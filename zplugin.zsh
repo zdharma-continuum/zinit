@@ -19,10 +19,12 @@ zplugin-shadow-autoload() {
 
     # Shadowed autoload
     for i in "$@"; do
-        eval "$i() { "\
-            "local FPATH='$ZPLUGIN_HOME/plugins/${ZPLUGIN_CURRENT_USER}--${ZPLUGIN_CURRENT_PLUGIN}';"\
-            "builtin autoload -X;"\
-            "}"
+        $i() {
+            local_FPATH
+            builtin autoload -X
+        }
+        local replace_str="local FPATH='$ZPLUGIN_HOME/plugins/${ZPLUGIN_CURRENT_USER}--${ZPLUGIN_CURRENT_PLUGIN}'"
+        functions[$i]="${functions[$i]/local_FPATH/$replace_str}"
     done
 }
 
