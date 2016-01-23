@@ -1,4 +1,4 @@
-# Zsh Plugin Governor
+# ZPlugin
 
 Example use:
 
