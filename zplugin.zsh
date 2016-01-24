@@ -1,3 +1,6 @@
+# -*- mode: shell-script -*-
+# vim:ft=zsh
+
 typeset -gaH ZPLG_REGISTERED_PLUGINS
 typeset -gAH ZPLG_REPORTS
 
