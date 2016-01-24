@@ -213,24 +213,14 @@ _zplugin-load-plugin() {
 
     # Look for a file to source
     typeset -a matches
-    local fname=""
-
-    # This should be for a Prezto plugin
-    matches=( $dname/$pdir/init.zsh(N) )
-
-    if [ "$#matches" -ne "0" ]; then
-        fname="$pdir/init.zsh"
-    else
-        # Other possible plugins, without "$pdir" in path
-        matches=(
-            $dname/${pdir}.plugin.zsh(N)
-            $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
-            $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
-            $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
-        )
-        [ "$#matches" -eq "0" ] && return 1
-        fname="$matches[1]:t"
-    fi
+    matches=(
+        $dname/$pdir/init.zsh(N) $dname/${pdir}.plugin.zsh(N)
+        $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
+        $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
+        $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
+    )
+    [ "$#matches" -eq "0" ] && return 1
+    local fname="${matches[1]#$dname/}"
 
     _zplugin-shadow-on
     source "$dname/$fname"
