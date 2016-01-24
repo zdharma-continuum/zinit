@@ -185,8 +185,9 @@ _zplugin-prepare-home() {
 _zplugin-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
-        cd "$ZPLG_PLUGINS_DIR"
+        command cd "$ZPLG_PLUGINS_DIR"
         git clone https://github.com/"$github_path" "${user}--${plugin}"
+        command cd "$OLDPWD"
     fi
 
     # All to the users - simulate OMZ directory structure (3/3)
