@@ -5,6 +5,11 @@ typeset -gH ZPLG_HOME="$HOME/.zplugin"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_HOME_READY
 
+# All to the users - simulate OMZ directory structure (1/3)
+typeset -gH ZSH="$ZPLG_PLUGINS_DIR"
+typeset -gH ZSH_CUSTOM="$ZPLG_PLUGINS_DIR/custom"
+export ZSH ZSH_CUSTOM
+
 # Nasty variables, can be used by any shadowing
 # function to recognize current context
 typeset -gH ZPLG_CUR_USER=""
@@ -168,6 +173,10 @@ _zplugin-prepare-home() {
 
     [ ! -d "$ZPLG_HOME" ] && mkdir 2>/dev/null "$ZPLG_HOME"
     [ ! -d "$ZPLG_PLUGINS_DIR" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR"
+
+    # All to the users - simulate OMZ directory structure (2/3)
+    [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom" 
+    [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom/plugins" 
 }
 
 _zplugin-setup-plugin-dir() {
@@ -175,6 +184,11 @@ _zplugin-setup-plugin-dir() {
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
         cd "$ZPLG_PLUGINS_DIR"
         git clone https://github.com/"$github_path" "${user}--${plugin}"
+    fi
+
+    # All to the users - simulate OMZ directory structure (3/3)
+    if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
+        ln -s "../../${user}--${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
     fi
 }
 
