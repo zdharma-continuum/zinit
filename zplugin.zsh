@@ -192,9 +192,19 @@ _zplugin-load-plugin() {
     # There are plugins having ".plugin.zsh"
     # already in ${plugin} directory name
     local fname="${plugin%.plugin.zsh}.plugin.zsh"
+    local dname="$ZPLG_PLUGINS_DIR/${user}--${plugin}"
+
+    if [ ! -f "$dname/$fname" ]; then
+        # Look for a plugin.zsh file
+        typeset -a matches
+        matches=( $dname/*.plugin.zsh(N) )
+        [ "$#matches" -eq "0" ] && return 1
+
+        fname="$matches[1]:t"
+    fi
 
     _zplugin-shadow-on
-    source "$ZPLG_PLUGINS_DIR/${user}--${plugin}/$fname"
+    source "$dname/$fname"
     _zplugin-shadow-off
 }
 
