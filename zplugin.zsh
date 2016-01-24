@@ -1,101 +1,197 @@
-ZPLUGIN_REGISTERED_PLUGINS=( )
-ZPLUGIN_REPORT=( )
+typeset -gaH ZPLG_REGISTERED_PLUGINS
+typeset -gAH ZPLG_REPORTS
 
-ZPLUGIN_HOME="$HOME/.zplugin"
-ZPLUGIN_PLUGINS_DIR="$ZPLUGIN_HOME/plugins"
+typeset -gH ZPLG_HOME="$HOME/.zplugin"
+typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
+typeset -gH ZPLG_HOME_READY
 
-ZPLUGIN_CURRENT_USER=""
-ZPLUGIN_CURRENT_PLUGIN=""
+# Nasty variables, can be used by any shadowing
+# function to recognize current context
+typeset -gH ZPLG_CUR_USER=""
+typeset -gH ZPLG_CUR_PLUGIN=""
+
+zmodload zsh/zutil || return 1
+zmodload zsh/parameter || return 1
+
+autoload colors
+colors
+
+typeset -gAH ZPLG_COLORS
+ZPLG_COLORS=(
+    "title" ""
+    "pname" $fg_bold[yellow]
+    "uname" $fg_bold[magenta]
+    "keyword" $fg_bold[green]
+    "error" $fg_bold[red]
+)
 
 #
-# Shadow functions
+# Shadowing-related functions (names of substitute functions start with -)
 #
 
-zplugin-shadow-autoload() {
+-zplugin_reload_and_run () {
+    local fpath_prefix="$1" autoload_opts="$2" func="$3"
+    shift 3
+
+    # Unfunction caller function (its name is given)
+    unfunction "$func"
+
+    local FPATH="$fpath_prefix":"${FPATH}"
+
+    # After this the function exists again
+    builtin autoload $=autoload_opts "$func"
+
+    # User wanted to call the function, not only load it
+    "$func" "$@"
+}
+
+-zplugin-shadow-autoload () {
+    local -a opts
+    local func
+
+    zparseopts -a opts -D ${(s::):-TUXkmtzw}
+
+    if (( $opts[(I)(-|+)X] ))
+    then
+        _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Failed autoload $opts $*"
+        print -u2 "builtin autoload required for $opts"
+        return 1
+    fi
+    if (( $opts[(I)-w] ))
+    then
+        _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "-w-Autoload $opts $*"
+        builtin autoload $opts "$@"
+        return
+    fi
+
+    # Report ZPLUGIN's "native" autoloads
     local i
     for i in "$@"; do
-        ZPLUGIN_REPORT+="Autoloading $i"
+        local msg="Autoload $i"
+        [ -n "$opts" ] && msg+=" with options $opts"
+        _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "$msg"
     done
 
-    # Shadowed autoload
-    for i in "$@"; do
-        functions[$i]=" 
-            local FPATH='$ZPLUGIN_HOME/plugins/${ZPLUGIN_CURRENT_USER}--${ZPLUGIN_CURRENT_PLUGIN}'
-            builtin autoload -X
-        "
+    # Do ZPLUGIN's "native" autoloads
+    local PLUGIN_DIR="$ZPLG_HOME/plugins/${ZPLG_CUR_USER}--${ZPLG_CUR_PLUGIN}"
+    for func
+    do
+        functions[$func]="-zplugin_reload_and_run ${(q)PLUGIN_DIR} ${(qq)opts} $func "'"$@"'
     done
 }
 
-zplugin-shadow-bindkey() {
-    ZPLUGIN_REPORT+="Bindkey $@"
+-zplugin-shadow-bindkey() {
+    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Bindkey $*"
 
     # Actual bindkey
     bindkey "$@"
 }
 
-zplugin-shadow-setopt() {
-    local i
-    for i in "$@"; do
-        ZPLUGIN_REPORT+="setopt $i"
-    done
+-zplugin-shadow-setopt() {
+    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Setopt $*"
 
     # Actual setopt
     setopt "$@"
 }
 
+-zplugin-shadow-zstyle() {
+    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Zstyle $*"
+
+    # Actual zstyle
+    zstyle "$@"
+}
+
 # Shadowing on
-zplugin-shadow-on() {
-    alias autoload=zplugin-shadow-autoload
-    alias bindkey=zplugin-shadow-bindkey
-    alias setopt=zplugin-shadow-setopt
+_zplugin-shadow-on() {
+    alias autoload=-zplugin-shadow-autoload
+    alias bindkey=-zplugin-shadow-bindkey
+    alias setopt=-zplugin-shadow-setopt
+    alias zstyle=-zplugin-shadow-zstyle
 }
 
 # Shadowing off
-zplugin-shadow-off() {
+_zplugin-shadow-off() {
     unalias autoload bindkey setopt
 }
 
 #
-# Zgov functions
+# Report functions
 #
 
-zplugin-prepare-home() {
-    [ -n "$_ZPLUGIN_HOME_READY" ] && return
-    _ZPLUGIN_HOME_READY="1"
-
-    [ ! -d "$ZPLUGIN_HOME" ] && mkdir 2>/dev/null "$ZPLUGIN_HOME"
-    [ ! -d "$ZPLUGIN_PLUGINS_DIR" ] && mkdir 2>/dev/null "$ZPLUGIN_PLUGINS_DIR"
-}
-
-zplugin-setup-plugin-dir() {
-    local user="$1" plugin="$2" github_path="$1/$2"
-    if [ ! -d "$ZPLUGIN_PLUGINS_DIR/${user}--${plugin}" ]; then
-        cd "$ZPLUGIN_PLUGINS_DIR"
-        git clone https://github.com/"$github_path" "${user}--${plugin}"
-    fi
-}
-
-zplugin-register-plugin() {
-    ZPLUGIN_REGISTERED_PLUGINS+="$1/$2"
-}
-
-zplugin-load-plugin() {
+_zplugin-add-report() {
     local user="$1" plugin="$2"
-    zplugin-shadow-on
-    ZPLUGIN_CURRENT_USER="$user"
-    ZPLUGIN_CURRENT_PLUGIN="$plugin"
-    source "$ZPLUGIN_PLUGINS_DIR/${user}--${plugin}/${plugin}.plugin.zsh"
-    zplugin-shadow-off
+
+    local keyword="${3%% *}"
+    if [ "$keyword" = "Failed" ]; then
+        keyword="$ZPLG_COLORS[error]$keyword$reset_color"
+    else
+        keyword="$ZPLG_COLORS[keyword]$keyword$reset_color"
+    fi
+
+    ZPLG_REPORTS[${user}/${plugin}]+="$keyword ${3#* }"$'\n'
 }
 
 zplugin-show-report() {
     local user="$1" plugin="$2"
-    echo "Plugin report for $user/$plugin"
-    print -rl "${ZPLUGIN_REPORT[@]}"
+    printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
+            "$ZPLG_COLORS[uname]$user$reset_color"\
+            "$ZPLG_COLORS[pname]$plugin$reset_color"
+
+    print $ZPLG_REPORTS[${user}/${plugin}]
+}
+
+zplugin-show-all-reports() {
+    local i
+    for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
+        local user="${i%%/*}" plugin="${i#*/}"
+        zplugin-show-report "$user" "$plugin"
+    done
+}
+
+#
+# ZPlugin functions
+#
+
+_zplugin-prepare-home() {
+    [ -n "$ZPLG_HOME_READY" ] && return
+    ZPLG_HOME_READY="1"
+
+    [ ! -d "$ZPLG_HOME" ] && mkdir 2>/dev/null "$ZPLG_HOME"
+    [ ! -d "$ZPLG_PLUGINS_DIR" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR"
+}
+
+_zplugin-setup-plugin-dir() {
+    local user="$1" plugin="$2" github_path="$1/$2"
+    if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
+        cd "$ZPLG_PLUGINS_DIR"
+        git clone https://github.com/"$github_path" "${user}--${plugin}"
+    fi
+}
+
+# TODO detect second autoload?
+_zplugin-register-plugin() {
+    [ -z "ZPLG_REPORTS[${user}/${plugin}]" ] && ZPLG_REPORTS[${user}/${plugin}]=""
+    ZPLG_REGISTERED_PLUGINS+="${1}/${2}"
+}
+
+_zplugin-load-plugin() {
+    local user="$1" plugin="$2"
+    _zplugin-shadow-on
+    ZPLG_CUR_USER="$user"
+    ZPLG_CUR_PLUGIN="$plugin"
+    source "$ZPLG_PLUGINS_DIR/${user}--${plugin}/${plugin}.plugin.zsh"
+    _zplugin-shadow-off
+}
+
+zplugin-show-registered-plugins() {
+    for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
+        local user="${i%%/*}" plugin="${i#*/}"
+        printf "%s/%s\n" $ZPLG_COLORS[uname]$user$reset_color $ZPLG_COLORS[pname]$plugin$reset_color
+    done
 }
 
 # $1 - plugin name, possibly github path
-zplugin-load () {
+_zplugin-load () {
     local github_path="$1"
 
     local user="$1:h"
@@ -107,11 +203,11 @@ zplugin-load () {
         user="_local"
     fi
 
-    zplugin-setup-plugin-dir "$user" "$plugin"
+    _zplugin-setup-plugin-dir "$user" "$plugin"
     # Instead of fpath entries, there
-    # are entries in ZPLUGIN_REGISTERED_PLUGINS array
-    zplugin-register-plugin "$user" "$plugin"
-    zplugin-load-plugin "$user" "$plugin"
+    # are entries in ZPLG_REGISTERED_PLUGINS array
+    _zplugin-register-plugin "$user" "$plugin"
+    _zplugin-load-plugin "$user" "$plugin"
     zplugin-show-report "$user" "$plugin"
 }
 
@@ -119,11 +215,11 @@ zplugin-load () {
 # - load
 # - unload
 zplugin() {
-    zplugin-prepare-home
+    _zplugin-prepare-home
 
     case "$1" in
        (load)
-           zplugin-load "$2"
+           _zplugin-load "$2"
            ;;
        (unload)
            ;;
