@@ -222,6 +222,8 @@ _zplugin-load-plugin() {
     [ "$#matches" -eq "0" ] && return 1
     local fname="${matches[1]#$dname/}"
 
+    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Source $fname"
+
     _zplugin-shadow-on
     source "$dname/$fname"
     _zplugin-shadow-off
