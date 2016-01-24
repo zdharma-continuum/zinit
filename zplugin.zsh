@@ -187,7 +187,12 @@ _zplugin-load-plugin() {
     _zplugin-shadow-on
     ZPLG_CUR_USER="$user"
     ZPLG_CUR_PLUGIN="$plugin"
-    source "$ZPLG_PLUGINS_DIR/${user}--${plugin}/${plugin}.plugin.zsh"
+
+    # There are plugins having ".plugin.zsh"
+    # already in ${plugin} directory name
+    local fname="${plugin%.plugin.zsh}.plugin.zsh"
+
+    source "$ZPLG_PLUGINS_DIR/${user}--${plugin}/$fname"
     _zplugin-shadow-off
 }
 
