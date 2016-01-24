@@ -205,15 +205,27 @@ _zplugin-load-plugin() {
 
     # There are plugins having ".plugin.zsh"
     # already in ${plugin} directory name
-    local fname="${plugin%.plugin.zsh}.plugin.zsh"
+    local pdir="${plugin%.plugin.zsh}"
     local dname="$ZPLG_PLUGINS_DIR/${user}--${plugin}"
 
-    if [ ! -f "$dname/$fname" ]; then
-        # Look for a plugin.zsh file
-        typeset -a matches
-        matches=( $dname/*.plugin.zsh(N) )
-        [ "$#matches" -eq "0" ] && return 1
+    # Look for a file to source
+    typeset -a matches
+    local fname=""
 
+    # This should be for a Prezto plugin
+    matches=( $dname/$pdir/init.zsh(N) )
+
+    if [ "$#matches" -ne "0" ]; then
+        fname="$pdir/init.zsh"
+    else
+        # Other possible plugins, without "$pdir" in path
+        matches=(
+            $dname/${pdir}.plugin.zsh(N)
+            $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
+            $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
+            $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
+        )
+        [ "$#matches" -eq "0" ] && return 1
         fname="$matches[1]:t"
     fi
 
