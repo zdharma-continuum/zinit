@@ -3,8 +3,8 @@
 Example use:
 
 ```
-. ~/github/zsh-plugin-governor/zgov.zsh
-zgov load psprint/zsh-cmd-architect
+. ~/github/zplugin/zplugin.zsh
+zplugin load psprint/zsh-cmd-architect
 ```
 
 Example plugin load report:
