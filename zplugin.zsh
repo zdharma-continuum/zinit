@@ -116,6 +116,13 @@ ZPLG_COLORS=(
     builtin alias "$@"
 }
 
+-zplugin-shadow-zle() {
+    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Zle $*"
+
+    # Actual zle
+    builtin zle "$@"
+}
+
 # Shadowing on
 _zplugin-shadow-on() {
     alias autoload=-zplugin-shadow-autoload
@@ -123,11 +130,12 @@ _zplugin-shadow-on() {
     alias setopt=-zplugin-shadow-setopt
     alias zstyle=-zplugin-shadow-zstyle
     alias alias=-zplugin-shadow-alias
+    alias zle=-zplugin-shadow-zle
 }
 
 # Shadowing off
 _zplugin-shadow-off() {
-    unalias autoload bindkey setopt zstyle alias
+    unalias     autoload bindkey setopt zstyle alias zle
 }
 
 #
