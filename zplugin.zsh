@@ -141,6 +141,8 @@ _zplugin-add-report() {
 
 zplugin-show-report() {
     local user="$1" plugin="$2"
+    [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
+
     printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
             "$ZPLG_COLORS[uname]$user$reset_color"\
             "$ZPLG_COLORS[pname]$plugin$reset_color"
