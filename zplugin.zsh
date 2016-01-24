@@ -214,8 +214,9 @@ _zplugin-load-plugin() {
     ZPLG_CUR_PLUGIN="$plugin"
 
     # There are plugins having ".plugin.zsh"
-    # already in ${plugin} directory name
-    local pdir="${plugin%.plugin.zsh}"
+    # in ${plugin} directory name, also some
+    # have ".zsh" there
+    local pdir="${${plugin%.plugin.zsh}%.zsh}"
     local dname="$ZPLG_PLUGINS_DIR/${user}--${plugin}"
 
     # Look for a file to source
