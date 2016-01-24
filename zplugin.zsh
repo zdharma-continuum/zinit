@@ -101,17 +101,25 @@ ZPLG_COLORS=(
     builtin zstyle "$@"
 }
 
+-zplugin-shadow-alias() {
+    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Alias $*"
+
+    # Actual alias
+    builtin alias "$@"
+}
+
 # Shadowing on
 _zplugin-shadow-on() {
     alias autoload=-zplugin-shadow-autoload
     alias bindkey=-zplugin-shadow-bindkey
     alias setopt=-zplugin-shadow-setopt
     alias zstyle=-zplugin-shadow-zstyle
+    alias alias=-zplugin-shadow-alias
 }
 
 # Shadowing off
 _zplugin-shadow-off() {
-    unalias autoload bindkey setopt
+    unalias autoload bindkey setopt zstyle alias
 }
 
 #
