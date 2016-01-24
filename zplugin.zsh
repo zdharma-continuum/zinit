@@ -184,7 +184,6 @@ _zplugin-register-plugin() {
 
 _zplugin-load-plugin() {
     local user="$1" plugin="$2"
-    _zplugin-shadow-on
     ZPLG_CUR_USER="$user"
     ZPLG_CUR_PLUGIN="$plugin"
 
@@ -192,6 +191,7 @@ _zplugin-load-plugin() {
     # already in ${plugin} directory name
     local fname="${plugin%.plugin.zsh}.plugin.zsh"
 
+    _zplugin-shadow-on
     source "$ZPLG_PLUGINS_DIR/${user}--${plugin}/$fname"
     _zplugin-shadow-off
 }
