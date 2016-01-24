@@ -84,21 +84,21 @@ ZPLG_COLORS=(
     _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Bindkey $*"
 
     # Actual bindkey
-    bindkey "$@"
+    builtin bindkey "$@"
 }
 
 -zplugin-shadow-setopt() {
     _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Setopt $*"
 
     # Actual setopt
-    setopt "$@"
+    builtin setopt "$@"
 }
 
 -zplugin-shadow-zstyle() {
     _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Zstyle $*"
 
     # Actual zstyle
-    zstyle "$@"
+    builtin zstyle "$@"
 }
 
 # Shadowing on
