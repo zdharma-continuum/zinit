@@ -183,7 +183,7 @@ _zplugin-diff-functions() {
             done
 
             local answer="" key
-            for key in "${(k)func[@]}"; do
+            for key in "${(onk)func[@]}"; do
                 answer+="$key"$'\n'
             done
 
