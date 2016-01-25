@@ -194,11 +194,11 @@ _zplugin-diff-functions() {
             local answer="" key
             integer count=1
             for key in "${(onk)func[@]}"; do
-                if (( COLUMNS >= (longest+1)*2 )); then
+                if (( COLUMNS >= (longest+1)*2-1 )); then
                     if (( count ++ % 2 == 0 )); then
                         answer+=`printf "%$(( longest+1 ))s" "$key"`$'\n'
                     else
-                        answer+=`printf "%$(( longest+1 ))s" "$key"`
+                        answer+=`printf "%$(( longest ))s" "$key"`
                     fi
                 else
                     answer+="$key"$'\n'
