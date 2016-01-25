@@ -205,6 +205,7 @@ _zplugin-diff-functions() {
                 fi
             done
             REPLY="$answer"
+            (( COLUMNS >= (longest+1)*2 && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
             ;;
         *)
             return 1
