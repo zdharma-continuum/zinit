@@ -216,15 +216,21 @@ _zplugin-format-functions() {
         [ "$#f" -gt "$longest" ] && longest="$#f"
     done
 
+    # Test for printf bug
+    # Left justified for zsh >= 5.1, which doesn't have the bug
+    integer left=0 right=0
+    f=`printf "%-2s" "1"`
+    [ "$f" = " 1" ] && right=1 || left=1
+
     # Output in one or two columns
     local answer=""
     integer count=1
     for f in "${(on)func[@]}"; do
         if (( COLUMNS >= (longest+1)*2-1 )); then
             if (( count ++ % 2 == 0 )); then
-                answer+=`printf "%$(( longest+1 ))s" "${(Q)f}"`$'\n'
+                answer+=`printf "%-$(( longest + right ))s" "${(Q)f}"`$'\n'
             else
-                answer+=`printf "%$(( longest ))s" "${(Q)f}"`
+                answer+=`printf "%-$(( longest + left ))s" "${(Q)f}"`
             fi
         else
             answer+="$f"$'\n'
