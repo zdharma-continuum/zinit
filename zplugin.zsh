@@ -43,6 +43,7 @@ ZPLG_COLORS=(
     "keyword" $fg_bold[green]
     "error" $fg_bold[red]
     "p" $fg_bold[blue]
+    "bar" $fg_bold[magenta]
 )
 
 #
@@ -262,14 +263,20 @@ zplugin-show-report() {
     local user="$1" plugin="$2"
     [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
 
+    # Print title
     printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
             "$ZPLG_COLORS[uname]$user$reset_color"\
             "$ZPLG_COLORS[pname]$plugin$reset_color"
 
+    # Print "----------"
+    local msg="Plugin report for $user/$plugin"
+    echo $ZPLG_COLORS[bar]"${(r:$#msg::-:)tmp__}"$reset_color
+
+    # Print report gathered via shadowing
     print $ZPLG_REPORTS[${user}/${plugin}]
 
+    # Print report gathered via $functions-diffing
     _zplugin-format-functions "$user/$plugin"
-
     echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 }
 
