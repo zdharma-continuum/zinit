@@ -237,7 +237,7 @@ _zplugin-format-functions() {
         fi
     done
     REPLY="$answer"
-    (( COLUMNS >= (longest+1)*2 && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
+    (( COLUMNS >= (longest+1)*2-1 && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
 }
 
 #
