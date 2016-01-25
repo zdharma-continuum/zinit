@@ -22,6 +22,11 @@ typeset -gH ZPLG_CUR_USPL=""
 # Concatenated with "/"
 typeset -gH ZPLG_CUR_USPL2=""
 
+# Used to hold declared functions existing before loading a plugin
+typeset -gAH ZPLG_FUNCTIONS
+# Functions existing after loading a plugin. Reporting will do a diff
+typeset -gAH ZPLG_FUNCTIONS2
+
 zmodload zsh/zutil || return 1
 zmodload zsh/parameter || return 1
 
@@ -35,6 +40,7 @@ ZPLG_COLORS=(
     "uname" $fg_bold[magenta]
     "keyword" $fg_bold[green]
     "error" $fg_bold[red]
+    "p" $fg_bold[blue]
 )
 
 #
@@ -143,6 +149,50 @@ _zplugin-shadow-off() {
 }
 
 #
+# Diff functions
+#
+
+_zplugin-diff-functions() {
+    local uspl2="$1"
+    local cmd="$2"
+
+    if [[ "$cmd" = "begin" || "$cmd" = "end" ]]; then
+            typeset -a func
+            func=( "${(onk)functions[@]}" )
+            func=( "${(q)func[@]}" )
+    fi
+
+    case "$cmd" in
+        begin)
+            ZPLG_FUNCTIONS[$uspl2]="$func[*]"
+            ;;
+        end)
+            ZPLG_FUNCTIONS2[$uspl2]="$func[*]"
+            ;;
+        diff)
+            typeset -A func
+            for i in "${(z)ZPLG_FUNCTIONS2[$uspl2]}"; do
+                func[$i]=1
+            done
+            for i in "${(z)ZPLG_FUNCTIONS[$uspl2]}"; do
+                func[$i]=0
+            done
+
+            local answer="" key
+            for key in "${(k)func[@]}"; do
+                if [ "${func[$key]}" = "1" ]; then
+                    answer+="$key"$'\n'
+                fi
+            done
+
+            echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$answer"
+            ;;
+        *)
+            return 1
+    esac
+}
+
+#
 # Report functions
 #
 
@@ -169,6 +219,8 @@ zplugin-show-report() {
             "$ZPLG_COLORS[pname]$plugin$reset_color"
 
     print $ZPLG_REPORTS[${user}/${plugin}]
+
+    _zplugin-diff-functions "$user/$plugin" diff
 }
 
 zplugin-show-all-reports() {
@@ -239,9 +291,11 @@ _zplugin-load-plugin() {
 
     _zplugin-add-report "$ZPLG_CUR_USPL2" "Source $fname"
 
+    _zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
     _zplugin-shadow-on
     source "$dname/$fname"
     _zplugin-shadow-off
+    _zplugin-diff-functions "$ZPLG_CUR_USPL2" end
 }
 
 zplugin-show-registered-plugins() {
@@ -269,7 +323,7 @@ _zplugin-load () {
     # are entries in ZPLG_REGISTERED_PLUGINS array
     _zplugin-register-plugin "$user" "$plugin"
     _zplugin-load-plugin "$user" "$plugin"
-    zplugin-show-report "$user" "$plugin"
+    #zplugin-show-report "$user" "$plugin"
 }
 
 # Main function with subcommands:
