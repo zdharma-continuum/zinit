@@ -162,6 +162,8 @@ _zplugin-diff-functions() {
             func=( "${(q)func[@]}" )
     fi
 
+    REPLY=""
+
     case "$cmd" in
         begin)
             ZPLG_FUNCTIONS_BEFORE[$uspl2]="$func[*]"
@@ -202,8 +204,7 @@ _zplugin-diff-functions() {
                     answer+="$key"$'\n'
                 fi
             done
-
-            echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$answer"
+            REPLY="$answer"
             ;;
         *)
             return 1
@@ -239,6 +240,8 @@ zplugin-show-report() {
     print $ZPLG_REPORTS[${user}/${plugin}]
 
     _zplugin-diff-functions "$user/$plugin" diff
+
+    echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 }
 
 zplugin-show-all-reports() {
