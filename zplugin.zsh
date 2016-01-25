@@ -458,6 +458,7 @@ _zplugin-unload() {
     func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
     local f
     for f in "${(on)func[@]}"; do
+        [ -z "$f" ] && continue
         echo "Deleting function $f"
         unfunction "$f"
     done
@@ -470,6 +471,7 @@ _zplugin-unload() {
     pattern_style=( "${(z)ZPLG_ZSTYLES[$uspl2]}" )
     local ps
     for ps in "${(on)pattern_style[@]}"; do
+        [ -z "$ps" ] && continue
         # Remove one level of quoting to split using (z)
         ps="${(Q)ps}"
         typeset -a ps_arr
