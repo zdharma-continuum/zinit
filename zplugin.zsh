@@ -1,20 +1,33 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
+#
+# Main state variables
+#
+
 typeset -gaH ZPLG_REGISTERED_PLUGINS
 typeset -gAH ZPLG_REPORTS
+
+#
+# Common needed values
+#
 
 typeset -gH ZPLG_HOME="$HOME/.zplugin"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_HOME_READY
 
+#
 # All to the users - simulate OMZ directory structure (1/3)
+#
+
 typeset -gH ZSH="$ZPLG_PLUGINS_DIR"
 typeset -gH ZSH_CUSTOM="$ZPLG_PLUGINS_DIR/custom"
 export ZSH ZSH_CUSTOM
 
-# Nasty variables, can be used by any shadowing
-# function to recognize current context
+#
+# Nasty variables, can be used by any shadowing function to recognize current context
+#
+
 typeset -gH ZPLG_CUR_USER=""
 typeset -gH ZPLG_CUR_PLUGIN=""
 # Concatenated with "--"
@@ -22,12 +35,28 @@ typeset -gH ZPLG_CUR_USPL=""
 # Concatenated with "/"
 typeset -gH ZPLG_CUR_USPL2=""
 
+#
+# Function diffing
+#
+
 # Used to hold declared functions existing before loading a plugin
 typeset -gAH ZPLG_FUNCTIONS_BEFORE
 # Functions existing after loading a plugin. Reporting will do a diff
 typeset -gAH ZPLG_FUNCTIONS_AFTER
 # Functions computed to be associated with plugin
 typeset -gAH ZPLG_FUNCTIONS
+
+#
+# Zstyle remembering
+#
+
+# Holds concatenated Zstyles declared by each plugin
+# Concatenated after quoting, so (z)-splittable
+typeset -gAH ZPLG_ZSTYLES
+
+#
+# End of global variable declarations
+#
 
 zmodload zsh/zutil || return 1
 zmodload zsh/parameter || return 1
@@ -118,8 +147,27 @@ ZPLG_COLORS=(
 -zplugin-shadow-zstyle() {
     _zplugin-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
 
+    # Remember to perform the actual zstyle call
+    typeset -a pos
+    pos=( "$@" )
+
+    # Check if we have regular zstyle call, i.e.
+    # with no options or with -e
+    local -a opts
+    zparseopts -a opts -D ${(s::):-eLdgabsTtm}
+
+    if [[ "$#opts" -eq 0 || ( "$#opts" -eq 1 && ${opts[1]} = "-e" ) ]]; then
+        # Have to quote $1, ten $2, then concatenate them, then quote them again
+        local pattern="${(q)1}" style="${(q)2}"
+        local ps="$pattern $style"
+        ps="${(q)ps}"
+
+        # Remember the zstyle
+        ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
+    fi
+
     # Actual zstyle
-    builtin zstyle "$@"
+    builtin zstyle "${pos[@]}"
 }
 
 -zplugin-shadow-alias() {
@@ -388,7 +436,7 @@ _zplugin-load () {
 #
 # 1. Unfunction functions created by plugin
 # 2. Restore bindkeys TODO
-# 3. Delete created zstyles TODO
+# 3. Delete created Zstyles TODO
 # 4. Restore options TODO
 # 5. Restore (or just unalias?) aliases TODO
 # 6. Forget the plugin
@@ -412,6 +460,28 @@ _zplugin-unload() {
     for f in "${(on)func[@]}"; do
         echo "Deleting function $f"
         unfunction "$f"
+    done
+
+    #
+    # 3. Delete created Zstyles
+    #
+
+    typeset -a pattern_style
+    pattern_style=( "${(z)ZPLG_ZSTYLES[$uspl2]}" )
+    local ps
+    for ps in "${(on)pattern_style[@]}"; do
+        # Remove one level of quoting to split using (z)
+        ps="${(Q)ps}"
+        typeset -a ps_arr
+        ps_arr=( "${(z)ps}" )
+
+        # Remove one level of quoting to pass to zstyle
+        ps_arr[1]="${(Q)ps_arr[1]}"
+        ps_arr[2]="${(Q)ps_arr[2]}"
+
+        echo "Deleting zstyle ${ps_arr[1]} ${ps_arr[2]}"
+
+        zstyle -d "${ps_arr[1]}" "${ps_arr[2]}"
     done
 
     #
