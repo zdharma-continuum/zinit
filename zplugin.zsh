@@ -171,18 +171,20 @@ _zplugin-diff-functions() {
             ;;
         diff)
             typeset -A func
+
+            # This includes new functions
             for i in "${(z)ZPLG_FUNCTIONS2[$uspl2]}"; do
                 func[$i]=1
             done
+
+            # Remove duplicated entries, i.e. existing before
             for i in "${(z)ZPLG_FUNCTIONS[$uspl2]}"; do
-                func[$i]=0
+                unset "func[$i]"
             done
 
             local answer="" key
             for key in "${(k)func[@]}"; do
-                if [ "${func[$key]}" = "1" ]; then
-                    answer+="$key"$'\n'
-                fi
+                answer+="$key"$'\n'
             done
 
             echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$answer"
