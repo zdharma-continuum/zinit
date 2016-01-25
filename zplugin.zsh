@@ -17,6 +17,10 @@ export ZSH ZSH_CUSTOM
 # function to recognize current context
 typeset -gH ZPLG_CUR_USER=""
 typeset -gH ZPLG_CUR_PLUGIN=""
+# Concatenated with "--"
+typeset -gH ZPLG_CUR_USPL=""
+# Concatenated with "/"
+typeset -gH ZPLG_CUR_USPL2=""
 
 zmodload zsh/zutil || return 1
 zmodload zsh/parameter || return 1
@@ -61,13 +65,13 @@ ZPLG_COLORS=(
 
     if (( $opts[(I)(-|+)X] ))
     then
-        _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Failed autoload $opts $*"
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
         return 1
     fi
     if (( $opts[(I)-w] ))
     then
-        _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "-w-Autoload $opts $*"
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
         return
     fi
@@ -77,11 +81,11 @@ ZPLG_COLORS=(
     for i in "$@"; do
         local msg="Autoload $i"
         [ -n "$opts" ] && msg+=" with options $opts"
-        _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "$msg"
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "$msg"
     done
 
     # Do ZPLUGIN's "native" autoloads
-    local PLUGIN_DIR="$ZPLG_HOME/plugins/${ZPLG_CUR_USER}--${ZPLG_CUR_PLUGIN}"
+    local PLUGIN_DIR="$ZPLG_HOME/plugins/${ZPLG_CUR_USPL}"
     for func
     do
         functions[$func]="-zplugin_reload_and_run ${(q)PLUGIN_DIR} ${(qq)opts} $func "'"$@"'
@@ -89,35 +93,35 @@ ZPLG_COLORS=(
 }
 
 -zplugin-shadow-bindkey() {
-    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Bindkey $*"
+    _zplugin-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
 
     # Actual bindkey
     builtin bindkey "$@"
 }
 
 -zplugin-shadow-setopt() {
-    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Setopt $*"
+    _zplugin-add-report "$ZPLG_CUR_USPL2" "Setopt $*"
 
     # Actual setopt
     builtin setopt "$@"
 }
 
 -zplugin-shadow-zstyle() {
-    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Zstyle $*"
+    _zplugin-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
 
     # Actual zstyle
     builtin zstyle "$@"
 }
 
 -zplugin-shadow-alias() {
-    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Alias $*"
+    _zplugin-add-report "$ZPLG_CUR_USPL2" "Alias $*"
 
     # Actual alias
     builtin alias "$@"
 }
 
 -zplugin-shadow-zle() {
-    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Zle $*"
+    _zplugin-add-report "$ZPLG_CUR_USPL2" "Zle $*"
 
     # Actual zle
     builtin zle "$@"
@@ -143,16 +147,17 @@ _zplugin-shadow-off() {
 #
 
 _zplugin-add-report() {
-    local user="$1" plugin="$2"
+    local uspl2="$1"
+    local txt="$2"
 
-    local keyword="${3%% *}"
+    local keyword="${txt%% *}"
     if [ "$keyword" = "Failed" ]; then
         keyword="$ZPLG_COLORS[error]$keyword$reset_color"
     else
         keyword="$ZPLG_COLORS[keyword]$keyword$reset_color"
     fi
 
-    ZPLG_REPORTS[${user}/${plugin}]+="$keyword ${3#* }"$'\n'
+    ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
 }
 
 zplugin-show-report() {
@@ -212,6 +217,8 @@ _zplugin-load-plugin() {
     local user="$1" plugin="$2"
     ZPLG_CUR_USER="$user"
     ZPLG_CUR_PLUGIN="$plugin"
+    ZPLG_CUR_USPL="${user}--${plugin}"
+    ZPLG_CUR_USPL2="${user}/${plugin}"
 
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
@@ -230,7 +237,7 @@ _zplugin-load-plugin() {
     [ "$#matches" -eq "0" ] && return 1
     local fname="${matches[1]#$dname/}"
 
-    _zplugin-add-report "$ZPLG_CUR_USER" "$ZPLG_CUR_PLUGIN" "Source $fname"
+    _zplugin-add-report "$ZPLG_CUR_USPL2" "Source $fname"
 
     _zplugin-shadow-on
     source "$dname/$fname"
