@@ -187,6 +187,7 @@ _zplugin-diff-functions() {
             # Get length of longest string
             integer longest=0
             for key in "${(k)func[@]}"; do
+                key="${(Q)key}"
                 [ "$#key" -gt "$longest" ] && longest="$#key"
             done
 
@@ -196,9 +197,9 @@ _zplugin-diff-functions() {
             for key in "${(onk)func[@]}"; do
                 if (( COLUMNS >= (longest+1)*2-1 )); then
                     if (( count ++ % 2 == 0 )); then
-                        answer+=`printf "%$(( longest+1 ))s" "$key"`$'\n'
+                        answer+=`printf "%$(( longest+1 ))s" "${(Q)key}"`$'\n'
                     else
-                        answer+=`printf "%$(( longest ))s" "$key"`
+                        answer+=`printf "%$(( longest ))s" "${(Q)key}"`
                     fi
                 else
                     answer+="$key"$'\n'
