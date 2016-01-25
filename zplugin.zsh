@@ -26,6 +26,8 @@ typeset -gH ZPLG_CUR_USPL2=""
 typeset -gAH ZPLG_FUNCTIONS_BEFORE
 # Functions existing after loading a plugin. Reporting will do a diff
 typeset -gAH ZPLG_FUNCTIONS_AFTER
+# Functions computed to be associated with plugin
+typeset -gAH ZPLG_FUNCTIONS
 
 zmodload zsh/zutil || return 1
 zmodload zsh/parameter || return 1
@@ -152,6 +154,9 @@ _zplugin-shadow-off() {
 # Diff functions
 #
 
+# Can remember current $functions twice, and compute the
+# difference, storing it in ZPLG_FUNCTIONS, associated
+# with given ($1) plugin
 _zplugin-diff-functions() {
     local uspl2="$1"
     local cmd="$2"
@@ -173,6 +178,7 @@ _zplugin-diff-functions() {
             ;;
         diff)
             typeset -A func
+            local i
 
             # This includes new functions
             for i in "${(z)ZPLG_FUNCTIONS_AFTER[$uspl2]}"; do
@@ -184,33 +190,48 @@ _zplugin-diff-functions() {
                 unset "func[$i]"
             done
 
-            # Get length of longest string
-            integer longest=0
-            for key in "${(k)func[@]}"; do
-                key="${(Q)key}"
-                [ "$#key" -gt "$longest" ] && longest="$#key"
+            # Store the functions, associating them with plugin ($uspl2)
+            for i in "${(onk)func[@]}"; do
+                ZPLG_FUNCTIONS[$uspl2]+="$i "
             done
-
-            # Output in one or two columns
-            local answer="" key
-            integer count=1
-            for key in "${(onk)func[@]}"; do
-                if (( COLUMNS >= (longest+1)*2-1 )); then
-                    if (( count ++ % 2 == 0 )); then
-                        answer+=`printf "%$(( longest+1 ))s" "${(Q)key}"`$'\n'
-                    else
-                        answer+=`printf "%$(( longest ))s" "${(Q)key}"`
-                    fi
-                else
-                    answer+="$key"$'\n'
-                fi
-            done
-            REPLY="$answer"
-            (( COLUMNS >= (longest+1)*2 && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
             ;;
         *)
             return 1
     esac
+}
+
+# Creates a one or two columns text with functions
+# belonging to given ($1) plugin
+_zplugin-format-functions() {
+    local uspl2="$1"
+
+    typeset -a func
+    func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
+
+    # Get length of longest string
+    integer longest=0
+    local f
+    for f in "${func[@]}"; do
+        f="${(Q)f}"
+        [ "$#f" -gt "$longest" ] && longest="$#f"
+    done
+
+    # Output in one or two columns
+    local answer=""
+    integer count=1
+    for f in "${(on)func[@]}"; do
+        if (( COLUMNS >= (longest+1)*2-1 )); then
+            if (( count ++ % 2 == 0 )); then
+                answer+=`printf "%$(( longest+1 ))s" "${(Q)f}"`$'\n'
+            else
+                answer+=`printf "%$(( longest ))s" "${(Q)f}"`
+            fi
+        else
+            answer+="$f"$'\n'
+        fi
+    done
+    REPLY="$answer"
+    (( COLUMNS >= (longest+1)*2 && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
 }
 
 #
@@ -241,7 +262,7 @@ zplugin-show-report() {
 
     print $ZPLG_REPORTS[${user}/${plugin}]
 
-    _zplugin-diff-functions "$user/$plugin" diff
+    _zplugin-format-functions "$user/$plugin"
 
     echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 }
@@ -319,6 +340,7 @@ _zplugin-load-plugin() {
     source "$dname/$fname"
     _zplugin-shadow-off
     _zplugin-diff-functions "$ZPLG_CUR_USPL2" end
+    _zplugin-diff-functions "$user/$plugin" diff
 }
 
 zplugin-show-registered-plugins() {
