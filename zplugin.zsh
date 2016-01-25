@@ -182,9 +182,25 @@ _zplugin-diff-functions() {
                 unset "func[$i]"
             done
 
+            # Get length of longest string
+            integer longest=0
+            for key in "${(k)func[@]}"; do
+                [ "$#key" -gt "$longest" ] && longest="$#key"
+            done
+
+            # Output in one or two columns
             local answer="" key
+            integer count=1
             for key in "${(onk)func[@]}"; do
-                answer+="$key"$'\n'
+                if (( COLUMNS >= (longest+1)*2 )); then
+                    if (( count ++ % 2 == 0 )); then
+                        answer+=`printf "%$(( longest+1 ))s" "$key"`$'\n'
+                    else
+                        answer+=`printf "%$(( longest+1 ))s" "$key"`
+                    fi
+                else
+                    answer+="$key"$'\n'
+                fi
             done
 
             echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$answer"
