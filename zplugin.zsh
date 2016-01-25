@@ -23,9 +23,9 @@ typeset -gH ZPLG_CUR_USPL=""
 typeset -gH ZPLG_CUR_USPL2=""
 
 # Used to hold declared functions existing before loading a plugin
-typeset -gAH ZPLG_FUNCTIONS
+typeset -gAH ZPLG_FUNCTIONS_BEFORE
 # Functions existing after loading a plugin. Reporting will do a diff
-typeset -gAH ZPLG_FUNCTIONS2
+typeset -gAH ZPLG_FUNCTIONS_AFTER
 
 zmodload zsh/zutil || return 1
 zmodload zsh/parameter || return 1
@@ -164,21 +164,21 @@ _zplugin-diff-functions() {
 
     case "$cmd" in
         begin)
-            ZPLG_FUNCTIONS[$uspl2]="$func[*]"
+            ZPLG_FUNCTIONS_BEFORE[$uspl2]="$func[*]"
             ;;
         end)
-            ZPLG_FUNCTIONS2[$uspl2]="$func[*]"
+            ZPLG_FUNCTIONS_AFTER[$uspl2]="$func[*]"
             ;;
         diff)
             typeset -A func
 
             # This includes new functions
-            for i in "${(z)ZPLG_FUNCTIONS2[$uspl2]}"; do
+            for i in "${(z)ZPLG_FUNCTIONS_AFTER[$uspl2]}"; do
                 func[$i]=1
             done
 
             # Remove duplicated entries, i.e. existing before
-            for i in "${(z)ZPLG_FUNCTIONS[$uspl2]}"; do
+            for i in "${(z)ZPLG_FUNCTIONS_BEFORE[$uspl2]}"; do
                 unset "func[$i]"
             done
 
