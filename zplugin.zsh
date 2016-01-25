@@ -384,6 +384,45 @@ _zplugin-load () {
     #zplugin-show-report "$user" "$plugin"
 }
 
+# $1 - user/plugin (i.e. uspl2 format, not uspl which is user--plugin)
+#
+# 1. Unfunction functions created by plugin
+# 2. Restore bindkeys TODO
+# 3. Delete created zstyles TODO
+# 4. Restore options TODO
+# 5. Restore (or just unalias?) aliases TODO
+# 6. Forget the plugin
+_zplugin-unload() {
+    local uspl2="$1" user="${1%%/*}" plugin="${1#*/}"
+    local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
+    local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
+
+    if [ "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" != "$uspl2" ]; then
+        echo "Plugin $uspl2col not registered"
+        return 1
+    fi
+
+    #
+    # 1. Unfunction
+    #
+
+    typeset -a func
+    func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
+    local f
+    for f in "${(on)func[@]}"; do
+        echo "Deleting function $f"
+        unfunction "$f"
+    done
+
+    #
+    # 6. Forget the plugin
+    #
+
+    echo "Unregistering plugin $uspl2col"
+    local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
+    ZPLG_REGISTERED_PLUGINS[$idx]=()
+}
+
 # Main function with subcommands:
 # - load
 # - unload
@@ -395,6 +434,7 @@ zplugin() {
            _zplugin-load "$2"
            ;;
        (unload)
+           _zplugin-unload "$2"
            ;;
        (*)
            ;;
