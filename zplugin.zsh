@@ -47,12 +47,15 @@ typeset -gAH ZPLG_FUNCTIONS_AFTER
 typeset -gAH ZPLG_FUNCTIONS
 
 #
-# Zstyle remembering
+# Zstyle, bindkey remembering
 #
 
 # Holds concatenated Zstyles declared by each plugin
 # Concatenated after quoting, so (z)-splittable
 typeset -gAH ZPLG_ZSTYLES
+
+# Holds concatenated bindkeys declared by each plugin
+typeset -gAH ZPLG_BINDKEYS
 
 #
 # End of global variable declarations
@@ -133,8 +136,50 @@ ZPLG_COLORS=(
 -zplugin-shadow-bindkey() {
     _zplugin-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
 
+    # Remember to perform the actual bindkey call
+    typeset -a pos
+    pos=( "$@" )
+
+    # Check if we have regular bindkey call, i.e.
+    # with no options or with -s, plus possible -M
+    # option
+    local -A optsA
+    zparseopts -A optsA -D ${(s::):-lLdDANmrseva} "M:"
+
+    local -a opts
+    opts=( "${(k)optsA[@]}" )
+
+    if [[ "$#opts" -eq "0" ||
+        ( "$#opts" -eq "1" && ${opts[1]} = "-M" ) ||
+        ( "$#opts" -eq "1" && ${opts[1]} = "-s" ) ||
+        ( "$#opts" -le "2" && "${opts[(r)-M]}" = "-M" && "${opts[(r)-s]}" = "-s" )
+    ]]; then
+        local string="${(q)1}" widget="${(q)2}"
+        local quoted
+
+        # "-M map" given?
+        if [ "${opts[(r)-M]}" = "-M" ]; then
+            local Mopt="-M"
+            local Marg="${optsA[-M]}"
+
+            Mopt="${(q)Mopt}"
+            Marg="${(q)Marg}"
+
+            quoted="$string $widget $Mopt $Marg"
+        else
+            quoted="$string $widget"
+        fi
+
+        quoted="${(q)quoted}"
+
+        # Remember the zstyle
+        ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+    else
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options $opts[*]"
+    fi
+
     # Actual bindkey
-    builtin bindkey "$@"
+    builtin bindkey "${pos[@]}"
 }
 
 -zplugin-shadow-setopt() {
@@ -165,7 +210,7 @@ ZPLG_COLORS=(
         # Remember the zstyle
         ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
     else
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning last zstyle used non-typical options: $opts[*]"
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: $opts[*]"
     fi
 
     # Actual zstyle
@@ -300,7 +345,7 @@ _zplugin-add-report() {
     local txt="$2"
 
     local keyword="${txt%% *}"
-    if [[ "$keyword" = "Failed" || "$keyword" = "Warning" ]]; then
+    if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
         keyword="$ZPLG_COLORS[error]$keyword$reset_color"
     else
         keyword="$ZPLG_COLORS[keyword]$keyword$reset_color"
@@ -437,8 +482,8 @@ _zplugin-load () {
 # $1 - user/plugin (i.e. uspl2 format, not uspl which is user--plugin)
 #
 # 1. Unfunction functions created by plugin
-# 2. Restore bindkeys TODO
-# 3. Delete created Zstyles TODO
+# 2. Delete bindkeys
+# 3. Delete created Zstyles
 # 4. Restore options TODO
 # 5. Restore (or just unalias?) aliases TODO
 # 6. Forget the plugin
@@ -463,6 +508,35 @@ _zplugin-unload() {
         [ -z "$f" ] && continue
         echo "Deleting function $f"
         unfunction "$f"
+    done
+
+    #
+    # 2. Delete done bindkeys
+    #
+
+    typeset -a string_widget
+    string_widget=( "${(z)ZPLG_BINDKEYS[$uspl2]}" )
+    local sw
+    for sw in "${(on)string_widget[@]}"; do
+        [ -z "$sw" ] && continue
+        # Remove one level of quoting to split using (z)
+        sw="${(Q)sw}"
+        typeset -a sw_arr
+        sw_arr=( "${(z)sw}" )
+
+        # Remove one level of quoting to pass to bindkey
+        sw_arr[1]="${(Q)sw_arr[1]}"
+        sw_arr[2]="${(Q)sw_arr[2]}"
+        sw_arr[3]="${(Q)sw_arr[3]}"
+        sw_arr[4]="${(Q)sw_arr[4]}"
+
+        if [ "${sw_arr[3]}" = "-M" ]; then
+            echo "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} mapped to ${sw_arr[4]}"
+            bindkey -M "${sw_arr[4]}" -r "${sw_arr[1]}"
+        else
+            echo "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]}"
+            bindkey -r "${sw_arr[1]}"
+        fi
     done
 
     #
