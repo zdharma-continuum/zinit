@@ -458,6 +458,13 @@ zplugin-show-registered-plugins() {
     done
 }
 
+_zplugin_exists() {
+    local uspl2="$1"
+    if [ "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" != "$uspl2" ]; then
+        return 1
+    fi
+    return 0
+}
 # $1 - plugin name, possibly github path
 _zplugin-load () {
     local github_path="$1"
@@ -492,7 +499,7 @@ _zplugin-unload() {
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
     local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
 
-    if [ "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" != "$uspl2" ]; then
+    if ! _zplugin_exists "$uspl2"; then
         echo "Plugin $uspl2col not registered"
         return 1
     fi
