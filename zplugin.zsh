@@ -354,37 +354,8 @@ _zplugin-add-report() {
     ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
 }
 
-zplugin-show-report() {
-    local user="$1" plugin="$2"
-    [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
-
-    # Print title
-    printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
-            "$ZPLG_COLORS[uname]$user$reset_color"\
-            "$ZPLG_COLORS[pname]$plugin$reset_color"
-
-    # Print "----------"
-    local msg="Plugin report for $user/$plugin"
-    echo $ZPLG_COLORS[bar]"${(r:$#msg::-:)tmp__}"$reset_color
-
-    # Print report gathered via shadowing
-    print $ZPLG_REPORTS[${user}/${plugin}]
-
-    # Print report gathered via $functions-diffing
-    _zplugin-format-functions "$user/$plugin"
-    echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
-}
-
-zplugin-show-all-reports() {
-    local i
-    for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        local user="${i%%/*}" plugin="${i#*/}"
-        zplugin-show-report "$user" "$plugin"
-    done
-}
-
 #
-# ZPlugin functions
+# ZPlugin internal functions
 #
 
 _zplugin-prepare-home() {
@@ -415,6 +386,14 @@ _zplugin-setup-plugin-dir() {
 _zplugin-register-plugin() {
     [ -z "ZPLG_REPORTS[${user}/${plugin}]" ] && ZPLG_REPORTS[${user}/${plugin}]=""
     ZPLG_REGISTERED_PLUGINS+="${1}/${2}"
+}
+
+_zplugin_exists() {
+    local uspl2="$1"
+    if [ "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" != "$uspl2" ]; then
+        return 1
+    fi
+    return 0
 }
 
 _zplugin-load-plugin() {
@@ -451,6 +430,39 @@ _zplugin-load-plugin() {
     _zplugin-diff-functions "$user/$plugin" diff
 }
 
+#
+# User-exposed functions
+#
+
+zplugin-show-report() {
+    local user="$1" plugin="$2"
+    [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
+
+    # Print title
+    printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
+            "$ZPLG_COLORS[uname]$user$reset_color"\
+            "$ZPLG_COLORS[pname]$plugin$reset_color"
+
+    # Print "----------"
+    local msg="Plugin report for $user/$plugin"
+    echo $ZPLG_COLORS[bar]"${(r:$#msg::-:)tmp__}"$reset_color
+
+    # Print report gathered via shadowing
+    print $ZPLG_REPORTS[${user}/${plugin}]
+
+    # Print report gathered via $functions-diffing
+    _zplugin-format-functions "$user/$plugin"
+    echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
+}
+
+zplugin-show-all-reports() {
+    local i
+    for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
+        local user="${i%%/*}" plugin="${i#*/}"
+        zplugin-show-report "$user" "$plugin"
+    done
+}
+
 zplugin-show-registered-plugins() {
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
         local user="${i%%/*}" plugin="${i#*/}"
@@ -458,13 +470,6 @@ zplugin-show-registered-plugins() {
     done
 }
 
-_zplugin_exists() {
-    local uspl2="$1"
-    if [ "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" != "$uspl2" ]; then
-        return 1
-    fi
-    return 0
-}
 # $1 - plugin name, possibly github path
 _zplugin-load () {
     local github_path="$1"
