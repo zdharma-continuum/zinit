@@ -490,7 +490,7 @@ _zplugin-load-plugin() {
 # User-exposed functions {{{
 #
 
-zplugin-show-report() {
+_zplugin-show-report() {
     local user="$1" plugin="$2"
     [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
 
@@ -513,15 +513,15 @@ zplugin-show-report() {
     echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 }
 
-zplugin-show-all-reports() {
+_zplugin-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
         local user="${i%%/*}" plugin="${i#*/}"
-        zplugin-show-report "$user" "$plugin"
+        _zplugin-show-report "$user" "$plugin"
     done
 }
 
-zplugin-show-registered-plugins() {
+_zplugin-show-registered-plugins() {
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
         local user="${i%%/*}" plugin="${i#*/}"
         printf "%s/%s\n" $ZPLG_COLORS[uname]$user$reset_color $ZPLG_COLORS[pname]$plugin$reset_color
@@ -546,7 +546,7 @@ _zplugin-load () {
     # are entries in ZPLG_REGISTERED_PLUGINS array
     _zplugin-register-plugin "$user" "$plugin"
     _zplugin-load-plugin "$user" "$plugin"
-    #zplugin-show-report "$user" "$plugin"
+    #_zplugin-show-report "$user" "$plugin"
 }
 
 # $1 - user/plugin (i.e. uspl2 format, not uspl which is user--plugin)
@@ -565,7 +565,7 @@ _zplugin-unload() {
     _zplugin_exists_message "$uspl2" || return 1
 
     # Store report of the plugin in variable LASTREPORT
-    LASTREPORT=`zplugin-show-report "$uspl2"`
+    LASTREPORT=`_zplugin-show-report "$uspl2"`
 
     #
     # 1. Unfunction
@@ -688,6 +688,23 @@ zplugin() {
            ;;
        (unload)
            _zplugin-unload "$2"
+           ;;
+       (report)
+           _zplugin-show-report "$2"
+           ;;
+       (all-reports)
+           _zplugin-show-all-reports
+           ;;
+       (loaded|registered)
+           _zplugin-show-registered-plugins
+           ;;
+       (-h|--help)
+           echo "$ZPLG_COLORS[p]Usage$reset_color:
+load $ZPLG_COLORS[pname]{plugin-name}$reset_color   - load plugin
+unload $ZPLG_COLORS[pname]{plugin-name}$reset_color - unload plugin
+report $ZPLG_COLORS[pname]{plugin-name}$reset_color - show plugin's report
+all-reports          - show all plugin reports
+loaded|registered    - show what plugins are loaded"
            ;;
        (*)
            ;;
