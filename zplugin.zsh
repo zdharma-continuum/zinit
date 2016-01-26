@@ -239,6 +239,7 @@ ZPLG_COLORS=(
             [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
         fi
 
+        quoted="${quoted//nono/}"
         quoted="${(q)quoted}"
         ZPLG_OPTIONS[$ZPLG_CUR_USPL2]+="$quoted "
     done
