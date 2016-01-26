@@ -230,7 +230,7 @@ ZPLG_COLORS=(
                 [[ -n ${-[(r)$option]} ]] && quoted="-$option" || quoted="+$option"
             fi
         else
-            # TODO: detect inproper prefix
+            [ -n "$prefix" ] && _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: incorrect option ($prefix$option)"
             # Store current state of option
             [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
         fi
