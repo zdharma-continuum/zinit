@@ -196,7 +196,7 @@ ZPLG_COLORS=(
     pos=( "$@" )
 
     local opt quoted prefix option
-    integer next_is_option=0
+    integer next_is_option=0 was_minus_o=0
 
     for opt in "$@"; do
         if (( next_is_option > 0 )); then
@@ -215,6 +215,8 @@ ZPLG_COLORS=(
                     # Store current state of option given right after -o
                     [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
                 else
+                    # Zsh doesn't support "-o option" after "option" in single setopt call
+                    was_minus_o=1
                     [ "$prefix" = "-" ] && next_is_option=1 || next_is_option=2
                     continue
                 fi
@@ -230,6 +232,8 @@ ZPLG_COLORS=(
                 [[ -n ${-[(r)$option]} ]] && quoted="-$option" || quoted="+$option"
             fi
         else
+            (( was_minus_o )) && _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: options given in one line"\
+                                                                       "in a way setopt doesn't support"
             [ -n "$prefix" ] && _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: incorrect option ($prefix$option)"
             # Store current state of option
             [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
