@@ -164,6 +164,8 @@ ZPLG_COLORS=(
 
         # Remember the zstyle
         ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
+    else
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning last zstyle used non-typical options: $opts[*]"
     fi
 
     # Actual zstyle
@@ -298,7 +300,7 @@ _zplugin-add-report() {
     local txt="$2"
 
     local keyword="${txt%% *}"
-    if [ "$keyword" = "Failed" ]; then
+    if [[ "$keyword" = "Failed" || "$keyword" = "Warning" ]]; then
         keyword="$ZPLG_COLORS[error]$keyword$reset_color"
     else
         keyword="$ZPLG_COLORS[keyword]$keyword$reset_color"
