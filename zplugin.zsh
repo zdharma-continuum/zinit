@@ -703,7 +703,7 @@ _zplugin-unload() {
         # Remove one level of quoting added when concatenating
         opt="${(Q)opt}"
 
-        echo "Setting option $opt"
+        echo "Setting option ${(U)opt}"
         setopt "$opt"
     done
 
