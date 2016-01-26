@@ -564,6 +564,9 @@ _zplugin-unload() {
 
     _zplugin_exists_message "$uspl2" || return 1
 
+    # Store report of the plugin in variable LASTREPORT
+    LASTREPORT=`zplugin-show-report "$uspl2"`
+
     #
     # 1. Unfunction
     #
@@ -667,6 +670,8 @@ _zplugin-unload() {
     echo "Unregistering plugin $uspl2col"
     local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
     ZPLG_REGISTERED_PLUGINS[$idx]=()
+
+    echo "Plugins report saved to \$LASTREPORT"
 }
 
 # }}}
