@@ -200,6 +200,7 @@ ZPLG_COLORS=(
 
     for opt in "$@"; do
         if (( next_is_option > 0 )); then
+            next_is_option=0
             prefix=""
             option="$opt"
         else
