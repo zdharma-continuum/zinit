@@ -396,6 +396,19 @@ _zplugin_exists() {
     return 0
 }
 
+_zplugin_exists_message() {
+    local uspl2="$1"
+    if ! _zplugin_exists "$uspl2"; then
+        local user="${1%%/*}" plugin="${1#*/}"
+        local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
+        local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
+
+        echo "$ZPLG_COLORS[error]No such plugin$reset_color $uspl2col"
+        return 1
+    fi
+    return 0
+}
+
 _zplugin-load-plugin() {
     local user="$1" plugin="$2"
     ZPLG_CUR_USER="$user"
@@ -438,10 +451,7 @@ zplugin-show-report() {
     local user="$1" plugin="$2"
     [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
 
-    if ! _zplugin_exists "$uspl2"; then
-        echo "$ZPLG_COLORS[error]No such plugin$reset_color $uspl2col"
-        return 1
-    fi
+    _zplugin_exists_message "$user/$plugin" || return 1
 
     # Print title
     printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
@@ -509,10 +519,7 @@ _zplugin-unload() {
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
     local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
 
-    if ! _zplugin_exists "$uspl2"; then
-        echo "Plugin $uspl2col not registered"
-        return 1
-    fi
+    _zplugin_exists_message "$uspl2" || return 1
 
     #
     # 1. Unfunction
