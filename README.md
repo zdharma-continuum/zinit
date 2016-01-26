@@ -1,3 +1,5 @@
+![zew logo](http://imageshack.com/a/img911/3904/KeuuFk.png)
+
 # Zplugin
 
 Zplugin in action:
