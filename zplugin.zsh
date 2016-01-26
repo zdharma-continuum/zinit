@@ -57,6 +57,9 @@ typeset -gAH ZPLG_ZSTYLES
 # Holds concatenated bindkeys declared by each plugin
 typeset -gAH ZPLG_BINDKEYS
 
+# Holds concatenated aliases declared by each plugin
+typeset -gAH ZPLG_ALIASES
+
 #
 # End of global variable declarations
 #
@@ -220,8 +223,40 @@ ZPLG_COLORS=(
 -zplugin-shadow-alias() {
     _zplugin-add-report "$ZPLG_CUR_USPL2" "Alias $*"
 
+    # Remember to perform the actual alias call
+    typeset -a pos
+    pos=( "$@" )
+
+    local -a opts
+    zparseopts -a opts -D ${(s::):-gs}
+
+    local a quoted tmp
+    for a in "$@"; do
+        local aname="${a%%=*}"
+        local avalue="${a#*=}"
+
+        aname="${(q)aname}"
+        bname="${(q)avalue}"
+
+        if [ "${opts[(r)-s]}" = "-s" ]; then
+            tmp="-s"
+            tmp="${(q)tmp}"
+            quoted="$aname $bname $tmp"
+        elif [ "${opts[(r)-g]}" = "-g" ]; then
+            tmp="-g"
+            tmp="${(q)tmp}"
+            quoted="$aname $bname $tmp"
+        else
+            quoted="$aname $bname"
+        fi
+
+        quoted="${(q)quoted}"
+
+        ZPLG_ALIASES[$ZPLG_CUR_USPL2]+="$quoted "
+    done
+
     # Actual alias
-    builtin alias "$@"
+    builtin alias "${pos[@]}"
 }
 
 -zplugin-shadow-zle() {
@@ -520,7 +555,7 @@ _zplugin-load () {
 # 2. Delete bindkeys
 # 3. Delete created Zstyles
 # 4. Restore options TODO
-# 5. Restore (or just unalias?) aliases TODO
+# 5. Restore (or just unalias?) aliases
 # 6. Forget the plugin
 _zplugin-unload() {
     local uspl2="$1" user="${1%%/*}" plugin="${1#*/}"
@@ -592,6 +627,37 @@ _zplugin-unload() {
         echo "Deleting zstyle ${ps_arr[1]} ${ps_arr[2]}"
 
         zstyle -d "${ps_arr[1]}" "${ps_arr[2]}"
+    done
+
+    #
+    # 5. Delete aliases
+    #
+
+    typeset -a aname_avalue
+    aname_avalue=( "${(z)ZPLG_ALIASES[$uspl2]}" )
+    local nv
+    for nv in "${(on)aname_avalue[@]}"; do
+        [ -z "$nv" ] && continue
+        # Remove one level of quoting to split using (z)
+        nv="${(Q)nv}"
+        typeset -a nv_arr
+        nv_arr=( "${(z)nv}" )
+
+        # Remove one level of quoting to pass to unalias
+        nv_arr[1]="${(Q)nv_arr[1]}"
+        nv_arr[2]="${(Q)nv_arr[2]}"
+        nv_arr[3]="${(Q)nv_arr[3]}"
+
+        if [ "${nv_arr[3]}" = "-s" ]; then
+            echo "Removing suffix alias ${nv_arr[1]}=${nv_arr[2]}"
+            unalias -s "${nv_arr[1]}"
+        elif [ "${nv_arr[3]}" = "-g" ]; then
+            echo "Removing global alias ${nv_arr[1]}=${nv_arr[2]}"
+            unalias "${(q)nv_arr[1]}"
+        else
+            echo "Removing alias ${nv_arr[1]}=${nv_arr[2]}"
+            unalias "${nv_arr[1]}"
+        fi
     done
 
     #
