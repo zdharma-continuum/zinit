@@ -209,9 +209,15 @@ ZPLG_COLORS=(
         fi
 
         if [[ "$prefix" = "-" || "$prefix" = "+" ]]; then
-            if [ "$option" = "o" ]; then
-                [ "$prefix" = "-" ] && next_is_option=1 || next_is_option=2
-                continue
+            if [ "$option[1]" = "o" ]; then
+                if [ "$#option" -gt 1 ]; then
+                    option="${option[2,-1]}"
+                    # Store current state of option given right after -o
+                    [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
+                else
+                    [ "$prefix" = "-" ] && next_is_option=1 || next_is_option=2
+                    continue
+                fi
             else
                 # Short option format?
                 if [ "$#option" != "1" ]; then
