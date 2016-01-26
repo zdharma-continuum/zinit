@@ -381,7 +381,8 @@ _zplugin-format-functions() {
 
 _zplugin-add-report() {
     local uspl2="$1"
-    local txt="$2"
+    shift
+    local txt="$*"
 
     local keyword="${txt%% *}"
     if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
