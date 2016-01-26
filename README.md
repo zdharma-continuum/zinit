@@ -47,6 +47,6 @@ Deleting function zca-usetty-wrapper
 Deleting function zca-widget
 Deleting bindkey ^T zca-widget
 Unregistering plugin psprint/zsh-cmd-architect
-Plugins report saved to $LASTREPORT
+Plugin's report saved to $LASTREPORT
 ```
 

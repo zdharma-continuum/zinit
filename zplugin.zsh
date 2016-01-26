@@ -746,7 +746,7 @@ _zplugin-unload() {
     local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
     ZPLG_REGISTERED_PLUGINS[$idx]=()
 
-    echo "Plugins report saved to \$LASTREPORT"
+    echo "Plugin's report saved to \$LASTREPORT"
 }
 
 # }}}
