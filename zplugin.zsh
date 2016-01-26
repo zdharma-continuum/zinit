@@ -79,7 +79,7 @@ ZPLG_COLORS=(
 )
 
 #
-# Shadowing-related functions (names of substitute functions start with -)
+# Shadowing-related functions (names of substitute functions start with -) {{{
 #
 
 -zplugin_reload_and_run () {
@@ -246,8 +246,10 @@ _zplugin-shadow-off() {
     unalias     autoload bindkey setopt zstyle alias zle
 }
 
+# }}}
+
 #
-# Diff functions
+# Diff functions {{{
 #
 
 # Can remember current $functions twice, and compute the
@@ -336,8 +338,10 @@ _zplugin-format-functions() {
     (( COLUMNS >= (longest+1)*2-1 && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
 }
 
+# }}}
+
 #
-# Report functions
+# Report functions {{{
 #
 
 _zplugin-add-report() {
@@ -354,8 +358,10 @@ _zplugin-add-report() {
     ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
 }
 
+# }}}
+
 #
-# ZPlugin internal functions
+# ZPlugin internal functions {{{
 #
 
 _zplugin-prepare-home() {
@@ -443,8 +449,10 @@ _zplugin-load-plugin() {
     _zplugin-diff-functions "$user/$plugin" diff
 }
 
+# }}}
+
 #
-# User-exposed functions
+# User-exposed functions {{{
 #
 
 zplugin-show-report() {
@@ -594,6 +602,8 @@ _zplugin-unload() {
     local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
     ZPLG_REGISTERED_PLUGINS[$idx]=()
 }
+
+# }}}
 
 # Main function with subcommands:
 # - load
