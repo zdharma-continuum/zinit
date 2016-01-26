@@ -438,6 +438,11 @@ zplugin-show-report() {
     local user="$1" plugin="$2"
     [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
 
+    if ! _zplugin_exists "$uspl2"; then
+        echo "$ZPLG_COLORS[error]No such plugin$reset_color $uspl2col"
+        return 1
+    fi
+
     # Print title
     printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
             "$ZPLG_COLORS[uname]$user$reset_color"\
