@@ -415,6 +415,7 @@ _zplugin-format-functions() {
     local answer=""
     integer count=1
     for f in "${(on)func[@]}"; do
+        [ -z "$f" ] && continue
         if (( COLUMNS >= (longest+1)*2-1 )); then
             if (( count ++ % 2 == 0 )); then
                 answer+=`printf "%-$(( longest + right ))s" "${(Q)f}"`$'\n'
