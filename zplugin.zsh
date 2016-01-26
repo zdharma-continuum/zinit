@@ -633,6 +633,7 @@ _zplugin-unload() {
     local f
     for f in "${(on)func[@]}"; do
         [ -z "$f" ] && continue
+        f="${(Q)f}"
         echo "Deleting function $f"
         unfunction "$f"
     done
