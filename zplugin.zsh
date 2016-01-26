@@ -60,6 +60,9 @@ typeset -gAH ZPLG_BINDKEYS
 # Holds concatenated aliases declared by each plugin
 typeset -gAH ZPLG_ALIASES
 
+# Holds concatenated options declared by each plugin
+typeset -gAH ZPLG_OPTIONS
+
 #
 # End of global variable declarations
 #
@@ -188,8 +191,43 @@ ZPLG_COLORS=(
 -zplugin-shadow-setopt() {
     _zplugin-add-report "$ZPLG_CUR_USPL2" "Setopt $*"
 
+    # Remember to perform the actual setopt call
+    typeset -a pos
+    pos=( "$@" )
+
+    local opt quoted prefix option
+    integer next_is_option=0
+
+    for opt in "$@"; do
+        if (( next_is_option > 0 )); then
+            prefix=""
+            option="$opt"
+        else
+            prefix="${opt%%(#m)[a-zA-Z0-9_ \t]##}"
+            option="$MATCH"
+        fi
+
+        if [[ "$prefix" = "-" || "$prefix" = "+" ]]; then
+            if [ "${option[1]}" = "o" ]; then
+                [ "$prefix" = "-" ] && next_is_option=1 || next_is_option=2
+                continue
+            else
+                # Unsupported short option format
+                _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported (for reversion) short"\
+                                                      "option format ($prefix$option)"
+                continue
+            fi
+        fi
+
+        # Store current state of option
+        [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
+        quoted="${(q)quoted}"
+
+        ZPLG_OPTIONS[$ZPLG_CUR_USPL2]+="$quoted "
+    done
+
     # Actual setopt
-    builtin setopt "$@"
+    builtin setopt "${pos[@]}"
 }
 
 -zplugin-shadow-zstyle() {
@@ -555,7 +593,7 @@ _zplugin-load () {
 # 1. Unfunction functions created by plugin
 # 2. Delete bindkeys
 # 3. Delete created Zstyles
-# 4. Restore options TODO
+# 4. Restore options
 # 5. Restore (or just unalias?) aliases
 # 6. Forget the plugin
 _zplugin-unload() {
@@ -631,6 +669,22 @@ _zplugin-unload() {
         echo "Deleting zstyle ${ps_arr[1]} ${ps_arr[2]}"
 
         zstyle -d "${ps_arr[1]}" "${ps_arr[2]}"
+    done
+
+    #
+    # 4. Restore options
+    #
+
+    typeset -a options
+    options=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
+    local opt
+    for opt in "${(on)options[@]}"; do
+        [ -z "$opt" ] && continue
+        # Remove one level of quoting added when concatenating
+        opt="${(Q)opt}"
+
+        echo "Setting option $opt"
+        setopt "$opt"
     done
 
     #
