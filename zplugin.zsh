@@ -208,21 +208,27 @@ ZPLG_COLORS=(
         fi
 
         if [[ "$prefix" = "-" || "$prefix" = "+" ]]; then
-            if [ "${option[1]}" = "o" ]; then
+            if [ "$option" = "o" ]; then
                 [ "$prefix" = "-" ] && next_is_option=1 || next_is_option=2
                 continue
             else
-                # Unsupported short option format
-                _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported (for reversion) short"\
-                                                      "option format ($prefix$option)"
-                continue
+                # Short option format?
+                if [ "$#option" != "1" ]; then
+                    # Unsupported option format
+                    _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported option format ($prefix$option)"
+                    continue
+                fi
+
+                # Store current state of option given in short format
+                [[ -n ${-[(r)$option]} ]] && quoted="-$option" || quoted="+$option"
             fi
+        else
+            # TODO: detect inproper prefix
+            # Store current state of option
+            [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
         fi
 
-        # Store current state of option
-        [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
         quoted="${(q)quoted}"
-
         ZPLG_OPTIONS[$ZPLG_CUR_USPL2]+="$quoted "
     done
 
