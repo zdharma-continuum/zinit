@@ -538,6 +538,30 @@ _zplugin_exists_message() {
     return 0
 }
 
+# Convert plugin name from "user--plugin" to "user/plugin"
+_zplugin_uspl_to_uspl2() {
+    local user="${1%%--*}" plugin="${1#*--}"
+    if [ "$user" = "$plugin" ]; then
+        REPLY="$plugin"
+    else
+        REPLY="$user/$plugin"
+    fi
+}
+
+_zplugin_colorify_uspl2() {
+    local user="${1%%/*}" plugin="${1#*/}"
+    local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
+    local uspl2col
+
+    if [ "$user" = "$plugin" ]; then
+        uspl2col="${pcol}${plugin}$reset_color"
+    else
+        uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
+    fi
+
+    REPLY="$uspl2col"
+}
+
 _zplugin-load-plugin() {
     local user="$1" plugin="$2"
     ZPLG_CUR_USER="$user"
@@ -577,6 +601,33 @@ _zplugin-load-plugin() {
 #
 # User-exposed functions {{{
 #
+
+_zplugin-show-completions() {
+    typeset -a completions
+    local cpath c in_plugin_path uspl2
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+
+    # Find longest completion name
+    integer longest=0
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        c="${c#_}"
+        [ "$#c" -gt "$longest" ] && longest="$#c"
+    done
+
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        c="${c#_}"
+        in_plugin_path="${cpath:A}"
+        in_plugin_path="${in_plugin_path:h}"
+        in_plugin_path="${in_plugin_path:t}"
+        _zplugin_uspl_to_uspl2 "$in_plugin_path"
+        _zplugin_colorify_uspl2 "$REPLY"
+        uspl2col="$REPLY"
+
+        print "${(r:longest+1:: :)c} $uspl2col"
+    done
+}
 
 _zplugin-show-report() {
     local user="$1" plugin="$2"
@@ -808,13 +859,17 @@ zplugin() {
        (loaded|registered)
            _zplugin-show-registered-plugins
            ;;
+       (comp|completions)
+           _zplugin-show-completions
+           ;;
        (-h|--help|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
 load $ZPLG_COLORS[pname]{plugin-name}$reset_color   - load plugin
 unload $ZPLG_COLORS[pname]{plugin-name}$reset_color - unload plugin
 report $ZPLG_COLORS[pname]{plugin-name}$reset_color - show plugin's report
 all-reports          - show all plugin reports
-loaded|registered    - show what plugins are loaded"
+loaded|registered    - show what plugins are loaded
+comp|completions     - list completions in use"
            ;;
        (*)
            echo "Unknown command \`$1' (try \`help' to get usage information)"
