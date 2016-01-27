@@ -738,6 +738,26 @@ _zplugin-show-registered-plugins() {
     done
 }
 
+_zplugin-check-comp-consistency() {
+    local cfile="$1" bkpfile="$2"
+    integer error="$3"
+
+    # bkpfile must be a simlink
+    if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
+        echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a simlink$reset_color"
+        error=1
+    fi
+
+    # cfile must be a simlink
+    if [[ -e "$cfile" && ! -L "$cfile" ]]; then
+        echo "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a simlink$reset_color"
+        error=1
+    fi
+
+    # Tell user that he can manually modify but should do it right
+    (( error )) && echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+}
+
 _zplugin-cenable() {
     local c="$1"
     c="${c#_}"
@@ -755,31 +775,15 @@ _zplugin-cenable() {
     if [ -e "$cfile" ]; then
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
 
-        # Verify correctness of cfile, bkpfile
-        integer error=0
-
-        # cfile must be a simlink
-        if [ ! -L "$cfile" ]; then
-            echo "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a simlink$reset_color"
-            error=1
-        fi
-
         # Backup file shouldn't exist if a completion is enabled
         if [ -e "$bkpfile" ]; then
             echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' exists$reset_color"
-            # If it is there, then at least it should be a simlink
-            if [ ! -L "$bkpfile" ]; then
-                echo "$ZPLG_COLORS[error]Warning: and it isn't a simlink$reset_color"
-            fi
-            error=1
         fi
 
-        # Tell user that he can manually modify
-        # but should do it right
-        (( error )) && echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
-
+        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         return 0
     fi
+    _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
 
     # Enable
     mv >/dev/null "$bkpfile" "$cfile" # move completion's backup file created when disabling
@@ -813,23 +817,21 @@ _zplugin-cdisable() {
     if [[ ! -e "$cfile" ]]; then
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already disabled"
 
-        # Verify correctness of bkpfile
-        if [ ! -L "$bkpfile" ]; then
-            echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a simlink$reset_color"
-            echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
-        fi
+        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 0
     fi
 
     # No disable, but bkpfile exists?
     if [ -e "$bkpfile" ]; then
         echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
-        echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         rm >/dev/null -f "$bkpfile"
+    else
+        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
     fi
 
     # Disable
-    mv >/dev/null "$cfile" "$bkpfile" # backup completion's file
+    mv >/dev/null "$cfile" "$bkpfile"
 
     # Prepare readlink command for establishing completion's owner
     _zplugin-prepare-readline
