@@ -604,8 +604,18 @@ _zplugin-load-plugin() {
 
 _zplugin-show-completions() {
     typeset -a completions
-    local cpath c in_plugin_path uspl2
     completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+
+    # :A and readlink will be used, then readlink's output if
+    # results differ. This allows to simlink git repositories
+    # into .zplugin/plugins and have username here in the listing
+    # (:A will read the link "twice" and give the final repository
+    # directory, possibly without username in the uspl format;
+    # readlink will read the link "once")
+    local readlink_cmd=":"
+    if type readlink 2>/dev/null 1>&2; then
+        readlink_cmd="readlink"
+    fi
 
     # Find longest completion name
     integer longest=0
@@ -615,10 +625,17 @@ _zplugin-show-completions() {
         [ "$#c" -gt "$longest" ] && longest="$#c"
     done
 
+    local cpath c in_plugin_path uspl2 tmp
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
         c="${c#_}"
+
+        # Try to go not too deep into resolving the simlink,
+        # to have the name as it is in .zplugin/plugins
+        tmp=$($readlink_cmd "$cpath")
         in_plugin_path="${cpath:A}"
+        [[ -n "$tmp" && "$in_plugin_path" != "$tmp" ]] && in_plugin_path="$tmp"
+
         in_plugin_path="${in_plugin_path:h}"
         in_plugin_path="${in_plugin_path:t}"
         _zplugin_uspl_to_uspl2 "$in_plugin_path"
