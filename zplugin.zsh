@@ -135,7 +135,10 @@ ZPLG_COLORS=(
     local PLUGIN_DIR="$ZPLG_HOME/plugins/${ZPLG_CUR_USPL}"
     for func
     do
-        functions[$func]="-zplugin_reload_and_run ${(q)PLUGIN_DIR} ${(qq)opts} $func "'"$@"'
+        eval "function $func {
+            -zplugin_reload_and_run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
+        }'
+        #functions[$func]="-zplugin_reload_and_run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
     done
 }
 
