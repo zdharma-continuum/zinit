@@ -14,6 +14,7 @@ typeset -gAH ZPLG_REPORTS
 
 typeset -gH ZPLG_HOME="$HOME/.zplugin"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
+typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
 typeset -gH ZPLG_HOME_READY
 
 #
@@ -136,7 +137,7 @@ ZPLG_COLORS=(
     done
 
     # Do ZPLUGIN's "native" autoloads
-    local PLUGIN_DIR="$ZPLG_HOME/plugins/${ZPLG_CUR_USPL}"
+    local PLUGIN_DIR="$ZPLG_PLUGINS_DIR/${ZPLG_CUR_USPL}"
     for func
     do
         eval "function $func {
