@@ -614,7 +614,7 @@ _zplugin-show-completions() {
     typeset -a completions
     completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
 
-    # :A and readlink will be used, then readlink's output if
+    # Both :A and readlink will be used, then readlink's output if
     # results differ. This allows to simlink git repositories
     # into .zplugin/plugins and have username here in the listing
     # (:A will read the link "twice" and give the final repository
@@ -634,9 +634,21 @@ _zplugin-show-completions() {
     done
 
     local cpath c in_plugin_path uspl2 tmp
+    integer disabled
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
         c="${c#_}"
+
+        # Is completion disabled? (i.e. zero size file)
+        if [ ! -s "$cpath" ]; then
+            disabled=1
+            # We have to change "cpath" to point to the
+            # completion's backup file (without "_" in name)
+            # to be able to resolve user and plugin
+            [ -f "${cpath:h}/$c" ] && cpath="${cpath:h}/$c"
+        else
+            disabled=0
+        fi
 
         # Try to go not too deep into resolving the simlink,
         # to have the name as it is in .zplugin/plugins
@@ -644,13 +656,24 @@ _zplugin-show-completions() {
         in_plugin_path="${cpath:A}"
         [[ -n "$tmp" && "$in_plugin_path" != "$tmp" ]] && in_plugin_path="$tmp"
 
-        in_plugin_path="${in_plugin_path:h}"
-        in_plugin_path="${in_plugin_path:t}"
+        if [ "$in_plugin_path" != "$cpath" ]; then
+            # Get the user--plugin part of path - it's right before $c
+            in_plugin_path="${in_plugin_path:h}"
+            in_plugin_path="${in_plugin_path:t}"
+        else
+            # readlink and :A have nothing
+            in_plugin_path="[unknown]"
+        fi
+
+        # Convert user--plugin into user/plugin
         _zplugin_uspl_to_uspl2 "$in_plugin_path"
         _zplugin_colorify_uspl2 "$REPLY"
         uspl2col="$REPLY"
 
-        print "${(r:longest+1:: :)c} $uspl2col"
+        # Output line of text
+        print -n "${(r:longest+1:: :)c} $uspl2col"
+        (( disabled )) && print -n " $ZPLG_COLORS[error][disabled]$reset_color"
+        print
     done
 }
 
