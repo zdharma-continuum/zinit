@@ -570,6 +570,38 @@ _zplugin_colorify_uspl2() {
     REPLY="$uspl2col"
 }
 
+# Both :A and readlink will be used, then readlink's output if
+# results differ. This allows to simlink git repositories
+# into .zplugin/plugins and have username properly resolved
+# (:A will read the link "twice" and give the final repository
+# directory, possibly without username in the uspl format;
+# readlink will read the link "once")
+_zplugin-get-completion-owner() {
+    local cpath="$1"
+    local readlink_cmd="$2"
+    local in_plugin_path tmp
+
+    # Try to go not too deep into resolving the simlink,
+    # to have the name as it is in .zplugin/plugins
+    # :A goes deep, descends fully to origin directory
+    # Readlink just reads what simlink points to
+    in_plugin_path="${cpath:A}"
+    tmp=$( "$readlink_cmd" "$cpath" )
+    [ -n "$tmp" ] && in_plugin_path="$tmp"
+
+    if [ "$in_plugin_path" != "$cpath" ]; then
+        # Get the user--plugin part of path -
+        # it's right before completion file name
+        in_plugin_path="${in_plugin_path:h}"
+        in_plugin_path="${in_plugin_path:t}"
+    else
+        # readlink and :A have nothing
+        in_plugin_path="[unknown]"
+    fi
+
+    REPLY="$in_plugin_path"
+}
+
 _zplugin-load-plugin() {
     local user="$1" plugin="$2"
     ZPLG_CUR_USER="$user"
@@ -614,18 +646,14 @@ _zplugin-show-completions() {
     typeset -a completions
     completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
 
-    # Both :A and readlink will be used, then readlink's output if
-    # results differ. This allows to simlink git repositories
-    # into .zplugin/plugins and have username here in the listing
-    # (:A will read the link "twice" and give the final repository
-    # directory, possibly without username in the uspl format;
-    # readlink will read the link "once")
+    # Prepare readlink command for establishing completion's owner
     local readlink_cmd=":"
     if type readlink 2>/dev/null 1>&2; then
         readlink_cmd="readlink"
     fi
 
     # Find longest completion name
+    local cpath c
     integer longest=0
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
@@ -633,7 +661,11 @@ _zplugin-show-completions() {
         [ "$#c" -gt "$longest" ] && longest="$#c"
     done
 
-    local cpath c in_plugin_path uspl2 tmp
+    #
+    # Display - resolves owner of each completion,
+    # detects if completion is disabled 
+    #
+
     integer disabled
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
@@ -650,28 +682,17 @@ _zplugin-show-completions() {
             disabled=0
         fi
 
-        # Try to go not too deep into resolving the simlink,
-        # to have the name as it is in .zplugin/plugins
-        tmp=$($readlink_cmd "$cpath")
-        in_plugin_path="${cpath:A}"
-        [[ -n "$tmp" && "$in_plugin_path" != "$tmp" ]] && in_plugin_path="$tmp"
-
-        if [ "$in_plugin_path" != "$cpath" ]; then
-            # Get the user--plugin part of path - it's right before $c
-            in_plugin_path="${in_plugin_path:h}"
-            in_plugin_path="${in_plugin_path:t}"
-        else
-            # readlink and :A have nothing
-            in_plugin_path="[unknown]"
-        fi
+        # This will resolve completion's simlink to obtain
+        # information about the repository it comes from,
+        # i.e. about uspl - user--plugin named directory
+        _zplugin-get-completion-owner "$cpath" "$readlink_cmd"
 
         # Convert user--plugin into user/plugin
-        _zplugin_uspl_to_uspl2 "$in_plugin_path"
+        _zplugin_uspl_to_uspl2 "$REPLY"
         _zplugin_colorify_uspl2 "$REPLY"
-        uspl2col="$REPLY"
 
         # Output line of text
-        print -n "${(r:longest+1:: :)c} $uspl2col"
+        print -n "${(r:longest+1:: :)c} $REPLY"
         (( disabled )) && print -n " $ZPLG_COLORS[error][disabled]$reset_color"
         print
     done
