@@ -1039,13 +1039,13 @@ zplugin() {
            ;;
        (cdisable)
            _zplugin-cdisable "$2"
-           unfunction "_${2#_}"
+           unfunction 2>/dev/null "_${2#_}"
            echo "Running compinit..."
            compinit
            ;;
        (cenable)
            _zplugin-cenable "$2"
-           unfunction "_${2#_}"
+           unfunction 2>/dev/null "_${2#_}"
            echo "Running compinit..."
            compinit
            ;;
