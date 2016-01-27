@@ -570,6 +570,15 @@ _zplugin-colorify-uspl2() {
     REPLY="$uspl2col"
 }
 
+# Prepare readlink command, used e.g. for
+# establishing completion's owner
+_zplugin-prepare-readline() {
+    REPLY=":"
+    if type readlink 2>/dev/null 1>&2; then
+        REPLY="readlink"
+    fi
+}
+
 # Both :A and readlink will be used, then readlink's output if
 # results differ. This allows to simlink git repositories
 # into .zplugin/plugins and have username properly resolved
@@ -646,12 +655,6 @@ _zplugin-show-completions() {
     typeset -a completions
     completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
 
-    # Prepare readlink command for establishing completion's owner
-    local readlink_cmd=":"
-    if type readlink 2>/dev/null 1>&2; then
-        readlink_cmd="readlink"
-    fi
-
     # Find longest completion name
     local cpath c
     integer longest=0
@@ -682,10 +685,14 @@ _zplugin-show-completions() {
             disabled=0
         fi
 
+        # Prepare readlink command for establishing
+        # completion's owner
+        _zplugin-prepare-readline
+
         # This will resolve completion's simlink to obtain
         # information about the repository it comes from,
         # i.e. about uspl - user--plugin named directory
-        _zplugin-get-completion-owner "$cpath" "$readlink_cmd"
+        _zplugin-get-completion-owner "$cpath" "$REPLY"
 
         # Convert user--plugin into user/plugin
         _zplugin-uspl-to-uspl2 "$REPLY"
