@@ -1049,9 +1049,15 @@ zplugin() {
            ;;
        (cdisable)
            _zplugin-cdisable "$2"
+           unfunction "_${2#_}"
+           echo "Running compinit..."
+           compinit
            ;;
        (cenable)
            _zplugin-cenable "$2"
+           unfunction "_${2#_}"
+           echo "Running compinit..."
+           compinit
            ;;
        (-h|--help|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
