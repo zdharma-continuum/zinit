@@ -81,12 +81,12 @@ fi
 typeset -gAH ZPLG_COLORS
 ZPLG_COLORS=(
     "title" ""
-    "pname" $fg_bold[yellow]
-    "uname" $fg_bold[magenta]
-    "keyword" $fg_bold[green]
-    "error" $fg_bold[red]
-    "p" $fg_bold[blue]
-    "bar" $fg_bold[magenta]
+    "pname" "$fg_bold[yellow]"
+    "uname" "$fg_bold[magenta]"
+    "keyword" "$fg_bold[green]"
+    "error" "$fg_bold[red]"
+    "p" "$fg_bold[blue]"
+    "bar" "$fg_bold[magenta]"
 )
 
 #
