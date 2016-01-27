@@ -808,7 +808,7 @@ zplugin() {
        (loaded|registered)
            _zplugin-show-registered-plugins
            ;;
-       (-h|--help)
+       (-h|--help|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
 load $ZPLG_COLORS[pname]{plugin-name}$reset_color   - load plugin
 unload $ZPLG_COLORS[pname]{plugin-name}$reset_color - unload plugin
@@ -817,6 +817,7 @@ all-reports          - show all plugin reports
 loaded|registered    - show what plugins are loaded"
            ;;
        (*)
+           echo "Unknown command \`$1' (try \`help' to get usage information)"
            ;;
     esac
 
