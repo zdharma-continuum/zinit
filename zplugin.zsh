@@ -817,10 +817,10 @@ _zplugin-cdisable() {
     fi
 
     # Check if it's actually disabled
-    integer error=0
     if [ ! -s "$cfile" ]; then
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already disabled"
 
+        integer error=0
         if [ -L "$cfile" ]; then
             echo "$ZPLG_COLORS[error]Warning: completion's disable file \`${cfile:t}' is a simlink$reset_color"
             error=1
@@ -835,13 +835,17 @@ _zplugin-cdisable() {
                 error=1
             fi
         fi
+        (( error )) && echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+
         return 0
-    else
-        echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
-        rm >/dev/null -f "$bkpfile"
-        error=1
     fi
-    (( error )) && echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+
+    # No disable, but bkpfile exists?
+    if [ -e "$bkpfile" ]; then
+        echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
+        echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+        rm >/dev/null -f "$bkpfile"
+    fi
 
     # Disable
     mv >/dev/null "$cfile" "$bkpfile" # backup completion's file
