@@ -405,8 +405,9 @@ _zplugin-format-functions() {
     typeset -a func
     func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
 
-    # Get length of longest strings (in left column, and in general)
-    integer longest=0 longest_left=0 count=1
+    # Get length of longest left-right string pair,
+    # and length of longest left string
+    integer longest=0 longest_left=0 cur_left_len=0 count=1
     local f
     for f in "${(on)func[@]}"; do
         [ -z "$f" ] && continue
@@ -416,12 +417,12 @@ _zplugin-format-functions() {
         # ones that will be paded with spaces 
         if (( count ++ % 2 != 0 )); then
             [ "$#f" -gt "$longest_left" ] && longest_left="$#f"
+            cur_left_len="$#f"
+        else
+            cur_left_len+="$#f"
+            cur_left_len+=1 # For separating space
+            [ "$cur_left_len" -gt "$longest" ] && longest="$cur_left_len"
         fi
-
-        # Compute for all elements. This is when
-        # ensuring that output will fit terminal
-        # width
-        [ "$#f" -gt "$longest" ] && longest="$#f"
     done
 
     # Output in one or two columns
@@ -431,7 +432,7 @@ _zplugin-format-functions() {
         [ -z "$f" ] && continue
         f="${(Q)f}"
 
-        if (( COLUMNS >= (longest+1)*2-1 )); then
+        if (( COLUMNS >= longest )); then
             if (( count ++ % 2 != 0 )); then
                 answer+=`print -n "${(r:longest_left+1:: :)f}"`
             else
@@ -442,7 +443,7 @@ _zplugin-format-functions() {
         fi
     done
     REPLY="$answer"
-    (( COLUMNS >= (longest+1)*2-1 && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
+    (( COLUMNS >= longest && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
 }
 
 # }}}
