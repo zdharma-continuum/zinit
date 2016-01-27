@@ -6,6 +6,10 @@ Zplugin in action:
 
 ![zplugin](http://imageshack.com/a/img903/3610/lO3yDy.gif)
 
+Completion handling:
+
+![zplugin](http://imageshack.com/a/img911/4917/iXQtJw.gif)
+
 ## Introduction
 
 Example use:
