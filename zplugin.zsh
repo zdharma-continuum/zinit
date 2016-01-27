@@ -547,7 +547,7 @@ _zplugin_exists_message() {
 }
 
 # Convert plugin name from "user--plugin" to "user/plugin"
-_zplugin_uspl_to_uspl2() {
+_zplugin-uspl-to-uspl2() {
     local user="${1%%--*}" plugin="${1#*--}"
     if [ "$user" = "$plugin" ]; then
         REPLY="$plugin"
@@ -556,7 +556,7 @@ _zplugin_uspl_to_uspl2() {
     fi
 }
 
-_zplugin_colorify_uspl2() {
+_zplugin-colorify-uspl2() {
     local user="${1%%/*}" plugin="${1#*/}"
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
     local uspl2col
@@ -688,8 +688,8 @@ _zplugin-show-completions() {
         _zplugin-get-completion-owner "$cpath" "$readlink_cmd"
 
         # Convert user--plugin into user/plugin
-        _zplugin_uspl_to_uspl2 "$REPLY"
-        _zplugin_colorify_uspl2 "$REPLY"
+        _zplugin-uspl-to-uspl2 "$REPLY"
+        _zplugin-colorify-uspl2 "$REPLY"
 
         # Output line of text
         print -n "${(r:longest+1:: :)c} $REPLY"
