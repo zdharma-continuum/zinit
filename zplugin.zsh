@@ -432,10 +432,10 @@ _zplugin-format-functions() {
         f="${(Q)f}"
 
         if (( COLUMNS >= (longest+1)*2-1 )); then
-            if (( count ++ % 2 == 0 )); then
-                answer+=`print -n "$f"`$'\n'
-            else
+            if (( count ++ % 2 != 0 )); then
                 answer+=`print -n "${(r:longest_left+1:: :)f}"`
+            else
+                answer+=`print -n "$f"`$'\n'
             fi
         else
             answer+="$f"$'\n'
