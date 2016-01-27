@@ -1018,9 +1018,8 @@ _zplugin-unload() {
 
 # }}}
 
-# Main function with subcommands:
-# - load
-# - unload
+# Main function with subcommands
+alias zpl=zplugin
 zplugin() {
     _zplugin-prepare-home
 
