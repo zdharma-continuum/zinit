@@ -87,6 +87,7 @@ ZPLG_COLORS=(
     "error" "$fg_bold[red]"
     "p" "$fg_bold[blue]"
     "bar" "$fg_bold[magenta]"
+    "info" "$fg_bold[green]"
 )
 
 #
@@ -743,6 +744,64 @@ _zplugin-show-registered-plugins() {
     done
 }
 
+_zplugin-cenable() {
+    local c="$1"
+    c="${c#_}"
+
+    # This file should be regular, empty
+    local cfile="${ZPLG_COMPLETIONS_DIR}/_${c}"
+    # This file should be simlink, not empty
+    local bkpfile="${cfile:h}/$c"
+
+    if [ ! -e "$cfile" ]; then
+        echo "$ZPLG_COLORS[error]No such completion \`$c'$reset_color"
+        return 1
+    fi
+
+    # Check if it's actually disabled
+    if [ -s "$cfile" ]; then
+        echo "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
+
+        integer error=0
+        if [ ! -L "$cfile" ]; then
+            echo "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a simlink$reset_color"
+            error=1
+        fi
+        if [ -e "$bkpfile" ]; then
+            echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' exists$reset_color"
+            if [ ! -L "$bkpfile" ]; then
+                echo "$ZPLG_COLORS[error]Warning: and it isn't a simlink$reset_color"
+            fi
+            error=1
+        fi
+        (( error )) && echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+        return 0
+    fi
+
+    # Check if we have regular disable-file, and backup simlink completion-file
+    if [[ -L "$cfile" || ! -L "$bkpfile" ]]; then
+        echo "$ZPLG_COLORS[error]Incorrect state, \`${cfile:t}' isn't a regular (non-simlink)"\
+             "file and/or \`${bkpfile:t}' isn't a simlink$reset_color"
+        echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?)$reset_color"
+        return 1
+    fi
+
+    # Enable
+    rm >/dev/null -f "$cfile" # this file is empty
+    mv >/dev/null "$bkpfile" "$cfile" # move completion's backup file created when disabling
+
+    # Prepare readlink command for establishing completion's owner
+    _zplugin-prepare-readline
+    # Get completion's owning plugin
+    _zplugin-get-completion-owner "$cfile" "$REPLY"
+    # Convert user--plugin into user/plugin
+    _zplugin-uspl-to-uspl2 "$REPLY"
+    # Colorify user/plugin
+    _zplugin-colorify-uspl2 "$REPLY"
+
+    echo "Enabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
+}
+
 # $1 - plugin name, possibly github path
 _zplugin-load () {
     local github_path="$1"
@@ -935,8 +994,11 @@ zplugin() {
        (loaded|registered)
            _zplugin-show-registered-plugins
            ;;
-       (comp|completions)
+       (comp|comps|completions)
            _zplugin-show-completions
+           ;;
+       (cenable)
+           _zplugin-cenable "$2"
            ;;
        (-h|--help|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
@@ -945,7 +1007,8 @@ unload $ZPLG_COLORS[pname]{plugin-name}$reset_color - unload plugin
 report $ZPLG_COLORS[pname]{plugin-name}$reset_color - show plugin's report
 all-reports          - show all plugin reports
 loaded|registered    - show what plugins are loaded
-comp|completions     - list completions in use"
+comp[s]|completions  - list completions in use
+cenable              - enable completion"
            ;;
        (*)
            echo "Unknown command \`$1' (try \`help' to get usage information)"
