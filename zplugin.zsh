@@ -405,30 +405,37 @@ _zplugin-format-functions() {
     typeset -a func
     func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
 
-    # Get length of longest string
-    integer longest=0
+    # Get length of longest strings (in left column, and in general)
+    integer longest=0 longest_left=0 count=1
     local f
-    for f in "${func[@]}"; do
+    for f in "${(on)func[@]}"; do
+        [ -z "$f" ] && continue
         f="${(Q)f}"
+
+        # Compute for elements in left column,
+        # ones that will be paded with spaces 
+        if (( count ++ % 2 != 0 )); then
+            [ "$#f" -gt "$longest_left" ] && longest_left="$#f"
+        fi
+
+        # Compute for all elements. This is when
+        # ensuring that output will fit terminal
+        # width
         [ "$#f" -gt "$longest" ] && longest="$#f"
     done
 
-    # Test for printf bug
-    # Left justified for zsh >= 5.1, which doesn't have the bug
-    integer left=0 right=0
-    f=`printf "%-2s" "1"`
-    [ "$f" = " 1" ] && right=1 || left=1
-
     # Output in one or two columns
     local answer=""
-    integer count=1
+    count=1
     for f in "${(on)func[@]}"; do
         [ -z "$f" ] && continue
+        f="${(Q)f}"
+
         if (( COLUMNS >= (longest+1)*2-1 )); then
             if (( count ++ % 2 == 0 )); then
-                answer+=`printf "%-$(( longest + right ))s" "${(Q)f}"`$'\n'
+                answer+=`print -n "$f"`$'\n'
             else
-                answer+=`printf "%-$(( longest + left ))s" "${(Q)f}"`
+                answer+=`print -n "${(r:longest_left+1:: :)f}"`
             fi
         else
             answer+="$f"$'\n'
