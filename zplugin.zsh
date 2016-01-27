@@ -658,7 +658,7 @@ _zplugin-load-plugin() {
 
 _zplugin-show-completions() {
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
 
     # Find longest completion name
     local cpath c
@@ -677,18 +677,8 @@ _zplugin-show-completions() {
     integer disabled
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
+        [ "${c#_}" = "${c}" ] && disabled=1 || disabled=0
         c="${c#_}"
-
-        # Is completion disabled? (i.e. zero size file)
-        if [ ! -s "$cpath" ]; then
-            disabled=1
-            # We have to change "cpath" to point to the
-            # completion's backup file (without "_" in name)
-            # to be able to resolve user and plugin
-            [ -f "${cpath:h}/$c" ] && cpath="${cpath:h}/$c"
-        else
-            disabled=0
-        fi
 
         # Prepare readlink command for establishing
         # completion's owner
