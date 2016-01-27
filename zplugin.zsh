@@ -470,7 +470,16 @@ _zplugin-prepare-home() {
     ZPLG_HOME_READY="1"
 
     [ ! -d "$ZPLG_HOME" ] && mkdir 2>/dev/null "$ZPLG_HOME"
-    [ ! -d "$ZPLG_PLUGINS_DIR" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR"
+    [ ! -d "$ZPLG_PLUGINS_DIR" ] && {
+        mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR"
+        # For compaudit
+        chmod g-w "$ZPLG_HOME"
+    }
+    [ ! -d "$ZPLG_COMPLETIONS_DIR" ] && {
+        mkdir 2>/dev/null "$ZPLG_COMPLETIONS_DIR"
+        # For comaudit
+        chmod g-w "$ZPLG_COMPLETIONS_DIR"
+    }
 
     # All to the users - simulate OMZ directory structure (2/3)
     [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom" 
@@ -482,6 +491,19 @@ _zplugin-setup-plugin-dir() {
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
         git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}--${plugin}"
     fi
+
+    # Simlink any potential completion files
+    typeset -a completions already_simlinked c cfile
+    completions=( "$ZPLG_PLUGINS_DIR/${user}--${plugin}"/_*(N) )
+    already_simlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+
+    for c in "${completions[@]}"; do
+        cfile="${c:t}"
+        if [ -z "${already_simlinked[(r)*/$cfile]}" ]; then
+            echo "Simlinking completion $cfile to $ZPLG_COMPLETIONS_DIR"
+            ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
+        fi
+    done
 
     # All to the users - simulate OMZ directory structure (3/3)
     if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
@@ -764,6 +786,11 @@ _zplugin-unload() {
 # - unload
 zplugin() {
     _zplugin-prepare-home
+
+    # Add completions directory to fpath
+    fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
+    # Uniquify
+    fpath=( "${(u)fpath[@]}" )
 
     case "$1" in
        (load)
