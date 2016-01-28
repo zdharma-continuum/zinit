@@ -1048,13 +1048,13 @@ zplugin() {
        (cdisable)
            _zplugin-cdisable "$2"
            unfunction 2>/dev/null "_${2#_}"
-           echo "Running compinit..."
+           echo "Initializing completion (compinit)..."
            compinit
            ;;
        (cenable)
            _zplugin-cenable "$2"
            unfunction 2>/dev/null "_${2#_}"
-           echo "Running compinit..."
+           echo "Initializing completion (compinit)..."
            compinit
            ;;
        (-h|--help|help)
