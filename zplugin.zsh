@@ -902,7 +902,7 @@ _zplugin-cenable() {
     if [ ! -e "$bkpfile" ]; then
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
 
-        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
+        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
     fi
 
