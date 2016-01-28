@@ -552,12 +552,8 @@ _zplugin-exists() {
 _zplugin-exists-message() {
     local usplx="$1"
     if ! _zplugin-exists "$usplx"; then
-        _zplugin-any-uspl-to-user-plugin "$usplx"
-        local user="$reply[1]" plugin="$reply[2]"
-        local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
-        local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
-
-        echo "$ZPLG_COLORS[error]No such plugin$reset_color $uspl2col"
+        _zplugin-colorify-usplx "$usplx"
+        echo "$ZPLG_COLORS[error]No such plugin$reset_color $REPLY"
         return 1
     fi
     return 0
@@ -594,20 +590,13 @@ _zplugin-uspl-to-uspl2() {
     fi
 }
 
+# Will take uspl, uspl2, or just plugin name,
+# and return colored text
 _zplugin-colorify-usplx() {
     _zplugin-any-uspl-to-user-plugin "$1"
     local user="$reply[1]" plugin="$reply[2]"
-
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
-    local uspl2col
-
-    if [ "$user" = "$plugin" ]; then
-        uspl2col="${pcol}${plugin}$reset_color"
-    else
-        uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
-    fi
-
-    REPLY="$uspl2col"
+    REPLY="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
 }
 
 # Prepare readlink command, used e.g. for
