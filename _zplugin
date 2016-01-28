@@ -1,0 +1,85 @@
+#compdef zplugin zpl
+
+local curcontext="$curcontext" state line ret=1
+typeset -A opt_args
+
+typeset -a commands
+commands=(
+    help:'usage information'
+    load:'load plugin'
+    unload:'unload plugin'
+    report:'show plugin'"'"'s report'
+    all-reports:'show all plugin reports'
+    loaded:'show what plugins are loaded'
+    list:'show what plugins are loaded'
+    comps:'list completions in use'
+    completions:'list completions in use'
+    cdisable:'disable completion'
+    cenable:'enable completion'
+    creinstall:'install completions for plugin'
+    cuninstall:'uninstall completions for plugin'
+)
+
+_arguments \
+    '1: :->command'\
+    '*: :->argument'
+
+case $state in
+    command)
+        _describe -t commands command commands && ret=0
+        ;;
+    *)
+        case $words[2] in
+            help)
+                ret=0
+                ;;
+            load)
+                ret=0
+                ;;
+            unload)
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
+                ret=0
+                ;;
+            report)
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
+                ret=0
+                ;;
+            all-reports)
+                ret=0
+                ;;
+            loaded|list)
+                ret=0
+                ;;
+            comps|completions)
+                ret=0
+                ;;
+            cdisable)
+                # Find enabled completions
+                typeset -a completions
+                completions=( ~/.zplugin/completions/_*(N) )
+                completions=( "${completions[@]:t}" )
+                compadd "$@" "${completions[@]#_}"
+                ret=0
+                ;;
+            cenable)
+                # Find disabled
+                typeset -a completions
+                completions=( ~/.zplugin/completions/[^_]*(N) )
+                compadd "$@" "${completions[@]:t}"
+                ret=0
+                ;;
+            creinstall)
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
+                ret=0
+                ;;
+            cuninstall)
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
+                ret=0
+                ;;
+            *)
+                ret=0
+                ;;
+        esac
+esac
+
+return "$ret"
