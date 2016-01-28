@@ -550,7 +550,7 @@ _zplugin-prepare-readline() {
 }
 
 # Both :A and readlink will be used, then readlink's output if
-# results differ. This allows to simlink git repositories
+# results differ. This allows to symlink git repositories
 # into .zplugin/plugins and have username properly resolved
 # (:A will read the link "twice" and give the final repository
 # directory, possibly without username in the uspl format;
@@ -560,10 +560,10 @@ _zplugin-get-completion-owner() {
     local readlink_cmd="$2"
     local in_plugin_path tmp
 
-    # Try to go not too deep into resolving the simlink,
+    # Try to go not too deep into resolving the symlink,
     # to have the name as it is in .zplugin/plugins
     # :A goes deep, descends fully to origin directory
-    # Readlink just reads what simlink points to
+    # Readlink just reads what symlink points to
     in_plugin_path="${cpath:A}"
     tmp=$( "$readlink_cmd" "$cpath" )
     [ -n "$tmp" ] && in_plugin_path="$tmp"
@@ -618,10 +618,9 @@ _zplugin-prepare-home() {
     [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom/plugins" 
 }
 
-# Simlinks completions of given plugin into $ZPLG_COMPLETIONS_DIR
-# $1 - user, or uspl, or uspl2, or plugin
-# $2 - plugin, if $1 given
-# $3 - reinstallation, if "1"
+# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
+# $2 - plugin (if $1 - user - given)
+# $3 - if 1, then reinstall, otherwise only install completions that aren't there
 _zplugin-install-completions() {
     local reinstall="${3:-0}"
 
@@ -631,19 +630,20 @@ _zplugin-install-completions() {
 
     _zplugin-exists-message "$user" "$plugin" || return 1
 
-    # Simlink any completion files included in plugin's directory
-    typeset -a completions already_simlinked backup_comps c cfile bkpfile
+    # Symlink any completion files included in plugin's directory
+    typeset -a completions already_symlinked backup_comps
+    local c cfile bkpfile
     completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
-    already_simlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
 
-    # Simlink completions if they are not already there
+    # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
     # OR - if it's a reinstall
     for c in "${completions[@]}"; do
         cfile="${c:t}"
         bkpfile="${cfile#_}"
-        if [[ -z "${already_simlinked[(r)*/$cfile]}" &&
+        if [[ -z "${already_symlinked[(r)*/$cfile]}" &&
               -z "${backup_comps[(r)*/$bkpfile]}" ||
               "$reinstall" = "1"
         ]]; then
@@ -661,6 +661,55 @@ _zplugin-install-completions() {
     done
 }
 
+# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
+# $2 - plugin (if $1 - user - given)
+_zplugin-uninstall-completions() {
+    _zplugin-any-to-user-plugin "$1" "$2"
+    local user="$reply[1]"
+    local plugin="$reply[2]"
+
+    _zplugin-exists-message "$user" "$plugin" || return 1
+
+    typeset -a completions already_symlinked backup_comps
+    local c cfile bkpfile
+    integer action global_action=0
+
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+
+    # Delete completions if they are really there, either
+    # as completions (_fname) or backups (fname)
+    for c in "${completions[@]}"; do
+        action=0
+        cfile="${c:t}"
+        bkpfile="${cfile#_}"
+
+        # Remove symlink to completion
+        if [[ -n "${symlinked[(r)*/$cfile]}" ]]; then
+            command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$cfile"
+            action=1
+        fi
+
+        # Remove backup symlink (created by cdisable)
+        if [[ -n "${backup_comps[(r)*/$bkpfile]}" ]]; then
+            command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
+            action=1
+        fi
+
+        if (( action )); then
+            echo "$ZPLG_COLORS[info]Uninstalling completion \`$cfile'$reset_color"
+            (( global_action ++ ))
+        else
+            echo "$ZPLG_COLORS[info]Completion \`$cfile' not installed$reset_color"
+        fi
+    done
+
+    if (( global_action > 0 )); then
+        echo "$ZPLG_COLORS[info]Uninstalled $global_action completions$reset_color"
+    fi
+}
+
 _zplugin-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
@@ -674,7 +723,7 @@ _zplugin-setup-plugin-dir() {
     # For now, this will be done every time setup plugin dir is
     # being run, to migrate old setup
     if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
-        # Remove in case of broken simlink
+        # Remove in case of broken symlink
         command rm 1>/dev/null -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
         command ln -s "../../${user}---${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
     fi
@@ -754,7 +803,7 @@ _zplugin-show-completions() {
         # completion's owner
         _zplugin-prepare-readline
 
-        # This will resolve completion's simlink to obtain
+        # This will resolve completion's symlink to obtain
         # information about the repository it comes from, i.e.
         # about user and plugin, taken from directory name
         _zplugin-get-completion-owner-uspl2col "$cpath" "$REPLY"
@@ -809,15 +858,15 @@ _zplugin-check-comp-consistency() {
     local cfile="$1" bkpfile="$2"
     integer error="$3"
 
-    # bkpfile must be a simlink
+    # bkpfile must be a symlink
     if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
-        echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a simlink$reset_color"
+        echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
         error=1
     fi
 
-    # cfile must be a simlink
+    # cfile must be a symlink
     if [[ -e "$cfile" && ! -L "$cfile" ]]; then
-        echo "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a simlink$reset_color"
+        echo "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
         error=1
     fi
 
@@ -1120,16 +1169,17 @@ zplugin() {
            compinit
            ;;
        (creinstall)
-           # Installs completions for plugin given in usplx format
-           # or via user and name. Enables them all. It's a
-           # reinstallation, thus every obstacle get's overwritten
-           # or removed
+           # Installs completions for plugin. Enables them all. It's a
+           # reinstallation, thus every obstacle gets overwritten or removed
            _zplugin-install-completions "$2" "$3" "1"
            echo "Initializing completion (compinit)..."
            compinit
            ;;
        (cuninstall)
-           # Uninstalls completions for plugin given in uspl2 format
+           # Uninstalls completions for plugin
+           _zplugin-uninstall-completions "$2" "$3"
+           echo "Initializing completion (compinit)..."
+           compinit
            ;;
        (-h|--help|h|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
