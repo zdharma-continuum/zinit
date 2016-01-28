@@ -495,11 +495,9 @@ _zplugin-prepare-home() {
     [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom/plugins" 
 }
 
-_zplugin-setup-plugin-dir() {
-    local user="$1" plugin="$2" github_path="$1/$2"
-    if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
-        git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}--${plugin}"
-    fi
+# Simlinks completions of given plugin into $ZPLG_COMPLETIONS_DIR
+_zplugin-install-completions() {
+    local user="$1" plugin="$2"
 
     # Simlink any completion files included in plugin's directory
     typeset -a completions already_simlinked backup_comps c cfile bkpfile
@@ -517,6 +515,15 @@ _zplugin-setup-plugin-dir() {
             ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
         fi
     done
+}
+_zplugin-setup-plugin-dir() {
+    local user="$1" plugin="$2" github_path="$1/$2"
+    if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
+        git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}--${plugin}"
+    fi
+
+    # Install completions
+    _zplugin-install-completions "$1" "$2"
 
     # All to the users - simulate OMZ directory structure (3/3)
     if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
@@ -539,9 +546,10 @@ _zplugin_exists() {
 }
 
 _zplugin_exists_message() {
-    local uspl2="$1"
-    if ! _zplugin_exists "$uspl2"; then
-        local user="${1%%/*}" plugin="${1#*/}"
+    local usplx="$1"
+    if ! _zplugin_exists "$usplx"; then
+        _zplugin-some-uspl-to-user-plugin "$x"
+        local user="$reply[1]" plugin="$reply[2]"
         local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
         local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
 
@@ -549,6 +557,16 @@ _zplugin_exists_message() {
         return 1
     fi
     return 0
+}
+
+# Converts uspl or uspl2 into user name and plugin name
+_zplugin-some-uspl-to-user-plugin() {
+    local user="${1%%/*}" plugin="${1#*/}"
+    if [ "$user" = "$plugin" ]; then
+        user="${1%%--*}"
+        plugin="${1#*--}"
+    fi
+    reply=( "$user" "$plugin" )
 }
 
 # Convert plugin name from "user--plugin" to "user/plugin"
@@ -561,8 +579,10 @@ _zplugin-uspl-to-uspl2() {
     fi
 }
 
-_zplugin-colorify-uspl2() {
-    local user="${1%%/*}" plugin="${1#*/}"
+_zplugin-colorify-usplx() {
+    _zplugin-some-uspl-to-user-plugin "$1"
+    local user="$reply[1]" plugin="$reply[2]"
+
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
     local uspl2col
 
@@ -619,18 +639,10 @@ _zplugin-get-completion-owner() {
 # For shortening of code
 # $1 - completion file
 # $2 - readline command
-_zplugin-get-completion-owner-uspl2() {
-    _zplugin-get-completion-owner "$1" "$2"
-    # Convert user--plugin into user/plugin
-    _zplugin-uspl-to-uspl2 "$REPLY"
-}
-
-# For shortening of code
-# $1 - completion file
-# $2 - readline command
 _zplugin-get-completion-owner-uspl2col() {
-    _zplugin-get-completion-owner-uspl2 "$1" "$2"
-    _zplugin-colorify-uspl2 "$REPLY"
+    # "cpath" "readline_cmd"
+    _zplugin-get-completion-owner "$1" "$2"
+    _zplugin-colorify-usplx "$REPLY"
 }
 
 _zplugin-load-plugin() {
@@ -739,14 +751,16 @@ _zplugin-show-report() {
 _zplugin-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        local user="${i%%/*}" plugin="${i#*/}"
+        _zplugin-some-uspl-to-user-plugin "$i"
+        local user="$reply[1]" plugin="$reply[2]"
         _zplugin-show-report "$user" "$plugin"
     done
 }
 
 _zplugin-show-registered-plugins() {
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        local user="${i%%/*}" plugin="${i#*/}"
+        _zplugin-some-uspl-to-user-plugin "$i"
+        local user="$reply[1]" plugin="$reply[2]"
         printf "%s/%s\n" $ZPLG_COLORS[uname]$user$reset_color $ZPLG_COLORS[pname]$plugin$reset_color
     done
 }
@@ -856,10 +870,8 @@ _zplugin-cdisable() {
 
 # $1 - plugin name, possibly github path
 _zplugin-load () {
-    local github_path="$1"
-
-    local user="$1:h"
-    local plugin="$1:t"
+    _zplugin-some-uspl-to-user-plugin "$1"
+    local user="$reply[1]" plugin="$reply[2]"
 
     # Name only? User can place a plugin
     # in plugins directory himself
