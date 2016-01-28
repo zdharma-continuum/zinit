@@ -1041,30 +1041,42 @@ zplugin() {
 
     case "$1" in
        (load)
+           # Load plugin given in uspl2 format, i.e. user/plugin
+           # Possibly clone from github, and install completions
            _zplugin-load "$2"
            ;;
        (unload)
+           # Unload given plugin. Cloned directory remains intact
+           # so as are completions
            _zplugin-unload "$2"
            ;;
        (report)
+           # Display report of given plugin
            _zplugin-show-report "$2"
            ;;
        (all-reports)
+           # Display reports of all plugins
            _zplugin-show-all-reports
            ;;
        (loaded|registered)
+           # Show list of loaded plugins
            _zplugin-show-registered-plugins
            ;;
        (comp|comps|completions)
+           # Show installed, enabled or disabled, completions
            _zplugin-show-completions
            ;;
        (cdisable)
+           # Disable completion given by completion function name
+           # with or without leading "_", e.g. "cp", "_cp"
            _zplugin-cdisable "$2"
            unfunction 2>/dev/null "_${2#_}"
            echo "Initializing completion (compinit)..."
            compinit
            ;;
        (cenable)
+           # Enable completion given by completion function name
+           # with or without leading "_", e.g. "cp", "_cp"
            _zplugin-cenable "$2"
            unfunction 2>/dev/null "_${2#_}"
            echo "Initializing completion (compinit)..."
