@@ -614,14 +614,14 @@ _zplugin-prepare-home() {
 
     [ ! -d "$ZPLG_HOME" ] && mkdir 2>/dev/null "$ZPLG_HOME"
     [ ! -d "$ZPLG_PLUGINS_DIR" ] && {
-        mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR"
+        command mkdir "$ZPLG_PLUGINS_DIR"
         # For compaudit
-        chmod g-w "$ZPLG_HOME"
+        command chmod g-w "$ZPLG_HOME"
     }
     [ ! -d "$ZPLG_COMPLETIONS_DIR" ] && {
-        mkdir 2>/dev/null "$ZPLG_COMPLETIONS_DIR"
+        command mkdir "$ZPLG_COMPLETIONS_DIR"
         # For comaudit
-        chmod g-w "$ZPLG_COMPLETIONS_DIR"
+        command chmod g-w "$ZPLG_COMPLETIONS_DIR"
     }
 
     # All to the users - simulate OMZ directory structure (2/3)
@@ -660,8 +660,8 @@ _zplugin-install-completions() {
         ]]; then
             if [ "$reinstall" = "1" ]; then
                 # Remove old files
-                command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$cfile"
-                command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
+                command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
+                command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
             fi
             echo "$ZPLG_COLORS[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
             command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
@@ -698,13 +698,13 @@ _zplugin-uninstall-completions() {
 
         # Remove symlink to completion
         if [[ -n "${symlinked[(r)*/$cfile]}" ]]; then
-            command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$cfile"
+            command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
             action=1
         fi
 
         # Remove backup symlink (created by cdisable)
         if [[ -n "${backup_comps[(r)*/$bkpfile]}" ]]; then
-            command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
+            command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
             action=1
         fi
 
@@ -735,7 +735,7 @@ _zplugin-setup-plugin-dir() {
     # being run, to migrate old setup
     if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
         # Remove in case of broken symlink
-        command rm 1>/dev/null -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
+        command rm -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
         command ln -s "../../${user}---${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
     fi
 }
@@ -911,13 +911,13 @@ _zplugin-cenable() {
         echo "$ZPLG_COLORS[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
         echo "$ZPLG_COLORS[error]Completion is actually enabled and will re-enable it again$reset_color"
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
-        command rm >/dev/null -f "$cfile"
+        command rm -f "$cfile"
     else
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
     fi
 
     # Enable
-    command mv >/dev/null "$bkpfile" "$cfile" # move completion's backup file created when disabling
+    command mv "$bkpfile" "$cfile" # move completion's backup file created when disabling
 
     # Prepare readlink command for establishing completion's owner
     _zplugin-prepare-readline
@@ -954,13 +954,13 @@ _zplugin-cdisable() {
     if [ -e "$bkpfile" ]; then
         echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
-        command rm >/dev/null -f "$bkpfile"
+        command rm -f "$bkpfile"
     else
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
     fi
 
     # Disable
-    command mv >/dev/null "$cfile" "$bkpfile"
+    command mv "$cfile" "$bkpfile"
 
     # Prepare readlink command for establishing completion's owner
     _zplugin-prepare-readline
