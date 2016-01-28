@@ -1,6 +1,6 @@
 #compdef zplugin zpl
 
-local curcontext="$curcontext" state line ret=1
+local context state state_descr line ret=1
 typeset -A opt_args
 
 typeset -a commands
@@ -22,13 +22,13 @@ commands=(
 
 _arguments \
     '1: :->command'\
-    '*: :->argument'
+    '*: :->argument' && ret=0
 
 case $state in
     command)
         _describe -t commands command commands && ret=0
         ;;
-    *)
+    argument)
         case $words[2] in
             help)
                 ret=0
@@ -37,12 +37,10 @@ case $state in
                 ret=0
                 ;;
             unload)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
-                ret=0
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
                 ;;
             report)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
-                ret=0
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
                 ;;
             all-reports)
                 ret=0
@@ -58,28 +56,27 @@ case $state in
                 typeset -a completions
                 completions=( ~/.zplugin/completions/_*(N) )
                 completions=( "${completions[@]:t}" )
-                compadd "$@" "${completions[@]#_}"
-                ret=0
+                compadd "$@" "${completions[@]#_}" && ret=0
                 ;;
             cenable)
                 # Find disabled
                 typeset -a completions
                 completions=( ~/.zplugin/completions/[^_]*(N) )
-                compadd "$@" "${completions[@]:t}"
-                ret=0
+                compadd "$@" "${completions[@]:t}" && ret=0
                 ;;
             creinstall)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
-                ret=0
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
                 ;;
             cuninstall)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}"
-                ret=0
+                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
                 ;;
             *)
                 ret=0
                 ;;
         esac
+    *)
+        ret=1
+        ;;
 esac
 
 return "$ret"
