@@ -94,7 +94,7 @@ ZPLG_COLORS=(
 # Shadowing-related functions (names of substitute functions start with -) {{{
 #
 
--zplugin_reload_and_run () {
+-zplugin-reload-and-run () {
     local fpath_prefix="$1" autoload_opts="$2" func="$3"
     shift 3
 
@@ -142,9 +142,9 @@ ZPLG_COLORS=(
     for func
     do
         eval "function $func {
-            -zplugin_reload_and_run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
+            -zplugin-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
         }'
-        #functions[$func]="-zplugin_reload_and_run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
+        #functions[$func]="-zplugin-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
     done
 }
 
@@ -541,7 +541,7 @@ _zplugin-register-plugin() {
     ZPLG_REGISTERED_PLUGINS+="${1}/${2}"
 }
 
-_zplugin_exists() {
+_zplugin-exists() {
     local uspl2="$1"
     if [ "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" != "$uspl2" ]; then
         return 1
@@ -549,10 +549,10 @@ _zplugin_exists() {
     return 0
 }
 
-_zplugin_exists_message() {
+_zplugin-exists-message() {
     local usplx="$1"
-    if ! _zplugin_exists "$usplx"; then
-        _zplugin-some-uspl-to-user-plugin "$x"
+    if ! _zplugin-exists "$usplx"; then
+        _zplugin-some-uspl-to-user-plugin "$usplx"
         local user="$reply[1]" plugin="$reply[2]"
         local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
         local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
@@ -733,7 +733,7 @@ _zplugin-show-report() {
     local user="$1" plugin="$2"
     [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
 
-    _zplugin_exists_message "$user/$plugin" || return 1
+    _zplugin-exists-message "$user/$plugin" || return 1
 
     # Print title
     printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
@@ -902,7 +902,7 @@ _zplugin-unload() {
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
     local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
 
-    _zplugin_exists_message "$uspl2" || return 1
+    _zplugin-exists-message "$uspl2" || return 1
 
     # Store report of the plugin in variable LASTREPORT
     LASTREPORT=`_zplugin-show-report "$uspl2"`
