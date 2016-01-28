@@ -471,111 +471,23 @@ _zplugin-add-report() {
 # }}}
 
 #
-# ZPlugin internal functions {{{
+# Helper functions {{{
 #
 
-_zplugin-prepare-home() {
-    [ -n "$ZPLG_HOME_READY" ] && return
-    ZPLG_HOME_READY="1"
-
-    [ ! -d "$ZPLG_HOME" ] && mkdir 2>/dev/null "$ZPLG_HOME"
-    [ ! -d "$ZPLG_PLUGINS_DIR" ] && {
-        mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR"
-        # For compaudit
-        chmod g-w "$ZPLG_HOME"
-    }
-    [ ! -d "$ZPLG_COMPLETIONS_DIR" ] && {
-        mkdir 2>/dev/null "$ZPLG_COMPLETIONS_DIR"
-        # For comaudit
-        chmod g-w "$ZPLG_COMPLETIONS_DIR"
-    }
-
-    # All to the users - simulate OMZ directory structure (2/3)
-    [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom" 
-    [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom/plugins" 
-}
-
-# Simlinks completions of given plugin into $ZPLG_COMPLETIONS_DIR
-# $1 - user, or uspl, or uspl2, or plugin
-# $2 - plugin, if $1 given
-_zplugin-install-completions() {
-    local user="$1" plugin="$2"
-
-    if [ -z "$2" ]; then
-        # This allows "user---plugin" and "user/plugin" formats
-        _zplugin-any-uspl-to-user-plugin "$1"
-        user="$reply[1]"
-        plugin="$reply[2]"
-    fi
-
-    # Simlink any completion files included in plugin's directory
-    typeset -a completions already_simlinked backup_comps c cfile bkpfile
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
-    already_simlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
-
-    # Simlink completions if they are not already there
-    # either as completions (_fname) or as backups (fname)
-    for c in "${completions[@]}"; do
-        cfile="${c:t}"
-        bkpfile="${cfile#_}"
-        if [[ -z "${already_simlinked[(r)*/$cfile]}" && -z "${backup_comps[(r)*/$bkpfile]}" ]]; then
-            echo "Simlinking completion $cfile to $ZPLG_COMPLETIONS_DIR"
-            ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
-        fi
-    done
-}
-_zplugin-setup-plugin-dir() {
-    local user="$1" plugin="$2" github_path="$1/$2"
-    if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
-        git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-
-        # Install completions
-        _zplugin-install-completions "$user" "$plugin"
-    fi
-
-    # All to the users - simulate OMZ directory structure (3/3)
-    # For now, this will be done every time setup plugin dir is
-    # being run, to migrate old setup
-    if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
-        # Remove in case of broken simlink
-        command rm 1>/dev/null -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
-        command ln -s "../../${user}---${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
-    fi
-}
-
-# TODO detect second autoload?
-_zplugin-register-plugin() {
-    [ -z "ZPLG_REPORTS[${user}/${plugin}]" ] && ZPLG_REPORTS[${user}/${plugin}]=""
-    ZPLG_REGISTERED_PLUGINS+="${1}/${2}"
-}
-
-_zplugin-exists() {
-    local uspl2="$1"
-    if [ "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" != "$uspl2" ]; then
-        return 1
-    fi
-    return 0
-}
-
-_zplugin-exists-message() {
-    local usplx="$1"
-    if ! _zplugin-exists "$usplx"; then
-        _zplugin-colorify-usplx "$usplx"
-        echo "$ZPLG_COLORS[error]No such plugin$reset_color $REPLY"
-        return 1
-    fi
-    return 0
-}
-
-# Supports three formats:
-# - uspl - user---plugin
-# - uspl2 - user/plugin
-# - plugin only - user is then "_local"
+# Crucial helper function A
+# Allows elastic use of "$1" and "$2" across the code
+#
+# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
+# $2 - plugin (if $1 - user - given)
 #
 # Returns user and plugin in $reply
 #
-_zplugin-any-uspl-to-user-plugin() {
+_zplugin-any-to-user-plugin() {
+    if [ ! -z "$2" ];then
+        reply=( "$1" "$2" )
+        return 0
+    fi
+
     local user="${1%%/*}" plugin="${1#*/}"
     if [ "$user" = "$plugin" ]; then
         user="${1%%---*}"
@@ -587,22 +499,42 @@ _zplugin-any-uspl-to-user-plugin() {
     fi
 
     reply=( "$user" "$plugin" )
+    return 0
 }
 
-# Convert plugin name from "user---plugin" to "user/plugin"
-_zplugin-uspl-to-uspl2() {
-    local user="${1%%---*}" plugin="${1#*---}"
-    if [ "$user" = "$plugin" ]; then
-        REPLY="$plugin"
-    else
-        REPLY="$user/$plugin"
+# Crucial helper function B
+# Converts to format that's used in keys for hash tables
+#
+# Supports all four formats
+_zplugin-any-to-uspl2() {
+    _zplugin-any-to-user-plugin "$1" "$2"
+    REPLY="$reply[1]/$reply[2]"
+}
+
+# Checks for a plugin existence, all four formats
+# of the plugin specification supported
+_zplugin-exists() {
+    _zplugin-any-to-uspl2 "$1" "$2"
+    if [ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]; then
+        return 1
     fi
+    return 0
+}
+
+# Checks for a plugin existence and outputs a message
+_zplugin-exists-message() {
+    if ! _zplugin-exists "$1" "$2"; then
+        _zplugin-any-colorify-as-uspl2 "$1" "$2"
+        echo "$ZPLG_COLORS[error]No such plugin$reset_color $REPLY"
+        return 1
+    fi
+    return 0
 }
 
 # Will take uspl, uspl2, or just plugin name,
 # and return colored text
-_zplugin-colorify-usplx() {
-    _zplugin-any-uspl-to-user-plugin "$1"
+_zplugin-any-colorify-as-uspl2() {
+    _zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]"
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
     REPLY="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
@@ -655,7 +587,102 @@ _zplugin-get-completion-owner() {
 _zplugin-get-completion-owner-uspl2col() {
     # "cpath" "readline_cmd"
     _zplugin-get-completion-owner "$1" "$2"
-    _zplugin-colorify-usplx "$REPLY"
+    _zplugin-any-colorify-as-uspl2 "$REPLY"
+}
+
+
+# }}}
+
+#
+# ZPlugin internal functions {{{
+#
+
+_zplugin-prepare-home() {
+    [ -n "$ZPLG_HOME_READY" ] && return
+    ZPLG_HOME_READY="1"
+
+    [ ! -d "$ZPLG_HOME" ] && mkdir 2>/dev/null "$ZPLG_HOME"
+    [ ! -d "$ZPLG_PLUGINS_DIR" ] && {
+        mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR"
+        # For compaudit
+        chmod g-w "$ZPLG_HOME"
+    }
+    [ ! -d "$ZPLG_COMPLETIONS_DIR" ] && {
+        mkdir 2>/dev/null "$ZPLG_COMPLETIONS_DIR"
+        # For comaudit
+        chmod g-w "$ZPLG_COMPLETIONS_DIR"
+    }
+
+    # All to the users - simulate OMZ directory structure (2/3)
+    [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom" 
+    [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom/plugins" 
+}
+
+# Simlinks completions of given plugin into $ZPLG_COMPLETIONS_DIR
+# $1 - user, or uspl, or uspl2, or plugin
+# $2 - plugin, if $1 given
+# $3 - reinstallation, if "1"
+_zplugin-install-completions() {
+    local reinstall="${3:-0}"
+
+    _zplugin-any-to-user-plugin "$1" "$2"
+    local user="$reply[1]"
+    local plugin="$reply[2]"
+
+    _zplugin-exists-message "$user" "$plugin" || return 1
+
+    echo "Ready to perform creinstall for $user/$plugin"
+
+    # Simlink any completion files included in plugin's directory
+    typeset -a completions already_simlinked backup_comps c cfile bkpfile
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
+    already_simlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+
+    # Simlink completions if they are not already there
+    # either as completions (_fname) or as backups (fname)
+    # OR - if it's a reinstall
+    for c in "${completions[@]}"; do
+        cfile="${c:t}"
+        bkpfile="${cfile#_}"
+        if [[ -z "${already_simlinked[(r)*/$cfile]}" &&
+              -z "${backup_comps[(r)*/$bkpfile]}" ||
+              "$reinstall" = "1"
+        ]]; then
+            if [ "$reinstall" = "1" ]; then
+                # Remove old files
+                command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$cfile"
+                command rm 1>/dev/null -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
+            fi
+            echo "$ZPLG_COLORS[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
+            command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
+        fi
+    done
+}
+
+_zplugin-setup-plugin-dir() {
+    local user="$1" plugin="$2" github_path="$1/$2"
+    if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
+        git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+
+        # Install completions
+        _zplugin-install-completions "$user" "$plugin"
+    fi
+
+    # All to the users - simulate OMZ directory structure (3/3)
+    # For now, this will be done every time setup plugin dir is
+    # being run, to migrate old setup
+    if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
+        # Remove in case of broken simlink
+        command rm 1>/dev/null -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
+        command ln -s "../../${user}---${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
+    fi
+}
+
+# TODO detect second autoload?
+_zplugin-register-plugin() {
+    [ -z "ZPLG_REPORTS[${user}/${plugin}]" ] && ZPLG_REPORTS[${user}/${plugin}]=""
+    ZPLG_REGISTERED_PLUGINS+="${1}/${2}"
 }
 
 _zplugin-load-plugin() {
@@ -739,14 +766,9 @@ _zplugin-show-completions() {
 }
 
 _zplugin-show-report() {
-    local user="$1" plugin="$2"
-
-    if [ -z "$2" ]; then
-        # This allows "user---plugin" and "user/plugin" formats
-        _zplugin-any-uspl-to-user-plugin "$1"
-        user="$reply[1]"
-        plugin="$reply[2]"
-    fi
+    _zplugin-any-to-user-plugin "$1" "$2"
+    local user="$reply[1]"
+    local plugin="$reply[2]"
 
     _zplugin-exists-message "$user/$plugin" || return 1
 
@@ -770,18 +792,15 @@ _zplugin-show-report() {
 _zplugin-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        _zplugin-any-uspl-to-user-plugin "$i"
-        local user="$reply[1]" plugin="$reply[2]"
-        _zplugin-show-report "$user" "$plugin"
+        _zplugin-show-report "$i"
     done
 }
 
 _zplugin-show-registered-plugins() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        _zplugin-any-uspl-to-user-plugin "$i"
-        local user="$reply[1]" plugin="$reply[2]"
-        printf "%s/%s\n" $ZPLG_COLORS[uname]$user$reset_color $ZPLG_COLORS[pname]$plugin$reset_color
+        _zplugin-any-colorify-as-uspl2 "$i"
+        print "$REPLY"
     done
 }
 
@@ -890,21 +909,16 @@ _zplugin-cdisable() {
 
 # $1 - plugin name, possibly github path
 _zplugin-load () {
-    _zplugin-any-uspl-to-user-plugin "$1"
+    _zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]"
-
-    # Name only? User can place a plugin
-    # in plugins directory himself
-    if [ "$user" = "$plugin" ]; then
-        user="_local"
-    fi
 
     _zplugin-setup-plugin-dir "$user" "$plugin"
     _zplugin-register-plugin "$user" "$plugin"
     _zplugin-load-plugin "$user" "$plugin"
 }
 
-# $1 - user/plugin (i.e. uspl2 format, not uspl which is user---plugin)
+# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
+# $2 - plugin (if $1 - user - given)
 #
 # 1. Unfunction functions created by plugin
 # 2. Delete bindkeys
@@ -913,14 +927,16 @@ _zplugin-load () {
 # 5. Restore (or just unalias?) aliases
 # 6. Forget the plugin
 _zplugin-unload() {
-    local uspl2="$1" user="${1%%/*}" plugin="${1#*/}"
-    local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
-    local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
+    _zplugin-exists-message "$1" "$2" || return 1
 
-    _zplugin-exists-message "$uspl2" || return 1
+    _zplugin-any-to-user-plugin "$1" "$2"
+    local uspl2="$reply[1]/$reply[2]" user="$reply[1]" plugin="$reply[2]"
+
+    _zplugin-any-colorify-as-uspl2 "$1" "$2"
+    local uspl2col="$REPLY"
 
     # Store report of the plugin in variable LASTREPORT
-    LASTREPORT=`_zplugin-show-report "$uspl2"`
+    LASTREPORT=`_zplugin-show-report "$1" "$2"`
 
     #
     # 1. Unfunction
@@ -1048,8 +1064,9 @@ _zplugin-unload() {
 
 # }}}
 
+alias zpl=zplugin zplg=zplugin
+
 # Main function with subcommands
-alias zpl=zplugin
 zplugin() {
     _zplugin-prepare-home
 
@@ -1062,22 +1079,22 @@ zplugin() {
        (load)
            # Load plugin given in uspl2 format, i.e. user/plugin
            # Possibly clone from github, and install completions
-           _zplugin-load "$2"
+           _zplugin-load "$2" "$3"
            ;;
        (unload)
            # Unload given plugin. Cloned directory remains intact
            # so as are completions
-           _zplugin-unload "$2"
+           _zplugin-unload "$2" "$3"
            ;;
        (report)
            # Display report of given plugin
-           _zplugin-show-report "$2"
+           _zplugin-show-report "$2" "$3"
            ;;
        (all-reports)
            # Display reports of all plugins
            _zplugin-show-all-reports
            ;;
-       (loaded|registered)
+       (loaded|registered|list)
            # Show list of loaded plugins
            _zplugin-show-registered-plugins
            ;;
@@ -1101,16 +1118,31 @@ zplugin() {
            echo "Initializing completion (compinit)..."
            compinit
            ;;
-       (-h|--help|help)
+       (creinstall)
+           # Installs completions for plugin given in usplx format
+           # or via user and name. Enables them all. It's a
+           # reinstallation, thus every obstacle get's overwritten
+           # or removed
+           _zplugin-install-completions "$2" "$3" "1"
+           echo "Initializing completion (compinit)..."
+           compinit
+           ;;
+       (cuninstall)
+           # Uninstalls completions for plugin given in uspl2 format
+           ;;
+       (-h|--help|h|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
-load $ZPLG_COLORS[pname]{plugin-name}$reset_color   - load plugin
-unload $ZPLG_COLORS[pname]{plugin-name}$reset_color - unload plugin
-report $ZPLG_COLORS[pname]{plugin-name}$reset_color - show plugin's report
-all-reports          - show all plugin reports
-loaded|registered    - show what plugins are loaded
-comp[s]|completions  - list completions in use
-cdisable             - disable completion
-cenable              - enable completion"
+-h|--help|h|help         - usage information
+load $ZPLG_COLORS[pname]{plugin-name}$reset_color       - load plugin
+unload $ZPLG_COLORS[pname]{plugin-name}$reset_color     - unload plugin
+report $ZPLG_COLORS[pname]{plugin-name}$reset_color     - show plugin's report
+all-reports              - show all plugin reports
+loaded|registered|list   - show what plugins are loaded
+comp[s]|completions      - list completions in use
+cdisable $ZPLG_COLORS[info]{cname}$reset_color         - disable completion \`cname'
+cenable  $ZPLG_COLORS[info]{cname}$reset_color         - enable completion \`cname'
+creinstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - install completions for plugin
+cuninstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - uninstall completions for plugin"
            ;;
        (*)
            echo "Unknown command \`$1' (try \`help' to get usage information)"
