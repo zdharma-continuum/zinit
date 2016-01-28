@@ -736,7 +736,13 @@ _zplugin-show-completions() {
 
 _zplugin-show-report() {
     local user="$1" plugin="$2"
-    [ -z "$2" ] && { user="$1:h"; plugin="$1:t" }
+
+    if [ -z "$2" ]; then
+        # This allows "user---plugin" and "user/plugin" formats
+        _zplugin-some-uspl-to-user-plugin "$1"
+        user="$reply[1]"
+        plugin="$reply[2]"
+    fi
 
     _zplugin-exists-message "$user/$plugin" || return 1
 
