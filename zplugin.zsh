@@ -868,11 +868,8 @@ _zplugin-load () {
     fi
 
     _zplugin-setup-plugin-dir "$user" "$plugin"
-    # Instead of fpath entries, there
-    # are entries in ZPLG_REGISTERED_PLUGINS array
     _zplugin-register-plugin "$user" "$plugin"
     _zplugin-load-plugin "$user" "$plugin"
-    #_zplugin-show-report "$user" "$plugin"
 }
 
 # $1 - user/plugin (i.e. uspl2 format, not uspl which is user--plugin)
