@@ -983,8 +983,8 @@ _zplugin-load () {
     _zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]"
 
-    _zplugin-setup-plugin-dir "$user" "$plugin"
     _zplugin-register-plugin "$user" "$plugin"
+    _zplugin-setup-plugin-dir "$user" "$plugin"
     _zplugin-load-plugin "$user" "$plugin"
 }
 
