@@ -496,8 +496,17 @@ _zplugin-prepare-home() {
 }
 
 # Simlinks completions of given plugin into $ZPLG_COMPLETIONS_DIR
+# $1 - user, or uspl, or uspl2, or plugin
+# $2 - plugin, if $1 given
 _zplugin-install-completions() {
     local user="$1" plugin="$2"
+
+    if [ -z "$2" ]; then
+        # This allows "user---plugin" and "user/plugin" formats
+        _zplugin-any-uspl-to-user-plugin "$1"
+        user="$reply[1]"
+        plugin="$reply[2]"
+    fi
 
     # Simlink any completion files included in plugin's directory
     typeset -a completions already_simlinked backup_comps c cfile bkpfile
