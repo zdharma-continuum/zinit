@@ -12,6 +12,7 @@ typeset -gAH ZPLG_REPORTS
 # Common needed values
 #
 
+typeset -gH ZPLG_DIR="$0:h"
 typeset -gH ZPLG_HOME="$HOME/.zplugin"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
@@ -622,6 +623,11 @@ _zplugin-prepare-home() {
         command mkdir "$ZPLG_COMPLETIONS_DIR"
         # For comaudit
         command chmod g-w "$ZPLG_COMPLETIONS_DIR"
+
+        # Symlink _zplugin completion into _local---zplugin directory
+        command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
+        command cp "$ZPLG_DIR/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
+        command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
     }
 
     # All to the users - simulate OMZ directory structure (2/3)
