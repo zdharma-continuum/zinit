@@ -590,6 +590,17 @@ _zplugin-get-completion-owner-uspl2col() {
     _zplugin-any-colorify-as-uspl2 "$REPLY"
 }
 
+# Forget given completions. Done before calling compinit
+# $1 - completion function name, e.g. "_cp"
+_zplugin-forget-completion() {
+    local f="$1"
+    local k
+    for k in "${(k@)_comps[(R)$f]}"; do
+        unset "_comps[$k]"
+        echo "Unsetting $k"
+    done
+    unfunction 2>/dev/null "$f"
+}
 
 # }}}
 
@@ -892,7 +903,7 @@ _zplugin-cenable() {
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
 
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
-        return 0
+        return 1
     fi
 
     # Disabled, but completion file already exists?
@@ -914,6 +925,8 @@ _zplugin-cenable() {
     _zplugin-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
     echo "Enabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
+
+    return 0
 }
 
 _zplugin-cdisable() {
@@ -934,7 +947,7 @@ _zplugin-cdisable() {
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already disabled"
 
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
-        return 0
+        return 1
     fi
 
     # No disable, but bkpfile exists?
@@ -955,6 +968,8 @@ _zplugin-cdisable() {
     _zplugin-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
     echo "Disabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
+
+    return 0
 }
 
 # $1 - plugin name, possibly github path
@@ -1153,20 +1168,24 @@ zplugin() {
            _zplugin-show-completions
            ;;
        (cdisable)
+           local f="_${2#_}"
            # Disable completion given by completion function name
            # with or without leading "_", e.g. "cp", "_cp"
-           _zplugin-cdisable "$2"
-           unfunction 2>/dev/null "_${2#_}"
-           echo "Initializing completion (compinit)..."
-           compinit
+           if _zplugin-cdisable "$f"; then
+               _zplugin-forget-completion "$f"
+               echo "Initializing completion system (compinit)..."
+               compinit
+           fi
            ;;
        (cenable)
+           local f="_${2#_}"
            # Enable completion given by completion function name
            # with or without leading "_", e.g. "cp", "_cp"
-           _zplugin-cenable "$2"
-           unfunction 2>/dev/null "_${2#_}"
-           echo "Initializing completion (compinit)..."
-           compinit
+           if _zplugin-cenable "$f"; then
+               _zplugin-forget-completion "$f"
+               echo "Initializing completion system (compinit)..."
+               compinit
+           fi
            ;;
        (creinstall)
            # Installs completions for plugin. Enables them all. It's a
