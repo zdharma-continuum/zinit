@@ -552,7 +552,7 @@ _zplugin-exists() {
 _zplugin-exists-message() {
     local usplx="$1"
     if ! _zplugin-exists "$usplx"; then
-        _zplugin-some-uspl-to-user-plugin "$usplx"
+        _zplugin-any-uspl-to-user-plugin "$usplx"
         local user="$reply[1]" plugin="$reply[2]"
         local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
         local uspl2col="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
@@ -563,8 +563,14 @@ _zplugin-exists-message() {
     return 0
 }
 
-# Converts uspl or uspl2 into user name and plugin name
-_zplugin-some-uspl-to-user-plugin() {
+# Supports three formats:
+# - uspl - user---plugin
+# - uspl2 - user/plugin
+# - plugin only - user is then "_local"
+#
+# Returns user and plugin in $reply
+#
+_zplugin-any-uspl-to-user-plugin() {
     local user="${1%%/*}" plugin="${1#*/}"
     if [ "$user" = "$plugin" ]; then
         user="${1%%---*}"
@@ -589,7 +595,7 @@ _zplugin-uspl-to-uspl2() {
 }
 
 _zplugin-colorify-usplx() {
-    _zplugin-some-uspl-to-user-plugin "$1"
+    _zplugin-any-uspl-to-user-plugin "$1"
     local user="$reply[1]" plugin="$reply[2]"
 
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
@@ -739,7 +745,7 @@ _zplugin-show-report() {
 
     if [ -z "$2" ]; then
         # This allows "user---plugin" and "user/plugin" formats
-        _zplugin-some-uspl-to-user-plugin "$1"
+        _zplugin-any-uspl-to-user-plugin "$1"
         user="$reply[1]"
         plugin="$reply[2]"
     fi
@@ -766,7 +772,7 @@ _zplugin-show-report() {
 _zplugin-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        _zplugin-some-uspl-to-user-plugin "$i"
+        _zplugin-any-uspl-to-user-plugin "$i"
         local user="$reply[1]" plugin="$reply[2]"
         _zplugin-show-report "$user" "$plugin"
     done
@@ -775,7 +781,7 @@ _zplugin-show-all-reports() {
 _zplugin-show-registered-plugins() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        _zplugin-some-uspl-to-user-plugin "$i"
+        _zplugin-any-uspl-to-user-plugin "$i"
         local user="$reply[1]" plugin="$reply[2]"
         printf "%s/%s\n" $ZPLG_COLORS[uname]$user$reset_color $ZPLG_COLORS[pname]$plugin$reset_color
     done
@@ -886,7 +892,7 @@ _zplugin-cdisable() {
 
 # $1 - plugin name, possibly github path
 _zplugin-load () {
-    _zplugin-some-uspl-to-user-plugin "$1"
+    _zplugin-any-uspl-to-user-plugin "$1"
     local user="$reply[1]" plugin="$reply[2]"
 
     # Name only? User can place a plugin
