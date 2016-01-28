@@ -758,6 +758,7 @@ _zplugin-show-all-reports() {
 }
 
 _zplugin-show-registered-plugins() {
+    local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
         _zplugin-some-uspl-to-user-plugin "$i"
         local user="$reply[1]" plugin="$reply[2]"
