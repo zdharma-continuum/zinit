@@ -1,14 +1,14 @@
-![zew logo](http://imageshack.com/a/img911/3904/KeuuFk.png)
+![zew logo](http://imageshack.com/a/img907/2224/62TFk9.png)
 
 # Zplugin
 
 Zplugin in action:
 
-![zplugin](http://imageshack.com/a/img903/3610/lO3yDy.gif)
+![zplugin](http://imageshack.com/a/img905/5575/n3p47o.gif)
 
 Completion handling:
 
-![zplugin](http://imageshack.com/a/img911/4917/iXQtJw.gif)
+![zplugin](http://imageshack.com/a/img907/2167/CATuag.gif)
 
 ## Introduction
 
