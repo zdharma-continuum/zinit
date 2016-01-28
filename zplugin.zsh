@@ -31,7 +31,7 @@ export ZSH ZSH_CUSTOM
 
 typeset -gH ZPLG_CUR_USER=""
 typeset -gH ZPLG_CUR_PLUGIN=""
-# Concatenated with "--"
+# Concatenated with "---"
 typeset -gH ZPLG_CUR_USPL=""
 # Concatenated with "/"
 typeset -gH ZPLG_CUR_USPL2=""
@@ -501,7 +501,7 @@ _zplugin-install-completions() {
 
     # Simlink any completion files included in plugin's directory
     typeset -a completions already_simlinked backup_comps c cfile bkpfile
-    completions=( "$ZPLG_PLUGINS_DIR/${user}--${plugin}"/_*(N) )
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
     already_simlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
 
@@ -518,16 +518,20 @@ _zplugin-install-completions() {
 }
 _zplugin-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
-    if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
-        git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}--${plugin}"
+    if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
+        git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 
         # Install completions
         _zplugin-install-completions "$user" "$plugin"
     fi
 
     # All to the users - simulate OMZ directory structure (3/3)
+    # For now, this will be done every time setup plugin dir is
+    # being run, to migrate old setup
     if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
-        ln -s "../../${user}--${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
+        # Remove in case of broken simlink
+        command rm 1>/dev/null -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
+        command ln -s "../../${user}---${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
     fi
 }
 
@@ -563,15 +567,15 @@ _zplugin_exists_message() {
 _zplugin-some-uspl-to-user-plugin() {
     local user="${1%%/*}" plugin="${1#*/}"
     if [ "$user" = "$plugin" ]; then
-        user="${1%%--*}"
-        plugin="${1#*--}"
+        user="${1%%---*}"
+        plugin="${1#*---}"
     fi
     reply=( "$user" "$plugin" )
 }
 
-# Convert plugin name from "user--plugin" to "user/plugin"
+# Convert plugin name from "user---plugin" to "user/plugin"
 _zplugin-uspl-to-uspl2() {
-    local user="${1%%--*}" plugin="${1#*--}"
+    local user="${1%%---*}" plugin="${1#*---}"
     if [ "$user" = "$plugin" ]; then
         REPLY="$plugin"
     else
@@ -624,7 +628,7 @@ _zplugin-get-completion-owner() {
     [ -n "$tmp" ] && in_plugin_path="$tmp"
 
     if [ "$in_plugin_path" != "$cpath" ]; then
-        # Get the user--plugin part of path -
+        # Get the user---plugin part of path -
         # it's right before completion file name
         in_plugin_path="${in_plugin_path:h}"
         in_plugin_path="${in_plugin_path:t}"
@@ -649,14 +653,14 @@ _zplugin-load-plugin() {
     local user="$1" plugin="$2"
     ZPLG_CUR_USER="$user"
     ZPLG_CUR_PLUGIN="$plugin"
-    ZPLG_CUR_USPL="${user}--${plugin}"
+    ZPLG_CUR_USPL="${user}---${plugin}"
     ZPLG_CUR_USPL2="${user}/${plugin}"
 
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
     # have ".zsh" there
     local pdir="${${plugin%.plugin.zsh}%.zsh}"
-    local dname="$ZPLG_PLUGINS_DIR/${user}--${plugin}"
+    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 
     # Look for a file to source
     typeset -a matches
@@ -885,7 +889,7 @@ _zplugin-load () {
     _zplugin-load-plugin "$user" "$plugin"
 }
 
-# $1 - user/plugin (i.e. uspl2 format, not uspl which is user--plugin)
+# $1 - user/plugin (i.e. uspl2 format, not uspl which is user---plugin)
 #
 # 1. Unfunction functions created by plugin
 # 2. Delete bindkeys
