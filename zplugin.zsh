@@ -631,8 +631,6 @@ _zplugin-install-completions() {
 
     _zplugin-exists-message "$user" "$plugin" || return 1
 
-    echo "Ready to perform creinstall for $user/$plugin"
-
     # Simlink any completion files included in plugin's directory
     typeset -a completions already_simlinked backup_comps c cfile bkpfile
     completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
@@ -656,6 +654,9 @@ _zplugin-install-completions() {
             fi
             echo "$ZPLG_COLORS[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
             command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
+        else
+            echo "$ZPLG_COLORS[error]Not symlinking completion \`$cfile', it already exists$reset_color"
+            echo "$ZPLG_COLORS[error]Use \`creinstall' {plugin-name} to force install$reset_color"
         fi
     done
 }
@@ -666,7 +667,7 @@ _zplugin-setup-plugin-dir() {
         git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 
         # Install completions
-        _zplugin-install-completions "$user" "$plugin"
+        _zplugin-install-completions "$user" "$plugin" "0"
     fi
 
     # All to the users - simulate OMZ directory structure (3/3)
