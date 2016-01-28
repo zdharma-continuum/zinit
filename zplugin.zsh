@@ -1159,11 +1159,11 @@ zplugin() {
            # Display reports of all plugins
            _zplugin-show-all-reports
            ;;
-       (loaded|registered|list)
+       (loaded|list)
            # Show list of loaded plugins
            _zplugin-show-registered-plugins
            ;;
-       (comp|comps|completions)
+       (comps|completions)
            # Show installed, enabled or disabled, completions
            _zplugin-show-completions
            ;;
@@ -1200,15 +1200,15 @@ zplugin() {
            echo "Initializing completion (compinit)..."
            compinit
            ;;
-       (-h|--help|h|help)
+       (-h|--help|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
--h|--help|h|help         - usage information
+-h|--help|help           - usage information
 load $ZPLG_COLORS[pname]{plugin-name}$reset_color       - load plugin
 unload $ZPLG_COLORS[pname]{plugin-name}$reset_color     - unload plugin
 report $ZPLG_COLORS[pname]{plugin-name}$reset_color     - show plugin's report
 all-reports              - show all plugin reports
-loaded|registered|list   - show what plugins are loaded
-comp[s]|completions      - list completions in use
+loaded|list              - show what plugins are loaded
+comps|completions        - list completions in use
 cdisable $ZPLG_COLORS[info]{cname}$reset_color         - disable completion \`cname'
 cenable  $ZPLG_COLORS[info]{cname}$reset_color         - enable completion \`cname'
 creinstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - install completions for plugin
