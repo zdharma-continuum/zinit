@@ -1169,7 +1169,7 @@ zplugin() {
            # Show list of loaded plugins
            _zplugin-show-registered-plugins
            ;;
-       (comps|completions)
+       (comp|completions)
            # Show installed, enabled or disabled, completions
            _zplugin-show-completions
            ;;
@@ -1214,7 +1214,7 @@ unload $ZPLG_COLORS[pname]{plugin-name}$reset_color     - unload plugin
 report $ZPLG_COLORS[pname]{plugin-name}$reset_color     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list              - show what plugins are loaded
-comps|completions        - list completions in use
+comp|completions        - list completions in use
 cdisable $ZPLG_COLORS[info]{cname}$reset_color         - disable completion \`cname'
 cenable  $ZPLG_COLORS[info]{cname}$reset_color         - enable completion \`cname'
 creinstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - install completions for plugin

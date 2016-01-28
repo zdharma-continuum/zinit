@@ -12,7 +12,7 @@ commands=(
     all-reports:'show all plugin reports'
     loaded:'show what plugins are loaded'
     list:'show what plugins are loaded'
-    comps:'list completions in use'
+    comp:'list completions in use'
     completions:'list completions in use'
     cdisable:'disable completion'
     cenable:'enable completion'
@@ -48,7 +48,7 @@ case $state in
             loaded|list)
                 ret=0
                 ;;
-            comps|completions)
+            comp|completions)
                 ret=0
                 ;;
             cdisable)
