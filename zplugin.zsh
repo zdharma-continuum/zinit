@@ -616,6 +616,23 @@ _zplugin-get-completion-owner() {
     REPLY="$in_plugin_path"
 }
 
+# For shortening of code
+# $1 - completion file
+# $2 - readline command
+_zplugin-get-completion-owner-uspl2() {
+    _zplugin-get-completion-owner "$1" "$2"
+    # Convert user--plugin into user/plugin
+    _zplugin-uspl-to-uspl2 "$REPLY"
+}
+
+# For shortening of code
+# $1 - completion file
+# $2 - readline command
+_zplugin-get-completion-owner-uspl2col() {
+    _zplugin-get-completion-owner-uspl2 "$1" "$2"
+    _zplugin-colorify-uspl2 "$REPLY"
+}
+
 _zplugin-load-plugin() {
     local user="$1" plugin="$2"
     ZPLG_CUR_USER="$user"
@@ -685,13 +702,9 @@ _zplugin-show-completions() {
         _zplugin-prepare-readline
 
         # This will resolve completion's simlink to obtain
-        # information about the repository it comes from,
-        # i.e. about uspl - user--plugin named directory
-        _zplugin-get-completion-owner "$cpath" "$REPLY"
-
-        # Convert user--plugin into user/plugin
-        _zplugin-uspl-to-uspl2 "$REPLY"
-        _zplugin-colorify-uspl2 "$REPLY"
+        # information about the repository it comes from, i.e.
+        # about user and plugin, taken from directory name
+        _zplugin-get-completion-owner-uspl2col "$cpath" "$REPLY"
 
         # Output line of text
         print -n "${(r:longest+1:: :)c} $REPLY"
@@ -795,11 +808,7 @@ _zplugin-cenable() {
     # Prepare readlink command for establishing completion's owner
     _zplugin-prepare-readline
     # Get completion's owning plugin
-    _zplugin-get-completion-owner "$cfile" "$REPLY"
-    # Convert user--plugin into user/plugin
-    _zplugin-uspl-to-uspl2 "$REPLY"
-    # Colorify user/plugin
-    _zplugin-colorify-uspl2 "$REPLY"
+    _zplugin-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
     echo "Enabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
 }
@@ -840,11 +849,7 @@ _zplugin-cdisable() {
     # Prepare readlink command for establishing completion's owner
     _zplugin-prepare-readline
     # Get completion's owning plugin
-    _zplugin-get-completion-owner "$bkpfile" "$REPLY"
-    # Convert user--plugin into user/plugin
-    _zplugin-uspl-to-uspl2 "$REPLY"
-    # Colorify user/plugin
-    _zplugin-colorify-uspl2 "$REPLY"
+    _zplugin-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
     echo "Disabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
 }
