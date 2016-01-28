@@ -900,13 +900,13 @@ _zplugin-cenable() {
         echo "$ZPLG_COLORS[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
         echo "$ZPLG_COLORS[error]Completion is actually enabled and will re-enable it again$reset_color"
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
-        rm >/dev/null -f "$cfile"
+        command rm >/dev/null -f "$cfile"
     else
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
     fi
 
     # Enable
-    mv >/dev/null "$bkpfile" "$cfile" # move completion's backup file created when disabling
+    command mv >/dev/null "$bkpfile" "$cfile" # move completion's backup file created when disabling
 
     # Prepare readlink command for establishing completion's owner
     _zplugin-prepare-readline
@@ -941,13 +941,13 @@ _zplugin-cdisable() {
     if [ -e "$bkpfile" ]; then
         echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
-        rm >/dev/null -f "$bkpfile"
+        command rm >/dev/null -f "$bkpfile"
     else
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
     fi
 
     # Disable
-    mv >/dev/null "$cfile" "$bkpfile"
+    command mv >/dev/null "$cfile" "$bkpfile"
 
     # Prepare readlink command for establishing completion's owner
     _zplugin-prepare-readline
