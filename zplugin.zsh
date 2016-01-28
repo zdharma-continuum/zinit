@@ -570,6 +570,11 @@ _zplugin-some-uspl-to-user-plugin() {
         user="${1%%---*}"
         plugin="${1#*---}"
     fi
+
+    if [ "$user" = "$plugin" ]; then
+        user="_local"
+    fi
+
     reply=( "$user" "$plugin" )
 }
 
