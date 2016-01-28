@@ -520,10 +520,10 @@ _zplugin-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}--${plugin}" ]; then
         git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}--${plugin}"
-    fi
 
-    # Install completions
-    _zplugin-install-completions "$1" "$2"
+        # Install completions
+        _zplugin-install-completions "$user" "$plugin"
+    fi
 
     # All to the users - simulate OMZ directory structure (3/3)
     if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
