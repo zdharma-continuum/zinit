@@ -770,20 +770,24 @@ _zplugin-cenable() {
         return 1
     fi
 
-    # Check if completion is already enabled
-    # Existence of "$cfile" says that
-    if [ -e "$cfile" ]; then
+    # Check if there is no backup file
+    # This is treated as if the completion is already enabled
+    if [ ! -e "$bkpfile" ]; then
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
-
-        # Backup file shouldn't exist if a completion is enabled
-        if [ -e "$bkpfile" ]; then
-            echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' exists$reset_color"
-        fi
 
         _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         return 0
     fi
-    _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
+
+    # Disabled, but completion file already exists?
+    if [ -e "$cfile" ]; then
+        echo "$ZPLG_COLORS[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
+        echo "$ZPLG_COLORS[error]Completion is actually enabled and will re-enable it again$reset_color"
+        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
+        rm >/dev/null -f "$cfile"
+    else
+        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
+    fi
 
     # Enable
     mv >/dev/null "$bkpfile" "$cfile" # move completion's backup file created when disabling
