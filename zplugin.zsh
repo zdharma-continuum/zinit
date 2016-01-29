@@ -949,7 +949,7 @@ ZPLG_COLORS=(
         ZPLG_REGISTERED_PLUGINS+="$uspl2"
     else
         # Allow overwrite-load, however warn about it
-        print "Warning: plugin already registered, will overwrite-load"
+        print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
     fi
 
     ZPLG_REPORTS[$uspl2]=""
