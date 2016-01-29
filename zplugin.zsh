@@ -194,7 +194,7 @@ ZPLG_COLORS=(
         # Remember the zstyle
         ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
     else
-        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options ${opts[*]}"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
     fi
 
     # Actual bindkey
