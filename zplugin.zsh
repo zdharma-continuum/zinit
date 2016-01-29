@@ -613,7 +613,7 @@ _zplugin-prepare-home() {
     [ -n "$ZPLG_HOME_READY" ] && return
     ZPLG_HOME_READY="1"
 
-    [ ! -d "$ZPLG_HOME" ] && mkdir 2>/dev/null "$ZPLG_HOME"
+    [ ! -d "$ZPLG_HOME" ] && command mkdir 2>/dev/null "$ZPLG_HOME"
     [ ! -d "$ZPLG_PLUGINS_DIR" ] && {
         command mkdir "$ZPLG_PLUGINS_DIR"
         # For compaudit
@@ -631,8 +631,8 @@ _zplugin-prepare-home() {
     }
 
     # All to the users - simulate OMZ directory structure (2/3)
-    [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom" 
-    [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && mkdir 2>/dev/null "$ZPLG_PLUGINS_DIR/custom/plugins" 
+    [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && command mkdir "$ZPLG_PLUGINS_DIR/custom" 
+    [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && command mkdir "$ZPLG_PLUGINS_DIR/custom/plugins" 
 }
 
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
