@@ -17,6 +17,7 @@ typeset -gH ZPLG_HOME="$HOME/.zplugin"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
 typeset -gH ZPLG_HOME_READY
+typeset -gaHU ZPLG_ENTER_OPTIONS
 
 #
 # All to the users - simulate OMZ directory structure (1/3)
@@ -82,17 +83,18 @@ fi
 typeset -gAH ZPLG_COLORS
 ZPLG_COLORS=(
     "title" ""
-    "pname" "$fg_bold[yellow]"
-    "uname" "$fg_bold[magenta]"
-    "keyword" "$fg_bold[green]"
-    "error" "$fg_bold[red]"
-    "p" "$fg_bold[blue]"
-    "bar" "$fg_bold[magenta]"
-    "info" "$fg_bold[green]"
+    "pname" "${fg_bold[yellow]}"
+    "uname" "${fg_bold[magenta]}"
+    "keyword" "${fg_bold[green]}"
+    "error" "${fg_bold[red]}"
+    "p" "${fg_bold[blue]}"
+    "bar" "${fg_bold[magenta]}"
+    "info" "${fg_bold[green]}"
 )
 
 #
 # Shadowing-related functions (names of substitute functions start with -) {{{
+# Must be resistant to various game-changing options like KSH_ARRAYS
 #
 
 --zplugin-reload-and-run () {
@@ -117,13 +119,13 @@ ZPLG_COLORS=(
 
     zparseopts -a opts -D ${(s::):-TUXkmtzw}
 
-    if (( $opts[(I)(-|+)X] ))
+    if [ -n "${opts[(r)(-|+)X]}" ]
     then
         -zplugin-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
         return 1
     fi
-    if (( $opts[(I)-w] ))
+    if [ -n "${opts[(r)-w]}" ]
     then
         -zplugin-add-report "$ZPLG_CUR_USPL2" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
@@ -165,10 +167,10 @@ ZPLG_COLORS=(
     local -a opts
     opts=( "${(k)optsA[@]}" )
 
-    if [[ "$#opts" -eq "0" ||
-        ( "$#opts" -eq "1" && ${opts[1]} = "-M" ) ||
-        ( "$#opts" -eq "1" && ${opts[1]} = "-s" ) ||
-        ( "$#opts" -le "2" && "${opts[(r)-M]}" = "-M" && "${opts[(r)-s]}" = "-s" )
+    if [[ "${#opts[@]}" -eq "0" ||
+        ( "${#opts[@]}" -eq "1" && "${opts[(r)-M]}" = "-M" ) ||
+        ( "${#opts[@]}" -eq "1" && "${opts[(r)-s]}" = "-s" ) ||
+        ( "${#opts[@]}" -le "2" && "${opts[(r)-M]}" = "-M" && "${opts[(r)-s]}" = "-s" )
     ]]; then
         local string="${(q)1}" widget="${(q)2}"
         local quoted
@@ -191,7 +193,7 @@ ZPLG_COLORS=(
         # Remember the zstyle
         ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
     else
-        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options $opts[*]"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options ${opts[*]}"
     fi
 
     # Actual bindkey
@@ -205,7 +207,7 @@ ZPLG_COLORS=(
     typeset -a pos
     pos=( "$@" )
 
-    local opt quoted prefix option
+    local opt quoted prefix option MATCH
     integer next_is_option=0 was_minus_o=0
 
     for opt in "$@"; do
@@ -219,9 +221,10 @@ ZPLG_COLORS=(
         fi
 
         if [[ "$prefix" = "-" || "$prefix" = "+" ]]; then
-            if [ "$option[1]" = "o" ]; then
-                if [ "$#option" -gt 1 ]; then
-                    option="${option[2,-1]}"
+            MATCH=""
+            option="${option#(#m)?}"
+            if [ "$MATCH" = "o" ]; then
+                if [ -n "$#option" ]; then
                     # Store current state of option given right after -o
                     [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
                 else
@@ -270,7 +273,7 @@ ZPLG_COLORS=(
     local -a opts
     zparseopts -a opts -D ${(s::):-eLdgabsTtm}
 
-    if [[ "$#opts" -eq 0 || ( "$#opts" -eq 1 && ${opts[1]} = "-e" ) ]]; then
+    if [[ "${#opts[@]}" -eq 0 || ( "${#opts[@]}" -eq 1 && "${opts[(r)-e]}" = "-e" ) ]]; then
         # Have to quote $1, ten $2, then concatenate them, then quote them again
         local pattern="${(q)1}" style="${(q)2}"
         local ps="$pattern $style"
@@ -279,7 +282,7 @@ ZPLG_COLORS=(
         # Remember the zstyle
         ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
     else
-        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: $opts[*]"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: ${opts[*]}"
     fi
 
     # Actual zstyle
@@ -334,7 +337,7 @@ ZPLG_COLORS=(
 
 --zplugin-shadow-compdef() {
     # Check if that function exists
-    if (( $+functions[compdef] == 0 )); then
+    if (( ${+functions[compdef]} == 0 )); then
         -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
     else
         -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \'compdef' exists"\
@@ -476,9 +479,9 @@ ZPLG_COLORS=(
 
     local keyword="${txt%% *}"
     if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
-        keyword="$ZPLG_COLORS[error]$keyword$reset_color"
+        keyword="${ZPLG_COLORS[error]}$keyword$reset_color"
     else
-        keyword="$ZPLG_COLORS[keyword]$keyword$reset_color"
+        keyword="${ZPLG_COLORS[keyword]}$keyword$reset_color"
     fi
 
     ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
@@ -616,6 +619,30 @@ ZPLG_COLORS=(
         echo "Unsetting $k"
     done
     unfunction 2>/dev/null "$f"
+}
+
+# }}}
+
+#
+# State restoration functions {{{
+#
+
+# Saves options
+-zplugin-save-enter-state() {
+    ZPLG_ENTER_OPTIONS=( )
+    [[ -o "KSH_ARRAYS" ]] && ZPLG_ENTER_OPTIONS+=( "KSH_ARRAYS" )
+}
+
+# Restores options
+-zplugin-restore-enter-state() {
+    for i in "${ZPLG_ENTER_OPTIONS[@]}"; do
+        setopt "$i"
+    done
+}
+
+# Sets state needed by this code
+-zplugin-set-desired-shell-state() {
+    setopt NO_KSH_ARRAYS
 }
 
 # }}}
@@ -833,9 +860,13 @@ ZPLG_COLORS=(
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Source $fname"
 
     -zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
+    # We need some state, but user wants his for his plugins
+    -zplugin-restore-enter-state 
     -zplugin-shadow-on
     source "$dname/$fname"
     -zplugin-shadow-off
+    # Restore our desired state for our operation
+    -zplugin-set-desired-shell-state
     -zplugin-diff-functions "$ZPLG_CUR_USPL2" end
     -zplugin-diff-functions "$user/$plugin" diff
 }
@@ -1193,6 +1224,9 @@ alias zpl=zplugin zplg=zplugin
 
 # Main function with subcommands
 zplugin() {
+    -zplugin-save-enter-state
+    -zplugin-set-desired-shell-state
+
     -zplugin-prepare-home
 
     # Add completions directory to fpath
@@ -1286,4 +1320,6 @@ compinit                 - refresh installed completions"
            ;;
     esac
 
+    # Restore user's options
+    -zplugin-restore-enter-state
 }
