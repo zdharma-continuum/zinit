@@ -727,6 +727,29 @@ _zplugin-uninstall-completions() {
     fi
 }
 
+_zplugin-compinit() {
+    typeset -a symlinked backup_comps
+    local c cfile bkpfile 
+
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+
+    # Delete completions if they are really there, either
+    # as completions (_fname) or backups (fname)
+    for c in "${symlinked[@]}" "${backup_comps[@]}"; do
+        action=0
+        cfile="${c:t}"
+        cfile="_${cfile#_}"
+        bkpfile="${cfile#_}"
+
+        _zplugin-forget-completion "$cfile"
+        echo "$ZPLG_COLORS[info]Processing completion $cfile$reset_color"
+    done
+
+    echo "Initializing completion (compinit)..."
+    compinit
+}
+
 _zplugin-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
@@ -1206,6 +1229,12 @@ zplugin() {
            echo "Initializing completion (compinit)..."
            compinit
            ;;
+       (compinit)
+           # Runs compinit in a way that ensures
+           # reload of plugins' completions
+           _zplugin-compinit
+           ;;
+
        (-h|--help|help)
            echo "$ZPLG_COLORS[p]Usage$reset_color:
 -h|--help|help           - usage information
@@ -1218,7 +1247,8 @@ comp|completions        - list completions in use
 cdisable $ZPLG_COLORS[info]{cname}$reset_color         - disable completion \`cname'
 cenable  $ZPLG_COLORS[info]{cname}$reset_color         - enable completion \`cname'
 creinstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - install completions for plugin
-cuninstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - uninstall completions for plugin"
+cuninstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - uninstall completions for plugin
+compinit                 - refresh installed completions"
            ;;
        (*)
            echo "Unknown command \`$1' (try \`help' to get usage information)"

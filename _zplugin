@@ -18,6 +18,7 @@ commands=(
     cenable:'enable completion'
     creinstall:'install completions for plugin'
     cuninstall:'uninstall completions for plugin'
+    compinit:'refresh installed completions'
 )
 
 _arguments \
@@ -70,13 +71,13 @@ case $state in
             cuninstall)
                 compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
                 ;;
-            *)
+            compinit)
                 ret=0
                 ;;
+            *)
+                ret=1
+                ;;
         esac
-    *)
-        ret=1
-        ;;
 esac
 
 return "$ret"
