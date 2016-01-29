@@ -1195,10 +1195,10 @@ ZPLG_COLORS=(
         nv_arr[3]="${(Q)nv_arr[3]}"
 
         if [ "${nv_arr[3]}" = "-s" ]; then
-            print "Removing suffix alias ${nv_arr[1]}=${nv_arr[2]}"
+            print "Removing ${ZPLG_COLORS[info]}suffix$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
             unalias -s "${nv_arr[1]}"
         elif [ "${nv_arr[3]}" = "-g" ]; then
-            print "Removing global alias ${nv_arr[1]}=${nv_arr[2]}"
+            print "Removing ${ZPLG_COLORS[info]}global$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
             unalias "${(q)nv_arr[1]}"
         else
             print "Removing alias ${nv_arr[1]}=${nv_arr[2]}"
