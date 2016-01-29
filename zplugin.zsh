@@ -650,6 +650,9 @@ ZPLG_COLORS=(
 -zplugin-save-enter-state() {
     ZPLG_ENTER_OPTIONS=( )
     [[ -o "KSH_ARRAYS" ]] && ZPLG_ENTER_OPTIONS+=( "KSH_ARRAYS" )
+    [[ -o "RC_EXPAND_PARAM" ]] && ZPLG_ENTER_OPTIONS+=( "RC_EXPAND_PARAM" )
+    [[ -o "SH_WORD_SPLIT" ]] && ZPLG_ENTER_OPTIONS+=( "SH_WORD_SPLIT" )
+    [[ -o "SHORT_LOOPS" ]] && ZPLG_ENTER_OPTIONS+=( "SHORT_LOOPS" )
 }
 
 # Restores options
@@ -662,6 +665,9 @@ ZPLG_COLORS=(
 # Sets state needed by this code
 -zplugin-set-desired-shell-state() {
     setopt NO_KSH_ARRAYS
+    setopt NO_RC_EXPAND_PARAM
+    setopt NO_SH_WORD_SPLIT
+    setopt NO_SHORT_LOOPS
 }
 
 # }}}
