@@ -71,7 +71,26 @@ case $state in
                 compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
                 ;;
             cuninstall)
-                compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
+                # We must iterate each plugin and check if
+                # it has completions that are installed
+                typeset -a plugins completions
+                local p c user plugin
+                for p in "${ZPLG_PLUGINS_DIR[@]}"/*; do
+                    completions=( "$p"/_*(N) )
+                    for c in "${completions[@]}"; do
+                        cfile="${c:t}"
+                        bkpfile="_${cfile#_}"
+                        # Completion installed, either enabled or disabled?
+                        if [[ -e "$ZPLG_COMPLETIONS_DIR"/"$cfile" || -e "$ZPLG_COMPLETIONS_DIR"/"$bkpfile" ]]; then
+                            p="${p:t}"
+                            user="${p%%---*}"
+                            plugin="${p#*---}"
+                            plugins+=( "$user/$plugin" )
+                            break
+                        fi
+                    done
+                done
+                compadd "$@" -a - plugins && ret=0
                 ;;
             compinit)
                 ret=0
