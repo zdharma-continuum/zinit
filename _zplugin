@@ -27,7 +27,7 @@ _arguments \
 
 case $state in
     command)
-        _describe -t commands command commands && ret=0
+        _describe -t commands "Zplugin command" commands && ret=0
         ;;
     argument)
         case $words[2] in
@@ -55,16 +55,14 @@ case $state in
             cdisable)
                 # Find enabled completions
                 typeset -a completions
-                completions=( ~/.zplugin/completions/_*(N) )
-                completions=( "${completions[@]:t}" )
+                completions=( ~/.zplugin/completions/_*(N:t) )
                 completions=( "${completions[@]#_}" )
                 compadd "$@" -a - completions && ret=0
                 ;;
             cenable)
                 # Find disabled
                 typeset -a completions
-                completions=( ~/.zplugin/completions/[^_]*(N) )
-                completions=( "${completions[@]:t}" )
+                completions=( ~/.zplugin/completions/[^_]*(N:t) )
                 compadd "$@" -a - completions && ret=0
                 ;;
             creinstall)
