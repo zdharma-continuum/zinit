@@ -786,8 +786,24 @@ ZPLG_COLORS=(
 
 # TODO detect second autoload?
 -zplugin-register-plugin() {
-    [ -z "ZPLG_REPORTS[${user}/${plugin}]" ] && ZPLG_REPORTS[${user}/${plugin}]=""
-    ZPLG_REGISTERED_PLUGINS+="${1}/${2}"
+    -zplugin-any-to-user-plugin "$1" "$2"
+    local user="$reply[1]" plugin="$reply[2]" uspl2="$reply[1]/$reply[2]"
+
+    if ! -zplugin-exists "$user" "$plugin"; then
+        ZPLG_REGISTERED_PLUGINS+="$uspl2"
+    else
+        # Allow overwrite-load, however warn about it
+        print "Warning: plugin already registered, will overwrite-load"
+    fi
+
+    ZPLG_REPORTS[$uspl2]=""
+    ZPLG_FUNCTIONS_BEFORE[$uspl2]=""
+    ZPLG_FUNCTIONS_AFTER[$uspl2]=""
+    ZPLG_FUNCTIONS[$uspl2]=""
+    ZPLG_ZSTYLES[$uspl2]=""
+    ZPLG_BINDKEYS[$uspl2]=""
+    ZPLG_ALIASES[$uspl2]=""
+    ZPLG_OPTIONS[$uspl2]=""
 }
 
 -zplugin-load-plugin() {
