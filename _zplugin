@@ -1,4 +1,4 @@
-#compdef zplugin zpl
+#compdef zplugin zpl zplg
 
 local context state state_descr line ret=1
 typeset -A opt_args
