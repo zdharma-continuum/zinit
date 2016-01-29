@@ -502,10 +502,17 @@ ZPLG_COLORS=(
 # Returns user and plugin in $reply
 #
 -zplugin-any-to-user-plugin() {
-    if [ ! -z "$2" ];then
+    # Two components given?
+    if [ -n "$2" ];then
+        # But user name is empty?
+        [ -z "$1" ] && 1="_local"
+
         reply=( "$1" "$2" )
         return 0
     fi
+
+    # Rest is for single component given
+    # It doesn't touch $2
 
     local user="${1%%/*}" plugin="${1#*/}"
     if [ "$user" = "$plugin" ]; then
@@ -513,8 +520,12 @@ ZPLG_COLORS=(
         plugin="${1#*---}"
     fi
 
-    if [ "$user" = "$plugin" ]; then
-        user="_local"
+    if [[ "$user" = "$plugin" || -z "$user" ]]; then
+            user="_local"
+    fi
+
+    if [[ -z "$plugin" ]]; then
+        plugin="_unknown"
     fi
 
     reply=( "$user" "$plugin" )
