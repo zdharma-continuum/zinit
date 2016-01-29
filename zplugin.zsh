@@ -38,6 +38,8 @@ typeset -gH ZPLG_CUR_PLUGIN=""
 typeset -gH ZPLG_CUR_USPL=""
 # Concatenated with "/"
 typeset -gH ZPLG_CUR_USPL2=""
+# Distincts setopt and unsetopt for the shadowing function
+typeset -gH ZPLG_IS_UNSETOPT_SHADOW
 
 #
 # Function diffing
@@ -201,65 +203,99 @@ ZPLG_COLORS=(
     builtin bindkey "${pos[@]}"
 }
 
+--zplugin-shadow-unsetopt() {
+    ZPLG_IS_UNSETOPT_SHADOW=1
+    --zplugin-shadow-setopt "$@"
+    ZPLG_IS_UNSETOPT_SHADOW=0
+}
+
 --zplugin-shadow-setopt() {
-    -zplugin-add-report "$ZPLG_CUR_USPL2" "Setopt $*"
+    if [ "$ZPLG_IS_UNSETOPT_SHADOW" = "1" ]; then
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Unsetopt $*"
+    else
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Setopt $*"
+    fi
 
     # Remember to perform the actual setopt call
     typeset -a pos
     pos=( "$@" )
 
     local opt quoted prefix option MATCH
-    integer next_is_option=0 was_minus_o=0
+    integer next_is_option=0 occured_straight=0
 
     for opt in "$@"; do
         if (( next_is_option > 0 )); then
-            # Next is option, so accept that no-minus token
-            (( was_minus_o == 1 )) && was_minus_o=2
-            next_is_option=0
+            # Just take the token
             prefix=""
             option="$opt"
         else
-            prefix="${opt%%(#m)[a-zA-Z0-9_ \t]##}"
+            # Get everything that's [a-zA-Z0-9_], leave rest
+            # as prefix, which normally should be "-" or "+"
+            # or empty
+            prefix="${opt%%(#m)[a-zA-Z0-9_]##}"
             option="$MATCH"
         fi
 
         if [[ "$prefix" = "-" || "$prefix" = "+" ]]; then
+            if [ "$occured_straight" = "1" ]; then
+                # Setopt works this way - if straight option occurs
+                # then no "-" or "+" formatted option can occur
+                # afterwards, long or short. However, after those
+                # skipped, anything else will be interpreted as
+                # straight option, e.g. a string after "-o ", thus
+                # the continue
+                -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ options given in one line"\
+                                                "in a way setopt doesn't support [$prefix$option]"
+                continue
+            fi
+
+            # First character
             MATCH=""
             option="${option#(#m)?}"
+
             if [ "$MATCH" = "o" ]; then
                 if [ -n "$option" ]; then
-                    # Store current state of option given right after -o
+                    # Option given right after -o
                     [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
                 else
-                    # Zsh doesn't support "-o option" after "option" in single setopt call
-                    was_minus_o=1
-                    [ "$prefix" = "-" ] && next_is_option=1 || next_is_option=2
+                    # Option given through -o, but as next token
+                    next_is_option=1
                     continue
                 fi
             else
-                # Short option format?
+                # Restore non-o character
+                option="$MATCH$option"
+
+                # Is it single short option or more?
                 if [ -n "${option#?}" ]; then
-                    # Unsupported option format
-                    -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported option format ($prefix$option)"
+                    # Unsupported option format, "-something"
+                    # TODO: support it, strings like -9wV...
+                    -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ unsupported option format ($prefix$option)"
                     continue
                 fi
 
-                # Store current state of option given in short format
+                # Single short option, store its state
                 [[ -n ${-[(r)$option]} ]] && quoted="-$option" || quoted="+$option"
             fi
         else
-            (( was_minus_o == 1 )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ options given in one line"\
-                                                                       "in a way setopt doesn't support [$prefix$option]"
-            # Next no-minus option will be reported
-            (( was_minus_o == 2 )) && was_minus_o=1
-            [ -n "$prefix" ] && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: incorrect option ($prefix$option)"
-            # Store current state of option
+            # Occured option given straight: setopt theoption
+            [ "$next_is_option" != "1" ] && occured_straight=1
+
+            # We removed [a-zA-Z0-9_], something else remained
+            if [ -n "$prefix" ]; then
+                -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ incorrect option ($prefix$option)"
+                continue
+            fi
+
             [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
         fi
 
         quoted="${quoted//nono/}"
         quoted="${(q)quoted}"
         ZPLG_OPTIONS[$ZPLG_CUR_USPL2]+="$quoted "
+
+        # We possibly used this to take whole string as option
+        next_is_option=0
     done
 
     # Actual setopt
@@ -359,15 +395,17 @@ ZPLG_COLORS=(
     alias autoload=--zplugin-shadow-autoload
     alias bindkey=--zplugin-shadow-bindkey
     alias setopt=--zplugin-shadow-setopt
+    alias unsetopt=--zplugin-shadow-unsetopt
     alias zstyle=--zplugin-shadow-zstyle
     alias alias=--zplugin-shadow-alias
     alias zle=--zplugin-shadow-zle
     alias compdef=--zplugin-shadow-compdef
+    ZPLG_IS_UNSETOPT_SHADOW=0
 }
 
 # Shadowing off
 -zplugin-shadow-off() {
-    unalias     autoload bindkey setopt zstyle alias zle
+    unalias     autoload bindkey setopt unsetopt zstyle alias zle
 }
 
 # }}}
