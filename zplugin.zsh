@@ -213,6 +213,8 @@ ZPLG_COLORS=(
 
     for opt in "$@"; do
         if (( next_is_option > 0 )); then
+            # Next is option, so accept that no-minus token
+            (( was_minus_o == 1 )) && was_minus_o=2
             next_is_option=0
             prefix=""
             option="$opt"
@@ -246,8 +248,10 @@ ZPLG_COLORS=(
                 [[ -n ${-[(r)$option]} ]] && quoted="-$option" || quoted="+$option"
             fi
         else
-            (( was_minus_o )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: options given in one line"\
-                                                                       "in a way setopt doesn't support"
+            (( was_minus_o == 1 )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ options given in one line"\
+                                                                       "in a way setopt doesn't support [$prefix$option]"
+            # Next no-minus option will be reported
+            (( was_minus_o == 2 )) && was_minus_o=1
             [ -n "$prefix" ] && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: incorrect option ($prefix$option)"
             # Store current state of option
             [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
