@@ -41,6 +41,9 @@ typeset -gH ZPLG_CUR_USPL=""
 typeset -gH ZPLG_CUR_USPL2=""
 # Distincts setopt and unsetopt for the shadowing function
 typeset -gH ZPLG_IS_UNSETOPT_SHADOW
+# If any plugin retains the shadowed function instead of
+# original one then this will protect from further reporting
+typeset -gH ZPLG_SHADOWING_ACTIVE
 
 #
 # Function diffing
@@ -118,6 +121,9 @@ ZPLG_COLORS=(
 }
 
 --zplugin-shadow-autoload () {
+    # Shadowing guard
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin autoload "$@"; return $? }
+
     local -a opts
     local func
 
@@ -156,6 +162,9 @@ ZPLG_COLORS=(
 }
 
 --zplugin-shadow-bindkey() {
+    # Shadowing guard
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin bindkey "$@"; return $? }
+
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
 
     # Remember to perform the actual bindkey call
@@ -205,12 +214,19 @@ ZPLG_COLORS=(
 }
 
 --zplugin-shadow-unsetopt() {
+    # Shadowing guard
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin unsetopt "$@"; return $? }
+
     ZPLG_IS_UNSETOPT_SHADOW=1
     --zplugin-shadow-setopt "$@"
     ZPLG_IS_UNSETOPT_SHADOW=0
 }
 
 --zplugin-shadow-setopt() {
+    # Shadowing guard
+    # unsetopt has its own guard so here it's always "setopt"
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin setopt "$@"; return $? }
+
     if [ "$ZPLG_IS_UNSETOPT_SHADOW" = "1" ]; then
         -zplugin-add-report "$ZPLG_CUR_USPL2" "Unsetopt $*"
     else
@@ -307,6 +323,9 @@ ZPLG_COLORS=(
 }
 
 --zplugin-shadow-zstyle() {
+    # Shadowing guard
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zstyle "$@"; return $? }
+
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
 
     # Remember to perform the actual zstyle call
@@ -335,6 +354,9 @@ ZPLG_COLORS=(
 }
 
 --zplugin-shadow-alias() {
+    # Shadowing guard
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin alias "$@"; return $? }
+
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Alias $*"
 
     # Remember to perform the actual alias call
@@ -374,6 +396,9 @@ ZPLG_COLORS=(
 }
 
 --zplugin-shadow-zle() {
+    # Shadowing guard
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zle "$@"; return $? }
+
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Zle $*"
 
     # Actual zle
@@ -381,6 +406,9 @@ ZPLG_COLORS=(
 }
 
 --zplugin-shadow-compdef() {
+    # Shadowing guard
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { \compdef "$@"; return $? }
+
     # Check if that function exists
     if (( ${+functions[compdef]} == 0 )); then
         -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
@@ -405,11 +433,13 @@ ZPLG_COLORS=(
     alias zle=--zplugin-shadow-zle
     alias compdef=--zplugin-shadow-compdef
     ZPLG_IS_UNSETOPT_SHADOW=0
+    ZPLG_SHADOWING_ACTIVE=1
 }
 
 # Shadowing off
 -zplugin-shadow-off() {
-    unalias     autoload bindkey setopt unsetopt zstyle alias zle
+    unalias autoload bindkey setopt unsetopt zstyle alias zle compdef
+    ZPLG_SHADOWING_ACTIVE=0
 }
 
 # }}}
