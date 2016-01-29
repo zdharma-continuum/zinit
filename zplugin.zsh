@@ -621,6 +621,25 @@ ZPLG_COLORS=(
     unfunction 2>/dev/null "$f"
 }
 
+-zplugin-check-comp-consistency() {
+    local cfile="$1" bkpfile="$2"
+    integer error="$3"
+
+    # bkpfile must be a symlink
+    if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
+        print "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
+        error=1
+    fi
+
+    # cfile must be a symlink
+    if [[ -e "$cfile" && ! -L "$cfile" ]]; then
+        print "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
+        error=1
+    fi
+
+    # Tell user that he can manually modify but should do it right
+    (( error )) && print "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+}
 # }}}
 
 #
@@ -954,26 +973,6 @@ ZPLG_COLORS=(
         -zplugin-any-colorify-as-uspl2 "$i"
         print "$REPLY"
     done
-}
-
--zplugin-check-comp-consistency() {
-    local cfile="$1" bkpfile="$2"
-    integer error="$3"
-
-    # bkpfile must be a symlink
-    if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
-        print "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
-        error=1
-    fi
-
-    # cfile must be a symlink
-    if [[ -e "$cfile" && ! -L "$cfile" ]]; then
-        print "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
-        error=1
-    fi
-
-    # Tell user that he can manually modify but should do it right
-    (( error )) && print "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
 }
 
 -zplugin-cenable() {
