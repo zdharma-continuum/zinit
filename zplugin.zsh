@@ -332,6 +332,20 @@ ZPLG_COLORS=(
     builtin zle "$@"
 }
 
+-zplugin-shadow-compdef() {
+    # Check if that function exists
+    if (( $+functions[compdef] == 0 )); then
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
+    else
+        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \'compdef' exists"\
+                                                "(you might be running compinit twice; this is probably required"\
+                                                "for this plugin's completion to work)"
+    fi
+
+    # Actual zle
+    \compdef 2>/dev/null "$@"
+}
+
 # Shadowing on
 _zplugin-shadow-on() {
     alias autoload=-zplugin-shadow-autoload
@@ -340,6 +354,7 @@ _zplugin-shadow-on() {
     alias zstyle=-zplugin-shadow-zstyle
     alias alias=-zplugin-shadow-alias
     alias zle=-zplugin-shadow-zle
+    alias compdef=-zplugin-shadow-compdef
 }
 
 # Shadowing off
