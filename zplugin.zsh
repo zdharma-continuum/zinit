@@ -1128,7 +1128,7 @@ ZPLG_COLORS=(
         sw_arr[4]="${(Q)sw_arr[4]}"
 
         if [ "${sw_arr[3]}" = "-M" ]; then
-            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} mapped to ${sw_arr[4]}"
+            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} ${ZPLG_COLORS[info]}mapped to ${sw_arr[4]}$reset_color"
             bindkey -M "${sw_arr[4]}" -r "${sw_arr[1]}"
         else
             print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]}"
