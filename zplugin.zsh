@@ -82,7 +82,7 @@ zmodload zsh/parameter || return 1
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
-if [[ -n "$terminfo[colors]" || "$termcap[Co]" ]]; then
+if [[ -n "$terminfo[colors]" || -n "$termcap[Co]" ]]; then
     autoload colors
     colors
 fi
