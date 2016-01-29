@@ -68,7 +68,25 @@ To update run the command again.
 `Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
 single line of code that will be added to the bottom (it will be sourcing
 `zplugin.zsh` for you). Completion will be also installed, for command `zplugin`
-and `zpl`, `zplg` (aliases).
+and aliases `zpl`, `zplg`.
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
 
+## Usage
+
+```
+% zpl help
+Usage:
+-h|--help|help           - usage information
+load {plugin-name}       - load plugin
+unload {plugin-name}     - unload plugin
+report {plugin-name}     - show plugin's report
+all-reports              - show all plugin reports
+loaded|list              - show what plugins are loaded
+comp|completions         - list completions in use
+cdisable {cname}         - disable completion `cname'
+cenable  {cname}         - enable completion `cname'
+creinstall {plugin-name} - install completions for plugin
+cuninstall {plugin-name} - uninstall completions for plugin
+compinit                 - refresh installed completions
+```
