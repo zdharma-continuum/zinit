@@ -19,6 +19,7 @@ typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
 typeset -gH ZPLG_HOME_READY
 typeset -gaHU ZPLG_ENTER_OPTIONS
+typeset -gH ZPLG_EXTENDED_GLOB
 
 #
 # All to the users - simulate OMZ directory structure (1/3)
@@ -229,11 +230,14 @@ ZPLG_COLORS=(
             prefix=""
             option="$opt"
         else
+            -zplugin-save-extendedglob
+            builtin setopt extendedglob
             # Get everything that's [a-zA-Z0-9_], leave rest
             # as prefix, which normally should be "-" or "+"
             # or empty
             prefix="${opt%%(#m)[a-zA-Z0-9_]##}"
             option="$MATCH"
+            -zplugin-restore-extendedglob
         fi
 
         if [[ "$prefix" = "-" || "$prefix" = "+" ]]; then
@@ -723,6 +727,15 @@ ZPLG_COLORS=(
     setopt NO_RC_EXPAND_PARAM
     setopt NO_SH_WORD_SPLIT
     setopt NO_SHORT_LOOPS
+}
+
+-zplugin-save-extendedglob() {
+    [[ -o "extendedglob" ]] && ZPLG_EXTENDED_GLOB="1" || ZPLG_EXTENDED_GLOB="0"
+}
+
+-zplugin-restore-extendedglob() {
+    [ "$ZPLG_EXTENDED_GLOB" = "1" ] && setopt extendedglob
+    [ "$ZPLG_EXTENDED_GLOB" = "0" ] && unsetopt extendedglob
 }
 
 # }}}
