@@ -541,7 +541,7 @@ ZPLG_COLORS=(
 -zplugin-exists-message() {
     if ! -zplugin-exists "$1" "$2"; then
         -zplugin-any-colorify-as-uspl2 "$1" "$2"
-        echo "$ZPLG_COLORS[error]No such plugin$reset_color $REPLY"
+        print "$ZPLG_COLORS[error]No such plugin$reset_color $REPLY"
         return 1
     fi
     return 0
@@ -684,11 +684,11 @@ ZPLG_COLORS=(
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
             fi
-            echo "$ZPLG_COLORS[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
+            print "$ZPLG_COLORS[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
             command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
         else
-            echo "$ZPLG_COLORS[error]Not symlinking completion \`$cfile', it already exists$reset_color"
-            echo "$ZPLG_COLORS[error]Use \`creinstall' {plugin-name} to force install$reset_color"
+            print "$ZPLG_COLORS[error]Not symlinking completion \`$cfile', it already exists$reset_color"
+            print "$ZPLG_COLORS[error]Use \`creinstall' {plugin-name} to force install$reset_color"
         fi
     done
 }
@@ -730,15 +730,15 @@ ZPLG_COLORS=(
         fi
 
         if (( action )); then
-            echo "$ZPLG_COLORS[info]Uninstalling completion \`$cfile'$reset_color"
+            print "$ZPLG_COLORS[info]Uninstalling completion \`$cfile'$reset_color"
             (( global_action ++ ))
         else
-            echo "$ZPLG_COLORS[info]Completion \`$cfile' not installed$reset_color"
+            print "$ZPLG_COLORS[info]Completion \`$cfile' not installed$reset_color"
         fi
     done
 
     if (( global_action > 0 )); then
-        echo "$ZPLG_COLORS[info]Uninstalled $global_action completions$reset_color"
+        print "$ZPLG_COLORS[info]Uninstalled $global_action completions$reset_color"
     fi
 }
 
@@ -758,10 +758,10 @@ ZPLG_COLORS=(
         bkpfile="${cfile#_}"
 
         -zplugin-forget-completion "$cfile"
-        echo "$ZPLG_COLORS[info]Processing completion $cfile$reset_color"
+        print "$ZPLG_COLORS[info]Processing completion $cfile$reset_color"
     done
 
-    echo "Initializing completion (compinit)..."
+    print "Initializing completion (compinit)..."
     compinit
 }
 
@@ -900,14 +900,14 @@ ZPLG_COLORS=(
 
     # Print "----------"
     local msg="Plugin report for $user/$plugin"
-    echo $ZPLG_COLORS[bar]"${(r:$#msg::-:)tmp__}"$reset_color
+    print $ZPLG_COLORS[bar]"${(r:$#msg::-:)tmp__}"$reset_color
 
     # Print report gathered via shadowing
     print $ZPLG_REPORTS[${user}/${plugin}]
 
     # Print report gathered via $functions-diffing
     -zplugin-format-functions "$user/$plugin"
-    echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
+    print $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 }
 
 -zplugin-show-all-reports() {
@@ -931,18 +931,18 @@ ZPLG_COLORS=(
 
     # bkpfile must be a symlink
     if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
-        echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
+        print "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
         error=1
     fi
 
     # cfile must be a symlink
     if [[ -e "$cfile" && ! -L "$cfile" ]]; then
-        echo "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
+        print "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
         error=1
     fi
 
     # Tell user that he can manually modify but should do it right
-    (( error )) && echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+    (( error )) && print "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
 }
 
 -zplugin-cenable() {
@@ -953,14 +953,14 @@ ZPLG_COLORS=(
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        echo "$ZPLG_COLORS[error]No such completion \`$c'$reset_color"
+        print "$ZPLG_COLORS[error]No such completion \`$c'$reset_color"
         return 1
     fi
 
     # Check if there is no backup file
     # This is treated as if the completion is already enabled
     if [ ! -e "$bkpfile" ]; then
-        echo "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
+        print "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
 
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -968,8 +968,8 @@ ZPLG_COLORS=(
 
     # Disabled, but completion file already exists?
     if [ -e "$cfile" ]; then
-        echo "$ZPLG_COLORS[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
-        echo "$ZPLG_COLORS[error]Completion is actually enabled and will re-enable it again$reset_color"
+        print "$ZPLG_COLORS[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
+        print "$ZPLG_COLORS[error]Completion is actually enabled and will re-enable it again$reset_color"
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$cfile"
     else
@@ -984,7 +984,7 @@ ZPLG_COLORS=(
     # Get completion's owning plugin
     -zplugin-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
-    echo "Enabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
+    print "Enabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
 
     return 0
 }
@@ -997,14 +997,14 @@ ZPLG_COLORS=(
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        echo "$ZPLG_COLORS[error]No such completion \`$c'$reset_color"
+        print "$ZPLG_COLORS[error]No such completion \`$c'$reset_color"
         return 1
     fi
 
     # Check if it's already disabled
     # Not existing "$cfile" says that
     if [[ ! -e "$cfile" ]]; then
-        echo "Completion $ZPLG_COLORS[info]$c$reset_color already disabled"
+        print "Completion $ZPLG_COLORS[info]$c$reset_color already disabled"
 
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -1012,7 +1012,7 @@ ZPLG_COLORS=(
 
     # No disable, but bkpfile exists?
     if [ -e "$bkpfile" ]; then
-        echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
+        print "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$bkpfile"
     else
@@ -1027,7 +1027,7 @@ ZPLG_COLORS=(
     # Get completion's owning plugin
     -zplugin-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
-    echo "Disabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
+    print "Disabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
 
     return 0
 }
@@ -1073,7 +1073,7 @@ ZPLG_COLORS=(
     for f in "${(on)func[@]}"; do
         [ -z "$f" ] && continue
         f="${(Q)f}"
-        echo "Deleting function $f"
+        print "Deleting function $f"
         unfunction "$f"
     done
 
@@ -1098,10 +1098,10 @@ ZPLG_COLORS=(
         sw_arr[4]="${(Q)sw_arr[4]}"
 
         if [ "${sw_arr[3]}" = "-M" ]; then
-            echo "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} mapped to ${sw_arr[4]}"
+            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} mapped to ${sw_arr[4]}"
             bindkey -M "${sw_arr[4]}" -r "${sw_arr[1]}"
         else
-            echo "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]}"
+            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]}"
             bindkey -r "${sw_arr[1]}"
         fi
     done
@@ -1124,7 +1124,7 @@ ZPLG_COLORS=(
         ps_arr[1]="${(Q)ps_arr[1]}"
         ps_arr[2]="${(Q)ps_arr[2]}"
 
-        echo "Deleting zstyle ${ps_arr[1]} ${ps_arr[2]}"
+        print "Deleting zstyle ${ps_arr[1]} ${ps_arr[2]}"
 
         zstyle -d "${ps_arr[1]}" "${ps_arr[2]}"
     done
@@ -1141,7 +1141,7 @@ ZPLG_COLORS=(
         # Remove one level of quoting added when concatenating
         opt="${(Q)opt}"
 
-        echo "Setting option ${(U)opt}"
+        print "Setting option ${(U)opt}"
         setopt "$opt"
     done
 
@@ -1165,13 +1165,13 @@ ZPLG_COLORS=(
         nv_arr[3]="${(Q)nv_arr[3]}"
 
         if [ "${nv_arr[3]}" = "-s" ]; then
-            echo "Removing suffix alias ${nv_arr[1]}=${nv_arr[2]}"
+            print "Removing suffix alias ${nv_arr[1]}=${nv_arr[2]}"
             unalias -s "${nv_arr[1]}"
         elif [ "${nv_arr[3]}" = "-g" ]; then
-            echo "Removing global alias ${nv_arr[1]}=${nv_arr[2]}"
+            print "Removing global alias ${nv_arr[1]}=${nv_arr[2]}"
             unalias "${(q)nv_arr[1]}"
         else
-            echo "Removing alias ${nv_arr[1]}=${nv_arr[2]}"
+            print "Removing alias ${nv_arr[1]}=${nv_arr[2]}"
             unalias "${nv_arr[1]}"
         fi
     done
@@ -1180,11 +1180,11 @@ ZPLG_COLORS=(
     # 6. Forget the plugin
     #
 
-    echo "Unregistering plugin $uspl2col"
+    print "Unregistering plugin $uspl2col"
     local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
     ZPLG_REGISTERED_PLUGINS[$idx]=()
 
-    echo "Plugin's report saved to \$LASTREPORT"
+    print "Plugin's report saved to \$LASTREPORT"
 }
 
 # }}}
@@ -1233,7 +1233,7 @@ zplugin() {
            # with or without leading "_", e.g. "cp", "_cp"
            if -zplugin-cdisable "$f"; then
                -zplugin-forget-completion "$f"
-               echo "Initializing completion system (compinit)..."
+               print "Initializing completion system (compinit)..."
                compinit
            fi
            ;;
@@ -1243,7 +1243,7 @@ zplugin() {
            # with or without leading "_", e.g. "cp", "_cp"
            if -zplugin-cenable "$f"; then
                -zplugin-forget-completion "$f"
-               echo "Initializing completion system (compinit)..."
+               print "Initializing completion system (compinit)..."
                compinit
            fi
            ;;
@@ -1251,13 +1251,13 @@ zplugin() {
            # Installs completions for plugin. Enables them all. It's a
            # reinstallation, thus every obstacle gets overwritten or removed
            -zplugin-install-completions "$2" "$3" "1"
-           echo "Initializing completion (compinit)..."
+           print "Initializing completion (compinit)..."
            compinit
            ;;
        (cuninstall)
            # Uninstalls completions for plugin
            -zplugin-uninstall-completions "$2" "$3"
-           echo "Initializing completion (compinit)..."
+           print "Initializing completion (compinit)..."
            compinit
            ;;
        (compinit)
@@ -1267,7 +1267,7 @@ zplugin() {
            ;;
 
        (-h|--help|help)
-           echo "$ZPLG_COLORS[p]Usage$reset_color:
+           print "$ZPLG_COLORS[p]Usage$reset_color:
 -h|--help|help           - usage information
 load $ZPLG_COLORS[pname]{plugin-name}$reset_color       - load plugin
 unload $ZPLG_COLORS[pname]{plugin-name}$reset_color     - unload plugin
@@ -1282,7 +1282,7 @@ cuninstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - uninstall completions 
 compinit                 - refresh installed completions"
            ;;
        (*)
-           echo "Unknown command \`$1' (try \`help' to get usage information)"
+           print "Unknown command \`$1' (try \`help' to get usage information)"
            ;;
     esac
 
