@@ -19,6 +19,7 @@ unixorn/git-extra-commands
 peterhurford/git-it-on.zsh
 tevren/gitfast-zsh-plugin
 zsh-users/zsh-syntax-highlighting
+voronkovich/gitignore.plugin.zsh
 
 skipped:
 Stibbons/crayon-syntax-zsh (a wordpress plugin)
