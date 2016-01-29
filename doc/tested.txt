@@ -1,0 +1,27 @@
+horosgrisa/autoenv
+adolfoabegg/browse-commit
+arzzen/calc.plugin.zsh
+walesmd/caniuse.plugin.zsh
+mollifier/cd-gitroot
+MikeDacre/cdbk
+willghatch/zsh-cdr
+rutchkiwi/copyzshell (required OMZ directory structure simulation)
+veelenga/crystal-zsh
+jgrowl/depot_tools
+gusaiani/elixir-oh-my-zsh
+b4b4r07/emoji-cli
+b4b4r07/enhancd
+uvaes/fzf-marks
+voronkovich/get-jquery.plugin.zsh
+fontno/ghost_zeus
+peterhurford/git-aliases.zsh
+unixorn/git-extra-commands
+peterhurford/git-it-on.zsh
+tevren/gitfast-zsh-plugin
+zsh-users/zsh-syntax-highlighting
+
+skipped:
+Stibbons/crayon-syntax-zsh (a wordpress plugin)
+jsks/czhttpd (not a plugin, a software, a command)
+Vifon/deer (not a plugin, provides manual installation instructions)
+
