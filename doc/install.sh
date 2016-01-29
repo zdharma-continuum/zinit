@@ -6,6 +6,7 @@
 
 if ! test -d "$HOME/.zplugin"; then
     mkdir "$HOME/.zplugin"
+    chmod g-rwX "$HOME/.zplugin"
 fi
 
 echo ">>> Downloading zplugin to ~/.zplugin/bin"
