@@ -1236,7 +1236,7 @@ ZPLG_COLORS=(
         # Remove one level of quoting added when concatenating
         opt="${(Q)opt}"
 
-        print "Setting option ${(U)opt}"
+        print "Setting option $opt"
         setopt "$opt"
     done
 
