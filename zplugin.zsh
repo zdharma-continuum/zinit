@@ -95,7 +95,7 @@ ZPLG_COLORS=(
 # Shadowing-related functions (names of substitute functions start with -) {{{
 #
 
--zplugin-reload-and-run () {
+--zplugin-reload-and-run () {
     local fpath_prefix="$1" autoload_opts="$2" func="$3"
     shift 3
 
@@ -111,7 +111,7 @@ ZPLG_COLORS=(
     "$func" "$@"
 }
 
--zplugin-shadow-autoload () {
+--zplugin-shadow-autoload () {
     local -a opts
     local func
 
@@ -119,13 +119,13 @@ ZPLG_COLORS=(
 
     if (( $opts[(I)(-|+)X] ))
     then
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
         return 1
     fi
     if (( $opts[(I)-w] ))
     then
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "-w-Autoload $opts $*"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
         return
     fi
@@ -135,7 +135,7 @@ ZPLG_COLORS=(
     for i in "$@"; do
         local msg="Autoload $i"
         [ -n "$opts" ] && msg+=" with options $opts"
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "$msg"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "$msg"
     done
 
     # Do ZPLUGIN's "native" autoloads
@@ -143,14 +143,14 @@ ZPLG_COLORS=(
     for func
     do
         eval "function $func {
-            -zplugin-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
+            --zplugin-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
         }'
-        #functions[$func]="-zplugin-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
+        #functions[$func]="--zplugin-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
     done
 }
 
--zplugin-shadow-bindkey() {
-    _zplugin-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
+--zplugin-shadow-bindkey() {
+    -zplugin-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
 
     # Remember to perform the actual bindkey call
     typeset -a pos
@@ -191,15 +191,15 @@ ZPLG_COLORS=(
         # Remember the zstyle
         ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
     else
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options $opts[*]"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options $opts[*]"
     fi
 
     # Actual bindkey
     builtin bindkey "${pos[@]}"
 }
 
--zplugin-shadow-setopt() {
-    _zplugin-add-report "$ZPLG_CUR_USPL2" "Setopt $*"
+--zplugin-shadow-setopt() {
+    -zplugin-add-report "$ZPLG_CUR_USPL2" "Setopt $*"
 
     # Remember to perform the actual setopt call
     typeset -a pos
@@ -234,7 +234,7 @@ ZPLG_COLORS=(
                 # Short option format?
                 if [ "$#option" != "1" ]; then
                     # Unsupported option format
-                    _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported option format ($prefix$option)"
+                    -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported option format ($prefix$option)"
                     continue
                 fi
 
@@ -242,9 +242,9 @@ ZPLG_COLORS=(
                 [[ -n ${-[(r)$option]} ]] && quoted="-$option" || quoted="+$option"
             fi
         else
-            (( was_minus_o )) && _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: options given in one line"\
+            (( was_minus_o )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: options given in one line"\
                                                                        "in a way setopt doesn't support"
-            [ -n "$prefix" ] && _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: incorrect option ($prefix$option)"
+            [ -n "$prefix" ] && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: incorrect option ($prefix$option)"
             # Store current state of option
             [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
         fi
@@ -258,8 +258,8 @@ ZPLG_COLORS=(
     builtin setopt "${pos[@]}"
 }
 
--zplugin-shadow-zstyle() {
-    _zplugin-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
+--zplugin-shadow-zstyle() {
+    -zplugin-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
 
     # Remember to perform the actual zstyle call
     typeset -a pos
@@ -279,15 +279,15 @@ ZPLG_COLORS=(
         # Remember the zstyle
         ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
     else
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: $opts[*]"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: $opts[*]"
     fi
 
     # Actual zstyle
     builtin zstyle "${pos[@]}"
 }
 
--zplugin-shadow-alias() {
-    _zplugin-add-report "$ZPLG_CUR_USPL2" "Alias $*"
+--zplugin-shadow-alias() {
+    -zplugin-add-report "$ZPLG_CUR_USPL2" "Alias $*"
 
     # Remember to perform the actual alias call
     typeset -a pos
@@ -325,19 +325,19 @@ ZPLG_COLORS=(
     builtin alias "${pos[@]}"
 }
 
--zplugin-shadow-zle() {
-    _zplugin-add-report "$ZPLG_CUR_USPL2" "Zle $*"
+--zplugin-shadow-zle() {
+    -zplugin-add-report "$ZPLG_CUR_USPL2" "Zle $*"
 
     # Actual zle
     builtin zle "$@"
 }
 
--zplugin-shadow-compdef() {
+--zplugin-shadow-compdef() {
     # Check if that function exists
     if (( $+functions[compdef] == 0 )); then
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
     else
-        _zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \'compdef' exists"\
+        -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \'compdef' exists"\
                                                 "(you might be running compinit twice; this is probably required"\
                                                 "for this plugin's completion to work)"
     fi
@@ -347,18 +347,18 @@ ZPLG_COLORS=(
 }
 
 # Shadowing on
-_zplugin-shadow-on() {
-    alias autoload=-zplugin-shadow-autoload
-    alias bindkey=-zplugin-shadow-bindkey
-    alias setopt=-zplugin-shadow-setopt
-    alias zstyle=-zplugin-shadow-zstyle
-    alias alias=-zplugin-shadow-alias
-    alias zle=-zplugin-shadow-zle
-    alias compdef=-zplugin-shadow-compdef
+-zplugin-shadow-on() {
+    alias autoload=--zplugin-shadow-autoload
+    alias bindkey=--zplugin-shadow-bindkey
+    alias setopt=--zplugin-shadow-setopt
+    alias zstyle=--zplugin-shadow-zstyle
+    alias alias=--zplugin-shadow-alias
+    alias zle=--zplugin-shadow-zle
+    alias compdef=--zplugin-shadow-compdef
 }
 
 # Shadowing off
-_zplugin-shadow-off() {
+-zplugin-shadow-off() {
     unalias     autoload bindkey setopt zstyle alias zle
 }
 
@@ -371,7 +371,7 @@ _zplugin-shadow-off() {
 # Can remember current $functions twice, and compute the
 # difference, storing it in ZPLG_FUNCTIONS, associated
 # with given ($1) plugin
-_zplugin-diff-functions() {
+-zplugin-diff-functions() {
     local uspl2="$1"
     local cmd="$2"
 
@@ -416,7 +416,7 @@ _zplugin-diff-functions() {
 
 # Creates a one or two columns text with functions
 # belonging to given ($1) plugin
-_zplugin-format-functions() {
+-zplugin-format-functions() {
     local uspl2="$1"
 
     typeset -a func
@@ -469,7 +469,7 @@ _zplugin-format-functions() {
 # Report functions {{{
 #
 
-_zplugin-add-report() {
+-zplugin-add-report() {
     local uspl2="$1"
     shift
     local txt="$*"
@@ -498,7 +498,7 @@ _zplugin-add-report() {
 #
 # Returns user and plugin in $reply
 #
-_zplugin-any-to-user-plugin() {
+-zplugin-any-to-user-plugin() {
     if [ ! -z "$2" ];then
         reply=( "$1" "$2" )
         return 0
@@ -522,15 +522,15 @@ _zplugin-any-to-user-plugin() {
 # Converts to format that's used in keys for hash tables
 #
 # Supports all four formats
-_zplugin-any-to-uspl2() {
-    _zplugin-any-to-user-plugin "$1" "$2"
+-zplugin-any-to-uspl2() {
+    -zplugin-any-to-user-plugin "$1" "$2"
     REPLY="$reply[1]/$reply[2]"
 }
 
 # Checks for a plugin existence, all four formats
 # of the plugin specification supported
-_zplugin-exists() {
-    _zplugin-any-to-uspl2 "$1" "$2"
+-zplugin-exists() {
+    -zplugin-any-to-uspl2 "$1" "$2"
     if [ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]; then
         return 1
     fi
@@ -538,9 +538,9 @@ _zplugin-exists() {
 }
 
 # Checks for a plugin existence and outputs a message
-_zplugin-exists-message() {
-    if ! _zplugin-exists "$1" "$2"; then
-        _zplugin-any-colorify-as-uspl2 "$1" "$2"
+-zplugin-exists-message() {
+    if ! -zplugin-exists "$1" "$2"; then
+        -zplugin-any-colorify-as-uspl2 "$1" "$2"
         echo "$ZPLG_COLORS[error]No such plugin$reset_color $REPLY"
         return 1
     fi
@@ -549,8 +549,8 @@ _zplugin-exists-message() {
 
 # Will take uspl, uspl2, or just plugin name,
 # and return colored text
-_zplugin-any-colorify-as-uspl2() {
-    _zplugin-any-to-user-plugin "$1" "$2"
+-zplugin-any-colorify-as-uspl2() {
+    -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]"
     local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
     REPLY="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
@@ -558,7 +558,7 @@ _zplugin-any-colorify-as-uspl2() {
 
 # Prepare readlink command, used e.g. for
 # establishing completion's owner
-_zplugin-prepare-readline() {
+-zplugin-prepare-readline() {
     REPLY=":"
     if type readlink 2>/dev/null 1>&2; then
         REPLY="readlink"
@@ -571,7 +571,7 @@ _zplugin-prepare-readline() {
 # (:A will read the link "twice" and give the final repository
 # directory, possibly without username in the uspl format;
 # readlink will read the link "once")
-_zplugin-get-completion-owner() {
+-zplugin-get-completion-owner() {
     local cpath="$1"
     local readlink_cmd="$2"
     local in_plugin_path tmp
@@ -600,15 +600,15 @@ _zplugin-get-completion-owner() {
 # For shortening of code
 # $1 - completion file
 # $2 - readline command
-_zplugin-get-completion-owner-uspl2col() {
+-zplugin-get-completion-owner-uspl2col() {
     # "cpath" "readline_cmd"
-    _zplugin-get-completion-owner "$1" "$2"
-    _zplugin-any-colorify-as-uspl2 "$REPLY"
+    -zplugin-get-completion-owner "$1" "$2"
+    -zplugin-any-colorify-as-uspl2 "$REPLY"
 }
 
 # Forget given completions. Done before calling compinit
 # $1 - completion function name, e.g. "_cp"
-_zplugin-forget-completion() {
+-zplugin-forget-completion() {
     local f="$1"
     local k
     for k in "${(k@)_comps[(R)$f]}"; do
@@ -624,7 +624,7 @@ _zplugin-forget-completion() {
 # ZPlugin internal functions {{{
 #
 
-_zplugin-prepare-home() {
+-zplugin-prepare-home() {
     [ -n "$ZPLG_HOME_READY" ] && return
     ZPLG_HOME_READY="1"
 
@@ -653,14 +653,14 @@ _zplugin-prepare-home() {
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
-_zplugin-install-completions() {
+-zplugin-install-completions() {
     local reinstall="${3:-0}"
 
-    _zplugin-any-to-user-plugin "$1" "$2"
+    -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]"
     local plugin="$reply[2]"
 
-    _zplugin-exists-message "$user" "$plugin" || return 1
+    -zplugin-exists-message "$user" "$plugin" || return 1
 
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
@@ -695,12 +695,12 @@ _zplugin-install-completions() {
 
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
-_zplugin-uninstall-completions() {
-    _zplugin-any-to-user-plugin "$1" "$2"
+-zplugin-uninstall-completions() {
+    -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]"
     local plugin="$reply[2]"
 
-    _zplugin-exists-message "$user" "$plugin" || return 1
+    -zplugin-exists-message "$user" "$plugin" || return 1
 
     typeset -a completions symlinked backup_comps
     local c cfile bkpfile
@@ -742,7 +742,7 @@ _zplugin-uninstall-completions() {
     fi
 }
 
-_zplugin-compinit() {
+-zplugin-compinit() {
     typeset -a symlinked backup_comps
     local c cfile bkpfile 
 
@@ -757,7 +757,7 @@ _zplugin-compinit() {
         cfile="_${cfile#_}"
         bkpfile="${cfile#_}"
 
-        _zplugin-forget-completion "$cfile"
+        -zplugin-forget-completion "$cfile"
         echo "$ZPLG_COLORS[info]Processing completion $cfile$reset_color"
     done
 
@@ -765,13 +765,13 @@ _zplugin-compinit() {
     compinit
 }
 
-_zplugin-setup-plugin-dir() {
+-zplugin-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
         git clone https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 
         # Install completions
-        _zplugin-install-completions "$user" "$plugin" "0"
+        -zplugin-install-completions "$user" "$plugin" "0"
     fi
 
     # All to the users - simulate OMZ directory structure (3/3)
@@ -785,12 +785,12 @@ _zplugin-setup-plugin-dir() {
 }
 
 # TODO detect second autoload?
-_zplugin-register-plugin() {
+-zplugin-register-plugin() {
     [ -z "ZPLG_REPORTS[${user}/${plugin}]" ] && ZPLG_REPORTS[${user}/${plugin}]=""
     ZPLG_REGISTERED_PLUGINS+="${1}/${2}"
 }
 
-_zplugin-load-plugin() {
+-zplugin-load-plugin() {
     local user="$1" plugin="$2"
     ZPLG_CUR_USER="$user"
     ZPLG_CUR_PLUGIN="$plugin"
@@ -814,14 +814,14 @@ _zplugin-load-plugin() {
     [ "$#matches" -eq "0" ] && return 1
     local fname="${matches[1]#$dname/}"
 
-    _zplugin-add-report "$ZPLG_CUR_USPL2" "Source $fname"
+    -zplugin-add-report "$ZPLG_CUR_USPL2" "Source $fname"
 
-    _zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
-    _zplugin-shadow-on
+    -zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
+    -zplugin-shadow-on
     source "$dname/$fname"
-    _zplugin-shadow-off
-    _zplugin-diff-functions "$ZPLG_CUR_USPL2" end
-    _zplugin-diff-functions "$user/$plugin" diff
+    -zplugin-shadow-off
+    -zplugin-diff-functions "$ZPLG_CUR_USPL2" end
+    -zplugin-diff-functions "$user/$plugin" diff
 }
 
 # }}}
@@ -830,7 +830,7 @@ _zplugin-load-plugin() {
 # User-exposed functions {{{
 #
 
-_zplugin-show-completions() {
+-zplugin-show-completions() {
     typeset -a completions
     completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
 
@@ -856,12 +856,12 @@ _zplugin-show-completions() {
 
         # Prepare readlink command for establishing
         # completion's owner
-        _zplugin-prepare-readline
+        -zplugin-prepare-readline
 
         # This will resolve completion's symlink to obtain
         # information about the repository it comes from, i.e.
         # about user and plugin, taken from directory name
-        _zplugin-get-completion-owner-uspl2col "$cpath" "$REPLY"
+        -zplugin-get-completion-owner-uspl2col "$cpath" "$REPLY"
 
         # Output line of text
         print -n "${(r:longest+1:: :)c} $REPLY"
@@ -870,12 +870,12 @@ _zplugin-show-completions() {
     done
 }
 
-_zplugin-show-report() {
-    _zplugin-any-to-user-plugin "$1" "$2"
+-zplugin-show-report() {
+    -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]"
     local plugin="$reply[2]"
 
-    _zplugin-exists-message "$user/$plugin" || return 1
+    -zplugin-exists-message "$user/$plugin" || return 1
 
     # Print title
     printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
@@ -890,26 +890,26 @@ _zplugin-show-report() {
     print $ZPLG_REPORTS[${user}/${plugin}]
 
     # Print report gathered via $functions-diffing
-    _zplugin-format-functions "$user/$plugin"
+    -zplugin-format-functions "$user/$plugin"
     echo $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 }
 
-_zplugin-show-all-reports() {
+-zplugin-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        _zplugin-show-report "$i"
+        -zplugin-show-report "$i"
     done
 }
 
-_zplugin-show-registered-plugins() {
+-zplugin-show-registered-plugins() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        _zplugin-any-colorify-as-uspl2 "$i"
+        -zplugin-any-colorify-as-uspl2 "$i"
         print "$REPLY"
     done
 }
 
-_zplugin-check-comp-consistency() {
+-zplugin-check-comp-consistency() {
     local cfile="$1" bkpfile="$2"
     integer error="$3"
 
@@ -929,7 +929,7 @@ _zplugin-check-comp-consistency() {
     (( error )) && echo "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
 }
 
-_zplugin-cenable() {
+-zplugin-cenable() {
     local c="$1"
     c="${c#_}"
 
@@ -946,7 +946,7 @@ _zplugin-cenable() {
     if [ ! -e "$bkpfile" ]; then
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
 
-        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
+        -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
     fi
 
@@ -954,26 +954,26 @@ _zplugin-cenable() {
     if [ -e "$cfile" ]; then
         echo "$ZPLG_COLORS[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
         echo "$ZPLG_COLORS[error]Completion is actually enabled and will re-enable it again$reset_color"
-        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
+        -zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$cfile"
     else
-        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
+        -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
     fi
 
     # Enable
     command mv "$bkpfile" "$cfile" # move completion's backup file created when disabling
 
     # Prepare readlink command for establishing completion's owner
-    _zplugin-prepare-readline
+    -zplugin-prepare-readline
     # Get completion's owning plugin
-    _zplugin-get-completion-owner-uspl2col "$cfile" "$REPLY"
+    -zplugin-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
     echo "Enabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
 
     return 0
 }
 
-_zplugin-cdisable() {
+-zplugin-cdisable() {
     local c="$1"
     c="${c#_}"
 
@@ -990,26 +990,26 @@ _zplugin-cdisable() {
     if [[ ! -e "$cfile" ]]; then
         echo "Completion $ZPLG_COLORS[info]$c$reset_color already disabled"
 
-        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
+        -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
     fi
 
     # No disable, but bkpfile exists?
     if [ -e "$bkpfile" ]; then
         echo "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
-        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
+        -zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$bkpfile"
     else
-        _zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
+        -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
     fi
 
     # Disable
     command mv "$cfile" "$bkpfile"
 
     # Prepare readlink command for establishing completion's owner
-    _zplugin-prepare-readline
+    -zplugin-prepare-readline
     # Get completion's owning plugin
-    _zplugin-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
+    -zplugin-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
     echo "Disabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
 
@@ -1017,13 +1017,13 @@ _zplugin-cdisable() {
 }
 
 # $1 - plugin name, possibly github path
-_zplugin-load () {
-    _zplugin-any-to-user-plugin "$1" "$2"
+-zplugin-load () {
+    -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]"
 
-    _zplugin-register-plugin "$user" "$plugin"
-    _zplugin-setup-plugin-dir "$user" "$plugin"
-    _zplugin-load-plugin "$user" "$plugin"
+    -zplugin-register-plugin "$user" "$plugin"
+    -zplugin-setup-plugin-dir "$user" "$plugin"
+    -zplugin-load-plugin "$user" "$plugin"
 }
 
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
@@ -1035,17 +1035,17 @@ _zplugin-load () {
 # 4. Restore options
 # 5. Restore (or just unalias?) aliases
 # 6. Forget the plugin
-_zplugin-unload() {
-    _zplugin-exists-message "$1" "$2" || return 1
+-zplugin-unload() {
+    -zplugin-exists-message "$1" "$2" || return 1
 
-    _zplugin-any-to-user-plugin "$1" "$2"
+    -zplugin-any-to-user-plugin "$1" "$2"
     local uspl2="$reply[1]/$reply[2]" user="$reply[1]" plugin="$reply[2]"
 
-    _zplugin-any-colorify-as-uspl2 "$1" "$2"
+    -zplugin-any-colorify-as-uspl2 "$1" "$2"
     local uspl2col="$REPLY"
 
     # Store report of the plugin in variable LASTREPORT
-    LASTREPORT=`_zplugin-show-report "$1" "$2"`
+    LASTREPORT=`-zplugin-show-report "$1" "$2"`
 
     #
     # 1. Unfunction
@@ -1177,7 +1177,7 @@ alias zpl=zplugin zplg=zplugin
 
 # Main function with subcommands
 zplugin() {
-    _zplugin-prepare-home
+    -zplugin-prepare-home
 
     # Add completions directory to fpath
     fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
@@ -1188,35 +1188,35 @@ zplugin() {
        (load)
            # Load plugin given in uspl2 format, i.e. user/plugin
            # Possibly clone from github, and install completions
-           _zplugin-load "$2" "$3"
+           -zplugin-load "$2" "$3"
            ;;
        (unload)
            # Unload given plugin. Cloned directory remains intact
            # so as are completions
-           _zplugin-unload "$2" "$3"
+           -zplugin-unload "$2" "$3"
            ;;
        (report)
            # Display report of given plugin
-           _zplugin-show-report "$2" "$3"
+           -zplugin-show-report "$2" "$3"
            ;;
        (all-reports)
            # Display reports of all plugins
-           _zplugin-show-all-reports
+           -zplugin-show-all-reports
            ;;
        (loaded|list)
            # Show list of loaded plugins
-           _zplugin-show-registered-plugins
+           -zplugin-show-registered-plugins
            ;;
        (comp|completions)
            # Show installed, enabled or disabled, completions
-           _zplugin-show-completions
+           -zplugin-show-completions
            ;;
        (cdisable)
            local f="_${2#_}"
            # Disable completion given by completion function name
            # with or without leading "_", e.g. "cp", "_cp"
-           if _zplugin-cdisable "$f"; then
-               _zplugin-forget-completion "$f"
+           if -zplugin-cdisable "$f"; then
+               -zplugin-forget-completion "$f"
                echo "Initializing completion system (compinit)..."
                compinit
            fi
@@ -1225,8 +1225,8 @@ zplugin() {
            local f="_${2#_}"
            # Enable completion given by completion function name
            # with or without leading "_", e.g. "cp", "_cp"
-           if _zplugin-cenable "$f"; then
-               _zplugin-forget-completion "$f"
+           if -zplugin-cenable "$f"; then
+               -zplugin-forget-completion "$f"
                echo "Initializing completion system (compinit)..."
                compinit
            fi
@@ -1234,20 +1234,20 @@ zplugin() {
        (creinstall)
            # Installs completions for plugin. Enables them all. It's a
            # reinstallation, thus every obstacle gets overwritten or removed
-           _zplugin-install-completions "$2" "$3" "1"
+           -zplugin-install-completions "$2" "$3" "1"
            echo "Initializing completion (compinit)..."
            compinit
            ;;
        (cuninstall)
            # Uninstalls completions for plugin
-           _zplugin-uninstall-completions "$2" "$3"
+           -zplugin-uninstall-completions "$2" "$3"
            echo "Initializing completion (compinit)..."
            compinit
            ;;
        (compinit)
            # Runs compinit in a way that ensures
            # reload of plugins' completions
-           _zplugin-compinit
+           -zplugin-compinit
            ;;
 
        (-h|--help|help)
