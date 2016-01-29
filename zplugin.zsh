@@ -891,7 +891,7 @@ ZPLG_COLORS=(
     local user="$reply[1]"
     local plugin="$reply[2]"
 
-    -zplugin-exists-message "$user/$plugin" || return 1
+    -zplugin-exists-message "$user" "$plugin" || return 1
 
     # Print title
     printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
