@@ -687,7 +687,7 @@ _zplugin-uninstall-completions() {
 
     _zplugin-exists-message "$user" "$plugin" || return 1
 
-    typeset -a completions already_symlinked backup_comps
+    typeset -a completions symlinked backup_comps
     local c cfile bkpfile
     integer action global_action=0
 
