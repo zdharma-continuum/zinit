@@ -55,3 +55,20 @@ Unregistering plugin psprint/zsh-cmd-architect
 Plugin's report saved to $LASTREPORT
 ```
 
+## Installation
+
+Execute:
+
+```
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
+```
+
+To update run the command again.
+
+`Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
+single line of code that will be added to the bottom (it will be sourcing
+`zplugin.zsh` for you). Completion will be also installed, for command `zplugin`
+and `zpl`, `zplg` (aliases).
+
+After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
+
