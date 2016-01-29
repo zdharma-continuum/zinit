@@ -38,10 +38,10 @@ case $state in
                 ret=0
                 ;;
             unload)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
+                compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
                 ;;
             report)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
+                compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
                 ;;
             all-reports)
                 ret=0
@@ -57,19 +57,21 @@ case $state in
                 typeset -a completions
                 completions=( ~/.zplugin/completions/_*(N) )
                 completions=( "${completions[@]:t}" )
-                compadd "$@" "${completions[@]#_}" && ret=0
+                completions=( "${completions[@]#_}" )
+                compadd "$@" -a - completions && ret=0
                 ;;
             cenable)
                 # Find disabled
                 typeset -a completions
                 completions=( ~/.zplugin/completions/[^_]*(N) )
-                compadd "$@" "${completions[@]:t}" && ret=0
+                completions=( "${completions[@]:t}" )
+                compadd "$@" -a - completions && ret=0
                 ;;
             creinstall)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
+                compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
                 ;;
             cuninstall)
-                compadd "$@" "${ZPLG_REGISTERED_PLUGINS[@]}" && ret=0
+                compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
                 ;;
             compinit)
                 ret=0
