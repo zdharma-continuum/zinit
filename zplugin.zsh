@@ -236,7 +236,7 @@ ZPLG_COLORS=(
                 fi
             else
                 # Short option format?
-                if [ "$#option" != "1" ]; then
+                if [ -n "${option#?}" ]; then
                     # Unsupported option format
                     -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported option format ($prefix$option)"
                     continue
