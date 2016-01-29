@@ -624,6 +624,7 @@ ZPLG_COLORS=(
 # Forget given completions. Done before calling compinit
 # $1 - completion function name, e.g. "_cp"
 -zplugin-forget-completion() {
+    echo "Forgetting completion \`$1'..."
     local f="$1"
     local k
     for k in "${(k@)_comps[(R)$f]}"; do
@@ -750,6 +751,8 @@ ZPLG_COLORS=(
             fi
             print "$ZPLG_COLORS[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
             command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
+            # Make compinit notice the change
+            -zplugin-forget-completion "$cfile"
         else
             print "$ZPLG_COLORS[error]Not symlinking completion \`$cfile', it already exists$reset_color"
             print "$ZPLG_COLORS[error]Use \`creinstall' {plugin-name} to force install$reset_color"
@@ -795,6 +798,8 @@ ZPLG_COLORS=(
 
         if (( action )); then
             print "$ZPLG_COLORS[info]Uninstalling completion \`$cfile'$reset_color"
+            # Make compinit notice the change
+            -zplugin-forget-completion "$cfile"
             (( global_action ++ ))
         else
             print "$ZPLG_COLORS[info]Completion \`$cfile' not installed$reset_color"
