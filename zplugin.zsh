@@ -225,7 +225,7 @@ ZPLG_COLORS=(
             MATCH=""
             option="${option#(#m)?}"
             if [ "$MATCH" = "o" ]; then
-                if [ -n "$#option" ]; then
+                if [ -n "$option" ]; then
                     # Store current state of option given right after -o
                     [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
                 else
