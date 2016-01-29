@@ -12,7 +12,8 @@ typeset -gAH ZPLG_REPORTS
 # Common needed values
 #
 
-typeset -gH ZPLG_DIR="$0:h"
+typeset -gH ZPLG_DIR="${0:h}"
+typeset -gH ZPLG_NAME="${${0:t}:r}"
 typeset -gH ZPLG_HOME="$HOME/.zplugin"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
@@ -1244,6 +1245,11 @@ zplugin() {
     -zplugin-set-desired-shell-state
 
     -zplugin-prepare-home
+
+    # Simulate existence of _local/zplugin module
+    # This will allow to cuninstall of its completion
+    ZPLG_REGISTERED_PLUGINS+="_local/$ZPLG_NAME"
+    ZPLG_REGISTERED_PLUGINS=( "${(u)ZPLG_REGISTERED_PLUGINS[@]}" )
 
     # Add completions directory to fpath
     fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
