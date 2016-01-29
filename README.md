@@ -16,6 +16,7 @@ Example use:
 
 ```
 % . ~/github/zplugin/zplugin.zsh
+% zplugin load zsh-users/zsh-syntax-highlighting
 % zplugin load psprint/zsh-cmd-architect
 ```
 
