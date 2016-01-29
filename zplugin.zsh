@@ -426,8 +426,8 @@ ZPLG_COLORS=(
 -zplugin-shadow-on() {
     alias autoload=--zplugin-shadow-autoload
     alias bindkey=--zplugin-shadow-bindkey
-    alias setopt=--zplugin-shadow-setopt
-    alias unsetopt=--zplugin-shadow-unsetopt
+    setopt() { --zplugin-shadow-setopt "$@" }
+    unsetopt() { --zplugin-shadow-unsetopt "$@" }
     alias zstyle=--zplugin-shadow-zstyle
     alias alias=--zplugin-shadow-alias
     alias zle=--zplugin-shadow-zle
@@ -438,7 +438,9 @@ ZPLG_COLORS=(
 
 # Shadowing off
 -zplugin-shadow-off() {
-    unalias autoload bindkey setopt unsetopt zstyle alias zle compdef
+    unalias autoload bindkey zstyle alias zle compdef
+    unfunction "setopt"
+    unfunction "unsetopt"
     ZPLG_SHADOWING_ACTIVE=0
 }
 
@@ -764,8 +766,8 @@ ZPLG_COLORS=(
 }
 
 -zplugin-restore-extendedglob() {
-    [ "$ZPLG_EXTENDED_GLOB" = "1" ] && setopt extendedglob
-    [ "$ZPLG_EXTENDED_GLOB" = "0" ] && unsetopt extendedglob
+    [ "$ZPLG_EXTENDED_GLOB" = "1" ] && builtin setopt extendedglob
+    [ "$ZPLG_EXTENDED_GLOB" = "0" ] && builtin unsetopt extendedglob
 }
 
 # }}}
