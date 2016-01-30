@@ -114,6 +114,7 @@ ZPLG_COLORS=(
     "p" "${fg_bold[blue]}"
     "bar" "${fg_bold[magenta]}"
     "info" "${fg_bold[green]}"
+    "uninst" "${fg_bold[blue]}"
 )
 
 # }}}
@@ -757,6 +758,56 @@ ZPLG_COLORS=(
     # Tell user that he can manually modify but should do it right
     (( error )) && print "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
 }
+
+# Searches for completions owned by given plugin
+# Returns them in reply array
+-zplugin-find-completions-of-plugin() {
+    -zplugin-any-to-user-plugin "$1" "$2"
+    local user="$reply[1]" plugin="$reply[2]" uspl="${1}---${2}"
+
+    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_*(N) )
+}
+
+# For each positional parameter that each should
+# be path to completion within a plugin's dir, it
+# checks whether that completion is installed -
+# returns 0 or 1 on corresponding positions in reply
+-zplugin-check-which-completions-are-installed() {
+    local i cfile bkpfile
+    reply=( )
+    for i in "$@"; do
+        cfile="${i:t}"
+        bkpfile="${cfile#_}"
+
+        if [[ -e "$ZPLG_COMPLETIONS_DIR"/"$cfile" || -e "$ZPLG_COMPLETIONS_DIR"/"$bkpfile" ]]; then
+            reply+=( "1" )
+        else
+            reply+=( "0" )
+        fi
+    done
+}
+
+# For each positional parameter that each should
+# be path to completion within a plugin's dir, it
+# checks whether that completion is disabled -
+# returns 0 or 1 on corresponding positions in reply
+#
+# Uninstalled completions will be reported as "0"
+# - i.e. disabled
+-zplugin-check-which-completions-are-enabled() {
+    local i cfile
+    reply=( )
+    for i in "$@"; do
+        cfile="${i:t}"
+
+        if [[ -e "$ZPLG_COMPLETIONS_DIR"/"$cfile" ]]; then
+            reply+=( "1" )
+        else
+            reply+=( "0" )
+        fi
+    done
+}
+
 # }}}
 
 #
@@ -1110,6 +1161,37 @@ ZPLG_COLORS=(
     -zplugin-diff-options "$user/$plugin" diff
     -zplugin-format-options "$user/$plugin"
     [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
+
+    # Print what completions plugin has
+    -zplugin-find-completions-of-plugin "$user" "$plugin"
+    typeset -a completions
+    completions=( "${reply[@]}" )
+
+    if [ "$#completions" -ge "1" ]; then
+        print "${ZPLG_COLORS[p]}Completions:$reset_color"
+        -zplugin-check-which-completions-are-installed "${completions[@]}"
+        typeset -a installed
+        installed=( "${reply[@]}" )
+
+        -zplugin-check-which-completions-are-enabled "${completions[@]}"
+        typeset -a enabled
+        enabled=( "${reply[@]}" )
+
+        integer count="$#completions" idx
+        for (( idx=1; idx <= count; idx ++ )); do
+            print -n "${completions[idx]:t}"
+            if [ "${installed[idx]}" != "1" ]; then
+                print -n " ${ZPLG_COLORS[uninst]}[not installed]$reset_color"
+            else
+                if [ "${enabled[idx]}" = "1" ]; then
+                    print -n " ${ZPLG_COLORS[info]}[enabled]$reset_color"
+                else
+                    print -n " ${ZPLG_COLORS[error]}[disabled]$reset_color"
+                fi
+            fi
+            print
+        done
+    fi
 }
 
 -zplugin-show-all-reports() {
