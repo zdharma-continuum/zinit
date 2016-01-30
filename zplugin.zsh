@@ -507,8 +507,7 @@ ZPLG_COLORS=(
     local uspl2="$1"
 
     # Paranoid, don't want bad key/value pair error
-    -zplugin-save-extendedglob
-    setopt extendedglob
+    -zplugin-save-set-extendedglob
     ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]## ##}"
     ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]%% ##}"
     -zplugin-restore-extendedglob
@@ -753,11 +752,15 @@ ZPLG_COLORS=(
     [[ -o "extendedglob" ]] && ZPLG_EXTENDED_GLOB="1" || ZPLG_EXTENDED_GLOB="0"
 }
 
+-zplugin-save-set-extendedglob() {
+    [[ -o "extendedglob" ]] && ZPLG_EXTENDED_GLOB="1" || ZPLG_EXTENDED_GLOB="0"
+    builtin setopt extendedglob
+}
+
 -zplugin-restore-extendedglob() {
     [ "$ZPLG_EXTENDED_GLOB" = "1" ] && builtin setopt extendedglob
     [ "$ZPLG_EXTENDED_GLOB" = "0" ] && builtin unsetopt extendedglob
 }
-
 # }}}
 
 #
@@ -1274,8 +1277,7 @@ ZPLG_COLORS=(
     #
 
     # Paranoid, don't want bad key/value pair error
-    -zplugin-save-extendedglob
-    setopt extendedglob
+    -zplugin-save-set-extendedglob
     ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]## ##}"
     ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]%% ##}"
     -zplugin-restore-extendedglob
