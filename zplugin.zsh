@@ -371,11 +371,16 @@ ZPLG_COLORS=(
     case "$cmd" in
         begin)
             ZPLG_FUNCTIONS_BEFORE[$uspl2]="$func[*]"
+            ZPLG_FUNCTIONS[$uspl2]=""
             ;;
         end)
             ZPLG_FUNCTIONS_AFTER[$uspl2]="$func[*]"
+            ZPLG_FUNCTIONS[$uspl2]=""
             ;;
         diff)
+            # Run diff once, have to begin or end again for diff
+            [ -n "$ZPLG_FUNCTIONS[$uspl2]" ] && return
+
             typeset -A func
             local i
 
@@ -472,7 +477,7 @@ ZPLG_COLORS=(
             ZPLG_OPTIONS[$uspl2]=""
             ;;
         diff)
-            # Run diff once
+            # Run diff once, have to begin or end again for diff
             [ -n "$ZPLG_OPTIONS[$uspl2]" ] && return
 
             typeset -A opts_before opts_after opts
@@ -984,9 +989,6 @@ ZPLG_COLORS=(
     # Restore our desired state for our operation
     -zplugin-set-desired-shell-state
     -zplugin-diff-functions "$ZPLG_CUR_USPL2" end
-
-    -zplugin-diff-functions "$ZPLG_CUR_USPL2" diff
-    -zplugin-diff-options "$ZPLG_CUR_USPL2" diff
 }
 
 # }}}
@@ -1056,11 +1058,13 @@ ZPLG_COLORS=(
 
     # Print report gathered via $functions-diffing
     REPLY=""
+    -zplugin-diff-functions "$ZPLG_CUR_USPL2" diff
     -zplugin-format-functions "$user/$plugin"
     print $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
+    -zplugin-diff-options "$ZPLG_CUR_USPL2" diff
     -zplugin-format-options "$user/$plugin"
     print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
 }
