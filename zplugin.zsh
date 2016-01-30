@@ -470,6 +470,7 @@ ZPLG_COLORS=(
         fi
     done
     REPLY="$answer"
+    # == 0 is: next element would have newline (postfix addition in "count ++")
     (( COLUMNS >= longest && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
 }
 
@@ -1093,13 +1094,13 @@ ZPLG_COLORS=(
     REPLY=""
     -zplugin-diff-functions "$user/$plugin" diff
     -zplugin-format-functions "$user/$plugin"
-    print $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
     -zplugin-diff-options "$user/$plugin" diff
     -zplugin-format-options "$user/$plugin"
-    print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
 }
 
 -zplugin-show-all-reports() {
