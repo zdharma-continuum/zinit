@@ -461,9 +461,9 @@ ZPLG_COLORS=(
 
         if (( COLUMNS >= longest )); then
             if (( count ++ % 2 != 0 )); then
-                answer+=`print -n "${(r:longest_left+1:: :)f}"`
+                answer+="${(r:longest_left+1:: :)f}"
             else
-                answer+=`print -n "$f"`$'\n'
+                answer+="$f"$'\n'
             fi
         else
             answer+="$f"$'\n'
