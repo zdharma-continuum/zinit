@@ -1114,6 +1114,8 @@ ZPLG_COLORS=(
 -zplugin-show-registered-plugins() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
+        # Skip _local/psprint
+        [ "$i" = "_local/zplugin" ] && continue
         -zplugin-any-colorify-as-uspl2 "$i"
         print "$REPLY"
     done
