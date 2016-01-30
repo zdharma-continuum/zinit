@@ -943,8 +943,8 @@ ZPLG_COLORS=(
         cfile="_${cfile#_}"
         bkpfile="${cfile#_}"
 
-        -zplugin-forget-completion "$cfile"
         print "$ZPLG_COLORS[info]Processing completion $cfile$reset_color"
+        -zplugin-forget-completion "$cfile"
     done
 
     print "Initializing completion (compinit)..."
