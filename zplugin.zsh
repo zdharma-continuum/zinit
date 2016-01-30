@@ -1071,6 +1071,7 @@ ZPLG_COLORS=(
 -zplugin-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
+        [ "$i" = "_local/$ZPLG_NAME" ] && continue
         -zplugin-show-report "$i"
     done
 }
