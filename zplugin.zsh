@@ -1208,6 +1208,7 @@ ZPLG_COLORS=(
             fi
             print
         done
+        print
     fi
 }
 
