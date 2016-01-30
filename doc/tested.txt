@@ -20,6 +20,21 @@ peterhurford/git-it-on.zsh
 tevren/gitfast-zsh-plugin
 zsh-users/zsh-syntax-highlighting
 voronkovich/gitignore.plugin.zsh
+bbenne10/goenv
+or17191/going_places
+Seinh/git-prune
+joepvd/grep2awk (failed, improper bindkey, the same with antigen)
+robertzk/hipchat.zsh (unfull, HIPCHAT_API_TOKEN was required)
+willghatch/zsh-hooks (problematic usage, the same with antigen)
+mgryszko/jvm (problematic usage, the same with antigen)
+rimraf/k
+d12frosted/kitsunebook.plugin.zsh (a completion done via manual compdef call)
+lesaint/lesaint-mvn
+Temikus/mac-packaging
+hlohm/mfunc (doesn't fully work, the same with antigen)
+horosgrisa/mysql-colorize
+voronkovich/mysql.plugin.zsh
+bric3/nice-exit-code
 
 skipped:
 Stibbons/crayon-syntax-zsh (a wordpress plugin)
