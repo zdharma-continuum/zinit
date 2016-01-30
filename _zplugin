@@ -92,7 +92,7 @@ case $state in
                     completions=( "$p"/_*(N) )
                     for c in "${completions[@]}"; do
                         cfile="${c:t}"
-                        bkpfile="_${cfile#_}"
+                        bkpfile="${cfile#_}"
                         # Completion installed, either enabled or disabled?
                         if [[ -e "$ZPLG_COMPLETIONS_DIR"/"$cfile" || -e "$ZPLG_COMPLETIONS_DIR"/"$bkpfile" ]]; then
                             p="${p:t}"
