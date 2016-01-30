@@ -378,8 +378,16 @@ ZPLG_COLORS=(
             ZPLG_FUNCTIONS[$uspl2]=""
             ;;
         diff)
-            # Run diff once, have to begin or end again for diff
-            [ -n "$ZPLG_FUNCTIONS[$uspl2]" ] && return
+            # Run diff once, have to `begin' or `end' again for actual diff
+            [ -n "$ZPLG_FUNCTIONS[$uspl2]" ] && return 0
+
+            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+            # This is paranoid for *_BEFORE and *_AFTER being only spaces
+            integer error=0
+            -zplugin-save-set-extendedglob
+            [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
+            -zplugin-restore-extendedglob
+            (( error )) && return 1
 
             typeset -A func
             local i
@@ -402,6 +410,8 @@ ZPLG_COLORS=(
         *)
             return 1
     esac
+
+    return 0
 }
 
 # Creates a one or two columns text with functions
@@ -477,8 +487,16 @@ ZPLG_COLORS=(
             ZPLG_OPTIONS[$uspl2]=""
             ;;
         diff)
-            # Run diff once, have to begin or end again for diff
-            [ -n "$ZPLG_OPTIONS[$uspl2]" ] && return
+            # Run diff once, have to `begin' or `end' again for actual diff
+            [ -n "$ZPLG_OPTIONS[$uspl2]" ] && return 0
+
+            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+            # This is paranoid for *_BEFORE and *_AFTER being only spaces
+            integer error=0
+            -zplugin-save-set-extendedglob
+            [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_OPTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
+            -zplugin-restore-extendedglob
+            (( error )) && return 1
 
             typeset -A opts_before opts_after opts
             opts_before=( "${(z)ZPLG_OPTIONS_BEFORE[$uspl2]}" )
@@ -500,6 +518,8 @@ ZPLG_COLORS=(
         *)
             return 1
     esac
+
+    return 0
 }
 
 # Creates a text about options that changed when loaded plugin "$1"
