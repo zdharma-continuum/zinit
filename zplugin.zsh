@@ -335,17 +335,27 @@ ZPLG_COLORS=(
 # Shadowing on
 -zplugin-shadow-on() {
     alias autoload=--zplugin-shadow-autoload
-    alias bindkey=--zplugin-shadow-bindkey
-    alias zstyle=--zplugin-shadow-zstyle
-    alias alias=--zplugin-shadow-alias
-    alias zle=--zplugin-shadow-zle
+    bindkey() {
+        --zplugin-shadow-bindkey "$@"
+    }
+    zstyle() {
+        --zplugin-shadow-zstyle "$@"
+    }
+    alias() {
+        --zplugin-shadow-alias "$@"
+    }
+    zle() {
+        --zplugin-shadow-zle "$@"
+    }
     alias compdef=--zplugin-shadow-compdef
     ZPLG_SHADOWING_ACTIVE=1
 }
 
 # Shadowing off
 -zplugin-shadow-off() {
-    unalias autoload bindkey zstyle alias zle compdef
+    unalias autoload
+    unfunction "bindkey" "zstyle" "alias" "zle"
+    unalias compdef
     ZPLG_SHADOWING_ACTIVE=0
 }
 
