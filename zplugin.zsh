@@ -1427,7 +1427,7 @@ zplugin() {
            -zplugin-compinit
            ;;
 
-       (-h|--help|help)
+       (-h|--help|help|)
            print "$ZPLG_COLORS[p]Usage$reset_color:
 -h|--help|help           - usage information
 load $ZPLG_COLORS[pname]{plugin-name}$reset_color       - load plugin
