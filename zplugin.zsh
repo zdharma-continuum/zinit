@@ -659,6 +659,23 @@ ZPLG_COLORS=(
     return 0
 }
 
+# Checks for a plugin existence, all four formats
+# of the plugin specification supported
+-zplugin-exists-physically() {
+    -zplugin-any-to-uspl2 "$1" "$2"
+    [ -d "$ZPLG_PLUGINS_DIR/${1}---${2}" ] && return 0 || return 1
+}
+
+# Checks for a plugin existence and outputs a message
+-zplugin-exists-physically-message() {
+    if ! -zplugin-exists-physically "$1" "$2"; then
+        -zplugin-any-colorify-as-uspl2 "$1" "$2"
+        print "$ZPLG_COLORS[error]No such plugin directory$reset_color $REPLY"
+        return 1
+    fi
+    return 0
+}
+
 # Will take uspl, uspl2, or just plugin name,
 # and return colored text
 -zplugin-any-colorify-as-uspl2() {
@@ -893,7 +910,7 @@ ZPLG_COLORS=(
     local user="$reply[1]"
     local plugin="$reply[2]"
 
-    -zplugin-exists-message "$user" "$plugin" || return 1
+    -zplugin-exists-physically-message "$user" "$plugin" || return 1
 
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
@@ -935,7 +952,7 @@ ZPLG_COLORS=(
     local user="$reply[1]"
     local plugin="$reply[2]"
 
-    -zplugin-exists-message "$user" "$plugin" || return 1
+    -zplugin-exists-physically-message "$user" "$plugin" || return 1
 
     typeset -a completions symlinked backup_comps
     local c cfile bkpfile
