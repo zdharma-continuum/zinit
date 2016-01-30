@@ -30,7 +30,8 @@ typeset -gH ZSH_CUSTOM="$ZPLG_PLUGINS_DIR/custom"
 export ZSH ZSH_CUSTOM
 
 #
-# Nasty variables, can be used by any shadowing function to recognize current context
+# Nasty variables {{{
+# Can be used by any shadowing function to recognize current context
 #
 
 typeset -gH ZPLG_CUR_USER=""
@@ -39,14 +40,14 @@ typeset -gH ZPLG_CUR_PLUGIN=""
 typeset -gH ZPLG_CUR_USPL=""
 # Concatenated with "/"
 typeset -gH ZPLG_CUR_USPL2=""
-# Distincts setopt and unsetopt for the shadowing function
-typeset -gH ZPLG_IS_UNSETOPT_SHADOW
 # If any plugin retains the shadowed function instead of
 # original one then this will protect from further reporting
 typeset -gH ZPLG_SHADOWING_ACTIVE
 
+# }}}
+
 #
-# Function diffing
+# Function diffing {{{
 #
 
 # Used to hold declared functions existing before loading a plugin
@@ -56,8 +57,25 @@ typeset -gAH ZPLG_FUNCTIONS_AFTER
 # Functions computed to be associated with plugin
 typeset -gAH ZPLG_FUNCTIONS
 
+#}}}
+
 #
-# Zstyle, bindkey remembering
+# Option diffing {{{
+#
+
+# Concatenated state of options before loading a plugin
+typeset -gAH ZPLG_OPTIONS_BEFORE
+
+# Concatenated state of options after loading a plugin
+typeset -gAH ZPLG_OPTIONS_AFTER
+
+# Concatenated options that changed, hold as they were before plugin load
+typeset -gAH ZPLG_OPTIONS
+
+# }}}
+
+#
+# Zstyle, bindkey remembering {{{
 #
 
 # Holds concatenated Zstyles declared by each plugin
@@ -70,11 +88,10 @@ typeset -gAH ZPLG_BINDKEYS
 # Holds concatenated aliases declared by each plugin
 typeset -gAH ZPLG_ALIASES
 
-# Holds concatenated options declared by each plugin
-typeset -gAH ZPLG_OPTIONS
+# }}}
 
 #
-# End of global variable declarations
+# Init {{{
 #
 
 zmodload zsh/zutil || return 1
@@ -98,6 +115,8 @@ ZPLG_COLORS=(
     "bar" "${fg_bold[magenta]}"
     "info" "${fg_bold[green]}"
 )
+
+# }}}
 
 #
 # Shadowing-related functions (names of substitute functions start with -) {{{
@@ -213,115 +232,6 @@ ZPLG_COLORS=(
     builtin bindkey "${pos[@]}"
 }
 
---zplugin-shadow-unsetopt() {
-    # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin unsetopt "$@"; return $? }
-
-    ZPLG_IS_UNSETOPT_SHADOW=1
-    --zplugin-shadow-setopt "$@"
-    ZPLG_IS_UNSETOPT_SHADOW=0
-}
-
---zplugin-shadow-setopt() {
-    # Shadowing guard
-    # unsetopt has its own guard so here it's always "setopt"
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin setopt "$@"; return $? }
-
-    if [ "$ZPLG_IS_UNSETOPT_SHADOW" = "1" ]; then
-        -zplugin-add-report "$ZPLG_CUR_USPL2" "Unsetopt $*"
-    else
-        -zplugin-add-report "$ZPLG_CUR_USPL2" "Setopt $*"
-    fi
-
-    # Remember to perform the actual setopt call
-    typeset -a pos
-    pos=( "$@" )
-
-    local opt quoted prefix option MATCH
-    integer next_is_option=0 occured_straight=0
-
-    for opt in "$@"; do
-        if (( next_is_option > 0 )); then
-            # Just take the token
-            prefix=""
-            option="$opt"
-        else
-            -zplugin-save-extendedglob
-            builtin setopt extendedglob
-            # Get everything that's [a-zA-Z0-9_], leave rest
-            # as prefix, which normally should be "-" or "+"
-            # or empty
-            prefix="${opt%%(#m)[a-zA-Z0-9_]##}"
-            option="$MATCH"
-            -zplugin-restore-extendedglob
-        fi
-
-        if [[ "$prefix" = "-" || "$prefix" = "+" ]]; then
-            if [ "$occured_straight" = "1" ]; then
-                # Setopt works this way - if straight option occurs
-                # then no "-" or "+" formatted option can occur
-                # afterwards, long or short. However, after those
-                # skipped, anything else will be interpreted as
-                # straight option, e.g. a string after "-o ", thus
-                # the continue
-                -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ options given in one line"\
-                                                "in a way setopt doesn't support [$prefix$option]"
-                continue
-            fi
-
-            # First character
-            MATCH=""
-            option="${option#(#m)?}"
-
-            if [ "$MATCH" = "o" ]; then
-                if [ -n "$option" ]; then
-                    # Option given right after -o
-                    [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
-                else
-                    # Option given through -o, but as next token
-                    next_is_option=1
-                    continue
-                fi
-            else
-                # Restore non-o character
-                option="$MATCH$option"
-
-                # Is it single short option or more?
-                if [ -n "${option#?}" ]; then
-                    # Unsupported option format, "-something"
-                    # TODO: support it, strings like -9wV...
-                    -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ unsupported option format ($prefix$option)"
-                    continue
-                fi
-
-                # Single short option, store its state
-                [[ -n ${-[(r)$option]} ]] && quoted="-$option" || quoted="+$option"
-            fi
-        else
-            # Occured option given straight: setopt theoption
-            [ "$next_is_option" != "1" ] && occured_straight=1
-
-            # We removed [a-zA-Z0-9_], something else remained
-            if [ -n "$prefix" ]; then
-                -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: ^ incorrect option ($prefix$option)"
-                continue
-            fi
-
-            [[ -o "$option" ]] && quoted="$option" || quoted="no$option"
-        fi
-
-        quoted="${quoted//nono/}"
-        quoted="${(q)quoted}"
-        ZPLG_OPTIONS[$ZPLG_CUR_USPL2]+="$quoted "
-
-        # We possibly used this to take whole string as option
-        next_is_option=0
-    done
-
-    # Actual setopt
-    builtin setopt "${pos[@]}"
-}
-
 --zplugin-shadow-zstyle() {
     # Shadowing guard
     [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zstyle "$@"; return $? }
@@ -426,28 +336,23 @@ ZPLG_COLORS=(
 -zplugin-shadow-on() {
     alias autoload=--zplugin-shadow-autoload
     alias bindkey=--zplugin-shadow-bindkey
-    setopt() { --zplugin-shadow-setopt "$@" }
-    unsetopt() { --zplugin-shadow-unsetopt "$@" }
     alias zstyle=--zplugin-shadow-zstyle
     alias alias=--zplugin-shadow-alias
     alias zle=--zplugin-shadow-zle
     alias compdef=--zplugin-shadow-compdef
-    ZPLG_IS_UNSETOPT_SHADOW=0
     ZPLG_SHADOWING_ACTIVE=1
 }
 
 # Shadowing off
 -zplugin-shadow-off() {
     unalias autoload bindkey zstyle alias zle compdef
-    unfunction "setopt"
-    unfunction "unsetopt"
     ZPLG_SHADOWING_ACTIVE=0
 }
 
 # }}}
 
 #
-# Diff functions {{{
+# Function diff functions {{{
 #
 
 # Can remember current $functions twice, and compute the
@@ -543,6 +448,86 @@ ZPLG_COLORS=(
     (( COLUMNS >= longest && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
 }
 
+# }}}
+
+#
+# Option diff functions {{{
+#
+
+# Can remember current $options twice. After that can
+# detect any change between the two saves. Changed
+# options are appended as they were in first save to
+# ZPLG_OPTIONS, all associated with given ($1) plugin
+-zplugin-diff-options() {
+    local uspl2="$1"
+    local cmd="$2"
+
+    case "$cmd" in
+        begin)
+            ZPLG_OPTIONS_BEFORE[$uspl2]="${(kv)options}"
+            ZPLG_OPTIONS[$uspl2]=""
+            ;;
+        end)
+            ZPLG_OPTIONS_AFTER[$uspl2]="${(kv)options}"
+            ZPLG_OPTIONS[$uspl2]=""
+            ;;
+        diff)
+            # Run diff once
+            [ -n "$ZPLG_OPTIONS[$uspl2]" ] && return
+
+            typeset -A opts_before opts_after opts
+            opts_before=( "${(z)ZPLG_OPTIONS_BEFORE[$uspl2]}" )
+            opts_after=( "${(z)ZPLG_OPTIONS_AFTER[$uspl2]}" )
+            opts=( )
+
+            # Iterate through first array (keys the same
+            # on both of them though) and thest for a change
+            local key
+            for key in "${(k)opts_before[@]}"; do
+                if [ "$opts_before[$key]" != "$opts_after[$key]" ]; then
+                    opts[$key]="${opts_before[$key]}"
+                fi
+            done
+
+            # Serialize for reporting
+            ZPLG_OPTIONS[$uspl2]="${(kv)opts}"
+            ;;
+        *)
+            return 1
+    esac
+}
+
+# Creates a text about options that changed when loaded plugin "$1"
+-zplugin-format-options() {
+    local uspl2="$1"
+
+    # Paranoid, don't want bad key/value pair error
+    -zplugin-save-extendedglob
+    setopt extendedglob
+    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]## ##}"
+    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]%% ##}"
+    -zplugin-restore-extendedglob
+
+    [ -z "$ZPLG_OPTIONS[$uspl2]" ] && return 0
+
+    typeset -A opts
+    opts=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
+
+    # Get length of longest option
+    integer longest=0
+    local k
+    for k in "${(kon)opts[@]}"; do
+        [ "$#k" -gt "$longest" ] && longest="$#k"
+    done
+
+    # Output in one column
+    REPLY=""
+    local txt
+    for k in "${(kon)opts[@]}"; do
+        [ "${opts[$k]}" = "on" ] && txt="was unset" || txt="was set"
+        REPLY+="${(r:longest+1:: :)k}$txt"$'\n'
+    done
+}
 # }}}
 
 #
@@ -989,13 +974,19 @@ ZPLG_COLORS=(
     -zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
     # We need some state, but user wants his for his plugins
     -zplugin-restore-enter-state 
+
+    -zplugin-diff-options "$ZPLG_CUR_USPL2" begin
     -zplugin-shadow-on
     source "$dname/$fname"
     -zplugin-shadow-off
+    -zplugin-diff-options "$ZPLG_CUR_USPL2" end
+
     # Restore our desired state for our operation
     -zplugin-set-desired-shell-state
     -zplugin-diff-functions "$ZPLG_CUR_USPL2" end
-    -zplugin-diff-functions "$user/$plugin" diff
+
+    -zplugin-diff-functions "$ZPLG_CUR_USPL2" diff
+    -zplugin-diff-options "$ZPLG_CUR_USPL2" diff
 }
 
 # }}}
@@ -1064,8 +1055,14 @@ ZPLG_COLORS=(
     print $ZPLG_REPORTS[${user}/${plugin}]
 
     # Print report gathered via $functions-diffing
+    REPLY=""
     -zplugin-format-functions "$user/$plugin"
     print $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
+
+    # Print report gathered via $options-diffing
+    REPLY=""
+    -zplugin-format-options "$user/$plugin"
+    print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
 }
 
 -zplugin-show-all-reports() {
@@ -1269,20 +1266,33 @@ ZPLG_COLORS=(
     done
 
     #
-    # 4. Restore options
+    # 4. Restore changed options
     #
 
-    typeset -a options
-    options=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
-    local opt
-    for opt in "${(on)options[@]}"; do
-        [ -z "$opt" ] && continue
-        # Remove one level of quoting added when concatenating
-        opt="${(Q)opt}"
+    # Paranoid, don't want bad key/value pair error
+    -zplugin-save-extendedglob
+    setopt extendedglob
+    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]## ##}"
+    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]%% ##}"
+    -zplugin-restore-extendedglob
 
-        print "Setting option $opt"
-        setopt "$opt"
-    done
+    if [ -n "$ZPLG_OPTIONS[$uspl2]" ]; then
+        typeset -A opts
+        opts=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
+        local k
+        for k in "${(kon)opts[@]}"; do
+            # Internal options
+            [ "$k" = "physical" ] && continue
+
+            if [ "${opts[$k]}" = "on" ]; then
+                print "Setting option $k"
+                setopt "$k"
+            else
+                print "Unsetting option $k"
+                unsetopt "$k"
+            fi
+        done
+    fi
 
     #
     # 5. Delete aliases
