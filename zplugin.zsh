@@ -720,13 +720,21 @@ ZPLG_COLORS=(
 # Forget given completions. Done before calling compinit
 # $1 - completion function name, e.g. "_cp"
 -zplugin-forget-completion() {
-    echo "Forgetting completion \`$1'..."
     local f="$1"
+
+    typeset -a commands
+    commands=( "${(k@)_comps[(R)$f]}" )
+
+    [ "$#commands" -gt 0 ] && echo "Forgetting commands completed by \`$f':"
+
     local k
-    for k in "${(k@)_comps[(R)$f]}"; do
+    for k in "${commands[@]}"; do
         unset "_comps[$k]"
         echo "Unsetting $k"
     done
+
+    echo "${ZPLG_COLORS[info]}Forgetting completion \`$f'...$reset_color"
+    echo
     unfunction 2>/dev/null "$f"
 }
 
