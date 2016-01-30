@@ -1061,13 +1061,13 @@ ZPLG_COLORS=(
 
     # Print report gathered via $functions-diffing
     REPLY=""
-    -zplugin-diff-functions "$ZPLG_CUR_USPL2" diff
+    -zplugin-diff-functions "$user/$plugin" diff
     -zplugin-format-functions "$user/$plugin"
     print $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
-    -zplugin-diff-options "$ZPLG_CUR_USPL2" diff
+    -zplugin-diff-options "$user/$plugin" diff
     -zplugin-format-options "$user/$plugin"
     print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
 }
