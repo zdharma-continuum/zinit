@@ -463,8 +463,6 @@ ZPLG_COLORS=(
             func=( "${(q)func[@]}" )
     fi
 
-    REPLY=""
-
     case "$cmd" in
         begin)
             ZPLG_FUNCTIONS_BEFORE[$uspl2]="$func[*]"
