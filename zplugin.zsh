@@ -537,13 +537,14 @@ ZPLG_COLORS=(
 -zplugin-format-options() {
     local uspl2="$1"
 
-    # Paranoid, don't want bad key/value pair error
-    -zplugin-save-set-extendedglob
-    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]## ##}"
-    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]%% ##}"
-    -zplugin-restore-extendedglob
+    REPLY=""
 
-    [ -z "$ZPLG_OPTIONS[$uspl2]" ] && return 0
+    # Paranoid, don't want bad key/value pair error
+    integer empty=0
+    -zplugin-save-set-extendedglob
+    [[ "${ZPLG_OPTIONS[$uspl2]}" = ( |$'\t')# ]] && empty=1
+    -zplugin-restore-extendedglob
+    (( empty )) && return 0
 
     typeset -A opts
     opts=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
@@ -556,7 +557,6 @@ ZPLG_COLORS=(
     done
 
     # Output in one column
-    REPLY=""
     local txt
     for k in "${(kon)opts[@]}"; do
         [ "${opts[$k]}" = "on" ] && txt="was unset" || txt="was set"
@@ -1308,12 +1308,12 @@ ZPLG_COLORS=(
     #
 
     # Paranoid, don't want bad key/value pair error
+    integer empty=0
     -zplugin-save-set-extendedglob
-    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]## ##}"
-    ZPLG_OPTIONS[$uspl2]="${ZPLG_OPTIONS[$uspl2]%% ##}"
+    [[ "${ZPLG_OPTIONS[$uspl2]}" = ( |$'\t')# ]] && empty=1
     -zplugin-restore-extendedglob
 
-    if [ -n "$ZPLG_OPTIONS[$uspl2]" ]; then
+    if (( empty != 1 )); then
         typeset -A opts
         opts=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
         local k
