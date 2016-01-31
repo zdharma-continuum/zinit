@@ -1373,8 +1373,22 @@ ZPLG_COL=(
 }
 
 -zplugin-show-registered-plugins() {
+    typeset -a filtered
+    local keyword="$1"
+
+    -zplugin-save-set-extendedglob
+    keyword="${keyword## ##}"
+    keyword="${keyword%% ##}"
+    if [ -n "$keyword" ]; then
+        echo "Installed plugins matching $ZPLG_COL[info]$keyword$reset_color:"
+        filtered=( "${(M)ZPLG_REGISTERED_PLUGINS[@]:#*$keyword*}" )
+    else
+        filtered=( "${ZPLG_REGISTERED_PLUGINS[@]}" )
+    fi
+    -zplugin-restore-extendedglob
+
     local i
-    for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
+    for i in "${filtered[@]}"; do
         # Skip _local/psprint
         [ "$i" = "_local/zplugin" ] && continue
         -zplugin-any-colorify-as-uspl2 "$i"
@@ -1704,7 +1718,7 @@ zplugin() {
            ;;
        (loaded|list)
            # Show list of loaded plugins
-           -zplugin-show-registered-plugins
+           -zplugin-show-registered-plugins "$2"
            ;;
        (comp|completions)
            # Show installed, enabled or disabled, completions
