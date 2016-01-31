@@ -1772,3 +1772,6 @@ compinit                 - refresh installed completions"
     # Restore user's options
     -zplugin-restore-enter-state
 }
+
+# Colorize completions for commands unload, report, creinstall, cuninstall
+zstyle ':completion:*:zplugin:*:argument-rest' list-colors '=(#b)(*)/(*)==1;35=1;33'

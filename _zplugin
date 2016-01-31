@@ -38,10 +38,12 @@ case $state in
                 ret=0
                 ;;
             unload)
-                compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
                 ;;
             report)
-                compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
                 ;;
             all-reports)
                 ret=0
@@ -81,7 +83,8 @@ case $state in
                         break
                     done
                 done
-                compadd "$@" -a - plugins && ret=0
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             cuninstall)
                 # We must iterate each plugin and check if
@@ -103,7 +106,8 @@ case $state in
                         fi
                     done
                 done
-                compadd "$@" -a - plugins && ret=0
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             compinit)
                 ret=0
