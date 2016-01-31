@@ -743,7 +743,7 @@ ZPLG_COLORS=(
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" )
 
-    [ "$#commands" -gt 0 ] && echo "Forgetting commands completed by \`$f':"
+    [ "$#commands" -gt 0 ] && print "Forgetting commands completed by \`$f':"
 
     local k
     for k in "${commands[@]}"; do
@@ -751,8 +751,8 @@ ZPLG_COLORS=(
         echo "Unsetting $k"
     done
 
-    echo "${ZPLG_COLORS[info]}Forgetting completion \`$f'...$reset_color"
-    echo
+    print "${ZPLG_COLORS[info]}Forgetting completion \`$f'...$reset_color"
+    print
     unfunction 2>/dev/null "$f"
 }
 
