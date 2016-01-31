@@ -56,6 +56,8 @@ typeset -gAH ZPLG_FUNCTIONS_BEFORE
 typeset -gAH ZPLG_FUNCTIONS_AFTER
 # Functions computed to be associated with plugin
 typeset -gAH ZPLG_FUNCTIONS
+# Was the function diff already ran?
+typeset -gH ZPLG_FUNCTIONS_DIFF_RAN
 
 #}}}
 
@@ -71,6 +73,9 @@ typeset -gAH ZPLG_OPTIONS_AFTER
 
 # Concatenated options that changed, hold as they were before plugin load
 typeset -gAH ZPLG_OPTIONS
+
+# Was the option diff already ran?
+typeset -gH ZPLG_OPTIONS_DIFF_RAN
 
 # }}}
 
@@ -410,14 +415,17 @@ ZPLG_COL=(
         begin)
             ZPLG_FUNCTIONS_BEFORE[$uspl2]="$func[*]"
             ZPLG_FUNCTIONS[$uspl2]=""
+            ZPLG_FUNCTIONS_DIFF_RAN="0"
             ;;
         end)
             ZPLG_FUNCTIONS_AFTER[$uspl2]="$func[*]"
             ZPLG_FUNCTIONS[$uspl2]=""
+            ZPLG_FUNCTIONS_DIFF_RAN="0"
             ;;
         diff)
             # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            [ -n "$ZPLG_FUNCTIONS[$uspl2]" ] && return 0
+            [ "$ZPLG_FUNCTIONS_DIFF_RAN" = "1" ] && return 0
+            ZPLG_FUNCTIONS_DIFF_RAN="1"
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
@@ -520,14 +528,17 @@ ZPLG_COL=(
         begin)
             ZPLG_OPTIONS_BEFORE[$uspl2]="${(kv)options}"
             ZPLG_OPTIONS[$uspl2]=""
+            ZPLG_OPTIONS_DIFF_RAN="0"
             ;;
         end)
             ZPLG_OPTIONS_AFTER[$uspl2]="${(kv)options}"
             ZPLG_OPTIONS[$uspl2]=""
+            ZPLG_OPTIONS_DIFF_RAN="0"
             ;;
         diff)
             # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            [ -n "$ZPLG_OPTIONS[$uspl2]" ] && return 0
+            [ "$ZPLG_OPTIONS_DIFF_RAN" = "1" ] && return 0
+            ZPLG_OPTIONS_DIFF_RAN="1"
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
