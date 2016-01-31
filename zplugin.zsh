@@ -12,8 +12,14 @@ typeset -gAH ZPLG_REPORTS
 # Common needed values
 #
 
-typeset -gH ZPLG_DIR="${0:h}"
-typeset -gH ZPLG_NAME="${${0:t}:r}"
+if [ -n "$argv[0]" ]; then
+    typeset -gH ZPLG_DIR="${argv[0]:h}"
+    typeset -gH ZPLG_NAME="${${argv[0]:t}:r}"
+else
+    typeset -gH ZPLG_DIR="${0:h}"
+    typeset -gH ZPLG_NAME="${${0:t}:r}"
+fi
+
 typeset -gH ZPLG_HOME="$HOME/.$ZPLG_NAME"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
