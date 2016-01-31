@@ -1185,7 +1185,8 @@ ZPLG_COL=(
 -zplugin-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
-        git clone --recursive https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+        # Return with error when any problem
+        git clone --recursive https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
 
         # Install completions
         -zplugin-install-completions "$user" "$plugin" "0"
@@ -1199,6 +1200,8 @@ ZPLG_COL=(
         command rm -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
         command ln -s "../../${user}---${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
     fi
+
+    return 0
 }
 
 # TODO detect second autoload?
@@ -1227,6 +1230,15 @@ ZPLG_COL=(
     ZPLG_FPATH[$uspl2]=""
 
     return $ret
+}
+
+-zplugin-unregister-plugin() {
+    -zplugin-any-to-user-plugin "$1" "$2"
+    local uspl2="$reply[1]/$reply[2]"
+
+    # If not found, idx will be length+1
+    local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
+    ZPLG_REGISTERED_PLUGINS[$idx]=()
 }
 
 -zplugin-load-plugin() {
@@ -1518,8 +1530,11 @@ ZPLG_COL=(
     local user="$reply[1]" plugin="$reply[2]"
 
     -zplugin-register-plugin "$user" "$plugin"
-    -zplugin-setup-plugin-dir "$user" "$plugin"
-    -zplugin-load-plugin "$user" "$plugin"
+    if ! -zplugin-setup-plugin-dir "$user" "$plugin"; then
+        -zplugin-unregister-plugin "$user" "$plugin"
+    else
+        -zplugin-load-plugin "$user" "$plugin"
+    fi
 }
 
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
@@ -1699,8 +1714,7 @@ ZPLG_COL=(
     #
 
     print "Unregistering plugin $uspl2col"
-    local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
-    ZPLG_REGISTERED_PLUGINS[$idx]=()
+    -zplugin-unregister-plugin "$user" "$plugin"
 
     print "Plugin's report saved to \$LASTREPORT"
 }
