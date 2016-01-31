@@ -1205,12 +1205,14 @@ ZPLG_COL=(
 -zplugin-register-plugin() {
     -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]" uspl2="$reply[1]/$reply[2]"
+    integer ret=0
 
     if ! -zplugin-exists "$user" "$plugin"; then
         ZPLG_REGISTERED_PLUGINS+="$uspl2"
     else
         # Allow overwrite-load, however warn about it
         print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
+        ret=1
     fi
 
     ZPLG_REPORTS[$uspl2]=""
@@ -1221,6 +1223,10 @@ ZPLG_COL=(
     ZPLG_BINDKEYS[$uspl2]=""
     ZPLG_ALIASES[$uspl2]=""
     ZPLG_OPTIONS[$uspl2]=""
+    ZPLG_PATH[$uspl2]=""
+    ZPLG_FPATH[$uspl2]=""
+
+    return $ret
 }
 
 -zplugin-load-plugin() {
