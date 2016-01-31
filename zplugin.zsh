@@ -1699,16 +1699,28 @@ zplugin() {
 
     case "$1" in
        (load)
-           # Load plugin given in uspl2 format, i.e. user/plugin
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
+           # Load plugin given in uspl2 or "user plugin" format
            # Possibly clone from github, and install completions
            -zplugin-load "$2" "$3"
            ;;
        (unload)
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
            # Unload given plugin. Cloned directory remains intact
            # so as are completions
            -zplugin-unload "$2" "$3"
            ;;
        (report)
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
            # Display report of given plugin
            -zplugin-show-report "$2" "$3"
            ;;
@@ -1725,6 +1737,10 @@ zplugin() {
            -zplugin-show-completions
            ;;
        (cdisable)
+           if [[ -z "$2" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
            local f="_${2#_}"
            # Disable completion given by completion function name
            # with or without leading "_", e.g. "cp", "_cp"
@@ -1735,6 +1751,10 @@ zplugin() {
            fi
            ;;
        (cenable)
+           if [[ -z "$2" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
            local f="_${2#_}"
            # Enable completion given by completion function name
            # with or without leading "_", e.g. "cp", "_cp"
@@ -1745,6 +1765,10 @@ zplugin() {
            fi
            ;;
        (creinstall)
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
            # Installs completions for plugin. Enables them all. It's a
            # reinstallation, thus every obstacle gets overwritten or removed
            -zplugin-install-completions "$2" "$3" "1"
@@ -1752,6 +1776,10 @@ zplugin() {
            compinit
            ;;
        (cuninstall)
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
            # Uninstalls completions for plugin
            -zplugin-uninstall-completions "$2" "$3"
            print "Initializing completion (compinit)..."
