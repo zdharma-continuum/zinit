@@ -45,12 +45,16 @@ case $state in
                     compadd "$@" -a - plugins && ret=0
                 ;;
             unload)
+                typeset -a plugins
+                plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
                 _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             report)
+                typeset -a plugins
+                plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
                 _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - ZPLG_REGISTERED_PLUGINS && ret=0
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             all-reports)
                 ret=0
