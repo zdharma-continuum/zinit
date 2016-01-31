@@ -1257,7 +1257,7 @@ ZPLG_COL=(
 
     -zplugin-diff-options "$ZPLG_CUR_USPL2" begin
     -zplugin-shadow-on
-    source "$dname/$fname"
+    builtin source "$dname/$fname"
     -zplugin-shadow-off
     -zplugin-diff-options "$ZPLG_CUR_USPL2" end
 
