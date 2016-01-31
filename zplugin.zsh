@@ -113,7 +113,7 @@ typeset -gH ZPLG_ENV_DIFF_RAN
 # }}}
 
 #
-# Zstyle, bindkey remembering {{{
+# Zstyle, bindkey, alias, zle remembering {{{
 #
 
 # Holds concatenated Zstyles declared by each plugin
@@ -125,6 +125,12 @@ typeset -gAH ZPLG_BINDKEYS
 
 # Holds concatenated aliases declared by each plugin
 typeset -gAH ZPLG_ALIASES
+
+# Holds concatenated pairs "widget_name save_name" for use with zle -A
+typeset -gAH ZPLG_WIDGETS_SAVED
+
+# Holds concatenated names of widgets that should be deleted
+typeset -gAH ZPLG_WIDGETS_DELETE
 
 # }}}
 
@@ -367,8 +373,40 @@ ZPLG_COL=(
 
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Zle $*"
 
+    # Remember to perform the actual zle call
+    typeset -a pos
+    pos=( "$@" )
+
+    # Try to catch game-changing "-N"
+    if [[ "$1" = "-N" && "$#" = "3" ]]; then
+        case "$2" in
+            # Hooks will be just deleted
+            zle-line-init|zle-line-finish|paste-insert)
+                local quoted="$2"
+                quoted="${(q)quoted}"
+                ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                ;;
+            # These will be saved and restored
+            self-insert|backward-delete-char|delete-char)
+                # Have to remember original widget "$2" and
+                # the copy that it's going to be done
+                local widname="$2" saved_widname="zplugin-saved-$2"
+                builtin zle -A "$widname" "$saved_widname"
+
+                widname="${(q)widname}"
+                saved_widname="${(q)saved_widname}"
+                quoted="$widname $saved_widname"
+                quoted="${(q)quoted}"
+                ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
+                ;;
+            *)
+                -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported widget replaced/taken via zle -N: \`$2'"
+                ;;
+        esac
+    fi
+
     # Actual zle
-    builtin zle "$@"
+    builtin zle "${pos[@]}"
 }
 
 --zplugin-shadow-compdef() {
@@ -1242,6 +1280,8 @@ ZPLG_COL=(
     ZPLG_ZSTYLES[$uspl2]=""
     ZPLG_BINDKEYS[$uspl2]=""
     ZPLG_ALIASES[$uspl2]=""
+    ZPLG_WIDGETS_SAVED[$uspl2]=""
+    ZPLG_WIDGETS_DELETE[$uspl2]=""
     ZPLG_OPTIONS[$uspl2]=""
     ZPLG_PATH[$uspl2]=""
     ZPLG_FPATH[$uspl2]=""
@@ -1562,8 +1602,9 @@ ZPLG_COL=(
 # 3. Delete created Zstyles
 # 4. Restore options
 # 5. Restore (or just unalias?) aliases
-# 6. Clean up FPATH and PATH
-# 7. Forget the plugin
+# 6. Restore Zle state
+# 7. Clean up FPATH and PATH
+# 8. Forget the plugin
 -zplugin-unload() {
     -zplugin-exists-message "$1" "$2" || return 1
 
@@ -1711,7 +1752,36 @@ ZPLG_COL=(
     done
 
     #
-    # 6. Clean up FPATH and PATH
+    # 6. Restore Zle state
+    #
+
+    typeset -a delete_widgets
+    delete_widgets=( "${(z)ZPLG_WIDGETS_DELETE[$uspl2]}" )
+    local wid
+    for wid in "${(on)delete_widgets[@]}"; do
+        [ -z "$wid" ] && continue
+        wid="${(Q)wid}"
+        print "Removing Zle hook $wid"
+        zle -D "$wid"
+    done
+
+    typeset -a restore_widgets
+    restore_widgets=( "${(z)ZPLG_WIDGETS_SAVED[$uspl2]}" )
+    for wid in "${(on)restore_widgets[@]}"; do
+        [ -z "$wid" ] && continue
+        wid="${(Q)wid}"
+        typeset -a orig_saved
+        orig_saved=( "${(z)wid}" )
+        orig_saved[1]="${(Q)orig_saved[1]}" # Original widget
+        orig_saved[2]="${(Q)orig_saved[2]}" # Saved widget
+
+        print "Restoring Zle widget ${orig_saved[1]}"
+        zle -A "${orig_saved[2]}" "${orig_saved[1]}"
+        zle -D "${orig_saved[2]}"
+    done
+
+    #
+    # 7. Clean up FPATH and PATH
     #
 
     -zplugin-diff-env "$uspl2" diff
@@ -1734,7 +1804,7 @@ ZPLG_COL=(
     fpath=( "${new[@]}" )
 
     #
-    # 7. Forget the plugin
+    # 8. Forget the plugin
     #
 
     print "Unregistering plugin $uspl2col"
