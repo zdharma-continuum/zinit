@@ -55,6 +55,8 @@ Completions:
 _xauth [disabled]
 ```
 
+![report example](http://imageshack.com/a/img923/4237/OHC0i5.png)
+
 Example plugin unload:
 
 ```
@@ -73,6 +75,8 @@ Removing FPATH element /Users/sgniazdowski/github/zsh-cmd-architect
 Unregistering plugin psprint/zsh-cmd-architect
 Plugin's report saved to $LASTREPORT
 ```
+
+![unload example](http://imageshack.com/a/img921/9896/rMMnQ1.png)
 
 ## Installation
 
