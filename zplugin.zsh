@@ -128,8 +128,8 @@ if [[ -n "$terminfo[colors]" || -n "$termcap[Co]" ]]; then
     colors
 fi
 
-typeset -gAH ZPLG_COLORS
-ZPLG_COLORS=(
+typeset -gAH ZPLG_COL
+ZPLG_COL=(
     "title" ""
     "pname" "${fg_bold[yellow]}"
     "uname" "${fg_bold[magenta]}"
@@ -717,9 +717,9 @@ ZPLG_COLORS=(
 
     local keyword="${txt%% *}"
     if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
-        keyword="${ZPLG_COLORS[error]}$keyword$reset_color"
+        keyword="${ZPLG_COL[error]}$keyword$reset_color"
     else
-        keyword="${ZPLG_COLORS[keyword]}$keyword$reset_color"
+        keyword="${ZPLG_COL[keyword]}$keyword$reset_color"
     fi
 
     ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
@@ -793,7 +793,7 @@ ZPLG_COLORS=(
 -zplugin-exists-message() {
     if ! -zplugin-exists "$1" "$2"; then
         -zplugin-any-colorify-as-uspl2 "$1" "$2"
-        print "$ZPLG_COLORS[error]No such plugin$reset_color $REPLY"
+        print "$ZPLG_COL[error]No such plugin$reset_color $REPLY"
         return 1
     fi
     return 0
@@ -810,7 +810,7 @@ ZPLG_COLORS=(
 -zplugin-exists-physically-message() {
     if ! -zplugin-exists-physically "$1" "$2"; then
         -zplugin-any-colorify-as-uspl2 "$1" "$2"
-        print "$ZPLG_COLORS[error]No such plugin directory$reset_color $REPLY"
+        print "$ZPLG_COL[error]No such plugin directory$reset_color $REPLY"
         return 1
     fi
     return 0
@@ -821,7 +821,7 @@ ZPLG_COLORS=(
 -zplugin-any-colorify-as-uspl2() {
     -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]"
-    local ucol="$ZPLG_COLORS[uname]" pcol="$ZPLG_COLORS[pname]"
+    local ucol="$ZPLG_COL[uname]" pcol="$ZPLG_COL[pname]"
     REPLY="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
 }
 
@@ -891,7 +891,7 @@ ZPLG_COLORS=(
         echo "Unsetting $k"
     done
 
-    print "${ZPLG_COLORS[info]}Forgetting completion \`$f'...$reset_color"
+    print "${ZPLG_COL[info]}Forgetting completion \`$f'...$reset_color"
     print
     unfunction 2>/dev/null "$f"
 }
@@ -902,18 +902,18 @@ ZPLG_COLORS=(
 
     # bkpfile must be a symlink
     if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
-        print "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
+        print "$ZPLG_COL[error]Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
         error=1
     fi
 
     # cfile must be a symlink
     if [[ -e "$cfile" && ! -L "$cfile" ]]; then
-        print "$ZPLG_COLORS[error]Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
+        print "$ZPLG_COL[error]Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
         error=1
     fi
 
     # Tell user that he can manually modify but should do it right
-    (( error )) && print "$ZPLG_COLORS[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+    (( error )) && print "$ZPLG_COL[error]Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
 }
 
 # Searches for completions owned by given plugin
@@ -1074,13 +1074,13 @@ ZPLG_COLORS=(
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
             fi
-            print "$ZPLG_COLORS[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
+            print "$ZPLG_COL[info]Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
             command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
             # Make compinit notice the change
             -zplugin-forget-completion "$cfile"
         else
-            print "$ZPLG_COLORS[error]Not symlinking completion \`$cfile', it already exists$reset_color"
-            print "$ZPLG_COLORS[error]Use \`creinstall' {plugin-name} to force install$reset_color"
+            print "$ZPLG_COL[error]Not symlinking completion \`$cfile', it already exists$reset_color"
+            print "$ZPLG_COL[error]Use \`creinstall' {plugin-name} to force install$reset_color"
         fi
     done
 }
@@ -1122,17 +1122,17 @@ ZPLG_COLORS=(
         fi
 
         if (( action )); then
-            print "$ZPLG_COLORS[info]Uninstalling completion \`$cfile'$reset_color"
+            print "$ZPLG_COL[info]Uninstalling completion \`$cfile'$reset_color"
             # Make compinit notice the change
             -zplugin-forget-completion "$cfile"
             (( global_action ++ ))
         else
-            print "$ZPLG_COLORS[info]Completion \`$cfile' not installed$reset_color"
+            print "$ZPLG_COL[info]Completion \`$cfile' not installed$reset_color"
         fi
     done
 
     if (( global_action > 0 )); then
-        print "$ZPLG_COLORS[info]Uninstalled $global_action completions$reset_color"
+        print "$ZPLG_COL[info]Uninstalled $global_action completions$reset_color"
     fi
 }
 
@@ -1151,7 +1151,7 @@ ZPLG_COLORS=(
         cfile="_${cfile#_}"
         bkpfile="${cfile#_}"
 
-        print "$ZPLG_COLORS[info]Processing completion $cfile$reset_color"
+        print "$ZPLG_COL[info]Processing completion $cfile$reset_color"
         -zplugin-forget-completion "$cfile"
     done
 
@@ -1285,7 +1285,7 @@ ZPLG_COLORS=(
 
         # Output line of text
         print -n "${(r:longest+1:: :)c} $REPLY"
-        (( disabled )) && print -n " $ZPLG_COLORS[error][disabled]$reset_color"
+        (( disabled )) && print -n " $ZPLG_COL[error][disabled]$reset_color"
         print
     done
 }
@@ -1298,13 +1298,13 @@ ZPLG_COLORS=(
     -zplugin-exists-message "$user" "$plugin" || return 1
 
     # Print title
-    printf "$ZPLG_COLORS[title]Plugin report for$reset_color %s/%s\n"\
-            "$ZPLG_COLORS[uname]$user$reset_color"\
-            "$ZPLG_COLORS[pname]$plugin$reset_color"
+    printf "$ZPLG_COL[title]Plugin report for$reset_color %s/%s\n"\
+            "$ZPLG_COL[uname]$user$reset_color"\
+            "$ZPLG_COL[pname]$plugin$reset_color"
 
     # Print "----------"
     local msg="Plugin report for $user/$plugin"
-    print $ZPLG_COLORS[bar]"${(r:$#msg::-:)tmp__}"$reset_color
+    print $ZPLG_COL[bar]"${(r:$#msg::-:)tmp__}"$reset_color
 
     # Print report gathered via shadowing
     print $ZPLG_REPORTS[${user}/${plugin}]
@@ -1313,23 +1313,23 @@ ZPLG_COLORS=(
     REPLY=""
     -zplugin-diff-functions "$user/$plugin" diff
     -zplugin-format-functions "$user/$plugin"
-    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"Functions created:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print $ZPLG_COL[p]"Functions created:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
     -zplugin-diff-options "$user/$plugin" diff
     -zplugin-format-options "$user/$plugin"
-    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print $ZPLG_COL[p]"Options changed:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via environment diffing
     REPLY=""
     -zplugin-diff-env "$user/$plugin" diff
     -zplugin-format-env "$user/$plugin" "1"
-    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"PATH elements added:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print $ZPLG_COL[p]"PATH elements added:$reset_color"$'\n'"$REPLY"
 
     REPLY=""
     -zplugin-format-env "$user/$plugin" "2"
-    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"FPATH elements added:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print $ZPLG_COL[p]"FPATH elements added:$reset_color"$'\n'"$REPLY"
 
     # Print what completions plugin has
     -zplugin-find-completions-of-plugin "$user" "$plugin"
@@ -1337,7 +1337,7 @@ ZPLG_COLORS=(
     completions=( "${reply[@]}" )
 
     if [ "$#completions" -ge "1" ]; then
-        print "${ZPLG_COLORS[p]}Completions:$reset_color"
+        print "${ZPLG_COL[p]}Completions:$reset_color"
         -zplugin-check-which-completions-are-installed "${completions[@]}"
         typeset -a installed
         installed=( "${reply[@]}" )
@@ -1350,12 +1350,12 @@ ZPLG_COLORS=(
         for (( idx=1; idx <= count; idx ++ )); do
             print -n "${completions[idx]:t}"
             if [ "${installed[idx]}" != "1" ]; then
-                print -n " ${ZPLG_COLORS[uninst]}[not installed]$reset_color"
+                print -n " ${ZPLG_COL[uninst]}[not installed]$reset_color"
             else
                 if [ "${enabled[idx]}" = "1" ]; then
-                    print -n " ${ZPLG_COLORS[info]}[enabled]$reset_color"
+                    print -n " ${ZPLG_COL[info]}[enabled]$reset_color"
                 else
-                    print -n " ${ZPLG_COLORS[error]}[disabled]$reset_color"
+                    print -n " ${ZPLG_COL[error]}[disabled]$reset_color"
                 fi
             fi
             print
@@ -1390,14 +1390,14 @@ ZPLG_COLORS=(
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "$ZPLG_COLORS[error]No such completion \`$c'$reset_color"
+        print "$ZPLG_COL[error]No such completion \`$c'$reset_color"
         return 1
     fi
 
     # Check if there is no backup file
     # This is treated as if the completion is already enabled
     if [ ! -e "$bkpfile" ]; then
-        print "Completion $ZPLG_COLORS[info]$c$reset_color already enabled"
+        print "Completion $ZPLG_COL[info]$c$reset_color already enabled"
 
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -1405,8 +1405,8 @@ ZPLG_COLORS=(
 
     # Disabled, but completion file already exists?
     if [ -e "$cfile" ]; then
-        print "$ZPLG_COLORS[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
-        print "$ZPLG_COLORS[error]Completion is actually enabled and will re-enable it again$reset_color"
+        print "$ZPLG_COL[error]Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
+        print "$ZPLG_COL[error]Completion is actually enabled and will re-enable it again$reset_color"
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$cfile"
     else
@@ -1421,7 +1421,7 @@ ZPLG_COLORS=(
     # Get completion's owning plugin
     -zplugin-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
-    print "Enabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
+    print "Enabled $ZPLG_COL[info]$c$reset_color completion belonging to $REPLY"
 
     return 0
 }
@@ -1434,14 +1434,14 @@ ZPLG_COLORS=(
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "$ZPLG_COLORS[error]No such completion \`$c'$reset_color"
+        print "$ZPLG_COL[error]No such completion \`$c'$reset_color"
         return 1
     fi
 
     # Check if it's already disabled
     # Not existing "$cfile" says that
     if [[ ! -e "$cfile" ]]; then
-        print "Completion $ZPLG_COLORS[info]$c$reset_color already disabled"
+        print "Completion $ZPLG_COL[info]$c$reset_color already disabled"
 
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -1449,7 +1449,7 @@ ZPLG_COLORS=(
 
     # No disable, but bkpfile exists?
     if [ -e "$bkpfile" ]; then
-        print "$ZPLG_COLORS[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
+        print "$ZPLG_COL[error]Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
         -zplugin-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$bkpfile"
     else
@@ -1464,7 +1464,7 @@ ZPLG_COLORS=(
     # Get completion's owning plugin
     -zplugin-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
-    print "Disabled $ZPLG_COLORS[info]$c$reset_color completion belonging to $REPLY"
+    print "Disabled $ZPLG_COL[info]$c$reset_color completion belonging to $REPLY"
 
     return 0
 }
@@ -1537,7 +1537,7 @@ ZPLG_COLORS=(
         sw_arr[4]="${(Q)sw_arr[4]}"
 
         if [ "${sw_arr[3]}" = "-M" ]; then
-            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} ${ZPLG_COLORS[info]}mapped to ${sw_arr[4]}$reset_color"
+            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} ${ZPLG_COL[info]}mapped to ${sw_arr[4]}$reset_color"
             bindkey -M "${sw_arr[4]}" -r "${sw_arr[1]}"
         else
             print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]}"
@@ -1617,10 +1617,10 @@ ZPLG_COLORS=(
         nv_arr[3]="${(Q)nv_arr[3]}"
 
         if [ "${nv_arr[3]}" = "-s" ]; then
-            print "Removing ${ZPLG_COLORS[info]}suffix$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
+            print "Removing ${ZPLG_COL[info]}suffix$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
             unalias -s "${nv_arr[1]}"
         elif [ "${nv_arr[3]}" = "-g" ]; then
-            print "Removing ${ZPLG_COLORS[info]}global$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
+            print "Removing ${ZPLG_COL[info]}global$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
             unalias "${(q)nv_arr[1]}"
         else
             print "Removing alias ${nv_arr[1]}=${nv_arr[2]}"
@@ -1639,7 +1639,7 @@ ZPLG_COLORS=(
     typeset -a new elem p
     elem=( "${(z)ZPLG_PATH[$uspl2]}" )
     for p in "${path[@]}"; do
-        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing PATH element $ZPLG_COLORS[info]$p$reset_color"
+        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing PATH element $ZPLG_COL[info]$p$reset_color"
     done
     path=( "${new[@]}" )
 
@@ -1647,7 +1647,7 @@ ZPLG_COLORS=(
     elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
     new=( )
     for p in "${fpath[@]}"; do
-        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing FPATH element $ZPLG_COLORS[info]$p$reset_color"
+        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing FPATH element $ZPLG_COL[info]$p$reset_color"
     done
     fpath=( "${new[@]}" )
 
@@ -1750,18 +1750,18 @@ zplugin() {
            ;;
 
        (-h|--help|help|)
-           print "$ZPLG_COLORS[p]Usage$reset_color:
+           print "$ZPLG_COL[p]Usage$reset_color:
 -h|--help|help           - usage information
-load $ZPLG_COLORS[pname]{plugin-name}$reset_color       - load plugin
-unload $ZPLG_COLORS[pname]{plugin-name}$reset_color     - unload plugin
-report $ZPLG_COLORS[pname]{plugin-name}$reset_color     - show plugin's report
+load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
+unload $ZPLG_COL[pname]{plugin-name}$reset_color     - unload plugin
+report $ZPLG_COL[pname]{plugin-name}$reset_color     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list              - show what plugins are loaded
 comp|completions         - list completions in use
-cdisable $ZPLG_COLORS[info]{cname}$reset_color         - disable completion \`cname'
-cenable  $ZPLG_COLORS[info]{cname}$reset_color         - enable completion \`cname'
-creinstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - install completions for plugin
-cuninstall $ZPLG_COLORS[pname]{plugin-name}$reset_color - uninstall completions for plugin
+cdisable $ZPLG_COL[info]{cname}$reset_color         - disable completion \`cname'
+cenable  $ZPLG_COL[info]{cname}$reset_color         - enable completion \`cname'
+creinstall $ZPLG_COL[pname]{plugin-name}$reset_color - install completions for plugin
+cuninstall $ZPLG_COL[pname]{plugin-name}$reset_color - uninstall completions for plugin
 compinit                 - refresh installed completions"
            ;;
        (*)
