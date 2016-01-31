@@ -1770,7 +1770,7 @@ load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
 unload $ZPLG_COL[pname]{plugin-name}$reset_color     - unload plugin
 report $ZPLG_COL[pname]{plugin-name}$reset_color     - show plugin's report
 all-reports              - show all plugin reports
-loaded|list              - show what plugins are loaded
+loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
 comp|completions         - list completions in use
 cdisable $ZPLG_COL[info]{cname}$reset_color         - disable completion \`cname'
 cenable  $ZPLG_COL[info]{cname}$reset_color         - enable completion \`cname'

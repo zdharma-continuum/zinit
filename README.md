@@ -118,7 +118,7 @@ load {plugin-name}       - load plugin
 unload {plugin-name}     - unload plugin
 report {plugin-name}     - show plugin's report
 all-reports              - show all plugin reports
-loaded|list              - show what plugins are loaded
+loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
 comp|completions         - list completions in use
 cdisable {cname}         - disable completion `cname'
 cenable  {cname}         - enable completion `cname'
