@@ -35,6 +35,11 @@ hlohm/mfunc (doesn't fully work, the same with antigen)
 horosgrisa/mysql-colorize
 voronkovich/mysql.plugin.zsh
 bric3/nice-exit-code
+chrissicool/zsh-bash
+zsh-users/zaw
+benclark/parallels-zsh-plugin
+oz/safe-paste
+willghatch/zsh-saneopt
 
 skipped:
 Stibbons/crayon-syntax-zsh (a wordpress plugin)
