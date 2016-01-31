@@ -90,8 +90,8 @@ To update run the command again.
 
 `Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
 single line of code that will be added to the bottom (it will be sourcing
-`zplugin.zsh` for you). Completion will be also installed, for command `zplugin`
-and aliases `zpl`, `zplg`.
+`zplugin.zsh` for you). Completion will be available, for command `zplugin` and
+aliases `zpl`, `zplg`.
 
 To manually install `Zplugin` clone the repo to e.g. `~/.zplugin/bin`:
 
