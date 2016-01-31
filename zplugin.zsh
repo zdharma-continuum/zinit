@@ -96,6 +96,9 @@ typeset -gAH ZPLG_FPATH_AFTER
 # Concatenated new elements of FPATH (after diff)
 typeset -gAH ZPLG_FPATH
 
+# Was the environment diff already ran?
+typeset -gH ZPLG_ENV_DIFF_RAN
+
 # }}}
 
 #
@@ -609,6 +612,7 @@ ZPLG_COL=(
             # Reset diffing
             ZPLG_PATH[$uspl2]=""
             ZPLG_FPATH[$uspl2]=""
+            ZPLG_ENV_DIFF_RAN="0"
             ;;
         end)
             tmp=( "${(q)path[@]}" )
@@ -619,10 +623,12 @@ ZPLG_COL=(
             # Reset diffing
             ZPLG_PATH[$uspl2]=""
             ZPLG_FPATH[$uspl2]=""
+            ZPLG_ENV_DIFF_RAN="0"
             ;;
         diff)
             # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            [[ -n "$ZPLG_PATH[$uspl2]" && -n "$ZPLG_FPATH[$uspl2]" ]] && return 0
+            [ "$ZPLG_ENV_DIFF_RAN" = "1" ] && return 0
+            ZPLG_ENV_DIFF_RAN="1"
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
