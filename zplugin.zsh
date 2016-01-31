@@ -1487,7 +1487,8 @@ ZPLG_COLORS=(
 # 3. Delete created Zstyles
 # 4. Restore options
 # 5. Restore (or just unalias?) aliases
-# 6. Forget the plugin
+# 6. Clean up FPATH and PATH
+# 7. Forget the plugin
 -zplugin-unload() {
     -zplugin-exists-message "$1" "$2" || return 1
 
@@ -1628,7 +1629,30 @@ ZPLG_COLORS=(
     done
 
     #
-    # 6. Forget the plugin
+    # 6. Clean up FPATH and PATH
+    #
+
+    -zplugin-diff-env "$uspl2" diff
+
+    # Have to iterate over $path elements and
+    # skip those that were added by the plugin
+    typeset -a new elem p
+    elem=( "${(z)ZPLG_PATH[$uspl2]}" )
+    for p in "${path[@]}"; do
+        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing PATH element $ZPLG_COLORS[info]$p$reset_color"
+    done
+    path=( "${new[@]}" )
+
+    # The same for $fpath
+    elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
+    new=( )
+    for p in "${fpath[@]}"; do
+        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing FPATH element $ZPLG_COLORS[info]$p$reset_color"
+    done
+    fpath=( "${new[@]}" )
+
+    #
+    # 7. Forget the plugin
     #
 
     print "Unregistering plugin $uspl2col"
