@@ -35,7 +35,14 @@ case $state in
                 ret=0
                 ;;
             load)
-                ret=0
+                typeset -a plugins
+                plugins=( ~/.zplugin/plugins/*(N:t) )
+                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             unload)
                 _wanted plugins expl "Plugins" \
