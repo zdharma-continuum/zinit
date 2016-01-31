@@ -1504,6 +1504,7 @@ ZPLG_COLORS=(
     # 1. Unfunction
     #
 
+    -zplugin-diff-functions "$uspl2" diff
     typeset -a func
     func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
     local f
@@ -1571,6 +1572,7 @@ ZPLG_COLORS=(
     #
 
     # Paranoid, don't want bad key/value pair error
+    -zplugin-diff-options "$uspl2" diff
     integer empty=0
     -zplugin-save-set-extendedglob
     [[ "${ZPLG_OPTIONS[$uspl2]}" = ( |$'\t')# ]] && empty=1
