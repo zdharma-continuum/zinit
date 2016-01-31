@@ -413,11 +413,11 @@ ZPLG_COLORS=(
             ZPLG_FUNCTIONS[$uspl2]=""
             ;;
         diff)
-            # Run diff once, have to `begin' or `end' again for actual diff
+            # Run diff once, `begin' or `end' is needed to be run again for a new diff
             [ -n "$ZPLG_FUNCTIONS[$uspl2]" ] && return 0
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
-            # This is paranoid for *_BEFORE and *_AFTER being only spaces
+            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
             integer error=0
             -zplugin-save-set-extendedglob
             [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
@@ -523,11 +523,11 @@ ZPLG_COLORS=(
             ZPLG_OPTIONS[$uspl2]=""
             ;;
         diff)
-            # Run diff once, have to `begin' or `end' again for actual diff
+            # Run diff once, `begin' or `end' is needed to be run again for a new diff
             [ -n "$ZPLG_OPTIONS[$uspl2]" ] && return 0
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
-            # This is paranoid for *_BEFORE and *_AFTER being only spaces
+            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
             integer error=0
             -zplugin-save-set-extendedglob
             [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_OPTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
