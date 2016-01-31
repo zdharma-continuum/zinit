@@ -75,6 +75,30 @@ typeset -gAH ZPLG_OPTIONS
 # }}}
 
 #
+# Environment diffing {{{
+#
+
+# Concatenated state of PATH before loading a plugin
+typeset -gAH ZPLG_PATH_BEFORE
+
+# Concatenated state of PATH after loading a plugin
+typeset -gAH ZPLG_PATH_AFTER
+
+# Concatenated new elements of PATH (after diff)
+typeset -gAH ZPLG_PATH
+
+# Concatenated state of FPATH before loading a plugin
+typeset -gAH ZPLG_FPATH_BEFORE
+
+# Concatenated state of FPATH after loading a plugin
+typeset -gAH ZPLG_FPATH_AFTER
+
+# Concatenated new elements of FPATH (after diff)
+typeset -gAH ZPLG_FPATH
+
+# }}}
+
+#
 # Zstyle, bindkey remembering {{{
 #
 
@@ -564,6 +588,122 @@ ZPLG_COLORS=(
         REPLY+="${(r:longest+1:: :)k}$txt"$'\n'
     done
 }
+# }}}
+
+#
+# Environment diff functions {{{
+#
+
+-zplugin-diff-env() {
+    local uspl2="$1"
+    local cmd="$2"
+    typeset -a tmp
+
+    case "$cmd" in
+        begin)
+            tmp=( "${(q)path[@]}" )
+            ZPLG_PATH_BEFORE[$uspl2]="$tmp[*]"
+            tmp=( "${(q)fpath[@]}" )
+            ZPLG_FPATH_BEFORE[$uspl2]="$tmp[*]"
+
+            # Reset diffing
+            ZPLG_PATH[$uspl2]=""
+            ZPLG_FPATH[$uspl2]=""
+            ;;
+        end)
+            tmp=( "${(q)path[@]}" )
+            ZPLG_PATH_AFTER[$uspl2]="$tmp[*]"
+            tmp=( "${(q)fpath[@]}" )
+            ZPLG_FPATH_AFTER[$uspl2]="$tmp[*]"
+
+            # Reset diffing
+            ZPLG_PATH[$uspl2]=""
+            ZPLG_FPATH[$uspl2]=""
+            ;;
+        diff)
+            # Run diff once, `begin' or `end' is needed to be run again for a new diff
+            [[ -n "$ZPLG_PATH[$uspl2]" && -n "$ZPLG_FPATH[$uspl2]" ]] && return 0
+
+            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
+            integer error=0
+            -zplugin-save-set-extendedglob
+            [[ "${ZPLG_PATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
+            [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FPATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
+            -zplugin-restore-extendedglob
+            (( error )) && return 1
+
+            typeset -A path_state fpath_state
+            local i
+
+            #
+            # PATH processing
+            #
+
+            # This includes new path elements
+            for i in "${(z)ZPLG_PATH_AFTER[$uspl2]}"; do
+                path_state[$i]=1
+            done
+
+            # Remove duplicated entries, i.e. existing before
+            for i in "${(z)ZPLG_PATH_BEFORE[$uspl2]}"; do
+                unset "path_state[$i]"
+            done
+
+            # Store the path elements, associating them with plugin ($uspl2)
+            for i in "${(onk)path_state[@]}"; do
+                ZPLG_PATH[$uspl2]+="$i "
+            done
+
+            #
+            # FPATH processing
+            #
+
+            # This includes new path elements
+            for i in "${(z)ZPLG_FPATH_AFTER[$uspl2]}"; do
+                fpath_state[$i]=1
+            done
+
+            # Remove duplicated entries, i.e. existing before
+            for i in "${(z)ZPLG_FPATH_BEFORE[$uspl2]}"; do
+                unset "fpath_state[$i]"
+            done
+
+            # Store the path elements, associating them with plugin ($uspl2)
+            for i in "${(onk)fpath_state[@]}"; do
+                ZPLG_FPATH[$uspl2]+="$i "
+            done
+            ;;
+        *)
+            return 1
+    esac
+
+    return 0
+}
+
+-zplugin-format-env() {
+    local uspl2="$1" which="$2"
+
+    # Format PATH?
+    if [ "$which" = "1" ]; then
+        typeset -a elem
+        elem=( "${(z)ZPLG_PATH[$uspl2]}" )
+    elif [ "$which" = "2" ]; then
+        typeset -a elem
+        elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
+    fi
+
+    # Enumerate elements added
+    local answer="" e
+    for e in "${elem[@]}"; do
+        [ -z "$e" ] && continue
+        e="${(Q)e}"
+        answer+="$e"$'\n'
+    done
+
+    [ -n "$answer" ] && REPLY="$answer"
+}
+
 # }}}
 
 #
@@ -1088,6 +1228,7 @@ ZPLG_COLORS=(
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Source $fname"
 
     -zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
+    -zplugin-diff-env "$ZPLG_CUR_USPL2" begin
     # We need some state, but user wants his for his plugins
     -zplugin-restore-enter-state 
 
@@ -1099,6 +1240,7 @@ ZPLG_COLORS=(
 
     # Restore our desired state for our operation
     -zplugin-set-desired-shell-state
+    -zplugin-diff-env "$ZPLG_CUR_USPL2" end
     -zplugin-diff-functions "$ZPLG_CUR_USPL2" end
 }
 
@@ -1178,6 +1320,16 @@ ZPLG_COLORS=(
     -zplugin-diff-options "$user/$plugin" diff
     -zplugin-format-options "$user/$plugin"
     [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"Options changed:$reset_color"$'\n'"$REPLY"
+
+    # Print report gathered via environment diffing
+    REPLY=""
+    -zplugin-diff-env "$user/$plugin" diff
+    -zplugin-format-env "$user/$plugin" "1"
+    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"PATH elements added:$reset_color"$'\n'"$REPLY"
+
+    REPLY=""
+    -zplugin-format-env "$user/$plugin" "2"
+    [ -n "$REPLY" ] && print $ZPLG_COLORS[p]"FPATH elements added:$reset_color"$'\n'"$REPLY"
 
     # Print what completions plugin has
     -zplugin-find-completions-of-plugin "$user" "$plugin"
