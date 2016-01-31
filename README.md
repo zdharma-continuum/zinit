@@ -23,7 +23,9 @@ Example use:
 Example plugin report:
 
 ```
-% zplugin report psprint/zsh-cmd-architect
+% zpl report psprint/zsh-cmd-architect
+Plugin report for psprint/zsh-cmd-architect
+-------------------------------------------
 Source zsh-cmd-architect.plugin.zsh
 Autoload h-list
 Autoload h-list-input
@@ -35,15 +37,28 @@ Zle -N zca-widget
 Bindkey ^T zca-widget
 
 Functions created:
-            h-list        h-list-draw
-      h-list-input                zca
-zca-usetty-wrapper         zca-widget
+h-list             h-list-draw
+h-list-input       zca
+zca-usetty-wrapper zca-widget
+
+Options changed:
+autolist     was unset
+menucomplete was unset
+
+PATH elements added:
+/Users/sgniazdowski/github/zsh-cmd-architect/bin
+
+FPATH elements added:
+/Users/sgniazdowski/github/zsh-cmd-architect
+
+Completions:
+_xauth [disabled]
 ```
 
 Example plugin unload:
 
 ```
-% zplugin unload psprint/zsh-cmd-architect
+% zpl unload psprint/zsh-cmd-architect
 Deleting function h-list
 Deleting function h-list-draw
 Deleting function h-list-input
@@ -51,6 +66,10 @@ Deleting function zca
 Deleting function zca-usetty-wrapper
 Deleting function zca-widget
 Deleting bindkey ^T zca-widget
+Setting option autolist
+Setting option menucomplete
+Removing PATH element /Users/sgniazdowski/github/zsh-cmd-architect/bin
+Removing FPATH element /Users/sgniazdowski/github/zsh-cmd-architect
 Unregistering plugin psprint/zsh-cmd-architect
 Plugin's report saved to $LASTREPORT
 ```
