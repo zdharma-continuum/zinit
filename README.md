@@ -82,7 +82,7 @@ Plugin's report saved to $LASTREPORT
 
 Execute:
 
-```
+```sh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
 ```
 
@@ -92,6 +92,19 @@ To update run the command again.
 single line of code that will be added to the bottom (it will be sourcing
 `zplugin.zsh` for you). Completion will be also installed, for command `zplugin`
 and aliases `zpl`, `zplg`.
+
+To manually install `Zplugin` clone the repo to e.g. `~/.zplugin/bin`:
+
+```sh
+mkdir ~/.zplugin
+git clone https://github.com/psprint/zplugin.git ~/.zplugin/bin
+```
+
+and source it from `.zshrc`:
+
+```sh
+source ~/.zplugin/bin/zplugin.zsh
+```
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
 
