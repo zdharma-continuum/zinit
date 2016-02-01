@@ -440,6 +440,8 @@ ZPLG_COL=(
         --zplugin-shadow-zstyle "$@"
     }
 
+    alias compdef=--zplugin-shadow-compdef
+
     (( ${+functions[alias]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was alias() function defined, possibly in zshrc"
     function alias {
         --zplugin-shadow-alias "$@"
@@ -449,8 +451,6 @@ ZPLG_COL=(
     function zle {
         --zplugin-shadow-zle "$@"
     }
-
-    alias compdef=--zplugin-shadow-compdef
 
     ZPLG_SHADOWING_ACTIVE=1
 }
