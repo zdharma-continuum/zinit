@@ -38,7 +38,7 @@ bric3/nice-exit-code
 chrissicool/zsh-bash
 zsh-users/zaw
 benclark/parallels-zsh-plugin
-oz/safe-paste
+oz/safe-paste (works but has issues, the same on antigen)
 willghatch/zsh-saneopt
 
 skipped:
