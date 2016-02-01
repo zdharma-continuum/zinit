@@ -533,11 +533,13 @@ ZPLG_COL=(
 
             # This includes new functions
             for i in "${(z)ZPLG_FUNCTIONS_AFTER[$uspl2]}"; do
+                i="${(Q)i}"
                 func[$i]=1
             done
 
             # Remove duplicated entries, i.e. existing before
             for i in "${(z)ZPLG_FUNCTIONS_BEFORE[$uspl2]}"; do
+                i="${(Q)i}"
                 unset "func[$i]"
             done
 
