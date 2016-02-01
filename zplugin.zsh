@@ -1430,6 +1430,43 @@ ZPLG_COL=(
     done
 }
 
+# While -zplugin-show-completions shows what completions are installed,
+# this functions searches through all plugin directories showing what's available
+-zplugin-search-completions() {
+    typeset -a plugin_paths
+    plugin_paths=( "$ZPLG_PLUGINS_DIR"/*---* )
+
+    # Find longest plugin name. Things are ran twice here, first pass
+    # is to get longest name of plugin which is having any completions
+    integer longest=0
+    typeset -a completions
+    local pp
+    for pp in "${plugin_paths[@]}"; do
+        completions=( "$pp"/_*(N) )
+        if [ "$#completions" -gt 0 ]; then
+            local pd="${pp:t}"
+            [ "${#pd}" -gt "$longest" ] && longest="${#pd}"
+        fi
+    done
+
+    for pp in "${plugin_paths[@]}"; do
+        completions=( "$pp"/_*(N) )
+
+        if [ "$#completions" -gt 0 ]; then
+            # Array of completions, e.g. ( _cp _xauth )
+            completions=( "${completions[@]:t}" )
+            # Convert directory name to colorified $user/$plugin
+            -zplugin-any-colorify-as-uspl2 "${pp:t}"
+
+            # Adjust for escape code (nasty, utilizes fact that
+            # $reset_color is used twice, so as a $ZPLG_COL)
+            integer adjust_ec=$(( ${#reset_color} * 2 + ${#ZPLG_COL[uname]} + ${#ZPLG_COL[pname]} ))
+
+            print "${(r:longest+adjust_ec:: :)REPLY} ${(j:, :)completions}"
+        fi
+    done
+}
+
 -zplugin-show-report() {
     -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]"
@@ -1978,6 +2015,9 @@ zplugin() {
            print "Initializing completion (compinit)..."
            compinit
            ;;
+       (csearch)
+           -zplugin-search-completions
+           ;;
        (compinit)
            # Runs compinit in a way that ensures
            # reload of plugins' completions
@@ -1998,6 +2038,7 @@ cdisable $ZPLG_COL[info]{cname}$reset_color         - disable completion \`cname
 cenable  $ZPLG_COL[info]{cname}$reset_color         - enable completion \`cname'
 creinstall $ZPLG_COL[pname]{plugin-name}$reset_color - install completions for plugin
 cuninstall $ZPLG_COL[pname]{plugin-name}$reset_color - uninstall completions for plugin
+csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions"
            ;;
        (*)
