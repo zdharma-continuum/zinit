@@ -429,16 +429,16 @@ ZPLG_COL=(
 # Shadowing on
 -zplugin-shadow-on() {
     alias autoload=--zplugin-shadow-autoload
-    bindkey() {
+    function bindkey {
         --zplugin-shadow-bindkey "$@"
     }
-    zstyle() {
+    function zstyle {
         --zplugin-shadow-zstyle "$@"
     }
-    alias() {
+    function alias {
         --zplugin-shadow-alias "$@"
     }
-    zle() {
+    function zle {
         --zplugin-shadow-zle "$@"
     }
     alias compdef=--zplugin-shadow-compdef
