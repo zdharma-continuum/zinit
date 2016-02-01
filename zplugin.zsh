@@ -20,7 +20,7 @@ else
     typeset -gH ZPLG_NAME="${${0:t}:r}"
 fi
 
-typeset -gH ZPLG_HOME="$HOME/.$ZPLG_NAME"
+typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
 typeset -gH ZPLG_HOME_READY

@@ -4,17 +4,19 @@
 # Clone or pull
 #
 
-if ! test -d "$HOME/.zplugin"; then
-    mkdir "$HOME/.zplugin"
-    chmod g-rwX "$HOME/.zplugin"
+ZPLG_HOME="${ZDOTDIR:-$HOME}/.zplugin"
+
+if ! test -d "$ZPLG_HOME"; then
+    mkdir "$ZPLG_HOME"
+    chmod g-rwX "$ZPLG_HOME"
 fi
 
-echo ">>> Downloading zplugin to ~/.zplugin/bin"
-if test -d ~/.zplugin/bin/.git; then
-    cd ~/.zplugin/bin
+echo ">>> Downloading zplugin to $ZPLG_HOME/bin"
+if test -d "$ZPLG_HOME/bin/.git"; then
+    cd "$ZPLG_HOME/bin"
     git pull origin master
 else
-    cd ~/.zplugin
+    cd "$ZPLG_HOME"
     git clone https://github.com/psprint/zplugin.git bin
 fi
 echo ">>> Done"
@@ -24,10 +26,10 @@ echo ">>> Done"
 #
 
 echo ">>> Updating .zshrc (with one line)"
-if ! grep zplugin ~/.zshrc >/dev/null 2>&1; then
-    echo >> ~/.zshrc
-    echo "### Added by Zplugin installer" >> ~/.zshrc
-    echo "source $HOME/.zplugin/bin/zplugin.zsh" >> ~/.zshrc
+if ! grep zplugin "$ZPLG_HOME/../.zshrc" >/dev/null 2>&1; then
+    echo >> "$ZPLG_HOME/../.zshrc"
+    echo "### Added by Zplugin installer" >> "$ZPLG_HOME/../.zshrc"
+    echo "source '$ZPLG_HOME/bin/zplugin.zsh'" >> "$ZPLG_HOME/../.zshrc"
     echo ">>> Done"
 else
     echo ">>> .zshrc already updated, not making changes"
