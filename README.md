@@ -124,5 +124,6 @@ cdisable {cname}         - disable completion `cname'
 cenable  {cname}         - enable completion `cname'
 creinstall {plugin-name} - install completions for plugin
 cuninstall {plugin-name} - uninstall completions for plugin
+csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
 ```
