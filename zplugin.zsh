@@ -310,7 +310,7 @@ ZPLG_COL=(
     zparseopts -a opts -D ${(s::):-eLdgabsTtm}
 
     if [[ "${#opts[@]}" -eq 0 || ( "${#opts[@]}" -eq 1 && "${opts[(r)-e]}" = "-e" ) ]]; then
-        # Have to quote $1, ten $2, then concatenate them, then quote them again
+        # Have to quote $1, then $2, then concatenate them, then quote them again
         local pattern="${(q)1}" style="${(q)2}"
         local ps="$pattern $style"
         ps="${(q)ps}"
