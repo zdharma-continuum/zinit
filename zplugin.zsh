@@ -343,6 +343,9 @@ ZPLG_COL=(
         local aname="${a%%=*}"
         local avalue="${a#*=}"
 
+        # Check if alias is to be redefined
+        (( ${+aliases[$aname]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: redefining alias \`${aname}', previous value: ${avalue[1,20]}"
+
         aname="${(q)aname}"
         bname="${(q)avalue}"
 
