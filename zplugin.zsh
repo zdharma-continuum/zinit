@@ -429,19 +429,29 @@ ZPLG_COL=(
 # Shadowing on
 -zplugin-shadow-on() {
     alias autoload=--zplugin-shadow-autoload
+
+    (( ${+functions[bindkey]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was bindkey() function defined, possibly in zshrc"
     function bindkey {
         --zplugin-shadow-bindkey "$@"
     }
+
+    (( ${+functions[zstyle]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was zstyle() function defined, possibly in zshrc"
     function zstyle {
         --zplugin-shadow-zstyle "$@"
     }
+
+    (( ${+functions[alias]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was alias() function defined, possibly in zshrc"
     function alias {
         --zplugin-shadow-alias "$@"
     }
+
+    (( ${+functions[zle]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was zle() function defined, possibly in zshrc"
     function zle {
         --zplugin-shadow-zle "$@"
     }
+
     alias compdef=--zplugin-shadow-compdef
+
     ZPLG_SHADOWING_ACTIVE=1
 }
 
