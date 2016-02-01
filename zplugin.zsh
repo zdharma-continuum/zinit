@@ -6,6 +6,8 @@
 #
 
 typeset -gaH ZPLG_REGISTERED_PLUGINS
+# Maps plugins to 0, 1 or 2 - not loaded, light loaded, fully loaded
+typeset -gAH ZPLG_REGISTERED_STATES
 typeset -gAH ZPLG_REPORTS
 
 #
@@ -431,7 +433,14 @@ ZPLG_COL=(
 
 # Shadowing on
 -zplugin-shadow-on() {
+    local light="$1"
+
+    ZPLG_SHADOWING_ACTIVE=1
+
     alias autoload=--zplugin-shadow-autoload
+
+    # Light loading stops here
+    [ "$light" = "light" ] && return 0
 
     (( ${+functions[bindkey]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was bindkey() function defined, possibly in zshrc"
     function bindkey {
@@ -456,15 +465,24 @@ ZPLG_COL=(
         --zplugin-shadow-zle "$@"
     }
 
-    ZPLG_SHADOWING_ACTIVE=1
+    return 0
 }
 
 # Shadowing off
 -zplugin-shadow-off() {
+    local light="$1"
+
+    ZPLG_SHADOWING_ACTIVE=0
+
     unalias autoload
+
+    # Light loading stops here
+    [ "$light" = "light" ] && return 0
+
     unfunction "bindkey" "zstyle" "alias" "zle"
     unalias compdef
-    ZPLG_SHADOWING_ACTIVE=0
+
+    return 0
 }
 
 # }}}
@@ -1075,16 +1093,16 @@ ZPLG_COL=(
 # Restores options
 -zplugin-restore-enter-state() {
     for i in "${ZPLG_ENTER_OPTIONS[@]}"; do
-        setopt "$i"
+        builtin setopt "$i"
     done
 }
 
 # Sets state needed by this code
 -zplugin-set-desired-shell-state() {
-    setopt NO_KSH_ARRAYS
-    setopt NO_RC_EXPAND_PARAM
-    setopt NO_SH_WORD_SPLIT
-    setopt NO_SHORT_LOOPS
+    builtin setopt NO_KSH_ARRAYS
+    builtin setopt NO_RC_EXPAND_PARAM
+    builtin setopt NO_SH_WORD_SPLIT
+    builtin setopt NO_SHORT_LOOPS
 }
 
 -zplugin-save-extendedglob() {
@@ -1275,6 +1293,7 @@ ZPLG_COL=(
 
 # TODO detect second autoload?
 -zplugin-register-plugin() {
+    local light="$3"
     -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]" uspl2="$reply[1]/$reply[2]"
     integer ret=0
@@ -1286,6 +1305,9 @@ ZPLG_COL=(
         print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
         ret=1
     fi
+
+    # Full or light load?
+    [ "$light" = "light" ] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
 
     ZPLG_REPORTS[$uspl2]=""
     ZPLG_FUNCTIONS_BEFORE[$uspl2]=""
@@ -1310,10 +1332,11 @@ ZPLG_COL=(
     # If not found, idx will be length+1
     local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
     ZPLG_REGISTERED_PLUGINS[$idx]=()
+    ZPLG_REGISTERED_STATES[$uspl2]="0"
 }
 
 -zplugin-load-plugin() {
-    local user="$1" plugin="$2"
+    local user="$1" plugin="$2" light="$3"
     ZPLG_CUR_USER="$user"
     ZPLG_CUR_PLUGIN="$plugin"
     ZPLG_CUR_USPL="${user}---${plugin}"
@@ -1339,21 +1362,26 @@ ZPLG_COL=(
 
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Source $fname"
 
-    -zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
-    -zplugin-diff-env "$ZPLG_CUR_USPL2" begin
+    # Light load doesn't do diffs and shadowing
+    if [ "$light" != "light" ]; then
+        -zplugin-diff-functions "$ZPLG_CUR_USPL2" begin
+        -zplugin-diff-options "$ZPLG_CUR_USPL2" begin
+        -zplugin-diff-env "$ZPLG_CUR_USPL2" begin
+    fi
+    -zplugin-shadow-on "$light"
+
     # We need some state, but user wants his for his plugins
     -zplugin-restore-enter-state 
-
-    -zplugin-diff-options "$ZPLG_CUR_USPL2" begin
-    -zplugin-shadow-on
     builtin source "$dname/$fname"
-    -zplugin-shadow-off
-    -zplugin-diff-options "$ZPLG_CUR_USPL2" end
-
     # Restore our desired state for our operation
     -zplugin-set-desired-shell-state
-    -zplugin-diff-env "$ZPLG_CUR_USPL2" end
-    -zplugin-diff-functions "$ZPLG_CUR_USPL2" end
+
+    -zplugin-shadow-off "$light"
+    if [ "$light" != "light" ]; then
+        -zplugin-diff-env "$ZPLG_CUR_USPL2" end
+        -zplugin-diff-options "$ZPLG_CUR_USPL2" end
+        -zplugin-diff-functions "$ZPLG_CUR_USPL2" end
+    fi
 }
 
 # }}}
@@ -1504,6 +1532,8 @@ ZPLG_COL=(
         # Skip _local/psprint
         [ "$i" = "_local/zplugin" ] && continue
         -zplugin-any-colorify-as-uspl2 "$i"
+        # Mark light loads
+        [ "${ZPLG_REGISTERED_STATES[$i]}" = "1" ] && REPLY="$REPLY ${ZPLG_COL[info]}*$reset_color"
         print "$REPLY"
     done
 }
@@ -1599,12 +1629,13 @@ ZPLG_COL=(
 -zplugin-load () {
     -zplugin-any-to-user-plugin "$1" "$2"
     local user="$reply[1]" plugin="$reply[2]"
+    local light="$3"
 
-    -zplugin-register-plugin "$user" "$plugin"
+    -zplugin-register-plugin "$user" "$plugin" "$light"
     if ! -zplugin-setup-plugin-dir "$user" "$plugin"; then
         -zplugin-unregister-plugin "$user" "$plugin"
     else
-        -zplugin-load-plugin "$user" "$plugin"
+        -zplugin-load-plugin "$user" "$plugin" "$light"
     fi
 }
 
@@ -1842,6 +1873,8 @@ zplugin() {
     # This will allow to cuninstall of its completion
     ZPLG_REGISTERED_PLUGINS+="_local/$ZPLG_NAME"
     ZPLG_REGISTERED_PLUGINS=( "${(u)ZPLG_REGISTERED_PLUGINS[@]}" )
+    # _zplugin module is loaded lightly
+    ZPLG_REGISTERED_STATES[_local/$ZPLG_NAME]="1"
 
     # Add completions directory to fpath
     fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
@@ -1857,6 +1890,15 @@ zplugin() {
            # Load plugin given in uspl2 or "user plugin" format
            # Possibly clone from github, and install completions
            -zplugin-load "$2" "$3"
+           ;;
+       (light)
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
+           # This is light load, without tracking, only with
+           # clean FPATH (autoload is still being shadowed)
+           -zplugin-load "$2" "$3" "light"
            ;;
        (unload)
            if [[ -z "$2" && -z "$3" ]]; then
@@ -1946,6 +1988,7 @@ zplugin() {
            print "$ZPLG_COL[p]Usage$reset_color:
 -h|--help|help           - usage information
 load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
+light $ZPLG_COL[pname]{plugin-name}$reset_color      - light plugin load, without reporting
 unload $ZPLG_COL[pname]{plugin-name}$reset_color     - unload plugin
 report $ZPLG_COL[pname]{plugin-name}$reset_color     - show plugin's report
 all-reports              - show all plugin reports

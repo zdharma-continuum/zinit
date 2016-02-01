@@ -34,7 +34,7 @@ case $state in
             help)
                 ret=0
                 ;;
-            load)
+            load|light)
                 typeset -a plugins
                 plugins=( ~/.zplugin/plugins/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )
