@@ -186,7 +186,7 @@ ZPLG_COL=(
 
 --zplugin-shadow-autoload () {
     # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin autoload "$@"; return $? }
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin autoload "$@"; return $?; }
 
     local -a opts
     local func
@@ -227,7 +227,7 @@ ZPLG_COL=(
 
 --zplugin-shadow-bindkey() {
     # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin bindkey "$@"; return $? }
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin bindkey "$@"; return $?; }
 
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
 
@@ -296,7 +296,7 @@ ZPLG_COL=(
 
 --zplugin-shadow-zstyle() {
     # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zstyle "$@"; return $? }
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zstyle "$@"; return $?; }
 
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
 
@@ -327,7 +327,7 @@ ZPLG_COL=(
 
 --zplugin-shadow-alias() {
     # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin alias "$@"; return $? }
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin alias "$@"; return $?; }
 
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Alias $*"
 
@@ -369,7 +369,7 @@ ZPLG_COL=(
 
 --zplugin-shadow-zle() {
     # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zle "$@"; return $? }
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zle "$@"; return $?; }
 
     -zplugin-add-report "$ZPLG_CUR_USPL2" "Zle $*"
 
@@ -411,7 +411,7 @@ ZPLG_COL=(
 
 --zplugin-shadow-compdef() {
     # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { \compdef "$@"; return $? }
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { \compdef "$@"; return $?; }
 
     # Check if that function exists
     if (( ${+functions[compdef]} == 0 )); then
