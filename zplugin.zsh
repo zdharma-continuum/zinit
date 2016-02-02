@@ -920,8 +920,8 @@ ZPLG_COL=(
 # Checks for a plugin existence, all four formats
 # of the plugin specification supported
 -zplugin-exists-physically() {
-    -zplugin-any-to-uspl2 "$1" "$2"
-    [ -d "$ZPLG_PLUGINS_DIR/${1}---${2}" ] && return 0 || return 1
+    -zplugin-any-to-user-plugin "$1" "$2"
+    [ -d "$ZPLG_PLUGINS_DIR/${reply[1]}---${reply[2]}" ] && return 0 || return 1
 }
 
 # Checks for a plugin existence and outputs a message
