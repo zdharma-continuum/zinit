@@ -1903,6 +1903,56 @@ ZPLG_COL=(
     print "Plugin's report saved to \$LASTREPORT"
 }
 
+# Updates given plugin
+-zplugin-update-or-status() {
+    local st="$1"
+    -zplugin-any-to-user-plugin "$2" "$3"
+    local user="$reply[1]" plugin="$reply[2]"
+
+    -zplugin-exists-physically-message "$user" "$plugin" || return 1
+
+    if [ "$st" = "status" ]; then
+        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ; git status )
+    else
+        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ; git pull )
+    fi
+}
+
+-zplugin-update-or-status-all() {
+    local st="$1"
+    local repo pd user plugin
+
+    if [ "$st" = "status" ]; then
+        echo "${ZPLG_COL[error]}Warning:$reset_color status done also for unloaded plugins"
+    else
+        echo "${ZPLG_COL[error]}Warning:$reset_color updating also unloaded plugins"
+    fi
+
+    for repo in "$ZPLG_PLUGINS_DIR"/*(N); do
+        pd="${repo:t}"
+
+        # Two special cases
+        [ "$pd" = "_local---zplugin" ] && continue
+        [ "$pd" = "custom" ] && continue
+
+        -zplugin-any-colorify-as-uspl2 "$pd"
+
+        # Must be a git repository
+        if [ ! -d "$repo/.git" ]; then
+            print "\n$REPLY not a git repository"
+            continue
+        fi
+
+        if [ "$st" = "status" ]; then
+            print "\nStatus for plugin $REPLY"
+            ( cd "$repo"; git status )
+        else
+            print "\nUpdating plugin $REPLY"
+            ( cd "$repo"; git pull )
+        fi
+    done
+}
+
 # }}}
 
 alias zpl=zplugin zplg=zplugin
@@ -1953,6 +2003,18 @@ zplugin() {
            # Unload given plugin. Cloned directory remains intact
            # so as are completions
            -zplugin-unload "$2" "$3"
+           ;;
+       (update)
+           -zplugin-update-or-status "update" "$2" "$3"
+           ;;
+       (update-all)
+           -zplugin-update-or-status-all "update"
+           ;;
+       (status)
+           -zplugin-update-or-status "status" "$2" "$3"
+           ;;
+       (status-all)
+           -zplugin-update-or-status-all "status"
            ;;
        (report)
            if [[ -z "$2" && -z "$3" ]]; then
@@ -2038,6 +2100,10 @@ zplugin() {
 load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
 light $ZPLG_COL[pname]{plugin-name}$reset_color      - light plugin load, without reporting
 unload $ZPLG_COL[pname]{plugin-name}$reset_color     - unload plugin
+update $ZPLG_COL[pname]{plugin-name}$reset_color     - update plugin (Git)
+update-all               - update all plugins (Git)
+status $ZPLG_COL[pname]{plugin-name}$reset_color     - status for plugin (Git)
+status-all               - status for all plugins (Git)
 report $ZPLG_COL[pname]{plugin-name}$reset_color     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')

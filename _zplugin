@@ -8,6 +8,10 @@ commands=(
     help:'usage information'
     load:'load plugin'
     unload:'unload plugin'
+    update:'update plugin (Git)'
+    update-all:'update all plugins (Git)'
+    status:'status for plugin (Git)'
+    status-all:'status for all plugins (Git)'
     report:'show plugin'"'"'s report'
     all-reports:'show all plugin reports'
     loaded:'show what plugins are loaded'
@@ -34,7 +38,7 @@ case $state in
             help)
                 ret=0
                 ;;
-            load|light)
+            load|light|update|status)
                 typeset -a plugins
                 plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )
