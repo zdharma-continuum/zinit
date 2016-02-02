@@ -22,7 +22,13 @@ else
     typeset -gH ZPLG_NAME="${${0:t}:r}"
 fi
 
-typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
+if [ -d "$HOME/.$ZPLG_NAME" ]; then
+    # Ignore ZDOTDIR if user manually put Zplugin to $HOME
+    typeset -gH ZPLG_HOME="$HOME/.$ZPLG_NAME"
+else
+    typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
+fi
+
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
 typeset -gH ZPLG_HOME_READY
