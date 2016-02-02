@@ -1953,6 +1953,11 @@ ZPLG_COL=(
     done
 }
 
+# Updates Zplugin
+-zplugin-self-update() {
+    ( cd "$ZPLG_DIR" ; git pull )
+}
+
 # }}}
 
 alias zpl=zplugin zplg=zplugin
@@ -1977,6 +1982,9 @@ zplugin() {
     fpath=( "${(u)fpath[@]}" )
 
     case "$1" in
+       (self-update)
+           -zplugin-self-update
+           ;;
        (load)
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
@@ -2097,6 +2105,7 @@ zplugin() {
        (-h|--help|help|)
            print "$ZPLG_COL[p]Usage$reset_color:
 -h|--help|help           - usage information
+self-update              - updates Zplugin
 load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
 light $ZPLG_COL[pname]{plugin-name}$reset_color      - light plugin load, without reporting
 unload $ZPLG_COL[pname]{plugin-name}$reset_color     - unload plugin

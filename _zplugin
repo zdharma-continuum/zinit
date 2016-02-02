@@ -5,6 +5,7 @@ typeset -A opt_args
 
 typeset -a commands
 commands=(
+    self-update:'updates Zplugin'
     help:'usage information'
     load:'load plugin'
     unload:'unload plugin'
