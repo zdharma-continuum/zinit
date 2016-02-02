@@ -2040,7 +2040,7 @@ zplugin() {
            # Show list of loaded plugins
            -zplugin-show-registered-plugins "$2"
            ;;
-       (comp|completions)
+       (clist|completions)
            # Show installed, enabled or disabled, completions
            -zplugin-show-completions
            ;;
@@ -2116,7 +2116,7 @@ status-all               - status for all plugins (Git)
 report $ZPLG_COL[pname]{plugin-name}$reset_color     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
-comp|completions         - list completions in use
+clist|completions        - list completions in use
 cdisable $ZPLG_COL[info]{cname}$reset_color         - disable completion \`cname'
 cenable  $ZPLG_COL[info]{cname}$reset_color         - enable completion \`cname'
 creinstall $ZPLG_COL[pname]{plugin-name}$reset_color - install completions for plugin
