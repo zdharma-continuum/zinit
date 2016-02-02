@@ -1965,6 +1965,11 @@ alias zpl=zplugin zplg=zplugin
 # Main function with subcommands
 zplugin() {
     -zplugin-save-enter-state
+
+    # Restore user's options on any exit
+    trap 'return 1' INT TERM
+    trap '-zplugin-restore-enter-state' EXIT
+
     -zplugin-set-desired-shell-state
 
     -zplugin-prepare-home
@@ -2128,9 +2133,6 @@ compinit                 - refresh installed completions"
            print "Unknown command \`$1' (try \`help' to get usage information)"
            ;;
     esac
-
-    # Restore user's options
-    -zplugin-restore-enter-state
 }
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
