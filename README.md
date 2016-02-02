@@ -19,6 +19,8 @@ Completion handling:
 
 ## Introduction
 
+![zplugin-refcard](http://imageshack.com/a/img924/7014/KKkzny.png)
+
 Example use:
 
 ```
