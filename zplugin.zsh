@@ -445,36 +445,36 @@ ZPLG_COL=(
 
     ZPLG_SHADOWING_ACTIVE=1
 
-    (( ${+aliases[autoload]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was \`autoload' alias defined, possibly in zshrc"
+    (( ${+aliases[autoload]} )) && -zplugin-already-alias-warning-uspl2 "$ZPLG_CUR_USPL2" "autoload"
     ZPLG_BACKUP_ALIASES[autoload]="$aliases[autoload]"
     builtin alias autoload=--zplugin-shadow-autoload
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
-    (( ${+functions[bindkey]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was bindkey() function defined, possibly in zshrc"
+    (( ${+functions[bindkey]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "bindkey"
     ZPLG_BACKUP_FUNCTIONS[bindkey]="$functions[bindkey]"
     function bindkey {
         --zplugin-shadow-bindkey "$@"
     }
 
-    (( ${+functions[zstyle]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was zstyle() function defined, possibly in zshrc"
+    (( ${+functions[zstyle]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "zstyle"
     ZPLG_BACKUP_FUNCTIONS[zstyle]="$functions[zstyle]"
     function zstyle {
         --zplugin-shadow-zstyle "$@"
     }
 
-    (( ${+aliases[compdef]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was \`compdef' alias defined, possibly in zshrc"
+    (( ${+aliases[compdef]} )) && -zplugin-already-alias-warning-uspl2 "$ZPLG_CUR_USPL2" "compdef"
     ZPLG_BACKUP_ALIASES[compdef]="$aliases[compdef]"
     builtin alias compdef=--zplugin-shadow-compdef
 
-    (( ${+functions[alias]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was alias() function defined, possibly in zshrc"
+    (( ${+functions[alias]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "alias"
     ZPLG_BACKUP_FUNCTIONS[alias]="$functions[alias]"
     function alias {
         --zplugin-shadow-alias "$@"
     }
 
-    (( ${+functions[zle]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was zle() function defined, possibly in zshrc"
+    (( ${+functions[zle]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "zle"
     ZPLG_BACKUP_FUNCTIONS[zle]="$functions[zle]"
     function zle {
         --zplugin-shadow-zle "$@"
@@ -1111,6 +1111,14 @@ ZPLG_COL=(
     [[ "${ZPLG_BACKUP_ALIASES[autoload]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[autoload]=""
     [[ "${ZPLG_BACKUP_ALIASES[compdef]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[compdef]=""
     -zplugin-restore-extendedglob
+}
+
+-zplugin-already-alias-warning-uspl2() {
+    -zplugin-add-report "$1" "Warning: there already was \`$2' alias defined, possibly in zshrc"
+}
+
+-zplugin-already-function-warning-uspl2() {
+    -zplugin-add-report "$1" "Warning: there already was $2() function defined, possibly in zshrc"
 }
 
 # }}}
