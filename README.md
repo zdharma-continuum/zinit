@@ -121,12 +121,18 @@ After installing and reloading shell give `Zplugin` a quick try with `zplugin he
 % zpl help
 Usage:
 -h|--help|help           - usage information
+self-update              - updates Zplugin
 load {plugin-name}       - load plugin
+light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin
+update {plugin-name}     - update plugin (Git)
+update-all               - update all plugins (Git)
+status {plugin-name}     - status for plugin (Git)
+status-all               - status for all plugins (Git)
 report {plugin-name}     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
-comp|completions         - list completions in use
+clist|completions        - list completions in use
 cdisable {cname}         - disable completion `cname'
 cenable  {cname}         - enable completion `cname'
 creinstall {plugin-name} - install completions for plugin
