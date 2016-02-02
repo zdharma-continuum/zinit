@@ -23,6 +23,7 @@ commands=(
     cenable:'enable completion'
     creinstall:'install completions for plugin'
     cuninstall:'uninstall completions for plugin'
+    csearch:'search for available completions from any plugin'
     compinit:'refresh installed completions'
 )
 
