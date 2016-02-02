@@ -34,6 +34,8 @@ typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
 typeset -gH ZPLG_HOME_READY
 typeset -gaHU ZPLG_ENTER_OPTIONS
 typeset -gH ZPLG_EXTENDED_GLOB
+typeset -gAH ZPLG_BACKUP_FUNCTIONS
+typeset -gAH ZPLG_BACKUP_ALIASES
 
 #
 # All to the users - simulate OMZ directory structure (1/3)
@@ -443,30 +445,37 @@ ZPLG_COL=(
 
     ZPLG_SHADOWING_ACTIVE=1
 
-    alias autoload=--zplugin-shadow-autoload
+    (( ${+aliases[autoload]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was \`autoload' alias defined, possibly in zshrc"
+    ZPLG_BACKUP_ALIASES[autoload]="$aliases[autoload]"
+    builtin alias autoload=--zplugin-shadow-autoload
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
     (( ${+functions[bindkey]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was bindkey() function defined, possibly in zshrc"
+    ZPLG_BACKUP_FUNCTIONS[bindkey]="$functions[bindkey]"
     function bindkey {
         --zplugin-shadow-bindkey "$@"
     }
 
     (( ${+functions[zstyle]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was zstyle() function defined, possibly in zshrc"
+    ZPLG_BACKUP_FUNCTIONS[zstyle]="$functions[zstyle]"
     function zstyle {
         --zplugin-shadow-zstyle "$@"
     }
 
-    (( ${+aliases[compdef]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was compdef alias defined, possibly in zshrc"
-    alias compdef=--zplugin-shadow-compdef
+    (( ${+aliases[compdef]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was \`compdef' alias defined, possibly in zshrc"
+    ZPLG_BACKUP_ALIASES[compdef]="$aliases[compdef]"
+    builtin alias compdef=--zplugin-shadow-compdef
 
     (( ${+functions[alias]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was alias() function defined, possibly in zshrc"
+    ZPLG_BACKUP_FUNCTIONS[alias]="$functions[alias]"
     function alias {
         --zplugin-shadow-alias "$@"
     }
 
     (( ${+functions[zle]} )) && -zplugin-add-report "$ZPLG_CUR_USPL2" "Warning: there already was zle() function defined, possibly in zshrc"
+    ZPLG_BACKUP_FUNCTIONS[zle]="$functions[zle]"
     function zle {
         --zplugin-shadow-zle "$@"
     }
@@ -480,13 +489,22 @@ ZPLG_COL=(
 
     ZPLG_SHADOWING_ACTIVE=0
 
-    unalias autoload
+    -zplugin-trim-backup-vars
+
+    # Unalias "autoload"
+    [ -n "$ZPLG_BACKUP_ALIASES[autoload]" ] && aliases[autoload]="$ZPLG_BACKUP_ALIASES[autoload]" || unalias "autoload"
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
-    unfunction "bindkey" "zstyle" "alias" "zle"
-    unalias compdef
+    # Unfunction shadowing functions
+    [ -n "$ZPLG_BACKUP_FUNCTIONS[bindkey]" ] && functions[bindkey]="$ZPLG_BACKUP_FUNCTIONS[bindkey]" || unfunction "bindkey"
+    [ -n "$ZPLG_BACKUP_FUNCTIONS[zstyle]" ] && functions[zstyle]="$ZPLG_BACKUP_FUNCTIONS[zstyle]" || unfunction "zstyle"
+    [ -n "$ZPLG_BACKUP_FUNCTIONS[alias]" ] && functions[alias]="$ZPLG_BACKUP_FUNCTIONS[alias]" || unfunction "alias"
+    [ -n "$ZPLG_BACKUP_FUNCTIONS[zle]" ] && functions[zle]="$ZPLG_BACKUP_FUNCTIONS[zle]" || unfunction "zle"
+
+    # Unalias "compdef"
+    [ -n "$ZPLG_BACKUP_ALIASES[compdef]" ] && aliases[compdef]="$ZPLG_BACKUP_ALIASES[compdef]" || unalias "compdef"
 
     return 0
 }
@@ -1081,6 +1099,18 @@ ZPLG_COL=(
             reply+=( "0" )
         fi
     done
+}
+
+# Trim the values, taken from $functions or $aliases can be e.g. a single tab
+-zplugin-trim-backup-vars() {
+    -zplugin-save-set-extendedglob
+    [[ "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[bindkey]=""
+    [[ "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zstyle]=""
+    [[ "${ZPLG_BACKUP_FUNCTIONS[alias]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[alias]=""
+    [[ "${ZPLG_BACKUP_FUNCTIONS[zle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zle]=""
+    [[ "${ZPLG_BACKUP_ALIASES[autoload]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[autoload]=""
+    [[ "${ZPLG_BACKUP_ALIASES[compdef]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[compdef]=""
+    -zplugin-restore-extendedglob
 }
 
 # }}}
