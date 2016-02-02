@@ -36,7 +36,7 @@ case $state in
                 ;;
             load|light)
                 typeset -a plugins
-                plugins=( ~/.zplugin/plugins/*(N:t) )
+                plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
@@ -68,14 +68,14 @@ case $state in
             cdisable)
                 # Find enabled completions
                 typeset -a completions
-                completions=( ~/.zplugin/completions/_*(N:t) )
+                completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N:t) )
                 completions=( "${completions[@]#_}" )
                 compadd "$@" -a - completions && ret=0
                 ;;
             cenable)
                 # Find disabled
                 typeset -a completions
-                completions=( ~/.zplugin/completions/[^_]*(N:t) )
+                completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N:t) )
                 compadd "$@" -a - completions && ret=0
                 ;;
             creinstall)
