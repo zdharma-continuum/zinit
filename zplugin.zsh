@@ -445,36 +445,36 @@ ZPLG_COL=(
 
     ZPLG_SHADOWING_ACTIVE=1
 
-    (( ${+aliases[autoload]} )) && -zplugin-already-alias-warning-uspl2 "$ZPLG_CUR_USPL2" "autoload"
+    -zplugin-already-alias-warning-uspl2 $(( ${+aliases[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
     ZPLG_BACKUP_ALIASES[autoload]="$aliases[autoload]"
     builtin alias autoload=--zplugin-shadow-autoload
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
-    (( ${+functions[bindkey]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "bindkey"
+    -zplugin-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "$ZPLG_CUR_USPL2" "bindkey"
     ZPLG_BACKUP_FUNCTIONS[bindkey]="$functions[bindkey]"
     function bindkey {
         --zplugin-shadow-bindkey "$@"
     }
 
-    (( ${+functions[zstyle]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "zstyle"
+    -zplugin-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
     ZPLG_BACKUP_FUNCTIONS[zstyle]="$functions[zstyle]"
     function zstyle {
         --zplugin-shadow-zstyle "$@"
     }
 
-    (( ${+aliases[compdef]} )) && -zplugin-already-alias-warning-uspl2 "$ZPLG_CUR_USPL2" "compdef"
+    -zplugin-already-alias-warning-uspl2 $(( ${+aliases[compdef]} )) "$ZPLG_CUR_USPL2" "compdef"
     ZPLG_BACKUP_ALIASES[compdef]="$aliases[compdef]"
     builtin alias compdef=--zplugin-shadow-compdef
 
-    (( ${+functions[alias]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "alias"
+    -zplugin-already-function-warning-uspl2 $(( ${+functions[alias]} )) "$ZPLG_CUR_USPL2" "alias"
     ZPLG_BACKUP_FUNCTIONS[alias]="$functions[alias]"
     function alias {
         --zplugin-shadow-alias "$@"
     }
 
-    (( ${+functions[zle]} )) && -zplugin-already-function-warning-uspl2 "$ZPLG_CUR_USPL2" "zle"
+    -zplugin-already-function-warning-uspl2 $(( ${+functions[zle]} )) "$ZPLG_CUR_USPL2" "zle"
     ZPLG_BACKUP_FUNCTIONS[zle]="$functions[zle]"
     function zle {
         --zplugin-shadow-zle "$@"
@@ -1114,11 +1114,11 @@ ZPLG_COL=(
 }
 
 -zplugin-already-alias-warning-uspl2() {
-    -zplugin-add-report "$1" "Warning: there already was \`$2' alias defined, possibly in zshrc"
+    (( $1 )) && -zplugin-add-report "$2" "Warning: there already was \`$3' alias defined, possibly in zshrc"
 }
 
 -zplugin-already-function-warning-uspl2() {
-    -zplugin-add-report "$1" "Warning: there already was $2() function defined, possibly in zshrc"
+    (( $1 )) && -zplugin-add-report "$2" "Warning: there already was $3() function defined, possibly in zshrc"
 }
 
 # }}}
