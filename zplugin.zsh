@@ -210,13 +210,13 @@ ZPLG_COL=(
     then
         -zplg-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
-        return 1
+        return 1 # Testable
     fi
     if [ -n "${opts[(r)-w]}" ]
     then
         -zplg-add-report "$ZPLG_CUR_USPL2" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
-        return
+        return # Testable
     fi
 
     # Report ZPLUGIN's "native" autoloads
@@ -236,6 +236,9 @@ ZPLG_COL=(
         }'
         #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
     done
+
+    # Testable
+    return 0
 }
 
 --zplg-shadow-bindkey() {
@@ -304,7 +307,12 @@ ZPLG_COL=(
     fi
 
     # Actual bindkey
-    builtin bindkey "${pos[@]}"
+    # "load" means full shadowing, non-"light" load
+    -zplg-shadow-off "load"
+    bindkey "${pos[@]}"
+    integer ret=$?
+    -zplg-shadow-on "load"
+    return $ret # testable
 }
 
 --zplg-shadow-zstyle() {
@@ -335,7 +343,12 @@ ZPLG_COL=(
     fi
 
     # Actual zstyle
-    builtin zstyle "${pos[@]}"
+    # "load" means full shadowing, non-"light" load
+    -zplg-shadow-off "load"
+    zstyle "${pos[@]}"
+    integer ret=$?
+    -zplg-shadow-on "load"
+    return $ret # testable
 }
 
 --zplg-shadow-alias() {
@@ -380,7 +393,12 @@ ZPLG_COL=(
     done
 
     # Actual alias
-    builtin alias "${pos[@]}"
+    # "load" means full shadowing, non-"light" load
+    -zplg-shadow-off "load"
+    alias "${pos[@]}"
+    integer ret=$?
+    -zplg-shadow-on "load"
+    return $ret # testable
 }
 
 --zplg-shadow-zle() {
@@ -422,7 +440,12 @@ ZPLG_COL=(
     fi
 
     # Actual zle
-    builtin zle "${pos[@]}"
+    # "load" means full shadowing, non-"light" load
+    -zplg-shadow-off "load"
+    zle "${pos[@]}"
+    integer ret=$?
+    -zplg-shadow-on "load"
+    return $ret # testable
 }
 
 --zplg-shadow-compdef() {
@@ -438,8 +461,13 @@ ZPLG_COL=(
                                                 "for this plugin's completion to work)"
     fi
 
-    # Actual zle
-    \compdef 2>/dev/null "$@"
+    # Actual compdef
+    # "load" means full shadowing, non-"light" load
+    -zplg-shadow-off "load"
+    compdef 2>/dev/null "$@"
+    integer ret=$?
+    -zplg-shadow-on "load"
+    return $ret # testable
 }
 
 # Shadowing on
