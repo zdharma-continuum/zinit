@@ -2047,7 +2047,10 @@ ZPLG_COL=(
     local_dir="${local_dir/./--DOT--}"
     local_dir="${local_dir//\//--SLASH--}"
 
-    [ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ] && command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
+    if [ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]; then
+        echo "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename$reset_color"
+        command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
+    fi
 
     # Change the url to point to raw github content if it isn't like that
     if [[ "$url" = *github.com* && ! "$url" = */raw/* ]]; then
