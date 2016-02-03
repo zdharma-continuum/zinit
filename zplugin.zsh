@@ -31,6 +31,7 @@ fi
 
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
+typeset -gH ZPLG_SNIPPETS_DIR="$ZPLG_HOME/snippets"
 typeset -gH ZPLG_HOME_READY
 typeset -gaHU ZPLG_ENTER_OPTIONS
 typeset -gH ZPLG_EXTENDED_GLOB
@@ -1233,6 +1234,10 @@ ZPLG_COL=(
         command cp "$ZPLG_DIR/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
         command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
     }
+    [ ! -d "$ZPLG_SNIPPETS_DIR" ] && {
+        command mkdir "$ZPLG_SNIPPETS_DIR"
+        command chmod g-w "$ZPLG_SNIPPETS_DIR"
+    }
 
     # All to the users - simulate OMZ directory structure (2/3)
     [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && command mkdir "$ZPLG_PLUGINS_DIR/custom" 
@@ -2016,6 +2021,57 @@ ZPLG_COL=(
     print "Plugin's report saved to \$LASTREPORT"
 }
 
+# Downloads and sources a single file
+# If url is detected to be github.com, then conversion to "raw" url may occur
+-zplg-load-snippet() {
+    local url="$1"
+    local force="$2"
+
+    if [ "$url" = "-f" ]; then
+        local tmp
+        tmp="$url"
+        url="$force"
+        force="$tmp"
+    fi
+
+    local -a match mbegin mend
+    local MATCH; integer MBEGIN MEND
+
+    -zplg-save-set-extendedglob
+
+    # Construct a local directory name from what's in url
+    local filename="${url:t}"
+    local local_dir="$url"
+    local_dir="${local_dir#http://}"
+    local_dir="${local_dir#https://}"
+    local_dir="${local_dir/./--DOT--}"
+    local_dir="${local_dir//\//--SLASH--}"
+
+    [ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ] && command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
+
+    # Change the url to point to raw github content if it isn't like that
+    if [[ "$url" = *github.com* && ! "$url" = */raw/* ]]; then
+        url="${url/\/blob\///raw/}"
+        url="${url}?raw=1"
+    fi
+
+    # Download the file
+    if [[ ! -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" || "$force" = "-f" ]]
+    then
+        (
+            cd "$ZPLG_SNIPPETS_DIR/$local_dir"
+            command rm -f "$filename"
+            echo "Downloading $filename..."
+            -zplg-download-file-stdout "$url" > "$filename"
+        )
+    fi
+
+    # Source the file
+    -zplg-restore-extendedglob
+
+    builtin source "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+}
+
 # Updates given plugin
 -zplg-update-or-status() {
     local st="$1"
@@ -2179,6 +2235,9 @@ zplugin() {
            # so as are completions
            -zplg-unload "$2" "$3"
            ;;
+       (snippet)
+           -zplg-load-snippet "$2" "$3"
+           ;;
        (update)
            -zplg-update-or-status "update" "$2" "$3"
            ;;
@@ -2277,6 +2336,7 @@ self-update              - updates Zplugin
 load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
 light $ZPLG_COL[pname]{plugin-name}$reset_color      - light plugin load, without reporting
 unload $ZPLG_COL[pname]{plugin-name}$reset_color     - unload plugin
+snippet $ZPLG_COL[pname]{url}$reset_color            - load file given via url
 update $ZPLG_COL[pname]{plugin-name}$reset_color     - update plugin (Git)
 update-all               - update all plugins (Git)
 status $ZPLG_COL[pname]{plugin-name}$reset_color     - status for plugin (Git)
