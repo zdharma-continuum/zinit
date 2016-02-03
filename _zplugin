@@ -63,13 +63,13 @@ case $state in
                     compadd "$@" -a - plugins && ret=0
                 ;;
             all-reports)
-                ret=0
+                _message "Hit enter to get all reports (for all loaded plugins)" && ret=0
                 ;;
             loaded|list)
-                ret=0
+                _message "Hit enter or give part of plugin name" && ret=0
                 ;;
             clist|completions)
-                ret=0
+                _message "Hit enter to get list of completions" && ret=0
                 ;;
             cdisable)
                 # Find enabled completions
