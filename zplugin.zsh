@@ -59,7 +59,10 @@ typeset -gH ZPLG_CUR_USPL2=""
 # If any plugin retains the shadowed function instead of
 # original one then this will protect from further reporting
 typeset -gH ZPLG_SHADOWING_ACTIVE
-
+# To show "alias already defined, in zsh" warning once per alias
+typeset -gAH ZPLG_ALREADY_WARNINGS_A
+# To show "function already defined, in zsh" warning once per function
+typeset -gAH ZPLG_ALREADY_WARNINGS_F
 # }}}
 
 #
@@ -1113,11 +1116,20 @@ ZPLG_COL=(
     -zplg-restore-extendedglob
 }
 
+-zplg-reset-already-warnings() {
+    ZPLG_ALREADY_WARNINGS_A=( )
+    ZPLG_ALREADY_WARNINGS_F=( )
+}
+
 -zplg-already-alias-warning-uspl2() {
+    [ "$ZPLG_ALREADY_WARNINGS_A[$3]" = "1" ] && return
+    ZPLG_ALREADY_WARNINGS_A[$3]="1"
     (( $1 )) && -zplg-add-report "$2" "Warning: there already was \`$3' alias defined, possibly in zshrc"
 }
 
 -zplg-already-function-warning-uspl2() {
+    [ "$ZPLG_ALREADY_WARNINGS_F[$3]" = "1" ] && return
+    ZPLG_ALREADY_WARNINGS_F[$3]="1"
     (( $1 )) && -zplg-add-report "$2" "Warning: there already was $3() function defined, possibly in zshrc"
 }
 
@@ -1407,6 +1419,7 @@ ZPLG_COL=(
     local fname="${matches[1]#$dname/}"
 
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
+    -zplg-reset-already-warnings
 
     # Light load doesn't do diffs and shadowing
     if [ "$light" != "light" ]; then
