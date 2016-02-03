@@ -476,36 +476,30 @@ ZPLG_COL=(
 
     ZPLG_SHADOWING_ACTIVE=1
 
-    -zplg-already-alias-warning-uspl2 $(( ${+aliases[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
     ZPLG_BACKUP_ALIASES[autoload]="$aliases[autoload]"
     builtin alias autoload=--zplg-shadow-autoload
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
-    -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "$ZPLG_CUR_USPL2" "bindkey"
     ZPLG_BACKUP_FUNCTIONS[bindkey]="$functions[bindkey]"
     function bindkey {
         --zplg-shadow-bindkey "$@"
     }
 
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
     ZPLG_BACKUP_FUNCTIONS[zstyle]="$functions[zstyle]"
     function zstyle {
         --zplg-shadow-zstyle "$@"
     }
 
-    -zplg-already-alias-warning-uspl2 $(( ${+aliases[compdef]} )) "$ZPLG_CUR_USPL2" "compdef"
     ZPLG_BACKUP_ALIASES[compdef]="$aliases[compdef]"
     builtin alias compdef=--zplg-shadow-compdef
 
-    -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "$ZPLG_CUR_USPL2" "alias"
     ZPLG_BACKUP_FUNCTIONS[alias]="$functions[alias]"
     function alias {
         --zplg-shadow-alias "$@"
     }
 
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "$ZPLG_CUR_USPL2" "zle"
     ZPLG_BACKUP_FUNCTIONS[zle]="$functions[zle]"
     function zle {
         --zplg-shadow-zle "$@"
@@ -1442,6 +1436,16 @@ ZPLG_COL=(
         -zplg-diff-options "$ZPLG_CUR_USPL2" begin
         -zplg-diff-env "$ZPLG_CUR_USPL2" begin
     fi
+
+    # Warn about user having his own shadows in place. Check
+    # every possible shadow regardless of "$light" setting
+    -zplg-already-alias-warning-uspl2 $(( ${+aliases[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
+    -zplg-already-alias-warning-uspl2 $(( ${+aliases[compdef]} )) "$ZPLG_CUR_USPL2" "compdef"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "$ZPLG_CUR_USPL2" "bindkey"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "$ZPLG_CUR_USPL2" "alias"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "$ZPLG_CUR_USPL2" "zle"
+
     -zplg-shadow-on "$light"
 
     # We need some state, but user wants his for his plugins
