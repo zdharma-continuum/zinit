@@ -555,8 +555,7 @@ ZPLG_COL=(
 
     if [[ "$cmd" = "begin" || "$cmd" = "end" ]]; then
             typeset -a func
-            func=( "${(k)functions[@]}" )
-            func=( "${(q)func[@]}" )
+            func=( "${(kq)functions[@]}" )
     fi
 
     case "$cmd" in
