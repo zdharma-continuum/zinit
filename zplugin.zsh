@@ -2341,7 +2341,7 @@ self-update              - updates Zplugin
 load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
 light $ZPLG_COL[pname]{plugin-name}$reset_color      - light plugin load, without reporting
 unload $ZPLG_COL[pname]{plugin-name}$reset_color     - unload plugin
-snippet [-f] $ZPLG_COL[pname]{url}$reset_color       - load file given via url (-f: force download, overwrite existing file)
+snippet [-f] $ZPLG_COL[pname]{url}$reset_color       - source file given via url (-f: force download, overwrite existing file)
 update $ZPLG_COL[pname]{plugin-name}$reset_color     - update plugin (Git)
 update-all               - update all plugins (Git)
 status $ZPLG_COL[pname]{plugin-name}$reset_color     - status for plugin (Git)

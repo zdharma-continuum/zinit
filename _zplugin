@@ -10,7 +10,7 @@ commands=(
     help:'usage information'
     load:'load plugin'
     unload:'unload plugin'
-    snippet:'load file given via url (-f: force download, overwrite existing file)'
+    snippet:'source file given via url'
     update:'update plugin (Git)'
     update-all:'update all plugins (Git)'
     status:'status for plugin (Git)'
