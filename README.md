@@ -87,6 +87,22 @@ Plugin's report saved to $LASTREPORT
 
 ![unload example](http://imageshack.com/a/img921/9896/rMMnQ1.png)
 
+Example `csearch` invocation (completion management):
+
+```
+# zplg csearch
+[+] is installed, [-] uninstalled, [+-] partially installed
+[+] _local/zplugin                  _zplugin
+[-] benclark/parallels-zsh-plugin   _parallels
+[+] mollifier/cd-gitroot            _cd-gitroot
+[-] or17191/going_places            _favrm, _go
+[-] psprint/zsh-cmd-architect       _xauth
+[-] psprint/zsh-editing-workbench   _cp
+[+] tevren/gitfast-zsh-plugin       _git
+```
+
+![csearch example](http://imageshack.com/a/img921/5741/QJaO8q.png)
+
 ## Installation
 
 Execute:
