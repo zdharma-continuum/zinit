@@ -39,7 +39,7 @@ case $state in
     argument)
         case $words[2] in
             help)
-                ret=0
+                _message "Hit enter to get usage information" && ret=0
                 ;;
             zstatus)
                 _message "Hit enter to get overall status information" && ret=0
