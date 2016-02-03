@@ -5,6 +5,7 @@ typeset -A opt_args
 
 typeset -a commands
 commands=(
+    zstatus:'overall Zplugin status'
     self-update:'updates Zplugin'
     help:'usage information'
     load:'load plugin'
@@ -39,6 +40,9 @@ case $state in
         case $words[2] in
             help)
                 ret=0
+                ;;
+            zstatus)
+                _message "Hit enter to get overall status information" && ret=0
                 ;;
             load|light|update|status)
                 typeset -a plugins

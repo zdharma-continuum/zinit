@@ -2028,6 +2028,40 @@ ZPLG_COL=(
     ( cd "$ZPLG_DIR" ; git pull )
 }
 
+# Shows overall status
+-zplg-show-zstatus() {
+    local infoc="$ZPLG_COL[info]"
+    # Without _zlocal/zplugin
+    print "${infoc}Loaded plugins:$reset_color $(( ${#ZPLG_REGISTERED_PLUGINS} - 1 ))"
+
+    # Count light-loaded plugins
+    integer light=0
+    local s
+    for s in "${ZPLG_REGISTERED_STATES[@]}"; do
+        [ "$s" = 1 ] && (( light ++ ))
+    done
+    # Without _zlocal/zplugin
+    print "${infoc}Light loaded:$reset_color $(( light - 1 ))"
+
+    # Downloaded plugins, without _zlocal/zplugin, custom
+    typeset -a plugins
+    plugins=( "$ZPLG_PLUGINS_DIR"/* )
+    print "${infoc}Downloaded plugins:$reset_color" ${#plugins}
+
+    # Number of enabled completions, with _zlocal/zplugin
+    typeset -a completions
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+    print "${infoc}Enabled completions:$reset_color" ${#completions}
+
+    # Number of disabled completions, with _zlocal/zplugin
+    completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+    print "${infoc}Disabled completions:$reset_color" ${#completions}
+
+    # Number of completions existing in all plugins
+    completions=( "$ZPLG_PLUGINS_DIR"/*/_*(N) )
+    print "${infoc}Completions available overall:$reset_color" ${#completions}
+}
+
 # }}}
 
 alias zpl=zplugin zplg=zplugin
@@ -2063,6 +2097,9 @@ zplugin() {
     fpath=( "${(u)fpath[@]}" )
 
     case "$1" in
+       (zstatus)
+           -zplg-show-zstatus
+           ;;
        (self-update)
            -zplg-self-update
            ;;
@@ -2186,6 +2223,7 @@ zplugin() {
        (-h|--help|help|)
            print "$ZPLG_COL[p]Usage$reset_color:
 -h|--help|help           - usage information
+zstatus                  - overall status of Zplugin
 self-update              - updates Zplugin
 load $ZPLG_COL[pname]{plugin-name}$reset_color       - load plugin
 light $ZPLG_COL[pname]{plugin-name}$reset_color      - light plugin load, without reporting
