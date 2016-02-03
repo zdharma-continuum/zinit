@@ -143,6 +143,7 @@ self-update              - updates Zplugin
 load {plugin-name}       - load plugin
 light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin
+snippet [-f] {url}       - load file given via url (-f: force download, overwrite existing file)
 update {plugin-name}     - update plugin (Git)
 update-all               - update all plugins (Git)
 status {plugin-name}     - status for plugin (Git)
@@ -157,6 +158,12 @@ creinstall {plugin-name} - install completions for plugin
 cuninstall {plugin-name} - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
+```
+
+To use themes created for `Oh-My-Zsh` you might want to first source the `git` library there:
+
+```sh
+zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
 ```
 
 ## IRC channel
