@@ -2041,11 +2041,13 @@ ZPLG_COL=(
 
     # Construct a local directory name from what's in url
     local filename="${url:t}"
+    filename="${filename%%\?*}"
     local local_dir="$url"
     local_dir="${local_dir#http://}"
     local_dir="${local_dir#https://}"
     local_dir="${local_dir/./--DOT--}"
     local_dir="${local_dir//\//--SLASH--}"
+    local_dir="${local_dir%%\?*}"
 
     if [ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]; then
         echo "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename$reset_color"
