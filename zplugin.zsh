@@ -553,19 +553,14 @@ ZPLG_COL=(
     local uspl2="$1"
     local cmd="$2"
 
-    if [[ "$cmd" = "begin" || "$cmd" = "end" ]]; then
-            typeset -a func
-            func=( "${(kq)functions[@]}" )
-    fi
-
     case "$cmd" in
         begin)
-            ZPLG_FUNCTIONS_BEFORE[$uspl2]="$func[*]"
+            ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}"
             ZPLG_FUNCTIONS[$uspl2]=""
             ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="0"
             ;;
         end)
-            ZPLG_FUNCTIONS_AFTER[$uspl2]="$func[*]"
+            ZPLG_FUNCTIONS_AFTER[$uspl2]="${(j: :)${(qk)functions[@]}}"
             ZPLG_FUNCTIONS[$uspl2]=""
             ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="0"
             ;;
