@@ -1527,12 +1527,32 @@ ZPLG_COL=(
         fi
     done
 
+    print "${ZPLG_COL[info]}[+]$reset_color is installed, ${ZPLG_COL[p]}[-]$reset_color uninstalled, ${ZPLG_COL[error]}[+-]$reset_color partially installed"
+
+    local c
     for pp in "${plugin_paths[@]}"; do
         completions=( "$pp"/_*(N) )
 
         if [ "$#completions" -gt 0 ]; then
             # Array of completions, e.g. ( _cp _xauth )
             completions=( "${completions[@]:t}" )
+
+            # Detect if the completions are installed
+            integer all_installed="${#completions}"
+            for c in "${completions[@]}"; do
+                if [[ -e "$ZPLG_COMPLETIONS_DIR/$c" || -e "$ZPLG_COMPLETIONS_DIR/${c#_}" ]]; then
+                    (( all_installed -- ))
+                fi
+            done
+
+            if [ "$all_installed" -eq "${#completions}" ]; then
+                print -n "${ZPLG_COL[p]}[-]$reset_color "
+            elif [ "$all_installed" -eq "0" ]; then
+                print -n "${ZPLG_COL[info]}[+]$reset_color "
+            else
+                print -n "${ZPLG_COL[error]}[+-]$reset_color "
+            fi
+
             # Convert directory name to colorified $user/$plugin
             -zplg-any-colorify-as-uspl2 "${pp:t}"
 
