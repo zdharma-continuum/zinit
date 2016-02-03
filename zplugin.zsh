@@ -1439,6 +1439,7 @@ ZPLG_COL=(
     local fname="${matches[1]#$dname/}"
 
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
+    [ "$light" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
     -zplg-reset-already-warnings
 
     # Light load doesn't do diffs and shadowing
