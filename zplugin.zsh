@@ -1141,6 +1141,29 @@ ZPLG_COL=(
     (( $1 )) && -zplg-add-report "$2" "Warning: there already was $3() function defined, possibly in zshrc"
 }
 
+-zplg-download-file-stdout() {
+    local url="$1"
+    local restart="$2"
+
+    if [ "$restart" = "1" ]; then
+        if (( ${+commands[lynx]} )) then
+            lynx -dump "$url"
+        elif (( ${+commands[wget]} )); then
+            wget "$url" -O -
+        elif (( ${+commands[curl]} )) then
+            curl -fsSL "$url"
+        fi
+    else
+        if type lynx 2>/dev/null 1>&2; then
+            lynx -dump "$url" || -zplg-download-file-stdout "$url" "1"
+        elif type wget 2>/dev/null 1>&2; then
+            wget "$url" -O - || -zplg-download-file-stdout "$url" "1"
+        elif type curl 2>/dev/null 1>&2; then
+            curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
+        fi
+    fi
+}
+
 # }}}
 
 #
