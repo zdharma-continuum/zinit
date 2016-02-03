@@ -2051,6 +2051,12 @@ ZPLG_COL=(
 # Shows overall status
 -zplg-show-zstatus() {
     local infoc="$ZPLG_COL[info]"
+
+    echo "${infoc}Zplugin's main directory:$reset_color $ZPLG_HOME"
+    echo "${infoc}Zplugin's binary directory:$reset_color $ZPLG_DIR"
+    echo "${infoc}Plugin directory:$reset_color $ZPLG_PLUGINS_DIR"
+    echo "${infoc}Completions directory:$reset_color $ZPLG_COMPLETIONS_DIR"
+
     # Without _zlocal/zplugin
     print "${infoc}Loaded plugins:$reset_color $(( ${#ZPLG_REGISTERED_PLUGINS} - 1 ))"
 
