@@ -131,7 +131,7 @@ case $state in
                     compadd "$@" -a - plugins && ret=0
                 ;;
             compinit)
-                ret=0
+                _message "Hit enter to refresh completion system" && ret=0
                 ;;
             *)
                 ret=1
