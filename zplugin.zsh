@@ -577,11 +577,9 @@ ZPLG_COL=(
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            integer error=0
-            -zplg-save-set-extendedglob
-            [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
-            -zplg-restore-extendedglob
-            (( error )) && return 1
+
+            setopt localoptions extendedglob
+            [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
 
             typeset -A func
             local i
@@ -692,11 +690,8 @@ ZPLG_COL=(
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            integer error=0
-            -zplg-save-set-extendedglob
-            [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_OPTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
-            -zplg-restore-extendedglob
-            (( error )) && return 1
+            setopt localoptions extendedglob
+            [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_OPTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
 
             typeset -A opts_before opts_after opts
             opts_before=( "${(z)ZPLG_OPTIONS_BEFORE[$uspl2]}" )
@@ -793,12 +788,9 @@ ZPLG_COL=(
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            integer error=0
-            -zplg-save-set-extendedglob
-            [[ "${ZPLG_PATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
-            [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FPATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && error=1
-            -zplg-restore-extendedglob
-            (( error )) && return 1
+            setopt localoptions extendedglob
+            [[ "${ZPLG_PATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
+            [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FPATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
 
             typeset -A path_state fpath_state
             local i
@@ -1134,14 +1126,14 @@ ZPLG_COL=(
 
 # Trim the values, taken from $functions or $aliases can be e.g. a single tab
 -zplg-trim-backup-vars() {
-    -zplg-save-set-extendedglob
+    setopt localoptions extendedglob
+
     [[ "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[bindkey]=""
     [[ "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zstyle]=""
     [[ "${ZPLG_BACKUP_FUNCTIONS[alias]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[alias]=""
     [[ "${ZPLG_BACKUP_FUNCTIONS[zle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zle]=""
     [[ "${ZPLG_BACKUP_ALIASES[autoload]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[autoload]=""
     [[ "${ZPLG_BACKUP_ALIASES[compdef]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[compdef]=""
-    -zplg-restore-extendedglob
 }
 
 -zplg-reset-already-warnings() {
@@ -2044,6 +2036,12 @@ alias zpl=zplugin zplg=zplugin
 # Main function with subcommands
 zplugin() {
     -zplg-save-enter-state
+
+    # All functions from now on will not change these values
+    # globally. Functions that don't do "source" of plugin
+    # will be able to setopt localoptions extendedglob
+    local -a match mbegin mend
+    local MATCH; integer MBEGIN MEND
 
     # Restore user's options on any exit
     trap 'return 1' INT TERM
