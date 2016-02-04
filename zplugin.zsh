@@ -1765,7 +1765,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Print report gathered via parameter diffing
     -zplg-diff-parameter "$user/$plugin" diff
     -zplg-format-parameter "$user/$plugin"
-    [ -n "$REPLY" ] && print $ZPLG_COL[p]"Variables added or changed:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print $ZPLG_COL[p]"Variables added or redefined:$reset_color"$'\n'"$REPLY"
 
     # Print what completions plugin has
     -zplg-find-completions-of-plugin "$user" "$plugin"
