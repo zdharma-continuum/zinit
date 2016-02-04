@@ -362,7 +362,8 @@ ZPLG_ZLE_HOOKS_LIST=(
         if [[ "${#opts[@]}" -eq "1" && "${opts[(r)-A]}" = "-A" && "${pos[3]}" = "main" && "${pos[2]}" != "-A" ]]; then
             # Save a copy of main keymap
             (( ZPLG_BINDKEY_MAIN_IDX ++ ))
-            local name="${(q)ZPLG_CUR_PLUGIN}-main-$ZPLG_BINDKEY_MAIN_IDX"
+            local pname="${ZPLG_CUR_PLUGIN:-$ZPLG_DEBUG_PLUGIN}"
+            local name="${(q)pname}-main-$ZPLG_BINDKEY_MAIN_IDX"
             builtin bindkey -N "${name}" main
 
             # Remember occurence of main keymap substitution, to revert on unload
