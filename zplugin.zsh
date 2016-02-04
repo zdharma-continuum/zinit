@@ -2508,7 +2508,11 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Reverts changes recorded through dtrace
 -zplg-debug-unload() {
-    -zplg-unload "$ZPLG_DEBUG_USER" "$ZPLG_DEBUG_PLUGIN"
+    if [ "$ZPLG_DEBUG_ACTIVE" = "1" ]; then
+        echo "Dtrace is still active, end it with \`dstop'"
+    else
+        -zplg-unload "$ZPLG_DEBUG_USER" "$ZPLG_DEBUG_PLUGIN"
+    fi
 }
 
 # }}}
