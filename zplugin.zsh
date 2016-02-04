@@ -2610,10 +2610,6 @@ zplugin() {
     local -a match mbegin mend
     local MATCH; integer MBEGIN MEND
 
-    # Restore user's options on any exit
-    trap 'return 1' INT TERM
-    trap '-zplg-restore-enter-state' EXIT
-
     -zplg-set-desired-shell-state
 
     -zplg-prepare-home
@@ -2804,6 +2800,9 @@ dclear                   - clear report of what was going on in session"
            print "Unknown command \`$1' (try \`help' to get usage information)"
            ;;
     esac
+
+    # Restore user's options
+    -zplg-restore-enter-state
 }
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
