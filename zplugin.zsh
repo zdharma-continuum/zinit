@@ -183,6 +183,13 @@ if [ "${(t)ZPLG_WIDGET_LIST}" != "association" ]; then
     source "$ZPLG_DIR/widget-list.zsh"
 fi
 
+# List of hooks
+typeset -gAH ZPLG_ZLE_HOOKS_LIST
+ZPLG_ZLE_HOOKS_LIST=(
+    zle-line-init "1"
+    zle-line-finish "1"
+    paste-insert "1"
+)
 # }}}
 
 #
@@ -422,16 +429,13 @@ fi
 
     # Try to catch game-changing "-N"
     if [[ "$1" = "-N" && "$#" = "3" ]]; then
-        case "$2" in
-            # Hooks will be just deleted
-            zle-line-init|zle-line-finish|paste-insert)
+            # Hooks
+            if [ "${ZPLG_ZLE_HOOKS_LIST[$2]}" = "1" ]; then
                 local quoted="$2"
                 quoted="${(q)quoted}"
                 ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
-                ;;
             # These will be saved and restored
-            *)
-                if [ "$ZPLG_WIDGET_LIST[$2]" = "1" ]; then
+            elif [ "${ZPLG_WIDGET_LIST[$2]}" = "1" ]; then
                     # Have to remember original widget "$2" and
                     # the copy that it's going to be done
                     local widname="$2" saved_widname="zplugin-saved-$2"
@@ -442,14 +446,13 @@ fi
                     quoted="$widname $saved_widname"
                     quoted="${(q)quoted}"
                     ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
-                else
+             # These will be deleted
+             else
                     -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
                     local quoted="$2"
                     quoted="${(q)quoted}"
                     ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
-                fi
-                ;;
-        esac
+             fi
     # Creation of new widgets. They will be removed on unload
     elif [[ "$1" = "-N" && "$#" = "2" ]]; then
         local quoted="$2"
@@ -1986,7 +1989,11 @@ fi
     for wid in "${(on)delete_widgets[@]}"; do
         [ -z "$wid" ] && continue
         wid="${(Q)wid}"
-        print "Removing Zle widget (which may be a hook) $wid"
+        if [ "${ZPLG_ZLE_HOOKS_LIST[$wid]}" = "1" ]; then
+            print "Removing Zle hook \`$wid'"
+        else
+            print "Removing Zle widget \`$wid'"
+        fi
         zle -D "$wid"
     done
 
