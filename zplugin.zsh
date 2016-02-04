@@ -308,7 +308,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # with no options or with -s, plus possible -M
     # option
     local -A optsA
-    zparseopts -A optsA -D ${(s::):-lLdDANmrsevaR} "M:"
+    zparseopts -A optsA -D ${(s::):-lLdDAmrsevaR} "M:" "N:"
 
     local -a opts
     opts=( "${(k)optsA[@]}" )
@@ -376,6 +376,19 @@ ZPLG_ZLE_HOOKS_LIST=(
             [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
 
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[2]}' substitution"
+        # bindkey -N newkeymap [other]
+        elif [[ "${#opts[@]}" -eq 1 && "${opts[(r)-N]}" = "-N" ]]; then
+            local Nopt="-N"
+            local Narg="${optsA[-N]}"
+
+            local keys="_" widget="_" optN="-N" mapname="${Narg}" optR="_"
+            quoted="${(q)keys} ${(q)widget} ${(q)optN} ${(q)mapname} ${(q)optR}"
+            quoted="${(q)quoted}"
+
+            # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
+            [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+            # Remember for dtrace
+            [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
         else
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
         fi
@@ -2167,9 +2180,9 @@ ZPLG_ZLE_HOOKS_LIST=(
         # Remove one level of quoting to pass to bindkey
         sw_arr[1]="${(Q)sw_arr[1]}" # Keys
         sw_arr[2]="${(Q)sw_arr[2]}" # Widget
-        sw_arr[3]="${(Q)sw_arr[3]}" # Optional -M or -A
+        sw_arr[3]="${(Q)sw_arr[3]}" # Optional -M or -A or -N
         sw_arr[4]="${(Q)sw_arr[4]}" # Optional map name
-        sw_arr[5]="${(Q)sw_arr[5]}" # Optional -R (not with -A)
+        sw_arr[5]="${(Q)sw_arr[5]}" # Optional -R (not with -A, -N)
 
         if [[ "${sw_arr[3]}" = "-M" && "${sw_arr[5]}" != "-R" ]]; then
             print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} ${ZPLG_COL[info]}mapped to ${sw_arr[4]}$reset_color"
@@ -2183,6 +2196,9 @@ ZPLG_ZLE_HOOKS_LIST=(
         elif [[ "${sw_arr[3]}" = "-A" ]]; then
             print "Linking backup-\`main' keymap \`${sw_arr[4]}' back to \`main'"
             bindkey -A "${sw_arr[4]}" "main"
+        elif [[ "${sw_arr[3]}" = "-N" ]]; then
+            print "Deleting keymap \`${sw_arr[4]}'"
+            bindkey -D "${sw_arr[4]}"
         else
             print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]}"
             bindkey -r "${sw_arr[1]}"
