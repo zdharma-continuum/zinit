@@ -138,8 +138,11 @@ typeset -gAH ZPLG_PARAMETERS_BEFORE
 # Concatenated state of PARAMETERS after loading a plugin
 typeset -gAH ZPLG_PARAMETERS_AFTER
 
-# Concatenated new elements of PARAMETERS (after diff)
-typeset -gAH ZPLG_PARAMETERS
+# Concatenated changed old elements of $parameters (before diff)
+typeset -gAH ZPLG_PARAMETERS_PRE
+
+# Concatenated changed new elements of $parameters (after diff)
+typeset -gAH ZPLG_PARAMETERS_POST
 
 # Was the environment diff already ran?
 typeset -gHA ZPLG_PARAMETERS_DIFF_RAN
@@ -905,14 +908,16 @@ ZPLG_ZLE_HOOKS_LIST=(
             ZPLG_PARAMETERS_BEFORE[$uspl2]="${(j: :)${(qkv)parameters[@]}}"
 
             # Reset diffing
-            ZPLG_PARAMETERS[$uspl2]=""
+            ZPLG_PARAMETERS_PRE[$uspl2]=""
+            ZPLG_PARAMETERS_POST[$uspl2]=""
             ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="0"
             ;;
         end)
             ZPLG_PARAMETERS_AFTER[$uspl2]="${(j: :)${(qkv)parameters[@]}}"
 
             # Reset diffing
-            ZPLG_PARAMETERS[$uspl2]=""
+            ZPLG_PARAMETERS_PRE[$uspl2]=""
+            ZPLG_PARAMETERS_POST[$uspl2]=""
             ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="0"
             ;;
         diff)
@@ -925,24 +930,41 @@ ZPLG_ZLE_HOOKS_LIST=(
             setopt localoptions extendedglob
             [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
 
-            typeset -A params_before params_after params
+            # Un-concatenated parameters from moment of diff start and of diff end
+            typeset -A params_before params_after
             params_before=( "${(z)ZPLG_PARAMETERS_BEFORE[$uspl2]}" )
             params_after=( "${(z)ZPLG_PARAMETERS_AFTER[$uspl2]}" )
-            params=( )
 
-            # Iterate through first array (keys the same
-            # on both of them though) and test for a change
+            # The parameters that changed, with save of what
+            # parameter was when diff started or when diff ended
+            typeset -A params_pre params_post
+            params_pre=( )
+            params_post=( )
+
+            # Iterate through all existing keys, before or after diff,
+            # i.e. after all variables that were somehow live across
+            # the diffing process
             local key
-            for key in "${(k)params_after[@]}"; do
+            typeset -aU keys
+            keys=( "${(k)params_after[@]}" );
+            keys=( "${keys[@]}" "${(k)params_before[@]}" );
+            for key in "${keys[@]}"; do
                 key="${(Q)key}"
                 if [ "${params_after[$key]}" != "${params_before[$key]}" ]; then
-                    # It will be empty for a new param
-                    params[$key]="${params_after[$key]}"
+                    # Empty for a new param, a type otherwise
+                    [ -z "${params_before[$key]}" ] && params_before[$key]="\"\""
+                    params_pre[$key]="${params_before[$key]}"
+
+                    # Current type, can also be empty, when plugin
+                    # unsets a parameter
+                    [ -z "${params_after[$key]}" ] && params_after[$key]="\"\""
+                    params_post[$key]="${params_after[$key]}"
                 fi
             done
 
             # Serialize for reporting
-            ZPLG_PARAMETERS[$uspl2]="${(j: :)${(qkv)params[@]}}"
+            ZPLG_PARAMETERS_PRE[$uspl2]="${(j: :)${(qkv)params_pre[@]}}"
+            ZPLG_PARAMETERS_POST[$uspl2]="${(j: :)${(qkv)params_post[@]}}"
             ;;
         *)
             return 1
@@ -958,19 +980,22 @@ ZPLG_ZLE_HOOKS_LIST=(
     # i.e. include white spaces as empty
     setopt localoptions extendedglob
     REPLY=""
-    [[ "${ZPLG_PARAMETERS[$uspl2]}" = ( |$'\t')# ]] && return 0
+    [[ "${ZPLG_PARAMETERS_PRE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PARAMETERS_POST[$uspl2]}" = ( |$'\t')# ]] && return 0
 
-    # TODO what if empty
-    typeset -A elem
-    elem=( "${(z)ZPLG_PARAMETERS[$uspl2]}" )
+    typeset -A elem_pre elem_post
+    elem_pre=( "${(z)ZPLG_PARAMETERS_PRE[$uspl2]}" )
+    elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
 
-    # Enumerate elements added
-    local answer="" k v
-    for k in "${(k)elem[@]}"; do
-        v="${(Q)elem[$k]}"
+    # Enumerate parameters that changed
+    # Enumerate parameters that changed. A key
+    # always exists in both of the arrays
+    local answer="" k v1 v2
+    for k in "${(k)elem_post[@]}"; do
+        v1="${(Q)elem_pre[$k]}"
+        v2="${(Q)elem_post[$k]}"
         k="${(Q)k}"
 
-        answer+="$k ${infoc}[$v]$reset_color"$'\n'
+        answer+="$k ${infoc}[$v1 -> $v2]$reset_color"$'\n'
     done
 
     [ -n "$answer" ] && REPLY="$answer"
