@@ -425,7 +425,7 @@ ZPLG_COL=(
                 ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
                 ;;
             # These will be saved and restored
-            self-insert|backward-delete-char|delete-char)
+            self-insert|backward-delete-char|delete-char|accept-and-hold|accept-line|backward-char|backward-kill-word|backward-word)
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
                 local widname="$2" saved_widname="zplugin-saved-$2"
@@ -441,6 +441,11 @@ ZPLG_COL=(
                 -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported widget replaced/taken via zle -N: \`$2'"
                 ;;
         esac
+    # Creation of new widgets. They will be removed on unload
+    elif [[ "$1" = "-N" && "$#" = "2" ]]; then
+        local quoted="$2"
+        quoted="${(q)quoted}"
+        ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
     fi
 
     # Actual zle
@@ -1972,7 +1977,7 @@ ZPLG_COL=(
     for wid in "${(on)delete_widgets[@]}"; do
         [ -z "$wid" ] && continue
         wid="${(Q)wid}"
-        print "Removing Zle hook $wid"
+        print "Removing Zle widget or hook $wid"
         zle -D "$wid"
     done
 
