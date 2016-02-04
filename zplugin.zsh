@@ -126,6 +126,23 @@ typeset -gAH ZPLG_FPATH
 
 # Was the environment diff already ran?
 typeset -gHA ZPLG_ENV_DIFF_RAN
+# }}}
+
+#
+# Parameter diffing {{{
+#
+
+# Concatenated state of PARAMETERS before loading a plugin
+typeset -gAH ZPLG_PARAMETERS_BEFORE
+
+# Concatenated state of PARAMETERS after loading a plugin
+typeset -gAH ZPLG_PARAMETERS_AFTER
+
+# Concatenated new elements of PARAMETERS (after diff)
+typeset -gAH ZPLG_PARAMETERS
+
+# Was the environment diff already ran?
+typeset -gHA ZPLG_PARAMETERS_DIFF_RAN
 
 # }}}
 
@@ -875,6 +892,87 @@ ZPLG_ZLE_HOOKS_LIST=(
 # }}}
 
 #
+# Parameter diff functions {{{
+#
+
+-zplg-diff-parameter() {
+    local uspl2="$1"
+    local cmd="$2"
+    typeset -a tmp
+
+    case "$cmd" in
+        begin)
+            ZPLG_PARAMETERS_BEFORE[$uspl2]="${(j: :)${(qkv)parameters[@]}}"
+
+            # Reset diffing
+            ZPLG_PARAMETERS[$uspl2]=""
+            ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="0"
+            ;;
+        end)
+            ZPLG_PARAMETERS_AFTER[$uspl2]="${(j: :)${(qkv)parameters[@]}}"
+
+            # Reset diffing
+            ZPLG_PARAMETERS[$uspl2]=""
+            ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="0"
+            ;;
+        diff)
+            # Run diff once, `begin' or `end' is needed to be run again for a new diff
+            [ "$ZPLG_PARAMETERS_DIFF_RAN[$uspl2]" = "1" ] && return 0
+            ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="1"
+
+            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
+            setopt localoptions extendedglob
+            [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
+
+            typeset -A params_before params_after params
+            params_before=( "${(z)ZPLG_PARAMETERS_BEFORE[$uspl2]}" )
+            params_after=( "${(z)ZPLG_PARAMETERS_AFTER[$uspl2]}" )
+            params=( )
+
+            # Iterate through first array (keys the same
+            # on both of them though) and test for a change
+            local key
+            for key in "${(k)params_after[@]}"; do
+                key="${(Q)key}"
+                if [ "${params_after[$key]}" != "${params_before[$key]}" ]; then
+                    # It will be empty for a new param
+                    params[$key]="${params_after[$key]}"
+                fi
+            done
+
+            # Serialize for reporting
+            ZPLG_PARAMETERS[$uspl2]="${(j: :)${(qkv)params[@]}}"
+            ;;
+        *)
+            return 1
+    esac
+
+    return 0
+}
+
+-zplg-format-parameter() {
+    local uspl2="$1" infoc="$ZPLG_COL[info]"
+
+    # TODO what if empty
+    typeset -A elem
+    elem=( "${(z)ZPLG_PARAMETERS[$uspl2]}" )
+
+    # Enumerate elements added
+    local answer="" k v
+    for k in "${(k)elem[@]}"; do
+        v="${(Q)elem[$k]}"
+        k="${(Q)k}"
+
+        answer+="$k ${infoc}[$v]$reset_color"$'\n'
+    done
+
+    [ -n "$answer" ] && REPLY="$answer"
+}
+
+# }}}
+
+#
 # Report functions {{{
 #
 
@@ -1483,6 +1581,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         -zplg-diff-functions "$ZPLG_CUR_USPL2" begin
         -zplg-diff-options "$ZPLG_CUR_USPL2" begin
         -zplg-diff-env "$ZPLG_CUR_USPL2" begin
+        -zplg-diff-parameter "$ZPLG_CUR_USPL2" begin
     fi
 
     # Warn about user having his own shadows in place. Check
@@ -1504,6 +1603,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     -zplg-shadow-off "$light"
     if [ "$light" != "light" ]; then
+        -zplg-diff-parameter "$ZPLG_CUR_USPL2" end
         -zplg-diff-env "$ZPLG_CUR_USPL2" end
         -zplg-diff-options "$ZPLG_CUR_USPL2" end
         -zplg-diff-functions "$ZPLG_CUR_USPL2" end
@@ -1653,6 +1753,11 @@ ZPLG_ZLE_HOOKS_LIST=(
     REPLY=""
     -zplg-format-env "$user/$plugin" "2"
     [ -n "$REPLY" ] && print $ZPLG_COL[p]"FPATH elements added:$reset_color"$'\n'"$REPLY"
+
+    # Print report gathered via parameter diffing
+    -zplg-diff-parameter "$user/$plugin" diff
+    -zplg-format-parameter "$user/$plugin"
+    [ -n "$REPLY" ] && print $ZPLG_COL[p]"Variables added or changed:$reset_color"$'\n'"$REPLY"
 
     # Print what completions plugin has
     -zplg-find-completions-of-plugin "$user" "$plugin"
