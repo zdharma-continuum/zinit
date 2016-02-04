@@ -725,7 +725,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             opts=( )
 
             # Iterate through first array (keys the same
-            # on both of them though) and thest for a change
+            # on both of them though) and test for a change
             local key
             for key in "${(k)opts_before[@]}"; do
                 if [ "$opts_before[$key]" != "$opts_after[$key]" ]; then
