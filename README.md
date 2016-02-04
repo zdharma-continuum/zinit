@@ -9,11 +9,11 @@ completions, `PATH` and `FPATH` elements a plugin has set up. Supported is
 disable, enable plugin's completions. The system doesn't use `$FPATH`, it's kept
 clean!
 
-Zplugin in action:
+**Zplugin in action:**
 
 ![zplugin](http://imageshack.com/a/img905/5575/n3p47o.gif)
 
-Completion handling:
+**Completion handling:**
 
 ![zplugin](http://imageshack.com/a/img907/2167/CATuag.gif)
 
@@ -21,7 +21,7 @@ Completion handling:
 
 ![zplugin-refcard](http://imageshack.com/a/img924/7014/KKkzny.png)
 
-Example use:
+**Example use:**
 
 ```
 % . ~/github/zplugin/zplugin.zsh
@@ -29,7 +29,7 @@ Example use:
 % zplugin load psprint/zsh-cmd-architect
 ```
 
-Example plugin report:
+**Example plugin report:**
 
 ```
 % zpl report psprint/zsh-cmd-architect
@@ -66,7 +66,7 @@ _xauth [disabled]
 
 ![report example](http://imageshack.com/a/img923/4237/OHC0i5.png)
 
-Example plugin unload:
+**Example plugin unload:**
 
 ```
 % zpl unload psprint/zsh-cmd-architect
@@ -87,7 +87,7 @@ Plugin's report saved to $LASTREPORT
 
 ![unload example](http://imageshack.com/a/img921/9896/rMMnQ1.png)
 
-Example `csearch` invocation (completion management):
+**Example `csearch` invocation (completion management):**
 
 ```
 # zplg csearch
