@@ -954,6 +954,12 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-format-parameter() {
     local uspl2="$1" infoc="$ZPLG_COL[info]"
 
+    # Paranoid for type of empty value,
+    # i.e. include white spaces as empty
+    setopt localoptions extendedglob
+    REPLY=""
+    [[ "${ZPLG_PARAMETERS[$uspl2]}" = ( |$'\t')# ]] && return 0
+
     # TODO what if empty
     typeset -A elem
     elem=( "${(z)ZPLG_PARAMETERS[$uspl2]}" )
@@ -968,6 +974,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     done
 
     [ -n "$answer" ] && REPLY="$answer"
+
+    return 0
 }
 
 # }}}
