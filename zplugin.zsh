@@ -432,20 +432,18 @@ fi
             # These will be saved and restored
             *)
                 if [ "$ZPLG_WIDGET_LIST[$2]" = "1" ]; then
+                    # Have to remember original widget "$2" and
+                    # the copy that it's going to be done
+                    local widname="$2" saved_widname="zplugin-saved-$2"
+                    builtin zle -A "$widname" "$saved_widname"
 
-                # Have to remember original widget "$2" and
-                # the copy that it's going to be done
-                local widname="$2" saved_widname="zplugin-saved-$2"
-                builtin zle -A "$widname" "$saved_widname"
-
-                widname="${(q)widname}"
-                saved_widname="${(q)saved_widname}"
-                quoted="$widname $saved_widname"
-                quoted="${(q)quoted}"
-                ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
-
+                    widname="${(q)widname}"
+                    saved_widname="${(q)saved_widname}"
+                    quoted="$widname $saved_widname"
+                    quoted="${(q)quoted}"
+                    ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
                 else
-                -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported widget replaced/taken via zle -N: \`$2'"
+                    -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported widget replaced/taken via zle -N: \`$2'"
                 fi
                 ;;
         esac
