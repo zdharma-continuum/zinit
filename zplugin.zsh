@@ -362,8 +362,9 @@ ZPLG_ZLE_HOOKS_LIST=(
         if [[ "${#opts[@]}" -eq "1" && "${opts[(r)-A]}" = "-A" && "${pos[3]}" = "main" && "${pos[2]}" != "-A" ]]; then
             # Save copy of main keymap
             (( ZPLG_BINDKEY_MAIN_IDX ++ ))
-            builtin bindkey -N "zplg-main-$ZPLG_BINDKEY_MAIN_IDX" main
-            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: \`main' keymap substituted with \`${pos[2]}', saved a copy to \`zplg-main-$ZPLG_BINDKEY_MAIN_IDX'"
+            local name="${(q)ZPLG_CUR_PLUGIN}"
+            builtin bindkey -N "${name}-main-$ZPLG_BINDKEY_MAIN_IDX" main
+            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: \`main' keymap substituted with \`${pos[2]}', saved a copy to \`${name}-main-$ZPLG_BINDKEY_MAIN_IDX'"
         else
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
         fi
