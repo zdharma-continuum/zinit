@@ -4,7 +4,7 @@
 
 Zplugin gives **reports** from plugin load. Plugins are no longer black boxes,
 report will tell what aliases, functions, bindkeys, Zle widgets, zstyles,
-completions, `PATH` and `FPATH` elements a plugin has set up. Supported is
+completions, variables, `PATH` and `FPATH` elements a plugin has set up. Supported is
 **unloading** of plugin and ability to list, uninstall, reinstall and selectively
 disable, enable plugin's completions. The system doesn't use `$FPATH`, it's kept
 clean!
@@ -19,7 +19,7 @@ clean!
 
 **Dtrace:**
 
-![dtrace](http://imageshack.com/a/img921/5314/xfqiXY.gif)
+![dtrace](http://imageshack.com/a/img924/2539/eCfnUD.gif)
 
 ## Introduction
 
