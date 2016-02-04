@@ -158,6 +158,11 @@ creinstall {plugin-name} - install completions for plugin
 cuninstall {plugin-name} - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
+dtrace|dstart            - start tracking what's going on in session
+dstop                    - stop tracking what's going on in session
+dunload                  - revert changes recorded between dstart and dstop
+dreport                  - report what was going on in session
+dclear                   - clear report of what was going on in session
 ```
 
 To use themes created for `Oh-My-Zsh` you might want to first source the `git` library there:
