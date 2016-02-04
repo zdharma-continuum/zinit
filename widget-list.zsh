@@ -194,6 +194,4 @@ ZPLG_WIDGET_LIST=(
     what-cursor-position  "1"
     where-is  "1"
     yank-pop  "1"
-    zew-history-complete-word "1"
-    zew-history-complete-word-backwards  "1"
 )
