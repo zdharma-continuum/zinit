@@ -27,9 +27,10 @@ commands=(
     cuninstall:'uninstall completions for plugin'
     csearch:'search for available completions from any plugin'
     compinit:'refresh installed completions'
-    dstart:"start tracking what's going on in session"
     dtrace:"start tracking what's going on in session"
+    dstart:"start tracking what's going on in session"
     dstop:"stop tracking what's going on in session"
+    dunload:'revert changes recorded between dstart and dstop'
     dreport:"report what was going on in session"
     dclear:'clear report of what was going on in session'
 )
@@ -150,6 +151,9 @@ case $state in
                 ;;
             dstop)
                 _message "Hit enter to stop tracking this session" && ret=0
+                ;;
+            dunload)
+                _message "Hit enter to revert changes recorded between dstart and dstop" && ret=0
                 ;;
             dreport)
                 _message "Hit enter to show report of what was going on in session" && ret=0

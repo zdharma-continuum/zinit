@@ -2678,8 +2678,9 @@ creinstall $ZPLG_COL[pname]{plugin-name}$reset_color - install completions for p
 cuninstall $ZPLG_COL[pname]{plugin-name}$reset_color - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
-dstart|dtrace            - start tracking what's going on in session
+dtrace|dstart            - start tracking what's going on in session
 dstop                    - stop tracking what's going on in session
+dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session"
            ;;
