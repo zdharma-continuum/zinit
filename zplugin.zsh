@@ -218,7 +218,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # }}}
 
 #
-# Shadowing-related functions (names of substitute functions start with -) {{{
+# Shadowing-related functions (names of substitute functions start with --) {{{
 # Must be resistant to various game-changing options like KSH_ARRAYS
 #
 
