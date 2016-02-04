@@ -1067,15 +1067,30 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     local user="${1%%/*}" plugin="${1#*/}"
     if [ "$user" = "$plugin" ]; then
+        # Is it really the same plugin and user name?
+        if [ "$user/$plugin" = "$1" ]; then
+            reply=( "$user" "$plugin" )
+            return 0
+        fi
+
         user="${1%%---*}"
         plugin="${1#*---}"
     fi
 
-    if [[ "$user" = "$plugin" || -z "$user" ]]; then
-            user="_local"
+    if [ "$user" = "$plugin" ]; then
+        # Is it really the same plugin and user name?
+        if [ "${user}---${plugin}" = "$1" ]; then
+            reply=( "$user" "$plugin" )
+            return 0
+        fi
+        user="_local"
+    fi
+    
+    if [ -z "$user" ]; then
+        user="_local"
     fi
 
-    if [[ -z "$plugin" ]]; then
+    if [ -z "$plugin" ]; then
         plugin="_unknown"
     fi
 
