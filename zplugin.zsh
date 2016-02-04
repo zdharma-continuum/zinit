@@ -1029,15 +1029,15 @@ ZPLG_ZLE_HOOKS_LIST=(
     elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
 
     # Find longest key and longest value
-    integer longest=0 vlongest=0
+    integer longest=0 vlongest1=0 vlongest2=0
     for k in "${(k)elem_post[@]}"; do
         k="${(Q)k}"
         [ "$#k" -gt "$longest" ] && longest="$#k"
 
         v1="${(Q)elem_pre[$k]}"
         v2="${(Q)elem_post[$k]}"
-        [ "$#v1" -gt "$vlongest" ] && vlongest="$#v1"
-        [ "$#v2" -gt "$vlongest" ] && vlongest="$#v2"
+        [ "$#v1" -gt "$vlongest1" ] && vlongest1="$#v1"
+        [ "$#v2" -gt "$vlongest2" ] && vlongest2="$#v2"
     done
 
     # Enumerate parameters that changed. A key
@@ -1049,8 +1049,8 @@ ZPLG_ZLE_HOOKS_LIST=(
         k="${(Q)k}"
 
         k="${(r:longest+1:: :)k}"
-        v1="${(l:vlongest+1:: :)v1}"
-        v2="${(r:vlongest+1:: :)v2}"
+        v1="${(l:vlongest1+1:: :)v1}"
+        v2="${(r:vlongest2+1:: :)v2}"
         answer+="$k ${infoc}[$v1 -> $v2]$reset_color"$'\n'
     done
 
