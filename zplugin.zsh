@@ -2052,7 +2052,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 # 5. Restore (or just unalias?) aliases
 # 6. Restore Zle state
 # 7. Clean up FPATH and PATH
-# 8. Forget the plugin
+# 8. Delete created variables
+# 9. Forget the plugin
 -zplg-unload() {
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="$reply[1]/$reply[2]" user="$reply[1]" plugin="$reply[2]"
@@ -2259,7 +2260,36 @@ ZPLG_ZLE_HOOKS_LIST=(
     fpath=( "${new[@]}" )
 
     #
-    # 8. Forget the plugin
+    # 8. Delete created variables
+    #
+
+    # Paranoid for type of empty value,
+    # i.e. include white spaces as empty
+    -zplg-diff-parameter "$uspl2" diff
+    empty=0
+    -zplg-save-set-extendedglob
+    [[ "${ZPLG_PARAMETERS_POST[$uspl2]}" = ( |$'\t')# ]] && empty=1
+    -zplg-restore-extendedglob
+
+    if (( empty != 1 )); then
+        typeset -A elem_post
+        elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
+
+        # Find variables created or modified
+        for k in "${(k)elem_post[@]}"; do
+            k="${(Q)k}"
+            v="${(Q)elem_post[$k]}"
+
+            # "" mean a variable was deleted, not created/changed
+            if [[ "$v" != "\"\"" ]]; then
+                print "Unsetting variable $k"
+                unset "$k"
+            fi
+        done
+    fi
+
+    #
+    # 9. Forget the plugin
     #
 
     if [ "$uspl2" = "$ZPLG_DEBUG_USPL2" ]; then
