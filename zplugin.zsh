@@ -2383,6 +2383,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     else
         print "Unregistering plugin $uspl2col"
         -zplg-unregister-plugin "$user" "$plugin"
+        -zplg-clear-report-for "$user" "$plugin"
         print "Plugin's report saved to \$LASTREPORT"
     fi
 
