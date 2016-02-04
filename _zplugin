@@ -28,6 +28,7 @@ commands=(
     csearch:'search for available completions from any plugin'
     compinit:'refresh installed completions'
     dstart:"start tracking what's going on in session"
+    dtrace:"start tracking what's going on in session"
     dstop:"stop tracking what's going on in session"
     dreport:"report what was going on in session"
     dclear:'clear report of what was going on in session'
@@ -144,7 +145,7 @@ case $state in
                 _wanted plugins expl "Options" \
                     compadd "$@" -a - list && ret=0
                 ;;
-            dstart)
+            dstart|dtrace)
                 _message "Hit enter to start tracking this session" && ret=0
                 ;;
             dstop)
