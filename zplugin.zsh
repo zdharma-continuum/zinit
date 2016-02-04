@@ -67,6 +67,11 @@ typeset -gH ZPLG_SHADOWING_ACTIVE
 typeset -gAH ZPLG_ALREADY_WARNINGS_A
 # To show "function already defined, in zsh" warning once per function
 typeset -gAH ZPLG_ALREADY_WARNINGS_F
+# If "1", it will make debug reporting active,
+# e.g. shadowing will be permanently on
+typeset -gH ZPLG_DEBUG_ACTIVE="0"
+# Name of "plugin" to which debug reports should be assigned
+typeset -gH ZPLG_DEBUG_USER="_debug/_debug"
 # }}}
 
 #
@@ -336,8 +341,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         quoted="${(q)quoted}"
 
-        ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
-        # Remember the bindkey
+        # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
+        [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
     else
         -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
     fi
@@ -372,8 +377,8 @@ ZPLG_ZLE_HOOKS_LIST=(
         local ps="$pattern $style"
         ps="${(q)ps}"
 
-        # Remember the zstyle
-        ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
+        # Remember the zstyle, only when load is in progress (it can be dstart that leads execution here)
+        [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
     else
         if [[ ! "${#opts}" = "1" && ( "${opts[(r)-s]}" = "-s" || "${opts[(r)-b]}" = "-b" || "${opts[(r)-a]}" = "-a" ||
                                       "${opts[(r)-t]}" = "-t" || "${opts[(r)-T]}" = "-T" || "${opts[(r)-m]}" = "-m" ) ]]
@@ -429,7 +434,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         quoted="${(q)quoted}"
 
-        ZPLG_ALIASES[$ZPLG_CUR_USPL2]+="$quoted "
+        # Remember the alias, only when load is in progress (it can be dstart that leads execution here)
+        [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_ALIASES[$ZPLG_CUR_USPL2]+="$quoted "
     done
 
     # Actual alias
@@ -457,7 +463,8 @@ ZPLG_ZLE_HOOKS_LIST=(
             if [ "${ZPLG_ZLE_HOOKS_LIST[$2]}" = "1" ]; then
                 local quoted="$2"
                 quoted="${(q)quoted}"
-                ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                # Remember only when load is in progress (it can be dstart that leads execution here)
+                [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
             # These will be saved and restored
             elif [ "${ZPLG_WIDGET_LIST[$2]}" = "1" ]; then
                 # Have to remember original widget "$2" and
@@ -469,19 +476,22 @@ ZPLG_ZLE_HOOKS_LIST=(
                 saved_widname="${(q)saved_widname}"
                 quoted="$widname $saved_widname"
                 quoted="${(q)quoted}"
-                ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
+                # Remember only when load is in progress (it can be dstart that leads execution here)
+                [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
              # These will be deleted
              else
                  -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
                  local quoted="$2"
                  quoted="${(q)quoted}"
-                 ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                 # Remember only when load is in progress (it can be dstart that leads execution here)
+                 [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
              fi
     # Creation of new widgets. They will be removed on unload
     elif [[ "$1" = "-N" && "$#" = "2" ]]; then
         local quoted="$2"
         quoted="${(q)quoted}"
-        ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+        # Remember only when load is in progress (it can be dstart that leads execution here)
+        [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
     fi
 
     # Actual zle
@@ -518,6 +528,9 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Shadowing on
 -zplg-shadow-on() {
     local light="$1"
+
+    # Enable shadowing only once
+    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] && return 0
 
     ZPLG_SHADOWING_ACTIVE=1
 
@@ -556,6 +569,9 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Shadowing off
 -zplg-shadow-off() {
     local light="$1"
+
+    # Disable shadowing only once
+    [ "$ZPLG_SHADOWING_ACTIVE" = "0" ] && return 0
 
     ZPLG_SHADOWING_ACTIVE=0
 
@@ -1039,7 +1055,14 @@ ZPLG_ZLE_HOOKS_LIST=(
         keyword="${ZPLG_COL[keyword]}$keyword$reset_color"
     fi
 
-    ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
+    # Don't report to any user/plugin if there is no plugin load in progress
+    if [ -n "$uspl2" ]; then
+        ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
+    fi
+
+    # This is nasty, if debug is on, report everything
+    # to special debug user
+    [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_REPORTS[$ZPLG_DEBUG_USER]+="$keyword ${txt#* }"$'\n'
 }
 
 # }}}
@@ -1674,8 +1697,13 @@ ZPLG_ZLE_HOOKS_LIST=(
         -zplg-diff-options "$ZPLG_CUR_USPL2" end
         -zplg-diff-functions "$ZPLG_CUR_USPL2" end
     fi
-}
 
+    # Mark no load is in progress
+    ZPLG_CUR_USER=""
+    ZPLG_CUR_PLUGIN=""
+    ZPLG_CUR_USPL=""
+    ZPLG_CUR_USPL2=""
+}
 # }}}
 
 #
@@ -1784,7 +1812,10 @@ ZPLG_ZLE_HOOKS_LIST=(
     local user="$reply[1]"
     local plugin="$reply[2]"
 
-    -zplg-exists-message "$user" "$plugin" || return 1
+    # Allow debug report
+    if [ "$user/$plugin" != $ZPLG_DEBUG_USER ]; then
+        -zplg-exists-message "$user" "$plugin" || return 1
+    fi
 
     # Print title
     printf "$ZPLG_COL[title]Plugin report for$reset_color %s/%s\n"\
@@ -2374,6 +2405,47 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # }}}
 
+#
+# Debug reporting functions, user exposed {{{
+#
+
+# Starts debug reporting, diffing
+-zplg-debug-start() {
+    ZPLG_DEBUG_ACTIVE="1"
+
+    -zplg-diff-functions "$ZPLG_DEBUG_USER" begin
+    -zplg-diff-options "$ZPLG_DEBUG_USER" begin
+    -zplg-diff-env "$ZPLG_DEBUG_USER" begin
+    -zplg-diff-parameter "$ZPLG_DEBUG_USER" begin
+
+    # Full shadowing on
+    -zplg-shadow-on ""
+}
+
+# Ends debug reporting, diffing
+-zplg-debug-stop() {
+    ZPLG_DEBUG_ACTIVE="0"
+
+    # Shadowing fully off
+    -zplg-shadow-off ""
+
+    # Gather end data now, for diffing later
+    -zplg-diff-parameter "$ZPLG_DEBUG_USER" end
+    -zplg-diff-env "$ZPLG_DEBUG_USER" end
+    -zplg-diff-options "$ZPLG_DEBUG_USER" end
+    -zplg-diff-functions "$ZPLG_DEBUG_USER" end
+}
+
+-zplg-show-debug-report() {
+    # Display report of given plugin
+    -zplg-show-report "$ZPLG_DEBUG_USER"
+}
+
+-zplg-clear-debug-report() {
+    ZPLG_REPORTS[$ZPLG_DEBUG_USER]=""
+}
+
+# }}}
 alias zpl=zplugin zplg=zplugin
 
 # Main function with subcommands
@@ -2532,7 +2604,18 @@ zplugin() {
            # reload of plugins' completions
            -zplg-compinit
            ;;
-
+       (dstart)
+           -zplg-debug-start
+           ;;
+       (dstop)
+           -zplg-debug-stop
+           ;;
+       (dreport)
+           -zplg-show-debug-report
+           ;;
+       (dclear)
+           -zplg-clear-debug-report
+           ;;
        (-h|--help|help|)
            print "$ZPLG_COL[p]Usage$reset_color:
 -h|--help|help           - usage information
@@ -2555,7 +2638,11 @@ cenable  $ZPLG_COL[info]{cname}$reset_color         - enable completion \`cname'
 creinstall $ZPLG_COL[pname]{plugin-name}$reset_color - install completions for plugin
 cuninstall $ZPLG_COL[pname]{plugin-name}$reset_color - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
-compinit                 - refresh installed completions"
+compinit                 - refresh installed completions
+dstart                   - start tracking what's going on in session
+dstop                    - stop tracking what's going on in session
+dreport                  - report what was going on in session
+dclear                   - clear report of what was going on in session"
            ;;
        (*)
            print "Unknown command \`$1' (try \`help' to get usage information)"

@@ -27,6 +27,10 @@ commands=(
     cuninstall:'uninstall completions for plugin'
     csearch:'search for available completions from any plugin'
     compinit:'refresh installed completions'
+    dstart:"start tracking what's going on in session"
+    dstop:"stop tracking what's going on in session"
+    dreport:"report what was going on in session"
+    dclear:'clear report of what was going on in session'
 )
 
 _arguments \
@@ -139,6 +143,18 @@ case $state in
                 list=( "-f" )
                 _wanted plugins expl "Options" \
                     compadd "$@" -a - list && ret=0
+                ;;
+            dstart)
+                _message "Hit enter to start tracking this session" && ret=0
+                ;;
+            dstop)
+                _message "Hit enter to stop tracking this session" && ret=0
+                ;;
+            dreport)
+                _message "Hit enter to show report of what was going on in session" && ret=0
+                ;;
+            dclear)
+                _message "Hit enter to clear report of what was going on in session" && ret=0
                 ;;
             *)
                 ret=1
