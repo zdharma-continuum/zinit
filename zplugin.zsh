@@ -170,6 +170,8 @@ typeset -gAH ZPLG_ZSTYLES
 
 # Holds concatenated bindkeys declared by each plugin
 typeset -gAH ZPLG_BINDKEYS
+# Holds counter used for main keymap saves
+typeset -giH ZPLG_BINDKEY_MAIN_IDX
 
 # Holds concatenated aliases declared by each plugin
 typeset -gAH ZPLG_ALIASES
@@ -356,7 +358,15 @@ ZPLG_ZLE_HOOKS_LIST=(
         # Remember for dtrace
         [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
     else
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
+        # bindkey -A newkeymap main?
+        if [[ "${#opts[@]}" -eq "1" && "${opts[(r)-A]}" = "-A" && "${pos[3]}" = "main" && "${pos[2]}" != "-A" ]]; then
+            # Save copy of main keymap
+            (( ZPLG_BINDKEY_MAIN_IDX ++ ))
+            builtin bindkey -N "zplg-main-$ZPLG_BINDKEY_MAIN_IDX" main
+            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: \`main' keymap substituted with \`${pos[2]}', saved a copy to \`zplg-main-$ZPLG_BINDKEY_MAIN_IDX'"
+        else
+            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
+        fi
     fi
 
     # Actual bindkey
