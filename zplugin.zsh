@@ -1416,6 +1416,46 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 }
 
+# Clears all report data for given user/plugin
+-zplg-clear-report-for() {
+    -zplg-any-to-uspl2 "$1" "$2"
+
+    # Shadowing
+    ZPLG_REPORTS[$REPLY]=""
+    ZPLG_BINDKEYS[$REPLY]=""
+    ZPLG_ZSTYLES[$REPLY]=""
+    ZPLG_ALIASES[$REPLY]=""
+    ZPLG_WIDGETS_SAVED[$REPLY]=""
+    ZPLG_WIDGETS_DELETE[$REPLY]=""
+
+    # Function diffing
+    ZPLG_FUNCTIONS[$REPLY]=""
+    ZPLG_FUNCTIONS_BEFORE[$REPLY]=""
+    ZPLG_FUNCTIONS_AFTER[$REPLY]=""
+    ZPLG_FUNCTIONS_DIFF_RAN[$REPLY]=""
+
+    # Option diffing
+    ZPLG_OPTIONS[$REPLY]=""
+    ZPLG_OPTIONS_BEFORE[$REPLY]=""
+    ZPLG_OPTIONS_AFTER[$REPLY]=""
+    ZPLG_OPTIONS_DIFF_RAN[$REPLY]="0"
+
+    # Environment diffing
+    ZPLG_PATH[$REPLY]=""
+    ZPLG_PATH_BEFORE[$REPLY]=""
+    ZPLG_PATH_AFTER[$REPLY]=""
+    ZPLG_FPATH[$REPLY]=""
+    ZPLG_FPATH_BEFORE[$REPLY]=""
+    ZPLG_FPATH_AFTER[$REPLY]=""
+    ZPLG_ENV_DIFF_RAN[$REPLY]="0"
+
+    # Parameter diffing
+    ZPLG_PARAMETERS_PRE[$REPLY]=""
+    ZPLG_PARAMETERS_POST[$REPLY]=""
+    ZPLG_PARAMETERS_BEFORE[$REPLY]=""
+    ZPLG_PARAMETERS_AFTER[$REPLY]=""
+    ZPLG_PARAMETERS_DIFF_RAN[$REPLY]="0"
+}
 # }}}
 
 #
@@ -2527,12 +2567,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 -zplg-clear-debug-report() {
-    ZPLG_REPORTS[$ZPLG_DEBUG_USPL2]=""
-    ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]=""
-    ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]=""
-    ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]=""
-    ZPLG_WIDGETS_SAVED[$ZPLG_DEBUG_USPL2]=""
-    ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]=""
+    -zplg-clear-report-for "$ZPLG_DEBUG_USPL2"
 }
 
 # Reverts changes recorded through dtrace
