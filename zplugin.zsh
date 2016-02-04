@@ -375,7 +375,11 @@ ZPLG_ZLE_HOOKS_LIST=(
         # Remember the zstyle
         ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
     else
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: ${opts[*]}"
+        if [[ ! "${#opts}" = "1" && ( "${opts[(r)-s]}" = "-s" || "${opts[(r)-b]}" = "-b" || "${opts[(r)-a]}" = "-a" ||
+                                      "${opts[(r)-t]}" = "-t" || "${opts[(r)-T]}" = "-T" || "${opts[(r)-m]}" = "-m" ) ]]
+        then
+            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: ${opts[*]}"
+        fi
     fi
 
     # Actual zstyle
