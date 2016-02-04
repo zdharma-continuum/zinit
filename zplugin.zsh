@@ -70,8 +70,14 @@ typeset -gAH ZPLG_ALREADY_WARNINGS_F
 # If "1", it will make debug reporting active,
 # e.g. shadowing will be permanently on
 typeset -gH ZPLG_DEBUG_ACTIVE="0"
-# Name of "plugin" to which debug reports should be assigned
-typeset -gH ZPLG_DEBUG_USER="_debug/_debug"
+# Name of "plugin" to which debug reports should be assigned - uspl2 format
+typeset -gH ZPLG_DEBUG_USPL2="_dtrace/_dtrace"
+# Name of "plugin" to which debug reports should be assigned - uspl1 format
+typeset -gH ZPLG_DEBUG_USPL="_dtrace---_dtrace"
+# User part of the debug plugin
+typeset -gH ZPLG_DEBUG_USER="_dtrace"
+# Plugin part of the debug plugin
+typeset -gH ZPLG_DEBUG_PLUGIN="_dtrace"
 # }}}
 
 #
@@ -343,6 +349,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
         [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+        # Remember for dtrace
+        [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
     else
         -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
     fi
@@ -379,6 +387,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         # Remember the zstyle, only when load is in progress (it can be dstart that leads execution here)
         [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
+        # Remember for dtrace
+        [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]+="$ps "
     else
         if [[ ! "${#opts}" = "1" && ( "${opts[(r)-s]}" = "-s" || "${opts[(r)-b]}" = "-b" || "${opts[(r)-a]}" = "-a" ||
                                       "${opts[(r)-t]}" = "-t" || "${opts[(r)-T]}" = "-T" || "${opts[(r)-m]}" = "-m" ) ]]
@@ -436,6 +446,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         # Remember the alias, only when load is in progress (it can be dstart that leads execution here)
         [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_ALIASES[$ZPLG_CUR_USPL2]+="$quoted "
+        # Remember for dtrace
+        [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]+="$quoted "
     done
 
     # Actual alias
@@ -478,6 +490,8 @@ ZPLG_ZLE_HOOKS_LIST=(
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
+                # Remember for dtrace
+                [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_WIDGETS_SAVED[$ZPLG_DEBUG_USPL2]+="$quoted "
              # These will be deleted
              else
                  -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
@@ -485,6 +499,8 @@ ZPLG_ZLE_HOOKS_LIST=(
                  quoted="${(q)quoted}"
                  # Remember only when load is in progress (it can be dstart that leads execution here)
                  [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                 # Remember for dtrace
+                 [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
              fi
     # Creation of new widgets. They will be removed on unload
     elif [[ "$1" = "-N" && "$#" = "2" ]]; then
@@ -492,6 +508,8 @@ ZPLG_ZLE_HOOKS_LIST=(
         quoted="${(q)quoted}"
         # Remember only when load is in progress (it can be dstart that leads execution here)
         [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+        # Remember for dtrace
+        [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
     fi
 
     # Actual zle
@@ -1062,7 +1080,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # This is nasty, if debug is on, report everything
     # to special debug user
-    [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_REPORTS[$ZPLG_DEBUG_USER]+="$keyword ${txt#* }"$'\n'
+    [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_REPORTS[$ZPLG_DEBUG_USPL2]+="$keyword ${txt#* }"$'\n'
 }
 
 # }}}
@@ -1813,7 +1831,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local plugin="$reply[2]"
 
     # Allow debug report
-    if [ "$user/$plugin" != $ZPLG_DEBUG_USER ]; then
+    if [ "$user/$plugin" != "$ZPLG_DEBUG_USPL2" ]; then
         -zplg-exists-message "$user" "$plugin" || return 1
     fi
 
@@ -2036,10 +2054,13 @@ ZPLG_ZLE_HOOKS_LIST=(
 # 7. Clean up FPATH and PATH
 # 8. Forget the plugin
 -zplg-unload() {
-    -zplg-exists-message "$1" "$2" || return 1
-
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="$reply[1]/$reply[2]" user="$reply[1]" plugin="$reply[2]"
+
+    # Allow unload for debug user
+    if [ "$uspl2" != "$ZPLG_DEBUG_USPL2" ]; then
+        -zplg-exists-message "$1" "$2" || return 1
+    fi
 
     -zplg-any-colorify-as-uspl2 "$1" "$2"
     local uspl2col="$REPLY"
@@ -2241,10 +2262,15 @@ ZPLG_ZLE_HOOKS_LIST=(
     # 8. Forget the plugin
     #
 
-    print "Unregistering plugin $uspl2col"
-    -zplg-unregister-plugin "$user" "$plugin"
+    if [ "$uspl2" = "$ZPLG_DEBUG_USPL2" ]; then
+        -zplg-clear-debug-report
+        print "dtrace report saved to \$LASTREPORT"
+    else
+        print "Unregistering plugin $uspl2col"
+        -zplg-unregister-plugin "$user" "$plugin"
+        print "Plugin's report saved to \$LASTREPORT"
+    fi
 
-    print "Plugin's report saved to \$LASTREPORT"
 }
 
 # Downloads and sources a single file
@@ -2413,10 +2439,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-debug-start() {
     ZPLG_DEBUG_ACTIVE="1"
 
-    -zplg-diff-functions "$ZPLG_DEBUG_USER" begin
-    -zplg-diff-options "$ZPLG_DEBUG_USER" begin
-    -zplg-diff-env "$ZPLG_DEBUG_USER" begin
-    -zplg-diff-parameter "$ZPLG_DEBUG_USER" begin
+    -zplg-diff-functions "$ZPLG_DEBUG_USPL2" begin
+    -zplg-diff-options "$ZPLG_DEBUG_USPL2" begin
+    -zplg-diff-env "$ZPLG_DEBUG_USPL2" begin
+    -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" begin
 
     # Full shadowing on
     -zplg-shadow-on ""
@@ -2430,19 +2456,29 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-shadow-off ""
 
     # Gather end data now, for diffing later
-    -zplg-diff-parameter "$ZPLG_DEBUG_USER" end
-    -zplg-diff-env "$ZPLG_DEBUG_USER" end
-    -zplg-diff-options "$ZPLG_DEBUG_USER" end
-    -zplg-diff-functions "$ZPLG_DEBUG_USER" end
+    -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" end
+    -zplg-diff-env "$ZPLG_DEBUG_USPL2" end
+    -zplg-diff-options "$ZPLG_DEBUG_USPL2" end
+    -zplg-diff-functions "$ZPLG_DEBUG_USPL2" end
 }
 
 -zplg-show-debug-report() {
     # Display report of given plugin
-    -zplg-show-report "$ZPLG_DEBUG_USER"
+    -zplg-show-report "$ZPLG_DEBUG_USPL2"
 }
 
 -zplg-clear-debug-report() {
-    ZPLG_REPORTS[$ZPLG_DEBUG_USER]=""
+    ZPLG_REPORTS[$ZPLG_DEBUG_USPL2]=""
+    ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]=""
+    ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]=""
+    ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]=""
+    ZPLG_WIDGETS_SAVED[$ZPLG_DEBUG_USPL2]=""
+    ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]=""
+}
+
+# Reverts changes recorded through dtrace
+-zplg-debug-unload() {
+    -zplg-unload "$ZPLG_DEBUG_USER" "$ZPLG_DEBUG_PLUGIN"
 }
 
 # }}}
@@ -2615,6 +2651,9 @@ zplugin() {
            ;;
        (dclear)
            -zplg-clear-debug-report
+           ;;
+       (dunload)
+           -zplg-debug-unload
            ;;
        (-h|--help|help|)
            print "$ZPLG_COL[p]Usage$reset_color:
