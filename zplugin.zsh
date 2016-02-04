@@ -178,6 +178,11 @@ ZPLG_COL=(
     "uninst" "${fg_bold[blue]}"
 )
 
+# Load list of widgets
+if [ "${(t)ZPLG_WIDGET_LIST}" != "association" ]; then
+    source "$ZPLG_DIR/widget-list.zsh"
+fi
+
 # }}}
 
 #
@@ -425,7 +430,9 @@ ZPLG_COL=(
                 ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
                 ;;
             # These will be saved and restored
-            self-insert|backward-delete-char|delete-char|accept-and-hold|accept-line|backward-char|backward-kill-word|backward-word)
+            *)
+                if [ "$ZPLG_WIDGET_LIST[$2]" = "1" ]; then
+
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
                 local widname="$2" saved_widname="zplugin-saved-$2"
@@ -436,9 +443,10 @@ ZPLG_COL=(
                 quoted="$widname $saved_widname"
                 quoted="${(q)quoted}"
                 ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
-                ;;
-            *)
+
+                else
                 -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported widget replaced/taken via zle -N: \`$2'"
+                fi
                 ;;
         esac
     # Creation of new widgets. They will be removed on unload
