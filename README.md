@@ -17,6 +17,10 @@ clean!
 
 ![zplugin](http://imageshack.com/a/img907/2167/CATuag.gif)
 
+**Dtrace:**
+
+![dtrace](http://imageshack.com/a/img921/5314/xfqiXY.gif)
+
 ## Introduction
 
 ![zplugin-refcard](http://imageshack.com/a/img924/7014/KKkzny.png)
