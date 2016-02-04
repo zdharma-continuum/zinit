@@ -986,7 +986,18 @@ ZPLG_ZLE_HOOKS_LIST=(
     elem_pre=( "${(z)ZPLG_PARAMETERS_PRE[$uspl2]}" )
     elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
 
-    # Enumerate parameters that changed
+    # Find longest key and longest value
+    integer longest=0 vlongest=0
+    for k in "${(k)elem_post[@]}"; do
+        k="${(Q)k}"
+        [ "$#k" -gt "$longest" ] && longest="$#k"
+
+        v1="${(Q)elem_pre[$k]}"
+        v2="${(Q)elem_post[$k]}"
+        [ "$#v1" -gt "$vlongest" ] && vlongest="$#v1"
+        [ "$#v2" -gt "$vlongest" ] && vlongest="$#v2"
+    done
+
     # Enumerate parameters that changed. A key
     # always exists in both of the arrays
     local answer="" k v1 v2
@@ -995,6 +1006,9 @@ ZPLG_ZLE_HOOKS_LIST=(
         v2="${(Q)elem_post[$k]}"
         k="${(Q)k}"
 
+        k="${(r:longest+1:: :)k}"
+        v1="${(l:vlongest+1:: :)v1}"
+        v2="${(r:vlongest+1:: :)v2}"
         answer+="$k ${infoc}[$v1 -> $v2]$reset_color"$'\n'
     done
 
