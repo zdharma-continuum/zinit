@@ -336,8 +336,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         quoted="${(q)quoted}"
 
-        # Remember the zstyle
         ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+        # Remember the bindkey
     else
         -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
     fi
