@@ -443,7 +443,10 @@ fi
                     quoted="${(q)quoted}"
                     ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
                 else
-                    -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unsupported widget replaced/taken via zle -N: \`$2'"
+                    -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
+                    local quoted="$2"
+                    quoted="${(q)quoted}"
+                    ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
                 fi
                 ;;
         esac
@@ -1983,7 +1986,7 @@ fi
     for wid in "${(on)delete_widgets[@]}"; do
         [ -z "$wid" ] && continue
         wid="${(Q)wid}"
-        print "Removing Zle widget or hook $wid"
+        print "Removing Zle widget (which may be a hook) $wid"
         zle -D "$wid"
     done
 
