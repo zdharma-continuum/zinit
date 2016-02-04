@@ -8,6 +8,9 @@
 typeset -gaH ZPLG_REGISTERED_PLUGINS
 # Maps plugins to 0, 1 or 2 - not loaded, light loaded, fully loaded
 typeset -gAH ZPLG_REGISTERED_STATES
+# Snippets loaded, url -> file name
+typeset -gAH ZPLG_SNIPPETS
+# Reports, per plugin
 typeset -gAH ZPLG_REPORTS
 
 #
@@ -2054,6 +2057,8 @@ ZPLG_COL=(
         command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
     fi
 
+    ZPLG_SNIPPETS[$url]="$filename"
+
     # Change the url to point to raw github content if it isn't like that
     if [[ "$url" = *github.com* && ! "$url" = */raw/* ]]; then
         url="${url/\/blob\///raw/}"
@@ -2170,6 +2175,9 @@ ZPLG_COL=(
     # Number of completions existing in all plugins
     completions=( "$ZPLG_PLUGINS_DIR"/*/_*(N) )
     print "${infoc}Completions available overall:$reset_color" ${#completions}
+
+    # Enumerate snippets loaded
+    print "${infoc}Snippets loaded:$reset_color ${(j:, :onv)ZPLG_SNIPPETS}"
 }
 
 # }}}
