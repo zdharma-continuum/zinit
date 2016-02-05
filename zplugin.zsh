@@ -2432,15 +2432,24 @@ ZPLG_ZLE_HOOKS_LIST=(
         url="${url}?raw=1"
     fi
 
-    # Download the file
+    # Download or copy the file
     if [[ ! -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" || "$force" = "-f" ]]
     then
+        if [[ "$url" = ( |$'\t')#http(|s):* ]]
+        then
+            # URL
         (
             cd "$ZPLG_SNIPPETS_DIR/$local_dir"
             command rm -f "$filename"
             echo "Downloading $filename..."
             -zplg-download-file-stdout "$url" > "$filename"
         )
+        else
+            # File
+            command rm -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+            echo "Copying $filename..."
+            command cp -v "$url" "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+        fi
     fi
 
     # Source the file
