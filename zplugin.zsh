@@ -1765,13 +1765,18 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Look for a file to source
     typeset -a matches
-    matches=(
-        $dname/$pdir/init.zsh(N) $dname/${pdir}.plugin.zsh(N)
-        $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
-        $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
-        $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
-        $dname/*.zsh-theme(N)
-    )
+    matches=( $dname/${pdir}.plugin.zsh(N) )
+
+    if [ "$#matches" -eq "0" ]; then
+        matches=(
+            $dname/$pdir/init.zsh(N)
+            $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
+            $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
+            $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
+            $dname/*.zsh-theme(N)
+        )
+    fi
+
     [ "$#matches" -eq "0" ] && return 1
     local fname="${matches[1]#$dname/}"
 
