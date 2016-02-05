@@ -49,6 +49,13 @@ ___ZPLG_TESTING_HOME="$___TEST_DIR/tzplugin"
     print -- "${(r:left_len-3::-:):--} END ${(r:right_len-2::-:):--}"
 }
 
+---mark() {
+    integer len="${#___STARTING_MSG}"
+    integer left_len=len/2
+    integer right_len=len-left_len
+    print -- "${(r:left_len-3::-:):--} MARK ${(r:right_len-3::-:):--}"
+}
+
 ---s-or-f() {
     [ "$1" -eq "0" ] && print -- "$___SUCCEEDED_MSG" || print -- "$___FAILED_MSG"
 }
