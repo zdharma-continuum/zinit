@@ -254,9 +254,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-autoload () {
-    # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin autoload "$@"; return $?; }
-
     local -a opts
     local func
 
@@ -301,9 +298,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-bindkey() {
-    # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin bindkey "$@"; return $?; }
-
     -zplg-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
 
     # Remember to perform the actual bindkey call
@@ -417,9 +411,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-zstyle() {
-    # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zstyle "$@"; return $?; }
-
     -zplg-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
 
     # Remember to perform the actual zstyle call
@@ -465,9 +456,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-alias() {
-    # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin alias "$@"; return $?; }
-
     -zplg-add-report "$ZPLG_CUR_USPL2" "Alias $*"
 
     # Remember to perform the actual alias call
@@ -524,9 +512,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-zle() {
-    # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { builtin zle "$@"; return $?; }
-
     -zplg-add-report "$ZPLG_CUR_USPL2" "Zle $*"
 
     # Remember to perform the actual zle call
@@ -592,9 +577,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-compdef() {
-    # Shadowing guard
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { \compdef "$@"; return $?; }
-
     # Check if that function exists
     if (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )); then
         -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \'compdef' exists"\
