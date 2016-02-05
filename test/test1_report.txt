@@ -33,5 +33,4 @@ Variables added or redefined:
 REPO_DIR    [ "" -> scalar ]
 CONFIG_DIR  [ "" -> scalar ]
 MY_VAR2     [ "" -> scalar ]
-quoted      [ "" -> scalar ]
 

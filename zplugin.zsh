@@ -368,7 +368,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
             # Remember occurence of main keymap substitution, to revert on unload
             local keys="_" widget="_" optA="-A" mapname="${name}" optR="_"
-            quoted="${(q)keys} ${(q)widget} ${(q)optA} ${(q)mapname} ${(q)optR}"
+            local quoted="${(q)keys} ${(q)widget} ${(q)optA} ${(q)mapname} ${(q)optR}"
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
@@ -383,7 +383,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             local Narg="${optsA[-N]}"
 
             local keys="_" widget="_" optN="-N" mapname="${Narg}" optR="_"
-            quoted="${(q)keys} ${(q)widget} ${(q)optN} ${(q)mapname} ${(q)optR}"
+            local quoted="${(q)keys} ${(q)widget} ${(q)optN} ${(q)mapname} ${(q)optR}"
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)

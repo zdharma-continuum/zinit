@@ -18,5 +18,4 @@ Removing FPATH element /usr/share/zsh
 Unsetting variable REPO_DIR
 Unsetting variable CONFIG_DIR
 Unsetting variable MY_VAR2
-Unsetting variable quoted
 dtrace report saved to $LASTREPORT
