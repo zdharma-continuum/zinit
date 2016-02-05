@@ -1,0 +1,16 @@
+Deleting function my_f
+Unsetting option menucomplete
+Removing suffix alias jpg=iv
+Removing alias test3alias1=echo Hello
+Removing global alias test3alias2=echo Hello
+Removing PATH element /component/nr2
+Removing PATH element /component/nr1
+Removing PATH element /component/nr2
+Removing FPATH element /fcomp/nr2
+Removing FPATH element /fcomp/nr1
+Unsetting variable MY_VAR
+Unsetting variable my_hash2
+Unsetting variable MY_VAR2
+Unsetting variable MY_VAR3
+Unsetting variable my_array
+dtrace report saved to $LASTREPORT
