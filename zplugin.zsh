@@ -535,7 +535,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
                 widname="${(q)widname}"
                 saved_widname="${(q)saved_widname}"
-                quoted="$widname $saved_widname"
+                local quoted="$widname $saved_widname"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
