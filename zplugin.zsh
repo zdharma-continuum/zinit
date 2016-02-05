@@ -289,10 +289,13 @@ ZPLG_ZLE_HOOKS_LIST=(
     local PLUGIN_DIR="$ZPLG_PLUGINS_DIR/${ZPLG_CUR_USPL}"
     for func
     do
-        eval "function $func {
-            --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
-        }'
-        #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
+        # Real autoload doesn't touch function if it already exists
+        if (( ${+functions[$func]} != 1 )); then
+            eval "function $func {
+                --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
+            }'
+            #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
+        fi
     done
 
     # Testable
@@ -597,8 +600,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     ZPLG_SHADOWING_ACTIVE=1
 
-    ZPLG_BACKUP_ALIASES[autoload]="${aliases[autoload]}"
-    builtin alias autoload=--zplg-shadow-autoload
+    ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
+    function autoload {
+        --zplg-shadow-autoload "$@"
+    }
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
@@ -640,8 +645,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     -zplg-trim-backup-vars
 
-    # Unalias "autoload"
-    [ -n "${ZPLG_BACKUP_ALIASES[autoload]}" ] && aliases[autoload]="${ZPLG_BACKUP_ALIASES[autoload]}" || unalias "autoload"
+    # Unfunction "autoload"
+    [ -n "${ZPLG_BACKUP_FUNCTIONS[autoload]}" ] && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
@@ -1397,11 +1402,11 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-trim-backup-vars() {
     setopt localoptions extendedglob
 
+    [[ "${ZPLG_BACKUP_FUNCTIONS[autoload]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[autoload]=""
     [[ "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[bindkey]=""
     [[ "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zstyle]=""
     [[ "${ZPLG_BACKUP_FUNCTIONS[alias]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[alias]=""
     [[ "${ZPLG_BACKUP_FUNCTIONS[zle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zle]=""
-    [[ "${ZPLG_BACKUP_ALIASES[autoload]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[autoload]=""
     [[ "${ZPLG_BACKUP_ALIASES[compdef]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[compdef]=""
 }
 
@@ -1794,7 +1799,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Warn about user having his own shadows in place. Check
     # every possible shadow regardless of "$light" setting
-    -zplg-already-alias-warning-uspl2 $(( ${+aliases[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
     -zplg-already-alias-warning-uspl2 $(( ${+aliases[compdef]} )) "$ZPLG_CUR_USPL2" "compdef"
     -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "$ZPLG_CUR_USPL2" "bindkey"
     -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
