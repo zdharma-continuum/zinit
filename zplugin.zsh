@@ -1189,7 +1189,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Supports all four formats
 -zplg-any-to-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
-    REPLY="${reply[1]}/${reply[2]}"
+    REPLY="${reply[-2]}/${reply[-1]}"
 }
 
 # Checks for a plugin existence, all four formats
@@ -1216,7 +1216,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # of the plugin specification supported
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
-    [ -d "$ZPLG_PLUGINS_DIR/${reply[1]}---${reply[2]}" ] && return 0 || return 1
+    [ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ] && return 0 || return 1
 }
 
 # Checks for a plugin existence and outputs a message
@@ -1233,7 +1233,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # and return colored text
 -zplg-any-colorify-as-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[1]}" plugin="${reply[2]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
     local ucol="${ZPLG_COL[uname]}" pcol="${ZPLG_COL[pname]}"
     REPLY="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
 }
@@ -1333,7 +1333,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Returns them in reply array
 -zplg-find-completions-of-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[1]}" plugin="${reply[2]}" uspl="${1}---${2}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
     reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_*(N) )
 }
@@ -1557,8 +1557,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     local reinstall="${3:-0}"
 
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[1]}"
-    local plugin="${reply[2]}"
+    local user="${reply[-2]}"
+    local plugin="${reply[-1]}"
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
@@ -1599,8 +1599,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 # $2 - plugin (if $1 - user - given)
 -zplg-uninstall-completions() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[1]}"
-    local plugin="${reply[2]}"
+    local user="${reply[-2]}"
+    local plugin="${reply[-1]}"
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
@@ -1695,7 +1695,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-register-plugin() {
     local light="$3"
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[1]}" plugin="${reply[2]}" uspl2="${reply[1]}/${reply[2]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}/${reply[-1]}"
     integer ret=0
 
     if ! -zplg-exists "$user" "$plugin"; then
@@ -1727,7 +1727,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[1]}/${reply[2]}"
+    local uspl2="${reply[-2]}/${reply[-1]}"
 
     # If not found, idx will be length+1
     local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
@@ -1908,8 +1908,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 -zplg-show-report() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[1]}"
-    local plugin="${reply[2]}"
+    local user="${reply[-2]}"
+    local plugin="${reply[-1]}"
 
     # Allow debug report
     if [ "$user/$plugin" != "$ZPLG_DEBUG_USPL2" ]; then
@@ -2112,7 +2112,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # $1 - plugin name, possibly github path
 -zplg-load () {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[1]}" plugin="${reply[2]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
     local light="$3"
 
     -zplg-register-plugin "$user" "$plugin" "$light"
@@ -2137,7 +2137,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # 9. Forget the plugin
 -zplg-unload() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[1]}/${reply[2]}" user="${reply[1]}" plugin="${reply[2]}"
+    local uspl2="${reply[-2]}/${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}"
 
     # Allow unload for debug user
     if [ "$uspl2" != "$ZPLG_DEBUG_USPL2" ]; then
@@ -2453,7 +2453,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-update-or-status() {
     local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
-    local user="${reply[1]}" plugin="${reply[2]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
