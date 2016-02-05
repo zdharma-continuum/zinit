@@ -1816,7 +1816,6 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
     -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "$ZPLG_CUR_USPL2" "alias"
     -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "$ZPLG_CUR_USPL2" "zle"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[compdef]} )) "$ZPLG_CUR_USPL2" "compdef"
 
     -zplg-shadow-on "$light"
 
