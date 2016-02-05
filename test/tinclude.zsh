@@ -24,8 +24,8 @@ fi
 
 export TERM=vt100
 
-___REPORT_FILE="$___TEST_DIR/${___TEST_NAME}_report.txt"
-___UNLOAD_FILE="$___TEST_DIR/${___TEST_NAME}_unload.txt"
+___REPORT_FILE="$___TEST_DIR/models/${___TEST_NAME}_report.txt"
+___UNLOAD_FILE="$___TEST_DIR/models/${___TEST_NAME}_unload.txt"
 ___TEST_REPORT_FILE="$___TEST_DIR/.report.txt"
 ___TEST_UNLOAD_FILE="$___TEST_DIR/.unload.txt"
 ___DIFF_FILE="$___TEST_DIR/.diff"
