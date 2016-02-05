@@ -68,8 +68,6 @@ typeset -gH ZPLG_CUR_USPL2=""
 # If any plugin retains the shadowed function instead of
 # original one then this will protect from further reporting
 typeset -gH ZPLG_SHADOWING_ACTIVE
-# To show "alias already defined, in zsh" warning once per alias
-typeset -gAH ZPLG_ALREADY_WARNINGS_A
 # To show "function already defined, in zsh" warning once per function
 typeset -gAH ZPLG_ALREADY_WARNINGS_F
 # If "1", it will make debug reporting active,
@@ -405,18 +403,14 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # A. Shadow off. Unfunction bindkey
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    () {
-        setopt localoptions extendedglob
-        [[ "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[bindkey]=""
-    }
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" ] && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
+    (( ${+ZPLG_BACKUP_FUNCTIONS[bindkey]} )) && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
 
     # Actual bindkey
     bindkey "${pos[@]}"
     integer ret=$?
 
     # A. Shadow on
-    ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
+    (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
     function bindkey { --zplg-shadow-bindkey "$@"; }
 
     return $ret # testable
@@ -457,18 +451,14 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # B. Shadow off. Unfunction zstyle
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    () {
-        setopt localoptions extendedglob
-        [[ "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zstyle]=""
-    }
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" ] && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
+    (( ${+ZPLG_BACKUP_FUNCTIONS[zstyle]} )) && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
 
     # Actual zstyle
     zstyle "${pos[@]}"
     integer ret=$?
 
     # B. Shadow on
-    ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
+    (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
     function zstyle { --zplg-shadow-zstyle "$@"; }
 
     return $ret # testable
@@ -520,18 +510,14 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # C. Shadow off. Unfunction alias
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    () {
-        setopt localoptions extendedglob
-        [[ "${ZPLG_BACKUP_FUNCTIONS[alias]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[alias]=""
-    }
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[alias]}" ] && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
+    (( ${+ZPLG_BACKUP_FUNCTIONS[alias]} )) && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
 
     # Actual alias
     alias "${pos[@]}"
     integer ret=$?
 
     # C. Shadow on
-    ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
+    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
     function alias { --zplg-shadow-alias "$@"; }
 
     return $ret # testable
@@ -592,18 +578,14 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # D. Shadow off. Unfunction zle
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    () {
-        setopt localoptions extendedglob
-        [[ "${ZPLG_BACKUP_FUNCTIONS[zle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zle]=""
-    }
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[zle]}" ] && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
+    (( ${+ZPLG_BACKUP_FUNCTIONS[zle]} )) && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
 
     # Actual zle
     zle "${pos[@]}"
     integer ret=$?
 
     # D. Shadow on
-    ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
+    (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
     function zle { --zplg-shadow-zle "$@"; }
 
     return $ret # testable
@@ -614,29 +596,25 @@ ZPLG_ZLE_HOOKS_LIST=(
     [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] || { \compdef "$@"; return $?; }
 
     # Check if that function exists
-    if (( ${+functions[compdef]} == 0 )); then
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
-    else
+    if (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )); then
         -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \'compdef' exists"\
                                                 "(you might be running compinit twice; this is probably required"\
                                                 "for this plugin's completion to work)"
+    else
+        -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
     fi
 
-    # E. Shadow off. Unalias "compdef"
+    # E. Shadow off. Unfunction "compdef"
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    () {
-        setopt localoptions extendedglob
-        [[ "${ZPLG_BACKUP_ALIASES[compdef]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[compdef]=""
-    }
-    [ -n "${ZPLG_BACKUP_ALIASES[compdef]}" ] && aliases[compdef]="${ZPLG_BACKUP_ALIASES[compdef]}" || unalias "compdef"
+    (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
 
     # Actual compdef
-    compdef 2>/dev/null "$@"
+    compdef "$@"
     integer ret=$?
 
     # E. Shadow on
-    ZPLG_BACKUP_ALIASES[compdef]="${aliases[compdef]}"
-    builtin alias compdef=--zplg-shadow-compdef
+    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
+    function compdef { --zplg-shadow-compdef "$@"; }
 
     return $ret # testable
 }
@@ -650,32 +628,43 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     ZPLG_SHADOWING_ACTIVE=1
 
-    # 0.
-    ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
+    # The point about backuping is: does the key exist in functions array
+    # If it does exist, then it will also exist in ZPLG_BACKUP_FUNCTIONS
+
+    # Defensive code, shouldn't be needed
+    unset "ZPLG_BACKUP_FUNCTIONS[autoload]" # 0.
+    unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
+    unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"   # B.
+    unset "ZPLG_BACKUP_FUNCTIONS[alias]"    # C.
+    unset "ZPLG_BACKUP_FUNCTIONS[zle]"      # D.
+    unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
+
+    # 0. Used, but not in temporary restoration, which doesn't happen for autoload
+    (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
     function autoload { --zplg-shadow-autoload "$@"; }
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
     # A.
-    ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
+    (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
     function bindkey { --zplg-shadow-bindkey "$@"; }
 
     # B.
-    ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
+    (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
     function zstyle { --zplg-shadow-zstyle "$@"; }
 
     # C.
-    ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
+    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
     function alias { --zplg-shadow-alias "$@"; }
 
     # D.
-    ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
+    (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
     function zle { --zplg-shadow-zle "$@"; }
 
     # E.
-    ZPLG_BACKUP_ALIASES[compdef]="${aliases[compdef]}"
-    builtin alias compdef=--zplg-shadow-compdef
+    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
+    function compdef { --zplg-shadow-compdef "$@"; }
 
     return 0
 }
@@ -689,26 +678,24 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     ZPLG_SHADOWING_ACTIVE=0
 
-    -zplg-trim-backup-vars
-
     # 0. Unfunction "autoload"
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[autoload]}" ] && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
+    (( ${+ZPLG_BACKUP_FUNCTIONS[autoload]} )) && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
     # Unfunction shadowing functions
-    # A.
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" ] && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
-    # B.
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" ] && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
-    # C.
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[alias]}" ] && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
-    # D.
-    [ -n "${ZPLG_BACKUP_FUNCTIONS[zle]}" ] && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
 
-    # E. Unalias "compdef"
-    [ -n "${ZPLG_BACKUP_ALIASES[compdef]}" ] && aliases[compdef]="${ZPLG_BACKUP_ALIASES[compdef]}" || unalias "compdef"
+    # A.
+    (( ${+ZPLG_BACKUP_FUNCTIONS[bindkey]} )) && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
+    # B.
+    (( ${+ZPLG_BACKUP_FUNCTIONS[zstyle]} )) && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
+    # C.
+    (( ${+ZPLG_BACKUP_FUNCTIONS[alias]} )) && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
+    # D.
+    (( ${+ZPLG_BACKUP_FUNCTIONS[zle]} )) && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
+    # E.
+    (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
 
     return 0
 }
@@ -1461,14 +1448,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 -zplg-reset-already-warnings() {
-    ZPLG_ALREADY_WARNINGS_A=( )
     ZPLG_ALREADY_WARNINGS_F=( )
-}
-
--zplg-already-alias-warning-uspl2() {
-    [ "${ZPLG_ALREADY_WARNINGS_A[$3]}" = "1" ] && return
-    ZPLG_ALREADY_WARNINGS_A[$3]="1"
-    (( $1 )) && -zplg-add-report "$2" "Warning: there already was \`$3' alias defined, possibly in zshrc"
 }
 
 -zplg-already-function-warning-uspl2() {
@@ -1850,11 +1830,11 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Warn about user having his own shadows in place. Check
     # every possible shadow regardless of "$light" setting
     -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
-    -zplg-already-alias-warning-uspl2 $(( ${+aliases[compdef]} )) "$ZPLG_CUR_USPL2" "compdef"
     -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "$ZPLG_CUR_USPL2" "bindkey"
     -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
     -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "$ZPLG_CUR_USPL2" "alias"
     -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "$ZPLG_CUR_USPL2" "zle"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[compdef]} )) "$ZPLG_CUR_USPL2" "compdef"
 
     -zplg-shadow-on "$light"
 
