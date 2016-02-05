@@ -1,0 +1,22 @@
+Deleting function my_f
+Deleting bindkey ^J self-insert
+Deleting bindkey ^[t echo test1 mapped to testmap
+Deleting bindkey ^[y echo test2
+Deleting bindkey ^_ undo
+Linking backup-`main' keymap `_dtrace-main-1' back to `main'
+Deleting keymap `testmap'
+Deleting keymap `testpluginmain'
+Unsetting option chaselinks
+Unsetting option listpacked
+Setting option listtypes
+Unsetting option menucomplete
+Removing global alias LLL=|less
+Removing alias aa=bb
+Removing alias aaa2=bbb
+Removing suffix alias gif=iv
+Removing FPATH element /usr/share/zsh
+Unsetting variable REPO_DIR
+Unsetting variable CONFIG_DIR
+Unsetting variable MY_VAR2
+Unsetting variable quoted
+dtrace report saved to $LASTREPORT
