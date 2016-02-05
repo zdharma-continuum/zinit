@@ -468,7 +468,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         (( ${+aliases[$aname]} )) && -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: redefining alias \`${aname}', previous value: ${avalue}"
 
         aname="${(q)aname}"
-        bname="${(q)avalue}"
+        local bname="${(q)avalue}"
 
         if [ "${opts[(r)-s]}" = "-s" ]; then
             tmp="-s"
