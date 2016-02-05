@@ -1487,6 +1487,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Restores options
 -zplg-restore-enter-state() {
+    local i
     for i in "${ZPLG_ENTER_OPTIONS[@]}"; do
         builtin setopt "$i"
     done
