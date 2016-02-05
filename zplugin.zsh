@@ -32,6 +32,11 @@ else
     typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
 fi
 
+# Optional ZPLG_HOME override, for use by tests
+if [ -n "$ZPLG_TESTING_HOME" ]; then
+    ZPLG_HOME="$ZPLG_TESTING_HOME"
+fi
+
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
 typeset -gH ZPLG_SNIPPETS_DIR="$ZPLG_HOME/snippets"

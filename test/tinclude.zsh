@@ -32,7 +32,7 @@ ___DIFF_FILE="$___TEST_DIR/.diff"
 ___SUCCEEDED_MSG="--- Succeeded ---"
 ___FAILED_MSG="--- Failed [ < model, > result ] ---"
 ___STARTING_MSG="----- Starting $___TEST_NAME -----"
-
+___ZPLG_TESTING_HOME="$___TEST_DIR/tzplugin"
 
 #
 # Functions
@@ -73,7 +73,8 @@ ___STARTING_MSG="----- Starting $___TEST_NAME -----"
 #
 # Load zplugin (testability maintained)
 #
- 
+
+ZPLG_TESTING_HOME="$___ZPLG_TESTING_HOME"
 cd "$___TEST_DIR"
 cd ..
 source "./zplugin.zsh"
