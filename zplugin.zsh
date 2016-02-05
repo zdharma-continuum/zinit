@@ -403,12 +403,22 @@ ZPLG_ZLE_HOOKS_LIST=(
         fi
     fi
 
+    # A. Shadow off. Unfunction bindkey
+    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
+    () {
+        setopt localoptions extendedglob
+        [[ "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[bindkey]=""
+    }
+    [ -n "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" ] && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
+
     # Actual bindkey
-    # "load" means full shadowing, non-"light" load
-    -zplg-shadow-off "load"
     bindkey "${pos[@]}"
     integer ret=$?
-    -zplg-shadow-on "load"
+
+    # A. Shadow on
+    ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
+    function bindkey { --zplg-shadow-bindkey "$@"; }
+
     return $ret # testable
 }
 
@@ -445,12 +455,22 @@ ZPLG_ZLE_HOOKS_LIST=(
         fi
     fi
 
+    # B. Shadow off. Unfunction zstyle
+    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
+    () {
+        setopt localoptions extendedglob
+        [[ "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zstyle]=""
+    }
+    [ -n "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" ] && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
+
     # Actual zstyle
-    # "load" means full shadowing, non-"light" load
-    -zplg-shadow-off "load"
     zstyle "${pos[@]}"
     integer ret=$?
-    -zplg-shadow-on "load"
+
+    # B. Shadow on
+    ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
+    function zstyle { --zplg-shadow-zstyle "$@"; }
+
     return $ret # testable
 }
 
@@ -498,12 +518,22 @@ ZPLG_ZLE_HOOKS_LIST=(
         [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]+="$quoted "
     done
 
+    # C. Shadow off. Unfunction alias
+    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
+    () {
+        setopt localoptions extendedglob
+        [[ "${ZPLG_BACKUP_FUNCTIONS[alias]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[alias]=""
+    }
+    [ -n "${ZPLG_BACKUP_FUNCTIONS[alias]}" ] && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
+
     # Actual alias
-    # "load" means full shadowing, non-"light" load
-    -zplg-shadow-off "load"
     alias "${pos[@]}"
     integer ret=$?
-    -zplg-shadow-on "load"
+
+    # C. Shadow on
+    ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
+    function alias { --zplg-shadow-alias "$@"; }
+
     return $ret # testable
 }
 
@@ -560,12 +590,22 @@ ZPLG_ZLE_HOOKS_LIST=(
         [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
     fi
 
+    # D. Shadow off. Unfunction zle
+    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
+    () {
+        setopt localoptions extendedglob
+        [[ "${ZPLG_BACKUP_FUNCTIONS[zle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zle]=""
+    }
+    [ -n "${ZPLG_BACKUP_FUNCTIONS[zle]}" ] && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
+
     # Actual zle
-    # "load" means full shadowing, non-"light" load
-    -zplg-shadow-off "load"
     zle "${pos[@]}"
     integer ret=$?
-    -zplg-shadow-on "load"
+
+    # D. Shadow on
+    ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
+    function zle { --zplg-shadow-zle "$@"; }
+
     return $ret # testable
 }
 
@@ -582,16 +622,26 @@ ZPLG_ZLE_HOOKS_LIST=(
                                                 "for this plugin's completion to work)"
     fi
 
+    # E. Shadow off. Unalias "compdef"
+    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
+    () {
+        setopt localoptions extendedglob
+        [[ "${ZPLG_BACKUP_ALIASES[compdef]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[compdef]=""
+    }
+    [ -n "${ZPLG_BACKUP_ALIASES[compdef]}" ] && aliases[compdef]="${ZPLG_BACKUP_ALIASES[compdef]}" || unalias "compdef"
+
     # Actual compdef
-    # "load" means full shadowing, non-"light" load
-    -zplg-shadow-off "load"
     compdef 2>/dev/null "$@"
     integer ret=$?
-    -zplg-shadow-on "load"
+
+    # E. Shadow on
+    ZPLG_BACKUP_ALIASES[compdef]="${aliases[compdef]}"
+    builtin alias compdef=--zplg-shadow-compdef
+
     return $ret # testable
 }
 
-# Shadowing on
+# Shadowing on completely for a given mode ("light" or "load")
 -zplg-shadow-on() {
     local light="$1"
 
@@ -600,41 +650,37 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     ZPLG_SHADOWING_ACTIVE=1
 
+    # 0.
     ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
-    function autoload {
-        --zplg-shadow-autoload "$@"
-    }
+    function autoload { --zplg-shadow-autoload "$@"; }
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
+    # A.
     ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
-    function bindkey {
-        --zplg-shadow-bindkey "$@"
-    }
+    function bindkey { --zplg-shadow-bindkey "$@"; }
 
+    # B.
     ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
-    function zstyle {
-        --zplg-shadow-zstyle "$@"
-    }
+    function zstyle { --zplg-shadow-zstyle "$@"; }
 
+    # C.
+    ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
+    function alias { --zplg-shadow-alias "$@"; }
+
+    # D.
+    ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
+    function zle { --zplg-shadow-zle "$@"; }
+
+    # E.
     ZPLG_BACKUP_ALIASES[compdef]="${aliases[compdef]}"
     builtin alias compdef=--zplg-shadow-compdef
-
-    ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
-    function alias {
-        --zplg-shadow-alias "$@"
-    }
-
-    ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
-    function zle {
-        --zplg-shadow-zle "$@"
-    }
 
     return 0
 }
 
-# Shadowing off
+# Shadowing off completely for a given mode "light" or not
 -zplg-shadow-off() {
     local light="$1"
 
@@ -645,19 +691,23 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     -zplg-trim-backup-vars
 
-    # Unfunction "autoload"
+    # 0. Unfunction "autoload"
     [ -n "${ZPLG_BACKUP_FUNCTIONS[autoload]}" ] && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
 
     # Unfunction shadowing functions
+    # A.
     [ -n "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" ] && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
+    # B.
     [ -n "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" ] && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
+    # C.
     [ -n "${ZPLG_BACKUP_FUNCTIONS[alias]}" ] && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
+    # D.
     [ -n "${ZPLG_BACKUP_FUNCTIONS[zle]}" ] && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
 
-    # Unalias "compdef"
+    # E. Unalias "compdef"
     [ -n "${ZPLG_BACKUP_ALIASES[compdef]}" ] && aliases[compdef]="${ZPLG_BACKUP_ALIASES[compdef]}" || unalias "compdef"
 
     return 0
