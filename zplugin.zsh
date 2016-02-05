@@ -781,12 +781,16 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     case "$cmd" in
         begin)
+            local bIFS="$IFS"; IFS=" "
             ZPLG_OPTIONS_BEFORE[$uspl2]="${(kv)options}"
+            IFS="$bIFS"
             ZPLG_OPTIONS[$uspl2]=""
             ZPLG_OPTIONS_DIFF_RAN[$uspl2]="0"
             ;;
         end)
+            local bIFS="$IFS"; IFS=" "
             ZPLG_OPTIONS_AFTER[$uspl2]="${(kv)options}"
+            IFS="$bIFS"
             ZPLG_OPTIONS[$uspl2]=""
             ZPLG_OPTIONS_DIFF_RAN[$uspl2]="0"
             ;;
@@ -815,7 +819,9 @@ ZPLG_ZLE_HOOKS_LIST=(
             done
 
             # Serialize for reporting
+            local bIFS="$IFS"; IFS=" "
             ZPLG_OPTIONS[$uspl2]="${(kv)opts}"
+            IFS="$bIFS"
             ;;
         *)
             return 1
@@ -867,10 +873,12 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     case "$cmd" in
         begin)
+            local bIFS="$IFS"; IFS=" "
             tmp=( "${(q)path[@]}" )
             ZPLG_PATH_BEFORE[$uspl2]="${tmp[*]}"
             tmp=( "${(q)fpath[@]}" )
             ZPLG_FPATH_BEFORE[$uspl2]="${tmp[*]}"
+            IFS="$bIFS"
 
             # Reset diffing
             ZPLG_PATH[$uspl2]=""
@@ -878,10 +886,12 @@ ZPLG_ZLE_HOOKS_LIST=(
             ZPLG_ENV_DIFF_RAN[$uspl2]="0"
             ;;
         end)
+            local bIFS="$IFS"; IFS=" "
             tmp=( "${(q)path[@]}" )
             ZPLG_PATH_AFTER[$uspl2]="${tmp[*]}"
             tmp=( "${(q)fpath[@]}" )
             ZPLG_FPATH_AFTER[$uspl2]="${tmp[*]}"
+            IFS="$bIFS"
 
             # Reset diffing
             ZPLG_PATH[$uspl2]=""
