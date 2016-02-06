@@ -40,7 +40,7 @@ setopt -o nolist_types -o LIST_PACKED
 unsetopt +9
 autoload -X test
 
-fpath+=/usr/share/zsh
+fpath+=( /usr/share/zsh )
 
 unset MY_VAR
 

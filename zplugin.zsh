@@ -1745,7 +1745,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     integer ret=0
 
     if ! -zplg-exists "$user" "$plugin"; then
-        ZPLG_REGISTERED_PLUGINS+="$uspl2"
+        ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
         print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
@@ -2798,7 +2798,7 @@ zplugin() {
 
     # Simulate existence of _local/zplugin module
     # This will allow to cuninstall of its completion
-    ZPLG_REGISTERED_PLUGINS+="_local/$ZPLG_NAME"
+    ZPLG_REGISTERED_PLUGINS+=( "_local/$ZPLG_NAME" )
     ZPLG_REGISTERED_PLUGINS=( "${(u)ZPLG_REGISTERED_PLUGINS[@]}" )
     # _zplugin module is loaded lightly
     ZPLG_REGISTERED_STATES[_local/$ZPLG_NAME]="1"

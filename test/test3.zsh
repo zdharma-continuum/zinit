@@ -19,7 +19,7 @@ zplugin dtrace
 
 typeset -U path
 PATH="$PATH:/component/nr1"
-path+="/component/nr2"
+path+=( "/component/nr2" )
 # Intentional nr2
 PATH="/component/nr2:$PATH"
 declare -p path
@@ -27,7 +27,7 @@ declare -p path
 echo
 
 FPATH="$FPATH:/fcomp/nr1"
-fpath+="/fcomp/nr2"
+fpath+=( "/fcomp/nr2" )
 # Intentional nr2
 FPATH="/fcomp/nr2:$FPATH"
 declare -p fpath
