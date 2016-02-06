@@ -1,8 +1,8 @@
 Deleting function my_f
 Unsetting option menucomplete
 Removing suffix alias jpg=iv
-Removing alias test3alias1=echo Hello
 Removing global alias test3alias2=echo Hello
+Removing alias test3alias1=echo Hello
 Removing PATH element /component/nr2
 Warning: it didn't exist on disk
 Removing PATH element /component/nr1

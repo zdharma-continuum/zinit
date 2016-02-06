@@ -2270,7 +2270,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a string_widget
     string_widget=( "${(z)ZPLG_BINDKEYS[$uspl2]}" )
     local sw
-    for sw in "${(on)string_widget[@]}"; do
+    for sw in "${(Oa)string_widget[@]}"; do
         [ -z "$sw" ] && continue
         # Remove one level of quoting to split using (z)
         sw="${(Q)sw}"
@@ -2312,7 +2312,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a pattern_style
     pattern_style=( "${(z)ZPLG_ZSTYLES[$uspl2]}" )
     local ps
-    for ps in "${(on)pattern_style[@]}"; do
+    for ps in "${(Oa)pattern_style[@]}"; do
         [ -z "$ps" ] && continue
         # Remove one level of quoting to split using (z)
         ps="${(Q)ps}"
@@ -2364,7 +2364,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a aname_avalue
     aname_avalue=( "${(z)ZPLG_ALIASES[$uspl2]}" )
     local nv
-    for nv in "${(on)aname_avalue[@]}"; do
+    for nv in "${(Oa)aname_avalue[@]}"; do
         [ -z "$nv" ] && continue
         # Remove one level of quoting to split using (z)
         nv="${(Q)nv}"
@@ -2395,7 +2395,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a delete_widgets
     delete_widgets=( "${(z)ZPLG_WIDGETS_DELETE[$uspl2]}" )
     local wid
-    for wid in "${(on)delete_widgets[@]}"; do
+    for wid in "${(Oa)delete_widgets[@]}"; do
         [ -z "$wid" ] && continue
         wid="${(Q)wid}"
         if [ "${ZPLG_ZLE_HOOKS_LIST[$wid]}" = "1" ]; then
@@ -2408,7 +2408,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     typeset -a restore_widgets
     restore_widgets=( "${(z)ZPLG_WIDGETS_SAVED[$uspl2]}" )
-    for wid in "${(on)restore_widgets[@]}"; do
+    for wid in "${(Oa)restore_widgets[@]}"; do
         [ -z "$wid" ] && continue
         wid="${(Q)wid}"
         typeset -a orig_saved
