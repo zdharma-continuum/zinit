@@ -156,6 +156,18 @@ source ~/.zplugin/bin/zplugin.zsh
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
 
+### Compilation
+It's good to compile `zplugin` into `Zsh` bytecode:
+
+```sh
+zcompile ~/.zplugin/bin/zplugin.zsh
+```
+
+Zplugin will compile each newly downloaded plugin. You can clear compilation of
+a plugin by invoking `zplugin uncompile {plugin-name}`. There are also commands
+`compile`, `compile-all`, `uncompile-all`, `compiled` that control the
+functionality of compiling plugins.
+
 ## Usage
 
 ```
@@ -186,6 +198,11 @@ dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session
+compile  {plugin-name}   - compile plugin
+compile-all              - compile all downloaded plugins
+uncompile {plugin-name}  - remove compiled version of plugin
+uncompile-all            - remove compiled versions of all downloaded plugins
+compiled                 - list plugins that are compiled
 ```
 
 To use themes created for `Oh-My-Zsh` you might want to first source the `git` library there:
@@ -193,6 +210,9 @@ To use themes created for `Oh-My-Zsh` you might want to first source the `git` l
 ```sh
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
 ```
+
+Then you can use the themes either as plugins (`zplugin load {user/theme-name}`) or as snippets
+(`zplugin snippet {file path or URL}`).
 
 ## IRC channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
