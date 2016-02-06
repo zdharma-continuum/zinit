@@ -17,13 +17,9 @@ typeset -gAH ZPLG_REPORTS
 # Common needed values
 #
 
-if [ -n "${argv[0]}" ]; then
-    typeset -gH ZPLG_DIR="${argv[0]:h}"
-    typeset -gH ZPLG_NAME="${${argv[0]:t}:r}"
-else
-    typeset -gH ZPLG_DIR="${0:h}"
-    typeset -gH ZPLG_NAME="${${0:t}:r}"
-fi
+# TODO emulate sh
+typeset -gH ZPLG_DIR="${0:h}"
+typeset -gH ZPLG_NAME="${${0:t}:r}"
 
 if [ -d "$HOME/.$ZPLG_NAME" ]; then
     # Ignore ZDOTDIR if user manually put Zplugin to $HOME
