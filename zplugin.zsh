@@ -2615,13 +2615,13 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-show-zstatus() {
     local infoc="${ZPLG_COL[info]}"
 
-    echo "${infoc}Zplugin's main directory:$reset_color $ZPLG_HOME"
-    echo "${infoc}Zplugin's binary directory:$reset_color $ZPLG_DIR"
-    echo "${infoc}Plugin directory:$reset_color $ZPLG_PLUGINS_DIR"
-    echo "${infoc}Completions directory:$reset_color $ZPLG_COMPLETIONS_DIR"
+    echo "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
+    echo "Zplugin's binary directory: ${infoc}$ZPLG_DIR${reset_color}"
+    echo "Plugin directory: ${infoc}$ZPLG_PLUGINS_DIR${reset_color}"
+    echo "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
 
     # Without _zlocal/zplugin
-    print "${infoc}Loaded plugins:$reset_color $(( ${#ZPLG_REGISTERED_PLUGINS} - 1 ))"
+    print "Loaded plugins: ${infoc}$(( ${#ZPLG_REGISTERED_PLUGINS} - 1 ))${reset_color}"
 
     # Count light-loaded plugins
     integer light=0
@@ -2630,28 +2630,28 @@ ZPLG_ZLE_HOOKS_LIST=(
         [ "$s" = 1 ] && (( light ++ ))
     done
     # Without _zlocal/zplugin
-    print "${infoc}Light loaded:$reset_color $(( light - 1 ))"
+    print "Light loaded: ${infoc}$(( light - 1 ))${reset_color}"
 
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
     plugins=( "$ZPLG_PLUGINS_DIR"/*(N) )
-    print "${infoc}Downloaded plugins:$reset_color" ${#plugins}
+    print "Downloaded plugins: ${infoc}${#plugins}${reset_color}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
     completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
-    print "${infoc}Enabled completions:$reset_color" ${#completions}
+    print "Enabled completions: ${infoc}${#completions}${reset_color}"
 
     # Number of disabled completions, with _zlocal/zplugin
     completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
-    print "${infoc}Disabled completions:$reset_color" ${#completions}
+    print "Disabled completions: ${infoc}${#completions}${reset_color}"
 
     # Number of completions existing in all plugins
     completions=( "$ZPLG_PLUGINS_DIR"/*/_*(N) )
-    print "${infoc}Completions available overall:$reset_color" ${#completions}
+    print "Completions available overall: ${infoc}${#completions}${reset_color}"
 
     # Enumerate snippets loaded
-    print "${infoc}Snippets loaded:$reset_color ${(j:, :onv)ZPLG_SNIPPETS}"
+    print "Snippets loaded: ${infoc}${(j:, :onv)ZPLG_SNIPPETS}${reset_color}"
 
     # Number of compiled plugins
     typeset -a matches m
@@ -2668,7 +2668,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         fi
     done
 
-    print "${infoc}Plugins compiled:$reset_color $count"
+    print "Compiled plugins: ${infoc}$count${reset_color}"
 }
 
 
