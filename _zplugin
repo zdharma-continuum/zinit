@@ -33,6 +33,11 @@ commands=(
     dunload:'revert changes recorded between dstart and dstop'
     dreport:"report what was going on in session"
     dclear:'clear report of what was going on in session'
+    compile:'compile plugin'
+    compile-all:'compile all downloaded plugins'
+    uncompile:'remove compiled version of plugin'
+    uncompile-all:'remove compiled versions of all downloaded plugins'
+    compiled:'show which plugins are compiled'
 )
 
 _arguments \
@@ -160,6 +165,44 @@ case $state in
                 ;;
             dclear)
                 _message "Hit enter to clear report of what was going on in session" && ret=0
+                ;;
+            compile)
+                typeset -a plugins
+                plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
+                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
+                ;;
+            compile-all)
+                _message 'Hit enter to compile all downloaded plugins' && ret=0
+                ;;
+            uncompile)
+                typeset -a plugins
+                plugins=( "$ZPLG_PLUGINS_DIR"/*(N) )
+
+                typeset -a show_plugins p matches
+                for p in "${plugins[@]}"; do
+                    matches=( $p/*.zwc(N) )
+                    if [ "$#matches" -ne "0" ]; then
+                        p="${p:t}"
+                        [ "$p" = "_local---zplugin" ] && continue
+                        [ "$p" = "custom" ] && continue
+                        p="${p/---//}"
+                        show_plugins+=( "$p" )
+                    fi
+                done
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - show_plugins && ret=0
+                ;;
+            uncompile-all)
+                _message 'Hit enter remove compiled versions of all downloaded plugins' && ret=0
+                ;;
+            compiled)
+                _message 'Hit enter to get list of compiled plugins' && ret=0
                 ;;
             *)
                 ret=1

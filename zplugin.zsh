@@ -1723,6 +1723,9 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         # Install completions
         -zplg-install-completions "$user" "$plugin" "0"
+
+        # Compile plugin
+        -zplg-compile-plugin "$user" "$plugin"
     fi
 
     # All to the users - simulate OMZ directory structure (3/3)
@@ -1845,6 +1848,59 @@ ZPLG_ZLE_HOOKS_LIST=(
     ZPLG_CUR_PLUGIN=""
     ZPLG_CUR_USPL=""
     ZPLG_CUR_USPL2=""
+}
+
+# Compiles plugin
+-zplg-compile-plugin() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    # There are plugins having ".plugin.zsh"
+    # in ${plugin} directory name, also some
+    # have ".zsh" there
+    local pdir="${${plugin%.plugin.zsh}%.zsh}"
+    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+
+    # Look for file to compile. First look for the most common one
+    # (optimization) then for other possibilities
+    reply=( $dname/${pdir}.plugin.zsh(N) )
+    [ "$#reply" -eq "0" ] && -zplg-find-other-matches "$dname" "$pdir"
+    if [ "$#reply" -eq "0" ]; then
+        print "${ZPLG_COL[error]}No files for compilation found$reset_color"
+        return 1
+    fi
+
+    local fname="${reply[1]#$dname/}"
+
+    print "Compiling ${ZPLG_COL[info]}$fname$reset_color..."
+    zcompile "${reply[1]}"
+}
+
+-zplg-uncompile-plugin() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}" silent="$3"
+
+    # There are plugins having ".plugin.zsh"
+    # in ${plugin} directory name, also some
+    # have ".zsh" there
+    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    typeset -a matches m
+    matches=( $dname/*.zwc(N) )
+
+    if [ "$#matches" -eq "0" ]; then
+        if [ "$silent" = "1" ]; then
+            print "not compiled"
+        else
+            -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+            print "$REPLY not compiled"
+        fi
+        return 1
+    fi
+
+    for m in "${matches[@]}"; do
+        print "Removing ${ZPLG_COL[info]}${m:t}$reset_color"
+        command rm -f "$m"
+    done
 }
 # }}}
 
@@ -2599,6 +2655,59 @@ ZPLG_ZLE_HOOKS_LIST=(
     print "${infoc}Snippets loaded:$reset_color ${(j:, :onv)ZPLG_SNIPPETS}"
 }
 
+
+# Gets list of compiled plugins
+-zplg-compiled() {
+    typeset -a matches m
+    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc(N) )
+
+    if [ "$#matches" -eq "0" ]; then
+        print "No compiled plugins"
+        return 0
+    fi
+
+    local cur_plugin="" uspl1
+    for m in "${matches[@]}"; do
+        file="${m:t}"
+        uspl1="${${m:h}:t}"
+        -zplg-any-to-user-plugin "$uspl1"
+        user="${reply[-2]}" plugin="${reply[-1]}"
+
+        if [ "$cur_plugin" != "$uspl1" ]; then
+            [ -n "$cur_plugin" ] && print # newline
+            -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+            print "$REPLY:"
+            cur_plugin="$uspl1"
+        fi
+
+        print "$file"
+    done
+}
+
+-zplg-compile-uncompile-all() {
+    local compile="$1"
+
+    typeset -a plugins
+    plugins=( "$ZPLG_PLUGINS_DIR"/*(N) )
+
+    local p user plugin
+    for p in "${plugins[@]}"; do
+        [[ "${p:t}" = "custom" || "${p:t}" = "_local---zplugin" ]] && continue
+
+        -zplg-any-to-user-plugin "${p:t}"
+        user="${reply[-2]}" plugin="${reply[-1]}"
+
+        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+        print "$REPLY"
+
+        if [ "$compile" = "1" ]; then
+            -zplg-compile-plugin "$user" "$plugin"
+        else
+            -zplg-uncompile-plugin "$user" "$plugin" "1"
+        fi
+    done
+}
+
 # }}}
 
 #
@@ -2820,6 +2929,29 @@ zplugin() {
        (dunload)
            -zplg-debug-unload
            ;;
+       (compile)
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
+           -zplg-compile-plugin "$2" "$3"
+           ;;
+       (compile-all)
+           -zplg-compile-uncompile-all "1"
+           ;;
+       (uncompile)
+           if [[ -z "$2" && -z "$3" ]]; then
+               print "Argument needed, try help"
+               return 1
+           fi
+           -zplg-uncompile-plugin "$2" "$3"
+           ;;
+       (uncompile-all)
+           -zplg-compile-uncompile-all "0"
+           ;;
+       (compiled)
+           -zplg-compiled
+           ;;
        (-h|--help|help|)
            print "${ZPLG_COL[p]}Usage$reset_color:
 -h|--help|help           - usage information
@@ -2847,7 +2979,12 @@ dtrace|dstart            - start tracking what's going on in session
 dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
-dclear                   - clear report of what was going on in session"
+dclear                   - clear report of what was going on in session
+compile  ${ZPLG_COL[pname]}{plugin-name}$reset_color   - compile plugin
+compile-all              - compile all downloaded plugins
+uncompile ${ZPLG_COL[pname]}{plugin-name}$reset_color  - remove compiled version of plugin
+uncompile-all            - remove compiled versions of all downloaded plugins
+compiled                 - list plugins that are compiled"
            ;;
        (*)
            print "Unknown command \`$1' (try \`help' to get usage information)"
