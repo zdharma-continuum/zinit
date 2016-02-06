@@ -2697,7 +2697,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         user="${reply[-2]}" plugin="${reply[-1]}"
 
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-        print "$REPLY"
+        print "$REPLY:"
 
         if [ "$compile" = "1" ]; then
             -zplg-compile-plugin "$user" "$plugin"
