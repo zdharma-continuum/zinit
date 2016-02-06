@@ -35,7 +35,7 @@ zplugin dstop
 ### Gather and compare results
 ###
 
-zplugin dreport > "$___TEST_REPORT_FILE"
-zplugin dunload > "$___TEST_UNLOAD_FILE"
+zplugin dreport > "$___TEST_REPORT_FILE" 2>&1
+zplugin dunload > "$___TEST_UNLOAD_FILE" 2>&1
 
 ---compare
