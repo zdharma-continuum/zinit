@@ -1,0 +1,50 @@
+echo ${(<TAB>, zsh-5.0.8, OS X 10.11.2
+
+parameter flag
+#  -- evaluate as numeric expression
+%  -- expand prompt sequences
+0  -- split words on null bytes
+@  -- double-quoted splitting of scalars
+A  -- create array parameter
+B  -- include index of beginning of match in #, %, / expressions
+C  -- capitalize words
+D  -- perform directory name abbreviation
+E  -- include index of end of match in #, %, / expressions
+F  -- join arrays with newlines
+I  -- search <argument>th match in #, %, / expressions
+L  -- lower case all letters
+M  -- include matched portion in #, %, / expressions
+N  -- include length of match in #, % expressions
+O  -- sort in descending order (lexically if no other sort option)
+P  -- use parameter value as name of parameter for redirected lookup
+Q  -- remove one level of quoting
+R  -- include rest (unmatched portion) in #, %, / expressions
+S  -- search substrings in #, %, / expressions
+U  -- upper case all letters
+V  -- visibility enhancements for special characters
+W  -- count words including empty words (with ${(W)#...})
+X  -- report parsing errors and eXit substitution
+Z  -- split words as if zsh command line (with options)
+a  -- sort in array index order (with O to reverse)
+b  -- backslash quote pattern characters only
+c  -- count characters in an array (with ${(c)#...})
+e  -- perform single-word shell expansions
+f  -- split the result on newlines
+g  -- process echo array sequences (needs options)
+i  -- sort case-insensitively
+j  -- join arrays with specified string
+k  -- subsitute keys of associative arrays
+l  -- left-pad resulting words
+m  -- count multibyte width in padding calculation
+n  -- sort decimal integers numerically
+o  -- sort in ascending order (lexically if no other sort option)
+p  -- handle print escapes or variables in parameter flag arguments
+q  -- quote with backslashes
+r  -- right-pad resulting words
+s  -- split words on specified string
+t  -- substitute type of parameter
+u  -- substitute first occurrence of each unique word
+v  -- substitute values of associative arrays (with (k))
+w  -- count words in array or string (with ${(w)#...})
+z  -- split words as if zsh command line
+~  -- treat strings in parameter flag arguments as patterns
