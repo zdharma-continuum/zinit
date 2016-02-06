@@ -1178,6 +1178,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 #
 -zplg-any-to-user-plugin() {
     # Two components given?
+    # That's a pretty fast track to call this function this way
     if [ -n "$2" ];then
         # But user name is empty?
         [ -z "$1" ] && 1="_local"
@@ -1528,7 +1529,6 @@ ZPLG_ZLE_HOOKS_LIST=(
     [[ -o "KSH_ARRAYS" ]] && ZPLG_ENTER_OPTIONS+=( "KSH_ARRAYS" )
     [[ -o "RC_EXPAND_PARAM" ]] && ZPLG_ENTER_OPTIONS+=( "RC_EXPAND_PARAM" )
     [[ -o "SH_WORD_SPLIT" ]] && ZPLG_ENTER_OPTIONS+=( "SH_WORD_SPLIT" )
-    [[ -o "SHORT_LOOPS" ]] && ZPLG_ENTER_OPTIONS+=( "SHORT_LOOPS" )
 }
 
 # Restores options
@@ -1544,7 +1544,6 @@ ZPLG_ZLE_HOOKS_LIST=(
     builtin setopt NO_KSH_ARRAYS
     builtin setopt NO_RC_EXPAND_PARAM
     builtin setopt NO_SH_WORD_SPLIT
-    builtin setopt NO_SHORT_LOOPS
 }
 
 -zplg-save-extendedglob() {
@@ -2635,7 +2634,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
-    plugins=( "$ZPLG_PLUGINS_DIR"/* )
+    plugins=( "$ZPLG_PLUGINS_DIR"/*(N) )
     print "${infoc}Downloaded plugins:$reset_color" ${#plugins}
 
     # Number of enabled completions, with _zlocal/zplugin
