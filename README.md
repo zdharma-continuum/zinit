@@ -107,6 +107,25 @@ Plugin's report saved to $LASTREPORT
 
 ![csearch example](http://imageshack.com/a/img921/5741/QJaO8q.png)
 
+**Example `compile` invocation:**
+
+```
+# zplg compile zsh-users/zsh-syntax-highlighting
+Compiling zsh-syntax-highlighting.plugin.zsh...
+# zplg compiled
+zsh-users/zsh-syntax-highlighting:
+zsh-syntax-highlighting.plugin.zsh.zwc
+# zplg uncompile zsh-users/zsh-syntax-highlighting
+Removing zsh-syntax-highlighting.plugin.zsh.zwc
+# zplg compiled
+No compiled plugins
+# zplg compile-all
+zsh-users/zsh-syntax-highlighting
+Compiling zsh-syntax-highlighting.plugin.zsh...
+```
+
+![compile example](http://imageshack.com/a/img923/6655/gexv8M.png)
+
 ## Installation
 
 Execute:
