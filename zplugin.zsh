@@ -2652,6 +2652,23 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Enumerate snippets loaded
     print "${infoc}Snippets loaded:$reset_color ${(j:, :onv)ZPLG_SNIPPETS}"
+
+    # Number of compiled plugins
+    typeset -a matches m
+    integer count=0
+    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc(N) )
+
+    local cur_plugin="" uspl1
+    for m in "${matches[@]}"; do
+        uspl1="${${m:h}:t}"
+
+        if [ "$cur_plugin" != "$uspl1" ]; then
+            (( count ++ ))
+            cur_plugin="$uspl1"
+        fi
+    done
+
+    print "${infoc}Plugins compiled:$reset_color $count"
 }
 
 
