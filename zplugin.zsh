@@ -2803,11 +2803,6 @@ zplugin() {
     # _zplugin module is loaded lightly
     ZPLG_REGISTERED_STATES[_local/$ZPLG_NAME]="1"
 
-    # Add completions directory to fpath
-    fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
-    # Uniquify
-    fpath=( "${(u)fpath[@]}" )
-
     case "$1" in
        (zstatus)
            -zplg-show-zstatus
@@ -3014,6 +3009,9 @@ compiled                 - list plugins that are compiled"
     # Restore user's options
     -zplg-restore-enter-state
 }
+
+# Add completions directory to fpath
+fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
 zstyle ':completion:*:zplugin:*:argument-rest' list-colors '=(#b)(*)/(*)==1;35=1;33'
