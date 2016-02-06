@@ -4,10 +4,15 @@ Removing suffix alias jpg=iv
 Removing alias test3alias1=echo Hello
 Removing global alias test3alias2=echo Hello
 Removing PATH element /component/nr2
+Warning: it didn't exist on disk
 Removing PATH element /component/nr1
+Warning: it didn't exist on disk
 Removing PATH element /component/nr2
+Warning: it didn't exist on disk
 Removing FPATH element /fcomp/nr2
+Warning: it didn't exist on disk
 Removing FPATH element /fcomp/nr1
+Warning: it didn't exist on disk
 Unsetting variable MY_VAR
 Unsetting variable my_hash2
 Unsetting variable MY_VAR2

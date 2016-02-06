@@ -27,6 +27,7 @@ menucomplete was set
 physical     was set
 
 FPATH elements added:
+/a/b/c
 /usr/share/zsh
 
 Variables added or redefined:

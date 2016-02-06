@@ -2432,7 +2432,10 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a new elem p
     elem=( "${(z)ZPLG_PATH[$uspl2]}" )
     for p in "${path[@]}"; do
-        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing PATH element ${ZPLG_COL[info]}$p$reset_color"
+        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || {
+            print "Removing PATH element ${ZPLG_COL[info]}$p$reset_color"
+            [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:$reset_color it didn't exist on disk"
+        }
     done
     path=( "${new[@]}" )
 
@@ -2440,7 +2443,10 @@ ZPLG_ZLE_HOOKS_LIST=(
     elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
     new=( )
     for p in "${fpath[@]}"; do
-        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || print "Removing FPATH element ${ZPLG_COL[info]}$p$reset_color"
+        [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || {
+            print "Removing FPATH element ${ZPLG_COL[info]}$p$reset_color"
+            [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:$reset_color it didn't exist on disk"
+        }
     done
     fpath=( "${new[@]}" )
 

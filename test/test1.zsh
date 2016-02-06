@@ -22,6 +22,7 @@ MY_VAR="test variable"
 MY_VAR2="test variable"
 zplugin snippet -f test/a::test::plugin.zsh
 my_f() { echo "Hello"; }
+fpath+=( /a/b/c )
 
 #
 # Stop Dtrace
