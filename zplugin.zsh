@@ -720,15 +720,13 @@ ZPLG_ZLE_HOOKS_LIST=(
             typeset -A func
             local i
 
-            # This includes new functions
+            # This includes new functions. Quoting is kept (i.e. no i=${(Q)i})
             for i in "${(z)ZPLG_FUNCTIONS_AFTER[$uspl2]}"; do
-                i="${(Q)i}"
                 func[$i]=1
             done
 
-            # Remove duplicated entries, i.e. existing before
+            # Remove duplicated entries, i.e. existing before. Quoting is kept
             for i in "${(z)ZPLG_FUNCTIONS_BEFORE[$uspl2]}"; do
-                i="${(Q)i}"
                 unset "func[$i]"
             done
 
