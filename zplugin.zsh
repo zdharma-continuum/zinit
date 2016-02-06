@@ -1502,6 +1502,20 @@ ZPLG_ZLE_HOOKS_LIST=(
     ZPLG_PARAMETERS_AFTER[$REPLY]=""
     ZPLG_PARAMETERS_DIFF_RAN[$REPLY]="0"
 }
+
+# Doesn't look for the most common $pname.plugin.zsh
+# file but for alternatives
+-zplg-find-other-matches() {
+    local dname="$1" pdir="$2"
+    reply=(
+        $dname/$pdir/init.zsh(N)
+        $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
+        $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
+        $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
+        $dname/*.zsh-theme(N)
+    )
+}
+
 # }}}
 
 #
@@ -1780,22 +1794,15 @@ ZPLG_ZLE_HOOKS_LIST=(
     local pdir="${${plugin%.plugin.zsh}%.zsh}"
     local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 
-    # Look for a file to source
-    typeset -a matches
-    matches=( $dname/${pdir}.plugin.zsh(N) )
+    # Look for a file to source. Use reply for optimization
+    # (-zplg-find-other-matches also uses it). First look
+    # for the most common one (optimization) then for other
+    # possibilities
+    reply=( $dname/${pdir}.plugin.zsh(N) )
+    [ "$#reply" -eq "0" ] && -zplg-find-other-matches "$dname" "$pdir"
+    [ "$#reply" -eq "0" ] && return 1
 
-    if [ "$#matches" -eq "0" ]; then
-        matches=(
-            $dname/$pdir/init.zsh(N)
-            $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
-            $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
-            $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
-            $dname/*.zsh-theme(N)
-        )
-    fi
-
-    [ "$#matches" -eq "0" ] && return 1
-    local fname="${matches[1]#$dname/}"
+    local fname="${reply[1]#$dname/}"
 
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
     [ "$light" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
