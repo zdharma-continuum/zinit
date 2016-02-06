@@ -2096,7 +2096,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     keyword="${keyword## ##}"
     keyword="${keyword%% ##}"
     if [ -n "$keyword" ]; then
-        echo "Installed plugins matching ${ZPLG_COL[info]}$keyword$reset_color:"
+        print "Installed plugins matching ${ZPLG_COL[info]}$keyword$reset_color:"
         filtered=( "${(M)ZPLG_REGISTERED_PLUGINS[@]:#*$keyword*}" )
     else
         filtered=( "${ZPLG_REGISTERED_PLUGINS[@]}" )
@@ -2518,7 +2518,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local_dir="${local_dir%%\?*}"
 
     if [ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]; then
-        echo "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename$reset_color"
+        print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename$reset_color"
         command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
     fi
 
@@ -2539,13 +2539,13 @@ ZPLG_ZLE_HOOKS_LIST=(
         (
             cd "$ZPLG_SNIPPETS_DIR/$local_dir"
             command rm -f "$filename"
-            echo "Downloading $filename..."
+            print "Downloading $filename..."
             -zplg-download-file-stdout "$url" > "$filename"
         )
         else
             # File
             command rm -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
-            echo "Copying $filename..."
+            print "Copying $filename..."
             command cp -v "$url" "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
         fi
     fi
@@ -2576,9 +2576,9 @@ ZPLG_ZLE_HOOKS_LIST=(
     local repo pd user plugin
 
     if [ "$st" = "status" ]; then
-        echo "${ZPLG_COL[error]}Warning:$reset_color status done also for unloaded plugins"
+        print "${ZPLG_COL[error]}Warning:$reset_color status done also for unloaded plugins"
     else
-        echo "${ZPLG_COL[error]}Warning:$reset_color updating also unloaded plugins"
+        print "${ZPLG_COL[error]}Warning:$reset_color updating also unloaded plugins"
     fi
 
     for repo in "$ZPLG_PLUGINS_DIR"/*(N); do
@@ -2615,10 +2615,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-show-zstatus() {
     local infoc="${ZPLG_COL[info]}"
 
-    echo "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
-    echo "Zplugin's binary directory: ${infoc}$ZPLG_DIR${reset_color}"
-    echo "Plugin directory: ${infoc}$ZPLG_PLUGINS_DIR${reset_color}"
-    echo "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
+    print "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
+    print "Zplugin's binary directory: ${infoc}$ZPLG_DIR${reset_color}"
+    print "Plugin directory: ${infoc}$ZPLG_PLUGINS_DIR${reset_color}"
+    print "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
 
     # Without _zlocal/zplugin
     print "Loaded plugins: ${infoc}$(( ${#ZPLG_REGISTERED_PLUGINS} - 1 ))${reset_color}"
@@ -2769,7 +2769,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Reverts changes recorded through dtrace
 -zplg-debug-unload() {
     if [ "$ZPLG_DEBUG_ACTIVE" = "1" ]; then
-        echo "Dtrace is still active, end it with \`dstop'"
+        print "Dtrace is still active, end it with \`dstop'"
     else
         -zplg-unload "$ZPLG_DEBUG_USER" "$ZPLG_DEBUG_PLUGIN"
     fi
