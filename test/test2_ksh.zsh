@@ -5,7 +5,7 @@
 # Script can be run from arbitrary directory under zplugin/ tree
 #
 
-setopt NO_KSH_ARRAYS
+setopt KSH_ARRAYS
 source "`pwd`/${0:h}/tinclude.zsh" "$0" || exit 1
 
 #
@@ -18,7 +18,7 @@ source "`pwd`/${0:h}/tinclude.zsh" "$0" || exit 1
 ### Test body
 ###
 
-local PLUGIN_NAME="_local/opp.zsh"
+local PLUGIN_NAME="_local/safe-paste"
 zplugin load "$PLUGIN_NAME"
 
 #

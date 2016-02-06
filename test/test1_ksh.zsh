@@ -5,7 +5,7 @@
 # Script can be run from arbitrary directory under zplugin/ tree
 #
 
-setopt NO_KSH_ARRAYS
+setopt KSH_ARRAYS
 source "`pwd`/${0:h}/tinclude.zsh" "$0" || exit 1
 
 #
@@ -13,25 +13,30 @@ source "`pwd`/${0:h}/tinclude.zsh" "$0" || exit 1
 #
 
 ---start
+zplugin dtrace
 
 ###
 ### Test body
 ###
 
-local PLUGIN_NAME="_local/opp.zsh"
-zplugin load "$PLUGIN_NAME"
+MY_VAR="test variable"
+MY_VAR2="test variable"
+zplugin snippet -f test/a::test::plugin.zsh
+my_f() { echo "Hello"; }
+fpath+=( /a/b/c )
 
 #
 # Stop Dtrace
 #
 
+zplugin dstop
 ---stop
 
 ###
 ### Gather and compare results
 ###
 
-zplugin report "$PLUGIN_NAME" > "$___TEST_REPORT_FILE" 2>&1
-zplugin unload "$PLUGIN_NAME" > "$___TEST_UNLOAD_FILE" 2>&1
+zplugin dreport > "$___TEST_REPORT_FILE" 2>&1
+zplugin dunload > "$___TEST_UNLOAD_FILE" 2>&1
 
 ---compare

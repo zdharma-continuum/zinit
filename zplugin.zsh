@@ -355,7 +355,8 @@ ZPLG_ZLE_HOOKS_LIST=(
         [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
     else
         # bindkey -A newkeymap main?
-        if [[ "${#opts[@]}" -eq "1" && "${opts[(r)-A]}" = "-A" && "${pos[3]}" = "main" && "${pos[2]}" != "-A" ]]; then
+        # Negative indices for KSH_ARRAYS immunity
+        if [[ "${#opts[@]}" -eq "1" && "${opts[(r)-A]}" = "-A" && "${#pos[@]}" = "3" && "${pos[-1]}" = "main" && "${pos[-2]}" != "-A" ]]; then
             # Save a copy of main keymap
             (( ZPLG_BINDKEY_MAIN_IDX ++ ))
             local pname="${ZPLG_CUR_PLUGIN:-$ZPLG_DEBUG_PLUGIN}"
@@ -372,7 +373,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             # Remember for dtrace
             [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
 
-            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[2]}' substitution"
+            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
         # bindkey -N newkeymap [other]
         elif [[ "${#opts[@]}" -eq 1 && "${opts[(r)-N]}" = "-N" ]]; then
             local Nopt="-N"
@@ -805,14 +806,14 @@ ZPLG_ZLE_HOOKS_LIST=(
     case "$cmd" in
         begin)
             local bIFS="$IFS"; IFS=" "
-            ZPLG_OPTIONS_BEFORE[$uspl2]="${(kv)options}"
+            ZPLG_OPTIONS_BEFORE[$uspl2]="${(kv)options[@]}"
             IFS="$bIFS"
             ZPLG_OPTIONS[$uspl2]=""
             ZPLG_OPTIONS_DIFF_RAN[$uspl2]="0"
             ;;
         end)
             local bIFS="$IFS"; IFS=" "
-            ZPLG_OPTIONS_AFTER[$uspl2]="${(kv)options}"
+            ZPLG_OPTIONS_AFTER[$uspl2]="${(kv)options[@]}"
             IFS="$bIFS"
             ZPLG_OPTIONS[$uspl2]=""
             ZPLG_OPTIONS_DIFF_RAN[$uspl2]="0"
@@ -843,7 +844,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
             # Serialize for reporting
             local bIFS="$IFS"; IFS=" "
-            ZPLG_OPTIONS[$uspl2]="${(kv)opts}"
+            ZPLG_OPTIONS[$uspl2]="${(kv)opts[@]}"
             IFS="$bIFS"
             ;;
         *)
@@ -1520,7 +1521,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Saves options
 -zplg-save-enter-state() {
     ZPLG_ENTER_OPTIONS=( )
-    [[ -o "KSH_ARRAYS" ]] && ZPLG_ENTER_OPTIONS+=( "KSH_ARRAYS" )
     [[ -o "RC_EXPAND_PARAM" ]] && ZPLG_ENTER_OPTIONS+=( "RC_EXPAND_PARAM" )
     [[ -o "SH_WORD_SPLIT" ]] && ZPLG_ENTER_OPTIONS+=( "SH_WORD_SPLIT" )
 }
@@ -1535,7 +1535,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Sets state needed by this code
 -zplg-set-desired-shell-state() {
-    builtin setopt NO_KSH_ARRAYS
     builtin setopt NO_RC_EXPAND_PARAM
     builtin setopt NO_SH_WORD_SPLIT
 }
@@ -1798,7 +1797,10 @@ ZPLG_ZLE_HOOKS_LIST=(
     [ "$#reply" -eq "0" ] && -zplg-find-other-matches "$dname" "$pdir"
     [ "$#reply" -eq "0" ] && return 1
 
-    local fname="${reply[1]#$dname/}"
+    # Get first one
+    integer correct=0
+    [[ -o "KSH_ARRAYS" ]] && correct=1
+    local fname="${reply[1-correct]#$dname/}"
 
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
     [ "$light" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
@@ -1863,10 +1865,15 @@ ZPLG_ZLE_HOOKS_LIST=(
         return 1
     fi
 
-    local fname="${reply[1]#$dname/}"
+    # Take first entry
+    integer correct=0
+    [[ -o "KSH_ARRAYS" ]] && correct=1
+    local first="${reply[1-correct]}"
+
+    local fname="${first#$dname/}"
 
     print "Compiling ${ZPLG_COL[info]}$fname$reset_color..."
-    zcompile "${reply[1]}"
+    zcompile "$first"
 }
 
 -zplg-uncompile-plugin() {
@@ -2231,6 +2238,10 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}/${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}"
 
+    # KSH_ARRAYS immunity
+    integer correct=0
+    [[ -o "KSH_ARRAYS" ]] && correct=1
+
     # Allow unload for debug user
     if [ "$uspl2" != "$ZPLG_DEBUG_USPL2" ]; then
         -zplg-exists-message "$1" "$2" || return 1
@@ -2272,30 +2283,30 @@ ZPLG_ZLE_HOOKS_LIST=(
         sw_arr=( "${(z)sw}" )
 
         # Remove one level of quoting to pass to bindkey
-        sw_arr[1]="${(Q)sw_arr[1]}" # Keys
-        sw_arr[2]="${(Q)sw_arr[2]}" # Widget
-        sw_arr[3]="${(Q)sw_arr[3]}" # Optional -M or -A or -N
-        sw_arr[4]="${(Q)sw_arr[4]}" # Optional map name
-        sw_arr[5]="${(Q)sw_arr[5]}" # Optional -R (not with -A, -N)
+        local sw_arr1="${(Q)sw_arr[1-correct]}" # Keys
+        local sw_arr2="${(Q)sw_arr[2-correct]}" # Widget
+        local sw_arr3="${(Q)sw_arr[3-correct]}" # Optional -M or -A or -N
+        local sw_arr4="${(Q)sw_arr[4-correct]}" # Optional map name
+        local sw_arr5="${(Q)sw_arr[5-correct]}" # Optional -R (not with -A, -N)
 
-        if [[ "${sw_arr[3]}" = "-M" && "${sw_arr[5]}" != "-R" ]]; then
-            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]} ${ZPLG_COL[info]}mapped to ${sw_arr[4]}$reset_color"
-            bindkey -M "${sw_arr[4]}" -r "${sw_arr[1]}"
-        elif [[ "${sw_arr[3]}" = "-M" && "${sw_arr[5]}" = "-R" ]]; then
-            print "Deleting ${ZPLG_COL[info]}range$reset_color bindkey ${sw_arr[1]} ${sw_arr[2]} ${ZPLG_COL[info]}mapped to ${sw_arr[4]}$reset_color"
-            bindkey -M "${sw_arr[4]}" -Rr "${sw_arr[1]}"
-        elif [[ "${sw_arr[3]}" != "-M" && "${sw_arr[5]}" = "-R" ]]; then
-            print "Deleting ${ZPLG_COL[info]}range$reset_color bindkey ${sw_arr[1]} ${sw_arr[2]}" 
-            bindkey -Rr "${sw_arr[1]}"
-        elif [[ "${sw_arr[3]}" = "-A" ]]; then
-            print "Linking backup-\`main' keymap \`${sw_arr[4]}' back to \`main'"
-            bindkey -A "${sw_arr[4]}" "main"
-        elif [[ "${sw_arr[3]}" = "-N" ]]; then
-            print "Deleting keymap \`${sw_arr[4]}'"
-            bindkey -D "${sw_arr[4]}"
+        if [[ "$sw_arr3" = "-M" && "$sw_arr5" != "-R" ]]; then
+            print "Deleting bindkey $sw_arr1 $sw_arr2 ${ZPLG_COL[info]}mapped to $sw_arr4$reset_color"
+            bindkey -M "$sw_arr4" -r "$sw_arr1"
+        elif [[ "$sw_arr3" = "-M" && "$sw_arr5" = "-R" ]]; then
+            print "Deleting ${ZPLG_COL[info]}range$reset_color bindkey $sw_arr1 $sw_arr2 ${ZPLG_COL[info]}mapped to $sw_arr4$reset_color"
+            bindkey -M "$sw_arr4" -Rr "$sw_arr1"
+        elif [[ "$sw_arr3" != "-M" && "$sw_arr5" = "-R" ]]; then
+            print "Deleting ${ZPLG_COL[info]}range$reset_color bindkey $sw_arr1 $sw_arr2" 
+            bindkey -Rr "$sw_arr1"
+        elif [[ "$sw_arr3" = "-A" ]]; then
+            print "Linking backup-\`main' keymap \`$sw_arr4' back to \`main'"
+            bindkey -A "$sw_arr4" "main"
+        elif [[ "$sw_arr3" = "-N" ]]; then
+            print "Deleting keymap \`$sw_arr4'"
+            bindkey -D "$sw_arr4"
         else
-            print "Deleting bindkey ${sw_arr[1]} ${sw_arr[2]}"
-            bindkey -r "${sw_arr[1]}"
+            print "Deleting bindkey $sw_arr1 $sw_arr2"
+            bindkey -r "$sw_arr1"
         fi
     done
 
@@ -2314,12 +2325,12 @@ ZPLG_ZLE_HOOKS_LIST=(
         ps_arr=( "${(z)ps}" )
 
         # Remove one level of quoting to pass to zstyle
-        ps_arr[1]="${(Q)ps_arr[1]}"
-        ps_arr[2]="${(Q)ps_arr[2]}"
+        local ps_arr1="${(Q)ps_arr[1-correct]}"
+        local ps_arr2="${(Q)ps_arr[2-correct]}"
 
-        print "Deleting zstyle ${ps_arr[1]} ${ps_arr[2]}"
+        print "Deleting zstyle $ps_arr1 $ps_arr2"
 
-        zstyle -d "${ps_arr[1]}" "${ps_arr[2]}"
+        zstyle -d "$ps_arr1" "$ps_arr2"
     done
 
     #
@@ -2366,19 +2377,19 @@ ZPLG_ZLE_HOOKS_LIST=(
         nv_arr=( "${(z)nv}" )
 
         # Remove one level of quoting to pass to unalias
-        nv_arr[1]="${(Q)nv_arr[1]}"
-        nv_arr[2]="${(Q)nv_arr[2]}"
-        nv_arr[3]="${(Q)nv_arr[3]}"
+        local nv_arr1="${(Q)nv_arr[1-correct]}"
+        local nv_arr2="${(Q)nv_arr[2-correct]}"
+        local nv_arr3="${(Q)nv_arr[3-correct]}"
 
-        if [ "${nv_arr[3]}" = "-s" ]; then
-            print "Removing ${ZPLG_COL[info]}suffix$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
-            unalias -s "${nv_arr[1]}"
-        elif [ "${nv_arr[3]}" = "-g" ]; then
-            print "Removing ${ZPLG_COL[info]}global$reset_color alias ${nv_arr[1]}=${nv_arr[2]}"
-            unalias "${(q)nv_arr[1]}"
+        if [ "$nv_arr3" = "-s" ]; then
+            print "Removing ${ZPLG_COL[info]}suffix$reset_color alias ${nv_arr1}=${nv_arr2}"
+            unalias -s "$nv_arr1"
+        elif [ "$nv_arr3" = "-g" ]; then
+            print "Removing ${ZPLG_COL[info]}global$reset_color alias ${nv_arr1}=${nv_arr2}"
+            unalias "${(q)nv_arr1}"
         else
-            print "Removing alias ${nv_arr[1]}=${nv_arr[2]}"
-            unalias "${nv_arr[1]}"
+            print "Removing alias ${nv_arr1}=${nv_arr2}"
+            unalias "$nv_arr1"
         fi
     done
 
@@ -2407,12 +2418,13 @@ ZPLG_ZLE_HOOKS_LIST=(
         wid="${(Q)wid}"
         typeset -a orig_saved
         orig_saved=( "${(z)wid}" )
-        orig_saved[1]="${(Q)orig_saved[1]}" # Original widget
-        orig_saved[2]="${(Q)orig_saved[2]}" # Saved widget
 
-        print "Restoring Zle widget ${orig_saved[1]}"
-        zle -A "${orig_saved[2]}" "${orig_saved[1]}"
-        zle -D "${orig_saved[2]}"
+        local orig_saved1="${(Q)orig_saved[1-correct]}" # Original widget
+        local orig_saved2="${(Q)orig_saved[2-correct]}" # Saved widget
+
+        print "Restoring Zle widget $orig_saved1"
+        zle -A "$orig_saved2" "$orig_saved1"
+        zle -D "$orig_saved2"
     done
 
     #

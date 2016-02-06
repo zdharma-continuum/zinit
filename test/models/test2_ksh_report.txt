@@ -1,0 +1,19 @@
+Plugin report for _local/safe-paste
+
+Source safe-paste.plugin.zsh
+Bindkey -N paste
+Bindkey -R -M paste ^@-Ş? paste-insert
+Bindkey ^[[200~ _start_paste
+Bindkey -M paste ^[[201~ _end_paste
+Bindkey -M paste -s ^M ^J
+Zle -N _start_paste
+Zle -N _end_paste
+Zle -N zle-line-init _zle_line_init
+Zle -N zle-line-finish _zle_line_finish
+Zle -N paste-insert _paste_insert
+
+Functions created:
+_end_paste     _paste_insert
+_start_paste   _zle_line_finish
+_zle_line_init 
+

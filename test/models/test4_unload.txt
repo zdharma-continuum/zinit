@@ -110,22 +110,22 @@ Deleting function opp1
 Deleting function with-opp
 Deleting function with-opp-regioned
 Deleting bindkey gu opp mapped to afu-vicmd
--zplg-unload:bindkey:53: no such keymap `afu-vicmd'
+-zplg-unload:bindkey:57: no such keymap `afu-vicmd'
 Deleting bindkey gu opp mapped to vicmd
 Deleting bindkey gU opp mapped to afu-vicmd
--zplg-unload:bindkey:53: no such keymap `afu-vicmd'
+-zplg-unload:bindkey:57: no such keymap `afu-vicmd'
 Deleting bindkey gU opp mapped to vicmd
 Deleting bindkey g~ opp mapped to afu-vicmd
--zplg-unload:bindkey:53: no such keymap `afu-vicmd'
+-zplg-unload:bindkey:57: no such keymap `afu-vicmd'
 Deleting bindkey g~ opp mapped to vicmd
 Deleting bindkey y opp mapped to afu-vicmd
--zplg-unload:bindkey:53: no such keymap `afu-vicmd'
+-zplg-unload:bindkey:57: no such keymap `afu-vicmd'
 Deleting bindkey y opp mapped to vicmd
 Deleting bindkey d opp mapped to afu-vicmd
--zplg-unload:bindkey:53: no such keymap `afu-vicmd'
+-zplg-unload:bindkey:57: no such keymap `afu-vicmd'
 Deleting bindkey d opp mapped to vicmd
 Deleting bindkey c opp mapped to afu-vicmd
--zplg-unload:bindkey:53: no such keymap `afu-vicmd'
+-zplg-unload:bindkey:57: no such keymap `afu-vicmd'
 Deleting bindkey c opp mapped to vicmd
 Deleting bindkey a` .accept-line mapped to opp
 Deleting bindkey i` .accept-line mapped to opp

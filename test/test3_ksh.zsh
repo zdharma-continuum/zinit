@@ -4,7 +4,7 @@
 # Common test suite code
 #
 
-setopt NO_KSH_ARRAYS
+setopt KSH_ARRAYS
 source "`pwd`/${0:h}/tinclude.zsh" "$0" || exit 1
 
 #
