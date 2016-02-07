@@ -19,8 +19,8 @@ if [[ "$1" = "sh" || -z "$1" ]]; then
 fi
 
 # KSH_ARRAYS
-if [[ "$1" = "ksh" || -z "$1" ]]; then
-    for i in test[0-9]##_ksh.zsh; do
+if [[ "$1" = "kshar" || -z "$1" ]]; then
+    for i in test[0-9]##_kshar.zsh; do
         ./"$i"
         print
         print "${fg_bold[blue]}===================================================$reset_color"
