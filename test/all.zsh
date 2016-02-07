@@ -25,7 +25,7 @@ fi
 # KSH_ARRAYS
 if [[ "$1" = "kshar" || -z "$1" ]]; then
     echo -e ${fg_bold[magenta]}"${pre}KSH_ARRAYS tests${after}"$reset_color"\n"
-    for i in test[0-9]##_kshar.zsh; do
+    for i in kshar_test[0-9]##.zsh; do
         ./"$i"
         print
         print "${fg_bold[blue]}===================================================$reset_color"
