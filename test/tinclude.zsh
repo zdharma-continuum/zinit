@@ -32,7 +32,7 @@ ___TEST_UNLOAD_FILE="$___TEST_DIR/.unload.txt"
 ___DIFF_FILE="$___TEST_DIR/.diff"
 ___SUCCEEDED_MSG="--- Succeeded ---"
 ___FAILED_MSG="--- Failed [ < model, > result ] ---"
-___STARTING_MSG="----- Starting $___TEST_NAME -----"
+___STARTING_MSG="----- Starting ${(U)___TEST_NAME} -----"
 ___ZPLG_TESTING_HOME="$___TEST_DIR/tzplugin"
 
 #
@@ -65,7 +65,11 @@ ___msg() {
 }
 
 ___s-or-f() {
-    [ "$1" -eq "0" ] && print -- "${fg_bold[green]}$___SUCCEEDED_MSG$reset_color" || print -- "${fg_bold[red]}$___FAILED_MSG$reset_color"
+    setopt localoptions extendedglob
+    [ "$1" -eq "0" ] && print -- "${fg_bold[green]}$___SUCCEEDED_MSG$reset_color" || {
+        local col="${fg_bold[green]}" main="${fg_bold[red]}"
+        print -- "${main}${___FAILED_MSG//(#m)(model|result)/${col}${MATCH}${main}}$reset_color"
+    }
 }
 
 #
@@ -88,7 +92,7 @@ ___s-or-f() {
 
 ---end() {
     print
-    ___msg "End of $___TEST_NAME" "color"
+    ___msg "End of ${(U)___TEST_NAME}" "color"
 }
 
 ---mark() {

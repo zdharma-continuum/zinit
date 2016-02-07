@@ -14,7 +14,7 @@ if [[ "$1" = "sh" || -z "$1" ]]; then
         print
         print -n "Press any key for next test..."
         read -sk k
-        print -e "\n"
+        echo -e "\n"
     done
 fi
 
@@ -28,6 +28,6 @@ if [[ "$1" = "ksh" || -z "$1" ]]; then
         print -n "Press any key for next test..."
         read -sk k
         [ "$k" != $'\n' ] && print
-        print -e "\n"
+        echo -e "\n"
     done
 fi
