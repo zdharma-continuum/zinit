@@ -56,7 +56,7 @@ ___ZPLG_TESTING_HOME="$___TEST_DIR/tzplugin"
     integer len="${#___STARTING_MSG}"
     integer left_len=len/2
     integer right_len=len-left_len
-    print -- ${fg_bold[red]}"${(r:left_len-3::-:):--} MARK ${(r:right_len-3::-:):--}"$reset_color
+    print -- ${fg_bold[blue]}"${(r:left_len-10::-:):--} Additional data ^ ${(r:right_len-9::-:):--}"$reset_color
 }
 
 ___restore_term() {
@@ -76,8 +76,8 @@ ___s-or-f() {
 ---compare() {
     ___restore_term
 
-    print
     diff "$___REPORT_FILE" "$___TEST_REPORT_FILE" > "$___DIFF_FILE"
+    print
     ___s-or-f $?
     cat "$___DIFF_FILE"
 
@@ -85,6 +85,7 @@ ___s-or-f() {
     read -sk
 
     diff "$___UNLOAD_FILE" "$___TEST_UNLOAD_FILE" > "$___DIFF_FILE"
+    print
     ___s-or-f $?
     cat "$___DIFF_FILE"
 
