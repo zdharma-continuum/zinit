@@ -26,7 +26,7 @@ fi
 
 # Problematic function_argzero
 if [[ ! -o "functionargzero" ]]; then
-    if [ "$0" = "${argv[0]}" ]; then
+    if [[ "$0" = "${argv[0]}" || -z "${argv[0]}" ]]; then
         ZPLG_NAME="zplugin" # A try of typical, actually expected name
         [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
     else
