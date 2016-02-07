@@ -724,12 +724,13 @@ ZPLG_ZLE_HOOKS_LIST=(
 
             # Remove duplicated entries, i.e. existing before. Quoting is kept
             for i in "${(z)ZPLG_FUNCTIONS_BEFORE[$uspl2]}"; do
-                unset "func[$i]"
+                # if would do unset, then: func[opp+a\[]: invalid parameter name
+                func[$i]=0
             done
 
             # Store the functions, associating them with plugin ($uspl2)
             for i in "${(onk)func[@]}"; do
-                ZPLG_FUNCTIONS[$uspl2]+="$i "
+                [ "${func[$i]}" = "1" ] && ZPLG_FUNCTIONS[$uspl2]+="$i "
             done
             ;;
         *)
