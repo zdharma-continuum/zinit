@@ -40,3 +40,4 @@ zplugin dreport > "$___TEST_REPORT_FILE" 2>&1
 zplugin dunload > "$___TEST_UNLOAD_FILE" 2>&1
 
 ---compare
+---end

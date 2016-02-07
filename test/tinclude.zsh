@@ -39,26 +39,6 @@ ___ZPLG_TESTING_HOME="$___TEST_DIR/tzplugin"
 # Functions
 #
 
----start() {
-    print -- "$___STARTING_MSG"
-}
-
----stop() {
-    integer len="${#___STARTING_MSG}"
-    integer left_len=len/2
-    integer right_len=len-left_len
-    print -- "${(r:left_len-3::-:):--} END ${(r:right_len-2::-:):--}"
-}
-
----mark() {
-    ___restore_term
-
-    integer len="${#___STARTING_MSG}"
-    integer left_len=len/2
-    integer right_len=len-left_len
-    print -- ${fg_bold[blue]}"${(r:left_len-10::-:):--} Additional data ^ ${(r:right_len-9::-:):--}"$reset_color
-}
-
 ___restore_term() {
     if [ -z "${functions[colors]}" ]; then
         autoload colors
@@ -69,8 +49,50 @@ ___restore_term() {
     fi
 }
 
+___msg() {
+    [ "$2" = "color" ] && ___restore_term
+
+    integer len="${#___STARTING_MSG}"
+    integer left_len=len/2
+    integer right_len=len-left_len
+
+    local msg=" $1 "
+    integer len2="${#msg}"
+    integer left_correct=len2/2
+    integer right_correct=len2-left_correct
+
+    print -- ${fg_bold[blue]}"${(r:left_len-left_correct::-:):--}${msg}${(r:right_len-right_correct::-:):--}"$reset_color
+}
+
 ___s-or-f() {
     [ "$1" -eq "0" ] && print -- "${fg_bold[green]}$___SUCCEEDED_MSG$reset_color" || print -- "${fg_bold[red]}$___FAILED_MSG$reset_color"
+}
+
+#
+# User functions
+#
+
+---start() {
+    print -- "$___STARTING_MSG"
+}
+
+---stop() {
+    ___msg "END"
+}
+
+---dumpenv() {
+    print "ZPLG_DIR '"$ZPLG_DIR"'"
+    print "ZPLG_NAME '"$ZPLG_NAME"'"
+    print "ZPLG_HOME '"$ZPLG_HOME"'"
+}
+
+---end() {
+    print
+    ___msg "End of $___TEST_NAME" "color"
+}
+
+---mark() {
+    ___msg "Additional data ^" "color"
 }
 
 ---compare() {
@@ -89,7 +111,6 @@ ___s-or-f() {
     ___s-or-f $?
     cat "$___DIFF_FILE"
 
-    print "\n----- End of $___TEST_NAME -----"
 }
 
 #

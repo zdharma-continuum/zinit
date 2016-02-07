@@ -76,3 +76,4 @@ declare -p fpath
 ---mark
 
 ---compare
+---end

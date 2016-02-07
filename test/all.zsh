@@ -9,12 +9,12 @@ colors
 if [[ "$1" = "sh" || -z "$1" ]]; then
     for i in test[0-9]##.zsh; do
         ./"$i"
-        echo
-        echo "${fg_bold[blue]}===================================================$reset_color"
-        echo
-        echo -n "Press any key for next test..."
+        print
+        print "${fg_bold[blue]}===================================================$reset_color"
+        print
+        print -n "Press any key for next test..."
         read -sk k
-        echo -e "\n"
+        print -e "\n"
     done
 fi
 
@@ -22,12 +22,12 @@ fi
 if [[ "$1" = "ksh" || -z "$1" ]]; then
     for i in test[0-9]##_ksh.zsh; do
         ./"$i"
-        echo
-        echo "${fg_bold[blue]}===================================================$reset_color"
-        echo
-        echo -n "Press any key for next test..."
+        print
+        print "${fg_bold[blue]}===================================================$reset_color"
+        print
+        print -n "Press any key for next test..."
         read -sk k
-        [ "$k" != $'\n' ] && echo
-        echo -e "\n"
+        [ "$k" != $'\n' ] && print
+        print -e "\n"
     done
 fi

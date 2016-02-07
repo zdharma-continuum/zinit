@@ -35,3 +35,4 @@ zplugin report "$PLUGIN_NAME" > "$___TEST_REPORT_FILE" 2>&1
 zplugin unload "$PLUGIN_NAME" > "$___TEST_UNLOAD_FILE" 2>&1
 
 ---compare
+---end
