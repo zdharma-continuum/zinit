@@ -110,6 +110,9 @@ ___s-or-f() {
 
     ___restore_term
 
+    print "\n${fg_bold[yellow]}----- Press any key for REPORT results -----$reset_color"
+    read -sk
+
     diff "$___REPORT_FILE" "$___TEST_REPORT_FILE" > "$___DIFF_FILE"
     ret=$?
     print

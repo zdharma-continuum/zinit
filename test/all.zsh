@@ -5,8 +5,12 @@ setopt extendedglob
 autoload colors
 colors
 
-# NO_KSH_ARRAYS
-if [[ "$1" = "sh" || -z "$1" ]]; then
+local pre="==== "
+local after=" ===="
+
+# Normal tests
+if [[ -z "$1" ]]; then
+    echo -e ${fg_bold[magenta]}"${pre}normal tests${after}"$reset_color"\n"
     for i in test[0-9]##.zsh; do
         ./"$i"
         print
@@ -20,6 +24,7 @@ fi
 
 # KSH_ARRAYS
 if [[ "$1" = "kshar" || -z "$1" ]]; then
+    echo -e ${fg_bold[magenta]}"${pre}KSH_ARRAYS tests${after}"$reset_color"\n"
     for i in test[0-9]##_kshar.zsh; do
         ./"$i"
         print
