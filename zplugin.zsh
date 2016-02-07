@@ -1368,10 +1368,11 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Searches for completions owned by given plugin
 # Returns them in reply array
 -zplg-find-completions-of-plugin() {
+    setopt localoptions nullglob
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
-    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_*(N) )
+    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_* )
 }
 
 # For each positional parameter that each should
@@ -1492,13 +1493,25 @@ ZPLG_ZLE_HOOKS_LIST=(
 # file but for alternatives
 -zplg-find-other-matches() {
     local dname="$1" pdir="$2"
-    reply=(
-        $dname/$pdir/init.zsh(N)
-        $dname/${pdir}.zsh-theme(N) $dname/${pdir}.theme.zsh(N)
-        $dname/${pdir}.zshplugin(N) $dname/${pdir}.zsh.plugin(N)
-        $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
-        $dname/*.zsh-theme(N)
-    )
+
+    setopt localoptions nullglob
+
+    if [ -e "$dname/$pdir/init.zsh" ]; then
+        reply=( "$dname/$pdir/init.zsh" )
+    elif [ -e "$dname/${pdir}.zsh-theme" ]; then
+        reply=( "$dname/${pdir}.zsh-theme" )
+    elif [ -e "$dname/${pdir}.theme.zsh" ]; then
+        reply=( "$dname/${pdir}.theme.zsh" )
+    elif [ -e "$dname/${pdir}.zshplugin" ]; then
+        reply=( "$dname/${pdir}.zshplugin" )
+    elif [ -e "$dname/${pdir}.zsh.plugin" ]; then
+        reply=( "$dname/${pdir}.zsh.plugin" )
+    else
+        reply=(
+            $dname/*.plugin.zsh $dname/*.zsh $dname/*.sh
+            $dname/*.zsh-theme
+        )
+    fi
 }
 
 # }}}
@@ -1583,6 +1596,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-install-completions() {
     local reinstall="${3:-0}"
 
+    setopt localoptions nullglob
+
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
     local plugin="${reply[-1]}"
@@ -1592,9 +1607,9 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
-    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_* )
+    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_* )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
@@ -1625,6 +1640,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 -zplg-uninstall-completions() {
+    setopt localoptions nullglob
+
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
     local plugin="${reply[-1]}"
@@ -1635,9 +1652,9 @@ ZPLG_ZLE_HOOKS_LIST=(
     local c cfile bkpfile
     integer action global_action=0
 
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_*(N) )
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_* )
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_* )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
@@ -1674,11 +1691,13 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 -zplg-compinit() {
+    setopt localoptions nullglob
+
     typeset -a symlinked backup_comps
     local c cfile bkpfile 
 
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_* )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
@@ -1778,12 +1797,13 @@ ZPLG_ZLE_HOOKS_LIST=(
     local pdir="${${plugin%.plugin.zsh}%.zsh}"
     local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 
-    # Look for a file to source. Use reply for optimization
-    # (-zplg-find-other-matches also uses it). First look
-    # for the most common one (optimization) then for other
-    # possibilities
-    reply=( $dname/${pdir}.plugin.zsh(N) )
-    [ "$#reply" -eq "0" ] && -zplg-find-other-matches "$dname" "$pdir"
+    # Look for a file to source. First look for the most
+    # common one (optimization) then for other possibilities
+    if [ ! -e "$dname/${pdir}.plugin.zsh" ]; then
+        -zplg-find-other-matches "$dname" "$pdir"
+    else
+        reply=( "$dname/${pdir}.plugin.zsh" )
+    fi
     [ "$#reply" -eq "0" ] && return 1
 
     # Get first one
@@ -1847,8 +1867,12 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Look for file to compile. First look for the most common one
     # (optimization) then for other possibilities
-    reply=( $dname/${pdir}.plugin.zsh(N) )
-    [ "$#reply" -eq "0" ] && -zplg-find-other-matches "$dname" "$pdir"
+    if [ ! -e "$dname/${pdir}.plugin.zsh" ]; then
+        -zplg-find-other-matches "$dname" "$pdir"
+    else
+        reply=( "$dname/${pdir}.plugin.zsh" )
+    fi
+
     if [ "$#reply" -eq "0" ]; then
         print "${ZPLG_COL[error]}No files for compilation found$reset_color"
         return 1
@@ -1866,6 +1890,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 -zplg-uncompile-plugin() {
+    setopt localoptions nullglob
+
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" silent="$3"
 
@@ -1874,7 +1900,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # have ".zsh" there
     local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
     typeset -a matches m
-    matches=( $dname/*.zwc(N) )
+    matches=( $dname/*.zwc )
 
     if [ "$#matches" -eq "0" ]; then
         if [ "$silent" = "1" ]; then
@@ -1898,8 +1924,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 #
 
 -zplg-show-completions() {
+    setopt localoptions nullglob
+
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Find longest completion name
     local cpath c
@@ -1940,6 +1968,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 # While -zplg-show-completions shows what completions are installed,
 # this functions searches through all plugin directories showing what's available
 -zplg-search-completions() {
+    setopt localoptions nullglob
+
     typeset -a plugin_paths
     plugin_paths=( "$ZPLG_PLUGINS_DIR"/*---* )
 
@@ -1949,7 +1979,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_*(N) )
+        completions=( "$pp"/_* )
         if [ "$#completions" -gt 0 ]; then
             local pd="${pp:t}"
             [ "${#pd}" -gt "$longest" ] && longest="${#pd}"
@@ -1960,7 +1990,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_*(N) )
+        completions=( "$pp"/_* )
 
         if [ "$#completions" -gt 0 ]; then
             # Array of completions, e.g. ( _cp _xauth )
@@ -2580,6 +2610,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 -zplg-update-or-status-all() {
+    setopt localoptions nullglob
+
     local st="$1"
     local repo pd user plugin
 
@@ -2589,7 +2621,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         print "${ZPLG_COL[error]}Warning:$reset_color updating also unloaded plugins"
     fi
 
-    for repo in "$ZPLG_PLUGINS_DIR"/*(N); do
+    for repo in "$ZPLG_PLUGINS_DIR"/*; do
         pd="${repo:t}"
 
         # Two special cases
@@ -2621,6 +2653,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Shows overall status
 -zplg-show-zstatus() {
+    setopt localoptions nullglob
+
     local infoc="${ZPLG_COL[info]}"
 
     print "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
@@ -2642,20 +2676,20 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
-    plugins=( "$ZPLG_PLUGINS_DIR"/*(N) )
+    plugins=( "$ZPLG_PLUGINS_DIR"/* )
     print "Downloaded plugins: ${infoc}${#plugins}${reset_color}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N) )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_* )
     print "Enabled completions: ${infoc}${#completions}${reset_color}"
 
     # Number of disabled completions, with _zlocal/zplugin
-    completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N) )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
     print "Disabled completions: ${infoc}${#completions}${reset_color}"
 
     # Number of completions existing in all plugins
-    completions=( "$ZPLG_PLUGINS_DIR"/*/_*(N) )
+    completions=( "$ZPLG_PLUGINS_DIR"/*/_* )
     print "Completions available overall: ${infoc}${#completions}${reset_color}"
 
     # Enumerate snippets loaded
@@ -2664,7 +2698,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Number of compiled plugins
     typeset -a matches m
     integer count=0
-    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc(N) )
+    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
 
     local cur_plugin="" uspl1
     for m in "${matches[@]}"; do
@@ -2682,8 +2716,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Gets list of compiled plugins
 -zplg-compiled() {
+    setopt localoptions nullglob
+
     typeset -a matches m
-    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc(N) )
+    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
 
     if [ "$#matches" -eq "0" ]; then
         print "No compiled plugins"
@@ -2709,10 +2745,12 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 -zplg-compile-uncompile-all() {
+    setopt localoptions nullglob
+
     local compile="$1"
 
     typeset -a plugins
-    plugins=( "$ZPLG_PLUGINS_DIR"/*(N) )
+    plugins=( "$ZPLG_PLUGINS_DIR"/* )
 
     local p user plugin
     for p in "${plugins[@]}"; do
