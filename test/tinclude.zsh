@@ -43,7 +43,7 @@ ___ZPLG_TESTING_HOME="$___TEST_DIR/tzplugin"
 
 ___restore_term() {
     if [ -z "${functions[colors]}" ]; then
-        autoload colors
+        autoload -Uz colors
         colors
     fi
     if [ "$TERM" = "vt100" ]; then
