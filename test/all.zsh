@@ -36,3 +36,18 @@ if [[ "$1" = "kshar" || -z "$1" ]]; then
         echo -e "\n"
     done
 fi
+
+# emulate sh
+if [[ "$1" = "sh" || -z "$1" ]]; then
+    echo -e ${fg_bold[magenta]}"${pre}emulate sh tests${after}"$reset_color"\n"
+    for i in sh_test[0-9]##.zsh; do
+        ./"$i"
+        print
+        print "${fg_bold[blue]}===================================================$reset_color"
+        print
+        print -n "Press any key for next test..."
+        read -sk k
+        [ "$k" != $'\n' ] && print
+        echo -e "\n"
+    done
+fi
