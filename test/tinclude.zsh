@@ -22,6 +22,7 @@ if [ ! -d "$___TEST_DIR" ]; then
     return 1
 fi
 
+bkpTERM="$TERM"
 export TERM=vt100
 
 ___REPORT_FILE="$___TEST_DIR/models/${___TEST_NAME}_report.txt"
@@ -50,28 +51,42 @@ ___ZPLG_TESTING_HOME="$___TEST_DIR/tzplugin"
 }
 
 ---mark() {
+    ___restore_term
+
     integer len="${#___STARTING_MSG}"
     integer left_len=len/2
     integer right_len=len-left_len
-    print -- "${(r:left_len-3::-:):--} MARK ${(r:right_len-3::-:):--}"
+    print -- ${fg_bold[red]}"${(r:left_len-3::-:):--} MARK ${(r:right_len-3::-:):--}"$reset_color
 }
 
----s-or-f() {
-    [ "$1" -eq "0" ] && print -- "$___SUCCEEDED_MSG" || print -- "$___FAILED_MSG"
+___restore_term() {
+    if [ -z "${functions[colors]}" ]; then
+        autoload colors
+        colors
+    fi
+    if [ "$TERM" = "vt100" ]; then
+        export TERM="$bkpTERM"
+    fi
+}
+
+___s-or-f() {
+    [ "$1" -eq "0" ] && print -- "${fg_bold[green]}$___SUCCEEDED_MSG$reset_color" || print -- "${fg_bold[red]}$___FAILED_MSG$reset_color"
 }
 
 ---compare() {
+    ___restore_term
+
     print
     diff "$___REPORT_FILE" "$___TEST_REPORT_FILE" > "$___DIFF_FILE"
-    ---s-or-f $?
+    ___s-or-f $?
     cat "$___DIFF_FILE"
 
-    print "\n----- REPORT results showed, hit enter for UNLOAD results -----"
+    print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}REPORT${fg_bold[yellow]} results showed, hit enter for UNLOAD results -----$reset_color"
     local enter
     read enter
 
     diff "$___UNLOAD_FILE" "$___TEST_UNLOAD_FILE" > "$___DIFF_FILE"
-    ---s-or-f $?
+    ___s-or-f $?
     cat "$___DIFF_FILE"
 
     print "\n----- End of $___TEST_NAME -----"
