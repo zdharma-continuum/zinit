@@ -81,9 +81,8 @@ ___s-or-f() {
     ___s-or-f $?
     cat "$___DIFF_FILE"
 
-    print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}REPORT${fg_bold[yellow]} results showed, hit enter for UNLOAD results -----$reset_color"
-    local enter
-    read enter
+    print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}REPORT${fg_bold[yellow]} results showed, press any key for UNLOAD results -----$reset_color"
+    read -sk
 
     diff "$___UNLOAD_FILE" "$___TEST_UNLOAD_FILE" > "$___DIFF_FILE"
     ___s-or-f $?
