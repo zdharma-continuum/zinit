@@ -712,7 +712,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
 
             setopt localoptions extendedglob
-            [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
+            [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
             typeset -A func
             local i
@@ -826,7 +826,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
             setopt localoptions extendedglob
-            [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_OPTIONS_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
+            [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_OPTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
             typeset -A opts_before opts_after opts
             opts_before=( "${(z)ZPLG_OPTIONS_BEFORE[$uspl2]}" )
@@ -863,7 +863,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Paranoid, don't want bad key/value pair error
     integer empty=0
     -zplg-save-set-extendedglob
-    [[ "${ZPLG_OPTIONS[$uspl2]}" = ( |$'\t')# ]] && empty=1
+    [[ "${ZPLG_OPTIONS[$uspl2]}" != *[$'! \t']* ]] && empty=1
     -zplg-restore-extendedglob
     (( empty )) && return 0
 
@@ -930,8 +930,8 @@ ZPLG_ZLE_HOOKS_LIST=(
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
             setopt localoptions extendedglob
-            [[ "${ZPLG_PATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
-            [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_FPATH_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
+            [[ "${ZPLG_PATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+            [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FPATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
             typeset -A path_state fpath_state
             local i
@@ -1040,7 +1040,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
             setopt localoptions extendedglob
-            [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" = ( |$'\t')# ]] && return 1
+            [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
             # Un-concatenated parameters from moment of diff start and of diff end
             typeset -A params_before params_after
@@ -1092,7 +1092,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # i.e. include white spaces as empty
     setopt localoptions extendedglob
     REPLY=""
-    [[ "${ZPLG_PARAMETERS_PRE[$uspl2]}" = ( |$'\t')# || "${ZPLG_PARAMETERS_POST[$uspl2]}" = ( |$'\t')# ]] && return 0
+    [[ "${ZPLG_PARAMETERS_PRE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_POST[$uspl2]}" != *[$'! \t']* ]] && return 0
 
     typeset -A elem_pre elem_post
     elem_pre=( "${(z)ZPLG_PARAMETERS_PRE[$uspl2]}" )
@@ -1411,18 +1411,6 @@ ZPLG_ZLE_HOOKS_LIST=(
             reply+=( "0" )
         fi
     done
-}
-
-# Trim the values, taken from $functions or $aliases can be e.g. a single tab
--zplg-trim-backup-vars() {
-    setopt localoptions extendedglob
-
-    [[ "${ZPLG_BACKUP_FUNCTIONS[autoload]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[autoload]=""
-    [[ "${ZPLG_BACKUP_FUNCTIONS[bindkey]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[bindkey]=""
-    [[ "${ZPLG_BACKUP_FUNCTIONS[zstyle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zstyle]=""
-    [[ "${ZPLG_BACKUP_FUNCTIONS[alias]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[alias]=""
-    [[ "${ZPLG_BACKUP_FUNCTIONS[zle]}" = ( |$'\t')# ]] && ZPLG_BACKUP_FUNCTIONS[zle]=""
-    [[ "${ZPLG_BACKUP_ALIASES[compdef]}" = ( |$'\t')# ]] && ZPLG_BACKUP_ALIASES[compdef]=""
 }
 
 -zplg-reset-already-warnings() {
@@ -2341,7 +2329,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-diff-options "$uspl2" diff
     integer empty=0
     -zplg-save-set-extendedglob
-    [[ "${ZPLG_OPTIONS[$uspl2]}" = ( |$'\t')# ]] && empty=1
+    [[ "${ZPLG_OPTIONS[$uspl2]}" != *[$'! \t']* ]] && empty=1
     -zplg-restore-extendedglob
 
     if (( empty != 1 )); then
@@ -2465,7 +2453,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-diff-parameter "$uspl2" diff
     empty=0
     -zplg-save-set-extendedglob
-    [[ "${ZPLG_PARAMETERS_POST[$uspl2]}" = ( |$'\t')# ]] && empty=1
+    [[ "${ZPLG_PARAMETERS_POST[$uspl2]}" != *[$'! \t']* ]] && empty=1
     -zplg-restore-extendedglob
 
     if (( empty != 1 )); then
@@ -2514,10 +2502,19 @@ ZPLG_ZLE_HOOKS_LIST=(
         force="$tmp"
     fi
 
-    local -a match mbegin mend
-    local MATCH; integer MBEGIN MEND
+    # Check for no-raw github url and for url at all
+    integer is_no_raw_github=0 is_url
+    () {
+        local -a match mbegin mend
+        local MATCH; integer MBEGIN MEND
+        setopt localoptions extendedglob
 
-    -zplg-save-set-extendedglob
+        # Remove leading whitespace
+        url="${url#"${url%%[! $'\t']*}"}"
+
+        [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
+        [[ "$url" = http:* || "$url" = https:* ]] && is_url=1
+    }
 
     # Construct a local directory name from what's in url
     local filename="${url:t}"
@@ -2537,7 +2534,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     ZPLG_SNIPPETS[$url]="$filename"
 
     # Change the url to point to raw github content if it isn't like that
-    if [[ "$url" = *github.com* && ! "$url" = */raw/* ]]; then
+    if (( is_no_raw_github )); then
         url="${url/\/blob\///raw/}"
         url="${url}?raw=1"
     fi
@@ -2545,7 +2542,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Download or copy the file
     if [[ ! -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" || "$force" = "-f" ]]
     then
-        if [[ "$url" = ( |$'\t')#http(|s):* ]]
+        if (( is_url ))
         then
             # URL
         (
@@ -2563,8 +2560,6 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 
     # Source the file
-    -zplg-restore-extendedglob
-
     builtin source "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
 }
 
@@ -2975,7 +2970,7 @@ zplugin() {
        (compiled)
            -zplg-compiled
            ;;
-       (-h|--help|help|)
+       (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage$reset_color:
 -h|--help|help           - usage information
 zstatus                  - overall status of Zplugin
