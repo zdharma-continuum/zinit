@@ -255,7 +255,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     zparseopts -a opts -D ${(s::):-TUXkmtzw}
 
-    if [ -n "${opts[(r)(-|+)X]}" ]
+    # TODO: +X
+    if [ -n "${opts[(r)-X]}" ]
     then
         -zplg-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
