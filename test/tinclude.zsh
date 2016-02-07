@@ -144,7 +144,7 @@ ___s-or-f() {
 # Load zplugin (testability maintained)
 #
 
-ZPLG_TESTING_HOME="$___ZPLG_TESTING_HOME"
+ZPLG_HOME="$___ZPLG_TESTING_HOME"
 cd "$___TEST_DIR"
 cd ..
 source "./zplugin.zsh"

@@ -17,20 +17,50 @@ typeset -gAH ZPLG_REPORTS
 # Common needed values
 #
 
-# TODO emulate sh
-typeset -gH ZPLG_DIR="${0:h}"
-typeset -gH ZPLG_NAME="${${0:t}:r}"
+typeset -gH ZPLG_NAME
 
-if [ -d "$HOME/.$ZPLG_NAME" ]; then
-    # Ignore ZDOTDIR if user manually put Zplugin to $HOME
-    typeset -gH ZPLG_HOME="$HOME/.$ZPLG_NAME"
-else
-    typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
+# User can override ZPLG_DIR. Misleading? Reset
+if [ ! -e "$ZPLG_DIR"/widget-list.zsh ]; then
+    typeset -gH ZPLG_DIR=""
 fi
 
-# Optional ZPLG_HOME override, for use by tests
-if [ -n "$ZPLG_TESTING_HOME" ]; then
-    ZPLG_HOME="$ZPLG_TESTING_HOME"
+# Problematic function_argzero
+if [[ ! -o "functionargzero" ]]; then
+    if [ "$0" = "${argv[0]}" ]; then
+        ZPLG_NAME="zplugin" # A try of typical, actually expected name
+        [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
+    else
+        ZPLG_NAME="${${argv[0]:t}:r}"
+        [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${argv[0]:h}"
+    fi
+else
+    ZPLG_NAME="${${0:t}:r}"
+    [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
+fi
+
+# Make ZPLG_DIR path absolute
+if [[ "$ZPLG_DIR" != /* ]]; then
+    if [ "$ZPLG_DIR" = "." ]; then
+        ZPLG_DIR="$PWD"
+    else
+        ZPLG_DIR="$PWD/$ZPLG_DIR"
+    fi
+fi
+
+# Final test of ZPLG_DIR
+if [ ! -e "$ZPLG_DIR"/widget-list.zsh ]; then
+    print "Could not establish ZPLG_DIR variable. Set it to where Zplugin's git repository is."
+    return 1
+fi
+
+# User can override ZPLG_HOME
+if [ -z "$ZPLG_HOME" ]; then
+    # Ignore ZDOTDIR if user manually put Zplugin to $HOME
+    if [ -d "$HOME/.$ZPLG_NAME" ]; then
+        typeset -gH ZPLG_HOME="$HOME/.$ZPLG_NAME"
+    else
+        typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
+    fi
 fi
 
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"

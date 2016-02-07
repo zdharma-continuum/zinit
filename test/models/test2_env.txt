@@ -1,4 +1,4 @@
-ZPLG_DIR '.'
+ZPLG_DIR '/Users/sgniazdowski/github/zplugin'
 ZPLG_NAME 'zplugin'
 ZPLG_HOME '/Users/sgniazdowski/github/zplugin/test/tzplugin'
 ZPLG_PLUGINS_DIR '/Users/sgniazdowski/github/zplugin/test/tzplugin/plugins'
