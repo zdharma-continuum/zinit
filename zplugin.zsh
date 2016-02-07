@@ -754,16 +754,16 @@ ZPLG_ZLE_HOOKS_LIST=(
     integer longest=0 longest_left=0 cur_left_len=0 count=1
     local f
     for f in "${(on)func[@]}"; do
-        [ -z "$f" ] && continue
+        [ -z "${#f}" ] && continue
         f="${(Q)f}"
 
         # Compute for elements in left column,
         # ones that will be paded with spaces 
         if (( count ++ % 2 != 0 )); then
-            [ "$#f" -gt "$longest_left" ] && longest_left="$#f"
-            cur_left_len="$#f"
+            [ "${#f}" -gt "$longest_left" ] && longest_left="${#f}"
+            cur_left_len="${#f}"
         else
-            cur_left_len+="$#f"
+            cur_left_len+="${#f}"
             cur_left_len+=1 # For separating space
             [ "$cur_left_len" -gt "$longest" ] && longest="$cur_left_len"
         fi
@@ -876,7 +876,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     integer longest=0
     local k
     for k in "${(kon)opts[@]}"; do
-        [ "$#k" -gt "$longest" ] && longest="$#k"
+        [ "${#k}" -gt "$longest" ] && longest="${#k}"
     done
 
     # Output in one column
@@ -1104,12 +1104,12 @@ ZPLG_ZLE_HOOKS_LIST=(
     integer longest=0 vlongest1=0 vlongest2=0
     for k in "${(k)elem_post[@]}"; do
         k="${(Q)k}"
-        [ "$#k" -gt "$longest" ] && longest="$#k"
+        [ "${#k}" -gt "$longest" ] && longest="${#k}"
 
         v1="${(Q)elem_pre[$k]}"
         v2="${(Q)elem_post[$k]}"
-        [ "$#v1" -gt "$vlongest1" ] && vlongest1="$#v1"
-        [ "$#v2" -gt "$vlongest2" ] && vlongest2="$#v2"
+        [ "${#v1}" -gt "$vlongest1" ] && vlongest1="${#v1}"
+        [ "${#v2}" -gt "$vlongest2" ] && vlongest2="${#v2}"
     done
 
     # Enumerate parameters that changed. A key
@@ -1333,7 +1333,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" )
 
-    [ "$#commands" -gt 0 ] && print "Forgetting commands completed by \`$f':"
+    [ "${#commands}" -gt 0 ] && print "Forgetting commands completed by \`$f':"
 
     local k
     for k in "${commands[@]}"; do
@@ -1805,7 +1805,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     else
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
-    [ "$#reply" -eq "0" ] && return 1
+    [ "${#reply}" -eq "0" ] && return 1
 
     # Get first one
     integer correct=0
@@ -1874,7 +1874,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
 
-    if [ "$#reply" -eq "0" ]; then
+    if [ "${#reply}" -eq "0" ]; then
         print "${ZPLG_COL[error]}No files for compilation found$reset_color"
         return 1
     fi
@@ -1903,7 +1903,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a matches m
     matches=( $dname/*.zwc )
 
-    if [ "$#matches" -eq "0" ]; then
+    if [ "${#matches}" -eq "0" ]; then
         if [ "$silent" = "1" ]; then
             print "not compiled"
         else
@@ -1936,7 +1936,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
         c="${c#_}"
-        [ "$#c" -gt "$longest" ] && longest="$#c"
+        [ "${#c}" -gt "$longest" ] && longest="${#c}"
     done
 
     #
@@ -1981,7 +1981,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local pp
     for pp in "${plugin_paths[@]}"; do
         completions=( "$pp"/_* )
-        if [ "$#completions" -gt 0 ]; then
+        if [ "${#completions}" -gt 0 ]; then
             local pd="${pp:t}"
             [ "${#pd}" -gt "$longest" ] && longest="${#pd}"
         fi
@@ -1993,7 +1993,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     for pp in "${plugin_paths[@]}"; do
         completions=( "$pp"/_* )
 
-        if [ "$#completions" -gt 0 ]; then
+        if [ "${#completions}" -gt 0 ]; then
             # Array of completions, e.g. ( _cp _xauth )
             completions=( "${completions[@]:t}" )
 
@@ -2042,7 +2042,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Print "----------"
     local msg="Plugin report for $user/$plugin"
-    print ${ZPLG_COL[bar]}"${(r:$#msg::-:)tmp__}"$reset_color
+    print ${ZPLG_COL[bar]}"${(r:${#msg}::-:)tmp__}"$reset_color
 
     # Print report gathered via shadowing
     print ${ZPLG_REPORTS[${user}/${plugin}]}
@@ -2079,7 +2079,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a completions
     completions=( "${reply[@]}" )
 
-    if [ "$#completions" -ge "1" ]; then
+    if [ "${#completions}" -ge "1" ]; then
         print "${ZPLG_COL[p]}Completions:$reset_color"
         -zplg-check-which-completions-are-installed "${completions[@]}"
         typeset -a installed
@@ -2089,7 +2089,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         typeset -a enabled
         enabled=( "${reply[@]}" )
 
-        integer count="$#completions" idx
+        integer count="${#completions}" idx
         for (( idx=1; idx <= count; idx ++ )); do
             print -n "${completions[idx]:t}"
             if [ "${installed[idx]}" != "1" ]; then
@@ -2722,7 +2722,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a matches m
     matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
 
-    if [ "$#matches" -eq "0" ]; then
+    if [ "${#matches}" -eq "0" ]; then
         print "No compiled plugins"
         return 0
     fi
