@@ -2042,37 +2042,37 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Print "----------"
     local msg="Plugin report for $user/$plugin"
-    print ${ZPLG_COL[bar]}"${(r:${#msg}::-:)tmp__}"$reset_color
+    print "${ZPLG_COL[bar]}${(r:${#msg}::-:)tmp__}$reset_color"
 
     # Print report gathered via shadowing
-    print ${ZPLG_REPORTS[${user}/${plugin}]}
+    print "${ZPLG_REPORTS[${user}/${plugin}]}"
 
     # Print report gathered via $functions-diffing
     REPLY=""
     -zplg-diff-functions "$user/$plugin" diff
     -zplg-format-functions "$user/$plugin"
-    [ -n "$REPLY" ] && print ${ZPLG_COL[p]}"Functions created:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Functions created:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
     -zplg-diff-options "$user/$plugin" diff
     -zplg-format-options "$user/$plugin"
-    [ -n "$REPLY" ] && print ${ZPLG_COL[p]}"Options changed:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Options changed:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via environment diffing
     REPLY=""
     -zplg-diff-env "$user/$plugin" diff
     -zplg-format-env "$user/$plugin" "1"
-    [ -n "$REPLY" ] && print ${ZPLG_COL[p]}"PATH elements added:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}PATH elements added:$reset_color"$'\n'"$REPLY"
 
     REPLY=""
     -zplg-format-env "$user/$plugin" "2"
-    [ -n "$REPLY" ] && print ${ZPLG_COL[p]}"FPATH elements added:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}FPATH elements added:$reset_color"$'\n'"$REPLY"
 
     # Print report gathered via parameter diffing
     -zplg-diff-parameter "$user/$plugin" diff
     -zplg-format-parameter "$user/$plugin"
-    [ -n "$REPLY" ] && print ${ZPLG_COL[p]}"Variables added or redefined:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Variables added or redefined:$reset_color"$'\n'"$REPLY"
 
     # Print what completions plugin has
     -zplg-find-completions-of-plugin "$user" "$plugin"

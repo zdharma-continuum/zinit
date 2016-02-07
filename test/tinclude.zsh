@@ -63,7 +63,7 @@ ___msg() {
     integer left_correct=len2/2
     integer right_correct=len2-left_correct
 
-    print -- ${fg_bold[blue]}"${(r:left_len-left_correct::-:):--}${msg}${(r:right_len-right_correct::-:):--}"$reset_color
+    print -- "${fg_bold[blue]}${(r:left_len-left_correct::-:):--}${msg}${(r:right_len-right_correct::-:):--}$reset_color"
 }
 
 ___s-or-f() {
