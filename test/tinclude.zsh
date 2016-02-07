@@ -27,8 +27,10 @@ export TERM=vt100
 
 ___REPORT_FILE="$___TEST_DIR/models/${___TEST_NAME}_report.txt"
 ___UNLOAD_FILE="$___TEST_DIR/models/${___TEST_NAME}_unload.txt"
+___ENV_FILE="$___TEST_DIR/models/${___TEST_NAME}_env.txt"
 ___TEST_REPORT_FILE="$___TEST_DIR/.report.txt"
 ___TEST_UNLOAD_FILE="$___TEST_DIR/.unload.txt"
+___TEST_ENV_FILE="$___TEST_DIR/.env.txt"
 ___DIFF_FILE="$___TEST_DIR/.diff"
 ___SUCCEEDED_MSG="--- Succeeded ---"
 ___FAILED_MSG="--- Failed [ < model, > result ] ---"
@@ -85,9 +87,13 @@ ___s-or-f() {
 }
 
 ---dumpenv() {
-    print "ZPLG_DIR '"$ZPLG_DIR"'"
-    print "ZPLG_NAME '"$ZPLG_NAME"'"
-    print "ZPLG_HOME '"$ZPLG_HOME"'"
+    print "ZPLG_DIR '$ZPLG_DIR'"
+    print "ZPLG_NAME '$ZPLG_NAME'"
+    print "ZPLG_HOME '$ZPLG_HOME'"
+    print "ZPLG_PLUGINS_DIR '$ZPLG_PLUGINS_DIR'"
+    print "ZPLG_COMPLETIONS_DIR '$ZPLG_COMPLETIONS_DIR'"
+    print "ZPLG_SNIPPETS_DIR '$ZPLG_SNIPPETS_DIR'"
+    print "ZPLG_HOME_READY '$ZPLG_HOME_READY'"
 }
 
 ---end() {
@@ -100,21 +106,35 @@ ___s-or-f() {
 }
 
 ---compare() {
+    local ret
+
     ___restore_term
 
     diff "$___REPORT_FILE" "$___TEST_REPORT_FILE" > "$___DIFF_FILE"
+    ret=$?
     print
-    ___s-or-f $?
+    ___s-or-f $ret
     cat "$___DIFF_FILE"
 
     print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}REPORT${fg_bold[yellow]} results showed, press any key for UNLOAD results -----$reset_color"
     read -sk
 
     diff "$___UNLOAD_FILE" "$___TEST_UNLOAD_FILE" > "$___DIFF_FILE"
+    ret=$?
     print
-    ___s-or-f $?
+    ___s-or-f $ret
     cat "$___DIFF_FILE"
 
+    print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}UNLOAD${fg_bold[yellow]} results showed, press any key for ENVIRONMENT results -----$reset_color"
+    read -sk
+
+    diff "$___ENV_FILE" "$___TEST_ENV_FILE" > "$___DIFF_FILE"
+    ret=$?
+    print
+    ___s-or-f $ret
+    cat "$___DIFF_FILE"
+
+    print "\n${fg_bold[yellow]}----- End of ${fg_bold[magenta]}ENVIRONMENT${fg_bold[yellow]} results -----$reset_color"
 }
 
 #
