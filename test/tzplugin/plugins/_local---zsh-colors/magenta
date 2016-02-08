@@ -1,4 +1,4 @@
-printf $fg[$0]
+printf "${fg[$0]}"
 
 if (( $# == 0 ))
 then

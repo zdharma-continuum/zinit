@@ -315,7 +315,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         # Real autoload doesn't touch function if it already exists
         if (( ${+functions[$func]} != 1 )); then
             eval "function $func {
-                --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"
+                --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"
             }'
             #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
         fi

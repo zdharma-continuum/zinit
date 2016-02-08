@@ -1,15 +1,15 @@
 Plugin report for _local/zsh-colors
 -----------------------------------
 Source colors.plugin.zsh
-Autoload black with options -U -z
-Autoload red with options -U -z
-Autoload green with options -U -z
-Autoload yellow with options -U -z
-Autoload blue with options -U -z
-Autoload magenta with options -U -z
-Autoload cyan with options -U -z
-Autoload white with options -U -z
-Autoload colors with options -U -z
+Autoload black with options -U
+Autoload red with options -U
+Autoload green with options -U
+Autoload yellow with options -U
+Autoload blue with options -U
+Autoload magenta with options -U
+Autoload cyan with options -U
+Autoload white with options -U
+Autoload colors with options -U
 
 Functions created:
 black  blue

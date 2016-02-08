@@ -4,5 +4,5 @@
 #
 # You can also debug this library with `whence -f red`
 colors=( black red green yellow blue magenta cyan white )
-autoload -Uz $colors
-autoload -U colors && colors
+autoload -Uz "${colors[@]}"
+autoload -Uz colors && colors
