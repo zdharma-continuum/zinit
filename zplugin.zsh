@@ -2540,6 +2540,14 @@ ZPLG_ZLE_HOOKS_LIST=(
                 # Don't unset readonly variables
                 [[ "${v1/-readonly/}" != "$v1" || "${v2/-readonly/}" != "$v2" ]] && continue
 
+                # Don't unset arrays managed by add-zsh-hook
+                # TODO: remember and remove hooks
+                case "$k" in
+                    (chpwd_functions|precmd_functions|preexec_functions|periodic_functions|zshaddhistory_functions|zshexit_functions|zsh_directory_name_functions)
+                        continue
+                        ;;
+                esac
+
                 # Don't unset redefined variables, only newly defined
                 # "" means variable didn't exist before plugin load
                 # (didn't have a type)
