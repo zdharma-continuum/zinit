@@ -2072,7 +2072,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Print "----------"
     local msg="Plugin report for $user/$plugin"
-    print "${ZPLG_COL[bar]}${(r:${#msg}::-:)tmp__}$reset_color"
+    print -- "${ZPLG_COL[bar]}${(r:${#msg}::-:)tmp__}$reset_color"
 
     # Print report gathered via shadowing
     print "${ZPLG_REPORTS[${user}/${plugin}]}"
