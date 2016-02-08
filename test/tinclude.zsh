@@ -2,7 +2,7 @@ typeset -gH ___TEST_NAME="${${1:t}:r}"
 
 ___TEST_DIR="`pwd`"
 
-if [ "${___TEST_DIR/\/zplugin/}" = "${___TEST_DIR}" ]; then
+if [[ "${___TEST_DIR/\/zplugin/}" = "${___TEST_DIR}" && "${___TEST_DIR/\/.zplugin}" = "${___TEST_DIR}" ]]; then
     echo "Test run not from zplugin's directory tree"
     return 1
 fi
@@ -13,7 +13,15 @@ if [ "${___TEST_DIR:t}" != "test" ]; then
         local -a match mbegin mend
         local MATCH; integer MBEGIN MEND
 
-        ___TEST_DIR="${___TEST_DIR/\/zplugin*//zplugin/test}"
+        if [ "${___TEST_DIR/\/zplugin/}" != "${___TEST_DIR}" ]; then
+            ___TEST_DIR="${___TEST_DIR/\/zplugin*//zplugin/test}"
+        else
+            # Get what's after /.zplugin/
+            tmp="${___TEST_DIR##*\/.zplugin\/}"
+            # Only first directory after /.zplugin/
+            tmp="${tmp%%/*}"
+            ___TEST_DIR="${___TEST_DIR/\/.zplugin*//.zplugin/${tmp}/test}"
+        fi
     }
 fi
 
@@ -28,6 +36,7 @@ export TERM=vt100
 ___REPORT_FILE="$___TEST_DIR/models/${___TEST_NAME}_report.txt"
 ___UNLOAD_FILE="$___TEST_DIR/models/${___TEST_NAME}_unload.txt"
 ___ENV_FILE="$___TEST_DIR/models/${___TEST_NAME}_env.txt"
+___ENV_FILE_TMP="$___TEST_DIR/models/${___TEST_NAME}_env_tmp.txt"
 ___OUT_FILE="$___TEST_DIR/models/${___TEST_NAME}_out.txt"
 ___TEST_REPORT_FILE="$___TEST_DIR/.report.txt"
 ___TEST_UNLOAD_FILE="$___TEST_DIR/.unload.txt"
@@ -74,6 +83,19 @@ ___s-or-f() {
         local col="${fg_bold[green]}" main="${fg_bold[red]}"
         print -- "${main}${___FAILED_MSG//(#m)(model|result)/${col}${MATCH}${main}}$reset_color"
     }
+}
+
+___env-on-line-fix() {
+    local infile="$1" outfile="$2"
+
+    typeset -a body
+    body=( "${(@f)"$(<$infile)"}" )
+
+    echo -n > "$outfile"
+
+    for i in "${body[@]}"; do
+        echo "${i//___ZPLG_DIR/$___ZPLG_DIR}" >> "$outfile"
+    done
 }
 
 #
@@ -134,7 +156,10 @@ ___s-or-f() {
     print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}UNLOAD${fg_bold[yellow]} results showed, press any key for ENVIRONMENT results -----$reset_color"
     read -sk
 
-    diff "$___ENV_FILE" "$___TEST_ENV_FILE" > "$___DIFF_FILE"
+    # On-line environment file preparation - substitute "___ZPLG_DIR" with $___ZPLG_DIR
+    ___env-on-line-fix "$___ENV_FILE" "$___ENV_FILE_TMP"
+
+    diff "$___ENV_FILE_TMP" "$___TEST_ENV_FILE" > "$___DIFF_FILE"
     ret=$?
     print
     ___s-or-f $ret
@@ -160,7 +185,10 @@ ___s-or-f() {
 # Load zplugin (testability maintained)
 #
 
+# Override
 ZPLG_HOME="$___ZPLG_TESTING_HOME"
 cd "$___TEST_DIR"
 cd ..
+# For on-line fixing of *_env.txt files
+___ZPLG_DIR="`pwd`"
 source "./zplugin.zsh"
