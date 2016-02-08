@@ -2537,9 +2537,12 @@ ZPLG_ZLE_HOOKS_LIST=(
 
             # "" means a variable was deleted, not created/changed
             if [[ "$v2" != "\"\"" ]]; then
+                # Don't unset readonly variables
+                [[ "${v1/-readonly/}" != "$v1" || "${v2/-readonly/}" != "$v2" ]] && continue
+
                 # Don't unset redefined variables, only newly defined
-                # "" means that variable didn't have any type before
-                # plugin load - i.e. didn't exist
+                # "" means variable didn't exist before plugin load
+                # (didn't have a type)
                 if [ "$v1" = "\"\"" ]; then
                     print "Unsetting variable $k"
                     unset "$k"
