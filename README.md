@@ -7,7 +7,9 @@ report will tell what aliases, functions, bindkeys, Zle widgets, zstyles,
 completions, variables, `PATH` and `FPATH` elements a plugin has set up. Supported is
 **unloading** of plugin and ability to list, uninstall, reinstall and selectively
 disable, enable plugin's completions. Also, every plugin is compiled and user
-can control this function. The system does not use `$FPATH`, it's kept clean!
+can control this function. The system does not use `$FPATH`, it's kept clean! Also,
+the code is immune to `KSH_ARRAYS`, `emulate sh`, `emulate ksh`, thoroughly tested to
+support any user setup, be as transparent as plain `source` command.
 
 **Zplugin in action:**
 
