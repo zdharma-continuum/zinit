@@ -238,6 +238,7 @@ ZPLG_COL=(
     "bar" "${fg_bold[magenta]}"
     "info" "${fg_bold[green]}"
     "uninst" "${fg_bold[blue]}"
+    "rst" "$reset_color"
 )
 
 # Load list of widgets
@@ -1153,7 +1154,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         k="${(r:longest+1:: :)k}"
         v1="${(l:vlongest1+1:: :)v1}"
         v2="${(r:vlongest2+1:: :)v2}"
-        answer+="$k ${infoc}[$v1 -> $v2]$reset_color"$'\n'
+        answer+="$k ${infoc}[$v1 -> $v2]${ZPLG_COL[rst]}"$'\n'
     done
 
     [ -n "$answer" ] && REPLY="$answer"
@@ -1174,9 +1175,9 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     local keyword="${txt%% *}"
     if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
-        keyword="${ZPLG_COL[error]}$keyword$reset_color"
+        keyword="${ZPLG_COL[error]}$keyword${ZPLG_COL[rst]}"
     else
-        keyword="${ZPLG_COL[keyword]}$keyword$reset_color"
+        keyword="${ZPLG_COL[keyword]}$keyword${ZPLG_COL[rst]}"
     fi
 
     # Don't report to any user/plugin if there is no plugin load in progress
@@ -1273,7 +1274,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-exists-message() {
     if ! -zplg-exists "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
-        print "${ZPLG_COL[error]}No such plugin$reset_color $REPLY"
+        print "${ZPLG_COL[error]}No such plugin${ZPLG_COL[rst]} $REPLY"
         return 1
     fi
     return 0
@@ -1290,7 +1291,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-exists-physically-message() {
     if ! -zplg-exists-physically "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
-        print "${ZPLG_COL[error]}No such plugin directory$reset_color $REPLY"
+        print "${ZPLG_COL[error]}No such plugin directory${ZPLG_COL[rst]} $REPLY"
         return 1
     fi
     return 0
@@ -1302,7 +1303,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
     local ucol="${ZPLG_COL[uname]}" pcol="${ZPLG_COL[pname]}"
-    REPLY="${ucol}${user}$reset_color/${pcol}${plugin}$reset_color"
+    REPLY="${ucol}${user}${ZPLG_COL[rst]}/${pcol}${plugin}${ZPLG_COL[rst]}"
 }
 
 # Prepare readlink command, used e.g. for
@@ -1371,7 +1372,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         echo "Unsetting $k"
     done
 
-    print "${ZPLG_COL[info]}Forgetting completion \`$f'...$reset_color"
+    print "${ZPLG_COL[info]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
     print
     unfunction 2>/dev/null "$f"
 }
@@ -1382,18 +1383,18 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # bkpfile must be a symlink
     if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
-        print "${ZPLG_COL[error]}Warning: completion's backup file \`${bkpfile:t}' isn't a symlink$reset_color"
+        print "${ZPLG_COL[error]}Warning: completion's backup file \`${bkpfile:t}' isn't a symlink${ZPLG_COL[rst]}"
         error=1
     fi
 
     # cfile must be a symlink
     if [[ -e "$cfile" && ! -L "$cfile" ]]; then
-        print "${ZPLG_COL[error]}Warning: completion file \`${cfile:t}' isn't a symlink$reset_color"
+        print "${ZPLG_COL[error]}Warning: completion file \`${cfile:t}' isn't a symlink${ZPLG_COL[rst]}"
         error=1
     fi
 
     # Tell user that he can manually modify but should do it right
-    (( error )) && print "${ZPLG_COL[error]}Manual edit of $ZPLG_COMPLETIONS_DIR occured?$reset_color"
+    (( error )) && print "${ZPLG_COL[error]}Manual edit of $ZPLG_COMPLETIONS_DIR occured?${ZPLG_COL[rst]}"
 }
 
 # Searches for completions owned by given plugin
@@ -1657,13 +1658,13 @@ ZPLG_ZLE_HOOKS_LIST=(
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
             fi
-            print "${ZPLG_COL[info]}Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR$reset_color"
+            print "${ZPLG_COL[info]}Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR${ZPLG_COL[rst]}"
             command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile"
         else
-            print "${ZPLG_COL[error]}Not symlinking completion \`$cfile', it already exists$reset_color"
-            print "${ZPLG_COL[error]}Use \`creinstall' {plugin-name} to force install$reset_color"
+            print "${ZPLG_COL[error]}Not symlinking completion \`$cfile', it already exists${ZPLG_COL[rst]}"
+            print "${ZPLG_COL[error]}Use \`creinstall' {plugin-name} to force install${ZPLG_COL[rst]}"
         fi
     done
 }
@@ -1707,17 +1708,17 @@ ZPLG_ZLE_HOOKS_LIST=(
         fi
 
         if (( action )); then
-            print "${ZPLG_COL[info]}Uninstalling completion \`$cfile'$reset_color"
+            print "${ZPLG_COL[info]}Uninstalling completion \`$cfile'${ZPLG_COL[rst]}"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile"
             (( global_action ++ ))
         else
-            print "${ZPLG_COL[info]}Completion \`$cfile' not installed$reset_color"
+            print "${ZPLG_COL[info]}Completion \`$cfile' not installed${ZPLG_COL[rst]}"
         fi
     done
 
     if (( global_action > 0 )); then
-        print "${ZPLG_COL[info]}Uninstalled $global_action completions$reset_color"
+        print "${ZPLG_COL[info]}Uninstalled $global_action completions${ZPLG_COL[rst]}"
     fi
 }
 
@@ -1738,7 +1739,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         cfile="_${cfile#_}"
         bkpfile="${cfile#_}"
 
-        print "${ZPLG_COL[info]}Processing completion $cfile$reset_color"
+        print "${ZPLG_COL[info]}Processing completion $cfile${ZPLG_COL[rst]}"
         -zplg-forget-completion "$cfile"
     done
 
@@ -1905,7 +1906,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 
     if [ "${#reply}" -eq "0" ]; then
-        print "${ZPLG_COL[error]}No files for compilation found$reset_color"
+        print "${ZPLG_COL[error]}No files for compilation found${ZPLG_COL[rst]}"
         return 1
     fi
 
@@ -1916,7 +1917,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     local fname="${first#$dname/}"
 
-    print "Compiling ${ZPLG_COL[info]}$fname$reset_color..."
+    print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
     zcompile "$first"
 }
 
@@ -1944,7 +1945,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 
     for m in "${matches[@]}"; do
-        print "Removing ${ZPLG_COL[info]}${m:t}$reset_color"
+        print "Removing ${ZPLG_COL[info]}${m:t}${ZPLG_COL[rst]}"
         command rm -f "$m"
     done
 }
@@ -1991,7 +1992,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         # Output line of text
         print -n "${(r:longest+1:: :)c} $REPLY"
-        (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]$reset_color"
+        (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
         print
     done
 }
@@ -2017,7 +2018,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         fi
     done
 
-    print "${ZPLG_COL[info]}[+]$reset_color is installed, ${ZPLG_COL[p]}[-]$reset_color uninstalled, ${ZPLG_COL[error]}[+-]$reset_color partially installed"
+    print "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} is installed, ${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} uninstalled, ${ZPLG_COL[error]}[+-]${ZPLG_COL[rst]} partially installed"
 
     local c
     for pp in "${plugin_paths[@]}"; do
@@ -2036,18 +2037,18 @@ ZPLG_ZLE_HOOKS_LIST=(
             done
 
             if [ "$all_installed" -eq "${#completions}" ]; then
-                print -n "${ZPLG_COL[p]}[-]$reset_color "
+                print -n "${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} "
             elif [ "$all_installed" -eq "0" ]; then
-                print -n "${ZPLG_COL[info]}[+]$reset_color "
+                print -n "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} "
             else
-                print -n "${ZPLG_COL[error]}[+-]$reset_color "
+                print -n "${ZPLG_COL[error]}[+-]${ZPLG_COL[rst]} "
             fi
 
             # Convert directory name to colorified $user/$plugin
             -zplg-any-colorify-as-uspl2 "${pp:t}"
 
             # Adjust for escape code (nasty, utilizes fact that
-            # $reset_color is used twice, so as a $ZPLG_COL)
+            # ${ZPLG_COL[rst]} is used twice, so as a $ZPLG_COL)
             integer adjust_ec=$(( ${#reset_color} * 2 + ${#ZPLG_COL[uname]} + ${#ZPLG_COL[pname]} ))
 
             print "${(r:longest+adjust_ec:: :)REPLY} ${(j:, :)completions}"
@@ -2066,13 +2067,13 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 
     # Print title
-    printf "${ZPLG_COL[title]}Plugin report for$reset_color %s/%s\n"\
-            "${ZPLG_COL[uname]}$user$reset_color"\
-            "${ZPLG_COL[pname]}$plugin$reset_color"
+    printf "${ZPLG_COL[title]}Plugin report for${ZPLG_COL[rst]} %s/%s\n"\
+            "${ZPLG_COL[uname]}$user${ZPLG_COL[rst]}"\
+            "${ZPLG_COL[pname]}$plugin${ZPLG_COL[rst]}"
 
     # Print "----------"
     local msg="Plugin report for $user/$plugin"
-    print -- "${ZPLG_COL[bar]}${(r:${#msg}::-:)tmp__}$reset_color"
+    print -- "${ZPLG_COL[bar]}${(r:${#msg}::-:)tmp__}${ZPLG_COL[rst]}"
 
     # Print report gathered via shadowing
     print "${ZPLG_REPORTS[${user}/${plugin}]}"
@@ -2081,28 +2082,28 @@ ZPLG_ZLE_HOOKS_LIST=(
     REPLY=""
     -zplg-diff-functions "$user/$plugin" diff
     -zplg-format-functions "$user/$plugin"
-    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Functions created:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Functions created:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
     -zplg-diff-options "$user/$plugin" diff
     -zplg-format-options "$user/$plugin"
-    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Options changed:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Options changed:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print report gathered via environment diffing
     REPLY=""
     -zplg-diff-env "$user/$plugin" diff
     -zplg-format-env "$user/$plugin" "1"
-    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}PATH elements added:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}PATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     REPLY=""
     -zplg-format-env "$user/$plugin" "2"
-    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}FPATH elements added:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}FPATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print report gathered via parameter diffing
     -zplg-diff-parameter "$user/$plugin" diff
     -zplg-format-parameter "$user/$plugin"
-    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Variables added or redefined:$reset_color"$'\n'"$REPLY"
+    [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Variables added or redefined:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print what completions plugin has
     -zplg-find-completions-of-plugin "$user" "$plugin"
@@ -2110,7 +2111,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     completions=( "${reply[@]}" )
 
     if [ "${#completions}" -ge "1" ]; then
-        print "${ZPLG_COL[p]}Completions:$reset_color"
+        print "${ZPLG_COL[p]}Completions:${ZPLG_COL[rst]}"
         -zplg-check-which-completions-are-installed "${completions[@]}"
         typeset -a installed
         installed=( "${reply[@]}" )
@@ -2123,12 +2124,12 @@ ZPLG_ZLE_HOOKS_LIST=(
         for (( idx=1; idx <= count; idx ++ )); do
             print -n "${completions[idx]:t}"
             if [ "${installed[idx]}" != "1" ]; then
-                print -n " ${ZPLG_COL[uninst]}[not installed]$reset_color"
+                print -n " ${ZPLG_COL[uninst]}[not installed]${ZPLG_COL[rst]}"
             else
                 if [ "${enabled[idx]}" = "1" ]; then
-                    print -n " ${ZPLG_COL[info]}[enabled]$reset_color"
+                    print -n " ${ZPLG_COL[info]}[enabled]${ZPLG_COL[rst]}"
                 else
-                    print -n " ${ZPLG_COL[error]}[disabled]$reset_color"
+                    print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
                 fi
             fi
             print
@@ -2153,7 +2154,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     keyword="${keyword## ##}"
     keyword="${keyword%% ##}"
     if [ -n "$keyword" ]; then
-        print "Installed plugins matching ${ZPLG_COL[info]}$keyword$reset_color:"
+        print "Installed plugins matching ${ZPLG_COL[info]}$keyword${ZPLG_COL[rst]}:"
         filtered=( "${(M)ZPLG_REGISTERED_PLUGINS[@]:#*$keyword*}" )
     else
         filtered=( "${ZPLG_REGISTERED_PLUGINS[@]}" )
@@ -2166,7 +2167,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         [ "$i" = "_local/zplugin" ] && continue
         -zplg-any-colorify-as-uspl2 "$i"
         # Mark light loads
-        [ "${ZPLG_REGISTERED_STATES[$i]}" = "1" ] && REPLY="$REPLY ${ZPLG_COL[info]}*$reset_color"
+        [ "${ZPLG_REGISTERED_STATES[$i]}" = "1" ] && REPLY="$REPLY ${ZPLG_COL[info]}*${ZPLG_COL[rst]}"
         print "$REPLY"
     done
 }
@@ -2179,14 +2180,14 @@ ZPLG_ZLE_HOOKS_LIST=(
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "${ZPLG_COL[error]}No such completion \`$c'$reset_color"
+        print "${ZPLG_COL[error]}No such completion \`$c'${ZPLG_COL[rst]}"
         return 1
     fi
 
     # Check if there is no backup file
     # This is treated as if the completion is already enabled
     if [ ! -e "$bkpfile" ]; then
-        print "Completion ${ZPLG_COL[info]}$c$reset_color already enabled"
+        print "Completion ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} already enabled"
 
         -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -2194,8 +2195,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Disabled, but completion file already exists?
     if [ -e "$cfile" ]; then
-        print "${ZPLG_COL[error]}Warning: completion's file \`${cfile:t}' exists, will overwrite$reset_color"
-        print "${ZPLG_COL[error]}Completion is actually enabled and will re-enable it again$reset_color"
+        print "${ZPLG_COL[error]}Warning: completion's file \`${cfile:t}' exists, will overwrite${ZPLG_COL[rst]}"
+        print "${ZPLG_COL[error]}Completion is actually enabled and will re-enable it again${ZPLG_COL[rst]}"
         -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$cfile"
     else
@@ -2210,7 +2211,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Get completion's owning plugin
     -zplg-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
-    print "Enabled ${ZPLG_COL[info]}$c$reset_color completion belonging to $REPLY"
+    print "Enabled ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} completion belonging to $REPLY"
 
     return 0
 }
@@ -2223,14 +2224,14 @@ ZPLG_ZLE_HOOKS_LIST=(
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "${ZPLG_COL[error]}No such completion \`$c'$reset_color"
+        print "${ZPLG_COL[error]}No such completion \`$c'${ZPLG_COL[rst]}"
         return 1
     fi
 
     # Check if it's already disabled
     # Not existing "$cfile" says that
     if [[ ! -e "$cfile" ]]; then
-        print "Completion ${ZPLG_COL[info]}$c$reset_color already disabled"
+        print "Completion ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} already disabled"
 
         -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -2238,7 +2239,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # No disable, but bkpfile exists?
     if [ -e "$bkpfile" ]; then
-        print "${ZPLG_COL[error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite$reset_color"
+        print "${ZPLG_COL[error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite${ZPLG_COL[rst]}"
         -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$bkpfile"
     else
@@ -2253,7 +2254,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Get completion's owning plugin
     -zplg-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
-    print "Disabled ${ZPLG_COL[info]}$c$reset_color completion belonging to $REPLY"
+    print "Disabled ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} completion belonging to $REPLY"
 
     return 0
 }
@@ -2340,13 +2341,13 @@ ZPLG_ZLE_HOOKS_LIST=(
         local sw_arr5="${(Q)sw_arr[5-correct]}" # Optional -R (not with -A, -N)
 
         if [[ "$sw_arr3" = "-M" && "$sw_arr5" != "-R" ]]; then
-            print "Deleting bindkey $sw_arr1 $sw_arr2 ${ZPLG_COL[info]}mapped to $sw_arr4$reset_color"
+            print "Deleting bindkey $sw_arr1 $sw_arr2 ${ZPLG_COL[info]}mapped to $sw_arr4${ZPLG_COL[rst]}"
             bindkey -M "$sw_arr4" -r "$sw_arr1"
         elif [[ "$sw_arr3" = "-M" && "$sw_arr5" = "-R" ]]; then
-            print "Deleting ${ZPLG_COL[info]}range$reset_color bindkey $sw_arr1 $sw_arr2 ${ZPLG_COL[info]}mapped to $sw_arr4$reset_color"
+            print "Deleting ${ZPLG_COL[info]}range${ZPLG_COL[rst]} bindkey $sw_arr1 $sw_arr2 ${ZPLG_COL[info]}mapped to $sw_arr4${ZPLG_COL[rst]}"
             bindkey -M "$sw_arr4" -Rr "$sw_arr1"
         elif [[ "$sw_arr3" != "-M" && "$sw_arr5" = "-R" ]]; then
-            print "Deleting ${ZPLG_COL[info]}range$reset_color bindkey $sw_arr1 $sw_arr2" 
+            print "Deleting ${ZPLG_COL[info]}range${ZPLG_COL[rst]} bindkey $sw_arr1 $sw_arr2" 
             bindkey -Rr "$sw_arr1"
         elif [[ "$sw_arr3" = "-A" ]]; then
             print "Linking backup-\`main' keymap \`$sw_arr4' back to \`main'"
@@ -2432,10 +2433,10 @@ ZPLG_ZLE_HOOKS_LIST=(
         local nv_arr3="${(Q)nv_arr[3-correct]}"
 
         if [ "$nv_arr3" = "-s" ]; then
-            print "Removing ${ZPLG_COL[info]}suffix$reset_color alias ${nv_arr1}=${nv_arr2}"
+            print "Removing ${ZPLG_COL[info]}suffix${ZPLG_COL[rst]} alias ${nv_arr1}=${nv_arr2}"
             unalias -s "$nv_arr1"
         elif [ "$nv_arr3" = "-g" ]; then
-            print "Removing ${ZPLG_COL[info]}global$reset_color alias ${nv_arr1}=${nv_arr2}"
+            print "Removing ${ZPLG_COL[info]}global${ZPLG_COL[rst]} alias ${nv_arr1}=${nv_arr2}"
             unalias "${(q)nv_arr1}"
         else
             print "Removing alias ${nv_arr1}=${nv_arr2}"
@@ -2489,8 +2490,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     elem=( "${(z)ZPLG_PATH[$uspl2]}" )
     for p in "${path[@]}"; do
         [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || {
-            print "Removing PATH element ${ZPLG_COL[info]}$p$reset_color"
-            [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:$reset_color it didn't exist on disk"
+            print "Removing PATH element ${ZPLG_COL[info]}$p${ZPLG_COL[rst]}"
+            [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} it didn't exist on disk"
         }
     done
     path=( "${new[@]}" )
@@ -2500,8 +2501,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     new=( )
     for p in "${fpath[@]}"; do
         [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || {
-            print "Removing FPATH element ${ZPLG_COL[info]}$p$reset_color"
-            [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:$reset_color it didn't exist on disk"
+            print "Removing FPATH element ${ZPLG_COL[info]}$p${ZPLG_COL[rst]}"
+            [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} it didn't exist on disk"
         }
     done
     fpath=( "${new[@]}" )
@@ -2589,7 +2590,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local_dir="${local_dir%%\?*}"
 
     if [ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]; then
-        print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename$reset_color"
+        print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
         command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
     fi
 
@@ -2647,9 +2648,9 @@ ZPLG_ZLE_HOOKS_LIST=(
     local repo pd user plugin
 
     if [ "$st" = "status" ]; then
-        print "${ZPLG_COL[error]}Warning:$reset_color status done also for unloaded plugins"
+        print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} status done also for unloaded plugins"
     else
-        print "${ZPLG_COL[error]}Warning:$reset_color updating also unloaded plugins"
+        print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} updating also unloaded plugins"
     fi
 
     for repo in "$ZPLG_PLUGINS_DIR"/*; do
@@ -3041,26 +3042,26 @@ zplugin() {
            -zplg-compiled
            ;;
        (-h|--help|help|"")
-           print "${ZPLG_COL[p]}Usage$reset_color:
+           print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
 zstatus                  - overall status of Zplugin
 self-update              - updates Zplugin
-load ${ZPLG_COL[pname]}{plugin-name}$reset_color       - load plugin
-light ${ZPLG_COL[pname]}{plugin-name}$reset_color      - light plugin load, without reporting
-unload ${ZPLG_COL[pname]}{plugin-name}$reset_color     - unload plugin
-snippet [-f] ${ZPLG_COL[pname]}{url}$reset_color       - source file given via url (-f: force download, overwrite existing file)
-update ${ZPLG_COL[pname]}{plugin-name}$reset_color     - update plugin (Git)
+load ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - load plugin
+light ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}      - light plugin load, without reporting
+unload ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - unload plugin
+snippet [-f] ${ZPLG_COL[pname]}{url}${ZPLG_COL[rst]}       - source file given via url (-f: force download, overwrite existing file)
+update ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - update plugin (Git)
 update-all               - update all plugins (Git)
-status ${ZPLG_COL[pname]}{plugin-name}$reset_color     - status for plugin (Git)
+status ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - status for plugin (Git)
 status-all               - status for all plugins (Git)
-report ${ZPLG_COL[pname]}{plugin-name}$reset_color     - show plugin's report
+report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
 clist|completions        - list completions in use
-cdisable ${ZPLG_COL[info]}{cname}$reset_color         - disable completion \`cname'
-cenable  ${ZPLG_COL[info]}{cname}$reset_color         - enable completion \`cname'
-creinstall ${ZPLG_COL[pname]}{plugin-name}$reset_color - install completions for plugin
-cuninstall ${ZPLG_COL[pname]}{plugin-name}$reset_color - uninstall completions for plugin
+cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
+cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'
+creinstall ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]} - install completions for plugin
+cuninstall ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]} - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
 dtrace|dstart            - start tracking what's going on in session
@@ -3068,9 +3069,9 @@ dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session
-compile  ${ZPLG_COL[pname]}{plugin-name}$reset_color   - compile plugin
+compile  ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}   - compile plugin
 compile-all              - compile all downloaded plugins
-uncompile ${ZPLG_COL[pname]}{plugin-name}$reset_color  - remove compiled version of plugin
+uncompile ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}  - remove compiled version of plugin
 uncompile-all            - remove compiled versions of all downloaded plugins
 compiled                 - list plugins that are compiled"
            ;;
