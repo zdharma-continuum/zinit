@@ -1550,13 +1550,12 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 #
 # State restoration functions {{{
+# Currently unused
 #
 
 # Saves options
 -zplg-save-enter-state() {
     ZPLG_ENTER_OPTIONS=( )
-    [[ -o "RC_EXPAND_PARAM" ]] && ZPLG_ENTER_OPTIONS+=( "RC_EXPAND_PARAM" )
-    [[ -o "SH_WORD_SPLIT" ]] && ZPLG_ENTER_OPTIONS+=( "SH_WORD_SPLIT" )
 }
 
 # Restores options
@@ -1569,8 +1568,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Sets state needed by this code
 -zplg-set-desired-shell-state() {
-    builtin setopt NO_RC_EXPAND_PARAM
-    builtin setopt NO_SH_WORD_SPLIT
 }
 
 -zplg-save-extendedglob() {
