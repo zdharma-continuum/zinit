@@ -178,10 +178,10 @@ typeset -gAH ZPLG_PARAMETERS_BEFORE
 # Concatenated state of PARAMETERS after loading a plugin
 typeset -gAH ZPLG_PARAMETERS_AFTER
 
-# Concatenated changed old elements of $parameters (before diff)
+# Concatenated *changed* previous elements of $parameters (before)
 typeset -gAH ZPLG_PARAMETERS_PRE
 
-# Concatenated changed new elements of $parameters (after diff)
+# Concatenated *changed* current elements of $parameters (after)
 typeset -gAH ZPLG_PARAMETERS_POST
 
 # Was the environment diff already ran?
@@ -2525,18 +2525,25 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-restore-extendedglob
 
     if (( empty != 1 )); then
-        typeset -A elem_post
+        typeset -A elem_pre elem_post
+        elem_pre=( "${(z)ZPLG_PARAMETERS_PRE[$uspl2]}" )
         elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
 
         # Find variables created or modified
         for k in "${(k)elem_post[@]}"; do
             k="${(Q)k}"
-            v="${(Q)elem_post[$k]}"
+            local v1="${(Q)elem_pre[$k]}" 
+            local v2="${(Q)elem_post[$k]}"
 
-            # "" mean a variable was deleted, not created/changed
-            if [[ "$v" != "\"\"" ]]; then
-                print "Unsetting variable $k"
-                unset "$k"
+            # "" means a variable was deleted, not created/changed
+            if [[ "$v2" != "\"\"" ]]; then
+                # Don't unset redefined variables, only newly defined
+                # "" means that variable didn't have any type before
+                # plugin load - i.e. didn't exist
+                if [ "$v1" = "\"\"" ]; then
+                    print "Unsetting variable $k"
+                    unset "$k"
+                fi
             fi
         done
     fi
