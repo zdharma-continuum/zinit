@@ -41,7 +41,7 @@ local pre="==== "
 local after=" ===="
 
 # Normal tests
-if [[ -z "$1" ]]; then
+if [[ "$1" = "normal" || -z "$1" ]]; then
     echo -e ${fg_bold[magenta]}"${pre}normal tests${after}"$reset_color"\n"
     for i in test[0-9]##.zsh; do
         ./"$i"
