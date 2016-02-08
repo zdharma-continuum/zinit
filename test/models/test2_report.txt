@@ -1,5 +1,5 @@
 Plugin report for _local/safe-paste
-
+-----------------------------------
 Source safe-paste.plugin.zsh
 Bindkey -N paste
 Bindkey -R -M paste ^@-Ş? paste-insert

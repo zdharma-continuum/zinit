@@ -1,5 +1,5 @@
 Plugin report for _dtrace/_dtrace
-
+---------------------------------
 Alias test3alias1=echo Hello
 Alias -g test3alias2=echo Hello
 Alias -s jpg=iv

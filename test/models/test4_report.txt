@@ -1,5 +1,5 @@
 Plugin report for _local/opp.zsh
-
+--------------------------------
 Source opp.zsh
 Bindkey -N opp
 Zle -N opp-skip-blank-backward

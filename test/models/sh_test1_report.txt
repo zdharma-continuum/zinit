@@ -1,5 +1,5 @@
 Plugin report for _dtrace/_dtrace
-
+---------------------------------
 Bindkey -v
 Warning: last bindkey used non-typical options: -v
 Alias aa=bb
