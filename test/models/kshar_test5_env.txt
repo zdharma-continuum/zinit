@@ -1,0 +1,7 @@
+ZPLG_DIR '___ZPLG_DIR'
+ZPLG_NAME 'zplugin'
+ZPLG_HOME '___ZPLG_DIR/test/tzplugin'
+ZPLG_PLUGINS_DIR '___ZPLG_DIR/test/tzplugin/plugins'
+ZPLG_COMPLETIONS_DIR '___ZPLG_DIR/test/tzplugin/completions'
+ZPLG_SNIPPETS_DIR '___ZPLG_DIR/test/tzplugin/snippets'
+ZPLG_HOME_READY '1'
