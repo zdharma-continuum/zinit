@@ -304,7 +304,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local i
     for i in "$@"; do
         local msg="Autoload $i"
-        [ -n "$opts" ] && msg+=" with options $opts"
+        [ -n "$opts" ] && msg+=" with options ${opts[@]}"
         -zplg-add-report "$ZPLG_CUR_USPL2" "$msg"
     done
 
