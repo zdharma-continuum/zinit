@@ -2833,6 +2833,11 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Starts debug reporting, diffing
 -zplg-debug-start() {
+    if [ "$ZPLG_DEBUG_ACTIVE" = "1" ]; then
+        print "${ZPLG_COL[error]}Dtrace is already active, stop it first with \`dstop'$reset_color"
+        return 1
+    fi
+
     ZPLG_DEBUG_ACTIVE="1"
 
     -zplg-diff-functions "$ZPLG_DEBUG_USPL2" begin
