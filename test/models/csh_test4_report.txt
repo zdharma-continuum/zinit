@@ -1,0 +1,149 @@
+Plugin report for _local/opp.zsh
+--------------------------------
+Source opp.zsh
+Bindkey -N opp
+Zle -N opp-skip-blank-backward
+Zle -N opp-skip-blank-forward
+Zle -N opp-skip-alnum-backward
+Zle -N opp-skip-alnum-forward
+Zle -N opp-skip-punct-backward
+Zle -N opp-skip-punct-forward
+Zle -N opp-skip-alpunum-backward
+Zle -N opp-skip-alpunum-forward
+Bindkey -M opp iw .accept-line
+Bindkey -M opp aw .accept-line
+Bindkey -M opp iW .accept-line
+Bindkey -M opp aW .accept-line
+Zle -N opp-gps-[
+Zle -N opp-gps-]
+Bindkey -M opp i[ .accept-line
+Bindkey -M opp i] .accept-line
+Bindkey -M opp ik .accept-line
+Bindkey -M opp a[ .accept-line
+Bindkey -M opp a] .accept-line
+Bindkey -M opp ak .accept-line
+Zle -N opp-gps-<
+Zle -N opp-gps->
+Bindkey -M opp i< .accept-line
+Bindkey -M opp i> .accept-line
+Bindkey -M opp a< .accept-line
+Bindkey -M opp a> .accept-line
+Zle -N opp-gps-(
+Zle -N opp-gps-)
+Bindkey -M opp i( .accept-line
+Bindkey -M opp i) .accept-line
+Bindkey -M opp ib .accept-line
+Bindkey -M opp a( .accept-line
+Bindkey -M opp a) .accept-line
+Bindkey -M opp ab .accept-line
+Zle -N opp-gps-{
+Zle -N opp-gps-}
+Bindkey -M opp i{ .accept-line
+Bindkey -M opp i} .accept-line
+Bindkey -M opp iB .accept-line
+Bindkey -M opp a{ .accept-line
+Bindkey -M opp a} .accept-line
+Bindkey -M opp aB .accept-line
+Zle -N opp-gps-inbetween-0-a
+Zle -N opp-gps-inbetween-0-b
+Bindkey -M opp i" .accept-line
+Bindkey -M opp a" .accept-line
+Zle -N opp-gps-inbetween-1-a
+Zle -N opp-gps-inbetween-1-b
+Bindkey -M opp i' .accept-line
+Bindkey -M opp a' .accept-line
+Zle -N opp-gps-inbetween-2-a
+Zle -N opp-gps-inbetween-2-b
+Bindkey -M opp i` .accept-line
+Bindkey -M opp a` .accept-line
+Zle -N opp-recursive-edit
+Zle -N opp-id
+Zle -N opp-copy-region
+Zle -N opp-swap-case-region
+Zle -N opp-vi-change
+Zle -N opp-vi-delete
+Zle -N opp-vi-yank
+Zle -N opp-vi-tilde
+Zle -N opp-upper-case-region
+Zle -N opp-vi-uppercase
+Zle -N opp-lower-case-region
+Zle -N opp-vi-lowercase
+Zle -N opp opp
+Warning: unknown widget replaced/taken via zle -N: `opp', it is set to be deleted
+Bindkey -M vicmd c opp
+Bindkey -M afu-vicmd c opp
+Bindkey -M vicmd d opp
+Bindkey -M afu-vicmd d opp
+Bindkey -M vicmd y opp
+Bindkey -M afu-vicmd y opp
+Bindkey -M vicmd g~ opp
+Bindkey -M afu-vicmd g~ opp
+Bindkey -M vicmd gU opp
+Bindkey -M afu-vicmd gU opp
+Bindkey -M vicmd gu opp
+Bindkey -M afu-vicmd gu opp
+
+Functions created:
+def-opp-skip                         def-oppc
+def-oppc-inbetween                   def-oppc-inbetween-1
+def-oppc-inbetween-2                 def-oppc-pair
+def-oppc-pair-1                      opp
+opp+aB                               opp+aW
+opp+a"                               opp+a'
+opp+a(                               opp+a)
+opp+a<                               opp+a>
+opp+a[                               opp+a]
+opp+a`                               opp+a{
+opp+a}                               opp+ab
+opp+ak                               opp+aw
+opp+iB                               opp+iW
+opp+i"                               opp+i'
+opp+i(                               opp+i)
+opp+i<                               opp+i>
+opp+i[                               opp+i]
+opp+i`                               opp+i{
+opp+i}                               opp+ib
+opp+ik                               opp+iw
+opp-accept-p                         opp-clean
+opp-copy-region                      opp-generic
+opp-generic-pair-scan                opp-generic-w
+opp-gps-(                            opp-gps-)
+opp-gps-<                            opp-gps->
+opp-gps-[                            opp-gps-]
+opp-gps-{                            opp-gps-}
+opp-gps-inbetween-0-a                opp-gps-inbetween-0-b
+opp-gps-inbetween-0-s-ref            opp-gps-inbetween-1-a
+opp-gps-inbetween-1-b                opp-gps-inbetween-1-s-ref
+opp-gps-inbetween-2-a                opp-gps-inbetween-2-b
+opp-gps-inbetween-2-s-ref            opp-id
+opp-inbetween-scan                   opp-install
+opp-install-installer                opp-installer-add
+opp-installer-expand                 opp-installer-install-opps
+opp-k                                opp-linewise
+opp-linewise~                        opp-lower-case-region
+opp-lower-case-region-0              opp-motion
+opp-oneshot-region                   opp-pair-scan
+opp-read-motion                      opp-read-motion-p
+opp-recursive-edit                   opp-recursive-edit-1
+opp-regioned-buffer-each             opp-regioned-buffer-each~
+opp-register-zle                     opp-register-zle-operator-mimic
+opp-register-zle-operator-mimic-case opp-skip-alnum-backward
+opp-skip-alnum-forward               opp-skip-alpunum-backward
+opp-skip-alpunum-forward             opp-skip-aw-forward-on-blank
+opp-skip-blank-backward              opp-skip-blank-forward
+opp-skip-punct-backward              opp-skip-punct-forward
+opp-swap-case-region                 opp-swap-case-region-0
+opp-undefined-key                    opp-upper-case-region
+opp-upper-case-region-0              opp-vi-change
+opp-vi-delete                        opp-vi-lowercase
+opp-vi-tilde                         opp-vi-uppercase
+opp-vi-yank                          opp-zcompile
+opp1                                 with-opp
+with-opp-regioned                    
+
+Variables added or redefined:
+opps                 [ "" -> association ]
+opp_installer_codes  [ "" -> array       ]
+opp_keybuffer        [ "" -> scalar      ]
+opp_operators        [ "" -> association ]
+

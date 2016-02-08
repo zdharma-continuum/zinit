@@ -98,3 +98,18 @@ if [[ "$1" = "ksh" || -z "$1" ]]; then
         echo -e "\n"
     done
 fi
+
+# csh setopts
+if [[ "$1" = "csh" || -z "$1" ]]; then
+    echo -e ${fg_bold[magenta]}"${pre}csh setopts tests${after}"$reset_color"\n"
+    for i in csh_test[0-9]##.zsh; do
+        ./"$i"
+        print
+        print "${fg_bold[blue]}===================================================$reset_color"
+        print
+        print -n "Press any key for next test..."
+        read -sk k
+        [ "$k" != $'\n' ] && print
+        echo -e "\n"
+    done
+fi
