@@ -42,6 +42,7 @@ oz/safe-paste (works but has issues, the same on antigen)
 willghatch/zsh-saneopt
 willghatch/zsh-snippets (misses a bindkey, the same with antigen, otherwise works)
 Tarrasch/zsh-colors
+dbkaplun/smart-cd
 
 skipped:
 Stibbons/crayon-syntax-zsh (a wordpress plugin)
