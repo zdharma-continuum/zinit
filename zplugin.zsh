@@ -1918,7 +1918,9 @@ ZPLG_ZLE_HOOKS_LIST=(
     local fname="${first#$dname/}"
 
     print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
+    -zplg-restore-enter-state 
     zcompile "$first"
+    -zplg-set-desired-shell-state
 }
 
 -zplg-uncompile-plugin() {
