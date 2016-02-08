@@ -1,0 +1,33 @@
+Plugin report for _local/zsh-colors
+-----------------------------------
+Source colors.plugin.zsh
+Autoload black with options -U -z
+Autoload red with options -U -z
+Autoload green with options -U -z
+Autoload yellow with options -U -z
+Autoload blue with options -U -z
+Autoload magenta with options -U -z
+Autoload cyan with options -U -z
+Autoload white with options -U -z
+Autoload colors with options -U
+
+Functions created:
+black  blue
+colors cyan
+green  magenta
+red    white
+yellow 
+
+Variables added or redefined:
+fg_bold      [ "" -> association-hideval ]
+fg           [ "" -> association-hideval ]
+bold_color   [ "" -> scalar-hideval      ]
+bg           [ "" -> association-hideval ]
+reset_color  [ "" -> scalar-hideval      ]
+bg_no_bold   [ "" -> association-hideval ]
+colour       [ "" -> association         ]
+fg_no_bold   [ "" -> association-hideval ]
+color        [ "" -> association         ]
+bg_bold      [ "" -> association-hideval ]
+colors       [ "" -> array               ]
+

@@ -1,0 +1,9 @@
+[31mHello
+[00m[34mBlue
+[00m[35mMagenta
+[00m[33mYellow
+[00m[32mGreen
+[00m[36mCyan
+[00m[30mBlack
+[00m[37mwhite
+[00m
