@@ -2,6 +2,38 @@
 
 setopt extendedglob
 
+___TEST_DIR="`pwd`"
+
+if [[ "${___TEST_DIR/\/zplugin/}" = "${___TEST_DIR}" && "${___TEST_DIR/\/.zplugin}" = "${___TEST_DIR}" ]]; then
+    echo "all.zsh run not from zplugin's directory tree"
+    return 1
+fi
+
+if [ "${___TEST_DIR:t}" != "test" ]; then
+    () {
+        setopt localoptions extendedglob
+        local -a match mbegin mend
+        local MATCH; integer MBEGIN MEND
+
+        if [ "${___TEST_DIR/\/zplugin/}" != "${___TEST_DIR}" ]; then
+            ___TEST_DIR="${___TEST_DIR/\/zplugin*//zplugin/test}"
+        else
+            # Get what's after /.zplugin/
+            tmp="${___TEST_DIR##*\/.zplugin\/}"
+            # Only first directory after /.zplugin/
+            tmp="${tmp%%/*}"
+            ___TEST_DIR="${___TEST_DIR/\/.zplugin*//.zplugin/${tmp}/test}"
+        fi
+    }
+fi
+
+if [ ! -d "$___TEST_DIR" ]; then
+    echo "Could not resolve test directory (tried $___TEST_DIR)"
+    return 1
+fi
+
+cd "$___TEST_DIR"
+
 autoload colors
 colors
 
