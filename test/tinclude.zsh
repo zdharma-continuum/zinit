@@ -80,6 +80,7 @@ ___s-or-f() {
 
 ---start() {
     print -- "$___STARTING_MSG"
+    command rm -f "$___TEST_REPORT_FILE" "$___TEST_UNLOAD_FILE" "$___TEST_ENV_FILE"
 }
 
 ---stop() {

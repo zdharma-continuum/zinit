@@ -69,6 +69,7 @@ zplugin dstop
 
 zplugin dreport > "$___TEST_REPORT_FILE" 2>&1
 zplugin dunload > "$___TEST_UNLOAD_FILE" 2>&1
+---dumpenv > "$___TEST_ENV_FILE" 2>&1
 
 # A look at hopefully cleaned up variables
 declare -p path
