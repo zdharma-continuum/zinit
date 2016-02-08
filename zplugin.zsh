@@ -1919,7 +1919,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
     -zplg-restore-enter-state 
-    zcompile "$first"
+    zcompile "$first" || {
+        echo "Compilation failed. Don't worry, the plugin will work also without compilation"
+        echo "Consider submitting an error report to the plugin's author"
+    }
     -zplg-set-desired-shell-state
 }
 
