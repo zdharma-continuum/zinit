@@ -24,6 +24,8 @@ cd test/tzplugin/plugins/_local---smart-cd/test_dir
 {
     zplugin load "$PLUGIN_NAME"
     cd ../test_dir2
+    add-zsh-hook -d chpwd _smart_cd_chpwd_handler
+    cd ../test_dir
 } > "$___TEST_OUT_FILE"
 
 #
