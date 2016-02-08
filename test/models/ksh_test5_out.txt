@@ -1,0 +1,9 @@
+Hello
+[00mBlue
+[00mMagenta
+[00mYellow
+[00mGreen
+[00mCyan
+[00mBlack
+[00mwhite
+[00m
