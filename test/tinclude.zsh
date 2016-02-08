@@ -28,9 +28,11 @@ export TERM=vt100
 ___REPORT_FILE="$___TEST_DIR/models/${___TEST_NAME}_report.txt"
 ___UNLOAD_FILE="$___TEST_DIR/models/${___TEST_NAME}_unload.txt"
 ___ENV_FILE="$___TEST_DIR/models/${___TEST_NAME}_env.txt"
+___OUT_FILE="$___TEST_DIR/models/${___TEST_NAME}_out.txt"
 ___TEST_REPORT_FILE="$___TEST_DIR/.report.txt"
 ___TEST_UNLOAD_FILE="$___TEST_DIR/.unload.txt"
 ___TEST_ENV_FILE="$___TEST_DIR/.env.txt"
+___TEST_OUT_FILE="$___TEST_DIR/.out.txt"
 ___DIFF_FILE="$___TEST_DIR/.diff"
 ___SUCCEEDED_MSG="--- Succeeded ---"
 ___FAILED_MSG="--- Failed [ < model, > result ] ---"
@@ -80,7 +82,7 @@ ___s-or-f() {
 
 ---start() {
     print -- "$___STARTING_MSG"
-    command rm -f "$___TEST_REPORT_FILE" "$___TEST_UNLOAD_FILE" "$___TEST_ENV_FILE"
+    command rm -f "$___TEST_REPORT_FILE" "$___TEST_UNLOAD_FILE" "$___TEST_ENV_FILE" "$___TEST_OUT_FILE"
 }
 
 ---stop() {
@@ -138,7 +140,20 @@ ___s-or-f() {
     ___s-or-f $ret
     cat "$___DIFF_FILE"
 
-    print "\n${fg_bold[yellow]}----- End of ${fg_bold[magenta]}ENVIRONMENT${fg_bold[yellow]} results -----$reset_color"
+    if [ ! -f "$___TEST_OUT_FILE" ]; then
+        print "\n${fg_bold[yellow]}----- End of ${fg_bold[magenta]}ENVIRONMENT${fg_bold[yellow]} results -----$reset_color"
+    else
+        print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}ENVIRONMENT${fg_bold[yellow]} results showed, press any key for OUTPUT results -----$reset_color"
+        read -sk
+
+        diff "$___OUT_FILE" "$___TEST_OUT_FILE" > "$___DIFF_FILE"
+        ret=$?
+        print
+        ___s-or-f $ret
+        cat "$___DIFF_FILE"
+
+        print "\n${fg_bold[yellow]}----- End of ${fg_bold[magenta]}OUTPUT${fg_bold[yellow]} results -----$reset_color"
+    fi
 }
 
 #
