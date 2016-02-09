@@ -2729,7 +2729,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
     plugins=( "$ZPLG_PLUGINS_DIR"/* )
-    print "Downloaded plugins: ${infoc}${#plugins}${reset_color}"
+    print "Downloaded plugins: ${infoc}$(( ${#plugins} - 2 ))${reset_color}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
