@@ -37,6 +37,7 @@ ___REPORT_FILE="$___TEST_DIR/models/${___TEST_NAME}_report.txt"
 ___UNLOAD_FILE="$___TEST_DIR/models/${___TEST_NAME}_unload.txt"
 ___ENV_FILE="$___TEST_DIR/models/${___TEST_NAME}_env.txt"
 ___ENV_FILE_TMP="$___TEST_DIR/models/${___TEST_NAME}_env_tmp.txt"
+___ENV_FILE_TMP_BKP="$___TEST_DIR/.env_tmp.txt"
 ___OUT_FILE="$___TEST_DIR/models/${___TEST_NAME}_out.txt"
 ___TEST_REPORT_FILE="$___TEST_DIR/.report.txt"
 ___TEST_UNLOAD_FILE="$___TEST_DIR/.unload.txt"
@@ -161,6 +162,7 @@ ___env-on-line-fix() {
 
     diff "$___ENV_FILE_TMP" "$___TEST_ENV_FILE" > "$___DIFF_FILE"
     ret=$?
+    command mv -f "$___ENV_FILE_TMP" "$___ENV_FILE_TMP_BKP"
     print
     ___s-or-f $ret
     cat "$___DIFF_FILE"
