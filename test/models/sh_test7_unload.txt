@@ -1,0 +1,3 @@
+Unsetting variable reply
+Unsetting variable REPLY
+dtrace report saved to $LASTREPORT

@@ -1,0 +1,45 @@
+Dtrace is already active, stop it first with `dstop'
+### Zstatus 
+Zplugin's main directory: /Users/sgniazdowski/.zplugin/bin/test/tzplugin
+Zplugin's binary directory: /Users/sgniazdowski/.zplugin/bin
+Plugin directory: /Users/sgniazdowski/.zplugin/bin/test/tzplugin/plugins
+Completions directory: /Users/sgniazdowski/.zplugin/bin/test/tzplugin/completions
+Loaded plugins: 0
+Light loaded: 0
+Downloaded plugins: 4
+Enabled completions: 1
+Disabled completions: 0
+Completions available overall: 1
+Snippets loaded: 
+Compiled plugins: 0
+
+### List ###
+
+### Clist ###
+zplugin  _local/zplugin
+
+### Csearch ###
+[+] is installed, [-] uninstalled, [+-] partially installed
+[+] _local/zplugin   _zplugin
+
+### Compile-all ###
+_local/opp.zsh:
+Compiling opp.zsh...
+Compilation failed. Don't worry, the plugin will work also without compilation
+Consider submitting an error report to the plugin's author
+_local/safe-paste:
+Compiling safe-paste.plugin.zsh...
+_local/smart-cd:
+Compiling smart-cd.plugin.zsh...
+_local/zsh-colors:
+Compiling colors.plugin.zsh...
+
+### Uncompile-all ###
+_local/opp.zsh:
+not compiled
+_local/safe-paste:
+Removing safe-paste.plugin.zsh.zwc
+_local/smart-cd:
+Removing smart-cd.plugin.zsh.zwc
+_local/zsh-colors:
+Removing colors.plugin.zsh.zwc
