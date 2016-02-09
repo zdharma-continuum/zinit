@@ -1741,6 +1741,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     done
 
     print "Initializing completion (compinit)..."
+    autoload -Uz compinit
     compinit
 }
 
@@ -2982,6 +2983,7 @@ zplugin() {
            if -zplg-cdisable "$f"; then
                -zplg-forget-completion "$f"
                print "Initializing completion system (compinit)..."
+               autoload -Uz compinit
                compinit
            fi
            ;;
@@ -2996,6 +2998,7 @@ zplugin() {
            if -zplg-cenable "$f"; then
                -zplg-forget-completion "$f"
                print "Initializing completion system (compinit)..."
+               autoload -Uz compinit
                compinit
            fi
            ;;
@@ -3008,6 +3011,7 @@ zplugin() {
            # reinstallation, thus every obstacle gets overwritten or removed
            -zplg-install-completions "$2" "$3" "1"
            print "Initializing completion (compinit)..."
+           autoload -Uz compinit
            compinit
            ;;
        (cuninstall)
@@ -3018,6 +3022,7 @@ zplugin() {
            # Uninstalls completions for plugin
            -zplg-uninstall-completions "$2" "$3"
            print "Initializing completion (compinit)..."
+           autoload -Uz compinit
            compinit
            ;;
        (csearch)
