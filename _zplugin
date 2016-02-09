@@ -10,7 +10,7 @@ commands=(
     help:'usage information'
     load:'load plugin'
     unload:'unload plugin'
-    snippet:'source file given via url'
+    snippet:"source local or remote file (-f: force - don't use cache)"
     update:'update plugin (Git)'
     update-all:'update all plugins (Git)'
     status:'status for plugin (Git)'

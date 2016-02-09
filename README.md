@@ -191,7 +191,7 @@ self-update              - updates Zplugin
 load {plugin-name}       - load plugin
 light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin
-snippet [-f] {url}       - source file given via url (-f: force download, overwrite existing file)
+snippet [-f] {url}       - source local or remote file (-f: force - don't use cache)
 update {plugin-name}     - update plugin (Git)
 update-all               - update all plugins (Git)
 status {plugin-name}     - status for plugin (Git)
