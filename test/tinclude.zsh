@@ -91,17 +91,18 @@ ___s-or-f() {
 ___on-line-fix() {
     local infile="$1" outfile="$2"
 
-    typeset -a body
-    body=( "${(@f)"$(<$infile)"}" )
+    local body
+    body="$(<$infile)"
 
-    echo -n > "$outfile"
+    # Substitute ___ZPLG_HOME - we know what it is, as it is enforced
+    body="${body//___ZPLG_HOME/$___ZPLG_TESTING_HOME}"
+    # ___ZPLG_DIR is known because tests are ran from within Zplugin's tree
+    body="${body//___ZPLG_DIR/$___ZPLG_DIR}"
 
-    for i in "${body[@]}"; do
-        # Substitute ___ZPLG_HOME - we know what it is, as it is enforced
-        i="${i//___ZPLG_HOME/$___ZPLG_TESTING_HOME}"
-        # ___ZPLG_DIR is known because tests are ran from within Zplugin's tree
-        echo "${i//___ZPLG_DIR/$___ZPLG_DIR}" >> "$outfile"
-    done
+    # Handle no new line at end
+    echo -n "$body" > "$outfile"
+
+    tail -c1 "$infile" | read -r _ && echo >> "$outfile"
 }
 
 #
