@@ -317,7 +317,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             eval "function $func {
                 --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"
             }'
-            #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts} ${(q)func} "'"$@"'
+            #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"'
         fi
     done
 
@@ -462,7 +462,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         # Remember for dtrace
         [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]+="$ps "
     else
-        if [[ ! "${#opts}" = "1" && ( "${opts[(r)-s]}" = "-s" || "${opts[(r)-b]}" = "-b" || "${opts[(r)-a]}" = "-a" ||
+        if [[ ! "${#opts[@]}" = "1" && ( "${opts[(r)-s]}" = "-s" || "${opts[(r)-b]}" = "-b" || "${opts[(r)-a]}" = "-a" ||
                                       "${opts[(r)-t]}" = "-t" || "${opts[(r)-T]}" = "-T" || "${opts[(r)-m]}" = "-m" ) ]]
         then
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: ${opts[*]}"
@@ -1364,7 +1364,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" )
 
-    [ "${#commands}" -gt 0 ] && print "Forgetting commands completed by \`$f':"
+    [ "${#commands[@]}" -gt 0 ] && print "Forgetting commands completed by \`$f':"
 
     local k
     for k in "${commands[@]}"; do
@@ -1834,7 +1834,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     else
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
-    [ "${#reply}" -eq "0" ] && return 1
+    [ "${#reply[@]}" -eq "0" ] && return 1
 
     # Get first one
     integer correct=0
@@ -1903,7 +1903,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
 
-    if [ "${#reply}" -eq "0" ]; then
+    if [ "${#reply[@]}" -eq "0" ]; then
         print "${ZPLG_COL[error]}No files for compilation found${ZPLG_COL[rst]}"
         return 1
     fi
@@ -1937,7 +1937,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a matches m
     matches=( $dname/*.zwc )
 
-    if [ "${#matches}" -eq "0" ]; then
+    if [ "${#matches[@]}" -eq "0" ]; then
         if [ "$silent" = "1" ]; then
             print "not compiled"
         else
@@ -2015,7 +2015,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local pp
     for pp in "${plugin_paths[@]}"; do
         completions=( "$pp"/_* )
-        if [ "${#completions}" -gt 0 ]; then
+        if [ "${#completions[@]}" -gt 0 ]; then
             local pd="${pp:t}"
             [ "${#pd}" -gt "$longest" ] && longest="${#pd}"
         fi
@@ -2027,19 +2027,19 @@ ZPLG_ZLE_HOOKS_LIST=(
     for pp in "${plugin_paths[@]}"; do
         completions=( "$pp"/_* )
 
-        if [ "${#completions}" -gt 0 ]; then
+        if [ "${#completions[@]}" -gt 0 ]; then
             # Array of completions, e.g. ( _cp _xauth )
             completions=( "${completions[@]:t}" )
 
             # Detect if the completions are installed
-            integer all_installed="${#completions}"
+            integer all_installed="${#completions[@]}"
             for c in "${completions[@]}"; do
                 if [[ -e "$ZPLG_COMPLETIONS_DIR/$c" || -e "$ZPLG_COMPLETIONS_DIR/${c#_}" ]]; then
                     (( all_installed -- ))
                 fi
             done
 
-            if [ "$all_installed" -eq "${#completions}" ]; then
+            if [ "$all_installed" -eq "${#completions[@]}" ]; then
                 print -n "${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} "
             elif [ "$all_installed" -eq "0" ]; then
                 print -n "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} "
@@ -2113,7 +2113,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a completions
     completions=( "${reply[@]}" )
 
-    if [ "${#completions}" -ge "1" ]; then
+    if [ "${#completions[@]}" -ge "1" ]; then
         print "${ZPLG_COL[p]}Completions:${ZPLG_COL[rst]}"
         -zplg-check-which-completions-are-installed "${completions[@]}"
         typeset -a installed
@@ -2123,7 +2123,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         typeset -a enabled
         enabled=( "${reply[@]}" )
 
-        integer count="${#completions}" idx
+        integer count="${#completions[@]}" idx
         for (( idx=1; idx <= count; idx ++ )); do
             print -n "${completions[idx]:t}"
             if [ "${installed[idx]}" != "1" ]; then
@@ -2716,7 +2716,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     print "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
 
     # Without _zlocal/zplugin
-    print "Loaded plugins: ${infoc}$(( ${#ZPLG_REGISTERED_PLUGINS} - 1 ))${reset_color}"
+    print "Loaded plugins: ${infoc}$(( ${#ZPLG_REGISTERED_PLUGINS[@]} - 1 ))${reset_color}"
 
     # Count light-loaded plugins
     integer light=0
@@ -2730,23 +2730,23 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
     plugins=( "$ZPLG_PLUGINS_DIR"/* )
-    print "Downloaded plugins: ${infoc}$(( ${#plugins} - 2 ))${reset_color}"
+    print "Downloaded plugins: ${infoc}$(( ${#plugins[@]} - 2 ))${reset_color}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
     completions=( "$ZPLG_COMPLETIONS_DIR"/_* )
-    print "Enabled completions: ${infoc}${#completions}${reset_color}"
+    print "Enabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of disabled completions, with _zlocal/zplugin
     completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
-    print "Disabled completions: ${infoc}${#completions}${reset_color}"
+    print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of completions existing in all plugins
     completions=( "$ZPLG_PLUGINS_DIR"/*/_* )
-    print "Completions available overall: ${infoc}${#completions}${reset_color}"
+    print "Completions available overall: ${infoc}${#completions[@]}${reset_color}"
 
     # Enumerate snippets loaded
-    print "Snippets loaded: ${infoc}${(j:, :onv)ZPLG_SNIPPETS}${reset_color}"
+    print "Snippets loaded: ${infoc}${(j:, :onv)ZPLG_SNIPPETS[@]}${reset_color}"
 
     # Number of compiled plugins
     typeset -a matches m
@@ -2774,7 +2774,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     typeset -a matches m
     matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
 
-    if [ "${#matches}" -eq "0" ]; then
+    if [ "${#matches[@]}" -eq "0" ]; then
         print "No compiled plugins"
         return 0
     fi
