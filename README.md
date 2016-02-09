@@ -164,7 +164,7 @@ source ~/.zplugin/bin/zplugin.zsh
 If you place the `source` below `compinit`, then add those two lines after the `source`:
 ```sh
 autoload -Uz _zplugin
-_comps[zplugin]=_zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
 ```
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
