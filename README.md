@@ -139,8 +139,8 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc
 To update run the command again (or just execute `doc/install.sh`).
 
 `Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
-single line of code that will be added to the bottom (it will be sourcing
-`zplugin.zsh` for you). **You might want to move that line above `compinit`.**
+three lines of code that will be added to the bottom (the lines will be sourcing
+`zplugin.zsh` and setting up completion).
 
 Completion will be available, for command **zplugin** and aliases **zpl**, **zplg**.
 
@@ -159,6 +159,12 @@ and source it from `.zshrc` (**above compinit**):
 
 ```sh
 source ~/.zplugin/bin/zplugin.zsh
+```
+
+If you place the `source` below `compinit`, then add those two lines after the `source`:
+```sh
+autoload -Uz _zplugin
+_comps[zplugin]=_zplugin
 ```
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
