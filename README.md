@@ -1,4 +1,4 @@
-![zew logo](http://imageshack.com/a/img907/2224/62TFk9.png)
+![zew logo](https://raw.githubusercontent.com/psprint/zplugin/master/doc/img/zplugin.png)
 
 # Zplugin
 
