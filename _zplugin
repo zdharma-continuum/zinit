@@ -148,8 +148,8 @@ case $state in
             snippet)
                 typeset -a list
                 list=( "-f" )
-                _wanted plugins expl "Options" \
-                    compadd "$@" -a - list && ret=0
+                _files || _wanted soptions expl "Options" \
+                    compadd "$@" -a - list
                 ;;
             dstart|dtrace)
                 _message "Hit enter to start tracking this session" && ret=0
