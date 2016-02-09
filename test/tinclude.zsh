@@ -39,6 +39,8 @@ ___ENV_FILE="$___TEST_DIR/models/${___TEST_NAME}_env.txt"
 ___ENV_FILE_TMP="$___TEST_DIR/models/${___TEST_NAME}_env_tmp.txt"
 ___ENV_FILE_TMP_BKP="$___TEST_DIR/.env_tmp.txt"
 ___OUT_FILE="$___TEST_DIR/models/${___TEST_NAME}_out.txt"
+___OUT_FILE_TMP="$___TEST_DIR/models/${___TEST_NAME}_out_tmp.txt"
+___OUT_FILE_TMP_BKP="$___TEST_DIR/.out_tmp.txt"
 ___TEST_REPORT_FILE="$___TEST_DIR/.report.txt"
 ___TEST_UNLOAD_FILE="$___TEST_DIR/.unload.txt"
 ___TEST_ENV_FILE="$___TEST_DIR/.env.txt"
@@ -86,7 +88,7 @@ ___s-or-f() {
     }
 }
 
-___env-on-line-fix() {
+___on-line-fix() {
     local infile="$1" outfile="$2"
 
     typeset -a body
@@ -95,6 +97,9 @@ ___env-on-line-fix() {
     echo -n > "$outfile"
 
     for i in "${body[@]}"; do
+        # Substitute ___ZPLG_HOME - we know what it is, as it is enforced
+        i="${i//___ZPLG_HOME/$___ZPLG_TESTING_HOME}"
+        # ___ZPLG_DIR is known because tests are ran from within Zplugin's tree
         echo "${i//___ZPLG_DIR/$___ZPLG_DIR}" >> "$outfile"
     done
 }
@@ -158,7 +163,7 @@ ___env-on-line-fix() {
     read -sk
 
     # On-line environment file preparation - substitute "___ZPLG_DIR" with $___ZPLG_DIR
-    ___env-on-line-fix "$___ENV_FILE" "$___ENV_FILE_TMP"
+    ___on-line-fix "$___ENV_FILE" "$___ENV_FILE_TMP"
 
     diff "$___ENV_FILE_TMP" "$___TEST_ENV_FILE" > "$___DIFF_FILE"
     ret=$?
@@ -173,8 +178,12 @@ ___env-on-line-fix() {
         print "\n${fg_bold[yellow]}----- ${fg_bold[magenta]}ENVIRONMENT${fg_bold[yellow]} results showed, press any key for OUTPUT results -----$reset_color"
         read -sk
 
-        diff "$___OUT_FILE" "$___TEST_OUT_FILE" > "$___DIFF_FILE"
+        # On-line output file preparation - substitute "___ZPLG_DIR" with $___ZPLG_DIR
+        ___on-line-fix "$___OUT_FILE" "$___OUT_FILE_TMP"
+
+        diff "$___OUT_FILE_TMP" "$___TEST_OUT_FILE" > "$___DIFF_FILE"
         ret=$?
+        command mv -f "$___OUT_FILE_TMP" "$___OUT_FILE_TMP_BKP"
         print
         ___s-or-f $ret
         cat "$___DIFF_FILE"
