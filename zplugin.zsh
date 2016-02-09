@@ -1447,13 +1447,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     done
 }
 
--zplg-reset-already-warnings() {
-    ZPLG_ALREADY_WARNINGS_F=( )
-}
-
 -zplg-already-function-warning-uspl2() {
-    [ "${ZPLG_ALREADY_WARNINGS_F[$3]}" = "1" ] && return
-    ZPLG_ALREADY_WARNINGS_F[$3]="1"
     (( $1 )) && -zplg-add-report "$2" "Warning: there already was $3() function defined, possibly in zshrc"
 }
 
@@ -1843,7 +1837,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
     [ "$light" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
-    -zplg-reset-already-warnings
 
     # Light load doesn't do diffs and shadowing
     if [ "$light" != "light" ]; then
