@@ -142,7 +142,7 @@ To update run the command again (or just execute `doc/install.sh`).
 single line of code that will be added to the bottom (it will be sourcing
 `zplugin.zsh` for you). **You might want to move that line above `compinit`.**
 
-Completion will be available, for command `zplugin` and aliases `zpl`, `zplg`.
+Completion will be available, for command **zplugin** and aliases **zpl**, **zplg**.
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
 
