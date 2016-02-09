@@ -1,9 +1,9 @@
 Dtrace is already active, stop it first with `dstop'
 ### Zstatus 
-Zplugin's main directory: /Users/sgniazdowski/.zplugin/bin/test/tzplugin
-Zplugin's binary directory: /Users/sgniazdowski/.zplugin/bin
-Plugin directory: /Users/sgniazdowski/.zplugin/bin/test/tzplugin/plugins
-Completions directory: /Users/sgniazdowski/.zplugin/bin/test/tzplugin/completions
+Zplugin's main directory: ___ZPLG_HOME
+Zplugin's binary directory: ___ZPLG_DIR
+Plugin directory: ___ZPLG_HOME/plugins
+Completions directory: ___ZPLG_HOME/completions
 Loaded plugins: 0
 Light loaded: 0
 Downloaded plugins: 4
