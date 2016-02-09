@@ -225,7 +225,16 @@ zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh
 ```
 
 Then you can use the themes either as plugins (`zplugin load {user/theme-name}`) or as snippets
-(`zplugin snippet {file path or URL}`).
+(`zplugin snippet {file path or URL}`; plugin method recommended). Some themes require not only
+`Oh-My-Zsh's` `git` library, but also `git` plugin (error about function `current_branch` appears).
+Source it as snippet directly from `Oh-My-Zsh`:
+
+```sh
+zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+```
+
+Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
+a fresh version of a snippet.
 
 ## IRC channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
