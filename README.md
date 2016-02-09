@@ -136,12 +136,17 @@ Execute:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
 ```
 
-To update run the command again.
+To update run the command again (or just execute `doc/install.sh`).
 
 `Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
 single line of code that will be added to the bottom (it will be sourcing
-`zplugin.zsh` for you). Completion will be available, for command `zplugin` and
-aliases `zpl`, `zplg`.
+`zplugin.zsh` for you). **You might want to move that line above `compinit`.**
+
+Completion will be available, for command `zplugin` and aliases `zpl`, `zplg`.
+
+After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
+
+## Manual installation
 
 To manually install `Zplugin` clone the repo to e.g. `~/.zplugin/bin`:
 
@@ -150,7 +155,7 @@ mkdir ~/.zplugin
 git clone https://github.com/psprint/zplugin.git ~/.zplugin/bin
 ```
 
-and source it from `.zshrc`:
+and source it from `.zshrc` (**above compinit**):
 
 ```sh
 source ~/.zplugin/bin/zplugin.zsh
