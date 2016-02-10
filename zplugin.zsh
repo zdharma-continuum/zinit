@@ -611,19 +611,19 @@ ZPLG_ZLE_HOOKS_LIST=(
     # No reply needed when compdef exists
     if (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )); then
 
-    -zplg-add-report "$ZPLG_CUR_USPL2" "Compdef $*"
+        -zplg-add-report "$ZPLG_CUR_USPL2" "Compdef $*"
 
-    # E. Shadow off. Unfunction "compdef"
-    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}"
+        # E. Shadow off. Unfunction "compdef"
+        # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
+        functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}"
 
-    # Actual compdef
-    compdef "$@"
-    integer ret=$?
+        # Actual compdef
+        compdef "$@"
+        integer ret=$?
 
-    # E. Shadow on. Custom compdef could unfunction itself
-    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}" || unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
-    function compdef { --zplg-shadow-compdef "$@"; }
+        # E. Shadow on. Custom compdef could unfunction itself
+        (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}" || unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
+        function compdef { --zplg-shadow-compdef "$@"; }
 
     # Save compdef call for replay
     else
@@ -651,9 +651,9 @@ ZPLG_ZLE_HOOKS_LIST=(
     unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
 
     if [ "$mode" != "compdef" ]; then
-    # 0. Used, but not in temporary restoration, which doesn't happen for autoload
-    (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
-    function autoload { --zplg-shadow-autoload "$@"; }
+        # 0. Used, but not in temporary restoration, which doesn't happen for autoload
+        (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
+        function autoload { --zplg-shadow-autoload "$@"; }
     fi
 
     # E. Always shadow compdef
