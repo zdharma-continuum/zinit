@@ -644,11 +644,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Defensive code, shouldn't be needed
     unset "ZPLG_BACKUP_FUNCTIONS[autoload]" # 0.
-    unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
-    unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"   # B.
-    unset "ZPLG_BACKUP_FUNCTIONS[alias]"    # C.
-    unset "ZPLG_BACKUP_FUNCTIONS[zle]"      # D.
-    unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
 
     # 0. Used, but not in temporary restoration, which doesn't happen for autoload
     (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
@@ -656,6 +651,13 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Light loading stops here
     [ "$light" = "light" ] && return 0
+
+    # Defensive code, shouldn't be needed
+    unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
+    unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"   # B.
+    unset "ZPLG_BACKUP_FUNCTIONS[alias]"    # C.
+    unset "ZPLG_BACKUP_FUNCTIONS[zle]"      # D.
+    unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
 
     # A.
     (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
