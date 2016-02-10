@@ -93,7 +93,7 @@ typeset -gH ZPLG_CUR_USPL=""
 typeset -gH ZPLG_CUR_USPL2=""
 # If any plugin retains the shadowed function instead of
 # original one then this will protect from further reporting
-typeset -gH ZPLG_SHADOWING_ACTIVE
+typeset -gH ZPLG_SHADOWING_ACTIVE="inactive"
 # To show "function already defined, in zsh" warning once per function
 typeset -gAH ZPLG_ALREADY_WARNINGS_F
 # If "1", it will make debug reporting active,
@@ -639,9 +639,18 @@ ZPLG_ZLE_HOOKS_LIST=(
     local mode="$1"
 
     # Enable shadowing only once
-    [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] && return 0
+    #
+    # One could expect possibility of widening of shadowing, however
+    # such sequence doesn't exist, e.g. "light" then "load"/"dtrace",
+    # "compdef" then "load"/"dtrace", "light" then "compdef",
+    # "compdef" then "light"
+    #
+    # It is always "dtrace" then "load" (i.e. dtrace then load)
+    # "dtrace" then "light" (i.e. dtrace then light load)
+    # "dtrace" then "compdef" (i.e. dtrace then snippet)
+    [ "$ZPLG_SHADOWING_ACTIVE" != "inactive" ] && return 0
 
-    ZPLG_SHADOWING_ACTIVE=1
+    ZPLG_SHADOWING_ACTIVE="$mode"
 
     # The point about backuping is: does the key exist in functions array
     # If it does exist, then it will also exist in ZPLG_BACKUP_FUNCTIONS
@@ -660,7 +669,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
     function compdef { --zplg-shadow-compdef "$@"; }
 
-    # Light and comdef shadowing stops here
+    # Light and compdef shadowing stops here. Dtrace and load go on
     [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
 
     # Defensive code, shouldn't be needed
@@ -693,9 +702,12 @@ ZPLG_ZLE_HOOKS_LIST=(
     local mode="$1"
 
     # Disable shadowing only once
-    [ "$ZPLG_SHADOWING_ACTIVE" = "0" ] && return 0
+    [ "$ZPLG_SHADOWING_ACTIVE" = "inactive" ] && return 0
 
-    ZPLG_SHADOWING_ACTIVE=0
+    # Disable shadowing only the way it was enabled first
+    [ "$ZPLG_SHADOWING_ACTIVE" != "$mode" ] && return 0
+
+    ZPLG_SHADOWING_ACTIVE="inactive"
 
     if [ "$mode" != "compdef" ]; then
     # 0. Unfunction "autoload"
@@ -2887,7 +2899,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" begin
 
     # Full shadowing on
-    -zplg-shadow-on "load"
+    -zplg-shadow-on "dtrace"
 }
 
 # Ends debug reporting, diffing
@@ -2895,7 +2907,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     ZPLG_DEBUG_ACTIVE="0"
 
     # Shadowing fully off
-    -zplg-shadow-off "load"
+    -zplg-shadow-off "dtrace"
 
     # Gather end data now, for diffing later
     -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" end
