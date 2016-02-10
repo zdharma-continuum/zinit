@@ -615,7 +615,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # E. Shadow off. Unfunction "compdef"
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
+    functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}"
 
     # Actual compdef
     compdef "$@"
