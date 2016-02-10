@@ -38,6 +38,9 @@ commands=(
     uncompile:'remove compiled version of plugin'
     uncompile-all:'remove compiled versions of all downloaded plugins'
     compiled:'show which plugins are compiled'
+    cdlist:'show compdef replay list'
+    cdreplay:'replay compdefs (to be done after compinit)'
+    cdclear:'clear compdef replay list'
 )
 
 _arguments \
@@ -203,6 +206,15 @@ case $state in
                 ;;
             compiled)
                 _message 'Hit enter to get list of compiled plugins' && ret=0
+                ;;
+            cdlist)
+                _message 'Hit enter to show compdef replay list' && ret=0
+                ;;
+            cdreplay)
+                _message 'Hit enter to replay recorded compdefs' && ret=0
+                ;;
+            cdclear)
+                _message 'Hit enter to clear compdef replay list' && ret=0
                 ;;
             *)
                 ret=1

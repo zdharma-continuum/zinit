@@ -211,6 +211,8 @@ typeset -gAH ZPLG_WIDGETS_SAVED
 # Holds concatenated names of widgets that should be deleted
 typeset -gAH ZPLG_WIDGETS_DELETE
 
+# Holds compdef calls (i.e. "${(j: :)${(q)@}}" of each call)
+typeset -gaH ZPLG_COMPDEF_REPLAY
 # }}}
 
 #
@@ -606,14 +608,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-compdef() {
-    # Check if that function exists
+    # No reply needed when compdef exists
     if (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )); then
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \'compdef' exists"\
-                                                "(you might be running compinit twice; this is probably required"\
-                                                "for this plugin's completion to work)"
-    else
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: running \`compdef $*' and \`compdef' doesn't exist"
-    fi
+
+    -zplg-add-report "$ZPLG_CUR_USPL2" "Compdef $*"
 
     # E. Shadow off. Unfunction "compdef"
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
@@ -627,10 +625,16 @@ ZPLG_ZLE_HOOKS_LIST=(
     (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
     function compdef { --zplg-shadow-compdef "$@"; }
 
+    # Save compdef call for replay
+    else
+        -zplg-add-report "$ZPLG_CUR_USPL2" "Saving \`compdef $*' for replay"
+        ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
+    fi
+
     return $ret # testable
 }
 
-# Shadowing on completely for a given mode ("light" or "load")
+# Shadowing on completely for a given mode ("load", "light" or "compdef")
 -zplg-shadow-on() {
     local mode="$1"
 
@@ -644,20 +648,26 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Defensive code, shouldn't be needed
     unset "ZPLG_BACKUP_FUNCTIONS[autoload]" # 0.
+    unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
 
+    if [ "$mode" != "compdef" ]; then
     # 0. Used, but not in temporary restoration, which doesn't happen for autoload
     (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
     function autoload { --zplg-shadow-autoload "$@"; }
+    fi
 
-    # Light loading stops here
-    [ "$mode" = "light" ] && return 0
+    # E. Always shadow compdef
+    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
+    function compdef { --zplg-shadow-compdef "$@"; }
+
+    # Light and comdef shadowing stops here
+    [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
 
     # Defensive code, shouldn't be needed
     unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
     unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"   # B.
     unset "ZPLG_BACKUP_FUNCTIONS[alias]"    # C.
     unset "ZPLG_BACKUP_FUNCTIONS[zle]"      # D.
-    unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
 
     # A.
     (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
@@ -675,14 +685,10 @@ ZPLG_ZLE_HOOKS_LIST=(
     (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
     function zle { --zplg-shadow-zle "$@"; }
 
-    # E.
-    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
-    function compdef { --zplg-shadow-compdef "$@"; }
-
     return 0
 }
 
-# Shadowing off completely for a given mode "light" or not
+# Shadowing off completely for a given mode "load", "light" or "compdef"
 -zplg-shadow-off() {
     local mode="$1"
 
@@ -691,11 +697,16 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     ZPLG_SHADOWING_ACTIVE=0
 
+    if [ "$mode" != "compdef" ]; then
     # 0. Unfunction "autoload"
     (( ${+ZPLG_BACKUP_FUNCTIONS[autoload]} )) && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
+    fi
 
-    # Light loading stops here
-    [ "$mode" = "light" ] && return 0
+    # E. Restore original compdef if it existed
+    (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
+
+    # Light and comdef shadowing stops here
+    [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
 
     # Unfunction shadowing functions
 
@@ -707,8 +718,6 @@ ZPLG_ZLE_HOOKS_LIST=(
     (( ${+ZPLG_BACKUP_FUNCTIONS[alias]} )) && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
     # D.
     (( ${+ZPLG_BACKUP_FUNCTIONS[zle]} )) && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
-    # E.
-    (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
 
     return 0
 }
@@ -1840,8 +1849,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
     [ "$mode" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
 
-    # Light load doesn't do diffs and shadowing
-    if [ "$mode" != "light" ]; then
+    # Light and compdef mode doesn't do diffs and shadowing
+    if [ "$mode" = "load" ]; then
         -zplg-diff-functions "$ZPLG_CUR_USPL2" begin
         -zplg-diff-options "$ZPLG_CUR_USPL2" begin
         -zplg-diff-env "$ZPLG_CUR_USPL2" begin
@@ -1865,7 +1874,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-set-desired-shell-state
 
     -zplg-shadow-off "$mode"
-    if [ "$mode" != "light" ]; then
+    if [ "$mode" = "load" ]; then
         -zplg-diff-parameter "$ZPLG_CUR_USPL2" end
         -zplg-diff-env "$ZPLG_CUR_USPL2" end
         -zplg-diff-options "$ZPLG_CUR_USPL2" end
@@ -2259,9 +2268,9 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # $1 - plugin name, possibly github path
 -zplg-load () {
+    local mode="$3"
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
-    local mode="$3"
 
     -zplg-register-plugin "$user" "$plugin" "$mode"
     if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
@@ -2638,8 +2647,10 @@ ZPLG_ZLE_HOOKS_LIST=(
         fi
     fi
 
-    # Source the file
+    # Source the file with compdef shadowing
+    -zplg-shadow-on "compdef"
     builtin source "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+    -zplg-shadow-off "compdef"
 }
 
 # Updates given plugin
@@ -2818,6 +2829,43 @@ ZPLG_ZLE_HOOKS_LIST=(
     done
 }
 
+-zplg-list-compdef-replay() {
+    print "Recorded compdefs:"
+    local cdf
+    for cdf in "${ZPLG_COMPDEF_REPLAY[@]}"; do
+        print "compdef ${(Q)cdf}"
+    done
+}
+
+-zplg-compdef-replay() {
+    local quiet="$1"
+    typeset -a pos
+
+    # Check if compinit was loaded
+    if [ "${+functions[compdef]}" = "0" ]; then
+        print "Compinit isn't loaded, cannot do compdef replay"
+        return 1
+    fi
+
+    # In the same order
+    local cdf
+    for cdf in "${ZPLG_COMPDEF_REPLAY[@]}"; do
+        pos=( "${(z)cdf}" )
+        # When ZPLG_COMPDEF_REPLAY empty (also when only white spaces)
+        [[ "${#pos[@]}" = "1" && -z "${pos[-1]}" ]] && continue
+        pos=( "${(Q)pos[@]}" )
+        [ "$quiet" = "-q" ] || echo "Running compdef ${pos[*]}"
+        compdef "${pos[@]}"
+    done
+
+    return 0
+}
+
+-zplg-compdef-clear() {
+    ZPLG_COMPDEF_REPLAY=( )
+    print "Compdef replay cleared"
+}
+
 # }}}
 
 #
@@ -2839,7 +2887,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" begin
 
     # Full shadowing on
-    -zplg-shadow-on ""
+    -zplg-shadow-on "load"
 }
 
 # Ends debug reporting, diffing
@@ -2847,7 +2895,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     ZPLG_DEBUG_ACTIVE="0"
 
     # Shadowing fully off
-    -zplg-shadow-off ""
+    -zplg-shadow-off "load"
 
     # Gather end data now, for diffing later
     -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" end
@@ -2912,7 +2960,7 @@ zplugin() {
            fi
            # Load plugin given in uspl2 or "user plugin" format
            # Possibly clone from github, and install completions
-           -zplg-load "$2" "$3"
+           -zplg-load "$2" "$3" "load"
            ;;
        (light)
            if [[ -z "$2" && -z "$3" ]]; then
@@ -3066,6 +3114,15 @@ zplugin() {
        (compiled)
            -zplg-compiled
            ;;
+       (cdlist)
+           -zplg-list-compdef-replay
+           ;;
+       (cdreplay)
+           -zplg-compdef-replay "$2"
+           ;;
+       (cdclear)
+           -zplg-compdef-clear
+           ;;
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
@@ -3098,7 +3155,10 @@ compile  ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}   - compile plugin
 compile-all              - compile all downloaded plugins
 uncompile ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}  - remove compiled version of plugin
 uncompile-all            - remove compiled versions of all downloaded plugins
-compiled                 - list plugins that are compiled"
+compiled                 - list plugins that are compiled
+cdlist                   - show compdef replay list
+cdreplay                 - replay compdefs (to be done after compinit)
+cdclear                  - clear compdef replay list"
            ;;
        (*)
            print "Unknown command \`$1' (try \`help' to get usage information)"
