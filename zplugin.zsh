@@ -434,8 +434,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     bindkey "${pos[@]}"
     integer ret=$?
 
-    # A. Shadow on
-    (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
+    # A. Shadow on. Custom function could unfunction itself
+    (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}" || unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"
     function bindkey { --zplg-shadow-bindkey "$@"; }
 
     return $ret # testable
@@ -479,8 +479,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     zstyle "${pos[@]}"
     integer ret=$?
 
-    # B. Shadow on
-    (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
+    # B. Shadow on. Custom function could unfunction itself
+    (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}" || unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"
     function zstyle { --zplg-shadow-zstyle "$@"; }
 
     return $ret # testable
@@ -535,8 +535,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     alias "${pos[@]}"
     integer ret=$?
 
-    # C. Shadow on
-    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
+    # C. Shadow on. Custom function could unfunction itself
+    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}" || unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
     function alias { --zplg-shadow-alias "$@"; }
 
     return $ret # testable
@@ -600,8 +600,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     zle "${pos[@]}"
     integer ret=$?
 
-    # D. Shadow on
-    (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
+    # D. Shadow on. Custom function could unfunction itself
+    (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}" || unset "ZPLG_BACKUP_FUNCTIONS[zle]"
     function zle { --zplg-shadow-zle "$@"; }
 
     return $ret # testable
@@ -621,8 +621,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     compdef "$@"
     integer ret=$?
 
-    # E. Shadow on
-    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
+    # E. Shadow on. Custom compdef could unfunction itself
+    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}" || unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
     function compdef { --zplg-shadow-compdef "$@"; }
 
     # Save compdef call for replay
