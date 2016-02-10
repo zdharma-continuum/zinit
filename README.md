@@ -236,6 +236,29 @@ zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/gi
 Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
 a fresh version of a snippet.
 
+## Clean .zshrc With Compdef Replaying
+
+`Zplugin` provides a feature which brings order into `.zshrc`. When to call `compinit`? Some plugins
+require completion being in place, other update `$FPATH` and want `compinit` called afterwards.
+`Zplugin` is like a pre-initialized completion for the first type of plugins. They will thus work
+without real `compinit` in place. You should call `compinit` only once after loading all plugins, in
+following way:
+
+```sh
+source ~/.zplugin/bin/zplugin.zsh
+zplugin load "some/plugin"
+...
+zplugin load "other/plugin"
+
+autoload -Uz compinit
+compinit
+zplugin cdreplay -q # -q is for quiet
+```
+
+Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
+`cdreplay` and single `compinit`: **0.156** sec.
+
+
 ## IRC channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
