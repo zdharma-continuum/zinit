@@ -632,7 +632,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Shadowing on completely for a given mode ("light" or "load")
 -zplg-shadow-on() {
-    local light="$1"
+    local mode="$1"
 
     # Enable shadowing only once
     [ "$ZPLG_SHADOWING_ACTIVE" = "1" ] && return 0
@@ -650,7 +650,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     function autoload { --zplg-shadow-autoload "$@"; }
 
     # Light loading stops here
-    [ "$light" = "light" ] && return 0
+    [ "$mode" = "light" ] && return 0
 
     # Defensive code, shouldn't be needed
     unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
@@ -684,7 +684,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Shadowing off completely for a given mode "light" or not
 -zplg-shadow-off() {
-    local light="$1"
+    local mode="$1"
 
     # Disable shadowing only once
     [ "$ZPLG_SHADOWING_ACTIVE" = "0" ] && return 0
@@ -695,7 +695,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     (( ${+ZPLG_BACKUP_FUNCTIONS[autoload]} )) && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
 
     # Light loading stops here
-    [ "$light" = "light" ] && return 0
+    [ "$mode" = "light" ] && return 0
 
     # Unfunction shadowing functions
 
@@ -1768,7 +1768,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # TODO detect second autoload?
 -zplg-register-plugin() {
-    local light="$3"
+    local mode="$3"
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}/${reply[-1]}"
     integer ret=0
@@ -1782,7 +1782,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 
     # Full or light load?
-    [ "$light" = "light" ] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
+    [ "$mode" = "light" ] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
 
     ZPLG_REPORTS[$uspl2]=""
     ZPLG_FUNCTIONS_BEFORE[$uspl2]=""
@@ -1811,7 +1811,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 -zplg-load-plugin() {
-    local user="$1" plugin="$2" light="$3"
+    local user="$1" plugin="$2" mode="$3"
     ZPLG_CUR_USER="$user"
     ZPLG_CUR_PLUGIN="$plugin"
     ZPLG_CUR_USPL="${user}---${plugin}"
@@ -1838,10 +1838,10 @@ ZPLG_ZLE_HOOKS_LIST=(
     local fname="${reply[1-correct]#$dname/}"
 
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
-    [ "$light" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
+    [ "$mode" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
 
     # Light load doesn't do diffs and shadowing
-    if [ "$light" != "light" ]; then
+    if [ "$mode" != "light" ]; then
         -zplg-diff-functions "$ZPLG_CUR_USPL2" begin
         -zplg-diff-options "$ZPLG_CUR_USPL2" begin
         -zplg-diff-env "$ZPLG_CUR_USPL2" begin
@@ -1849,14 +1849,14 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 
     # Warn about user having his own shadows in place. Check
-    # every possible shadow regardless of "$light" setting
+    # every possible shadow regardless of "$mode" setting
     -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
     -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "$ZPLG_CUR_USPL2" "bindkey"
     -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
     -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "$ZPLG_CUR_USPL2" "alias"
     -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "$ZPLG_CUR_USPL2" "zle"
 
-    -zplg-shadow-on "$light"
+    -zplg-shadow-on "$mode"
 
     # We need some state, but user wants his for his plugins
     -zplg-restore-enter-state 
@@ -1864,8 +1864,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     # Restore our desired state for our operation
     -zplg-set-desired-shell-state
 
-    -zplg-shadow-off "$light"
-    if [ "$light" != "light" ]; then
+    -zplg-shadow-off "$mode"
+    if [ "$mode" != "light" ]; then
         -zplg-diff-parameter "$ZPLG_CUR_USPL2" end
         -zplg-diff-env "$ZPLG_CUR_USPL2" end
         -zplg-diff-options "$ZPLG_CUR_USPL2" end
@@ -2261,13 +2261,13 @@ ZPLG_ZLE_HOOKS_LIST=(
 -zplg-load () {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
-    local light="$3"
+    local mode="$3"
 
-    -zplg-register-plugin "$user" "$plugin" "$light"
+    -zplg-register-plugin "$user" "$plugin" "$mode"
     if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
         -zplg-unregister-plugin "$user" "$plugin"
     else
-        -zplg-load-plugin "$user" "$plugin" "$light"
+        -zplg-load-plugin "$user" "$plugin" "$mode"
     fi
 }
 
