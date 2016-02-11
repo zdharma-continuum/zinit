@@ -201,6 +201,9 @@ status-all               - status for all plugins (Git)
 report {plugin-name}     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
+cd {plugin-name}         - cd into plugin's directory
+edit {plugin-name}       - edit plugin's file with $EDITOR
+glance {plugin-name}     - look at plugin's source (pygmentize, {,source-}highlight)
 clist|completions        - list completions in use
 cdisable {cname}         - disable completion `cname'
 cenable  {cname}         - enable completion `cname'

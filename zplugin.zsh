@@ -3240,9 +3240,9 @@ status-all               - status for all plugins (Git)
 report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
-cd                       - cd into plugin's directory
-edit                     - edit plugin's file with \$EDITOR
-glance                   - look at plugin's source (pygmentize, {,source-}highlight)
+cd ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}         - cd into plugin's directory
+edit ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - edit plugin's file with \$EDITOR
+glance ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - look at plugin's source (pygmentize, {,source-}highlight)
 clist|completions        - list completions in use
 cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
 cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'
