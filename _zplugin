@@ -20,6 +20,7 @@ commands=(
     loaded:'show what plugins are loaded'
     list:'show what plugins are loaded'
     cd:"go into plugin's directory"
+    edit:"edit plugin's file with \$EDITOR"
     clist:'list completions in use'
     completions:'list completions in use'
     cdisable:'disable completion'
@@ -217,7 +218,7 @@ case $state in
             cdclear)
                 _message 'Hit enter to clear compdef replay list' && ret=0
                 ;;
-            cd)
+            cd|edit)
                 typeset -a plugins
                 plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )

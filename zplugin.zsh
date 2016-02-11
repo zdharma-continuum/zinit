@@ -2898,6 +2898,24 @@ ZPLG_ZLE_HOOKS_LIST=(
     cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 }
 
+-zplg-edit-plugin() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    # cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    -zplg-first "$1" "$2" || {
+        print "${ZPLG_COL[error]}No source file found, cannot edit${ZPLG_COL[rst]}"
+        return 1
+    }
+
+    local fname="${reply[-1]}"
+
+    print "Editting ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]} with ${ZPLG_COL[p]}${EDITOR:-vim}${ZPLG_COL[rst]}"
+    "${EDITOR:-vim}" "$fname"
+}
+
 # }}}
 
 #
@@ -3158,6 +3176,9 @@ zplugin() {
        (cd)
            -zplg-cd-plugin "$2" "$3"
            ;;
+       (edit)
+           -zplg-edit-plugin "$2" "$3"
+           ;;
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
@@ -3175,6 +3196,7 @@ report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's repor
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
 cd                       - cd into plugin's directory
+edit                     - edit plugin's file with \$EDITOR
 clist|completions        - list completions in use
 cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
 cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'
