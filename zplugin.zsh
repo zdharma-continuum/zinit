@@ -2889,7 +2889,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     print "Compdef replay cleared"
 }
 
--zplg-cd-plugin() {
+-zplg-cd() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
@@ -2898,7 +2898,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
 }
 
--zplg-edit-plugin() {
+-zplg-edit() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
@@ -2916,7 +2916,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     "${EDITOR:-vim}" "$fname"
 }
 
--zplg-glance-plugin() {
+-zplg-glance() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
@@ -3216,13 +3216,13 @@ zplugin() {
            -zplg-compdef-clear
            ;;
        (cd)
-           -zplg-cd-plugin "$2" "$3"
+           -zplg-cd "$2" "$3"
            ;;
        (edit)
-           -zplg-edit-plugin "$2" "$3"
+           -zplg-edit "$2" "$3"
            ;;
        (glance)
-           -zplg-glance-plugin "$2" "$3"
+           -zplg-glance "$2" "$3"
            ;;
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
