@@ -2916,6 +2916,48 @@ ZPLG_ZLE_HOOKS_LIST=(
     "${EDITOR:-vim}" "$fname"
 }
 
+-zplg-glance-plugin() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    -zplg-first "$1" "$2" || {
+        print "${ZPLG_COL[error]}No source file found, cannot glance${ZPLG_COL[rst]}"
+        return 1
+    }
+
+    local fname="${reply[-1]}"
+
+    integer has_256_colors=0
+    [[ "$TERM" = xterm* || "$TERM" = "screen" ]] && has_256_colors=1
+
+    {
+        if (( ${+commands[pygmentize]} )); then
+            print "Glancing with ${ZPLG_COL[info]}pygmentize${ZPLG_COL[rst]}"
+            pygmentize -l bash -g "$fname"
+        elif (( ${+commands[highlight]} )); then
+            print "Glancing with ${ZPLG_COL[info]}highlight${ZPLG_COL[rst]}"
+            if (( has_256_colors )); then
+                highlight -q --force -S sh -O xterm256 "$fname"
+            else
+                highlight -q --force -S sh -O ansi "$fname"
+            fi
+        elif (( ${+commands[source-highlight]} )); then
+            print "Glancing with ${ZPLG_COL[info]}source-highlight${ZPLG_COL[rst]}"
+            source-highlight -fesc --failsafe -s zsh -o STDOUT -i "$fname"
+        else
+            cat "$fname"
+        fi
+    } | {
+        if [ -t 1 ]; then
+            less -iRFX
+        else
+            cat
+        fi
+    }
+}
+
 # }}}
 
 #
@@ -3179,6 +3221,9 @@ zplugin() {
        (edit)
            -zplg-edit-plugin "$2" "$3"
            ;;
+       (glance)
+           -zplg-glance-plugin "$2" "$3"
+           ;;
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
@@ -3197,6 +3242,7 @@ all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
 cd                       - cd into plugin's directory
 edit                     - edit plugin's file with \$EDITOR
+glance                   - look at plugin's source (pygmentize, {,source-}highlight)
 clist|completions        - list completions in use
 cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
 cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'
