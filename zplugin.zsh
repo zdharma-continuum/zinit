@@ -2878,6 +2878,15 @@ ZPLG_ZLE_HOOKS_LIST=(
     print "Compdef replay cleared"
 }
 
+-zplg-cd-plugin() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+}
+
 # }}}
 
 #
@@ -3135,6 +3144,9 @@ zplugin() {
        (cdclear)
            -zplg-compdef-clear
            ;;
+       (cd)
+           -zplg-cd-plugin "$2" "$3"
+           ;;
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
@@ -3151,6 +3163,7 @@ status-all               - status for all plugins (Git)
 report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's report
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
+cd                       - cd into plugin's directory
 clist|completions        - list completions in use
 cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
 cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'

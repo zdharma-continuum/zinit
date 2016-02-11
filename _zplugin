@@ -19,6 +19,7 @@ commands=(
     all-reports:'show all plugin reports'
     loaded:'show what plugins are loaded'
     list:'show what plugins are loaded'
+    cd:"go into plugin's directory"
     clist:'list completions in use'
     completions:'list completions in use'
     cdisable:'disable completion'
@@ -215,6 +216,16 @@ case $state in
                 ;;
             cdclear)
                 _message 'Hit enter to clear compdef replay list' && ret=0
+                ;;
+            cd)
+                typeset -a plugins
+                plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
+                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             *)
                 ret=1
