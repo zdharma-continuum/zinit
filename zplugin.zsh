@@ -1392,7 +1392,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local k
     for k in "${commands[@]}"; do
         unset "_comps[$k]"
-        echo "Unsetting $k"
+        print "Unsetting $k"
     done
 
     print "${ZPLG_COL[info]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
@@ -1945,8 +1945,8 @@ ZPLG_ZLE_HOOKS_LIST=(
     print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
     -zplg-restore-enter-state 
     zcompile "$first" || {
-        echo "Compilation failed. Don't worry, the plugin will work also without compilation"
-        echo "Consider submitting an error report to the plugin's author"
+        print "Compilation failed. Don't worry, the plugin will work also without compilation"
+        print "Consider submitting an error report to the plugin's author"
     }
     -zplg-set-desired-shell-state
 }
@@ -2877,7 +2877,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         # When ZPLG_COMPDEF_REPLAY empty (also when only white spaces)
         [[ "${#pos[@]}" = "1" && -z "${pos[-1]}" ]] && continue
         pos=( "${(Q)pos[@]}" )
-        [ "$quiet" = "-q" ] || echo "Running compdef ${pos[*]}"
+        [ "$quiet" = "-q" ] || print "Running compdef ${pos[*]}"
         compdef "${pos[@]}"
     done
 
