@@ -1563,6 +1563,39 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 }
 
+# Get first file that looks like main plugin's file
+-zplg-first() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    # There are plugins having ".plugin.zsh"
+    # in ${plugin} directory name, also some
+    # have ".zsh" there
+    local pdir="${${plugin%.plugin.zsh}%.zsh}"
+    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+
+    # Look for file to compile. First look for the most common one
+    # (optimization) then for other possibilities
+    if [ ! -e "$dname/${pdir}.plugin.zsh" ]; then
+        -zplg-find-other-matches "$dname" "$pdir"
+    else
+        reply=( "$dname/${pdir}.plugin.zsh" )
+    fi
+
+    if [ "${#reply[@]}" -eq "0" ]; then
+        reply=( "$dname" "" )
+        return 1
+    fi
+
+    # Take first entry
+    integer correct=0
+    [[ -o "KSH_ARRAYS" ]] && correct=1
+    local first="${reply[1-correct]}"
+
+    reply=( "$dname" "$first" )
+    return 0
+}
+
 # }}}
 
 #
@@ -1902,33 +1935,11 @@ ZPLG_ZLE_HOOKS_LIST=(
 
 # Compiles plugin
 -zplg-compile-plugin() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
-
-    # There are plugins having ".plugin.zsh"
-    # in ${plugin} directory name, also some
-    # have ".zsh" there
-    local pdir="${${plugin%.plugin.zsh}%.zsh}"
-    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-
-    # Look for file to compile. First look for the most common one
-    # (optimization) then for other possibilities
-    if [ ! -e "$dname/${pdir}.plugin.zsh" ]; then
-        -zplg-find-other-matches "$dname" "$pdir"
-    else
-        reply=( "$dname/${pdir}.plugin.zsh" )
-    fi
-
-    if [ "${#reply[@]}" -eq "0" ]; then
+    -zplg-first "$1" "$2" || {
         print "${ZPLG_COL[error]}No files for compilation found${ZPLG_COL[rst]}"
         return 1
-    fi
-
-    # Take first entry
-    integer correct=0
-    [[ -o "KSH_ARRAYS" ]] && correct=1
-    local first="${reply[1-correct]}"
-
+    }
+    local dname="${reply[-2]}" first="${reply[-1]}"
     local fname="${first#$dname/}"
 
     print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
