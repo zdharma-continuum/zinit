@@ -2971,7 +2971,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # Read user
     local compcontext="user:User Name:(\"$USER\" \"$user\")"
-    vared -cp "Github user name or just \`_local': " user
+    vared -cp "Github user name or just \"_local\": " user
 
     # Read plugin
     unset compcontext
