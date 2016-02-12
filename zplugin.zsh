@@ -2958,6 +2958,65 @@ ZPLG_ZLE_HOOKS_LIST=(
     }
 }
 
+-zplg-create() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    if (( ${+commands[curl]} == 0 || ${+commands[git]} == 0 )); then
+        print "${ZPLG_COL[error]}curl and git needed${ZPLG_COL[rst]}"
+        return 1
+    fi
+
+    print "Will create plugin locally and bind it with new Github repository"
+
+    # Read user
+    local compcontext="user:User Name:(\"$USER\" \"$user\")"
+    vared -cp "Github user name or just \`_local': " user
+
+    # Read plugin
+    unset compcontext
+    vared -cp 'Plugin name: ' plugin
+
+    if [ "$plugin" = "_unknown" ]; then
+        print "${ZPLG_COL[error]}No plugin name entered${ZPLG_COL[rst]}"
+        return 1
+    fi
+
+    -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+    local uspl2col="$REPLY"
+
+    if -zplg-exists-physically "$user" "$plugin"; then
+        print "${ZPLG_COL[error]}Repository${ZPLG_COL[rst]} $uspl2col ${ZPLG_COL[error]}already exists locally${ZPLG_COL[rst]}"
+        return 1
+    fi
+
+    cd "$ZPLG_PLUGINS_DIR"
+
+    if [ "$user" != "_local" ]; then
+        curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
+        git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin}" || {
+            print "${ZPLG_COL[error]}Creation of remote repository $uspl2col ${ZPLG_COL[error]}failed. Bad credentials?${ZPLG_COL[rst]}"
+            return 1
+        }
+        cd "${user}---${plugin}"
+    else
+        command mkdir "${user}---${plugin}"
+        cd "${user}---${plugin}"
+        git init
+    fi
+
+    echo > "${plugin}.plugin.zsh"
+    echo > "README.md"
+    echo > "LICENSE"
+
+    if [ "$user" != "_local" ]; then
+        print "Remote repository $uspl2col set up as origin. You're in plugin's local folder. The files aren't added to git"
+        print "Your next step after commiting will be \`git push -u origin master'"
+    else
+        print "Created local $uspl2col plugin. You're in plugin's repository folder. The files aren't added to git"
+    fi
+}
+
 # }}}
 
 #
@@ -3224,6 +3283,9 @@ zplugin() {
        (glance)
            -zplg-glance "$2" "$3"
            ;;
+       (create)
+           -zplg-create "$2" "$3"
+           ;;
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
@@ -3241,6 +3303,7 @@ report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's repor
 all-reports              - show all plugin reports
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
 cd ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}         - cd into plugin's directory
+create ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - create plugin (also together with Github repository)
 edit ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - edit plugin's file with \$EDITOR
 glance ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - look at plugin's source (pygmentize, {,source-}highlight)
 clist|completions        - list completions in use
