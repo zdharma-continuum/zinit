@@ -2967,8 +2967,6 @@ ZPLG_ZLE_HOOKS_LIST=(
         return 1
     fi
 
-    print "Will create plugin locally and bind it with new Github repository"
-
     # Read user
     local compcontext="user:User Name:(\"$USER\" \"$user\")"
     vared -cp "Github user name or just \"_local\": " user
@@ -2995,13 +2993,16 @@ ZPLG_ZLE_HOOKS_LIST=(
     cd "$ZPLG_PLUGINS_DIR"
 
     if [ "$user" != "_local" ]; then
+        print "${ZPLG_COL[info]}Creating Github repository${ZPLG_COL[rst]}"
         curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin}" || {
-            print "${ZPLG_COL[error]}Creation of remote repository $uspl2col ${ZPLG_COL[error]}failed. Bad credentials?${ZPLG_COL[rst]}"
+            print "${ZPLG_COL[error]}Creation of remote repository $uspl2col ${ZPLG_COL[error]}failed${ZPLG_COL[rst]}"
+            print "${ZPLG_COL[error]}Bad credentials?${ZPLG_COL[rst]}"
             return 1
         }
         cd "${user}---${plugin}"
     else
+        print "${ZPLG_COL[info]}Creating local git repository${ZPLG_COL[rst]}"
         command mkdir "${user}---${plugin}"
         cd "${user}---${plugin}"
         git init
@@ -3012,10 +3013,15 @@ ZPLG_ZLE_HOOKS_LIST=(
     echo > "LICENSE"
 
     if [ "$user" != "_local" ]; then
-        print "Remote repository $uspl2col set up as origin. You're in plugin's local folder. The files aren't added to git"
-        print "Your next step after commiting will be \`git push -u origin master'"
+        print "Remote repository $uspl2col set up as origin"
+        print "You're in plugin's local folder"
+        print "The files aren't added to git"
+        print "Your next step after commiting will be:"
+        print "git push -u origin master"
     else
-        print "Created local $uspl2col plugin. You're in plugin's repository folder. The files aren't added to git"
+        print "Created local $uspl2col plugin"
+        print "You're in plugin's repository folder"
+        print "The files aren't added to git"
     fi
 }
 
