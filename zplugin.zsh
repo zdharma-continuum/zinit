@@ -2982,7 +2982,7 @@ ZPLG_ZLE_HOOKS_LIST=(
         return 1
     fi
 
-    plugin="${plugin//[^a-zA-Z_]##/-}"
+    plugin="${plugin//[^a-zA-Z0-9_]##/-}"
     -zplg-any-colorify-as-uspl2 "$user" "$plugin"
     local uspl2col="$REPLY"
     print "Plugin is $uspl2col"
