@@ -20,6 +20,7 @@ commands=(
     loaded:'show what plugins are loaded'
     list:'show what plugins are loaded'
     cd:"go into plugin's directory"
+    create:'create plugin (also together with Github repository)'
     edit:"edit plugin's file with \$EDITOR"
     glance:"look at plugin's source (pygmentize, {,source-}highlight)"
     clist:'list completions in use'
@@ -228,6 +229,9 @@ case $state in
 
                 _wanted plugins expl "Plugins" \
                     compadd "$@" -a - plugins && ret=0
+                ;;
+            create)
+                _message 'Plugin spec or just enter, to create new plugin' && ret=0
                 ;;
             *)
                 ret=1
