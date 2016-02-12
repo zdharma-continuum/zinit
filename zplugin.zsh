@@ -2982,8 +2982,10 @@ ZPLG_ZLE_HOOKS_LIST=(
         return 1
     fi
 
+    plugin="${plugin//[^a-zA-Z_]##/-}"
     -zplg-any-colorify-as-uspl2 "$user" "$plugin"
     local uspl2col="$REPLY"
+    print "Plugin is $uspl2col"
 
     if -zplg-exists-physically "$user" "$plugin"; then
         print "${ZPLG_COL[error]}Repository${ZPLG_COL[rst]} $uspl2col ${ZPLG_COL[error]}already exists locally${ZPLG_COL[rst]}"
