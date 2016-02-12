@@ -3005,7 +3005,10 @@ ZPLG_ZLE_HOOKS_LIST=(
         print "${ZPLG_COL[info]}Creating local git repository${ZPLG_COL[rst]}"
         command mkdir "${user}---${plugin}"
         cd "${user}---${plugin}"
-        git init
+        git init || {
+            print "Git repository initialization failed, aborting"
+            return 1
+        }
     fi
 
     echo > "${plugin}.plugin.zsh"
