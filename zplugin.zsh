@@ -3351,4 +3351,5 @@ cdclear                  - clear compdef replay list"
 fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
-zstyle ':completion:*:zplugin:*:argument-rest' list-colors '=(#b)(*)/(*)==1;35=1;33'
+zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==1;35=1;33'
+zstyle ':completion:*:zplugin:argument-rest:plugins' matcher 'r:|=** l:|=*'

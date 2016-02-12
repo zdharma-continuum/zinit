@@ -47,7 +47,7 @@ commands=(
     cdclear:'clear compdef replay list'
 )
 
-_arguments \
+_arguments -C \
     '1: :->command'\
     '*: :->argument' && ret=0
 
