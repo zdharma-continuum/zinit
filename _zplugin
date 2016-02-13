@@ -24,6 +24,7 @@ commands=(
     edit:"edit plugin's file with \$EDITOR"
     glance:"look at plugin's source (pygmentize, {,source-}highlight)"
     changes:"view plugin's git log"
+    recently:"show plugins that changed recently, argument is e.g. 1 month 2 days"
     clist:'list completions in use'
     completions:'list completions in use'
     cdisable:'disable completion'
@@ -230,6 +231,15 @@ case $state in
 
                 _wanted plugins expl "Plugins" \
                     compadd "$@" -a - plugins && ret=0
+                ;;
+            recently)
+                typeset -a timespecs
+                timespecs=(
+                    "3 days":"code modified during last 3 days"
+                    "1 week":"code modified during last 7 days"
+                    "1 month":"code modified during last month"
+                )
+                _describe -t timespecs "Time spec" timespecs && ret=0
                 ;;
             create)
                 _message 'Plugin spec or just enter, to create new plugin' && ret=0

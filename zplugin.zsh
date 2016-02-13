@@ -2973,6 +2973,32 @@ ZPLG_ZLE_HOOKS_LIST=(
     )
 }
 
+-zplg-recently() {
+    setopt localoptions nullglob extendedglob
+
+    local IFS="."
+    local timespec="${*// ##/.}"
+    timespec="${timespec//.##/.}"
+
+    typeset -a plugins
+    plugins=( "$ZPLG_PLUGINS_DIR"/* )
+
+    local p uspl1
+    for p in "${plugins[@]}"; do
+        uspl1="${p:t}"
+        [[ "$uspl1" = "custom" || "$uspl1" = "_local---zplugin" ]] && continue
+
+        pushd "$p" >/dev/null
+        if [ -d ".git" ]; then
+            if [[ `git log --all --max-count=1 --since=$timespec` ]]; then
+                -zplg-any-colorify-as-uspl2 "$uspl1"
+                echo "$REPLY"
+            fi
+        fi
+        popd >/dev/null
+    done
+}
+
 -zplg-create() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -3312,6 +3338,10 @@ zplugin() {
        (changes)
            -zplg-changes "$2" "$3"
            ;;
+       (recently)
+           shift
+           -zplg-recently "$@"
+           ;;
        (create)
            -zplg-create "$2" "$3"
            ;;
@@ -3336,6 +3366,7 @@ create ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - create plugin (also
 edit ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - edit plugin's file with \$EDITOR
 glance ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - look at plugin's source (pygmentize, {,source-}highlight)
 changes ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}    - view plugin's git log
+recently ${ZPLG_COL[info]}[time-spec]${ZPLG_COL[rst]}     - show plugins that changed recently, argument is e.g. 1 month 2 days
 clist|completions        - list completions in use
 cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
 cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'
