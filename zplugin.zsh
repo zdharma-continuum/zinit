@@ -2969,7 +2969,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     (
         cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-        git log -p
+        git log -p --graph --decorate --date=relative -C -M
     )
 }
 
