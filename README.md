@@ -229,6 +229,8 @@ cd {plugin-name}         - cd into plugin's directory
 create {plugin-name}     - create plugin (also together with Github repository)
 edit {plugin-name}       - edit plugin's file with $EDITOR
 glance {plugin-name}     - look at plugin's source (pygmentize, {,source-}highlight)
+changes {plugin-name}    - view plugin's git log
+recently [time-spec]     - show plugins that changed recently, argument is e.g. 1 month 2 days
 clist|completions        - list completions in use
 cdisable {cname}         - disable completion `cname'
 cenable  {cname}         - enable completion `cname'
