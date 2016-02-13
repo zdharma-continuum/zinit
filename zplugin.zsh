@@ -2961,6 +2961,18 @@ ZPLG_ZLE_HOOKS_LIST=(
     }
 }
 
+-zplg-changes() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    (
+        cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+        git log -p
+    )
+}
+
 -zplg-create() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -3297,6 +3309,9 @@ zplugin() {
        (glance)
            -zplg-glance "$2" "$3"
            ;;
+       (changes)
+           -zplg-changes "$2" "$3"
+           ;;
        (create)
            -zplg-create "$2" "$3"
            ;;
@@ -3320,6 +3335,7 @@ cd ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}         - cd into plugin's di
 create ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - create plugin (also together with Github repository)
 edit ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - edit plugin's file with \$EDITOR
 glance ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - look at plugin's source (pygmentize, {,source-}highlight)
+changes ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}    - view plugin's git log
 clist|completions        - list completions in use
 cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
 cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'

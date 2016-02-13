@@ -23,6 +23,7 @@ commands=(
     create:'create plugin (also together with Github repository)'
     edit:"edit plugin's file with \$EDITOR"
     glance:"look at plugin's source (pygmentize, {,source-}highlight)"
+    changes:"view plugin's git log"
     clist:'list completions in use'
     completions:'list completions in use'
     cdisable:'disable completion'
@@ -220,7 +221,7 @@ case $state in
             cdclear)
                 _message 'Hit enter to clear compdef replay list' && ret=0
                 ;;
-            cd|edit|glance)
+            cd|edit|glance|changes)
                 typeset -a plugins
                 plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )
