@@ -3150,6 +3150,9 @@ zplugin() {
     ZPLG_REGISTERED_STATES[_local/$ZPLG_NAME]="1"
 
     case "$1" in
+       (man)
+           man "$ZPLG_DIR/doc/zplugin.1"
+           ;;
        (zstatus)
            -zplg-show-zstatus
            ;;
@@ -3348,6 +3351,7 @@ zplugin() {
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
+man                      - manual
 zstatus                  - overall status of Zplugin
 self-update              - updates Zplugin
 load ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - load plugin

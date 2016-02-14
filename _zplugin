@@ -8,6 +8,7 @@ commands=(
     zstatus:'overall Zplugin status'
     self-update:'updates Zplugin'
     help:'usage information'
+    man:'manual'
     load:'load plugin'
     unload:'unload plugin'
     snippet:"source local or remote file (-f: force - don't use cache)"
@@ -61,6 +62,9 @@ case $state in
         case $words[2] in
             help)
                 _message "Hit enter to get usage information" && ret=0
+                ;;
+            man)
+                _message "Hit enter to view manual" && ret=0
                 ;;
             zstatus)
                 _message "Hit enter to get overall status information" && ret=0
