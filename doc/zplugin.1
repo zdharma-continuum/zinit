@@ -1,0 +1,356 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "README" "" "February 2016" "" ""
+Zplugin gives \fBreports\fR from plugin load\. Plugins are no longer black boxes, report will tell what aliases, functions, bindkeys, Zle widgets, zstyles, completions, variables, \fBPATH\fR and \fBFPATH\fR elements a plugin has set up\. Supported is \fBunloading\fR of plugin and ability to list, uninstall, reinstall and selectively disable, enable plugin\'s completions\. Also, every plugin is compiled and user can control this function\. The system does not use \fB$FPATH\fR, it\'s kept clean!
+.
+.P
+Code is immune to \fBKSH_ARRAYS\fR, \fBemulate sh\fR, \fBemulate ksh\fR, thoroughly tested to support any user setup, be as transparent as plain \fBsource\fR command\. Compdef replays functionality is provided to allow user call \fBcompinit\fR only once in \fB\.zshrc\fR\.
+.
+.P
+.
+.SH "Introduction"
+.
+.P
+\fBExample use:\fR
+.
+.IP "" 4
+.
+.nf
+
+% \. ~/github/zplugin/zplugin\.zsh
+% zplugin load zsh\-users/zsh\-syntax\-highlighting
+% zplugin load psprint/zsh\-cmd\-architect
+.
+.fi
+.
+.IP "" 0
+.
+.P
+\fBExample plugin report:\fR
+.
+.IP "" 4
+.
+.nf
+
+% zpl report psprint/zsh\-cmd\-architect
+Plugin report for psprint/zsh\-cmd\-architect
+\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-\-
+Source zsh\-cmd\-architect\.plugin\.zsh
+Autoload h\-list
+Autoload h\-list\-input
+Autoload h\-list\-draw
+Autoload zca
+Autoload zca\-usetty\-wrapper
+Autoload zca\-widget
+Zle \-N zca\-widget
+Bindkey ^T zca\-widget
+
+Functions created:
+h\-list             h\-list\-draw
+h\-list\-input       zca
+zca\-usetty\-wrapper zca\-widget
+
+Options changed:
+autolist     was unset
+menucomplete was unset
+
+PATH elements added:
+/Users/sgniazdowski/github/zsh\-cmd\-architect/bin
+
+FPATH elements added:
+/Users/sgniazdowski/github/zsh\-cmd\-architect
+
+Completions:
+_xauth [disabled]
+.
+.fi
+.
+.IP "" 0
+.
+.P
+.
+.P
+\fBExample plugin unload:\fR
+.
+.IP "" 4
+.
+.nf
+
+% zpl unload psprint/zsh\-cmd\-architect
+Deleting function h\-list
+Deleting function h\-list\-draw
+Deleting function h\-list\-input
+Deleting function zca
+Deleting function zca\-usetty\-wrapper
+Deleting function zca\-widget
+Deleting bindkey ^T zca\-widget
+Setting option autolist
+Setting option menucomplete
+Removing PATH element /Users/sgniazdowski/github/zsh\-cmd\-architect/bin
+Removing FPATH element /Users/sgniazdowski/github/zsh\-cmd\-architect
+Unregistering plugin psprint/zsh\-cmd\-architect
+Plugin\'s report saved to $LASTREPORT
+.
+.fi
+.
+.IP "" 0
+.
+.P
+.
+.P
+\fBExample \fBcsearch\fR invocation (completion management):\fR
+.
+.IP "" 4
+.
+.nf
+
+# zplg csearch
+[+] is installed, [\-] uninstalled, [+\-] partially installed
+[+] _local/zplugin                  _zplugin
+[\-] benclark/parallels\-zsh\-plugin   _parallels
+[+] mollifier/cd\-gitroot            _cd\-gitroot
+[\-] or17191/going_places            _favrm, _go
+[\-] psprint/zsh\-cmd\-architect       _xauth
+[\-] psprint/zsh\-editing\-workbench   _cp
+[+] tevren/gitfast\-zsh\-plugin       _git
+.
+.fi
+.
+.IP "" 0
+.
+.P
+.
+.P
+\fBExample \fBcompile\fR invocation:\fR
+.
+.IP "" 4
+.
+.nf
+
+# zplg compile zsh\-users/zsh\-syntax\-highlighting
+Compiling zsh\-syntax\-highlighting\.plugin\.zsh\.\.\.
+# zplg compiled
+zsh\-users/zsh\-syntax\-highlighting:
+zsh\-syntax\-highlighting\.plugin\.zsh\.zwc
+# zplg uncompile zsh\-users/zsh\-syntax\-highlighting
+Removing zsh\-syntax\-highlighting\.plugin\.zsh\.zwc
+# zplg compiled
+No compiled plugins
+# zplg compile\-all
+zsh\-users/zsh\-syntax\-highlighting
+Compiling zsh\-syntax\-highlighting\.plugin\.zsh\.\.\.
+.
+.fi
+.
+.IP "" 0
+.
+.P
+.
+.P
+\fBExample \fBcreate\fR invocation:\fR
+.
+.IP "" 4
+.
+.nf
+
+% zplg create psprint/testplugin
+Github user name or just "_local": psprint
+Plugin name: testplugin2
+Plugin is psprint/testplugin2
+Creating Github repository
+Enter host password for user \'psprint\':
+Cloning into \'psprint\-\-\-testplugin2\'\.\.\.
+warning: You appear to have cloned an empty repository\.
+Checking connectivity\.\.\. done\.
+Remote repository psprint/testplugin2 set up as origin
+You\'re in plugin\'s local folder
+The files aren\'t added to git
+Your next step after commiting will be:
+git push \-u origin master
+% ls
+\.git                   README\.md
+LICENSE                testplugin2\.plugin\.zsh
+.
+.fi
+.
+.IP "" 0
+.
+.P
+.
+.SH "Installation"
+Execute:
+.
+.IP "" 4
+.
+.nf
+
+sh \-c "$(curl \-fsSL https://raw\.githubusercontent\.com/psprint/zplugin/master/doc/install\.sh)"
+.
+.fi
+.
+.IP "" 0
+.
+.P
+To update run the command again (or just execute \fBdoc/install\.sh\fR)\.
+.
+.P
+\fBZplugin\fR will be installed into \fB~/\.zplugin/bin\fR\. \fB\.zshrc\fR will be updated with three lines of code that will be added to the bottom (the lines will be sourcing \fBzplugin\.zsh\fR and setting up completion)\.
+.
+.P
+Completion will be available, for command \fBzplugin\fR and aliases \fBzpl\fR, \fBzplg\fR\.
+.
+.P
+After installing and reloading shell give \fBZplugin\fR a quick try with \fBzplugin help\fR\.
+.
+.SH "Manual installation"
+To manually install \fBZplugin\fR clone the repo to e\.g\. \fB~/\.zplugin/bin\fR:
+.
+.IP "" 4
+.
+.nf
+
+mkdir ~/\.zplugin
+git clone https://github\.com/psprint/zplugin\.git ~/\.zplugin/bin
+.
+.fi
+.
+.IP "" 0
+.
+.P
+and source it from \fB\.zshrc\fR (\fBabove compinit\fR):
+.
+.IP "" 4
+.
+.nf
+
+source ~/\.zplugin/bin/zplugin\.zsh
+.
+.fi
+.
+.IP "" 0
+.
+.P
+If you place the \fBsource\fR below \fBcompinit\fR, then add those two lines after the \fBsource\fR: \fBsh autoload \-Uz _zplugin (( ${+_comps} )) && _comps[zplugin]=_zplugin\fR
+.
+.P
+After installing and reloading shell give \fBZplugin\fR a quick try with \fBzplugin help\fR\.
+.
+.SS "Compilation"
+It\'s good to compile \fBzplugin\fR into \fBZsh\fR bytecode:
+.
+.IP "" 4
+.
+.nf
+
+zcompile ~/\.zplugin/bin/zplugin\.zsh
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Zplugin will compile each newly downloaded plugin\. You can clear compilation of a plugin by invoking \fBzplugin uncompile {plugin\-name}\fR\. There are also commands \fBcompile\fR, \fBcompile\-all\fR, \fBuncompile\-all\fR, \fBcompiled\fR that control the functionality of compiling plugins\.
+.
+.SH "Usage"
+.
+.nf
+
+% zpl help
+Usage:
+\-h|\-\-help|help           \- usage information
+self\-update              \- updates Zplugin
+load {plugin\-name}       \- load plugin
+light {plugin\-name}      \- light plugin load, without reporting
+unload {plugin\-name}     \- unload plugin
+snippet [\-f] {url}       \- source local or remote file (\-f: force \- don\'t use cache)
+update {plugin\-name}     \- update plugin (Git)
+update\-all               \- update all plugins (Git)
+status {plugin\-name}     \- status for plugin (Git)
+status\-all               \- status for all plugins (Git)
+report {plugin\-name}     \- show plugin\'s report
+all\-reports              \- show all plugin reports
+loaded|list [keyword]    \- show what plugins are loaded (filter with `keyword\')
+cd {plugin\-name}         \- cd into plugin\'s directory
+create {plugin\-name}     \- create plugin (also together with Github repository)
+edit {plugin\-name}       \- edit plugin\'s file with $EDITOR
+glance {plugin\-name}     \- look at plugin\'s source (pygmentize, {,source\-}highlight)
+changes {plugin\-name}    \- view plugin\'s git log
+recently [time\-spec]     \- show plugins that changed recently, argument is e\.g\. 1 month 2 days
+clist|completions        \- list completions in use
+cdisable {cname}         \- disable completion `cname\'
+cenable  {cname}         \- enable completion `cname\'
+creinstall {plugin\-name} \- install completions for plugin
+cuninstall {plugin\-name} \- uninstall completions for plugin
+csearch                  \- search for available completions from any plugin
+compinit                 \- refresh installed completions
+dtrace|dstart            \- start tracking what\'s going on in session
+dstop                    \- stop tracking what\'s going on in session
+dunload                  \- revert changes recorded between dstart and dstop
+dreport                  \- report what was going on in session
+dclear                   \- clear report of what was going on in session
+compile  {plugin\-name}   \- compile plugin
+compile\-all              \- compile all downloaded plugins
+uncompile {plugin\-name}  \- remove compiled version of plugin
+uncompile\-all            \- remove compiled versions of all downloaded plugins
+compiled                 \- list plugins that are compiled
+.
+.fi
+.
+.P
+To use themes created for \fBOh\-My\-Zsh\fR you might want to first source the \fBgit\fR library there:
+.
+.IP "" 4
+.
+.nf
+
+zplugin snippet \'http://github\.com/robbyrussell/oh\-my\-zsh/raw/master/lib/git\.zsh\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Then you can use the themes either as plugins (\fBzplugin load {user/theme\-name}\fR) or as snippets (\fBzplugin snippet {file path or URL}\fR; plugin method recommended)\. Some themes require not only \fBOh\-My\-Zsh\'s\fR \fBgit\fR library, but also \fBgit\fR plugin (error about function \fBcurrent_branch\fR appears)\. Source it as snippet directly from \fBOh\-My\-Zsh\fR:
+.
+.IP "" 4
+.
+.nf
+
+zplugin snippet \'https://github\.com/robbyrussell/oh\-my\-zsh/raw/master/plugins/git/git\.plugin\.zsh\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Such lines should be added to \fB\.zshrc\fR\. Snippets are cached locally, use \fB\-f\fR option to download a fresh version of a snippet\.
+.
+.SH "Clean \.zshrc With Compdef Replaying"
+\fBZplugin\fR provides a feature which brings order into \fB\.zshrc\fR\. When to call \fBcompinit\fR? Some plugins require completion being in place, other update \fB$FPATH\fR and want \fBcompinit\fR called afterwards\. \fBZplugin\fR is like a pre\-initialized completion for the first type of plugins\. They will thus work without real \fBcompinit\fR in place\. You should call \fBcompinit\fR only once after loading all plugins, in following way:
+.
+.IP "" 4
+.
+.nf
+
+source ~/\.zplugin/bin/zplugin\.zsh
+zplugin load "some/plugin"
+\.\.\.
+zplugin load "other/plugin"
+
+autoload \-Uz compinit
+compinit
+zplugin cdreplay \-q # \-q is for quiet
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Performance gains are huge, example shell startup time with double \fBcompinit\fR: \fB0\.980\fR sec, with \fBcdreplay\fR and single \fBcompinit\fR: \fB0\.156\fR sec\.
+.
+.SH "IRC channel"
+Simply connect to chat\.freenode\.net:6697 \fIircs://chat\.freenode\.net:6697/%23zplugin\fR (SSL) or chat\.freenode\.net:6667 \fIirc://chat\.freenode\.net:6667/%23zplugin\fR and join #zplugin\.
+.
+.P
+Following is a quick access via Webchat  \fIhttps://kiwiirc\.com/client/chat\.freenode\.net:+6697/#zplugin\fR
