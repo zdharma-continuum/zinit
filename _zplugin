@@ -69,7 +69,7 @@ case $state in
             zstatus)
                 _message "Hit enter to get overall status information" && ret=0
                 ;;
-            load|light|update|status)
+            load|light|update|status|compile|stress|cd|edit|glance|changes)
                 typeset -a plugins
                 plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )
@@ -79,13 +79,7 @@ case $state in
                 _wanted plugins expl "Plugins" \
                     compadd "$@" -a - plugins && ret=0
                 ;;
-            unload)
-                typeset -a plugins
-                plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
-                ;;
-            report)
+            unload|report)
                 typeset -a plugins
                 plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
                 _wanted plugins expl "Plugins" \
@@ -179,16 +173,6 @@ case $state in
             dclear)
                 _message "Hit enter to clear report of what was going on in session" && ret=0
                 ;;
-            compile)
-                typeset -a plugins
-                plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
-                plugins=( "${plugins[@]/---//}" )
-                plugins=( "${plugins[@]:#_local/zplugin}" )
-                plugins=( "${plugins[@]:#custom}" )
-
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
-                ;;
             compile-all)
                 _message 'Hit enter to compile all downloaded plugins' && ret=0
                 ;;
@@ -225,16 +209,6 @@ case $state in
                 ;;
             cdclear)
                 _message 'Hit enter to clear compdef replay list' && ret=0
-                ;;
-            cd|edit|glance|changes)
-                typeset -a plugins
-                plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
-                plugins=( "${plugins[@]/---//}" )
-                plugins=( "${plugins[@]:#_local/zplugin}" )
-                plugins=( "${plugins[@]:#custom}" )
-
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
                 ;;
             recently)
                 typeset -a timespecs
