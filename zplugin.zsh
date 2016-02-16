@@ -71,6 +71,8 @@ typeset -gaHU ZPLG_ENTER_OPTIONS
 typeset -gH ZPLG_EXTENDED_GLOB
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
+typeset -ga ZPLG_STRESS_TEST_OPTIONS
+ZPLG_STRESS_TEST_OPTIONS=( "NO_SHORT_LOOPS" "IGNORE_BRACES" "IGNORE_CLOSE_BRACES" "SH_GLOB" "CSH_JUNKIE_QUOTES" )
 
 #
 # All to the users - simulate OMZ directory structure (1/3)
@@ -240,6 +242,8 @@ ZPLG_COL=(
     "bar" "${fg_bold[magenta]}"
     "info" "${fg_bold[green]}"
     "uninst" "${fg_bold[blue]}"
+    "success" "${fg_bold[green]}"
+    "failure" "${fg_bold[red]}"
     "rst" "$reset_color"
 )
 
@@ -3069,6 +3073,43 @@ ZPLG_ZLE_HOOKS_LIST=(
     fi
 }
 
+# Compiles plugin with various options on and off
+# to see how well the code is written
+-zplg-stress() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    -zplg-first "$1" "$2" || {
+        print "${ZPLG_COL[error]}No source file found, cannot stress${ZPLG_COL[rst]}"
+        return 1
+    }
+
+    local dname="${reply[-2]}" fname="${reply[-1]}"
+
+    integer compiled=1
+    [ -e "${fname}.zwc" ] && command rm -f "${fname}.zwc" || compiled=0
+
+    (
+        emulate -LR ksh
+        unsetopt shglob kshglob
+        for i in "${ZPLG_STRESS_TEST_OPTIONS[@]}"; do
+            setopt "$i"
+            print -n "Stress-testing ${fname:t} for option $i "
+            zcompile -R "$fname" 2>/dev/null && {
+                print "[${ZPLG_COL[success]}Success${ZPLG_COL[rst]}]"
+            } || {
+                print "[${ZPLG_COL[failure]}Fail${ZPLG_COL[rst]}]"
+            }
+            unsetopt "$i"
+        done
+    )
+
+    command rm -f "${fname}.zwc"
+    (( compiled )) && zcompile "$fname"
+}
+
 # }}}
 
 #
@@ -3348,6 +3389,9 @@ zplugin() {
        (create)
            -zplg-create "$2" "$3"
            ;;
+       (stress)
+           -zplg-stress "$2" "$3"
+           ;;
        (-h|--help|help|"")
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
@@ -3369,6 +3413,7 @@ cd ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}         - cd into plugin's di
 create ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - create plugin (also together with Github repository)
 edit ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - edit plugin's file with \$EDITOR
 glance ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - look at plugin's source (pygmentize, {,source-}highlight)
+stress ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - test plugin for compatibility with set of options
 changes ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}    - view plugin's git log
 recently ${ZPLG_COL[info]}[time-spec]${ZPLG_COL[rst]}     - show plugins that changed recently, argument is e.g. 1 month 2 days
 clist|completions        - list completions in use

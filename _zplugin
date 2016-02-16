@@ -24,6 +24,7 @@ commands=(
     create:'create plugin (also together with Github repository)'
     edit:"edit plugin's file with \$EDITOR"
     glance:"look at plugin's source (pygmentize, {,source-}highlight)"
+    stress:'test plugin for compatibility with set of options'
     changes:"view plugin's git log"
     recently:"show plugins that changed recently, argument is e.g. 1 month 2 days"
     clist:'list completions in use'
