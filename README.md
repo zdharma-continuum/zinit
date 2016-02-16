@@ -272,7 +272,7 @@ a fresh version of a snippet.
 ## Clean .zshrc With Compdef Replaying
 
 `Zplugin` provides a feature which brings order into `.zshrc`. When to call `compinit`? Some plugins
-require completion being in place, other update `$FPATH` and want `compinit` called afterwards.
+require completion being in place, other update `$FPATH` and want `compinit` to be called later.
 `Zplugin` is like a pre-initialized completion for the first type of plugins. They will thus work
 without real `compinit` in place. You should call `compinit` only once after loading all plugins, in
 following way:
