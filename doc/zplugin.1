@@ -275,6 +275,7 @@ cd {plugin\-name}         \- cd into plugin\'s directory
 create {plugin\-name}     \- create plugin (also together with Github repository)
 edit {plugin\-name}       \- edit plugin\'s file with $EDITOR
 glance {plugin\-name}     \- look at plugin\'s source (pygmentize, {,source\-}highlight)
+stress {plugin\-name}     \- test plugin for compatibility with set of options
 changes {plugin\-name}    \- view plugin\'s git log
 recently [time\-spec]     \- show plugins that changed recently, argument is e\.g\. 1 month 2 days
 clist|completions        \- list completions in use
@@ -327,7 +328,7 @@ zplugin snippet \'https://github\.com/robbyrussell/oh\-my\-zsh/raw/master/plugin
 Such lines should be added to \fB\.zshrc\fR\. Snippets are cached locally, use \fB\-f\fR option to download a fresh version of a snippet\.
 .
 .SH "Clean \.zshrc With Compdef Replaying"
-\fBZplugin\fR provides a feature which brings order into \fB\.zshrc\fR\. When to call \fBcompinit\fR? Some plugins require completion being in place, other update \fB$FPATH\fR and want \fBcompinit\fR called afterwards\. \fBZplugin\fR is like a pre\-initialized completion for the first type of plugins\. They will thus work without real \fBcompinit\fR in place\. You should call \fBcompinit\fR only once after loading all plugins, in following way:
+\fBZplugin\fR provides a feature which brings order into \fB\.zshrc\fR\. When to call \fBcompinit\fR? Some plugins require completion being in place, other update \fB$FPATH\fR and want \fBcompinit\fR to be called later\. \fBZplugin\fR is like a pre\-initialized completion for the first type of plugins\. They will thus work without real \fBcompinit\fR in place\. You should call \fBcompinit\fR only once after loading all plugins, in following way:
 .
 .IP "" 4
 .
