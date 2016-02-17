@@ -217,6 +217,7 @@ functionality of compiling plugins.
 % zpl help
 Usage:
 -h|--help|help           - usage information
+man                      - manual
 self-update              - updates Zplugin
 load {plugin-name}       - load plugin
 light {plugin-name}      - light plugin load, without reporting
