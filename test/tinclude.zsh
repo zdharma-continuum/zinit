@@ -89,7 +89,7 @@ ___s-or-f() {
 }
 
 ___on-line-fix() {
-    local infile="$1" outfile="$2"
+    local infile="$1" outfile="$2" tmp
 
     local body
     body="$(<$infile)"
@@ -102,7 +102,7 @@ ___on-line-fix() {
     # Handle no new line at end
     echo -n "$body" > "$outfile"
 
-    tail -c1 "$infile" | read -r _ && echo >> "$outfile"
+    tail -c1 "$infile" | read -r tmp && echo >> "$outfile"
 }
 
 #
