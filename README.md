@@ -25,6 +25,10 @@ functionality is provided to allow user call `compinit` only once in `.zshrc`.
 
 ![dtrace](http://imageshack.com/a/img924/2539/eCfnUD.gif)
 
+**Code recognition with recently, changes, glance, report, stress:**
+
+![code recognition](http://imageshack.com/a/img923/6404/5mOUl2.gif)
+
 ## Introduction
 
 ![zplugin-refcard](http://imageshack.com/a/img924/7014/KKkzny.png)
