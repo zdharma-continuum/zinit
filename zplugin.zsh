@@ -2981,6 +2981,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     setopt localoptions nullglob extendedglob
 
     local IFS="."
+    local gitout
     local timespec="${*// ##/.}"
     timespec="${timespec//.##/.}"
     [ -z "$timespec" ] && timespec="1.week"
@@ -2995,7 +2996,8 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         pushd "$p" >/dev/null
         if [ -d ".git" ]; then
-            if [[ `git log --all --max-count=1 --since=$timespec` ]]; then
+            gitout=`git log --all --max-count=1 --since=$timespec`
+            if [[ -n "$gitout" ]]; then
                 -zplg-any-colorify-as-uspl2 "$uspl1"
                 echo "$REPLY"
             fi
