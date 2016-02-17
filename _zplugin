@@ -215,7 +215,7 @@ case $state in
                 typeset -a timespecs
                 timespecs=(
                     "3 days":"code modified during last 3 days"
-                    "1 week":"code modified during last 7 days"
+                    "1 week":"code modified during last 7 days (default)"
                     "1 month":"code modified during last month"
                 )
                 _describe -t timespecs "Time spec" timespecs && ret=0

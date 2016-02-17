@@ -2983,6 +2983,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     local IFS="."
     local timespec="${*// ##/.}"
     timespec="${timespec//.##/.}"
+    [ -z "$timespec" ] && timespec="1.week"
 
     typeset -a plugins
     plugins=( "$ZPLG_PLUGINS_DIR"/* )
