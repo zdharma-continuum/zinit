@@ -502,7 +502,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     local a quoted tmp
     for a in "$@"; do
-        local aname="${a%%=*}"
+        local aname="${a%%[=]*}"
         local avalue="${a#*=}"
 
         # Check if alias is to be redefined
