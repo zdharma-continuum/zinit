@@ -296,6 +296,25 @@ zplugin cdreplay -q # -q is for quiet
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
+### Ignoring Compdefs
+
+If you want to ignore compdefs provided by some plugins and snippets, place their load commands
+before commands loading other plugins and snippets, and issue `zplugin cdclear`:
+
+```sh
+source ~/.zplugin/bin/zplugin.zsh
+zplugin snippet https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh
+zplugin cdclear # <- forget completions provided up to this moment
+
+zplugin load "some/plugin"
+...
+zplugin load "other/plugin"
+
+autoload -Uz compinit
+compinit
+zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
+zplugin cdlist # look at gathered compdefs
+```
 
 ## IRC channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
