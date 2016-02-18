@@ -259,6 +259,7 @@ Zplugin will compile each newly downloaded plugin\. You can clear compilation of
 % zpl help
 Usage:
 \-h|\-\-help|help           \- usage information
+man                      \- manual
 self\-update              \- updates Zplugin
 load {plugin\-name}       \- load plugin
 light {plugin\-name}      \- light plugin load, without reporting
@@ -349,6 +350,30 @@ zplugin cdreplay \-q # \-q is for quiet
 .
 .P
 Performance gains are huge, example shell startup time with double \fBcompinit\fR: \fB0\.980\fR sec, with \fBcdreplay\fR and single \fBcompinit\fR: \fB0\.156\fR sec\.
+.
+.SS "Ignoring Compdefs"
+If you want to ignore compdefs provided by some plugins and snippets, place their load commands before commands loading other plugins and snippets, and issue \fBzplugin cdclear\fR:
+.
+.IP "" 4
+.
+.nf
+
+source ~/\.zplugin/bin/zplugin\.zsh
+zplugin snippet https://github\.com/robbyrussell/oh\-my\-zsh/blob/master/plugins/git/git\.plugin\.zsh
+zplugin cdclear # <\- forget completions provided up to this moment
+
+zplugin load "some/plugin"
+\.\.\.
+zplugin load "other/plugin"
+
+autoload \-Uz compinit
+compinit
+zplugin cdreplay \-q # <\- execute compdefs provided by rest of plugins
+zplugin cdlist # look at gathered compdefs
+.
+.fi
+.
+.IP "" 0
 .
 .SH "IRC channel"
 Simply connect to chat\.freenode\.net:6697 \fIircs://chat\.freenode\.net:6697/%23zplugin\fR (SSL) or chat\.freenode\.net:6667 \fIirc://chat\.freenode\.net:6667/%23zplugin\fR and join #zplugin\.
