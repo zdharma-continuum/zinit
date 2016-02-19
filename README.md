@@ -298,8 +298,8 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 
 ### Ignoring Compdefs
 
-If you want to ignore compdefs provided by some plugins and snippets, place their load commands
-before commands loading other plugins and snippets, and issue `zplugin cdclear`:
+If you want to ignore compdefs provided by some plugins or snippets, place their load commands
+before commands loading other plugins or snippets, and issue `zplugin cdclear`:
 
 ```sh
 source ~/.zplugin/bin/zplugin.zsh
