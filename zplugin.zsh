@@ -1395,6 +1395,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     local k
     for k in "${commands[@]}"; do
+        [ -n "$k" ] || continue
         unset "_comps[$k]"
         print "Unsetting $k"
     done
