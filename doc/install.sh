@@ -25,15 +25,18 @@ echo ">>> Done"
 # Modify .zshrc
 #
 
-echo ">>> Updating .zshrc (3 lines of code, at the bottom)"
-if ! grep zplugin "$ZPLG_HOME/../.zshrc" >/dev/null 2>&1; then
-    echo >> "$ZPLG_HOME/../.zshrc"
-    echo "### Added by Zplugin's installer"             >> "$ZPLG_HOME/../.zshrc"
-    echo "source '$ZPLG_HOME/bin/zplugin.zsh'"          >> "$ZPLG_HOME/../.zshrc"
-    echo "autoload -Uz _zplugin"                        >> "$ZPLG_HOME/../.zshrc"
-    echo "(( ${+_comps} )) && _comps[zplugin]=_zplugin" >> "$ZPLG_HOME/../.zshrc"
-    echo "### End of Zplugin's installer chunk"         >> "$ZPLG_HOME/../.zshrc"
-    echo ">>> Done"
-else
+if grep zplugin "$ZPLG_HOME/../.zshrc" >/dev/null 2>&1; then
     echo ">>> .zshrc already updated, not making changes"
+    exit 0
 fi
+
+echo ">>> Updating .zshrc (3 lines of code, at the bottom)"
+cat <<-EOF >> "$ZPLG_HOME/../.zshrc"
+### Added by Zplugin's installer
+source '$ZPLG_HOME/bin/zplugin.zsh'
+autoload -Uz _zplugin
+(( \${+_comps} )) && _comps[zplugin]=_zplugin
+### End of Zplugin's installer chunk
+EOF
+echo ">>> Done"
+
