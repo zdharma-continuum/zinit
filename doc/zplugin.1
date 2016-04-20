@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "README" "" "February 2016" "" ""
+.TH "README" "" "April 2016" "" ""
 Zplugin gives \fBreports\fR from plugin load\. Plugins are no longer black boxes, report will tell what aliases, functions, bindkeys, Zle widgets, zstyles, completions, variables, \fBPATH\fR and \fBFPATH\fR elements a plugin has set up\. Supported is \fBunloading\fR of plugin and ability to list, uninstall, reinstall and selectively disable, enable plugin\'s completions\. Also, every plugin is compiled and user can control this function\. The system does not use \fB$FPATH\fR, it\'s kept clean!
 .
 .P
@@ -374,6 +374,12 @@ zplugin cdlist # look at gathered compdefs
 .fi
 .
 .IP "" 0
+.
+.SS "Non\-Github (local) plugins"
+Use \fBcreate\fR command with user name \fB_local\fR (the default) to create plugin\'s skeleton\. It will be not connected with Github repository (because of user name being \fB_local\fR)\. To enter the plugin\'s directory use \fBcd\fR command with just plugin\'s name (without \fB_local\fR)\.
+.
+.P
+The special user name \fB_local\fR is optional also for other commands, e\.g\. for \fBload\fR (i\.e\. \fBzplugin load myplugin\fR is sufficient, there\'s no need for \fBzplugin load _local/myplugin\fR)\.
 .
 .SH "IRC channel"
 Simply connect to chat\.freenode\.net:6697 \fIircs://chat\.freenode\.net:6697/%23zplugin\fR (SSL) or chat\.freenode\.net:6667 \fIirc://chat\.freenode\.net:6667/%23zplugin\fR and join #zplugin\.

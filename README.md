@@ -318,10 +318,14 @@ zplugin cdlist # look at gathered compdefs
 
 ### Non-Github (local) plugins
 
-Use `create` command with user name "_local" (the default) to create plugin's
+Use `create` command with user name `_local` (the default) to create plugin's
 skeleton. It will be not connected with Github repository (because of user name
-being "_local"). To enter the plugin's directory use `cd` command with just plugin's
-name (without "_local").
+being `_local`). To enter the plugin's directory use `cd` command with just
+plugin's name (without `_local`).
+
+The special user name `_local` is optional also for other commands, e.g. for
+`load` (i.e. `zplugin load myplugin` is sufficient, there's no need for
+`zplugin load _local/myplugin`).
 
 ## IRC channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
