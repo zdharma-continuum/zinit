@@ -274,6 +274,9 @@ zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/gi
 Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
 a fresh version of a snippet.
 
+Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set prompt
+will appear as something like: `$(build_prompt)`.
+
 ## Clean .zshrc With Compdef Replaying
 
 `Zplugin` provides a feature which brings order into `.zshrc`. When to call `compinit`? Some plugins
@@ -316,7 +319,7 @@ zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
 zplugin cdlist # look at gathered compdefs
 ```
 
-### Non-Github (local) plugins
+## Non-Github (local) plugins
 
 Use `create` command with user name `_local` (the default) to create plugin's
 skeleton. It will be not connected with Github repository (because of user name

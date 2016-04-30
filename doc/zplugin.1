@@ -328,6 +328,9 @@ zplugin snippet \'https://github\.com/robbyrussell/oh\-my\-zsh/raw/master/plugin
 .P
 Such lines should be added to \fB\.zshrc\fR\. Snippets are cached locally, use \fB\-f\fR option to download a fresh version of a snippet\.
 .
+.P
+Most themes require \fBpromptsubst\fR option (\fBsetopt promptsubst\fR in \fBzshrc\fR), if it isn\'t set prompt will appear as something like: \fB$(build_prompt)\fR\.
+.
 .SH "Clean \.zshrc With Compdef Replaying"
 \fBZplugin\fR provides a feature which brings order into \fB\.zshrc\fR\. When to call \fBcompinit\fR? Some plugins require completion being in place, other update \fB$FPATH\fR and want \fBcompinit\fR to be called later\. \fBZplugin\fR is like a pre\-initialized completion for the first type of plugins\. They will thus work without real \fBcompinit\fR in place\. You should call \fBcompinit\fR only once after loading all plugins, in following way:
 .
@@ -375,7 +378,7 @@ zplugin cdlist # look at gathered compdefs
 .
 .IP "" 0
 .
-.SS "Non\-Github (local) plugins"
+.SH "Non\-Github (local) plugins"
 Use \fBcreate\fR command with user name \fB_local\fR (the default) to create plugin\'s skeleton\. It will be not connected with Github repository (because of user name being \fB_local\fR)\. To enter the plugin\'s directory use \fBcd\fR command with just plugin\'s name (without \fB_local\fR)\.
 .
 .P
