@@ -1796,6 +1796,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     done
 
     print "Initializing completion (compinit)..."
+    command rm -f ~/.zcompdump
     autoload -Uz compinit
     compinit
 }
