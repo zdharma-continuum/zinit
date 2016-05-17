@@ -73,6 +73,10 @@ typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
 typeset -ga ZPLG_STRESS_TEST_OPTIONS
 ZPLG_STRESS_TEST_OPTIONS=( "NO_SHORT_LOOPS" "IGNORE_BRACES" "IGNORE_CLOSE_BRACES" "SH_GLOB" "CSH_JUNKIE_QUOTES" "NO_MULTI_FUNC_DEF" )
+typeset -gH ZPLG_NEW_AUTOLOAD=0
+
+autoload is-at-least
+is-at-least 5.2 && ZPLG_NEW_AUTOLOAD=1
 
 #
 # All to the users - simulate OMZ directory structure (1/3)
@@ -320,9 +324,16 @@ ZPLG_ZLE_HOOKS_LIST=(
     do
         # Real autoload doesn't touch function if it already exists
         if (( ${+functions[$func]} != 1 )); then
-            eval "function $func {
-                --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"
-            }'
+            if [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
+                eval "function $func {
+                    local FPATH="$PLUGIN_DIR":"${FPATH}"
+                    builtin autoload -X
+                }"
+            else
+                eval "function $func {
+                    --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"
+                }'
+            fi
             #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"'
         fi
     done
