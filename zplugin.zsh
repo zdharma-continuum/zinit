@@ -76,7 +76,7 @@ ZPLG_STRESS_TEST_OPTIONS=( "NO_SHORT_LOOPS" "IGNORE_BRACES" "IGNORE_CLOSE_BRACES
 typeset -gH ZPLG_NEW_AUTOLOAD=0
 
 autoload is-at-least
-is-at-least 5.2 && ZPLG_NEW_AUTOLOAD=1
+is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 
 #
 # All to the users - simulate OMZ directory structure (1/3)
