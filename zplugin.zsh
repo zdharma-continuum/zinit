@@ -3466,6 +3466,8 @@ cdclear                  - clear compdef replay list"
     -zplg-restore-enter-state
 }
 
+-zplg-prepare-home
+
 # Add completions directory to fpath
 fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
 
