@@ -32,6 +32,7 @@ fi
 
 echo ">>> Updating .zshrc (3 lines of code, at the bottom)"
 cat <<-EOF >> "$ZPLG_HOME/../.zshrc"
+
 ### Added by Zplugin's installer
 source '$ZPLG_HOME/bin/zplugin.zsh'
 autoload -Uz _zplugin
