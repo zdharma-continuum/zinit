@@ -20,7 +20,7 @@ typeset -gAH ZPLG_REPORTS
 typeset -gH ZPLG_NAME
 
 # User can override ZPLG_DIR. Misleading? Reset
-if [ ! -e "$ZPLG_DIR"/widget-list.zsh ]; then
+if [ ! -e "$ZPLG_DIR"/zplugin.zsh ]; then
     typeset -gH ZPLG_DIR=""
 fi
 
@@ -48,7 +48,7 @@ if [[ "$ZPLG_DIR" != /* ]]; then
 fi
 
 # Final test of ZPLG_DIR
-if [ ! -e "$ZPLG_DIR"/widget-list.zsh ]; then
+if [ ! -e "$ZPLG_DIR"/zplugin.zsh ]; then
     print "Could not establish ZPLG_DIR variable. Set it to where Zplugin's git repository is."
     return 1
 fi
@@ -250,11 +250,6 @@ ZPLG_COL=(
     "failure" "${fg_bold[red]}"
     "rst" "$reset_color"
 )
-
-# Load list of widgets
-if [ "${(t)ZPLG_WIDGET_LIST}" != "association" ]; then
-    source "$ZPLG_DIR/widget-list.zsh"
-fi
 
 # List of hooks
 typeset -gAH ZPLG_ZLE_HOOKS_LIST
@@ -573,7 +568,7 @@ ZPLG_ZLE_HOOKS_LIST=(
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
             # These will be saved and restored
-            elif [ "${ZPLG_WIDGET_LIST[$2]}" = "1" ]; then
+            elif zle -la "$2"; then
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
                 local widname="$2" saved_widname="zplugin-saved-$2"
