@@ -1672,7 +1672,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         # Symlink _zplugin completion into _local---zplugin directory
         command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
-        command cp "$ZPLG_DIR/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
+        command ln -s "$ZPLG_DIR/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
         command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
     }
     [ ! -d "$ZPLG_SNIPPETS_DIR" ] && {
