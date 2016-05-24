@@ -568,7 +568,7 @@ ZPLG_ZLE_HOOKS_LIST=(
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
             # These will be saved and restored
-            elif zle -la "$2"; then
+            elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
                 local widname="$2" saved_widname="zplugin-saved-$2"
