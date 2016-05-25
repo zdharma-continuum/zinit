@@ -546,7 +546,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     integer ret=$?
 
     # C. Shadow on. Custom function could unfunction itself
-    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}" || unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
+    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}" || unset "ZPLG_BACKUP_FUNCTIONS[alias]"
     function alias { --zplg-shadow-alias "$@"; }
 
     return $ret # testable
