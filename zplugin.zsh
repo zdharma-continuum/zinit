@@ -618,30 +618,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 --zplg-shadow-compdef() {
-    # No reply needed when compdef exists
-    if (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )); then
+    -zplg-add-report "$ZPLG_CUR_USPL2" "Saving \`compdef $*' for replay"
+    ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
 
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Compdef $*"
-
-        # E. Shadow off. Unfunction "compdef"
-        # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-        functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}"
-
-        # Actual compdef
-        compdef "$@"
-        integer ret=$?
-
-        # E. Shadow on. Custom compdef could unfunction itself
-        (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}" || unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
-        function compdef { --zplg-shadow-compdef "$@"; }
-
-    # Save compdef call for replay
-    else
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Saving \`compdef $*' for replay"
-        ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
-    fi
-
-    return $ret # testable
+    return 0 # testable
 }
 
 # Shadowing on completely for a given mode ("load", "light" or "compdef")
