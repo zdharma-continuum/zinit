@@ -277,31 +277,35 @@ a fresh version of a snippet.
 Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set prompt
 will appear as something like: `$(build_prompt)`.
 
-## Clean .zshrc With Compdef Replaying
+## Calling compinit
 
-`Zplugin` provides a feature which brings order into `.zshrc`. When to call `compinit`? Some plugins
-require completion being in place, other update `$FPATH` and want `compinit` to be called later.
-`Zplugin` is like a pre-initialized completion for the first type of plugins. They will thus work
-without real `compinit` in place. You should call `compinit` only once after loading all plugins, in
-following way:
+Compinit should be called right after `source` of `Zplugin`. The reason is that `Zplugin`
+takes control over completions of its plugins, simlinks them to `~/.zplugin/completions` and
+adds this directory to `$FPATH` when sourced. You manage those simlinks via commands starting
+with `c`: `csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`. All this
+brings order to `$FPATH`, there is only one directory there, and you can selectively disable
+and enable completions. Also, plugins aren't allowed to simply run `compdefs`. They will be
+run only after issuing `zplugin cdreplay`. To summarize:
 
 ```sh
 source ~/.zplugin/bin/zplugin.zsh
+autoload -Uz compinit
+compinit
+
 zplugin load "some/plugin"
 ...
 zplugin load "other/plugin"
 
-autoload -Uz compinit
-compinit
 zplugin cdreplay -q # -q is for quiet
 ```
 
+All this allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
 ### Ignoring Compdefs
 
-If you want to ignore compdefs provided by some plugins or snippets, place their load commands
+If you want to ignore `compdef`s provided by some plugins or snippets, place their load commands
 before commands loading other plugins or snippets, and issue `zplugin cdclear`:
 
 ```sh
