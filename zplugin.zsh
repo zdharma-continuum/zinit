@@ -1783,6 +1783,10 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     print "Initializing completion (compinit)..."
     command rm -f ~/.zcompdump
+
+    # Workaround for a nasty trick in _vim
+    unfunction _vim_files
+
     autoload -Uz compinit
     compinit
 }
