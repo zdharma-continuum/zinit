@@ -322,7 +322,7 @@ ZPLG_ZLE_HOOKS_LIST=(
             if [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
                 eval "function $func {
                     local FPATH="$PLUGIN_DIR":"${FPATH}"
-                    builtin autoload -X
+                    builtin autoload -X ${opts[*]}
                 }"
             else
                 eval "function $func {
