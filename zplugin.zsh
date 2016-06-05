@@ -257,6 +257,13 @@ ZPLG_ZLE_HOOKS_LIST=(
 # }}}
 
 #
+# The one noaliases setopt that will protect all
+# Zplugin's functions from disruption via aliases,
+# including global ones
+#
+setopt noaliases
+
+#
 # Shadowing-related functions (names of substitute functions start with --) {{{
 # Must be resistant to various game-changing options like KSH_ARRAYS
 #
@@ -312,6 +319,7 @@ ZPLG_ZLE_HOOKS_LIST=(
     do
         # Real autoload doesn't touch function if it already exists
         if (( ${+functions[$func]} != 1 )); then
+            setopt noaliases
             if [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
                 eval "function $func {
                     local FPATH="$PLUGIN_DIR":"${FPATH}"
@@ -323,6 +331,7 @@ ZPLG_ZLE_HOOKS_LIST=(
                 }'
             fi
             #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"'
+            unsetopt noaliases
         fi
     done
 
@@ -1890,7 +1899,9 @@ ZPLG_ZLE_HOOKS_LIST=(
 
     # We need some state, but user wants his for his plugins
     -zplg-restore-enter-state 
+    setopt noaliases
     builtin source "$dname/$fname"
+    unsetopt noaliases
     # Restore our desired state for our operation
     -zplg-set-desired-shell-state
 
@@ -3146,7 +3157,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 # }}}
-builtin alias zpl=zplugin zplg=zplugin
 
 # Main function with subcommands
 zplugin() {
@@ -3424,6 +3434,9 @@ cdclear                  - clear compdef replay list"
     # Restore user's options
     -zplg-restore-enter-state
 }
+
+unsetopt noaliases
+builtin alias zpl=zplugin zplg=zplugin
 
 -zplg-prepare-home
 
