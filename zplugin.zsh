@@ -79,14 +79,6 @@ autoload is-at-least
 is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 
 #
-# All to the users - simulate OMZ directory structure (1/3)
-#
-
-typeset -gH ZSH="$ZPLG_PLUGINS_DIR"
-typeset -gH ZSH_CUSTOM="$ZPLG_PLUGINS_DIR/custom"
-export ZSH ZSH_CUSTOM
-
-#
 # Nasty variables {{{
 # Can be used by any shadowing function to recognize current context
 #
@@ -1655,10 +1647,6 @@ ZPLG_ZLE_HOOKS_LIST=(
         command mkdir "$ZPLG_SNIPPETS_DIR"
         command chmod g-w "$ZPLG_SNIPPETS_DIR"
     }
-
-    # All to the users - simulate OMZ directory structure (2/3)
-    [ ! -d "$ZPLG_PLUGINS_DIR/custom" ] && command mkdir "$ZPLG_PLUGINS_DIR/custom" 
-    [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins" ] && command mkdir "$ZPLG_PLUGINS_DIR/custom/plugins" 
 }
 
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
@@ -1803,15 +1791,6 @@ ZPLG_ZLE_HOOKS_LIST=(
 
         # Compile plugin
         -zplg-compile-plugin "$user" "$plugin"
-    fi
-
-    # All to the users - simulate OMZ directory structure (3/3)
-    # For now, this will be done every time setup plugin dir is
-    # being run, to migrate old setup
-    if [ ! -d "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}" ]; then
-        # Remove in case of broken symlink
-        command rm -f "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
-        command ln -s "../../${user}---${plugin}" "$ZPLG_PLUGINS_DIR/custom/plugins/${plugin}"
     fi
 
     return 0
