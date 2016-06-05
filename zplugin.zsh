@@ -1638,16 +1638,20 @@ builtin setopt noaliases
     [ -n "$ZPLG_HOME_READY" ] && return
     ZPLG_HOME_READY="1"
 
-    [ ! -d "$ZPLG_HOME" ] && command mkdir 2>/dev/null "$ZPLG_HOME"
+    [ ! -d "$ZPLG_HOME" ] && {
+        command mkdir 2>/dev/null "$ZPLG_HOME"
+        # For compaudit
+        command chmod go-w "$ZPLG_HOME"
+    }
     [ ! -d "$ZPLG_PLUGINS_DIR" ] && {
         command mkdir "$ZPLG_PLUGINS_DIR"
         # For compaudit
-        command chmod g-w "$ZPLG_HOME"
+        command chmod go-w "$ZPLG_PLUGINS_DIR"
     }
     [ ! -d "$ZPLG_COMPLETIONS_DIR" ] && {
         command mkdir "$ZPLG_COMPLETIONS_DIR"
-        # For comaudit
-        command chmod g-w "$ZPLG_COMPLETIONS_DIR"
+        # For compaudit
+        command chmod go-w "$ZPLG_COMPLETIONS_DIR"
 
         # Symlink _zplugin completion into _local---zplugin directory
         command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
@@ -1656,7 +1660,7 @@ builtin setopt noaliases
     }
     [ ! -d "$ZPLG_SNIPPETS_DIR" ] && {
         command mkdir "$ZPLG_SNIPPETS_DIR"
-        command chmod g-w "$ZPLG_SNIPPETS_DIR"
+        command chmod go-w "$ZPLG_SNIPPETS_DIR"
     }
 }
 
