@@ -3146,7 +3146,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 }
 
 # }}}
-alias zpl=zplugin zplg=zplugin
+builtin alias zpl=zplugin zplg=zplugin
 
 # Main function with subcommands
 zplugin() {
