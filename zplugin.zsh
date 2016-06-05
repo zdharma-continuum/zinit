@@ -1798,6 +1798,9 @@ builtin setopt noaliases
 -zplg-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
+        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+        print "Downloading $REPLY..."
+
         # Return with error when any problem
         git clone --recursive https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
 
