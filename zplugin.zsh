@@ -1789,7 +1789,7 @@ builtin setopt noaliases
     command rm -f ~/.zcompdump
 
     # Workaround for a nasty trick in _vim
-    unfunction _vim_files
+    (( ${+functions[_vim_files]} )) && unfunction _vim_files
 
     builtin autoload -Uz compinit
     compinit
