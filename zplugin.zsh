@@ -1706,7 +1706,7 @@ builtin setopt noaliases
             -zplg-forget-completion "$cfile"
         else
             print "${ZPLG_COL[error]}Not symlinking completion \`$cfile', it already exists${ZPLG_COL[rst]}"
-            print "${ZPLG_COL[error]}Use \`creinstall' {plugin-name} to force install${ZPLG_COL[rst]}"
+            print "${ZPLG_COL[error]}Use \`creinstall {plugin-name}' to force install${ZPLG_COL[rst]}"
         fi
     done
 }
