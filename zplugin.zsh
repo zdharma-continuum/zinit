@@ -75,7 +75,7 @@ typeset -ga ZPLG_STRESS_TEST_OPTIONS
 ZPLG_STRESS_TEST_OPTIONS=( "NO_SHORT_LOOPS" "IGNORE_BRACES" "IGNORE_CLOSE_BRACES" "SH_GLOB" "CSH_JUNKIE_QUOTES" "NO_MULTI_FUNC_DEF" )
 typeset -gH ZPLG_NEW_AUTOLOAD=0
 
-autoload is-at-least
+builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 
 #
@@ -223,7 +223,7 @@ zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
 if [[ ( -n "${terminfo[colors]}" || -n "${termcap[Co]}" ) && -z "${functions[colors]}" ]]; then
-    autoload colors
+    builtin autoload -Uz colors
     colors
 fi
 
