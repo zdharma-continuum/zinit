@@ -628,6 +628,7 @@ setopt noaliases
 
 # Shadowing on completely for a given mode ("load", "light" or "compdef")
 -zplg-shadow-on() {
+    setopt localoptions noaliases
     local mode="$1"
 
     # Enable shadowing only once
@@ -691,6 +692,7 @@ setopt noaliases
 
 # Shadowing off completely for a given mode "load", "light" or "compdef"
 -zplg-shadow-off() {
+    setopt localoptions noaliases
     local mode="$1"
 
     # Disable shadowing only once
