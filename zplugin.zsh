@@ -261,7 +261,7 @@ ZPLG_ZLE_HOOKS_LIST=(
 # Zplugin's functions from disruption via aliases,
 # including global ones
 #
-setopt noaliases
+builtin setopt noaliases
 
 #
 # Shadowing-related functions (names of substitute functions start with --) {{{
@@ -319,7 +319,7 @@ setopt noaliases
     do
         # Real autoload doesn't touch function if it already exists
         if (( ${+functions[$func]} != 1 )); then
-            setopt noaliases
+            builtin setopt noaliases
             if [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
                 eval "function $func {
                     local FPATH="$PLUGIN_DIR":"${FPATH}"
@@ -331,7 +331,7 @@ setopt noaliases
                 }'
             fi
             #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"'
-            unsetopt noaliases
+            builtin unsetopt noaliases
         fi
     done
 
@@ -628,7 +628,7 @@ setopt noaliases
 
 # Shadowing on completely for a given mode ("load", "light" or "compdef")
 -zplg-shadow-on() {
-    setopt localoptions noaliases
+    builtin setopt localoptions noaliases
     local mode="$1"
 
     # Enable shadowing only once
@@ -692,7 +692,7 @@ setopt noaliases
 
 # Shadowing off completely for a given mode "load", "light" or "compdef"
 -zplg-shadow-off() {
-    setopt localoptions noaliases
+    builtin setopt localoptions noaliases
     local mode="$1"
 
     # Disable shadowing only once
@@ -760,7 +760,7 @@ setopt noaliases
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
 
-            setopt localoptions extendedglob
+            builtin setopt localoptions extendedglob
             [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
             typeset -A func
@@ -875,7 +875,7 @@ setopt noaliases
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            setopt localoptions extendedglob
+            builtin setopt localoptions extendedglob
             [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_OPTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
             typeset -A opts_before opts_after opts
@@ -979,7 +979,7 @@ setopt noaliases
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            setopt localoptions extendedglob
+            builtin setopt localoptions extendedglob
             [[ "${ZPLG_PATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
             [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FPATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
@@ -1089,7 +1089,7 @@ setopt noaliases
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
             # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            setopt localoptions extendedglob
+            builtin setopt localoptions extendedglob
             [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
             # Un-concatenated parameters from moment of diff start and of diff end
@@ -1140,7 +1140,7 @@ setopt noaliases
 
     # Paranoid for type of empty value,
     # i.e. include white spaces as empty
-    setopt localoptions extendedglob
+    builtin setopt localoptions extendedglob
     REPLY=""
     [[ "${ZPLG_PARAMETERS_PRE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_POST[$uspl2]}" != *[$'! \t']* ]] && return 0
 
@@ -1418,7 +1418,7 @@ setopt noaliases
 # Searches for completions owned by given plugin
 # Returns them in reply array
 -zplg-find-completions-of-plugin() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
@@ -1538,7 +1538,7 @@ setopt noaliases
 -zplg-find-other-matches() {
     local dname="$1" pdir="$2"
 
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     if [ -e "$dname/$pdir/init.zsh" ]; then
         reply=( "$dname/$pdir/init.zsh" )
@@ -1666,7 +1666,7 @@ setopt noaliases
 -zplg-install-completions() {
     local reinstall="${3:-0}"
 
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -1710,7 +1710,7 @@ setopt noaliases
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 -zplg-uninstall-completions() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -1761,7 +1761,7 @@ setopt noaliases
 }
 
 -zplg-compinit() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     typeset -a symlinked backup_comps
     local c cfile bkpfile 
@@ -1901,9 +1901,9 @@ setopt noaliases
 
     # We need some state, but user wants his for his plugins
     -zplg-restore-enter-state 
-    setopt noaliases
+    builtin setopt noaliases
     builtin source "$dname/$fname"
-    unsetopt noaliases
+    builtin unsetopt noaliases
     # Restore our desired state for our operation
     -zplg-set-desired-shell-state
 
@@ -1941,7 +1941,7 @@ setopt noaliases
 }
 
 -zplg-uncompile-plugin() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" silent="$3"
@@ -1975,7 +1975,7 @@ setopt noaliases
 #
 
 -zplg-show-completions() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     typeset -a completions
     completions=( "$ZPLG_COMPLETIONS_DIR"/_* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
@@ -2019,7 +2019,7 @@ setopt noaliases
 # While -zplg-show-completions shows what completions are installed,
 # this functions searches through all plugin directories showing what's available
 -zplg-search-completions() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     typeset -a plugin_paths
     plugin_paths=( "$ZPLG_PLUGINS_DIR"/*---* )
@@ -2424,10 +2424,10 @@ setopt noaliases
 
             if [ "${opts[$k]}" = "on" ]; then
                 print "Setting option $k"
-                setopt "$k"
+                builtin setopt "$k"
             else
                 print "Unsetting option $k"
-                unsetopt "$k"
+                builtin unsetopt "$k"
             fi
         done
     fi
@@ -2610,7 +2610,7 @@ setopt noaliases
     () {
         local -a match mbegin mend
         local MATCH; integer MBEGIN MEND
-        setopt localoptions extendedglob
+        builtin setopt localoptions extendedglob
 
         # Remove leading whitespace
         url="${url#"${url%%[! $'\t']*}"}"
@@ -2684,7 +2684,7 @@ setopt noaliases
 }
 
 -zplg-update-or-status-all() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     local st="$1"
     local repo pd user plugin
@@ -2727,7 +2727,7 @@ setopt noaliases
 
 # Shows overall status
 -zplg-show-zstatus() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     local infoc="${ZPLG_COL[info]}"
 
@@ -2790,7 +2790,7 @@ setopt noaliases
 
 # Gets list of compiled plugins
 -zplg-compiled() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     typeset -a matches m
     matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
@@ -2819,7 +2819,7 @@ setopt noaliases
 }
 
 -zplg-compile-uncompile-all() {
-    setopt localoptions nullglob
+    builtin setopt localoptions nullglob
 
     local compile="$1"
 
@@ -2963,7 +2963,7 @@ setopt noaliases
 }
 
 -zplg-recently() {
-    setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob
 
     local IFS="."
     local gitout
@@ -3085,16 +3085,16 @@ setopt noaliases
 
     (
         emulate -LR ksh
-        unsetopt shglob kshglob
+        builtin unsetopt shglob kshglob
         for i in "${ZPLG_STRESS_TEST_OPTIONS[@]}"; do
-            setopt "$i"
+            builtin setopt "$i"
             print -n "Stress-testing ${fname:t} for option $i "
             zcompile -R "$fname" 2>/dev/null && {
                 print "[${ZPLG_COL[success]}Success${ZPLG_COL[rst]}]"
             } || {
                 print "[${ZPLG_COL[failure]}Fail${ZPLG_COL[rst]}]"
             }
-            unsetopt "$i"
+            builtin unsetopt "$i"
         done
     )
 
@@ -3437,7 +3437,7 @@ cdclear                  - clear compdef replay list"
     -zplg-restore-enter-state
 }
 
-unsetopt noaliases
+builtin unsetopt noaliases
 builtin alias zpl=zplugin zplg=zplugin
 
 -zplg-prepare-home
