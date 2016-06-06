@@ -2004,7 +2004,7 @@ builtin setopt noaliases
     # detects if completion is disabled 
     #
 
-    integer disabled
+    integer disabled unknown stray
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
         [ "${c#_}" = "${c}" ] && disabled=1 || disabled=0
@@ -2017,11 +2017,21 @@ builtin setopt noaliases
         # This will resolve completion's symlink to obtain
         # information about the repository it comes from, i.e.
         # about user and plugin, taken from directory name
-        -zplg-get-completion-owner-uspl2col "$cpath" "$REPLY"
+        -zplg-get-completion-owner "$cpath" "$REPLY"
+        [ "$REPLY" = "[unknown]" ] && unknown=1 || unknown=0
+        -zplg-any-colorify-as-uspl2 "$REPLY"
+
+        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
+        stray=0
+        if (( unknown == 0 )); then
+            [[ ! -f "$cpath" ]] && stray=1
+        fi
 
         # Output line of text
         print -n "${(r:longest+1:: :)c} $REPLY"
         (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
+        (( unknown )) && print -n " ${ZPLG_COL[error]}[unknown file, clean with cclear]${ZPLG_COL[rst]}"
+        (( stray )) && print -n " ${ZPLG_COL[error]}[stray, clean with cclear]${ZPLG_COL[rst]}"
         print
     done
 }
@@ -3261,6 +3271,7 @@ zplugin() {
            ;;
        (clist|completions)
            # Show installed, enabled or disabled, completions
+           # Detect stray and improper ones
            -zplg-show-completions
            ;;
        (cdisable)
