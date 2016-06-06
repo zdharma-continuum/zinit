@@ -1325,7 +1325,7 @@ builtin setopt noaliases
 
 # Prepare readlink command, used e.g. for
 # establishing completion's owner
--zplg-prepare-readline() {
+-zplg-prepare-readlink() {
     REPLY=":"
     if type readlink 2>/dev/null 1>&2; then
         REPLY="readlink"
@@ -2011,7 +2011,7 @@ builtin setopt noaliases
 
         # Prepare readlink command for establishing
         # completion's owner
-        -zplg-prepare-readline
+        -zplg-prepare-readlink
 
         # This will resolve completion's symlink to obtain
         # information about the repository it comes from, i.e.
@@ -2235,7 +2235,7 @@ builtin setopt noaliases
     command mv "$bkpfile" "$cfile" # move completion's backup file created when disabling
 
     # Prepare readlink command for establishing completion's owner
-    -zplg-prepare-readline
+    -zplg-prepare-readlink
     # Get completion's owning plugin
     -zplg-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
@@ -2278,7 +2278,7 @@ builtin setopt noaliases
     command mv "$cfile" "$bkpfile"
 
     # Prepare readlink command for establishing completion's owner
-    -zplg-prepare-readline
+    -zplg-prepare-readlink
     # Get completion's owning plugin
     -zplg-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
