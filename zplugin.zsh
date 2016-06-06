@@ -1349,6 +1349,7 @@ builtin setopt noaliases
     # Readlink just reads what symlink points to
     in_plugin_path="${cpath:A}"
     tmp=$( "$readlink_cmd" "$cpath" )
+    # This in effect works as: "if different, then readlink"
     [ -n "$tmp" ] && in_plugin_path="$tmp"
 
     if [ "$in_plugin_path" != "$cpath" ]; then
