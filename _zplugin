@@ -28,6 +28,7 @@ commands=(
     changes:"view plugin's git log"
     recently:"show plugins that changed recently, argument is e.g. 1 month 2 days"
     clist:'list completions in use'
+    cclear:'clear stray and improper completions'
     completions:'list completions in use'
     cdisable:'disable completion'
     cenable:'enable completion'
@@ -94,6 +95,9 @@ case $state in
                 ;;
             clist|completions)
                 _message "Hit enter to get list of completions" && ret=0
+                ;;
+            cclear)
+                _message "Hit enter to clear stray and improper completions" && ret=0
                 ;;
             cdisable)
                 # Find enabled completions

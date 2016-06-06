@@ -2036,6 +2036,53 @@ builtin setopt noaliases
     done
 }
 
+-zplg-clear-completions() {
+    builtin setopt localoptions nullglob
+
+    typeset -a completions
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+
+    # Find longest completion name
+    local cpath c
+    integer longest=0
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        c="${c#_}"
+        [ "${#c}" -gt "$longest" ] && longest="${#c}"
+    done
+
+    integer disabled unknown stray
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        [ "${c#_}" = "${c}" ] && disabled=1 || disabled=0
+        c="${c#_}"
+
+        -zplg-prepare-readlink
+
+        # This will resolve completion's symlink to obtain
+        # information about the repository it comes from, i.e.
+        # about user and plugin, taken from directory name
+        -zplg-get-completion-owner "$cpath" "$REPLY"
+        [ "$REPLY" = "[unknown]" ] && unknown=1 || unknown=0
+        -zplg-any-colorify-as-uspl2 "$REPLY"
+
+        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
+        stray=0
+        if (( unknown == 0 )); then
+            [[ ! -f "$cpath" ]] && stray=1
+        fi
+
+        if (( unknown == 1 || stray == 1 )); then
+            print -n "Removing completion: ${(r:longest+1:: :)c} $REPLY"
+            (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
+            (( unknown )) && print -n " ${ZPLG_COL[error]}[unknown file]${ZPLG_COL[rst]}"
+            (( stray )) && print -n " ${ZPLG_COL[error]}[stray]${ZPLG_COL[rst]}"
+            print
+            command rm -f "$cpath"
+        fi
+    done
+}
+
 # While -zplg-show-completions shows what completions are installed,
 # this functions searches through all plugin directories showing what's available
 -zplg-search-completions() {
@@ -3273,6 +3320,10 @@ zplugin() {
            # Show installed, enabled or disabled, completions
            # Detect stray and improper ones
            -zplg-show-completions
+           ;;
+       (cclear)
+           # Delete stray and improper completions
+           -zplg-clear-completions
            ;;
        (cdisable)
            if [[ -z "$2" ]]; then
