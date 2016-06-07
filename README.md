@@ -286,8 +286,8 @@ Compinit should be called right after `source` of `Zplugin`. The reason is that 
 takes control over completions of its plugins, simlinks them to `~/.zplugin/completions` and
 adds this directory to `$FPATH` when sourced. You manage those simlinks via commands starting
 with `c`: `csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`. All this
-brings order to `$FPATH`, there is only one directory there, and you can selectively disable
-and enable completions. Also, plugins aren't allowed to simply run `compdefs`. They will be
+brings order to `$FPATH`, there is only one directory there. 
+Also, plugins aren't allowed to simply run `compdefs`. They will be
 run only after issuing `zplugin cdreplay`. To summarize:
 
 ```sh
