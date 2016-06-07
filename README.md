@@ -277,6 +277,9 @@ a fresh version of a snippet.
 Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set prompt
 will appear as something like: `$(build_prompt)`.
 
+You might want to supress completions provided by the git plugin by issuing `zplugin cdclear -q`
+(`-q` is for quiet) – see below **Ignoring Compdefs**.
+
 ## Calling compinit
 
 Compinit should be called right after `source` of `Zplugin`. The reason is that `Zplugin`
@@ -303,7 +306,7 @@ All this allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
-### Ignoring Compdefs
+## Ignoring Compdefs
 
 If you want to ignore `compdef`s provided by some plugins or snippets, place their load commands
 before commands loading other plugins or snippets, and issue `zplugin cdclear`:
@@ -311,7 +314,7 @@ before commands loading other plugins or snippets, and issue `zplugin cdclear`:
 ```sh
 source ~/.zplugin/bin/zplugin.zsh
 zplugin snippet https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh
-zplugin cdclear # <- forget completions provided up to this moment
+zplugin cdclear -q # <- forget completions provided up to this moment
 
 zplugin load "some/plugin"
 ...
