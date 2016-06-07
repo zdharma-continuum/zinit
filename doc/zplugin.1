@@ -331,20 +331,24 @@ Such lines should be added to \fB\.zshrc\fR\. Snippets are cached locally, use \
 .P
 Most themes require \fBpromptsubst\fR option (\fBsetopt promptsubst\fR in \fBzshrc\fR), if it isn\'t set prompt will appear as something like: \fB$(build_prompt)\fR\.
 .
-.SH "Clean \.zshrc With Compdef Replaying"
-\fBZplugin\fR provides a feature which brings order into \fB\.zshrc\fR\. When to call \fBcompinit\fR? Some plugins require completion being in place, other update \fB$FPATH\fR and want \fBcompinit\fR to be called later\. \fBZplugin\fR is like a pre\-initialized completion for the first type of plugins\. They will thus work without real \fBcompinit\fR in place\. You should call \fBcompinit\fR only once after loading all plugins, in following way:
+.P
+You might want to supress completions provided by the git plugin by issuing \fBzplugin cdclear \-q\fR (\fB\-q\fR is for quiet) – see below \fBIgnoring Compdefs\fR\.
+.
+.SH "Calling compinit"
+Compinit should be called right after \fBsource\fR of \fBZplugin\fR\. The reason is that \fBZplugin\fR takes control over completions of its plugins, simlinks them to \fB~/\.zplugin/completions\fR and adds this directory to \fB$FPATH\fR when sourced\. You manage those simlinks via commands starting with \fBc\fR: \fBcsearch\fR, \fBclist\fR, \fBcreinstall\fR, \fBcuninstall\fR, \fBcenable\fR, \fBcdisable\fR\. All this brings order to \fB$FPATH\fR, there is only one directory there, and you can selectively disable and enable completions\. Also, plugins aren\'t allowed to simply run \fBcompdefs\fR\. They will be run only after issuing \fBzplugin cdreplay\fR\. To summarize:
 .
 .IP "" 4
 .
 .nf
 
 source ~/\.zplugin/bin/zplugin\.zsh
+autoload \-Uz compinit
+compinit
+
 zplugin load "some/plugin"
 \.\.\.
 zplugin load "other/plugin"
 
-autoload \-Uz compinit
-compinit
 zplugin cdreplay \-q # \-q is for quiet
 .
 .fi
@@ -352,10 +356,10 @@ zplugin cdreplay \-q # \-q is for quiet
 .IP "" 0
 .
 .P
-Performance gains are huge, example shell startup time with double \fBcompinit\fR: \fB0\.980\fR sec, with \fBcdreplay\fR and single \fBcompinit\fR: \fB0\.156\fR sec\.
+All this allows to call compinit once\. Performance gains are huge, example shell startup time with double \fBcompinit\fR: \fB0\.980\fR sec, with \fBcdreplay\fR and single \fBcompinit\fR: \fB0\.156\fR sec\.
 .
-.SS "Ignoring Compdefs"
-If you want to ignore compdefs provided by some plugins or snippets, place their load commands before commands loading other plugins or snippets, and issue \fBzplugin cdclear\fR:
+.SH "Ignoring Compdefs"
+If you want to ignore \fBcompdef\fRs provided by some plugins or snippets, place their load commands before commands loading other plugins or snippets, and issue \fBzplugin cdclear\fR:
 .
 .IP "" 4
 .
@@ -363,7 +367,7 @@ If you want to ignore compdefs provided by some plugins or snippets, place their
 
 source ~/\.zplugin/bin/zplugin\.zsh
 zplugin snippet https://github\.com/robbyrussell/oh\-my\-zsh/blob/master/plugins/git/git\.plugin\.zsh
-zplugin cdclear # <\- forget completions provided up to this moment
+zplugin cdclear \-q # <\- forget completions provided up to this moment
 
 zplugin load "some/plugin"
 \.\.\.
