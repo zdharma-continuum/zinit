@@ -2944,8 +2944,9 @@ builtin setopt noaliases
 }
 
 -zplg-compdef-clear() {
+    local quiet="$1"
     ZPLG_COMPDEF_REPLAY=( )
-    print "Compdef replay cleared"
+    [ "$quiet" = "-q" ] || print "Compdef replay cleared"
 }
 
 -zplg-cd() {
@@ -3431,7 +3432,7 @@ zplugin() {
            -zplg-compdef-replay "$2"
            ;;
        (cdclear)
-           -zplg-compdef-clear
+           -zplg-compdef-clear "$2"
            ;;
        (cd)
            -zplg-cd "$2" "$3"
