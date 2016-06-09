@@ -10,16 +10,32 @@ disable, enable plugin's completions. Also, every plugin is compiled and user
 can control this function. The system does not use `$FPATH`, it's kept clean!
 
 Code is immune to `KSH_ARRAYS`, `emulate sh`, `emulate ksh`, thoroughly tested to
-support any user setup, be as transparent as plain `source` command. Compdef replays
-functionality is provided to allow user call `compinit` only once in `.zshrc`.
+support any user setup, be as transparent as plain `source` command. Completion
+management functionality is provided to allow user call `compinit` only once in
+`.zshrc`.
 
-**Zplugin in action:**
+## Quick start
 
-![zplugin](http://imageshack.com/a/img905/5575/n3p47o.gif)
+To install, execute:
 
-**Completion handling:**
+```sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
+```
 
-![zplugin](http://imageshack.com/a/img907/2167/CATuag.gif)
+Then add to `~/.zshrc`:
+
+```zsh
+zplg load psprint zsh-navigation-tools
+zplg load psprint---zprompts
+zplg load zsh-users/zsh-autosuggestions
+zplg load zsh-users/zsh-syntax-highlighting
+```
+
+`ZNT` – multi-word searching of history (Ctrl-R), `zprompts` – a few themes
+with advanced Git features (add `promptinit; prompt scala4` to `~/.zshrc` to
+set a prompt).
+
+## Screencasts
 
 **Dtrace:**
 
@@ -28,6 +44,14 @@ functionality is provided to allow user call `compinit` only once in `.zshrc`.
 **Code recognition with recently, changes, glance, report, stress:**
 
 ![code recognition](http://imageshack.com/a/img923/6404/5mOUl2.gif)
+
+**Zplugin in action:**
+
+![zplugin](http://imageshack.com/a/img905/5575/n3p47o.gif)
+
+**Completion handling:**
+
+![zplugin](http://imageshack.com/a/img907/2167/CATuag.gif)
 
 ## Introduction
 
