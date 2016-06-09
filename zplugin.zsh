@@ -1,6 +1,9 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
+# A fallback when functionargzero is unset (emulate sh, emulate ksh)
+ZPLG_UNDERSCORE="$_"
+
 #
 # Main state variables
 #
@@ -26,13 +29,8 @@ fi
 
 # Problematic function_argzero
 if [[ ! -o "functionargzero" ]]; then
-    if [[ "$0" = "${argv[0]}" || -z "${argv[0]}" ]]; then
-        ZPLG_NAME="zplugin" # A try of typical, actually expected name
-        [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
-    else
-        ZPLG_NAME="${${argv[0]:t}:r}"
-        [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${argv[0]:h}"
-    fi
+    ZPLG_NAME="${${ZPLG_UNDERSCORE:t}:r}"
+    [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${ZPLG_UNDERSCORE:h}"
 else
     ZPLG_NAME="${${0:t}:r}"
     [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
