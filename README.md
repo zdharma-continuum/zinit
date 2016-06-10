@@ -25,10 +25,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc
 Then add to `~/.zshrc`:
 
 ```zsh
-zplg load psprint zsh-navigation-tools
-zplg load psprint---zprompts
-zplg load zsh-users/zsh-autosuggestions
-zplg load zsh-users/zsh-syntax-highlighting
+zplugin load psprint zsh-navigation-tools
+zplugin load psprint---zprompts
+zplugin load zsh-users/zsh-autosuggestions
+zplugin load zsh-users/zsh-syntax-highlighting
 ```
 
 `ZNT` – multi-word searching of history (Ctrl-R), `zprompts` – a few themes
