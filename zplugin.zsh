@@ -1,9 +1,6 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
-# A fallback when functionargzero is unset (emulate sh, emulate ksh)
-ZPLG_UNDERSCORE="$_"
-
 #
 # Main state variables
 #
@@ -29,12 +26,11 @@ fi
 
 # Problematic function_argzero
 if [[ ! -o "functionargzero" ]]; then
-    ZPLG_NAME="${${ZPLG_UNDERSCORE:t}:r}"
-    [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${ZPLG_UNDERSCORE:h}"
-else
-    ZPLG_NAME="${${0:t}:r}"
-    [ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
+    0="${(%):-%N}" # this gives immunity to functionargzero being unset
 fi
+
+ZPLG_NAME="${${0:t}:r}"
+[ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
 
 # Make ZPLG_DIR path absolute
 if [[ "$ZPLG_DIR" != /* ]]; then
