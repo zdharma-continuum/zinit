@@ -3089,11 +3089,7 @@ builtin setopt noaliases
 
     if [ "$user" != "_local" ]; then
         print "${ZPLG_COL[info]}Creating Github repository${ZPLG_COL[rst]}"
-        if which hub >/dev/null 2>&1; then
-            hub create "$user/$plugin"
-        else
-            curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
-        fi
+        curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin}" || {
             print "${ZPLG_COL[error]}Creation of remote repository $uspl2col ${ZPLG_COL[error]}failed${ZPLG_COL[rst]}"
             print "${ZPLG_COL[error]}Bad credentials?${ZPLG_COL[rst]}"
