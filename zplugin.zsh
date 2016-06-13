@@ -262,6 +262,7 @@ builtin setopt noaliases
 # Must be resistant to various game-changing options like KSH_ARRAYS
 #
 
+# Author: Bart Schaefer
 --zplg-reload-and-run () {
     local fpath_prefix="$1" autoload_opts="$2" func="$3"
     shift 3
@@ -312,6 +313,7 @@ builtin setopt noaliases
     for func
     do
         # Real autoload doesn't touch function if it already exists
+        # Author of the idea of FPATH-clean autoloading: Bart Schaefer
         if (( ${+functions[$func]} != 1 )); then
             builtin setopt noaliases
             if [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
