@@ -22,7 +22,7 @@ To install, execute:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
 ```
 
-Then add to `~/.zshrc`:
+Then add to `~/.zshrc`, at bottom:
 
 ```zsh
 zplugin load psprint zsh-navigation-tools
@@ -30,6 +30,14 @@ zplugin load psprint---zprompts
 zplugin load zsh-users/zsh-autosuggestions
 zplugin load zsh-users/zsh-syntax-highlighting
 ```
+
+(No need to add:
+
+```zsh
+source "$HOME/.zplugin/bin/zplugin.zsh"
+```
+
+because the install script does this.)
 
 `ZNT` – multi-word searching of history (Ctrl-R), `zprompts` – a few themes
 with advanced Git features (add `promptinit; prompt scala4` to `~/.zshrc` to
