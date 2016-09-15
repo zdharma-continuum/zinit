@@ -268,7 +268,7 @@ builtin setopt noaliases
     shift 3
 
     # Unfunction caller function (its name is given)
-    unfunction "$func"
+    unfunction -- "$func"
 
     local FPATH="$fpath_prefix":"${FPATH}"
 
@@ -1389,7 +1389,7 @@ builtin setopt noaliases
 
     print "${ZPLG_COL[info]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
     print
-    unfunction 2>/dev/null "$f"
+    unfunction -- 2>/dev/null "$f"
 }
 
 -zplg-check-comp-consistency() {
@@ -2398,7 +2398,7 @@ builtin setopt noaliases
         [ -z "$f" ] && continue
         f="${(Q)f}"
         print "Deleting function $f"
-        unfunction "$f"
+        unfunction -- "$f"
     done
 
     #
