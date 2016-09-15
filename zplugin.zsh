@@ -2516,13 +2516,13 @@ builtin setopt noaliases
 
         if [ "$nv_arr3" = "-s" ]; then
             print "Removing ${ZPLG_COL[info]}suffix${ZPLG_COL[rst]} alias ${nv_arr1}=${nv_arr2}"
-            unalias -s "$nv_arr1"
+            unalias -s -- "$nv_arr1"
         elif [ "$nv_arr3" = "-g" ]; then
             print "Removing ${ZPLG_COL[info]}global${ZPLG_COL[rst]} alias ${nv_arr1}=${nv_arr2}"
-            unalias "${(q)nv_arr1}"
+            unalias -- "${(q)nv_arr1}"
         else
             print "Removing alias ${nv_arr1}=${nv_arr2}"
-            unalias "$nv_arr1"
+            unalias -- "$nv_arr1"
         fi
     done
 
@@ -2633,7 +2633,10 @@ builtin setopt noaliases
                 # (didn't have a type)
                 if [ "$v1" = "\"\"" ]; then
                     print "Unsetting variable $k"
-                    unset "$k"
+                    # Checked that 4.3.17 does support "--"
+                    # There cannot be parameter starting with
+                    # "-" but let's defensively use "--" here
+                    unset -- "$k"
                 fi
             fi
         done
