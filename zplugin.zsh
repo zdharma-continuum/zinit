@@ -2718,7 +2718,7 @@ builtin setopt noaliases
             cd "$ZPLG_SNIPPETS_DIR/$local_dir"
             command rm -f "$filename"
             print "Downloading $filename..."
-            -zplg-download-file-stdout "$url" > "$filename"
+            -zplg-download-file-stdout "$url" >! "$filename"
         )
         else
             # File
@@ -3111,9 +3111,9 @@ builtin setopt noaliases
         }
     fi
 
-    echo > "${plugin}.plugin.zsh"
-    echo > "README.md"
-    echo > "LICENSE"
+    echo >! "${plugin}.plugin.zsh"
+    echo >! "README.md"
+    echo >! "LICENSE"
 
     if [ "$user" != "_local" ]; then
         print "Remote repository $uspl2col set up as origin"
