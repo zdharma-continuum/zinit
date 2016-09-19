@@ -217,8 +217,10 @@ zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
 if [[ ( -n "${terminfo[colors]}" || -n "${termcap[Co]}" ) && -z "${functions[colors]}" ]]; then
-    builtin autoload -Uz colors
-    colors
+    [[ -z "${fg_bold[green]}" ]] && {
+        builtin autoload -Uz colors
+        colors
+    }
 fi
 
 typeset -gAH ZPLG_COL
