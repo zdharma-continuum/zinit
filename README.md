@@ -295,7 +295,7 @@ zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh
 ```
 
 Then you can use the themes either as plugins (`zplugin load {user/theme-name}`) or as snippets
-(`zplugin snippet {file path or URL}`; plugin method recommended). Some themes require not only
+(`zplugin snippet {file path or URL}`). Some themes require not only
 `Oh-My-Zsh's` `git` library, but also `git` plugin (error about function `current_branch` appears).
 Source it as snippet directly from `Oh-My-Zsh`:
 
