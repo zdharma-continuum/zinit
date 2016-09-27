@@ -319,12 +319,12 @@ builtin setopt noaliases
         if (( ${+functions[$func]} != 1 )); then
             builtin setopt noaliases
             if builtin [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
-                eval "function $func {
-                    local FPATH="$PLUGIN_DIR":"${FPATH}"
-                    builtin autoload -X ${opts[*]}
+                eval "function ${(q)func} {
+                    local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
+                    builtin autoload -X ${(q-)opts[*]}
                 }"
             else
-                eval "function $func {
+                eval "function ${(q)func} {
                     --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"
                 }'
             fi
