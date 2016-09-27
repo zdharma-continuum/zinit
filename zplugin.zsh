@@ -321,7 +321,7 @@ builtin setopt noaliases
             if builtin [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
                 eval "function ${(q)func} {
                     local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
-                    builtin autoload -X ${(q-)opts[*]}
+                    builtin autoload -X ${(q-)opts[@]}
                 }"
             else
                 eval "function ${(q)func} {
