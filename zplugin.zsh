@@ -1417,11 +1417,11 @@ builtin setopt noaliases
 # Searches for completions owned by given plugin
 # Returns them in reply array
 -zplg-find-completions-of-plugin() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
-    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_* )
+    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_[^_]* )
 }
 
 # For each positional parameter that each should
@@ -1671,7 +1671,7 @@ builtin setopt noaliases
 -zplg-install-completions() {
     local reinstall="${3:-0}"
 
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -1682,8 +1682,8 @@ builtin setopt noaliases
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_* )
-    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_* )
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_[^_]* )
+    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Symlink completions if they are not already there
@@ -1715,7 +1715,7 @@ builtin setopt noaliases
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 -zplg-uninstall-completions() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -1727,8 +1727,8 @@ builtin setopt noaliases
     local c cfile bkpfile
     integer action global_action=0
 
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_* )
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_* )
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_[^_]* )
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Delete completions if they are really there, either
@@ -1766,12 +1766,12 @@ builtin setopt noaliases
 }
 
 -zplg-compinit() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
 
     typeset -a symlinked backup_comps
     local c cfile bkpfile 
 
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_* )
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Delete completions if they are really there, either
@@ -1983,10 +1983,10 @@ builtin setopt noaliases
 #
 
 -zplg-show-completions() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
 
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Find longest completion name
     local cpath c
@@ -2035,10 +2035,10 @@ builtin setopt noaliases
 }
 
 -zplg-clear-completions() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
 
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
     # Find longest completion name
     local cpath c
@@ -2084,7 +2084,7 @@ builtin setopt noaliases
 # While -zplg-show-completions shows what completions are installed,
 # this functions searches through all plugin directories showing what's available
 -zplg-search-completions() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
 
     typeset -a plugin_paths
     plugin_paths=( "$ZPLG_PLUGINS_DIR"/*---* )
@@ -2095,7 +2095,7 @@ builtin setopt noaliases
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_* )
+        completions=( "$pp"/_[^_]* )
         if builtin [ "${#completions[@]}" -gt 0 ]; then
             local pd="${pp:t}"
             builtin [ "${#pd}" -gt "$longest" ] && longest="${#pd}"
@@ -2106,7 +2106,7 @@ builtin setopt noaliases
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_* )
+        completions=( "$pp"/_[^_]* )
 
         if builtin [ "${#completions[@]}" -gt 0 ]; then
             # Array of completions, e.g. ( _cp _xauth )
@@ -2795,7 +2795,7 @@ builtin setopt noaliases
 
 # Shows overall status
 -zplg-show-zstatus() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob extendedglob
 
     local infoc="${ZPLG_COL[info]}"
 
@@ -2823,7 +2823,7 @@ builtin setopt noaliases
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_* )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
     print "Enabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of disabled completions, with _zlocal/zplugin
@@ -2831,7 +2831,7 @@ builtin setopt noaliases
     print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of completions existing in all plugins
-    completions=( "$ZPLG_PLUGINS_DIR"/*/_* )
+    completions=( "$ZPLG_PLUGINS_DIR"/*/_[^_]* )
     print "Completions available overall: ${infoc}${#completions[@]}${reset_color}"
 
     # Enumerate snippets loaded
