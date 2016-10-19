@@ -198,7 +198,7 @@ Execute:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
 ```
 
-To update run the command again (or just execute `doc/install.sh`).
+To update run the command again (or just execute `doc/install.sh`) or run `zplugin self-update`.
 
 `Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
 three lines of code that will be added to the bottom (the lines will be sourcing
