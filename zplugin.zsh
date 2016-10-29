@@ -289,13 +289,13 @@ builtin setopt noaliases
     zparseopts -a opts -D ${(s::):-TUXkmtzw}
 
     # TODO: +X
-    if builtin [ -n "${opts[(r)-X]}" ]
+    if (( ${+opts[(r)-X]} ))
     then
         -zplg-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
         return 1 # Testable
     fi
-    if builtin [ -n "${opts[(r)-w]}" ]
+    if (( ${+opts[(r)-w]} ))
     then
         -zplg-add-report "$ZPLG_CUR_USPL2" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
@@ -354,17 +354,17 @@ builtin setopt noaliases
     opts=( "${(k)optsA[@]}" )
 
     if [[ "${#opts[@]}" -eq "0" ||
-        ( "${#opts[@]}" -eq "1" && "${opts[(r)-M]}" = "-M" ) ||
-        ( "${#opts[@]}" -eq "1" && "${opts[(r)-R]}" = "-R" ) ||
-        ( "${#opts[@]}" -eq "1" && "${opts[(r)-s]}" = "-s" ) ||
-        ( "${#opts[@]}" -le "2" && "${opts[(r)-M]}" = "-M" && "${opts[(r)-s]}" = "-s" ) ||
-        ( "${#opts[@]}" -le "2" && "${opts[(r)-M]}" = "-M" && "${opts[(r)-R]}" = "-R" )
+        ( "${#opts[@]}" -eq "1" && "${+opts[(r)-M]}" = "1" ) ||
+        ( "${#opts[@]}" -eq "1" && "${+opts[(r)-R]}" = "1" ) ||
+        ( "${#opts[@]}" -eq "1" && "${+opts[(r)-s]}" = "1" ) ||
+        ( "${#opts[@]}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-s]}" = "1" ) ||
+        ( "${#opts[@]}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-R]}" = "1" )
     ]]; then
         local string="${(q)1}" widget="${(q)2}"
         local quoted
 
         # "-M map" given?
-        if builtin [ "${opts[(r)-M]}" = "-M" ]; then
+        if (( ${+opts[(r)-M]} )); then
             local Mopt="-M"
             local Marg="${optsA[-M]}"
 
@@ -377,11 +377,11 @@ builtin setopt noaliases
         fi
 
         # -R given?
-        if builtin [ "${opts[(r)-R]}" = "-R" ]; then
+        if (( ${+opts[(r)-R]} )); then
             local Ropt="-R"
             Ropt="${(q)Ropt}"
 
-            if builtin [ "${opts[(r)-M]}" = "-M" ]; then
+            if (( ${+opts[(r)-M]} )); then
                 quoted="$quoted $Ropt"
             else
                 # Two empty fields for non-existent -M arg
@@ -400,7 +400,7 @@ builtin setopt noaliases
     else
         # bindkey -A newkeymap main?
         # Negative indices for KSH_ARRAYS immunity
-        if [[ "${#opts[@]}" -eq "1" && "${opts[(r)-A]}" = "-A" && "${#pos[@]}" = "3" && "${pos[-1]}" = "main" && "${pos[-2]}" != "-A" ]]; then
+        if [[ "${#opts[@]}" -eq "1" && "${+opts[(r)-A]}" = "1" && "${#pos[@]}" = "3" && "${pos[-1]}" = "main" && "${pos[-2]}" != "-A" ]]; then
             # Save a copy of main keymap
             (( ZPLG_BINDKEY_MAIN_IDX ++ ))
             local pname="${ZPLG_CUR_PLUGIN:-$ZPLG_DEBUG_PLUGIN}"
@@ -419,7 +419,7 @@ builtin setopt noaliases
 
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
         # bindkey -N newkeymap [other]
-        elif [[ "${#opts[@]}" -eq 1 && "${opts[(r)-N]}" = "-N" ]]; then
+        elif [[ "${#opts[@]}" -eq 1 && "${+opts[(r)-N]}" = "1" ]]; then
             local Nopt="-N"
             local Narg="${optsA[-N]}"
 
@@ -463,7 +463,7 @@ builtin setopt noaliases
     local -a opts
     zparseopts -a opts -D ${(s::):-eLdgabsTtm}
 
-    if [[ "${#opts[@]}" -eq 0 || ( "${#opts[@]}" -eq 1 && "${opts[(r)-e]}" = "-e" ) ]]; then
+    if [[ "${#opts[@]}" -eq 0 || ( "${#opts[@]}" -eq 1 && "${+opts[(r)-e]}" = "1" ) ]]; then
         # Have to quote $1, then $2, then concatenate them, then quote them again
         local pattern="${(q)1}" style="${(q)2}"
         local ps="$pattern $style"
@@ -474,8 +474,8 @@ builtin setopt noaliases
         # Remember for dtrace
         builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]+="$ps "
     else
-        if [[ ! "${#opts[@]}" = "1" && ( "${opts[(r)-s]}" = "-s" || "${opts[(r)-b]}" = "-b" || "${opts[(r)-a]}" = "-a" ||
-                                      "${opts[(r)-t]}" = "-t" || "${opts[(r)-T]}" = "-T" || "${opts[(r)-m]}" = "-m" ) ]]
+        if [[ ! "${#opts[@]}" = "1" && ( "${+opts[(r)-s]}" = "1" || "${+opts[(r)-b]}" = "1" || "${+opts[(r)-a]}" = "1" ||
+                                      "${+opts[(r)-t]}" = "1" || "${+opts[(r)-T]}" = "1" || "${+opts[(r)-m]}" = "1" ) ]]
         then
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: ${opts[*]}"
         fi
@@ -517,11 +517,11 @@ builtin setopt noaliases
         aname="${(q)aname}"
         local bname="${(q)avalue}"
 
-        if builtin [ "${opts[(r)-s]}" = "-s" ]; then
+        if (( ${+opts[(r)-s]} )); then
             tmp="-s"
             tmp="${(q)tmp}"
             quoted="$aname $bname $tmp"
-        elif builtin [ "${opts[(r)-g]}" = "-g" ]; then
+        elif (( ${+opts[(r)-g]} )); then
             tmp="-g"
             tmp="${(q)tmp}"
             quoted="$aname $bname $tmp"
@@ -1671,7 +1671,7 @@ builtin setopt noaliases
 -zplg-install-completions() {
     local reinstall="${3:-0}"
 
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob unset
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -1715,7 +1715,7 @@ builtin setopt noaliases
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 -zplg-uninstall-completions() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob unset
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
