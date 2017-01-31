@@ -315,8 +315,8 @@ You might want to supress completions provided by the git plugin by issuing `zpl
 ## Calling compinit
 
 Compinit should be called right after `source` of `Zplugin`. The reason is that `Zplugin`
-takes control over completions of its plugins, simlinks them to `~/.zplugin/completions` and
-adds this directory to `$FPATH` when sourced. You manage those simlinks via commands starting
+takes control over completions of its plugins, symlinks them to `~/.zplugin/completions` and
+adds this directory to `$FPATH` when sourced. You manage those symlinks via commands starting
 with `c`: `csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`. All this
 brings order to `$FPATH`, there is only one directory there. 
 Also, plugins aren't allowed to simply run `compdefs`. They will be
