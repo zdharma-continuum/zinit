@@ -59,8 +59,42 @@ loadautofn(Shfunc shf, int fksh, int autol, int current_fpath)
 	    (current_fpath || (shf->node.flags & PM_CUR_FPATH)))
 	    prog = getfpfunc(shf->node.nam, &ksh, &fdir, NULL, 0);
     }
-    else
-	prog = getfpfunc(shf->node.nam, &ksh, &fdir, NULL, 0);
+    else {
+        Shfunc shf2;
+        Funcstack fs;
+        const char *calling_f = NULL;
+        char *spec_path[2] = {NULL,NULL};
+
+        /* Find calling function */
+        for (fs = funcstack; fs; fs = fs->prev) {
+            if (fs->tp == FS_FUNC && 0 != strcmp(fs->name,shf->node.nam)) {
+                calling_f = fs->name;
+                break;
+            }
+        }
+
+        /* Get its Shfunc */
+        if (calling_f) {
+            if ((shf2 = (Shfunc) shfunctab->getnode2(shfunctab, calling_f))) {
+                if (shf2->node.flags & PM_LOADDIR) {
+                    spec_path[0] = dupstring(shf2->filename);
+                }
+            }
+        }
+
+        /* Load via associated directory */
+        if (spec_path[0]) {
+            prog = getfpfunc(shf->node.nam, &ksh, &fdir, spec_path, 0);
+            if (prog == &dummy_eprog) {
+                spec_path[0] = NULL;
+            }
+        }
+
+        /* Load via fpath */
+        if (!spec_path[0]) {
+            prog = getfpfunc(shf->node.nam, &ksh, &fdir, NULL, 0);
+        }
+    }
     noaliases = noalias;
 
     if (ksh == 1) {
