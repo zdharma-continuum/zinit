@@ -11,33 +11,8 @@
 #define PM_ABSPATH_USED       (1<<12) /* (function): loaded using absolute path (shared with PM_EXPORTED) */
 
 /*
- * Repeated, copied from exec.c, because it's static
+ * Some are repeated, copied from exec.c, because of static
  */
-
-/**/
-static void
-loadautofnsetfile(Shfunc shf, char *fdir)
-{
-    /*
-     * If shf->filename is already the load directory ---
-     * keep it as we can still use it to get the load file.
-     * This makes autoload with an absolute path particularly efficient.
-     */
-    if (!(shf->node.flags & PM_LOADDIR) ||
-	strcmp(shf->filename, fdir) != 0) {
-	/* Old directory name not useful... */
-	dircache_set(&shf->filename, NULL);
-	if (fdir) {
-	    /* ...can still cache directory */
-	    shf->node.flags |= PM_LOADDIR;
-	    dircache_set(&shf->filename, fdir);
-	} else {
-	    /* ...no separate directory part to cache, for some reason. */
-	    shf->node.flags &= ~PM_LOADDIR;
-	    shf->filename = ztrdup(shf->node.nam);
-	}
-    }
-}
 
 /* Helper for bin_functions() for -X and -r options */
 
