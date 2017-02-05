@@ -1552,7 +1552,7 @@ builtin setopt noaliases
     else
         reply=(
             $dname/*.plugin.zsh $dname/*.zsh $dname/*.sh
-            $dname/*.zsh-theme
+            $dname/*.zsh-theme $dname/.zshrc(N)
         )
     fi
 }
