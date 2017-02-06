@@ -6320,7 +6320,7 @@ if test "$ac_res" != no; then :
 fi
 
 else
-  termcap_curses_order="$ncursesw_test tinfo termcap $ncurses_test curses"
+  termcap_curses_order="$ncursesw_test $ncurses_test curses tinfo termcap"
 fi
 else
   case "$host_os" in
@@ -6330,7 +6330,7 @@ else
    DL_EXT="${DL_EXT=sl}"
    termcap_curses_order="Hcurses $ncursesw_test $ncurses_test curses termcap" ;;
   *)
-   termcap_curses_order="$ncursesw_test tinfo termcap $ncurses_test curses" ;;
+   termcap_curses_order="$ncursesw_test $ncurses_test curses tinfo termcap" ;;
 esac
 fi
 
