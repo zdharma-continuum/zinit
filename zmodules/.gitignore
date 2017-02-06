@@ -14,7 +14,6 @@ TAGS
 /META-FAQ
 /config.cache
 /config.h
-/config.h.in
 /config.log
 /config.modules
 /config.modules.sh
@@ -22,7 +21,6 @@ TAGS
 /config.status.lineno
 /cscope.out
 /stamp-h
-/stamp-h.in
 /autom4te.cache
 
 Config/defs.mk
