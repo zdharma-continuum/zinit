@@ -58,7 +58,9 @@ if builtin [ -z "$ZPLG_HOME" ]; then
 fi
 
 typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
-typeset -gH ZPLG_COMPLETIONS_DIR="$ZPLG_HOME/completions"
+# Can be customized, e.g. for multi-user environment
+typeset -gH ZPLG_COMPLETIONS_DIR
+: ${ZPLG_COMPLETIONS_DIR:=$ZPLG_HOME/completions}
 typeset -gH ZPLG_SNIPPETS_DIR="$ZPLG_HOME/snippets"
 typeset -gH ZPLG_HOME_READY
 typeset -gaHU ZPLG_ENTER_OPTIONS
