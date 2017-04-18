@@ -235,6 +235,7 @@ ZPLG_COL=(
     "p" "${fg_bold[blue]}"
     "bar" "${fg_bold[magenta]}"
     "info" "${fg_bold[green]}"
+    "info2" "${fg[green]}"
     "uninst" "${fg_bold[blue]}"
     "success" "${fg_bold[green]}"
     "failure" "${fg_bold[red]}"
@@ -2799,7 +2800,7 @@ builtin setopt noaliases
 -zplg-show-zstatus() {
     builtin setopt localoptions nullglob extendedglob
 
-    local infoc="${ZPLG_COL[info]}"
+    local infoc="${ZPLG_COL[info2]}"
 
     print "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
     print "Zplugin's binary directory: ${infoc}$ZPLG_DIR${reset_color}"
