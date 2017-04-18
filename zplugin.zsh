@@ -629,7 +629,6 @@ builtin setopt noaliases
 
 # Shadowing on completely for a given mode ("load", "light" or "compdef")
 -zplg-shadow-on() {
-    builtin setopt localoptions noaliases
     local mode="$1"
 
     # Enable shadowing only once
@@ -642,7 +641,7 @@ builtin setopt noaliases
     # It is always "dtrace" then "load" (i.e. dtrace then load)
     # "dtrace" then "light" (i.e. dtrace then light load)
     # "dtrace" then "compdef" (i.e. dtrace then snippet)
-    [[ "$ZPLG_SHADOWING_ACTIVE" != "inactive" ]] && return 0
+    [[ "$ZPLG_SHADOWING_ACTIVE" != "inactive" ]] && builtin return 0
 
     ZPLG_SHADOWING_ACTIVE="$mode"
 
@@ -650,45 +649,45 @@ builtin setopt noaliases
     # If it does exist, then it will also exist in ZPLG_BACKUP_FUNCTIONS
 
     # Defensive code, shouldn't be needed
-    unset "ZPLG_BACKUP_FUNCTIONS[autoload]" # 0.
-    unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[autoload]" # 0.
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
 
     if [[ "$mode" != "compdef" ]]; then
         # 0. Used, but not in temporary restoration, which doesn't happen for autoload
         (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
-        function autoload { --zplg-shadow-autoload "$@"; }
+        autoload() { --zplg-shadow-autoload "$@"; }
     fi
 
     # E. Always shadow compdef
     (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
-    function compdef { --zplg-shadow-compdef "$@"; }
+    compdef() { --zplg-shadow-compdef "$@"; }
 
     # Light and compdef shadowing stops here. Dtrace and load go on
     [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
 
     # Defensive code, shouldn't be needed
-    unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
-    unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"   # B.
-    unset "ZPLG_BACKUP_FUNCTIONS[alias]"    # C.
-    unset "ZPLG_BACKUP_FUNCTIONS[zle]"      # D.
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"   # B.
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[alias]"    # C.
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[zle]"      # D.
 
     # A.
     (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
-    function bindkey { --zplg-shadow-bindkey "$@"; }
+    bindkey() { --zplg-shadow-bindkey "$@"; }
 
     # B.
     (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
-    function zstyle { --zplg-shadow-zstyle "$@"; }
+    zstyle() { --zplg-shadow-zstyle "$@"; }
 
     # C.
     (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
-    function alias { --zplg-shadow-alias "$@"; }
+    alias() { --zplg-shadow-alias "$@"; }
 
     # D.
     (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
-    function zle { --zplg-shadow-zle "$@"; }
+    zle() { --zplg-shadow-zle "$@"; }
 
-    return 0
+    builtin return 0
 }
 
 # Shadowing off completely for a given mode "load", "light" or "compdef"
