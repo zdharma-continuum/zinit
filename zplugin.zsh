@@ -20,7 +20,7 @@ typeset -gAH ZPLG_REPORTS
 typeset -gH ZPLG_NAME
 
 # User can override ZPLG_DIR. Misleading? Reset
-if builtin [ ! -e "$ZPLG_DIR"/zplugin.zsh ]; then
+if [[ ! -e "$ZPLG_DIR"/zplugin.zsh ]]; then
     typeset -gH ZPLG_DIR=""
 fi
 
@@ -34,7 +34,7 @@ ZPLG_NAME="${${0:t}:r}"
 
 # Make ZPLG_DIR path absolute
 if [[ "$ZPLG_DIR" != /* ]]; then
-    if builtin [ "$ZPLG_DIR" = "." ]; then
+    if [[ "$ZPLG_DIR" = "." ]]; then
         ZPLG_DIR="$PWD"
     else
         ZPLG_DIR="$PWD/$ZPLG_DIR"
@@ -42,15 +42,15 @@ if [[ "$ZPLG_DIR" != /* ]]; then
 fi
 
 # Final test of ZPLG_DIR
-if builtin [ ! -e "$ZPLG_DIR"/zplugin.zsh ]; then
+if [[ ! -e "$ZPLG_DIR"/zplugin.zsh ]]; then
     print "Could not establish ZPLG_DIR variable. Set it to where Zplugin's git repository is."
     return 1
 fi
 
 # User can override ZPLG_HOME
-if builtin [ -z "$ZPLG_HOME" ]; then
+if [[ -z "$ZPLG_HOME" ]]; then
     # Ignore ZDOTDIR if user manually put Zplugin to $HOME
-    if builtin [ -d "$HOME/.$ZPLG_NAME" ]; then
+    if [[ -d "$HOME/.$ZPLG_NAME" ]]; then
         typeset -gH ZPLG_HOME="$HOME/.$ZPLG_NAME"
     else
         typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
@@ -308,7 +308,7 @@ builtin setopt noaliases
     local i
     for i in "$@"; do
         local msg="Autoload $i"
-        builtin [ -n "$opts" ] && msg+=" with options ${opts[@]}"
+        [[ -n "$opts" ]] && msg+=" with options ${opts[@]}"
         -zplg-add-report "$ZPLG_CUR_USPL2" "$msg"
     done
 
@@ -320,7 +320,7 @@ builtin setopt noaliases
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer
         if (( ${+functions[$func]} != 1 )); then
             builtin setopt noaliases
-            if builtin [ "$ZPLG_NEW_AUTOLOAD" = "1" ]; then
+            if [[ "$ZPLG_NEW_AUTOLOAD" = "1" ]]; then
                 eval "function ${(q)func} {
                     local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
                     builtin autoload -X ${(q-)opts[@]}
@@ -396,9 +396,9 @@ builtin setopt noaliases
         quoted="${(q)quoted}"
 
         # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-        builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
         # Remember for dtrace
-        builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
+        [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
     else
         # bindkey -A newkeymap main?
         # Negative indices for KSH_ARRAYS immunity
@@ -415,9 +415,9 @@ builtin setopt noaliases
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-            builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+            [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
             # Remember for dtrace
-            builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
+            [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
 
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
         # bindkey -N newkeymap [other]
@@ -430,9 +430,9 @@ builtin setopt noaliases
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-            builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+            [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
             # Remember for dtrace
-            builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
+            [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
         else
             -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
         fi
@@ -472,9 +472,9 @@ builtin setopt noaliases
         ps="${(q)ps}"
 
         # Remember the zstyle, only when load is in progress (it can be dstart that leads execution here)
-        builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
+        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
         # Remember for dtrace
-        builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]+="$ps "
+        [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]+="$ps "
     else
         if [[ ! "${#opts[@]}" = "1" && ( "${+opts[(r)-s]}" = "1" || "${+opts[(r)-b]}" = "1" || "${+opts[(r)-a]}" = "1" ||
                                       "${+opts[(r)-t]}" = "1" || "${+opts[(r)-T]}" = "1" || "${+opts[(r)-m]}" = "1" ) ]]
@@ -534,9 +534,9 @@ builtin setopt noaliases
         quoted="${(q)quoted}"
 
         # Remember the alias, only when load is in progress (it can be dstart that leads execution here)
-        builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_ALIASES[$ZPLG_CUR_USPL2]+="$quoted "
+        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_ALIASES[$ZPLG_CUR_USPL2]+="$quoted "
         # Remember for dtrace
-        builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]+="$quoted "
+        [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]+="$quoted "
     done
 
     # C. Shadow off. Unfunction alias
@@ -564,11 +564,11 @@ builtin setopt noaliases
     # Try to catch game-changing "-N"
     if [[ "$1" = "-N" && "$#" = "3" ]]; then
             # Hooks
-            if builtin [ "${ZPLG_ZLE_HOOKS_LIST[$2]}" = "1" ]; then
+            if [[ "${ZPLG_ZLE_HOOKS_LIST[$2]}" = "1" ]]; then
                 local quoted="$2"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
-                builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
             # These will be saved and restored
             elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
@@ -581,27 +581,27 @@ builtin setopt noaliases
                 local quoted="$widname $saved_widname"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
-                builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
+                [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
                 # Remember for dtrace
-                builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_WIDGETS_SAVED[$ZPLG_DEBUG_USPL2]+="$quoted "
+                [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_WIDGETS_SAVED[$ZPLG_DEBUG_USPL2]+="$quoted "
              # These will be deleted
              else
                  -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
                  local quoted="$2"
                  quoted="${(q)quoted}"
                  # Remember only when load is in progress (it can be dstart that leads execution here)
-                 builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                 [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
                  # Remember for dtrace
-                 builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
+                 [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
              fi
     # Creation of new widgets. They will be removed on unload
     elif [[ "$1" = "-N" && "$#" = "2" ]]; then
         local quoted="$2"
         quoted="${(q)quoted}"
         # Remember only when load is in progress (it can be dstart that leads execution here)
-        builtin [ -n "$ZPLG_CUR_USPL2" ] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
         # Remember for dtrace
-        builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
+        [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
     fi
 
     # D. Shadow off. Unfunction zle
@@ -641,7 +641,7 @@ builtin setopt noaliases
     # It is always "dtrace" then "load" (i.e. dtrace then load)
     # "dtrace" then "light" (i.e. dtrace then light load)
     # "dtrace" then "compdef" (i.e. dtrace then snippet)
-    builtin [ "$ZPLG_SHADOWING_ACTIVE" != "inactive" ] && return 0
+    [[ "$ZPLG_SHADOWING_ACTIVE" != "inactive" ]] && return 0
 
     ZPLG_SHADOWING_ACTIVE="$mode"
 
@@ -652,7 +652,7 @@ builtin setopt noaliases
     unset "ZPLG_BACKUP_FUNCTIONS[autoload]" # 0.
     unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
 
-    if builtin [ "$mode" != "compdef" ]; then
+    if [[ "$mode" != "compdef" ]]; then
         # 0. Used, but not in temporary restoration, which doesn't happen for autoload
         (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
         function autoload { --zplg-shadow-autoload "$@"; }
@@ -696,14 +696,14 @@ builtin setopt noaliases
     local mode="$1"
 
     # Disable shadowing only once
-    builtin [ "$ZPLG_SHADOWING_ACTIVE" = "inactive" ] && return 0
+    [[ "$ZPLG_SHADOWING_ACTIVE" = "inactive" ]] && return 0
 
     # Disable shadowing only the way it was enabled first
-    builtin [ "$ZPLG_SHADOWING_ACTIVE" != "$mode" ] && return 0
+    [[ "$ZPLG_SHADOWING_ACTIVE" != "$mode" ]] && return 0
 
     ZPLG_SHADOWING_ACTIVE="inactive"
 
-    if builtin [ "$mode" != "compdef" ]; then
+    if [[ "$mode" != "compdef" ]]; then
     # 0. Unfunction "autoload"
     (( ${+ZPLG_BACKUP_FUNCTIONS[autoload]} )) && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
     fi
@@ -754,7 +754,7 @@ builtin setopt noaliases
             ;;
         diff)
             # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            builtin [ "${ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]}" = "1" ] && return 0
+            [[ "${ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
             ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="1"
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
@@ -779,7 +779,7 @@ builtin setopt noaliases
 
             # Store the functions, associating them with plugin ($uspl2)
             for i in "${(onk)func[@]}"; do
-                builtin [ "${func[$i]}" = "1" ] && ZPLG_FUNCTIONS[$uspl2]+="$i "
+                [[ "${func[$i]}" = "1" ]] && ZPLG_FUNCTIONS[$uspl2]+="$i "
             done
             ;;
         *)
@@ -802,18 +802,18 @@ builtin setopt noaliases
     integer longest=0 longest_left=0 cur_left_len=0 count=1
     local f
     for f in "${(on)func[@]}"; do
-        builtin [ -z "${#f}" ] && continue
+        [[ -z "${#f}" ]] && continue
         f="${(Q)f}"
 
         # Compute for elements in left column,
         # ones that will be paded with spaces 
         if (( count ++ % 2 != 0 )); then
-            builtin [ "${#f}" -gt "$longest_left" ] && longest_left="${#f}"
+            [[ "${#f}" -gt "$longest_left" ]] && longest_left="${#f}"
             cur_left_len="${#f}"
         else
             cur_left_len+="${#f}"
             cur_left_len+=1 # For separating space
-            builtin [ "$cur_left_len" -gt "$longest" ] && longest="$cur_left_len"
+            [[ "$cur_left_len" -gt "$longest" ]] && longest="$cur_left_len"
         fi
     done
 
@@ -821,7 +821,7 @@ builtin setopt noaliases
     local answer=""
     count=1
     for f in "${(on)func[@]}"; do
-        builtin [ -z "$f" ] && continue
+        [[ -z "$f" ]] && continue
         f="${(Q)f}"
 
         if (( COLUMNS >= longest )); then
@@ -870,7 +870,7 @@ builtin setopt noaliases
             ;;
         diff)
             # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            builtin [ "${ZPLG_OPTIONS_DIFF_RAN[$uspl2]}" = "1" ] && return 0
+            [[ "${ZPLG_OPTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
             ZPLG_OPTIONS_DIFF_RAN[$uspl2]="1"
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
@@ -887,7 +887,7 @@ builtin setopt noaliases
             # on both of them though) and test for a change
             local key
             for key in "${(k)opts_before[@]}"; do
-                if builtin [ "${opts_before[$key]}" != "${opts_after[$key]}" ]; then
+                if [[ "${opts_before[$key]}" != "${opts_after[$key]}" ]]; then
                     opts[$key]="${opts_before[$key]}"
                 fi
             done
@@ -924,13 +924,13 @@ builtin setopt noaliases
     integer longest=0
     local k
     for k in "${(kon)opts[@]}"; do
-        builtin [ "${#k}" -gt "$longest" ] && longest="${#k}"
+        [[ "${#k}" -gt "$longest" ]] && longest="${#k}"
     done
 
     # Output in one column
     local txt
     for k in "${(kon)opts[@]}"; do
-        builtin [ "${opts[$k]}" = "on" ] && txt="was unset" || txt="was set"
+        [[ "${opts[$k]}" = "on" ]] && txt="was unset" || txt="was set"
         REPLY+="${(r:longest+1:: :)k}$txt"$'\n'
     done
 }
@@ -974,7 +974,7 @@ builtin setopt noaliases
             ;;
         diff)
             # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            builtin [ "${ZPLG_ENV_DIFF_RAN[$uspl2]}" = "1" ] && return 0
+            [[ "${ZPLG_ENV_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
             ZPLG_ENV_DIFF_RAN[$uspl2]="1"
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
@@ -1035,10 +1035,10 @@ builtin setopt noaliases
     local uspl2="$1" which="$2"
 
     # Format PATH?
-    if builtin [ "$which" = "1" ]; then
+    if [[ "$which" = "1" ]]; then
         typeset -a elem
         elem=( "${(z)ZPLG_PATH[$uspl2]}" )
-    elif builtin [ "$which" = "2" ]; then
+    elif [[ "$which" = "2" ]]; then
         typeset -a elem
         elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
     fi
@@ -1046,12 +1046,12 @@ builtin setopt noaliases
     # Enumerate elements added
     local answer="" e
     for e in "${elem[@]}"; do
-        builtin [ -z "$e" ] && continue
+        [[ -z "$e" ]] && continue
         e="${(Q)e}"
         answer+="$e"$'\n'
     done
 
-    builtin [ -n "$answer" ] && REPLY="$answer"
+    [[ -n "$answer" ]] && REPLY="$answer"
 }
 
 # }}}
@@ -1084,7 +1084,7 @@ builtin setopt noaliases
             ;;
         diff)
             # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            builtin [ "${ZPLG_PARAMETERS_DIFF_RAN[$uspl2]}" = "1" ] && return 0
+            [[ "${ZPLG_PARAMETERS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
             ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="1"
 
             # Cannot run diff if *_BEFORE or *_AFTER variable is not set
@@ -1112,14 +1112,14 @@ builtin setopt noaliases
             keys=( "${keys[@]}" "${(k)params_before[@]}" );
             for key in "${keys[@]}"; do
                 key="${(Q)key}"
-                if builtin [ "${params_after[$key]}" != "${params_before[$key]}" ]; then
+                if [[ "${params_after[$key]}" != "${params_before[$key]}" ]]; then
                     # Empty for a new param, a type otherwise
-                    builtin [ -z "${params_before[$key]}" ] && params_before[$key]="\"\""
+                    [[ -z "${params_before[$key]}" ]] && params_before[$key]="\"\""
                     params_pre[$key]="${params_before[$key]}"
 
                     # Current type, can also be empty, when plugin
                     # unsets a parameter
-                    builtin [ -z "${params_after[$key]}" ] && params_after[$key]="\"\""
+                    [[ -z "${params_after[$key]}" ]] && params_after[$key]="\"\""
                     params_post[$key]="${params_after[$key]}"
                 fi
             done
@@ -1152,12 +1152,12 @@ builtin setopt noaliases
     integer longest=0 vlongest1=0 vlongest2=0
     for k in "${(k)elem_post[@]}"; do
         k="${(Q)k}"
-        builtin [ "${#k}" -gt "$longest" ] && longest="${#k}"
+        [[ "${#k}" -gt "$longest" ]] && longest="${#k}"
 
         v1="${(Q)elem_pre[$k]}"
         v2="${(Q)elem_post[$k]}"
-        builtin [ "${#v1}" -gt "$vlongest1" ] && vlongest1="${#v1}"
-        builtin [ "${#v2}" -gt "$vlongest2" ] && vlongest2="${#v2}"
+        [[ "${#v1}" -gt "$vlongest1" ]] && vlongest1="${#v1}"
+        [[ "${#v2}" -gt "$vlongest2" ]] && vlongest2="${#v2}"
     done
 
     # Enumerate parameters that changed. A key
@@ -1174,7 +1174,7 @@ builtin setopt noaliases
         answer+="$k ${infoc}[$v1 -> $v2]${ZPLG_COL[rst]}"$'\n'
     done
 
-    builtin [ -n "$answer" ] && REPLY="$answer"
+    [[ -n "$answer" ]] && REPLY="$answer"
 
     return 0
 }
@@ -1198,13 +1198,13 @@ builtin setopt noaliases
     fi
 
     # Don't report to any user/plugin if there is no plugin load in progress
-    if builtin [ -n "$uspl2" ]; then
+    if [[ -n "$uspl2" ]]; then
         ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
     fi
 
     # This is nasty, if debug is on, report everything
     # to special debug user
-    builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ] && ZPLG_REPORTS[$ZPLG_DEBUG_USPL2]+="$keyword ${txt#* }"$'\n'
+    [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_REPORTS[$ZPLG_DEBUG_USPL2]+="$keyword ${txt#* }"$'\n'
 }
 
 # }}}
@@ -1224,9 +1224,9 @@ builtin setopt noaliases
 -zplg-any-to-user-plugin() {
     # Two components given?
     # That's a pretty fast track to call this function this way
-    if builtin [ -n "$2" ];then
+    if [[ -n "$2" ]];then
         # But user name is empty?
-        builtin [ -z "$1" ] && 1="_local"
+        [[ -z "$1" ]] && 1="_local"
 
         reply=( "$1" "$2" )
         return 0
@@ -1236,9 +1236,9 @@ builtin setopt noaliases
     # It doesn't touch $2
 
     local user="${1%%/*}" plugin="${1#*/}"
-    if builtin [ "$user" = "$plugin" ]; then
+    if [[ "$user" = "$plugin" ]]; then
         # Is it really the same plugin and user name?
-        if builtin [ "$user/$plugin" = "$1" ]; then
+        if [[ "$user/$plugin" = "$1" ]]; then
             reply=( "$user" "$plugin" )
             return 0
         fi
@@ -1247,20 +1247,20 @@ builtin setopt noaliases
         plugin="${1#*---}"
     fi
 
-    if builtin [ "$user" = "$plugin" ]; then
+    if [[ "$user" = "$plugin" ]]; then
         # Is it really the same plugin and user name?
-        if builtin [ "${user}---${plugin}" = "$1" ]; then
+        if [[ "${user}---${plugin}" = "$1" ]]; then
             reply=( "$user" "$plugin" )
             return 0
         fi
         user="_local"
     fi
     
-    if builtin [ -z "$user" ]; then
+    if [[ -z "$user" ]]; then
         user="_local"
     fi
 
-    if builtin [ -z "$plugin" ]; then
+    if [[ -z "$plugin" ]]; then
         plugin="_unknown"
     fi
 
@@ -1281,7 +1281,7 @@ builtin setopt noaliases
 # of the plugin specification supported
 -zplg-exists() {
     -zplg-any-to-uspl2 "$1" "$2"
-    if builtin [ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]; then
+    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
         return 1
     fi
     return 0
@@ -1301,7 +1301,7 @@ builtin setopt noaliases
 # of the plugin specification supported
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
-    builtin [ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ] && return 0 || return 1
+    [[ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
 }
 
 # Checks for a plugin existence and outputs a message
@@ -1350,9 +1350,9 @@ builtin setopt noaliases
     in_plugin_path="${cpath:A}"
     tmp=$( "$readlink_cmd" "$cpath" )
     # This in effect works as: "if different, then readlink"
-    builtin [ -n "$tmp" ] && in_plugin_path="$tmp"
+    [[ -n "$tmp" ]] && in_plugin_path="$tmp"
 
-    if builtin [ "$in_plugin_path" != "$cpath" ]; then
+    if [[ "$in_plugin_path" != "$cpath" ]]; then
         # Get the user---plugin part of path -
         # it's right before completion file name
         in_plugin_path="${in_plugin_path:h}"
@@ -1382,11 +1382,11 @@ builtin setopt noaliases
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" )
 
-    builtin [ "${#commands[@]}" -gt 0 ] && print "Forgetting commands completed by \`$f':"
+    [[ "${#commands[@]}" -gt 0 ]] && print "Forgetting commands completed by \`$f':"
 
     local k
     for k in "${commands[@]}"; do
-        builtin [ -n "$k" ] || continue
+        [[ -n "$k" ]] || continue
         unset "_comps[$k]"
         print "Unsetting $k"
     done
@@ -1474,7 +1474,7 @@ builtin setopt noaliases
     local url="$1"
     local restart="$2"
 
-    if builtin [ "$restart" = "1" ]; then
+    if [[ "$restart" = "1" ]]; then
         if (( ${+commands[curl]} )) then
             curl -fsSL "$url"
         elif (( ${+commands[wget]} )); then
@@ -1541,15 +1541,15 @@ builtin setopt noaliases
 
     builtin setopt localoptions nullglob
 
-    if builtin [ -e "$dname/$pdir/init.zsh" ]; then
+    if [[ -e "$dname/$pdir/init.zsh" ]]; then
         reply=( "$dname/$pdir/init.zsh" )
-    elif builtin [ -e "$dname/${pdir}.zsh-theme" ]; then
+    elif [[ -e "$dname/${pdir}.zsh-theme" ]]; then
         reply=( "$dname/${pdir}.zsh-theme" )
-    elif builtin [ -e "$dname/${pdir}.theme.zsh" ]; then
+    elif [[ -e "$dname/${pdir}.theme.zsh" ]]; then
         reply=( "$dname/${pdir}.theme.zsh" )
-    elif builtin [ -e "$dname/${pdir}.zshplugin" ]; then
+    elif [[ -e "$dname/${pdir}.zshplugin" ]]; then
         reply=( "$dname/${pdir}.zshplugin" )
-    elif builtin [ -e "$dname/${pdir}.zsh.plugin" ]; then
+    elif [[ -e "$dname/${pdir}.zsh.plugin" ]]; then
         reply=( "$dname/${pdir}.zsh.plugin" )
     else
         reply=(
@@ -1572,13 +1572,13 @@ builtin setopt noaliases
 
     # Look for file to compile. First look for the most common one
     # (optimization) then for other possibilities
-    if builtin [ ! -e "$dname/${pdir}.plugin.zsh" ]; then
+    if [[ ! -e "$dname/${pdir}.plugin.zsh" ]]; then
         -zplg-find-other-matches "$dname" "$pdir"
     else
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
 
-    if builtin [ "${#reply[@]}" -eq "0" ]; then
+    if [[ "${#reply[@]}" -eq "0" ]]; then
         reply=( "$dname" "" )
         return 1
     fi
@@ -1626,8 +1626,8 @@ builtin setopt noaliases
 }
 
 -zplg-restore-extendedglob() {
-    builtin [ "$ZPLG_EXTENDED_GLOB" = "1" ] && builtin setopt extendedglob
-    builtin [ "$ZPLG_EXTENDED_GLOB" = "0" ] && builtin unsetopt extendedglob
+    [[ "$ZPLG_EXTENDED_GLOB" = "1" ]] && builtin setopt extendedglob
+    [[ "$ZPLG_EXTENDED_GLOB" = "0" ]] && builtin unsetopt extendedglob
 }
 # }}}
 
@@ -1636,15 +1636,15 @@ builtin setopt noaliases
 #
 
 -zplg-prepare-home() {
-    builtin [ -n "$ZPLG_HOME_READY" ] && return
+    [[ -n "$ZPLG_HOME_READY" ]] && return
     ZPLG_HOME_READY="1"
 
-    builtin [ ! -d "$ZPLG_HOME" ] && {
+    [[ ! -d "$ZPLG_HOME" ]] && {
         command mkdir 2>/dev/null "$ZPLG_HOME"
         # For compaudit
         command chmod go-w "$ZPLG_HOME"
     }
-    builtin [ ! -d "$ZPLG_PLUGINS_DIR" ] && {
+    [[ ! -d "$ZPLG_PLUGINS_DIR" ]] && {
         command mkdir "$ZPLG_PLUGINS_DIR"
         # For compaudit
         command chmod go-w "$ZPLG_PLUGINS_DIR"
@@ -1653,7 +1653,7 @@ builtin setopt noaliases
         command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
         command ln -s "$ZPLG_DIR/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
     }
-    builtin [ ! -d "$ZPLG_COMPLETIONS_DIR" ] && {
+    [[ ! -d "$ZPLG_COMPLETIONS_DIR" ]] && {
         command mkdir "$ZPLG_COMPLETIONS_DIR"
         # For compaudit
         command chmod go-w "$ZPLG_COMPLETIONS_DIR"
@@ -1661,7 +1661,7 @@ builtin setopt noaliases
         # Symlink _zplugin completion into _local---zplugin directory
         command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
     }
-    builtin [ ! -d "$ZPLG_SNIPPETS_DIR" ] && {
+    [[ ! -d "$ZPLG_SNIPPETS_DIR" ]] && {
         command mkdir "$ZPLG_SNIPPETS_DIR"
         command chmod go-w "$ZPLG_SNIPPETS_DIR"
     }
@@ -1698,7 +1698,7 @@ builtin setopt noaliases
               -z "${backup_comps[(r)*/$bkpfile]}" ||
               "$reinstall" = "1"
         ]]; then
-            if builtin [ "$reinstall" = "1" ]; then
+            if [[ "$reinstall" = "1" ]]; then
                 # Remove old files
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
@@ -1800,7 +1800,7 @@ builtin setopt noaliases
 
 -zplg-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
-    if builtin [ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]; then
+    if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
         print "Downloading $REPLY..."
 
@@ -1833,7 +1833,7 @@ builtin setopt noaliases
     fi
 
     # Full or light load?
-    builtin [ "$mode" = "light" ] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
+    [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
 
     ZPLG_REPORTS[$uspl2]=""
     ZPLG_FUNCTIONS_BEFORE[$uspl2]=""
@@ -1876,12 +1876,12 @@ builtin setopt noaliases
 
     # Look for a file to source. First look for the most
     # common one (optimization) then for other possibilities
-    if builtin [ ! -e "$dname/${pdir}.plugin.zsh" ]; then
+    if [[ ! -e "$dname/${pdir}.plugin.zsh" ]]; then
         -zplg-find-other-matches "$dname" "$pdir"
     else
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
-    builtin [ "${#reply[@]}" -eq "0" ] && return 1
+    [[ "${#reply[@]}" -eq "0" ]] && return 1
 
     # Get first one
     integer correct=0
@@ -1889,10 +1889,10 @@ builtin setopt noaliases
     local fname="${reply[1-correct]#$dname/}"
 
     -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
-    builtin [ "$mode" = "light" ] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
+    [[ "$mode" = "light" ]] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
 
     # Light and compdef mode doesn't do diffs and shadowing
-    if builtin [ "$mode" = "load" ]; then
+    if [[ "$mode" = "load" ]]; then
         -zplg-diff-functions "$ZPLG_CUR_USPL2" begin
         -zplg-diff-options "$ZPLG_CUR_USPL2" begin
         -zplg-diff-env "$ZPLG_CUR_USPL2" begin
@@ -1918,7 +1918,7 @@ builtin setopt noaliases
     -zplg-set-desired-shell-state
 
     -zplg-shadow-off "$mode"
-    if builtin [ "$mode" = "load" ]; then
+    if [[ "$mode" = "load" ]]; then
         -zplg-diff-parameter "$ZPLG_CUR_USPL2" end
         -zplg-diff-env "$ZPLG_CUR_USPL2" end
         -zplg-diff-options "$ZPLG_CUR_USPL2" end
@@ -1963,8 +1963,8 @@ builtin setopt noaliases
     typeset -a matches m
     matches=( $dname/*.zwc )
 
-    if builtin [ "${#matches[@]}" -eq "0" ]; then
-        if builtin [ "$silent" = "1" ]; then
+    if [[ "${#matches[@]}" -eq "0" ]]; then
+        if [[ "$silent" = "1" ]]; then
             print "not compiled"
         else
             -zplg-any-colorify-as-uspl2 "$user" "$plugin"
@@ -1996,7 +1996,7 @@ builtin setopt noaliases
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
         c="${c#_}"
-        builtin [ "${#c}" -gt "$longest" ] && longest="${#c}"
+        [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
     done
 
     #
@@ -2007,7 +2007,7 @@ builtin setopt noaliases
     integer disabled unknown stray
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
-        builtin [ "${c#_}" = "${c}" ] && disabled=1 || disabled=0
+        [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
         c="${c#_}"
 
         # Prepare readlink command for establishing
@@ -2018,7 +2018,7 @@ builtin setopt noaliases
         # information about the repository it comes from, i.e.
         # about user and plugin, taken from directory name
         -zplg-get-completion-owner "$cpath" "$REPLY"
-        builtin [ "$REPLY" = "[unknown]" ] && unknown=1 || unknown=0
+        [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
         -zplg-any-colorify-as-uspl2 "$REPLY"
 
         # If we succesfully read a symlink (unknown == 0), test if it isn't broken
@@ -2048,13 +2048,13 @@ builtin setopt noaliases
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
         c="${c#_}"
-        builtin [ "${#c}" -gt "$longest" ] && longest="${#c}"
+        [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
     done
 
     integer disabled unknown stray
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
-        builtin [ "${c#_}" = "${c}" ] && disabled=1 || disabled=0
+        [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
         c="${c#_}"
 
         -zplg-prepare-readlink
@@ -2063,7 +2063,7 @@ builtin setopt noaliases
         # information about the repository it comes from, i.e.
         # about user and plugin, taken from directory name
         -zplg-get-completion-owner "$cpath" "$REPLY"
-        builtin [ "$REPLY" = "[unknown]" ] && unknown=1 || unknown=0
+        [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
         -zplg-any-colorify-as-uspl2 "$REPLY"
 
         # If we succesfully read a symlink (unknown == 0), test if it isn't broken
@@ -2098,9 +2098,9 @@ builtin setopt noaliases
     local pp
     for pp in "${plugin_paths[@]}"; do
         completions=( "$pp"/_[^_]* )
-        if builtin [ "${#completions[@]}" -gt 0 ]; then
+        if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
-            builtin [ "${#pd}" -gt "$longest" ] && longest="${#pd}"
+            [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
         fi
     done
 
@@ -2110,7 +2110,7 @@ builtin setopt noaliases
     for pp in "${plugin_paths[@]}"; do
         completions=( "$pp"/_[^_]* )
 
-        if builtin [ "${#completions[@]}" -gt 0 ]; then
+        if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
             completions=( "${completions[@]:t}" )
 
@@ -2122,9 +2122,9 @@ builtin setopt noaliases
                 fi
             done
 
-            if builtin [ "$all_installed" -eq "${#completions[@]}" ]; then
+            if [[ "$all_installed" -eq "${#completions[@]}" ]]; then
                 print -n "${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} "
-            elif builtin [ "$all_installed" -eq "0" ]; then
+            elif [[ "$all_installed" -eq "0" ]]; then
                 print -n "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} "
             else
                 print -n "${ZPLG_COL[error]}[+-]${ZPLG_COL[rst]} "
@@ -2148,7 +2148,7 @@ builtin setopt noaliases
     local plugin="${reply[-1]}"
 
     # Allow debug report
-    if builtin [ "$user/$plugin" != "$ZPLG_DEBUG_USPL2" ]; then
+    if [[ "$user/$plugin" != "$ZPLG_DEBUG_USPL2" ]]; then
         -zplg-exists-message "$user" "$plugin" || return 1
     fi
 
@@ -2168,35 +2168,35 @@ builtin setopt noaliases
     REPLY=""
     -zplg-diff-functions "$user/$plugin" diff
     -zplg-format-functions "$user/$plugin"
-    builtin [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Functions created:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Functions created:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
     -zplg-diff-options "$user/$plugin" diff
     -zplg-format-options "$user/$plugin"
-    builtin [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Options changed:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Options changed:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print report gathered via environment diffing
     REPLY=""
     -zplg-diff-env "$user/$plugin" diff
     -zplg-format-env "$user/$plugin" "1"
-    builtin [ -n "$REPLY" ] && print "${ZPLG_COL[p]}PATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}PATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     REPLY=""
     -zplg-format-env "$user/$plugin" "2"
-    builtin [ -n "$REPLY" ] && print "${ZPLG_COL[p]}FPATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}FPATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print report gathered via parameter diffing
     -zplg-diff-parameter "$user/$plugin" diff
     -zplg-format-parameter "$user/$plugin"
-    builtin [ -n "$REPLY" ] && print "${ZPLG_COL[p]}Variables added or redefined:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Variables added or redefined:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print what completions plugin has
     -zplg-find-completions-of-plugin "$user" "$plugin"
     typeset -a completions
     completions=( "${reply[@]}" )
 
-    if builtin [ "${#completions[@]}" -ge "1" ]; then
+    if [[ "${#completions[@]}" -ge "1" ]]; then
         print "${ZPLG_COL[p]}Completions:${ZPLG_COL[rst]}"
         -zplg-check-which-completions-are-installed "${completions[@]}"
         typeset -a installed
@@ -2209,10 +2209,10 @@ builtin setopt noaliases
         integer count="${#completions[@]}" idx
         for (( idx=1; idx <= count; idx ++ )); do
             print -n "${completions[idx]:t}"
-            if builtin [ "${installed[idx]}" != "1" ]; then
+            if [[ "${installed[idx]}" != "1" ]]; then
                 print -n " ${ZPLG_COL[uninst]}[not installed]${ZPLG_COL[rst]}"
             else
-                if builtin [ "${enabled[idx]}" = "1" ]; then
+                if [[ "${enabled[idx]}" = "1" ]]; then
                     print -n " ${ZPLG_COL[info]}[enabled]${ZPLG_COL[rst]}"
                 else
                     print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
@@ -2227,7 +2227,7 @@ builtin setopt noaliases
 -zplg-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        builtin [ "$i" = "_local/$ZPLG_NAME" ] && continue
+        [[ "$i" = "_local/$ZPLG_NAME" ]] && continue
         -zplg-show-report "$i"
     done
 }
@@ -2239,7 +2239,7 @@ builtin setopt noaliases
     -zplg-save-set-extendedglob
     keyword="${keyword## ##}"
     keyword="${keyword%% ##}"
-    if builtin [ -n "$keyword" ]; then
+    if [[ -n "$keyword" ]]; then
         print "Installed plugins matching ${ZPLG_COL[info]}$keyword${ZPLG_COL[rst]}:"
         filtered=( "${(M)ZPLG_REGISTERED_PLUGINS[@]:#*$keyword*}" )
     else
@@ -2250,10 +2250,10 @@ builtin setopt noaliases
     local i
     for i in "${filtered[@]}"; do
         # Skip _local/psprint
-        builtin [ "$i" = "_local/zplugin" ] && continue
+        [[ "$i" = "_local/zplugin" ]] && continue
         -zplg-any-colorify-as-uspl2 "$i"
         # Mark light loads
-        builtin [ "${ZPLG_REGISTERED_STATES[$i]}" = "1" ] && REPLY="$REPLY ${ZPLG_COL[info]}*${ZPLG_COL[rst]}"
+        [[ "${ZPLG_REGISTERED_STATES[$i]}" = "1" ]] && REPLY="$REPLY ${ZPLG_COL[info]}*${ZPLG_COL[rst]}"
         print "$REPLY"
     done
 }
@@ -2272,7 +2272,7 @@ builtin setopt noaliases
 
     # Check if there is no backup file
     # This is treated as if the completion is already enabled
-    if builtin [ ! -e "$bkpfile" ]; then
+    if [[ ! -e "$bkpfile" ]]; then
         print "Completion ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} already enabled"
 
         -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
@@ -2280,7 +2280,7 @@ builtin setopt noaliases
     fi
 
     # Disabled, but completion file already exists?
-    if builtin [ -e "$cfile" ]; then
+    if [[ -e "$cfile" ]]; then
         print "${ZPLG_COL[error]}Warning: completion's file \`${cfile:t}' exists, will overwrite${ZPLG_COL[rst]}"
         print "${ZPLG_COL[error]}Completion is actually enabled and will re-enable it again${ZPLG_COL[rst]}"
         -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
@@ -2324,7 +2324,7 @@ builtin setopt noaliases
     fi
 
     # No disable, but bkpfile exists?
-    if builtin [ -e "$bkpfile" ]; then
+    if [[ -e "$bkpfile" ]]; then
         print "${ZPLG_COL[error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite${ZPLG_COL[rst]}"
         -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$bkpfile"
@@ -2380,7 +2380,7 @@ builtin setopt noaliases
     [[ -o "KSH_ARRAYS" ]] && correct=1
 
     # Allow unload for debug user
-    if builtin [ "$uspl2" != "$ZPLG_DEBUG_USPL2" ]; then
+    if [[ "$uspl2" != "$ZPLG_DEBUG_USPL2" ]]; then
         -zplg-exists-message "$1" "$2" || return 1
     fi
 
@@ -2399,7 +2399,7 @@ builtin setopt noaliases
     func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
     local f
     for f in "${(on)func[@]}"; do
-        builtin [ -z "$f" ] && continue
+        [[ -z "$f" ]] && continue
         f="${(Q)f}"
         print "Deleting function $f"
         unfunction -- "$f"
@@ -2413,7 +2413,7 @@ builtin setopt noaliases
     string_widget=( "${(z)ZPLG_BINDKEYS[$uspl2]}" )
     local sw
     for sw in "${(Oa)string_widget[@]}"; do
-        builtin [ -z "$sw" ] && continue
+        [[ -z "$sw" ]] && continue
         # Remove one level of quoting to split using (z)
         sw="${(Q)sw}"
         typeset -a sw_arr
@@ -2455,7 +2455,7 @@ builtin setopt noaliases
     pattern_style=( "${(z)ZPLG_ZSTYLES[$uspl2]}" )
     local ps
     for ps in "${(Oa)pattern_style[@]}"; do
-        builtin [ -z "$ps" ] && continue
+        [[ -z "$ps" ]] && continue
         # Remove one level of quoting to split using (z)
         ps="${(Q)ps}"
         typeset -a ps_arr
@@ -2487,9 +2487,9 @@ builtin setopt noaliases
         local k
         for k in "${(kon)opts[@]}"; do
             # Internal options
-            builtin [ "$k" = "physical" ] && continue
+            [[ "$k" = "physical" ]] && continue
 
-            if builtin [ "${opts[$k]}" = "on" ]; then
+            if [[ "${opts[$k]}" = "on" ]]; then
                 print "Setting option $k"
                 builtin setopt "$k"
             else
@@ -2507,7 +2507,7 @@ builtin setopt noaliases
     aname_avalue=( "${(z)ZPLG_ALIASES[$uspl2]}" )
     local nv
     for nv in "${(Oa)aname_avalue[@]}"; do
-        builtin [ -z "$nv" ] && continue
+        [[ -z "$nv" ]] && continue
         # Remove one level of quoting to split using (z)
         nv="${(Q)nv}"
         typeset -a nv_arr
@@ -2518,10 +2518,10 @@ builtin setopt noaliases
         local nv_arr2="${(Q)nv_arr[2-correct]}"
         local nv_arr3="${(Q)nv_arr[3-correct]}"
 
-        if builtin [ "$nv_arr3" = "-s" ]; then
+        if [[ "$nv_arr3" = "-s" ]]; then
             print "Removing ${ZPLG_COL[info]}suffix${ZPLG_COL[rst]} alias ${nv_arr1}=${nv_arr2}"
             unalias -s -- "$nv_arr1"
-        elif builtin [ "$nv_arr3" = "-g" ]; then
+        elif [[ "$nv_arr3" = "-g" ]]; then
             print "Removing ${ZPLG_COL[info]}global${ZPLG_COL[rst]} alias ${nv_arr1}=${nv_arr2}"
             unalias -- "${(q)nv_arr1}"
         else
@@ -2538,9 +2538,9 @@ builtin setopt noaliases
     delete_widgets=( "${(z)ZPLG_WIDGETS_DELETE[$uspl2]}" )
     local wid
     for wid in "${(Oa)delete_widgets[@]}"; do
-        builtin [ -z "$wid" ] && continue
+        [[ -z "$wid" ]] && continue
         wid="${(Q)wid}"
-        if builtin [ "${ZPLG_ZLE_HOOKS_LIST[$wid]}" = "1" ]; then
+        if [[ "${ZPLG_ZLE_HOOKS_LIST[$wid]}" = "1" ]]; then
             print "Removing Zle hook \`$wid'"
         else
             print "Removing Zle widget \`$wid'"
@@ -2551,7 +2551,7 @@ builtin setopt noaliases
     typeset -a restore_widgets
     restore_widgets=( "${(z)ZPLG_WIDGETS_SAVED[$uspl2]}" )
     for wid in "${(Oa)restore_widgets[@]}"; do
-        builtin [ -z "$wid" ] && continue
+        [[ -z "$wid" ]] && continue
         wid="${(Q)wid}"
         typeset -a orig_saved
         orig_saved=( "${(z)wid}" )
@@ -2575,9 +2575,9 @@ builtin setopt noaliases
     typeset -a new elem p
     elem=( "${(z)ZPLG_PATH[$uspl2]}" )
     for p in "${path[@]}"; do
-        builtin [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || {
+        [[ -z "${elem[(r)$p]}" ]] && new+=( "$p" ) || {
             print "Removing PATH element ${ZPLG_COL[info]}$p${ZPLG_COL[rst]}"
-            builtin [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} it didn't exist on disk"
+            [[ -d "$p" ]] || print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} it didn't exist on disk"
         }
     done
     path=( "${new[@]}" )
@@ -2586,9 +2586,9 @@ builtin setopt noaliases
     elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
     new=( )
     for p in "${fpath[@]}"; do
-        builtin [ -z "${elem[(r)$p]}" ] && new+=( "$p" ) || {
+        [[ -z "${elem[(r)$p]}" ]] && new+=( "$p" ) || {
             print "Removing FPATH element ${ZPLG_COL[info]}$p${ZPLG_COL[rst]}"
-            builtin [ -d "$p" ] || print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} it didn't exist on disk"
+            [[ -d "$p" ]] || print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} it didn't exist on disk"
         }
     done
     fpath=( "${new[@]}" )
@@ -2635,7 +2635,7 @@ builtin setopt noaliases
                 # Don't unset redefined variables, only newly defined
                 # "" means variable didn't exist before plugin load
                 # (didn't have a type)
-                if builtin [ "$v1" = "\"\"" ]; then
+                if [[ "$v1" = "\"\"" ]]; then
                     print "Unsetting variable $k"
                     # Checked that 4.3.17 does support "--"
                     # There cannot be parameter starting with
@@ -2650,7 +2650,7 @@ builtin setopt noaliases
     # 9. Forget the plugin
     #
 
-    if builtin [ "$uspl2" = "$ZPLG_DEBUG_USPL2" ]; then
+    if [[ "$uspl2" = "$ZPLG_DEBUG_USPL2" ]]; then
         -zplg-clear-debug-report
         print "dtrace report saved to \$LASTREPORT"
     else
@@ -2668,7 +2668,7 @@ builtin setopt noaliases
     local url="$1"
     local force="$2"
 
-    if builtin [ "$url" = "-f" ]; then
+    if [[ "$url" = "-f" ]]; then
         local tmp
         tmp="$url"
         url="$force"
@@ -2699,7 +2699,7 @@ builtin setopt noaliases
     local_dir="${local_dir//\//--SLASH--}"
     local_dir="${local_dir%%\?*}"
 
-    if builtin [ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]; then
+    if [[ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]]; then
         print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
         command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
     fi
@@ -2746,7 +2746,7 @@ builtin setopt noaliases
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-    if builtin [ "$st" = "status" ]; then
+    if [[ "$st" = "status" ]]; then
         ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ; git status )
     else
         ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ; git pull )
@@ -2759,7 +2759,7 @@ builtin setopt noaliases
     local st="$1"
     local repo pd user plugin
 
-    if builtin [ "$st" = "status" ]; then
+    if [[ "$st" = "status" ]]; then
         print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} status done also for unloaded plugins"
     else
         print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} updating also unloaded plugins"
@@ -2769,18 +2769,18 @@ builtin setopt noaliases
         pd="${repo:t}"
 
         # Two special cases
-        builtin [ "$pd" = "_local---zplugin" ] && continue
-        builtin [ "$pd" = "custom" ] && continue
+        [[ "$pd" = "_local---zplugin" ]] && continue
+        [[ "$pd" = "custom" ]] && continue
 
         -zplg-any-colorify-as-uspl2 "$pd"
 
         # Must be a git repository
-        if builtin [ ! -d "$repo/.git" ]; then
+        if [[ ! -d "$repo/.git" ]]; then
             print "\n$REPLY not a git repository"
             continue
         fi
 
-        if builtin [ "$st" = "status" ]; then
+        if [[ "$st" = "status" ]]; then
             print "\nStatus for plugin $REPLY"
             ( cd "$repo"; git status )
         else
@@ -2813,7 +2813,7 @@ builtin setopt noaliases
     integer light=0
     local s
     for s in "${ZPLG_REGISTERED_STATES[@]}"; do
-        builtin [ "$s" = 1 ] && (( light ++ ))
+        [[ "$s" = 1 ]] && (( light ++ ))
     done
     # Without _zlocal/zplugin
     print "Light loaded: ${infoc}$(( light - 1 ))${reset_color}"
@@ -2848,7 +2848,7 @@ builtin setopt noaliases
     for m in "${matches[@]}"; do
         uspl1="${${m:h}:t}"
 
-        if builtin [ "$cur_plugin" != "$uspl1" ]; then
+        if [[ "$cur_plugin" != "$uspl1" ]]; then
             (( count ++ ))
             cur_plugin="$uspl1"
         fi
@@ -2865,7 +2865,7 @@ builtin setopt noaliases
     typeset -a matches m
     matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
 
-    if builtin [ "${#matches[@]}" -eq "0" ]; then
+    if [[ "${#matches[@]}" -eq "0" ]]; then
         print "No compiled plugins"
         return 0
     fi
@@ -2877,8 +2877,8 @@ builtin setopt noaliases
         -zplg-any-to-user-plugin "$uspl1"
         user="${reply[-2]}" plugin="${reply[-1]}"
 
-        if builtin [ "$cur_plugin" != "$uspl1" ]; then
-            builtin [ -n "$cur_plugin" ] && print # newline
+        if [[ "$cur_plugin" != "$uspl1" ]]; then
+            [[ -n "$cur_plugin" ]] && print # newline
             -zplg-any-colorify-as-uspl2 "$user" "$plugin"
             print "$REPLY:"
             cur_plugin="$uspl1"
@@ -2906,7 +2906,7 @@ builtin setopt noaliases
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
         print "$REPLY:"
 
-        if builtin [ "$compile" = "1" ]; then
+        if [[ "$compile" = "1" ]]; then
             -zplg-compile-plugin "$user" "$plugin"
         else
             -zplg-uncompile-plugin "$user" "$plugin" "1"
@@ -2927,7 +2927,7 @@ builtin setopt noaliases
     typeset -a pos
 
     # Check if compinit was loaded
-    if builtin [ "${+functions[compdef]}" = "0" ]; then
+    if [[ "${+functions[compdef]}" = "0" ]]; then
         print "Compinit isn't loaded, cannot do compdef replay"
         return 1
     fi
@@ -2939,7 +2939,7 @@ builtin setopt noaliases
         # When ZPLG_COMPDEF_REPLAY empty (also when only white spaces)
         [[ "${#pos[@]}" = "1" && -z "${pos[-1]}" ]] && continue
         pos=( "${(Q)pos[@]}" )
-        builtin [ "$quiet" = "-q" ] || print "Running compdef ${pos[*]}"
+        [[ "$quiet" = "-q" ]] || print "Running compdef ${pos[*]}"
         compdef "${pos[@]}"
     done
 
@@ -2949,7 +2949,7 @@ builtin setopt noaliases
 -zplg-compdef-clear() {
     local quiet="$1"
     ZPLG_COMPDEF_REPLAY=( )
-    builtin [ "$quiet" = "-q" ] || print "Compdef replay cleared"
+    [[ "$quiet" = "-q" ]] || print "Compdef replay cleared"
 }
 
 -zplg-cd() {
@@ -3013,7 +3013,7 @@ builtin setopt noaliases
             cat "$fname"
         fi
     } | {
-        if builtin [ -t 1 ]; then
+        if [[ -t 1 ]]; then
             less -iRFX
         else
             cat
@@ -3040,7 +3040,7 @@ builtin setopt noaliases
     local gitout
     local timespec="${*// ##/.}"
     timespec="${timespec//.##/.}"
-    builtin [ -z "$timespec" ] && timespec="1.week"
+    [[ -z "$timespec" ]] && timespec="1.week"
 
     typeset -a plugins
     plugins=( "$ZPLG_PLUGINS_DIR"/* )
@@ -3051,7 +3051,7 @@ builtin setopt noaliases
         [[ "$uspl1" = "custom" || "$uspl1" = "_local---zplugin" ]] && continue
 
         pushd "$p" >/dev/null
-        if builtin [ -d ".git" ]; then
+        if [[ -d ".git" ]]; then
             gitout=`git log --all --max-count=1 --since=$timespec`
             if [[ -n "$gitout" ]]; then
                 -zplg-any-colorify-as-uspl2 "$uspl1"
@@ -3079,7 +3079,7 @@ builtin setopt noaliases
     unset compcontext
     vared -cp 'Plugin name: ' plugin
 
-    if builtin [ "$plugin" = "_unknown" ]; then
+    if [[ "$plugin" = "_unknown" ]]; then
         print "${ZPLG_COL[error]}No plugin name entered${ZPLG_COL[rst]}"
         return 1
     fi
@@ -3096,7 +3096,7 @@ builtin setopt noaliases
 
     cd "$ZPLG_PLUGINS_DIR"
 
-    if builtin [ "$user" != "_local" ]; then
+    if [[ "$user" != "_local" ]]; then
         print "${ZPLG_COL[info]}Creating Github repository${ZPLG_COL[rst]}"
         curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin}" || {
@@ -3119,7 +3119,7 @@ builtin setopt noaliases
     echo >! "README.md"
     echo >! "LICENSE"
 
-    if builtin [ "$user" != "_local" ]; then
+    if [[ "$user" != "_local" ]]; then
         print "Remote repository $uspl2col set up as origin"
         print "You're in plugin's local folder"
         print "The files aren't added to git"
@@ -3148,7 +3148,7 @@ builtin setopt noaliases
     local dname="${reply[-2]}" fname="${reply[-1]}"
 
     integer compiled=1
-    builtin [ -e "${fname}.zwc" ] && command rm -f "${fname}.zwc" || compiled=0
+    [[ -e "${fname}.zwc" ]] && command rm -f "${fname}.zwc" || compiled=0
 
     (
         emulate -LR ksh
@@ -3177,7 +3177,7 @@ builtin setopt noaliases
 
 # Starts debug reporting, diffing
 -zplg-debug-start() {
-    if builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ]; then
+    if [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]]; then
         print "${ZPLG_COL[error]}Dtrace is already active, stop it first with \`dstop'$reset_color"
         return 1
     fi
@@ -3218,7 +3218,7 @@ builtin setopt noaliases
 
 # Reverts changes recorded through dtrace
 -zplg-debug-unload() {
-    if builtin [ "$ZPLG_DEBUG_ACTIVE" = "1" ]; then
+    if [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]]; then
         print "Dtrace is still active, end it with \`dstop'"
     else
         -zplg-unload "$ZPLG_DEBUG_USER" "$ZPLG_DEBUG_PLUGIN"
