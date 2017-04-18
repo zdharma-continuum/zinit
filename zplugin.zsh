@@ -449,7 +449,7 @@ builtin setopt noaliases
 
     # A. Shadow on. Custom function could unfunction itself
     (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}" || unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"
-    function bindkey { --zplg-shadow-bindkey "$@"; }
+    functions[bindkey]='--zplg-shadow-bindkey "$@";'
 
     return $ret # testable
 }
@@ -494,7 +494,7 @@ builtin setopt noaliases
 
     # B. Shadow on. Custom function could unfunction itself
     (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}" || unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"
-    function zstyle { --zplg-shadow-zstyle "$@"; }
+    functions[zstyle]='--zplg-shadow-zstyle "$@";'
 
     return $ret # testable
 }
@@ -550,7 +550,7 @@ builtin setopt noaliases
 
     # C. Shadow on. Custom function could unfunction itself
     (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}" || unset "ZPLG_BACKUP_FUNCTIONS[alias]"
-    function alias { --zplg-shadow-alias "$@"; }
+    functions[alias]='--zplg-shadow-alias "$@";'
 
     return $ret # testable
 }
@@ -615,7 +615,7 @@ builtin setopt noaliases
 
     # D. Shadow on. Custom function could unfunction itself
     (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}" || unset "ZPLG_BACKUP_FUNCTIONS[zle]"
-    function zle { --zplg-shadow-zle "$@"; }
+    functions[zle]='--zplg-shadow-zle "$@";'
 
     return $ret # testable
 }
@@ -655,12 +655,12 @@ builtin setopt noaliases
     if [[ "$mode" != "compdef" ]]; then
         # 0. Used, but not in temporary restoration, which doesn't happen for autoload
         (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
-        function autoload { --zplg-shadow-autoload "$@"; }
+        functions[autoload]='--zplg-shadow-autoload "$@";'
     fi
 
     # E. Always shadow compdef
     (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
-    function compdef { --zplg-shadow-compdef "$@"; }
+    functions[compdef]='--zplg-shadow-compdef "$@";'
 
     # Light and compdef shadowing stops here. Dtrace and load go on
     [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
@@ -673,19 +673,19 @@ builtin setopt noaliases
 
     # A.
     (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
-    function bindkey { --zplg-shadow-bindkey "$@"; }
+    functions[bindkey]='--zplg-shadow-bindkey "$@";'
 
     # B.
     (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
-    function zstyle { --zplg-shadow-zstyle "$@"; }
+    functions[zstyle]='--zplg-shadow-zstyle "$@";'
 
     # C.
     (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
-    function alias { --zplg-shadow-alias "$@"; }
+    functions[alias]='--zplg-shadow-alias "$@";'
 
     # D.
     (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
-    function zle { --zplg-shadow-zle "$@"; }
+    functions[zle]='--zplg-shadow-zle "$@";'
 
     builtin return 0
 }
