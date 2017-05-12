@@ -1318,6 +1318,16 @@ builtin setopt noaliases
 # ZPlugin internal functions {{{
 #
 
+-zplg-unregister-plugin() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local uspl2="${reply[-2]}/${reply[-1]}"
+
+    # If not found, idx will be length+1
+    local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
+    ZPLG_REGISTERED_PLUGINS[$idx]=()
+    ZPLG_REGISTERED_STATES[$uspl2]="0"
+}
+
 -zplg-prepare-home() {
     [[ -n "$ZPLG_HOME_READY" ]] && return
     ZPLG_HOME_READY="1"
