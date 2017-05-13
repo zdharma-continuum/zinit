@@ -310,6 +310,7 @@ To summarize:
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
 zplugin cdclear -q # <- forget completions provided up to this moment
+setopt promptsubst
 # Load theme
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/dstufft.zsh-theme'
 # Load plugin-theme
