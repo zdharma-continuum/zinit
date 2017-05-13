@@ -286,7 +286,7 @@ To use themes created for `Oh-My-Zsh` you might want to first source the `git` l
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
 ```
 
-Then you can use the themes either as snippets (`zplugin snippet {file path or Github URL}`).
+Then you can use the themes as snippets (`zplugin snippet {file path or Github URL}`).
 Some themes require not only
 `Oh-My-Zsh's` `git` library, but also `git` plugin (error about function `current_branch` appears).
 Source it as snippet directly from `Oh-My-Zsh`:
