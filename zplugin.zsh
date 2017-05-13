@@ -1432,6 +1432,11 @@ builtin setopt noaliases
 -zplg-setup-plugin-dir() {
     local user="$1" plugin="$2" github_path="$1/$2"
     if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
+        if [[ "$user" = "_local" ]]; then
+            print "Warning: no local plugin \`$plugin\'"
+            print "(looked in $ZPLG_PLUGINS_DIR/${user}---${plugin})"
+            return 1
+        fi
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
         print "Downloading $REPLY..."
 
