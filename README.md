@@ -313,7 +313,7 @@ zplugin cdclear -q # <- forget completions provided up to this moment
 setopt promptsubst
 # Load theme
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/dstufft.zsh-theme'
-# Load plugin-theme
+# Load plugin-theme depending on OMZ git library
 zplugin light NicoSantangelo/Alpharized
 ```
 
