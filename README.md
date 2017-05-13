@@ -14,7 +14,7 @@ support any user setup, be as transparent as plain `source` command. Completion
 management functionality is provided to allow user call `compinit` only once in
 `.zshrc`.
 
-## Quick start
+# Quick start
 
 To install, execute:
 
@@ -43,7 +43,7 @@ because the install script does this.)
 with advanced Git features (add `promptinit; prompt scala4` to `~/.zshrc` to
 set a prompt).
 
-## Screencasts
+# Screencasts
 
 **Dtrace:**
 
@@ -53,7 +53,7 @@ set a prompt).
 
 ![code recognition](http://imageshack.com/a/img923/6404/5mOUl2.gif)
 
-## Introduction
+# Introduction
 
 ![zplugin-refcard](http://imageshack.com/a/img924/7014/KKkzny.png)
 
@@ -85,7 +85,7 @@ set a prompt).
 
 ![create example](http://imageshack.com/a/img921/8966/NURP24.png)
 
-## Installation
+# Installation
 
 Execute:
 
@@ -126,7 +126,7 @@ autoload -Uz _zplugin
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
 
-### Compilation
+# Compilation
 It's good to compile `zplugin` into `Zsh` bytecode:
 
 ```sh
@@ -138,7 +138,7 @@ a plugin by invoking `zplugin uncompile {plugin-name}`. There are also commands
 `compile`, `compile-all`, `uncompile-all`, `compiled` that control the
 functionality of compiling plugins.
 
-## Usage
+# Usage
 
 ```
 % zpl help
@@ -220,7 +220,7 @@ zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/ds
 zplugin light NicoSantangelo/Alpharized
 ```
 
-## Calling compinit
+# Calling compinit
 
 Compinit should be called after loading of all plugins and before possibly calling `cdreply`.
 `Zplugin` takes control over completions, symlinks them to `~/.zplugin/completions` and adds
@@ -247,7 +247,7 @@ This allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
-## Ignoring Compdefs
+# Ignoring Compdefs
 
 If you want to ignore `compdef`s provided by some plugins or snippets, place their load commands
 before commands loading other plugins or snippets, and issue `zplugin cdclear`:
@@ -267,7 +267,7 @@ zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
 zplugin cdlist # look at gathered compdefs
 ```
 
-## Non-Github (local) plugins
+# Non-Github (local) plugins
 
 Use `create` command with user name `_local` (the default) to create plugin's
 skeleton. It will be not connected with Github repository (because of user name
@@ -278,7 +278,7 @@ The special user name `_local` is optional also for other commands, e.g. for
 `load` (i.e. `zplugin load myplugin` is sufficient, there's no need for
 `zplugin load _local/myplugin`).
 
-## IRC channel
+# IRC channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
 Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
