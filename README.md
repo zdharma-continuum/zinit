@@ -43,6 +43,24 @@ because the install script does this.)
 with advanced Git features (add `promptinit; prompt scala4` to `~/.zshrc` to
 set a prompt).
 
+# News
+
+* 13-05-2017
+  - Bug fixes related to local plugins
+  - `100` `ms` gain in performance
+  - When updating plugin a list of new commits is shown
+  - `lftp` as fallback transport support for snippets
+  - Snippets support `ftp` and `scp` protocols
+  - With snippets you can load a file as **command** that is added to PATH:
+
+    ```zsh
+    % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+    % httpstat.sh
+    too few arguments
+    ```
+
+  - Snippets are updated on `update-all` command
+
 # Screencasts
 
 **Dtrace:**
