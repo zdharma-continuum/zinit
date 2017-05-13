@@ -28,7 +28,7 @@ Then add to `~/.zshrc`, at bottom:
 zplugin load psprint zsh-navigation-tools
 zplugin load psprint---zprompts
 zplugin load zsh-users/zsh-autosuggestions
-zplugin load zsh-users/zsh-syntax-highlighting
+zplugin light zsh-users/zsh-syntax-highlighting
 ```
 
 (No need to add:
@@ -254,7 +254,7 @@ self-update              - updates Zplugin
 load {plugin-name}       - load plugin
 light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin
-snippet [-f] {url}       - source local or remote file (-f: force - don't use cache)
+snippet [-f] [--command] {url}       - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 update {plugin-name}     - update plugin (Git)
 update-all               - update all plugins (Git)
 status {plugin-name}     - status for plugin (Git)
