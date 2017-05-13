@@ -1082,9 +1082,9 @@
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     if [[ "$st" = "status" ]]; then
-        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ; git status )
+        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git status; )
     else
-        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ; git pull )
+        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git fetch --quiet; git log --date=short --pretty=format:'%Cgreen%cd %h %Creset%s' ..FETCH_HEAD; git pull --no-stat; )
     fi
 }
 
@@ -1120,7 +1120,7 @@
             ( cd "$repo"; git status )
         else
             print "\nUpdating plugin $REPLY"
-            ( cd "$repo"; git pull )
+            ( cd "$repo"; git fetch --quiet; git log --date=short --pretty=format:'%Cgreen%cd %h %Creset%s' ..FETCH_HEAD; git pull --no-stat; )
         fi
     done
 }
