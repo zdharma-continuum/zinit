@@ -1618,6 +1618,7 @@ builtin setopt noaliases
 
     # Check for no-raw github url and for url at all
     integer is_no_raw_github=0 is_url
+    local filename local_dir
     () {
         local -a match mbegin mend
         local MATCH; integer MBEGIN MEND
@@ -1627,18 +1628,17 @@ builtin setopt noaliases
         url="${url#"${url%%[! $'\t']*}"}"
 
         [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
-        [[ "$url" = http:* || "$url" = https:* ]] && is_url=1
-    }
+        [[ "$url" = http:* || "$url" = https:* || "$url" = ftp:* || "$url" = ftps:* || "$url" = scp:* ]] && is_url=1
 
-    # Construct a local directory name from what's in url
-    local filename="${url:t}"
-    filename="${filename%%\?*}"
-    local local_dir="$url"
-    local_dir="${local_dir#http://}"
-    local_dir="${local_dir#https://}"
-    local_dir="${local_dir/./--DOT--}"
-    local_dir="${local_dir//\//--SLASH--}"
-    local_dir="${local_dir%%\?*}"
+        # Construct a local directory name from what's in url
+        filename="${url:t}"
+        filename="${filename%%\?*}"
+        local_dir="$url"
+        local_dir="${local_dir//(#b)(http|https|ftp|ftps|scp):\/\//${match[1]}--}"
+        local_dir="${local_dir/./--DOT--}"
+        local_dir="${local_dir//\//--SLASH--}"
+        local_dir="${local_dir%%\?*}"
+    }
 
     if [[ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]]; then
         print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
