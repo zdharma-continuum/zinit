@@ -1637,7 +1637,9 @@ builtin setopt noaliases
         local_dir="${local_dir//(#b)(http|https|ftp|ftps|scp):\/\//${match[1]}--}"
         local_dir="${local_dir/./--DOT--}"
         local_dir="${local_dir//\//--SLASH--}"
-        local_dir="${local_dir%%\?*}"
+        local_dir="${local_dir//\?/--QMRK--}"
+        local_dir="${local_dir//\&/--AMP--}"
+        local_dir="${local_dir//=/--EQ--}"
     }
 
     if [[ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]]; then
@@ -1650,7 +1652,7 @@ builtin setopt noaliases
     # Change the url to point to raw github content if it isn't like that
     if (( is_no_raw_github )); then
         url="${url/\/blob\///raw/}"
-        url="${url}?raw=1"
+        [[ "$url" = *\?* ]] && url="${url}&raw=1" || url="${url}?raw=1"
     fi
 
     # Download or copy the file
