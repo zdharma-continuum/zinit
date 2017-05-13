@@ -327,7 +327,7 @@ compinit
 zplugin cdreplay -q # -q is for quiet
 ```
 
-All this allows to call compinit once.
+This allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
