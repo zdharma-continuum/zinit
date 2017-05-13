@@ -1642,22 +1642,22 @@ builtin setopt noaliases
         local_dir="${local_dir//=/--EQ--}"
     }
 
-    if [[ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]]; then
-        print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
-        command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
-    fi
-
-    ZPLG_SNIPPETS[$url]="$filename"
-
     # Change the url to point to raw github content if it isn't like that
     if (( is_no_raw_github )); then
         url="${url/\/blob\///raw/}"
         [[ "$url" = *\?* ]] && url="${url}&raw=1" || url="${url}?raw=1"
     fi
 
+    ZPLG_SNIPPETS[$url]="$filename"
+
     # Download or copy the file
     if [[ ! -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" || "$force" = "-f" ]]
     then
+        if [[ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]]; then
+            print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
+            command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
+        fi
+
         if (( is_url ))
         then
             # URL
