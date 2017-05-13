@@ -1614,7 +1614,7 @@ builtin setopt noaliases
         [[ "$cmd" != -* ]] && { url="$cmd"; cmd="$tmp"; } || { url="$force"; force="$tmp"; }
     fi
 
-    [[ "$cmd" != --* ]] && { local tmp="$cmd"; cmd="$force"; force="$tmp"; }
+    [[ "$cmd" != --* && -n "$cmd" ]] && { local tmp="$cmd"; cmd="$force"; force="$tmp"; }
 
     # Check for no-raw github url and for url at all
     integer is_no_raw_github=0 is_url
