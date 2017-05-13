@@ -1202,7 +1202,7 @@ builtin setopt noaliases
         if (( ${+commands[curl]} )) then
             curl -fsSL "$url"
         elif (( ${+commands[wget]} )); then
-            wget "$url" -O -
+            wget -q "$url" -O -
         elif (( ${+commands[lynx]} )) then
             lynx -dump "$url"
         fi
@@ -1210,7 +1210,7 @@ builtin setopt noaliases
         if type curl 2>/dev/null 1>&2; then
             curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
         elif type wget 2>/dev/null 1>&2; then
-            wget "$url" -O - || -zplg-download-file-stdout "$url" "1"
+            wget -q "$url" -O - || -zplg-download-file-stdout "$url" "1"
         else
             -zplg-download-file-stdout "$url" "1"
         fi
