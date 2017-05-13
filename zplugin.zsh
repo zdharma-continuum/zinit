@@ -1199,22 +1199,33 @@ builtin setopt noaliases
     local restart="$2"
 
     if [[ "$restart" = "1" ]]; then
+        path+=( "/usr/local/bin" )
         if (( ${+commands[curl]} )) then
             curl -fsSL "$url"
         elif (( ${+commands[wget]} )); then
             wget -q "$url" -O -
+        elif (( ${+commands[lftp]} )); then
+            lftp -c "cat $url"
         elif (( ${+commands[lynx]} )) then
             lynx -dump "$url"
+        else
+            [[ "${(t)path}" != *unique* ]] && path[-1]=()
+            return 1
         fi
+        [[ "${(t)path}" != *unique* ]] && path[-1]=()
     else
-        if type curl 2>/dev/null 1>&2; then
+        if ! type curl 2>/dev/null 1>&2; then
             curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
         elif type wget 2>/dev/null 1>&2; then
             wget -q "$url" -O - || -zplg-download-file-stdout "$url" "1"
+        elif type lftp 2>/dev/null 1>&2; then
+            lftp -c "cat $url" || -zplg-download-file-stdout "$url" "1"
         else
             -zplg-download-file-stdout "$url" "1"
         fi
     fi
+
+    return 0
 }
 
 # Doesn't look for the most common $pname.plugin.zsh
@@ -1652,7 +1663,7 @@ builtin setopt noaliases
             cd "$ZPLG_SNIPPETS_DIR/$local_dir"
             command rm -f "$filename"
             print "Downloading $filename..."
-            -zplg-download-file-stdout "$url" >! "$filename"
+            -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
         )
         else
             # File
