@@ -158,10 +158,10 @@ case $state in
                 _message "Hit enter to refresh completion system" && ret=0
                 ;;
             snippet)
-                typeset -a list
-                list=( "-f" )
-                _files || _wanted soptions expl "Options" \
-                    compadd "$@" -a - list
+                typeset -a soptions 
+                soptions=( "-f" "--command" )
+                _wanted soptions expl "Options" \
+                    compadd "$@" -a - soptions && ret=0
                 ;;
             dstart|dtrace)
                 _message "Hit enter to start tracking this session" && ret=0
