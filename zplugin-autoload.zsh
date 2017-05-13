@@ -1109,6 +1109,18 @@
 
         -zplg-any-colorify-as-uspl2 "$pd"
 
+        # Check if repository has a remote set, if it is _local
+        if [[ "$pd" = _local* ]]; then
+            if [[ -f "$repo/.git/config" ]]; then
+                local -a config
+                config=( "${(f)"$(<$repo/.git/config)"}" )
+                if [[ -z "${(M)config:#\[remote[[:blank:]]*\]}" ]]; then
+                    print "\n$REPLY doesn't have a remote set, will not fetch"
+                    continue
+                fi
+            fi
+        fi
+
         # Must be a git repository
         if [[ ! -d "$repo/.git" ]]; then
             print "\n$REPLY not a git repository"
