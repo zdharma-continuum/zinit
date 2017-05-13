@@ -59,7 +59,7 @@ set a prompt).
 
 **Example use:**
 
-```
+```zsh
 % . ~/github/zplugin/zplugin.zsh
 % zplugin load zsh-users/zsh-syntax-highlighting
 % zplugin load psprint/zsh-cmd-architect
@@ -67,75 +67,13 @@ set a prompt).
 
 **Example plugin report:**
 
-```
-% zpl report psprint/zsh-cmd-architect
-Plugin report for psprint/zsh-cmd-architect
--------------------------------------------
-Source zsh-cmd-architect.plugin.zsh
-Autoload h-list
-Autoload h-list-input
-Autoload h-list-draw
-Autoload zca
-Autoload zca-usetty-wrapper
-Autoload zca-widget
-Zle -N zca-widget
-Bindkey ^T zca-widget
-
-Functions created:
-h-list             h-list-draw
-h-list-input       zca
-zca-usetty-wrapper zca-widget
-
-Options changed:
-autolist     was unset
-menucomplete was unset
-
-PATH elements added:
-/Users/sgniazdowski/github/zsh-cmd-architect/bin
-
-FPATH elements added:
-/Users/sgniazdowski/github/zsh-cmd-architect
-
-Completions:
-_xauth [disabled]
-```
-
 ![report example](http://imageshack.com/a/img923/4237/OHC0i5.png)
 
 **Example plugin unload:**
 
-```
-% zpl unload psprint/zsh-cmd-architect
-Deleting function h-list
-Deleting function h-list-draw
-Deleting function h-list-input
-Deleting function zca
-Deleting function zca-usetty-wrapper
-Deleting function zca-widget
-Deleting bindkey ^T zca-widget
-Setting option autolist
-Setting option menucomplete
-Removing PATH element /Users/sgniazdowski/github/zsh-cmd-architect/bin
-Removing FPATH element /Users/sgniazdowski/github/zsh-cmd-architect
-Unregistering plugin psprint/zsh-cmd-architect
-Plugin's report saved to $LASTREPORT
-```
-
 ![unload example](http://imageshack.com/a/img921/9896/rMMnQ1.png)
 
 **Example `csearch` invocation (completion management):**
-
-```
-# zplg csearch
-[+] is installed, [-] uninstalled, [+-] partially installed
-[+] _local/zplugin                  _zplugin
-[-] benclark/parallels-zsh-plugin   _parallels
-[+] mollifier/cd-gitroot            _cd-gitroot
-[-] or17191/going_places            _favrm, _go
-[-] psprint/zsh-cmd-architect       _xauth
-[-] psprint/zsh-editing-workbench   _cp
-[+] tevren/gitfast-zsh-plugin       _git
-```
 
 ![csearch example](http://imageshack.com/a/img921/5741/QJaO8q.png)
 
