@@ -53,14 +53,6 @@ set a prompt).
 
 ![code recognition](http://imageshack.com/a/img923/6404/5mOUl2.gif)
 
-**Zplugin in action:**
-
-![zplugin](http://imageshack.com/a/img905/5575/n3p47o.gif)
-
-**Completion handling:**
-
-![zplugin](http://imageshack.com/a/img907/2167/CATuag.gif)
-
 ## Introduction
 
 ![zplugin-refcard](http://imageshack.com/a/img924/7014/KKkzny.png)
