@@ -1501,7 +1501,7 @@ self-update              - updates Zplugin
 load ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - load plugin
 light ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}      - light plugin load, without reporting
 unload ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - unload plugin
-snippet [-f] ${ZPLG_COL[pname]}{url}${ZPLG_COL[rst]}       - source local or remote file (-f: force - don't use cache)
+snippet [-f] [--command] ${ZPLG_COL[pname]}{url}${ZPLG_COL[rst]}       - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 update ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - update plugin (Git)
 update-all               - update all plugins (Git)
 status ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - status for plugin (Git)

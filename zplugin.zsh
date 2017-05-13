@@ -1606,15 +1606,15 @@ builtin setopt noaliases
 # Downloads and sources a single file
 # If url is detected to be github.com, then conversion to "raw" url may occur
 -zplg-load-snippet() {
-    local url="$1"
-    local force="$2"
+    local url="$1" cmd="$2" force="$3"
 
-    if [[ "$url" = "-f" ]]; then
+    if [[ "$url" = "-f" || "$url" == "--command" ]]; then
         local tmp
         tmp="$url"
-        url="$force"
-        force="$tmp"
+        [[ "$cmd" != -* ]] && { url="$cmd"; cmd="$tmp"; } || { url="$force"; force="$tmp"; }
     fi
+
+    [[ "$cmd" != --* ]] && { local tmp="$cmd"; cmd="$force"; force="$tmp"; }
 
     # Check for no-raw github url and for url at all
     integer is_no_raw_github=0 is_url
@@ -1676,9 +1676,14 @@ builtin setopt noaliases
     fi
 
     # Source the file with compdef shadowing
-    -zplg-shadow-on "compdef"
-    builtin source "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
-    -zplg-shadow-off "compdef"
+    if [[ "$cmd" != "--command" ]]; then
+        -zplg-shadow-on "compdef"
+        builtin source "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+        -zplg-shadow-off "compdef"
+    else
+        [[ ! -x "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" ]] && command chmod a+x "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+        [[ -z "${path[(er)$ZPLG_SNIPPETS_DIR/$local_dir]}" ]] && path+=( "$ZPLG_SNIPPETS_DIR/$local_dir" )
+    fi
 }
 
 -zplg-compdef-replay() {
@@ -1841,7 +1846,7 @@ zplugin() {
            -zplg-unload "$2" "$3"
            ;;
        (snippet)
-           -zplg-load-snippet "$2" "$3"
+           -zplg-load-snippet "$2" "$3" "$4"
            ;;
        (update)
            -zplg-load-user-functions
