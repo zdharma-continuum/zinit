@@ -1106,7 +1106,16 @@
     builtin setopt localoptions nullglob
 
     local st="$1"
-    local repo pd user plugin
+    local repo snip pd user plugin
+
+    if [[ "$st" != "status" ]]; then
+        for snip in "$ZPLG_SNIPPETS_DIR"/*; do
+            [[ ! -f "$snip/.zplugin_url" ]] && continue
+            local url=$(<$snip/.zplugin_url)
+            -zplg-load-snippet "$url" "" "-f" "-u"
+        done
+        print
+    fi
 
     if [[ "$st" = "status" ]]; then
         print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} status done also for unloaded plugins"
@@ -1503,7 +1512,7 @@ light ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}      - light plugin load, 
 unload ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - unload plugin
 snippet [-f] [--command] ${ZPLG_COL[pname]}{url}${ZPLG_COL[rst]}       - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 update ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - update plugin (Git)
-update-all               - update all plugins (Git)
+update-all               - update all plugins (Git) and snippets (from URL or local path)
 status ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - status for plugin (Git)
 status-all               - status for all plugins (Git)
 report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's report

@@ -1606,7 +1606,7 @@ builtin setopt noaliases
 # Downloads and sources a single file
 # If url is detected to be github.com, then conversion to "raw" url may occur
 -zplg-load-snippet() {
-    local url="$1" cmd="$2" force="$3"
+    local url="$1" cmd="$2" force="$3" update="$4"
 
     if [[ "$url" = "-f" || "$url" == "--command" ]]; then
         local tmp
@@ -1642,6 +1642,8 @@ builtin setopt noaliases
         local_dir="${local_dir//=/--EQ--}"
     }
 
+    local save_url="$url"
+
     # Change the url to point to raw github content if it isn't like that
     if (( is_no_raw_github )); then
         url="${url/\/blob\///raw/}"
@@ -1657,6 +1659,8 @@ builtin setopt noaliases
             print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
             command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
         fi
+
+        [[ "$update" = "-u" ]] && echo "${ZPLG_COL[info]}Updating snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
 
         if (( is_url ))
         then
@@ -1674,11 +1678,14 @@ builtin setopt noaliases
             command cp -v "$url" "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
         fi
 
-        echo "$url" >! "$ZPLG_SNIPPETS_DIR/$local_dir/.zplugin_url"
+        echo "$save_url" >! "$ZPLG_SNIPPETS_DIR/$local_dir/.zplugin_url"
     fi
 
-    # Source the file with compdef shadowing
+    # Updating – no sourcing or setup
+    [[ "$update" = "-u" ]] && return 0
+
     if [[ "$cmd" != "--command" ]]; then
+        # Source the file with compdef shadowing
         -zplg-shadow-on "compdef"
         builtin source "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
         -zplg-shadow-off "compdef"
