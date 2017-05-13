@@ -304,6 +304,18 @@ will appear as something like: `$(build_prompt)`.
 You might want to supress completions provided by the git plugin by issuing `zplugin cdclear -q`
 (`-q` is for quiet) – see below **Ignoring Compdefs**.
 
+To summarize:
+
+```zsh
+zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
+zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+zplugin cdclear -q # <- forget completions provided up to this moment
+# Load theme
+zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/dstufft.zsh-theme'
+# Load plugin-theme
+zplugin light NicoSantangelo/Alpharized
+```
+
 ## Calling compinit
 
 Compinit should be called after loading of all plugins and before possibly calling `cdreply`.
