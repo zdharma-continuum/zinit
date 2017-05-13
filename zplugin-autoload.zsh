@@ -1081,6 +1081,20 @@
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
+    # Check if repository has a remote set, if it is _local
+    if [[ "$user" = "_local" ]]; then
+        local repo="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+        if [[ -f "$repo/.git/config" ]]; then
+            local -a config
+            config=( "${(f)"$(<$repo/.git/config)"}" )
+            if [[ -z "${(M)config:#\[remote[[:blank:]]*\]}" ]]; then
+                -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+                print "$REPLY doesn't have a remote set, will not fetch"
+                return
+            fi
+        fi
+    fi
+
     if [[ "$st" = "status" ]]; then
         ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git status; )
     else
