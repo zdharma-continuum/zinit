@@ -1084,7 +1084,7 @@
     if [[ "$st" = "status" ]]; then
         ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git status; )
     else
-        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git fetch --quiet; git log --date=short --pretty=format:'%Cgreen%cd %h %Creset%s' ..FETCH_HEAD; git pull --no-stat; )
+        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git fetch --quiet; git log --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD; git pull --no-stat; )
     fi
 }
 
@@ -1120,7 +1120,7 @@
             ( cd "$repo"; git status )
         else
             print "\nUpdating plugin $REPLY"
-            ( cd "$repo"; git fetch --quiet; git log --date=short --pretty=format:'%Cgreen%cd %h %Creset%s' ..FETCH_HEAD; git pull --no-stat; )
+            ( cd "$repo"; git fetch --quiet; git log --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD; git pull --no-stat; )
         fi
     done
 }
