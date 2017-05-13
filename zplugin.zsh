@@ -1673,6 +1673,8 @@ builtin setopt noaliases
             print "Copying $filename..."
             command cp -v "$url" "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
         fi
+
+        echo "$url" >! "$ZPLG_SNIPPETS_DIR/$local_dir/.zplugin_url"
     fi
 
     # Source the file with compdef shadowing
