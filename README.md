@@ -61,7 +61,7 @@ set a prompt).
 
 ```zsh
 % . ~/github/zplugin/zplugin.zsh
-% zplugin load zsh-users/zsh-syntax-highlighting
+% zplugin light zsh-users/zsh-syntax-highlighting
 % zplugin load psprint/zsh-cmd-architect
 ```
 
@@ -79,44 +79,9 @@ set a prompt).
 
 **Example `compile` invocation:**
 
-```
-# zplg compile zsh-users/zsh-syntax-highlighting
-Compiling zsh-syntax-highlighting.plugin.zsh...
-# zplg compiled
-zsh-users/zsh-syntax-highlighting:
-zsh-syntax-highlighting.plugin.zsh.zwc
-# zplg uncompile zsh-users/zsh-syntax-highlighting
-Removing zsh-syntax-highlighting.plugin.zsh.zwc
-# zplg compiled
-No compiled plugins
-# zplg compile-all
-zsh-users/zsh-syntax-highlighting
-Compiling zsh-syntax-highlighting.plugin.zsh...
-```
-
 ![compile example](http://imageshack.com/a/img923/6655/gexv8M.png)
 
 **Example `create` invocation:**
-
-```
-% zplg create psprint/testplugin
-Github user name or just "_local": psprint
-Plugin name: testplugin2
-Plugin is psprint/testplugin2
-Creating Github repository
-Enter host password for user 'psprint':
-Cloning into 'psprint---testplugin2'...
-warning: You appear to have cloned an empty repository.
-Checking connectivity... done.
-Remote repository psprint/testplugin2 set up as origin
-You're in plugin's local folder
-The files aren't added to git
-Your next step after commiting will be:
-git push -u origin master
-% ls
-.git                   README.md
-LICENSE                testplugin2.plugin.zsh
-```
 
 ![create example](http://imageshack.com/a/img921/8966/NURP24.png)
 
