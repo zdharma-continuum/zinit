@@ -67,14 +67,12 @@ builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 
 #
-# Nasty variables {{{
+# Shadowing variables {{{
 # Can be used by any shadowing function to recognize current context
 #
 
+ZPLG_MAIN[SHADOWING]="inactive"
 typeset -gH ZPLG_CUR_PLUGIN=""
-# If any plugin retains the shadowed function instead of
-# original one then this will protect from further reporting
-typeset -gH ZPLG_SHADOWING_ACTIVE="inactive"
 # To show "function already defined, in zsh" warning once per function
 typeset -gAH ZPLG_ALREADY_WARNINGS_F
 # If "1", it will make debug reporting active,
@@ -628,9 +626,9 @@ builtin setopt noaliases
     # It is always "dtrace" then "load" (i.e. dtrace then load)
     # "dtrace" then "light" (i.e. dtrace then light load)
     # "dtrace" then "compdef" (i.e. dtrace then snippet)
-    [[ "$ZPLG_SHADOWING_ACTIVE" != "inactive" ]] && builtin return 0
+    [[ "${ZPLG_MAIN[SHADOWING]}" != "inactive" ]] && builtin return 0
 
-    ZPLG_SHADOWING_ACTIVE="$mode"
+    ZPLG_MAIN[SHADOWING]="$mode"
 
     # The point about backuping is: does the key exist in functions array
     # If it does exist, then it will also exist in ZPLG_BACKUP_FUNCTIONS
@@ -683,12 +681,10 @@ builtin setopt noaliases
     local mode="$1"
 
     # Disable shadowing only once
-    [[ "$ZPLG_SHADOWING_ACTIVE" = "inactive" ]] && return 0
-
     # Disable shadowing only the way it was enabled first
-    [[ "$ZPLG_SHADOWING_ACTIVE" != "$mode" ]] && return 0
+    [[ "${ZPLG_MAIN[SHADOWING]}" = "inactive" || "${ZPLG_MAIN[SHADOWING]}" != "$mode" ]] && return 0
 
-    ZPLG_SHADOWING_ACTIVE="inactive"
+    ZPLG_MAIN[SHADOWING]="inactive"
 
     if [[ "$mode" != "compdef" ]]; then
     # 0. Unfunction "autoload"
