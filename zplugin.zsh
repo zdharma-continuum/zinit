@@ -55,7 +55,6 @@ typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR
 : ${ZPLG_COMPLETIONS_DIR:=$ZPLG_HOME/completions}
 typeset -gH ZPLG_SNIPPETS_DIR="$ZPLG_HOME/snippets"
-typeset -gaHU ZPLG_ENTER_OPTIONS
 typeset -gH ZPLG_EXTENDED_GLOB
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
@@ -1262,27 +1261,6 @@ builtin setopt noaliases
 # Currently unused
 #
 
-# Saves options
--zplg-save-enter-state() {
-    ZPLG_ENTER_OPTIONS=( )
-}
-
-# Restores options
--zplg-restore-enter-state() {
-    local i
-    for i in "${ZPLG_ENTER_OPTIONS[@]}"; do
-        builtin setopt "$i"
-    done
-}
-
-# Sets state needed by this code
--zplg-set-desired-shell-state() {
-}
-
--zplg-save-extendedglob() {
-    [[ -o "extendedglob" ]] && ZPLG_EXTENDED_GLOB="1" || ZPLG_EXTENDED_GLOB="0"
-}
-
 -zplg-save-set-extendedglob() {
     [[ -o "extendedglob" ]] && ZPLG_EXTENDED_GLOB="1" || ZPLG_EXTENDED_GLOB="0"
     builtin setopt extendedglob
@@ -1516,12 +1494,9 @@ builtin setopt noaliases
     -zplg-shadow-on "$mode"
 
     # We need some state, but user wants his for his plugins
-    -zplg-restore-enter-state
     builtin setopt noaliases
     builtin source "$dname/$fname"
     builtin unsetopt noaliases
-    # Restore our desired state for our operation
-    -zplg-set-desired-shell-state
 
     -zplg-shadow-off "$mode"
     if [[ "$mode" = "load" ]]; then
@@ -1548,12 +1523,10 @@ builtin setopt noaliases
     local fname="${first#$dname/}"
 
     print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
-    -zplg-restore-enter-state
     zcompile "$first" || {
         print "Compilation failed. Don't worry, the plugin will work also without compilation"
         print "Consider submitting an error report to the plugin's author"
     }
-    -zplg-set-desired-shell-state
 }
 # }}}
 
@@ -1759,15 +1732,11 @@ builtin setopt noaliases
 
 # Main function with subcommands
 zplugin() {
-    -zplg-save-enter-state
-
     # All functions from now on will not change these values
     # globally. Functions that don't do "source" of plugin
     # will be able to setopt localoptions extendedglob
     local -a match mbegin mend
     local MATCH; integer MBEGIN MEND
-
-    -zplg-set-desired-shell-state
 
     -zplg-prepare-home
 
@@ -2018,9 +1987,6 @@ zplugin() {
            print "Unknown command \`$1' (use \`help' to get usage information)"
            ;;
     esac
-
-    # Restore user's options
-    -zplg-restore-enter-state
 }
 
 builtin unsetopt noaliases
