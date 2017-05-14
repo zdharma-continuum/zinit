@@ -652,7 +652,7 @@
 -zplg-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        [[ "$i" = "_local/$ZPLG_NAME" ]] && continue
+        [[ "$i" = "_local/zplugin" ]] && continue
         -zplg-show-report "$i"
     done
 }
@@ -674,7 +674,6 @@
 
     local i
     for i in "${filtered[@]}"; do
-        # Skip _local/psprint
         [[ "$i" = "_local/zplugin" ]] && continue
         -zplg-any-colorify-as-uspl2 "$i"
         # Mark light loads
@@ -1127,8 +1126,7 @@
         pd="${repo:t}"
 
         # Two special cases
-        [[ "$pd" = "_local---zplugin" ]] && continue
-        [[ "$pd" = "custom" ]] && continue
+        [[ "$pd" = "custom" || "$pd" = "_local---zplugin" ]] && continue
 
         -zplg-any-colorify-as-uspl2 "$pd"
 

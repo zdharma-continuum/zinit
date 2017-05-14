@@ -17,20 +17,14 @@ typeset -gAH ZPLG_REPORTS
 # Common needed values
 #
 
-typeset -gH ZPLG_NAME
 
 # User can override ZPLG_DIR. Misleading? Reset
-if [[ ! -e "$ZPLG_DIR"/zplugin.zsh ]]; then
-    typeset -gH ZPLG_DIR=""
-fi
+[[ ! -e "$ZPLG_DIR"/zplugin.zsh ]] && typeset -gH ZPLG_DIR=""
 
 # Problematic function_argzero
-if [[ ! -o "functionargzero" ]]; then
-    0="${(%):-%N}" # this gives immunity to functionargzero being unset
-fi
+[[ ! -o "functionargzero" ]] && 0="${(%):-%N}" # this gives immunity to functionargzero being unset
 
-ZPLG_NAME="${${0:t}:r}"
-[ -z "$ZPLG_DIR" ] && ZPLG_DIR="${0:h}"
+[[ -z "$ZPLG_DIR" ]] && typeset -gH ZPLG_DIR="${0:h}"
 
 # Make ZPLG_DIR path absolute
 if [[ "$ZPLG_DIR" != /* ]]; then
@@ -50,10 +44,10 @@ fi
 # User can override ZPLG_HOME
 if [[ -z "$ZPLG_HOME" ]]; then
     # Ignore ZDOTDIR if user manually put Zplugin to $HOME
-    if [[ -d "$HOME/.$ZPLG_NAME" ]]; then
-        typeset -gH ZPLG_HOME="$HOME/.$ZPLG_NAME"
+    if [[ -d "$HOME/.zplugin" ]]; then
+        typeset -gH ZPLG_HOME="$HOME/.zplugin"
     else
-        typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.$ZPLG_NAME"
+        typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.zplugin"
     fi
 fi
 
@@ -1809,10 +1803,10 @@ zplugin() {
 
     # Simulate existence of _local/zplugin module
     # This will allow to cuninstall of its completion
-    ZPLG_REGISTERED_PLUGINS+=( "_local/$ZPLG_NAME" )
+    ZPLG_REGISTERED_PLUGINS+=( "_local/zplugin" )
     ZPLG_REGISTERED_PLUGINS=( "${(u)ZPLG_REGISTERED_PLUGINS[@]}" )
     # _zplugin module is loaded lightly
-    ZPLG_REGISTERED_STATES[_local/$ZPLG_NAME]="1"
+    ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 
     case "$1" in
        (load)
