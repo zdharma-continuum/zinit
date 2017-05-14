@@ -10,13 +10,12 @@ typeset -gaH ZPLG_REGISTERED_PLUGINS
 typeset -gAH ZPLG_REGISTERED_STATES
 # Snippets loaded, url -> file name
 typeset -gAH ZPLG_SNIPPETS
-# Reports, per plugin
 typeset -gAH ZPLG_REPORTS
+typeset -gAH ZPLG_MAIN
 
 #
 # Common needed values
 #
-
 
 # User can override ZPLG_DIR. Misleading? Reset
 [[ ! -e "$ZPLG_DIR"/zplugin.zsh ]] && typeset -gH ZPLG_DIR=""
@@ -56,7 +55,6 @@ typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR
 : ${ZPLG_COMPLETIONS_DIR:=$ZPLG_HOME/completions}
 typeset -gH ZPLG_SNIPPETS_DIR="$ZPLG_HOME/snippets"
-typeset -gH ZPLG_HOME_READY
 typeset -gaHU ZPLG_ENTER_OPTIONS
 typeset -gH ZPLG_EXTENDED_GLOB
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
@@ -1334,8 +1332,8 @@ builtin setopt noaliases
 }
 
 -zplg-prepare-home() {
-    [[ -n "$ZPLG_HOME_READY" ]] && return
-    ZPLG_HOME_READY="1"
+    [[ -n "${ZPLG_MAIN[HOME_READY]}" ]] && return
+    ZPLG_MAIN[HOME_READY]="1"
 
     [[ ! -d "$ZPLG_HOME" ]] && {
         command mkdir 2>/dev/null "$ZPLG_HOME"
