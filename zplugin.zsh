@@ -1865,33 +1865,30 @@ zplugin() {
            ;;
        (update)
            -zplg-load-user-functions
-           -zplg-update-or-status "update" "$2" "$3"
-           ;;
-       (update-all)
-           -zplg-load-user-functions
-           -zplg-update-or-status-all "update"
+           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+               -zplg-update-or-status-all "update"
+           else
+               -zplg-update-or-status "update" "$2" "$3"
+           fi
            ;;
        (status)
            -zplg-load-user-functions
-           -zplg-update-or-status "status" "$2" "$3"
-           ;;
-       (status-all)
-           -zplg-load-user-functions
-           -zplg-update-or-status-all "status"
+           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+               -zplg-update-or-status-all "status"
+           else
+               -zplg-update-or-status "status" "$2" "$3"
+           fi
            ;;
        (report)
            -zplg-load-user-functions
-           if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try help"
-               return 1
+           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 3; }
+               -zplg-show-all-reports
+           else
+               -zplg-show-report "$2" "$3"
            fi
-           # Display report of given plugin
-           -zplg-show-report "$2" "$3"
-           ;;
-       (all-reports)
-           -zplg-load-user-functions
-           # Display reports of all plugins
-           -zplg-show-all-reports
            ;;
        (loaded|list)
            -zplg-load-user-functions
@@ -1995,27 +1992,22 @@ zplugin() {
            -zplg-debug-unload
            ;;
        (compile)
-           if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try help"
-               return 1
+           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+               -zplg-load-user-functions
+               -zplg-compile-uncompile-all "1"
+           else
+               -zplg-compile-plugin "$2" "$3"
            fi
-           -zplg-compile-plugin "$2" "$3"
-           ;;
-       (compile-all)
-           -zplg-load-user-functions
-           -zplg-compile-uncompile-all "1"
            ;;
        (uncompile)
            -zplg-load-user-functions
-           if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try help"
-               return 1
+           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+               -zplg-compile-uncompile-all "0"
+           else
+               -zplg-uncompile-plugin "$2" "$3"
            fi
-           -zplg-uncompile-plugin "$2" "$3"
-           ;;
-       (uncompile-all)
-           -zplg-load-user-functions
-           -zplg-compile-uncompile-all "0"
            ;;
        (compiled)
            -zplg-load-user-functions

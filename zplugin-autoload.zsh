@@ -1511,12 +1511,9 @@ load ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - load plugin
 light ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}      - light plugin load, without reporting
 unload ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - unload plugin
 snippet [-f] [--command] ${ZPLG_COL[pname]}{url}${ZPLG_COL[rst]}       - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
-update ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - update plugin (Git)
-update-all               - update all plugins (Git) and snippets (from URL or local path)
-status ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - status for plugin (Git)
-status-all               - status for all plugins (Git)
-report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's report
-all-reports              - show all plugin reports
+update ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - Git update plugin (or all plugins and snippets if --all passed)
+status ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - Git status for plugin (or all plugins if --all passed)
+report ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - show plugin's report (or all plugins' if --all passed)
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
 cd ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}         - cd into plugin's directory
 create ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - create plugin (also together with Github repository)
@@ -1537,10 +1534,8 @@ dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session
-compile  ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}   - compile plugin
-compile-all              - compile all downloaded plugins
-uncompile ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}  - remove compiled version of plugin
-uncompile-all            - remove compiled versions of all downloaded plugins
+compile  ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}   - compile plugin (or all plugins if --all passed)
+uncompile ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}  - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
 cdlist                   - show compdef replay list
 cdreplay                 - replay compdefs (to be done after compinit)
