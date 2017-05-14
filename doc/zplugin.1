@@ -1,13 +1,105 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "README" "" "April 2016" "" ""
+.TH "README" "" "May 2017" "" ""
 Zplugin gives \fBreports\fR from plugin load\. Plugins are no longer black boxes, report will tell what aliases, functions, bindkeys, Zle widgets, zstyles, completions, variables, \fBPATH\fR and \fBFPATH\fR elements a plugin has set up\. Supported is \fBunloading\fR of plugin and ability to list, uninstall, reinstall and selectively disable, enable plugin\'s completions\. Also, every plugin is compiled and user can control this function\. The system does not use \fB$FPATH\fR, it\'s kept clean!
 .
 .P
-Code is immune to \fBKSH_ARRAYS\fR, \fBemulate sh\fR, \fBemulate ksh\fR, thoroughly tested to support any user setup, be as transparent as plain \fBsource\fR command\. Compdef replays functionality is provided to allow user call \fBcompinit\fR only once in \fB\.zshrc\fR\.
+Code is immune to \fBKSH_ARRAYS\fR, \fBemulate sh\fR, \fBemulate ksh\fR, thoroughly tested to support any user setup, be as transparent as plain \fBsource\fR command\. Completion management functionality is provided to allow user call \fBcompinit\fR only once in \fB\.zshrc\fR\.To install, execute:
+.
+.IP "" 4
+.
+.nf
+
+sh \-c "$(curl \-fsSL https://raw\.githubusercontent\.com/psprint/zplugin/master/doc/install\.sh)"
+.
+.fi
+.
+.IP "" 0
 .
 .P
+Then add to \fB~/\.zshrc\fR, at bottom:
+.
+.IP "" 4
+.
+.nf
+
+zplugin load psprint zsh\-navigation\-tools
+zplugin load psprint\-\-\-zprompts
+zplugin load zsh\-users/zsh\-autosuggestions
+zplugin light zsh\-users/zsh\-syntax\-highlighting
+.
+.fi
+.
+.IP "" 0
+.
+.P
+(No need to add:
+.
+.IP "" 4
+.
+.nf
+
+source "$HOME/\.zplugin/bin/zplugin\.zsh"
+.
+.fi
+.
+.IP "" 0
+.
+.P
+because the install script does this\.)
+.
+.P
+\fBZNT\fR – multi\-word searching of history (Ctrl\-R), \fBzprompts\fR – a few themes with advanced Git features (add \fBpromptinit; prompt scala4\fR to \fB~/\.zshrc\fR to set a prompt)\.
+.
+.IP "\(bu" 4
+.SH "News"
+14\-05\-2017
+.
+.IP "\(bu" 4
+The \fBall\fR\-variants of commands (e\.g\. \fBupdate\-all\fR) have been merged into normal variants (with \fB\-\-all\fR switch)
+.
+.IP "" 0
+
+.
+.IP "\(bu" 4
+13\-05\-2017
+.
+.IP "\(bu" 4
+Bug fixes related to local plugins
+.
+.IP "\(bu" 4
+\fB100\fR \fBms\fR gain in performance
+.
+.IP "\(bu" 4
+When updating plugin a list of new commits is shown
+.
+.IP "\(bu" 4
+\fBlftp\fR as fallback transport support for snippets
+.
+.IP "\(bu" 4
+Snippets support \fBftp\fR and \fBscp\fR protocols
+.
+.IP "\(bu" 4
+With snippets you can load a file as \fBcommand\fR that is added to PATH:
+.
+.IP "" 4
+.
+.nf
+
+% zplg snippet \-\-command https://github\.com/b4b4r07/httpstat/blob/master/httpstat\.sh
+% httpstat\.sh
+too few arguments
+.
+.fi
+.
+.IP "" 0
+
+.
+.IP "\(bu" 4
+Snippets are updated on \fBupdate \-\-all\fR command
+.
+.IP "" 0
 .
 .SH "Introduction"
 .
@@ -19,7 +111,7 @@ Code is immune to \fBKSH_ARRAYS\fR, \fBemulate sh\fR, \fBemulate ksh\fR, thoroug
 .nf
 
 % \. ~/github/zplugin/zplugin\.zsh
-% zplugin load zsh\-users/zsh\-syntax\-highlighting
+% zplugin light zsh\-users/zsh\-syntax\-highlighting
 % zplugin load psprint/zsh\-cmd\-architect
 .
 .fi
@@ -192,7 +284,7 @@ sh \-c "$(curl \-fsSL https://raw\.githubusercontent\.com/psprint/zplugin/master
 .IP "" 0
 .
 .P
-To update run the command again (or just execute \fBdoc/install\.sh\fR)\.
+To update run the command again (or just execute \fBdoc/install\.sh\fR) or run \fBzplugin self\-update\fR\.
 .
 .P
 \fBZplugin\fR will be installed into \fB~/\.zplugin/bin\fR\. \fB\.zshrc\fR will be updated with three lines of code that will be added to the bottom (the lines will be sourcing \fBzplugin\.zsh\fR and setting up completion)\.
@@ -250,7 +342,7 @@ zcompile ~/\.zplugin/bin/zplugin\.zsh
 .IP "" 0
 .
 .P
-Zplugin will compile each newly downloaded plugin\. You can clear compilation of a plugin by invoking \fBzplugin uncompile {plugin\-name}\fR\. There are also commands \fBcompile\fR, \fBcompile\-all\fR, \fBuncompile\-all\fR, \fBcompiled\fR that control the functionality of compiling plugins\.
+Zplugin will compile each newly downloaded plugin\. You can clear compilation of a plugin by invoking \fBzplugin uncompile {plugin\-spec}\fR\. There are also commands \fBcompile\fR, \fBcompiled\fR that control the functionality of compiling plugins\.
 .
 .SH "Usage"
 .
@@ -264,13 +356,10 @@ self\-update              \- updates Zplugin
 load {plugin\-name}       \- load plugin
 light {plugin\-name}      \- light plugin load, without reporting
 unload {plugin\-name}     \- unload plugin
-snippet [\-f] {url}       \- source local or remote file (\-f: force \- don\'t use cache)
-update {plugin\-name}     \- update plugin (Git)
-update\-all               \- update all plugins (Git)
-status {plugin\-name}     \- status for plugin (Git)
-status\-all               \- status for all plugins (Git)
-report {plugin\-name}     \- show plugin\'s report
-all\-reports              \- show all plugin reports
+snippet [\-f] [\-\-command] {url} \- source (or add to PATH with \-\-command) local or remote file (\-f: force \- don\'t use cache)
+update {plugin\-name}     \- Git update plugin (or all plugins and snippets if \-\-all passed)
+status {plugin\-name}     \- Git status for plugin (or all plugins if \-\-all passed)
+report {plugin\-name}     \- show plugin\'s report (or all plugins\' if \-\-all passed)
 loaded|list [keyword]    \- show what plugins are loaded (filter with `keyword\')
 cd {plugin\-name}         \- cd into plugin\'s directory
 create {plugin\-name}     \- create plugin (also together with Github repository)
@@ -291,10 +380,8 @@ dstop                    \- stop tracking what\'s going on in session
 dunload                  \- revert changes recorded between dstart and dstop
 dreport                  \- report what was going on in session
 dclear                   \- clear report of what was going on in session
-compile  {plugin\-name}   \- compile plugin
-compile\-all              \- compile all downloaded plugins
-uncompile {plugin\-name}  \- remove compiled version of plugin
-uncompile\-all            \- remove compiled versions of all downloaded plugins
+compile  {plugin\-name}   \- compile plugin (or all plugins if \-\-all passed)
+uncompile {plugin\-name}  \- remove compiled version of plugin (or of all plugins if \-\-all passed)
 compiled                 \- list plugins that are compiled
 .
 .fi
@@ -313,7 +400,7 @@ zplugin snippet \'http://github\.com/robbyrussell/oh\-my\-zsh/raw/master/lib/git
 .IP "" 0
 .
 .P
-Then you can use the themes either as plugins (\fBzplugin load {user/theme\-name}\fR) or as snippets (\fBzplugin snippet {file path or URL}\fR; plugin method recommended)\. Some themes require not only \fBOh\-My\-Zsh\'s\fR \fBgit\fR library, but also \fBgit\fR plugin (error about function \fBcurrent_branch\fR appears)\. Source it as snippet directly from \fBOh\-My\-Zsh\fR:
+Then you can use the themes as snippets (\fBzplugin snippet {file path or Github URL}\fR)\. Some themes require not only \fBOh\-My\-Zsh\'s\fR \fBgit\fR library, but also \fBgit\fR plugin (error about function \fBcurrent_branch\fR appears)\. Source it as snippet directly from \fBOh\-My\-Zsh\fR:
 .
 .IP "" 4
 .
@@ -334,20 +421,41 @@ Most themes require \fBpromptsubst\fR option (\fBsetopt promptsubst\fR in \fBzsh
 .P
 You might want to supress completions provided by the git plugin by issuing \fBzplugin cdclear \-q\fR (\fB\-q\fR is for quiet) – see below \fBIgnoring Compdefs\fR\.
 .
+.P
+To summarize:
+.
+.IP "" 4
+.
+.nf
+
+zplugin snippet \'http://github\.com/robbyrussell/oh\-my\-zsh/raw/master/lib/git\.zsh\'
+zplugin snippet \'https://github\.com/robbyrussell/oh\-my\-zsh/raw/master/plugins/git/git\.plugin\.zsh\'
+zplugin cdclear \-q # <\- forget completions provided up to this moment
+setopt promptsubst
+# Load theme
+zplugin snippet \'https://github\.com/robbyrussell/oh\-my\-zsh/blob/master/themes/dstufft\.zsh\-theme\'
+# Load plugin\-theme depending on OMZ git library
+zplugin light NicoSantangelo/Alpharized
+.
+.fi
+.
+.IP "" 0
+.
 .SH "Calling compinit"
-Compinit should be called right after \fBsource\fR of \fBZplugin\fR\. The reason is that \fBZplugin\fR takes control over completions of its plugins, simlinks them to \fB~/\.zplugin/completions\fR and adds this directory to \fB$FPATH\fR when sourced\. You manage those simlinks via commands starting with \fBc\fR: \fBcsearch\fR, \fBclist\fR, \fBcreinstall\fR, \fBcuninstall\fR, \fBcenable\fR, \fBcdisable\fR\. All this brings order to \fB$FPATH\fR, there is only one directory there, and you can selectively disable and enable completions\. Also, plugins aren\'t allowed to simply run \fBcompdefs\fR\. They will be run only after issuing \fBzplugin cdreplay\fR\. To summarize:
+Compinit should be called after loading of all plugins and before possibly calling \fBcdreply\fR\. \fBZplugin\fR takes control over completions, symlinks them to \fB~/\.zplugin/completions\fR and adds this directory to \fB$FPATH\fR\. You manage those completions via commands starting with \fBc\fR: \fBcsearch\fR, \fBclist\fR, \fBcreinstall\fR, \fBcuninstall\fR, \fBcenable\fR, \fBcdisable\fR\. All this brings order to \fB$FPATH\fR, there is only one directory there\. Also, plugins aren\'t allowed to simply run \fBcompdefs\fR\. You can decide whether to run \fBcompdefs\fR by issuing \fBzplugin cdreplay\fR (\fBcompdef\fR\-replay)\. To summarize:
 .
 .IP "" 4
 .
 .nf
 
 source ~/\.zplugin/bin/zplugin\.zsh
-autoload \-Uz compinit
-compinit
 
 zplugin load "some/plugin"
 \.\.\.
 zplugin load "other/plugin"
+
+autoload \-Uz compinit
+compinit
 
 zplugin cdreplay \-q # \-q is for quiet
 .
@@ -356,7 +464,7 @@ zplugin cdreplay \-q # \-q is for quiet
 .IP "" 0
 .
 .P
-All this allows to call compinit once\. Performance gains are huge, example shell startup time with double \fBcompinit\fR: \fB0\.980\fR sec, with \fBcdreplay\fR and single \fBcompinit\fR: \fB0\.156\fR sec\.
+This allows to call compinit once\. Performance gains are huge, example shell startup time with double \fBcompinit\fR: \fB0\.980\fR sec, with \fBcdreplay\fR and single \fBcompinit\fR: \fB0\.156\fR sec\.
 .
 .SH "Ignoring Compdefs"
 If you want to ignore \fBcompdef\fRs provided by some plugins or snippets, place their load commands before commands loading other plugins or snippets, and issue \fBzplugin cdclear\fR:
