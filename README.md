@@ -45,6 +45,9 @@ set a prompt).
 
 # News
 
+* 14-05-2017
+  - The `all`-variants of commands (e.g. `update-all`) have been merged into normal variants (with `--all` switch)
+
 * 13-05-2017
   - Bug fixes related to local plugins
   - `100` `ms` gain in performance
@@ -59,7 +62,7 @@ set a prompt).
     too few arguments
     ```
 
-  - Snippets are updated on `update-all` command
+  - Snippets are updated on `update --all` command
 
 # Screencasts
 
@@ -152,9 +155,8 @@ zcompile ~/.zplugin/bin/zplugin.zsh
 ```
 
 Zplugin will compile each newly downloaded plugin. You can clear compilation of
-a plugin by invoking `zplugin uncompile {plugin-name}`. There are also commands
-`compile`, `compile-all`, `uncompile-all`, `compiled` that control the
-functionality of compiling plugins.
+a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
+`compile`, `compiled` that control the functionality of compiling plugins.
 
 # Usage
 
@@ -168,12 +170,9 @@ load {plugin-name}       - load plugin
 light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin
 snippet [-f] [--command] {url}       - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
-update {plugin-name}     - update plugin (Git)
-update-all               - update all plugins (Git)
-status {plugin-name}     - status for plugin (Git)
-status-all               - status for all plugins (Git)
-report {plugin-name}     - show plugin's report
-all-reports              - show all plugin reports
+update {plugin-name}     - Git update plugin (or all plugins and snippets if --all passed)
+status {plugin-name}     - Git status for plugin (or all plugins if --all passed)
+report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
 loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
 cd {plugin-name}         - cd into plugin's directory
 create {plugin-name}     - create plugin (also together with Github repository)
@@ -194,10 +193,8 @@ dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session
-compile  {plugin-name}   - compile plugin
-compile-all              - compile all downloaded plugins
-uncompile {plugin-name}  - remove compiled version of plugin
-uncompile-all            - remove compiled versions of all downloaded plugins
+compile  {plugin-name}   - compile plugin (or all plugins if --all passed)
+uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
 ```
 
