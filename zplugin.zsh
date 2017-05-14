@@ -72,8 +72,6 @@ is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 #
 
 typeset -gH ZPLG_CUR_PLUGIN=""
-# Concatenated with "---"
-typeset -gH ZPLG_CUR_USPL=""
 # Concatenated with "/"
 typeset -gH ZPLG_CUR_USPL2=""
 # If any plugin retains the shadowed function instead of
@@ -305,7 +303,7 @@ builtin setopt noaliases
     done
 
     # Do ZPLUGIN's "native" autoloads
-    local PLUGIN_DIR="$ZPLG_PLUGINS_DIR/${ZPLG_CUR_USPL}"
+    local PLUGIN_DIR="$ZPLG_PLUGINS_DIR/${ZPLG_MAIN[CUR_USPL]}"
     for func
     do
         # Real autoload doesn't touch function if it already exists
@@ -1493,7 +1491,7 @@ builtin setopt noaliases
     local user="$1" plugin="$2" mode="$3"
     ZPLG_MAIN[CUR_USR]="$user"
     ZPLG_CUR_PLUGIN="$plugin"
-    ZPLG_CUR_USPL="${user}---${plugin}"
+    ZPLG_MAIN[CUR_USPL]="${user}---${plugin}"
     ZPLG_CUR_USPL2="${user}/${plugin}"
 
     # There are plugins having ".plugin.zsh"
@@ -1556,7 +1554,7 @@ builtin setopt noaliases
     # Mark no load is in progress
     ZPLG_MAIN[CUR_USR]=""
     ZPLG_CUR_PLUGIN=""
-    ZPLG_CUR_USPL=""
+    ZPLG_MAIN[CUR_USPL]=""
     ZPLG_CUR_USPL2=""
 }
 
