@@ -1745,11 +1745,6 @@ builtin setopt noaliases
     -zplg-diff-functions "_dtrace/_dtrace" end
 }
 
--zplg-show-debug-report() {
-    # Display report of given plugin
-    -zplg-show-report "_dtrace/_dtrace"
-}
-
 -zplg-clear-debug-report() {
     -zplg-clear-report-for "_dtrace/_dtrace"
 }

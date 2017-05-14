@@ -1497,6 +1497,11 @@
 }
 # }}}
 
+-zplg-show-debug-report() {
+    # Display report of given plugin
+    -zplg-show-report "_dtrace/_dtrace"
+}
+
 -zplg-help() {
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
