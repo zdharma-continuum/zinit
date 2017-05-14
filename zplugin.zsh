@@ -73,8 +73,6 @@ is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 
 ZPLG_MAIN[SHADOWING]="inactive"
 typeset -gH ZPLG_CUR_PLUGIN=""
-# To show "function already defined, in zsh" warning once per function
-typeset -gAH ZPLG_ALREADY_WARNINGS_F
 # If "1", it will make debug reporting active,
 # e.g. shadowing will be permanently on
 typeset -gH ZPLG_DEBUG_ACTIVE="0"
