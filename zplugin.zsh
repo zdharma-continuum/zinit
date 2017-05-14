@@ -74,8 +74,6 @@ is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 ZPLG_MAIN[SHADOWING]="inactive"
 ZPLG_MAIN[DTRACE]="0"
 typeset -gH ZPLG_CUR_PLUGIN=""
-# Name of "plugin" to which debug reports should be assigned - uspl2 format
-typeset -gH ZPLG_DEBUG_USPL2="_dtrace/_dtrace"
 # Name of "plugin" to which debug reports should be assigned - uspl1 format
 typeset -gH ZPLG_DEBUG_USPL="_dtrace---_dtrace"
 # User part of the debug plugin
@@ -380,7 +378,7 @@ builtin setopt noaliases
         # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
         [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
-        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
+        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[_dtrace/_dtrace]+="$quoted "
     else
         # bindkey -A newkeymap main?
         # Negative indices for KSH_ARRAYS immunity
@@ -398,7 +396,7 @@ builtin setopt noaliases
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
             [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
-            [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
+            [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[_dtrace/_dtrace]+="$quoted "
 
             -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
         # bindkey -N newkeymap [other]
@@ -412,7 +410,7 @@ builtin setopt noaliases
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
             [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
-            [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
+            [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[_dtrace/_dtrace]+="$quoted "
         else
             -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${opts[*]}"
         fi
@@ -454,7 +452,7 @@ builtin setopt noaliases
         # Remember the zstyle, only when load is in progress (it can be dstart that leads execution here)
         [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_ZSTYLES[${ZPLG_MAIN[CUR_USPL2]}]+="$ps "
         # Remember for dtrace
-        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]+="$ps "
+        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_ZSTYLES[_dtrace/_dtrace]+="$ps "
     else
         if [[ ! "${#opts[@]}" = "1" && ( "${+opts[(r)-s]}" = "1" || "${+opts[(r)-b]}" = "1" || "${+opts[(r)-a]}" = "1" ||
                                       "${+opts[(r)-t]}" = "1" || "${+opts[(r)-T]}" = "1" || "${+opts[(r)-m]}" = "1" ) ]]
@@ -516,7 +514,7 @@ builtin setopt noaliases
         # Remember the alias, only when load is in progress (it can be dstart that leads execution here)
         [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_ALIASES[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
-        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]+="$quoted "
+        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_ALIASES[_dtrace/_dtrace]+="$quoted "
     done
 
     # C. Shadow off. Unfunction alias
@@ -563,7 +561,7 @@ builtin setopt noaliases
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_WIDGETS_SAVED[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
                 # Remember for dtrace
-                [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_SAVED[$ZPLG_DEBUG_USPL2]+="$quoted "
+                [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_SAVED[_dtrace/_dtrace]+="$quoted "
              # These will be deleted
              else
                  -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
@@ -572,7 +570,7 @@ builtin setopt noaliases
                  # Remember only when load is in progress (it can be dstart that leads execution here)
                  [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
                  # Remember for dtrace
-                 [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
+                 [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_DELETE[_dtrace/_dtrace]+="$quoted "
              fi
     # Creation of new widgets. They will be removed on unload
     elif [[ "$1" = "-N" && "$#" = "2" ]]; then
@@ -581,7 +579,7 @@ builtin setopt noaliases
         # Remember only when load is in progress (it can be dstart that leads execution here)
         [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
-        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
+        [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_DELETE[_dtrace/_dtrace]+="$quoted "
     fi
 
     # D. Shadow off. Unfunction zle
@@ -1030,7 +1028,7 @@ builtin setopt noaliases
 
     # This is nasty, if debug is on, report everything
     # to special debug user
-    [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_REPORTS[$ZPLG_DEBUG_USPL2]+="$keyword ${txt#* }"$'\n'
+    [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$keyword ${txt#* }"$'\n'
 }
 
 # }}}
@@ -1724,10 +1722,10 @@ builtin setopt noaliases
 
     ZPLG_MAIN[DTRACE]="1"
 
-    -zplg-diff-functions "$ZPLG_DEBUG_USPL2" begin
-    -zplg-diff-options "$ZPLG_DEBUG_USPL2" begin
-    -zplg-diff-env "$ZPLG_DEBUG_USPL2" begin
-    -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" begin
+    -zplg-diff-functions "_dtrace/_dtrace" begin
+    -zplg-diff-options "_dtrace/_dtrace" begin
+    -zplg-diff-env "_dtrace/_dtrace" begin
+    -zplg-diff-parameter "_dtrace/_dtrace" begin
 
     # Full shadowing on
     -zplg-shadow-on "dtrace"
@@ -1741,19 +1739,19 @@ builtin setopt noaliases
     -zplg-shadow-off "dtrace"
 
     # Gather end data now, for diffing later
-    -zplg-diff-parameter "$ZPLG_DEBUG_USPL2" end
-    -zplg-diff-env "$ZPLG_DEBUG_USPL2" end
-    -zplg-diff-options "$ZPLG_DEBUG_USPL2" end
-    -zplg-diff-functions "$ZPLG_DEBUG_USPL2" end
+    -zplg-diff-parameter "_dtrace/_dtrace" end
+    -zplg-diff-env "_dtrace/_dtrace" end
+    -zplg-diff-options "_dtrace/_dtrace" end
+    -zplg-diff-functions "_dtrace/_dtrace" end
 }
 
 -zplg-show-debug-report() {
     # Display report of given plugin
-    -zplg-show-report "$ZPLG_DEBUG_USPL2"
+    -zplg-show-report "_dtrace/_dtrace"
 }
 
 -zplg-clear-debug-report() {
-    -zplg-clear-report-for "$ZPLG_DEBUG_USPL2"
+    -zplg-clear-report-for "_dtrace/_dtrace"
 }
 
 # Reverts changes recorded through dtrace

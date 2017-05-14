@@ -573,7 +573,7 @@
     local plugin="${reply[-1]}"
 
     # Allow debug report
-    if [[ "$user/$plugin" != "$ZPLG_DEBUG_USPL2" ]]; then
+    if [[ "$user/$plugin" != "_dtrace/_dtrace" ]]; then
         -zplg-exists-message "$user" "$plugin" || return 1
     fi
 
@@ -790,7 +790,7 @@
     [[ -o "KSH_ARRAYS" ]] && correct=1
 
     # Allow unload for debug user
-    if [[ "$uspl2" != "$ZPLG_DEBUG_USPL2" ]]; then
+    if [[ "$uspl2" != "_dtrace/_dtrace" ]]; then
         -zplg-exists-message "$1" "$2" || return 1
     fi
 
@@ -1060,7 +1060,7 @@
     # 9. Forget the plugin
     #
 
-    if [[ "$uspl2" = "$ZPLG_DEBUG_USPL2" ]]; then
+    if [[ "$uspl2" = "_dtrace/_dtrace" ]]; then
         -zplg-clear-debug-report
         print "dtrace report saved to \$LASTREPORT"
     else
