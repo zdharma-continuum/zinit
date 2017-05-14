@@ -1,6 +1,25 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
+ZPLG_MAIN[EXTENDED_GLOB]=""
+
+#
+# State restoration functions {{{
+# Currently unused
+#
+
+-zplg-save-set-extendedglob() {
+    [[ -o "extendedglob" ]] && ZPLG_MAIN[EXTENDED_GLOB]="1" || ZPLG_MAIN[EXTENDED_GLOB]="0"
+    builtin setopt extendedglob
+}
+
+-zplg-restore-extendedglob() {
+    [[ "${ZPLG_MAIN[EXTENDED_GLOB]}" = "0" ]] && builtin unsetopt extendedglob || builtin setopt extendedglob
+}
+
+# }}}
+
+
 # Creates a one or two columns text with functions
 # belonging to given ($1) plugin
 -zplg-format-functions() {

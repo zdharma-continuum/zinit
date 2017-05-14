@@ -55,7 +55,6 @@ typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
 typeset -gH ZPLG_COMPLETIONS_DIR
 : ${ZPLG_COMPLETIONS_DIR:=$ZPLG_HOME/completions}
 typeset -gH ZPLG_SNIPPETS_DIR="$ZPLG_HOME/snippets"
-typeset -gH ZPLG_EXTENDED_GLOB
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
 typeset -ga ZPLG_STRESS_TEST_OPTIONS
@@ -1254,22 +1253,6 @@ builtin setopt noaliases
     return 0
 }
 
-# }}}
-
-#
-# State restoration functions {{{
-# Currently unused
-#
-
--zplg-save-set-extendedglob() {
-    [[ -o "extendedglob" ]] && ZPLG_EXTENDED_GLOB="1" || ZPLG_EXTENDED_GLOB="0"
-    builtin setopt extendedglob
-}
-
--zplg-restore-extendedglob() {
-    [[ "$ZPLG_EXTENDED_GLOB" = "1" ]] && builtin setopt extendedglob
-    [[ "$ZPLG_EXTENDED_GLOB" = "0" ]] && builtin unsetopt extendedglob
-}
 # }}}
 
 #
