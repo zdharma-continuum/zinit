@@ -19,6 +19,23 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
 # }}}
 
+# Prepare readlink command, used e.g. for
+# establishing completion's owner
+-zplg-prepare-readlink() {
+    REPLY=":"
+    if type readlink 2>/dev/null 1>&2; then
+        REPLY="readlink"
+    fi
+}
+
+# For shortening of code
+# $1 - completion file
+# $2 - readline command
+-zplg-get-completion-owner-uspl2col() {
+    # "cpath" "readline_cmd"
+    -zplg-get-completion-owner "$1" "$2"
+    -zplg-any-colorify-as-uspl2 "$REPLY"
+}
 
 # Creates a one or two columns text with functions
 # belonging to given ($1) plugin
