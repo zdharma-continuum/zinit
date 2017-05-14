@@ -74,12 +74,6 @@ is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 ZPLG_MAIN[SHADOWING]="inactive"
 ZPLG_MAIN[DTRACE]="0"
 typeset -gH ZPLG_CUR_PLUGIN=""
-# Name of "plugin" to which debug reports should be assigned - uspl1 format
-typeset -gH ZPLG_DEBUG_USPL="_dtrace---_dtrace"
-# User part of the debug plugin
-typeset -gH ZPLG_DEBUG_USER="_dtrace"
-# Plugin part of the debug plugin
-typeset -gH ZPLG_DEBUG_PLUGIN="_dtrace"
 # }}}
 
 #
@@ -385,7 +379,7 @@ builtin setopt noaliases
         if [[ "${#opts[@]}" -eq "1" && "${+opts[(r)-A]}" = "1" && "${#pos[@]}" = "3" && "${pos[-1]}" = "main" && "${pos[-2]}" != "-A" ]]; then
             # Save a copy of main keymap
             (( ZPLG_BINDKEY_MAIN_IDX ++ ))
-            local pname="${ZPLG_CUR_PLUGIN:-$ZPLG_DEBUG_PLUGIN}"
+            local pname="${ZPLG_CUR_PLUGIN:-_dtrace}"
             local name="${(q)pname}-main-$ZPLG_BINDKEY_MAIN_IDX"
             builtin bindkey -N "${name}" main
 
@@ -1754,7 +1748,7 @@ builtin setopt noaliases
     if [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]]; then
         print "Dtrace is still active, end it with \`dstop'"
     else
-        -zplg-unload "$ZPLG_DEBUG_USER" "$ZPLG_DEBUG_PLUGIN"
+        -zplg-unload "_dtrace" "_dtrace"
     fi
 }
 # }}}
