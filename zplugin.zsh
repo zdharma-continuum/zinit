@@ -72,8 +72,6 @@ is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 #
 
 typeset -gH ZPLG_CUR_PLUGIN=""
-# Concatenated with "/"
-typeset -gH ZPLG_CUR_USPL2=""
 # If any plugin retains the shadowed function instead of
 # original one then this will protect from further reporting
 typeset -gH ZPLG_SHADOWING_ACTIVE="inactive"
@@ -283,13 +281,13 @@ builtin setopt noaliases
     # TODO: +X
     if (( ${+opts[(r)-X]} ))
     then
-        -zplg-add-report "$ZPLG_CUR_USPL2" "Failed autoload $opts $*"
+        -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
         return 1 # Testable
     fi
     if (( ${+opts[(r)-w]} ))
     then
-        -zplg-add-report "$ZPLG_CUR_USPL2" "-w-Autoload $opts $*"
+        -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
         return # Testable
     fi
@@ -299,7 +297,7 @@ builtin setopt noaliases
     for i in "$@"; do
         local msg="Autoload $i"
         [[ -n "$opts" ]] && msg+=" with options ${opts[@]}"
-        -zplg-add-report "$ZPLG_CUR_USPL2" "$msg"
+        -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "$msg"
     done
 
     # Do ZPLUGIN's "native" autoloads
@@ -330,7 +328,7 @@ builtin setopt noaliases
 }
 
 --zplg-shadow-bindkey() {
-    -zplg-add-report "$ZPLG_CUR_USPL2" "Bindkey $*"
+    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Bindkey $*"
 
     # Remember to perform the actual bindkey call
     typeset -a pos
@@ -386,7 +384,7 @@ builtin setopt noaliases
         quoted="${(q)quoted}"
 
         # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+        [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
         [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
     else
@@ -405,11 +403,11 @@ builtin setopt noaliases
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-            [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+            [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
             # Remember for dtrace
             [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
 
-            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
+            -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
         # bindkey -N newkeymap [other]
         elif [[ "${#opts[@]}" -eq 1 && "${+opts[(r)-N]}" = "1" ]]; then
             local Nopt="-N"
@@ -420,11 +418,11 @@ builtin setopt noaliases
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-            [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_BINDKEYS[$ZPLG_CUR_USPL2]+="$quoted "
+            [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
             # Remember for dtrace
             [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_BINDKEYS[$ZPLG_DEBUG_USPL2]+="$quoted "
         else
-            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last bindkey used non-typical options: ${opts[*]}"
+            -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${opts[*]}"
         fi
     fi
 
@@ -444,7 +442,7 @@ builtin setopt noaliases
 }
 
 --zplg-shadow-zstyle() {
-    -zplg-add-report "$ZPLG_CUR_USPL2" "Zstyle $*"
+    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Zstyle $*"
 
     # Remember to perform the actual zstyle call
     typeset -a pos
@@ -462,14 +460,14 @@ builtin setopt noaliases
         ps="${(q)ps}"
 
         # Remember the zstyle, only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_ZSTYLES[$ZPLG_CUR_USPL2]+="$ps "
+        [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_ZSTYLES[${ZPLG_MAIN[CUR_USPL2]}]+="$ps "
         # Remember for dtrace
         [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_ZSTYLES[$ZPLG_DEBUG_USPL2]+="$ps "
     else
         if [[ ! "${#opts[@]}" = "1" && ( "${+opts[(r)-s]}" = "1" || "${+opts[(r)-b]}" = "1" || "${+opts[(r)-a]}" = "1" ||
                                       "${+opts[(r)-t]}" = "1" || "${+opts[(r)-T]}" = "1" || "${+opts[(r)-m]}" = "1" ) ]]
         then
-            -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: last zstyle used non-typical options: ${opts[*]}"
+            -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: last zstyle used non-typical options: ${opts[*]}"
         fi
     fi
 
@@ -489,7 +487,7 @@ builtin setopt noaliases
 }
 
 --zplg-shadow-alias() {
-    -zplg-add-report "$ZPLG_CUR_USPL2" "Alias $*"
+    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Alias $*"
 
     # Remember to perform the actual alias call
     typeset -a pos
@@ -504,7 +502,7 @@ builtin setopt noaliases
         local avalue="${a#*=}"
 
         # Check if alias is to be redefined
-        (( ${+aliases[$aname]} )) && -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: redefining alias \`${aname}', previous value: ${avalue}"
+        (( ${+aliases[$aname]} )) && -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: redefining alias \`${aname}', previous value: ${avalue}"
 
         aname="${(q)aname}"
         local bname="${(q)avalue}"
@@ -524,7 +522,7 @@ builtin setopt noaliases
         quoted="${(q)quoted}"
 
         # Remember the alias, only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_ALIASES[$ZPLG_CUR_USPL2]+="$quoted "
+        [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_ALIASES[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
         [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_ALIASES[$ZPLG_DEBUG_USPL2]+="$quoted "
     done
@@ -545,7 +543,7 @@ builtin setopt noaliases
 }
 
 --zplg-shadow-zle() {
-    -zplg-add-report "$ZPLG_CUR_USPL2" "Zle $*"
+    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Zle $*"
 
     # Remember to perform the actual zle call
     typeset -a pos
@@ -558,7 +556,7 @@ builtin setopt noaliases
                 local quoted="$2"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
-                [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
             # These will be saved and restored
             elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
@@ -571,16 +569,16 @@ builtin setopt noaliases
                 local quoted="$widname $saved_widname"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
-                [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_SAVED[$ZPLG_CUR_USPL2]+="$quoted "
+                [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_WIDGETS_SAVED[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
                 # Remember for dtrace
                 [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_WIDGETS_SAVED[$ZPLG_DEBUG_USPL2]+="$quoted "
              # These will be deleted
              else
-                 -zplg-add-report "$ZPLG_CUR_USPL2" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
+                 -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
                  local quoted="$2"
                  quoted="${(q)quoted}"
                  # Remember only when load is in progress (it can be dstart that leads execution here)
-                 [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+                 [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
                  # Remember for dtrace
                  [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
              fi
@@ -589,7 +587,7 @@ builtin setopt noaliases
         local quoted="$2"
         quoted="${(q)quoted}"
         # Remember only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "$ZPLG_CUR_USPL2" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_CUR_USPL2]+="$quoted "
+        [[ -n "${ZPLG_MAIN[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLG_MAIN[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
         [[ "$ZPLG_DEBUG_ACTIVE" = "1" ]] && ZPLG_WIDGETS_DELETE[$ZPLG_DEBUG_USPL2]+="$quoted "
     fi
@@ -610,7 +608,7 @@ builtin setopt noaliases
 }
 
 --zplg-shadow-compdef() {
-    -zplg-add-report "$ZPLG_CUR_USPL2" "Saving \`compdef $*' for replay"
+    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Saving \`compdef $*' for replay"
     ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
 
     return 0 # testable
@@ -1492,7 +1490,7 @@ builtin setopt noaliases
     ZPLG_MAIN[CUR_USR]="$user"
     ZPLG_CUR_PLUGIN="$plugin"
     ZPLG_MAIN[CUR_USPL]="${user}---${plugin}"
-    ZPLG_CUR_USPL2="${user}/${plugin}"
+    ZPLG_MAIN[CUR_USPL2]="${user}/${plugin}"
 
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
@@ -1514,24 +1512,24 @@ builtin setopt noaliases
     [[ -o "KSH_ARRAYS" ]] && correct=1
     local fname="${reply[1-correct]#$dname/}"
 
-    -zplg-add-report "$ZPLG_CUR_USPL2" "Source $fname"
-    [[ "$mode" = "light" ]] && -zplg-add-report "$ZPLG_CUR_USPL2" "Light load"
+    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Source $fname"
+    [[ "$mode" = "light" ]] && -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Light load"
 
     # Light and compdef mode doesn't do diffs and shadowing
     if [[ "$mode" = "load" ]]; then
-        -zplg-diff-functions "$ZPLG_CUR_USPL2" begin
-        -zplg-diff-options "$ZPLG_CUR_USPL2" begin
-        -zplg-diff-env "$ZPLG_CUR_USPL2" begin
-        -zplg-diff-parameter "$ZPLG_CUR_USPL2" begin
+        -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" begin
+        -zplg-diff-options "${ZPLG_MAIN[CUR_USPL2]}" begin
+        -zplg-diff-env "${ZPLG_MAIN[CUR_USPL2]}" begin
+        -zplg-diff-parameter "${ZPLG_MAIN[CUR_USPL2]}" begin
     fi
 
     # Warn about user having his own shadows in place. Check
     # every possible shadow regardless of "$mode" setting
-    -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "$ZPLG_CUR_USPL2" "autoload"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "$ZPLG_CUR_USPL2" "bindkey"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "$ZPLG_CUR_USPL2" "zstyle"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "$ZPLG_CUR_USPL2" "alias"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "$ZPLG_CUR_USPL2" "zle"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "${ZPLG_MAIN[CUR_USPL2]}" "autoload"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "${ZPLG_MAIN[CUR_USPL2]}" "bindkey"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zstyle"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "${ZPLG_MAIN[CUR_USPL2]}" "alias"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zle"
 
     -zplg-shadow-on "$mode"
 
@@ -1545,17 +1543,17 @@ builtin setopt noaliases
 
     -zplg-shadow-off "$mode"
     if [[ "$mode" = "load" ]]; then
-        -zplg-diff-parameter "$ZPLG_CUR_USPL2" end
-        -zplg-diff-env "$ZPLG_CUR_USPL2" end
-        -zplg-diff-options "$ZPLG_CUR_USPL2" end
-        -zplg-diff-functions "$ZPLG_CUR_USPL2" end
+        -zplg-diff-parameter "${ZPLG_MAIN[CUR_USPL2]}" end
+        -zplg-diff-env "${ZPLG_MAIN[CUR_USPL2]}" end
+        -zplg-diff-options "${ZPLG_MAIN[CUR_USPL2]}" end
+        -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" end
     fi
 
     # Mark no load is in progress
     ZPLG_MAIN[CUR_USR]=""
     ZPLG_CUR_PLUGIN=""
     ZPLG_MAIN[CUR_USPL]=""
-    ZPLG_CUR_USPL2=""
+    ZPLG_MAIN[CUR_USPL2]=""
 }
 
 # Compiles plugin
