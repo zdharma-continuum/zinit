@@ -1451,15 +1451,13 @@
     echo >! "LICENSE"
 
     if [[ "$user" != "_local" ]]; then
-        print "Remote repository $uspl2col set up as origin"
-        print "You're in plugin's local folder"
-        print "The files aren't added to git"
+        print "Remote repository $uspl2col set up as origin."
+        print "You're in plugin's local folder, the files aren't added to git."
         print "Your next step after commiting will be:"
         print "git push -u origin master"
     else
-        print "Created local $uspl2col plugin"
-        print "You're in plugin's repository folder"
-        print "The files aren't added to git"
+        print "Created local $uspl2col plugin."
+        print "You're in plugin's repository folder, the files aren't added to git."
     fi
 }
 
