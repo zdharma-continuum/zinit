@@ -1104,7 +1104,7 @@ builtin setopt noaliases
         fi
         user="_local"
     fi
-    
+
     if [[ -z "$user" ]]; then
         user="_local"
     fi
@@ -1547,7 +1547,7 @@ builtin setopt noaliases
     -zplg-shadow-on "$mode"
 
     # We need some state, but user wants his for his plugins
-    -zplg-restore-enter-state 
+    -zplg-restore-enter-state
     builtin setopt noaliases
     builtin source "$dname/$fname"
     builtin unsetopt noaliases
@@ -1579,7 +1579,7 @@ builtin setopt noaliases
     local fname="${first#$dname/}"
 
     print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
-    -zplg-restore-enter-state 
+    -zplg-restore-enter-state
     zcompile "$first" || {
         print "Compilation failed. Don't worry, the plugin will work also without compilation"
         print "Consider submitting an error report to the plugin's author"
@@ -2059,7 +2059,7 @@ zplugin() {
            -zplg-help
            ;;
        (*)
-           print "Unknown command \`$1' (try \`help' to get usage information)"
+           print "Unknown command \`$1' (use \`help' to get usage information)"
            ;;
     esac
 
