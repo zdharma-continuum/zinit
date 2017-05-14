@@ -1815,17 +1815,6 @@ zplugin() {
     ZPLG_REGISTERED_STATES[_local/$ZPLG_NAME]="1"
 
     case "$1" in
-       (man)
-           man "$ZPLG_DIR/doc/zplugin.1"
-           ;;
-       (zstatus)
-           -zplg-load-user-functions
-           -zplg-show-zstatus
-           ;;
-       (self-update)
-           -zplg-load-user-functions
-           -zplg-self-update
-           ;;
        (load)
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
@@ -1843,6 +1832,23 @@ zplugin() {
            # This is light load, without tracking, only with
            # clean FPATH (autoload is still being shadowed)
            -zplg-load "$2" "$3" "light"
+           ;;
+       (cdreplay)
+           -zplg-compdef-replay "$2"
+           ;;
+       (cdclear)
+           -zplg-compdef-clear "$2"
+           ;;
+       (man)
+           man "$ZPLG_DIR/doc/zplugin.1"
+           ;;
+       (zstatus)
+           -zplg-load-user-functions
+           -zplg-show-zstatus
+           ;;
+       (self-update)
+           -zplg-load-user-functions
+           -zplg-self-update
            ;;
        (unload)
            -zplg-load-user-functions
@@ -2018,12 +2024,6 @@ zplugin() {
        (cdlist)
            -zplg-load-user-functions
            -zplg-list-compdef-replay
-           ;;
-       (cdreplay)
-           -zplg-compdef-replay "$2"
-           ;;
-       (cdclear)
-           -zplg-compdef-clear "$2"
            ;;
        (cd)
            -zplg-load-user-functions
