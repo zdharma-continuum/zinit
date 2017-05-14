@@ -169,7 +169,7 @@ self-update              - updates Zplugin
 load {plugin-name}       - load plugin
 light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin
-snippet [-f] [--command] {url}       - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
+snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 update {plugin-name}     - Git update plugin (or all plugins and snippets if --all passed)
 status {plugin-name}     - Git status for plugin (or all plugins if --all passed)
 report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
