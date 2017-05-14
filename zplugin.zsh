@@ -71,7 +71,6 @@ is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 # Can be used by any shadowing function to recognize current context
 #
 
-typeset -gH ZPLG_CUR_USER=""
 typeset -gH ZPLG_CUR_PLUGIN=""
 # Concatenated with "---"
 typeset -gH ZPLG_CUR_USPL=""
@@ -1492,7 +1491,7 @@ builtin setopt noaliases
 
 -zplg-load-plugin() {
     local user="$1" plugin="$2" mode="$3"
-    ZPLG_CUR_USER="$user"
+    ZPLG_MAIN[CUR_USR]="$user"
     ZPLG_CUR_PLUGIN="$plugin"
     ZPLG_CUR_USPL="${user}---${plugin}"
     ZPLG_CUR_USPL2="${user}/${plugin}"
@@ -1555,7 +1554,7 @@ builtin setopt noaliases
     fi
 
     # Mark no load is in progress
-    ZPLG_CUR_USER=""
+    ZPLG_MAIN[CUR_USR]=""
     ZPLG_CUR_PLUGIN=""
     ZPLG_CUR_USPL=""
     ZPLG_CUR_USPL2=""
