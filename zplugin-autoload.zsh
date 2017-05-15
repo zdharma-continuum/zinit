@@ -75,6 +75,20 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     fi
     return 0
 } # }}}
+# FUNCTION: -zplg-exists-physically {{{
+-zplg-exists-physically() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    [[ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
+} # }}}
+# FUNCTION: -zplg-exists-physically-message {{{
+-zplg-exists-physically-message() {
+    if ! -zplg-exists-physically "$1" "$2"; then
+        -zplg-any-colorify-as-uspl2 "$1" "$2"
+        print "${ZPLG_COL[error]}No such plugin directory${ZPLG_COL[rst]} $REPLY"
+        return 1
+    fi
+    return 0
+} # }}}
 
 #
 # Format functions
