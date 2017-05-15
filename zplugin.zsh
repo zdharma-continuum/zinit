@@ -6,12 +6,8 @@
 #
 
 typeset -gaH ZPLG_REGISTERED_PLUGINS
-# Maps plugins to 0, 1 or 2 - not loaded, light loaded, fully loaded
-typeset -gAH ZPLG_REGISTERED_STATES
 # Snippets loaded, url -> file name
-typeset -gAH ZPLG_SNIPPETS
-typeset -gAH ZPLG_REPORTS
-typeset -gAH ZPLG_MAIN
+typeset -gAH ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_MAIN ZPLG_ICE
 
 #
 # Common needed values
@@ -1386,6 +1382,20 @@ builtin setopt noaliases
 } # }}}
 
 #
+# Ice support
+#
+
+-zplg-ice() {
+    setopt localoptions extendedglob
+    local cline="$*"
+    while [[ "$cline" = (#b)(from|proto|report|depth|blockf)([^[:blank:]]#)([[:blank:]]##)(#c0,1)(from|proto|report|depth|blockf)(#c0,1)([^[:blank:]]#)(#c0,1)[[:blank:]]#(*) ]]; do
+        ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ -n "${match[4]}" ]] && ZPLG_ICE[${match[4]}]="${match[5]}"
+        cline="${match[6]}"
+    done
+}
+
+#
 # Main function with subcommands
 #
 
@@ -1410,23 +1420,26 @@ zplugin() {
        (load)
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
-               return 1
+           else
+               # Load plugin given in uspl2 or "user plugin" format
+               # Possibly clone from github, and install completions
+               -zplg-load "$2" "$3" "load"
            fi
-           # Load plugin given in uspl2 or "user plugin" format
-           # Possibly clone from github, and install completions
-           -zplg-load "$2" "$3" "load"
            ;;
        (light)
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
-               return 1
+           else
+               # This is light load, without tracking, only with
+               # clean FPATH (autoload is still being shadowed)
+               -zplg-load "$2" "$3" "light"
            fi
-           # This is light load, without tracking, only with
-           # clean FPATH (autoload is still being shadowed)
-           -zplg-load "$2" "$3" "light"
            ;;
        (snippet)
            -zplg-load-snippet "$2" "$3" "$4"
+           ;;
+       (ice)
+           -zplg-ice "${@[2,-1]}"
            ;;
        (cdreplay)
            -zplg-compdef-replay "$2"
@@ -1455,11 +1468,11 @@ zplugin() {
                (unload)
                    if [[ -z "$2" && -z "$3" ]]; then
                        print "Argument needed, try help"
-                       return 1
+                   else
+                       # Unload given plugin. Cloned directory remains intact
+                       # so as are completions
+                       -zplg-unload "$2" "$3"
                    fi
-                   # Unload given plugin. Cloned directory remains intact
-                   # so as are completions
-                   -zplg-unload "$2" "$3"
                    ;;
                (update)
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
@@ -1501,33 +1514,33 @@ zplugin() {
                (cdisable)
                    if [[ -z "$2" ]]; then
                        print "Argument needed, try help"
-                       return 1
-                   fi
-                   local f="_${2#_}"
-                   # Disable completion given by completion function name
-                   # with or without leading "_", e.g. "cp", "_cp"
-                   if -zplg-cdisable "$f"; then
-                       (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
-                       -zplg-forget-completion "$f"
-                       print "Initializing completion system (compinit)..."
-                       builtin autoload -Uz compinit
-                       compinit
+                   else
+                       local f="_${2#_}"
+                       # Disable completion given by completion function name
+                       # with or without leading "_", e.g. "cp", "_cp"
+                       if -zplg-cdisable "$f"; then
+                           (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
+                           -zplg-forget-completion "$f"
+                           print "Initializing completion system (compinit)..."
+                           builtin autoload -Uz compinit
+                           compinit
+                       fi
                    fi
                    ;;
                (cenable)
                    if [[ -z "$2" ]]; then
                        print "Argument needed, try help"
-                       return 1
-                   fi
-                   local f="_${2#_}"
-                   # Enable completion given by completion function name
-                   # with or without leading "_", e.g. "cp", "_cp"
-                   if -zplg-cenable "$f"; then
-                       (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
-                       -zplg-forget-completion "$f"
-                       print "Initializing completion system (compinit)..."
-                       builtin autoload -Uz compinit
-                       compinit
+                   else
+                       local f="_${2#_}"
+                       # Enable completion given by completion function name
+                       # with or without leading "_", e.g. "cp", "_cp"
+                       if -zplg-cenable "$f"; then
+                           (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
+                           -zplg-forget-completion "$f"
+                           print "Initializing completion system (compinit)..."
+                           builtin autoload -Uz compinit
+                           compinit
+                       fi
                    fi
                    ;;
                (creinstall)
@@ -1542,14 +1555,14 @@ zplugin() {
                (cuninstall)
                    if [[ -z "$2" && -z "$3" ]]; then
                        print "Argument needed, try help"
-                       return 1
+                   else
+                       (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
+                       # Uninstalls completions for plugin
+                       -zplg-uninstall-completions "$2" "$3"
+                       print "Initializing completion (compinit)..."
+                       builtin autoload -Uz compinit
+                       compinit
                    fi
-                   (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
-                   # Uninstalls completions for plugin
-                   -zplg-uninstall-completions "$2" "$3"
-                   print "Initializing completion (compinit)..."
-                   builtin autoload -Uz compinit
-                   compinit
                    ;;
                (csearch)
                    -zplg-search-completions
@@ -1621,6 +1634,8 @@ zplugin() {
             esac
             ;;
     esac
+
+    [[ "$1" != "ice" ]] && ZPLG_ICE=()
 } # }}}
 
 #

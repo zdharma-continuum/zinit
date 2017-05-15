@@ -15,8 +15,17 @@
 
 # FUNCTION: -zplg-setup-plugin-dir {{{
 -zplg-setup-plugin-dir() {
-    local user="$1" plugin="$2" github_path="$1/$2"
+    local user="$1" plugin="$2" remote_url_path="$1/$2"
     if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
+        local -A sites
+        sites=(
+            "github"    "github.com"
+            "gh"        "github.com"
+            "bitbucket" "bitbucket.org"
+            "bb"        "bitbucket.org"
+            "notabug"   "notabug.org"
+            "nb"        "notabug.org"
+        )
         if [[ "$user" = "_local" ]]; then
             print "Warning: no local plugin \`$plugin\'"
             print "(looked in $ZPLG_PLUGINS_DIR/${user}---${plugin})"
@@ -26,7 +35,9 @@
         print "Downloading $REPLY..."
 
         # Return with error when any problem
-        git clone --recursive https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
+        local site
+        [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
+        git clone --recursive https://${site:-github.com}/"$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
 
         # Install completions
         -zplg-install-completions "$user" "$plugin" "0"
