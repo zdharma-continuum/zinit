@@ -1072,10 +1072,6 @@ builtin setopt noaliases
         )
     fi
 } # }}}
-# FUNCTION: -zplg-already-function-warning-uspl2 {{{
--zplg-already-function-warning-uspl2() {
-    (( $1 )) && -zplg-add-report "$2" "Warning: there already was $3() function defined, possibly in zshrc"
-} # }}}
 # FUNCTION: -zplg-register-plugin {{{
 -zplg-register-plugin() {
     local mode="$3"
@@ -1359,14 +1355,6 @@ builtin setopt noaliases
         -zplg-diff-env "${ZPLG_MAIN[CUR_USPL2]}" begin
         -zplg-diff-parameter "${ZPLG_MAIN[CUR_USPL2]}" begin
     fi
-
-    # Warn about user having his own shadows in place. Check
-    # every possible shadow regardless of "$mode" setting
-    -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "${ZPLG_MAIN[CUR_USPL2]}" "autoload"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "${ZPLG_MAIN[CUR_USPL2]}" "bindkey"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zstyle"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "${ZPLG_MAIN[CUR_USPL2]}" "alias"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zle"
 
     -zplg-shadow-on "$mode"
 
