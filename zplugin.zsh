@@ -1604,11 +1604,11 @@ zplugin() {
                    -zplg-debug-unload
                    ;;
                (compile)
+                   (( ${+functions[-zplg-compile-plugin]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
                        -zplg-compile-uncompile-all "1"
                    else
-                       (( ${+functions[-zplg-compile-plugin]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
                        -zplg-compile-plugin "$2" "$3"
                    fi
                    ;;
