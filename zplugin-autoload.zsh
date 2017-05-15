@@ -4,41 +4,74 @@
 ZPLG_MAIN[EXTENDED_GLOB]=""
 
 #
-# State restoration functions {{{
-# Currently unused
+# Backend, low level functions
 #
 
+# FUNCTION: -zplg-save-set-extendedglob {{{
 -zplg-save-set-extendedglob() {
     [[ -o "extendedglob" ]] && ZPLG_MAIN[EXTENDED_GLOB]="1" || ZPLG_MAIN[EXTENDED_GLOB]="0"
     builtin setopt extendedglob
-}
-
+} # }}}
+# FUNCTION: -zplg-restore-extendedglob {{{
 -zplg-restore-extendedglob() {
     [[ "${ZPLG_MAIN[EXTENDED_GLOB]}" = "0" ]] && builtin unsetopt extendedglob || builtin setopt extendedglob
-}
-
-# }}}
-
-# Prepare readlink command, used e.g. for
-# establishing completion's owner
+} # }}}
+# FUNCTION: -zplg-prepare-readlink {{{
+# Prepare readlink command, used for establishing completion's owner
 -zplg-prepare-readlink() {
     REPLY=":"
     if type readlink 2>/dev/null 1>&2; then
         REPLY="readlink"
     fi
-}
+} # }}}
+# FUNCTION: -zplg-clear-report-for {{{
+# Clears all report data for given user/plugin
+-zplg-clear-report-for() {
+    -zplg-any-to-uspl2 "$1" "$2"
 
-# For shortening of code
-# $1 - completion file
-# $2 - readline command
--zplg-get-completion-owner-uspl2col() {
-    # "cpath" "readline_cmd"
-    -zplg-get-completion-owner "$1" "$2"
-    -zplg-any-colorify-as-uspl2 "$REPLY"
-}
+    # Shadowing
+    ZPLG_REPORTS[$REPLY]=""
+    ZPLG_BINDKEYS[$REPLY]=""
+    ZPLG_ZSTYLES[$REPLY]=""
+    ZPLG_ALIASES[$REPLY]=""
+    ZPLG_WIDGETS_SAVED[$REPLY]=""
+    ZPLG_WIDGETS_DELETE[$REPLY]=""
 
+    # Function diffing
+    ZPLG_FUNCTIONS[$REPLY]=""
+    ZPLG_FUNCTIONS_BEFORE[$REPLY]=""
+    ZPLG_FUNCTIONS_AFTER[$REPLY]=""
+    ZPLG_FUNCTIONS_DIFF_RAN[$REPLY]=""
+
+    # Option diffing
+    ZPLG_OPTIONS[$REPLY]=""
+    ZPLG_OPTIONS_BEFORE[$REPLY]=""
+    ZPLG_OPTIONS_AFTER[$REPLY]=""
+    ZPLG_OPTIONS_DIFF_RAN[$REPLY]="0"
+
+    # Environment diffing
+    ZPLG_PATH[$REPLY]=""
+    ZPLG_PATH_BEFORE[$REPLY]=""
+    ZPLG_PATH_AFTER[$REPLY]=""
+    ZPLG_FPATH[$REPLY]=""
+    ZPLG_FPATH_BEFORE[$REPLY]=""
+    ZPLG_FPATH_AFTER[$REPLY]=""
+    ZPLG_ENV_DIFF_RAN[$REPLY]="0"
+
+    # Parameter diffing
+    ZPLG_PARAMETERS_PRE[$REPLY]=""
+    ZPLG_PARAMETERS_POST[$REPLY]=""
+    ZPLG_PARAMETERS_BEFORE[$REPLY]=""
+    ZPLG_PARAMETERS_AFTER[$REPLY]=""
+    ZPLG_PARAMETERS_DIFF_RAN[$REPLY]="0"
+} # }}}
+
+#
+# Format functions
+#
+
+# FUNCTION: -zplg-format-functions {{{
 # Creates a one or two columns text with functions
-# belonging to given ($1) plugin
 -zplg-format-functions() {
     local uspl2="$1"
 
@@ -85,8 +118,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     REPLY="$answer"
     # == 0 is: next element would have newline (postfix addition in "count ++")
     (( COLUMNS >= longest && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
-}
-
+} # }}}
+# FUNCTION: -zplg-format-options {{{
 # Creates a text about options that changed when loaded plugin "$1"
 -zplg-format-options() {
     local uspl2="$1"
@@ -116,8 +149,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         [[ "${opts[$k]}" = "on" ]] && txt="was unset" || txt="was set"
         REPLY+="${(r:longest+1:: :)k}$txt"$'\n'
     done
-}
-
+} # }}}
+# FUNCTION: -zplg-format-env {{{
 -zplg-format-env() {
     local uspl2="$1" which="$2"
 
@@ -139,8 +172,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     done
 
     [[ -n "$answer" ]] && REPLY="$answer"
-}
-
+} # }}}
+# FUNCTION: -zplg-format-parameter {{{
 -zplg-format-parameter() {
     local uspl2="$1" infoc="${ZPLG_COL[info]}"
 
@@ -183,14 +216,18 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     [[ -n "$answer" ]] && REPLY="$answer"
 
     return 0
-}
+} # }}}
 
+#
+# Completion functions
+#
+
+# FUNCTION: -zplg-get-completion-owner {{{
 # Both :A and readlink will be used, then readlink's output if
-# results differ. This allows to symlink git repositories
-# into .zplugin/plugins and have username properly resolved
-# (:A will read the link "twice" and give the final repository
+# results differ.
+# :A will read the link "twice" and give the final repository
 # directory, possibly without username in the uspl format;
-# readlink will read the link "once")
+# readlink will read the link "once"
 -zplg-get-completion-owner() {
     local cpath="$1"
     local readlink_cmd="$2"
@@ -216,8 +253,25 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     fi
 
     REPLY="$in_plugin_path"
-}
+} # }}}
+# FUNCTION: -zplg-get-completion-owner-uspl2col {{{
+# For shortening of code
+-zplg-get-completion-owner-uspl2col() {
+    # "cpath" "readline_cmd"
+    -zplg-get-completion-owner "$1" "$2"
+    -zplg-any-colorify-as-uspl2 "$REPLY"
+} # }}}
+# FUNCTION: -zplg-find-completions-of-plugin {{{
+# Searches for completions owned by given plugin
+# Returns them in reply array
+-zplg-find-completions-of-plugin() {
+    builtin setopt localoptions nullglob extendedglob
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
+    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_[^_]* )
+} # }}}
+# FUNCTION: -zplg-check-comp-consistency {{{
 -zplg-check-comp-consistency() {
     local cfile="$1" bkpfile="$2"
     integer error="$3"
@@ -236,18 +290,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
     # Tell user that he can manually modify but should do it right
     (( error )) && print "${ZPLG_COL[error]}Manual edit of $ZPLG_COMPLETIONS_DIR occured?${ZPLG_COL[rst]}"
-}
-
-# Searches for completions owned by given plugin
-# Returns them in reply array
--zplg-find-completions-of-plugin() {
-    builtin setopt localoptions nullglob extendedglob
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
-
-    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_[^_]* )
-}
-
+} # }}}
+# FUNCTION: -zplg-check-which-completions-are-installed {{{
 # For each positional parameter that each should
 # be path to completion within a plugin's dir, it
 # checks whether that completion is installed -
@@ -265,8 +309,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
             reply+=( "0" )
         fi
     done
-}
-
+} # }}}
+# FUNCTION: -zplg-check-which-completions-are-enabled {{{
 # For each positional parameter that each should
 # be path to completion within a plugin's dir, it
 # checks whether that completion is disabled -
@@ -286,49 +330,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
             reply+=( "0" )
         fi
     done
-}
-
-# Clears all report data for given user/plugin
--zplg-clear-report-for() {
-    -zplg-any-to-uspl2 "$1" "$2"
-
-    # Shadowing
-    ZPLG_REPORTS[$REPLY]=""
-    ZPLG_BINDKEYS[$REPLY]=""
-    ZPLG_ZSTYLES[$REPLY]=""
-    ZPLG_ALIASES[$REPLY]=""
-    ZPLG_WIDGETS_SAVED[$REPLY]=""
-    ZPLG_WIDGETS_DELETE[$REPLY]=""
-
-    # Function diffing
-    ZPLG_FUNCTIONS[$REPLY]=""
-    ZPLG_FUNCTIONS_BEFORE[$REPLY]=""
-    ZPLG_FUNCTIONS_AFTER[$REPLY]=""
-    ZPLG_FUNCTIONS_DIFF_RAN[$REPLY]=""
-
-    # Option diffing
-    ZPLG_OPTIONS[$REPLY]=""
-    ZPLG_OPTIONS_BEFORE[$REPLY]=""
-    ZPLG_OPTIONS_AFTER[$REPLY]=""
-    ZPLG_OPTIONS_DIFF_RAN[$REPLY]="0"
-
-    # Environment diffing
-    ZPLG_PATH[$REPLY]=""
-    ZPLG_PATH_BEFORE[$REPLY]=""
-    ZPLG_PATH_AFTER[$REPLY]=""
-    ZPLG_FPATH[$REPLY]=""
-    ZPLG_FPATH_BEFORE[$REPLY]=""
-    ZPLG_FPATH_AFTER[$REPLY]=""
-    ZPLG_ENV_DIFF_RAN[$REPLY]="0"
-
-    # Parameter diffing
-    ZPLG_PARAMETERS_PRE[$REPLY]=""
-    ZPLG_PARAMETERS_POST[$REPLY]=""
-    ZPLG_PARAMETERS_BEFORE[$REPLY]=""
-    ZPLG_PARAMETERS_AFTER[$REPLY]=""
-    ZPLG_PARAMETERS_DIFF_RAN[$REPLY]="0"
-}
-
+} # }}}
+# FUNCTION: -zplg-uninstall-completions {{{
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 -zplg-uninstall-completions() {
@@ -380,8 +383,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     if (( global_action > 0 )); then
         print "${ZPLG_COL[info]}Uninstalled $global_action completions${ZPLG_COL[rst]}"
     fi
-}
-
+} # }}}
+# FUNCTION: -zplg-compinit {{{
 -zplg-compinit() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -411,288 +414,17 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
     builtin autoload -Uz compinit
     compinit
-}
-
--zplg-uncompile-plugin() {
-    builtin setopt localoptions nullglob
-
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" silent="$3"
-
-    # There are plugins having ".plugin.zsh"
-    # in ${plugin} directory name, also some
-    # have ".zsh" there
-    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-    typeset -a matches m
-    matches=( $dname/*.zwc )
-
-    if [[ "${#matches[@]}" -eq "0" ]]; then
-        if [[ "$silent" = "1" ]]; then
-            print "not compiled"
-        else
-            -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-            print "$REPLY not compiled"
-        fi
-        return 1
-    fi
-
-    for m in "${matches[@]}"; do
-        print "Removing ${ZPLG_COL[info]}${m:t}${ZPLG_COL[rst]}"
-        command rm -f "$m"
-    done
-}
+} # }}}
 
 #
-# User-exposed functions {{{
+# User-exposed functions
 #
--zplg-show-completions() {
-    builtin setopt localoptions nullglob extendedglob
 
-    typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
-
-    # Find longest completion name
-    local cpath c
-    integer longest=0
-    for cpath in "${completions[@]}"; do
-        c="${cpath:t}"
-        c="${c#_}"
-        [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
-    done
-
-    #
-    # Display - resolves owner of each completion,
-    # detects if completion is disabled 
-    #
-
-    integer disabled unknown stray
-    for cpath in "${completions[@]}"; do
-        c="${cpath:t}"
-        [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
-        c="${c#_}"
-
-        # Prepare readlink command for establishing
-        # completion's owner
-        -zplg-prepare-readlink
-
-        # This will resolve completion's symlink to obtain
-        # information about the repository it comes from, i.e.
-        # about user and plugin, taken from directory name
-        -zplg-get-completion-owner "$cpath" "$REPLY"
-        [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
-        -zplg-any-colorify-as-uspl2 "$REPLY"
-
-        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
-        stray=0
-        if (( unknown == 0 )); then
-            [[ ! -f "$cpath" ]] && stray=1
-        fi
-
-        # Output line of text
-        print -n "${(r:longest+1:: :)c} $REPLY"
-        (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
-        (( unknown )) && print -n " ${ZPLG_COL[error]}[unknown file, clean with cclear]${ZPLG_COL[rst]}"
-        (( stray )) && print -n " ${ZPLG_COL[error]}[stray, clean with cclear]${ZPLG_COL[rst]}"
-        print
-    done
-}
-
--zplg-clear-completions() {
-    builtin setopt localoptions nullglob extendedglob
-
-    typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
-
-    # Find longest completion name
-    local cpath c
-    integer longest=0
-    for cpath in "${completions[@]}"; do
-        c="${cpath:t}"
-        c="${c#_}"
-        [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
-    done
-
-    integer disabled unknown stray
-    for cpath in "${completions[@]}"; do
-        c="${cpath:t}"
-        [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
-        c="${c#_}"
-
-        -zplg-prepare-readlink
-
-        # This will resolve completion's symlink to obtain
-        # information about the repository it comes from, i.e.
-        # about user and plugin, taken from directory name
-        -zplg-get-completion-owner "$cpath" "$REPLY"
-        [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
-        -zplg-any-colorify-as-uspl2 "$REPLY"
-
-        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
-        stray=0
-        if (( unknown == 0 )); then
-            [[ ! -f "$cpath" ]] && stray=1
-        fi
-
-        if (( unknown == 1 || stray == 1 )); then
-            print -n "Removing completion: ${(r:longest+1:: :)c} $REPLY"
-            (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
-            (( unknown )) && print -n " ${ZPLG_COL[error]}[unknown file]${ZPLG_COL[rst]}"
-            (( stray )) && print -n " ${ZPLG_COL[error]}[stray]${ZPLG_COL[rst]}"
-            print
-            command rm -f "$cpath"
-        fi
-    done
-}
-
-# While -zplg-show-completions shows what completions are installed,
-# this functions searches through all plugin directories showing what's available
--zplg-search-completions() {
-    builtin setopt localoptions nullglob extendedglob
-
-    typeset -a plugin_paths
-    plugin_paths=( "$ZPLG_PLUGINS_DIR"/*---* )
-
-    # Find longest plugin name. Things are ran twice here, first pass
-    # is to get longest name of plugin which is having any completions
-    integer longest=0
-    typeset -a completions
-    local pp
-    for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_[^_]* )
-        if [[ "${#completions[@]}" -gt 0 ]]; then
-            local pd="${pp:t}"
-            [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
-        fi
-    done
-
-    print "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} is installed, ${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} uninstalled, ${ZPLG_COL[error]}[+-]${ZPLG_COL[rst]} partially installed"
-
-    local c
-    for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_[^_]* )
-
-        if [[ "${#completions[@]}" -gt 0 ]]; then
-            # Array of completions, e.g. ( _cp _xauth )
-            completions=( "${completions[@]:t}" )
-
-            # Detect if the completions are installed
-            integer all_installed="${#completions[@]}"
-            for c in "${completions[@]}"; do
-                if [[ -e "$ZPLG_COMPLETIONS_DIR/$c" || -e "$ZPLG_COMPLETIONS_DIR/${c#_}" ]]; then
-                    (( all_installed -- ))
-                fi
-            done
-
-            if [[ "$all_installed" -eq "${#completions[@]}" ]]; then
-                print -n "${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} "
-            elif [[ "$all_installed" -eq "0" ]]; then
-                print -n "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} "
-            else
-                print -n "${ZPLG_COL[error]}[+-]${ZPLG_COL[rst]} "
-            fi
-
-            # Convert directory name to colorified $user/$plugin
-            -zplg-any-colorify-as-uspl2 "${pp:t}"
-
-            # Adjust for escape code (nasty, utilizes fact that
-            # ${ZPLG_COL[rst]} is used twice, so as a $ZPLG_COL)
-            integer adjust_ec=$(( ${#reset_color} * 2 + ${#ZPLG_COL[uname]} + ${#ZPLG_COL[pname]} ))
-
-            print "${(r:longest+adjust_ec:: :)REPLY} ${(j:, :)completions}"
-        fi
-    done
-}
-
--zplg-show-report() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}"
-    local plugin="${reply[-1]}"
-
-    # Allow debug report
-    if [[ "$user/$plugin" != "_dtrace/_dtrace" ]]; then
-        -zplg-exists-message "$user" "$plugin" || return 1
-    fi
-
-    # Print title
-    printf "${ZPLG_COL[title]}Plugin report for${ZPLG_COL[rst]} %s/%s\n"\
-            "${ZPLG_COL[uname]}$user${ZPLG_COL[rst]}"\
-            "${ZPLG_COL[pname]}$plugin${ZPLG_COL[rst]}"
-
-    # Print "----------"
-    local msg="Plugin report for $user/$plugin"
-    print -- "${ZPLG_COL[bar]}${(r:${#msg}::-:)tmp__}${ZPLG_COL[rst]}"
-
-    # Print report gathered via shadowing
-    print "${ZPLG_REPORTS[${user}/${plugin}]}"
-
-    # Print report gathered via $functions-diffing
-    REPLY=""
-    -zplg-diff-functions "$user/$plugin" diff
-    -zplg-format-functions "$user/$plugin"
-    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Functions created:${ZPLG_COL[rst]}"$'\n'"$REPLY"
-
-    # Print report gathered via $options-diffing
-    REPLY=""
-    -zplg-diff-options "$user/$plugin" diff
-    -zplg-format-options "$user/$plugin"
-    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Options changed:${ZPLG_COL[rst]}"$'\n'"$REPLY"
-
-    # Print report gathered via environment diffing
-    REPLY=""
-    -zplg-diff-env "$user/$plugin" diff
-    -zplg-format-env "$user/$plugin" "1"
-    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}PATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
-
-    REPLY=""
-    -zplg-format-env "$user/$plugin" "2"
-    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}FPATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
-
-    # Print report gathered via parameter diffing
-    -zplg-diff-parameter "$user/$plugin" diff
-    -zplg-format-parameter "$user/$plugin"
-    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Variables added or redefined:${ZPLG_COL[rst]}"$'\n'"$REPLY"
-
-    # Print what completions plugin has
-    -zplg-find-completions-of-plugin "$user" "$plugin"
-    typeset -a completions
-    completions=( "${reply[@]}" )
-
-    if [[ "${#completions[@]}" -ge "1" ]]; then
-        print "${ZPLG_COL[p]}Completions:${ZPLG_COL[rst]}"
-        -zplg-check-which-completions-are-installed "${completions[@]}"
-        typeset -a installed
-        installed=( "${reply[@]}" )
-
-        -zplg-check-which-completions-are-enabled "${completions[@]}"
-        typeset -a enabled
-        enabled=( "${reply[@]}" )
-
-        integer count="${#completions[@]}" idx
-        for (( idx=1; idx <= count; idx ++ )); do
-            print -n "${completions[idx]:t}"
-            if [[ "${installed[idx]}" != "1" ]]; then
-                print -n " ${ZPLG_COL[uninst]}[not installed]${ZPLG_COL[rst]}"
-            else
-                if [[ "${enabled[idx]}" = "1" ]]; then
-                    print -n " ${ZPLG_COL[info]}[enabled]${ZPLG_COL[rst]}"
-                else
-                    print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
-                fi
-            fi
-            print
-        done
-        print
-    fi
-}
-
--zplg-show-all-reports() {
-    local i
-    for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        [[ "$i" = "_local/zplugin" ]] && continue
-        -zplg-show-report "$i"
-    done
-}
-
+# FUNCTION: -zplg-self-update {{{
+-zplg-self-update() {
+    ( cd "$ZPLG_DIR" ; git pull )
+} # }}}
+# FUNCTION: -zplg-show-registered-plugins {{{
 -zplg-show-registered-plugins() {
     typeset -a filtered
     local keyword="$1"
@@ -716,95 +448,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         [[ "${ZPLG_REGISTERED_STATES[$i]}" = "1" ]] && REPLY="$REPLY ${ZPLG_COL[info]}*${ZPLG_COL[rst]}"
         print "$REPLY"
     done
-}
-
--zplg-cenable() {
-    local c="$1"
-    c="${c#_}"
-
-    local cfile="${ZPLG_COMPLETIONS_DIR}/_${c}"
-    local bkpfile="${cfile:h}/$c"
-
-    if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "${ZPLG_COL[error]}No such completion \`$c'${ZPLG_COL[rst]}"
-        return 1
-    fi
-
-    # Check if there is no backup file
-    # This is treated as if the completion is already enabled
-    if [[ ! -e "$bkpfile" ]]; then
-        print "Completion ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} already enabled"
-
-        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
-        return 1
-    fi
-
-    # Disabled, but completion file already exists?
-    if [[ -e "$cfile" ]]; then
-        print "${ZPLG_COL[error]}Warning: completion's file \`${cfile:t}' exists, will overwrite${ZPLG_COL[rst]}"
-        print "${ZPLG_COL[error]}Completion is actually enabled and will re-enable it again${ZPLG_COL[rst]}"
-        -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
-        command rm -f "$cfile"
-    else
-        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
-    fi
-
-    # Enable
-    command mv "$bkpfile" "$cfile" # move completion's backup file created when disabling
-
-    # Prepare readlink command for establishing completion's owner
-    -zplg-prepare-readlink
-    # Get completion's owning plugin
-    -zplg-get-completion-owner-uspl2col "$cfile" "$REPLY"
-
-    print "Enabled ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} completion belonging to $REPLY"
-
-    return 0
-}
-
--zplg-cdisable() {
-    local c="$1"
-    c="${c#_}"
-
-    local cfile="${ZPLG_COMPLETIONS_DIR}/_${c}"
-    local bkpfile="${cfile:h}/$c"
-
-    if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "${ZPLG_COL[error]}No such completion \`$c'${ZPLG_COL[rst]}"
-        return 1
-    fi
-
-    # Check if it's already disabled
-    # Not existing "$cfile" says that
-    if [[ ! -e "$cfile" ]]; then
-        print "Completion ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} already disabled"
-
-        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
-        return 1
-    fi
-
-    # No disable, but bkpfile exists?
-    if [[ -e "$bkpfile" ]]; then
-        print "${ZPLG_COL[error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite${ZPLG_COL[rst]}"
-        -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
-        command rm -f "$bkpfile"
-    else
-        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
-    fi
-
-    # Disable
-    command mv "$cfile" "$bkpfile"
-
-    # Prepare readlink command for establishing completion's owner
-    -zplg-prepare-readlink
-    # Get completion's owning plugin
-    -zplg-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
-
-    print "Disabled ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} completion belonging to $REPLY"
-
-    return 0
-}
-
+} # }}}
+# FUNCTION: -zplg-unload {{{
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 #
@@ -1106,8 +751,102 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         print "Plugin's report saved to \$LASTREPORT"
     fi
 
-}
+} # }}}
+# FUNCTION: -zplg-show-report {{{
+-zplg-show-report() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}"
+    local plugin="${reply[-1]}"
 
+    # Allow debug report
+    if [[ "$user/$plugin" != "_dtrace/_dtrace" ]]; then
+        -zplg-exists-message "$user" "$plugin" || return 1
+    fi
+
+    # Print title
+    printf "${ZPLG_COL[title]}Plugin report for${ZPLG_COL[rst]} %s/%s\n"\
+            "${ZPLG_COL[uname]}$user${ZPLG_COL[rst]}"\
+            "${ZPLG_COL[pname]}$plugin${ZPLG_COL[rst]}"
+
+    # Print "----------"
+    local msg="Plugin report for $user/$plugin"
+    print -- "${ZPLG_COL[bar]}${(r:${#msg}::-:)tmp__}${ZPLG_COL[rst]}"
+
+    # Print report gathered via shadowing
+    print "${ZPLG_REPORTS[${user}/${plugin}]}"
+
+    # Print report gathered via $functions-diffing
+    REPLY=""
+    -zplg-diff-functions "$user/$plugin" diff
+    -zplg-format-functions "$user/$plugin"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Functions created:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+
+    # Print report gathered via $options-diffing
+    REPLY=""
+    -zplg-diff-options "$user/$plugin" diff
+    -zplg-format-options "$user/$plugin"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Options changed:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+
+    # Print report gathered via environment diffing
+    REPLY=""
+    -zplg-diff-env "$user/$plugin" diff
+    -zplg-format-env "$user/$plugin" "1"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}PATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+
+    REPLY=""
+    -zplg-format-env "$user/$plugin" "2"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}FPATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+
+    # Print report gathered via parameter diffing
+    -zplg-diff-parameter "$user/$plugin" diff
+    -zplg-format-parameter "$user/$plugin"
+    [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Variables added or redefined:${ZPLG_COL[rst]}"$'\n'"$REPLY"
+
+    # Print what completions plugin has
+    -zplg-find-completions-of-plugin "$user" "$plugin"
+    typeset -a completions
+    completions=( "${reply[@]}" )
+
+    if [[ "${#completions[@]}" -ge "1" ]]; then
+        print "${ZPLG_COL[p]}Completions:${ZPLG_COL[rst]}"
+        -zplg-check-which-completions-are-installed "${completions[@]}"
+        typeset -a installed
+        installed=( "${reply[@]}" )
+
+        -zplg-check-which-completions-are-enabled "${completions[@]}"
+        typeset -a enabled
+        enabled=( "${reply[@]}" )
+
+        integer count="${#completions[@]}" idx
+        for (( idx=1; idx <= count; idx ++ )); do
+            print -n "${completions[idx]:t}"
+            if [[ "${installed[idx]}" != "1" ]]; then
+                print -n " ${ZPLG_COL[uninst]}[not installed]${ZPLG_COL[rst]}"
+            else
+                if [[ "${enabled[idx]}" = "1" ]]; then
+                    print -n " ${ZPLG_COL[info]}[enabled]${ZPLG_COL[rst]}"
+                else
+                    print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
+                fi
+            fi
+            print
+        done
+        print
+    fi
+} # }}}
+# FUNCTION: -zplg-show-all-reports {{{
+-zplg-show-all-reports() {
+    local i
+    for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
+        [[ "$i" = "_local/zplugin" ]] && continue
+        -zplg-show-report "$i"
+    done
+} # }}}
+# FUNCTION: -zplg-show-debug-report {{{
+-zplg-show-debug-report() {
+    -zplg-show-report "_dtrace/_dtrace"
+} # }}}
+# FUNCTION: -zplg-update-or-status {{{
 # Updates given plugin
 -zplg-update-or-status() {
     local st="$1"
@@ -1135,8 +874,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     else
         ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
     fi
-}
-
+} # }}}
+# FUNCTION: -zplg-update-or-status-all {{{
 -zplg-update-or-status-all() {
     builtin setopt localoptions nullglob
 
@@ -1192,14 +931,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
             ( cd "$repo"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
         fi
     done
-}
-
-# Updates Zplugin
--zplg-self-update() {
-    ( cd "$ZPLG_DIR" ; git pull )
-}
-
-# Shows overall status
+} # }}}
+# FUNCTION: -zplg-show-zstatus {{{
 -zplg-show-zstatus() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1259,9 +992,9 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     done
 
     print "Compiled plugins: ${infoc}$count${reset_color}"
-}
+} # }}}
 
-
+# FUNCTION: -zplg-compiled {{{
 # Gets list of compiled plugins
 -zplg-compiled() {
     builtin setopt localoptions nullglob
@@ -1290,8 +1023,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
         print "$file"
     done
-}
-
+} # }}}
+# FUNCTION: -zplg-compile-uncompile-all {{{
 -zplg-compile-uncompile-all() {
     builtin setopt localoptions nullglob
 
@@ -1316,76 +1049,284 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
             -zplg-uncompile-plugin "$user" "$plugin" "1"
         fi
     done
-}
+} # }}}
+# FUNCTION: -zplg-uncompile-plugin {{{
+-zplg-uncompile-plugin() {
+    builtin setopt localoptions nullglob
 
--zplg-list-compdef-replay() {
-    print "Recorded compdefs:"
-    local cdf
-    for cdf in "${ZPLG_COMPDEF_REPLAY[@]}"; do
-        print "compdef ${(Q)cdf}"
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}" silent="$3"
+
+    # There are plugins having ".plugin.zsh"
+    # in ${plugin} directory name, also some
+    # have ".zsh" there
+    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    typeset -a matches m
+    matches=( $dname/*.zwc )
+
+    if [[ "${#matches[@]}" -eq "0" ]]; then
+        if [[ "$silent" = "1" ]]; then
+            print "not compiled"
+        else
+            -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+            print "$REPLY not compiled"
+        fi
+        return 1
+    fi
+
+    for m in "${matches[@]}"; do
+        print "Removing ${ZPLG_COL[info]}${m:t}${ZPLG_COL[rst]}"
+        command rm -f "$m"
     done
-}
+} # }}}
 
--zplg-edit() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+# FUNCTION: -zplg-show-completions {{{
+-zplg-show-completions() {
+    builtin setopt localoptions nullglob extendedglob
 
-    -zplg-exists-physically-message "$user" "$plugin" || return 1
+    typeset -a completions
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
-    # cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-    -zplg-first "$1" "$2" || {
-        print "${ZPLG_COL[error]}No source file found, cannot edit${ZPLG_COL[rst]}"
-        return 1
-    }
+    # Find longest completion name
+    local cpath c
+    integer longest=0
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        c="${c#_}"
+        [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
+    done
 
-    local fname="${reply[-1]}"
+    #
+    # Display - resolves owner of each completion,
+    # detects if completion is disabled 
+    #
 
-    print "Editting ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]} with ${ZPLG_COL[p]}${EDITOR:-vim}${ZPLG_COL[rst]}"
-    "${EDITOR:-vim}" "$fname"
-}
+    integer disabled unknown stray
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
+        c="${c#_}"
 
--zplg-glance() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+        # Prepare readlink command for establishing
+        # completion's owner
+        -zplg-prepare-readlink
 
-    -zplg-exists-physically-message "$user" "$plugin" || return 1
+        # This will resolve completion's symlink to obtain
+        # information about the repository it comes from, i.e.
+        # about user and plugin, taken from directory name
+        -zplg-get-completion-owner "$cpath" "$REPLY"
+        [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
+        -zplg-any-colorify-as-uspl2 "$REPLY"
 
-    -zplg-first "$1" "$2" || {
-        print "${ZPLG_COL[error]}No source file found, cannot glance${ZPLG_COL[rst]}"
-        return 1
-    }
+        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
+        stray=0
+        if (( unknown == 0 )); then
+            [[ ! -f "$cpath" ]] && stray=1
+        fi
 
-    local fname="${reply[-1]}"
+        # Output line of text
+        print -n "${(r:longest+1:: :)c} $REPLY"
+        (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
+        (( unknown )) && print -n " ${ZPLG_COL[error]}[unknown file, clean with cclear]${ZPLG_COL[rst]}"
+        (( stray )) && print -n " ${ZPLG_COL[error]}[stray, clean with cclear]${ZPLG_COL[rst]}"
+        print
+    done
+} # }}}
+# FUNCTION: -zplg-clear-completions {{{
+-zplg-clear-completions() {
+    builtin setopt localoptions nullglob extendedglob
 
-    integer has_256_colors=0
-    [[ "$TERM" = xterm* || "$TERM" = "screen" ]] && has_256_colors=1
+    typeset -a completions
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
 
-    {
-        if (( ${+commands[pygmentize]} )); then
-            print "Glancing with ${ZPLG_COL[info]}pygmentize${ZPLG_COL[rst]}"
-            pygmentize -l bash -g "$fname"
-        elif (( ${+commands[highlight]} )); then
-            print "Glancing with ${ZPLG_COL[info]}highlight${ZPLG_COL[rst]}"
-            if (( has_256_colors )); then
-                highlight -q --force -S sh -O xterm256 "$fname"
+    # Find longest completion name
+    local cpath c
+    integer longest=0
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        c="${c#_}"
+        [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
+    done
+
+    integer disabled unknown stray
+    for cpath in "${completions[@]}"; do
+        c="${cpath:t}"
+        [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
+        c="${c#_}"
+
+        -zplg-prepare-readlink
+
+        # This will resolve completion's symlink to obtain
+        # information about the repository it comes from, i.e.
+        # about user and plugin, taken from directory name
+        -zplg-get-completion-owner "$cpath" "$REPLY"
+        [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
+        -zplg-any-colorify-as-uspl2 "$REPLY"
+
+        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
+        stray=0
+        if (( unknown == 0 )); then
+            [[ ! -f "$cpath" ]] && stray=1
+        fi
+
+        if (( unknown == 1 || stray == 1 )); then
+            print -n "Removing completion: ${(r:longest+1:: :)c} $REPLY"
+            (( disabled )) && print -n " ${ZPLG_COL[error]}[disabled]${ZPLG_COL[rst]}"
+            (( unknown )) && print -n " ${ZPLG_COL[error]}[unknown file]${ZPLG_COL[rst]}"
+            (( stray )) && print -n " ${ZPLG_COL[error]}[stray]${ZPLG_COL[rst]}"
+            print
+            command rm -f "$cpath"
+        fi
+    done
+} # }}}
+# FUNCTION: -zplg-search-completions {{{
+# While -zplg-show-completions shows what completions are installed,
+# this functions searches through all plugin directories showing what's available
+-zplg-search-completions() {
+    builtin setopt localoptions nullglob extendedglob
+
+    typeset -a plugin_paths
+    plugin_paths=( "$ZPLG_PLUGINS_DIR"/*---* )
+
+    # Find longest plugin name. Things are ran twice here, first pass
+    # is to get longest name of plugin which is having any completions
+    integer longest=0
+    typeset -a completions
+    local pp
+    for pp in "${plugin_paths[@]}"; do
+        completions=( "$pp"/_[^_]* )
+        if [[ "${#completions[@]}" -gt 0 ]]; then
+            local pd="${pp:t}"
+            [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
+        fi
+    done
+
+    print "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} is installed, ${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} uninstalled, ${ZPLG_COL[error]}[+-]${ZPLG_COL[rst]} partially installed"
+
+    local c
+    for pp in "${plugin_paths[@]}"; do
+        completions=( "$pp"/_[^_]* )
+
+        if [[ "${#completions[@]}" -gt 0 ]]; then
+            # Array of completions, e.g. ( _cp _xauth )
+            completions=( "${completions[@]:t}" )
+
+            # Detect if the completions are installed
+            integer all_installed="${#completions[@]}"
+            for c in "${completions[@]}"; do
+                if [[ -e "$ZPLG_COMPLETIONS_DIR/$c" || -e "$ZPLG_COMPLETIONS_DIR/${c#_}" ]]; then
+                    (( all_installed -- ))
+                fi
+            done
+
+            if [[ "$all_installed" -eq "${#completions[@]}" ]]; then
+                print -n "${ZPLG_COL[p]}[-]${ZPLG_COL[rst]} "
+            elif [[ "$all_installed" -eq "0" ]]; then
+                print -n "${ZPLG_COL[info]}[+]${ZPLG_COL[rst]} "
             else
-                highlight -q --force -S sh -O ansi "$fname"
+                print -n "${ZPLG_COL[error]}[+-]${ZPLG_COL[rst]} "
             fi
-        elif (( ${+commands[source-highlight]} )); then
-            print "Glancing with ${ZPLG_COL[info]}source-highlight${ZPLG_COL[rst]}"
-            source-highlight -fesc --failsafe -s zsh -o STDOUT -i "$fname"
-        else
-            cat "$fname"
-        fi
-    } | {
-        if [[ -t 1 ]]; then
-            less -iRFX
-        else
-            cat
-        fi
-    }
-}
 
+            # Convert directory name to colorified $user/$plugin
+            -zplg-any-colorify-as-uspl2 "${pp:t}"
+
+            # Adjust for escape code (nasty, utilizes fact that
+            # ${ZPLG_COL[rst]} is used twice, so as a $ZPLG_COL)
+            integer adjust_ec=$(( ${#reset_color} * 2 + ${#ZPLG_COL[uname]} + ${#ZPLG_COL[pname]} ))
+
+            print "${(r:longest+adjust_ec:: :)REPLY} ${(j:, :)completions}"
+        fi
+    done
+} # }}}
+# FUNCTION: -zplg-cenable {{{
+-zplg-cenable() {
+    local c="$1"
+    c="${c#_}"
+
+    local cfile="${ZPLG_COMPLETIONS_DIR}/_${c}"
+    local bkpfile="${cfile:h}/$c"
+
+    if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
+        print "${ZPLG_COL[error]}No such completion \`$c'${ZPLG_COL[rst]}"
+        return 1
+    fi
+
+    # Check if there is no backup file
+    # This is treated as if the completion is already enabled
+    if [[ ! -e "$bkpfile" ]]; then
+        print "Completion ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} already enabled"
+
+        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
+        return 1
+    fi
+
+    # Disabled, but completion file already exists?
+    if [[ -e "$cfile" ]]; then
+        print "${ZPLG_COL[error]}Warning: completion's file \`${cfile:t}' exists, will overwrite${ZPLG_COL[rst]}"
+        print "${ZPLG_COL[error]}Completion is actually enabled and will re-enable it again${ZPLG_COL[rst]}"
+        -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
+        command rm -f "$cfile"
+    else
+        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
+    fi
+
+    # Enable
+    command mv "$bkpfile" "$cfile" # move completion's backup file created when disabling
+
+    # Prepare readlink command for establishing completion's owner
+    -zplg-prepare-readlink
+    # Get completion's owning plugin
+    -zplg-get-completion-owner-uspl2col "$cfile" "$REPLY"
+
+    print "Enabled ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} completion belonging to $REPLY"
+
+    return 0
+} # }}}
+# FUNCTION: -zplg-cdisable {{{
+-zplg-cdisable() {
+    local c="$1"
+    c="${c#_}"
+
+    local cfile="${ZPLG_COMPLETIONS_DIR}/_${c}"
+    local bkpfile="${cfile:h}/$c"
+
+    if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
+        print "${ZPLG_COL[error]}No such completion \`$c'${ZPLG_COL[rst]}"
+        return 1
+    fi
+
+    # Check if it's already disabled
+    # Not existing "$cfile" says that
+    if [[ ! -e "$cfile" ]]; then
+        print "Completion ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} already disabled"
+
+        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
+        return 1
+    fi
+
+    # No disable, but bkpfile exists?
+    if [[ -e "$bkpfile" ]]; then
+        print "${ZPLG_COL[error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite${ZPLG_COL[rst]}"
+        -zplg-check-comp-consistency "$cfile" "$bkpfile" 1
+        command rm -f "$bkpfile"
+    else
+        -zplg-check-comp-consistency "$cfile" "$bkpfile" 0
+    fi
+
+    # Disable
+    command mv "$cfile" "$bkpfile"
+
+    # Prepare readlink command for establishing completion's owner
+    -zplg-prepare-readlink
+    # Get completion's owning plugin
+    -zplg-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
+
+    print "Disabled ${ZPLG_COL[info]}$c${ZPLG_COL[rst]} completion belonging to $REPLY"
+
+    return 0
+} # }}}
+
+# FUNCTION: -zplg-changes {{{
 -zplg-changes() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1396,8 +1337,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
         git log -p --graph --decorate --date=relative -C -M
     )
-}
-
+} # }}}
+# FUNCTION: -zplg-recently {{{
 -zplg-recently() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1425,8 +1366,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         fi
         popd >/dev/null
     done
-}
-
+} # }}}
+# FUNCTION: -zplg-create {{{
 -zplg-create() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1493,8 +1434,68 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         print "Created local $uspl2col plugin."
         print "You're in plugin's repository folder, the files aren't added to git."
     fi
-}
+} # }}}
+# FUNCTION: -zplg-glance {{{
+-zplg-glance() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
 
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    -zplg-first "$1" "$2" || {
+        print "${ZPLG_COL[error]}No source file found, cannot glance${ZPLG_COL[rst]}"
+        return 1
+    }
+
+    local fname="${reply[-1]}"
+
+    integer has_256_colors=0
+    [[ "$TERM" = xterm* || "$TERM" = "screen" ]] && has_256_colors=1
+
+    {
+        if (( ${+commands[pygmentize]} )); then
+            print "Glancing with ${ZPLG_COL[info]}pygmentize${ZPLG_COL[rst]}"
+            pygmentize -l bash -g "$fname"
+        elif (( ${+commands[highlight]} )); then
+            print "Glancing with ${ZPLG_COL[info]}highlight${ZPLG_COL[rst]}"
+            if (( has_256_colors )); then
+                highlight -q --force -S sh -O xterm256 "$fname"
+            else
+                highlight -q --force -S sh -O ansi "$fname"
+            fi
+        elif (( ${+commands[source-highlight]} )); then
+            print "Glancing with ${ZPLG_COL[info]}source-highlight${ZPLG_COL[rst]}"
+            source-highlight -fesc --failsafe -s zsh -o STDOUT -i "$fname"
+        else
+            cat "$fname"
+        fi
+    } | {
+        if [[ -t 1 ]]; then
+            less -iRFX
+        else
+            cat
+        fi
+    }
+} # }}}
+# FUNCTION: -zplg-edit {{{
+-zplg-edit() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    # cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    -zplg-first "$1" "$2" || {
+        print "${ZPLG_COL[error]}No source file found, cannot edit${ZPLG_COL[rst]}"
+        return 1
+    }
+
+    local fname="${reply[-1]}"
+
+    print "Editting ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]} with ${ZPLG_COL[p]}${EDITOR:-vim}${ZPLG_COL[rst]}"
+    "${EDITOR:-vim}" "$fname"
+} # }}}
+# FUNCTION: -zplg-stress {{{
 # Compiles plugin with various options on and off
 # to see how well the code is written
 -zplg-stress() {
@@ -1530,14 +1531,21 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
     command rm -f "${fname}.zwc"
     (( compiled )) && zcompile "$fname"
-}
-# }}}
+} # }}}
+# FUNCTION: -zplg-list-compdef-replay {{{
+-zplg-list-compdef-replay() {
+    print "Recorded compdefs:"
+    local cdf
+    for cdf in "${ZPLG_COMPDEF_REPLAY[@]}"; do
+        print "compdef ${(Q)cdf}"
+    done
+} # }}}
 
--zplg-show-debug-report() {
-    # Display report of given plugin
-    -zplg-show-report "_dtrace/_dtrace"
-}
+#
+# Help function
+#
 
+# FUNCTION: -zplg-help {{{
 -zplg-help() {
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
@@ -1577,4 +1585,4 @@ compiled                 - list plugins that are compiled
 cdlist                   - show compdef replay list
 cdreplay                 - replay compdefs (to be done after compinit)
 cdclear                  - clear compdef replay list"
-}
+} # }}}
