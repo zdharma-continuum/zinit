@@ -1115,10 +1115,6 @@ builtin setopt noaliases
     ZPLG_REGISTERED_PLUGINS[$idx]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
 } # }}}
-# FUNCTION: -zplg-load-user-functions {{{
--zplg-load-user-functions() {
-    (( ${+functions[-zplg-format-functions]} )) || builtin source $ZPLG_DIR"/zplugin-autoload.zsh"
-} # }}}
 
 #
 # Remaining functions
@@ -1484,7 +1480,7 @@ zplugin() {
            man "$ZPLG_DIR/doc/zplugin.1"
            ;;
        (*)
-           -zplg-load-user-functions
+           (( ${+functions[-zplg-format-functions]} )) || builtin source $ZPLG_DIR"/zplugin-autoload.zsh"
            case "$1" in
                (zstatus)
                    -zplg-show-zstatus
