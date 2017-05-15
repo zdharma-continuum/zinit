@@ -1465,143 +1465,14 @@ zplugin() {
            # clean FPATH (autoload is still being shadowed)
            -zplg-load "$2" "$3" "light"
            ;;
+       (snippet)
+           -zplg-load-snippet "$2" "$3" "$4"
+           ;;
        (cdreplay)
            -zplg-compdef-replay "$2"
            ;;
        (cdclear)
            -zplg-compdef-clear "$2"
-           ;;
-       (man)
-           man "$ZPLG_DIR/doc/zplugin.1"
-           ;;
-       (zstatus)
-           -zplg-load-user-functions
-           -zplg-show-zstatus
-           ;;
-       (self-update)
-           -zplg-load-user-functions
-           -zplg-self-update
-           ;;
-       (unload)
-           -zplg-load-user-functions
-           if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try help"
-               return 1
-           fi
-           # Unload given plugin. Cloned directory remains intact
-           # so as are completions
-           -zplg-unload "$2" "$3"
-           ;;
-       (snippet)
-           -zplg-load-snippet "$2" "$3" "$4"
-           ;;
-       (update)
-           -zplg-load-user-functions
-           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
-               -zplg-update-or-status-all "update"
-           else
-               -zplg-update-or-status "update" "$2" "$3"
-           fi
-           ;;
-       (status)
-           -zplg-load-user-functions
-           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
-               -zplg-update-or-status-all "status"
-           else
-               -zplg-update-or-status "status" "$2" "$3"
-           fi
-           ;;
-       (report)
-           -zplg-load-user-functions
-           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 3; }
-               -zplg-show-all-reports
-           else
-               -zplg-show-report "$2" "$3"
-           fi
-           ;;
-       (loaded|list)
-           -zplg-load-user-functions
-           # Show list of loaded plugins
-           -zplg-show-registered-plugins "$2"
-           ;;
-       (clist|completions)
-           -zplg-load-user-functions
-           # Show installed, enabled or disabled, completions
-           # Detect stray and improper ones
-           -zplg-show-completions
-           ;;
-       (cclear)
-           -zplg-load-user-functions
-           # Delete stray and improper completions
-           -zplg-clear-completions
-           ;;
-       (cdisable)
-           -zplg-load-user-functions
-           if [[ -z "$2" ]]; then
-               print "Argument needed, try help"
-               return 1
-           fi
-           local f="_${2#_}"
-           # Disable completion given by completion function name
-           # with or without leading "_", e.g. "cp", "_cp"
-           if -zplg-cdisable "$f"; then
-               (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
-               -zplg-forget-completion "$f"
-               print "Initializing completion system (compinit)..."
-               builtin autoload -Uz compinit
-               compinit
-           fi
-           ;;
-       (cenable)
-           -zplg-load-user-functions
-           if [[ -z "$2" ]]; then
-               print "Argument needed, try help"
-               return 1
-           fi
-           local f="_${2#_}"
-           # Enable completion given by completion function name
-           # with or without leading "_", e.g. "cp", "_cp"
-           if -zplg-cenable "$f"; then
-               (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
-               -zplg-forget-completion "$f"
-               print "Initializing completion system (compinit)..."
-               builtin autoload -Uz compinit
-               compinit
-           fi
-           ;;
-       (creinstall)
-           (( ${+functions[-zplg-install-completions]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
-           # Installs completions for plugin. Enables them all. It's a
-           # reinstallation, thus every obstacle gets overwritten or removed
-           -zplg-install-completions "$2" "$3" "1"
-           print "Initializing completion (compinit)..."
-           builtin autoload -Uz compinit
-           compinit
-           ;;
-       (cuninstall)
-           -zplg-load-user-functions
-           if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try help"
-               return 1
-           fi
-           # Uninstalls completions for plugin
-           -zplg-uninstall-completions "$2" "$3"
-           print "Initializing completion (compinit)..."
-           builtin autoload -Uz compinit
-           compinit
-           ;;
-       (csearch)
-           -zplg-load-user-functions
-           -zplg-search-completions
-           ;;
-       (compinit)
-           -zplg-load-user-functions
-           # Runs compinit in a way that ensures
-           # reload of plugins' completions
-           -zplg-compinit
            ;;
        (dstart|dtrace)
            -zplg-debug-start
@@ -1609,81 +1480,186 @@ zplugin() {
        (dstop)
            -zplg-debug-stop
            ;;
-       (dreport)
-           -zplg-load-user-functions
-           -zplg-show-debug-report
-           ;;
-       (dclear)
-           -zplg-load-user-functions
-           -zplg-clear-debug-report
-           ;;
-       (dunload)
-           -zplg-load-user-functions
-           -zplg-debug-unload
-           ;;
-       (compile)
-           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
-               -zplg-load-user-functions
-               -zplg-compile-uncompile-all "1"
-           else
-               (( ${+functions[-zplg-compile-plugin]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
-               -zplg-compile-plugin "$2" "$3"
-           fi
-           ;;
-       (uncompile)
-           -zplg-load-user-functions
-           if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-               [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
-               -zplg-compile-uncompile-all "0"
-           else
-               -zplg-uncompile-plugin "$2" "$3"
-           fi
-           ;;
-       (compiled)
-           -zplg-load-user-functions
-           -zplg-compiled
-           ;;
-       (cdlist)
-           -zplg-load-user-functions
-           -zplg-list-compdef-replay
-           ;;
-       (cd)
-           -zplg-load-user-functions
-           -zplg-cd "$2" "$3"
-           ;;
-       (edit)
-           -zplg-load-user-functions
-           -zplg-edit "$2" "$3"
-           ;;
-       (glance)
-           -zplg-load-user-functions
-           -zplg-glance "$2" "$3"
-           ;;
-       (changes)
-           -zplg-load-user-functions
-           -zplg-changes "$2" "$3"
-           ;;
-       (recently)
-           -zplg-load-user-functions
-           shift
-           -zplg-recently "$@"
-           ;;
-       (create)
-           -zplg-load-user-functions
-           -zplg-create "$2" "$3"
-           ;;
-       (stress)
-           -zplg-load-user-functions
-           -zplg-stress "$2" "$3"
-           ;;
-       (-h|--help|help|"")
-           -zplg-load-user-functions
-           -zplg-help
+       (man)
+           man "$ZPLG_DIR/doc/zplugin.1"
            ;;
        (*)
-           print "Unknown command \`$1' (use \`help' to get usage information)"
-           ;;
+           -zplg-load-user-functions
+           case "$1" in
+               (zstatus)
+                   -zplg-show-zstatus
+                   ;;
+               (self-update)
+                   -zplg-self-update
+                   ;;
+               (unload)
+                   if [[ -z "$2" && -z "$3" ]]; then
+                       print "Argument needed, try help"
+                       return 1
+                   fi
+                   # Unload given plugin. Cloned directory remains intact
+                   # so as are completions
+                   -zplg-unload "$2" "$3"
+                   ;;
+               (update)
+                   if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       -zplg-update-or-status-all "update"
+                   else
+                       -zplg-update-or-status "update" "$2" "$3"
+                   fi
+                   ;;
+               (status)
+                   if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       -zplg-update-or-status-all "status"
+                   else
+                       -zplg-update-or-status "status" "$2" "$3"
+                   fi
+                   ;;
+               (report)
+                   if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 3; }
+                       -zplg-show-all-reports
+                   else
+                       -zplg-show-report "$2" "$3"
+                   fi
+                   ;;
+               (loaded|list)
+                   # Show list of loaded plugins
+                   -zplg-show-registered-plugins "$2"
+                   ;;
+               (clist|completions)
+                   # Show installed, enabled or disabled, completions
+                   # Detect stray and improper ones
+                   -zplg-show-completions
+                   ;;
+               (cclear)
+                   # Delete stray and improper completions
+                   -zplg-clear-completions
+                   ;;
+               (cdisable)
+                   if [[ -z "$2" ]]; then
+                       print "Argument needed, try help"
+                       return 1
+                   fi
+                   local f="_${2#_}"
+                   # Disable completion given by completion function name
+                   # with or without leading "_", e.g. "cp", "_cp"
+                   if -zplg-cdisable "$f"; then
+                       (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
+                       -zplg-forget-completion "$f"
+                       print "Initializing completion system (compinit)..."
+                       builtin autoload -Uz compinit
+                       compinit
+                   fi
+                   ;;
+               (cenable)
+                   if [[ -z "$2" ]]; then
+                       print "Argument needed, try help"
+                       return 1
+                   fi
+                   local f="_${2#_}"
+                   # Enable completion given by completion function name
+                   # with or without leading "_", e.g. "cp", "_cp"
+                   if -zplg-cenable "$f"; then
+                       (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
+                       -zplg-forget-completion "$f"
+                       print "Initializing completion system (compinit)..."
+                       builtin autoload -Uz compinit
+                       compinit
+                   fi
+                   ;;
+               (creinstall)
+                   (( ${+functions[-zplg-install-completions]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
+                   # Installs completions for plugin. Enables them all. It's a
+                   # reinstallation, thus every obstacle gets overwritten or removed
+                   -zplg-install-completions "$2" "$3" "1"
+                   print "Initializing completion (compinit)..."
+                   builtin autoload -Uz compinit
+                   compinit
+                   ;;
+               (cuninstall)
+                   if [[ -z "$2" && -z "$3" ]]; then
+                       print "Argument needed, try help"
+                       return 1
+                   fi
+                   # Uninstalls completions for plugin
+                   -zplg-uninstall-completions "$2" "$3"
+                   print "Initializing completion (compinit)..."
+                   builtin autoload -Uz compinit
+                   compinit
+                   ;;
+               (csearch)
+                   -zplg-search-completions
+                   ;;
+               (compinit)
+                   # Runs compinit in a way that ensures
+                   # reload of plugins' completions
+                   -zplg-compinit
+                   ;;
+               (dreport)
+                   -zplg-show-debug-report
+                   ;;
+               (dclear)
+                   -zplg-clear-debug-report
+                   ;;
+               (dunload)
+                   -zplg-debug-unload
+                   ;;
+               (compile)
+                   if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       -zplg-compile-uncompile-all "1"
+                   else
+                       (( ${+functions[-zplg-compile-plugin]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
+                       -zplg-compile-plugin "$2" "$3"
+                   fi
+                   ;;
+               (uncompile)
+                   if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       -zplg-compile-uncompile-all "0"
+                   else
+                       -zplg-uncompile-plugin "$2" "$3"
+                   fi
+                   ;;
+               (compiled)
+                   -zplg-compiled
+                   ;;
+               (cdlist)
+                   -zplg-list-compdef-replay
+                   ;;
+               (cd)
+                   -zplg-cd "$2" "$3"
+                   ;;
+               (edit)
+                   -zplg-edit "$2" "$3"
+                   ;;
+               (glance)
+                   -zplg-glance "$2" "$3"
+                   ;;
+               (changes)
+                   -zplg-changes "$2" "$3"
+                   ;;
+               (recently)
+                   shift
+                   -zplg-recently "$@"
+                   ;;
+               (create)
+                   -zplg-create "$2" "$3"
+                   ;;
+               (stress)
+                   -zplg-stress "$2" "$3"
+                   ;;
+               (-h|--help|help|"")
+                   -zplg-help
+                   ;;
+               (*) 
+                   print "Unknown command \`$1' (use \`help' to get usage information)"
+                   ;;
+            esac
+            ;;
     esac
 } # }}}
 
