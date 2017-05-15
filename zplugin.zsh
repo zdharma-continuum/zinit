@@ -557,8 +557,7 @@ builtin setopt noaliases
     # If it does exist, then it will also exist in ZPLG_BACKUP_FUNCTIONS
 
     # Defensive code, shouldn't be needed
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[autoload]" # 0.
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[compdef]"  # E.
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[autoload]" "ZPLG_BACKUP_FUNCTIONS[compdef]"  # 0, E.
 
     if [[ "$mode" != "compdef" ]]; then
         # 0. Used, but not in temporary restoration, which doesn't happen for autoload
@@ -573,11 +572,8 @@ builtin setopt noaliases
     # Light and compdef shadowing stops here. Dtrace and load go on
     [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
 
-    # Defensive code, shouldn't be needed
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"  # A.
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"   # B.
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[alias]"    # C.
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[zle]"      # D.
+    # Defensive code, shouldn't be needed. A, B, C, D
+    builtin unset "ZPLG_BACKUP_FUNCTIONS[bindkey]" "ZPLG_BACKUP_FUNCTIONS[zstyle]" "ZPLG_BACKUP_FUNCTIONS[alias]" "ZPLG_BACKUP_FUNCTIONS[zle]"
 
     # A.
     (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
