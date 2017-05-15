@@ -37,7 +37,14 @@
         # Return with error when any problem
         local site
         [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
-        git clone --recursive https://${site:-github.com}/"$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
+        case "${ZPLG_ICE[proto]}" in
+            (|https)
+                git clone --recursive https://${site:-github.com}/"$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
+                ;;
+            (git)
+                git clone --recursive git://${site:-github.com}/"$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
+                ;;
+        esac
 
         # Install completions
         -zplg-install-completions "$user" "$plugin" "0"
