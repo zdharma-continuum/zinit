@@ -1266,16 +1266,6 @@ builtin setopt noaliases
     }
 } # }}}
 
-# FUNCTION: -zplg-cd {{{
--zplg-cd() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
-
-    -zplg-exists-physically-message "$user" "$plugin" || return 1
-
-    cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-} # }}}
-
 #
 # Remaining functions
 #
