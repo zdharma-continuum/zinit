@@ -64,100 +64,46 @@ typeset -gH ZPLG_NEW_AUTOLOAD=0
 builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
 
-#
-# Shadowing variables {{{
-# Can be used by any shadowing function to recognize current context
-#
-
+# Parameters - shadowing {{{
 ZPLG_MAIN[SHADOWING]="inactive"
 ZPLG_MAIN[DTRACE]="0"
 typeset -gH ZPLG_CUR_PLUGIN=""
 # }}}
-
-#
-# Function diffing {{{
-#
-
-# Used to hold declared functions existing before loading a plugin
+# Parameters - function diffing {{{
 typeset -gAH ZPLG_FUNCTIONS_BEFORE
-# Functions existing after loading a plugin. Reporting will do a diff
 typeset -gAH ZPLG_FUNCTIONS_AFTER
 # Functions computed to be associated with plugin
 typeset -gAH ZPLG_FUNCTIONS
-# Was the function diff already ran?
 typeset -gAH ZPLG_FUNCTIONS_DIFF_RAN
-
 #}}}
-
-#
-# Option diffing {{{
-#
-
-# Concatenated state of options before loading a plugin
+# Parameters - option diffing {{{
 typeset -gAH ZPLG_OPTIONS_BEFORE
-
-# Concatenated state of options after loading a plugin
 typeset -gAH ZPLG_OPTIONS_AFTER
-
 # Concatenated options that changed, hold as they were before plugin load
 typeset -gAH ZPLG_OPTIONS
-
-# Was the option diff already ran?
 typeset -gAH ZPLG_OPTIONS_DIFF_RAN
-
 # }}}
-
-#
-# Environment diffing {{{
-#
-
-# Concatenated state of PATH before loading a plugin
+# Parameters - environment diffing {{{
 typeset -gAH ZPLG_PATH_BEFORE
-
-# Concatenated state of PATH after loading a plugin
 typeset -gAH ZPLG_PATH_AFTER
-
 # Concatenated new elements of PATH (after diff)
 typeset -gAH ZPLG_PATH
-
-# Concatenated state of FPATH before loading a plugin
 typeset -gAH ZPLG_FPATH_BEFORE
-
-# Concatenated state of FPATH after loading a plugin
 typeset -gAH ZPLG_FPATH_AFTER
-
 # Concatenated new elements of FPATH (after diff)
 typeset -gAH ZPLG_FPATH
-
-# Was the environment diff already ran?
 typeset -gHA ZPLG_ENV_DIFF_RAN
 # }}}
-
-#
-# Parameter diffing {{{
-#
-
-# Concatenated state of PARAMETERS before loading a plugin
+# Parameters - parameter diffing {{{
 typeset -gAH ZPLG_PARAMETERS_BEFORE
-
-# Concatenated state of PARAMETERS after loading a plugin
 typeset -gAH ZPLG_PARAMETERS_AFTER
-
 # Concatenated *changed* previous elements of $parameters (before)
 typeset -gAH ZPLG_PARAMETERS_PRE
-
 # Concatenated *changed* current elements of $parameters (after)
 typeset -gAH ZPLG_PARAMETERS_POST
-
-# Was the environment diff already ran?
 typeset -gHA ZPLG_PARAMETERS_DIFF_RAN
-
 # }}}
-
-#
-# Zstyle, bindkey, alias, zle remembering {{{
-#
-
+# Parameters - zstyle, bindkey, alias, zle remembering {{{
 # Holds concatenated Zstyles declared by each plugin
 # Concatenated after quoting, so (z)-splittable
 typeset -gAH ZPLG_ZSTYLES
@@ -180,10 +126,7 @@ typeset -gAH ZPLG_WIDGETS_DELETE
 typeset -gaH ZPLG_COMPDEF_REPLAY
 # }}}
 
-#
 # Init {{{
-#
-
 zmodload zsh/zutil || return 1
 zmodload zsh/parameter || return 1
 zmodload zsh/terminfo 2>/dev/null
@@ -224,20 +167,16 @@ ZPLG_ZLE_HOOKS_LIST=(
     zle-history-line-set "1"
     zle-keymap-select "1"
 )
+
+builtin setopt noaliases
+
 # }}}
 
 #
-# The one noaliases setopt that will protect all
-# Zplugin's functions from disruption via aliases,
-# including global ones
-#
-builtin setopt noaliases
-
-#
-# Shadowing-related functions (names of substitute functions start with --) {{{
-# Must be resistant to various game-changing options like KSH_ARRAYS
+# Shadowing-related functions
 #
 
+# FUNCTION: --zplg-reload-and-run {{{
 # Author: Bart Schaefer
 --zplg-reload-and-run () {
     local fpath_prefix="$1" autoload_opts="$2" func="$3"
@@ -254,8 +193,8 @@ builtin setopt noaliases
 
     # User wanted to call the function, not only load it
     "$func" "$@"
-}
-
+} # }}}
+# FUNCTION: --zplg-shadow-autoload {{{
 --zplg-shadow-autoload () {
     local -a opts
     local func
@@ -309,8 +248,8 @@ builtin setopt noaliases
 
     # Testable
     return 0
-}
-
+} # }}}
+# FUNCTION: --zplg-shadow-bindkey {{{
 --zplg-shadow-bindkey() {
     -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Bindkey $*"
 
@@ -421,8 +360,8 @@ builtin setopt noaliases
     functions[bindkey]='--zplg-shadow-bindkey "$@";'
 
     return $ret # testable
-}
-
+} # }}}
+# FUNCTION: --zplg-shadow-zstyle {{{
 --zplg-shadow-zstyle() {
     -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Zstyle $*"
 
@@ -466,8 +405,8 @@ builtin setopt noaliases
     functions[zstyle]='--zplg-shadow-zstyle "$@";'
 
     return $ret # testable
-}
-
+} # }}}
+# FUNCTION: --zplg-shadow-alias {{{
 --zplg-shadow-alias() {
     -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Alias $*"
 
@@ -522,8 +461,8 @@ builtin setopt noaliases
     functions[alias]='--zplg-shadow-alias "$@";'
 
     return $ret # testable
-}
-
+} # }}}
+# FUNCTION: --zplg-shadow-zle {{{
 --zplg-shadow-zle() {
     -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Zle $*"
 
@@ -587,15 +526,15 @@ builtin setopt noaliases
     functions[zle]='--zplg-shadow-zle "$@";'
 
     return $ret # testable
-}
-
+} # }}}
+# FUNCTION: --zplg-shadow-compdef {{{
 --zplg-shadow-compdef() {
     -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Saving \`compdef $*' for replay"
     ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
 
     return 0 # testable
-}
-
+} # }}}
+# FUNCTION: -zplg-shadow-on {{{
 # Shadowing on completely for a given mode ("load", "light" or "compdef")
 -zplg-shadow-on() {
     local mode="$1"
@@ -657,8 +596,8 @@ builtin setopt noaliases
     functions[zle]='--zplg-shadow-zle "$@";'
 
     builtin return 0
-}
-
+} # }}}
+# FUNCTION: -zplg-shadow-off {{{
 # Shadowing off completely for a given mode "load", "light" or "compdef"
 -zplg-shadow-off() {
     builtin setopt localoptions noaliases
@@ -693,17 +632,13 @@ builtin setopt noaliases
     (( ${+ZPLG_BACKUP_FUNCTIONS[zle]} )) && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
 
     return 0
-}
-
-# }}}
+} # }}}
 
 #
-# Function diff functions {{{
+# Diff functions
 #
 
-# Can remember current $functions twice, and compute the
-# difference, storing it in ZPLG_FUNCTIONS, associated
-# with given ($1) plugin
+# FUNCTION: -zplg-diff-functions {{{
 -zplg-diff-functions() {
     local uspl2="$1"
     local cmd="$2"
@@ -754,17 +689,8 @@ builtin setopt noaliases
     esac
 
     return 0
-}
-# }}}
-
-#
-# Option diff functions {{{
-#
-
-# Can remember current $options twice. After that can
-# detect any change between the two saves. Changed
-# options are appended as they were in first save to
-# ZPLG_OPTIONS, all associated with given ($1) plugin
+} # }}}
+# FUNCTION: -zplg-diff-options {{{
 -zplg-diff-options() {
     local uspl2="$1"
     local cmd="$2"
@@ -818,13 +744,8 @@ builtin setopt noaliases
     esac
 
     return 0
-}
-# }}}
-
-#
-# Environment diff functions {{{
-#
-
+} # }}}
+# FUNCTION: -zplg-diff-env {{{
 -zplg-diff-env() {
     local uspl2="$1"
     local cmd="$2"
@@ -914,13 +835,8 @@ builtin setopt noaliases
     esac
 
     return 0
-}
-# }}}
-
-#
-# Parameter diff functions {{{
-#
-
+} # }}}
+# FUNCTION: -zplg-diff-parameter {{{
 -zplg-diff-parameter() {
     local uspl2="$1"
     local cmd="$2"
@@ -994,42 +910,13 @@ builtin setopt noaliases
     esac
 
     return 0
-}
-# }}}
+} # }}}
 
 #
-# Report functions {{{
+# Utility functions
 #
 
--zplg-add-report() {
-    local uspl2="$1"
-    shift
-    local txt="$*"
-
-    local keyword="${txt%% *}"
-    if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
-        keyword="${ZPLG_COL[error]}$keyword${ZPLG_COL[rst]}"
-    else
-        keyword="${ZPLG_COL[keyword]}$keyword${ZPLG_COL[rst]}"
-    fi
-
-    # Don't report to any user/plugin if there is no plugin load in progress
-    if [[ -n "$uspl2" ]]; then
-        ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
-    fi
-
-    # This is nasty, if debug is on, report everything
-    # to special debug user
-    [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$keyword ${txt#* }"$'\n'
-}
-
-# }}}
-
-#
-# Helper functions {{{
-#
-
-# Crucial helper function A
+# FUNCTION: -zplg-any-to-user-plugin {{{
 # Allows elastic use of "$1" and "$2" across the code
 #
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
@@ -1082,28 +969,25 @@ builtin setopt noaliases
 
     reply=( "$user" "$plugin" )
     return 0
-}
-
-# Crucial helper function B
+} # }}}
+# FUNCTION: -zplg-any-to-uspl2 {{{
 # Converts to format that's used in keys for hash tables
 #
 # Supports all four formats
 -zplg-any-to-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
     REPLY="${reply[-2]}/${reply[-1]}"
-}
-
-# Checks for a plugin existence, all four formats
-# of the plugin specification supported
+} # }}}
+# FUNCTION: -zplg-exists {{{
+# Checks for a plugin existence
 -zplg-exists() {
     -zplg-any-to-uspl2 "$1" "$2"
     if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
         return 1
     fi
     return 0
-}
-
-# Checks for a plugin existence and outputs a message
+} # }}}
+# FUNCTION: -zplg-exists-message {{{
 -zplg-exists-message() {
     if ! -zplg-exists "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
@@ -1111,16 +995,13 @@ builtin setopt noaliases
         return 1
     fi
     return 0
-}
-
-# Checks for a plugin existence, all four formats
-# of the plugin specification supported
+} # }}}
+# FUNCTION: -zplg-exists-physically {{{
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
     [[ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
-}
-
-# Checks for a plugin existence and outputs a message
+} # }}}
+# FUNCTION: -zplg-exists-physically-message {{{
 -zplg-exists-physically-message() {
     if ! -zplg-exists-physically "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
@@ -1128,81 +1009,15 @@ builtin setopt noaliases
         return 1
     fi
     return 0
-}
-
-# Will take uspl, uspl2, or just plugin name,
-# and return colored text
+} # }}}
+# FUNCTION: -zplg-any-colorify-as-uspl2 {{{
 -zplg-any-colorify-as-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
     local ucol="${ZPLG_COL[uname]}" pcol="${ZPLG_COL[pname]}"
     REPLY="${ucol}${user}${ZPLG_COL[rst]}/${pcol}${plugin}${ZPLG_COL[rst]}"
-}
-
--zplg-already-function-warning-uspl2() {
-    (( $1 )) && -zplg-add-report "$2" "Warning: there already was $3() function defined, possibly in zshrc"
-}
-
--zplg-download-file-stdout() {
-    local url="$1"
-    local restart="$2"
-
-    if [[ "$restart" = "1" ]]; then
-        path+=( "/usr/local/bin" )
-        if (( ${+commands[curl]} )) then
-            curl -fsSL "$url"
-        elif (( ${+commands[wget]} )); then
-            wget -q "$url" -O -
-        elif (( ${+commands[lftp]} )); then
-            lftp -c "cat $url"
-        elif (( ${+commands[lynx]} )) then
-            lynx -dump "$url"
-        else
-            [[ "${(t)path}" != *unique* ]] && path[-1]=()
-            return 1
-        fi
-        [[ "${(t)path}" != *unique* ]] && path[-1]=()
-    else
-        if ! type curl 2>/dev/null 1>&2; then
-            curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
-        elif type wget 2>/dev/null 1>&2; then
-            wget -q "$url" -O - || -zplg-download-file-stdout "$url" "1"
-        elif type lftp 2>/dev/null 1>&2; then
-            lftp -c "cat $url" || -zplg-download-file-stdout "$url" "1"
-        else
-            -zplg-download-file-stdout "$url" "1"
-        fi
-    fi
-
-    return 0
-}
-
-# Doesn't look for the most common $pname.plugin.zsh
-# file but for alternatives
--zplg-find-other-matches() {
-    local dname="$1" pdir="$2"
-
-    builtin setopt localoptions nullglob
-
-    if [[ -e "$dname/$pdir/init.zsh" ]]; then
-        reply=( "$dname/$pdir/init.zsh" )
-    elif [[ -e "$dname/${pdir}.zsh-theme" ]]; then
-        reply=( "$dname/${pdir}.zsh-theme" )
-    elif [[ -e "$dname/${pdir}.theme.zsh" ]]; then
-        reply=( "$dname/${pdir}.theme.zsh" )
-    elif [[ -e "$dname/${pdir}.zshplugin" ]]; then
-        reply=( "$dname/${pdir}.zshplugin" )
-    elif [[ -e "$dname/${pdir}.zsh.plugin" ]]; then
-        reply=( "$dname/${pdir}.zsh.plugin" )
-    else
-        reply=(
-            $dname/*.plugin.zsh $dname/*.zsh $dname/*.sh
-            $dname/*.zsh-theme $dname/.zshrc(N)
-        )
-    fi
-}
-
-# Get first file that looks like main plugin's file
+} # }}}
+# FUNCTION: -zplg-first {{{
 -zplg-first() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1233,14 +1048,68 @@ builtin setopt noaliases
 
     reply=( "$dname" "$first" )
     return 0
-}
+} # }}}
+# FUNCTION: -zplg-find-other-matches {{{
+-zplg-find-other-matches() {
+    local dname="$1" pdir="$2"
 
-# }}}
+    builtin setopt localoptions nullglob
 
-#
-# ZPlugin internal functions {{{
-#
+    if [[ -e "$dname/$pdir/init.zsh" ]]; then
+        reply=( "$dname/$pdir/init.zsh" )
+    elif [[ -e "$dname/${pdir}.zsh-theme" ]]; then
+        reply=( "$dname/${pdir}.zsh-theme" )
+    elif [[ -e "$dname/${pdir}.theme.zsh" ]]; then
+        reply=( "$dname/${pdir}.theme.zsh" )
+    elif [[ -e "$dname/${pdir}.zshplugin" ]]; then
+        reply=( "$dname/${pdir}.zshplugin" )
+    elif [[ -e "$dname/${pdir}.zsh.plugin" ]]; then
+        reply=( "$dname/${pdir}.zsh.plugin" )
+    else
+        reply=(
+            $dname/*.plugin.zsh $dname/*.zsh $dname/*.sh
+            $dname/*.zsh-theme $dname/.zshrc(N)
+        )
+    fi
+} # }}}
+# FUNCTION: -zplg-already-function-warning-uspl2 {{{
+-zplg-already-function-warning-uspl2() {
+    (( $1 )) && -zplg-add-report "$2" "Warning: there already was $3() function defined, possibly in zshrc"
+} # }}}
+# FUNCTION: -zplg-register-plugin {{{
+-zplg-register-plugin() {
+    local mode="$3"
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}/${reply[-1]}"
+    integer ret=0
 
+    if ! -zplg-exists "$user" "$plugin"; then
+        ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
+    else
+        # Allow overwrite-load, however warn about it
+        print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
+        ret=1
+    fi
+
+    # Full or light load?
+    [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
+
+    ZPLG_REPORTS[$uspl2]=""
+    ZPLG_FUNCTIONS_BEFORE[$uspl2]=""
+    ZPLG_FUNCTIONS_AFTER[$uspl2]=""
+    ZPLG_FUNCTIONS[$uspl2]=""
+    ZPLG_ZSTYLES[$uspl2]=""
+    ZPLG_BINDKEYS[$uspl2]=""
+    ZPLG_ALIASES[$uspl2]=""
+    ZPLG_WIDGETS_SAVED[$uspl2]=""
+    ZPLG_WIDGETS_DELETE[$uspl2]=""
+    ZPLG_OPTIONS[$uspl2]=""
+    ZPLG_PATH[$uspl2]=""
+    ZPLG_FPATH[$uspl2]=""
+
+    return $ret
+} # }}}
+# FUNCTION: -zplg-unregister-plugin {{{
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}/${reply[-1]}"
@@ -1249,62 +1118,37 @@ builtin setopt noaliases
     local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
     ZPLG_REGISTERED_PLUGINS[$idx]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
-}
+} # }}}
+# FUNCTION: -zplg-load-user-functions {{{
+-zplg-load-user-functions() {
+    (( ${+functions[-zplg-format-functions]} )) || builtin source $ZPLG_DIR"/zplugin-autoload.zsh"
+} # }}}
 
--zplg-prepare-home() {
-    [[ -n "${ZPLG_MAIN[HOME_READY]}" ]] && return
-    ZPLG_MAIN[HOME_READY]="1"
+# FUNCTION: -zplg-setup-plugin-dir {{{
+-zplg-setup-plugin-dir() {
+    local user="$1" plugin="$2" github_path="$1/$2"
+    if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
+        if [[ "$user" = "_local" ]]; then
+            print "Warning: no local plugin \`$plugin\'"
+            print "(looked in $ZPLG_PLUGINS_DIR/${user}---${plugin})"
+            return 1
+        fi
+        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+        print "Downloading $REPLY..."
 
-    [[ ! -d "$ZPLG_HOME" ]] && {
-        command mkdir 2>/dev/null "$ZPLG_HOME"
-        # For compaudit
-        command chmod go-w "$ZPLG_HOME"
-    }
-    [[ ! -d "$ZPLG_PLUGINS_DIR" ]] && {
-        command mkdir "$ZPLG_PLUGINS_DIR"
-        # For compaudit
-        command chmod go-w "$ZPLG_PLUGINS_DIR"
+        # Return with error when any problem
+        git clone --recursive https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
 
-        # Prepare mock-like plugin for Zplugin itself
-        command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
-        command ln -s "$ZPLG_DIR/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
-    }
-    [[ ! -d "$ZPLG_COMPLETIONS_DIR" ]] && {
-        command mkdir "$ZPLG_COMPLETIONS_DIR"
-        # For compaudit
-        command chmod go-w "$ZPLG_COMPLETIONS_DIR"
+        # Install completions
+        -zplg-install-completions "$user" "$plugin" "0"
 
-        # Symlink _zplugin completion into _local---zplugin directory
-        command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
-    }
-    [[ ! -d "$ZPLG_SNIPPETS_DIR" ]] && {
-        command mkdir "$ZPLG_SNIPPETS_DIR"
-        command chmod go-w "$ZPLG_SNIPPETS_DIR"
-    }
-}
+        # Compile plugin
+        -zplg-compile-plugin "$user" "$plugin"
+    fi
 
-# Forget given completions. Done before calling compinit
-# $1 - completion function name, e.g. "_cp"
--zplg-forget-completion() {
-    local f="$1"
-
-    typeset -a commands
-    commands=( "${(k@)_comps[(R)$f]}" )
-
-    [[ "${#commands[@]}" -gt 0 ]] && print "Forgetting commands completed by \`$f':"
-
-    local k
-    for k in "${commands[@]}"; do
-        [[ -n "$k" ]] || continue
-        unset "_comps[$k]"
-        print "Unsetting $k"
-    done
-
-    print "${ZPLG_COL[info]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
-    print
-    unfunction -- 2>/dev/null "$f"
-}
-
+    return 0
+} # }}}
+# FUNCTION: -zplg-install-completions {{{
 # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
 # $2 - plugin (if $1 - user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
@@ -1350,135 +1194,63 @@ builtin setopt noaliases
             print "${ZPLG_COL[error]}Use \`creinstall {plugin-name}' to force install${ZPLG_COL[rst]}"
         fi
     done
-}
+} # }}}
+# FUNCTION: -zplg-download-file-stdout {{{
+-zplg-download-file-stdout() {
+    local url="$1"
+    local restart="$2"
 
--zplg-setup-plugin-dir() {
-    local user="$1" plugin="$2" github_path="$1/$2"
-    if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
-        if [[ "$user" = "_local" ]]; then
-            print "Warning: no local plugin \`$plugin\'"
-            print "(looked in $ZPLG_PLUGINS_DIR/${user}---${plugin})"
+    if [[ "$restart" = "1" ]]; then
+        path+=( "/usr/local/bin" )
+        if (( ${+commands[curl]} )) then
+            curl -fsSL "$url"
+        elif (( ${+commands[wget]} )); then
+            wget -q "$url" -O -
+        elif (( ${+commands[lftp]} )); then
+            lftp -c "cat $url"
+        elif (( ${+commands[lynx]} )) then
+            lynx -dump "$url"
+        else
+            [[ "${(t)path}" != *unique* ]] && path[-1]=()
             return 1
         fi
-        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-        print "Downloading $REPLY..."
-
-        # Return with error when any problem
-        git clone --recursive https://github.com/"$github_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
-
-        # Install completions
-        -zplg-install-completions "$user" "$plugin" "0"
-
-        # Compile plugin
-        -zplg-compile-plugin "$user" "$plugin"
+        [[ "${(t)path}" != *unique* ]] && path[-1]=()
+    else
+        if ! type curl 2>/dev/null 1>&2; then
+            curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
+        elif type wget 2>/dev/null 1>&2; then
+            wget -q "$url" -O - || -zplg-download-file-stdout "$url" "1"
+        elif type lftp 2>/dev/null 1>&2; then
+            lftp -c "cat $url" || -zplg-download-file-stdout "$url" "1"
+        else
+            -zplg-download-file-stdout "$url" "1"
+        fi
     fi
 
     return 0
-}
+} # }}}
+# FUNCTION: -zplg-forget-completion {{{
+# $1 - completion function name, e.g. "_cp"
+-zplg-forget-completion() {
+    local f="$1"
 
-# TODO detect second autoload?
--zplg-register-plugin() {
-    local mode="$3"
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}/${reply[-1]}"
-    integer ret=0
+    typeset -a commands
+    commands=( "${(k@)_comps[(R)$f]}" )
 
-    if ! -zplg-exists "$user" "$plugin"; then
-        ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
-    else
-        # Allow overwrite-load, however warn about it
-        print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
-        ret=1
-    fi
+    [[ "${#commands[@]}" -gt 0 ]] && print "Forgetting commands completed by \`$f':"
 
-    # Full or light load?
-    [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
+    local k
+    for k in "${commands[@]}"; do
+        [[ -n "$k" ]] || continue
+        unset "_comps[$k]"
+        print "Unsetting $k"
+    done
 
-    ZPLG_REPORTS[$uspl2]=""
-    ZPLG_FUNCTIONS_BEFORE[$uspl2]=""
-    ZPLG_FUNCTIONS_AFTER[$uspl2]=""
-    ZPLG_FUNCTIONS[$uspl2]=""
-    ZPLG_ZSTYLES[$uspl2]=""
-    ZPLG_BINDKEYS[$uspl2]=""
-    ZPLG_ALIASES[$uspl2]=""
-    ZPLG_WIDGETS_SAVED[$uspl2]=""
-    ZPLG_WIDGETS_DELETE[$uspl2]=""
-    ZPLG_OPTIONS[$uspl2]=""
-    ZPLG_PATH[$uspl2]=""
-    ZPLG_FPATH[$uspl2]=""
-
-    return $ret
-}
-
--zplg-load-plugin() {
-    local user="$1" plugin="$2" mode="$3"
-    ZPLG_MAIN[CUR_USR]="$user"
-    ZPLG_CUR_PLUGIN="$plugin"
-    ZPLG_MAIN[CUR_USPL]="${user}---${plugin}"
-    ZPLG_MAIN[CUR_USPL2]="${user}/${plugin}"
-
-    # There are plugins having ".plugin.zsh"
-    # in ${plugin} directory name, also some
-    # have ".zsh" there
-    local pdir="${${plugin%.plugin.zsh}%.zsh}"
-    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-
-    # Look for a file to source. First look for the most
-    # common one (optimization) then for other possibilities
-    if [[ ! -e "$dname/${pdir}.plugin.zsh" ]]; then
-        -zplg-find-other-matches "$dname" "$pdir"
-    else
-        reply=( "$dname/${pdir}.plugin.zsh" )
-    fi
-    [[ "${#reply[@]}" -eq "0" ]] && return 1
-
-    # Get first one
-    integer correct=0
-    [[ -o "KSH_ARRAYS" ]] && correct=1
-    local fname="${reply[1-correct]#$dname/}"
-
-    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Source $fname"
-    [[ "$mode" = "light" ]] && -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Light load"
-
-    # Light and compdef mode doesn't do diffs and shadowing
-    if [[ "$mode" = "load" ]]; then
-        -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" begin
-        -zplg-diff-options "${ZPLG_MAIN[CUR_USPL2]}" begin
-        -zplg-diff-env "${ZPLG_MAIN[CUR_USPL2]}" begin
-        -zplg-diff-parameter "${ZPLG_MAIN[CUR_USPL2]}" begin
-    fi
-
-    # Warn about user having his own shadows in place. Check
-    # every possible shadow regardless of "$mode" setting
-    -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "${ZPLG_MAIN[CUR_USPL2]}" "autoload"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "${ZPLG_MAIN[CUR_USPL2]}" "bindkey"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zstyle"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "${ZPLG_MAIN[CUR_USPL2]}" "alias"
-    -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zle"
-
-    -zplg-shadow-on "$mode"
-
-    # We need some state, but user wants his for his plugins
-    builtin setopt noaliases
-    builtin source "$dname/$fname"
-    builtin unsetopt noaliases
-
-    -zplg-shadow-off "$mode"
-    if [[ "$mode" = "load" ]]; then
-        -zplg-diff-parameter "${ZPLG_MAIN[CUR_USPL2]}" end
-        -zplg-diff-env "${ZPLG_MAIN[CUR_USPL2]}" end
-        -zplg-diff-options "${ZPLG_MAIN[CUR_USPL2]}" end
-        -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" end
-    fi
-
-    # Mark no load is in progress
-    ZPLG_MAIN[CUR_USR]=""
-    ZPLG_CUR_PLUGIN=""
-    ZPLG_MAIN[CUR_USPL]=""
-    ZPLG_MAIN[CUR_USPL2]=""
-}
-
-# Compiles plugin
+    print "${ZPLG_COL[info]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
+    print
+    unfunction -- 2>/dev/null "$f"
+} # }}}
+# FUNCTION: -zplg-compile-plugin {{{
 -zplg-compile-plugin() {
     -zplg-first "$1" "$2" || {
         print "${ZPLG_COL[error]}No files for compilation found${ZPLG_COL[rst]}"
@@ -1492,10 +1264,55 @@ builtin setopt noaliases
         print "Compilation failed. Don't worry, the plugin will work also without compilation"
         print "Consider submitting an error report to the plugin's author"
     }
-}
-# }}}
+} # }}}
 
+# FUNCTION: -zplg-cd {{{
+-zplg-cd() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
 
+    -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+} # }}}
+
+#
+# Remaining functions
+#
+
+# FUNCTION: -zplg-prepare-home {{{
+-zplg-prepare-home() {
+    [[ -n "${ZPLG_MAIN[HOME_READY]}" ]] && return
+    ZPLG_MAIN[HOME_READY]="1"
+
+    [[ ! -d "$ZPLG_HOME" ]] && {
+        command mkdir 2>/dev/null "$ZPLG_HOME"
+        # For compaudit
+        command chmod go-w "$ZPLG_HOME"
+    }
+    [[ ! -d "$ZPLG_PLUGINS_DIR" ]] && {
+        command mkdir "$ZPLG_PLUGINS_DIR"
+        # For compaudit
+        command chmod go-w "$ZPLG_PLUGINS_DIR"
+
+        # Prepare mock-like plugin for Zplugin itself
+        command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
+        command ln -s "$ZPLG_DIR/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
+    }
+    [[ ! -d "$ZPLG_COMPLETIONS_DIR" ]] && {
+        command mkdir "$ZPLG_COMPLETIONS_DIR"
+        # For compaudit
+        command chmod go-w "$ZPLG_COMPLETIONS_DIR"
+
+        # Symlink _zplugin completion into _local---zplugin directory
+        command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
+    }
+    [[ ! -d "$ZPLG_SNIPPETS_DIR" ]] && {
+        command mkdir "$ZPLG_SNIPPETS_DIR"
+        command chmod go-w "$ZPLG_SNIPPETS_DIR"
+    }
+} # }}}
+# FUNCTION: -zplg-load {{{
 # $1 - plugin name, possibly github path
 -zplg-load () {
     local mode="$3"
@@ -1508,10 +1325,8 @@ builtin setopt noaliases
     else
         -zplg-load-plugin "$user" "$plugin" "$mode"
     fi
-}
-
-# Downloads and sources a single file
-# If url is detected to be github.com, then conversion to "raw" url may occur
+} # }}}
+# FUNCTION: -zplg-load-snippet {{{
 -zplg-load-snippet() {
     local url="$1" cmd="$2" force="$3" update="$4"
 
@@ -1600,8 +1415,8 @@ builtin setopt noaliases
         [[ ! -x "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" ]] && command chmod a+x "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
         [[ -z "${path[(er)$ZPLG_SNIPPETS_DIR/$local_dir]}" ]] && path+=( "$ZPLG_SNIPPETS_DIR/$local_dir" )
     fi
-}
-
+} # }}}
+# FUNCTION: -zplg-compdef-replay {{{
 -zplg-compdef-replay() {
     local quiet="$1"
     typeset -a pos
@@ -1624,28 +1439,109 @@ builtin setopt noaliases
     done
 
     return 0
-}
-
+} # }}}
+# FUNCTION: -zplg-compdef-clear {{{
 -zplg-compdef-clear() {
     local quiet="$1"
     ZPLG_COMPDEF_REPLAY=( )
     [[ "$quiet" = "-q" ]] || print "Compdef replay cleared"
-}
+} # }}}
+# FUNCTION: -zplg-add-report {{{
+-zplg-add-report() {
+    local uspl2="$1"
+    shift
+    local txt="$*"
 
--zplg-cd() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+    local keyword="${txt%% *}"
+    if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
+        keyword="${ZPLG_COL[error]}$keyword${ZPLG_COL[rst]}"
+    else
+        keyword="${ZPLG_COL[keyword]}$keyword${ZPLG_COL[rst]}"
+    fi
 
-    -zplg-exists-physically-message "$user" "$plugin" || return 1
+    # Don't report to any user/plugin if there is no plugin load in progress
+    if [[ -n "$uspl2" ]]; then
+        ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
+    fi
 
-    cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
-}
+    # This is nasty, if debug is on, report everything
+    # to special debug user
+    [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$keyword ${txt#* }"$'\n'
+} # }}}
+# FUNCTION: -zplg-load-plugin {{{
+-zplg-load-plugin() {
+    local user="$1" plugin="$2" mode="$3"
+    ZPLG_MAIN[CUR_USR]="$user"
+    ZPLG_CUR_PLUGIN="$plugin"
+    ZPLG_MAIN[CUR_USPL]="${user}---${plugin}"
+    ZPLG_MAIN[CUR_USPL2]="${user}/${plugin}"
+
+    # There are plugins having ".plugin.zsh"
+    # in ${plugin} directory name, also some
+    # have ".zsh" there
+    local pdir="${${plugin%.plugin.zsh}%.zsh}"
+    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+
+    # Look for a file to source. First look for the most
+    # common one (optimization) then for other possibilities
+    if [[ ! -e "$dname/${pdir}.plugin.zsh" ]]; then
+        -zplg-find-other-matches "$dname" "$pdir"
+    else
+        reply=( "$dname/${pdir}.plugin.zsh" )
+    fi
+    [[ "${#reply[@]}" -eq "0" ]] && return 1
+
+    # Get first one
+    integer correct=0
+    [[ -o "KSH_ARRAYS" ]] && correct=1
+    local fname="${reply[1-correct]#$dname/}"
+
+    -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Source $fname"
+    [[ "$mode" = "light" ]] && -zplg-add-report "${ZPLG_MAIN[CUR_USPL2]}" "Light load"
+
+    # Light and compdef mode doesn't do diffs and shadowing
+    if [[ "$mode" = "load" ]]; then
+        -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" begin
+        -zplg-diff-options "${ZPLG_MAIN[CUR_USPL2]}" begin
+        -zplg-diff-env "${ZPLG_MAIN[CUR_USPL2]}" begin
+        -zplg-diff-parameter "${ZPLG_MAIN[CUR_USPL2]}" begin
+    fi
+
+    # Warn about user having his own shadows in place. Check
+    # every possible shadow regardless of "$mode" setting
+    -zplg-already-function-warning-uspl2 $(( ${+functions[autoload]} )) "${ZPLG_MAIN[CUR_USPL2]}" "autoload"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[bindkey]} )) "${ZPLG_MAIN[CUR_USPL2]}" "bindkey"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[zstyle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zstyle"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[alias]} )) "${ZPLG_MAIN[CUR_USPL2]}" "alias"
+    -zplg-already-function-warning-uspl2 $(( ${+functions[zle]} )) "${ZPLG_MAIN[CUR_USPL2]}" "zle"
+
+    -zplg-shadow-on "$mode"
+
+    # We need some state, but user wants his for his plugins
+    builtin setopt noaliases
+    builtin source "$dname/$fname"
+    builtin unsetopt noaliases
+
+    -zplg-shadow-off "$mode"
+    if [[ "$mode" = "load" ]]; then
+        -zplg-diff-parameter "${ZPLG_MAIN[CUR_USPL2]}" end
+        -zplg-diff-env "${ZPLG_MAIN[CUR_USPL2]}" end
+        -zplg-diff-options "${ZPLG_MAIN[CUR_USPL2]}" end
+        -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" end
+    fi
+
+    # Mark no load is in progress
+    ZPLG_MAIN[CUR_USR]=""
+    ZPLG_CUR_PLUGIN=""
+    ZPLG_MAIN[CUR_USPL]=""
+    ZPLG_MAIN[CUR_USPL2]=""
+} # }}}
 
 #
-# Debug reporting functions, user exposed {{{
+# Dtrace
 #
 
-# Starts debug reporting, diffing
+# FUNCTION: -zplg-debug-start {{{
 -zplg-debug-start() {
     if [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]]; then
         print "${ZPLG_COL[error]}Dtrace is already active, stop it first with \`dstop'$reset_color"
@@ -1661,9 +1557,8 @@ builtin setopt noaliases
 
     # Full shadowing on
     -zplg-shadow-on "dtrace"
-}
-
-# Ends debug reporting, diffing
+} # }}}
+# FUNCTION: -zplg-debug-stop {{{
 -zplg-debug-stop() {
     ZPLG_MAIN[DTRACE]="0"
 
@@ -1675,27 +1570,25 @@ builtin setopt noaliases
     -zplg-diff-env "_dtrace/_dtrace" end
     -zplg-diff-options "_dtrace/_dtrace" end
     -zplg-diff-functions "_dtrace/_dtrace" end
-}
-
+} # }}}
+# FUNCTION: -zplg-clear-debug-report {{{
 -zplg-clear-debug-report() {
     -zplg-clear-report-for "_dtrace/_dtrace"
-}
-
-# Reverts changes recorded through dtrace
+} # }}}
+# FUNCTION: -zplg-debug-unload {{{
 -zplg-debug-unload() {
     if [[ "${ZPLG_MAIN[DTRACE]}" = "1" ]]; then
         print "Dtrace is still active, end it with \`dstop'"
     else
         -zplg-unload "_dtrace" "_dtrace"
     fi
-}
-# }}}
+} # }}}
 
--zplg-load-user-functions() {
-    (( ${+functions[-zplg-format-functions]} )) || builtin source $ZPLG_DIR"/zplugin-autoload.zsh"
-}
-
+#
 # Main function with subcommands
+#
+
+# FUNCTION: zplugin {{{
 zplugin() {
     # All functions from now on will not change these values
     # globally. Functions that don't do "source" of plugin
@@ -1952,8 +1845,13 @@ zplugin() {
            print "Unknown command \`$1' (use \`help' to get usage information)"
            ;;
     esac
-}
+} # }}}
 
+#
+# Source-executed code
+#
+
+# code {{{
 builtin unsetopt noaliases
 builtin alias zpl=zplugin zplg=zplugin
 
@@ -1965,3 +1863,4 @@ fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
 # Colorize completions for commands unload, report, creinstall, cuninstall
 zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==1;35=1;33'
 zstyle ':completion:*:zplugin:argument-rest:plugins' matcher 'r:|=** l:|=*'
+# }}}
