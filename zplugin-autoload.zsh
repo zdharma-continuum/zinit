@@ -65,6 +65,16 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     ZPLG_PARAMETERS_AFTER[$REPLY]=""
     ZPLG_PARAMETERS_DIFF_RAN[$REPLY]="0"
 } # }}}
+# FUNCTION: -zplg-exists-message {{{
+-zplg-exists-message() {
+    -zplg-any-to-uspl2 "$1" "$2"
+    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
+        -zplg-any-colorify-as-uspl2 "$1" "$2"
+        print "${ZPLG_COL[error]}No such plugin${ZPLG_COL[rst]} $REPLY"
+        return 1
+    fi
+    return 0
+} # }}}
 
 #
 # Format functions

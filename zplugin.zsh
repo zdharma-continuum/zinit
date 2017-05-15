@@ -974,16 +974,6 @@ builtin setopt noaliases
     -zplg-any-to-user-plugin "$1" "$2"
     REPLY="${reply[-2]}/${reply[-1]}"
 } # }}}
-# FUNCTION: -zplg-exists-message {{{
--zplg-exists-message() {
-    -zplg-any-to-uspl2 "$1" "$2"
-    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
-        -zplg-any-colorify-as-uspl2 "$1" "$2"
-        print "${ZPLG_COL[error]}No such plugin${ZPLG_COL[rst]} $REPLY"
-        return 1
-    fi
-    return 0
-} # }}}
 # FUNCTION: -zplg-exists-physically {{{
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
