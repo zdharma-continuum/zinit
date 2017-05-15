@@ -1544,6 +1544,7 @@ zplugin() {
                        print "Argument needed, try help"
                        return 1
                    fi
+                   (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
                    # Uninstalls completions for plugin
                    -zplg-uninstall-completions "$2" "$3"
                    print "Initializing completion (compinit)..."
@@ -1554,8 +1555,7 @@ zplugin() {
                    -zplg-search-completions
                    ;;
                (compinit)
-                   # Runs compinit in a way that ensures
-                   # reload of plugins' completions
+                   (( ${+functions[-zplg-forget-completion]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
                    -zplg-compinit
                    ;;
                (dreport)
