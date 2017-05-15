@@ -974,18 +974,10 @@ builtin setopt noaliases
     -zplg-any-to-user-plugin "$1" "$2"
     REPLY="${reply[-2]}/${reply[-1]}"
 } # }}}
-# FUNCTION: -zplg-exists {{{
-# Checks for a plugin existence
--zplg-exists() {
-    -zplg-any-to-uspl2 "$1" "$2"
-    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
-        return 1
-    fi
-    return 0
-} # }}}
 # FUNCTION: -zplg-exists-message {{{
 -zplg-exists-message() {
-    if ! -zplg-exists "$1" "$2"; then
+    -zplg-any-to-uspl2 "$1" "$2"
+    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
         print "${ZPLG_COL[error]}No such plugin${ZPLG_COL[rst]} $REPLY"
         return 1
@@ -1075,7 +1067,7 @@ builtin setopt noaliases
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}/${reply[-1]}"
     integer ret=0
 
-    if ! -zplg-exists "$user" "$plugin"; then
+    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$user/$plugin]}" ]]; then
         ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
