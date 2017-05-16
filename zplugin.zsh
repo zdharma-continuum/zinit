@@ -1320,6 +1320,7 @@ builtin setopt noaliases
     builtin source "$dname/$fname"
     builtin unsetopt noaliases
     (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
+    (( ${+ZPLG_ICE[atload]} )) && eval "${ZPLG_ICE[atload]}"
 
     -zplg-shadow-off "$mode"
     if [[ "$mode" = "load" ]]; then
@@ -1391,7 +1392,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|report|depth|blockf)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|report|depth|blockf|atload|atpull|atclone)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 }
 
