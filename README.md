@@ -44,6 +44,45 @@ with advanced Git features (add `promptinit; prompt scala4` to `~/.zshrc` to
 set a prompt).
 
 # News
+* 16-05-2017
+  - A very slick feature: **adding ice to commands**. Ice is something added and something that
+    melts. You add modifiers to single next command:
+
+    ```zsh
+    % zplg ice from"notabug" atload"echo --Loaded--" atclone"echo --Cloned--"
+    % zplg load zdharma/zui
+    Downloading zdharma/zui...
+    ...
+    Checking connectivity... done.
+    --Cloned--
+    Compiling zui.plugin.zsh...
+    --Loaded--
+    % grep notabug ~/.zplugin/plugins/zdharma---zui/.git/config
+        url = https://notabug.org/zdharma/zui
+    ```
+
+  - Completion-management supports completions provided in subdirectory, like in `zsh-users/zsh-completions`
+    plugin. With `ice` modifier `blockf` (block-fpath), you can manage such completions:
+
+    ```zsh
+    % zplg ice blockf
+    % zplg load zsh-users/zsh-completions
+    ...
+    Symlinking completion `_ack' to /Users/sgniazdowski/.zplugin/completions
+    Forgetting completion `_ack'...
+
+    Symlinking completion `_afew' to /Users/sgniazdowski/.zplugin/completions
+    Forgetting completion `_afew'...
+    ...
+    Compiling zsh-completions.plugin.zsh...
+    % echo $fpath
+    /Users/sgniazdowski/.zplugin/completions /usr/local/share/zsh/site-functions
+    % zplg cdisable vagrant
+    Disabled vagrant completion belonging to zsh-users/zsh-completions
+    Forgetting completion `_vagrant'...
+
+    Initializing completion system (compinit)...
+    ```
 
 * 14-05-2017
   - The `all`-variants of commands (e.g. `update-all`) have been merged into normal variants (with `--all` switch)
