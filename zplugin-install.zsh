@@ -92,7 +92,7 @@
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
                 command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
             fi
-            print "${ZPLG_COL[info]}Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR${ZPLG_COL[rst]}"
+            print "${ZPLG_COL[info2]}Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR${ZPLG_COL[rst]}"
             command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile"
@@ -153,7 +153,7 @@
         print "Unsetting $k"
     done
 
-    print "${ZPLG_COL[info]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
+    print "${ZPLG_COL[info2]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
     print
     unfunction -- 2>/dev/null "$f"
 } # }}}
