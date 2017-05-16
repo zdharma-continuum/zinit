@@ -73,9 +73,9 @@
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_[^_]* )
-    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
+    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)

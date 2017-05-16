@@ -114,7 +114,7 @@ case $state in
                 typeset -a plugins completions
                 local p c user plugin
                 for p in "${ZPLG_PLUGINS_DIR[@]}"/*; do
-                    completions=( "$p"/_*(N) )
+                    completions=( "$p"/**/_[^_.][^.]#(N) )
                     for c in "${completions[@]}"; do
                         p="${p:t}"
                         user="${p%%---*}"
@@ -132,7 +132,7 @@ case $state in
                 typeset -a plugins completions
                 local p c user plugin
                 for p in "${ZPLG_PLUGINS_DIR[@]}"/*; do
-                    completions=( "$p"/_*(N) )
+                    completions=( "$p"/**/_[^_.][^.]#(N) )
                     for c in "${completions[@]}"; do
                         cfile="${c:t}"
                         bkpfile="${cfile#_}"

@@ -253,6 +253,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 # directory, possibly without username in the uspl format;
 # readlink will read the link "once"
 -zplg-get-completion-owner() {
+    setopt localoptions extendedglob
     local cpath="$1"
     local readlink_cmd="$2"
     local in_plugin_path tmp
@@ -294,7 +295,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
-    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/_[^_]* )
+    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/**/_[^_.][^.]# )
 } # }}}
 # FUNCTION: -zplg-check-comp-consistency {{{
 -zplg-check-comp-consistency() {
@@ -372,9 +373,9 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     local c cfile bkpfile
     integer action global_action=0
 
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/_[^_]* )
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
@@ -416,8 +417,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     typeset -a symlinked backup_comps
     local c cfile bkpfile 
 
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
+    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
@@ -987,15 +988,15 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
     print "Enabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of disabled completions, with _zlocal/zplugin
-    completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
     print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of completions existing in all plugins
-    completions=( "$ZPLG_PLUGINS_DIR"/*/_[^_]* )
+    completions=( "$ZPLG_PLUGINS_DIR"/*/**/_[^_.][^.]# )
     print "Completions available overall: ${infoc}${#completions[@]}${reset_color}"
 
     # Enumerate snippets loaded
@@ -1110,7 +1111,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob extendedglob
 
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
     # Find longest completion name
     local cpath c
@@ -1162,7 +1163,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob extendedglob
 
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_]* "$ZPLG_COMPLETIONS_DIR"/[^_]* )
+    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
     # Find longest completion name
     local cpath c
@@ -1219,7 +1220,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_[^_]* )
+        completions=( "$pp"/**/_[^_.][^.]# )
         if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
             [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
@@ -1230,7 +1231,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/_[^_]* )
+        completions=( "$pp"/**/_[^_.][^.]# )
 
         if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
