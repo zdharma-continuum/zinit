@@ -26,7 +26,8 @@ Then add to `~/.zshrc`, at bottom:
 
 ```zsh
 zplugin load psprint zsh-navigation-tools
-zplugin load psprint---zprompts
+zplugin ice from"notabug" atload"echo loaded zui"
+zplugin load zdharma/zui
 zplugin load zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 ```
@@ -39,9 +40,8 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 
 because the install script does this.)
 
-`ZNT` – multi-word searching of history (Ctrl-R), `zprompts` – a few themes
-with advanced Git features (add `promptinit; prompt scala4` to `~/.zshrc` to
-set a prompt).
+`ZNT` – multi-word searching of history (Ctrl-R), `zui` – textual UI library for Zshell.
+The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
 * 16-05-2017
