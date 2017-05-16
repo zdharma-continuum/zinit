@@ -1389,11 +1389,9 @@ builtin setopt noaliases
 
 -zplg-ice() {
     setopt localoptions extendedglob
-    local cline="$*"
-    while [[ "$cline" = (#b)(from|proto|report|depth|blockf)([^[:blank:]]#)([[:blank:]]##)(#c0,1)(from|proto|report|depth|blockf)(#c0,1)([^[:blank:]]#)(#c0,1)[[:blank:]]#(*) ]]; do
-        ZPLG_ICE[${match[1]}]="${match[2]}"
-        [[ -n "${match[4]}" ]] && ZPLG_ICE[${match[4]}]="${match[5]}"
-        cline="${match[6]}"
+    local bit
+    for bit; do
+        [[ "$bit" = (#b)(from|proto|report|depth|blockf)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 }
 
