@@ -62,6 +62,8 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
         url = https://notabug.org/zdharma/zui
     ```
 
+    One other ice is `proto`. Use `proto"git"` with Github to be able to use private repositories.
+
   - Completion-management supports completions provided in subdirectory, like in `zsh-users/zsh-completions`
     plugin. With `ice` modifier `blockf` (block-fpath), you can manage such completions:
 
