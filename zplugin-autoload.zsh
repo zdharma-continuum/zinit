@@ -267,9 +267,10 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     [[ -n "$tmp" ]] && in_plugin_path="$tmp"
 
     if [[ "$in_plugin_path" != "$cpath" ]]; then
-        # Get the user---plugin part of path -
-        # it's right before completion file name
-        in_plugin_path="${in_plugin_path:h}"
+        # Get the user---plugin part of path
+        while [[ "$in_plugin_path" != */[a-zA-Z_-]##---[a-zA-Z_-]## && "$in_plugin_path" != "/" ]]; do
+            in_plugin_path="${in_plugin_path:h}"
+        done
         in_plugin_path="${in_plugin_path:t}"
     else
         # readlink and :A have nothing
