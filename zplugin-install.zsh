@@ -41,7 +41,7 @@
             (|https)
                 git clone --recursive "https://${site:-github.com}/$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
                 ;;
-            (git|rsync|ftp|ftps|http)
+            (git|http|ftp|ftps|rsync|ssh)
                 git clone --recursive "${ZPLG_ICE[proto]}://${site:-github.com}/$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
                 ;;
             (*)
