@@ -268,7 +268,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
     if [[ "$in_plugin_path" != "$cpath" ]]; then
         # Get the user---plugin part of path
-        while [[ "$in_plugin_path" != */[a-zA-Z_-]##---[a-zA-Z_-]## && "$in_plugin_path" != "/" ]]; do
+        while [[ "$in_plugin_path" != */[^/]##---[^/]## && "$in_plugin_path" != "/" ]]; do
             in_plugin_path="${in_plugin_path:h}"
         done
         in_plugin_path="${in_plugin_path:t}"
