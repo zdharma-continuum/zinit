@@ -1315,9 +1315,11 @@ builtin setopt noaliases
     -zplg-shadow-on "$mode"
 
     # We need some state, but user wants his for his plugins
+    (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
     builtin setopt noaliases
     builtin source "$dname/$fname"
     builtin unsetopt noaliases
+    (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
     -zplg-shadow-off "$mode"
     if [[ "$mode" = "load" ]]; then
