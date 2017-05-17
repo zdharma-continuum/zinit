@@ -8,6 +8,8 @@
 #include "zplugin.mdh"
 #include "zplugin.pro"
 
+static HandlerFunc originalAutoload = NULL;
+
 /*
  * k   - ksh autoload
  * z   - zsh autoload
@@ -28,8 +30,8 @@ static int
 bin_autoload2(char *name, char **argv, Options ops, int func)
 {
     Shfunc shf;
-    int returnval = 0;
     int on = 0, off = 0, roff;
+    char **in_argv = argv;
 
     /* Do we have any flags defined? */
     if (OPT_ISSET(ops,'X'))
@@ -229,7 +231,7 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
         }
     }
 
-    return returnval;
+    return originalAutoload( name, in_argv, ops, func );
 }
 
 static struct features module_features = { 0 };
@@ -239,6 +241,7 @@ int
 setup_(UNUSED(Module m))
 {
     Builtin bn = (Builtin) builtintab->getnode2(builtintab, "autoload");
+    originalAutoload = bn->handlerfunc;
     bn->handlerfunc = bin_autoload2;
 
     printf("The example module has now been set up.\n");
@@ -280,6 +283,9 @@ cleanup_(Module m)
 int
 finish_(UNUSED(Module m))
 {
+    Builtin bn = (Builtin) builtintab->getnode2(builtintab, "autoload");
+    bn->handlerfunc = originalAutoload;
+
     printf("Thank you for using the example module.  Have a nice day.\n");
     fflush(stdout);
     return 0;
