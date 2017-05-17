@@ -1,0 +1,7 @@
+name=zdharma/zplugin
+link=dynamic
+load=no
+
+autofeatures=""
+
+objects="zplugin.o"

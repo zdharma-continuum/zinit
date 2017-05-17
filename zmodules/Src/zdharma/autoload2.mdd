@@ -1,7 +1,0 @@
-name=zdharma/autoload2
-link=dynamic
-load=no
-
-autofeatures=""
-
-objects="autoload2.o"

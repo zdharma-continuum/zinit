@@ -1,12 +1,12 @@
 /*
- * autoload2.c – alternative autoload for Zsh, via module
+ * zplugin.c – module for Zplugin plugin manager
  *
  * Copyright (c) 2017 Sebastian Gniazdowski
  * All rights reserved.
  */
 
-#include "autoload2.mdh"
-#include "autoload2.pro"
+#include "zplugin.mdh"
+#include "zplugin.pro"
 
 #define PM_ABSPATH_USED       (1<<12) /* (function): loaded using absolute path (shared with PM_EXPORTED) */
 
