@@ -437,11 +437,6 @@ fi],
 [AC_DEFINE(DEFAULT_READNULLCMD,"more")]
 )
 
-dnl Do you want to look for pcre support?
-AC_ARG_ENABLE(pcre,
-AC_HELP_STRING([--enable-pcre],
-[enable the search for the pcre library (may create run-time library dependencies)]))
-
 dnl Do you want to look for capability support?
 AC_ARG_ENABLE(cap,
 AC_HELP_STRING([--enable-cap],
@@ -672,16 +667,6 @@ AC_HEADER_STAT
 AC_HEADER_SYS_WAIT
 
 oldcflags="$CFLAGS"
-if test x$enable_pcre = xyes; then
-AC_CHECK_PROG([PCRECONF], pcre-config, pcre-config)
-dnl Typically (meaning on this single RedHat 9 box in front of me)
-dnl pcre-config --cflags produces a -I output which needs to go into
-dnl CPPFLAGS else configure's preprocessor tests don't pick it up,
-dnl producing a warning.
-if test "x$ac_cv_prog_PCRECONF" = xpcre-config; then
-  CPPFLAGS="$CPPFLAGS `pcre-config --cflags`"
-fi
-fi
 
 AC_CHECK_HEADERS(sys/time.h sys/times.h sys/select.h termcap.h termio.h \
 		 termios.h sys/param.h sys/filio.h string.h memory.h \
@@ -689,7 +674,7 @@ AC_CHECK_HEADERS(sys/time.h sys/times.h sys/select.h termcap.h termio.h \
 		 locale.h errno.h stdio.h stdarg.h varargs.h stdlib.h \
 		 unistd.h sys/capability.h \
 		 utmp.h utmpx.h sys/types.h pwd.h grp.h poll.h sys/mman.h \
-		 netinet/in_systm.h pcre.h langinfo.h wchar.h stddef.h \
+		 netinet/in_systm.h langinfo.h wchar.h stddef.h \
 		 sys/stropts.h iconv.h ncurses.h ncursesw/ncurses.h \
 		 ncurses/ncurses.h)
 if test x$dynamic = xyes; then
@@ -930,12 +915,6 @@ if test "x$ac_found_iconv" = "xyes"; then
       [ac_cv_iconv_const=const])])
   AC_DEFINE_UNQUOTED([ICONV_CONST], $ac_cv_iconv_const,
     [Define as const if the declaration of iconv() needs const.])
-fi
-
-if test x$enable_pcre = xyes; then
-dnl pcre-config should probably be employed here
-dnl AC_SEARCH_LIBS(pcre_compile, pcre)
-  LIBS="`$ac_cv_prog_PCRECONF --libs` $LIBS"
 fi
 
 dnl ---------------------
@@ -1311,7 +1290,6 @@ AC_CHECK_FUNCS(strftime strptime mktime timelocal \
 	       pathconf sysconf \
 	       tgetent tigetflag tigetnum tigetstr setupterm initscr resize_term \
 	       getcchar setcchar waddwstr wget_wch win_wch use_default_colors \
-	       pcre_compile pcre_study pcre_exec \
 	       nl_langinfo \
 	       erand48 open_memstream \
 	       posix_openpt \
@@ -3278,8 +3256,7 @@ AC_SUBST_FILE(CONFIG_MK)dnl
 AC_SUBST_FILE(DEFS_MK)dnl
 AC_SUBST_FILE(VERSION_MK)dnl
 
-AC_CONFIG_FILES(Config/defs.mk Makefile Doc/Makefile Etc/Makefile \
-Src/Makefile Test/Makefile)
+AC_CONFIG_FILES(Config/defs.mk Makefile Src/Makefile Test/Makefile)
 AC_CONFIG_COMMANDS([config.modules], [. ./config.modules.sh])
 AC_CONFIG_COMMANDS([stamp-h], [echo >stamp-h])
 

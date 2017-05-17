@@ -466,18 +466,6 @@
 /* Define to 1 if you have the `pathconf' function. */
 #undef HAVE_PATHCONF
 
-/* Define to 1 if you have the `pcre_compile' function. */
-#undef HAVE_PCRE_COMPILE
-
-/* Define to 1 if you have the `pcre_exec' function. */
-#undef HAVE_PCRE_EXEC
-
-/* Define to 1 if you have the <pcre.h> header file. */
-#undef HAVE_PCRE_H
-
-/* Define to 1 if you have the `pcre_study' function. */
-#undef HAVE_PCRE_STUDY
-
 /* Define to 1 if you have the `poll' function. */
 #undef HAVE_POLL
 

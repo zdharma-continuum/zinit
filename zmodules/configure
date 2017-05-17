@@ -646,7 +646,6 @@ CURSES_KEYS_H
 ZSH_CURSES_H
 ERRNO_H
 SIGNAL_H
-PCRECONF
 ANSI2KNR
 PAPERSIZE
 TEXI2HTML
@@ -776,7 +775,6 @@ enable_custom_patchlevel
 enable_maildir_support
 enable_max_function_depth
 enable_readnullcmd
-enable_pcre
 enable_cap
 enable_gdbm
 enable_largefile
@@ -1457,8 +1455,6 @@ Optional Features:
                           limit function depth to MAX, default 1000
   --enable-readnullcmd=PAGER
                           pager used when READNULLCMD is not set
-  --enable-pcre           enable the search for the pcre library (may create
-                          run-time library dependencies)
   --enable-cap            enable the search for POSIX capabilities (may
                           require additional headers to be added by hand)
   --disable-gdbm          turn off search for gdbm library
@@ -3018,12 +3014,6 @@ else
   $as_echo "#define DEFAULT_READNULLCMD \"more\"" >>confdefs.h
 
 
-fi
-
-
-# Check whether --enable-pcre was given.
-if test "${enable_pcre+set}" = set; then :
-  enableval=$enable_pcre;
 fi
 
 
@@ -5887,48 +5877,6 @@ fi
 
 
 oldcflags="$CFLAGS"
-if test x$enable_pcre = xyes; then
-# Extract the first word of "pcre-config", so it can be a program name with args.
-set dummy pcre-config; ac_word=$2
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
-$as_echo_n "checking for $ac_word... " >&6; }
-if ${ac_cv_prog_PCRECONF+:} false; then :
-  $as_echo_n "(cached) " >&6
-else
-  if test -n "$PCRECONF"; then
-  ac_cv_prog_PCRECONF="$PCRECONF" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
-for as_dir in $PATH
-do
-  IFS=$as_save_IFS
-  test -z "$as_dir" && as_dir=.
-    for ac_exec_ext in '' $ac_executable_extensions; do
-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
-    ac_cv_prog_PCRECONF="pcre-config"
-    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
-    break 2
-  fi
-done
-  done
-IFS=$as_save_IFS
-
-fi
-fi
-PCRECONF=$ac_cv_prog_PCRECONF
-if test -n "$PCRECONF"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $PCRECONF" >&5
-$as_echo "$PCRECONF" >&6; }
-else
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-if test "x$ac_cv_prog_PCRECONF" = xpcre-config; then
-  CPPFLAGS="$CPPFLAGS `pcre-config --cflags`"
-fi
-fi
 
 for ac_header in sys/time.h sys/times.h sys/select.h termcap.h termio.h \
 		 termios.h sys/param.h sys/filio.h string.h memory.h \
@@ -5936,7 +5884,7 @@ for ac_header in sys/time.h sys/times.h sys/select.h termcap.h termio.h \
 		 locale.h errno.h stdio.h stdarg.h varargs.h stdlib.h \
 		 unistd.h sys/capability.h \
 		 utmp.h utmpx.h sys/types.h pwd.h grp.h poll.h sys/mman.h \
-		 netinet/in_systm.h pcre.h langinfo.h wchar.h stddef.h \
+		 netinet/in_systm.h langinfo.h wchar.h stddef.h \
 		 sys/stropts.h iconv.h ncurses.h ncursesw/ncurses.h \
 		 ncurses/ncurses.h
 do :
@@ -7020,10 +6968,6 @@ cat >>confdefs.h <<_ACEOF
 #define ICONV_CONST $ac_cv_iconv_const
 _ACEOF
 
-fi
-
-if test x$enable_pcre = xyes; then
-  LIBS="`$ac_cv_prog_PCRECONF --libs` $LIBS"
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking if an include file defines ospeed" >&5
@@ -8340,7 +8284,6 @@ for ac_func in strftime strptime mktime timelocal \
 	       pathconf sysconf \
 	       tgetent tigetflag tigetnum tigetstr setupterm initscr resize_term \
 	       getcchar setcchar waddwstr wget_wch win_wch use_default_colors \
-	       pcre_compile pcre_study pcre_exec \
 	       nl_langinfo \
 	       erand48 open_memstream \
 	       posix_openpt \
@@ -13232,7 +13175,7 @@ DEFS_MK="Config/defs.mk"
 VERSION_MK="${srcdir}/Config/version.mk"
 
 
-ac_config_files="$ac_config_files Config/defs.mk Makefile Doc/Makefile Etc/Makefile Src/Makefile Test/Makefile"
+ac_config_files="$ac_config_files Config/defs.mk Makefile Src/Makefile Test/Makefile"
 
 ac_config_commands="$ac_config_commands config.modules"
 
@@ -13937,8 +13880,6 @@ do
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "Config/defs.mk") CONFIG_FILES="$CONFIG_FILES Config/defs.mk" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "Doc/Makefile") CONFIG_FILES="$CONFIG_FILES Doc/Makefile" ;;
-    "Etc/Makefile") CONFIG_FILES="$CONFIG_FILES Etc/Makefile" ;;
     "Src/Makefile") CONFIG_FILES="$CONFIG_FILES Src/Makefile" ;;
     "Test/Makefile") CONFIG_FILES="$CONFIG_FILES Test/Makefile" ;;
     "config.modules") CONFIG_COMMANDS="$CONFIG_COMMANDS config.modules" ;;
