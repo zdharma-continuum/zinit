@@ -1,4 +1,4 @@
-name=zsh/autoload2
+name=zdharma/autoload2
 link=dynamic
 load=no
 
