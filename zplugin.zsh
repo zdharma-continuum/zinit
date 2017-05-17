@@ -7,7 +7,7 @@
 
 typeset -gaH ZPLG_REGISTERED_PLUGINS
 # Snippets loaded, url -> file name
-typeset -gAH ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_MAIN ZPLG_ICE
+typeset -gAH ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_MAIN ZPLG_ICE ZPLG_SICE
 
 #
 # Common needed values
@@ -1119,6 +1119,7 @@ builtin setopt noaliases
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
+    -zplg-pack-ice "$user" "$plugin"
     -zplg-register-plugin "$user" "$plugin" "$mode"
     if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
@@ -1169,6 +1170,7 @@ builtin setopt noaliases
     }
 
     local save_url="$url"
+    -zplg-pack-ice "$url" ""
 
     # Change the url to point to raw github content if it isn't like that
     if (( is_no_raw_github )); then
@@ -1388,13 +1390,19 @@ builtin setopt noaliases
 # Ice support
 #
 
+# FUNCTION: -zplg-ice {{{
 -zplg-ice() {
     setopt localoptions extendedglob
     local bit
     for bit; do
         [[ "$bit" = (#b)(from|proto|report|depth|blockf|atload|atpull|atclone)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
-}
+} # }}}
+# FUNCTION: -zplg-pack-ice {{{
+-zplg-pack-ice() {
+    [[ -z "${ZPLG_ICE[atpull]}" ]] && return
+    ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
+} # }}}
 
 #
 # Main function with subcommands

@@ -899,7 +899,9 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git status; )
     else
         ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
-        ( (( ${+ZPLG_ICE[atpull]} )) && eval "${ZPLG_ICE[atpull]}" )
+        local -A sice
+        sice=( "${(z)ZPLG_SICE[$user/$plugin]:-no op}" )
+        ( (( ${+sice[atpull]} )) && eval "${(Q)sice[atpull]}" )
     fi
 } # }}}
 # FUNCTION: -zplg-update-or-status-all {{{
@@ -944,6 +946,9 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
             fi
         fi
 
+        -zplg-any-to-user-plugin "$pd"
+        local user="${reply[-2]}" plugin="${reply[-1]}"
+
         # Must be a git repository
         if [[ ! -d "$repo/.git" ]]; then
             print "\n$REPLY not a git repository"
@@ -956,7 +961,9 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
         else
             print "\nUpdating plugin $REPLY"
             ( cd "$repo"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
-            ( (( ${+ZPLG_ICE[atpull]} )) && eval "${ZPLG_ICE[atpull]}" )
+            local -A sice
+            sice=( "${(z)ZPLG_SICE[$user/$plugin]:-no op}" )
+            ( (( ${+sice[atpull]} )) && eval "${(Q)sice[atpull]}" )
         fi
     done
 } # }}}
