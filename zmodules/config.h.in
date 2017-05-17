@@ -50,9 +50,6 @@
 /* Define to 1 if tcsetpgrp() doesn't work, ie BeOS R4.51. */
 #undef BROKEN_TCSETPGRP
 
-/* Define to 1 if the wcwidth() function is present but broken. */
-#undef BROKEN_WCWIDTH
-
 /* Define to 1 if you use BSD style signal handling (and can block signals).
    */
 #undef BSD_SIGNALS
@@ -286,6 +283,9 @@
 /* Define to 1 if you have the `gettimeofday' function. */
 #undef HAVE_GETTIMEOFDAY
 
+/* Define to 1 if you have the `getutent' function. */
+#undef HAVE_GETUTENT
+
 /* Define to 1 if you have the `getutxent' function. */
 #undef HAVE_GETUTXENT
 
@@ -513,6 +513,9 @@
 
 /* Define to 1 if you have the `regfree' function. */
 #undef HAVE_REGFREE
+
+/* Define to 1 if you have the `resize_term' function. */
+#undef HAVE_RESIZE_TERM
 
 /* Define to 1 if RLIMIT_AIO_MEM is present (whether or not as a macro). */
 #undef HAVE_RLIMIT_AIO_MEM

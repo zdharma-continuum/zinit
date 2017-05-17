@@ -1496,8 +1496,8 @@ struct dircache_entry
  * for multiple references to the same directory, e.g
  * "autoload /blah/blah/\*".
  */
-struct dircache_entry *dircache, *dircache_lastentry;
-int dircache_size;
+static struct dircache_entry *dircache, *dircache_lastentry;
+static int dircache_size;
 
 /*
  * Set *name to point to a cached version of value.

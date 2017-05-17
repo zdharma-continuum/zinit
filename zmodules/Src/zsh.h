@@ -238,6 +238,16 @@ struct mathfunc {
 #define PATCHARS "#^*()|[]<>?~\\"
 
 /*
+ * Check for a possibly tokenized dash.
+ *
+ * A dash only needs to be a token in a character range, [a-z], but
+ * it's difficult in general to ensure that.  So it's turned into
+ * a token at the usual point in the lexer.  However, we need
+ * to check for a literal dash at many points.
+ */
+#define IS_DASH(x) ((x) == '-' || (x) == Dash)
+
+/*
  * Types of quote.  This is used in various places, so care needs
  * to be taken when changing them.  (Oooh, don't you look surprised.)
  * - Passed to quotestring() to indicate style.  This is the ultimate
@@ -1807,6 +1817,7 @@ struct tieddata {
 #define PM_READONLY	(1<<10)	/* readonly                                 */
 #define PM_TAGGED	(1<<11)	/* tagged                                   */
 #define PM_EXPORTED	(1<<12)	/* exported                                 */
+#define PM_ABSPATH_USED (1<<12) /* (function): loaded using absolute path   */
 
 /* The following are the same since they *
  * both represent -U option to typeset   */
@@ -3147,9 +3158,7 @@ typedef wint_t convchar_t;
  * works on MacOS which doesn't define that.
  */
 #ifdef ENABLE_UNICODE9
-#define WCWIDTH(wc)	mk_wcwidth(wc)
-#elif defined(BROKEN_WCWIDTH) && (defined(__STDC_ISO_10646__) || defined(__APPLE__))
-#define WCWIDTH(wc)	mk_wcwidth(wc)
+#define WCWIDTH(wc)	u9_wcwidth(wc)
 #else
 #define WCWIDTH(wc)	wcwidth(wc)
 #endif
@@ -3194,15 +3203,7 @@ typedef wint_t convchar_t;
  * sense throughout the shell.  I am not aware of a way of
  * detecting the Unicode trait in standard libraries.
  */
-#ifdef BROKEN_WCWIDTH
-/*
- * We can't be quite sure the wcwidth we've provided is entirely
- * in agreement with the system's, so be extra safe.
- */
-#define IS_COMBINING(wc)	(wc != 0 && WCWIDTH(wc) == 0 && !iswcntrl(wc))
-#else
 #define IS_COMBINING(wc)	(wc != 0 && WCWIDTH(wc) == 0)
-#endif
 /*
  * Test for the base of a combining character.
  *

@@ -52,7 +52,8 @@ dupstring_wlen(const char *s, unsigned len)
     if (!s)
 	return NULL;
     t = (char *) zhalloc(len + 1);
-    strcpy(t, s);
+    memcpy(t, s, len);
+    t[len] = '\0';
     return t;
 }
 

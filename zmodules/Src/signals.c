@@ -55,6 +55,11 @@ mod_export Eprog siglists[VSIGCOUNT];
 /**/
 mod_export int nsigtrapped;
 
+/* Running an exit trap? */
+
+/**/
+int in_exit_trap;
+
 /*
  * Flag that exit trap has been set in POSIX mode.
  * The setter's expectation is therefore that it is run
@@ -522,6 +527,11 @@ wait_for_processes(void)
 #if defined(HAVE_WAIT3) && defined(HAVE_GETRUSAGE)
 		struct timezone dummy_tz;
 		gettimeofday(&pn->endtime, &dummy_tz);
+#ifdef WIFCONTINUED
+		if (WIFCONTINUED(status))
+		    pn->status = SP_RUNNING;
+		else
+#endif
 		pn->status = status;
 		pn->ti = ru;
 #else
@@ -1430,7 +1440,13 @@ dotrap(int sig)
 
     dont_queue_signals();
 
+    if (sig == SIGEXIT)
+	++in_exit_trap;
+
     dotrapargs(sig, sigtrapped+sig, funcprog);
+
+    if (sig == SIGEXIT)
+	--in_exit_trap;
 
     restore_queue_signals(q);
 }

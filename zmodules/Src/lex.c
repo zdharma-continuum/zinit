@@ -1359,17 +1359,13 @@ gettokstr(int c, int sub)
 	case LX2_DASH:
 	    /*
 	     * - shouldn't be treated as a special character unless
-	     * we're in a pattern.  Howeve,simply  counting "[" doesn't
-	     * work as []a-z] is a valid expression and we don't know
-	     * down here what this "[" is for as $foo[stuff] is valid
-	     * in zsh.  So just detect an opening [, which is enough
-	     * to turn this into a pattern; the Dash will be harmlessly
-	     * untokenised if not wanted.
+	     * we're in a pattern.  Unfortunately, working out for
+	     * sure in complicated expressions whether we're in a
+	     * pattern is tricky.  So we'll make it special and
+	     * turn it back any time we don't need it special.
+	     * This is not ideal as it's a lot of work.
 	     */
-	    if (seen_brct)
-		c = Dash;
-           else
-               c = '-';
+	    c = Dash;
            break;
        case LX2_BANG:
            /*
@@ -2064,9 +2060,7 @@ skipcomm(void)
     int new_lexstop, new_lex_add_raw;
     int save_infor = infor;
     struct lexbufstate new_lexbuf;
-    int noalias = noaliases;
 
-    noaliases = 1;
     infor = 0;
     cmdpush(CS_CMDSUBST);
     SETPARBEGIN
@@ -2193,7 +2187,6 @@ skipcomm(void)
 	SETPAREND
     cmdpop();
     infor = save_infor;
-    noaliases = noalias;
 
     return lexstop;
 #endif

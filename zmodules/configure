@@ -8338,7 +8338,7 @@ for ac_func in strftime strptime mktime timelocal \
 	       putenv getenv setenv unsetenv xw\
 	       brk sbrk \
 	       pathconf sysconf \
-	       tgetent tigetflag tigetnum tigetstr setupterm initscr \
+	       tgetent tigetflag tigetnum tigetstr setupterm initscr resize_term \
 	       getcchar setcchar waddwstr wget_wch win_wch use_default_colors \
 	       pcre_compile pcre_study pcre_exec \
 	       nl_langinfo \
@@ -8354,7 +8354,7 @@ for ac_func in strftime strptime mktime timelocal \
 	       cygwin_conv_path \
 	       nanosleep \
 	       srand_deterministic \
-	       setutxent getutxent endutxent
+	       setutxent getutxent endutxent getutent
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
@@ -11705,7 +11705,7 @@ if test x$zsh_cv_c_unicode_support = xyes; then
   $as_echo "#define MULTIBYTE_SUPPORT 1" >>confdefs.h
 
 
-                                locale_prog='char *my_locales[] = {
+                                          locale_prog='char *my_locales[] = {
   "en_US.UTF-8", "en_GB.UTF-8", "en.UTF-8", '
   locale_prog="$locale_prog"`locale -a 2>/dev/null | \
     sed -e 's/utf8/UTF-8/' | grep UTF-8 | \
@@ -11715,26 +11715,32 @@ if test x$zsh_cv_c_unicode_support = xyes; then
   #include <stdlib.h>
   #include <locale.h>
   #include <wchar.h>
+  #include <wctype.h>
 
   int main() {
     char **localep;
     char comb_acute_mb[] = { (char)0xcc, (char)0x81 };
+    char u_0234[] = { (char)0xc8, (char)0xb4 };
     wchar_t wc;
+  #if !defined(__STDC_ISO_10646__) && !defined(__APPLE__)
+    return 1;
+  #endif
 
     for (localep = my_locales; *localep; localep++)
-      if (setlocale(LC_ALL, *localep) &&
-          mbtowc(&wc, comb_acute_mb, 2) == 2)
+      if (setlocale(LC_ALL, *localep))
 	  break;
     if (!*localep)
       return 1;
-    if (wcwidth(wc) == 0)
-      return 1;
-    return 0;
+    if (mbtowc(&wc, comb_acute_mb, 2) == 2 && (wcwidth(wc) != 0 || !iswprint(wc)))
+      return 0;
+    if (mbtowc(&wc, u_0234, 2) == 2 && (wcwidth(wc) != 1 || !iswprint(wc)))
+      return 0;
+    return 1;
   }
   "
 
-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking if the wcwidth() function is broken" >&5
-$as_echo_n "checking if the wcwidth() function is broken... " >&6; }
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking if the wcwidth() and/or iswprint() functions are broken" >&5
+$as_echo_n "checking if the wcwidth() and/or iswprint() functions are broken... " >&6; }
 if ${zsh_cv_c_broken_wcwidth+:} false; then :
   $as_echo_n "(cached) " >&6
 else
@@ -11758,7 +11764,7 @@ fi
 { $as_echo "$as_me:${as_lineno-$LINENO}: result: $zsh_cv_c_broken_wcwidth" >&5
 $as_echo "$zsh_cv_c_broken_wcwidth" >&6; }
   if test x$zsh_cv_c_broken_wcwidth = xyes; then
-    $as_echo "#define BROKEN_WCWIDTH 1" >>confdefs.h
+    $as_echo "#define ENABLE_UNICODE9 1" >>confdefs.h
 
   fi
 
@@ -13226,7 +13232,7 @@ DEFS_MK="Config/defs.mk"
 VERSION_MK="${srcdir}/Config/version.mk"
 
 
-ac_config_files="$ac_config_files Config/defs.mk Makefile Src/Makefile"
+ac_config_files="$ac_config_files Config/defs.mk Makefile Doc/Makefile Etc/Makefile Src/Makefile Test/Makefile"
 
 ac_config_commands="$ac_config_commands config.modules"
 
@@ -13931,7 +13937,10 @@ do
     "config.h") CONFIG_HEADERS="$CONFIG_HEADERS config.h" ;;
     "Config/defs.mk") CONFIG_FILES="$CONFIG_FILES Config/defs.mk" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
+    "Doc/Makefile") CONFIG_FILES="$CONFIG_FILES Doc/Makefile" ;;
+    "Etc/Makefile") CONFIG_FILES="$CONFIG_FILES Etc/Makefile" ;;
     "Src/Makefile") CONFIG_FILES="$CONFIG_FILES Src/Makefile" ;;
+    "Test/Makefile") CONFIG_FILES="$CONFIG_FILES Test/Makefile" ;;
     "config.modules") CONFIG_COMMANDS="$CONFIG_COMMANDS config.modules" ;;
     "stamp-h") CONFIG_COMMANDS="$CONFIG_COMMANDS stamp-h" ;;
 

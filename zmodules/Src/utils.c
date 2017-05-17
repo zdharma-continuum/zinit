@@ -629,7 +629,7 @@ wcs_nicechar_sel(wchar_t c, size_t *widthp, char **swidep, int quotable)
     }
 
     s = buf;
-    if (!iswprint(c) && (c < 0x80 || !isset(PRINTEIGHTBIT))) {
+    if (!WC_ISPRINT(c) && (c < 0x80 || !isset(PRINTEIGHTBIT))) {
 	if (c == 0x7f) {
 	    if (quotable) {
 		*s++ = '\\';
@@ -734,7 +734,7 @@ wcs_nicechar(wchar_t c, size_t *widthp, char **swidep)
 /**/
 mod_export int is_wcs_nicechar(wchar_t c)
 {
-    if (!iswprint(c) && (c < 0x80 || !isset(PRINTEIGHTBIT))) {
+    if (!WC_ISPRINT(c) && (c < 0x80 || !isset(PRINTEIGHTBIT))) {
 	if (c == 0x7f || c == L'\n' || c == L'\t' || c < 0x20)
 	    return 1;
 	if (c >= 0x80) {
@@ -886,7 +886,7 @@ xsymlinks(char *s, int full)
     char **pp, **opp;
     char xbuf2[PATH_MAX*3+1], xbuf3[PATH_MAX*2+1];
     int t0, ret = 0;
-    zulong xbuflen = strlen(xbuf);
+    zulong xbuflen = strlen(xbuf), pplen;
 
     opp = pp = slashsplit(s);
     for (; xbuflen < sizeof(xbuf) && *pp && ret >= 0; pp++) {
@@ -907,10 +907,18 @@ xsymlinks(char *s, int full)
 	    xbuflen--;
 	    continue;
 	}
-	sprintf(xbuf2, "%s/%s", xbuf, *pp);
+	/* Includes null byte. */
+	pplen = strlen(*pp) + 1;
+	if (xbuflen + pplen + 1 > sizeof(xbuf2)) {
+	    *xbuf = 0;
+	    ret = -1;
+	    break;
+	}
+	memcpy(xbuf2, xbuf, xbuflen);
+	xbuf2[xbuflen] = '/';
+	memcpy(xbuf2 + xbuflen + 1, *pp, pplen);
 	t0 = readlink(unmeta(xbuf2), xbuf3, PATH_MAX);
 	if (t0 == -1) {
-	    zulong pplen = strlen(*pp) + 1;
 	    if ((xbuflen += pplen) < sizeof(xbuf)) {
 		strcat(xbuf, "/");
 		strcat(xbuf, *pp);
@@ -1230,13 +1238,13 @@ adduserdir(char *s, char *t, int flags, int always)
 	 * named directory, since these are sometimes used for
 	 * special purposes.
 	 */
-	nd->dir = ztrdup(t);
+	nd->dir = metafy(t, -1, META_DUP);
     } else
-	nd->dir = ztrduppfx(t, eptr - t);
+	nd->dir = metafy(t, eptr - t, META_DUP);
     /* The variables PWD and OLDPWD are not to be displayed as ~PWD etc. */
     if (!strcmp(s, "PWD") || !strcmp(s, "OLDPWD"))
 	nd->node.flags |= ND_NOABBREV;
-    nameddirtab->addnode(nameddirtab, ztrdup(s), nd);
+    nameddirtab->addnode(nameddirtab, metafy(s, -1, META_DUP), nd);
 }
 
 /* Get a named directory: this function can cause a directory name *
@@ -2376,7 +2384,7 @@ zstrtol_underscore(const char *s, char **t, int base, int underscore)
     while (inblank(*s))
 	s++;
 
-    if ((neg = (*s == '-')))
+    if ((neg = IS_DASH(*s)))
 	s++;
     else if (*s == '+')
 	s++;
@@ -4788,6 +4796,41 @@ unmeta(const char *file_name)
 }
 
 /*
+ * Unmetafy just one character and store the number of bytes it occupied.
+ */
+/**/
+mod_export convchar_t
+unmeta_one(const char *in, int *sz)
+{
+    convchar_t wc;
+    int newsz;
+#ifdef MULTIBYTE_SUPPORT
+    mbstate_t wstate;
+#endif
+
+    if (!sz)
+	sz = &newsz;
+    *sz = 0;
+
+    if (!in || !*in)
+	return 0;
+
+#ifdef MULTIBYTE_SUPPORT
+    memset(&wstate, 0, sizeof(wstate));
+    *sz = mb_metacharlenconv_r(in, &wc, &wstate);
+#else
+    if (in[0] == Meta) {
+      *sz = 2;
+      wc = STOUC(in[1] ^ 32);
+    } else {
+      *sz = 1;
+      wc = STOUC(in[0]);
+    }
+#endif
+    return wc;
+}
+
+/*
  * Unmetafy and compare two strings, comparing unsigned character values.
  * "a\0" sorts after "a".
  *
@@ -6118,7 +6161,9 @@ quotedzputs(char const *s, FILE *stream)
 	} else
 	    *ptr++ = '\'';
 	while(*s) {
-	    if (*s == Meta)
+	    if (*s == Dash)
+		c = '-';
+	    else if (*s == Meta)
 		c = *++s ^ 32;
 	    else
 		c = *s;
@@ -6155,7 +6200,9 @@ quotedzputs(char const *s, FILE *stream)
     } else {
 	/* use Bourne-style quoting, avoiding empty quoted strings */
 	while (*s) {
-	    if (*s == Meta)
+	    if (*s == Dash)
+		c = '-';
+	    else if (*s == Meta)
 		c = *++s ^ 32;
 	    else
 		c = *s;

@@ -22,6 +22,7 @@ static const struct wcwidth9_interval wcwidth9_nonprint[] = {
   {0x070f, 0x070f},
   {0x180b, 0x180e},
   {0x200b, 0x200f},
+  {0x2028, 0x2029},
   {0x202a, 0x202e},
   {0x206a, 0x206f},
   {0xd800, 0xdfff},
@@ -1283,6 +1284,9 @@ static inline bool wcwidth9_intable(const struct wcwidth9_interval *table, size_
 }
 
 static inline int wcwidth9(int c) {
+  if (c == 0) {
+    return 0;
+  }
   if (c < 0|| c > 0x10ffff) {
     return -1;
   }
@@ -1292,7 +1296,7 @@ static inline int wcwidth9(int c) {
   }
 
   if (wcwidth9_intable(wcwidth9_combining, WCWIDTH9_ARRAY_SIZE(wcwidth9_combining), c)) {
-    return -1;
+    return 0;
   }
 
   if (wcwidth9_intable(wcwidth9_not_assigned, WCWIDTH9_ARRAY_SIZE(wcwidth9_not_assigned), c)) {
