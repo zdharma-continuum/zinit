@@ -8,172 +8,31 @@
 #include "zplugin.mdh"
 #include "zplugin.pro"
 
-#define PM_ABSPATH_USED       (1<<12) /* (function): loaded using absolute path (shared with PM_EXPORTED) */
-
 /*
- * Some are repeated, copied from exec.c, because of static
+ * k   - ksh autoload
+ * z   - zsh autoload
+ * X,- - replace definition of function with autoloaded one, execute
+ * X,+ - load immediately, do not execute
+ * m   - name treated as pattern, used with +X
+ * d   - search $fpath even with a path
+ * U   - no aliases
+ * W   - WARN_NESTED_VAR
+ * r   - resolve absolute path, silent on error
+ * R   - resolve absolute path, aborts on error
+ * t   - turn on execution tracing
+ * T   - as above, but turn off for called functions
  */
-
-/* Helper for bin_functions() for -X and -r options */
-
-/**/
-static int
-check_autoload(Shfunc shf, char *name, Options ops, int func)
-{
-    if (OPT_ISSET(ops,'X'))
-    {
-	return eval_autoload(shf, name, ops, func);
-    }
-    if ((OPT_ISSET(ops,'r') || OPT_ISSET(ops,'R')) &&
-	(shf->node.flags & PM_UNDEFINED))
-    {
-	char *dir_path;
-	if (shf->filename && (shf->node.flags & PM_LOADDIR)) {
-	    char *spec_path[2];
-	    spec_path[0] = shf->filename;
-	    spec_path[1] = NULL;
-	    if (getfpfunc(shf->node.nam, NULL, &dir_path, spec_path, 1)) {
-		/* shf->filename is already correct. */
-		return 0;
-	    }
-	    if (!OPT_ISSET(ops,'d')) {
-		if (OPT_ISSET(ops,'R')) {
-		    zerr("%s: function definition file not found",
-			 shf->node.nam);
-		    return 1;
-		}
-		return 0;
-	    }
-	}
-	if (getfpfunc(shf->node.nam, NULL, &dir_path, NULL, 1)) {
-	    dircache_set(&shf->filename, NULL);
-	    if (*dir_path != '/') {
-		dir_path = zhtricat(metafy(zgetcwd(), -1, META_HEAPDUP),
-				    "/", dir_path);
-		dir_path = xsymlink(dir_path, 1);
-	    }
-	    dircache_set(&shf->filename, dir_path);
-	    shf->node.flags |= PM_LOADDIR;
-	    return 0;
-	}
-	if (OPT_ISSET(ops,'R')) {
-	    zerr("%s: function definition file not found",
-		 shf->node.nam);
-	    return 1;
-	}
-	/* with -r, we don't flag an error, just let it be found later. */
-    }
-    return 0;
-}
-
-static void
-add_autoload_function(Shfunc shf, char *funcname)
-{
-    char *nam;
-    if (*funcname == '/' && funcname[1] &&
-	(nam = strrchr(funcname, '/')) && nam[1] &&
-	(shf->node.flags & PM_UNDEFINED))
-    {
-	char *dir;
-	nam = strrchr(funcname, '/');
-	if (nam == funcname) {
-	    dir = "/";
-	} else {
-	    *nam++ = '\0';
-	    dir = funcname;
-	}
-	dircache_set(&shf->filename, NULL);
-	dircache_set(&shf->filename, dir);
-	shf->node.flags |= PM_LOADDIR;
-        shf->node.flags |= PM_ABSPATH_USED;
-	shfunctab->addnode(shfunctab, ztrdup(nam), shf);
-    } else {
-        Shfunc shf2;
-        Funcstack fs;
-        const char *calling_f = NULL;
-        char buf[PATH_MAX+1];
-
-        /* Find calling function */
-	for (fs = funcstack; fs; fs = fs->prev) {
-	    if (fs->tp == FS_FUNC && fs->name && (!shf->node.nam || 0 != strcmp(fs->name,shf->node.nam))) {
-                calling_f = fs->name;
-		break;
-	    }
-	}
-
-        /* Get its directory */
-        if (calling_f) {
-            if ((shf2 = (Shfunc) shfunctab->getnode2(shfunctab, calling_f))
-                && (shf2->node.flags & PM_LOADDIR) && (shf2->node.flags & PM_ABSPATH_USED)
-                && shf2->filename)
-            {
-                if (strlen(shf2->filename) + strlen(funcname) + 1 < PATH_MAX)
-                {
-                    sprintf(buf, "%s/%s", shf2->filename, funcname);
-                    /* Set containing directory if the function file
-                     * exists (do normal FPATH processing otherwise) */
-                    if (!access(buf, R_OK)) {
-                        dircache_set(&shf->filename, NULL);
-                        dircache_set(&shf->filename, shf2->filename);
-                        shf->node.flags |= PM_LOADDIR;
-                        shf->node.flags |= PM_ABSPATH_USED;
-                    }
-                }
-            }
-        }
-
-	shfunctab->addnode(shfunctab, ztrdup(funcname), shf);
-    }
-}
-
-/**/
-static void
-listusermathfunc(MathFunc p)
-{
-    int showargs;
-
-    if (p->module)
-	showargs = 3;
-    else if (p->maxargs != (p->minargs ? p->minargs : -1))
-	showargs = 2;
-    else if (p->minargs)
-	showargs = 1;
-    else
-	showargs = 0;
-
-    printf("functions -M %s", p->name);
-    if (showargs) {
-	printf(" %d", p->minargs);
-	showargs--;
-    }
-    if (showargs) {
-	printf(" %d", p->maxargs);
-	showargs--;
-    }
-    if (showargs) {
-	/*
-	 * function names are not required to consist of ident characters
-	 */
-	putchar(' ');
-	quotedzputs(p->module, stdout);
-	showargs--;
-    }
-    putchar('\n');
-}
 
 /**/
 static int
 bin_autoload2(char *name, char **argv, Options ops, int func)
 {
-    Patprog pprog;
     Shfunc shf;
-    int i, returnval = 0;
-    int on = 0, off = 0, pflags = 0, roff, expand = 0;
+    int returnval = 0;
+    int on = 0, off = 0, roff;
 
     /* Do we have any flags defined? */
-    if (OPT_PLUS(ops,'u'))
-	off |= PM_UNDEFINED;
-    else if (OPT_MINUS(ops,'u') || OPT_ISSET(ops,'X'))
+    if (OPT_ISSET(ops,'X'))
 	on |= PM_UNDEFINED;
     if (OPT_MINUS(ops,'U'))
 	on |= PM_UNALIASED|PM_UNDEFINED;
@@ -214,332 +73,162 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
 	roff |= PM_CUR_FPATH;
     }
 
-    if ((off & PM_UNDEFINED) || (OPT_ISSET(ops,'k') && OPT_ISSET(ops,'z')) ||
-	(OPT_ISSET(ops,'x') && !OPT_HASARG(ops,'x')) ||
-	(OPT_MINUS(ops,'X') && (OPT_ISSET(ops,'m') || !scriptname))) {
-	zwarnnam(name, "invalid option(s)");
-	return 1;
+    /* If option recognizing is finished */
+    int finished = 0;
+
+    if ( (off & PM_UNDEFINED) || (OPT_ISSET(ops,'k') && OPT_ISSET(ops,'z')) ||
+	(OPT_MINUS(ops,'X') && (OPT_ISSET(ops,'m') || !scriptname)) )
+    {
+        /**
+         ** This path is: invalid options
+         **/
+
+	zwarnnam( name, "Invalid option(s)" );
+        finished = 1;
     }
 
-    if (OPT_ISSET(ops,'x')) {
-	char *eptr;
-	expand = (int)zstrtol(OPT_ARG(ops,'x'), &eptr, 10);
-	if (*eptr) {
-	    zwarnnam(name, "number expected after -x");
-	    return 1;
-	}
-	if (expand == 0)	/* no indentation at all */
-	    expand = -1;
+    if ( !finished && OPT_MINUS( ops,'X' ) ) {
+        /**
+         ** This path is: eval autoload
+            % calendar() { autoload -X; }
+            % calendar
+            calendar:autoload: My: -X
+            calendar:calendar: My: eval_autoload does -X, calls mkautofn, bin_eval
+         **/
+
+        zwarnnam( name, "-X path" );
+        finished = 1;
+    } else if ( !finished && !*argv) {
+        /**
+         ** This path is: print functions
+         **/
+
+        zwarnnam( name, "print functions" );
+        finished = 1;
     }
 
-    if (OPT_PLUS(ops,'f') || roff || OPT_ISSET(ops,'+'))
-	pflags |= PRINT_NAMEONLY;
+    if ( !finished && OPT_ISSET( ops,'m' ) ) {
+        /**
+         ** This path is: apply options to matching functions
+         **               or print functions if no options given
+            autoload: -m
+            calendar: check_autoload has seen X
+            calendar: eval_autoload does loadautofn
+            zsh: loadautofn
+         **/
 
-    if (OPT_MINUS(ops,'M') || OPT_PLUS(ops,'M')) {
-	MathFunc p, q;
-	/*
-	 * Add/remove/list function as mathematical.
-	 */
-	if (on || off || pflags || OPT_ISSET(ops,'X') || OPT_ISSET(ops,'u')
-	    || OPT_ISSET(ops,'U') || OPT_ISSET(ops,'w')) {
-	    zwarnnam(name, "invalid option(s)");
-	    return 1;
-	}
-	if (!*argv) {
-	    /* List functions. */
-	    queue_signals();
-	    for (p = mathfuncs; p; p = p->next)
-		if (p->flags & MFF_USERFUNC)
-		    listusermathfunc(p);
-	    unqueue_signals();
-	} else if (OPT_ISSET(ops,'m')) {
-	    /* List matching functions. */
-	    for (; *argv; argv++) {
-		queue_signals();
-		tokenize(*argv);
-		if ((pprog = patcompile(*argv, PAT_STATIC, 0))) {
-		    for (p = mathfuncs, q = NULL; p; q = p) {
-			MathFunc next;
-			do {
-			    next = NULL;
-			    if ((p->flags & MFF_USERFUNC) &&
-				pattry(pprog, p->name)) {
-				if (OPT_PLUS(ops,'M')) {
-				    next = p->next;
-				    removemathfunc(q, p);
-				    p = next;
-				} else
-				    listusermathfunc(p);
-			    }
-			    /* if we deleted one, retry with the new p */
-			} while (next);
-			if (p)
-			    p = p->next;
-		    }
-		} else {
-		    untokenize(*argv);
-		    zwarnnam(name, "bad pattern : %s", *argv);
-		    returnval = 1;
-		}
-		unqueue_signals();
-	    }
-	} else if (OPT_PLUS(ops,'M')) {
-	    /* Delete functions. -m is allowed but is handled above. */
-	    for (; *argv; argv++) {
-		queue_signals();
-		for (p = mathfuncs, q = NULL; p; q = p, p = p->next) {
-		    if (!strcmp(p->name, *argv)) {
-			if (!(p->flags & MFF_USERFUNC)) {
-			    zwarnnam(name, "+M %s: is a library function",
-				     *argv);
-			    returnval = 1;
-			    break;
-			}
-			removemathfunc(q, p);
-			break;
-		    }
-		}
-		unqueue_signals();
-	    }
-	} else {
-	    /* Add a function */
-	    int minargs = 0, maxargs = -1;
-	    char *funcname = *argv++;
-	    char *modname = NULL;
-	    char *ptr;
-
-	    ptr = itype_end(funcname, IIDENT, 0);
-	    if (idigit(*funcname) || funcname == ptr || *ptr) {
-		zwarnnam(name, "-M %s: bad math function name", funcname);
-		return 1;
-	    }
-
-	    if (*argv) {
-		minargs = (int)zstrtol(*argv, &ptr, 0);
-		if (minargs < 0 || *ptr) {
-		    zwarnnam(name, "-M: invalid min number of arguments: %s",
-			     *argv);
-		    return 1;
-		}
-		maxargs = minargs;
-		argv++;
-	    }
-	    if (*argv) {
-		maxargs = (int)zstrtol(*argv, &ptr, 0);
-		if (maxargs < -1 ||
-		    (maxargs != -1 && maxargs < minargs) ||
-		    *ptr) {
-		    zwarnnam(name,
-			     "-M: invalid max number of arguments: %s",
-			     *argv);
-		    return 1;
-		}
-		argv++;
-	    }
-	    if (*argv)
-		modname = *argv++;
-	    if (*argv) {
-		zwarnnam(name, "-M: too many arguments");
-		return 1;
-	    }
-
-	    p = (MathFunc)zshcalloc(sizeof(struct mathfunc));
-	    p->name = ztrdup(funcname);
-	    p->flags = MFF_USERFUNC;
-	    p->module = modname ? ztrdup(modname) : NULL;
-	    p->minargs = minargs;
-	    p->maxargs = maxargs;
-
-	    queue_signals();
-	    for (q = mathfuncs; q; q = q->next) {
-		if (!strcmp(q->name, funcname)) {
-		    unqueue_signals();
-		    zwarnnam(name, "-M %s: function already exists",
-			     funcname);
-		    zsfree(p->name);
-		    zsfree(p->module);
-		    zfree(p, sizeof(struct mathfunc));
-		    return 1;
-		}
-	    }
-
-	    p->next = mathfuncs;
-	    mathfuncs = p;
-	    unqueue_signals();
-	}
-
-	return returnval;
+        zwarnnam( name, "print functions / apply options, to matching" );
+        finished = 1;
     }
 
-    if (OPT_MINUS(ops,'X')) {
-	Funcstack fs;
-	char *funcname = NULL;
-	int ret;
-	if (*argv && argv[1]) {
-	    zwarnnam(name, "-X: too many arguments");
-	    return 1;
-	}
-	queue_signals();
-	for (fs = funcstack; fs; fs = fs->prev) {
-	    if (fs->tp == FS_FUNC) {
-		/*
-		 * dupstring here is paranoia but unlikely to be
-		 * problematic
-		 */
-		funcname = dupstring(fs->name);
-		break;
-	    }
-	}
-	if (!funcname)
-	{
-	    zerrnam(name, "bad autoload");
-	    ret = 1;
-	} else {
-	    if ((shf = (Shfunc) shfunctab->getnode(shfunctab, funcname))) {
-		DPUTS(!shf->funcdef,
-		      "BUG: Calling autoload from empty function");
-	    } else {
-		shf = (Shfunc) zshcalloc(sizeof *shf);
-		shfunctab->addnode(shfunctab, ztrdup(funcname), shf);
-	    }
-	    if (*argv) {
-		dircache_set(&shf->filename, NULL);
-		dircache_set(&shf->filename, *argv);
-		on |= PM_LOADDIR;
-	    }
-	    shf->node.flags = on;
-	    ret = eval_autoload(shf, funcname, ops, func);
-	}
-	unqueue_signals();
-	return ret;
-    } else if (!*argv) {
-	/* If no arguments given, we will print functions.  If flags *
-	 * are given, we will print only functions containing these  *
-	 * flags, else we'll print them all.                         */
-	int ret = 0;
+    if ( ! finished ) {
+        /* Take the arguments literally -- do not glob */
+        for (; *argv; argv++) {
+            if (OPT_ISSET(ops,'w')) {
+                /**
+                 ** This path is: from-zcompile
+                 **/
+                // returnval = dump_autoload(name, *argv, on, ops, func);
 
-	queue_signals();
-	if (OPT_ISSET(ops,'U') && !OPT_ISSET(ops,'u'))
-		on &= ~PM_UNDEFINED;
-	    scanshfunc(1, on|off, DISABLED, shfunctab->printnode,
-		       pflags, expand);
-	unqueue_signals();
-	return ret;
+                zwarnnam( name, "dump_autoload" );
+                finished = 1;
+            } else if ((shf = (Shfunc) shfunctab->getnode(shfunctab, *argv))) {
+                if (on|off) {
+                    /**
+                     ** This path is: update options
+                     **/
+
+                    /**
+                     ** This path is: change options, handle +X
+                        % autoload calendar
+                        autoload: & PM_UNDEFINED
+                        autoload: add_autoload_function
+                        autoload: Third check_autoload
+                        % autoload +X calendar
+                        autoload: Update options
+                        autoload: First check_autoload
+                        calendar: check_autoload has seen X
+                        calendar: eval_autoload does loadautofn
+                        zsh: loadautofn
+                     **/
+                    /* turn on/off the given flags */
+                    // shf->node.flags = (shf->node.flags | (on & ~PM_UNDEFINED)) & ~off;
+                    // if (check_autoload(shf, shf->node.nam, ops, func))
+                    //     returnval = 1;
+
+                    finished = 1;
+                } else {
+                    /**
+                     ** This path is: print function
+                     **/
+
+                    finished = 1;
+                }
+            } else if (on & PM_UNDEFINED) {
+                /**
+                 ** This path is: +X or no -/+X
+                 **/
+
+                if ( **argv == '/' ) {
+                    /**
+                     ** This path is: update options, update path, handle +X
+                        % autoload calendar
+                        autoload: & PM_UNDEFINED
+                        autoload: add_autoload_function
+                        autoload: Third check_autoload
+                        % autoload +X /usr/local/share/zsh/5.3.1-dev-0/functions/calendar
+                        autoload: & PM_UNDEFINED
+                        autoload: At == /
+                        autoload: Second check_autoload
+                        calendar: check_autoload has seen X
+                        calendar: eval_autoload does loadautofn
+                        zsh: loadautofn
+                     **/
+
+                    char *base = strrchr(*argv, '/') + 1;
+                    if ( *base && ( shf = (Shfunc) shfunctab->getnode( shfunctab, base ) ) ) {
+                        /* turn on/off the given flags */
+                        // shf->node.flags = (shf->node.flags | (on & ~PM_UNDEFINED)) & ~off;
+                        if (shf->node.flags & PM_UNDEFINED) {
+                            /* update path if not yet loaded */
+                            // dircache_set(&shf->filename, NULL);
+                            // dircache_set(&shf->filename, dir);
+                        }
+                        // if (check_autoload(shf, shf->node.nam, ops, func))
+                        //  returnval = 1;
+
+                        finished = 1;
+                        continue;
+                    }
+                }
+
+                /**
+                 ** This path is: add autoload function STUB
+                    % autoload +X calendar
+                    autoload: & PM_UNDEFINED
+                    autoload: add_autoload_function
+                    autoload: Third check_autoload
+                    calendar: check_autoload has seen X
+                    calendar: eval_autoload does loadautofn
+                    zsh: loadautofn
+                 **/
+                // if (ok && check_autoload(shf, shf->node.nam, ops, func))
+                //    returnval = 1;
+
+                zwarnnam( name, "Adding autoload stub" );
+                finished = 1;
+            } else {
+                /**
+                 ** This path is: bad arguments
+                 **/
+                // returnval = 1;
+
+                zwarnnam( name, "bad arguments" );
+                finished = 1;
+            }
+        }
     }
 
-    /* With the -m option, treat arguments as glob patterns */
-    if (OPT_ISSET(ops,'m')) {
-	on &= ~PM_UNDEFINED;
-	for (; *argv; argv++) {
-	    queue_signals();
-	    /* expand argument */
-	    tokenize(*argv);
-	    if ((pprog = patcompile(*argv, PAT_STATIC, 0))) {
-		/* with no options, just print all functions matching the glob pattern */
-		if (!(on|off) && !OPT_ISSET(ops,'X')) {
-		    scanmatchshfunc(pprog, 1, 0, DISABLED,
-				   shfunctab->printnode, pflags, expand);
-		} else {
-		    /* apply the options to all functions matching the glob pattern */
-		    for (i = 0; i < shfunctab->hsize; i++) {
-			for (shf = (Shfunc) shfunctab->nodes[i]; shf;
-			     shf = (Shfunc) shf->node.next)
-			    if (pattry(pprog, shf->node.nam) &&
-				!(shf->node.flags & DISABLED)) {
-				shf->node.flags = (shf->node.flags |
-					      (on & ~PM_UNDEFINED)) & ~off;
-				if (check_autoload(shf, shf->node.nam,
-						   ops, func)) {
-				    returnval = 1;
-				}
-			    }
-		    }
-		}
-	    } else {
-		untokenize(*argv);
-		zwarnnam(name, "bad pattern : %s", *argv);
-		returnval = 1;
-	    }
-	    unqueue_signals();
-	}
-	return returnval;
-    }
-
-    /* Take the arguments literally -- do not glob */
-    queue_signals();
-    for (; *argv; argv++) {
-	if (OPT_ISSET(ops,'w'))
-	    returnval = dump_autoload(name, *argv, on, ops, func);
-	else if ((shf = (Shfunc) shfunctab->getnode(shfunctab, *argv))) {
-	    /* if any flag was given */
-	    if (on|off) {
-		/* turn on/off the given flags */
-		shf->node.flags = (shf->node.flags | (on & ~PM_UNDEFINED)) & ~off;
-		if (check_autoload(shf, shf->node.nam, ops, func))
-		    returnval = 1;
-	    } else
-		/* no flags, so just print */
-		printshfuncexpand(&shf->node, pflags, expand);
-	} else if (on & PM_UNDEFINED) {
-	    int signum = -1, ok = 1;
-
-	    if (!strncmp(*argv, "TRAP", 4) &&
-		(signum = getsignum(*argv + 4)) != -1) {
-		/*
-		 * Because of the possibility of alternative names,
-		 * we must remove the trap explicitly.
-		 */
-		removetrapnode(signum);
-	    }
-
-	    if (**argv == '/') {
-		char *base = strrchr(*argv, '/') + 1;
-		if (*base &&
-		    (shf = (Shfunc) shfunctab->getnode(shfunctab, base))) {
-		    char *dir;
-		    /* turn on/off the given flags */
-		    shf->node.flags =
-			(shf->node.flags | (on & ~PM_UNDEFINED)) & ~off;
-		    if (shf->node.flags & PM_UNDEFINED) {
-			/* update path if not yet loaded */
-			if (base == *argv + 1)
-			    dir = "/";
-			else {
-			    dir = *argv;
-			    base[-1] = '\0';
-			}
-			dircache_set(&shf->filename, NULL);
-			dircache_set(&shf->filename, dir);
-		    }
-		    if (check_autoload(shf, shf->node.nam, ops, func))
-			returnval = 1;
-		    continue;
-		}
-	    }
-
-	    /* Add a new undefined (autoloaded) function to the *
-	     * hash table with the corresponding flags set.     */
-	    shf = (Shfunc) zshcalloc(sizeof *shf);
-	    shf->node.flags = on;
-	    shf->funcdef = mkautofn(shf);
-	    shfunc_set_sticky(shf);
-	    add_autoload_function(shf, *argv);
-
-	    if (signum != -1) {
-		if (settrap(signum, NULL, ZSIG_FUNC)) {
-		    shfunctab->removenode(shfunctab, *argv);
-		    shfunctab->freenode(&shf->node);
-		    returnval = 1;
-		    ok = 0;
-		}
-	    }
-
-	    if (ok && check_autoload(shf, shf->node.nam, ops, func))
-		returnval = 1;
-	} else
-	    returnval = 1;
-    }
-    unqueue_signals();
     return returnval;
 }
 
