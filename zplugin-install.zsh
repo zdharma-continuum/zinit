@@ -23,6 +23,8 @@
             "gh"        "github.com"
             "bitbucket" "bitbucket.org"
             "bb"        "bitbucket.org"
+            "gitlab"    "gitlab.com"
+            "gl"        "gitlab.com"
             "notabug"   "notabug.org"
             "nb"        "notabug.org"
         )
