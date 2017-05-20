@@ -46,7 +46,10 @@ if [[ -z "$ZPLG_HOME" ]]; then
     fi
 fi
 
-typeset -gH ZPLG_PLUGINS_DIR="$ZPLG_HOME/plugins"
+# Can be customized
+typeset -gH ZPLG_PLUGINS_DIR
+: ${ZPLG_PLUGINS_DIR:=$ZPLG_HOME/plugins}
+
 # Can be customized, e.g. for multi-user environment
 typeset -gH ZPLG_COMPLETIONS_DIR
 : ${ZPLG_COMPLETIONS_DIR:=$ZPLG_HOME/completions}
