@@ -26,7 +26,7 @@ Then add to `~/.zshrc`, at bottom:
 
 ```zsh
 zplugin load psprint zsh-navigation-tools
-zplugin ice from"notabug" atload"echo loaded zui"
+zplugin ice from"notabug" atload"echo loaded zui" if"(( 1 ))"
 zplugin load zdharma/zui
 zplugin load zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
@@ -44,6 +44,18 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 23-05-2017
+  - New `ice` modifier: `if`, to which you can provide a conditional expression
+
+    ```zsh
+    % zplg ice if"(( 0 ))"
+    % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+    % zplg ice if"(( 1 ))"
+    % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+    Setting up snippet httpstat.sh
+    Downloading httpstat.sh...
+    ```
+
 * 16-05-2017
   - A very slick feature: **adding ice to commands**. Ice is something added and something that
     melts. You add modifiers to single next command, and the format (using quotes) guarantees
