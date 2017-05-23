@@ -1325,7 +1325,6 @@ builtin setopt noaliases
     builtin source "$dname/$fname"
     builtin unsetopt noaliases
     (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
-    (( ${+ZPLG_ICE[atload]} )) && eval "${ZPLG_ICE[atload]}"
 
     -zplg-shadow-off "$mode"
     if [[ "$mode" = "load" ]]; then
@@ -1334,6 +1333,8 @@ builtin setopt noaliases
         -zplg-diff-options "${ZPLG_MAIN[CUR_USPL2]}" end
         -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" end
     fi
+
+    (( ${+ZPLG_ICE[atload]} )) && eval "${ZPLG_ICE[atload]}"
 
     # Mark no load is in progress
     ZPLG_MAIN[CUR_USR]=""
