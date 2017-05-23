@@ -168,9 +168,9 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 |-----------|-------------|
 | `from`    | Clone from given site (Github is the default), supported are `from"gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gl`, `bb`, `nb`) |
 | `blockf`  | Disallow plugin to modify `fpath` |
-| `atclone` | Run command after cloning, e.g. `zplg ice atclone"echo Cloned"` |
-| `atload`  | Run command after loading |
-| `atpull`  | Run command after updating |
+| `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"` |
+| `atload`  | Run command after loading, within plugin's directory |
+| `atpull`  | Run command after updating, within plugin's directory |
 | `if`      | Load plugin when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...` |
 | `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, etc. |
 
