@@ -1,13 +1,6 @@
-<table>
-    <tr>
-        <td>
 ![zplugin logo](https://raw.githubusercontent.com/psprint/zplugin/master/doc/img/zplugin.png)
-        </td>
-        <td>
+
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D6XDCHDSBDSDG)
-        </td>
-    </tr>
-</table>
 
 # Zplugin
 
