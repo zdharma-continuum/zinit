@@ -54,7 +54,7 @@
         # Install completions
         -zplg-install-completions "$user" "$plugin" "0"
 
-        ( (( ${+ZPLG_ICE[atclone]} )) && eval "${ZPLG_ICE[atclone]}" )
+        ( (( ${+ZPLG_ICE[atclone]} )) && { cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}" } )
 
         # Compile plugin
         -zplg-compile-plugin "$user" "$plugin"
