@@ -47,7 +47,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 * 23-05-2017
   - New `ice` modifier: `if`, to which you can provide a conditional expression
 
-    ```Cirru
+    ```zsh
     % zplg ice if"(( 0 ))"
     % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
     % zplg ice if"(( 1 ))"
