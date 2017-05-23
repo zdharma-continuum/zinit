@@ -25,7 +25,8 @@ Then add to \fB~/\.zshrc\fR, at bottom:
 .nf
 
 zplugin load psprint zsh\-navigation\-tools
-zplugin load psprint\-\-\-zprompts
+zplugin ice from"notabug" atload"echo loaded zui" if"(( 1 ))"
+zplugin load zdharma/zui
 zplugin load zsh\-users/zsh\-autosuggestions
 zplugin light zsh\-users/zsh\-syntax\-highlighting
 .
@@ -50,10 +51,99 @@ source "$HOME/\.zplugin/bin/zplugin\.zsh"
 because the install script does this\.)
 .
 .P
-\fBZNT\fR – multi\-word searching of history (Ctrl\-R), \fBzprompts\fR – a few themes with advanced Git features (add \fBpromptinit; prompt scala4\fR to \fB~/\.zshrc\fR to set a prompt)\.
+\fBZNT\fR – multi\-word searching of history (Ctrl\-R), \fBzui\fR – textual UI library for Zshell\. The \fBice\fR subcommand – modifiers for following single command\. \fBnotabug\fR – the site \fBnotabug\.org\fR
 .
 .IP "\(bu" 4
 .SH "News"
+.
+.IP "" 0
+.
+23\-05\-2017
+.
+.IP "\(bu" 4
+New \fBice\fR modifier: \fBif\fR, to which you can provide a conditional expression
+.
+.IP "" 4
+.
+.nf
+
+% zplg ice if"(( 0 ))"
+% zplg snippet \-\-command https://github\.com/b4b4r07/httpstat/blob/master/httpstat\.sh
+% zplg ice if"(( 1 ))"
+% zplg snippet \-\-command https://github\.com/b4b4r07/httpstat/blob/master/httpstat\.sh
+Setting up snippet httpstat\.sh
+Downloading httpstat\.sh\.\.\.
+.
+.fi
+.
+.IP "" 0
+
+.
+.IP "" 0
+
+.
+.IP "\(bu" 4
+16\-05\-2017
+.
+.IP "\(bu" 4
+A very slick feature: \fBadding ice to commands\fR\. Ice is something added and something that melts\. You add modifiers to single next command, and the format (using quotes) guarantees you will see the syntax highlighted in editors:
+.
+.IP "" 4
+.
+.nf
+
+% zplg ice from"notabug" atload"echo \-\-Loaded\-\-" atclone"echo \-\-Cloned\-\-"
+% zplg load zdharma/zui
+Downloading zdharma/zui\.\.\.
+\.\.\.
+Checking connectivity\.\.\. done\.
+\-\-Cloned\-\-
+Compiling zui\.plugin\.zsh\.\.\.
+\-\-Loaded\-\-
+% grep notabug ~/\.zplugin/plugins/zdharma\-\-\-zui/\.git/config
+    url = https://notabug\.org/zdharma/zui
+.
+.fi
+.
+.IP "" 0
+.
+.IP
+One other \fBice\fR is \fBproto\fR\. Use \fBproto"git"\fR with Github to be able to use private repositories\.
+.
+.IP "\(bu" 4
+Completion\-management supports completions provided in subdirectory, like in \fBzsh\-users/zsh\-completions\fR plugin\. With \fBice\fR modifier \fBblockf\fR (block\-fpath), you can manage such completions:
+.
+.IP "" 4
+.
+.nf
+
+% zplg ice blockf
+% zplg load zsh\-users/zsh\-completions
+\.\.\.
+Symlinking completion `_ack\' to /Users/sgniazdowski/\.zplugin/completions
+Forgetting completion `_ack\'\.\.\.
+
+Symlinking completion `_afew\' to /Users/sgniazdowski/\.zplugin/completions
+Forgetting completion `_afew\'\.\.\.
+\.\.\.
+Compiling zsh\-completions\.plugin\.zsh\.\.\.
+% echo $fpath
+/Users/sgniazdowski/\.zplugin/completions /usr/local/share/zsh/site\-functions
+% zplg cdisable vagrant
+Disabled vagrant completion belonging to zsh\-users/zsh\-completions
+Forgetting completion `_vagrant\'\.\.\.
+
+Initializing completion system (compinit)\.\.\.
+.
+.fi
+.
+.IP "" 0
+
+.
+.IP "" 0
+
+.
+.IP "\(bu" 4
 14\-05\-2017
 .
 .IP "\(bu" 4
