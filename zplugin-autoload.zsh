@@ -879,6 +879,8 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     -zplg-any-to-user-plugin "$2" "$3"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
+    -zplg-pack-ice "$user" "$plugin"
+
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     # Check if repository has a remote set, if it is _local
