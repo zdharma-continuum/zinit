@@ -1334,7 +1334,7 @@ builtin setopt noaliases
         -zplg-diff-functions "${ZPLG_MAIN[CUR_USPL2]}" end
     fi
 
-    (( ${+ZPLG_ICE[atload]} )) && eval "${ZPLG_ICE[atload]}"
+    (( ${+ZPLG_ICE[atload]} )) && { local oldcd="$PWD"; cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; eval "${ZPLG_ICE[atload]}"; cd "$oldcd"; }
 
     # Mark no load is in progress
     ZPLG_MAIN[CUR_USR]=""
