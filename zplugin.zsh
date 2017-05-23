@@ -1398,7 +1398,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|report|depth|blockf|atload|atpull|atclone)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|report|depth|blockf|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
@@ -1430,6 +1430,7 @@ zplugin() {
 
     case "$1" in
        (load)
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
@@ -1439,6 +1440,7 @@ zplugin() {
            fi
            ;;
        (light)
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
@@ -1448,6 +1450,7 @@ zplugin() {
            fi
            ;;
        (snippet)
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            -zplg-load-snippet "$2" "$3" "$4"
            ;;
        (ice)
