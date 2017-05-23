@@ -74,7 +74,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
         url = https://notabug.org/zdharma/zui
     ```
 
-    One other ice is `proto`. Use `proto"git"` with Github to be able to use private repositories.
+    One other `ice` is `proto`. Use `proto"git"` with Github to be able to use private repositories.
 
   - Completion-management supports completions provided in subdirectory, like in `zsh-users/zsh-completions`
     plugin. With `ice` modifier `blockf` (block-fpath), you can manage such completions:
@@ -159,6 +159,20 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 **Example `create` invocation:**
 
 ![create example](http://imageshack.com/a/img921/8966/NURP24.png)
+
+# Ice Modifiers
+
+Following `ice` modifiers are passed to `zplg ice ...` to obtain described effects.
+
+|  Modifier | Description |
+|-----------|-------------|
+| `from`    | Clone from given site (Github is the default), supported are `from"gitlab"`, `..."bitbucket"`, `..."notabug"` |
+| `blockf`  | Disallow plugin to modify `fpath` |
+| `atclone` | Run command after cloning, e.g. `zplg ice atclone"echo Cloned"` |
+| `atload`  | Run command after loading |
+| `atpull`  | Run command after updating |
+| `if`      | Load plugin when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'` |
+| `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, etc. |
 
 # Installation
 
