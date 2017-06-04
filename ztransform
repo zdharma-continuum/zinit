@@ -1,0 +1,103 @@
+#!/usr/local/bin/zsh-5.3.1-dev-0
+# vim:ft=zsh
+
+setopt extendedglob
+
+fpath+=( "${0%/*}" )
+autoload zplg-process-buffer
+
+local name="$1"
+local doc="$(<$name)" token prev_token="" spaces prev_spaces="" next_token next_spaces
+
+local preamble="" fun_name=""
+local -A funs
+
+integer next_fun=0 cur_fun=0 prev_fun=0 anon_fun=0
+integer depth=0 prev_depth=0 jfinish=0
+
+zplg-process-buffer "$doc" 1
+integer i size="${#ZPLG_PB_WORDS}"
+
+print -rl ${ZPLG_PB_WORDS} >! words.txt
+for (( i=1; i<=size; ++ i )); do
+    token="${ZPLG_PB_WORDS[i]}"
+    spaces="${ZPLG_PB_SPACES[i]}"
+    next_token="${ZPLG_PB_WORDS[i+1]}"
+    next_spaces="${ZPLG_PB_SPACES[i+1]}"
+    jfinish=0
+
+    (( next_fun )) && { next_fun=0 cur_fun=1 prev_fun=0 anon_fun=0 }
+
+    if [[ "$token" = "function" ]]; then
+        next_fun=1 cur_fun=0 prev_fun=0 anon_fun=0
+    elif [[ "$token" = "()" ]]; then
+        if [[ "$spaces" = *$'\n'* || -z "$prev_token" ]]; then
+            next_fun=0 cur_fun=0 prev_fun=0 anon_fun=1
+        else
+            next_fun=0 cur_fun=0 prev_fun=1 anon_fun=0
+        fi
+    elif [[ "$token" = "{" ]]; then
+        (( ++ depth ))
+    elif [[ "$token" = "}" ]]; then
+        (( -- depth ))
+    fi
+
+    if (( cur_fun )); then
+        fun_name="$token"
+        cur_fun=0
+    elif (( prev_fun )); then
+        fun_name="$prev_token"
+        prev_fun=0
+    fi
+
+    if [[ "$depth" = 1 && "$token" = "{" ]]; then
+        :
+    elif (( depth > 0 && anon_fun == 0 )); then
+        if [[ "$token" != [[:space:]]#\#* ]]; then
+            funs[$fun_name]+="$spaces$token"
+        fi
+    elif (( depth == 0 && prev_depth == 1 )); then
+        jfinish=1
+        fun_name=""
+        (( anon_fun )) && anon_fun=3
+    fi
+
+    if [[ "$anon_fun" -gt 0 ]]; then
+        if (( anon_fun >= 2 )); then
+            [[ "$prev_token" != [[:space:]]#\#* ]] && preamble+="$prev_spaces$prev_token"
+        fi
+
+        if (( anon_fun == 1 )); then
+            anon_fun=2
+        fi
+
+        if (( jfinish )); then
+            [[ "$token" != [[:space:]]#\#* ]] && preamble+="$spaces$token"$'\n'
+        fi
+
+        (( anon_fun == 3 )) && anon_fun=0
+    elif [[ "$next_fun" -eq 0 && -z "$fun_name" && "$jfinish" -eq 0 ]]; then
+        if [[ "$next_token" = "()" && "$next_spaces" = *$'\n'* || "$next_token" != "()" ]]; then
+            [[ "$token" != [[:space:]]#\#* ]] && preamble+="$spaces$token"
+        fi
+    fi
+
+    prev_depth="$depth"
+    prev_token="$token"
+    prev_spaces="$spaces"
+done
+
+if [[ ( "$jfinish" -eq "0" || "$anon_fun" -eq 2 ) && "$prev_token" != [[:space:]]#\#* ]]; then
+    preamble+="$prev_spaces$prev_token"
+    (( anon_fun == 2 )) && anon_fun=0
+fi
+
+print -r -- "[preamble]"
+print -r -- "$preamble"
+print
+
+for fun_name in "${(ko@)funs}"; do
+    print -r -- "[${fun_name}"$'\C-A'"fun]"
+    print -r -- "${funs[$fun_name]}"
+    print
+done
