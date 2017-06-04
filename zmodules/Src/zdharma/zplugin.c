@@ -19,7 +19,6 @@ static struct builtin bintab[] = {
 
 static int counter=0;
 static const char *out_hash = "ZPLG_FBODIES";
-static const char *fun_stubfmt = "%s() { functions[%s]=\"${ZPLG_FBODIES[%s]}\"; %s \"$@\"; };";
 
 /* FUNCTION: bin_autoload2 {{{ */
 /*
@@ -246,22 +245,254 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
     return originalAutoload( name, in_argv, ops, func );
 }
 /* }}} */
+/* FUNCTION: pack_function {{{ */
+/**/
+void pack_function(const char *funname, char *funbody) {
+    // fprintf(stderr, "Packing function %s:\n%s", funname, funbody);
+    // fflush(stderr);
+
+    Param pm, val_pm;
+    HashTable ht;
+    HashNode hn;
+
+    pm = (Param) paramtab->getnode(paramtab, out_hash);
+    if(!pm) {
+        zwarn("Aborting, no Zplugin parameter `%s', is Zplugin loaded?", out_hash);
+        return;
+    }
+
+    ht = pm->u.hash;
+    hn = gethashnode2(ht, funname);
+    val_pm = (Param) hn;
+
+    if (!val_pm) {
+        val_pm = (Param) zshcalloc(sizeof (*val_pm));
+        val_pm->node.flags = PM_SCALAR | PM_HASHELEM;
+        val_pm->gsu.s = &stdscalar_gsu;;
+        ht->addnode(ht, ztrdup(funname), val_pm); // sets pm->node.nam
+    }
+
+    /* Ensure there's no leak */
+    if (val_pm->u.str) {
+        zsfree(val_pm->u.str);
+        val_pm->u.str = NULL;
+    }
+
+    val_pm->u.str = metafy(funbody, strlen(funbody), META_DUP);
+
+    /* Add short function, easy to parse */
+    char fun_buf[256];
+    const char *fun_stubfmt = "%s() { functions[%s]=\"${ZPLG_FBODIES[%s]}\"; %s \"$@\"; };";
+    sprintf(fun_buf, fun_stubfmt, funname, funname, funname, funname);
+
+    char *fargv[2];
+    fargv[0] = fun_buf;
+    fargv[1] = 0;
+
+    Options ops = NULL;
+
+    bin_eval("", fargv, ops, 0);
+}
+/* }}} */
+/* FUNCTION: run_preamble {{{ */
+static void run_preamble(char *preamble) {
+    //fprintf(stderr, "Running preamble:\n%s", preamble);
+    //fflush(stderr);
+
+    char *fargv[2];
+    fargv[0] = preamble;
+    fargv[1] = 0;
+
+    Options ops = NULL;
+
+    bin_eval("", fargv, ops, 0);
+    return;
+}
+/* }}} */
 /* FUNCTION: bin_ziniload {{{ */
 /**/
 static int
 bin_ziniload(char *name, char **argv, Options ops, int func)
 {
-    const char *fname;
+    const char *fname, *obtained;
+    char *blind, *preamble, *funbody, *new, *found, *last_line;
+    char funname[128];
+    int blind_size = 1024, size, retval = 0;
+    int preamble_size = 128, preamble_idx = 0;
+    int funbody_size = 128, funbody_idx = 0;
+    int current_type = 0; /* blind read */
+
+#define LINE_SIZE 1024
+#define NAME_SIZE 128
+#define ZINI_TYPE_BLIND 0
+#define ZINI_TYPE_PREAMBLE 1
+#define ZINI_TYPE_FUNCTION 2
 
     fname = *argv;
+    blind = zalloc(sizeof(char) * blind_size);
+    preamble = zalloc(sizeof(char) * preamble_size);
+    funbody = zalloc(sizeof(char) * funbody_size);
 
     FILE *in = fopen(fname,"r");
     if (!in) {
         zwarnnam(name, "File doesn't exist: %s", fname);
-        return 1;
+        retval = 1;
+        goto cleanup;
     }
 
-    return 0;
+    while (!feof(in)) {
+        if (current_type == ZINI_TYPE_BLIND) {
+            clearerr(in);
+            obtained = fgets(blind, blind_size, in);
+            if (obtained) {
+                size = strlen(blind);
+                if (blind[size-1] != '\n') {
+                    /* Don't process such a long line, however correctly skip it */
+                    while (blind[size-1] != '\n') {
+                        clearerr(in);
+                        obtained = fgets(blind, blind_size, in);
+                        if (!obtained) {
+                            break;
+                        } else {
+                            size = strlen(blind);
+                        }
+                    }
+                    continue;
+                }
+
+                if ( 0 == strncmp(blind,"[preamble]",10)) {
+                    current_type = ZINI_TYPE_PREAMBLE;
+                    preamble_idx = 0;
+                    continue;
+                } else if ( NULL != (found = strstr(blind,"\001fun]"))) {
+                    *found = '\0';
+                    strncpy(funname, blind+1, NAME_SIZE);
+                    funname[NAME_SIZE-1] = '\0';
+                    current_type = ZINI_TYPE_FUNCTION;
+                    funbody_idx = 0;
+                    continue;
+                }
+            }
+        } else if (current_type == ZINI_TYPE_PREAMBLE) {
+            while(preamble_idx + LINE_SIZE + 1 > preamble_size) {
+                new = (char *) zrealloc(preamble, sizeof(char) * preamble_size * 2);
+                if (new) {
+                    preamble = new;
+                    preamble_size = preamble_size * 2;
+                    new = NULL;
+                } else {
+                    zwarnnam(name, "Out of memory, aborting");
+                    retval = 1;
+                    goto cleanup;
+                }
+            }
+
+            clearerr(in);
+            obtained = fgets(preamble+preamble_idx, LINE_SIZE, in);
+            (preamble+preamble_idx)[LINE_SIZE] = '\0';
+
+            if (!obtained) {
+                if (feof(in)) {
+                    current_type = ZINI_TYPE_BLIND;
+                } else if(ferror(in)) {
+                    zwarnnam(name, "Error when reading preamble (%s), aborting", strerror(errno));
+                    break;
+                } else {
+                    current_type = ZINI_TYPE_BLIND;
+                }
+                continue;
+            }
+
+            last_line = preamble+preamble_idx;
+            size = strlen(preamble+preamble_idx);
+            preamble_idx += size;
+
+            if (preamble[preamble_idx - 1] != '\n') {
+                zwarnnam(name, "Too long line in preamble, skipping the plugin");
+                current_type = ZINI_TYPE_BLIND;
+                preamble_idx = 0;
+                break;
+            }
+
+            if (0 == strncmp(last_line, "PLG_END_P", 9)) {
+                *last_line = '\0';
+                current_type = ZINI_TYPE_BLIND;
+                continue;
+            }
+        } else if (current_type == ZINI_TYPE_FUNCTION) {
+            while(funbody_idx + LINE_SIZE + 1 > funbody_size) {
+                new = (char *) zrealloc(funbody, sizeof(char) * funbody_size * 2);
+                if (new) {
+                    funbody = new;
+                    funbody_size = funbody_size * 2;
+                    new = NULL;
+                } else {
+                    zwarnnam(name, "Out of memory, aborting");
+                    retval = 1;
+                    goto cleanup;
+                }
+            }
+
+            clearerr(in);
+            obtained = fgets(funbody+funbody_idx, LINE_SIZE, in);
+            (funbody+funbody_idx)[LINE_SIZE] = '\0';
+
+            if (!obtained) {
+                if (feof(in)) {
+                    pack_function(funname, funbody);
+                    current_type = ZINI_TYPE_BLIND;
+                    funbody_idx = 0;
+                } else if(ferror(in)) {
+                    zwarnnam(name, "Error when reading function's `%s' body (%s)", funname, strerror(errno));
+                    break;
+                } else {
+                    pack_function(funname, funbody);
+                    current_type = ZINI_TYPE_BLIND;
+                    funbody_idx = 0;
+                }
+                continue; 
+            }
+
+            last_line = funbody+funbody_idx;
+            size = strlen(funbody+funbody_idx);
+            funbody_idx += size;
+
+            if (funbody[funbody_idx - 1] != '\n') {
+                zwarnnam(name, "Too long line in the function `%s', skipping whole function", funname);
+                current_type = ZINI_TYPE_BLIND;
+                funbody_idx = 0;
+                continue;
+            }
+
+            if (0 == strncmp(last_line, "PLG_END_F", 9)) {
+                *last_line = '\0';
+                pack_function(funname, funbody);
+                current_type = ZINI_TYPE_BLIND;
+                funbody_idx = 0;
+                continue;
+            }
+        }
+    }
+
+    if (preamble_idx > 0) {
+        run_preamble(preamble);
+    }
+
+cleanup:
+
+    if (blind) {
+        zfree(blind, sizeof(char) * blind_size);   
+        blind = NULL;
+    }
+    if (preamble) {
+        zfree(preamble, sizeof(char) * preamble_size);
+        preamble = NULL;
+    }
+    if (funbody) {
+        zfree(funbody, sizeof(char) * funbody_size);
+        funbody = NULL;
+    }
+    return retval;
 }
 /* }}} */
 

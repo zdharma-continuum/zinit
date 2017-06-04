@@ -92,12 +92,11 @@ if [[ ( "$jfinish" -eq "0" || "$anon_fun" -eq 2 ) && "$prev_token" != [[:space:]
     (( anon_fun == 2 )) && anon_fun=0
 fi
 
-print -r -- "[preamble]"
-print -r -- "$preamble"
-print
+print -r -- "$preamble" >| "preamble.zini"
 
 for fun_name in "${(ko@)funs}"; do
     print -r -- "[${fun_name}"$'\C-A'"fun]"
     print -r -- "${funs[$fun_name]}"
+    print -r -- "PLG_END_F"
     print
-done
+done >| "functions.ini"
