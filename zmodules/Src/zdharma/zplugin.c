@@ -1,4 +1,6 @@
-/*
+/* -*- Mode: C; c-basic-offset: 4 -*-
+ * vim:sw=4:sts=4:et
+ *
  * zplugin.c – module for Zplugin plugin manager
  *
  * Copyright (c) 2017 Sebastian Gniazdowski
@@ -10,6 +12,16 @@
 
 static HandlerFunc originalAutoload = NULL;
 
+/* ARRAY: builtin {{{ */
+static struct builtin bintab[] = {
+    BUILTIN("ziniload", 0, bin_ziniload, 0, -1, 0, "", NULL),
+};
+
+static int counter=0;
+static const char *out_hash = "ZPLG_FBODIES";
+static const char *fun_stubfmt = "%s() { functions[%s]=\"${ZPLG_FBODIES[%s]}\"; %s \"$@\"; };";
+
+/* FUNCTION: bin_autoload2 {{{ */
 /*
  * k   - ksh autoload
  * z   - zsh autoload
@@ -35,68 +47,68 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
 
     /* Do we have any flags defined? */
     if (OPT_ISSET(ops,'X'))
-	on |= PM_UNDEFINED;
+        on |= PM_UNDEFINED;
     if (OPT_MINUS(ops,'U'))
-	on |= PM_UNALIASED|PM_UNDEFINED;
+        on |= PM_UNALIASED|PM_UNDEFINED;
     else if (OPT_PLUS(ops,'U'))
-	off |= PM_UNALIASED;
+        off |= PM_UNALIASED;
     if (OPT_MINUS(ops,'t'))
-	on |= PM_TAGGED;
+        on |= PM_TAGGED;
     else if (OPT_PLUS(ops,'t'))
-	off |= PM_TAGGED;
+        off |= PM_TAGGED;
     if (OPT_MINUS(ops,'T'))
-	on |= PM_TAGGED_LOCAL;
+        on |= PM_TAGGED_LOCAL;
     else if (OPT_PLUS(ops,'T'))
-	off |= PM_TAGGED_LOCAL;
+        off |= PM_TAGGED_LOCAL;
     if (OPT_MINUS(ops,'W'))
-	on |= PM_WARNNESTED;
+        on |= PM_WARNNESTED;
     else if (OPT_PLUS(ops,'W'))
-	off |= PM_WARNNESTED;
+        off |= PM_WARNNESTED;
     roff = off;
     if (OPT_MINUS(ops,'z')) {
-	on |= PM_ZSHSTORED;
-	off |= PM_KSHSTORED;
+        on |= PM_ZSHSTORED;
+        off |= PM_KSHSTORED;
     } else if (OPT_PLUS(ops,'z')) {
-	off |= PM_ZSHSTORED;
-	roff |= PM_ZSHSTORED;
+        off |= PM_ZSHSTORED;
+        roff |= PM_ZSHSTORED;
     }
     if (OPT_MINUS(ops,'k')) {
-	on |= PM_KSHSTORED;
-	off |= PM_ZSHSTORED;
+        on |= PM_KSHSTORED;
+        off |= PM_ZSHSTORED;
     } else if (OPT_PLUS(ops,'k')) {
-	off |= PM_KSHSTORED;
-	roff |= PM_KSHSTORED;
+        off |= PM_KSHSTORED;
+        roff |= PM_KSHSTORED;
     }
     if (OPT_MINUS(ops,'d')) {
-	on |= PM_CUR_FPATH;
-	off |= PM_CUR_FPATH;
+        on |= PM_CUR_FPATH;
+        off |= PM_CUR_FPATH;
     } else if (OPT_PLUS(ops,'d')) {
-	off |= PM_CUR_FPATH;
-	roff |= PM_CUR_FPATH;
+        off |= PM_CUR_FPATH;
+        roff |= PM_CUR_FPATH;
     }
 
     /* If option recognizing is finished */
     int finished = 0;
 
     if ( (off & PM_UNDEFINED) || (OPT_ISSET(ops,'k') && OPT_ISSET(ops,'z')) ||
-	(OPT_MINUS(ops,'X') && (OPT_ISSET(ops,'m') || !scriptname)) )
-    {
-        /**
-         ** This path is: invalid options
-         **/
+         (OPT_MINUS(ops,'X') && (OPT_ISSET(ops,'m') || !scriptname)) )
+        {
+            /**
+             ** This path is: invalid options
+             **/
 
-	zwarnnam( name, "Invalid option(s)" );
-        finished = 1;
-    }
+            zwarnnam( name, "Invalid option(s)" );
+            finished = 1;
+        }
 
     if ( !finished && OPT_MINUS( ops,'X' ) ) {
         /**
          ** This path is: eval autoload
-            % calendar() { autoload -X; }
-            % calendar
-            calendar:autoload: My: -X
-            calendar:calendar: My: eval_autoload does -X, calls mkautofn, bin_eval
-         **/
+         % calendar() { autoload -X; }
+         % calendar
+         calendar:autoload: My: -X
+         calendar:calendar: My: eval_autoload does -X, calls mkautofn, bin_eval
+        **/
 
         zwarnnam( name, "-X path" );
         finished = 1;
@@ -113,11 +125,11 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
         /**
          ** This path is: apply options to matching functions
          **               or print functions if no options given
-            autoload: -m
-            calendar: check_autoload has seen X
-            calendar: eval_autoload does loadautofn
-            zsh: loadautofn
-         **/
+         autoload: -m
+         calendar: check_autoload has seen X
+         calendar: eval_autoload does loadautofn
+         zsh: loadautofn
+        **/
 
         zwarnnam( name, "print functions / apply options, to matching" );
         finished = 1;
@@ -142,17 +154,17 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
 
                     /**
                      ** This path is: change options, handle +X
-                        % autoload calendar
-                        autoload: & PM_UNDEFINED
-                        autoload: add_autoload_function
-                        autoload: Third check_autoload
-                        % autoload +X calendar
-                        autoload: Update options
-                        autoload: First check_autoload
-                        calendar: check_autoload has seen X
-                        calendar: eval_autoload does loadautofn
-                        zsh: loadautofn
-                     **/
+                     % autoload calendar
+                     autoload: & PM_UNDEFINED
+                     autoload: add_autoload_function
+                     autoload: Third check_autoload
+                     % autoload +X calendar
+                     autoload: Update options
+                     autoload: First check_autoload
+                     calendar: check_autoload has seen X
+                     calendar: eval_autoload does loadautofn
+                     zsh: loadautofn
+                    **/
                     /* turn on/off the given flags */
                     // shf->node.flags = (shf->node.flags | (on & ~PM_UNDEFINED)) & ~off;
                     // if (check_autoload(shf, shf->node.nam, ops, func))
@@ -174,18 +186,18 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
                 if ( **argv == '/' ) {
                     /**
                      ** This path is: update options, update path, handle +X
-                        % autoload calendar
-                        autoload: & PM_UNDEFINED
-                        autoload: add_autoload_function
-                        autoload: Third check_autoload
-                        % autoload +X /usr/local/share/zsh/5.3.1-dev-0/functions/calendar
-                        autoload: & PM_UNDEFINED
-                        autoload: At == /
-                        autoload: Second check_autoload
-                        calendar: check_autoload has seen X
-                        calendar: eval_autoload does loadautofn
-                        zsh: loadautofn
-                     **/
+                     % autoload calendar
+                     autoload: & PM_UNDEFINED
+                     autoload: add_autoload_function
+                     autoload: Third check_autoload
+                     % autoload +X /usr/local/share/zsh/5.3.1-dev-0/functions/calendar
+                     autoload: & PM_UNDEFINED
+                     autoload: At == /
+                     autoload: Second check_autoload
+                     calendar: check_autoload has seen X
+                     calendar: eval_autoload does loadautofn
+                     zsh: loadautofn
+                    **/
 
                     char *base = strrchr(*argv, '/') + 1;
                     if ( *base && ( shf = (Shfunc) shfunctab->getnode( shfunctab, base ) ) ) {
@@ -206,14 +218,14 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
 
                 /**
                  ** This path is: add autoload function STUB
-                    % autoload +X calendar
-                    autoload: & PM_UNDEFINED
-                    autoload: add_autoload_function
-                    autoload: Third check_autoload
-                    calendar: check_autoload has seen X
-                    calendar: eval_autoload does loadautofn
-                    zsh: loadautofn
-                 **/
+                 % autoload +X calendar
+                 autoload: & PM_UNDEFINED
+                 autoload: add_autoload_function
+                 autoload: Third check_autoload
+                 calendar: check_autoload has seen X
+                 calendar: eval_autoload does loadautofn
+                 zsh: loadautofn
+                **/
                 // if (ok && check_autoload(shf, shf->node.nam, ops, func))
                 //    returnval = 1;
 
@@ -233,16 +245,41 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
 
     return originalAutoload( name, in_argv, ops, func );
 }
+/* }}} */
+/* FUNCTION: bin_ziniload {{{ */
+/**/
+static int
+bin_ziniload(char *name, char **argv, Options ops, int func)
+{
+    const char *fname;
 
-static struct features module_features = { 0 };
+    fname = *argv;
+
+    FILE *in = fopen(fname,"r");
+    if (!in) {
+        zwarnnam(name, "File doesn't exist: %s", fname);
+        return 1;
+    }
+
+    return 0;
+}
+/* }}} */
+
+static struct features module_features = {
+    bintab, sizeof(bintab)/sizeof(*bintab),
+    NULL, 0,
+    NULL, 0,
+    NULL, 0,
+    0
+};
 
 /**/
 int
 setup_(UNUSED(Module m))
 {
-    Builtin bn = (Builtin) builtintab->getnode2(builtintab, "autoload");
-    originalAutoload = bn->handlerfunc;
-    bn->handlerfunc = bin_autoload2;
+    // Builtin bn = (Builtin) builtintab->getnode2(builtintab, "autoload");
+    // originalAutoload = bn->handlerfunc;
+    // bn->handlerfunc = bin_autoload2;
 
     printf("The example module has now been set up.\n");
 
@@ -283,8 +320,8 @@ cleanup_(Module m)
 int
 finish_(UNUSED(Module m))
 {
-    Builtin bn = (Builtin) builtintab->getnode2(builtintab, "autoload");
-    bn->handlerfunc = originalAutoload;
+    // Builtin bn = (Builtin) builtintab->getnode2(builtintab, "autoload");
+    // bn->handlerfunc = originalAutoload;
 
     printf("Thank you for using the example module.  Have a nice day.\n");
     fflush(stdout);
