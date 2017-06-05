@@ -24,7 +24,7 @@ for (( i=1; i<=size; ++ i )); do
     spaces="${ZPLG_PB_SPACES[i]}"
     next_token="${ZPLG_PB_WORDS[i+1]}"
     next_spaces="${ZPLG_PB_SPACES[i+1]}"
-    descentff=0 descentfa=0
+    cur_fun=0 prev_fun=0 descentff=0 descentfa=0
 
     (( next_fun )) && { next_fun=0 cur_fun=1 prev_fun=0 anon_depth=-1 }
 
@@ -32,7 +32,7 @@ for (( i=1; i<=size; ++ i )); do
     if [[ "$token" = "function" ]]; then
         next_fun=1 cur_fun=0 prev_fun=0 anon_depth=-1
     # Detect function if not already in function
-    elif [[ "$token" = "()" && (fun_depth < 0) && (anon_depth < 0) ]]; then
+    elif [[ "$token" = "()" && ( "$fun_depth" -lt 0 ) && ( $anon_depth -lt 0 ) ]]; then
         if [[ "$spaces" = *$'\n'* || -z "$prev_token" ]]; then
             next_fun=0 cur_fun=0 prev_fun=0 anon_depth=$depth
         else
@@ -46,11 +46,9 @@ for (( i=1; i<=size; ++ i )); do
 
     if (( cur_fun )); then
         fun_name="$token"
-        cur_fun=0
         fun_depth="$depth"
     elif (( prev_fun )); then
         fun_name="$prev_token"
-        prev_fun=0
         fun_depth="$depth"
     fi
 
@@ -83,7 +81,9 @@ for (( i=1; i<=size; ++ i )); do
         fun_depth=-1
     # No-function printing
     elif (( next_fun == 0 && cur_fun == 0 && prev_fun == 0 && anon_depth < 0 && fun_depth < 0 )); then
-        [[ "$token" != [[:space:]]#\#* ]] && preamble+="${spaces}${token}"
+        if [[ "$next_token" != "()" || "$next_spaces" = *$'\n'* ]]; then
+            [[ "$token" != [[:space:]]#\#* ]] && preamble+="${spaces}${token}"
+        fi
     fi
 
     prev_depth="$depth"
