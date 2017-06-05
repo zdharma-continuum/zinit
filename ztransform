@@ -98,4 +98,4 @@ for fun_name in "${(ko@)funs}"; do
     print -r -- "${funs[$fun_name]}"
     print -r -- "PLG_END_F"
     print
-done >| "functions.ini"
+done >| "functions.zini"
