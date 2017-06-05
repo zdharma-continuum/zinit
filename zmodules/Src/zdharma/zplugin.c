@@ -16,6 +16,7 @@ static HandlerFunc originalAutoload = NULL;
 static struct builtin bintab[] = {
     BUILTIN("ziniload", 0, bin_ziniload, 0, -1, 0, "", NULL),
 };
+/* }}} */
 
 static int counter=0;
 static const char *out_hash = "ZPLG_FBODIES";
