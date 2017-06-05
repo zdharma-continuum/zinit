@@ -9,8 +9,22 @@
 
 #include "zplugin.mdh"
 #include "zplugin.pro"
+#include <sys/mman.h>
+
+#if !defined(MAP_VARIABLE)
+#define MAP_VARIABLE 0
+#endif
+#if !defined(MAP_FILE)
+#define MAP_FILE 0
+#endif
+#if !defined(MAP_NORESERVE)
+#define MAP_NORESERVE 0
+#endif
+
+#define MMAP_ARGS (MAP_FILE | MAP_VARIABLE | MAP_SHARED | MAP_NORESERVE)
 
 static HandlerFunc originalAutoload = NULL;
+
 
 /* ARRAY: builtin {{{ */
 static struct builtin bintab[] = {
@@ -247,8 +261,8 @@ bin_autoload2(char *name, char **argv, Options ops, int func)
 /* }}} */
 /* FUNCTION: pack_function {{{ */
 /**/
-void pack_function(const char *funname, char *funbody) {
-    // fprintf(stderr, "Packing function %s:\n%s", funname, funbody);
+static void pack_function(const char *funname, char *mmptr, int len) {
+    // fprintf(stderr, "Packing function %s:\n%s", funname, mmptr);
     // fflush(stderr);
 
     Param pm, val_pm;
@@ -278,7 +292,7 @@ void pack_function(const char *funname, char *funbody) {
         val_pm->u.str = NULL;
     }
 
-    val_pm->u.str = metafy(funbody, strlen(funbody), META_DUP);
+    val_pm->u.str = metafy(mmptr, len, META_DUP);
 
     /* Add short function, easy to parse */
     char fun_buf[256];
@@ -299,131 +313,106 @@ void pack_function(const char *funname, char *funbody) {
 static int
 bin_ziniload(char *name, char **argv, Options ops, int func)
 {
-    const char *fname;
-    char *funbody, *new, *found, *found2, *last_line;
+    char *fname;
+    int umlen, fd;
+    struct stat sbuf;
+    caddr_t mmptr = 0;
+    int mm_size = 0, mm_idx = 0, start_idx = 0;
+    char *last_line;
+
+    char *found, *found2;
     char funname[128];
     int retval = 0;
-    int funbody_size = 4096, funbody_idx = 0;
     int current_type = 0; /* blind read */
-    int nobtained = 0, has_read = 0;
 
-#define LINE_SIZE 1024
 #define NAME_SIZE 128
 #define ZINI_TYPE_BLIND 0
 #define ZINI_TYPE_FUNCTION 1
 
     fname = *argv;
-    funbody = zalloc(sizeof(char) * funbody_size);
-    funbody[0]='\0';
-    last_line = funbody;
 
-    FILE *in = fopen(fname,"r");
-    if (!in) {
-        zwarnnam(name, "File doesn't exist: %s", fname);
-        retval = 1;
-        goto cleanup;
+    unmetafy(fname = ztrdup(fname), &umlen);
+
+    if ((fd = open(fname, O_RDONLY | O_NOCTTY)) < 0 ||
+	fstat(fd, &sbuf) ||
+	(mmptr = (caddr_t)mmap((caddr_t)0, mm_size = sbuf.st_size, PROT_READ,
+			       MMAP_ARGS, fd, (off_t)0)) == (caddr_t)-1) {
+	if (fd >= 0) {
+	    close(fd);
+        }
+
+        set_length(fname, umlen);
+	zsfree(fname);
+
+	return 1;
     }
 
-    while (!feof(in)) {
-        /* Prepare for max LINE_SIZE read */
-        ptrdiff_t diff = last_line - funbody;
-        while(has_read + LINE_SIZE > funbody_size) {
-            new = (char *) zrealloc(funbody, sizeof(char) * funbody_size * 2);
-            if (new) {
-                funbody = new;
-                funbody_size = funbody_size * 2;
-                new = NULL;
-            } else {
-                zwarnnam(name, "Out of memory, aborting");
-                retval = 1;
-                goto cleanup;
-            }
-        }
-        last_line = funbody + diff;
-        
+    /* Don't need file name anymore */
+    set_length(fname, umlen);
+    zsfree(fname);
+
+    last_line = mmptr;
+    while (1) {
         /* Find new line */
-        if (!(found = strchr(funbody+funbody_idx, '\n'))) {
-            clearerr(in);
-            nobtained = fread(funbody+has_read, 1, LINE_SIZE-1, in);
-            has_read += nobtained;
-            funbody[has_read] = '\0';
+        found = strchr(mmptr+mm_idx, '\n');
+        mm_idx = found - mmptr + 1;
 
-            if (nobtained == 0) {
-                if (feof(in)) {
-                    if (current_type == ZINI_TYPE_FUNCTION) {
-                        pack_function(funname, funbody);
-                        current_type = ZINI_TYPE_BLIND;
-                    }
-                } else if(ferror(in)) {
-                    if (current_type == ZINI_TYPE_FUNCTION) {
-                        zwarnnam(name, "Error when reading function's `%s' body (%s)", funname, strerror(errno));
-                    } else {
-                        zwarnnam(name, "Error when reading zini file (%s)", strerror(errno));
-                    }
-                    break;
-                } else {
-                    if (current_type == ZINI_TYPE_FUNCTION) {
-                        pack_function(funname, funbody);
-                        current_type = ZINI_TYPE_BLIND;
-                    }
-                }
-                continue; 
-            } else {
-                found = strchr(funbody+funbody_idx, '\n');
-                if (!found)
-                    continue;
-            }
+        if (!found) {
+            // No full line, can abort
+            break;
         }
-
-        funbody_idx = found - funbody + 1;
 
         if (current_type == ZINI_TYPE_BLIND) {
-            *found = '\0';
-            if ( NULL != (found2 = strstr(last_line,"\001fun]"))) {
-                *found2 = '\0';
-                strncpy(funname, last_line+1, NAME_SIZE);
+
+            if ( NULL != (found2 = strnstr(last_line, "\001fun]", found - last_line))) {
+                strncpy(funname, last_line + 1, found2 - (last_line + 1));
                 funname[NAME_SIZE-1] = '\0';
+                funname[found2 - (last_line + 1)] = '\0';
+                start_idx = mm_idx;
                 current_type = ZINI_TYPE_FUNCTION;
-                has_read = strlen(found+1);
-                memmove(funbody, found+1, has_read + 1);
-                funbody_idx = 0;
-                last_line = funbody;
-                continue;
-            } else {
-                last_line = found + 1;
             }
+
+            last_line = found + 1;
+            continue;
         } else if (current_type == ZINI_TYPE_FUNCTION) {
-            if (funbody[funbody_idx-1] != '\n') {
+            if (mmptr[mm_idx-1] != '\n') {
                 zwarnnam(name, "Too long line in the function `%s', skipping whole function", funname);
                 current_type = ZINI_TYPE_BLIND;
-                funbody_idx = 0;
                 last_line = found + 1;
                 continue;
             }
 
             if (0 == strncmp(last_line, "PLG_END_F", 9)) {
-                *last_line = '\0';
-                pack_function(funname, funbody);
+                pack_function(funname, mmptr + start_idx, last_line - mmptr - start_idx);
                 current_type = ZINI_TYPE_BLIND;
-                funbody_idx = 0;
-                has_read = strlen(found+1);
-                memmove( funbody, found+1, has_read + 1 );
-                last_line = funbody;
-                continue;
-            } else {
-                //zwarnnam(name, "Stored line: %s", last_line);
                 last_line = found + 1;
             }
+
+            last_line = found + 1;
+            continue;
         }
     }
 
-cleanup:
-
-    if (funbody) {
-        zfree(funbody, sizeof(char) * funbody_size);
-        funbody = NULL;
+    if (mmptr) {
+        munmap(mmptr, sbuf.st_size);
+        close(fd);
+        mmptr = NULL;
     }
     return retval;
+}
+/* }}} */
+/* FUNCTION: set_length {{{ */
+/*
+ * For zsh-allocator, rest of Zsh seems to use
+ * free() instead of zsfree(), and such length
+ * restoration causes slowdown, but all is this
+ * way strict - correct */
+/**/
+static void set_length(char *buf, int size) {
+    buf[size]='\0';
+    while (-- size >= 0) {
+        buf[size]=' ';
+    }
 }
 /* }}} */
 
