@@ -299,12 +299,13 @@ void pack_function(const char *funname, char *funbody) {
 static int
 bin_ziniload(char *name, char **argv, Options ops, int func)
 {
-    const char *fname, *obtained;
-    char *blind, *funbody, *new, *found, *last_line;
+    const char *fname;
+    char *funbody, *new, *found, *found2, *last_line;
     char funname[128];
-    int blind_size = 1024, size, retval = 0;
-    int funbody_size = 128, funbody_idx = 0;
+    int retval = 0;
+    int funbody_size = 4096, funbody_idx = 0;
     int current_type = 0; /* blind read */
+    int nobtained = 0, has_read = 0;
 
 #define LINE_SIZE 1024
 #define NAME_SIZE 128
@@ -312,8 +313,9 @@ bin_ziniload(char *name, char **argv, Options ops, int func)
 #define ZINI_TYPE_FUNCTION 1
 
     fname = *argv;
-    blind = zalloc(sizeof(char) * blind_size);
     funbody = zalloc(sizeof(char) * funbody_size);
+    funbody[0]='\0';
+    last_line = funbody;
 
     FILE *in = fopen(fname,"r");
     if (!in) {
@@ -323,76 +325,79 @@ bin_ziniload(char *name, char **argv, Options ops, int func)
     }
 
     while (!feof(in)) {
-        if (current_type == ZINI_TYPE_BLIND) {
-            clearerr(in);
-            obtained = fgets(blind, blind_size, in);
-            if (obtained) {
-                size = strlen(blind);
-                if (blind[size-1] != '\n') {
-                    /* Don't process such a long line, however correctly skip it */
-                    while (blind[size-1] != '\n') {
-                        clearerr(in);
-                        obtained = fgets(blind, blind_size, in);
-                        if (!obtained) {
-                            break;
-                        } else {
-                            size = strlen(blind);
-                        }
-                    }
-                    continue;
-                }
-
-                if ( NULL != (found = strstr(blind,"\001fun]"))) {
-                    *found = '\0';
-                    strncpy(funname, blind+1, NAME_SIZE);
-                    funname[NAME_SIZE-1] = '\0';
-                    current_type = ZINI_TYPE_FUNCTION;
-                    funbody_idx = 0;
-                    continue;
-                }
+        /* Prepare for max LINE_SIZE read */
+        ptrdiff_t diff = last_line - funbody;
+        while(has_read + LINE_SIZE > funbody_size) {
+            new = (char *) zrealloc(funbody, sizeof(char) * funbody_size * 2);
+            if (new) {
+                funbody = new;
+                funbody_size = funbody_size * 2;
+                new = NULL;
+            } else {
+                zwarnnam(name, "Out of memory, aborting");
+                retval = 1;
+                goto cleanup;
             }
-        } else if (current_type == ZINI_TYPE_FUNCTION) {
-            while(funbody_idx + LINE_SIZE + 1 > funbody_size) {
-                new = (char *) zrealloc(funbody, sizeof(char) * funbody_size * 2);
-                if (new) {
-                    funbody = new;
-                    funbody_size = funbody_size * 2;
-                    new = NULL;
-                } else {
-                    zwarnnam(name, "Out of memory, aborting");
-                    retval = 1;
-                    goto cleanup;
-                }
-            }
-
+        }
+        last_line = funbody + diff;
+        
+        /* Find new line */
+        if (!(found = strchr(funbody+funbody_idx, '\n'))) {
             clearerr(in);
-            obtained = fgets(funbody+funbody_idx, LINE_SIZE, in);
-            (funbody+funbody_idx)[LINE_SIZE] = '\0';
+            nobtained = fread(funbody+has_read, 1, LINE_SIZE-1, in);
+            has_read += nobtained;
+            funbody[has_read] = '\0';
 
-            if (!obtained) {
+            if (nobtained == 0) {
                 if (feof(in)) {
-                    pack_function(funname, funbody);
-                    current_type = ZINI_TYPE_BLIND;
-                    funbody_idx = 0;
+                    if (current_type == ZINI_TYPE_FUNCTION) {
+                        pack_function(funname, funbody);
+                        current_type = ZINI_TYPE_BLIND;
+                    }
                 } else if(ferror(in)) {
-                    zwarnnam(name, "Error when reading function's `%s' body (%s)", funname, strerror(errno));
+                    if (current_type == ZINI_TYPE_FUNCTION) {
+                        zwarnnam(name, "Error when reading function's `%s' body (%s)", funname, strerror(errno));
+                    } else {
+                        zwarnnam(name, "Error when reading zini file (%s)", strerror(errno));
+                    }
                     break;
                 } else {
-                    pack_function(funname, funbody);
-                    current_type = ZINI_TYPE_BLIND;
-                    funbody_idx = 0;
+                    if (current_type == ZINI_TYPE_FUNCTION) {
+                        pack_function(funname, funbody);
+                        current_type = ZINI_TYPE_BLIND;
+                    }
                 }
                 continue; 
+            } else {
+                found = strchr(funbody+funbody_idx, '\n');
+                if (!found)
+                    continue;
             }
+        }
 
-            last_line = funbody+funbody_idx;
-            size = strlen(funbody+funbody_idx);
-            funbody_idx += size;
+        funbody_idx = found - funbody + 1;
 
-            if (funbody[funbody_idx - 1] != '\n') {
+        if (current_type == ZINI_TYPE_BLIND) {
+            *found = '\0';
+            if ( NULL != (found2 = strstr(last_line,"\001fun]"))) {
+                *found2 = '\0';
+                strncpy(funname, last_line+1, NAME_SIZE);
+                funname[NAME_SIZE-1] = '\0';
+                current_type = ZINI_TYPE_FUNCTION;
+                has_read = strlen(found+1);
+                memmove(funbody, found+1, has_read + 1);
+                funbody_idx = 0;
+                last_line = funbody;
+                continue;
+            } else {
+                last_line = found + 1;
+            }
+        } else if (current_type == ZINI_TYPE_FUNCTION) {
+            if (funbody[funbody_idx-1] != '\n') {
                 zwarnnam(name, "Too long line in the function `%s', skipping whole function", funname);
                 current_type = ZINI_TYPE_BLIND;
                 funbody_idx = 0;
+                last_line = found + 1;
                 continue;
             }
 
@@ -401,17 +406,19 @@ bin_ziniload(char *name, char **argv, Options ops, int func)
                 pack_function(funname, funbody);
                 current_type = ZINI_TYPE_BLIND;
                 funbody_idx = 0;
+                has_read = strlen(found+1);
+                memmove( funbody, found+1, has_read + 1 );
+                last_line = funbody;
                 continue;
+            } else {
+                //zwarnnam(name, "Stored line: %s", last_line);
+                last_line = found + 1;
             }
         }
     }
 
 cleanup:
 
-    if (blind) {
-        zfree(blind, sizeof(char) * blind_size);   
-        blind = NULL;
-    }
     if (funbody) {
         zfree(funbody, sizeof(char) * funbody_size);
         funbody = NULL;
