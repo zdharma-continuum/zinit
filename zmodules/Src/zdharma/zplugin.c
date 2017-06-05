@@ -18,7 +18,6 @@ static struct builtin bintab[] = {
 };
 /* }}} */
 
-static int counter=0;
 static const char *out_hash = "ZPLG_FBODIES";
 
 /* FUNCTION: bin_autoload2 {{{ */
@@ -295,43 +294,25 @@ void pack_function(const char *funname, char *funbody) {
     bin_eval("", fargv, ops, 0);
 }
 /* }}} */
-/* FUNCTION: run_preamble {{{ */
-static void run_preamble(char *preamble) {
-    //fprintf(stderr, "Running preamble:\n%s", preamble);
-    //fflush(stderr);
-
-    char *fargv[2];
-    fargv[0] = preamble;
-    fargv[1] = 0;
-
-    Options ops = NULL;
-
-    bin_eval("", fargv, ops, 0);
-    return;
-}
-/* }}} */
 /* FUNCTION: bin_ziniload {{{ */
 /**/
 static int
 bin_ziniload(char *name, char **argv, Options ops, int func)
 {
     const char *fname, *obtained;
-    char *blind, *preamble, *funbody, *new, *found, *last_line;
+    char *blind, *funbody, *new, *found, *last_line;
     char funname[128];
     int blind_size = 1024, size, retval = 0;
-    int preamble_size = 128, preamble_idx = 0;
     int funbody_size = 128, funbody_idx = 0;
     int current_type = 0; /* blind read */
 
 #define LINE_SIZE 1024
 #define NAME_SIZE 128
 #define ZINI_TYPE_BLIND 0
-#define ZINI_TYPE_PREAMBLE 1
-#define ZINI_TYPE_FUNCTION 2
+#define ZINI_TYPE_FUNCTION 1
 
     fname = *argv;
     blind = zalloc(sizeof(char) * blind_size);
-    preamble = zalloc(sizeof(char) * preamble_size);
     funbody = zalloc(sizeof(char) * funbody_size);
 
     FILE *in = fopen(fname,"r");
@@ -361,11 +342,7 @@ bin_ziniload(char *name, char **argv, Options ops, int func)
                     continue;
                 }
 
-                if ( 0 == strncmp(blind,"[preamble]",10)) {
-                    current_type = ZINI_TYPE_PREAMBLE;
-                    preamble_idx = 0;
-                    continue;
-                } else if ( NULL != (found = strstr(blind,"\001fun]"))) {
+                if ( NULL != (found = strstr(blind,"\001fun]"))) {
                     *found = '\0';
                     strncpy(funname, blind+1, NAME_SIZE);
                     funname[NAME_SIZE-1] = '\0';
@@ -373,52 +350,6 @@ bin_ziniload(char *name, char **argv, Options ops, int func)
                     funbody_idx = 0;
                     continue;
                 }
-            }
-        } else if (current_type == ZINI_TYPE_PREAMBLE) {
-            while(preamble_idx + LINE_SIZE + 1 > preamble_size) {
-                new = (char *) zrealloc(preamble, sizeof(char) * preamble_size * 2);
-                if (new) {
-                    preamble = new;
-                    preamble_size = preamble_size * 2;
-                    new = NULL;
-                } else {
-                    zwarnnam(name, "Out of memory, aborting");
-                    retval = 1;
-                    goto cleanup;
-                }
-            }
-
-            clearerr(in);
-            obtained = fgets(preamble+preamble_idx, LINE_SIZE, in);
-            (preamble+preamble_idx)[LINE_SIZE] = '\0';
-
-            if (!obtained) {
-                if (feof(in)) {
-                    current_type = ZINI_TYPE_BLIND;
-                } else if(ferror(in)) {
-                    zwarnnam(name, "Error when reading preamble (%s), aborting", strerror(errno));
-                    break;
-                } else {
-                    current_type = ZINI_TYPE_BLIND;
-                }
-                continue;
-            }
-
-            last_line = preamble+preamble_idx;
-            size = strlen(preamble+preamble_idx);
-            preamble_idx += size;
-
-            if (preamble[preamble_idx - 1] != '\n') {
-                zwarnnam(name, "Too long line in preamble, skipping the plugin");
-                current_type = ZINI_TYPE_BLIND;
-                preamble_idx = 0;
-                break;
-            }
-
-            if (0 == strncmp(last_line, "PLG_END_P", 9)) {
-                *last_line = '\0';
-                current_type = ZINI_TYPE_BLIND;
-                continue;
             }
         } else if (current_type == ZINI_TYPE_FUNCTION) {
             while(funbody_idx + LINE_SIZE + 1 > funbody_size) {
@@ -475,19 +406,11 @@ bin_ziniload(char *name, char **argv, Options ops, int func)
         }
     }
 
-    if (preamble_idx > 0) {
-        run_preamble(preamble);
-    }
-
 cleanup:
 
     if (blind) {
         zfree(blind, sizeof(char) * blind_size);   
         blind = NULL;
-    }
-    if (preamble) {
-        zfree(preamble, sizeof(char) * preamble_size);
-        preamble = NULL;
     }
     if (funbody) {
         zfree(funbody, sizeof(char) * funbody_size);
