@@ -18,7 +18,6 @@ integer depth=0 prev_depth=0 fun_depth=-1 anon_depth=-1 descentff=0 descentfa=0
 zplg-process-buffer "$doc" 1
 integer i size="${#ZPLG_PB_WORDS}"
 
-print -rl ${ZPLG_PB_WORDS} >! words.txt
 for (( i=1; i<=size; ++ i )); do
     token="${ZPLG_PB_WORDS[i]}"
     spaces="${ZPLG_PB_SPACES[i]}"
