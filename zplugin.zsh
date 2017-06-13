@@ -223,7 +223,7 @@ builtin setopt noaliases
     done
 
     # Do ZPLUGIN's "native" autoloads
-    local PLUGIN_DIR="$ZPLG_PLUGINS_DIR/${ZPLG_MAIN[CUR_USPL]}"
+    if [[ "$ZPLG_MAIN[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="$ZPLG_PLUGINS_DIR/${ZPLG_MAIN[CUR_USPL]}"
     for func
     do
         # Real autoload doesn't touch function if it already exists
@@ -930,6 +930,19 @@ builtin setopt noaliases
         return 0
     fi
 
+    # Is it absolute path?
+    if [[ "${1[1]}" = "/" ]]; then
+        reply=( "%" "$1" )
+        return 0
+    fi
+
+    # Is it absolute path in zplugin format?
+    if [[ "${1[1]}" = "%" ]]; then
+        reply=( "%" "${${${1/\%HOME/$HOME}/\%\//}#%}" )
+        echo "Reply is ${reply[@]}" >> /tmp/reply
+        return 0
+    fi
+
     # Rest is for single component given
     # It doesn't touch $2
 
@@ -977,8 +990,7 @@ builtin setopt noaliases
 -zplg-any-colorify-as-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
-    local ucol="${ZPLG_COL[uname]}" pcol="${ZPLG_COL[pname]}"
-    REPLY="${ucol}${user}${ZPLG_COL[rst]}/${pcol}${plugin}${ZPLG_COL[rst]}"
+    [[ "$user" = "%" ]] && REPLY="${ZPLG_COL[uname]}%${ZPLG_COL[rst]}${ZPLG_COL[pname]}${plugin}${ZPLG_COL[rst]}" || REPLY="${ZPLG_COL[uname]}${user}${ZPLG_COL[rst]}/${ZPLG_COL[pname]}${plugin}${ZPLG_COL[rst]}"
 } # }}}
 # FUNCTION: -zplg-first {{{
 -zplg-first() {
@@ -988,8 +1000,13 @@ builtin setopt noaliases
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
     # have ".zsh" there
-    local pdir="${${plugin%.plugin.zsh}%.zsh}"
-    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    if [[ "$user" = "%" ]]; then
+        local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
+        local dname="$plugin"
+    else
+        local pdir="${${${plugin%.plugin.zsh}%.zsh}.git}"
+        local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    fi
 
     # Look for file to compile. First look for the most common one
     # (optimization) then for other possibilities
@@ -999,7 +1016,7 @@ builtin setopt noaliases
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
 
-    if [[ "${#reply[@]}" -eq "0" ]]; then
+    if [[ "${#reply}" -eq "0" ]]; then
         reply=( "$dname" "" )
         return 1
     fi
@@ -1124,7 +1141,7 @@ builtin setopt noaliases
 
     -zplg-pack-ice "$user" "$plugin"
     -zplg-register-plugin "$user" "$plugin" "$mode"
-    if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
+    if [[ "$user" != "%" && ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source $ZPLG_DIR"/zplugin-install.zsh"
         if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
             -zplg-unregister-plugin "$user" "$plugin"
@@ -1286,11 +1303,13 @@ builtin setopt noaliases
     ZPLG_MAIN[CUR_USPL]="${user}---${plugin}"
     ZPLG_MAIN[CUR_USPL2]="${user}/${plugin}"
 
-    # There are plugins having ".plugin.zsh"
-    # in ${plugin} directory name, also some
-    # have ".zsh" there
-    local pdir="${${plugin%.plugin.zsh}%.zsh}"
-    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    if [[ "$user" = "%" ]]; then
+        local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
+        local dname="$plugin"
+    else
+        local pdir="${${${plugin%.plugin.zsh}%.zsh}%.git}"
+        local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    fi
 
     # Look for a file to source. First look for the most
     # common one (optimization) then for other possibilities
