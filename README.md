@@ -46,6 +46,17 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 13-06-2017
+  - Plugins can now be absolute paths:
+
+    ```zsh
+    % zplg load %HOME/github/{directory}
+    % zplg load /Users/sgniazdowski/github/{directory}
+    % zplg load %/Users/sgniazdowski/github/{directory}
+    ```
+
+    Completions are not automatically managed, but user can run `zplg creinstall %HOME/github/{directory}`, etc.
+
 * 23-05-2017
   - New `ice` modifier: `if`, to which you can provide a conditional expression
 
