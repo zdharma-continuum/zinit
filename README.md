@@ -20,13 +20,13 @@ management functionality is provided to allow user call `compinit` only once in
 
 To install, execute:
 
-```sh
+```SystemVerilog
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
 ```
 
 Then add to `~/.zshrc`, at bottom:
 
-```zsh
+```SystemVerilog
 zplugin load psprint zsh-navigation-tools
 zplugin ice from"notabug" atload"echo loaded zui" if"(( 1 ))"
 zplugin load zdharma/zui
@@ -37,7 +37,7 @@ zplugin creinstall %HOME/my_completions
 
 (No need to add:
 
-```zsh
+```SystemVerilog
 source "$HOME/.zplugin/bin/zplugin.zsh"
 ```
 
@@ -50,7 +50,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 * 13-06-2017
   - Plugins can now be absolute paths:
 
-    ```zsh
+    ```SystemVerilog
     % zplg load %HOME/github/{directory}
     % zplg load /Users/sgniazdowski/github/{directory}
     % zplg load %/Users/sgniazdowski/github/{directory}
@@ -61,7 +61,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 * 23-05-2017
   - New `ice` modifier: `if`, to which you can provide a conditional expression
 
-    ```zsh
+    ```SystemVerilog
     % zplg ice if"(( 0 ))"
     % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
     % zplg ice if"(( 1 ))"
@@ -75,7 +75,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     melts. You add modifiers to single next command, and the format (using quotes) guarantees
     you will see the syntax highlighted in editors:
 
-    ```zsh
+    ```SystemVerilog
     % zplg ice from"notabug" atload"echo --Loaded--" atclone"echo --Cloned--"
     % zplg load zdharma/zui
     Downloading zdharma/zui...
@@ -93,7 +93,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
   - Completion-management supports completions provided in subdirectory, like in `zsh-users/zsh-completions`
     plugin. With `ice` modifier `blockf` (block-fpath), you can manage such completions:
 
-    ```zsh
+    ```SystemVerilog
     % zplg ice blockf
     % zplg load zsh-users/zsh-completions
     ...
@@ -124,7 +124,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
   - Snippets support `ftp` and `scp` protocols
   - With snippets you can load a file as **command** that is added to PATH:
 
-    ```zsh
+    ```SystemVerilog
     % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
     % httpstat.sh
     too few arguments
@@ -148,7 +148,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
 **Example use:**
 
-```zsh
+```SystemVerilog
 % . ~/github/zplugin/zplugin.zsh
 % zplugin light zsh-users/zsh-syntax-highlighting
 % zplugin load psprint/zsh-cmd-architect
@@ -306,7 +306,7 @@ You might want to supress completions provided by the git plugin by issuing `zpl
 
 To summarize:
 
-```zsh
+```SystemVerilog
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
 zplugin cdclear -q # <- forget completions provided up to this moment
