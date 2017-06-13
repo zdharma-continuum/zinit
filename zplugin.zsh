@@ -939,7 +939,7 @@ builtin setopt noaliases
     # Is it absolute path in zplugin format?
     if [[ "${1[1]}" = "%" ]]; then
         reply=( "%" "${${${1/\%HOME/$HOME}/\%\//}#%}" )
-        echo "Reply is ${reply[@]}" >> /tmp/reply
+        [[ "${${reply[2]}[1]}" != "/" ]] && reply[2]="/${reply[2]}"
         return 0
     fi
 
