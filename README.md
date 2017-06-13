@@ -73,7 +73,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 * 16-05-2017
   - A very slick feature: **adding ice to commands**. Ice is something added and something that
     melts. You add modifiers to single next command, and the format (using quotes) guarantees
-    you will see the syntax highlighted in editors:
+    you will see syntax highlighting in editors:
 
     ```SystemVerilog
     % zplg ice from"notabug" atload"echo --Loaded--" atclone"echo --Cloned--"
