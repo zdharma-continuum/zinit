@@ -32,6 +32,7 @@ zplugin ice from"notabug" atload"echo loaded zui" if"(( 1 ))"
 zplugin load zdharma/zui
 zplugin load zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
+zplugin creinstall %HOME/my_completions
 ```
 
 (No need to add:
