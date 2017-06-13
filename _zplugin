@@ -77,8 +77,15 @@ case $state in
                     compadd "$@" -a - plugins && ret=0
                 ;;
             unload|report)
-                typeset -a plugins
+                typeset -a plugins absolute normal
                 plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
+                normal=( "${plugins[@]:#%*}" )
+                absolute=( "${(M)plugins[@]:#%*}" )
+                absolute=( "${absolute[@]/\%\/\//%/}" )
+                local hm="${HOME%/}"
+                absolute=( "${absolute[@]/$hm/HOME}" )
+                plugins=( $absolute $normal )
+
                 _wanted plugins expl "Plugins" \
                     compadd "$@" -a - plugins && ret=0
                 ;;
