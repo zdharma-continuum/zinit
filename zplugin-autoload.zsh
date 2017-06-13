@@ -373,7 +373,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     local c cfile bkpfile
     integer action global_action=0
 
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
     symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 

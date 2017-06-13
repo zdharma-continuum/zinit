@@ -1,7 +1,11 @@
 # FUNCTION: -zplg-exists-physically {{{
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
-    [[ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
+    if [[ "${reply[-2]}" = "%" ]]; then
+        [[ -d "${reply[-1]}" ]] && return 0 || return 1
+    else
+        [[ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
+    fi
 } # }}}
 # FUNCTION: -zplg-exists-physically-message {{{
 -zplg-exists-physically-message() {
@@ -80,7 +84,7 @@
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
     already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
