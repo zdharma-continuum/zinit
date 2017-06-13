@@ -192,7 +192,7 @@ case $state in
                     fi
                 done
 
-                _wanted plugins expl "Plugins" \
+                _wanted show_plugins expl "Plugins" \
                     compadd "$@" -a - show_plugins && ret=0
                 ;;
             uncompile-all)
