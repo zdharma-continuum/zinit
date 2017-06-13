@@ -247,7 +247,7 @@ Usage:
 -h|--help|help           - usage information
 man                      - manual
 self-update              - updates Zplugin
-load {plugin-name}       - load plugin
+load {plugin-name}       - load plugin, can also receive absolute local path
 light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
@@ -265,7 +265,7 @@ recently [time-spec]     - show plugins that changed recently, argument is e.g. 
 clist|completions        - list completions in use
 cdisable {cname}         - disable completion `cname'
 cenable  {cname}         - enable completion `cname'
-creinstall {plugin-name} - install completions for plugin
+creinstall {plugin-name} - install completions for plugin; can also receive absolute local path
 cuninstall {plugin-name} - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions

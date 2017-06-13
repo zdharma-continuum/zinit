@@ -1598,7 +1598,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 man                      - manual
 zstatus                  - overall status of Zplugin
 self-update              - updates Zplugin
-load ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - load plugin
+load ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - load plugin, can also receive absolute local path
 light ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}      - light plugin load, without reporting
 unload ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}     - unload plugin
 snippet [-f] [--command] ${ZPLG_COL[pname]}{url}${ZPLG_COL[rst]}       - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
@@ -1616,7 +1616,7 @@ recently ${ZPLG_COL[info]}[time-spec]${ZPLG_COL[rst]}     - show plugins that ch
 clist|completions        - list completions in use
 cdisable ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - disable completion \`cname'
 cenable  ${ZPLG_COL[info]}{cname}${ZPLG_COL[rst]}         - enable completion \`cname'
-creinstall ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]} - install completions for plugin
+creinstall ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]} - install completions for plugin, can also receive absolute local path
 cuninstall ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]} - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
