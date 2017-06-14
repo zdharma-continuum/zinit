@@ -273,6 +273,10 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
             in_plugin_path="${in_plugin_path:h}"
         done
         in_plugin_path="${in_plugin_path:t}"
+
+        if [[ -z "$in_plugin_path" ]]; then
+            in_plugin_path="${tmp:h}"
+        fi
     else
         # readlink and :A have nothing
         in_plugin_path="[unknown]"
