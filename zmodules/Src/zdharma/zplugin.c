@@ -27,7 +27,8 @@ static HandlerFunc originalAutoload = NULL;
 
 
 /* ARRAY: builtin {{{ */
-static struct builtin bintab[] = {
+static struct builtin bintab[] =
+{
     BUILTIN("ziniload", 0, bin_ziniload, 0, -1, 0, "", NULL),
 };
 /* }}} */
@@ -334,17 +335,17 @@ bin_ziniload(char *name, char **argv, Options ops, int func)
     unmetafy(fname = ztrdup(fname), &umlen);
 
     if ((fd = open(fname, O_RDONLY | O_NOCTTY)) < 0 ||
-	fstat(fd, &sbuf) ||
-	(mmptr = (caddr_t)mmap((caddr_t)0, mm_size = sbuf.st_size, PROT_READ,
-			       MMAP_ARGS, fd, (off_t)0)) == (caddr_t)-1) {
-	if (fd >= 0) {
-	    close(fd);
+        fstat(fd, &sbuf) ||
+        (mmptr = (caddr_t)mmap((caddr_t)0, mm_size = sbuf.st_size, PROT_READ,
+                               MMAP_ARGS, fd, (off_t)0)) == (caddr_t)-1) {
+        if (fd >= 0) {
+            close(fd);
         }
 
         set_length(fname, umlen);
-	zsfree(fname);
+        zsfree(fname);
 
-	return 1;
+        return 1;
     }
 
     /* Don't need file name anymore */
@@ -416,7 +417,8 @@ static void set_length(char *buf, int size) {
 }
 /* }}} */
 
-static struct features module_features = {
+static struct features module_features =
+{
     bintab, sizeof(bintab)/sizeof(*bintab),
     NULL, 0,
     NULL, 0,
@@ -432,7 +434,7 @@ setup_(UNUSED(Module m))
     // originalAutoload = bn->handlerfunc;
     // bn->handlerfunc = bin_autoload2;
 
-    printf("The example module has now been set up.\n");
+    printf("zdharma/zplugin module has been set up");
 
     fflush(stdout);
     return 0;
@@ -474,7 +476,7 @@ finish_(UNUSED(Module m))
     // Builtin bn = (Builtin) builtintab->getnode2(builtintab, "autoload");
     // bn->handlerfunc = originalAutoload;
 
-    printf("Thank you for using the example module.  Have a nice day.\n");
+    printf("zdharma/zplugin module unloaded\n");
     fflush(stdout);
     return 0;
 }
