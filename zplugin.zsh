@@ -1007,7 +1007,7 @@ builtin setopt noaliases
         local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
         local dname="$plugin"
     else
-        local pdir="${${${plugin%.plugin.zsh}%.zsh}.git}"
+        local pdir="${${${plugin%.plugin.zsh}%.zsh}%.git}"
         local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
     fi
 
