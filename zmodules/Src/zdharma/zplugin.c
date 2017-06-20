@@ -350,7 +350,7 @@ load_dheader(char *nam, char *name, int err)
 
 	if (fdmagic(buf) == FD_MAGIC) {
 	    len = fdheaderlen(buf) * sizeof(wordcode);
-	    head = (Wordcode) zhalloc(len);
+	    head = (Wordcode) zalloc(len);
 	}
 	else {
 	    int o = fdother(buf);
@@ -363,7 +363,7 @@ load_dheader(char *nam, char *name, int err)
 		return NULL;
 	    }
 	    len = fdheaderlen(buf) * sizeof(wordcode);
-	    head = (Wordcode) zhalloc(len);
+	    head = (Wordcode) zalloc(len);
 	}
 	memcpy(head, buf, (FD_PRELEN + 1) * sizeof(wordcode));
 
