@@ -93,8 +93,8 @@ done
 print -r -- "$preamble" >| "preamble.zini"
 
 for fun_name in "${(ko@)funs}"; do
-    print -r -- "[${fun_name}"$'\C-A'"fun]"
+    print -r -- "${fun_name}() {"
     print -r -- "${funs[$fun_name]}"
-    print -r -- "PLG_END_F"
+    print -r -- "}"
     print
 done >| "functions.zini"
