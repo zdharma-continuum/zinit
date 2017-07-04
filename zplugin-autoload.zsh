@@ -452,7 +452,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
 # FUNCTION: -zplg-self-update {{{
 -zplg-self-update() {
-    ( cd "${ZPLGM[DIR]}" ; git pull )
+    ( cd "${ZPLGM[BIN_DIR]}" ; git pull )
 } # }}}
 # FUNCTION: -zplg-show-registered-plugins {{{
 -zplg-show-registered-plugins() {
@@ -980,7 +980,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local infoc="${ZPLG_COL[info2]}"
 
     print "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
-    print "Zplugin's binary directory: ${infoc}${ZPLGM[DIR]}${reset_color}"
+    print "Zplugin's binary directory: ${infoc}${ZPLGM[BIN_DIR]}${reset_color}"
     print "Plugin directory: ${infoc}$ZPLG_PLUGINS_DIR${reset_color}"
     print "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
 

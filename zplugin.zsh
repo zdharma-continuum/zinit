@@ -13,25 +13,25 @@ typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZP
 # Common needed values
 #
 
-[[ ! -e "${ZPLGM[DIR]}"/zplugin.zsh ]] && ZPLGM[DIR]=""
+[[ ! -e "${ZPLGM[BIN_DIR]}"/zplugin.zsh ]] && ZPLGM[BIN_DIR]=""
 
 ZPLGM[ZERO]="$0"
 [[ ! -o "functionargzero" ]] && ZPLGM[ZERO]="${(%):-%N}" # this gives immunity to functionargzero being unset
 
-[[ -z "${ZPLGM[DIR]}" ]] && ZPLGM[DIR]="${ZPLGM[ZERO]:h}"
+[[ -z "${ZPLGM[BIN_DIR]}" ]] && ZPLGM[BIN_DIR]="${ZPLGM[ZERO]:h}"
 
-# Make ZPLGM[DIR] path absolute
-if [[ "${ZPLGM[DIR]}" != /* ]]; then
-    if [[ "${ZPLGM[DIR]}" = "." ]]; then
-        ZPLGM[DIR]="$PWD"
+# Make ZPLGM[BIN_DIR] path absolute
+if [[ "${ZPLGM[BIN_DIR]}" != /* ]]; then
+    if [[ "${ZPLGM[BIN_DIR]}" = "." ]]; then
+        ZPLGM[BIN_DIR]="$PWD"
     else
-        ZPLGM[DIR]="$PWD/${ZPLGM[DIR]}"
+        ZPLGM[BIN_DIR]="$PWD/${ZPLGM[BIN_DIR]}"
     fi
 fi
 
-# Final test of ZPLGM[DIR]
-if [[ ! -e "${ZPLGM[DIR]}"/zplugin.zsh ]]; then
-    print "Could not establish ZPLGM[DIR] hash field. It should point where Zplugin's git repository is."
+# Final test of ZPLGM[BIN_DIR]
+if [[ ! -e "${ZPLGM[BIN_DIR]}"/zplugin.zsh ]]; then
+    print "Could not establish ZPLGM[BIN_DIR] hash field. It should point where Zplugin's git repository is."
     return 1
 fi
 
@@ -1122,7 +1122,7 @@ builtin setopt noaliases
 
         # Prepare mock-like plugin for Zplugin itself
         command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
-        command ln -s "${ZPLGM[DIR]}/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
+        command ln -s "${ZPLGM[BIN_DIR]}/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
     }
     [[ ! -d "$ZPLG_COMPLETIONS_DIR" ]] && {
         command mkdir "$ZPLG_COMPLETIONS_DIR"
@@ -1147,7 +1147,7 @@ builtin setopt noaliases
     -zplg-pack-ice "$user" "$plugin"
     -zplg-register-plugin "$user" "$plugin" "$mode"
     if [[ "$user" != "%" && ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
-        (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+        (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
             -zplg-unregister-plugin "$user" "$plugin"
             return
@@ -1222,7 +1222,7 @@ builtin setopt noaliases
             cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
             command rm -f "$filename"
             print "Downloading $filename..."
-            (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+            (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
             -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
         )
         else
@@ -1494,10 +1494,10 @@ zplugin() {
            -zplg-debug-stop
            ;;
        (man)
-           man "${ZPLGM[DIR]}/doc/zplugin.1"
+           man "${ZPLGM[BIN_DIR]}/doc/zplugin.1"
            ;;
        (*)
-           (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-autoload.zsh"
+           (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
            case "$1" in
                (zstatus)
                    -zplg-show-zstatus
@@ -1559,7 +1559,7 @@ zplugin() {
                        # Disable completion given by completion function name
                        # with or without leading "_", e.g. "cp", "_cp"
                        if -zplg-cdisable "$f"; then
-                           (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+                           (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                            -zplg-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
@@ -1575,7 +1575,7 @@ zplugin() {
                        # Enable completion given by completion function name
                        # with or without leading "_", e.g. "cp", "_cp"
                        if -zplg-cenable "$f"; then
-                           (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+                           (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                            -zplg-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
@@ -1584,7 +1584,7 @@ zplugin() {
                    fi
                    ;;
                (creinstall)
-                   (( ${+functions[-zplg-install-completions]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+                   (( ${+functions[-zplg-install-completions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
                    -zplg-install-completions "$2" "$3" "1"
@@ -1596,7 +1596,7 @@ zplugin() {
                    if [[ -z "$2" && -z "$3" ]]; then
                        print "Argument needed, try help"
                    else
-                       (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+                       (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                        # Uninstalls completions for plugin
                        -zplg-uninstall-completions "$2" "$3"
                        print "Initializing completion (compinit)..."
@@ -1608,7 +1608,7 @@ zplugin() {
                    -zplg-search-completions
                    ;;
                (compinit)
-                   (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+                   (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                    -zplg-compinit
                    ;;
                (dreport)
@@ -1621,7 +1621,7 @@ zplugin() {
                    -zplg-debug-unload
                    ;;
                (compile)
-                   (( ${+functions[-zplg-compile-plugin]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
+                   (( ${+functions[-zplg-compile-plugin]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
                        -zplg-compile-uncompile-all "1"
