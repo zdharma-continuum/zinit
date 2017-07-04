@@ -68,7 +68,7 @@ case $state in
                 ;;
             load|light|update|status|compile|stress|cd|edit|glance|changes)
                 typeset -a plugins
-                plugins=( "$ZPLG_PLUGINS_DIR"/*(N:t) )
+                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
@@ -120,7 +120,7 @@ case $state in
                 # for completions that can be installed
                 typeset -a plugins completions
                 local p c user plugin
-                for p in "${ZPLG_PLUGINS_DIR[@]}"/*; do
+                for p in "${ZPLGM[PLUGINS_DIR]}"/*; do
                     completions=( "$p"/**/_[^_.][^.]#(N) )
                     for c in "${completions[@]}"; do
                         p="${p:t}"
@@ -138,7 +138,7 @@ case $state in
                 # it has completions that are installed
                 typeset -a plugins completions
                 local p c user plugin
-                for p in "${ZPLG_PLUGINS_DIR[@]}"/*; do
+                for p in "${ZPLGM[PLUGINS_DIR]}"/*; do
                     completions=( "$p"/**/_[^_.][^.]#(N) )
                     for c in "${completions[@]}"; do
                         cfile="${c:t}"
@@ -185,7 +185,7 @@ case $state in
                 ;;
             uncompile)
                 typeset -a plugins
-                plugins=( "$ZPLG_PLUGINS_DIR"/*(N) )
+                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N) )
 
                 typeset -a show_plugins p matches
                 for p in "${plugins[@]}"; do
