@@ -183,6 +183,107 @@
         print "Consider submitting an error report to the plugin's author"
     }
 } # }}}
+# FUNCTION: -zplg-lexicon {{{
+-zplg-lexicon() {
+    [[ "$1" = "convert" || "$1" = "unconvert" ]] && {
+        -zplg-any-to-user-plugin "$2" "$3"
+        local user="${reply[-2]}" plugin="${reply[-1]}"
+
+        -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+        -zplg-first "$2" "$3" || {
+            print "${ZPLG_COL[error]}Plugin has no files to source, no data to process, exiting${ZPLG_COL[rst]}"
+            return 0
+        }
+
+        local dname="${reply[-2]}" fname="${reply[-1]}"
+    }
+
+
+    case "$1" in
+        (convert)
+            (
+                builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                local -a matched
+                matched=( zplg_functions/*(N) zplg_functions/.*(N) )
+                [[ "${#matched}" -gt 0 ]] && command rm -f "${matched[@]}"
+                command mkdir -p zplg_functions
+                "${ZPLGM[BIN_DIR]}"/ztransform "${fname}"
+                -zplg-lexicon-add "$user" "$plugin"
+            )
+            ;;
+        (unconvert)
+            (
+                builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+                local -a matched
+                matched=( preamble.zplg(N) zplg_functions.zwc(N) zplg_functions/*(N) zplg_functions/.*(N) )
+                if [[ "${#matched}" -gt 0 ]]; then
+                    command rm -f "${matched[@]}"
+                    [[ -d "zplg_functions" ]] && command rmdir "zplg_functions"
+                    print "$REPLY cleared, will use normal loading method"
+                else
+                    print "$REPLY already cleared (uses normal loading method)"
+                fi
+
+                matched=( "${ZPLGM[LEX_DIR]}"/**/*(-@N) )
+                [[ "${#matched}" -gt 0 ]] && command rm -f "${matched[@]}"
+
+                command rm -f "${ZPLGM[LEX_DIR]:h}/lexicon.zwc"
+                matched=( "${ZPLGM[LEX_DIR]}"/*(N) "${ZPLGM[LEX_DIR]}"/.*(N) )
+                [[ "${#matched}" -gt 0 ]] && zcompile -Uz "${ZPLGM[LEX_DIR]:h}/lexicon.zwc" "${matched[@]}"
+            )
+            ;;
+        (refresh)
+            command rm -f "${ZPLGM[LEX_DIR]:h}/lexicon.zwc"
+            matched=( "${ZPLGM[LEX_DIR]}"/*(N) "${ZPLGM[LEX_DIR]}"/.*(N) )
+            if [[ "${#matched}" -gt 0 ]]; then
+                zcompile -Uz "${ZPLGM[LEX_DIR]:h}/lexicon.zwc" "${matched[@]}"
+            else
+                print "${ZPLG_COL[info2]}No functions, nothing to do, exiting${ZPLG_COL[rst]}"
+                print "(functions directory can be obtained from: zplugin fcd)"
+                return 0
+            fi
+            ;;
+        (list)
+            ;;
+    esac
+} # }}}
+# FUNCTION: -zplg-lexicon-add {{{
+-zplg-lexicon-add() {
+    -zplg-first "$1" "$2" || { print "${ZPLG_COL[error]}Error:${ZPLG_COL[rst]} plugin has no files to source, aborting"; return 1; }
+    local dname="${reply[-2]}" first="${reply[-1]}"
+    local fname="${first#$dname/}" m
+
+    if [[ ! -d "$dname"/zplg_functions ]]; then
+        print "${ZPLG_COL[error]}Error:${ZPLG_COL[rst]} plugin has no lexicon"
+        print "Create one with: zplugin lexicon convert {plugin}"
+        return 1
+    else
+        -zplg-any-colorify-as-uspl2 "$1" "$2"
+        print "Processing $REPLY (zplg_functions/*, preamble.zplg)..."
+
+        [[ -f "$dname"/preamble.zplg ]] && zcompile -Uz "$dname"/preamble.zplg
+
+        local -a matched
+        matched=( "$dname"/zplg_functions/*(N) "$dname"/zplg_functions/.*(N) )
+        if [[ "${#matched}" -eq 0 ]]; then
+            print "${ZPLG_COL[info2]}No extracted functions in zplg_functions, nothing to do, exiting${ZPLG_COL[rst]}"
+            return 0
+        fi
+
+        for m in $matched; do
+            command rm -f "${ZPLGM[LEX_DIR]}/${m:t}"
+            command ln -s "$m" "${ZPLGM[LEX_DIR]}"
+        done
+
+        zcompile -Uz "$dname"/zplg_functions.zwc "${matched[@]}"
+
+        command rm -f "${ZPLGM[LEX_DIR]:h}/lexicon.zwc"
+        matched=( "${ZPLGM[LEX_DIR]}"/*(N) "${ZPLGM[LEX_DIR]}"/.*(N) )
+        [[ "${#matched}" -gt 0 ]] && zcompile -Uz "${ZPLGM[LEX_DIR]:h}/lexicon.zwc" "${matched[@]}"
+    fi
+}
 
 # -*- mode: shell-script -*-
 # vim:ft=zsh
