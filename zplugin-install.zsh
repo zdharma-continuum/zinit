@@ -85,8 +85,8 @@
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
     [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]# )
-    already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
+    already_symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
+    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
@@ -100,11 +100,11 @@
         ]]; then
             if [[ "$reinstall" = "1" ]]; then
                 # Remove old files
-                command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
-                command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
+                command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
+                command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$bkpfile"
             fi
-            print "${ZPLG_COL[info2]}Symlinking completion \`$cfile' to $ZPLG_COMPLETIONS_DIR${ZPLG_COL[rst]}"
-            command ln -s "$c" "$ZPLG_COMPLETIONS_DIR/$cfile"
+            print "${ZPLG_COL[info2]}Symlinking completion \`$cfile' to ${ZPLGM[COMPLETIONS_DIR]}${ZPLG_COL[rst]}"
+            command ln -s "$c" "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile"
         else

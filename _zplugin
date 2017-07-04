@@ -104,14 +104,14 @@ case $state in
             cdisable)
                 # Find enabled completions
                 typeset -a completions
-                completions=( "$ZPLG_COMPLETIONS_DIR"/_*(N:t) )
+                completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_*(N:t) )
                 completions=( "${completions[@]#_}" )
                 compadd "$@" -a - completions && ret=0
                 ;;
             cenable)
                 # Find disabled
                 typeset -a completions
-                completions=( "$ZPLG_COMPLETIONS_DIR"/[^_]*(N:t) )
+                completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_]*(N:t) )
                 compadd "$@" -a - completions && ret=0
                 ;;
             creinstall)
@@ -144,7 +144,7 @@ case $state in
                         cfile="${c:t}"
                         bkpfile="${cfile#_}"
                         # Completion installed, either enabled or disabled?
-                        if [[ -e "$ZPLG_COMPLETIONS_DIR"/"$cfile" || -e "$ZPLG_COMPLETIONS_DIR"/"$bkpfile" ]]; then
+                        if [[ -e "${ZPLGM[COMPLETIONS_DIR]}"/"$cfile" || -e "${ZPLGM[COMPLETIONS_DIR]}"/"$bkpfile" ]]; then
                             p="${p:t}"
                             user="${p%%---*}"
                             plugin="${p#*---}"

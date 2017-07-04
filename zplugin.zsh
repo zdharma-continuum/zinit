@@ -47,12 +47,7 @@ fi
 
 # Can be customized
 : ${ZPLGM[PLUGINS_DIR]:=${ZPLGM[HOME_DIR]}/plugins}
-
-# Can be customized, e.g. for multi-user environment
-typeset -gH ZPLG_COMPLETIONS_DIR
-: ${ZPLG_COMPLETIONS_DIR:=${ZPLGM[HOME_DIR]}/completions}
-
-# Can be customized
+: ${ZPLGM[COMPLETIONS_DIR]:=${ZPLGM[HOME_DIR]}/completions}
 : ${ZPLGM[SNIPPETS_DIR]:=${ZPLGM[HOME_DIR]}/snippets}
 
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
@@ -1123,13 +1118,13 @@ builtin setopt noaliases
         command mkdir "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
         command ln -s "${ZPLGM[BIN_DIR]}/_zplugin" "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
     }
-    [[ ! -d "$ZPLG_COMPLETIONS_DIR" ]] && {
-        command mkdir "$ZPLG_COMPLETIONS_DIR"
+    [[ ! -d "${ZPLGM[COMPLETIONS_DIR]}" ]] && {
+        command mkdir "${ZPLGM[COMPLETIONS_DIR]}"
         # For compaudit
-        command chmod go-w "$ZPLG_COMPLETIONS_DIR"
+        command chmod go-w "${ZPLGM[COMPLETIONS_DIR]}"
 
         # Symlink _zplugin completion into _local---zplugin directory
-        command ln -s "${ZPLGM[PLUGINS_DIR]}/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
+        command ln -s "${ZPLGM[PLUGINS_DIR]}/_local---zplugin/_zplugin" "${ZPLGM[COMPLETIONS_DIR]}"
     }
     [[ ! -d "${ZPLGM[SNIPPETS_DIR]}" ]] && {
         command mkdir "${ZPLGM[SNIPPETS_DIR]}"
@@ -1688,7 +1683,7 @@ builtin alias zpl=zplugin zplg=zplugin
 -zplg-prepare-home
 
 # Add completions directory to fpath
-fpath=( "$ZPLG_COMPLETIONS_DIR" "${fpath[@]}" )
+fpath=( "${ZPLGM[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
 zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==1;35=1;33'

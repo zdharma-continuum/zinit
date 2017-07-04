@@ -319,7 +319,7 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     # Tell user that he can manually modify but should do it right
-    (( error )) && print "${ZPLG_COL[error]}Manual edit of $ZPLG_COMPLETIONS_DIR occured?${ZPLG_COL[rst]}"
+    (( error )) && print "${ZPLG_COL[error]}Manual edit of ${ZPLGM[COMPLETIONS_DIR]} occured?${ZPLG_COL[rst]}"
 } # }}}
 # FUNCTION: -zplg-check-which-completions-are-installed {{{
 # For each positional parameter that each should
@@ -333,7 +333,7 @@ ZPLGM[EXTENDED_GLOB]=""
         cfile="${i:t}"
         bkpfile="${cfile#_}"
 
-        if [[ -e "$ZPLG_COMPLETIONS_DIR"/"$cfile" || -e "$ZPLG_COMPLETIONS_DIR"/"$bkpfile" ]]; then
+        if [[ -e "${ZPLGM[COMPLETIONS_DIR]}"/"$cfile" || -e "${ZPLGM[COMPLETIONS_DIR]}"/"$bkpfile" ]]; then
             reply+=( "1" )
         else
             reply+=( "0" )
@@ -354,7 +354,7 @@ ZPLGM[EXTENDED_GLOB]=""
     for i in "$@"; do
         cfile="${i:t}"
 
-        if [[ -e "$ZPLG_COMPLETIONS_DIR"/"$cfile" ]]; then
+        if [[ -e "${ZPLGM[COMPLETIONS_DIR]}"/"$cfile" ]]; then
             reply+=( "1" )
         else
             reply+=( "0" )
@@ -378,8 +378,8 @@ ZPLGM[EXTENDED_GLOB]=""
     integer action global_action=0
 
     [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]# )
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
+    symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
+    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
@@ -390,13 +390,13 @@ ZPLGM[EXTENDED_GLOB]=""
 
         # Remove symlink to completion
         if [[ -n "${symlinked[(r)*/$cfile]}" ]]; then
-            command rm -f "$ZPLG_COMPLETIONS_DIR/$cfile"
+            command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
             action=1
         fi
 
         # Remove backup symlink (created by cdisable)
         if [[ -n "${backup_comps[(r)*/$bkpfile]}" ]]; then
-            command rm -f "$ZPLG_COMPLETIONS_DIR/$bkpfile"
+            command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$bkpfile"
             action=1
         fi
 
@@ -421,8 +421,8 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -a symlinked backup_comps
     local c cfile bkpfile 
 
-    symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
-    backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
+    symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
+    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
@@ -982,7 +982,7 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Zplugin's main directory: ${infoc}${ZPLGM[HOME_DIR]}${reset_color}"
     print "Zplugin's binary directory: ${infoc}${ZPLGM[BIN_DIR]}${reset_color}"
     print "Plugin directory: ${infoc}${ZPLGM[PLUGINS_DIR]}${reset_color}"
-    print "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
+    print "Completions directory: ${infoc}${ZPLGM[COMPLETIONS_DIR]}${reset_color}"
 
     # Without _zlocal/zplugin
     print "Loaded plugins: ${infoc}$(( ${#ZPLG_REGISTERED_PLUGINS[@]} - 1 ))${reset_color}"
@@ -1003,11 +1003,11 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
+    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
     print "Enabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of disabled completions, with _zlocal/zplugin
-    completions=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
+    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
     print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of completions existing in all plugins
@@ -1126,7 +1126,7 @@ ZPLGM[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob extendedglob
 
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
+    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
     # Find longest completion name
     local cpath c
@@ -1178,7 +1178,7 @@ ZPLGM[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob extendedglob
 
     typeset -a completions
-    completions=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
+    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
     # Find longest completion name
     local cpath c
@@ -1255,7 +1255,7 @@ ZPLGM[EXTENDED_GLOB]=""
             # Detect if the completions are installed
             integer all_installed="${#completions[@]}"
             for c in "${completions[@]}"; do
-                if [[ -e "$ZPLG_COMPLETIONS_DIR/$c" || -e "$ZPLG_COMPLETIONS_DIR/${c#_}" ]]; then
+                if [[ -e "${ZPLGM[COMPLETIONS_DIR]}/$c" || -e "${ZPLGM[COMPLETIONS_DIR]}/${c#_}" ]]; then
                     (( all_installed -- ))
                 fi
             done
@@ -1284,7 +1284,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local c="$1"
     c="${c#_}"
 
-    local cfile="${ZPLG_COMPLETIONS_DIR}/_${c}"
+    local cfile="${ZPLGM[COMPLETIONS_DIR]}/_${c}"
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
@@ -1328,7 +1328,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local c="$1"
     c="${c#_}"
 
-    local cfile="${ZPLG_COMPLETIONS_DIR}/_${c}"
+    local cfile="${ZPLGM[COMPLETIONS_DIR]}/_${c}"
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
