@@ -52,7 +52,10 @@ typeset -gH ZPLG_PLUGINS_DIR
 # Can be customized, e.g. for multi-user environment
 typeset -gH ZPLG_COMPLETIONS_DIR
 : ${ZPLG_COMPLETIONS_DIR:=$ZPLG_HOME/completions}
-typeset -gH ZPLG_SNIPPETS_DIR="$ZPLG_HOME/snippets"
+
+# Can be customized
+: ${ZPLGM[SNIPPETS_DIR]:=$ZPLG_HOME/snippets}
+
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
 typeset -ga ZPLG_STRESS_TEST_OPTIONS
@@ -1129,9 +1132,9 @@ builtin setopt noaliases
         # Symlink _zplugin completion into _local---zplugin directory
         command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
     }
-    [[ ! -d "$ZPLG_SNIPPETS_DIR" ]] && {
-        command mkdir "$ZPLG_SNIPPETS_DIR"
-        command chmod go-w "$ZPLG_SNIPPETS_DIR"
+    [[ ! -d "${ZPLGM[SNIPPETS_DIR]}" ]] && {
+        command mkdir "${ZPLGM[SNIPPETS_DIR]}"
+        command chmod go-w "${ZPLGM[SNIPPETS_DIR]}"
     }
 } # }}}
 # FUNCTION: -zplg-load {{{
@@ -1203,11 +1206,11 @@ builtin setopt noaliases
     ZPLG_SNIPPETS[$url]="$filename"
 
     # Download or copy the file
-    if [[ ! -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" || "$force" = "-f" ]]
+    if [[ ! -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" || "$force" = "-f" ]]
     then
-        if [[ ! -d "$ZPLG_SNIPPETS_DIR/$local_dir" ]]; then
+        if [[ ! -d "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]]; then
             print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
-            command mkdir -p "$ZPLG_SNIPPETS_DIR/$local_dir"
+            command mkdir -p "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
         fi
 
         [[ "$update" = "-u" ]] && echo "${ZPLG_COL[info]}Updating snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
@@ -1216,7 +1219,7 @@ builtin setopt noaliases
         then
             # URL
         (
-            cd "$ZPLG_SNIPPETS_DIR/$local_dir"
+            cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
             command rm -f "$filename"
             print "Downloading $filename..."
             (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[DIR]}"/zplugin-install.zsh"
@@ -1224,12 +1227,12 @@ builtin setopt noaliases
         )
         else
             # File
-            command rm -f "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+            command rm -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
             print "Copying $filename..."
-            command cp -v "$url" "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+            command cp -v "$url" "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
         fi
 
-        echo "$save_url" >! "$ZPLG_SNIPPETS_DIR/$local_dir/.zplugin_url"
+        echo "$save_url" >! "${ZPLGM[SNIPPETS_DIR]}/$local_dir/.zplugin_url"
     fi
 
     # Updating – no sourcing or setup
@@ -1238,11 +1241,11 @@ builtin setopt noaliases
     if [[ "$cmd" != "--command" ]]; then
         # Source the file with compdef shadowing
         -zplg-shadow-on "compdef"
-        builtin source "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
+        builtin source "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
         -zplg-shadow-off "compdef"
     else
-        [[ ! -x "$ZPLG_SNIPPETS_DIR/$local_dir/$filename" ]] && command chmod a+x "$ZPLG_SNIPPETS_DIR/$local_dir/$filename"
-        [[ -z "${path[(er)$ZPLG_SNIPPETS_DIR/$local_dir]}" ]] && path+=( "$ZPLG_SNIPPETS_DIR/$local_dir" )
+        [[ ! -x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command chmod a+x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+        [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir" )
     fi
 } # }}}
 # FUNCTION: -zplg-compdef-replay {{{
