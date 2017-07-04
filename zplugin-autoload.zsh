@@ -1564,6 +1564,9 @@ ZPLGM[EXTENDED_GLOB]=""
     integer compiled=1
     [[ -e "${fname}.zwc" ]] && command rm -f "${fname}.zwc" || compiled=0
 
+    local -a ZPLG_STRESS_TEST_OPTIONS
+    ZPLG_STRESS_TEST_OPTIONS=( "NO_SHORT_LOOPS" "IGNORE_BRACES" "IGNORE_CLOSE_BRACES" "SH_GLOB" "CSH_JUNKIE_QUOTES" "NO_MULTI_FUNC_DEF" )
+
     (
         emulate -LR ksh
         builtin unsetopt shglob kshglob
