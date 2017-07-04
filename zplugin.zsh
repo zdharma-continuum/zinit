@@ -35,26 +35,26 @@ if [[ ! -e "${ZPLGM[BIN_DIR]}"/zplugin.zsh ]]; then
     return 1
 fi
 
-# User can override ZPLG_HOME
-if [[ -z "$ZPLG_HOME" ]]; then
+# User can override ZPLGM[HOME_DIR]
+if [[ -z "${ZPLGM[HOME_DIR]}" ]]; then
     # Ignore ZDOTDIR if user manually put Zplugin to $HOME
     if [[ -d "$HOME/.zplugin" ]]; then
-        typeset -gH ZPLG_HOME="$HOME/.zplugin"
+        ZPLGM[HOME_DIR]="$HOME/.zplugin"
     else
-        typeset -gH ZPLG_HOME="${ZDOTDIR:-$HOME}/.zplugin"
+        ZPLGM[HOME_DIR]="${ZDOTDIR:-$HOME}/.zplugin"
     fi
 fi
 
 # Can be customized
 typeset -gH ZPLG_PLUGINS_DIR
-: ${ZPLG_PLUGINS_DIR:=$ZPLG_HOME/plugins}
+: ${ZPLG_PLUGINS_DIR:=${ZPLGM[HOME_DIR]}/plugins}
 
 # Can be customized, e.g. for multi-user environment
 typeset -gH ZPLG_COMPLETIONS_DIR
-: ${ZPLG_COMPLETIONS_DIR:=$ZPLG_HOME/completions}
+: ${ZPLG_COMPLETIONS_DIR:=${ZPLGM[HOME_DIR]}/completions}
 
 # Can be customized
-: ${ZPLGM[SNIPPETS_DIR]:=$ZPLG_HOME/snippets}
+: ${ZPLGM[SNIPPETS_DIR]:=${ZPLGM[HOME_DIR]}/snippets}
 
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
@@ -1110,10 +1110,10 @@ builtin setopt noaliases
     [[ -n "${ZPLGM[HOME_READY]}" ]] && return
     ZPLGM[HOME_READY]="1"
 
-    [[ ! -d "$ZPLG_HOME" ]] && {
-        command mkdir 2>/dev/null "$ZPLG_HOME"
+    [[ ! -d "${ZPLGM[HOME_DIR]}" ]] && {
+        command mkdir 2>/dev/null "${ZPLGM[HOME_DIR]}"
         # For compaudit
-        command chmod go-w "$ZPLG_HOME"
+        command chmod go-w "${ZPLGM[HOME_DIR]}"
     }
     [[ ! -d "$ZPLG_PLUGINS_DIR" ]] && {
         command mkdir "$ZPLG_PLUGINS_DIR"

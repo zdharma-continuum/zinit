@@ -979,7 +979,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local infoc="${ZPLG_COL[info2]}"
 
-    print "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
+    print "Zplugin's main directory: ${infoc}${ZPLGM[HOME_DIR]}${reset_color}"
     print "Zplugin's binary directory: ${infoc}${ZPLGM[BIN_DIR]}${reset_color}"
     print "Plugin directory: ${infoc}$ZPLG_PLUGINS_DIR${reset_color}"
     print "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
