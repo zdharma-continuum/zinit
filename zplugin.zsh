@@ -52,10 +52,9 @@ fi
 
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
-typeset -gH ZPLG_NEW_AUTOLOAD=0
 
 builtin autoload -Uz is-at-least
-is-at-least 5.1 && ZPLG_NEW_AUTOLOAD=1
+is-at-least 5.1 && ZPLGM[NEW_AUTOLOAD]=1 || ZPLGM[NEW_AUTOLOAD]=0
 
 # Parameters - shadowing {{{
 ZPLGM[SHADOWING]="inactive"
@@ -224,7 +223,7 @@ builtin setopt noaliases
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer
         if (( ${+functions[$func]} != 1 )); then
             builtin setopt noaliases
-            if [[ "$ZPLG_NEW_AUTOLOAD" = "1" ]]; then
+            if [[ "${ZPLGM[NEW_AUTOLOAD]}" = "1" ]]; then
                 eval "function ${(q)func} {
                     local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
                     builtin autoload -X ${(q-)opts[@]}
