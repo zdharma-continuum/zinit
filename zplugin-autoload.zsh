@@ -1,7 +1,7 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
-ZPLG_MAIN[EXTENDED_GLOB]=""
+ZPLGM[EXTENDED_GLOB]=""
 
 #
 # Backend, low level functions
@@ -9,12 +9,12 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
 # FUNCTION: -zplg-save-set-extendedglob {{{
 -zplg-save-set-extendedglob() {
-    [[ -o "extendedglob" ]] && ZPLG_MAIN[EXTENDED_GLOB]="1" || ZPLG_MAIN[EXTENDED_GLOB]="0"
+    [[ -o "extendedglob" ]] && ZPLGM[EXTENDED_GLOB]="1" || ZPLGM[EXTENDED_GLOB]="0"
     builtin setopt extendedglob
 } # }}}
 # FUNCTION: -zplg-restore-extendedglob {{{
 -zplg-restore-extendedglob() {
-    [[ "${ZPLG_MAIN[EXTENDED_GLOB]}" = "0" ]] && builtin unsetopt extendedglob || builtin setopt extendedglob
+    [[ "${ZPLGM[EXTENDED_GLOB]}" = "0" ]] && builtin unsetopt extendedglob || builtin setopt extendedglob
 } # }}}
 # FUNCTION: -zplg-prepare-readlink {{{
 # Prepare readlink command, used for establishing completion's owner
@@ -452,7 +452,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
 
 # FUNCTION: -zplg-self-update {{{
 -zplg-self-update() {
-    ( cd "$ZPLG_DIR" ; git pull )
+    ( cd "${ZPLGM[DIR]}" ; git pull )
 } # }}}
 # FUNCTION: -zplg-show-registered-plugins {{{
 -zplg-show-registered-plugins() {
@@ -980,7 +980,7 @@ ZPLG_MAIN[EXTENDED_GLOB]=""
     local infoc="${ZPLG_COL[info2]}"
 
     print "Zplugin's main directory: ${infoc}$ZPLG_HOME${reset_color}"
-    print "Zplugin's binary directory: ${infoc}$ZPLG_DIR${reset_color}"
+    print "Zplugin's binary directory: ${infoc}${ZPLGM[DIR]}${reset_color}"
     print "Plugin directory: ${infoc}$ZPLG_PLUGINS_DIR${reset_color}"
     print "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
 
