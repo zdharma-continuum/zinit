@@ -78,7 +78,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-exists-physically {{{
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
-    [[ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
+    [[ -d "${ZPLGM[PLUGINS_DIR]}/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
 } # }}}
 # FUNCTION: -zplg-exists-physically-message {{{
 -zplg-exists-physically-message() {
@@ -299,7 +299,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
-    reply=( "$ZPLG_PLUGINS_DIR/$uspl"/**/_[^_.][^.]# )
+    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]# )
 } # }}}
 # FUNCTION: -zplg-check-comp-consistency {{{
 -zplg-check-comp-consistency() {
@@ -377,7 +377,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local c cfile bkpfile
     integer action global_action=0
 
-    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]# )
     symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
@@ -889,7 +889,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Check if repository has a remote set, if it is _local
     if [[ "$user" = "_local" ]]; then
-        local repo="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+        local repo="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
         if [[ -f "$repo/.git/config" ]]; then
             local -a config
             config=( "${(f)"$(<$repo/.git/config)"}" )
@@ -902,12 +902,12 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     if [[ "$st" = "status" ]]; then
-        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git status; )
+        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; git status; )
     else
-        ( cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
+        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
         local -A sice
         sice=( "${(z)ZPLG_SICE[$user/$plugin]:-no op}" )
-        ( (( ${+sice[atpull]} )) && { cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
+        ( (( ${+sice[atpull]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
     fi
 } # }}}
 # FUNCTION: -zplg-update-or-status-all {{{
@@ -932,7 +932,7 @@ ZPLGM[EXTENDED_GLOB]=""
         print "${ZPLG_COL[error]}Warning:${ZPLG_COL[rst]} updating also unloaded plugins"
     fi
 
-    for repo in "$ZPLG_PLUGINS_DIR"/*; do
+    for repo in "${ZPLGM[PLUGINS_DIR]}"/*; do
         pd="${repo:t}"
 
         # Two special cases
@@ -981,7 +981,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     print "Zplugin's main directory: ${infoc}${ZPLGM[HOME_DIR]}${reset_color}"
     print "Zplugin's binary directory: ${infoc}${ZPLGM[BIN_DIR]}${reset_color}"
-    print "Plugin directory: ${infoc}$ZPLG_PLUGINS_DIR${reset_color}"
+    print "Plugin directory: ${infoc}${ZPLGM[PLUGINS_DIR]}${reset_color}"
     print "Completions directory: ${infoc}$ZPLG_COMPLETIONS_DIR${reset_color}"
 
     # Without _zlocal/zplugin
@@ -998,8 +998,8 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
-    plugins=( "$ZPLG_PLUGINS_DIR"/* )
-    print "Downloaded plugins: ${infoc}$(( ${#plugins[@]} - 2 ))${reset_color}"
+    plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
+    print "Downloaded plugins: ${infoc}$(( ${#plugins[@]} - 1 ))${reset_color}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
@@ -1011,7 +1011,7 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of completions existing in all plugins
-    completions=( "$ZPLG_PLUGINS_DIR"/*/**/_[^_.][^.]# )
+    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]# )
     print "Completions available overall: ${infoc}${#completions[@]}${reset_color}"
 
     # Enumerate snippets loaded
@@ -1020,7 +1020,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Number of compiled plugins
     typeset -a matches m
     integer count=0
-    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
+    matches=( ${ZPLGM[PLUGINS_DIR]}/*/*.zwc )
 
     local cur_plugin="" uspl1
     for m in "${matches[@]}"; do
@@ -1041,7 +1041,7 @@ ZPLGM[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob
 
     typeset -a matches m
-    matches=( $ZPLG_PLUGINS_DIR/*/*.zwc )
+    matches=( ${ZPLGM[PLUGINS_DIR]}/*/*.zwc )
 
     if [[ "${#matches[@]}" -eq "0" ]]; then
         print "No compiled plugins"
@@ -1072,7 +1072,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local compile="$1"
 
     typeset -a plugins
-    plugins=( "$ZPLG_PLUGINS_DIR"/* )
+    plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
 
     local p user plugin
     for p in "${plugins[@]}"; do
@@ -1101,7 +1101,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
     # have ".zsh" there
-    local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    local dname="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     typeset -a matches m
     matches=( $dname/*.zwc )
 
@@ -1227,7 +1227,7 @@ ZPLGM[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob extendedglob
 
     typeset -a plugin_paths
-    plugin_paths=( "$ZPLG_PLUGINS_DIR"/*---* )
+    plugin_paths=( "${ZPLGM[PLUGINS_DIR]}"/*---* )
 
     # Find longest plugin name. Things are ran twice here, first pass
     # is to get longest name of plugin which is having any completions
@@ -1374,7 +1374,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-    cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
 } # }}}
 # FUNCTION: -zplg-changes {{{
 -zplg-changes() {
@@ -1384,7 +1384,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     (
-        cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+        cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
         git log -p --graph --decorate --date=relative -C -M
     )
 } # }}}
@@ -1399,7 +1399,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -z "$timespec" ]] && timespec="1.week"
 
     typeset -a plugins
-    plugins=( "$ZPLG_PLUGINS_DIR"/* )
+    plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
 
     local p uspl1
     for p in "${plugins[@]}"; do
@@ -1450,7 +1450,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     fi
 
-    cd "$ZPLG_PLUGINS_DIR"
+    cd "${ZPLGM[PLUGINS_DIR]}"
 
     if [[ "$user" != "_local" ]]; then
         print "${ZPLG_COL[info]}Creating Github repository${ZPLG_COL[rst]}"
@@ -1534,7 +1534,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-    # cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+    # cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     -zplg-first "$1" "$2" || {
         print "${ZPLG_COL[error]}No source file found, cannot edit${ZPLG_COL[rst]}"
         return 1

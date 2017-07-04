@@ -46,8 +46,7 @@ if [[ -z "${ZPLGM[HOME_DIR]}" ]]; then
 fi
 
 # Can be customized
-typeset -gH ZPLG_PLUGINS_DIR
-: ${ZPLG_PLUGINS_DIR:=${ZPLGM[HOME_DIR]}/plugins}
+: ${ZPLGM[PLUGINS_DIR]:=${ZPLGM[HOME_DIR]}/plugins}
 
 # Can be customized, e.g. for multi-user environment
 typeset -gH ZPLG_COMPLETIONS_DIR
@@ -225,7 +224,7 @@ builtin setopt noaliases
     done
 
     # Do ZPLUGIN's "native" autoloads
-    if [[ "$ZPLGM[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="$ZPLG_PLUGINS_DIR/${ZPLGM[CUR_USPL]}"
+    if [[ "$ZPLGM[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${ZPLGM[CUR_USPL]}"
     for func
     do
         # Real autoload doesn't touch function if it already exists
@@ -1010,7 +1009,7 @@ builtin setopt noaliases
         local dname="$plugin"
     else
         local pdir="${${${plugin%.plugin.zsh}%.zsh}%.git}"
-        local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+        local dname="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
 
     # Look for file to compile. First look for the most common one
@@ -1115,14 +1114,14 @@ builtin setopt noaliases
         # For compaudit
         command chmod go-w "${ZPLGM[HOME_DIR]}"
     }
-    [[ ! -d "$ZPLG_PLUGINS_DIR" ]] && {
-        command mkdir "$ZPLG_PLUGINS_DIR"
+    [[ ! -d "${ZPLGM[PLUGINS_DIR]}" ]] && {
+        command mkdir "${ZPLGM[PLUGINS_DIR]}"
         # For compaudit
-        command chmod go-w "$ZPLG_PLUGINS_DIR"
+        command chmod go-w "${ZPLGM[PLUGINS_DIR]}"
 
         # Prepare mock-like plugin for Zplugin itself
-        command mkdir "$ZPLG_PLUGINS_DIR/_local---zplugin"
-        command ln -s "${ZPLGM[BIN_DIR]}/_zplugin" "$ZPLG_PLUGINS_DIR/_local---zplugin"
+        command mkdir "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
+        command ln -s "${ZPLGM[BIN_DIR]}/_zplugin" "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
     }
     [[ ! -d "$ZPLG_COMPLETIONS_DIR" ]] && {
         command mkdir "$ZPLG_COMPLETIONS_DIR"
@@ -1130,7 +1129,7 @@ builtin setopt noaliases
         command chmod go-w "$ZPLG_COMPLETIONS_DIR"
 
         # Symlink _zplugin completion into _local---zplugin directory
-        command ln -s "$ZPLG_PLUGINS_DIR/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
+        command ln -s "${ZPLGM[PLUGINS_DIR]}/_local---zplugin/_zplugin" "$ZPLG_COMPLETIONS_DIR"
     }
     [[ ! -d "${ZPLGM[SNIPPETS_DIR]}" ]] && {
         command mkdir "${ZPLGM[SNIPPETS_DIR]}"
@@ -1146,7 +1145,7 @@ builtin setopt noaliases
 
     -zplg-pack-ice "$user" "$plugin"
     -zplg-register-plugin "$user" "$plugin" "$mode"
-    if [[ "$user" != "%" && ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
+    if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
             -zplg-unregister-plugin "$user" "$plugin"
@@ -1313,7 +1312,7 @@ builtin setopt noaliases
         local dname="$plugin"
     else
         local pdir="${${${plugin%.plugin.zsh}%.zsh}%.git}"
-        local dname="$ZPLG_PLUGINS_DIR/${user}---${plugin}"
+        local dname="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
 
     # Look for a file to source. First look for the most
@@ -1358,7 +1357,7 @@ builtin setopt noaliases
         -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" end
     fi
 
-    (( ${+ZPLG_ICE[atload]} )) && { local oldcd="$PWD"; cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; eval "${ZPLG_ICE[atload]}"; cd "$oldcd"; }
+    (( ${+ZPLG_ICE[atload]} )) && { local oldcd="$PWD"; cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atload]}"; cd "$oldcd"; }
 
     # Mark no load is in progress
     ZPLGM[CUR_USR]=""

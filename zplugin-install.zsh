@@ -4,7 +4,7 @@
     if [[ "${reply[-2]}" = "%" ]]; then
         [[ -d "${reply[-1]}" ]] && return 0 || return 1
     else
-        [[ -d "$ZPLG_PLUGINS_DIR/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
+        [[ -d "${ZPLGM[PLUGINS_DIR]}/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
     fi
 } # }}}
 # FUNCTION: -zplg-exists-physically-message {{{
@@ -20,7 +20,7 @@
 # FUNCTION: -zplg-setup-plugin-dir {{{
 -zplg-setup-plugin-dir() {
     local user="$1" plugin="$2" remote_url_path="$1/$2"
-    if [[ ! -d "$ZPLG_PLUGINS_DIR/${user}---${plugin}" ]]; then
+    if [[ ! -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]]; then
         local -A sites
         sites=(
             "github"    "github.com"
@@ -34,7 +34,7 @@
         )
         if [[ "$user" = "_local" ]]; then
             print "Warning: no local plugin \`$plugin\'"
-            print "(looked in $ZPLG_PLUGINS_DIR/${user}---${plugin})"
+            print "(looked in ${ZPLGM[PLUGINS_DIR]}/${user}---${plugin})"
             return 1
         fi
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
@@ -45,10 +45,10 @@
         [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
         case "${ZPLG_ICE[proto]}" in
             (|https)
-                git clone --recursive "https://${site:-github.com}/$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
+                git clone --recursive "https://${site:-github.com}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
                 ;;
             (git|http|ftp|ftps|rsync|ssh)
-                git clone --recursive "${ZPLG_ICE[proto]}://${site:-github.com}/$remote_url_path" "$ZPLG_PLUGINS_DIR/${user}---${plugin}" || return 1
+                git clone --recursive "${ZPLG_ICE[proto]}://${site:-github.com}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
                 ;;
             (*)
                 print "${ZPLG_COL[error]}Unknown protocol:${ZPLG_COL[rst]} ${ZPLG_ICE[proto]}"
@@ -58,7 +58,7 @@
         # Install completions
         -zplg-install-completions "$user" "$plugin" "0"
 
-        ( (( ${+ZPLG_ICE[atclone]} )) && { cd "$ZPLG_PLUGINS_DIR/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}" } )
+        ( (( ${+ZPLG_ICE[atclone]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}" } )
 
         # Compile plugin
         -zplg-compile-plugin "$user" "$plugin"
@@ -84,7 +84,7 @@
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "$ZPLG_PLUGINS_DIR/${user}---${plugin}"/**/_[^_.][^.]# )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]# )
     already_symlinked=( "$ZPLG_COMPLETIONS_DIR"/_[^_.][^.]# )
     backup_comps=( "$ZPLG_COMPLETIONS_DIR"/[^_.][^.]# )
 
