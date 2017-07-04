@@ -15,6 +15,15 @@ local -A funs
 integer next_fun=0 cur_fun=0 prev_fun=0
 integer depth=0 prev_depth=0 fun_depth=-1 anon_depth=-1 descentff=0 descentfa=0
 
+line_count()
+{
+    local -a list
+    list=( "${(@f)1}" )
+    local count=${#list}
+    print -r -- "${(l:3:: :)count}"
+}
+
+
 zplg-process-buffer "$doc" 1
 integer i size="${#ZPLG_PB_WORDS}"
 
@@ -90,11 +99,12 @@ for (( i=1; i<=size; ++ i )); do
     prev_spaces="$spaces"
 done
 
-print -r -- "$preamble" >| "preamble.zini"
-
 for fun_name in "${(ko@)funs}"; do
-    print -r -- "${fun_name}() {"
-    print -r -- "${funs[$fun_name]}"
-    print -r -- "}"
-    print
-done >| "functions.zini"
+    print "Extracted `line_count ${funs[$fun_name]}`-line function \`\e[32m${fun_name}\e[0m'..."
+    {
+        print -r -- "${funs[$fun_name]}"
+    } >| "zplg_functions/$fun_name"
+done
+
+print -r -- "$preamble" >| "preamble.zplg"
+print "\e[32mGenerated preamble\e[0m (`line_count $preamble` lines)"
