@@ -182,6 +182,8 @@
         print "Compilation failed. Don't worry, the plugin will work also without compilation"
         print "Consider submitting an error report to the plugin's author"
     }
+    # Try to catch possible additional file
+    zcompile "${first%.plugin.zsh}.zsh" 2>/dev/null
 } # }}}
 # FUNCTION: -zplg-lexicon {{{
 -zplg-lexicon() {
