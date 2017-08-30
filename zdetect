@@ -1,0 +1,118 @@
+#!/usr/bin/env zsh
+# vim:ft=zsh
+
+setopt extendedglob
+
+fpath+=( "${0%/*}" )
+autoload zplg-process-buffer
+
+local name="$1"
+local doc="$(<$name)" token prev_token="" spaces prev_spaces="" next_token next_spaces
+
+# Function and preamble extraction
+local preamble="" fun_name=""
+local -A funs
+integer next_fun=0 cur_fun=0 prev_fun=0
+integer depth=0 prev_depth=0 fun_depth=-1 anon_depth=-1 descentff=0 descentfa=0
+
+# Call detection
+integer at_command=1
+local -A call_tree
+local -a known_functions
+known_functions=( zplg_functions/*(N) )
+known_functions=( ${known_functions[@]:t} )
+
+line_count()
+{
+    local -a list
+    list=( "${(@f)1}" )
+    local count=${#list}
+    print -r -- "${(l:3:: :)count}"
+}
+
+zplg-process-buffer "$doc" 1
+integer i size="${#ZPLG_PB_WORDS}"
+
+for (( i=1; i<=size; ++ i )); do
+    token="${ZPLG_PB_WORDS[i]}"
+    spaces="${ZPLG_PB_SPACES[i]}"
+    next_token="${ZPLG_PB_WORDS[i+1]}"
+    next_spaces="${ZPLG_PB_SPACES[i+1]}"
+    cur_fun=0 prev_fun=0 descentff=0 descentfa=0
+
+    (( next_fun )) && { next_fun=0 cur_fun=1 prev_fun=0 anon_depth=-1 }
+
+    # Detect function call
+    if [[ "$spaces" = *$'\n'* || -z "$prev_token" ]]; then
+        at_command=1
+    fi
+    if (( at_command )); then
+        if [[ "$cur_fun" -eq 0 && "$next_token" != "()" && -n "${known_functions[(re)$token]}" ]]; then
+            print "$fun_name calls $token"
+            call_tree[$fun_name]="$token"
+        fi
+        at_command=0
+    fi
+
+    # Explicit future function
+    if [[ "$token" = "function" ]]; then
+        next_fun=1 cur_fun=0 prev_fun=0 anon_depth=-1
+    # Detect function if not already in function
+    elif [[ "$token" = "()" && ( "$fun_depth" -lt 0 ) && ( $anon_depth -lt 0 ) ]]; then
+        if [[ "$spaces" = *$'\n'* || -z "$prev_token" ]]; then
+            next_fun=0 cur_fun=0 prev_fun=0 anon_depth=$depth
+        else
+            next_fun=0 cur_fun=0 prev_fun=1 anon_depth=-1
+        fi
+    elif [[ "$token" = "{" ]]; then
+        (( ++ depth ))
+    elif [[ "$token" = "}" ]]; then
+        (( -- depth ))
+    fi
+
+    if (( cur_fun )); then
+        fun_name="$token"
+        fun_depth="$depth"
+    elif (( prev_fun )); then
+        fun_name="$prev_token"
+        fun_depth="$depth"
+    fi
+
+    # Ascent to function - skip '{'
+    if (( fun_depth >= 0 && depth == (fun_depth + 1) )) && [[ "$token" = "{" ]]; then
+        :
+    # In-function
+    elif (( fun_depth >= 0 && depth > fun_depth )); then
+        if [[ "$token" != [[:space:]]#\#* ]]; then
+            funs[$fun_name]+="${spaces}${token}"
+        fi
+    # Descent from function - skip '}'
+    elif (( fun_depth >= 0 && depth == fun_depth && prev_depth == fun_depth + 1 )); then
+        descentff=1
+    # Descent from anon
+    elif (( anon_depth >= 0 && depth == anon_depth && prev_depth == anon_depth + 1 )); then
+        descentfa=1
+    fi
+
+    # Anon function in top-level
+    if (( anon_depth >= 0 && fun_depth < 0 )); then
+        [[ "$token" != [[:space:]]#\#* ]] && preamble+="${spaces}${token}"
+    fi
+
+    # Late disable of (anon)
+    if (( descentfa )); then
+        anon_depth=-1
+    elif (( descentff )); then
+        fun_name=""
+        fun_depth=-1
+    # No-function printing
+    elif (( next_fun == 0 && cur_fun == 0 && prev_fun == 0 && anon_depth < 0 && fun_depth < 0 )); then
+        if [[ "$next_token" != "()" || "$next_spaces" = *$'\n'* ]]; then
+            [[ "$token" != [[:space:]]#\#* ]] && preamble+="${spaces}${token}"
+        fi
+    fi
+
+    prev_depth="$depth"
+    prev_token="$token"
+    prev_spaces="$spaces"
+done
