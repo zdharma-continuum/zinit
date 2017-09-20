@@ -264,17 +264,17 @@ self-update              - updates Zplugin
 zstatus                  - overall Zplugin status
 times                    - statistics on plugin loading times
 load {plugin-name}       - load plugin, can also receive absolute local path
-light {plugin-name}      - light plugin load, without reporting
-unload {plugin-name}     - unload plugin
+light {plugin-name}      - light plugin load, without reporting (faster)
+unload {plugin-name}     - unload plugin (needs reporting)
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 update {plugin-name}     - Git update plugin (or all plugins and snippets if --all passed)
 status {plugin-name}     - Git status for plugin (or all plugins if --all passed)
 report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
 loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
-cd {plugin-name}         - cd into plugin's directory
+cd {plugin-name}         - cd into plugin's directory (does completion on TAB)
 create {plugin-name}     - create plugin (also together with Github repository)
 edit {plugin-name}       - edit plugin's file with $EDITOR
-glance {plugin-name}     - look at plugin's source (pygmentize, {,source-}highlight)
+glance {plugin-name}     - look at plugin's source (pygmentize, highlight, GNU source-highlight)
 stress {plugin-name}     - test plugin for compatibility with set of options
 changes {plugin-name}    - view plugin's git log
 recently [time-spec]     - show plugins that changed recently, argument is e.g. 1 month 2 days
@@ -283,8 +283,8 @@ cdisable {cname}         - disable completion `cname'
 cenable  {cname}         - enable completion `cname'
 creinstall {plugin-name} - install completions for plugin; can also receive absolute local path
 cuninstall {plugin-name} - uninstall completions for plugin
-csearch                  - search for available completions from any plugin
-compinit                 - refresh installed completions
+csearch                  - search all for available completions from any plugin, even unused ones
+compinit                 - reload installed completions
 dtrace|dstart            - start tracking what's going on in session
 dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
