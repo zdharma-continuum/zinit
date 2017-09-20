@@ -1618,6 +1618,7 @@ ZPLGM[EXTENDED_GLOB]=""
 -h|--help|help           - usage information
 man                      - manual
 zstatus                  - overall status of Zplugin
+times                    - statistics on plugin load times
 self-update              - updates Zplugin
 load ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}       - load plugin, can also receive absolute local path
 light ${ZPLG_COL[pname]}{plugin-name}${ZPLG_COL[rst]}      - light plugin load, without reporting
