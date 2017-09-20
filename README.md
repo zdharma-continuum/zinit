@@ -388,6 +388,19 @@ The special user name `_local` is optional also for other commands, e.g. for
 `load` (i.e. `zplugin load myplugin` is sufficient, there's no need for
 `zplugin load _local/myplugin`).
 
+# Customizing paths
+
+Following variables can be set to custom values, before sourcing Zplugin:
+
+```
+local -A ZPLGM # (initial Zplugin hash definition)
+ZPLGM[BIN_DIR] – where Zplugin code resides, e.g.: "/home/user/.zplugin/bin"
+ZPLGM[HOME_DIR] – where Zplugin should create all working directories, e.g.: "/home/user/.zplugin"
+ZPLGM[PLUGINS_DIR] – override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins"
+ZPLGM[COMPLETIONS_DIR] – as above, for completion files, e.g. "/opt/zsh/zplugin/root_completions"
+ZPLGM[SNIPPETS_DIR] – as above, for snippets
+```
+
 # IRC channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
