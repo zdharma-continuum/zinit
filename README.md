@@ -261,6 +261,8 @@ Usage:
 -h|--help|help           - usage information
 man                      - manual
 self-update              - updates Zplugin
+zstatus                  - overall Zplugin status
+times                    - statistics on plugin loading times
 load {plugin-name}       - load plugin, can also receive absolute local path
 light {plugin-name}      - light plugin load, without reporting
 unload {plugin-name}     - unload plugin

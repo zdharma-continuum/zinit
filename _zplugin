@@ -6,7 +6,7 @@ typeset -A opt_args
 typeset -a commands
 commands=(
     zstatus:'overall Zplugin status'
-    times:'statistics on plugin load times'
+    times:'statistics on plugin loading times'
     self-update:'updates Zplugin'
     help:'usage information'
     man:'manual'
