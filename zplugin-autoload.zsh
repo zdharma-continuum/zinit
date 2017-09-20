@@ -1037,6 +1037,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-show-times {{{
 -zplg-show-times() {
     local entry entry2 user plugin title='no'
+    float -F 3 sum=0.0
     for entry in "${(@o)ZPLGM[(I)TIME_*]}"; do
         [[ "$title" = "no" ]] && { print "Plugin loading times:"; title="yes"; }
         entry2="${entry#TIME_}"
@@ -1045,7 +1046,9 @@ ZPLGM[EXTENDED_GLOB]=""
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
 
         print "${ZPLGM[$entry]} sec" - "$REPLY"
+        (( sum += ZPLGM[$entry] ))
     done
+    print "Sum: $sum sec"
 }
 # }}}
 
