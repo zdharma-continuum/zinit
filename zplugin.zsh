@@ -1137,6 +1137,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-load {{{
 # $1 - plugin name, possibly github path
 -zplg-load () {
+    typeset -F 3 SECONDS=0
     local mode="$3"
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1152,6 +1153,7 @@ builtin setopt noaliases
     fi
 
     -zplg-load-plugin "$user" "$plugin" "$mode"
+    ZPLGM[TIME_${user}---${plugin}]=$SECONDS
 } # }}}
 # FUNCTION: -zplg-load-snippet {{{
 -zplg-load-snippet() {
@@ -1498,6 +1500,9 @@ zplugin() {
            case "$1" in
                (zstatus)
                    -zplg-show-zstatus
+                   ;;
+               (times)
+                   -zplg-show-times
                    ;;
                (self-update)
                    -zplg-self-update

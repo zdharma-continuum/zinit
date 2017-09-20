@@ -1034,6 +1034,20 @@ ZPLGM[EXTENDED_GLOB]=""
 
     print "Compiled plugins: ${infoc}$count${reset_color}"
 } # }}}
+# FUNCTION: -zplg-show-times {{{
+-zplg-show-times() {
+    local entry entry2 user plugin title='no'
+    for entry in "${(@o)ZPLGM[(I)TIME_*]}"; do
+        [[ "$title" = "no" ]] && { print "Plugin loading times:"; title="yes"; }
+        entry2="${entry#TIME_}"
+        user="${entry2%---*}"
+        plugin="${entry2#*---}"
+        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+
+        print "${ZPLGM[$entry]} sec" - "$REPLY"
+    done
+}
+# }}}
 
 # FUNCTION: -zplg-compiled {{{
 # Gets list of compiled plugins
