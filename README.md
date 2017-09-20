@@ -47,6 +47,19 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 20-09-2017
+  - New feature - **plugin load time statistics**
+
+    ```SystemVerilog
+    % zplg times
+    Plugin loading times:
+    0.002 sec - psprint/history-search-multi-word
+    0.005 sec - psprint/zsh-navigation-tools
+    0.002 sec - rimraf/k
+    0.020 sec - zdharma/fast-syntax-highlighting
+    0.005 sec - zsh-users/zsh-autosuggestions
+    ```
+
 * 13-06-2017
   - Plugins can now be absolute paths:
 
