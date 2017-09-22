@@ -32,6 +32,7 @@ zplugin ice from"notabug" atload"echo loaded zui" if"(( 1 ))"
 zplugin load zdharma/zui
 zplugin load zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
+# This one to be ran just once, in interactive session
 zplugin creinstall %HOME/my_completions  # Handle completions without loading the plugin, see "clist" command
 ```
 
