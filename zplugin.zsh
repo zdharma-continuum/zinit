@@ -205,7 +205,7 @@ builtin setopt noaliases
     then
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
-        return # Testable
+        return 0 # Testable
     fi
 
     # Report ZPLUGIN's "native" autoloads
