@@ -686,100 +686,29 @@ builtin setopt noaliases
     IFS="$bIFS"
     ZPLG_OPTIONS[$1]=""
     ZPLG_OPTIONS_DIFF_RAN[$1]="0"
-
-    return 0
 } # }}}
 # FUNCTION: -zplg-diff-env {{{
 # Implements detection of change in PATH and FPATH.
 -zplg-diff-env() {
-    local uspl2="$1"
-    local cmd="$2"
     typeset -a tmp
+    local bIFS="$IFS"; IFS=" "
 
-    case "$cmd" in
-        begin)
-            local bIFS="$IFS"; IFS=" "
+    [[ "$2" = "begin" ]] && {
             tmp=( "${(q)path[@]}" )
-            ZPLG_PATH_BEFORE[$uspl2]="${tmp[*]}"
+            ZPLG_PATH_BEFORE[$1]="${tmp[*]}"
             tmp=( "${(q)fpath[@]}" )
-            ZPLG_FPATH_BEFORE[$uspl2]="${tmp[*]}"
-            IFS="$bIFS"
-
-            # Reset diffing
-            ZPLG_PATH[$uspl2]=""
-            ZPLG_FPATH[$uspl2]=""
-            ZPLG_ENV_DIFF_RAN[$uspl2]="0"
-            ;;
-        end)
-            local bIFS="$IFS"; IFS=" "
+            ZPLG_FPATH_BEFORE[$1]="${tmp[*]}"
+    } || {
             tmp=( "${(q)path[@]}" )
-            ZPLG_PATH_AFTER[$uspl2]="${tmp[*]}"
+            ZPLG_PATH_AFTER[$1]="${tmp[*]}"
             tmp=( "${(q)fpath[@]}" )
-            ZPLG_FPATH_AFTER[$uspl2]="${tmp[*]}"
-            IFS="$bIFS"
+            ZPLG_FPATH_AFTER[$1]="${tmp[*]}"
+    }
 
-            # Reset diffing
-            ZPLG_PATH[$uspl2]=""
-            ZPLG_FPATH[$uspl2]=""
-            ZPLG_ENV_DIFF_RAN[$uspl2]="0"
-            ;;
-        diff)
-            # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            [[ "${ZPLG_ENV_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-            ZPLG_ENV_DIFF_RAN[$uspl2]="1"
-
-            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
-            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            builtin setopt localoptions extendedglob
-            [[ "${ZPLG_PATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
-            [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FPATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
-
-            typeset -A path_state fpath_state
-            local i
-
-            #
-            # PATH processing
-            #
-
-            # This includes new path elements
-            for i in "${(z)ZPLG_PATH_AFTER[$uspl2]}"; do
-                path_state[$i]=1
-            done
-
-            # Remove duplicated entries, i.e. existing before
-            for i in "${(z)ZPLG_PATH_BEFORE[$uspl2]}"; do
-                unset "path_state[$i]"
-            done
-
-            # Store the path elements, associating them with plugin ($uspl2)
-            for i in "${(onk)path_state[@]}"; do
-                ZPLG_PATH[$uspl2]+="$i "
-            done
-
-            #
-            # FPATH processing
-            #
-
-            # This includes new path elements
-            for i in "${(z)ZPLG_FPATH_AFTER[$uspl2]}"; do
-                fpath_state[$i]=1
-            done
-
-            # Remove duplicated entries, i.e. existing before
-            for i in "${(z)ZPLG_FPATH_BEFORE[$uspl2]}"; do
-                unset "fpath_state[$i]"
-            done
-
-            # Store the path elements, associating them with plugin ($uspl2)
-            for i in "${(onk)fpath_state[@]}"; do
-                ZPLG_FPATH[$uspl2]+="$i "
-            done
-            ;;
-        *)
-            return 1
-    esac
-
-    return 0
+    IFS="$bIFS"
+    ZPLG_PATH[$1]=""
+    ZPLG_FPATH[$1]=""
+    ZPLG_ENV_DIFF_RAN[$1]="0"
 } # }}}
 # FUNCTION: -zplg-diff-parameter {{{
 # Implements detection of change in any parameter's existence and type.

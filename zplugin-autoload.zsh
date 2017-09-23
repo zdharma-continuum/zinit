@@ -85,6 +85,68 @@ ZPLGM[EXTENDED_GLOB]=""
     IFS="$bIFS"
     return 0
 } # }}}
+# FUNCTION: -zplg-diff-env-compute {{{
+# Computes ZPLG_PATH, ZPLG_FPATH that hold (f)path components
+# added by plugin, from data gathered by -zplg-diff-env().
+#
+# $1 - user/plugin
+-zplg-diff-env-compute() {
+    local uspl2="$1"
+    typeset -a tmp
+
+    # Run diff once, `begin' or `end' is needed to be run again for a new diff
+    [[ "${ZPLG_ENV_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
+    ZPLG_ENV_DIFF_RAN[$uspl2]="1"
+
+    # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+    # Following is paranoid for *_BEFORE and *_AFTER being only spaces
+    builtin setopt localoptions extendedglob
+    [[ "${ZPLG_PATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+    [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FPATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+
+    typeset -A path_state fpath_state
+    local i
+
+    #
+    # PATH processing
+    #
+
+    # This includes new path elements
+    for i in "${(z)ZPLG_PATH_AFTER[$uspl2]}"; do
+        path_state[$i]=1
+    done
+
+    # Remove duplicated entries, i.e. existing before
+    for i in "${(z)ZPLG_PATH_BEFORE[$uspl2]}"; do
+        unset "path_state[$i]"
+    done
+
+    # Store the path elements, associating them with plugin ($uspl2)
+    for i in "${(onk)path_state[@]}"; do
+        ZPLG_PATH[$uspl2]+="$i "
+    done
+
+    #
+    # FPATH processing
+    #
+
+    # This includes new path elements
+    for i in "${(z)ZPLG_FPATH_AFTER[$uspl2]}"; do
+        fpath_state[$i]=1
+    done
+
+    # Remove duplicated entries, i.e. existing before
+    for i in "${(z)ZPLG_FPATH_BEFORE[$uspl2]}"; do
+        unset "fpath_state[$i]"
+    done
+
+    # Store the path elements, associating them with plugin ($uspl2)
+    for i in "${(onk)fpath_state[@]}"; do
+        ZPLG_FPATH[$uspl2]+="$i "
+    done
+
+    return 0
+} # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
 # Converts to format that's used in keys for hash tables
 #
@@ -769,7 +831,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # 7. Clean up FPATH and PATH
     #
 
-    -zplg-diff-env "$uspl2" diff
+    -zplg-diff-env-compute "$uspl2"
 
     # Have to iterate over $path elements and
     # skip those that were added by the plugin
@@ -902,7 +964,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Print report gathered via environment diffing
     REPLY=""
-    -zplg-diff-env "$user/$plugin" diff
+    -zplg-diff-env-compute "$user/$plugin"
     -zplg-format-env "$user/$plugin" "1"
     [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}PATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
