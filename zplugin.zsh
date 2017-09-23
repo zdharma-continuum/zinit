@@ -689,6 +689,9 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-diff-env {{{
 # Implements detection of change in PATH and FPATH.
+#
+# $1 - user/plugin (i.e. uspl2 format)
+# $2 - command, can be "begin" or "end"
 -zplg-diff-env() {
     typeset -a tmp
     local bIFS="$IFS"; IFS=" "
@@ -712,79 +715,18 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-diff-parameter {{{
 # Implements detection of change in any parameter's existence and type.
+# Performs data gathering, computation is done in *-compute().
+#
+# $1 - user/plugin (i.e. uspl2 format)
+# $2 - command, can be "begin" or "end"
 -zplg-diff-parameter() {
-    local uspl2="$1"
-    local cmd="$2"
     typeset -a tmp
 
-    case "$cmd" in
-        begin)
-            ZPLG_PARAMETERS_BEFORE[$uspl2]="${(j: :)${(qkv)parameters[@]}}"
+    [[ "$2" = "begin" ]] && ZPLG_PARAMETERS_BEFORE[$1]="${(j: :)${(qkv)parameters[@]}}" || ZPLG_PARAMETERS_AFTER[$1]="${(j: :)${(qkv)parameters[@]}}"
 
-            # Reset diffing
-            ZPLG_PARAMETERS_PRE[$uspl2]=""
-            ZPLG_PARAMETERS_POST[$uspl2]=""
-            ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="0"
-            ;;
-        end)
-            ZPLG_PARAMETERS_AFTER[$uspl2]="${(j: :)${(qkv)parameters[@]}}"
-
-            # Reset diffing
-            ZPLG_PARAMETERS_PRE[$uspl2]=""
-            ZPLG_PARAMETERS_POST[$uspl2]=""
-            ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="0"
-            ;;
-        diff)
-            # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            [[ "${ZPLG_PARAMETERS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-            ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="1"
-
-            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
-            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            builtin setopt localoptions extendedglob
-            [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
-
-            # Un-concatenated parameters from moment of diff start and of diff end
-            typeset -A params_before params_after
-            params_before=( "${(z)ZPLG_PARAMETERS_BEFORE[$uspl2]}" )
-            params_after=( "${(z)ZPLG_PARAMETERS_AFTER[$uspl2]}" )
-
-            # The parameters that changed, with save of what
-            # parameter was when diff started or when diff ended
-            typeset -A params_pre params_post
-            params_pre=( )
-            params_post=( )
-
-            # Iterate through all existing keys, before or after diff,
-            # i.e. after all variables that were somehow live across
-            # the diffing process
-            local key
-            typeset -aU keys
-            keys=( "${(k)params_after[@]}" );
-            keys=( "${keys[@]}" "${(k)params_before[@]}" );
-            for key in "${keys[@]}"; do
-                key="${(Q)key}"
-                if [[ "${params_after[$key]}" != "${params_before[$key]}" ]]; then
-                    # Empty for a new param, a type otherwise
-                    [[ -z "${params_before[$key]}" ]] && params_before[$key]="\"\""
-                    params_pre[$key]="${params_before[$key]}"
-
-                    # Current type, can also be empty, when plugin
-                    # unsets a parameter
-                    [[ -z "${params_after[$key]}" ]] && params_after[$key]="\"\""
-                    params_post[$key]="${params_after[$key]}"
-                fi
-            done
-
-            # Serialize for reporting
-            ZPLG_PARAMETERS_PRE[$uspl2]="${(j: :)${(qkv)params_pre[@]}}"
-            ZPLG_PARAMETERS_POST[$uspl2]="${(j: :)${(qkv)params_post[@]}}"
-            ;;
-        *)
-            return 1
-    esac
-
-    return 0
+    ZPLG_PARAMETERS_PRE[$1]=""
+    ZPLG_PARAMETERS_POST[$1]=""
+    ZPLG_PARAMETERS_DIFF_RAN[$1]="0"
 } # }}}
 
 #

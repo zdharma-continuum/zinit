@@ -147,6 +147,63 @@ ZPLGM[EXTENDED_GLOB]=""
 
     return 0
 } # }}}
+# FUNCTION: -zplg-diff-parameter-compute {{{
+# Computes ZPLG_PARAMETERS_PRE, ZPLG_PARAMETERS_POST that hold
+# parameters created or changed (their type) by plugin, from
+# data gathered by -zplg-diff-parameter().
+#
+# $1 - user/plugin
+-zplg-diff-parameter-compute() {
+    local uspl2="$1"
+    typeset -a tmp
+
+    # Run diff once, `begin' or `end' is needed to be run again for a new diff
+    [[ "${ZPLG_PARAMETERS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
+    ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="1"
+
+    # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+    # Following is paranoid for *_BEFORE and *_AFTER being only spaces
+    builtin setopt localoptions extendedglob
+    [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+
+    # Un-concatenated parameters from moment of diff start and of diff end
+    typeset -A params_before params_after
+    params_before=( "${(z)ZPLG_PARAMETERS_BEFORE[$uspl2]}" )
+    params_after=( "${(z)ZPLG_PARAMETERS_AFTER[$uspl2]}" )
+
+    # The parameters that changed, with save of what
+    # parameter was when diff started or when diff ended
+    typeset -A params_pre params_post
+    params_pre=( )
+    params_post=( )
+
+    # Iterate through all existing keys, before or after diff,
+    # i.e. after all variables that were somehow live across
+    # the diffing process
+    local key
+    typeset -aU keys
+    keys=( "${(k)params_after[@]}" );
+    keys=( "${keys[@]}" "${(k)params_before[@]}" );
+    for key in "${keys[@]}"; do
+        key="${(Q)key}"
+        if [[ "${params_after[$key]}" != "${params_before[$key]}" ]]; then
+            # Empty for a new param, a type otherwise
+            [[ -z "${params_before[$key]}" ]] && params_before[$key]="\"\""
+            params_pre[$key]="${params_before[$key]}"
+
+            # Current type, can also be empty, when plugin
+            # unsets a parameter
+            [[ -z "${params_after[$key]}" ]] && params_after[$key]="\"\""
+            params_post[$key]="${params_after[$key]}"
+        fi
+    done
+
+    # Serialize for reporting
+    ZPLG_PARAMETERS_PRE[$uspl2]="${(j: :)${(qkv)params_pre[@]}}"
+    ZPLG_PARAMETERS_POST[$uspl2]="${(j: :)${(qkv)params_post[@]}}"
+
+    return 0
+} # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
 # Converts to format that's used in keys for hash tables
 #
@@ -862,7 +919,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Paranoid for type of empty value,
     # i.e. include white spaces as empty
-    -zplg-diff-parameter "$uspl2" diff
+    -zplg-diff-parameter-compute "$uspl2"
     empty=0
     -zplg-save-set-extendedglob
     [[ "${ZPLG_PARAMETERS_POST[$uspl2]}" != *[$'! \t']* ]] && empty=1
@@ -973,7 +1030,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}FPATH elements added:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
     # Print report gathered via parameter diffing
-    -zplg-diff-parameter "$user/$plugin" diff
+    -zplg-diff-parameter-compute "$user/$plugin"
     -zplg-format-parameter "$user/$plugin"
     [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Variables added or redefined:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
