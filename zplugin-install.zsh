@@ -59,8 +59,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # visible to compinit. Visible completions can be selectively
 # disabled.
 #
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
-# $2 - plugin (if $1 - user - given)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
 -zplg-install-completions() {
     local reinstall="${3:-0}"
@@ -169,8 +169,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # Compiles given plugin (its main source file, and also an
 # additional "....zsh" file if it exists).
 #
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
-# $2 - plugin (if $1 - user - given)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-compile-plugin() {
     -zplg-first "$1" "$2" || {
         print "${ZPLG_COL[error]}No files for compilation found${ZPLG_COL[rst]}"

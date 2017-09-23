@@ -358,8 +358,8 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-uninstall-completions {{{
-# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
-# $2 - plugin (if $1 - user - given)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-uninstall-completions() {
     builtin setopt localoptions nullglob extendedglob unset
 
@@ -476,8 +476,8 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-unload {{{
-# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
-# $2 - plugin (if $1 - user - given)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 #
 # 1. Unfunction functions created by plugin
 # 2. Delete bindkeys

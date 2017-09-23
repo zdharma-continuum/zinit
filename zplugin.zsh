@@ -171,6 +171,10 @@ builtin setopt noaliases
 # FUNCTION: --zplg-reload-and-run {{{
 # Marks given function ($3) for autoloading, and executes it triggering the
 # load. $1 is the fpath dedicated to the function, $2 are autoload options.
+# This function replaces "autoload -X", because using that on older Zsh
+# version causes problems with traps. So basically one creates function stub
+# that calls --zplg-reload-and-run() instead of "autoload -X".
+#
 # Author: Bart Schaefer
 --zplg-reload-and-run () {
     local fpath_prefix="$1" autoload_opts="$2" func="$3"
@@ -190,6 +194,8 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-autoload {{{
 # Function defined to hijack plugin's calls to `autoload' builtin.
+# The hijacking is not only to gather report data, but also to
+# run custom `autoload' function, that doesn't need FPATH.
 --zplg-shadow-autoload () {
     local -a opts
     local func
@@ -246,6 +252,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-bindkey {{{
 # Function defined to hijack plugin's calls to `bindkey' builtin.
+# The hijacking is to gather report data.
 --zplg-shadow-bindkey() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey $*"
 
@@ -359,6 +366,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-zstyle {{{
 # Function defined to hijack plugin's calls to `zstyle' builtin.
+# The hijacking is to gather report data.
 --zplg-shadow-zstyle() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zstyle $*"
 
@@ -405,6 +413,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-alias {{{
 # Function defined to hijack plugin's calls to `alias' builtin.
+# The hijacking is to gather report data.
 --zplg-shadow-alias() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Alias $*"
 
@@ -462,6 +471,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-zle {{{
 # Function defined to hijack plugin's calls to `zle' builtin.
+# The hijacking is to gather report data.
 --zplg-shadow-zle() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zle $*"
 
@@ -528,6 +538,8 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-compdef {{{
 # Function defined to hijack plugin's calls to `compdef' function.
+# The hijacking is not only for reporting, but also to save compdef
+# calls so that `compinit' can be called after loading plugins.
 --zplg-shadow-compdef() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Saving \`compdef $*' for replay"
     ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
@@ -536,7 +548,8 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-shadow-on {{{
 # Turn on shadowing of builtins and functions according to passed
-# mode ("load", "light" or "compdef").
+# mode ("load", "light" or "compdef"). The shadowing is to gather
+# report data, and to hijack `autoload' and `compdef' calls.
 -zplg-shadow-on() {
     local mode="$1"
 
@@ -921,7 +934,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-any-to-user-plugin {{{
 # Allows elastic plugin-spec across the code.
 #
-# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 #
 # Returns user and plugin in $reply
@@ -1091,7 +1104,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-load {{{
 # Implements the exposed-to-user action of loading a plugin.
 #
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin name, if the third format is used
 -zplg-load () {
     typeset -F 3 SECONDS=0

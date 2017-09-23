@@ -1,8 +1,8 @@
 # FUNCTION: -zplg-exists-physically {{{
 # Checks if given plugin directory exists in PLUGIN_DIR.
 # Testable.
-# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
-# $2 - plugin (if $1 - user - given)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
     if [[ "${reply[-2]}" = "%" ]]; then
@@ -14,8 +14,8 @@
 # FUNCTION: -zplg-exists-physically-message {{{
 # Checks if given plugin directory exists in PLUGIN_DIR,
 # and outputs error message if it doesn't. Testable.
-# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
-# $2 - plugin (if $1 - user - given)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-exists-physically-message() {
     if ! -zplg-exists-physically "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
