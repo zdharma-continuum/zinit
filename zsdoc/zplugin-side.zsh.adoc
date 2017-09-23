@@ -24,16 +24,18 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-1 lines
-
-No functions called (may attach to Zle or do hooks, etc.)
+Has 1 lines. No functions are called (may attach to Zle or do hooks, etc.).
 
 -zplg-any-colorify-as-uspl2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-6 lines
+____
+ # Returns (REPLY) ANSI-colorified "user/plugin" string, from any
+ # supported spec (user--plugin, user/plugin, plugin).
+ # Double-defined, in *install and *autoload.
+____
 
-Calls functions:
+Has 6 line(s). Calls functions:
 
  -zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -57,17 +59,17 @@ Called by:
  zplugin-autoload.zsh/-zplg-update-or-status
  zplugin-install.zsh/-zplg-setup-plugin-dir
 
-
- # Returns (REPLY) ANSI-colorified "user/plugin" string, from any
- # supported spec (user--plugin, user/plugin, plugin).
- # Double-defined, in *install and *autoload.
-
 -zplg-exists-physically
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-6 lines
+____
+ # Checks if given plugin directory exists in PLUGIN_DIR.
+ # Testable.
+ # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+ # $2 - plugin (if $1 - user - given)
+____
 
-Calls functions:
+Has 6 line(s). Calls functions:
 
  -zplg-exists-physically
  `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -77,18 +79,17 @@ Called by:
  -zplg-exists-physically-message
  zplugin-autoload.zsh/-zplg-create
 
-
- # Checks if given plugin directory exists in PLUGIN_DIR.
- # Testable.
- # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
- # $2 - plugin (if $1 - user - given)
-
 -zplg-exists-physically-message
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-6 lines
+____
+ # Checks if given plugin directory exists in PLUGIN_DIR,
+ # and outputs error message if it doesn't. Testable.
+ # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+ # $2 - plugin (if $1 - user - given)
+____
 
-Calls functions:
+Has 6 line(s). Calls functions:
 
  -zplg-exists-physically-message
  |-- -zplg-any-colorify-as-uspl2
@@ -106,18 +107,18 @@ Called by:
  zplugin-autoload.zsh/-zplg-update-or-status
  zplugin-install.zsh/-zplg-install-completions
 
-
- # Checks if given plugin directory exists in PLUGIN_DIR,
- # and outputs error message if it doesn't. Testable.
- # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
- # $2 - plugin (if $1 - user - given)
-
 -zplg-first
 ~~~~~~~~~~~
 
-25 lines
+____
+ # Finds the main file of plugin. There are multiple file name
+ # formats, they are ordered in order starting from more correct
+ # ones, and matched. -zplg-load-plugin() has similar code parts
+ # and doesn't call -zplg-first() – for performance. Obscure matching
+ # is done in -zplg-find-other-matches, here and in -zplg-load().
+____
 
-Calls functions:
+Has 25 line(s). Calls functions:
 
  -zplg-first
  |-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -129,11 +130,4 @@ Called by:
  zplugin-autoload.zsh/-zplg-glance
  zplugin-autoload.zsh/-zplg-stress
  zplugin-install.zsh/-zplg-compile-plugin
-
-
- # Finds the main file of plugin. There are multiple file name
- # formats, they are ordered in order starting from more correct
- # ones, and matched. -zplg-load-plugin() has similar code parts
- # and doesn't call -zplg-first() – for performance. Obscure matching
- # is done in -zplg-find-other-matches, here and in -zplg-load().
 

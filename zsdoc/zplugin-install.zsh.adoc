@@ -25,16 +25,20 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-1 lines
-
-No functions called (may attach to Zle or do hooks, etc.)
+Has 1 lines. No functions are called (may attach to Zle or do hooks, etc.).
 
 -zplg-compile-plugin
 ~~~~~~~~~~~~~~~~~~~~
 
-13 lines
+____
+ # Compiles given plugin (its main source file, and also an
+ # additional "....zsh" file if it exists).
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
+ # $2 - plugin (if $1 - user - given)
+____
 
-Calls functions:
+Has 13 line(s). Calls functions:
 
  -zplg-compile-plugin
  `-- zplugin-side.zsh/-zplg-first
@@ -45,19 +49,15 @@ Called by:
  zplugin-autoload.zsh/-zplg-compile-uncompile-all
  zplugin.zsh/zplugin
 
-
- # Compiles given plugin (its main source file, and also an
- # additional "....zsh" file if it exists).
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
- # $2 - plugin (if $1 - user - given)
-
 -zplg-download-file-stdout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-31 lines
+____
+ # Downloads file to stdout. Supports following backend commands:
+ # curl, wget, lftp, lynx. Used by snippet loading.
+____
 
-Calls functions:
+Has 31 line(s). Calls functions:
 
  -zplg-download-file-stdout
 
@@ -65,16 +65,17 @@ Called by:
 
  zplugin.zsh/-zplg-load-snippet
 
-
- # Downloads file to stdout. Supports following backend commands:
- # curl, wget, lftp, lynx. Used by snippet loading.
-
 -zplg-forget-completion
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-17 lines
+____
+ # Implements alternation of Zsh state so that already initialized
+ # completion stops being visible to Zsh.
+ #
+ # $1 - completion function name, e.g. "_cp"
+____
 
-No functions called
+Has 17 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -83,18 +84,20 @@ Called by:
  zplugin-autoload.zsh/-zplg-uninstall-completions
  zplugin.zsh/zplugin
 
-
- # Implements alternation of Zsh state so that already initialized
- # completion stops being visible to Zsh.
- #
- # $1 - completion function name, e.g. "_cp"
-
 -zplg-install-completions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-33 lines
+____
+ # Installs all completions of given plugin. After that they are
+ # visible to compinit. Visible completions can be selectively
+ # disabled.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
+ # $2 - plugin (if $1 - user - given)
+ # $3 - if 1, then reinstall, otherwise only install completions that aren't there
+____
 
-Calls functions:
+Has 33 line(s). Calls functions:
 
  -zplg-install-completions
  |-- -zplg-forget-completion
@@ -106,21 +109,18 @@ Called by:
  -zplg-setup-plugin-dir
  zplugin.zsh/zplugin
 
-
- # Installs all completions of given plugin. After that they are
- # visible to compinit. Visible completions can be selectively
- # disabled.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
- # $2 - plugin (if $1 - user - given)
- # $3 - if 1, then reinstall, otherwise only install completions that aren't there
-
 -zplg-setup-plugin-dir
 ~~~~~~~~~~~~~~~~~~~~~~
 
-40 lines
+____
+ # Clones given plugin into PLUGIN_DIR. Supports multiple
+ # sites (respecting `from' and `proto' ice modifiers).
+ #
+ # $1 - user
+ # $2 - plugin
+____
 
-Calls functions:
+Has 40 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin
@@ -134,11 +134,4 @@ Calls functions:
 Called by:
 
  zplugin.zsh/-zplg-load
-
-
- # Clones given plugin into PLUGIN_DIR. Supports multiple
- # sites (respecting `from' and `proto' ice modifiers).
- #
- # $1 - user
- # $2 - plugin
 
