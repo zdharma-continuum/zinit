@@ -67,6 +67,14 @@ Has 115 lines. Calls functions:
 ____
  # Marks given function ($3) for autoloading, and executes it triggering the
  # load. $1 is the fpath dedicated to the function, $2 are autoload options.
+ # This function replaces "autoload -X", because using that on older Zsh
+ # version causes problems with traps. So basically one creates function stub
+ # that calls --zplg-reload-and-run() instead of "autoload -X".
+ #
+ # $1 - FPATH dedicated to function
+ # $2 - autoload options
+ # $3 - function name (one that needs autoloading)
+ #
  # Author: Bart Schaefer
 ____
 
@@ -79,6 +87,8 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 
 ____
  # Function defined to hijack plugin's calls to `alias' builtin.
+ #
+ # The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 39 line(s). Calls functions:
@@ -93,6 +103,9 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 
 ____
  # Function defined to hijack plugin's calls to `autoload' builtin.
+ #
+ # The hijacking is not only to gather report data, but also to
+ # run custom `autoload' function, that doesn't need FPATH.
 ____
 
 Has 41 line(s). Calls functions:
@@ -107,6 +120,8 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 
 ____
  # Function defined to hijack plugin's calls to `bindkey' builtin.
+ #
+ # The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 78 line(s). Calls functions:
@@ -121,6 +136,8 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 
 ____
  # Function defined to hijack plugin's calls to `compdef' function.
+ # The hijacking is not only for reporting, but also to save compdef
+ # calls so that `compinit' can be called after loading plugins.
 ____
 
 Has 4 line(s). Calls functions:
@@ -135,6 +152,8 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 
 ____
  # Function defined to hijack plugin's calls to `zle' builtin.
+ #
+ # The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 38 line(s). Calls functions:
@@ -149,6 +168,8 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 
 ____
  # Function defined to hijack plugin's calls to `zstyle' builtin.
+ #
+ # The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 26 line(s). Calls functions:
@@ -186,7 +207,7 @@ Called by:
 ____
  # Allows elastic plugin-spec across the code.
  #
- # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin (only when $1 - i.e. user - given)
  #
  # Returns user and plugin in $reply
@@ -416,7 +437,7 @@ Called by:
 ____
  # Implements the exposed-to-user action of loading a plugin.
  #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin name, if the third format is used
 ____
 
@@ -555,7 +576,8 @@ Called by:
 
 ____
  # Turn on shadowing of builtins and functions according to passed
- # mode ("load", "light" or "compdef").
+ # mode ("load", "light" or "compdef"). The shadowing is to gather
+ # report data, and to hijack `autoload' and `compdef' calls.
 ____
 
 Has 24 line(s). Doesn't call other functions.

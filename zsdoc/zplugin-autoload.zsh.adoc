@@ -90,6 +90,15 @@ Called by:
 -zplg-cd
 ~~~~~~~~
 
+____
+ # Jumps to plugin's directory in Zplugins home directory.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
+ #
+ # User-action entry point.
+____
+
 Has 6 line(s). Calls functions:
 
  -zplg-cd
@@ -102,6 +111,14 @@ Called by:
 
 -zplg-cdisable
 ~~~~~~~~~~~~~~
+
+____
+ # Enables given installed completion.
+ #
+ # $1 - e.g. "_mkdir" or "mkdir"
+ #
+ # User-action entry point.
+____
 
 Has 30 line(s). Calls functions:
 
@@ -119,6 +136,14 @@ Called by:
 -zplg-cenable
 ~~~~~~~~~~~~~
 
+____
+ # Disables given installed completion.
+ #
+ # $1 - e.g. "_mkdir" or "mkdir"
+ #
+ # User-action entry point.
+____
+
 Has 31 line(s). Calls functions:
 
  -zplg-cenable
@@ -134,6 +159,15 @@ Called by:
 
 -zplg-changes
 ~~~~~~~~~~~~~
+
+____
+ # Shows `git log` of given plugin.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
+ #
+ # User-action entry point.
+____
 
 Has 9 line(s). Calls functions:
 
@@ -193,6 +227,12 @@ Called by:
 -zplg-clear-completions
 ~~~~~~~~~~~~~~~~~~~~~~~
 
+____
+ # Delete stray and improper completions.
+ #
+ # User-action entry point.
+____
+
 Has 36 line(s). Calls functions:
 
  -zplg-clear-completions
@@ -225,6 +265,12 @@ Called by:
 -zplg-compile-uncompile-all
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+____
+ # Compiles or uncompiles all existing plugins.
+ #
+ # User-action entry point.
+____
+
 Has 23 line(s). Calls functions:
 
  -zplg-compile-uncompile-all
@@ -243,7 +289,9 @@ Called by:
 ~~~~~~~~~~~~~~
 
 ____
- # Gets list of compiled plugins
+ # Gets list of compiled plugins.
+ #
+ # User-action entry point.
 ____
 
 Has 26 line(s). Calls functions:
@@ -272,6 +320,15 @@ Called by:
 -zplg-create
 ~~~~~~~~~~~~
 
+____
+ # Creates a plugin, also on Github (if not "_local/name" plugin).
+ #
+ # $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - (optional) plugin (only when $1 - i.e. user - given)
+ #
+ # User-action entry point.
+____
+
 Has 61 line(s). Calls functions:
 
  -zplg-create
@@ -285,6 +342,15 @@ Called by:
 
 -zplg-edit
 ~~~~~~~~~~
+
+____
+ # Runs $EDITOR on source of given plugin.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
+ #
+ # User-action entry point.
+____
 
 Has 13 line(s). Calls functions:
 
@@ -417,6 +483,15 @@ Called by:
 -zplg-glance
 ~~~~~~~~~~~~
 
+____
+ # Shows colorized source code of plugin.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
+ #
+ # User-action entry point.
+____
+
 Has 39 line(s). Calls functions:
 
  -zplg-glance
@@ -431,6 +506,12 @@ Called by:
 -zplg-help
 ~~~~~~~~~~
 
+____
+ # Shows usage information.
+ #
+ # User-action entry point.
+____
+
 Has 39 line(s). Doesn't call other functions.
 
 Called by:
@@ -439,6 +520,12 @@ Called by:
 
 -zplg-list-compdef-replay
 ~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Shows recorded compdefs (called by plugins loaded earlier).
+ #
+ # User-action entry point.
+____
 
 Has 5 line(s). Doesn't call other functions.
 
@@ -464,6 +551,14 @@ Called by:
 
 -zplg-recently
 ~~~~~~~~~~~~~~
+
+____
+ # Shows plugins that obtained commits in specified past time.
+ #
+ # $1 - time spec, e.g. "1 week"
+ #
+ # User-action entry point.
+____
 
 Has 26 line(s). Calls functions:
 
@@ -500,8 +595,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # While -zplg-show-completions shows what completions are installed,
- # this functions searches through all plugin directories showing what's available
+ # While -zplg-show-completions() shows what completions are
+ # installed, this functions searches through all plugin dirs
+ # showing what's available in general (for installation)
+ #
+ # User-action entry point.
 ____
 
 Has 43 line(s). Calls functions:
@@ -516,6 +614,12 @@ Called by:
 -zplg-self-update
 ~~~~~~~~~~~~~~~~~
 
+____
+ # Updates Zplugin code (does a git pull).
+ #
+ # User-action entry point.
+____
+
 Has 1 line(s). Doesn't call other functions.
 
 Called by:
@@ -524,6 +628,12 @@ Called by:
 
 -zplg-show-all-reports
 ~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Displays reports of all loaded plugins.
+ #
+ # User-action entry point.
+____
 
 Has 5 line(s). Calls functions:
 
@@ -556,6 +666,13 @@ Called by:
 -zplg-show-completions
 ~~~~~~~~~~~~~~~~~~~~~~
 
+____
+ # Show installed (enabled and disabled), completions. Detect stray
+ # and improper ones.
+ #
+ # User-action entry point.
+____
+
 Has 31 line(s). Calls functions:
 
  -zplg-show-completions
@@ -569,6 +686,12 @@ Called by:
 
 -zplg-show-debug-report
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Displays dtrace report (data recorded in interactive session).
+ #
+ # User-action entry point.
+____
 
 Has 1 line(s). Calls functions:
 
@@ -601,6 +724,12 @@ Called by:
 -zplg-show-registered-plugins
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+____
+ # Lists loaded plugins (subcommands list, lodaded).
+ #
+ # User-action entry point.
+____
+
 Has 21 line(s). Calls functions:
 
  -zplg-show-registered-plugins
@@ -614,6 +743,12 @@ Called by:
 
 -zplg-show-report
 ~~~~~~~~~~~~~~~~~
+
+____
+ # Displays given plugin's report.
+ #
+ # User-action entry point.
+____
 
 Has 61 line(s). Calls functions:
 
@@ -647,6 +782,12 @@ Called by:
 -zplg-show-times
 ~~~~~~~~~~~~~~~~
 
+____
+ # Shows loading times of all loaded plugins.
+ #
+ # User-action entry point.
+____
+
 Has 13 line(s). Calls functions:
 
  -zplg-show-times
@@ -659,6 +800,12 @@ Called by:
 -zplg-show-zstatus
 ~~~~~~~~~~~~~~~~~~
 
+____
+ # Shows Zplugin status.
+ #
+ # User-action entry point.
+____
+
 Has 41 line(s). Doesn't call other functions.
 
 Called by:
@@ -670,7 +817,12 @@ Called by:
 
 ____
  # Compiles plugin with various options on and off
- # to see how well the code is written
+ # to see how well the code is written.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
+ #
+ # User-action entry point.
 ____
 
 Has 35 line(s). Calls functions:
@@ -687,6 +839,12 @@ Called by:
 -zplg-uncompile-plugin
 ~~~~~~~~~~~~~~~~~~~~~~
 
+____
+ # Uncompiles given plugin.
+ #
+ # User-action entry point.
+____
+
 Has 22 line(s). Calls functions:
 
  -zplg-uncompile-plugin
@@ -702,8 +860,8 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
- # $2 - plugin (if $1 - user - given)
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 40 line(s). Calls functions:
@@ -721,8 +879,8 @@ Called by:
 ~~~~~~~~~~~~
 
 ____
- # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
- # $2 - plugin (if $1 - user - given)
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
  #
  # 1. Unfunction functions created by plugin
  # 2. Delete bindkeys
@@ -733,6 +891,8 @@ ____
  # 7. Clean up FPATH and PATH
  # 8. Delete created variables
  # 9. Forget the plugin
+ #
+ # User-action entry point.
 ____
 
 Has 209 line(s). Calls functions:
@@ -765,7 +925,9 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Updates given plugin
+ # Updates (git pull) or does `git status' for given plugin.
+ #
+ # User-action entry point.
 ____
 
 Has 28 line(s). Calls functions:
@@ -782,6 +944,12 @@ Called by:
 
 -zplg-update-or-status-all
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Updates (git pull) or does `git status` for all existing plugins.
+ #
+ # User-action entry point.
+____
 
 Has 54 line(s). Calls functions:
 

@@ -66,8 +66,8 @@ Called by:
 ____
  # Checks if given plugin directory exists in PLUGIN_DIR.
  # Testable.
- # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
- # $2 - plugin (if $1 - user - given)
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 6 line(s). Calls functions:
@@ -86,8 +86,8 @@ Called by:
 ____
  # Checks if given plugin directory exists in PLUGIN_DIR,
  # and outputs error message if it doesn't. Testable.
- # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
- # $2 - plugin (if $1 - user - given)
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 6 line(s). Calls functions:
