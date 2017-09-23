@@ -659,57 +659,18 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-diff-functions {{{
-# Implements detection of newly created functions.
+# Implements detection of newly created functions. Performs
+# data gathering, computation is done in *-compute().
+#
+# $1 - user/plugin (i.e. uspl2 format)
+# $2 - command, can be "begin" or "end"
 -zplg-diff-functions() {
     local uspl2="$1"
     local cmd="$2"
 
-    case "$cmd" in
-        begin)
-            ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}"
-            ZPLG_FUNCTIONS[$uspl2]=""
-            ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="0"
-            ;;
-        end)
-            ZPLG_FUNCTIONS_AFTER[$uspl2]="${(j: :)${(qk)functions[@]}}"
-            ZPLG_FUNCTIONS[$uspl2]=""
-            ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="0"
-            ;;
-        diff)
-            # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            [[ "${ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-            ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="1"
-
-            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
-            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-
-            builtin setopt localoptions extendedglob
-            [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
-
-            typeset -A func
-            local i
-
-            # This includes new functions. Quoting is kept (i.e. no i=${(Q)i})
-            for i in "${(z)ZPLG_FUNCTIONS_AFTER[$uspl2]}"; do
-                func[$i]=1
-            done
-
-            # Remove duplicated entries, i.e. existing before. Quoting is kept
-            for i in "${(z)ZPLG_FUNCTIONS_BEFORE[$uspl2]}"; do
-                # if would do unset, then: func[opp+a\[]: invalid parameter name
-                func[$i]=0
-            done
-
-            # Store the functions, associating them with plugin ($uspl2)
-            for i in "${(onk)func[@]}"; do
-                [[ "${func[$i]}" = "1" ]] && ZPLG_FUNCTIONS[$uspl2]+="$i "
-            done
-            ;;
-        *)
-            return 1
-    esac
-
-    return 0
+    ZPLG_FUNCTIONS[$uspl2]=""
+    ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="0"
+    [[ "$cmd" = "begin" ]] && ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}" || ZPLG_FUNCTIONS_AFTER[$uspl2]="${(j: :)${(qk)functions[@]}}"
 } # }}}
 # FUNCTION: -zplg-diff-options {{{
 # Implements detection of change in option state.

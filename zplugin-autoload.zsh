@@ -9,6 +9,43 @@ ZPLGM[EXTENDED_GLOB]=""
 # Backend, low level functions
 #
 
+# FUNCTION: -zplg-diff-functions-compute {{{
+# Computes ZPLG_FUNCTIONS that holds new functions added by plugin,
+# from data gathered by -zplg-diff-functions().
+-zplg-diff-functions-compute() {
+    local uspl2="$1"
+
+    # Run diff once for given data
+    [[ "${ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
+    ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="1"
+
+    # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+    # Following is paranoid for *_BEFORE and *_AFTER being only spaces
+
+    builtin setopt localoptions extendedglob
+    [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+
+    typeset -A func
+    local i
+
+    # This includes new functions. Quoting is kept (i.e. no i=${(Q)i})
+    for i in "${(z)ZPLG_FUNCTIONS_AFTER[$uspl2]}"; do
+        func[$i]=1
+    done
+
+    # Remove duplicated entries, i.e. existing before. Quoting is kept
+    for i in "${(z)ZPLG_FUNCTIONS_BEFORE[$uspl2]}"; do
+        # if would do unset, then: func[opp+a\[]: invalid parameter name
+        func[$i]=0
+    done
+
+    # Store the functions, associating them with plugin ($uspl2)
+    for i in "${(onk)func[@]}"; do
+        [[ "${func[$i]}" = "1" ]] && ZPLG_FUNCTIONS[$uspl2]+="$i "
+    done
+
+    return 0
+} # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
 # Converts to format that's used in keys for hash tables
 #
@@ -519,7 +556,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # 1. Unfunction
     #
 
-    -zplg-diff-functions "$uspl2" diff
+    -zplg-diff-functions-compute "$uspl2"
     typeset -a func
     func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
     local f
@@ -814,7 +851,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Print report gathered via $functions-diffing
     REPLY=""
-    -zplg-diff-functions "$user/$plugin" diff
+    -zplg-diff-functions-compute "$user/$plugin"
     -zplg-format-functions "$user/$plugin"
     [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Functions created:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 
