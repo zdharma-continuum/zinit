@@ -27,6 +27,10 @@ FUNCTIONS
  -zplg-compiled
  -zplg-compinit
  -zplg-create
+ -zplg-diff-env-compute
+ -zplg-diff-functions-compute
+ -zplg-diff-options-compute
+ -zplg-diff-parameter-compute
  -zplg-edit
  -zplg-exists-message
  -zplg-find-completions-of-plugin
@@ -340,6 +344,75 @@ Called by:
 
  zplugin.zsh/zplugin
 
+-zplg-diff-env-compute
+~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Computes ZPLG_PATH, ZPLG_FPATH that hold (f)path components
+ # added by plugin, from data gathered by -zplg-diff-env().
+ #
+ # $1 - user/plugin
+____
+
+Has 30 line(s). Doesn't call other functions.
+
+Called by:
+
+ -zplg-show-report
+ -zplg-unload
+
+-zplg-diff-functions-compute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Computes ZPLG_FUNCTIONS that holds new functions added by plugin,
+ # from data gathered by -zplg-diff-functions().
+ #
+ # $1 - user/plugin
+____
+
+Has 20 line(s). Doesn't call other functions.
+
+Called by:
+
+ -zplg-show-report
+ -zplg-unload
+
+-zplg-diff-options-compute
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Computes ZPLG_OPTIONS that holds options changed by plugin,
+ # from data gathered by -zplg-diff-options().
+ #
+ # $1 - user/plugin
+____
+
+Has 20 line(s). Doesn't call other functions.
+
+Called by:
+
+ -zplg-show-report
+ -zplg-unload
+
+-zplg-diff-parameter-compute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Computes ZPLG_PARAMETERS_PRE, ZPLG_PARAMETERS_POST that hold
+ # parameters created or changed (their type) by plugin, from
+ # data gathered by -zplg-diff-parameter().
+ #
+ # $1 - user/plugin
+____
+
+Has 29 line(s). Doesn't call other functions.
+
+Called by:
+
+ -zplg-show-report
+ -zplg-unload
+
 -zplg-edit
 ~~~~~~~~~~
 
@@ -641,6 +714,10 @@ Has 5 line(s). Calls functions:
  `-- -zplg-show-report
      |-- -zplg-check-which-completions-are-enabled
      |-- -zplg-check-which-completions-are-installed
+     |-- -zplg-diff-env-compute
+     |-- -zplg-diff-functions-compute
+     |-- -zplg-diff-options-compute
+     |-- -zplg-diff-parameter-compute
      |-- -zplg-exists-message
      |   |-- -zplg-any-to-uspl2
      |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -653,11 +730,7 @@ Has 5 line(s). Calls functions:
      |   |-- -zplg-restore-extendedglob
      |   `-- -zplg-save-set-extendedglob
      |-- -zplg-format-parameter
-     |-- zplugin.zsh/-zplg-any-to-user-plugin
-     |-- zplugin.zsh/-zplg-diff-env
-     |-- zplugin.zsh/-zplg-diff-functions
-     |-- zplugin.zsh/-zplg-diff-options
-     `-- zplugin.zsh/-zplg-diff-parameter
+     `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
 
@@ -699,6 +772,10 @@ Has 1 line(s). Calls functions:
  `-- -zplg-show-report
      |-- -zplg-check-which-completions-are-enabled
      |-- -zplg-check-which-completions-are-installed
+     |-- -zplg-diff-env-compute
+     |-- -zplg-diff-functions-compute
+     |-- -zplg-diff-options-compute
+     |-- -zplg-diff-parameter-compute
      |-- -zplg-exists-message
      |   |-- -zplg-any-to-uspl2
      |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -711,11 +788,7 @@ Has 1 line(s). Calls functions:
      |   |-- -zplg-restore-extendedglob
      |   `-- -zplg-save-set-extendedglob
      |-- -zplg-format-parameter
-     |-- zplugin.zsh/-zplg-any-to-user-plugin
-     |-- zplugin.zsh/-zplg-diff-env
-     |-- zplugin.zsh/-zplg-diff-functions
-     |-- zplugin.zsh/-zplg-diff-options
-     `-- zplugin.zsh/-zplg-diff-parameter
+     `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
 
@@ -755,6 +828,10 @@ Has 61 line(s). Calls functions:
  -zplg-show-report
  |-- -zplg-check-which-completions-are-enabled
  |-- -zplg-check-which-completions-are-installed
+ |-- -zplg-diff-env-compute
+ |-- -zplg-diff-functions-compute
+ |-- -zplg-diff-options-compute
+ |-- -zplg-diff-parameter-compute
  |-- -zplg-exists-message
  |   |-- -zplg-any-to-uspl2
  |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -767,11 +844,7 @@ Has 61 line(s). Calls functions:
  |   |-- -zplg-restore-extendedglob
  |   `-- -zplg-save-set-extendedglob
  |-- -zplg-format-parameter
- |-- zplugin.zsh/-zplg-any-to-user-plugin
- |-- zplugin.zsh/-zplg-diff-env
- |-- zplugin.zsh/-zplg-diff-functions
- |-- zplugin.zsh/-zplg-diff-options
- `-- zplugin.zsh/-zplg-diff-parameter
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
 
@@ -901,6 +974,10 @@ Has 209 line(s). Calls functions:
  |-- -zplg-clear-report-for
  |   `-- -zplg-any-to-uspl2
  |       `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- -zplg-diff-env-compute
+ |-- -zplg-diff-functions-compute
+ |-- -zplg-diff-options-compute
+ |-- -zplg-diff-parameter-compute
  |-- -zplg-exists-message
  |   |-- -zplg-any-to-uspl2
  |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -910,10 +987,6 @@ Has 209 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- zplugin.zsh/-zplg-clear-debug-report
- |-- zplugin.zsh/-zplg-diff-env
- |-- zplugin.zsh/-zplg-diff-functions
- |-- zplugin.zsh/-zplg-diff-options
- |-- zplugin.zsh/-zplg-diff-parameter
  `-- zplugin.zsh/-zplg-unregister-plugin
 
 Called by:

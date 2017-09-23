@@ -44,7 +44,6 @@ FUNCTIONS
  -zplg-shadow-on
  -zplg-unregister-plugin
  zplugin
-AUTOLOAD colors
 AUTOLOAD compinit
 AUTOLOAD is-at-least
 
@@ -54,11 +53,10 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 115 lines. Calls functions:
+Has 109 lines. Calls functions:
 
  Script-Body
  |-- -zplg-prepare-home
- |-- colors
  `-- is-at-least
 
 --zplg-reload-and-run
@@ -345,68 +343,75 @@ Called by:
 
 ____
  # Implements detection of change in PATH and FPATH.
+ #
+ # $1 - user/plugin (i.e. uspl2 format)
+ # $2 - command, can be "begin" or "end"
 ____
 
-Has 60 line(s). Doesn't call other functions.
+Has 19 line(s). Doesn't call other functions.
 
 Called by:
 
  -zplg-debug-start
  -zplg-debug-stop
  -zplg-load-plugin
- zplugin-autoload.zsh/-zplg-show-report
- zplugin-autoload.zsh/-zplg-unload
 
 -zplg-diff-functions
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements detection of newly created functions.
+ # Implements detection of newly created functions. Performs
+ # data gathering, computation is done in *-compute().
+ #
+ # $1 - user/plugin (i.e. uspl2 format)
+ # $2 - command, can be "begin" or "end"
 ____
 
-Has 38 line(s). Doesn't call other functions.
+Has 6 line(s). Doesn't call other functions.
 
 Called by:
 
  -zplg-debug-start
  -zplg-debug-stop
  -zplg-load-plugin
- zplugin-autoload.zsh/-zplg-show-report
- zplugin-autoload.zsh/-zplg-unload
 
 -zplg-diff-options
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements detection of change in option state.
+ # Implements detection of change in option state. Performs
+ # data gathering, computation is done in *-compute().
+ #
+ # $1 - user/plugin (i.e. uspl2 format)
+ # $2 - command, can be "begin" or "end"
 ____
 
-Has 43 line(s). Doesn't call other functions.
+Has 7 line(s). Doesn't call other functions.
 
 Called by:
 
  -zplg-debug-start
  -zplg-debug-stop
  -zplg-load-plugin
- zplugin-autoload.zsh/-zplg-show-report
- zplugin-autoload.zsh/-zplg-unload
 
 -zplg-diff-parameter
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
  # Implements detection of change in any parameter's existence and type.
+ # Performs data gathering, computation is done in *-compute().
+ #
+ # $1 - user/plugin (i.e. uspl2 format)
+ # $2 - command, can be "begin" or "end"
 ____
 
-Has 49 line(s). Doesn't call other functions.
+Has 7 line(s). Doesn't call other functions.
 
 Called by:
 
  -zplg-debug-start
  -zplg-debug-stop
  -zplg-load-plugin
- zplugin-autoload.zsh/-zplg-show-report
- zplugin-autoload.zsh/-zplg-unload
 
 -zplg-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -688,15 +693,6 @@ Has 217 line(s). Calls functions:
  `-- zplugin-install.zsh/-zplg-install-completions
 
 Not called by script or any function, may be a hook or Zle widget, etc.
-
-colors
-~~~~~~
-
-Has 117 line(s). Doesn't call other functions.
-
-Called by:
-
- Script-Body
 
 compinit
 ~~~~~~~~
