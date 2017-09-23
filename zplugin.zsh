@@ -170,6 +170,8 @@ builtin setopt noaliases
 #
 
 # FUNCTION: --zplg-reload-and-run {{{
+# Marks given function ($3) for autoloading, and executes it triggering the
+# load. $1 is the fpath dedicated to the function, $2 are autoload options.
 # Author: Bart Schaefer
 --zplg-reload-and-run () {
     local fpath_prefix="$1" autoload_opts="$2" func="$3"
@@ -188,6 +190,7 @@ builtin setopt noaliases
     "$func" "$@"
 } # }}}
 # FUNCTION: --zplg-shadow-autoload {{{
+# Function defined to hijack plugin's calls to `autoload' builtin.
 --zplg-shadow-autoload () {
     local -a opts
     local func
@@ -243,6 +246,7 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: --zplg-shadow-bindkey {{{
+# Function defined to hijack plugin's calls to `bindkey' builtin.
 --zplg-shadow-bindkey() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey $*"
 
@@ -355,6 +359,7 @@ builtin setopt noaliases
     return $ret # testable
 } # }}}
 # FUNCTION: --zplg-shadow-zstyle {{{
+# Function defined to hijack plugin's calls to `zstyle' builtin.
 --zplg-shadow-zstyle() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zstyle $*"
 
@@ -400,6 +405,7 @@ builtin setopt noaliases
     return $ret # testable
 } # }}}
 # FUNCTION: --zplg-shadow-alias {{{
+# Function defined to hijack plugin's calls to `alias' builtin.
 --zplg-shadow-alias() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Alias $*"
 
@@ -456,6 +462,7 @@ builtin setopt noaliases
     return $ret # testable
 } # }}}
 # FUNCTION: --zplg-shadow-zle {{{
+# Function defined to hijack plugin's calls to `zle' builtin.
 --zplg-shadow-zle() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zle $*"
 
@@ -521,6 +528,7 @@ builtin setopt noaliases
     return $ret # testable
 } # }}}
 # FUNCTION: --zplg-shadow-compdef {{{
+# Function defined to hijack plugin's calls to `compdef' function.
 --zplg-shadow-compdef() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Saving \`compdef $*' for replay"
     ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
@@ -528,7 +536,8 @@ builtin setopt noaliases
     return 0 # testable
 } # }}}
 # FUNCTION: -zplg-shadow-on {{{
-# Shadowing on completely for a given mode ("load", "light" or "compdef")
+# Turn on shadowing of builtins and functions according to passed
+# mode ("load", "light" or "compdef").
 -zplg-shadow-on() {
     local mode="$1"
 
@@ -587,7 +596,8 @@ builtin setopt noaliases
     builtin return 0
 } # }}}
 # FUNCTION: -zplg-shadow-off {{{
-# Shadowing off completely for a given mode "load", "light" or "compdef"
+# Turn off shadowing completely for a given mode ("load", "light"
+# or "compdef").
 -zplg-shadow-off() {
     builtin setopt localoptions noaliases
     local mode="$1"
@@ -628,6 +638,7 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-diff-functions {{{
+# Implements detection of newly created functions.
 -zplg-diff-functions() {
     local uspl2="$1"
     local cmd="$2"
@@ -680,6 +691,7 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: -zplg-diff-options {{{
+# Implements detection of change in option state.
 -zplg-diff-options() {
     local uspl2="$1"
     local cmd="$2"
@@ -735,6 +747,7 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: -zplg-diff-env {{{
+# Implements detection of change in PATH and FPATH.
 -zplg-diff-env() {
     local uspl2="$1"
     local cmd="$2"
@@ -826,6 +839,7 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: -zplg-diff-parameter {{{
+# Implements detection of change in any parameter's existence and type.
 -zplg-diff-parameter() {
     local uspl2="$1"
     local cmd="$2"
@@ -906,10 +920,10 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-any-to-user-plugin {{{
-# Allows elastic use of "$1" and "$2" across the code
+# Allows elastic plugin-spec across the code.
 #
-# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
-# $2 - plugin (if $1 - user - given)
+# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+# $2 - plugin (only when $1 - i.e. user - given)
 #
 # Returns user and plugin in $reply
 #
@@ -1044,6 +1058,8 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-prepare-home {{{
+# Creates all directories needed by Zplugin, first checks
+# if they already exist.
 -zplg-prepare-home() {
     [[ -n "${ZPLGM[HOME_READY]}" ]] && return
     ZPLGM[HOME_READY]="1"
@@ -1081,7 +1097,10 @@ builtin setopt noaliases
     }
 } # }}}
 # FUNCTION: -zplg-load {{{
-# $1 - plugin name, possibly github path
+# Implements the exposed-to-user action of loading a plugin.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
+# $2 - plugin name, if the third format is used
 -zplg-load () {
     typeset -F 3 SECONDS=0
     local mode="$3"
@@ -1102,6 +1121,12 @@ builtin setopt noaliases
     ZPLGM[TIME_${user}---${plugin}]=$SECONDS
 } # }}}
 # FUNCTION: -zplg-load-snippet {{{
+# Implements the exposed-to-user action of loading a snippet.
+#
+# $1 - url (can be local, absolute path)
+# $2 - "--command" if that option given
+# $3 - "--force" if that option given
+# $4 - "-u" if invoked by Zplugin to only update snippet
 -zplg-load-snippet() {
     local url="$1" cmd="$2" force="$3" update="$4"
 
@@ -1194,6 +1219,8 @@ builtin setopt noaliases
     fi
 } # }}}
 # FUNCTION: -zplg-compdef-replay {{{
+# Runs gathered compdef calls. This allows to run `compinit'
+# after loading plugins.
 -zplg-compdef-replay() {
     local quiet="$1"
     typeset -a pos
@@ -1218,12 +1245,17 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: -zplg-compdef-clear {{{
+# Implements user-exposed functionality to clear gathered compdefs.
 -zplg-compdef-clear() {
     local quiet="$1"
     ZPLG_COMPDEF_REPLAY=( )
     [[ "$quiet" = "-q" ]] || print "Compdef replay cleared"
 } # }}}
 # FUNCTION: -zplg-add-report {{{
+# Adds a report line for given plugin.
+#
+# $1 - uspl2, i.e. user/plugin
+# $2, ... - the text
 -zplg-add-report() {
     local uspl2="$1"
     shift
@@ -1246,6 +1278,11 @@ builtin setopt noaliases
     [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$keyword ${txt#* }"$'\n'
 } # }}}
 # FUNCTION: -zplg-load-plugin {{{
+# Lower-level function for loading a plugin.
+#
+# $1 - user
+# $2 - plugin
+# $3 - mode (light or load)
 -zplg-load-plugin() {
     local user="$1" plugin="$2" mode="$3"
     ZPLGM[CUR_USR]="$user"
@@ -1317,6 +1354,7 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-debug-start {{{
+# Starts Dtrace, i.e. session tracking for changes in Zsh state.
 -zplg-debug-start() {
     if [[ "${ZPLGM[DTRACE]}" = "1" ]]; then
         print "${ZPLG_COL[error]}Dtrace is already active, stop it first with \`dstop'$reset_color"
@@ -1334,6 +1372,7 @@ builtin setopt noaliases
     -zplg-shadow-on "dtrace"
 } # }}}
 # FUNCTION: -zplg-debug-stop {{{
+# Stops Dtrace, i.e. session tracking for changes in Zsh state.
 -zplg-debug-stop() {
     ZPLGM[DTRACE]="0"
 
@@ -1347,10 +1386,12 @@ builtin setopt noaliases
     -zplg-diff-functions "_dtrace/_dtrace" end
 } # }}}
 # FUNCTION: -zplg-clear-debug-report {{{
+# Forgets dtrace repport gathered up to this moment.
 -zplg-clear-debug-report() {
     -zplg-clear-report-for "_dtrace/_dtrace"
 } # }}}
 # FUNCTION: -zplg-debug-unload {{{
+# Reverts changes detected by dtrace run.
 -zplg-debug-unload() {
     if [[ "${ZPLGM[DTRACE]}" = "1" ]]; then
         print "Dtrace is still active, end it with \`dstop'"
@@ -1364,6 +1405,7 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-ice {{{
+# Parses ICE specification (`zplg ice' subcommand).
 -zplg-ice() {
     setopt localoptions extendedglob
     local bit
@@ -1372,6 +1414,7 @@ builtin setopt noaliases
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
+# Remembers long-live ICE specs, assigns them to concrete plugin.
 -zplg-pack-ice() {
     [[ -z "${ZPLG_ICE[atpull]}" ]] && return
     ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
@@ -1382,6 +1425,8 @@ builtin setopt noaliases
 #
 
 # FUNCTION: zplugin {{{
+# Main function directly exposed to user, obtains
+# subcommand and its arguments.
 zplugin() {
     # All functions from now on will not change these values
     # globally. Functions that don't do "source" of plugin
