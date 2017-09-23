@@ -12,6 +12,8 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-diff-functions-compute {{{
 # Computes ZPLG_FUNCTIONS that holds new functions added by plugin,
 # from data gathered by -zplg-diff-functions().
+#
+# $1 - user/plugin
 -zplg-diff-functions-compute() {
     local uspl2="$1"
 
@@ -44,6 +46,43 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ "${func[$i]}" = "1" ]] && ZPLG_FUNCTIONS[$uspl2]+="$i "
     done
 
+    return 0
+} # }}}
+# FUNCTION: -zplg-diff-options-compute {{{
+# Computes ZPLG_OPTIONS that holds options changed by plugin,
+# from data gathered by -zplg-diff-options().
+#
+# $1 - user/plugin
+-zplg-diff-options-compute() {
+    local uspl2="$1"
+
+    # Run diff once for given data
+    [[ "${ZPLG_OPTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
+    ZPLG_OPTIONS_DIFF_RAN[$uspl2]="1"
+
+    # Cannot run diff if *_BEFORE or *_AFTER variable is not set
+    # Following is paranoid for *_BEFORE and *_AFTER being only spaces
+    builtin setopt localoptions extendedglob
+    [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_OPTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+
+    typeset -A opts_before opts_after opts
+    opts_before=( "${(z)ZPLG_OPTIONS_BEFORE[$uspl2]}" )
+    opts_after=( "${(z)ZPLG_OPTIONS_AFTER[$uspl2]}" )
+    opts=( )
+
+    # Iterate through first array (keys the same
+    # on both of them though) and test for a change
+    local key
+    for key in "${(k)opts_before[@]}"; do
+        if [[ "${opts_before[$key]}" != "${opts_after[$key]}" ]]; then
+            opts[$key]="${opts_before[$key]}"
+        fi
+    done
+
+    # Serialize for reporting
+    local bIFS="$IFS"; IFS=" "
+    ZPLG_OPTIONS[$uspl2]="${(kv)opts[@]}"
+    IFS="$bIFS"
     return 0
 } # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
@@ -637,7 +676,7 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     # Paranoid, don't want bad key/value pair error
-    -zplg-diff-options "$uspl2" diff
+    -zplg-diff-options-compute "$uspl2"
     integer empty=0
     -zplg-save-set-extendedglob
     [[ "${ZPLG_OPTIONS[$uspl2]}" != *[$'! \t']* ]] && empty=1
@@ -857,7 +896,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Print report gathered via $options-diffing
     REPLY=""
-    -zplg-diff-options "$user/$plugin" diff
+    -zplg-diff-options-compute "$user/$plugin"
     -zplg-format-options "$user/$plugin"
     [[ -n "$REPLY" ]] && print "${ZPLG_COL[p]}Options changed:${ZPLG_COL[rst]}"$'\n'"$REPLY"
 

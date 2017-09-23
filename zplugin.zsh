@@ -673,58 +673,19 @@ builtin setopt noaliases
     [[ "$cmd" = "begin" ]] && ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}" || ZPLG_FUNCTIONS_AFTER[$uspl2]="${(j: :)${(qk)functions[@]}}"
 } # }}}
 # FUNCTION: -zplg-diff-options {{{
-# Implements detection of change in option state.
+# Implements detection of change in option state. Performs
+# data gathering, computation is done in *-compute().
+#
+# $1 - user/plugin (i.e. uspl2 format)
+# $2 - command, can be "begin" or "end"
 -zplg-diff-options() {
-    local uspl2="$1"
-    local cmd="$2"
+    local bIFS="$IFS"; IFS=" "
 
-    case "$cmd" in
-        begin)
-            local bIFS="$IFS"; IFS=" "
-            ZPLG_OPTIONS_BEFORE[$uspl2]="${(kv)options[@]}"
-            IFS="$bIFS"
-            ZPLG_OPTIONS[$uspl2]=""
-            ZPLG_OPTIONS_DIFF_RAN[$uspl2]="0"
-            ;;
-        end)
-            local bIFS="$IFS"; IFS=" "
-            ZPLG_OPTIONS_AFTER[$uspl2]="${(kv)options[@]}"
-            IFS="$bIFS"
-            ZPLG_OPTIONS[$uspl2]=""
-            ZPLG_OPTIONS_DIFF_RAN[$uspl2]="0"
-            ;;
-        diff)
-            # Run diff once, `begin' or `end' is needed to be run again for a new diff
-            [[ "${ZPLG_OPTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-            ZPLG_OPTIONS_DIFF_RAN[$uspl2]="1"
+    [[ "$2" = "begin" ]] && ZPLG_OPTIONS_BEFORE[$1]="${(kv)options[@]}" || ZPLG_OPTIONS_AFTER[$1]="${(kv)options[@]}"
 
-            # Cannot run diff if *_BEFORE or *_AFTER variable is not set
-            # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-            builtin setopt localoptions extendedglob
-            [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_OPTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
-
-            typeset -A opts_before opts_after opts
-            opts_before=( "${(z)ZPLG_OPTIONS_BEFORE[$uspl2]}" )
-            opts_after=( "${(z)ZPLG_OPTIONS_AFTER[$uspl2]}" )
-            opts=( )
-
-            # Iterate through first array (keys the same
-            # on both of them though) and test for a change
-            local key
-            for key in "${(k)opts_before[@]}"; do
-                if [[ "${opts_before[$key]}" != "${opts_after[$key]}" ]]; then
-                    opts[$key]="${opts_before[$key]}"
-                fi
-            done
-
-            # Serialize for reporting
-            local bIFS="$IFS"; IFS=" "
-            ZPLG_OPTIONS[$uspl2]="${(kv)opts[@]}"
-            IFS="$bIFS"
-            ;;
-        *)
-            return 1
-    esac
+    IFS="$bIFS"
+    ZPLG_OPTIONS[$1]=""
+    ZPLG_OPTIONS_DIFF_RAN[$1]="0"
 
     return 0
 } # }}}
