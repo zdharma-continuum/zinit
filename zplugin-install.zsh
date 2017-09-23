@@ -1,32 +1,5 @@
 builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
-# FUNCTION: -zplg-exists-physically {{{
-# Checks if given plugin directory exists in PLUGIN_DIR.
-# Testable.
-# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
-# $2 - plugin (if $1 - user - given)
--zplg-exists-physically() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    if [[ "${reply[-2]}" = "%" ]]; then
-        [[ -d "${reply[-1]}" ]] && return 0 || return 1
-    else
-        [[ -d "${ZPLGM[PLUGINS_DIR]}/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
-    fi
-} # }}}
-# FUNCTION: -zplg-exists-physically-message {{{
-# Checks if given plugin directory exists in PLUGIN_DIR,
-# and outputs error message if it doesn't. Testable.
-# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
-# $2 - plugin (if $1 - user - given)
--zplg-exists-physically-message() {
-    if ! -zplg-exists-physically "$1" "$2"; then
-        -zplg-any-colorify-as-uspl2 "$1" "$2"
-        print "${ZPLG_COL[error]}No such plugin directory${ZPLG_COL[rst]} $REPLY"
-        return 1
-    fi
-    return 0
-} # }}}
-
 # FUNCTION: -zplg-setup-plugin-dir {{{
 # Clones given plugin into PLUGIN_DIR. Supports multiple
 # sites (respecting `from' and `proto' ice modifiers).
