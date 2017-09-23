@@ -1,0 +1,871 @@
+zplugin-autoload.zsh(1)
+=======================
+:compat-mode!:
+
+NAME
+----
+zplugin-autoload.zsh - a shell script
+
+SYNOPSIS
+--------
+Documentation automatically generated with `zshelldoc'
+
+FUNCTIONS
+---------
+
+ -zplg-any-to-uspl2
+ -zplg-cd
+ -zplg-cdisable
+ -zplg-cenable
+ -zplg-changes
+ -zplg-check-comp-consistency
+ -zplg-check-which-completions-are-enabled
+ -zplg-check-which-completions-are-installed
+ -zplg-clear-completions
+ -zplg-clear-report-for
+ -zplg-compile-uncompile-all
+ -zplg-compiled
+ -zplg-compinit
+ -zplg-create
+ -zplg-edit
+ -zplg-exists-message
+ -zplg-find-completions-of-plugin
+ -zplg-format-env
+ -zplg-format-functions
+ -zplg-format-options
+ -zplg-format-parameter
+ -zplg-get-completion-owner
+ -zplg-get-completion-owner-uspl2col
+ -zplg-glance
+ -zplg-help
+ -zplg-list-compdef-replay
+ -zplg-prepare-readlink
+ -zplg-recently
+ -zplg-restore-extendedglob
+ -zplg-save-set-extendedglob
+ -zplg-search-completions
+ -zplg-self-update
+ -zplg-show-all-reports
+ -zplg-show-completions
+ -zplg-show-debug-report
+ -zplg-show-registered-plugins
+ -zplg-show-report
+ -zplg-show-times
+ -zplg-show-zstatus
+ -zplg-stress
+ -zplg-uncompile-plugin
+ -zplg-uninstall-completions
+ -zplg-unload
+ -zplg-update-or-status
+ -zplg-update-or-status-all
+AUTOLOAD compinit
+
+DETAILS
+-------
+
+Script Body
+~~~~~~~~~~~
+
+5 lines
+
+No functions called (may attach to Zle or do hooks, etc.)
+
+-zplg-any-to-uspl2
+~~~~~~~~~~~~~~~~~~
+
+2 lines
+
+Calls functions:
+
+ -zplg-any-to-uspl2
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ -zplg-clear-report-for
+ -zplg-exists-message
+
+
+ # Converts to format that's used in keys for hash tables
+ #
+ # Supports all four formats
+
+-zplg-cd
+~~~~~~~~
+
+6 lines
+
+Calls functions:
+
+ -zplg-cd
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-cdisable
+~~~~~~~~~~~~~~
+
+30 lines
+
+Calls functions:
+
+ -zplg-cdisable
+ |-- -zplg-check-comp-consistency
+ |-- -zplg-get-completion-owner-uspl2col
+ |   |-- -zplg-get-completion-owner
+ |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ `-- -zplg-prepare-readlink
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-cenable
+~~~~~~~~~~~~~
+
+31 lines
+
+Calls functions:
+
+ -zplg-cenable
+ |-- -zplg-check-comp-consistency
+ |-- -zplg-get-completion-owner-uspl2col
+ |   |-- -zplg-get-completion-owner
+ |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ `-- -zplg-prepare-readlink
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-changes
+~~~~~~~~~~~~~
+
+9 lines
+
+Calls functions:
+
+ -zplg-changes
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-check-comp-consistency
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+11 lines
+
+No functions called
+
+Called by:
+
+ -zplg-cdisable
+ -zplg-cenable
+
+-zplg-check-which-completions-are-enabled
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+11 lines
+
+No functions called
+
+Called by:
+
+ -zplg-show-report
+
+
+ # For each positional parameter that each should
+ # be path to completion within a plugin's dir, it
+ # checks whether that completion is disabled -
+ # returns 0 or 1 on corresponding positions in reply
+ #
+ # Uninstalled completions will be reported as "0"
+ # - i.e. disabled
+
+-zplg-check-which-completions-are-installed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+12 lines
+
+No functions called
+
+Called by:
+
+ -zplg-show-report
+
+
+ # For each positional parameter that each should
+ # be path to completion within a plugin's dir, it
+ # checks whether that completion is installed -
+ # returns 0 or 1 on corresponding positions in reply
+
+-zplg-clear-completions
+~~~~~~~~~~~~~~~~~~~~~~~
+
+36 lines
+
+Calls functions:
+
+ -zplg-clear-completions
+ |-- -zplg-get-completion-owner
+ |-- -zplg-prepare-readlink
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-clear-report-for
+~~~~~~~~~~~~~~~~~~~~~~
+
+27 lines
+
+Calls functions:
+
+ -zplg-clear-report-for
+ `-- -zplg-any-to-uspl2
+     `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ -zplg-unload
+ zplugin.zsh/-zplg-clear-debug-report
+
+
+ # Clears all report data for given user/plugin
+
+-zplg-compile-uncompile-all
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+23 lines
+
+Calls functions:
+
+ -zplg-compile-uncompile-all
+ |-- -zplg-uncompile-plugin
+ |-- zplugin-install.zsh/-zplg-compile-plugin
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-compiled
+~~~~~~~~~~~~~~
+
+26 lines
+
+Calls functions:
+
+ -zplg-compiled
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+
+ # Gets list of compiled plugins
+
+-zplg-compinit
+~~~~~~~~~~~~~~
+
+23 lines
+
+Calls functions:
+
+ -zplg-compinit
+ |-- compinit
+ `-- zplugin-install.zsh/-zplg-forget-completion
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-create
+~~~~~~~~~~~~
+
+61 lines
+
+Calls functions:
+
+ -zplg-create
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |-- zplugin-side.zsh/-zplg-exists-physically
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-edit
+~~~~~~~~~~
+
+13 lines
+
+Calls functions:
+
+ -zplg-edit
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin-side.zsh/-zplg-first
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-exists-message
+~~~~~~~~~~~~~~~~~~~~
+
+7 lines
+
+Calls functions:
+
+ -zplg-exists-message
+ |-- -zplg-any-to-uspl2
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ -zplg-show-report
+ -zplg-unload
+
+-zplg-find-completions-of-plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5 lines
+
+Calls functions:
+
+ -zplg-find-completions-of-plugin
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ -zplg-show-report
+
+
+ # Searches for completions owned by given plugin
+ # Returns them in reply array
+
+-zplg-format-env
+~~~~~~~~~~~~~~~~
+
+16 lines
+
+No functions called
+
+Called by:
+
+ -zplg-show-report
+
+-zplg-format-functions
+~~~~~~~~~~~~~~~~~~~~~~
+
+36 lines
+
+No functions called
+
+Called by:
+
+ -zplg-show-report
+
+
+ # Creates a one or two columns text with functions
+
+-zplg-format-options
+~~~~~~~~~~~~~~~~~~~~
+
+21 lines
+
+Calls functions:
+
+ -zplg-format-options
+ |-- -zplg-restore-extendedglob
+ `-- -zplg-save-set-extendedglob
+
+Called by:
+
+ -zplg-show-report
+
+
+ # Creates a text about options that changed when loaded plugin "$1"
+
+-zplg-format-parameter
+~~~~~~~~~~~~~~~~~~~~~~
+
+33 lines
+
+No functions called
+
+Called by:
+
+ -zplg-show-report
+
+-zplg-get-completion-owner
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+22 lines
+
+No functions called
+
+Called by:
+
+ -zplg-clear-completions
+ -zplg-get-completion-owner-uspl2col
+ -zplg-show-completions
+
+
+ # Both :A and readlink will be used, then readlink's output if
+ # results differ.
+ # :A will read the link "twice" and give the final repository
+ # directory, possibly without username in the uspl format;
+ # readlink will read the link "once"
+
+-zplg-get-completion-owner-uspl2col
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2 lines
+
+Calls functions:
+
+ -zplg-get-completion-owner-uspl2col
+ |-- -zplg-get-completion-owner
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ -zplg-cdisable
+ -zplg-cenable
+
+
+ # For shortening of code
+
+-zplg-glance
+~~~~~~~~~~~~
+
+39 lines
+
+Calls functions:
+
+ -zplg-glance
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin-side.zsh/-zplg-first
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-help
+~~~~~~~~~~
+
+39 lines
+
+No functions called
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-list-compdef-replay
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+5 lines
+
+No functions called
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-prepare-readlink
+~~~~~~~~~~~~~~~~~~~~~~
+
+4 lines
+
+No functions called
+
+Called by:
+
+ -zplg-cdisable
+ -zplg-cenable
+ -zplg-clear-completions
+ -zplg-show-completions
+
+
+ # Prepare readlink command, used for establishing completion's owner
+
+-zplg-recently
+~~~~~~~~~~~~~~
+
+26 lines
+
+Calls functions:
+
+ -zplg-recently
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-restore-extendedglob
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1 lines
+
+No functions called
+
+Called by:
+
+ -zplg-format-options
+ -zplg-show-registered-plugins
+ -zplg-unload
+
+-zplg-save-set-extendedglob
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+2 lines
+
+No functions called
+
+Called by:
+
+ -zplg-format-options
+ -zplg-show-registered-plugins
+ -zplg-unload
+
+-zplg-search-completions
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+43 lines
+
+Calls functions:
+
+ -zplg-search-completions
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+
+ # While -zplg-show-completions shows what completions are installed,
+ # this functions searches through all plugin directories showing what's available
+
+-zplg-self-update
+~~~~~~~~~~~~~~~~~
+
+1 lines
+
+No functions called
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-show-all-reports
+~~~~~~~~~~~~~~~~~~~~~~
+
+5 lines
+
+Calls functions:
+
+ -zplg-show-all-reports
+ `-- -zplg-show-report
+     |-- -zplg-check-which-completions-are-enabled
+     |-- -zplg-check-which-completions-are-installed
+     |-- -zplg-exists-message
+     |   |-- -zplg-any-to-uspl2
+     |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+     |-- -zplg-find-completions-of-plugin
+     |-- -zplg-format-env
+     |-- -zplg-format-functions
+     |-- -zplg-format-options
+     |   |-- -zplg-restore-extendedglob
+     |   `-- -zplg-save-set-extendedglob
+     |-- -zplg-format-parameter
+     |-- zplugin.zsh/-zplg-any-to-user-plugin
+     |-- zplugin.zsh/-zplg-diff-env
+     |-- zplugin.zsh/-zplg-diff-functions
+     |-- zplugin.zsh/-zplg-diff-options
+     `-- zplugin.zsh/-zplg-diff-parameter
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-show-completions
+~~~~~~~~~~~~~~~~~~~~~~
+
+31 lines
+
+Calls functions:
+
+ -zplg-show-completions
+ |-- -zplg-get-completion-owner
+ |-- -zplg-prepare-readlink
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-show-debug-report
+~~~~~~~~~~~~~~~~~~~~~~~
+
+1 lines
+
+Calls functions:
+
+ -zplg-show-debug-report
+ `-- -zplg-show-report
+     |-- -zplg-check-which-completions-are-enabled
+     |-- -zplg-check-which-completions-are-installed
+     |-- -zplg-exists-message
+     |   |-- -zplg-any-to-uspl2
+     |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+     |-- -zplg-find-completions-of-plugin
+     |-- -zplg-format-env
+     |-- -zplg-format-functions
+     |-- -zplg-format-options
+     |   |-- -zplg-restore-extendedglob
+     |   `-- -zplg-save-set-extendedglob
+     |-- -zplg-format-parameter
+     |-- zplugin.zsh/-zplg-any-to-user-plugin
+     |-- zplugin.zsh/-zplg-diff-env
+     |-- zplugin.zsh/-zplg-diff-functions
+     |-- zplugin.zsh/-zplg-diff-options
+     `-- zplugin.zsh/-zplg-diff-parameter
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-show-registered-plugins
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+21 lines
+
+Calls functions:
+
+ -zplg-show-registered-plugins
+ |-- -zplg-restore-extendedglob
+ |-- -zplg-save-set-extendedglob
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-show-report
+~~~~~~~~~~~~~~~~~
+
+61 lines
+
+Calls functions:
+
+ -zplg-show-report
+ |-- -zplg-check-which-completions-are-enabled
+ |-- -zplg-check-which-completions-are-installed
+ |-- -zplg-exists-message
+ |   |-- -zplg-any-to-uspl2
+ |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |-- -zplg-find-completions-of-plugin
+ |-- -zplg-format-env
+ |-- -zplg-format-functions
+ |-- -zplg-format-options
+ |   |-- -zplg-restore-extendedglob
+ |   `-- -zplg-save-set-extendedglob
+ |-- -zplg-format-parameter
+ |-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- zplugin.zsh/-zplg-diff-env
+ |-- zplugin.zsh/-zplg-diff-functions
+ |-- zplugin.zsh/-zplg-diff-options
+ `-- zplugin.zsh/-zplg-diff-parameter
+
+Called by:
+
+ -zplg-show-all-reports
+ -zplg-show-debug-report
+ zplugin.zsh/zplugin
+
+-zplg-show-times
+~~~~~~~~~~~~~~~~
+
+13 lines
+
+Calls functions:
+
+ -zplg-show-times
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-show-zstatus
+~~~~~~~~~~~~~~~~~~
+
+41 lines
+
+No functions called
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-stress
+~~~~~~~~~~~~
+
+35 lines
+
+Calls functions:
+
+ -zplg-stress
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin-side.zsh/-zplg-first
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+
+ # Compiles plugin with various options on and off
+ # to see how well the code is written
+
+-zplg-uncompile-plugin
+~~~~~~~~~~~~~~~~~~~~~~
+
+22 lines
+
+Calls functions:
+
+ -zplg-uncompile-plugin
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ -zplg-compile-uncompile-all
+ zplugin.zsh/zplugin
+
+-zplg-uninstall-completions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+40 lines
+
+Calls functions:
+
+ -zplg-uninstall-completions
+ |-- zplugin-install.zsh/-zplg-forget-completion
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+
+ # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
+ # $2 - plugin (if $1 - user - given)
+
+-zplg-unload
+~~~~~~~~~~~~
+
+209 lines
+
+Calls functions:
+
+ -zplg-unload
+ |-- -zplg-clear-report-for
+ |-- -zplg-exists-message
+ |   |-- -zplg-any-to-uspl2
+ |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |-- -zplg-restore-extendedglob
+ |-- -zplg-save-set-extendedglob
+ |-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- zplugin.zsh/-zplg-clear-debug-report
+ |-- zplugin.zsh/-zplg-diff-env
+ |-- zplugin.zsh/-zplg-diff-functions
+ |-- zplugin.zsh/-zplg-diff-options
+ |-- zplugin.zsh/-zplg-diff-parameter
+ `-- zplugin.zsh/-zplg-unregister-plugin
+
+Called by:
+
+ zplugin.zsh/-zplg-debug-unload
+ zplugin.zsh/zplugin
+
+
+ # $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
+ # $2 - plugin (if $1 - user - given)
+ #
+ # 1. Unfunction functions created by plugin
+ # 2. Delete bindkeys
+ # 3. Delete created Zstyles
+ # 4. Restore options
+ # 5. Restore (or just unalias?) aliases
+ # 6. Restore Zle state
+ # 7. Clean up FPATH and PATH
+ # 8. Delete created variables
+ # 9. Forget the plugin
+
+-zplg-update-or-status
+~~~~~~~~~~~~~~~~~~~~~~
+
+28 lines
+
+Calls functions:
+
+ -zplg-update-or-status
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- zplugin.zsh/-zplg-pack-ice
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+
+ # Updates given plugin
+
+-zplg-update-or-status-all
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+54 lines
+
+Calls functions:
+
+ -zplg-update-or-status-all
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- zplugin.zsh/-zplg-load-snippet
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+compinit
+~~~~~~~~
+
+542 lines
+
+No functions called
+
+Called by:
+
+ -zplg-compinit
+
