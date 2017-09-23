@@ -72,7 +72,7 @@ ____
  # Author: Bart Schaefer
 ____
 
-8 lines
+Has 8 line(s)
 
 No functions called
 
@@ -85,7 +85,7 @@ ____
  # Function defined to hijack plugin's calls to `alias' builtin.
 ____
 
-39 lines
+Has 39 line(s). Calls functions:
 
  --zplg-shadow-alias
  `-- -zplg-add-report
@@ -99,7 +99,7 @@ ____
  # Function defined to hijack plugin's calls to `autoload' builtin.
 ____
 
-41 lines
+Has 41 line(s). Calls functions:
 
  --zplg-shadow-autoload
  `-- -zplg-add-report
@@ -113,7 +113,7 @@ ____
  # Function defined to hijack plugin's calls to `bindkey' builtin.
 ____
 
-78 lines
+Has 78 line(s). Calls functions:
 
  --zplg-shadow-bindkey
  `-- -zplg-add-report
@@ -127,7 +127,7 @@ ____
  # Function defined to hijack plugin's calls to `compdef' function.
 ____
 
-4 lines
+Has 4 line(s). Calls functions:
 
  --zplg-shadow-compdef
  `-- -zplg-add-report
@@ -141,7 +141,7 @@ ____
  # Function defined to hijack plugin's calls to `zle' builtin.
 ____
 
-38 lines
+Has 38 line(s). Calls functions:
 
  --zplg-shadow-zle
  `-- -zplg-add-report
@@ -155,7 +155,7 @@ ____
  # Function defined to hijack plugin's calls to `zstyle' builtin.
 ____
 
-26 lines
+Has 26 line(s). Calls functions:
 
  --zplg-shadow-zstyle
  `-- -zplg-add-report
@@ -172,7 +172,7 @@ ____
  # $2, ... - the text
 ____
 
-14 lines
+Has 14 line(s)
 
 No functions called
 
@@ -198,7 +198,7 @@ ____
  # Returns user and plugin in $reply
 ____
 
-45 lines
+Has 45 line(s)
 
 No functions called
 
@@ -214,7 +214,7 @@ ____
  # Forgets dtrace repport gathered up to this moment.
 ____
 
-1 lines
+Has 1 line(s)
 
 No functions called
 
@@ -229,7 +229,7 @@ ____
  # Implements user-exposed functionality to clear gathered compdefs.
 ____
 
-3 lines
+Has 3 line(s)
 
 No functions called
 
@@ -245,7 +245,7 @@ ____
  # after loading plugins.
 ____
 
-16 lines
+Has 16 line(s)
 
 No functions called
 
@@ -260,7 +260,7 @@ ____
  # Starts Dtrace, i.e. session tracking for changes in Zsh state.
 ____
 
-12 lines
+Has 12 line(s). Calls functions:
 
  -zplg-debug-start
  |-- -zplg-diff-env
@@ -280,7 +280,7 @@ ____
  # Stops Dtrace, i.e. session tracking for changes in Zsh state.
 ____
 
-6 lines
+Has 6 line(s). Calls functions:
 
  -zplg-debug-stop
  |-- -zplg-diff-env
@@ -300,7 +300,7 @@ ____
  # Reverts changes detected by dtrace run.
 ____
 
-5 lines
+Has 5 line(s)
 
 No functions called
 
@@ -315,7 +315,7 @@ ____
  # Implements detection of change in PATH and FPATH.
 ____
 
-60 lines
+Has 60 line(s)
 
 No functions called
 
@@ -332,7 +332,7 @@ ____
  # Implements detection of newly created functions.
 ____
 
-38 lines
+Has 38 line(s)
 
 No functions called
 
@@ -349,7 +349,7 @@ ____
  # Implements detection of change in option state.
 ____
 
-43 lines
+Has 43 line(s)
 
 No functions called
 
@@ -366,7 +366,7 @@ ____
  # Implements detection of change in any parameter's existence and type.
 ____
 
-49 lines
+Has 49 line(s)
 
 No functions called
 
@@ -379,7 +379,7 @@ Called by:
 -zplg-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-20 lines
+Has 20 line(s)
 
 No functions called
 
@@ -394,7 +394,7 @@ ____
  # Parses ICE specification (`zplg ice' subcommand).
 ____
 
-5 lines
+Has 5 line(s)
 
 No functions called
 
@@ -412,7 +412,7 @@ ____
  # $2 - plugin name, if the third format is used
 ____
 
-17 lines
+Has 17 line(s). Calls functions:
 
  -zplg-load
  |-- -zplg-any-to-user-plugin
@@ -444,7 +444,7 @@ ____
  # $3 - mode (light or load)
 ____
 
-52 lines
+Has 52 line(s). Calls functions:
 
  -zplg-load-plugin
  |-- -zplg-add-report
@@ -472,7 +472,7 @@ ____
  # $4 - "-u" if invoked by Zplugin to only update snippet
 ____
 
-74 lines
+Has 74 line(s). Calls functions:
 
  -zplg-load-snippet
  |-- -zplg-pack-ice
@@ -490,7 +490,7 @@ ____
  # Remembers long-live ICE specs, assigns them to concrete plugin.
 ____
 
-2 lines
+Has 2 line(s)
 
 No functions called
 
@@ -507,7 +507,7 @@ ____
  # if they already exist.
 ____
 
-22 lines
+Has 22 line(s)
 
 No functions called
 
@@ -519,7 +519,7 @@ Called by:
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
 
-25 lines
+Has 25 line(s)
 
 No functions called
 
@@ -535,7 +535,7 @@ ____
  # or "compdef").
 ____
 
-17 lines
+Has 17 line(s)
 
 No functions called
 
@@ -553,7 +553,7 @@ ____
  # mode ("load", "light" or "compdef").
 ____
 
-24 lines
+Has 24 line(s)
 
 No functions called
 
@@ -566,7 +566,7 @@ Called by:
 -zplg-unregister-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-5 lines
+Has 5 line(s). Calls functions:
 
  -zplg-unregister-plugin
  `-- -zplg-any-to-user-plugin
@@ -583,7 +583,7 @@ ____
  # subcommand and its arguments.
 ____
 
-217 lines
+Has 217 line(s). Calls functions:
 
  zplugin
  |-- -zplg-clear-debug-report
@@ -620,7 +620,7 @@ ____
  # }}}
 ____
 
-117 lines
+Has 117 line(s)
 
 No functions called
 
@@ -631,7 +631,7 @@ Called by:
 compinit
 ~~~~~~~~
 
-542 lines
+Has 542 line(s)
 
 No functions called
 
@@ -642,7 +642,7 @@ Called by:
 is-at-least
 ~~~~~~~~~~~
 
-38 lines
+Has 38 line(s)
 
 No functions called
 
