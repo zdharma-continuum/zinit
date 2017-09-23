@@ -7,6 +7,14 @@ ZPLGM[EXTENDED_GLOB]=""
 # Backend, low level functions
 #
 
+# FUNCTION: -zplg-any-to-uspl2 {{{
+# Converts to format that's used in keys for hash tables
+#
+# Supports all four formats
+-zplg-any-to-uspl2() {
+    -zplg-any-to-user-plugin "$1" "$2"
+    REPLY="${reply[-2]}/${reply[-1]}"
+} # }}}
 # FUNCTION: -zplg-save-set-extendedglob {{{
 -zplg-save-set-extendedglob() {
     [[ -o "extendedglob" ]] && ZPLGM[EXTENDED_GLOB]="1" || ZPLGM[EXTENDED_GLOB]="0"

@@ -972,14 +972,6 @@ builtin setopt noaliases
     reply=( "$user" "$plugin" )
     return 0
 } # }}}
-# FUNCTION: -zplg-any-to-uspl2 {{{
-# Converts to format that's used in keys for hash tables
-#
-# Supports all four formats
--zplg-any-to-uspl2() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    REPLY="${reply[-2]}/${reply[-1]}"
-} # }}}
 # FUNCTION: -zplg-any-colorify-as-uspl2 {{{
 -zplg-any-colorify-as-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
