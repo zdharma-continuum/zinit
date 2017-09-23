@@ -72,9 +72,7 @@ ____
  # Author: Bart Schaefer
 ____
 
-Has 8 line(s)
-
-No functions called
+Has 8 line(s). Doesn't call other functions.
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -172,9 +170,7 @@ ____
  # $2, ... - the text
 ____
 
-Has 14 line(s)
-
-No functions called
+Has 14 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -198,9 +194,7 @@ ____
  # Returns user and plugin in $reply
 ____
 
-Has 45 line(s)
-
-No functions called
+Has 45 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -214,9 +208,7 @@ ____
  # Forgets dtrace repport gathered up to this moment.
 ____
 
-Has 1 line(s)
-
-No functions called
+Has 1 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -229,9 +221,7 @@ ____
  # Implements user-exposed functionality to clear gathered compdefs.
 ____
 
-Has 3 line(s)
-
-No functions called
+Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -245,9 +235,7 @@ ____
  # after loading plugins.
 ____
 
-Has 16 line(s)
-
-No functions called
+Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -300,9 +288,7 @@ ____
  # Reverts changes detected by dtrace run.
 ____
 
-Has 5 line(s)
-
-No functions called
+Has 5 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -315,9 +301,7 @@ ____
  # Implements detection of change in PATH and FPATH.
 ____
 
-Has 60 line(s)
-
-No functions called
+Has 60 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -332,9 +316,7 @@ ____
  # Implements detection of newly created functions.
 ____
 
-Has 38 line(s)
-
-No functions called
+Has 38 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -349,9 +331,7 @@ ____
  # Implements detection of change in option state.
 ____
 
-Has 43 line(s)
-
-No functions called
+Has 43 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -366,9 +346,7 @@ ____
  # Implements detection of change in any parameter's existence and type.
 ____
 
-Has 49 line(s)
-
-No functions called
+Has 49 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -379,9 +357,7 @@ Called by:
 -zplg-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Has 20 line(s)
-
-No functions called
+Has 20 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -394,9 +370,7 @@ ____
  # Parses ICE specification (`zplg ice' subcommand).
 ____
 
-Has 5 line(s)
-
-No functions called
+Has 5 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -490,9 +464,7 @@ ____
  # Remembers long-live ICE specs, assigns them to concrete plugin.
 ____
 
-Has 2 line(s)
-
-No functions called
+Has 2 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -507,9 +479,7 @@ ____
  # if they already exist.
 ____
 
-Has 22 line(s)
-
-No functions called
+Has 22 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -519,9 +489,7 @@ Called by:
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
 
-Has 25 line(s)
-
-No functions called
+Has 25 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -535,9 +503,7 @@ ____
  # or "compdef").
 ____
 
-Has 17 line(s)
-
-No functions called
+Has 17 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -553,9 +519,7 @@ ____
  # mode ("load", "light" or "compdef").
 ____
 
-Has 24 line(s)
-
-No functions called
+Has 24 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -620,9 +584,7 @@ ____
  # }}}
 ____
 
-Has 117 line(s)
-
-No functions called
+Has 117 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -631,9 +593,7 @@ Called by:
 compinit
 ~~~~~~~~
 
-Has 542 line(s)
-
-No functions called
+Has 542 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -642,9 +602,7 @@ Called by:
 is-at-least
 ~~~~~~~~~~~
 
-Has 38 line(s)
-
-No functions called
+Has 38 line(s). Doesn't call other functions.
 
 Called by:
 
