@@ -1,6 +1,8 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
+builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
+
 ZPLGM[EXTENDED_GLOB]=""
 
 #
@@ -14,18 +16,6 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-any-to-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
     REPLY="${reply[-2]}/${reply[-1]}"
-} # }}}
-# FUNCTION: -zplg-any-colorify-as-uspl2 {{{
-# Returns (REPLY) ANSI-colorified "user/plugin" string, from any
-# supported spec (user--plugin, user/plugin, plugin).
-# Double-defined, in *install and *autoload.
--zplg-any-colorify-as-uspl2() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
-    [[ "$user" = "%" ]] && {
-        plugin="${plugin/$HOME/HOME}"
-        REPLY="${ZPLG_COL[uname]}%${ZPLG_COL[rst]}${ZPLG_COL[pname]}${plugin}${ZPLG_COL[rst]}"
-    } || REPLY="${ZPLG_COL[uname]}${user}${ZPLG_COL[rst]}/${ZPLG_COL[pname]}${plugin}${ZPLG_COL[rst]}"
 } # }}}
 # FUNCTION: -zplg-save-set-extendedglob {{{
 -zplg-save-set-extendedglob() {
