@@ -1,4 +1,9 @@
 # FUNCTION: -zplg-first {{{
+# Finds the main file of plugin. There are multiple file name
+# formats, they are ordered in order starting from more correct
+# ones, and matched. -zplg-load-plugin() has similar code parts
+# and doesn't call -zplg-first() – for performance. Obscure matching
+# is done in -zplg-find-other-matches, here and in -zplg-load().
 -zplg-first() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
