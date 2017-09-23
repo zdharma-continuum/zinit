@@ -124,29 +124,24 @@ zmodload zsh/parameter || return 1
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
-if [[ ( -n "${terminfo[colors]}" || -n "${termcap[Co]}" ) && -z "${functions[colors]}" ]]; then
-    [[ -z "${fg_bold[green]}" ]] && {
-        builtin autoload -Uz colors
-        colors
-    }
-fi
-
 typeset -gAH ZPLG_COL
-ZPLG_COL=(
-    "title" ""
-    "pname" "${fg_bold[yellow]}"
-    "uname" "${fg_bold[magenta]}"
-    "keyword" "${fg_bold[green]}"
-    "error" "${fg_bold[red]}"
-    "p" "${fg_bold[blue]}"
-    "bar" "${fg_bold[magenta]}"
-    "info" "${fg_bold[green]}"
-    "info2" "${fg[green]}"
-    "uninst" "${fg_bold[blue]}"
-    "success" "${fg_bold[green]}"
-    "failure" "${fg_bold[red]}"
-    "rst" "$reset_color"
-)
+[[ -n "${terminfo[colors]}" || -n "${termcap[Co]}" ]] && {
+    ZPLG_COL=(
+        "title" ""
+        "pname" $'\e[33m'
+        "uname" $'\e[35m'
+        "keyword" $'\e[32m'
+        "error" $'\e[31m'
+        "p" $'\e[01m\e[34m'
+        "bar" $'\e[01m\e[35m'
+        "info" $'\e[32m'
+        "info2" $'\e[32m'
+        "uninst" $'\e[01m\e[34m'
+        "success" $'\e[01m\e[32m'
+        "failure" $'\e[31m'
+        "rst" $'\e[0m'
+    )
+}
 
 # List of hooks
 typeset -gAH ZPLG_ZLE_HOOKS_LIST
