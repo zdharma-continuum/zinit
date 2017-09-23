@@ -1,6 +1,10 @@
 builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
 # FUNCTION: -zplg-exists-physically {{{
+# Checks if given plugin directory exists in PLUGIN_DIR.
+# Testable.
+# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+# $2 - plugin (if $1 - user - given)
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
     if [[ "${reply[-2]}" = "%" ]]; then
@@ -10,6 +14,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 } # }}}
 # FUNCTION: -zplg-exists-physically-message {{{
+# Checks if given plugin directory exists in PLUGIN_DIR,
+# and outputs error message if it doesn't. Testable.
+# $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+# $2 - plugin (if $1 - user - given)
 -zplg-exists-physically-message() {
     if ! -zplg-exists-physically "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
@@ -20,6 +28,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 } # }}}
 
 # FUNCTION: -zplg-setup-plugin-dir {{{
+# Clones given plugin into PLUGIN_DIR. Supports multiple
+# sites (respecting `from' and `proto' ice modifiers).
+#
+# $1 - user
+# $2 - plugin
 -zplg-setup-plugin-dir() {
     local user="$1" plugin="$2" remote_url_path="$1/$2"
     if [[ ! -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]]; then
@@ -69,7 +82,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     return 0
 } # }}}
 # FUNCTION: -zplg-install-completions {{{
-# $1 - user---plugin, user/plugin, user (if $2 given), or plugin (if $2 empty)
+# Installs all completions of given plugin. After that they are
+# visible to compinit. Visible completions can be selectively
+# disabled.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
 # $2 - plugin (if $1 - user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
 -zplg-install-completions() {
@@ -116,6 +133,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     done
 } # }}}
 # FUNCTION: -zplg-download-file-stdout {{{
+# Downloads file to stdout. Supports following backend commands:
+# curl, wget, lftp, lynx. Used by snippet loading.
 -zplg-download-file-stdout() {
     local url="$1"
     local restart="$2"
@@ -150,6 +169,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     return 0
 } # }}}
 # FUNCTION: -zplg-forget-completion {{{
+# Implements alternation of Zsh state so that already initialized
+# completion stops being visible to Zsh.
+#
 # $1 - completion function name, e.g. "_cp"
 -zplg-forget-completion() {
     local f="$1"
@@ -171,6 +193,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     unfunction -- 2>/dev/null "$f"
 } # }}}
 # FUNCTION: -zplg-compile-plugin {{{
+# Compiles given plugin (its main source file, and also an
+# additional "....zsh" file if it exists).
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
+# $2 - plugin (if $1 - user - given)
 -zplg-compile-plugin() {
     -zplg-first "$1" "$2" || {
         print "${ZPLG_COL[error]}No files for compilation found${ZPLG_COL[rst]}"
