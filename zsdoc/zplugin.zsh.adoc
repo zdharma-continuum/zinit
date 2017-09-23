@@ -72,11 +72,11 @@ No functions called
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Marks given function ($3) for autoloading, and executes it triggering the
 # load. $1 is the fpath dedicated to the function, $2 are autoload options.
 # Author: Bart Schaefer
-====
+```
 
 --zplg-shadow-alias
 ~~~~~~~~~~~~~~~~~~~
@@ -90,9 +90,9 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Function defined to hijack plugin's calls to `alias' builtin.
-====
+```
 
 --zplg-shadow-autoload
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -106,9 +106,9 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Function defined to hijack plugin's calls to `autoload' builtin.
-====
+```
 
 --zplg-shadow-bindkey
 ~~~~~~~~~~~~~~~~~~~~~
@@ -122,9 +122,9 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Function defined to hijack plugin's calls to `bindkey' builtin.
-====
+```
 
 --zplg-shadow-compdef
 ~~~~~~~~~~~~~~~~~~~~~
@@ -138,9 +138,9 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Function defined to hijack plugin's calls to `compdef' function.
-====
+```
 
 --zplg-shadow-zle
 ~~~~~~~~~~~~~~~~~
@@ -154,9 +154,9 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Function defined to hijack plugin's calls to `zle' builtin.
-====
+```
 
 --zplg-shadow-zstyle
 ~~~~~~~~~~~~~~~~~~~~
@@ -170,9 +170,9 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Function defined to hijack plugin's calls to `zstyle' builtin.
-====
+```
 
 -zplg-add-report
 ~~~~~~~~~~~~~~~~
@@ -191,12 +191,12 @@ Called by:
  --zplg-shadow-zstyle
  -zplg-load-plugin
 
-====
+```
 # Adds a report line for given plugin.
 #
 # $1 - uspl2, i.e. user/plugin
 # $2, ... - the text
-====
+```
 
 -zplg-any-to-user-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,14 +230,14 @@ Called by:
  zplugin-side.zsh/-zplg-exists-physically
  zplugin-side.zsh/-zplg-first
 
-====
+```
 # Allows elastic plugin-spec across the code.
 #
 # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
 # $2 - plugin (only when $1 - i.e. user - given)
 #
 # Returns user and plugin in $reply
-====
+```
 
 -zplg-clear-debug-report
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -254,9 +254,9 @@ Called by:
  zplugin
  zplugin-autoload.zsh/-zplg-unload
 
-====
+```
 # Forgets dtrace repport gathered up to this moment.
-====
+```
 
 -zplg-compdef-clear
 ~~~~~~~~~~~~~~~~~~~
@@ -269,9 +269,9 @@ Called by:
 
  zplugin
 
-====
+```
 # Implements user-exposed functionality to clear gathered compdefs.
-====
+```
 
 -zplg-compdef-replay
 ~~~~~~~~~~~~~~~~~~~~
@@ -284,10 +284,10 @@ Called by:
 
  zplugin
 
-====
+```
 # Runs gathered compdef calls. This allows to run `compinit'
 # after loading plugins.
-====
+```
 
 -zplg-debug-start
 ~~~~~~~~~~~~~~~~~
@@ -307,9 +307,9 @@ Called by:
 
  zplugin
 
-====
+```
 # Starts Dtrace, i.e. session tracking for changes in Zsh state.
-====
+```
 
 -zplg-debug-stop
 ~~~~~~~~~~~~~~~~
@@ -329,9 +329,9 @@ Called by:
 
  zplugin
 
-====
+```
 # Stops Dtrace, i.e. session tracking for changes in Zsh state.
-====
+```
 
 -zplg-debug-unload
 ~~~~~~~~~~~~~~~~~~
@@ -347,9 +347,9 @@ Called by:
 
  zplugin
 
-====
+```
 # Reverts changes detected by dtrace run.
-====
+```
 
 -zplg-diff-env
 ~~~~~~~~~~~~~~
@@ -366,9 +366,9 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
 
-====
+```
 # Implements detection of change in PATH and FPATH.
-====
+```
 
 -zplg-diff-functions
 ~~~~~~~~~~~~~~~~~~~~
@@ -385,9 +385,9 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
 
-====
+```
 # Implements detection of newly created functions.
-====
+```
 
 -zplg-diff-options
 ~~~~~~~~~~~~~~~~~~
@@ -404,9 +404,9 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
 
-====
+```
 # Implements detection of change in option state.
-====
+```
 
 -zplg-diff-parameter
 ~~~~~~~~~~~~~~~~~~~~
@@ -423,9 +423,9 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
 
-====
+```
 # Implements detection of change in any parameter's existence and type.
-====
+```
 
 -zplg-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -450,9 +450,9 @@ Called by:
 
  zplugin
 
-====
+```
 # Parses ICE specification (`zplg ice' subcommand).
-====
+```
 
 -zplg-load
 ~~~~~~~~~~
@@ -481,12 +481,12 @@ Called by:
 
  zplugin
 
-====
+```
 # Implements the exposed-to-user action of loading a plugin.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
 # $2 - plugin name, if the third format is used
-====
+```
 
 -zplg-load-plugin
 ~~~~~~~~~~~~~~~~~
@@ -509,13 +509,13 @@ Called by:
 
  -zplg-load
 
-====
+```
 # Lower-level function for loading a plugin.
 #
 # $1 - user
 # $2 - plugin
 # $3 - mode (light or load)
-====
+```
 
 -zplg-load-snippet
 ~~~~~~~~~~~~~~~~~~
@@ -535,14 +535,14 @@ Called by:
  zplugin
  zplugin-autoload.zsh/-zplg-update-or-status-all
 
-====
+```
 # Implements the exposed-to-user action of loading a snippet.
 #
 # $1 - url (can be local, absolute path)
 # $2 - "--command" if that option given
 # $3 - "--force" if that option given
 # $4 - "-u" if invoked by Zplugin to only update snippet
-====
+```
 
 -zplg-pack-ice
 ~~~~~~~~~~~~~~
@@ -557,9 +557,9 @@ Called by:
  -zplg-load
  zplugin-autoload.zsh/-zplg-update-or-status
 
-====
+```
 # Remembers long-live ICE specs, assigns them to concrete plugin.
-====
+```
 
 -zplg-prepare-home
 ~~~~~~~~~~~~~~~~~~
@@ -573,10 +573,10 @@ Called by:
  Script-Body
  zplugin
 
-====
+```
 # Creates all directories needed by Zplugin, first checks
 # if they already exist.
-====
+```
 
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
@@ -602,10 +602,10 @@ Called by:
  -zplg-load-plugin
  -zplg-load-snippet
 
-====
+```
 # Turn off shadowing completely for a given mode ("load", "light"
 # or "compdef").
-====
+```
 
 -zplg-shadow-on
 ~~~~~~~~~~~~~~~
@@ -620,10 +620,10 @@ Called by:
  -zplg-load-plugin
  -zplg-load-snippet
 
-====
+```
 # Turn on shadowing of builtins and functions according to passed
 # mode ("load", "light" or "compdef").
-====
+```
 
 -zplg-unregister-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -710,10 +710,10 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-====
+```
 # Main function directly exposed to user, obtains
 # subcommand and its arguments.
-====
+```
 
 colors
 ~~~~~~
@@ -726,9 +726,9 @@ Called by:
 
  Script-Body
 
-====
+```
 # }}}
-====
+```
 
 compinit
 ~~~~~~~~
