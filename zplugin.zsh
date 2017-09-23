@@ -175,6 +175,10 @@ builtin setopt noaliases
 # version causes problems with traps. So basically one creates function stub
 # that calls --zplg-reload-and-run() instead of "autoload -X".
 #
+# $1 - FPATH dedicated to function
+# $2 - autoload options
+# $3 - function name (one that needs autoloading)
+#
 # Author: Bart Schaefer
 --zplg-reload-and-run () {
     local fpath_prefix="$1" autoload_opts="$2" func="$3"
@@ -194,6 +198,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-autoload {{{
 # Function defined to hijack plugin's calls to `autoload' builtin.
+#
 # The hijacking is not only to gather report data, but also to
 # run custom `autoload' function, that doesn't need FPATH.
 --zplg-shadow-autoload () {
@@ -252,7 +257,8 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-bindkey {{{
 # Function defined to hijack plugin's calls to `bindkey' builtin.
-# The hijacking is to gather report data.
+#
+# The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-bindkey() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey $*"
 
@@ -366,7 +372,8 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-zstyle {{{
 # Function defined to hijack plugin's calls to `zstyle' builtin.
-# The hijacking is to gather report data.
+#
+# The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zstyle() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zstyle $*"
 
@@ -413,7 +420,8 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-alias {{{
 # Function defined to hijack plugin's calls to `alias' builtin.
-# The hijacking is to gather report data.
+#
+# The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-alias() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Alias $*"
 
@@ -471,7 +479,8 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: --zplg-shadow-zle {{{
 # Function defined to hijack plugin's calls to `zle' builtin.
-# The hijacking is to gather report data.
+#
+# The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zle() {
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zle $*"
 

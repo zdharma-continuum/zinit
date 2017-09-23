@@ -447,10 +447,16 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 
 # FUNCTION: -zplg-self-update {{{
+# Updates Zplugin code (does a git pull).
+#
+# User-action entry point.
 -zplg-self-update() {
     ( cd "${ZPLGM[BIN_DIR]}" ; git pull )
 } # }}}
 # FUNCTION: -zplg-show-registered-plugins {{{
+# Lists loaded plugins (subcommands list, lodaded).
+#
+# User-action entry point.
 -zplg-show-registered-plugins() {
     typeset -a filtered
     local keyword="$1"
@@ -488,6 +494,8 @@ ZPLGM[EXTENDED_GLOB]=""
 # 7. Clean up FPATH and PATH
 # 8. Delete created variables
 # 9. Forget the plugin
+#
+# User-action entry point.
 -zplg-unload() {
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}/${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}"
@@ -779,6 +787,9 @@ ZPLGM[EXTENDED_GLOB]=""
 
 } # }}}
 # FUNCTION: -zplg-show-report {{{
+# Displays given plugin's report.
+#
+# User-action entry point.
 -zplg-show-report() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -861,6 +872,9 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-show-all-reports {{{
+# Displays reports of all loaded plugins.
+#
+# User-action entry point.
 -zplg-show-all-reports() {
     local i
     for i in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
@@ -869,11 +883,16 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-show-debug-report {{{
+# Displays dtrace report (data recorded in interactive session).
+#
+# User-action entry point.
 -zplg-show-debug-report() {
     -zplg-show-report "_dtrace/_dtrace"
 } # }}}
 # FUNCTION: -zplg-update-or-status {{{
-# Updates given plugin
+# Updates (git pull) or does `git status' for given plugin.
+#
+# User-action entry point.
 -zplg-update-or-status() {
     local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
@@ -907,6 +926,9 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-update-or-status-all {{{
+# Updates (git pull) or does `git status` for all existing plugins.
+#
+# User-action entry point.
 -zplg-update-or-status-all() {
     builtin setopt localoptions nullglob
 
@@ -970,6 +992,9 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-show-zstatus {{{
+# Shows Zplugin status.
+#
+# User-action entry point.
 -zplg-show-zstatus() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1031,6 +1056,9 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Compiled plugins: ${infoc}$count${reset_color}"
 } # }}}
 # FUNCTION: -zplg-show-times {{{
+# Shows loading times of all loaded plugins.
+#
+# User-action entry point.
 -zplg-show-times() {
     local entry entry2 user plugin title='no'
     float -F 3 sum=0.0
@@ -1049,7 +1077,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # }}}
 
 # FUNCTION: -zplg-compiled {{{
-# Gets list of compiled plugins
+# Gets list of compiled plugins.
+#
+# User-action entry point.
 -zplg-compiled() {
     builtin setopt localoptions nullglob
 
@@ -1079,6 +1109,9 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-compile-uncompile-all {{{
+# Compiles or uncompiles all existing plugins.
+#
+# User-action entry point.
 -zplg-compile-uncompile-all() {
     builtin setopt localoptions nullglob
 
@@ -1105,6 +1138,9 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-uncompile-plugin {{{
+# Uncompiles given plugin.
+#
+# User-action entry point.
 -zplg-uncompile-plugin() {
     builtin setopt localoptions nullglob
 
@@ -1135,6 +1171,10 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 
 # FUNCTION: -zplg-show-completions {{{
+# Show installed (enabled and disabled), completions. Detect stray
+# and improper ones.
+#
+# User-action entry point.
 -zplg-show-completions() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1187,6 +1227,9 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-clear-completions {{{
+# Delete stray and improper completions.
+#
+# User-action entry point.
 -zplg-clear-completions() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1234,8 +1277,11 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-search-completions {{{
-# While -zplg-show-completions shows what completions are installed,
-# this functions searches through all plugin directories showing what's available
+# While -zplg-show-completions() shows what completions are
+# installed, this functions searches through all plugin dirs
+# showing what's available in general (for installation)
+#
+# User-action entry point.
 -zplg-search-completions() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1293,6 +1339,11 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-cenable {{{
+# Disables given installed completion.
+#
+# $1 - e.g. "_mkdir" or "mkdir"
+#
+# User-action entry point.
 -zplg-cenable() {
     local c="$1"
     c="${c#_}"
@@ -1337,6 +1388,11 @@ ZPLGM[EXTENDED_GLOB]=""
     return 0
 } # }}}
 # FUNCTION: -zplg-cdisable {{{
+# Enables given installed completion.
+#
+# $1 - e.g. "_mkdir" or "mkdir"
+#
+# User-action entry point.
 -zplg-cdisable() {
     local c="$1"
     c="${c#_}"
@@ -1381,6 +1437,12 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 
 # FUNCTION: -zplg-cd {{{
+# Jumps to plugin's directory in Zplugins home directory.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+#
+# User-action entry point.
 -zplg-cd() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1390,6 +1452,12 @@ ZPLGM[EXTENDED_GLOB]=""
     cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
 } # }}}
 # FUNCTION: -zplg-changes {{{
+# Shows `git log` of given plugin.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+#
+# User-action entry point.
 -zplg-changes() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1402,6 +1470,11 @@ ZPLGM[EXTENDED_GLOB]=""
     )
 } # }}}
 # FUNCTION: -zplg-recently {{{
+# Shows plugins that obtained commits in specified past time.
+#
+# $1 - time spec, e.g. "1 week"
+#
+# User-action entry point.
 -zplg-recently() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1431,6 +1504,12 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-create {{{
+# Creates a plugin, also on Github (if not "_local/name" plugin).
+#
+# $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - (optional) plugin (only when $1 - i.e. user - given)
+#
+# User-action entry point.
 -zplg-create() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1499,6 +1578,12 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-glance {{{
+# Shows colorized source code of plugin.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+#
+# User-action entry point.
 -zplg-glance() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1541,6 +1626,12 @@ ZPLGM[EXTENDED_GLOB]=""
     }
 } # }}}
 # FUNCTION: -zplg-edit {{{
+# Runs $EDITOR on source of given plugin.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+#
+# User-action entry point.
 -zplg-edit() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1560,7 +1651,12 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-stress {{{
 # Compiles plugin with various options on and off
-# to see how well the code is written
+# to see how well the code is written.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+#
+# User-action entry point.
 -zplg-stress() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1599,6 +1695,9 @@ ZPLGM[EXTENDED_GLOB]=""
     (( compiled )) && zcompile "$fname"
 } # }}}
 # FUNCTION: -zplg-list-compdef-replay {{{
+# Shows recorded compdefs (called by plugins loaded earlier).
+#
+# User-action entry point.
 -zplg-list-compdef-replay() {
     print "Recorded compdefs:"
     local cdf
@@ -1612,6 +1711,9 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 
 # FUNCTION: -zplg-help {{{
+# Shows usage information.
+#
+# User-action entry point.
 -zplg-help() {
            print "${ZPLG_COL[p]}Usage${ZPLG_COL[rst]}:
 -h|--help|help           - usage information
