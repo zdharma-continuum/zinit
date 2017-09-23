@@ -1675,7 +1675,7 @@ zplugin() {
                (-h|--help|help|"")
                    -zplg-help
                    ;;
-               (*) 
+               (*)
                    print "Unknown command \`$1' (use \`help' to get usage information)"
                    ;;
             esac
