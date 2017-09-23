@@ -124,22 +124,21 @@ zmodload zsh/parameter || return 1
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
-typeset -gAH ZPLG_COL
 [[ -n "${terminfo[colors]}" || -n "${termcap[Co]}" ]] && {
-    ZPLG_COL=(
-        "title" ""
-        "pname" $'\e[33m'
-        "uname" $'\e[35m'
-        "keyword" $'\e[32m'
-        "error" $'\e[31m'
-        "p" $'\e[01m\e[34m'
-        "bar" $'\e[01m\e[35m'
-        "info" $'\e[32m'
-        "info2" $'\e[32m'
-        "uninst" $'\e[01m\e[34m'
-        "success" $'\e[01m\e[32m'
-        "failure" $'\e[31m'
-        "rst" $'\e[0m'
+    ZPLGM+=(
+        "col-title"     ""
+        "col-pname"     $'\e[33m'
+        "col-uname"     $'\e[35m'
+        "col-keyword"   $'\e[32m'
+        "col-error"     $'\e[31m'
+        "col-p"         $'\e[01m\e[34m'
+        "col-bar"       $'\e[01m\e[35m'
+        "col-info"      $'\e[32m'
+        "col-info2"     $'\e[32m'
+        "col-uninst"    $'\e[01m\e[34m'
+        "col-success"   $'\e[01m\e[32m'
+        "col-failure"   $'\e[31m'
+        "col-rst"       $'\e[0m'
     )
 }
 
@@ -981,11 +980,11 @@ builtin setopt noaliases
     if [[ ! -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" || "$force" = "-f" ]]
     then
         if [[ ! -d "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]]; then
-            print "${ZPLG_COL[info]}Setting up snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
+            print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}$filename${ZPLGM[col-rst]}"
             command mkdir -p "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
         fi
 
-        [[ "$update" = "-u" ]] && echo "${ZPLG_COL[info]}Updating snippet ${ZPLG_COL[p]}$filename${ZPLG_COL[rst]}"
+        [[ "$update" = "-u" ]] && echo "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$filename${ZPLGM[col-rst]}"
 
         if (( is_url ))
         then
@@ -1065,9 +1064,9 @@ builtin setopt noaliases
 
     local keyword="${txt%% *}"
     if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
-        keyword="${ZPLG_COL[error]}$keyword${ZPLG_COL[rst]}"
+        keyword="${ZPLGM[col-error]}$keyword${ZPLGM[col-rst]}"
     else
-        keyword="${ZPLG_COL[keyword]}$keyword${ZPLG_COL[rst]}"
+        keyword="${ZPLGM[col-keyword]}$keyword${ZPLGM[col-rst]}"
     fi
 
     # Don't report to any user/plugin if there is no plugin load in progress
@@ -1159,7 +1158,7 @@ builtin setopt noaliases
 # Starts Dtrace, i.e. session tracking for changes in Zsh state.
 -zplg-debug-start() {
     if [[ "${ZPLGM[DTRACE]}" = "1" ]]; then
-        print "${ZPLG_COL[error]}Dtrace is already active, stop it first with \`dstop'$reset_color"
+        print "${ZPLGM[col-error]}Dtrace is already active, stop it first with \`dstop'$reset_color"
         return 1
     fi
 

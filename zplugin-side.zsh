@@ -19,7 +19,7 @@
 -zplg-exists-physically-message() {
     if ! -zplg-exists-physically "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
-        print "${ZPLG_COL[error]}No such plugin directory${ZPLG_COL[rst]} $REPLY"
+        print "${ZPLGM[col-error]}No such plugin directory${ZPLGM[col-rst]} $REPLY"
         return 1
     fi
     return 0
@@ -75,6 +75,6 @@
     local user="${reply[-2]}" plugin="${reply[-1]}"
     [[ "$user" = "%" ]] && {
         plugin="${plugin/$HOME/HOME}"
-        REPLY="${ZPLG_COL[uname]}%${ZPLG_COL[rst]}${ZPLG_COL[pname]}${plugin}${ZPLG_COL[rst]}"
-    } || REPLY="${ZPLG_COL[uname]}${user}${ZPLG_COL[rst]}/${ZPLG_COL[pname]}${plugin}${ZPLG_COL[rst]}"
+        REPLY="${ZPLGM[col-uname]}%${ZPLGM[col-rst]}${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
+    } || REPLY="${ZPLGM[col-uname]}${user}${ZPLGM[col-rst]}/${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
 } # }}}

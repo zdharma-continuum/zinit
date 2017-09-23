@@ -39,7 +39,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 git clone --recursive "${ZPLG_ICE[proto]}://${site:-github.com}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
                 ;;
             (*)
-                print "${ZPLG_COL[error]}Unknown protocol:${ZPLG_COL[rst]} ${ZPLG_ICE[proto]}"
+                print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
                 return 1
         esac
 
@@ -95,13 +95,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$bkpfile"
             fi
-            print "${ZPLG_COL[info2]}Symlinking completion \`$cfile' to ${ZPLGM[COMPLETIONS_DIR]}${ZPLG_COL[rst]}"
+            print "${ZPLGM[col-info2]}Symlinking completion \`$cfile' to ${ZPLGM[COMPLETIONS_DIR]}${ZPLGM[col-rst]}"
             command ln -s "$c" "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile"
         else
-            print "${ZPLG_COL[error]}Not symlinking completion \`$cfile', it already exists${ZPLG_COL[rst]}"
-            print "${ZPLG_COL[error]}Use \`creinstall {plugin-name}' to force install${ZPLG_COL[rst]}"
+            print "${ZPLGM[col-error]}Not symlinking completion \`$cfile', it already exists${ZPLGM[col-rst]}"
+            print "${ZPLGM[col-error]}Use \`creinstall {plugin-name}' to force install${ZPLGM[col-rst]}"
         fi
     done
 } # }}}
@@ -161,7 +161,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         print "Unsetting $k"
     done
 
-    print "${ZPLG_COL[info2]}Forgetting completion \`$f'...${ZPLG_COL[rst]}"
+    print "${ZPLGM[col-info2]}Forgetting completion \`$f'...${ZPLGM[col-rst]}"
     print
     unfunction -- 2>/dev/null "$f"
 } # }}}
@@ -173,13 +173,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-compile-plugin() {
     -zplg-first "$1" "$2" || {
-        print "${ZPLG_COL[error]}No files for compilation found${ZPLG_COL[rst]}"
+        print "${ZPLGM[col-error]}No files for compilation found${ZPLGM[col-rst]}"
         return 1
     }
     local dname="${reply[-2]}" first="${reply[-1]}"
     local fname="${first#$dname/}"
 
-    print "Compiling ${ZPLG_COL[info]}$fname${ZPLG_COL[rst]}..."
+    print "Compiling ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]}..."
     zcompile "$first" || {
         print "Compilation failed. Don't worry, the plugin will work also without compilation"
         print "Consider submitting an error report to the plugin's author"
