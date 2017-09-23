@@ -436,6 +436,7 @@ Has 17 line(s). Calls functions:
  |-- -zplg-pack-ice
  |-- -zplg-register-plugin
  |-- -zplg-unregister-plugin
+ |   `-- -zplg-any-to-user-plugin
  `-- zplugin-install.zsh/-zplg-setup-plugin-dir
 
 Called by:
@@ -594,8 +595,19 @@ Has 217 line(s). Calls functions:
  |-- -zplg-compdef-clear
  |-- -zplg-compdef-replay
  |-- -zplg-debug-start
+ |   |-- -zplg-diff-env
+ |   |-- -zplg-diff-functions
+ |   |-- -zplg-diff-options
+ |   |-- -zplg-diff-parameter
+ |   `-- -zplg-shadow-on
  |-- -zplg-debug-stop
+ |   |-- -zplg-diff-env
+ |   |-- -zplg-diff-functions
+ |   |-- -zplg-diff-options
+ |   |-- -zplg-diff-parameter
+ |   `-- -zplg-shadow-off
  |-- -zplg-debug-unload
+ |   `-- zplugin-autoload.zsh/-zplg-unload
  |-- -zplg-ice
  |-- -zplg-load
  |   |-- -zplg-any-to-user-plugin
@@ -611,8 +623,12 @@ Has 217 line(s). Calls functions:
  |   |-- -zplg-pack-ice
  |   |-- -zplg-register-plugin
  |   |-- -zplg-unregister-plugin
+ |   |   `-- -zplg-any-to-user-plugin
  |   `-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |-- -zplg-load-snippet
+ |   |-- -zplg-pack-ice
+ |   |-- -zplg-shadow-off
+ |   |-- -zplg-shadow-on
  |   `-- zplugin-install.zsh/-zplg-download-file-stdout
  |-- -zplg-prepare-home
  |-- compinit

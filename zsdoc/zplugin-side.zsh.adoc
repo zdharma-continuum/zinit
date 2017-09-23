@@ -55,6 +55,7 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-registered-plugins
  zplugin-autoload.zsh/-zplg-show-times
  zplugin-autoload.zsh/-zplg-uncompile-plugin
+ zplugin-autoload.zsh/-zplg-unload
  zplugin-autoload.zsh/-zplg-update-or-status-all
  zplugin-autoload.zsh/-zplg-update-or-status
  zplugin-install.zsh/-zplg-setup-plugin-dir
@@ -93,6 +94,7 @@ Has 6 line(s). Calls functions:
 
  -zplg-exists-physically-message
  |-- -zplg-any-colorify-as-uspl2
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- -zplg-exists-physically
      `-- zplugin.zsh/-zplg-any-to-user-plugin
 
