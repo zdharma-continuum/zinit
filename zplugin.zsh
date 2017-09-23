@@ -49,7 +49,6 @@ fi
 : ${ZPLGM[PLUGINS_DIR]:=${ZPLGM[HOME_DIR]}/plugins}
 : ${ZPLGM[COMPLETIONS_DIR]:=${ZPLGM[HOME_DIR]}/completions}
 : ${ZPLGM[SNIPPETS_DIR]:=${ZPLGM[HOME_DIR]}/snippets}
-: ${ZPLGM[LEX_DIR]:=${ZPLGM[HOME_DIR]}/lexicon}
 
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
 typeset -gAH ZPLG_BACKUP_ALIASES
@@ -1084,11 +1083,6 @@ builtin setopt noaliases
         # Symlink _zplugin completion into _local---zplugin directory
         command ln -s "${ZPLGM[PLUGINS_DIR]}/_local---zplugin/_zplugin" "${ZPLGM[COMPLETIONS_DIR]}"
     }
-    [[ ! -d "${ZPLGM[LEX_DIR]}" ]] && {
-        command mkdir "${ZPLGM[LEX_DIR]}"
-        # For compaudit
-        command chmod go-w "${ZPLGM[LEX_DIR]}"
-    }
     [[ ! -d "${ZPLGM[SNIPPETS_DIR]}" ]] && {
         command mkdir "${ZPLGM[SNIPPETS_DIR]}"
         command chmod go-w "${ZPLGM[SNIPPETS_DIR]}"
@@ -1655,10 +1649,6 @@ zplugin() {
                    ;;
                (stress)
                    -zplg-stress "$2" "$3"
-                   ;;
-               (lexicon|lex)
-                   (( ${+functions[-zplg-install-completions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-                   -zplg-lexicon "$2" "$3" "$4" "$5"
                    ;;
                (-h|--help|help|"")
                    -zplg-help
