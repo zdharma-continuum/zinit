@@ -1011,12 +1011,10 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-register-plugin {{{
 -zplg-register-plugin() {
-    local mode="$3"
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}/${reply[-1]}"
+    local uspl2="$1" mode="$2"
     integer ret=0
 
-    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$user/$plugin]}" ]]; then
+    if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" ]]; then
         ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
@@ -1108,7 +1106,7 @@ builtin setopt noaliases
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
     -zplg-pack-ice "$user" "$plugin"
-    -zplg-register-plugin "$user" "$plugin" "$mode"
+    -zplg-register-plugin "$user/$plugin" "$mode"
     if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
