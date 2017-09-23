@@ -66,20 +66,24 @@ Calls functions:
 --zplg-reload-and-run
 ~~~~~~~~~~~~~~~~~~~~~
 
-8 lines
-
-No functions called
-
-Not called by script or any function, may be a hook or Zle widget, etc.
-
 ____
  # Marks given function ($3) for autoloading, and executes it triggering the
  # load. $1 is the fpath dedicated to the function, $2 are autoload options.
  # Author: Bart Schaefer
 ____
 
+8 lines
+
+No functions called
+
+Not called by script or any function, may be a hook or Zle widget, etc.
+
 --zplg-shadow-alias
 ~~~~~~~~~~~~~~~~~~~
+
+____
+ # Function defined to hijack plugin's calls to `alias' builtin.
+____
 
 39 lines
 
@@ -90,12 +94,12 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-____
- # Function defined to hijack plugin's calls to `alias' builtin.
-____
-
 --zplg-shadow-autoload
 ~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Function defined to hijack plugin's calls to `autoload' builtin.
+____
 
 41 lines
 
@@ -106,12 +110,12 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-____
- # Function defined to hijack plugin's calls to `autoload' builtin.
-____
-
 --zplg-shadow-bindkey
 ~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Function defined to hijack plugin's calls to `bindkey' builtin.
+____
 
 78 lines
 
@@ -122,12 +126,12 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-____
- # Function defined to hijack plugin's calls to `bindkey' builtin.
-____
-
 --zplg-shadow-compdef
 ~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Function defined to hijack plugin's calls to `compdef' function.
+____
 
 4 lines
 
@@ -138,12 +142,12 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-____
- # Function defined to hijack plugin's calls to `compdef' function.
-____
-
 --zplg-shadow-zle
 ~~~~~~~~~~~~~~~~~
+
+____
+ # Function defined to hijack plugin's calls to `zle' builtin.
+____
 
 38 lines
 
@@ -154,12 +158,12 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-____
- # Function defined to hijack plugin's calls to `zle' builtin.
-____
-
 --zplg-shadow-zstyle
 ~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Function defined to hijack plugin's calls to `zstyle' builtin.
+____
 
 26 lines
 
@@ -170,12 +174,15 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-____
- # Function defined to hijack plugin's calls to `zstyle' builtin.
-____
-
 -zplg-add-report
 ~~~~~~~~~~~~~~~~
+
+____
+ # Adds a report line for given plugin.
+ #
+ # $1 - uspl2, i.e. user/plugin
+ # $2, ... - the text
+____
 
 14 lines
 
@@ -191,15 +198,17 @@ Called by:
  --zplg-shadow-zstyle
  -zplg-load-plugin
 
-____
- # Adds a report line for given plugin.
- #
- # $1 - uspl2, i.e. user/plugin
- # $2, ... - the text
-____
-
 -zplg-any-to-user-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Allows elastic plugin-spec across the code.
+ #
+ # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
+ # $2 - plugin (only when $1 - i.e. user - given)
+ #
+ # Returns user and plugin in $reply
+____
 
 45 lines
 
@@ -230,17 +239,12 @@ Called by:
  zplugin-side.zsh/-zplg-exists-physically
  zplugin-side.zsh/-zplg-first
 
-____
- # Allows elastic plugin-spec across the code.
- #
- # $1 - user---plugin OR user/plugin OR user (if $2 given), OR plugin (if $2 empty)
- # $2 - plugin (only when $1 - i.e. user - given)
- #
- # Returns user and plugin in $reply
-____
-
 -zplg-clear-debug-report
 ~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Forgets dtrace repport gathered up to this moment.
+____
 
 1 lines
 
@@ -254,12 +258,12 @@ Called by:
  zplugin
  zplugin-autoload.zsh/-zplg-unload
 
-____
- # Forgets dtrace repport gathered up to this moment.
-____
-
 -zplg-compdef-clear
 ~~~~~~~~~~~~~~~~~~~
+
+____
+ # Implements user-exposed functionality to clear gathered compdefs.
+____
 
 3 lines
 
@@ -269,12 +273,13 @@ Called by:
 
  zplugin
 
-____
- # Implements user-exposed functionality to clear gathered compdefs.
-____
-
 -zplg-compdef-replay
 ~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Runs gathered compdef calls. This allows to run `compinit'
+ # after loading plugins.
+____
 
 16 lines
 
@@ -284,13 +289,12 @@ Called by:
 
  zplugin
 
-____
- # Runs gathered compdef calls. This allows to run `compinit'
- # after loading plugins.
-____
-
 -zplg-debug-start
 ~~~~~~~~~~~~~~~~~
+
+____
+ # Starts Dtrace, i.e. session tracking for changes in Zsh state.
+____
 
 12 lines
 
@@ -307,12 +311,12 @@ Called by:
 
  zplugin
 
-____
- # Starts Dtrace, i.e. session tracking for changes in Zsh state.
-____
-
 -zplg-debug-stop
 ~~~~~~~~~~~~~~~~
+
+____
+ # Stops Dtrace, i.e. session tracking for changes in Zsh state.
+____
 
 6 lines
 
@@ -329,12 +333,12 @@ Called by:
 
  zplugin
 
-____
- # Stops Dtrace, i.e. session tracking for changes in Zsh state.
-____
-
 -zplg-debug-unload
 ~~~~~~~~~~~~~~~~~~
+
+____
+ # Reverts changes detected by dtrace run.
+____
 
 5 lines
 
@@ -347,12 +351,12 @@ Called by:
 
  zplugin
 
-____
- # Reverts changes detected by dtrace run.
-____
-
 -zplg-diff-env
 ~~~~~~~~~~~~~~
+
+____
+ # Implements detection of change in PATH and FPATH.
+____
 
 60 lines
 
@@ -366,12 +370,12 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
 
-____
- # Implements detection of change in PATH and FPATH.
-____
-
 -zplg-diff-functions
 ~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Implements detection of newly created functions.
+____
 
 38 lines
 
@@ -385,12 +389,12 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
 
-____
- # Implements detection of newly created functions.
-____
-
 -zplg-diff-options
 ~~~~~~~~~~~~~~~~~~
+
+____
+ # Implements detection of change in option state.
+____
 
 43 lines
 
@@ -404,12 +408,12 @@ Called by:
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
 
-____
- # Implements detection of change in option state.
-____
-
 -zplg-diff-parameter
 ~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Implements detection of change in any parameter's existence and type.
+____
 
 49 lines
 
@@ -422,10 +426,6 @@ Called by:
  -zplg-load-plugin
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-unload
-
-____
- # Implements detection of change in any parameter's existence and type.
-____
 
 -zplg-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -442,6 +442,10 @@ Called by:
 -zplg-ice
 ~~~~~~~~~
 
+____
+ # Parses ICE specification (`zplg ice' subcommand).
+____
+
 5 lines
 
 No functions called
@@ -450,12 +454,15 @@ Called by:
 
  zplugin
 
-____
- # Parses ICE specification (`zplg ice' subcommand).
-____
-
 -zplg-load
 ~~~~~~~~~~
+
+____
+ # Implements the exposed-to-user action of loading a plugin.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
+ # $2 - plugin name, if the third format is used
+____
 
 17 lines
 
@@ -481,15 +488,16 @@ Called by:
 
  zplugin
 
-____
- # Implements the exposed-to-user action of loading a plugin.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user plugin, plugin)
- # $2 - plugin name, if the third format is used
-____
-
 -zplg-load-plugin
 ~~~~~~~~~~~~~~~~~
+
+____
+ # Lower-level function for loading a plugin.
+ #
+ # $1 - user
+ # $2 - plugin
+ # $3 - mode (light or load)
+____
 
 52 lines
 
@@ -509,16 +517,17 @@ Called by:
 
  -zplg-load
 
-____
- # Lower-level function for loading a plugin.
- #
- # $1 - user
- # $2 - plugin
- # $3 - mode (light or load)
-____
-
 -zplg-load-snippet
 ~~~~~~~~~~~~~~~~~~
+
+____
+ # Implements the exposed-to-user action of loading a snippet.
+ #
+ # $1 - url (can be local, absolute path)
+ # $2 - "--command" if that option given
+ # $3 - "--force" if that option given
+ # $4 - "-u" if invoked by Zplugin to only update snippet
+____
 
 74 lines
 
@@ -535,17 +544,12 @@ Called by:
  zplugin
  zplugin-autoload.zsh/-zplg-update-or-status-all
 
-____
- # Implements the exposed-to-user action of loading a snippet.
- #
- # $1 - url (can be local, absolute path)
- # $2 - "--command" if that option given
- # $3 - "--force" if that option given
- # $4 - "-u" if invoked by Zplugin to only update snippet
-____
-
 -zplg-pack-ice
 ~~~~~~~~~~~~~~
+
+____
+ # Remembers long-live ICE specs, assigns them to concrete plugin.
+____
 
 2 lines
 
@@ -557,12 +561,13 @@ Called by:
  -zplg-load
  zplugin-autoload.zsh/-zplg-update-or-status
 
-____
- # Remembers long-live ICE specs, assigns them to concrete plugin.
-____
-
 -zplg-prepare-home
 ~~~~~~~~~~~~~~~~~~
+
+____
+ # Creates all directories needed by Zplugin, first checks
+ # if they already exist.
+____
 
 22 lines
 
@@ -572,11 +577,6 @@ Called by:
 
  Script-Body
  zplugin
-
-____
- # Creates all directories needed by Zplugin, first checks
- # if they already exist.
-____
 
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
@@ -592,6 +592,11 @@ Called by:
 -zplg-shadow-off
 ~~~~~~~~~~~~~~~~
 
+____
+ # Turn off shadowing completely for a given mode ("load", "light"
+ # or "compdef").
+____
+
 17 lines
 
 No functions called
@@ -602,13 +607,13 @@ Called by:
  -zplg-load-plugin
  -zplg-load-snippet
 
-____
- # Turn off shadowing completely for a given mode ("load", "light"
- # or "compdef").
-____
-
 -zplg-shadow-on
 ~~~~~~~~~~~~~~~
+
+____
+ # Turn on shadowing of builtins and functions according to passed
+ # mode ("load", "light" or "compdef").
+____
 
 24 lines
 
@@ -619,11 +624,6 @@ Called by:
  -zplg-debug-start
  -zplg-load-plugin
  -zplg-load-snippet
-
-____
- # Turn on shadowing of builtins and functions according to passed
- # mode ("load", "light" or "compdef").
-____
 
 -zplg-unregister-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -642,6 +642,11 @@ Called by:
 
 zplugin
 ~~~~~~~
+
+____
+ # Main function directly exposed to user, obtains
+ # subcommand and its arguments.
+____
 
 217 lines
 
@@ -710,13 +715,12 @@ Calls functions:
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
-____
- # Main function directly exposed to user, obtains
- # subcommand and its arguments.
-____
-
 colors
 ~~~~~~
+
+____
+ # }}}
+____
 
 117 lines
 
@@ -725,10 +729,6 @@ No functions called
 Called by:
 
  Script-Body
-
-____
- # }}}
-____
 
 compinit
 ~~~~~~~~
