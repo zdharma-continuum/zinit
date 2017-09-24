@@ -16,6 +16,8 @@ support any user setup, be as transparent as plain `source` command. Completion
 management functionality is provided to allow user call `compinit` only once in
 `.zshrc`.
 
+**NEW**: **[Code documentation](zsdoc)**
+
 # Quick start
 
 To install, execute:
