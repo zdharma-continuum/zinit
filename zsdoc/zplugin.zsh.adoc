@@ -434,7 +434,9 @@ Called by:
 ~~~~~~~~~
 
 ____
- # Parses ICE specification (`zplg ice' subcommand).
+ # Parses ICE specification (`zplg ice' subcommand), puts
+ # the result into ZPLG_ICE global hash. The ice-spec is
+ # valid for next command only (i.e. it "melts").
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -533,6 +535,9 @@ Called by:
 
 ____
  # Remembers long-live ICE specs, assigns them to concrete plugin.
+ # Ice spec is in general forgotten for second-next command (that's
+ # why it's called "ice" - it melts), however some ice modifiers can
+ # glue to plugin mentioned in the next command.
 ____
 
 Has 2 line(s). Doesn't call other functions.
