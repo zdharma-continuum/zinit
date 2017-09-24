@@ -47,7 +47,7 @@ pdf/zplugin-autoload.zsh.pdf:
 	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin-autoload.zsh.adoc
 
 clean:
-	rm -rf man pdf
+	rm -rf man pdf data
 
 .PHONY: man pdf clean
 
