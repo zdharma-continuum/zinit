@@ -1,6 +1,6 @@
-= Code documentation
+= Code documentation =
 
-Here Code documentation generated using [Zshelldoc](https://github.com/zdharma/zshelldoc).
+Here is `Asciidoc` code documentation generated using [Zshelldoc](https://github.com/zdharma/zshelldoc).
 There are `4` source files, the main one is [zplugin.zsh](zplugin.zsh.adoc). The documentation
 lists all functions, interactions between them, and their comments.
 
