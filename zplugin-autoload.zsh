@@ -1920,6 +1920,7 @@ load ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}       - load plugin, can 
 light ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}      - light plugin load, without reporting
 unload ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - unload plugin
 snippet [-f] [--command] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
+ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
 update ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git update plugin (or all plugins and snippets if --all passed)
 status ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git status for plugin (or all plugins if --all passed)
 report ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - show plugin's report (or all plugins' if --all passed)

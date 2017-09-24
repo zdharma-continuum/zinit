@@ -268,6 +268,7 @@ load {plugin-name}       - load plugin, can also receive absolute local path
 light {plugin-name}      - light plugin load, without reporting (faster)
 unload {plugin-name}     - unload plugin (needs reporting)
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
+ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
 update {plugin-name}     - Git update plugin (or all plugins and snippets if --all passed)
 status {plugin-name}     - Git status for plugin (or all plugins if --all passed)
 report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
