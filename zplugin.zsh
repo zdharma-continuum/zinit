@@ -794,10 +794,12 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: -zplg-find-other-matches {{{
+# Plugin's main source file is in general `name.plugin.zsh'. However,
+# there can be different conventions, if that file is not found, then
+# this functions examines other conventions in order of most expected
+# sanity.
 -zplg-find-other-matches() {
     local dname="$1" pdir="$2"
-
-    builtin setopt localoptions nullglob
 
     if [[ -e "$dname/$pdir/init.zsh" ]]; then
         reply=( "$dname/$pdir/init.zsh" )
@@ -811,8 +813,8 @@ builtin setopt noaliases
         reply=( "$dname/${pdir}.zsh.plugin" )
     else
         reply=(
-            $dname/*.plugin.zsh $dname/*.zsh $dname/*.sh
-            $dname/*.zsh-theme $dname/.zshrc(N)
+            $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
+            $dname/*.zsh-theme(N) $dname/.zshrc(N)
         )
     fi
 } # }}}
