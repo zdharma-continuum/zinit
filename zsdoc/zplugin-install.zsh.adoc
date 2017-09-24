@@ -25,7 +25,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 1 lines. No functions are called (may attach to Zle or do hooks, etc.).
+Has 1 line(s). No functions are called (may attach to Zle or do hooks, etc.).
 
 -zplg-compile-plugin
 ~~~~~~~~~~~~~~~~~~~~

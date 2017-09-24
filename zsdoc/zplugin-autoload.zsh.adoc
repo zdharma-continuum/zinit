@@ -70,15 +70,17 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 5 lines. No functions are called (may attach to Zle or do hooks, etc.).
+Has 5 line(s). No functions are called (may attach to Zle or do hooks, etc.).
 
 -zplg-any-to-uspl2
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Converts to format that's used in keys for hash tables
+ # Converts given plugin-spec to format that's used in keys for hash tables.
+ # So basically, creates string "user/plugin".
  #
- # Supports all four formats
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
 Has 2 line(s). Calls functions:
