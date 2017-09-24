@@ -66,8 +66,10 @@ ____
  # Marks given function ($3) for autoloading, and executes it triggering the
  # load. $1 is the fpath dedicated to the function, $2 are autoload options.
  # This function replaces "autoload -X", because using that on older Zsh
- # version causes problems with traps. So basically one creates function stub
- # that calls --zplg-reload-and-run() instead of "autoload -X".
+ # versions causes problems with traps.
+ #
+ # So basically one creates function stub that calls --zplg-reload-and-run()
+ # instead of "autoload -X".
  #
  # $1 - FPATH dedicated to function
  # $2 - autoload options

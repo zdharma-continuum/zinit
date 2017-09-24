@@ -1,7 +1,7 @@
 # Code documentation
 
 Here is `Asciidoc` code documentation generated using [Zshelldoc](https://github.com/zdharma/zshelldoc).
-There are `4` source files, the main one is [zplugin.zsh](zplugin.zsh.adoc). The documentation
+There are `4` Zplugin's source files, the main one is [zplugin.zsh](zplugin.zsh.adoc). The documentation
 lists all functions, interactions between them, and their comments.
 
 Github allows to directly view `Asciidoc` documents:
@@ -14,4 +14,5 @@ Github allows to directly view `Asciidoc` documents:
 
 Formats other than `Asciidoc` can be produced by using provided Makefile. For example, issuing
 `make pdf` will create and populate a new directory `pdf` (requires `asciidoctor`, install with
-`gem install asciidoctor-pdf --pre`).
+`gem install asciidoctor-pdf --pre`). `make man` will create man pages (requires package `asciidoc`,
+uses its command `a2x`, which is quite slow).
