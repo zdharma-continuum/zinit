@@ -51,7 +51,6 @@ fi
 : ${ZPLGM[SNIPPETS_DIR]:=${ZPLGM[HOME_DIR]}/snippets}
 
 typeset -gAH ZPLG_BACKUP_FUNCTIONS
-typeset -gAH ZPLG_BACKUP_ALIASES
 
 builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLGM[NEW_AUTOLOAD]=1 || ZPLGM[NEW_AUTOLOAD]=0
