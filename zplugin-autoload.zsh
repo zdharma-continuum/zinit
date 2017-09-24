@@ -205,9 +205,11 @@ ZPLGM[EXTENDED_GLOB]=""
     return 0
 } # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
-# Converts to format that's used in keys for hash tables
+# Converts given plugin-spec to format that's used in keys for hash tables.
+# So basically, creates string "user/plugin".
 #
-# Supports all four formats
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - (optional) plugin (only when $1 - i.e. user - given)
 -zplg-any-to-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
     REPLY="${reply[-2]}/${reply[-1]}"
