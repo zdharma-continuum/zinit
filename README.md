@@ -50,6 +50,9 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 24-09-2017
+  - **[Code documentation](zsdoc)** for contributors and interested people.
+
 * 20-09-2017
   - New feature - **plugin load time statistics**
 
