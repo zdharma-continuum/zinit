@@ -416,7 +416,14 @@ Called by:
 -zplg-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-Has 20 line(s). Doesn't call other functions.
+____
+ # Plugin's main source file is in general `name.plugin.zsh'. However,
+ # there can be different conventions, if that file is not found, then
+ # this functions examines other conventions in order of most expected
+ # sanity.
+____
+
+Has 18 line(s). Doesn't call other functions.
 
 Called by:
 

@@ -585,7 +585,7 @@ ____
  # User-action entry point.
 ____
 
-Has 39 line(s). Doesn't call other functions.
+Has 40 line(s). Doesn't call other functions.
 
 Called by:
 
