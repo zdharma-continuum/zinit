@@ -1207,7 +1207,9 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-ice {{{
-# Parses ICE specification (`zplg ice' subcommand).
+# Parses ICE specification (`zplg ice' subcommand), puts
+# the result into ZPLG_ICE global hash. The ice-spec is
+# valid for next command only (i.e. it "melts").
 -zplg-ice() {
     setopt localoptions extendedglob
     local bit
@@ -1217,6 +1219,9 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
 # Remembers long-live ICE specs, assigns them to concrete plugin.
+# Ice spec is in general forgotten for second-next command (that's
+# why it's called "ice" - it melts), however some ice modifiers can
+# glue to plugin mentioned in the next command.
 -zplg-pack-ice() {
     [[ -z "${ZPLG_ICE[atpull]}" ]] && return
     ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
