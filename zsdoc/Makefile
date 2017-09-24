@@ -1,0 +1,54 @@
+# This Makefile is to convert supplied Asciidoc files into
+# other formats like pdf and man. The files contain Zplugin's
+# code documentation.
+
+all: man pdf
+
+# MANUALS
+# Converted with a2x from asciidoc package
+
+man: man/zplugin.zsh.1 man/zplugin-side.zsh.1 man/zplugin-install.zsh.1 man/zplugin-autoload.zsh.1
+
+man/zplugin.zsh.1:
+	@mkdir -p man
+	a2x --verbose -L --doctype manpage --format manpage -D man zplugin.zsh.adoc
+
+man/zplugin-side.zsh.1:
+	@mkdir -p man
+	a2x --verbose -L --doctype manpage --format manpage -D man zplugin-side.zsh.adoc
+
+man/zplugin-install.zsh.1:
+	@mkdir -p man
+	a2x --verbose -L --doctype manpage --format manpage -D man zplugin-install.zsh.adoc
+
+man/zplugin-autoload.zsh.1:
+	@mkdir -p man
+	a2x --verbose -L --doctype manpage --format manpage -D man zplugin-autoload.zsh.adoc
+
+# PDFS
+# Uses asciidoctor not a2x (i.e. not asciidoc)
+
+pdf: pdf/zplugin.zsh.pdf pdf/zplugin-side.zsh.pdf pdf/zplugin-install.zsh.pdf pdf/zplugin-autoload.zsh.pdf
+
+pdf/zplugin.zsh.pdf:
+	@mkdir -p pdf
+	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin.zsh.adoc
+
+pdf/zplugin-side.zsh.pdf:
+	@mkdir -p pdf
+	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin-side.zsh.adoc
+
+pdf/zplugin-install.zsh.pdf:
+	@mkdir -p pdf
+	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin-install.zsh.adoc
+
+pdf/zplugin-autoload.zsh.pdf:
+	@mkdir -p pdf
+	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin-autoload.zsh.adoc
+
+clean:
+	rm -rf man pdf
+
+.PHONY: man pdf clean
+
+# vim:noet:sts=8:ts=8
