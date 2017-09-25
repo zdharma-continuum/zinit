@@ -43,6 +43,8 @@ Has 13 line(s). Calls functions:
  -zplg-compile-plugin
  `-- zplugin-side.zsh/-zplg-first
 
+Uses features: _zcompile_
+
 Called by:
 
  -zplg-setup-plugin-dir
@@ -61,6 +63,8 @@ Has 31 line(s). Calls functions:
 
  -zplg-download-file-stdout
 
+Uses features: _type_
+
 Called by:
 
  zplugin.zsh/-zplg-load-snippet
@@ -76,6 +80,8 @@ ____
 ____
 
 Has 17 line(s). Doesn't call other functions.
+
+Uses features: _unfunction_
 
 Called by:
 
@@ -132,6 +138,8 @@ Has 40 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Uses features: _eval_
 
 Called by:
 

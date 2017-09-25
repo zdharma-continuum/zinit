@@ -332,6 +332,8 @@ Has 23 line(s). Calls functions:
  |-- compinit
  `-- zplugin-install.zsh/-zplg-forget-completion
 
+Uses features: _autoload_, _unfunction_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -354,6 +356,8 @@ Has 61 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin-side.zsh/-zplg-exists-physically
  `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Uses features: _vared_
 
 Called by:
 
@@ -663,6 +667,8 @@ ____
 
 Has 4 line(s). Doesn't call other functions.
 
+Uses features: _type_
+
 Called by:
 
  -zplg-cdisable
@@ -962,6 +968,8 @@ Has 35 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-first
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses features: _zcompile_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -1048,6 +1056,8 @@ Has 209 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-clear-debug-report
  `-- zplugin.zsh/-zplg-unregister-plugin
 
+Uses features: _bindkey_, _unalias_, _unfunction_, _zle_, _zstyle_
+
 Called by:
 
  zplugin.zsh/-zplg-debug-unload
@@ -1070,6 +1080,8 @@ Has 28 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin.zsh/-zplg-pack-ice
 
+Uses features: _eval_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -1090,6 +1102,8 @@ Has 54 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin.zsh/-zplg-load-snippet
 
+Uses features: _eval_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -1098,6 +1112,8 @@ compinit
 ~~~~~~~~
 
 Has 547 line(s). Doesn't call other functions.
+
+Uses features: _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
