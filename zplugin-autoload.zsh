@@ -10,8 +10,8 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 
 # FUNCTION: -zplg-diff-functions-compute {{{
-# Computes ZPLG_FUNCTIONS that holds new functions added by plugin,
-# from data gathered by -zplg-diff-functions().
+# Computes ZPLG_FUNCTIONS that holds new functions added by plugin.
+# Uses data gathered earlier by -zplg-diff-functions().
 #
 # $1 - user/plugin
 -zplg-diff-functions-compute() {
@@ -49,8 +49,8 @@ ZPLGM[EXTENDED_GLOB]=""
     return 0
 } # }}}
 # FUNCTION: -zplg-diff-options-compute {{{
-# Computes ZPLG_OPTIONS that holds options changed by plugin,
-# from data gathered by -zplg-diff-options().
+# Computes ZPLG_OPTIONS that holds options changed by plugin.
+# Uses data gathered earlier by -zplg-diff-options().
 #
 # $1 - user/plugin
 -zplg-diff-options-compute() {
@@ -87,7 +87,7 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-diff-env-compute {{{
 # Computes ZPLG_PATH, ZPLG_FPATH that hold (f)path components
-# added by plugin, from data gathered by -zplg-diff-env().
+# added by plugin. Uses data gathered earlier by -zplg-diff-env().
 #
 # $1 - user/plugin
 -zplg-diff-env-compute() {
@@ -149,8 +149,8 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-diff-parameter-compute {{{
 # Computes ZPLG_PARAMETERS_PRE, ZPLG_PARAMETERS_POST that hold
-# parameters created or changed (their type) by plugin, from
-# data gathered by -zplg-diff-parameter().
+# parameters created or changed (their type) by plugin. Uses
+# data gathered earlier by -zplg-diff-parameter().
 #
 # $1 - user/plugin
 -zplg-diff-parameter-compute() {
@@ -206,7 +206,7 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
 # Converts given plugin-spec to format that's used in keys for hash tables.
-# So basically, creates string "user/plugin".
+# So basically, creates string "user/plugin" (this format is called: uspl2).
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - (optional) plugin (only when $1 - i.e. user - given)
@@ -215,16 +215,22 @@ ZPLGM[EXTENDED_GLOB]=""
     REPLY="${reply[-2]}/${reply[-1]}"
 } # }}}
 # FUNCTION: -zplg-save-set-extendedglob {{{
+# Enables extendedglob-option first saving if it was already
+# enabled, for restoration of this state later.
+#
 -zplg-save-set-extendedglob() {
     [[ -o "extendedglob" ]] && ZPLGM[EXTENDED_GLOB]="1" || ZPLGM[EXTENDED_GLOB]="0"
     builtin setopt extendedglob
 } # }}}
 # FUNCTION: -zplg-restore-extendedglob {{{
+# Restores extendedglob-option from state saved earlier.
 -zplg-restore-extendedglob() {
     [[ "${ZPLGM[EXTENDED_GLOB]}" = "0" ]] && builtin unsetopt extendedglob || builtin setopt extendedglob
 } # }}}
 # FUNCTION: -zplg-prepare-readlink {{{
-# Prepare readlink command, used for establishing completion's owner
+# Prepares readlink command, used for establishing completion's owner.
+#
+# $REPLY = ":" or "readlink"
 -zplg-prepare-readlink() {
     REPLY=":"
     if type readlink 2>/dev/null 1>&2; then
@@ -232,7 +238,11 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-clear-report-for {{{
-# Clears all report data for given user/plugin
+# Clears all report data for given user/plugin. This is
+# done by resetting all related global ZPLG_* hashes.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - (optional) plugin (only when $1 - i.e. user - given)
 -zplg-clear-report-for() {
     -zplg-any-to-uspl2 "$1" "$2"
 
@@ -273,6 +283,11 @@ ZPLGM[EXTENDED_GLOB]=""
     ZPLG_PARAMETERS_DIFF_RAN[$REPLY]="0"
 } # }}}
 # FUNCTION: -zplg-exists-message {{{
+# Checks if plugin is loaded. Testable. Also outputs error
+# message if plugin is not loaded.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - (optional) plugin (only when $1 - i.e. user - given)
 -zplg-exists-message() {
     -zplg-any-to-uspl2 "$1" "$2"
     if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
@@ -288,7 +303,10 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 
 # FUNCTION: -zplg-format-functions {{{
-# Creates a one or two columns text with functions
+# Creates a one or two columns text with functions created
+# by given plugin.
+#
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 -zplg-format-functions() {
     local uspl2="$1"
 
@@ -337,7 +355,10 @@ ZPLGM[EXTENDED_GLOB]=""
     (( COLUMNS >= longest && count % 2 == 0 )) && REPLY="$REPLY"$'\n'
 } # }}}
 # FUNCTION: -zplg-format-options {{{
-# Creates a text about options that changed when loaded plugin "$1"
+# Creates one-column text about options that changed when
+# plugin "$1" was loaded.
+#
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 -zplg-format-options() {
     local uspl2="$1"
 
@@ -368,6 +389,11 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-format-env {{{
+# Creates one-column text about FPATH or PATH elements
+# added when given plugin was loaded.
+#
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+# $2 - if 1, then examine PATH, if 2, then examine FPATH
 -zplg-format-env() {
     local uspl2="$1" which="$2"
 
@@ -391,6 +417,10 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -n "$answer" ]] && REPLY="$answer"
 } # }}}
 # FUNCTION: -zplg-format-parameter {{{
+# Creates one column text that lists global parameters that
+# changed when the given plugin was loaded.
+#
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 -zplg-format-parameter() {
     local uspl2="$1" infoc="${ZPLGM[col-info]}"
 
@@ -441,7 +471,8 @@ ZPLGM[EXTENDED_GLOB]=""
 
 # FUNCTION: -zplg-get-completion-owner {{{
 # Both :A and readlink will be used, then readlink's output if
-# results differ.
+# results differ. Readlink might not be available.
+#
 # :A will read the link "twice" and give the final repository
 # directory, possibly without username in the uspl format;
 # readlink will read the link "once"
@@ -478,15 +509,16 @@ ZPLGM[EXTENDED_GLOB]=""
     REPLY="$in_plugin_path"
 } # }}}
 # FUNCTION: -zplg-get-completion-owner-uspl2col {{{
-# For shortening of code
+# For shortening of code - returns colorized plugin name
+# that owns given completion.
 -zplg-get-completion-owner-uspl2col() {
     # "cpath" "readline_cmd"
     -zplg-get-completion-owner "$1" "$2"
     -zplg-any-colorify-as-uspl2 "$REPLY"
 } # }}}
 # FUNCTION: -zplg-find-completions-of-plugin {{{
-# Searches for completions owned by given plugin
-# Returns them in reply array
+# Searches for completions owned by given plugin.
+# Returns them in `reply' array.
 -zplg-find-completions-of-plugin() {
     builtin setopt localoptions nullglob extendedglob
     -zplg-any-to-user-plugin "$1" "$2"
@@ -515,10 +547,10 @@ ZPLGM[EXTENDED_GLOB]=""
     (( error )) && print "${ZPLGM[col-error]}Manual edit of ${ZPLGM[COMPLETIONS_DIR]} occured?${ZPLGM[col-rst]}"
 } # }}}
 # FUNCTION: -zplg-check-which-completions-are-installed {{{
-# For each positional parameter that each should
-# be path to completion within a plugin's dir, it
-# checks whether that completion is installed -
-# returns 0 or 1 on corresponding positions in reply
+# For each positional parameter that each should be a path to
+# completion within a plugin's dir, it checks whether that
+# completion is installed - returns 0 or 1 on corresponding
+# positions in reply
 -zplg-check-which-completions-are-installed() {
     local i cfile bkpfile
     reply=( )
@@ -534,10 +566,10 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-check-which-completions-are-enabled {{{
-# For each positional parameter that each should
-# be path to completion within a plugin's dir, it
-# checks whether that completion is disabled -
-# returns 0 or 1 on corresponding positions in reply
+# For each positional parameter that each should be a path
+# to completion within a plugin's dir, it checks whether
+# that completion is disabled - returns 0 or 1 on corresponding
+# positions in reply
 #
 # Uninstalled completions will be reported as "0"
 # - i.e. disabled
@@ -555,6 +587,8 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-uninstall-completions {{{
+# Removes all completions of given plugin from Zshell (i.e. from FPATH)
+#
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-uninstall-completions() {
@@ -608,6 +642,12 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-compinit {{{
+# User-exposed `compinit' frontend which first ensures that all
+# completions managed by Zplugin are forgotten by Zshell. After
+# that it runs normal `compinit', which should more easily detect
+# Zplugin's completions.
+#
+# No arguments.
 -zplg-compinit() {
     builtin setopt localoptions nullglob extendedglob
 

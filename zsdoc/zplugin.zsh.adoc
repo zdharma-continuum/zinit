@@ -53,7 +53,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 109 lines. Calls functions:
+Has 108 line(s). Calls functions:
 
  Script-Body
  |-- -zplg-prepare-home
@@ -711,7 +711,7 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 compinit
 ~~~~~~~~
 
-Has 542 line(s). Doesn't call other functions.
+Has 547 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -720,7 +720,7 @@ Called by:
 is-at-least
 ~~~~~~~~~~~
 
-Has 38 line(s). Doesn't call other functions.
+Has 56 line(s). Doesn't call other functions.
 
 Called by:
 

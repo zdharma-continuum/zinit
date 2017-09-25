@@ -2,7 +2,7 @@
 # vim:ft=zsh
 
 # FUNCTION: -zplg-exists-physically {{{
-# Checks if given plugin directory exists in PLUGIN_DIR.
+# Checks if directory of given plugin exists in PLUGIN_DIR.
 # Testable.
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -15,8 +15,9 @@
     fi
 } # }}}
 # FUNCTION: -zplg-exists-physically-message {{{
-# Checks if given plugin directory exists in PLUGIN_DIR,
+# Checks if directory of given plugin exists in PLUGIN_DIR,
 # and outputs error message if it doesn't. Testable.
+#
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-exists-physically-message() {
@@ -33,6 +34,7 @@
 # ones, and matched. -zplg-load-plugin() has similar code parts
 # and doesn't call -zplg-first() – for performance. Obscure matching
 # is done in -zplg-find-other-matches, here and in -zplg-load().
+# Obscure = non-standard main-file naming convention.
 -zplg-first() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -70,9 +72,10 @@
     return 0
 } # }}}
 # FUNCTION: -zplg-any-colorify-as-uspl2 {{{
-# Returns (REPLY) ANSI-colorified "user/plugin" string, from any
-# supported spec (user--plugin, user/plugin, plugin).
-# Double-defined, in *install and *autoload.
+# Returns ANSI-colorified "user/plugin" string, from any supported
+# plugin spec (user--plugin, user/plugin, user plugin, plugin).
+#
+# $REPLY = ANSI-colorified "user/plugin" string
 -zplg-any-colorify-as-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"

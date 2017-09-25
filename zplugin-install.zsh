@@ -6,6 +6,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # FUNCTION: -zplg-setup-plugin-dir {{{
 # Clones given plugin into PLUGIN_DIR. Supports multiple
 # sites (respecting `from' and `proto' ice modifiers).
+# Invokes compilation of plugin's main file.
 #
 # $1 - user
 # $2 - plugin
@@ -59,8 +60,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 } # }}}
 # FUNCTION: -zplg-install-completions {{{
 # Installs all completions of given plugin. After that they are
-# visible to compinit. Visible completions can be selectively
-# disabled.
+# visible to `compinit'. Visible completions can be selectively
+# disabled and enabled. User can access completion data with
+# `clist' or `completions' subcommand.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -148,7 +150,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
 #
-# $1 - completion function name, e.g. "_cp"
+# $1 - completion function name, e.g. "_cp"; can also be "cp"
 -zplg-forget-completion() {
     local f="$1"
 
