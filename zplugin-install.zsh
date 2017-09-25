@@ -1,3 +1,6 @@
+# -*- mode: shell-script -*-
+# vim:ft=zsh
+
 builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
 # FUNCTION: -zplg-setup-plugin-dir {{{
@@ -187,6 +190,3 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Try to catch possible additional file
     zcompile "${first%.plugin.zsh}.zsh" 2>/dev/null
 } # }}}
-
-# -*- mode: shell-script -*-
-# vim:ft=zsh

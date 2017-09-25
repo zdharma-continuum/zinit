@@ -1,3 +1,6 @@
+# -*- mode: shell-script -*-
+# vim:ft=zsh
+
 # FUNCTION: -zplg-exists-physically {{{
 # Checks if given plugin directory exists in PLUGIN_DIR.
 # Testable.
