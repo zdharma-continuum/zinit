@@ -604,7 +604,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local c cfile bkpfile
     integer action global_action=0
 
-    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]# ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]# )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
     symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
     backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
@@ -1269,7 +1269,7 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of completions existing in all plugins
-    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]# )
+    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
     print "Completions available overall: ${infoc}${#completions[@]}${reset_color}"
 
     # Enumerate snippets loaded
@@ -1531,7 +1531,7 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]# )
+        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
         if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
             [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
@@ -1542,7 +1542,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]# )
+        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
 
         if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
