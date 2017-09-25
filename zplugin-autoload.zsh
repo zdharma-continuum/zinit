@@ -524,7 +524,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
-    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]# )
+    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
 } # }}}
 # FUNCTION: -zplg-check-comp-consistency {{{
 -zplg-check-comp-consistency() {
