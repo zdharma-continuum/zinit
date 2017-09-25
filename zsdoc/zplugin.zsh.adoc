@@ -450,7 +450,8 @@ Called by:
 ____
  # Parses ICE specification (`zplg ice' subcommand), puts
  # the result into ZPLG_ICE global hash. The ice-spec is
- # valid for next command only (i.e. it "melts").
+ # valid for next command only (i.e. it "melts"), but it
+ # can then stick to plugin and activate e.g. at update.
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -644,8 +645,8 @@ zplugin
 ~~~~~~~
 
 ____
- # Main function directly exposed to user, obtains
- # subcommand and its arguments.
+ # Main function directly exposed to user, obtains subcommand
+ # and its arguments, has completion.
 ____
 
 Has 217 line(s). Calls functions:

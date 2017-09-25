@@ -1211,7 +1211,8 @@ builtin setopt noaliases
 # FUNCTION: -zplg-ice {{{
 # Parses ICE specification (`zplg ice' subcommand), puts
 # the result into ZPLG_ICE global hash. The ice-spec is
-# valid for next command only (i.e. it "melts").
+# valid for next command only (i.e. it "melts"), but it
+# can then stick to plugin and activate e.g. at update.
 -zplg-ice() {
     setopt localoptions extendedglob
     local bit
@@ -1234,8 +1235,8 @@ builtin setopt noaliases
 #
 
 # FUNCTION: zplugin {{{
-# Main function directly exposed to user, obtains
-# subcommand and its arguments.
+# Main function directly exposed to user, obtains subcommand
+# and its arguments, has completion.
 zplugin() {
     # All functions from now on will not change these values
     # globally. Functions that don't do "source" of plugin

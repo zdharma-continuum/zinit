@@ -217,7 +217,6 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-save-set-extendedglob {{{
 # Enables extendedglob-option first saving if it was already
 # enabled, for restoration of this state later.
-#
 -zplg-save-set-extendedglob() {
     [[ -o "extendedglob" ]] && ZPLGM[EXTENDED_GLOB]="1" || ZPLGM[EXTENDED_GLOB]="0"
     builtin setopt extendedglob
@@ -517,6 +516,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-get-completion-owner-uspl2col {{{
 # For shortening of code - returns colorized plugin name
 # that owns given completion.
+#
+# $1 - absolute path to completion file (in COMPLETIONS_DIR)
+# $2 - readlink command (":" or "readlink")
 -zplg-get-completion-owner-uspl2col() {
     # "cpath" "readline_cmd"
     -zplg-get-completion-owner "$1" "$2"
@@ -525,6 +527,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-find-completions-of-plugin {{{
 # Searches for completions owned by given plugin.
 # Returns them in `reply' array.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-find-completions-of-plugin() {
     builtin setopt localoptions nullglob extendedglob
     -zplg-any-to-user-plugin "$1" "$2"
@@ -533,6 +538,14 @@ ZPLGM[EXTENDED_GLOB]=""
     reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
 } # }}}
 # FUNCTION: -zplg-check-comp-consistency {{{
+# Zplugin creates symlink for each installed completion.
+# This function checks whether given completion (i.e.
+# file like "_mkdir") is indeed a symlink. Backup file
+# is a completion that is disabled - has the leading "_"
+# removed.
+#
+# $1 - path to completion within plugin's directory
+# $2 - path to backup file within plugin's directory
 -zplg-check-comp-consistency() {
     local cfile="$1" bkpfile="$2"
     integer error="$3"
@@ -553,10 +566,12 @@ ZPLGM[EXTENDED_GLOB]=""
     (( error )) && print "${ZPLGM[col-error]}Manual edit of ${ZPLGM[COMPLETIONS_DIR]} occured?${ZPLGM[col-rst]}"
 } # }}}
 # FUNCTION: -zplg-check-which-completions-are-installed {{{
-# For each positional parameter that each should be a path to
-# completion within a plugin's dir, it checks whether that
-# completion is installed - returns 0 or 1 on corresponding
-# positions in reply
+# For each argument that each should be a path to completion
+# within a plugin's dir, it checks whether that completion
+# is installed - returns 0 or 1 on corresponding positions
+# in reply.
+#
+# $1, ... - path to completion within plugin's directory
 -zplg-check-which-completions-are-installed() {
     local i cfile bkpfile
     reply=( )
@@ -572,13 +587,15 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-check-which-completions-are-enabled {{{
-# For each positional parameter that each should be a path
-# to completion within a plugin's dir, it checks whether
-# that completion is disabled - returns 0 or 1 on corresponding
-# positions in reply
+# For each argument that each should be a path to completion
+# within a plugin's dir, it checks whether that completion
+# is disabled - returns 0 or 1 on corresponding positions
+# in reply.
 #
 # Uninstalled completions will be reported as "0"
 # - i.e. disabled
+#
+# $1, ... - path to completion within plugin's directory
 -zplg-check-which-completions-are-enabled() {
     local i cfile
     reply=( )
@@ -593,7 +610,8 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-uninstall-completions {{{
-# Removes all completions of given plugin from Zshell (i.e. from FPATH)
+# Removes all completions of given plugin from Zshell (i.e. from FPATH).
+# The FPATH is typically `~/.zplugin/completions/'.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -725,20 +743,20 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-unload {{{
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
-# $2 - plugin (only when $1 - i.e. user - given)
-#
-# 1. Unfunction functions created by plugin
-# 2. Delete bindkeys
-# 3. Delete created Zstyles
+# 1. Unfunction functions (created by plugin)
+# 2. Delete bindkeys (...)
+# 3. Delete Zstyles
 # 4. Restore options
-# 5. Restore (or just unalias?) aliases
+# 5. Remove aliases
 # 6. Restore Zle state
-# 7. Clean up FPATH and PATH
+# 7. Clean-up FPATH and PATH
 # 8. Delete created variables
 # 9. Forget the plugin
 #
 # User-action entry point.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-unload() {
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}/${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1030,9 +1048,12 @@ ZPLGM[EXTENDED_GLOB]=""
 
 } # }}}
 # FUNCTION: -zplg-show-report {{{
-# Displays given plugin's report.
+# Displays report of the plugin given.
 #
 # User-action entry point.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-show-report() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -1136,6 +1157,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # Updates (git pull) or does `git status' for given plugin.
 #
 # User-action entry point.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-update-or-status() {
     local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
@@ -1170,6 +1194,8 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-update-or-status-all {{{
 # Updates (git pull) or does `git status` for all existing plugins.
+# This includes also plugins that are not loaded into Zsh (but exist
+# on disk). Also updates (i.e. redownloads) snippets.
 #
 # User-action entry point.
 -zplg-update-or-status-all() {
@@ -1235,7 +1261,8 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-show-zstatus {{{
-# Shows Zplugin status.
+# Shows Zplugin status, i.e. number of loaded plugins,
+# of available completions, etc.
 #
 # User-action entry point.
 -zplg-show-zstatus() {
@@ -1315,12 +1342,12 @@ ZPLGM[EXTENDED_GLOB]=""
         print "${ZPLGM[$entry]} sec" - "$REPLY"
         (( sum += ZPLGM[$entry] ))
     done
-    print "Sum: $sum sec"
+    print "Total: $sum sec"
 }
 # }}}
 
 # FUNCTION: -zplg-compiled {{{
-# Gets list of compiled plugins.
+# Displays list of plugins that are compiled.
 #
 # User-action entry point.
 -zplg-compiled() {
@@ -1352,7 +1379,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-compile-uncompile-all {{{
-# Compiles or uncompiles all existing plugins.
+# Compiles or uncompiles all existing (on disk) plugins.
 #
 # User-action entry point.
 -zplg-compile-uncompile-all() {
@@ -1384,6 +1411,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # Uncompiles given plugin.
 #
 # User-action entry point.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-uncompile-plugin() {
     builtin setopt localoptions nullglob
 
@@ -1414,8 +1444,11 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 
 # FUNCTION: -zplg-show-completions {{{
-# Show installed (enabled and disabled), completions. Detect stray
-# and improper ones.
+# Display installed (enabled and disabled), completions. Detect
+# stray and improper ones.
+#
+# Completions live even when plugin isn't loaded - if they are
+# installed and enabled.
 #
 # User-action entry point.
 -zplg-show-completions() {
@@ -1472,6 +1505,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-clear-completions {{{
 # Delete stray and improper completions.
 #
+# Completions live even when plugin isn't loaded - if they are
+# installed and enabled.
+#
 # User-action entry point.
 -zplg-clear-completions() {
     builtin setopt localoptions nullglob extendedglob
@@ -1522,7 +1558,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-search-completions {{{
 # While -zplg-show-completions() shows what completions are
 # installed, this functions searches through all plugin dirs
-# showing what's available in general (for installation)
+# showing what's available in general (for installation).
 #
 # User-action entry point.
 -zplg-search-completions() {
@@ -1584,9 +1620,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-cenable {{{
 # Disables given installed completion.
 #
-# $1 - e.g. "_mkdir" or "mkdir"
-#
 # User-action entry point.
+#
+# $1 - e.g. "_mkdir" or "mkdir"
 -zplg-cenable() {
     local c="$1"
     c="${c#_}"
@@ -1633,9 +1669,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-cdisable {{{
 # Enables given installed completion.
 #
-# $1 - e.g. "_mkdir" or "mkdir"
-#
 # User-action entry point.
+#
+# $1 - e.g. "_mkdir" or "mkdir"
 -zplg-cdisable() {
     local c="$1"
     c="${c#_}"
@@ -1682,10 +1718,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-cd {{{
 # Jumps to plugin's directory (in Zplugin's home directory).
 #
+# User-action entry point.
+#
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-#
-# User-action entry point.
 -zplg-cd() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1697,10 +1733,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-changes {{{
 # Shows `git log` of given plugin.
 #
+# User-action entry point.
+#
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-#
-# User-action entry point.
 -zplg-changes() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1715,9 +1751,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-recently {{{
 # Shows plugins that obtained commits in specified past time.
 #
-# $1 - time spec, e.g. "1 week"
-#
 # User-action entry point.
+#
+# $1 - time spec, e.g. "1 week"
 -zplg-recently() {
     builtin setopt localoptions nullglob extendedglob
 
@@ -1749,10 +1785,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-create {{{
 # Creates a plugin, also on Github (if not "_local/name" plugin).
 #
+# User-action entry point.
+#
 # $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - (optional) plugin (only when $1 - i.e. user - given)
-#
-# User-action entry point.
 -zplg-create() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1824,10 +1860,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # Shows colorized source code of plugin. Is able to use pygmentize,
 # highlight, GNU source-highlight.
 #
+# User-action entry point.
+#
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-#
-# User-action entry point.
 -zplg-glance() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1873,10 +1909,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # Runs $EDITOR on source of given plugin. If the variable is not
 # set then defaults to `vim'.
 #
+# User-action entry point.
+#
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-#
-# User-action entry point.
 -zplg-edit() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1898,13 +1934,13 @@ ZPLGM[EXTENDED_GLOB]=""
 # Compiles plugin with various options on and off to see
 # how well the code is written. The options are:
 #
-# NO_SHORT_LOOPS IGNORE_BRACES IGNORE_CLOSE_BRACES SH_GLOB
-# CSH_JUNKIE_QUOTES NO_MULTI_FUNC_DEF
+# NO_SHORT_LOOPS, IGNORE_BRACES, IGNORE_CLOSE_BRACES, SH_GLOB,
+# CSH_JUNKIE_QUOTES, NO_MULTI_FUNC_DEF.
+#
+# User-action entry point.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-#
-# User-action entry point.
 -zplg-stress() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
