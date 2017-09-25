@@ -97,7 +97,7 @@ Called by:
 ~~~~~~~~
 
 ____
- # Jumps to plugin's directory in Zplugins home directory.
+ # Jumps to plugin's directory (in Zplugin's home directory).
  #
  # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin (only when $1 - i.e. user - given)
@@ -332,7 +332,7 @@ Has 23 line(s). Calls functions:
  |-- compinit
  `-- zplugin-install.zsh/-zplg-forget-completion
 
-Uses features: _autoload_, _unfunction_
+Uses feature(s): _autoload_, _unfunction_
 
 Called by:
 
@@ -357,7 +357,7 @@ Has 61 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-exists-physically
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses features: _vared_
+Uses feature(s): _vared_
 
 Called by:
 
@@ -436,7 +436,8 @@ Called by:
 ~~~~~~~~~~
 
 ____
- # Runs $EDITOR on source of given plugin.
+ # Runs $EDITOR on source of given plugin. If the variable is not
+ # set then defaults to `vim'.
  #
  # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin (only when $1 - i.e. user - given)
@@ -568,12 +569,18 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
+ # Returns "user---plugin" string (uspl1 format) of plugin that
+ # owns given completion.
+ #
  # Both :A and readlink will be used, then readlink's output if
  # results differ. Readlink might not be available.
  #
  # :A will read the link "twice" and give the final repository
  # directory, possibly without username in the uspl format;
  # readlink will read the link "once"
+ #
+ # $1 - absolute path to completion file (in COMPLETIONS_DIR)
+ # $2 - readlink command (":" or "readlink")
 ____
 
 Has 22 line(s). Doesn't call other functions.
@@ -607,7 +614,8 @@ Called by:
 ~~~~~~~~~~~~
 
 ____
- # Shows colorized source code of plugin.
+ # Shows colorized source code of plugin. Is able to use pygmentize,
+ # highlight, GNU source-highlight.
  #
  # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin (only when $1 - i.e. user - given)
@@ -646,6 +654,8 @@ Called by:
 
 ____
  # Shows recorded compdefs (called by plugins loaded earlier).
+ # Plugins often call `compdef' hoping for `compinit' being
+ # already ran. Zplugin solves this by recording compdefs.
  #
  # User-action entry point.
 ____
@@ -667,7 +677,7 @@ ____
 
 Has 4 line(s). Doesn't call other functions.
 
-Uses features: _type_
+Uses feature(s): _type_
 
 Called by:
 
@@ -952,8 +962,11 @@ Called by:
 ~~~~~~~~~~~~
 
 ____
- # Compiles plugin with various options on and off
- # to see how well the code is written.
+ # Compiles plugin with various options on and off to see
+ # how well the code is written. The options are:
+ #
+ # NO_SHORT_LOOPS IGNORE_BRACES IGNORE_CLOSE_BRACES SH_GLOB
+ # CSH_JUNKIE_QUOTES NO_MULTI_FUNC_DEF
  #
  # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin (only when $1 - i.e. user - given)
@@ -968,7 +981,7 @@ Has 35 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-first
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses features: _zcompile_
+Uses feature(s): _zcompile_
 
 Called by:
 
@@ -1056,7 +1069,7 @@ Has 209 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-clear-debug-report
  `-- zplugin.zsh/-zplg-unregister-plugin
 
-Uses features: _bindkey_, _unalias_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _bindkey_, _unalias_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
@@ -1080,7 +1093,7 @@ Has 28 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin.zsh/-zplg-pack-ice
 
-Uses features: _eval_
+Uses feature(s): _eval_
 
 Called by:
 
@@ -1102,7 +1115,7 @@ Has 54 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin.zsh/-zplg-load-snippet
 
-Uses features: _eval_
+Uses feature(s): _eval_
 
 Called by:
 
@@ -1113,7 +1126,7 @@ compinit
 
 Has 547 line(s). Doesn't call other functions.
 
-Uses features: _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 

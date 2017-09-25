@@ -80,7 +80,7 @@ ____
 
 Has 8 line(s). Doesn't call other functions.
 
-Uses features: _autoload_, _unfunction_
+Uses feature(s): _autoload_, _unfunction_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -98,7 +98,7 @@ Has 39 line(s). Calls functions:
  --zplg-shadow-alias
  `-- -zplg-add-report
 
-Uses features: _alias_, _unfunction_, _zparseopts_
+Uses feature(s): _alias_, _unfunction_, _zparseopts_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -117,7 +117,7 @@ Has 41 line(s). Calls functions:
  --zplg-shadow-autoload
  `-- -zplg-add-report
 
-Uses features: _autoload_, _eval_, _zparseopts_
+Uses feature(s): _autoload_, _eval_, _zparseopts_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -135,7 +135,7 @@ Has 78 line(s). Calls functions:
  --zplg-shadow-bindkey
  `-- -zplg-add-report
 
-Uses features: _bindkey_, _unfunction_, _zparseopts_
+Uses feature(s): _bindkey_, _unfunction_, _zparseopts_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -169,7 +169,7 @@ Has 38 line(s). Calls functions:
  --zplg-shadow-zle
  `-- -zplg-add-report
 
-Uses features: _unfunction_, _zle_
+Uses feature(s): _unfunction_, _zle_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -187,7 +187,7 @@ Has 26 line(s). Calls functions:
  --zplg-shadow-zstyle
  `-- -zplg-add-report
 
-Uses features: _unfunction_, _zparseopts_, _zstyle_
+Uses feature(s): _unfunction_, _zparseopts_, _zstyle_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -488,7 +488,7 @@ Has 17 line(s). Calls functions:
  |   `-- -zplg-any-to-user-plugin
  `-- zplugin-install.zsh/-zplg-setup-plugin-dir
 
-Uses features: _source_
+Uses feature(s): _source_
 
 Called by:
 
@@ -517,7 +517,7 @@ Has 52 line(s). Calls functions:
  |-- -zplg-shadow-off
  `-- -zplg-shadow-on
 
-Uses features: _eval_, _source_
+Uses feature(s): _eval_, _source_
 
 Called by:
 
@@ -543,7 +543,7 @@ Has 74 line(s). Calls functions:
  |-- -zplg-shadow-on
  `-- zplugin-install.zsh/-zplg-download-file-stdout
 
-Uses features: _source_
+Uses feature(s): _source_
 
 Called by:
 
@@ -602,7 +602,7 @@ ____
 
 Has 17 line(s). Doesn't call other functions.
 
-Uses features: _unfunction_
+Uses feature(s): _unfunction_
 
 Called by:
 
@@ -726,7 +726,7 @@ Has 217 line(s). Calls functions:
  |-- zplugin-install.zsh/-zplg-forget-completion
  `-- zplugin-install.zsh/-zplg-install-completions
 
-Uses features: _autoload_, _eval_, _source_
+Uses feature(s): _autoload_, _eval_, _source_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -735,7 +735,7 @@ compinit
 
 Has 547 line(s). Doesn't call other functions.
 
-Uses features: _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 

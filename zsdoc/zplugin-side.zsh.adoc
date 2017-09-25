@@ -33,6 +33,8 @@ ____
  # Returns ANSI-colorified "user/plugin" string, from any supported
  # plugin spec (user--plugin, user/plugin, user plugin, plugin).
  #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
  # $REPLY = ANSI-colorified "user/plugin" string
 ____
 
@@ -66,7 +68,9 @@ Called by:
 
 ____
  # Checks if directory of given plugin exists in PLUGIN_DIR.
+ #
  # Testable.
+ #
  # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin (only when $1 - i.e. user - given)
 ____
@@ -86,7 +90,9 @@ Called by:
 
 ____
  # Checks if directory of given plugin exists in PLUGIN_DIR,
- # and outputs error message if it doesn't. Testable.
+ # and outputs error message if it doesn't.
+ #
+ # Testable.
  #
  # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  # $2 - plugin (only when $1 - i.e. user - given)
@@ -121,6 +127,9 @@ ____
  # and doesn't call -zplg-first() – for performance. Obscure matching
  # is done in -zplg-find-other-matches, here and in -zplg-load().
  # Obscure = non-standard main-file naming convention.
+ #
+ # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 25 line(s). Calls functions:

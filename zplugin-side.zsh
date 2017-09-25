@@ -3,7 +3,9 @@
 
 # FUNCTION: -zplg-exists-physically {{{
 # Checks if directory of given plugin exists in PLUGIN_DIR.
+#
 # Testable.
+#
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-exists-physically() {
@@ -16,7 +18,9 @@
 } # }}}
 # FUNCTION: -zplg-exists-physically-message {{{
 # Checks if directory of given plugin exists in PLUGIN_DIR,
-# and outputs error message if it doesn't. Testable.
+# and outputs error message if it doesn't.
+#
+# Testable.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -35,6 +39,9 @@
 # and doesn't call -zplg-first() – for performance. Obscure matching
 # is done in -zplg-find-other-matches, here and in -zplg-load().
 # Obscure = non-standard main-file naming convention.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 -zplg-first() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -75,6 +82,8 @@
 # Returns ANSI-colorified "user/plugin" string, from any supported
 # plugin spec (user--plugin, user/plugin, user plugin, plugin).
 #
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
 # $REPLY = ANSI-colorified "user/plugin" string
 -zplg-any-colorify-as-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"

@@ -470,12 +470,18 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 
 # FUNCTION: -zplg-get-completion-owner {{{
+# Returns "user---plugin" string (uspl1 format) of plugin that
+# owns given completion.
+#
 # Both :A and readlink will be used, then readlink's output if
 # results differ. Readlink might not be available.
 #
 # :A will read the link "twice" and give the final repository
 # directory, possibly without username in the uspl format;
 # readlink will read the link "once"
+#
+# $1 - absolute path to completion file (in COMPLETIONS_DIR)
+# $2 - readlink command (":" or "readlink")
 -zplg-get-completion-owner() {
     setopt localoptions extendedglob
     local cpath="$1"
@@ -1674,7 +1680,7 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 
 # FUNCTION: -zplg-cd {{{
-# Jumps to plugin's directory in Zplugins home directory.
+# Jumps to plugin's directory (in Zplugin's home directory).
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -1815,7 +1821,8 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-glance {{{
-# Shows colorized source code of plugin.
+# Shows colorized source code of plugin. Is able to use pygmentize,
+# highlight, GNU source-highlight.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -1863,7 +1870,8 @@ ZPLGM[EXTENDED_GLOB]=""
     }
 } # }}}
 # FUNCTION: -zplg-edit {{{
-# Runs $EDITOR on source of given plugin.
+# Runs $EDITOR on source of given plugin. If the variable is not
+# set then defaults to `vim'.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -1887,8 +1895,11 @@ ZPLGM[EXTENDED_GLOB]=""
     "${EDITOR:-vim}" "$fname"
 } # }}}
 # FUNCTION: -zplg-stress {{{
-# Compiles plugin with various options on and off
-# to see how well the code is written.
+# Compiles plugin with various options on and off to see
+# how well the code is written. The options are:
+#
+# NO_SHORT_LOOPS IGNORE_BRACES IGNORE_CLOSE_BRACES SH_GLOB
+# CSH_JUNKIE_QUOTES NO_MULTI_FUNC_DEF
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -1933,6 +1944,8 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-list-compdef-replay {{{
 # Shows recorded compdefs (called by plugins loaded earlier).
+# Plugins often call `compdef' hoping for `compinit' being
+# already ran. Zplugin solves this by recording compdefs.
 #
 # User-action entry point.
 -zplg-list-compdef-replay() {
