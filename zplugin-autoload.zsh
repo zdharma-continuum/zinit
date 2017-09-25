@@ -374,10 +374,10 @@ ZPLGM[EXTENDED_GLOB]=""
     # Format PATH?
     if [[ "$which" = "1" ]]; then
         typeset -a elem
-        elem=( "${(z)ZPLG_PATH[$uspl2]}" )
+        elem=( "${(z@)ZPLG_PATH[$uspl2]}" )
     elif [[ "$which" = "2" ]]; then
         typeset -a elem
-        elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
+        elem=( "${(z@)ZPLG_FPATH[$uspl2]}" )
     fi
 
     # Enumerate elements added

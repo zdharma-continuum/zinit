@@ -152,7 +152,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" )
 
-    [[ "${#commands[@]}" -gt 0 ]] && print "Forgetting commands completed by \`$f':"
+    [[ "${#commands}" -gt 0 ]] && print "Forgetting commands completed by \`$f':"
 
     local k
     for k in "${commands[@]}"; do
