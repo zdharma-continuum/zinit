@@ -14,8 +14,14 @@ addons:
     packages:
     - zsh
 
+env:
+  global:
+  - ENCRYPTION_LABEL: "de1faff15945"
+  - COMMIT_AUTHOR_EMAIL: "psprint@zdharma.org"
+
 before_script:
 - zsh --version
 script:
 - make
 - make -C zsdoc pdf
+- share/deploy_doc.sh
