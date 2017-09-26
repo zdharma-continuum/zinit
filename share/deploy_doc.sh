@@ -25,9 +25,11 @@ LIST_ORIGINAL=( out/* )
 
 # Remove existing contents
 mv -v out/.git .git_out
+mv -v out/index.html .
 rm -rf out
 mkdir out
 mv .git_out out/.git
+mv index.html out
 
 # Copy the PDFs (built earlier by .travis.yml / make)
 cp -v zsdoc/pdf/*.pdf out
