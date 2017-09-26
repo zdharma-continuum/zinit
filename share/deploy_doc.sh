@@ -65,9 +65,11 @@ chmod 600 ../share/deploy_key
 eval `ssh-agent -s`
 ssh-add ../share/deploy_key
 
-# Push to GitHub, without --force, it shouldn't be needed
-#git push "$SSH_REPO" "$TARGET_BRANCH"
-
+echo
 ls -1
+echo
+
+# Push to GitHub, without --force, it shouldn't be needed
+git push "$SSH_REPO" "$TARGET_BRANCH"
 
 rm -f ../share/deploy_key
