@@ -304,7 +304,7 @@ uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins 
 compiled                 - list plugins that are compiled
 ```
 
-To use themes created for `Oh-My-Zsh` you might want to first source the `git` library there:
+To use **themes** created for `Oh-My-Zsh` you might want to first source the `git` library there:
 
 ```sh
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
@@ -312,8 +312,8 @@ zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh
 
 Then you can use the themes as snippets (`zplugin snippet {file path or Github URL}`).
 Some themes require not only
-`Oh-My-Zsh's` `git` library, but also `git` plugin (error about function `current_branch` appears).
-Source it as snippet directly from `Oh-My-Zsh`:
+`Oh-My-Zsh's` `git` **library**, but also `git` **plugin** (error about function `current_branch` appears).
+Load this plugin as snippet:
 
 ```sh
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
@@ -322,8 +322,8 @@ zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/gi
 Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
 a fresh version of a snippet.
 
-Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set prompt
-will appear as something like: `$(build_prompt)`.
+Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
+prompt will appear as something like: `... $(build_prompt) ...`.
 
 You might want to supress completions provided by the git plugin by issuing `zplugin cdclear -q`
 (`-q` is for quiet) – see below **Ignoring Compdefs**.
@@ -331,11 +331,13 @@ You might want to supress completions provided by the git plugin by issuing `zpl
 To summarize:
 
 ```SystemVerilog
+# Load Git library from OMZ
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
+# Load Git plugin from OMZ
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
 zplugin cdclear -q # <- forget completions provided up to this moment
 setopt promptsubst
-# Load theme
+# Load theme from OMZ
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/dstufft.zsh-theme'
 # Load plugin-theme depending on OMZ git library
 zplugin light NicoSantangelo/Alpharized
@@ -349,7 +351,7 @@ this directory to `$FPATH`. You manage those completions via commands starting w
 `csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`.
 All this brings order to `$FPATH`, there is only one directory there. 
 Also, plugins aren't allowed to simply run `compdefs`. You can decide whether to run `compdefs`
-by issuing `zplugin cdreplay` (`compdef`-replay). To summarize:
+by issuing `zplugin cdreplay` (reads: `compdef`-replay). To summarize:
 
 ```sh
 source ~/.zplugin/bin/zplugin.zsh
@@ -370,7 +372,7 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 
 # Ignoring Compdefs
 
-If you want to ignore `compdef`s provided by some plugins or snippets, place their load commands
+If you want to ignore compdefs provided by some plugins or snippets, place their load commands
 before commands loading other plugins or snippets, and issue `zplugin cdclear`:
 
 ```sh
