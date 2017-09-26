@@ -18,3 +18,4 @@ before_script:
 - zsh --version
 script:
 - make
+- make -C zsdoc pdf
