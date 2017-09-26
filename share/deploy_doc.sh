@@ -30,6 +30,7 @@ rm -rf out
 mkdir out
 mv .git_out out/.git
 mv index.html out
+touch out/.nojekyll
 
 # Copy the PDFs (built earlier by .travis.yml / make)
 cp -v zsdoc/pdf/*.pdf out
