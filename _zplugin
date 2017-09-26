@@ -1,0 +1,242 @@
+#compdef zplugin
+
+local context state state_descr line ret=1
+typeset -A opt_args
+
+typeset -a commands
+commands=(
+    zstatus:'overall Zplugin status'
+    times:'statistics on plugin loading times'
+    self-update:'updates Zplugin'
+    help:'usage information'
+    man:'manual'
+    load:'load plugin'
+    unload:'unload plugin'
+    snippet:"source (or add to PATH with --command) local or remote file (-f: force - don't use cache)"
+    update:'Git update plugin (or all plugins and snippets if --all passed)'
+    status:'Git status for plugin (or all plugins if --all passed)'
+    report:'show plugin'"'"'s report (or all plugins'"'"' if --all passed)'
+    loaded:'show what plugins are loaded'
+    list:'show what plugins are loaded'
+    cd:"go into plugin's directory"
+    create:'create plugin (also together with Github repository)'
+    edit:"edit plugin's file with \$EDITOR"
+    glance:"look at plugin's source (pygmentize, {,source-}highlight)"
+    stress:'test plugin for compatibility with set of options'
+    changes:"view plugin's git log"
+    recently:"show plugins that changed recently, argument is e.g. 1 month 2 days"
+    clist:'list completions in use'
+    cclear:'clear stray and improper completions'
+    completions:'list completions in use'
+    cdisable:'disable completion'
+    cenable:'enable completion'
+    creinstall:'install completions for plugin'
+    cuninstall:'uninstall completions for plugin'
+    csearch:'search for available completions from any plugin'
+    compinit:'refresh installed completions'
+    dtrace:"start tracking what's going on in session"
+    dstart:"start tracking what's going on in session"
+    dstop:"stop tracking what's going on in session"
+    dunload:'revert changes recorded between dstart and dstop'
+    dreport:"report what was going on in session"
+    dclear:'clear report of what was going on in session'
+    compile:'compile plugin (or all plugins if --all passed)'
+    uncompile:'remove compiled version of plugin (or of all plugins if --all passed)'
+    compiled:'show which plugins are compiled'
+    cdlist:'show compdef replay list'
+    cdreplay:'replay compdefs (to be done after compinit)'
+    cdclear:'clear compdef replay list'
+)
+
+_arguments -C \
+    '1: :->command'\
+    '*: :->argument' && ret=0
+
+case $state in
+    command)
+        _describe -t commands "Zplugin command" commands && ret=0
+        ;;
+    argument)
+        case $words[2] in
+            help)
+                _message "Hit enter to get usage information" && ret=0
+                ;;
+            man)
+                _message "Hit enter to view manual" && ret=0
+                ;;
+            zstatus)
+                _message "Hit enter to get overall status information" && ret=0
+                ;;
+            times)
+                _message "Hit enter to get plugin load time statistics" && ret=0
+                ;;
+            load|light|update|status|compile|stress|cd|edit|glance|changes)
+                typeset -a plugins
+                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
+                ;;
+            unload|report)
+                typeset -a plugins absolute normal
+                plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
+                normal=( "${plugins[@]:#%*}" )
+                absolute=( "${(M)plugins[@]:#%*}" )
+                absolute=( "${absolute[@]/\%\/\//%/}" )
+                local hm="${HOME%/}"
+                absolute=( "${absolute[@]/$hm/HOME}" )
+                plugins=( $absolute $normal )
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
+                ;;
+            all-reports)
+                _message "Hit enter to get all reports (for all loaded plugins)" && ret=0
+                ;;
+            loaded|list)
+                _message "Hit enter or give part of plugin name" && ret=0
+                ;;
+            clist|completions)
+                _message "Hit enter to get list of completions" && ret=0
+                ;;
+            cclear)
+                _message "Hit enter to clear stray and improper completions" && ret=0
+                ;;
+            cdisable)
+                # Find enabled completions
+                typeset -a completions
+                completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_*(N:t) )
+                completions=( "${completions[@]#_}" )
+                compadd "$@" -a - completions && ret=0
+                ;;
+            cenable)
+                # Find disabled
+                typeset -a completions
+                completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_]*(N:t) )
+                compadd "$@" -a - completions && ret=0
+                ;;
+            creinstall)
+                # Complete only plugins that have any completions
+                # We must iterate each plugin to check
+                # for completions that can be installed
+                typeset -a plugins completions
+                local p c user plugin
+                for p in "${ZPLGM[PLUGINS_DIR]}"/*; do
+                    completions=( "$p"/**/_[^_.][^.]#(N) )
+                    for c in "${completions[@]}"; do
+                        p="${p:t}"
+                        user="${p%%---*}"
+                        plugin="${p#*---}"
+                        plugins+=( "$user/$plugin" )
+                        break
+                    done
+                done
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
+                ;;
+            cuninstall)
+                # We must iterate each plugin and check if
+                # it has completions that are installed
+                typeset -a plugins completions
+                local p c user plugin
+                for p in "${ZPLGM[PLUGINS_DIR]}"/*; do
+                    completions=( "$p"/**/_[^_.][^.]#(N) )
+                    for c in "${completions[@]}"; do
+                        cfile="${c:t}"
+                        bkpfile="${cfile#_}"
+                        # Completion installed, either enabled or disabled?
+                        if [[ -e "${ZPLGM[COMPLETIONS_DIR]}"/"$cfile" || -e "${ZPLGM[COMPLETIONS_DIR]}"/"$bkpfile" ]]; then
+                            p="${p:t}"
+                            user="${p%%---*}"
+                            plugin="${p#*---}"
+                            plugins+=( "$user/$plugin" )
+                            break
+                        fi
+                    done
+                done
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
+                ;;
+            compinit)
+                _message "Hit enter to refresh completion system" && ret=0
+                ;;
+            snippet)
+                typeset -a soptions 
+                soptions=( "-f" "--command" )
+                _wanted soptions expl "Options" \
+                    compadd "$@" -a - soptions && ret=0
+                ;;
+            dstart|dtrace)
+                _message "Hit enter to start tracking this session" && ret=0
+                ;;
+            dstop)
+                _message "Hit enter to stop tracking this session" && ret=0
+                ;;
+            dunload)
+                _message "Hit enter to revert changes recorded between dstart and dstop" && ret=0
+                ;;
+            dreport)
+                _message "Hit enter to show report of what was going on in session" && ret=0
+                ;;
+            dclear)
+                _message "Hit enter to clear report of what was going on in session" && ret=0
+                ;;
+            compile-all)
+                _message 'Hit enter to compile all downloaded plugins' && ret=0
+                ;;
+            uncompile)
+                typeset -a plugins
+                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N) )
+
+                typeset -a show_plugins p matches
+                for p in "${plugins[@]}"; do
+                    matches=( $p/*.zwc(N) )
+                    if [ "$#matches" -ne "0" ]; then
+                        p="${p:t}"
+                        [ "$p" = "_local---zplugin" ] && continue
+                        [ "$p" = "custom" ] && continue
+                        p="${p/---//}"
+                        show_plugins+=( "$p" )
+                    fi
+                done
+
+                _wanted show_plugins expl "Plugins" \
+                    compadd "$@" -a - show_plugins && ret=0
+                ;;
+            uncompile-all)
+                _message 'Hit enter remove compiled versions of all downloaded plugins' && ret=0
+                ;;
+            compiled)
+                _message 'Hit enter to get list of compiled plugins' && ret=0
+                ;;
+            cdlist)
+                _message 'Hit enter to show compdef replay list' && ret=0
+                ;;
+            cdreplay)
+                _message 'Hit enter to replay recorded compdefs' && ret=0
+                ;;
+            cdclear)
+                _message 'Hit enter to clear compdef replay list' && ret=0
+                ;;
+            recently)
+                typeset -a timespecs
+                timespecs=(
+                    "3 days":"code modified during last 3 days"
+                    "1 week":"code modified during last 7 days (default)"
+                    "1 month":"code modified during last month"
+                )
+                _describe -t timespecs "Time spec" timespecs && ret=0
+                ;;
+            create)
+                _message 'Plugin spec or just enter, to create new plugin' && ret=0
+                ;;
+            *)
+                ret=1
+                ;;
+        esac
+esac
+
+return "$ret"
