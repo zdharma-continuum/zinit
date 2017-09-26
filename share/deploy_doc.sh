@@ -24,19 +24,22 @@ git -C out checkout "$TARGET_BRANCH" || git -C out checkout --orphan "$TARGET_BR
 LIST_ORIGINAL=( out/* )
 
 # Remove existing contents
-rm -rf out/**/* || exit 0
+mv -v out/.git .git_out
+rm -rf out
+mkdir out
+mv .git_out out/.git
 
 # Copy the PDFs (built earlier by .travis.yml / make)
 cp -v zsdoc/pdf/*.pdf out
 
-### CD ###
-cd out
-
 # To count new files
 LIST_NEW=( out/* )
 
+### CD ###
+cd out
+
 # No changes?
-if git diff --exit-code || [[ "${#LIST_ORIGINAL}" -eq "${#LIST_NEW}" ]]; then
+if git diff --quiet --exit-code || [[ "${#LIST_ORIGINAL}" -eq "${#LIST_NEW}" ]]; then
     echo -- "<- ${LIST_ORIGINAL[@]}"
     echo -- "-> ${LIST_NEW[@]}"
     echo "NO CHANGES, exiting"
@@ -48,7 +51,7 @@ git config user.name "Sebastian Gniazdowski [Travis CI]"
 git config user.email "$COMMIT_AUTHOR_EMAIL"
 
 # Commit the new files
-git add .
+git add -A .
 git commit -m "GitHub Pages deploy: ${SHA}"
 
 # Get the deploy key by using Travis's stored variables to decrypt deploy_key.enc
@@ -63,6 +66,8 @@ eval `ssh-agent -s`
 ssh-add ../share/deploy_key
 
 # Push to GitHub, without --force, it shouldn't be needed
-git push "$SSH_REPO" "$TARGET_BRANCH"
+#git push "$SSH_REPO" "$TARGET_BRANCH"
+
+ls -1
 
 rm -f ../share/deploy_key
