@@ -1051,9 +1051,9 @@ builtin setopt noaliases
 # FUNCTION: -zplg-compdef-clear {{{
 # Implements user-exposed functionality to clear gathered compdefs.
 -zplg-compdef-clear() {
-    local quiet="$1"
+    local quiet="$1" count="${#ZPLG_COMPDEF_REPLAY}"
     ZPLG_COMPDEF_REPLAY=( )
-    [[ "$quiet" = "-q" ]] || print "Compdef replay cleared"
+    [[ "$quiet" = "-q" ]] || print "Compdef-replay cleared (had $count entries)"
 } # }}}
 # FUNCTION: -zplg-add-report {{{
 # Adds a report line for given plugin.
