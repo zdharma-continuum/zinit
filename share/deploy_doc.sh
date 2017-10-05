@@ -42,7 +42,7 @@ LIST_NEW=( out/* )
 cd out
 
 # No changes?
-if git diff --quiet --exit-code || [[ "${#LIST_ORIGINAL}" -eq "${#LIST_NEW}" ]]; then
+if git diff --quiet --exit-code && [[ "${#LIST_ORIGINAL}" -eq "${#LIST_NEW}" ]]; then
     echo -- "<- ${LIST_ORIGINAL[@]}"
     echo -- "-> ${LIST_NEW[@]}"
     echo "NO CHANGES, exiting"
