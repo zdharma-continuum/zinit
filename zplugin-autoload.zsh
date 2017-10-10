@@ -2039,6 +2039,6 @@ compile  ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}   - compile plugin (o
 uncompile ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}  - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
 cdlist                   - show compdef replay list
-cdreplay                 - replay compdefs (to be done after compinit)
-cdclear                  - clear compdef replay list"
+cdreplay [-q]            - replay compdefs (to be done after compinit), -q - quiet
+cdclear [-q]             - clear compdef replay list, -q - quiet"
 } # }}}
