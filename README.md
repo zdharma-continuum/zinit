@@ -63,7 +63,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     Plugin loading times:
     0.010 sec - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/git.zsh
     0.001 sec - https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh
-    0.003 sec - psprint/history-search-multi-word
+    0.003 sec - zdharma/history-search-multi-word
     0.003 sec - rimraf/k
     0.003 sec - zsh-users/zsh-autosuggestions
     ```
@@ -77,10 +77,10 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     ```SystemVerilog
     % zplg times
     Plugin loading times:
-    0.002 sec - psprint/history-search-multi-word
     0.005 sec - psprint/zsh-navigation-tools
     0.002 sec - rimraf/k
     0.020 sec - zdharma/fast-syntax-highlighting
+    0.002 sec - zdharma/history-search-multi-word
     0.005 sec - zsh-users/zsh-autosuggestions
     ```
 
