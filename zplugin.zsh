@@ -1004,9 +1004,15 @@ builtin setopt noaliases
 
     if [[ "$cmd" != "--command" ]]; then
         # Source the file with compdef shadowing
-        -zplg-shadow-on "compdef"
+        # Shadowing code is inlined from -zplg-shadow-on
+
+        builtin unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
+        (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
+        functions[compdef]='--zplg-shadow-compdef "$@";'
+
         builtin source "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
-        -zplg-shadow-off "compdef"
+
+        (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
     else
         [[ ! -x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command chmod a+x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
         [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir" )
