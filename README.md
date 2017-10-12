@@ -53,6 +53,8 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
 # News
 * 12-10-2017
+  - The `cd` subcommand can now obtain URL and move session to snippet directory (where it can
+    be e.g. compiled, but a functionality is coming for this too)
   - The `times` subcommand now includes statistics on snippets. Also, entries
     are displayed in order of loading:
 
