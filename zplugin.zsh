@@ -944,34 +944,22 @@ builtin setopt noaliases
 
     [[ "$cmd" != --* && -n "$cmd" ]] && { local tmp="$cmd"; cmd="$force"; force="$tmp"; }
 
-    # Check for no-raw github url and for url at all
-    integer is_no_raw_github=0 is_url
-    local filename local_dir
-    () {
-        local -a match mbegin mend
-        local MATCH; integer MBEGIN MEND
-        builtin setopt localoptions extendedglob
+    # Remove leading whitespace
+    url="${url#"${url%%[! $'\t']*}"}"
 
-        # Remove leading whitespace
-        url="${url#"${url%%[! $'\t']*}"}"
-
-        [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
-        [[ "$url" = http:* || "$url" = https:* || "$url" = ftp:* || "$url" = ftps:* || "$url" = scp:* ]] && is_url=1
-
-        # Construct a local directory name from what's in url
-        filename="${url:t}"
-        filename="${filename%%\?*}"
-        local_dir="$url"
-        local_dir="${local_dir//(#b)(http|https|ftp|ftps|scp):\/\//${match[1]}--}"
-        local_dir="${local_dir/./--DOT--}"
-        local_dir="${local_dir//\//--SLASH--}"
-        local_dir="${local_dir//\?/--QMRK--}"
-        local_dir="${local_dir//\&/--AMP--}"
-        local_dir="${local_dir//=/--EQ--}"
-    }
-
-    local save_url="$url"
+    integer is_no_raw_github=0 is_url=0 MBEGIN MEND
+    local filename local_dir save_url="$url" MATCH
     -zplg-pack-ice "$url" ""
+
+    # Check for no-raw github url and for url at all
+    [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
+    [[ "$url" = http:* || "$url" = https:* || "$url" = ftp:* || "$url" = ftps:* || "$url" = scp:* ]] && is_url=1
+
+    # Construct a local directory name from what's in url
+    filename="${${url:t}%%\?*}"
+    local_dir="${url//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
+    local_dir="${${local_dir/./--D--}//\//--S--}"
+    local_dir="${${${local_dir//\?/--QM--}//\&/--AMP--}//=/--EQ--}"
 
     # Change the url to point to raw github content if it isn't like that
     if (( is_no_raw_github )); then
@@ -979,7 +967,7 @@ builtin setopt noaliases
         [[ "$url" = *\?* ]] && url="${url}&raw=1" || url="${url}?raw=1"
     fi
 
-    ZPLG_SNIPPETS[$url]="$filename"
+    ZPLG_SNIPPETS[$save_url]="$filename"
 
     # Download or copy the file
     if [[ ! -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" || "$force" = "-f" ]]
@@ -994,13 +982,13 @@ builtin setopt noaliases
         if (( is_url ))
         then
             # URL
-        (
-            cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
-            command rm -f "$filename"
-            print "Downloading $filename..."
-            (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-            -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
-        )
+            (
+                cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
+                command rm -f "$filename"
+                print "Downloading $filename..."
+                (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
+                -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
+            )
         else
             # File
             command rm -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
