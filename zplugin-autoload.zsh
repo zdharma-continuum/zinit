@@ -1332,9 +1332,9 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-show-times() {
     local entry entry2 user plugin title='no'
     float -F 3 sum=0.0
-    for entry in "${(@o)ZPLGM[(I)TIME_*]}"; do
+    for entry in "${(@on)ZPLGM[(I)TIME_[0-9]##_*]}"; do
         [[ "$title" = "no" ]] && { print "Plugin loading times:"; title="yes"; }
-        entry2="${entry#TIME_}"
+        entry2="${entry#TIME_[0-9]##_}"
         user="${entry2%---*}"
         plugin="${entry2#*---}"
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
@@ -2005,7 +2005,7 @@ ZPLGM[EXTENDED_GLOB]=""
 -h|--help|help           - usage information
 man                      - manual
 zstatus                  - overall status of Zplugin
-times                    - statistics on plugin load times
+times                    - statistics on plugin load times, sorted in order of loading
 self-update              - updates Zplugin
 load ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}       - load plugin, can also receive absolute local path
 light ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}      - light plugin load, without reporting

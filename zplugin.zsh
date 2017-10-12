@@ -922,7 +922,8 @@ builtin setopt noaliases
     fi
 
     -zplg-load-plugin "$user" "$plugin" "$mode"
-    ZPLGM[TIME_${user}---${plugin}]=$SECONDS
+    ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
+    ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${user}---${plugin}]=$SECONDS
 } # }}}
 # FUNCTION: -zplg-load-snippet {{{
 # Implements the exposed-to-user action of loading a snippet.
