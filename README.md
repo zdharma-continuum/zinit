@@ -403,7 +403,10 @@ The special user name `_local` is optional also for other commands, e.g. for
 
 # Customizing paths
 
-Following variables can be set to custom values, before sourcing Zplugin:
+Following variables can be set to custom values, before sourcing Zplugin. The
+previous global variables like `$ZPLG_HOME` have been removed to not pollute
+the namespace – there's single `$ZPLGM` hash instead of `5` string variables.
+Please update your dotfiles.
 
 ```
 local -A ZPLGM # (initial Zplugin hash definition)

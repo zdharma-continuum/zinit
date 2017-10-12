@@ -35,19 +35,19 @@ pdf: pdf/zplugin.zsh.pdf pdf/zplugin-side.zsh.pdf pdf/zplugin-install.zsh.pdf pd
 
 pdf/zplugin.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin.zsh.adoc
 
 pdf/zplugin-side.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin-side.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin-side.zsh.adoc
 
 pdf/zplugin-install.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin-install.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin-install.zsh.adoc
 
 pdf/zplugin-autoload.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -b pdf -r asciidoctor-pdf -D pdf zplugin-autoload.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin-autoload.zsh.adoc
 
 clean:
 	rm -rf man pdf data
