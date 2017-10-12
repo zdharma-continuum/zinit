@@ -54,7 +54,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 # News
 * 12-10-2017
   - The `times` subcommand now includes statistics on snippets. Also, entries
-    are displayed in order of loading.
+    are displayed in order of loading:
 
     ```SystemVerilog
     % zplg times
