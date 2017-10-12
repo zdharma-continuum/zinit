@@ -52,6 +52,20 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 12-10-2017
+  - The `times` subcommand now includes statistics on snippets. Also, entries
+    are displayed in order of loading.
+
+    ```SystemVerilog
+    % zplg times
+    Plugin loading times:
+    0.010 sec - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/git.zsh
+    0.001 sec - https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh
+    0.003 sec - psprint/history-search-multi-word
+    0.003 sec - rimraf/k
+    0.003 sec - zsh-users/zsh-autosuggestions
+    ```
+
 * 24-09-2017
   - **[Code documentation](zsdoc)** for contributors and interested people.
 
