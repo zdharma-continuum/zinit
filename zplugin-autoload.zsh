@@ -1330,14 +1330,20 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-show-times() {
-    local entry entry2 user plugin title='no'
+    setopt localoptions extendedglob
+    local entry entry2 user plugin
     float -F 3 sum=0.0
+
+    print "Plugin loading times:"
     for entry in "${(@on)ZPLGM[(I)TIME_[0-9]##_*]}"; do
-        [[ "$title" = "no" ]] && { print "Plugin loading times:"; title="yes"; }
         entry2="${entry#TIME_[0-9]##_}"
-        user="${entry2%---*}"
-        plugin="${entry2#*---}"
-        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+        if [[ "$entry2" = (http|https|ftp|ftps|scp):* ]]; then
+            REPLY="${ZPLGM[col-pname]}$entry2${ZPLGM[col-rst]}"
+        else
+            user="${entry2%---*}"
+            plugin="${entry2#*---}"
+            -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+        fi
 
         print "${ZPLGM[$entry]} sec" - "$REPLY"
         (( sum += ZPLGM[$entry] ))

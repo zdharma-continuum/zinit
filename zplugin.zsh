@@ -933,6 +933,7 @@ builtin setopt noaliases
 # $3 - "--force" if that option given
 # $4 - "-u" if invoked by Zplugin to only update snippet
 -zplg-load-snippet() {
+    typeset -F 3 SECONDS=0
     local url="$1" cmd="$2" force="$3" update="$4"
 
     if [[ "$url" = "-f" || "$url" == "--command" ]]; then
@@ -1022,6 +1023,9 @@ builtin setopt noaliases
         [[ ! -x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command chmod a+x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
         [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir" )
     fi
+
+    ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
+    ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${save_url}]=$SECONDS
 } # }}}
 # FUNCTION: -zplg-compdef-replay {{{
 # Runs gathered compdef calls. This allows to run `compinit'
