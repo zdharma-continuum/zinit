@@ -1729,12 +1729,25 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-cd() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+    if [[ "$1" = (http|https|ftp|ftps|scp)://* ]]; then
+        integer MBEGIN MEND
+        local url="$1" filename local_dir MATCH
 
-    -zplg-exists-physically-message "$user" "$plugin" || return 1
+        # Construct a local directory name from what's in url
+        filename="${${url:t}%%\?*}"
+        local_dir="${url//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
+        local_dir="${${local_dir/./--D--}//\//--S--}"
+        local_dir="${${${local_dir//\?/--QM--}//\&/--AMP--}//=/--EQ--}"
 
-    cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
+    else
+        -zplg-any-to-user-plugin "$1" "$2"
+        local user="${reply[-2]}" plugin="${reply[-1]}"
+
+        -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+        cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    fi
 } # }}}
 # FUNCTION: -zplg-changes {{{
 # Shows `git log` of given plugin.
@@ -2022,7 +2035,7 @@ update ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git update plugin
 status ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git status for plugin (or all plugins if --all passed)
 report ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - show plugin's report (or all plugins' if --all passed)
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
-cd ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}         - cd into plugin's directory
+cd ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}         - cd into plugin's directory; also support snippets, if feed with URL
 create ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - create plugin (also together with Github repository)
 edit ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}       - edit plugin's file with \$EDITOR
 glance ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - look at plugin's source (pygmentize, {,source-}highlight)
