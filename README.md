@@ -52,6 +52,14 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 13-10-2017
+  - Snippets can use "OMZ::" prefix to easily point to `Oh-My-Zsh` plugins and libraries, e.g.:
+
+    ```SystemVerilog
+    zplugin snippet OMZ::lib/git.zsh
+    zplugin snippet OMZ::plugins/git/git.plugin.zsh
+    ```
+
 * 12-10-2017
   - The `cd` subcommand can now obtain URL and move session to snippet directory (where it can
     be e.g. compiled, but a functionality is coming for this too)
@@ -324,6 +332,8 @@ To use **themes** created for `Oh-My-Zsh` you might want to first source the `gi
 
 ```sh
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
+# Or using OMZ:: shorthand:
+zplugin snippet OMZ::lib/git.zsh
 ```
 
 Then you can use the themes as snippets (`zplugin snippet {file path or Github URL}`).
