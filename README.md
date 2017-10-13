@@ -34,7 +34,7 @@ Then add to `~/.zshrc`, at bottom:
 zplugin load psprint zsh-navigation-tools
 zplugin ice from"notabug" atload"echo loaded zui" if"(( 1 ))"
 zplugin load zdharma/zui
-zplugin load zsh-users/zsh-autosuggestions
+zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 # This one to be ran just once, in interactive session
 zplugin creinstall %HOME/my_completions  # Handle completions without loading the plugin, see "clist" command
@@ -195,8 +195,8 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
 ```SystemVerilog
 % . ~/github/zplugin/zplugin.zsh
+% zplugin load zdharma/history-search-multi-word
 % zplugin light zsh-users/zsh-syntax-highlighting
-% zplugin load psprint/zsh-cmd-architect
 ```
 
 **Example plugin report:**
@@ -296,7 +296,7 @@ self-update              - updates Zplugin
 zstatus                  - overall Zplugin status
 times                    - statistics on plugin loading times
 load {plugin-name}       - load plugin, can also receive absolute local path
-light {plugin-name}      - light plugin load, without reporting (faster)
+light {plugin-name}      - light plugin load, without reporting (significantly faster)
 unload {plugin-name}     - unload plugin (needs reporting)
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
