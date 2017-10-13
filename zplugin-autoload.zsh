@@ -1205,7 +1205,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local repo snip pd user plugin
 
     if [[ "$st" != "status" ]]; then
-        for snip in "$ZPLG_SNIPPETS_DIR"/*; do
+        for snip in "${ZPLGM[SNIPPETS_DIR]}"/*; do
             [[ ! -f "$snip/.zplugin_url" ]] && continue
             local url=$(<$snip/.zplugin_url)
             -zplg-load-snippet "$url" "" "-f" "-u"
