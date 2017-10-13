@@ -951,6 +951,9 @@ builtin setopt noaliases
     local filename local_dir save_url="$url" MATCH
     -zplg-pack-ice "$url" ""
 
+    # Oh-My-Zsh shorthand
+    url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/raw/master/}"
+
     # Check for no-raw github url and for url at all
     [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
     [[ "$url" = http:* || "$url" = https:* || "$url" = ftp:* || "$url" = ftps:* || "$url" = scp:* ]] && is_url=1

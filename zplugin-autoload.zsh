@@ -1729,9 +1729,13 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-cd() {
-    if [[ "$1" = (http|https|ftp|ftps|scp)://* ]]; then
+
+    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* ]]; then
         integer MBEGIN MEND
         local url="$1" filename local_dir MATCH
+
+        # Oh-My-Zsh shorthand
+        url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/raw/master/}"
 
         # Construct a local directory name from what's in url
         filename="${${url:t}%%\?*}"
