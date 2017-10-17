@@ -1,4 +1,6 @@
+<p align="center">
 ![zplugin logo](https://raw.githubusercontent.com/psprint/zplugin/master/doc/img/zplugin.png)
+</p>
 
 [![Build Status](https://travis-ci.org/zdharma/zplugin.svg?branch=master)](https://travis-ci.org/zdharma/zplugin)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
