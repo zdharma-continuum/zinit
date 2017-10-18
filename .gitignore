@@ -85,3 +85,4 @@ zmodules/Src/zdharma/*.dSYM
 zmodules/Test/*.tmp
 /.project
 zmodules/ValTest/test_type
+/*deploy*key*
