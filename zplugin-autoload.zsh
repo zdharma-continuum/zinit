@@ -1188,7 +1188,7 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
         local -A sice
-        sice=( "${(z)ZPLG_SICE[$user/$plugin]:-no op}" )
+        sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
         ( (( ${+sice[atpull]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
     fi
 } # }}}
@@ -1255,7 +1255,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print "\nUpdating plugin $REPLY"
             ( cd "$repo"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
             local -A sice
-            sice=( "${(z)ZPLG_SICE[$user/$plugin]:-no op}" )
+            sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
             ( (( ${+sice[atpull]} )) && eval "${(Q)sice[atpull]}" )
         fi
     done
@@ -1732,16 +1732,38 @@ ZPLGM[EXTENDED_GLOB]=""
 
     if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* ]]; then
         integer MBEGIN MEND
-        local url="$1" filename local_dir MATCH
+        local url1="$1" url2 filename local_dir MATCH
+        filename="${${url1:t}%%\?*}"
+
+        url1="${url1%/}" url2="$url1"
 
         # Oh-My-Zsh shorthand
-        url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/raw/master/}"
+        local -A sice
+        local -a tmp
+        tmp=( "${(z@)ZPLG_SICE[$url1/]}" )
+        (( ${#tmp} > 1 )) && sice=( "${tmp[@]}" )
+
+        (( ${+sice[svn]} )) && {
+            # SVN mirroring
+            url1="${url1/OMZ::/https://github.com/robbyrussell/oh-my-zsh/trunk/}"
+            url1="${url1/PZT::/https://github.com/sorin-ionescu/prezto/trunk/}"
+
+            # Construct a local directory name from what's in url
+            local_dir="${${url1%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
+            local_dir="${${local_dir//\//--S--}//=/--EQ--}"
+            local_dir="${${local_dir//\?/--QM--}//\&/--AMP--}"
+
+            [[ -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]] && { cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"; return; }
+        }
+
+        # Normal download via wget, etc.
+        url2="${url2/OMZ::/https://github.com/robbyrussell/oh-my-zsh/raw/master/}"
+        url2="${url2/PZT::/https://github.com/sorin-ionescu/prezto/raw/master/}"
 
         # Construct a local directory name from what's in url
-        filename="${${url:t}%%\?*}"
-        local_dir="${url//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
-        local_dir="${${local_dir/./--D--}//\//--S--}"
-        local_dir="${${${local_dir//\?/--QM--}//\&/--AMP--}//=/--EQ--}"
+        local_dir="${${url2%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
+        local_dir="${${local_dir//\//--S--}//=/--EQ--}"
+        local_dir="${${local_dir//\?/--QM--}//\&/--AMP--}"
 
         cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
     else

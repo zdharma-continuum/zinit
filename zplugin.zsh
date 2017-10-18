@@ -952,7 +952,13 @@ builtin setopt noaliases
     -zplg-pack-ice "$url" ""
 
     # Oh-My-Zsh shorthand
-    url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/raw/master/}"
+    (( ${+ZPLG_ICE[svn]} )) && {
+        url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/trunk/}"
+        url="${url/PZT::/https://github.com/sorin-ionescu/prezto/trunk/}"
+    } || {
+        url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/raw/master/}"
+        url="${url/PZT::/https://github.com/sorin-ionescu/prezto/raw/master/}"
+    }
 
     # Check for no-raw github url and for url at all
     [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
@@ -960,20 +966,20 @@ builtin setopt noaliases
 
     # Construct a local directory name from what's in url
     filename="${${url:t}%%\?*}"
-    local_dir="${url//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
-    local_dir="${${local_dir/./--D--}//\//--S--}"
-    local_dir="${${${local_dir//\?/--QM--}//\&/--AMP--}//=/--EQ--}"
+    local_dir="${${url%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
+    local_dir="${${local_dir//\//--S--}//=/--EQ--}"
+    local_dir="${${local_dir//\?/--QM--}//\&/--AMP--}"
 
     # Change the url to point to raw github content if it isn't like that
-    if (( is_no_raw_github )); then
+    if (( is_no_raw_github && ${+ZPLG_ICE[svn]} == 0 )); then
         url="${url/\/blob\///raw/}"
         [[ "$url" = *\?* ]] && url="${url}&raw=1" || url="${url}?raw=1"
     fi
 
-    ZPLG_SNIPPETS[$save_url]="$filename"
+    ZPLG_SNIPPETS[$save_url]="$filename (${${ZPLG_ICE[svn]+svn}:-wget, curl, lftp})"
 
     # Download or copy the file
-    if [[ ! -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" || "$force" = "-f" ]]
+    if [[ ! -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" || "$force" = "-f" ]]
     then
         if [[ ! -d "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]]; then
             print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}$filename${ZPLGM[col-rst]}"
@@ -988,9 +994,14 @@ builtin setopt noaliases
             (
                 cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
                 command rm -f "$filename"
-                print "Downloading $filename..."
+                print "Downloading $filename${${ZPLG_ICE[svn]+ \(subversion\)}:- \(wget, curl, lftp\)}..."
                 (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-                -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
+
+                if (( ${+ZPLG_ICE[svn]} )); then
+                    -zplg-mirror-using-svn "$url"
+                else
+                    -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
+                fi
             )
         else
             # File
@@ -1219,7 +1230,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|report|depth|blockf|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
@@ -1228,8 +1239,8 @@ builtin setopt noaliases
 # why it's called "ice" - it melts), however some ice modifiers can
 # glue to plugin mentioned in the next command.
 -zplg-pack-ice() {
-    [[ -z "${ZPLG_ICE[atpull]}" ]] && return
-    ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
+    (( ${+ZPLG_ICE[atpull]} )) && ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
+    (( ${+ZPLG_ICE[svn]} )) && ZPLG_SICE[$1/$2]+="svn ${(q)ZPLG_ICE[svn]} "
 } # }}}
 
 #

@@ -146,6 +146,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     return 0
 } # }}}
+# FUNCTION: -zplg-mirror-using-svn {{{
+-zplg-mirror-using-svn() {
+    local url="$1"
+    svn checkout "$url"
+}
+# }}}
 # FUNCTION: -zplg-forget-completion {{{
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
