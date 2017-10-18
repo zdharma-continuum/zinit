@@ -951,6 +951,11 @@ builtin setopt noaliases
     local filename local_dir save_url="$url" MATCH
     -zplg-pack-ice "$url" ""
 
+    # Prepare SICE
+    local -a tmp
+    tmp=( "${(z@)ZPLG_SICE[$save_url/]}" )
+    (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && ZPLG_ICE+=( "${tmp[@]}" )
+
     # Oh-My-Zsh shorthand
     (( ${+ZPLG_ICE[svn]} )) && {
         url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/trunk/}"
@@ -993,7 +998,7 @@ builtin setopt noaliases
             # URL
             (
                 cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
-                command rm -f "$filename"
+                command rm -rf "$filename"
                 print "Downloading $filename${${ZPLG_ICE[svn]+ \(subversion\)}:- \(wget, curl, lftp\)}..."
                 (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
 
@@ -1005,16 +1010,20 @@ builtin setopt noaliases
             )
         else
             # File
-            command rm -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+            [[ -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command rm -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
             print "Copying $filename..."
             command cp -v "$url" "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
         fi
 
-        echo "$save_url" >! "${ZPLGM[SNIPPETS_DIR]}/$local_dir/.zplugin_url"
+        print -r "$save_url" >! "${ZPLGM[SNIPPETS_DIR]}/$local_dir/.zplugin_url"
+        print -r "${+ZPLG_ICE[svn]}" >! "${ZPLGM[SNIPPETS_DIR]}/$local_dir/.zplugin_mode"
     fi
 
     # Updating – no sourcing or setup
     [[ "$update" = "-u" ]] && return 0
+
+    local -a extensions list
+    extensions=( ".plugin.zsh" "init.zsh" ".zsh-theme" )
 
     if [[ "$cmd" != "--command" ]]; then
         # Source the file with compdef shadowing
@@ -1024,12 +1033,23 @@ builtin setopt noaliases
         (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
         functions[compdef]='--zplg-shadow-compdef "$@";'
 
-        builtin source "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+        if [[ -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]]; then
+            builtin source "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+        else
+            list=( ${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename/*${(~j.|.)extensions}(N) )
+            [[ -n "${list[1]}" ]] && builtin source "${list[1]}"
+        fi
 
         (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
     else
-        [[ ! -x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command chmod a+x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
-        [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir" )
+        # If this is a Subversion checkout of a subdirectory, then
+        # don't do chmod +x and just add the directory to path
+        if (( ${+ZPLG_ICE[svn]} )); then
+            [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" )
+        else
+            [[ ! -x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command chmod a+x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+            [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir" )
+        fi
     fi
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))

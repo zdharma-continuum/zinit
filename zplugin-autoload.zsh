@@ -1741,7 +1741,7 @@ ZPLGM[EXTENDED_GLOB]=""
         local -A sice
         local -a tmp
         tmp=( "${(z@)ZPLG_SICE[$url1/]}" )
-        (( ${#tmp} > 1 )) && sice=( "${tmp[@]}" )
+        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${tmp[@]}" )
 
         (( ${+sice[svn]} )) && {
             # SVN mirroring

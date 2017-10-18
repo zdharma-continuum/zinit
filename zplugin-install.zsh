@@ -149,7 +149,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # FUNCTION: -zplg-mirror-using-svn {{{
 -zplg-mirror-using-svn() {
     local url="$1"
-    svn checkout "$url"
+    svn checkout --non-interactive -q "$url"
 }
 # }}}
 # FUNCTION: -zplg-forget-completion {{{
