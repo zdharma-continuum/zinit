@@ -987,7 +987,7 @@ builtin setopt noaliases
     if [[ ! -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" || "$force" = "-f" ]]
     then
         if [[ ! -d "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]]; then
-            print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}$filename${ZPLGM[col-rst]}"
+            print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$filename${ZPLGM[col-rst]}"
             command mkdir -p "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
         fi
 
