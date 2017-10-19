@@ -1730,7 +1730,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-cd() {
 
-    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* ]]; then
+    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
         integer MBEGIN MEND
         local url1="$1" url2 filename local_dir MATCH
         filename="${${url1:t}%%\?*}"
@@ -1753,7 +1753,8 @@ ZPLGM[EXTENDED_GLOB]=""
             local_dir="${${local_dir//\//--S--}//=/--EQ--}"
             local_dir="${${local_dir//\?/--QM--}//\&/--AMP--}"
 
-            [[ -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]] && { cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"; return; }
+            [[ -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]] && cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
+            return
         }
 
         # Normal download via wget, etc.

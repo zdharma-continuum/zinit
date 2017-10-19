@@ -955,6 +955,7 @@ builtin setopt noaliases
     local -a tmp
     tmp=( "${(z@)ZPLG_SICE[$save_url/]}" )
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && ZPLG_ICE+=( "${tmp[@]}" )
+    tmp=()
 
     # Oh-My-Zsh shorthand
     (( ${+ZPLG_ICE[svn]} )) && {
@@ -999,7 +1000,7 @@ builtin setopt noaliases
             (
                 cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
                 command rm -rf "$filename"
-                print "Downloading $filename${${ZPLG_ICE[svn]+ \(subversion\)}:- \(wget, curl, lftp\)}..."
+                print "Downloading $filename${${ZPLG_ICE[svn]+ \(Subversion\)}:- \(wget, curl, lftp\)}..."
                 (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
 
                 if (( ${+ZPLG_ICE[svn]} )); then
@@ -1008,6 +1009,15 @@ builtin setopt noaliases
                     -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
                 fi
             )
+
+            if (( ${+ZPLG_ICE[svn]} == 0 )); then
+                tmp=( 1 )
+                zcompile "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" 2>/dev/null || {
+                    print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
+                    print -r "(snippet URL points to a directory instead of a file?)"
+                    tmp=( 0 )
+                }
+            fi
         else
             # File
             [[ -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command rm -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
@@ -1034,7 +1044,7 @@ builtin setopt noaliases
         functions[compdef]='--zplg-shadow-compdef "$@";'
 
         if [[ -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]]; then
-            builtin source "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+            (( tmp[1] )) && builtin source "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
         else
             list=( ${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename/*${(~j.|.)extensions}(N) )
             [[ -n "${list[1]}" ]] && builtin source "${list[1]}"
