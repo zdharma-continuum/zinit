@@ -1337,7 +1337,7 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Plugin loading times:"
     for entry in "${(@on)ZPLGM[(I)TIME_[0-9]##_*]}"; do
         entry2="${entry#TIME_[0-9]##_}"
-        if [[ "$entry2" = (http|https|ftp|ftps|scp):* ]]; then
+        if [[ "$entry2" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
             REPLY="${ZPLGM[col-pname]}$entry2${ZPLGM[col-rst]}"
         else
             user="${entry2%---*}"
