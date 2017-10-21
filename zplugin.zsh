@@ -964,7 +964,7 @@ pmodload() {
     # Remove leading whitespace
     url="${url#"${url%%[! $'\t']*}"}"
 
-    integer is_no_raw_github=0 is_url=0
+    integer is_no_raw_github=0
     local filename filename0 local_dir save_url="$url"
     -zplg-pack-ice "$url" ""
 
@@ -984,7 +984,6 @@ pmodload() {
     # Check for no-raw github url and for url at all
     [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
     [[ "$url" = http://* || "$url" = https://* || "$url" = ftp://* || "$url" = ftps://* || "$url" = scp://* ]] && {
-        is_url=1
         local_dir="${local_dir/:\/\//--}"
     }
 
@@ -1000,48 +999,8 @@ pmodload() {
     # Download or copy the file
     if [[ ! -e "$local_dir/$filename" || "$force" = "-f" ]]
     then
-        [[ "$filename" = (init.zsh|trunk) ]] && local sname="$filename0" || local sname="$filename"
-
-        if [[ ! -d "$local_dir" ]]; then
-            print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}"
-            command mkdir -p "$local_dir"
-        fi
-
-        [[ "$update" = "-u" ]] && echo "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}"
-
-        if (( is_url ))
-        then
-            # URL
-            (
-                cd "$local_dir"
-                command rm -rf "$filename"
-                print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
-                (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-
-                if (( ${+ZPLG_ICE[svn]} )); then
-                    -zplg-mirror-using-svn "$url"
-                else
-                    -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
-                fi
-            )
-
-            if (( ${+ZPLG_ICE[svn]} == 0 )); then
-                zcompile "$local_dir/$filename" 2>/dev/null || {
-                    print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
-                    print -r "(snippet URL points to a directory instead of a file?"
-                    print -r "to download directory, use preceding: zplugin ice svn)"
-                    tmp=( 0 )
-                }
-            fi
-        else
-            # File
-            [[ -f "$local_dir/$filename" ]] && command rm -f "$local_dir/$filename"
-            print "Copying $filename..."
-            command cp -v "$url" "$local_dir/$filename"
-        fi
-
-        print -r "$save_url" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_url"
-        print -r "${+ZPLG_ICE[svn]}" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_mode"
+        (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
+        -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "$update" || tmp=( 0 )
     fi
 
     # Updating – no sourcing or setup

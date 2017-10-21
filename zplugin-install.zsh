@@ -198,3 +198,49 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Try to catch possible additional file
     zcompile "${first%.plugin.zsh}.zsh" 2>/dev/null
 } # }}}
+# FUNCTION: -zplg-download-snippet {{{
+-zplg-download-snippet() {
+    local save_url="$1" url="$2" local_dir="$3" filename0="$4" filename="$5" update="$6"
+
+    [[ "$filename" = (init.zsh|trunk) ]] && local sname="$filename0" || local sname="$filename"
+
+    if [[ ! -d "$local_dir" ]]; then
+        print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}"
+        command mkdir -p "$local_dir"
+    fi
+
+    [[ "$update" = "-u" ]] && echo "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}"
+
+    if [[ "$url" = http://* || "$url" = https://* || "$url" = ftp://* || "$url" = ftps://* || "$url" = scp://* ]]
+    then
+        # URL
+        (
+            cd "$local_dir"
+            command rm -rf "$filename"
+            print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+
+            if (( ${+ZPLG_ICE[svn]} )); then
+                -zplg-mirror-using-svn "$url"
+            else
+                -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
+            fi
+        )
+
+        if (( ${+ZPLG_ICE[svn]} == 0 )); then
+            zcompile "$local_dir/$filename" 2>/dev/null || {
+                print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
+                print -r "(snippet URL points to a directory instead of a file?"
+                print -r "to download directory, use preceding: zplugin ice svn)"
+                tmp=( 0 )
+            }
+        fi
+    else
+        # File
+        [[ -f "$local_dir/$filename" ]] && command rm -f "$local_dir/$filename"
+        print "Copying $filename..."
+        command cp -v "$url" "$local_dir/$filename"
+    fi
+
+    print -r "$save_url" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_url"
+    print -r "${+ZPLG_ICE[svn]}" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_mode"
+}
