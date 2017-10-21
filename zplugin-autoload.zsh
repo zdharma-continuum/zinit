@@ -1205,10 +1205,13 @@ ZPLGM[EXTENDED_GLOB]=""
     local repo snip pd user plugin
 
     if [[ "$st" != "status" ]]; then
-        for snip in "${ZPLGM[SNIPPETS_DIR]}"/*; do
-            [[ ! -f "$snip/.zplugin_url" ]] && continue
-            local url=$(<$snip/.zplugin_url)
+        for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/.zplugin_url; do
+            [[ ! -f "${snip:h}/.zplugin_mode" ]] && continue
+            local url=$(<$snip)
+            local mode=$(<${snip:h}/.zplugin_mode)
+            [[ "$mode" = "1" ]] && zplg ice svn
             -zplg-load-snippet "$url" "" "-f" "-u"
+            [[ "$mode" = "1" ]] && ZPLG_ICE=()
         done
         print
     fi
