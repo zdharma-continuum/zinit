@@ -65,14 +65,12 @@ typeset -gAH ZPLG_FUNCTIONS_BEFORE
 typeset -gAH ZPLG_FUNCTIONS_AFTER
 # Functions computed to be associated with plugin
 typeset -gAH ZPLG_FUNCTIONS
-typeset -gAH ZPLG_FUNCTIONS_DIFF_RAN
 #}}}
 # Parameters - option diffing {{{
 typeset -gAH ZPLG_OPTIONS_BEFORE
 typeset -gAH ZPLG_OPTIONS_AFTER
 # Concatenated options that changed, hold as they were before plugin load
 typeset -gAH ZPLG_OPTIONS
-typeset -gAH ZPLG_OPTIONS_DIFF_RAN
 # }}}
 # Parameters - environment diffing {{{
 typeset -gAH ZPLG_PATH_BEFORE
@@ -83,7 +81,6 @@ typeset -gAH ZPLG_FPATH_BEFORE
 typeset -gAH ZPLG_FPATH_AFTER
 # Concatenated new elements of FPATH (after diff)
 typeset -gAH ZPLG_FPATH
-typeset -gHA ZPLG_ENV_DIFF_RAN
 # }}}
 # Parameters - parameter diffing {{{
 typeset -gAH ZPLG_PARAMETERS_BEFORE
@@ -92,7 +89,6 @@ typeset -gAH ZPLG_PARAMETERS_AFTER
 typeset -gAH ZPLG_PARAMETERS_PRE
 # Concatenated *changed* current elements of $parameters (after)
 typeset -gAH ZPLG_PARAMETERS_POST
-typeset -gHA ZPLG_PARAMETERS_DIFF_RAN
 # }}}
 # Parameters - zstyle, bindkey, alias, zle remembering {{{
 # Holds concatenated Zstyles declared by each plugin
@@ -681,7 +677,6 @@ pmodload() {
     local cmd="$2"
 
     ZPLG_FUNCTIONS[$uspl2]=""
-    ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="0"
     [[ "$cmd" = "begin" ]] && ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}" || ZPLG_FUNCTIONS_AFTER[$uspl2]="${(j: :)${(qk)functions[@]}}"
 } # }}}
 # FUNCTION: -zplg-diff-options {{{
@@ -697,7 +692,6 @@ pmodload() {
 
     IFS="$bIFS"
     ZPLG_OPTIONS[$1]=""
-    ZPLG_OPTIONS_DIFF_RAN[$1]="0"
 } # }}}
 # FUNCTION: -zplg-diff-env {{{
 # Implements detection of change in PATH and FPATH.
@@ -723,7 +717,6 @@ pmodload() {
     IFS="$bIFS"
     ZPLG_PATH[$1]=""
     ZPLG_FPATH[$1]=""
-    ZPLG_ENV_DIFF_RAN[$1]="0"
 } # }}}
 # FUNCTION: -zplg-diff-parameter {{{
 # Implements detection of change in any parameter's existence and type.
@@ -738,7 +731,6 @@ pmodload() {
 
     ZPLG_PARAMETERS_PRE[$1]=""
     ZPLG_PARAMETERS_POST[$1]=""
-    ZPLG_PARAMETERS_DIFF_RAN[$1]="0"
 } # }}}
 
 #

@@ -17,10 +17,6 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-diff-functions-compute() {
     local uspl2="$1"
 
-    # Run diff once for given data
-    [[ "${ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-    ZPLG_FUNCTIONS_DIFF_RAN[$uspl2]="1"
-
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
 
@@ -56,10 +52,6 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-diff-options-compute() {
     local uspl2="$1"
 
-    # Run diff once for given data
-    [[ "${ZPLG_OPTIONS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-    ZPLG_OPTIONS_DIFF_RAN[$uspl2]="1"
-
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
     builtin setopt localoptions extendedglob
@@ -93,10 +85,6 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-diff-env-compute() {
     local uspl2="$1"
     typeset -a tmp
-
-    # Run diff once, `begin' or `end' is needed to be run again for a new diff
-    [[ "${ZPLG_ENV_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-    ZPLG_ENV_DIFF_RAN[$uspl2]="1"
 
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
@@ -156,10 +144,6 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-diff-parameter-compute() {
     local uspl2="$1"
     typeset -a tmp
-
-    # Run diff once, `begin' or `end' is needed to be run again for a new diff
-    [[ "${ZPLG_PARAMETERS_DIFF_RAN[$uspl2]}" = "1" ]] && return 0
-    ZPLG_PARAMETERS_DIFF_RAN[$uspl2]="1"
 
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
@@ -257,13 +241,11 @@ ZPLGM[EXTENDED_GLOB]=""
     ZPLG_FUNCTIONS[$REPLY]=""
     ZPLG_FUNCTIONS_BEFORE[$REPLY]=""
     ZPLG_FUNCTIONS_AFTER[$REPLY]=""
-    ZPLG_FUNCTIONS_DIFF_RAN[$REPLY]=""
 
     # Option diffing
     ZPLG_OPTIONS[$REPLY]=""
     ZPLG_OPTIONS_BEFORE[$REPLY]=""
     ZPLG_OPTIONS_AFTER[$REPLY]=""
-    ZPLG_OPTIONS_DIFF_RAN[$REPLY]="0"
 
     # Environment diffing
     ZPLG_PATH[$REPLY]=""
@@ -272,14 +254,12 @@ ZPLGM[EXTENDED_GLOB]=""
     ZPLG_FPATH[$REPLY]=""
     ZPLG_FPATH_BEFORE[$REPLY]=""
     ZPLG_FPATH_AFTER[$REPLY]=""
-    ZPLG_ENV_DIFF_RAN[$REPLY]="0"
 
     # Parameter diffing
     ZPLG_PARAMETERS_PRE[$REPLY]=""
     ZPLG_PARAMETERS_POST[$REPLY]=""
     ZPLG_PARAMETERS_BEFORE[$REPLY]=""
     ZPLG_PARAMETERS_AFTER[$REPLY]=""
-    ZPLG_PARAMETERS_DIFF_RAN[$REPLY]="0"
 } # }}}
 # FUNCTION: -zplg-exists-message {{{
 # Checks if plugin is loaded. Testable. Also outputs error
