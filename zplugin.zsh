@@ -648,6 +648,12 @@ builtin setopt noaliases
 
     return 0
 } # }}}
+# FUNCTION: pmodload {{{
+# Compatibility with Prezto. Calls can be recursive.
+pmodload() {
+    [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && zplugin snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
+}
+# }}}
 
 #
 # Diff functions
@@ -947,17 +953,17 @@ builtin setopt noaliases
     # Remove leading whitespace
     url="${url#"${url%%[! $'\t']*}"}"
 
-    integer is_no_raw_github=0 is_url=0 MBEGIN MEND
-    local filename local_dir save_url="$url" MATCH
+    integer is_no_raw_github=0 is_url=0
+    local filename filename0 local_dir save_url="$url"
     -zplg-pack-ice "$url" ""
 
     # Prepare SICE
     local -a tmp
-    tmp=( "${(z@)ZPLG_SICE[$save_url/]}" )
+    tmp=( "${(Q@)${(z@)ZPLG_SICE[$save_url/]}}" )
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && ZPLG_ICE+=( "${tmp[@]}" )
-    tmp=()
+    tmp=( 1 )
 
-    # Oh-My-Zsh shorthand
+    # Oh-My-Zsh and Prezto shorthands
     (( ${+ZPLG_ICE[svn]} )) && {
         url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/trunk/}"
         url="${url/PZT::/https://github.com/sorin-ionescu/prezto/trunk/}"
@@ -966,41 +972,46 @@ builtin setopt noaliases
         url="${url/PZT::/https://github.com/sorin-ionescu/prezto/raw/master/}"
     }
 
+    filename="${${url%%\?*}:t}"
+    filename0="${${${url%%\?*}:h}:t}"
+
     # Check for no-raw github url and for url at all
     [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
-    [[ "$url" = http:* || "$url" = https:* || "$url" = ftp:* || "$url" = ftps:* || "$url" = scp:* ]] && is_url=1
+    [[ "$url" = http://* || "$url" = https://* || "$url" = ftp://* || "$url" = ftps://* || "$url" = scp://* ]] && {
+        is_url=1
+        local_dir="${${url%/*}/:\/\//--}"
+    } || {
+        local_dir="${url%/*}"
+    }
 
     # Construct a local directory name from what's in url
-    filename="${${url:t}%%\?*}"
-    local_dir="${${url%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
-    local_dir="${${local_dir//\//--S--}//=/--EQ--}"
-    local_dir="${${local_dir//\?/--QM--}//\&/--AMP--}"
+    local_dir="${${${${local_dir//\//--S--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    local_dir="${ZPLGM[SNIPPETS_DIR]}/${local_dir%${ZPLG_ICE[svn]---S--$filename0}}${ZPLG_ICE[svn]-/$filename0}"
 
     # Change the url to point to raw github content if it isn't like that
-    if (( is_no_raw_github && ${+ZPLG_ICE[svn]} == 0 )); then
-        url="${url/\/blob\///raw/}"
-        [[ "$url" = *\?* ]] && url="${url}&raw=1" || url="${url}?raw=1"
-    fi
+    (( is_no_raw_github && ${+ZPLG_ICE[svn]} == 0 )) && url="${url/\/blob\///raw/}"
 
-    ZPLG_SNIPPETS[$save_url]="$filename (${${ZPLG_ICE[svn]+svn}:-wget, curl, lftp})"
+    ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+1}:-0}>"
 
     # Download or copy the file
-    if [[ ! -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" || "$force" = "-f" ]]
+    if [[ ! -e "$local_dir/$filename" || "$force" = "-f" ]]
     then
-        if [[ ! -d "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]]; then
-            print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$filename${ZPLGM[col-rst]}"
-            command mkdir -p "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
+        [[ "$filename" = "init.zsh" ]] && local sname="$filename0" || local sname="$filename"
+
+        if [[ ! -d "$local_dir" ]]; then
+            print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}"
+            command mkdir -p "$local_dir"
         fi
 
-        [[ "$update" = "-u" ]] && echo "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$filename${ZPLGM[col-rst]}"
+        [[ "$update" = "-u" ]] && echo "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}"
 
         if (( is_url ))
         then
             # URL
             (
-                cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
+                cd "$local_dir"
                 command rm -rf "$filename"
-                print "Downloading $filename${${ZPLG_ICE[svn]+ \(Subversion\)}:- \(wget, curl, lftp\)}..."
+                print "Downloading \`$filename'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
                 (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
 
                 if (( ${+ZPLG_ICE[svn]} )); then
@@ -1011,22 +1022,22 @@ builtin setopt noaliases
             )
 
             if (( ${+ZPLG_ICE[svn]} == 0 )); then
-                tmp=( 1 )
-                zcompile "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" 2>/dev/null || {
+                zcompile "$local_dir/$filename" 2>/dev/null || {
                     print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
-                    print -r "(snippet URL points to a directory instead of a file?)"
+                    print -r "(snippet URL points to a directory instead of a file?"
+                    print -r "to download directory, use preceding: zplugin ice svn)"
                     tmp=( 0 )
                 }
             fi
         else
             # File
-            [[ -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command rm -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+            [[ -f "$local_dir/$filename" ]] && command rm -f "$local_dir/$filename"
             print "Copying $filename..."
-            command cp -v "$url" "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+            command cp -v "$url" "$local_dir/$filename"
         fi
 
-        print -r "$save_url" >! "${ZPLGM[SNIPPETS_DIR]}/$local_dir/.zplugin_url"
-        print -r "${+ZPLG_ICE[svn]}" >! "${ZPLGM[SNIPPETS_DIR]}/$local_dir/.zplugin_mode"
+        print -r "$save_url" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_url"
+        print -r "${+ZPLG_ICE[svn]}" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_mode"
     fi
 
     # Updating – no sourcing or setup
@@ -1043,10 +1054,16 @@ builtin setopt noaliases
         (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
         functions[compdef]='--zplg-shadow-compdef "$@";'
 
-        if [[ -f "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]]; then
-            (( tmp[1] )) && builtin source "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
+        # Add to fpath
+        [[ -d "$local_dir/$filename/functions" ]] && {
+            [[ -z "${fpath[(r)$local_dir/$filename/functions]}" ]] && fpath+=( "$local_dir/$filename/functions" )
+        }
+
+        # Source
+        if [[ -f "$local_dir/$filename" ]]; then
+            (( tmp[1] )) && builtin source "$local_dir/$filename"
         else
-            list=( ${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename/*${(~j.|.)extensions}(N) )
+            list=( $local_dir/$filename/*${(~j.|.)extensions}(N) )
             [[ -n "${list[1]}" ]] && builtin source "${list[1]}"
         fi
 
@@ -1055,10 +1072,10 @@ builtin setopt noaliases
         # If this is a Subversion checkout of a subdirectory, then
         # don't do chmod +x and just add the directory to path
         if (( ${+ZPLG_ICE[svn]} )); then
-            [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" )
+            [[ -z "${path[(er)$local_dir/$filename]}" ]] && path+=( "$local_dir/$filename" )
         else
-            [[ ! -x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename" ]] && command chmod a+x "${ZPLGM[SNIPPETS_DIR]}/$local_dir/$filename"
-            [[ -z "${path[(er)${ZPLGM[SNIPPETS_DIR]}/$local_dir]}" ]] && path+=( "${ZPLGM[SNIPPETS_DIR]}/$local_dir" )
+            [[ ! -x "$local_dir/$filename" ]] && command chmod a+x "$local_dir/$filename"
+            [[ -z "${path[(er)$local_dir]}" ]] && path+=( "$local_dir" )
         fi
     fi
 
