@@ -1298,7 +1298,7 @@ zplugin() {
 
     case "$1" in
        (load)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { ZPLG_ICE=(); return 0; }; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
@@ -1308,7 +1308,7 @@ zplugin() {
            fi
            ;;
        (light)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { ZPLG_ICE=(); return 0; }; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
@@ -1318,7 +1318,7 @@ zplugin() {
            fi
            ;;
        (snippet)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { ZPLG_ICE=(); return 0; }; }
            -zplg-load-snippet "$2" "$3" "$4"
            ;;
        (ice)
