@@ -123,7 +123,7 @@ zmodload zsh/parameter || return 1
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
-[[ -n "${terminfo[colors]}" || -n "${termcap[Co]}" ]] && {
+[[ ( "${+terminfo}" = 1 && -n "${terminfo[colors]}" ) || ( "${+termcap}" = 1 && -n "${termcap[Co]}" ) ]] && {
     ZPLGM+=(
         "col-title"     ""
         "col-pname"     $'\e[33m'
