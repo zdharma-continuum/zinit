@@ -981,8 +981,7 @@ pmodload() {
     filename0="${${${url%%\?*}:h}:t}"
     local_dir="${url:h}"
 
-    # Check for no-raw github url and for url at all
-    [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
+    # Check if it's URL
     [[ "$url" = http://* || "$url" = https://* || "$url" = ftp://* || "$url" = ftps://* || "$url" = scp://* ]] && {
         local_dir="${local_dir/:\/\//--}"
     }
@@ -990,9 +989,6 @@ pmodload() {
     # Construct a local directory name from what's in url
     local_dir="${${${${local_dir//\//--S--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dir="${ZPLGM[SNIPPETS_DIR]}/${local_dir%${ZPLG_ICE[svn]---S--$filename0}}${ZPLG_ICE[svn]-/$filename0}"
-
-    # Change the url to point to raw github content if it isn't like that
-    (( is_no_raw_github && ${+ZPLG_ICE[svn]} == 0 )) && url="${url/\/blob\///raw/}"
 
     ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+1}:-0}>"
 
