@@ -116,6 +116,17 @@ typeset -gAH ZPLG_WIDGETS_DELETE
 # Holds compdef calls (i.e. "${(j: :)${(q)@}}" of each call)
 typeset -gaH ZPLG_COMPDEF_REPLAY
 # }}}
+# Parameters - ICE, swiss-knife {{{
+local -A ZPLG_1MAP ZPLG_2MAP
+ZPLG_1MAP=(
+    "OMZ::" "https://github.com/robbyrussell/oh-my-zsh/trunk/"
+    "PZT::" "https://github.com/sorin-ionescu/prezto/trunk/"
+)
+ZPLG_2MAP=(
+    "OMZ::" "https://github.com/robbyrussell/oh-my-zsh/raw/master/"
+    "PZT::" "https://github.com/sorin-ionescu/prezto/raw/master/"
+)
+# }}}
 
 # Init {{{
 zmodload zsh/zutil || return 1
@@ -963,25 +974,18 @@ pmodload() {
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && ZPLG_ICE+=( "${tmp[@]}" )
     tmp=( 1 )
 
-    # Oh-My-Zsh and Prezto shorthands
-    (( ${+ZPLG_ICE[svn]} )) && {
-        url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/trunk/}"
-        url="${url/PZT::/https://github.com/sorin-ionescu/prezto/trunk/}"
-    } || {
-        url="${url/OMZ::/https://github.com/robbyrussell/oh-my-zsh/raw/master/}"
-        url="${url/PZT::/https://github.com/sorin-ionescu/prezto/raw/master/}"
-    }
+    # Oh-My-Zsh, Prezto and manual shorthands
+    (( ${+ZPLG_ICE[svn]} )) && url[1,5]="${ZPLG_1MAP[${url[1,5]}]:-$url[1,5]}" || url[1,5]="${ZPLG_2MAP[${url[1,5]}]:-$url[1,5]}"
 
     filename="${${url%%\?*}:t}"
     filename0="${${${url%%\?*}:h}:t}"
+    local_dir="${url:h}"
 
     # Check for no-raw github url and for url at all
     [[ "$url" = *github.com* && ! "$url" = */raw/* ]] && is_no_raw_github=1
     [[ "$url" = http://* || "$url" = https://* || "$url" = ftp://* || "$url" = ftps://* || "$url" = scp://* ]] && {
         is_url=1
-        local_dir="${${url%/*}/:\/\//--}"
-    } || {
-        local_dir="${url%/*}"
+        local_dir="${local_dir/:\/\//--}"
     }
 
     # Construct a local directory name from what's in url
@@ -996,7 +1000,7 @@ pmodload() {
     # Download or copy the file
     if [[ ! -e "$local_dir/$filename" || "$force" = "-f" ]]
     then
-        [[ "$filename" = "init.zsh" ]] && local sname="$filename0" || local sname="$filename"
+        [[ "$filename" = (init.zsh|trunk) ]] && local sname="$filename0" || local sname="$filename"
 
         if [[ ! -d "$local_dir" ]]; then
             print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}"
@@ -1011,7 +1015,7 @@ pmodload() {
             (
                 cd "$local_dir"
                 command rm -rf "$filename"
-                print "Downloading \`$filename'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
                 (( ${+functions[-zplg-download-file-stdout]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
 
                 if (( ${+ZPLG_ICE[svn]} )); then
