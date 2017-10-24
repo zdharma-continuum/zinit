@@ -659,7 +659,7 @@ builtin setopt noaliases
 # Compatibility with Prezto. Calls can be recursive.
 pmodload() {
     while (( $# )); do
-        [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && zplugin snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
+        [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && -zplg-load-snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
         shift
     done
 }
