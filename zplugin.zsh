@@ -959,7 +959,6 @@ pmodload() {
     # Remove leading whitespace
     url="${url#"${url%%[! $'\t']*}"}"
 
-    integer is_no_raw_github=0
     local filename filename0 local_dir save_url="$url"
     -zplg-pack-ice "$url" ""
 
@@ -988,17 +987,13 @@ pmodload() {
     ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+1}:-0}>"
 
     # Download or copy the file
-    if [[ ! -e "$local_dir/$filename" || "$force" = "-f" ]]
-    then
+    if [[ "$force" = "-f" || ! -e "$local_dir/$filename" ]]; then
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "$update" || tmp=( 0 )
     fi
 
     # Updating – no sourcing or setup
     [[ "$update" = "-u" ]] && return 0
-
-    local -a extensions list
-    extensions=( ".plugin.zsh" "init.zsh" ".zsh-theme" )
 
     if [[ "$cmd" != "--command" ]]; then
         # Source the file with compdef shadowing
@@ -1020,7 +1015,9 @@ pmodload() {
         if [[ -f "$local_dir/$filename" ]]; then
             (( tmp[1] )) && builtin source "$local_dir/$filename"
         else
-            list=( $local_dir/$filename/*${(~j.|.)extensions}(N) )
+            local -a list
+            list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
+                   $local_dir/$filename/*.zsh-theme(N) )
             [[ -n "${list[1]}" ]] && builtin source "${list[1]}"
         fi
 
