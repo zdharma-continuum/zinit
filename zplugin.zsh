@@ -946,15 +946,9 @@ pmodload() {
 # $4 - "-u" if invoked by Zplugin to only update snippet
 -zplg-load-snippet() {
     typeset -F 3 SECONDS=0
-    local url="$1" cmd="$2" force="$3" update="$4"
-
-    if [[ "$url" = "-f" || "$url" == "--command" ]]; then
-        local tmp
-        tmp="$url"
-        [[ "$cmd" != -* ]] && { url="$cmd"; cmd="$tmp"; } || { url="$force"; force="$tmp"; }
-    fi
-
-    [[ "$cmd" != --* && -n "$cmd" ]] && { local tmp="$cmd"; cmd="$force"; force="$tmp"; }
+    local -a opts
+    zparseopts -E -D -a opts f -command u || { echo "Incorrect options (accepted ones: -f, --command)"; return 1; }
+    local url="$1"
 
     # Remove leading whitespace
     url="${url#"${url%%[! $'\t']*}"}"
@@ -987,15 +981,15 @@ pmodload() {
     ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+1}:-0}>"
 
     # Download or copy the file
-    if [[ "$force" = "-f" || ! -e "$local_dir/$filename" ]]; then
+    if [[ -n "${opts[(r)-f]}" || ! -e "$local_dir/$filename" ]]; then
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-        -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "$update" || tmp=( 0 )
+        -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
 
     # Updating – no sourcing or setup
-    [[ "$update" = "-u" ]] && return 0
+    [[ -n "${opts[(r)-u]}" ]] && return 0
 
-    if [[ "$cmd" != "--command" ]]; then
+    if [[ -z "${opts[(r)--command]}" ]]; then
         # Source the file with compdef shadowing
         if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
             # Shadowing code is inlined from -zplg-shadow-on
@@ -1290,7 +1284,7 @@ zplugin() {
            ;;
        (snippet)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { ZPLG_ICE=(); return 0; }; }
-           -zplg-load-snippet "$2" "$3" "$4"
+           -zplg-load-snippet "$2" "$3" "$4" "$5" "$6"
            ;;
        (ice)
            -zplg-ice "${@[2,-1]}"
