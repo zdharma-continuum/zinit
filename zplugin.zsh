@@ -1002,11 +1002,14 @@ pmodload() {
 
     if [[ "$cmd" != "--command" ]]; then
         # Source the file with compdef shadowing
-        # Shadowing code is inlined from -zplg-shadow-on
-
-        builtin unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
-        (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
-        functions[compdef]='--zplg-shadow-compdef "$@";'
+        if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
+            # Shadowing code is inlined from -zplg-shadow-on
+            (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}" || builtin unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
+            functions[compdef]='--zplg-shadow-compdef "$@";'
+            ZPLGM[SHADOWING]="1"
+        else
+            (( ++ ZPLGM[SHADOWING] ))
+        fi
 
         # Add to fpath
         [[ -d "$local_dir/$filename/functions" ]] && {
@@ -1021,7 +1024,7 @@ pmodload() {
             [[ -n "${list[1]}" ]] && builtin source "${list[1]}"
         fi
 
-        (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
+        (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"; }
     else
         # If this is a Subversion checkout of a subdirectory, then
         # don't do chmod +x and just add the directory to path
