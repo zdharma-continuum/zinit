@@ -658,7 +658,10 @@ builtin setopt noaliases
 # FUNCTION: pmodload {{{
 # Compatibility with Prezto. Calls can be recursive.
 pmodload() {
-    [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && zplugin snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
+    while (( $# )); do
+        [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && zplugin snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
+        shift
+    done
 }
 # }}}
 
