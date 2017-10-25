@@ -1119,9 +1119,7 @@ pmodload() {
     [[ "${#reply[@]}" -eq "0" ]] && return 1
 
     # Get first one
-    integer correct=0
-    [[ -o "KSH_ARRAYS" ]] && correct=1
-    local fname="${reply[1-correct]#$dname/}"
+    local fname="${${${(@Oa)reply}[-1]}#$dname/}"
 
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname"
     [[ "$mode" = "light" ]] && -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Light load"
