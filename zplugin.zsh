@@ -868,9 +868,8 @@ pmodload() {
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}/${reply[-1]}"
 
-    # If not found, idx will be length+1
-    local idx="${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}"
-    ZPLG_REGISTERED_PLUGINS[$idx]=()
+    # If not found, the index will be length+1
+    ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
 } # }}}
 
