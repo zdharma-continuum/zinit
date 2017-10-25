@@ -37,10 +37,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
         case "${ZPLG_ICE[proto]}" in
             (|https)
-                git clone --recursive "https://${site:-github.com}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
+                git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "https://${site:-github.com}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
                 ;;
             (git|http|ftp|ftps|rsync|ssh)
-                git clone --recursive "${ZPLG_ICE[proto]}://${site:-github.com}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
+                git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "${ZPLG_ICE[proto]}://${site:-github.com}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
                 ;;
             (*)
                 print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
