@@ -815,8 +815,8 @@ pmodload() {
 -zplg-find-other-matches() {
     local dname="$1" pdir="$2"
 
-    if [[ -e "$dname/$pdir/init.zsh" ]]; then
-        reply=( "$dname/$pdir/init.zsh" )
+    if [[ -e "$dname/init.zsh" ]]; then
+        reply=( "$dname/init.zsh" )
     elif [[ -e "$dname/${pdir}.zsh-theme" ]]; then
         reply=( "$dname/${pdir}.zsh-theme" )
     elif [[ -e "$dname/${pdir}.theme.zsh" ]]; then
