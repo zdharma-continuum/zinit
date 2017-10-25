@@ -97,8 +97,6 @@ typeset -gAH ZPLG_ZSTYLES
 
 # Holds concatenated bindkeys declared by each plugin
 typeset -gAH ZPLG_BINDKEYS
-# Holds counter used for main keymap saves
-typeset -giH ZPLG_BINDKEY_MAIN_IDX
 
 # Holds concatenated aliases declared by each plugin
 typeset -gAH ZPLG_ALIASES
@@ -326,10 +324,10 @@ builtin setopt noaliases
         # Negative indices for KSH_ARRAYS immunity
         if [[ "${#opts[@]}" -eq "1" && "${+opts[(r)-A]}" = "1" && "${#pos[@]}" = "3" && "${pos[-1]}" = "main" && "${pos[-2]}" != "-A" ]]; then
             # Save a copy of main keymap
-            (( ZPLG_BINDKEY_MAIN_IDX ++ ))
+            (( ZPLGM[BINDKEY_MAIN_IDX] = ${ZPLGM[BINDKEY_MAIN_IDX]:-0} + 1 ))
             local pname="${ZPLG_CUR_PLUGIN:-_dtrace}"
-            local name="${(q)pname}-main-$ZPLG_BINDKEY_MAIN_IDX"
-            builtin bindkey -N "${name}" main
+            local name="${(q)pname}-main-${ZPLGM[BINDKEY_MAIN_IDX]}"
+            builtin bindkey -N "$name" main
 
             # Remember occurence of main keymap substitution, to revert on unload
             local keys="_" widget="_" optA="-A" mapname="${name}" optR="_"
