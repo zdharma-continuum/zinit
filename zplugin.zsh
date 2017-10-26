@@ -1114,7 +1114,7 @@ pmodload() {
     else
         reply=( "$dname/${pdir}.plugin.zsh" )
     fi
-    [[ "${#reply[@]}" -eq "0" ]] && return 1
+    [[ "${#reply}" -eq "0" ]] && return 1
 
     # Get first one
     local fname="${${${(@Oa)reply}[-1]}#$dname/}"
