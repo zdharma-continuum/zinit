@@ -1103,13 +1103,18 @@ pmodload() {
         local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
 
-    # Look for a file to source. First look for the most
-    # common one (optimization) then for other possibilities
-    if [[ ! -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
-        -zplg-find-other-matches "$pdir_path" "$pbase"
+    if (( ${+ZPLG_ICE[pick]} == 0 )); then
+        # Look for a file to source. First look for the most
+        # common one (optimization) then for other possibilities
+        if [[ ! -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
+            -zplg-find-other-matches "$pdir_path" "$pbase"
+        else
+            reply=( "$pdir_path/${pbase}.plugin.zsh" )
+        fi
     else
-        reply=( "$pdir_path/${pbase}.plugin.zsh" )
+        reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) )
     fi
+
     [[ "${#reply}" -eq "0" ]] && return 1
 
     # Get first one
@@ -1216,7 +1221,7 @@ pmodload() {
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
