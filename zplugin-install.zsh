@@ -201,6 +201,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # FUNCTION: -zplg-download-snippet {{{
 -zplg-download-snippet() {
     local save_url="$1" url="$2" local_dir="$3" filename0="$4" filename="$5" update="$6"
+    integer retval=0
 
     [[ "$filename" = (init.zsh|trunk) ]] && local sname="$filename0" || local sname="$filename"
 
@@ -234,7 +235,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
                 print -r "(snippet URL points to a directory instead of a file?"
                 print -r "to download directory, use preceding: zplugin ice svn)"
-                tmp=( 0 )
+                retval=1
             }
         fi
     else
@@ -246,4 +247,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     print -r "$save_url" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_url"
     print -r "${+ZPLG_ICE[svn]}" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_mode"
+
+    return $retval
 }
