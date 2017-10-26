@@ -982,6 +982,7 @@ pmodload() {
     # Updating – no sourcing or setup
     [[ -n "${opts[(r)-u]}" ]] && return 0
 
+    local -a list
     if [[ -z "${opts[(r)--command]}" ]]; then
         # Source the file with compdef shadowing
         if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
@@ -999,25 +1000,37 @@ pmodload() {
         }
 
         # Source
-        if [[ -f "$local_dir/$filename" ]]; then
-            (( tmp[1] )) && builtin source "$local_dir/$filename"
+        if (( ${+ZPLG_ICE[svn]} == 0 )); then
+            (( tmp[1] )) && list=( "$local_dir/$filename" )
+            (( ${+ZPLG_ICE[pick]} )) && list=( $local_dir/${~ZPLG_ICE[pick]}(N) )
         else
-            local -a list
-            list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
-                   $local_dir/$filename/*.zsh-theme(N) )
-            [[ -n "${list[1]}" ]] && builtin source "${list[1]}"
+            if (( ${+ZPLG_ICE[pick]} )); then
+                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) )
+            else
+                list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
+                       $local_dir/$filename/*.zsh-theme(N) )
+            fi
         fi
+
+        [[ -f "${list[1]}" ]] && { builtin source "${list[1]}"; ((1)); } || echo "Snippet not loaded ($save_url)"
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"; }
     else
-        # If this is a Subversion checkout of a subdirectory, then
-        # don't do chmod +x and just add the directory to path
+        # Subversion - directory and multiple files possible
         if (( ${+ZPLG_ICE[svn]} )); then
-            [[ -z "${path[(er)$local_dir/$filename]}" ]] && path+=( "$local_dir/$filename" )
+            if (( ${+ZPLG_ICE[pick]} )); then
+                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) )
+                [[ -n "${list[1]}" ]] && local xpath="${list[1]:h}" xfilepath="${list[1]}"
+            else
+                local xpath="$local_dir/$filename"
+            fi
         else
-            [[ ! -x "$local_dir/$filename" ]] && command chmod a+x "$local_dir/$filename"
-            [[ -z "${path[(er)$local_dir]}" ]] && path+=( "$local_dir" )
+            local xpath="$local_dir" xfilepath="$local_dir/$filename"
+            # This doesn't make sense, but users may come up with something
+            (( ${+ZPLG_ICE[pick]} )) && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ); xfilepath="${list[1]}"; }
         fi
+        [[ -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path+=( "$xpath" )
+        [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath"
     fi
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
