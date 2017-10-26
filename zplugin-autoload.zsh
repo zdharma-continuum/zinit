@@ -1412,9 +1412,9 @@ ZPLGM[EXTENDED_GLOB]=""
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
     # have ".zsh" there
-    local dname="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     typeset -a matches m
-    matches=( $dname/*.zwc )
+    matches=( $pdir_path/*.zwc )
 
     if [[ "${#matches[@]}" -eq "0" ]]; then
         if [[ "$silent" = "1" ]]; then
@@ -1981,7 +1981,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     }
 
-    local dname="${reply[-2]}" fname="${reply[-1]}"
+    local pdir_path="${reply[-2]}" fname="${reply[-1]}"
 
     integer compiled=1
     [[ -e "${fname}.zwc" ]] && command rm -f "${fname}.zwc" || compiled=0

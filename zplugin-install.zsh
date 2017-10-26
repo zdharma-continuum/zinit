@@ -187,8 +187,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         print "${ZPLGM[col-error]}No files for compilation found${ZPLGM[col-rst]}"
         return 1
     }
-    local dname="${reply[-2]}" first="${reply[-1]}"
-    local fname="${first#$dname/}"
+    local pdir_path="${reply[-2]}" first="${reply[-1]}"
+    local fname="${first#$pdir_path/}"
 
     print "Compiling ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]}..."
     zcompile "$first" || {

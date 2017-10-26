@@ -811,18 +811,18 @@ pmodload() {
 # this functions examines other conventions in order of most expected
 # sanity.
 -zplg-find-other-matches() {
-    local dname="$1" pdir="$2"
+    local pdir_path="$1" pbase="$2"
 
-    if [[ -e "$dname/init.zsh" ]]; then
-        reply=( "$dname/init.zsh" )
-    elif [[ -e "$dname/${pdir}.zsh-theme" ]]; then
-        reply=( "$dname/${pdir}.zsh-theme" )
-    elif [[ -e "$dname/${pdir}.theme.zsh" ]]; then
-        reply=( "$dname/${pdir}.theme.zsh" )
+    if [[ -e "$pdir_path/init.zsh" ]]; then
+        reply=( "$pdir_path/init.zsh" )
+    elif [[ -e "$pdir_path/${pbase}.zsh-theme" ]]; then
+        reply=( "$pdir_path/${pbase}.zsh-theme" )
+    elif [[ -e "$pdir_path/${pbase}.theme.zsh" ]]; then
+        reply=( "$pdir_path/${pbase}.theme.zsh" )
     else
         reply=(
-            $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
-            $dname/*.zsh-theme(N) $dname/.zshrc(N)
+            $pdir_path/*.plugin.zsh(N) $pdir_path/*.zsh(N) $pdir_path/*.sh(N)
+            $pdir_path/*.zsh-theme(N) $pdir_path/.zshrc(N)
         )
     fi
 } # }}}
@@ -1096,24 +1096,24 @@ pmodload() {
     ZPLGM[CUR_USPL2]="${user}/${plugin}"
 
     if [[ "$user" = "%" ]]; then
-        local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
-        local dname="$plugin"
+        local pbase="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
+        local pdir_path="$plugin"
     else
-        local pdir="${${${plugin%.plugin.zsh}%.zsh}%.git}"
-        local dname="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        local pbase="${${${plugin%.plugin.zsh}%.zsh}%.git}"
+        local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
 
     # Look for a file to source. First look for the most
     # common one (optimization) then for other possibilities
-    if [[ ! -e "$dname/${pdir}.plugin.zsh" ]]; then
-        -zplg-find-other-matches "$dname" "$pdir"
+    if [[ ! -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
+        -zplg-find-other-matches "$pdir_path" "$pbase"
     else
-        reply=( "$dname/${pdir}.plugin.zsh" )
+        reply=( "$pdir_path/${pbase}.plugin.zsh" )
     fi
     [[ "${#reply}" -eq "0" ]] && return 1
 
     # Get first one
-    local fname="${${${(@Oa)reply}[-1]}#$dname/}"
+    local fname="${${${(@Oa)reply}[-1]}#$pdir_path/}"
 
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname"
     [[ "$mode" = "light" ]] && -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Light load"
@@ -1131,7 +1131,7 @@ pmodload() {
     # We need some state, but user wants his for his plugins
     (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
     builtin setopt noaliases
-    builtin source "$dname/$fname"
+    builtin source "$pdir_path/$fname"
     builtin unsetopt noaliases
     (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
