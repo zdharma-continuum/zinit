@@ -819,10 +819,6 @@ pmodload() {
         reply=( "$dname/${pdir}.zsh-theme" )
     elif [[ -e "$dname/${pdir}.theme.zsh" ]]; then
         reply=( "$dname/${pdir}.theme.zsh" )
-    elif [[ -e "$dname/${pdir}.zshplugin" ]]; then
-        reply=( "$dname/${pdir}.zshplugin" )
-    elif [[ -e "$dname/${pdir}.zsh.plugin" ]]; then
-        reply=( "$dname/${pdir}.zsh.plugin" )
     else
         reply=(
             $dname/*.plugin.zsh(N) $dname/*.zsh(N) $dname/*.sh(N)
