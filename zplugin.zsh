@@ -1120,18 +1120,17 @@ pmodload() {
     # Get first one
     local fname="${${${(@Oa)reply}[-1]}#$pdir_path/}"
 
-    -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname"
-    [[ "$mode" = "light" ]] && -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Light load"
+    -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname${mode:+ $ZPLGM[col-info2]($mode load)$ZPLGM[col-rst]}"
 
     # Light and compdef mode doesn't do diffs and shadowing
-    if [[ "$mode" = "load" ]]; then
+    if [[ "$mode" != "light" ]]; then
         -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" begin
         -zplg-diff-options "${ZPLGM[CUR_USPL2]}" begin
         -zplg-diff-env "${ZPLGM[CUR_USPL2]}" begin
         -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" begin
     fi
 
-    -zplg-shadow-on "$mode"
+    -zplg-shadow-on "${mode:-load}"
 
     # We need some state, but user wants his for his plugins
     (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
@@ -1140,8 +1139,9 @@ pmodload() {
     builtin unsetopt noaliases
     (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
-    -zplg-shadow-off "$mode"
-    if [[ "$mode" = "load" ]]; then
+    -zplg-shadow-off "${mode:-load}"
+
+    if [[ "$mode" != "light" ]]; then
         -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" end
         -zplg-diff-env "${ZPLGM[CUR_USPL2]}" end
         -zplg-diff-options "${ZPLGM[CUR_USPL2]}" end
@@ -1265,7 +1265,7 @@ zplugin() {
            else
                # Load plugin given in uspl2 or "user plugin" format
                # Possibly clone from github, and install completions
-               -zplg-load "$2" "$3" "load"
+               -zplg-load "$2" "$3" ""
            fi
            ;;
        (light)
