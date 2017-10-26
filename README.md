@@ -229,6 +229,7 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 |-----------|-------------|
 | `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, etc. |
 | `from`    | Clone from given site (Github is the default), supported are `from"gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gl`, `bb`, `nb`) |
+| `pick`    | Select file to source, or file to set as command (when using `snippet --command`), e.g. `zplg ice pick"*.plugin.zsh"` |
 | `depth`   | Pass `--depth` to git, i.e. limit how much of history to download |
 | `if`      | Load plugin or snippet when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...` |
 | `blockf`  | Disallow plugin to modify `fpath` |
