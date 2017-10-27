@@ -1103,10 +1103,8 @@ pmodload() {
 # $3 - mode (light or load)
 -zplg-load-plugin() {
     local user="$1" plugin="$2" mode="$3"
-    ZPLGM[CUR_USR]="$user"
-    ZPLG_CUR_PLUGIN="$plugin"
-    ZPLGM[CUR_USPL]="${user}---${plugin}"
-    ZPLGM[CUR_USPL2]="${user}/${plugin}"
+    ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin"
+    ZPLGM[CUR_USPL]="${user}---${plugin}" ZPLGM[CUR_USPL2]="${user}/${plugin}"
 
     if [[ "$user" = "%" ]]; then
         local pbase="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
@@ -1164,10 +1162,7 @@ pmodload() {
     (( ${+ZPLG_ICE[atload]} )) && { local oldcd="$PWD"; cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atload]}"; cd "$oldcd"; }
 
     # Mark no load is in progress
-    ZPLGM[CUR_USR]=""
-    ZPLG_CUR_PLUGIN=""
-    ZPLGM[CUR_USPL]=""
-    ZPLGM[CUR_USPL2]=""
+    ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL]="" ZPLGM[CUR_USPL2]=""
 } # }}}
 
 #
