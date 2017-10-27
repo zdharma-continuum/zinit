@@ -1030,7 +1030,7 @@ pmodload() {
             (( ${+ZPLG_ICE[pick]} )) && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ); xfilepath="${list[1]}"; }
         fi
         [[ -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path+=( "$xpath" )
-        [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath"
+        [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "${list[@]:#$xfilepath}" "$xfilepath"
     fi
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
