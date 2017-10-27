@@ -983,7 +983,7 @@ pmodload() {
     [[ -n "${opts[(r)-u]}" ]] && return 0
 
     local -a list
-    if [[ -z "${opts[(r)--command]}" ]]; then
+    if [[ -z "${opts[(r)--command]}" && "${ZPLG_ICE[as]}" != "command" ]]; then
         # Source the file with compdef shadowing
         if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
             # Shadowing code is inlined from -zplg-shadow-on
