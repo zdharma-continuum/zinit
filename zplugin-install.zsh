@@ -120,25 +120,25 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ "$restart" = "1" ]]; then
         path+=( "/usr/local/bin" )
         if (( ${+commands[curl]} )) then
-            curl -fsSL "$url"
+            command curl -fsSL "$url"
         elif (( ${+commands[wget]} )); then
-            wget -q "$url" -O -
+            command wget -q "$url" -O -
         elif (( ${+commands[lftp]} )); then
-            lftp -c "cat $url"
+            command lftp -c "cat $url"
         elif (( ${+commands[lynx]} )) then
-            lynx -dump "$url"
+            command lynx -dump "$url"
         else
             [[ "${(t)path}" != *unique* ]] && path[-1]=()
             return 1
         fi
         [[ "${(t)path}" != *unique* ]] && path[-1]=()
     else
-        if ! type curl 2>/dev/null 1>&2; then
-            curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
+        if type curl 2>/dev/null 1>&2; then
+            command curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
         elif type wget 2>/dev/null 1>&2; then
-            wget -q "$url" -O - || -zplg-download-file-stdout "$url" "1"
+            command wget -q "$url" -O - || -zplg-download-file-stdout "$url" "1"
         elif type lftp 2>/dev/null 1>&2; then
-            lftp -c "cat $url" || -zplg-download-file-stdout "$url" "1"
+            command lftp -c "cat $url" || -zplg-download-file-stdout "$url" "1"
         else
             -zplg-download-file-stdout "$url" "1"
         fi
