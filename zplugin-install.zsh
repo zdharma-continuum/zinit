@@ -126,7 +126,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         elif (( ${+commands[lftp]} )); then
             command lftp -c "cat $url"
         elif (( ${+commands[lynx]} )) then
-            command lynx -dump "$url"
+            command lynx -source "$url"
         else
             [[ "${(t)path}" != *unique* ]] && path[-1]=()
             return 1
