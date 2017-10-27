@@ -1114,16 +1114,13 @@ pmodload() {
         local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
 
-    if (( ${+ZPLG_ICE[pick]} == 0 )); then
-        # Look for a file to source. First look for the most
-        # common one (optimization) then for other possibilities
-        if [[ ! -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
-            -zplg-find-other-matches "$pdir_path" "$pbase"
-        else
-            reply=( "$pdir_path/${pbase}.plugin.zsh" )
-        fi
-    else
+    if (( ${+ZPLG_ICE[pick]} )); then
         reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) )
+    elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
+        reply=( "$pdir_path/${pbase}.plugin.zsh" )
+    else
+        # The common file to source isn't there, so:
+        -zplg-find-other-matches "$pdir_path" "$pbase"
     fi
 
     [[ "${#reply}" -eq "0" ]] && return 1
