@@ -1114,46 +1114,57 @@ pmodload() {
         local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
 
-    if (( ${+ZPLG_ICE[pick]} )); then
-        reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) )
-    elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
-        reply=( "$pdir_path/${pbase}.plugin.zsh" )
+    if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
+        reply=()
+        if (( ${+ZPLG_ICE[pick]} )); then
+            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) )
+            [[ -n "${reply[1]}" ]] && pdir_path="${reply[1]:h}"
+        fi
+        [[ -z "${path[(er)$pdir_path]}" ]] && path+=( "$pdir_path" )
+        [[ -n "${reply[1]}" && ! -x "${reply[1]}" ]] && command chmod a+x ${reply[@]}
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "$ZPLGM[col-info2]$pdir_path$ZPLGM[col-rst] added to \$PATH"
     else
-        # The common file to source isn't there, so:
-        -zplg-find-other-matches "$pdir_path" "$pbase"
-    fi
+        if (( ${+ZPLG_ICE[pick]} )); then
+            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) )
+        elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
+            reply=( "$pdir_path/${pbase}.plugin.zsh" )
+        else
+            # The common file to source isn't there, so:
+            -zplg-find-other-matches "$pdir_path" "$pbase"
+        fi
 
-    [[ "${#reply}" -eq "0" ]] && return 1
+        [[ "${#reply}" -eq "0" ]] && return 1
 
-    # Get first one
-    local fname="${${${(@Oa)reply}[-1]}#$pdir_path/}"
+        # Get first one
+        local fname="${${${(@Oa)reply}[-1]}#$pdir_path/}"
 
-    -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname${mode:+ $ZPLGM[col-info2]($mode load)$ZPLGM[col-rst]}"
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname${mode:+ $ZPLGM[col-info2]($mode load)$ZPLGM[col-rst]}"
 
-    # Light and compdef mode doesn't do diffs and shadowing
-    if [[ "$mode" != "light" ]]; then
-        -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" begin
-        -zplg-diff-options "${ZPLGM[CUR_USPL2]}" begin
-        -zplg-diff-env "${ZPLGM[CUR_USPL2]}" begin
-        -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" begin
-    fi
+        # Light and compdef mode doesn't do diffs and shadowing
+        if [[ "$mode" != "light" ]]; then
+            -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" begin
+            -zplg-diff-options "${ZPLGM[CUR_USPL2]}" begin
+            -zplg-diff-env "${ZPLGM[CUR_USPL2]}" begin
+            -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" begin
+        fi
 
-    -zplg-shadow-on "${mode:-load}"
+        -zplg-shadow-on "${mode:-load}"
 
-    # We need some state, but user wants his for his plugins
-    (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
-    builtin setopt noaliases
-    builtin source "$pdir_path/$fname"
-    builtin unsetopt noaliases
-    (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
+        # We need some state, but user wants his for his plugins
+        (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
+        builtin setopt noaliases
+        builtin source "$pdir_path/$fname"
+        builtin unsetopt noaliases
+        (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
-    -zplg-shadow-off "${mode:-load}"
+        -zplg-shadow-off "${mode:-load}"
 
-    if [[ "$mode" != "light" ]]; then
-        -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" end
-        -zplg-diff-env "${ZPLGM[CUR_USPL2]}" end
-        -zplg-diff-options "${ZPLGM[CUR_USPL2]}" end
-        -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" end
+        if [[ "$mode" != "light" ]]; then
+            -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" end
+            -zplg-diff-env "${ZPLGM[CUR_USPL2]}" end
+            -zplg-diff-options "${ZPLGM[CUR_USPL2]}" end
+            -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" end
+        fi
     fi
 
     (( ${+ZPLG_ICE[atload]} )) && { local oldcd="$PWD"; cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atload]}"; cd "$oldcd"; }
@@ -1226,7 +1237,7 @@ pmodload() {
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|as|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
