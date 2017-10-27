@@ -10,15 +10,16 @@
 
 Zplugin gives **reports** from plugin load. Plugins are no longer black boxes,
 report will tell what aliases, functions, bindkeys, Zle widgets, zstyles,
-completions, variables, `PATH` and `FPATH` elements a plugin has set up. Supported is
-**unloading** of plugin and ability to list, uninstall, reinstall and selectively
-disable, enable plugin's completions. Also, every plugin is compiled and user
-can control this function. The system does not use `$FPATH`, it's kept clean!
+completions, variables, `PATH` and `FPATH` elements a plugin has set up.
 
-Code is immune to `KSH_ARRAYS`, `emulate sh`, `emulate ksh`, thoroughly tested to
-support any user setup, be as transparent as plain `source` command. Completion
-management functionality is provided to allow user call `compinit` only once in
-`.zshrc`.
+Supported is **unloading** of plugin and ability to list, (un)install and
+selectively disable, enable plugin's completions. Also, every plugin is
+compiled and user can control this function.
+
+The system does not use `$FPATH`, loading multiple plugins doesn't clutter
+`$FPATH` with the same number of entries (e.g. `10`). Code is immune to
+`KSH_ARRAYS`. Completion management functionality is provided to allow user
+to call `compinit` only once in `.zshrc`.
 
 **NEW**: **[Code documentation](zsdoc)**
 
@@ -34,8 +35,9 @@ Then add to `~/.zshrc`, at bottom:
 
 ```SystemVerilog
 zplugin load psprint zsh-navigation-tools
-zplugin ice from"notabug" atload"echo loaded zui" if"(( 1 ))"
 zplugin load zdharma/zui
+zplugin ice from"github" as"command" pick"bin/docker-compose"
+zplg load docker/compose
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 # This one to be ran just once, in interactive session
