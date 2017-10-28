@@ -21,6 +21,7 @@ env:
 
 before_script:
 - zsh --version
+- zsh -c 'print -rl -- "OSTYPE: $OSTYPE" "CPUTYPE: $CPUTYPE" "MACHTYPE: $MACHTYPE"'
 script:
 - make
 - make -C zsdoc pdf
