@@ -12,49 +12,52 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $2 - plugin
 -zplg-setup-plugin-dir() {
     local user="$1" plugin="$2" remote_url_path="$1/$2"
-    if [[ ! -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]]; then
-        local -A sites
-        sites=(
-            "github"    "github.com"
-            "gh"        "github.com"
-            "bitbucket" "bitbucket.org"
-            "bb"        "bitbucket.org"
-            "gitlab"    "gitlab.com"
-            "gl"        "gitlab.com"
-            "notabug"   "notabug.org"
-            "nb"        "notabug.org"
-        )
-        if [[ "$user" = "_local" ]]; then
-            print "Warning: no local plugin \`$plugin\'"
-            print "(looked in ${ZPLGM[PLUGINS_DIR]}/${user}---${plugin})"
-            return 1
-        fi
-        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-        print "Downloading $REPLY..."
 
-        # Return with error when any problem
-        local site
-        [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
-        case "${ZPLG_ICE[proto]}" in
-            (|https)
-                git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
-                ;;
-            (git|http|ftp|ftps|rsync|ssh)
-                git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
-                ;;
-            (*)
-                print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
-                return 1
-        esac
+    [[ -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]] && return 0
 
-        # Install completions
-        -zplg-install-completions "$user" "$plugin" "0"
+    local -A sites
+    sites=(
+        "github"    "github.com"
+        "gh"        "github.com"
+        "bitbucket" "bitbucket.org"
+        "bb"        "bitbucket.org"
+        "gitlab"    "gitlab.com"
+        "gl"        "gitlab.com"
+        "notabug"   "notabug.org"
+        "nb"        "notabug.org"
+    )
 
-        ( (( ${+ZPLG_ICE[atclone]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}" } )
-
-        # Compile plugin
-        -zplg-compile-plugin "$user" "$plugin"
+    if [[ "$user" = "_local" ]]; then
+        print "Warning: no local plugin \`$plugin\'"
+        print "(should be located at ${ZPLGM[PLUGINS_DIR]}/${user}---${plugin})"
+        return 1
     fi
+
+    -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+    print "Downloading $REPLY..."
+
+    local site
+    [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
+
+    case "${ZPLG_ICE[proto]}" in
+        (|https)
+            git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
+            ;;
+        (git|http|ftp|ftps|rsync|ssh)
+            git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
+            ;;
+        (*)
+            print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
+            return 1
+    esac
+
+    # Install completions
+    -zplg-install-completions "$user" "$plugin" "0"
+
+    # Compile plugin
+    -zplg-compile-plugin "$user" "$plugin"
+
+    ( (( ${+ZPLG_ICE[atclone]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}" } )
 
     return 0
 } # }}}
