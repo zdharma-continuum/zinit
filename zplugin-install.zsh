@@ -120,27 +120,28 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ "$restart" = "1" ]]; then
         path+=( "/usr/local/bin" )
         if (( ${+commands[curl]} )) then
-            command curl -fsSL "$url"
+            command curl -fsSL "$url" || return 1
         elif (( ${+commands[wget]} )); then
-            command wget -q "$url" -O -
+            command wget -q "$url" -O - || return 1
         elif (( ${+commands[lftp]} )); then
-            command lftp -c "cat $url"
+            command lftp -c "cat $url" || return 1
         elif (( ${+commands[lynx]} )) then
-            command lynx -source "$url"
+            command lynx -source "$url" || return 1
         else
             [[ "${(t)path}" != *unique* ]] && path[-1]=()
-            return 1
+            return 2
         fi
         [[ "${(t)path}" != *unique* ]] && path[-1]=()
     else
         if type curl 2>/dev/null 1>&2; then
-            command curl -fsSL "$url" || -zplg-download-file-stdout "$url" "1"
+            command curl -fsSL "$url" || return 1
         elif type wget 2>/dev/null 1>&2; then
-            command wget -q "$url" -O - || -zplg-download-file-stdout "$url" "1"
+            command wget -q "$url" -O - || return 1
         elif type lftp 2>/dev/null 1>&2; then
-            command lftp -c "cat $url" || -zplg-download-file-stdout "$url" "1"
+            command lftp -c "cat $url" || return 1
         else
             -zplg-download-file-stdout "$url" "1"
+            return $?
         fi
     fi
 
@@ -226,7 +227,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             if (( ${+ZPLG_ICE[svn]} )); then
                 -zplg-mirror-using-svn "$url"
             else
-                -zplg-download-file-stdout "$url" >! "$filename" || echo "No available download tool (curl,wget,lftp,lynx)"
+                -zplg-download-file-stdout "$url" >! "$filename" || {
+                    -zplg-download-file-stdout "$url" 1 >! "$filename" || {
+                        echo "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                    }
+                }
             fi
         )
 
