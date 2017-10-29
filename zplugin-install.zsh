@@ -317,6 +317,27 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     return $retval
 }
+# }}}
+# FUNCTION: -zplg-get-latest-gh-r-version {{{
+# Gets version string of latest release of given Github
+# package. Connects to Github releases page.
+-zplg-get-latest-gh-r-version() {
+    setopt localoptions extendedglob
+
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}"
+    local plugin="${reply[-1]}"
+
+    local url="https://github.com/$user/$plugin/releases/latest"
+
+    local -a list
+    list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1 } 2>/dev/null | \
+                  grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+
+    list=( "${(uOn)list[@]/(#b)href=?(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}" )
+    REPLY="${list[1]}"
+}
+# }}}
 # FUNCTION: -zplg-handle-binary-file {{{
 # If the file is an archive, it is extracted by this function.
 # Next stage is scanning of files with the common utility `file',
