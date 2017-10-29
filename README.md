@@ -56,7 +56,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
 # News
 * 29-10-2017
-  - Subversion protocol (supported by Github) can be used to clone subdirectories when using
+  - Subversion protocol (supported by Github) can be used to clone **subdirectories** when using
     snippets. This allows to load multi-file snippets. For example:
 
     ```SystemVerilog
@@ -64,21 +64,24 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     zplg ice svn; zplg snippet PZT::modules/prompt
     ```
 
-  - Snippets support `Prezto` modules (e.g. with their dependencies), and can use `PZT::` URL-shorthand,
+  - Snippets support `Prezto` modules (with dependencies), and can use **PZT::** URL-shorthand,
     like in the example above. One can load `Prezto` module as single file snippet, or use Subversion
-    to download whole directory:
+    to download whole directory (see also description of [Ice Modifiers](#ice-modifiers)):
 
     ```SystemVerilog
     # Single file snippet, URL points to file
     zplg snippet PZT::modules/helper/init.zsh
     # Multi-file snippet, URL points to directory to clone with Subversion
+    # The file to source (init.zsh) is automatically detected
     zplg ice svn; zplg snippet PZT::modules/prompt
+    # Use of Subversion for an Oh-My-Zsh plugin
+    zplg ice svn; zplg snippet OMZ::plugins/git
     ```
 
   - Fixed a bug with `cURL` usage (snippets) for downloading, it will now be properly used
 
 * 13-10-2017
-  - Snippets can use "OMZ::" prefix to easily point to `Oh-My-Zsh` plugins and libraries, e.g.:
+  - Snippets can use "**OMZ::**" prefix to easily point to `Oh-My-Zsh` plugins and libraries, e.g.:
 
     ```SystemVerilog
     zplugin snippet OMZ::lib/git.zsh
