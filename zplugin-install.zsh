@@ -11,9 +11,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - user
 # $2 - plugin
 -zplg-setup-plugin-dir() {
-    local user="$1" plugin="$2" remote_url_path="$1/$2"
+    local user="$1" plugin="$2" remote_url_path="$1/$2" local_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
 
-    [[ -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]] && return 0
+    [[ -d "$local_path" ]] && return 0
 
     local -A sites
     sites=(
@@ -25,11 +25,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         "gl"        "gitlab.com"
         "notabug"   "notabug.org"
         "nb"        "notabug.org"
+        "github-rel" "github.com/$remote_url_path/releases"
+        "gh-r"      "github.com/$remote_url_path/releases"
     )
 
     if [[ "$user" = "_local" ]]; then
         print "Warning: no local plugin \`$plugin\'"
-        print "(should be located at ${ZPLGM[PLUGINS_DIR]}/${user}---${plugin})"
+        print "(should be located at: $local_path)"
         return 1
     fi
 
@@ -39,17 +41,70 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local site
     [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
 
-    case "${ZPLG_ICE[proto]}" in
-        (|https)
-            git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
-            ;;
-        (git|http|ftp|ftps|rsync|ssh)
-            git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || return 1
-            ;;
-        (*)
-            print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
+    if [[ "$site" = *"releases" ]]; then
+        local url="$site/${ZPLG_ICE[ver]}"
+        local -a list list2
+
+        list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1 } 2>/dev/null | \
+                      grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
+        list=( "${list[@]#href=?}" )
+
+        [[ -n "${ZPLG_ICE[pick]}" ]] && list=( "${(M)list[@]:#(#i)${ZPLG_ICE[pick]}}" )
+
+        [[ ${#list} -gt 1 ]] && {
+            list2=( "${(M)list[@]:#(#i)*${CPUTYPE#(#i)(x86_|i|amd)}*}" )
+            [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
+        }
+
+        [[ ${#list} -gt 1 ]] && {
+            list2=( "${(M)list[@]:#(#i)*${${OSTYPE%(#i)-gnu}%%[0-9.]##}*}" )
+            [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
+        }
+
+        [[ ${#list} -eq 0 ]] && {
+            print "Didn't find correct Github release-file to download (for \`$remote_url_path'), try adapting pick-ICE"
             return 1
-    esac
+        }
+
+        command mkdir -p "$local_path"
+        [[ -d "$local_path" ]] || return 1
+
+        (
+            cd "$local_path"
+            url="https://github.com${list[1]}"
+            -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
+                -zplg-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
+                    echo "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                    echo "Tried url: $url"
+                    return 1
+                }
+            }
+
+            echo "$url" >! .zplugin_url
+            -zplg-handle-binary-file "$url" "${list[1]:t}"
+            integer retval=$?
+
+            ( (( ${+ZPLG_ICE[atclone]} )) && eval "${ZPLG_ICE[atclone]}"; )
+
+            return $retval
+        ) && {
+            return 0
+        }
+
+        return 1
+    else
+        case "${ZPLG_ICE[proto]}" in
+            (|https)
+                git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" || return 1
+                ;;
+            (git|http|ftp|ftps|rsync|ssh)
+                git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" || return 1
+                ;;
+            (*)
+                print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
+                return 1
+        esac
+    fi
 
     # Install completions
     -zplg-install-completions "$user" "$plugin" "0"
@@ -57,7 +112,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Compile plugin
     -zplg-compile-plugin "$user" "$plugin"
 
-    ( (( ${+ZPLG_ICE[atclone]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}"; } )
+    ( (( ${+ZPLG_ICE[atclone]} )) && { cd "$local_path"; eval "${ZPLG_ICE[atclone]}"; } )
 
     return 0
 } # }}}
@@ -262,3 +317,64 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     return $retval
 }
+# FUNCTION: -zplg-handle-binary-file {{{
+# If the file is an archive, it is extracted by this function.
+# Next stage is scanning of files with the common utility `file',
+# to detect executables. They are given +x mode. There are also
+# messages to the user on performed actions.
+-zplg-handle-binary-file() {
+    setopt localoptions extendedglob
+
+    -zplg-extract-wrapper() {
+        local file="$1" fun="$2"
+        echo "Extracting files from: \`$file'..."
+        $fun
+        command rm -f "$file"
+    }
+
+    local url="$1" file="$2"
+
+    case "$file" in
+        (*.zip)
+            -zplg-extract() { command unzip "$file"; }
+            ;;
+        (*.rar)
+            -zplg-extract() { command unrar x "$file"; }
+            ;;
+        (*.tar.bz2|*.tbz2)
+            -zplg-extract() { command bzip2 -dc "$file" | command tar -xvf -; }
+            ;;
+        (*.tar.gz|*.tgz)
+            -zplg-extract() { command gzip -dc "$file" | command tar -xvf -; }
+            ;;
+        (*.tar.xz|*.txz)
+            -zplg-extract() { command xz -dc "$file" | command tar -xvf -; }
+            ;;
+        (*.tar.7z|*.t7z)
+            -zplg-extract() { command 7z x -so "$file" | command tar -xvf -; }
+            ;;
+    esac
+
+    [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] && {
+        -zplg-extract-wrapper "$file" -zplg-extract
+        unfunction -- -zplg-extract
+    }
+    unfunction -- -zplg-extract-wrapper
+
+    execs=( ${(@f)"$( file **/*(N-.) )"} )
+    execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
+    execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
+
+    [[ ${#execs} -gt 0 ]] && {
+        command chmod a+x "${execs[@]}"
+        if [[ "${execs[1]}" = "$file" ]]; then
+            print -r -- "Successfully downloaded and installed the executable: \`$file'."
+        else
+            print -r -- "Successfully installed executables (\"${(j:\", \":)execs}\") contained in \`$file'."
+        fi
+    }
+
+    REPLY="${execs[1]}"
+    return 0
+}
+# }}}
