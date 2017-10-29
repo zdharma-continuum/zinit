@@ -55,6 +55,28 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 29-10-2017
+  - Subversion protocol (supported by Github) can be used to clone subdirectories when using
+    snippets. This allows to load multi-file snippets. For example:
+
+    ```SystemVerilog
+    zstyle ':prezto:module:prompt' theme smiley
+    zplg ice svn; zplg snippet PZT::modules/prompt
+    ```
+
+  - Snippets support `Prezto` modules (e.g. with their dependencies), and can use `PZT::` URL-shorthand,
+    like in the example above. One can load `Prezto` module as single file snippet, or use Subversion
+    to download whole directory:
+
+    ```SystemVerilog
+    # Single file snippet, URL points to file
+    zplg snippet PZT::modules/helper/init.zsh
+    # Multi-file snippet, URL points to directory to clone with Subversion
+    zplg ice svn; zplg snippet PZT::modules/prompt
+    ```
+
+  - Fixed a bug with `cURL` usage (snippets) for downloading, it will now be properly used
+
 * 13-10-2017
   - Snippets can use "OMZ::" prefix to easily point to `Oh-My-Zsh` plugins and libraries, e.g.:
 
@@ -238,7 +260,7 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
 | `atpull`  | Run command after updating, within plugin's directory. |
-| `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source. |
+| `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
 
 # Installation
 
