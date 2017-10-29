@@ -229,8 +229,9 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 |  Modifier | Description |
 |-----------|-------------|
 | `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, etc. |
-| `from`    | Clone from given site (Github is the default), supported are `from"gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gl`, `bb`, `nb`) |
+| `from`    | Clone from given site, supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise) |
 | `pick`    | Select file to source, or file to set as command (when using `snippet --command`), e.g. `zplg ice pick"*.plugin.zsh"` |
+| `ver`     | Used with `from"gh-r"` (downloading binary release) – selects which version to download. Default is latest, can also be explicitly `ver"latest"` |
 | `depth`   | Pass `--depth` to git, i.e. limit how much of history to download |
 | `if`      | Load plugin or snippet when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...` |
 | `blockf`  | Disallow plugin to modify `fpath` |
