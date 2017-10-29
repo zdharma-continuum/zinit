@@ -229,15 +229,16 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 |  Modifier | Description |
 |-----------|-------------|
 | `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, etc. |
-| `from`    | Clone from given site, supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise) |
-| `pick`    | Select file to source, or file to set as command (when using `snippet --command`), e.g. `zplg ice pick"*.plugin.zsh"` |
-| `ver`     | Used with `from"gh-r"` (downloading binary release) – selects which version to download. Default is latest, can also be explicitly `ver"latest"` |
-| `depth`   | Pass `--depth` to git, i.e. limit how much of history to download |
-| `if`      | Load plugin or snippet when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...` |
-| `blockf`  | Disallow plugin to modify `fpath` |
-| `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"` |
-| `atload`  | Run command after loading, within plugin's directory |
-| `atpull`  | Run command after updating, within plugin's directory |
+| `from`    | Clone from given site, supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). |
+| `pick`    | Select file to source, or file to set as command (when using `snippet --command` or ICE `as"command"`), e.g. `zplg ice pick"*.plugin.zsh"`. |
+| `ver`     | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"command"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. |
+| `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. |
+| `if`      | Load plugin or snippet when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
+| `blockf`  | Disallow plugin to modify `fpath`. |
+| `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"`. Ran also after downloading snippet. |
+| `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
+| `atpull`  | Run command after updating, within plugin's directory. |
+| `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source. |
 
 # Installation
 
