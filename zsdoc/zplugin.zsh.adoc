@@ -43,6 +43,7 @@ FUNCTIONS
  -zplg-shadow-off
  -zplg-shadow-on
  -zplg-unregister-plugin
+ pmodload
  zplugin
 AUTOLOAD compinit
 AUTOLOAD is-at-least
@@ -53,7 +54,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 108 line(s). Calls functions:
+Has 112 line(s). Calls functions:
 
  Script-Body
  |-- -zplg-prepare-home
@@ -247,6 +248,7 @@ Called by:
  zplugin-autoload.zsh/-zplg-unload
  zplugin-autoload.zsh/-zplg-update-or-status-all
  zplugin-autoload.zsh/-zplg-update-or-status
+ zplugin-install.zsh/-zplg-get-latest-gh-r-version
  zplugin-install.zsh/-zplg-install-completions
  zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  zplugin-side.zsh/-zplg-exists-physically
@@ -362,7 +364,7 @@ ____
  # $2 - command, can be "begin" or "end"
 ____
 
-Has 19 line(s). Doesn't call other functions.
+Has 18 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -381,7 +383,7 @@ ____
  # $2 - command, can be "begin" or "end"
 ____
 
-Has 6 line(s). Doesn't call other functions.
+Has 5 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -400,7 +402,7 @@ ____
  # $2 - command, can be "begin" or "end"
 ____
 
-Has 7 line(s). Doesn't call other functions.
+Has 6 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -419,7 +421,7 @@ ____
  # $2 - command, can be "begin" or "end"
 ____
 
-Has 7 line(s). Doesn't call other functions.
+Has 6 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -437,7 +439,7 @@ ____
  # sanity.
 ____
 
-Has 18 line(s). Doesn't call other functions.
+Has 14 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -470,7 +472,7 @@ ____
  # $2 - plugin name, if the third format is used
 ____
 
-Has 17 line(s). Calls functions:
+Has 18 line(s). Calls functions:
 
  -zplg-load
  |-- -zplg-any-to-user-plugin
@@ -506,7 +508,7 @@ ____
  # $3 - mode (light or load)
 ____
 
-Has 52 line(s). Calls functions:
+Has 61 line(s). Calls functions:
 
  -zplg-load-plugin
  |-- -zplg-add-report
@@ -536,18 +538,17 @@ ____
  # $4 - "-u" if invoked by Zplugin to only update snippet
 ____
 
-Has 74 line(s). Calls functions:
+Has 75 line(s). Calls functions:
 
  -zplg-load-snippet
  |-- -zplg-pack-ice
- |-- -zplg-shadow-off
- |-- -zplg-shadow-on
- `-- zplugin-install.zsh/-zplg-download-file-stdout
+ `-- zplugin-install.zsh/-zplg-download-snippet
 
-Uses feature(s): _source_
+Uses feature(s): _source_, _unfunction_, _zparseopts_
 
 Called by:
 
+ pmodload
  zplugin
  zplugin-autoload.zsh/-zplg-update-or-status-all
 
@@ -609,7 +610,6 @@ Called by:
 
  -zplg-debug-stop
  -zplg-load-plugin
- -zplg-load-snippet
 
 -zplg-shadow-on
 ~~~~~~~~~~~~~~~
@@ -626,12 +626,11 @@ Called by:
 
  -zplg-debug-start
  -zplg-load-plugin
- -zplg-load-snippet
 
 -zplg-unregister-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Has 5 line(s). Calls functions:
+Has 4 line(s). Calls functions:
 
  -zplg-unregister-plugin
  `-- -zplg-any-to-user-plugin
@@ -640,6 +639,22 @@ Called by:
 
  -zplg-load
  zplugin-autoload.zsh/-zplg-unload
+
+pmodload
+~~~~~~~~
+
+____
+ # Compatibility with Prezto. Calls can be recursive.
+____
+
+Has 4 line(s). Calls functions:
+
+ pmodload
+ `-- -zplg-load-snippet
+     |-- -zplg-pack-ice
+     `-- zplugin-install.zsh/-zplg-download-snippet
+
+Not called by script or any function, may be a hook or Zle widget, etc.
 
 zplugin
 ~~~~~~~
@@ -689,9 +704,7 @@ Has 217 line(s). Calls functions:
  |   `-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |-- -zplg-load-snippet
  |   |-- -zplg-pack-ice
- |   |-- -zplg-shadow-off
- |   |-- -zplg-shadow-on
- |   `-- zplugin-install.zsh/-zplg-download-file-stdout
+ |   `-- zplugin-install.zsh/-zplg-download-snippet
  |-- -zplg-prepare-home
  |-- compinit
  |-- zplugin-autoload.zsh/-zplg-cd

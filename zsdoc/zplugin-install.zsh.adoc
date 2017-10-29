@@ -15,8 +15,12 @@ FUNCTIONS
 
  -zplg-compile-plugin
  -zplg-download-file-stdout
+ -zplg-download-snippet
  -zplg-forget-completion
+ -zplg-get-latest-gh-r-version
+ -zplg-handle-binary-file
  -zplg-install-completions
+ -zplg-mirror-using-svn
  -zplg-setup-plugin-dir
 
 DETAILS
@@ -59,11 +63,34 @@ ____
  # curl, wget, lftp, lynx. Used by snippet loading.
 ____
 
-Has 31 line(s). Calls functions:
+Has 32 line(s). Calls functions:
 
  -zplg-download-file-stdout
 
 Uses feature(s): _type_
+
+Called by:
+
+ -zplg-download-snippet
+ -zplg-setup-plugin-dir
+
+-zplg-download-snippet
+~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Downloads snippet – either a file – with curl, wget, lftp or lynx,
+ # or a directory, with Subversion – when svn-ICE is active. Github
+ # supports Subversion protocol and allows to clone subdirectories.
+ # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
+____
+
+Has 49 line(s). Calls functions:
+
+ -zplg-download-snippet
+ |-- -zplg-download-file-stdout
+ `-- -zplg-mirror-using-svn
+
+Uses feature(s): _zcompile_
 
 Called by:
 
@@ -89,6 +116,39 @@ Called by:
  zplugin-autoload.zsh/-zplg-compinit
  zplugin-autoload.zsh/-zplg-uninstall-completions
  zplugin.zsh/zplugin
+
+-zplg-get-latest-gh-r-version
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # Gets version string of latest release of given Github
+ # package. Connects to Github releases page.
+____
+
+Has 14 line(s). Calls functions:
+
+ -zplg-get-latest-gh-r-version
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Not called by script or any function, may be a hook or Zle widget, etc.
+
+-zplg-handle-binary-file
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ # If the file is an archive, it is extracted by this function.
+ # Next stage is scanning of files with the common utility `file',
+ # to detect executables. They are given +x mode. There are also
+ # messages to the user on performed actions.
+____
+
+Has 53 line(s). Doesn't call other functions.
+
+Uses feature(s): _unfunction_
+
+Called by:
+
+ -zplg-setup-plugin-dir
 
 -zplg-install-completions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -116,6 +176,15 @@ Called by:
  -zplg-setup-plugin-dir
  zplugin.zsh/zplugin
 
+-zplg-mirror-using-svn
+~~~~~~~~~~~~~~~~~~~~~~
+
+Has 2 line(s). Doesn't call other functions.
+
+Called by:
+
+ -zplg-download-snippet
+
 -zplg-setup-plugin-dir
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -128,11 +197,13 @@ ____
  # $2 - plugin
 ____
 
-Has 40 line(s). Calls functions:
+Has 100 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin
  |   `-- zplugin-side.zsh/-zplg-first
+ |-- -zplg-download-file-stdout
+ |-- -zplg-handle-binary-file
  |-- -zplg-install-completions
  |   |-- -zplg-forget-completion
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
