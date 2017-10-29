@@ -315,6 +315,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     print -r "$save_url" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_url"
     print -r "${+ZPLG_ICE[svn]}" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_mode"
 
+    ( (( ${+ZPLG_ICE[atclone]} )) && { cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atclone]}"; } )
+
     return $retval
 }
 # }}}
