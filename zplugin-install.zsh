@@ -109,7 +109,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             -zplg-forget-completion "$cfile"
         else
             print "${ZPLGM[col-error]}Not symlinking completion \`$cfile', it already exists${ZPLGM[col-rst]}"
-            print "${ZPLGM[col-error]}Use \`creinstall {plugin-name}' to force install${ZPLGM[col-rst]}"
+            print "${ZPLGM[col-error]}Use \`zplugin creinstall {plugin-name}' to force install${ZPLGM[col-rst]}"
         fi
     done
 } # }}}
