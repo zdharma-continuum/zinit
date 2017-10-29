@@ -203,6 +203,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     zcompile "${first%.plugin.zsh}.zsh" 2>/dev/null
 } # }}}
 # FUNCTION: -zplg-download-snippet {{{
+# Downloads snippet – either a file – with curl, wget, lftp or lynx,
+# or a directory, with Subversion – when svn-ICE is active. Github
+# supports Subversion protocol and allows to clone subdirectories.
+# This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 -zplg-download-snippet() {
     local save_url="$1" url="$2" local_dir="$3" filename0="$4" filename="$5" update="$6"
     integer retval=0
