@@ -1171,6 +1171,7 @@ pmodload() {
 
     # Mark no load is in progress
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL]="" ZPLGM[CUR_USPL2]=""
+    return 0
 } # }}}
 
 #
