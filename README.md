@@ -36,8 +36,7 @@ Then add to `~/.zshrc`, at bottom:
 ```SystemVerilog
 zplugin load psprint zsh-navigation-tools
 zplugin load zdharma/zui
-zplugin ice from"github" as"command" pick"bin/docker-compose"
-zplg load docker/compose
+zplg ice from"gh-r" ver"latest" as"command"; zplg load "junegunn/fzf-bin"
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 # This one to be ran just once, in interactive session
