@@ -1239,7 +1239,7 @@ ZPLGM[EXTENDED_GLOB]=""
             ( cd "$repo"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
             local -A sice
             sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
-            ( (( ${+sice[atpull]} )) && eval "${(Q)sice[atpull]}" )
+            ( (( ${+sice[atpull]} )) && eval "${(Q)sice[atpull]}"; )
         fi
     done
 } # }}}

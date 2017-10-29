@@ -57,7 +57,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Compile plugin
     -zplg-compile-plugin "$user" "$plugin"
 
-    ( (( ${+ZPLG_ICE[atclone]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}" } )
+    ( (( ${+ZPLG_ICE[atclone]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${ZPLG_ICE[atclone]}"; } )
 
     return 0
 } # }}}
