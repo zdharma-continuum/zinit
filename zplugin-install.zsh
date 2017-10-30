@@ -346,7 +346,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # to detect executables. They are given +x mode. There are also
 # messages to the user on performed actions.
 -zplg-handle-binary-file() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob typesetsilent
 
     -zplg-extract-wrapper() {
         local file="$1" fun="$2"
@@ -396,6 +396,20 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             print -r -- "Successfully installed executables (\"${(j:\", \":)execs}\") contained in \`$file'."
         fi
     }
+
+    if [[ -n "${ZPLG_ICE[mv]}" ]]; then
+        local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
+        local -a afr
+        afr=( ${~from}(N) )
+        [[ ${#afr} -gt 0 ]] && command mv -vf "${afr[1]}" "$to"
+    fi
+
+    if [[ -n "${ZPLG_ICE[cp]}" ]]; then
+        local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
+        local -a afr
+        afr=( ${~from}(N) )
+        [[ ${#afr} -gt 0 ]] && command cp -vf "${afr[1]}" "$to"
+    fi
 
     REPLY="${execs[1]}"
     return 0

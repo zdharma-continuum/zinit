@@ -1240,7 +1240,7 @@ pmodload() {
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|as|ver|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|as|ver|mv|cp|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
