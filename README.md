@@ -299,12 +299,11 @@ enclose contents of `atpull` Ice-mod.
 Commands can also be added to `$PATH` using **snippets**. For example:
 
 ```SystemVerilog
-% zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
-# Or
-% zplg ice as"command"; zplg snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+% zplg ice cp"httpstat.sh -> httpstat" pick"httpstat" as"command"
+% zplg snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 ```
 
-Support for `mv`, `cp`, `atpull` Ice-modifiers for snippets is coming soon.
+Support for `atpull` in snippets is coming soon.
 
 # Ice Modifiers
 
