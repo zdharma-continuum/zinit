@@ -242,6 +242,7 @@ snippets that are multi-file (for example a Prezto module can have file `init.zs
 Default files that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`:
 
 ```SystemVerilog
+# URL points to directory
 % zplg ice svn; zplg snippet PZT::modules/docker
 ```
 
@@ -256,7 +257,7 @@ Ice-modifier "**pick**" user can explicitly select the file to source:
 ```
 
 Content of Ice-modifier is simply put into `"..."`, `'...'`, or `$'...'`. No need for `":"` after
-Ice-mod name. This way editors like `vim` and `emacs` will highlight contents of Ice modifiers.
+Ice-mod name. This way editors like `vim` and `emacs` will highlight contents of Ice-modifiers.
 
 ### as"command"
 
