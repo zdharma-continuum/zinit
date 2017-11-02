@@ -36,6 +36,7 @@ Then add to `~/.zshrc`, at bottom:
 ```SystemVerilog
 zplugin load psprint zsh-navigation-tools
 zplugin load zdharma/zui
+# Binary release in archive, after unpacking it provides command "fzf"
 zplg ice from"gh-r" ver"latest" as"command"; zplg load "junegunn/fzf-bin"
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
@@ -205,19 +206,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
   - Snippets are updated on `update --all` command
 
-# Screencasts
-
-**Dtrace:**
-
-![dtrace](http://imageshack.com/a/img924/2539/eCfnUD.gif)
-
-**Code recognition with recently, changes, glance, report, stress:**
-
-![code recognition](http://imageshack.com/a/img923/6404/5mOUl2.gif)
-
 # Introduction
-
-![zplugin-refcard](http://imageshack.com/a/img924/7014/KKkzny.png)
 
 **Example use:**
 
@@ -226,26 +215,6 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 % zplugin load zdharma/history-search-multi-word
 % zplugin light zsh-users/zsh-syntax-highlighting
 ```
-
-**Example plugin report:**
-
-![report example](http://imageshack.com/a/img923/4237/OHC0i5.png)
-
-**Example plugin unload:**
-
-![unload example](http://imageshack.com/a/img921/9896/rMMnQ1.png)
-
-**Example `csearch` invocation (completion management):**
-
-![csearch example](http://imageshack.com/a/img921/5741/QJaO8q.png)
-
-**Example `compile` invocation:**
-
-![compile example](http://imageshack.com/a/img923/6655/gexv8M.png)
-
-**Example `create` invocation:**
-
-![create example](http://imageshack.com/a/img921/8966/NURP24.png)
 
 # Ice Modifiers
 
@@ -260,9 +229,11 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. |
 | `if`      | Load plugin or snippet when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. |
+| `mv`      | Move file after cloning or after update (only if new commits were downloaded). Example: `mv "fzf-* -> fzf". So it uses `->` as separator for old and new file names. |
+| `mv`      | Copy file after cloning or after update (only if new commits were downloaded). Example: `cp "docker-c* -> dcompose". Uses `->` the same way `mv` does. Ran after `mv`. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
-| `atpull`  | Run command after updating, within plugin's directory. |
+| `atpull`  | Run command after updating (**only if new comminds were fetched**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices. Otherwise it is ran after them. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
 
 # Installation
