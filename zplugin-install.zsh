@@ -268,10 +268,30 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-compile-plugin() {
-    -zplg-first "$1" "$2" || {
-        print "${ZPLGM[col-error]}No files for compilation found${ZPLGM[col-rst]}"
-        return 1
-    }
+    -zplg-any-to-user-plugin "$1" "$2"
+    local user="${reply[-2]}" plugin="${reply[-1]}"
+
+    # No ICE packing because this command is ran from
+    # *load-plugin and it would pack ice twice
+    local -A sice
+    sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
+    [[ -n "${ZPLG_ICE[pick]}" ]] && sice[pick]="${(q)ZPLG_ICE[pick]}"
+
+    if [[ -n "${sice[pick]}" ]]; then
+        local pdir_path2="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        local -a list
+        list=( $pdir_path2/${(Q)~sice[pick]}(N) )
+        [[ ${#list} -eq 0 ]] && {
+            print "${ZPLGM[col-error]}No files for compilation found (pick-ice didn't match)${ZPLGM[col-rst]}"
+            return 1
+        }
+        reply=( "$pdir_path2" "${list[1]}" )
+    else
+        -zplg-first "$1" "$2" || {
+            print "${ZPLGM[col-error]}No files for compilation found${ZPLGM[col-rst]}"
+            return 1
+        }
+    fi
     local pdir_path="${reply[-2]}" first="${reply[-1]}"
     local fname="${first#$pdir_path/}"
 
