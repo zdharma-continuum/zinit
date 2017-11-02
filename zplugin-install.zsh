@@ -333,6 +333,24 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         print -r "${+ZPLG_ICE[svn]}" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_mode"
     fi
 
+    if [[ -n "${ZPLG_ICE[mv]}" ]]; then
+        local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
+        local -a afr
+        ( cd "$local_dir"
+          afr=( ${~from}(N) )
+          [[ ${#afr} -gt 0 ]] && command mv -vf "${afr[1]}" "$to"
+        )
+    fi
+
+    if [[ -n "${ZPLG_ICE[cp]}" ]]; then
+        local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
+        local -a afr
+        ( cd "$local_dir"
+          afr=( ${~from}(N) )
+          [[ ${#afr} -gt 0 ]] && command cp -vf "${afr[1]}" "$to"
+        )
+    fi
+
     ( (( ${+ZPLG_ICE[atclone]} )) && { cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atclone]}"; } )
 
     return $retval
