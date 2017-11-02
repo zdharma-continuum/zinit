@@ -323,7 +323,7 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 | `mv`      | Copy file after cloning or after update (only if new commits were downloaded). Example: `cp "docker-c* -> dcompose". Uses `->` the same way `mv` does. Ran after `mv`. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
-| `atpull`  | Run command after updating (**only if new comminds were fetched**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices. Otherwise it is ran after them. |
+| `atpull`  | Run command after updating (**only if new comminds were fetched**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull`. Otherwise it is ran after them. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
 
 # Installation
