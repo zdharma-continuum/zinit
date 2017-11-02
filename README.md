@@ -317,8 +317,8 @@ Following `ice` modifiers are passed to `zplg ice ...` to obtain described effec
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
 | `if`      | Load plugin or snippet when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. |
-| `mv`      | Move file after cloning or after update (only if new commits are waiting for download). Example: `mv "fzf-* -> fzf`. It uses `->` as separator for old and new file names. Works also with snippets. |
-| `cp`      | Copy file after cloning or after update (only if new commits are waiting for download). Example: `cp "docker-c* -> dcompose"`. Uses `->` in the same way `mv` does. Ran after `mv`. Works also with snippets. |
+| `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf`. It uses `->` as separator for old and new file names. Works also with snippets. |
+| `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Uses `->` in the same way `mv` does. Ran after `mv`. Works also with snippets. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull`. Otherwise it is ran after them. |
