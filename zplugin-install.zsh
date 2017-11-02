@@ -109,7 +109,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local -a afr
         ( cd "$local_path"
           afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && command mv -vf "${afr[1]}" "$to"
+          [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
     fi
 
@@ -118,7 +118,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local -a afr
         ( cd "$local_path"
           afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && command cp -vf "${afr[1]}" "$to"
+          [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
     fi
 
@@ -357,7 +357,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local -a afr
         ( cd "$local_dir"
           afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && command mv -vf "${afr[1]}" "$to"
+          [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
     fi
 
@@ -366,7 +366,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local -a afr
         ( cd "$local_dir"
           afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && command cp -vf "${afr[1]}" "$to"
+          [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
     fi
 

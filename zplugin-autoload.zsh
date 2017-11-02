@@ -1196,7 +1196,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 local -a afr
                 ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
                   afr=( ${~from}(N) )
-                  [[ ${#afr} -gt 0 ]] && command mv -vf "${afr[1]}" "$to"
+                  [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
 
@@ -1205,7 +1205,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 local -a afr
                 ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
                   afr=( ${~from}(N) )
-                  [[ ${#afr} -gt 0 ]] && command cp -vf "${afr[1]}" "$to"
+                  [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
 
