@@ -1138,8 +1138,9 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 #
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
-# $2 - plugin (only when $1 - i.e. user - given)
+# $1 - "status" for status, other for update
+# $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+# $3 - plugin (only when $1 - i.e. user - given)
 -zplg-update-or-status() {
     setopt localoptions extendedglob
 
@@ -1276,10 +1277,7 @@ ZPLGM[EXTENDED_GLOB]=""
             ( cd "$repo"; command git status )
         else
             print "\nUpdating plugin $REPLY"
-            ( cd "$repo"; command git fetch --quiet && command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && command git pull --no-stat; )
-            local -A sice
-            sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
-            ( (( ${+sice[atpull]} )) && eval "${(Q)sice[atpull]}"; )
+            -zplg-update-or-status "update" "$user" "$plugin"
         fi
     done
 } # }}}
