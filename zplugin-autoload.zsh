@@ -692,7 +692,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-self-update() {
-    ( cd "${ZPLGM[BIN_DIR]}" ; git pull )
+    ( cd "${ZPLGM[BIN_DIR]}" ; command git pull )
 } # }}}
 # FUNCTION: -zplg-show-registered-plugins {{{
 # Lists loaded plugins (subcommands list, lodaded).
@@ -1164,7 +1164,7 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     if [[ "$st" = "status" ]]; then
-        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; git status; )
+        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
     else
         ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
         local -A sice
@@ -1233,10 +1233,10 @@ ZPLGM[EXTENDED_GLOB]=""
 
         if [[ "$st" = "status" ]]; then
             print "\nStatus for plugin $REPLY"
-            ( cd "$repo"; git status )
+            ( cd "$repo"; command git status )
         else
             print "\nUpdating plugin $REPLY"
-            ( cd "$repo"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
+            ( cd "$repo"; command git fetch --quiet && command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && command git pull --no-stat; )
             local -A sice
             sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
             ( (( ${+sice[atpull]} )) && eval "${(Q)sice[atpull]}"; )
@@ -1774,7 +1774,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     (
         cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
-        git log -p --graph --decorate --date=relative -C -M
+        command git log -p --graph --decorate --date=relative -C -M
     )
 } # }}}
 # FUNCTION: -zplg-recently {{{
@@ -1802,7 +1802,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         pushd "$p" >/dev/null
         if [[ -d ".git" ]]; then
-            gitout=`git log --all --max-count=1 --since=$timespec`
+            gitout=`command git log --all --max-count=1 --since=$timespec`
             if [[ -n "$gitout" ]]; then
                 -zplg-any-colorify-as-uspl2 "$uspl1"
                 echo "$REPLY"
@@ -1855,7 +1855,7 @@ ZPLGM[EXTENDED_GLOB]=""
     if [[ "$user" != "_local" ]]; then
         print "${ZPLGM[col-info]}Creating Github repository${ZPLGM[col-rst]}"
         curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
-        git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin}" || {
+        command git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin}" || {
             print "${ZPLGM[col-error]}Creation of remote repository $uspl2col ${ZPLGM[col-error]}failed${ZPLGM[col-rst]}"
             print "${ZPLGM[col-error]}Bad credentials?${ZPLGM[col-rst]}"
             return 1
@@ -1865,7 +1865,7 @@ ZPLGM[EXTENDED_GLOB]=""
         print "${ZPLGM[col-info]}Creating local git repository${ZPLGM[col-rst]}"
         command mkdir "${user}---${plugin}"
         cd "${user}---${plugin}"
-        git init || {
+        command git init || {
             print "Git repository initialization failed, aborting"
             return 1
         }
