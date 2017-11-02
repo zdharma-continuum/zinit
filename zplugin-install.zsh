@@ -84,6 +84,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
             command mkdir -p ._zplugin
             echo "$url" >! ._zplugin/url
+            echo "${list[1]}" >! ._zplugin/is_release
             -zplg-handle-binary-file "$url" "${list[1]:t}"
             return $?
         ) || {
@@ -135,6 +136,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     print -r "${ZPLG_ICE[mv]}" >! "$local_path/._zplugin/mv"
     print -r "${ZPLG_ICE[cp]}" >! "$local_path/._zplugin/cp"
     print -r "${ZPLG_ICE[atpull]}" >! "$local_path/._zplugin/atpull"
+    print -r "${ZPLG_ICE[ver]}" >! "$local_path/._zplugin/ver"
 
     ( (( ${+ZPLG_ICE[atclone]} )) && { cd "$local_path"; eval "${ZPLG_ICE[atclone]}"; } )
 
