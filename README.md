@@ -36,7 +36,7 @@ Then add to `~/.zshrc`, at bottom:
 ```SystemVerilog
 zplugin load psprint zsh-navigation-tools
 zplugin load zdharma/zui
-# Binary release in archive, after unpacking it provides command "fzf"
+# Binary release in archive, from Github-releases page; after unpacking it provides command "fzf"
 zplg ice from"gh-r" ver"latest" as"command"; zplg load "junegunn/fzf-bin"
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
@@ -215,6 +215,95 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 % zplugin load zdharma/history-search-multi-word
 % zplugin light zsh-users/zsh-syntax-highlighting
 ```
+
+Above commands show two ways of basic plugin loading. **load** causes reporting to be enabled –
+you can track what plugin does, show the information with `zplugin report {plugin-spec}`.
+**light** is faster loading without tracking and reporting.
+
+### Oh-My-Zsh, Prezto
+
+To load Oh-My-Zsh and Prezto plugins, use `snippets` feature. Snippets are single files downloaded
+by `curl`, `wget`, etc. directly from URL. For example:
+
+```SystemVerilog
+% zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+% zplugin snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
+```
+
+Also, you can use `OMZ::` and `PZT::` shorthands:
+
+```SystemVerilog
+% zplugin snippet OMZ::plugins/git/git.plugin.zsh
+% zplugin snippet PZT::modules/helper/init.zsh
+```
+
+Moreover, snippets support `Subversion` protocol, supported also by Github. This allows to load
+snippets that are multi-file (for example a Prezto module can have file `init.zsh` and file `alias.zsh`).
+Default files that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`:
+
+```SystemVerilog
+% zplg ice svn; zplg snippet PZT::modules/docker
+```
+
+### Some ice-modifiers
+
+The command `zplg ice` provides Ice-modifiers for single next command (see subsection [below](#ice-modifiers)).
+The logic is that "ice" is something that melts (so it doesn't last long) and something that's added. Using other
+Ice-modifier "**pick**" user can explicitly select the file to source:
+
+```SystemVerilog
+% zplg ice svn pick"init.zsh"; zplg snippet PZT::modules/git
+```
+
+Content of Ice-modifier is simply put into `"..."`, `'...'`, or `$'...'`. No need for `":"` after
+Ice-mod name. This way editors like `vim` and `emacs` will highlight contents of Ice modifiers.
+
+### as"command"
+
+A plugin might not be a file for sourcing, but a command to be added to `$PATH`. To obtain this
+effect, use Ice-modifier `as` with value `command`.
+
+```SystemVerilog
+% zplg ice as"command" cp"httpstat.sh -> httpstat" pick"httpstat"
+% zplg light b4b4r07/httpstat
+```
+
+Above command will add plugin directory to `$PATH`, copy file `httpstat.sh` into `httpstat` and add
+execution rights (`+x`) to file selected with `pick`, i.e. to `httpstat`. Other Ice-mod exists,
+`mv`, which works like `cp` but **moves** a file (it is ran before `cp`).
+
+### atpull"..."
+
+Copying file is safe for doing later updates – original files of repository are unmodified and
+`Git` will report no conflicts. However, `mv` also can be used, if a proper `atpull` (an Ice–modifier
+ran at **update** of plugin) will be used:
+
+```SystemVerilog
+% zplg ice as"command" mv"httpstat.sh -> httpstat" pick"httpstat" atpull'!git reset --hard'
+% zplg light b4b4r07/httpstat
+```
+
+If `atpull` starts with exclamation mark, then it will be run before `git pull`, and before `mv`.
+Nevertheless, `atpull`, `mv`, `cp` are ran **only if new commits are to be fetched**. So in summary,
+when user runs `zplugin update b4b4r07/httpstat` to update this plugin, and there are new commits,
+what happens first is that `git reset --hard` is ran – and it restores original `httpstat.sh`,
+**then** `git pull` is ran and it downloads new commits (doing fast-forward), **then** `mv` is
+ran again so that the command is `httpstat` not `httpstat.sh`.
+
+For exclamation mark to not be expanded by Zsh in interactive session, use `'...'` not `"..."` to
+enclose contents of `atpull` Ice-mod.
+
+### Snippets-commands
+
+Commands can also be added to `$PATH` using **snippets**. For example:
+
+```SystemVerilog
+% zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+# Or
+% zplg ice as"command"; zplg snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+```
+
+Support for `mv`, `cp`, `atpull` Ice-modifiers for snippets is coming soon.
 
 # Ice Modifiers
 
