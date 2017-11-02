@@ -279,6 +279,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # supports Subversion protocol and allows to clone subdirectories.
 # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 -zplg-download-snippet() {
+    setopt localoptions extendedglob
+
     local save_url="$1" url="$2" local_dir="$3" filename0="$4" filename="$5" update="$6"
     integer retval=0
 
