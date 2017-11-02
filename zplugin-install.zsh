@@ -82,7 +82,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 }
             }
 
-            echo "$url" >! .zplugin_url
+            command mkdir -p ._zplugin
+            echo "$url" >! ._zplugin/url
             -zplg-handle-binary-file "$url" "${list[1]:t}"
             return $?
         ) || {
@@ -127,6 +128,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # Compile plugin
         -zplg-compile-plugin "$user" "$plugin"
     fi
+
+    command mkdir -p "$local_path/._zplugin"
+    print -r "${ZPLG_ICE[as]}" >! "$local_path/._zplugin/as"
+    print -r "${ZPLG_ICE[pick]}" >! "$local_path/._zplugin/pick"
+    print -r "${ZPLG_ICE[mv]}" >! "$local_path/._zplugin/mv"
+    print -r "${ZPLG_ICE[cp]}" >! "$local_path/._zplugin/cp"
+    print -r "${ZPLG_ICE[atpull]}" >! "$local_path/._zplugin/atpull"
 
     ( (( ${+ZPLG_ICE[atclone]} )) && { cd "$local_path"; eval "${ZPLG_ICE[atclone]}"; } )
 
@@ -331,8 +339,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     if [[ "$local_dir${ZPLG_ICE[svn]+/$filename}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
-        print -r "$save_url" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_url"
-        print -r "${+ZPLG_ICE[svn]}" >! "$local_dir${ZPLG_ICE[svn]+/$filename}/.zplugin_mode"
+        local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin"
+        command mkdir -p "$pfx"
+        print -r "$save_url" >! "$pfx/url"
+        print -r "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
+        print -r "${ZPLG_ICE[as]}" >! "$pfx/as"
+        print -r "${ZPLG_ICE[pick]}" >! "$pfx/pick"
+        print -r "${ZPLG_ICE[mv]}" >! "$pfx/mv"
+        print -r "${ZPLG_ICE[cp]}" >! "$pfx/cp"
+        print -r "${ZPLG_ICE[atpull]}" >! "$pfx/atpull"
     fi
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then

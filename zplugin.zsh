@@ -979,11 +979,8 @@ pmodload() {
         -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
 
-    # Updating – no sourcing or setup
-    [[ -n "${opts[(r)-u]}" ]] && return 0
-
     local -a list
-    if [[ -z "${opts[(r)--command]}" && "${ZPLG_ICE[as]}" != "command" ]]; then
+    if [[ -z "${opts[(r)-u]}" && -z "${opts[(r)--command]}" && "${ZPLG_ICE[as]}" != "command" ]]; then
         # Source the file with compdef shadowing
         if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
             # Shadowing code is inlined from -zplg-shadow-on
@@ -1015,7 +1012,7 @@ pmodload() {
         [[ -f "${list[1]}" ]] && { builtin source "${list[1]}"; ((1)); } || echo "Snippet not loaded ($save_url)"
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"; }
-    else
+    elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
         # Subversion - directory and multiple files possible
         if (( ${+ZPLG_ICE[svn]} )); then
             if (( ${+ZPLG_ICE[pick]} )); then
@@ -1029,9 +1026,12 @@ pmodload() {
             # This doesn't make sense, but users may come up with something
             (( ${+ZPLG_ICE[pick]} )) && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ); xfilepath="${list[1]}"; }
         fi
-        [[ -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path+=( "$xpath" )
+        [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path+=( "$xpath" )
         [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "${list[@]:#$xfilepath}" "$xfilepath"
     fi
+
+    # Updating – not sourcing, etc.
+    [[ -n "${opts[(r)-u]}" ]] && return 0
 
     (( ${+ZPLG_ICE[atload]} )) && { local __oldcd="$PWD"; cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atload]}"; cd "$__oldcd"; }
 

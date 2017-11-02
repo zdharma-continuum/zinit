@@ -1226,13 +1226,25 @@ ZPLGM[EXTENDED_GLOB]=""
     local repo snip pd user plugin
 
     if [[ "$st" != "status" ]]; then
-        for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/.zplugin_url; do
-            [[ ! -f "${snip:h}/.zplugin_mode" ]] && continue
-            local url=$(<$snip)
-            local mode=$(<${snip:h}/.zplugin_mode)
+        for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
+            [[ ! -f "${snip:h}/url" ]] && continue
+            {
+                local mode=$(<${snip})
+                local url=$(<${snip:h}/url)
+                local as=$(<${snip:h}/as)
+                local pick=$(<${snip:h}/pick)
+                local mv=$(<${snip:h}/mv)
+                local cp=$(<${snip:h}/cp)
+                local atpull=$(<${snip:h}/atpull)
+            } 2>/dev/null
             [[ "$mode" = "1" ]] && zplg ice svn
+            [[ "$as" = "command" ]] && zplg ice as"command"
+            [[ -n "$pick" ]] && zplg ice pick"$pick"
+            [[ -n "$mv" ]] && zplg ice mv"$mv"
+            [[ -n "$cp" ]] && zplg ice cp"$cp"
+            [[ -n "$atpull" ]] && zplg ice atpull"$atpull"
             -zplg-load-snippet "$url" "" "-f" "-u"
-            [[ "$mode" = "1" ]] && ZPLG_ICE=()
+            ZPLG_ICE=()
         done
         print
     fi
