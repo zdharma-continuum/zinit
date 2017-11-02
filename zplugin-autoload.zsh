@@ -1141,6 +1141,8 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-update-or-status() {
+    setopt localoptions extendedglob
+
     local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1166,10 +1168,48 @@ ZPLGM[EXTENDED_GLOB]=""
     if [[ "$st" = "status" ]]; then
         ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
     else
-        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; git fetch --quiet && git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | less -F && git pull --no-stat; )
         local -A sice
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
-        ( (( ${+sice[atpull]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
+
+        command rm -f cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd"
+        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}";
+          command git fetch --quiet && \
+            command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
+            command tee .zplugin_lstupd | \
+            command less -F
+
+          local -a log
+          { log=( ${(@f)"$(<${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd)"} ); } 2>/dev/null
+          [[ ${#log} -gt 0 ]] && {
+            [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]#\\!}"; } )
+          }
+
+          command git pull --no-stat; )
+
+        # Any new commits?
+        local -a log
+        { log=( ${(@f)"$(<${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd)"} ); } 2>/dev/null
+        [[ ${#log} -gt 0 ]] && {
+            if [[ -n "${sice[mv]}" ]]; then
+                local from="${${(Q)sice[mv]}%%[[:space:]]#->*}" to="${${(Q)sice[mv]}##*->[[:space:]]#}"
+                local -a afr
+                ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                  afr=( ${~from}(N) )
+                  [[ ${#afr} -gt 0 ]] && command mv -vf "${afr[1]}" "$to"
+                )
+            fi
+
+            if [[ -n "${sice[cp]}" ]]; then
+                local from="${${(Q)sice[cp]}%%[[:space:]]#->*}" to="${${(Q)sice[cp]}##*->[[:space:]]#}"
+                local -a afr
+                ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                  afr=( ${~from}(N) )
+                  [[ ${#afr} -gt 0 ]] && command cp -vf "${afr[1]}" "$to"
+                )
+            fi
+
+            [[ ${${sice[atpull]}[1,2]} != *"!"* ]] && ( (( ${+sice[atpull]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
+        }
     fi
 } # }}}
 # FUNCTION: -zplg-update-or-status-all {{{

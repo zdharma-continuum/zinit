@@ -1251,6 +1251,8 @@ pmodload() {
 -zplg-pack-ice() {
     (( ${+ZPLG_ICE[atpull]} )) && ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
     (( ${+ZPLG_ICE[svn]} )) && ZPLG_SICE[$1/$2]+="svn ${(q)ZPLG_ICE[svn]} "
+    (( ${+ZPLG_ICE[mv]} )) && ZPLG_SICE[$1/$2]+="mv ${(q)ZPLG_ICE[mv]} "
+    (( ${+ZPLG_ICE[cp]} )) && ZPLG_SICE[$1/$2]+="cp ${(q)ZPLG_ICE[cp]} "
 } # }}}
 
 #
