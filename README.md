@@ -211,7 +211,6 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 **Example use:**
 
 ```SystemVerilog
-% . ~/github/zplugin/zplugin.zsh
 % zplugin load zdharma/history-search-multi-word
 % zplugin light zsh-users/zsh-syntax-highlighting
 ```
