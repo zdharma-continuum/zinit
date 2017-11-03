@@ -1147,6 +1147,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
     local user="${reply[-2]}" plugin="${reply[-1]}"
+    local local_dir="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
 
     -zplg-pack-ice "$user" "$plugin"
 
@@ -1172,29 +1173,29 @@ ZPLGM[EXTENDED_GLOB]=""
         local -A sice
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
 
-        command rm -f "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd"
-        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}";
+        command rm -f "$local_dir/.zplugin_lstupd"
+        ( builtin cd "$local_dir";
           command git fetch --quiet && \
             command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
             command tee .zplugin_lstupd | \
             command less -F
 
           local -a log
-          { log=( ${(@f)"$(<${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd)"} ); } 2>/dev/null
+          { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
           [[ ${#log} -gt 0 ]] && {
-            [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]#\\!}"; } )
+            [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; } )
           }
 
           command git pull --no-stat; )
 
         # Any new commits?
         local -a log
-        { log=( ${(@f)"$(<${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd)"} ); } 2>/dev/null
+        { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
         [[ ${#log} -gt 0 ]] && {
             if [[ -n "${sice[mv]}" ]]; then
                 local from="${${(Q)sice[mv]}%%[[:space:]]#->*}" to="${${(Q)sice[mv]}##*->[[:space:]]#}"
                 local -a afr
-                ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                ( builtin cd "$local_dir"
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
@@ -1203,13 +1204,13 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -n "${sice[cp]}" ]]; then
                 local from="${${(Q)sice[cp]}%%[[:space:]]#->*}" to="${${(Q)sice[cp]}##*->[[:space:]]#}"
                 local -a afr
-                ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                ( builtin cd "$local_dir"
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
 
-            [[ ${${sice[atpull]}[1,2]} != *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
+            [[ ${${sice[atpull]}[1,2]} != *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]}"; } )
         }
     fi
 } # }}}
