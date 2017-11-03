@@ -83,8 +83,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             }
 
             command mkdir -p ._zplugin
-            echo "$url" >! ._zplugin/url
-            echo "${list[1]}" >! ._zplugin/is_release
+            print -r -- "$url" >! ._zplugin/url
+            print -r -- "${list[1]}" >! ._zplugin/is_release
             -zplg-handle-binary-file "$url" "${list[1]:t}"
             return $?
         ) || {
@@ -131,12 +131,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     command mkdir -p "$local_path/._zplugin"
-    print -r "${ZPLG_ICE[as]}" >! "$local_path/._zplugin/as"
-    print -r "${ZPLG_ICE[pick]}" >! "$local_path/._zplugin/pick"
-    print -r "${ZPLG_ICE[mv]}" >! "$local_path/._zplugin/mv"
-    print -r "${ZPLG_ICE[cp]}" >! "$local_path/._zplugin/cp"
-    print -r "${ZPLG_ICE[atpull]}" >! "$local_path/._zplugin/atpull"
-    print -r "${ZPLG_ICE[ver]}" >! "$local_path/._zplugin/ver"
+    print -r -- "${ZPLG_ICE[as]}" >! "$local_path/._zplugin/as"
+    print -r -- "${ZPLG_ICE[pick]}" >! "$local_path/._zplugin/pick"
+    print -r -- "${ZPLG_ICE[mv]}" >! "$local_path/._zplugin/mv"
+    print -r -- "${ZPLG_ICE[cp]}" >! "$local_path/._zplugin/cp"
+    print -r -- "${ZPLG_ICE[atpull]}" >! "$local_path/._zplugin/atpull"
+    print -r -- "${ZPLG_ICE[ver]}" >! "$local_path/._zplugin/ver"
 
     ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path"; eval "${ZPLG_ICE[atclone]}"; } )
 
@@ -363,13 +363,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ "$local_dir${ZPLG_ICE[svn]+/$filename}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
         local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin"
         command mkdir -p "$pfx"
-        print -r "$save_url" >! "$pfx/url"
-        print -r "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
-        print -r "${ZPLG_ICE[as]}" >! "$pfx/as"
-        print -r "${ZPLG_ICE[pick]}" >! "$pfx/pick"
-        print -r "${ZPLG_ICE[mv]}" >! "$pfx/mv"
-        print -r "${ZPLG_ICE[cp]}" >! "$pfx/cp"
-        print -r "${ZPLG_ICE[atpull]}" >! "$pfx/atpull"
+        print -r -- "$save_url" >! "$pfx/url"
+        print -r -- "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
+        print -r -- "${ZPLG_ICE[as]}" >! "$pfx/as"
+        print -r -- "${ZPLG_ICE[pick]}" >! "$pfx/pick"
+        print -r -- "${ZPLG_ICE[mv]}" >! "$pfx/mv"
+        print -r -- "${ZPLG_ICE[cp]}" >! "$pfx/cp"
+        print -r -- "${ZPLG_ICE[atpull]}" >! "$pfx/atpull"
     fi
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
