@@ -692,7 +692,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-self-update() {
-    ( cd "${ZPLGM[BIN_DIR]}" ; command git pull )
+    ( builtin cd "${ZPLGM[BIN_DIR]}" ; command git pull )
 } # }}}
 # FUNCTION: -zplg-show-registered-plugins {{{
 # Lists loaded plugins (subcommands list, lodaded).
@@ -1167,7 +1167,7 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     if [[ "$st" = "status" ]]; then
-        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
+        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
     else
         local -A sice
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
@@ -1182,7 +1182,7 @@ ZPLGM[EXTENDED_GLOB]=""
           local -a log
           { log=( ${(@f)"$(<${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd)"} ); } 2>/dev/null
           [[ ${#log} -gt 0 ]] && {
-            [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]#\\!}"; } )
+            [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]#\\!}"; } )
           }
 
           command git pull --no-stat; )
@@ -1194,7 +1194,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -n "${sice[mv]}" ]]; then
                 local from="${${(Q)sice[mv]}%%[[:space:]]#->*}" to="${${(Q)sice[mv]}##*->[[:space:]]#}"
                 local -a afr
-                ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
@@ -1203,13 +1203,13 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -n "${sice[cp]}" ]]; then
                 local from="${${(Q)sice[cp]}%%[[:space:]]#->*}" to="${${(Q)sice[cp]}##*->[[:space:]]#}"
                 local -a afr
-                ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+                ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
 
-            [[ ${${sice[atpull]}[1,2]} != *"!"* ]] && ( (( ${+sice[atpull]} )) && { cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
+            [[ ${${sice[atpull]}[1,2]} != *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; eval "${(Q)sice[atpull]}"; } )
         }
     fi
 } # }}}
@@ -1286,7 +1286,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         if [[ "$st" = "status" ]]; then
             print "\nStatus for plugin $REPLY"
-            ( cd "$repo"; command git status )
+            ( builtin cd "$repo"; command git status )
         else
             print "\nUpdating plugin $REPLY"
             -zplg-update-or-status "update" "$user" "$plugin"
@@ -1786,7 +1786,7 @@ ZPLGM[EXTENDED_GLOB]=""
             local_dir="${${local_dir//\//--S--}//=/--EQ--}"
             local_dir="${${local_dir//\?/--QM--}//\&/--AMP--}"
 
-            [[ -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]] && cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
+            [[ -e "${ZPLGM[SNIPPETS_DIR]}/$local_dir" ]] && builtin cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
             return
         }
 
@@ -1799,14 +1799,14 @@ ZPLGM[EXTENDED_GLOB]=""
         local_dir="${${local_dir//\//--S--}//=/--EQ--}"
         local_dir="${${local_dir//\?/--QM--}//\&/--AMP--}"
 
-        cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
+        builtin cd "${ZPLGM[SNIPPETS_DIR]}/$local_dir"
     else
         -zplg-any-to-user-plugin "$1" "$2"
         local user="${reply[-2]}" plugin="${reply[-1]}"
 
         -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-        cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
 } # }}}
 # FUNCTION: -zplg-changes {{{
@@ -1823,7 +1823,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     (
-        cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
         command git log -p --graph --decorate --date=relative -C -M
     )
 } # }}}
@@ -1900,7 +1900,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     fi
 
-    cd "${ZPLGM[PLUGINS_DIR]}"
+    builtin cd "${ZPLGM[PLUGINS_DIR]}"
 
     if [[ "$user" != "_local" ]]; then
         print "${ZPLGM[col-info]}Creating Github repository${ZPLGM[col-rst]}"
@@ -1910,11 +1910,11 @@ ZPLGM[EXTENDED_GLOB]=""
             print "${ZPLGM[col-error]}Bad credentials?${ZPLGM[col-rst]}"
             return 1
         }
-        cd "${user}---${plugin}"
+        builtin cd "${user}---${plugin}"
     else
         print "${ZPLGM[col-info]}Creating local git repository${ZPLGM[col-rst]}"
         command mkdir "${user}---${plugin}"
-        cd "${user}---${plugin}"
+        builtin cd "${user}---${plugin}"
         command git init || {
             print "Git repository initialization failed, aborting"
             return 1
@@ -1998,7 +1998,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-    # cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    # builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     -zplg-first "$1" "$2" || {
         print "${ZPLGM[col-error]}No source file found, cannot edit${ZPLGM[col-rst]}"
         return 1
