@@ -994,6 +994,7 @@ pmodload() {
         # Add to fpath
         [[ -d "$local_dir/$filename/functions" ]] && {
             [[ -z "${fpath[(r)$local_dir/$filename/functions]}" ]] && fpath+=( "$local_dir/$filename/functions" )
+            autoload $local_dir/$filename/functions/^([_.]*|prompt_*_setup|README*)(-.N:t)
         }
 
         # Source
