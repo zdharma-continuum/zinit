@@ -1147,7 +1147,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
     local user="${reply[-2]}" plugin="${reply[-1]}"
-    local local_dir="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    local local_dir="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" key
 
     -zplg-pack-ice "$user" "$plugin"
 
