@@ -1255,12 +1255,12 @@ ZPLGM[EXTENDED_GLOB]=""
                 local cp=$(<${snip:h}/cp)
                 local atpull=$(<${snip:h}/atpull)
             } 2>/dev/null
-            [[ "$mode" = "1" ]] && zplg ice svn
-            [[ "$as" = "command" ]] && zplg ice as"command"
-            [[ -n "$pick" ]] && zplg ice pick"$pick"
-            [[ -n "$mv" ]] && zplg ice mv"$mv"
-            [[ -n "$cp" ]] && zplg ice cp"$cp"
-            [[ -n "$atpull" ]] && zplg ice atpull"$atpull"
+            [[ "$mode" = "1" ]] && zplugin ice svn
+            [[ "$as" = "command" ]] && zplugin ice as"command"
+            [[ -n "$pick" ]] && zplugin ice pick"$pick"
+            [[ -n "$mv" ]] && zplugin ice mv"$mv"
+            [[ -n "$cp" ]] && zplugin ice cp"$cp"
+            [[ -n "$atpull" ]] && zplugin ice atpull"$atpull"
             -zplg-load-snippet "$url" "" "-f" "-u"
             ZPLG_ICE=()
         done
