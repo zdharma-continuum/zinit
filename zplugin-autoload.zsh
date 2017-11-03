@@ -1172,8 +1172,8 @@ ZPLGM[EXTENDED_GLOB]=""
         local -A sice
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
 
-        command rm -f cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd"
-        ( cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}";
+        command rm -f "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}/.zplugin_lstupd"
+        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}";
           command git fetch --quiet && \
             command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
             command tee .zplugin_lstupd | \
