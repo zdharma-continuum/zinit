@@ -370,6 +370,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         print -r -- "${ZPLG_ICE[mv]}" >! "$pfx/mv"
         print -r -- "${ZPLG_ICE[cp]}" >! "$pfx/cp"
         print -r -- "${ZPLG_ICE[atpull]}" >! "$pfx/atpull"
+        print -r -- "${ZPLG_ICE[ver]}" >! "$pfx/ver"
     fi
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
