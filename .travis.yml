@@ -27,3 +27,10 @@ script:
 - make
 - make -C zsdoc pdf
 - share/deploy_doc.sh
+
+notifications:
+  irc:
+    channels:
+      - "chat.freenode.net#zplugin"
+    on_success: change # default: always
+    on_failure: always # default: always
