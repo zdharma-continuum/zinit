@@ -1173,6 +1173,15 @@ ZPLGM[EXTENDED_GLOB]=""
         local -A sice
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
 
+        { local -A mdata
+          for key in as pick mv cp atpull ver; do
+            mdata[$key]=$(<${local_dir}/._zplugin/$key)
+          done
+        } 2>/dev/null
+        for key in as pick mv cp atpull ver; do
+            [[ -n "${sice[$key]}" || -n "${mdata[$key]}" ]] && sice[$key]=${sice[$key]:-${(q)mdata[$key]}}
+        done
+
         command rm -f "$local_dir/.zplugin_lstupd"
         ( builtin cd "$local_dir";
           command git fetch --quiet && \
@@ -1212,6 +1221,14 @@ ZPLGM[EXTENDED_GLOB]=""
 
             [[ ${${sice[atpull]}[1,2]} != *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]}"; } )
         }
+
+        # Record new ICE modifiers used
+        ( builtin cd "$local_dir"
+          command mkdir -p ._zplugin
+          for key in as pick mv cp atpull ver; do
+              print -r -- "${(Q)sice[$key]}" >! "._zplugin/$key"
+          done
+        )
     fi
 } # }}}
 # FUNCTION: -zplg-update-or-status-all {{{
