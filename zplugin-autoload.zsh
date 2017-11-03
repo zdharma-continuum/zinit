@@ -1148,6 +1148,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-any-to-user-plugin "$2" "$3"
     local user="${reply[-2]}" plugin="${reply[-1]}"
     local local_dir="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" key
+    local -A mdata sice
 
     -zplg-pack-ice "$user" "$plugin"
 
@@ -1168,40 +1169,51 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     if [[ "$st" = "status" ]]; then
-        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
+        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; return 0; )
     else
-        local -A sice
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
 
-        { local -A mdata
-          for key in as pick mv cp atpull ver; do
+        { for key in from as pick mv cp atpull ver is_release; do
             mdata[$key]=$(<${local_dir}/._zplugin/$key)
           done
         } 2>/dev/null
-        for key in as pick mv cp atpull ver; do
+        for key in from as pick mv cp atpull ver; do
             [[ -n "${sice[$key]}" || -n "${mdata[$key]}" ]] && sice[$key]=${sice[$key]:-${(q)mdata[$key]}}
         done
 
-        command rm -f "$local_dir/.zplugin_lstupd"
-        ( builtin cd "$local_dir";
-          command git fetch --quiet && \
-            command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
-            command tee .zplugin_lstupd | \
-            command less -F
+        if [[ -n "${mdata[is_release]}" ]]; then
+            (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
+            -zplg-get-latest-gh-r-version "$user" "$plugin"
+            if [[ "${mdata[is_release]/\/$REPLY\//}" != "${mdata[is_release]}" ]]; then
+                echo "Binary release already up to date (version: $REPLY)"
+            else
+                [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; } )
+                print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
+                for key in from as pick mv cp atpull ver; do ZPLG_ICE[$key]="${ZPLG_ICE[$key]:-${(Q)sice[$key]}}" done
+                -zplg-setup-plugin-dir "$user" "$plugin"
+            fi
+        else
+            ( builtin cd "$local_dir"
+              command rm -f .zplugin_lstupd
+              command git fetch --quiet && \
+                command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
+                command tee .zplugin_lstupd | \
+                command less -F
 
-          local -a log
-          { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
-          [[ ${#log} -gt 0 ]] && {
-            [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; } )
-          }
+              local -a log
+              { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
+              [[ ${#log} -gt 0 ]] && {
+                [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; } )
+              }
 
-          command git pull --no-stat; )
+              command git pull --no-stat; )
+        fi
 
         # Any new commits?
         local -a log
         { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
         [[ ${#log} -gt 0 ]] && {
-            if [[ -n "${sice[mv]}" ]]; then
+            if [[ -z "${mdata[is_release]}" && -n "${sice[mv]}" ]]; then
                 local from="${${(Q)sice[mv]}%%[[:space:]]#->*}" to="${${(Q)sice[mv]}##*->[[:space:]]#}"
                 local -a afr
                 ( builtin cd "$local_dir"
@@ -1210,7 +1222,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
-            if [[ -n "${sice[cp]}" ]]; then
+            if [[ -z "${mdata[is_release]}" && -n "${sice[cp]}" ]]; then
                 local from="${${(Q)sice[cp]}%%[[:space:]]#->*}" to="${${(Q)sice[cp]}##*->[[:space:]]#}"
                 local -a afr
                 ( builtin cd "$local_dir"
@@ -1225,11 +1237,13 @@ ZPLGM[EXTENDED_GLOB]=""
         # Record new ICE modifiers used
         ( builtin cd "$local_dir"
           command mkdir -p ._zplugin
-          for key in as pick mv cp atpull ver; do
+          for key in proto from as pick mv cp atpull ver; do
               print -r -- "${(Q)sice[$key]}" >! "._zplugin/$key"
           done
         )
     fi
+
+    return 0
 } # }}}
 # FUNCTION: -zplg-update-or-status-all {{{
 # Updates (git pull) or does `git status` for all existing plugins.
@@ -1296,8 +1310,8 @@ ZPLGM[EXTENDED_GLOB]=""
         -zplg-any-to-user-plugin "$pd"
         local user="${reply[-2]}" plugin="${reply[-1]}"
 
-        # Must be a git repository
-        if [[ ! -d "$repo/.git" ]]; then
+        # Must be a git repository or a binary release
+        if [[ ! -d "$repo/.git" && ! -f "$repo/._zplugin/is_release" ]]; then
             print "\n$REPLY not a git repository"
             continue
         fi

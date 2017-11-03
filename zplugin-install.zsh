@@ -15,8 +15,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local user="$1" plugin="$2" remote_url_path="$1/$2" local_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
 
-    [[ -d "$local_path" ]] && return 0
-
     local -A sites
     sites=(
         "github"    "github.com"
@@ -131,12 +129,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     command mkdir -p "$local_path/._zplugin"
-    print -r -- "${ZPLG_ICE[as]}" >! "$local_path/._zplugin/as"
-    print -r -- "${ZPLG_ICE[pick]}" >! "$local_path/._zplugin/pick"
-    print -r -- "${ZPLG_ICE[mv]}" >! "$local_path/._zplugin/mv"
-    print -r -- "${ZPLG_ICE[cp]}" >! "$local_path/._zplugin/cp"
-    print -r -- "${ZPLG_ICE[atpull]}" >! "$local_path/._zplugin/atpull"
-    print -r -- "${ZPLG_ICE[ver]}" >! "$local_path/._zplugin/ver"
+    local key
+    for key in proto from as pick mv cp atpull ver; do
+        print -r -- "${ZPLG_ICE[$key]}" >! "$local_path/._zplugin/$key"
+    done
 
     ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path"; eval "${ZPLG_ICE[atclone]}"; } )
 
@@ -361,16 +357,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     if [[ "$local_dir${ZPLG_ICE[svn]+/$filename}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
-        local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin"
+        local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin" key
         command mkdir -p "$pfx"
         print -r -- "$save_url" >! "$pfx/url"
         print -r -- "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
-        print -r -- "${ZPLG_ICE[as]}" >! "$pfx/as"
-        print -r -- "${ZPLG_ICE[pick]}" >! "$pfx/pick"
-        print -r -- "${ZPLG_ICE[mv]}" >! "$pfx/mv"
-        print -r -- "${ZPLG_ICE[cp]}" >! "$pfx/cp"
-        print -r -- "${ZPLG_ICE[atpull]}" >! "$pfx/atpull"
-        print -r -- "${ZPLG_ICE[ver]}" >! "$pfx/ver"
+        for key in proto from as pick mv cp atpull ver; do
+            print -r -- "${ZPLG_ICE[$key]}" >! "$pfx/$key"
+        done
     fi
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
@@ -469,7 +462,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         if [[ "${execs[1]}" = "$file" ]]; then
             print -r -- "Successfully downloaded and installed the executable: \`$file'."
         else
-            print -r -- "Successfully installed executables (\"${(j:\", \":)execs}\") contained in \`$file'."
+            print -r -- "Successfully installed executables (\"${(j:", ":)execs}\") contained in \`$file'."
         fi
     }
 
