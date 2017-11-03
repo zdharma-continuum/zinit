@@ -1255,6 +1255,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[mv]} )) && ZPLG_SICE[$1/$2]+="mv ${(q)ZPLG_ICE[mv]} "
     (( ${+ZPLG_ICE[cp]} )) && ZPLG_SICE[$1/$2]+="cp ${(q)ZPLG_ICE[cp]} "
     (( ${+ZPLG_ICE[pick]} )) && ZPLG_SICE[$1/$2]+="pick ${(q)ZPLG_ICE[pick]} "
+    (( ${+ZPLG_ICE[as]} )) && ZPLG_SICE[$1/$2]+="as ${(q)ZPLG_ICE[as]} "
 } # }}}
 
 #
