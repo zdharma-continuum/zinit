@@ -655,7 +655,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: pmodload {{{
 # Compatibility with Prezto. Calls can be recursive.
-pmodload() {
+(( ${+functions[pmodload]} )) || pmodload() {
     while (( $# )); do
         [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && -zplg-load-snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
         shift
