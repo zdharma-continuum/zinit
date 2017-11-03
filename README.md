@@ -34,7 +34,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc
 Then add to `~/.zshrc`, at bottom:
 
 ```SystemVerilog
-zplugin load psprint zsh-navigation-tools
+zplugin load zdharma history-search-multi-word
 zplugin load zdharma/zui
 # Binary release in archive, from Github-releases page; after unpacking it provides command "fzf"
 zplg ice from"gh-r" ver"latest" as"command"; zplg load "junegunn/fzf-bin"
@@ -52,7 +52,7 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 
 because the install script does this.)
 
-`ZNT` – multi-word searching of history (Ctrl-R), `zui` – textual UI library for Zshell.
+`HSMW` – multi-word searching of history (Ctrl-R), `zui` – textual UI library for Zshell.
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
