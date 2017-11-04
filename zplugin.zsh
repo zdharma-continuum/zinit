@@ -50,8 +50,6 @@ fi
 : ${ZPLGM[COMPLETIONS_DIR]:=${ZPLGM[HOME_DIR]}/completions}
 : ${ZPLGM[SNIPPETS_DIR]:=${ZPLGM[HOME_DIR]}/snippets}
 
-typeset -gAH ZPLG_BACKUP_FUNCTIONS
-
 builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLGM[NEW_AUTOLOAD]=1 || ZPLGM[NEW_AUTOLOAD]=0
 
@@ -358,14 +356,14 @@ builtin setopt noaliases
 
     # A. Shadow off. Unfunction bindkey
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLG_BACKUP_FUNCTIONS[bindkey]} )) && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
+    (( ${+ZPLGM[bkp-bindkey]} )) && functions[bindkey]="${ZPLGM[bkp-bindkey]}" || unfunction "bindkey"
 
     # Actual bindkey
     bindkey "${pos[@]}"
     integer ret=$?
 
     # A. Shadow on. Custom function could unfunction itself
-    (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}" || unset "ZPLG_BACKUP_FUNCTIONS[bindkey]"
+    (( ${+functions[bindkey]} )) && ZPLGM[bkp-bindkey]="${functions[bindkey]}" || unset "ZPLGM[bkp-bindkey]"
     functions[bindkey]='--zplg-shadow-bindkey "$@";'
 
     return $ret # testable
@@ -406,14 +404,14 @@ builtin setopt noaliases
 
     # B. Shadow off. Unfunction zstyle
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLG_BACKUP_FUNCTIONS[zstyle]} )) && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
+    (( ${+ZPLGM[bkp-zstyle]} )) && functions[zstyle]="${ZPLGM[bkp-zstyle]}" || unfunction "zstyle"
 
     # Actual zstyle
     zstyle "${pos[@]}"
     integer ret=$?
 
     # B. Shadow on. Custom function could unfunction itself
-    (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}" || unset "ZPLG_BACKUP_FUNCTIONS[zstyle]"
+    (( ${+functions[zstyle]} )) && ZPLGM[bkp-zstyle]="${functions[zstyle]}" || unset "ZPLGM[bkp-zstyle]"
     functions[zstyle]='--zplg-shadow-zstyle "$@";'
 
     return $ret # testable
@@ -465,14 +463,14 @@ builtin setopt noaliases
 
     # C. Shadow off. Unfunction alias
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLG_BACKUP_FUNCTIONS[alias]} )) && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
+    (( ${+ZPLGM[bkp-alias]} )) && functions[alias]="${ZPLGM[bkp-alias]}" || unfunction "alias"
 
     # Actual alias
     alias "${pos[@]}"
     integer ret=$?
 
     # C. Shadow on. Custom function could unfunction itself
-    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}" || unset "ZPLG_BACKUP_FUNCTIONS[alias]"
+    (( ${+functions[alias]} )) && ZPLGM[bkp-alias]="${functions[alias]}" || unset "ZPLGM[bkp-alias]"
     functions[alias]='--zplg-shadow-alias "$@";'
 
     return $ret # testable
@@ -533,14 +531,14 @@ builtin setopt noaliases
 
     # D. Shadow off. Unfunction zle
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLG_BACKUP_FUNCTIONS[zle]} )) && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
+    (( ${+ZPLGM[bkp-zle]} )) && functions[zle]="${ZPLGM[bkp-zle]}" || unfunction "zle"
 
     # Actual zle
     zle "${pos[@]}"
     integer ret=$?
 
     # D. Shadow on. Custom function could unfunction itself
-    (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}" || unset "ZPLG_BACKUP_FUNCTIONS[zle]"
+    (( ${+functions[zle]} )) && ZPLGM[bkp-zle]="${functions[zle]}" || unset "ZPLGM[bkp-zle]"
     functions[zle]='--zplg-shadow-zle "$@";'
 
     return $ret # testable
@@ -577,41 +575,41 @@ builtin setopt noaliases
     ZPLGM[SHADOWING]="$mode"
 
     # The point about backuping is: does the key exist in functions array
-    # If it does exist, then it will also exist in ZPLG_BACKUP_FUNCTIONS
+    # If it does exist, then it will also exist as ZPLGM[bkp-*]
 
     # Defensive code, shouldn't be needed
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[autoload]" "ZPLG_BACKUP_FUNCTIONS[compdef]"  # 0, E.
+    builtin unset "ZPLGM[bkp-autoload]" "ZPLGM[bkp-compdef]"  # 0, E.
 
     if [[ "$mode" != "compdef" ]]; then
         # 0. Used, but not in temporary restoration, which doesn't happen for autoload
-        (( ${+functions[autoload]} )) && ZPLG_BACKUP_FUNCTIONS[autoload]="${functions[autoload]}"
+        (( ${+functions[autoload]} )) && ZPLGM[bkp-autoload]="${functions[autoload]}"
         functions[autoload]='--zplg-shadow-autoload "$@";'
     fi
 
     # E. Always shadow compdef
-    (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}"
+    (( ${+functions[compdef]} )) && ZPLGM[bkp-compdef]="${functions[compdef]}"
     functions[compdef]='--zplg-shadow-compdef "$@";'
 
     # Light and compdef shadowing stops here. Dtrace and load go on
     [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
 
     # Defensive code, shouldn't be needed. A, B, C, D
-    builtin unset "ZPLG_BACKUP_FUNCTIONS[bindkey]" "ZPLG_BACKUP_FUNCTIONS[zstyle]" "ZPLG_BACKUP_FUNCTIONS[alias]" "ZPLG_BACKUP_FUNCTIONS[zle]"
+    builtin unset "ZPLGM[bkp-bindkey]" "ZPLGM[bkp-zstyle]" "ZPLGM[bkp-alias]" "ZPLGM[bkp-zle]"
 
     # A.
-    (( ${+functions[bindkey]} )) && ZPLG_BACKUP_FUNCTIONS[bindkey]="${functions[bindkey]}"
+    (( ${+functions[bindkey]} )) && ZPLGM[bkp-bindkey]="${functions[bindkey]}"
     functions[bindkey]='--zplg-shadow-bindkey "$@";'
 
     # B.
-    (( ${+functions[zstyle]} )) && ZPLG_BACKUP_FUNCTIONS[zstyle]="${functions[zstyle]}"
+    (( ${+functions[zstyle]} )) && ZPLGM[bkp-zstyle]="${functions[zstyle]}"
     functions[zstyle]='--zplg-shadow-zstyle "$@";'
 
     # C.
-    (( ${+functions[alias]} )) && ZPLG_BACKUP_FUNCTIONS[alias]="${functions[alias]}"
+    (( ${+functions[alias]} )) && ZPLGM[bkp-alias]="${functions[alias]}"
     functions[alias]='--zplg-shadow-alias "$@";'
 
     # D.
-    (( ${+functions[zle]} )) && ZPLG_BACKUP_FUNCTIONS[zle]="${functions[zle]}"
+    (( ${+functions[zle]} )) && ZPLGM[bkp-zle]="${functions[zle]}"
     functions[zle]='--zplg-shadow-zle "$@";'
 
     builtin return 0
@@ -631,11 +629,11 @@ builtin setopt noaliases
 
     if [[ "$mode" != "compdef" ]]; then
     # 0. Unfunction "autoload"
-    (( ${+ZPLG_BACKUP_FUNCTIONS[autoload]} )) && functions[autoload]="${ZPLG_BACKUP_FUNCTIONS[autoload]}" || unfunction "autoload"
+    (( ${+ZPLGM[bkp-autoload]} )) && functions[autoload]="${ZPLGM[bkp-autoload]}" || unfunction "autoload"
     fi
 
     # E. Restore original compdef if it existed
-    (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"
+    (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"
 
     # Light and comdef shadowing stops here
     [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
@@ -643,13 +641,13 @@ builtin setopt noaliases
     # Unfunction shadowing functions
 
     # A.
-    (( ${+ZPLG_BACKUP_FUNCTIONS[bindkey]} )) && functions[bindkey]="${ZPLG_BACKUP_FUNCTIONS[bindkey]}" || unfunction "bindkey"
+    (( ${+ZPLGM[bkp-bindkey]} )) && functions[bindkey]="${ZPLGM[bkp-bindkey]}" || unfunction "bindkey"
     # B.
-    (( ${+ZPLG_BACKUP_FUNCTIONS[zstyle]} )) && functions[zstyle]="${ZPLG_BACKUP_FUNCTIONS[zstyle]}" || unfunction "zstyle"
+    (( ${+ZPLGM[bkp-zstyle]} )) && functions[zstyle]="${ZPLGM[bkp-zstyle]}" || unfunction "zstyle"
     # C.
-    (( ${+ZPLG_BACKUP_FUNCTIONS[alias]} )) && functions[alias]="${ZPLG_BACKUP_FUNCTIONS[alias]}" || unfunction "alias"
+    (( ${+ZPLGM[bkp-alias]} )) && functions[alias]="${ZPLGM[bkp-alias]}" || unfunction "alias"
     # D.
-    (( ${+ZPLG_BACKUP_FUNCTIONS[zle]} )) && functions[zle]="${ZPLG_BACKUP_FUNCTIONS[zle]}" || unfunction "zle"
+    (( ${+ZPLGM[bkp-zle]} )) && functions[zle]="${ZPLGM[bkp-zle]}" || unfunction "zle"
 
     return 0
 } # }}}
@@ -981,7 +979,7 @@ builtin setopt noaliases
         # Source the file with compdef shadowing
         if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
             # Shadowing code is inlined from -zplg-shadow-on
-            (( ${+functions[compdef]} )) && ZPLG_BACKUP_FUNCTIONS[compdef]="${functions[compdef]}" || builtin unset "ZPLG_BACKUP_FUNCTIONS[compdef]"
+            (( ${+functions[compdef]} )) && ZPLGM[bkp-compdef]="${functions[compdef]}" || builtin unset "ZPLGM[bkp-compdef]"
             functions[compdef]='--zplg-shadow-compdef "$@";'
             ZPLGM[SHADOWING]="1"
         else
@@ -1009,7 +1007,7 @@ builtin setopt noaliases
 
         [[ -f "${list[1]}" ]] && { builtin source "${list[1]}"; ((1)); } || echo "Snippet not loaded ($save_url)"
 
-        (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; (( ${+ZPLG_BACKUP_FUNCTIONS[compdef]} )) && functions[compdef]="${ZPLG_BACKUP_FUNCTIONS[compdef]}" || unfunction "compdef"; }
+        (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; }
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
         # Subversion - directory and multiple files possible
         if (( ${+ZPLG_ICE[svn]} )); then
