@@ -2145,7 +2145,7 @@ self-update              - updates Zplugin
 load ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}       - load plugin, can also receive absolute local path
 light ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}      - light plugin load, without reporting
 unload ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - unload plugin
-snippet [-f] [--command] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
+snippet [-f] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]}       - source local or remote file (by direct URL), -f: force - don't use cache
 ls                       - list snippets in formatted and colorized manner
 ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
 update ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git update plugin (or all plugins and snippets if --all passed)
