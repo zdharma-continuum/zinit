@@ -332,16 +332,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
             if (( ${+ZPLG_ICE[svn]} )); then
-                -zplg-mirror-using-svn "$url"
+                -zplg-mirror-using-svn "$url" || return 1
             else
                 -zplg-download-file-stdout "$url" >! "$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$filename" || {
                         command rm -f "$filename"
                         print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                        return 1
                     }
                 }
             fi
-        )
+            return 0
+        ) || retval=1
 
         if (( ${+ZPLG_ICE[svn]} == 0 )); then
             [[ -e "$local_dir/$filename" ]] && {
@@ -359,6 +361,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         print "Copying $filename..."
         command cp -v "$url" "$local_dir/$filename"
     fi
+
+    (( retval )) && { command rmdir "$local_dir" 2>/dev/null; return $retval; }
 
     if [[ "$local_dir${ZPLG_ICE[svn]+/$filename}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
         local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin" key
