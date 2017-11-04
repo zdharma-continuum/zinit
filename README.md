@@ -36,10 +36,13 @@ Then add to `~/.zshrc`, at bottom:
 ```SystemVerilog
 zplugin load zdharma history-search-multi-word
 zplugin load zdharma/zui
+
 # Binary release in archive, from Github-releases page; after unpacking it provides command "fzf"
 zplugin ice from"gh-r" ver"latest" as"command"; zplugin load "junegunn/fzf-bin"
+
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
+
 # This one to be ran just once, in interactive session
 zplugin creinstall %HOME/my_completions  # Handle completions without loading the plugin, see "clist" command
 ```
@@ -56,6 +59,11 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 04-11-2017
+  - New subcommand `ls` which lists snippets directory in formatted and colorized manner. Example:
+
+  ![zplugin-ls](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-ls.png)
+
 * 29-10-2017
   - Subversion protocol (supported by Github) can be used to clone **subdirectories** when using
     snippets. This allows to load multi-file snippets. For example:
@@ -72,10 +80,12 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     ```SystemVerilog
     # Single file snippet, URL points to file
     zplg snippet PZT::modules/helper/init.zsh
+
     # Multi-file snippet, URL points to directory to clone with Subversion
     # The file to source (init.zsh) is automatically detected
     zplugin ice svn; zplugin snippet PZT::modules/prompt
-    # Use of Subversion for an Oh-My-Zsh plugin
+
+    # Use of Subversion to load an OMZ plugin
     zplugin ice svn; zplugin snippet OMZ::plugins/git
     ```
 
@@ -98,8 +108,8 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     ```SystemVerilog
     % zplg times
     Plugin loading times:
-    0.010 sec - https://github.com/robbyrussell/oh-my-zsh/blob/master/lib/git.zsh
-    0.001 sec - https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh
+    0.010 sec - OMZ::lib/git.zsh
+    0.001 sec - OMZ::plugins/git/git.plugin.zsh
     0.003 sec - zdharma/history-search-multi-word
     0.003 sec - rimraf/k
     0.003 sec - zsh-users/zsh-autosuggestions
@@ -107,19 +117,6 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
 * 24-09-2017
   - **[Code documentation](zsdoc)** for contributors and interested people.
-
-* 20-09-2017
-  - New feature - **plugin load time statistics**
-
-    ```SystemVerilog
-    % zplg times
-    Plugin loading times:
-    0.005 sec - psprint/zsh-navigation-tools
-    0.002 sec - rimraf/k
-    0.020 sec - zdharma/fast-syntax-highlighting
-    0.002 sec - zdharma/history-search-multi-word
-    0.005 sec - zsh-users/zsh-autosuggestions
-    ```
 
 * 13-06-2017
   - Plugins can now be absolute paths:
@@ -130,7 +127,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     % zplg load %/Users/sgniazdowski/github/{directory}
     ```
 
-    Completions are not automatically managed, but user can run `zplg creinstall %HOME/github/{directory}`, etc.
+    Completions are not automatically installed, but user can run `zplg creinstall %HOME/github/{directory}`, etc.
 
 * 23-05-2017
   - New `ice` modifier: `if`, to which you can provide a conditional expression
@@ -191,19 +188,9 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
   - The `all`-variants of commands (e.g. `update-all`) have been merged into normal variants (with `--all` switch)
 
 * 13-05-2017
-  - Bug fixes related to local plugins
   - `100` `ms` gain in performance
-  - When updating plugin a list of new commits is shown
+  - List of new commits for each updated plugin
   - `lftp` as fallback transport support for snippets
-  - Snippets support `ftp` and `scp` protocols
-  - With snippets you can load a file as **command** that is added to PATH:
-
-    ```SystemVerilog
-    % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
-    % httpstat.sh
-    too few arguments
-    ```
-
   - Snippets are updated on `update --all` command
 
 # Introduction
@@ -395,6 +382,7 @@ update {plugin-name}     - Git update plugin (or all plugins and snippets if --a
 status {plugin-name}     - Git status for plugin (or all plugins if --all passed)
 report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
 loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
+ls                       - list snippets in formatted and colorized manner
 cd {plugin-name}         - cd into plugin's directory (does completion on TAB)
 create {plugin-name}     - create plugin (also together with Github repository)
 edit {plugin-name}       - edit plugin's file with $EDITOR
@@ -421,7 +409,7 @@ compiled                 - list plugins that are compiled
 
 To use **themes** created for `Oh-My-Zsh` you might want to first source the `git` library there:
 
-```sh
+```SystemVerilog
 zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
 # Or using OMZ:: shorthand:
 zplugin snippet OMZ::lib/git.zsh
@@ -432,12 +420,12 @@ Some themes require not only
 `Oh-My-Zsh's` `git` **library**, but also `git` **plugin** (error about function `current_branch` appears).
 Load this plugin as snippet:
 
-```sh
-zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+```SystemVerilog
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
 ```
 
 Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
-a fresh version of a snippet.
+a fresh version of a snippet, or `zplugin update --all` to refresh all snippets.
 
 Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
 prompt will appear as something like: `... $(build_prompt) ...`.
@@ -448,15 +436,15 @@ You might want to supress completions provided by the git plugin by issuing `zpl
 To summarize:
 
 ```SystemVerilog
-# Load Git library from OMZ
-zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
+# Load OMZ Git library
+zplugin snippet OMZ::lib/git.zsh
 # Load Git plugin from OMZ
-zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin cdclear -q # <- forget completions provided up to this moment
 setopt promptsubst
 # Load theme from OMZ
-zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/blob/master/themes/dstufft.zsh-theme'
-# Load plugin-theme depending on OMZ git library
+zplugin snippet OMZ::themes/dstufft.zsh-theme
+# Load normal Github plugin with theme depending on OMZ Git library
 zplugin light NicoSantangelo/Alpharized
 ```
 
@@ -492,10 +480,10 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 If you want to ignore compdefs provided by some plugins or snippets, place their load commands
 before commands loading other plugins or snippets, and issue `zplugin cdclear`:
 
-```sh
+```SystemVerilog
 source ~/.zplugin/bin/zplugin.zsh
-zplugin snippet https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh
-zplugin cdclear -q # <- forget completions provided up to this moment
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zplugin cdclear -q # <- forget completions provided by Git plugin
 
 zplugin load "some/plugin"
 ...
