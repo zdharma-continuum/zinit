@@ -74,8 +74,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             url="https://github.com${list[1]}"
             -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
                 -zplg-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
-                    echo "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
-                    echo "Tried url: $url"
+                    command rm -f "${list[1]:t}"
+                    print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                    print -r "Tried url: $url"
                     return 1
                 }
             }
@@ -335,18 +336,21 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             else
                 -zplg-download-file-stdout "$url" >! "$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$filename" || {
-                        echo "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                        command rm -f "$filename"
+                        print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                     }
                 }
             fi
         )
 
         if (( ${+ZPLG_ICE[svn]} == 0 )); then
-            zcompile "$local_dir/$filename" 2>/dev/null || {
-                print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
-                print -r "(snippet URL points to a directory instead of a file?"
-                print -r "to download directory, use preceding: zplugin ice svn)"
-                retval=1
+            [[ -e "$local_dir/$filename" ]] && {
+                zcompile "$local_dir/$filename" 2>/dev/null || {
+                    print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
+                    print -r "(snippet URL points to a directory instead of a file?"
+                    print -r "to download directory, use preceding: zplugin ice svn)"
+                    retval=1
+                }
             }
         fi
     else
