@@ -943,8 +943,8 @@ builtin setopt noaliases
     zparseopts -E -D -a opts f -command u || { echo "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
 
-    # Remove leading whitespace
-    url="${url#"${url%%[! $'\t']*}"}"
+    # Remove leading whitespace and trailing /
+    url="${${url#"${url%%[! $'\t']*}"}%/}"
 
     local filename filename0 local_dir save_url="$url"
     -zplg-pack-ice "$url" ""
@@ -968,8 +968,8 @@ builtin setopt noaliases
     }
 
     # Construct a local directory name from what's in url
-    local_dir="${${${${local_dir//\//--S--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-    local_dir="${ZPLGM[SNIPPETS_DIR]}/${local_dir%${ZPLG_ICE[svn]---S--$filename0}}${ZPLG_ICE[svn]-/$filename0}"
+    local_dir="${${${${local_dir//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    local_dir="${ZPLGM[SNIPPETS_DIR]}/${local_dir%${ZPLG_ICE[svn]---$filename0}}${ZPLG_ICE[svn]-/$filename0}"
 
     ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+1}:-0}>"
 
