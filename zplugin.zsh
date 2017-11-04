@@ -843,17 +843,14 @@ builtin setopt noaliases
     [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
 
     ZPLG_REPORTS[$uspl2]=""
-    ZPLG_FUNCTIONS_BEFORE[$uspl2]=""
-    ZPLG_FUNCTIONS_AFTER[$uspl2]=""
-    ZPLG_FUNCTIONS[$uspl2]=""
-    ZPLG_ZSTYLES[$uspl2]=""
-    ZPLG_BINDKEYS[$uspl2]=""
-    ZPLG_ALIASES[$uspl2]=""
-    ZPLG_WIDGETS_SAVED[$uspl2]=""
-    ZPLG_WIDGETS_DELETE[$uspl2]=""
-    ZPLG_OPTIONS[$uspl2]=""
-    ZPLG_PATH[$uspl2]=""
-    ZPLG_FPATH[$uspl2]=""
+    # Functions
+    ZPLG_FUNCTIONS_BEFORE[$uspl2]="" ZPLG_FUNCTIONS_AFTER[$uspl2]="" ZPLG_FUNCTIONS[$uspl2]=""
+    # Objects
+    ZPLG_ZSTYLES[$uspl2]=""          ZPLG_BINDKEYS[$uspl2]=""        ZPLG_ALIASES[$uspl2]=""
+    # Widgets
+    ZPLG_WIDGETS_SAVED[$uspl2]=""    ZPLG_WIDGETS_DELETE[$uspl2]=""
+    # Rest (options and (f)path)
+    ZPLG_OPTIONS[$uspl2]=""          ZPLG_PATH[$uspl2]=""            ZPLG_FPATH[$uspl2]=""
 
     return $ret
 } # }}}
