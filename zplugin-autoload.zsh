@@ -1260,22 +1260,18 @@ ZPLGM[EXTENDED_GLOB]=""
     if [[ "$st" != "status" ]]; then
         for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
             [[ ! -f "${snip:h}/url" ]] && continue
-            {
-                local mode=$(<${snip})
-                local url=$(<${snip:h}/url)
-                local as=$(<${snip:h}/as)
-                local pick=$(<${snip:h}/pick)
-                local mv=$(<${snip:h}/mv)
-                local cp=$(<${snip:h}/cp)
-                local atpull=$(<${snip:h}/atpull)
+            local -A mdata
+            { for key in mode url as pick mv cp atpull; do
+                mdata[$key]="$(<${snip:h}/$key)"
+              done
             } 2>/dev/null
-            [[ "$mode" = "1" ]] && zplugin ice svn
-            [[ "$as" = "command" ]] && zplugin ice as"command"
-            [[ -n "$pick" ]] && zplugin ice pick"$pick"
-            [[ -n "$mv" ]] && zplugin ice mv"$mv"
-            [[ -n "$cp" ]] && zplugin ice cp"$cp"
-            [[ -n "$atpull" ]] && zplugin ice atpull"$atpull"
-            -zplg-load-snippet "$url" "" "-f" "-u"
+            [[ "$mdata[mode]" = "1" ]] && zplugin ice svn
+            [[ "$mdata[as]" = "command" ]] && zplugin ice as"command"
+            [[ -n "$mdata[pick]" ]] && zplugin ice pick"$mdata[pick]"
+            [[ -n "$mdata[mv]" ]] && zplugin ice mv"$mdata[mv]"
+            [[ -n "$mdata[cp]" ]] && zplugin ice cp"$mdata[cp]"
+            [[ -n "$mdata[atpull]" ]] && zplugin ice atpull"$mdata[atpull]"
+            -zplg-load-snippet "$mdata[url]" "" "-f" "-u"
             ZPLG_ICE=()
         done
         print
