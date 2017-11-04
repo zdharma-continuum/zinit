@@ -316,7 +316,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Change the url to point to raw github content if it isn't like that
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZPLG_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
 
-    if [[ ! -d "$local_dir" ]]; then
+    if [[ ! -d "$local_dir${ZPLG_ICE[svn]+/$filename}" ]]; then
         print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}"
         command mkdir -p "$local_dir"
     fi
