@@ -18,6 +18,7 @@ commands=(
     report:'show plugin'"'"'s report (or all plugins'"'"' if --all passed)'
     loaded:'show what plugins are loaded'
     list:'show what plugins are loaded'
+    ls:'list snippets in formatted and colorized manner'
     cd:"go into plugin's directory"
     create:'create plugin (also together with Github repository)'
     edit:"edit plugin's file with \$EDITOR"

@@ -2097,6 +2097,35 @@ ZPLGM[EXTENDED_GLOB]=""
         print "compdef ${(Q)cdf}"
     done
 } # }}}
+# FUNCTION: -zplg-ls {{{
+-zplg-ls() {
+    (( ${+commands[tree]} )) || {
+        print "${ZPLGM[col-error]}No \`tree' program, it is required by the subcommand \`ls\'${ZPLGM[col-rst]}"
+        print "Download from: http://mama.indstate.edu/users/ice/tree/"
+        print "It is also available probably in all distributions and Homebrew, as package \`tree'"
+    }
+    (
+        setopt localoptions extendedglob
+        cd "${ZPLGM[SNIPPETS_DIR]}"
+        local -a list
+        list=( "${(f@)"$(LANG=en_US.utf-8 tree -L 3 --charset utf-8)"}" )
+        # Oh-My-Zsh single file
+        list=( "${list[@]//(#b)(https--github.com--robbyrussell--oh-my-zsh--raw--master(--)(#c0,1)(*))/$ZPLGM[col-info]Oh-My-Zsh$ZPLGM[col-error]${match[2]/--//}$ZPLGM[col-pname]${match[3]//--/$ZPLGM[col-error]/$ZPLGM[col-pname]} $ZPLGM[col-info](single-file)$ZPLGM[col-rst] ${match[1]}}" )
+        # Oh-My-Zsh SVN
+        list=( "${list[@]//(#b)(https--github.com--robbyrussell--oh-my-zsh--trunk(--)(#c0,1)(*))/$ZPLGM[col-info]Oh-My-Zsh$ZPLGM[col-error]${match[2]/--//}$ZPLGM[col-pname]${match[3]//--/$ZPLGM[col-error]/$ZPLGM[col-pname]} $ZPLGM[col-info](SVN)$ZPLGM[col-rst] ${match[1]}}" )
+        # Prezto single file
+        list=( "${list[@]//(#b)(https--github.com--sorin-ionescu--prezto--raw--master(--)(#c0,1)(*))/$ZPLGM[col-info]Prezto$ZPLGM[col-error]${match[2]/--//}$ZPLGM[col-pname]${match[3]//--/$ZPLGM[col-error]/$ZPLGM[col-pname]} $ZPLGM[col-info](single-file)$ZPLGM[col-rst] ${match[1]}}" )
+        # Prezto SVN
+        list=( "${list[@]//(#b)(https--github.com--sorin-ionescu--prezto--trunk(--)(#c0,1)(*))/$ZPLGM[col-info]Prezto$ZPLGM[col-error]${match[2]/--//}$ZPLGM[col-pname]${match[3]//--/$ZPLGM[col-error]/$ZPLGM[col-pname]} $ZPLGM[col-info](SVN)$ZPLGM[col-rst] ${match[1]}}" )
+
+        # First-level names
+        list=( "${list[@]//(#b)(#s)(│   └──|    └──|    ├──|│   ├──) (*)/${match[1]} $ZPLGM[col-error]${match[2]}$ZPLGM[col-rst]}" )
+
+        list[-1]+=", located at ZPLGM[SNIPPETS_DIR], i.e. ${ZPLGM[SNIPPETS_DIR]}"
+        print -rl -- "${list[@]}"
+    )
+}
+# }}}
 
 #
 # Help function
@@ -2117,6 +2146,7 @@ load ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}       - load plugin, can 
 light ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}      - light plugin load, without reporting
 unload ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - unload plugin
 snippet [-f] [--command] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
+ls                       - list snippets in formatted and colorized manner
 ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
 update ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git update plugin (or all plugins and snippets if --all passed)
 status ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git status for plugin (or all plugins if --all passed)

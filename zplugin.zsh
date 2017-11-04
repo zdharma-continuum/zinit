@@ -1494,6 +1494,9 @@ zplugin() {
                (-h|--help|help|"")
                    -zplg-help
                    ;;
+               (ls)
+                   -zplg-ls "${@[2,-1]}"
+                   ;;
                (*)
                    print "Unknown command \`$1' (use \`help' to get usage information)"
                    ;;
