@@ -232,6 +232,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 -zplg-mirror-using-svn() {
     local url="$1"
     svn checkout --non-interactive -q "$url"
+    return $?
 }
 # }}}
 # FUNCTION: -zplg-forget-completion {{{
