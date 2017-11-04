@@ -37,7 +37,7 @@ Then add to `~/.zshrc`, at bottom:
 zplugin load zdharma history-search-multi-word
 zplugin load zdharma/zui
 # Binary release in archive, from Github-releases page; after unpacking it provides command "fzf"
-zplg ice from"gh-r" ver"latest" as"command"; zplg load "junegunn/fzf-bin"
+zplugin ice from"gh-r" ver"latest" as"command"; zplugin load "junegunn/fzf-bin"
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 # This one to be ran just once, in interactive session
@@ -62,7 +62,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
     ```SystemVerilog
     zstyle ':prezto:module:prompt' theme smiley
-    zplg ice svn; zplg snippet PZT::modules/prompt
+    zplugin ice svn; zplugin snippet PZT::modules/prompt
     ```
 
   - Snippets support `Prezto` modules (with dependencies), and can use **PZT::** URL-shorthand,
@@ -74,9 +74,9 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     zplg snippet PZT::modules/helper/init.zsh
     # Multi-file snippet, URL points to directory to clone with Subversion
     # The file to source (init.zsh) is automatically detected
-    zplg ice svn; zplg snippet PZT::modules/prompt
+    zplugin ice svn; zplugin snippet PZT::modules/prompt
     # Use of Subversion for an Oh-My-Zsh plugin
-    zplg ice svn; zplg snippet OMZ::plugins/git
+    zplugin ice svn; zplugin snippet OMZ::plugins/git
     ```
 
   - Fixed a bug with `cURL` usage (snippets) for downloading, it will now be properly used
@@ -136,10 +136,10 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
   - New `ice` modifier: `if`, to which you can provide a conditional expression
 
     ```SystemVerilog
-    % zplg ice if"(( 0 ))"
-    % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
-    % zplg ice if"(( 1 ))"
-    % zplg snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+    % zplugin ice if"(( 0 ))"
+    % zplugin snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+    % zplugin ice if"(( 1 ))"
+    % zplugin snippet --command https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
     Setting up snippet httpstat.sh
     Downloading httpstat.sh...
     ```
@@ -242,7 +242,7 @@ Default files that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme
 
 ```SystemVerilog
 # URL points to directory
-% zplg ice svn; zplg snippet PZT::modules/docker
+% zplugin ice svn; zplugin snippet PZT::modules/docker
 ```
 
 ### Some ice-modifiers
@@ -252,7 +252,7 @@ The logic is that "ice" is something that melts (so it doesn't last long) and so
 Ice-modifier "**pick**" user can explicitly select the file to source:
 
 ```SystemVerilog
-% zplg ice svn pick"init.zsh"; zplg snippet PZT::modules/git
+% zplugin ice svn pick"init.zsh"; zplugin snippet PZT::modules/git
 ```
 
 Content of Ice-modifier is simply put into `"..."`, `'...'`, or `$'...'`. No need for `":"` after
@@ -264,8 +264,8 @@ A plugin might not be a file for sourcing, but a command to be added to `$PATH`.
 effect, use Ice-modifier `as` with value `command`.
 
 ```SystemVerilog
-% zplg ice as"command" cp"httpstat.sh -> httpstat" pick"httpstat"
-% zplg light b4b4r07/httpstat
+% zplugin ice as"command" cp"httpstat.sh -> httpstat" pick"httpstat"
+% zplugin light b4b4r07/httpstat
 ```
 
 Above command will add plugin directory to `$PATH`, copy file `httpstat.sh` into `httpstat` and add
@@ -279,8 +279,8 @@ Copying file is safe for doing later updates – original files of repository a
 ran at **update** of plugin) will be used:
 
 ```SystemVerilog
-% zplg ice as"command" mv"httpstat.sh -> httpstat" pick"httpstat" atpull'!git reset --hard'
-% zplg light b4b4r07/httpstat
+% zplugin ice as"command" mv"httpstat.sh -> httpstat" pick"httpstat" atpull'!git reset --hard'
+% zplugin light b4b4r07/httpstat
 ```
 
 If `atpull` starts with exclamation mark, then it will be run before `git pull`, and before `mv`.
@@ -298,28 +298,28 @@ enclose contents of `atpull` Ice-mod.
 Commands can also be added to `$PATH` using **snippets**. For example:
 
 ```SystemVerilog
-% zplg ice cp"httpstat.sh -> httpstat" pick"httpstat" as"command"
-% zplg snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+% zplugin ice cp"httpstat.sh -> httpstat" pick"httpstat" as"command"
+% zplugin snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 ```
 
 Support for `atpull` in snippets is coming soon.
 
 # Ice Modifiers
 
-Following `ice` modifiers are passed to `zplg ice ...` to obtain described effects.
+Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
 
 |  Modifier | Description |
 |-----------|-------------|
 | `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, etc. Works with plugins (i.e. not snippets). |
 | `from`    | Clone plugin from given site, supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). |
 | `ver`     | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"command"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. |
-| `pick`    | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"command"`), e.g. `zplg ice pick"*.plugin.zsh"`. Works with plugins and snippets. |
+| `pick`    | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"command"`), e.g. `zplugin ice pick"*.plugin.zsh"`. Works with plugins and snippets. |
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
-| `if`      | Load plugin or snippet when condition is meet, e.g. `zplg ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
+| `if`      | Load plugin or snippet when condition is meet, e.g. `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. |
 | `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf`. It uses `->` as separator for old and new file names. Works also with snippets. |
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Uses `->` in the same way `mv` does. Ran after `mv`. Works also with snippets. |
-| `atclone` | Run command after cloning, within plugin's directory, e.g. `zplg ice atclone"echo Cloned"`. Ran also after downloading snippet. |
+| `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull`. Otherwise it is ran after them. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
