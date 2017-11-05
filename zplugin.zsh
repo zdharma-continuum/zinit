@@ -1371,7 +1371,7 @@ zplugin() {
                (clist|completions)
                    # Show installed, enabled or disabled, completions
                    # Detect stray and improper ones
-                   -zplg-show-completions
+                   -zplg-show-completions "$2"
                    ;;
                (cclear)
                    # Delete stray and improper completions

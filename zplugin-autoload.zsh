@@ -1524,28 +1524,23 @@ ZPLGM[EXTENDED_GLOB]=""
 # User-action entry point.
 -zplg-show-completions() {
     builtin setopt localoptions nullglob extendedglob
+    local count="${1:-3}"
 
     typeset -a completions
     completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
-    # Find longest completion name
-    local cpath c
-    integer longest=0
-    for cpath in "${completions[@]}"; do
-        c="${cpath:t}"
-        c="${c#_}"
-        [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
-    done
+    local cpath c o s group
 
     # Prepare readlink command for establishing
     # completion's owner
     -zplg-prepare-readlink
     local rdlink="$REPLY"
 
-    #
-    # Display - resolves owner of each completion,
-    # detects if completion is disabled
-    #
+    float flmax=${#completions} flcur=0
+    typeset -F1 flper
+
+    local -A owner_to_group
+    local -a packs splitted
 
     integer disabled unknown stray
     for cpath in "${completions[@]}"; do
@@ -1558,7 +1553,7 @@ ZPLGM[EXTENDED_GLOB]=""
         # about user and plugin, taken from directory name
         -zplg-get-completion-owner "$cpath" "$rdlink"
         [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
-        -zplg-any-colorify-as-uspl2 "$REPLY"
+        o="$REPLY"
 
         # If we succesfully read a symlink (unknown == 0), test if it isn't broken
         stray=0
@@ -1566,11 +1561,49 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ ! -f "$cpath" ]] && stray=1
         fi
 
-        # Output line of text
-        print -n "${(r:longest+1:: :)c} $REPLY"
-        (( disabled )) && print -n " ${ZPLGM[col-error]}[disabled]${ZPLGM[col-rst]}"
-        (( unknown )) && print -n " ${ZPLGM[col-error]}[unknown file, clean with cclear]${ZPLGM[col-rst]}"
-        (( stray )) && print -n " ${ZPLGM[col-error]}[stray, clean with cclear]${ZPLGM[col-rst]}"
+        s=$(( 1*disabled + 2*unknown + 3*stray ))
+
+        owner_to_group[${o}--$s]+="$c;"
+        group="${owner_to_group[${o}--$s]%;}"
+        splitted=( "${(s:;:)group}" )
+
+        if [[ "${#splitted}" -ge "$count" ]]; then
+            packs+=( "${(q)group//;/, } ${(q)o} ${(q)s}" )
+            unset "owner_to_group[${o}--$s]"
+        fi
+
+        (( ++ flcur ))
+        flper=$(( flcur / flmax * 100 ))
+        print -n -- "\r${flper}% "
+    done
+
+    for o in "${(k@)owner_to_group}"; do
+        group="${owner_to_group[$o]%;}"
+        s="${o##*--}"
+        o="${o%--*}"
+        packs+=( "${(q)group//;/, } ${(q)o} ${(q)s}" )
+    done
+    packs=( "${(on@)packs}" )
+
+    print # newline after percent
+
+    # Find longest completion name
+    integer longest=0
+    local -a unpacked
+    for c in "${packs[@]}"; do
+        unpacked=( "${(Q@)${(z@)c}}" )
+        [[ "${#unpacked[1]}" -gt "$longest" ]] && longest="${#unpacked[1]}"
+    done
+
+    for c in "${packs[@]}"; do
+        unpacked=( "${(Q@)${(z@)c}}" )
+
+        -zplg-any-colorify-as-uspl2 "$unpacked[2]"
+        print -n "${(r:longest+1:: :)unpacked[1]} $REPLY"
+
+        (( unpacked[3] & 0x1 )) && print -n " ${ZPLGM[col-error]}[disabled]${ZPLGM[col-rst]}"
+        (( unpacked[3] & 0x2 )) && print -n " ${ZPLGM[col-error]}[unknown file, clean with cclear]${ZPLGM[col-rst]}"
+        (( unpacked[3] & 0x4 )) && print -n " ${ZPLGM[col-error]}[stray, clean with cclear]${ZPLGM[col-rst]}"
         print
     done
 } # }}}
