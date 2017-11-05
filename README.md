@@ -38,13 +38,13 @@ zplugin load zdharma history-search-multi-word
 zplugin load zdharma/zui
 
 # Binary release in archive, from Github-releases page; after unpacking it provides command "fzf"
-zplugin ice from"gh-r" ver"latest" as"command"; zplugin load "junegunn/fzf-bin"
+zplugin ice from"gh-r" as"command"; zplugin load "junegunn/fzf-bin"
 
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 
 # This one to be ran just once, in interactive session
-zplugin creinstall %HOME/my_completions  # Handle completions without loading the plugin, see "clist" command
+zplugin creinstall %HOME/my_completions  # Handle completions without loading any plugin, see "clist" command
 ```
 
 (No need to add:
@@ -55,12 +55,12 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 
 because the install script does this.)
 
-`HSMW` – multi-word searching of history (Ctrl-R), `zui` – textual UI library for Zshell.
+`HSMW` – multi-word searching of history (bound to Ctrl-R), `zui` – textual UI library for Zshell.
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
 * 04-11-2017
-  - New subcommand `ls` which lists snippets directory in formatted and colorized manner. Example:
+  - New subcommand `ls` which lists snippets-directory in a formatted and colorized manner. Example:
 
   ![zplugin-ls](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-ls.png)
 
@@ -85,7 +85,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     # The file to source (init.zsh) is automatically detected
     zplugin ice svn; zplugin snippet PZT::modules/prompt
 
-    # Use of Subversion to load an OMZ plugin
+    # An use of Subversion to load an OMZ plugin
     zplugin ice svn; zplugin snippet OMZ::plugins/git
     ```
 
@@ -100,8 +100,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     ```
 
 * 12-10-2017
-  - The `cd` subcommand can now obtain URL and move session to snippet directory (where it can
-    be e.g. compiled, but a functionality is coming for this too)
+  - The `cd` subcommand can now obtain URL and move session to **snippet** directory
   - The `times` subcommand now includes statistics on snippets. Also, entries
     are displayed in order of loading:
 
@@ -130,7 +129,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     Completions are not automatically installed, but user can run `zplg creinstall %HOME/github/{directory}`, etc.
 
 * 23-05-2017
-  - New `ice` modifier: `if`, to which you can provide a conditional expression
+  - New `ice` modifier: `if`, to which you can provide a conditional expression:
 
     ```SystemVerilog
     % zplugin ice if"(( 0 ))"
@@ -159,10 +158,11 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
         url = https://notabug.org/zdharma/zui
     ```
 
-    One other `ice` is `proto`. Use `proto"git"` with Github to be able to use private repositories.
+    One other `ice` is `proto` that changes network protocol. Use `proto"git"` with Github to be able to use private repositories.
 
   - Completion-management supports completions provided in subdirectory, like in `zsh-users/zsh-completions`
-    plugin. With `ice` modifier `blockf` (block-fpath), you can manage such completions:
+    plugin. With `ice` modifier `blockf` (block-fpath), you can manage completions in such plugins (plugin can be
+    normally loaded and it will be blocked from updating `$fpath`):
 
     ```SystemVerilog
     % zplg ice blockf
@@ -203,7 +203,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 ```
 
 Above commands show two ways of basic plugin loading. **load** causes reporting to be enabled –
-you can track what plugin does, show the information with `zplugin report {plugin-spec}`.
+you can track what plugin does, view the information with `zplugin report {plugin-spec}`.
 **light** is a faster loading without tracking and reporting.
 
 ### Oh-My-Zsh, Prezto
@@ -256,7 +256,7 @@ effect, use Ice-modifier `as` with value `command`.
 ```
 
 Above command will add plugin directory to `$PATH`, copy file `httpstat.sh` into `httpstat` and add
-execution rights (`+x`) to file selected with `pick`, i.e. to `httpstat`. Other Ice-mod exists,
+execution rights (`+x`) to the file selected with `pick`, i.e. to `httpstat`. Other Ice-mod exists,
 `mv`, which works like `cp` but **moves** a file (it is ran before `cp`).
 
 ### atpull"..."
@@ -297,15 +297,15 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 
 |  Modifier | Description |
 |-----------|-------------|
-| `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, etc. Works with plugins (i.e. not snippets). |
-| `from`    | Clone plugin from given site, supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). |
+| `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. Works with plugins (i.e. not snippets). |
+| `from`    | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). |
 | `ver`     | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"command"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. |
 | `pick`    | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"command"`), e.g. `zplugin ice pick"*.plugin.zsh"`. Works with plugins and snippets. |
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
-| `if`      | Load plugin or snippet when condition is meet, e.g. `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
-| `blockf`  | Disallow plugin to modify `fpath`. |
+| `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
+| `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
 | `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf`. It uses `->` as separator for old and new file names. Works also with snippets. |
-| `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Uses `->` in the same way `mv` does. Ran after `mv`. Works also with snippets. |
+| `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull`. Otherwise it is ran after them. |
@@ -350,6 +350,8 @@ autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 ```
 
+Various paths can be customized, see section below [Customizing Paths](#customizing-paths).
+
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
 
 # Compilation
@@ -358,6 +360,8 @@ It's good to compile `zplugin` into `Zsh` bytecode:
 ```sh
 zcompile ~/.zplugin/bin/zplugin.zsh
 ```
+
+**NEW:** `zplugin self-update` now also performs full zplugin compilation on each run.
 
 Zplugin will compile each newly downloaded plugin. You can clear compilation of
 a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
@@ -407,6 +411,8 @@ uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins 
 compiled                 - list plugins that are compiled
 ```
 
+### Using Oh-My-Zsh themes
+
 To use **themes** created for `Oh-My-Zsh` you might want to first source the `git` library there:
 
 ```SystemVerilog
@@ -417,8 +423,8 @@ zplugin snippet OMZ::lib/git.zsh
 
 Then you can use the themes as snippets (`zplugin snippet {file path or Github URL}`).
 Some themes require not only
-`Oh-My-Zsh's` `git` **library**, but also `git` **plugin** (error about function `current_branch` appears).
-Load this plugin as snippet:
+`Oh-My-Zsh's` `git` **library**, but also `git` **plugin** (error about function `current_branch` appears, or a similar one).
+Load this plugin as single-file snippet:
 
 ```SystemVerilog
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
@@ -438,19 +444,23 @@ To summarize:
 ```SystemVerilog
 # Load OMZ Git library
 zplugin snippet OMZ::lib/git.zsh
+
 # Load Git plugin from OMZ
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin cdclear -q # <- forget completions provided up to this moment
+
 setopt promptsubst
+
 # Load theme from OMZ
 zplugin snippet OMZ::themes/dstufft.zsh-theme
+
 # Load normal Github plugin with theme depending on OMZ Git library
 zplugin light NicoSantangelo/Alpharized
 ```
 
 # Calling compinit
 
-Compinit should be called after loading of all plugins and before possibly calling `cdreply`.
+Compinit can be called after loading of all plugins and before possibly calling `cdreply`.
 `Zplugin` takes control over completions, symlinks them to `~/.zplugin/completions` and adds
 this directory to `$FPATH`. You manage those completions via commands starting with `c`:
 `csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`.
@@ -498,15 +508,15 @@ zplugin cdlist # look at gathered compdefs
 # Non-Github (local) plugins
 
 Use `create` command with user name `_local` (the default) to create plugin's
-skeleton. It will be not connected with Github repository (because of user name
+skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository (because of user name
 being `_local`). To enter the plugin's directory use `cd` command with just
-plugin's name (without `_local`).
+plugin's name (without `_local`, it's optional).
 
 The special user name `_local` is optional also for other commands, e.g. for
 `load` (i.e. `zplugin load myplugin` is sufficient, there's no need for
 `zplugin load _local/myplugin`).
 
-# Customizing paths
+# Customizing Paths
 
 Following variables can be set to custom values, before sourcing Zplugin. The
 previous global variables like `$ZPLG_HOME` have been removed to not pollute
@@ -514,7 +524,7 @@ the namespace – there's single `$ZPLGM` hash instead of `5` string variables.
 Please update your dotfiles.
 
 ```
-local -A ZPLGM # (initial Zplugin hash definition)
+local -A ZPLGM # (initial Zplugin's hash definition)
 ZPLGM[BIN_DIR] – where Zplugin code resides, e.g.: "/home/user/.zplugin/bin"
 ZPLGM[HOME_DIR] – where Zplugin should create all working directories, e.g.: "/home/user/.zplugin"
 ZPLGM[PLUGINS_DIR] – override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins"
