@@ -181,13 +181,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$bkpfile"
             fi
-            print "${ZPLGM[col-info2]}Symlinking completion \`$cfile' to ${ZPLGM[COMPLETIONS_DIR]}${ZPLGM[col-rst]}"
+            print "Symlinking completion ${ZPLGM[col-uname]}$cfile${ZPLGM[col-rst]} to \${ZPLGM[COMPLETIONS_DIR]}"
             command ln -s "$c" "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile"
         else
             print "${ZPLGM[col-error]}Not symlinking completion \`$cfile', it already exists${ZPLGM[col-rst]}"
-            print "${ZPLGM[col-error]}Use \`zplugin creinstall {plugin-name}' to force install${ZPLGM[col-rst]}"
+            print "${ZPLGM[col-error]}Use \`zplugin creinstall {plugin-spec}' to force install${ZPLGM[col-rst]}"
         fi
     done
 } # }}}
@@ -255,8 +255,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         print "Unsetting $k"
     done
 
-    print "${ZPLGM[col-info2]}Forgetting completion \`$f'...${ZPLGM[col-rst]}"
-    print
     unfunction -- 2>/dev/null "$f"
 } # }}}
 # FUNCTION: -zplg-compile-plugin {{{
