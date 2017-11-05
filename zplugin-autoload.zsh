@@ -693,6 +693,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # User-action entry point.
 -zplg-self-update() {
     ( builtin cd "${ZPLGM[BIN_DIR]}" ; command git pull )
+    zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
+    zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
+    zcompile "${ZPLGM[BIN_DIR]}"/zplugin-install.zsh
+    zcompile "${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh
 } # }}}
 # FUNCTION: -zplg-show-registered-plugins {{{
 # Lists loaded plugins (subcommands list, lodaded).
