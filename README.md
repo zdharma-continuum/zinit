@@ -23,7 +23,7 @@ to call `compinit` only once in `.zshrc`.
 
 **NEW**: **[Code documentation](zsdoc)**
 
-# Quick start
+# Quick Start
 
 To install, execute:
 
@@ -232,7 +232,7 @@ Default files that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme
 % zplugin ice svn; zplugin snippet PZT::modules/docker
 ```
 
-### Some ice-modifiers
+### Some Ice-modifiers
 
 The command `zplg ice` provides Ice-modifiers for single next command (see subsection [below](#ice-modifiers)).
 The logic is that "ice" is something that melts (so it doesn't last long) and something that's added. Using other
@@ -291,6 +291,73 @@ Commands can also be added to `$PATH` using **snippets**. For example:
 
 Support for `atpull` in snippets is coming soon.
 
+### Completion Management
+
+Zplugin allows to disable and enable each completion in every plugin. Try installing a
+popular plugin that provides completions:
+
+```SystemVerilog
+% zplugin ice blockf
+% zplugin light zsh-users/zsh-completions
+```
+
+First command will block the traditional method of adding completions. Zplugin uses own
+method (based on simlinks instead of adding to `$fpath`). Zplugin will automatically *install*
+completions of newly downloaded plugin. To uninstall, and install again, use
+
+```SystemVerilog
+% zplg cuninstall zsh-users/zsh-completions   # uninstall
+% zplg creinstall zsh-users/zsh-completions   # install
+```
+
+#### Listing completions
+
+(Note: `zplg` is an alias that can be used in interactive sessions). To see what completions
+*all* plugins provide, in tabular formatting and with name of each plugin, use:
+
+```SystemVerilog
+% zplg clist
+```
+
+This command is specially adapted for plugins like `zsh-users/zsh-completions`, which provide
+many completions – listing will have `3` completions per line, so that not many terminal pages
+will be occupied, like this:
+
+```SystemVerilog
+...
+atach, bitcoin-cli, bower    zsh-users/zsh-completions
+bundle, caffeinate, cap      zsh-users/zsh-completions
+cask, cf, chattr             zsh-users/zsh-completions
+...
+```
+
+You can show more completions per line by providing an *argument* to `clist`, e.g. `zplg clist 6`,
+will show:
+
+```SystemVerilog
+...
+bundle, caffeinate, cap, cask, cf, chattr      zsh-users/zsh-completions
+cheat, choc, cmake, coffee, column, composer   zsh-users/zsh-completions
+console, dad, debuild, dget, dhcpcd, diana     zsh-users/zsh-completions
+...
+```
+
+#### Enabling and disabling completions
+
+Completions can be disabled, so that e.g. original Zsh completion will be used.
+The commands are very basic, they only need completion *name*:
+
+```
+% zplg cdisable cmake
+Disabled cmake completion belonging to zsh-users/zsh-completions
+% zplg cenable cmake
+Enabled cmake completion belonging to zsh-users/zsh-completions
+```
+
+That's all on completions. There's one more command, `zplugin csearch`, that will
+*search* all plugin directories for available completions, and show if they are
+installed. This sums up to complete control over completions.
+
 # Ice Modifiers
 
 Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
@@ -329,7 +396,7 @@ Completion will be available, for command **zplugin** and aliases **zpl**, **zpl
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
 
-## Manual installation
+## Manual Installation
 
 To manually install `Zplugin` clone the repo to e.g. `~/.zplugin/bin`:
 
@@ -411,7 +478,7 @@ uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins 
 compiled                 - list plugins that are compiled
 ```
 
-### Using Oh-My-Zsh themes
+### Using Oh-My-Zsh Themes
 
 To use **themes** created for `Oh-My-Zsh` you might want to first source the `git` library there:
 
@@ -505,7 +572,7 @@ zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
 zplugin cdlist # look at gathered compdefs
 ```
 
-# Non-Github (local) plugins
+# Non-Github (Local) Plugins
 
 Use `create` command with user name `_local` (the default) to create plugin's
 skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository (because of user name
@@ -532,7 +599,7 @@ ZPLGM[COMPLETIONS_DIR] – as above, for completion files, e.g. "/opt/zsh/zplugi
 ZPLGM[SNIPPETS_DIR] – as above, for snippets
 ```
 
-# IRC channel
+# IRC Channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
 Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
