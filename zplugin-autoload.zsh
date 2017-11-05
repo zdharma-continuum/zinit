@@ -1537,6 +1537,11 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
     done
 
+    # Prepare readlink command for establishing
+    # completion's owner
+    -zplg-prepare-readlink
+    local rdlink="$REPLY"
+
     #
     # Display - resolves owner of each completion,
     # detects if completion is disabled
@@ -1548,14 +1553,10 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
         c="${c#_}"
 
-        # Prepare readlink command for establishing
-        # completion's owner
-        -zplg-prepare-readlink
-
         # This will resolve completion's symlink to obtain
         # information about the repository it comes from, i.e.
         # about user and plugin, taken from directory name
-        -zplg-get-completion-owner "$cpath" "$REPLY"
+        -zplg-get-completion-owner "$cpath" "$rdlink"
         [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
         -zplg-any-colorify-as-uspl2 "$REPLY"
 
@@ -1595,18 +1596,19 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ "${#c}" -gt "$longest" ]] && longest="${#c}"
     done
 
+    -zplg-prepare-readlink
+    local rdlink="$REPLY"
+
     integer disabled unknown stray
     for cpath in "${completions[@]}"; do
         c="${cpath:t}"
         [[ "${c#_}" = "${c}" ]] && disabled=1 || disabled=0
         c="${c#_}"
 
-        -zplg-prepare-readlink
-
         # This will resolve completion's symlink to obtain
         # information about the repository it comes from, i.e.
         # about user and plugin, taken from directory name
-        -zplg-get-completion-owner "$cpath" "$REPLY"
+        -zplg-get-completion-owner "$cpath" "$rdlink"
         [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
         -zplg-any-colorify-as-uspl2 "$REPLY"
 
