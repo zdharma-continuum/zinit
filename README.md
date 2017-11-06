@@ -62,6 +62,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 * 06-11-2017
   - The subcommand `clist` now prints `3` completions per line (not `1`). This makes large amount
     of completions to look better. Argument can be given, e.g. `6`, to increase the grouping.
+  - New Ice-mod `silent` that mutes `stderr` & `stdout` of a plugin or snippet.
 
 * 04-11-2017
   - New subcommand `ls` which lists snippets-directory in a formatted and colorized manner. Example:
@@ -375,6 +376,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
 | `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
+| `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. |
 | `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf`. It uses `->` as separator for old and new file names. Works also with snippets. |
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
