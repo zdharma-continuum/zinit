@@ -1005,7 +1005,10 @@ builtin setopt noaliases
             fi
         fi
 
-        [[ -f "${list[1]}" ]] && { builtin source "${list[1]}"; ((1)); } || echo "Snippet not loaded ($save_url)"
+        [[ -f "${list[1]}" ]] && {
+            (( ${+ZPLG_ICE[silent]} )) && { builtin source "${list[1]}" 2>/dev/null 1>&2; ((1)); } || builtin source "${list[1]}"
+            (( 1 ))
+        } || echo "Snippet not loaded ($save_url)"
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; }
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
@@ -1151,7 +1154,7 @@ builtin setopt noaliases
         # We need some state, but user wants his for his plugins
         (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         builtin setopt noaliases
-        builtin source "$pdir_path/$fname"
+        (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_path/$fname" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_path/$fname"
         builtin unsetopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
@@ -1236,7 +1239,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|as|ver|mv|cp|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|as|ver|silent|mv|cp|atload|atpull|atclone|if)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
