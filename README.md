@@ -237,9 +237,15 @@ Default files that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme
 % zplugin ice svn; zplugin snippet PZT::modules/docker
 ```
 
+### Snippets and performance
+
+Using `curl`, `wget`, etc., `Subversion` allows to almost completely avoid code dedicated to Oh-My-Zsh and
+Prezto, and also to other frameworks. This gives profits in performance of `Zplugin`, it is really fast
+and also compact (low memory usage, short loading time).
+
 ### Some Ice-modifiers
 
-The command `zplg ice` provides Ice-modifiers for single next command (see subsection [below](#ice-modifiers)).
+The command `zplugin ice` provides Ice-modifiers for single next command (see subsection [below](#ice-modifiers)).
 The logic is that "ice" is something that melts (so it doesn't last long) and something that's added. Using other
 Ice-modifier "**pick**" user can explicitly select the file to source:
 
