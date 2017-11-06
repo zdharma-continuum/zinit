@@ -59,6 +59,10 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 06-11-2017
+  - The subcommand `clist` now prints `3` completions per line (not `1`). This makes large amount
+    of completions to look better. Argument can be given, e.g. `6`, to increase the grouping.
+
 * 04-11-2017
   - New subcommand `ls` which lists snippets-directory in a formatted and colorized manner. Example:
 
