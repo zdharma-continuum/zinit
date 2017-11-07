@@ -1679,7 +1679,7 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
+        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)*(.) )
         if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
             [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
@@ -1690,7 +1690,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
+        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)*(.) )
 
         if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
