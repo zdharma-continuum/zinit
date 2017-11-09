@@ -17,7 +17,7 @@ if test -d "$ZPLG_HOME/bin/.git"; then
     git pull origin master
 else
     cd "$ZPLG_HOME"
-    git clone https://github.com/psprint/zplugin.git bin
+    git clone https://github.com/zdharma/zplugin.git bin
 fi
 echo ">>> Done"
 
