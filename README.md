@@ -296,7 +296,7 @@ enclose contents of `atpull` Ice-mod.
 Commands can also be added to `$PATH` using **snippets**. For example:
 
 ```SystemVerilog
-% zplugin ice cp"httpstat.sh -> httpstat" pick"httpstat" as"command"
+% zplugin ice mv"httpstat.sh -> httpstat" pick"httpstat" as"command"
 % zplugin snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 ```
 
