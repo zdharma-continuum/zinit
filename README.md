@@ -28,7 +28,7 @@ to call `compinit` only once in `.zshrc`.
 To install, execute:
 
 ```SystemVerilog
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
 ```
 
 Then add to `~/.zshrc`, at bottom:
