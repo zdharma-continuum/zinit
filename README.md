@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/psprint/zplugin/master/doc/img/zplugin.png" />
+<img src="https://raw.githubusercontent.com/zdharma/zplugin/master/doc/img/zplugin.png" />
 </p>
 
 [![Build Status](https://travis-ci.org/zdharma/zplugin.svg?branch=master)](https://travis-ci.org/zdharma/zplugin)
@@ -395,7 +395,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 Execute:
 
 ```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/psprint/zplugin/master/doc/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
 ```
 
 To update run the command again (or just execute `doc/install.sh`) or run `zplugin self-update`.
@@ -414,7 +414,7 @@ To manually install `Zplugin` clone the repo to e.g. `~/.zplugin/bin`:
 
 ```sh
 mkdir ~/.zplugin
-git clone https://github.com/psprint/zplugin.git ~/.zplugin/bin
+git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
 ```
 
 and source it from `.zshrc` (**above compinit**):
