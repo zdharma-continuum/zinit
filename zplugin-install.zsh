@@ -429,6 +429,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # Next stage is scanning of files with the common utility `file',
 # to detect executables. They are given +x mode. There are also
 # messages to the user on performed actions.
+#
+# $1 - url
+# $2 - file
 -zplg-handle-binary-file() {
     setopt localoptions extendedglob
 
@@ -449,16 +452,16 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             -zplg-extract() { command unrar x "$file"; }
             ;;
         (*.tar.bz2|*.tbz2)
-            -zplg-extract() { command bzip2 -dc "$file" | command tar -xvf -; }
+            -zplg-extract() { command bzip2 -dc "$file" | command tar -xf -; }
             ;;
         (*.tar.gz|*.tgz)
-            -zplg-extract() { command gzip -dc "$file" | command tar -xvf -; }
+            -zplg-extract() { command gzip -dc "$file" | command tar -xf -; }
             ;;
         (*.tar.xz|*.txz)
-            -zplg-extract() { command xz -dc "$file" | command tar -xvf -; }
+            -zplg-extract() { command xz -dc "$file" | command tar -xf -; }
             ;;
         (*.tar.7z|*.t7z)
-            -zplg-extract() { command 7z x -so "$file" | command tar -xvf -; }
+            -zplg-extract() { command 7z x -so "$file" | command tar -xf -; }
             ;;
     esac
 
