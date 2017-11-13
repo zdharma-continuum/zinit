@@ -129,13 +129,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         -zplg-compile-plugin "$user" "$plugin"
     fi
 
-    command mkdir -p "$local_path/._zplugin"
-    local key
-    for key in proto from as pick mv cp atpull ver; do
-        print -r -- "${ZPLG_ICE[$key]}" >! "$local_path/._zplugin/$key"
-    done
+    if [[ "$3" != "-u" ]]; then
+        command mkdir -p "$local_path/._zplugin"
+        local key
+        for key in proto from as pick mv cp atpull ver; do
+            print -r -- "${ZPLG_ICE[$key]}" >! "$local_path/._zplugin/$key"
+        done
+        # Optional file - create file for make ICE mod
+        (( ${+ZPLG_ICE[make]} )) && print -r -- "${ZPLG_ICE[make]}" >! "$local_path/._zplugin/make" || command rm -f "$local_path/._zplugin/make"
 
-    ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path"; eval "${ZPLG_ICE[atclone]}"; } )
+        ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path"; eval "${ZPLG_ICE[atclone]}"; } )
+        (( ${+ZPLG_ICE[make]} )) && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
+    fi
 
     return 0
 } # }}}
@@ -371,6 +376,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         for key in proto from as pick mv cp atpull ver; do
             print -r -- "${ZPLG_ICE[$key]}" >! "$pfx/$key"
         done
+        # Optional file - create file for make ICE mod
+        (( ${+ZPLG_ICE[make]} )) && print -r -- "${ZPLG_ICE[make]}" >! "$pfx/make" || command rm -f "$pfx/make"
     fi
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
@@ -392,6 +399,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atclone]}"; } )
+    (( ${+ZPLG_ICE[make]} )) && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
 
     return $retval
 }
