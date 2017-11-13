@@ -78,8 +78,9 @@ case $state in
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
 
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
+                # _wanted plugins expl "Plugins" \
+                #    compadd "$@" -a - plugins && ret=0
+                _alternative 'files:file:_files' 'plugins:plugin:compadd -a - plugins'
                 ;;
             unload|report)
                 typeset -a plugins absolute normal
