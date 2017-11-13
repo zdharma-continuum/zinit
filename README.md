@@ -40,6 +40,14 @@ zplugin load zdharma/zui
 # Binary release in archive, from Github-releases page; after unpacking it provides command "fzf"
 zplugin ice from"gh-r" as"command"; zplugin load "junegunn/fzf-bin"
 
+# Vim repository on Github – the source for compilation
+zplugin ice as"command" atclone"./configure" make pick"src/vim"; zplugin light vim/vim
+
+# Zsh script that needs building by make. The make argument (install PREFIX=/opt) isn't
+# needed because the pick Ice-mod will use uninstalled files from build-directory, but
+# this demonstrates the make-customization feature which has a swiss-knife potential
+zplugin ice as"command" pick"build/zsd*" make"install PREFIX=/opt"; zplugin load zdharma/zshelldoc
+
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 
