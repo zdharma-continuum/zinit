@@ -609,7 +609,7 @@ zplugin cdlist # look at gathered compdefs
 
 # Non-Github (Local) Plugins
 
-Use `create` command with user name `_local` (the default) to create plugin's
+Use `create` subcommand with user name `_local` (the default) to create plugin's
 skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository (because of user name
 being `_local`). To enter the plugin's directory use `cd` command with just
 plugin's name (without `_local`, it's optional).
@@ -617,6 +617,8 @@ plugin's name (without `_local`, it's optional).
 The special user name `_local` is optional also for other commands, e.g. for
 `load` (i.e. `zplugin load myplugin` is sufficient, there's no need for
 `zplugin load _local/myplugin`).
+
+If user name will not be `_local`, then Zplugin will create repository also on Github.
 
 # Customizing Paths
 
@@ -626,13 +628,15 @@ the namespace – there's single `$ZPLGM` hash instead of `5` string variables.
 Please update your dotfiles.
 
 ```
-local -A ZPLGM # (initial Zplugin's hash definition)
-ZPLGM[BIN_DIR] – where Zplugin code resides, e.g.: "/home/user/.zplugin/bin"
-ZPLGM[HOME_DIR] – where Zplugin should create all working directories, e.g.: "/home/user/.zplugin"
-ZPLGM[PLUGINS_DIR] – override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins"
-ZPLGM[COMPLETIONS_DIR] – as above, for completion files, e.g. "/opt/zsh/zplugin/root_completions"
-ZPLGM[SNIPPETS_DIR] – as above, for snippets
+local -A ZPLGM  # initial Zplugin's hash definition, then:
 ```
+| Hash Field | Description |
+-------------|-------------
+| ZPLGM[BIN_DIR]         | Where Zplugin code resides, e.g.: "/home/user/.zplugin/bin"                      |
+| ZPLGM[HOME_DIR]        | Where Zplugin should create all working directories, e.g.: "/home/user/.zplugin" |
+| ZPLGM[PLUGINS_DIR]     | Override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins" |
+| ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"         |
+| ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
 
 # IRC Channel
 Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
