@@ -37,10 +37,10 @@ Then add to `~/.zshrc`, at bottom:
 zplugin load zdharma history-search-multi-word
 zplugin load zdharma/zui
 
-# Binary release in archive, from Github-releases page; after unpacking it provides command "fzf"
+# Binary release in archive, from Github-releases page; after automatic unpacking it provides command "fzf"
 zplugin ice from"gh-r" as"command"; zplugin load "junegunn/fzf-bin"
 
-# Vim repository on Github – the source for compilation
+# Vim repository on Github – the source that needs compilation
 zplugin ice as"command" atclone"./configure" make pick"src/vim"; zplugin light vim/vim
 
 # Zsh script that needs building by make. The make argument (install PREFIX=/opt) isn't
@@ -68,14 +68,14 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
 # News
 * 13-11-207
-  - New ice modifier – `make`. It causes `make`-command to be executed after cloning or updating
-    plugins. For example there's `Zshelldoc` that uses `Makefile` to build final scripts:
+  - New ice modifier – `make`. It causes the `make`-command to be executed after cloning or updating
+    plugins and snippets. For example there's `Zshelldoc` that uses `Makefile` to build final scripts:
 
     ```SystemVerilog
     zplugin ice as"command" pick"build/zsd*" make; zplugin light zdharma/zshelldoc
     ```
 
-    This doesn't trigger the `install` target, but this does:
+    The above doesn't trigger the `install` target, but this does:
 
     ```SystemVerilog
     zplugin ice as"command" pick"build/zsd*" make"install PREFIX=/tmp"; zplugin light zdharma/zshelldoc
@@ -97,7 +97,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
     ```SystemVerilog
     zstyle ':prezto:module:prompt' theme smiley
-    zplugin ice svn; zplugin snippet PZT::modules/prompt
+    zplugin ice svn silent; zplugin snippet PZT::modules/prompt
     ```
 
   - Snippets support `Prezto` modules (with dependencies), and can use **PZT::** URL-shorthand,
