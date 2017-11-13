@@ -59,6 +59,20 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 13-11-207
+  - New ice modifier – `make`. It causes `make`-command to be executed after cloning or updating
+    plugins. For example there's `Zshelldoc` that uses `Makefile` to build final scripts:
+
+    ```SystemVerilog
+    zplugin ice as"command" pick"build/zsd*" make; zplugin light zdharma/zshelldoc
+    ```
+
+    This doesn't trigger the `install` target, but this does:
+
+    ```SystemVerilog
+    zplugin ice as"command" pick"build/zsd*" make"install PREFIX=/tmp"; zplugin light zdharma/zshelldoc
+    ```
+
 * 06-11-2017
   - The subcommand `clist` now prints `3` completions per line (not `1`). This makes large amount
     of completions to look better. Argument can be given, e.g. `6`, to increase the grouping.
@@ -389,6 +403,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull`. Otherwise it is ran after them. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
+| `make`    | Run `make` command after cloning and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. |
 
 # Installation
 
