@@ -631,7 +631,7 @@ Please update your dotfiles.
 local -A ZPLGM  # initial Zplugin's hash definition, then:
 ```
 | Hash Field | Description |
--------------|-------------
+-------------|--------------
 | ZPLGM[BIN_DIR]         | Where Zplugin code resides, e.g.: "/home/user/.zplugin/bin"                      |
 | ZPLGM[HOME_DIR]        | Where Zplugin should create all working directories, e.g.: "/home/user/.zplugin" |
 | ZPLGM[PLUGINS_DIR]     | Override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins" |

@@ -515,7 +515,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
-    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
+    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
 } # }}}
 # FUNCTION: -zplg-check-comp-consistency {{{
 # Zplugin creates symlink for each installed completion.
@@ -608,7 +608,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local c cfile bkpfile
     integer action global_action=0
 
-    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
     symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
     backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
@@ -1373,7 +1373,7 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
 
     # Number of completions existing in all plugins
-    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)* )
+    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
     print "Completions available overall: ${infoc}${#completions[@]}${reset_color}"
 
     # Enumerate snippets loaded
@@ -1685,7 +1685,7 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)*(.) )
+        completions=( "$pp"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(.) )
         if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
             [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
@@ -1696,7 +1696,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]#~*(zplg_functions|/zsdoc/)*(.) )
+        completions=( "$pp"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(.) )
 
         if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
