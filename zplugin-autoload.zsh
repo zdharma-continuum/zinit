@@ -1177,11 +1177,11 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
 
-        { for key in from as pick mv cp make atpull ver is_release; do
+        { for key in from as pick bpick mv cp make atpull ver is_release; do
             [[ -f "${local_dir}/._zplugin/$key" ]] && mdata[$key]=$(<${local_dir}/._zplugin/$key)
           done
         } 2>/dev/null
-        for key in from as pick mv cp make atpull ver; do
+        for key in from as pick bpick mv cp make atpull ver; do
             (( ${+sice[$key]} || ${+mdata[$key]} )) && sice[$key]=${sice[$key]-${(q)mdata[$key]}}
         done
 
@@ -1193,7 +1193,7 @@ ZPLGM[EXTENDED_GLOB]=""
             else
                 [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; } )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
-                for key in from as pick mv cp make atpull ver; do
+                for key in from as pick bpick mv cp make atpull ver; do
                     (( ${+sice[$key]} || ${+ZPLG_ICE[$key]} )) && ZPLG_ICE[$key]="${ZPLG_ICE[$key]-${(Q)sice[$key]}}"
                 done
                 -zplg-setup-plugin-dir "$user" "$plugin" "-u"
@@ -1244,7 +1244,7 @@ ZPLGM[EXTENDED_GLOB]=""
         # Record new ICE modifiers used
         ( builtin cd "$local_dir"
           command mkdir -p ._zplugin
-          for key in proto from as pick mv cp atpull ver; do
+          for key in proto from as pick bpick mv cp atpull ver; do
               print -r -- "${(Q)sice[$key]}" >! "._zplugin/$key"
           done
           # Optional file - create file for make ICE mod
@@ -1270,13 +1270,14 @@ ZPLGM[EXTENDED_GLOB]=""
         for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
             [[ ! -f "${snip:h}/url" ]] && continue
             local -A mdata
-            { for key in mode url as pick mv cp make atpull; do
+            { for key in mode url as pick bpick mv cp make atpull; do
                 [[ -f "${snip:h}/$key" ]] && mdata[$key]="$(<${snip:h}/$key)"
               done
             } 2>/dev/null
             [[ "$mdata[mode]" = "1" ]] && zplugin ice svn
             [[ "$mdata[as]" = "command" ]] && zplugin ice as"command"
             [[ -n "$mdata[pick]" ]] && zplugin ice pick"$mdata[pick]"
+            [[ -n "$mdata[bpick]" ]] && zplugin ice pick"$mdata[bpick]"
             [[ -n "$mdata[mv]" ]] && zplugin ice mv"$mdata[mv]"
             [[ -n "$mdata[cp]" ]] && zplugin ice cp"$mdata[cp]"
             [[ -n "$mdata[atpull]" ]] && zplugin ice atpull"$mdata[atpull]"

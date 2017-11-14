@@ -81,6 +81,9 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     zplugin ice as"command" pick"build/zsd*" make"install PREFIX=/tmp"; zplugin light zdharma/zshelldoc
     ```
 
+  - Fixed problem with binary-release selection (`from"gh-r"`) by adding Ice-mod `bpick`, which
+    should be used for this purpose instead of `pick`, which selects file within plugin tree.
+
 * 06-11-2017
   - The subcommand `clist` now prints `3` completions per line (not `1`). This makes large amount
     of completions to look better. Argument can be given, e.g. `6`, to increase the grouping.
@@ -401,6 +404,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `from`    | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). |
 | `ver`     | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"command"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. |
 | `pick`    | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"command"`), e.g. `zplugin ice pick"*.plugin.zsh"`. Works with plugins and snippets. |
+| `bpick`   | Used to select which release from Github Releases to download, e.g. `zplg ice from"gh-r" as"command" bpick"*Darwin*"; zplg load docker/compose` |
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
 | `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |

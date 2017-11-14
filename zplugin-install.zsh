@@ -49,7 +49,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                       grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
         list=( "${list[@]#href=?}" )
 
-        [[ -n "${ZPLG_ICE[pick]}" ]] && list=( "${(M)list[@]:#(#i)${ZPLG_ICE[pick]}}" )
+        [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)${~ZPLG_ICE[bpick]}}" )
 
         [[ ${#list} -gt 1 ]] && {
             list2=( "${(M)list[@]:#(#i)*${CPUTYPE#(#i)(x86_|i|amd)}*}" )
@@ -62,7 +62,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         }
 
         [[ ${#list} -eq 0 ]] && {
-            print "Didn't find correct Github release-file to download (for \`$remote_url_path'), try adapting pick-ICE"
+            print "Didn't find correct Github release-file to download (for \`$remote_url_path'), try adapting bpick-ICE"
             return 1
         }
 
@@ -132,7 +132,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ "$3" != "-u" ]]; then
         command mkdir -p "$local_path/._zplugin"
         local key
-        for key in proto from as pick mv cp atpull ver; do
+        for key in proto from as pick bpick mv cp atpull ver; do
             print -r -- "${ZPLG_ICE[$key]}" >! "$local_path/._zplugin/$key"
         done
         # Optional file - create file for make ICE mod
@@ -373,7 +373,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         command mkdir -p "$pfx"
         print -r -- "$save_url" >! "$pfx/url"
         print -r -- "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
-        for key in proto from as pick mv cp atpull ver; do
+        for key in proto from as pick bpick mv cp atpull ver; do
             print -r -- "${ZPLG_ICE[$key]}" >! "$pfx/$key"
         done
         # Optional file - create file for make ICE mod
