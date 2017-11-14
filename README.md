@@ -38,12 +38,17 @@ zplugin load zdharma history-search-multi-word
 zplugin load zdharma/zui
 
 # Binary release in archive, from Github-releases page; after automatic unpacking it provides command "fzf"
-zplugin ice from"gh-r" as"command"; zplugin load "junegunn/fzf-bin"
+zplugin ice from"gh-r" as"command"; zplugin load junegunn/fzf-bin
 
-# Vim repository on Github – the source that needs compilation
+# One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
+# Used also `bpick' which selects Linux packages – in this case not needed, Zplugin
+# automatically narrows down the releases by grepping uname etc.
+zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
+
+# Vim repository on Github – a source that needs compilation
 zplugin ice as"command" atclone"./configure" make pick"src/vim"; zplugin light vim/vim
 
-# Zsh script that needs building by make. The make argument (install PREFIX=/opt) isn't
+# A script (Zsh) that needs building by make. The make argument (install PREFIX=/opt) isn't
 # needed because the pick Ice-mod will use uninstalled files from build-directory, but
 # this demonstrates the make-customization feature which has a swiss-knife potential
 zplugin ice as"command" pick"build/zsd*" make"install PREFIX=/opt"; zplugin load zdharma/zshelldoc
