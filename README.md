@@ -8,6 +8,9 @@
 
 # Zplugin
 
+**New**: Zplugin now has pure-Zsh [semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
+wich allows to manipulate plugins, snippets, etc.
+
 Zplugin gives **reports** from plugin load. Plugins are no longer black boxes,
 report will tell what aliases, functions, bindkeys, Zle widgets, zstyles,
 completions, variables, `PATH` and `FPATH` elements a plugin has set up.
