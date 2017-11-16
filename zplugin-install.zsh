@@ -167,7 +167,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(.) ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(.) )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(^/) ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(^/) )
     already_symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
     backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 

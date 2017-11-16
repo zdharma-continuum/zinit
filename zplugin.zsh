@@ -878,13 +878,12 @@ builtin setopt noaliases
         # For compaudit
         command chmod go-w "${ZPLGM[HOME_DIR]}"
     }
-    [[ ! -d "${ZPLGM[PLUGINS_DIR]}" ]] && {
-        command mkdir "${ZPLGM[PLUGINS_DIR]}"
+    [[ ! -d "${ZPLGM[PLUGINS_DIR]}/_local---zplugin" ]] && {
+        command mkdir -p "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
         # For compaudit
         command chmod go-w "${ZPLGM[PLUGINS_DIR]}"
 
         # Prepare mock-like plugin for Zplugin itself
-        command mkdir "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
         command ln -s "${ZPLGM[BIN_DIR]}/_zplugin" "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
     }
     [[ ! -d "${ZPLGM[COMPLETIONS_DIR]}" ]] && {
