@@ -574,7 +574,7 @@ zplugin light NicoSantangelo/Alpharized
 
 # Calling compinit
 
-Compinit can be called after loading of all plugins and before possibly calling `cdreply`.
+Compinit can be called after loading of all plugins and before possibly calling `cdreplay`.
 `Zplugin` takes control over completions, symlinks them to `~/.zplugin/completions` and adds
 this directory to `$FPATH`. You manage those completions via commands starting with `c`:
 `csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`.
