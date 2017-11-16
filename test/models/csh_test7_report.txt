@@ -1,7 +1,0 @@
-Plugin report for _dtrace/_dtrace
----------------------------------
-
-Variables added or redefined:
-reply  [ "" -> array  ]
-REPLY  [ "" -> scalar ]
-
