@@ -40,8 +40,23 @@ internet_mock_git() {
     builtin return 0
 }
 # }}}
+# FUNCTION: verbosity {{{
+tst_verbosity() {
+    # 3 can be used for output
+    exec 3<&1
 
+    if (( VERBOSE )); then
+        : # no redirection
+    elif (( DBG )); then
+        exec 1>/dev/null
+    else
+        exec 1>/dev/null
+        exec 2>&1
+    fi
+}
+# }}}
 builtin cd "$1"
+[[ -n "$2" ]] && typeset -g VERBOSE=1
 [[ -n "$3" ]] && typeset -g DBG=1                          # $(DEBUG)
 [[ -n "$4" ]] && { autoload allopt; allopt > allopt.txt; } # $(OPTDUMP)
 local -a plugins
@@ -52,9 +67,5 @@ done
 
 command rm -f skip
 builtin source ./script
-
-if [[ -n "$2" ]]; then
-    : VERBOSE flag
-fi
 
 return 0
