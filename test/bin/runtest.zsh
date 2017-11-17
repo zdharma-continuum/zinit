@@ -1,6 +1,9 @@
 #!/usr/bin/env zsh
 
-emulate -LR zsh -o warncreateglobal -o typesetsilent -o extendedglob
+local emul="zsh";
+[[ -f ./emulate ]] && emul="$(<./emulate)"
+emul="${5:-$emul}"
+emulate -LR "$emul" -o warncreateglobal -o typesetsilent -o extendedglob
 
 # Will generate new answer
 [[ -d $PWD/$1/answer ]] && rm -rf $PWD/$1/answer
@@ -55,10 +58,12 @@ tst_verbosity() {
     fi
 }
 # }}}
+
 builtin cd "$1"
 [[ -n "$2" ]] && typeset -g VERBOSE=1
 [[ -n "$3" ]] && typeset -g DBG=1                          # $(DEBUG)
 [[ -n "$4" ]] && { autoload allopt; allopt > allopt.txt; } # $(OPTDUMP)
+
 local -a plugins
 [[ -f "plugins" ]] && plugins=( "${(@f)"$(<./plugins)"}" )
 for p in "${plugins[@]}"; do

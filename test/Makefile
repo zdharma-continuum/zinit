@@ -13,7 +13,7 @@ prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-au
 
 test%: _test%/script _test%/urlmap _test%/model data
 	rm -rf _$@/answer
-	./bin/runtest.zsh _$@ "$(VERBOSE)" "$(DEBUG)" "$(OPTDUMP)"
+	./bin/runtest.zsh _$@ "$(VERBOSE)" "$(DEBUG)" "$(OPTDUMP)" "$(EMUL)"
 	if [ "$(NODIFF)" = "" -a ! -f _$@/skip ]; then diff -x .git -x .test_git -x '*.zwc' -x .model_keep -u -r _$@/model _$@/answer; exit $$?; fi
 	@echo
 
