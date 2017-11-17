@@ -3,7 +3,7 @@ current_dir = $(notdir $(shell pwd))
 test: script urlmap model ../data
 	rm -rf answer
 	cd .. && ./bin/runtest.zsh $(current_dir) "$(VERBOSE)" "$(DEBUG)" "$(OPTDUMP)"
-	if [ "$(NODIFF)" = "" -a ! -f skip ]; then cd ..; diff -x .git -x '*.zwc' -x _zplugin -x .model_keep -u -r $(current_dir)/model $(current_dir)/answer; exit $$?; fi
+	if [ "$(NODIFF)" = "" -a ! -f skip ]; then cd ..; diff -x .git -x .test_git -x '*.zwc' -x _zplugin -x .model_keep -u -r $(current_dir)/model $(current_dir)/answer; exit $$?; fi
 	@echo
 
 test%: ../_test%/script ../_test%/urlmap ../_test%/model ../data
