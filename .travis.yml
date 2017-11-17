@@ -35,4 +35,4 @@ notifications:
       - "chat.freenode.net#zplugin"
     on_success: change # default: always
     on_failure: always # default: always
-    skip_join: true
+    skip_join: false
