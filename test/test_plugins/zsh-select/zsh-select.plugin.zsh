@@ -4,5 +4,5 @@
 # method.
 
 0="${(%):-%N}" # this gives immunity to functionargzero being unset
-REPO_DIR="${0%/*}"
+local REPO_DIR="${0%/*}"
 path+=( "$REPO_DIR" )
