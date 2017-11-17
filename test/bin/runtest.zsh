@@ -7,6 +7,7 @@ emulate -LR "$emul" -o warncreateglobal -o typesetsilent -o extendedglob
 
 # Will generate new answer
 [[ -d $PWD/$1/answer ]] && rm -rf $PWD/$1/answer
+[[ -f $PWD/$1/state ]] && rm -f $PWD/$1/state
 
 # Setup paths and load Zplugin
 local REPLY p
@@ -58,6 +59,29 @@ tst_verbosity() {
     fi
 }
 # }}}
+# FUNCTION: store_state {{{
+store_state() {
+    local -A mymap
+    mymap=( "${(kv@)ZPLGM}" )
+    local -a keys
+    local k
+    keys=( ${mymap[(I)*(col-)*]} NEW_AUTOLOAD )
+
+    for k in "${keys[@]}"; do
+        unset "ZPLGM[$k]"
+    done
+
+    keys=( ${(k)mymap[(R)[[:digit:]]##.[[:digit:]]#]} )
+    for k in "${keys[@]}"; do
+        ZPLGM[$k]="__reset-by-test__"
+    done
+
+    ZPLGM=( "${(kv)ZPLGM[@]/${PWD:h}\//}" )
+    ZPLGM=( "${(kv)ZPLGM[@]/${${PWD:h}:h}\//}" )
+
+    print -rl -- "${(kv@)ZPLGM}" >! answer/state
+}
+# }}}
 
 builtin cd "$1"
 [[ -n "$2" ]] && typeset -g VERBOSE=1
@@ -72,5 +96,7 @@ done
 
 command rm -f skip
 builtin source ./script
+
+store_state
 
 return 0
