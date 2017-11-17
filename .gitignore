@@ -74,6 +74,7 @@ zmodules/Src/zdharma/errcount.h
 zmodules/Src/zdharma/curses_keys.h
 
 test/test_plugins/zsh-select/.git
+test/test_plugins/zsh-select/.test_git/COMMIT_EDITMSG
 var
 *.zwc
 answer
