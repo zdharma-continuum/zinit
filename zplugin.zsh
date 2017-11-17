@@ -16,7 +16,7 @@ typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZP
 [[ ! -e "${ZPLGM[BIN_DIR]}"/zplugin.zsh ]] && ZPLGM[BIN_DIR]=""
 
 ZPLGM[ZERO]="$0"
-[[ ! -o "functionargzero" ]] && ZPLGM[ZERO]="${(%):-%N}" # this gives immunity to functionargzero being unset
+[[ ! -o "functionargzero" || "${ZPLGM[ZERO]/\//}" = "${ZPLGM[ZERO]}" ]] && ZPLGM[ZERO]="${(%):-%N}"
 
 [[ -z "${ZPLGM[BIN_DIR]}" ]] && ZPLGM[BIN_DIR]="${ZPLGM[ZERO]:h}"
 
