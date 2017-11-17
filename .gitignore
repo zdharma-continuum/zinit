@@ -73,7 +73,6 @@ zmodules/Src/zdharma/errnames.c
 zmodules/Src/zdharma/errcount.h
 zmodules/Src/zdharma/curses_keys.h
 
-test
 var
 *.txt
 *.zini

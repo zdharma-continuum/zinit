@@ -1,0 +1,2 @@
+zplugin ice depth"1"
+zplugin load psprint/zsh-select
