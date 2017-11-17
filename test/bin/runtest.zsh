@@ -6,7 +6,7 @@ emulate -LR zsh -o warncreateglobal -o typesetsilent -o extendedglob
 [[ -d $PWD/$1/answer ]] && rm -rf $PWD/$1/answer
 
 # Setup paths and load Zplugin
-local REPLY
+local REPLY p
 local -a reply
 local -A ZPLGM
 ZPLGM[BIN_DIR]=$PWD
@@ -44,6 +44,11 @@ internet_mock_git() {
 builtin cd "$1"
 [[ -n "$3" ]] && typeset -g DBG=1                          # $(DEBUG)
 [[ -n "$4" ]] && { autoload allopt; allopt > allopt.txt; } # $(OPTDUMP)
+local -a plugins
+[[ -f "plugins" ]] && plugins=( "${(@f)"$(<./plugins)"}" )
+for p in "${plugins[@]}"; do
+    [[ ! -e ../test_plugins/$p/.git ]] && command ln -svf .test_git ../test_plugins/$p/.git
+done
 
 command rm -f skip
 builtin source ./script

@@ -25,6 +25,7 @@ before_script:
     zsh -c 'print -rl -- "ZSH_VERSION: $ZSH_VERSION" "ZSH_PATCHLEVEL: $ZSH_PATCHLEVEL" "OSTYPE: $OSTYPE" "CPUTYPE: $CPUTYPE" "MACHTYPE: $MACHTYPE"'
 script:
 - make
+- make test
 - make -C zsdoc pdf
 - share/deploy_doc.sh
 

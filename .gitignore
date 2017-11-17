@@ -73,7 +73,13 @@ zmodules/Src/zdharma/errnames.c
 zmodules/Src/zdharma/errcount.h
 zmodules/Src/zdharma/curses_keys.h
 
+test/test_plugins/zsh-select/.git
 var
+*.zwc
+answer
+test/data
+test/zplugin*.zsh
+test/_zplugin
 *.txt
 *.zini
 .ycm_extra_conf.py

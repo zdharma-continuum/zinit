@@ -1,6 +1,6 @@
 all: test
 
-test: test1 test2 test3
+test: test1
 
 prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh
 	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin .
