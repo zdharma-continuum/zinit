@@ -42,17 +42,18 @@ internet_mock_git() {
 # }}}
 # FUNCTION: verbosity {{{
 tst_verbosity() {
+    :
     # 3 can be used for output
-    exec 3<&1
+#    exec 3<&1
 
-    if (( VERBOSE )); then
-        : # no redirection
-    elif (( DBG )); then
-        exec 1>/dev/null
-    else
-        exec 1>/dev/null
-        exec 2>&1
-    fi
+#    if (( VERBOSE )); then
+#        : # no redirection
+#    elif (( DBG )); then
+#        exec 1>/dev/null
+#    else
+#        exec 1>/dev/null
+#        exec 2>&1
+#    fi
 }
 # }}}
 builtin cd "$1"
