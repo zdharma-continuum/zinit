@@ -235,8 +235,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 } # }}}
 # FUNCTION: -zplg-mirror-using-svn {{{
 -zplg-mirror-using-svn() {
-    local url="$1"
-    svn checkout --non-interactive -q "$url"
+    local url="$1" update="$2" directory="$3"
+    if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]];then
+        ( cd "$directory"
+          svn update
+          return $? )
+    else
+        svn checkout --non-interactive -q "$url"
+    fi
     return $?
 }
 # }}}
@@ -332,11 +338,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # URL
         (
             builtin cd "$local_dir"
-            command rm -rf "$filename"
+            # command rm -rf "$filename"
             print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
             if (( ${+ZPLG_ICE[svn]} )); then
-                -zplg-mirror-using-svn "$url" || return 1
+                -zplg-mirror-using-svn "$url" "$update" "$filename" || return 1
             else
                 -zplg-download-file-stdout "$url" >! "$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$filename" || {

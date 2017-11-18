@@ -1265,11 +1265,12 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local st="$1"
     local repo snip pd user plugin
+    local -A mdata
 
     if [[ "$st" != "status" ]]; then
         for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
             [[ ! -f "${snip:h}/url" ]] && continue
-            local -A mdata
+            mdata=()
             { for key in mode url as pick bpick mv cp make atpull; do
                 [[ -f "${snip:h}/$key" ]] && mdata[$key]="$(<${snip:h}/$key)"
               done
