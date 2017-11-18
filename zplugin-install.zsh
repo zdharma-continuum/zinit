@@ -320,8 +320,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local save_url="$1" url="$2" local_dir="$3" filename0="$4" filename="$5" update="$6"
     integer retval=0
-
-    [[ "$filename" = (init.zsh|trunk) ]] && local sname="$filename0/$filename" || local sname="$filename"
+    local sname="$filename0/$filename"
 
     # Change the url to point to raw github content if it isn't like that
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZPLG_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
