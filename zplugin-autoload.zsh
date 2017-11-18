@@ -1946,7 +1946,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
     if (( ${+commands[curl]} == 0 || ${+commands[git]} == 0 )); then
-        print "${ZPLGM[col-error]}curl and git needed${ZPLGM[col-rst]}"
+        print "${ZPLGM[col-error]}curl and git are needed${ZPLGM[col-rst]}"
         return 1
     fi
 
