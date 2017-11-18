@@ -87,7 +87,12 @@ store_state() {
     ZPLGM=( "${(kv)ZPLGM[@]/${PWD:h}\//}" )
     ZPLGM=( "${(kv)ZPLGM[@]/${${PWD:h}:h}\//}" )
 
-    print -rl -- "${(kv@)ZPLGM}" "---" >! answer/state
+    # Sort and print
+    for k in "${(ko@)ZPLGM}"; do
+        print -rl -- "$k" "${ZPLGM[$k]}" >>! answer/state
+    done
+
+    print -r -- "---" >>! answer/state
 
     print -r -- "ERRORS" >! answer/errors
 
