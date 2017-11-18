@@ -16,7 +16,7 @@ PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
 FPATH=/usr/share/zsh/site-functions:/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions
 
 # Setup paths and load Zplugin
-local REPLY p
+local REPLY p k
 local -a reply
 local -A ZPLGM
 ZPLGM[BIN_DIR]=$PWD
@@ -72,7 +72,6 @@ store_state() {
     local -A mymap
     mymap=( "${(kv@)ZPLGM}" )
     local -a keys
-    local k
     keys=( ${mymap[(I)*(col-)*]} NEW_AUTOLOAD )
 
     for k in "${keys[@]}"; do
@@ -144,6 +143,12 @@ done
 
 command rm -f skip
 builtin source ./script
+
+local -a execs
+execs=( ./answer/**/*(*N) )
+for k in "${execs[@]}"; do
+    print -r -- "The file has a +x permission" >! ${k}.is_exec
+done
 
 store_state
 
