@@ -2,6 +2,6 @@ tst_verbosity
 
 zplugin ice as"command" mv"zsh-select -> zs" cp"zs -> zsh-select2" \
             pick"zsh-select2" atclone'chmod -x zsh-select2' from"gl"
-zplugin light psprint/zsh-select
+zplugin load psprint/zsh-select
 
 # vim:ft=zsh
