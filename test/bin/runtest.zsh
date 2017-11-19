@@ -7,13 +7,14 @@ emulate -LR "$emul" -o warncreateglobal -o typesetsilent -o extendedglob
 
 # Will generate new answer
 [[ -d $PWD/$1/answer ]] && rm -rf $PWD/$1/answer
-[[ -f $PWD/$1/state ]] && rm -f $PWD/$1/state
 
 # Discard per-setup (e.g. per-version) PATH and FPATH entries
 builtin autoload +X is-at-least
 builtin autoload +X allopt
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
 FPATH=/usr/share/zsh/site-functions:/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions
+
+local TEST_DIR="$PWD/$1"
 
 # Setup paths and load Zplugin
 local REPLY p k
@@ -33,15 +34,24 @@ internet_mock_git() {
 
     builtin zparseopts -E -D -A opts -recursive -depth: || { echo "Incorrect options given to git mock function"; return 1; }
     
-    local -A urlmap
-    urlmap=( "${(f@)"$(<urlmap)"}" )
-    urlmap=( "${(kv@)urlmap//\%PWD/$PWD}" )
-    local URL="${2//(http|https|ftp|ftps|scp):\/\//file://}"
-    URL="${urlmap[$URL]}"
-    local local_dir="$3"
-
     if [[ "$1" = "clone" ]]; then
+        local -A urlmap
+        urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
+        urlmap=( "${(kv@)urlmap//\%PWD/$TEST_DIR}" )
+        local URL="${2//(http|https|ftp|ftps|scp):\/\//file://}"
+        URL="${urlmap[$URL]}"
+        local local_dir="$3"
+
         command git clone -q ${opts[--recursive]+--recursive} ${=opts[--depth]+--depth ${opts[--depth]}} "$URL" "$local_dir"
+    elif [[ "$1" = "fetch" ]]; then
+        shift
+        command git fetch "$@"
+    elif [[ "$1" = "pull" ]]; then
+        shift
+        command git pull "$@"
+    elif [[ "$1" = "log" ]]; then
+        shift
+        command git log "$@"
     else
         builtin print "Incorrect command ($1) given to the git mock, the mock exits with error"
         builtin return 1
@@ -138,7 +148,7 @@ builtin cd "$1"
 local -a plugins
 [[ -f "plugins" ]] && plugins=( "${(@f)"$(<./plugins)"}" )
 for p in "${plugins[@]}"; do
-    [[ ! -e ../test_plugins/$p/.git ]] && command ln -svf .test_git ../test_plugins/$p/.git
+    [[ ! -e ../test_plugins/$p/.git ]] && command ln -sf .test_git ../test_plugins/$p/.git
 done
 
 command rm -f skip
