@@ -1267,6 +1267,14 @@ builtin setopt noaliases
 # Main function directly exposed to user, obtains subcommand
 # and its arguments, has completion.
 zplugin() {
+    [[ "$1" != "ice" ]] && {
+        local -a ice
+        ice=( "${(kv)ZPLG_ICE[@]}" )
+        ZPLG_ICE=()
+        local -A ZPLG_ICE
+        ZPLG_ICE=( "${ice[@]}" )
+    }
+
     # All functions from now on will not change these values
     # globally. Functions that don't do "source" of plugin
     # will be able to setopt localoptions extendedglob
@@ -1284,7 +1292,7 @@ zplugin() {
 
     case "$1" in
        (load)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { ZPLG_ICE=(); return 0; }; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
@@ -1294,7 +1302,7 @@ zplugin() {
            fi
            ;;
        (light)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { ZPLG_ICE=(); return 0; }; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
@@ -1304,7 +1312,7 @@ zplugin() {
            fi
            ;;
        (snippet)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { ZPLG_ICE=(); return 0; }; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            -zplg-load-snippet "$2" "$3" "$4" "$5" "$6"
            ;;
        (ice)
@@ -1347,6 +1355,7 @@ zplugin() {
                    fi
                    ;;
                (update)
+                   (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
                        -zplg-update-or-status-all "update"
@@ -1509,8 +1518,6 @@ zplugin() {
             esac
             ;;
     esac
-
-    [[ "$1" != "ice" ]] && ZPLG_ICE=()
 } # }}}
 
 #
