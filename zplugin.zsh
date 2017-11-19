@@ -933,7 +933,7 @@ builtin setopt noaliases
 # $4 - "-u" if invoked by Zplugin to only update snippet
 -zplg-load-snippet() {
     typeset -F 3 SECONDS=0
-    local -a opts
+    local -a opts tmp ice
     zparseopts -E -D -a opts f -command u i || { echo "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
 
@@ -943,10 +943,11 @@ builtin setopt noaliases
     local filename filename0 local_dir save_url="$url"
     [[ -z "${opts[(r)-i]}" ]] && -zplg-pack-ice "$url" ""
 
-    # Prepare SICE
-    local -a tmp
+    # - case A: called from `update --all', ZPLG_ICE not packed (above), static ice will win
+    # - case B: called from `snippet', ZPLG_ICE packed, so it will win
+    # - case C: called from `update', ZPLG_ICE packed, so it will win
     tmp=( "${(Q@)${(z@)ZPLG_SICE[$save_url/]}}" )
-    (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && ZPLG_ICE+=( "${tmp[@]}" )
+    (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && { ice=( "${(kv)ZPLG_ICE[@]}" "${tmp[@]}" ); ZPLG_ICE=( "${ice[@]}" ); }
     tmp=( 1 )
 
     # Oh-My-Zsh, Prezto and manual shorthands
