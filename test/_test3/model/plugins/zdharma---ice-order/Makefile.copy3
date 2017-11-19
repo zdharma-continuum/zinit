@@ -1,2 +1,2 @@
 all:
-	cp Makefile2 Makefile
+	cp Makefile.copy2 Makefile.copy3

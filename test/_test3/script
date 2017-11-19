@@ -1,7 +1,8 @@
 tst_verbosity
 
 zplugin ice mv"Makefile2 -> Makefile" cp"Makefile -> Makefile.copy" \
-            atclone'cp Makefile.copy Makefile.copy2' atload'cp Makefile.copy2 Makefile.copy3'
+            atclone'cp -v Makefile.copy Makefile.copy2' make \
+            atload'cp -v Makefile.copy3 Makefile.copy4'
 zplugin light zdharma/ice-order
 
 # vim:ft=zsh
