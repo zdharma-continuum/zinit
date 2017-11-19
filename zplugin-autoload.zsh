@@ -1269,6 +1269,8 @@ ZPLGM[EXTENDED_GLOB]=""
     ZPLG_ICE=()
 
     if [[ "$st" != "status" ]]; then
+        print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
+
         for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
             [[ ! -f "${snip:h}/url" ]] && continue
             mdata=()
