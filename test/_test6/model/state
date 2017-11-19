@@ -1,0 +1,50 @@
+BIN_DIR
+test
+COMPLETIONS_DIR
+_test6/answer/completions
+CUR_USPL
+
+CUR_USPL2
+
+CUR_USR
+
+DTRACE
+0
+EXTENDED_GLOB
+
+HOME_DIR
+_test6/answer
+HOME_READY
+1
+PLUGINS_DIR
+_test6/answer/plugins
+SHADOWING
+inactive
+SNIPPETS_DIR
+_test6/answer/snippets
+TIME_1_psprint---zsh-select
+__reset-by-test__
+TIME_INDEX
+1
+ZERO
+zplugin.zsh
+---
+ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select'
+ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '2'
+ZPLG_SNIPPETS: 
+ZPLG_SICE: 'psprint/zsh-select' 'atpull command\ chmod\ -x\ zsh-select '
+ZPLG_FUNCTIONS: 'psprint/zsh-select' ''
+ZPLG_OPTIONS: 'psprint/zsh-select' ''
+ZPLG_PATH: 'psprint/zsh-select' '_test6/answer/plugins/psprint---zsh-select '
+ZPLG_FPATH: 'psprint/zsh-select' ''
+ZPLG_PARAMETERS_PRE: 'psprint/zsh-select' 'REPO_DIR \"\"'
+ZPLG_PARAMETERS_POST: 'psprint/zsh-select' 'REPO_DIR scalar-local'
+ZPLG_ZSTYLES: 'psprint/zsh-select' ''
+ZPLG_BINDKEYS: 'psprint/zsh-select' ''
+ZPLG_ALIASES: 'psprint/zsh-select' ''
+ZPLG_WIDGETS_SAVED: 'psprint/zsh-select' ''
+ZPLG_WIDGETS_DELETE: 'psprint/zsh-select' ''
+ZPLG_COMPDEF_REPLAY: 
+ZPLG_CUR_PLUGIN: ''
+---
+Parameter module: 1

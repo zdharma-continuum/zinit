@@ -1,0 +1,5 @@
+This test verifies:
+
+1. Static ice vs. saved ice competition
+
+2. cp ice correctly executing on pull
