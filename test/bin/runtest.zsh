@@ -144,6 +144,10 @@ done
 command rm -f skip
 builtin source ./script
 
+for p in "${plugins[@]}"; do
+    command rm -f ../test_plugins/$p/.git
+done
+
 local -a execs
 execs=( ./answer/**/*(*N) )
 for k in "${execs[@]}"; do
