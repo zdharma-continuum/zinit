@@ -1265,7 +1265,8 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local st="$1"
     local repo snip pd user plugin
-    local -A mdata
+    local -A mdata ZPLG_ICE
+    ZPLG_ICE=()
 
     if [[ "$st" != "status" ]]; then
         for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
@@ -1275,19 +1276,19 @@ ZPLGM[EXTENDED_GLOB]=""
                 [[ -f "${snip:h}/$key" ]] && mdata[$key]="$(<${snip:h}/$key)"
               done
             } 2>/dev/null
-            [[ "$mdata[mode]" = "1" ]] && zplugin ice svn
-            [[ "$mdata[as]" = "command" ]] && zplugin ice as"command"
-            [[ -n "$mdata[pick]" ]] && zplugin ice pick"$mdata[pick]"
-            [[ -n "$mdata[bpick]" ]] && zplugin ice pick"$mdata[bpick]"
-            [[ -n "$mdata[mv]" ]] && zplugin ice mv"$mdata[mv]"
-            [[ -n "$mdata[cp]" ]] && zplugin ice cp"$mdata[cp]"
-            [[ -n "$mdata[atpull]" ]] && zplugin ice atpull"$mdata[atpull]"
-            (( ${+mdata[make]} )) && zplugin ice make"$mdata[make]"
+            [[ "$mdata[mode]" = "1" ]] && ZPLG_ICE[svn]=""
+            (( ${+mdata[make]} )) && ZPLG_ICE[make]="$mdata[make]"
+            for key in as pick bpick mv cp atpull; do
+                [[ -n "$mdata[$key]" ]] && ZPLG_ICE[$key]="$mdata[$key]"
+            done
+
             -zplg-load-snippet "$mdata[url]" "" "-f" "-u"
             ZPLG_ICE=()
         done
         print
     fi
+
+    ZPLG_ICE=()
 
     if [[ "$st" = "status" ]]; then
         print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} status done also for unloaded plugins"
