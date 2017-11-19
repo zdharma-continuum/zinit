@@ -152,7 +152,7 @@ for p in "${plugins[@]}"; do
 done
 
 command rm -f skip
-builtin source ./script
+builtin source ./script || echo "Test's script has failed" > answer/fail.msg
 
 for p in "${plugins[@]}"; do
     command rm -f ../test_plugins/$p/.git
