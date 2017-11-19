@@ -1282,7 +1282,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 [[ -n "$mdata[$key]" ]] && ZPLG_ICE[$key]="$mdata[$key]"
             done
 
-            -zplg-load-snippet "$mdata[url]" "" "-f" "-u"
+            -zplg-load-snippet "$mdata[url]" "-i" "-f" "-u"
             ZPLG_ICE=()
         done
         print

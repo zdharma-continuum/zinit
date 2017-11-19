@@ -934,14 +934,14 @@ builtin setopt noaliases
 -zplg-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts
-    zparseopts -E -D -a opts f -command u || { echo "Incorrect options (accepted ones: -f, --command)"; return 1; }
+    zparseopts -E -D -a opts f -command u i || { echo "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
 
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
 
     local filename filename0 local_dir save_url="$url"
-    -zplg-pack-ice "$url" ""
+    [[ -z "${opts[(r)-i]}" ]] && -zplg-pack-ice "$url" ""
 
     # Prepare SICE
     local -a tmp
@@ -1255,6 +1255,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[bpick]} )) && ZPLG_SICE[$1/$2]+="bpick ${(q)ZPLG_ICE[bpick]} "
     (( ${+ZPLG_ICE[as]} )) && ZPLG_SICE[$1/$2]+="as ${(q)ZPLG_ICE[as]} "
     (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+="make ${(q)ZPLG_ICE[make]} "
+    return 0
 } # }}}
 
 #
