@@ -8,8 +8,18 @@
 
 # Zplugin
 
-**New**: Zplugin now has pure-Zsh [semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
+**NEW**: Zplugin now has pure-Zsh [semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
 wich allows to manipulate plugins, snippets, etc.
+
+Zplugin is an elastic and fast plugin manager that will allow you to install
+everything from Github and other sites. For example, to install
+[trapd00r/LS_COLORS](https://github.com/trapd00r/LS_COLORS), which isn't a Zsh
+plugin:
+
+```SystemVerilog
+zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" pick"c.zsh"
+zplugin light trapd00r/LS_COLORS
+```
 
 Zplugin gives **reports** from plugin load. Plugins are no longer black boxes,
 report will tell what aliases, functions, bindkeys, Zle widgets, zstyles,
@@ -417,7 +427,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. |
-| `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf`. It uses `->` as separator for old and new file names. Works also with snippets. |
+| `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. |
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
@@ -495,7 +505,7 @@ load {plugin-name}       - load plugin, can also receive absolute local path
 light {plugin-name}      - light plugin load, without reporting (significantly faster)
 unload {plugin-name}     - unload plugin (needs reporting)
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
-ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
+ice <ice specification>  - add ICE to next command, argument is e.g. from"gitlab"
 update {plugin-name}     - Git update plugin (or all plugins and snippets if --all passed)
 status {plugin-name}     - Git status for plugin (or all plugins if --all passed)
 report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
@@ -530,7 +540,7 @@ compiled                 - list plugins that are compiled
 To use **themes** created for `Oh-My-Zsh` you might want to first source the `git` library there:
 
 ```SystemVerilog
-zplugin snippet 'http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh'
+zplugin snippet http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh
 # Or using OMZ:: shorthand:
 zplugin snippet OMZ::lib/git.zsh
 ```
@@ -630,7 +640,7 @@ The special user name `_local` is optional also for other commands, e.g. for
 `load` (i.e. `zplugin load myplugin` is sufficient, there's no need for
 `zplugin load _local/myplugin`).
 
-If user name will not be `_local`, then Zplugin will create repository also on Github.
+If user name will not be `_local`, then Zplugin will create repository also on Github and setup correct repository origin.
 
 # Customizing Paths
 
