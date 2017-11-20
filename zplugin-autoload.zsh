@@ -276,6 +276,11 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
     return 0
 } # }}}
+# FUNCTION: -zplg-at-eval {{{
+-zplg-at-eval() {
+    [[ "$1" = "%atclone" ]] && { eval "$2"; ((1)); } || eval "$1"
+}
+# }}}
 
 #
 # Format functions
@@ -1177,11 +1182,11 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
 
-        { for key in from as pick bpick mv cp make atpull ver is_release; do
+        { for key in from as pick bpick mv cp make atclone atpull ver is_release; do
             [[ -f "${local_dir}/._zplugin/$key" ]] && mdata[$key]=$(<${local_dir}/._zplugin/$key)
           done
         } 2>/dev/null
-        for key in from as pick bpick mv cp make atpull ver; do
+        for key in from as pick bpick mv cp make atclone atpull ver; do
             (( ${+sice[$key]} || ${+mdata[$key]} )) && sice[$key]=${sice[$key]-${(q)mdata[$key]}}
         done
 
@@ -1191,9 +1196,9 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${mdata[is_release]/\/$REPLY\//}" != "${mdata[is_release]}" ]]; then
                 echo "Binary release already up to date (version: $REPLY)"
             else
-                [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; )
+                [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir"; -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
-                for key in from as pick bpick mv cp make atpull ver; do
+                for key in from as pick bpick mv cp make atclone atpull ver; do
                     (( ${+sice[$key]} || ${+ZPLG_ICE[$key]} )) && ZPLG_ICE[$key]="${ZPLG_ICE[$key]-${(Q)sice[$key]}}"
                 done
                 -zplg-setup-plugin-dir "$user" "$plugin" "-u"
@@ -1209,7 +1214,7 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
-                [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; } )
+                  [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir"; -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
               }
 
               command git pull --no-stat; )
@@ -1237,14 +1242,14 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
-            [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} != *"!"* ]] && ( builtin cd "$local_dir"; eval "${(Q)sice[atpull]}"; )
+            [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} != *"!"* ]] && ( builtin cd "$local_dir"; -zplg-at-eval "${(Q)sice[atpull]}" ${(Q)sice[atclone]}; )
             (( ${+sice[make]} )) && command make -C "$local_dir" ${(@s; ;)${(Q)sice[make]}}
         }
 
         # Record new ICE modifiers used
         ( builtin cd "$local_dir"
           command mkdir -p ._zplugin
-          for key in proto from as pick bpick mv cp atpull ver; do
+          for key in proto from as pick bpick mv cp atclone atpull ver; do
               print -r -- "${(Q)sice[$key]}" >! "._zplugin/$key"
           done
           # Optional file - create file for make ICE mod
@@ -1274,13 +1279,13 @@ ZPLGM[EXTENDED_GLOB]=""
         for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
             [[ ! -f "${snip:h}/url" ]] && continue
             mdata=()
-            { for key in mode url as pick bpick mv cp make atpull; do
+            { for key in mode url as pick bpick mv cp make atclone atpull; do
                 [[ -f "${snip:h}/$key" ]] && mdata[$key]="$(<${snip:h}/$key)"
               done
             } 2>/dev/null
             [[ "$mdata[mode]" = "1" ]] && ZPLG_ICE[svn]=""
             (( ${+mdata[make]} )) && ZPLG_ICE[make]="$mdata[make]"
-            for key in as pick bpick mv cp atpull; do
+            for key in as pick bpick mv cp atclone atpull; do
                 [[ -n "$mdata[$key]" ]] && ZPLG_ICE[$key]="$mdata[$key]"
             done
 

@@ -132,7 +132,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ "$3" != "-u" ]]; then
         command mkdir -p "$local_path/._zplugin"
         local key
-        for key in proto from as pick bpick mv cp atpull ver; do
+        for key in proto from as pick bpick mv cp atclone atpull ver; do
             print -r -- "${ZPLG_ICE[$key]}" >! "$local_path/._zplugin/$key"
         done
         # Optional file - create file for make ICE mod
@@ -371,14 +371,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 if [[ "$update" = "-u" ]];then
                     # Test if update available
                     -zplg-mirror-using-svn "$url" "-t" "$filename" || return 2
-                    [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${ZPLG_ICE[atpull]#!}"; )
+                    [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                     # Do the update
                     -zplg-mirror-using-svn "$url" "-u" "$filename" || return 1
                 else
                     -zplg-mirror-using-svn "$url" "" "$filename" || return 1
                 fi
             else
-                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${ZPLG_ICE[atpull]#!}"; )
+                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                 -zplg-download-file-stdout "$url" >! "$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$filename" || {
                         command rm -f "$filename"
@@ -401,7 +401,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             }
         fi
     else
-        [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${ZPLG_ICE[atpull]#!}"; )
+        [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
         # File
         [[ -f "$local_dir/$filename" ]] && command rm -f "$local_dir/$filename"
         print "Copying $filename..."
@@ -416,7 +416,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         command mkdir -p "$pfx"
         print -r -- "$save_url" >! "$pfx/url"
         print -r -- "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
-        for key in proto from as pick bpick mv cp atpull ver; do
+        for key in proto from as pick bpick mv cp atclone atpull ver; do
             print -r -- "${ZPLG_ICE[$key]}" >! "$pfx/$key"
         done
         # Optional file - create file for make ICE mod
@@ -442,7 +442,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     if [[ "$update" = "-u" ]];then
-        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atpull]}"; )
+        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
     else
         ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atclone]}"; } )
     fi
@@ -533,5 +533,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     REPLY="${execs[1]}"
     return 0
+}
+# }}}
+# FUNCTION: -zplg-at-eval {{{
+-zplg-at-eval() {
+    [[ "$1" = "%atclone" ]] && { eval "$2"; ((1)); } || eval "$1"
 }
 # }}}
