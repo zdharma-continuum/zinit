@@ -258,7 +258,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
             out1=( "${(M)out1[@]:#Revision:*}" )
             out2=( "${(M)out2[@]:#Revision:*}" )
-            print "Comparing ${out1[1]##[^0-9]##} and ${out2[1]##[^0-9]##}"
             [[ "${out1[1]##[^0-9]##}" != "${out2[1]##[^0-9]##}" ]] && return 0
             return 1
         )
