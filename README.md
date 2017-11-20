@@ -343,7 +343,7 @@ Commands can also be added to `$PATH` using **snippets**. For example:
 % zplugin snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 ```
 
-Support for `atpull` in snippets is coming soon.
+Snippets also support `atpull` Ice-mod, so it's possible to do e.g. `atpull'!svn revert'`.
 
 ### Completion Management
 
@@ -431,7 +431,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
-| `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull`. Otherwise it is ran after them. |
+| `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. To be used with plugins and snippets. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
 | `make`    | Run `make` command after cloning and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. |
 

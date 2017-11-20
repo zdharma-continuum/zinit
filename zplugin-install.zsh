@@ -234,8 +234,33 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     return 0
 } # }}}
 # FUNCTION: -zplg-mirror-using-svn {{{
+# Used to clone subdirectories from Github. If in update mode
+# (see $2), then invokes `svn update', in normal mode invokes
+# `svn checkout --non-interactive -q <URL>'. In test mode only
+# compares remote and local revision and outputs true if update
+# is needed.
+#
+# $1 - URL
+# $2 - mode, "" - normal, "-u" - update, "-t" - test
+# $3 - subdirectory (not path) with working copy, needed for -t and -u
 -zplg-mirror-using-svn() {
+    setopt localoptions extendedglob
     local url="$1" update="$2" directory="$3"
+    if [[ "$update" = "-t" ]]; then
+        (
+            cd "$directory"
+            local -a out1 out2
+            out1=( "${(f@)"$(svn info -r HEAD)"}" )
+            out2=( "${(f@)"$(svn info)"}" )
+
+            out1=( "${(M)out1[@]:#Revision:*}" )
+            out2=( "${(M)out2[@]:#Revision:*}" )
+            print "Comparing ${out1[1]##[^0-9]##} and ${out2[1]##[^0-9]##}"
+            [[ "${out1[1]##[^0-9]##}" != "${out2[1]##[^0-9]##}" ]] && return 0
+            return 1
+        )
+        return $?
+    fi
     (( ${+commands[svn]} )) || print -r -- "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]];then
         ( cd "$directory"
@@ -342,8 +367,17 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
             if (( ${+ZPLG_ICE[svn]} )); then
-                -zplg-mirror-using-svn "$url" "$update" "$filename" || return 1
+                if [[ "$update" = "-u" ]];then
+                    # Test if update available
+                    -zplg-mirror-using-svn "$url" "-t" "$filename" || return 2
+                    [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${(Q)ZPLG_ICE[atpull]#!}"; )
+                    # Do the update
+                    -zplg-mirror-using-svn "$url" "-u" "$filename" || return 1
+                else
+                    -zplg-mirror-using-svn "$url" "" "$filename" || return 1
+                fi
             else
+                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${(Q)ZPLG_ICE[atpull]#!}"; )
                 -zplg-download-file-stdout "$url" >! "$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$filename" || {
                         command rm -f "$filename"
@@ -353,7 +387,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 }
             fi
             return 0
-        ) || retval=1
+        ) || retval=$?
 
         if (( ${+ZPLG_ICE[svn]} == 0 )); then
             [[ -e "$local_dir/$filename" ]] && {
@@ -369,10 +403,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # File
         [[ -f "$local_dir/$filename" ]] && command rm -f "$local_dir/$filename"
         print "Copying $filename..."
-        command cp -v "$url" "$local_dir/$filename"
+        command cp -v "$url" "$local_dir/$filename" || { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
     fi
 
-    (( retval )) && { command rmdir "$local_dir" 2>/dev/null; return $retval; }
+    (( retval == 1 )) && { command rmdir "$local_dir" 2>/dev/null; return $retval; }
+    (( retval == 2 )) && { return 0; }
 
     if [[ "$local_dir${ZPLG_ICE[svn]+/$filename}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
         local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin" key
@@ -404,7 +439,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         )
     fi
 
-    ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atclone]}"; } )
+    if [[ "$update" = "-u" ]];then
+        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${(Q)ZPLG_ICE[atpull]}"; )
+    else
+        ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atclone]}"; } )
+    fi
     (( ${+ZPLG_ICE[make]} )) && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
 
     return $retval
