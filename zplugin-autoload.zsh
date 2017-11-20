@@ -1237,7 +1237,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
-            [[ ${${sice[atpull]}[1,2]} != *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]}"; } )
+            [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} != *"!"* ]] && ( builtin cd "$local_dir"; eval "${(Q)sice[atpull]}"; )
             (( ${+sice[make]} )) && command make -C "$local_dir" ${(@s; ;)${(Q)sice[make]}}
         }
 
