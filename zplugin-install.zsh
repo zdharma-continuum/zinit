@@ -246,6 +246,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 -zplg-mirror-using-svn() {
     setopt localoptions extendedglob
     local url="$1" update="$2" directory="$3"
+
+    (( ${+commands[svn]} )) || print -r -- "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
+
     if [[ "$update" = "-t" ]]; then
         (
             cd "$directory"
@@ -261,7 +264,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         )
         return $?
     fi
-    (( ${+commands[svn]} )) || print -r -- "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]];then
         ( cd "$directory"
           svn update
