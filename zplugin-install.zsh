@@ -371,14 +371,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 if [[ "$update" = "-u" ]];then
                     # Test if update available
                     -zplg-mirror-using-svn "$url" "-t" "$filename" || return 2
-                    [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${(Q)ZPLG_ICE[atpull]#!}"; )
+                    [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${ZPLG_ICE[atpull]#!}"; )
                     # Do the update
                     -zplg-mirror-using-svn "$url" "-u" "$filename" || return 1
                 else
                     -zplg-mirror-using-svn "$url" "" "$filename" || return 1
                 fi
             else
-                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${(Q)ZPLG_ICE[atpull]#!}"; )
+                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${ZPLG_ICE[atpull]#!}"; )
                 -zplg-download-file-stdout "$url" >! "$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$filename" || {
                         command rm -f "$filename"
@@ -401,7 +401,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             }
         fi
     else
-        [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${(Q)ZPLG_ICE[atpull]#!}"; )
+        [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${ZPLG_ICE[atpull]#!}"; )
         # File
         [[ -f "$local_dir/$filename" ]] && command rm -f "$local_dir/$filename"
         print "Copying $filename..."
@@ -442,7 +442,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     if [[ "$update" = "-u" ]];then
-        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${(Q)ZPLG_ICE[atpull]}"; )
+        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atpull]}"; )
     else
         ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}"; eval "${ZPLG_ICE[atclone]}"; } )
     fi
