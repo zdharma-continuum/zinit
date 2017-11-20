@@ -400,6 +400,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             }
         fi
     else
+        [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( eval "${(Q)ZPLG_ICE[atpull]#!}"; )
         # File
         [[ -f "$local_dir/$filename" ]] && command rm -f "$local_dir/$filename"
         print "Copying $filename..."
