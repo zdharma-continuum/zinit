@@ -1191,7 +1191,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${mdata[is_release]/\/$REPLY\//}" != "${mdata[is_release]}" ]]; then
                 echo "Binary release already up to date (version: $REPLY)"
             else
-                [[ ${${sice[atpull]}[1,2]} = *"!"* ]] && ( (( ${+sice[atpull]} )) && { builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; } )
+                [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir"; eval "${(Q)sice[atpull]#\\!}"; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                 for key in from as pick bpick mv cp make atpull ver; do
                     (( ${+sice[$key]} || ${+ZPLG_ICE[$key]} )) && ZPLG_ICE[$key]="${ZPLG_ICE[$key]-${(Q)sice[$key]}}"
