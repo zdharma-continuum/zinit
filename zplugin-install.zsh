@@ -236,7 +236,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # FUNCTION: -zplg-mirror-using-svn {{{
 -zplg-mirror-using-svn() {
     local url="$1" update="$2" directory="$3"
-    (( ${+commands[svnc]} )) || print -r -- "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
+    (( ${+commands[svn]} )) || print -r -- "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]];then
         ( cd "$directory"
           svn update
