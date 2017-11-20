@@ -2,3 +2,5 @@ tst_verbosity
 
 zplugin ice depth"1"
 zplugin load psprint/zsh-select
+
+# vim:ft=zsh
