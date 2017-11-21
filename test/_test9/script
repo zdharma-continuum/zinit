@@ -1,0 +1,22 @@
+tst_verbosity
+
+zplugin ice depth"1" atclone'builtin echo >! test_file' atpull'%atclone'
+zplugin load psprint/zsh-select
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+perl -pi -e 's/test_plugins\/zsh-select/test_plugins\/zsh-select-more/g' answer/plugins/psprint---zsh-select/.git/config
+
+( zplugin cd psprint/zsh-select
+  set -e
+  print 'builtin echo >! Test_has_failed' >! ._zplugin/atpull
+  print -rl -- test_file* >! file.lst
+  command rm -f test_file ) || return 1
+
+zplugin update psprint/zsh-select
+
+( zplugin cd psprint/zsh-select
+  git log --oneline >! git_log )
+
+# vim:ft=zsh
