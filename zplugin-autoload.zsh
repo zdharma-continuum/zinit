@@ -697,7 +697,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-self-update() {
-    ( builtin cd "${ZPLGM[BIN_DIR]}" ; command git pull )
+    ( builtin cd "${ZPLGM[BIN_DIR]}" && command git pull )
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-install.zsh
@@ -1196,7 +1196,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${mdata[is_release]/\/$REPLY\//}" != "${mdata[is_release]}" ]]; then
                 echo "Binary release already up to date (version: $REPLY)"
             else
-                [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir"; -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
+                [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                 for key in from as pick bpick mv cp make atclone atpull ver; do
                     (( ${+sice[$key]} || ${+ZPLG_ICE[$key]} )) && ZPLG_ICE[$key]="${ZPLG_ICE[$key]-${(Q)sice[$key]}}"
@@ -1204,7 +1204,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 -zplg-setup-plugin-dir "$user" "$plugin" "-u"
             fi
         else
-            ( builtin cd "$local_dir"
+            ( builtin cd "$local_dir" || return 1
               command rm -f .zplugin_lstupd
               command git fetch --quiet && \
                 command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
@@ -1214,7 +1214,7 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
-                  [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir"; -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
+                  [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
               }
 
               command git pull --no-stat; )
@@ -1227,7 +1227,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -z "${mdata[is_release]}" && -n "${sice[mv]}" ]]; then
                 local from="${${(Q)sice[mv]}%%[[:space:]]#->*}" to="${${(Q)sice[mv]}##*->[[:space:]]#}"
                 local -a afr
-                ( builtin cd "$local_dir"
+                ( builtin cd "$local_dir" || return 1
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
@@ -1236,18 +1236,18 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -z "${mdata[is_release]}" && -n "${sice[cp]}" ]]; then
                 local from="${${(Q)sice[cp]}%%[[:space:]]#->*}" to="${${(Q)sice[cp]}##*->[[:space:]]#}"
                 local -a afr
-                ( builtin cd "$local_dir"
+                ( builtin cd "$local_dir" || return 1
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
 
-            [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} != *"!"* ]] && ( builtin cd "$local_dir"; -zplg-at-eval "${(Q)sice[atpull]}" ${(Q)sice[atclone]}; )
+            [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} != *"!"* ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${(Q)sice[atpull]}" ${(Q)sice[atclone]}; )
             (( ${+sice[make]} )) && command make -C "$local_dir" ${(@s; ;)${(Q)sice[make]}}
         }
 
         # Record new ICE modifiers used
-        ( builtin cd "$local_dir"
+        ( builtin cd "$local_dir" || return 1
           command mkdir -p ._zplugin
           for key in proto from as pick bpick mv cp atclone atpull ver; do
               print -r -- "${(Q)sice[$key]}" >! "._zplugin/$key"
@@ -1888,7 +1888,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || echo "No such plugin"
     fi
 } # }}}
 # FUNCTION: -zplg-changes {{{
@@ -1905,7 +1905,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     (
-        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && \
         command git log -p --graph --decorate --date=relative -C -M
     )
 } # }}}
