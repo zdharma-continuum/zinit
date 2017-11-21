@@ -9,6 +9,7 @@ print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 #perl -pi -e 's/test_plugins\/zsh-select/test_plugins\/zsh-select-more/g' answer/plugins/psprint---zsh-select/.git/config
 
 ( zplugin cd psprint/zsh-select
+  set -e
   print 'touch Test_has_failed' >! ._zplugin/atpull
   print -rl -- LICENSE* > license.lst
   command rm -f LICENSE.bkp ) || return 1

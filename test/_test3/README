@@ -1,0 +1,10 @@
+This test verifies (acting on plugin):
+
+1. Correct order of execution of ices:
+   - mv
+   - cp
+   - atclone
+   - make
+   - atload
+
+2. Correct execution of make ice
