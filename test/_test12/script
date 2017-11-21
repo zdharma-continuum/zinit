@@ -1,0 +1,16 @@
+tst_verbosity
+
+zplugin ice svn as"command" mv"n-help -> nh" cp"nh -> n-help2" \
+            pick"n-help2" atclone"chmod -x znt-tmux.zsh"
+zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+local matcher_val
+zstyle -s ':completion::complete:n-kill::bits' matcher matcher_val
+
+# Should be empty (as"command")
+echo "$matcher_val" >! answer/matcher
+
+# vim:ft=zsh
