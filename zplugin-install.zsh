@@ -426,7 +426,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
         local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
         local -a afr
-        ( builtin cd "$local_dir" || return 1
+        ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" || return 1
           afr=( ${~from}(N) )
           [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
@@ -435,7 +435,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ -n "${ZPLG_ICE[cp]}" ]]; then
         local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
         local -a afr
-        ( builtin cd "$local_dir" || return 1
+        ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" || return 1
           afr=( ${~from}(N) )
           [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
