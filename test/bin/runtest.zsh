@@ -38,7 +38,7 @@ internet_mock_git() {
         local -A urlmap
         urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
         urlmap=( "${(kv@)urlmap//\%PWD/$TEST_DIR}" )
-        local URL="${2//(http|https|ftp|ftps|scp):\/\//file://}"
+        local URL="$2"
         URL="${urlmap[$URL]}"
         local local_dir="$3"
 
