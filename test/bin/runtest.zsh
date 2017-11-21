@@ -33,7 +33,7 @@ internet_mock_git() {
     args=( "$@" )
 
     builtin zparseopts -E -D -A opts -recursive -depth: || { echo "Incorrect options given to git mock function"; return 1; }
-    
+
     if [[ "$1" = "clone" ]]; then
         local -A urlmap
         urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
@@ -54,6 +54,36 @@ internet_mock_git() {
         command git log "$@"
     else
         builtin print "Incorrect command ($1) given to the git mock, the mock exits with error"
+        builtin return 1
+    fi
+
+    builtin return 0
+}
+# }}}
+# FUNCTION: internet_mock_svn {{{
+internet_mock_svn() {
+    setopt localoptions extendedglob warncreateglobal typesetsilent
+    local -A opts
+    local -a args
+    args=( "$@" )
+
+    builtin zparseopts -E -D -A opts -non-interactive q || { echo "Incorrect options given to SVN mock function"; return 1; }
+
+    if [[ "$1" = "checkout" ]]; then
+        local -A urlmap
+        urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
+        urlmap=( "${(kv@)urlmap//\%PWD/$TEST_DIR}" )
+        local URL="$2"
+        local local_dir="${URL:t}"
+        URL="${urlmap[$URL]}"
+        URL="${URL//\/[^\/]##\/../}"
+
+        command svn checkout ${opts[--non-interactive]+--non-interactive} ${opts[-q]+-q} "$URL" "$local_dir"
+    elif [[ "$1" = "update" ]]; then
+        shift
+        command svn update "$@"
+    else
+        builtin print "Incorrect command ($1) given to the SVN mock, the mock exits with error"
         builtin return 1
     fi
 
