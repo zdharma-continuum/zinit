@@ -3,8 +3,8 @@ tst_verbosity
 zplugin ice depth"1" atpull'!command echo local\ change >! version4' cp'version4 -> version4.cpy'
 zplugin load psprint/zsh-select
 
-print -rl "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
 perl -pi -e 's/test_plugins\/zsh-select/test_plugins\/zsh-select-more/g' answer/plugins/psprint---zsh-select/.git/config
 
