@@ -1,0 +1,5 @@
+This test verifies (acting on plugin):
+
+1. atpull'!...' executing before `git pull' and cp ice
+
+2. Static ice vs. saved ice competition

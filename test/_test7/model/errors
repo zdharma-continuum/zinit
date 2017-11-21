@@ -1,0 +1,5 @@
+ERRORS
+Failed: -zplg-diff-functions-compute for _local/zplugin
+Failed: -zplg-diff-options-compute for _local/zplugin
+Failed: -zplg-diff-env-compute _local/zplugin
+Failed: -zplg-diff-parameter-compute _local/zplugin
