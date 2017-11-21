@@ -265,10 +265,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]];then
         ( cd "$directory"
-          svn update
+          command svn update
           return $? )
     else
-        svn checkout --non-interactive -q "$url"
+        command svn checkout --non-interactive -q "$url"
     fi
     return $?
 }
