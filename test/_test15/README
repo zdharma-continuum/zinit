@@ -1,0 +1,7 @@
+This test verifies (acting on snippet):
+
+1. atpull being run at update (TODO: verify if not at clone)
+
+2. That update is using saved ice – not distinguished if from files or ZPLG_SICE
+
+3. ._zplugin/atpull file having correct contents
