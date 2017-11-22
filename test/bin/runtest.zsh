@@ -78,10 +78,17 @@ internet_mock_svn() {
         URL="${urlmap[$URL]}"
         URL="${URL//\/[^\/]##\/../}"
 
+        [[ -z "$URL" ]] && {
+            print -u2 -r -- "### internet_mock_svn: urlmap didn't contain \`$2'"
+            return 1
+        }
+
         command svn checkout ${opts[--non-interactive]+--non-interactive} ${opts[-q]+-q} "$URL" "$local_dir"
+        return $?
     elif [[ "$1" = "update" ]]; then
         shift
         command svn update "$@"
+        return $?
     else
         builtin print "Incorrect command ($1) given to the SVN mock, the mock exits with error"
         builtin return 1
