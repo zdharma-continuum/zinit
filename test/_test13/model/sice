@@ -1,0 +1,2 @@
+atclone cp\ -v\ Makefile.copy\ Makefile.copy2 svn '' mv Makefile2\ -\>\ Makefile cp Makefile\ -\>\ Makefile.copy make '' 
+https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order/
