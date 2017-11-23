@@ -89,6 +89,11 @@
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
     [[ "$user" = "%" ]] && {
+        plugin="${plugin/${ZPLGM[SNIPPETS_DIR]}/SNIPPETS}"
+        plugin="${plugin/https--github.com--robbyrussell--oh-my-zsh--trunk--/OMZ::}"
+        plugin="${plugin/https--github.com--robbyrussell--oh-my-zsh--trunk/OMZ}"
+        plugin="${plugin/https--github.com--sorin-ionescu--prezto--trunk--/PZT::}"
+        plugin="${plugin/https--github.com--sorin-ionescu--prezto--trunk/PZT}"
         plugin="${plugin/$HOME/HOME}"
         REPLY="${ZPLGM[col-uname]}%${ZPLGM[col-rst]}${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
     } || REPLY="${ZPLGM[col-uname]}${user}${ZPLGM[col-rst]}/${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
