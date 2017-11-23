@@ -456,6 +456,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
     (( ${+ZPLG_ICE[make]} )) && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
 
+    -zplg-install-completions "%" "$local_dir${ZPLG_ICE[svn]+/$filename}"
     return $retval
 }
 # }}}
