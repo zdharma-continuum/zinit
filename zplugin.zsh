@@ -763,7 +763,7 @@ builtin setopt noaliases
 
     # Is it absolute path in zplugin format?
     if [[ "${1[1]}" = "%" ]]; then
-        reply=( "%" "${${${1/\%HOME/$HOME}/\%\//}#%}" )
+        reply=( "%" "${${${1/\%HOME/$HOME}/\%SNIPPETS/${ZPLGM[SNIPPETS_DIR]}}#%}" )
         [[ "${${reply[2]}[1]}" != "/" ]] && reply[2]="/${reply[2]}"
         return 0
     fi
