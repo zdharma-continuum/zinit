@@ -413,6 +413,16 @@ That's all on completions. There's one more command, `zplugin csearch`, that wil
 *search* all plugin directories for available completions, and show if they are
 installed. This sums up to complete control over completions.
 
+### Subversion For Subdirectories
+
+In general, to use *subdirectories* of Github projects as snippets add `/trunk/{path-to-dir}` to URL, for example:
+
+```SystemVerilog
+% zplugin ice svn; zplugin snippet https://github.com/zsh-users/zsh-completions/trunk/src
+```
+
+Snippets too have completions installed by default, like plugins.
+
 # Ice Modifiers
 
 Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
