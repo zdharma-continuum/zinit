@@ -1,6 +1,21 @@
 # -*- mode: shell-script -*-
 # vim:ft=zsh
 
+# FUNCTION: -zplg-shands-exp {{{
+# Does expansion of currently little unstandarized
+# shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
+-zplg-shands-exp() {
+    REPLY="$1$2"
+    REPLY="${${${REPLY/\%HOME/$HOME}/\%SNIPPETS/${ZPLGM[SNIPPETS_DIR]}}#%}"
+    REPLY="${REPLY/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
+    REPLY="${REPLY/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
+    REPLY="${REPLY/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
+    REPLY="${REPLY/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
+
+    # Testable
+    [[ "$REPLY" != "$1$2" ]]
+}
+# }}}
 # FUNCTION: -zplg-exists-physically {{{
 # Checks if directory of given plugin exists in PLUGIN_DIR.
 #
