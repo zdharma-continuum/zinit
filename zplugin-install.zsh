@@ -271,7 +271,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         )
         return $?
     fi
-    if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]];then
+    if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
         ( cd "$directory"
           command svn update
           return $? )
@@ -379,7 +379,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 if [[ "$update" = "-u" ]];then
                     # Test if update available
                     -zplg-mirror-using-svn "$url" "-t" "$filename" || return 2
-                    [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( cd "$filename"; -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
+                    [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( cd "$filename" && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                     # Do the update
                     -zplg-mirror-using-svn "$url" "-u" "$filename" || return 1
                 else
