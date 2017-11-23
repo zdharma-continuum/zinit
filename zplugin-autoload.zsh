@@ -1888,7 +1888,11 @@ ZPLGM[EXTENDED_GLOB]=""
 
         -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || echo "No such plugin"
+        -zplg-shands-exp "$1" "$2" && {
+            builtin cd "$REPLY" || print -r -- "No such plugin or snippet"
+        } || {
+            builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || print -r -- "No such plugin or snippet"
+        }
     fi
 } # }}}
 # FUNCTION: -zplg-changes {{{

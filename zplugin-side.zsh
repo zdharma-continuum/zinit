@@ -26,7 +26,12 @@
 -zplg-exists-physically() {
     -zplg-any-to-user-plugin "$1" "$2"
     if [[ "${reply[-2]}" = "%" ]]; then
-        [[ -d "${reply[-1]}" ]] && return 0 || return 1
+        # Shorthands, little unstandarized
+        -zplg-shands-exp "$1" "$2" && {
+            [[ -d "$REPLY" ]] && return 0 || return 1
+        } || {
+            [[ -d "${reply[-1]}" ]] && return 0 || return 1
+        }
     else
         [[ -d "${ZPLGM[PLUGINS_DIR]}/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
     fi
@@ -40,21 +45,14 @@
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-exists-physically-message() {
-    local exp
     if ! -zplg-exists-physically "$1" "$2"; then
         -zplg-any-colorify-as-uspl2 "$1" "$2"
+        local spec="$REPLY"
 
-        # Shorthands, little unstandarized
-        exp="$1$2"
-        exp="${${${exp/\%HOME/$HOME}/\%SNIPPETS/${ZPLGM[SNIPPETS_DIR]}}#%}"
-        exp="${exp/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
-        exp="${exp/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
-        exp="${exp/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
-        exp="${exp/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
-        exp="${exp/$HOME/~}"
+        -zplg-shands-exp "$1" "$2" && REPLY="${REPLY/$HOME/~}"
 
-        print -r -- "${ZPLGM[col-error]}No such (plugin or snippet) directory${ZPLGM[col-rst]} $REPLY"
-        [[ "$exp" != "$1$2" ]] && print -r -- "(expands to: $exp)"
+        print -r -- "${ZPLGM[col-error]}No such (plugin or snippet) directory${ZPLGM[col-rst]}: $spec"
+        [[ "$REPLY" != "$1$2" ]] && print -r -- "(expands to: $REPLY)"
         return 1
     fi
     return 0

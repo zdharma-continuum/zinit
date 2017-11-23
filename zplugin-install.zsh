@@ -158,9 +158,17 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     builtin setopt localoptions nullglob extendedglob unset
 
+    # Shorthands, little unstandarized
+    1="${1/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
+    1="${1/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
+    1="${1/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
+    1="${1/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
+
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
     local plugin="${reply[-1]}"
+    -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+    local abbrev_pspec="$REPLY"
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
@@ -191,8 +199,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile"
         else
-            print "${ZPLGM[col-error]}Not symlinking completion \`$cfile', it already exists${ZPLGM[col-rst]}"
-            print "${ZPLGM[col-error]}Use \`zplugin creinstall {plugin-spec}' to force install${ZPLGM[col-rst]}"
+            print "Not symlinking completion \`$cfile', it already exists"
+            print "${ZPLGM[col-info2]}Use \`${ZPLGM[col-pname]}zplugin creinstall $abbrev_pspec${ZPLGM[col-info2]}' to force install${ZPLGM[col-rst]}"
         fi
     done
 } # }}}
