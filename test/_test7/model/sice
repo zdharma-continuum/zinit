@@ -1,2 +1,2 @@
- atpull !command\ echo\ local\\\ change\ \>!\ version4 cp version4\ -\>\ version4.cpy
+atpull !command\ echo\ local\\\ change\ \>!\ version4 cp version4\ -\>\ version4.cpy 
 psprint/zsh-select

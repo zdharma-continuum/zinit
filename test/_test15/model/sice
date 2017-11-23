@@ -1,2 +1,2 @@
- atpull command\ chmod\ -x\ zsh-navigation-tools.plugin.zsh svn ''
+atpull command\ chmod\ -x\ zsh-navigation-tools.plugin.zsh svn '' 
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/

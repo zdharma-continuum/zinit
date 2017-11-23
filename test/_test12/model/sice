@@ -1,2 +1,2 @@
- atclone chmod\ -x\ znt-tmux.zsh svn '' mv n-help\ -\>\ nh cp nh\ -\>\ n-help2 pick n-help2 as command
+atclone chmod\ -x\ znt-tmux.zsh svn '' mv n-help\ -\>\ nh cp nh\ -\>\ n-help2 pick n-help2 as command 
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/
