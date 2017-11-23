@@ -26,7 +26,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'zsh-navigation-tools <1>'
-ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/' 'atclone chmod\ -x\ znt-tmux.zsh svn '\'''\'' mv n-help\ -\>\ nh cp nh\ -\>\ n-help2 pick n-help2 as command '
+ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/' ' atclone chmod\ -x\ znt-tmux.zsh svn '\'''\'' mv n-help\ -\>\ nh cp nh\ -\>\ n-help2 pick n-help2 as command'
 ZPLG_FUNCTIONS: 
 ZPLG_OPTIONS: 
 ZPLG_PATH: 

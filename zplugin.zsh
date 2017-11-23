@@ -1248,15 +1248,15 @@ builtin setopt noaliases
 # why it's called "ice" - it melts), however some ice modifiers can
 # glue to plugin mentioned in the next command.
 -zplg-pack-ice() {
-    (( ${+ZPLG_ICE[atclone]} )) && ZPLG_SICE[$1/$2]+="atclone ${(q)ZPLG_ICE[atclone]} "
-    (( ${+ZPLG_ICE[atpull]} )) && ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
-    (( ${+ZPLG_ICE[svn]} )) && ZPLG_SICE[$1/$2]+="svn ${(q)ZPLG_ICE[svn]} "
-    (( ${+ZPLG_ICE[mv]} )) && ZPLG_SICE[$1/$2]+="mv ${(q)ZPLG_ICE[mv]} "
-    (( ${+ZPLG_ICE[cp]} )) && ZPLG_SICE[$1/$2]+="cp ${(q)ZPLG_ICE[cp]} "
-    (( ${+ZPLG_ICE[pick]} )) && ZPLG_SICE[$1/$2]+="pick ${(q)ZPLG_ICE[pick]} "
-    (( ${+ZPLG_ICE[bpick]} )) && ZPLG_SICE[$1/$2]+="bpick ${(q)ZPLG_ICE[bpick]} "
-    (( ${+ZPLG_ICE[as]} )) && ZPLG_SICE[$1/$2]+="as ${(q)ZPLG_ICE[as]} "
-    (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+="make ${(q)ZPLG_ICE[make]} "
+    (( ${+ZPLG_ICE[atclone]} )) && ZPLG_SICE[$1/$2]+=" atclone ${(q)ZPLG_ICE[atclone]}"
+    (( ${+ZPLG_ICE[atpull]} )) && ZPLG_SICE[$1/$2]+=" atpull ${(q)ZPLG_ICE[atpull]}"
+    (( ${+ZPLG_ICE[svn]} )) && ZPLG_SICE[$1/$2]+=" svn ${(q)ZPLG_ICE[svn]}"
+    (( ${+ZPLG_ICE[mv]} )) && ZPLG_SICE[$1/$2]+=" mv ${(q)ZPLG_ICE[mv]}"
+    (( ${+ZPLG_ICE[cp]} )) && ZPLG_SICE[$1/$2]+=" cp ${(q)ZPLG_ICE[cp]}"
+    (( ${+ZPLG_ICE[pick]} )) && ZPLG_SICE[$1/$2]+=" pick ${(q)ZPLG_ICE[pick]}"
+    (( ${+ZPLG_ICE[bpick]} )) && ZPLG_SICE[$1/$2]+=" bpick ${(q)ZPLG_ICE[bpick]}"
+    (( ${+ZPLG_ICE[as]} )) && ZPLG_SICE[$1/$2]+=" as ${(q)ZPLG_ICE[as]}"
+    (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+=" make ${(q)ZPLG_ICE[make]}"
     return 0
 } # }}}
 

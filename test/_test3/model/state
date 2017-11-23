@@ -32,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'zdharma/ice-order'
 ZPLG_REGISTERED_STATES: 'zdharma/ice-order' '1' '_local/zplugin' '1'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'zdharma/ice-order' 'atclone cp\ -v\ Makefile.copy\ Makefile.copy2 mv Makefile2\ -\>\ Makefile cp Makefile\ -\>\ Makefile.copy make '\'''\'' '
+ZPLG_SICE: 'zdharma/ice-order' ' atclone cp\ -v\ Makefile.copy\ Makefile.copy2 mv Makefile2\ -\>\ Makefile cp Makefile\ -\>\ Makefile.copy make '\'''\'''
 ZPLG_FUNCTIONS: 'zdharma/ice-order' ''
 ZPLG_OPTIONS: 'zdharma/ice-order' ''
 ZPLG_PATH: 'zdharma/ice-order' ''
