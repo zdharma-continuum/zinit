@@ -420,7 +420,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     (( retval == 2 )) && { return 0; }
 
     if [[ "$local_dir${ZPLG_ICE[svn]+/$filename}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
-        local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin" key
+        local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin_$filename" key
         command mkdir -p "$pfx"
         print -r -- "$save_url" >! "$pfx/url"
         print -r -- "${+ZPLG_ICE[svn]}" >! "$pfx/mode"

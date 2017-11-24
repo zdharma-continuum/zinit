@@ -1276,7 +1276,7 @@ ZPLGM[EXTENDED_GLOB]=""
     if [[ "$st" != "status" ]]; then
         print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
 
-        for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
+        for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin*/mode; do
             [[ ! -f "${snip:h}/url" ]] && continue
             mdata=()
             { for key in mode url as pick bpick mv cp make atclone atpull; do

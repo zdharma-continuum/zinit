@@ -3,6 +3,8 @@ all: test
 test: test1 test2 test3 test4 test5 test6 test7 test8 test9 \
     	test11 test12 test13 test14 test15 test17
 
+svn: test11 test12 test13 test14 test15 test17
+
 prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh
 	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin .
 	rm -rf data
