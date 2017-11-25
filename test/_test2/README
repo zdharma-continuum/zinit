@@ -1,0 +1,7 @@
+This test verifies:
+
+1. from ice
+
+2. as,mv,cp,atclone,pick
+
+3. If the plugin is NOT sourced (this would change ZPLG_PATH)
