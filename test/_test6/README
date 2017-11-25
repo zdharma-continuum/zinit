@@ -2,4 +2,6 @@ This test verifies:
 
 1. Static ice vs. saved ice competition
 
-2. cp ice correctly executing on pull
+2. Use of saved ice
+
+3. cp ice correctly executing on pull
