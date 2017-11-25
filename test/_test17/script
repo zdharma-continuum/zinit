@@ -8,8 +8,6 @@ print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
 local matcher_val
 zstyle -s ':completion::complete:n-kill::bits' matcher matcher_val
-
-# Should be empty (as"command")
 echo "$matcher_val" >! answer/matcher
 
 ( zplugin cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
