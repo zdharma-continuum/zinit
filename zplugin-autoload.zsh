@@ -1242,8 +1242,9 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
+            [[ ${+sice[make]} = 1 && ${(Q)sice[make]} = "!"* ]] && command make -C "$local_dir" ${(@s; ;)${${(Q)sice[make]}#\!}}
             [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} != *"!"* ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${(Q)sice[atpull]}" ${(Q)sice[atclone]}; )
-            (( ${+sice[make]} )) && command make -C "$local_dir" ${(@s; ;)${(Q)sice[make]}}
+            [[ ${+sice[make]} = 1 && ${(Q)sice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${(Q)sice[make]}}
         }
 
         # Record new ICE modifiers used

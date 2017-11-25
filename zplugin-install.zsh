@@ -138,8 +138,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # Optional file - create file for make ICE mod
         (( ${+ZPLG_ICE[make]} )) && print -r -- "${ZPLG_ICE[make]}" >! "$local_path/._zplugin/make" || command rm -f "$local_path/._zplugin/make"
 
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
         ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path" && eval "${ZPLG_ICE[atclone]}"; }; )
-        (( ${+ZPLG_ICE[make]} )) && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
     fi
 
     return 0
@@ -450,12 +451,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         )
     fi
 
+    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
+
     if [[ "$update" = "-u" ]];then
         [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
     else
         ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atclone]}"; } )
     fi
-    (( ${+ZPLG_ICE[make]} )) && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
+
+    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
 
     -zplg-install-completions "%" "$local_dir${ZPLG_ICE[svn]+/$filename}"
     return $retval
