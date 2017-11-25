@@ -1010,6 +1010,8 @@ builtin setopt noaliases
             (( 1 ))
         } || echo "Snippet not loaded ($save_url)"
 
+        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}"; }
+
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
         # Subversion - directory and multiple files possible
@@ -1027,6 +1029,7 @@ builtin setopt noaliases
         fi
         [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path+=( "$xpath" )
         [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "${list[@]:#$xfilepath}" "$xfilepath"
+        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}"; }
     fi
 
     # Updating – not sourcing, etc.
@@ -1114,6 +1117,7 @@ builtin setopt noaliases
         local pbase="${${${plugin%.plugin.zsh}%.zsh}%.git}"
         local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     fi
+    local pdir_orig="$pdir_path"
 
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
@@ -1124,6 +1128,8 @@ builtin setopt noaliases
         [[ -z "${path[(er)$pdir_path]}" ]] && path+=( "$pdir_path" )
         [[ -n "${reply[1]}" && ! -x "${reply[1]}" ]] && command chmod a+x ${reply[@]}
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "$ZPLGM[col-info2]$pdir_path$ZPLGM[col-rst] added to \$PATH"
+
+        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_orig/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_orig/${ZPLG_ICE[src]}"; }
     else
         if (( ${+ZPLG_ICE[pick]} )); then
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) )
@@ -1155,6 +1161,7 @@ builtin setopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         builtin setopt noaliases
         (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_path/$fname" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_path/$fname"
+        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_orig/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_orig/${ZPLG_ICE[src]}"; }
         builtin unsetopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
@@ -1239,7 +1246,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|bpick|as|ver|silent|mv|cp|atload|atpull|atclone|if|make)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|src|bpick|as|ver|silent|mv|cp|atload|atpull|atclone|if|make)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
