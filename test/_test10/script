@@ -2,7 +2,7 @@ tst_verbosity
 
 zplugin ice as"command" mv"zsh-select.plugin.zsh -> zs" cp"zs -> zsh-select2" \
             atclone'command echo "touch \${ZPLGM[PLUGINS_DIR]}/error.mark" >! zsh-select.plugin.zsh' \
-            pick"zsh-select2" from"gl" src"zs" atload'echo $PATH > path'
+            pick"zsh-select2" from"gl" src"zs" atload'echo ${REPO_DIR:t} > var'
 zplugin load psprint/zsh-select
 
 # vim:ft=zsh
