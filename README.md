@@ -22,6 +22,14 @@ zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
 zplugin light trapd00r/LS_COLORS
 ```
 
+Other example: direnv written in Go, requiring building after cloning:
+
+```SystemVerilog
+# make'!...' -> run make before atclone & atpull
+zplugin ice as"command" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
+zplg light direnv/direnv
+```
+
 Zplugin gives **reports** from plugin load. Plugins are no longer black boxes,
 report will tell what aliases, functions, bindkeys, Zle widgets, zstyles,
 completions, variables, `PATH` and `FPATH` elements a plugin has set up.
@@ -60,7 +68,7 @@ zplugin ice from"gh-r" as"command"; zplugin load junegunn/fzf-bin
 zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
 
 # Vim repository on Github – a source that needs compilation
-zplugin ice as"command" atclone"./configure" make pick"src/vim"; zplugin light vim/vim
+zplugin ice as"command" atclone"./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
 
 # A script (Zsh) that needs building by make. The make argument (install PREFIX=/opt) isn't
 # needed because the pick Ice-mod will use uninstalled files from build-directory, but
