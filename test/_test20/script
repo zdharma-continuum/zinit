@@ -1,0 +1,16 @@
+tst_verbosity
+
+zplugin ice svn as"command" mv"zsh-navigation-tools.plugin.zsh -> plugin.text" \
+            pick"n-help" atclone"chmod -x znt-tmux.zsh" src"plugin.text"
+zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+local matcher_val
+zstyle -s ':completion::complete:n-kill::bits' matcher matcher_val
+
+# Should be set because src"" loads the plugin file
+echo "$matcher_val" >! answer/matcher
+
+# vim:ft=zsh

@@ -1,0 +1,2 @@
+atclone chmod\ -x\ znt-tmux.zsh svn '' mv zsh-navigation-tools.plugin.zsh\ -\>\ plugin.text pick n-help as command 
+https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/
