@@ -1,0 +1,1 @@
+command echo "touch ${ZPLGM[PLUGINS_DIR]}/error.mark" >! zsh-select.plugin.zsh
