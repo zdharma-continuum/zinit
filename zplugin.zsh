@@ -1278,9 +1278,7 @@ builtin setopt noaliases
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${idx}]}}" )
 
     if [[ "$wait" = <-> ]]; then
-        zle && zle -M "Loading ${${5:+$4/$5}:-$4}..."
         -zplg-load "$4" "$5" "$mode"
-        zle && zle -M "Loaded ${${5:+$4/$5}:-$4}"
     elif eval "$wait"; then
         zle && zle -M "Loading ${${5:+$4/$5}:-$4}..."
         -zplg-load "$4" "$5" "$mode"
