@@ -1272,19 +1272,19 @@ builtin setopt noaliases
 # conditions are meet – a) time passed (for wait'2' etc.),
 # or b) condition code evaluates to true
 -zplg-wait-cb() {
-    local idx="$1" wait="$2" mode="$3"
+    local tpe="$1" idx="$2" wait="$3" mode="$4"
 
     local -A ZPLG_ICE
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${idx}]}}" )
 
     if [[ "$wait" = <-> ]]; then
-        -zplg-load "$4" "$5" "$mode"
+        [[ "$tpe" = "p" ]] && -zplg-load "$5" "$6" "$mode" || -zplg-load-snippet "$5" "$6"
     elif eval "$wait"; then
         zle && zle -M "Loading ${${5:+$4/$5}:-$4}..."
-        -zplg-load "$4" "$5" "$mode"
+        [[ "$tpe" = "p" ]] && -zplg-load "$5" "$6" "$mode" || -zplg-load-snippet "$5" "$6"
         zle && zle -M "Loaded ${${5:+$4/$5}:-$4}"
     else
-        sched +1 "-zplg-wait-cb $idx ${(q)wait} ${(q)mode} ${(q)4} ${(q)5}"
+        sched +1 "-zplg-wait-cb $tpe $idx ${(q)wait} ${(q)mode} ${(q)5} ${(q)6}"
     fi
     return 0
 }
@@ -1331,7 +1331,7 @@ zplugin() {
                    ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
                    ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
                    local t="${${${ZPLG_ICE[wait]#[0-9]*}:+1}:-${ZPLG_ICE[wait]}}"
-                   sched +$t "-zplg-wait-cb ${ZPLGM[WAIT_IDX]} ${(q)ZPLG_ICE[wait]} ${(q)1/load/} ${(q)2} ${(q)3}"
+                   sched +$t "-zplg-wait-cb p ${ZPLGM[WAIT_IDX]} ${(q)ZPLG_ICE[wait]} ${(q)1/load/} ${(q)2} ${(q)3}"
                else
                    -zplg-load "$2" "$3" "${1/load/}"
                fi
@@ -1339,7 +1339,14 @@ zplugin() {
            ;;
        (snippet)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-           -zplg-load-snippet "$2" "$3" "$4" "$5" "$6"
+           if (( ${+ZPLG_ICE[wait]} )); then
+               ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
+               ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
+               local t="${${${ZPLG_ICE[wait]#[0-9]*}:+1}:-${ZPLG_ICE[wait]}}"
+               sched +$t "-zplg-wait-cb s ${ZPLGM[WAIT_IDX]} ${(q)ZPLG_ICE[wait]} '' ${(q)2} ${(q)3}"
+           else
+               -zplg-load-snippet "$2" "$3"
+           fi
            ;;
        (ice)
            -zplg-ice "${@[2,-1]}"
