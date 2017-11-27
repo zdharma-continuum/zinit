@@ -1277,12 +1277,14 @@ builtin setopt noaliases
     local -A ZPLG_ICE
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${idx}]}}" )
 
+    [[ "$tpe" = "p" ]] && local name="${${6:+$5/$6}:-$5}" || local name="$5"
+
     if [[ "$wait" = <-> ]]; then
         [[ "$tpe" = "p" ]] && -zplg-load "$5" "$6" "$mode" || -zplg-load-snippet "$5" "$6"
     elif eval "$wait"; then
-        zle && zle -M "Loading ${${5:+$4/$5}:-$4}..."
+        zle && zle -M "Loading $name..."
         [[ "$tpe" = "p" ]] && -zplg-load "$5" "$6" "$mode" || -zplg-load-snippet "$5" "$6"
-        zle && zle -M "Loaded ${${5:+$4/$5}:-$4}"
+        zle && zle -M "Loaded $name"
     else
         sched +1 "-zplg-wait-cb $tpe $idx ${(q)wait} ${(q)mode} ${(q)5} ${(q)6}"
     fi
