@@ -1175,7 +1175,7 @@ builtin setopt noaliases
         fi
     fi
 
-    (( ${+ZPLG_ICE[atload]} )) && { local oldcd="$PWD"; builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && eval "${ZPLG_ICE[atload]}"; builtin cd "$oldcd"; }
+    (( ${+ZPLG_ICE[atload]} )) && { local __oldcd="$PWD"; builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
 
     # Mark no load is in progress
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL]="" ZPLGM[CUR_USPL2]=""
@@ -1246,7 +1246,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|blockf|svn|pick|src|bpick|as|ver|silent|mv|cp|atload|atpull|atclone|if|make)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|if|blockf|svn|pick|src|bpick|as|ver|silent|mv|cp|atload|atpull|atclone|make)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
@@ -1266,6 +1266,31 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+="make ${(q)ZPLG_ICE[make]} "
     return 0
 } # }}}
+# FUNCTION: -zplg-wait-cb {{{
+# Called by sched every 1 second or specified number of
+# seconds. Performs actual (delayed) plugin loading if
+# conditions are meet – a) time passed (for wait'2' etc.),
+# or b) condition code evaluates to true
+-zplg-wait-cb() {
+    local idx="$1" wait="$2" mode="$3"
+
+    local -A ZPLG_ICE
+    ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${idx}]}}" )
+
+    if [[ "$wait" = <-> ]]; then
+        zle && zle -M "Loading ${${5:+$4/$5}:-$4}..."
+        -zplg-load "$4" "$5" "$mode"
+        zle && zle -M "Loaded ${${5:+$4/$5}:-$4}"
+    elif eval "$wait"; then
+        zle && zle -M "Loading ${${5:+$4/$5}:-$4}..."
+        -zplg-load "$4" "$5" "$mode"
+        zle && zle -M "Loaded ${${5:+$4/$5}:-$4}"
+    else
+        sched +1 "-zplg-wait-cb $idx ${(q)wait} ${(q)mode} ${(q)4} ${(q)5}"
+    fi
+    return 0
+}
+# }}}
 
 #
 # Main function with subcommands
@@ -1299,24 +1324,19 @@ zplugin() {
     ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 
     case "$1" in
-       (load)
+       (load|light)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
-               # Load plugin given in uspl2 or "user plugin" format
-               # Possibly clone from github, and install completions
-               -zplg-load "$2" "$3" ""
-           fi
-           ;;
-       (light)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-           if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try help"
-           else
-               # This is light load, without tracking, only with
-               # clean FPATH (autoload is still being shadowed)
-               -zplg-load "$2" "$3" "light"
+               if (( ${+ZPLG_ICE[wait]} )); then
+                   ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
+                   ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
+                   local t="${${${ZPLG_ICE[wait]#[0-9]*}:+1}:-${ZPLG_ICE[wait]}}"
+                   sched +$t "-zplg-wait-cb ${ZPLGM[WAIT_IDX]} ${(q)ZPLG_ICE[wait]} ${(q)1/load/} ${(q)2} ${(q)3}"
+               else
+                   -zplg-load "$2" "$3" "${1/load/}"
+               fi
            fi
            ;;
        (snippet)
