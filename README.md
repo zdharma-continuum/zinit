@@ -365,7 +365,7 @@ popular plugin that provides completions:
 ```
 
 First command will block the traditional method of adding completions. Zplugin uses own
-method (based on simlinks instead of adding to `$fpath`). Zplugin will automatically *install*
+method (based on symlinks instead of adding to `$fpath`). Zplugin will automatically *install*
 completions of newly downloaded plugin. To uninstall, and install again, use
 
 ```SystemVerilog
@@ -454,6 +454,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
 | `make`    | Run `make` command after cloning and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`, e.g. `make'!'`. |
 | `src`     | Specify additional file to source after sourcing main file or after setting up command (`as"command"`). |
+| `wait`    | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). |
 
 # Installation
 
