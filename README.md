@@ -95,7 +95,13 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
-* 13-11-207
+* 29-11-2017
+  - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode)** – **39-50% or more faster loading!**
+  - Subcommand `update` can update snippets, via given URL (up to this point snippets were updated via
+    `zplugin update --all`).
+  - Completion management is enabled for snippets (not only plugins).
+
+* 13-11-2017
   - New ice modifier – `make`. It causes the `make`-command to be executed after cloning or updating
     plugins and snippets. For example there's `Zshelldoc` that uses `Makefile` to build final scripts:
 
@@ -442,7 +448,8 @@ background. This has drawbacks, but is for sure better than blank screen for
 lags, freezes, etc. – the command line is fully usable while the plugins are
 being loaded.
 
-To use this Turbo Mode add `wait` ice to the target plugin in one of following ways:
+Zsh 5.3 or greater is required. To use this Turbo Mode add `wait` ice to the
+target plugin in one of following ways:
 
 ```SystemVerilog
 PS1="READY > "
