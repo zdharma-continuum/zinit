@@ -1,0 +1,9 @@
+This test verifies (acting on plugin):
+
+(The same as test 7, but uses update --all not update <plugin-spec>)
+
+1. atpull'!...' executing before `git pull' and cp ice
+
+2. Static ice vs. saved ice competition
+
+3. depth"1" correctly working
