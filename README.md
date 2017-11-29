@@ -473,7 +473,7 @@ makes autosuggestions inactive at first prompt. But the given `atload` Ice-mod f
 the same function `precmd` would, right after loading autosuggestions.
 
 ```SystemVerilog
-zplugin ice wait'[[ ${ZLAST_COMMANDS[(r)cras*]} ]]'
+zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
 zplugin load zdharma/zplugin-crasis
 ```
 
