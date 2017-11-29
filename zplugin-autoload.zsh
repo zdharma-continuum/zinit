@@ -1153,6 +1153,11 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-update-or-status() {
     setopt localoptions extendedglob
 
+    if [[ "$2" = (http|https|ftp|ftps|scp)://* || "$2" = OMZ::* || "$2" = PZT::* ]]; then
+        -zplg-update-or-status-snippet "$1" "$2" "$3"
+        return $?
+    fi
+
     local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
     local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -1260,6 +1265,113 @@ ZPLGM[EXTENDED_GLOB]=""
 
     return 0
 } # }}}
+# FUNCTION: -zplg-update-or-status-snippet {{{
+#
+# Implements update or status operation for snippet given by URL.
+#
+# $1 - "status" or "update"
+# $2 - snippet URL
+-zplg-update-or-status-snippet() {
+    local st="$1" URL="${2%/}" local_dir filename
+    -zplg-compute-ice "$URL" "pack" ZPLG_ICE local_dir filename || return 1
+
+    if [[ "$st" = "status" ]]; then
+        if (( ${+ZPLG_ICE[svn]} )); then
+            ( builtin cd "$local_dir"; command svn status -vu )
+        else
+            ( builtin cd "$local_dir"; command ls -lth $filename )
+        fi
+    else
+        -zplg-load-snippet "$URL" "-i" "-f" "-u"
+    fi
+
+    ZPLG_ICE=()
+}
+# }}}
+# FUNCTION: -zplg-compute-ice {{{
+# Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
+# ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+# returns path to snippet directory and optional name of snippet file (only
+# valid if ZPLG_ICE[svn] is not set).
+#
+# $1 - URL (also plugin-spec in future)
+# $2 - "pack" or "nopack" - packing means ZPLG_ICE wins with static ice
+# $3 - name of output associative array, "ZPLG_ICE" is the default
+# $4 - name of output string parameter, to hold path to directory ("local_dir")
+# $5 - name of output string parameter, to hold filename ("filename")
+-zplg-compute-ice() {
+    local __URL="${1%/}" __pack="$2"
+    local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" __var_name3="${5:-filename}"
+
+    # Remove whitespace from beginning of URL
+    URL="${${URL#"${URL%%[! $'\t']*}"}%/}"
+
+    -zplg-two-paths "$__URL"
+    local __s_path="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
+
+    # If packed, ZPLG_ICE will win. If not then other sources will win
+    [[ "$__pack" = "pack" ]] && -zplg-pack-ice "$__URL" ""
+
+    local -A __sice
+    local -a __tmp
+    __tmp=( "${(z@)ZPLG_SICE[$__URL/]}" )
+    (( ${#__tmp} > 1 && ${#__tmp} % 2 == 0 )) && __sice=( "${(@Q)__tmp}" )
+
+    if [[ "${+__sice[svn]}" = "1" || -e "$__s_path" ]]; then
+        if [[ -e "$__s_path" ]]; then
+            __sice[svn]=""
+            __local_dir="$__s_path"
+        else
+            [[ ! -e "$___path" ]] && { print -r -- "No such snippet, looked at paths: $__s_path, and: $___path"; return 1; }
+            unset '__sice[svn]'
+            __local_dir="$___path"
+        fi
+    else
+        if [[ -e "$___path" ]]; then
+            unset '__sice[svn]'
+            __local_dir="$___path"
+        else
+            print -r -- "No such snippet, looked at paths: $__s_path, and: $___path"
+            return 1
+        fi
+    fi
+
+    local __zplugin_path="$__local_dir/._zplugin${__sice[svn]-_${__filename}}"
+
+    # Read disk-Ice
+    local -A __mdata
+    local __key
+    { for __key in mode url as pick bpick mv cp make atclone atpull; do
+        [[ -f "$__zplugin_path/$__key" ]] && __mdata[$__key]="$(<$__zplugin_path/$__key)"
+      done
+      [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
+    } 2>/dev/null
+
+    # Handle flag-Ices; svn must be last
+    for __key in make svn; do
+        (( ${+ZPLG_ICE[no$__key]} )) || continue
+
+        if [[ "$__key" = "svn" ]]; then
+            command print -r -- "0" >! "$__zplugin_path/mode"
+        else
+            command rm -f -- "$__zplugin_path/$__key"
+        fi
+        unset "__mdata[$__key]" "__sice[$__key]" "ZPLG_ICE[$__key]"
+    done
+
+    # Final decision, static ice vs. saved ice
+    local -A __MY_ICE
+    for __key in as pick bpick mv cp atclone atpull   make svn; do
+        (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+    done
+
+    : ${(PA)__var_name1::="${(kv@)__MY_ICE}"}
+    : ${(P)__var_name2::=$__local_dir}
+    : ${(P)__var_name3::=$__filename}
+
+    return 0
+}
+# }}}
 # FUNCTION: -zplg-update-or-status-all {{{
 # Updates (git pull) or does `git status` for all existing plugins.
 # This includes also plugins that are not loaded into Zsh (but exist
@@ -1850,15 +1962,16 @@ ZPLGM[EXTENDED_GLOB]=""
     if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
         local -A sice
         local -a tmp
-        tmp=( "${(z@)ZPLG_SICE[$url/]}" )
-        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${tmp[@]}" )
+        tmp=( "${(z@)ZPLG_SICE[${1%/}/]}" )
+        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(@Q)tmp[@]}" )
 
         -zplg-two-paths "$1"
+        local s_path="${reply[-3]}" _path="${reply[-2]}"
 
-        [[ "${+sice[svn]}" = "1" || -e "${reply[-2]}" ]] && {
-            [[ -e "${reply[-2]}" ]] && builtin cd "${reply[-2]}" || echo "No such snippet"
+        [[ "${+sice[svn]}" = "1" || -e "$s_path" ]] && {
+            [[ -e "$s_path" ]] && builtin cd "$s_path" || echo "No such snippet"
         } || {
-            [[ -e "${reply[-1]}" ]] && builtin cd "${reply[-1]}" || echo "No such snippet"
+            [[ -e "$_path" ]] && builtin cd "$_path" || echo "No such snippet"
         }
     else
         -zplg-any-to-user-plugin "$1" "$2"

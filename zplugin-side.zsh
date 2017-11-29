@@ -153,5 +153,5 @@
     local_dirB="${${${${local_dirB//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dirB="${ZPLGM[SNIPPETS_DIR]}/${local_dirB%--$filename0B}/$filename0B"
 
-    reply=( "$local_dirA/$filenameA" "$local_dirB" )
+    reply=( "$local_dirA/$filenameA" "$local_dirB" "$filenameB" )
 }
