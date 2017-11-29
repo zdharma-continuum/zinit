@@ -13,7 +13,7 @@
     REPLY="${REPLY/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
 
     # Testable
-    [[ "$REPLY" != "$1$2" ]]
+    [[ "$REPLY" != "${1%/}/${2#/}" ]]
 }
 # }}}
 # FUNCTION: -zplg-exists-physically {{{
@@ -52,7 +52,7 @@
         -zplg-shands-exp "$1" "$2" && REPLY="${REPLY/$HOME/~}"
 
         print -r -- "${ZPLGM[col-error]}No such (plugin or snippet) directory${ZPLGM[col-rst]}: $spec"
-        [[ "$REPLY" != "$1$2" ]] && print -r -- "(expands to: $REPLY)"
+        [[ "$REPLY" != "${1%/}/${2#/}" ]] && print -r -- "(expands to: $REPLY)"
         return 1
     fi
     return 0
