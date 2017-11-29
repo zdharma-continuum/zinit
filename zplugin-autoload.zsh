@@ -1383,30 +1383,17 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local st="$1"
     local repo snip pd user plugin
-    local -A mdata ZPLG_ICE
+    local -A ZPLG_ICE
     ZPLG_ICE=()
 
-    if [[ "$st" != "status" ]]; then
-        print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
+    [[ "$st" != "status" ]] && print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
 
-        for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin*/mode; do
-            [[ ! -f "${snip:h}/url" ]] && continue
-            mdata=()
-            { for key in mode url as pick bpick mv cp make atclone atpull; do
-                [[ -f "${snip:h}/$key" ]] && mdata[$key]="$(<${snip:h}/$key)"
-              done
-            } 2>/dev/null
-            [[ "$mdata[mode]" = "1" ]] && ZPLG_ICE[svn]=""
-            (( ${+mdata[make]} )) && ZPLG_ICE[make]="$mdata[make]"
-            for key in as pick bpick mv cp atclone atpull; do
-                [[ -n "$mdata[$key]" ]] && ZPLG_ICE[$key]="$mdata[$key]"
-            done
-
-            -zplg-load-snippet "$mdata[url]" "-i" "-f" "-u"
-            ZPLG_ICE=()
-        done
-        print
-    fi
+    for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin*/mode; do
+        [[ ! -f "${snip:h}/url" ]] && continue
+        -zplg-update-or-status-snippet "$st" "$(<${snip:h}/url)"
+        ZPLG_ICE=()
+    done
+    print
 
     ZPLG_ICE=()
 
