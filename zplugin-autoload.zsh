@@ -1172,7 +1172,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -z "${(M)config:#\[remote[[:blank:]]*\]}" ]]; then
                 -zplg-any-colorify-as-uspl2 "$user" "$plugin"
                 print "$REPLY doesn't have a remote set, will not fetch"
-                return
+                return 1
             fi
         fi
     fi
