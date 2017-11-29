@@ -123,3 +123,35 @@
         REPLY="${ZPLGM[col-uname]}%${ZPLGM[col-rst]}${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
     } || REPLY="${ZPLGM[col-uname]}${user}${ZPLGM[col-rst]}/${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
 } # }}}
+# FUNCTION: -zplg-two-paths()
+# Obtains a snippet URL without specification if it is an SVN URL (points to
+# directory) or regular URL (points to file), returns 2 possible paths for
+# further examination
+-zplg-two-paths() {
+    setopt localoptions extendedglob
+    integer MBEGIN MEND
+    local url="$1" url1 url2 filenameA filenameB filename0A filename0B local_dirA local_dirB MATCH
+
+    # Remove leading whitespace and trailing /
+    url="${${url#"${url%%[! $'\t']*}"}%/}"
+    url1="$url" url2="$url"
+
+    url1[1,5]="${ZPLG_1MAP[${url[1,5]}]:-$url[1,5]}" # svn
+    url2[1,5]="${ZPLG_2MAP[${url[1,5]}]:-$url[1,5]}" # normal
+
+    filenameA="${${url1%%\?*}:t}"
+    filename0A="${${${url1%%\?*}:h}:t}"
+    filenameB="${${url2%%\?*}:t}"
+    filename0B="${${${url2%%\?*}:h}:t}"
+
+    # Construct a local directory name from what's in url
+    local_dirA="${${url1%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
+    local_dirA="${${${${local_dirA//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    local_dirA="${ZPLGM[SNIPPETS_DIR]}/$local_dirA"
+
+    local_dirB="${${url2%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
+    local_dirB="${${${${local_dirB//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    local_dirB="${ZPLGM[SNIPPETS_DIR]}/${local_dirB%--$filename0B}/$filename0B"
+
+    reply=( "$local_dirA/$filenameA" "$local_dirB" )
+}

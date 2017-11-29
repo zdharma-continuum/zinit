@@ -1847,41 +1847,18 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-cd() {
     setopt localoptions extendedglob
-
     if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
-        integer MBEGIN MEND
-        local url="$1" url1 url2 filenameA filenameB filename0A filename0B local_dirA local_dirB MATCH
-
-        # Remove leading whitespace and trailing /
-        url="${${url#"${url%%[! $'\t']*}"}%/}"
-        url1="$url" url2="$url"
-
         local -A sice
         local -a tmp
         tmp=( "${(z@)ZPLG_SICE[$url/]}" )
         (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${tmp[@]}" )
 
-        url1[1,5]="${ZPLG_1MAP[${url[1,5]}]:-$url[1,5]}" # svn
-        url2[1,5]="${ZPLG_2MAP[${url[1,5]}]:-$url[1,5]}" # normal
+        -zplg-two-paths "$1"
 
-        filenameA="${${url1%%\?*}:t}"
-        filename0A="${${${url1%%\?*}:h}:t}"
-        filenameB="${${url2%%\?*}:t}"
-        filename0B="${${${url2%%\?*}:h}:t}"
-
-        # Construct a local directory name from what's in url
-        local_dirA="${${url1%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
-        local_dirA="${${${${local_dirA//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-        local_dirA="${ZPLGM[SNIPPETS_DIR]}/$local_dirA"
-
-        local_dirB="${${url2%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
-        local_dirB="${${${${local_dirB//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-        local_dirB="${ZPLGM[SNIPPETS_DIR]}/${local_dirB%--$filename0B}/$filename0B"
-
-        [[ "${+sice[svn]}" = "1" || -e "$local_dirA/$filenameA" ]] && {
-            [[ -e "$local_dirA/$filenameA" ]] && builtin cd "$local_dirA/$filenameA" || echo "No such snippet"
+        [[ "${+sice[svn]}" = "1" || -e "${reply[-2]}" ]] && {
+            [[ -e "${reply[-2]}" ]] && builtin cd "${reply[-2]}" || echo "No such snippet"
         } || {
-            [[ -e "$local_dirB" ]] && builtin cd "$local_dirB" || echo "No such snippet"
+            [[ -e "${reply[-1]}" ]] && builtin cd "${reply[-1]}" || echo "No such snippet"
         }
     else
         -zplg-any-to-user-plugin "$1" "$2"
