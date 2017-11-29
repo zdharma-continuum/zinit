@@ -1277,9 +1277,13 @@ ZPLGM[EXTENDED_GLOB]=""
 
     if [[ "$st" = "status" ]]; then
         if (( ${+ZPLG_ICE[svn]} )); then
+            print -r -- "${ZPLGM[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZPLGM[col-rst]}"
             ( builtin cd "$local_dir"; command svn status -vu )
+            print
         else
+            print -r -- "${ZPLGM[col-info]}Status for ${${local_dir:h}##*--}/$filename${ZPLGM[col-rst]}"
             ( builtin cd "$local_dir"; command ls -lth $filename )
+            print
         fi
     else
         -zplg-load-snippet "$URL" "-i" "-f" "-u"
