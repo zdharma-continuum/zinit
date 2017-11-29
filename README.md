@@ -30,13 +30,14 @@ zplugin ice as"command" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%a
 zplg light direnv/direnv
 ```
 
-Zplugin gives **reports** from plugin load. Plugins are no longer black boxes,
-report will tell what aliases, functions, bindkeys, Zle widgets, zstyles,
-completions, variables, `PATH` and `FPATH` elements a plugin has set up.
+Zplugin is the only plugin manager out there currently that has **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode)** which yields **39-50% faster loading!**
+
+Zplugin gives **reports** from plugin load describing what aliases, functions,
+bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
+elements a plugin has set up.
 
 Supported is **unloading** of plugin and ability to list, (un)install and
-selectively disable, enable plugin's completions. Also, every plugin is
-compiled and user can control this function.
+selectively disable, enable plugin's completions.
 
 The system does not use `$FPATH`, loading multiple plugins doesn't clutter
 `$FPATH` with the same number of entries (e.g. `10`). Code is immune to
@@ -430,6 +431,57 @@ In general, to use *subdirectories* of Github projects as snippets add `/trunk/{
 ```
 
 Snippets too have completions installed by default, like plugins.
+
+### Turbo Mode
+
+The Ice-mod `wait` allows you to postpone loading of a plugin to the moment
+when processing of `.zshrc` is finished and prompt is being shown. It is like
+Windows – during startup, it shows desktop even though it still loads data in
+background. This has drawbacks, but is for sure better than blank screen for
+10 minutes. And here, in Zplugin, there are no drawbacks of this approach – no
+lags, freezes, etc. – the command line is fully usable while the plugins are
+being loaded.
+
+To use this Turbo Mode add `wait` ice to the target plugin in one of following ways:
+
+```SystemVerilog
+PS1="READY > "
+zplugin ice wait'!1' atload'promptinit; prompt scala3'
+zplugin load psprint/zprompts
+```
+
+This sets plugin `psprint/zprompts` to be loaded `1` second after `zshrc`. Seeing
+your prompt updated at startup is like loud engine in sports car, you see the speed
+happening :) Exclamation mark causes Zplugin to reset-prompt after loading plugin.
+The same with Prezto prompts:
+
+```SystemVerilog
+zplg ice svn silent wait'!1' atload'prompt smiley'
+zplg snippet PZT::modules/prompt
+```
+
+Using `zsh-users/zsh-autosuggestions` without any drawbacks:
+
+```SystemVerilog
+zplugin ice wait'1' atload'_zsh_autosuggest_start'
+zplugin light zsh-users/zsh-autosuggestions
+```
+
+Autosuggestions uses `precmd` hook that is called right after processing `zshrc` (before prompt).
+Turbo Mode will wait `1` second so `precmd` will be called earlier than load of the plugin. This
+makes autosuggestions inactive at first prompt. But the given `atload` Ice-mod fixes this, it calls
+the same function `precmd` would, right after loading autosuggestions.
+
+```SystemVerilog
+zplugin ice wait'[[ ${ZLAST_COMMANDS[(r)cras*]} ]]'
+zplugin load zdharma/zplugin-crasis
+```
+
+The plugin `zplugin-crasis` provides command `crasis`. Ice-mod `wait` is set to wait on condition. When user
+enters `cras` at command line, the plugin is instantly loaded and command `crasis` becomes
+available. **[See this feature in action](https://asciinema.org/a/149725)**. This feature
+requires `zdharma/fast-syntax-highlighting` (it builds `ZLAST_COMMANDS` array), but a small
+dedicated plugin is comming soon.
 
 # Ice Modifiers
 
