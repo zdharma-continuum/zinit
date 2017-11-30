@@ -170,7 +170,9 @@ store_state() {
            ZPLG_CUR_PLUGIN
     )
     for k in "${keys[@]}"; do
-        print -r -- "$k: ${(qq@)${(Pkv@)k}}" >>! answer/state
+        # kv two times, outer for after patch, inner for before patch:
+        # 37092: make nested ${(P)name} properly refer to parameter on return
+        print -r -- "$k: ${(kvqq@)${(Pkv@)k}}" >>! answer/state
     done
 
     print -rl -- "---" "Parameter module: ${+modules[zsh/parameter]}" >>! answer/state
