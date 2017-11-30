@@ -1038,7 +1038,7 @@ builtin setopt noaliases
     # Updating – not sourcing, etc.
     [[ -n "${opts[(r)-u]}" ]] && return 0
 
-    (( ${+ZPLG_ICE[atload]} )) && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atload]} && tmp[1] )) && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${save_url}]=$SECONDS
