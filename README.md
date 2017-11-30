@@ -509,6 +509,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. |
 | `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. |
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
+| `atinit`  | Run command after directory setup (cloning, checking it, etc.) but before loading. Supports plugins and snippets. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. To be used with plugins and snippets. |
@@ -580,7 +581,7 @@ a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
 Usage:
 -h|--help|help           - usage information
 man                      - manual
-self-update              - updates Zplugin
+self-update              - updates and compiles Zplugin
 zstatus                  - overall Zplugin status
 times                    - statistics on plugin loading times
 load {plugin-name}       - load plugin, can also receive absolute local path
@@ -588,8 +589,8 @@ light {plugin-name}      - light plugin load, without reporting (significantly f
 unload {plugin-name}     - unload plugin (needs reporting)
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 ice <ice specification>  - add ICE to next command, argument is e.g. from"gitlab"
-update {plugin-name}     - Git update plugin (or all plugins and snippets if --all passed)
-status {plugin-name}     - Git status for plugin (or all plugins if --all passed)
+update {plugin-name}|URL - Git update plugin or snippet (or all plugins and snippets if --all passed)
+status {plugin-name}|URL - Git status for a plugin or snippet (or all plugins and snippets if --all passed)
 report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
 loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
 ls                       - list snippets in formatted and colorized manner
@@ -637,7 +638,8 @@ zplugin snippet OMZ::plugins/git/git.plugin.zsh
 ```
 
 Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
-a fresh version of a snippet, or `zplugin update --all` to refresh all snippets.
+a fresh version of a snippet, or `zplugin update {URL}`. Can also use `zplugin update --all` to
+update all snippets (and plugins).
 
 Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
 prompt will appear as something like: `... $(build_prompt) ...`.
@@ -743,6 +745,6 @@ local -A ZPLGM  # initial Zplugin's hash definition, then:
 | ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
 
 # IRC Channel
-Simply connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
+Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
 Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
