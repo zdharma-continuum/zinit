@@ -278,7 +278,7 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-at-eval {{{
 -zplg-at-eval() {
-    [[ "$1" = "%atclone" ]] && { eval "$2"; ((1)); } || eval "$1"
+    [[ "$1" = "%atclone" ]] && { eval "$2"; return $?; } || { eval "$1"; return $?; }
 }
 # }}}
 
