@@ -1,5 +1,7 @@
 tst_verbosity
 
+LANG=C LC_ALL=C
+
 zplugin ice as"command" mv"git.plugin.zsh -> gp" cp"gp -> git2.plugin.zsh" \
             pick"git2.plugin.zsh" atclone"command cp git2.plugin.zsh after_cp_test" \
             atinit"command cp after_cp_test after_atclone_test"
