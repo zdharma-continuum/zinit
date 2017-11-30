@@ -920,6 +920,8 @@ builtin setopt noaliases
         fi
     fi
 
+    (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
+
     -zplg-load-plugin "$user" "$plugin" "$mode"
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${user}---${plugin}]=$SECONDS
@@ -973,6 +975,8 @@ builtin setopt noaliases
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
+
+    (( ${+ZPLG_ICE[atinit]} && tmp[1] )) && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
 
     local -a list
     if [[ -z "${opts[(r)-u]}" && -z "${opts[(r)--command]}" && "${ZPLG_ICE[as]}" != "command" ]]; then
