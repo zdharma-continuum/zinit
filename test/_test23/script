@@ -1,0 +1,12 @@
+tst_verbosity
+
+zplugin ice as"command" mv"Makefile2 -> Makefile" cp"Makefile -> Makefile.copy" \
+            atclone"cp -v Makefile.copy Makefile.copy2" make \
+            atinit"cp -v Makefile.copy3 Makefile.copy4" \
+            atload"cp -v Makefile.copy4 Makefile.copy5" pick"Makefile.copy4" 
+zplugin snippet OMZ::plugins/make/Makefile2
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+# vim:ft=zsh

@@ -1,0 +1,3 @@
+This test verifies (acting on single-file snippet):
+
+1. Correct order of execution of ices, including atinit
