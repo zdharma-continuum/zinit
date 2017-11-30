@@ -1301,7 +1301,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" __var_name3="${5:-filename}"
 
     # Remove whitespace from beginning of URL
-    URL="${${URL#"${URL%%[! $'\t']*}"}%/}"
+    __URL="${${__URL#"${__URL%%[! $'\t']*}"}%/}"
 
     if [[ "$__URL" != [^/:]##/[^/]## ]]; then
         # Snippet
