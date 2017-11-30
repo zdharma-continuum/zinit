@@ -30,7 +30,9 @@ zplugin ice as"command" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%a
 zplg light direnv/direnv
 ```
 
-Zplugin is the only plugin manager out there currently that has **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode)** which yields **39-50% faster loading!**
+Zplugin is the only plugin manager out there currently that has **[Turbo
+Mode](https://github.com/zdharma/zplugin#turbo-mode)** which yields **39-50%
+faster Zsh startup!**
 
 Zplugin gives **reports** from plugin load describing what aliases, functions,
 bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
