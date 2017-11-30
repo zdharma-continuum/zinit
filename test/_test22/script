@@ -1,0 +1,12 @@
+tst_verbosity
+
+zplugin ice as"command" mv"git.plugin.zsh -> gp" cp"gp -> git2.plugin.zsh" \
+            pick"git2.plugin.zsh" atclone"command cp git2.plugin.zsh after_cp_test" \
+            atinit"command cp after_cp_test after_atclone_test"
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+zplugin cdlist >! answer/compdefs
+# vim:ft=zsh

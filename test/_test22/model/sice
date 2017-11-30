@@ -1,0 +1,2 @@
+OMZ::plugins/git/git.plugin.zsh/
+atclone command\ cp\ git2.plugin.zsh\ after_cp_test mv git.plugin.zsh\ -\>\ gp cp gp\ -\>\ git2.plugin.zsh pick git2.plugin.zsh as command 
