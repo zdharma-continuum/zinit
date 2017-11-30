@@ -728,7 +728,7 @@ ZPLGM[EXTENDED_GLOB]=""
         -zplg-any-colorify-as-uspl2 "$i"
         # Mark light loads
         [[ "${ZPLG_REGISTERED_STATES[$i]}" = "1" ]] && REPLY="$REPLY ${ZPLGM[col-info]}*${ZPLGM[col-rst]}"
-        print "$REPLY"
+        print -r -- "$REPLY"
     done
 } # }}}
 # FUNCTION: -zplg-unload {{{
@@ -1179,7 +1179,7 @@ ZPLGM[EXTENDED_GLOB]=""
             config=( "${(f)"$(<$repo/.git/config)"}" )
             if [[ -z "${(M)config:#\[remote[[:blank:]]*\]}" ]]; then
                 -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-                print "$REPLY doesn't have a remote set, will not fetch"
+                print -r -- "$REPLY doesn't have a remote set, will not fetch"
                 return 1
             fi
         fi
@@ -1563,7 +1563,7 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ "$cur_plugin" != "$uspl1" ]]; then
             [[ -n "$cur_plugin" ]] && print # newline
             -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-            print "$REPLY:"
+            print -r -- "$REPLY:"
             cur_plugin="$uspl1"
         fi
 
@@ -1590,7 +1590,7 @@ ZPLGM[EXTENDED_GLOB]=""
         user="${reply[-2]}" plugin="${reply[-1]}"
 
         -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-        print "$REPLY:"
+        print -r -- "$REPLY:"
 
         if [[ "$compile" = "1" ]]; then
             -zplg-compile-plugin "$user" "$plugin"
@@ -1624,7 +1624,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print "not compiled"
         else
             -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-            print "$REPLY not compiled"
+            print -r -- "$REPLY not compiled"
         fi
         return 1
     fi
@@ -1961,9 +1961,9 @@ ZPLGM[EXTENDED_GLOB]=""
         local s_path="${reply[-3]}" _path="${reply[-2]}"
 
         [[ "${+sice[svn]}" = "1" || -e "$s_path" ]] && {
-            [[ -e "$s_path" ]] && builtin cd "$s_path" || echo "No such snippet"
+            [[ -e "$s_path" ]] && builtin cd "$s_path" || print "No such snippet"
         } || {
-            [[ -e "$_path" ]] && builtin cd "$_path" || echo "No such snippet"
+            [[ -e "$_path" ]] && builtin cd "$_path" || print "No such snippet"
         }
     else
         -zplg-any-to-user-plugin "$1" "$2"
@@ -2024,7 +2024,7 @@ ZPLGM[EXTENDED_GLOB]=""
             gitout=`command git log --all --max-count=1 --since=$timespec`
             if [[ -n "$gitout" ]]; then
                 -zplg-any-colorify-as-uspl2 "$uspl1"
-                echo "$REPLY"
+                print -r -- "$REPLY"
             fi
         fi
         popd >/dev/null
@@ -2090,9 +2090,9 @@ ZPLGM[EXTENDED_GLOB]=""
         }
     fi
 
-    echo >! "${plugin}.plugin.zsh"
-    echo >! "README.md"
-    echo >! "LICENSE"
+    print >! "${plugin}.plugin.zsh"
+    print >! "README.md"
+    print >! "LICENSE"
 
     if [[ "$user" != "_local" ]]; then
         print "Remote repository $uspl2col set up as origin."
