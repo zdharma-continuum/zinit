@@ -518,6 +518,8 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `src`     | Specify additional file to source after sourcing main file or after setting up command (`as"command"`). |
 | `wait`    | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). |
 
+Order of related Ice-mods: `atinit` -> `atpull!` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `atload`.
+
 # Installation
 
 Execute:
