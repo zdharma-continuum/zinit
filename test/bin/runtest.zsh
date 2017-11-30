@@ -97,6 +97,37 @@ internet_mock_svn() {
     builtin return 0
 }
 # }}}
+# FUNCTION: internet_mock_curl {{{
+internet_mock_curl() {
+    setopt localoptions extendedglob warncreateglobal typesetsilent
+    local -a opts
+    local -a args
+    args=( "$@" )
+
+    builtin zparseopts -E -D -a opts f s S L || { echo "Incorrect options given to CURL mock function"; return 1; }
+    local -a all_opts=( -f -s -S -L )
+
+    if [[ -z ${(@)opts:|all_opts} ]]; then
+        local -A urlmap
+        urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
+        urlmap=( "${(kv@)urlmap//\%PWD/$TEST_DIR}" )
+        local URL="$1"
+        local local_dir="${URL:t}"
+        URL="${urlmap[$URL]}"
+        URL="${URL//\/[^\/]##\/../}"
+
+        [[ -z "$URL" ]] && {
+            print -u2 -r -- "### internet_mock_curl: urlmap didn't contain \`$1'"
+            return 1
+        }
+
+        command curl ${opts[@]} "$URL"
+        return $?
+    fi
+
+    return 1
+}
+# }}}
 # FUNCTION: verbosity {{{
 tst_verbosity() {
     # 3 can be used for output

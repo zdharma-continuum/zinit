@@ -17,6 +17,7 @@ prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-au
 	cp ../_zplugin data/functions/zplugin.zsh/
 	perl -pi -e 's/command git/internet_mock_git/g' zplugin-install.zsh zplugin-autoload.zsh
 	perl -pi -e 's/command svn/internet_mock_svn/g' zplugin-install.zsh
+	perl -pi -e 's/command curl/internet_mock_curl/g' zplugin-install.zsh
 
 test%: _test%/script _test%/urlmap _test%/model data
 	rm -rf _$@/answer
