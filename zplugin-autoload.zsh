@@ -1158,15 +1158,18 @@ ZPLGM[EXTENDED_GLOB]=""
         return $?
     fi
 
-    local st="$1"
     -zplg-any-to-user-plugin "$2" "$3"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
-    local local_dir="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" key
-    local -A mdata sice
-
-    -zplg-pack-ice "$user" "$plugin"
+    local user="${reply[-2]}" plugin="${reply[-1]}" st="$1" local_dir filename key
+    local -A ice
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+    if [[ "$st" = "status" ]]; then
+        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
+        return 0
+    fi
+
+    -zplg-compute-ice "$user/$plugin" "pack" ice local_dir filename || return 1
 
     # Check if repository has a remote set, if it is _local
     if [[ "$user" = "_local" ]]; then
@@ -1177,40 +1180,28 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -z "${(M)config:#\[remote[[:blank:]]*\]}" ]]; then
                 -zplg-any-colorify-as-uspl2 "$user" "$plugin"
                 print "$REPLY doesn't have a remote set, will not fetch"
-                return
+                return 1
             fi
         fi
     fi
 
-    if [[ "$st" = "status" ]]; then
-        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; return 0; )
-    else
-        sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
+    command rm -f $local_dir/.zplugin_lstupd
 
-        { for key in from as pick bpick mv cp make atclone atpull ver is_release; do
-            [[ -f "${local_dir}/._zplugin/$key" ]] && mdata[$key]=$(<${local_dir}/._zplugin/$key)
-          done
-        } 2>/dev/null
-        for key in from as pick bpick mv cp make atclone atpull ver; do
-            (( ${+sice[$key]} || ${+mdata[$key]} )) && sice[$key]=${sice[$key]-${(q)mdata[$key]}}
-        done
-
-        if [[ -n "${mdata[is_release]}" ]]; then
+    if (( 1 )); then
+        if [[ -n "${ice[is_release]}" ]]; then
             (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
             -zplg-get-latest-gh-r-version "$user" "$plugin"
-            if [[ "${mdata[is_release]/\/$REPLY\//}" != "${mdata[is_release]}" ]]; then
-                echo "Binary release already up to date (version: $REPLY)"
+            if [[ "${ice[is_release]/\/$REPLY\//}" != "${ice[is_release]}" ]]; then
+                print -r -- "Binary release already up to date (version: $REPLY)"
             else
-                [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
+                [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
-                for key in from as pick bpick mv cp make atclone atpull ver; do
-                    (( ${+sice[$key]} || ${+ZPLG_ICE[$key]} )) && ZPLG_ICE[$key]="${ZPLG_ICE[$key]-${(Q)sice[$key]}}"
-                done
+                ZPLG_ICE=( "${(kv@)ice}" )
                 -zplg-setup-plugin-dir "$user" "$plugin" "-u"
+                ZPLG_ICE=()
             fi
         else
             ( builtin cd "$local_dir" || return 1
-              command rm -f .zplugin_lstupd
               command git fetch --quiet && \
                 command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
                 command tee .zplugin_lstupd | \
@@ -1219,7 +1210,7 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
-                  [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} = *"!"* ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${${(Q)sice[atpull]}#!}" ${(Q)sice[atclone]}; )
+                  [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
               }
 
               command git pull --no-stat; )
@@ -1229,8 +1220,8 @@ ZPLGM[EXTENDED_GLOB]=""
         local -a log
         { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
         [[ ${#log} -gt 0 ]] && {
-            if [[ -z "${mdata[is_release]}" && -n "${sice[mv]}" ]]; then
-                local from="${${(Q)sice[mv]}%%[[:space:]]#->*}" to="${${(Q)sice[mv]}##*->[[:space:]]#}"
+            if [[ -z "${ice[is_release]}" && -n "${ice[mv]}" ]]; then
+                local from="${ice[mv]%%[[:space:]]#->*}" to="${ice[mv]##*->[[:space:]]#}"
                 local -a afr
                 ( builtin cd "$local_dir" || return 1
                   afr=( ${~from}(N) )
@@ -1238,8 +1229,8 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
-            if [[ -z "${mdata[is_release]}" && -n "${sice[cp]}" ]]; then
-                local from="${${(Q)sice[cp]}%%[[:space:]]#->*}" to="${${(Q)sice[cp]}##*->[[:space:]]#}"
+            if [[ -z "${ice[is_release]}" && -n "${ice[cp]}" ]]; then
+                local from="${ice[cp]%%[[:space:]]#->*}" to="${ice[cp]##*->[[:space:]]#}"
                 local -a afr
                 ( builtin cd "$local_dir" || return 1
                   afr=( ${~from}(N) )
@@ -1247,19 +1238,19 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
-            [[ ${+sice[make]} = 1 && ${(Q)sice[make]} = "!"* ]] && command make -C "$local_dir" ${(@s; ;)${${(Q)sice[make]}#\!}}
-            [[ ${+sice[atpull]} = 1 && ${${sice[atpull]}[1,2]} != *"!"* ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${(Q)sice[atpull]}" ${(Q)sice[atclone]}; )
-            [[ ${+sice[make]} = 1 && ${(Q)sice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${(Q)sice[make]}}
+            [[ ${+ice[make]} = 1 && ${ice[make]} = "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}
+            [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
+            [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
         }
 
         # Record new ICE modifiers used
         ( builtin cd "$local_dir" || return 1
           command mkdir -p ._zplugin
           for key in proto from as pick bpick mv cp atclone atpull ver; do
-              print -r -- "${(Q)sice[$key]}" >! "._zplugin/$key"
+              print -r -- "${ice[$key]}" >! "._zplugin/$key"
           done
           # Optional file - create file for make ICE mod
-          (( ${+sice[make]} )) && print -r -- "${(Q)sice[make]}" >! "._zplugin/make" || command rm -f "._zplugin/make"
+          (( ${+ice[make]} )) && print -r -- "${ice[make]}" >! "._zplugin/make" || command rm -f "._zplugin/make"
         )
     fi
 
@@ -1304,21 +1295,29 @@ ZPLGM[EXTENDED_GLOB]=""
 # $4 - name of output string parameter, to hold path to directory ("local_dir")
 # $5 - name of output string parameter, to hold filename ("filename")
 -zplg-compute-ice() {
+    setopt localoptions extendedglob
+
     local __URL="${1%/}" __pack="$2"
     local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" __var_name3="${5:-filename}"
 
     # Remove whitespace from beginning of URL
     URL="${${URL#"${URL%%[! $'\t']*}"}%/}"
 
-    -zplg-two-paths "$__URL"
-    local __s_path="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
+    if [[ "$__URL" != [^/:]##/[^/]## ]]; then
+        # Snippet
+        -zplg-two-paths "$__URL"
+        local __s_path="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
+    else
+        # Plugin
+        local __user="${__URL%%/*}" __plugin="${__URL#*/}"
+        local __s_path="" ___path="${ZPLGM[PLUGINS_DIR]}/${__user}---${__plugin}" __filename="" __local_dir
+    fi
 
-    # If packed, ZPLG_ICE will win. If not then other sources will win
-    [[ "$__pack" = "pack" ]] && -zplg-pack-ice "$__URL" ""
+    [[ "$__pack" = "pack" ]] && -zplg-pack-ice "${__user-$__URL}" "$__plugin"
 
     local -A __sice
     local -a __tmp
-    __tmp=( "${(z@)ZPLG_SICE[$__URL/]}" )
+    __tmp=( "${(z@)ZPLG_SICE[${${__user+$__user/$__plugin}:-$__URL/}]}" )
     (( ${#__tmp} > 1 && ${#__tmp} % 2 == 0 )) && __sice=( "${(@Q)__tmp}" )
 
     if [[ "${+__sice[svn]}" = "1" || -e "$__s_path" ]]; then
@@ -1340,12 +1339,13 @@ ZPLGM[EXTENDED_GLOB]=""
         fi
     fi
 
-    local __zplugin_path="$__local_dir/._zplugin${__sice[svn]-_${__filename}}"
+    local __zplugin_path="$__local_dir/._zplugin"
+    (( 0 == ${+__user} )) && __zplugin_path+="${__sice[svn]-_${__filename}}"
 
     # Read disk-Ice
     local -A __mdata
     local __key
-    { for __key in mode url as pick bpick mv cp make atclone atpull; do
+    { for __key in mode url from as pick bpick mv cp make atclone atpull is_release ver; do
         [[ -f "$__zplugin_path/$__key" ]] && __mdata[$__key]="$(<$__zplugin_path/$__key)"
       done
       [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
@@ -1353,10 +1353,11 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Handle flag-Ices; svn must be last
     for __key in make svn; do
-        (( ${+ZPLG_ICE[no$__key]} )) || continue
+        (( 0 == ${+ZPLG_ICE[no$__key]} )) && continue
 
         if [[ "$__key" = "svn" ]]; then
             command print -r -- "0" >! "$__zplugin_path/mode"
+            __mdata[mode]=0
         else
             command rm -f -- "$__zplugin_path/$__key"
         fi
@@ -1365,7 +1366,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
-    for __key in as pick bpick mv cp atclone atpull   make svn; do
+    for __key in mode url from as pick bpick mv cp atclone atpull is_release ver   make svn; do
         (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
 
