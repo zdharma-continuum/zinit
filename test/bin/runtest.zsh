@@ -13,6 +13,8 @@ builtin autoload +X is-at-least
 builtin autoload +X allopt
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
 FPATH=/usr/share/zsh/site-functions:/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions
+LANG=C
+LC_ALL=C
 
 local TEST_DIR="$PWD/$1"
 
