@@ -105,7 +105,8 @@ internet_mock_curl() {
     args=( "$@" )
 
     builtin zparseopts -E -D -a opts f s S L || { echo "Incorrect options given to CURL mock function"; return 1; }
-    local -a all_opts=( -f -s -S -L )
+    local -a all_opts
+    all_opts=( -f -s -S -L )
 
     if [[ -z ${(@)opts:|all_opts} ]]; then
         local -A urlmap
