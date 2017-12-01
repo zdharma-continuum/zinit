@@ -1,0 +1,44 @@
+BIN_DIR
+test
+COMPLETIONS_DIR
+_test26/answer/completions
+DTRACE
+0
+EXTENDED_GLOB
+
+HOME_DIR
+_test26/answer
+HOME_READY
+1
+PLUGINS_DIR
+_test26/answer/plugins
+SHADOWING
+inactive
+SNIPPETS_DIR
+_test26/answer/snippets
+TIME_1_OMZ::plugins/git/git.plugin.zsh
+__reset-by-test__
+TIME_INDEX
+1
+ZERO
+zplugin.zsh
+---
+ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
+ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
+ZPLG_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'git.plugin.zsh <0>'
+ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh/' 'atpull builtin\ print\ --\ --Added\ Line--\ \>\>!\ git.plugin.zsh '
+ZPLG_FUNCTIONS: 
+ZPLG_OPTIONS: 
+ZPLG_PATH: 
+ZPLG_FPATH: 
+ZPLG_PARAMETERS_PRE: 
+ZPLG_PARAMETERS_POST: 
+ZPLG_ZSTYLES: 
+ZPLG_BINDKEYS: 
+ZPLG_ALIASES: 
+ZPLG_WIDGETS_SAVED: 
+ZPLG_WIDGETS_DELETE: 
+ZPLG_COMPDEF_REPLAY: '_git gcount' '_git gdv=git-diff' '_grep gfg' '_git ggf=git-checkout' '_git ggl=git-checkout' '_git ggp=git-checkout' '_git ggpnp=git-checkout' '_git ggu=git-checkout' '_git ggpur=git-checkout' '_git ggpull=git-checkout' '_git ggpush=git-checkout' '_git git-svn-dcommit-push=git' '_git gk=gitk' '_git gke=gitk' '_git glp=git-log' '_git gpoat=git-push'
+ZPLG_CUR_PLUGIN: ''
+---
+Parameter module: 1
