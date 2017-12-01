@@ -362,6 +362,8 @@ Commands can also be added to `$PATH` using **snippets**. For example:
 ```
 
 Snippets also support `atpull` Ice-mod, so it's possible to do e.g. `atpull'!svn revert'`.
+There's also `atinit` Ice-mod, executed before loading plugin or snippet (but after setting
+up its main directory).
 
 ### Completion Management
 
@@ -448,7 +450,8 @@ Windows – during startup, it shows desktop even though it still loads data in
 background. This has drawbacks, but is for sure better than blank screen for
 10 minutes. And here, in Zplugin, there are no drawbacks of this approach – no
 lags, freezes, etc. – the command line is fully usable while the plugins are
-being loaded.
+being loaded, for number of such plugins like `10` or `20`. The same for higher
+number of plugins will be implemented very soon.
 
 Zsh 5.3 or greater is required. To use this Turbo Mode add `wait` ice to the
 target plugin in one of following ways:
@@ -509,12 +512,12 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. |
 | `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. |
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
-| `atinit`  | Run command after directory setup (cloning, checking it, etc.) but before loading. Supports plugins and snippets. |
+| `atinit`  | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. |
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. To be used with plugins and snippets. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
-| `make`    | Run `make` command after cloning and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`, e.g. `make'!'`. |
+| `make`    | Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. |
 | `src`     | Specify additional file to source after sourcing main file or after setting up command (`as"command"`). |
 | `wait`    | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). |
 
