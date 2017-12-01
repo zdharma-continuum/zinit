@@ -1,0 +1,1 @@
+!builtin print -- --Added Line-- >>! git.plugin.zsh; cp -vf git.plugin.zsh git2.plugin.zsh
