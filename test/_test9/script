@@ -12,7 +12,7 @@ perl -pi -e 's/test_plugins\/zsh-select/test_plugins\/zsh-select-more/g' answer/
   set -e
   print 'builtin echo >! Test_has_failed' >! ._zplugin/atpull
   print -rl -- test_file* >! file.lst
-  command rm -f test_file ) || return 1
+  [[ -f test_file ]] && command rm -f test_file ) || return 1
 
 zplugin update psprint/zsh-select
 
