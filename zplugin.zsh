@@ -1276,32 +1276,32 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-wait-cb {{{
 -zplg-run-task() {
-    local pass="$1" t="$2" tpe="$3" idx="$4" mode="$5" id="${(Q)6}" action s=1
+    local __pass="$1" __t="$2" __tpe="$3" __idx="$4" __mode="$5" __id="${(Q)6}" __action __s=1
 
     local -A ZPLG_ICE
-    ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${idx}]}}" )
+    ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${__idx}]}}" )
 
-    if [[ $pass = 1 && "${ZPLG_ICE[wait]#\!}" = <-> ]]; then
-        action="${(M)ZPLG_ICE[wait]#\!}load"
-    elif [[ $pass = 1 && -n "${ZPLG_ICE[wait]#\!}" ]] && { eval "${ZPLG_ICE[wait]#\!}" || [[ $(( s=0 )) = 1 ]]; }; then
-        action="${(M)ZPLG_ICE[wait]#\!}load"
-    elif [[ -n "${ZPLG_ICE[load]#\!}" && -n $(( s=0 )) && $pass = 2 && -z "${ZPLG_REGISTERED_PLUGINS[(r)$id]}" ]] && eval "${ZPLG_ICE[load]#\!}"; then
-        action="${(M)ZPLG_ICE[load]#\!}load"
-    elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( s=0 )) && $pass = 1 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
-        action="${(M)ZPLG_ICE[unload]#\!}remove"
+    if [[ $__pass = 1 && "${ZPLG_ICE[wait]#\!}" = <-> ]]; then
+        __action="${(M)ZPLG_ICE[wait]#\!}load"
+    elif [[ $__pass = 1 && -n "${ZPLG_ICE[wait]#\!}" ]] && { eval "${ZPLG_ICE[wait]#\!}" || [[ $(( __s=0 )) = 1 ]]; }; then
+        __action="${(M)ZPLG_ICE[wait]#\!}load"
+    elif [[ -n "${ZPLG_ICE[load]#\!}" && -n $(( __s=0 )) && $__pass = 2 && -z "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[load]#\!}"; then
+        __action="${(M)ZPLG_ICE[load]#\!}load"
+    elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( __s=0 )) && $__pass = 1 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
+        __action="${(M)ZPLG_ICE[unload]#\!}remove"
     fi
 
-    if [[ "$action" = *load ]]; then
-        [[ "$tpe" = "p" ]] && -zplg-load "$id" "" "$mode" || -zplg-load-snippet "$id" ""
-        zle && zle -M "Loaded $id"
-    elif [[ "$action" = *remove ]]; then
+    if [[ "$__action" = *load ]]; then
+        [[ "$__tpe" = "p" ]] && -zplg-load "$__id" "" "$__mode" || -zplg-load-snippet "$__id" ""
+        zle && zle -M "Loaded $__id"
+    elif [[ "$__action" = *remove ]]; then
         (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
-        [[ "$tpe" = "p" ]] && -zplg-unload "$id" "" "-q"
+        [[ "$__tpe" = "p" ]] && -zplg-unload "$__id" "" "-q"
     fi
 
-    [[ "${REPLY::=$action}" = \!* ]] && zle && zle .reset-prompt
+    [[ "${REPLY::=$__action}" = \!* ]] && zle && zle .reset-prompt
 
-    return $s
+    return $__s
 }
 # }}}
 # FUNCTION: -zplg-submit-turbo {{{
@@ -1332,31 +1332,31 @@ builtin setopt noaliases
 -zplg-scheduler() {
     sched +1 "-zplg-scheduler 1"
 
-    integer t=EPOCHSECONDS i=2
+    integer __t=EPOCHSECONDS __i=2
 
     [[ -n "$1" ]] && {
         () {
             setopt localoptions extendedglob
-            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1]} < $t ? zplugin_scheduler_add(i++) : i++ ))]}} )
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1]} < $__t ? zplugin_scheduler_add(__i++) : __i++ ))]}} )
         }
         ZPLG_TASKS=( "<no-data>" ${(@)ZPLG_TASKS:#<no-data>} )
     } || {
         add-zsh-hook -d -- precmd -zplg-scheduler
         () {
             setopt localoptions extendedglob
-            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1]} <= 1 ? ${match[1]} : t ))${match[2]}} )
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1]} <= 1 ? ${match[1]} : __t ))${match[2]}} )
         }
     }
 
-    local task idx=0 count=0 idx2
-    for task in ${ZPLG_RUN[@]}; do
-        -zplg-run-task 1 "${(@z)task}" && ZPLG_TASKS+=( "$task" )
-        [[ $(( ++idx, count += ${${REPLY:+1}:-0} )) -gt 20 ]] && break
+    local __task __idx=0 __count=0 __idx2
+    for __task in ${ZPLG_RUN[@]}; do
+        -zplg-run-task 1 "${(@z)__task}" && ZPLG_TASKS+=( "$__task" )
+        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 20 ]] && break
     done
-    for (( idx2=1; idx2 <= idx; ++ idx2 )); do
-        -zplg-run-task 2 "${(@z)ZPLG_RUN[idx2]}"
+    for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
+        -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2]}"
     done
-    ZPLG_RUN[1,idx]=()
+    ZPLG_RUN[1,__idx]=()
 }
 # }}}
 #
