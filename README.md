@@ -495,6 +495,23 @@ available. **[See this feature in action](https://asciinema.org/a/149725)**. Thi
 requires `zdharma/fast-syntax-highlighting` (it builds `ZLAST_COMMANDS` array), but a small
 dedicated plugin is comming soon.
 
+### Automatic Load/Unload On Condition
+
+Ices `load` and `unload` allow to define when you want plugins active or unactive. For example:
+
+```SystemVerilog
+# Load when in ~/tmp
+zplugin ice load'![[ $PWD = */tmp ]]' unload'![[ $PWD != */tmp ]]' atload"promptinit; prompt sprint3"
+zplugin load psprint/zprompts
+# Load when NOT in ~/tmp
+zplugin ice load'![[ $PWD != */tmp ]]' unload'![[ $PWD = */tmp ]]'
+zplugin load russjohnson/angry-fly-zsh
+```
+
+Two prompts, each active in different directories. This can be used to have plugin-sets, e.g. by
+defining variable `$PLUGINS` with values like `cpp`,`web`,`admin` and setting `load`/`unload`
+conditions which plugins you want to be active.
+
 # Ice Modifiers
 
 Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
