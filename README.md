@@ -97,6 +97,11 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 04-12-2017
+  - It's possible to set plugin loading and unloading on condition. ZPlugin supports plugin unloading,
+    so it's possible to e.g. **unload prompt and load another one**, on e.g. directory change. Checkout
+    [full story](#automatic-loadunload-on-condition) and [Asciinema video](https://asciinema.org/a/150825).
+
 * 29-11-2017
   - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode)** – **39-50% or more faster loading!**
   - Subcommand `update` can update snippets, via given URL (up to this point snippets were updated via
@@ -510,7 +515,9 @@ zplugin load russjohnson/angry-fly-zsh
 
 Two prompts, each active in different directories. This can be used to have plugin-sets, e.g. by
 defining variable `$PLUGINS` with values like `cpp`,`web`,`admin` and setting `load`/`unload`
-conditions which plugins you want to be active.
+conditions which plugins you want to be active on `cpp`, which on `web`, etc.
+
+Difference with `wait` is that `load`/`unload` are constantly active, not only till first activation.
 
 # Ice Modifiers
 
