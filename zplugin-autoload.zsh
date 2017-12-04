@@ -748,7 +748,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-unload() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]}/${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}"
+    local uspl2="${reply[-2]}/${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
 
     # KSH_ARRAYS immunity
     integer correct=0
@@ -776,7 +776,7 @@ ZPLGM[EXTENDED_GLOB]=""
     for f in "${(on)func[@]}"; do
         [[ -z "$f" ]] && continue
         f="${(Q)f}"
-        print "Deleting function $f"
+        (( quiet )) || print "Deleting function $f"
         unfunction -- "$f"
     done
 
@@ -802,22 +802,22 @@ ZPLGM[EXTENDED_GLOB]=""
         local sw_arr5="${(Q)sw_arr[5-correct]}" # Optional -R (not with -A, -N)
 
         if [[ "$sw_arr3" = "-M" && "$sw_arr5" != "-R" ]]; then
-            print "Deleting bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}mapped to $sw_arr4${ZPLGM[col-rst]}"
+            (( quiet )) || print "Deleting bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}mapped to $sw_arr4${ZPLGM[col-rst]}"
             bindkey -M "$sw_arr4" -r "$sw_arr1"
         elif [[ "$sw_arr3" = "-M" && "$sw_arr5" = "-R" ]]; then
-            print "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}mapped to $sw_arr4${ZPLGM[col-rst]}"
+            (( quiet )) || print "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}mapped to $sw_arr4${ZPLGM[col-rst]}"
             bindkey -M "$sw_arr4" -Rr "$sw_arr1"
         elif [[ "$sw_arr3" != "-M" && "$sw_arr5" = "-R" ]]; then
-            print "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2"
+            (( quiet )) || print "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2"
             bindkey -Rr "$sw_arr1"
         elif [[ "$sw_arr3" = "-A" ]]; then
-            print "Linking backup-\`main' keymap \`$sw_arr4' back to \`main'"
+            (( quiet )) || print "Linking backup-\`main' keymap \`$sw_arr4' back to \`main'"
             bindkey -A "$sw_arr4" "main"
         elif [[ "$sw_arr3" = "-N" ]]; then
-            print "Deleting keymap \`$sw_arr4'"
+            (( quiet )) || print "Deleting keymap \`$sw_arr4'"
             bindkey -D "$sw_arr4"
         else
-            print "Deleting bindkey $sw_arr1 $sw_arr2"
+            (( quiet )) || print "Deleting bindkey $sw_arr1 $sw_arr2"
             bindkey -r "$sw_arr1"
         fi
     done
@@ -840,7 +840,7 @@ ZPLGM[EXTENDED_GLOB]=""
         local ps_arr1="${(Q)ps_arr[1-correct]}"
         local ps_arr2="${(Q)ps_arr[2-correct]}"
 
-        print "Deleting zstyle $ps_arr1 $ps_arr2"
+        (( quiet )) || print "Deleting zstyle $ps_arr1 $ps_arr2"
 
         zstyle -d "$ps_arr1" "$ps_arr2"
     done
@@ -865,10 +865,10 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ "$k" = "physical" ]] && continue
 
             if [[ "${opts[$k]}" = "on" ]]; then
-                print "Setting option $k"
+                (( quiet )) || print "Setting option $k"
                 builtin setopt "$k"
             else
-                print "Unsetting option $k"
+                (( quiet )) || print "Unsetting option $k"
                 builtin unsetopt "$k"
             fi
         done
@@ -894,13 +894,13 @@ ZPLGM[EXTENDED_GLOB]=""
         local nv_arr3="${(Q)nv_arr[3-correct]}"
 
         if [[ "$nv_arr3" = "-s" ]]; then
-            print "Removing ${ZPLGM[col-info]}suffix${ZPLGM[col-rst]} alias ${nv_arr1}=${nv_arr2}"
+            (( quiet )) || print "Removing ${ZPLGM[col-info]}suffix${ZPLGM[col-rst]} alias ${nv_arr1}=${nv_arr2}"
             unalias -s -- "$nv_arr1"
         elif [[ "$nv_arr3" = "-g" ]]; then
-            print "Removing ${ZPLGM[col-info]}global${ZPLGM[col-rst]} alias ${nv_arr1}=${nv_arr2}"
+            (( quiet )) || print "Removing ${ZPLGM[col-info]}global${ZPLGM[col-rst]} alias ${nv_arr1}=${nv_arr2}"
             unalias -- "${(q)nv_arr1}"
         else
-            print "Removing alias ${nv_arr1}=${nv_arr2}"
+            (( quiet )) || print "Removing alias ${nv_arr1}=${nv_arr2}"
             unalias -- "$nv_arr1"
         fi
     done
@@ -916,9 +916,9 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ -z "$wid" ]] && continue
         wid="${(Q)wid}"
         if [[ "${ZPLG_ZLE_HOOKS_LIST[$wid]}" = "1" ]]; then
-            print "Removing Zle hook \`$wid'"
+            (( quiet )) || print "Removing Zle hook \`$wid'"
         else
-            print "Removing Zle widget \`$wid'"
+            (( quiet )) || print "Removing Zle widget \`$wid'"
         fi
         zle -D "$wid"
     done
@@ -934,7 +934,7 @@ ZPLGM[EXTENDED_GLOB]=""
         local orig_saved1="${(Q)orig_saved[1-correct]}" # Original widget
         local orig_saved2="${(Q)orig_saved[2-correct]}" # Saved widget
 
-        print "Restoring Zle widget $orig_saved1"
+        (( quiet )) || print "Restoring Zle widget $orig_saved1"
         zle -A "$orig_saved2" "$orig_saved1"
         zle -D "$orig_saved2"
     done
@@ -951,8 +951,8 @@ ZPLGM[EXTENDED_GLOB]=""
     elem=( "${(z)ZPLG_PATH[$uspl2]}" )
     for p in "${path[@]}"; do
         [[ -z "${elem[(r)$p]}" ]] && new+=( "$p" ) || {
-            print "Removing PATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
-            [[ -d "$p" ]] || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
+            (( quiet )) || print "Removing PATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
+            [[ -d "$p" ]] || (( quiet )) || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
         }
     done
     path=( "${new[@]}" )
@@ -962,8 +962,8 @@ ZPLGM[EXTENDED_GLOB]=""
     new=( )
     for p in "${fpath[@]}"; do
         [[ -z "${elem[(r)$p]}" ]] && new+=( "$p" ) || {
-            print "Removing FPATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
-            [[ -d "$p" ]] || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
+            (( quiet )) || print "Removing FPATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
+            [[ -d "$p" ]] || (( quiet )) || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
         }
     done
     fpath=( "${new[@]}" )
@@ -1011,7 +1011,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 # "" means variable didn't exist before plugin load
                 # (didn't have a type)
                 if [[ "$v1" = "\"\"" ]]; then
-                    print "Unsetting variable $k"
+                    (( quiet )) || print "Unsetting variable $k"
                     # Checked that 4.3.17 does support "--"
                     # There cannot be parameter starting with
                     # "-" but let's defensively use "--" here
@@ -1027,12 +1027,12 @@ ZPLGM[EXTENDED_GLOB]=""
 
     if [[ "$uspl2" = "_dtrace/_dtrace" ]]; then
         -zplg-clear-debug-report
-        print "dtrace report saved to \$LASTREPORT"
+        (( quiet )) || print "dtrace report saved to \$LASTREPORT"
     else
-        print "Unregistering plugin $uspl2col"
+        (( quiet )) || print "Unregistering plugin $uspl2col"
         -zplg-unregister-plugin "$user" "$plugin"
         -zplg-clear-report-for "$user" "$plugin"
-        print "Plugin's report saved to \$LASTREPORT"
+        (( quiet )) || print "Plugin's report saved to \$LASTREPORT"
     fi
 
 } # }}}

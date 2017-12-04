@@ -5,7 +5,8 @@
 # Main state variables
 #
 
-typeset -gaH ZPLG_REGISTERED_PLUGINS
+typeset -gaH ZPLG_REGISTERED_PLUGINS ZPLG_TASKS ZPLG_RUN
+ZPLG_TASKS=( "<no-data>" )
 # Snippets loaded, url -> file name
 typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE
 
@@ -1253,7 +1254,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|if|blockf|svn|pick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
@@ -1274,33 +1275,90 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: -zplg-wait-cb {{{
-# Called by sched every 1 second or specified number of
-# seconds. Performs actual (delayed) plugin loading if
-# conditions are meet – a) time passed (for wait'2' etc.),
-# or b) condition code evaluates to true
--zplg-wait-cb() {
-    local tpe="$1" idx="$2" wait="$3" mode="$4"
+-zplg-run-task() {
+    local pass="$1" t="$2" tpe="$3" idx="$4" mode="$5" id="${(Q)6}" action s=1
 
     local -A ZPLG_ICE
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${idx}]}}" )
 
-    [[ "$tpe" = "p" ]] && local name="${${6:+$5/$6}:-$5}" || local name="$5"
-
-    if [[ "${wait#\!}" = <-> ]]; then
-        [[ "$tpe" = "p" ]] && -zplg-load "$5" "$6" "$mode" || -zplg-load-snippet "$5" "$6"
-        [[ "$wait" = \!* ]] && zle && zle .reset-prompt
-    elif eval "${wait#\!}"; then
-        zle && zle -M "Loading $name..."
-        [[ "$tpe" = "p" ]] && -zplg-load "$5" "$6" "$mode" || -zplg-load-snippet "$5" "$6"
-        [[ "$wait" = \!* ]] && zle && zle .reset-prompt
-        zle && zle -M "Loaded $name"
-    else
-        sched +1 "-zplg-wait-cb $tpe $idx ${(q)wait} ${(q)mode} ${(q)5} ${(q)6}"
+    if [[ $pass = 1 && "${ZPLG_ICE[wait]#\!}" = <-> ]]; then
+        action="${(M)ZPLG_ICE[wait]#\!}load"
+    elif [[ $pass = 1 && -n "${ZPLG_ICE[wait]#\!}" ]] && { eval "${ZPLG_ICE[wait]#\!}" || [[ $(( s=0 )) = 1 ]]; }; then
+        action="${(M)ZPLG_ICE[wait]#\!}load"
+    elif [[ -n "${ZPLG_ICE[load]#\!}" && -n $(( s=0 )) && $pass = 2 && -z "${ZPLG_REGISTERED_PLUGINS[(r)$id]}" ]] && eval "${ZPLG_ICE[load]#\!}"; then
+        action="${(M)ZPLG_ICE[load]#\!}load"
+    elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( s=0 )) && $pass = 1 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
+        action="${(M)ZPLG_ICE[unload]#\!}remove"
     fi
-    return 0
+
+    if [[ "$action" = *load ]]; then
+        [[ "$tpe" = "p" ]] && -zplg-load "$id" "" "$mode" || -zplg-load-snippet "$id" ""
+        zle && zle -M "Loaded $id"
+    elif [[ "$action" = *remove ]]; then
+        (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
+        [[ "$tpe" = "p" ]] && -zplg-unload "$id" "" "-q"
+    fi
+
+    [[ "${REPLY::=$action}" = \!* ]] && zle && zle .reset-prompt
+
+    return $s
 }
 # }}}
+# FUNCTION: -zplg-submit-turbo {{{
+-zplg-submit-turbo() {
+    local tpe="$1" mode="$2" opt_uspl2="$3" opt_plugin="$4"
 
+    ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
+    ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
+
+    local id="${${opt_plugin:+$opt_uspl2/$opt_plugin}:-$opt_uspl2}"
+
+    if [[ "${ZPLG_ICE[wait]}" = (\!|.|)<-> ]]; then
+        ZPLG_TASKS+=( "$EPOCHSECONDS+${ZPLG_ICE[wait]#(\!|.)} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
+    elif [[ -n "${ZPLG_ICE[wait]}" || -n "${ZPLG_ICE[load]}" || -n "${ZPLG_ICE[unload]}" ]]; then
+        ZPLG_TASKS+=( "${${ZPLG_ICE[wait]:+0}:-1} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-x} ${(q)id}" )
+    fi
+}
+# }}}
+# FUNCTION: -zplugin_scheduler_add_sh {{{
+# Copies task into ZPLG_RUN array, called when a task timeouts
+-zplugin_scheduler_add_sh() {
+    ZPLG_RUN+=( ${ZPLG_TASKS[$1]} )
+    return 1
+}
+# }}}
+# FUNCTION: -zplg-scheduler {{{
+# Searches for timeout tasks, executes them
+-zplg-scheduler() {
+    sched +1 "-zplg-scheduler 1"
+
+    integer t=EPOCHSECONDS i=2
+
+    [[ -n "$1" ]] && {
+        () {
+            setopt localoptions extendedglob
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1]} < $t ? zplugin_scheduler_add(i++) : i++ ))]}} )
+        }
+        ZPLG_TASKS=( "<no-data>" ${(@)ZPLG_TASKS:#<no-data>} )
+    } || {
+        add-zsh-hook -d -- precmd -zplg-scheduler
+        () {
+            setopt localoptions extendedglob
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1]} <= 1 ? ${match[1]} : t ))${match[2]}} )
+        }
+    }
+
+    local task idx=0 count=0 idx2
+    for task in ${ZPLG_RUN[@]}; do
+        -zplg-run-task 1 "${(@z)task}" && ZPLG_TASKS+=( "$task" )
+        [[ $(( ++idx, count += ${${REPLY:+1}:-0} )) -gt 20 ]] && break
+    done
+    for (( idx2=1; idx2 <= idx; ++ idx2 )); do
+        -zplg-run-task 2 "${(@z)ZPLG_RUN[idx2]}"
+    done
+    ZPLG_RUN[1,idx]=()
+}
+# }}}
 #
 # Main function with subcommands
 #
@@ -1338,11 +1396,8 @@ zplugin() {
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
-               if (( ${+ZPLG_ICE[wait]} )); then
-                   ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
-                   ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
-                   local t="${${${ZPLG_ICE[wait]##(\!|)[0-9]*}:+1}:-${ZPLG_ICE[wait]#\!}}"
-                   sched +$t "-zplg-wait-cb p ${ZPLGM[WAIT_IDX]} ${(q)ZPLG_ICE[wait]} ${(q)1/load/} ${(q)2} ${(q)3}"
+               if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} ]]; then
+                   -zplg-submit-turbo p "$1" "$2" "$3"
                else
                    -zplg-load "$2" "$3" "${1/load/}"
                fi
@@ -1350,11 +1405,8 @@ zplugin() {
            ;;
        (snippet)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-           if (( ${+ZPLG_ICE[wait]} )); then
-               ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
-               ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
-               local t="${${${ZPLG_ICE[wait]##(\!|)[0-9]*}:+1}:-${ZPLG_ICE[wait]#\!}}"
-               sched +$t "-zplg-wait-cb s ${ZPLGM[WAIT_IDX]} ${(q)ZPLG_ICE[wait]} '' ${(q)2} ${(q)3}"
+           if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} ]]; then
+               -zplg-submit-turbo s "" "$2" "$3"
            else
                -zplg-load-snippet "$2" "$3"
            fi
@@ -1390,6 +1442,7 @@ zplugin() {
                    -zplg-self-update
                    ;;
                (unload)
+                   (( ${+functions[-zplg-unload]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-unload.zsh"
                    if [[ -z "$2" && -z "$3" ]]; then
                        print "Argument needed, try help"
                    else
@@ -1567,6 +1620,11 @@ zplugin() {
 #
 # Source-executed code
 #
+
+zmodload zsh/datetime
+functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh
+autoload add-zsh-hook
+add-zsh-hook -- precmd -zplg-scheduler
 
 # code {{{
 builtin unsetopt noaliases
