@@ -1333,6 +1333,7 @@ builtin setopt noaliases
     sched +1 "-zplg-scheduler 1"
 
     integer __t=EPOCHSECONDS __i=2
+    local -a match mbegin mend
 
     [[ -n "$1" ]] && {
         () {
