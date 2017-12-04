@@ -14,6 +14,7 @@ FUNCTIONS
 ---------
 
  -zplg-any-to-uspl2
+ -zplg-at-eval
  -zplg-cd
  -zplg-cdisable
  -zplg-cenable
@@ -26,6 +27,7 @@ FUNCTIONS
  -zplg-compile-uncompile-all
  -zplg-compiled
  -zplg-compinit
+ -zplg-compute-ice
  -zplg-create
  -zplg-diff-env-compute
  -zplg-diff-functions-compute
@@ -43,6 +45,7 @@ FUNCTIONS
  -zplg-glance
  -zplg-help
  -zplg-list-compdef-replay
+ -zplg-ls
  -zplg-prepare-readlink
  -zplg-recently
  -zplg-restore-extendedglob
@@ -62,6 +65,7 @@ FUNCTIONS
  -zplg-unload
  -zplg-update-or-status
  -zplg-update-or-status-all
+ -zplg-update-or-status-snippet
 AUTOLOAD compinit
 
 DETAILS
@@ -93,6 +97,17 @@ Called by:
  -zplg-clear-report-for
  -zplg-exists-message
 
+-zplg-at-eval
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Uses feature(s): _eval_
+
+Called by:
+
+ -zplg-update-or-status
+
 -zplg-cd
 ~~~~~~~~
 
@@ -105,10 +120,12 @@ ____
  # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 36 line(s). Calls functions:
+Has 27 line(s). Calls functions:
 
  -zplg-cd
  |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin-side.zsh/-zplg-shands-exp
+ |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
@@ -257,7 +274,7 @@ ____
  # User-action entry point.
 ____
 
-Has 36 line(s). Calls functions:
+Has 37 line(s). Calls functions:
 
  -zplg-clear-completions
  |-- -zplg-get-completion-owner
@@ -355,6 +372,33 @@ Uses feature(s): _autoload_, _unfunction_
 Called by:
 
  zplugin.zsh/zplugin
+
+-zplg-compute-ice
+~~~~~~~~~~~~~~~~~
+
+____
+ # Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
+ # ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+ # returns path to snippet directory and optional name of snippet file (only
+ # valid if ZPLG_ICE[svn] is not set).
+ #
+ # $1 - URL (also plugin-spec in future)
+ # $2 - "pack" or "nopack" - packing means ZPLG_ICE wins with static ice
+ # $3 - name of output associative array, "ZPLG_ICE" is the default
+ # $4 - name of output string parameter, to hold path to directory ("local_dir")
+ # $5 - name of output string parameter, to hold filename ("filename")
+____
+
+Has 70 line(s). Calls functions:
+
+ -zplg-compute-ice
+ |-- zplugin-side.zsh/-zplg-two-paths
+ `-- zplugin.zsh/-zplg-pack-ice
+
+Called by:
+
+ -zplg-update-or-status-snippet
+ -zplg-update-or-status
 
 -zplg-create
 ~~~~~~~~~~~~
@@ -667,7 +711,7 @@ ____
  # User-action entry point.
 ____
 
-Has 40 line(s). Doesn't call other functions.
+Has 41 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -685,6 +729,15 @@ ____
 ____
 
 Has 5 line(s). Doesn't call other functions.
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-ls
+~~~~~~~~
+
+Has 19 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -790,7 +843,9 @@ ____
  # User-action entry point.
 ____
 
-Has 1 line(s). Doesn't call other functions.
+Has 5 line(s). Doesn't call other functions.
+
+Uses feature(s): _zcompile_
 
 Called by:
 
@@ -846,7 +901,7 @@ ____
  # User-action entry point.
 ____
 
-Has 31 line(s). Calls functions:
+Has 72 line(s). Calls functions:
 
  -zplg-show-completions
  |-- -zplg-get-completion-owner
@@ -1109,6 +1164,7 @@ Uses feature(s): _bindkey_, _unalias_, _unfunction_, _zle_, _zstyle_
 Called by:
 
  zplugin.zsh/-zplg-debug-unload
+ zplugin.zsh/-zplg-run-task
  zplugin.zsh/zplugin
 
 -zplg-update-or-status
@@ -1119,22 +1175,34 @@ ____
  #
  # User-action entry point.
  #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ # $1 - "status" for status, other for update
+ # $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+ # $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 28 line(s). Calls functions:
+Has 97 line(s). Calls functions:
 
  -zplg-update-or-status
+ |-- -zplg-at-eval
+ |-- -zplg-compute-ice
+ |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   `-- zplugin.zsh/-zplg-pack-ice
+ |-- -zplg-update-or-status-snippet
+ |   |-- -zplg-compute-ice
+ |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   `-- zplugin.zsh/-zplg-load-snippet
+ |-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
+ |-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin-side.zsh/-zplg-exists-physically-message
- |-- zplugin.zsh/-zplg-any-to-user-plugin
- `-- zplugin.zsh/-zplg-pack-ice
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses feature(s): _eval_
+Uses feature(s): _source_
 
 Called by:
 
+ -zplg-update-or-status-all
  zplugin.zsh/zplugin
 
 -zplg-update-or-status-all
@@ -1148,23 +1216,64 @@ ____
  # User-action entry point.
 ____
 
-Has 57 line(s). Calls functions:
+Has 55 line(s). Calls functions:
 
  -zplg-update-or-status-all
+ |-- -zplg-update-or-status
+ |   |-- -zplg-at-eval
+ |   |-- -zplg-compute-ice
+ |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   |-- -zplg-update-or-status-snippet
+ |   |   |-- -zplg-compute-ice
+ |   |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   |   `-- zplugin.zsh/-zplg-load-snippet
+ |   |-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
+ |   |-- zplugin-install.zsh/-zplg-setup-plugin-dir
+ |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- -zplg-update-or-status-snippet
+ |   |-- -zplg-compute-ice
+ |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   `-- zplugin.zsh/-zplg-load-snippet
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
- |-- zplugin.zsh/-zplg-any-to-user-plugin
- `-- zplugin.zsh/-zplg-load-snippet
-
-Uses feature(s): _eval_
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
 
  zplugin.zsh/zplugin
 
+-zplg-update-or-status-snippet
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ #
+ # Implements update or status operation for snippet given by URL.
+ #
+ # $1 - "status" or "update"
+ # $2 - snippet URL
+____
+
+Has 18 line(s). Calls functions:
+
+ -zplg-update-or-status-snippet
+ |-- -zplg-compute-ice
+ |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   `-- zplugin.zsh/-zplg-pack-ice
+ `-- zplugin.zsh/-zplg-load-snippet
+
+Called by:
+
+ -zplg-update-or-status-all
+ -zplg-update-or-status
+
 compinit
 ~~~~~~~~
 
-Has 547 line(s). Doesn't call other functions.
+Has 542 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 

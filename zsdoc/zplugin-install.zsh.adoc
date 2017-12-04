@@ -13,6 +13,7 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
+ -zplg-at-eval
  -zplg-compile-plugin
  -zplg-download-file-stdout
  -zplg-download-snippet
@@ -31,6 +32,17 @@ Script Body
 
 Has 3 line(s). No functions are called (may attach to Zle or do hooks, etc.).
 
+-zplg-at-eval
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Uses feature(s): _eval_
+
+Called by:
+
+ -zplg-download-snippet
+
 -zplg-compile-plugin
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -42,10 +54,11 @@ ____
  # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 13 line(s). Calls functions:
+Has 30 line(s). Calls functions:
 
  -zplg-compile-plugin
- `-- zplugin-side.zsh/-zplg-first
+ |-- zplugin-side.zsh/-zplg-first
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Uses feature(s): _zcompile_
 
@@ -84,13 +97,19 @@ ____
  # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 49 line(s). Calls functions:
+Has 103 line(s). Calls functions:
 
  -zplg-download-snippet
+ |-- -zplg-at-eval
  |-- -zplg-download-file-stdout
+ |-- -zplg-install-completions
+ |   |-- -zplg-forget-completion
+ |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- -zplg-mirror-using-svn
 
-Uses feature(s): _zcompile_
+Uses feature(s): _eval_, _zcompile_
 
 Called by:
 
@@ -106,7 +125,7 @@ ____
  # $1 - completion function name, e.g. "_cp"; can also be "cp"
 ____
 
-Has 17 line(s). Doesn't call other functions.
+Has 15 line(s). Doesn't call other functions.
 
 Uses feature(s): _unfunction_
 
@@ -130,7 +149,9 @@ Has 14 line(s). Calls functions:
  -zplg-get-latest-gh-r-version
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Called by:
+
+ zplugin-autoload.zsh/-zplg-update-or-status
 
 -zplg-handle-binary-file
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -140,6 +161,9 @@ ____
  # Next stage is scanning of files with the common utility `file',
  # to detect executables. They are given +x mode. There are also
  # messages to the user on performed actions.
+ #
+ # $1 - url
+ # $2 - file
 ____
 
 Has 53 line(s). Doesn't call other functions.
@@ -164,22 +188,36 @@ ____
  # $3 - if 1, then reinstall, otherwise only install completions that aren't there
 ____
 
-Has 33 line(s). Calls functions:
+Has 39 line(s). Calls functions:
 
  -zplg-install-completions
  |-- -zplg-forget-completion
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin-side.zsh/-zplg-exists-physically-message
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
 
+ -zplg-download-snippet
  -zplg-setup-plugin-dir
  zplugin.zsh/zplugin
 
 -zplg-mirror-using-svn
 ~~~~~~~~~~~~~~~~~~~~~~
 
-Has 2 line(s). Doesn't call other functions.
+____
+ # Used to clone subdirectories from Github. If in update mode
+ # (see $2), then invokes `svn update', in normal mode invokes
+ # `svn checkout --non-interactive -q <URL>'. In test mode only
+ # compares remote and local revision and outputs true if update
+ # is needed.
+ #
+ # $1 - URL
+ # $2 - mode, "" - normal, "-u" - update, "-t" - test
+ # $3 - subdirectory (not path) with working copy, needed for -t and -u
+____
+
+Has 27 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -197,15 +235,17 @@ ____
  # $2 - plugin
 ____
 
-Has 100 line(s). Calls functions:
+Has 129 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin
- |   `-- zplugin-side.zsh/-zplg-first
+ |   |-- zplugin-side.zsh/-zplg-first
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- -zplg-download-file-stdout
  |-- -zplg-handle-binary-file
  |-- -zplg-install-completions
  |   |-- -zplg-forget-completion
+ |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -214,5 +254,6 @@ Uses feature(s): _eval_
 
 Called by:
 
+ zplugin-autoload.zsh/-zplg-update-or-status
  zplugin.zsh/-zplg-load
 

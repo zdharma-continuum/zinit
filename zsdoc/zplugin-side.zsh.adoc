@@ -17,6 +17,8 @@ FUNCTIONS
  -zplg-exists-physically
  -zplg-exists-physically-message
  -zplg-first
+ -zplg-shands-exp
+ -zplg-two-paths
 
 DETAILS
 -------
@@ -38,7 +40,7 @@ ____
  # $REPLY = ANSI-colorified "user/plugin" string
 ____
 
-Has 6 line(s). Calls functions:
+Has 11 line(s). Calls functions:
 
  -zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -61,6 +63,7 @@ Called by:
  zplugin-autoload.zsh/-zplg-unload
  zplugin-autoload.zsh/-zplg-update-or-status-all
  zplugin-autoload.zsh/-zplg-update-or-status
+ zplugin-install.zsh/-zplg-install-completions
  zplugin-install.zsh/-zplg-setup-plugin-dir
 
 -zplg-exists-physically
@@ -75,9 +78,10 @@ ____
  # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 6 line(s). Calls functions:
+Has 10 line(s). Calls functions:
 
  -zplg-exists-physically
+ |-- -zplg-shands-exp
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
@@ -98,13 +102,15 @@ ____
  # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 6 line(s). Calls functions:
+Has 11 line(s). Calls functions:
 
  -zplg-exists-physically-message
  |-- -zplg-any-colorify-as-uspl2
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
- `-- -zplg-exists-physically
-     `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- -zplg-exists-physically
+ |   |-- -zplg-shands-exp
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- -zplg-shands-exp
 
 Called by:
 
@@ -144,4 +150,37 @@ Called by:
  zplugin-autoload.zsh/-zplg-glance
  zplugin-autoload.zsh/-zplg-stress
  zplugin-install.zsh/-zplg-compile-plugin
+
+-zplg-shands-exp
+~~~~~~~~~~~~~~~~
+
+____
+ # Does expansion of currently little unstandarized
+ # shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
+____
+
+Has 7 line(s). Doesn't call other functions.
+
+Called by:
+
+ -zplg-exists-physically-message
+ -zplg-exists-physically
+ zplugin-autoload.zsh/-zplg-cd
+
+-zplg-two-paths
+~~~~~~~~~~~~~~~
+
+____
+ # FUNCTION: -zplg-two-paths()
+ # Obtains a snippet URL without specification if it is an SVN URL (points to
+ # directory) or regular URL (points to file), returns 2 possible paths for
+ # further examination
+____
+
+Has 22 line(s). Doesn't call other functions.
+
+Called by:
+
+ zplugin-autoload.zsh/-zplg-cd
+ zplugin-autoload.zsh/-zplg-compute-ice
 
