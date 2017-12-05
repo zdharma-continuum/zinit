@@ -276,7 +276,8 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
 Above commands show two ways of basic plugin loading. **load** causes reporting to be enabled –
 you can track what plugin does, view the information with `zplugin report {plugin-spec}`.
-**light** is a faster loading without tracking and reporting.
+**light** is a significantly faster loading without tracking and reporting (note: plugin-unloading
+needs the tracking; also note: in turbo mode the slowdown caused by tracking isn't that important).
 
 ### Oh-My-Zsh, Prezto
 
@@ -518,10 +519,13 @@ zplugin load russjohnson/angry-fly-zsh
 ```
 
 Two prompts, each active in different directories. This can be used to have plugin-sets, e.g. by
-defining variable `$PLUGINS` with values like `cpp`,`web`,`admin` and setting `load`/`unload`
-conditions which plugins you want to be active on `cpp`, which on `web`, etc.
+defining parameter `$PLUGINS` with possible values like `cpp`,`web`,`admin` and by setting
+`load`/`unload` conditions to activate different plugins on `cpp`, on `web`, etc.
 
 Difference with `wait` is that `load`/`unload` are constantly active, not only till first activation.
+
+Note that unloading a plugin needs it to be loaded with tracking (so `zplugin load ...`, not `zplugin light ...`).
+Tracking causes slight slowdown, however this doesn't matter in turbo mode, as Zsh startup isn't slowed down.
 
 # Ice Modifiers
 
