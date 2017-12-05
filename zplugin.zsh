@@ -1003,10 +1003,10 @@ builtin setopt noaliases
         # Source
         if (( ${+ZPLG_ICE[svn]} == 0 )); then
             (( tmp[1] )) && list=( "$local_dir/$filename" )
-            (( ${+ZPLG_ICE[pick]} )) && list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${~ZPLG_ICE[pick]}(N) )
+            (( ${+ZPLG_ICE[pick]} )) && list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
         else
             if (( ${+ZPLG_ICE[pick]} )); then
-                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${~ZPLG_ICE[pick]}(N) )
+                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
             else
                 list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
                        $local_dir/$filename/*.zsh-theme(N) )
@@ -1025,7 +1025,7 @@ builtin setopt noaliases
         # Subversion - directory and multiple files possible
         if (( ${+ZPLG_ICE[svn]} )); then
             if (( ${+ZPLG_ICE[pick]} )); then
-                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${~ZPLG_ICE[pick]}(N) )
+                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
                 [[ -n "${list[1]}" ]] && local xpath="${list[1]:h}" xfilepath="${list[1]}"
             else
                 local xpath="$local_dir/$filename"
@@ -1033,7 +1033,7 @@ builtin setopt noaliases
         else
             local xpath="$local_dir" xfilepath="$local_dir/$filename"
             # This doesn't make sense, but users may come up with something
-            (( ${+ZPLG_ICE[pick]} )) && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${~ZPLG_ICE[pick]}(N) ); xfilepath="${list[1]}"; }
+            (( ${+ZPLG_ICE[pick]} )) && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) ); xfilepath="${list[1]}"; }
         fi
         [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path+=( "$xpath" )
         [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "${list[@]:#$xfilepath}" "$xfilepath"
@@ -1130,7 +1130,7 @@ builtin setopt noaliases
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
         if (( ${+ZPLG_ICE[pick]} )); then
-            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${~ZPLG_ICE[pick]}(N) )
+            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
             [[ -n "${reply[1]}" ]] && pdir_path="${reply[1]:h}"
         fi
         [[ -z "${path[(er)$pdir_path]}" ]] && path+=( "$pdir_path" )
@@ -1140,7 +1140,7 @@ builtin setopt noaliases
         [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_orig/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_orig/${ZPLG_ICE[src]}"; }
     else
         if (( ${+ZPLG_ICE[pick]} )); then
-            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${~ZPLG_ICE[pick]}(N) )
+            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
         elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
             reply=( "$pdir_path/${pbase}.plugin.zsh" )
         else
