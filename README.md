@@ -73,10 +73,11 @@ zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose" bpick"*linux*";
 # Vim repository on Github – a source that needs compilation
 zplugin ice as"command" atclone"./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
 
-# A script (Zsh) that needs building by make. The make argument (install PREFIX=/opt) isn't
-# needed because the pick Ice-mod will use uninstalled files from build-directory, but
-# this demonstrates the make-customization feature which has a swiss-knife potential
-zplugin ice as"command" pick"build/zsd*" make"install PREFIX=/opt"; zplugin load zdharma/zshelldoc
+# Scripts that are built at install (there's single default make target, "install", and
+# it constructs scripts by cat-ting a few files). The make ice could also be:
+# `make"install PREFIX=${ZPLGM[HOME_DIR]}/cmd"`, if "install" wouldn't be default target
+zplugin ice as"command" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
+zplugin light tj/git-extras
 
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
