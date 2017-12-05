@@ -469,9 +469,12 @@ zplugin load psprint/zprompts
 ```
 
 This sets plugin `psprint/zprompts` to be loaded `1` second after `zshrc`. Seeing
-your prompt updated at startup is like loud engine in sports car, you see the speed
-happening :) Exclamation mark causes Zplugin to reset-prompt after loading plugin.
-The same with Prezto prompts:
+your prompt updated at startup can cause mixed reactions, for example for me it is
+nice to quickly see raw prompt and observe how `wait''` does its job, but who knows
+I might resign from this one day.
+
+The exclamation mark causes Zplugin to reset-prompt after loading plugin. The same
+with Prezto prompts:
 
 ```SystemVerilog
 zplg ice svn silent wait'!1' atload'prompt smiley'
