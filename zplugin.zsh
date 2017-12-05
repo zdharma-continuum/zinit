@@ -1293,7 +1293,7 @@ builtin setopt noaliases
 
     if [[ "$__action" = *load ]]; then
         [[ "$__tpe" = "p" ]] && -zplg-load "$__id" "" "$__mode" || -zplg-load-snippet "$__id" ""
-        zle && zle -M "Loaded $__id"
+        (( ${+ZPLG_ICE[silent]} == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ "$__action" = *remove ]]; then
         (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
         [[ "$__tpe" = "p" ]] && -zplg-unload "$__id" "" "-q"
