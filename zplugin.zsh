@@ -820,8 +820,8 @@ builtin setopt noaliases
         reply=( "$pdir_path/${pbase}.theme.zsh" )
     else
         reply=(
-            $pdir_path/*.plugin.zsh(N) $pdir_path/*.zsh(N) $pdir_path/*.sh(N)
-            $pdir_path/*.zsh-theme(N) $pdir_path/.zshrc(N)
+            $pdir_path/*.plugin.zsh(N) $pdir_path/*.zsh-theme(N)
+            $pdir_path/*.zsh(N) $pdir_path/*.sh(N) $pdir_path/.zshrc(N)
         )
     fi
 } # }}}
