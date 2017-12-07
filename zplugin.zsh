@@ -1133,7 +1133,11 @@ builtin setopt noaliases
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
             [[ -n "${reply[1]}" ]] && pdir_path="${reply[1]:h}"
         fi
-        [[ -z "${path[(er)$pdir_path]}" ]] && path[1,0]=( "$pdir_path" )
+        [[ -z "${path[(er)$pdir_path]}" ]] && {
+            [[ "$mode" != "light" ]] && -zplg-diff-env "${ZPLGM[CUR_USPL2]}" begin
+            path[1,0]=( "$pdir_path" )
+            [[ "$mode" != "light" ]] && -zplg-diff-env "${ZPLGM[CUR_USPL2]}" end
+        }
         [[ -n "${reply[1]}" && ! -x "${reply[1]}" ]] && command chmod a+x ${reply[@]}
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "$ZPLGM[col-info2]$pdir_path$ZPLGM[col-rst] added to \$PATH"
 
