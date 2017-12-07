@@ -98,6 +98,10 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 07-12-2017
+  - New subcommand `delete` that obtains plugin-spec or URL and deletes plugin or snippet from disk.
+    It's good to forget wrongly passed Ice-mods (which are storred on disk e.g. for `update --all`).
+
 * 04-12-2017
   - It's possible to set plugin loading and unloading on condition. ZPlugin supports plugin unloading,
     so it's possible to e.g. **unload prompt and load another one**, on e.g. directory change. Checkout
@@ -632,6 +636,7 @@ snippet [-f] [--command] {url} - source (or add to PATH with --command) local or
 ice <ice specification>  - add ICE to next command, argument is e.g. from"gitlab"
 update {plugin-name}|URL - Git update plugin or snippet (or all plugins and snippets if --all passed)
 status {plugin-name}|URL - Git status for a plugin or snippet (or all plugins and snippets if --all passed)
+delete {plugin-name}|URL - remove plugin or snippet from disk (good to forget wrongly passed ice mods)
 report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
 loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
 ls                       - list snippets in formatted and colorized manner

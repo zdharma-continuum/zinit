@@ -2329,28 +2329,29 @@ man                      - manual
 zstatus                  - overall status of Zplugin
 times                    - statistics on plugin load times, sorted in order of loading
 self-update              - updates Zplugin
-load ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}       - load plugin, can also receive absolute local path
-light ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}      - light plugin load, without reporting
-unload ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - unload plugin
+load ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}         - load plugin, can also receive absolute local path
+light ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}        - light plugin load, without reporting
+unload ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - unload plugin
 snippet [-f] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]}       - source local or remote file (by direct URL), -f: force - don't use cache
 ls                       - list snippets in formatted and colorized manner
 ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
-update ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git update plugin (or all plugins and snippets if --all passed)
-status ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - Git status for plugin (or all plugins if --all passed)
-report ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - show plugin's report (or all plugins' if --all passed)
+update ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - Git update plugin or snippet (or all plugins and snippets if --all passed)
+status ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - Git status for plugin or svn status for snippet (or for all those if --all passed)
+report ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - show plugin's report (or all plugins' if --all passed)
+delete ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
-cd ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}         - cd into plugin's directory; also support snippets, if feed with URL
-create ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - create plugin (also together with Github repository)
-edit ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}       - edit plugin's file with \$EDITOR
-glance ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - look at plugin's source (pygmentize, {,source-}highlight)
-stress ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}     - test plugin for compatibility with set of options
-changes ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}    - view plugin's git log
+cd ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}           - cd into plugin's directory; also support snippets, if feed with URL
+create ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - create plugin (also together with Github repository)
+edit ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}         - edit plugin's file with \$EDITOR
+glance ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - look at plugin's source (pygmentize, {,source-}highlight)
+stress ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - test plugin for compatibility with set of options
+changes ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}      - view plugin's git log
 recently ${ZPLGM[col-info]}[time-spec]${ZPLGM[col-rst]}     - show plugins that changed recently, argument is e.g. 1 month 2 days
 clist|completions        - list completions in use
-cdisable ${ZPLGM[col-info]}{cname}${ZPLGM[col-rst]}         - disable completion \`cname'
-cenable  ${ZPLGM[col-info]}{cname}${ZPLGM[col-rst]}         - enable completion \`cname'
-creinstall ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]} - install completions for plugin, can also receive absolute local path
-cuninstall ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]} - uninstall completions for plugin
+cdisable ${ZPLGM[col-info]}cname${ZPLGM[col-rst]}           - disable completion \`cname'
+cenable  ${ZPLGM[col-info]}cname${ZPLGM[col-rst]}           - enable completion \`cname'
+creinstall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - install completions for plugin, can also receive absolute local path
+cuninstall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
 dtrace|dstart            - start tracking what's going on in session
@@ -2358,8 +2359,8 @@ dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session
-compile  ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}   - compile plugin (or all plugins if --all passed)
-uncompile ${ZPLGM[col-pname]}{plugin-name}${ZPLGM[col-rst]}  - remove compiled version of plugin (or of all plugins if --all passed)
+compile ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}      - compile plugin (or all plugins if --all passed)
+uncompile ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}    - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
 cdlist                   - show compdef replay list
 cdreplay [-q]            - replay compdefs (to be done after compinit), -q - quiet
