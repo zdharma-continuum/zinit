@@ -1587,6 +1587,9 @@ zplugin() {
                (cd)
                    -zplg-cd "$2" "$3"
                    ;;
+               (delete)
+                   -zplg-delete "$2" "$3"
+                   ;;
                (edit)
                    -zplg-edit "$2" "$3"
                    ;;

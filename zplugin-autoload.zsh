@@ -1977,6 +1977,52 @@ ZPLGM[EXTENDED_GLOB]=""
         }
     fi
 } # }}}
+# FUNCTION: -zplg-delete {{{
+# Jumps to plugin's directory (in Zplugin's home directory).
+#
+# User-action entry point.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+-zplg-delete() {
+    setopt localoptions extendedglob
+    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
+        local -A sice
+        local -a tmp
+        tmp=( "${(z@)ZPLG_SICE[${1%/}/]}" )
+        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(@Q)tmp[@]}" )
+
+        -zplg-two-paths "$1"
+        local s_path="${reply[-3]}" _path="${reply[-2]}" filename="${reply[-1]}"
+
+        [[ "${+sice[svn]}" = "1" || -e "$s_path" ]] && {
+            [[ -e "$s_path" ]] && -zplg-confirm "Delete $s_path?\n[y/n]" "command rm -rf ${(q)s_path}" || print "No such snippet"
+        } || {
+            [[ -e "$_path/$filename" ]] && -zplg-confirm "Delete $_path/$filename?\n[y/n]" "command rm -rf ${(q)_path}/${(q)filename} ${(q)_path}/${(q)filename}.zwc ${(q)_path}/._zplugin_${(q)filename}; command rmdir ${(q)_path} 2>/dev/null" || print "No such snippet"
+        }
+    else
+        -zplg-any-to-user-plugin "$1" "$2"
+        local user="${reply[-2]}" plugin="${reply[-1]}"
+
+        -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+        -zplg-shands-exp "$1" "$2" && {
+            [[ -e "$REPLY" ]] && -zplg-confirm "Delete $REPLY?\n[y/n]" "command rm -rf ${(q)REPLY}" || print -r -- "No such plugin or snippet"
+        } || {
+            local dir="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+            [[ -e "$dir" ]] && -zplg-confirm "Delete $dir?\n[y/n]" "command rm -rf ${(q)dir}" || print -r -- "No such plugin or snippet"
+        }
+    fi
+} # }}}
+# FUNCTION: -zplg-confirm() {{{
+-zplg-confirm() {
+    print "$1"
+    local ans
+    read -q ans
+    [[ "$ans" = "y" ]] && { eval "$2"; print "\nDone"; } || print "\nBreak"
+    return 0
+}
+# }}}
 # FUNCTION: -zplg-changes {{{
 # Shows `git log` of given plugin.
 #
