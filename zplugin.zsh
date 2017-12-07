@@ -1153,7 +1153,7 @@ builtin setopt noaliases
         # Get first one
         local fname="${${${(@Oa)reply}[-1]}#$pdir_path/}"
 
-        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname${mode:+ $ZPLGM[col-info2]($mode load)$ZPLGM[col-rst]}"
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname ${${${(M)mode:#light}:+(no reporting)}:-$ZPLGM[col-info2](reporting enabled)$ZPLGM[col-rst]}"
 
         # Light and compdef mode doesn't do diffs and shadowing
         if [[ "$mode" != "light" ]]; then
