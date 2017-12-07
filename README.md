@@ -104,7 +104,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     [full story](#automatic-loadunload-on-condition) and [Asciinema video](https://asciinema.org/a/150825).
 
 * 29-11-2017
-  - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode)** – **39-50% or more faster loading!**
+  - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode)** – **39-50% or more faster Zsh startup!**
   - Subcommand `update` can update snippets, via given URL (up to this point snippets were updated via
     `zplugin update --all`).
   - Completion management is enabled for snippets (not only plugins).
@@ -573,7 +573,8 @@ three lines of code that will be added to the bottom (the lines will be sourcing
 
 Completion will be available, for command **zplugin** and aliases **zpl**, **zplg**.
 
-After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
+After installing and reloading shell give `Zplugin` a quick try with `zplugin help`
+and compile it with `zplugin self-update`.
 
 ## Manual Installation
 
@@ -598,7 +599,8 @@ autoload -Uz _zplugin
 
 Various paths can be customized, see section below [Customizing Paths](#customizing-paths).
 
-After installing and reloading shell give `Zplugin` a quick try with `zplugin help`.
+After installing and reloading shell give `Zplugin` a quick try with `zplugin help` and
+compile it with `zplugin self-update`.
 
 # Compilation
 It's good to compile `zplugin` into `Zsh` bytecode:
