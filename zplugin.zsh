@@ -686,11 +686,10 @@ builtin setopt noaliases
 # $1 - user/plugin (i.e. uspl2 format)
 # $2 - command, can be "begin" or "end"
 -zplg-diff-options() {
-    local bIFS="$IFS"; IFS=" "
+    local IFS=" "
 
     [[ "$2" = "begin" ]] && ZPLG_OPTIONS_BEFORE[$1]="${(kv)options[@]}" || ZPLG_OPTIONS_AFTER[$1]="${(kv)options[@]}"
 
-    IFS="$bIFS"
     ZPLG_OPTIONS[$1]=""
 } # }}}
 # FUNCTION: -zplg-diff-env {{{
@@ -700,7 +699,7 @@ builtin setopt noaliases
 # $2 - command, can be "begin" or "end"
 -zplg-diff-env() {
     typeset -a tmp
-    local bIFS="$IFS"; IFS=" "
+    local IFS=" "
 
     [[ "$2" = "begin" ]] && {
             tmp=( "${(q)path[@]}" )
@@ -714,7 +713,6 @@ builtin setopt noaliases
             ZPLG_FPATH_AFTER[$1]="${tmp[*]}"
     }
 
-    IFS="$bIFS"
     ZPLG_PATH[$1]=""
     ZPLG_FPATH[$1]=""
 } # }}}

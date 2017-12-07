@@ -72,9 +72,8 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     # Serialize for reporting
-    local bIFS="$IFS"; IFS=" "
+    local IFS=" "
     ZPLG_OPTIONS[$uspl2]="${(kv)opts[@]}"
-    IFS="$bIFS"
     return 0
 } # }}}
 # FUNCTION: -zplg-diff-env-compute {{{
