@@ -35,7 +35,7 @@ ZPLG_SNIPPETS:
 ZPLG_SICE: 'psprint/zsh-select' 'atclone command\ chmod\ -x\ zsh-select2\ \|\|\ builtin\ print\ \>!\ Test_Failed mv zsh-select\ -\>\ zs cp zs\ -\>\ zsh-select2 pick zsh-select2 as command '
 ZPLG_FUNCTIONS: 'psprint/zsh-select' ''
 ZPLG_OPTIONS: 'psprint/zsh-select' ''
-ZPLG_PATH: 'psprint/zsh-select' ''
+ZPLG_PATH: 'psprint/zsh-select' '_test2/answer/plugins/psprint---zsh-select '
 ZPLG_FPATH: 'psprint/zsh-select' ''
 ZPLG_PARAMETERS_PRE: 
 ZPLG_PARAMETERS_POST: 
