@@ -1168,6 +1168,8 @@ ZPLGM[EXTENDED_GLOB]=""
         return 0
     fi
 
+    (( ${#ZPLG_ICE} > 0 )) && ZPLG_SICE[$user/$plugin]=""
+
     -zplg-compute-ice "$user/$plugin" "pack" ice local_dir filename || return 1
 
     # Check if repository has a remote set, if it is _local
@@ -1263,6 +1265,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - snippet URL
 -zplg-update-or-status-snippet() {
     local st="$1" URL="${2%/}" local_dir filename
+    (( ${#ZPLG_ICE} > 0 )) && ZPLG_SICE[$URL/]=""
     -zplg-compute-ice "$URL" "pack" ZPLG_ICE local_dir filename || return 1
 
     if [[ "$st" = "status" ]]; then

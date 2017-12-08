@@ -904,6 +904,7 @@ builtin setopt noaliases
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
+    ZPLG_SICE[$user/$plugin]=""
     -zplg-pack-ice "$user" "$plugin"
     -zplg-register-plugin "$user/$plugin" "$mode"
     if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]]; then
@@ -1363,9 +1364,6 @@ zplugin() {
         ZPLG_ICE=( "${ice[@]}" )
     }
 
-    # All functions from now on will not change these values
-    # globally. Functions that don't do "source" of plugin
-    # will be able to setopt localoptions extendedglob
     local -a match mbegin mend
     local MATCH; integer MBEGIN MEND
 
@@ -1387,6 +1385,7 @@ zplugin() {
            if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} ]]; then
                -zplg-submit-turbo s "" "$2" "$3"
            else
+               ZPLG_SICE[${2%/}/]=""
                -zplg-load-snippet "$2" "$3"
            fi
            ;;
