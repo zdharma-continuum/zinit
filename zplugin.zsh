@@ -1369,15 +1369,6 @@ zplugin() {
     local -a match mbegin mend
     local MATCH; integer MBEGIN MEND
 
-    -zplg-prepare-home
-
-    # Simulate existence of _local/zplugin module
-    # This will allow to cuninstall of its completion
-    ZPLG_REGISTERED_PLUGINS+=( "_local/zplugin" )
-    ZPLG_REGISTERED_PLUGINS=( "${(u)ZPLG_REGISTERED_PLUGINS[@]}" )
-    # _zplugin module is loaded lightly
-    ZPLG_REGISTERED_STATES[_local/zplugin]="1"
-
     case "$1" in
        (load|light)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
@@ -1622,6 +1613,12 @@ builtin unsetopt noaliases
 builtin alias zpl=zplugin zplg=zplugin
 
 -zplg-prepare-home
+
+# Simulate existence of _local/zplugin plugin
+# This will allow to cuninstall of its completion
+ZPLG_REGISTERED_PLUGINS+=( "_local/zplugin" )
+ZPLG_REGISTERED_PLUGINS=( "${(u)ZPLG_REGISTERED_PLUGINS[@]}" )
+ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 
 # Add completions directory to fpath
 fpath=( "${ZPLGM[COMPLETIONS_DIR]}" "${fpath[@]}" )
