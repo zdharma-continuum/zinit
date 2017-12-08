@@ -1168,9 +1168,9 @@ ZPLGM[EXTENDED_GLOB]=""
         return 0
     fi
 
-    (( ${#ZPLG_ICE} > 0 )) && ZPLG_SICE[$user/$plugin]=""
+    (( ${#ZPLG_ICE} > 0 )) && { ZPLG_SICE[$user/$plugin]=""; local nf="-nf"; }
 
-    -zplg-compute-ice "$user/$plugin" "pack" ice local_dir filename || return 1
+    -zplg-compute-ice "$user/$plugin" "pack$nf" ice local_dir filename || return 1
 
     # Check if repository has a remote set, if it is _local
     if [[ "$user" = "_local" ]]; then
@@ -1247,11 +1247,12 @@ ZPLGM[EXTENDED_GLOB]=""
         # Record new ICE modifiers used
         ( builtin cd "$local_dir" || return 1
           command mkdir -p ._zplugin
-          for key in proto from as pick bpick mv cp atclone atpull ver; do
+          for key in proto from as bpick mv cp atclone atpull ver; do
               print -r -- "${ice[$key]}" >! "._zplugin/$key"
           done
           # Optional file - create file for make ICE mod
           (( ${+ice[make]} )) && print -r -- "${ice[make]}" >! "._zplugin/make" || command rm -f "._zplugin/make"
+          (( ${+ice[pick]} )) && print -r -- "${ice[pick]}" >! "._zplugin/pick" || command rm -f "._zplugin/pick"
         )
     fi
 
@@ -1265,8 +1266,8 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - snippet URL
 -zplg-update-or-status-snippet() {
     local st="$1" URL="${2%/}" local_dir filename
-    (( ${#ZPLG_ICE} > 0 )) && ZPLG_SICE[$URL/]=""
-    -zplg-compute-ice "$URL" "pack" ZPLG_ICE local_dir filename || return 1
+    (( ${#ZPLG_ICE} > 0 )) && { ZPLG_SICE[$URL/]=""; local nf="-nf"; }
+    -zplg-compute-ice "$URL" "pack$nf" ZPLG_ICE local_dir filename || return 1
 
     if [[ "$st" = "status" ]]; then
         if (( ${+ZPLG_ICE[svn]} )); then
@@ -1315,7 +1316,7 @@ ZPLGM[EXTENDED_GLOB]=""
         local __s_path="" ___path="${ZPLGM[PLUGINS_DIR]}/${__user}---${__plugin}" __filename="" __local_dir
     fi
 
-    [[ "$__pack" = "pack" ]] && -zplg-pack-ice "${__user-$__URL}" "$__plugin"
+    [[ "$__pack" = pack* ]] && -zplg-pack-ice "${__user-$__URL}" "$__plugin"
 
     local -A __sice
     local -a __tmp
@@ -1354,7 +1355,7 @@ ZPLGM[EXTENDED_GLOB]=""
     } 2>/dev/null
 
     # Handle flag-Ices; svn must be last
-    for __key in make svn; do
+    for __key in make svn pick; do
         (( 0 == ${+ZPLG_ICE[no$__key]} )) && continue
 
         if [[ "$__key" = "svn" ]]; then
@@ -1369,7 +1370,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
     for __key in mode url from as pick bpick mv cp atclone atpull is_release ver   make svn; do
-        (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+        (( ${+__sice[$__key]} + ${${${__pack:#pack-nf}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
 
     : ${(PA)__var_name1::="${(kv@)__MY_ICE}"}

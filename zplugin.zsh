@@ -1030,7 +1030,7 @@ builtin setopt noaliases
             [[ -n ${ZPLG_ICE[pick]} ]] && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) ); xfilepath="${list[1]}"; }
         fi
         [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path[1,0]=( "${xpath%/}" )
-        [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "${list[@]:#$xfilepath}" "$xfilepath"
+        [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
         [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}"; }
     fi
 
@@ -1241,7 +1241,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{

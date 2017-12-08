@@ -132,11 +132,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ "$3" != "-u" ]]; then
         command mkdir -p "$local_path/._zplugin"
         local key
-        for key in proto from as pick bpick mv cp atclone atpull ver; do
+        for key in proto from as bpick mv cp atclone atpull ver; do
             print -r -- "${ZPLG_ICE[$key]}" >! "$local_path/._zplugin/$key"
         done
         # Optional file - create file for make ICE mod
         (( ${+ZPLG_ICE[make]} )) && print -r -- "${ZPLG_ICE[make]}" >! "$local_path/._zplugin/make" || command rm -f "$local_path/._zplugin/make"
+        (( ${+ZPLG_ICE[pick]} )) && print -r -- "${ZPLG_ICE[pick]}" >! "$local_path/._zplugin/pick" || command rm -f "$local_path/._zplugin/pick"
 
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
         ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path" && eval "${ZPLG_ICE[atclone]}"; }; )
@@ -399,12 +400,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             return 0
         ) || retval=$?
 
-        if (( ${+ZPLG_ICE[svn]} == 0 )); then
+        if [[ $ZPLG_ICE[as] != "command" ]] && (( ${+ZPLG_ICE[svn]} == 0 )); then
             [[ -e "$local_dir/$filename" ]] && {
                 zcompile "$local_dir/$filename" 2>/dev/null || {
                     print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
                     print -r "(snippet URL points to a directory instead of a file?"
-                    print -r "to download directory, use preceding: zplugin ice svn)"
+                    print -r "to download directory, use preceding: zplugin ice svn;)"
                     retval=1
                 }
             }
@@ -426,11 +427,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         command mkdir -p "$pfx"
         print -r -- "$save_url" >! "$pfx/url"
         print -r -- "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
-        for key in proto from as pick bpick mv cp atclone atpull ver; do
+        for key in proto from as bpick mv cp atclone atpull ver; do
             print -r -- "${ZPLG_ICE[$key]}" >! "$pfx/$key"
         done
         # Optional file - create file for make ICE mod
         (( ${+ZPLG_ICE[make]} )) && print -r -- "${ZPLG_ICE[make]}" >! "$pfx/make" || command rm -f "$pfx/make"
+        (( ${+ZPLG_ICE[pick]} )) && print -r -- "${ZPLG_ICE[pick]}" >! "$pfx/pick" || command rm -f "$pfx/pick"
     fi
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
@@ -461,7 +463,20 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
 
-    -zplg-install-completions "%" "$local_dir${ZPLG_ICE[svn]+/$filename}"
+    if [[ ${ZPLG_ICE[as]} != "command" && ${+ZPLG_ICE[svn]} = 1 ]]; then
+        if [[ -n ${ZPLG_ICE[pick]} ]]; then
+            list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+        elif [[ -z ${ZPLG_ICE[pick]} ]]; then
+            list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
+                   $local_dir/$filename/*.zsh-theme(N) )
+        fi
+
+        [[ -e "${list[1]}" ]] && { zcompile "${list[1]}" || {
+            print -r "Couldn't compile \`${list[1]}' (from SVN snippet: $save_url)"
+        } }
+    fi
+
+    -zplg-install-completions "%" "$local_dir${ZPLG_ICE[svn]+/$filename}" 0
     return $retval
 }
 # }}}
