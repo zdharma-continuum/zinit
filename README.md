@@ -98,6 +98,12 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 08-12-2017
+  - SVN snippets are compiled on install and update
+  - Resolved how should ice-mods be remembered – general rule is that using `zplugin ice ...` makes
+    memory-saved and disk-saved ice-mods not used, and replaced on update. Calling e.g. `zplugin
+    update ...` without preceding `ice` uses memory, then disk-saved ices.
+
 * 07-12-2017
   - New subcommand `delete` that obtains plugin-spec or URL and deletes plugin or snippet from disk.
     It's good to forget wrongly passed Ice-mods (which are storred on disk e.g. for `update --all`).
