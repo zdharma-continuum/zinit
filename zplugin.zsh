@@ -209,7 +209,7 @@ builtin setopt noaliases
     zparseopts -a opts -D ${(s::):-TUXkmtzw}
 
     if (( ${+opts[(r)-X]} )); then
-        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Failed autoload $opts $*"
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
         return 1
     fi
@@ -1085,19 +1085,8 @@ builtin setopt noaliases
     local txt="$*"
 
     local keyword="${txt%% *}"
-    if [[ "$keyword" = "Failed" || "$keyword" = "Warning:" ]]; then
-        keyword="${ZPLGM[col-error]}$keyword${ZPLGM[col-rst]}"
-    else
-        keyword="${ZPLGM[col-keyword]}$keyword${ZPLGM[col-rst]}"
-    fi
-
-    # Don't report to any user/plugin if there is no plugin load in progress
-    if [[ -n "$uspl2" ]]; then
-        ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
-    fi
-
-    # This is nasty, if debug is on, report everything
-    # to special debug user
+    keyword="${${${(M)keyword:#Warning:}:+${ZPLGM[col-error]}}:-${ZPLGM[col-keyword]}}$keyword${ZPLGM[col-rst]}"
+    [[ -n "$uspl2" ]] && ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
     [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$keyword ${txt#* }"$'\n'
 } # }}}
 # FUNCTION: -zplg-load-plugin {{{
