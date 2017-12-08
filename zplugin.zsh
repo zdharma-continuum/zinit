@@ -995,12 +995,12 @@ builtin setopt noaliases
 
         # Source
         if (( ${+ZPLG_ICE[svn]} == 0 )); then
-            (( tmp[1] )) && list=( "$local_dir/$filename" )
-            (( ${+ZPLG_ICE[pick]} )) && list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+            [[ ${tmp[1]} = 1 && ${+ZPLG_ICE[pick]} = 0 ]] && list=( "$local_dir/$filename" )
+            [[ -n ${ZPLG_ICE[pick]} ]] && list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
         else
-            if (( ${+ZPLG_ICE[pick]} )); then
+            if [[ -n ${ZPLG_ICE[pick]} ]]; then
                 list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
-            else
+            elif (( ${+ZPLG_ICE[pick]} == 0 )); then
                 list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
                        $local_dir/$filename/*.zsh-theme(N) )
             fi
@@ -1009,7 +1009,7 @@ builtin setopt noaliases
         [[ -f "${list[1]}" ]] && {
             (( ${+ZPLG_ICE[silent]} )) && { builtin source "${list[1]}" 2>/dev/null 1>&2; ((1)); } || builtin source "${list[1]}"
             (( 1 ))
-        } || echo "Snippet not loaded ($save_url)"
+        } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z ${ZPLG_ICE[pick]} ]] || echo "Snippet not loaded ($save_url)"; }
 
         [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}"; }
 
@@ -1017,7 +1017,7 @@ builtin setopt noaliases
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
         # Subversion - directory and multiple files possible
         if (( ${+ZPLG_ICE[svn]} )); then
-            if (( ${+ZPLG_ICE[pick]} )); then
+            if [[ -n ${ZPLG_ICE[pick]} ]]; then
                 list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
                 [[ -n "${list[1]}" ]] && local xpath="${list[1]:h}" xfilepath="${list[1]}"
             else
@@ -1026,7 +1026,7 @@ builtin setopt noaliases
         else
             local xpath="$local_dir" xfilepath="$local_dir/$filename"
             # This doesn't make sense, but users may come up with something
-            (( ${+ZPLG_ICE[pick]} )) && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) ); xfilepath="${list[1]}"; }
+            [[ -n ${ZPLG_ICE[pick]} ]] && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) ); xfilepath="${list[1]}"; }
         fi
         [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path[1,0]=( "${xpath%/}" )
         [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "${list[@]:#$xfilepath}" "$xfilepath"
@@ -1111,7 +1111,7 @@ builtin setopt noaliases
 
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
-        if (( ${+ZPLG_ICE[pick]} )); then
+        if [[ -n ${ZPLG_ICE[pick]} ]]; then
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
             [[ -n "${reply[1]}" ]] && pdir_path="${reply[1]:h}"
         fi
@@ -1125,7 +1125,7 @@ builtin setopt noaliases
 
         [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_orig/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_orig/${ZPLG_ICE[src]}"; }
     else
-        if (( ${+ZPLG_ICE[pick]} )); then
+        if [[ -n ${ZPLG_ICE[pick]} ]]; then
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
         elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
             reply=( "$pdir_path/${pbase}.plugin.zsh" )
