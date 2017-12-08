@@ -11,6 +11,7 @@ emulate -LR "$emul" -o warncreateglobal -o typesetsilent -o extendedglob
 # Discard per-setup (e.g. per-version) PATH and FPATH entries
 builtin autoload +X is-at-least
 builtin autoload +X allopt
+builtin autoload +X add-zsh-hook
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
 FPATH=/usr/share/zsh/site-functions:/usr/local/share/zsh/functions:/usr/local/share/zsh/site-functions
 LANG=C
