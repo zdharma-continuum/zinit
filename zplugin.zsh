@@ -53,6 +53,7 @@ fi
 
 builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLGM[NEW_AUTOLOAD]=1 || ZPLGM[NEW_AUTOLOAD]=0
+#is-at-least 5.4 && ZPLGM[NEW_AUTOLOAD]=2
 
 # Parameters - shadowing {{{
 ZPLGM[SHADOWING]="inactive"
@@ -236,7 +237,9 @@ builtin setopt noaliases
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer
         if (( ${+functions[$func]} != 1 )); then
             builtin setopt noaliases
-            if [[ "${ZPLGM[NEW_AUTOLOAD]}" = "1" ]]; then
+            if [[ "${ZPLGM[NEW_AUTOLOAD]}" = "2" ]]; then
+                builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
+            elif [[ "${ZPLGM[NEW_AUTOLOAD]}" = "1" ]]; then
                 eval "function ${(q)func} {
                     local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
                     builtin autoload -X ${(q-)opts[@]}
@@ -1276,7 +1279,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+="make ${(q)ZPLG_ICE[make]} "
     return 0
 } # }}}
-# FUNCTION: -zplg-wait-cb {{{
+# FUNCTION: -zplg-run-task {{{
 -zplg-run-task() {
     local __pass="$1" __t="$2" __tpe="$3" __idx="$4" __mode="$5" __id="${(Q)6}" __action __s=1
 
@@ -1362,6 +1365,7 @@ builtin setopt noaliases
     ZPLG_RUN[1,__idx]=()
 }
 # }}}
+
 #
 # Main function with subcommands
 #
