@@ -205,34 +205,28 @@ builtin setopt noaliases
     local -a opts
     local func
 
+    # TODO: +X
     zparseopts -a opts -D ${(s::):-TUXkmtzw}
 
-    # TODO: +X
-    if (( ${+opts[(r)-X]} ))
-    then
+    if (( ${+opts[(r)-X]} )); then
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Failed autoload $opts $*"
         print -u2 "builtin autoload required for $opts"
-        return 1 # Testable
+        return 1
     fi
-    if (( ${+opts[(r)-w]} ))
-    then
+    if (( ${+opts[(r)-w]} )); then
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "-w-Autoload $opts $*"
         builtin autoload $opts "$@"
-        return 0 # Testable
+        return 0
     fi
 
     # Report ZPLUGIN's "native" autoloads
-    local i
-    for i in "$@"; do
-        local msg="Autoload $i"
-        [[ -n "$opts" ]] && msg+=" with options ${opts[@]}"
-        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "$msg"
+    for func; do
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload $func${opts:+ with options ${opts[*]}}"
     done
 
     # Do ZPLUGIN's "native" autoloads
     if [[ "$ZPLGM[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${ZPLGM[CUR_USPL]}"
-    for func
-    do
+    for func; do
         # Real autoload doesn't touch function if it already exists
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer
         if (( ${+functions[$func]} != 1 )); then
@@ -249,12 +243,10 @@ builtin setopt noaliases
                     --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"
                 }'
             fi
-            #functions[$func]="--zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"'
             builtin unsetopt noaliases
         fi
     done
 
-    # Testable
     return 0
 } # }}}
 # FUNCTION: --zplg-shadow-bindkey {{{
