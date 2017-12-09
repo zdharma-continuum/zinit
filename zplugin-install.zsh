@@ -156,9 +156,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $2 - plugin (only when $1 - i.e. user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
 -zplg-install-completions() {
-    local reinstall="${3:-0}"
-
     builtin setopt localoptions nullglob extendedglob unset nokshglob
+
+    local reinstall="${3:-0}" quiet="${${4:+1}:-0}"
 
     # Shorthands, little unstandarized
     1="${1/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
@@ -196,13 +196,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$bkpfile"
             fi
-            print "Symlinking completion ${ZPLGM[col-uname]}$cfile${ZPLGM[col-rst]} to \${ZPLGM[COMPLETIONS_DIR]}"
+            (( quiet )) || print "Symlinking completion ${ZPLGM[col-uname]}$cfile${ZPLGM[col-rst]} to \${ZPLGM[COMPLETIONS_DIR]}"
             command ln -s "$c" "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
-            -zplg-forget-completion "$cfile"
+            -zplg-forget-completion "$cfile" "$quiet"
         else
-            print "Not symlinking completion \`$cfile', it already exists"
-            print "${ZPLGM[col-info2]}Use \`${ZPLGM[col-pname]}zplugin creinstall $abbrev_pspec${ZPLGM[col-info2]}' to force install${ZPLGM[col-rst]}"
+            (( quiet )) || print "Not symlinking completion \`$cfile', it already exists"
+            (( quiet )) || print "${ZPLGM[col-info2]}Use \`${ZPLGM[col-pname]}zplugin creinstall $abbrev_pspec${ZPLGM[col-info2]}' to force install${ZPLGM[col-rst]}"
         fi
     done
 } # }}}
@@ -289,18 +289,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 #
 # $1 - completion function name, e.g. "_cp"; can also be "cp"
 -zplg-forget-completion() {
-    local f="$1"
+    local f="$1" quiet="$2"
 
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" )
 
-    [[ "${#commands}" -gt 0 ]] && print "Forgetting commands completed by \`$f':"
+    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print "Forgetting commands completed by \`$f':"
 
     local k
     for k in "${commands[@]}"; do
         [[ -n "$k" ]] || continue
         unset "_comps[$k]"
-        print "Unsetting $k"
+        (( quiet )) || print "Unsetting $k"
     done
 
     unfunction -- 2>/dev/null "$f"

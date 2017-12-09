@@ -1509,8 +1509,9 @@ zplugin() {
                    (( ${+functions[-zplg-install-completions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
-                   -zplg-install-completions "$2" "$3" "1"
-                   print "Initializing completion (compinit)..."
+                   [[ "$2" = "-q" ]] && { 5="-q"; shift; }
+                   -zplg-install-completions "$2" "$3" "1" "${(M)4:#-q}"
+                   [[ -z "${(M)4:#-q}" ]] && print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
                    compinit
                    ;;
