@@ -2353,8 +2353,8 @@ changes ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}      - view plugin's git
 recently ${ZPLGM[col-info]}[time-spec]${ZPLGM[col-rst]}     - show plugins that changed recently, argument is e.g. 1 month 2 days
 clist|completions        - list completions in use
 cdisable ${ZPLGM[col-info]}cname${ZPLGM[col-rst]}           - disable completion \`cname'
-cenable  ${ZPLGM[col-info]}cname${ZPLGM[col-rst]}           - enable completion \`cname'
-creinstall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - install completions for plugin, can also receive absolute local path
+cenable ${ZPLGM[col-info]}cname${ZPLGM[col-rst]}            - enable completion \`cname'
+creinstall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - install completions for plugin, can also receive absolute local path; -q - quiet
 cuninstall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions

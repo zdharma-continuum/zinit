@@ -655,8 +655,8 @@ changes {plugin-name}    - view plugin's git log
 recently [time-spec]     - show plugins that changed recently, argument is e.g. 1 month 2 days
 clist|completions        - list completions in use
 cdisable {cname}         - disable completion `cname'
-cenable  {cname}         - enable completion `cname'
-creinstall {plugin-name} - install completions for plugin; can also receive absolute local path
+cenable {cname}          - enable completion `cname'
+creinstall {plugin-name} - install completions for plugin; can also receive absolute local path; -q – quiet
 cuninstall {plugin-name} - uninstall completions for plugin
 csearch                  - search all for available completions from any plugin, even unused ones
 compinit                 - reload installed completions
@@ -665,7 +665,7 @@ dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session
-compile  {plugin-name}   - compile plugin (or all plugins if --all passed)
+compile {plugin-name}    - compile plugin (or all plugins if --all passed)
 uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
 ```
