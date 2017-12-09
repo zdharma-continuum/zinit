@@ -6,6 +6,12 @@ test:
 testB:
 	make OPTS="kshglob" plugin svn curl
 
+testC:
+	make OPTS="noextendedglob" plugin svn curl
+
+testD:
+	make OPTS="ksharrays" plugin svn curl
+
 plugin: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 \
     	test50 test51
 
@@ -17,10 +23,10 @@ curl: test21 test22 test23 test24 test25 test26 test27 test29
 prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh
 	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin .
 	rm -rf data
-	./bin/zsd-transform -q zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh
-	mv zsdoc/data .
-	rm -rf zsdoc
-	cp ../_zplugin data/functions/zplugin.zsh/
+	@: ./bin/zsd-transform -q zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh
+	@: mv zsdoc/data .
+	@: rm -rf zsdoc
+	@: cp ../_zplugin data/functions/zplugin.zsh/
 	perl -pi -e 's/command git/internet_mock_git/g' zplugin-install.zsh zplugin-autoload.zsh
 	perl -pi -e 's/command svn/internet_mock_svn/g' zplugin-install.zsh
 	perl -pi -e 's/command curl/internet_mock_curl/g' zplugin-install.zsh

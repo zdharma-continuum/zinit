@@ -13,7 +13,7 @@ local -a lines
 lines=( "${(f@)"$( command git log --oneline --max-count=2 )"}" )
 
 cd "$PREV_PWD"
-print -r -- ${#lines} > answer/line_count
+print -r -- ${#lines[@]} > answer/line_count
 
 # No static ice should be gathered when if-condition is not meet
 print -rl -- "${(kv)ZPLG_SICE[@]}" > answer/static_ice

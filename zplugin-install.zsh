@@ -11,7 +11,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - user
 # $2 - plugin
 -zplg-setup-plugin-dir() {
-    setopt localoptions extendedglob typesetsilent
+    setopt localoptions extendedglob typesetsilent noksharrays
 
     local user="$1" plugin="$2" remote_url_path="$1/$2" local_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
 
@@ -92,10 +92,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     else
         case "${ZPLG_ICE[proto]}" in
             (|https)
-                command git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" || return 1
+                command git clone --recursive ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" || return 1
                 ;;
             (git|http|ftp|ftps|rsync|ssh)
-                command git clone --recursive ${=ZPLG_ICE[depth]:+--depth $ZPLG_ICE[depth]} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" || return 1
+                command git clone --recursive ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" || return 1
                 ;;
             (*)
                 print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
@@ -353,7 +353,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # supports Subversion protocol and allows to clone subdirectories.
 # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 -zplg-download-snippet() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob noksharrays
 
     local save_url="$1" url="$2" local_dir="$3" filename0="$4" filename="$5" update="$6"
     integer retval=0
@@ -464,6 +464,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
 
     if [[ ${ZPLG_ICE[as]} != "command" && ${+ZPLG_ICE[svn]} = 1 ]]; then
+        local -a list
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
             list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
         elif [[ -z ${ZPLG_ICE[pick]} ]]; then

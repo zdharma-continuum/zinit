@@ -18,6 +18,6 @@ local -a lines
 lines=( "${(f@)"$( command svn log | command grep sgniazdowski )"}" )
 
 cd "$PREV_PWD"
-print -r -- ${#lines} > answer/line_count
+print -r -- ${#lines[@]} > answer/line_count
 
 # vim:ft=zsh

@@ -42,7 +42,7 @@ internet_mock_git() {
     if [[ "$1" = "clone" ]]; then
         local -A urlmap
         urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
-        urlmap=( "${(kv@)urlmap//\%PWD/$TEST_DIR}" )
+        urlmap=( "${(kv)urlmap[@]//\%PWD/$TEST_DIR}" )
         local URL="$2"
         URL="${urlmap[$URL]}"
         local local_dir="$3"
@@ -77,7 +77,7 @@ internet_mock_svn() {
     if [[ "$1" = "checkout" ]]; then
         local -A urlmap
         urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
-        urlmap=( "${(kv@)urlmap//\%PWD/$TEST_DIR}" )
+        urlmap=( "${(kv)urlmap[@]//\%PWD/$TEST_DIR}" )
         local URL="$2"
         local local_dir="${URL:t}"
         URL="${urlmap[$URL]}"
@@ -116,7 +116,7 @@ internet_mock_curl() {
     if [[ -z ${(@)opts:|all_opts} ]]; then
         local -A urlmap
         urlmap=( "${(f@)"$(<$TEST_DIR/urlmap)"}" )
-        urlmap=( "${(kv@)urlmap//\%PWD/$TEST_DIR}" )
+        urlmap=( "${(kv)urlmap[@]//\%PWD/$TEST_DIR}" )
         local URL="$1"
         local local_dir="${URL:t}"
         URL="${urlmap[$URL]}"

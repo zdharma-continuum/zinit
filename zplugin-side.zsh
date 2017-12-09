@@ -128,7 +128,7 @@
 # directory) or regular URL (points to file), returns 2 possible paths for
 # further examination
 -zplg-two-paths() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob noksharrays
     integer MBEGIN MEND
     local url="$1" url1 url2 filenameA filenameB filename0A filename0B local_dirA local_dirB MATCH
 
@@ -136,8 +136,8 @@
     url="${${url#"${url%%[! $'\t']*}"}%/}"
     url1="$url" url2="$url"
 
-    url1[1,5]="${ZPLG_1MAP[${url[1,5]}]:-$url[1,5]}" # svn
-    url2[1,5]="${ZPLG_2MAP[${url[1,5]}]:-$url[1,5]}" # normal
+    url1[1,5]="${ZPLG_1MAP[${url[1,5]}]:-${url[1,5]}}" # svn
+    url2[1,5]="${ZPLG_2MAP[${url[1,5]}]:-${url[1,5]}}" # normal
 
     filenameA="${${url1%%\?*}:t}"
     filename0A="${${${url1%%\?*}:h}:t}"
