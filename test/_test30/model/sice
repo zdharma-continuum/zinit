@@ -1,0 +1,2 @@
+OMZ::plugins/git/git.plugin.zsh/
+atclone command\ echo\ \"touch\ \\\$\{ZPLGM\[PLUGINS_DIR\]\}/error.mark\"\ \>!\ git.plugin.zsh atpull %atclone cp git.plugin.zsh\ -\>\ gp pick git.plugin.zsh as command 
