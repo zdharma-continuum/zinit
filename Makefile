@@ -4,7 +4,10 @@ all: zplugin.zsh.zwc zplugin-side.zsh.zwc zplugin-install.zsh.zwc zplugin-autolo
 	doc/zcompile $<
 
 test:
-	make VERBOSE=$(VERBOSE) NODIFF=$(NODIFF) DEBUG=$(DEBUG) OPTDUMP=$(OPTDUMP) -C test test
+	make VERBOSE=$(VERBOSE) NODIFF=$(NODIFF) DEBUG=$(DEBUG) OPTDUMP=$(OPTDUMP) OPTS=$(OPTS) -C test test
+
+testB:
+	make VERBOSE=$(VERBOSE) NODIFF=$(NODIFF) DEBUG=$(DEBUG) OPTDUMP=$(OPTDUMP) OPTS="kshglob" -C test test
 
 doc: zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh
 	rm -rf zsdoc/data zsdoc/*.adoc

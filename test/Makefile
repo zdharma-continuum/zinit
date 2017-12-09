@@ -1,6 +1,10 @@
 all: test
 
-test: plugin svn curl
+test:
+	make plugin svn curl
+
+testB:
+	make OPTS="kshglob" plugin svn curl
 
 plugin: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 \
     	test50 test51
@@ -23,7 +27,7 @@ prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-au
 
 test%: _test%/script _test%/urlmap _test%/model data
 	rm -rf _$@/answer
-	./bin/runtest.zsh _$@ "$(VERBOSE)" "$(DEBUG)" "$(OPTDUMP)" "$(EMUL)"
+	./bin/runtest.zsh _$@ "$(VERBOSE)" "$(DEBUG)" "$(OPTDUMP)" "$(EMUL)" "$(OPTS)"
 	if [ "$(NODIFF)" = "" -a ! -f _$@/skip ]; then diff -x .git -x .svn -x .test_git -x '*.zwc' -x .model_keep -u -r _$@/model _$@/answer; exit $$?; fi
 	@echo
 

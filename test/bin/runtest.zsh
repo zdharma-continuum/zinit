@@ -5,6 +5,8 @@ local emul="zsh";
 emul="${5:-$emul}"
 emulate -LR "$emul" -o warncreateglobal -o typesetsilent -o extendedglob
 
+local opts="$6"
+
 # Will generate new answer
 [[ -d $PWD/$1/answer ]] && rm -rf $PWD/$1/answer
 
@@ -226,7 +228,9 @@ for p in "${plugins[@]}"; do
 done
 
 command rm -f skip
+setopt ${=opts}
 builtin source ./script || echo "Test's script has failed" > answer/fail.msg
+unsetopt ${=opts}
 
 for p in "${plugins[@]}"; do
     command rm -f ../test_plugins/$p/.git
