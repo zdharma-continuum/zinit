@@ -228,9 +228,9 @@ for p in "${plugins[@]}"; do
 done
 
 command rm -f skip
-setopt ${=opts}
+[[ -n "$opts" ]] && setopt ${=opts}
 builtin source ./script || echo "Test's script has failed" > answer/fail.msg
-unsetopt ${=opts}
+[[ -n "$opts" ]] && unsetopt ${=opts}
 
 for p in "${plugins[@]}"; do
     command rm -f ../test_plugins/$p/.git
