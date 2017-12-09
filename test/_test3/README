@@ -5,6 +5,7 @@ This test verifies (acting on plugin):
    - cp
    - atclone
    - make
+   - atinit
    - atload
 
 2. Correct execution of make ice
