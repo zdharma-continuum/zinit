@@ -158,7 +158,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 -zplg-install-completions() {
     local reinstall="${3:-0}"
 
-    builtin setopt localoptions nullglob extendedglob unset
+    builtin setopt localoptions nullglob extendedglob unset nokshglob
 
     # Shorthands, little unstandarized
     1="${1/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
@@ -509,7 +509,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - url
 # $2 - file
 -zplg-handle-binary-file() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob
 
     -zplg-extract-wrapper() {
         local file="$1" fun="$2"

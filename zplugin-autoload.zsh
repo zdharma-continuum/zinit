@@ -20,7 +20,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
 
-    builtin setopt localoptions extendedglob
+    builtin setopt localoptions extendedglob nokshglob
     [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
     typeset -A func
@@ -54,7 +54,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-    builtin setopt localoptions extendedglob
+    builtin setopt localoptions extendedglob nokshglob
     [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_OPTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
     typeset -A opts_before opts_after opts
@@ -87,7 +87,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-    builtin setopt localoptions extendedglob
+    builtin setopt localoptions extendedglob nokshglob
     [[ "${ZPLG_PATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
     [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FPATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
@@ -146,7 +146,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
-    builtin setopt localoptions extendedglob
+    builtin setopt localoptions extendedglob nokshglob
     [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
 
     # Un-concatenated parameters from moment of diff start and of diff end
@@ -409,7 +409,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Paranoid for type of empty value,
     # i.e. include white spaces as empty
-    builtin setopt localoptions extendedglob
+    builtin setopt localoptions extendedglob nokshglob
     REPLY=""
     [[ "${ZPLG_PARAMETERS_PRE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_POST[$uspl2]}" != *[$'! \t']* ]] && return 0
 
@@ -466,7 +466,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - absolute path to completion file (in COMPLETIONS_DIR)
 # $2 - readlink command (":" or "readlink")
 -zplg-get-completion-owner() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob
     local cpath="$1"
     local readlink_cmd="$2"
     local in_plugin_path tmp
@@ -515,7 +515,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-find-completions-of-plugin() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob nokshglob
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
 
@@ -600,7 +600,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-uninstall-completions() {
-    builtin setopt localoptions nullglob extendedglob unset
+    builtin setopt localoptions nullglob extendedglob unset nokshglob
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -657,7 +657,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # No arguments.
 -zplg-compinit() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob nokshglob
 
     typeset -a symlinked backup_comps
     local c cfile bkpfile
@@ -1150,7 +1150,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $3 - plugin (only when $1 - i.e. user - given)
 -zplg-update-or-status() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob
 
     if [[ "$2" = (http|https|ftp|ftps|scp)://* || "$2" = OMZ::* || "$2" = PZT::* ]]; then
         -zplg-update-or-status-snippet "$1" "$2" "$3"
@@ -1298,7 +1298,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $4 - name of output string parameter, to hold path to directory ("local_dir")
 # $5 - name of output string parameter, to hold filename ("filename")
 -zplg-compute-ice() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob
 
     local __URL="${1%/}" __pack="$2"
     local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" __var_name3="${5:-filename}"
@@ -1387,7 +1387,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-update-or-status-all() {
-    builtin setopt localoptions nullglob
+    builtin setopt localoptions nullglob nokshglob
 
     local st="$1"
     local repo snip pd user plugin
@@ -1455,7 +1455,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-show-zstatus() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob nokshglob
 
     local infoc="${ZPLGM[col-info2]}"
 
@@ -1519,7 +1519,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-show-times() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob
     local entry entry2 user plugin
     float -F 3 sum=0.0
 
@@ -1647,7 +1647,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-show-completions() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob nokshglob
     local count="${1:-3}"
 
     typeset -a completions
@@ -1739,7 +1739,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-clear-completions() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob nokshglob
 
     typeset -a completions
     completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
@@ -1792,7 +1792,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-search-completions() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob nokshglob
 
     typeset -a plugin_paths
     plugin_paths=( "${ZPLGM[PLUGINS_DIR]}"/*---* )
@@ -1953,7 +1953,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-cd() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob
     if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
         local -A sice
         local -a tmp
@@ -1989,7 +1989,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob nokshglob
     if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
         local -A sice
         local -a tmp
@@ -2052,7 +2052,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # $1 - time spec, e.g. "1 week"
 -zplg-recently() {
-    builtin setopt localoptions nullglob extendedglob
+    builtin setopt localoptions nullglob extendedglob nokshglob
 
     local IFS="."
     local gitout
@@ -2296,7 +2296,7 @@ ZPLGM[EXTENDED_GLOB]=""
         print "It is also available probably in all distributions and Homebrew, as package \`tree'"
     }
     (
-        setopt localoptions extendedglob
+        setopt localoptions extendedglob nokshglob
         cd "${ZPLGM[SNIPPETS_DIR]}"
         local -a list
         list=( "${(f@)"$(LANG=en_US.utf-8 tree -L 3 --charset utf-8)"}" )
