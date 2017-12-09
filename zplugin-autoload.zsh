@@ -1244,16 +1244,8 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
         }
 
-        # Record new ICE modifiers used
-        ( builtin cd "$local_dir" || return 1
-          command mkdir -p ._zplugin
-          for key in proto from as bpick mv cp atclone atpull ver; do
-              print -r -- "${ice[$key]}" >! "._zplugin/$key"
-          done
-          # Optional file - create file for make ICE mod
-          (( ${+ice[make]} )) && print -r -- "${ice[make]}" >! "._zplugin/make" || command rm -f "._zplugin/make"
-          (( ${+ice[pick]} )) && print -r -- "${ice[pick]}" >! "._zplugin/pick" || command rm -f "._zplugin/pick"
-        )
+        # Store ices at update of plugin
+        -zplg-store-ices "$local_dir/._zplugin" ice "" "" "" ""
     fi
 
     return 0

@@ -130,14 +130,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     if [[ "$3" != "-u" ]]; then
-        command mkdir -p "$local_path/._zplugin"
-        local key
-        for key in proto from as bpick mv cp atclone atpull ver; do
-            print -r -- "${ZPLG_ICE[$key]}" >! "$local_path/._zplugin/$key"
-        done
-        # Optional file - create file for make ICE mod
-        (( ${+ZPLG_ICE[make]} )) && print -r -- "${ZPLG_ICE[make]}" >! "$local_path/._zplugin/make" || command rm -f "$local_path/._zplugin/make"
-        (( ${+ZPLG_ICE[pick]} )) && print -r -- "${ZPLG_ICE[pick]}" >! "$local_path/._zplugin/pick" || command rm -f "$local_path/._zplugin/pick"
+        # Store ices at clone of a plugin
+        -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
         ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path" && eval "${ZPLG_ICE[atclone]}"; }; )
@@ -419,21 +413,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     (( retval == 1 )) && { command rmdir "$local_dir" 2>/dev/null; return $retval; }
-    (( retval == 2 )) && { return 0; }
 
     if [[ "$local_dir${ZPLG_ICE[svn]+/$filename}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
-        local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin" key
-        (( ${+ZPLG_ICE[svn]} == 0 )) && pfx+="_$filename"
-        command mkdir -p "$pfx"
-        print -r -- "$save_url" >! "$pfx/url"
-        print -r -- "${+ZPLG_ICE[svn]}" >! "$pfx/mode"
-        for key in proto from as bpick mv cp atclone atpull ver; do
-            print -r -- "${ZPLG_ICE[$key]}" >! "$pfx/$key"
-        done
-        # Optional file - create file for make ICE mod
-        (( ${+ZPLG_ICE[make]} )) && print -r -- "${ZPLG_ICE[make]}" >! "$pfx/make" || command rm -f "$pfx/make"
-        (( ${+ZPLG_ICE[pick]} )) && print -r -- "${ZPLG_ICE[pick]}" >! "$pfx/pick" || command rm -f "$pfx/pick"
+        # Store ices at "clone" and update of snippet, SVN and single-file
+        local pfx="$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin${ZPLG_ICE[svn]-_$filename}"
+        -zplg-store-ices "$pfx" ZPLG_ICE "" "" "$save_url" "${+ZPLG_ICE[svn]}"
     fi
+
+    (( retval == 2 )) && { return 0; }
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
         local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"

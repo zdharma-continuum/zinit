@@ -1,5 +1,7 @@
 all: test
 
+alltest: test testB testC testD
+
 test:
 	make plugin svn curl
 

@@ -123,7 +123,7 @@
         REPLY="${ZPLGM[col-uname]}%${ZPLGM[col-rst]}${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
     } || REPLY="${ZPLGM[col-uname]}${user}${ZPLGM[col-rst]}/${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
 } # }}}
-# FUNCTION: -zplg-two-paths()
+# FUNCTION: -zplg-two-paths {{{
 # Obtains a snippet URL without specification if it is an SVN URL (points to
 # directory) or regular URL (points to file), returns 2 possible paths for
 # further examination
@@ -155,3 +155,32 @@
 
     reply=( "$local_dirA/$filenameA" "$local_dirB" "$filenameB" )
 }
+# }}}
+# FUNCTION: -zplg-store-ices {{{
+# Saves ice mods in given hash onto disk.
+#
+# $1 - directory where to create / delete files
+# $2 - name of hash that holds values
+# $3 - additional keys of hash to store, space separated
+# $4 - additional keys of hash to store, empty-meaningful ices, space separated
+-zplg-store-ices() {
+    local __pfx="$1" __ice_var="$2" __add_ices="$3" __add_ices2="$4" url="$5" mode="$6"
+
+    command mkdir -p "$__pfx"
+    local __key __var_name
+    for __key in proto from as bpick mv cp atclone atpull ver ${(@s: :)__add_ices}; do
+        __var_name="${__ice_var}[$__key]"
+        print -r -- "${(P)__var_name}" >! "$__pfx"/$__key
+    done
+
+    # Ices that even empty mean something
+    for __key in make pick ${(@s: :)__add_ices2}; do
+        __var_name="${__ice_var}[$__key]"
+        (( ${(P)+__var_name} )) && print -r -- "${(P)__var_name}" >! "$__pfx"/$__key || command rm -f "$__pfx"/$__key
+    done
+
+    for __key in url mode; do
+        [[ -n "${(P)__key}" ]] && print -r -- "${(P)__key}" >! "$__pfx"/$__key
+    done
+}
+# }}}
