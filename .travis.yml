@@ -27,6 +27,8 @@ script:
 - make
 - make test VERBOSE=1
 - make testB VERBOSE=1
+- make testC VERBOSE=1
+- make testD VERBOSE=1
 - make -C zsdoc pdf
 - share/deploy_doc.sh
 
