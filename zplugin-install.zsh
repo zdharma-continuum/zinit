@@ -122,7 +122,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     # Install completions
-    -zplg-install-completions "$user" "$plugin" "0"
+    -zplg-install-completions "$user" "$plugin" "0" ${ZPLG_ICE[silent]+-q}
 
     if [[ "$site" != *"releases" ]]; then
         # Compile plugin
