@@ -1322,20 +1322,22 @@ builtin setopt noaliases
 -zplg-scheduler() {
     sched +1 "-zplg-scheduler 1"
 
-    integer __t=EPOCHSECONDS __i=2
+    integer __t=EPOCHSECONDS __i=2 correct=0
     local -a match mbegin mend
+
+    [[ -o ksharrays ]] && correct=1
 
     [[ -n "$1" ]] && {
         () {
             setopt localoptions extendedglob
-            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1]} < $__t ? zplugin_scheduler_add(__i++) : __i++ ))]}} )
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1-correct]} < $__t ? zplugin_scheduler_add(__i++ - correct) : __i++ ))]}} )
         }
         ZPLG_TASKS=( "<no-data>" ${(@)ZPLG_TASKS:#<no-data>} )
     } || {
         add-zsh-hook -d -- precmd -zplg-scheduler
         () {
             setopt localoptions extendedglob
-            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1]} <= 1 ? ${match[1]} : __t ))${match[2]}} )
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
         }
     }
 
@@ -1345,9 +1347,9 @@ builtin setopt noaliases
         [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 20 ]] && break
     done
     for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
-        -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2]}"
+        -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2-correct]}"
     done
-    ZPLG_RUN[1,__idx]=()
+    ZPLG_RUN[1-correct,__idx-correct]=()
 }
 # }}}
 
