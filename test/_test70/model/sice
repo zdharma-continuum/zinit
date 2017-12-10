@@ -1,0 +1,2 @@
+OMZ::plugins/git/git.plugin.zsh/
+atclone command\ echo\ \"touch\ \\\$\{ZPLGM\[SNIPPETS_DIR\]\}/load.mark\"\ \>!\ git.plugin.zsh atpull %atclone mv git.plugin.zsh\ -\>\ gp 
