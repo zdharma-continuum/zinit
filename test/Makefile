@@ -3,16 +3,16 @@ all: test
 alltest: test testB testC testD
 
 test:
-	make plugin svn curl
+	make plugin svn curl general
 
 testB:
-	make OPTS="kshglob" plugin svn curl
+	make OPTS="kshglob" plugin svn curl general
 
 testC:
-	make OPTS="noextendedglob" plugin svn curl
+	make OPTS="noextendedglob" plugin svn curl general
 
 testD:
-	make OPTS="ksharrays" plugin svn curl
+	make OPTS="ksharrays" plugin svn curl general
 
 plugin: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 \
     	test50 test51
@@ -22,6 +22,8 @@ svn: test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 \
 
 curl: test21 test22 test23 test24 test25 test26 test27 test29 test30 \
       test70
+
+general: test100
 
 prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh
 	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin .

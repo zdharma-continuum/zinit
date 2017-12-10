@@ -2,4 +2,4 @@ test 1-10    on plugin tests of Ice-mods         + test 50-59
 test 11-20   on svn-snippets tests of Ice-mods   + test 60-69
 test 21-30   on curl-snippets tests of Ice-mods  + test 70-79
 
-
+test 100-…   general tests
