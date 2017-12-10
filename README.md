@@ -467,8 +467,8 @@ Windows – during startup, it shows desktop even though it still loads data in
 background. This has drawbacks, but is for sure better than blank screen for
 10 minutes. And here, in Zplugin, there are no drawbacks of this approach – no
 lags, freezes, etc. – the command line is fully usable while the plugins are
-being loaded, for number of such plugins like `10` or `20`. The same for higher
-number of plugins will be implemented very soon.
+being loaded, for number of such plugins like `10` or `20`. For higher number
+of plugins automatic queueing for next free time slot (i.e. delaying) is performed.
 
 Zsh 5.3 or greater is required. To use this Turbo Mode add `wait` ice to the
 target plugin in one of following ways:
