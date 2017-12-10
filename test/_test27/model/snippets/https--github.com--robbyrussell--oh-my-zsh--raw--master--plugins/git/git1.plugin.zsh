@@ -92,14 +92,14 @@ alias gdct='git describe --tags `git rev-list --tags --max-count=1`'
 alias gdt='git diff-tree --no-commit-id --name-only -r'
 alias gdw='git diff --word-diff'
 
-gdv() { git diff -w "$@" | view - }
+gdv() { git diff -w "$@" | view -; }
 compdef _git gdv=git-diff
 
 alias gf='git fetch'
 alias gfa='git fetch --all --prune'
 alias gfo='git fetch origin'
 
-function gfg() { git ls-files | grep $@ }
+function gfg() { git ls-files | grep $@; }
 compdef _grep gfg
 
 alias gg='git gui citool'

@@ -45,7 +45,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local url="$site/${ZPLG_ICE[ver]}"
         local -a list list2
 
-        list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1 } 2>/dev/null | \
+        list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
                       command grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
         list=( "${list[@]#href=?}" )
 
@@ -481,7 +481,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local url="https://github.com/$user/$plugin/releases/latest"
 
     local -a list
-    list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1 } 2>/dev/null | \
+    list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
                   command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
 
     list=( "${(uOn)list[@]/(#b)href=?(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}" )

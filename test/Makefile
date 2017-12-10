@@ -1,6 +1,6 @@
 all: test
 
-alltest: test testB testC testD
+alltest: test testB testC testD testE
 
 test:
 	make plugin svn curl general
@@ -13,6 +13,9 @@ testC:
 
 testD:
 	make OPTS="ksharrays" plugin svn curl general
+
+testE:
+	make OPTS="ignoreclosebraces" plugin svn curl general
 
 plugin: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 \
     	test50 test51
