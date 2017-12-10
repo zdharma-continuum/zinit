@@ -163,6 +163,7 @@ no_colors() {
 # }}}
 # FUNCTION: store_state {{{
 store_state() {
+    setopt localoptions extendedglob nokshglob noksharrays
     local out="$1" out2="$2"
     (( ${+functions[-zplg-diff-env-compute]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
 
