@@ -149,6 +149,18 @@ tst_verbosity() {
     fi
 }
 # }}}
+# FUNCTION: no_colors {{{
+no_colors() {
+    local -A mymap
+    mymap=( "${(kv@)ZPLGM}" )
+    local -a keys
+    keys=( ${mymap[(I)*(col-)*]} )
+
+    for k in "${keys[@]}"; do
+        ZPLGM[$k]=""
+    done
+}
+# }}}
 # FUNCTION: store_state {{{
 store_state() {
     (( ${+functions[-zplg-diff-env-compute]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
@@ -166,6 +178,8 @@ store_state() {
     for k in "${keys[@]}"; do
         ZPLGM[$k]="__reset-by-test__"
     done
+
+    ZPLGM[EXTENDED_GLOB]=""
 
     ZPLGM=( "${(kv)ZPLGM[@]/${PWD:h}\//}" )
     ZPLGM=( "${(kv)ZPLGM[@]/${${PWD:h}:h}\//}" )
@@ -215,6 +229,8 @@ store_state() {
     print -rl -- "---" "Parameter module: ${+modules[zsh/parameter]}" >>! answer/state
 }
 # }}}
+
+no_colors
 
 builtin cd "$1"
 [[ -n "$2" ]] && typeset -g VERBOSE=1     # $(VERBOSE)
