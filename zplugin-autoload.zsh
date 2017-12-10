@@ -1548,7 +1548,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 0
     fi
 
-    local cur_plugin="" uspl1
+    local cur_plugin="" uspl1 file user plugin
     for m in "${matches[@]}"; do
         file="${m:t}"
         uspl1="${${m:h}:t}"
