@@ -419,6 +419,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Find longest key and longest value
     integer longest=0 vlongest1=0 vlongest2=0
+    local v1 v2
     for k in "${(k)elem_post[@]}"; do
         k="${(Q)k}"
         [[ "${#k}" -gt "$longest" ]] && longest="${#k}"
@@ -762,6 +763,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local uspl2col="$REPLY"
 
     # Store report of the plugin in variable LASTREPORT
+    typeset -g LASTREPORT
     LASTREPORT=`-zplg-show-report "$1" "$2"`
 
     #
