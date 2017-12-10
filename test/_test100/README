@@ -1,5 +1,5 @@
 This test verifies:
 
-1. If clone is properly done
+1. Commands load,list,compiled,zstatus,csearch
 
 2. If ice and static ice are empty
