@@ -163,6 +163,7 @@ no_colors() {
 # }}}
 # FUNCTION: store_state {{{
 store_state() {
+    local out="$1" out2="$2"
     (( ${+functions[-zplg-diff-env-compute]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
 
     local -A mymap
@@ -186,33 +187,31 @@ store_state() {
 
     # Sort and print
     for k in "${(ko@)ZPLGM}"; do
-        print -rl -- "$k" "${ZPLGM[$k]}" >>! answer/state
+        print -rl -- "$k" "${ZPLGM[$k]}" >>! "$out"
     done
 
-    print -r -- "---" >>! answer/state
+    print -r -- "---" >>! "$out"
 
-    print -r -- "ERRORS" >! answer/errors
+    print -r -- "ERRORS" >! "$out2"
 
     # Normalize PATH and FPATH
-    path=( "${path/${PWD:h}\//}" )
-    path=( "${path/${${PWD:h}:h}\//}" )
-    fpath=( "${fpath/${PWD:h}\//}" )
-    fpath=( "${fpath/${${PWD:h}:h}\//}" )
-    ZPLG_PATH_BEFORE=( "${(kv@)ZPLG_PATH_BEFORE/${PWD:h}\//}" )
-    ZPLG_PATH_BEFORE=( "${(kv@)ZPLG_PATH_BEFORE/${${PWD:h}:h}\//}" )
-    ZPLG_PATH_AFTER=( "${(kv@)ZPLG_PATH_AFTER/${PWD:h}\//}" )
-    ZPLG_PATH_AFTER=( "${(kv@)ZPLG_PATH_AFTER/${${PWD:h}:h}\//}" )
-    ZPLG_FPATH_BEFORE=( "${(kv@)ZPLG_FPATH_BEFORE/${PWD:h}\//}" )
-    ZPLG_FPATH_BEFORE=( "${(kv@)ZPLG_FPATH_BEFORE/${${PWD:h}:h}\//}" )
-    ZPLG_FPATH_AFTER=( "${(kv@)ZPLG_FPATH_AFTER/${PWD:h}\//}" )
-    ZPLG_FPATH_AFTER=( "${(kv@)ZPLG_FPATH_AFTER/${${PWD:h}:h}\//}" )
+    local -a path2 fpath2
+    path2=( "${path[@]/${PWD:h}\//}" )
+    path2=( "${path2[@]/${${PWD:h}:h}\//}" )
+    fpath2=( "${fpath[@]/${PWD:h}\//}" )
+    fpath2=( "${fpath2[@]/${${PWD:h}:h}\//}" )
 
     for k in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        -zplg-diff-functions-compute "$k" || print -r -- "Failed: -zplg-diff-functions-compute for $k" >>! answer/errors
-        -zplg-diff-options-compute "$k"   || print -r -- "Failed: -zplg-diff-options-compute for $k" >>! answer/errors
-        -zplg-diff-env-compute "$k"       || print -r -- "Failed: -zplg-diff-env-compute $k" >>! answer/errors
-        -zplg-diff-parameter-compute "$k" || print -r -- "Failed: -zplg-diff-parameter-compute $k" >>! answer/errors
+        -zplg-diff-functions-compute "$k" || print -r -- "Failed: -zplg-diff-functions-compute for $k" >>! "$out2"
+        -zplg-diff-options-compute "$k"   || print -r -- "Failed: -zplg-diff-options-compute for $k" >>! "$out2"
+        -zplg-diff-env-compute "$k"       || print -r -- "Failed: -zplg-diff-env-compute $k" >>! "$out2"
+        -zplg-diff-parameter-compute "$k" || print -r -- "Failed: -zplg-diff-parameter-compute $k" >>! "$out2"
     done
+
+    ZPLG_PATH=( "${(kv@)ZPLG_PATH/${PWD:h}\//}" )
+    ZPLG_PATH=( "${(kv@)ZPLG_PATH/${${PWD:h}:h}\//}" )
+    ZPLG_FPATH=( "${(kv@)ZPLG_FPATH/${PWD:h}\//}" )
+    ZPLG_FPATH=( "${(kv@)ZPLG_FPATH/${${PWD:h}:h}\//}" )
 
     keys=( ZPLG_REGISTERED_PLUGINS ZPLG_REGISTERED_STATES ZPLG_SNIPPETS
            ZPLG_SICE ZPLG_FUNCTIONS ZPLG_OPTIONS ZPLG_PATH ZPLG_FPATH
@@ -223,10 +222,10 @@ store_state() {
     for k in "${keys[@]}"; do
         # kv two times, outer for after patch, inner for before patch:
         # 37092: make nested ${(P)name} properly refer to parameter on return
-        print -r -- "$k: ${(kvqq@)${(Pkv@)k}}" >>! answer/state
+        print -r -- "$k: ${(kvqq@)${(Pkv@)k}}" >>! "$out"
     done
 
-    print -rl -- "---" "Parameter module: ${+modules[zsh/parameter]}" >>! answer/state
+    print -rl -- "---" "Parameter module: ${+modules[zsh/parameter]}" >>! "$out"
 }
 # }}}
 
@@ -258,6 +257,6 @@ for k in "${execs[@]}"; do
     print -r -- "The file has a +x permission" >! ${k}.is_exec
 done
 
-store_state
+store_state answer/state answer/errors
 
 return 0
