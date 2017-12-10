@@ -637,7 +637,7 @@ zstatus                  - overall Zplugin status
 times                    - statistics on plugin loading times
 load {plugin-name}       - load plugin, can also receive absolute local path
 light {plugin-name}      - light plugin load, without reporting (significantly faster)
-unload {plugin-name}     - unload plugin (needs reporting)
+unload {plugin-name}     - unload plugin (needs reporting, i.e. load not light), -q – quiet
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 ice <ice specification>  - add ICE to next command, argument is e.g. from"gitlab"
 update {plugin-name}|URL - Git update plugin or snippet (or all plugins and snippets if --all passed)

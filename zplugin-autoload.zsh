@@ -2329,7 +2329,7 @@ times                    - statistics on plugin load times, sorted in order of l
 self-update              - updates Zplugin
 load ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}         - load plugin, can also receive absolute local path
 light ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}        - light plugin load, without reporting
-unload ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - unload plugin
+unload ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - unload plugin loaded with \`zplugin load ...', -q - quiet
 snippet [-f] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]}       - source local or remote file (by direct URL), -f: force - don't use cache
 ls                       - list snippets in formatted and colorized manner
 ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"

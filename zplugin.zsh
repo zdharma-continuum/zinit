@@ -1441,9 +1441,10 @@ zplugin() {
                    if [[ -z "$2" && -z "$3" ]]; then
                        print "Argument needed, try help"
                    else
+                       [[ "$2" = "-q" ]] && { 5="-q"; shift; }
                        # Unload given plugin. Cloned directory remains intact
                        # so as are completions
-                       -zplg-unload "$2" "$3"
+                       -zplg-unload "$2" "${3:#-q}" "${${(M)4:#-q}:-${(M)3:#-q}}"
                    fi
                    ;;
                (update)
