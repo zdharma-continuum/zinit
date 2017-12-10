@@ -109,6 +109,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     # Store the path elements, associating them with plugin ($uspl2)
+    ZPLG_PATH[$uspl2]=""
     for i in "${(onk)path_state[@]}"; do
         ZPLG_PATH[$uspl2]+="$i "
     done
@@ -128,6 +129,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     # Store the path elements, associating them with plugin ($uspl2)
+    ZPLG_FPATH[$uspl2]=""
     for i in "${(onk)fpath_state[@]}"; do
         ZPLG_FPATH[$uspl2]+="$i "
     done
