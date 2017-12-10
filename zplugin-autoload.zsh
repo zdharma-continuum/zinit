@@ -434,7 +434,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Enumerate parameters that changed. A key
     # always exists in both of the arrays
-    local answer="" k v1 v2
+    local answer="" k
     for k in "${(k)elem_post[@]}"; do
         v1="${(Q)elem_pre[$k]}"
         v2="${(Q)elem_post[$k]}"
