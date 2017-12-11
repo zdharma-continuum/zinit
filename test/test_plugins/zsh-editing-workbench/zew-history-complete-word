@@ -1,0 +1,166 @@
+emulate -LR zsh
+setopt typesetsilent extendedglob noshortloops
+
+# When an error, then no cursor keys bindings
+zmodload zsh/terminfo 2>/dev/null
+zmodload zsh/termcap 2>/dev/null
+
+# Prepare output variables for zew-process-buffer
+local ZEW_PB_WORDS ZEW_PB_WORDS_BEGINNINGS ZEW_PB_SPACES 
+local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
+
+typeset -g __zew_hcw_index __zew_hcw_left __zew_hcw_right
+typeset -g __zew_hcw_widget_name __zew_hcw_restart __zew_hcw_call_count
+typeset -gaU __zew_hcw_found
+
+(( __zew_hcw_call_count ++ ))
+
+_zhcw_main() {
+
+autoload zew-process-buffer
+zew-process-buffer "$BUFFER" "$CURSOR"
+
+# First call or restart?
+if [[ "$__zew_hcw_call_count" -le 1 || "$__zew_hcw_restart" = "1" ]]; then
+    # '0' will get changed into $to_display limit
+    [[ "$WIDGET" != *-backwards ]] && __zew_hcw_index="1" || __zew_hcw_index="0"
+    __zew_hcw_widget_name="${WIDGET%-backwards}"
+    __zew_hcw_left="$ZEW_PB_LEFT"
+    __zew_hcw_right="$ZEW_PB_RIGHT"
+    __zew_hcw_found=( )
+    __zew_hcw_finished="0"
+    __zew_hcw_restart="0"
+else
+    # Consecutive call
+    [[ "$WIDGET" != *-backwards ]] && (( __zew_hcw_index ++ )) || (( __zew_hcw_index -- ))
+fi
+
+# Find history words matching $left ... $right
+if [ "$#__zew_hcw_found" -eq "0" ]; then
+    repeat 1; do
+        __zew_hcw_found=( "${(@M)historywords:#(#i)$__zew_hcw_left*$__zew_hcw_right}" )
+    done
+
+    # The first result should be always $__zew_hcw_left$__zew_hcw_right
+    if [ "$__zew_hcw_found[1]" != "$__zew_hcw_left$__zew_hcw_right" ]; then
+        __zew_hcw_found=( "$__zew_hcw_left$__zew_hcw_right" "$__zew_hcw_found[@]" )
+    fi
+fi
+
+if [ "$#__zew_hcw_found" -le "0" ]; then
+    zle -M "No matches found"
+    return 0
+fi
+
+# Pagination, index value guards
+integer page_size=$(( LINES / 2 ))
+integer max_index="$#__zew_hcw_found"
+[ "$page_size" -gt "$max_index" ] && page_size="$max_index"
+[ "$__zew_hcw_index" -le 0 ] && __zew_hcw_index="$max_index"
+[ "$__zew_hcw_index" -gt "$max_index" ] && __zew_hcw_index=1
+integer page_start_idx=$(( ((__zew_hcw_index-1)/page_size)*page_size+1 ))
+integer on_page_idx=$(( (__zew_hcw_index-1) % page_size + 1 ))
+
+# Display matches
+typeset -a disp_list
+disp_list=( "${(@)__zew_hcw_found[page_start_idx,page_start_idx+page_size-1]}" )
+
+# Add two spaces before every element
+disp_list=( "${(@)disp_list/(#m)*/  ${MATCH}}" )
+
+# Add > before active element
+local entry="${disp_list[on_page_idx]}"
+entry[1]='>'
+disp_list[on_page_idx]="$entry"
+
+zle -M -- \
+"Searching for '${__zew_hcw_left}_${__zew_hcw_right}'. "\
+"Element #$__zew_hcw_index of $max_index"$'\n'"${(F)disp_list}"
+
+# Regenerate command line
+local buf=""
+integer nwords="${#ZEW_PB_WORDS}"
+for (( i=1; i<=nwords; i++ )); do
+    if [ "$i" = "$ZEW_PB_SELECTED_WORD" ]; then
+        buf+="${ZEW_PB_SPACES[i]}${__zew_hcw_found[__zew_hcw_index]}"
+    else
+        buf+="${ZEW_PB_SPACES[i]}${ZEW_PB_WORDS[i]}"
+    fi
+done
+
+if [[ "$nwords" = "0" && "$ZEW_PB_SELECTED_WORD" = "0" ]]; then
+    buf+="${__zew_hcw_found[__zew_hcw_index]}"
+fi
+
+# Add trailing spaces
+buf+="$ZEW_PB_SPACES[i]"
+
+# Set command line
+BUFFER="$buf"
+
+}
+
+_zhcw_self_insert() {
+    LBUFFER+="${KEYS[-1]}"
+    __zew_hcw_restart="1"
+    _zhcw_main
+}
+
+_zhcw_backward_delete_char() {
+    LBUFFER="${LBUFFER%?}"
+    __zew_hcw_restart="1"
+    _zhcw_main
+}
+
+_zhcw_delete_char() {
+    RBUFFER="${RBUFFER#?}"
+    __zew_hcw_restart="1"
+    _zhcw_main
+}
+
+_zhcw_main
+
+if [ "$__zew_hcw_call_count" -eq "1" ]; then
+    # Make the zhcw keymap a copy of the current main
+    bindkey -N zhcw emacs
+
+    local down_widget="${WIDGET%-backwards}"
+    local up_widget="${down_widget}-backwards"
+
+    # Manual, termcap, terminfo
+    bindkey -M zhcw '^[OA' "$up_widget"
+    bindkey -M zhcw '^[OB' "$down_widget"
+    bindkey -M zhcw '^[[A' "$up_widget"
+    bindkey -M zhcw '^[[B' "$down_widget"
+    [ -n "$termcap[ku]" ] && bindkey -M zhcw "$termcap[ku]" "$up_widget"
+    [ -n "$termcap[kd]" ] && bindkey -M zhcw "$termcap[kd]" "$down_widget"
+    [ -n "$termcap[kD]" ] && bindkey -M zhcw "$termcap[kD]" delete-char
+    [ -n "$terminfo[kcuu1]" ] && bindkey -M zhcw "$terminfo[kcuu1]" "$up_widget"
+    [ -n "$terminfo[kcud1]" ] && bindkey -M zhcw "$terminfo[kcud1]" "$down_widget"
+    [ -n "$terminfo[kdch1]" ] && bindkey -M zhcw "$terminfo[kdch1]" delete-char
+
+    # Needed for Fedora 23, zsh-5.1.1
+    bindkey -M zhcw ' ' self-insert
+
+    # Substitute self-insert, backward-delete-char, delete-char
+    zle -A self-insert saved-self-insert
+    zle -A backward-delete-char saved-backward-delete-char
+    zle -A delete-char saved-delete-char
+
+    zle -N self-insert _zhcw_self_insert
+    zle -N backward-delete-char _zhcw_backward_delete_char
+    zle -N delete-char _zhcw_delete_char
+
+    zle recursive-edit -K zhcw
+    zle -M ""
+
+    zle -A saved-self-insert self-insert
+    zle -A saved-backward-delete-char backward-delete-char
+    zle -A saved-delete-char delete-char
+    zle -D saved-self-insert saved-backward-delete-char saved-delete-char
+
+    # Full reinitialisation at next call
+    __zew_hcw_call_count="0"
+fi
+
+# vim:ft=zsh

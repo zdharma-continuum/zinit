@@ -1,0 +1,47 @@
+# Transpose shell-words, i.e. parts of lines obtained by (Z) flag, i.e.
+# as if zsh parsed the line.
+#
+# Code to activate the functionality with binding to Alt-t:
+# autoload zew-transpose-shell-words
+# zle -N zew-transpose-shell-words
+# bindkey "^[t" zew-transpose-shell-words
+
+local curcontext=":zle:$WIDGET"
+local MATCH MBEGIN MEND i
+
+# Prepare output variables for zew-process-buffer
+local ZEW_PB_WORDS ZEW_PB_WORDS_BEGINNINGS ZEW_PB_SPACES
+local ZEW_PB_SELECTED_WORD ZEW_PB_LEFT ZEW_PB_RIGHT
+
+autoload zew-process-buffer
+zew-process-buffer "$BUFFER"
+
+# No active shell word found (shouldn't happen) (-1)
+# or it's the first shell word (1), or word before first
+# shell word (0)? Return
+[ "$ZEW_PB_SELECTED_WORD" -le 1 ] && return 0
+
+# Swap shell words
+local tmp="$ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD]"
+ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD]="$ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD-1]"
+ZEW_PB_WORDS[ZEW_PB_SELECTED_WORD-1]="$tmp"
+
+# Build BUFFER
+integer size="${#ZEW_PB_WORDS}"
+integer newcursor
+buf=""
+
+for (( i=1; i<=size; i++ )); do
+    buf+="$ZEW_PB_SPACES[i]$ZEW_PB_WORDS[i]"
+    [ "$i" = "$ZEW_PB_SELECTED_WORD" ] && newcursor="$#buf"
+done
+
+# Append final white spaces
+buf+="$ZEW_PB_SPACES[i]"
+
+BUFFER="$buf"
+CURSOR="$newcursor"
+
+return 0
+
+# vim:ft=zsh
