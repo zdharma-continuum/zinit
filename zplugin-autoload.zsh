@@ -38,6 +38,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     # Store the functions, associating them with plugin ($uspl2)
+    ZPLG_FUNCTIONS[$uspl2]=""
     for i in "${(onk)func[@]}"; do
         [[ "${func[$i]}" = "1" ]] && ZPLG_FUNCTIONS[$uspl2]+="$i "
     done
