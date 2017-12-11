@@ -432,10 +432,10 @@ builtin setopt noaliases
         local avalue="${a#*=}"
 
         # Check if alias is to be redefined
-        (( ${+aliases[$aname]} )) && -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: redefining alias \`${aname}', previous value: ${avalue}"
+        (( ${+aliases[$aname]} )) && -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: redefining alias \`${aname}', previous value: ${aliases[$aname]}"
 
+        local bname=${(q)aliases[$aname]}
         aname="${(q)aname}"
-        local bname="${(q)avalue}"
 
         if (( ${+opts[(r)-s]} )); then
             tmp="-s"
