@@ -172,6 +172,7 @@ ZPLGM[EXTENDED_GLOB]=""
     keys=( "${keys[@]}" "${(k)params_before[@]}" );
     for key in "${keys[@]}"; do
         key="${(Q)key}"
+        [[ "${params_after[$key]}" = *local* ]] && continue
         if [[ "${params_after[$key]}" != "${params_before[$key]}" ]]; then
             # Empty for a new param, a type otherwise
             [[ -z "${params_before[$key]}" ]] && params_before[$key]="\"\""
