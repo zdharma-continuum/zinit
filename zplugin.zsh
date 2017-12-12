@@ -482,6 +482,8 @@ builtin setopt noaliases
     typeset -a pos
     pos=( "$@" )
 
+    set -- "${@:#--}"
+
     # Try to catch game-changing "-N"
     if [[ "$1" = "-N" && "$#" = "3" ]]; then
             # Hooks
