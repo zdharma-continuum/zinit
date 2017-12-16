@@ -111,7 +111,7 @@ typeset -gAH ZPLG_WIDGETS_DELETE
 typeset -gaH ZPLG_COMPDEF_REPLAY
 # }}}
 # Parameters - ICE, swiss-knife {{{
-local -A ZPLG_1MAP ZPLG_2MAP
+declare -gA ZPLG_1MAP ZPLG_2MAP
 ZPLG_1MAP=(
     "OMZ::" "https://github.com/robbyrussell/oh-my-zsh/trunk/"
     "PZT::" "https://github.com/sorin-ionescu/prezto/trunk/"
