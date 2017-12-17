@@ -1,0 +1,2 @@
+atclone command\ cp\ -vf\ \$TEST_DIR/zew.plugin.zsh\ zsh-editing-workbench.plugin.zsh 
+psprint/zsh-editing-workbench
