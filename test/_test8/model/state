@@ -2,8 +2,6 @@ BIN_DIR
 test
 COMPLETIONS_DIR
 _test8/answer/completions
-CUR_USPL
-
 CUR_USPL2
 
 CUR_USR
