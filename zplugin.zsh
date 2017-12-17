@@ -1111,19 +1111,13 @@ builtin setopt noaliases
 # $2 - plugin
 # $3 - mode (light or load)
 -zplg-load-plugin() {
-    local user="$1" plugin="$2" mode="$3"
+    local user="$1" plugin="$2" mode="$3" correct=0
     ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin"
     ZPLGM[CUR_USPL2]="${user}/${plugin}"
-    local correct=0
     [[ -o ksharrays ]] && correct=1
 
-    if [[ "$user" = "%" ]]; then
-        local pbase="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
-        local pdir_path="$plugin"
-    else
-        local pbase="${${${plugin%.plugin.zsh}%.zsh}%.git}"
-        local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
-    fi
+    local pbase="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
+    [[ "$user" = "%" ]] && local pdir_path="$plugin" || local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     local pdir_orig="$pdir_path"
 
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
