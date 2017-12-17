@@ -1,0 +1,43 @@
+tst_verbosity
+
+unset ZCONVEY_ID ZCONVEY_FD 2>/dev/null
+
+# The plugin has:
+# - 8 aliases
+# - 8 autoloads
+# - 9 zle calls
+# - 14 bindkeys
+# - 4 setopts
+# - 4 zstyles
+# - 11 global parameters
+zplugin load psprint/zsh-editing-workbench
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+store_state answer/state_bunload answer/errors_bunload
+
+zplugin unload psprint/zsh-editing-workbench
+
+# Verify that changes were reverted
+
+(( ${+aliases[nhistory]} )) && echo >! answer/aliases_incorrect
+[[ ${aliases[zplg]} != "zplugin" ]] && echo >! answer/aliases_incorrect
+(( ${+functions[zew-backward-kill-shell-word]} )) && echo >! answer/functions_incorrect
+(( ${+functions[-zew-rotate-shell-words]} )) && echo >! answer/functions_incorrect
+(( ${+functions[__zconvey_zle_paster]} )) && echo >! answer/functions_incorrect
+(( ${+widgets[zew-backward-kill-shell-word]} )) && echo >! answer/widgets_incorrect
+(( ${+widgets[__zconvey_zle_paster]} )) && echo >! answer/widgets_incorrect
+[[ $(bindkey '^[w') = *zew-* ]] && echo >! answer/bindkeys_incorrect
+[[ $(bindkey '^[R') = *zew-* ]] && echo >! answer/bindkeys_incorrect
+[[ -o hist_lex_words ]] && echo >! answer/options_incorrect
+
+local value
+zstyle -s ':completion:*' range value
+[[ $value = *000* ]] && echo >! answer/zstyles_incorrect
+
+(( ${+parameters[ZCONVEY_IO_DIR]} )) && echo >! answer/params_incorrect
+(( ${+parameters[TEST_FLOAT]} )) && echo >! answer/params_incorrect
+
+return 0
+# vim:ft=zsh
