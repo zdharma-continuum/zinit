@@ -225,7 +225,7 @@ builtin setopt noaliases
     done
 
     # Do ZPLUGIN's "native" autoloads
-    if [[ "$ZPLGM[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${ZPLGM[CUR_USPL]}"
+    if [[ "$ZPLGM[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${ZPLGM[CUR_USR]}---${ZPLG_CUR_PLUGIN}"
     for func; do
         # Real autoload doesn't touch function if it already exists
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer
@@ -1113,7 +1113,7 @@ builtin setopt noaliases
 -zplg-load-plugin() {
     local user="$1" plugin="$2" mode="$3"
     ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin"
-    ZPLGM[CUR_USPL]="${user}---${plugin}" ZPLGM[CUR_USPL2]="${user}/${plugin}"
+    ZPLGM[CUR_USPL2]="${user}/${plugin}"
     local correct=0
     [[ -o ksharrays ]] && correct=1
 
@@ -1154,7 +1154,8 @@ builtin setopt noaliases
         [[ "${#reply}" -eq "0" ]] && return 1
 
         # Get first one
-        local fname="${${reply[1-correct]}#$pdir_path/}"
+        local fname="${reply[1-correct]:t}"
+        pdir_path="${reply[1-correct]:h}"
 
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname ${${${(M)mode:#light}:+(no reporting)}:-$ZPLGM[col-info2](reporting enabled)$ZPLGM[col-rst]}"
 
@@ -1189,7 +1190,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[atload]} )) && { local __oldcd="$PWD"; builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
 
     # Mark no load is in progress
-    ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL]="" ZPLGM[CUR_USPL2]=""
+    ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
     return 0
 } # }}}
 
