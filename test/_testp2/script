@@ -18,10 +18,11 @@ typeset -F3 SECONDS=0
         zplugin light psprint/zsh-editing-workbench
     done
 }
+local msg="Measured time: \\e[1;35m$SECONDS\\e[0m"
 print
 zprof | head -n 18
 print
-print "Measured time: \e[1;35m$SECONDS\e[0m"
+print "$msg"
 
 return 0
 # vim:ft=zsh
