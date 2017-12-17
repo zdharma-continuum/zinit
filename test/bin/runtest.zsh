@@ -244,6 +244,8 @@ for p in "${plugins[@]}"; do
     [[ ! -e ../test_plugins/$p/.git ]] && command ln -sf .test_git ../test_plugins/$p/.git
     echo "EFFECT: _______________________"
     ls -alth ../test_plugins/$p
+    echo "ALWAYS LIST: __________________"
+    ls -lath /home/travis/build/zdharma/zplugin/test/_test102/../test_plugins/zsh-editing-workbench
 done
 
 command rm -f skip
