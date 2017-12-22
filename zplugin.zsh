@@ -917,7 +917,7 @@ builtin setopt noaliases
         fi
     fi
 
-    (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; builtin cd "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
 
     -zplg-load-plugin "$user" "$plugin" "$mode"
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
@@ -1181,7 +1181,7 @@ builtin setopt noaliases
         fi
     fi
 
-    (( ${+ZPLG_ICE[atload]} )) && { local __oldcd="$PWD"; builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atload]} )) && { local __oldcd="$PWD"; builtin cd "$pdir_orig" && eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
 
     # Mark no load is in progress
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
