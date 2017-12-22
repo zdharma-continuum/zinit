@@ -1,3 +1,37 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Zplugin](#zplugin)
+- [Quick Start](#quick-start)
+- [News](#news)
+- [Introduction](#introduction)
+    - [Oh-My-Zsh, Prezto](#oh-my-zsh-prezto)
+    - [Snippets and performance](#snippets-and-performance)
+    - [Some Ice-modifiers](#some-ice-modifiers)
+    - [as"command"](#ascommand)
+    - [atpull"..."](#atpull)
+    - [Snippets-commands](#snippets-commands)
+    - [Completion Management](#completion-management)
+      - [Listing completions](#listing-completions)
+      - [Enabling and disabling completions](#enabling-and-disabling-completions)
+    - [Subversion For Subdirectories](#subversion-for-subdirectories)
+    - [Turbo Mode](#turbo-mode)
+    - [Automatic Load/Unload On Condition](#automatic-loadunload-on-condition)
+- [Ice Modifiers](#ice-modifiers)
+- [Installation](#installation)
+  - [Manual Installation](#manual-installation)
+- [Compilation](#compilation)
+- [Usage](#usage)
+    - [Using Oh-My-Zsh Themes](#using-oh-my-zsh-themes)
+- [Calling compinit](#calling-compinit)
+- [Ignoring Compdefs](#ignoring-compdefs)
+- [Non-Github (Local) Plugins](#non-github-local-plugins)
+- [Customizing Paths](#customizing-paths)
+- [IRC Channel](#irc-channel)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/zdharma/zplugin/master/doc/img/zplugin.png" />
 </p>
