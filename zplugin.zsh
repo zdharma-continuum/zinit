@@ -1328,6 +1328,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-scheduler {{{
 # Searches for timeout tasks, executes them
 -zplg-scheduler() {
+    integer __ret=$?
     sched +1 "-zplg-scheduler 1"
 
     integer __t=EPOCHSECONDS __i=2 correct=0
@@ -1358,6 +1359,8 @@ builtin setopt noaliases
         -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2-correct]}"
     done
     ZPLG_RUN[1-correct,__idx-correct]=()
+
+    return $__ret
 }
 # }}}
 
