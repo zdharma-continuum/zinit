@@ -132,6 +132,10 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 24-12-2017
+  - Xmas present – [fast-syntax-highlighting](https://github.com/zdharma/fast-syntax-highlighting)
+    now highlights the quoted part in `atinit"echo Initializing"`, i.e. it supports ICE syntax :)
+
 * 08-12-2017
   - SVN snippets are compiled on install and update
   - Resolved how should ice-mods be remembered – general rule is that using `zplugin ice ...` makes
