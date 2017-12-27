@@ -52,6 +52,7 @@ plugin:
 
 ```SystemVerilog
 # For GNU ls (the binaries can be gls, gdircolors)
+
 zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
 zplugin light trapd00r/LS_COLORS
 ```
@@ -60,8 +61,9 @@ Other example: direnv written in Go, requiring building after cloning:
 
 ```SystemVerilog
 # make'!...' -> run make before atclone & atpull
+
 zplugin ice as"command" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
-zplg light direnv/direnv
+zplugin light direnv/direnv
 ```
 
 Zplugin is the only plugin manager out there currently that has **[Turbo
@@ -92,24 +94,28 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc
 
 Then add to `~/.zshrc`, at bottom:
 
-```SystemVerilog
+```zsh
 zplugin load zdharma history-search-multi-word
 zplugin load zdharma/zui
 
 # Binary release in archive, from Github-releases page; after automatic unpacking it provides command "fzf"
+
 zplugin ice from"gh-r" as"command"; zplugin load junegunn/fzf-bin
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # Used also `bpick' which selects Linux packages – in this case not needed, Zplugin
 # automatically narrows down the releases by grepping uname etc.
+
 zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
 
 # Vim repository on Github – a source that needs compilation
+
 zplugin ice as"command" atclone"./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
 
 # Scripts that are built at install (there's single default make target, "install", and
 # it constructs scripts by cat-ting a few files). The make ice could also be:
 # `make"install PREFIX=${ZPLGM[HOME_DIR]}/cmd"`, if "install" wouldn't be default target
+
 zplugin ice as"command" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
 zplugin light tj/git-extras
 
@@ -117,6 +123,7 @@ zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 
 # This one to be ran just once, in interactive session
+
 zplugin creinstall %HOME/my_completions  # Handle completions without loading any plugin, see "clist" command
 ```
 
@@ -199,13 +206,16 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
 
     ```SystemVerilog
     # Single file snippet, URL points to file
+
     zplg snippet PZT::modules/helper/init.zsh
 
     # Multi-file snippet, URL points to directory to clone with Subversion
     # The file to source (init.zsh) is automatically detected
+
     zplugin ice svn; zplugin snippet PZT::modules/prompt
 
-    # An use of Subversion to load an OMZ plugin
+    # Use of Subversion to load an OMZ plugin
+
     zplugin ice svn; zplugin snippet OMZ::plugins/git
     ```
 
@@ -225,7 +235,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     are displayed in order of loading:
 
     ```SystemVerilog
-    % zplg times
+    % zplugin times
     Plugin loading times:
     0.010 sec - OMZ::lib/git.zsh
     0.001 sec - OMZ::plugins/git/git.plugin.zsh
@@ -241,9 +251,9 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
   - Plugins can now be absolute paths:
 
     ```SystemVerilog
-    % zplg load %HOME/github/{directory}
-    % zplg load /Users/sgniazdowski/github/{directory}
-    % zplg load %/Users/sgniazdowski/github/{directory}
+    zplugin load %HOME/github/{directory}
+    zplugin load /Users/sgniazdowski/github/{directory}
+    zplugin load %/Users/sgniazdowski/github/{directory}
     ```
 
     Completions are not automatically installed, but user can run `zplg creinstall %HOME/github/{directory}`, etc.
@@ -559,9 +569,12 @@ Ices `load` and `unload` allow to define when you want plugins active or unactiv
 
 ```SystemVerilog
 # Load when in ~/tmp
+
 zplugin ice load'![[ $PWD = */tmp ]]' unload'![[ $PWD != */tmp ]]' atload"promptinit; prompt sprint3"
 zplugin load psprint/zprompts
+
 # Load when NOT in ~/tmp
+
 zplugin ice load'![[ $PWD != */tmp ]]' unload'![[ $PWD = */tmp ]]'
 zplugin load russjohnson/angry-fly-zsh
 ```
