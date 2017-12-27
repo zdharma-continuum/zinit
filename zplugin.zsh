@@ -829,7 +829,7 @@ builtin setopt noaliases
         ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
-        [[ -z "${ZPLGM[TEST]}" ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
+        [[ -z "${ZPLGM[TEST]}" && -z ${ZPLG_ICE[wait]} && -z ${ZPLG_ICE[load]} ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
         ret=1
     fi
 
@@ -1623,7 +1623,7 @@ zplugin() {
 #
 
 zmodload zsh/datetime
-functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh
+functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh 2>/dev/null
 autoload add-zsh-hook
 add-zsh-hook -- precmd -zplg-scheduler
 
