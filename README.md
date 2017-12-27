@@ -497,7 +497,7 @@ In general, to use *subdirectories* of Github projects as snippets add `/trunk/{
 
 Snippets too have completions installed by default, like plugins.
 
-### Turbo Mode
+### Turbo Mode (Zsh >= 5.3)
 
 The Ice-mod `wait` allows you to postpone loading of a plugin to the moment
 when processing of `.zshrc` is finished and prompt is being shown. It is like
@@ -523,10 +523,10 @@ nice to quickly see raw prompt and observe how `wait''` does its job, but who kn
 I might resign from this one day.
 
 The exclamation mark causes Zplugin to reset-prompt after loading plugin. The same
-with Prezto prompts:
+with Prezto prompts, with shorter delay:
 
 ```SystemVerilog
-zplg ice svn silent wait'!1' atload'prompt smiley'
+zplg ice svn silent wait'!0' atload'prompt smiley'
 zplg snippet PZT::modules/prompt
 ```
 
@@ -551,7 +551,7 @@ The plugin `zplugin-crasis` provides command `crasis`. Ice-mod `wait` is set to 
 enters `cras` at command line, the plugin is instantly loaded and command `crasis` becomes
 available. **[See this feature in action](https://asciinema.org/a/149725)**. This feature
 requires `zdharma/fast-syntax-highlighting` (it builds `ZLAST_COMMANDS` array), but a small
-dedicated plugin is comming soon.
+dedicated plugin is coming soon.
 
 ### Automatic Load/Unload On Condition
 
