@@ -122,6 +122,9 @@ zplugin light tj/git-extras
 zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 
+# Load the pure theme, with zsh-async that's bundled with it
+zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+
 # This one to be ran just once, in interactive session
 
 zplugin creinstall %HOME/my_completions  # Handle completions without loading any plugin, see "clist" command
