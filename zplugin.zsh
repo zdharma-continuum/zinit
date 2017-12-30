@@ -50,6 +50,7 @@ fi
 : ${ZPLGM[PLUGINS_DIR]:=${ZPLGM[HOME_DIR]}/plugins}
 : ${ZPLGM[COMPLETIONS_DIR]:=${ZPLGM[HOME_DIR]}/completions}
 : ${ZPLGM[SNIPPETS_DIR]:=${ZPLGM[HOME_DIR]}/snippets}
+: ${ZPLGM[SERVICES_DIR]:=${ZPLGM[HOME_DIR]}/services}
 
 builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLGM[NEW_AUTOLOAD]=1 || ZPLGM[NEW_AUTOLOAD]=0
@@ -894,6 +895,10 @@ builtin setopt noaliases
         command mkdir "${ZPLGM[SNIPPETS_DIR]}"
         command chmod go-w "${ZPLGM[SNIPPETS_DIR]}"
     }
+    [[ ! -d "${ZPLGM[SERVICES_DIR]}" ]] && {
+        command mkdir "${ZPLGM[SERVICES_DIR]}"
+        command chmod go-w "${ZPLGM[SERVICES_DIR]}"
+    }
 } # }}}
 # FUNCTION: -zplg-load {{{
 # Implements the exposed-to-user action of loading a plugin.
@@ -1252,7 +1257,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
@@ -1272,6 +1277,32 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+="make ${(q)ZPLG_ICE[make]} "
     return 0
 } # }}}
+# FUNCTION: -zplg-service {{{
+-zplg-service() {
+    local __tpe="$1" __mode="$2" __id="$3" __fle="${ZPLGM[SERVICES_DIR]}/${ZPLG_ICE[service]}.lock" __fd __cmd __tmp __lckd __strd=0
+    { builtin echo -n >! "$__fle"; } 2>/dev/null 1>&2
+    [[ ! -e "${__fle:r}.fifo" ]] && command mkfifo "${__fle:r}.fifo" 2>/dev/null 1>&2
+    [[ ! -e "${__fle:r}.fifo2" ]] && command mkfifo "${__fle:r}.fifo2" 2>/dev/null 1>&2
+
+    typeset -g ZSRV_WORK_DIR="${ZPLGM[SERVICES_DIR]}" ZSRV_ID="${ZPLG_ICE[service]}"  # should be also set by other p-m
+
+    while (( 1 )); do
+        [[ ! -f "${__fle:r}.stop" ]] && if (( __lckd )) || zsystem 2>/dev/null flock -t 1 -f __fd -e "$__fle"; then
+            __lckd=1
+            if (( ! __strd )) || [[ "$__cmd" = "RESTART" ]]; then
+                [[ "$__tpe" = p ]] && { __strd=1; -zplg-load "$__id" "" "$__mode"; }
+                [[ "$__tpe" = s ]] && { __strd=1; -zplg-load-snippet "$__id" ""; }
+            fi
+            __cmd=""
+            while (( 1 )); do builtin read -t 32767 __cmd <>"${__fle:r}.fifo" && break; done
+        fi
+        [[ "$__cmd" = "NEXT" ]] && { __cmd=""; kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; exec {__fd}>&-; __lckd=0; __strd=0; builtin read -t 10 __tmp <>"${__fle:r}.fifo2"; }
+        [[ "$__cmd" = "STOP" ]] && { __cmd=""; kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; __strd=0; builtin echo >! "${__fle:r}.stop"; }
+        [[ "$__cmd" = "QUIT" ]] && { kill -HUP $$; break; }
+        [[ "$__cmd" != (NEXT|QUIT|STOP|RESTART) ]] && { __cmd=""; builtin read -t 1 __tmp <>"${__fle:r}.fifo2"; }
+    done 2>/dev/null 1>&2
+}
+# }}}
 # FUNCTION: -zplg-run-task {{{
 -zplg-run-task() {
     local __pass="$1" __t="$2" __tpe="$3" __idx="$4" __mode="$5" __id="${(Q)6}" __action __s=1
@@ -1290,7 +1321,13 @@ builtin setopt noaliases
     fi
 
     if [[ "$__action" = *load ]]; then
-        [[ "$__tpe" = "p" ]] && -zplg-load "$__id" "" "$__mode" || -zplg-load-snippet "$__id" ""
+        if [[ "$__tpe" = "p" ]]; then
+            -zplg-load "$__id" "" "$__mode"
+        elif [[ "$__tpe" = "s" ]]; then
+            -zplg-load-snippet "$__id" ""
+        elif [[ "$__tpe" = "p1" || "$__tpe" = "s1" ]]; then
+            zpty -b "${__id//\//:}" '-zplg-service '"${(M)__tpe#?}"' "$__mode" "$__id"'
+        fi
         (( ${+ZPLG_ICE[silent]} == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ "$__action" = *remove ]]; then
         (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
@@ -1314,7 +1351,7 @@ builtin setopt noaliases
     if [[ "${ZPLG_ICE[wait]}" = (\!|.|)<-> ]]; then
         ZPLG_TASKS+=( "$EPOCHSECONDS+${ZPLG_ICE[wait]#(\!|.)} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
     elif [[ -n "${ZPLG_ICE[wait]}" || -n "${ZPLG_ICE[load]}" || -n "${ZPLG_ICE[unload]}" ]]; then
-        ZPLG_TASKS+=( "${${ZPLG_ICE[wait]:+0}:-1} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-x} ${(q)id}" )
+        ZPLG_TASKS+=( "${${ZPLG_ICE[wait]:+0}:-1} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
     fi
 }
 # }}}
@@ -1389,8 +1426,9 @@ zplugin() {
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
-               if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} ]]; then
-                   -zplg-submit-turbo p "$1" "$2" "$3"
+               if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
+                   ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
+                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "$2" "$3"
                else
                    -zplg-load "$2" "$3" "${1/load/}"
                fi
@@ -1398,8 +1436,9 @@ zplugin() {
            ;;
        (snippet)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-           if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} ]]; then
-               -zplg-submit-turbo s "" "$2" "$3"
+           if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
+               ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
+               -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "$2" "$3"
            else
                ZPLG_SICE[${2%/}/]=""
                -zplg-load-snippet "$2" "$3"
@@ -1622,10 +1661,10 @@ zplugin() {
 # Source-executed code
 #
 
-zmodload zsh/datetime
-functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh 2>/dev/null
 autoload add-zsh-hook
-add-zsh-hook -- precmd -zplg-scheduler
+zmodload zsh/datetime && add-zsh-hook -- precmd -zplg-scheduler  # zsh/datetime required for wait/load/unload ice-mods
+functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh 2>/dev/null
+zmodload zsh/zpty zsh/system 2>/dev/null
 
 # code {{{
 builtin unsetopt noaliases
