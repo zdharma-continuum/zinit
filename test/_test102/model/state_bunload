@@ -16,6 +16,8 @@ HOME_READY
 1
 PLUGINS_DIR
 _test102/answer/plugins
+SERVICES_DIR
+_test102/answer/services
 SHADOWING
 inactive
 SNIPPETS_DIR
@@ -35,8 +37,8 @@ ZPLG_FUNCTIONS: 'psprint/zsh-editing-workbench' '-zconvey_pinfo -zew-rotate-shel
 ZPLG_OPTIONS: 'psprint/zsh-editing-workbench' 'histlexwords off autopushd off histignoredups off pushdignoredups off'
 ZPLG_PATH: 'psprint/zsh-editing-workbench' ''
 ZPLG_FPATH: 'psprint/zsh-editing-workbench' ''
-ZPLG_PARAMETERS_PRE: 'psprint/zsh-editing-workbench' 'REPO_DIR \"\" sysparams \"\" ZCONVEY_SCHEDULE_ORIGIN \"\" CONFIG_DIR \"\" ZCONVEY_ID \"\" TEST_ARRAY \"\" ZCONVEY_FD \"\" widgets undefined TEST_FLOAT \"\" TEST_HASH \"\" ZCONVEY_LOCKS_DIR \"\" preexec_functions \"\" ZCONVEY_IO_DIR \"\" errnos \"\" TEST_INTEGER \"\"'
-ZPLG_PARAMETERS_POST: 'psprint/zsh-editing-workbench' 'REPO_DIR scalar sysparams association-readonly-hide-hideval-special ZCONVEY_SCHEDULE_ORIGIN scalar CONFIG_DIR scalar ZCONVEY_ID integer TEST_ARRAY array ZCONVEY_FD scalar-hide-hideval widgets association-readonly-hide-hideval-special TEST_FLOAT float TEST_HASH association ZCONVEY_LOCKS_DIR scalar-hide-hideval preexec_functions array ZCONVEY_IO_DIR scalar-hide-hideval errnos array-readonly-hide-hideval-special TEST_INTEGER integer'
+ZPLG_PARAMETERS_PRE: 'psprint/zsh-editing-workbench' 'REPO_DIR \"\" ZCONVEY_SCHEDULE_ORIGIN \"\" CONFIG_DIR \"\" ZCONVEY_ID \"\" TEST_ARRAY \"\" ZCONVEY_FD \"\" widgets undefined TEST_FLOAT \"\" TEST_HASH \"\" ZCONVEY_LOCKS_DIR \"\" preexec_functions \"\" ZCONVEY_IO_DIR \"\" TEST_INTEGER \"\"'
+ZPLG_PARAMETERS_POST: 'psprint/zsh-editing-workbench' 'REPO_DIR scalar ZCONVEY_SCHEDULE_ORIGIN scalar CONFIG_DIR scalar ZCONVEY_ID integer TEST_ARRAY array ZCONVEY_FD scalar-hide-hideval widgets association-readonly-hide-hideval-special TEST_FLOAT float TEST_HASH association ZCONVEY_LOCKS_DIR scalar-hide-hideval preexec_functions array ZCONVEY_IO_DIR scalar-hide-hideval TEST_INTEGER integer'
 ZPLG_ZSTYLES: 'psprint/zsh-editing-workbench' ':zle:\\\*\ word-chars :zle:\\\*\ skip-whitespace-first :zle:\\\*\ word-style :completion:history-words:\\\*\ remove-all-dups :completion:history-words:\\\*\ sort :completion:\\\*\ range :completion::complete:n-kill::bits\ matcher '
 ZPLG_BINDKEYS: 'psprint/zsh-editing-workbench' '\\\^\\\[w\ zew-backward-kill-shell-word \\\^\\\[t\ zew-transpose-shell-words \\\^\\\[m\ copy-earlier-word \\\^\\\[M\ copy-prev-shell-word \\\^\\\[.\ insert-last-word \\\^W\ backward-kill-word \\\^\\\[y\ transpose-words-match \\\^\\\[/\ _history-complete-older \\\^\\\[h\ zew-history-complete-word \\\^\\\[H\ zew-history-complete-word-backwards \\\^J\ self-insert \\\^_\ undo \\\^\\\[r\ zew-rotate-shell-words \\\^\\\[R\ zew-rotate-shell-words-backwards '
 ZPLG_ALIASES: 'psprint/zsh-editing-workbench' 'naliases\ \'\''\'\'' ncd\ \'\''\'\'' nenv\ \'\''\'\'' nfunctions\ \'\''\'\'' nhistory\ \'\''\'\'' nkill\ \'\''\'\'' zpl\ zplugin zplg\ zplugin '

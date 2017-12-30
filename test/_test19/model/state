@@ -12,6 +12,8 @@ HOME_READY
 1
 PLUGINS_DIR
 _test19/answer/plugins
+SERVICES_DIR
+_test19/answer/services
 SHADOWING
 inactive
 SNIPPETS_DIR
