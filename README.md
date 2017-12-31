@@ -156,7 +156,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     ```
 
     This feature allows to configure everything in `.zshrc`, without the the need to deal with `systemd` or
-    `launchd`, and can be useful e.g. to configure shared-variables (across Zshell), stored in `redis` database
+    `launchd`, and can be useful e.g. to configure shared-variables (across Zshells), stored in `redis` database
     (details on [zservices/redis](https://github.com/zservices/redis)).
 
 * 24-12-2017
@@ -635,6 +635,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `wait`    | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). |
 | `load`    | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. |
 | `unload`  | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. |
+| `service` | Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices org](https://github.com/zservices). |
 
 Order of related Ice-mods: `atinit` -> `atpull!` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `atload`.
 
