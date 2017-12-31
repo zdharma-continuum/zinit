@@ -1657,6 +1657,17 @@ zplugin() {
                    shift
                    -zplg-ls "$@"
                    ;;
+               (srv)
+                   () { setopt localoptions extendedglob
+                   [[ ! -e ${ZPLGM[SERVICES_DIR]}/"$2".fifo ]] && { print "No such service: $2"; } ||
+                       { [[ "$3" = (#i)(next|stop|quit|restart) ]] &&
+                           { print "${(U)3}" >>! ${ZPLGM[SERVICES_DIR]}/"$2".fifo || print "Service $2 inactive"; ((1)); } ||
+                               { [[ "$3" = (#i)start ]] && rm -f ${ZPLGM[SERVICES_DIR]}/"$2".stop ||
+                                   { print "Unknown service-command: $3"; }
+                               }
+                       }
+                   } "$@"
+                   ;;
                (*)
                    print "Unknown command \`$1' (use \`help' to get usage information)"
                    ;;
