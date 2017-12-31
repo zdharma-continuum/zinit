@@ -148,8 +148,8 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     READMEs say, and controlled via:
 
     ```
-    % zplugin srv redis next    # current serving shell will drop the service, next Zshell will pick-up it
-    % zplugin srv redis quit    # the serving shell will quit managing the service, next Zshell will pick-up it
+    % zplugin srv redis next    # current serving shell will drop the service, next Zshell will pick it up
+    % zplugin srv redis quit    # the serving shell will quit managing the service, next Zshell will pick it up
     % zplugin srv redis stop    # stop serving, do not pass it to any shell, just hold the service
     % zplugin srv redis start   # start stopped service, without changing the serving shell
     % zplugin srv redis restart # restart service, without changing the serving shell
@@ -740,6 +740,7 @@ dclear                   - clear report of what was going on in session
 compile {plugin-name}    - compile plugin (or all plugins if --all passed)
 uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
+srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; `next' moves the service to another Zshell
 ```
 
 ### Using Oh-My-Zsh Themes
