@@ -20,6 +20,9 @@ zplugin light tj/git-extras
 zplugin ice as"command" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
 zplugin light direnv/direnv
 
+zplugin ice from"gh-r" as"command" mv"shfmt* -> shfmt"
+zplugin light mvdan/sh
+
 # Snippets
 
 zplg ice svn pick"completion.zsh" src"git.zsh"
