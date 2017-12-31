@@ -1287,20 +1287,28 @@ builtin setopt noaliases
     typeset -g ZSRV_WORK_DIR="${ZPLGM[SERVICES_DIR]}" ZSRV_ID="${ZPLG_ICE[service]}"  # should be also set by other p-m
 
     while (( 1 )); do
-        [[ ! -f "${__fle:r}.stop" ]] && if (( __lckd )) || zsystem 2>/dev/null flock -t 1 -f __fd -e "$__fle"; then
-            __lckd=1
-            if (( ! __strd )) || [[ "$__cmd" = "RESTART" ]]; then
-                [[ "$__tpe" = p ]] && { __strd=1; -zplg-load "$__id" "" "$__mode"; }
-                [[ "$__tpe" = s ]] && { __strd=1; -zplg-load-snippet "$__id" ""; }
-            fi
-            __cmd=""
-            while (( 1 )); do builtin read -t 32767 __cmd <>"${__fle:r}.fifo" && break; done
-        fi
-        [[ "$__cmd" = "NEXT" ]] && { __cmd=""; kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; exec {__fd}>&-; __lckd=0; __strd=0; builtin read -t 10 __tmp <>"${__fle:r}.fifo2"; }
-        [[ "$__cmd" = "STOP" ]] && { __cmd=""; kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; __strd=0; builtin echo >! "${__fle:r}.stop"; }
-        [[ "$__cmd" = "QUIT" ]] && { kill -HUP $$; break; }
-        [[ "$__cmd" != (NEXT|QUIT|STOP|RESTART) ]] && { __cmd=""; builtin read -t 1 __tmp <>"${__fle:r}.fifo2"; }
-    done 2>/dev/null 1>&2
+        (
+            while (( 1 )); do
+                [[ ! -f "${__fle:r}.stop" ]] && if (( __lckd )) || zsystem 2>>/tmp/reply 1>&2 flock -t 1 -f __fd -e "$__fle"; then
+                    __lckd=1
+                    if (( ! __strd )) || [[ "$__cmd" = "RESTART" ]]; then
+                        [[ "$__tpe" = p ]] && { __strd=1; -zplg-load "$__id" "" "$__mode"; }
+                        [[ "$__tpe" = s ]] && { __strd=1; -zplg-load-snippet "$__id" ""; }
+                    fi
+                    __cmd=""
+                    while (( 1 )); do builtin read -t 32767 __cmd <>"${__fle:r}.fifo" && break; done
+                else
+                    return 0
+                fi
+
+                [[ "$__cmd" = "NEXT" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; exec {__fd}>&-; __lckd=0; __strd=0; builtin read -t 10 __tmp <>"${__fle:r}.fifo2"; }
+                [[ "$__cmd" = "STOP" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; __strd=0; builtin echo >! "${__fle:r}.stop"; }
+                [[ "$__cmd" = "QUIT" ]] && { kill -HUP ${sysparams[pid]}; return 1; }
+                [[ "$__cmd" != "RESTART" ]] && { __cmd=""; builtin read -t 1 __tmp <>"${__fle:r}.fifo2"; }
+            done
+        ) || break
+        builtin read -t 1 __tmp <>"${__fle:r}.fifo2"
+    done >>! "$ZSRV_WORK_DIR"/"$ZSRV_ID".log 2>&1
 }
 # }}}
 # FUNCTION: -zplg-run-task {{{
