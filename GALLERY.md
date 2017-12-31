@@ -23,6 +23,9 @@ zplugin light direnv/direnv
 zplugin ice from"gh-r" as"command" mv"shfmt* -> shfmt"
 zplugin light mvdan/sh
 
+zplugin ice from"gh-r" as"command" mv"gotcha_* -> gotcha"
+zplugin light b4b4r07/gotcha
+
 # Snippets
 
 zplg ice svn pick"completion.zsh" src"git.zsh"
