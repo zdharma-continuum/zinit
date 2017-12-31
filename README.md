@@ -142,6 +142,23 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 31-12-2017
+  - For the new year there's a new feature: user-services spawned by Zshell :) Check out
+    [available services](https://github.com/zservices). They are configured like their
+    READMEs say, and controlled via:
+
+    ```
+    % zplugin srv redis next    # current serving shell will drop the service, next Zshell will pick-up it
+    % zplugin srv redis quit    # the serving shell will quit managing the service, next Zshell will pick-up it
+    % zplugin srv redis stop    # stop serving, do not pass it to any shell, just hold the service
+    % zplugin srv redis start   # start stopped service, without changing the serving shell
+    % zplugin srv redis restart # restart service, without changing the serving shell
+    ```
+
+    This feature allows to configure everything in `.zshrc`, without the the need to deal with `systemd` or
+    `launchd`, and can be useful e.g. to configure shared-variables (across Zshell), stored in `redis` database
+    (details on [zservices/redis](https://github.com/zservices/redis)).
+
 * 24-12-2017
   - Xmas present – [fast-syntax-highlighting](https://github.com/zdharma/fast-syntax-highlighting)
     now highlights the quoted part in `atinit"echo Initializing"`, i.e. it supports ICE syntax :)
