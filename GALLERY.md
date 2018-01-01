@@ -46,4 +46,8 @@ zplg light mafredri/zsh-async  # dependency
 zplg ice svn silent atload'prompt sorin'
 zplg snippet PZT::modules/prompt
 
+zplg ice atload"fpath+=( \$PWD );"
+zplg load chauncey-garrett/zsh-prompt-garrett
+zplg ice svn atload"prompt garrett"
+zplg snippet PZT::modules/prompt
 ```
