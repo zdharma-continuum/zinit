@@ -1150,7 +1150,7 @@ builtin setopt noaliases
             -zplg-find-other-matches "$pdir_path" "$pbase"
         fi
 
-        [[ "${#reply}" -eq "0" ]] && return 1
+        #[[ "${#reply}" -eq "0" ]] && return 1
 
         # Get first one
         local fname="${reply[1-correct]:t}"
