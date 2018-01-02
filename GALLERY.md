@@ -6,10 +6,10 @@
 # Commands
 
 zplugin ice from"gh-r" as"command"
-zplugin load junegunn/fzf-bin
+zplugin light junegunn/fzf-bin
 
 zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose"
-zplugin load docker/compose
+zplugin light docker/compose
 
 zplugin ice as"command" atclone"./configure" atpull"%atclone" make pick"src/vim"
 zplugin light vim/vim
@@ -29,6 +29,11 @@ zplugin light b4b4r07/gotcha
 zplg ice as"command" cp"wd.sh -> wd" pick"wd"
 zplg light mfaerevaag/wd
 
+# Plugins
+
+zplg ice pick"h.sh"
+zplg light paoloantinori/hhighlighter
+
 # Snippets
 
 zplg ice svn pick"completion.zsh" src"git.zsh"
@@ -40,14 +45,14 @@ zplugin ice pick"async.zsh" src"pure.zsh"
 zplugin light sindresorhus/pure
 
 zplg ice pick"powerless.zsh" src"utilities.zsh"
-zplg load martinrotter/powerless
+zplg light martinrotter/powerless
 
 zplg light mafredri/zsh-async  # dependency
 zplg ice svn silent atload'prompt sorin'
 zplg snippet PZT::modules/prompt
 
 zplg ice atload"fpath+=( \$PWD );"
-zplg load chauncey-garrett/zsh-prompt-garrett
+zplg light chauncey-garrett/zsh-prompt-garrett
 zplg ice svn atload"prompt garrett"
 zplg snippet PZT::modules/prompt
 ```
