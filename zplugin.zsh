@@ -981,6 +981,7 @@ builtin setopt noaliases
 
     (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
 
+    local ZERO=""
     local -a list
     if [[ -z "${opts[(r)-u]}" && -z "${opts[(r)--command]}" && "${ZPLG_ICE[as]}" != "command" ]]; then
         # Source the file with compdef shadowing
@@ -1116,7 +1117,7 @@ builtin setopt noaliases
 # $2 - plugin
 # $3 - mode (light or load)
 -zplg-load-plugin() {
-    local user="$1" plugin="$2" mode="$3" correct=0
+    local user="$1" plugin="$2" mode="$3" correct=0 ZERO=""
     ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin"
     ZPLGM[CUR_USPL2]="${user}/${plugin}"
     [[ -o ksharrays ]] && correct=1
