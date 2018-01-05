@@ -1,3 +1,9 @@
+<p align="center">
+<img src="https://raw.githubusercontent.com/zdharma/zplugin/master/doc/img/zplugin.png" />
+</p>
+
+[![Status][status-badge]][status-link] [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Chat at https://gitter.im/zplugin/Lobby][lobby-badge]][lobby-link]
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -31,16 +37,6 @@
 - [IRC Channel](#irc-channel)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-<p align="center">
-<img src="https://raw.githubusercontent.com/zdharma/zplugin/master/doc/img/zplugin.png" />
-</p>
-
-[![Build Status](https://travis-ci.org/zdharma/zplugin.svg?branch=master)](https://travis-ci.org/zdharma/zplugin)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![zplugin](https://img.shields.io/badge/zplugin-2.0-b65eed.svg)](https://github.com/zdharma/zplugin/releases)
-![activity](https://img.shields.io/github/commit-activity/y/zdharma/zplugin.svg)
-[![Join the chat at https://gitter.im/zplugin/Lobby](https://badges.gitter.im/zplugin/Lobby.svg)](https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Zplugin
 
@@ -877,3 +873,13 @@ local -A ZPLGM  # initial Zplugin's hash definition, then:
 Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
 Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
+
+[status-badge]: https://travis-ci.org/zdharma/zplugin.svg?branch=master
+[status-link]: https://travis-ci.org/zdharma/zplugin
+[MIT-badge]: https://img.shields.io/badge/license-MIT-blue.svg
+[MIT-link]: ./LICENSE
+[ver-badge]: https://img.shields.io/github/tag/zdharma/zplugin.svg
+[ver-link]: https://github.com/zdharma/zplugin/releases
+[act-badge]: https://img.shields.io/github/commit-activity/y/zdharma/zplugin.svg
+[lobby-badge]: https://badges.gitter.im/zplugin/Lobby.svg
+[lobby-link]: https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
