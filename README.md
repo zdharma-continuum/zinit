@@ -42,6 +42,8 @@
 
 # Zplugin
 
+[![Join the chat at https://gitter.im/zplugin/Lobby](https://badges.gitter.im/zplugin/Lobby.svg)](https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **NEW**: Zplugin now has pure-Zsh [semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
 wich allows to manipulate plugins, snippets, etc.
 
