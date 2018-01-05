@@ -70,7 +70,7 @@ zplugin light direnv/direnv
 ```
 
 Zplugin is the only plugin manager out there currently that has **[Turbo
-Mode](https://github.com/zdharma/zplugin#turbo-mode)** which yields **39-50%
+Mode](https://github.com/zdharma/zplugin#turbo-mode-zsh--53)** which yields **39-50%
 faster Zsh startup!**
 
 Zplugin gives **reports** from plugin load describing what aliases, functions,
@@ -182,7 +182,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     [full story](#automatic-loadunload-on-condition) and [Asciinema video](https://asciinema.org/a/150825).
 
 * 29-11-2017
-  - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode)** – **39-50% or more faster Zsh startup!**
+  - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode-zsh--53)** – **39-50% or more faster Zsh startup!**
   - Subcommand `update` can update snippets, via given URL (up to this point snippets were updated via
     `zplugin update --all`).
   - Completion management is enabled for snippets (not only plugins).
