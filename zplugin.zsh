@@ -1279,6 +1279,11 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: -zplg-service {{{
+# Handles given service, i.e. obtains lock, runs it, or waits if no lock
+#
+# $1 - type "p" or "s" (plugin or snippet)
+# $2 - mode - for plugin (light or load)
+# $3 - id - URL or plugin ID
 -zplg-service() {
     local __tpe="$1" __mode="$2" __id="$3" __fle="${ZPLGM[SERVICES_DIR]}/${ZPLG_ICE[service]}.lock" __fd __cmd __tmp __lckd __strd=0
     { builtin echo -n >! "$__fle"; } 2>/dev/null 1>&2

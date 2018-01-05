@@ -1998,11 +1998,11 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-delete {{{
-# Jumps to plugin's directory (in Zplugin's home directory).
+# Deletes plugin's or snippet's directory (in Zplugin's home directory).
 #
 # User-action entry point.
 #
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
     setopt localoptions extendedglob nokshglob noksharrays
@@ -2035,11 +2035,16 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 } # }}}
 # FUNCTION: -zplg-confirm() {{{
+# Prints given question, waits for "y" key, evals
+# given expression if "y" obtained
+#
+# $1 - question
+# $2 - expression
 -zplg-confirm() {
     print "$1"
     local ans
     read -q ans
-    [[ "$ans" = "y" ]] && { eval "$2"; print "\nDone"; } || print "\nBreak"
+    [[ "$ans" = "y" ]] && { eval "$2"; print "\nDone (action executed, exit code: $?)"; } || print "\nBreak, no action"
     return 0
 }
 # }}}
