@@ -16,7 +16,7 @@
       - [Listing completions](#listing-completions)
       - [Enabling and disabling completions](#enabling-and-disabling-completions)
     - [Subversion For Subdirectories](#subversion-for-subdirectories)
-    - [Turbo Mode](#turbo-mode)
+    - [Turbo Mode (Zsh >= 5.3)](#turbo-mode-zsh--53)
     - [Automatic Load/Unload On Condition](#automatic-loadunload-on-condition)
 - [Ice Modifiers](#ice-modifiers)
 - [Installation](#installation)
