@@ -39,10 +39,9 @@
 [![Build Status](https://travis-ci.org/zdharma/zplugin.svg?branch=master)](https://travis-ci.org/zdharma/zplugin)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
 ![ZSH 5.0.0](https://img.shields.io/badge/zsh-v5.0.0-orange.svg?style=flat-square)
+[![Join the chat at https://gitter.im/zplugin/Lobby](https://badges.gitter.im/zplugin/Lobby.svg)](https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Zplugin
-
-[![Join the chat at https://gitter.im/zplugin/Lobby](https://badges.gitter.im/zplugin/Lobby.svg)](https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **NEW**: Zplugin now has pure-Zsh [semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
 wich allows to manipulate plugins, snippets, etc.
