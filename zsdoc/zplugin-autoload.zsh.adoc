@@ -28,7 +28,9 @@ FUNCTIONS
  -zplg-compiled
  -zplg-compinit
  -zplg-compute-ice
+ -zplg-confirm
  -zplg-create
+ -zplg-delete
  -zplg-diff-env-compute
  -zplg-diff-functions-compute
  -zplg-diff-options-compute
@@ -400,6 +402,25 @@ Called by:
  -zplg-update-or-status-snippet
  -zplg-update-or-status
 
+-zplg-confirm
+~~~~~~~~~~~~~
+
+____
+ # Prints given question, waits for "y" key, evals
+ # given expression if "y" obtained
+ #
+ # $1 - question
+ # $2 - expression
+____
+
+Has 5 line(s). Doesn't call other functions.
+
+Uses feature(s): _eval_, _read_
+
+Called by:
+
+ -zplg-delete
+
 -zplg-create
 ~~~~~~~~~~~~
 
@@ -425,6 +446,31 @@ Called by:
 
  zplugin.zsh/zplugin
 
+-zplg-delete
+~~~~~~~~~~~~
+
+____
+ # Deletes plugin's or snippet's directory (in Zplugin's home directory).
+ #
+ # User-action entry point.
+ #
+ # $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ # $2 - plugin (only when $1 - i.e. user - given)
+____
+
+Has 28 line(s). Calls functions:
+
+ -zplg-delete
+ |-- -zplg-confirm
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin-side.zsh/-zplg-shands-exp
+ |-- zplugin-side.zsh/-zplg-two-paths
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
 -zplg-diff-env-compute
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -435,7 +481,7 @@ ____
  # $1 - user/plugin
 ____
 
-Has 28 line(s). Doesn't call other functions.
+Has 30 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -452,7 +498,7 @@ ____
  # $1 - user/plugin
 ____
 
-Has 18 line(s). Doesn't call other functions.
+Has 19 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -469,7 +515,7 @@ ____
  # $1 - user/plugin
 ____
 
-Has 18 line(s). Doesn't call other functions.
+Has 17 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -487,7 +533,7 @@ ____
  # $1 - user/plugin
 ____
 
-Has 27 line(s). Doesn't call other functions.
+Has 28 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -624,7 +670,7 @@ ____
  # $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 ____
 
-Has 33 line(s). Doesn't call other functions.
+Has 34 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -711,7 +757,7 @@ ____
  # User-action entry point.
 ____
 
-Has 41 line(s). Doesn't call other functions.
+Has 43 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -1138,7 +1184,7 @@ ____
  # $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 209 line(s). Calls functions:
+Has 228 line(s). Calls functions:
 
  -zplg-unload
  |-- -zplg-clear-report-for
@@ -1159,7 +1205,7 @@ Has 209 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-clear-debug-report
  `-- zplugin.zsh/-zplg-unregister-plugin
 
-Uses feature(s): _bindkey_, _unalias_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _alias_, _bindkey_, _unalias_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
@@ -1180,7 +1226,7 @@ ____
  # $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 97 line(s). Calls functions:
+Has 93 line(s). Calls functions:
 
  -zplg-update-or-status
  |-- -zplg-at-eval
@@ -1196,6 +1242,7 @@ Has 97 line(s). Calls functions:
  |-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin-side.zsh/-zplg-store-ices
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Uses feature(s): _source_
@@ -1233,6 +1280,7 @@ Has 55 line(s). Calls functions:
  |   |-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   |-- zplugin-side.zsh/-zplg-store-ices
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- -zplg-update-or-status-snippet
  |   |-- -zplg-compute-ice
@@ -1257,7 +1305,7 @@ ____
  # $2 - snippet URL
 ____
 
-Has 18 line(s). Calls functions:
+Has 19 line(s). Calls functions:
 
  -zplg-update-or-status-snippet
  |-- -zplg-compute-ice

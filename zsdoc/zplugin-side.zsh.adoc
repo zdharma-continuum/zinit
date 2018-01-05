@@ -18,6 +18,7 @@ FUNCTIONS
  -zplg-exists-physically-message
  -zplg-first
  -zplg-shands-exp
+ -zplg-store-ices
  -zplg-two-paths
 
 DETAILS
@@ -116,6 +117,7 @@ Called by:
 
  zplugin-autoload.zsh/-zplg-cd
  zplugin-autoload.zsh/-zplg-changes
+ zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-edit
  zplugin-autoload.zsh/-zplg-glance
  zplugin-autoload.zsh/-zplg-stress
@@ -166,12 +168,32 @@ Called by:
  -zplg-exists-physically-message
  -zplg-exists-physically
  zplugin-autoload.zsh/-zplg-cd
+ zplugin-autoload.zsh/-zplg-delete
+
+-zplg-store-ices
+~~~~~~~~~~~~~~~~
+
+____
+ # Saves ice mods in given hash onto disk.
+ #
+ # $1 - directory where to create / delete files
+ # $2 - name of hash that holds values
+ # $3 - additional keys of hash to store, space separated
+ # $4 - additional keys of hash to store, empty-meaningful ices, space separated
+____
+
+Has 16 line(s). Doesn't call other functions.
+
+Called by:
+
+ zplugin-autoload.zsh/-zplg-update-or-status
+ zplugin-install.zsh/-zplg-download-snippet
+ zplugin-install.zsh/-zplg-setup-plugin-dir
 
 -zplg-two-paths
 ~~~~~~~~~~~~~~~
 
 ____
- # FUNCTION: -zplg-two-paths()
  # Obtains a snippet URL without specification if it is an SVN URL (points to
  # directory) or regular URL (points to file), returns 2 possible paths for
  # further examination
@@ -183,4 +205,5 @@ Called by:
 
  zplugin-autoload.zsh/-zplg-cd
  zplugin-autoload.zsh/-zplg-compute-ice
+ zplugin-autoload.zsh/-zplg-delete
 

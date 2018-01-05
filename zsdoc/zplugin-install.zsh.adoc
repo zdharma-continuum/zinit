@@ -97,7 +97,7 @@ ____
  # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 103 line(s). Calls functions:
+Has 111 line(s). Calls functions:
 
  -zplg-download-snippet
  |-- -zplg-at-eval
@@ -107,7 +107,8 @@ Has 103 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
- `-- -zplg-mirror-using-svn
+ |-- -zplg-mirror-using-svn
+ `-- zplugin-side.zsh/-zplg-store-ices
 
 Uses feature(s): _eval_, _zcompile_
 
@@ -235,7 +236,7 @@ ____
  # $2 - plugin
 ____
 
-Has 129 line(s). Calls functions:
+Has 124 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin
@@ -248,7 +249,8 @@ Has 129 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
- `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ `-- zplugin-side.zsh/-zplg-store-ices
 
 Uses feature(s): _eval_
 

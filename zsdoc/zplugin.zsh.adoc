@@ -41,6 +41,7 @@ FUNCTIONS
  -zplg-prepare-home
  -zplg-register-plugin
  -zplg-run-task
+ -zplg-service
  -zplg-shadow-off
  -zplg-shadow-on
  -zplg-submit-turbo
@@ -59,7 +60,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 117 line(s). Calls functions:
+Has 121 line(s). Calls functions:
 
  Script-Body
  |-- -zplg-prepare-home
@@ -119,7 +120,7 @@ ____
  # run custom `autoload' function, that doesn't need FPATH.
 ____
 
-Has 41 line(s). Calls functions:
+Has 38 line(s). Calls functions:
 
  --zplg-shadow-autoload
  `-- -zplg-add-report
@@ -171,7 +172,7 @@ ____
  # The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 38 line(s). Calls functions:
+Has 40 line(s). Calls functions:
 
  --zplg-shadow-zle
  `-- -zplg-add-report
@@ -208,7 +209,7 @@ ____
  # $2, ... - the text
 ____
 
-Has 14 line(s). Doesn't call other functions.
+Has 8 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -244,6 +245,7 @@ Called by:
  zplugin-autoload.zsh/-zplg-compile-uncompile-all
  zplugin-autoload.zsh/-zplg-compiled
  zplugin-autoload.zsh/-zplg-create
+ zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-edit
  zplugin-autoload.zsh/-zplg-find-completions-of-plugin
  zplugin-autoload.zsh/-zplg-glance
@@ -371,7 +373,7 @@ ____
  # $2 - command, can be "begin" or "end"
 ____
 
-Has 18 line(s). Doesn't call other functions.
+Has 17 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -409,7 +411,7 @@ ____
  # $2 - command, can be "begin" or "end"
 ____
 
-Has 6 line(s). Doesn't call other functions.
+Has 5 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -479,7 +481,7 @@ ____
  # $2 - plugin name, if the third format is used
 ____
 
-Has 20 line(s). Calls functions:
+Has 21 line(s). Calls functions:
 
  -zplg-load
  |-- -zplg-any-to-user-plugin
@@ -503,6 +505,7 @@ Uses feature(s): _eval_, _source_
 Called by:
 
  -zplg-run-task
+ -zplg-service
  zplugin
 
 -zplg-load-plugin
@@ -516,7 +519,7 @@ ____
  # $3 - mode (light or load)
 ____
 
-Has 65 line(s). Calls functions:
+Has 64 line(s). Calls functions:
 
  -zplg-load-plugin
  |-- -zplg-add-report
@@ -546,7 +549,7 @@ ____
  # $4 - "-u" if invoked by Zplugin to only update snippet
 ____
 
-Has 88 line(s). Calls functions:
+Has 100 line(s). Calls functions:
 
  -zplg-load-snippet
  |-- -zplg-pack-ice
@@ -557,6 +560,7 @@ Uses feature(s): _autoload_, _eval_, _source_, _unfunction_, _zparseopts_
 Called by:
 
  -zplg-run-task
+ -zplg-service
  pmodload
  zplugin
  zplugin-autoload.zsh/-zplg-update-or-status-snippet
@@ -587,12 +591,11 @@ ____
  # if they already exist.
 ____
 
-Has 21 line(s). Doesn't call other functions.
+Has 25 line(s). Doesn't call other functions.
 
 Called by:
 
  Script-Body
- zplugin
 
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
@@ -606,7 +609,7 @@ Called by:
 -zplg-run-task
 ~~~~~~~~~~~~~~
 
-Has 26 line(s). Calls functions:
+Has 32 line(s). Calls functions:
 
  -zplg-run-task
  |-- -zplg-load
@@ -630,7 +633,7 @@ Has 26 line(s). Calls functions:
  |   `-- zplugin-install.zsh/-zplg-download-snippet
  `-- zplugin-autoload.zsh/-zplg-unload
 
-Uses feature(s): _eval_, _source_, _zle_
+Uses feature(s): _eval_, _source_, _zle_, _zpty_
 
 Called by:
 
@@ -643,7 +646,7 @@ ____
  # Searches for timeout tasks, executes them
 ____
 
-Has 27 line(s). *Is a precmd hook*. Calls functions:
+Has 33 line(s). *Is a precmd hook*. Calls functions:
 
  -zplg-scheduler
  |-- -zplg-run-task
@@ -670,6 +673,44 @@ Has 27 line(s). *Is a precmd hook*. Calls functions:
  `-- add-zsh-hook
 
 Uses feature(s): _sched_
+
+Not called by script or any function, may be a hook or Zle widget, etc.
+
+-zplg-service
+~~~~~~~~~~~~~
+
+____
+ # Handles given service, i.e. obtains lock, runs it, or waits if no lock
+ #
+ # $1 - type "p" or "s" (plugin or snippet)
+ # $2 - mode - for plugin (light or load)
+ # $3 - id - URL or plugin ID
+____
+
+Has 30 line(s). Calls functions:
+
+ -zplg-service
+ |-- -zplg-load
+ |   |-- -zplg-any-to-user-plugin
+ |   |-- -zplg-load-plugin
+ |   |   |-- -zplg-add-report
+ |   |   |-- -zplg-diff-env
+ |   |   |-- -zplg-diff-functions
+ |   |   |-- -zplg-diff-options
+ |   |   |-- -zplg-diff-parameter
+ |   |   |-- -zplg-find-other-matches
+ |   |   |-- -zplg-shadow-off
+ |   |   `-- -zplg-shadow-on
+ |   |-- -zplg-pack-ice
+ |   |-- -zplg-register-plugin
+ |   |-- -zplg-unregister-plugin
+ |   |   `-- -zplg-any-to-user-plugin
+ |   `-- zplugin-install.zsh/-zplg-setup-plugin-dir
+ `-- -zplg-load-snippet
+     |-- -zplg-pack-ice
+     `-- zplugin-install.zsh/-zplg-download-snippet
+
+Uses feature(s): _kill_, _read_
 
 Not called by script or any function, may be a hook or Zle widget, etc.
 
@@ -759,7 +800,7 @@ ____
  # and its arguments, has completion.
 ____
 
-Has 227 line(s). Calls functions:
+Has 244 line(s). Calls functions:
 
  zplugin
  |-- -zplg-clear-debug-report
@@ -800,7 +841,6 @@ Has 227 line(s). Calls functions:
  |-- -zplg-load-snippet
  |   |-- -zplg-pack-ice
  |   `-- zplugin-install.zsh/-zplg-download-snippet
- |-- -zplg-prepare-home
  |-- -zplg-submit-turbo
  |-- compinit
  |-- zplugin-autoload.zsh/-zplg-cd
@@ -812,6 +852,7 @@ Has 227 line(s). Calls functions:
  |-- zplugin-autoload.zsh/-zplg-compiled
  |-- zplugin-autoload.zsh/-zplg-compinit
  |-- zplugin-autoload.zsh/-zplg-create
+ |-- zplugin-autoload.zsh/-zplg-delete
  |-- zplugin-autoload.zsh/-zplg-edit
  |-- zplugin-autoload.zsh/-zplg-glance
  |-- zplugin-autoload.zsh/-zplg-help
@@ -844,7 +885,7 @@ Not called by script or any function, may be a hook or Zle widget, etc.
 add-zsh-hook
 ~~~~~~~~~~~~
 
-Has 91 line(s). Doesn't call other functions.
+Has 93 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_
 
