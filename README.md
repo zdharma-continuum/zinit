@@ -37,8 +37,9 @@
 </p>
 
 [![Build Status](https://travis-ci.org/zdharma/zplugin.svg?branch=master)](https://travis-ci.org/zdharma/zplugin)
-[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](./LICENSE)
-![ZSH 5.0.0](https://img.shields.io/badge/zsh-v5.0.0-orange.svg?style=flat-square)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
+[![zplugin](https://img.shields.io/badge/zplugin-2.0-b65eed.svg)](https://github.com/zdharma/zplugin/releases)
+![activity](https://img.shields.io/github/commit-activity/y/zdharma/zplugin.svg)
 [![Join the chat at https://gitter.im/zplugin/Lobby](https://badges.gitter.im/zplugin/Lobby.svg)](https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 # Zplugin
