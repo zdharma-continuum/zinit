@@ -110,7 +110,7 @@ zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose" bpick"*linux*";
 
 # Vim repository on Github – a source that needs compilation
 
-zplugin ice as"command" atclone"./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
+zplugin ice as"command" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
 
 # Scripts that are built at install (there's single default make target, "install", and
 # it constructs scripts by cat-ting a few files). The make ice could also be:

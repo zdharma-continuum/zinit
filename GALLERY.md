@@ -11,7 +11,7 @@ zplugin light junegunn/fzf-bin
 zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose"
 zplugin light docker/compose
 
-zplugin ice as"command" atclone"./configure" atpull"%atclone" make pick"src/vim"
+zplugin ice as"command" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"
 zplugin light vim/vim
 
 zplugin ice as"command" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
