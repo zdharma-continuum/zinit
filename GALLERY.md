@@ -31,6 +31,9 @@ zplugin light b4b4r07/gotcha
 zplugin ice as"command" cp"wd.sh -> wd" pick"wd"
 zplugin light mfaerevaag/wd
 
+zplugin ice as"command" pick"yank" make
+zplugin light mptre/yank
+
 # Plugins
 
 zplugin ice pick"h.sh"
