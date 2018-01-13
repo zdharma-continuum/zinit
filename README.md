@@ -866,8 +866,9 @@ local -A ZPLGM  # initial Zplugin's hash definition, then:
 | ZPLGM[BIN_DIR]         | Where Zplugin code resides, e.g.: "/home/user/.zplugin/bin"                      |
 | ZPLGM[HOME_DIR]        | Where Zplugin should create all working directories, e.g.: "/home/user/.zplugin" |
 | ZPLGM[PLUGINS_DIR]     | Override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins" |
-| ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"         |
+| ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"     |
 | ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
+| ZPLGM[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. it's name can be different) |
 
 # IRC Channel
 Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.

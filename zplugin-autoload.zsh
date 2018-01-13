@@ -683,13 +683,13 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     print "Initializing completion (compinit)..."
-    command rm -f ~/.zcompdump
+    command rm -f ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
     # Workaround for a nasty trick in _vim
     (( ${+functions[_vim_files]} )) && unfunction _vim_files
 
     builtin autoload -Uz compinit
-    compinit
+    compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 } # }}}
 
 #

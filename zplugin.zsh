@@ -1550,7 +1550,7 @@ zplugin() {
                            -zplg-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
-                           compinit
+                           compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
                        fi
                    fi
                    ;;
@@ -1566,7 +1566,7 @@ zplugin() {
                            -zplg-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
-                           compinit
+                           compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
                        fi
                    fi
                    ;;
@@ -1578,7 +1578,7 @@ zplugin() {
                    -zplg-install-completions "$2" "$3" "1" "${(M)4:#-q}"
                    [[ -z "${(M)4:#-q}" ]] && print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
-                   compinit
+                   compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
                    ;;
                (cuninstall)
                    if [[ -z "$2" && -z "$3" ]]; then
@@ -1589,7 +1589,7 @@ zplugin() {
                        -zplg-uninstall-completions "$2" "$3"
                        print "Initializing completion (compinit)..."
                        builtin autoload -Uz compinit
-                       compinit
+                       compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
                    fi
                    ;;
                (csearch)
