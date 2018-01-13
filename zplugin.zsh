@@ -1379,7 +1379,7 @@ builtin setopt noaliases
 # FUNCTION: -zplugin_scheduler_add_sh {{{
 # Copies task into ZPLG_RUN array, called when a task timeouts
 -zplugin_scheduler_add_sh() {
-    ZPLG_RUN+=( ${ZPLG_TASKS[$1]} )
+    ZPLG_RUN+=( "${ZPLG_TASKS[$1]}" )
     return 1
 }
 # }}}
@@ -1409,7 +1409,7 @@ builtin setopt noaliases
     }
 
     local __task __idx=0 __count=0 __idx2
-    for __task in ${ZPLG_RUN[@]}; do
+    for __task in "${ZPLG_RUN[@]}"; do
         -zplg-run-task 1 "${(@z)__task}" && ZPLG_TASKS+=( "$__task" )
         [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 20 ]] && break
     done
