@@ -20,6 +20,7 @@ ZPLGM[ZERO]="$0"
 [[ ! -o "functionargzero" || "${ZPLGM[ZERO]/\//}" = "${ZPLGM[ZERO]}" ]] && ZPLGM[ZERO]="${(%):-%N}"
 
 [[ -z "${ZPLGM[BIN_DIR]}" ]] && ZPLGM[BIN_DIR]="${ZPLGM[ZERO]:h}"
+[[ "${ZPLGM[BIN_DIR]}" = \~* ]] && ZPLGM[BIN_DIR]=${~ZPLGM[BIN_DIR]}
 
 # Make ZPLGM[BIN_DIR] path absolute
 if [[ "${ZPLGM[BIN_DIR]}" != /* ]]; then
@@ -51,6 +52,12 @@ fi
 : ${ZPLGM[COMPLETIONS_DIR]:=${ZPLGM[HOME_DIR]}/completions}
 : ${ZPLGM[SNIPPETS_DIR]:=${ZPLGM[HOME_DIR]}/snippets}
 : ${ZPLGM[SERVICES_DIR]:=${ZPLGM[HOME_DIR]}/services}
+
+ZPLGM[PLUGINS_DIR]=${~ZPLGM[PLUGINS_DIR]}
+ZPLGM[COMPLETIONS_DIR]=${~ZPLGM[COMPLETIONS_DIR]}
+ZPLGM[SNIPPETS_DIR]=${~ZPLGM[SNIPPETS_DIR]}
+ZPLGM[SERVICES_DIR]=${~ZPLGM[SERVICES_DIR]}
+[[ -n "${ZPLGM[ZCOMPDUMP_PATH]}" ]] && ZPLGM[ZCOMPDUMP_PATH]=${~ZPLGM[ZCOMPDUMP_PATH]}
 
 builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLGM[NEW_AUTOLOAD]=1 || ZPLGM[NEW_AUTOLOAD]=0

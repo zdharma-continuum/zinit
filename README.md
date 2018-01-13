@@ -142,6 +142,12 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 13-01-2018
+  - New customizable path `$ZPLGM[ZCOMPDUMP_PATH]` that allows to point zplugin to non-standard
+    `.zcompdump` location.
+  - Tilde-expansion is now performed on the [customizable paths](#customizing-paths) – you can
+    assign paths like `~/.zplugin`, there's no need to use `$HOME/.zplugin`.
+
 * 31-12-2017
   - For the new year there's a new feature: user-services spawned by Zshell :) Check out
     [available services](https://github.com/zservices). They are configured like their
@@ -863,8 +869,8 @@ local -A ZPLGM  # initial Zplugin's hash definition, then:
 ```
 | Hash Field | Description |
 -------------|--------------
-| ZPLGM[BIN_DIR]         | Where Zplugin code resides, e.g.: "/home/user/.zplugin/bin"                      |
-| ZPLGM[HOME_DIR]        | Where Zplugin should create all working directories, e.g.: "/home/user/.zplugin" |
+| ZPLGM[BIN_DIR]         | Where Zplugin code resides, e.g.: "~/.zplugin/bin"                      |
+| ZPLGM[HOME_DIR]        | Where Zplugin should create all working directories, e.g.: "~/.zplugin" |
 | ZPLGM[PLUGINS_DIR]     | Override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins" |
 | ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"     |
 | ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
