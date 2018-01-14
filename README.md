@@ -31,6 +31,7 @@
 - [Usage](#usage)
     - [Using Oh-My-Zsh Themes](#using-oh-my-zsh-themes)
 - [Calling compinit](#calling-compinit)
+  - [Turbo-loading completions](#turbo-loading-completions)
 - [Ignoring Compdefs](#ignoring-compdefs)
 - [Non-Github (Local) Plugins](#non-github-local-plugins)
 - [Customizing Paths](#customizing-paths)
@@ -142,6 +143,12 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 14-01-2018
+  - Two functions have been exposed: `zpcdreplay` and `zpcompinit`. First one invokes compdef-replay,
+    second one is equal to `autoload compinit; compinit` (it also respects `$ZPLGM[ZCOMPDUMP_PATH]`).
+    You can use e.g. `atinit'zpcompinit'` ice-mod in a syntax-highlighting plugin, to initialize
+    completion right-before setting up syntax highlighting (because that should be done at the end).
+
 * 13-01-2018
   - New customizable path `$ZPLGM[ZCOMPDUMP_PATH]` that allows to point zplugin to non-standard
     `.zcompdump` location.
@@ -823,6 +830,13 @@ zplugin cdreplay -q # -q is for quiet
 This allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
+
+## Turbo-loading completions
+
+If you load completions using `wait''` mode then you can add `atinit'zpcompinit'` to syntax-highlighting
+plugin (which should be the last one), or `atload'zpcompinit'` to last completion-related plugin. `zpcompinit`
+is a function that runs `autoload compinit; compinit`. There's also `zpcdreplay`, so you can also do:
+`atinit'zpcompinit; zpcdreplay'`, etc.
 
 # Ignoring Compdefs
 
