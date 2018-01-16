@@ -396,6 +396,33 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 else
                     -zplg-mirror-using-svn "$url" "" "$filename" || return 1
                 fi
+
+                local -a list
+
+                if [[ ${ZPLG_ICE[as]} != "command" ]]; then
+                    if [[ -n ${ZPLG_ICE[pick]} ]]; then
+                        list=( $local_dir/$filename/${~ZPLG_ICE[pick]##/*}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+                    elif [[ -z ${ZPLG_ICE[pick]} ]]; then
+                        list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
+                               $local_dir/$filename/*.zsh-theme(N) )
+                    fi
+
+                    [[ -e "${list[1]}" ]] && { zcompile "${list[1]}" || {
+                        print -r "Warning: Couldn't compile \`${list[1]}'"
+                    } }
+                fi
+
+                if [[ ${+ZPLG_ICE[svn]} = 1 && -n "${ZPLG_ICE[compile]}" ]]; then
+                    list=( $local_dir/$filename/${~ZPLG_ICE[compile]}(N) )
+                    [[ ${#list} -eq 0 ]] && {
+                        print "Warning: Ice mod compile'' didn't match any files"
+                    } || {
+                        local matched
+                        for matched in "${list[@]}"; do
+                            zcompile "$matched"
+                        done
+                    }
+                fi
             else
                 [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                 -zplg-download-file-stdout "$url" >! "$filename" || {
@@ -464,20 +491,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
-
-    if [[ ${ZPLG_ICE[as]} != "command" && ${+ZPLG_ICE[svn]} = 1 ]]; then
-        local -a list
-        if [[ -n ${ZPLG_ICE[pick]} ]]; then
-            list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
-        elif [[ -z ${ZPLG_ICE[pick]} ]]; then
-            list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
-                   $local_dir/$filename/*.zsh-theme(N) )
-        fi
-
-        [[ -e "${list[1]}" ]] && { zcompile "${list[1]}" || {
-            print -r "Couldn't compile \`${list[1]}' (from SVN snippet: $save_url)"
-        } }
-    fi
 
     -zplg-install-completions "%" "$local_dir${ZPLG_ICE[svn]+/$filename}" 0
     return $retval
