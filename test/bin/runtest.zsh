@@ -10,6 +10,7 @@ local opts="$6"
 # Will generate new answer
 [[ -d $PWD/$1/answer ]] && rm -rf $PWD/$1/answer
 
+unset ZCONVEY_LOCKS_DIR ZCONVEY_IO_DIR
 # Discard per-setup (e.g. per-version) PATH and FPATH entries
 builtin autoload +X is-at-least
 builtin autoload +X allopt
