@@ -15,7 +15,7 @@
     - [Oh-My-Zsh, Prezto](#oh-my-zsh-prezto)
     - [Snippets and performance](#snippets-and-performance)
     - [Some Ice-modifiers](#some-ice-modifiers)
-    - [as"command"](#ascommand)
+    - [as"program"](#asprogram)
     - [atpull"..."](#atpull)
     - [Snippets-commands](#snippets-commands)
     - [Completion Management](#completion-management)
@@ -63,7 +63,7 @@ Other example: direnv written in Go, requiring building after cloning:
 ```SystemVerilog
 # make'!...' -> run make before atclone & atpull
 
-zplugin ice as"command" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
+zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
 zplugin light direnv/direnv
 ```
 
@@ -101,23 +101,23 @@ zplugin load zdharma/zui
 
 # Binary release in archive, from Github-releases page; after automatic unpacking it provides command "fzf"
 
-zplugin ice from"gh-r" as"command"; zplugin load junegunn/fzf-bin
+zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # Used also `bpick' which selects Linux packages – in this case not needed, Zplugin
 # automatically narrows down the releases by grepping uname etc.
 
-zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
+zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
 
 # Vim repository on Github – a source that needs compilation
 
-zplugin ice as"command" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
+zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
 
 # Scripts that are built at install (there's single default make target, "install", and
 # it constructs scripts by cat-ting a few files). The make ice could also be:
 # `make"install PREFIX=${ZPLGM[HOME_DIR]}/cmd"`, if "install" wouldn't be default target
 
-zplugin ice as"command" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
+zplugin ice as"program" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
 zplugin light tj/git-extras
 
 zplugin light zsh-users/zsh-autosuggestions
@@ -202,13 +202,13 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     plugins and snippets. For example there's `Zshelldoc` that uses `Makefile` to build final scripts:
 
     ```SystemVerilog
-    zplugin ice as"command" pick"build/zsd*" make; zplugin light zdharma/zshelldoc
+    zplugin ice as"program" pick"build/zsd*" make; zplugin light zdharma/zshelldoc
     ```
 
     The above doesn't trigger the `install` target, but this does:
 
     ```SystemVerilog
-    zplugin ice as"command" pick"build/zsd*" make"install PREFIX=/tmp"; zplugin light zdharma/zshelldoc
+    zplugin ice as"program" pick"build/zsd*" make"install PREFIX=/tmp"; zplugin light zdharma/zshelldoc
     ```
 
   - Fixed problem with binary-release selection (`from"gh-r"`) by adding Ice-mod `bpick`, which
@@ -415,13 +415,13 @@ Ice-modifier "**pick**" user can explicitly select the file to source:
 Content of Ice-modifier is simply put into `"..."`, `'...'`, or `$'...'`. No need for `":"` after
 Ice-mod name. This way editors like `vim` and `emacs` will highlight contents of Ice-modifiers.
 
-### as"command"
+### as"program"
 
 A plugin might not be a file for sourcing, but a command to be added to `$PATH`. To obtain this
-effect, use Ice-modifier `as` with value `command`.
+effect, use Ice-modifier `as` with value `program`.
 
 ```SystemVerilog
-% zplugin ice as"command" cp"httpstat.sh -> httpstat" pick"httpstat"
+% zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
 % zplugin light b4b4r07/httpstat
 ```
 
@@ -436,7 +436,7 @@ Copying file is safe for doing later updates – original files of repository a
 ran at **update** of plugin) will be used:
 
 ```SystemVerilog
-% zplugin ice as"command" mv"httpstat.sh -> httpstat" pick"httpstat" atpull'!git reset --hard'
+% zplugin ice as"program" mv"httpstat.sh -> httpstat" pick"httpstat" atpull'!git reset --hard'
 % zplugin light b4b4r07/httpstat
 ```
 
@@ -455,7 +455,7 @@ enclose contents of `atpull` Ice-mod.
 Commands can also be added to `$PATH` using **snippets**. For example:
 
 ```SystemVerilog
-% zplugin ice mv"httpstat.sh -> httpstat" pick"httpstat" as"command"
+% zplugin ice mv"httpstat.sh -> httpstat" pick"httpstat" as"program"
 % zplugin snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 ```
 
@@ -629,9 +629,10 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 |-----------|-------------|
 | `proto`   | Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. Works with plugins (i.e. not snippets). |
 | `from`    | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). |
-| `ver`     | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"command"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. |
-| `pick`    | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"command"`), e.g. `zplugin ice pick"*.plugin.zsh"`. Works with plugins and snippets. |
-| `bpick`   | Used to select which release from Github Releases to download, e.g. `zplg ice from"gh-r" as"command" bpick"*Darwin*"; zplg load docker/compose` |
+| `as`      | Can be `as"program"` (also alias `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). |
+| `ver`     | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. |
+| `pick`    | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"program"`), e.g. `zplugin ice pick"*.plugin.zsh"`. Works with plugins and snippets. |
+| `bpick`   | Used to select which release from Github Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` |
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
 | `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
@@ -644,7 +645,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. To be used with plugins and snippets. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
 | `make`    | Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. |
-| `src`     | Specify additional file to source after sourcing main file or after setting up command (`as"command"`). |
+| `src`     | Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). |
 | `wait`    | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). |
 | `load`    | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. |
 | `unload`  | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. |

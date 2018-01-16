@@ -3,36 +3,41 @@
 ```zsh
 # PRs welcomed :)
 
-# Commands
+# Programs
 
-zplugin ice from"gh-r" as"command"
+zplugin ice from"gh-r" as"program"
 zplugin light junegunn/fzf-bin
 
-zplugin ice from"gh-r" as"command" mv"docker* -> docker-compose"
+zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose"
 zplugin light docker/compose
 
-zplugin ice as"command" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"
+zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"
 zplugin light vim/vim
 
-zplugin ice as"command" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
-zplugin light tj/git-extras
-
-zplugin ice as"command" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
+zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
 zplugin light direnv/direnv
 
-zplugin ice from"gh-r" as"command" mv"direnv* -> direnv"; zplugin light direnv/direnv
+zplugin ice from"gh-r" as"program" mv"direnv* -> direnv"; zplugin light direnv/direnv
 
-zplugin ice from"gh-r" as"command" mv"shfmt* -> shfmt"
+zplugin ice from"gh-r" as"program" mv"shfmt* -> shfmt"
 zplugin light mvdan/sh
 
-zplugin ice from"gh-r" as"command" mv"gotcha_* -> gotcha"
+zplugin ice from"gh-r" as"program" mv"gotcha_* -> gotcha"
 zplugin light b4b4r07/gotcha
 
-zplugin ice as"command" cp"wd.sh -> wd" pick"wd"
+zplugin ice as"program" pick"yank" make
+zplugin light mptre/yank
+
+# Scripts
+
+zplugin ice as"program" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
+zplugin light tj/git-extras
+
+zplugin ice as"program" cp"wd.sh -> wd" pick"wd"
 zplugin light mfaerevaag/wd
 
-zplugin ice as"command" pick"yank" make
-zplugin light mptre/yank
+zplg ice as"program" pick"bin/archey"
+zplg load obihann/archey-osx
 
 # Plugins
 
