@@ -1265,7 +1265,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
 } # }}}
@@ -1284,6 +1284,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[bpick]} )) && ZPLG_SICE[$1/$2]+="bpick ${(q)ZPLG_ICE[bpick]} "
     (( ${+ZPLG_ICE[as]} )) && ZPLG_SICE[$1/$2]+="as ${(q)ZPLG_ICE[as]} "
     (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+="make ${(q)ZPLG_ICE[make]} "
+    (( ${+ZPLG_ICE[compile]} )) && ZPLG_SICE[$1/$2]+="compile ${(q)ZPLG_ICE[compile]} "
     return 0
 } # }}}
 # FUNCTION: -zplg-service {{{

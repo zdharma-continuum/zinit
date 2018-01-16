@@ -307,39 +307,54 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-compile-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" first
+    local plugin_dir="${${${(M)plugin:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}}"
+    local -a list
 
-    # No ICE packing because this command is ran from
-    # *load-plugin and it would pack ice twice
+    # No ICE packing because this command is ran
+    # from -zplg-load-plugin which does that
     local -A sice
-    sice=( "${(z@)ZPLG_SICE[$user/$plugin]:-no op}" )
-    [[ -n "${ZPLG_ICE[pick]}" ]] && sice[pick]="${(q)ZPLG_ICE[pick]}"
+    sice=( "${(@Q)${(z@)ZPLG_SICE[$user/$plugin]:-no op}}" )
 
-    if [[ -n "${sice[pick]}" ]]; then
-        local pdir_path2="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
-        local -a list
-        list=( $pdir_path2/${(Q)~sice[pick]}(N) )
-        [[ ${#list} -eq 0 ]] && {
-            print "${ZPLGM[col-error]}No files for compilation found (pick-ice didn't match)${ZPLGM[col-rst]}"
-            return 1
+    if [[ -z "${sice[nocompile]}" ]]; then
+        if [[ -n "${sice[pick]}" ]]; then
+            list=( $plugin_dir/${~sice[pick]}(N) )
+            [[ ${#list} -eq 0 ]] && {
+                print "No files for compilation found (pick-ice didn't match)"
+                return 1
+            }
+            reply=( "${list[1]:h}" "${list[1]:t}" )
+        else
+            -zplg-first "$1" "$2" || {
+                print "No files for compilation found"
+                return 1
+            }
+        fi
+        local pdir_path="${reply[-2]}"
+        first="${reply[-1]}"
+        local fname="${first#$pdir_path/}"
+
+        print "Compiling ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]}..."
+        zcompile "$first" || {
+            print "Compilation failed. Don't worry, the plugin will work also without compilation"
+            print "Consider submitting an error report to Zplugin or to the plugin's author"
         }
-        reply=( "$pdir_path2" "${list[1]}" )
-    else
-        -zplg-first "$1" "$2" || {
-            print "${ZPLGM[col-error]}No files for compilation found${ZPLGM[col-rst]}"
-            return 1
+        # Try to catch possible additional file
+        zcompile "${first%.plugin.zsh}.zsh" 2>/dev/null
+    fi
+
+    if [[ -n "${sice[compile]}" ]]; then
+        list=( $plugin_dir/${~sice[compile]}(N) )
+        [[ ${#list} -eq 0 ]] && {
+            print "Warning: Ice mod compile'' didn't match any files"
+        } || {
+            for first in "${list[@]}"; do
+                zcompile "$first"
+            done
         }
     fi
-    local pdir_path="${reply[-2]}" first="${reply[-1]}"
-    local fname="${first#$pdir_path/}"
 
-    print "Compiling ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]}..."
-    zcompile "$first" || {
-        print "Compilation failed. Don't worry, the plugin will work also without compilation"
-        print "Consider submitting an error report to the plugin's author"
-    }
-    # Try to catch possible additional file
-    zcompile "${first%.plugin.zsh}.zsh" 2>/dev/null
+    return 0
 } # }}}
 # FUNCTION: -zplg-download-snippet {{{
 # Downloads snippet – either a file – with curl, wget, lftp or lynx,
