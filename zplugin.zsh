@@ -1267,6 +1267,7 @@ builtin setopt noaliases
     for bit; do
         [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
+    [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
 # Remembers long-live ICE specs, assigns them to concrete plugin.
