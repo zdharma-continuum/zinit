@@ -96,7 +96,9 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc
 Then add to `~/.zshrc`, at bottom:
 
 ```zsh
-zplugin load zdharma history-search-multi-word
+zplugin load zdharma/history-search-multi-word
+
+zplugin ice compile"*.lzui"
 zplugin load zdharma/zui
 
 # Binary release in archive, from Github-releases page; after automatic unpacking it provides command "fzf"
@@ -143,6 +145,11 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 16-01-2018
+  - New ice-mod `compile` which takes pattern to select additional files to compile, e.g.
+    `zplugin ice compile"(hsmw-*|history-*)"` (for `zdharma/history-search-multi-word` plugin).
+    See [Ice Modifiers](#ice-modifiers).
+
 * 14-01-2018
   - Two functions have been exposed: `zpcdreplay` and `zpcompinit`. First one invokes compdef-replay,
     second one is equal to `autoload compinit; compinit` (it also respects `$ZPLGM[ZCOMPDUMP_PATH]`).
@@ -650,6 +657,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `load`    | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. |
 | `unload`  | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. |
 | `service` | Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices org](https://github.com/zservices). |
+| `compile` | Pattern to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure` |
 
 Order of related Ice-mods: `atinit` -> `atpull!` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `atload`.
 
