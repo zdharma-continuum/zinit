@@ -555,6 +555,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         (*.tar.7z|*.t7z)
             -zplg-extract() { command 7z x -so "$file" | command tar -xf -; }
             ;;
+        (*.gz)
+            -zplg-extract() { command gunzip "$file"; }
+            ;;
     esac
 
     [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] && {
