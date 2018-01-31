@@ -340,7 +340,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             print "Consider submitting an error report to Zplugin or to the plugin's author"
         }
         # Try to catch possible additional file
-        zcompile "${first%.plugin.zsh}.zsh" 2>/dev/null
+        zcompile "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
     fi
 
     if [[ -n "${sice[compile]}" ]]; then
