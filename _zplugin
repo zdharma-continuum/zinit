@@ -11,6 +11,7 @@ commands=(
     help:'usage information'
     man:'manual'
     load:'load plugin'
+    delete:'delete plugin'
     unload:'unload plugin'
     snippet:"source (or add to PATH with --command) local or remote file (-f: force - don't use cache)"
     update:'Git update plugin (or all plugins and snippets if --all passed)'
@@ -81,6 +82,16 @@ case $state in
                 # _wanted plugins expl "Plugins" \
                 #    compadd "$@" -a - plugins && ret=0
                 _alternative 'files:file:_files' 'plugins:plugin:compadd -a - plugins'
+                ;;
+            delete)
+                typeset -a plugins
+                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             unload|report)
                 typeset -a plugins absolute normal
