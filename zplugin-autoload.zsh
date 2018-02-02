@@ -1538,19 +1538,31 @@ ZPLGM[EXTENDED_GLOB]=""
     setopt localoptions extendedglob nokshglob noksharrays
     local entry entry2 user plugin
     float -F 3 sum=0.0
+    local -A sice
+    local -a tmp
 
     print "Plugin loading times:"
     for entry in "${(@on)ZPLGM[(I)TIME_[0-9]##_*]}"; do
         entry2="${entry#TIME_[0-9]##_}"
         if [[ "$entry2" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
             REPLY="${ZPLGM[col-pname]}$entry2${ZPLGM[col-rst]}"
+
+            tmp=( "${(z@)ZPLG_SICE[${entry2%/}/]}" )
+            (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" ) || sice=()
         else
             user="${entry2%---*}"
             plugin="${entry2#*---}"
             -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+
+            tmp=( "${(z@)ZPLG_SICE[$user/$plugin]}" )
+            (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" ) || sice=()
         fi
 
-        print "${ZPLGM[$entry]} sec" - "$REPLY"
+        if [[ "${sice[as]}" == "command" ]]; then
+            print "${ZPLGM[$entry]} sec" - "$REPLY (command)"
+        else
+            print "${ZPLGM[$entry]} sec" - "$REPLY"
+        fi
         (( sum += ZPLGM[$entry] ))
     done
     print "Total: $sum sec"
