@@ -1241,9 +1241,12 @@ ZPLGM[EXTENDED_GLOB]=""
               command git pull --no-stat; )
         fi
 
-        # Any new commits?
         local -a log
         { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
+
+        command rm -f $local_dir/.zplugin_lstupd
+
+        # Any new commits?
         [[ ${#log} -gt 0 ]] && {
             if [[ -z "${ice[is_release]}" && -n "${ice[mv]}" ]]; then
                 local from="${ice[mv]%%[[:space:]]#->*}" to="${ice[mv]##*->[[:space:]]#}"
@@ -1268,7 +1271,7 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
         }
 
-        # Store ices at update of plugin
+        # Store ices to disk at update of plugin
         -zplg-store-ices "$local_dir/._zplugin" ice "" "" "" ""
     fi
 
