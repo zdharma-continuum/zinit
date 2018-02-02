@@ -369,6 +369,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     integer retval=0
     local sname="$filename0/$filename"
 
+    if [[ "$sname" = *trunk* ]]; then
+        local notrunk="${url%%/trunk*}"
+        sname="${notrunk:t}/$filename"
+    fi
+
     # Change the url to point to raw github content if it isn't like that
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZPLG_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
 
