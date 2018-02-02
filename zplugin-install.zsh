@@ -72,6 +72,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         (
             builtin cd "$local_path" || return 1
             url="https://github.com${list[1]}"
+            print "(Requesting \`${list[1]:t}'...)"
             -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
                 -zplg-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
                     command rm -f "${list[1]:t}"
@@ -527,14 +528,19 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 -zplg-handle-binary-file() {
     setopt localoptions extendedglob nokshglob
 
-    -zplg-extract-wrapper() {
-        local file="$1" fun="$2"
-        echo "Extracting files from: \`$file'..."
-        $fun
-        command rm -f "$file"
-    }
-
     local url="$1" file="$2"
+
+    command mkdir -p ._backup
+    command rm -f ._backup/*(N)
+    command mv -f *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(N) ._backup 2>/dev/null
+
+    -zplg-extract-wrapper() {
+        local file="$1" fun="$2" retval
+        print "Extracting files from: \`$file'..."
+        $fun; retval=$?
+        command rm -f "$file"
+        return $retval
+    }
 
     case "$file" in
         (*.zip)
@@ -561,7 +567,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     esac
 
     [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] && {
-        -zplg-extract-wrapper "$file" -zplg-extract
+        -zplg-extract-wrapper "$file" -zplg-extract || {
+            print "Extraction of archive had problems, restoring previous version of the command"
+            command mv ._backup/*(D) .
+            return 1
+        }
         unfunction -- -zplg-extract
     }
     unfunction -- -zplg-extract-wrapper
