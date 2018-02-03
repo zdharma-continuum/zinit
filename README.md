@@ -51,7 +51,7 @@ install everything from Github and other sites. For example, in order to install
 [trapd00r/LS_COLORS](https://github.com/trapd00r/LS_COLORS), which isn't a Zsh
 plugin:
 
-```SystemVerilog
+```zsh
 # For GNU ls (the binaries can be gls, gdircolors)
 
 zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
@@ -60,7 +60,7 @@ zplugin light trapd00r/LS_COLORS
 
 Other example: direnv written in Go, requiring building after cloning:
 
-```SystemVerilog
+```zsh
 # make'!...' -> run make before atclone & atpull
 
 zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
@@ -89,7 +89,7 @@ to call `compinit` only once in `.zshrc`.
 
 To install, execute:
 
-```SystemVerilog
+```zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
 ```
 
