@@ -1033,7 +1033,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 # Don't unset redefined variables, only newly defined
                 # "" means variable didn't exist before plugin load
                 # (didn't have a type)
-                if [[ "$v1" = "\"\"" ]]; then
+                if [[ "$v1" = "\"\"" || ( "$k" = (RPROMPT|RPS1|RPS2|PROMPT|PS1) && "$v1" != "$v2" ) ]]; then
                     (( quiet )) || print "Unsetting variable $k"
                     # Checked that 4.3.17 does support "--"
                     # There cannot be parameter starting with

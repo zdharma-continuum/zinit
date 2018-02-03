@@ -730,7 +730,11 @@ builtin setopt noaliases
 -zplg-diff-parameter() {
     typeset -a tmp
 
-    [[ "$2" = "begin" ]] && ZPLG_PARAMETERS_BEFORE[$1]="${(j: :)${(qkv)parameters[@]}}" || ZPLG_PARAMETERS_AFTER[$1]="${(j: :)${(qkv)parameters[@]}}"
+    [[ "$2" = "begin" ]] && {
+        ZPLG_PARAMETERS_BEFORE[$1]="${(j: :)${(qkv)parameters[@]}} RPROMPT '${RPROMPT//[^a-zA-Z]/_}' RPS1 '${RPS1//[^a-zA-Z]/_}' RPS2 '${RPS2//[^a-zA-Z]/_}' PROMPT '${PROMPT//[^a-zA-Z]/_}' PS1 '${PS1//[^a-zA-Z]/_}'"
+    } || {
+        ZPLG_PARAMETERS_AFTER[$1]="${(j: :)${(qkv)parameters[@]}} RPROMPT '${RPROMPT//[^a-zA-Z]/_}' RPS1 '${RPS1//[^a-zA-Z]/_}' RPS2 '${RPS2//[^a-zA-Z]/_}' PROMPT '${PROMPT//[^a-zA-Z]/_}' PS1 '${PS1//[^a-zA-Z]/_}'"
+    }
 
     ZPLG_PARAMETERS_PRE[$1]=""
     ZPLG_PARAMETERS_POST[$1]=""
