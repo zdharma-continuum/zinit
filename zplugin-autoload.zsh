@@ -1311,24 +1311,29 @@ ZPLGM[EXTENDED_GLOB]=""
 # returns path to snippet directory and optional name of snippet file (only
 # valid if ZPLG_ICE[svn] is not set).
 #
+# Can also pack resulting ices into ZPLG_SICE (see $2).
+#
 # $1 - URL (also plugin-spec in future)
-# $2 - "pack" or "nopack" - packing means ZPLG_ICE wins with static ice
+# $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
+#      "pack-nf" means that disk-ices will be ignored (no-file?)
 # $3 - name of output associative array, "ZPLG_ICE" is the default
 # $4 - name of output string parameter, to hold path to directory ("local_dir")
 # $5 - name of output string parameter, to hold filename ("filename")
 -zplg-compute-ice() {
     setopt localoptions extendedglob nokshglob noksharrays
 
-    local __URL="${1%/}" __pack="$2"
+    local __URL="${1%/}" __pack="$2" is_snippet=0
     local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" __var_name3="${5:-filename}"
 
     # Remove whitespace from beginning of URL
     __URL="${${__URL#"${__URL%%[! $'\t']*}"}%/}"
 
+    # Check if $__URL is user/plugin
     if [[ "$__URL" != [^/:]##/[^/]## ]]; then
         # Snippet
         -zplg-two-paths "$__URL"
         local __s_path="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
+        is_snippet=1
     else
         # Plugin
         local __user="${__URL%%/*}" __plugin="${__URL#*/}"
@@ -1343,6 +1348,14 @@ ZPLGM[EXTENDED_GLOB]=""
     (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
 
     if [[ "${+__sice[svn]}" = "1" || -e "$__s_path" ]]; then
+        if (( !is_snippet && ${+__sice[svn]} == 1 )); then
+            print -r -- "The \`svn' ice is given, but the argument ($__URL) is a plugin"
+            print -r -- "(\`svn' can be used only with snippets)"
+            return 1
+        elif (( !is_snippet )); then
+            print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zplugin/issues"
+            return 1
+        fi
         if [[ -e "$__s_path" ]]; then
             __sice[svn]=""
             __local_dir="$__s_path"
