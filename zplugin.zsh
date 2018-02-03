@@ -978,7 +978,7 @@ builtin setopt noaliases
     local_dir="${${${${local_dir//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dir="${ZPLGM[SNIPPETS_DIR]}/${local_dir%${ZPLG_ICE[svn]---$filename0}}${ZPLG_ICE[svn]-/$filename0}"
 
-    ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+1}:-0}>"
+    ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+svn}:-file}>"
 
     # Download or copy the file
     if [[ -n "${opts[(r)-f]}" || ! -e "$local_dir/$filename" ]]; then
