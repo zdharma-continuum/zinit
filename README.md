@@ -244,7 +244,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
     like in the example above. One can load `Prezto` module as single file snippet, or use Subversion
     to download whole directory (see also description of [Ice Modifiers](#ice-modifiers)):
 
-    ```SystemVerilog
+    ```zsh
     # Single file snippet, URL points to file
 
     zplg snippet PZT::modules/helper/init.zsh
@@ -274,7 +274,7 @@ The `ice` subcommand – modifiers for following single command. `notabug` –�
   - The `times` subcommand now includes statistics on snippets. Also, entries
     are displayed in order of loading:
 
-    ```SystemVerilog
+    ```zsh
     % zplugin times
     Plugin loading times:
     0.010 sec - OMZ::lib/git.zsh
