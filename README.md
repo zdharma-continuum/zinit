@@ -46,6 +46,8 @@ wich allows to manipulate plugins, snippets, etc.
 
 **NEW**: [Gallery of Zplugin Invocations](GALLERY.md)
 
+**NEW**: [Short-text style Wiki](https://github.com/zdharma/zplugin/wiki)
+
 Zplugin is an elastic and fast Zshell plugin manager that will allow you to
 install everything from Github and other sites. For example, in order to install
 [trapd00r/LS_COLORS](https://github.com/trapd00r/LS_COLORS), which isn't a Zsh
