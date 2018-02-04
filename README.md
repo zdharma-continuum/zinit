@@ -632,6 +632,8 @@ Difference with `wait` is that `load`/`unload` are constantly active, not only t
 Note that unloading a plugin needs it to be loaded with tracking (so `zplugin load ...`, not `zplugin light ...`).
 Tracking causes slight slowdown, however this doesn't matter in turbo mode, as Zsh startup isn't slowed down.
 
+See also Wiki on [multiple prompts](https://github.com/zdharma/zplugin/wiki/Multiple-prompts).
+
 # Ice Modifiers
 
 Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
