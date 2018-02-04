@@ -60,7 +60,7 @@ zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh"
 zplugin light trapd00r/LS_COLORS
 ```
 
-Other example: direnv written in Go, requiring building after cloning:
+([explanation](https://github.com/zdharma/zplugin/wiki/LS_COLORS-explanation)). Other example: direnv written in Go, requiring building after cloning:
 
 ```zsh
 # make'!...' -> run make before atclone & atpull
