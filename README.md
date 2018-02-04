@@ -69,7 +69,9 @@ zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%a
 zplugin light direnv/direnv
 ```
 
-Zplugin is the only plugin manager out there currently that has **[Turbo
+([explanation](https://github.com/zdharma/zplugin/wiki/Direnv-explanation)).
+
+Zplugin is currently the only plugin manager out there that has **[Turbo
 Mode](https://github.com/zdharma/zplugin#turbo-mode-zsh--53)** which yields **39-50%
 faster Zsh startup!**
 
