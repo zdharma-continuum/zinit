@@ -149,6 +149,10 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 05-02-2018
+  - I work much on this README however multi-file Wiki might be better to read – it
+    [just has been created](https://github.com/zdharma/zplugin/wiki).
+
 * 16-01-2018
   - New ice-mod `compile` which takes pattern to select additional files to compile, e.g.
     `zplugin ice compile"(hsmw-*|history-*)"` (for `zdharma/history-search-multi-word` plugin).
