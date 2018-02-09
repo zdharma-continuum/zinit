@@ -2418,5 +2418,8 @@ compiled                 - list plugins that are compiled
 cdlist                   - show compdef replay list
 cdreplay [-q]            - replay compdefs (to be done after compinit), -q - quiet
 cdclear [-q]             - clear compdef replay list, -q - quiet
-srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell"
+srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
+
+Available ice-modifiers: proto from depth if wait load unload blockf pick bpick src as
+                         ver silent svn mv cp atinit atclone atload atpull make service"
 } # }}}
