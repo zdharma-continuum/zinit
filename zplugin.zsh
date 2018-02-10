@@ -1656,6 +1656,9 @@ zplugin() {
                (delete)
                    -zplg-delete "$2" "$3"
                    ;;
+               (recall)
+                   -zplg-recall "$2" "$3"
+                   ;;
                (edit)
                    -zplg-edit "$2" "$3"
                    ;;

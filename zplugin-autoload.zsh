@@ -2376,6 +2376,45 @@ ZPLGM[EXTENDED_GLOB]=""
     return 0
 }
 # }}}
+# FUNCTION: -zplg-recall {{{
+-zplg-recall() {
+    local -A ice
+    local el val cand1 cand2 local_dir filename user plugin URL
+
+    local -a ice_order nval_ices output
+    ice_order=( svn proto from depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
+    nval_ices=( blockf silent svn )
+
+    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
+        URL="${1%/}"
+        URL="${${URL#"${URL%%[! $'\t']*}"}%/}"
+    else
+        -zplg-any-to-user-plugin "$1" "$2"
+        user="${reply[-2]}" plugin="${reply[-1]}"
+    fi
+
+    -zplg-compute-ice "${${user:+$user/$plugin}:-$URL}" "pack" ice local_dir filename || return 1
+
+    [[ -e "$local_dir" ]] && {
+        for el in "${ice_order[@]}"; do
+            val="${ice[$el]}"
+            cand1="${(qqq)val}"
+            cand2="${(qq)val}"
+            if [[ -n "$val" ]]; then
+                [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
+            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = "make" ) ]]; then
+                output+=( "$el" )
+            fi
+        done
+
+        if [[ "${#output}" = 0 ]]; then
+            print -zr "# No Ice modifiers"
+        else
+            print -zr "zplugin ice ${output[*]}; zplugin "
+        fi
+    } || print -r -- "No such plugin or snippet"
+}
+# }}}
 
 #
 # Help function
@@ -2429,6 +2468,7 @@ cdlist                   - show compdef replay list
 cdreplay [-q]            - replay compdefs (to be done after compinit), -q - quiet
 cdclear [-q]             - clear compdef replay list, -q - quiet
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
+recall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - fetch ice modifiers and construct zplugin command
 
 Available ice-modifiers: proto from depth if wait load unload blockf pick bpick src as
                          ver silent svn mv cp atinit atclone atload atpull make service"
