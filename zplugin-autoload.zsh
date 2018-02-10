@@ -2119,7 +2119,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         pushd "$p" >/dev/null
         if [[ -d ".git" ]]; then
-            gitout=`command git log --all --max-count=1 --since=$timespec`
+            gitout=`command git log --all --max-count=1 --since=$timespec 2>/dev/null`
             if [[ -n "$gitout" ]]; then
                 -zplg-any-colorify-as-uspl2 "$uspl1"
                 print -r -- "$REPLY"
