@@ -1998,32 +1998,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-cd() {
     setopt localoptions extendedglob nokshglob noksharrays
-    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
-        local -A sice
-        local -a tmp
-        tmp=( "${(z@)ZPLG_SICE[${1%/}/]}" )
-        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
-
-        -zplg-two-paths "$1"
-        local s_path="${reply[-3]}" _path="${reply[-2]}"
-
-        [[ "${+sice[svn]}" = "1" || -e "$s_path" ]] && {
-            [[ -e "$s_path" ]] && builtin cd "$s_path" || print "No such snippet"
-        } || {
-            [[ -e "$_path" ]] && builtin cd "$_path" || print "No such snippet"
-        }
-    else
-        -zplg-any-to-user-plugin "$1" "$2"
-        local user="${reply[-2]}" plugin="${reply[-1]}"
-
-        -zplg-exists-physically-message "$user" "$plugin" || return 1
-
-        -zplg-shands-exp "$1" "$2" && {
-            builtin cd "$REPLY" || print -r -- "No such plugin or snippet"
-        } || {
-            builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" || print -r -- "No such plugin or snippet"
-        }
-    fi
+    -zplg-get-path "$1" "$2" && [[ -e "$REPLY" ]] && builtin cd "$REPLY" || print -r -- "No such plugin or snippet"
 } # }}}
 # FUNCTION: -zplg-delete {{{
 # Deletes plugin's or snippet's directory (in Zplugin's home directory).
@@ -2364,6 +2339,41 @@ ZPLGM[EXTENDED_GLOB]=""
         list[-1]+=", located at ZPLGM[SNIPPETS_DIR], i.e. ${ZPLGM[SNIPPETS_DIR]}"
         print -rl -- "${list[@]}"
     )
+}
+# }}}
+# FUNCTION -zplg-get-path {{{
+-zplg-get-path() {
+    setopt localoptions extendedglob nokshglob noksharrays
+    REPLY=""
+
+    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
+        local -A sice
+        local -a tmp
+        tmp=( "${(z@)ZPLG_SICE[${1%/}/]}" )
+        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
+
+        -zplg-two-paths "$1"
+        local s_path="${reply[-3]}" _path="${reply[-2]}"
+
+        [[ "${+sice[svn]}" = "1" || -e "$s_path" ]] && {
+            [[ -e "$s_path" ]] && REPLY="$s_path"
+        } || {
+            [[ -e "$_path" ]] && REPLY="$_path"
+        }
+    else
+        -zplg-any-to-user-plugin "$1" "$2"
+        local user="${reply[-2]}" plugin="${reply[-1]}"
+
+        -zplg-exists-physically "$user" "$plugin" || return 1
+
+        -zplg-shands-exp "$1" "$2" && {
+            :
+        } || {
+            REPLY="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        }
+    fi
+
+    return 0
 }
 # }}}
 
