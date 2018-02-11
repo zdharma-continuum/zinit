@@ -2468,7 +2468,7 @@ cdlist                   - show compdef replay list
 cdreplay [-q]            - replay compdefs (to be done after compinit), -q - quiet
 cdclear [-q]             - clear compdef replay list, -q - quiet
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
-recall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - fetch ice modifiers and construct zplugin command
+recall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - fetch saved ice modifiers and construct \`zplugin ice ...' command
 
 Available ice-modifiers: proto from depth if wait load unload blockf pick bpick src as
                          ver silent svn mv cp atinit atclone atload atpull make service"

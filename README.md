@@ -773,6 +773,7 @@ compile {plugin-name}    - compile plugin (or all plugins if --all passed)
 uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; `next' moves the service to another Zshell
+recall {plugin-name|URL} - fetch saved ice modifiers and construct `zplugin ice ...' command
 ```
 
 ### Using Oh-My-Zsh Themes
