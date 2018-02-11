@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh/
-atpull !builtin\ print\ --\ --Added\ Line--\ \>\>!\ git.plugin.zsh\;\ cp\ -vf\ git.plugin.zsh\ git2.plugin.zsh cp git.plugin.zsh\ -\>\ git3.plugin.zsh 
+atpull '!builtin print -- --Added Line-- >>! git.plugin.zsh; cp -vf git.plugin.zsh git2.plugin.zsh' cp 'git.plugin.zsh -> git3.plugin.zsh' 

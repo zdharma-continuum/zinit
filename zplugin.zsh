@@ -990,7 +990,7 @@ builtin setopt noaliases
         -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
 
-    (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
 
     local ZERO=""
     local -a list
@@ -1052,7 +1052,7 @@ builtin setopt noaliases
         fi
         [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path=( "${xpath%/}" ${path[@]} )
         [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
-        [[ -n "${ZPLG_ICE[src]}" || "${ZPLG_ICE[atload][1]}" = "!" ]] && {
+        [[ -z "${opts[(r)-u]}" && ( -n "${ZPLG_ICE[src]}" || "${ZPLG_ICE[atload][1]}" = "!" ) ]] && {
             if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
                 # Shadowing code is inlined from -zplg-shadow-on
                 (( ${+functions[compdef]} )) && ZPLGM[bkp-compdef]="${functions[compdef]}" || builtin unset "ZPLGM[bkp-compdef]"
@@ -1285,16 +1285,8 @@ builtin setopt noaliases
 # why it's called "ice" - it melts), however some ice modifiers can
 # glue to plugin mentioned in the next command.
 -zplg-pack-ice() {
-    (( ${+ZPLG_ICE[atclone]} )) && ZPLG_SICE[$1/$2]+="atclone ${(q)ZPLG_ICE[atclone]} "
-    (( ${+ZPLG_ICE[atpull]} )) && ZPLG_SICE[$1/$2]+="atpull ${(q)ZPLG_ICE[atpull]} "
-    (( ${+ZPLG_ICE[svn]} )) && ZPLG_SICE[$1/$2]+="svn ${(q)ZPLG_ICE[svn]} "
-    (( ${+ZPLG_ICE[mv]} )) && ZPLG_SICE[$1/$2]+="mv ${(q)ZPLG_ICE[mv]} "
-    (( ${+ZPLG_ICE[cp]} )) && ZPLG_SICE[$1/$2]+="cp ${(q)ZPLG_ICE[cp]} "
-    (( ${+ZPLG_ICE[pick]} )) && ZPLG_SICE[$1/$2]+="pick ${(q)ZPLG_ICE[pick]} "
-    (( ${+ZPLG_ICE[bpick]} )) && ZPLG_SICE[$1/$2]+="bpick ${(q)ZPLG_ICE[bpick]} "
-    (( ${+ZPLG_ICE[as]} )) && ZPLG_SICE[$1/$2]+="as ${(q)ZPLG_ICE[as]} "
-    (( ${+ZPLG_ICE[make]} )) && ZPLG_SICE[$1/$2]+="make ${(q)ZPLG_ICE[make]} "
-    (( ${+ZPLG_ICE[compile]} )) && ZPLG_SICE[$1/$2]+="compile ${(q)ZPLG_ICE[compile]} "
+    ZPLG_SICE[$1/$2]+="${(j: :)${(q-kv@)ZPLG_ICE}} "
+    ZPLG_SICE[$1/$2]="${ZPLG_SICE[$1/$2]# }"
     return 0
 } # }}}
 # FUNCTION: -zplg-service {{{

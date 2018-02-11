@@ -1,2 +1,2 @@
-atpull !command\ echo\ local\\\ change\ \>!\ version4 cp LICENSE\ -\>\ LICENSE.bkp 
+atpull '!command echo local\ change >! version4' cp 'LICENSE -> LICENSE.bkp' depth 1 
 psprint/zsh-select

@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh/
-atpull builtin\ print\ --\ --Added\ Line--\ \>\>!\ git.plugin.zsh 
+atpull 'builtin print -- --Added Line-- >>! git.plugin.zsh' 

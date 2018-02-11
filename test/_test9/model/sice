@@ -1,2 +1,2 @@
-atclone builtin\ echo\ \>!\ test_file atpull %atclone 
+atpull %atclone atclone 'builtin echo >! test_file' depth 1 
 psprint/zsh-select

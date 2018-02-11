@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh/
-atclone command\ echo\ \"touch\ \\\$\{ZPLGM\[SNIPPETS_DIR\]\}/load.mark\"\ \>!\ git.plugin.zsh atpull %atclone mv git.plugin.zsh\ -\>\ gp 
+atinit 'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out' atpull %atclone atload 'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out' mv 'git.plugin.zsh -> gp' atclone 'command echo "touch \${ZPLGM[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh' src gp 

@@ -1,2 +1,2 @@
-atpull !command\ cp\ LICENSE\ LICENSE.cpy svn '' cp LICENSE\ -\>\ LICENSE.bkp 
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/
+svn '' atpull '!command cp LICENSE LICENSE.cpy' cp 'LICENSE -> LICENSE.bkp' 

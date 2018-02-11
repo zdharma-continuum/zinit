@@ -1,2 +1,2 @@
-atpull command\ chmod\ -x\ zsh-select 
+atpull 'command chmod -x zsh-select' depth 1 
 psprint/zsh-select

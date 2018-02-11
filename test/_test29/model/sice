@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh/
-atclone builtin\ echo\ \>!\ test_file atpull %atclone 
+atpull %atclone atclone 'builtin echo >! test_file' 

@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh/
-atclone command\ echo\ \"touch\ \\\$\{ZPLGM\[PLUGINS_DIR\]\}/error.mark\"\ \>!\ git.plugin.zsh atpull %atclone cp git.plugin.zsh\ -\>\ gp pick git.plugin.zsh as command 
+as command pick git.plugin.zsh atinit 'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out' atpull %atclone atload 'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out' atclone 'command echo "touch \${ZPLGM[PLUGINS_DIR]}/error.mark" >! git.plugin.zsh' cp 'git.plugin.zsh -> gp' src gp 

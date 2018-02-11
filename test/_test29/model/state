@@ -28,7 +28,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'git.plugin.zsh <file>'
-ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh/' 'atclone builtin\ echo\ \>!\ test_file atpull %atclone '
+ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh/' 'atpull %atclone atclone '\''builtin echo >! test_file'\''  '
 ZPLG_FUNCTIONS: 
 ZPLG_OPTIONS: 
 ZPLG_PATH: 
