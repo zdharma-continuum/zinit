@@ -1275,7 +1275,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
 } # }}}
@@ -1353,7 +1353,7 @@ builtin setopt noaliases
         elif [[ "$__tpe" = "p1" || "$__tpe" = "s1" ]]; then
             zpty -b "${__id//\//:}" '-zplg-service '"${(M)__tpe#?}"' "$__mode" "$__id"'
         fi
-        (( ${+ZPLG_ICE[silent]} == 0 )) && zle && zle -M "Loaded $__id"
+        (( ${+ZPLG_ICE[silent]} == 0 && ${+ZPLG_ICE[lucid]} == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ "$__action" = *remove ]]; then
         (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
         [[ "$__tpe" = "p" ]] && -zplg-unload "$__id" "" "-q"
