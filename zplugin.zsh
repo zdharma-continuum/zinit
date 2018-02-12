@@ -1285,7 +1285,7 @@ builtin setopt noaliases
 # why it's called "ice" - it melts), however some ice modifiers can
 # glue to plugin mentioned in the next command.
 -zplg-pack-ice() {
-    ZPLG_SICE[$1/$2]+="${(j: :)${(q-kv@)ZPLG_ICE}} "
+    ZPLG_SICE[$1/$2]+="${(j: :)${(q-kv)ZPLG_ICE[@]}} "
     ZPLG_SICE[$1/$2]="${ZPLG_SICE[$1/$2]# }"
     return 0
 } # }}}
