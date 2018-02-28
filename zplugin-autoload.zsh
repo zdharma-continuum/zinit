@@ -1491,13 +1491,13 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local infoc="${ZPLGM[col-info2]}"
 
-    print "Zplugin's main directory: ${infoc}${ZPLGM[HOME_DIR]}${reset_color}"
-    print "Zplugin's binary directory: ${infoc}${ZPLGM[BIN_DIR]}${reset_color}"
-    print "Plugin directory: ${infoc}${ZPLGM[PLUGINS_DIR]}${reset_color}"
-    print "Completions directory: ${infoc}${ZPLGM[COMPLETIONS_DIR]}${reset_color}"
+    print "Zplugin's main directory: ${infoc}${ZPLGM[HOME_DIR]}${ZPLGM[col-rst]}"
+    print "Zplugin's binary directory: ${infoc}${ZPLGM[BIN_DIR]}${ZPLGM[col-rst]}"
+    print "Plugin directory: ${infoc}${ZPLGM[PLUGINS_DIR]}${ZPLGM[col-rst]}"
+    print "Completions directory: ${infoc}${ZPLGM[COMPLETIONS_DIR]}${ZPLGM[col-rst]}"
 
     # Without _zlocal/zplugin
-    print "Loaded plugins: ${infoc}$(( ${#ZPLG_REGISTERED_PLUGINS[@]} - 1 ))${reset_color}"
+    print "Loaded plugins: ${infoc}$(( ${#ZPLG_REGISTERED_PLUGINS[@]} - 1 ))${ZPLGM[col-rst]}"
 
     # Count light-loaded plugins
     integer light=0
@@ -1506,28 +1506,28 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ "$s" = 1 ]] && (( light ++ ))
     done
     # Without _zlocal/zplugin
-    print "Light loaded: ${infoc}$(( light - 1 ))${reset_color}"
+    print "Light loaded: ${infoc}$(( light - 1 ))${ZPLGM[col-rst]}"
 
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
     plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
-    print "Downloaded plugins: ${infoc}$(( ${#plugins[@]} - 1 ))${reset_color}"
+    print "Downloaded plugins: ${infoc}$(( ${#plugins[@]} - 1 ))${ZPLGM[col-rst]}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
     completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
-    print "Enabled completions: ${infoc}${#completions[@]}${reset_color}"
+    print "Enabled completions: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Number of disabled completions, with _zlocal/zplugin
     completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
-    print "Disabled completions: ${infoc}${#completions[@]}${reset_color}"
+    print "Disabled completions: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Number of completions existing in all plugins
     completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
-    print "Completions available overall: ${infoc}${#completions[@]}${reset_color}"
+    print "Completions available overall: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Enumerate snippets loaded
-    print "Snippets loaded: ${infoc}${(j:, :onv)ZPLG_SNIPPETS[@]}${reset_color}"
+    print "Snippets loaded: ${infoc}${(j:, :onv)ZPLG_SNIPPETS[@]}${ZPLGM[col-rst]}"
 
     # Number of compiled plugins
     typeset -a matches m
@@ -1544,7 +1544,7 @@ ZPLGM[EXTENDED_GLOB]=""
         fi
     done
 
-    print "Compiled plugins: ${infoc}$count${reset_color}"
+    print "Compiled plugins: ${infoc}$count${ZPLGM[col-rst]}"
 } # }}}
 # FUNCTION: -zplg-show-times {{{
 # Shows loading times of all loaded plugins.
@@ -1885,7 +1885,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
             # Adjust for escape code (nasty, utilizes fact that
             # ${ZPLGM[col-rst]} is used twice, so as a $ZPLG_COL)
-            integer adjust_ec=$(( ${#reset_color} * 2 + ${#ZPLGM[col-uname]} + ${#ZPLGM[col-pname]} ))
+            integer adjust_ec=$(( ${#ZPLGM[col-rst]} * 2 + ${#ZPLGM[col-uname]} + ${#ZPLGM[col-pname]} ))
 
             print "${(r:longest+adjust_ec:: :)REPLY} ${(j:, :)completions}"
         fi

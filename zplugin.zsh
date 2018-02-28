@@ -1219,7 +1219,7 @@ builtin setopt noaliases
 # Starts Dtrace, i.e. session tracking for changes in Zsh state.
 -zplg-debug-start() {
     if [[ "${ZPLGM[DTRACE]}" = "1" ]]; then
-        print "${ZPLGM[col-error]}Dtrace is already active, stop it first with \`dstop'$reset_color"
+        print "${ZPLGM[col-error]}Dtrace is already active, stop it first with \`dstop'${ZPLGM[col-rst]}"
         return 1
     fi
 
