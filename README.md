@@ -35,6 +35,7 @@
 - [Ignoring Compdefs](#ignoring-compdefs)
 - [Non-Github (Local) Plugins](#non-github-local-plugins)
 - [Customizing Paths](#customizing-paths)
+- [Hint: extending Git](#hint-extending-git)
 - [IRC Channel](#irc-channel)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -910,6 +911,36 @@ local -A ZPLGM  # initial Zplugin's hash definition, then:
 | ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"     |
 | ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
 | ZPLGM[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. it's name can be different) |
+
+There is also `$ZPFX`, set by default to `~/.zplugin/polaris` – a directory
+where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
+
+# Hint: extending Git
+
+There are several projects that provide git extensions. Installing them with
+Zplugin has many benefits:
+
+ - all files are under `$HOME` – no administrator rights needed,
+ - declarative setup (like Chef or Puppet) – copying `.zshrc` to different account
+   brings also git-related setup,
+ - easy update by e.g. `zplugin update --all`.
+
+Below is a configuration that adds multiple git extensions, loaded in Turbo Mode,
+two seconds after prompt:
+
+```zsh
+zplugin ice wait"2" lucid as"program" pick"bin/git-dsf"
+zplugin light zdharma/zsh-diff-so-fancy
+zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-now" make"prefix=$ZPFX install"
+zplugin light iwata/git-now
+zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX"
+zplugin light tj/git-extras
+zplugin ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \
+            make'install' pick"$ZPFX/bin/git-cal"
+zplugin light k4rthik/git-cal
+```
+
+Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
 
 # IRC Channel
 Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
