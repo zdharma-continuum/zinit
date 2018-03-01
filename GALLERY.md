@@ -33,6 +33,9 @@ zplugin light mptre/yank
 zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zplugin light tj/git-extras
 
+zplg ice as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' make'install' pick"$ZPFX/bin/git-cal"
+zplg light k4rthik/git-cal
+
 zplugin ice as"program" cp"wd.sh -> wd" pick"wd"
 zplugin light mfaerevaag/wd
 
