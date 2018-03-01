@@ -121,9 +121,9 @@ zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull
 
 # Scripts that are built at install (there's single default make target, "install", and
 # it constructs scripts by cat-ting a few files). The make ice could also be:
-# `make"install PREFIX=${ZPLGM[HOME_DIR]}/cmd"`, if "install" wouldn't be default target
+# `make"install PREFIX=$ZPFX"`, if "install" wouldn't be default target
 
-zplugin ice as"program" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
+zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zplugin light tj/git-extras
 
 zplugin light zsh-users/zsh-autosuggestions

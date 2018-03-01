@@ -30,7 +30,7 @@ zplugin light mptre/yank
 
 # Scripts
 
-zplugin ice as"program" pick"${ZPLGM[HOME_DIR]}/cmd/bin/git-*" make"PREFIX=${ZPLGM[HOME_DIR]}/cmd"
+zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zplugin light tj/git-extras
 
 zplugin ice as"program" cp"wd.sh -> wd" pick"wd"
