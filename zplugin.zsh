@@ -1456,9 +1456,9 @@ zplugin() {
            else
                if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
                    ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
-                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "$2" "$3"
+                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${2#https://github.com/}" "$3"
                else
-                   -zplg-load "$2" "$3" "${1/load/}"
+                   -zplg-load "${2#https://github.com/}" "$3" "${1/load/}"
                fi
            fi
            ;;
