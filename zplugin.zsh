@@ -1729,6 +1729,9 @@ ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 # Add completions directory to fpath
 fpath=( "${ZPLGM[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
+# Set up $ZPFX
+export MANPATH=$MANPATH:$ZPFX/share/man
+
 # Colorize completions for commands unload, report, creinstall, cuninstall
 zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==1;35=1;33'
 zstyle ':completion:*:zplugin:argument-rest:plugins' matcher 'r:|=** l:|=*'
