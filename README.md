@@ -150,6 +150,14 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 02-03-2018
+  - Zplugin exports `$ZPFX` parameter. Its default value is `~/.zplugin/polaris` (user can
+    override it before sourcing Zplugin). This directory is like `/usr/local`, a prefix
+    for installed software, so it's possible to use ice like `make"PREFIX=$ZPFX"` or
+    `atclone"./configure --prefix=$ZPFX"`. Zplugin also setups `$MANPATH` pointing to the
+    `polaris` directory. Checkout [gallery](GALLERY.md) for examples.
+  - [New README section](#hint-extending-git) about extending Git with Zplugin.
+
 * 05-02-2018
   - I work much on this README however multi-file Wiki might be better to read – it
     [just has been created](https://github.com/zdharma/zplugin/wiki).
