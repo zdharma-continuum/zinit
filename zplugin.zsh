@@ -888,6 +888,8 @@ builtin setopt noaliases
         command mkdir 2>/dev/null "${ZPLGM[HOME_DIR]}"
         # For compaudit
         command chmod go-w "${ZPLGM[HOME_DIR]}"
+        # Also set up */bin and ZPFX in general
+        command mkdir 2>/dev/null -p ${ZPFX}/bin
     }
     [[ ! -d "${ZPLGM[PLUGINS_DIR]}/_local---zplugin" ]] && {
         command mkdir -p "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
