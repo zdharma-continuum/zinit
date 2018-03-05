@@ -1701,7 +1701,7 @@ zplugin() {
     esac
 } # }}}
 # FUNCTION: zpcdreplay {{{
-zcdreplay() { -zplg-compdef-replay -q; }
+zpcdreplay() { -zplg-compdef-replay -q; }
 # }}}
 # FUNCTION: zpcompinit {{{
 zpcompinit() { autoload compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}; }
