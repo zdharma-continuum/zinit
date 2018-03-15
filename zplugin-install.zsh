@@ -102,6 +102,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
                 return 1
         esac
+
+        if [[ -n "${ZPLG_ICE[ver]}" ]]; then
+            command git -C "$local_path" checkout "${ZPLG_ICE[ver]}"
+        fi
     fi
 
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
