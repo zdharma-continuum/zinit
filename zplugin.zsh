@@ -1037,7 +1037,7 @@ builtin setopt noaliases
             (( 1 ))
         } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || echo "Snippet not loaded ($save_url)"; }
 
-        [[ -n "${ZPLG_ICE[src]}" ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}"; }
+        [[ -n "${ZPLG_ICE[src]}" ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}"; }
         (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
@@ -1067,7 +1067,7 @@ builtin setopt noaliases
                 (( ++ ZPLGM[SHADOWING] ))
             fi
             if [[ -n "${ZPLG_ICE[src]}" ]]; then
-                (( ${+ZPLG_ICE[silent]} )) && { builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}";
+                (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}";
             fi
             (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
@@ -1160,7 +1160,7 @@ builtin setopt noaliases
         }
         [[ -n "${reply[1-correct]}" && ! -x "${reply[1-correct]}" ]] && command chmod a+x ${reply[@]}
 
-        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_orig/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_orig/${ZPLG_ICE[src]}"; }
+        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; }
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { local __oldcd="$PWD"; builtin cd "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
     else
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
@@ -1194,7 +1194,7 @@ builtin setopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         builtin setopt noaliases
         (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_path/$fname" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_path/$fname"
-        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_orig/${ZPLG_ICE[src]}" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_orig/${ZPLG_ICE[src]}"; }
+        [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; }
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { local __oldcd="$PWD"; builtin cd "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
         builtin unsetopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
