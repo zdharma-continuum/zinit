@@ -1742,7 +1742,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         (( ++ flcur ))
         flper=$(( flcur / flmax * 100 ))
-        print -n -- "\r${flper}% "
+        print -u 2 -n -- "\r${flper}% "
     done
 
     for o in "${(k@)owner_to_group}"; do
@@ -1753,7 +1753,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
     packs=( "${(on@)packs}" )
 
-    print # newline after percent
+    print -u 2 # newline after percent
 
     # Find longest completion name
     integer longest=0
