@@ -702,6 +702,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # User-action entry point.
 -zplg-self-update() {
     ( builtin cd "${ZPLGM[BIN_DIR]}" && command git pull )
+    builtin print -- "Compiling Zplugin (zcompile)..."
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-install.zsh
