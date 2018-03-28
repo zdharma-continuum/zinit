@@ -701,7 +701,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-self-update() {
-    ( builtin cd "${ZPLGM[BIN_DIR]}" && command git pull )
+    ( builtin cd -q "${ZPLGM[BIN_DIR]}" && command git pull )
     builtin print -- "Compiling Zplugin (zcompile)..."
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
@@ -1189,7 +1189,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     if [[ "$st" = "status" ]]; then
-        ( builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
+        ( builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
         return 0
     fi
 
@@ -1220,14 +1220,14 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${ice[is_release]/\/$REPLY\//}" != "${ice[is_release]}" ]]; then
                 print -r -- "Binary release already up to date (version: $REPLY)"
             else
-                [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                 ZPLG_ICE=( "${(kv@)ice}" )
                 -zplg-setup-plugin-dir "$user" "$plugin" "-u"
                 ZPLG_ICE=()
             fi
         else
-            ( builtin cd "$local_dir" || return 1
+            ( builtin cd -q "$local_dir" || return 1
               command git fetch --quiet && \
                 command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
                 command tee .zplugin_lstupd | \
@@ -1236,7 +1236,7 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
-                  [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                  [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
               }
 
               command git pull --no-stat; )
@@ -1252,7 +1252,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -z "${ice[is_release]}" && -n "${ice[mv]}" ]]; then
                 local from="${ice[mv]%%[[:space:]]#->*}" to="${ice[mv]##*->[[:space:]]#}"
                 local -a afr
-                ( builtin cd "$local_dir" || return 1
+                ( builtin cd -q "$local_dir" || return 1
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
@@ -1261,14 +1261,14 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ -z "${ice[is_release]}" && -n "${ice[cp]}" ]]; then
                 local from="${ice[cp]%%[[:space:]]#->*}" to="${ice[cp]##*->[[:space:]]#}"
                 local -a afr
-                ( builtin cd "$local_dir" || return 1
+                ( builtin cd -q "$local_dir" || return 1
                   afr=( ${~from}(N) )
                   [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
 
             [[ ${+ice[make]} = 1 && ${ice[make]} = "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}
-            [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( builtin cd "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
+            [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
         }
 
@@ -1292,11 +1292,11 @@ ZPLGM[EXTENDED_GLOB]=""
     if [[ "$st" = "status" ]]; then
         if (( ${+ZPLG_ICE[svn]} )); then
             print -r -- "${ZPLGM[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZPLGM[col-rst]}"
-            ( builtin cd "$local_dir"; command svn status -vu )
+            ( builtin cd -q "$local_dir"; command svn status -vu )
             print
         else
             print -r -- "${ZPLGM[col-info]}Status for ${${local_dir:h}##*--}/$filename${ZPLGM[col-rst]}"
-            ( builtin cd "$local_dir"; command ls -lth $filename )
+            ( builtin cd -q "$local_dir"; command ls -lth $filename )
             print
         fi
     else
@@ -1475,7 +1475,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         if [[ "$st" = "status" ]]; then
             print "\nStatus for plugin $REPLY"
-            ( builtin cd "$repo"; command git status )
+            ( builtin cd -q "$repo"; command git status )
         else
             print "\nUpdating plugin $REPLY"
             -zplg-update-or-status "update" "$user" "$plugin"
@@ -2066,7 +2066,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     (
-        builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && \
+        builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && \
         command git log -p --graph --decorate --date=relative -C -M
     )
 } # }}}
@@ -2143,7 +2143,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     fi
 
-    builtin cd "${ZPLGM[PLUGINS_DIR]}"
+    builtin cd -q "${ZPLGM[PLUGINS_DIR]}"
 
     if [[ "$user" != "_local" ]]; then
         print "${ZPLGM[col-info]}Creating Github repository${ZPLGM[col-rst]}"
@@ -2153,11 +2153,11 @@ ZPLGM[EXTENDED_GLOB]=""
             print "${ZPLGM[col-error]}Bad credentials?${ZPLGM[col-rst]}"
             return 1
         }
-        builtin cd "${user}---${plugin}"
+        builtin cd -q "${user}---${plugin}"
     else
         print "${ZPLGM[col-info]}Creating local git repository${ZPLGM[col-rst]}"
         command mkdir "${user}---${plugin}"
-        builtin cd "${user}---${plugin}"
+        builtin cd -q "${user}---${plugin}"
         command git init || {
             print "Git repository initialization failed, aborting"
             return 1
@@ -2241,7 +2241,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-    # builtin cd "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    # builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
     -zplg-first "$1" "$2" || {
         print "${ZPLGM[col-error]}No source file found, cannot edit${ZPLGM[col-rst]}"
         return 1
@@ -2322,7 +2322,7 @@ ZPLGM[EXTENDED_GLOB]=""
     }
     (
         setopt localoptions extendedglob nokshglob noksharrays
-        cd "${ZPLGM[SNIPPETS_DIR]}"
+        builtin cd -q "${ZPLGM[SNIPPETS_DIR]}"
         local -a list
         list=( "${(f@)"$(LANG=en_US.utf-8 tree -L 3 --charset utf-8)"}" )
         # Oh-My-Zsh single file

@@ -938,7 +938,7 @@ builtin setopt noaliases
         fi
     fi
 
-    (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; builtin cd "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}}" && eval "${ZPLG_ICE[atinit]}"; builtin cd -q "$__oldcd"; }
 
     -zplg-load-plugin "$user" "$plugin" "$mode"
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
@@ -995,7 +995,7 @@ builtin setopt noaliases
         -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
 
-    (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atinit]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atinit]}"; builtin cd -q "$__oldcd"; }
 
     local ZERO=""
     local -a list
@@ -1038,7 +1038,7 @@ builtin setopt noaliases
         } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || echo "Snippet not loaded ($save_url)"; }
 
         [[ -n "${ZPLG_ICE[src]}" ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}"; }
-        (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
+        (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { local __oldcd="$PWD"; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
@@ -1069,7 +1069,7 @@ builtin setopt noaliases
             if [[ -n "${ZPLG_ICE[src]}" ]]; then
                 (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}";
             fi
-            (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
+            (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { local __oldcd="$PWD"; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
         }
     fi
@@ -1077,7 +1077,7 @@ builtin setopt noaliases
     # Updating – not sourcing, etc.
     [[ -n "${opts[(r)-u]}" ]] && return 0
 
-    (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { local __oldcd="$PWD"; builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { local __oldcd="$PWD"; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]}"; builtin cd -q "$__oldcd"; }
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${save_url}]=$SECONDS
@@ -1161,7 +1161,7 @@ builtin setopt noaliases
         [[ -n "${reply[1-correct]}" && ! -x "${reply[1-correct]}" ]] && command chmod a+x ${reply[@]}
 
         [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; }
-        [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { local __oldcd="$PWD"; builtin cd "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
+        [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { local __oldcd="$PWD"; builtin cd -q "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
     else
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
@@ -1195,7 +1195,7 @@ builtin setopt noaliases
         builtin setopt noaliases
         (( ${+ZPLG_ICE[silent]} )) && { builtin source "$pdir_path/$fname" 2>/dev/null 1>&2; ((1)); } || builtin source "$pdir_path/$fname"
         [[ -n ${ZPLG_ICE[src]} ]] && { (( ${+ZPLG_ICE[silent]} )) && { builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}" 2>/dev/null 1>&2; ((1)); } || builtin source "${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; }
-        [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { local __oldcd="$PWD"; builtin cd "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd "$__oldcd"; }
+        [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { local __oldcd="$PWD"; builtin cd -q "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
         builtin unsetopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
@@ -1209,7 +1209,7 @@ builtin setopt noaliases
         fi
     fi
 
-    (( ${+ZPLG_ICE[atload]} )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { local __oldcd="$PWD"; builtin cd "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]}"; builtin cd "$__oldcd"; }
+    (( ${+ZPLG_ICE[atload]} )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { local __oldcd="$PWD"; builtin cd -q "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]}"; builtin cd -q "$__oldcd"; }
 
     # Mark no load is in progress
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""

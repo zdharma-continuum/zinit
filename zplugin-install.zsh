@@ -70,7 +70,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ -d "$local_path" ]] || return 1
 
         (
-            builtin cd "$local_path" || return 1
+            builtin cd -q "$local_path" || return 1
             url="https://github.com${list[1]}"
             print "(Requesting \`${list[1]:t}'...)"
             -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
@@ -111,7 +111,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
         local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
         local -a afr
-        ( builtin cd "$local_path" || return 1
+        ( builtin cd -q "$local_path" || return 1
           afr=( ${~from}(N) )
           [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
@@ -120,7 +120,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ -n "${ZPLG_ICE[cp]}" ]]; then
         local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
         local -a afr
-        ( builtin cd "$local_path" || return 1
+        ( builtin cd -q "$local_path" || return 1
           afr=( ${~from}(N) )
           [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
@@ -139,7 +139,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
-        ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_path" && eval "${ZPLG_ICE[atclone]}"; }; )
+        ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd -q "$local_path" && eval "${ZPLG_ICE[atclone]}"; }; )
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
     fi
 
@@ -260,7 +260,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     if [[ "$update" = "-t" ]]; then
         (
-            cd "$directory"
+            builtin cd -q "$directory"
             local -a out1 out2
             out1=( "${(f@)"$(svn info -r HEAD)"}" )
             out2=( "${(f@)"$(svn info)"}" )
@@ -273,7 +273,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return $?
     fi
     if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
-        ( cd "$directory"
+        ( builtin cd -q "$directory"
           command svn update
           return $? )
     else
@@ -392,7 +392,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     then
         # URL
         (
-            builtin cd "$local_dir" || return 1
+            builtin cd -q "$local_dir" || return 1
             # command rm -rf "$filename"
             print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
@@ -400,7 +400,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 if [[ "$update" = "-u" ]];then
                     # Test if update available
                     -zplg-mirror-using-svn "$url" "-t" "$filename" || return 2
-                    [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( builtin cd "$filename" && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
+                    [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( builtin cd -q "$filename" && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                     # Do the update
                     -zplg-mirror-using-svn "$url" "-u" "$filename" || return 1
                 else
@@ -477,7 +477,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
         local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
         local -a afr
-        ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" || return 1
+        ( builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" || return 1
           afr=( ${~from}(N) )
           [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
@@ -486,7 +486,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if [[ -n "${ZPLG_ICE[cp]}" ]]; then
         local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
         local -a afr
-        ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" || return 1
+        ( builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" || return 1
           afr=( ${~from}(N) )
           [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
         )
@@ -495,9 +495,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
 
     if [[ "$update" = "-u" ]];then
-        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
+        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
     else
-        ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atclone]}"; } )
+        ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atclone]}"; } )
     fi
 
     [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
