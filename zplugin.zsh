@@ -995,9 +995,10 @@ builtin setopt noaliases
         -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
 
+    local ZERO="$local_dir${ZPLG_ICE[svn]+/$filename}"
+
     (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && eval "${ZPLG_ICE[atinit]}"; builtin cd -q "$__oldcd"; }
 
-    local ZERO=""
     local -a list
     if [[ -z "${opts[(r)-u]}" && -z "${opts[(r)--command]}" && "${ZPLG_ICE[as]}" != "command" ]]; then
         # Source the file with compdef shadowing
@@ -1137,14 +1138,14 @@ builtin setopt noaliases
 # $2 - plugin
 # $3 - mode (light or load)
 -zplg-load-plugin() {
-    local user="$1" plugin="$2" mode="$3" correct=0 ZERO=""
+    local user="$1" plugin="$2" mode="$3" correct=0
     ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin"
     ZPLGM[CUR_USPL2]="${user}/${plugin}"
     [[ -o ksharrays ]] && correct=1
 
     local pbase="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
     [[ "$user" = "%" ]] && local pdir_path="$plugin" || local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
-    local pdir_orig="$pdir_path"
+    local pdir_orig="$pdir_path" ZERO="$pdir_path"
 
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
