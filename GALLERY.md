@@ -54,6 +54,10 @@ zplugin snippet OMZ::lib
 
 # Themes
 
+GEOMETRY_COLOR_DIR=152
+zplugin ice wait"0" lucid atload"prompt_geometry_render"
+zplugin light geometry-zsh/geometry
+
 zplugin ice pick"async.zsh" src"pure.zsh"
 zplugin light sindresorhus/pure
 
