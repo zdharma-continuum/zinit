@@ -31,7 +31,7 @@
 - [Usage](#usage)
     - [Using Oh-My-Zsh Themes](#using-oh-my-zsh-themes)
 - [Calling compinit](#calling-compinit)
-  - [Turbo-loading completions](#turbo-loading-completions)
+  - [Turbo-loading completions & calling compinit](#turbo-loading-completions--calling-compinit)
 - [Ignoring Compdefs](#ignoring-compdefs)
 - [Non-Github (Local) Plugins](#non-github-local-plugins)
 - [Customizing Paths](#customizing-paths)
@@ -836,7 +836,8 @@ zplugin light NicoSantangelo/Alpharized
 
 # Calling compinit
 
-Compinit can be called after loading of all plugins and before possibly calling `cdreplay`.
+With no turbo mode in use, compinit can be called after loading of all plugins and before
+possibly calling `zplugin cdreplay`.
 `Zplugin` takes control over completions, symlinks them to `~/.zplugin/completions` and adds
 this directory to `$FPATH`. You manage those completions via commands starting with `c`:
 `csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`.
@@ -861,12 +862,13 @@ This allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
-## Turbo-loading completions
+## Turbo-loading completions & calling compinit
 
 If you load completions using `wait''` mode then you can add `atinit'zpcompinit'` to syntax-highlighting
 plugin (which should be the last one), or `atload'zpcompinit'` to last completion-related plugin. `zpcompinit`
 is a function that runs `autoload compinit; compinit`. There's also `zpcdreplay`, so you can also do:
-`atinit'zpcompinit; zpcdreplay'`, etc.
+`atinit'zpcompinit; zpcdreplay'`, etc. Basically, it's the same as normal compinit call, but it is done
+in `atinit` or `atload` hook of last related plugin.
 
 # Ignoring Compdefs
 
