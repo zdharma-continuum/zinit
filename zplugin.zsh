@@ -6,6 +6,7 @@
 #
 
 typeset -gaH ZPLG_REGISTERED_PLUGINS ZPLG_TASKS ZPLG_RUN
+typeset -ga LOADED_PLUGINS
 ZPLG_TASKS=( "<no-data>" )
 # Snippets loaded, url -> file name
 typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE
@@ -937,6 +938,9 @@ builtin setopt noaliases
             return
         fi
     fi
+
+    # Support Zsh plugin standard
+    LOADED_PLUGINS+=( "$user/$plugin" )
 
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}}" && eval "${ZPLG_ICE[atinit]}"; builtin cd -q "$__oldcd"; }
 
