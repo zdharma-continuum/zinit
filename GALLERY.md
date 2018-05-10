@@ -28,6 +28,9 @@ zplugin light b4b4r07/gotcha
 zplugin ice as"program" pick"yank" make
 zplugin light mptre/yank
 
+zplugin ice wait"2" lucid as'command' pick'src/vramsteg' atclone'cmake .' atpull'%atclone' make  # use turbo-mode
+zplugin light psprint/vramsteg-zsh
+
 # Scripts
 
 zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
