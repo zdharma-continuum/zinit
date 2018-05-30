@@ -1048,6 +1048,7 @@ builtin setopt noaliases
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
         # Subversion - directory and multiple files possible
+        ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
         if (( ${+ZPLG_ICE[svn]} )); then
             if [[ -n ${ZPLG_ICE[pick]} ]]; then
                 list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
@@ -1155,6 +1156,7 @@ builtin setopt noaliases
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
+            ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
             [[ -n "${reply[1-correct]}" ]] && pdir_path="${reply[1-correct]:h}"
         fi
