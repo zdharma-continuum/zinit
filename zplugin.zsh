@@ -1048,7 +1048,6 @@ builtin setopt noaliases
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
         # Subversion - directory and multiple files possible
-        ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
         if (( ${+ZPLG_ICE[svn]} )); then
             if [[ -n ${ZPLG_ICE[pick]} ]]; then
                 list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
@@ -1156,7 +1155,6 @@ builtin setopt noaliases
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
-            ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
             [[ -n "${reply[1-correct]}" ]] && pdir_path="${reply[1-correct]:h}"
         fi
@@ -1294,6 +1292,7 @@ builtin setopt noaliases
         [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
+    ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
 # Remembers long-live ICE specs, assigns them to concrete plugin.
