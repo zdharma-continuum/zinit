@@ -1782,7 +1782,11 @@ ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 fpath=( "${ZPLGM[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
 # Set up $ZPFX
-export MANPATH=$MANPATH:$ZPFX/share/man
+if [[ $(uname -a) =~ "^SunOS.*" ]] && [[ -z $MANPATH ]]; then
+  export MANPATH=/usr/share/man:$ZPFX/share/man
+else
+  export MANPATH=$MANPATH:$ZPFX/share/man
+fi
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
 zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==1;35=1;33'
