@@ -29,7 +29,7 @@ curl: test21 test22 test23 test24 test25 test26 test27 test29 test30 \
 general: test100 test101 test102
 
 prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh
-	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin .
+	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin ../git-process-output.zsh .
 	rm -rf data
 	@: ./bin/zsd-transform -q zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh
 	@: mv zsdoc/data .
