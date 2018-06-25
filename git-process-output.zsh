@@ -10,25 +10,30 @@ local first=1
 print_my_line() {
     (( first == 0 )) && print -n $'\015'
     first=0
-    print -nr -- "OBJ: $1, PACKED: $2/$3, RECEIVING: $4%, RESOLVING: $5%           "
+    print -nr -- "OBJ: $1, PACKED: $2/$3${${4:#...}:+, RECEIVING: $4%}${${5:#...}:+, RESOLVING: $5%}           "
 }
 
-integer have_1_counting=0 have_2_total=0 have_3_receiving=0 have_4_deltas=0
-integer counting_1=0 total_2=0 total_packed_2=0 receiving_3=0 deltas_4=0
+print_my_line_compress() {
+    (( first == 0 )) && print -n $'\015'
+    first=0
+    print -nr -- "OBJ: $1, PACKED: $2/$3, COMPRESS: $4%                            "
+}
+
+integer have_1_counting=0 have_2_total=0 have_3_receiving=0 have_4_deltas=0 have_5_compress=0
+integer counting_1=0 total_2=0 total_packed_2=0 receiving_3=0 deltas_4=0 compress_5=0
 
 IFS=''
-local delim=$'\n'
+local delim=$'\r'
 
-while read -rd$delim line; do
+tr '\n' '\r' | while read -rd$delim line; do
     if [[ "$line" = "Cloning into"* ]]; then
         print $line
     fi
     if [[ "$line" = (#b)"remote: Counting objects:"[\ ]#([0-9]##)(*) ]]; then
         have_1_counting=1
         counting_1="${match[1]}"
-        delim=$'\015'
     fi
-    if [[ "$line" = (#b)"remote: Total"[\ ]#([0-9]##)*"pack-reused"[\ ]#([0-9]##)* ]]; then
+    if [[ "$line" = (#b)*"remote: Total"[\ ]#([0-9]##)*"pack-reused"[\ ]#([0-9]##)* ]]; then
         have_2_total=1
         total_2="${match[1]}" total_packed_2="${match[2]}"
     fi
@@ -40,12 +45,23 @@ while read -rd$delim line; do
         have_4_deltas=1
         deltas_4="${match[1]}"
     fi
+    if [[ "$line" = (#b)"remote: Compressing objects:"[\ ]#([0-9]##)"%"(*) ]]; then
+        have_5_compress=1
+        compress_5="${match[1]}"
+    fi
 
-    print_my_line "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
-                  "${${${(M)have_2_total:#1}:+$total_2}:-...}" \
-                  "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
-                  "${${${(M)have_3_receiving:#1}:+$receiving_3}:-...}" \
-                  "${${${(M)have_4_deltas:#1}:+$deltas_4}:-...}"
+    if (( have_5_compress )); then
+        print_my_line_compress "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
+                               "${${${(M)have_2_total:#1}:+$total_2}:-...}" \
+                               "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
+                               "${${${(M)have_5_compress:#1}:+$compress_5}:-...}"
+    else
+        print_my_line "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
+                      "${${${(M)have_2_total:#1}:+$total_2}:-...}" \
+                      "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
+                      "${${${(M)have_3_receiving:#1}:+$receiving_3}:-...}" \
+                      "${${${(M)have_4_deltas:#1}:+$deltas_4}:-...}"
+    fi
 done
 
 print
