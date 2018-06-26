@@ -10,13 +10,13 @@ local first=1
 print_my_line() {
     (( first == 0 )) && print -n $'\015'
     first=0
-    print -nr -- "OBJ: $1, PACKED: $2/$3${${4:#...}:+, RECEIVING: $4%}${${5:#...}:+, RESOLVING: $5%}           "
+    print -nr -- "OBJ: $1, PACKED: $2/$3${${4:#...}:+, RECEIVING: $4%}${${5:#...}:+, RESOLVING: $5%}          "
 }
 
 print_my_line_compress() {
     (( first == 0 )) && print -n $'\015'
     first=0
-    print -nr -- "OBJ: $1, PACKED: $2/$3, COMPRESS: $4%                            "
+    print -nr -- "OBJ: $1, PACKED: $2/$3, COMPRESS: $4%${${5:#...}:+, RECEIVING: $5%}          "
 }
 
 integer have_1_counting=0 have_2_total=0 have_3_receiving=0 have_4_deltas=0 have_5_compress=0
@@ -54,7 +54,8 @@ tr '\n' '\r' | while read -rd$delim line; do
         print_my_line_compress "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
                                "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
                                "${${${(M)have_2_total:#1}:+$total_2}:-...}" \
-                               "${${${(M)have_5_compress:#1}:+$compress_5}:-...}"
+                               "${${${(M)have_5_compress:#1}:+$compress_5}:-...}" \
+                               "${${${(M)have_3_receiving:#1}:+$receiving_3}:-...}"
     else
         print_my_line "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
                       "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
