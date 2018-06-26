@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+emulate -LR zsh -o typesetsilent -o extendedglob -o warncreateglobal
+
 local first=1
 
 # $1 - n. of objects
