@@ -38,7 +38,7 @@ internet_mock_git() {
     local -a args
     args=( "$@" )
 
-    builtin zparseopts -E -D -A opts -recursive -depth: || { echo "Incorrect options given to git mock function"; return 1; }
+    builtin zparseopts -E -D -A opts -recursive -progress -depth: || { echo "Incorrect options given to git mock function"; return 1; }
 
     if [[ "$1" = "clone" ]]; then
         local -A urlmap
@@ -48,7 +48,7 @@ internet_mock_git() {
         URL="${urlmap[$URL]}"
         local local_dir="$3"
 
-        command git clone -q ${opts[--recursive]+--recursive} ${=opts[--depth]+--depth ${opts[--depth]}} "$URL" "$local_dir"
+        command git clone ${opts[--progress]+--progress} ${opts[--recursive]+--recursive} ${=opts[--depth]+--depth ${opts[--depth]}} "$URL" "$local_dir"
     elif [[ "$1" = "fetch" ]]; then
         shift
         command git fetch "$@"
