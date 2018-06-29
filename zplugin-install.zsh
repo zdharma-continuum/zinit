@@ -131,7 +131,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     if [[ "$site" != *"releases" ]]; then
         # Compile plugin
-        LANG=C sleep 0.2
+        LANG=C sleep 0.3
         -zplg-compile-plugin "$user" "$plugin"
     fi
 
