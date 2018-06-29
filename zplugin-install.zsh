@@ -127,7 +127,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     # Install completions
-    -zplg-install-completions "$user" "$plugin" "0" ${ZPLG_ICE[silent]+-q}
+    (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "$user" "$plugin" "0" ${ZPLG_ICE[silent]+-q}
 
     if [[ "$site" != *"releases" ]]; then
         # Compile plugin
@@ -503,7 +503,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)ZPLG_ICE[make]}; }
 
-    -zplg-install-completions "%" "$local_dir${ZPLG_ICE[svn]+/$filename}" 0
+    (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "%" "$local_dir${ZPLG_ICE[svn]+/$filename}" 0
     return $retval
 }
 # }}}

@@ -678,6 +678,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `unload`  | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. |
 | `service` | Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices org](https://github.com/zservices). |
 | `compile` | Pattern to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure` |
+| `nocompletions` | Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}` |
 
 Order of related Ice-mods: `atinit` -> `atpull!` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `atload`.
 
