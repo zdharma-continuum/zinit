@@ -329,7 +329,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 print "No files for compilation found (pick-ice didn't match)"
                 return 1
             }
-            reply=( "${list[1]:h}" "${list[1]:t}" )
+            reply=( "${list[1]:h}" "${list[1]}" )
         else
             -zplg-first "$1" "$2" || {
                 print "No files for compilation found"
