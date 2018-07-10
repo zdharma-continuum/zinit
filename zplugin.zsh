@@ -1423,7 +1423,7 @@ builtin setopt noaliases
             # This either doesn't change ZPLG_TASKS entry - when
             # __i is used in the ternary expression, or replaces
             # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
-            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1-correct]} < $__t ? zplugin_scheduler_add(__i++ - correct) : __i++ ))]}} )
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1-correct]} <= $__t ? zplugin_scheduler_add(__i++ - correct) : __i++ ))]}} )
         }
         ZPLG_TASKS=( "<no-data>" ${(@)ZPLG_TASKS:#<no-data>} )
     } || {
