@@ -129,7 +129,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Install completions
     (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "$user" "$plugin" "0" ${ZPLG_ICE[silent]+-q}
 
-    if [[ "$site" != *"releases" ]]; then
+    if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} != '!' ]]; then
         # Compile plugin
         LANG=C sleep 0.3
         -zplg-compile-plugin "$user" "$plugin"
@@ -142,6 +142,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
         ( (( ${+ZPLG_ICE[atclone]} )) && { builtin cd -q "$local_path" && eval "${ZPLG_ICE[atclone]}"; }; )
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
+    fi
+
+    if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} = '!' ]]; then
+        # Compile plugin
+        LANG=C sleep 0.3
+        -zplg-compile-plugin "$user" "$plugin"
     fi
 
     return 0
@@ -322,9 +328,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local -A sice
     sice=( "${(@Q)${(z@)ZPLG_SICE[$user/$plugin]:-no op}}" )
 
-    if (( ${+sice[nocompile]} == 0 )); then
+    if [[ ${+sice[nocompile]} = "0" || ${sice[nocompile]} = "!" ]]; then
         if [[ -n "${sice[pick]}" ]]; then
-            list=( $plugin_dir/${~sice[pick]}(N) )
+            list=( ${~${(M)sice[pick]:#/*}:-$plugin_dir/$sice[pick]}(N) )
             [[ ${#list} -eq 0 ]] && {
                 print "No files for compilation found (pick-ice didn't match)"
                 return 1
