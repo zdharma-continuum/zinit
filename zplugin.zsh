@@ -1408,7 +1408,8 @@ builtin setopt noaliases
 # $1 - if not empty, it's a following, not first call
 -zplg-scheduler() {
     integer __ret=$?
-    sched +1 "-zplg-scheduler 1"
+    [[ -n "$1" ]] && sched +1 "-zplg-scheduler following"
+    [[ -n "$1" && "$1" != "following" ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
 
     integer __t=EPOCHSECONDS __i=2 correct=0
     local -a match mbegin mend
@@ -1434,6 +1435,8 @@ builtin setopt noaliases
             # in "1531252764+2" and replace it with current time
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
         }
+        exec {ANFD}< <(LANG=C sleep 0.05; echo run;)
+        zle -F "$ANFD" -zplg-scheduler
     }
 
     local __task __idx=0 __count=0 __idx2
