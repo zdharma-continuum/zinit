@@ -150,6 +150,9 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 10-07-2018
+  - Ice `wait'0'` now means actually short time – you can load plugins and snippets **very quickly** after prompt.
+
 * 02-03-2018
   - Zplugin exports `$ZPFX` parameter. Its default value is `~/.zplugin/polaris` (user can
     override it before sourcing Zplugin). This directory is like `/usr/local`, a prefix
