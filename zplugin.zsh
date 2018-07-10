@@ -1383,6 +1383,7 @@ builtin setopt noaliases
 -zplg-submit-turbo() {
     local tpe="$1" mode="$2" opt_uspl2="$3" opt_plugin="$4"
 
+    ZPLG_ICE[wait]="${ZPLG_ICE[wait]%%.[0-9]##}"
     ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
     ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
 
@@ -1404,6 +1405,7 @@ builtin setopt noaliases
 # }}}
 # FUNCTION: -zplg-scheduler {{{
 # Searches for timeout tasks, executes them
+# $1 - if not empty, it's a following, not first call
 -zplg-scheduler() {
     integer __ret=$?
     sched +1 "-zplg-scheduler 1"
@@ -1416,6 +1418,11 @@ builtin setopt noaliases
     [[ -n "$1" ]] && {
         () {
             setopt localoptions extendedglob
+            # Example entry:
+            # 1531252764+2 p 18 light zdharma/zsh-diff-so-fancy
+            # This either doesn't change ZPLG_TASKS entry - when
+            # __i is used in the ternary expression, or replaces
+            # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1-correct]} < $__t ? zplugin_scheduler_add(__i++ - correct) : __i++ ))]}} )
         }
         ZPLG_TASKS=( "<no-data>" ${(@)ZPLG_TASKS:#<no-data>} )
@@ -1423,6 +1430,8 @@ builtin setopt noaliases
         add-zsh-hook -d -- precmd -zplg-scheduler
         () {
             setopt localoptions extendedglob
+            # No "+" in this pattern, it will match only "1531252764"
+            # in "1531252764+2" and replace it with current time
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
         }
     }
