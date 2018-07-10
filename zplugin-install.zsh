@@ -322,7 +322,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local -A sice
     sice=( "${(@Q)${(z@)ZPLG_SICE[$user/$plugin]:-no op}}" )
 
-    if [[ -z "${sice[nocompile]}" ]]; then
+    if (( ${+sice[nocompile]} == 0 )); then
         if [[ -n "${sice[pick]}" ]]; then
             list=( $plugin_dir/${~sice[pick]}(N) )
             [[ ${#list} -eq 0 ]] && {
