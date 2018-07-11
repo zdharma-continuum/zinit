@@ -55,11 +55,9 @@ zplugin light paoloantinori/hhighlighter
 zplugin ice svn pick"completion.zsh" src"git.zsh"
 zplugin snippet OMZ::lib
 
-```zsh
 zplugin ice svn wait"0" lucid atinit"local ZSH=\$PWD" \
     atclone"mkdir -p plugins; cd plugins; ln -sfn ../. osx"
 zplugin snippet OMZ::plugins/osx
-```
 
 # Themes
 
