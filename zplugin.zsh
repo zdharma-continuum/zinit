@@ -1435,7 +1435,7 @@ builtin setopt noaliases
             # in "1531252764+2" and replace it with current time
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
         }
-        exec {ANFD}< <(LANG=C sleep 0.05; echo run;)
+        exec {ANFD}< <(LANG=C sleep 0.01; echo run;)
         zle -F "$ANFD" -zplg-scheduler
     }
 
