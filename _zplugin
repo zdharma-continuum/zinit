@@ -10,6 +10,7 @@ commands=(
     self-update:'updates Zplugin'
     help:'usage information'
     man:'manual'
+    env-whitelist:'specify names (also patterns) of parameters to be left unchanged during an unload'
     load:'load plugin'
     delete:'delete plugin'
     unload:'unload plugin'

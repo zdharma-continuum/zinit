@@ -1515,6 +1515,18 @@ zplugin() {
        (man)
            man "${ZPLGM[BIN_DIR]}/doc/zplugin.1"
            ;;
+       (env-whitelist)
+           shift
+           [[ $1 = "-v" ]] && { shift; local verbose=1; }
+           [[ $1 = "-h" ]] && { shift; print "Usage: zplugin env-whitelist [-v] VAR1 ...\nSaves names (also patterns) of parameters left unchanged during an unload. -v - verbose."; }
+           (( $# == 0 )) && {
+               ZPLGM[ENV-WHITELIST]=""
+               (( verbose )) && print "Cleared parameter whitelist"
+           } || {
+               ZPLGM[ENV-WHITELIST]+="${(j: :)${(q-kv)@}} "
+               (( verbose )) && print "Extended parameter whitelist"
+           }
+           ;;
        (*)
            (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
            case "$1" in
@@ -1528,7 +1540,7 @@ zplugin() {
                    -zplg-self-update
                    ;;
                (unload)
-                   (( ${+functions[-zplg-unload]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-unload.zsh"
+                   (( ${+functions[-zplg-unload]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
                    if [[ -z "$2" && -z "$3" ]]; then
                        print "Argument needed, try help"
                    else

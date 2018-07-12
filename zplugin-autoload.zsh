@@ -1010,6 +1010,9 @@ ZPLGM[EXTENDED_GLOB]=""
         elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
 
         # Find variables created or modified
+        local wl found
+        local -a whitelist
+        whitelist=( "${(@Q)${(z@)ZPLGM[ENV-WHITELIST]}}" )
         for k in "${(k)elem_post[@]}"; do
             k="${(Q)k}"
             local v1="${(Q)elem_pre[$k]}"
@@ -1035,11 +1038,20 @@ ZPLGM[EXTENDED_GLOB]=""
                 # "" means variable didn't exist before plugin load
                 # (didn't have a type)
                 if [[ "$v1" = "\"\"" || ( "$k" = (RPROMPT|RPS1|RPS2|PROMPT|PS1) && "$v1" != "$v2" ) ]]; then
-                    (( quiet )) || print "Unsetting variable $k"
-                    # Checked that 4.3.17 does support "--"
-                    # There cannot be parameter starting with
-                    # "-" but let's defensively use "--" here
-                    unset -- "$k"
+                    found=0
+                    for wl in "${whitelist[@]}"; do
+                        if [[ "$k" = ${~wl} ]]; then
+                            found=1
+                            break
+                        fi
+                    done
+                    if (( !found )); then
+                        (( quiet )) || print "Unsetting variable $k"
+                        # Checked that 4.3.17 does support "--"
+                        # There cannot be parameter starting with
+                        # "-" but let's defensively use "--" here
+                        unset -- "$k"
+                    fi
                 fi
             fi
         done
@@ -2471,6 +2483,7 @@ cdreplay [-q]            - replay compdefs (to be done after compinit), -q - qui
 cdclear [-q]             - clear compdef replay list, -q - quiet
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
 recall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - fetch saved ice modifiers and construct \`zplugin ice ...' command
+env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
 
 Available ice-modifiers: proto from depth if wait load unload blockf pick bpick src as
                          ver silent svn mv cp atinit atclone atload atpull make service"
