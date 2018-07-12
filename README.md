@@ -150,6 +150,14 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 12-07-2018
+  - For docker and new machine provisioning, there's a trick that allows to install all [turbo-mode](#turbo-mode-zsh--53)
+    plugins by scripting:
+
+    ```zsh
+    zsh -i -c -- '-zplg-scheduler burst'
+    ```
+
 * 10-07-2018
   - Ice `wait'0'` now means actually short time – you can load plugins and snippets **very quickly** after prompt.
 
