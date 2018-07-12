@@ -789,6 +789,7 @@ uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins 
 compiled                 - list plugins that are compiled
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; `next' moves the service to another Zshell
 recall {plugin-name|URL} - fetch saved ice modifiers and construct `zplugin ice ...' command
+env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
 ```
 
 ### Using Oh-My-Zsh Themes
