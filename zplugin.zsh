@@ -1155,15 +1155,15 @@ builtin setopt noaliases
 
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
-        if [[ -n ${ZPLG_ICE[pick]} ]]; then
+        if [[ -n "${ZPLG_ICE[pick]}" && "${ZPLG_ICE[pick]}" != "/dev/null" ]]; then
             reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
             [[ -n "${reply[1-correct]}" ]] && pdir_path="${reply[1-correct]:h}"
         fi
         [[ -z "${path[(er)$pdir_path]}" ]] && {
             [[ "$mode" != "light" ]] && -zplg-diff-env "${ZPLGM[CUR_USPL2]}" begin
             path=( "${pdir_path%/}" ${path[@]} )
-            -zplg-add-report "${ZPLGM[CUR_USPL2]}" "$ZPLGM[col-info2]$pdir_path$ZPLGM[col-rst] added to \$PATH"
             [[ "$mode" != "light" ]] && -zplg-diff-env "${ZPLGM[CUR_USPL2]}" end
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" "$ZPLGM[col-info2]$pdir_path$ZPLGM[col-rst] added to \$PATH"
         }
         [[ -n "${reply[1-correct]}" && ! -x "${reply[1-correct]}" ]] && command chmod a+x ${reply[@]}
 
@@ -1172,7 +1172,7 @@ builtin setopt noaliases
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; builtin cd -q "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
     else
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
-            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+            [[ "${ZPLG_ICE[pick]}" = "/dev/null" ]] && reply=( "/dev/null" ) || reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
         elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
             reply=( "$pdir_path/${pbase}.plugin.zsh" )
         else
