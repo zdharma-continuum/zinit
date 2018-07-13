@@ -1043,6 +1043,7 @@ builtin setopt noaliases
         } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || echo "Snippet not loaded ($save_url)"; }
 
         [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
         (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir${ZPLG_ICE[svn]+/$filename}/-atload-"; local __oldcd="$PWD"; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
@@ -1062,7 +1063,7 @@ builtin setopt noaliases
         fi
         [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path=( "${xpath%/}" ${path[@]} )
         [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
-        [[ -z "${opts[(r)-u]}" && ( -n "${ZPLG_ICE[src]}" || "${ZPLG_ICE[atload][1]}" = "!" ) ]] && {
+        [[ -z "${opts[(r)-u]}" && ( -n "${ZPLG_ICE[src]}" || -n "${ZPLG_ICE[multisrc]}" || "${ZPLG_ICE[atload][1]}" = "!" ) ]] && {
             if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
                 # Shadowing code is inlined from -zplg-shadow-on
                 (( ${+functions[compdef]} )) && ZPLGM[bkp-compdef]="${functions[compdef]}" || builtin unset "ZPLGM[bkp-compdef]"
@@ -1076,6 +1077,7 @@ builtin setopt noaliases
                 ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}"
                 (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
             fi
+            [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
             (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir${ZPLG_ICE[svn]+/$filename}/-atload-"; local __oldcd="$PWD"; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
         }
@@ -1169,6 +1171,7 @@ builtin setopt noaliases
 
         local ZERO
         [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; builtin cd -q "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
     else
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
@@ -1204,6 +1207,7 @@ builtin setopt noaliases
         builtin setopt noaliases
         (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
         [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; builtin cd -q "$pdir_orig" && builtin eval "${ZPLG_ICE[atload]#\!}"; builtin cd -q "$__oldcd"; }
         builtin unsetopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
@@ -1289,7 +1293,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
