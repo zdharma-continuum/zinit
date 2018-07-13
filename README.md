@@ -150,6 +150,17 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 13-07-2018
+  - New `multisrc''` ice, it allows to specify multiple files for sourcing and  it uses brace expansion syntax, so for example you can:
+    ```zsh
+    zplugin ice depth"1" multisrc="lib/{misc,functions}.zsh" pick"/dev/null"; zplugin load robbyrussell/oh-my-zsh
+    zplugin ice svn multisrc"{misc,functions}.zsh" pick""; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\${array[@]}" pick""; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"${array[@]}" pick""; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\$array" pick""; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"$array" pick""; zplugin snippet OMZ::lib
+    zplugin ice svn multisrc"misc.zsh functions.zsh" pick""; zplugin snippet OMZ::lib
+    ```
 * 12-07-2018
   - For docker and new machine provisioning, there's a trick that allows to install all [turbo-mode](#turbo-mode-zsh--53)
     plugins by scripting:
@@ -688,9 +699,10 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `load`    | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. |
 | `unload`  | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. |
 | `service` | Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices org](https://github.com/zservices). |
-| `compile` | Pattern to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure` |
-| `nocompletions` | Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}` |
+| `compile` | Pattern to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`. |
+| `nocompletions` | Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. |
 | `nocompile` | Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at location of installation). |
+| `multisrc` | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). |
 
 Order of related Ice-mods: `atinit` -> `atpull!` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `atload`.
 
