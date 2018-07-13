@@ -1413,7 +1413,8 @@ builtin setopt noaliases
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
 
     integer __t=EPOCHSECONDS __i=2 correct=0
-    local -a match mbegin mend
+    local -a match mbegin mend reply
+    local REPLY
 
     [[ -o ksharrays ]] && correct=1
 
@@ -1470,8 +1471,8 @@ zplugin() {
         ZPLG_ICE=( "${ice[@]}" )
     }
 
-    local -a match mbegin mend
-    local MATCH; integer MBEGIN MEND
+    local -a match mbegin mend reply
+    local MATCH REPLY; integer MBEGIN MEND
 
     case "$1" in
        (load|light)
