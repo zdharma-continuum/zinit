@@ -924,7 +924,7 @@ builtin setopt noaliases
 # $2 - plugin name, if the third format is used
 -zplg-load () {
     typeset -F 3 SECONDS=0
-    local mode="$3"
+    local mode="$3" rst="0"
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
@@ -935,10 +935,10 @@ builtin setopt noaliases
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
             -zplg-unregister-plugin "$user" "$plugin"
-            zle && zle .reset-prompt
+            zle && { print; zle .reset-prompt; }
             return
         fi
-        zle && zle .reset-prompt
+        zle && rst=1
     fi
 
     # Support Zsh plugin standard
@@ -946,7 +946,7 @@ builtin setopt noaliases
 
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}}" && eval "${ZPLG_ICE[atinit]}"; builtin cd -q "$__oldcd"; }
 
-    -zplg-load-plugin "$user" "$plugin" "$mode"
+    -zplg-load-plugin "$user" "$plugin" "$mode" "$rst"
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${user}---${plugin}]=$SECONDS
 } # }}}
@@ -1228,6 +1228,8 @@ builtin setopt noaliases
 
     # Mark no load is in progress
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
+
+    (( $4 )) && { print; zle .reset-prompt; }
     return 0
 } # }}}
 
