@@ -935,8 +935,10 @@ builtin setopt noaliases
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
             -zplg-unregister-plugin "$user" "$plugin"
+            zle && zle .reset-prompt
             return
         fi
+        zle && zle .reset-prompt
     fi
 
     # Support Zsh plugin standard
