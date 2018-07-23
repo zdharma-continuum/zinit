@@ -1414,7 +1414,7 @@ builtin setopt noaliases
 # $1 - if not empty, it's a following, not first call
 -zplg-scheduler() {
     integer __ret=$?
-    [[ -n "$1" && "$1" != "burst" ]] && sched +1 "-zplg-scheduler following"
+    [[ "$1" = "following" ]] && sched +1 "-zplg-scheduler following"
     [[ -n "$1" && "$1" != (following|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
 
@@ -1443,6 +1443,12 @@ builtin setopt noaliases
             # in "1531252764+2" and replace it with current time
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
         }
+        # There's a bug in Zsh: first sched call would not be issued
+        # until a key-press, if "sched +1 ..." would be called inside
+        # zle -F handler. So it's done here, in precmd-handle code.
+        sched +1 "-zplg-scheduler following"
+
+        local ANFD
         exec {ANFD}< <(LANG=C sleep 0.01; echo run;)
         zle -F "$ANFD" -zplg-scheduler
     }
