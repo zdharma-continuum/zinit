@@ -150,6 +150,11 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 25-07-2018
+  - If you encountered a problem with loading Turbo-Mode plugins, it is fixed now. This occurred in versions
+  available between `10` and `23` of July. Issue `zplugin self-update` if you installed/updated in this period.
+  - New bug-fix release `v2.07`.
+
 * 13-07-2018
   - New `multisrc''` ice, it allows to specify multiple files for sourcing and  it uses brace expansion syntax, so for example you can:
     ```zsh
