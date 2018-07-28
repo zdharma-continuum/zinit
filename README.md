@@ -974,7 +974,7 @@ zplugin ice wait"2" lucid as"program" pick"bin/git-dsf"
 zplugin light zdharma/zsh-diff-so-fancy
 zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-now" make"prefix=$ZPFX install"
 zplugin light iwata/git-now
-zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX"
+zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX" nocompile
 zplugin light tj/git-extras
 zplugin ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \
             make'install' pick"$ZPFX/bin/git-cal"
