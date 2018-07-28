@@ -33,7 +33,7 @@ zplugin light psprint/vramsteg-zsh
 
 # Scripts
 
-zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
+zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX" nocompile
 zplugin light tj/git-extras
 
 zplugin ice as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' make'install' pick"$ZPFX/bin/git-cal"
