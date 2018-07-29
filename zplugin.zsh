@@ -1782,7 +1782,7 @@ ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 fpath=( "${ZPLGM[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
 # Set up $ZPFX
-if [[ $(uname -a) =~ "^SunOS.*" ]] && [[ -z $MANPATH ]]; then
+if [[ $OSTYPE = solaris* ]] && [[ -z $MANPATH ]]; then
   export MANPATH=/usr/share/man:$ZPFX/share/man
 else
   export MANPATH=$MANPATH:$ZPFX/share/man
