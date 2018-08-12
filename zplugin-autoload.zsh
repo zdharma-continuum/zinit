@@ -1598,6 +1598,57 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Total: $sum sec"
 }
 # }}}
+# FUNCTION: -zplg-list-bindkeys {{{
+-zplg-list-bindkeys() {
+    local uspl2 uspl2col sw first=1
+    local -a string_widget
+
+    # KSH_ARRAYS immunity
+    integer correct=0
+    [[ -o "KSH_ARRAYS" ]] && correct=1
+
+    for uspl2 in "${(ko@)ZPLG_BINDKEYS}"; do
+        [[ -z "${ZPLG_BINDKEYS[$uspl2]}" ]] && continue
+
+        (( !first )) && print
+        first=0
+
+        -zplg-any-colorify-as-uspl2 "$uspl2"
+        uspl2col="$REPLY"
+        print "$uspl2col"
+
+        string_widget=( "${(z@)ZPLG_BINDKEYS[$uspl2]}" )
+        for sw in "${(Oa)string_widget[@]}"; do
+            [[ -z "$sw" ]] && continue
+            # Remove one level of quoting to split using (z)
+            sw="${(Q)sw}"
+            typeset -a sw_arr
+            sw_arr=( "${(z@)sw}" )
+
+            # Remove one level of quoting to pass to bindkey
+            local sw_arr1="${(Q)sw_arr[1-correct]}" # Keys
+            local sw_arr2="${(Q)sw_arr[2-correct]}" # Widget
+            local sw_arr3="${(Q)sw_arr[3-correct]}" # Optional -M or -A or -N
+            local sw_arr4="${(Q)sw_arr[4-correct]}" # Optional map name
+            local sw_arr5="${(Q)sw_arr[5-correct]}" # Optional -R (not with -A, -N)
+
+            if [[ "$sw_arr3" = "-M" && "$sw_arr5" != "-R" ]]; then
+                print "bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}for keymap $sw_arr4${ZPLGM[col-rst]}"
+            elif [[ "$sw_arr3" = "-M" && "$sw_arr5" = "-R" ]]; then
+                print "${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}mapped to $sw_arr4${ZPLGM[col-rst]}"
+            elif [[ "$sw_arr3" != "-M" && "$sw_arr5" = "-R" ]]; then
+                print "${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2"
+            elif [[ "$sw_arr3" = "-A" ]]; then
+                print "Override of keymap \`main'"
+            elif [[ "$sw_arr3" = "-N" ]]; then
+                print "New keymap \`$sw_arr4'"
+            else
+                print "bindkey $sw_arr1 $sw_arr2"
+            fi
+        done
+    done
+}
+# }}}
 
 # FUNCTION: -zplg-compiled {{{
 # Displays list of plugins that are compiled.
@@ -2355,7 +2406,7 @@ ZPLGM[EXTENDED_GLOB]=""
     )
 }
 # }}}
-# FUNCTION -zplg-get-path {{{
+# FUNCTION: -zplg-get-path {{{
 -zplg-get-path() {
     setopt localoptions extendedglob nokshglob noksharrays
     REPLY=""

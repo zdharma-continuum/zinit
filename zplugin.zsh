@@ -1566,6 +1566,9 @@ zplugin() {
                        -zplg-unload "$2" "${3:#-q}" "${${(M)4:#-q}:-${(M)3:#-q}}"
                    fi
                    ;;
+               (bindkeys)
+                   -zplg-list-bindkeys
+                   ;;
                (update)
                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
