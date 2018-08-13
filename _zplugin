@@ -73,7 +73,7 @@ case $state in
             times)
                 _message "Hit enter to get plugin load time statistics" && ret=0
                 ;;
-            load|light|update|status|compile|stress|cd|edit|glance|changes)
+            load|light|compile|stress|edit|glance)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
                 plugins=( "${plugins[@]/---//}" )
@@ -82,7 +82,17 @@ case $state in
 
                 # _wanted plugins expl "Plugins" \
                 #    compadd "$@" -a - plugins && ret=0
-                _alternative 'files:file:_files' 'plugins:plugin:compadd -a - plugins'
+                _alternative 'directories:directory:_directories' 'plugins:plugin:compadd -a - plugins'
+                ;;
+            update|status|cd|changes)
+                typeset -a plugins
+                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                _wanted plugins expl "Plugins" \
+                    compadd "$@" -a - plugins && ret=0
                 ;;
             delete)
                 typeset -a plugins
