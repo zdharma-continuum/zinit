@@ -2539,6 +2539,7 @@ cdclear [-q]             - clear compdef replay list, -q - quiet
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
 recall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - fetch saved ice modifiers and construct \`zplugin ice ...' command
 env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
+bindkeys                 - lists bindkeys set up by each plugin
 
 Available ice-modifiers: proto from depth if wait load unload blockf pick bpick src as
                          ver silent svn mv cp atinit atclone atload atpull make service"

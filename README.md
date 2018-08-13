@@ -150,6 +150,12 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 13-08-2018
+  - `self-update` (subcommand used to update Zplugin) now lists new commits downloaded by the update:
+  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-self-update.png)
+
+  - New subcommand `bindkeys` that lists what bindkeys each plugin has set up.
+
 * 25-07-2018
   - If you encountered a problem with loading Turbo-Mode plugins, it is fixed now. This occurred in versions
   available between `10` and `23` of July. Issue `zplugin self-update` if you installed/updated in this period.
@@ -815,6 +821,7 @@ compiled                 - list plugins that are compiled
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; `next' moves the service to another Zshell
 recall {plugin-name|URL} - fetch saved ice modifiers and construct `zplugin ice ...' command
 env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
+bindkeys                 - lists bindkeys set up by each plugin
 ```
 
 ### Using Oh-My-Zsh Themes
