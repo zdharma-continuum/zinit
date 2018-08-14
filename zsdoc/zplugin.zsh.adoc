@@ -48,6 +48,8 @@ FUNCTIONS
  -zplg-unregister-plugin
  -zplugin_scheduler_add_sh
  pmodload
+ zpcdreplay
+ zpcompinit
  zplugin
 AUTOLOAD add-zsh-hook
 AUTOLOAD compinit
@@ -60,45 +62,51 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 121 line(s). Calls functions:
+Has 137 line(s). Calls functions:
 
  Script-Body
  |-- -zplg-prepare-home
  |-- add-zsh-hook
  `-- is-at-least
 
+Uses feature(s): _alias_, _autoload_, _export_, _zmodload_, _zstyle_
+
+_Exports (environment):_ MANPATH [big]*//* ZPFX
+
 --zplg-reload-and-run
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Marks given function ($3) for autoloading, and executes it triggering the
- # load. $1 is the fpath dedicated to the function, $2 are autoload options.
- # This function replaces "autoload -X", because using that on older Zsh
- # versions causes problems with traps.
- #
- # So basically one creates function stub that calls --zplg-reload-and-run()
- # instead of "autoload -X".
- #
- # $1 - FPATH dedicated to function
- # $2 - autoload options
- # $3 - function name (one that needs autoloading)
- #
- # Author: Bart Schaefer
+ 
+ Marks given function ($3) for autoloading, and executes it triggering the
+ load. $1 is the fpath dedicated to the function, $2 are autoload options.
+ This function replaces "autoload -X", because using that on older Zsh
+ versions causes problems with traps.
+ 
+ So basically one creates function stub that calls --zplg-reload-and-run()
+ instead of "autoload -X".
+ 
+ $1 - FPATH dedicated to function
+ $2 - autoload options
+ $3 - function name (one that needs autoloading)
+ 
+ Author: Bart Schaefer
 ____
 
 Has 8 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _unfunction_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 --zplg-shadow-alias
 ~~~~~~~~~~~~~~~~~~~
 
 ____
- # Function defined to hijack plugin's calls to `alias' builtin.
- #
- # The hijacking is to gather report data (which is used in unload).
+ 
+ Function defined to hijack plugin's calls to `alias' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 39 line(s). Calls functions:
@@ -108,16 +116,17 @@ Has 39 line(s). Calls functions:
 
 Uses feature(s): _alias_, _unfunction_, _zparseopts_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 --zplg-shadow-autoload
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Function defined to hijack plugin's calls to `autoload' builtin.
- #
- # The hijacking is not only to gather report data, but also to
- # run custom `autoload' function, that doesn't need FPATH.
+ 
+ Function defined to hijack plugin's calls to `autoload' builtin.
+ 
+ The hijacking is not only to gather report data, but also to
+ run custom `autoload' function, that doesn't need FPATH.
 ____
 
 Has 38 line(s). Calls functions:
@@ -127,15 +136,16 @@ Has 38 line(s). Calls functions:
 
 Uses feature(s): _autoload_, _eval_, _zparseopts_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 --zplg-shadow-bindkey
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Function defined to hijack plugin's calls to `bindkey' builtin.
- #
- # The hijacking is to gather report data (which is used in unload).
+ 
+ Function defined to hijack plugin's calls to `bindkey' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 78 line(s). Calls functions:
@@ -145,15 +155,16 @@ Has 78 line(s). Calls functions:
 
 Uses feature(s): _bindkey_, _unfunction_, _zparseopts_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 --zplg-shadow-compdef
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Function defined to hijack plugin's calls to `compdef' function.
- # The hijacking is not only for reporting, but also to save compdef
- # calls so that `compinit' can be called after loading plugins.
+ 
+ Function defined to hijack plugin's calls to `compdef' function.
+ The hijacking is not only for reporting, but also to save compdef
+ calls so that `compinit' can be called after loading plugins.
 ____
 
 Has 4 line(s). Calls functions:
@@ -161,15 +172,16 @@ Has 4 line(s). Calls functions:
  --zplg-shadow-compdef
  `-- -zplg-add-report
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 --zplg-shadow-zle
 ~~~~~~~~~~~~~~~~~
 
 ____
- # Function defined to hijack plugin's calls to `zle' builtin.
- #
- # The hijacking is to gather report data (which is used in unload).
+ 
+ Function defined to hijack plugin's calls to `zle' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 40 line(s). Calls functions:
@@ -179,15 +191,16 @@ Has 40 line(s). Calls functions:
 
 Uses feature(s): _unfunction_, _zle_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 --zplg-shadow-zstyle
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Function defined to hijack plugin's calls to `zstyle' builtin.
- #
- # The hijacking is to gather report data (which is used in unload).
+ 
+ Function defined to hijack plugin's calls to `zstyle' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
 ____
 
 Has 26 line(s). Calls functions:
@@ -197,16 +210,17 @@ Has 26 line(s). Calls functions:
 
 Uses feature(s): _unfunction_, _zparseopts_, _zstyle_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-add-report
 ~~~~~~~~~~~~~~~~
 
 ____
- # Adds a report line for given plugin.
- #
- # $1 - uspl2, i.e. user/plugin
- # $2, ... - the text
+ 
+ Adds a report line for given plugin.
+ 
+ $1 - uspl2, i.e. user/plugin
+ $2, ... - the text
 ____
 
 Has 8 line(s). Doesn't call other functions.
@@ -225,12 +239,14 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Allows elastic plugin-spec across the code.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
- #
- # Returns user and plugin in $reply
+ 
+ Allows elastic plugin-spec across the code.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Returns user and plugin in $reply
+ 
 ____
 
 Has 45 line(s). Doesn't call other functions.
@@ -240,7 +256,6 @@ Called by:
  -zplg-load
  -zplg-unregister-plugin
  zplugin-autoload.zsh/-zplg-any-to-uspl2
- zplugin-autoload.zsh/-zplg-cd
  zplugin-autoload.zsh/-zplg-changes
  zplugin-autoload.zsh/-zplg-compile-uncompile-all
  zplugin-autoload.zsh/-zplg-compiled
@@ -248,7 +263,9 @@ Called by:
  zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-edit
  zplugin-autoload.zsh/-zplg-find-completions-of-plugin
+ zplugin-autoload.zsh/-zplg-get-path
  zplugin-autoload.zsh/-zplg-glance
+ zplugin-autoload.zsh/-zplg-recall
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-stress
  zplugin-autoload.zsh/-zplg-uncompile-plugin
@@ -267,7 +284,8 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Forgets dtrace repport gathered up to this moment.
+ 
+ Forgets dtrace repport gathered up to this moment.
 ____
 
 Has 1 line(s). Calls functions:
@@ -284,7 +302,8 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements user-exposed functionality to clear gathered compdefs.
+ 
+ Implements user-exposed functionality to clear gathered compdefs.
 ____
 
 Has 3 line(s). Doesn't call other functions.
@@ -297,21 +316,24 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Runs gathered compdef calls. This allows to run `compinit'
- # after loading plugins.
+ 
+ Runs gathered compdef calls. This allows to run `compinit'
+ after loading plugins.
 ____
 
 Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
+ zpcdreplay
  zplugin
 
 -zplg-debug-start
 ~~~~~~~~~~~~~~~~~
 
 ____
- # Starts Dtrace, i.e. session tracking for changes in Zsh state.
+ 
+ Starts Dtrace, i.e. session tracking for changes in Zsh state.
 ____
 
 Has 12 line(s). Calls functions:
@@ -331,7 +353,8 @@ Called by:
 ~~~~~~~~~~~~~~~~
 
 ____
- # Stops Dtrace, i.e. session tracking for changes in Zsh state.
+ 
+ Stops Dtrace, i.e. session tracking for changes in Zsh state.
 ____
 
 Has 6 line(s). Calls functions:
@@ -351,7 +374,8 @@ Called by:
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Reverts changes detected by dtrace run.
+ 
+ Reverts changes detected by dtrace run.
 ____
 
 Has 5 line(s). Calls functions:
@@ -367,10 +391,11 @@ Called by:
 ~~~~~~~~~~~~~~
 
 ____
- # Implements detection of change in PATH and FPATH.
- #
- # $1 - user/plugin (i.e. uspl2 format)
- # $2 - command, can be "begin" or "end"
+ 
+ Implements detection of change in PATH and FPATH.
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
 ____
 
 Has 17 line(s). Doesn't call other functions.
@@ -385,11 +410,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements detection of newly created functions. Performs
- # data gathering, computation is done in *-compute().
- #
- # $1 - user/plugin (i.e. uspl2 format)
- # $2 - command, can be "begin" or "end"
+ 
+ Implements detection of newly created functions. Performs
+ data gathering, computation is done in *-compute().
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -404,11 +430,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements detection of change in option state. Performs
- # data gathering, computation is done in *-compute().
- #
- # $1 - user/plugin (i.e. uspl2 format)
- # $2 - command, can be "begin" or "end"
+ 
+ Implements detection of change in option state. Performs
+ data gathering, computation is done in *-compute().
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -423,14 +450,15 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements detection of change in any parameter's existence and type.
- # Performs data gathering, computation is done in *-compute().
- #
- # $1 - user/plugin (i.e. uspl2 format)
- # $2 - command, can be "begin" or "end"
+ 
+ Implements detection of change in any parameter's existence and type.
+ Performs data gathering, computation is done in *-compute().
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
 ____
 
-Has 6 line(s). Doesn't call other functions.
+Has 10 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -442,10 +470,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Plugin's main source file is in general `name.plugin.zsh'. However,
- # there can be different conventions, if that file is not found, then
- # this functions examines other conventions in order of most expected
- # sanity.
+ 
+ Plugin's main source file is in general `name.plugin.zsh'. However,
+ there can be different conventions, if that file is not found, then
+ this functions examines other conventions in order of most expected
+ sanity.
 ____
 
 Has 14 line(s). Doesn't call other functions.
@@ -459,29 +488,33 @@ Called by:
 ~~~~~~~~~
 
 ____
- # Parses ICE specification (`zplg ice' subcommand), puts
- # the result into ZPLG_ICE global hash. The ice-spec is
- # valid for next command only (i.e. it "melts"), but it
- # can then stick to plugin and activate e.g. at update.
+ 
+ Parses ICE specification (`zplg ice' subcommand), puts
+ the result into ZPLG_ICE global hash. The ice-spec is
+ valid for next command only (i.e. it "melts"), but it
+ can then stick to plugin and activate e.g. at update.
 ____
 
-Has 5 line(s). Doesn't call other functions.
+Has 7 line(s). Doesn't call other functions.
 
 Called by:
 
  zplugin
 
+_Environment variables used:_ ZPFX
+
 -zplg-load
 ~~~~~~~~~~
 
 ____
- # Implements the exposed-to-user action of loading a plugin.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin name, if the third format is used
+ 
+ Implements the exposed-to-user action of loading a plugin.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin name, if the third format is used
 ____
 
-Has 21 line(s). Calls functions:
+Has 24 line(s). Calls functions:
 
  -zplg-load
  |-- -zplg-any-to-user-plugin
@@ -500,7 +533,7 @@ Has 21 line(s). Calls functions:
  |   `-- -zplg-any-to-user-plugin
  `-- zplugin-install.zsh/-zplg-setup-plugin-dir
 
-Uses feature(s): _eval_, _source_
+Uses feature(s): _eval_, _source_, _zle_
 
 Called by:
 
@@ -512,14 +545,15 @@ Called by:
 ~~~~~~~~~~~~~~~~~
 
 ____
- # Lower-level function for loading a plugin.
- #
- # $1 - user
- # $2 - plugin
- # $3 - mode (light or load)
+ 
+ Lower-level function for loading a plugin.
+ 
+ $1 - user
+ $2 - plugin
+ $3 - mode (light or load)
 ____
 
-Has 64 line(s). Calls functions:
+Has 72 line(s). Calls functions:
 
  -zplg-load-plugin
  |-- -zplg-add-report
@@ -531,7 +565,7 @@ Has 64 line(s). Calls functions:
  |-- -zplg-shadow-off
  `-- -zplg-shadow-on
 
-Uses feature(s): _eval_, _source_
+Uses feature(s): _eval_, _source_, _zle_
 
 Called by:
 
@@ -541,15 +575,16 @@ Called by:
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements the exposed-to-user action of loading a snippet.
- #
- # $1 - url (can be local, absolute path)
- # $2 - "--command" if that option given
- # $3 - "--force" if that option given
- # $4 - "-u" if invoked by Zplugin to only update snippet
+ 
+ Implements the exposed-to-user action of loading a snippet.
+ 
+ $1 - url (can be local, absolute path)
+ $2 - "--command" if that option given
+ $3 - "--force" if that option given
+ $4 - "-u" if invoked by Zplugin to only update snippet
 ____
 
-Has 100 line(s). Calls functions:
+Has 109 line(s). Calls functions:
 
  -zplg-load-snippet
  |-- -zplg-pack-ice
@@ -569,13 +604,14 @@ Called by:
 ~~~~~~~~~~~~~~
 
 ____
- # Remembers long-live ICE specs, assigns them to concrete plugin.
- # Ice spec is in general forgotten for second-next command (that's
- # why it's called "ice" - it melts), however some ice modifiers can
- # glue to plugin mentioned in the next command.
+ 
+ Remembers long-live ICE specs, assigns them to concrete plugin.
+ Ice spec is in general forgotten for second-next command (that's
+ why it's called "ice" - it melts), however some ice modifiers can
+ glue to plugin mentioned in the next command.
 ____
 
-Has 10 line(s). Doesn't call other functions.
+Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -587,15 +623,18 @@ Called by:
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Creates all directories needed by Zplugin, first checks
- # if they already exist.
+ 
+ Creates all directories needed by Zplugin, first checks
+ if they already exist.
 ____
 
-Has 25 line(s). Doesn't call other functions.
+Has 26 line(s). Doesn't call other functions.
 
 Called by:
 
  Script-Body
+
+_Environment variables used:_ ZPFX
 
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
@@ -643,10 +682,24 @@ Called by:
 ~~~~~~~~~~~~~~~
 
 ____
- # Searches for timeout tasks, executes them
+ 
+ Searches for timeout tasks, executes them. There's an array of tasks
+ waiting for execution, this scheduler manages them, detects which ones
+ should be run at current moment, decides to remove (or not) them from
+ the array after execution.
+ 
+ $1 - if "following", then it is non-first (second and more) invocation
+ of the scheduler; this results in chain of `sched' invocations that
+ results in repetitive -zplg-scheduler activity;
+ 
+ if "burst", then all tasks are marked timeout and executed one by one;
+ this is handy if e.g. a docker image starts up and needs to install
+ all turbo-mode plugins without any hesitation (delay), i.e. "burst"
+ allows to run package installations from script, not from prompt
+ 
 ____
 
-Has 33 line(s). *Is a precmd hook*. Calls functions:
+Has 41 line(s). *Is a precmd hook*. Calls functions:
 
  -zplg-scheduler
  |-- -zplg-run-task
@@ -672,19 +725,20 @@ Has 33 line(s). *Is a precmd hook*. Calls functions:
  |   `-- zplugin-autoload.zsh/-zplg-unload
  `-- add-zsh-hook
 
-Uses feature(s): _sched_
+Uses feature(s): _sched_, _zle_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-service
 ~~~~~~~~~~~~~
 
 ____
- # Handles given service, i.e. obtains lock, runs it, or waits if no lock
- #
- # $1 - type "p" or "s" (plugin or snippet)
- # $2 - mode - for plugin (light or load)
- # $3 - id - URL or plugin ID
+ 
+ Handles given service, i.e. obtains lock, runs it, or waits if no lock
+ 
+ $1 - type "p" or "s" (plugin or snippet)
+ $2 - mode - for plugin (light or load)
+ $3 - id - URL or plugin ID
 ____
 
 Has 30 line(s). Calls functions:
@@ -712,14 +766,15 @@ Has 30 line(s). Calls functions:
 
 Uses feature(s): _kill_, _read_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-shadow-off
 ~~~~~~~~~~~~~~~~
 
 ____
- # Turn off shadowing completely for a given mode ("load", "light"
- # or "compdef").
+ 
+ Turn off shadowing completely for a given mode ("load", "light"
+ or "compdef").
 ____
 
 Has 17 line(s). Doesn't call other functions.
@@ -735,9 +790,10 @@ Called by:
 ~~~~~~~~~~~~~~~
 
 ____
- # Turn on shadowing of builtins and functions according to passed
- # mode ("load", "light" or "compdef"). The shadowing is to gather
- # report data, and to hijack `autoload' and `compdef' calls.
+ 
+ Turn on shadowing of builtins and functions according to passed
+ mode ("load", "light" or "compdef"). The shadowing is to gather
+ report data, and to hijack `autoload' and `compdef' calls.
 ____
 
 Has 24 line(s). Doesn't call other functions.
@@ -750,7 +806,16 @@ Called by:
 -zplg-submit-turbo
 ~~~~~~~~~~~~~~~~~~
 
-Has 12 line(s). Doesn't call other functions.
+____
+ 
+ If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
+ preceded with `wait', `load' or `unload' ice-mods then the plugin
+ or snipped is to be loaded in turbo-mode, and this function adds
+ it to internal data structures, so that -zplg-scheduler can run
+ (load, unload) this as a task.
+____
+
+Has 13 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -773,12 +838,14 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Copies task into ZPLG_RUN array, called when a task timeouts
+ 
+ Copies task into ZPLG_RUN array, called when a task timeouts.
+ A small function ran from pattern in /-substitution.
 ____
 
 Has 2 line(s). Doesn't call other functions.
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 pmodload
 ~~~~~~~~
@@ -790,17 +857,52 @@ Has 4 line(s). Calls functions:
      |-- -zplg-pack-ice
      `-- zplugin-install.zsh/-zplg-download-snippet
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+zpcdreplay
+~~~~~~~~~~
+
+____
+ 
+ A function that can be invoked from within `atinit', `atload', etc. ice-mod.
+ It works like `zplugin cdreplay', which cannot be invoked from hook ices.
+____
+
+Has 1 line(s). Calls functions:
+
+ zpcdreplay
+ `-- -zplg-compdef-replay
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+zpcompinit
+~~~~~~~~~~
+
+____
+ 
+ A function that can be invoked from within `atinit', `atload', etc. ice-mod.
+ It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
+____
+
+Has 1 line(s). Calls functions:
+
+ zpcompinit
+ `-- compinit
+
+Uses feature(s): _autoload_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 zplugin
 ~~~~~~~
 
 ____
- # Main function directly exposed to user, obtains subcommand
- # and its arguments, has completion.
+ 
+ Main function directly exposed to user, obtains subcommand
+ and its arguments, has completion.
 ____
 
-Has 244 line(s). Calls functions:
+Has 262 line(s). Calls functions:
 
  zplugin
  |-- -zplg-clear-debug-report
@@ -856,8 +958,10 @@ Has 244 line(s). Calls functions:
  |-- zplugin-autoload.zsh/-zplg-edit
  |-- zplugin-autoload.zsh/-zplg-glance
  |-- zplugin-autoload.zsh/-zplg-help
+ |-- zplugin-autoload.zsh/-zplg-list-bindkeys
  |-- zplugin-autoload.zsh/-zplg-list-compdef-replay
  |-- zplugin-autoload.zsh/-zplg-ls
+ |-- zplugin-autoload.zsh/-zplg-recall
  |-- zplugin-autoload.zsh/-zplg-recently
  |-- zplugin-autoload.zsh/-zplg-search-completions
  |-- zplugin-autoload.zsh/-zplg-self-update
@@ -880,14 +984,14 @@ Has 244 line(s). Calls functions:
 
 Uses feature(s): _autoload_, _eval_, _source_
 
-Not called by script or any function, may be a hook or Zle widget, etc.
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 add-zsh-hook
 ~~~~~~~~~~~~
 
 Has 93 line(s). Doesn't call other functions.
 
-Uses feature(s): _autoload_
+Uses feature(s): _autoload_, _getopts_
 
 Called by:
 
@@ -897,18 +1001,19 @@ Called by:
 compinit
 ~~~~~~~~
 
-Has 542 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
+ zpcompinit
  zplugin
 
 is-at-least
 ~~~~~~~~~~~
 
-Has 38 line(s). Doesn't call other functions.
+Has 56 line(s). Doesn't call other functions.
 
 Called by:
 

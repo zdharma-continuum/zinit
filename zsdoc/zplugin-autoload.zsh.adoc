@@ -44,11 +44,14 @@ FUNCTIONS
  -zplg-format-parameter
  -zplg-get-completion-owner
  -zplg-get-completion-owner-uspl2col
+ -zplg-get-path
  -zplg-glance
  -zplg-help
+ -zplg-list-bindkeys
  -zplg-list-compdef-replay
  -zplg-ls
  -zplg-prepare-readlink
+ -zplg-recall
  -zplg-recently
  -zplg-restore-extendedglob
  -zplg-save-set-extendedglob
@@ -76,17 +79,20 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 5 line(s). No functions are called (may attach to Zle or do hooks, etc.).
+Has 5 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
+
+Uses feature(s): _source_
 
 -zplg-any-to-uspl2
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Converts given plugin-spec to format that's used in keys for hash tables.
- # So basically, creates string "user/plugin" (this format is called: uspl2).
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - (optional) plugin (only when $1 - i.e. user - given)
+ 
+ Converts given plugin-spec to format that's used in keys for hash tables.
+ So basically, creates string "user/plugin" (this format is called: uspl2).
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
 Has 2 line(s). Calls functions:
@@ -114,21 +120,23 @@ Called by:
 ~~~~~~~~
 
 ____
- # Jumps to plugin's directory (in Zplugin's home directory).
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Jumps to plugin's directory (in Zplugin's home directory).
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 27 line(s). Calls functions:
+Has 2 line(s). Calls functions:
 
  -zplg-cd
- |-- zplugin-side.zsh/-zplg-exists-physically-message
- |-- zplugin-side.zsh/-zplg-shands-exp
- |-- zplugin-side.zsh/-zplg-two-paths
- `-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- -zplg-get-path
+     |-- zplugin-side.zsh/-zplg-exists-physically
+     |-- zplugin-side.zsh/-zplg-shands-exp
+     |-- zplugin-side.zsh/-zplg-two-paths
+     `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Called by:
 
@@ -138,11 +146,12 @@ Called by:
 ~~~~~~~~~~~~~~
 
 ____
- # Enables given installed completion.
- #
- # User-action entry point.
- #
- # $1 - e.g. "_mkdir" or "mkdir"
+ 
+ Enables given installed completion.
+ 
+ User-action entry point.
+ 
+ $1 - e.g. "_mkdir" or "mkdir"
 ____
 
 Has 30 line(s). Calls functions:
@@ -162,11 +171,12 @@ Called by:
 ~~~~~~~~~~~~~
 
 ____
- # Disables given installed completion.
- #
- # User-action entry point.
- #
- # $1 - e.g. "_mkdir" or "mkdir"
+ 
+ Disables given installed completion.
+ 
+ User-action entry point.
+ 
+ $1 - e.g. "_mkdir" or "mkdir"
 ____
 
 Has 31 line(s). Calls functions:
@@ -186,12 +196,13 @@ Called by:
 ~~~~~~~~~~~~~
 
 ____
- # Shows `git log` of given plugin.
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Shows `git log` of given plugin.
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 9 line(s). Calls functions:
@@ -208,14 +219,15 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Zplugin creates symlink for each installed completion.
- # This function checks whether given completion (i.e.
- # file like "_mkdir") is indeed a symlink. Backup file
- # is a completion that is disabled - has the leading "_"
- # removed.
- #
- # $1 - path to completion within plugin's directory
- # $2 - path to backup file within plugin's directory
+ 
+ Zplugin creates symlink for each installed completion.
+ This function checks whether given completion (i.e.
+ file like "_mkdir") is indeed a symlink. Backup file
+ is a completion that is disabled - has the leading "_"
+ removed.
+ 
+ $1 - path to completion within plugin's directory
+ $2 - path to backup file within plugin's directory
 ____
 
 Has 11 line(s). Doesn't call other functions.
@@ -229,15 +241,16 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # For each argument that each should be a path to completion
- # within a plugin's dir, it checks whether that completion
- # is disabled - returns 0 or 1 on corresponding positions
- # in reply.
- #
- # Uninstalled completions will be reported as "0"
- # - i.e. disabled
- #
- # $1, ... - path to completion within plugin's directory
+ 
+ For each argument that each should be a path to completion
+ within a plugin's dir, it checks whether that completion
+ is disabled - returns 0 or 1 on corresponding positions
+ in reply.
+ 
+ Uninstalled completions will be reported as "0"
+ - i.e. disabled
+ 
+ $1, ... - path to completion within plugin's directory
 ____
 
 Has 11 line(s). Doesn't call other functions.
@@ -250,12 +263,13 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # For each argument that each should be a path to completion
- # within a plugin's dir, it checks whether that completion
- # is installed - returns 0 or 1 on corresponding positions
- # in reply.
- #
- # $1, ... - path to completion within plugin's directory
+ 
+ For each argument that each should be a path to completion
+ within a plugin's dir, it checks whether that completion
+ is installed - returns 0 or 1 on corresponding positions
+ in reply.
+ 
+ $1, ... - path to completion within plugin's directory
 ____
 
 Has 12 line(s). Doesn't call other functions.
@@ -268,12 +282,13 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Delete stray and improper completions.
- #
- # Completions live even when plugin isn't loaded - if they are
- # installed and enabled.
- #
- # User-action entry point.
+ 
+ Delete stray and improper completions.
+ 
+ Completions live even when plugin isn't loaded - if they are
+ installed and enabled.
+ 
+ User-action entry point.
 ____
 
 Has 37 line(s). Calls functions:
@@ -291,11 +306,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Clears all report data for given user/plugin. This is
- # done by resetting all related global ZPLG_* hashes.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - (optional) plugin (only when $1 - i.e. user - given)
+ 
+ Clears all report data for given user/plugin. This is
+ done by resetting all related global ZPLG_* hashes.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
 Has 23 line(s). Calls functions:
@@ -313,9 +329,10 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Compiles or uncompiles all existing (on disk) plugins.
- #
- # User-action entry point.
+ 
+ Compiles or uncompiles all existing (on disk) plugins.
+ 
+ User-action entry point.
 ____
 
 Has 23 line(s). Calls functions:
@@ -336,9 +353,10 @@ Called by:
 ~~~~~~~~~~~~~~
 
 ____
- # Displays list of plugins that are compiled.
- #
- # User-action entry point.
+ 
+ Displays list of plugins that are compiled.
+ 
+ User-action entry point.
 ____
 
 Has 26 line(s). Calls functions:
@@ -355,12 +373,13 @@ Called by:
 ~~~~~~~~~~~~~~
 
 ____
- # User-exposed `compinit' frontend which first ensures that all
- # completions managed by Zplugin are forgotten by Zshell. After
- # that it runs normal `compinit', which should more easily detect
- # Zplugin's completions.
- #
- # No arguments.
+ 
+ User-exposed `compinit' frontend which first ensures that all
+ completions managed by Zplugin are forgotten by Zshell. After
+ that it runs normal `compinit', which should more easily detect
+ Zplugin's completions.
+ 
+ No arguments.
 ____
 
 Has 23 line(s). Calls functions:
@@ -379,19 +398,23 @@ Called by:
 ~~~~~~~~~~~~~~~~~
 
 ____
- # Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
- # ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
- # returns path to snippet directory and optional name of snippet file (only
- # valid if ZPLG_ICE[svn] is not set).
- #
- # $1 - URL (also plugin-spec in future)
- # $2 - "pack" or "nopack" - packing means ZPLG_ICE wins with static ice
- # $3 - name of output associative array, "ZPLG_ICE" is the default
- # $4 - name of output string parameter, to hold path to directory ("local_dir")
- # $5 - name of output string parameter, to hold filename ("filename")
+ 
+ Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
+ ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+ returns path to snippet directory and optional name of snippet file (only
+ valid if ZPLG_ICE[svn] is not set).
+ 
+ Can also pack resulting ices into ZPLG_SICE (see $2).
+ 
+ $1 - URL (also plugin-spec in future)
+ $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
+ "pack-nf" means that disk-ices will be ignored (no-file?)
+ $3 - name of output associative array, "ZPLG_ICE" is the default
+ $4 - name of output string parameter, to hold path to directory ("local_dir")
+ $5 - name of output string parameter, to hold filename ("filename")
 ____
 
-Has 70 line(s). Calls functions:
+Has 78 line(s). Calls functions:
 
  -zplg-compute-ice
  |-- zplugin-side.zsh/-zplg-two-paths
@@ -399,6 +422,7 @@ Has 70 line(s). Calls functions:
 
 Called by:
 
+ -zplg-recall
  -zplg-update-or-status-snippet
  -zplg-update-or-status
 
@@ -406,11 +430,12 @@ Called by:
 ~~~~~~~~~~~~~
 
 ____
- # Prints given question, waits for "y" key, evals
- # given expression if "y" obtained
- #
- # $1 - question
- # $2 - expression
+ 
+ Prints given question, waits for "y" key, evals
+ given expression if "y" obtained
+ 
+ $1 - question
+ $2 - expression
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -425,12 +450,13 @@ Called by:
 ~~~~~~~~~~~~
 
 ____
- # Creates a plugin, also on Github (if not "_local/name" plugin).
- #
- # User-action entry point.
- #
- # $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - (optional) plugin (only when $1 - i.e. user - given)
+ 
+ Creates a plugin, also on Github (if not "_local/name" plugin).
+ 
+ User-action entry point.
+ 
+ $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
 Has 61 line(s). Calls functions:
@@ -450,12 +476,13 @@ Called by:
 ~~~~~~~~~~~~
 
 ____
- # Deletes plugin's or snippet's directory (in Zplugin's home directory).
- #
- # User-action entry point.
- #
- # $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Deletes plugin's or snippet's directory (in Zplugin's home directory).
+ 
+ User-action entry point.
+ 
+ $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 28 line(s). Calls functions:
@@ -475,10 +502,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Computes ZPLG_PATH, ZPLG_FPATH that hold (f)path components
- # added by plugin. Uses data gathered earlier by -zplg-diff-env().
- #
- # $1 - user/plugin
+ 
+ Computes ZPLG_PATH, ZPLG_FPATH that hold (f)path components
+ added by plugin. Uses data gathered earlier by -zplg-diff-env().
+ 
+ $1 - user/plugin
 ____
 
 Has 30 line(s). Doesn't call other functions.
@@ -492,10 +520,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Computes ZPLG_FUNCTIONS that holds new functions added by plugin.
- # Uses data gathered earlier by -zplg-diff-functions().
- #
- # $1 - user/plugin
+ 
+ Computes ZPLG_FUNCTIONS that holds new functions added by plugin.
+ Uses data gathered earlier by -zplg-diff-functions().
+ 
+ $1 - user/plugin
 ____
 
 Has 19 line(s). Doesn't call other functions.
@@ -509,10 +538,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Computes ZPLG_OPTIONS that holds options changed by plugin.
- # Uses data gathered earlier by -zplg-diff-options().
- #
- # $1 - user/plugin
+ 
+ Computes ZPLG_OPTIONS that holds options changed by plugin.
+ Uses data gathered earlier by -zplg-diff-options().
+ 
+ $1 - user/plugin
 ____
 
 Has 17 line(s). Doesn't call other functions.
@@ -526,11 +556,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Computes ZPLG_PARAMETERS_PRE, ZPLG_PARAMETERS_POST that hold
- # parameters created or changed (their type) by plugin. Uses
- # data gathered earlier by -zplg-diff-parameter().
- #
- # $1 - user/plugin
+ 
+ Computes ZPLG_PARAMETERS_PRE, ZPLG_PARAMETERS_POST that hold
+ parameters created or changed (their type) by plugin. Uses
+ data gathered earlier by -zplg-diff-parameter().
+ 
+ $1 - user/plugin
 ____
 
 Has 28 line(s). Doesn't call other functions.
@@ -544,13 +575,14 @@ Called by:
 ~~~~~~~~~~
 
 ____
- # Runs $EDITOR on source of given plugin. If the variable is not
- # set then defaults to `vim'.
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Runs $EDITOR on source of given plugin. If the variable is not
+ set then defaults to `vim'.
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 13 line(s). Calls functions:
@@ -568,11 +600,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Checks if plugin is loaded. Testable. Also outputs error
- # message if plugin is not loaded.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - (optional) plugin (only when $1 - i.e. user - given)
+ 
+ Checks if plugin is loaded. Testable. Also outputs error
+ message if plugin is not loaded.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
 Has 7 line(s). Calls functions:
@@ -591,11 +624,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Searches for completions owned by given plugin.
- # Returns them in `reply' array.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Searches for completions owned by given plugin.
+ Returns them in `reply' array.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 5 line(s). Calls functions:
@@ -611,11 +645,12 @@ Called by:
 ~~~~~~~~~~~~~~~~
 
 ____
- # Creates one-column text about FPATH or PATH elements
- # added when given plugin was loaded.
- #
- # $1 - user/plugin (i.e. uspl2 format of plugin-spec)
- # $2 - if 1, then examine PATH, if 2, then examine FPATH
+ 
+ Creates one-column text about FPATH or PATH elements
+ added when given plugin was loaded.
+ 
+ $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+ $2 - if 1, then examine PATH, if 2, then examine FPATH
 ____
 
 Has 16 line(s). Doesn't call other functions.
@@ -628,10 +663,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Creates a one or two columns text with functions created
- # by given plugin.
- #
- # $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+ 
+ Creates a one or two columns text with functions created
+ by given plugin.
+ 
+ $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 ____
 
 Has 36 line(s). Doesn't call other functions.
@@ -644,10 +680,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Creates one-column text about options that changed when
- # plugin "$1" was loaded.
- #
- # $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+ 
+ Creates one-column text about options that changed when
+ plugin "$1" was loaded.
+ 
+ $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 ____
 
 Has 21 line(s). Calls functions:
@@ -664,10 +701,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Creates one column text that lists global parameters that
- # changed when the given plugin was loaded.
- #
- # $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+ 
+ Creates one column text that lists global parameters that
+ changed when the given plugin was loaded.
+ 
+ $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 ____
 
 Has 34 line(s). Doesn't call other functions.
@@ -680,18 +718,19 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Returns "user---plugin" string (uspl1 format) of plugin that
- # owns given completion.
- #
- # Both :A and readlink will be used, then readlink's output if
- # results differ. Readlink might not be available.
- #
- # :A will read the link "twice" and give the final repository
- # directory, possibly without username in the uspl format;
- # readlink will read the link "once"
- #
- # $1 - absolute path to completion file (in COMPLETIONS_DIR)
- # $2 - readlink command (":" or "readlink")
+ 
+ Returns "user---plugin" string (uspl1 format) of plugin that
+ owns given completion.
+ 
+ Both :A and readlink will be used, then readlink's output if
+ results differ. Readlink might not be available.
+ 
+ :A will read the link "twice" and give the final repository
+ directory, possibly without username in the uspl format;
+ readlink will read the link "once"
+ 
+ $1 - absolute path to completion file (in COMPLETIONS_DIR)
+ $2 - readlink command (":" or "readlink")
 ____
 
 Has 22 line(s). Doesn't call other functions.
@@ -706,11 +745,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # For shortening of code - returns colorized plugin name
- # that owns given completion.
- #
- # $1 - absolute path to completion file (in COMPLETIONS_DIR)
- # $2 - readlink command (":" or "readlink")
+ 
+ For shortening of code - returns colorized plugin name
+ that owns given completion.
+ 
+ $1 - absolute path to completion file (in COMPLETIONS_DIR)
+ $2 - readlink command (":" or "readlink")
 ____
 
 Has 2 line(s). Calls functions:
@@ -724,17 +764,33 @@ Called by:
  -zplg-cdisable
  -zplg-cenable
 
+-zplg-get-path
+~~~~~~~~~~~~~~
+
+Has 31 line(s). Calls functions:
+
+ -zplg-get-path
+ |-- zplugin-side.zsh/-zplg-exists-physically
+ |-- zplugin-side.zsh/-zplg-shands-exp
+ |-- zplugin-side.zsh/-zplg-two-paths
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ -zplg-cd
+
 -zplg-glance
 ~~~~~~~~~~~~
 
 ____
- # Shows colorized source code of plugin. Is able to use pygmentize,
- # highlight, GNU source-highlight.
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Shows colorized source code of plugin. Is able to use pygmentize,
+ highlight, GNU source-highlight.
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 39 line(s). Calls functions:
@@ -752,12 +808,25 @@ Called by:
 ~~~~~~~~~~
 
 ____
- # Shows usage information.
- #
- # User-action entry point.
+ 
+ Shows usage information.
+ 
+ User-action entry point.
 ____
 
-Has 43 line(s). Doesn't call other functions.
+Has 49 line(s). Doesn't call other functions.
+
+Called by:
+
+ zplugin.zsh/zplugin
+
+-zplg-list-bindkeys
+~~~~~~~~~~~~~~~~~~~
+
+Has 42 line(s). Calls functions:
+
+ -zplg-list-bindkeys
+ `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
 
 Called by:
 
@@ -767,11 +836,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Shows recorded compdefs (called by plugins loaded earlier).
- # Plugins often call `compdef' hoping for `compinit' being
- # already ran. Zplugin solves this by recording compdefs.
- #
- # User-action entry point.
+ 
+ Shows recorded compdefs (called by plugins loaded earlier).
+ Plugins often call `compdef' hoping for `compinit' being
+ already ran. Zplugin solves this by recording compdefs.
+ 
+ User-action entry point.
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -793,9 +863,10 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Prepares readlink command, used for establishing completion's owner.
- #
- # $REPLY = ":" or "readlink"
+ 
+ Prepares readlink command, used for establishing completion's owner.
+ 
+ $REPLY = ":" or "readlink"
 ____
 
 Has 4 line(s). Doesn't call other functions.
@@ -809,15 +880,33 @@ Called by:
  -zplg-clear-completions
  -zplg-show-completions
 
+-zplg-recall
+~~~~~~~~~~~~
+
+Has 35 line(s). Calls functions:
+
+ -zplg-recall
+ |-- -zplg-compute-ice
+ |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   `-- zplugin.zsh/-zplg-pack-ice
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Uses feature(s): _wait_
+
+Called by:
+
+ zplugin.zsh/zplugin
+
 -zplg-recently
 ~~~~~~~~~~~~~~
 
 ____
- # Shows plugins that obtained commits in specified past time.
- #
- # User-action entry point.
- #
- # $1 - time spec, e.g. "1 week"
+ 
+ Shows plugins that obtained commits in specified past time.
+ 
+ User-action entry point.
+ 
+ $1 - time spec, e.g. "1 week"
 ____
 
 Has 26 line(s). Calls functions:
@@ -833,7 +922,8 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Restores extendedglob-option from state saved earlier.
+ 
+ Restores extendedglob-option from state saved earlier.
 ____
 
 Has 1 line(s). Doesn't call other functions.
@@ -848,8 +938,9 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Enables extendedglob-option first saving if it was already
- # enabled, for restoration of this state later.
+ 
+ Enables extendedglob-option first saving if it was already
+ enabled, for restoration of this state later.
 ____
 
 Has 2 line(s). Doesn't call other functions.
@@ -864,11 +955,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # While -zplg-show-completions() shows what completions are
- # installed, this functions searches through all plugin dirs
- # showing what's available in general (for installation).
- #
- # User-action entry point.
+ 
+ While -zplg-show-completions() shows what completions are
+ installed, this functions searches through all plugin dirs
+ showing what's available in general (for installation).
+ 
+ User-action entry point.
 ____
 
 Has 43 line(s). Calls functions:
@@ -884,12 +976,13 @@ Called by:
 ~~~~~~~~~~~~~~~~~
 
 ____
- # Updates Zplugin code (does a git pull).
- #
- # User-action entry point.
+ 
+ Updates Zplugin code (does a git pull).
+ 
+ User-action entry point.
 ____
 
-Has 5 line(s). Doesn't call other functions.
+Has 10 line(s). Doesn't call other functions.
 
 Uses feature(s): _zcompile_
 
@@ -901,9 +994,10 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Displays reports of all loaded plugins.
- #
- # User-action entry point.
+ 
+ Displays reports of all loaded plugins.
+ 
+ User-action entry point.
 ____
 
 Has 5 line(s). Calls functions:
@@ -938,13 +1032,14 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Display installed (enabled and disabled), completions. Detect
- # stray and improper ones.
- #
- # Completions live even when plugin isn't loaded - if they are
- # installed and enabled.
- #
- # User-action entry point.
+ 
+ Display installed (enabled and disabled), completions. Detect
+ stray and improper ones.
+ 
+ Completions live even when plugin isn't loaded - if they are
+ installed and enabled.
+ 
+ User-action entry point.
 ____
 
 Has 72 line(s). Calls functions:
@@ -962,9 +1057,10 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Displays dtrace report (data recorded in interactive session).
- #
- # User-action entry point.
+ 
+ Displays dtrace report (data recorded in interactive session).
+ 
+ User-action entry point.
 ____
 
 Has 1 line(s). Calls functions:
@@ -999,9 +1095,10 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Lists loaded plugins (subcommands list, lodaded).
- #
- # User-action entry point.
+ 
+ Lists loaded plugins (subcommands list, lodaded).
+ 
+ User-action entry point.
 ____
 
 Has 21 line(s). Calls functions:
@@ -1019,12 +1116,13 @@ Called by:
 ~~~~~~~~~~~~~~~~~
 
 ____
- # Displays report of the plugin given.
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Displays report of the plugin given.
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 61 line(s). Calls functions:
@@ -1060,12 +1158,13 @@ Called by:
 ~~~~~~~~~~~~~~~~
 
 ____
- # Shows loading times of all loaded plugins.
- #
- # User-action entry point.
+ 
+ Shows loading times of all loaded plugins.
+ 
+ User-action entry point.
 ____
 
-Has 19 line(s). Calls functions:
+Has 31 line(s). Calls functions:
 
  -zplg-show-times
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -1078,10 +1177,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~
 
 ____
- # Shows Zplugin status, i.e. number of loaded plugins,
- # of available completions, etc.
- #
- # User-action entry point.
+ 
+ Shows Zplugin status, i.e. number of loaded plugins,
+ of available completions, etc.
+ 
+ User-action entry point.
 ____
 
 Has 41 line(s). Doesn't call other functions.
@@ -1094,16 +1194,17 @@ Called by:
 ~~~~~~~~~~~~
 
 ____
- # Compiles plugin with various options on and off to see
- # how well the code is written. The options are:
- #
- # NO_SHORT_LOOPS, IGNORE_BRACES, IGNORE_CLOSE_BRACES, SH_GLOB,
- # CSH_JUNKIE_QUOTES, NO_MULTI_FUNC_DEF.
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Compiles plugin with various options on and off to see
+ how well the code is written. The options are:
+ 
+ NO_SHORT_LOOPS, IGNORE_BRACES, IGNORE_CLOSE_BRACES, SH_GLOB,
+ CSH_JUNKIE_QUOTES, NO_MULTI_FUNC_DEF.
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 35 line(s). Calls functions:
@@ -1123,12 +1224,13 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Uncompiles given plugin.
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Uncompiles given plugin.
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 22 line(s). Calls functions:
@@ -1146,11 +1248,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Removes all completions of given plugin from Zshell (i.e. from FPATH).
- # The FPATH is typically `~/.zplugin/completions/'.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Removes all completions of given plugin from Zshell (i.e. from FPATH).
+ The FPATH is typically `~/.zplugin/completions/'.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 40 line(s). Calls functions:
@@ -1168,23 +1271,24 @@ Called by:
 ~~~~~~~~~~~~
 
 ____
- # 1. Unfunction functions (created by plugin)
- # 2. Delete bindkeys (...)
- # 3. Delete Zstyles
- # 4. Restore options
- # 5. Remove aliases
- # 6. Restore Zle state
- # 7. Clean-up FPATH and PATH
- # 8. Delete created variables
- # 9. Forget the plugin
- #
- # User-action entry point.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ 1. Unfunction functions (created by plugin)
+ 2. Delete bindkeys (...)
+ 3. Delete Zstyles
+ 4. Restore options
+ 5. Remove aliases
+ 6. Restore Zle state
+ 7. Clean-up FPATH and PATH
+ 8. Delete created variables
+ 9. Forget the plugin
+ 
+ User-action entry point.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 228 line(s). Calls functions:
+Has 241 line(s). Calls functions:
 
  -zplg-unload
  |-- -zplg-clear-report-for
@@ -1217,16 +1321,17 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Updates (git pull) or does `git status' for given plugin.
- #
- # User-action entry point.
- #
- # $1 - "status" for status, other for update
- # $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
- # $3 - plugin (only when $1 - i.e. user - given)
+ 
+ Updates (git pull) or does `git status' for given plugin.
+ 
+ User-action entry point.
+ 
+ $1 - "status" for status, other for update
+ $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+ $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 93 line(s). Calls functions:
+Has 96 line(s). Calls functions:
 
  -zplg-update-or-status
  |-- -zplg-at-eval
@@ -1256,11 +1361,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Updates (git pull) or does `git status` for all existing plugins.
- # This includes also plugins that are not loaded into Zsh (but exist
- # on disk). Also updates (i.e. redownloads) snippets.
- #
- # User-action entry point.
+ 
+ Updates (git pull) or does `git status` for all existing plugins.
+ This includes also plugins that are not loaded into Zsh (but exist
+ on disk). Also updates (i.e. redownloads) snippets.
+ 
+ User-action entry point.
 ____
 
 Has 55 line(s). Calls functions:
@@ -1298,11 +1404,12 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- #
- # Implements update or status operation for snippet given by URL.
- #
- # $1 - "status" or "update"
- # $2 - snippet URL
+ 
+ 
+ Implements update or status operation for snippet given by URL.
+ 
+ $1 - "status" or "update"
+ $2 - snippet URL
 ____
 
 Has 19 line(s). Calls functions:
@@ -1321,7 +1428,7 @@ Called by:
 compinit
 ~~~~~~~~
 
-Has 542 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 

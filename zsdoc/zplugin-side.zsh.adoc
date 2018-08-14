@@ -27,18 +27,19 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 1 line(s). No functions are called (may attach to Zle or do hooks, etc.).
+Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 -zplg-any-colorify-as-uspl2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Returns ANSI-colorified "user/plugin" string, from any supported
- # plugin spec (user--plugin, user/plugin, user plugin, plugin).
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
- # $REPLY = ANSI-colorified "user/plugin" string
+ 
+ Returns ANSI-colorified "user/plugin" string, from any supported
+ plugin spec (user--plugin, user/plugin, user plugin, plugin).
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
+ $REPLY = ANSI-colorified "user/plugin" string
 ____
 
 Has 11 line(s). Calls functions:
@@ -55,6 +56,7 @@ Called by:
  zplugin-autoload.zsh/-zplg-create
  zplugin-autoload.zsh/-zplg-exists-message
  zplugin-autoload.zsh/-zplg-get-completion-owner-uspl2col
+ zplugin-autoload.zsh/-zplg-list-bindkeys
  zplugin-autoload.zsh/-zplg-recently
  zplugin-autoload.zsh/-zplg-search-completions
  zplugin-autoload.zsh/-zplg-show-completions
@@ -71,12 +73,13 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Checks if directory of given plugin exists in PLUGIN_DIR.
- #
- # Testable.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Checks if directory of given plugin exists in PLUGIN_DIR.
+ 
+ Testable.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 10 line(s). Calls functions:
@@ -89,18 +92,20 @@ Called by:
 
  -zplg-exists-physically-message
  zplugin-autoload.zsh/-zplg-create
+ zplugin-autoload.zsh/-zplg-get-path
 
 -zplg-exists-physically-message
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Checks if directory of given plugin exists in PLUGIN_DIR,
- # and outputs error message if it doesn't.
- #
- # Testable.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Checks if directory of given plugin exists in PLUGIN_DIR,
+ and outputs error message if it doesn't.
+ 
+ Testable.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 11 line(s). Calls functions:
@@ -115,7 +120,6 @@ Has 11 line(s). Calls functions:
 
 Called by:
 
- zplugin-autoload.zsh/-zplg-cd
  zplugin-autoload.zsh/-zplg-changes
  zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-edit
@@ -129,15 +133,16 @@ Called by:
 ~~~~~~~~~~~
 
 ____
- # Finds the main file of plugin. There are multiple file name
- # formats, they are ordered in order starting from more correct
- # ones, and matched. -zplg-load-plugin() has similar code parts
- # and doesn't call -zplg-first() – for performance. Obscure matching
- # is done in -zplg-find-other-matches, here and in -zplg-load().
- # Obscure = non-standard main-file naming convention.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Finds the main file of plugin. There are multiple file name
+ formats, they are ordered in order starting from more correct
+ ones, and matched. -zplg-load-plugin() has similar code parts
+ and doesn't call -zplg-first() – for performance. Obscure matching
+ is done in -zplg-find-other-matches, here and in -zplg-load().
+ Obscure = non-standard main-file naming convention.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
 Has 25 line(s). Calls functions:
@@ -157,8 +162,9 @@ Called by:
 ~~~~~~~~~~~~~~~~
 
 ____
- # Does expansion of currently little unstandarized
- # shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
+ 
+ Does expansion of currently little unstandarized
+ shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
 ____
 
 Has 7 line(s). Doesn't call other functions.
@@ -167,19 +173,20 @@ Called by:
 
  -zplg-exists-physically-message
  -zplg-exists-physically
- zplugin-autoload.zsh/-zplg-cd
  zplugin-autoload.zsh/-zplg-delete
+ zplugin-autoload.zsh/-zplg-get-path
 
 -zplg-store-ices
 ~~~~~~~~~~~~~~~~
 
 ____
- # Saves ice mods in given hash onto disk.
- #
- # $1 - directory where to create / delete files
- # $2 - name of hash that holds values
- # $3 - additional keys of hash to store, space separated
- # $4 - additional keys of hash to store, empty-meaningful ices, space separated
+ 
+ Saves ice mods in given hash onto disk.
+ 
+ $1 - directory where to create / delete files
+ $2 - name of hash that holds values
+ $3 - additional keys of hash to store, space separated
+ $4 - additional keys of hash to store, empty-meaningful ices, space separated
 ____
 
 Has 16 line(s). Doesn't call other functions.
@@ -194,16 +201,17 @@ Called by:
 ~~~~~~~~~~~~~~~
 
 ____
- # Obtains a snippet URL without specification if it is an SVN URL (points to
- # directory) or regular URL (points to file), returns 2 possible paths for
- # further examination
+ 
+ Obtains a snippet URL without specification if it is an SVN URL (points to
+ directory) or regular URL (points to file), returns 2 possible paths for
+ further examination
 ____
 
 Has 22 line(s). Doesn't call other functions.
 
 Called by:
 
- zplugin-autoload.zsh/-zplg-cd
  zplugin-autoload.zsh/-zplg-compute-ice
  zplugin-autoload.zsh/-zplg-delete
+ zplugin-autoload.zsh/-zplg-get-path
 

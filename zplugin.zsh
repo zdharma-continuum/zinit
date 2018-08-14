@@ -1388,6 +1388,11 @@ builtin setopt noaliases
 }
 # }}}
 # FUNCTION: -zplg-submit-turbo {{{
+# If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
+# preceded with `wait', `load' or `unload' ice-mods then the plugin
+# or snipped is to be loaded in turbo-mode, and this function adds
+# it to internal data structures, so that -zplg-scheduler can run
+# (load, unload) this as a task.
 -zplg-submit-turbo() {
     local tpe="$1" mode="$2" opt_uspl2="$3" opt_plugin="$4"
 
@@ -1405,15 +1410,28 @@ builtin setopt noaliases
 }
 # }}}
 # FUNCTION: -zplugin_scheduler_add_sh {{{
-# Copies task into ZPLG_RUN array, called when a task timeouts
+# Copies task into ZPLG_RUN array, called when a task timeouts.
+# A small function ran from pattern in /-substitution.
 -zplugin_scheduler_add_sh() {
     ZPLG_RUN+=( "${ZPLG_TASKS[$1]}" )
     return 1
 }
 # }}}
 # FUNCTION: -zplg-scheduler {{{
-# Searches for timeout tasks, executes them
-# $1 - if not empty, it's a following, not first call
+# Searches for timeout tasks, executes them. There's an array of tasks
+# waiting for execution, this scheduler manages them, detects which ones
+# should be run at current moment, decides to remove (or not) them from
+# the array after execution.
+#
+# $1 - if "following", then it is non-first (second and more) invocation
+#      of the scheduler; this results in chain of `sched' invocations that
+#      results in repetitive -zplg-scheduler activity;
+#
+#      if "burst", then all tasks are marked timeout and executed one by one;
+#      this is handy if e.g. a docker image starts up and needs to install
+#      all turbo-mode plugins without any hesitation (delay), i.e. "burst"
+#      allows to run package installations from script, not from prompt
+#
 -zplg-scheduler() {
     integer __ret=$?
     [[ "$1" = "following" ]] && sched +1 "-zplg-scheduler following"
@@ -1754,9 +1772,13 @@ zplugin() {
     esac
 } # }}}
 # FUNCTION: zpcdreplay {{{
+# A function that can be invoked from within `atinit', `atload', etc. ice-mod.
+# It works like `zplugin cdreplay', which cannot be invoked from hook ices.
 zpcdreplay() { -zplg-compdef-replay -q; }
 # }}}
 # FUNCTION: zpcompinit {{{
+# A function that can be invoked from within `atinit', `atload', etc. ice-mod.
+# It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
 zpcompinit() { autoload compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}; }
 # }}}
 

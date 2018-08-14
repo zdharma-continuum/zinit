@@ -30,7 +30,9 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 3 line(s). No functions are called (may attach to Zle or do hooks, etc.).
+Has 3 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
+
+Uses feature(s): _source_
 
 -zplg-at-eval
 ~~~~~~~~~~~~~
@@ -47,14 +49,15 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Compiles given plugin (its main source file, and also an
- # additional "....zsh" file if it exists).
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
+ 
+ Compiles given plugin (its main source file, and also an
+ additional "....zsh" file if it exists).
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 30 line(s). Calls functions:
+Has 46 line(s). Calls functions:
 
  -zplg-compile-plugin
  |-- zplugin-side.zsh/-zplg-first
@@ -72,8 +75,9 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Downloads file to stdout. Supports following backend commands:
- # curl, wget, lftp, lynx. Used by snippet loading.
+ 
+ Downloads file to stdout. Supports following backend commands:
+ curl, wget, lftp, lynx. Used by snippet loading.
 ____
 
 Has 32 line(s). Calls functions:
@@ -91,13 +95,14 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Downloads snippet – either a file – with curl, wget, lftp or lynx,
- # or a directory, with Subversion – when svn-ICE is active. Github
- # supports Subversion protocol and allows to clone subdirectories.
- # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
+ 
+ Downloads snippet – either a file – with curl, wget, lftp or lynx,
+ or a directory, with Subversion – when svn-ICE is active. Github
+ supports Subversion protocol and allows to clone subdirectories.
+ This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 111 line(s). Calls functions:
+Has 129 line(s). Calls functions:
 
  -zplg-download-snippet
  |-- -zplg-at-eval
@@ -120,10 +125,11 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Implements alternation of Zsh state so that already initialized
- # completion stops being visible to Zsh.
- #
- # $1 - completion function name, e.g. "_cp"; can also be "cp"
+ 
+ Implements alternation of Zsh state so that already initialized
+ completion stops being visible to Zsh.
+ 
+ $1 - completion function name, e.g. "_cp"; can also be "cp"
 ____
 
 Has 15 line(s). Doesn't call other functions.
@@ -141,8 +147,9 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Gets version string of latest release of given Github
- # package. Connects to Github releases page.
+ 
+ Gets version string of latest release of given Github
+ package. Connects to Github releases page.
 ____
 
 Has 14 line(s). Calls functions:
@@ -158,16 +165,17 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # If the file is an archive, it is extracted by this function.
- # Next stage is scanning of files with the common utility `file',
- # to detect executables. They are given +x mode. There are also
- # messages to the user on performed actions.
- #
- # $1 - url
- # $2 - file
+ 
+ If the file is an archive, it is extracted by this function.
+ Next stage is scanning of files with the common utility `file',
+ to detect executables. They are given +x mode. There are also
+ messages to the user on performed actions.
+ 
+ $1 - url
+ $2 - file
 ____
 
-Has 53 line(s). Doesn't call other functions.
+Has 65 line(s). Doesn't call other functions.
 
 Uses feature(s): _unfunction_
 
@@ -179,14 +187,15 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Installs all completions of given plugin. After that they are
- # visible to `compinit'. Visible completions can be selectively
- # disabled and enabled. User can access completion data with
- # `clist' or `completions' subcommand.
- #
- # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- # $2 - plugin (only when $1 - i.e. user - given)
- # $3 - if 1, then reinstall, otherwise only install completions that aren't there
+ 
+ Installs all completions of given plugin. After that they are
+ visible to `compinit'. Visible completions can be selectively
+ disabled and enabled. User can access completion data with
+ `clist' or `completions' subcommand.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
+ $3 - if 1, then reinstall, otherwise only install completions that aren't there
 ____
 
 Has 39 line(s). Calls functions:
@@ -207,15 +216,16 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Used to clone subdirectories from Github. If in update mode
- # (see $2), then invokes `svn update', in normal mode invokes
- # `svn checkout --non-interactive -q <URL>'. In test mode only
- # compares remote and local revision and outputs true if update
- # is needed.
- #
- # $1 - URL
- # $2 - mode, "" - normal, "-u" - update, "-t" - test
- # $3 - subdirectory (not path) with working copy, needed for -t and -u
+ 
+ Used to clone subdirectories from Github. If in update mode
+ (see $2), then invokes `svn update', in normal mode invokes
+ `svn checkout --non-interactive -q <URL>'. In test mode only
+ compares remote and local revision and outputs true if update
+ is needed.
+ 
+ $1 - URL
+ $2 - mode, "" - normal, "-u" - update, "-t" - test
+ $3 - subdirectory (not path) with working copy, needed for -t and -u
 ____
 
 Has 27 line(s). Doesn't call other functions.
@@ -228,15 +238,16 @@ Called by:
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
- # Clones given plugin into PLUGIN_DIR. Supports multiple
- # sites (respecting `from' and `proto' ice modifiers).
- # Invokes compilation of plugin's main file.
- #
- # $1 - user
- # $2 - plugin
+ 
+ Clones given plugin into PLUGIN_DIR. Supports multiple
+ sites (respecting `from' and `proto' ice modifiers).
+ Invokes compilation of plugin's main file.
+ 
+ $1 - user
+ $2 - plugin
 ____
 
-Has 124 line(s). Calls functions:
+Has 136 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin
