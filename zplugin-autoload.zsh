@@ -689,7 +689,7 @@ ZPLGM[EXTENDED_GLOB]=""
     (( ${+functions[_vim_files]} )) && unfunction _vim_files
 
     builtin autoload -Uz compinit
-    compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+    compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
 } # }}}
 
 #

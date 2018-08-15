@@ -1637,7 +1637,7 @@ zplugin() {
                            -zplg-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
-                           compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+                           compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
                        fi
                    fi
                    ;;
@@ -1653,7 +1653,7 @@ zplugin() {
                            -zplg-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
-                           compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+                           compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
                        fi
                    fi
                    ;;
@@ -1665,7 +1665,7 @@ zplugin() {
                    -zplg-install-completions "$2" "$3" "1" "${(M)4:#-q}"
                    [[ -z "${(M)4:#-q}" ]] && print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
-                   compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+                   compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
                    ;;
                (cuninstall)
                    if [[ -z "$2" && -z "$3" ]]; then
@@ -1676,7 +1676,7 @@ zplugin() {
                        -zplg-uninstall-completions "$2" "$3"
                        print "Initializing completion (compinit)..."
                        builtin autoload -Uz compinit
-                       compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+                       compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
                    fi
                    ;;
                (csearch)
@@ -1779,7 +1779,7 @@ zpcdreplay() { -zplg-compdef-replay -q; }
 # FUNCTION: zpcompinit {{{
 # A function that can be invoked from within `atinit', `atload', etc. ice-mod.
 # It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
-zpcompinit() { autoload compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}; }
+zpcompinit() { autoload compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"; }
 # }}}
 
 #

@@ -959,6 +959,7 @@ local -A ZPLGM  # initial Zplugin's hash definition, then:
 | ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"     |
 | ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
 | ZPLGM[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. it's name can be different) |
+| ZPLGM[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zpcompinit`), use to pass -C to speed up loading |
 
 There is also `$ZPFX`, set by default to `~/.zplugin/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
