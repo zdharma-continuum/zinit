@@ -150,6 +150,14 @@ because the install script does this.)
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
 
 # News
+* 15-08-2018
+  - New `$ZPLGM` field `COMPINIT_OPTS` (also see [Customizing Paths](#customizing-paths)). You can pass
+    `-C` or `-i` there to mute the `insecure directories` messages. Typical use case could be:
+    ```zsh
+    zplugin ice wait"5" atinit"ZPLGM[COMPINIT_OPTS]-C; zpcompinit; zpcdreplay" lucid
+    zplugin light zdharma/fast-syntax-highlighting
+    ```
+
 * 13-08-2018
   - `self-update` (subcommand used to update Zplugin) now lists new commits downloaded by the update:
   ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-self-update.png)
