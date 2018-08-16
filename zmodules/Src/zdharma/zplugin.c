@@ -129,6 +129,119 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
 }
 /* }}} */
 
+/* FUNCTION: bin_zpmod {{{ */
+static int
+bin_zpmod(char *nam, char **argv, UNUSED(Options ops), UNUSED(int func)) {
+    char *subcmd = NULL;
+    int ret = 0;
+
+    if ( OPT_ISSET( ops, 'h' ) ) {
+        zpmod_usage();
+        return 0;
+    }
+
+    if ( !*argv ) {
+        zwarnnam( nam, "`zpmod' takes a sub-command as first argument, see -h" );
+        return 1;
+    }
+
+    subcmd = *argv ++;
+
+    if ( 0 == strcmp( subcmd, "report-append" ) ) {
+        char *target = NULL, *body = NULL;
+        int target_len = 0, body_len = 0;
+
+        target = *argv ++;
+        if ( !target ) {
+            zwarnnam( nam, "`report-append' is missing the target plugin ID (like \"zdharma/zbrowse\", see -h" );
+            return 1;
+        }
+        target = zp_unmetafy_zalloc( target, &target_len );
+        if ( !target ) {
+            zwarnnam( nam, "Couldn't allocate new memory (1), operation aborted" );
+            return 1;
+        }
+
+        body = *argv ++;
+        if ( !body ) {
+            zwarnnam( nam, "`report-append' is missing the report-body to append, see -h" );
+            return 1;
+        }
+        body_len = strlen( body );
+
+        ret = zp_append_report( nam, target, target_len, body, body_len );
+        zfree( target, target_len );
+    } else {
+        zwarnnam( nam, "Unknown zplugin-module command: `%s', see `-h'", subcmd );
+    }
+
+    return ret;
+}
+/* }}} */
+
+/* FUNCTION: zp_append_report {{{ */
+/**/
+static int
+zp_append_report( const char *nam, const char *target, int target_len, const char *body, int body_len ) {
+    Param pm = NULL, val_pm = NULL;
+    HashTable ht = NULL;
+    HashNode hn = NULL;
+    char *target_string = NULL;
+    int target_string_len = 0, new_extended_len = 0;
+
+    /* Get ZPLG_REPORTS associative array */
+    pm = ( Param ) paramtab->getnode( paramtab, "ZPLG_REPORTS" );
+    if ( !pm ) {
+        zwarnnam( nam, "Parameter $ZPLG_REPORTS isn't declared. Zplugin is not loaded? I.e. not sourced." );
+        return 1;
+    }
+
+    /* Get ZPLG_REPORTS[{target}] hashed Param */
+    ht = pm->u.hash;
+    hn = gethashnode2( ht, target );
+    val_pm = ( Param ) hn;
+    if ( !val_pm ) {
+        zwarnnam( nam, "Plugin %s isn't registered, cannot append to its report.", target );
+        return 1;
+    }
+
+    /* Nothing to append? */
+    if ( body_len == 0 ) {
+        return 0;
+    }
+
+    /* Get string that the hashed Param holds */
+    target_string = val_pm->u.str;
+    if( !target_string ) {
+        target_string_len = 0;
+    } else {
+        target_string_len = strlen( target_string );
+    }
+
+    /* Extend the string with additional body_len-bytes */
+    new_extended_len = target_string_len + body_len;
+    target_string = realloc( target_string, ( new_extended_len + 1 ) * sizeof( char ) );
+    if ( NULL == target_string ) {
+        zwarnnam( nam, "Couldn't allocate new memory (2), operation aborted" );
+        return 1;
+    }
+
+    /* Copy contents of body, null terminate */
+    memcpy( target_string + target_string_len, body, sizeof( char ) * body_len );
+    target_string[ new_extended_len ] = '\0';
+
+    /* Store the pointer in case realloc() allocated a new buffer */
+    val_pm->u.str = target_string;
+
+    return 0;
+}
+/* }}} */
+/* FUNCTION: zpmod_usage {{{ */
+/**/
+void zpmod_usage() {
+}
+/* }}} */
+
 /* FUNCTION: zp_createhashtable {{{ */
 /**/
 static HashTable
@@ -288,7 +401,8 @@ zp_unmetafy_zalloc( const char *to_copy, int *new_len )
 /* ARRAY: struct builtin bintab[] {{{ */
 static struct builtin bintab[] =
 {
-    BUILTIN( "custom_coproc", 0, bin_custom_dot, 1, 1, 0, "", NULL ),
+    BUILTIN( "custom_dot", 0, bin_custom_dot, 1, -1, 0, NULL, NULL ),
+    BUILTIN( "zpmod", 0, bin_zpmod, 0, -1, 0, "h", NULL ),
 };
 /* }}} */
 /* STRUCT: struct features module_features {{{ */
