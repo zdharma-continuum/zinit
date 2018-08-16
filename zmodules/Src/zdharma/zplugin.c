@@ -220,6 +220,71 @@ zp_freeparamnode( HashNode hn )
 }
 /* }}} */
 
+
+/* FUNCTION: my_ztrdup_glen {{{ */
+/**/
+char *
+my_ztrdup_glen( const char *s, unsigned *len_ret )
+{
+    char *t;
+
+    if ( !s )
+        return NULL;
+    t = ( char * )zalloc( ( *len_ret = strlen( ( char * )s ) ) + 1 );
+    strcpy(t, s);
+    return t;
+}
+/* }}} */
+/* FUNCTION: zp_unmetafy_zalloc {{{ */
+/*
+ * Unmetafy that:
+ * - duplicates buffer to work on it - original buffer is unchanged, can be zsfree'd,
+ * - does zalloc of exact size for the new unmeta-string - this string can be zfree'd,
+ * - restores work-buffer to original meta-content, to restore strlen - thus work-buffer can be zsfree'd,
+ * - returns actual length of the output unmeta-string, which should be passed to zfree.
+ *
+ * This function can be avoided if there's no need for new buffer, user should first strlen
+ * the metafied string, store the length into a variable (e.g. meta_length), then unmetafy,
+ * use the unmeta-content, then zfree( buf, meta_length ).
+ */
+
+/**/
+char *
+zp_unmetafy_zalloc( const char *to_copy, int *new_len )
+{
+    char *work, *to_return;
+    int my_new_len = 0;
+    unsigned meta_length = 0;
+
+    work = my_ztrdup_glen( to_copy, &meta_length );
+    if ( !work ) {
+        return NULL;
+    }
+
+    work = unmetafy( work, &my_new_len );
+
+    if ( new_len )
+        *new_len = my_new_len;
+
+    to_return = ( char * )zalloc( ( my_new_len + 1 ) * sizeof( char ) );
+    if ( !to_return ) {
+        zfree( work, meta_length );
+        return NULL;
+    }
+
+    memcpy( to_return, work, sizeof( char ) * my_new_len ); /* memcpy handles $'\0' */
+    to_return[ my_new_len ] = '\0';
+
+    /* Restore original content and correctly zsfree(). */
+    /* UPDATE: instead of zsfree() here now it is
+     * zfree() that's used and the length it needs
+     * is taken above from my_ztrdup_glen */
+    zfree( work, meta_length );
+
+    return to_return;
+}
+/* }}} */
+
 /* ARRAY: struct builtin bintab[] {{{ */
 static struct builtin bintab[] =
 {
