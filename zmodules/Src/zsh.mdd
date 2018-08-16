@@ -10,7 +10,7 @@ alwayslink=1
 # autofeatures not specified because of alwayslink
 
 objects="signames.o builtin.o module.o lex.o exec.o mem.o \
-string.o parse.o hashtable.o utils.o params.o options.o \
+string.o parse.o hashtable.o init.o utils.o params.o options.o \
 signals.o pattern.o compat.o jobs.o glob.o"
 
 headers="../config.h zsh_system.h zsh.h sigcount.h signals.h \
