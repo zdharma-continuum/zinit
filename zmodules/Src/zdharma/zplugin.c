@@ -131,7 +131,7 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
 
 /* FUNCTION: bin_zpmod {{{ */
 static int
-bin_zpmod(char *nam, char **argv, UNUSED(Options ops), UNUSED(int func)) {
+bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
     char *subcmd = NULL;
     int ret = 0;
 
@@ -239,6 +239,8 @@ zp_append_report( const char *nam, const char *target, int target_len, const cha
 /* FUNCTION: zpmod_usage {{{ */
 /**/
 void zpmod_usage() {
+    fprintf( stdout, "Usage: zpmod {subcommand} {subcommand-arguments}\n" );
+    fprintf( stdout, "       zpmod report-append {plugin-ID} {new-report-body}\n");
 }
 /* }}} */
 
@@ -344,7 +346,7 @@ my_ztrdup_glen( const char *s, unsigned *len_ret )
     if ( !s )
         return NULL;
     t = ( char * )zalloc( ( *len_ret = strlen( ( char * )s ) ) + 1 );
-    strcpy(t, s);
+    strcpy( t, s );
     return t;
 }
 /* }}} */
