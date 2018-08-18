@@ -758,9 +758,23 @@ custom_try_source_file(char *file)
     rc = stat(wc, &stc);
     rn = stat(file, &stn);
 
-    fprintf( stderr, "There %s bytecode and it is %s than %s\n",
-             !rc ? "is" : "is no", rc ? "(void)" : ( stc.st_mtime >= stn.st_mtime ? "more recent" : "less recent" ), file );
-    fflush( stderr );
+    /* If there's no .zwc, or if there is also script and it is more
+     * recent than bytecode */
+    if ( rc || (!rn && ( stc.st_mtime < stn.st_mtime ) ) ) {
+        char *args[] = { file, NULL };
+        struct options ops;
+
+        /* Initialise options structure */
+        memset(ops.ind, 0, MAX_OPS*sizeof(unsigned char));
+        ops.args = NULL;
+        ops.argscount = ops.argsalloc = 0;
+
+        /* Invoke compilation */
+        bin_zcompile("ZpluginModule", args, &ops, 0);
+
+        /* Repeat stat for newly created zwc */
+        rc = stat(wc, &stc);
+    }
 
     queue_signals();
     if (!rc && (rn || stc.st_mtime >= stn.st_mtime) &&
