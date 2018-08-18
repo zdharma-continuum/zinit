@@ -39,6 +39,469 @@ struct basic_node {
     struct hashnode node;
 };
 
+/* Option support {{{ */
+static int zp_opt_for_zsh_version[256] = { 0 };
+
+enum {
+    OPT_INVALID__,
+    ALIASESOPT__,
+    ALIASFUNCDEF__,
+    ALLEXPORT__,
+    ALWAYSLASTPROMPT__,
+    ALWAYSTOEND__,
+    APPENDHISTORY__,
+    AUTOCD__,
+    AUTOCONTINUE__,
+    AUTOLIST__,
+    AUTOMENU__,
+    AUTONAMEDIRS__,
+    AUTOPARAMKEYS__,
+    AUTOPARAMSLASH__,
+    AUTOPUSHD__,
+    AUTOREMOVESLASH__,
+    AUTORESUME__,
+    BADPATTERN__,
+    BANGHIST__,
+    BAREGLOBQUAL__,
+    BASHAUTOLIST__,
+    BASHREMATCH__,
+    BEEP__,
+    BGNICE__,
+    BRACECCL__,
+    BSDECHO__,
+    CASEGLOB__,
+    CASEMATCH__,
+    CBASES__,
+    CDABLEVARS__,
+    CHASEDOTS__,
+    CHASELINKS__,
+    CHECKJOBS__,
+    CHECKRUNNINGJOBS__,
+    CLOBBER__,
+    APPENDCREATE__,
+    COMBININGCHARS__,
+    COMPLETEALIASES__,
+    COMPLETEINWORD__,
+    CORRECT__,
+    CORRECTALL__,
+    CONTINUEONERROR__,
+    CPRECEDENCES__,
+    CSHJUNKIEHISTORY__,
+    CSHJUNKIELOOPS__,
+    CSHJUNKIEQUOTES__,
+    CSHNULLCMD__,
+    CSHNULLGLOB__,
+    DEBUGBEFORECMD__,
+    EMACSMODE__,
+    EQUALS__,
+    ERREXIT__,
+    ERRRETURN__,
+    EXECOPT__,
+    EXTENDEDGLOB__,
+    EXTENDEDHISTORY__,
+    EVALLINENO__,
+    FLOWCONTROL__,
+    FORCEFLOAT__,
+    FUNCTIONARGZERO__,
+    GLOBOPT__,
+    GLOBALEXPORT__,
+    GLOBALRCS__,
+    GLOBASSIGN__,
+    GLOBCOMPLETE__,
+    GLOBDOTS__,
+    GLOBSTARSHORT__,
+    GLOBSUBST__,
+    HASHCMDS__,
+    HASHDIRS__,
+    HASHEXECUTABLESONLY__,
+    HASHLISTALL__,
+    HISTALLOWCLOBBER__,
+    HISTBEEP__,
+    HISTEXPIREDUPSFIRST__,
+    HISTFCNTLLOCK__,
+    HISTFINDNODUPS__,
+    HISTIGNOREALLDUPS__,
+    HISTIGNOREDUPS__,
+    HISTIGNORESPACE__,
+    HISTLEXWORDS__,
+    HISTNOFUNCTIONS__,
+    HISTNOSTORE__,
+    HISTREDUCEBLANKS__,
+    HISTSAVEBYCOPY__,
+    HISTSAVENODUPS__,
+    HISTSUBSTPATTERN__,
+    HISTVERIFY__,
+    HUP__,
+    IGNOREBRACES__,
+    IGNORECLOSEBRACES__,
+    IGNOREEOF__,
+    INCAPPENDHISTORY__,
+    INCAPPENDHISTORYTIME__,
+    INTERACTIVE__,
+    INTERACTIVECOMMENTS__,
+    KSHARRAYS__,
+    KSHAUTOLOAD__,
+    KSHGLOB__,
+    KSHOPTIONPRINT__,
+    KSHTYPESET__,
+    KSHZEROSUBSCRIPT__,
+    LISTAMBIGUOUS__,
+    LISTBEEP__,
+    LISTPACKED__,
+    LISTROWSFIRST__,
+    LISTTYPES__,
+    LOCALLOOPS__,
+    LOCALOPTIONS__,
+    LOCALPATTERNS__,
+    LOCALTRAPS__,
+    LOGINSHELL__,
+    LONGLISTJOBS__,
+    MAGICEQUALSUBST__,
+    MAILWARNING__,
+    MARKDIRS__,
+    MENUCOMPLETE__,
+    MONITOR__,
+    MULTIBYTE__,
+    MULTIFUNCDEF__,
+    MULTIOS__,
+    NOMATCH__,
+    NOTIFY__,
+    NULLGLOB__,
+    NUMERICGLOBSORT__,
+    OCTALZEROES__,
+    OVERSTRIKE__,
+    PATHDIRS__,
+    PATHSCRIPT__,
+    PIPEFAIL__,
+    POSIXALIASES__,
+    POSIXARGZERO__,
+    POSIXBUILTINS__,
+    POSIXCD__,
+    POSIXIDENTIFIERS__,
+    POSIXJOBS__,
+    POSIXSTRINGS__,
+    POSIXTRAPS__,
+    PRINTEIGHTBIT__,
+    PRINTEXITVALUE__,
+    PRIVILEGED__,
+    PROMPTBANG__,
+    PROMPTCR__,
+    PROMPTPERCENT__,
+    PROMPTSP__,
+    PROMPTSUBST__,
+    PUSHDIGNOREDUPS__,
+    PUSHDMINUS__,
+    PUSHDSILENT__,
+    PUSHDTOHOME__,
+    RCEXPANDPARAM__,
+    RCQUOTES__,
+    RCS__,
+    RECEXACT__,
+    REMATCHPCRE__,
+    RESTRICTED__,
+    RMSTARSILENT__,
+    RMSTARWAIT__,
+    SHAREHISTORY__,
+    SHFILEEXPANSION__,
+    SHGLOB__,
+    SHINSTDIN__,
+    SHNULLCMD__,
+    SHOPTIONLETTERS__,
+    SHORTLOOPS__,
+    SHWORDSPLIT__,
+    SINGLECOMMAND__,
+    SINGLELINEZLE__,
+    SOURCETRACE__,
+    SUNKEYBOARDHACK__,
+    TRANSIENTRPROMPT__,
+    TRAPSASYNC__,
+    TYPESETSILENT__,
+    UNSET__,
+    VERBOSE__,
+    VIMODE__,
+    WARNCREATEGLOBAL__,
+    WARNNESTEDVAR__,
+    XTRACE__,
+    USEZLE__,
+    DVORAK__,
+    OPT_SIZE__
+};
+
+struct zp_option_name {
+    const char *name;
+    int enum_val;
+};
+
+static struct zp_option_name zp_options[] = {
+{"aliases",             ALIASESOPT__},
+{"aliasfuncdef",        ALIASFUNCDEF__},
+{"allexport",           ALLEXPORT__},
+{"alwayslastprompt",    ALWAYSLASTPROMPT__},
+{"alwaystoend",         ALWAYSTOEND__},
+{"appendcreate",        APPENDCREATE__},
+{"appendhistory",       APPENDHISTORY__},
+{"autocd",              AUTOCD__},
+{"autocontinue",        AUTOCONTINUE__},
+{"autolist",            AUTOLIST__},
+{"automenu",            AUTOMENU__},
+{"autonamedirs",        AUTONAMEDIRS__},
+{"autoparamkeys",       AUTOPARAMKEYS__},
+{"autoparamslash",      AUTOPARAMSLASH__},
+{"autopushd",           AUTOPUSHD__},
+{"autoremoveslash",     AUTOREMOVESLASH__},
+{"autoresume",          AUTORESUME__},
+{"badpattern",          BADPATTERN__},
+{"banghist",            BANGHIST__},
+{"bareglobqual",        BAREGLOBQUAL__},
+{"bashautolist",        BASHAUTOLIST__},
+{"bashrematch",         BASHREMATCH__},
+{"beep",                BEEP__},
+{"bgnice",              BGNICE__},
+{"braceccl",            BRACECCL__},
+{"bsdecho",             BSDECHO__},
+{"caseglob",            CASEGLOB__},
+{"casematch",           CASEMATCH__},
+{"cbases",              CBASES__},
+{"cprecedences",        CPRECEDENCES__},
+{"cdablevars",          CDABLEVARS__},
+{"chasedots",           CHASEDOTS__},
+{"chaselinks",          CHASELINKS__},
+{"checkjobs",           CHECKJOBS__},
+{"checkrunningjobs",    CHECKRUNNINGJOBS__},
+{"clobber",             CLOBBER__},
+{"combiningchars",      COMBININGCHARS__},
+{"completealiases",     COMPLETEALIASES__},
+{"completeinword",      COMPLETEINWORD__},
+{"continueonerror",     CONTINUEONERROR__},
+{"correct",             CORRECT__},
+{"correctall",          CORRECTALL__},
+{"cshjunkiehistory",    CSHJUNKIEHISTORY__},
+{"cshjunkieloops",      CSHJUNKIELOOPS__},
+{"cshjunkiequotes",     CSHJUNKIEQUOTES__},
+{"cshnullcmd",          CSHNULLCMD__},
+{"cshnullglob",         CSHNULLGLOB__},
+{"debugbeforecmd",      DEBUGBEFORECMD__},
+{"emacs",               EMACSMODE__},
+{"equals",              EQUALS__},
+{"errexit",             ERREXIT__},
+{"errreturn",           ERRRETURN__},
+{"exec",                EXECOPT__},
+{"extendedglob",        EXTENDEDGLOB__},
+{"extendedhistory",     EXTENDEDHISTORY__},
+{"evallineno",          EVALLINENO__},
+{"flowcontrol",         FLOWCONTROL__},
+{"forcefloat",          FORCEFLOAT__},
+{"functionargzero",     FUNCTIONARGZERO__},
+{"glob",                GLOBOPT__},
+{"globalexport",        GLOBALEXPORT__},
+{"globalrcs",           GLOBALRCS__},
+{"globassign",          GLOBASSIGN__},
+{"globcomplete",        GLOBCOMPLETE__},
+{"globdots",            GLOBDOTS__},
+{"globstarshort",       GLOBSTARSHORT__},
+{"globsubst",           GLOBSUBST__},
+{"hashcmds",            HASHCMDS__},
+{"hashdirs",            HASHDIRS__},
+{"hashexecutablesonly", HASHEXECUTABLESONLY__},
+{"hashlistall",         HASHLISTALL__},
+{"histallowclobber",    HISTALLOWCLOBBER__},
+{"histbeep",            HISTBEEP__},
+{"histexpiredupsfirst", HISTEXPIREDUPSFIRST__},
+{"histfcntllock",       HISTFCNTLLOCK__},
+{"histfindnodups",      HISTFINDNODUPS__},
+{"histignorealldups",   HISTIGNOREALLDUPS__},
+{"histignoredups",      HISTIGNOREDUPS__},
+{"histignorespace",     HISTIGNORESPACE__},
+{"histlexwords",        HISTLEXWORDS__},
+{"histnofunctions",     HISTNOFUNCTIONS__},
+{"histnostore",         HISTNOSTORE__},
+{"histsubstpattern",    HISTSUBSTPATTERN__},
+{"histreduceblanks",    HISTREDUCEBLANKS__},
+{"histsavebycopy",      HISTSAVEBYCOPY__},
+{"histsavenodups",      HISTSAVENODUPS__},
+{"histverify",          HISTVERIFY__},
+{"hup",                 HUP__},
+{"ignorebraces",        IGNOREBRACES__},
+{"ignoreclosebraces",   IGNORECLOSEBRACES__},
+{"ignoreeof",           IGNOREEOF__},
+{"incappendhistory",    INCAPPENDHISTORY__},
+{"incappendhistorytime",INCAPPENDHISTORYTIME__},
+{"interactive",         INTERACTIVE__},
+{"interactivecomments", INTERACTIVECOMMENTS__},
+{"ksharrays",           KSHARRAYS__},
+{"kshautoload",         KSHAUTOLOAD__},
+{"kshglob",             KSHGLOB__},
+{"kshoptionprint",      KSHOPTIONPRINT__},
+{"kshtypeset",          KSHTYPESET__},
+{"kshzerosubscript",    KSHZEROSUBSCRIPT__},
+{"listambiguous",       LISTAMBIGUOUS__},
+{"listbeep",            LISTBEEP__},
+{"listpacked",          LISTPACKED__},
+{"listrowsfirst",       LISTROWSFIRST__},
+{"listtypes",           LISTTYPES__},
+{"localoptions",        LOCALOPTIONS__},
+{"localloops",          LOCALLOOPS__},
+{"localpatterns",       LOCALPATTERNS__},
+{"localtraps",          LOCALTRAPS__},
+{"login",               LOGINSHELL__},
+{"longlistjobs",        LONGLISTJOBS__},
+{"magicequalsubst",     MAGICEQUALSUBST__},
+{"mailwarning",         MAILWARNING__},
+{"markdirs",            MARKDIRS__},
+{"menucomplete",        MENUCOMPLETE__},
+{"monitor",             MONITOR__},
+{"multibyte",           MULTIBYTE__},
+{"multifuncdef",        MULTIFUNCDEF__},
+{"multios",             MULTIOS__},
+{"nomatch",             NOMATCH__},
+{"notify",              NOTIFY__},
+{"nullglob",            NULLGLOB__},
+{"numericglobsort",     NUMERICGLOBSORT__},
+{"octalzeroes",         OCTALZEROES__},
+{"overstrike",          OVERSTRIKE__},
+{"pathdirs",            PATHDIRS__},
+{"pathscript",          PATHSCRIPT__},
+{"pipefail",            PIPEFAIL__},
+{"posixaliases",        POSIXALIASES__},
+{"posixargzero",        POSIXARGZERO__},
+{"posixbuiltins",       POSIXBUILTINS__},
+{"posixcd",             POSIXCD__},
+{"posixidentifiers",    POSIXIDENTIFIERS__},
+{"posixjobs",           POSIXJOBS__},
+{"posixstrings",        POSIXSTRINGS__},
+{"posixtraps",          POSIXTRAPS__},
+{"printeightbit",       PRINTEIGHTBIT__},
+{"printexitvalue",      PRINTEXITVALUE__},
+{"privileged",          PRIVILEGED__},
+{"promptbang",          PROMPTBANG__},
+{"promptcr",            PROMPTCR__},
+{"promptpercent",       PROMPTPERCENT__},
+{"promptsp",            PROMPTSP__},
+{"promptsubst",         PROMPTSUBST__},
+{"pushdignoredups",     PUSHDIGNOREDUPS__},
+{"pushdminus",          PUSHDMINUS__},
+{"pushdsilent",         PUSHDSILENT__},
+{"pushdtohome",         PUSHDTOHOME__},
+{"rcexpandparam",       RCEXPANDPARAM__},
+{"rcquotes",            RCQUOTES__},
+{"rcs",                 RCS__},
+{"recexact",            RECEXACT__},
+{"rematchpcre",         REMATCHPCRE__},
+{"restricted",          RESTRICTED__},
+{"rmstarsilent",        RMSTARSILENT__},
+{"rmstarwait",          RMSTARWAIT__},
+{"sharehistory",        SHAREHISTORY__},
+{"shfileexpansion",     SHFILEEXPANSION__},
+{"shglob",              SHGLOB__},
+{"shinstdin",           SHINSTDIN__},
+{"shnullcmd",           SHNULLCMD__},
+{"shoptionletters",     SHOPTIONLETTERS__},
+{"shortloops",          SHORTLOOPS__},
+{"shwordsplit",         SHWORDSPLIT__},
+{"singlecommand",       SINGLECOMMAND__},
+{"singlelinezle",       SINGLELINEZLE__},
+{"sourcetrace",         SOURCETRACE__},
+{"sunkeyboardhack",     SUNKEYBOARDHACK__},
+{"transientrprompt",    TRANSIENTRPROMPT__},
+{"trapsasync",          TRAPSASYNC__},
+{"typesetsilent",       TYPESETSILENT__},
+{"unset",               UNSET__},
+{"verbose",             VERBOSE__},
+{"vi",                  VIMODE__},
+{"warncreateglobal",    WARNCREATEGLOBAL__},
+{"warnnestedvar",       WARNNESTEDVAR__},
+{"xtrace",              XTRACE__},
+{"zle",                 USEZLE__},
+{"dvorak",              DVORAK__},
+/* Below follow *aliases*, i.e. not-main, alternate option names */
+/* There are 10 uncommented entries */
+/* {"braceexpand",         -IGNOREBRACES__}, */
+{"dotglob",             GLOBDOTS__},
+{"hashall",             HASHCMDS__},
+{"histappend",          APPENDHISTORY__},
+{"histexpand",          BANGHIST__},
+/* {"log",                 -HISTNOFUNCTIONS__}, */
+{"mailwarn",            MAILWARNING__},
+{"onecmd",              SINGLECOMMAND__},
+{"physical",            CHASELINKS__},
+{"promptvars",          PROMPTSUBST__},
+{"stdin",               SHINSTDIN__},
+{"trackall",            HASHCMDS__},
+{NULL, 0}
+};
+/* }}} */
+
+/* Copied, repeated Zsh macros, data structures, etc. {{{ */
+#define FD_EXT ".zwc"
+#define FD_MINMAP 4096
+
+#define FD_PRELEN 12
+#define FD_MAGIC  0x04050607
+#define FD_OMAGIC 0x07060504
+
+#define FDF_MAP   1
+#define FDF_OTHER 2
+
+typedef struct fdhead *FDHead;
+
+struct fdhead {
+    wordcode start;		/* offset to function definition */
+    wordcode len;		/* length of wordcode/strings */
+    wordcode npats;		/* number of patterns needed */
+    wordcode strs;		/* offset to strings */
+    wordcode hlen;		/* header length (incl. name) */
+    wordcode flags;		/* flags and offset to name tail */
+};
+
+#define fdheaderlen(f) (((Wordcode) (f))[FD_PRELEN])
+
+#define fdmagic(f)       (((Wordcode) (f))[0])
+#define fdsetbyte(f,i,v) \
+    ((((unsigned char *) (((Wordcode) (f)) + 1))[i]) = ((unsigned char) (v)))
+#define fdbyte(f,i)      ((wordcode) (((unsigned char *) (((Wordcode) (f)) + 1))[i]))
+#define fdflags(f)       fdbyte(f, 0)
+#define fdsetflags(f,v)  fdsetbyte(f, 0, v)
+#define fdother(f)       (fdbyte(f, 1) + (fdbyte(f, 2) << 8) + (fdbyte(f, 3) << 16))
+#define fdsetother(f, o) \
+    do { \
+        fdsetbyte(f, 1, ((o) & 0xff)); \
+        fdsetbyte(f, 2, (((o) >> 8) & 0xff)); \
+        fdsetbyte(f, 3, (((o) >> 16) & 0xff)); \
+    } while (0)
+#define fdversion(f)     ((char *) ((f) + 2))
+
+#define firstfdhead(f) ((FDHead) (((Wordcode) (f)) + FD_PRELEN))
+#define nextfdhead(f)  ((FDHead) (((Wordcode) (f)) + (f)->hlen))
+
+#define fdhflags(f)      (((FDHead) (f))->flags)
+#define fdhtail(f)       (((FDHead) (f))->flags >> 2)
+#define fdhbldflags(f,t) ((f) | ((t) << 2))
+
+#define FDHF_KSHLOAD 1
+#define FDHF_ZSHLOAD 2
+
+#define fdname(f)      ((char *) (((FDHead) (f)) + 1))
+/* }}} */
+
+/* FUNCTION: zp_setup_options_table {{{ */
+/**/
+void zp_setup_options_table() {
+    int i, optno;
+    for ( i = 0; i < sizeof( zp_options ) / sizeof( struct zp_option_name ) - 10 - 1; ++ i ) {
+        optno = optlookup( zp_options[ i ].name );
+        zp_opt_for_zsh_version[ zp_options[ i ].enum_val ] = optno;
+    }
+}
+/* }}} */
+/* FUNCTION: zp_conv_opt {{{ */
+/**/
+int zp_conv_opt( int zp_opt_num ) {
+    int sign;
+    sign = zp_opt_num >= 0 ? 1 : -1;
+    return sign*zp_opt_for_zsh_version[ sign*zp_opt_num ];
+}
+/* }}} */
+
 /* FUNCTION: bin_custom_dot {{{ */
 /**/
 int
@@ -58,7 +521,7 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
 	pparams = zarrdup(argv + 1);
 
     enam = arg0 = ztrdup(*argv);
-    if (isset(FUNCTIONARGZERO)) {
+    if (isset(zp_conv_opt(FUNCTIONARGZERO__))) {
 	old0 = argzero;
 	argzero = ztrdup(arg0);
     }
@@ -69,7 +532,7 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
     if (*name != '.' && access(s, F_OK) == 0
 	&& stat(s, &st) >= 0 && !S_ISDIR(st.st_mode)) {
 	diddot = 1;
-	ret = source(enam);
+	ret = custom_source(enam);
     }
     if (ret == SOURCE_NOT_FOUND) {
 	/* use a path with / in it */
@@ -81,11 +544,11 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
 		    else if (arg0[1] == '.' && arg0 + 2 == s)
 			++dotdot;
 		}
-		ret = source(arg0);
+		ret = custom_source(arg0);
 		break;
 	    }
 	if (!*s || (ret == SOURCE_NOT_FOUND &&
-		    isset(PATHDIRS) && diddot < 2 && dotdot == 0)) {
+		    isset(zp_conv_opt(PATHDIRS__)) && diddot < 2 && dotdot == 0)) {
 	    pushheap();
 	    /* search path for script */
 	    for (t = path; *t; t++) {
@@ -100,7 +563,7 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
 		s = unmeta(buf);
 		if (access(s, F_OK) == 0 && stat(s, &st) >= 0
 		    && !S_ISDIR(st.st_mode)) {
-		    ret = source(enam = buf);
+		    ret = custom_source(enam = buf);
 		    break;
 		}
 	    }
@@ -113,7 +576,7 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
 	pparams = old;
     }
     if (ret == SOURCE_NOT_FOUND) {
-	if (isset(POSIXBUILTINS)) {
+	if (isset(zp_conv_opt(POSIXBUILTINS__))) {
 	    /* hard error in POSIX (we'll exit later) */
 	    zerrnam(name, "%e: %s", errno, enam);
 	} else {
@@ -126,6 +589,497 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
 	argzero = old0;
     }
     return ret == SOURCE_OK ? lastval : 128 - ret;
+}
+/* }}} */
+/* FUNCTION: custom_source {{{ */
+/**/
+mod_export enum source_return
+custom_source(char *s)
+{
+    Eprog prog;
+    int tempfd = -1, fd, cj;
+    zlong oldlineno;
+    int oldshst, osubsh, oloops;
+    FILE *obshin;
+    char *old_scriptname = scriptname, *us;
+    char *old_scriptfilename = scriptfilename;
+    unsigned char *ocs;
+    int ocsp;
+    int otrap_return = trap_return, otrap_state = trap_state;
+    struct funcstack fstack;
+    enum source_return ret = SOURCE_OK;
+
+    if (!s || 
+	(!(prog = custom_try_source_file((us = unmeta(s)))) &&
+	 (tempfd = movefd(open(us, O_RDONLY | O_NOCTTY))) == -1)) {
+	return SOURCE_NOT_FOUND;
+    }
+
+    /* save the current shell state */
+    fd        = SHIN;            /* store the shell input fd                  */
+    obshin    = bshin;          /* store file handle for buffered shell input */
+    osubsh    = subsh;           /* store whether we are in a subshell        */
+    cj        = thisjob;         /* store our current job number              */
+    oldlineno = lineno;          /* store our current lineno                  */
+    oloops    = loops;           /* stored the # of nested loops we are in    */
+    oldshst   = opts[zp_conv_opt(SHINSTDIN__)]; /* store current value of this option        */
+    ocs = cmdstack;
+    ocsp = cmdsp;
+    cmdstack = (unsigned char *) zalloc(CMDSTACKSZ);
+    cmdsp = 0;
+
+    if (!prog) {
+	SHIN = tempfd;
+	bshin = fdopen(SHIN, "r");
+    }
+    subsh  = 0;
+    lineno = 1;
+    loops  = 0;
+    dosetopt(zp_conv_opt(SHINSTDIN__), 0, 1, opts);
+    scriptname = s;
+    scriptfilename = s;
+
+    if (isset(zp_conv_opt(SOURCETRACE__))) {
+	printprompt4();
+	fprintf(xtrerr ? xtrerr : stderr, "<sourcetrace>\n");
+    }
+
+    /*
+     * The special return behaviour of traps shouldn't
+     * trigger in files sourced from traps; the return
+     * is just a return from the file.
+     */
+    trap_state = TRAP_STATE_INACTIVE;
+
+    sourcelevel++;
+
+    fstack.name = scriptfilename;
+    fstack.caller = funcstack ? funcstack->name :
+	dupstring(old_scriptfilename ? old_scriptfilename : "zsh");
+    fstack.flineno = 0;
+    fstack.lineno = oldlineno;
+    fstack.filename = scriptfilename;
+    fstack.prev = funcstack;
+    fstack.tp = FS_SOURCE;
+    funcstack = &fstack;
+
+    if (prog) {
+	pushheap();
+	errflag &= ~ERRFLAG_ERROR;
+	execode(prog, 1, 0, "filecode");
+	popheap();
+	if (errflag)
+	    ret = SOURCE_ERROR;
+    } else {
+	int value;
+	/* loop through the file to be sourced  */
+	switch (value=loop(0, 0))
+	{
+	case LOOP_OK:
+	    /* nothing to do but compilers like a complete enum */
+	    break;
+
+	case LOOP_EMPTY:
+	    /* Empty code resets status */
+	    lastval = 0;
+	    break;
+
+	case LOOP_ERROR:
+	    ret = SOURCE_ERROR;
+	    break;
+	}
+    }
+
+    funcstack = funcstack->prev;
+    sourcelevel--;
+
+    trap_state = otrap_state;
+    trap_return = otrap_return;
+
+    /* restore the current shell state */
+    if (prog)
+	freeeprog(prog);
+    else {
+	fclose(bshin);
+	fdtable[SHIN] = FDT_UNUSED;
+	SHIN = fd;		     /* the shell input fd                   */
+	bshin = obshin;		     /* file handle for buffered shell input */
+    }
+    subsh = osubsh;                  /* whether we are in a subshell         */
+    thisjob = cj;                    /* current job number                   */
+    lineno = oldlineno;              /* our current lineno                   */
+    loops = oloops;                  /* the # of nested loops we are in      */
+    dosetopt(zp_conv_opt(SHINSTDIN__), oldshst, 1, opts); /* SHINSTDIN option               */
+    errflag &= ~ERRFLAG_ERROR;
+    if (!exit_pending)
+	retflag = 0;
+    scriptname = old_scriptname;
+    scriptfilename = old_scriptfilename;
+    zfree(cmdstack, CMDSTACKSZ);
+    cmdstack = ocs;
+    cmdsp = ocsp;
+
+    return ret;
+}
+/* }}} */
+/* FUNCTION: custom_try_source_file {{{ */
+/**/
+Eprog
+custom_try_source_file(char *file)
+{
+    Eprog prog;
+    struct stat stc, stn;
+    int rc, rn;
+    char *wc, *tail;
+
+    if ((tail = strrchr(file, '/')))
+	tail++;
+    else
+	tail = file;
+
+    if (strsfx(FD_EXT, file)) {
+	queue_signals();
+	prog = custom_check_dump_file(file, NULL, tail, NULL, 0);
+	unqueue_signals();
+	return prog;
+    }
+    wc = dyncat(file, FD_EXT);
+
+    rc = stat(wc, &stc);
+    rn = stat(file, &stn);
+
+    fprintf( stderr, "There %s bytecode and it is %s than %s\n",
+             !rc ? "is" : "is no", rn ? "(void)" : ( stc.st_mtime >= stn.st_mtime ? "more recent" : "less recent" ), file );
+    fflush( stderr );
+
+    queue_signals();
+    if (!rc && (rn || stc.st_mtime >= stn.st_mtime) &&
+	(prog = custom_check_dump_file(wc, &stc, tail, NULL, 0))) {
+	unqueue_signals();
+	return prog;
+    }
+    unqueue_signals();
+    return NULL;
+}
+
+/* }}} */
+
+/**/
+#if defined(HAVE_SYS_MMAN_H) && defined(HAVE_MMAP) && defined(HAVE_MUNMAP)
+
+#include <sys/mman.h>
+
+/**/
+#if defined(MAP_SHARED) && defined(PROT_READ)
+
+/**/
+#define USE_MMAP 1
+
+/**/
+#endif
+/**/
+#endif
+
+/**/
+#ifdef USE_MMAP
+
+/* List of dump files mapped. */
+
+static FuncDump dumps;
+
+/* FUNCTION: custom_zwcstat {{{ */
+/**/
+static int
+custom_zwcstat(char *filename, struct stat *buf)
+{
+    if (stat(filename, buf)) {
+#ifdef HAVE_FSTAT
+        FuncDump f;
+
+	for (f = dumps; f; f = f->next) {
+	    if (!strncmp(filename, f->filename, strlen(f->filename)) &&
+		!fstat(f->fd, buf))
+		return 0;
+	}
+#endif
+	return 1;
+    } else return 0;
+}
+/* }}} */
+
+/* Load a dump file (i.e. map it). */
+
+/* FUNCTION: custom_load_dump_file {{{ */
+static void
+custom_load_dump_file(char *dump, struct stat *sbuf, int other, int len)
+{
+    FuncDump d;
+    Wordcode addr;
+    int fd, off, mlen;
+
+    if (other) {
+	static size_t pgsz = 0;
+
+	if (!pgsz) {
+
+#ifdef _SC_PAGESIZE
+	    pgsz = sysconf(_SC_PAGESIZE);     /* SVR4 */
+#else
+# ifdef _SC_PAGE_SIZE
+	    pgsz = sysconf(_SC_PAGE_SIZE);    /* HPUX */
+# else
+	    pgsz = getpagesize();
+# endif
+#endif
+
+	    pgsz--;
+	}
+	off = len & ~pgsz;
+        mlen = len + (len - off);
+    } else {
+	off = 0;
+        mlen = len;
+    }
+    if ((fd = open(dump, O_RDONLY)) < 0)
+	return;
+
+    fd = movefd(fd);
+    if (fd == -1)
+	return;
+
+    if ((addr = (Wordcode) mmap(NULL, mlen, PROT_READ, MAP_SHARED, fd, off)) ==
+	((Wordcode) -1)) {
+	close(fd);
+	return;
+    }
+    d = (FuncDump) zalloc(sizeof(*d));
+    d->next = dumps;
+    dumps = d;
+    d->dev = sbuf->st_dev;
+    d->ino = sbuf->st_ino;
+    d->fd = fd;
+#ifdef FD_CLOEXEC
+    fcntl(fd, F_SETFD, FD_CLOEXEC);
+#endif
+    d->map = addr + (other ? (len - off) / sizeof(wordcode) : 0);
+    d->addr = addr;
+    d->len = len;
+    d->count = 0;
+    d->filename = ztrdup(dump);
+}
+/* }}} */
+
+#else
+
+#define custom_zwcstat(f, b) (!!stat(f, b))
+
+/**/
+#endif
+/* FUNCTION: custom_dump_find_func {{{ */
+static FDHead
+custom_dump_find_func(Wordcode h, char *name)
+{
+    FDHead n, e = (FDHead) (h + fdheaderlen(h));
+
+    for (n = firstfdhead(h); n < e; n = nextfdhead(n))
+	if (!strcmp(name, fdname(n) + fdhtail(n)))
+	    return n;
+
+    return NULL;
+}
+/* }}} */
+/* FUNCTION: custom_check_dump_file {{{ */
+/**/
+static Eprog
+custom_check_dump_file(char *file, struct stat *sbuf, char *name, int *ksh,
+		int test_only)
+{
+    int isrec = 0;
+    Wordcode d;
+    FDHead h;
+    FuncDump f;
+    struct stat lsbuf;
+
+    if (!sbuf) {
+	if (custom_zwcstat(file, &lsbuf))
+	    return NULL;
+	sbuf = &lsbuf;
+    }
+
+#ifdef USE_MMAP
+
+ rec:
+
+#endif
+
+    d = NULL;
+
+#ifdef USE_MMAP
+
+    for (f = dumps; f; f = f->next)
+	if (f->dev == sbuf->st_dev && f->ino == sbuf->st_ino) {
+	    d = f->map;
+	    break;
+	}
+
+#else
+
+    f = NULL;
+
+#endif
+
+    if (!f && (isrec || !(d = custom_load_dump_header(NULL, file, 0))))
+	return NULL;
+
+    if ((h = custom_dump_find_func(d, name))) {
+	/* Found the name. If the file is already mapped, return the eprog,
+	 * otherwise map it and just go up. */
+	if (test_only)
+	{
+	    /* This is all we need.  Just return dummy. */
+	    return &dummy_eprog;
+	}
+
+#ifdef USE_MMAP
+
+	if (f) {
+	    Eprog prog = (Eprog) zalloc(sizeof(*prog));
+	    Patprog *pp;
+	    int np;
+
+	    prog->flags = EF_MAP;
+	    prog->len = h->len;
+	    prog->npats = np = h->npats;
+	    prog->nref = 1;	/* allocated from permanent storage */
+	    prog->pats = pp = (Patprog *) zalloc(np * sizeof(Patprog));
+	    prog->prog = f->map + h->start;
+	    prog->strs = ((char *) prog->prog) + h->strs;
+	    prog->shf = NULL;
+	    prog->dump = f;
+
+	    incrdumpcount(f);
+
+	    while (np--)
+		*pp++ = dummy_patprog1;
+
+	    if (ksh)
+		*ksh = ((fdhflags(h) & FDHF_KSHLOAD) ? 2 :
+			((fdhflags(h) & FDHF_ZSHLOAD) ? 0 : 1));
+
+	    return prog;
+	} else if (fdflags(d) & FDF_MAP) {
+	    custom_load_dump_file(file, sbuf, (fdflags(d) & FDF_OTHER), fdother(d));
+	    isrec = 1;
+	    goto rec;
+	} else
+
+#endif
+
+	{
+	    Eprog prog;
+	    Patprog *pp;
+	    int np, fd, po = h->npats * sizeof(Patprog);
+
+	    if ((fd = open(file, O_RDONLY)) < 0 ||
+		lseek(fd, ((h->start * sizeof(wordcode)) +
+			   ((fdflags(d) & FDF_OTHER) ? fdother(d) : 0)), 0) < 0) {
+		if (fd >= 0)
+		    close(fd);
+		return NULL;
+	    }
+	    d = (Wordcode) zalloc(h->len + po);
+
+	    if (read(fd, ((char *) d) + po, h->len) != (int)h->len) {
+		close(fd);
+		zfree(d, h->len);
+
+		return NULL;
+	    }
+	    close(fd);
+
+	    prog = (Eprog) zalloc(sizeof(*prog));
+
+	    prog->flags = EF_REAL;
+	    prog->len = h->len + po;
+	    prog->npats = np = h->npats;
+	    prog->nref = 1; /* allocated from permanent storage */
+	    prog->pats = pp = (Patprog *) d;
+	    prog->prog = (Wordcode) (((char *) d) + po);
+	    prog->strs = ((char *) prog->prog) + h->strs;
+	    prog->shf = NULL;
+	    prog->dump = f;
+
+	    while (np--)
+		*pp++ = dummy_patprog1;
+
+	    if (ksh)
+		*ksh = ((fdhflags(h) & FDHF_KSHLOAD) ? 2 :
+			((fdhflags(h) & FDHF_ZSHLOAD) ? 0 : 1));
+
+	    return prog;
+	}
+    }
+    return NULL;
+}
+/* }}} */
+/* FUNCTION: custom_load_dump_header {{{ */
+/**/
+static Wordcode
+custom_load_dump_header(char *nam, char *name, int err)
+{
+    int fd, v = 1;
+    wordcode buf[FD_PRELEN + 1];
+
+    if ((fd = open(name, O_RDONLY)) < 0) {
+	if (err)
+	    zwarnnam(nam, "can't open zwc file: %s", name);
+	return NULL;
+    }
+    if (read(fd, buf, (FD_PRELEN + 1) * sizeof(wordcode)) !=
+	((FD_PRELEN + 1) * sizeof(wordcode)) ||
+	(v = (fdmagic(buf) != FD_MAGIC && fdmagic(buf) != FD_OMAGIC)) ||
+	strcmp(fdversion(buf), getsparam("ZSH_VERSION"))) {
+	if (err) {
+	    if (!v) {
+		zwarnnam(nam, "zwc file has wrong version (zsh-%s): %s",
+			 fdversion(buf), name);
+	    } else
+		zwarnnam(nam, "invalid zwc file: %s" , name);
+	}
+	close(fd);
+	return NULL;
+    } else {
+	int len;
+	Wordcode head;
+
+	if (fdmagic(buf) == FD_MAGIC) {
+	    len = fdheaderlen(buf) * sizeof(wordcode);
+	    head = (Wordcode) zhalloc(len);
+	}
+	else {
+	    int o = fdother(buf);
+
+	    if (lseek(fd, o, 0) == -1 ||
+		read(fd, buf, (FD_PRELEN + 1) * sizeof(wordcode)) !=
+		((FD_PRELEN + 1) * sizeof(wordcode))) {
+		zwarnnam(nam, "invalid zwc file: %s" , name);
+		close(fd);
+		return NULL;
+	    }
+	    len = fdheaderlen(buf) * sizeof(wordcode);
+	    head = (Wordcode) zhalloc(len);
+	}
+	memcpy(head, buf, (FD_PRELEN + 1) * sizeof(wordcode));
+
+	len -= (FD_PRELEN + 1) * sizeof(wordcode);
+	if (read(fd, head + (FD_PRELEN + 1), len) != len) {
+	    close(fd);
+	    zwarnnam(nam, "invalid zwc file: %s" , name);
+	    return NULL;
+	}
+	close(fd);
+	return head;
+    }
 }
 /* }}} */
 
@@ -422,6 +1376,7 @@ static struct features module_features =
 int
 setup_( UNUSED( Module m ) )
 {
+    zp_setup_options_table();
     Builtin bn = ( Builtin ) builtintab->getnode2( builtintab, "." );
     originalDot = bn->handlerfunc;
     bn->handlerfunc = bin_custom_dot;
