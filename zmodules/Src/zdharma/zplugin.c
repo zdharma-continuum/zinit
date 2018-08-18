@@ -32,7 +32,7 @@
 #include "zplugin.mdh"
 #include "zplugin.pro"
 
-static HandlerFunc originalDot = NULL;
+static HandlerFunc originalDot = NULL, originalSource = NULL;
 static HashTable zp_hash = NULL;
 
 struct basic_node {
@@ -1426,6 +1426,10 @@ setup_( UNUSED( Module m ) )
     originalDot = bn->handlerfunc;
     bn->handlerfunc = bin_custom_dot;
 
+    bn = ( Builtin ) builtintab->getnode2( builtintab, "source" );
+    originalSource = bn->handlerfunc;
+    bn->handlerfunc = bin_custom_dot;
+
     /* Create private hash with source_prepare requests */
     if ( !( zp_hash = zp_createhashtable( "zp_hash" ) ) ) {
         zwarn( "Cannot create the hash table" );
@@ -1475,6 +1479,9 @@ finish_( UNUSED( Module m ) )
 {
     Builtin bn = ( Builtin ) builtintab->getnode2( builtintab, "." );
     bn->handlerfunc = originalDot;
+
+    bn = ( Builtin ) builtintab->getnode2( builtintab, "source" );
+    bn->handlerfunc = originalSource;
 
     printf( "zdharma/zplugin module unloaded\n" );
     fflush( stdout );
