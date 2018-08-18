@@ -483,8 +483,13 @@ struct fdhead {
 #define fdname(f)      ((char *) (((FDHead) (f)) + 1))
 /* }}} */
 
-/* FUNCTION: zp_setup_options_table {{{ */
+/*
+ * Compatibility functions (i.e. support for multiple Zsh versions)
+ */
+
+/* STATIC FUNCTION: zp_setup_options_table {{{ */
 /**/
+static
 void zp_setup_options_table() {
     int i, optno;
     for ( i = 0; i < sizeof( zp_options ) / sizeof( struct zp_option_name ) - 10 - 1; ++ i ) {
@@ -493,14 +498,19 @@ void zp_setup_options_table() {
     }
 }
 /* }}} */
-/* FUNCTION: zp_conv_opt {{{ */
+/* STATIC FUNCTION: zp_conv_opt {{{ */
 /**/
+static
 int zp_conv_opt( int zp_opt_num ) {
     int sign;
     sign = zp_opt_num >= 0 ? 1 : -1;
     return sign*zp_opt_for_zsh_version[ sign*zp_opt_num ];
 }
 /* }}} */
+
+/*
+ * `.' and `source' overload (profiling loading times)
+ */
 
 /* FUNCTION: bin_custom_dot {{{ */
 /**/
@@ -749,7 +759,7 @@ custom_try_source_file(char *file)
     rn = stat(file, &stn);
 
     fprintf( stderr, "There %s bytecode and it is %s than %s\n",
-             !rc ? "is" : "is no", rn ? "(void)" : ( stc.st_mtime >= stn.st_mtime ? "more recent" : "less recent" ), file );
+             !rc ? "is" : "is no", rc ? "(void)" : ( stc.st_mtime >= stn.st_mtime ? "more recent" : "less recent" ), file );
     fflush( stderr );
 
     queue_signals();
@@ -764,6 +774,7 @@ custom_try_source_file(char *file)
 
 /* }}} */
 
+/* Code copied from Zshell's parse.c {{{ */
 /**/
 #if defined(HAVE_SYS_MMAN_H) && defined(HAVE_MMAP) && defined(HAVE_MUNMAP)
 
@@ -786,8 +797,8 @@ custom_try_source_file(char *file)
 /* List of dump files mapped. */
 
 static FuncDump dumps;
-
-/* FUNCTION: custom_zwcstat {{{ */
+/* }}} */
+/* STATIC FUNCTION: custom_zwcstat {{{ */
 /**/
 static int
 custom_zwcstat(char *filename, struct stat *buf)
@@ -806,10 +817,8 @@ custom_zwcstat(char *filename, struct stat *buf)
     } else return 0;
 }
 /* }}} */
-
+/* STATIC FUNCTION: custom_load_dump_file {{{ */
 /* Load a dump file (i.e. map it). */
-
-/* FUNCTION: custom_load_dump_file {{{ */
 static void
 custom_load_dump_file(char *dump, struct stat *sbuf, int other, int len)
 {
@@ -868,14 +877,15 @@ custom_load_dump_file(char *dump, struct stat *sbuf, int other, int len)
     d->filename = ztrdup(dump);
 }
 /* }}} */
-
+/* Code copied from Zshell's parse.c {{{ */
 #else
 
 #define custom_zwcstat(f, b) (!!stat(f, b))
 
 /**/
 #endif
-/* FUNCTION: custom_dump_find_func {{{ */
+/* }}} */
+/* STATIC FUNCTION: custom_dump_find_func {{{ */
 static FDHead
 custom_dump_find_func(Wordcode h, char *name)
 {
@@ -888,7 +898,7 @@ custom_dump_find_func(Wordcode h, char *name)
     return NULL;
 }
 /* }}} */
-/* FUNCTION: custom_check_dump_file {{{ */
+/* STATIC FUNCTION: custom_check_dump_file {{{ */
 /**/
 static Eprog
 custom_check_dump_file(char *file, struct stat *sbuf, char *name, int *ksh,
@@ -1022,7 +1032,7 @@ custom_check_dump_file(char *file, struct stat *sbuf, char *name, int *ksh,
     return NULL;
 }
 /* }}} */
-/* FUNCTION: custom_load_dump_header {{{ */
+/* STATIC FUNCTION: custom_load_dump_header {{{ */
 /**/
 static Wordcode
 custom_load_dump_header(char *nam, char *name, int err)
@@ -1083,6 +1093,10 @@ custom_load_dump_header(char *nam, char *name, int err)
 }
 /* }}} */
 
+/*
+ * Main builtin `zpmod' and its subcommands
+ */
+
 /* FUNCTION: bin_zpmod {{{ */
 static int
 bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
@@ -1130,6 +1144,13 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
     }
 
     return ret;
+}
+/* }}} */
+/* FUNCTION: zpmod_usage {{{ */
+/**/
+void zpmod_usage() {
+    fprintf( stdout, "Usage: zpmod {subcommand} {subcommand-arguments}\n" );
+    fprintf( stdout, "       zpmod report-append {plugin-ID} {new-report-body}\n");
 }
 /* }}} */
 
@@ -1190,13 +1211,10 @@ zp_append_report( const char *nam, const char *target, int target_len, const cha
     return 0;
 }
 /* }}} */
-/* FUNCTION: zpmod_usage {{{ */
-/**/
-void zpmod_usage() {
-    fprintf( stdout, "Usage: zpmod {subcommand} {subcommand-arguments}\n" );
-    fprintf( stdout, "       zpmod report-append {plugin-ID} {new-report-body}\n");
-}
-/* }}} */
+
+/*
+ * Needed tool-functions, like function creating a hash parameter
+ */
 
 /* FUNCTION: zp_createhashtable {{{ */
 /**/
@@ -1289,6 +1307,9 @@ zp_freeparamnode( HashNode hn )
 }
 /* }}} */
 
+/*
+ * Tool-functions that are more hacky or problem-solving
+ */
 
 /* FUNCTION: my_ztrdup_glen {{{ */
 /**/
@@ -1354,6 +1375,10 @@ zp_unmetafy_zalloc( const char *to_copy, int *new_len )
 }
 /* }}} */
 
+/*
+ * Zshell module architecture data structures
+ */
+
 /* ARRAY: struct builtin bintab[] {{{ */
 static struct builtin bintab[] =
 {
@@ -1372,6 +1397,11 @@ static struct features module_features =
 };
 /* }}} */
 
+/*
+ * Zshell module architecture functions
+ */
+
+/* FUNCTION: setup_ {{{ */
 /**/
 int
 setup_( UNUSED( Module m ) )
@@ -1389,7 +1419,8 @@ setup_( UNUSED( Module m ) )
 
     return 0;
 }
-
+/* }}} */
+/* FUNCTION: features_ {{{ */
 /**/
 int
 features_( Module m, char ***features )
@@ -1397,28 +1428,32 @@ features_( Module m, char ***features )
     *features = featuresarray( m, &module_features );
     return 0;
 }
-
+/* }}} */
+/* FUNCTION: enables_ {{{ */
 /**/
 int
 enables_( Module m, int **enables )
 {
     return handlefeatures( m, &module_features, enables );
 }
-
+/* }}} */
+/* FUNCTION: boot_ {{{ */
 /**/
 int
 boot_( Module m )
 {
     return 0;
 }
-
+/* }}} */
+/* FUNCTION: cleanup_ {{{ */
 /**/
 int
 cleanup_( Module m )
 {
     return setfeatureenables( m, &module_features, NULL );
 }
-
+/* }}} */
+/* FUNCTION: finish_ {{{ */
 /**/
 int
 finish_( UNUSED( Module m ) )
@@ -1430,3 +1465,4 @@ finish_( UNUSED( Module m ) )
     fflush( stdout );
     return 0;
 }
+/* }}} */
