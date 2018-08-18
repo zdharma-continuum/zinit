@@ -768,6 +768,7 @@ custom_try_source_file(char *file)
         memset(ops.ind, 0, MAX_OPS*sizeof(unsigned char));
         ops.args = NULL;
         ops.argscount = ops.argsalloc = 0;
+        ops.ind['U'] = 1;
 
         /* Invoke compilation */
         bin_zcompile("ZpluginModule", args, &ops, 0);
