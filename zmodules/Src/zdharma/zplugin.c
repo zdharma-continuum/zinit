@@ -32,12 +32,28 @@
 #include "zplugin.mdh"
 #include "zplugin.pro"
 
+/* Source/bin_dot related data structures {{{ */
 static HandlerFunc originalDot = NULL, originalSource = NULL;
-static HashTable zp_hash = NULL;
+static HashTable zp_source_events = NULL;
+static int zp_sevent_count = 0;
 
-struct basic_node {
-    struct hashnode node;
+struct source_event {
+    int id;
+    long ts;
+    char *dir_path;
+    char *file_name;
+    char *full_path;
+    double duration;
+    int load_error;
 };
+
+struct zp_sevent_node {
+    struct hashnode node;
+    struct source_event event;
+};
+
+typedef struct zp_sevent_node *SEventNode;
+/* }}} */
 
 /* Option support {{{ */
 static int zp_opt_for_zsh_version[256] = { 0 };
@@ -619,6 +635,15 @@ custom_source(char *s)
     struct funcstack fstack;
     enum source_return ret = SOURCE_OK;
 
+    /* ZP-CODE */
+    SEventNode zp_node;
+    struct timeval zp_tv;
+    struct timezone zp_dummy_tz;
+    double zp_prev_tv;
+    zp_tv.tv_sec = zp_tv.tv_usec = 0;
+    gettimeofday(&zp_tv, &zp_dummy_tz);
+    zp_prev_tv = ((((double) zp_tv.tv_sec) * 1000.0) + (((double) zp_tv.tv_usec) / 1000.0));
+
     if (!s || 
 	(!(prog = custom_try_source_file((us = unmeta(s)))) &&
 	 (tempfd = movefd(open(us, O_RDONLY | O_NOCTTY))) == -1)) {
@@ -728,6 +753,60 @@ custom_source(char *s)
     zfree(cmdstack, CMDSTACKSZ);
     cmdstack = ocs;
     cmdsp = ocsp;
+
+    /* ZP-CODE */
+    zp_tv.tv_sec = zp_tv.tv_usec = 0;
+    gettimeofday(&zp_tv, &zp_dummy_tz);
+    zp_node = (SEventNode) zshcalloc( sizeof( struct zp_sevent_node ) );
+
+    if ( zp_node ) {
+        char zp_tmp[20], bkp;
+        char *dir_path, *file_name, *full_path, *slash;
+        int is_dot_slash;
+
+        /* Prepare paths */
+        if ( s[0] == '/' ) {
+            /* event.full_path */
+            full_path = ztrdup( s );
+        } else {
+            int pwd_len, rel_len;
+            is_dot_slash = ( s[0] == '.' && s[1] == '/' );
+            /* event.full_path */
+            pwd_len = strlen( pwd );
+            rel_len = strlen( s ) - is_dot_slash * 2;
+            full_path = (char *) zalloc( sizeof( char ) * ( pwd_len + rel_len + 2 ) );
+            strcpy( full_path, pwd );
+            strcat( full_path, "/" );
+            strcat( full_path, s + is_dot_slash * 2 );
+        }
+
+        /* event.file_name */
+        slash = strrchr( full_path, '/' );
+        file_name = ztrdup( slash + 1 );
+        /* event.dir_path */
+        bkp = slash[1];
+        slash[1] = '\0';
+        dir_path = ztrdup( full_path );
+        slash[1] = bkp;
+
+        /* Fill and add zp_node */
+        ++ zp_sevent_count;
+        zp_node->event.id = zp_sevent_count;
+        zp_node->event.ts = (long) zp_prev_tv;
+        zp_node->event.dir_path = dir_path;
+        zp_node->event.file_name = file_name;
+        zp_node->event.full_path = full_path;
+        zp_node->event.duration = ((((double) zp_tv.tv_sec) * 1000.0) + (((double) zp_tv.tv_usec) / 1000.0)) - zp_prev_tv;
+        zp_node->event.load_error = ret;
+
+        sprintf( zp_tmp, "%d", zp_node->event.id );
+        zp_tmp[ 19 ] = '\0';
+
+        addhashnode( zp_source_events, ztrdup( zp_tmp ), ( void * ) zp_node );
+
+        fprintf( stderr,"dir_path: %s, file_name: %s, duration: %lf\n", dir_path, file_name, zp_node->event.duration );
+        fflush( stderr );
+    }
 
     return ret;
 }
@@ -1250,7 +1329,7 @@ zp_createhashtable( char *name )
     ht->removenode  = removehashnode;
     ht->disablenode = NULL;
     ht->enablenode  = NULL;
-    ht->freenode    = zp_freebasicnode;
+    ht->freenode    = zp_free_sevent_node;
     ht->printnode   = NULL;
 
     return ht;
@@ -1287,13 +1366,13 @@ zp_createhashparam( char *name, int flags )
     return pm;
 }
 /* }}} */
-/* FUNCTION: zp_freebasicnode {{{ */
+/* FUNCTION: zp_free_sevent_node {{{ */
 /**/
 static void
-zp_freebasicnode( HashNode hn )
+zp_free_sevent_node( HashNode hn )
 {
     zsfree( hn->nam );
-    zfree( hn, sizeof( struct basic_node ) );
+    zfree( hn, sizeof( struct zp_sevent_node ) );
 }
 /* }}} */
 /* FUNCTION: zp_freeparamnode {{{ */
@@ -1431,7 +1510,7 @@ setup_( UNUSED( Module m ) )
     bn->handlerfunc = bin_custom_dot;
 
     /* Create private hash with source_prepare requests */
-    if ( !( zp_hash = zp_createhashtable( "zp_hash" ) ) ) {
+    if ( !( zp_source_events = zp_createhashtable( "zp_source_events" ) ) ) {
         zwarn( "Cannot create the hash table" );
         return 1;
     }
