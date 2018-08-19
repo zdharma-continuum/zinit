@@ -837,9 +837,9 @@ custom_try_source_file(char *file)
     rc = stat(wc, &stc);
     rn = stat(file, &stn);
 
-    /* If there's no .zwc, or if there is also script and it is more
-     * recent than bytecode */
-    if ( rc || (!rn && ( stc.st_mtime < stn.st_mtime ) ) ) {
+    /* ZP-CODE */
+    /* If there is no zwc file, or if it is less recent than script file */
+    if ( !rn && ( rc || ( stc.st_mtime < stn.st_mtime ) ) ) {
         char *args[] = { file, NULL };
         struct options ops;
 
