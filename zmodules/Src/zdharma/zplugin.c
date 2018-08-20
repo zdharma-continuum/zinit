@@ -803,9 +803,6 @@ custom_source(char *s)
         zp_tmp[ 19 ] = '\0';
 
         addhashnode( zp_source_events, ztrdup( zp_tmp ), ( void * ) zp_node );
-
-        fprintf( stderr,"dir_path: %s, file_name: %s, duration: %lf\n", dir_path, file_name, zp_node->event.duration );
-        fflush( stderr );
     }
 
     return ret;
@@ -1202,14 +1199,16 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
         return 0;
     }
 
-    if ( !*argv ) {
-        zwarnnam( nam, "`zpmod' takes a sub-command as first argument, see -h" );
+    if ( *argv && 0 != strcmp( "report-append", *argv ) ) {
+        zwarnnam( nam, "`zpmod' incorrect subcommand, see -h" );
         return 1;
     }
 
-    subcmd = *argv ++;
+    if ( (subcmd = *argv) ) {
+        argv ++;
+    }
 
-    if ( 0 == strcmp( subcmd, "report-append" ) ) {
+    if ( 0 == strcmp( subcmd ? subcmd : "", "report-append" ) ) {
         char *target = NULL, *body = NULL;
         int target_len = 0, body_len = 0;
 
@@ -1233,6 +1232,17 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
 
         ret = zp_append_report( nam, target, target_len, body, body_len );
         zfree( target, target_len );
+    } else if ( OPT_ISSET( ops, 'S' ) ) {
+        char *report;
+        int rep_size;
+        report = zp_build_source_report( ! OPT_ISSET( ops, 'l' ), &rep_size );
+        fprintf( stdout, "%s", report ? report : "Unknown error, aborted" );
+        fflush( stdout );
+        if ( rep_size ) {
+            zfree( report, rep_size );
+        } else if ( report ) {
+            zsfree( report );
+        }
     } else {
         zwarnnam( nam, "Unknown zplugin-module command: `%s', see `-h'", subcmd );
     }
@@ -1305,7 +1315,67 @@ zp_append_report( const char *nam, const char *target, int target_len, const cha
     return 0;
 }
 /* }}} */
+/* FUNCTION: zp_build_source_report {{{ */
+/**/
+char *zp_build_source_report( int no_paths, int *rep_size ) {
+    char *report, zp_tmp[ 20 ];
+    int current_size, space_left, current_end, idx, printed;
+    SEventNode node;
+    FILE *null_fle;
 
+    current_size = 127;
+    current_end = 0;
+    report = ( char * ) zalloc( sizeof( char ) * ( current_size + 1 ) );
+    space_left = 127;
+    report[ current_end ] = '\0';
+    *rep_size = current_size + 1;
+
+    if ( ! report ) {
+        *rep_size = 0;
+        return ztrdup( "ERROR: couldn't allocate initial buffer, aborted\n" );
+    }
+
+    null_fle = fopen( "/dev/null", "w" );
+    if ( ! null_fle ) {
+        zfree( report, *rep_size );
+        *rep_size = 0;
+        return ztrdup( "ERROR: couldn't open /dev/null, aborted\n" );
+    }
+
+    for ( idx = 1; idx <= zp_sevent_count; ++ idx ) {
+        sprintf( zp_tmp, "%d", idx );
+        zp_tmp[ 19 ] = '\0';
+
+        if ( ! ( node = ( SEventNode ) gethashnode2( zp_source_events, zp_tmp ) ) ) {
+            continue;
+        }
+
+        printed = fprintf( null_fle, "%4.3lf ms    %s\n", node->event.duration,
+                                                        no_paths ? node->event.file_name : node->event.full_path );
+        if ( space_left < printed ) {
+            char *report_;
+            current_size += printed - space_left + 25;
+            space_left += printed - space_left + 25;
+            report_ = zrealloc( report, sizeof( char ) * ( current_size + 1 ) );
+            if ( ! report_ ) {
+                zfree( report, *rep_size );
+                *rep_size = 0;
+                fclose( null_fle );
+                return ztrdup( "ERROR: Couldn't realloc buffer, aborted\n" );
+            }
+            report = report_;
+            *rep_size = current_size + 1;
+        }
+
+        printed = sprintf( report + current_end, "%4.3lf ms    %s\n", node->event.duration,
+                                                            no_paths ? node->event.file_name : node->event.full_path );
+        current_end += printed;
+        space_left -= printed;
+    }
+    fclose( null_fle );
+    return report;
+}
+/* }}} */
 /*
  * Needed tool-functions, like function creating a hash parameter
  */
@@ -1477,7 +1547,7 @@ zp_unmetafy_zalloc( const char *to_copy, int *new_len )
 static struct builtin bintab[] =
 {
     BUILTIN( "custom_dot", 0, bin_custom_dot, 1, -1, 0, NULL, NULL ),
-    BUILTIN( "zpmod", 0, bin_zpmod, 0, -1, 0, "h", NULL ),
+    BUILTIN( "zpmod", 0, bin_zpmod, 0, -1, 0, "hSl", NULL ),
 };
 /* }}} */
 /* STRUCT: struct features module_features {{{ */
