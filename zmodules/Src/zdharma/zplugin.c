@@ -1251,8 +1251,22 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
 /* FUNCTION: zpmod_usage {{{ */
 /**/
 void zpmod_usage() {
-    fprintf( stdout, "Usage: zpmod {subcommand} {subcommand-arguments}\n" );
-    fprintf( stdout, "       zpmod report-append {plugin-ID} {new-report-body}\n");
+    fprintf( stdout, "Usage: zpmod {subcommand} {subcommand-arguments}\n"
+                     "       zpmod report-append {plugin-ID} {new-report-body}\n"
+                     "       zpmod source-study [-l]\n"
+                     "\n"
+                     "Command <report-append>:\n"
+                     "Used by Zplugin internally to speed up loading plugins with tracking (reporting).\n"
+                     "It extends the given field {plugin-ID} in $ZPLG_REPORTS hash, with the given string\n"
+                     "{new-report-body}.\n"
+                     "\n"
+                     "Command <source-study>:\n"
+                     "Displays list of files loaded via `source' or `.' builtins, with duration that each\n"
+                     "loading lasted, in milliseconds. Zplugin tracks all calls to those builtins and measures\n"
+                     "the time each call took. This can be used to e.g. profile plugins loading, regardless of\n"
+                     "the plugin manager used.\n"
+                     );
+    fflush( stdout );
 }
 /* }}} */
 
