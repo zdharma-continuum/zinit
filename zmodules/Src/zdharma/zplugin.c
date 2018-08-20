@@ -1362,7 +1362,7 @@ char *zp_build_source_report( int no_paths, int *rep_size ) {
             continue;
         }
 
-        printed = fprintf( null_fle, "%4.3lf ms    %s\n", node->event.duration,
+        printed = fprintf( null_fle, "%4.0lf ms    %s\n", node->event.duration,
                                                         no_paths ? node->event.file_name : node->event.full_path );
         if ( space_left < printed ) {
             char *report_;
@@ -1379,7 +1379,7 @@ char *zp_build_source_report( int no_paths, int *rep_size ) {
             *rep_size = current_size + 1;
         }
 
-        printed = sprintf( report + current_end, "%4.3lf ms    %s\n", node->event.duration,
+        printed = sprintf( report + current_end, "%4.0lf ms    %s\n", node->event.duration,
                                                             no_paths ? node->event.file_name : node->event.full_path );
         current_end += printed;
         space_left -= printed;
