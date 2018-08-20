@@ -1199,16 +1199,14 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
         return 0;
     }
 
-    if ( *argv && 0 != strcmp( "report-append", *argv ) ) {
-        zwarnnam( nam, "`zpmod' incorrect subcommand, see -h" );
+    if ( !*argv ) {
+        zwarnnam( nam, "`zpmod' takes a sub-command as first argument, see -h" );
         return 1;
     }
 
-    if ( (subcmd = *argv) ) {
-        argv ++;
-    }
+    subcmd = *argv ++;
 
-    if ( 0 == strcmp( subcmd ? subcmd : "", "report-append" ) ) {
+    if ( 0 == strcmp( subcmd, "report-append" ) ) {
         char *target = NULL, *body = NULL;
         int target_len = 0, body_len = 0;
 
@@ -1232,10 +1230,10 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
 
         ret = zp_append_report( nam, target, target_len, body, body_len );
         zfree( target, target_len );
-    } else if ( OPT_ISSET( ops, 'S' ) ) {
+    } else if ( 0 == strcmp( subcmd, "source-study" ) ) {
         char *report;
         int rep_size;
-        report = zp_build_source_report( ! OPT_ISSET( ops, 'l' ), &rep_size );
+        report = zp_build_source_report( ! zp_has_option( argv, 'l' ), &rep_size );
         fprintf( stdout, "%s", report ? report : "Unknown error, aborted" );
         fflush( stdout );
         if ( rep_size ) {
@@ -1475,6 +1473,24 @@ zp_freeparamnode( HashNode hn )
  * Tool-functions that are more hacky or problem-solving
  */
 
+/* FUNCTION: zp_has_option {{{ */
+/**/
+static int
+zp_has_option( char **argv, char opt ) {
+    char *string;
+    while ( ( string = *argv ) ) {
+        if ( string[0] == '-' ) {
+            while ( *++string ) {
+                if ( string[0] == opt ) {
+                    return 1;
+                }
+            }
+        }
+        ++ argv;
+    }
+    return 0;
+}
+/* }}} */
 /* FUNCTION: my_ztrdup_glen {{{ */
 /**/
 char *
@@ -1547,7 +1563,7 @@ zp_unmetafy_zalloc( const char *to_copy, int *new_len )
 static struct builtin bintab[] =
 {
     BUILTIN( "custom_dot", 0, bin_custom_dot, 1, -1, 0, NULL, NULL ),
-    BUILTIN( "zpmod", 0, bin_zpmod, 0, -1, 0, "hSl", NULL ),
+    BUILTIN( "zpmod", 0, bin_zpmod, 0, -1, 0, "h", NULL ),
 };
 /* }}} */
 /* STRUCT: struct features module_features {{{ */
