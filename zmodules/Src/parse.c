@@ -48,7 +48,11 @@ mod_export int incond;
 /**/
 mod_export int inredir;
  
-/* != 0 if we are about to read a case pattern */
+/*
+ * 1 if we are about to read a case pattern
+ * -1 if we are not quite sure
+ * 0 otherwise
+ */
  
 /**/
 int incasepat;
@@ -394,9 +398,12 @@ ecdel(int p)
 static wordcode
 ecstrcode(char *s)
 {
-    int l, t = has_token(s);
+    int l, t;
+
+    unsigned val = hasher(s);
 
     if ((l = strlen(s) + 1) && l <= 4) {
+	t = has_token(s);
 	wordcode c = (t ? 3 : 2);
 	switch (l) {
 	case 4: c |= ((wordcode) STOUC(s[2])) << 19;
@@ -410,16 +417,21 @@ ecstrcode(char *s)
 	int cmp;
 
 	for (pp = &ecstrs; (p = *pp); ) {
-	    if (!(cmp = p->nfunc - ecnfunc) && !(cmp = strcmp(p->str, s)))
+	    if (!(cmp = p->nfunc - ecnfunc) && !(cmp = (((signed)p->hashval) - ((signed)val))) && !(cmp = strcmp(p->str, s))) {
 		return p->offs;
+            }
 	    pp = (cmp < 0 ? &(p->left) : &(p->right));
 	}
+
+        t = has_token(s);
+
 	p = *pp = (Eccstr) zhalloc(sizeof(*p));
 	p->left = p->right = 0;
 	p->offs = ((ecsoffs - ecssub) << 2) | (t ? 1 : 0);
 	p->aoffs = ecsoffs;
 	p->str = s;
 	p->nfunc = ecnfunc;
+        p->hashval = val;
 	ecsoffs += l;
 
 	return p->offs;
@@ -796,8 +808,13 @@ par_sublist(int *cmplx)
 				 WC_SUBLIST_END),
 			     f, (e - 1 - p), c);
 	    cmdpop();
-	} else
+	} else {
+	    if (tok == AMPER || tok == AMPERBANG) {
+		c = 1;
+		*cmplx |= c;
+	    }		
 	    set_sublist_code(p, WC_SUBLIST_END, f, (e - 1 - p), c);
+	}
 	return 1;
     } else {
 	ecused--;
@@ -1186,6 +1203,7 @@ par_case(int *cmplx)
 
     for (;;) {
 	char *str;
+	int skip_zshlex;
 
 	while (tok == SEPER)
 	    zshlex();
@@ -1193,11 +1211,17 @@ par_case(int *cmplx)
 	    break;
 	if (tok == INPAR)
 	    zshlex();
-	if (tok != STRING)
-	    YYERRORV(oecused);
-	if (!strcmp(tokstr, "esac"))
-	    break;
-	str = dupstring(tokstr);
+	if (tok == BAR) {
+	    str = dupstring("");
+	    skip_zshlex = 1;
+	} else {
+	    if (tok != STRING)
+		YYERRORV(oecused);
+	    if (!strcmp(tokstr, "esac"))
+		break;
+	    str = dupstring(tokstr);
+	    skip_zshlex = 0;
+	}
 	type = WC_CASE_OR;
 	pp = ecadd(0);
 	palts = ecadd(0);
@@ -1235,10 +1259,11 @@ par_case(int *cmplx)
 	 * this doesn't affect our ability to match a | or ) as
 	 * these are valid on command lines.
 	 */
-	incasepat = 0;
+	incasepat = -1;
 	incmdpos = 1;
-	for (;;) {
+	if (!skip_zshlex)
 	    zshlex();
+	for (;;) {
 	    if (tok == OUTPAR) {
 		ecstr(str);
 		ecadd(ecnpats++);
@@ -1294,10 +1319,26 @@ par_case(int *cmplx)
 	    }
 
 	    zshlex();
-	    if (tok != STRING)
+	    switch (tok) {
+	    case STRING:
+		/* Normal case */
+		str = dupstring(tokstr);
+		zshlex();
+		break;
+
+	    case OUTPAR:
+	    case BAR:
+		/* Empty string */
+		str = dupstring("");
+		break;
+
+	    default:
+		/* Oops. */
 		YYERRORV(oecused);
-	    str = dupstring(tokstr);
+		break;
+	    }
 	}
+	incasepat = 0;
 	par_save_list(cmplx);
 	if (tok == SEMIAMP)
 	    type = WC_CASE_AND;
@@ -1469,8 +1510,10 @@ par_while(int *cmplx)
 	if (tok != ZEND)
 	    YYERRORV(oecused);
 	zshlex();
-    } else
+    } else if (unset(SHORTLOOPS)) {
 	YYERRORV(oecused);
+    } else
+	par_save_list1(cmplx);
 
     ecbuf[p] = WCB_WHILE(type, ecused - 1 - p);
 }
@@ -1807,6 +1850,10 @@ par_simple(int *cmplx, int nr)
 	    incmdpos = oldcmdpos;
 	    isnull = 0;
 	    assignments = 1;
+	} else if (IS_REDIROP(tok)) {
+	    *cmplx = c = 1;
+	    nr += par_redir(&r, NULL);
+	    continue;
 	} else
 	    break;
 	zshlex();
@@ -2701,7 +2748,8 @@ freeeprog(Eprog p)
 	DPUTS(p->nref < 0 && !(p->flags & EF_HEAP), "Real EPROG has nref < 0");
 	DPUTS(p->nref < -1, "Uninitialised EPROG nref");
 #ifdef MAX_FUNCTION_DEPTH
-	DPUTS(p->nref > MAX_FUNCTION_DEPTH + 10, "Overlarge EPROG nref");
+	DPUTS(zsh_funcnest >=0 && p->nref > zsh_funcnest + 10,
+	      "Overlarge EPROG nref");
 #endif
 	if (p->nref > 0 && !--p->nref) {
 	    for (i = p->npats, pp = p->pats; i--; pp++)
@@ -3631,15 +3679,15 @@ try_dump_file(char *path, char *name, char *file, int *ksh, int test_only)
      * function. */
     queue_signals();
     if (!rd &&
-	(rc || std.st_mtime > stc.st_mtime) &&
-	(rn || std.st_mtime > stn.st_mtime) &&
+	(rc || std.st_mtime >= stc.st_mtime) &&
+	(rn || std.st_mtime >= stn.st_mtime) &&
 	(prog = check_dump_file(dig, &std, name, ksh, test_only))) {
 	unqueue_signals();
 	return prog;
     }
     /* No digest file. Now look for the per-function compiled file. */
     if (!rc &&
-	(rn || stc.st_mtime > stn.st_mtime) &&
+	(rn || stc.st_mtime >= stn.st_mtime) &&
 	(prog = check_dump_file(wc, &stc, name, ksh, test_only))) {
 	unqueue_signals();
 	return prog;
@@ -3678,7 +3726,7 @@ try_source_file(char *file)
     rn = stat(file, &stn);
 
     queue_signals();
-    if (!rc && (rn || stc.st_mtime > stn.st_mtime) &&
+    if (!rc && (rn || stc.st_mtime >= stn.st_mtime) &&
 	(prog = check_dump_file(wc, &stc, tail, NULL, 0))) {
 	unqueue_signals();
 	return prog;

@@ -1261,6 +1261,8 @@ printaliasnode(HashNode hn, int printflags)
     if (printflags & PRINT_WHENCE_WORD) {
 	if (a->node.flags & ALIAS_SUFFIX)
 	    printf("%s: suffix alias\n", a->node.nam);
+	else if (a->node.flags & ALIAS_GLOBAL)
+	    printf("%s: global alias\n", a->node.nam);
 	else
 	    printf("%s: alias\n", a->node.nam);
 	return;
@@ -1443,6 +1445,9 @@ void
 freehistdata(Histent he, int unlink)
 {
     if (!he)
+	return;
+
+    if (he == &curline)
 	return;
 
     if (!(he->node.flags & (HIST_DUP | HIST_TMPSTORE)))

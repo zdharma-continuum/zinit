@@ -277,6 +277,10 @@ handle_sub(int job, int fg)
 		(!jn->procs->next || cp || jn->procs->pid != jn->gleader))
 		attachtty(jn->gleader);
 	    kill(sj->other, SIGCONT);
+	    if (jn->stat & STAT_DISOWN)
+	    {
+		deletejob(jn, 1);
+	    }
 	}
 	curjob = jn - jobtab;
     } else if (sj->stat & STAT_STOPPED) {
@@ -724,6 +728,40 @@ printtime(struct timeval *real, child_times_t *ti, char *desc)
 	    case 'S':
 		fprintf(stderr, "%4.2fs", system_time);
 		break;
+	    case 'm':
+		switch (*++s) {
+		case 'E':
+		    fprintf(stderr, "%0.fms", elapsed_time * 1000.0);
+		    break;
+		case 'U':
+		    fprintf(stderr, "%0.fms", user_time * 1000.0);
+		    break;
+		case 'S':
+		    fprintf(stderr, "%0.fms", system_time * 1000.0);
+		    break;
+		default:
+		    fprintf(stderr, "%%m");
+		    s--;
+		    break;
+		}
+		break;
+	    case 'u':
+		switch (*++s) {
+		case 'E':
+		    fprintf(stderr, "%0.fus", elapsed_time * 1000000.0);
+		    break;
+		case 'U':
+		    fprintf(stderr, "%0.fus", user_time * 1000000.0);
+		    break;
+		case 'S':
+		    fprintf(stderr, "%0.fus", system_time * 1000000.0);
+		    break;
+		default:
+		    fprintf(stderr, "%%u");
+		    s--;
+		    break;
+		}
+		break;
 	    case '*':
 		switch (*++s) {
 		case 'E':
@@ -887,6 +925,7 @@ should_report_time(Job j)
     struct value vbuf;
     Value v;
     char *s = "REPORTTIME";
+    int save_errflag = errflag;
     zlong reporttime = -1;
 #ifdef HAVE_GETRUSAGE
     char *sm = "REPORTMEMORY";
@@ -898,12 +937,14 @@ should_report_time(Job j)
 	return 1;
 
     queue_signals();
+    errflag = 0;
     if ((v = getvalue(&vbuf, &s, 0)))
 	reporttime = getintvalue(v);
 #ifdef HAVE_GETRUSAGE
     if ((v = getvalue(&vbuf, &sm, 0)))
 	reportmemory = getintvalue(v);
 #endif
+    errflag = save_errflag;
     unqueue_signals();
     if (reporttime < 0
 #ifdef HAVE_GETRUSAGE
@@ -1217,11 +1258,7 @@ pipecleanfilelist(LinkList filelist, int proc_subst_only)
     while (node) {
 	Jobfile jf = (Jobfile)getdata(node);
 	if (jf->is_fd &&
-	    (!proc_subst_only
-#ifdef FDT_PROC_SUBST
-	     || fdtable[jf->u.fd] == FDT_PROC_SUBST
-#endif
-		)) {
+	    (!proc_subst_only || fdtable[jf->u.fd] == FDT_PROC_SUBST)) {
 	    LinkNode next = nextnode(node);
 	    zclose(jf->u.fd);
 	    (void)remnode(filelist, node);
@@ -2213,7 +2250,8 @@ bin_fg(char *name, char **argv, Options ops, int func)
 	    return 0;
 	} else {   /* Must be BIN_WAIT, so wait for all jobs */
 	    for (job = 0; job <= maxjob; job++)
-		if (job != thisjob && jobtab[job].stat)
+		if (job != thisjob && jobtab[job].stat &&
+		    !(jobtab[job].stat & STAT_NOPRINT))
 		    retval = zwaitjob(job, 1);
 	    unqueue_signals();
 	    return retval;
@@ -2247,8 +2285,11 @@ bin_fg(char *name, char **argv, Options ops, int func)
 		     */
 		    retval = waitforpid(pid, 1);
 		}
-		if (retval == 0)
-		    retval = lastval2;
+		if (retval == 0) {
+		    if ((retval = getbgstatus(pid)) < 0) {
+			retval = lastval2;
+		    }
+		}
 	    } else if ((retval = getbgstatus(pid)) < 0) {
 		zwarnnam(name, "pid %d is not a child of this shell", pid);
 		/* presumably lastval2 doesn't tell us a heck of a lot? */
@@ -2288,8 +2329,10 @@ bin_fg(char *name, char **argv, Options ops, int func)
 	case BIN_FG:
 	case BIN_BG:
 	case BIN_WAIT:
-	    if (func == BIN_BG)
+	    if (func == BIN_BG) {
 		jobtab[job].stat |= STAT_NOSTTY;
+		jobtab[job].stat &= ~STAT_CURSH;
+	    }
 	    if ((stopped = (jobtab[job].stat & STAT_STOPPED))) {
 		makerunning(jobtab + job);
 		if (func == BIN_BG) {
@@ -2373,6 +2416,10 @@ bin_fg(char *name, char **argv, Options ops, int func)
 	    printjob(job + (oldjobtab ? oldjobtab : jobtab), lng, 2);
 	    break;
 	case BIN_DISOWN:
+	    if (jobtab[job].stat & STAT_SUPERJOB) {
+		jobtab[job].stat |= STAT_DISOWN;
+		continue;
+	    }
 	    if (jobtab[job].stat & STAT_STOPPED) {
 		char buf[20], *pids = "";
 

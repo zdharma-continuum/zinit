@@ -27,7 +27,7 @@
  *
  */
 
-#define SIGNAL_HANDTYPE RETSIGTYPE (*)_((int))
+#define SIGNAL_HANDTYPE void (*)_((int))
 
 #ifndef HAVE_KILLPG
 # define killpg(pgrp,sig) kill(-(pgrp),sig)

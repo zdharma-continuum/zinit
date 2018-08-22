@@ -53,7 +53,7 @@ static struct builtin builtins[] =
     BUILTIN("cd", BINF_SKIPINVALID | BINF_SKIPDASH | BINF_DASHDASHVALID, bin_cd, 0, 2, BIN_CD, "qsPL", NULL),
     BUILTIN("chdir", BINF_SKIPINVALID | BINF_SKIPDASH | BINF_DASHDASHVALID, bin_cd, 0, 2, BIN_CD, "qsPL", NULL),
     BUILTIN("continue", BINF_PSPECIAL, bin_break, 0, 1, BIN_CONTINUE, NULL, NULL),
-    BUILTIN("declare", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "AE:%F:%HL:%R:%TUZ:%afghi:%klmprtuxz", NULL),
+    BUILTIN("declare", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "AE:%F:%HL:%R:%TUZ:%afghi:%klmp:%rtuxz", NULL),
     BUILTIN("dirs", 0, bin_dirs, 0, -1, 0, "clpv", NULL),
     BUILTIN("disable", 0, bin_enable, 0, -1, BIN_DISABLE, "afmprs", NULL),
     BUILTIN("disown", 0, bin_fg, 0, -1, BIN_DISOWN, NULL, NULL),
@@ -62,7 +62,7 @@ static struct builtin builtins[] =
     BUILTIN("enable", 0, bin_enable, 0, -1, BIN_ENABLE, "afmprs", NULL),
     BUILTIN("eval", BINF_PSPECIAL, bin_eval, 0, -1, BIN_EVAL, NULL, NULL),
     BUILTIN("exit", BINF_PSPECIAL, bin_break, 0, 1, BIN_EXIT, NULL, NULL),
-    BUILTIN("export", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "E:%F:%HL:%R:%TUZ:%afhi:%lprtu", "xg"),
+    BUILTIN("export", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "E:%F:%HL:%R:%TUZ:%afhi:%lp:%rtu", "xg"),
     BUILTIN("false", 0, bin_false, 0, -1, 0, NULL, NULL),
     /*
      * We used to behave as if the argument to -e was optional.
@@ -71,7 +71,7 @@ static struct builtin builtins[] =
      */
     BUILTIN("fc", 0, bin_fc, 0, -1, BIN_FC, "aAdDe:EfiIlLmnpPrRt:W", NULL),
     BUILTIN("fg", 0, bin_fg, 0, -1, BIN_FG, NULL, NULL),
-    BUILTIN("float", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "E:%F:%HL:%R:%Z:%ghlprtux", "E"),
+    BUILTIN("float", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "E:%F:%HL:%R:%Z:%ghlp:%rtux", "E"),
     BUILTIN("functions", BINF_PLUSOPTS, bin_functions, 0, -1, 0, "kmMstTuUWx:z", NULL),
     BUILTIN("getln", 0, bin_read, 0, -1, 0, "ecnAlE", "zr"),
     BUILTIN("getopts", 0, bin_getopts, 2, -1, 0, NULL, NULL),
@@ -82,11 +82,11 @@ static struct builtin builtins[] =
 #endif
 
     BUILTIN("history", 0, bin_fc, 0, -1, BIN_FC, "adDEfiLmnpPrt:", "l"),
-    BUILTIN("integer", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "HL:%R:%Z:%ghi:%lprtux", "i"),
+    BUILTIN("integer", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "HL:%R:%Z:%ghi:%lp:%rtux", "i"),
     BUILTIN("jobs", 0, bin_fg, 0, -1, BIN_JOBS, "dlpZrs", NULL),
     BUILTIN("kill", BINF_HANDLES_OPTS, bin_kill, 0, -1, 0, NULL, NULL),
     BUILTIN("let", 0, bin_let, 1, -1, 0, NULL, NULL),
-    BUILTIN("local", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "AE:%F:%HL:%R:%TUZ:%ahi:%lprtux", NULL),
+    BUILTIN("local", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "AE:%F:%HL:%R:%TUZ:%ahi:%lp:%rtux", NULL),
     BUILTIN("log", 0, bin_log, 0, 0, 0, NULL, NULL),
     BUILTIN("logout", 0, bin_break, 0, 1, BIN_LOGOUT, NULL, NULL),
 
@@ -120,18 +120,18 @@ static struct builtin builtins[] =
     BUILTIN("trap", BINF_PSPECIAL | BINF_HANDLES_OPTS, bin_trap, 0, -1, 0, NULL, NULL),
     BUILTIN("true", 0, bin_true, 0, -1, 0, NULL, NULL),
     BUILTIN("type", 0, bin_whence, 0, -1, 0, "ampfsSw", "v"),
-    BUILTIN("typeset", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "AE:%F:%HL:%R:%TUZ:%afghi:%klprtuxmz", NULL),
+    BUILTIN("typeset", BINF_PLUSOPTS | BINF_MAGICEQUALS | BINF_PSPECIAL | BINF_ASSIGN, (HandlerFunc)bin_typeset, 0, -1, 0, "AE:%F:%HL:%R:%TUZ:%afghi:%klp:%rtuxmz", NULL),
     BUILTIN("umask", 0, bin_umask, 0, 1, 0, "S", NULL),
     BUILTIN("unalias", 0, bin_unhash, 0, -1, BIN_UNALIAS, "ams", NULL),
     BUILTIN("unfunction", 0, bin_unhash, 1, -1, BIN_UNFUNCTION, "m", "f"),
     BUILTIN("unhash", 0, bin_unhash, 1, -1, BIN_UNHASH, "adfms", NULL),
-    BUILTIN("unset", BINF_PSPECIAL, bin_unset, 1, -1, 0, "fmv", NULL),
+    BUILTIN("unset", BINF_PSPECIAL, bin_unset, 1, -1, BIN_UNSET, "fmv", NULL),
     BUILTIN("unsetopt", 0, bin_setopt, 0, -1, BIN_UNSETOPT, NULL, NULL),
     BUILTIN("wait", 0, bin_fg, 0, -1, BIN_WAIT, NULL, NULL),
     BUILTIN("whence", 0, bin_whence, 0, -1, 0, "acmpvfsSwx:", NULL),
     BUILTIN("where", 0, bin_whence, 0, -1, 0, "pmsSwx:", "ca"),
     BUILTIN("which", 0, bin_whence, 0, -1, 0, "ampsSwx:", "c"),
-    BUILTIN("zmodload", 0, bin_zmodload, 0, -1, 0, "AFRILP:abcfdilmpue", NULL),
+    BUILTIN("zmodload", 0, bin_zmodload, 0, -1, 0, "AFRILP:abcfdilmpsue", NULL),
     BUILTIN("zcompile", 0, bin_zcompile, 0, -1, 0, "tUMRcmzka", NULL),
 };
 
@@ -450,15 +450,35 @@ execbuiltin(LinkList args, LinkList assigns, Builtin bn)
 		    Asgment asg = (Asgment)node;
 		    fputc(' ', xtrerr);
 		    quotedzputs(asg->name, xtrerr);
-		    if (asg->is_array) {
-			LinkNode arrnode;
+		    if (asg->flags & ASG_ARRAY) {
 			fprintf(xtrerr, "=(");
 			if (asg->value.array) {
-			    for (arrnode = firstnode(asg->value.array);
-				 arrnode;
-				 incnode(arrnode)) {
-				fputc(' ', xtrerr);
-				quotedzputs((char *)getdata(arrnode), xtrerr);
+			    if (asg->flags & ASG_KEY_VALUE) {
+				LinkNode keynode, valnode;
+				keynode = firstnode(asg->value.array);
+				for (;;) {
+				    if (!keynode)
+					break;
+				    valnode = nextnode(keynode);
+				    if (!valnode)
+					break;
+				    fputc('[', xtrerr);
+				    quotedzputs((char *)getdata(keynode),
+						xtrerr);
+				    fprintf(stderr, "]=");
+				    quotedzputs((char *)getdata(valnode),
+						xtrerr);
+				    keynode = nextnode(valnode);
+				}
+			    } else {
+				LinkNode arrnode;
+				for (arrnode = firstnode(asg->value.array);
+				     arrnode;
+				     incnode(arrnode)) {
+				    fputc(' ', xtrerr);
+				    quotedzputs((char *)getdata(arrnode),
+						xtrerr);
+				}
 			    }
 			}
 			fprintf(xtrerr, " )");
@@ -675,13 +695,11 @@ bin_set(char *nam, char **args, UNUSED(Options ops), UNUSED(int func))
 	char **a = NULL, **y;
 	int len = arrlen(args);
 
-	if (array < 0 && (a = getaparam(arrayname))) {
-	    int al = arrlen(a);
-
-	    if (al > len)
-		len = al;
+	if (array < 0 && (a = getaparam(arrayname)) && arrlen_gt(a, len)) {
+	    a += len;
+	    len += arrlen(a);
 	}
-	for (x = y = zalloc((len + 1) * sizeof(char *)); len--; a++) {
+	for (x = y = zalloc((len + 1) * sizeof(char *)); len--;) {
 	    if (!*args)
 		args = a;
 	    *y++ = ztrdup(*args++);
@@ -880,8 +898,13 @@ cd_get_dest(char *nam, char **argv, int hard, int func)
 	    dir = nextnode(firstnode(dirstack));
 	if (dir)
 	    zinsertlinknode(dirstack, dir, getlinknode(dirstack));
-	else if (func != BIN_POPD)
+	else if (func != BIN_POPD) {
+	    if (!home) {
+		zwarnnam(nam, "HOME not set");
+		return NULL;
+	    }
 	    zpushnode(dirstack, ztrdup(home));
+	}
     } else if (!argv[1]) {
 	int dd;
 	char *end;
@@ -935,6 +958,10 @@ cd_get_dest(char *nam, char **argv, int hard, int func)
     }
     if (!dir) {
 	dir = firstnode(dirstack);
+    }
+    if (!dir || !getdata(dir)) {
+	DPUTS(1, "Directory not set, not detected early enough");
+	return NULL;
     }
     if (!(dest = cd_do_chdir(nam, getdata(dir), hard))) {
 	if (!target)
@@ -1510,7 +1537,7 @@ bin_fc(char *nam, char **argv, Options ops, int func)
 	    asgl = a;
 	}
 	a->name = *argv;
-	a->is_array = 0;
+	a->flags = 0;
 	a->value.scalar = s;
 	a->node.next = a->node.prev = NULL;
 	argv++;
@@ -1901,7 +1928,7 @@ getasg(char ***argvp, LinkList assigns)
 	return NULL;
     }
     asg.name = s;
-    asg.is_array = 0;
+    asg.flags = 0;
 
     /* search for `=' */
     for (; *s && *s != '='; s++);
@@ -2162,7 +2189,7 @@ typeset_single(char *cname, char *pname, Param pm, UNUSED(int func),
      *   ii. we are creating a new local parameter
      */
     if (usepm) {
-	if (asg->is_array ?
+	if ((asg->flags & ASG_ARRAY) ?
 	    !(PM_TYPE(pm->node.flags) & (PM_ARRAY|PM_HASHED)) :
 	    (asg->value.scalar && (PM_TYPE(pm->node.flags &
 					   (PM_ARRAY|PM_HASHED))))) {
@@ -2232,10 +2259,11 @@ typeset_single(char *cname, char *pname, Param pm, UNUSED(int func),
 	    if (asg->value.scalar &&
 		!(pm = assignsparam(pname, ztrdup(asg->value.scalar), 0)))
 		return NULL;
-	} else if (asg->is_array) {
+	} else if (asg->flags & ASG_ARRAY) {
+	    int flags = (asg->flags & ASG_KEY_VALUE) ? ASSPM_KEY_VALUE : 0;
 	    if (!(pm = assignaparam(pname, asg->value.array ?
 				 zlinklist2array(asg->value.array) :
-				 mkarray(NULL), 0)))
+				 mkarray(NULL), flags)))
 		return NULL;
 	}
 	if (errflag)
@@ -2246,7 +2274,7 @@ typeset_single(char *cname, char *pname, Param pm, UNUSED(int func),
 	return pm;
     }
 
-    if (asg->is_array ?
+    if ((asg->flags & ASG_ARRAY) ?
 	!(on & (PM_ARRAY|PM_HASHED)) :
 	(asg->value.scalar && (on & (PM_ARRAY|PM_HASHED)))) {
 	zerrnam(cname, "%s: inconsistent type for assignment", pname);
@@ -2278,7 +2306,7 @@ typeset_single(char *cname, char *pname, Param pm, UNUSED(int func),
 	 */
 	if (!ASG_VALUEP(asg) && !((pm->node.flags|on) & (PM_ARRAY|PM_HASHED))) {
 	    asg->value.scalar = dupstring(getsparam(pname));
-	    asg->is_array = 0;
+	    asg->flags = 0;
 	}
 	/* pname may point to pm->nam which is about to disappear */
 	pname = dupstring(pname);
@@ -2387,13 +2415,14 @@ typeset_single(char *cname, char *pname, Param pm, UNUSED(int func),
 		      ztrdup(asg->value.scalar ? asg->value.scalar : ""), 0)))
 		return NULL;
 	    dont_set = 1;
-	    asg->is_array = 0;
+	    asg->flags = 0;
 	    keeplocal = 0;
 	    on = pm->node.flags;
 	} else if (PM_TYPE(on) == PM_ARRAY && ASG_ARRAYP(asg)) {
+	    int flags = (asg->flags & ASG_KEY_VALUE) ? ASSPM_KEY_VALUE : 0;
 	    if (!(pm = assignaparam(pname, asg->value.array ?
 				    zlinklist2array(asg->value.array) :
-				    mkarray(NULL), 0)))
+				    mkarray(NULL), flags)))
 		return NULL;
 	    dont_set = 1;
 	    keeplocal = 0;
@@ -2470,6 +2499,7 @@ typeset_single(char *cname, char *pname, Param pm, UNUSED(int func),
 	Param ipm = pm;
 	if (pm->node.flags & (PM_ARRAY|PM_HASHED)) {
 	    char **arrayval;
+	    int flags = (asg->flags & ASG_KEY_VALUE) ? ASSPM_KEY_VALUE : 0;
 	    if (!ASG_ARRAYP(asg)) {
 		/*
 		 * Attempt to assign a scalar value to an array.
@@ -2488,7 +2518,7 @@ typeset_single(char *cname, char *pname, Param pm, UNUSED(int func),
 		arrayval = zlinklist2array(asg->value.array);
 	    else
 		arrayval = mkarray(NULL);
-	    if (!(pm=assignaparam(pname, arrayval, 0)))
+	    if (!(pm=assignaparam(pname, arrayval, flags)))
 		return NULL;
 	} else {
 	    DPUTS(ASG_ARRAYP(asg), "BUG: inconsistent array value for scalar");
@@ -2613,8 +2643,21 @@ bin_typeset(char *name, char **argv, LinkList assigns, Options ops, int func)
     queue_signals();
 
     /* Given no arguments, list whatever the options specify. */
-    if (OPT_ISSET(ops,'p'))
+    if (OPT_ISSET(ops,'p')) {
 	printflags |= PRINT_TYPESET;
+	if (OPT_HASARG(ops,'p')) {
+	    char *eptr;
+	    int pflag = (int)zstrtol(OPT_ARG(ops,'p'), &eptr, 10);
+	    if (pflag == 1 && !*eptr)
+		printflags |= PRINT_LINE;
+	    else if (pflag || *eptr) {
+		zwarnnam(name, "bad argument to -p: %s", OPT_ARG(ops,'p'));
+		unqueue_signals();
+		return 1;
+	    }
+	    /* -p0 treated as -p for consistency */
+	}
+    }
     hasargs = *argv != NULL || (assigns && firstnode(assigns));
     if (!hasargs) {
 	if (!OPT_ISSET(ops,'p')) {
@@ -2741,13 +2784,15 @@ bin_typeset(char *name, char **argv, LinkList assigns, Options ops, int func)
 		     * Already tied in the fashion requested.
 		     */
 		    struct tieddata *tdp = (struct tieddata*)pm->u.data;
+		    int flags = (asg->flags & ASG_KEY_VALUE) ?
+			ASSPM_KEY_VALUE : 0;
 		    /* Update join character */
 		    tdp->joinchar = joinchar;
 		    if (asg0.value.scalar)
 			assignsparam(asg0.name, ztrdup(asg0.value.scalar), 0);
 		    else if (asg->value.array)
 			assignaparam(
-			    asg->name, zlinklist2array(asg->value.array), 0);
+			    asg->name, zlinklist2array(asg->value.array),flags);
 		    return 0;
 		} else {
 		    zwarnnam(name, "can't tie already tied scalar: %s",
@@ -2769,7 +2814,7 @@ bin_typeset(char *name, char **argv, LinkList assigns, Options ops, int func)
 	 * to be exported properly.
 	 */
 	asg2.name = asg->name;
-	asg2.is_array = 0;
+	asg2.flags = 0;
 	asg2.value.array = (LinkList)0;
 	if (!(apm=typeset_single(name, asg->name,
 				 (Param)paramtab->getnode(paramtab,
@@ -2807,9 +2852,10 @@ bin_typeset(char *name, char **argv, LinkList assigns, Options ops, int func)
 	if (apm->ename)
 	    zsfree(apm->ename);
 	apm->ename = ztrdup(asg0.name);
-	if (asg->value.array)
-	    assignaparam(asg->name, zlinklist2array(asg->value.array), 0);
-	else if (oldval)
+	if (asg->value.array) {
+	    int flags = (asg->flags & ASG_KEY_VALUE) ? ASSPM_KEY_VALUE : 0;
+	    assignaparam(asg->name, zlinklist2array(asg->value.array), flags);
+	} else if (oldval)
 	    assignsparam(asg0.name, oldval, 0);
 	unqueue_signals();
 
@@ -3153,7 +3199,7 @@ bin_functions(char *name, char **argv, Options ops, int func)
 	pflags |= PRINT_NAMEONLY;
 
     if (OPT_MINUS(ops,'M') || OPT_PLUS(ops,'M')) {
-	MathFunc p, q;
+	MathFunc p, q, prev;
 	/*
 	 * Add/remove/list function as mathematical.
 	 */
@@ -3285,15 +3331,10 @@ bin_functions(char *name, char **argv, Options ops, int func)
 	    p->maxargs = maxargs;
 
 	    queue_signals();
-	    for (q = mathfuncs; q; q = q->next) {
+	    for (q = mathfuncs, prev = NULL; q; prev = q, q = q->next) {
 		if (!strcmp(q->name, funcname)) {
-		    unqueue_signals();
-		    zwarnnam(name, "-M %s: function already exists",
-			     funcname);
-		    zsfree(p->name);
-		    zsfree(p->module);
-		    zfree(p, sizeof(struct mathfunc));
-		    return 1;
+		    removemathfunc(prev, q);
+		    break;
 		}
 	    }
 
@@ -4110,6 +4151,10 @@ bin_unhash(char *name, char **argv, Options ops, int func)
     for (; *argv; argv++) {
 	if ((hn = ht->removenode(ht, *argv))) {
 	    ht->freenode(hn);
+	} else if (func == BIN_UNSET && isset(POSIXBUILTINS)) {
+	    /* POSIX: unset: "Unsetting a variable or function that was *
+	     * not previously set shall not be considered an error."    */
+	    returnval = 0;
 	} else {
 	    zwarnnam(name, "no such hash table element: %s", *argv);
 	    returnval = 1;
@@ -5184,14 +5229,23 @@ bin_print(char *name, char **args, Options ops, int func)
 			    errflag &= ~ERRFLAG_ERROR;
 			    ret = 1;
 			}
-			print_val(doubleval)
-			    break;
+			/* force consistent form for Inf/NaN output */
+			if (isnan(doubleval))
+			    count += fputs("nan", fout);
+			else if (isinf(doubleval))
+			    count += fputs((doubleval < 0.0) ? "-inf" : "inf", fout);
+		        else
+			    print_val(doubleval)
+			break;
 		    case 3:
 #ifdef ZSH_64_BIT_UTYPE
  		    	*d++ = 'l';
 #endif
 		    	*d++ = 'l', *d++ = *c, *d = '\0';
-			zulongval = (curarg) ? mathevali(curarg) : 0;
+			if (!curarg)
+			    zulongval = (zulong)0;
+			else if (!zstrtoul_underscore(curarg, &zulongval))
+			    zulongval = mathevali(curarg);
 			if (errflag) {
 			    zulongval = 0;
 			    errflag &= ~ERRFLAG_ERROR;
@@ -5264,8 +5318,13 @@ bin_shift(char *name, char **argv, Options ops, UNUSED(int func))
 
     /* optional argument can be either numeric or an array */
     queue_signals();
-    if (*argv && !getaparam(*argv))
+    if (*argv && !getaparam(*argv)) {
         num = mathevali(*argv++);
+	if (errflag) {
+	    unqueue_signals();
+	    return 1;
+	}
+    }
 
     if (num < 0) {
 	unqueue_signals();
@@ -5390,8 +5449,9 @@ bin_getopts(UNUSED(char *name), char **argv, UNUSED(Options ops), UNUSED(int fun
 	if(quiet) {
 	    zoptarg = metafy(optbuf, lenoptbuf, META_DUP);
 	} else {
-	    zwarn(*p == '?' ? "bad option: -%c" :
-		  "argument expected after -%c option", opch);
+	    zwarn(*p == '?' ? "bad option: %c%c" :
+		  "argument expected after %c%c option",
+		  "?-+"[lenoptbuf], opch);
 	    zoptarg=ztrdup("");
 	}
 	return 0;
@@ -5541,7 +5601,8 @@ checkjobs(void)
 
     for (i = 1; i <= maxjob; i++)
 	if (i != thisjob && (jobtab[i].stat & STAT_LOCKED) &&
-	    !(jobtab[i].stat & STAT_NOPRINT))
+	    !(jobtab[i].stat & STAT_NOPRINT) &&
+	    (isset(CHECKRUNNINGJOBS) || jobtab[i].stat & STAT_STOPPED))
 	    break;
     if (i <= maxjob) {
 	if (jobtab[i].stat & STAT_STOPPED) {
@@ -5896,7 +5957,7 @@ bin_emulate(char *nam, char **argv, Options ops, UNUSED(int func))
     savehackchar = keyboardhackchar;
     emulate(shname, opt_R, &new_emulation, new_opts);
     optlist = newlinklist();
-    if (parseopts(nam, &argv, new_opts, &cmd, optlist)) {
+    if (parseopts(nam, &argv, new_opts, &cmd, optlist, 0)) {
 	ret = 1;
 	goto restore;
     }

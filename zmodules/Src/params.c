@@ -36,6 +36,8 @@
 #else
 #include "patchlevel.h"
 
+#include <math.h>
+
 /* If removed from the ChangeLog for some reason */
 #ifndef ZSH_PATCHLEVEL
 #define ZSH_PATCHLEVEL "unknown"
@@ -101,6 +103,19 @@ zlong lastval,		/* $?           */
      rprompt_indent,	/* $ZLE_RPROMPT_INDENT */
      ppid,		/* $PPID        */
      zsh_subshell;	/* $ZSH_SUBSHELL */
+
+/* $FUNCNEST    */
+/**/
+mod_export
+zlong zsh_funcnest =
+#ifdef MAX_FUNCTION_DEPTH
+    MAX_FUNCTION_DEPTH
+#else
+    /* Disabled by default but can be enabled at run time */
+    -1
+#endif
+    ;
+
 /**/
 zlong lineno,		/* $LINENO      */
      zoptind,		/* $OPTIND      */
@@ -337,6 +352,7 @@ IPDEF5("COLUMNS", &zterm_columns, zlevar_gsu),
 IPDEF5("LINES", &zterm_lines, zlevar_gsu),
 IPDEF5U("ZLE_RPROMPT_INDENT", &rprompt_indent, rprompt_indent_gsu),
 IPDEF5("SHLVL", &shlvl, varinteger_gsu),
+IPDEF5("FUNCNEST", &zsh_funcnest, varinteger_gsu),
 
 /* Don't import internal integer status variables. */
 #define IPDEF6(A,B,F) {{NULL,A,PM_INTEGER|PM_SPECIAL|PM_DONTIMPORT},BR((void *)B),GSU(F),10,0,NULL,NULL,NULL,0}
@@ -535,10 +551,13 @@ scancopyparams(HashNode hn, UNUSED(int flags))
 HashTable
 copyparamtable(HashTable ht, char *name)
 {
-    HashTable nht = newparamtable(ht->hsize, name);
-    outtable = nht;
-    scanhashtable(ht, 0, 0, 0, scancopyparams, 0);
-    outtable = NULL;
+    HashTable nht = 0;
+    if (ht) {
+	nht = newparamtable(ht->hsize, name);
+	outtable = nht;
+	scanhashtable(ht, 0, 0, 0, scancopyparams, 0);
+	outtable = NULL;
+    }
     return nht;
 }
 
@@ -1204,7 +1223,7 @@ isident(char *s)
 /**/
 static zlong
 getarg(char **str, int *inv, Value v, int a2, zlong *w,
-       int *prevcharlen, int *nextcharlen)
+       int *prevcharlen, int *nextcharlen, int flags)
 {
     int hasbeg = 0, word = 0, rev = 0, ind = 0, down = 0, l, i, ishash;
     int keymatch = 0, needtok = 0, arglen, len, inpar = 0;
@@ -1407,6 +1426,8 @@ getarg(char **str, int *inv, Value v, int a2, zlong *w,
 	if (ishash) {
 	    HashTable ht = v->pm->gsu.h->getfn(v->pm);
 	    if (!ht) {
+		if (flags & SCANPM_CHECKING)
+		    return 0;
 		ht = newparamtable(17, v->pm->node.nam);
 		v->pm->gsu.h->setfn(v->pm, ht);
 	    }
@@ -1494,7 +1515,7 @@ getarg(char **str, int *inv, Value v, int a2, zlong *w,
 	    }
 	}
     } else {
-	if (!v->isarr && !word) {
+	if (!v->isarr && !word && !quote_arg) {
 	    l = strlen(s);
 	    if (a2) {
 		if (!l || *s != '*') {
@@ -1513,9 +1534,23 @@ getarg(char **str, int *inv, Value v, int a2, zlong *w,
 	    }
 	}
 	if (!keymatch) {
-	    if (quote_arg)
+	    if (quote_arg) {
 		untokenize(s);
-	    else
+		/* Scalar (e) needs implicit asterisk tokens */
+		if (!v->isarr && !word) {
+		    l = strlen(s);
+		    d = (char *) hcalloc(l + 2);
+		    if (a2) {
+			*d = Star;
+			strcpy(d + 1, s);
+		    } else {
+			strcpy(d, s);
+			d[l] = Star;
+			d[l + 1] = '\0';
+		    }
+		    s = d;
+		}
+	    } else
 		tokenize(s);
 	    remnulargs(s);
 	    pprog = patcompile(s, 0, NULL);
@@ -1848,7 +1883,8 @@ getindex(char **pptr, Value v, int flags)
 	zlong we = 0, dummy;
 	int startprevlen, startnextlen;
 
-	start = getarg(&s, &inv, v, 0, &we, &startprevlen, &startnextlen);
+	start = getarg(&s, &inv, v, 0, &we, &startprevlen, &startnextlen,
+		       flags);
 
 	if (inv) {
 	    if (!v->isarr && start != 0) {
@@ -1922,7 +1958,7 @@ getindex(char **pptr, Value v, int flags)
 
 	    if ((com = (*s == ','))) {
 		s++;
-		end = getarg(&s, &inv, v, 1, &dummy, NULL, NULL);
+		end = getarg(&s, &inv, v, 1, &dummy, NULL, NULL, flags);
 	    } else {
 		end = we ? we : start;
 	    }
@@ -2704,7 +2740,7 @@ setarrvalue(Value v, char **val)
 	    v->pm->gsu.a->setfn(v->pm, val);
     } else if (v->start == -1 && v->end == 0 &&
     	    PM_TYPE(v->pm->node.flags) == PM_HASHED) {
-    	arrhashsetfn(v->pm, val, 1);
+    	arrhashsetfn(v->pm, val, ASSPM_AUGMENT);
     } else if ((PM_TYPE(v->pm->node.flags) == PM_HASHED)) {
 	freearray(val);
 	zerr("%s: attempt to set slice of associative array",
@@ -3185,6 +3221,142 @@ assignaparam(char *s, char **val, int flags)
 
     if (flags & ASSPM_WARN)
 	check_warn_pm(v->pm, "array", created, may_warn_about_nested_vars);
+
+    /*
+     * At this point, we may have array entries consisting of
+     * - a Marker element --- normally allocated array entry but
+     *   with just Marker char and null
+     * - an array index element --- as normal for associative array,
+     *   but non-standard for normal array which we handle now.
+     * - a value for the indexed element.
+     * This only applies if the flag ASSPM_KEY_VALUE is passed in,
+     * indicating prefork() detected this syntax.
+     *
+     * For associative arrays we just junk the Marker elements.
+     */
+    if (flags & ASSPM_KEY_VALUE) {
+	char **aptr;
+	if (PM_TYPE(v->pm->node.flags) & PM_ARRAY) {
+	    /*
+	     * This is an ordinary array with key / value pairs.
+	     */
+	    int maxlen, origlen, nextind;
+	    char **fullval, **origptr;
+	    zlong *subscripts = (zlong *)zhalloc(arrlen(val) * sizeof(zlong));
+	    zlong *iptr = subscripts;
+	    if (flags & ASSPM_AUGMENT) {
+		origptr = v->pm->gsu.a->getfn(v->pm);
+		maxlen = origlen = arrlen(origptr);
+	    } else {
+		maxlen = origlen = 0;
+		origptr = NULL;
+	    }
+	    nextind = 0;
+	    for (aptr = val; *aptr; ) {
+		if (**aptr == Marker) {
+		    *iptr = mathevali(*++aptr);
+		    if (*iptr < 0 ||
+			(!isset(KSHARRAYS) && *iptr == 0)) {
+			unqueue_signals();
+			zerr("bad subscript for direct array assignment: %s", *aptr);
+			freearray(val);
+			return NULL;
+		    }
+		    if (!isset(KSHARRAYS))
+			--*iptr;
+		    nextind = *iptr + 1;
+		    ++iptr;
+		    aptr += 2;
+		} else {
+		    ++nextind;
+		    ++aptr;
+		}
+		if (nextind > maxlen)
+		    maxlen = nextind;
+	    }
+	    fullval = zshcalloc((maxlen+1) * sizeof(char *));
+	    if (!fullval) {
+		zerr("array too large");
+		freearray(val);
+		return NULL;
+	    }
+	    fullval[maxlen] = NULL;
+	    if (flags & ASSPM_AUGMENT) {
+		char **srcptr = origptr;
+		for (aptr = fullval; aptr <= fullval + origlen; aptr++) {
+		    *aptr = ztrdup(*srcptr);
+		    srcptr++;
+		}
+	    }
+	    iptr = subscripts;
+	    nextind = 0;
+	    for (aptr = val; *aptr; ++aptr) {
+		char *old;
+		if (**aptr == Marker) {
+		    int augment = ((*aptr)[1] == '+');
+		    zsfree(*aptr);
+		    zsfree(*++aptr); /* Index, no longer needed */
+		    old = fullval[*iptr];
+		    if (augment && old) {
+			fullval[*iptr] = bicat(old, *++aptr);
+			zsfree(*aptr);
+		    } else {
+			fullval[*iptr] = *++aptr;
+		    }
+		    nextind = *iptr + 1;
+		    ++iptr;
+		} else {
+		    old = fullval[nextind];
+		    fullval[nextind] = *aptr;
+		    ++nextind;
+		}
+		if (old)
+		    zsfree(old);
+		/* aptr now on value in both cases */
+	    }
+	    if (*aptr) {		/* Shouldn't be possible */
+		DPUTS(1, "Extra element in key / value array");
+		zsfree(*aptr);
+	    }
+	    free(val);
+	    for (aptr = fullval; aptr < fullval + maxlen; aptr++) {
+		/*
+		 * Remember we don't have sparse arrays but and they're null
+		 * terminated --- so any value we don't set has to be an
+		 * empty string.
+		 */
+		if (!*aptr)
+		    *aptr = ztrdup("");
+	    }
+	    setarrvalue(v, fullval);
+	    unqueue_signals();
+	    return v->pm;
+	} else if (PM_TYPE(v->pm->node.flags & PM_HASHED)) {
+	    /*
+	     * We strictly enforce [key]=value syntax for associative
+	     * arrays.  Marker can only indicate a Marker / key / value
+	     * triad; it cannot be there by accident.
+	     *
+	     * It's too inefficient to strip Markers here, and they
+	     * can't be there in the other form --- so just ignore
+	     * them willy nilly lower down.
+	     */
+	    for (aptr = val; *aptr; aptr += 3) {
+		if (**aptr != Marker) {
+		    unqueue_signals();
+		    freearray(val);
+		    zerr("bad [key]=value syntax for associative array");
+		    return NULL;
+		}
+	    }
+	} else {
+	    unqueue_signals();
+	    freearray(val);
+	    zerr("invalid use of [key]=value assignment syntax");
+	    return NULL;
+	}
+    }
+
     if (flags & ASSPM_AUGMENT) {
     	if (v->start == 0 && v->end == -1) {
 	    if (PM_TYPE(v->pm->node.flags) & PM_ARRAY) {
@@ -3242,12 +3414,17 @@ sethparam(char *s, char **val)
     if (!(v = fetchvalue(&vbuf, &s, 1, SCANPM_ASSIGNING))) {
 	createparam(t, PM_HASHED);
 	checkcreate = 1;
-    } else if (!(PM_TYPE(v->pm->node.flags) & PM_HASHED) &&
-	     !(v->pm->node.flags & PM_SPECIAL)) {
-	unsetparam(t);
-	/* no WARNCREATEGLOBAL check here as parameter already existed */
-	createparam(t, PM_HASHED);
-	v = NULL;
+    } else if (!(PM_TYPE(v->pm->node.flags) & PM_HASHED)) {
+	if (!(v->pm->node.flags & PM_SPECIAL)) {
+	    unsetparam(t);
+	    /* no WARNCREATEGLOBAL check here as parameter already existed */
+	    createparam(t, PM_HASHED);
+	    v = NULL;
+	} else {
+	    zerr("%s: can't change type of a special parameter", t);
+	    unqueue_signals();
+	    return NULL;
+	}
     }
     if (!v)
 	if (!(v = fetchvalue(&vbuf, &t, 1, SCANPM_ASSIGNING))) {
@@ -3670,30 +3847,49 @@ nullsethashfn(UNUSED(Param pm), HashTable x)
 /* Function to set value of an association parameter using key/value pairs */
 
 /**/
-mod_export void
-arrhashsetfn(Param pm, char **val, int augment)
+static void
+arrhashsetfn(Param pm, char **val, int flags)
 {
     /* Best not to shortcut this by using the existing hash table,   *
      * since that could cause trouble for special hashes.  This way, *
      * it's up to pm->gsu.h->setfn() what to do.                     */
-    int alen = arrlen(val);
+    int alen = 0;
     HashTable opmtab = paramtab, ht = 0;
-    char **aptr = val;
+    char **aptr;
     Value v = (Value) hcalloc(sizeof *v);
     v->end = -1;
+
+    for (aptr = val; *aptr; ++aptr) {
+	if (**aptr != Marker)
+	    ++alen;
+    }
 
     if (alen % 2) {
 	freearray(val);
 	zerr("bad set of key/value pairs for associative array");
 	return;
     }
-    if (augment) {
+    if (flags & ASSPM_AUGMENT) {
 	ht = paramtab = pm->gsu.h->getfn(pm);
     }
-    if (alen && (!augment || !paramtab)) {
+    if (alen && (!(flags & ASSPM_AUGMENT) || !paramtab)) {
 	ht = paramtab = newparamtable(17, pm->node.nam);
     }
-    while (*aptr) {
+    for (aptr = val; *aptr; ) {
+	int eltflags = 0;
+	if (**aptr == Marker) {
+	    /* Either all elements have Marker or none. Checked in caller. */
+	    if ((*aptr)[1] == '+') {
+		/* Actually, assignstrvalue currently doesn't handle this... */
+		eltflags = ASSPM_AUGMENT;
+		/* ...so we'll use the trick from setsparam(). */
+		v->start = INT_MAX;
+	    } else {
+		v->start = 0;
+	    }
+	    v->end = -1;
+	    zsfree(*aptr++);
+	}
 	/* The parameter name is ztrdup'd... */
 	v->pm = createparam(*aptr, PM_SCALAR|PM_UNSET);
 	/*
@@ -3704,7 +3900,7 @@ arrhashsetfn(Param pm, char **val, int augment)
 	    v->pm = (Param) paramtab->getnode(paramtab, *aptr);
 	zsfree(*aptr++);
 	/* ...but we can use the value without copying. */
-	setstrvalue(v, *aptr++);
+	assignstrvalue(v, *aptr++, eltflags);
     }
     paramtab = opmtab;
     pm->gsu.h->setfn(pm, ht);
@@ -5251,10 +5447,16 @@ convfloat(double dval, int digits, int flags, FILE *fout)
 	ret = NULL;
     } else {
 	VARARR(char, buf, 512 + digits);
-	sprintf(buf, fmt, digits, dval);
-	if (!strchr(buf, 'e') && !strchr(buf, '.'))
-	    strcat(buf, ".");
-	ret = dupstring(buf);
+	if (isinf(dval))
+	    ret = dupstring((dval < 0.0) ? "-Inf" : "Inf");
+	else if (isnan(dval))
+	    ret = dupstring("NaN");
+	else {
+	    sprintf(buf, fmt, digits, dval);
+	    if (!strchr(buf, 'e') && !strchr(buf, '.'))
+		strcat(buf, ".");
+	    ret = dupstring(buf);
+	}
     }
 #ifdef USE_LOCALE
     if (prev_locale) setlocale(LC_NUMERIC, prev_locale);
@@ -5493,9 +5695,7 @@ printparamvalue(Param p, int printflags)
 {
     char *t, **u;
 
-    if (printflags & PRINT_KV_PAIR)
-	putchar(' ');
-    else
+    if (!(printflags & PRINT_KV_PAIR))
 	putchar('=');
 
     /* How the value is displayed depends *
@@ -5523,40 +5723,60 @@ printparamvalue(Param p, int printflags)
 	/* array */
 	if (!(printflags & PRINT_KV_PAIR)) {
 	    putchar('(');
-	    putchar(' ');
+	    if (!(printflags & PRINT_LINE))
+		putchar(' ');
 	}
 	u = p->gsu.a->getfn(p);
 	if(*u) {
+	    if (printflags & PRINT_LINE) {
+		if (printflags & PRINT_KV_PAIR)
+		    printf("  ");
+		else
+		    printf("\n  ");
+	    }
 	    quotedzputs(*u++, stdout);
 	    while (*u) {
-		putchar(' ');
+		if (printflags & PRINT_LINE)
+		    printf("\n  ");
+		else
+		    putchar(' ');
 		quotedzputs(*u++, stdout);
 	    }
+	    if ((printflags & (PRINT_LINE|PRINT_KV_PAIR)) == PRINT_LINE)
+		putchar('\n');
 	}
 	if (!(printflags & PRINT_KV_PAIR)) {
-	    putchar(' ');
+	    if (!(printflags & PRINT_LINE))
+		putchar(' ');
 	    putchar(')');
 	}
 	break;
     case PM_HASHED:
 	/* association */
-	if (!(printflags & PRINT_KV_PAIR)) {
-	    putchar('(');
-	    putchar(' ');
-	}
 	{
-            HashTable ht = p->gsu.h->getfn(p);
+	    HashTable ht;
+	    int found = 0;
+	    if (!(printflags & PRINT_KV_PAIR)) {
+		putchar('(');
+		if (!(printflags & PRINT_LINE))
+		    putchar(' ');
+	    }
+            ht = p->gsu.h->getfn(p);
             if (ht)
-		scanhashtable(ht, 1, 0, PM_UNSET,
-			      ht->printnode, PRINT_KV_PAIR);
+		found = scanhashtable(ht, 1, 0, PM_UNSET,
+				      ht->printnode, PRINT_KV_PAIR |
+				      (printflags & PRINT_LINE));
+	    if (!(printflags & PRINT_KV_PAIR)) {
+		if (found && (printflags & PRINT_LINE))
+		    putchar('\n');
+		putchar(')');
+	    }
 	}
-	if (!(printflags & PRINT_KV_PAIR))
-	    putchar(')');
 	break;
     }
-    if (printflags & PRINT_KV_PAIR)
+    if ((printflags & (PRINT_KV_PAIR|PRINT_LINE)) == PRINT_KV_PAIR)
 	putchar(' ');
-    else
+    else if (!(printflags & PRINT_KV_PAIR))
 	putchar('\n');
 }
 
@@ -5650,7 +5870,14 @@ printparamnode(HashNode hn, int printflags)
 	zputs(p->node.nam, stdout);
 	putchar('\n');
     } else {
+	if (printflags & PRINT_KV_PAIR) {
+	    if (printflags & PRINT_LINE)
+		printf("\n  ");
+	    putchar('[');
+	}
 	quotedzputs(p->node.nam, stdout);
+	if (printflags & PRINT_KV_PAIR)
+	    printf("]=");
 
 	printparamvalue(p, printflags);
     }

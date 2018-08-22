@@ -387,7 +387,7 @@ insert(char *s, int checked)
 	    qn = qn->next;
 	}
     } else if (!checked) {
-	if (statfullpath(s, NULL, 1)) {
+	if (statfullpath(s, &buf, 1)) {
 	    unqueue_signals();
 	    return;
 	}
@@ -1455,13 +1455,15 @@ zglob(LinkList list, LinkNode np, int nountok)
 			    if ((pw = getpwnam(s + arglen)))
 				data = pw->pw_uid;
 			    else {
-				zerr("unknown user");
+				zerr("unknown username '%s'", s + arglen);
 				data = 0;
 			    }
 			    *tt = sav;
 #else /* !USE_GETPWNAM */
 			    sav = *tt;
-			    zerr("unknown user");
+			    *tt = '\0';
+			    zerr("unable to resolve non-numeric username '%s'", s + arglen);
+			    *tt = sav;
 			    data = 0;
 #endif /* !USE_GETPWNAM */
 			    if (sav)
@@ -2194,6 +2196,8 @@ bracechardots(char *str, convchar_t *c1p, convchar_t *c2p)
 	pnext[0] != '.' || pnext[1] != '.')
 	return 0;
     pnext += 2;
+    if (!*pnext)
+	return 0;
     if (itok(*pnext)) {
 	if (*pnext == Inbrace)
 	    return 0;

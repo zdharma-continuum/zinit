@@ -328,6 +328,18 @@
 /* Define to 1 if there is a prototype defined for ioctl() on your system. */
 #undef HAVE_IOCTL_PROTO
 
+/* Define to 1 if you have the `isblank' function. */
+#undef HAVE_ISBLANK
+
+/* Define to 1 if you have the `isinf' function. */
+#undef HAVE_ISINF
+
+/* Define to 1 if you have the `isnan' function. */
+#undef HAVE_ISNAN
+
+/* Define to 1 if you have the `iswblank' function. */
+#undef HAVE_ISWBLANK
+
 /* Define to 1 if you have the `killpg' function. */
 #undef HAVE_KILLPG
 
@@ -375,6 +387,9 @@
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H
+
+/* Define to 1 if you have the `log2' function. */
+#undef HAVE_LOG2
 
 /* Define to 1 if you have the `lstat' function. */
 #undef HAVE_LSTAT
@@ -783,6 +798,9 @@
 /* Define to 1 if `st_mtim.tv_nsec' is a member of `struct stat'. */
 #undef HAVE_STRUCT_STAT_ST_MTIM_TV_NSEC
 
+/* Define to 1 if struct timespec is defined by a system header */
+#undef HAVE_STRUCT_TIMESPEC
+
 /* Define to 1 if struct timezone is defined by a system header */
 #undef HAVE_STRUCT_TIMEZONE
 
@@ -1057,9 +1075,6 @@
 /* Undefine this if you don't want to get a restricted shell when zsh is
    exec'd with basename that starts with r. By default this is defined. */
 #undef RESTRICTED_R
-
-/* Define as the return type of signal handlers (`int' or `void'). */
-#undef RETSIGTYPE
 
 /* Define to 1 if RLIMIT_RSS and RLIMIT_AS both exist and are equal. */
 #undef RLIMIT_RSS_IS_AS

@@ -158,7 +158,7 @@ mod_export int nocomments;
 /* add raw input characters while parsing command substitution */
 
 /**/
-static int lex_add_raw;
+int lex_add_raw;
 
 /* variables associated with the above */
 
@@ -677,7 +677,7 @@ gettok(void)
 		(char *)hcalloc(lexbuf.siz = LEX_HEAP_SIZE);
 	    add(c);
 	}
-	hwend();
+	hwabort();
 	while ((c = ingetc()) != '\n' && !lexstop) {
 	    hwaddc(c);
 	    addtoline(c);
@@ -760,7 +760,7 @@ gettok(void)
 	return AMPER;
     case LX1_BAR:
 	d = hgetc();
-	if (d == '|')
+	if (d == '|' && !incasepat)
 	    return DBAR;
 	else if (d == '&')
 	    return BARAMP;
@@ -1058,7 +1058,7 @@ gettokstr(int c, int sub)
 	    if (isset(SHGLOB)) {
 		if (sub || in_brace_param)
 		    break;
-		if (incasepat && !lexbuf.len)
+		if (incasepat > 0 && !lexbuf.len)
 		    return INPAR;
 		if (!isset(KSHGLOB) && lexbuf.len)
 		    goto brk;
@@ -1291,7 +1291,9 @@ gettokstr(int c, int sub)
 		ALLOWHIST
 		if (c != '\'') {
 		    unmatched = '\'';
-		    peek = LEXERR;
+		    /* Not an error when called from bufferwords() */
+		    if (!(lexflags & LEXFLAGS_ACTIVE))
+			peek = LEXERR;
 		    cmdpop();
 		    goto brk;
 		}
@@ -1313,7 +1315,9 @@ gettokstr(int c, int sub)
 	    cmdpop();
 	    if (c) {
 		unmatched = '"';
-		peek = LEXERR;
+		/* Not an error when called from bufferwords() */
+		if (!(lexflags & LEXFLAGS_ACTIVE))
+		    peek = LEXERR;
 		goto brk;
 	    }
 	    c = Dnull;
@@ -1350,7 +1354,9 @@ gettokstr(int c, int sub)
 	    cmdpop();
 	    if (c != '`') {
 		unmatched = '`';
-		peek = LEXERR;
+		/* Not an error when called from bufferwords() */
+		if (!(lexflags & LEXFLAGS_ACTIVE))
+		    peek = LEXERR;
 		goto brk;
 	    }
 	    c = Tick;
@@ -1392,7 +1398,7 @@ gettokstr(int c, int sub)
 	return LEXERR;
     }
     hungetc(c);
-    if (unmatched)
+    if (unmatched && !(lexflags & LEXFLAGS_ACTIVE))
 	zerr("unmatched %c", unmatched);
     if (in_brace_param) {
 	while(bct-- >= in_brace_param)
@@ -1859,7 +1865,7 @@ exalias(void)
     Reswd rw;
 
     hwend();
-    if (interact && isset(SHINSTDIN) && !strin && !incasepat &&
+    if (interact && isset(SHINSTDIN) && !strin && incasepat <= 0 &&
 	tok == STRING && !nocorrect && !(inbufflags & INP_ALIAS) &&
 	(isset(CORRECTALL) || (isset(CORRECT) && incmdpos)))
 	spckword(&tokstr, 1, incmdpos, 1);
@@ -2128,8 +2134,12 @@ skipcomm(void)
      * function at the history layer --- this is consistent with the
      * intention of maintaining the history and input layers across
      * the recursive parsing.
+     *
+     * Also turn off LEXFLAGS_NEWLINE because this is already skipping
+     * across the entire construct, and parse_event() needs embedded
+     * newlines to be "real" when looking for the OUTPAR token.
      */
-    lexflags &= ~LEXFLAGS_ZLE;
+    lexflags &= ~(LEXFLAGS_ZLE|LEXFLAGS_NEWLINE);
     dbparens = 0;	/* restored by zcontext_restore_partial() */
 
     if (!parse_event(OUTPAR) || tok != OUTPAR) {

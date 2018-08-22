@@ -94,6 +94,39 @@ gettimeofday(struct timeval *tv, struct timezone *tz)
 #endif
 
 
+/* Provide clock time with nanoseconds */
+
+/**/
+mod_export int
+zgettime(struct timespec *ts)
+{
+    int ret = -1;
+
+#ifdef HAVE_CLOCK_GETTIME
+    struct timespec dts;
+    if (clock_gettime(CLOCK_REALTIME, &dts) < 0) {
+	zwarn("unable to retrieve time: %e", errno);
+	ret--;
+    } else {
+	ret++;
+	ts->tv_sec = (time_t) dts.tv_sec;
+	ts->tv_nsec = (long) dts.tv_nsec;
+    }
+#endif
+
+    if (ret) {
+	struct timeval dtv;
+	struct timezone dtz;
+	gettimeofday(&dtv, &dtz);
+	ret++;
+	ts->tv_sec = (time_t) dtv.tv_sec;
+	ts->tv_nsec = (long) dtv.tv_usec * 1000;
+    }
+
+    return ret;
+}
+
+
 /* compute the difference between two calendar times */
 
 /**/

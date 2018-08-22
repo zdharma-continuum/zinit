@@ -250,6 +250,14 @@ struct timezone {
 };
 #endif
 
+/* Used to provide compatibility with clock_gettime() */
+#if !defined(HAVE_STRUCT_TIMESPEC) && !defined(ZSH_OOT_MODULE)
+struct timespec {
+    time_t tv_sec;
+    long tv_nsec;
+};
+#endif
+
 /* There's more than one non-standard way to get at this data */
 #if !defined(HAVE_STRUCT_DIRENT_D_INO) && defined(HAVE_STRUCT_DIRENT_D_STAT)
 # define d_ino d_stat.st_ino
