@@ -1764,6 +1764,9 @@ zplugin() {
                        }
                    } "$@"
                    ;;
+               (module)
+                   -zplg-module "${@[2,-1]}"
+                   ;;
                (*)
                    print "Unknown command \`$1' (use \`help' to get usage information)"
                    ;;

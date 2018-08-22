@@ -2484,6 +2484,67 @@ ZPLGM[EXTENDED_GLOB]=""
     } || print -r -- "No such plugin or snippet"
 }
 # }}}
+# FUNCTION: -zplg-module {{{
+# Function that has sub-commands passed as long-options (with two dashes, --).
+# It's an attempt to plugin only this one function into `zplugin' function
+# defined in zplugin.zsh, to not make this file longer than it's needed.
+-zplg-module() {
+    if [[ "$1" = "build" ]]; then
+        -zplg-build-module "${@[2,-1]}"
+    elif [[ "$1" = "info" ]]; then
+        if [[ "$2" = "--link" ]]; then
+              print -r "You can copy the error messages and submit"
+              print -r "error-report at: https://github.com/zdharma/zplugin/issues"
+        else
+            print -r "To load the module, add following 2 lines to .zshrc, at top:"
+            print -r "    module_path+=( \"${ZPLGM[BIN_DIR]}/zmodules/Src\" )"
+            print -r "    zmodload zdharma/zplugin"
+            print -r ""
+            print -r "After loading, use command \`zpmod' to communicate with the module."
+            print -r "See \`zpmod -h' for more information."
+        fi
+    elif [[ "$1" = (help|usage) ]]; then
+        print -r "Usage: zplugin module {build|info|help} [options]"
+        print -r "       zplugin module build [--clean]"
+        print -r "       zplugin module info [--link]"
+        print -r ""
+        print -r "To start using the zplugin Zsh module run: \`zplugin module build'"
+        print -r "and follow the instructions. Option --clean causes \`make distclean'"
+        print -r "to be run. To display the instructions on loading the module, run:"
+        print -r "\`zplugin module info'."
+    fi
+}
+# }}}
+# FUNCTION: -zplg-build-module {{{
+# Performs ./configure && make on the module and displays information
+# how to load the module in .zshrc.
+-zplg-build-module() {
+    ( builtin cd -q "${ZPLGM[BIN_DIR]}"/zmodules
+      print -r -- "${ZPLGM[col-pname]}== Building module zdharma/zplugin, running: a make clean, then ./configure and then make ==${ZPLGM[col-rst]}"
+      print -r -- "${ZPLGM[col-pname]}== The module sources are located at: "${ZPLGM[BIN_DIR]}"/zmodules ==${ZPLGM[col-rst]}"
+      [[ -f Makefile ]] && { [[ "$1" = "--clean" ]] && {
+              print -r -- ${ZPLGM[col-p]}-- make distclean --${ZPLGM[col-rst]}
+              make distclean
+              ((1))
+          } || {
+              print -r -- ${ZPLGM[col-p]}-- make clean --${ZPLGM[col-rst]}
+              make clean
+          }
+      }
+      print -r -- ${ZPLGM[col-p]}-- ./configure --${ZPLGM[col-rst]}
+      CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm && {
+          print -r -- ${ZPLGM[col-p]}-- make --${ZPLGM[col-rst]}
+          make && {
+            print -r -- "${ZPLGM[col-info]}Module has been built correctly.${ZPLGM[col-rst]}"
+            -zplg-module info
+          } || {
+              print -rn -- "${ZPLGM[col-error]}Module didn't build.${ZPLGM[col-rst]} "
+              -zplg-module info --link
+          }
+      }
+    )
+}
+# }}}
 
 #
 # Help function
@@ -2540,6 +2601,7 @@ srv {service-id} [cmd]   - control a service, command can be: stop,start,restart
 recall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - fetch saved ice modifiers and construct \`zplugin ice ...' command
 env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
 bindkeys                 - lists bindkeys set up by each plugin
+module                   - manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
 
 Available ice-modifiers: proto from depth if wait load unload blockf pick bpick src as
                          ver silent svn mv cp atinit atclone atload atpull make service"

@@ -830,6 +830,7 @@ srv {service-id} [cmd]   - control a service, command can be: stop,start,restart
 recall {plugin-name|URL} - fetch saved ice modifiers and construct `zplugin ice ...' command
 env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
 bindkeys                 - lists bindkeys set up by each plugin
+module                   - manage binary Zsh module shipped with Zplugin, see `zplugin module help'
 ```
 
 ### Using Oh-My-Zsh Themes
