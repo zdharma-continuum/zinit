@@ -10,6 +10,7 @@
 
 - [Zplugin](#zplugin)
 - [Quick Start](#quick-start)
+- [Quick Start Module-Only](#quick-start-module-only)
 - [News](#news)
 - [Introduction](#introduction)
     - [Oh-My-Zsh, Prezto](#oh-my-zsh-prezto)
@@ -148,6 +149,16 @@ because the install script does this.)
 
 `HSMW` – multi-word searching of history (bound to Ctrl-R), `zui` – textual UI library for Zshell.
 The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
+
+# Quick Start Module-Only
+
+To install just the binary Zplugin module (Zplugin not needed, can be used with any plugin manager), execute:
+
+```zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/mod-install.sh)"
+```
+
+This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
 
 # News
 * 15-08-2018
