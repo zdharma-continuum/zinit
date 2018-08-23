@@ -164,7 +164,8 @@ see `zui-demo<TAB>`. The `ice` sub-command – add modifiers to following `zplu
 
 # Quick Start Module-Only
 
-To install just the binary Zplugin module (Zplugin not needed, can be used with any plugin manager), execute:
+To install just the binary Zplugin module **standalone** (Zplugin is not needed, the module can be used with any
+other plugin manager), execute:
 
 ```zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/mod-install.sh)"
