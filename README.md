@@ -186,20 +186,20 @@ This command will compile the module and display instructions on what to add to 
 
 ### Module – Guaranteed Compilation Of All Scripts / Plugins
 
-The module is a binary Zsh module (think about `zmodload` Zsh command, that's the topic) which transparently,
+The module is a binary Zsh module (think about `zmodload` Zsh command, it's that topic) which transparently and
 automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
 a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can
-source smaller helper scripts or dependency libraries (e.g. `geometry-zsh/geometry` prompt does that) and there are
-very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load command and
-tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
+source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
+and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
+command and tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
 
 ### Module – Measuring Time Of `source`s
 
 Besides the compilation-feature, the module also measures **duration** of each script sourcing. Issue `zpmod
-source-study` after loading the module at top of `~/.zshrc` to see list of sourced files with the time the sourcing
-took in milliseconds on the left. This feature allows to profile the shell startup. Also, no script can pass-through
-that check and you will obtain a complete list of loaded scripts, like if Zshell itself was tracking this. The list
-can be surprising.
+source-study` after loading the module at top of `~/.zshrc` to see a list of all sourced files with the time the
+sourcing took in milliseconds on the left. This feature allows to profile the shell startup. Also, no script can
+pass-through that check and you will obtain a complete list of all loaded scripts, like if Zshell itself was
+tracking this. The list can be surprising.
 
 # News
 * 15-08-2018
