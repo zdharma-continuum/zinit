@@ -99,39 +99,46 @@ To install, execute:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
 ```
 
-Then add to `~/.zshrc`, at bottom:
+Then add some actions (load some plugins) to `~/.zshrc`, at bottom, for example:
 
 ```zsh
 zplugin load zdharma/history-search-multi-word
 
-zplugin ice compile"*.lzui"
+zplugin ice compile"*.lzui" from"notabug"
 zplugin load zdharma/zui
 
-# Binary release in archive, from Github-releases page; after automatic unpacking it provides command "fzf"
+# Binary release in archive, from Github-releases page; after automatic unpacking it provides program "fzf"
 
 zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
-# Used also `bpick' which selects Linux packages – in this case not needed, Zplugin
-# automatically narrows down the releases by grepping uname etc.
+# This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
+# single version, for OS X, Linux and Windows – so ice-mod `bpick' is used to
+# select Linux package – in this case this is not needed, Zplugin will grep
+# operating system name and architecture automatically when there's no `bpick'
 
 zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
 
-# Vim repository on Github – a source that needs compilation
+# Vim repository on Github – a typical source code that needs compilation – Zplugin
+# can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
+# Ice-mod `pick` selects a binary program to add to $PATH.
 
-zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"; zplugin light vim/vim
+zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"
+zplugin light vim/vim
 
-# Scripts that are built at install (there's single default make target, "install", and
-# it constructs scripts by cat-ting a few files). The make ice could also be:
-# `make"install PREFIX=$ZPFX"`, if "install" wouldn't be default target
+# Scripts that are built at install (there's single default make target, "install",
+# and it constructs scripts by `cat'ing a few files). The make"" ice could also be:
+# `make"install PREFIX=$ZPFX"`, if "install" wouldn't be the only, default target
 
 zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zplugin light tj/git-extras
 
-zplugin light zsh-users/zsh-autosuggestions
-zplugin light zsh-users/zsh-syntax-highlighting
+# Two regular plugins loaded in default way (no `zplugin ice ...` modifiers)
 
-# Load the pure theme, with zsh-async that's bundled with it
+zplugin light zsh-users/zsh-autosuggestions
+zplugin light zdharma/fast-syntax-highlighting
+
+# Load the pure theme, with zsh-async library that's bundled with it
 zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
 
 # This one to be ran just once, in interactive session
@@ -147,8 +154,10 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 
 because the install script does this.)
 
-`HSMW` – multi-word searching of history (bound to Ctrl-R), `zui` – textual UI library for Zshell.
-The `ice` subcommand – modifiers for following single command. `notabug` – the site `notabug.org`
+Things used in above example config: 
+`history-search-multi-word` – multi-term searching of history (bound to Ctrl-R), `zui` – textual-UI library for Zshell,
+see `zui-demo<TAB>`. The `ice` sub-command – add modifiers to following `zplugin load ...` command or other command.
+`notabug` – the site `notabug.org`
 
 # Quick Start Module-Only
 
@@ -160,12 +169,40 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc
 
 This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
 
+## More On Zplugin Zsh Module
+
+Zplugin users can build the module by issuing following command instead of running above `mod-install.sh` script
+(the script is for e.g. `zgen` users or users of any other plugin manager):
+
+```zsh
+zplugin module build
+```
+
+This command will compile the module and display instructions on what to add to `~/.zshrc`.
+
+### Module – Guaranteed Compilation Of All Scripts / Plugins
+
+The module is a binary Zsh module (think about `zmodload` Zsh command, that's the topic) which transparently,
+automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
+a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can
+source smaller helper scripts or dependency libraries (e.g. `geometry-zsh/geometry` prompt does that) and there are
+very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load command and
+tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
+
+### Module – Measuring Time Of `source`s
+
+Besides the compilation-feature, the module also measures **duration** of each script sourcing. Issue `zpmod
+source-study` after loading the module at top of `~/.zshrc` to see list of sourced files with the time the sourcing
+took in milliseconds on the left. This feature allows to profile the shell startup. Also, no script can pass-through
+that check and you will obtain a complete list of loaded scripts, like if Zshell itself was tracking this. The list
+can be surprising.
+
 # News
 * 15-08-2018
   - New `$ZPLGM` field `COMPINIT_OPTS` (also see [Customizing Paths](#customizing-paths)). You can pass
     `-C` or `-i` there to mute the `insecure directories` messages. Typical use case could be:
     ```zsh
-    zplugin ice wait"5" atinit"ZPLGM[COMPINIT_OPTS]-C; zpcompinit; zpcdreplay" lucid
+    zplugin ice wait"5" atinit"ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" lucid
     zplugin light zdharma/fast-syntax-highlighting
     ```
 
