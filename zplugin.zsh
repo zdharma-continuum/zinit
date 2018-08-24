@@ -1468,7 +1468,7 @@ builtin setopt noaliases
         # zle -F handler. So it's done here, in precmd-handle code.
         sched +1 "-zplg-scheduler following"
 
-        local ANFD
+        local ANFD="13371337" # for older Zsh + noclobber option
         exec {ANFD}< <(LANG=C sleep 0.01; echo run;)
         zle -F "$ANFD" -zplg-scheduler
     }
