@@ -704,7 +704,7 @@ ZPLGM[EXTENDED_GLOB]=""
     ( builtin cd -q "${ZPLGM[BIN_DIR]}" && \
       command git fetch --quiet && \
         command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
-        command less -F
+        command less -FRXi
         command git pull --no-stat; )
     builtin print -- "Compiling Zplugin (zcompile)..."
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
@@ -1248,7 +1248,7 @@ ZPLGM[EXTENDED_GLOB]=""
               command git fetch --quiet && \
                 command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
                 command tee .zplugin_lstupd | \
-                command less -F
+                command less -FRXi
 
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
