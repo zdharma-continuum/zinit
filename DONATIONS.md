@@ -1,6 +1,6 @@
 Below are reports about what is being done with donations, i.e. which commits
 are created thanks to them, which new features are added, etc. From the money
-receive I buy myself coffee and organize time to work on the requested
+I receive I buy myself coffee and organize the time to work on the requested
 features, sometimes many days in a row.
 
 ## 2018-08-14, received $30
