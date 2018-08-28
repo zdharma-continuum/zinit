@@ -1,5 +1,5 @@
-[![patreon](https://img.shields.io/badge/-Patreon-orange.svg?longCache=true&style=for-the-badge)](https://www.patreon.com/psprint)
 [![paypal](https://img.shields.io/badge/-Donate-yellow.svg?longCache=true&style=for-the-badge)](https://www.paypal.me/ZdharmaInitiative)
+[![patreon](https://img.shields.io/badge/-Patreon-orange.svg?longCache=true&style=for-the-badge)](https://www.patreon.com/psprint)
 <br/>New: You can request a feature when donating, even fancy or advanced ones get implemented this way. [There are
 reports](DONATIONS.md) about what is being done with the money received.
 
@@ -197,6 +197,8 @@ a solution to this. Even if a plugin manager does compile plugin's main script (
 source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
 and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
 command and tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
+
+  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png)
 
 ### Module – Measuring Time Of `source`s
 
@@ -424,59 +426,6 @@ tracking this. The list can be surprising.
     Setting up snippet httpstat.sh
     Downloading httpstat.sh...
     ```
-
-* 16-05-2017
-  - A very slick feature: **adding ice to commands**. Ice is something added and something that
-    melts. You add modifiers to single next command, and the format (using quotes) guarantees
-    you will see syntax highlighting in editors:
-
-    ```SystemVerilog
-    % zplg ice from"notabug" atload"echo --Loaded--" atclone"echo --Cloned--"
-    % zplg load zdharma/zui
-    Downloading zdharma/zui...
-    ...
-    Checking connectivity... done.
-    --Cloned--
-    Compiling zui.plugin.zsh...
-    --Loaded--
-    % grep notabug ~/.zplugin/plugins/zdharma---zui/.git/config
-        url = https://notabug.org/zdharma/zui
-    ```
-
-    One other `ice` is `proto` that changes network protocol. Use `proto"git"` with Github to be able to use private repositories.
-
-  - Completion-management supports completions provided in subdirectory, like in `zsh-users/zsh-completions`
-    plugin. With `ice` modifier `blockf` (block-fpath), you can manage completions in such plugins (plugin can be
-    normally loaded and it will be blocked from updating `$fpath`):
-
-    ```SystemVerilog
-    % zplg ice blockf
-    % zplg load zsh-users/zsh-completions
-    ...
-    Symlinking completion `_ack' to /Users/sgniazdowski/.zplugin/completions
-    Forgetting completion `_ack'...
-
-    Symlinking completion `_afew' to /Users/sgniazdowski/.zplugin/completions
-    Forgetting completion `_afew'...
-    ...
-    Compiling zsh-completions.plugin.zsh...
-    % echo $fpath
-    /Users/sgniazdowski/.zplugin/completions /usr/local/share/zsh/site-functions
-    % zplg cdisable vagrant
-    Disabled vagrant completion belonging to zsh-users/zsh-completions
-    Forgetting completion `_vagrant'...
-
-    Initializing completion system (compinit)...
-    ```
-
-* 14-05-2017
-  - The `all`-variants of commands (e.g. `update-all`) have been merged into normal variants (with `--all` switch)
-
-* 13-05-2017
-  - `100` `ms` gain in performance
-  - List of new commits for each updated plugin
-  - `lftp` as fallback transport support for snippets
-  - Snippets are updated on `update --all` command
 
 # Introduction
 
