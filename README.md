@@ -729,7 +729,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `nocompile` | Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at location of installation). |
 | `multisrc` | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). |
 
-Order of related Ice-mods: `atinit` -> `atpull!` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `atload`.
+Order of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `atload`.
 
 # Installation
 

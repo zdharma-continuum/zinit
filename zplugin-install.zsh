@@ -110,6 +110,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         fi
     fi
 
+    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
+
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
         local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
         local -a afr
@@ -140,7 +142,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # Store ices at clone of a plugin
         -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"[^\!]* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
         ( (( ${+ZPLG_ICE[atclone]} )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "${ZPLG_ICE[atclone]}"; }; )
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
     fi
@@ -483,6 +485,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     (( retval == 2 )) && { return 0; }
 
+    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
+
     if [[ -n "${ZPLG_ICE[mv]}" ]]; then
         local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
         local -a afr
@@ -501,7 +505,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         )
     fi
 
-    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
+    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!"[^\!]* ]] && { command make -C "$local_dir${ZPLG_ICE[svn]+/$filename}" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
 
     if [[ "$update" = "-u" ]];then
         [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}"; } && -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
