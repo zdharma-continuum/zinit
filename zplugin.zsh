@@ -996,7 +996,7 @@ builtin setopt noaliases
     ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+svn}:-file}>"
 
     # Download or copy the file
-    if [[ -n "${opts[(r)-f]}" || ! -e "$local_dir/$filename" ]]; then
+    if [[ -n "${opts[(r)-f]}" || ! -e "$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin${ZPLG_ICE[svn]-_$filename}" ]]; then
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
