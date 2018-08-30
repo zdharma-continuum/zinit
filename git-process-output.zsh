@@ -2,6 +2,10 @@
 
 emulate -LR zsh -o typesetsilent -o extendedglob -o warncreateglobal
 
+trap "tput cnorm" EXIT
+trap "tput cnorm" INT
+trap "tput cnorm" TERM
+
 local first=1
 
 # Code by leoj3n
@@ -31,6 +35,8 @@ integer counting_1=0 total_2=0 total_packed_2=0 receiving_3=0 deltas_4=0 compres
 integer loop_count=0
 
 IFS=''
+
+tput civis
 
 { command perl -pe 'BEGIN { $|++; $/ = \1 }; tr/\r/\n/' || \
     gstdbuf -o0 gtr '\r' '\n' || \
@@ -63,7 +69,11 @@ while read -r line; do
     fi
 
     if (( loop_count >= 2 )); then
-	timeline "" $(( ( ( ( loop_count - 1 ) / 11 ) % 10 ) + 1 )) 11
+        integer pr
+        (( pr = have_4_deltas ? deltas_4 / 10 : (
+                have_3_receiving ? receiving_3 / 10 : (
+                have_5_compress ? compress_5 / 10 : ( ( ( loop_count - 1 ) / 14 ) % 10 ) + 1 ) ) ))
+	timeline "" $pr 11
         if (( have_5_compress )); then
             print_my_line_compress "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
                                    "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
@@ -82,3 +92,5 @@ while read -r line; do
 done
 
 print
+
+tput cnorm
