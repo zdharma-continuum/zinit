@@ -4,21 +4,26 @@ emulate -LR zsh -o typesetsilent -o extendedglob -o warncreateglobal
 
 local first=1
 
+# Code by leoj3n
+timeline() {
+  local sp='▚▞'; sp="${sp:$2%2:1}"
+  local bar="$(print -f "%-$2s▓%$(($3-$2))s" "${sp}" "${sp}")"
+  print -f "%s %s" "${bar// /░}" ""
+}
+
 # $1 - n. of objects
 # $2 - packed objects
 # $3 - total objects
 # $4 - receiving percentage
 # $5 - resolving percentage
 print_my_line() {
-    (( first == 0 )) && print -n $'\015'
-    first=0
     print -nr -- "OBJ: $1, PACKED: $2/$3${${4:#...}:+, RECEIVING: $4%}${${5:#...}:+, RESOLVING: $5%}          "
+    print -n $'\015'
 }
 
 print_my_line_compress() {
-    (( first == 0 )) && print -n $'\015'
-    first=0
     print -nr -- "OBJ: $1, PACKED: $2/$3, COMPRESS: $4%${${5:#...}:+, RECEIVING: $5%}${${6:#...}:+, RESOLVING: $6%}          "
+    print -n $'\015'
 }
 
 integer have_1_counting=0 have_2_total=0 have_3_receiving=0 have_4_deltas=0 have_5_compress=0
@@ -58,6 +63,7 @@ while read -r line; do
     fi
 
     if (( loop_count >= 2 )); then
+	timeline "" $(( ( ( ( loop_count - 1 ) / 11 ) % 10 ) + 1 )) 11
         if (( have_5_compress )); then
             print_my_line_compress "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
                                    "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
