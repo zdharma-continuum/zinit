@@ -209,6 +209,14 @@ pass-through that check and you will obtain a complete list of all loaded script
 tracking this. The list can be surprising.
 
 # News
+* 30-08-2018
+  - New `as''` ice-mod value: `completion`. Can be used to install completion-only "plugins", even single
+    files:
+    ```zsh
+    zplugin ice as"completion" mv"hub* -> _hub"
+    zplugin snippet https://github.com/github/hub/blob/master/etc/hub.zsh_completion
+    ```
+
 * 15-08-2018
   - New `$ZPLGM` field `COMPINIT_OPTS` (also see [Customizing Paths](#customizing-paths)). You can pass
     `-C` or `-i` there to mute the `insecure directories` messages. Typical use case could be:
