@@ -217,6 +217,10 @@ tracking this. The list can be surprising.
     zplugin snippet https://github.com/github/hub/blob/master/etc/hub.zsh_completion
     ```
 
+  - Uplift of Git-output, it now has an animated progress-bar:
+
+  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-progress-bar.gif)
+
 * 15-08-2018
   - New `$ZPLGM` field `COMPINIT_OPTS` (also see [Customizing Paths](#customizing-paths)). You can pass
     `-C` or `-i` there to mute the `insecure directories` messages. Typical use case could be:
