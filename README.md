@@ -43,7 +43,7 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Turbo-loading completions & calling compinit](#turbo-loading-completions--calling-compinit)
 - [Ignoring Compdefs](#ignoring-compdefs)
 - [Non-Github (Local) Plugins](#non-github-local-plugins)
-- [Customizing Paths](#customizing-paths)
+- [Customizing Paths & Other](#customizing-paths--other)
 - [Hint: extending Git](#hint-extending-git)
 - [IRC Channel](#irc-channel)
 
@@ -222,7 +222,7 @@ tracking this. The list can be surprising.
   ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-progress-bar.gif)
 
 * 15-08-2018
-  - New `$ZPLGM` field `COMPINIT_OPTS` (also see [Customizing Paths](#customizing-paths)). You can pass
+  - New `$ZPLGM` field `COMPINIT_OPTS` (also see [Customizing Paths](#customizing-paths--other)). You can pass
     `-C` or `-i` there to mute the `insecure directories` messages. Typical use case could be:
     ```zsh
     zplugin ice wait"5" atinit"ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" lucid
@@ -288,7 +288,7 @@ tracking this. The list can be surprising.
 * 13-01-2018
   - New customizable path `$ZPLGM[ZCOMPDUMP_PATH]` that allows to point zplugin to non-standard
     `.zcompdump` location.
-  - Tilde-expansion is now performed on the [customizable paths](#customizing-paths) – you can
+  - Tilde-expansion is now performed on the [customizable paths](#customizing-paths--other) – you can
     assign paths like `~/.zplugin`, there's no need to use `$HOME/.zplugin`.
 
 * 31-12-2017
@@ -783,7 +783,7 @@ autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 ```
 
-Various paths can be customized, see section below [Customizing Paths](#customizing-paths).
+Various paths can be customized, see section below [Customizing Paths](#customizing-paths--other).
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help` and
 compile it with `zplugin self-update`.
@@ -968,7 +968,7 @@ The special user name `_local` is optional also for other commands, e.g. for
 
 If user name will not be `_local`, then Zplugin will create repository also on Github and setup correct repository origin.
 
-# Customizing Paths
+# Customizing Paths & Other
 
 Following variables can be set to custom values, before sourcing Zplugin. The
 previous global variables like `$ZPLG_HOME` have been removed to not pollute
@@ -976,7 +976,7 @@ the namespace – there's single `$ZPLGM` hash instead of `5` string variables.
 Please update your dotfiles.
 
 ```
-local -A ZPLGM  # initial Zplugin's hash definition, then:
+local -A ZPLGM  # initial Zplugin's hash definition, if configuring before loading Zplugin, then:
 ```
 | Hash Field | Description |
 -------------|--------------
@@ -987,6 +987,7 @@ local -A ZPLGM  # initial Zplugin's hash definition, then:
 | ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
 | ZPLGM[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. it's name can be different) |
 | ZPLGM[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zpcompinit`), use to pass -C to speed up loading |
+| ZPLGM[MUTE_WARNINGS]   | If set to `1`, then mutes some of the Zplugin warnings, specifically the `plugin already registered` warning |
 
 There is also `$ZPFX`, set by default to `~/.zplugin/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
