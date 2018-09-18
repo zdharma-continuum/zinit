@@ -46,6 +46,9 @@ while read -r line; do
     if [[ "$line" = "Cloning into"* ]]; then
         print; print $line
         continue
+    elif [[ "$line" = (#i)*user*name* || "$line" = (#i)*password* ]]; then
+        print; print $line
+        continue
     fi
     if [[ "$line" = (#b)"remote: Counting objects:"[\ ]#([0-9]##)(*) ]]; then
         have_1_counting=1
