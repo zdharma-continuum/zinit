@@ -49,7 +49,7 @@ while read -r line; do
     elif [[ "$line" = (#i)*user*name* || "$line" = (#i)*password* ]]; then
         print; print $line
         continue
-    elif [[ "$line" = remote:* || "$line" = fatal:* ]]; then
+    elif [[ "$line" = remote:*~*(Counting|Total|Compressing|Enumerating)* || "$line" = fatal:* ]]; then
         print $line
         continue
     fi
