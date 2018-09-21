@@ -82,15 +82,15 @@ while read -r line; do
 	timeline "" $pr 11
         if (( have_5_compress )); then
             print_my_line_compress "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
-                                   "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
-                                   "${${${(M)have_2_total:#1}:+$total_2}:-...}" \
+                                   "${${${(M)have_2_total:#1}:+$total_packed_2}:-0}" \
+                                   "${${${(M)have_2_total:#1}:+$total_2}:-0}" \
                                    "${${${(M)have_5_compress:#1}:+$compress_5}:-...}" \
                                    "${${${(M)have_3_receiving:#1}:+$receiving_3}:-...}" \
                                    "${${${(M)have_4_deltas:#1}:+$deltas_4}:-...}"
         else
             print_my_line "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
-                          "${${${(M)have_2_total:#1}:+$total_packed_2}:-...}" \
-                          "${${${(M)have_2_total:#1}:+$total_2}:-...}" \
+                          "${${${(M)have_2_total:#1}:+$total_packed_2}:-0}" \
+                          "${${${(M)have_2_total:#1}:+$total_2}:-0}" \
                           "${${${(M)have_3_receiving:#1}:+$receiving_3}:-...}" \
                           "${${${(M)have_4_deltas:#1}:+$deltas_4}:-...}"
         fi
