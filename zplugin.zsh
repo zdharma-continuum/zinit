@@ -202,8 +202,7 @@ builtin setopt noaliases
     local FPATH="$fpath_prefix":"${FPATH}"
 
     # After this the function exists again
-    local IFS=" "
-    builtin autoload $=autoload_opts -- "$func"
+    builtin autoload ${(s: :)autoload_opts} -- "$func"
 
     # User wanted to call the function, not only load it
     "$func" "$@"
