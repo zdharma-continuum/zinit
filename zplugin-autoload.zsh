@@ -1331,7 +1331,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # Can also pack resulting ices into ZPLG_SICE (see $2).
 #
-# $1 - URL (also plugin-spec in future)
+# $1 - URL (also plugin-spec)
 # $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
 #      "pack-nf" means that disk-ices will be ignored (no-file?)
 # $3 - name of output associative array, "ZPLG_ICE" is the default
@@ -1529,7 +1529,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
     plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
-    print "Downloaded plugins: ${infoc}$(( ${#plugins[@]} - 1 ))${ZPLGM[col-rst]}"
+    print "Downloaded plugins: ${infoc}$(( ${#plugins} - 1 ))${ZPLGM[col-rst]}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
@@ -1611,7 +1611,7 @@ ZPLGM[EXTENDED_GLOB]=""
     integer correct=0
     [[ -o "KSH_ARRAYS" ]] && correct=1
 
-    for uspl2 in "${(ko@)ZPLG_BINDKEYS}"; do
+    for uspl2 in "${(ko)ZPLG_BINDKEYS[@]}"; do
         [[ -z "${ZPLG_BINDKEYS[$uspl2]}" ]] && continue
 
         (( !first )) && print
@@ -1814,13 +1814,13 @@ ZPLGM[EXTENDED_GLOB]=""
         print -u 2 -n -- "\r${flper}% "
     done
 
-    for o in "${(k@)owner_to_group}"; do
+    for o in "${(k)owner_to_group[@]}"; do
         group="${owner_to_group[$o]%;}"
         s="${o##*--}"
         o="${o%--*}"
         packs+=( "${(q)group//;/, } ${(q)o} ${(q)s}" )
     done
-    packs=( "${(on@)packs}" )
+    packs=( "${(on)packs[@]}" )
 
     print -u 2 # newline after percent
 
@@ -1833,7 +1833,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     for c in "${packs[@]}"; do
-        unpacked=( "${(Q@)${(z@)c}}" )
+        unpacked=( "${(Q@)${(z@)c}}" ) # TODO: ${(Q)${(z@)c}[@]} ?
 
         -zplg-any-colorify-as-uspl2 "$unpacked[2]"
         print -n "${(r:longest+1:: :)unpacked[1]} $REPLY"

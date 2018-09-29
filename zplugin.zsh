@@ -280,12 +280,12 @@ builtin setopt noaliases
     local -a opts
     opts=( "${(k)optsA[@]}" )
 
-    if [[ "${#opts[@]}" -eq "0" ||
-        ( "${#opts[@]}" -eq "1" && "${+opts[(r)-M]}" = "1" ) ||
-        ( "${#opts[@]}" -eq "1" && "${+opts[(r)-R]}" = "1" ) ||
-        ( "${#opts[@]}" -eq "1" && "${+opts[(r)-s]}" = "1" ) ||
-        ( "${#opts[@]}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-s]}" = "1" ) ||
-        ( "${#opts[@]}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-R]}" = "1" )
+    if [[ "${#opts}" -eq "0" ||
+        ( "${#opts}" -eq "1" && "${+opts[(r)-M]}" = "1" ) ||
+        ( "${#opts}" -eq "1" && "${+opts[(r)-R]}" = "1" ) ||
+        ( "${#opts}" -eq "1" && "${+opts[(r)-s]}" = "1" ) ||
+        ( "${#opts}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-s]}" = "1" ) ||
+        ( "${#opts}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-R]}" = "1" )
     ]]; then
         local string="${(q)1}" widget="${(q)2}"
         local quoted
@@ -391,7 +391,7 @@ builtin setopt noaliases
     local -a opts
     zparseopts -a opts -D ${(s::):-eLdgabsTtm}
 
-    if [[ "${#opts[@]}" -eq 0 || ( "${#opts[@]}" -eq 1 && "${+opts[(r)-e]}" = "1" ) ]]; then
+    if [[ "${#opts}" -eq 0 || ( "${#opts}" -eq 1 && "${+opts[(r)-e]}" = "1" ) ]]; then
         # Have to quote $1, then $2, then concatenate them, then quote them again
         local pattern="${(q)1}" style="${(q)2}"
         local ps="$pattern $style"
@@ -953,9 +953,6 @@ builtin setopt noaliases
 # Implements the exposed-to-user action of loading a snippet.
 #
 # $1 - url (can be local, absolute path)
-# $2 - "--command" if that option given
-# $3 - "--force" if that option given
-# $4 - "-u" if invoked by Zplugin to only update snippet
 -zplg-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts tmp ice
@@ -1401,7 +1398,7 @@ builtin setopt noaliases
 
     ZPLG_ICE[wait]="${ZPLG_ICE[wait]%%.[0-9]##}"
     ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
-    ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv@)ZPLG_ICE}}"
+    ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv)ZPLG_ICE[@]}}"
 
     local id="${${opt_plugin:+$opt_uspl2/$opt_plugin}:-$opt_uspl2}"
 
@@ -1457,7 +1454,7 @@ builtin setopt noaliases
             # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1-correct]} <= $__t ? zplugin_scheduler_add(__i++ - correct) : __i++ ))]}} )
         }
-        ZPLG_TASKS=( "<no-data>" ${(@)ZPLG_TASKS:#<no-data>} )
+        ZPLG_TASKS=( "<no-data>" ${ZPLG_TASKS[@]:#<no-data>} )
     } || {
         add-zsh-hook -d -- precmd -zplg-scheduler
         () {

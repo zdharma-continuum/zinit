@@ -174,7 +174,7 @@
     done
 
     # Ices that even empty mean something
-    for __key in make pick ${(@s: :)__add_ices2}; do
+    for __key in make pick ${(s: :)__add_ices2[@]}; do
         __var_name="${__ice_var}[$__key]"
         (( ${(P)+__var_name} )) && print -r -- "${(P)__var_name}" >! "$__pfx"/$__key || command rm -f "$__pfx"/$__key
     done

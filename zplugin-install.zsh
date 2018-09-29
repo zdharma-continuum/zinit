@@ -301,7 +301,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local f="$1" quiet="$2"
 
     typeset -a commands
-    commands=( "${(k@)_comps[(R)$f]}" )
+    commands=( "${(k@)_comps[(R)$f]}" ) # TODO: "${${(k)_comps[(R)$f]}[@]}" ?
 
     [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print "Forgetting commands completed by \`$f':"
 
@@ -436,7 +436,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 if [[ ${+ZPLG_ICE[svn]} = 1 && -n "${ZPLG_ICE[compile]}" ]]; then
                     list=( $local_dir/$filename/${~ZPLG_ICE[compile]}(N) )
                     [[ ${#list} -eq 0 ]] && {
-                        print "Warning: Ice mod compile'' didn't match any files"
+                        print "Warning: Ice-mod compile'' didn't match any files"
                     } || {
                         local matched
                         for matched in "${list[@]}"; do
