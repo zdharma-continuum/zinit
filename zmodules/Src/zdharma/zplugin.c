@@ -1185,6 +1185,117 @@ custom_load_dump_header(char *nam, char *name, int err)
 /* }}} */
 
 /*
+ * readarray {{{
+ *
+ * readarray [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd]
+ *   [-C callback] [-c quantum] [array]
+ * 
+ * Reads from stdin or from {fd} (-u option).
+ * -d {delim} - terminator for each record read (default: newline)
+ * -n {count} - copy at most {count} records
+ * -O {origin} - begin storing in {array} at index {origin}
+ * -s {count} - discard first {count} lines read
+ * -t - remove trailing {delim} from result
+ * -u {fd} - read from file descriptor {fd}
+ * -C {callback} - eval {callback} each time {quantum} records are read
+ * -c {quantum} - the # of records for the above -C option
+ *
+ * Default {quantum} is 5000. Callback obtains 2 arguments, <assign-index> <content-to-assign>,
+ * i.e. where the record will be assigned in the {array}, and body of the record.
+ *
+ * Without -O, readarray clears the array at start.
+ *
+ * readarray returns successfully unless a bad option or option argument is
+ * supplied, {array} is unassignable, or if {array} is not an indexed array.
+ */
+int bin_readarray( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
+    int delim='\n', to_copy = 0, start_at = 1, skip_first = 0, remdel = 0, srcfd = 0, quantum = 5000;
+    char *callback = NULL, *oarr_name = NULL, **oarr = NULL;
+    FILE *stream = NULL;
+
+    /* Usage message */
+    if ( OPT_ISSET( ops, 'h' ) ) {
+        readarray_usage();
+        return 0;
+    }
+
+    /* -d {delim} - terminator for each record read (default: newline) */
+    if ( OPT_ISSET( ops, 'd' ) ) {
+        delim = OPT_ARG( ops, 'd' ) ? OPT_ARG( ops, 'd' )[0] : '\n';
+    }
+
+    /* -n {count} - copy at most {count} records */
+    if ( OPT_ISSET( ops, 'n' ) ) {
+        to_copy = OPT_ARG( ops, 'n' ) ? atoi( OPT_ARG( ops, 'n' ) ) : 0;
+    }
+
+    /* -O {origin} - begin storing in {array} at index {origin} */
+    if ( OPT_ISSET( ops, 'O' ) ) {
+        start_at = OPT_ARG( ops, 'O' ) ? atoi( OPT_ARG( ops, 'O' ) ) : 1;
+    }
+
+    /* -s {count} - discard first {count} lines read */
+    if ( OPT_ISSET( ops, 's' ) ) {
+        skip_first = OPT_ARG( ops, 's' ) ? atoi( OPT_ARG( ops, 's' ) ) : 0;
+    }
+
+    /* -t - remove trailing {delim} from result */
+    if ( OPT_ISSET( ops, 't' ) ) {
+        remdel = 1;
+    }
+
+    /* -u {fd} - read from file descriptor {fd} */
+    if ( OPT_ISSET( ops, 'u' ) ) {
+        srcfd = OPT_ARG( ops, 'u' ) ? atoi( OPT_ARG( ops, 'u' ) ) : 0;
+    }
+
+    /* -C {callback} - eval {callback} each time {quantum} records are read */
+    if ( OPT_ISSET( ops, 'C' ) ) {
+        callback = OPT_ARG( ops, 'C' ) ? ztrdup( OPT_ARG( ops, 'C' ) ) : NULL;
+    }
+
+    /* -c {quantum} - the # of records for the above -C option */
+    if ( OPT_ISSET( ops, 'c' ) ) {
+        quantum = OPT_ARG( ops, 'c' ) ? atoi( OPT_ARG( ops, 'c' ) ) : 5000;
+    }
+
+    /* The name of output array */
+    if ( !*argv ) {
+        zwarnnam( nam, "Name of the output array is required, aborting" );
+        return 1;
+    } else {
+        oarr_name = ztrdup( *argv );
+        ++ argv;
+    }
+
+    /* Extra arguments -> error */
+    if ( *argv ) {
+        zwarnnam( nam, "Extra arguments detected, only one argument is needed, see -h, aborting" );
+        return 1;
+    }
+
+    stream = fdopen( srcfd, "r" );
+    if ( !stream ) {
+        zwarnnam( nam, "Couldn't read descriptor: %d" , nam, srcfd );
+        return 1;
+    }
+
+#ifdef HAVE_GETLINE
+    
+#endif
+
+    return 0;
+}
+
+/**/
+static void
+readarray_usage() {
+    fprintf( stdout, "Usage: readarray\n" );
+    fflush( stdout );
+}
+/* }}} */
+
+/*
  * Main builtin `zpmod' and its subcommands
  */
 

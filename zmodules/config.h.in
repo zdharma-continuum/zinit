@@ -259,6 +259,9 @@
 /* Define to 1 if you have the `getipnodebyname' function. */
 #undef HAVE_GETIPNODEBYNAME
 
+/* Define to 1 if you have the `getline' function. */
+#undef HAVE_GETLINE
+
 /* Define to 1 if you have the `getlogin' function. */
 #undef HAVE_GETLOGIN
 
