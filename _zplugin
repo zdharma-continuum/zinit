@@ -76,7 +76,7 @@ case $state in
             load|light|compile|stress|edit|glance)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
-                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]//---//}" )
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
 
@@ -87,7 +87,7 @@ case $state in
             update|status|cd|changes)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
-                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]//---//}" )
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
 
@@ -97,7 +97,7 @@ case $state in
             delete)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
-                plugins=( "${plugins[@]/---//}" )
+                plugins=( "${plugins[@]//---//}" )
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
 
@@ -154,7 +154,8 @@ case $state in
                         p="${p:t}"
                         user="${p%%---*}"
                         plugin="${p#*---}"
-                        plugins+=( "$user/$plugin" )
+                        [[ "$user" = "$plugin" && "${user}---${plugin}" != "$p" ]] && user=""
+                        plugins+=( "${user:+$user/}$plugin" )
                         break
                     done
                 done
@@ -176,7 +177,8 @@ case $state in
                             p="${p:t}"
                             user="${p%%---*}"
                             plugin="${p#*---}"
-                            plugins+=( "$user/$plugin" )
+                            [[ "$user" = "$plugin" && "${user}---${plugin}" != "$p" ]] && user=""
+                            plugins+=( "${user:+$user/}$plugin" )
                             break
                         fi
                     done
@@ -222,7 +224,7 @@ case $state in
                         p="${p:t}"
                         [ "$p" = "_local---zplugin" ] && continue
                         [ "$p" = "custom" ] && continue
-                        p="${p/---//}"
+                        p="${p//---//}"
                         show_plugins+=( "$p" )
                     fi
                 done
