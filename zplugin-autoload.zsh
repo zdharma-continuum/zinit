@@ -471,7 +471,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - absolute path to completion file (in COMPLETIONS_DIR)
 # $2 - readlink command (":" or "readlink")
 -zplg-get-completion-owner() {
-    setopt localoptions extendedglob nokshglob noksharrays
+    setopt localoptions extendedglob nokshglob noksharrays noshwordsplit
     local cpath="$1"
     local readlink_cmd="$2"
     local in_plugin_path tmp
@@ -487,7 +487,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     if [[ "$in_plugin_path" != "$cpath" ]]; then
         # Get the user---plugin part of path
-        while [[ "$in_plugin_path" != */[^/]##---[^/]## && "$in_plugin_path" != "/" ]]; do
+        while [[ "$in_plugin_path" != ${ZPLGM[PLUGINS_DIR]}/[^/]## && "$in_plugin_path" != "/" ]]; do
             in_plugin_path="${in_plugin_path:h}"
         done
         in_plugin_path="${in_plugin_path:t}"
@@ -1798,7 +1798,7 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ ! -f "$cpath" ]] && stray=1
         fi
 
-        s=$(( 1*disabled + 2*unknown + 3*stray ))
+        s=$(( 1*disabled + 2*unknown + 4*stray ))
 
         owner_to_group[${o}--$s]+="$c;"
         group="${owner_to_group[${o}--$s]%;}"
