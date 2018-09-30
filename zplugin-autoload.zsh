@@ -605,19 +605,33 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-uninstall-completions() {
-    builtin setopt localoptions nullglob extendedglob unset nokshglob noksharrays
-
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}"
-    local plugin="${reply[-1]}"
-
-    -zplg-exists-physically-message "$user" "$plugin" || return 1
+    builtin setopt localoptions nullglob extendedglob unset nokshglob noksharrays noshwordsplit
 
     typeset -a completions symlinked backup_comps
     local c cfile bkpfile
     integer action global_action=0
 
-    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+    -zplg-two-paths "$1"
+    local __s_path="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}"
+    if [[ -e "$__s_path" || -e "$__path" ]]; then
+        if [[ -e "$__s_path" ]]; then
+            completions=( "${__s_path}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+        else
+            completions=( "${__path}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+        fi
+    else
+        -zplg-any-to-user-plugin "$1" "$2"
+        local user="${reply[-2]}"
+        local plugin="${reply[-1]}"
+
+        -zplg-exists-physically-message "$user" "$plugin" || return 1
+
+        -zplg-shands-exp "$1" "$2" && {
+            completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+        } || {
+            [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+        }
+    fi
     symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
     backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
