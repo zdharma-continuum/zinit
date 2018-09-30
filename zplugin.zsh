@@ -1812,10 +1812,14 @@ ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 fpath=( "${ZPLGM[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
 # Set up $ZPFX
-if [[ $OSTYPE = solaris* ]] && [[ -z $MANPATH ]]; then
+if [[ $OSTYPE = solaris* && -z $MANPATH ]]; then
   export MANPATH=/usr/share/man:$ZPFX/share/man
+elif [[ $OSTYPE = darwin* && -n $MANPATH ]]; then
+    # User reported: OS X problems happen "when launching a login shell with
+    # tmux from a shell that had defined a $MANTPATH"
+    :
 else
-  export MANPATH=$MANPATH:$ZPFX/share/man
+  export MANPATH=${MANPATH:+$MANPATH:}$ZPFX/share/man
 fi
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
