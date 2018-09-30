@@ -1331,7 +1331,7 @@ builtin setopt noaliases
     while (( 1 )); do
         (
             while (( 1 )); do
-                [[ ! -f "${__fle:r}.stop" ]] && if (( __lckd )) || zsystem 2>>/tmp/reply 1>&2 flock -t 1 -f __fd -e "$__fle"; then
+                [[ ! -f "${__fle:r}.stop" ]] && if (( __lckd )) || zsystem 2>/dev/null 1>&2 flock -t 1 -f __fd -e "$__fle"; then
                     __lckd=1
                     if (( ! __strd )) || [[ "$__cmd" = "RESTART" ]]; then
                         [[ "$__tpe" = p ]] && { __strd=1; -zplg-load "$__id" "" "$__mode"; }
