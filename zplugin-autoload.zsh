@@ -715,11 +715,27 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-self-update() {
-    ( builtin cd -q "${ZPLGM[BIN_DIR]}" && \
-      command git fetch --quiet && \
-        command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
-        command less -FRXi
-        command git pull --no-stat; )
+    setopt localoptions extendedglob nokshglob noksharrays noshwordsplit
+    local nl=$'\n' escape=$'\x1b['
+    local -a lines
+    (   builtin cd -q "${ZPLGM[BIN_DIR]}" && \
+        command git fetch --quiet && \
+            lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
+        if (( ${#lines} > 0 )); then
+            # Remove the (origin/master ...) segments, to expect only tags to appear
+            lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master)[^a-zA-Z]##(HEAD|origin|master)[,[:blank:]]#)#\)/}" )
+            # Remove " ||" if it ends the line (i.e. no additional text from the body)
+            lines=( "${lines[@]/ \|\|[[:blank:]]#(#e)/}" )
+            # If there's no ref-name, 2 consecutive spaces occur - fix this
+            lines=( "${lines[@]/(#b)[[:space:]]#\|\|[[:space:]]#(*)(#e)/|| ${match[1]}}" )
+            lines=( "${lines[@]/(#b)$escape([0-9]##)m[[:space:]]##${escape}m/$escape${match[1]}m${escape}m}" )
+            # Replace what follows "|| ..." with the same thing but with no newlines,
+            # and also only first 10 words (the (w)-flag enables word-indexing)
+            lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
+            builtin print -rl -- "${lines[@]}" | command less -FRXi
+        fi
+        command git pull --no-stat;
+    )
     builtin print -- "Compiling Zplugin (zcompile)..."
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
