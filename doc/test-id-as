@@ -119,9 +119,13 @@ print -- $fg_bold[red]SNIPPETS START NOW$reset_color
 print; print -- "$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]pip$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin cd OMZ::plugins/pip; ls -lthd .*(N) *(N)
+sleep 3
+zplugin creinstall %SNIPPETS/OMZ::plugins/pip
+sleep 3
 cd $OLDPWD
 zplugin delete OMZ::plugins/pip
 zplugin cd OMZ::plugins/pip && ls -lthd .*(N) *(N)
+zplugin cclear
 
 sleep 3
 
@@ -146,9 +150,13 @@ sleep 3
 print; print -- "$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]gradle$fg_bold[green] AS ::\`$fg[red]myid/sub$fg_bold[green]'::$reset_color"
 zplugin ice svn id-as"myid/sub"; zplugin snippet OMZ::plugins/gradle
 zplugin cd myid/sub; ls -lthd .*(N) *(N)
+sleep 3
+zplugin creinstall %SNIPPETS/myid/sub
+sleep 3
 cd $OLDPWD
 zplugin delete myid/sub
 zplugin cd myid/sub && ls -lthd .*(N) *(N)
+zplugin cclear
 
 cd $INITIAL_CD
 # vim:ft=zsh:sts=4:sw=4:et
