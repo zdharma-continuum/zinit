@@ -6,27 +6,47 @@
 # any snippet or plugin) is a set of so many changes that
 # more tests were needed, thus this file was created, real
 # tests would took too long.
+#
+# Creates PLUGINS_DIR and SNIPPETS_DIR in /tmp. Can obtain
+# --reuse option, to reuse existing PLUGINS_DIR & SNIPPETS_DIR.
 
 autoload colors; colors
 
+setopt localtraps typesetsilent
+
+typeset -g plg_bkp="${ZPLGM[PLUGINS_DIR]}" snp_bkp="${ZPLGM[SNIPPETS_DIR]}" argv1="$1"
+[[ -z "$plg_bkp" || -z "$snp_bkp" ]] && { print "Zplugin not loaded? (the \$ZPLGM hash is missing fields)"; return 1; }
+[[ "$plg_bkp" != /* || $snp_bkp != /* ]] && { print "PLUGINS_DIR and/or SNIPPETS_DIR isn't an absolute path, aborting"; return 1; }
+
+if [[ "$argv1" != "--reuse" ]]; then
+    command rm -rf /tmp/zplg_plgs /tmp/zplg_snps
+    command mkdir -p /tmp/zplg_plgs /tmp/zplg_snps
+
+    ZPLGM[PLUGINS_DIR]=/tmp/zplg_plgs ZPLGM[SNIPPETS_DIR]=/tmp/zplg_snps
+
+    trap '[[ $argv1 != "--keep" ]] && { ZPLGM[PLUGINS_DIR]=$plg_bkp; ZPLGM[SNIPPETS_DIR]=$snp_bkp; } || { print; print "Kept ${ZPLGM[PLUGINS_DIR]} :: ${ZPLGM[SNIPPETS_DIR]}"; }' EXIT INT TERM QUIT
+fi
+
 local INITIAL_CD="$PWD"
-cd /var/tmp
+cd /tmp
 print; print -- "$fg[green]..........Working dir: $PWD$reset_color.........."
 
 print -- "Removing test-plugins & snippets from disk ..."
 
-command rm -rf -- ~/.zplugin/plugins/mvdan---sh/ \
-                    ~/.zplugin/plugins/oz---safe-paste \
-                    ~/.zplugin/plugins/junegunn---fzf-bin \
-                    ~/.zplugin/plugins/my---jun---gun \
-                    ~/.zplugin/plugins/myid \
-                    ~/.zplugin/plugins/myid---sub---1 \
-                    ~/.zplugin/plugins/my---pure
+# This removal is in case of --reuse being passed to this script
 
-command rm -rf -- ~/.zplugin/snippets/https--github.com--robbyrussell--oh-my-zsh--trunk--plugins \
-                    ~/.zplugin/snippets/MY-UNIQUE \
-                    ~/.zplugin/snippets/my \
-                    ~/.zplugin/snippets/myid/sub
+command rm -rf -- ${ZPLGM[PLUGINS_DIR]}/mvdan---sh/ \
+                    ${ZPLGM[PLUGINS_DIR]}/oz---safe-paste \
+                    ${ZPLGM[PLUGINS_DIR]}/junegunn---fzf-bin \
+                    ${ZPLGM[PLUGINS_DIR]}/my---jun---gun \
+                    ${ZPLGM[PLUGINS_DIR]}/myid \
+                    ${ZPLGM[PLUGINS_DIR]}/myid---sub---1 \
+                    ${ZPLGM[PLUGINS_DIR]}/my---pure
+
+command rm -rf -- ${ZPLGM[SNIPPETS_DIR]}/https--github.com--robbyrussell--oh-my-zsh--trunk--plugins \
+                    ${ZPLGM[SNIPPETS_DIR]}/MY-UNIQUE \
+                    ${ZPLGM[SNIPPETS_DIR]}/my \
+                    ${ZPLGM[SNIPPETS_DIR]}/myid/sub
 
 print -- "Done."
 
@@ -91,7 +111,7 @@ zplugin cd myid/sub/1 && ls -lthd .*(N) *(N)
 
 sleep 3
 
-print -- "$green[green]Report of $fg[red]::\`myid/sub/1'::$fg[green] (agkozak/agkozak-zsh-theme)$reset_color"
+print; print -- "$green[green]Report of $fg[red]::\`myid/sub/1'::$fg[green] (agkozak/agkozak-zsh-theme)$reset_color"
 zplugin report myid/sub/1 > /tmp/myid--sub--1.report.txt
 head -n 10 /tmp/myid--sub--1.report.txt | tail -n 8
 
