@@ -958,7 +958,7 @@ builtin setopt noaliases
 -zplg-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts tmp ice
-    zparseopts -E -D -a opts f -command u i || { echo "Incorrect options (accepted ones: -f, --command)"; return 1; }
+    zparseopts -E -D -a opts f -command u i || { print -r -- "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1" correct=0
     [[ -o ksharrays ]] && correct=1
 
@@ -1040,7 +1040,7 @@ builtin setopt noaliases
             ZERO="${list[1-correct]}"
             (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
             (( 1 ))
-        } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || echo "Snippet not loaded ($save_url)"; }
+        } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || print -r -- "Snippet not loaded ($id_as)"; }
 
         [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
         [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
@@ -1592,7 +1592,7 @@ zplugin() {
                (update)
                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-update-or-status-all "update"
                    else
                        -zplg-update-or-status "update" "$2" "$3"
@@ -1600,7 +1600,7 @@ zplugin() {
                    ;;
                (status)
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-update-or-status-all "status"
                    else
                        -zplg-update-or-status "status" "$2" "$3"
@@ -1608,7 +1608,7 @@ zplugin() {
                    ;;
                (report)
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 3; }
+                       [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 3; }
                        -zplg-show-all-reports
                    else
                        -zplg-show-report "$2" "$3"
@@ -1700,7 +1700,7 @@ zplugin() {
                (compile)
                    (( ${+functions[-zplg-compile-plugin]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-compile-uncompile-all "1"
                    else
                        -zplg-compile-plugin "$2" "$3"
@@ -1708,7 +1708,7 @@ zplugin() {
                    ;;
                (uncompile)
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
-                       [[ -z "$2" ]] && { echo "Assuming --all is passed"; sleep 2; }
+                       [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-compile-uncompile-all "0"
                    else
                        -zplg-uncompile-plugin "$2" "$3"
