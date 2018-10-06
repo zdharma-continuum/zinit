@@ -236,7 +236,7 @@ builtin setopt noaliases
     done
 
     # Do ZPLUGIN's "native" autoloads
-    if [[ "$ZPLGM[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${ZPLGM[CUR_USR]}---${ZPLG_CUR_PLUGIN}"
+    if [[ "$ZPLGM[CUR_USR]" = "%" ]] && local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${${ZPLGM[CUR_USR]}:+${ZPLGM[CUR_USR]}---}${ZPLG_CUR_PLUGIN//\//---}"
     for func; do
         # Real autoload doesn't touch function if it already exists
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer
@@ -759,11 +759,8 @@ builtin setopt noaliases
     # Two components given?
     # That's a pretty fast track to call this function this way
     if [[ -n "$2" ]];then
-        # But user name is empty?
-        [[ -z "$1" ]] && 1="_local"
-
         2=${~2}
-        reply=( "$1" "$2" )
+        reply=( "$1" "${2//---//}" )
         return 0
     fi
 
@@ -777,43 +774,23 @@ builtin setopt noaliases
     if [[ "$1" = "%"* ]]; then
         reply=( "%" "${${${1/\%HOME/$HOME}/\%SNIPPETS/${ZPLGM[SNIPPETS_DIR]}}#%}" )
         reply[2]=${~reply[2]}
-        [[ "${reply[2]}" != "/"* ]] && reply[2]="/${reply[2]}"
         return 0
     fi
 
     # Rest is for single component given
     # It doesn't touch $2
 
-    local user="${1%%/*}" plugin="${1#*/}"
-    if [[ "$user" = "$plugin" ]]; then
-        # Is it really the same plugin and user name?
-        if [[ "$user/$plugin" = "$1" ]]; then
-            reply=( "$user" "$plugin" )
-            return 0
-        fi
-
-        user="${1%%---*}"
-        plugin="${1#*---}"
+    if [[ "$1" = (#b)([^/]##)/(?*) ]]; then
+        reply=( "${match[1]}" "${match[2]//---//}" )
+        return 0
     fi
 
-    if [[ "$user" = "$plugin" ]]; then
-        # Is it really the same plugin and user name?
-        if [[ "${user}---${plugin}" = "$1" ]]; then
-            reply=( "$user" "$plugin" )
-            return 0
-        fi
-        user="_local"
+    if [[ "$1" = (#b)(^*---*)---(?*) ]]; then
+        reply=( "${match[1]}" "${match[2]//---//}" )
+    else
+        reply=( "" "${${1##---}:-_unknown}" )
     fi
 
-    if [[ -z "$user" ]]; then
-        user="_local"
-    fi
-
-    if [[ -z "$plugin" ]]; then
-        plugin="_unknown"
-    fi
-
-    reply=( "$user" "$plugin" )
     return 0
 } # }}}
 # FUNCTION: -zplg-find-other-matches {{{
@@ -868,7 +845,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-unregister-plugin {{{
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]}/${reply[-1]}"
+    local uspl2="${reply[-2]:+${reply[-2]}/}${reply[-1]}"
 
     # If not found, the index will be length+1
     ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
@@ -927,15 +904,16 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local mode="$3" rst="0"
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]:+${reply[-2]}/}${reply[-1]}}"
+    ZPLG_ICE[teleid]="${user:+$user/}$plugin"
 
-    ZPLG_SICE[$user/$plugin]=""
-    -zplg-pack-ice "$user" "$plugin"
-    -zplg-register-plugin "$user/$plugin" "$mode"
-    if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" ]]; then
+    ZPLG_SICE[$id_as]=""
+    -zplg-pack-ice "$id_as"
+    -zplg-register-plugin "$id_as" "$mode"
+    if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-        if ! -zplg-setup-plugin-dir "$user" "$plugin"; then
-            -zplg-unregister-plugin "$user" "$plugin"
+        if ! -zplg-setup-plugin-dir "$user" "$plugin" "$id_as"; then
+            -zplg-unregister-plugin "$id_as"
             zle && { print; zle .reset-prompt; }
             return
         fi
@@ -943,13 +921,13 @@ builtin setopt noaliases
     fi
 
     # Support Zsh plugin standard
-    LOADED_PLUGINS+=( "$user/$plugin" )
+    LOADED_PLUGINS+=( "$id_as" )
 
-    (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}}"; } && eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+    (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-    -zplg-load-plugin "$user" "$plugin" "$mode" "$rst"
+    -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
-    ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${user}---${plugin}]=$SECONDS
+    ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as//\//---}]=$SECONDS
 } # }}}
 # FUNCTION: -zplg-load-snippet {{{
 # Implements the exposed-to-user action of loading a snippet.
@@ -964,42 +942,43 @@ builtin setopt noaliases
 
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
+    ZPLG_ICE[teleid]="$url"
 
-    local filename filename0 local_dir save_url="$url"
-    [[ -z "${opts[(r)-i]}" ]] && -zplg-pack-ice "$url" ""
+    local local_dir dirname filename save_url="$url" id_as="${ZPLG_ICE[id-as]:-$url}"
+    [[ -z "${opts[(r)-i]}" ]] && -zplg-pack-ice "$id_as" ""
 
     # - case A: called from `update --all', ZPLG_ICE not packed (above), static ice will win
     # - case B: called from `snippet', ZPLG_ICE packed, so it will win
     # - case C: called from `update', ZPLG_ICE packed, so it will win
-    tmp=( "${(Q@)${(z@)ZPLG_SICE[$save_url/]}}" )
+    tmp=( "${(Q@)${(z@)ZPLG_SICE[$id_as]}}" )
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && { ice=( "${(kv)ZPLG_ICE[@]}" "${tmp[@]}" ); ZPLG_ICE=( "${ice[@]}" ); }
     tmp=( 1 )
 
     # Oh-My-Zsh, Prezto and manual shorthands
-    (( ${+ZPLG_ICE[svn]} )) && url[1-correct,5-correct]="${ZPLG_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}" || url[1-correct,5-correct]="${ZPLG_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
-
-    filename="${${url%%\?*}:t}"
-    filename0="${${${url%%\?*}:h}:t}"
-    local_dir="${url:h}"
-
-    # Check if it's URL
-    [[ "$url" = http://* || "$url" = https://* || "$url" = ftp://* || "$url" = ftps://* || "$url" = scp://* ]] && {
-        local_dir="${local_dir/:\/\//--}"
+    (( ${+ZPLG_ICE[svn]} )) && {
+        url[1-correct,5-correct]="${ZPLG_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
+    } || {
+        url[1-correct,5-correct]="${ZPLG_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
     }
+    id_as="${ZPLG_ICE[id-as]:-$url}"
 
-    # Construct a local directory name from what's in url
-    local_dir="${${${${local_dir//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-    local_dir="${ZPLGM[SNIPPETS_DIR]}/${local_dir%${ZPLG_ICE[svn]---$filename0}}${ZPLG_ICE[svn]-/$filename0}"
+    # Construct containing directory, extract final directory
+    # into handy-variable $dirname
+    filename="${${url%%\?*}:t}"
+    dirname="${${id_as%%\?*}:t}"
+    local_dir="${${${id_as%%\?*}:h}/:\/\//--}"
+    [[ "$local_dir" = "." ]] && local_dir="" || local_dir="${${${${local_dir//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    local_dir="${ZPLGM[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
-    ZPLG_SNIPPETS[$save_url]="$filename <${${ZPLG_ICE[svn]+svn}:-file}>"
+    ZPLG_SNIPPETS[$id_as]="$dirname <${${ZPLG_ICE[svn]+svn}:-file}>"
 
     # Download or copy the file
-    if [[ -n "${opts[(r)-f]}" || ! -e "$local_dir${ZPLG_ICE[svn]+/$filename}/._zplugin${ZPLG_ICE[svn]-_$filename}" ]]; then
+    if [[ -n "${opts[(r)-f]}" || ! -e "$local_dir/$dirname/._zplugin" ]]; then
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-        -zplg-download-snippet "$save_url" "$url" "$local_dir" "$filename0" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
+        -zplg-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
 
-    (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}"; } && eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+    (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     local -a list
     if [[ -z "${opts[(r)-u]}" && -z "${opts[(r)--command]}" && -z "${ZPLG_ICE[as]}" ]]; then
@@ -1014,24 +993,24 @@ builtin setopt noaliases
         fi
 
         # Add to fpath
-        [[ -d "$local_dir/$filename/functions" ]] && {
-            [[ -z "${fpath[(r)$local_dir/$filename/functions]}" ]] && fpath+=( "$local_dir/$filename/functions" )
+        [[ -d "$local_dir/$dirname/functions" ]] && {
+            [[ -z "${fpath[(r)$local_dir/$dirname/functions]}" ]] && fpath+=( "$local_dir/$dirname/functions" )
             () {
                 setopt localoptions extendedglob
-                autoload $local_dir/$filename/functions/^([_.]*|prompt_*_setup|README*)(-.N:t)
+                autoload $local_dir/$dirname/functions/^([_.]*|prompt_*_setup|README*)(-.N:t)
             }
         }
 
         # Source
         if (( ${+ZPLG_ICE[svn]} == 0 )); then
-            [[ ${tmp[1-correct]} = 1 && ${+ZPLG_ICE[pick]} = 0 ]] && list=( "$local_dir/$filename" )
-            [[ -n ${ZPLG_ICE[pick]} ]] && list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+            [[ ${tmp[1-correct]} = 1 && ${+ZPLG_ICE[pick]} = 0 ]] && list=( "$local_dir/$dirname/$filename" )
+            [[ -n ${ZPLG_ICE[pick]} ]] && list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
         else
             if [[ -n ${ZPLG_ICE[pick]} ]]; then
-                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+                list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
             elif (( ${+ZPLG_ICE[pick]} == 0 )); then
-                list=( $local_dir/$filename/*.plugin.zsh(N) $local_dir/$filename/init.zsh(N)
-                       $local_dir/$filename/*.zsh-theme(N) )
+                list=( $local_dir/$dirname/*.plugin.zsh(N) $local_dir/$dirname/init.zsh(N)
+                       $local_dir/$dirname/*.zsh-theme(N) )
             fi
         fi
 
@@ -1042,27 +1021,30 @@ builtin setopt noaliases
             (( 1 ))
         } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || print -r -- "Snippet not loaded ($id_as)"; }
 
-        [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
-        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
-        (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir${ZPLG_ICE[svn]+/$filename}/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+        [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
+        (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
     elif [[ -n "${opts[(r)--command]}" || "${ZPLG_ICE[as]}" = "command" ]]; then
         # Subversion - directory and multiple files possible
         if (( ${+ZPLG_ICE[svn]} )); then
             if [[ -n ${ZPLG_ICE[pick]} ]]; then
-                list=( $local_dir/$filename/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+                list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
                 [[ -n "${list[1-correct]}" ]] && local xpath="${list[1-correct]:h}" xfilepath="${list[1-correct]}"
             else
-                local xpath="$local_dir/$filename"
+                local xpath="$local_dir/$dirname"
             fi
         else
-            local xpath="$local_dir" xfilepath="$local_dir/$filename"
+            local xpath="$local_dir/$dirname" xfilepath="$local_dir/$dirname/$filename"
             # This doesn't make sense, but users may come up with something
-            [[ -n ${ZPLG_ICE[pick]} ]] && { list=( $local_dir/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) ); xfilepath="${list[1-correct]}"; }
+            [[ -n ${ZPLG_ICE[pick]} ]] && {
+                list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
+                [[ -n "${list[1-correct]}" ]] && xpath="${list[1-correct]:h}" xfilepath="${list[1-correct]}"
+            }
         fi
         [[ -z "${opts[(r)-u]}" && -n "$xpath" && -z "${path[(er)$xpath]}" ]] && path=( "${xpath%/}" ${path[@]} )
-        [[ -n "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
+        [[ -n "$xfilepath" && -f "$xfilepath" && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
         [[ -z "${opts[(r)-u]}" && ( -n "${ZPLG_ICE[src]}" || -n "${ZPLG_ICE[multisrc]}" || "${ZPLG_ICE[atload][1]}" = "!" ) ]] && {
             if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
                 # Shadowing code is inlined from -zplg-shadow-on
@@ -1074,11 +1056,11 @@ builtin setopt noaliases
             fi
             local ZERO
             if [[ -n "${ZPLG_ICE[src]}" ]]; then
-                ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/${ZPLG_ICE[src]}}"
+                ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"
                 (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
             fi
-            [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir${ZPLG_ICE[svn]+/$filename}/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
-            (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir${ZPLG_ICE[svn]+/$filename}/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
+            (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
         }
     elif [[ "${ZPLG_ICE[as]}" = "completion" ]]; then
@@ -1088,10 +1070,10 @@ builtin setopt noaliases
     # Updating – not sourcing, etc.
     [[ -n "${opts[(r)-u]}" ]] && return 0
 
-    (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { ZERO="$local_dir${ZPLG_ICE[svn]+/$filename}/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$filename}"; } && builtin eval "${ZPLG_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+    (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { ZERO="$local_dir${ZPLG_ICE[svn]+/$dirname}/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir${ZPLG_ICE[svn]+/$dirname}"; } && builtin eval "${ZPLG_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
-    ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${save_url}]=$SECONDS
+    ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as}]=$SECONDS
 } # }}}
 # FUNCTION: -zplg-compdef-replay {{{
 # Runs gathered compdef calls. This allows to run `compinit'
@@ -1148,19 +1130,18 @@ builtin setopt noaliases
 # $2 - plugin
 # $3 - mode (light or load)
 -zplg-load-plugin() {
-    local user="$1" plugin="$2" mode="$3" correct=0
-    ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin"
-    ZPLGM[CUR_USPL2]="${user}/${plugin}"
+    local user="$1" plugin="$2" id_as="$3" mode="$4" correct=0
+    ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin" ZPLGM[CUR_USPL2]="$id_as"
     [[ -o ksharrays ]] && correct=1
 
-    local pbase="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
-    [[ "$user" = "%" ]] && local pdir_path="$plugin" || local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    local pbase="${${plugin:t}%(.plugin.zsh|.zsh|.git)}"
+    [[ "$user" = "%" ]] && local pdir_path="$plugin" || local pdir_path="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
     local pdir_orig="$pdir_path"
 
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
         if [[ -n "${ZPLG_ICE[pick]}" && "${ZPLG_ICE[pick]}" != "/dev/null" ]]; then
-            reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+            reply=( ${(M)~ZPLG_ICE[pick]##/*}(N) $pdir_path/${~ZPLG_ICE[pick]}(N) )
             [[ -n "${reply[1-correct]}" ]] && pdir_path="${reply[1-correct]:h}"
         fi
         [[ -z "${path[(er)$pdir_path]}" ]] && {
@@ -1179,7 +1160,7 @@ builtin setopt noaliases
         ((1))
     else
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
-            [[ "${ZPLG_ICE[pick]}" = "/dev/null" ]] && reply=( "/dev/null" ) || reply=( $pdir_path/${~ZPLG_ICE[pick]}(N) ${(M)~ZPLG_ICE[pick]##/*}(N) )
+            [[ "${ZPLG_ICE[pick]}" = "/dev/null" ]] && reply=( "/dev/null" ) || reply=( ${(M)~ZPLG_ICE[pick]##/*}(N) $pdir_path/${~ZPLG_ICE[pick]}(N) )
         elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
             reply=( "$pdir_path/${pbase}.plugin.zsh" )
         else
@@ -1299,7 +1280,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
@@ -1310,8 +1291,8 @@ builtin setopt noaliases
 # why it's called "ice" - it melts), however some ice modifiers can
 # glue to plugin mentioned in the next command.
 -zplg-pack-ice() {
-    ZPLG_SICE[$1/$2]+="${(j: :)${(q-kv)ZPLG_ICE[@]}} "
-    ZPLG_SICE[$1/$2]="${ZPLG_SICE[$1/$2]# }"
+    ZPLG_SICE[$1${2:+/$2}]+="${(j: :)${(q-kv)ZPLG_ICE[@]}} "
+    ZPLG_SICE[$1${2:+/$2}]="${ZPLG_SICE[$1${2:+/$2}]# }"
     return 0
 } # }}}
 # FUNCTION: -zplg-service {{{
@@ -1528,7 +1509,7 @@ zplugin() {
                ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
                -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "$2" "$3"
            else
-               ZPLG_SICE[${2%/}/]=""
+               ZPLG_SICE[${2%/}]=""
                -zplg-load-snippet "$2" "$3"
            fi
            ;;

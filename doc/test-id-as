@@ -24,7 +24,7 @@ if [[ "$argv1" != "--reuse" ]]; then
 
     ZPLGM[PLUGINS_DIR]=/tmp/zplg_plgs ZPLGM[SNIPPETS_DIR]=/tmp/zplg_snps
 
-    trap '[[ $argv1 != "--keep" ]] && { ZPLGM[PLUGINS_DIR]=$plg_bkp; ZPLGM[SNIPPETS_DIR]=$snp_bkp; } || { print; print "Kept ${ZPLGM[PLUGINS_DIR]} :: ${ZPLGM[SNIPPETS_DIR]}"; }' EXIT INT TERM QUIT
+    trap '[[ $argv1 != "--keep" ]] && { ZPLGM[PLUGINS_DIR]=$plg_bkp; ZPLGM[SNIPPETS_DIR]=$snp_bkp; } || { print; print "Kept ${ZPLGM[PLUGINS_DIR]} :: ${ZPLGM[SNIPPETS_DIR]}"; }; return 0;' EXIT INT TERM QUIT
 fi
 
 local INITIAL_CD="$PWD"

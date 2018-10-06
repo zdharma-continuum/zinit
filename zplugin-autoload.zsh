@@ -199,7 +199,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - (optional) plugin (only when $1 - i.e. user - given)
 -zplg-any-to-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
-    REPLY="${reply[-2]}/${reply[-1]}"
+    REPLY="${reply[-2]:+${reply[-2]}/}${reply[-1]}"
 } # }}}
 # FUNCTION: -zplg-save-set-extendedglob {{{
 # Enables extendedglob-option first saving if it was already
@@ -522,7 +522,7 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-find-completions-of-plugin() {
     builtin setopt localoptions nullglob extendedglob nokshglob noksharrays
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${1}---${2}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl="${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---}"
 
     reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
 } # }}}
@@ -611,27 +611,14 @@ ZPLGM[EXTENDED_GLOB]=""
     local c cfile bkpfile
     integer action global_action=0
 
-    -zplg-two-paths "$1"
-    local __s_path="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}"
-    if [[ -e "$__s_path" || -e "$__path" ]]; then
-        if [[ -e "$__s_path" ]]; then
-            completions=( "${__s_path}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
-        else
-            completions=( "${__path}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
-        fi
-    else
-        -zplg-any-to-user-plugin "$1" "$2"
-        local user="${reply[-2]}"
-        local plugin="${reply[-1]}"
+    -zplg-get-path "$1" "$2"
+    [[ -e "$REPLY" ]] && {
+        completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+    } || {
+        print "No such completion or snippet ${${:-${1:+$1/}$2}%/}"
+        return 1
+    }
 
-        -zplg-exists-physically-message "$user" "$plugin" || return 1
-
-        -zplg-shands-exp "$1" "$2" && {
-            completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
-        } || {
-            [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
-        }
-    fi
     symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
     backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
@@ -787,7 +774,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-unload() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]}/${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
+    local uspl2="${reply[-2]:+${reply[-2]}/}${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
 
     # KSH_ARRAYS immunity
     integer correct=0
@@ -1101,7 +1088,7 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         (( quiet )) || print "Unregistering plugin $uspl2col"
         -zplg-unregister-plugin "$user" "$plugin"
-        LOADED_PLUGINS[${LOADED_PLUGINS[(i)$user/$plugin]}]=()  # Support Zsh plugin standard
+        LOADED_PLUGINS[${LOADED_PLUGINS[(i)${user:+$user/}$plugin]}]=()  # Support Zsh plugin standard
         -zplg-clear-report-for "$user" "$plugin"
         (( quiet )) || print "Plugin's report saved to \$LASTREPORT"
     fi
@@ -1116,8 +1103,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-show-report() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}"
-    local plugin="${reply[-1]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]:+${reply[-2]}/}${reply[-1]}"
 
     # Allow debug report
     if [[ "$user/$plugin" != "_dtrace/_dtrace" ]]; then
@@ -1125,42 +1111,42 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     # Print title
-    printf "${ZPLGM[col-title]}Plugin report for${ZPLGM[col-rst]} %s/%s\n"\
-            "${ZPLGM[col-uname]}$user${ZPLGM[col-rst]}"\
+    printf "${ZPLGM[col-title]}Plugin report for${ZPLGM[col-rst]} %s%s\n"\
+            "${user:+${ZPLGM[col-uname]}$user${ZPLGM[col-rst]}/}"\
             "${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}"
 
     # Print "----------"
-    local msg="Plugin report for $user/$plugin"
+    local msg="Plugin report for ${user:+$user/}$plugin"
     print -- "${ZPLGM[col-bar]}${(r:${#msg}::-:)tmp__}${ZPLGM[col-rst]}"
 
     # Print report gathered via shadowing
-    print "${ZPLG_REPORTS[${user}/${plugin}]}"
+    print "${ZPLG_REPORTS[$uspl2]}"
 
     # Print report gathered via $functions-diffing
     REPLY=""
-    -zplg-diff-functions-compute "$user/$plugin"
-    -zplg-format-functions "$user/$plugin"
+    -zplg-diff-functions-compute "$uspl2"
+    -zplg-format-functions "$uspl2"
     [[ -n "$REPLY" ]] && print "${ZPLGM[col-p]}Functions created:${ZPLGM[col-rst]}"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
-    -zplg-diff-options-compute "$user/$plugin"
-    -zplg-format-options "$user/$plugin"
+    -zplg-diff-options-compute "$uspl2"
+    -zplg-format-options "$uspl2"
     [[ -n "$REPLY" ]] && print "${ZPLGM[col-p]}Options changed:${ZPLGM[col-rst]}"$'\n'"$REPLY"
 
     # Print report gathered via environment diffing
     REPLY=""
-    -zplg-diff-env-compute "$user/$plugin"
-    -zplg-format-env "$user/$plugin" "1"
+    -zplg-diff-env-compute "$uspl2"
+    -zplg-format-env "$uspl2" "1"
     [[ -n "$REPLY" ]] && print "${ZPLGM[col-p]}PATH elements added:${ZPLGM[col-rst]}"$'\n'"$REPLY"
 
     REPLY=""
-    -zplg-format-env "$user/$plugin" "2"
+    -zplg-format-env "$uspl2" "2"
     [[ -n "$REPLY" ]] && print "${ZPLGM[col-p]}FPATH elements added:${ZPLGM[col-rst]}"$'\n'"$REPLY"
 
     # Print report gathered via parameter diffing
-    -zplg-diff-parameter-compute "$user/$plugin"
-    -zplg-format-parameter "$user/$plugin"
+    -zplg-diff-parameter-compute "$uspl2"
+    -zplg-format-parameter "$uspl2"
     [[ -n "$REPLY" ]] && print "${ZPLGM[col-p]}Variables added or redefined:${ZPLGM[col-rst]}"$'\n'"$REPLY"
 
     # Print what completions plugin has
@@ -1224,37 +1210,37 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-update-or-status() {
     setopt localoptions extendedglob nokshglob noksharrays
 
-    if [[ "$2" = (http|https|ftp|ftps|scp)://* || "$2" = OMZ::* || "$2" = PZT::* ]]; then
+    -zplg-two-paths "${${:-${2:+$2/}$3}%%/##}"
+    if [[ -n "${reply[-3]}" || -n "${reply[-1]}" ]]; then
         -zplg-update-or-status-snippet "$1" "$2" "$3"
         return $?
     fi
 
     -zplg-any-to-user-plugin "$2" "$3"
-    local user="${reply[-2]}" plugin="${reply[-1]}" st="$1" local_dir filename key
+    local user="${reply[-2]}" plugin="${reply[-1]}" st="$1" local_dir filename key id_as="${reply[-2]:+${reply[-2]}/}${reply[-1]}"
     local -A ice
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     if [[ "$st" = "status" ]]; then
-        ( builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"; command git status; )
+        ( builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"; command git status; )
         return 0
     fi
 
     (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$user/$plugin]=""; local nf="-nf"; }
 
     -zplg-compute-ice "$user/$plugin" "pack$nf" ice local_dir filename || return 1
+    [[ "${ice[teleid]:-$id_as}" = (#b)([^/]##)/(*) ]] && { user="${match[1]}"; plugin="${match[2]}"; } || { user=""; plugin="${ice[teleid]:-$id_as}"; }
 
     # Check if repository has a remote set, if it is _local
-    if [[ "$user" = "_local" ]]; then
-        local repo="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
-        if [[ -f "$repo/.git/config" ]]; then
-            local -a config
-            config=( "${(f)"$(<$repo/.git/config)"}" )
-            if [[ -z "${(M)config:#\[remote[[:blank:]]*\]}" ]]; then
-                -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-                print -r -- "$REPLY doesn't have a remote set, will not fetch"
-                return 1
-            fi
+    local repo="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
+    if [[ -f "$repo/.git/config" ]]; then
+        local -a config
+        config=( ${(f)"$(<$repo/.git/config)"} )
+        if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
+            -zplg-any-colorify-as-uspl2 "$id_as"
+            print -r -- "$REPLY doesn't have a remote set, will not fetch"
+            return 1
         fi
     fi
 
@@ -1267,10 +1253,10 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${ice[is_release]/\/$REPLY\//}" != "${ice[is_release]}" ]]; then
                 print -r -- "Binary release already up to date (version: $REPLY)"
             else
-                [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
-                ZPLG_ICE=( "${(kv@)ice}" )
-                -zplg-setup-plugin-dir "$user" "$plugin" "-u"
+                ZPLG_ICE=( "${(kv)ice[@]}" )
+                -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "-u"
                 ZPLG_ICE=()
             fi
         else
@@ -1283,7 +1269,7 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
-                  [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} = "!" ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                  [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
               }
 
               command git pull --no-stat; )
@@ -1333,7 +1319,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - snippet URL
 -zplg-update-or-status-snippet() {
     local st="$1" URL="${2%/}" local_dir filename
-    (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$URL/]=""; local nf="-nf"; }
+    (( ${#ZPLG_ICE} > 0 )) && { ZPLG_SICE[$URL]=""; local nf="-nf"; }
     -zplg-compute-ice "$URL" "pack$nf" ZPLG_ICE local_dir filename || return 1
 
     if [[ "$st" = "status" ]]; then
@@ -1347,7 +1333,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print
         fi
     else
-        -zplg-load-snippet "$URL" "-i" "-f" "-u"
+        -zplg-load-snippet "${ZPLG_ICE[teleid]}" "-i" "-f" "-u"
     fi
 
     ZPLG_ICE=()
@@ -1376,26 +1362,27 @@ ZPLGM[EXTENDED_GLOB]=""
     # Remove whitespace from beginning of URL
     __URL="${${__URL#"${__URL%%[! $'\t']*}"}%/}"
 
-    # Check if $__URL is user/plugin
-    if [[ "$__URL" != [^/:]##/[^/]## ]]; then
-        # Snippet
-        -zplg-two-paths "$__URL"
-        local __s_path="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
+    # Snippet?
+    -zplg-two-paths "$__URL"
+    local __s_path="${reply[-4]}" __s_svn="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
+    if [[ -n "$__s_svn" || -n "$__filename" ]]; then
         is_snippet=1
     else
         # Plugin
         local __user="${__URL%%/*}" __plugin="${__URL#*/}"
-        local __s_path="" ___path="${ZPLGM[PLUGINS_DIR]}/${__user}---${__plugin}" __filename="" __local_dir
+        [[ "$__user" = "$__plugin" && "$__user/$__plugin" != "$__URL" ]] && __user=""
+        __s_path="" ___path="${ZPLGM[PLUGINS_DIR]}/${__user:+${__user}---}${__plugin//\//---}" __filename=""
+        -zplg-exists-physically-message "$__user" "$__plugin" || return 1
     fi
 
     [[ "$__pack" = pack* ]] && -zplg-pack-ice "${__user-$__URL}" "$__plugin"
 
     local -A __sice
     local -a __tmp
-    __tmp=( "${(z@)ZPLG_SICE[${${__user+$__user/$__plugin}:-$__URL/}]}" )
+    __tmp=( "${(z@)ZPLG_SICE[${${__user+${${__user:+$__user/$__plugin}:-$__plugin}}:-$__URL}]}" )
     (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
 
-    if [[ "${+__sice[svn]}" = "1" || -e "$__s_path" ]]; then
+    if [[ "${+__sice[svn]}" = "1" || -n "$__s_svn" ]]; then
         if (( !is_snippet && ${+__sice[svn]} == 1 )); then
             print -r -- "The \`svn' ice is given, but the argument ($__URL) is a plugin"
             print -r -- "(\`svn' can be used only with snippets)"
@@ -1404,7 +1391,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zplugin/issues"
             return 1
         fi
-        if [[ -e "$__s_path" ]]; then
+        if [[ -e "$__s_path" && -n "$__s_svn" ]]; then
             __sice[svn]=""
             __local_dir="$__s_path"
         else
@@ -1423,12 +1410,11 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     local __zplugin_path="$__local_dir/._zplugin"
-    (( 0 == ${+__user} )) && __zplugin_path+="${__sice[svn]-_${__filename}}"
 
     # Read disk-Ice
     local -A __mdata
     local __key
-    { for __key in mode url from as pick bpick mv cp make atclone atpull is_release ver; do
+    { for __key in mode url from as pick bpick mv cp make atclone atpull is_release ver id-as teleid; do
         [[ -f "$__zplugin_path/$__key" ]] && __mdata[$__key]="$(<$__zplugin_path/$__key)"
       done
       [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
@@ -1449,7 +1435,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
-    for __key in mode url from as pick bpick mv cp atclone atpull is_release ver   make svn; do
+    for __key in mode url from as pick bpick mv cp atclone atpull is_release ver id-as teleid   make svn; do
         (( ${+__sice[$__key]} + ${${${__pack:#pack-nf}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
 
@@ -1467,7 +1453,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 -zplg-update-or-status-all() {
-    builtin setopt localoptions nullglob nokshglob noksharrays
+    builtin setopt localoptions nullglob nokshglob noksharrays typesetsilent
 
     local st="$1"
     local repo snip pd user plugin
@@ -1476,9 +1462,9 @@ ZPLGM[EXTENDED_GLOB]=""
 
     [[ "$st" != "status" ]] && print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
 
-    for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin*/mode; do
-        [[ ! -f "${snip:h}/url" ]] && continue
-        -zplg-update-or-status-snippet "$st" "$(<${snip:h}/url)"
+    for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
+        [[ ! -f "${snip:h}/id-as" ]] && continue
+        -zplg-update-or-status-snippet "$st" "${$(<${snip:h}/id-as):-$(<${snip:h}/url)}"
         ZPLG_ICE=()
     done
     print
@@ -1499,15 +1485,13 @@ ZPLGM[EXTENDED_GLOB]=""
 
         -zplg-any-colorify-as-uspl2 "$pd"
 
-        # Check if repository has a remote set, if it is _local
-        if [[ "$pd" = _local* ]]; then
-            if [[ -f "$repo/.git/config" ]]; then
-                local -a config
-                config=( "${(f)"$(<$repo/.git/config)"}" )
-                if [[ -z "${(M)config:#\[remote[[:blank:]]*\]}" ]]; then
-                    print "\n$REPLY doesn't have a remote set, will not fetch"
-                    continue
-                fi
+        # Check if repository has a remote set
+        if [[ -f "$repo/.git/config" ]]; then
+            local -a config
+            config=( ${(f)"$(<$repo/.git/config)"} )
+            if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} = 0 ]]; then
+                print "\n$REPLY doesn't have a remote set, will not fetch"
+                continue
             fi
         fi
 
@@ -1611,11 +1595,12 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ "$entry2" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
             REPLY="${ZPLGM[col-pname]}$entry2${ZPLGM[col-rst]}"
 
-            tmp=( "${(z@)ZPLG_SICE[${entry2%/}/]}" )
+            tmp=( "${(z@)ZPLG_SICE[${entry2%/}]}" )
             (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" ) || sice=()
         else
-            user="${entry2%---*}"
+            user="${entry2%%---*}"
             plugin="${entry2#*---}"
+            [[ "$user" = "$plugin" && "$user/$plugin" != "$entry2" ]] && user=""
             -zplg-any-colorify-as-uspl2 "$user" "$plugin"
 
             tmp=( "${(z@)ZPLG_SICE[$user/$plugin]}" )
@@ -1761,7 +1746,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
     # have ".zsh" there
-    local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
     typeset -a matches m
     matches=( $pdir_path/*.zwc )
 
@@ -1938,7 +1923,7 @@ ZPLGM[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob extendedglob nokshglob noksharrays
 
     typeset -a plugin_paths
-    plugin_paths=( "${ZPLGM[PLUGINS_DIR]}"/*---* )
+    plugin_paths=( "${ZPLGM[PLUGINS_DIR]}"/* )
 
     # Find longest plugin name. Things are ran twice here, first pass
     # is to get longest name of plugin which is having any completions
@@ -2097,7 +2082,18 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-cd() {
     setopt localoptions extendedglob nokshglob noksharrays
-    -zplg-get-path "$1" "$2" && [[ -e "$REPLY" ]] && builtin cd "$REPLY" || print -r -- "No such plugin or snippet"
+    -zplg-get-path "$1" "$2" && {
+        if [[ -e "$REPLY" ]]; then
+            builtin cd "$REPLY"
+        else
+            print -r -- "No such plugin or snippet"
+            return 1
+        fi
+        print
+    } || {
+        print -r -- "No such plugin or snippet"
+        return 1
+    }
 } # }}}
 # FUNCTION: -zplg-delete {{{
 # Deletes plugin's or snippet's directory (in Zplugin's home directory).
@@ -2108,19 +2104,30 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
     setopt localoptions extendedglob nokshglob noksharrays
-    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
+    local the_id="${${:-${1:+$1/}$2}%%/##}"
+
+    -zplg-two-paths "$the_id"
+    local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
+
+    if [[ -n "$s_svn" || -n "$_filename" ]]; then
         local -A sice
         local -a tmp
-        tmp=( "${(z@)ZPLG_SICE[${1%/}/]}" )
+        tmp=( "${(z@)ZPLG_SICE[$the_id]}" )
         (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
 
-        -zplg-two-paths "$1"
-        local s_path="${reply[-3]}" _path="${reply[-2]}" filename="${reply[-1]}"
-
-        [[ "${+sice[svn]}" = "1" || -e "$s_path" ]] && {
-            [[ -e "$s_path" ]] && -zplg-confirm "Delete $s_path?\n[y/n]" "command rm -rf ${(q)s_path}" || print "No such snippet"
+        [[ "${+sice[svn]}" = "1" || -n "$s_svn" ]] && {
+            [[ "$s_path" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
+            [[ -e "$s_path" ]] && -zplg-confirm "Delete $s_path?\n[y/n]" "command rm -rf ${(q)s_path}" || { print "No such snippet"; return 1; }
         } || {
-            [[ -e "$_path/$filename" ]] && -zplg-confirm "Delete $_path/$filename?\n[y/n]" "command rm -rf ${(q)_path}/${(q)filename} ${(q)_path}/${(q)filename}.zwc ${(q)_path}/._zplugin_${(q)filename}; command rmdir ${(q)_path} 2>/dev/null" || print "No such snippet"
+            [[ "$_path" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
+            if [[ -e "$_path/$_filename" ]]; then
+                -zplg-confirm "Delete $_path (it holds \`$_filename')?\n[y/n]" "command rm -rf ${(q)_path};"
+            elif [[ -e "$_path" ]]; then
+                -zplg-confirm "Delete $_path (it is empty)?\n[y/n]" "command rm -rf ${(q)_path};"
+            else
+                print "No such snippet"
+                return 1
+            fi
         }
     else
         -zplg-any-to-user-plugin "$1" "$2"
@@ -2129,12 +2136,15 @@ ZPLGM[EXTENDED_GLOB]=""
         -zplg-exists-physically-message "$user" "$plugin" || return 1
 
         -zplg-shands-exp "$1" "$2" && {
-            [[ -e "$REPLY" ]] && -zplg-confirm "Delete $REPLY?\n[y/n]" "command rm -rf ${(q)REPLY}" || print -r -- "No such plugin or snippet"
+            [[ "$REPLY" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
+            [[ -e "$REPLY" ]] && -zplg-confirm "Delete $REPLY?\n[y/n]" "command rm -rf ${(q)REPLY}" || { print -r -- "No such plugin or snippet"; return 1; }
         } || {
-            local dir="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
-            [[ -e "$dir" ]] && -zplg-confirm "Delete $dir?\n[y/n]" "command rm -rf ${(q)dir}" || print -r -- "No such plugin or snippet"
+            local dir="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
+            [[ -e "$dir" ]] && -zplg-confirm "Delete $dir?\n[y/n]" "command rm -rf ${(q)dir}" || { print -r -- "No such plugin or snippet"; return 1; }
         }
     fi
+
+    return 0
 } # }}}
 # FUNCTION: -zplg-confirm() {{{
 # Prints given question, waits for "y" key, evals
@@ -2164,7 +2174,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
     (
-        builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}" && \
+        builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}" && \
         command git log -p --graph --decorate --date=relative -C -M
     )
 } # }}}
@@ -2243,26 +2253,26 @@ ZPLGM[EXTENDED_GLOB]=""
 
     builtin cd -q "${ZPLGM[PLUGINS_DIR]}"
 
-    if [[ "$user" != "_local" ]]; then
+    if [[ "$user" != "_local" && -n "$user" ]]; then
         print "${ZPLGM[col-info]}Creating Github repository${ZPLGM[col-rst]}"
         curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
-        command git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin}" || {
+        command git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin//\//---}" || {
             print "${ZPLGM[col-error]}Creation of remote repository $uspl2col ${ZPLGM[col-error]}failed${ZPLGM[col-rst]}"
             print "${ZPLGM[col-error]}Bad credentials?${ZPLGM[col-rst]}"
             return 1
         }
-        builtin cd -q "${user}---${plugin}"
+        builtin cd -q "${user}---${plugin//\//---}"
     else
-        print "${ZPLGM[col-info]}Creating local git repository${ZPLGM[col-rst]}"
-        command mkdir "${user}---${plugin}"
-        builtin cd -q "${user}---${plugin}"
+        print "${ZPLGM[col-info]}Creating local git repository${${user:+.}:-, free-style, without "_local/" part.}${ZPLGM[col-rst]}"
+        command mkdir "${user:+${user}---}${plugin//\//---}"
+        builtin cd -q "${user:+${user}---}${plugin//\//---}"
         command git init || {
             print "Git repository initialization failed, aborting"
             return 1
         }
     fi
 
-    print >! "${plugin}.plugin.zsh"
+    print >! "${plugin:t}.plugin.zsh"
     print >! "README.md"
     print >! "LICENSE"
 
@@ -2339,7 +2349,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
 
-    # builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+    # builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
     -zplg-first "$1" "$2" || {
         print "${ZPLGM[col-error]}No source file found, cannot edit${ZPLGM[col-rst]}"
         return 1
@@ -2441,22 +2451,30 @@ ZPLGM[EXTENDED_GLOB]=""
 }
 # }}}
 # FUNCTION: -zplg-get-path {{{
+# Returns path of given ID-string, which may be a plugin-spec
+# (like "user/plugin" or "user" "plugin"), an absolute path
+# ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
+# nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 -zplg-get-path() {
     setopt localoptions extendedglob nokshglob noksharrays
+    local the_id="${${:-${1:+$1/}$2}%%/##}"
+
+    -zplg-two-paths "$the_id"
+    local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
+
+    reply=()
     REPLY=""
 
-    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
+    if [[ -n "$s_svn" || -n "$_filename" ]]; then
         local -A sice
         local -a tmp
-        tmp=( "${(z@)ZPLG_SICE[${1%/}/]}" )
+        tmp=( "${(z@)ZPLG_SICE[$the_id]}" )
         (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
 
-        -zplg-two-paths "$1"
-        local s_path="${reply[-3]}" _path="${reply[-2]}"
-
-        [[ "${+sice[svn]}" = "1" || -e "$s_path" ]] && {
+        [[ "${+sice[svn]}" = "1" || -n "$s_svn" ]] && {
             [[ -e "$s_path" ]] && REPLY="$s_path"
         } || {
+            reply=( ${_filename:+"$_filename"} )
             [[ -e "$_path" ]] && REPLY="$_path"
         }
     else
@@ -2468,7 +2486,7 @@ ZPLGM[EXTENDED_GLOB]=""
         -zplg-shands-exp "$1" "$2" && {
             :
         } || {
-            REPLY="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+            REPLY="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
         }
     fi
 
@@ -2478,21 +2496,13 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-recall {{{
 -zplg-recall() {
     local -A ice
-    local el val cand1 cand2 local_dir filename user plugin URL
+    local el val cand1 cand2 local_dir filename
 
     local -a ice_order nval_ices output
-    ice_order=( svn proto from depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
+    ice_order=( svn proto from teleid id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
     nval_ices=( blockf silent svn )
 
-    if [[ "$1" = (http|https|ftp|ftps|scp)://* || "$1" = OMZ::* || "$1" = PZT::* ]]; then
-        URL="${1%/}"
-        URL="${${URL#"${URL%%[! $'\t']*}"}%/}"
-    else
-        -zplg-any-to-user-plugin "$1" "$2"
-        user="${reply[-2]}" plugin="${reply[-1]}"
-    fi
-
-    -zplg-compute-ice "${${user:+$user/$plugin}:-$URL}" "pack" ice local_dir filename || return 1
+    -zplg-compute-ice "${${:-${1:+$1/}$2}%%/##}" "pack" ice local_dir filename || return 1
 
     [[ -e "$local_dir" ]] && {
         for el in "${ice_order[@]}"; do

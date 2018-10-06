@@ -33,7 +33,7 @@
             [[ -d "${reply[-1]}" ]] && return 0 || return 1
         }
     else
-        [[ -d "${ZPLGM[PLUGINS_DIR]}/${reply[-2]}---${reply[-1]}" ]] && return 0 || return 1
+        [[ -d "${ZPLGM[PLUGINS_DIR]}/${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---}" ]] && return 0 || return 1
     fi
 } # }}}
 # FUNCTION: -zplg-exists-physically-message {{{
@@ -78,8 +78,8 @@
         local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
         local dname="$plugin"
     else
-        local pdir="${${${plugin%.plugin.zsh}%.zsh}%.git}"
-        local dname="${ZPLGM[PLUGINS_DIR]}/${user}---${plugin}"
+        local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
+        local dname="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
     fi
 
     # Look for file to compile. First look for the most common one
@@ -121,16 +121,16 @@
         plugin="${plugin/https--github.com--sorin-ionescu--prezto--trunk/PZT}"
         plugin="${plugin/$HOME/HOME}"
         REPLY="${ZPLGM[col-uname]}%${ZPLGM[col-rst]}${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
-    } || REPLY="${ZPLGM[col-uname]}${user}${ZPLGM[col-rst]}/${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
+    } || REPLY="${user:+${ZPLGM[col-uname]}${user}${ZPLGM[col-rst]}/}${ZPLGM[col-pname]}${plugin}${ZPLGM[col-rst]}"
 } # }}}
 # FUNCTION: -zplg-two-paths {{{
 # Obtains a snippet URL without specification if it is an SVN URL (points to
 # directory) or regular URL (points to file), returns 2 possible paths for
 # further examination
 -zplg-two-paths() {
-    setopt localoptions extendedglob nokshglob noksharrays
-    integer MBEGIN MEND
-    local url="$1" url1 url2 filenameA filenameB filename0A filename0B local_dirA local_dirB MATCH
+    setopt localoptions extendedglob nokshglob noksharrays noshwordsplit
+    local url="$1" url1 url2 local_dirA svn_dirA local_dirB
+    local -a fileB_there
 
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
@@ -139,21 +139,19 @@
     url1[1,5]="${ZPLG_1MAP[${url[1,5]}]:-${url[1,5]}}" # svn
     url2[1,5]="${ZPLG_2MAP[${url[1,5]}]:-${url[1,5]}}" # normal
 
-    filenameA="${${url1%%\?*}:t}"
-    filename0A="${${${url1%%\?*}:h}:t}"
-    filenameB="${${url2%%\?*}:t}"
-    filename0B="${${${url2%%\?*}:h}:t}"
+    dirnameA="${${url1%%\?*}:t}"
+    local_dirA="${${${url1%%\?*}:h}/:\/\//--}"
+    [[ "$local_dirA" = "." ]] && local_dirA="" || local_dirA="${${${${local_dirA//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    local_dirA="${ZPLGM[SNIPPETS_DIR]}${local_dirA:+/$local_dirA}"
+    [[ -d "$local_dirA/$dirnameA/.svn" ]] && svn_dirA=".svn"
 
-    # Construct a local directory name from what's in url
-    local_dirA="${${url1%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
-    local_dirA="${${${${local_dirA//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-    local_dirA="${ZPLGM[SNIPPETS_DIR]}/$local_dirA"
+    dirnameB="${${url1%%\?*}:t}"
+    local_dirB="${${${url1%%\?*}:h}/:\/\//--}"
+    [[ "$local_dirB" = "." ]] && local_dirB="" || local_dirB="${${${${local_dirB//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    local_dirB="${ZPLGM[SNIPPETS_DIR]}${local_dirB:+/$local_dirB}"
+    fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.OnN[1]) )
 
-    local_dirB="${${url2%/*}//(#m)(http|https|ftp|ftps|scp):\/\//${MATCH%???}--}"
-    local_dirB="${${${${local_dirB//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-    local_dirB="${ZPLGM[SNIPPETS_DIR]}/${local_dirB%--$filename0B}/$filename0B"
-
-    reply=( "$local_dirA/$filenameA" "$local_dirB" "$filenameB" )
+    reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 }
 # }}}
 # FUNCTION: -zplg-store-ices {{{
@@ -168,7 +166,7 @@
 
     command mkdir -p "$__pfx"
     local __key __var_name
-    for __key in proto from as bpick mv cp atclone atpull ver ${(@s: :)__add_ices}; do
+    for __key in proto from as bpick mv cp atclone atpull ver id-as teleid ${(s: :)__add_ices[@]}; do
         __var_name="${__ice_var}[$__key]"
         print -r -- "${(P)__var_name}" >! "$__pfx"/$__key
     done
