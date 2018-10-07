@@ -473,6 +473,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
         # File
         [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
+        command mkdir -p "$local_dir/$dirname"
         print "Copying $filename..."
         command cp -v "$url" "$local_dir/$dirname/$filename" || { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
     fi
