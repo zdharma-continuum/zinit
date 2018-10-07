@@ -967,7 +967,7 @@ builtin setopt noaliases
     filename="${${url%%\?*}:t}"
     dirname="${${id_as%%\?*}:t}"
     local_dir="${${${id_as%%\?*}:h}/:\/\//--}"
-    [[ "$local_dir" = "." ]] && local_dir="" || local_dir="${${${${local_dir//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    [[ "$local_dir" = "." ]] && local_dir="" || local_dir="${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dir="${ZPLGM[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
     ZPLG_SNIPPETS[$id_as]="$dirname <${${ZPLG_ICE[svn]+svn}:-file}>"

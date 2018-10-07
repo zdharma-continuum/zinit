@@ -141,13 +141,13 @@
 
     dirnameA="${${url1%%\?*}:t}"
     local_dirA="${${${url1%%\?*}:h}/:\/\//--}"
-    [[ "$local_dirA" = "." ]] && local_dirA="" || local_dirA="${${${${local_dirA//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    [[ "$local_dirA" = "." ]] && local_dirA="" || local_dirA="${${${${${local_dirA#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dirA="${ZPLGM[SNIPPETS_DIR]}${local_dirA:+/$local_dirA}"
     [[ -d "$local_dirA/$dirnameA/.svn" ]] && svn_dirA=".svn"
 
-    dirnameB="${${url1%%\?*}:t}"
-    local_dirB="${${${url1%%\?*}:h}/:\/\//--}"
-    [[ "$local_dirB" = "." ]] && local_dirB="" || local_dirB="${${${${local_dirB//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    dirnameB="${${url2%%\?*}:t}"
+    local_dirB="${${${url2%%\?*}:h}/:\/\//--}"
+    [[ "$local_dirB" = "." ]] && local_dirB="" || local_dirB="${${${${${local_dirB#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dirB="${ZPLGM[SNIPPETS_DIR]}${local_dirB:+/$local_dirB}"
     fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.OnN[1]) )
 
