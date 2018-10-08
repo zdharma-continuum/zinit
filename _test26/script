@@ -11,8 +11,8 @@ zplugin cdlist >! answer/compdefs
 ( zplg cd OMZ::plugins/git/git.plugin.zsh
   set -e
   command cp -v git.plugin.zsh git0.plugin.zsh                              # atpull didn't activate yet
-  print 'command touch Test_has_failed' >! ._zplugin_git.plugin.zsh/atpull  # static ice should win
-  print 'git.plugin.zsh -> git1.plugin.zsh' >! ._zplugin_git.plugin.zsh/cp  # disk-ice should activate
+  print 'command touch Test_has_failed' >! ._zplugin/atpull  # static ice should win
+  print 'git.plugin.zsh -> git1.plugin.zsh' >! ._zplugin/cp  # disk-ice should activate
 ) || return 1
 
 
