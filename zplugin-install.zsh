@@ -434,7 +434,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     } }
                 fi
             else
-                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
+                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                 command mkdir -p "$local_dir/$dirname"
                 -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
