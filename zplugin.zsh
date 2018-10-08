@@ -981,6 +981,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     local -a list
+    local ZERO
     if [[ -z "${opts[(r)-u]}" && -z "${opts[(r)--command]}" && -z "${ZPLG_ICE[as]}" ]]; then
         # Source the file with compdef shadowing
         if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
@@ -1014,7 +1015,6 @@ builtin setopt noaliases
             fi
         fi
 
-        local ZERO
         [[ -f "${list[1-correct]}" ]] && {
             ZERO="${list[1-correct]}"
             (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
@@ -1054,7 +1054,6 @@ builtin setopt noaliases
             else
                 (( ++ ZPLGM[SHADOWING] ))
             fi
-            local ZERO
             if [[ -n "${ZPLG_ICE[src]}" ]]; then
                 ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"
                 (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
