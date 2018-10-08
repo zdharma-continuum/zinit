@@ -1,0 +1,7 @@
+*/answer/*
+_zplugin
+zplugin.zsh
+zplugin-side.zsh
+zplugin-install.zsh
+zplugin-autoload.zsh
+git-process-output.zsh

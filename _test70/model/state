@@ -28,7 +28,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh' 'git.plugin.zsh <file>'
-ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'atinit '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out'\'' teleid OMZ::plugins/git/git.plugin.zsh atpull %atclone atload '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out'\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command echo "touch \${ZPLGM[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh'\'' src gp '
+ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'atinit '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out'\'' teleid OMZ::plugins/git/git.plugin.zsh atpull %atclone atload '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out'\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command echo "touch \${ZPLGM[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh'\'' src gp  '
 ZPLG_FUNCTIONS: 
 ZPLG_OPTIONS: 
 ZPLG_PATH: 

@@ -12,7 +12,7 @@ print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
 ( zplg cd OMZ::plugins/git/git.plugin.zsh
   set -e
-  print 'command touch Test_has_failed' >! ._zplugin_git.plugin.zsh/atpull  # static ice should win
+  print 'command touch Test_has_failed' >! ._zplugin/atpull  # static ice should win
 ) || return 1
 
 zplugin update OMZ::plugins/git/git.plugin.zsh
