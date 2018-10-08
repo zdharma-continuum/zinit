@@ -780,16 +780,12 @@ builtin setopt noaliases
     # Rest is for single component given
     # It doesn't touch $2
 
-    if [[ "$1" = (#b)([^/]##)/(?*) ]]; then
-        reply=( "${match[1]}" "${match[2]//---//}" )
+    if [[ "$1" = */* ]]; then
+        reply=( "${1%%/*}" "${1#*/}" )
         return 0
     fi
 
-    if [[ "$1" = (#b)(^*---*)---(?*) ]]; then
-        reply=( "${match[1]}" "${match[2]//---//}" )
-    else
-        reply=( "" "${${1##---}:-_unknown}" )
-    fi
+    reply=( "${${(M)1#*---}%---}" "${${${1#*---}//---//}:-_unknown}" )
 
     return 0
 } # }}}

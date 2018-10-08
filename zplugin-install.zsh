@@ -13,7 +13,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 -zplg-setup-plugin-dir() {
     setopt localoptions extendedglob typesetsilent noksharrays
 
-    local user="$1" plugin="$2" id_as="$3" remote_url_path="$1/$2" local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}"
+    local user="$1" plugin="$2" id_as="$3" remote_url_path="${1:+$1/}$2" local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}"
 
     local -A sites
     sites=(
