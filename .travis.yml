@@ -24,6 +24,8 @@ before_script:
 - >-
     zsh -c 'print -rl -- "ZSH_VERSION: $ZSH_VERSION" "ZSH_PATCHLEVEL: $ZSH_PATCHLEVEL" "OSTYPE: $OSTYPE" "CPUTYPE: $CPUTYPE" "MACHTYPE: $MACHTYPE"'
 script:
+- git fetch origin tests
+- git worktree add test tests
 - make
 - make test VERBOSE=1
 - make testB VERBOSE=1
