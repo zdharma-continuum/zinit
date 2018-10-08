@@ -129,7 +129,7 @@
 # further examination
 -zplg-two-paths() {
     setopt localoptions extendedglob nokshglob noksharrays noshwordsplit
-    local url="$1" url1 url2 local_dirA svn_dirA local_dirB
+    local url="$1" url1 url2 local_dirA svn_dirA local_dirB dirnameA dirnameB
     local -a fileB_there
 
     # Remove leading whitespace and trailing /
