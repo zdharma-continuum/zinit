@@ -1,0 +1,9 @@
+This test verifies (acting on plugin):
+
+1. atpull'!...' NOT executing because there are no new commits
+
+2. cp NOT executing, as above
+
+3. cp executing at clone
+
+4. depth"1" correctly working

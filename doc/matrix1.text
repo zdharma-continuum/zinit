@@ -1,0 +1,36 @@
+            test1 test2 test3 test4 test5 test6 test7 test8 test9
+proto
+
+from                x 
+
+as                  x
+
+pick                x
+
+if                              x
+
+            test1 test2 test3 test4 test5 test6 test7 test8 test9
+depth                                             x     x     x
+
+mv                  x     x
+
+cp                  x     x                       x     x
+
+atclone             x     x                                   x
+
+atpull                                                        x
+
+atpull!                                           x     x
+
+            test1 test2 test3 test4 test5 test6 test7 test8 test9
+atload                    x
+
+make                      x
+
+ice competition                             x     x
+
+update                                x     x     x     x     x
+
+empty update                                            x
+
+silent

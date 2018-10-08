@@ -1,0 +1,21 @@
+tst_verbosity
+
+zplugin ice svn atpull'!command cp version2 version2a.cpy' cp'version2 -> version2b.cpy'
+zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+local matcher_val
+zstyle -s ':completion::complete:n-kill::bits' matcher matcher_val
+echo "$matcher_val" >! answer/matcher
+
+( zplugin cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+  svn relocate file://${TEST_DIR:h}/test_snippets/zdharma-more )
+
+zplugin update --all
+
+( zplugin cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+  svn log | grep -o sgniazdowski >! svn_log )
+
+# vim:ft=zsh

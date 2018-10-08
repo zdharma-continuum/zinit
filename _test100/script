@@ -1,0 +1,20 @@
+tst_verbosity
+
+zplugin ice depth"1"
+zplugin load psprint/zsh-select
+zplugin load zdharma/ice-order
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+zplugin list > answer/loaded
+zplugin compiled > answer/compiled
+
+local -a lines
+lines=( "${(f)"$( zplugin zstatus )"}" )
+lines=( "${lines[@]/*\/test/}" )
+print -rl -- "${lines[@]}" > answer/zstatus
+
+zplugin csearch > answer/csearch
+
+# vim:ft=zsh

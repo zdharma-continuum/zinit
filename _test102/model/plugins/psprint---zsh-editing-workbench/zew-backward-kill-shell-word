@@ -1,0 +1,60 @@
+#
+# Copyright (c) 2016 Daniel Shahaf
+#
+# MIT License
+# -----------
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+# Modifications Copyright (c) 2016 Sebastian Gniazdowski
+#
+
+local MATCH; integer MBEGIN MEND
+integer start end_of_word end_of_cut=$CURSOR
+
+# Walk backwards to an end-of-word
+[[ $LBUFFER =~ '[[:space:]]*$' ]] || : # sets $MATCH
+(( end_of_word = CURSOR - $#MATCH ))
+
+# Find the start of the shell word ending at $BUFFER[end_of_word]
+() {
+  local l="$PREBUFFER$LBUFFER[1,end_of_word]"
+  local -a a
+  if [[ -o interactive_comments ]]; then
+    a=( ${(zZ+c+)l} )
+  else
+    a=( ${(z)l} )
+  fi
+  (( start = end_of_word - ${#a[-1]} + 1 ))
+}
+
+# Standard kill-widget behaviour
+autoload -Uz is-at-least
+if is-at-least 5.2; then
+    zle -f 'kill'
+fi
+
+if [[ $LASTWIDGET == *'kill'* ]]; then
+  CUTBUFFER=${BUFFER[start,end_of_cut]}$CUTBUFFER
+else
+  zle copy-region-as-kill -- "${BUFFER[start,end_of_cut]}"
+fi
+
+# Delete the last shell word from $LBUFFER
+LBUFFER[start,end_of_cut]=""

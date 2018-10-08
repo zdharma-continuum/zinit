@@ -1,0 +1,5 @@
+This test verifies:
+
+1. If unloading plugins removes PATH and FPATH components
+
+2. If tracking correctly remembered data after loading 2 plugins

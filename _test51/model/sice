@@ -1,0 +1,2 @@
+psprint/zsh-select
+teleid psprint/zsh-select atpull '!command echo local\ change >! version4' cp 'version4 -> version4.cpy' depth 1 

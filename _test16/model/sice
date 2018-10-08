@@ -1,0 +1,2 @@
+https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools atpull 'command chmod -x zsh-navigation-tools.plugin.zsh' 

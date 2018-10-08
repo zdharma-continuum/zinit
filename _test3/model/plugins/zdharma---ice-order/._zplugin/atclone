@@ -1,0 +1,1 @@
+cp -v Makefile.copy Makefile.copy2

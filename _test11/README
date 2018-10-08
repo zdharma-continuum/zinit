@@ -1,0 +1,5 @@
+This test verifies (acting on snippet):
+
+1. svn ice correctly working
+
+2. snippet correctly loading

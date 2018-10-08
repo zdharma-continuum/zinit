@@ -1,0 +1,22 @@
+tst_verbosity
+
+zplugin ice depth"1"
+zplugin load psprint/zsh-select
+zplugin load zdharma/ice-order
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+store_state answer/state_bunload answer/errors_bunload
+
+[[ ${FPATH[(i)test101]} != ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath || echo >! answer/incorrect_fpath
+[[ $PATH = *zsh-select* ]] && echo >! answer/correct_path || echo >! answer/incorrect_path
+
+zplugin unload zdharma/ice-order
+[[ ${FPATH[(i)test101]} = ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath_af || echo >! answer/incorrect_fpath_af
+[[ $PATH = *zsh-select* ]] && echo >! answer/correct_path2 || echo >! answer/incorrect_path2
+
+zplugin unload psprint/zsh-select
+[[ $PATH != *zsh-select* ]] && echo >! answer/correct_path_af || echo >! answer/incorrect_path_af
+
+# vim:ft=zsh

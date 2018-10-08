@@ -1,0 +1,23 @@
+tst_verbosity
+
+zplugin ice svn atclone"print -u2 Failed" depth"1" if"(( 0 ))"
+zplugin snippet https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
+
+ls -1 answer/snippets >! answer/snippets.lst
+
+zplugin ice svn
+zplugin snippet https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
+
+print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+local PREV_PWD="$PWD"
+zplugin cd https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
+
+local -a lines
+lines=( "${(f@)"$( command svn log | command grep sgniazdowski )"}" )
+
+cd "$PREV_PWD"
+print -r -- ${#lines[@]} > answer/line_count
+
+# vim:ft=zsh

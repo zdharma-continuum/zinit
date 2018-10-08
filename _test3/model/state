@@ -1,0 +1,50 @@
+BIN_DIR
+test
+COMPLETIONS_DIR
+_test3/answer/completions
+CUR_USPL2
+
+CUR_USR
+
+DTRACE
+0
+EXTENDED_GLOB
+
+HOME_DIR
+_test3/answer
+HOME_READY
+1
+PLUGINS_DIR
+_test3/answer/plugins
+SERVICES_DIR
+_test3/answer/services
+SHADOWING
+inactive
+SNIPPETS_DIR
+_test3/answer/snippets
+TIME_1_zdharma---ice-order
+__reset-by-test__
+TIME_INDEX
+1
+ZERO
+zplugin.zsh
+---
+ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'zdharma/ice-order'
+ZPLG_REGISTERED_STATES: 'zdharma/ice-order' '1' '_local/zplugin' '1'
+ZPLG_SNIPPETS: 
+ZPLG_SICE: 'zdharma/ice-order' 'atinit '\''cp -v Makefile.copy3 Makefile.copy4'\'' teleid zdharma/ice-order atload '\''cp -v Makefile.copy4 Makefile.copy5'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
+ZPLG_FUNCTIONS: 'zdharma/ice-order' ''
+ZPLG_OPTIONS: 'zdharma/ice-order' ''
+ZPLG_PATH: 'zdharma/ice-order' ''
+ZPLG_FPATH: 'zdharma/ice-order' ''
+ZPLG_PARAMETERS_PRE: 
+ZPLG_PARAMETERS_POST: 
+ZPLG_ZSTYLES: 'zdharma/ice-order' ''
+ZPLG_BINDKEYS: 'zdharma/ice-order' ''
+ZPLG_ALIASES: 'zdharma/ice-order' ''
+ZPLG_WIDGETS_SAVED: 'zdharma/ice-order' ''
+ZPLG_WIDGETS_DELETE: 'zdharma/ice-order' ''
+ZPLG_COMPDEF_REPLAY: 
+ZPLG_CUR_PLUGIN: ''
+---
+Parameter module: 1

@@ -1,0 +1,9 @@
+This test verifies (acting on snippet):
+
+1. svn ice correctly working
+
+2. Snippet correctly loading
+
+3. as"command" ice-mod
+
+4. pick, mv, cp, atclone

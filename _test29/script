@@ -1,0 +1,20 @@
+tst_verbosity
+
+zplugin ice atclone'builtin echo >! test_file' atpull'%atclone'
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
+
+print -rl -- "${(okv)ZPLG_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+
+zplugin cdlist >! answer/compdefs
+
+( zplg cd OMZ::plugins/git/git.plugin.zsh
+  set -e
+  print 'command touch Test_has_failed' >! ._zplugin_git.plugin.zsh/atpull  # static ice should win
+  print -rl -- test_file* >! file.lst
+  [[ -f test_file ]] && command rm -f test_file
+) || return 1
+
+zplugin update OMZ::plugins/git/git.plugin.zsh
+
+# vim:ft=zsh

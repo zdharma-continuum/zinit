@@ -1,0 +1,52 @@
+BIN_DIR
+test
+COMPLETIONS_DIR
+_test100/answer/completions
+CUR_USPL2
+
+CUR_USR
+
+DTRACE
+0
+EXTENDED_GLOB
+
+HOME_DIR
+_test100/answer
+HOME_READY
+1
+PLUGINS_DIR
+_test100/answer/plugins
+SERVICES_DIR
+_test100/answer/services
+SHADOWING
+inactive
+SNIPPETS_DIR
+_test100/answer/snippets
+TIME_1_psprint---zsh-select
+__reset-by-test__
+TIME_2_zdharma---ice-order
+__reset-by-test__
+TIME_INDEX
+2
+ZERO
+zplugin.zsh
+---
+ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select' 'zdharma/ice-order'
+ZPLG_REGISTERED_STATES: 'zdharma/ice-order' '2' '_local/zplugin' '1' 'psprint/zsh-select' '2'
+ZPLG_SNIPPETS: 
+ZPLG_SICE: 'zdharma/ice-order' 'teleid zdharma/ice-order ' 'psprint/zsh-select' 'teleid psprint/zsh-select depth 1 '
+ZPLG_FUNCTIONS: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_OPTIONS: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_PATH: 'zdharma/ice-order' '' 'psprint/zsh-select' '_test100/answer/plugins/psprint---zsh-select '
+ZPLG_FPATH: 'zdharma/ice-order' '_test100 ' 'psprint/zsh-select' ''
+ZPLG_PARAMETERS_PRE: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_PARAMETERS_POST: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_ZSTYLES: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_BINDKEYS: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_ALIASES: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_WIDGETS_SAVED: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_WIDGETS_DELETE: 'zdharma/ice-order' '' 'psprint/zsh-select' ''
+ZPLG_COMPDEF_REPLAY: 
+ZPLG_CUR_PLUGIN: ''
+---
+Parameter module: 1

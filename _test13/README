@@ -1,0 +1,12 @@
+This test verifies (acting on snippet):
+
+1. Correct order of execution of ices:
+   - mv
+   - cp
+   - atclone
+   - make
+   - atload
+
+2. Correct execution of make ice
+
+3. Ice vanishing after single command

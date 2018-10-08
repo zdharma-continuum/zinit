@@ -1,0 +1,11 @@
+This test verifies (acting on single-file snippet):
+
+1. If cp is ran after clone
+
+2. If atpull! isn't ran after clone
+
+3. If atpull! is ran before clone
+
+4. If update is performed
+
+5. If static ice (atpull) is used, not disk ice

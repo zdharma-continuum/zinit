@@ -1,0 +1,17 @@
+Recorded compdefs:
+compdef _git gcount
+compdef _git gdv=git-diff
+compdef _grep gfg
+compdef _git ggf=git-checkout
+compdef _git ggl=git-checkout
+compdef _git ggp=git-checkout
+compdef _git ggpnp=git-checkout
+compdef _git ggu=git-checkout
+compdef _git ggpur=git-checkout
+compdef _git ggpull=git-checkout
+compdef _git ggpush=git-checkout
+compdef _git git-svn-dcommit-push=git
+compdef _git gk=gitk
+compdef _git gke=gitk
+compdef _git glp=git-log
+compdef _git gpoat=git-push
