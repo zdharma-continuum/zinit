@@ -1,2 +1,0 @@
-OMZ::plugins/make/Makefile2/
-as command atinit 'cp -v Makefile.copy3 Makefile.copy4' pick Makefile.copy4 atload 'cp -v Makefile.copy4 Makefile.copy5' mv 'Makefile2 -> Makefile' atclone 'cp -v Makefile.copy Makefile.copy2' cp 'Makefile -> Makefile.copy' make '' 

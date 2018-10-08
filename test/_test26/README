@@ -1,5 +1,0 @@
-This test verifies (acting on single-file snippet):
-
-1. If static atpull is used instead of disk atpull
-
-2. If disk cp is used (because there's no other ice)

@@ -1,5 +1,0 @@
-This test verifies (acting on single-file snippet):
-
-1. as,mv,cp,atclone,atinit,pick
-
-2. If the snippet got NOT sourced.

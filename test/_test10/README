@@ -1,7 +1,0 @@
-This test verifies:
-
-1. as"command" not sourcing plugin.zsh file
-
-2. src"" correctly sourcing a script
-
-3. mv,cp,atclone,atload,pick,from

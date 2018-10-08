@@ -1,7 +1,0 @@
-This test verifies (acting on snippet):
-
-1. atpull being run at update
-
-2. That update is using static ice
-
-3. Using saved ice in case there's no static ice

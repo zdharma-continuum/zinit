@@ -1,5 +1,0 @@
-This test verifies (acting on single-file snippet):
-
-1. atpull'%atclone' correctly working and reusing atclone ice contents
-
-2. atclone correctly executing

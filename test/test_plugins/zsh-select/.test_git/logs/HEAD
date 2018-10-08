@@ -1,2 +1,0 @@
-0000000000000000000000000000000000000000 fc2466285482f3d4a27e499d8003689c1b577aeb Sebastian Gniazdowski <sgniazdowski@gmail.com> 1510919375 +0100	clone: from https://github.com/psprint/zsh-select
-fc2466285482f3d4a27e499d8003689c1b577aeb 90045f9ca3a59dacfb7085ff5aa2c872f521faab Sebastian Gniazdowski <sgniazdowski@gmail.com> 1510924955 +0100	commit: test: Fix test 1 so that warncreateglobal isn't triggered

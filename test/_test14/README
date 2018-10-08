@@ -1,5 +1,0 @@
-This test verifies (acting on snippet):
-
-1. `if' ice-mod working correctly, also if it suppresses sice saving
-
-2. *.plugin.zsh snippet being loaded

@@ -1,1 +1,0 @@
-command echo "touch \${ZPLGM[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh

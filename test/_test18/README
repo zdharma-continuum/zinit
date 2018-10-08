@@ -1,7 +1,0 @@
-This test verifies (acting on snippet):
-
-1. atpull with '!...' NOT being run before update (no new commits)
-
-2. cp NOT being run after empty update
-
-3. Update NOT trying to fetch new commits (via 1. and 2.)

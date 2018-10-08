@@ -1,2 +1,0 @@
-atpull %atclone atclone 'builtin echo >! test_file' depth 1 
-psprint/zsh-select

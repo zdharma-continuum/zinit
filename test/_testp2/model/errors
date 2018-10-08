@@ -1,9 +1,0 @@
-ERRORS
-Failed: -zplg-diff-functions-compute for _local/zplugin
-Failed: -zplg-diff-options-compute for _local/zplugin
-Failed: -zplg-diff-env-compute _local/zplugin
-Failed: -zplg-diff-parameter-compute _local/zplugin
-Failed: -zplg-diff-functions-compute for psprint/zsh-editing-workbench
-Failed: -zplg-diff-options-compute for psprint/zsh-editing-workbench
-Failed: -zplg-diff-env-compute psprint/zsh-editing-workbench
-Failed: -zplg-diff-parameter-compute psprint/zsh-editing-workbench

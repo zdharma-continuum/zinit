@@ -1,2 +1,0 @@
-https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/
-svn '' atpull '!command cp version2 version2a.cpy' cp 'version2 -> version2b.cpy' 

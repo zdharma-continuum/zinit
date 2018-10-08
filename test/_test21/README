@@ -1,9 +1,0 @@
-This test verifies (acting on single-file snippet):
-
-1. If CURL mock works properly.
-
-2. If the snippet got sourced.
-
-3. If compdefs are correctly gathered.
-
-4. If URL shorthand (OMZ::) is correctly expanded.

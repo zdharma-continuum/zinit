@@ -1,7 +1,0 @@
-This test verifies (acting on snippet):
-
-1. atpull with '!...' being run before update
-
-2. cp being run after update
-
-3. Update being actually run

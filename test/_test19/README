@@ -1,7 +1,0 @@
-This test verifies (acting on snippet):
-
-1. atpull'%atclone' correctly working and reusing atclone ice contents
-
-2. atclone correctly executing
-
-3. Static instead of saved ice being used

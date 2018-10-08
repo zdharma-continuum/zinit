@@ -1,1 +1,0 @@
-../test_snippets/git/git.plugin.zsh

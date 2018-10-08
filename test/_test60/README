@@ -1,7 +1,0 @@
-This test verifies (acting on snippet):
-
-1. Snippet correctly loading
-
-2. src"" ice-mod working
-
-3. mv, atclone ice-mods working

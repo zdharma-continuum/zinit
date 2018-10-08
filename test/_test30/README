@@ -1,5 +1,0 @@
-This test verifies (acting on single-file snippet):
-
-1. src"" working for as"command" snippet
-
-2. compdef-shadowing working for src"" and as"command" snippet

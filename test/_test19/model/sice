@@ -1,2 +1,0 @@
-https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools/
-svn '' atpull %atclone atclone 'builtin echo >! test_file' 

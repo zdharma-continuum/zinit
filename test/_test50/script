@@ -1,8 +1,0 @@
-tst_verbosity
-
-zplugin ice mv"zsh-select.plugin.zsh -> orig.plugin.zsh" \
-            atclone'command echo "touch \${ZPLGM[PLUGINS_DIR]}/load.mark" >! zsh-select.plugin.zsh' \
-            from"gl" src"orig.plugin.zsh" atload'echo ${REPO_DIR:t} > var'
-zplugin load psprint/zsh-select
-
-# vim:ft=zsh

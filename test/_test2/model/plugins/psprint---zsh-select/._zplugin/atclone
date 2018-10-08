@@ -1,1 +1,0 @@
-command chmod -x zsh-select2 || builtin print >! Test_Failed
