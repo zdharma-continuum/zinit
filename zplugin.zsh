@@ -764,7 +764,7 @@ builtin setopt noaliases
     # That's a pretty fast track to call this function this way
     if [[ -n "$2" ]];then
         2=${~2}
-        reply=( "$1" "${2//---//}" )
+        reply=( "$1" "${${${(M)1#%}:+$2}:-${2//---//}}" )
         return 0
     fi
 
@@ -845,7 +845,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-unregister-plugin {{{
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]:+${reply[-2]}/}${reply[-1]}"
+    local uspl2="${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]}"
 
     # If not found, the index will be length+1
     ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
@@ -904,8 +904,8 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local mode="$3" rst="0" retval=0
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]:+${reply[-2]}/}${reply[-1]}}"
-    ZPLG_ICE[teleid]="${user:+$user/}$plugin"
+    local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]}}"
+    ZPLG_ICE[teleid]="$user${${user:#%*}:+/}$plugin"
 
     ZPLG_SICE[$id_as]=""
     -zplg-pack-ice "$id_as"
@@ -1384,7 +1384,7 @@ builtin setopt noaliases
     ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
     ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv)ZPLG_ICE[@]}}"
 
-    local id="${${opt_plugin:+$opt_uspl2/$opt_plugin}:-$opt_uspl2}"
+    local id="${${opt_plugin:+$opt_uspl2${${opt_uspl2:#%*}:+/}$opt_plugin}:-$opt_uspl2}"
 
     if [[ "${ZPLG_ICE[wait]}" = (\!|.|)<-> ]]; then
         ZPLG_TASKS+=( "$EPOCHSECONDS+${ZPLG_ICE[wait]#(\!|.)} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
