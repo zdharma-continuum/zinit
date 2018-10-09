@@ -898,7 +898,7 @@ builtin setopt noaliases
 # $2 - plugin name, if the third format is used
 -zplg-load () {
     typeset -F 3 SECONDS=0
-    local mode="$3" rst="0"
+    local mode="$3" rst="0" retval=0
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]:+${reply[-2]}/}${reply[-1]}}"
     ZPLG_ICE[teleid]="${user:+$user/}$plugin"
@@ -921,9 +921,10 @@ builtin setopt noaliases
 
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-    -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"
+    -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"; retval=$?
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as//\//---}]=$SECONDS
+    return $retval
 } # }}}
 # FUNCTION: -zplg-load-snippet {{{
 # Implements the exposed-to-user action of loading a snippet.
@@ -933,7 +934,7 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local -a opts tmp ice
     zparseopts -E -D -a opts f -command u i || { print -r -- "Incorrect options (accepted ones: -f, --command)"; return 1; }
-    local url="$1" correct=0
+    local url="$1" correct=0 retval=0
     [[ -o ksharrays ]] && correct=1
 
     # Remove leading whitespace and trailing /
@@ -1013,12 +1014,12 @@ builtin setopt noaliases
 
         [[ -f "${list[1-correct]}" ]] && {
             ZERO="${list[1-correct]}"
-            (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
+            (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }
             (( 1 ))
         } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || print -r -- "Snippet not loaded ($id_as)"; }
 
-        [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
-        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
+        [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; done; }
         (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
@@ -1052,9 +1053,9 @@ builtin setopt noaliases
             fi
             if [[ -n "${ZPLG_ICE[src]}" ]]; then
                 ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"
-                (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
+                (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }
             fi
-            [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
+            [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; done; }
             (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
         }
@@ -1069,6 +1070,7 @@ builtin setopt noaliases
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as}]=$SECONDS
+    return $retval
 } # }}}
 # FUNCTION: -zplg-compdef-replay {{{
 # Runs gathered compdef calls. This allows to run `compinit'
@@ -1125,7 +1127,7 @@ builtin setopt noaliases
 # $2 - plugin
 # $3 - mode (light or load)
 -zplg-load-plugin() {
-    local user="$1" plugin="$2" id_as="$3" mode="$4" correct=0
+    local user="$1" plugin="$2" id_as="$3" mode="$4" correct=0 retval=0
     ZPLGM[CUR_USR]="$user" ZPLG_CUR_PLUGIN="$plugin" ZPLGM[CUR_USPL2]="$id_as"
     [[ -o ksharrays ]] && correct=1
 
@@ -1148,8 +1150,8 @@ builtin setopt noaliases
         [[ -n "${reply[1-correct]}" && ! -x "${reply[1-correct]}" ]] && command chmod a+x ${reply[@]}
 
         local ZERO
-        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
-        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
+        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; done; }
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
     elif [[ "${ZPLG_ICE[as]}" = "completion" ]]; then
         ((1))
@@ -1185,9 +1187,9 @@ builtin setopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         local ZERO="$pdir_path/$fname"
         builtin setopt noaliases
-        (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"
-        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; }
-        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; ((1)); } || builtin source "$ZERO"; done; }
+        (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }
+        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); } done; }
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
         builtin unsetopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
@@ -1208,7 +1210,7 @@ builtin setopt noaliases
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
 
     (( $4 )) && { print; zle .reset-prompt; }
-    return 0
+    return $retval
 } # }}}
 
 #
@@ -1331,7 +1333,7 @@ builtin setopt noaliases
 # }}}
 # FUNCTION: -zplg-run-task {{{
 -zplg-run-task() {
-    local __pass="$1" __t="$2" __tpe="$3" __idx="$4" __mode="$5" __id="${(Q)6}" __action __s=1
+    local __pass="$1" __t="$2" __tpe="$3" __idx="$4" __mode="$5" __id="${(Q)6}" __action __s=1 __retval=0
 
     local -A ZPLG_ICE
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${__idx}]}}" )
@@ -1348,13 +1350,13 @@ builtin setopt noaliases
 
     if [[ "$__action" = *load ]]; then
         if [[ "$__tpe" = "p" ]]; then
-            -zplg-load "$__id" "" "$__mode"
+            -zplg-load "$__id" "" "$__mode"; (( __retval += $? ))
         elif [[ "$__tpe" = "s" ]]; then
-            -zplg-load-snippet "$__id" ""
+            -zplg-load-snippet "$__id" ""; (( __retval += $? ))
         elif [[ "$__tpe" = "p1" || "$__tpe" = "s1" ]]; then
             zpty -b "${__id//\//:}" '-zplg-service '"${(M)__tpe#?}"' "$__mode" "$__id"'
         fi
-        (( ${+ZPLG_ICE[silent]} == 0 && ${+ZPLG_ICE[lucid]} == 0 )) && zle && zle -M "Loaded $__id"
+        (( ${+ZPLG_ICE[silent]} == 0 && ${+ZPLG_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ "$__action" = *remove ]]; then
         (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
         [[ "$__tpe" = "p" ]] && -zplg-unload "$__id" "" "-q"
