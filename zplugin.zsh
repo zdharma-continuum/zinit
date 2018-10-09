@@ -217,22 +217,26 @@ builtin setopt noaliases
     local func
 
     # TODO: +X
-    zparseopts -a opts -D ${(s::):-TUXkmtzw}
+    zparseopts -D -a opts ${(s::):-RTUXdkmrtWz}
 
     if (( ${+opts[(r)-X]} )); then
-        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: Failed autoload $opts $*"
-        print -u2 "builtin autoload required for $opts"
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
+        print -u2 "builtin autoload required for ${(j: :)opts[@]}"
         return 1
     fi
     if (( ${+opts[(r)-w]} )); then
-        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "-w-Autoload $opts $*"
-        builtin autoload $opts "$@"
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
+        builtin autoload ${opts[@]} "$@"
         return 0
     fi
-
+    if [[ -n ${(M)@:#+X} ]]; then
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
+        builtin autoload +X ${opts[@]} "${@:#+X}"
+        return 0
+    fi
     # Report ZPLUGIN's "native" autoloads
     for func; do
-        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload $func${opts:+ with options ${opts[*]}}"
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
     done
 
     # Do ZPLUGIN's "native" autoloads
