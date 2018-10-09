@@ -805,6 +805,12 @@ ZPLGM[EXTENDED_GLOB]=""
         f="${(Q)f}"
         (( quiet )) || print "Deleting function $f"
         unfunction -- "$f"
+        (( ${+precmd_functions} )) && precmd_functions=( ${precmd_functions[@]:#$f} )
+        (( ${+preexec_functions} )) && preexec_functions=( ${preexec_functions[@]:#$f} )
+        (( ${+chpwd_functions} )) && chpwd_functions=( ${chpwd_functions[@]:#$f} )
+        (( ${+periodic_functions} )) && periodic_functions=( ${periodic_functions[@]:#$f} )
+        (( ${+zshaddhistory_functions} )) && zshaddhistory_functions=( ${zshaddhistory_functions[@]:#$f} )
+        (( ${+zshexit_functions} )) && zshexit_functions=( ${zshexit_functions[@]:#$f} )
     done
 
     #
