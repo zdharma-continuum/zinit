@@ -1498,9 +1498,9 @@ zplugin() {
            else
                if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
                    ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
-                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${2#https://github.com/}" "$3"
+                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"
                else
-                   -zplg-load "${2#https://github.com/}" "$3" "${1/load/}"
+                   -zplg-load "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}" "${1/load/}"
                fi
            fi
            ;;
@@ -1508,10 +1508,10 @@ zplugin() {
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
                ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
-               -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "$2" "$3"
+               -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "$3"
            else
-               ZPLG_SICE[${2%/}]=""
-               -zplg-load-snippet "$2" "$3"
+               ZPLG_SICE[${2%%(/|//|///)}]=""
+               -zplg-load-snippet "${2%%(/|//|///)}" "$3"
            fi
            ;;
        (ice)
@@ -1565,7 +1565,7 @@ zplugin() {
                        [[ "$2" = "-q" ]] && { 5="-q"; shift; }
                        # Unload given plugin. Cloned directory remains intact
                        # so as are completions
-                       -zplg-unload "$2" "${3:#-q}" "${${(M)4:#-q}:-${(M)3:#-q}}"
+                       -zplg-unload "${2%%(/|//|///)}" "${${3:#-q}%%(/|//|///)}" "${${(M)4:#-q}:-${(M)3:#-q}}"
                    fi
                    ;;
                (bindkeys)
@@ -1577,7 +1577,7 @@ zplugin() {
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-update-or-status-all "update"
                    else
-                       -zplg-update-or-status "update" "$2" "$3"
+                       -zplg-update-or-status "update" "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    fi
                    ;;
                (status)
@@ -1585,7 +1585,7 @@ zplugin() {
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-update-or-status-all "status"
                    else
-                       -zplg-update-or-status "status" "$2" "$3"
+                       -zplg-update-or-status "status" "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    fi
                    ;;
                (report)
@@ -1593,7 +1593,7 @@ zplugin() {
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 3; }
                        -zplg-show-all-reports
                    else
-                       -zplg-show-report "$2" "$3"
+                       -zplg-show-report "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    fi
                    ;;
                (loaded|list)
@@ -1646,7 +1646,7 @@ zplugin() {
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ "$2" = "-q" ]] && { 5="-q"; shift; }
-                   -zplg-install-completions "$2" "$3" "1" "${(M)4:#-q}"
+                   -zplg-install-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}" "1" "${(M)4:#-q}"
                    [[ -z "${(M)4:#-q}" ]] && print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
                    compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
@@ -1657,7 +1657,7 @@ zplugin() {
                    else
                        (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                        # Uninstalls completions for plugin
-                       -zplg-uninstall-completions "$2" "$3"
+                       -zplg-uninstall-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                        print "Initializing completion (compinit)..."
                        builtin autoload -Uz compinit
                        compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
@@ -1685,7 +1685,7 @@ zplugin() {
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-compile-uncompile-all "1"
                    else
-                       -zplg-compile-plugin "$2" "$3"
+                       -zplg-compile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    fi
                    ;;
                (uncompile)
@@ -1693,7 +1693,7 @@ zplugin() {
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-compile-uncompile-all "0"
                    else
-                       -zplg-uncompile-plugin "$2" "$3"
+                       -zplg-uncompile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    fi
                    ;;
                (compiled)
@@ -1703,32 +1703,32 @@ zplugin() {
                    -zplg-list-compdef-replay
                    ;;
                (cd)
-                   -zplg-cd "$2" "$3"
+                   -zplg-cd "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (delete)
-                   -zplg-delete "$2" "$3"
+                   -zplg-delete "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (recall)
-                   -zplg-recall "$2" "$3"
+                   -zplg-recall "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (edit)
-                   -zplg-edit "$2" "$3"
+                   -zplg-edit "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (glance)
-                   -zplg-glance "$2" "$3"
+                   -zplg-glance "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (changes)
-                   -zplg-changes "$2" "$3"
+                   -zplg-changes "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (recently)
                    shift
                    -zplg-recently "$@"
                    ;;
                (create)
-                   -zplg-create "$2" "$3"
+                   -zplg-create "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (stress)
-                   -zplg-stress "$2" "$3"
+                   -zplg-stress "${2%%(/|//|///)}" "${3%%(/|//|///)}"
                    ;;
                (-h|--help|help|"")
                    -zplg-help
