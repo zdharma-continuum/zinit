@@ -79,4 +79,7 @@ zplugin ice atload"fpath+=( \$PWD );"
 zplugin light chauncey-garrett/zsh-prompt-garrett
 zplugin ice svn atload"prompt garrett"
 zplugin snippet PZT::modules/prompt
+
+zplugin ice from"gitlab" nocompletions atinit'fpath+=($PWD/p10k_functions $PWD/segments)'
+zplugin load robobenklein/p10k
 ```
