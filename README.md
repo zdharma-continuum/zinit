@@ -983,7 +983,7 @@ the namespace – there's single `$ZPLGM` hash instead of `5` string variables.
 Please update your dotfiles.
 
 ```
-local -A ZPLGM  # initial Zplugin's hash definition, if configuring before loading Zplugin, then:
+declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loading Zplugin, and then:
 ```
 | Hash Field | Description |
 -------------|--------------
