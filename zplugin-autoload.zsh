@@ -616,7 +616,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -e "$REPLY" ]] && {
         completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
     } || {
-        print "No such completion or snippet $1${${1:#%*}:+/}$2"
+        print "No such completion or snippet $1${${1:##(%|/)*}:+/}$2"
         return 1
     }
 
@@ -1376,7 +1376,8 @@ ZPLGM[EXTENDED_GLOB]=""
         is_snippet=1
     else
         # Plugin
-        local __user="${__URL%%/*}" __plugin="${__URL#*/}"
+        -zplg-shands-exp "$__URL" && __URL="$REPLY"
+        local __user="${${(M)__URL#%}:-${${__URL%%/*}:-%}}" __plugin="${${(M)__URL#%}:+/}${${(M)__URL#/}:+/}${__URL#*/}"
         [[ "$__user" = "$__plugin" && "$__user/$__plugin" != "$__URL" ]] && __user=""
         __s_path="" __filename=""
         [[ "$__user" = "%" ]] && ___path="$__plugin" || ___path="${ZPLGM[PLUGINS_DIR]}/${__user:+${__user}---}${__plugin//\//---}"
@@ -2112,7 +2113,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local the_id="$1${${1:#%*}:+/}$2"
+    local the_id="$1${${1:##(%|/)*}:+/}$2"
 
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
@@ -2465,7 +2466,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 -zplg-get-path() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local the_id="$1${${1:#%*}:+/}$2"
+    local the_id="$1${${1:##(%|/)*}:+/}$2"
 
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
@@ -2509,7 +2510,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local -a ice_order nval_ices output
     ice_order=( svn proto from teleid id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
     nval_ices=( blockf silent svn )
-    -zplg-compute-ice "$1${${1:#%*}:+/}$2" "pack" ice local_dir filename || return 1
+    -zplg-compute-ice "$1${${1:##(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
 
     [[ -e "$local_dir" ]] && {
         for el in "${ice_order[@]}"; do

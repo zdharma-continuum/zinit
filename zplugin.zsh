@@ -764,7 +764,7 @@ builtin setopt noaliases
     # That's a pretty fast track to call this function this way
     if [[ -n "$2" ]];then
         2=${~2}
-        reply=( "$1" "${${${(M)1#%}:+$2}:-${2//---//}}" )
+        reply=( "${1:-${${(M)2#/}:+%}}" "${${${(M)1#%}:+$2}:-${2//---//}}" )
         return 0
     fi
 
