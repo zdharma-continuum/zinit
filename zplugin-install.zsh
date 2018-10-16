@@ -326,7 +326,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 -zplg-compile-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" first
-    local plugin_dir="${${${(M)plugin:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}}"
+    local plugin_dir="${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}}"
     local -a list
 
     # No ICE packing because this command is ran
