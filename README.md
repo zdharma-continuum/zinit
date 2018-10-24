@@ -726,6 +726,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `pick`    | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"program"`), e.g. `zplugin ice pick"*.plugin.zsh"`. Works with plugins and snippets. |
 | `bpick`   | Used to select which release from Github Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` |
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
+| `cloneopts`   | Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. Works with plugins. |
 | `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. |

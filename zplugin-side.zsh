@@ -166,7 +166,7 @@
 
     command mkdir -p "$__pfx"
     local __key __var_name
-    for __key in proto from as bpick mv cp atclone atpull ver id-as teleid ${(s: :)__add_ices[@]}; do
+    for __key in proto from as bpick mv cp atclone atpull ver id-as teleid cloneopts ${(s: :)__add_ices[@]}; do
         __var_name="${__ice_var}[$__key]"
         print -r -- "${(P)__var_name}" >! "$__pfx"/$__key
     done

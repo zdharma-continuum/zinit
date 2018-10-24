@@ -1281,7 +1281,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+        [[ "$bit" = (#b)(from|proto|cloneopts|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"

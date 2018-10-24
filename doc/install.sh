@@ -40,4 +40,3 @@ autoload -Uz _zplugin
 ### End of Zplugin's installer chunk
 EOF
 echo ">>> Done"
-

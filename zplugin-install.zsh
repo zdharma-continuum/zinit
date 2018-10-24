@@ -93,11 +93,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     else
         case "${ZPLG_ICE[proto]}" in
             (|https)
-                command git clone --progress --recursive ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
+                command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
                 (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
                 ;;
             (git|http|ftp|ftps|rsync|ssh)
-                command git clone --progress --recursive ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
+                command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" "$local_path" |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
                 (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
                 ;;
             (*)
