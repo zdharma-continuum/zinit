@@ -1236,7 +1236,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$user/$plugin]=""; local nf="-nf"; }
 
-    -zplg-compute-ice "$user/$plugin" "pack$nf" ice local_dir filename || return 1
+    -zplg-compute-ice "$user${${user:##(%|/)*}:+/}$plugin" "pack$nf" ice local_dir filename || return 1
     [[ "${ice[teleid]:-$id_as}" = (#b)([^/]##)/(*) ]] && { user="${match[1]}"; plugin="${match[2]}"; } || { user=""; plugin="${ice[teleid]:-$id_as}"; }
 
     # Check if repository has a remote set, if it is _local
