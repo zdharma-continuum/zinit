@@ -862,7 +862,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-unregister-plugin {{{
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]}"
+    local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
 
     # If not found, the index will be length+1
     ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
@@ -921,8 +921,8 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local mode="$3" rst="0" retval=0
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]}}"
-    ZPLG_ICE[teleid]="$user${${user:#%*}:+/}$plugin"
+    local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
+    ZPLG_ICE[teleid]="$user${${user:#(%|/)*}:+/}$plugin"
 
     ZPLG_SICE[$id_as]=""
     -zplg-pack-ice "$id_as"

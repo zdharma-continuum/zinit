@@ -199,7 +199,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - (optional) plugin (only when $1 - i.e. user - given)
 -zplg-any-to-uspl2() {
     -zplg-any-to-user-plugin "$1" "$2"
-    [[ "${reply[-2]}" = "%" ]] && REPLY="${reply[-2]}${reply[-1]}" || REPLY="${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]//---//}"
+    [[ "${reply[-2]}" = "%" ]] && REPLY="${reply[-2]}${reply[-1]}" || REPLY="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]//---//}"
 } # }}}
 # FUNCTION: -zplg-save-set-extendedglob {{{
 # Enables extendedglob-option first saving if it was already
@@ -616,7 +616,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -e "$REPLY" ]] && {
         completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
     } || {
-        print "No such completion or snippet $1${${1:##(%|/)*}:+/}$2"
+        print "No such completion or snippet $1${${1:#(%|/)*}:+/}$2"
         return 1
     }
 
@@ -775,7 +775,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-unload() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
+    local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
 
     # KSH_ARRAYS immunity
     integer correct=0
@@ -1095,7 +1095,7 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         (( quiet )) || print "Unregistering plugin $uspl2col"
         -zplg-unregister-plugin "$user" "$plugin"
-        LOADED_PLUGINS[${LOADED_PLUGINS[(i)$user${${user:#%*}:+/}$plugin]}]=()  # Support Zsh plugin standard
+        LOADED_PLUGINS[${LOADED_PLUGINS[(i)$user${${user:#(%|/)*}:+/}$plugin]}]=()  # Support Zsh plugin standard
         -zplg-clear-report-for "$user" "$plugin"
         (( quiet )) || print "Plugin's report saved to \$LASTREPORT"
     fi
@@ -1110,7 +1110,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-show-report() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
 
     # Allow debug report
     if [[ "$user/$plugin" != "_dtrace/_dtrace" ]]; then
@@ -1119,11 +1119,11 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Print title
     printf "${ZPLGM[col-title]}Plugin report for${ZPLGM[col-rst]} %s%s\n"\
-            "${user:+${ZPLGM[col-uname]}$user${ZPLGM[col-rst]}}${${user:#%*}:+/}"\
+            "${user:+${ZPLGM[col-uname]}$user${ZPLGM[col-rst]}}${${user:#(%|/)*}:+/}"\
             "${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}"
 
     # Print "----------"
-    local msg="Plugin report for $user${${user:#%*}:+/}$plugin"
+    local msg="Plugin report for $user${${user:#(%|/)*}:+/}$plugin"
     print -- "${ZPLGM[col-bar]}${(r:${#msg}::-:)tmp__}${ZPLGM[col-rst]}"
 
     # Print report gathered via shadowing
@@ -1220,14 +1220,14 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-update-or-status() {
     setopt localoptions extendedglob nokshglob noksharrays
 
-    -zplg-two-paths "$2${${2:#%*}:+/}$3"
+    -zplg-two-paths "$2${${2:#(%|/)*}:+/}$3"
     if [[ -n "${reply[-3]}" || -n "${reply[-1]}" ]]; then
         -zplg-update-or-status-snippet "$1" "$2" "$3"
         return $?
     fi
 
     -zplg-any-to-user-plugin "$2" "$3"
-    local user="${reply[-2]}" plugin="${reply[-1]}" st="$1" local_dir filename key id_as="${reply[-2]}${${reply[-2]:#%*}:+/}${reply[-1]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" st="$1" local_dir filename key id_as="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
     local -A ice
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
@@ -1239,7 +1239,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$user/$plugin]=""; local nf="-nf"; }
 
-    -zplg-compute-ice "$user${${user:##(%|/)*}:+/}$plugin" "pack$nf" ice local_dir filename || return 1
+    -zplg-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" ice local_dir filename || return 1
     [[ "${ice[teleid]:-$id_as}" = (#b)([^/]##)/(*) ]] && { user="${match[1]}"; plugin="${match[2]}"; } || { user=""; plugin="${ice[teleid]:-$id_as}"; }
 
     # Check if repository has a remote set, if it is _local
@@ -1391,7 +1391,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local -A __sice
     local -a __tmp
-    __tmp=( "${(z@)ZPLG_SICE[${${__user+$user${${user:#%*}:+/}$plugin}:-$__URL}]}" )
+    __tmp=( "${(z@)ZPLG_SICE[${${__user+$user${${user:#(%|/)*}:+/}$plugin}:-$__URL}]}" )
     (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
 
     if [[ "${+__sice[svn]}" = "1" || -n "$__s_svn" ]]; then
@@ -2116,7 +2116,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local the_id="$1${${1:##(%|/)*}:+/}$2"
+    local the_id="$1${${1:#(%|/)*}:+/}$2"
 
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
@@ -2469,7 +2469,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 -zplg-get-path() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local the_id="$1${${1:##(%|/)*}:+/}$2"
+    local the_id="$1${${1:#(%|/)*}:+/}$2"
 
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
@@ -2513,7 +2513,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local -a ice_order nval_ices output
     ice_order=( svn proto from teleid bindmap cloneopts id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
     nval_ices=( blockf silent svn )
-    -zplg-compute-ice "$1${${1:##(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
+    -zplg-compute-ice "$1${${1:#(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
 
     [[ -e "$local_dir" ]] && {
         for el in "${ice_order[@]}"; do
