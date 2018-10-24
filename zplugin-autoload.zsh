@@ -1127,7 +1127,10 @@ ZPLGM[EXTENDED_GLOB]=""
     print -- "${ZPLGM[col-bar]}${(r:${#msg}::-:)tmp__}${ZPLGM[col-rst]}"
 
     # Print report gathered via shadowing
-    print "${ZPLG_REPORTS[$uspl2]}"
+    () {
+        setopt localoptions extendedglob
+        print -rl -- "${(@)${(f@)ZPLG_REPORTS[$uspl2]}/(#b)(#s)([^[:space:]]##)([[:space:]]##)/${${${(M)match[1]:#(Warning:|Error:)}:+${ZPLGM[col-error]}${match[1]}${ZPLGM[col-rst]}}:-${ZPLGM[col-keyword]}${match[1]}${ZPLGM[col-rst]}}${match[2]}}"
+    }
 
     # Print report gathered via $functions-diffing
     REPLY=""

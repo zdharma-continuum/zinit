@@ -1132,14 +1132,8 @@ builtin setopt noaliases
 # $1 - uspl2, i.e. user/plugin
 # $2, ... - the text
 -zplg-add-report() {
-    local uspl2="$1"
-    shift
-    local txt="$*"
-
-    local keyword="${txt%% *}"
-    keyword="${${${(M)keyword:#Warning:}:+${ZPLGM[col-error]}}:-${ZPLGM[col-keyword]}}$keyword${ZPLGM[col-rst]}"
-    [[ -n "$uspl2" ]] && ZPLG_REPORTS[$uspl2]+="$keyword ${txt#* }"$'\n'
-    [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$keyword ${txt#* }"$'\n'
+    [[ -n "$1" ]] && ZPLG_REPORTS[$1]+="$2"$'\n'
+    [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$2"$'\n'
 } # }}}
 # FUNCTION: -zplg-load-plugin {{{
 # Lower-level function for loading a plugin.
