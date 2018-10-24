@@ -9,7 +9,7 @@ typeset -gaH ZPLG_REGISTERED_PLUGINS ZPLG_TASKS ZPLG_RUN
 typeset -ga LOADED_PLUGINS
 ZPLG_TASKS=( "<no-data>" )
 # Snippets loaded, url -> file name
-typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE
+typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE ZPLG_CUR_BIND_MAP
 
 #
 # Common needed values
@@ -293,6 +293,23 @@ builtin setopt noaliases
     ]]; then
         local string="${(q)1}" widget="${(q)2}"
         local quoted
+
+        if [[ -n "${ZPLG_ICE[bindmap]}" && ${ZPLG_CUR_BIND_MAP[empty]} -eq 1 ]]; then
+            local -a pairs
+            pairs=( "${(@s,;,)ZPLG_ICE[bindmap]}" )
+            () {
+                setopt localoptions extendedglob noksharrays noshwordsplit;
+                pairs=( "${(@)${(@)${(@s:->:)pairs}##[[:space:]]##}%%[[:space:]]##}" )
+            }
+            ZPLG_CUR_BIND_MAP=( empty 0 )
+            (( ${#pairs} > 1 && ${#pairs[@]} % 2 == 0 )) && ZPLG_CUR_BIND_MAP+=( "${pairs[@]}" )
+        fi
+
+        1="${1#"${1%%[! $'\t']*}"}" # leading whitespace
+        1="${1%"${1##*[! $'\t']}"}" # trailing whitespace
+        local bmap_val="${ZPLG_CUR_BIND_MAP[${1}]}"
+        [[ -n "$bmap_val" ]] && { string="${(q)bmap_val}"; pos[1]="$bmap_val"; -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> remapped onto <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"; }
+        [[ "$bmap_val" = "hold" ]] && return 0
 
         # "-M map" given?
         if (( ${+opts[(r)-M]} )); then
@@ -830,7 +847,7 @@ builtin setopt noaliases
     # Full or light load?
     [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
 
-    ZPLG_REPORTS[$uspl2]=""
+    ZPLG_REPORTS[$uspl2]=""          ZPLG_CUR_BIND_MAP=( empty 1 )
     # Functions
     ZPLG_FUNCTIONS_BEFORE[$uspl2]="" ZPLG_FUNCTIONS_AFTER[$uspl2]="" ZPLG_FUNCTIONS[$uspl2]=""
     # Objects
@@ -1281,7 +1298,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|cloneopts|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+        [[ "$bit" = (#b)(from|proto|cloneopts|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"

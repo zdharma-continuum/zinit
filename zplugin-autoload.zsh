@@ -1326,7 +1326,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - snippet URL
 -zplg-update-or-status-snippet() {
     local st="$1" URL="${2%/}" local_dir filename
-    (( ${#ZPLG_ICE} > 0 )) && { ZPLG_SICE[$URL]=""; local nf="-nf"; }
+    (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$URL]=""; local nf="-nf"; }
     -zplg-compute-ice "$URL" "pack$nf" ZPLG_ICE local_dir filename || return 1
 
     if [[ "$st" = "status" ]]; then
@@ -1423,7 +1423,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Read disk-Ice
     local -A __mdata
     local __key
-    { for __key in mode url from as pick bpick mv cp make atclone atpull is_release ver id-as teleid cloneopts; do
+    { for __key in mode url from as pick bpick mv cp make atclone atpull is_release ver id-as teleid bindmap cloneopts; do
         [[ -f "$__zplugin_path/$__key" ]] && __mdata[$__key]="$(<$__zplugin_path/$__key)"
       done
       [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
@@ -1444,7 +1444,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
-    for __key in mode url from as pick bpick mv cp atclone atpull is_release ver id-as teleid cloneopts   make svn; do
+    for __key in mode url from as pick bpick mv cp atclone atpull is_release ver id-as teleid bindmap cloneopts   make svn; do
         (( ${+__sice[$__key]} + ${${${__pack:#pack-nf}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
 
@@ -2508,7 +2508,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local el val cand1 cand2 local_dir filename
 
     local -a ice_order nval_ices output
-    ice_order=( svn proto from teleid cloneopts id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
+    ice_order=( svn proto from teleid bindmap cloneopts id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
     nval_ices=( blockf silent svn )
     -zplg-compute-ice "$1${${1:##(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
 
@@ -2652,5 +2652,5 @@ bindkeys                 - lists bindkeys set up by each plugin
 module                   - manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
 
 Available ice-modifiers: proto from cloneopts depth if wait load unload blockf pick bpick src as
-                         ver silent svn mv cp atinit atclone atload atpull make service"
+                         ver silent svn mv cp atinit atclone atload atpull make service bindmap"
 } # }}}
