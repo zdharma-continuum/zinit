@@ -522,7 +522,7 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-find-completions-of-plugin() {
     builtin setopt localoptions nullglob extendedglob nokshglob noksharrays
     -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" uspl
     [[ "$user" = "%" ]] && uspl="${user}${plugin}" || uspl="${reply[-2]}${reply[-2]:+---}${reply[-1]//\//---}"
 
     reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
