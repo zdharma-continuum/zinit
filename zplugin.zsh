@@ -1225,7 +1225,7 @@ builtin setopt noaliases
     # Mark no load is in progress
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
 
-    (( $4 )) && { print; zle .reset-prompt; }
+    (( $5 )) && { print; zle .reset-prompt; }
     return $retval
 } # }}}
 
