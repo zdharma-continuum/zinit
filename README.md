@@ -728,6 +728,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `depth`   | Pass `--depth` to `git`, i.e. limit how much of history to download. Works with plugins. |
 | `cloneopts`   | Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. Works with plugins. |
 | `bindmap` | To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. |
+| `trackbinds` | Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. |
 | `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. |
@@ -821,7 +822,7 @@ self-update              - updates and compiles Zplugin
 zstatus                  - overall Zplugin status
 times                    - statistics on plugin loading times
 load {plugin-name}       - load plugin, can also receive absolute local path
-light {plugin-name}      - light plugin load, without reporting (significantly faster)
+light [-b] {plugin-name} - light plugin load, without reporting/tracking (-b - do track but bindkey-calls only), for fast loading
 unload {plugin-name}     - unload plugin (needs reporting, i.e. load not light), -q – quiet
 snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
 ice <ice specification>  - add ICE to next command, argument is e.g. from"gitlab"

@@ -2511,8 +2511,8 @@ ZPLGM[EXTENDED_GLOB]=""
     local el val cand1 cand2 local_dir filename
 
     local -a ice_order nval_ices output
-    ice_order=( svn proto from teleid bindmap cloneopts id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service )
-    nval_ices=( blockf silent svn )
+    ice_order=( svn proto from teleid bindmap cloneopts id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service trackbinds )
+    nval_ices=( blockf silent svn trackbinds )
     -zplg-compute-ice "$1${${1:#(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
 
     [[ -e "$local_dir" ]] && {
@@ -2613,7 +2613,7 @@ zstatus                  - overall status of Zplugin
 times                    - statistics on plugin load times, sorted in order of loading
 self-update              - updates Zplugin
 load ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}         - load plugin, can also receive absolute local path
-light ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}        - light plugin load, without reporting
+light [-b] ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - light plugin load, without reporting/tracking (-b - do track but bindkey-calls only)
 unload ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - unload plugin loaded with \`zplugin load ...', -q - quiet
 snippet [-f] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]}       - source local or remote file (by direct URL), -f: force - don't use cache
 ls                       - list snippets in formatted and colorized manner
@@ -2654,6 +2654,6 @@ env-whitelist [-v]       - allows to specify names (also patterns) of variables 
 bindkeys                 - lists bindkeys set up by each plugin
 module                   - manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
 
-Available ice-modifiers: proto from cloneopts depth if wait load unload blockf pick bpick src as
-                         ver silent svn mv cp atinit atclone atload atpull make service bindmap"
+Available ice-modifiers: proto from cloneopts depth if wait load unload blockf pick bpick src as ver
+                         silent svn mv cp atinit atclone atload atpull make service bindmap trackbinds"
 } # }}}

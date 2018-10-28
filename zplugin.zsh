@@ -621,7 +621,7 @@ builtin setopt noaliases
     functions[compdef]='--zplg-shadow-compdef "$@";'
 
     # Light and compdef shadowing stops here. Dtrace and load go on
-    [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
+    [[ ( "$mode" = "light" && ${+ZPLG_ICE[trackbinds]} -eq 0 ) || "$mode" = "compdef" ]] && return 0
 
     # Defensive code, shouldn't be needed. A, B, C, D
     builtin unset "ZPLGM[bkp-bindkey]" "ZPLGM[bkp-zstyle]" "ZPLGM[bkp-alias]" "ZPLGM[bkp-zle]"
@@ -629,6 +629,9 @@ builtin setopt noaliases
     # A.
     (( ${+functions[bindkey]} )) && ZPLGM[bkp-bindkey]="${functions[bindkey]}"
     functions[bindkey]='--zplg-shadow-bindkey "$@";'
+
+    # B, when `zplugin light -b ...' or when `zplugin ice trackbinds ...; zplugin light ...'
+    [[ "$mode" = "light-b" || ( "$mode" = "light" && ${+ZPLG_ICE[trackbinds]} -eq 1 ) ]] && return 0
 
     # B.
     (( ${+functions[zstyle]} )) && ZPLGM[bkp-zstyle]="${functions[zstyle]}"
@@ -665,13 +668,17 @@ builtin setopt noaliases
     # E. Restore original compdef if it existed
     (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"
 
-    # Light and comdef shadowing stops here
-    [[ "$mode" = "light" || "$mode" = "compdef" ]] && return 0
+    # Light and compdef shadowing stops here
+    [[ ( "$mode" = "light" && ${+ZPLG_ICE[trackbinds]} -eq 0 ) || "$mode" = "compdef" ]] && return 0
 
     # Unfunction shadowing functions
 
     # A.
     (( ${+ZPLGM[bkp-bindkey]} )) && functions[bindkey]="${ZPLGM[bkp-bindkey]}" || unfunction "bindkey"
+
+    # When `zplugin light -b ...' or when `zplugin ice trackbinds ...; zplugin light ...'
+    [[ "$mode" = "light-b" || ( "$mode" = "light" && ${+ZPLG_ICE[trackbinds]} -eq 1 ) ]] && return 0
+
     # B.
     (( ${+ZPLGM[bkp-zstyle]} )) && functions[zstyle]="${ZPLGM[bkp-zstyle]}" || unfunction "zstyle"
     # C.
@@ -1190,7 +1197,7 @@ builtin setopt noaliases
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname ${${${(M)mode:#light}:+(no reporting)}:-$ZPLGM[col-info2](reporting enabled)$ZPLGM[col-rst]}"
 
         # Light and compdef mode doesn't do diffs and shadowing
-        if [[ "$mode" != "light" ]]; then
+        if [[ "$mode" != (light|light-b) ]]; then
             -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" begin
             -zplg-diff-options "${ZPLGM[CUR_USPL2]}" begin
             -zplg-diff-env "${ZPLGM[CUR_USPL2]}" begin
@@ -1212,7 +1219,7 @@ builtin setopt noaliases
 
         -zplg-shadow-off "${mode:-load}"
 
-        if [[ "$mode" != "light" ]]; then
+        if [[ "$mode" != (light|light-b) ]]; then
             -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" end
             -zplg-diff-env "${ZPLGM[CUR_USPL2]}" end
             -zplg-diff-options "${ZPLGM[CUR_USPL2]}" end
@@ -1293,7 +1300,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|cloneopts|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+        [[ "$bit" = (#b)(from|proto|cloneopts|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
@@ -1510,8 +1517,10 @@ zplugin() {
            else
                if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
                    ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
+                   [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
                    -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"
                else
+                   [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
                    -zplg-load "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}" "${1/load/}"
                fi
            fi
