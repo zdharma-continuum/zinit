@@ -130,9 +130,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         )
     fi
 
-    # Install completions
-    (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
-
     if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} != '!' ]]; then
         # Compile plugin
         -zplg-compile-plugin "$id_as" ""
@@ -146,6 +143,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         ( (( ${+ZPLG_ICE[atclone]} )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "${ZPLG_ICE[atclone]}"; }; )
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
     fi
+
+    # After additional executions like atclone'' - install completions (1 - plugins)
+    (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
 
     if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} = '!' ]]; then
         # Compile plugin
@@ -522,6 +522,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)ZPLG_ICE[make]}; }
 
+    # After additional executions like atclone'' - install completions (2 - snippets)
     (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "%" "$local_dir/$dirname" 0
     return $retval
 }
