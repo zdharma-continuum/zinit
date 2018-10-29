@@ -57,6 +57,10 @@ while read -r line; do
         have_1_counting=1
         counting_1="${match[1]}"
     fi
+    if [[ "$line" = (#b)"remote: Enumerating objects:"[\ ]#([0-9]##)(*) ]]; then
+        have_1_counting=1
+        counting_1="${match[1]}"
+    fi
     if [[ "$line" = (#b)*"remote: Total"[\ ]#([0-9]##)*"pack-reused"[\ ]#([0-9]##)* ]]; then
         have_2_total=1
         total_2="${match[1]}" total_packed_2="${match[2]}"
