@@ -925,12 +925,15 @@ source ~/.zplugin/bin/zplugin.zsh
 
 zplugin load "some/plugin"
 ...
+zpcompdef _gnu_generic fd  # instead of the regular `compdef'
+...
 zplugin load "other/plugin"
 
 autoload -Uz compinit
 compinit
 
-zplugin cdreplay -q # -q is for quiet
+zplugin cdreplay -q # -q is for quiet; actually run all the `compdef's saved before `compinit` call
+                    # (`compinit' declares the `compdef' function, so it cannot be used until `compinit`)
 ```
 
 This allows to call compinit once.
@@ -941,9 +944,13 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 
 If you load completions using `wait''` mode then you can add `atinit'zpcompinit'` to syntax-highlighting
 plugin (which should be the last one), or `atload'zpcompinit'` to last completion-related plugin. `zpcompinit`
-is a function that runs `autoload compinit; compinit`. There's also `zpcdreplay`, so you can also do:
-`atinit'zpcompinit; zpcdreplay'`, etc. Basically, it's the same as normal compinit call, but it is done
-in `atinit` or `atload` hook of last related plugin.
+is a function that runs `autoload compinit; compinit`. There's also `zpcdreplay` which will replay any caught
+compdefs so you can also do: `atinit'zpcompinit; zpcdreplay'`, etc. Basically, it's the same as normal `compinit`
+call, but it is done in `atinit` or `atload` hook of the last related plugin.
+
+Also: there's `zpcompdef`, which works like regular `compdef` call, but saves the completion definition so that
+it can be actually run by `zplugin cdreplay` (normal mode) or `atinit'cdreplay'`, etc. (turbo mode), after calling
+`compinit` (normal mode) or `zpcompinit` (turbo mode).
 
 # Ignoring Compdefs
 

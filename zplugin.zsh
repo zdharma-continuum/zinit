@@ -1789,6 +1789,11 @@ zpcdreplay() { -zplg-compdef-replay -q; }
 # It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
 zpcompinit() { autoload compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"; }
 # }}}
+# FUNCTION: zpcompdef {{{
+# Stores compdef for a replay with `zpcdreplay' (turbo
+# mode) or with `zplugin cdreplay' (normal mode)
+zpcompdef() { ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
+# }}}
 
 #
 # Source-executed code
