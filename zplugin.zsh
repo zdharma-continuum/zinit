@@ -63,6 +63,11 @@ ZPLGM[SERVICES_DIR]=${~ZPLGM[SERVICES_DIR]}
 export ZPFX=${~ZPFX}
 [[ -n "${ZPLGM[ZCOMPDUMP_PATH]}" ]] && ZPLGM[ZCOMPDUMP_PATH]=${~ZPLGM[ZCOMPDUMP_PATH]}
 
+ZPLGM[UPAR]=";:^[[A;:^[OA;:\\e[A;:\\eOA;:${termcap[ku]/$'\e'/^\[};:${terminfo[kcuu1]/$'\e'/^\[};:"
+ZPLGM[DOWNAR]=";:^[[B;:^[OB;:\\e[B;:\\eOB;:${termcap[kd]/$'\e'/^\[};:${terminfo[kcud1]/$'\e'/^\[};:"
+ZPLGM[RIGHTAR]=";:^[[C;:^[OC;:\\e[C;:\\eOC;:${termcap[kr]/$'\e'/^\[};:${terminfo[kcuf1]/$'\e'/^\[};:"
+ZPLGM[LEFTAR]=";:^[[D;:^[OD;:\\e[D;:\\eOD;:${termcap[kl]/$'\e'/^\[};:${terminfo[kcub1]/$'\e'/^\[};:"
+
 builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZPLGM[NEW_AUTOLOAD]=1 || ZPLGM[NEW_AUTOLOAD]=0
 #is-at-least 5.4 && ZPLGM[NEW_AUTOLOAD]=2
@@ -308,7 +313,28 @@ builtin setopt noaliases
         1="${1#"${1%%[! $'\t']*}"}" # leading whitespace
         1="${1%"${1##*[! $'\t']}"}" # trailing whitespace
         local bmap_val="${ZPLG_CUR_BIND_MAP[${1}]}"
-        [[ -n "$bmap_val" ]] && { string="${(q)bmap_val}"; pos[1]="$bmap_val"; -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> remapped onto <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"; }
+        if [[ -n "$bmap_val" ]]; then
+            string="${(q)bmap_val}"
+            pos[1]="$bmap_val"
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
+            (( 1 ))
+        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[UPAR]}} && -n "${${ZPLGM[UPAR]}[(r);:${(q)1};:]}" ]]; then
+            string="${(q)bmap_val}"
+            pos[1]="$bmap_val"
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Up-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
+        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[DOWNAR]}} && -n "${${ZPLGM[DOWNAR]}[(r);:${(q)1};:]}" ]]; then
+            string="${(q)bmap_val}"
+            pos[1]="$bmap_val"
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Down-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
+        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[RIGHTAR]}} && -n "${${ZPLGM[RIGHTAR]}[(r);:${(q)1};:]}" ]]; then
+            string="${(q)bmap_val}"
+            pos[1]="$bmap_val"
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Right-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
+        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[LEFTAR]}} && -n "${${ZPLGM[LEFTAR]}[(r);:${(q)1};:]}" ]]; then
+            string="${(q)bmap_val}"
+            pos[1]="$bmap_val"
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Left-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
+        fi
         [[ "$bmap_val" = "hold" ]] && return 0
 
         # "-M map" given?
@@ -387,7 +413,7 @@ builtin setopt noaliases
     (( ${+ZPLGM[bkp-bindkey]} )) && functions[bindkey]="${ZPLGM[bkp-bindkey]}" || unfunction "bindkey"
 
     # Actual bindkey
-    bindkey "${pos[@]}"
+    builtin bindkey "${pos[@]}"
     integer ret=$?
 
     # A. Shadow on. Custom function could unfunction itself
