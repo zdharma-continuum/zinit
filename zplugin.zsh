@@ -318,22 +318,14 @@ builtin setopt noaliases
             pos[1]="$bmap_val"
             -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
             (( 1 ))
-        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[UPAR]}} && -n "${${ZPLGM[UPAR]}[(r);:${(q)1};:]}" ]]; then
+        elif [[ ( -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[UPAR]}} && -n "${${ZPLGM[UPAR]}[(r);:${(q)1};:]}" ) || \
+                ( -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[DOWNAR]}} && -n "${${ZPLGM[DOWNAR]}[(r);:${(q)1};:]}" ) || \
+                ( -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[RIGHTAR]}} && -n "${${ZPLGM[RIGHTAR]}[(r);:${(q)1};:]}" ) || \
+                ( -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[LEFTAR]}} && -n "${${ZPLGM[LEFTAR]}[(r);:${(q)1};:]}" )
+        ]]; then
             string="${(q)bmap_val}"
             pos[1]="$bmap_val"
-            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Up-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
-        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[DOWNAR]}} && -n "${${ZPLGM[DOWNAR]}[(r);:${(q)1};:]}" ]]; then
-            string="${(q)bmap_val}"
-            pos[1]="$bmap_val"
-            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Down-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
-        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[RIGHTAR]}} && -n "${${ZPLGM[RIGHTAR]}[(r);:${(q)1};:]}" ]]; then
-            string="${(q)bmap_val}"
-            pos[1]="$bmap_val"
-            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Right-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
-        elif [[ -n ${bmap_val::=${ZPLG_CUR_BIND_MAP[LEFTAR]}} && -n "${${ZPLGM[LEFTAR]}[(r);:${(q)1};:]}" ]]; then
-            string="${(q)bmap_val}"
-            pos[1]="$bmap_val"
-            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as Left-Cursor and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as cursor-key and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZPLGM[col-error]}unmapped${ZPLGM[col-rst]}}"
         fi
         [[ "$bmap_val" = "hold" ]] && return 0
 
