@@ -153,7 +153,7 @@ tst_verbosity() {
 # FUNCTION: no_colors {{{
 no_colors() {
     local -A mymap
-    mymap=( "${(kv@)ZPLGM}" )
+    mymap=( "${(kv)ZPLGM[@]}" )
     local -a keys
     keys=( ${mymap[(I)*(col-)*]} )
 
@@ -168,8 +168,11 @@ store_state() {
     local out="$1" out2="$2"
     (( ${+functions[-zplg-diff-env-compute]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
 
+    local -a not_show_keys
+    not_show_keys=( UPAR DOWNAR RIGHTAR LEFTAR )
+
     local -A mymap
-    mymap=( "${(kv@)ZPLGM}" )
+    mymap=( "${(kv)ZPLGM[@]}" )
     local -a keys
     keys=( ${mymap[(I)*(col-)*]} NEW_AUTOLOAD )
 
@@ -188,7 +191,8 @@ store_state() {
     ZPLGM=( "${(kv)ZPLGM[@]/${${PWD:h}:h}\//}" )
 
     # Sort and print
-    for k in "${(ko@)ZPLGM}"; do
+    for k in "${(ko)ZPLGM[@]}"; do
+        [[ -n "${not_show_keys[(r)$k]}" ]] && continue
         print -rl -- "$k" "${ZPLGM[$k]}" >>! "$out"
     done
 
