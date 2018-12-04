@@ -324,7 +324,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-compile-plugin() {
-    -zplg-any-to-user-plugin "$1" "$2"
+    # $id_as - a /-separated pair if second element
+    # is not empty and first is not "%" - then it's
+    # just $1 in first case, or $1$2 in second case
+    local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" 
+
+    # Shorthands, little unstandarized
+    id_as="${id_as/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
+    id_as="${id_as/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
+    id_as="${id_as/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
+    id_as="${id_as/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
+
+    -zplg-any-to-user-plugin "$id_as" ""
     local user="${reply[-2]}" plugin="${reply[-1]}" first
     local plugin_dir="${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}}"
     local -a list
@@ -332,7 +343,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # No ICE packing because this command is ran
     # from -zplg-load-plugin which does that
     local -A sice
-    sice=( "${(@Q)${(z@)ZPLG_SICE[$user/$plugin]:-no op}}" )
+    sice=( "${(@Q)${(z@)ZPLG_SICE[$id_as]:-no op}}" )
     [[ "${sice[pick]}" = "/dev/null" ]] && return 0
 
     if [[ ${sice[as]} != "command" && ( ${+sice[nocompile]} = "0" || ${sice[nocompile]} = "!" ) ]]; then
@@ -363,7 +374,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     if [[ -n "${sice[compile]}" ]]; then
-        list=( $plugin_dir/${~sice[compile]}(N) )
+        eval "list=( \$plugin_dir/${~sice[compile]}(N) )"
         [[ ${#list} -eq 0 ]] && {
             print "Warning: Ice mod compile'' didn't match any files"
         } || {
