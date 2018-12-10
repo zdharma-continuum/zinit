@@ -873,8 +873,16 @@ zplugin snippet OMZ::lib/git.zsh
 
 Then you can use the themes as snippets (`zplugin snippet {file path or Github URL}`).
 Some themes require not only
-`Oh-My-Zsh's` `git` **library**, but also `git` **plugin** (error about function `current_branch` appears, or a similar one).
-Load this plugin as single-file snippet:
+`Oh-My-Zsh's` `git` **library**, but also `git` **plugin**. In such case following
+example errors could appear when entering commands at the prompt/theme:
+
+```
+check_git_prompt_info:3: command not found: git_prompt_status
+get_right_prompt:2: command not found: git_prompt_short_sha
+```
+
+It can be also an error about `current_branch` function. Load this (in such case
+required) Git-plugin as single-file snippet directly from OMZ:
 
 ```SystemVerilog
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
