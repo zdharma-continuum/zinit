@@ -996,6 +996,7 @@ builtin setopt noaliases
     tmp=( "${(Q@)${(z@)ZPLG_SICE[$id_as]}}" )
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && { ice=( "${(kv)ZPLG_ICE[@]}" "${tmp[@]}" ); ZPLG_ICE=( "${ice[@]}" ); }
     tmp=( 1 )
+    id_as="${ZPLG_ICE[id-as]:-$id_as}"
 
     # Oh-My-Zsh, Prezto and manual shorthands
     (( ${+ZPLG_ICE[svn]} )) && {
@@ -1003,11 +1004,10 @@ builtin setopt noaliases
     } || {
         url[1-correct,5-correct]="${ZPLG_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
     }
-    id_as="${ZPLG_ICE[id-as]:-$url}"
 
     # Construct containing directory, extract final directory
     # into handy-variable $dirname
-    filename="${${url%%\?*}:t}"
+    filename="${${id_as%%\?*}:t}"
     dirname="${${id_as%%\?*}:t}"
     local_dir="${${${id_as%%\?*}:h}/:\/\//--}"
     [[ "$local_dir" = "." ]] && local_dir="" || local_dir="${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"

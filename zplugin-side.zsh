@@ -7,10 +7,10 @@
 -zplg-shands-exp() {
     REPLY="$1$2"
     REPLY="${${${REPLY/\%HOME/$HOME}/\%SNIPPETS/${ZPLGM[SNIPPETS_DIR]}}#%}"
-    REPLY="${REPLY/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
-    REPLY="${REPLY/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
-    REPLY="${REPLY/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
-    REPLY="${REPLY/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
+    #REPLY="${REPLY/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
+    #REPLY="${REPLY/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
+    #REPLY="${REPLY/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
+    #REPLY="${REPLY/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
 
     # Testable
     [[ "$REPLY" != "$1$2" ]]
@@ -136,8 +136,8 @@
     url="${${url#"${url%%[! $'\t']*}"}%/}"
     url1="$url" url2="$url"
 
-    url1[1,5]="${ZPLG_1MAP[${url[1,5]}]:-${url[1,5]}}" # svn
-    url2[1,5]="${ZPLG_2MAP[${url[1,5]}]:-${url[1,5]}}" # normal
+    #url1[1,5]="${ZPLG_1MAP[${url[1,5]}]:-${url[1,5]}}" # svn
+    #url2[1,5]="${ZPLG_2MAP[${url[1,5]}]:-${url[1,5]}}" # normal
 
     dirnameA="${${url1%%\?*}:t}"
     local_dirA="${${${url1%%\?*}:h}/:\/\//--}"

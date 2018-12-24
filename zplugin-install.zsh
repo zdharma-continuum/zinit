@@ -172,12 +172,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # just $1 in first case, or $1$2 in second case
     local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" reinstall="${3:-0}" quiet="${${4:+1}:-0}"
 
-    # Shorthands, little unstandarized
-    id_as="${id_as/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
-    id_as="${id_as/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
-    id_as="${id_as/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
-    id_as="${id_as/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
-
     -zplg-any-to-user-plugin "$id_as" ""
     local user="${reply[-2]}"
     local plugin="${reply[-1]}"
@@ -328,12 +322,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # is not empty and first is not "%" - then it's
     # just $1 in first case, or $1$2 in second case
     local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" 
-
-    # Shorthands, little unstandarized
-    id_as="${id_as/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
-    id_as="${id_as/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
-    id_as="${id_as/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
-    id_as="${id_as/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
 
     -zplg-any-to-user-plugin "$id_as" ""
     local user="${reply[-2]}" plugin="${reply[-1]}" first
