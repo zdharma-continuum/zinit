@@ -645,20 +645,19 @@ target plugin in one of following ways:
 
 ```SystemVerilog
 PS1="READY > "
-zplugin ice wait'!1' atload'promptinit; prompt scala3'
+zplugin ice wait'!0' atload'promptinit; prompt scala3'
 zplugin load psprint/zprompts
 ```
 
-This sets plugin `psprint/zprompts` to be loaded `1` second after `zshrc`. Seeing
-your prompt updated at startup can cause mixed reactions, for example for me it is
-nice to quickly see raw prompt and observe how `wait''` does its job, but who knows
-I might resign from this one day.
+This sets plugin `psprint/zprompts` to be loaded `0` second after `zshrc`. It will
+fire up after 100 ms of showing of the basic prompt `READY >`. I'm running this method
+of setting up a prompt from half year now, without any problems.
 
 The exclamation mark causes Zplugin to reset-prompt after loading plugin. The same
-with Prezto prompts, with shorter delay:
+with Prezto prompts, with longer delay:
 
 ```SystemVerilog
-zplg ice svn silent wait'!0' atload'prompt smiley'
+zplg ice svn silent wait'!1' atload'prompt smiley'
 zplg snippet PZT::modules/prompt
 ```
 
@@ -670,9 +669,9 @@ zplugin light zsh-users/zsh-autosuggestions
 ```
 
 Autosuggestions uses `precmd` hook that is called right after processing `zshrc` (before prompt).
-Turbo Mode will wait `1` second so `precmd` will be called earlier than load of the plugin. This
-makes autosuggestions inactive at first prompt. But the given `atload` Ice-mod fixes this, it calls
-the same function `precmd` would, right after loading autosuggestions.
+Turbo Mode will wait `1` second so `precmd` will not be called at first prompt. This makes
+autosuggestions inactive at first prompt. **However** the given `atload` Ice-mod fixes this, it
+calls the same function `precmd` would, right after loading autosuggestions.
 
 ```SystemVerilog
 zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
@@ -682,8 +681,7 @@ zplugin load zdharma/zplugin-crasis
 The plugin `zplugin-crasis` provides command `crasis`. Ice-mod `wait` is set to wait on condition. When user
 enters `cras` at command line, the plugin is instantly loaded and command `crasis` becomes
 available. **[See this feature in action](https://asciinema.org/a/149725)**. This feature
-requires `zdharma/fast-syntax-highlighting` (it builds `ZLAST_COMMANDS` array), but a small
-dedicated plugin is coming soon.
+requires `zdharma/fast-syntax-highlighting` (it builds the `ZLAST_COMMANDS` array).
 
 ### Automatic Load/Unload On Condition
 
@@ -707,8 +705,9 @@ defining parameter `$PLUGINS` with possible values like `cpp`,`web`,`admin` and 
 
 Difference with `wait` is that `load`/`unload` are constantly active, not only till first activation.
 
-Note that unloading a plugin needs it to be loaded with tracking (so `zplugin load ...`, not `zplugin light ...`).
-Tracking causes slight slowdown, however this doesn't matter in turbo mode, as Zsh startup isn't slowed down.
+Note that unloading a plugin needs it to be loaded with tracking (so `zplugin load ...`, not `zplugin
+light ...`). Tracking causes slight slowdown, however this doesn't matter in turbo mode, as Zsh
+startup isn't slowed down.
 
 See also Wiki on [multiple prompts](https://github.com/zdharma/zplugin/wiki/Multiple-prompts).
 
