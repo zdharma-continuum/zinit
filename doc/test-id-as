@@ -14,17 +14,17 @@ autoload colors; colors
 
 setopt localtraps typesetsilent
 
-typeset -g plg_bkp="${ZPLGM[PLUGINS_DIR]}" snp_bkp="${ZPLGM[SNIPPETS_DIR]}" argv1="$1"
+typeset -g plg_bkp="${ZPLGM[PLUGINS_DIR]}" snp_bkp="${ZPLGM[SNIPPETS_DIR]}" argv1="$1" argv2="$2"
 [[ -z "$plg_bkp" || -z "$snp_bkp" ]] && { print "Zplugin not loaded? (the \$ZPLGM hash is missing fields)"; return 1; }
 [[ "$plg_bkp" != /* || $snp_bkp != /* ]] && { print "PLUGINS_DIR and/or SNIPPETS_DIR isn't an absolute path, aborting"; return 1; }
 
-if [[ "$argv1" != "--reuse" ]]; then
+if [[ "$argv1" != "--reuse" && "$argv2" != "--reuse" ]]; then
     command rm -rf /tmp/zplg_plgs /tmp/zplg_snps
     command mkdir -p /tmp/zplg_plgs /tmp/zplg_snps
 
     ZPLGM[PLUGINS_DIR]=/tmp/zplg_plgs ZPLGM[SNIPPETS_DIR]=/tmp/zplg_snps
 
-    trap '[[ $argv1 != "--keep" ]] && { ZPLGM[PLUGINS_DIR]=$plg_bkp; ZPLGM[SNIPPETS_DIR]=$snp_bkp; } || { print; print "Kept ${ZPLGM[PLUGINS_DIR]} :: ${ZPLGM[SNIPPETS_DIR]}"; }; return 0;' EXIT INT TERM QUIT
+    trap '[[ $argv1 != "--keep" && $argv2 != "--keep" ]] && { ZPLGM[PLUGINS_DIR]=$plg_bkp; ZPLGM[SNIPPETS_DIR]=$snp_bkp; } || { print; print "Kept ${ZPLGM[PLUGINS_DIR]} :: ${ZPLGM[SNIPPETS_DIR]}"; }; return 0;' EXIT INT TERM QUIT
 fi
 
 local INITIAL_CD="$PWD"
@@ -50,7 +50,7 @@ command rm -rf -- ${ZPLGM[SNIPPETS_DIR]}/https--github.com--robbyrussell--oh-my-
 
 print -- "Done."
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]mvdan$reset_color/$fg[yellow]sh$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]mvdan$reset_color/$fg[yellow]sh$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
 zplugin ice from"gh-r" as"command" mv"shfmt* -> shfmt"; zplugin load mvdan/sh
 zplugin cd mvdan/sh; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -59,7 +59,7 @@ zplugin cd mvdan/sh && ls -lthd .*(N) *(N)
 
 sleep 3
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`single-file plugin' $fg[magenta]oz$reset_color/$fg[yellow]safe-paste$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`single-file plugin' $fg[magenta]oz$reset_color/$fg[yellow]safe-paste$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
 zplugin load oz/safe-paste
 zplugin cd oz/safe-paste; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -68,7 +68,7 @@ zplugin cd oz/safe-paste && ls -lthd .*(N) *(N)
 
 sleep 3
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]junegunn$reset_color/$fg[yellow]fzf-bin$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]junegunn$reset_color/$fg[yellow]fzf-bin$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
 zplugin ice from"gh-r" as"command" mv"fzf* -> fzf1" atpull'!rm -f fzf2; touch fzf.txt'; zplugin light junegunn/fzf-bin
 zplugin cd junegunn/fzf-bin; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -77,7 +77,7 @@ zplugin cd junegunn/fzf-bin && ls -lthd .*(N) *(N)
 
 sleep 3
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]junegunn$reset_color/$fg[yellow]fzf-bin$fg_bold[green] AS ::\`$fg[red]my/jun/gun$fg_bold[green]'::$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]junegunn$reset_color/$fg[yellow]fzf-bin$fg_bold[green] AS ::\`$fg[red]my/jun/gun$fg_bold[green]'::$reset_color"
 zplugin ice from"gh-r" as"command" mv"fzf* -> fzf2" id-as"my/jun/gun"; zplugin load junegunn/fzf-bin
 zplugin cd my/jun/gun; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -86,7 +86,7 @@ zplugin cd my/jun/gun && ls -lthd .*(N) *(N)
 
 sleep 3
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]agkozak$reset_color/$fg[yellow]agkozak-zsh-theme$fg_bold[green] AS ::\`$fg[red]myid$fg_bold[green]'::$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]agkozak$reset_color/$fg[yellow]agkozak-zsh-theme$fg_bold[green] AS ::\`$fg[red]myid$fg_bold[green]'::$reset_color"
 zplugin ice id-as"myid"; zplugin load agkozak/agkozak-zsh-theme
 zplugin cd myid; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -102,7 +102,7 @@ head -n 17 /tmp/myid.unload.txt | tail -n 4
 
 sleep 5
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]agkozak$reset_color/$fg[yellow]agkozak-zsh-theme$fg_bold[green] AS ::\`$fg[red]myid/sub/1$fg_bold[green]'::$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]agkozak$reset_color/$fg[yellow]agkozak-zsh-theme$fg_bold[green] AS ::\`$fg[red]myid/sub/1$fg_bold[green]'::$reset_color"
 zplugin ice id-as"myid/sub/1"; zplugin load agkozak/agkozak-zsh-theme
 zplugin cd myid/sub/1; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -124,7 +124,7 @@ head -n 17 /tmp/myid--sub--1.unload.txt | tail -n 4
 
 sleep 5
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]sindresorhus$reset_color/$fg[yellow]pure$fg_bold[green] AS ::\`$fg[red]my/pure$fg_bold[green]'::$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]sindresorhus$reset_color/$fg[yellow]pure$fg_bold[green] AS ::\`$fg[red]my/pure$fg_bold[green]'::$reset_color"
 zplugin ice multisrc"{async,pure}.zsh" pick"/dev/null" id-as"my/pure"; zplugin load sindresorhus/pure
 zplugin cd my/pure; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -134,9 +134,9 @@ zplugin cd my/pure && ls -lthd .*(N) *(N)
 sleep 3
 
 print
-print -- $fg_bold[red]SNIPPETS START NOW$reset_color
+print -- "\n\n\n"$fg_bold[red]SNIPPETS START NOW$reset_color
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]pip$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]pip$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
 zplugin ice svn; zplugin snippet OMZ::plugins/pip
 zplugin cd OMZ::plugins/pip; ls -lthd .*(N) *(N)
 sleep 3
@@ -149,7 +149,7 @@ zplugin cclear
 
 sleep 3
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`single-file command-snippet' $fg[magenta]GH::Osse/git-scripts/blob/master/git-unique$fg_bold[green] AS ::\`$fg[red]MY-UNIQUE$fg_bold[green]'::$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`single-file command-snippet' $fg[magenta]GH::Osse/git-scripts/blob/master/git-unique$fg_bold[green] AS ::\`$fg[red]MY-UNIQUE$fg_bold[green]'::$reset_color"
 zplugin ice as"program" id-as"MY-UNIQUE"; zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 zplugin cd MY-UNIQUE; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -158,7 +158,7 @@ zplugin cd MY-UNIQUE && ls -lthd .*(N) *(N)
 
 sleep 3
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]git$fg_bold[green] AS ::\`$fg[red]my$fg_bold[green]'::$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]git$fg_bold[green] AS ::\`$fg[red]my$fg_bold[green]'::$reset_color"
 zplugin ice svn id-as"my"; zplugin snippet OMZ::plugins/git
 zplugin cd my; ls -lthd .*(N) *(N)
 cd $OLDPWD
@@ -167,7 +167,7 @@ zplugin cd my && ls -lthd .*(N) *(N)
 
 sleep 3
 
-print; print -- "$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]gradle$fg_bold[green] AS ::\`$fg[red]myid/sub$fg_bold[green]'::$reset_color"
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]gradle$fg_bold[green] AS ::\`$fg[red]myid/sub$fg_bold[green]'::$reset_color"
 zplugin ice svn id-as"myid/sub"; zplugin snippet OMZ::plugins/gradle
 zplugin cd myid/sub; ls -lthd .*(N) *(N)
 sleep 3
