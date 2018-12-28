@@ -103,12 +103,8 @@
         return 1
     fi
 
-    # Take first entry
-    integer correct=0
-    [[ -o "KSH_ARRAYS" ]] && correct=1
-    local first="${reply[1-correct]}"
-
-    reply=( "$dname" "$first" )
+    # Take first entry (ksharrays resilience)
+    reply=( "$dname" "${reply[-${#reply}]}" )
     return 0
 } # }}}
 # FUNCTION: -zplg-any-colorify-as-uspl2 {{{
