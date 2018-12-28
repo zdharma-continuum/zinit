@@ -57,6 +57,22 @@
     fi
     return 0
 } # }}}
+# FUNCTION: -zplg-plgdir {{{
+-zplg-get-plg-dir() {
+    # There are plugins having ".plugin.zsh"
+    # in ${plugin} directory name, also some
+    # have ".zsh" there
+    local dname="${ZPLGM[alias-map-${user:+${user}/}$plugin]}"
+    local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
+    [[ -z "$dname" ]] && {
+        [[ "$user" = "%" ]] && dname="$plugin" || \
+                dname="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
+    }
+
+    reply=( "$dname" "$pdir" )
+    return 0
+}
+# }}}
 # FUNCTION: -zplg-first {{{
 # Finds the main file of plugin. There are multiple file name
 # formats, they are ordered in order starting from more correct
@@ -71,23 +87,15 @@
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
-    # There are plugins having ".plugin.zsh"
-    # in ${plugin} directory name, also some
-    # have ".zsh" there
-    if [[ "$user" = "%" ]]; then
-        local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
-        local dname="$plugin"
-    else
-        local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
-        local dname="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
-    fi
+    -zplg-get-plg-dir "$user" "$plugin"
+    local dname="${reply[-2]}"
 
     # Look for file to compile. First look for the most common one
     # (optimization) then for other possibilities
-    if [[ ! -e "$dname/${pdir}.plugin.zsh" ]]; then
-        -zplg-find-other-matches "$dname" "$pdir"
+    if [[ ! -e "$dname/${reply[-1]}.plugin.zsh" ]]; then
+        -zplg-find-other-matches "$dname" "${reply[-1]}"
     else
-        reply=( "$dname/${pdir}.plugin.zsh" )
+        reply=( "$dname/${reply[-1]}.plugin.zsh" )
     fi
 
     if [[ "${#reply}" -eq "0" ]]; then
