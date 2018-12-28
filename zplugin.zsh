@@ -710,8 +710,13 @@ builtin setopt noaliases
 # Compatibility with Prezto. Calls can be recursive.
 (( ${+functions[pmodload]} )) || pmodload() {
     while (( $# )); do
-        [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" && -z "${ZPLG_SNIPPETS[https://github.com/sorin-ionescu/prezto/trunk/modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && -zplg-load-snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
-        shift
+        if zstyle -t ":prezto:module:$1" loaded 'yes' 'no'; then
+            shift
+            continue
+        else
+            [[ -z "${ZPLG_SNIPPETS[PZT::modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" && -z "${ZPLG_SNIPPETS[https://github.com/sorin-ionescu/prezto/trunk/modules/$1${ZPLG_ICE[svn]-/init.zsh}]}" ]] && -zplg-load-snippet PZT::modules/"$1${ZPLG_ICE[svn]-/init.zsh}"
+            shift
+        fi
     done
 }
 # }}}
@@ -1062,6 +1067,7 @@ builtin setopt noaliases
         [[ -f "${list[1-correct]}" ]] && {
             ZERO="${list[1-correct]}"
             (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }
+            (( 0 == retval )) && [[ "$id_as" = PZT::* || "$id_as" = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
             (( 1 ))
         } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || print -r -- "Snippet not loaded ($id_as)"; }
 
