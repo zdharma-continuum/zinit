@@ -2242,7 +2242,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Read user
     local compcontext="user:User Name:(\"$USER\" \"$user\")"
-    vared -cp "Github user name or just \"_local\": " user
+    vared -cp "Github user name or just \"_local\" (or even leave blank, for an userless plugin): " user
 
     # Read plugin
     unset compcontext
@@ -2275,7 +2275,7 @@ ZPLGM[EXTENDED_GLOB]=""
         }
         builtin cd -q "${user}---${plugin//\//---}"
     else
-        print "${ZPLGM[col-info]}Creating local git repository${${user:+.}:-, free-style, without "_local/" part.}${ZPLGM[col-rst]}"
+        print "${ZPLGM[col-info]}Creating local git repository${${user:+.}:-, ${ZPLGM[col-pname]}free-style, without the \"_local/\" part${ZPLGM[col-info]}.}${ZPLGM[col-rst]}"
         command mkdir "${user:+${user}---}${plugin//\//---}"
         builtin cd -q "${user:+${user}---}${plugin//\//---}"
         command git init || {
@@ -2288,7 +2288,7 @@ ZPLGM[EXTENDED_GLOB]=""
     print >! "README.md"
     print >! "LICENSE"
 
-    if [[ "$user" != "_local" ]]; then
+    if [[ "$user" != "_local" && -n "$user" ]]; then
         print "Remote repository $uspl2col set up as origin."
         print "You're in plugin's local folder, the files aren't added to git."
         print "Your next step after commiting will be:"
