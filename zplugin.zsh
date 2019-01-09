@@ -204,7 +204,8 @@ builtin setopt noaliases
     # Unfunction caller function (its name is given)
     unfunction -- "$func"
 
-    local FPATH="$fpath_prefix":"${FPATH}"
+    local -a fpath
+    fpath=( "$fpath_prefix" "${fpath[@]}" )
 
     # After this the function exists again
     builtin autoload ${(s: :)autoload_opts} -- "$func"
@@ -255,7 +256,8 @@ builtin setopt noaliases
                 builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
             elif [[ "${ZPLGM[NEW_AUTOLOAD]}" = "1" ]]; then
                 eval "function ${(q)func} {
-                    local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
+                    local -a fpath
+                    fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath} )
                     builtin autoload -X ${(j: :)${(q-)opts[@]}}
                 }"
             else
