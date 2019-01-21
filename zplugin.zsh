@@ -1008,6 +1008,7 @@ builtin setopt noaliases
 
     # Oh-My-Zsh, Prezto and manual shorthands
     (( ${+ZPLG_ICE[svn]} )) && {
+        [[ "$url" = *(OMZ::|robbyrussell*oh-my-zsh)* ]] && local ZSH="${ZPLGM[SNIPPETS_DIR]}"
         url[1-correct,5-correct]="${ZPLG_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
     } || {
         url[1-correct,5-correct]="${ZPLG_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
