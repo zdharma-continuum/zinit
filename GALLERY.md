@@ -3,7 +3,9 @@
 ```zsh
 # PRs welcomed :)
 
+#
 # Programs
+#
 
 zplugin ice from"gh-r" as"program"
 zplugin light junegunn/fzf-bin
@@ -31,7 +33,9 @@ zplugin light mptre/yank
 zplugin ice wait"2" lucid as'command' pick'src/vramsteg' atclone'cmake .' atpull'%atclone' make  # use turbo-mode
 zplugin light psprint/vramsteg-zsh
 
+#
 # Scripts
+#
 
 zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX" nocompile
 zplugin light tj/git-extras
@@ -45,12 +49,16 @@ zplugin light mfaerevaag/wd
 zplugin ice as"program" pick"bin/archey"
 zplugin load obihann/archey-osx
 
+#
 # Plugins
+#
 
 zplugin ice pick"h.sh"
 zplugin light paoloantinori/hhighlighter
 
+#
 # Snippets
+#
 
 zplugin ice svn pick"completion.zsh" src"git.zsh"
 zplugin snippet OMZ::lib
@@ -59,7 +67,13 @@ zplugin ice svn wait"0" lucid atinit"local ZSH=\$PWD" \
     atclone"mkdir -p plugins; cd plugins; ln -sfn ../. osx"
 zplugin snippet OMZ::plugins/osx
 
+# Or with most recent Zplugin and with ~/.zplugin/snippeds directory pruned (rm -rf -- ${ZPLGM[SNIPPETS_DIR]}):
+zplugin ice svn
+zplugin snippet OMZ::plugins/osx
+
+#
 # Themes
+#
 
 GEOMETRY_COLOR_DIR=152
 zplugin ice wait"0" lucid atload"prompt_geometry_render"
