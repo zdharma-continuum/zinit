@@ -917,29 +917,34 @@ zplugin light NicoSantangelo/Alpharized
 
 # Calling compinit
 
-With no turbo mode in use, compinit can be called after loading of all plugins and before
-possibly calling `zplugin cdreplay`.
-`Zplugin` takes control over completions, symlinks them to `~/.zplugin/completions` and adds
-this directory to `$FPATH`. You manage those completions via commands starting with `c`:
-`csearch`, `clist`, `creinstall`, `cuninstall`, `cenable`, `cdisable`.
-All this brings order to `$FPATH`, there is only one directory there. 
-Also, plugins aren't allowed to simply run `compdefs`. You can decide whether to run `compdefs`
-by issuing `zplugin cdreplay` (reads: `compdef`-replay). To summarize:
+With no turbo mode in use, compinit can be called normally, i.e.: as `autolaod compinit:
+compinit`. This should be done after loading of all plugins and before possibly calling
+`zplugin cdreplay`.  Also, plugins aren't allowed to simply run `compdefs`. You can
+decide whether to run `compdefs` by issuing `zplugin cdreplay` (reads: `compdef`-replay).
+To summarize:
 
 ```sh
 source ~/.zplugin/bin/zplugin.zsh
 
 zplugin load "some/plugin"
 ...
-zpcompdef _gnu_generic fd  # instead of the regular `compdef'
+compdef _gnu_generic fd  # this will be intercepted by Zplugin, because as the compinit
+                         # isn't yet loaded, thus there's no such function `compdef'; yet
+                         # Zplugin provides its own `compdef' function which saves the
+                         # completion-definition for later possible re-run with `zplugin
+                         # cdreplay` or `zpcdreplay` (the second one can be used in hooks
+                         # like atload'', atinit'', etc.)
 ...
 zplugin load "other/plugin"
 
 autoload -Uz compinit
 compinit
 
-zplugin cdreplay -q # -q is for quiet; actually run all the `compdef's saved before `compinit` call
-                    # (`compinit' declares the `compdef' function, so it cannot be used until `compinit`)
+zplugin cdreplay -q # -q is for quiet; actually run all the `compdef's saved before
+                    #`compinit` call (`compinit' declares the `compdef' function, so
+                    # it cannot be used until `compinit` is ran; Zplugin solves this
+                    # via intercepting the `compdef'-calls and storing them for later
+                    # use with `zplugin cdreplay')
 ```
 
 This allows to call compinit once.
@@ -948,15 +953,16 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 
 ## Turbo-loading completions & calling compinit
 
-If you load completions using `wait''` mode then you can add `atinit'zpcompinit'` to syntax-highlighting
-plugin (which should be the last one), or `atload'zpcompinit'` to last completion-related plugin. `zpcompinit`
-is a function that runs `autoload compinit; compinit`. There's also `zpcdreplay` which will replay any caught
-compdefs so you can also do: `atinit'zpcompinit; zpcdreplay'`, etc. Basically, it's the same as normal `compinit`
-call, but it is done in `atinit` or `atload` hook of the last related plugin.
-
-Also: there's `zpcompdef`, which works like regular `compdef` call, but saves the completion definition so that
-it can be actually run by `zplugin cdreplay` (normal mode) or `atinit'cdreplay'`, etc. (turbo mode), after calling
-`compinit` (normal mode) or `zpcompinit` (turbo mode).
+If you load completions using `wait''` turbo-mode then you can add
+`atinit'zpcompinit'` to syntax-highlighting plugin (which should be the last
+one loaded, as their (2 projects, [z-sy-h](https://github.com/zsh-users/zsh-syntax-highlighting) &
+[f-sy-h](https://github.com/zdharma/fast-syntax-highlighting))
+ documentation state), or `atload'zpcompinit'` to last
+completion-related plugin. `zpcompinit` is a function that just runs `autoload
+compinit; compinit`, created for convenience. There's also `zpcdreplay` which
+will replay any caught compdefs so you can also do: `atinit'zpcompinit;
+zpcdreplay'`, etc. Basically, it's the same as normal `compinit` call, but it
+is done in `atinit` or `atload` hook of the last related plugin.
 
 # Ignoring Compdefs
 
