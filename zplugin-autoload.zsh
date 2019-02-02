@@ -192,7 +192,7 @@ ZPLGM[EXTENDED_GLOB]=""
     return 0
 } # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
-# Converts given plugin-spec to format that's used in keys for hash tables.
+# Converts given plg-spec to format that's used in keys for hash tables.
 # So basically, creates string "user/plugin" (this format is called: uspl2).
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
@@ -293,7 +293,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates a one or two columns text with functions created
 # by given plugin.
 #
-# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+# $1 - user/plugin (i.e. uspl2 format of plg-spec)
 -zplg-format-functions() {
     local uspl2="$1"
 
@@ -345,7 +345,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates one-column text about options that changed when
 # plugin "$1" was loaded.
 #
-# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+# $1 - user/plugin (i.e. uspl2 format of plg-spec)
 -zplg-format-options() {
     local uspl2="$1"
 
@@ -379,7 +379,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates one-column text about FPATH or PATH elements
 # added when given plugin was loaded.
 #
-# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+# $1 - user/plugin (i.e. uspl2 format of plg-spec)
 # $2 - if 1, then examine PATH, if 2, then examine FPATH
 -zplg-format-env() {
     local uspl2="$1" which="$2"
@@ -407,7 +407,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates one column text that lists global parameters that
 # changed when the given plugin was loaded.
 #
-# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+# $1 - user/plugin (i.e. uspl2 format of plg-spec)
 -zplg-format-parameter() {
     local uspl2="$1" infoc="${ZPLGM[col-info]}"
 
@@ -1375,7 +1375,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # Can also pack resulting ices into ZPLG_SICE (see $2).
 #
-# $1 - URL (also plugin-spec)
+# $1 - URL (also plg-spec)
 # $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
 #      "pack-nf" means that disk-ices will be ignored (no-file?)
 # $3 - name of output associative array, "ZPLG_ICE" is the default
@@ -2485,7 +2485,7 @@ ZPLGM[EXTENDED_GLOB]=""
 }
 # }}}
 # FUNCTION: -zplg-get-path {{{
-# Returns path of given ID-string, which may be a plugin-spec
+# Returns path of given ID-string, which may be a plg-spec
 # (like "user/plugin" or "user" "plugin"), an absolute path
 # ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
 # nickname (i.e. id-as'' ice-mod), or a snippet nickname.
@@ -2631,32 +2631,32 @@ ZPLGM[EXTENDED_GLOB]=""
            print "${ZPLGM[col-p]}Usage${ZPLGM[col-rst]}:
 -h|--help|help           - usage information
 man                      - manual
-zstatus                  - overall status of Zplugin
+self-update              - updates and compiles Zplugin
 times                    - statistics on plugin load times, sorted in order of loading
-self-update              - updates Zplugin
-load ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}         - load plugin, can also receive absolute local path
-light [-b] ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - light plugin load, without reporting/tracking (-b - do track but bindkey-calls only)
-unload ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - unload plugin loaded with \`zplugin load ...', -q - quiet
+zstatus                  - overall Zplugin status
+load ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}            - load plugin, can also receive absolute local path
+light [-b] ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}      - light plugin load, without reporting/tracking (-b - do track but bindkey-calls only)
+unload ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}          - unload plugin loaded with \`zplugin load ...', -q - quiet
 snippet [-f] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]}       - source local or remote file (by direct URL), -f: force - don't use cache
 ls                       - list snippets in formatted and colorized manner
 ice <ice specification>  - add ICE to next command, argument is e.g. from\"gitlab\"
-update ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - Git update plugin or snippet (or all plugins and snippets if --all passed)
-status ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - Git status for plugin or svn status for snippet (or for all those if --all passed)
-report ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - show plugin's report (or all plugins' if --all passed)
-delete ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
+update [-q] ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL - Git update plugin or snippet (or all plugins and snippets if --all passed); besides -q accepts also --quiet
+status ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL      - Git status for plugin or svn status for snippet (or for all those if --all passed)
+report ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}          - show plugin's report (or all plugins' if --all passed)
+delete ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL      - remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
 loaded|list [keyword]    - show what plugins are loaded (filter with \'keyword')
-cd ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}           - cd into plugin's directory; also support snippets, if feed with URL
-create ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - create plugin (also together with Github repository)
-edit ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}         - edit plugin's file with \$EDITOR
-glance ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - look at plugin's source (pygmentize, {,source-}highlight)
-stress ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}       - test plugin for compatibility with set of options
-changes ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}      - view plugin's git log
+cd ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}              - cd into plugin's directory; also support snippets, if feed with URL
+create ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}          - create plugin (also together with Github repository)
+edit ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}            - edit plugin's file with \$EDITOR
+glance ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}          - look at plugin's source (pygmentize, {,source-}highlight)
+stress ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}          - test plugin for compatibility with set of options
+changes ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}         - view plugin's git log
 recently ${ZPLGM[col-info]}[time-spec]${ZPLGM[col-rst]}     - show plugins that changed recently, argument is e.g. 1 month 2 days
 clist|completions        - list completions in use
 cdisable ${ZPLGM[col-info]}cname${ZPLGM[col-rst]}           - disable completion \`cname'
 cenable ${ZPLGM[col-info]}cname${ZPLGM[col-rst]}            - enable completion \`cname'
-creinstall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - install completions for plugin, can also receive absolute local path; -q - quiet
-cuninstall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}   - uninstall completions for plugin
+creinstall ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}      - install completions for plugin, can also receive absolute local path; -q - quiet
+cuninstall ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}      - uninstall completions for plugin
 csearch                  - search for available completions from any plugin
 compinit                 - refresh installed completions
 dtrace|dstart            - start tracking what's going on in session
@@ -2664,18 +2664,20 @@ dstop                    - stop tracking what's going on in session
 dunload                  - revert changes recorded between dstart and dstop
 dreport                  - report what was going on in session
 dclear                   - clear report of what was going on in session
-compile ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}      - compile plugin (or all plugins if --all passed)
-uncompile ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}    - remove compiled version of plugin (or of all plugins if --all passed)
+compile ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}         - compile plugin (or all plugins if --all passed)
+uncompile ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}       - remove compiled version of plugin (or of all plugins if --all passed)
 compiled                 - list plugins that are compiled
 cdlist                   - show compdef replay list
 cdreplay [-q]            - replay compdefs (to be done after compinit), -q - quiet
 cdclear [-q]             - clear compdef replay list, -q - quiet
 srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
-recall ${ZPLGM[col-pname]}plugin-spec${ZPLGM[col-rst]}|URL   - fetch saved ice modifiers and construct \`zplugin ice ...' command
+recall ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL      - fetch saved ice modifiers and construct \`zplugin ice ...' command
 env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
 bindkeys                 - lists bindkeys set up by each plugin
 module                   - manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
 
-Available ice-modifiers: proto from cloneopts depth if wait load unload blockf pick bpick src as ver
-                         silent svn mv cp atinit atclone atload atpull make service bindmap trackbinds"
+Available ice-modifiers: proto from cloneopts depth if wait load unload blockf
+                         pick bpick src as ver silent svn mv cp atinit atclone
+                         atload atpull make service bindmap trackbinds nocompile
+                         nocompletions"
 } # }}}

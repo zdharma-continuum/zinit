@@ -815,49 +815,57 @@ a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
 ```
 % zpl help
 Usage:
--h|--help|help           - usage information
-man                      - manual
-self-update              - updates and compiles Zplugin
-zstatus                  - overall Zplugin status
-times                    - statistics on plugin loading times
-load {plugin-name}       - load plugin, can also receive absolute local path
-light [-b] {plugin-name} - light plugin load, without reporting/tracking (-b - do track but bindkey-calls only), for fast loading
-unload {plugin-name}     - unload plugin (needs reporting, i.e. load not light), -q – quiet
-snippet [-f] [--command] {url} - source (or add to PATH with --command) local or remote file (-f: force - don't use cache)
-ice <ice specification>  - add ICE to next command, argument is e.g. from"gitlab"
-update {plugin-name}|URL - Git update plugin or snippet (or all plugins and snippets if --all passed)
-status {plugin-name}|URL - Git status for a plugin or snippet (or all plugins and snippets if --all passed)
-delete {plugin-name}|URL - remove plugin or snippet from disk (good to forget wrongly passed ice mods)
-report {plugin-name}     - show plugin's report (or all plugins' if --all passed)
-loaded|list [keyword]    - show what plugins are loaded (filter with `keyword')
-ls                       - list snippets in formatted and colorized manner
-cd {plugin-name}         - cd into plugin's directory (does completion on TAB)
-create {plugin-name}     - create plugin (also together with Github repository)
-edit {plugin-name}       - edit plugin's file with $EDITOR
-glance {plugin-name}     - look at plugin's source (pygmentize, highlight, GNU source-highlight)
-stress {plugin-name}     - test plugin for compatibility with set of options
-changes {plugin-name}    - view plugin's git log
-recently [time-spec]     - show plugins that changed recently, argument is e.g. 1 month 2 days
-clist|completions        - list completions in use
-cdisable {cname}         - disable completion `cname'
-cenable {cname}          - enable completion `cname'
-creinstall {plugin-name} - install completions for plugin; can also receive absolute local path; -q – quiet
-cuninstall {plugin-name} - uninstall completions for plugin
-csearch                  - search all for available completions from any plugin, even unused ones
-compinit                 - reload installed completions
-dtrace|dstart            - start tracking what's going on in session
-dstop                    - stop tracking what's going on in session
-dunload                  - revert changes recorded between dstart and dstop
-dreport                  - report what was going on in session
-dclear                   - clear report of what was going on in session
-compile {plugin-name}    - compile plugin (or all plugins if --all passed)
-uncompile {plugin-name}  - remove compiled version of plugin (or of all plugins if --all passed)
-compiled                 - list plugins that are compiled
-srv {service-id} [cmd]   - control a service, command can be: stop,start,restart,next,quit; `next' moves the service to another Zshell
-recall {plugin-name|URL} - fetch saved ice modifiers and construct `zplugin ice ...' command
-env-whitelist [-v]       - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
-bindkeys                 - lists bindkeys set up by each plugin
-module                   - manage binary Zsh module shipped with Zplugin, see `zplugin module help'
+-h|--help|help               - usage information
+man                          - manual
+self-update                  - updates and compiles Zplugin
+times                        - statistics on plugin load times, sorted in order of loading
+zstatus                      - overall Zplugin status
+load {plg-spec}              - load plugin, can also receive absolute local path
+light [-b] {plg-spec}        - light plugin load, without reporting/tracking (-b - do track but bindkey-calls only)
+unload {plg-spec}            - unload plugin loaded with `zplugin load ...', -q - quiet
+snippet [-f] {URL}           - source local or remote file (by direct {URL}), -f: force - don't use cache
+ls                           - list snippets in formatted and colorized manner
+ice <ice specification>      - add ICE to next command, argument is e.g. from"gitlab"
+update [-q] {plg-spec}|{URL} - Git update plugin or snippet (or all plugins and snippets if --all passed); besides -q accepts also --quiet
+status {plg-spec}|{URL}      - Git status for plugin or svn status for snippet (or for all those if --all passed)
+report {plg-spec}            - show plugin's report (or all plugins' if --all passed)
+delete {plg-spec}|{URL}      - remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
+loaded|list [keyword]        - show what plugins are loaded (filter with 'keyword')
+cd {plg-spec}                - cd into plugin's directory; also support snippets, if feed with {URL}
+create {plg-spec}            - create plugin (also together with Github repository)
+edit {plg-spec}              - edit plugin's file with $EDITOR
+glance {plg-spec}            - look at plugin's source (pygmentize, {,source-}highlight)
+stress {plg-spec}            - test plugin for compatibility with set of options
+changes {plg-spec}           - view plugin's git log
+recently [time-spec]         - show plugins that changed recently, argument is e.g. 1 month 2 days
+clist|completions            - list completions in use
+cdisable cname               - disable completion `cname'
+cenable cname                - enable completion `cname'
+creinstall {plg-spec}        - install completions for plugin, can also receive absolute local path; -q - quiet
+cuninstall {plg-spec}        - uninstall completions for plugin
+csearch                      - search for available completions from any plugin
+compinit                     - refresh installed completions
+dtrace|dstart                - start tracking what's going on in session
+dstop                        - stop tracking what's going on in session
+dunload                      - revert changes recorded between dstart and dstop
+dreport                      - report what was going on in session
+dclear                       - clear report of what was going on in session
+compile {plg-spec}           - compile plugin (or all plugins if --all passed)
+uncompile {plg-spec}         - remove compiled version of plugin (or of all plugins if --all passed)
+compiled                     - list plugins that are compiled
+cdlist                       - show compdef replay list
+cdreplay [-q]                - replay compdefs (to be done after compinit), -q - quiet
+cdclear [-q]                 - clear compdef replay list, -q - quiet
+srv {service-id} [cmd]       - control a service, command can be: stop,start,restart,next,quit; `next' moves the service to another Zshell
+recall {plg-spec}|{URL}      - fetch saved ice modifiers and construct `zplugin ice ...' command
+env-whitelist [-v]           - allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose
+bindkeys                     - lists bindkeys set up by each plugin
+module                       - manage binary Zsh module shipped with Zplugin, see `zplugin module help'
+
+Available ice-modifiers: proto from cloneopts depth if wait load unload blockf
+                         pick bpick src as ver silent svn mv cp atinit atclone
+                         atload atpull make service bindmap trackbinds nocompile
+                         nocompletions
 ```
 
 ### Using Oh-My-Zsh Themes
