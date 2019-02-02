@@ -925,7 +925,7 @@ zplugin light NicoSantangelo/Alpharized
 
 # Calling compinit
 
-With no turbo mode in use, compinit can be called normally, i.e.: as `autolaod compinit:
+With no turbo mode in use, compinit can be called normally, i.e.: as `autoload compinit:
 compinit`. This should be done after loading of all plugins and before possibly calling
 `zplugin cdreplay`.  Also, plugins aren't allowed to simply run `compdefs`. You can
 decide whether to run `compdefs` by issuing `zplugin cdreplay` (reads: `compdef`-replay).
