@@ -1261,18 +1261,35 @@ ZPLGM[EXTENDED_GLOB]=""
             (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
             -zplg-get-latest-gh-r-version "$user" "$plugin"
             if [[ "${ice[is_release]/\/$REPLY\//}" != "${ice[is_release]}" ]]; then
-                print -r -- "Binary release already up to date (version: $REPLY)"
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+                    print -- "\rBinary release already up to date (version: $REPLY)"
             else
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                 ZPLG_ICE=( "${(kv)ice[@]}" )
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                    -zplg-any-colorify-as-uspl2 "$id_as"
+                    print "\nUpdating plugin $REPLY"
+                }
                 -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "-u"
                 ZPLG_ICE=()
             fi
         else
             ( builtin cd -q "$local_dir" || return 1
+              integer had_output=0
+              local IFS=$'\n'
               command git fetch --quiet && \
                 command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
+                while read line; do
+                  [[ -n "${line%%[[:space:]]##}" && $had_output -eq 0 ]] && {
+                      had_output=1
+                      [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                          -zplg-any-colorify-as-uspl2 "$id_as"
+                          print "\r\nUpdating plugin $REPLY"
+                      }
+                  }
+                  echo $line
+                done | \
                 command tee .zplugin_lstupd | \
                 command less -FRXi
 
@@ -1280,9 +1297,10 @@ ZPLGM[EXTENDED_GLOB]=""
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                  command git pull --no-stat
               }
+            )
 
-              command git pull --no-stat; )
         fi
 
         local -a log
@@ -1469,6 +1487,10 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local st="$1"
     local repo snip pd user plugin
+
+    local -A ICE_OPTS
+    ICE_OPTS=( "${(@kv)ZPLG_ICE[(I)opt_*]}" )
+
     local -A ZPLG_ICE
     ZPLG_ICE=()
 
@@ -1520,7 +1542,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print "\nStatus for plugin $REPLY"
             ( builtin cd -q "$repo"; command git status )
         else
-            print "\nUpdating plugin $REPLY"
+            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "\nUpdating plugin $REPLY" || print -n .
             -zplg-update-or-status "update" "$user" "$plugin"
         fi
     done

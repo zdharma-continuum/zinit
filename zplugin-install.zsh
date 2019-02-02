@@ -397,14 +397,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         command mkdir -p "$local_dir"
     fi
 
-    [[ "$update" = "-u" ]] && print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
+    [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
 
     if [[ "$url" = (http|https|ftp|ftps|scp)://* ]]
     then
         # URL
         (
             () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
-            print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
             if (( ${+ZPLG_ICE[svn]} )); then
                 if [[ "$update" = "-u" ]];then
@@ -412,6 +412,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     -zplg-mirror-using-svn "$url" "-t" "$dirname" || return 2
                     [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                     # Do the update
+                    [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                        print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
+                        print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                    }
                     -zplg-mirror-using-svn "$url" "-u" "$dirname" || return 1
                 else
                     -zplg-mirror-using-svn "$url" "" "$dirname" || return 1

@@ -1623,8 +1623,11 @@ zplugin() {
                    ;;
                (update)
                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
+                   match=( "${(M)@[@]:#(--quiet|-q)}" )
+                   set -- "${@[@]:#(--quiet|-q)}"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -n "$match" ]] && ZPLG_ICE[opt_-q,--quiet]=1
                        -zplg-update-or-status-all "update"
                    else
                        -zplg-update-or-status "update" "${2%%(/|//|///)}" "${3%%(/|//|///)}"
