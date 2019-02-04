@@ -48,3 +48,49 @@ num  calls                time                       self            name
 -----------------------------------------------------------------------------------
 
 Measured time: 0.774
+
+2019-02-01 77f6b51b09f39e03449d46020ad76f578427f77f
+Updated README.md
+Measured time: 2.465
+200  2304.84   11.52   93.53%   1878.79  9.39  76.24%  -zplg-load-plugin
+
+2019-01-10 ea9302b5090743cf6e2b590672bffa40fef3706f
+zplugin: Limit an influence on the FPATH contents – preserve colons
+Measured time: 2.479
+200  2318.54   11.59   93.53%   1876.01  9.38  75.68%  -zplg-load-plugin
+
+2018-12-25 ecf0bf3e59e30d13d204d0a76a6b377fd2524fdc
+zplugin,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
+Measured time: 2.469
+200  2311.09   11.56   93.63%   1879.83  9.40  76.16%  -zplg-load-plugin
+
+
+2018-10-24 dde100db60be4a7cd34cf7295ad35c6c0e2efe8d
+zplugin: Actually utilize zplugin binary module for report-append op
+Measured time: 2.497
+200  2339.53   11.70   93.70%   1903.53  9.52  76.24%  -zplg-load-plugin
+
+2018-10-04 2f1a2a39cd75fb93eb209a26f456f293e328091e
+An empty commit to test the new `zplugin self-update ...' features
+Measured time: 2.501
+200  2356.95   11.78   94.26%   1851.15  9.26  74.03%  -zplg-load-plugin
+
+2018-07-28 7adf2fac6ecba2db2c429dc06e706542e9ef3c73
+Updated README
+Measured time: 2.529
+200  2395.83   11.98   94.12%   1884.88  9.42  74.05%  -zplg-load-plugin
+
+2018-02-10 173a50abd58294d1826c2fb1211e8c20521c47d0
+*autoload: Subcommand `recently' mutes error messages from git
+Measured time: 2.525
+200  2387.04   11.94   94.56%   1878.08  9.39  74.40%  -zplg-load-plugin
+
+2018-01-05 df249032dd5b6225a2f448d174050c1e2471a1da
+Updated README.md
+Measured time: 2.514
+200  2371.22   11.86   94.32%   1860.95  9.30  74.02%  -zplg-load-plugin
+
+2017-12-31 ffe1f603212aa50a7a1f5214b0111fefddb0632e
+*autoload: Add help message on `srv' subcommand
+Measured time: 2.513
+200  2377.39   11.89   94.63%   1862.89  9.31  74.15%  -zplg-load-plugin
