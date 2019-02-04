@@ -26,7 +26,8 @@ num  calls                time                       self            name
 
 Measured time: 3.231
 
-No idea how it could go so well:
+No idea how it could go so well (however the zsh-version switch provides amost
+full answer):
 2017-12-17 f559b2029712746664dd54503a780754ff292e2c
 (full data below)
 
@@ -55,7 +56,65 @@ zplugin: More small optimizations for *load-plugin
 200   681.39   3.41    88.60%    326.64  1.63  42.47%  -zplg-load-plugin
 Measured time: 0.774
 
-Survey:
+(following one is before the f55 commit; binary used zsh-5.7):
+2017-12-17 d1aed98856694250f7c00cdcc19bb163e539cde9
+zplugin: tiny *load-plugin optimization; plus a small fix
+Measured time: 1.160
+200  1027.70    5.14   88.59%    526.26  2.63  45.36%  -zplg-load-plugin
+
+Survey (!! zsh-5.7 !1):
+-----------------------
+
+2019-02-01 77f6b51b09f39e03449d46020ad76f578427f77f
+Updated README.md
+Measured time: 1.099
+200   950.68   4.75    86.53%    525.32  2.63  47.82%  -zplg-load-plugin
+
+2019-01-10 ea9302b5090743cf6e2b590672bffa40fef3706f
+zplugin: Limit an influence on the FPATH contents – preserve colons
+Measured time: 1.103
+200   952.80   4.76    86.37%    524.93  2.62  47.59%  -zplg-load-plugin
+
+2018-12-25 ecf0bf3e59e30d13d204d0a76a6b377fd2524fdc
+zplugin,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
+Measured time: 1.108
+200   956.62   4.78    86.34%    525.44  2.63  47.43%  -zplg-load-plugin
+
+2018-10-24 dde100db60be4a7cd34cf7295ad35c6c0e2efe8d
+zplugin: Actually utilize zplugin binary module for report-append op
+Measured time: 1.118
+200   967.80   4.84    86.55%    536.91  2.68  48.02%  -zplg-load-plugin
+
+2018-10-04 2f1a2a39cd75fb93eb209a26f456f293e328091e
+An empty commit to test the new `zplugin self-update ...' features
+Measured time: 1.150
+200   1014.98  5.07    88.29%    520.30  2.60  45.26%  -zplg-load-plugin
+
+2018-07-28 7adf2fac6ecba2db2c429dc06e706542e9ef3c73
+Updated README.md
+Measured time: 1.167
+200  1040.57    5.20   88.39%    534.85  2.67  45.43%  -zplg-load-plugin
+
+2018-02-10 173a50abd58294d1826c2fb1211e8c20521c47d0
+*autoload: Subcommand `recently' mut
+Measured time: 1.139
+200   1007.75   5.04   88.47%    514.34  2.57  45.15%  -zplg-load-plugin
+
+
+2018-01-05 df249032dd5b6225a2f448d174050c1e2471a1da
+Updated README.md
+Measured time: 1.154
+200   1021.35   5.11   88.52%    518.50  2.59  44.94%  -zplg-load-plugin
+
+2017-12-31 ffe1f603212aa50a7a1f5214b0111fefddb0632e
+*autoload: Add help message on `srv' subcommand
+Measured time: 1.151
+200   1017.20   5.09   88.37%    517.89  2.59  44.99%  -zplg-load-plugin
+
+
+
+Survey (!! ZSH 5.3 !!):
+-----------------------
 
 2019-02-01 77f6b51b09f39e03449d46020ad76f578427f77f
 Updated README.md
