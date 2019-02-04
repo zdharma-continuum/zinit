@@ -1248,8 +1248,10 @@ ZPLGM[EXTENDED_GLOB]=""
         local -a config
         config=( ${(f)"$(<$repo/.git/config)"} )
         if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
-            -zplg-any-colorify-as-uspl2 "$id_as"
-            print -r -- "$REPLY doesn't have a remote set, will not fetch"
+            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && {
+                -zplg-any-colorify-as-uspl2 "$id_as"
+                print -r -- "$REPLY doesn't have a remote set, will not fetch"
+            }
             return 1
         fi
     fi
@@ -1494,7 +1496,9 @@ ZPLGM[EXTENDED_GLOB]=""
     local -A ZPLG_ICE
     ZPLG_ICE=()
 
-    [[ "$st" != "status" ]] && print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
+    [[ "$st" != "status" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+        print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
+
 
     for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
         [[ ! -f "${snip:h}/id-as" ]] && continue
@@ -1506,9 +1510,11 @@ ZPLGM[EXTENDED_GLOB]=""
     ZPLG_ICE=()
 
     if [[ "$st" = "status" ]]; then
-        print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} status done also for unloaded plugins"
+        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+            print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} status done also for unloaded plugins"
     else
-        print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded plugins"
+        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+            print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded plugins"
     fi
 
     for repo in "${ZPLGM[PLUGINS_DIR]}"/*; do
@@ -1523,8 +1529,9 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ -f "$repo/.git/config" ]]; then
             local -a config
             config=( ${(f)"$(<$repo/.git/config)"} )
-            if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} = 0 ]]; then
-                print "\n$REPLY doesn't have a remote set, will not fetch"
+            if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+                    print "\n$REPLY doesn't have a remote set, will not fetch"
                 continue
             fi
         fi
@@ -1534,7 +1541,8 @@ ZPLGM[EXTENDED_GLOB]=""
 
         # Must be a git repository or a binary release
         if [[ ! -d "$repo/.git" && ! -f "$repo/._zplugin/is_release" ]]; then
-            print "\n$REPLY not a git repository"
+            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+                print "\n$REPLY not a git repository"
             continue
         fi
 
