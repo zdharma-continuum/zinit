@@ -2,7 +2,7 @@
 
 unset ZCONVEY_ID ZCONVEY_FD 2>/dev/null
 
-zplugin ice atclone'command cp -vf $TEST_DIR/zew.plugin.zsh zsh-editing-workbench.plugin.zsh'
+zplugin ice atclone'LANG=C command sleep 1.1; command cp -vf $TEST_DIR/zew.plugin.zsh zsh-editing-workbench.plugin.zsh'
 zplugin light psprint/zsh-editing-workbench
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
@@ -10,8 +10,6 @@ print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
 ZPLGM[TEST]=1
 touch skip
-
-zplugin light psprint/zsh-editing-workbench
 
 print -P %F{yellow}'==' Measuring starts here '=='%F{default}
 
