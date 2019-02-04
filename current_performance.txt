@@ -26,8 +26,11 @@ num  calls                time                       self            name
 
 Measured time: 3.231
 
-testp2:
+No idea how it could go so well:
+2017-12-17 f559b2029712746664dd54503a780754ff292e2c
+(full data below)
 
+testp2:
 num  calls                time                       self            name
 -----------------------------------------------------------------------------------
  1)  200         681.39     3.41   88.60%    326.64     1.63   42.47%  -zplg-load-plugin
@@ -47,7 +50,12 @@ num  calls                time                       self            name
 
 -----------------------------------------------------------------------------------
 
+2017-12-17 f559b2029712746664dd54503a780754ff292e2c
+zplugin: More small optimizations for *load-plugin
+200   681.39   3.41    88.60%    326.64  1.63  42.47%  -zplg-load-plugin
 Measured time: 0.774
+
+Survey:
 
 2019-02-01 77f6b51b09f39e03449d46020ad76f578427f77f
 Updated README.md
