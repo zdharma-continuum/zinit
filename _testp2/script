@@ -11,6 +11,10 @@ print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 ZPLGM[TEST]=1
 touch skip
 
+zplugin light psprint/zsh-editing-workbench
+
+print -P %F{yellow}'==' Measuring starts here '=='%F{default}
+
 zmodload zsh/zprof
 typeset -F3 SECONDS=0
 () {
@@ -18,9 +22,9 @@ typeset -F3 SECONDS=0
         zplugin light psprint/zsh-editing-workbench
     done
 }
-local msg="Measured time: \\e[1;35m$SECONDS\\e[0m"
+local msg="\\e[1;33mMeasured time: \\e[1;35m$SECONDS\\e[0m"
 print
-zprof | head -n 18
+zprof | head -n 22
 print
 print "$msg"
 
