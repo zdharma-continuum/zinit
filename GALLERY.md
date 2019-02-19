@@ -34,6 +34,13 @@ zplugin ice wait"2" lucid as'command' pick'src/vramsteg' atclone'cmake .' atpull
 zplugin light psprint/vramsteg-zsh
 
 #
+# Completions
+#
+
+zplugin ice as"completion"
+zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docke
+
+#
 # Scripts
 #
 
