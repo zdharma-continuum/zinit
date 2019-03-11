@@ -21,12 +21,12 @@ timeline() {
 # $4 - receiving percentage
 # $5 - resolving percentage
 print_my_line() {
-    print -nr -- "OBJ: $1, PACKED: $2/$3${${4:#...}:+, RECEIVING: $4%}${${5:#...}:+, RESOLVING: $5%}          "
+    print -nr -- "OBJ: $1, PACKED: $2/$3${${4:#...}:+, RECEIV.: $4%}${${5:#...}:+, RESOLV.: $5%}  "
     print -n $'\015'
 }
 
 print_my_line_compress() {
-    print -nr -- "OBJ: $1, PACKED: $2/$3, COMPRESS: $4%${${5:#...}:+, RECEIVING: $5%}${${6:#...}:+, RESOLVING: $6%}          "
+    print -nr -- "OBJ: $1, PACKED: $2/$3, COMPR.: $4%${${5:#...}:+, RECEIV.: $5%}${${6:#...}:+, RESOL.: $6%}  "
     print -n $'\015'
 }
 
