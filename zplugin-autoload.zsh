@@ -1281,16 +1281,18 @@ ZPLGM[EXTENDED_GLOB]=""
               integer had_output=0
               local IFS=$'\n'
               command git fetch --quiet && \
-                command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset' ..FETCH_HEAD | \
+                command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset%n' ..FETCH_HEAD | \
                 while read line; do
-                  [[ -n "${line%%[[:space:]]##}" && $had_output -eq 0 ]] && {
-                      had_output=1
-                      [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
-                          -zplg-any-colorify-as-uspl2 "$id_as"
-                          print "\r\nUpdating plugin $REPLY"
+                  [[ -n "${line%%[[:space:]]##}" ]] && {
+                      [[ $had_output -eq 0 ]] && {
+                          had_output=1
+                          [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                              -zplg-any-colorify-as-uspl2 "$id_as"
+                              print "\r\nUpdating plugin $REPLY"
+                          }
                       }
+                      echo $line
                   }
-                  echo $line
                 done | \
                 command tee .zplugin_lstupd | \
                 command less -FRXi &
