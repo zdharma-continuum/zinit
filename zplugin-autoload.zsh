@@ -192,7 +192,7 @@ ZPLGM[EXTENDED_GLOB]=""
     return 0
 } # }}}
 # FUNCTION: -zplg-any-to-uspl2 {{{
-# Converts given plg-spec to format that's used in keys for hash tables.
+# Converts given plugin-spec to format that's used in keys for hash tables.
 # So basically, creates string "user/plugin" (this format is called: uspl2).
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
@@ -293,7 +293,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates a one or two columns text with functions created
 # by given plugin.
 #
-# $1 - user/plugin (i.e. uspl2 format of plg-spec)
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 -zplg-format-functions() {
     local uspl2="$1"
 
@@ -345,7 +345,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates one-column text about options that changed when
 # plugin "$1" was loaded.
 #
-# $1 - user/plugin (i.e. uspl2 format of plg-spec)
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 -zplg-format-options() {
     local uspl2="$1"
 
@@ -379,7 +379,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates one-column text about FPATH or PATH elements
 # added when given plugin was loaded.
 #
-# $1 - user/plugin (i.e. uspl2 format of plg-spec)
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 # $2 - if 1, then examine PATH, if 2, then examine FPATH
 -zplg-format-env() {
     local uspl2="$1" which="$2"
@@ -407,7 +407,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # Creates one column text that lists global parameters that
 # changed when the given plugin was loaded.
 #
-# $1 - user/plugin (i.e. uspl2 format of plg-spec)
+# $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 -zplg-format-parameter() {
     local uspl2="$1" infoc="${ZPLGM[col-info]}"
 
@@ -1382,7 +1382,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # Can also pack resulting ices into ZPLG_SICE (see $2).
 #
-# $1 - URL (also plg-spec)
+# $1 - URL (also plugin-spec)
 # $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
 #      "pack-nf" means that disk-ices will be ignored (no-file?)
 # $3 - name of output associative array, "ZPLG_ICE" is the default
@@ -2498,7 +2498,7 @@ ZPLGM[EXTENDED_GLOB]=""
 }
 # }}}
 # FUNCTION: -zplg-get-path {{{
-# Returns path of given ID-string, which may be a plg-spec
+# Returns path of given ID-string, which may be a plugin-spec
 # (like "user/plugin" or "user" "plugin"), an absolute path
 # ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
 # nickname (i.e. id-as'' ice-mod), or a snippet nickname.
