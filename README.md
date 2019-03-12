@@ -14,6 +14,7 @@ reports](DONATIONS.md) about what is being done with the money received.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [Getting help](#getting-help)
 - [Zplugin](#zplugin)
 - [Quick Start](#quick-start)
 - [Quick Start Module-Only](#quick-start-module-only)
@@ -22,9 +23,6 @@ reports](DONATIONS.md) about what is being done with the money received.
     - [Module – Measuring Time Of `source`s](#module--measuring-time-of-sources)
 - [News](#news)
 - [Ice Modifiers](#ice-modifiers)
-- [Installation](#installation)
-  - [Manual Installation](#manual-installation)
-- [Compilation](#compilation)
 - [Usage](#usage)
     - [Using Oh-My-Zsh Themes](#using-oh-my-zsh-themes)
 - [Calling compinit](#calling-compinit)
@@ -36,6 +34,15 @@ reports](DONATIONS.md) about what is being done with the money received.
 - [IRC Channel](#irc-channel)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Getting help
+
+Besides the main-knowledge source, i.e. this README, there are subpages that are
+**guides**:
+
+ - [INSTALLATION](doc/INSTALLATION.adoc)
+ - [INTRODUCTION TO ZPLUGIN](doc/INTRODUCTION.adoc)
+ - [Short-narration style WIKI](https://github.com/zdharma/zplugin/wiki)
 
 # Zplugin
 
@@ -482,64 +489,6 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `multisrc` | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). |
 
 Order of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
-
-# Installation
-
-Execute:
-
-```sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
-```
-
-To update run the command again (or just execute `doc/install.sh`) or run `zplugin self-update`.
-
-`Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
-three lines of code that will be added to the bottom (the lines will be sourcing
-`zplugin.zsh` and setting up completion).
-
-Completion will be available, for command **zplugin** and aliases **zpl**, **zplg**.
-
-After installing and reloading shell give `Zplugin` a quick try with `zplugin help`
-and compile it with `zplugin self-update`.
-
-## Manual Installation
-
-To manually install `Zplugin` clone the repo to e.g. `~/.zplugin/bin`:
-
-```sh
-mkdir ~/.zplugin
-git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
-```
-
-and source it from `.zshrc` (**above compinit**):
-
-```sh
-source ~/.zplugin/bin/zplugin.zsh
-```
-
-If you place the `source` below `compinit`, then add those two lines after the `source`:
-```sh
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
-```
-
-Various paths can be customized, see section below [Customizing Paths](#customizing-paths--other).
-
-After installing and reloading shell give `Zplugin` a quick try with `zplugin help` and
-compile it with `zplugin self-update`.
-
-# Compilation
-It's good to compile `zplugin` into `Zsh` bytecode:
-
-```sh
-zcompile ~/.zplugin/bin/zplugin.zsh
-```
-
-**NEW:** `zplugin self-update` now also performs full zplugin compilation on each run.
-
-Zplugin will compile each newly downloaded plugin. You can clear compilation of
-a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
-`compile`, `compiled` that control the functionality of compiling plugins.
 
 # Usage
 

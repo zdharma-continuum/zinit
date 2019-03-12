@@ -1,4 +1,4 @@
-# INTRODUCTION
+# INTRODUCTION TO ZPLUGIN
 Sebastian Gniazdowski <psprint@zdharma.org>
 v0.9, 12/03/2018
 :source-highlighter: prettify

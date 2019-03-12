@@ -1,0 +1,71 @@
+# INSTALLATION OF ZPLUGIN
+Sebastian Gniazdowski <psprint@zdharma.org>
+v0.9, 12/03/2018
+:source-highlighter: prettify
+:toc:
+:toclevels: 3
+:toc-placement!:
+
+toc::[]
+
+## Installation
+
+Execute:
+
+```sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
+```
+
+To update run the command again (or just execute `doc/install.sh`) or run `zplugin self-update`.
+
+`Zplugin` will be installed into `~/.zplugin/bin`. `.zshrc` will be updated with
+three lines of code that will be added to the bottom (the lines will be sourcing
+`zplugin.zsh` and setting up completion).
+
+Completion will be available, for command **zplugin** and aliases **zpl**, **zplg**.
+
+After installing and reloading shell give `Zplugin` a quick try with `zplugin help`
+and compile it with `zplugin self-update`.
+
+### Manual Installation
+
+To manually install `Zplugin` clone the repo to e.g. `~/.zplugin/bin`:
+
+```sh
+mkdir ~/.zplugin
+git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
+```
+
+and source it from `.zshrc` (**above compinit**):
+
+```sh
+source ~/.zplugin/bin/zplugin.zsh
+```
+
+If you place the `source` below `compinit`, then add those two lines after the `source`:
+```sh
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+```
+
+Various paths can be customized, see section below [Customizing Paths](#customizing-paths--other).
+
+After installing and reloading shell give `Zplugin` a quick try with `zplugin help` and
+compile it with `zplugin self-update`.
+
+## Compilation
+It's good to compile `zplugin` into `Zsh` bytecode:
+
+```sh
+zcompile ~/.zplugin/bin/zplugin.zsh
+```
+
+**NEW:** `zplugin self-update` now also performs full zplugin compilation on each run.
+
+Zplugin will compile each newly downloaded plugin. You can clear compilation of
+a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
+`compile`, `compiled` that control the functionality of compiling plugins.
+
+[appendix]
+== Revision history (history of updates to the document)
+v1.0, 03/11/2018: First asciidoc version – 1/ replaced doctoc with :toc: 2/ Intense uplift and verification before commiting +
