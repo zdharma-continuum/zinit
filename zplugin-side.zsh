@@ -109,7 +109,7 @@
 } # }}}
 # FUNCTION: -zplg-any-colorify-as-uspl2 {{{
 # Returns ANSI-colorified "user/plugin" string, from any supported
-# plugin spec (user--plugin, user/plugin, user plugin, plugin).
+# plugin spec (user---plugin, user/plugin, user plugin, plugin).
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
