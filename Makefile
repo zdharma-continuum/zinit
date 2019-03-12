@@ -28,5 +28,5 @@ clean:
 	rm -f zplugin.zsh.zwc zplugin-side.zsh.zwc zplugin-install.zsh.zwc zplugin-autoload.zsh.zwc
 	rm -rf zsdoc/data
 
-.PHONY: all test clean
+.PHONY: all test clean doc
 # vim:noet:sts=8:ts=8
