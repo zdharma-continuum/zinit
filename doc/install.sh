@@ -4,7 +4,9 @@
 # Clone or pull
 #
 
-ZPLG_HOME="${ZDOTDIR:-$HOME}/.zplugin"
+if [ -z "$ZPLG_HOME" ]; then
+    ZPLG_HOME="${ZDOTDIR:-$HOME}/.zplugin"
+fi
 
 if ! test -d "$ZPLG_HOME"; then
     mkdir "$ZPLG_HOME"
@@ -24,14 +26,14 @@ echo ">>> Done"
 #
 # Modify .zshrc
 #
-
-if grep zplugin "$ZPLG_HOME/../.zshrc" >/dev/null 2>&1; then
+THE_ZDOTDIR="${ZDOTDIR:-$HOME}"
+if grep zplugin "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
     echo ">>> .zshrc already updated, not making changes"
     exit 0
 fi
 
-echo ">>> Updating .zshrc (3 lines of code, at the bottom)"
-cat <<-EOF >> "$ZPLG_HOME/../.zshrc"
+echo ">>> Updating $THE_ZDOTDIR/.zshrc (3 lines of code, at the bottom)"
+cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
 
 ### Added by Zplugin's installer
 source '$ZPLG_HOME/bin/zplugin.zsh'
