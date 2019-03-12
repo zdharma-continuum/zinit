@@ -52,7 +52,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)${~ZPLG_ICE[bpick]}}" )
 
         [[ ${#list} -gt 1 ]] && {
-            list2=( "${(M)list[@]:#(#i)*${CPUTYPE#(#i)(x86_|i|amd)}*}" )
+            list2=( "${(M)list[@]:#(#i)*${CPUTYPE#(#i)(i|amd)}*}" )
             [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
         }
 
