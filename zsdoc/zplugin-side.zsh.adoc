@@ -17,6 +17,7 @@ FUNCTIONS
  -zplg-exists-physically
  -zplg-exists-physically-message
  -zplg-first
+ -zplg-get-plg-dir
  -zplg-shands-exp
  -zplg-store-ices
  -zplg-two-paths
@@ -35,7 +36,7 @@ Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 ____
  
  Returns ANSI-colorified "user/plugin" string, from any supported
- plugin spec (user--plugin, user/plugin, user plugin, plugin).
+ plugin spec (user---plugin, user/plugin, user plugin, plugin).
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
@@ -121,11 +122,11 @@ Has 11 line(s). Calls functions:
 Called by:
 
  zplugin-autoload.zsh/-zplg-changes
+ zplugin-autoload.zsh/-zplg-compute-ice
  zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-edit
  zplugin-autoload.zsh/-zplg-glance
  zplugin-autoload.zsh/-zplg-stress
- zplugin-autoload.zsh/-zplg-uninstall-completions
  zplugin-autoload.zsh/-zplg-update-or-status
  zplugin-install.zsh/-zplg-install-completions
 
@@ -145,9 +146,10 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 25 line(s). Calls functions:
+Has 17 line(s). Calls functions:
 
  -zplg-first
+ |-- -zplg-get-plg-dir
  |-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin.zsh/-zplg-find-other-matches
 
@@ -158,6 +160,15 @@ Called by:
  zplugin-autoload.zsh/-zplg-stress
  zplugin-install.zsh/-zplg-compile-plugin
 
+-zplg-get-plg-dir
+~~~~~~~~~~~~~~~~~
+
+Has 9 line(s). Doesn't call other functions.
+
+Called by:
+
+ -zplg-first
+
 -zplg-shands-exp
 ~~~~~~~~~~~~~~~~
 
@@ -167,12 +178,13 @@ ____
  shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
 ____
 
-Has 7 line(s). Doesn't call other functions.
+Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
  -zplg-exists-physically-message
  -zplg-exists-physically
+ zplugin-autoload.zsh/-zplg-compute-ice
  zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-get-path
 
@@ -207,11 +219,12 @@ ____
  further examination
 ____
 
-Has 22 line(s). Doesn't call other functions.
+Has 19 line(s). Doesn't call other functions.
 
 Called by:
 
  zplugin-autoload.zsh/-zplg-compute-ice
  zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-get-path
+ zplugin-autoload.zsh/-zplg-update-or-status
 

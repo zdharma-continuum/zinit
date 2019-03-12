@@ -49,6 +49,7 @@ FUNCTIONS
  -zplugin_scheduler_add_sh
  pmodload
  zpcdreplay
+ zpcompdef
  zpcompinit
  zplugin
 AUTOLOAD add-zsh-hook
@@ -71,7 +72,7 @@ Has 137 line(s). Calls functions:
 
 Uses feature(s): _alias_, _autoload_, _export_, _zmodload_, _zstyle_
 
-_Exports (environment):_ MANPATH [big]*//* ZPFX
+_Exports (environment):_ ZPFX
 
 --zplg-reload-and-run
 ~~~~~~~~~~~~~~~~~~~~~
@@ -129,7 +130,7 @@ ____
  run custom `autoload' function, that doesn't need FPATH.
 ____
 
-Has 38 line(s). Calls functions:
+Has 44 line(s). Calls functions:
 
  --zplg-shadow-autoload
  `-- -zplg-add-report
@@ -148,7 +149,7 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 78 line(s). Calls functions:
+Has 108 line(s). Calls functions:
 
  --zplg-shadow-bindkey
  `-- -zplg-add-report
@@ -223,7 +224,7 @@ ____
  $2, ... - the text
 ____
 
-Has 8 line(s). Doesn't call other functions.
+Has 2 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -249,7 +250,7 @@ ____
  
 ____
 
-Has 45 line(s). Doesn't call other functions.
+Has 23 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -265,11 +266,9 @@ Called by:
  zplugin-autoload.zsh/-zplg-find-completions-of-plugin
  zplugin-autoload.zsh/-zplg-get-path
  zplugin-autoload.zsh/-zplg-glance
- zplugin-autoload.zsh/-zplg-recall
  zplugin-autoload.zsh/-zplg-show-report
  zplugin-autoload.zsh/-zplg-stress
  zplugin-autoload.zsh/-zplg-uncompile-plugin
- zplugin-autoload.zsh/-zplg-uninstall-completions
  zplugin-autoload.zsh/-zplg-unload
  zplugin-autoload.zsh/-zplg-update-or-status-all
  zplugin-autoload.zsh/-zplg-update-or-status
@@ -514,7 +513,7 @@ ____
  $2 - plugin name, if the third format is used
 ____
 
-Has 24 line(s). Calls functions:
+Has 26 line(s). Calls functions:
 
  -zplg-load
  |-- -zplg-any-to-user-plugin
@@ -553,7 +552,7 @@ ____
  $3 - mode (light or load)
 ____
 
-Has 72 line(s). Calls functions:
+Has 73 line(s). Calls functions:
 
  -zplg-load-plugin
  |-- -zplg-add-report
@@ -579,18 +578,15 @@ ____
  Implements the exposed-to-user action of loading a snippet.
  
  $1 - url (can be local, absolute path)
- $2 - "--command" if that option given
- $3 - "--force" if that option given
- $4 - "-u" if invoked by Zplugin to only update snippet
 ____
 
-Has 109 line(s). Calls functions:
+Has 119 line(s). Calls functions:
 
  -zplg-load-snippet
  |-- -zplg-pack-ice
  `-- zplugin-install.zsh/-zplg-download-snippet
 
-Uses feature(s): _autoload_, _eval_, _source_, _unfunction_, _zparseopts_
+Uses feature(s): _autoload_, _eval_, _source_, _unfunction_, _zparseopts_, _zstyle_
 
 Called by:
 
@@ -628,7 +624,7 @@ ____
  if they already exist.
 ____
 
-Has 26 line(s). Doesn't call other functions.
+Has 27 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -777,7 +773,7 @@ ____
  or "compdef").
 ____
 
-Has 17 line(s). Doesn't call other functions.
+Has 18 line(s). Doesn't call other functions.
 
 Uses feature(s): _unfunction_
 
@@ -796,7 +792,7 @@ ____
  report data, and to hijack `autoload' and `compdef' calls.
 ____
 
-Has 24 line(s). Doesn't call other functions.
+Has 25 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -850,12 +846,14 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 pmodload
 ~~~~~~~~
 
-Has 4 line(s). Calls functions:
+Has 9 line(s). Calls functions:
 
  pmodload
  `-- -zplg-load-snippet
      |-- -zplg-pack-ice
      `-- zplugin-install.zsh/-zplg-download-snippet
+
+Uses feature(s): _zstyle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -872,6 +870,19 @@ Has 1 line(s). Calls functions:
 
  zpcdreplay
  `-- -zplg-compdef-replay
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+zpcompdef
+~~~~~~~~~
+
+____
+ 
+ Stores compdef for a replay with `zpcdreplay' (turbo
+ mode) or with `zplugin cdreplay' (normal mode)
+____
+
+Has 1 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -902,7 +913,7 @@ ____
  and its arguments, has completion.
 ____
 
-Has 262 line(s). Calls functions:
+Has 270 line(s). Calls functions:
 
  zplugin
  |-- -zplg-clear-debug-report
@@ -961,6 +972,7 @@ Has 262 line(s). Calls functions:
  |-- zplugin-autoload.zsh/-zplg-list-bindkeys
  |-- zplugin-autoload.zsh/-zplg-list-compdef-replay
  |-- zplugin-autoload.zsh/-zplg-ls
+ |-- zplugin-autoload.zsh/-zplg-module
  |-- zplugin-autoload.zsh/-zplg-recall
  |-- zplugin-autoload.zsh/-zplg-recently
  |-- zplugin-autoload.zsh/-zplg-search-completions

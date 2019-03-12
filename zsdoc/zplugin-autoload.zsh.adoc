@@ -15,6 +15,7 @@ FUNCTIONS
 
  -zplg-any-to-uspl2
  -zplg-at-eval
+ -zplg-build-module
  -zplg-cd
  -zplg-cdisable
  -zplg-cenable
@@ -50,6 +51,7 @@ FUNCTIONS
  -zplg-list-bindkeys
  -zplg-list-compdef-replay
  -zplg-ls
+ -zplg-module
  -zplg-prepare-readlink
  -zplg-recall
  -zplg-recently
@@ -116,6 +118,24 @@ Called by:
 
  -zplg-update-or-status
 
+-zplg-build-module
+~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Performs ./configure && make on the module and displays information
+ how to load the module in .zshrc.
+____
+
+Has 24 line(s). Calls functions:
+
+ -zplg-build-module
+ `-- -zplg-module
+
+Called by:
+
+ -zplg-module
+
 -zplg-cd
 ~~~~~~~~
 
@@ -129,7 +149,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 2 line(s). Calls functions:
+Has 13 line(s). Calls functions:
 
  -zplg-cd
  `-- -zplg-get-path
@@ -406,7 +426,7 @@ ____
  
  Can also pack resulting ices into ZPLG_SICE (see $2).
  
- $1 - URL (also plugin-spec in future)
+ $1 - URL (also plugin-spec)
  $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
  "pack-nf" means that disk-ices will be ignored (no-file?)
  $3 - name of output associative array, "ZPLG_ICE" is the default
@@ -414,9 +434,11 @@ ____
  $5 - name of output string parameter, to hold filename ("filename")
 ____
 
-Has 78 line(s). Calls functions:
+Has 81 line(s). Calls functions:
 
  -zplg-compute-ice
+ |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |-- zplugin-side.zsh/-zplg-shands-exp
  |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-pack-ice
 
@@ -485,7 +507,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 28 line(s). Calls functions:
+Has 42 line(s). Calls functions:
 
  -zplg-delete
  |-- -zplg-confirm
@@ -632,7 +654,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 5 line(s). Calls functions:
+Has 6 line(s). Calls functions:
 
  -zplg-find-completions-of-plugin
  `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -767,7 +789,15 @@ Called by:
 -zplg-get-path
 ~~~~~~~~~~~~~~
 
-Has 31 line(s). Calls functions:
+____
+ 
+ Returns path of given ID-string, which may be a plugin-spec
+ (like "user/plugin" or "user" "plugin"), an absolute path
+ ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
+ nickname (i.e. id-as'' ice-mod), or a snippet nickname.
+____
+
+Has 35 line(s). Calls functions:
 
  -zplg-get-path
  |-- zplugin-side.zsh/-zplg-exists-physically
@@ -778,6 +808,7 @@ Has 31 line(s). Calls functions:
 Called by:
 
  -zplg-cd
+ -zplg-uninstall-completions
 
 -zplg-glance
 ~~~~~~~~~~~~
@@ -814,7 +845,7 @@ ____
  User-action entry point.
 ____
 
-Has 49 line(s). Doesn't call other functions.
+Has 52 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -859,6 +890,26 @@ Called by:
 
  zplugin.zsh/zplugin
 
+-zplg-module
+~~~~~~~~~~~~
+
+____
+ 
+ Function that has sub-commands passed as long-options (with two dashes, --).
+ It's an attempt to plugin only this one function into `zplugin' function
+ defined in zplugin.zsh, to not make this file longer than it's needed.
+____
+
+Has 24 line(s). Calls functions:
+
+ -zplg-module
+ `-- -zplg-build-module
+
+Called by:
+
+ -zplg-build-module
+ zplugin.zsh/zplugin
+
 -zplg-prepare-readlink
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -883,13 +934,14 @@ Called by:
 -zplg-recall
 ~~~~~~~~~~~~
 
-Has 35 line(s). Calls functions:
+Has 26 line(s). Calls functions:
 
  -zplg-recall
- |-- -zplg-compute-ice
- |   |-- zplugin-side.zsh/-zplg-two-paths
- |   `-- zplugin.zsh/-zplg-pack-ice
- `-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- -zplg-compute-ice
+     |-- zplugin-side.zsh/-zplg-exists-physically-message
+     |-- zplugin-side.zsh/-zplg-shands-exp
+     |-- zplugin-side.zsh/-zplg-two-paths
+     `-- zplugin.zsh/-zplg-pack-ice
 
 Uses feature(s): _wait_
 
@@ -982,7 +1034,7 @@ ____
  User-action entry point.
 ____
 
-Has 10 line(s). Doesn't call other functions.
+Has 21 line(s). Doesn't call other functions.
 
 Uses feature(s): _zcompile_
 
@@ -1125,7 +1177,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 61 line(s). Calls functions:
+Has 63 line(s). Calls functions:
 
  -zplg-show-report
  |-- -zplg-check-which-completions-are-enabled
@@ -1164,7 +1216,7 @@ ____
  User-action entry point.
 ____
 
-Has 31 line(s). Calls functions:
+Has 32 line(s). Calls functions:
 
  -zplg-show-times
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -1256,12 +1308,15 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 40 line(s). Calls functions:
+Has 41 line(s). Calls functions:
 
  -zplg-uninstall-completions
- |-- zplugin-install.zsh/-zplg-forget-completion
- |-- zplugin-side.zsh/-zplg-exists-physically-message
- `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- -zplg-get-path
+ |   |-- zplugin-side.zsh/-zplg-exists-physically
+ |   |-- zplugin-side.zsh/-zplg-shands-exp
+ |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- zplugin-install.zsh/-zplg-forget-completion
 
 Called by:
 
@@ -1288,7 +1343,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 241 line(s). Calls functions:
+Has 247 line(s). Calls functions:
 
  -zplg-unload
  |-- -zplg-clear-report-for
@@ -1331,15 +1386,19 @@ ____
  $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 96 line(s). Calls functions:
+Has 121 line(s). Calls functions:
 
  -zplg-update-or-status
  |-- -zplg-at-eval
  |-- -zplg-compute-ice
+ |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |-- zplugin-side.zsh/-zplg-two-paths
  |   `-- zplugin.zsh/-zplg-pack-ice
  |-- -zplg-update-or-status-snippet
  |   |-- -zplg-compute-ice
+ |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |-- zplugin-side.zsh/-zplg-two-paths
  |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   `-- zplugin.zsh/-zplg-load-snippet
@@ -1348,9 +1407,10 @@ Has 96 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin-side.zsh/-zplg-exists-physically-message
  |-- zplugin-side.zsh/-zplg-store-ices
+ |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses feature(s): _source_
+Uses feature(s): _kill_, _read_, _source_, _wait_
 
 Called by:
 
@@ -1369,16 +1429,20 @@ ____
  User-action entry point.
 ____
 
-Has 55 line(s). Calls functions:
+Has 63 line(s). Calls functions:
 
  -zplg-update-or-status-all
  |-- -zplg-update-or-status
  |   |-- -zplg-at-eval
  |   |-- -zplg-compute-ice
+ |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |-- zplugin-side.zsh/-zplg-two-paths
  |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   |-- -zplg-update-or-status-snippet
  |   |   |-- -zplg-compute-ice
+ |   |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |   |-- zplugin-side.zsh/-zplg-two-paths
  |   |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   |   `-- zplugin.zsh/-zplg-load-snippet
@@ -1387,9 +1451,12 @@ Has 55 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |-- zplugin-side.zsh/-zplg-store-ices
+ |   |-- zplugin-side.zsh/-zplg-two-paths
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- -zplg-update-or-status-snippet
  |   |-- -zplg-compute-ice
+ |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |-- zplugin-side.zsh/-zplg-two-paths
  |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   `-- zplugin.zsh/-zplg-load-snippet
@@ -1416,6 +1483,8 @@ Has 19 line(s). Calls functions:
 
  -zplg-update-or-status-snippet
  |-- -zplg-compute-ice
+ |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+ |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |-- zplugin-side.zsh/-zplg-two-paths
  |   `-- zplugin.zsh/-zplg-pack-ice
  `-- zplugin.zsh/-zplg-load-snippet

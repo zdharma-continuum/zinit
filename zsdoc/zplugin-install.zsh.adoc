@@ -57,13 +57,13 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 46 line(s). Calls functions:
+Has 48 line(s). Calls functions:
 
  -zplg-compile-plugin
  |-- zplugin-side.zsh/-zplg-first
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses feature(s): _zcompile_
+Uses feature(s): _eval_, _zcompile_
 
 Called by:
 
@@ -102,7 +102,7 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 129 line(s). Calls functions:
+Has 137 line(s). Calls functions:
 
  -zplg-download-snippet
  |-- -zplg-at-eval
@@ -198,7 +198,7 @@ ____
  $3 - if 1, then reinstall, otherwise only install completions that aren't there
 ____
 
-Has 39 line(s). Calls functions:
+Has 34 line(s). Calls functions:
 
  -zplg-install-completions
  |-- -zplg-forget-completion
@@ -247,7 +247,7 @@ ____
  $2 - plugin
 ____
 
-Has 136 line(s). Calls functions:
+Has 138 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin
