@@ -48,7 +48,7 @@ autoload -Uz _zplugin
 (( ${+_comps} )) && _comps[zplugin]=_zplugin
 ```
 
-Various paths can be customized, see section below [Customizing Paths](#customizing-paths--other).
+Various paths can be customized, see the README's section link:../README.md#customizing-paths\--other[Customizing Paths].
 
 After installing and reloading shell give `Zplugin` a quick try with `zplugin help` and
 compile it with `zplugin self-update`.
@@ -68,4 +68,5 @@ a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
 
 [appendix]
 == Revision history (history of updates to the document)
-v1.0, 03/11/2018: First asciidoc version – 1/ replaced doctoc with :toc: 2/ Intense uplift and verification before commiting +
+v1.01, 03/13/2018: Update the link to README.md / Customizing Paths section +
+v1.00, 03/11/2018: First asciidoc version – 1/ replaced doctoc with :toc: 2/ Intense uplift and verification before commiting +
