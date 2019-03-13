@@ -2,9 +2,24 @@
 
 emulate -LR zsh -o typesetsilent -o extendedglob -o warncreateglobal
 
-trap "tput cnorm" EXIT
-trap "tput cnorm" INT
-trap "tput cnorm" TERM
+# Alpine Linux doesn't have tput; FreeBSD and Dragonfly BSD have termcap
+if whence tput &> /dev/null; then
+  if [[ $OSTYPE == freebsd* ]] || [[ $OSTYPE == dragonfly* ]]; then
+    # termcap commands
+    ZPLG_CNORM='tput ve'
+    ZPLG_CIVIS='tput vi'
+  else
+    # terminfo is more common
+    ZPLG_CNORM='tput cnorm'
+    ZPLG_CIVIS='tput civis'
+  fi
+fi
+
+if (( $+ZPLG_CNORM )); then
+  trap $ZPLG_CNORM EXIT
+  trap $ZPLG_CNORM INT
+  trap $ZPLG_CNORM TERM
+fi
 
 local first=1
 
@@ -36,7 +51,7 @@ integer loop_count=0
 
 IFS=''
 
-tput civis
+(( $+ZPLG_CIVIS )) && eval $ZPLG_CIVIS
 
 { command perl -pe 'BEGIN { $|++; $/ = \1 }; tr/\r/\n/' || \
     gstdbuf -o0 gtr '\r' '\n' || \
@@ -103,4 +118,6 @@ done
 
 print
 
-tput cnorm
+(( $+ZPLG_CNORM )) && eval $ZPLG_CNORM
+
+unset ZPLG_CNORM ZPLG_CIVIS
