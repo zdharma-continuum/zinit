@@ -1298,7 +1298,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 command less -FRXi &
                 integer less_pid=$!
                 { sleep 20 && kill -9 $less_pid 2>/dev/null 1>&2; } &!
-                wait $less_pid
+                { wait $less_pid; } > /dev/null 2>&1
 
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
