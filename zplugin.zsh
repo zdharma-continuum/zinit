@@ -1528,11 +1528,14 @@ builtin setopt noaliases
 # and its arguments, has completion.
 zplugin() {
     [[ "$1" != "ice" ]] && {
-        local -a ice
+        local -A ice ICE_OPTS
+
         ice=( "${(kv)ZPLG_ICE[@]}" )
         ZPLG_ICE=()
+
         local -A ZPLG_ICE
-        ZPLG_ICE=( "${ice[@]}" )
+        ZPLG_ICE=( "${(kv@)ice[(I)^opt_*]}" )
+        ICE_OPTS=( "${(kv@)ice[(I)opt_*]}" )
     }
 
     local -a match mbegin mend reply
@@ -1623,11 +1626,18 @@ zplugin() {
                    ;;
                (update)
                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-                   match=( "${(M)@[@]:#(--quiet|-q)}" )
-                   set -- "${@[@]:#(--quiet|-q)}"
+                   local -A map
+                   map=(
+                       -q       opt_-q,--quiet
+                       --quiet  opt_-q,--quiet
+                       -r       opt_-r,--reset
+                       --reset  opt_-r,--reset
+                   )
+                   : ${@[@]//(#b)(--quiet|-q|--reset|-r)/${ICE_OPTS[${map[${match[1]}]}]::=1}}
+                   # : ${@[@]//(#b)(--quiet|-q|--reset|-r)[[:blank:]=]#(([a-zA-Z_-][a-zA-Z0-9_-]#)~(-q|--reset|-r))#/${ZPLG_ICE[${map[${match[1]}]}]::=${${match[2]}:-1}}}
+                   set -- "${@[@]:#(--quiet|-q|--reset|-r)}"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
-                       [[ -n "$match" ]] && ZPLG_ICE[opt_-q,--quiet]=1
                        -zplg-update-or-status-all "update"
                    else
                        -zplg-update-or-status "update" "${2%%(/|//|///)}" "${3%%(/|//|///)}"

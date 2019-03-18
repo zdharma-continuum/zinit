@@ -1495,9 +1495,6 @@ ZPLGM[EXTENDED_GLOB]=""
     local st="$1"
     local repo snip pd user plugin
 
-    local -A ICE_OPTS
-    ICE_OPTS=( "${(@kv)ZPLG_ICE[(I)opt_*]}" )
-
     local -A ZPLG_ICE
     ZPLG_ICE=()
 

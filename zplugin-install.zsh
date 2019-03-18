@@ -321,7 +321,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # $id_as - a /-separated pair if second element
     # is not empty and first is not "%" - then it's
     # just $1 in first case, or $1$2 in second case
-    local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" 
+    local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}"
 
     -zplg-any-to-user-plugin "$id_as" ""
     local user="${reply[-2]}" plugin="${reply[-1]}" first
@@ -404,9 +404,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # URL
         (
             () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
+
             [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
             if (( ${+ZPLG_ICE[svn]} )); then
+                [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
+                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
+                    command svn revert $filename/.
+                }
+
                 if [[ "$update" = "-u" ]];then
                     # Test if update available
                     -zplg-mirror-using-svn "$url" "-t" "$dirname" || return 2
@@ -437,8 +443,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     } }
                 fi
             else
-                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                 command mkdir -p "$local_dir/$dirname"
+                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
+
+                [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
+                    command rm -f "$dirname/$filename"
+                }
+
                 -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
                     -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
                         command rm -f "$dirname/$filename"
@@ -475,6 +487,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     else
         [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
         # File
+        [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$local_dir/$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
+            command rm -f "$local_dir/$dirname/$filename"
+        }
+        # Currently redundant, but theoretically it has its place
         [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
         command mkdir -p "$local_dir/$dirname"
         print "Copying $filename..."
