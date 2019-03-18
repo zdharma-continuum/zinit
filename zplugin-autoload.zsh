@@ -1218,7 +1218,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $3 - plugin (only when $1 - i.e. user - given)
 -zplg-update-or-status() {
-    setopt localoptions extendedglob nokshglob noksharrays
+    setopt localoptions extendedglob nokshglob noksharrays nullglob rmstarsilent
 
     -zplg-two-paths "$2${${2:#(%|/)*}:+/}$3"
     if [[ -n "${reply[-3]}" || -n "${reply[-1]}" ]]; then
@@ -1273,11 +1273,20 @@ ZPLGM[EXTENDED_GLOB]=""
                     -zplg-any-colorify-as-uspl2 "$id_as"
                     print "\nUpdating plugin $REPLY"
                 }
+                [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Removing the previous file(s) (-r/--reset given)..."
+                    command rm -rf ${local_dir:-/tmp/x}/*
+                }
                 -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "-u"
                 ZPLG_ICE=()
             fi
         else
             ( builtin cd -q "$local_dir" || return 1
+              [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                  [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
+                  command git reset --hard HEAD
+              }
+
               integer had_output=0
               local IFS=$'\n'
               command git fetch --quiet && \
