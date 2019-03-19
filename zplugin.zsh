@@ -1534,8 +1534,11 @@ zplugin() {
         ZPLG_ICE=()
 
         local -A ZPLG_ICE
-        ZPLG_ICE=( "${(kv@)ice[(I)^opt_*]}" )
-        ICE_OPTS=( "${(kv@)ice[(I)opt_*]}" )
+        () {
+            setopt localoptions extendedglob
+            ZPLG_ICE=( "${(kv@)ice[(I)^opt_*]}" )
+            ICE_OPTS=( "${(kv@)ice[(I)opt_*]}" )
+        }
     }
 
     local -a match mbegin mend reply
