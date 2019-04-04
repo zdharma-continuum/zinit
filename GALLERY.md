@@ -38,7 +38,7 @@ zplugin light psprint/vramsteg-zsh
 #
 
 zplugin ice as"completion"
-zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docke
+zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 
 #
 # Scripts
