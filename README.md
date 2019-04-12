@@ -47,7 +47,7 @@ Besides the main-knowledge source, i.e. this README, there are subpages that are
 # Zplugin
 
 **NEW**: Zplugin now has pure-Zsh [semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
-wich allows to manipulate plugins, snippets, etc.
+which allows to manipulate plugins, snippets, etc.
 
 **NEW**: [Gallery of Zplugin Invocations](GALLERY.md)
 
@@ -160,7 +160,7 @@ source "$HOME/.zplugin/bin/zplugin.zsh"
 
 because the install script does this.)
 
-Things used in above example config: 
+Things used in above example config:
 `history-search-multi-word` – multi-term searching of history (bound to Ctrl-R), `zui` – textual-UI library for Zshell,
 see `zui-demo<TAB>`. The `ice` sub-command – add modifiers to following `zplugin load ...` command or other command.
 `notabug` – the site `notabug.org`
