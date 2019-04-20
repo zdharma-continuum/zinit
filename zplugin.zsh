@@ -938,7 +938,7 @@ builtin setopt noaliases
     [[ ! -d "${ZPLGM[SNIPPETS_DIR]}" ]] && {
         command mkdir "${ZPLGM[SNIPPETS_DIR]}"
         command chmod go-w "${ZPLGM[SNIPPETS_DIR]}"
-        command ln -s "${ZPLGM[SNIPPETS_DIR]}/OMZ::plugins" "${ZPLGM[SNIPPETS_DIR]}/plugins"
+        ( cd ${ZPLGM[SNIPPETS_DIR]}; command ln -s "OMZ::plugins" "plugins"; )
     }
     [[ ! -d "${ZPLGM[SERVICES_DIR]}" ]] && {
         command mkdir "${ZPLGM[SERVICES_DIR]}"
