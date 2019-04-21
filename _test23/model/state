@@ -28,7 +28,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'OMZ::plugins/make/Makefile2' 'Makefile2 <file>'
-ZPLG_SICE: 'OMZ::plugins/make/Makefile2' 'as command atinit '\''cp -v Makefile.copy3 Makefile.copy4'\'' pick Makefile.copy4 teleid OMZ::plugins/make/Makefile2 atload '\''cp -v Makefile.copy4 Makefile.copy5'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
+ZPLG_SICE: 'OMZ::plugins/make/Makefile2' 'pick Makefile.copy4 atinit '\''cp -v Makefile.copy3 Makefile.copy4'\'' as command teleid OMZ::plugins/make/Makefile2 atload '\''cp -v Makefile.copy4 Makefile.copy5'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
 ZPLG_FUNCTIONS: 
 ZPLG_OPTIONS: 
 ZPLG_PATH: 

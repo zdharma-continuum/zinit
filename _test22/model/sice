@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh
-as command pick git2.plugin.zsh atinit 'command cp after_cp_test after_atclone_test' teleid OMZ::plugins/git/git.plugin.zsh mv 'git.plugin.zsh -> gp' atclone 'command cp git2.plugin.zsh after_cp_test' cp 'gp -> git2.plugin.zsh' 
+atinit 'command cp after_cp_test after_atclone_test' pick git2.plugin.zsh as command teleid OMZ::plugins/git/git.plugin.zsh mv 'git.plugin.zsh -> gp' atclone 'command cp git2.plugin.zsh after_cp_test' cp 'gp -> git2.plugin.zsh' 

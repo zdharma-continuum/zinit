@@ -23,13 +23,14 @@ LC_ALL=C
 local TEST_DIR="$PWD/$1"
 
 # Setup paths and load Zplugin
-local REPLY p k
+local REPLY p k l ll
 local -a reply
 local -A ZPLGM
 ZPLGM[BIN_DIR]=$PWD
 command mkdir -p $PWD/$1/answer
 ZPLGM[HOME_DIR]=$PWD/$1/answer
 builtin source "${ZPLGM[BIN_DIR]}/zplugin.zsh"
+command mkdir $PWD/$1/answer/snippets/OMZ::plugins
 
 # FUNCTION: internet_mock_git {{{
 internet_mock_git() {
@@ -219,17 +220,27 @@ store_state() {
     ZPLG_FPATH=( "${(kv@)ZPLG_FPATH/${PWD:h}\//}" )
     ZPLG_FPATH=( "${(kv@)ZPLG_FPATH/${${PWD:h}:h}\//}" )
 
-    keys=( ZPLG_REGISTERED_PLUGINS ZPLG_REGISTERED_STATES ZPLG_SNIPPETS
+    print -r -- "ZPLG_REGISTERED_PLUGINS:${${:- ${(qq@)ZPLG_REGISTERED_PLUGINS}}:# }" >>! "$out"
+
+    keys=( ZPLG_REGISTERED_STATES ZPLG_SNIPPETS
            ZPLG_SICE ZPLG_FUNCTIONS ZPLG_OPTIONS ZPLG_PATH ZPLG_FPATH
            ZPLG_PARAMETERS_PRE ZPLG_PARAMETERS_POST ZPLG_ZSTYLES ZPLG_BINDKEYS
-           ZPLG_ALIASES ZPLG_WIDGETS_SAVED ZPLG_WIDGETS_DELETE ZPLG_COMPDEF_REPLAY
-           ZPLG_CUR_PLUGIN
+           ZPLG_ALIASES ZPLG_WIDGETS_SAVED ZPLG_WIDGETS_DELETE
     )
+
     for k in "${keys[@]}"; do
-        # kv two times, outer for after patch, inner for before patch:
+        [[ "${(ok@)#${(Pk@)k}}" -gt 0 ]] && print -rn -- "$k:" >>! "$out" || print -rn -- "$k: " >>! "$out"
+        # (k) two times, outer for after patch, the inner one for before-patch:
         # 37092: make nested ${(P)name} properly refer to parameter on return
-        print -r -- "$k: ${(kvqq@)${(Pkv@)k}}" >>! "$out"
+        for l in ${(ok@)${(Pk@)k}}; do
+            ll="$k"; ll+="[$l]"
+            print -rn -- ${:- ${(qq)l} ${(Pqq)ll}} >>! "$out"
+        done
+        print >>! "$out"
     done
+    print
+    [[ -n "$ZPLG_COMPDEF_REPLAY" ]] && print -r -- "ZPLG_COMPDEF_REPLAY: ${(qq@)ZPLG_COMPDEF_REPLAY}" >>! "$out" || print -r -- "ZPLG_COMPDEF_REPLAY: " >>! "$out"
+    print -r -- "ZPLG_CUR_PLUGIN: ${(qq)ZPLG_CUR_PLUGIN}" >>! "$out"
 
     print -rl -- "---" "Parameter module: ${+modules[zsh/parameter]}" >>! "$out"
 }

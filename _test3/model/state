@@ -30,7 +30,7 @@ ZERO
 zplugin.zsh
 ---
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'zdharma/ice-order'
-ZPLG_REGISTERED_STATES: 'zdharma/ice-order' '1' '_local/zplugin' '1'
+ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'zdharma/ice-order' '1'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'zdharma/ice-order' 'atinit '\''cp -v Makefile.copy3 Makefile.copy4'\'' teleid zdharma/ice-order atload '\''cp -v Makefile.copy4 Makefile.copy5'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
 ZPLG_FUNCTIONS: 'zdharma/ice-order' ''
