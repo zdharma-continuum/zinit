@@ -1266,7 +1266,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
                     print -- "\rBinary release already up to date (version: $REPLY)"
             else
-                [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#\!}" ${ZPLG_ICE[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                 ZPLG_ICE=( "${(kv)ice[@]}" )
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
@@ -1312,7 +1312,7 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
-                  [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                  [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#\!}" ${ZPLG_ICE[atclone]}; )
                   command git pull --no-stat
               }
             )
@@ -1345,7 +1345,7 @@ ZPLGM[EXTENDED_GLOB]=""
             fi
 
             [[ ${+ice[make]} = 1 && ${ice[make]} = "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}
-            [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
+            [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
         }
 
