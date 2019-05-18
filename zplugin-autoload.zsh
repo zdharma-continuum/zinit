@@ -1507,16 +1507,18 @@ ZPLGM[EXTENDED_GLOB]=""
     local -A ZPLG_ICE
     ZPLG_ICE=()
 
-    [[ "$st" != "status" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
-        print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets"
+    local -a snipps
+    snipps=( ${ZPLGM[SNIPPETS_DIR]}/**/._zplugin(NY1) )
 
+    [[ "$st" != "status" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -n "$snipps" ]] && \
+        print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets\n"
 
     for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
         [[ ! -f "${snip:h}/id-as" ]] && continue
         -zplg-update-or-status-snippet "$st" "${$(<${snip:h}/id-as):-$(<${snip:h}/url)}"
         ZPLG_ICE=()
     done
-    print
+    [[ -n "$snipps" ]] && print
 
     ZPLG_ICE=()
 
