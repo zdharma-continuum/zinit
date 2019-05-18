@@ -210,7 +210,11 @@ pass-through that check and you will obtain a complete list of all loaded script
 tracking this. The list can be surprising.
 
 # News
-* 12-03-2018
+* 18-05-2019
+  - New ice-mod `nocd` – it prevents changing current directory into the plugin's directory
+    before evaluating `atinit''`, `atload''` etc. ice-mods.
+
+* 12-03-2019
   - Finally reorganizing the `README.md`. Went on asciidoc path, the
     side-documents are written in it and the `README.md` will also be
     converted (example page: [Introduction](doc/INTRODUCTION.adoc))
@@ -476,6 +480,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`). |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. To be used with plugins and snippets. |
+| `nocd`    | Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
 | `make`    | Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. |
 | `src`     | Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). |
