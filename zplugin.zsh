@@ -204,8 +204,7 @@ builtin setopt noaliases
     # Unfunction caller function (its name is given)
     unfunction -- "$func"
 
-    local -a fpath
-    fpath=( "$fpath_prefix" "${fpath[@]}" )
+    [[ "$FPATH" != *$fpath_prefix* ]] && local +h FPATH="$fpath_prefix:$FPATH"
 
     # After this the function exists again
     builtin autoload ${(s: :)autoload_opts} -- "$func"
