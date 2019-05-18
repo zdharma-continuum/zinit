@@ -2,7 +2,7 @@ language: ruby
 dist: trusty
 rvm:
   - 2.2
-install: gem install asciidoctor-pdf
+install: gem install asciidoctor-pdf --pre
 
 git:
   depth: 1
