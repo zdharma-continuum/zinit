@@ -1466,7 +1466,7 @@ builtin setopt noaliases
 -zplg-scheduler() {
     integer __ret=$?
     [[ "$1" = "following" ]] && sched +1 "-zplg-scheduler following"
-    [[ -n "$1" && "$1" != (following|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
+    [[ -n "$1" && "$1" != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
 
     integer __t=EPOCHSECONDS __i=2 correct=0
@@ -1507,7 +1507,7 @@ builtin setopt noaliases
     local __task __idx=0 __count=0 __idx2
     for __task in "${ZPLG_RUN[@]}"; do
         -zplg-run-task 1 "${(@z)__task}" && ZPLG_TASKS+=( "$__task" )
-        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 20 && "$1" != "burst" ]] && break
+        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 5 && "$1" != "burst" ]] && { sched +0 -zplg-scheduler following-additional; break; }
     done
     for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
         -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2-correct]}"
