@@ -210,6 +210,14 @@ pass-through that check and you will obtain a complete list of all loaded script
 tracking this. The list can be surprising.
 
 # News
+* 26-05-2019
+  - Turbo-Mode now divides the scheduled events (i.e. loadings of plugins or snippets)
+    into packs of 5. In other words, after loading each series of 5 plugins or snippets
+    the prompt is activated, i.e. it is feed an amount of CPU time. This will help to
+    deliver the promise of background loading without interferences visible to the
+    user. If you have some two slow-loading plugins and/or snippets, you can put them
+    into some separate blocks of 5 events.
+
 * 18-05-2019
   - New ice-mod `nocd` – it prevents changing current directory into the plugin's directory
     before evaluating `atinit''`, `atload''` etc. ice-mods.
