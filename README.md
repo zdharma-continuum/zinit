@@ -479,6 +479,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `bindmap` | To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. |
 | `trackbinds` | Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. |
 | `if`      | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. |
+| `has`     | Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` |
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. |
 | `lucid`   | Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). |
@@ -555,7 +556,7 @@ env-whitelist [-v]           - allows to specify names (also patterns) of variab
 bindkeys                     - lists bindkeys set up by each plugin
 module                       - manage binary Zsh module shipped with Zplugin, see `zplugin module help'
 
-Available ice-modifiers: proto from cloneopts depth if wait load unload blockf
+Available ice-modifiers: proto from cloneopts depth if has wait load unload blockf
                          pick bpick src as ver silent svn mv cp atinit atclone
                          atload atpull make service bindmap trackbinds nocompile
                          nocompletions

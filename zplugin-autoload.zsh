@@ -2697,7 +2697,7 @@ env-whitelist [-v]       - allows to specify names (also patterns) of variables 
 bindkeys                 - lists bindkeys set up by each plugin
 module                   - manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
 
-Available ice-modifiers: proto from cloneopts depth if wait load unload blockf
+Available ice-modifiers: proto from cloneopts depth if has wait load unload blockf
                          pick bpick src as ver silent svn mv cp atinit atclone
                          atload atpull make service bindmap trackbinds nocompile
                          nocompletions"
