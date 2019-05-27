@@ -1328,7 +1328,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(from|proto|cloneopts|depth|wait|load|unload|if|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+        [[ "$bit" = (#b)(from|proto|cloneopts|depth|wait|load|unload|if|has|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
@@ -1546,6 +1546,7 @@ zplugin() {
     case "$1" in
        (load|light)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
+           (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 0; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
@@ -1561,6 +1562,7 @@ zplugin() {
            ;;
        (snippet)
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
+           (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 0; }
            if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
                ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
                -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "$3"
@@ -1628,6 +1630,7 @@ zplugin() {
                    ;;
                (update)
                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
+                   (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 0; }
                    local -A map
                    map=(
                        -q       opt_-q,--quiet
