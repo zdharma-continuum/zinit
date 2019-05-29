@@ -1508,7 +1508,7 @@ ZPLGM[EXTENDED_GLOB]=""
     ZPLG_ICE=()
 
     local -a snipps
-    snipps=( ${ZPLGM[SNIPPETS_DIR]}/**/._zplugin(NY1) )
+    snipps=( ${ZPLGM[SNIPPETS_DIR]}/**/._zplugin(N) )
 
     [[ "$st" != "status" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -n "$snipps" ]] && \
         print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} updating also unloaded snippets\n"
