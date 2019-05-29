@@ -1389,7 +1389,7 @@ builtin setopt noaliases
     local -A ZPLG_ICE
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${__idx}]}}" )
 
-    if [[ $__pass = 1 && "${ZPLG_ICE[wait]#\!}" = <-> ]]; then
+    if [[ $__pass = 1 && "${${ZPLG_ICE[wait]#\!}%%[^0-9]##}" = <-> ]]; then
         __action="${(M)ZPLG_ICE[wait]#\!}load"
     elif [[ $__pass = 1 && -n "${ZPLG_ICE[wait]#\!}" ]] && { eval "${ZPLG_ICE[wait]#\!}" || [[ $(( __s=0 )) = 1 ]]; }; then
         __action="${(M)ZPLG_ICE[wait]#\!}load"
@@ -1433,10 +1433,10 @@ builtin setopt noaliases
 
     local id="${${opt_plugin:+$opt_uspl2${${opt_uspl2:#%*}:+/}$opt_plugin}:-$opt_uspl2}"
 
-    if [[ "${ZPLG_ICE[wait]}" = (\!|.|)<-> ]]; then
-        ZPLG_TASKS+=( "$EPOCHSECONDS+${ZPLG_ICE[wait]#(\!|.)} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
+    if [[ "${${ZPLG_ICE[wait]}%%[^0-9]##}" = (\!|.|)<-> ]]; then
+        ZPLG_TASKS+=( "$EPOCHSECONDS+${${ZPLG_ICE[wait]#(\!|.)}%%[^0-9]##}+${${${(M)ZPLG_ICE[wait]%a}:+1}:-${${${(M)ZPLG_ICE[wait]%b}:+2}:-${${${(M)ZPLG_ICE[wait]%c}:+3}:-1}}} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
     elif [[ -n "${ZPLG_ICE[wait]}" || -n "${ZPLG_ICE[load]}" || -n "${ZPLG_ICE[unload]}" ]]; then
-        ZPLG_TASKS+=( "${${ZPLG_ICE[wait]:+0}:-1} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
+        ZPLG_TASKS+=( "${${ZPLG_ICE[wait]:+0}:-1}+0+1 $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
     fi
 }
 # }}}
@@ -1444,8 +1444,13 @@ builtin setopt noaliases
 # Copies task into ZPLG_RUN array, called when a task timeouts.
 # A small function ran from pattern in /-substitution.
 -zplugin_scheduler_add_sh() {
-    ZPLG_RUN+=( "${ZPLG_TASKS[$1]}" )
-    return 1
+    local idx="$1" in_wait="$2" in_abc="$3" ver_wait="$4" ver_abc="$5"
+    if [[ ( "$in_wait" = "$ver_wait" || "$in_wait" -ge 10 ) && "$in_abc" = "$ver_abc" ]]; then
+        ZPLG_RUN+=( "${ZPLG_TASKS[$idx]}" )
+        return 1
+    else
+        return $idx
+    fi
 }
 # }}}
 # FUNCTION: -zplg-scheduler {{{
@@ -1469,7 +1474,7 @@ builtin setopt noaliases
     [[ -n "$1" && "$1" != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
 
-    integer __t=EPOCHSECONDS __i=2 correct=0
+    integer __t=EPOCHSECONDS __i correct=0
     local -a match mbegin mend reply
     local REPLY
 
@@ -1479,13 +1484,19 @@ builtin setopt noaliases
         () {
             setopt localoptions extendedglob
             # Example entry:
-            # 1531252764+2 p 18 light zdharma/zsh-diff-so-fancy
+            # 1531252764+2+1 p 18 light zdharma/zsh-diff-so-fancy
             # This either doesn't change ZPLG_TASKS entry - when
             # __i is used in the ternary expression, or replaces
             # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
-            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9+]##)(*)/${ZPLG_TASKS[$(( ${match[1-correct]} <= $__t ? zplugin_scheduler_add(__i++ - correct) : __i++ ))]}} )
+            integer __idx1 __idx2
+            for (( __idx1 = 0; __idx1 <= 10; __idx1 ++ )); do
+                for (( __idx2 = 1; __idx2 <= 3; __idx2 ++ )); do
+                    __i=2
+                    ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/${ZPLG_TASKS[$(( (${match[1-correct]}+${match[2-correct]}) <= $__t ? zplugin_scheduler_add(__i++ - correct, ${match[2-correct]}, ${(M)match[3-correct]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
+                    ZPLG_TASKS=( "<no-data>" ${ZPLG_TASKS[@]:#<no-data>} )
+                done
+            done
         }
-        ZPLG_TASKS=( "<no-data>" ${ZPLG_TASKS[@]:#<no-data>} )
     } || {
         add-zsh-hook -d -- precmd -zplg-scheduler
         () {
@@ -1551,7 +1562,7 @@ zplugin() {
                print "Argument needed, try help"
            else
                if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
-                   ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
+                   ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
                    [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
                    -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"
                else
@@ -1564,7 +1575,7 @@ zplugin() {
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
            (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 0; }
            if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
-               ZPLG_ICE[wait]=${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}
+               ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
                -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "$3"
            else
                ZPLG_SICE[${2%%(/|//|///)}]=""
@@ -1847,7 +1858,7 @@ zpcompdef() { ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
 
 autoload add-zsh-hook
 zmodload zsh/datetime && add-zsh-hook -- precmd -zplg-scheduler  # zsh/datetime required for wait/load/unload ice-mods
-functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh 2>/dev/null
+functions -M -- zplugin_scheduler_add 5 5 -zplugin_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
 
 # code {{{
