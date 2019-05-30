@@ -210,6 +210,27 @@ pass-through that check and you will obtain a complete list of all loaded script
 tracking this. The list can be surprising.
 
 # News
+* 29-05-2019
+  - Turbo-Mode, i.e. the `wait''` ice-mode now supports a suffix – the letter `a`, `b`
+    or `c`. The meaning is illustrated by the following example:
+
+    ```zsh
+    zplugin ice wait"0b" as"command" pick"wd.sh" atinit"echo Firing 1" lucid
+    zplugin light mfaerevaag/wd
+    zplugin ice wait"0a" as"command" pick"wd.sh" atinit"echo Firing 2" lucid
+    zplugin light mfaerevaag/wd
+
+    # The output
+    Firing 2
+    Firing 1
+    ```
+
+    As it can be seen, the second plugin has been loaded first. That's because there
+    are now three sub-slots (the `a`, `b` and `c`) in which the plugin/snippet loadings
+    can be put into. In other words, instead of `wait'0'` you can enter `wait'1a'`,
+    `wait'1b'` and `wait'1c'` – to this way **impose order** on the loadings
+    **regardless of the order of `zplugin` commands**. Plugins from the same time-slot
+    with suffix `a` will be loaded before plugins with suffix `b`, etc.
 * 26-05-2019
   - Turbo-Mode now divides the scheduled events (i.e. loadings of plugins or snippets)
     into packs of 5. In other words, after loading each series of 5 plugins or snippets
@@ -764,3 +785,5 @@ Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat
 [act-badge]: https://img.shields.io/github/commit-activity/y/zdharma/zplugin.svg
 [lobby-badge]: https://badges.gitter.im/zplugin/Lobby.svg
 [lobby-link]: https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
+<!-- vim:tw=87 -->
