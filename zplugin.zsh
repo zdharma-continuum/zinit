@@ -1482,7 +1482,8 @@ builtin setopt noaliases
 
     [[ -n "$1" ]] && {
         () {
-            setopt localoptions extendedglob
+            emulate -L zsh
+            setopt extendedglob
             # Example entry:
             # 1531252764+2+1 p 18 light zdharma/zsh-diff-so-fancy
             # This either doesn't change ZPLG_TASKS entry - when
@@ -1500,7 +1501,8 @@ builtin setopt noaliases
     } || {
         add-zsh-hook -d -- precmd -zplg-scheduler
         () {
-            setopt localoptions extendedglob
+            emulate -L zsh
+            setopt extendedglob
             # No "+" in this pattern, it will match only "1531252764"
             # in "1531252764+2" and replace it with current time
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
