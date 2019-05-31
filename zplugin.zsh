@@ -1444,7 +1444,7 @@ builtin setopt noaliases
 # Copies task into ZPLG_RUN array, called when a task timeouts.
 # A small function ran from pattern in /-substitution.
 -zplugin_scheduler_add_sh() {
-    local idx="$1" in_wait="$2" in_abc="$3" ver_wait="$4" ver_abc="$5"
+    local idx="$1" in_wait="$__ar2" in_abc="$__ar3" ver_wait="$__ar4" ver_abc="$__ar5"
     if [[ ( "$in_wait" = "$ver_wait" || "$in_wait" -ge 10 ) && "$in_abc" = "$ver_abc" ]]; then
         ZPLG_RUN+=( "${ZPLG_TASKS[$idx]}" )
         return 1
@@ -1490,10 +1490,30 @@ builtin setopt noaliases
             # __i is used in the ternary expression, or replaces
             # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
             integer __idx1 __idx2
+            local __ar2 __ar3 __ar4 __ar5
             for (( __idx1 = 0; __idx1 <= 10; __idx1 ++ )); do
                 for (( __idx2 = 1; __idx2 <= 3; __idx2 ++ )); do
+                    # The following substitution could be just (well, 'just'..) this:
+                    #
+                    # ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/
+                    # ${ZPLG_TASKS[$(( (${match[1-correct]}+${match[2-correct]}) <= $__t ?                    # zplugin_scheduler_add(__i++ - correct, ${match[2-correct]},
+                    # ${(M)match[3-correct]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
+                    #
+                    # However, there's a severe bug in Zsh <= 5.3.1 - use of the period
+                    # (,) is impossible inside ${..//$arr[$(( ... ))]}.
                     __i=2
-                    ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/${ZPLG_TASKS[$(( (${match[1-correct]}+${match[2-correct]}) <= $__t ? zplugin_scheduler_add(__i++ - correct, ${match[2-correct]}, ${(M)match[3-correct]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
+
+                    ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/${ZPLG_TASKS[
+                    $(( __ar2=${match[2-correct]}+1 ? (
+                        __ar3=${(M)match[3-correct]%[1-3]} ? (
+                        __ar4=__idx1+1 ? (
+                        __ar5=__idx2 ? (
+            ${match[1-correct]}+${match[2-correct]} <= $__t ?
+            zplugin_scheduler_add(__i++ - correct) : __i++ )
+                        : 1 )
+                        : 1 )
+                        : 1 )
+                        : 1  ))]}} )
                     ZPLG_TASKS=( "<no-data>" ${ZPLG_TASKS[@]:#<no-data>} )
                 done
             done
@@ -1860,7 +1880,7 @@ zpcompdef() { ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
 
 autoload add-zsh-hook
 zmodload zsh/datetime && add-zsh-hook -- precmd -zplg-scheduler  # zsh/datetime required for wait/load/unload ice-mods
-functions -M -- zplugin_scheduler_add 5 5 -zplugin_scheduler_add_sh 2>/dev/null
+functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
 
 # code {{{
