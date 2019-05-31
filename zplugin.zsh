@@ -1389,7 +1389,7 @@ builtin setopt noaliases
     local -A ZPLG_ICE
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${__idx}]}}" )
 
-    if [[ $__pass = 1 && "${${ZPLG_ICE[wait]#\!}%%[^0-9]##}" = <-> ]]; then
+    if [[ $__pass = 1 && "${${ZPLG_ICE[wait]#\!}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}" = <-> ]]; then
         __action="${(M)ZPLG_ICE[wait]#\!}load"
     elif [[ $__pass = 1 && -n "${ZPLG_ICE[wait]#\!}" ]] && { eval "${ZPLG_ICE[wait]#\!}" || [[ $(( __s=0 )) = 1 ]]; }; then
         __action="${(M)ZPLG_ICE[wait]#\!}load"
@@ -1433,8 +1433,8 @@ builtin setopt noaliases
 
     local id="${${opt_plugin:+$opt_uspl2${${opt_uspl2:#%*}:+/}$opt_plugin}:-$opt_uspl2}"
 
-    if [[ "${${ZPLG_ICE[wait]}%%[^0-9]##}" = (\!|.|)<-> ]]; then
-        ZPLG_TASKS+=( "$EPOCHSECONDS+${${ZPLG_ICE[wait]#(\!|.)}%%[^0-9]##}+${${${(M)ZPLG_ICE[wait]%a}:+1}:-${${${(M)ZPLG_ICE[wait]%b}:+2}:-${${${(M)ZPLG_ICE[wait]%c}:+3}:-1}}} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
+    if [[ "${${ZPLG_ICE[wait]}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}" = (\!|.|)<-> ]]; then
+        ZPLG_TASKS+=( "$EPOCHSECONDS+${${ZPLG_ICE[wait]#(\!|.)}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}+${${${(M)ZPLG_ICE[wait]%a}:+1}:-${${${(M)ZPLG_ICE[wait]%b}:+2}:-${${${(M)ZPLG_ICE[wait]%c}:+3}:-1}}} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
     elif [[ -n "${ZPLG_ICE[wait]}" || -n "${ZPLG_ICE[load]}" || -n "${ZPLG_ICE[unload]}" ]]; then
         ZPLG_TASKS+=( "${${ZPLG_ICE[wait]:+0}:-1}+0+1 $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
     fi
