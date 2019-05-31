@@ -1866,7 +1866,7 @@ zpcdreplay() { -zplg-compdef-replay -q; }
 # FUNCTION: zpcompinit {{{
 # A function that can be invoked from within `atinit', `atload', etc. ice-mod.
 # It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
-zpcompinit() { autoload compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"; }
+zpcompinit() { autoload -Uz compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"; }
 # }}}
 # FUNCTION: zpcompdef {{{
 # Stores compdef for a replay with `zpcdreplay' (turbo
