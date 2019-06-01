@@ -815,8 +815,8 @@ custom_try_source_file(char *file)
 {
     Eprog prog;
     struct stat stc, stn;
-    int rc, rn;
-    char *wc, *tail;
+    int rc, rn, faltered = 0, flen;
+    char *wc, *tail, *file_dup;
 
     if ((tail = strrchr(file, '/')))
 	tail++;
@@ -835,8 +835,21 @@ custom_try_source_file(char *file)
     rn = stat(file, &stn);
 
     /* ZP-CODE */
+    if ( file != tail ) {
+        faltered = 1;
+        *--tail = '\0';
+    }
+    file_dup = ztrdup( file );
+    flen = strlen( file );
+    if ( faltered ) {
+        *tail++ = '/';
+    }
     /* If there is no zwc file, or if it is less recent than script file */
-    if ( !rn && ( rc || ( stc.st_mtime < stn.st_mtime ) ) ) {
+    if ( ( !rn && ( rc || ( stc.st_mtime < stn.st_mtime ) ) ) &&
+            ( access( file_dup, W_OK ) == 0 || 0 == strcmp(
+                getsparam( "ZPLG_MOD_DEBUG" ) ? getsparam( "ZPLG_MOD_DEBUG" ) : "0",
+                "1" ) )
+    ) {
         char *args[] = { file, NULL };
         struct options ops;
 
@@ -852,6 +865,8 @@ custom_try_source_file(char *file)
         /* Repeat stat for newly created zwc */
         rc = stat(wc, &stc);
     }
+
+    zfree(file_dup, flen);
 
     queue_signals();
     if (!rc && (rn || stc.st_mtime >= stn.st_mtime) &&
@@ -1210,7 +1225,7 @@ custom_load_dump_header(char *nam, char *name, int err)
  */
 int bin_readarray( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
     int delim='\n', to_copy = 0, start_at = 1, skip_first = 0, remdel = 0, srcfd = 0, quantum = 5000;
-    char *callback = NULL, *oarr_name = NULL, **oarr = NULL;
+    char *callback = NULL, *oarr_name = NULL; // unused: **oarr = NULL;
     FILE *stream = NULL;
 
     /* Usage message */
