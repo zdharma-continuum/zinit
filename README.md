@@ -286,12 +286,12 @@ tracking this. The list can be surprising.
 * 13-07-2018
   - New `multisrc''` ice, it allows to specify multiple files for sourcing and  it uses brace expansion syntax, so for example you can:
     ```zsh
-    zplugin ice depth"1" multisrc="lib/{misc,functions}.zsh" pick"/dev/null"; zplugin load robbyrussell/oh-my-zsh
-    zplugin ice svn multisrc"{misc,functions}.zsh" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\$array" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"$array" pick"/dev/null"; zplugin snippet OMZ::lib
+    zplugin ice depth"1" multisrc="lib/{functions,misc}.zsh" pick"/dev/null"; zplugin load robbyrussell/oh-my-zsh
+    zplugin ice svn multisrc"{functions,misc}.zsh" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {functions,misc}.zsh ); zplg ice svn multisrc"\${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {functions,misc}.zsh ); zplg ice svn multisrc"${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {functions,misc}.zsh ); zplg ice svn multisrc"\$array" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {functions,misc}.zsh ); zplg ice svn multisrc"$array" pick"/dev/null"; zplugin snippet OMZ::lib
     zplugin ice svn multisrc"misc.zsh functions.zsh" pick"/dev/null"; zplugin snippet OMZ::lib
     ```
 * 12-07-2018
