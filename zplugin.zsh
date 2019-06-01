@@ -993,6 +993,7 @@ builtin setopt noaliases
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
     ZPLG_ICE[teleid]="$url"
+    (( ${+ZPLG_ICE[pick]} )) && ZPLG_ICE[pick]="${ZPLG_ICE[pick]:#/dev/null}"
 
     local local_dir dirname filename save_url="$url" id_as="${ZPLG_ICE[id-as]:-$url}"
     [[ -z "${opts[(r)-i]}" ]] && -zplg-pack-ice "$id_as" ""
