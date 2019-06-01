@@ -287,12 +287,12 @@ tracking this. The list can be surprising.
   - New `multisrc''` ice, it allows to specify multiple files for sourcing and  it uses brace expansion syntax, so for example you can:
     ```zsh
     zplugin ice depth"1" multisrc="lib/{misc,functions}.zsh" pick"/dev/null"; zplugin load robbyrussell/oh-my-zsh
-    zplugin ice svn multisrc"{misc,functions}.zsh" pick""; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\${array[@]}" pick""; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"${array[@]}" pick""; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\$array" pick""; zplugin snippet OMZ::lib
-    array=( {misc,functions}.zsh ); zplg ice svn multisrc"$array" pick""; zplugin snippet OMZ::lib
-    zplugin ice svn multisrc"misc.zsh functions.zsh" pick""; zplugin snippet OMZ::lib
+    zplugin ice svn multisrc"{misc,functions}.zsh" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"\$array" pick"/dev/null"; zplugin snippet OMZ::lib
+    array=( {misc,functions}.zsh ); zplg ice svn multisrc"$array" pick"/dev/null"; zplugin snippet OMZ::lib
+    zplugin ice svn multisrc"misc.zsh functions.zsh" pick"/dev/null"; zplugin snippet OMZ::lib
     ```
 * 12-07-2018
   - For docker and new machine provisioning, there's a trick that allows to install all [turbo-mode](#turbo-mode-zsh--53)
@@ -521,7 +521,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `compile` | Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`. |
 | `nocompletions` | Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. |
 | `nocompile` | Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at location of installation). |
-| `multisrc` | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). |
+| `multisrc` | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). See also the [wiki on **Sourcing multiple files**](https://github.com/zdharma/zplugin/wiki/Sourcing-multiple-files). |
 
 Order of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
 
@@ -786,4 +786,5 @@ Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat
 [lobby-badge]: https://badges.gitter.im/zplugin/Lobby.svg
 [lobby-link]: https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-<!-- vim:tw=87 -->
+<!-- vim:tw=87
+-->
