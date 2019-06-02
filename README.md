@@ -21,6 +21,7 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [More On Zplugin Zsh Module](#more-on-zplugin-zsh-module)
     - [Module – Guaranteed Compilation Of All Scripts / Plugins](#module--guaranteed-compilation-of-all-scripts--plugins)
     - [Module – Measuring Time Of `source`s](#module--measuring-time-of-sources)
+    - [Module - Debugging](#module---debugging)
 - [News](#news)
 - [Ice Modifiers](#ice-modifiers)
 - [Usage](#usage)
@@ -30,7 +31,9 @@ reports](DONATIONS.md) about what is being done with the money received.
 - [Ignoring Compdefs](#ignoring-compdefs)
 - [Non-Github (Local) Plugins](#non-github-local-plugins)
 - [Customizing Paths & Other](#customizing-paths--other)
-- [Hint: extending Git](#hint-extending-git)
+- [Hint: Extending Git](#hint-extending-git)
+- [Hint: Docker Images (`burst` Scheduler Invocation)](#hint-docker-images-burst-scheduler-invocation)
+- [Hint: Plugin Standard](#hint-plugin-standard)
 - [IRC Channel](#irc-channel)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -208,6 +211,14 @@ source-study` after loading the module at top of `~/.zshrc` to see a list of all
 sourcing took in milliseconds on the left. This feature allows to profile the shell startup. Also, no script can
 pass-through that check and you will obtain a complete list of all loaded scripts, like if Zshell itself was
 tracking this. The list can be surprising.
+
+### Module - Debugging
+
+To enable debug messages from the module set:
+
+```zsh
+typeset -g ZPLG_MOD_DEBUG=1
+```
 
 # News
 * 29-05-2019
@@ -724,8 +735,8 @@ If user name will not be `_local`, then Zplugin will create repository also on G
 
 Following variables can be set to custom values, before sourcing Zplugin. The
 previous global variables like `$ZPLG_HOME` have been removed to not pollute
-the namespace – there's single `$ZPLGM` hash instead of `5` string variables.
-Please update your dotfiles.
+the namespace – there's single `$ZPLGM` ("*ZPLUGIN MAP*") hash instead of `8` string
+variables. Please update your dotfiles.
 
 ```
 declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loading Zplugin, and then:
@@ -744,7 +755,7 @@ declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loa
 There is also `$ZPFX`, set by default to `~/.zplugin/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
 
-# Hint: extending Git
+# Hint: Extending Git
 
 There are several projects that provide git extensions. Installing them with
 Zplugin has many benefits:
@@ -770,6 +781,39 @@ zplugin light k4rthik/git-cal
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
+
+# Hint: Docker Images (`burst` Scheduler Invocation)
+
+If you create a Docker image that uses Zplugin, you can invoke the zplugin-scheduler
+function in such a way, that it:
+
+ - installs plugins without waiting for the prompt (i.e. it's script friendly),
+ - installs **all** plugins instantly, without respecting the `wait''` argument.
+
+To accomplish this, use `burst` argument and call `-zplg-scheduler` function. Example
+`Dockerfile` entry:
+
+```
+RUN zsh -i -c -- '-zplg-scheduler burst || true'
+```
+
+An example `Dockerfile` can be found
+[here](https://github.com/robobenklein/configs/blob/master/Dockerfile#L36).
+
+# Hint: Plugin Standard
+
+Zsh plugins may look scary, as they seem to have some "architecture". In fact, what a
+plugin really is, is that:
+
+1. It has its directory added to `fpath`
+2. It has any first `*.plugin.zsh` file sourced
+
+That's it. When one contributes to Oh-My-Zsh or creates a plugin for any plugin
+manager, he only needs to account for this. 
+
+Also, [**there's a document that defines the Zsh Plugin
+Standard**](http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html). Zplugin
+fully supports the standard.
 
 # IRC Channel
 Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
