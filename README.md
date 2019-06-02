@@ -721,15 +721,12 @@ zplugin cdlist # look at gathered compdefs
 # Non-Github (Local) Plugins
 
 Use `create` subcommand with user name `_local` (the default) to create plugin's
-skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository (because of user name
-being `_local`). To enter the plugin's directory use `cd` command with just
-plugin's name (without `_local`, it's optional).
+skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository
+(because of user name being `_local`). To enter the plugin's directory use `cd` command
+with just plugin's name (without `_local`, it's optional).
 
-The special user name `_local` is optional also for other commands, e.g. for
-`load` (i.e. `zplugin load myplugin` is sufficient, there's no need for
-`zplugin load _local/myplugin`).
-
-If user name will not be `_local`, then Zplugin will create repository also on Github and setup correct repository origin.
+If user name will not be `_local`, then Zplugin will create repository also on Github
+and setup correct repository origin.
 
 # Customizing Paths & Other
 
