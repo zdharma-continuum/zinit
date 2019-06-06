@@ -1534,7 +1534,7 @@ builtin setopt noaliases
         sched +1 "-zplg-scheduler following"
 
         local ANFD="13371337" # for older Zsh + noclobber option
-        exec {ANFD}< <(LANG=C sleep 0.01; echo run;)
+        exec {ANFD}< <(builtin echo run;)
         zle -F "$ANFD" -zplg-scheduler
     }
 
