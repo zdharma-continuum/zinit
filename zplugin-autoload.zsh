@@ -1250,7 +1250,8 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
             [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && {
                 -zplg-any-colorify-as-uspl2 "$id_as"
-                print -r -- "$REPLY doesn't have a remote set, will not fetch"
+                [[ "$id_as" = _local/* ]] && print -r -- "Skipping local plugin $REPLY" || \
+                    print -r -- "$REPLY doesn't have a remote set, will not fetch"
             }
             return 1
         fi
@@ -1544,7 +1545,8 @@ ZPLGM[EXTENDED_GLOB]=""
             config=( ${(f)"$(<$repo/.git/config)"} )
             if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
-                    print "\n$REPLY doesn't have a remote set, will not fetch"
+                    [[ "$pd" = _local---* ]] && print -r -- "Skipping local plugin $REPLY" || \
+                        print "\n$REPLY doesn't have a remote set, will not fetch"
                 continue
             fi
         fi
