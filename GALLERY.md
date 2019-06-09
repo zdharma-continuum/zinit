@@ -102,7 +102,7 @@ zplugin light chauncey-garrett/zsh-prompt-garrett
 zplugin ice svn atload"prompt garrett"
 zplugin snippet PZT::modules/prompt
 
-zplugin ice nocompletions atpull'prompt_zinc_compile' compile"{zinc_functions/*,segments/*,zinc.zsh}"
+zplugin ice nocompletions atclone'prompt_zinc_compile' atpull'%atclone' compile"{zinc_functions/*,segments/*,zinc.zsh}"
 zplugin load robobenklein/zinc
 # ZINC git info is already async, but if you want it even faster with gitstatus in turbo mode:
 # https://github.com/romkatv/gitstatus
