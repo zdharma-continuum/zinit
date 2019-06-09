@@ -1545,7 +1545,7 @@ ZPLGM[EXTENDED_GLOB]=""
             config=( ${(f)"$(<$repo/.git/config)"} )
             if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
-                    [[ "$pd" = _local---* ]] && print -r -- "Skipping local plugin $REPLY" || \
+                    [[ "$pd" = _local---* ]] && print -r -- "\nSkipping local plugin $REPLY" || \
                         print "\n$REPLY doesn't have a remote set, will not fetch"
                 continue
             fi
