@@ -964,7 +964,7 @@ builtin setopt noaliases
         if ! -zplg-setup-plugin-dir "$user" "$plugin" "$id_as"; then
             -zplg-unregister-plugin "$id_as"
             zle && { print; zle .reset-prompt; }
-            return
+            return 1
         fi
         zle && rst=1
     fi
