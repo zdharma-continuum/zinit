@@ -44,6 +44,11 @@ zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh
 # Scripts
 #
 
+# For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
+# coreutils package from Homebrew or using https://github.com/ogham/exa)
+zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
+zplugin light trapd00r/LS_COLORS
+
 zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX" nocompile
 zplugin light tj/git-extras
 
@@ -104,6 +109,7 @@ zplugin snippet PZT::modules/prompt
 
 zplugin ice nocompletions atclone'prompt_zinc_compile' atpull'%atclone' compile"{zinc_functions/*,segments/*,zinc.zsh}"
 zplugin load robobenklein/zinc
+
 # ZINC git info is already async, but if you want it even faster with gitstatus in turbo mode:
 # https://github.com/romkatv/gitstatus
 zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
