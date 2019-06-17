@@ -1327,6 +1327,8 @@ ZPLGM[EXTENDED_GLOB]=""
 
         # Any new commits?
         [[ ${#log} -gt 0 ]] && {
+            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_dir" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
+
             if [[ -z "${ice[is_release]}" && -n "${ice[mv]}" ]]; then
                 local from="${ice[mv]%%[[:space:]]#->*}" to="${ice[mv]##*->[[:space:]]#}"
                 local -a afr
@@ -1345,7 +1347,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
-            [[ ${+ice[make]} = 1 && ${ice[make]} = "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}
+            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_dir" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
             [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
         }
