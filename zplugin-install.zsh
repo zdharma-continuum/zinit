@@ -417,7 +417,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
                 if [[ "$update" = "-u" ]];then
                     # Test if update available
-                    -zplg-mirror-using-svn "$url" "-t" "$dirname" || return 2
+                    -zplg-mirror-using-svn "$url" "-t" "$dirname" || {
+                        (( ${+ZPLG_ICE[run-atpull]} )) && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
+                        return 2;
+                    }
                     [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
                     # Do the update
                     [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {

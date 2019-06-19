@@ -1266,6 +1266,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${ice[is_release]/\/$REPLY\//}" != "${ice[is_release]}" ]]; then
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
                     print -- "\rBinary release already up to date (version: $REPLY)"
+                (( ${+ice[run-atpull]} )) && ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
             else
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#\!}" ${ZPLG_ICE[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
@@ -1315,6 +1316,9 @@ ZPLGM[EXTENDED_GLOB]=""
               [[ ${#log} -gt 0 ]] && {
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#\!}" ${ZPLG_ICE[atclone]}; )
                   command git pull --no-stat
+                  ((1))
+              } || {
+                  (( ${+ice[run-atpull]} )) && ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
               }
             )
 
@@ -1411,11 +1415,12 @@ ZPLGM[EXTENDED_GLOB]=""
     ice_order=(
         svn proto from teleid bindmap cloneopts id-as depth if wait load unload
         blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
         nocompletions
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd nocompletions svn
+            blockf silent lucid trackbinds cloneonly nocd run-atpull
+            nocompletions svn
     )
 
     # Remove whitespace from beginning of URL
@@ -2573,11 +2578,12 @@ ZPLGM[EXTENDED_GLOB]=""
     ice_order=(
         svn proto from teleid bindmap cloneopts id-as depth if wait load unload
         blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
         nocompletions
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd nocompletions svn
+            blockf silent lucid trackbinds cloneonly nocd run-atpull
+            nocompletions svn
     )
     -zplg-compute-ice "$1${${1:#(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
 
@@ -2723,6 +2729,6 @@ module                   - manage binary Zsh module shipped with Zplugin, see \`
 Available ice-modifiers:
         svn proto from teleid bindmap cloneopts id-as depth if wait load unload
         blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
         nocompletions"
 } # }}}

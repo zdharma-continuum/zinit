@@ -173,11 +173,12 @@
     ice_order=(
         svn proto from teleid bindmap cloneopts id-as depth if wait load unload
         blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
         nocompletions
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd nocompletions svn
+            blockf silent lucid trackbinds cloneonly nocd run-atpull
+            nocompletions svn
     )
 
     command mkdir -p "$__pfx"

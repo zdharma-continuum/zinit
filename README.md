@@ -522,6 +522,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. |
 | `atload`  | Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`). |
 | `atpull`  | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. To be used with plugins and snippets. |
+| `run-atpull` | Always run the atpull hook (when updating), not only when there are new commits to be downloaded. |
 | `cloneonly` | Don't load the plugin / snippet, only download it |
 | `nocd`    | Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. |
 | `svn`     | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). |
@@ -593,7 +594,7 @@ module                       - manage binary Zsh module shipped with Zplugin, se
 Available ice-modifiers:
         svn proto from teleid bindmap cloneopts id-as depth if wait load unload
         blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
         nocompletions"
 ```
 
