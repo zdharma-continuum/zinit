@@ -1406,6 +1406,18 @@ ZPLGM[EXTENDED_GLOB]=""
     local __URL="${1%/}" __pack="$2" is_snippet=0
     local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" __var_name3="${5:-filename}"
 
+    # Copy from -zplg-recall
+    local -a ice_order nval_ices
+    ice_order=(
+        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
+        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
+        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocompletions
+    )
+    nval_ices=(
+            blockf silent lucid trackbinds cloneonly nocd nocompletions svn
+    )
+
     # Remove whitespace from beginning of URL
     __URL="${${__URL#"${__URL%%[! $'\t']*}"}%/}"
 
@@ -1463,14 +1475,14 @@ ZPLGM[EXTENDED_GLOB]=""
     # Read disk-Ice
     local -A __mdata
     local __key
-    { for __key in mode url from as pick bpick mv cp make atclone atpull is_release ver id-as teleid bindmap cloneopts; do
+    { for __key in mode url ${ice_order[@]}; do
         [[ -f "$__zplugin_path/$__key" ]] && __mdata[$__key]="$(<$__zplugin_path/$__key)"
       done
       [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
     } 2>/dev/null
 
     # Handle flag-Ices; svn must be last
-    for __key in make svn pick; do
+    for __key in make pick nocompile ${nval_ices[@]}; do
         (( 0 == ${+ZPLG_ICE[no$__key]} )) && continue
 
         if [[ "$__key" = "svn" ]]; then
@@ -1484,7 +1496,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
-    for __key in mode url from as pick bpick mv cp atclone atpull is_release ver id-as teleid bindmap cloneopts   make svn; do
+    for __key in mode url ${ice_order[@]}; do
         (( ${+__sice[$__key]} + ${${${__pack:#pack-nf}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
 
@@ -2558,8 +2570,15 @@ ZPLGM[EXTENDED_GLOB]=""
     local el val cand1 cand2 local_dir filename
 
     local -a ice_order nval_ices output
-    ice_order=( svn proto from teleid bindmap cloneopts id-as depth if wait load unload blockf pick bpick src as ver silent mv cp atinit atclone atload atpull make service trackbinds )
-    nval_ices=( blockf silent svn trackbinds )
+    ice_order=(
+        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
+        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
+        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocompletions
+    )
+    nval_ices=(
+            blockf silent lucid trackbinds cloneonly nocd nocompletions svn
+    )
     -zplg-compute-ice "$1${${1:#(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
 
     [[ -e "$local_dir" ]] && {
@@ -2569,7 +2588,7 @@ ZPLGM[EXTENDED_GLOB]=""
             cand2="${(qq)val}"
             if [[ -n "$val" ]]; then
                 [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
-            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = "make" ) ]]; then
+            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile) ) ]]; then
                 output+=( "$el" )
             fi
         done
@@ -2701,8 +2720,9 @@ env-whitelist [-v]       - allows to specify names (also patterns) of variables 
 bindkeys                 - lists bindkeys set up by each plugin
 module                   - manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
 
-Available ice-modifiers: proto from cloneopts depth if has wait load unload blockf
-                         pick bpick src as ver silent svn mv cp atinit atclone
-                         atload atpull make service bindmap trackbinds nocompile
-                         nocompletions"
+Available ice-modifiers:
+        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
+        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
+        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocompletions"
 } # }}}

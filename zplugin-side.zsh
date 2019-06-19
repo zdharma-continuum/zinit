@@ -168,15 +168,28 @@
 -zplg-store-ices() {
     local __pfx="$1" __ice_var="$2" __add_ices="$3" __add_ices2="$4" url="$5" mode="$6"
 
+    # Copy from -zplg-recall
+    local -a ice_order nval_ices
+    ice_order=(
+        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
+        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
+        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocompletions
+    )
+    nval_ices=(
+            blockf silent lucid trackbinds cloneonly nocd nocompletions svn
+    )
+
     command mkdir -p "$__pfx"
     local __key __var_name
-    for __key in proto from as bpick mv cp atclone atpull ver id-as teleid bindmap cloneopts ${(s: :)__add_ices[@]}; do
+    # No nval_ices here
+    for __key in ${ice_order[@]:#(${(~j:|:)nval_ices[@]})} ${(s: :)__add_ices[@]}; do
         __var_name="${__ice_var}[$__key]"
         print -r -- "${(P)__var_name}" >! "$__pfx"/$__key
     done
 
     # Ices that even empty mean something
-    for __key in make pick ${(s: :)__add_ices2[@]}; do
+    for __key in make pick nocompile ${nval_ices[@]} ${(s: :)__add_ices2[@]}; do
         __var_name="${__ice_var}[$__key]"
         (( ${(P)+__var_name} )) && print -r -- "${(P)__var_name}" >! "$__pfx"/$__key || command rm -f "$__pfx"/$__key
     done

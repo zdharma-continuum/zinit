@@ -590,10 +590,11 @@ env-whitelist [-v]           - allows to specify names (also patterns) of variab
 bindkeys                     - lists bindkeys set up by each plugin
 module                       - manage binary Zsh module shipped with Zplugin, see `zplugin module help'
 
-Available ice-modifiers: proto from cloneopts depth if has wait load unload blockf
-                         pick bpick src as ver silent svn mv cp atinit atclone
-                         atload atpull make service bindmap trackbinds nocompile
-                         nocompletions
+Available ice-modifiers:
+        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
+        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
+        nocd has cloneonly make service trackbinds multisrc compile nocompile
+        nocompletions"
 ```
 
 ### Using Oh-My-Zsh Themes
@@ -808,7 +809,7 @@ plugin really is, is that:
 2. It has any first `*.plugin.zsh` file sourced
 
 That's it. When one contributes to Oh-My-Zsh or creates a plugin for any plugin
-manager, he only needs to account for this. 
+manager, he only needs to account for this.
 
 Also, [**there's a document that defines the Zsh Plugin
 Standard**](http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html). Zplugin
