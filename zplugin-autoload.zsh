@@ -1480,7 +1480,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Read disk-Ice
     local -A __mdata
     local __key
-    { for __key in mode url ${ice_order[@]}; do
+    { for __key in mode url is_release ${ice_order[@]}; do
         [[ -f "$__zplugin_path/$__key" ]] && __mdata[$__key]="$(<$__zplugin_path/$__key)"
       done
       [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
@@ -1501,7 +1501,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
-    for __key in mode url ${ice_order[@]}; do
+    for __key in mode url is_release ${ice_order[@]}; do
         (( ${+__sice[$__key]} + ${${${__pack:#pack-nf}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
 
