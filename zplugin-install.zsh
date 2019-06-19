@@ -369,6 +369,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             for first in "${list[@]}"; do
                 zcompile "$first"
             done
+            print "Compiled following additional files (${ZPLGM[col-pname]}the compile''-ice${ZPLGM[col-rst]}): ${(j:, :)list[@]#$plugin_dir/}"
         }
     fi
 
