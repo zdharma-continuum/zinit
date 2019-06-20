@@ -1676,6 +1676,7 @@ ZPLGM[EXTENDED_GLOB]=""
         else
             user="${entry2%%---*}"
             plugin="${entry2#*---}"
+            [[ "$user" = \% ]] && plugin="/${plugin//---/\/}"
             [[ "$user" = "$plugin" && "$user/$plugin" != "$entry2" ]] && user=""
             -zplg-any-colorify-as-uspl2 "$user" "$plugin"
 
