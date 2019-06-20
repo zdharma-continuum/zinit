@@ -1646,7 +1646,7 @@ zplugin() {
                    -zplg-show-zstatus
                    ;;
                (times)
-                   -zplg-show-times
+                   -zplg-show-times "${@[2,-1]}"
                    ;;
                (self-update)
                    -zplg-self-update

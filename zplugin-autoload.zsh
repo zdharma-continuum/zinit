@@ -1660,7 +1660,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # User-action entry point.
 -zplg-show-times() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local entry entry2 user plugin
+    local opt="$1" entry entry2 user plugin
     float -F 3 sum=0.0
     local -A sice
     local -a tmp
@@ -1683,11 +1683,20 @@ ZPLGM[EXTENDED_GLOB]=""
             (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" ) || sice=()
         fi
 
-        if [[ "${sice[as]}" == "command" ]]; then
-            print "${ZPLGM[$entry]} sec" - "$REPLY (command)"
+        if [[ "$opt" = "-s" ]]; then
+            if [[ "${sice[as]}" == "command" ]]; then
+                print "${ZPLGM[$entry]} sec" - "$REPLY (command)"
+            else
+                print "${ZPLGM[$entry]} sec" - "$REPLY"
+            fi
         else
-            print "${ZPLGM[$entry]} sec" - "$REPLY"
+            if [[ "${sice[as]}" == "command" ]]; then
+                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (command)"
+            else
+                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY"
+            fi
         fi
+
         (( sum += ZPLGM[$entry] ))
     done
     print "Total: $sum sec"
@@ -2682,7 +2691,7 @@ ZPLGM[EXTENDED_GLOB]=""
 —— -h|--help|help                – usage information
 —— man                           – manual
 —— self-update                   – updates and compiles Zplugin
-—— times                         – statistics on plugin load times, sorted in order of loading
+—— times [-s]                    – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds
 —— zstatus                       – overall Zplugin status
 —— load ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}                 – load plugin, can also receive absolute local path
 —— light [-b] ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)

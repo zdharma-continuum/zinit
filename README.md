@@ -547,7 +547,7 @@ Usage:
 —— -h|--help|help                – usage information
 —— man                           – manual
 —— self-update                   – updates and compiles Zplugin
-—— times                         – statistics on plugin load times, sorted in order of loading
+—— times [-s]                    – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds
 —— zstatus                       – overall Zplugin status
 —— load plg-spec                 – load plugin, can also receive absolute local path
 —— light [-b] plg-spec           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)
