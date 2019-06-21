@@ -1490,6 +1490,7 @@ builtin setopt noaliases
             setopt extendedglob
             # Example entry:
             # 1531252764+2+1 p 18 light zdharma/zsh-diff-so-fancy
+            #
             # This either doesn't change ZPLG_TASKS entry - when
             # __i is used in the ternary expression, or replaces
             # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
@@ -1500,7 +1501,8 @@ builtin setopt noaliases
                     # The following substitution could be just (well, 'just'..) this:
                     #
                     # ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/
-                    # ${ZPLG_TASKS[$(( (${match[1-correct]}+${match[2-correct]}) <= $__t ?                    # zplugin_scheduler_add(__i++ - correct, ${match[2-correct]},
+                    # ${ZPLG_TASKS[$(( (${match[1-correct]}+${match[2-correct]}) <= $__t ?
+                    # zplugin_scheduler_add(__i++ - correct, ${match[2-correct]},
                     # ${(M)match[3-correct]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
                     #
                     # However, there's a severe bug in Zsh <= 5.3.1 - use of the period
@@ -1508,11 +1510,11 @@ builtin setopt noaliases
                     __i=2
 
                     ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/${ZPLG_TASKS[
-                    $(( __ar2=${match[2-correct]}+1 ? (
-                        __ar3=${(M)match[3-correct]%[1-3]} ? (
-                        __ar4=__idx1+1 ? (
-                        __ar5=__idx2 ? (
-            ${match[1-correct]}+${match[2-correct]} <= $__t ?
+                    $(( (__ar2=${match[2-correct]}+1) ? (
+                        (__ar3=${(M)match[3-correct]%[1-3]}) ? (
+                        (__ar4=__idx1+1) ? (
+                        (__ar5=__idx2) ? (
+            (${match[1-correct]}+${match[2-correct]}) <= $__t ?
             zplugin_scheduler_add(__i++ - correct) : __i++ )
                         : 1 )
                         : 1 )
