@@ -1237,7 +1237,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 0
     fi
 
-    (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$user/$plugin]=""; local nf="-nf"; }
+    (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$user/$plugin]=""; local nf="-nftid"; }
 
     -zplg-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" ice local_dir filename || return 1
     [[ "${ice[teleid]:-$id_as}" = (#b)([^/]##)/(*) ]] && { user="${match[1]}"; plugin="${match[2]}"; } || { user=""; plugin="${ice[teleid]:-$id_as}"; }
@@ -1505,8 +1505,14 @@ ZPLGM[EXTENDED_GLOB]=""
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
     for __key in mode url is_release ${ice_order[@]}; do
-        (( ${+__sice[$__key]} + ${${${__pack:#pack-nf}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+        (( ${+__sice[$__key]} + ${${${__pack:#pack-nf*}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
+    # One more round for the special case – update, which ALWAYS
+    # needs the tleid from the disk or static ice
+    __key=teleid; [[ "$__pack" = pack-nftid ]] && {
+        (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+        print 'YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' $__MY_ICE[$__key] '@@@@@@@@@@@@@@'
+    }
 
     : ${(PA)__var_name1::="${(kv)__MY_ICE[@]}"}
     : ${(P)__var_name2::=$__local_dir}
