@@ -236,8 +236,8 @@ typeset -g ZPLG_MOD_DEBUG=1
 
     In case of problems with the loading a warning message will be output:
 
-    ```zsh
-    % zplugin ice wait"0" lucid notify atload'return 7'
+    ```
+    % zplugin ice notify atload'return 7'
     % zplugin light zdharma/null
     %
     notify: Plugin not loaded / loaded with problem, the return code: 7
