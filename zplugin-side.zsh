@@ -175,6 +175,7 @@
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
+        reset-prompt
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull

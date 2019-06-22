@@ -977,6 +977,7 @@ builtin setopt noaliases
 
     -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"; retval=$?
     (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && -zplg-deploy-message @msg "${ZPLG_ICE[notify]#\!}" || -zplg-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
+    (( ${+ZPLG_ICE[reset-prompt]} == 1 )) && -zplg-deploy-message @rst
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as//\//---}]=$SECONDS
     return $retval
@@ -1130,6 +1131,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]}"; ((1)); } || eval "${ZPLG_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && -zplg-deploy-message @msg "${ZPLG_ICE[notify]#\!}" || -zplg-deploy-message @msg "notify: Snippet not loaded / loaded with problem, the return code: $retval"; }
+    (( ${+ZPLG_ICE[reset-prompt]} == 1 )) && -zplg-deploy-message @rst
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as}]=$SECONDS
@@ -1335,7 +1337,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|unload|if|has|cloneonly|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|run-atpull|make|nomake|notify|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+        [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|unload|if|has|cloneonly|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
@@ -1431,7 +1433,7 @@ builtin setopt noaliases
     [[ "$1" = <-> && ${#} -eq 1 ]] && { zle && {
             local alltext text IFS=$'\n' nl=$'\n'
             repeat 25; do read -u"$1" text; alltext+="${text:+$text$nl}"; done
-            [[ -n "$alltext" ]] && zle -M "$alltext"
+            [[ "$alltext" = "@rst$nl" ]] && zle .reset-prompt || { [[ -n "$alltext" ]] && zle -M "$alltext"; }
         }
         zle -F "$1"; exec {1}<&-
         return 0
