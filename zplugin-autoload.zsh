@@ -1416,10 +1416,10 @@ ZPLGM[EXTENDED_GLOB]=""
     # Copy from -zplg-recall
     local -a ice_order nval_ices
     ice_order=(
-        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
-        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions
+        svn proto from teleid bindmap cloneopts id-as depth if wait load
+        unload blockf pick bpick src as ver silent lucid notify mv cp
+        atinit atclone atload atpull nocd run-atpull has cloneonly make
+        service trackbinds multisrc compile nocompile nocompletions
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
@@ -2595,10 +2595,10 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local -a ice_order nval_ices output
     ice_order=(
-        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
-        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions
+        svn proto from teleid bindmap cloneopts id-as depth if wait load
+        unload blockf pick bpick src as ver silent lucid notify mv cp
+        atinit atclone atload atpull nocd run-atpull has cloneonly make
+        service trackbinds multisrc compile nocompile nocompletions
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
@@ -2613,7 +2613,7 @@ ZPLGM[EXTENDED_GLOB]=""
             cand2="${(qq)val}"
             if [[ -n "$val" ]]; then
                 [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
-            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile) ) ]]; then
+            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify) ) ]]; then
                 output+=( "$el" )
             fi
         done

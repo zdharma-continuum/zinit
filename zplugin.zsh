@@ -976,6 +976,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"; retval=$?
+    (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && -zplg-deploy-message @msg "${ZPLG_ICE[notify]#\!}" || -zplg-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as//\//---}]=$SECONDS
     return $retval
@@ -1127,6 +1128,8 @@ builtin setopt noaliases
     [[ -n "${opts[(r)-u]}" ]] && return 0
 
     (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]}"; ((1)); } || eval "${ZPLG_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+
+    (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && -zplg-deploy-message @msg "${ZPLG_ICE[notify]#\!}" || -zplg-deploy-message @msg "notify: Snippet not loaded / loaded with problem, the return code: $retval"; }
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as}]=$SECONDS
@@ -1332,7 +1335,7 @@ builtin setopt noaliases
     setopt localoptions extendedglob noksharrays
     local bit
     for bit; do
-        [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|unload|if|has|cloneonly|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|run-atpull|make|nomake|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+        [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|unload|if|has|cloneonly|blockf|svn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|atclone|run-atpull|make|nomake|notify|nosvn|service|compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
@@ -1422,6 +1425,27 @@ builtin setopt noaliases
     return $__s
 }
 # }}}
+# FUNCTION: -zplg-deploy-message {{{
+# Deploys a sub-prompt message to be displayed
+-zplg-deploy-message() {
+    [[ "$1" = <-> && ${#} -eq 1 ]] && { zle && {
+            local alltext text IFS=$'\n' nl=$'\n'
+            repeat 25; do read -u"$1" text; alltext+="${text:+$text$nl}"; done
+            [[ -n "$alltext" ]] && zle -M "$alltext"
+            print -rl "Yes outputted the text: $alltext" >> /tmp/reply
+        }
+        zle -F "$1"; exec {1}<&-
+        return 0
+    }
+    local THEFD
+    # The expansion is: if there is @sleep: pfx, then use what's after
+    # it, otherwise substitute 0
+    exec {THEFD} < <(LANG=C sleep $(( 0.01 + ${${${(M)1#@sleep:}:+${1#@sleep:}}:-0} )); print -r -- ${1:#(@msg|@sleep:*)} "${@[2,-1]}")
+    zle -F "$THEFD" -zplg-deploy-message
+    print -rl "Yes setupt the text: $alltext" >> /tmp/reply
+}
+# }}}
+
 # FUNCTION: -zplg-submit-turbo {{{
 # If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
 # preceded with `wait', `load' or `unload' ice-mods then the plugin

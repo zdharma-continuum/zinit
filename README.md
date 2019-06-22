@@ -222,6 +222,29 @@ typeset -g ZPLG_MOD_DEBUG=1
 ```
 
 # News
+
+* 22-06-2019
+  - New ice-mod `notify''` which will cause to display an under-prompt notification
+    when the plugin or snippet gets loaded. E.g.:
+
+    ```zsh
+    % zplugin ice wait"0" lucid notify"zdharma/null has been loaded"
+    % zplugin light zdharma/null
+    %
+    zdharma/null has been loaded
+    ```
+
+    In case of problems with the loading a warning message will be output:
+
+    ```zsh
+    % zplugin ice wait"0" lucid notify atload'return 7'
+    % zplugin light zdharma/null
+    %
+    notify: Plugin not loaded / loaded with problem, the return code: 7
+    ```
+
+    Refer to [Ice Modifiers](#ice-modifiers) section for a complete description.
+
 * 29-05-2019
   - Turbo-Mode, i.e. the `wait''` ice-mode now supports a suffix – the letter `a`, `b`
     or `c`. The meaning is illustrated by the following example:
@@ -239,10 +262,12 @@ typeset -g ZPLG_MOD_DEBUG=1
 
     As it can be seen, the second plugin has been loaded first. That's because there
     are now three sub-slots (the `a`, `b` and `c`) in which the plugin/snippet loadings
-    can be put into. In other words, instead of `wait'0'` you can enter `wait'1a'`,
+    can be put into. Plugins from the same time-slot with suffix `a` will be loaded
+    before plugins with suffix `b`, etc.
+
+    In other words, instead of `wait'1'` you can enter `wait'1a'`,
     `wait'1b'` and `wait'1c'` – to this way **impose order** on the loadings
-    **regardless of the order of `zplugin` commands**. Plugins from the same time-slot
-    with suffix `a` will be loaded before plugins with suffix `b`, etc.
+    **regardless of the order of `zplugin` commands**. 
 * 26-05-2019
   - Turbo-Mode now divides the scheduled events (i.e. loadings of plugins or snippets)
     into packs of 5. In other words, after loading each series of 5 plugins or snippets
@@ -516,6 +541,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `blockf`  | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. |
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. |
 | `lucid`   | Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). |
+| `notify`  | Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems. |
 | `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. |
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
 | `atinit`  | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. |
@@ -592,10 +618,10 @@ Usage:
 —— module                        – manage binary Zsh module shipped with Zplugin, see `zplugin module help'
 
 Available ice-modifiers:
-        svn proto from teleid bindmap cloneopts id-as depth if wait load unload
-        blockf pick bpick src as ver silent lucid mv cp atinit atclone atload atpull
-        nocd run-atpull has cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions"
+        svn proto from teleid bindmap cloneopts id-as depth if wait load unload blockf
+        pick bpick src as ver silent lucid notify mv cp atinit atclone atload atpull
+        nocd run-atpull has cloneonly make service trackbinds multisrc compile
+        nocompile nocompletions"
 ```
 
 ### Using Oh-My-Zsh Themes
