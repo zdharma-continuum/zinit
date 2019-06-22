@@ -225,6 +225,10 @@ typeset -g ZPLG_MOD_DEBUG=1
 # News
 
 * 22-06-2019
+  - New ice mod `reset-prompt` that will issue `zle .reset-prompt` after loading the
+    plugin or snippet, causing the prompt to be recomputed. Useful with themes &
+    turbo-mode.
+
   - New ice-mod `notify''` which will cause to display an under-prompt notification
     when the plugin or snippet gets loaded. E.g.:
 

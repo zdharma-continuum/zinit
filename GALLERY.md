@@ -114,4 +114,12 @@ zplugin load robobenklein/zinc
 # https://github.com/romkatv/gitstatus
 zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
 zplugin load romkatv/gitstatus
+
+# Powerlevel10k theme with automatically downloaded & updated settings
+# that emulate sindresorhus/pure theme
+
+zplugin ice atclone'curl -fsSL https://gist.githubusercontent.com/romkatv/7cbab80dcbc639003066bb68b9ae0bbf/raw/pure10k.zsh -o pure10k.zsh' \
+    atpull'%atclone' run-atpull atload"powerlevel9k_prepare_prompts" \
+    src"pure10k.zsh" wait"0" lucid reset-prompt
+zplugin load romkatv/powerlevel10k
 ```
