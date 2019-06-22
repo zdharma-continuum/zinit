@@ -46,6 +46,7 @@ Besides the main-knowledge source, i.e. this README, there are subpages that are
  - [INSTALLATION](doc/INSTALLATION.adoc)
  - [INTRODUCTION TO ZPLUGIN](doc/INTRODUCTION.adoc)
  - [Short-narration style WIKI](https://github.com/zdharma/zplugin/wiki)
+ - [A subreddit dedicated to Zplugin](https://www.reddit.com/r/zplugin/)
 
 # Zplugin
 
@@ -725,13 +726,16 @@ one loaded, as their (2 projects, [z-sy-h](https://github.com/zsh-users/zsh-synt
 completion-related plugin. `zpcompinit` is a function that just runs `autoload
 compinit; compinit`, created for convenience. There's also `zpcdreplay` which
 will replay any caught compdefs so you can also do: `atinit'zpcompinit;
-zpcdreplay'`, etc. Basically, it's the same as normal `compinit` call, but it
-is done in `atinit` or `atload` hook of the last related plugin.
+zpcdreplay'`, etc. Basically, the whole topic is the same as normal `compinit` call,
+but it is done in `atinit` or `atload` hook of the last related plugin with use of the
+helper functions (`zpcompinit`,`zpcdreplay` & `zpcdclear` – see below for explanation
+of the last one).
 
 # Ignoring Compdefs
 
 If you want to ignore compdefs provided by some plugins or snippets, place their load commands
-before commands loading other plugins or snippets, and issue `zplugin cdclear`:
+before commands loading other plugins or snippets, and issue `zplugin cdclear` (or
+`zpcdclear`, designed to be used in hooks like `atload''`):
 
 ```SystemVerilog
 source ~/.zplugin/bin/zplugin.zsh
