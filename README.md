@@ -41,7 +41,7 @@ reports](DONATIONS.md) about what is being done with the money received.
 # Getting help
 
 Besides the main-knowledge source, i.e. this README, there are subpages that are
-**guides**:
+**guides** and also an external web-page:
 
  - [INSTALLATION](doc/INSTALLATION.adoc)
  - [INTRODUCTION TO ZPLUGIN](doc/INTRODUCTION.adoc)
