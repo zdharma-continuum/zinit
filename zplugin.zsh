@@ -1891,6 +1891,7 @@ zplugin() {
 # It works like `zplugin cdreplay', which cannot be invoked from hook ices.
 zpcdreplay() { -zplg-compdef-replay -q; }
 # }}}
+zpcdclear() { -zplg-compdef-clear -q; }
 # FUNCTION: zpcompinit {{{
 # A function that can be invoked from within `atinit', `atload', etc. ice-mod.
 # It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
