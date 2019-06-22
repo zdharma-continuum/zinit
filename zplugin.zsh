@@ -548,7 +548,7 @@ builtin setopt noaliases
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
                 local widname="$2" saved_widname="zplugin-saved-$2"
-                builtin zle -A "$widname" "$saved_widname"
+                builtin zle -A -- "$widname" "$saved_widname"
 
                 widname="${(q)widname}"
                 saved_widname="${(q)saved_widname}"

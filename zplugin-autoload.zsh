@@ -1902,7 +1902,7 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
         o="$REPLY"
 
-        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
+        # If we successfully read a symlink (unknown == 0), test if it isn't broken
         stray=0
         if (( unknown == 0 )); then
             [[ ! -f "$cpath" ]] && stray=1
@@ -1992,7 +1992,7 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ "$REPLY" = "[unknown]" ]] && unknown=1 || unknown=0
         -zplg-any-colorify-as-uspl2 "$REPLY"
 
-        # If we succesfully read a symlink (unknown == 0), test if it isn't broken
+        # If we successfully read a symlink (unknown == 0), test if it isn't broken
         stray=0
         if (( unknown == 0 )); then
             [[ ! -f "$cpath" ]] && stray=1
