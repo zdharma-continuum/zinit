@@ -616,7 +616,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -e "$REPLY" ]] && {
         completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
     } || {
-        print "No such completion or snippet $1${${1:#(%|/)*}:+/}$2"
+        print "No such completion or snippet $1${${1:#(%|/)*}:+${2:+/}}$2"
         return 1
     }
 
@@ -1220,7 +1220,7 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-update-or-status() {
     setopt localoptions extendedglob nokshglob noksharrays nullglob rmstarsilent
 
-    -zplg-two-paths "$2${${2:#(%|/)*}:+/}$3"
+    -zplg-two-paths "$2${${2:#(%|/)*}:+${3:+/}}$3"
     if [[ -n "${reply[-3]}" || -n "${reply[-1]}" ]]; then
         -zplg-update-or-status-snippet "$1" "$2" "$3"
         return $?
@@ -1260,6 +1260,9 @@ ZPLGM[EXTENDED_GLOB]=""
     command rm -f $local_dir/.zplugin_lstupd
 
     if (( 1 )); then
+        if [[ -z "${ice[is_release]}" && "${ice[from]}" = (gh-r|github-rel) ]]; then
+            ice[is_release]=true
+        fi
         if [[ -n "${ice[is_release]}" ]]; then
             (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
             -zplg-get-latest-gh-r-version "$user" "$plugin"
@@ -1434,8 +1437,8 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         # Plugin
         -zplg-shands-exp "$__URL" && __URL="$REPLY"
-        local __user="${${(M)__URL#%}:-${${__URL%%/*}:-%}}" __plugin="${${(M)__URL#%}:+/}${${(M)__URL#/}:+/}${__URL#*/}"
-        [[ "$__user" = "$__plugin" && "$__user/$__plugin" != "$__URL" ]] && __user=""
+        -zplg-any-to-user-plugin "$__URL" ""
+        local __user="${reply[-2]}" __plugin="${reply[-1]}"
         __s_path="" __filename=""
         [[ "$__user" = "%" ]] && ___path="$__plugin" || ___path="${ZPLGM[PLUGINS_DIR]}/${__user:+${__user}---}${__plugin//\//---}"
         -zplg-exists-physically-message "$__user" "$__plugin" || return 1
@@ -1445,7 +1448,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local -A __sice
     local -a __tmp
-    __tmp=( "${(z@)ZPLG_SICE[${${__user+$user${${user:#(%|/)*}:+/}$plugin}:-$__URL}]}" )
+    __tmp=( "${(z@)ZPLG_SICE[$__user${${__user:#(%|/)*}:+/}$__plugin]}" )
     (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
 
     if [[ "${+__sice[svn]}" = "1" || -n "$__s_svn" ]]; then
@@ -1461,7 +1464,7 @@ ZPLGM[EXTENDED_GLOB]=""
             __sice[svn]=""
             __local_dir="$__s_path"
         else
-            [[ ! -e "$___path" ]] && { print -r -- "No such snippet, looked at paths: $__s_path, and: $___path"; return 1; }
+            [[ ! -e "$___path" ]] && { print -r -- "No such snippet, looked at paths (1): $__s_path, and: $___path"; return 1; }
             unset '__sice[svn]'
             __local_dir="$___path"
         fi
@@ -1470,7 +1473,7 @@ ZPLGM[EXTENDED_GLOB]=""
             unset '__sice[svn]'
             __local_dir="$___path"
         else
-            print -r -- "No such snippet, looked at paths: $__s_path, and: $___path"
+            print -r -- "No such snippet, looked at paths (2): $__s_path, and: $___path"
             return 1
         fi
     fi
@@ -2190,7 +2193,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local the_id="$1${${1:#(%|/)*}:+/}$2"
+    local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
@@ -2543,7 +2546,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 -zplg-get-path() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local the_id="$1${${1:#(%|/)*}:+/}$2"
+    local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
@@ -2595,7 +2598,7 @@ ZPLGM[EXTENDED_GLOB]=""
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions svn
     )
-    -zplg-compute-ice "$1${${1:#(%|/)*}:+/}$2" "pack" ice local_dir filename || return 1
+    -zplg-compute-ice "$1${${1:#(%|/)*}:+${2:+/}}$2" "pack" ice local_dir filename || return 1
 
     [[ -e "$local_dir" ]] && {
         for el in "${ice_order[@]}"; do
