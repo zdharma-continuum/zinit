@@ -227,7 +227,7 @@ typeset -g ZPLG_MOD_DEBUG=1
   - New ice mod `subscribe''`/`on-update-of''` which works like the
     `wait''` ice-mod, i.e. defers loading of a plugin, but it **looks at
     modification time of the given file(s)**, and when it changes, it then
-    triggers loading of the plugin
+    triggers loading of the plugin/snippet:
 
     ```zsh
     % zplugin ice on-update-of'{~/files-*,/tmp/files-*}' lucid \
