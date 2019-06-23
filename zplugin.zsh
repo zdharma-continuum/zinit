@@ -1342,9 +1342,10 @@ unload|on-update-of|subscribe|if|has|cloneonly|blockf|svn|pick|\
 nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|\
 atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|\
 compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|\
-nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+nocd|once)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
+    ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
@@ -1411,6 +1412,14 @@ nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
         __action="${(M)ZPLG_ICE[load]#\!}load"
     elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( __s=0 )) && $__pass = 1 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
         __action="${(M)ZPLG_ICE[unload]#\!}remove"
+    elif [[ -n "${ZPLG_ICE[subscribe]#\!}" && $(( __s=0 )) && "$__pass" = 2 ]] && \
+        { local -a fts_arr
+          eval "fts_arr=( ${ZPLG_ICE[subscribe]}(Nms-$(( EPOCHSECONDS -
+                 ZPLGM[fts-${ZPLG_ICE[subscribe]}] ))) ); (( \${#fts_arr} ))" && \
+                 { ZPLGM[fts-${ZPLG_ICE[subscribe]}]="$EPOCHSECONDS"; __s=${+ZPLG_ICE[once]}; } || (( 0 ))
+        }
+    then
+        __action="${(M)ZPLG_ICE[subscribe]#\!}load"
     fi
 
     if [[ "$__action" = *load ]]; then
@@ -1463,12 +1472,13 @@ nocd)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
     ZPLG_ICE[wait]="${ZPLG_ICE[wait]%%.[0-9]##}"
     ZPLGM[WAIT_IDX]=$(( ${ZPLGM[WAIT_IDX]:-0} + 1 ))
     ZPLGM[WAIT_ICE_${ZPLGM[WAIT_IDX]}]="${(j: :)${(qkv)ZPLG_ICE[@]}}"
+    ZPLGM[fts-${ZPLG_ICE[subscribe]}]="${ZPLG_ICE[subscribe]:+$EPOCHSECONDS}"
 
     local id="${${opt_plugin:+$opt_uspl2${${opt_uspl2:#%*}:+/}$opt_plugin}:-$opt_uspl2}"
 
     if [[ "${${ZPLG_ICE[wait]}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}" = (\!|.|)<-> ]]; then
         ZPLG_TASKS+=( "$EPOCHSECONDS+${${ZPLG_ICE[wait]#(\!|.)}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}+${${${(M)ZPLG_ICE[wait]%a}:+1}:-${${${(M)ZPLG_ICE[wait]%b}:+2}:-${${${(M)ZPLG_ICE[wait]%c}:+3}:-1}}} $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
-    elif [[ -n "${ZPLG_ICE[wait]}" || -n "${ZPLG_ICE[load]}" || -n "${ZPLG_ICE[unload]}" ]]; then
+    elif [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[subscribe]}" ]]; then
         ZPLG_TASKS+=( "${${ZPLG_ICE[wait]:+0}:-1}+0+1 $tpe ${ZPLGM[WAIT_IDX]} ${mode:-_} ${(q)id}" )
     fi
 }
@@ -1618,7 +1628,7 @@ zplugin() {
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
-               if [[ -n ${ZPLG_ICE[wait]} || -n ${ZPLG_ICE[load]} || -n ${ZPLG_ICE[unload]} || -n ${ZPLG_ICE[service]} ]]; then
+               if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                    ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
                    [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
                    -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"
