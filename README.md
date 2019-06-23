@@ -223,6 +223,23 @@ typeset -g ZPLG_MOD_DEBUG=1
 ```
 
 # News
+* 23-06-2019
+  - New ice mod `subscribe''`/`on-update-of''` which works like the
+    `wait''` ice-mod, i.e. defers loading of a plugin, but it **looks at
+    modification time of the given file(s)**, and when it changes, it then
+    triggers loading of the plugin
+
+    ```zsh
+    % zplugin ice on-update-of'{~/files-*,/tmp/files-*}' lucid \
+        atload"echo I have been loaded" \
+        notify"Yes that's true :)"
+    % zplugin load zdharma/null
+    % touch ~/files-1
+    The plugin has been loaded
+    %
+    Yes that's true :)
+    ```
+    The plugin/snippet will be sourced as many times as the file gets updated.
 
 * 22-06-2019
   - New ice mod `reset-prompt` that will issue `zle .reset-prompt` after loading the
@@ -547,7 +564,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `silent`  | Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. |
 | `lucid`   | Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). |
 | `notify`  | Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems. |
-| `reset-prompt` | Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`) |
+| `reset-prompt` | Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`. |
 | `mv`      | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. |
 | `cp`      | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. Works also with snippets. |
 | `atinit`  | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. |
@@ -563,6 +580,7 @@ Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain descri
 | `wait`    | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). |
 | `load`    | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. |
 | `unload`  | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. |
+| `subscribe` / `on-update-of` | Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` |
 | `service` | Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices org](https://github.com/zservices). |
 | `compile` | Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`. |
 | `nocompletions` | Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. |
