@@ -2370,9 +2370,17 @@ ZPLGM[EXTENDED_GLOB]=""
         }
     fi
 
-    print >! "${plugin:t}.plugin.zsh"
-    print >! "README.md"
-    print >! "LICENSE"
+    command cat >! "${plugin:t}.plugin.zsh" <<EOF
+# According to the Zsh Plugin Standard:
+# http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
+
+0="\${\${ZERO:-\${0:#\$ZSH_ARGZERO}}:-\${(%):-%N}}"
+
+# Then \${0:h} to get plugin's directory
+EOF
+
+    print -r -- "# $plugin" >! "README.md"
+    command cp -vf "${ZPLGM[BIN_DIR]}/LICENSE" LICENSE
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
         print "Remote repository $uspl2col set up as origin."
