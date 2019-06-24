@@ -729,6 +729,7 @@ ZPLGM[EXTENDED_GLOB]=""
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-install.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh
+    zcompile "${ZPLGM[BIN_DIR]}"/git-process-output.zsh
 } # }}}
 # FUNCTION: -zplg-show-registered-plugins {{{
 # Lists loaded plugins (subcommands list, lodaded).
