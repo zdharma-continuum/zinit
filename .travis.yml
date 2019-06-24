@@ -40,5 +40,5 @@ notifications:
     channels:
       - "chat.freenode.net#zplugin"
     on_success: change # default: always
-    on_failure: always # default: always
+    on_failure: change # default: always
     skip_join: true
