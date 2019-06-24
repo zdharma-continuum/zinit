@@ -33,6 +33,16 @@ zplugin light mptre/yank
 zplugin ice wait"2" lucid as'command' pick'src/vramsteg' atclone'cmake .' atpull'%atclone' make  # use turbo-mode
 zplugin light psprint/vramsteg-zsh
 
+zplugin ice atclone"./libexec/pyenv init - > zpyenv.zsh" \
+    atinit'export PYENV_ROOT="$PWD"' atpull"%atclone" \
+    as'command' pick'bin/pyenv' src"zpyenv.zsh" nocompile'!'
+zplugin light pyenv/pyenv
+
+zplugin ice as"program" pick"$ZPFX/sdkman/bin/sdk" id-as'sdkman' run-atpull \
+    atclone"wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh" \
+    atpull"SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate" \
+    atinit"export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh"
+zplugin light zdharma/null
 #
 # Completions
 #
