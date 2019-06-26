@@ -1387,10 +1387,10 @@ nocd|once)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
                     return 0
                 fi
 
-                [[ "$__cmd" = "NEXT" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; exec {__fd}>&-; __lckd=0; __strd=0; builtin read -t 10 __tmp <>"${__fle:r}.fifo2"; }
-                [[ "$__cmd" = "STOP" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; __strd=0; builtin echo >! "${__fle:r}.stop"; }
-                [[ "$__cmd" = "QUIT" ]] && { kill -HUP ${sysparams[pid]}; return 1; }
-                [[ "$__cmd" != "RESTART" ]] && { __cmd=""; builtin read -t 1 __tmp <>"${__fle:r}.fifo2"; }
+                [[ "$__cmd" = (#i)"NEXT" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; exec {__fd}>&-; __lckd=0; __strd=0; builtin read -t 10 __tmp <>"${__fle:r}.fifo2"; }
+                [[ "$__cmd" = (#i)"STOP" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; __strd=0; builtin echo >! "${__fle:r}.stop"; }
+                [[ "$__cmd" = (#i)"QUIT" ]] && { kill -HUP ${sysparams[pid]}; return 1; }
+                [[ "$__cmd" != (#i)"RESTART" ]] && { __cmd=""; builtin read -t 1 __tmp <>"${__fle:r}.fifo2"; }
             done
         ) || break
         builtin read -t 1 __tmp <>"${__fle:r}.fifo2"
