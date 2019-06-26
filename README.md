@@ -223,6 +223,10 @@ typeset -g ZPLG_MOD_DEBUG=1
 ```
 
 # News
+* 26-06-2019
+  - `notify''` contents gets evaluated, i.e. can contain active code like `$(tail -1
+    /var/log/messages)`, etc.
+
 * 23-06-2019
   - New ice mod `subscribe''`/`on-update-of''` which works like the
     `wait''` ice-mod, i.e. defers loading of a plugin, but it **looks at

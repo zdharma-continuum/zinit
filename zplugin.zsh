@@ -976,7 +976,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"; retval=$?
-    (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && -zplg-deploy-message @msg "${ZPLG_ICE[notify]#\!}" || -zplg-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
+    (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && { local msg; eval "msg=\"${ZPLG_ICE[notify]#\!}\""; -zplg-deploy-message @msg "$msg" } || -zplg-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
     (( ${+ZPLG_ICE[reset-prompt]} == 1 )) && -zplg-deploy-message @rst
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as//\//---}]=$SECONDS
@@ -1130,7 +1130,7 @@ builtin setopt noaliases
 
     (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]}"; ((1)); } || eval "${ZPLG_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-    (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && -zplg-deploy-message @msg "${ZPLG_ICE[notify]#\!}" || -zplg-deploy-message @msg "notify: Snippet not loaded / loaded with problem, the return code: $retval"; }
+    (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && { local msg; eval "msg=\"${ZPLG_ICE[notify]#\!}\""; -zplg-deploy-message @msg "$msg" } || -zplg-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
     (( ${+ZPLG_ICE[reset-prompt]} == 1 )) && -zplg-deploy-message @rst
 
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
