@@ -36,7 +36,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-    print "Downloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
+    print "\\nDownloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
 
     local site
     [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
