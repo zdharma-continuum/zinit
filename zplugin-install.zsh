@@ -41,131 +41,134 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local site
     [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
 
-    if [[ "$site" = *"releases" ]]; then
-        local url="$site/${ZPLG_ICE[ver]}"
-        local -a list list2
+    (
+        if [[ "$site" = *"releases" ]]; then
+            local url="$site/${ZPLG_ICE[ver]}"
+            local -a list list2
 
-        list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
-                      command grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
-        list=( "${list[@]#href=?}" )
+            list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
+                          command grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
+            list=( "${list[@]#href=?}" )
 
-        [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)${~ZPLG_ICE[bpick]}}" )
+            [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)${~ZPLG_ICE[bpick]}}" )
 
-        [[ ${#list} -gt 1 ]] && {
-            list2=( "${(M)list[@]:#(#i)(*${CPUTYPE#(#i)(i|amd)}*|*${${${(M)${CPUTYPE#(#i)(i|amd)}:#x86_64}:+amd64}:-DUMMY_ARCH}*)}" )
-            [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
-        }
-
-        [[ ${#list} -gt 1 ]] && {
-            list2=( "${(M)list[@]:#(#i)*${${OSTYPE%(#i)-gnu}%%[0-9.]##}*}" )
-            [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
-        }
-
-        [[ ${#list} -eq 0 ]] && {
-            print "Didn't find correct Github release-file to download (for \`$remote_url_path'), try adapting bpick-ICE"
-            return 1
-        }
-
-        command mkdir -p "$local_path"
-        [[ -d "$local_path" ]] || return 1
-
-        (
-            () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-            url="https://github.com${list[1]}"
-            print "(Requesting \`${list[1]:t}'...)"
-            -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
-                -zplg-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
-                    command rm -f "${list[1]:t}"
-                    print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
-                    print -r "Tried url: $url"
-                    return 1
-                }
+            [[ ${#list} -gt 1 ]] && {
+                list2=( "${(M)list[@]:#(#i)(*${CPUTYPE#(#i)(i|amd)}*|*${${${(M)${CPUTYPE#(#i)(i|amd)}:#x86_64}:+amd64}:-DUMMY_ARCH}*)}" )
+                [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
             }
 
-            command mkdir -p ._zplugin
-            print -r -- "$url" >! ._zplugin/url
-            print -r -- "${list[1]}" >! ._zplugin/is_release
-            -zplg-handle-binary-file "$url" "${list[1]:t}"
-            return $?
-        ) || {
-            return 1
-        }
-    else
-        case "${ZPLG_ICE[proto]}" in
-            (|https)
-                command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
-                    ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} \
-                    "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" \
-                    "$local_path" \
-                    --config transfer.fsckobjects=false \
-                    --config receive.fsckobjects=false \
-                    --config fetch.fsckobjects=false \
-                        |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
-                (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
-                ;;
-            (git|http|ftp|ftps|rsync|ssh)
-                command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
-                    ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} \
-                    "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" \
-                    "$local_path" \
-                    --config transfer.fsckobjects=false \
-                    --config receive.fsckobjects=false \
-                    --config fetch.fsckobjects=false \
-                        |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
-                (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
-                ;;
-            (*)
-                print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
+            [[ ${#list} -gt 1 ]] && {
+                list2=( "${(M)list[@]:#(#i)*${${OSTYPE%(#i)-gnu}%%[0-9.]##}*}" )
+                [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
+            }
+
+            [[ ${#list} -eq 0 ]] && {
+                print "Didn't find correct Github release-file to download (for \`$remote_url_path'), try adapting bpick-ICE"
                 return 1
-        esac
+            }
 
-        if [[ -n "${ZPLG_ICE[ver]}" ]]; then
-            command git -C "$local_path" checkout "${ZPLG_ICE[ver]}"
+            command mkdir -p "$local_path"
+            [[ -d "$local_path" ]] || return 1
+
+            (
+                () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+                url="https://github.com${list[1]}"
+                print "(Requesting \`${list[1]:t}'...)"
+                -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
+                    -zplg-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
+                        command rm -f "${list[1]:t}"
+                        print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                        print -r "Tried url: $url"
+                        return 1
+                    }
+                }
+
+                command mkdir -p ._zplugin
+                print -r -- "$url" >! ._zplugin/url
+                print -r -- "${list[1]}" >! ._zplugin/is_release
+                -zplg-handle-binary-file "$url" "${list[1]:t}"
+                return $?
+            ) || {
+                return 1
+            }
+        else
+            case "${ZPLG_ICE[proto]}" in
+                (|https)
+                    command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
+                        ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} \
+                        "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" \
+                        "$local_path" \
+                        --config transfer.fsckobjects=false \
+                        --config receive.fsckobjects=false \
+                        --config fetch.fsckobjects=false \
+                            |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
+                    (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
+                    ;;
+                (git|http|ftp|ftps|rsync|ssh)
+                    command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
+                        ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} \
+                        "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" \
+                        "$local_path" \
+                        --config transfer.fsckobjects=false \
+                        --config receive.fsckobjects=false \
+                        --config fetch.fsckobjects=false \
+                            |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
+                    (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
+                    ;;
+                (*)
+                    print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
+                    return 1
+            esac
+
+            if [[ -n "${ZPLG_ICE[ver]}" ]]; then
+                command git -C "$local_path" checkout "${ZPLG_ICE[ver]}"
+            fi
         fi
-    fi
 
-    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
 
-    if [[ -n "${ZPLG_ICE[mv]}" ]]; then
-        local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
-        local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-          afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
-        )
-    fi
+        if [[ -n "${ZPLG_ICE[mv]}" ]]; then
+            local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
+            local -a afr
+            ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+              afr=( ${~from}(N) )
+              [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+            )
+        fi
 
-    if [[ -n "${ZPLG_ICE[cp]}" ]]; then
-        local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
-        local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-          afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
-        )
-    fi
+        if [[ -n "${ZPLG_ICE[cp]}" ]]; then
+            local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
+            local -a afr
+            ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+              afr=( ${~from}(N) )
+              [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+            )
+        fi
 
-    if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} != '!' ]]; then
-        # Compile plugin
-        -zplg-compile-plugin "$id_as" ""
-    fi
+        if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} != '!' ]]; then
+            # Compile plugin
+            -zplg-compile-plugin "$id_as" ""
+        fi
 
-    if [[ "$3" != "-u" ]]; then
-        # Store ices at clone of a plugin
-        -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
+        if [[ "$3" != "-u" ]]; then
+            # Store ices at clone of a plugin
+            -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
-        ( (( ${+ZPLG_ICE[atclone]} )) && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; }; )
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
-    fi
+            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
+            (( ${+ZPLG_ICE[atclone]} )) && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; }
+            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
+        fi
 
-    # After additional executions like atclone'' - install completions (1 - plugins)
-    (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
+        # After additional executions like atclone'' - install completions (1 - plugins)
+        (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
 
-    if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} = '!' ]]; then
-        # Compile plugin
-        LANG=C sleep 0.3
-        -zplg-compile-plugin "$id_as" ""
-    fi
+        if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} = '!' ]]; then
+            # Compile plugin
+            LANG=C sleep 0.3
+            -zplg-compile-plugin "$id_as" ""
+        fi
+
+    ) || return $?
 
     return 0
 } # }}}
@@ -415,151 +418,154 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
 
-    if [[ "$url" = (http|https|ftp|ftps|scp)://* ]]
-    then
-        # URL
-        (
-            () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
+    (
+        if [[ "$url" = (http|https|ftp|ftps|scp)://* ]]
+        then
+            # URL
+            (
+                () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
 
-            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
-            if (( ${+ZPLG_ICE[svn]} )); then
-                [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
-                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
-                    command svn revert $filename/.
-                }
-
-                if [[ "$update" = "-u" ]];then
-                    # Test if update available
-                    -zplg-mirror-using-svn "$url" "-t" "$dirname" || {
-                        (( ${+ZPLG_ICE[run-atpull]} )) && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
-                        return 2;
+                if (( ${+ZPLG_ICE[svn]} )); then
+                    [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
+                        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
+                        command svn revert $filename/.
                     }
-                    [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
-                    # Do the update
-                    [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
-                        print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
-                        print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
-                    }
-                    -zplg-mirror-using-svn "$url" "-u" "$dirname" || return 1
-                else
-                    -zplg-mirror-using-svn "$url" "" "$dirname" || return 1
-                fi
 
-                local -a list
-
-                # Redundant code, just to compile SVN snippet
-                if [[ ${ZPLG_ICE[as]} != "command" ]]; then
-                    if [[ -n ${ZPLG_ICE[pick]} ]]; then
-                        list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
-                    elif [[ -z ${ZPLG_ICE[pick]} ]]; then
-                        list=( $local_dir/$dirname/*.plugin.zsh(N) $local_dir/$dirname/init.zsh(N)
-                               $local_dir/$dirname/*.zsh-theme(N) )
+                    if [[ "$update" = "-u" ]];then
+                        # Test if update available
+                        -zplg-mirror-using-svn "$url" "-t" "$dirname" || {
+                            (( ${+ZPLG_ICE[run-atpull]} )) && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; }
+                            return 2
+                        }
+                        [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; }
+                        # Do the update
+                        [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                            print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
+                            print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                        }
+                        -zplg-mirror-using-svn "$url" "-u" "$dirname" || return 1
+                    else
+                        -zplg-mirror-using-svn "$url" "" "$dirname" || return 1
                     fi
 
-                    [[ -e "${list[1]}" ]] && { zcompile "${list[1]}" || {
-                        print -r "Warning: Couldn't compile \`${list[1]}'"
-                    } }
-                fi
-            else
-                command mkdir -p "$local_dir/$dirname"
-                [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
+                    local -a list
 
-                [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
-                    command rm -f "$dirname/$filename"
-                }
+                    # Redundant code, just to compile SVN snippet
+                    if [[ ${ZPLG_ICE[as]} != "command" ]]; then
+                        if [[ -n ${ZPLG_ICE[pick]} ]]; then
+                            list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
+                        elif [[ -z ${ZPLG_ICE[pick]} ]]; then
+                            list=( $local_dir/$dirname/*.plugin.zsh(N) $local_dir/$dirname/init.zsh(N)
+                                   $local_dir/$dirname/*.zsh-theme(N) )
+                        fi
 
-                -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
-                    -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
+                        [[ -e "${list[1]}" ]] && { zcompile "${list[1]}" || {
+                            print -r "Warning: Couldn't compile \`${list[1]}'"
+                        } }
+                    fi
+                else
+                    command mkdir -p "$local_dir/$dirname"
+                    [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; }
+
+                    [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
                         command rm -f "$dirname/$filename"
-                        print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
-                        return 1
+                    }
+
+                    -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
+                        -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
+                            command rm -f "$dirname/$filename"
+                            print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                            return 1
+                        }
+                    }
+                fi
+                return 0
+            ) || retval=$?
+
+            if [[ -n "${ZPLG_ICE[compile]}" ]]; then
+                list=( ${(M)~ZPLG_ICE[compile]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[compile]}(N) )
+                [[ ${#list} -eq 0 ]] && {
+                    print "Warning: Ice-mod compile'' didn't match any files"
+                } || {
+                    local matched
+                    for matched in "${list[@]}"; do
+                        builtin zcompile "$matched"
+                    done
+                }
+            fi
+
+            if [[ $ZPLG_ICE[as] != "command" ]] && (( ${+ZPLG_ICE[svn]} == 0 )); then
+                [[ -e "$local_dir/$dirname/$filename" ]] && {
+                    zcompile "$local_dir/$dirname/$filename" 2>/dev/null || {
+                        print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
+                        print -r "(snippet URL points to a directory instead of a file?"
+                        print -r "to download directory, use preceding: zplugin ice svn;)"
+                        retval=1
                     }
                 }
             fi
-            return 0
-        ) || retval=$?
-
-        if [[ -n "${ZPLG_ICE[compile]}" ]]; then
-            list=( ${(M)~ZPLG_ICE[compile]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[compile]}(N) )
-            [[ ${#list} -eq 0 ]] && {
-                print "Warning: Ice-mod compile'' didn't match any files"
-            } || {
-                local matched
-                for matched in "${list[@]}"; do
-                    builtin zcompile "$matched"
-                done
+        else
+            [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; }
+            # File
+            [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$local_dir/$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
+                command rm -f "$local_dir/$dirname/$filename"
             }
+            # Currently redundant, but theoretically it has its place
+            [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
+            command mkdir -p "$local_dir/$dirname"
+            print "Copying $filename..."
+            command cp -v "$url" "$local_dir/$dirname/$filename" || { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
         fi
-
-        if [[ $ZPLG_ICE[as] != "command" ]] && (( ${+ZPLG_ICE[svn]} == 0 )); then
-            [[ -e "$local_dir/$dirname/$filename" ]] && {
-                zcompile "$local_dir/$dirname/$filename" 2>/dev/null || {
-                    print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
-                    print -r "(snippet URL points to a directory instead of a file?"
-                    print -r "to download directory, use preceding: zplugin ice svn;)"
-                    retval=1
-                }
-            }
-        fi
-    else
-        [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; )
-        # File
-        [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$local_dir/$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
-            command rm -f "$local_dir/$dirname/$filename"
-        }
-        # Currently redundant, but theoretically it has its place
-        [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
-        command mkdir -p "$local_dir/$dirname"
-        print "Copying $filename..."
-        command cp -v "$url" "$local_dir/$dirname/$filename" || { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
-    fi
 
     (( retval == 1 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
 
-    if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
-        # Store ices at "clone" and update of snippet, SVN and single-file
-        local pfx="$local_dir/$dirname/._zplugin"
-        -zplg-store-ices "$pfx" ZPLG_ICE "" "" "$save_url" "${+ZPLG_ICE[svn]}"
-    else
-        print "${ZPLGM[col-error]}Warning${ZPLGM[col-rst]}: inconsistency #2 occurred - skipped storing ice-mods to"
-        print "disk, please report at https://github.com/zdharma/zplugin/issues"
-        print "providing the commands \`zplugin ice {...}; zplugin snippet {...}'"
-    fi
+        if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
+            # Store ices at "clone" and update of snippet, SVN and single-file
+            local pfx="$local_dir/$dirname/._zplugin"
+            -zplg-store-ices "$pfx" ZPLG_ICE "" "" "$save_url" "${+ZPLG_ICE[svn]}"
+        else
+            print "${ZPLGM[col-error]}Warning${ZPLGM[col-rst]}: inconsistency #2 occurred - skipped storing ice-mods to"
+            print "disk, please report at https://github.com/zdharma/zplugin/issues"
+            print "providing the commands \`zplugin ice {...}; zplugin snippet {...}'"
+        fi
 
-    (( retval == 2 )) && { return 0; }
+        (( retval == 2 )) && { return 0; }
 
-    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
 
-    if [[ -n "${ZPLG_ICE[mv]}" ]]; then
-        local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
-        local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
-          afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
-        )
-    fi
+        if [[ -n "${ZPLG_ICE[mv]}" ]]; then
+            local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
+            local -a afr
+            ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
+              afr=( ${~from}(N) )
+              [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+            )
+        fi
 
-    if [[ -n "${ZPLG_ICE[cp]}" ]]; then
-        local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
-        local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
-          afr=( ${~from}(N) )
-          [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
-        )
-    fi
+        if [[ -n "${ZPLG_ICE[cp]}" ]]; then
+            local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
+            local -a afr
+            ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
+              afr=( ${~from}(N) )
+              [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+            )
+        fi
 
-    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
 
-    if [[ "$update" = "-u" ]]; then
-        [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; )
-    else
-        ( (( ${+ZPLG_ICE[atclone]} )) && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; }; )
-    fi
+        if [[ "$update" = "-u" ]]; then
+            [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]}" ${ZPLG_ICE[atclone]}; }
+        else
+            (( ${+ZPLG_ICE[atclone]} )) && { (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; }
+        fi
 
-    [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)ZPLG_ICE[make]}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)ZPLG_ICE[make]}; }
+
+    ) || return $?
 
     # After additional executions like atclone'' - install completions (2 - snippets)
     (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "%" "$local_dir/$dirname" 0
