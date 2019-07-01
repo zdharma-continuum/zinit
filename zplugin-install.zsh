@@ -494,6 +494,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     for matched in "${list[@]}"; do
                         builtin zcompile "$matched"
                     done
+                    ((1))
                 }
             fi
 
