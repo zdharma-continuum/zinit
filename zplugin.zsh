@@ -1025,8 +1025,6 @@ builtin setopt noaliases
     [[ "$local_dir" = "." ]] && local_dir="" || local_dir="${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dir="${ZPLGM[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
-    ZPLG_SNIPPETS[$id_as]="$dirname <${${ZPLG_ICE[svn]+svn}:-file}>"
-
     # Download or copy the file
     if [[ -n "${opts[(r)-f]}" || ! -e "$local_dir/$dirname/._zplugin" ]]; then
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
@@ -1035,6 +1033,8 @@ builtin setopt noaliases
     fi
 
     (( ${+ZPLG_ICE[cloneonly]} )) && return 0
+
+    ZPLG_SNIPPETS[$id_as]="$dirname <${${ZPLG_ICE[svn]+svn}:-file}>"
 
     (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
