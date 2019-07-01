@@ -2752,7 +2752,7 @@ EOF
 —— cdreplay [-q]                 – replay compdefs (to be done after compinit), -q – quiet
 —— cdclear [-q]                  – clear compdef replay list, -q – quiet
 —— srv {service-id} [cmd]        – control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
-—— recall ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL      – fetch saved ice modifiers and construct \`zplugin ice ...' command
+—— recall ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL           – fetch saved ice modifiers and construct \`zplugin ice ...' command
 —— env-whitelist [-v|-h] {env..} – allows to specify names (also patterns) of variables left unchanged during an unload. -v – verbose
 —— bindkeys                      – lists bindkeys set up by each plugin
 —— module                        – manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
