@@ -29,6 +29,17 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         "gh-r"      "github.com/$remote_url_path/releases"
     )
 
+    local -A matchstr
+    matchstr=(
+        "i386"    "(386|686)"
+        "i686"    "(386|686)"
+        "x86_64"  "(x86_64|amd64|intel)"
+        "amd64"   "(x86_64|amd64|intel)"
+        "aarch64" "aarch64"
+        "linux"   "(linux|gnu)"
+        "darwin"  "(darwin|macos|mac-os|osx|os-x)"
+    )
+
     if [[ "$user" = "_local" ]]; then
         print "Warning: no local plugin \`$plugin\'"
         print "(should be located at: $local_path)"
@@ -53,12 +64,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)${~ZPLG_ICE[bpick]}}" )
 
             [[ ${#list} -gt 1 ]] && {
-                list2=( "${(M)list[@]:#(#i)(*${CPUTYPE#(#i)(i|amd)}*|*${${${(M)${CPUTYPE#(#i)(i|amd)}:#x86_64}:+amd64}:-DUMMY_ARCH}*)}" )
+                list2=( "${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*}" )
                 [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
             }
 
             [[ ${#list} -gt 1 ]] && {
-                list2=( "${(M)list[@]:#(#i)*${${OSTYPE%(#i)-gnu}%%[0-9.]##}*}" )
+                list2=( "${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*}" )
                 [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
             }
 
