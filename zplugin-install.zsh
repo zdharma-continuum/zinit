@@ -38,6 +38,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         "aarch64" "aarch64"
         "linux"   "(linux|gnu)"
         "darwin"  "(darwin|macos|mac-os|osx|os-x)"
+        "cygwin"  "(windows|cygwin)"
+        "windows" "(windows|cygwin)"
     )
 
     if [[ "$user" = "_local" ]]; then
