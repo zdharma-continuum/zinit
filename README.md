@@ -223,6 +223,12 @@ typeset -g ZPLG_MOD_DEBUG=1
 ```
 
 # News
+
+* 02-07-2019
+  - [Cooperation of Fast-Syntax-Highlighting and
+    Zplugin](https://asciinema.org/a/254630) – a new precise highlighting for
+    Zplugin in F-Sy-H.
+
 * 01-07-2019
   - `atclone''`, `atpull''` & `make''` get run in the same subshell, thus an e.g.
     export done in `atclone''` will be visible during the `make`.
@@ -893,5 +899,5 @@ Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat
 [lobby-badge]: https://badges.gitter.im/zplugin/Lobby.svg
 [lobby-link]: https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-<!-- vim:tw=87
+<!-- vim:tw=84
 -->
