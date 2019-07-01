@@ -223,6 +223,10 @@ typeset -g ZPLG_MOD_DEBUG=1
 ```
 
 # News
+* 01-07-2019
+  - `atclone''`, `atpull''` & `make''` get run in the same subshell, thus an e.g.
+    export done in `atclone''` will be visible during the `make`.
+
 * 26-06-2019
   - `notify''` contents gets evaluated, i.e. can contain active code like `$(tail -1
     /var/log/messages)`, etc.
