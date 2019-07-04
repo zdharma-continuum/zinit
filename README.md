@@ -14,15 +14,17 @@ reports](DONATIONS.md) about what is being done with the money received.
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
+- [News](#news)
 - [Getting help](#getting-help)
-- [Zplugin](#zplugin)
+- [Additional resources](#additional-resources)
+- [Introduction](#introduction)
+- [Installation](#installation)
 - [Quick Start](#quick-start)
 - [Quick Start Module-Only](#quick-start-module-only)
   - [More On Zplugin Zsh Module](#more-on-zplugin-zsh-module)
     - [Module – Guaranteed Compilation Of All Scripts / Plugins](#module--guaranteed-compilation-of-all-scripts--plugins)
     - [Module – Measuring Time Of `source`s](#module--measuring-time-of-sources)
     - [Module - Debugging](#module---debugging)
-- [News](#news)
 - [Ice Modifiers](#ice-modifiers)
 - [Usage](#usage)
     - [Using Oh-My-Zsh Themes](#using-oh-my-zsh-themes)
@@ -38,200 +40,9 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# Getting help
-
-Besides the main-knowledge source, i.e. this README, there are subpages that are
-**guides** and also an external web-page:
-
- - [INSTALLATION](doc/INSTALLATION.adoc)
- - [INTRODUCTION TO ZPLUGIN](doc/INTRODUCTION.adoc)
- - [Short-narration style WIKI](https://github.com/zdharma/zplugin/wiki)
- - [A subreddit dedicated to Zplugin](https://www.reddit.com/r/zplugin/)
-
-# Zplugin
-
-**NEW**: Zplugin now has pure-Zsh [semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
-which allows to manipulate plugins, snippets, etc.
-
-**NEW**: [Gallery of Zplugin Invocations](GALLERY.md)
-
-**NEW**: **[Short-text style Wiki](https://github.com/zdharma/zplugin/wiki)**
-
-**NEW**: [Code documentation](zsdoc)
-
-Zplugin is an elastic and fast Zshell plugin manager that will allow you to
-install everything from Github and other sites. For example, in order to install
-[trapd00r/LS_COLORS](https://github.com/trapd00r/LS_COLORS), which isn't a Zsh
-plugin:
-
-```zsh
-# For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
-# coreutils package from Homebrew or using https://github.com/ogham/exa)
-
-zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
-zplugin light trapd00r/LS_COLORS
-```
-
-([explanation](https://github.com/zdharma/zplugin/wiki/LS_COLORS-explanation)). Other example: direnv written in Go, requiring building after cloning:
-
-```zsh
-# make'!...' -> run make before atclone & atpull
-
-zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
-zplugin light direnv/direnv
-```
-
-([explanation](https://github.com/zdharma/zplugin/wiki/Direnv-explanation)).
-
-Zplugin is currently the only plugin manager out there that has **[Turbo
-Mode](https://github.com/zdharma/zplugin#turbo-mode-zsh--53)** which yields **39-50%
-faster Zsh startup!**
-
-Zplugin gives **reports** from plugin load describing what aliases, functions,
-bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
-elements a plugin has set up.
-
-Supported is **unloading** of plugin and ability to list, (un)install and
-selectively disable, enable plugin's completions.
-
-The system does not use `$FPATH`, loading multiple plugins doesn't clutter
-`$FPATH` with the same number of entries (e.g. `10`). Code is immune to
-`KSH_ARRAYS`. Completion management functionality is provided to allow user
-to call `compinit` only once in `.zshrc`.
-
-Looking for help? See the [Introduction](doc/INTRODUCTION.adoc) and [the
-wiki](https://github.com/zdharma/zplugin/wiki).
-
-# Quick Start
-
-To install, execute:
-
-```zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
-```
-
-Then add some actions (load some plugins) to `~/.zshrc`, at bottom, for example:
-
-```zsh
-zplugin load zdharma/history-search-multi-word
-
-zplugin ice compile"*.lzui" from"notabug"
-zplugin load zdharma/zui
-
-# Binary release in archive, from Github-releases page; after automatic unpacking it provides program "fzf"
-
-zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
-
-# One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
-# This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
-# single version, for OS X, Linux and Windows – so ice-mod `bpick' is used to
-# select Linux package – in this case this is not needed, Zplugin will grep
-# operating system name and architecture automatically when there's no `bpick'
-
-zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
-
-# Vim repository on Github – a typical source code that needs compilation – Zplugin
-# can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
-# Ice-mod `pick` selects a binary program to add to $PATH.
-
-zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"
-zplugin light vim/vim
-
-# Scripts that are built at install (there's single default make target, "install",
-# and it constructs scripts by `cat'ing a few files). The make"" ice could also be:
-# `make"install PREFIX=$ZPFX"`, if "install" wouldn't be the only, default target
-
-zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
-zplugin light tj/git-extras
-
-# Two regular plugins loaded in default way (no `zplugin ice ...` modifiers)
-
-zplugin light zsh-users/zsh-autosuggestions
-zplugin light zdharma/fast-syntax-highlighting
-
-# Load the pure theme, with zsh-async library that's bundled with it
-zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
-
-# This one to be ran just once, in interactive session
-
-zplugin creinstall %HOME/my_completions  # Handle completions without loading any plugin, see "clist" command
-```
-
-(No need to add:
-
-```SystemVerilog
-source "$HOME/.zplugin/bin/zplugin.zsh"
-```
-
-because the install script does this.)
-
-Things used in above example config:
-`history-search-multi-word` – multi-term searching of history (bound to Ctrl-R), `zui` – textual-UI library for Zshell,
-see `zui-demo<TAB>`. The `ice` sub-command – add modifiers to following `zplugin load ...` command or other command.
-`notabug` – the site `notabug.org`
-
-Looking for help? See the [Introduction](doc/INTRODUCTION.adoc) and [the
-wiki](https://github.com/zdharma/zplugin/wiki).
-
-# Quick Start Module-Only
-
-To install just the binary Zplugin module **standalone** (Zplugin is not needed, the module can be used with any
-other plugin manager), execute:
-
-```zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/mod-install.sh)"
-```
-
-This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
-
-## More On Zplugin Zsh Module
-
-Zplugin users can build the module by issuing following command instead of running above `mod-install.sh` script
-(the script is for e.g. `zgen` users or users of any other plugin manager):
-
-```zsh
-zplugin module build
-```
-
-This command will compile the module and display instructions on what to add to `~/.zshrc`.
-
-### Module – Guaranteed Compilation Of All Scripts / Plugins
-
-The module is a binary Zsh module (think about `zmodload` Zsh command, it's that topic) which transparently and
-automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
-a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can
-source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
-and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
-command and tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
-
-  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png)
-
-### Module – Measuring Time Of `source`s
-
-Besides the compilation-feature, the module also measures **duration** of each script sourcing. Issue `zpmod
-source-study` after loading the module at top of `~/.zshrc` to see a list of all sourced files with the time the
-sourcing took in milliseconds on the left. This feature allows to profile the shell startup. Also, no script can
-pass-through that check and you will obtain a complete list of all loaded scripts, like if Zshell itself was
-tracking this. The list can be surprising.
-
-### Module - Debugging
-
-To enable debug messages from the module set:
-
-```zsh
-typeset -g ZPLG_MOD_DEBUG=1
-```
-
 # News
 
-* 02-07-2019
-  - [Cooperation of Fast-Syntax-Highlighting and
-    Zplugin](https://asciinema.org/a/254630) – a new precise highlighting for
-    Zplugin in F-Sy-H.
-
-* 01-07-2019
-  - `atclone''`, `atpull''` & `make''` get run in the same subshell, thus an e.g.
-    export done in `atclone''` will be visible during the `make`.
+Here are the new features and updates added to zplugin in the last 90 days. To see the full history check [the changelog.](CHANGELOG.md)
 
 * 26-06-2019
   - `notify''` contents gets evaluated, i.e. can contain active code like `$(tail -1
@@ -316,133 +127,183 @@ typeset -g ZPLG_MOD_DEBUG=1
   - New ice-mod `nocd` – it prevents changing current directory into the plugin's directory
     before evaluating `atinit''`, `atload''` etc. ice-mods.
 
-* 12-03-2019
-  - Finally reorganizing the `README.md`. Went on asciidoc path, the
-    side-documents are written in it and the `README.md` will also be
-    converted (example page: [Introduction](doc/INTRODUCTION.adoc))
-* 12-10-2018
-  - New `id-as''` ice-mod. You can nickname a plugin or snippet, to e.g. load it twice, with different `pick''`
-    ice-mod, or from Github binary releases and regular Github repository at the same time. More information
-    in [blog post](http://zdharma.org/2018-10-12/Nickname-a-plugin-or-snippet).
+# Getting help
 
-* 30-08-2018
-  - New `as''` ice-mod value: `completion`. Can be used to install completion-only "plugins", even single
-    files:
-    ```zsh
-    zplugin ice as"completion" mv"hub* -> _hub"
-    zplugin snippet https://github.com/github/hub/blob/master/etc/hub.zsh_completion
-    ```
+If you need help you can do the following:
 
-  - Uplift of Git-output, it now has an animated progress-bar:
+- Ask in our subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
 
-  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-progress-bar.gif)
+- Ask in our IRC channel. Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin. Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
 
-* 15-08-2018
-  - New `$ZPLGM` field `COMPINIT_OPTS` (also see [Customizing Paths](#customizing-paths--other)). You can pass
-    `-C` or `-i` there to mute the `insecure directories` messages. Typical use case could be:
-    ```zsh
-    zplugin ice wait"5" atinit"ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay" lucid
-    zplugin light zdharma/fast-syntax-highlighting
-    ```
+# Additional resources
 
-* 13-08-2018
-  - `self-update` (subcommand used to update Zplugin) now lists new commits downloaded by the update:
-  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/zplg-self-update.png)
+Besides the main-knowledge source, i.e. this README, there are subpages that are
+**guides** and also an external web-page:
 
-  - New subcommand `bindkeys` that lists what bindkeys each plugin has set up.
+ - [INTRODUCTION TO ZPLUGIN](doc/INTRODUCTION.adoc)
+ - [Short-narration style WIKI](https://github.com/zdharma/zplugin/wiki)
+ - [Gallery of Zplugin Invocations](GALLERY.md)
+ - [Code documentation](zsdoc)
+ - [Zplugin semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
+ - [User configurations](https://github.com/zdharma/zplugin-configs)
 
-* 25-07-2018
-  - If you encountered a problem with loading Turbo-Mode plugins, it is fixed now. This occurred in versions
-  available between `10` and `23` of July. Issue `zplugin self-update` if you installed/updated in this period.
-  - New bug-fix release `v2.07`.
 
-* 13-07-2018
-  - New `multisrc''` ice, it allows to specify multiple files for sourcing and  it uses brace expansion syntax, so for example you can:
-    ```zsh
-    zplugin ice depth"1" multisrc="lib/{functions,misc}.zsh" pick"/dev/null"; zplugin load robbyrussell/oh-my-zsh
-    zplugin ice svn multisrc"{functions,misc}.zsh" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {functions,misc}.zsh ); zplg ice svn multisrc"\${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {functions,misc}.zsh ); zplg ice svn multisrc"${array[@]}" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {functions,misc}.zsh ); zplg ice svn multisrc"\$array" pick"/dev/null"; zplugin snippet OMZ::lib
-    array=( {functions,misc}.zsh ); zplg ice svn multisrc"$array" pick"/dev/null"; zplugin snippet OMZ::lib
-    zplugin ice svn multisrc"misc.zsh functions.zsh" pick"/dev/null"; zplugin snippet OMZ::lib
-    ```
-* 12-07-2018
-  - For docker and new machine provisioning, there's a trick that allows to install all [turbo-mode](#turbo-mode-zsh--53)
-    plugins by scripting:
+# Introduction
 
-    ```zsh
-    zsh -i -c -- '-zplg-scheduler burst'
-    ```
+Zplugin is an elastic and fast Zshell plugin manager that will allow you to
+install everything from Github and other sites. 
 
-* 10-07-2018
-  - Ice `wait'0'` now means actually short time – you can load plugins and snippets **very quickly** after prompt.
+Zplugin is currently the only plugin manager out there that has Turbo
+Mode which yields **39-50%
+faster Zsh startup!**
 
-* 02-03-2018
-  - Zplugin exports `$ZPFX` parameter. Its default value is `~/.zplugin/polaris` (user can
-    override it before sourcing Zplugin). This directory is like `/usr/local`, a prefix
-    for installed software, so it's possible to use ice like `make"PREFIX=$ZPFX"` or
-    `atclone"./configure --prefix=$ZPFX"`. Zplugin also setups `$MANPATH` pointing to the
-    `polaris` directory. Checkout [gallery](GALLERY.md) for examples.
-  - [New README section](#hint-extending-git) about extending Git with Zplugin.
+Zplugin gives **reports** from plugin load describing what aliases, functions,
+bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
+elements a plugin has set up.
 
-* 05-02-2018
-  - I work much on this README however multi-file Wiki might be better to read – it
-    [just has been created](https://github.com/zdharma/zplugin/wiki).
+Supported is **unloading** of plugin and ability to list, (un)install and
+selectively disable, enable plugin's completions.
 
-* 16-01-2018
-  - New ice-mod `compile` which takes pattern to select additional files to compile, e.g.
-    `zplugin ice compile"(hsmw-*|history-*)"` (for `zdharma/history-search-multi-word` plugin).
-    See [Ice Modifiers](#ice-modifiers).
+The system does not use `$FPATH`, loading multiple plugins doesn't clutter
+`$FPATH` with the same number of entries (e.g. `10`). Code is immune to
+`KSH_ARRAYS`. Completion management functionality is provided to allow user
+to call `compinit` only once in `.zshrc`.
 
-* 14-01-2018
-  - Two functions have been exposed: `zpcdreplay` and `zpcompinit`. First one invokes compdef-replay,
-    second one is equal to `autoload compinit; compinit` (it also respects `$ZPLGM[ZCOMPDUMP_PATH]`).
-    You can use e.g. `atinit'zpcompinit'` ice-mod in a syntax-highlighting plugin, to initialize
-    completion right-before setting up syntax highlighting (because that should be done at the end).
+# Installation
 
-* 13-01-2018
-  - New customizable path `$ZPLGM[ZCOMPDUMP_PATH]` that allows to point zplugin to non-standard
-    `.zcompdump` location.
-  - Tilde-expansion is now performed on the [customizable paths](#customizing-paths--other) – you can
-    assign paths like `~/.zplugin`, there's no need to use `$HOME/.zplugin`.
+The easiest way to install Zplugin is to execute: 
 
-* 31-12-2017
-  - For the new year there's a new feature: user-services spawned by Zshell :) Check out
-    [available services](https://github.com/zservices). They are configured like their
-    READMEs say, and controlled via:
+```zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
+```
 
-    ```
-    % zplugin srv redis next    # current serving shell will drop the service, next Zshell will pick it up
-    % zplugin srv redis quit    # the serving shell will quit managing the service, next Zshell will pick it up
-    % zplugin srv redis stop    # stop serving, do not pass it to any shell, just hold the service
-    % zplugin srv redis start   # start stopped service, without changing the serving shell
-    % zplugin srv redis restart # restart service, without changing the serving shell
-    ```
+This will install Zplugin in ~/.zplugin/bin. .zshrc will be updated with three lines of code that will be added to the bottom.
 
-    This feature allows to configure everything in `.zshrc`, without the the need to deal with `systemd` or
-    `launchd`, and can be useful e.g. to configure shared-variables (across Zshells), stored in `redis` database
-    (details on [zservices/redis](https://github.com/zservices/redis)).
+If you're interested in more ways to install Zplugin check [INSTALLATION](doc/INSTALLATION.adoc).
 
-* 24-12-2017
-  - Xmas present – [fast-syntax-highlighting](https://github.com/zdharma/fast-syntax-highlighting)
-    now highlights the quoted part in `atinit"echo Initializing"`, i.e. it supports ICE syntax :)
+# Quick Start
 
-* 08-12-2017
-  - SVN snippets are compiled on install and update
-  - Resolved how should ice-mods be remembered – general rule is that using `zplugin ice ...` makes
-    memory-saved and disk-saved ice-mods not used, and replaced on update. Calling e.g. `zplugin
-    update ...` without preceding `ice` uses memory, then disk-saved ices.
 
-* 07-12-2017
-  - New subcommand `delete` that obtains plugin-spec or URL and deletes plugin or snippet from disk.
-    It's good to forget wrongly passed Ice-mods (which are storred on disk e.g. for `update --all`).
+Then add some actions (load some plugins) to `~/.zshrc`, at bottom. For example, in order to install
+[trapd00r/LS_COLORS](https://github.com/trapd00r/LS_COLORS), which isn't a Zsh
+plugin:
 
-* 04-12-2017
-  - It's possible to set plugin loading and unloading on condition. ZPlugin supports plugin unloading,
-    so it's possible to e.g. **unload prompt and load another one**, on e.g. directory change. Checkout
-    [full story](#automatic-loadunload-on-condition) and [Asciinema video](https://asciinema.org/a/150825).
+```zsh
+# For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
+# coreutils package from Homebrew or using https://github.com/ogham/exa)
 
+zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
+zplugin light trapd00r/LS_COLORS
+```
+
+([explanation](https://github.com/zdharma/zplugin/wiki/LS_COLORS-explanation)). Another example is direnv written in Go, requiring building after cloning:
+
+```zsh
+# make'!...' -> run make before atclone & atpull
+
+zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
+zplugin light direnv/direnv
+```
+
+([explanation](https://github.com/zdharma/zplugin/wiki/Direnv-explanation)).
+
+Other examples:
+
+```zsh
+zplugin load zdharma/history-search-multi-word
+
+zplugin ice compile"*.lzui" from"notabug"
+zplugin load zdharma/zui
+
+# Binary release in archive, from Github-releases page; after automatic unpacking it provides program "fzf"
+
+zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
+
+# One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
+# This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
+# single version, for OS X, Linux and Windows – so ice-mod `bpick' is used to
+# select Linux package – in this case this is not needed, Zplugin will grep
+# operating system name and architecture automatically when there's no `bpick'
+
+zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
+
+# Vim repository on Github – a typical source code that needs compilation – Zplugin
+# can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
+# Ice-mod `pick` selects a binary program to add to $PATH.
+
+zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"
+zplugin light vim/vim
+
+# Scripts that are built at install (there's single default make target, "install",
+# and it constructs scripts by `cat'ing a few files). The make"" ice could also be:
+# `make"install PREFIX=$ZPFX"`, if "install" wouldn't be the only, default target
+
+zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
+zplugin light tj/git-extras
+
+# Two regular plugins loaded in default way (no `zplugin ice ...` modifiers)
+
+zplugin light zsh-users/zsh-autosuggestions
+zplugin light zdharma/fast-syntax-highlighting
+
+# Load the pure theme, with zsh-async library that's bundled with it
+zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+
+# This one to be ran just once, in interactive session
+
+zplugin creinstall %HOME/my_completions  # Handle completions without loading any plugin, see "clist" command
+```
+
+If you're interested in more examples then check out [this repository](https://github.com/zdharma/zplugin-configs) where user have uploaded their `~/.zshrc` and Zplugin configurations. Feel free to submit your `~/.zshrc` there if it contains Zplugin commands.
+
+# Quick Start Module-Only
+
+To install just the binary Zplugin module **standalone** (Zplugin is not needed, the module can be used with any
+other plugin manager), execute:
+
+```zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/mod-install.sh)"
+```
+
+This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
+
+## More On Zplugin Zsh Module
+
+Zplugin users can build the module by issuing following command instead of running above `mod-install.sh` script
+(the script is for e.g. `zgen` users or users of any other plugin manager):
+
+```zsh
+zplugin module build
+```
+
+This command will compile the module and display instructions on what to add to `~/.zshrc`.
+
+### Module – Guaranteed Compilation Of All Scripts / Plugins
+
+The module is a binary Zsh module (think about `zmodload` Zsh command, it's that topic) which transparently and
+automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
+a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can
+source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
+and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
+command and tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
+
+  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png)
+
+### Module – Measuring Time Of `source`s
+
+Besides the compilation-feature, the module also measures **duration** of each script sourcing. Issue `zpmod
+source-study` after loading the module at top of `~/.zshrc` to see a list of all sourced files with the time the
+sourcing took in milliseconds on the left. This feature allows to profile the shell startup. Also, no script can
+pass-through that check and you will obtain a complete list of all loaded scripts, like if Zshell itself was
+tracking this. The list can be surprising.
+
+### Module - Debugging
+
+To enable debug messages from the module set:
+
+```zsh
+typeset -g ZPLG_MOD_DEBUG=1
+```
 # Ice Modifiers
 
 Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
@@ -787,5 +648,5 @@ Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat
 [lobby-badge]: https://badges.gitter.im/zplugin/Lobby.svg
 [lobby-link]: https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-<!-- vim:tw=84
+<!-- vim:tw=87
 -->
