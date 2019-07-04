@@ -869,6 +869,8 @@ builtin setopt noaliases
 
     if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" ]]; then
         ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
+        # Support Zsh plugin standard
+        LOADED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
         [[ -z "${ZPLGM[TEST]}${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[subscribe]}" && ${ZPLGM[MUTE_WARNINGS]} != 1 ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
@@ -897,6 +899,8 @@ builtin setopt noaliases
 
     # If not found, the index will be length+1
     ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
+    # Support Zsh plugin standard
+    LOADED_PLUGINS[${LOADED_PLUGINS[(i)$uspl2]}]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
 } # }}}
 
@@ -970,8 +974,6 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[cloneonly]} )) && return 0
 
     -zplg-register-plugin "$id_as" "$mode"
-    # Support Zsh plugin standard
-    LOADED_PLUGINS+=( "$id_as" )
 
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
