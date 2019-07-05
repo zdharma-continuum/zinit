@@ -1513,7 +1513,6 @@ ZPLGM[EXTENDED_GLOB]=""
     # needs the tleid from the disk or static ice
     __key=teleid; [[ "$__pack" = pack-nftid ]] && {
         (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
-        print 'YESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS' $__MY_ICE[$__key] '@@@@@@@@@@@@@@'
     }
 
     : ${(PA)__var_name1::="${(kv)__MY_ICE[@]}"}
