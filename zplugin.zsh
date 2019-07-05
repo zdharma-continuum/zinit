@@ -1421,7 +1421,7 @@ nocd|once)(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
         __action="${(M)ZPLG_ICE[load]#\!}load"
     elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( __s=0 )) && $__pass = 1 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
         __action="${(M)ZPLG_ICE[unload]#\!}remove"
-    elif [[ -n "${ZPLG_ICE[subscribe]#\!}" && $(( __s=0 )) && "$__pass" = 2 ]] && \
+    elif [[ -n "${ZPLG_ICE[subscribe]#\!}" && -n $(( __s=0 )) && "$__pass" = 2 ]] && \
         { local -a fts_arr
           eval "fts_arr=( ${ZPLG_ICE[subscribe]}(Nms-$(( EPOCHSECONDS -
                  ZPLGM[fts-${ZPLG_ICE[subscribe]}] ))) ); (( \${#fts_arr} ))" && \
