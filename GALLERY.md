@@ -66,6 +66,9 @@ zplugin light tj/git-extras
 zplugin ice as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' make'install' pick"$ZPFX/bin/git-cal"
 zplugin light k4rthik/git-cal
 
+zplugin ice as"program" id-as"git-unique" pick"git-unique"
+zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+
 zplugin ice as"program" cp"wd.sh -> wd" mv"_wd.sh -> _wd" \
     atpull'!git reset --hard' pick"wd"
 zplugin light mfaerevaag/wd
