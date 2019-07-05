@@ -903,6 +903,13 @@ builtin setopt noaliases
     LOADED_PLUGINS[${LOADED_PLUGINS[(i)$uspl2]}]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
 } # }}}
+# FUNCTION: @zplg-register-z-plugin {{{
+# Registers the z-plugin inside Zplugin – i.e. an Zplugin extension
+@zplg-register-z-plugin() {
+    local name="$1" type="$2" handler="$3" helphandler="$4"
+    ZPLGM[z-plugin-${ZPLGM[z-plugin-index]::=$(( ${ZPLGM[z-plugin-index]:-0} + 1 ))}-$name]="z-plugin-data: ${(q)type} ${(q)handler} ${(q)helphandler}"
+}
+# }}}
 
 #
 # Remaining functions
@@ -1684,7 +1691,14 @@ zplugin() {
            }
            ;;
        (*)
-           (( ${+functions[-zplg-format-functions]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
+           # Check if there is a z-plugin registered for the subcommand
+           reply=( ${(kv)ZPLGM[(r)z-plugin-data: subcommand:${(q)${1//(#m)(\*|\#|\?|\^|\~)/${(q)MATCH}}} *]} )
+           (( ${#reply} )) && {
+               [[ ${reply[1]} = (#b)z-plugin-<->-(*) ]]
+               reply=( "${(Q)${(z@)reply[2]}[@]}" )
+               (( ${+functions[${reply[3]}]} )) && { "${reply[3]}" "$@"; return $?; } ||
+                 { print -rl -- "(Couldn't find the subcommand-handler \`${reply[3]}' of the z-plugin \`${match[1]}')"; return 1; }
+           }
            case "$1" in
                (zstatus)
                    -zplg-show-zstatus

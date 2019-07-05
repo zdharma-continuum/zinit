@@ -2755,8 +2755,20 @@ EOF
 —— recall ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL           – fetch saved ice modifiers and construct \`zplugin ice ...' command
 —— env-whitelist [-v|-h] {env..} – allows to specify names (also patterns) of variables left unchanged during an unload. -v – verbose
 —— bindkeys                      – lists bindkeys set up by each plugin
-—— module                        – manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
+—— module                        – manage binary Zsh module shipped with Zplugin, see \`zplugin module help'"
 
+    integer idx
+    local key
+    local -a arr match mbegin mend
+    for (( idx=1; idx <= ZPLGM[z-plugin-index]; ++ idx )); do
+        key="${ZPLGM[(i)(#b)z-plugin-$idx-(*)]}"
+        [[ -z "$key" ]] && continue
+        arr=( "${(Q)${(z@)ZPLGM[$key]}[@]}" )
+        (( ${+functions[${arr[4]}]} )) && { "${arr[4]}"; ((1)); } || \
+            { print -rl -- "(Couldn't find the help-handler \`${arr[4]}' of the z-plugin \`${match[1]}')"; }
+    done
+
+print "
 Available ice-modifiers:
         svn proto from teleid bindmap cloneopts id-as depth if wait load
         unload blockf on-update-of subscribe pick bpick src as ver silent
