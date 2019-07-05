@@ -9,7 +9,7 @@ typeset -gaH ZPLG_REGISTERED_PLUGINS ZPLG_TASKS ZPLG_RUN
 typeset -ga LOADED_PLUGINS
 ZPLG_TASKS=( "<no-data>" )
 # Snippets loaded, url -> file name
-typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE ZPLG_CUR_BIND_MAP
+typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE ZPLG_CUR_BIND_MAP ZPLG_EXTS
 
 #
 # Common needed values
@@ -906,8 +906,8 @@ builtin setopt noaliases
 # FUNCTION: @zplg-register-z-plugin {{{
 # Registers the z-plugin inside Zplugin – i.e. an Zplugin extension
 @zplg-register-z-plugin() {
-    local name="$1" type="$2" handler="$3" helphandler="$4"
-    ZPLGM[z-plugin\ ${(q)type}]="${ZPLGM[z-plugin-index]::=$(( ${ZPLGM[z-plugin-index]:-0} + 1 ))} z-plugin-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler}"
+    local name="$1" type="$2" handler="$3" helphandler="$4" key="z-plugin ${(q)2}"
+    ZPLG_EXTS[$key]="${ZPLGM[z-plugin-index]::=$(( ${ZPLGM[z-plugin-index]:-0} + 1 ))} z-plugin-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler}"
 }
 # }}}
 
@@ -1692,7 +1692,7 @@ zplugin() {
            ;;
        (*)
            # Check if there is a z-plugin registered for the subcommand
-           reply=( ${ZPLGM[z-plugin\ subcommand:${(q)1}]} )
+           reply=( ${ZPLG_EXTS[z-plugin subcommand:${(q)1}]} )
            (( ${#reply} )) && {
                reply=( "${(Q)${(z@)reply[1]}[@]}" )
                (( ${+functions[${reply[5]}]} )) && { "${reply[5]}" "$@"; return $?; } ||

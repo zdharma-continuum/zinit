@@ -2758,14 +2758,16 @@ EOF
 —— module                        – manage binary Zsh module shipped with Zplugin, see \`zplugin module help'"
 
     integer idx
-    local key
+    local type key
     local -a arr
-    for (( idx=1; idx <= ZPLGM[z-plugin-index]; ++ idx )); do
-        key="${(k)ZPLGM[(r)$idx *]}"
-        [[ -z "$key" ]] && continue
-        arr=( "${(Q)${(z@)ZPLGM[$key]}[@]}" )
-        (( ${+functions[${arr[6]}]} )) && { "${arr[6]}"; ((1)); } || \
-            { print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-plugin \`${arr[3]}')"; }
+    for type in subcommand hook; do
+        for (( idx=1; idx <= ZPLGM[z-plugin-index]; ++ idx )); do
+            key="${(k)ZPLG_EXTS[(r)$idx *]}"
+            [[ -z "$key" || "$key" != "z-plugin $type:"* ]] && continue
+            arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+            (( ${+functions[${arr[6]}]} )) && { "${arr[6]}"; ((1)); } || \
+                { print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-plugin \`${arr[3]}')"; }
+        done
     done
 
 print "
