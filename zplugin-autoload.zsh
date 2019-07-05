@@ -1270,8 +1270,34 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${ice[is_release]/\/$REPLY\//}" != "${ice[is_release]}" ]]; then
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
                     print -- "\rBinary release already up to date (version: $REPLY)"
-                (( ${+ice[run-atpull]} )) && ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
+
+                (( ${+ice[run-atpull]} )) && {
+                    # Run z-plugins atpull hooks (the before atpull-ice ones)
+                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                    for key in "${reply[@]}"; do
+                        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                    done
+
+                    ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
+
+                    # Run z-plugins atpull hooks (the after atpull-ice ones)
+                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
+                    for key in "${reply[@]}"; do
+                        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                    done
+                }
             else
+                # Run z-plugins atpull hooks (the before atpull-ice ones)
+                [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
+                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                    for key in "${reply[@]}"; do
+                        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                    done
+                }
+
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                 ZPLG_ICE=( "${(kv)ice[@]}" )
@@ -1318,11 +1344,35 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
+                  # Run z-plugins atpull hooks (the before atpull-ice ones)
+                  [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
+                      reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                      for key in "${reply[@]}"; do
+                          arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                      done
+                  }
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                   command git pull --no-stat
                   ((1))
               } || {
-                  (( ${+ice[run-atpull]} )) && ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
+                  (( ${+ice[run-atpull]} )) && {
+                      # Run z-plugins atpull hooks (the before atpull-ice ones)
+                      reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                      for key in "${reply[@]}"; do
+                          arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                      done
+
+                      ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
+
+                      # Run z-plugins atpull hooks (the afteratpull-ice ones)
+                      reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
+                      for key in "${reply[@]}"; do
+                          arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                      done
+                  }
               }
             )
 
@@ -1355,9 +1405,25 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
+            # Run z-plugins atpull hooks (the before atpull-ice ones)
+            [[ ${ice[atpull]} != "!"* ]] && {
+                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                for key in "${reply[@]}"; do
+                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                    "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                done
+            }
+
             [[ ${+ice[make]} = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
             [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
+
+            # Run z-plugins atpull hooks (the after atpull-ice ones)
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+            done
         }
 
         # Store ices to disk at update of plugin
