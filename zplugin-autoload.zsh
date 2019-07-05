@@ -2243,7 +2243,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     return 0
 } # }}}
-# FUNCTION: -zplg-confirm() {{{
+# FUNCTION: -zplg-confirm {{{
 # Prints given question, waits for "y" key, evals
 # given expression if "y" obtained
 #
