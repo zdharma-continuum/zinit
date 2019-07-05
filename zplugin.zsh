@@ -1080,7 +1080,7 @@ builtin setopt noaliases
             (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }
             (( 0 == retval )) && [[ "$id_as" = PZT::* || "$id_as" = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
             (( 1 ))
-        } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || print -r -- "Snippet not loaded ($id_as)"; }
+        } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || { print -r -- "Snippet not loaded ($id_as)"; retval=1; } }
 
         [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; }
         [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=( ${ZPLG_ICE[multisrc]} )"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { builtin source "$ZERO"; (( retval += $? )); }; done; }
@@ -1620,35 +1620,36 @@ zplugin() {
         }
     }
 
+    integer retval=0
     local -a match mbegin mend reply
     local MATCH REPLY; integer MBEGIN MEND
 
     case "$1" in
        (load|light)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-           (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 0; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
+           (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
            if [[ -z "$2" && -z "$3" ]]; then
                print "Argument needed, try help"
            else
                if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                    ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
                    [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
-                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"
+                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                else
                    [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
-                   -zplg-load "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}" "${1/load/}"
+                   -zplg-load "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}" "${1/load/}"; retval=$?
                fi
            fi
            ;;
        (snippet)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-           (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 0; }
+           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
+           (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
            if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
-               -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "$3"
+               -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "$3"; retval=$?
            else
                ZPLG_SICE[${2%%(/|//|///)}]=""
-               -zplg-load-snippet "${2%%(/|//|///)}" "$3"
+               -zplg-load-snippet "${2%%(/|//|///)}" "$3"; retval=$?
            fi
            ;;
        (ice)
@@ -1656,7 +1657,7 @@ zplugin() {
            -zplg-ice "$@"
            ;;
        (cdreplay)
-           -zplg-compdef-replay "$2"
+           -zplg-compdef-replay "$2"; retval=$?
            ;;
        (cdclear)
            -zplg-compdef-clear "$2"
@@ -1697,20 +1698,20 @@ zplugin() {
                (unload)
                    (( ${+functions[-zplg-unload]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
                    if [[ -z "$2" && -z "$3" ]]; then
-                       print "Argument needed, try help"
+                       print "Argument needed, try help"; retval=1
                    else
                        [[ "$2" = "-q" ]] && { 5="-q"; shift; }
                        # Unload given plugin. Cloned directory remains intact
                        # so as are completions
-                       -zplg-unload "${2%%(/|//|///)}" "${${3:#-q}%%(/|//|///)}" "${${(M)4:#-q}:-${(M)3:#-q}}"
+                       -zplg-unload "${2%%(/|//|///)}" "${${3:#-q}%%(/|//|///)}" "${${(M)4:#-q}:-${(M)3:#-q}}"; retval=$?
                    fi
                    ;;
                (bindkeys)
                    -zplg-list-bindkeys
                    ;;
                (update)
-                   (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 0; }
-                   (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 0; }
+                   (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
+                   (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
                    local -A map
                    map=(
                        -q       opt_-q,--quiet
@@ -1722,17 +1723,17 @@ zplugin() {
                    set -- "${@[@]:#(--quiet|-q|--reset|-r)}"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
-                       -zplg-update-or-status-all "update"
+                       -zplg-update-or-status-all "update"; retval=$?
                    else
-                       -zplg-update-or-status "update" "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+                       -zplg-update-or-status "update" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                    fi
                    ;;
                (status)
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
-                       -zplg-update-or-status-all "status"
+                       -zplg-update-or-status-all "status"; retval=$?
                    else
-                       -zplg-update-or-status "status" "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+                       -zplg-update-or-status "status" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                    fi
                    ;;
                (report)
@@ -1740,7 +1741,7 @@ zplugin() {
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 3; }
                        -zplg-show-all-reports
                    else
-                       -zplg-show-report "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+                       -zplg-show-report "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                    fi
                    ;;
                (loaded|list)
@@ -1758,7 +1759,7 @@ zplugin() {
                    ;;
                (cdisable)
                    if [[ -z "$2" ]]; then
-                       print "Argument needed, try help"
+                       print "Argument needed, try help"; retval=1
                    else
                        local f="_${2#_}"
                        # Disable completion given by completion function name
@@ -1769,12 +1770,14 @@ zplugin() {
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
                            compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
+                       else
+                           retval=1
                        fi
                    fi
                    ;;
                (cenable)
                    if [[ -z "$2" ]]; then
-                       print "Argument needed, try help"
+                       print "Argument needed, try help"; retval=1
                    else
                        local f="_${2#_}"
                        # Enable completion given by completion function name
@@ -1785,6 +1788,8 @@ zplugin() {
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
                            compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
+                       else
+                           retval=1
                        fi
                    fi
                    ;;
@@ -1793,18 +1798,18 @@ zplugin() {
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ "$2" = "-q" ]] && { 5="-q"; shift; }
-                   -zplg-install-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}" "1" "${(M)4:#-q}"
+                   -zplg-install-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}" "1" "${(M)4:#-q}"; retval=$?
                    [[ -z "${(M)4:#-q}" ]] && print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
                    compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
                    ;;
                (cuninstall)
                    if [[ -z "$2" && -z "$3" ]]; then
-                       print "Argument needed, try help"
+                       print "Argument needed, try help"; retval=1
                    else
                        (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                        # Uninstalls completions for plugin
-                       -zplg-uninstall-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+                       -zplg-uninstall-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                        print "Initializing completion (compinit)..."
                        builtin autoload -Uz compinit
                        compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
@@ -1815,7 +1820,7 @@ zplugin() {
                    ;;
                (compinit)
                    (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-                   -zplg-compinit
+                   -zplg-compinit; retval=$?
                    ;;
                (dreport)
                    -zplg-show-debug-report
@@ -1830,17 +1835,17 @@ zplugin() {
                    (( ${+functions[-zplg-compile-plugin]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
-                       -zplg-compile-uncompile-all "1"
+                       -zplg-compile-uncompile-all "1"; retval=$?
                    else
-                       -zplg-compile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+                       -zplg-compile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                    fi
                    ;;
                (uncompile)
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
-                       -zplg-compile-uncompile-all "0"
+                       -zplg-compile-uncompile-all "0"; retval=$?
                    else
-                       -zplg-uncompile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+                       -zplg-uncompile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                    fi
                    ;;
                (compiled)
@@ -1849,33 +1854,12 @@ zplugin() {
                (cdlist)
                    -zplg-list-compdef-replay
                    ;;
-               (cd)
-                   -zplg-cd "${2%%(/|//|///)}" "${3%%(/|//|///)}"
-                   ;;
-               (delete)
-                   -zplg-delete "${2%%(/|//|///)}" "${3%%(/|//|///)}"
-                   ;;
-               (recall)
-                   -zplg-recall "${2%%(/|//|///)}" "${3%%(/|//|///)}"
-                   ;;
-               (edit)
-                   -zplg-edit "${2%%(/|//|///)}" "${3%%(/|//|///)}"
-                   ;;
-               (glance)
-                   -zplg-glance "${2%%(/|//|///)}" "${3%%(/|//|///)}"
-                   ;;
-               (changes)
-                   -zplg-changes "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+               (cd|delete|recall|edit|glance|changes|create|stress)
+                   -zplg-"$1" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                    ;;
                (recently)
                    shift
-                   -zplg-recently "$@"
-                   ;;
-               (create)
-                   -zplg-create "${2%%(/|//|///)}" "${3%%(/|//|///)}"
-                   ;;
-               (stress)
-                   -zplg-stress "${2%%(/|//|///)}" "${3%%(/|//|///)}"
+                   -zplg-recently "$@"; retval=$?
                    ;;
                (-h|--help|help|"")
                    -zplg-help
@@ -1888,22 +1872,25 @@ zplugin() {
                    () { setopt localoptions extendedglob
                    [[ ! -e ${ZPLGM[SERVICES_DIR]}/"$2".fifo ]] && { print "No such service: $2"; } ||
                        { [[ "$3" = (#i)(next|stop|quit|restart) ]] &&
-                           { print "${(U)3}" >>! ${ZPLGM[SERVICES_DIR]}/"$2".fifo || print "Service $2 inactive"; ((1)); } ||
+                           { print "${(U)3}" >>! ${ZPLGM[SERVICES_DIR]}/"$2".fifo || print "Service $2 inactive"; retval=1; } ||
                                { [[ "$3" = (#i)start ]] && rm -f ${ZPLGM[SERVICES_DIR]}/"$2".stop ||
-                                   { print "Unknown service-command: $3"; }
+                                   { print "Unknown service-command: $3"; retval=1; }
                                }
                        }
                    } "$@"
                    ;;
                (module)
-                   -zplg-module "${@[2,-1]}"
+                   -zplg-module "${@[2,-1]}"; retval=$?
                    ;;
                (*)
                    print "Unknown command \`$1' (use \`help' to get usage information)"
+                   retval=1
                    ;;
             esac
             ;;
     esac
+
+    return $retval
 } # }}}
 # FUNCTION: zpcdreplay {{{
 # A function that can be invoked from within `atinit', `atload', etc. ice-mod.
