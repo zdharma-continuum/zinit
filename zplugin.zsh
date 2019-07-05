@@ -907,7 +907,7 @@ builtin setopt noaliases
 # Registers the z-plugin inside Zplugin – i.e. an Zplugin extension
 @zplg-register-z-plugin() {
     local name="$1" type="$2" handler="$3" helphandler="$4"
-    ZPLGM[z-plugin-${ZPLGM[z-plugin-index]::=$(( ${ZPLGM[z-plugin-index]:-0} + 1 ))}-$name]="z-plugin-data: ${(q)type} ${(q)handler} ${(q)helphandler}"
+    ZPLGM[z-plugin\ ${(q)type}]="${ZPLGM[z-plugin-index]::=$(( ${ZPLGM[z-plugin-index]:-0} + 1 ))} z-plugin-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler}"
 }
 # }}}
 
@@ -1692,12 +1692,11 @@ zplugin() {
            ;;
        (*)
            # Check if there is a z-plugin registered for the subcommand
-           reply=( ${(kv)ZPLGM[(r)z-plugin-data: subcommand:${(q)${1//(#m)(\*|\#|\?|\^|\~)/${(q)MATCH}}} *]} )
+           reply=( ${ZPLGM[z-plugin\ subcommand:${(q)1}]} )
            (( ${#reply} )) && {
-               [[ ${reply[1]} = (#b)z-plugin-<->-(*) ]]
-               reply=( "${(Q)${(z@)reply[2]}[@]}" )
-               (( ${+functions[${reply[3]}]} )) && { "${reply[3]}" "$@"; return $?; } ||
-                 { print -rl -- "(Couldn't find the subcommand-handler \`${reply[3]}' of the z-plugin \`${match[1]}')"; return 1; }
+               reply=( "${(Q)${(z@)reply[1]}[@]}" )
+               (( ${+functions[${reply[5]}]} )) && { "${reply[5]}" "$@"; return $?; } ||
+                 { print -rl -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-plugin \`${reply[3]}')"; return 1; }
            }
            case "$1" in
                (zstatus)

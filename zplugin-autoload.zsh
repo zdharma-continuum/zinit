@@ -2759,13 +2759,13 @@ EOF
 
     integer idx
     local key
-    local -a arr match mbegin mend
+    local -a arr
     for (( idx=1; idx <= ZPLGM[z-plugin-index]; ++ idx )); do
-        key="${ZPLGM[(i)(#b)z-plugin-$idx-(*)]}"
+        key="${(k)ZPLGM[(r)$idx *]}"
         [[ -z "$key" ]] && continue
         arr=( "${(Q)${(z@)ZPLGM[$key]}[@]}" )
-        (( ${+functions[${arr[4]}]} )) && { "${arr[4]}"; ((1)); } || \
-            { print -rl -- "(Couldn't find the help-handler \`${arr[4]}' of the z-plugin \`${match[1]}')"; }
+        (( ${+functions[${arr[6]}]} )) && { "${arr[6]}"; ((1)); } || \
+            { print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-plugin \`${arr[3]}')"; }
     done
 
 print "
