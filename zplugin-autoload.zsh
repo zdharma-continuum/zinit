@@ -2761,7 +2761,7 @@ EOF
     local type key
     local -a arr
     for type in subcommand hook; do
-        for (( idx=1; idx <= ZPLGM[z-plugin-index]; ++ idx )); do
+        for (( idx=1; idx <= ZPLG_EXTS[seqno]; ++ idx )); do
             key="${(k)ZPLG_EXTS[(r)$idx *]}"
             [[ -z "$key" || "$key" != "z-plugin $type:"* ]] && continue
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
