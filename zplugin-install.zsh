@@ -167,9 +167,21 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             # Store ices at clone of a plugin
             -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atclone <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+            done
+
             [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
             (( ${+ZPLG_ICE[atclone]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
             [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_path" ${(@s; ;)ZPLG_ICE[make]}; }
+
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atclone <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+            done
         fi
 
         # After additional executions like atclone'' - install completions (1 - plugins)
@@ -415,6 +427,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     setopt localoptions extendedglob noksharrays noshwordsplit
 
     local save_url="$1" url="$2" id_as="$3" id_as_clean="${3%%\?*}" local_dir="$4" dirname="$5" filename="$6" update="$7"
+    local -a list arr
     integer retval=0
     [[ "$id_as" = (http|https|ftp|ftps|scp)://* ]] && {
         local sname="${${id_as_clean:h}:t}/${id_as_clean:t}"
@@ -450,13 +463,36 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         # Test if update available
                         -zplg-mirror-using-svn "$url" "-t" "$dirname" || {
                             (( ${+ZPLG_ICE[run-atpull]} )) && {
+                                # Run z-plugins atpull hooks (the before atpull-ice ones)
+                                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                                for key in "${reply[@]}"; do
+                                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                                    "${arr[5]}" "snippet" "$save_url" "$id_as"
+                                done
 
                                 { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
+                                # Run z-plugins atpull hooks (the after atpull-ice ones)
+                                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
+                                for key in "${reply[@]}"; do
+                                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                                    "${arr[5]}" "snippet" "$save_url" "$id_as"
+                                done
                             }
                             return 2
                         }
+
+                        # Run z-plugins atpull hooks (the before atpull-ice ones)
+                        [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
+                            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                            for key in "${reply[@]}"; do
+                                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                                "${arr[5]}" "snippet" "$save_url" "$id_as"
+                            done
+                        }
+
                         [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+
                         # Do the update
                         [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
                             print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
@@ -466,8 +502,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     else
                         -zplg-mirror-using-svn "$url" "" "$dirname" || return 1
                     fi
-
-                    local -a list
 
                     # Redundant code, just to compile SVN snippet
                     if [[ ${ZPLG_ICE[as]} != "command" ]]; then
@@ -484,6 +518,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     fi
                 else
                     command mkdir -p "$local_dir/$dirname"
+
+                    # Run z-plugins atpull hooks (the before atpull-ice ones)
+                    [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
+                        reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                        for key in "${reply[@]}"; do
+                            arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                            "${arr[5]}" "snippet" "$save_url" "$id_as"
+                        done
+                    }
 
                     [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
                         [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
@@ -527,6 +570,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 }
             fi
         else
+            # Run z-plugins atpull hooks (the before atpull-ice ones)
+            [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
+                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                for key in "${reply[@]}"; do
+                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                    "${arr[5]}" "snippet" "$save_url" "$id_as"
+                done
+            }
+
             # File
             [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$local_dir/$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
@@ -579,14 +631,44 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
 
         if [[ "$update" = "-u" ]]; then
+            # Run z-plugins atpull hooks (the before atpull-ice ones)
+            [[ ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && {
+                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                for key in "${reply[@]}"; do
+                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                    "${arr[5]}" "snippet" "$save_url" "$id_as"
+                done
+            }
 
             [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
         else
+            # Run z-plugins atclone hooks (the before atclone-ice ones)
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atclone <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "snippet" "$save_url" "$id_as"
+            done
+
             (( ${+ZPLG_ICE[atclone]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+
+            # Run z-plugins atclone hooks (the after atclone-ice ones)
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atclone <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "snippet" "$save_url" "$id_as"
+            done
         fi
 
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)ZPLG_ICE[make]}; }
 
+        # Run z-plugins atpull hooks (the after atpull-ice ones)
+        [[ "$update" = "-u" ]] && {
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "snippet" "$save_url" "$id_as"
+            done
+        }
     ) || return $?
 
     # After additional executions like atclone'' - install completions (2 - snippets)
