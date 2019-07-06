@@ -2786,7 +2786,7 @@ EOF
 —— snippet [-f] ${ZPLGM[col-pname]}{url}${ZPLGM[col-rst]}            – source local or remote file (by direct URL), -f: force – don't use cache
 —— ls                            – list snippets in formatted and colorized manner
 —— ice <ice specification>       – add ICE to next command, argument is e.g. from\"gitlab\"
-—— update [-q] ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet
+—— update [-q] ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
 —— status ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
 —— report ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}               – show plugin's report (or all plugins' if ——all passed)
 —— delete ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL           – remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
