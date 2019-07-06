@@ -1307,7 +1307,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 }
                 [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
                     [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Removing the previous file(s) (-r/--reset given)..."
-                    command rm -rf ${local_dir:-/tmp/x}/*
+                    command rm -rf ${local_dir:-/tmp/xyzabc312}/*
                 }
                 -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "-u"
                 ZPLG_ICE=()
