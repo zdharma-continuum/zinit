@@ -1740,7 +1740,7 @@ zplugin() {
            (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
            (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
            if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try help"
+               print "Argument needed, try: help"
            else
                ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
                if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
@@ -1822,7 +1822,7 @@ zplugin() {
                (unload)
                    (( ${+functions[-zplg-unload]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
                    if [[ -z "$2" && -z "$3" ]]; then
-                       print "Argument needed, try help"; retval=1
+                       print "Argument needed, try: help"; retval=1
                    else
                        [[ "$2" = "-q" ]] && { 5="-q"; shift; }
                        # Unload given plugin. Cloned directory remains intact
@@ -1883,7 +1883,7 @@ zplugin() {
                    ;;
                (cdisable)
                    if [[ -z "$2" ]]; then
-                       print "Argument needed, try help"; retval=1
+                       print "Argument needed, try: help"; retval=1
                    else
                        local f="_${2#_}"
                        # Disable completion given by completion function name
@@ -1901,7 +1901,7 @@ zplugin() {
                    ;;
                (cenable)
                    if [[ -z "$2" ]]; then
-                       print "Argument needed, try help"; retval=1
+                       print "Argument needed, try: help"; retval=1
                    else
                        local f="_${2#_}"
                        # Enable completion given by completion function name
@@ -1929,7 +1929,7 @@ zplugin() {
                    ;;
                (cuninstall)
                    if [[ -z "$2" && -z "$3" ]]; then
-                       print "Argument needed, try help"; retval=1
+                       print "Argument needed, try: help"; retval=1
                    else
                        (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
                        # Uninstalls completions for plugin
