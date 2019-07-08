@@ -44,6 +44,11 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 Here are the new features and updates added to zplugin in the last 90 days. To see the full history check [the changelog.](CHANGELOG.md)
 
+* 08-07-2019
+  - You can now do `zplugin ice wait ...` and it will work as `zplugin ice wait'0' ...`
+    :) I.e. when there's no value to the `wait''` ice then a value of `0` is being
+    substituted.
+
 * 02-07-2019
   - [Cooperation of Fast-Syntax-Highlighting and
     Zplugin](https://asciinema.org/a/254630) – a new precise highlighting for
