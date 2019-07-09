@@ -1488,10 +1488,17 @@ ZPLGM[EXTENDED_GLOB]=""
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt
+        # Include all additional ices – after
+        # stripping them from the possible: ''
+        ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions svn
+            # Include only those additional ices,
+            # don't have the '' in their name, i.e.
+            # aren't designed to hold value
+            ${(@)${(@s.|.)ZPLG_EXTS[ice-mods]}:#*\'\'*}
     )
 
     # Remove whitespace from beginning of URL
@@ -2676,10 +2683,17 @@ EOF
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt
+        # Include all additional ices – after
+        # stripping them from the possible: ''
+        ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions svn
+            # Include only those additional ices,
+            # don't have the '' in their name, i.e.
+            # aren't designed to hold value
+            ${(@)${(@s.|.)ZPLG_EXTS[ice-mods]}:#*\'\'*}
     )
     -zplg-compute-ice "$1${${1:#(%|/)*}:+${2:+/}}$2" "pack" ice local_dir filename || return 1
 
