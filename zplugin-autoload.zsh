@@ -725,6 +725,7 @@ ZPLGM[EXTENDED_GLOB]=""
         command git pull --no-stat;
     )
     builtin print -- "Compiling Zplugin (zcompile)..."
+    command rm -f "${ZPLGM[BIN_DIR]}"/*.zwc(N)
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-install.zsh
