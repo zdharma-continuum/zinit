@@ -44,6 +44,13 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 Here are the new features and updates added to zplugin in the last 90 days. To see the full history check [the changelog.](CHANGELOG.md)
 
+* 09-07-2019
+  - Zplugin can now have **its own plugins**, called **z-plugins**! Check out an
+    example but fully functional z-plugin
+    [zdharma/z-p-submods](https://github.com/zdharma/z-p-submods) and a document that
+    explains on how to implement your own z-plugin
+    ([here](https://github.com/zdharma/zplugin/blob/master/doc/Z-PLUGINS.adoc)).
+
 * 08-07-2019
   - You can now do `zplugin ice wait ...` and it will work as `zplugin ice wait'0' ...`
     :) I.e. when there's no value to the `wait''` ice then a value of `0` is being
