@@ -252,7 +252,8 @@ zplugin load psprint/zprompts
 This sets plugin `psprint/zprompts` to be loaded `0` seconds after `zshrc`. It
 will fire up after c.a. 100 ms of showing of the basic prompt `READY >`. I've
 started to use this method of setting up a prompt a year ago now and I run it
-without any problems.
+without any problems. **NEW**: It is now sufficient to provide just the word
+`wait`, it'll work like `wait'0'`.
 
 The exclamation mark causes Zplugin to reset-prompt after loading plugin. The
 same with Prezto prompts, with a longer delay:
