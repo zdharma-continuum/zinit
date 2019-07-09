@@ -1,6 +1,6 @@
 # INSTALLATION OF ZPLUGIN
 Sebastian Gniazdowski <psprint@zdharma.org>
-v0.9, 12/03/2018
+v1.01, 03/13/2018
 :source-highlighter: prettify
 :toc:
 :toclevels: 3
@@ -68,5 +68,5 @@ a plugin by invoking `zplugin uncompile {plugin-spec}`. There are also commands
 
 [appendix]
 == Revision history (history of updates to the document)
-v1.01, 03/13/2018: Update the link to README.md / Customizing Paths section +
-v1.00, 03/11/2018: First asciidoc version – 1/ replaced doctoc with :toc: 2/ Intense uplift and verification before commiting +
+v1.01, 03/13/2019: Update the link to README.md / Customizing Paths section +
+v1.00, 03/11/2019: First asciidoc version – 1/ replaced doctoc with :toc: 2/ Intense uplift and verification before commiting +
