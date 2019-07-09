@@ -201,7 +201,9 @@ ____
  $4 - additional keys of hash to store, empty-meaningful ices, space separated
 ____
 
-Has 16 line(s). Doesn't call other functions.
+Has 30 line(s). Doesn't call other functions.
+
+Uses feature(s): _wait_
 
 Called by:
 

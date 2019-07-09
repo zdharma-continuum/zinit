@@ -158,9 +158,7 @@ Has 13 line(s). Calls functions:
      |-- zplugin-side.zsh/-zplg-two-paths
      `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-cdisable
 ~~~~~~~~~~~~~~
@@ -231,9 +229,7 @@ Has 9 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-exists-physically-message
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-check-comp-consistency
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -434,13 +430,16 @@ ____
  $5 - name of output string parameter, to hold filename ("filename")
 ____
 
-Has 81 line(s). Calls functions:
+Has 98 line(s). Calls functions:
 
  -zplg-compute-ice
  |-- zplugin-side.zsh/-zplg-exists-physically-message
  |-- zplugin-side.zsh/-zplg-shands-exp
  |-- zplugin-side.zsh/-zplg-two-paths
+ |-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin.zsh/-zplg-pack-ice
+
+Uses feature(s): _wait_
 
 Called by:
 
@@ -481,7 +480,7 @@ ____
  $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
-Has 61 line(s). Calls functions:
+Has 66 line(s). Calls functions:
 
  -zplg-create
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -490,9 +489,7 @@ Has 61 line(s). Calls functions:
 
 Uses feature(s): _vared_
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-delete
 ~~~~~~~~~~~~
@@ -516,9 +513,7 @@ Has 42 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-diff-env-compute
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -614,9 +609,7 @@ Has 13 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-first
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-exists-message
 ~~~~~~~~~~~~~~~~~~~~
@@ -831,9 +824,7 @@ Has 39 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-first
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-help
 ~~~~~~~~~~
@@ -845,7 +836,7 @@ ____
  User-action entry point.
 ____
 
-Has 52 line(s). Doesn't call other functions.
+Has 68 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -934,20 +925,19 @@ Called by:
 -zplg-recall
 ~~~~~~~~~~~~
 
-Has 26 line(s). Calls functions:
+Has 37 line(s). Calls functions:
 
  -zplg-recall
  `-- -zplg-compute-ice
      |-- zplugin-side.zsh/-zplg-exists-physically-message
      |-- zplugin-side.zsh/-zplg-shands-exp
      |-- zplugin-side.zsh/-zplg-two-paths
+     |-- zplugin.zsh/-zplg-any-to-user-plugin
      `-- zplugin.zsh/-zplg-pack-ice
 
 Uses feature(s): _wait_
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-recently
 ~~~~~~~~~~~~~~
@@ -1034,7 +1024,7 @@ ____
  User-action entry point.
 ____
 
-Has 21 line(s). Doesn't call other functions.
+Has 23 line(s). Doesn't call other functions.
 
 Uses feature(s): _zcompile_
 
@@ -1216,7 +1206,7 @@ ____
  User-action entry point.
 ____
 
-Has 32 line(s). Calls functions:
+Has 42 line(s). Calls functions:
 
  -zplg-show-times
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -1268,9 +1258,7 @@ Has 35 line(s). Calls functions:
 
 Uses feature(s): _zcompile_
 
-Called by:
-
- zplugin.zsh/zplugin
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-uncompile-plugin
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -1386,7 +1374,7 @@ ____
  $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 121 line(s). Calls functions:
+Has 210 line(s). Calls functions:
 
  -zplg-update-or-status
  |-- -zplg-at-eval
@@ -1394,12 +1382,14 @@ Has 121 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |-- zplugin.zsh/-zplg-any-to-user-plugin
  |   `-- zplugin.zsh/-zplg-pack-ice
  |-- -zplg-update-or-status-snippet
  |   |-- -zplg-compute-ice
  |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
  |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   `-- zplugin.zsh/-zplg-load-snippet
  |-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
@@ -1438,12 +1428,14 @@ Has 63 line(s). Calls functions:
  |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
  |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   |-- -zplg-update-or-status-snippet
  |   |   |-- -zplg-compute-ice
  |   |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
  |   |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   |   `-- zplugin.zsh/-zplg-load-snippet
  |   |-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
@@ -1458,6 +1450,7 @@ Has 63 line(s). Calls functions:
  |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
  |   |   `-- zplugin.zsh/-zplg-pack-ice
  |   `-- zplugin.zsh/-zplg-load-snippet
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -1486,6 +1479,7 @@ Has 19 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |-- zplugin-side.zsh/-zplg-two-paths
+ |   |-- zplugin.zsh/-zplg-any-to-user-plugin
  |   `-- zplugin.zsh/-zplg-pack-ice
  `-- zplugin.zsh/-zplg-load-snippet
 

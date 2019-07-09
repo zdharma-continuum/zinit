@@ -57,7 +57,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 48 line(s). Calls functions:
+Has 50 line(s). Calls functions:
 
  -zplg-compile-plugin
  |-- zplugin-side.zsh/-zplg-first
@@ -102,7 +102,7 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 137 line(s). Calls functions:
+Has 234 line(s). Calls functions:
 
  -zplg-download-snippet
  |-- -zplg-at-eval
@@ -247,7 +247,7 @@ ____
  $2 - plugin
 ____
 
-Has 138 line(s). Calls functions:
+Has 180 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin

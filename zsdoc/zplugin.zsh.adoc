@@ -28,6 +28,7 @@ FUNCTIONS
  -zplg-debug-start
  -zplg-debug-stop
  -zplg-debug-unload
+ -zplg-deploy-message
  -zplg-diff-env
  -zplg-diff-functions
  -zplg-diff-options
@@ -47,7 +48,9 @@ FUNCTIONS
  -zplg-submit-turbo
  -zplg-unregister-plugin
  -zplugin_scheduler_add_sh
+ @zplg-register-z-plugin
  pmodload
+ zpcdclear
  zpcdreplay
  zpcompdef
  zpcompinit
@@ -94,7 +97,7 @@ ____
  Author: Bart Schaefer
 ____
 
-Has 8 line(s). Doesn't call other functions.
+Has 7 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _unfunction_
 
@@ -130,7 +133,7 @@ ____
  run custom `autoload' function, that doesn't need FPATH.
 ____
 
-Has 44 line(s). Calls functions:
+Has 45 line(s). Calls functions:
 
  --zplg-shadow-autoload
  `-- -zplg-add-report
@@ -260,6 +263,7 @@ Called by:
  zplugin-autoload.zsh/-zplg-changes
  zplugin-autoload.zsh/-zplg-compile-uncompile-all
  zplugin-autoload.zsh/-zplg-compiled
+ zplugin-autoload.zsh/-zplg-compute-ice
  zplugin-autoload.zsh/-zplg-create
  zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-edit
@@ -309,6 +313,7 @@ Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
+ zpcdclear
  zplugin
 
 -zplg-compdef-replay
@@ -385,6 +390,23 @@ Has 5 line(s). Calls functions:
 Called by:
 
  zplugin
+
+-zplg-deploy-message
+~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Deploys a sub-prompt message to be displayed
+____
+
+Has 11 line(s). Doesn't call other functions.
+
+Uses feature(s): _read_, _zle_
+
+Called by:
+
+ -zplg-load-snippet
+ -zplg-load
 
 -zplg-diff-env
 ~~~~~~~~~~~~~~
@@ -494,7 +516,7 @@ ____
  can then stick to plugin and activate e.g. at update.
 ____
 
-Has 7 line(s). Doesn't call other functions.
+Has 8 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -513,10 +535,11 @@ ____
  $2 - plugin name, if the third format is used
 ____
 
-Has 26 line(s). Calls functions:
+Has 42 line(s). Calls functions:
 
  -zplg-load
  |-- -zplg-any-to-user-plugin
+ |-- -zplg-deploy-message
  |-- -zplg-load-plugin
  |   |-- -zplg-add-report
  |   |-- -zplg-diff-env
@@ -528,8 +551,6 @@ Has 26 line(s). Calls functions:
  |   `-- -zplg-shadow-on
  |-- -zplg-pack-ice
  |-- -zplg-register-plugin
- |-- -zplg-unregister-plugin
- |   `-- -zplg-any-to-user-plugin
  `-- zplugin-install.zsh/-zplg-setup-plugin-dir
 
 Uses feature(s): _eval_, _source_, _zle_
@@ -552,7 +573,7 @@ ____
  $3 - mode (light or load)
 ____
 
-Has 73 line(s). Calls functions:
+Has 102 line(s). Calls functions:
 
  -zplg-load-plugin
  |-- -zplg-add-report
@@ -580,9 +601,10 @@ ____
  $1 - url (can be local, absolute path)
 ____
 
-Has 119 line(s). Calls functions:
+Has 173 line(s). Calls functions:
 
  -zplg-load-snippet
+ |-- -zplg-deploy-message
  |-- -zplg-pack-ice
  `-- zplugin-install.zsh/-zplg-download-snippet
 
@@ -635,7 +657,7 @@ _Environment variables used:_ ZPFX
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
 
-Has 18 line(s). Doesn't call other functions.
+Has 19 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -644,11 +666,12 @@ Called by:
 -zplg-run-task
 ~~~~~~~~~~~~~~
 
-Has 32 line(s). Calls functions:
+Has 40 line(s). Calls functions:
 
  -zplg-run-task
  |-- -zplg-load
  |   |-- -zplg-any-to-user-plugin
+ |   |-- -zplg-deploy-message
  |   |-- -zplg-load-plugin
  |   |   |-- -zplg-add-report
  |   |   |-- -zplg-diff-env
@@ -660,10 +683,9 @@ Has 32 line(s). Calls functions:
  |   |   `-- -zplg-shadow-on
  |   |-- -zplg-pack-ice
  |   |-- -zplg-register-plugin
- |   |-- -zplg-unregister-plugin
- |   |   `-- -zplg-any-to-user-plugin
  |   `-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |-- -zplg-load-snippet
+ |   |-- -zplg-deploy-message
  |   |-- -zplg-pack-ice
  |   `-- zplugin-install.zsh/-zplg-download-snippet
  `-- zplugin-autoload.zsh/-zplg-unload
@@ -695,12 +717,13 @@ ____
  
 ____
 
-Has 41 line(s). *Is a precmd hook*. Calls functions:
+Has 61 line(s). *Is a precmd hook*. Calls functions:
 
  -zplg-scheduler
  |-- -zplg-run-task
  |   |-- -zplg-load
  |   |   |-- -zplg-any-to-user-plugin
+ |   |   |-- -zplg-deploy-message
  |   |   |-- -zplg-load-plugin
  |   |   |   |-- -zplg-add-report
  |   |   |   |-- -zplg-diff-env
@@ -712,10 +735,9 @@ Has 41 line(s). *Is a precmd hook*. Calls functions:
  |   |   |   `-- -zplg-shadow-on
  |   |   |-- -zplg-pack-ice
  |   |   |-- -zplg-register-plugin
- |   |   |-- -zplg-unregister-plugin
- |   |   |   `-- -zplg-any-to-user-plugin
  |   |   `-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |   |-- -zplg-load-snippet
+ |   |   |-- -zplg-deploy-message
  |   |   |-- -zplg-pack-ice
  |   |   `-- zplugin-install.zsh/-zplg-download-snippet
  |   `-- zplugin-autoload.zsh/-zplg-unload
@@ -742,6 +764,7 @@ Has 30 line(s). Calls functions:
  -zplg-service
  |-- -zplg-load
  |   |-- -zplg-any-to-user-plugin
+ |   |-- -zplg-deploy-message
  |   |-- -zplg-load-plugin
  |   |   |-- -zplg-add-report
  |   |   |-- -zplg-diff-env
@@ -753,10 +776,9 @@ Has 30 line(s). Calls functions:
  |   |   `-- -zplg-shadow-on
  |   |-- -zplg-pack-ice
  |   |-- -zplg-register-plugin
- |   |-- -zplg-unregister-plugin
- |   |   `-- -zplg-any-to-user-plugin
  |   `-- zplugin-install.zsh/-zplg-setup-plugin-dir
  `-- -zplg-load-snippet
+     |-- -zplg-deploy-message
      |-- -zplg-pack-ice
      `-- zplugin-install.zsh/-zplg-download-snippet
 
@@ -811,7 +833,7 @@ ____
  (load, unload) this as a task.
 ____
 
-Has 13 line(s). Doesn't call other functions.
+Has 14 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -820,14 +842,13 @@ Called by:
 -zplg-unregister-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Has 4 line(s). Calls functions:
+Has 5 line(s). Calls functions:
 
  -zplg-unregister-plugin
  `-- -zplg-any-to-user-plugin
 
 Called by:
 
- -zplg-load
  zplugin-autoload.zsh/-zplg-unload
 
 -zplugin_scheduler_add_sh
@@ -839,7 +860,19 @@ ____
  A small function ran from pattern in /-substitution.
 ____
 
-Has 2 line(s). Doesn't call other functions.
+Has 7 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+@zplg-register-z-plugin
+~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Registers the z-plugin inside Zplugin – i.e. an Zplugin extension
+____
+
+Has 4 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -850,10 +883,21 @@ Has 9 line(s). Calls functions:
 
  pmodload
  `-- -zplg-load-snippet
+     |-- -zplg-deploy-message
      |-- -zplg-pack-ice
      `-- zplugin-install.zsh/-zplg-download-snippet
 
 Uses feature(s): _zstyle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+zpcdclear
+~~~~~~~~~
+
+Has 1 line(s). Calls functions:
+
+ zpcdclear
+ `-- -zplg-compdef-clear
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -913,7 +957,7 @@ ____
  and its arguments, has completion.
 ____
 
-Has 270 line(s). Calls functions:
+Has 284 line(s). Calls functions:
 
  zplugin
  |-- -zplg-clear-debug-report
@@ -937,6 +981,7 @@ Has 270 line(s). Calls functions:
  |-- -zplg-ice
  |-- -zplg-load
  |   |-- -zplg-any-to-user-plugin
+ |   |-- -zplg-deploy-message
  |   |-- -zplg-load-plugin
  |   |   |-- -zplg-add-report
  |   |   |-- -zplg-diff-env
@@ -948,32 +993,24 @@ Has 270 line(s). Calls functions:
  |   |   `-- -zplg-shadow-on
  |   |-- -zplg-pack-ice
  |   |-- -zplg-register-plugin
- |   |-- -zplg-unregister-plugin
- |   |   `-- -zplg-any-to-user-plugin
  |   `-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |-- -zplg-load-snippet
+ |   |-- -zplg-deploy-message
  |   |-- -zplg-pack-ice
  |   `-- zplugin-install.zsh/-zplg-download-snippet
  |-- -zplg-submit-turbo
  |-- compinit
- |-- zplugin-autoload.zsh/-zplg-cd
  |-- zplugin-autoload.zsh/-zplg-cdisable
  |-- zplugin-autoload.zsh/-zplg-cenable
- |-- zplugin-autoload.zsh/-zplg-changes
  |-- zplugin-autoload.zsh/-zplg-clear-completions
  |-- zplugin-autoload.zsh/-zplg-compile-uncompile-all
  |-- zplugin-autoload.zsh/-zplg-compiled
  |-- zplugin-autoload.zsh/-zplg-compinit
- |-- zplugin-autoload.zsh/-zplg-create
- |-- zplugin-autoload.zsh/-zplg-delete
- |-- zplugin-autoload.zsh/-zplg-edit
- |-- zplugin-autoload.zsh/-zplg-glance
  |-- zplugin-autoload.zsh/-zplg-help
  |-- zplugin-autoload.zsh/-zplg-list-bindkeys
  |-- zplugin-autoload.zsh/-zplg-list-compdef-replay
  |-- zplugin-autoload.zsh/-zplg-ls
  |-- zplugin-autoload.zsh/-zplg-module
- |-- zplugin-autoload.zsh/-zplg-recall
  |-- zplugin-autoload.zsh/-zplg-recently
  |-- zplugin-autoload.zsh/-zplg-search-completions
  |-- zplugin-autoload.zsh/-zplg-self-update
@@ -984,7 +1021,6 @@ Has 270 line(s). Calls functions:
  |-- zplugin-autoload.zsh/-zplg-show-report
  |-- zplugin-autoload.zsh/-zplg-show-times
  |-- zplugin-autoload.zsh/-zplg-show-zstatus
- |-- zplugin-autoload.zsh/-zplg-stress
  |-- zplugin-autoload.zsh/-zplg-uncompile-plugin
  |-- zplugin-autoload.zsh/-zplg-uninstall-completions
  |-- zplugin-autoload.zsh/-zplg-unload
