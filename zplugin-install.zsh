@@ -595,7 +595,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             command cp -v "$url" "$local_dir/$dirname/$filename" || { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
         fi
 
-        (( retval )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
+    (( retval == 1 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
 
         if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
             # Store ices at "clone" and update of snippet, SVN and single-file
