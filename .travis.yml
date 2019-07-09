@@ -27,13 +27,13 @@ script:
 - git fetch --depth=1 origin tests:tests
 - git worktree add test tests
 - make
+- make -C zsdoc pdf
+- share/deploy_doc.sh
 - make test VERBOSE=1
 - make testB VERBOSE=1
 - make testC VERBOSE=1
 - make testD VERBOSE=1
 - make testE VERBOSE=1
-- make -C zsdoc pdf
-- share/deploy_doc.sh
 
 notifications:
   irc:
