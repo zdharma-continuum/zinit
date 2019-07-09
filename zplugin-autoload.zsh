@@ -1371,7 +1371,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
                       ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
 
-                      # Run z-plugins atpull hooks (the afteratpull-ice ones)
+                      # Run z-plugins atpull hooks (the after atpull-ice ones)
                       reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
@@ -1437,6 +1437,14 @@ ZPLGM[EXTENDED_GLOB]=""
         # Store ices to disk at update of plugin
         -zplg-store-ices "$local_dir/._zplugin" ice "" "" "" ""
     fi
+    ZPLG_ICE=( "${(kv)ice[@]}" )
+    # Run z-plugins atpull hooks (the `always' after atpull-ice ones)
+    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:%atpull <->]} )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+    done
+    ZPLG_ICE=()
 
     return 0
 } # }}}

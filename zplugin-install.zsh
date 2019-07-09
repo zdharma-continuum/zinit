@@ -607,7 +607,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             print "providing the commands \`zplugin ice {...}; zplugin snippet {...}'"
         fi
 
-        (( retval == 2 )) && { return 0; }
+        (( retval == 2 )) && {
+            # Run z-plugins atpull hooks (the `always' after atpull-ice ones)
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:%atpull <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+            done
+            return 0;
+        }
 
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && { command make -C "$local_dir/$dirname" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
 
@@ -665,6 +673,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # Run z-plugins atpull hooks (the after atpull-ice ones)
         [[ "$update" = "-u" ]] && {
             reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+            done
+            # Run z-plugins atpull hooks (the `always' after atpull-ice ones)
+            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:%atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"

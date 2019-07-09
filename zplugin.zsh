@@ -221,7 +221,6 @@ builtin setopt noaliases
     local -a opts
     local func
 
-    # TODO: +X
     zparseopts -D -a opts ${(s::):-RTUXdkmrtWz}
 
     if (( ${+opts[(r)-X]} )); then
