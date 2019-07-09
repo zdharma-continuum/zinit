@@ -1272,6 +1272,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     print -- "\rBinary release already up to date (version: $REPLY)"
 
                 (( ${+ice[run-atpull]} )) && {
+                    ZPLG_ICE=( "${(kv)ice[@]}" )
                     # Run z-plugins atpull hooks (the before atpull-ice ones)
                     reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
                     for key in "${reply[@]}"; do
@@ -1287,8 +1288,10 @@ ZPLGM[EXTENDED_GLOB]=""
                         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                     done
+                    ZPLG_ICE=()
                 }
             else
+                ZPLG_ICE=( "${(kv)ice[@]}" )
                 # Run z-plugins atpull hooks (the before atpull-ice ones)
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
                     reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
@@ -1300,7 +1303,6 @@ ZPLGM[EXTENDED_GLOB]=""
 
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
-                ZPLG_ICE=( "${(kv)ice[@]}" )
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
                     -zplg-any-colorify-as-uspl2 "$id_as"
                     print "\nUpdating plugin $REPLY"
@@ -1344,6 +1346,7 @@ ZPLGM[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && {
+                  ZPLG_ICE=( "${(kv)ice[@]}" )
                   # Run z-plugins atpull hooks (the before atpull-ice ones)
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
                       reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
@@ -1353,11 +1356,13 @@ ZPLGM[EXTENDED_GLOB]=""
                       done
                   }
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                  ZPLG_ICE=()
                   command git pull --no-stat
                   ((1))
               } || {
                   (( ${+ice[run-atpull]} )) && {
                       # Run z-plugins atpull hooks (the before atpull-ice ones)
+                      ZPLG_ICE=( "${(kv)ice[@]}" )
                       reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
@@ -1372,6 +1377,7 @@ ZPLGM[EXTENDED_GLOB]=""
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                           "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                       done
+                      ZPLG_ICE=()
                   }
               }
             )
@@ -1405,6 +1411,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 )
             fi
 
+            ZPLG_ICE=( "${(kv)ice[@]}" )
             # Run z-plugins atpull hooks (the before atpull-ice ones)
             [[ ${ice[atpull]} != "!"* ]] && {
                 reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
@@ -1424,6 +1431,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
             done
+            ZPLG_ICE=()
         }
 
         # Store ices to disk at update of plugin
