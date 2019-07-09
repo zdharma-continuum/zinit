@@ -221,14 +221,15 @@ zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
 # single version, for OS X, Linux and Windows – so ice-mod `bpick' is used to
-# select Linux package – in this case this is not needed, Zplugin will grep
-# operating system name and architecture automatically when there's no `bpick'.
+# select Linux package – in this case this is actually not needed, Zplugin will
+# grep operating system name and architecture automatically when there's no `bpick'.
 
 zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"; zplugin load docker/compose
 
 # Vim repository on Github – a typical source code that needs compilation – Zplugin
 # can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
-# Ice-mod `pick` selects a binary program to add to $PATH.
+# Ice-mod `pick` selects a binary program to add to $PATH. You could also install the
+# package under the path $ZPFX with make"install PREFIX=$ZPFX"
 
 zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" atpull"%atclone" make pick"src/vim"
 zplugin light vim/vim
@@ -257,12 +258,17 @@ zplugin light trapd00r/LS_COLORS
 zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
 zplugin light direnv/direnv
 
-# Handle completions without loading any plugin, see "clist" command. This one is to be ran just once, in interactive session.
+# Handle completions without loading any plugin, see "clist" command.
+# This one is to be ran just once, in interactive session.
 
 zplugin creinstall %HOME/my_completions  
 ```
 
-If you're interested in more examples then check out [this repository](https://github.com/zdharma/zplugin-configs) where user have uploaded their `~/.zshrc` and Zplugin configurations. Feel free to submit your `~/.zshrc` there if it contains Zplugin commands.
+If you're interested in more examples then check out [this
+repository](https://github.com/zdharma/zplugin-configs) where users have uploaded their
+`~/.zshrc` and Zplugin configurations. Feel free to
+[submit](https://github.com/zdharma/zplugin-configs/issues/new?template=request-to-add-zshrc-to-the-zplugin-configs-repo.md)
+your `~/.zshrc` there if it contains Zplugin commands.
 
 You can also check out the [Gallery of Zplugin Invocations](GALLERY.md) for some additional examples.
 
