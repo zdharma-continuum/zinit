@@ -27,7 +27,7 @@ Zplugin – the dash and the plural form.
 .. `atload` hook – run after loading any plugin
 . Register hooks for generating help text, shown by the `zplugin help` subcommand
 
-## How to code them?
+## How To Code Them?
 
 Below is an example body of an `atclone` hook (taken from
 link:https://github.com/zdharma/z-p-submods[zdharma/z-p-submods] z-plugin).
