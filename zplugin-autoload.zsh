@@ -1631,7 +1631,7 @@ ZPLGM[EXTENDED_GLOB]=""
     snipps=( ${ZPLGM[SNIPPETS_DIR]}/**/._zplugin(N) )
 
     [[ "$st" != "status" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -n "$snipps" ]] && \
-        print "${ZPLGM[col-error]}Note:${ZPLGM[col-rst]} updating also unloaded snippets\n"
+        print "${ZPLGM[col-info]}Note:${ZPLGM[col-rst]} updating also unloaded snippets\n"
 
     for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
         [[ ! -f "${snip:h}/id-as" ]] && continue
@@ -1644,10 +1644,10 @@ ZPLGM[EXTENDED_GLOB]=""
 
     if [[ "$st" = "status" ]]; then
         [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
-            print "${ZPLGM[col-error]}Note:${ZPLGM[col-rst]} status done also for unloaded plugins"
+            print "${ZPLGM[col-info]}Note:${ZPLGM[col-rst]} status done also for unloaded plugins"
     else
         [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
-            print "${ZPLGM[col-error]}Note:${ZPLGM[col-rst]} updating also unloaded plugins"
+            print "${ZPLGM[col-info]}Note:${ZPLGM[col-rst]} updating also unloaded plugins"
     fi
 
     for repo in "${ZPLGM[PLUGINS_DIR]}"/*; do
