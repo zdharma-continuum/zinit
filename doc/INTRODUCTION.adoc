@@ -1,6 +1,6 @@
 # INTRODUCTION TO ZPLUGIN
 Sebastian Gniazdowski <psprint@zdharma.org>
-v0.9, 12/03/2018
+v0.93, 10/07/2019
 :source-highlighter: prettify
 :toc:
 :toclevels: 3
@@ -322,6 +322,7 @@ link:https://github.com/zdharma/zplugin/wiki/Multiple-prompts[multiple prompts].
 
 [appendix]
 == Revision history (history of updates to the document)
+v0.93, 10/07/2019: Add the mention on `wait` now working like `wait'0'`, etc.
 v0.92, 05/19/2018: 1/ Precise uplift 2/ added the Snippets-completions section +
 v0.9, 03/11/2018: First asciidoc version – 1/ replaced doctoc with :toc: 2/ general,
 intense uplift before commiting +
