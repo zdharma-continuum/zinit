@@ -269,6 +269,10 @@ You can also check out the [Gallery of Zplugin Invocations](GALLERY.md) for some
 ## Ice Modifiers
 
 Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
+The word `ice` means something that's added (like ice to a drink) – and in Zplugin it
+means adding modifier to a next `zplugin` command, and also something that's temporary
+because it melts – and this means that the modification will last only for a **single**
+next `zplugin` command.
 
 | Modifier | <p align="center"> <p align="center"> Description </p> </p> | Works with plugins | Works with snippets |
 |:-:|-|:-:|:-:|
@@ -654,7 +658,7 @@ Besides the main-knowledge source, i.e. this README, there are subpages that are
 **guides** and also an external web-page:
 
  - [Short-narration style WIKI](https://github.com/zdharma/zplugin/wiki)
- - [Writing zplugin extensions](doc/Z-PLUGINS.adoc)
+ - [Writing Zplugin extensions](doc/Z-PLUGINS.adoc)
  - [Code documentation](zsdoc)
  - [Zplugin semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
 
