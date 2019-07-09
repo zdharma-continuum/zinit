@@ -1276,7 +1276,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                     done
 
                     ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
@@ -1285,7 +1285,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                     done
                 }
             else
@@ -1294,7 +1294,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                     done
                 }
 
@@ -1349,7 +1349,7 @@ ZPLGM[EXTENDED_GLOB]=""
                       reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                       done
                   }
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
@@ -1361,7 +1361,7 @@ ZPLGM[EXTENDED_GLOB]=""
                       reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                       done
 
                       ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
@@ -1370,7 +1370,7 @@ ZPLGM[EXTENDED_GLOB]=""
                       reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                       done
                   }
               }
@@ -1410,7 +1410,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                    "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                    "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                 done
             }
 
@@ -1422,7 +1422,7 @@ ZPLGM[EXTENDED_GLOB]=""
             reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as"
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
             done
         }
 
