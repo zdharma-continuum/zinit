@@ -603,8 +603,9 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-shadow-on {{{
 # Turn on shadowing of builtins and functions according to passed
-# mode ("load", "light" or "compdef"). The shadowing is to gather
-# report data, and to hijack `autoload' and `compdef' calls.
+# mode ("load", "light", "light-b" or "compdef"). The shadowing is
+# to gather report data, and to hijack `autoload', `bindkey' and
+# `compdef' calls.
 -zplg-shadow-on() {
     local mode="$1"
 
@@ -666,8 +667,8 @@ builtin setopt noaliases
     builtin return 0
 } # }}}
 # FUNCTION: -zplg-shadow-off {{{
-# Turn off shadowing completely for a given mode ("load", "light"
-# or "compdef").
+# Turn off shadowing completely for a given mode ("load", "light",
+# "light-b" (i.e. the `trackbinds' mode) or "compdef").
 -zplg-shadow-off() {
     builtin setopt localoptions noaliases
     local mode="$1"
@@ -707,7 +708,7 @@ builtin setopt noaliases
     return 0
 } # }}}
 # FUNCTION: pmodload {{{
-# Compatibility with Prezto. Calls can be recursive.
+# {function:pmodload} Compatibility with Prezto. Calls can be recursive.
 (( ${+functions[pmodload]} )) || pmodload() {
     while (( $# )); do
         if zstyle -t ":prezto:module:$1" loaded 'yes' 'no'; then
@@ -801,7 +802,7 @@ builtin setopt noaliases
 # FUNCTION: -zplg-any-to-user-plugin {{{
 # Allows elastic plugin-spec across the code.
 #
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $1 - plugin spec (2 formats: user/plugin, user plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 #
 # Returns user and plugin in $reply
@@ -862,6 +863,9 @@ builtin setopt noaliases
     fi
 } # }}}
 # FUNCTION: -zplg-register-plugin {{{
+# Adds the plugin to ZPLG_REGISTERED_PLUGINS array and to the
+# LOADED_PLUGINS array (managed according to the plugin standard:
+# http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html)
 -zplg-register-plugin() {
     local uspl2="$1" mode="$2"
     integer ret=0
@@ -892,6 +896,8 @@ builtin setopt noaliases
     return $ret
 } # }}}
 # FUNCTION: -zplg-unregister-plugin {{{
+# Removes the plugin from ZPLG_REGISTERED_PLUGINS array and from the
+# LOADED_PLUGINS array (managed according to the plugin standard)
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
@@ -917,8 +923,8 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-prepare-home {{{
-# Creates all directories needed by Zplugin, first checks
-# if they already exist.
+# Creates all directories needed by Zplugin, first checks if they
+# already exist.
 -zplg-prepare-home() {
     [[ -n "${ZPLGM[HOME_READY]}" ]] && return
     ZPLGM[HOME_READY]="1"
@@ -1441,10 +1447,10 @@ builtin setopt noaliases
 #
 
 # FUNCTION: -zplg-ice {{{
-# Parses ICE specification (`zplg ice' subcommand), puts
-# the result into ZPLG_ICE global hash. The ice-spec is
-# valid for next command only (i.e. it "melts"), but it
-# can then stick to plugin and activate e.g. at update.
+# Parses ICE specification (`zplg ice' subcommand), puts the result
+# into ZPLG_ICE global hash. The ice-spec is valid for next command
+# only (i.e. it "melts"), but it can then stick to plugin and activate
+# e.g. at update.
 -zplg-ice() {
     setopt localoptions extendedglob noksharrays
     local bit
@@ -1461,10 +1467,11 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
     [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
-# Remembers long-live ICE specs, assigns them to concrete plugin.
-# Ice spec is in general forgotten for second-next command (that's
-# why it's called "ice" - it melts), however some ice modifiers can
-# glue to plugin mentioned in the next command.
+# Remembers all ice-mods, assigns them to concrete plugin. Ice spec
+# is in general forgotten for second-next command (that's why it's
+# called "ice" - it melts), however they glue to the object (plugin
+# or snippet) mentioned in the next command – for later use with e.g.
+# `zplugin update ...'
 -zplg-pack-ice() {
     ZPLG_SICE[$1${1:+${2:+/}}$2]+="${(j: :)${(q-kv)ZPLG_ICE[@]}} "
     ZPLG_SICE[$1${1:+${2:+/}}$2]="${ZPLG_SICE[$1${1:+${2:+/}}$2]# }"
@@ -1475,7 +1482,7 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 #
 # $1 - type "p" or "s" (plugin or snippet)
 # $2 - mode - for plugin (light or load)
-# $3 - id - URL or plugin ID
+# $3 - id - URL or plugin ID or alias name (from id-as'')
 -zplg-service() {
     local __tpe="$1" __mode="$2" __id="$3" __fle="${ZPLGM[SERVICES_DIR]}/${ZPLG_ICE[service]}.lock" __fd __cmd __tmp __lckd __strd=0
     { builtin echo -n >! "$__fle"; } 2>/dev/null 1>&2
@@ -1510,6 +1517,17 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 }
 # }}}
 # FUNCTION: -zplg-run-task {{{
+# A backend, worker function of -zplg-scheduler. It obtains the tasks
+# index and a few of its properties (like the type: plugin, snippet,
+# service plugin, service snippet) and executes it first checking for
+# additional conditions (like non-numeric wait'' ice).
+#
+# $1 - the pass number, either 1st or 2nd pass
+# $2 - the time assigned to the task
+# $3 - type: plugin, snippet, service plugin, service snippet
+# $4 - task's index in the ZPLGM[WAIT_ICE_...] fields
+# $5 - mode: load or light
+# $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 -zplg-run-task() {
     local __pass="$1" __t="$2" __tpe="$3" __idx="$4" __mode="$5" __id="${(Q)6}" __action __s=1 __retval=0
 
@@ -1554,7 +1572,8 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 }
 # }}}
 # FUNCTION: -zplg-deploy-message {{{
-# Deploys a sub-prompt message to be displayed
+# Deploys a sub-prompt message to be displayed OR a `zle
+# .reset-prompt' call to be invoked
 -zplg-deploy-message() {
     [[ "$1" = <-> && ${#} -eq 1 ]] && { zle && {
             local alltext text IFS=$'\n' nl=$'\n'
@@ -1574,10 +1593,10 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 
 # FUNCTION: -zplg-submit-turbo {{{
 # If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
-# preceded with `wait', `load' or `unload' ice-mods then the plugin
-# or snipped is to be loaded in turbo-mode, and this function adds
-# it to internal data structures, so that -zplg-scheduler can run
-# (load, unload) this as a task.
+# preceded with `wait', `load', `unload' or `on-update-of`/`subscribe'
+# ice-mods then the plugin or snipped is to be loaded in turbo-mode,
+# and this function adds it to internal data structures, so that
+# -zplg-scheduler can run (load, unload) this as a task.
 -zplg-submit-turbo() {
     local tpe="$1" mode="$2" opt_uspl2="$3" opt_plugin="$4"
 
@@ -1597,7 +1616,8 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 # }}}
 # FUNCTION: -zplugin_scheduler_add_sh {{{
 # Copies task into ZPLG_RUN array, called when a task timeouts.
-# A small function ran from pattern in /-substitution.
+# A small function ran from pattern in /-substitution as a math
+# function.
 -zplugin_scheduler_add_sh() {
     local idx="$1" in_wait="$__ar2" in_abc="$__ar3" ver_wait="$__ar4" ver_abc="$__ar5"
     if [[ ( "$in_wait" = "$ver_wait" || "$in_wait" -ge 10 ) && "$in_abc" = "$ver_abc" ]]; then
@@ -1614,14 +1634,15 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 # should be run at current moment, decides to remove (or not) them from
 # the array after execution.
 #
-# $1 - if "following", then it is non-first (second and more) invocation
-#      of the scheduler; this results in chain of `sched' invocations that
-#      results in repetitive -zplg-scheduler activity;
+# $1 - if "following", then it is non-first (second and more)
+#      invocation of the scheduler; this results in chain of `sched'
+#      invocations that results in repetitive -zplg-scheduler activity
 #
-#      if "burst", then all tasks are marked timeout and executed one by one;
-#      this is handy if e.g. a docker image starts up and needs to install
-#      all turbo-mode plugins without any hesitation (delay), i.e. "burst"
-#      allows to run package installations from script, not from prompt
+#      if "burst", then all tasks are marked timeout and executed one
+#      by one; this is handy if e.g. a docker image starts up and
+#      needs to install all turbo-mode plugins without any hesitation
+#      (delay), i.e. "burst" allows to run package installations from
+#      script, not from prompt
 #
 -zplg-scheduler() {
     integer __ret=$?
@@ -1713,8 +1734,8 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 #
 
 # FUNCTION: zplugin {{{
-# Main function directly exposed to user, obtains subcommand
-# and its arguments, has completion.
+# Main function directly exposed to user, obtains subcommand and its
+# arguments, has completion.
 zplugin() {
     [[ "$1" != "ice" ]] && {
         local -A ice ICE_OPTS
@@ -2016,19 +2037,26 @@ zplugin() {
     return $retval
 } # }}}
 # FUNCTION: zpcdreplay {{{
-# A function that can be invoked from within `atinit', `atload', etc. ice-mod.
-# It works like `zplugin cdreplay', which cannot be invoked from hook ices.
+# A function that can be invoked from within `atinit', `atload', etc.
+# ice-mod.  It works like `zplugin cdreplay', which cannot be invoked
+# from such hook ices.
 zpcdreplay() { -zplg-compdef-replay -q; }
 # }}}
+# FUNCTION: zpcdclear {{{
+# A wrapper for `zplugin cdclear -q' which can be called from hook
+# ices like the atinit'', atload'', etc. ices.
 zpcdclear() { -zplg-compdef-clear -q; }
+# }}}
 # FUNCTION: zpcompinit {{{
-# A function that can be invoked from within `atinit', `atload', etc. ice-mod.
-# It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
+# A function that can be invoked from within `atinit', `atload', etc.
+# ice-mod.  It runs `autoload compinit; compinit' and respects
+# ZPLGM[ZCOMPDUMP_PATH] and ZPLGM[COMPINIT_OPTS].
 zpcompinit() { autoload -Uz compinit; compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"; }
 # }}}
 # FUNCTION: zpcompdef {{{
-# Stores compdef for a replay with `zpcdreplay' (turbo
-# mode) or with `zplugin cdreplay' (normal mode)
+# Stores compdef for a replay with `zpcdreplay' (turbo mode) or
+# with `zplugin cdreplay' (normal mode). An utility functton of
+# an undefined use case.
 zpcompdef() { ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
 # }}}
 

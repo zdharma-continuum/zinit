@@ -246,7 +246,7 @@ ____
  
  Allows elastic plugin-spec across the code.
  
- $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $1 - plugin spec (2 formats: user/plugin, user plugin)
  $2 - plugin (only when $1 - i.e. user - given)
  
  Returns user and plugin in $reply
@@ -396,7 +396,8 @@ Called by:
 
 ____
  
- Deploys a sub-prompt message to be displayed
+ Deploys a sub-prompt message to be displayed OR a `zle
+ .reset-prompt' call to be invoked
 ____
 
 Has 11 line(s). Doesn't call other functions.
@@ -510,10 +511,10 @@ Called by:
 
 ____
  
- Parses ICE specification (`zplg ice' subcommand), puts
- the result into ZPLG_ICE global hash. The ice-spec is
- valid for next command only (i.e. it "melts"), but it
- can then stick to plugin and activate e.g. at update.
+ Parses ICE specification (`zplg ice' subcommand), puts the result
+ into ZPLG_ICE global hash. The ice-spec is valid for next command
+ only (i.e. it "melts"), but it can then stick to plugin and activate
+ e.g. at update.
 ____
 
 Has 8 line(s). Doesn't call other functions.
@@ -623,10 +624,11 @@ Called by:
 
 ____
  
- Remembers long-live ICE specs, assigns them to concrete plugin.
- Ice spec is in general forgotten for second-next command (that's
- why it's called "ice" - it melts), however some ice modifiers can
- glue to plugin mentioned in the next command.
+ Remembers all ice-mods, assigns them to concrete plugin. Ice spec
+ is in general forgotten for second-next command (that's why it's
+ called "ice" - it melts), however they glue to the object (plugin
+ or snippet) mentioned in the next command – for later use with e.g.
+ `zplugin update ...'
 ____
 
 Has 3 line(s). Doesn't call other functions.
@@ -642,11 +644,11 @@ Called by:
 
 ____
  
- Creates all directories needed by Zplugin, first checks
- if they already exist.
+ Creates all directories needed by Zplugin, first checks if they
+ already exist.
 ____
 
-Has 27 line(s). Doesn't call other functions.
+Has 25 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -657,6 +659,13 @@ _Environment variables used:_ ZPFX
 -zplg-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~
 
+____
+ 
+ Adds the plugin to ZPLG_REGISTERED_PLUGINS array and to the
+ LOADED_PLUGINS array (managed according to the plugin standard:
+ http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html)
+____
+
 Has 19 line(s). Doesn't call other functions.
 
 Called by:
@@ -665,6 +674,21 @@ Called by:
 
 -zplg-run-task
 ~~~~~~~~~~~~~~
+
+____
+ 
+ A backend, worker function of -zplg-scheduler. It obtains the tasks
+ index and a few of its properties (like the type: plugin, snippet,
+ service plugin, service snippet) and executes it first checking for
+ additional conditions (like non-numeric wait'' ice).
+ 
+ $1 - the pass number, either 1st or 2nd pass
+ $2 - the time assigned to the task
+ $3 - type: plugin, snippet, service plugin, service snippet
+ $4 - task's index in the ZPLGM[WAIT_ICE_...] fields
+ $5 - mode: load or light
+ $6 - the plugin-spec or snippet URL or alias name (from id-as'')
+____
 
 Has 40 line(s). Calls functions:
 
@@ -706,14 +730,15 @@ ____
  should be run at current moment, decides to remove (or not) them from
  the array after execution.
  
- $1 - if "following", then it is non-first (second and more) invocation
- of the scheduler; this results in chain of `sched' invocations that
- results in repetitive -zplg-scheduler activity;
+ $1 - if "following", then it is non-first (second and more)
+ invocation of the scheduler; this results in chain of `sched'
+ invocations that results in repetitive -zplg-scheduler activity
  
- if "burst", then all tasks are marked timeout and executed one by one;
- this is handy if e.g. a docker image starts up and needs to install
- all turbo-mode plugins without any hesitation (delay), i.e. "burst"
- allows to run package installations from script, not from prompt
+ if "burst", then all tasks are marked timeout and executed one
+ by one; this is handy if e.g. a docker image starts up and
+ needs to install all turbo-mode plugins without any hesitation
+ (delay), i.e. "burst" allows to run package installations from
+ script, not from prompt
  
 ____
 
@@ -756,7 +781,7 @@ ____
  
  $1 - type "p" or "s" (plugin or snippet)
  $2 - mode - for plugin (light or load)
- $3 - id - URL or plugin ID
+ $3 - id - URL or plugin ID or alias name (from id-as'')
 ____
 
 Has 30 line(s). Calls functions:
@@ -791,8 +816,8 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- Turn off shadowing completely for a given mode ("load", "light"
- or "compdef").
+ Turn off shadowing completely for a given mode ("load", "light",
+ "light-b" (i.e. the `trackbinds' mode) or "compdef").
 ____
 
 Has 18 line(s). Doesn't call other functions.
@@ -810,8 +835,9 @@ Called by:
 ____
  
  Turn on shadowing of builtins and functions according to passed
- mode ("load", "light" or "compdef"). The shadowing is to gather
- report data, and to hijack `autoload' and `compdef' calls.
+ mode ("load", "light", "light-b" or "compdef"). The shadowing is
+ to gather report data, and to hijack `autoload', `bindkey' and
+ `compdef' calls.
 ____
 
 Has 25 line(s). Doesn't call other functions.
@@ -827,10 +853,10 @@ Called by:
 ____
  
  If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
- preceded with `wait', `load' or `unload' ice-mods then the plugin
- or snipped is to be loaded in turbo-mode, and this function adds
- it to internal data structures, so that -zplg-scheduler can run
- (load, unload) this as a task.
+ preceded with `wait', `load', `unload' or `on-update-of`/`subscribe'
+ ice-mods then the plugin or snipped is to be loaded in turbo-mode,
+ and this function adds it to internal data structures, so that
+ -zplg-scheduler can run (load, unload) this as a task.
 ____
 
 Has 14 line(s). Doesn't call other functions.
@@ -841,6 +867,12 @@ Called by:
 
 -zplg-unregister-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Removes the plugin from ZPLG_REGISTERED_PLUGINS array and from the
+ LOADED_PLUGINS array (managed according to the plugin standard)
+____
 
 Has 5 line(s). Calls functions:
 
@@ -857,7 +889,8 @@ Called by:
 ____
  
  Copies task into ZPLG_RUN array, called when a task timeouts.
- A small function ran from pattern in /-substitution.
+ A small function ran from pattern in /-substitution as a math
+ function.
 ____
 
 Has 7 line(s). Doesn't call other functions.
@@ -879,6 +912,11 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 pmodload
 ~~~~~~~~
 
+____
+ 
+ Compatibility with Prezto. Calls can be recursive.
+____
+
 Has 9 line(s). Calls functions:
 
  pmodload
@@ -894,6 +932,12 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 zpcdclear
 ~~~~~~~~~
 
+____
+ 
+ A wrapper for `zplugin cdclear -q' which can be called from hook
+ ices like the atinit'', atload'', etc. ices.
+____
+
 Has 1 line(s). Calls functions:
 
  zpcdclear
@@ -906,8 +950,9 @@ zpcdreplay
 
 ____
  
- A function that can be invoked from within `atinit', `atload', etc. ice-mod.
- It works like `zplugin cdreplay', which cannot be invoked from hook ices.
+ A function that can be invoked from within `atinit', `atload', etc.
+ ice-mod.  It works like `zplugin cdreplay', which cannot be invoked
+ from such hook ices.
 ____
 
 Has 1 line(s). Calls functions:
@@ -922,8 +967,9 @@ zpcompdef
 
 ____
  
- Stores compdef for a replay with `zpcdreplay' (turbo
- mode) or with `zplugin cdreplay' (normal mode)
+ Stores compdef for a replay with `zpcdreplay' (turbo mode) or
+ with `zplugin cdreplay' (normal mode). An utility functton of
+ an undefined use case.
 ____
 
 Has 1 line(s). Doesn't call other functions.
@@ -935,8 +981,9 @@ zpcompinit
 
 ____
  
- A function that can be invoked from within `atinit', `atload', etc. ice-mod.
- It runs `autoload compinit; compinit' and respects ZPLGM[ZCOMPDUMP_PATH].
+ A function that can be invoked from within `atinit', `atload', etc.
+ ice-mod.  It runs `autoload compinit; compinit' and respects
+ ZPLGM[ZCOMPDUMP_PATH] and ZPLGM[COMPINIT_OPTS].
 ____
 
 Has 1 line(s). Calls functions:
@@ -953,8 +1000,8 @@ zplugin
 
 ____
  
- Main function directly exposed to user, obtains subcommand
- and its arguments, has completion.
+ Main function directly exposed to user, obtains subcommand and its
+ arguments, has completion.
 ____
 
 Has 284 line(s). Calls functions:
@@ -1049,7 +1096,7 @@ Called by:
 compinit
 ~~~~~~~~
 
-Has 549 line(s). Doesn't call other functions.
+Has 544 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 
