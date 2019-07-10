@@ -930,7 +930,7 @@ builtin setopt noaliases
     ZPLGM[HOME_READY]="1"
 
     [[ ! -d "${ZPLGM[HOME_DIR]}" ]] && {
-        command mkdir 2>/dev/null "${ZPLGM[HOME_DIR]}"
+        command mkdir  -p "${ZPLGM[HOME_DIR]}"
         # For compaudit
         command chmod go-w "${ZPLGM[HOME_DIR]}"
         # Also set up */bin and ZPFX in general
@@ -956,9 +956,9 @@ builtin setopt noaliases
         command mkdir "${ZPLGM[SNIPPETS_DIR]}"
         command chmod go-w "${ZPLGM[SNIPPETS_DIR]}"
         ( cd ${ZPLGM[SNIPPETS_DIR]}; command ln -s "OMZ::plugins" "plugins"; )
-    }
-    [[ ! -d "${ZPLGM[SERVICES_DIR]}" ]] && {
-        command mkdir "${ZPLGM[SERVICES_DIR]}"
+
+        # Also create the SERVICES_DIR
+        command mkdir -p "${ZPLGM[SERVICES_DIR]}"
         command chmod go-w "${ZPLGM[SERVICES_DIR]}"
     }
 } # }}}
