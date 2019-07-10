@@ -37,7 +37,7 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Non-Github (Local) Plugins](#non-github-local-plugins)
   - [Customizing Paths & Other](#customizing-paths--other)
   - [Extending Git](#extending-git)
-  - [Docker Images (`burst` Scheduler Invocation)](#docker-images-burst-scheduler-invocation)
+  - [Preinstall Plugins (`burst` Scheduler Invocation)](#preinstall-plugins-burst-scheduler-invocation)
   - [Plugin Standard](#plugin-standard)
 - [Additional resources](#additional-resources)
 - [IRC Channel](#irc-channel)
@@ -625,10 +625,10 @@ zplugin light k4rthik/git-cal
 
 Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
 
-## Docker Images (`burst` Scheduler Invocation)
+## Preinstall Plugins (`burst` Scheduler Invocation)
 
-If you create a Docker image that uses Zplugin, you can invoke the zplugin-scheduler
-function in such a way, that it:
+If you create a Docker image that uses Zplugin, or want to install turbo-loaded plugins before the shell starts interactively,
+you can invoke the zplugin-scheduler function in such a way, that it:
 
  - installs plugins without waiting for the prompt (i.e. it's script friendly),
  - installs **all** plugins instantly, without respecting the `wait''` argument.
@@ -641,7 +641,7 @@ RUN zsh -i -c -- '-zplg-scheduler burst || true'
 ```
 
 An example `Dockerfile` can be found
-[here](https://github.com/robobenklein/configs/blob/master/Dockerfile#L36).
+[here](https://github.com/robobenklein/configs/blob/master/Dockerfile).
 
 ## Plugin Standard
 
