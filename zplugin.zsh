@@ -2077,8 +2077,7 @@ builtin alias zpl=zplugin zplg=zplugin
 
 # Simulate existence of _local/zplugin plugin
 # This will allow to cuninstall of its completion
-ZPLG_REGISTERED_PLUGINS+=( "_local/zplugin" )
-ZPLG_REGISTERED_PLUGINS=( "${(u)ZPLG_REGISTERED_PLUGINS[@]}" )
+ZPLG_REGISTERED_PLUGINS=( "_local/zplugin" "${(u)ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
 ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 
 # Add completions directory to fpath
