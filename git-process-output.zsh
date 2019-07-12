@@ -26,7 +26,7 @@ local first=1
 # Code by leoj3n
 timeline() {
   local sp='▚▞'; sp="${sp:$2%2:1}"
-  local bar="$(print -f "%-$2s▓%$(($3-$2))s" "${sp}" "${sp}")"
+  local bar="$(print -f "%-$2s▓%$(($3-$2-1))s" "" "")"
   print -f "%s %s" "${bar// /░}" ""
 }
 
@@ -36,12 +36,12 @@ timeline() {
 # $4 - receiving percentage
 # $5 - resolving percentage
 print_my_line() {
-    print -nr -- "OBJ: $1, PACKED: $2/$3${${4:#...}:+, RECEIV.: $4%}${${5:#...}:+, RESOLV.: $5%}  "
+    print -nr -- "OBJ: $1, PACK: $2/$3${${4:#...}:+, REC: $4%}${${5:#...}:+, RESOL: $5%}  "
     print -n $'\015'
 }
 
 print_my_line_compress() {
-    print -nr -- "OBJ: $1, PACKED: $2/$3, COMPR.: $4%${${5:#...}:+, RECEIV.: $5%}${${6:#...}:+, RESOL.: $6%}  "
+    print -nr -- "OBJ: $1, PACK: $2/$3, COMPR: $4%${${5:#...}:+, REC: $5%}${${6:#...}:+, RESOL: $6%}  "
     print -n $'\015'
 }
 
