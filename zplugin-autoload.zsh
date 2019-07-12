@@ -2289,8 +2289,33 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
-    setopt localoptions extendedglob nokshglob noksharrays
+    setopt localoptions extendedglob nokshglob noksharrays warncreateglobal
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
+
+    # Parse options
+    local -a opts
+    opts=( --all --clean --yes )
+    : ${@[@]//(#b)(${(~j.|.)opts})/${ICE_OPTS[${opt_map[${match[1]}]}]::=1}}
+    set -- "${@[@]:#(--all|--clean)}"
+
+    # --all given?
+    if (( ICE_OPTS[opt_--all] )); then
+        -zplg-confirm "Prune all plugins in \`${ZPLGM[PLUGINS_DIR]}'"\
+"and snippets in \`${ZPLGM[SNIPPETS_DIR]}'?" \
+"command rm -rf ${${ZPLGM[PLUGINS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/_local---zplugin "\
+"${${ZPLGM[SNIPPETS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/plugins"
+        return $?
+    fi
+
+    # --clean given?
+    if (( ICE_OPTS[opt_--clean] )); then
+        -zplg-confirm "Prune ${ZPLGM[col-info]}CURRENTLY NOT LOADED${ZPLGM[col-rst]}"\
+" plugins in ${ZPLGM[PLUGINS_DIR]}"\
+" and snippets in ${ZPLGM[SNIPPETS_DIR]}?" \
+"command rm -rf ${${ZPLGM[PLUGINS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/(${(j:|:)${ZPLG_REGISTERED_PLUGINS[@]//\//---}})(N) "\
+"${${ZPLGM[SNIPPETS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/(plugins|OMZ::lib|${(j:|:)${(@)${(@)${${ZPLG_SNIPPETS[@]% <*>}[@]:h}//\//--}}})(N)"
+        return $?
+    fi
 
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
