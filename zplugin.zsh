@@ -1754,6 +1754,16 @@ zplugin() {
     integer retval=0
     local -a match mbegin mend reply
     local MATCH REPLY; integer MBEGIN MEND
+    local -A opt_map
+    opt_map=(
+       -q       opt_-q,--quiet
+       --quiet  opt_-q,--quiet
+       -r       opt_-r,--reset
+       --reset  opt_-r,--reset
+       --all    opt_--all
+       --clean  opt_--clean
+       --yes    opt_--yes
+    )
 
     case "$1" in
        (load|light)
@@ -1856,14 +1866,7 @@ zplugin() {
                (update)
                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
                    (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
-                   local -A map
-                   map=(
-                       -q       opt_-q,--quiet
-                       --quiet  opt_-q,--quiet
-                       -r       opt_-r,--reset
-                       --reset  opt_-r,--reset
-                   )
-                   : ${@[@]//(#b)(--quiet|-q|--reset|-r)/${ICE_OPTS[${map[${match[1]}]}]::=1}}
+                   : ${@[@]//(#b)(--quiet|-q|--reset|-r)/${ICE_OPTS[${opt_map[${match[1]}]}]::=1}}
                    set -- "${@[@]:#(--quiet|-q|--reset|-r)}"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
