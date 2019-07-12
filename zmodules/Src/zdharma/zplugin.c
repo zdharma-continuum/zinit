@@ -644,7 +644,7 @@ custom_source(char *s)
     gettimeofday(&zp_tv, &zp_dummy_tz);
     zp_prev_tv = ((((double) zp_tv.tv_sec) * 1000.0) + (((double) zp_tv.tv_usec) / 1000.0));
 
-    if (!s || 
+    if (!s ||
 	(!(prog = custom_try_source_file((us = unmeta(s)))) &&
 	 (tempfd = movefd(open(us, O_RDONLY | O_NOCTTY))) == -1)) {
 	return SOURCE_NOT_FOUND;
@@ -847,7 +847,8 @@ custom_try_source_file(char *file)
     /* If there is no zwc file, or if it is less recent than script file */
     if ( ( !rn && ( rc || ( stc.st_mtime < stn.st_mtime ) ) ) &&
             ( access( file_dup, W_OK ) == 0 || 0 == strcmp(
-                getsparam( "ZPLG_MOD_DEBUG" ) ? getsparam( "ZPLG_MOD_DEBUG" ) : "0",
+                getsparam( "ZPLG_MOD_DEBUG" ) ?
+                    getsparam( "ZPLG_MOD_DEBUG" ) : "0",
                 "1" ) )
     ) {
         char *args[] = { file, NULL };
@@ -860,7 +861,20 @@ custom_try_source_file(char *file)
         ops.ind['U'] = 1;
 
         /* Invoke compilation */
-        bin_zcompile("ZpluginModule", args, &ops, 0);
+        if ( access( file, R_OK ) ) {
+            bin_zcompile("ZpluginModule", args, &ops, 0);
+        } else {
+           if ( 0 == strcmp(
+                    getsparam( "ZPLG_MOD_DEBUG" ) ?
+                        getsparam( "ZPLG_MOD_DEBUG" ) : "0",
+                    "1" )
+          ) {
+               zwarnnam( "ZpluginModule",
+                         "Couldn't read the script: `%s', compilation skipped",
+                         file );
+          }
+
+        }
 
         /* Repeat stat for newly created zwc */
         rc = stat(wc, &stc);
@@ -1204,7 +1218,7 @@ custom_load_dump_header(char *nam, char *name, int err)
  *
  * readarray [-d delim] [-n count] [-O origin] [-s count] [-t] [-u fd]
  *   [-C callback] [-c quantum] [array]
- * 
+ *
  * Reads from stdin or from {fd} (-u option).
  * -d {delim} - terminator for each record read (default: newline)
  * -n {count} - copy at most {count} records
@@ -1296,7 +1310,7 @@ int bin_readarray( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int fu
     }
 
 #ifdef HAVE_GETLINE
-    
+
 #endif
 
     return 0;
