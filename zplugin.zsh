@@ -1063,7 +1063,7 @@ builtin setopt noaliases
 
     (( ${+ZPLG_ICE[cloneonly]} )) && return 0
 
-    ZPLG_SNIPPETS[$id_as]="$dirname <${${ZPLG_ICE[svn]+svn}:-file}>"
+    ZPLG_SNIPPETS[$id_as]="$save_url <${${ZPLG_ICE[svn]+svn}:-single file}>"
 
     local -a arr
     [[ "${tmp[1-correct]}" -gt 0 ]] && {
