@@ -53,7 +53,7 @@ Here are the new features and updates added to zplugin in the last 90 days. To s
     example but fully functional z-plugin
     [zdharma/z-p-submods](https://github.com/zdharma/z-p-submods) and a document that
     explains on how to implement your own z-plugin
-    ([here](https://github.com/zdharma/zplugin/blob/master/doc/Z-PLUGINS.adoc)).
+    ([here](../../wiki/Z-PLUGINS)).
 
 * 08-07-2019
   - You can now do `zplugin ice wait ...` and it will work as `zplugin ice wait'0' ...`
@@ -191,13 +191,13 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc
 
 This will install Zplugin in ~/.zplugin/bin. .zshrc will be updated with three lines of code that will be added to the bottom.
 
-If you're interested in more ways to install Zplugin check [INSTALLATION](doc/INSTALLATION.adoc).
+If you're interested in more ways to install Zplugin check [INSTALLATION](../../wiki/INSTALLATION).
 
 # Usage
 
 ## Introduction
 
-You can read the introduction to Zplugin in [INTRODUCTION](doc/INTRODUCTION.adoc). It explains basic usage and some of the more unique features of Zplugin such as the Turbo Mode.
+You can read the introduction to Zplugin in [INTRODUCTION](../../wiki/INTRODUCTION). It explains basic usage and some of the more unique features of Zplugin such as the Turbo Mode.
 
 ## Example Usage
 
@@ -270,7 +270,7 @@ repository](https://github.com/zdharma/zplugin-configs) where users have uploade
 [submit](https://github.com/zdharma/zplugin-configs/issues/new?template=request-to-add-zshrc-to-the-zplugin-configs-repo.md)
 your `~/.zshrc` there if it contains Zplugin commands.
 
-You can also check out the [Gallery of Zplugin Invocations](GALLERY.md) for some additional examples.
+You can also check out the [Gallery of Zplugin Invocations](../../wiki/GALLERY) for some additional examples.
 
 ## Ice Modifiers
 
@@ -280,14 +280,17 @@ means adding modifier to a next `zplugin` command, and also something that's tem
 because it melts – and this means that the modification will last only for a **single**
 next `zplugin` command.
 
+Some Ice-modifiers are highlighted and clicking on them will take you to the
+appropriate wiki page for an extended explanation.
+
 | Modifier | <p align="center"> <p align="center"> Description </p> </p> | Works with plugins | Works with snippets |
 |:-:|-|:-:|:-:|
 | `proto` | Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. | :heavy_check_mark: | :heavy_multiplication_x: |
 | `from` | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). | :heavy_check_mark: | :heavy_multiplication_x: |
 | `as` | Can be `as"program"` (also alias `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"`. | :heavy_check_mark: | :heavy_check_mark: |
-| `id-as` | Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. See [blog post](http://zdharma.org/2018-10-12/Nickname-a-plugin-or-snippet). | :heavy_check_mark: | :heavy_check_mark: |
+| [**`id-as`**](../../wiki/id-as) | Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. | :heavy_check_mark: | :heavy_check_mark: |
 | `ver` | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. | :heavy_check_mark: | :heavy_check_mark: |
-| `pick` | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"program"`), e.g. `zplugin ice pick"*.plugin.zsh"`. | :heavy_check_mark: | :heavy_check_mark: |
+| [**`pick`**](../../wiki/Sourcing-multiple-files) | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"program"`), e.g. `zplugin ice pick"*.plugin.zsh"`. | :heavy_check_mark: | :heavy_check_mark: |
 | `bpick` | Used to select which release from Github Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` | :heavy_check_mark: | :heavy_multiplication_x: |
 | `depth` | Pass `--depth` to `git`, i.e. limit how much of history to download. | :heavy_check_mark: | :heavy_multiplication_x: |
 | `cloneopts` | Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. | :heavy_check_mark: | :heavy_multiplication_x: |
@@ -310,17 +313,17 @@ next `zplugin` command.
 | `cloneonly` | Don't load the plugin / snippet, only download it | :heavy_check_mark: | :heavy_check_mark: |
 | `nocd` | Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. | :heavy_check_mark: | :heavy_check_mark: |
 | `svn` | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). | :heavy_multiplication_x: | :heavy_check_mark: |
-| `make` | Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. | :heavy_check_mark: | :heavy_check_mark: |
-| `src` | Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). | :heavy_check_mark: | :heavy_check_mark: |
-| `wait` | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). **Fact:** when `wait` is used without value, it works as `wait'0'`. | :heavy_check_mark: | :heavy_check_mark: |
-| `load` | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. | :heavy_check_mark: | :heavy_check_mark: |
-| `unload` | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. | :heavy_check_mark: | :heavy_check_mark: |
+| [**`make`**](../../wiki/Installing-with-make) | Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. | :heavy_check_mark: | :heavy_check_mark: |
+| [**`src`**](../../wiki/Sourcing-multiple-files) | Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). | :heavy_check_mark: | :heavy_check_mark: |
+| [**`wait`**](../../wiki/Example-wait-conditions) | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). **Fact:** when `wait` is used without value, it works as `wait'0'`. | :heavy_check_mark: | :heavy_check_mark: |
+| [**`load`**](../../wiki/Multiple-prompts) | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. | :heavy_check_mark: | :heavy_check_mark: |
+| [**`unload`**](../../wiki/Multiple-prompts) | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. | :heavy_check_mark: | :heavy_check_mark: |
 | `subscribe` / `on-update-of` | Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` | :heavy_check_mark: | :heavy_check_mark: |
 | `service` | Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices org](https://github.com/zservices). | :heavy_check_mark: | :heavy_check_mark: |
 | `compile` | Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\ | :heavy_check_mark: | :heavy_check_mark: |
 | `nocompletions` | Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. | :heavy_check_mark: | :heavy_check_mark: |
 | `nocompile` | Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at location of installation). | :heavy_check_mark: | :heavy_check_mark: |
-| `multisrc` | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). See also the [wiki on **Sourcing multiple files**](https://github.com/zdharma/zplugin/wiki/Sourcing-multiple-files). | :heavy_check_mark: | :heavy_check_mark: |
+| [**`multisrc`**](../../wiki/Sourcing-multiple-files) | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). | :heavy_check_mark: | :heavy_check_mark: |
 
 Order of execution of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
 
@@ -663,9 +666,9 @@ fully supports the standard.
 Besides the main-knowledge source, i.e. this README, there are subpages that are
 **guides** and also an external web-page:
 
- - [Short-narration style WIKI](https://github.com/zdharma/zplugin/wiki)
- - [Writing Zplugin extensions](doc/Z-PLUGINS.adoc)
- - [Code documentation](zsdoc)
+ - [Short-narration style WIKI](../../wiki)
+ - [Writing Zplugin extensions](../../wiki/Z-PLUGINS)
+ - [Code documentation](../../wiki/Code-Documentation)
  - [Zplugin semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
 
 # IRC Channel
