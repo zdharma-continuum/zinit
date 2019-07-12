@@ -1999,7 +1999,7 @@ zplugin() {
                    -zplg-list-compdef-replay
                    ;;
                (cd|delete|recall|edit|glance|changes|create|stress)
-                   -zplg-"$1" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
+                   -zplg-"$1" "${@[2,-1]%%(/|//|///)}"; retval=$?
                    ;;
                (recently)
                    shift
