@@ -684,6 +684,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
             done
         }
+        ((1))
     ) || return $?
 
     # After additional executions like atclone'' - install completions (2 - snippets)
