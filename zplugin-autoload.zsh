@@ -2785,6 +2785,8 @@ EOF
 # Performs ./configure && make on the module and displays information
 # how to load the module in .zshrc.
 -zplg-build-module() {
+    setopt localoptions localtraps
+    trap 'return 1' INT TERM
     ( builtin cd -q "${ZPLGM[BIN_DIR]}"/zmodules
       print -r -- "${ZPLGM[col-pname]}== Building module zdharma/zplugin, running: a make clean, then ./configure and then make ==${ZPLGM[col-rst]}"
       print -r -- "${ZPLGM[col-pname]}== The module sources are located at: "${ZPLGM[BIN_DIR]}"/zmodules ==${ZPLGM[col-rst]}"
