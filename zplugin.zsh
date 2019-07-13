@@ -1577,8 +1577,9 @@ nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match
 -zplg-deploy-message() {
     [[ "$1" = <-> && ${#} -eq 1 ]] && { zle && {
             local alltext text IFS=$'\n' nl=$'\n'
-            repeat 25; do read -u"$1" text; alltext+="${text:+$text$nl}"; done
-            [[ "$alltext" = "@rst$nl" ]] && zle .reset-prompt || { [[ -n "$alltext" ]] && zle -M "$alltext"; }
+            repeat 25; do read -r -u"$1" text; alltext+="${text:+$text$nl}"; done
+            [[ "$alltext" = "@rst$nl" ]] && zle .reset-prompt || \
+                { [[ -n "$alltext" ]] && zle -M "$alltext"; }
         }
         zle -F "$1"; exec {1}<&-
         return 0
