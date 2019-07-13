@@ -876,7 +876,7 @@ builtin setopt noaliases
         LOADED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
-        [[ -z "${ZPLGM[TEST]}${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[subscribe]}" && ${ZPLGM[MUTE_WARNINGS]} != 1 ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
+        [[ -z "${ZPLGM[TEST]}${${+ZPLG_ICE[wait]}:#0}${ZPLG_ICE[load]}${ZPLG_ICE[subscribe]}" && ${ZPLGM[MUTE_WARNINGS]} != 1 ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
         ret=1
     fi
 
