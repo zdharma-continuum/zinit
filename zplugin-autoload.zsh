@@ -1274,21 +1274,17 @@ ZPLGM[EXTENDED_GLOB]=""
 
                 (( ${+ice[run-atpull]} )) && {
                     ZPLG_ICE=( "${(kv)ice[@]}" )
-                    # Run z-plugins atpull hooks (the before atpull-ice ones)
-                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
-                    for key in "${reply[@]}"; do
-                        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
-                    done
+                    [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
+                        # Run z-plugins atpull hooks (the before atpull-ice ones)
+                        reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                        for key in "${reply[@]}"; do
+                            arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                            "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+                        done
+                    }
 
-                    ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
-
-                    # Run z-plugins atpull hooks (the after atpull-ice ones)
-                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
-                    for key in "${reply[@]}"; do
-                        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
-                    done
+                    [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                    print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                     ZPLG_ICE=()
                 }
             else
@@ -1362,22 +1358,17 @@ ZPLGM[EXTENDED_GLOB]=""
                   ((1))
               } || {
                   (( ${+ice[run-atpull]} )) && {
-                      # Run z-plugins atpull hooks (the before atpull-ice ones)
                       ZPLG_ICE=( "${(kv)ice[@]}" )
-                      reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
-                      for key in "${reply[@]}"; do
-                          arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
-                      done
-
-                      ( (( ${+ice[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#!}" ${ice[atclone]}; )
-
-                      # Run z-plugins atpull hooks (the after atpull-ice ones)
-                      reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
-                      for key in "${reply[@]}"; do
-                          arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
-                      done
+                      # Run z-plugins atpull hooks (the before atpull-ice ones)
+                      [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
+                          reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                          for key in "${reply[@]}"; do
+                              arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                              "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+                          done
+                      }
+                      [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                      print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                       ZPLG_ICE=()
                   }
               }

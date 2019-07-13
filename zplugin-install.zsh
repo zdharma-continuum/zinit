@@ -463,23 +463,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         # Test if update available
                         -zplg-mirror-using-svn "$url" "-t" "$dirname" || {
                             (( ${+ZPLG_ICE[run-atpull]} )) && {
-                                # Run z-plugins atpull hooks (the before atpull-ice ones)
-                                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
-                                for key in "${reply[@]}"; do
-                                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
-                                done
+                                [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
+                                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                                    for key in "${reply[@]}"; do
+                                        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                                        "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
 
-                                { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                                    done
+                                }
 
-                                # Run z-plugins atpull hooks (the after atpull-ice ones)
-                                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
-                                for key in "${reply[@]}"; do
-                                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
-                                done
-                            }
-                            return 2
+                                [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                                ((1))
+                            } || return 2
                         }
 
                         # Run z-plugins atpull hooks (the before atpull-ice ones)
