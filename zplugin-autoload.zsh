@@ -1097,7 +1097,7 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         (( quiet )) || print "Unregistering plugin $uspl2col"
         -zplg-unregister-plugin "$user" "$plugin"
-        LOADED_PLUGINS[${LOADED_PLUGINS[(i)$user${${user:#(%|/)*}:+/}$plugin]}]=()  # Support Zsh plugin standard
+        zsh_loaded_plugins[${zsh_loaded_plugins[(i)$user${${user:#(%|/)*}:+/}$plugin]}]=()  # Support Zsh plugin standard
         -zplg-clear-report-for "$user" "$plugin"
         (( quiet )) || print "Plugin's report saved to \$LASTREPORT"
     fi

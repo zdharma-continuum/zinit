@@ -6,7 +6,7 @@
 #
 
 typeset -gaH ZPLG_REGISTERED_PLUGINS ZPLG_TASKS ZPLG_RUN
-typeset -ga LOADED_PLUGINS
+typeset -ga zsh_loaded_plugins
 ZPLG_TASKS=( "<no-data>" )
 # Snippets loaded, url -> file name
 typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE ZPLG_CUR_BIND_MAP ZPLG_EXTS
@@ -864,7 +864,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-register-plugin {{{
 # Adds the plugin to ZPLG_REGISTERED_PLUGINS array and to the
-# LOADED_PLUGINS array (managed according to the plugin standard:
+# zsh_loaded_plugins array (managed according to the plugin standard:
 # http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html)
 -zplg-register-plugin() {
     local uspl2="$1" mode="$2"
@@ -873,7 +873,7 @@ builtin setopt noaliases
     if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" ]]; then
         ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
         # Support Zsh plugin standard
-        LOADED_PLUGINS+=( "$uspl2" )
+        zsh_loaded_plugins+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
         [[ -z "${ZPLGM[TEST]}${${+ZPLG_ICE[wait]}:#0}${ZPLG_ICE[load]}${ZPLG_ICE[subscribe]}" && ${ZPLGM[MUTE_WARNINGS]} != 1 ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
@@ -897,7 +897,7 @@ builtin setopt noaliases
 } # }}}
 # FUNCTION: -zplg-unregister-plugin {{{
 # Removes the plugin from ZPLG_REGISTERED_PLUGINS array and from the
-# LOADED_PLUGINS array (managed according to the plugin standard)
+# zsh_loaded_plugins array (managed according to the plugin standard)
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
@@ -905,7 +905,7 @@ builtin setopt noaliases
     # If not found, the index will be length+1
     ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
     # Support Zsh plugin standard
-    LOADED_PLUGINS[${LOADED_PLUGINS[(i)$uspl2]}]=()
+    zsh_loaded_plugins[${zsh_loaded_plugins[(i)$uspl2]}]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
 } # }}}
 # FUNCTION: @zplg-register-z-plugin {{{
