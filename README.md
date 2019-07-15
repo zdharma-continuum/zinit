@@ -532,13 +532,13 @@ zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
 zplugin cdlist # look at gathered compdefs
 ```
 
-## Disabling system-wide compinit call (Ubuntu)
+## Disabling system-wide `compinit` call (Ubuntu)
 
-On Ubuntu users might get surprised that e.g. their completions work while they
-didn't call compinit in their .zshrc. That's because the function is being
-called in /etc/zshrc. To disable this call – what is needed to avoid the slowdown
-and if user loads any completion-equipped plugins, i.e. almost on 100% – add
-the following lines to ~/.zshenv:
+On Ubuntu users might get surprised that e.g. their completions work while they didn't
+call `compinit` in their `.zshrc`. That's because the function is being called in
+`/etc/zshrc`. To disable this call – what is needed to avoid the slowdown and if user
+loads any completion-equipped plugins, i.e. almost on 100% – add the following lines to
+`~/.zshenv`:
 
 ```zsh
 # Skip the not really helping Ubuntu global compinit
