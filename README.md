@@ -23,19 +23,20 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Example Usage](#example-usage)
   - [Ice Modifiers](#ice-modifiers)
   - [Zplugin commands](#zplugin-commands)
+  - [Updating Zplugin and plugins](#updating-zplugin-and-plugins)
   - [Using Oh-My-Zsh Themes](#using-oh-my-zsh-themes)
 - [Completions](#completions)
-  - [Calling compinit](#calling-compinit)
-    - [Turbo-loading completions & calling compinit](#turbo-loading-completions--calling-compinit)
+  - [Calling compinit Without Turbo Mode](#calling-compinit-without-turbo-mode)
+  - [Calling compinit With Turbo Mode](#calling-compinit-with-turbo-mode)
   - [Ignoring Compdefs](#ignoring-compdefs)
-- [Zplugin Module-Only](#zplugin-module-only)
-  - [More On Zplugin Zsh Module](#more-on-zplugin-zsh-module)
-    - [Module – Guaranteed Compilation Of All Scripts / Plugins](#module--guaranteed-compilation-of-all-scripts--plugins)
-    - [Module – Measuring Time Of `source`s](#module--measuring-time-of-sources)
-    - [Module - Debugging](#module---debugging)
+- [Zplugin Module](#zplugin-module)
+  - [Installation](#installation-1)
+  - [Guaranteed Compilation Of All Scripts / Plugins](#guaranteed-compilation-of-all-scripts--plugins)
+  - [Measuring Time Of `source`s](#measuring-time-of-sources)
+  - [Debugging](#debugging)
 - [Hints and Tips](#hints-and-tips)
-  - [Non-Github (Local) Plugins](#non-github-local-plugins)
   - [Customizing Paths & Other](#customizing-paths--other)
+  - [Non-Github (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
   - [Preinstall Plugins (`burst` Scheduler Invocation)](#preinstall-plugins-burst-scheduler-invocation)
   - [Plugin Standard](#plugin-standard)
@@ -204,7 +205,6 @@ You can read the introduction to Zplugin in [INTRODUCTION](../../wiki/INTRODUCTI
 After installing Zplugin you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
 
 ```zsh
-
 # Two regular plugins loaded without tracking.
 
 zplugin light zsh-users/zsh-autosuggestions
@@ -387,6 +387,21 @@ Available ice-modifiers:
         nocompletions reset-prompt
 ```
 
+## Updating Zplugin and plugins
+
+To update Zplugin issue `zplugin self-update` in the command line.
+
+To update all plugins and snippets, issue `zplugin update`. If you wish to update only
+a single plugin/snippet instead issue `zplugin update NAME_OF_PLUGIN`. A list of
+commits will be shown:
+
+<p align="center">
+<img src="./doc/img/update.png" />
+</p>
+
+Some plugins require performing an action each time they're updated. One way you can do
+this is by using the `atpull` ice modifier. For example, writing `zplugin ice atpull'./configure'` before loading a plugin will execute `./configure` after a successful update. Refer to [Ice Modifiers](#ice-modifiers) for more information.
+
 ## Using Oh-My-Zsh Themes
 
 To use **themes** created for `Oh-My-Zsh` you might want to first source the `git` library there:
@@ -444,7 +459,7 @@ zplugin light NicoSantangelo/Alpharized
 
 # Completions
 
-## Calling compinit
+## Calling compinit Without Turbo Mode
 
 With no turbo mode in use, compinit can be called normally, i.e.: as `autoload compinit;
 compinit`. This should be done after loading of all plugins and before possibly calling
@@ -480,7 +495,7 @@ This allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
-### Turbo-loading completions & calling compinit
+## Calling compinit With Turbo Mode
 
 If you load completions using `wait''` turbo-mode then you can add
 `atinit'zpcompinit'` to syntax-highlighting plugin (which should be the last
@@ -516,7 +531,11 @@ zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
 zplugin cdlist # look at gathered compdefs
 ```
 
-# Zplugin Module-Only
+# Zplugin Module
+
+## Installation
+
+**Without Zplugin**
 
 To install just the binary Zplugin module **standalone** (Zplugin is not needed, the module can be used with any
 other plugin manager), execute:
@@ -527,7 +546,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc
 
 This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
 
-## More On Zplugin Zsh Module
+**With Zplugin**
 
 Zplugin users can build the module by issuing following command instead of running above `mod-install.sh` script
 (the script is for e.g. `zgen` users or users of any other plugin manager):
@@ -538,7 +557,7 @@ zplugin module build
 
 This command will compile the module and display instructions on what to add to `~/.zshrc`.
 
-### Module – Guaranteed Compilation Of All Scripts / Plugins
+## Guaranteed Compilation Of All Scripts / Plugins
 
 The module is a binary Zsh module (think about `zmodload` Zsh command, it's that topic) which transparently and
 automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
@@ -549,7 +568,7 @@ command and tracking updates to the plugin – in Zplugin case: by using `compil
 
   ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png)
 
-### Module – Measuring Time Of `source`s
+## Measuring Time Of `source`s
 
 Besides the compilation-feature, the module also measures **duration** of each script sourcing. Issue `zpmod
 source-study` after loading the module at top of `~/.zshrc` to see a list of all sourced files with the time the
@@ -557,7 +576,7 @@ sourcing took in milliseconds on the left. This feature allows to profile the sh
 pass-through that check and you will obtain a complete list of all loaded scripts, like if Zshell itself was
 tracking this. The list can be surprising.
 
-### Module - Debugging
+## Debugging
 
 To enable debug messages from the module set:
 
@@ -566,16 +585,6 @@ typeset -g ZPLG_MOD_DEBUG=1
 ```
 
 # Hints and Tips
-
-## Non-Github (Local) Plugins
-
-Use `create` subcommand with user name `_local` (the default) to create plugin's
-skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository
-(because of user name being `_local`). To enter the plugin's directory use `cd` command
-with just plugin's name (without `_local`, it's optional).
-
-If user name will not be `_local`, then Zplugin will create repository also on Github
-and setup correct repository origin.
 
 ## Customizing Paths & Other
 
@@ -600,6 +609,17 @@ declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loa
 
 There is also `$ZPFX`, set by default to `~/.zplugin/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
+
+## Non-Github (Local) Plugins
+
+Use `create` subcommand with user name `_local` (the default) to create plugin's
+skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository
+(because of user name being `_local`). To enter the plugin's directory use `cd` command
+with just plugin's name (without `_local`, it's optional).
+
+If user name will not be `_local`, then Zplugin will create repository also on Github
+and setup correct repository origin.
+
 
 ## Extending Git
 
