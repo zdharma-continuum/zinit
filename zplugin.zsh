@@ -2088,7 +2088,7 @@ ZPLG_REGISTERED_STATES[_local/zplugin]="1"
 fpath=( "${ZPLGM[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
 # Inform Prezto that the compdef function is available
-zstyle ':prezto:module' completion loaded
+zstyle ':prezto:module:completion' loaded 1
 
 # Colorize completions for commands unload, report, creinstall, cuninstall
 zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==1;35=1;33'
