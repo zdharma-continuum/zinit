@@ -87,6 +87,10 @@ zplugin light paoloantinori/hhighlighter
 # Snippets
 #
 
+# Uses z-p-submods z-plugin: https://github.com/zdharma/z-p-submods
+zplugin ice svn submods"clvv/fasd -> external"
+zplugin snippet PZT::modules/fasd
+
 zplugin ice svn pick"completion.zsh" src"git.zsh"
 zplugin snippet OMZ::lib
 
