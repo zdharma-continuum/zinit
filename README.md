@@ -48,7 +48,8 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 # News
 
-Here are the new features and updates added to zplugin in the last 60 days. To see the full history check [the changelog.](CHANGELOG.md)
+<details>
+  <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
 * 29-07-2019
   - `delete` now supports following options:
@@ -150,7 +151,11 @@ Here are the new features and updates added to zplugin in the last 60 days. To s
     `wait'1b'` and `wait'1c'` – to this way **impose order** on the loadings
     **regardless of the order of `zplugin` commands**. 
 
-# Getting Help
+</details>
+
+To see the full history check [the changelog](CHANGELOG.md).
+
+# Getting help
 
 If you need help you can do the following:
 
