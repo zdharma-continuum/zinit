@@ -2791,7 +2791,7 @@ EOF
     setopt localoptions localtraps
     trap 'return 1' INT TERM
     ( builtin cd -q "${ZPLGM[BIN_DIR]}"/zmodules
-      print -r -- "${ZPLGM[col-pname]}== Building module zdharma/zplugin, running: a make clean, then ./configure and then make ==${ZPLGM[col-rst]}"
+      print -r -- "${ZPLGM[col-pname]}== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==${ZPLGM[col-rst]}"
       print -r -- "${ZPLGM[col-pname]}== The module sources are located at: "${ZPLGM[BIN_DIR]}"/zmodules ==${ZPLGM[col-rst]}"
       [[ -f Makefile ]] && { [[ "$1" = "--clean" ]] && {
               print -r -- ${ZPLGM[col-p]}-- make distclean --${ZPLGM[col-rst]}
@@ -2806,6 +2806,7 @@ EOF
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm && {
           print -r -- ${ZPLGM[col-p]}-- make --${ZPLGM[col-rst]}
           make && {
+            [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
             print -r -- "${ZPLGM[col-info]}Module has been built correctly.${ZPLGM[col-rst]}"
             -zplg-module info
           } || {
