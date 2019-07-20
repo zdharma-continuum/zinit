@@ -15,33 +15,33 @@ reports](DONATIONS.md) about what is being done with the money received.
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [News](#news)
-- [Getting help](#getting-help)
+- [Getting Help](#getting-help)
 - [Zplugin](#zplugin)
 - [Installation](#installation)
+  - [Option 1 - Automatic Installation (Recommended)](#option-1---automatic-installation-recommended)
+  - [Option 2 - Manual Installation](#option-2---manual-installation)
 - [Usage](#usage)
   - [Introduction](#introduction)
   - [Example Usage](#example-usage)
   - [Ice Modifiers](#ice-modifiers)
-  - [Zplugin commands](#zplugin-commands)
-  - [Updating Zplugin and plugins](#updating-zplugin-and-plugins)
-  - [Using Oh-My-Zsh Themes](#using-oh-my-zsh-themes)
+  - [Zplugin Commands](#zplugin-commands)
+  - [Updating Zplugin and Plugins](#updating-zplugin-and-plugins)
+  - [Using Oh My Zsh Themes](#using-oh-my-zsh-themes)
 - [Completions](#completions)
-  - [Calling compinit Without Turbo Mode](#calling-compinit-without-turbo-mode)
-  - [Calling compinit With Turbo Mode](#calling-compinit-with-turbo-mode)
+  - [Calling `compinit` Without Turbo Mode](#calling-compinit-without-turbo-mode)
+  - [Calling `compinit` With Turbo Mode](#calling-compinit-with-turbo-mode)
   - [Ignoring Compdefs](#ignoring-compdefs)
-  - [Disabling system-wide compinit call (Ubuntu)](#disabling-system-wide-compinit-call-ubuntu)
+  - [Disabling System-Wide `compinit` Call (Ubuntu)](#disabling-system-wide-compinit-call-ubuntu)
 - [Zplugin Module](#zplugin-module)
+  - [Motivation](#motivation)
   - [Installation](#installation-1)
-  - [Guaranteed Compilation Of All Scripts / Plugins](#guaranteed-compilation-of-all-scripts--plugins)
-  - [Measuring Time Of `source`s](#measuring-time-of-sources)
+  - [Measuring Time of `source`s](#measuring-time-of-sources)
   - [Debugging](#debugging)
 - [Hints and Tips](#hints-and-tips)
-  - [Customizing Paths & Other](#customizing-paths--other)
+  - [Customizing Paths](#customizing-paths)
   - [Non-Github (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
-  - [Preinstall Plugins (`burst` Scheduler Invocation)](#preinstall-plugins-burst-scheduler-invocation)
-  - [Plugin Standard](#plugin-standard)
-- [Additional resources](#additional-resources)
+- [Additional Resources](#additional-resources)
 - [IRC Channel](#irc-channel)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -154,9 +154,11 @@ Here are the new features and updates added to zplugin in the last 90 days. To s
   - New ice-mod `nocd` – it prevents changing current directory into the plugin's directory
     before evaluating `atinit''`, `atload''` etc. ice-mods.
 
-# Getting help
+# Getting Help
 
 If you need help you can do the following:
+
+- [Check if the information is in the Zplugin WIKI](../../wiki)
 
 - Ask in our subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
 
@@ -185,15 +187,44 @@ to call `compinit` only once in `.zshrc`.
 
 # Installation
 
+## Option 1 - Automatic Installation (Recommended)
+
 The easiest way to install Zplugin is to execute: 
 
 ```zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
 ```
 
-This will install Zplugin in ~/.zplugin/bin. .zshrc will be updated with three lines of code that will be added to the bottom.
+This will install Zplugin in `~/.zplugin/bin`. `.zshrc` will be updated with three
+lines of code that will be added to the bottom. The lines will be sourcing
+`zplugin.zsh` and setting up completion for command `zplugin`. After installing and
+reloading the shell compile Zplugin with `zplugin self-update`.
 
-If you're interested in more ways to install Zplugin check [INSTALLATION](../../wiki/INSTALLATION).
+## Option 2 - Manual Installation
+
+To manually install Zplugin clone the repo to e.g. `~/.zplugin/bin`:
+
+```sh
+mkdir ~/.zplugin
+git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
+```
+
+and source it from `.zshrc` (above compinit):
+
+```sh
+source ~/.zplugin/bin/zplugin.zsh
+```
+
+If you place the `source` below `compinit`, then add those two lines after the `source`:
+```sh
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+```
+
+Various paths can be customized, see section [Customizing Paths](#customizing-paths).
+
+After installing and reloading shell give Zplugin a quick try with `zplugin help` and
+compile it with `zplugin self-update`.
 
 # Usage
 
@@ -328,7 +359,7 @@ appropriate wiki page for an extended explanation.
 
 Order of execution of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
 
-## Zplugin commands
+## Zplugin Commands
 
 ```
 % zpl help
@@ -388,7 +419,7 @@ Available ice-modifiers:
         nocompletions reset-prompt
 ```
 
-## Updating Zplugin and plugins
+## Updating Zplugin and Plugins
 
 To update Zplugin issue `zplugin self-update` in the command line.
 
@@ -403,9 +434,9 @@ commits will be shown:
 Some plugins require performing an action each time they're updated. One way you can do
 this is by using the `atpull` ice modifier. For example, writing `zplugin ice atpull'./configure'` before loading a plugin will execute `./configure` after a successful update. Refer to [Ice Modifiers](#ice-modifiers) for more information.
 
-## Using Oh-My-Zsh Themes
+## Using Oh My Zsh Themes
 
-To use **themes** created for `Oh-My-Zsh` you might want to first source the `git` library there:
+To use **themes** created for Oh My Zsh you might want to first source the `git` library there:
 
 ```SystemVerilog
 zplugin snippet http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh
@@ -421,7 +452,7 @@ If the library will not be loaded, then similar to following errors will be appe
 ```
 
 Then you can use the themes as snippets (`zplugin snippet {file path or Github URL}`).
-Some themes require not only `Oh-My-Zsh's` Git **library**, but also Git **plugin** (error
+Some themes require not only Oh My Zsh's Git **library**, but also Git **plugin** (error
 about `current_branch` function can be appearing). Load this Git-plugin as single-file
 snippet directly from OMZ:
 
@@ -460,7 +491,7 @@ zplugin light NicoSantangelo/Alpharized
 
 # Completions
 
-## Calling compinit Without Turbo Mode
+## Calling `compinit` Without Turbo Mode
 
 With no turbo mode in use, compinit can be called normally, i.e.: as `autoload compinit;
 compinit`. This should be done after loading of all plugins and before possibly calling
@@ -496,7 +527,7 @@ This allows to call compinit once.
 Performance gains are huge, example shell startup time with double `compinit`: **0.980** sec, with
 `cdreplay` and single `compinit`: **0.156** sec.
 
-## Calling compinit With Turbo Mode
+## Calling `compinit` With Turbo Mode
 
 If you load completions using `wait''` turbo-mode then you can add
 `atinit'zpcompinit'` to syntax-highlighting plugin (which should be the last
@@ -532,7 +563,7 @@ zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
 zplugin cdlist # look at gathered compdefs
 ```
 
-## Disabling system-wide `compinit` call (Ubuntu)
+## Disabling System-Wide `compinit` Call (Ubuntu)
 
 On Ubuntu users might get surprised that e.g. their completions work while they didn't
 call `compinit` in their `.zshrc`. That's because the function is being called in
@@ -546,6 +577,17 @@ skip_global_compinit=1
 ```
 
 # Zplugin Module
+
+## Motivation
+
+The module is a binary Zsh module (think about `zmodload` Zsh command, it's that topic) which transparently and
+automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
+a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can
+source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
+and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
+command and tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
+
+  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png)
 
 ## Installation
 
@@ -571,18 +613,7 @@ zplugin module build
 
 This command will compile the module and display instructions on what to add to `~/.zshrc`.
 
-## Guaranteed Compilation Of All Scripts / Plugins
-
-The module is a binary Zsh module (think about `zmodload` Zsh command, it's that topic) which transparently and
-automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
-a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can
-source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
-and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
-command and tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
-
-  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png)
-
-## Measuring Time Of `source`s
+## Measuring Time of `source`s
 
 Besides the compilation-feature, the module also measures **duration** of each script sourcing. Issue `zpmod
 source-study` after loading the module at top of `~/.zshrc` to see a list of all sourced files with the time the
@@ -600,7 +631,7 @@ typeset -g ZPLG_MOD_DEBUG=1
 
 # Hints and Tips
 
-## Customizing Paths & Other
+## Customizing Paths
 
 Following variables can be set to custom values, before sourcing Zplugin. The
 previous global variables like `$ZPLG_HOME` have been removed to not pollute
@@ -662,47 +693,13 @@ zplugin light k4rthik/git-cal
 
 Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
 
-## Preinstall Plugins (`burst` Scheduler Invocation)
-
-If you create a Docker image that uses Zplugin, or want to install turbo-loaded plugins before the shell starts interactively,
-you can invoke the zplugin-scheduler function in such a way, that it:
-
- - installs plugins without waiting for the prompt (i.e. it's script friendly),
- - installs **all** plugins instantly, without respecting the `wait''` argument.
-
-To accomplish this, use `burst` argument and call `-zplg-scheduler` function. Example
-`Dockerfile` entry:
-
-```
-RUN zsh -i -c -- '-zplg-scheduler burst || true'
-```
-
-An example `Dockerfile` can be found
-[here](https://github.com/robobenklein/configs/blob/master/Dockerfile).
-
-## Plugin Standard
-
-Zsh plugins may look scary, as they seem to have some "architecture". In fact, what a
-plugin really is, is that:
-
-1. It has its directory added to `fpath`
-2. It has any first `*.plugin.zsh` file sourced
-
-That's it. When one contributes to Oh-My-Zsh or creates a plugin for any plugin
-manager, he only needs to account for this.
-
-Also, [**there's a document that defines the Zsh Plugin
-Standard**](http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html). Zplugin
-fully supports the standard.
-
-# Additional resources
+# Additional Resources
 
 Besides the main-knowledge source, i.e. this README, there are subpages that are
 **guides** and also an external web-page:
 
- - [Short-narration style WIKI](../../wiki)
+ - [WIKI](../../wiki)
  - [Writing Zplugin extensions](../../wiki/Z-PLUGINS)
- - [Code documentation](../../wiki/Code-Documentation)
  - [Zplugin semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
 
 # IRC Channel
