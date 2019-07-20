@@ -1,0 +1,819 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+    
+    
+      
+        <title>zplugin-side.zsh - Zplugin Wiki</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
+      
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#name" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href=".." title="Zplugin Wiki" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon"></i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Zplugin Wiki
+            </span>
+            <span class="md-header-nav__topic">
+              
+                zplugin-side.zsh
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href=".." title="Zplugin Wiki" class="md-nav__button md-logo">
+      
+        <i class="md-icon"></i>
+      
+    </a>
+    Zplugin Wiki
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href=".." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../INTRODUCTION/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Examples
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Examples
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-Minimal-Setup/" title="Example Minimal Setup" class="md-nav__link">
+      Example Minimal Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-Oh-My-Zsh-setup/" title="Example Oh My Zsh Setup" class="md-nav__link">
+      Example Oh My Zsh Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../LS_COLORS-explanation/" title="LS_COLORS Explanation" class="md-nav__link">
+      LS_COLORS Explanation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Direnv-explanation/" title="Direnv Explanation" class="md-nav__link">
+      Direnv Explanation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Compiling-programs/" title="Compiling Programs" class="md-nav__link">
+      Compiling Programs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Profiling-plugins/" title="Profiling Plugins" class="md-nav__link">
+      Profiling Plugins
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../GALLERY/" title="Gallery" class="md-nav__link">
+      Gallery
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Ice modifiers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Ice modifiers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Multiple-prompts/" title="Multiple Prompts" class="md-nav__link">
+      Multiple Prompts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-wait-conditions/" title="Example wait Conditions" class="md-nav__link">
+      Example wait Conditions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Installing-with-make/" title="Installing With Make" class="md-nav__link">
+      Installing With Make
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Sourcing-multiple-files/" title="Sourcing Multiple Files" class="md-nav__link">
+      Sourcing Multiple Files
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
+      Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-nav__link">
+      Z-Plugins
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Hints
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Hints
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
+      Preinstalling Plugins
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
+    
+    <label class="md-nav__link" for="nav-7">
+      Code Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        Code Documentation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Code-Documentation/" title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin.zsh/" title="zplugin.zsh" class="md-nav__link">
+      zplugin.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="zplugin-side.zsh" class="md-nav__link md-nav__link--active">
+      zplugin-side.zsh
+    </a>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin-install.zsh/" title="zplugin-install.zsh" class="md-nav__link">
+      zplugin-install.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin-autoload.zsh/" title="zplugin-autoload.zsh" class="md-nav__link">
+      zplugin-autoload.zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="name">NAME</h1>
+<p>zplugin-side.zsh - a shell script</p>
+<h1 id="synopsis">SYNOPSIS</h1>
+<p>Documentation automatically generated with `zshelldoc'</p>
+<h1 id="functions">FUNCTIONS</h1>
+<pre><code>-zplg-any-colorify-as-uspl2
+-zplg-exists-physically
+-zplg-exists-physically-message
+-zplg-first
+-zplg-get-plg-dir
+-zplg-shands-exp
+-zplg-store-ices
+-zplg-two-paths
+</code></pre>
+<h1 id="details">DETAILS</h1>
+<h2 id="script-body">Script Body</h2>
+<p>Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle
+widget bound to a key, etc.).</p>
+<h2 id="45zplg-any-colorify-as-uspl2">-zplg-any-colorify-as-uspl2</h2>
+<blockquote>
+<pre><code>Returns ANSI-colorified "user/plugin" string, from any supported
+plugin spec (user---plugin, user/plugin, user plugin, plugin).
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+$REPLY = ANSI-colorified "user/plugin" string
+</code></pre>
+</blockquote>
+<p>Has 11 line(s). Calls functions:</p>
+<pre><code>-zplg-any-colorify-as-uspl2
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-exists-physically-message
+zplugin-autoload.zsh/-zplg-clear-completions
+zplugin-autoload.zsh/-zplg-compile-uncompile-all
+zplugin-autoload.zsh/-zplg-compiled
+zplugin-autoload.zsh/-zplg-create
+zplugin-autoload.zsh/-zplg-exists-message
+zplugin-autoload.zsh/-zplg-get-completion-owner-uspl2col
+zplugin-autoload.zsh/-zplg-list-bindkeys
+zplugin-autoload.zsh/-zplg-recently
+zplugin-autoload.zsh/-zplg-search-completions
+zplugin-autoload.zsh/-zplg-show-completions
+zplugin-autoload.zsh/-zplg-show-registered-plugins
+zplugin-autoload.zsh/-zplg-show-times
+zplugin-autoload.zsh/-zplg-uncompile-plugin
+zplugin-autoload.zsh/-zplg-unload
+zplugin-autoload.zsh/-zplg-update-or-status-all
+zplugin-autoload.zsh/-zplg-update-or-status
+zplugin-install.zsh/-zplg-install-completions
+zplugin-install.zsh/-zplg-setup-plugin-dir
+</code></pre>
+<h2 id="45zplg-exists-physically">-zplg-exists-physically</h2>
+<blockquote>
+<pre><code>Checks if directory of given plugin exists in PLUGIN_DIR.
+
+Testable.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 10 line(s). Calls functions:</p>
+<pre><code>-zplg-exists-physically
+|-- -zplg-shands-exp
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-exists-physically-message
+zplugin-autoload.zsh/-zplg-create
+zplugin-autoload.zsh/-zplg-get-path
+</code></pre>
+<h2 id="45zplg-exists-physically-message">-zplg-exists-physically-message</h2>
+<blockquote>
+<pre><code>Checks if directory of given plugin exists in PLUGIN_DIR,
+and outputs error message if it doesn't.
+
+Testable.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 11 line(s). Calls functions:</p>
+<pre><code>-zplg-exists-physically-message
+|-- -zplg-any-colorify-as-uspl2
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+|-- -zplg-exists-physically
+|   |-- -zplg-shands-exp
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+`-- -zplg-shands-exp
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin-autoload.zsh/-zplg-changes
+zplugin-autoload.zsh/-zplg-compute-ice
+zplugin-autoload.zsh/-zplg-delete
+zplugin-autoload.zsh/-zplg-edit
+zplugin-autoload.zsh/-zplg-glance
+zplugin-autoload.zsh/-zplg-stress
+zplugin-autoload.zsh/-zplg-update-or-status
+zplugin-install.zsh/-zplg-install-completions
+</code></pre>
+<h2 id="45zplg-first">-zplg-first</h2>
+<blockquote>
+<pre><code>Finds the main file of plugin. There are multiple file name
+formats, they are ordered in order starting from more correct
+ones, and matched. -zplg-load-plugin() has similar code parts
+and doesn't call -zplg-first() – for performance. Obscure matching
+is done in -zplg-find-other-matches, here and in -zplg-load().
+Obscure = non-standard main-file naming convention.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 17 line(s). Calls functions:</p>
+<pre><code>-zplg-first
+|-- -zplg-get-plg-dir
+|-- zplugin.zsh/-zplg-any-to-user-plugin
+`-- zplugin.zsh/-zplg-find-other-matches
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin-autoload.zsh/-zplg-edit
+zplugin-autoload.zsh/-zplg-glance
+zplugin-autoload.zsh/-zplg-stress
+zplugin-install.zsh/-zplg-compile-plugin
+</code></pre>
+<h2 id="45zplg-get-plg-dir">-zplg-get-plg-dir</h2>
+<p>Has 9 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-first
+</code></pre>
+<h2 id="45zplg-shands-exp">-zplg-shands-exp</h2>
+<blockquote>
+<pre><code>Does expansion of currently little unstandarized
+shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
+</code></pre>
+</blockquote>
+<p>Has 3 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-exists-physically-message
+-zplg-exists-physically
+zplugin-autoload.zsh/-zplg-compute-ice
+zplugin-autoload.zsh/-zplg-delete
+zplugin-autoload.zsh/-zplg-get-path
+</code></pre>
+<h2 id="45zplg-store-ices">-zplg-store-ices</h2>
+<blockquote>
+<pre><code>Saves ice mods in given hash onto disk.
+
+$1 - directory where to create / delete files
+$2 - name of hash that holds values
+$3 - additional keys of hash to store, space separated
+$4 - additional keys of hash to store, empty-meaningful ices, space separated
+</code></pre>
+</blockquote>
+<p>Has 30 line(s). Doesn’t call other functions.</p>
+<p>Uses feature(s): <em>wait</em></p>
+<p>Called by:</p>
+<pre><code>zplugin-autoload.zsh/-zplg-update-or-status
+zplugin-install.zsh/-zplg-download-snippet
+zplugin-install.zsh/-zplg-setup-plugin-dir
+</code></pre>
+<h2 id="45zplg-two-paths">-zplg-two-paths</h2>
+<blockquote>
+<pre><code>Obtains a snippet URL without specification if it is an SVN URL (points to
+directory) or regular URL (points to file), returns 2 possible paths for
+further examination
+</code></pre>
+</blockquote>
+<p>Has 19 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>zplugin-autoload.zsh/-zplg-compute-ice
+zplugin-autoload.zsh/-zplg-delete
+zplugin-autoload.zsh/-zplg-get-path
+zplugin-autoload.zsh/-zplg-update-or-status
+</code></pre>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../zplugin.zsh/" title="zplugin.zsh" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                zplugin.zsh
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../zplugin-install.zsh/" title="zplugin-install.zsh" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                zplugin-install.zsh
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.245445c6.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+    
+  </body>
+</html>
