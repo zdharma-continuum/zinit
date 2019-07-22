@@ -24,12 +24,14 @@ git -C out checkout "$TARGET_BRANCH" || git -C out checkout --orphan "$TARGET_BR
 LIST_ORIGINAL=( out/* )
 
 # Remove existing contents
+mv -v out/site site_out
 mv -v out/.git .git_out
 mv -v out/index.html .
 rm -rf out
 mkdir out
-mv .git_out out/.git
-mv index.html out
+mv -v site_out out/site
+mv -v .git_out out/.git
+mv -v index.html out
 touch out/.nojekyll
 
 # Copy the PDFs (built earlier by .travis.yml / make)
