@@ -1,110 +1,30 @@
-/*Themes and colors*/
-
-@-webkit-keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
-}
-
-@-moz-keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
-}
-
+/*Define rules for gradient "animation"*/
 @keyframes Gradient {
-	0% {
-		background-position: 0% 50%
-	}
-	50% {
-		background-position: 100% 50%
-	}
-	100% {
-		background-position: 0% 50%
-	}
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
 }
 
+/*Define gradient colors and start position for top bars.*/
 .md-header, .md-tabs { 
-  font-weight: bold;
-  color: #fff;
   background: linear-gradient(-45deg, #845EC2,#D65DB1,#FF6F91);
   background-size: 400% 400%;
   animation: Gradient 20s infinite;
-  -webkit-animation: Gradient 20s infinite;
-  -moz-animation: Gradient 20s infinite;
   animation-delay: -5s;
 }
 
-/*Font size/text altering*/
-
-.md-tabs__inner .md-tabs__list .md-tabs__item .md-tabs__link { 
-  font-size: 160%;
+/*Footer color.*/
+.md-footer-meta{
+  background-color: #fea45f;
 }
 
-
-.md-typeset h1{
-  font-size: 160%;
-}
-
-.md-typeset h2{
-  display: grid;
-  font-size: 100%;
-  font-weight: bold;
-  grid-template-columns: minmax(20px, 1fr) auto minmax(20px, 1fr);
-  align-items: center;
-  text-align: center;
-  grid-gap: 20px;
-  width: 100%;
-  line-height: 5;
-}
-
-h2:before {
-    content: '';
-    border-bottom: 2px solid;
-}
-
-h2:after {
-    content: '';
-    border-top: 2px solid;
-}
-
-.md-typeset h3{
-  font-size: 90%;
-}
-
-.md-typeset h1, .md-typeset h3, .md-tabs__inner .md-tabs__list .md-tabs__item .md-tabs__link{
-  font-weight: bold;
-}
-
-.md-nav{
-  font-size: .9rem;
-}
-
-.md-typeset .codehilite, .md-typeset p{
-  font-size: 110%;
-}
-
-.md-typeset .admonition{
-  font-size: 90%;
-}
-
-/*Remove elements*/
+/*Remove prev/next sections in footer and a "skip to contents" button that was
+ * acting weird.*/
 .md-skip, .md-footer-nav { 
   display: none;
 }
 
+/*Remove "created by mkdocs..." message in footer.*/
 .md-footer-copyright { 
     visibility: hidden;
 }

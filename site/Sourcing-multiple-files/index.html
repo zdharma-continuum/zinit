@@ -231,6 +231,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
+          declare-zsh
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -659,6 +672,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      declare-zsh
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        declare-zsh
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -706,16 +755,26 @@ zplugin snippet OMZ::lib
 <p>The all possible ways to use the <code>multisrc''</code> ice-mod:</p>
 <pre><code class="zsh">zplugin ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
 zplugin load robbyrussell/oh-my-zsh
+
 zplugin ice svn multisrc&quot;{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc&quot;\${array[@]}&quot; \
-    pick&quot;/dev/null&quot;; zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc&quot;${array[@]}&quot; \
-    pick&quot;/dev/null&quot;; zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc&quot;\${array[@]}&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc&quot;$array&quot; pick&quot;/dev/null&quot;
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc&quot;${array[@]}&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
+zplugin snippet OMZ::lib
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc&quot;$array&quot; pick&quot;/dev/null&quot;
+zplugin snippet OMZ::lib
+
 zplugin ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
 </code></pre>
@@ -793,5 +852,17 @@ zplugin snippet OMZ::lib
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
+<link href="../../highlight/style.css" rel="stylesheet" />
+  <script src="../../highlight/highlight.pack.js"></script>
+  <script>
+  function highlightCode() {
+      var pres = document.querySelectorAll("pre>code");
+      for (var i = 0; i < pres.length; i++) {
+	  hljs.highlightBlock(pres[i]);
+      }
+  }
+  highlightCode();
+  </script>
+
   </body>
 </html>

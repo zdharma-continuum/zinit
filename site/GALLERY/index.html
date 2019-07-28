@@ -235,6 +235,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
+          declare-zsh
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -729,6 +742,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      declare-zsh
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        declare-zsh
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -838,7 +887,7 @@ zplugin ice as&quot;program&quot; pick&quot;yank&quot; make
 zplugin light mptre/yank
 
 zplugin ice wait&quot;2&quot; lucid as'command' pick'src/vramsteg' \
-    atclone'cmake .' atpull'%atclone' make  # use turbo-mode
+    atclone'cmake .' atpull'%atclone' make  # use Turbo-mode
 zplugin light psprint/vramsteg-zsh
 
 zplugin ice atclone&quot;./libexec/pyenv init - &gt; zpyenv.zsh&quot; \
@@ -928,7 +977,7 @@ zplugin ice nocompletions atclone'prompt_zinc_compile' atpull'%atclone' \
 zplugin load robobenklein/zinc
 
 # ZINC git info is already async, but if you want it 
-# even faster with gitstatus in turbo mode:
+# even faster with gitstatus in Turbo mode:
 # https://github.com/romkatv/gitstatus
 zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
 zplugin load romkatv/gitstatus
@@ -1015,5 +1064,17 @@ zplugin load romkatv/powerlevel10k
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
+<link href="../../highlight/style.css" rel="stylesheet" />
+  <script src="../../highlight/highlight.pack.js"></script>
+  <script>
+  function highlightCode() {
+      var pres = document.querySelectorAll("pre>code");
+      for (var i = 0; i < pres.length; i++) {
+	  hljs.highlightBlock(pres[i]);
+      }
+  }
+  highlightCode();
+  </script>
+
   </body>
 </html>

@@ -235,6 +235,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
+          declare-zsh
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -665,6 +678,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      declare-zsh
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        declare-zsh
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -715,7 +764,7 @@ zplugin light zdharma/fast-syntax-highlighting
 <li>the <code>atinit</code> of the plugin runs also <code>zcdreplay</code> (i.e. "<em>zplugin-compdef-replay</em>"), because after <code>compinit</code> is loaded, the <code>compdef</code> function becomes available, and one can re-run the all earlier automatically-caught<code>compdef</code> calls,</li>
 <li>add <code>lucid</code> ice-mod to silence the under-prompt messages.</li>
 </ul>
-<p>The same setup but without using turbo-mode (i.e. no <code>wait''</code> ice):</p>
+<p>The same setup but without using Turbo-mode (i.e. no <code>wait''</code> ice):</p>
 <pre><code class="zsh">zplugin ice blockf; zplugin light zsh-users/zsh-completions
 zplugin light zsh-users/zsh-autosuggestions
 
@@ -802,5 +851,17 @@ zplugin light zdharma/fast-syntax-highlighting
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
+<link href="../../highlight/style.css" rel="stylesheet" />
+  <script src="../../highlight/highlight.pack.js"></script>
+  <script>
+  function highlightCode() {
+      var pres = document.querySelectorAll("pre>code");
+      for (var i = 0; i < pres.length; i++) {
+	  hljs.highlightBlock(pres[i]);
+      }
+  }
+  highlightCode();
+  </script>
+
   </body>
 </html>

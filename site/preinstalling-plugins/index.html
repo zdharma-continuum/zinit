@@ -235,6 +235,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
+          declare-zsh
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -665,6 +678,42 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      declare-zsh
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        declare-zsh
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -694,7 +743,7 @@
                 
                 
                 <h1 id="preinstalling-plugins">Preinstalling Plugins</h1>
-<p>If you create a Docker image that uses Zplugin, or want to install turbo-loaded plugins before the shell starts interactively,
+<p>If you create a Docker image that uses Zplugin, or want to install Turbo-loaded plugins before the shell starts interactively,
 you can invoke the zplugin-scheduler function in such a way, that it:</p>
 <ul>
 <li>installs plugins without waiting for the prompt (i.e. it's script friendly),</li>
@@ -781,5 +830,17 @@ you can invoke the zplugin-scheduler function in such a way, that it:</p>
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
+<link href="../../highlight/style.css" rel="stylesheet" />
+  <script src="../../highlight/highlight.pack.js"></script>
+  <script>
+  function highlightCode() {
+      var pres = document.querySelectorAll("pre>code");
+      for (var i = 0; i < pres.length; i++) {
+	  hljs.highlightBlock(pres[i]);
+      }
+  }
+  highlightCode();
+  </script>
+
   </body>
 </html>

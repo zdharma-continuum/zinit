@@ -235,6 +235,19 @@
   
 
       
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
+          declare-zsh
+        </a>
+      
+    </li>
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -656,6 +669,42 @@
   <li class="md-nav__item">
     <a href="../zplugin-autoload.zsh/" title="zplugin-autoload.zsh" class="md-nav__link">
       zplugin-autoload.zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      declare-zsh
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        declare-zsh
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
     </a>
   </li>
 
@@ -1261,7 +1310,7 @@ invocations that results in repetitive -zplg-scheduler activity
 
 if "burst", then all tasks are marked timeout and executed one
 by one; this is handy if e.g. a docker image starts up and
-needs to install all turbo-mode plugins without any hesitation
+needs to install all Turbo-mode plugins without any hesitation
 (delay), i.e. "burst" allows to run package installations from
 script, not from prompt
 </code></pre>
@@ -1357,7 +1406,7 @@ to gather report data, and to hijack `autoload', `bindkey' and
 <blockquote>
 <pre><code>If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
 preceded with `wait', `load', `unload' or `on-update-of`/`subscribe'
-ice-mods then the plugin or snipped is to be loaded in turbo-mode,
+ice-mods then the plugin or snipped is to be loaded in Turbo-mode,
 and this function adds it to internal data structures, so that
 -zplg-scheduler can run (load, unload) this as a task.
 </code></pre>
@@ -1439,7 +1488,7 @@ from such hook ices.
 etc.).</p>
 <h2 id="zpcompdef">zpcompdef</h2>
 <blockquote>
-<pre><code>Stores compdef for a replay with `zpcdreplay' (turbo mode) or
+<pre><code>Stores compdef for a replay with `zpcdreplay' (Turbo mode) or
 with `zplugin cdreplay' (normal mode). An utility functton of
 an undefined use case.
 </code></pre>
@@ -1636,5 +1685,17 @@ zplugin
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
       
     
+<link href="../../highlight/style.css" rel="stylesheet" />
+  <script src="../../highlight/highlight.pack.js"></script>
+  <script>
+  function highlightCode() {
+      var pres = document.querySelectorAll("pre>code");
+      for (var i = 0; i < pres.length; i++) {
+	  hljs.highlightBlock(pres[i]);
+      }
+  }
+  highlightCode();
+  </script>
+
   </body>
 </html>
