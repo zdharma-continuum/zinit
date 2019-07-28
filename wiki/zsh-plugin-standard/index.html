@@ -1,0 +1,1125 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+    
+    
+      
+        <title>Zsh Plugin Standard - Zplugin Wiki</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
+      
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../css/theme.css">
+    
+      <link rel="stylesheet" href="../css/fonts.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#zsh-plugin-standard" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href=".." title="Zplugin Wiki" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">home</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Zplugin Wiki
+            </span>
+            <span class="md-header-nav__topic">
+              
+                Zsh Plugin Standard
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+        
+
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../INTRODUCTION/" title="Introduction" class="md-tabs__link">
+          Introduction
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Multiple-prompts/" title="Ice modifiers" class="md-tabs__link">
+          Ice modifiers
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Example-Minimal-Setup/" title="Examples" class="md-tabs__link">
+          Examples
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-tabs__link">
+          Z-Plugins
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="./" title="Hints" class="md-tabs__link md-tabs__link--active">
+          Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Code-Documentation/" title="Code Documentation" class="md-tabs__link">
+          Code Documentation
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
+          declare-zsh
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href=".." title="Zplugin Wiki" class="md-nav__button md-logo">
+      
+        <i class="md-icon">home</i>
+      
+    </a>
+    Zplugin Wiki
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Introduction
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        Introduction
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../INTRODUCTION/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Ice modifiers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Ice modifiers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Multiple-prompts/" title="Multiple Prompts" class="md-nav__link">
+      Multiple Prompts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-wait-conditions/" title="Example wait Conditions" class="md-nav__link">
+      Example wait Conditions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Installing-with-make/" title="Installing With Make" class="md-nav__link">
+      Installing With Make
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Sourcing-multiple-files/" title="Sourcing Multiple Files" class="md-nav__link">
+      Sourcing Multiple Files
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
+      Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Examples
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Examples
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-Minimal-Setup/" title="Example Minimal Setup" class="md-nav__link">
+      Example Minimal Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-Oh-My-Zsh-setup/" title="Example Oh My Zsh Setup" class="md-nav__link">
+      Example Oh My Zsh Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../LS_COLORS-explanation/" title="LS_COLORS Explanation" class="md-nav__link">
+      LS_COLORS Explanation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Direnv-explanation/" title="Direnv Explanation" class="md-nav__link">
+      Direnv Explanation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Compiling-programs/" title="Compiling Programs" class="md-nav__link">
+      Compiling Programs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Profiling-plugins/" title="Profiling Plugins" class="md-nav__link">
+      Profiling Plugins
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../GALLERY/" title="Gallery" class="md-nav__link">
+      Gallery
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Z-Plugins
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Z-Plugins
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-nav__link">
+      Z-Plugins
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5" checked>
+    
+    <label class="md-nav__link" for="nav-5">
+      Hints
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Hints
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Zsh Plugin Standard
+      </label>
+    
+    <a href="./" title="Zsh Plugin Standard" class="md-nav__link md-nav__link--active">
+      Zsh Plugin Standard
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-zsh-plugin" title="What is a Zsh plugin?" class="md-nav__link">
+    What is a Zsh plugin?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#146-standardized-0-handling" title="1. Standardized $0 handling" class="md-nav__link">
+    1. Standardized $0 handling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#246-unload-function" title="2. Unload function" class="md-nav__link">
+    2. Unload function
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#346-plugin-manager-activity-indicator" title="3. Plugin manager activity indicator" class="md-nav__link">
+    3. Plugin manager activity indicator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#446-global-parameter-with-prefix-for-make-configure-etc" title="4. Global parameter with PREFIX for make, configure, etc." class="md-nav__link">
+    4. Global parameter with PREFIX for make, configure, etc.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-revision-history-history-of-updates-to-the-document" title="Appendix A: Revision history (history of updates to the document)" class="md-nav__link">
+    Appendix A: Revision history (history of updates to the document)
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
+      Preinstalling Plugins
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Code Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Code Documentation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Code-Documentation/" title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin.zsh/" title="zplugin.zsh" class="md-nav__link">
+      zplugin.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin-side.zsh/" title="zplugin-side.zsh" class="md-nav__link">
+      zplugin-side.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin-install.zsh/" title="zplugin-install.zsh" class="md-nav__link">
+      zplugin-install.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin-autoload.zsh/" title="zplugin-autoload.zsh" class="md-nav__link">
+      zplugin-autoload.zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      declare-zsh
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        declare-zsh
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-a-zsh-plugin" title="What is a Zsh plugin?" class="md-nav__link">
+    What is a Zsh plugin?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#146-standardized-0-handling" title="1. Standardized $0 handling" class="md-nav__link">
+    1. Standardized $0 handling
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#246-unload-function" title="2. Unload function" class="md-nav__link">
+    2. Unload function
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#346-plugin-manager-activity-indicator" title="3. Plugin manager activity indicator" class="md-nav__link">
+    3. Plugin manager activity indicator
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#446-global-parameter-with-prefix-for-make-configure-etc" title="4. Global parameter with PREFIX for make, configure, etc." class="md-nav__link">
+    4. Global parameter with PREFIX for make, configure, etc.
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-revision-history-history-of-updates-to-the-document" title="Appendix A: Revision history (history of updates to the document)" class="md-nav__link">
+    Appendix A: Revision history (history of updates to the document)
+  </a>
+  
+</li>
+      
+      
+      
+      
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="zsh-plugin-standard">Zsh Plugin Standard</h1>
+<p>This document defines the Zsh Plugin Standard. Zplugin fully supports
+this standard.</p>
+<p>This document is also available as a
+<a href="http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.pdf"><strong>PDF</strong></a>.</p>
+<h2 id="what-is-a-zsh-plugin">What is a Zsh plugin?</h2>
+<p>Zsh plugins were first defined by Oh My Zsh. They provide for a way to
+package together files that extend or configure the shell’s
+functionality in a particular way.</p>
+<p>At a simple level, a plugin:</p>
+<ol>
+<li>
+<p>Has its directory added to <code>$fpath</code> (<a href="http://zsh.sourceforge.net/Doc/Release/Functions.html#Autoloading-Functions"><strong>zsh
+    doc</strong></a>).</p>
+</li>
+<li>
+<p>Has its first <code>*.plugin.zsh</code> file sourced (or <code>*.zsh</code>, <code>init.zsh</code>,
+    <code>*.sh</code>, these are non-standard).</p>
+</li>
+</ol>
+<p>The first point allows plugins to provide completions and functions that
+are loaded via Zsh’s <code>autoload</code> mechanism (a single function per-file).</p>
+<p>From a more broad perspective, a plugin consists of:</p>
+<ol>
+<li>
+<p>A directory containing various files (main script, autoload
+    functions, completions, Makefiles, backend programs, documentation).</p>
+</li>
+<li>
+<p>A script that obtains the path to its directory via <code>$0</code> (see the
+    <a href="#zero-handling"><strong>next section</strong></a> for a related enhancement proposal).</p>
+</li>
+<li>
+<p>A Github (or other site) repository identified by two components
+    <strong>username</strong>/<strong>pluginname</strong>.</p>
+</li>
+<li>
+<p>A software package containing any type of command line artifacts –
+    when used with advanced plugin managers that have hooks, it can run
+    Makefiles, add directories to <code>$PATH</code>.</p>
+</li>
+</ol>
+<p>Below follow proposed enhancements and codifications of the definition
+of a "Zsh plugin" and the actions of plugin managers – the proposed
+standardization.</p>
+<h2 id="146-standardized-0-handling">1. Standardized $0 handling</h2>
+<p>To get the plugin’s location, plugins should do:</p>
+<pre><code class="zsh">0=&quot;${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}&quot;
+
+# Then ${0:h} to get plugin's directory
+</code></pre>
+
+<p>The one-line code above will:</p>
+<ol>
+<li>
+<p>Be backwards-compatible with normal <code>$0</code> setting and usage.</p>
+</li>
+<li>
+<p>Use <code>ZERO</code> if it’s not empty,</p>
+<ul>
+<li>
+<p>plugin manager will be easily able to alter effective <code>$0</code>
+    before loading a plugin,</p>
+</li>
+<li>
+<p>this allows for e.g. <code>eval "$(&lt;plugin)"</code>, which can be faster
+    than <code>source</code>
+    (<a href="http://www.zsh.org/mla/workers/2017/msg01827.html"><strong>comparison</strong></a>,
+    note that it’s not for a compiled script).</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Use <code>$0</code> if it doesn’t contain the path to the Zsh binary,</p>
+<ul>
+<li>
+<p>plugin manager will still be able to set <code>$0</code>, although more
+    difficultly (requires <code>unsetopt function_argzero</code> before
+    sourcing plugin script, and <code>0=…​</code> assignment),</p>
+</li>
+<li>
+<p><code>unsetopt function_argzero</code> will be detected (it causes <code>$0</code> not
+    to contain plugin-script path, but path to Zsh binary, if not
+    overwritten by <code>0=…​</code> assignment),</p>
+</li>
+<li>
+<p><code>setopt posix_argzero</code> will be detected (as above).</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Use <code>%N</code> prompt expansion flag, which always gives absolute path to
+    script,</p>
+<ul>
+<li>plugin manager cannot alter this (no advanced loading of plugin
+    is possible), but simple plugin-file sourcing (without a plugin
+    manager) will be saved from breaking caused by the mentioned
+    <code>*_argzero</code> options, so this is a very good last-resort
+    fallback.</li>
+</ul>
+</li>
+</ol>
+<p>The goal is flexibility, with essential motivation to support <code>eval
+"$(&lt;plugin)"</code> and definitely solve <code>setopt no_function_argzero</code> and
+<code>setopt posix_argzero</code> cases.</p>
+<p>A plugin manager will be even able to convert a plugin to a function
+(author implemented such proof of concept functionality, it’s possible),
+but performance differences of this are unclear. It might however
+provide a use case.</p>
+<h2 id="246-unload-function">2. Unload function</h2>
+<p>If a plugin is named e.g. <code>kalc</code> (and is available via <code>an-user/kalc</code>
+plugin-ID), then it can provide a function, <code>kalc_unload_plugin</code>, that
+can be called by a plugin manager to undo the effects of loading that
+plugin.</p>
+<p>A plugin manager can implement its own tracking of changes made by a
+plugin so this is in general optional. However, to properly unload e.g.
+a prompt, detailed tracking (easy to do by the plugin creator) can
+provide better, predictable results. Any special, uncommon effects of
+loading a plugin are possible to undo only by a dedicated function.</p>
+<h2 id="346-plugin-manager-activity-indicator">3. Plugin manager activity indicator</h2>
+<p>Plugin managers should set the <code>$zsh_loaded_plugins</code> array to contain
+all previously loaded plugins and the plugin currently being loaded (as
+the last element). This will allow plugins to:</p>
+<ol>
+<li>
+<p>Check which plugins are already loaded.</p>
+</li>
+<li>
+<p>Check if it is being loaded by a plugin manager (i.e. not just
+    sourced).</p>
+</li>
+</ol>
+<p>The first item allows a plugin to e.g. issue a notice about missing
+dependencies. Instead of issuing a notice, it may be able to satisfy the
+dependencies from resources it provides. For example, <code>pure</code> prompt
+provides <code>zsh-async</code> dependency library, which is a separate project and
+can be loaded by the user directly. Consequently, the prompt can decide
+to source its private copy of <code>zsh-async</code>, having also reliable <code>$0</code>
+defined by previous section (note: <code>pure</code> doesn’t normally do this).</p>
+<p>The second item allows a plugin to e.g. set up <code>$fpath</code>, knowing that
+plugin manager will not handle this:</p>
+<pre><code class="zsh">if [[ ( ${+zsh_loaded_plugins} = 0 || ${zsh_loaded_plugins[-1]} != */kalc ) \
+    &amp;&amp; -z &quot;${fpath[(r)${0:h}]}&quot; ]]
+then
+    fpath+=( &quot;${0:h}&quot; )
+fi
+</code></pre>
+
+<p>This will allow user to reliably source the plugin without using a
+plugin manager.</p>
+<h2 id="446-global-parameter-with-prefix-for-make-configure-etc">4. Global parameter with PREFIX for make, configure, etc.</h2>
+<p>Plugin managers may export the parameter <code>$ZPFX</code> which should contain a
+path to a directory dedicated for user-land software, i.e. for
+directories <code>$ZPFX/bin</code>, <code>$ZPFX/lib</code>, <code>$ZPFX/share</code>, etc. Suggested name
+of the directory is <code>polaris</code>, Zplugin uses this name and places this
+directory at <code>~/.zplugin/polaris</code> by default.</p>
+<p>User can then configure hooks (feature of e.g. zplug and Zplugin) to
+invoke e.g. <code>make PREFIX=$ZPFX install</code> to install software like e.g.
+<a href="https://github.com/tj/git-extras"><strong>tj/git-extras</strong></a>. This is a developing
+role of Zsh plugin managers as package managers, where <code>.zshrc</code> has a
+similar role to Chef or Puppet configuration and allows to <strong>declare</strong>
+system state, and have the same state on different accounts / machines.</p>
+<p>No-narration facts-list related to <code>$ZPFX</code>:</p>
+<ol>
+<li>
+<p><code>export ZPFX="$HOME/polaris"</code> (or e.g. <code>$HOME/.zplugin/polaris</code>)</p>
+</li>
+<li>
+<p><code>make PREFIX=$ZPFX install</code></p>
+</li>
+<li>
+<p><code>./configure --prefix=$ZPFX</code></p>
+</li>
+<li>
+<p><code>cmake -DCMAKE_INSTALL_PREFIX=$ZPFX .</code></p>
+</li>
+<li>
+<p><code>zplugin ice make"PREFIX=$ZPFX install"</code></p>
+</li>
+<li>
+<p><code>zplug …​ hook-build:"make PREFIX=$PFX install"</code></p>
+</li>
+</ol>
+<h2 id="appendix-a-revision-history-history-of-updates-to-the-document">Appendix A: Revision history (history of updates to the document)</h2>
+<p>v0.94, 07/20/2019: Add initial version of the best practices section</p>
+<p>v0.93, 07/20/2019: 1/ Add the second line to the <code>$0</code> handling. 2/ Reformat to 80 columns</p>
+<p>v0.92, 07/14/2019: 1/ Rename LOADED_PLUGINS to zsh_loaded_plugins. 2/ Suggest that $ZPFX is optional.</p>
+<p>v0.91, 06/02/2018: Fix the link to the PDF for Github.</p>
+<p>v0.9, 12/12/2017: Remove ZERO references (bad design), add TOC.</p>
+<p>Reminder: The date format that uses slashes is <code>MM/DD/YYYY</code>.</p>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Z-Plugins
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Preinstalling Plugins
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.245445c6.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+    
+  </body>
+</html>

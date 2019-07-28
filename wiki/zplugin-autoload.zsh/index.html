@@ -1,0 +1,2023 @@
+
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      
+      
+      
+      
+        <meta name="lang:clipboard.copy" content="Copy to clipboard">
+      
+        <meta name="lang:clipboard.copied" content="Copied to clipboard">
+      
+        <meta name="lang:search.language" content="en">
+      
+        <meta name="lang:search.pipeline.stopwords" content="True">
+      
+        <meta name="lang:search.pipeline.trimmer" content="True">
+      
+        <meta name="lang:search.result.none" content="No matching documents">
+      
+        <meta name="lang:search.result.one" content="1 matching document">
+      
+        <meta name="lang:search.result.other" content="# matching documents">
+      
+        <meta name="lang:search.tokenizer" content="[\s\-]+">
+      
+      <link rel="shortcut icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.0.4, mkdocs-material-4.4.0">
+    
+    
+      
+        <title>zplugin-autoload.zsh - Zplugin Wiki</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/application.0284f74d.css">
+      
+      
+    
+    
+      <script src="../assets/javascripts/modernizr.74668098.js"></script>
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto","Helvetica Neue",Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono","Courier New",Courier,monospace}</style>
+      
+    
+    <link rel="stylesheet" href="../assets/fonts/material-icons.css">
+    
+    
+      <link rel="stylesheet" href="../css/theme.css">
+    
+      <link rel="stylesheet" href="../css/fonts.css">
+    
+    
+      
+    
+    
+  </head>
+  
+    <body dir="ltr">
+  
+    <svg class="md-svg">
+      <defs>
+        
+        
+      </defs>
+    </svg>
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#name" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid">
+    <div class="md-flex">
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <a href=".." title="Zplugin Wiki" class="md-header-nav__button md-logo">
+          
+            <i class="md-icon">home</i>
+          
+        </a>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        <label class="md-icon md-icon--menu md-header-nav__button" for="__drawer"></label>
+      </div>
+      <div class="md-flex__cell md-flex__cell--stretch">
+        <div class="md-flex__ellipsis md-header-nav__title" data-md-component="title">
+          
+            <span class="md-header-nav__topic">
+              Zplugin Wiki
+            </span>
+            <span class="md-header-nav__topic">
+              
+                zplugin-autoload.zsh
+              
+            </span>
+          
+        </div>
+      </div>
+      <div class="md-flex__cell md-flex__cell--shrink">
+        
+          <label class="md-icon md-icon--search md-header-nav__button" for="__search"></label>
+          
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="query" data-md-state="active">
+      <label class="md-icon md-search__icon" for="__search"></label>
+      <button type="reset" class="md-icon md-search__icon" data-md-component="reset" tabindex="-1">
+        &#xE5CD;
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="result">
+          <div class="md-search-result__meta">
+            Type to start searching
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+        
+      </div>
+      
+    </div>
+  </nav>
+</header>
+    
+    <div class="md-container">
+      
+        
+      
+      
+        
+
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../INTRODUCTION/" title="Introduction" class="md-tabs__link">
+          Introduction
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Multiple-prompts/" title="Ice modifiers" class="md-tabs__link">
+          Ice modifiers
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Example-Minimal-Setup/" title="Examples" class="md-tabs__link">
+          Examples
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-tabs__link">
+          Z-Plugins
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+          Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Code-Documentation/" title="Code Documentation" class="md-tabs__link md-tabs__link--active">
+          Code Documentation
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
+          declare-zsh
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+      
+      <main class="md-main">
+        <div class="md-main__inner md-grid" data-md-component="container">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" data-md-level="0">
+  <label class="md-nav__title md-nav__title--site" for="__drawer">
+    <a href=".." title="Zplugin Wiki" class="md-nav__button md-logo">
+      
+        <i class="md-icon">home</i>
+      
+    </a>
+    Zplugin Wiki
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Introduction
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        Introduction
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../INTRODUCTION/" title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Ice modifiers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Ice modifiers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Multiple-prompts/" title="Multiple Prompts" class="md-nav__link">
+      Multiple Prompts
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-wait-conditions/" title="Example wait Conditions" class="md-nav__link">
+      Example wait Conditions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Installing-with-make/" title="Installing With Make" class="md-nav__link">
+      Installing With Make
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Sourcing-multiple-files/" title="Sourcing Multiple Files" class="md-nav__link">
+      Sourcing Multiple Files
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
+      Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3">
+    
+    <label class="md-nav__link" for="nav-3">
+      Examples
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-3">
+        Examples
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-Minimal-Setup/" title="Example Minimal Setup" class="md-nav__link">
+      Example Minimal Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-Oh-My-Zsh-setup/" title="Example Oh My Zsh Setup" class="md-nav__link">
+      Example Oh My Zsh Setup
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../LS_COLORS-explanation/" title="LS_COLORS Explanation" class="md-nav__link">
+      LS_COLORS Explanation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Direnv-explanation/" title="Direnv Explanation" class="md-nav__link">
+      Direnv Explanation
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Compiling-programs/" title="Compiling Programs" class="md-nav__link">
+      Compiling Programs
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Profiling-plugins/" title="Profiling Plugins" class="md-nav__link">
+      Profiling Plugins
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../GALLERY/" title="Gallery" class="md-nav__link">
+      Gallery
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+    
+    <label class="md-nav__link" for="nav-4">
+      Z-Plugins
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-4">
+        Z-Plugins
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-nav__link">
+      Z-Plugins
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
+    
+    <label class="md-nav__link" for="nav-5">
+      Hints
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-5">
+        Hints
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
+      Preinstalling Plugins
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" checked>
+    
+    <label class="md-nav__link" for="nav-6">
+      Code Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Code Documentation
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Code-Documentation/" title="Intro" class="md-nav__link">
+      Intro
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin.zsh/" title="zplugin.zsh" class="md-nav__link">
+      zplugin.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin-side.zsh/" title="zplugin-side.zsh" class="md-nav__link">
+      zplugin-side.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zplugin-install.zsh/" title="zplugin-install.zsh" class="md-nav__link">
+      zplugin-install.zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="zplugin-autoload.zsh" class="md-nav__link md-nav__link--active">
+      zplugin-autoload.zsh
+    </a>
+    
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      declare-zsh
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
+        declare-zsh
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                <h1 id="name">NAME</h1>
+<p>zplugin-autoload.zsh - a shell script</p>
+<h1 id="synopsis">SYNOPSIS</h1>
+<p>Documentation automatically generated with `zshelldoc'</p>
+<h1 id="functions">FUNCTIONS</h1>
+<pre><code> -zplg-any-to-uspl2
+ -zplg-at-eval
+ -zplg-build-module
+ -zplg-cd
+ -zplg-cdisable
+ -zplg-cenable
+ -zplg-changes
+ -zplg-check-comp-consistency
+ -zplg-check-which-completions-are-enabled
+ -zplg-check-which-completions-are-installed
+ -zplg-clear-completions
+ -zplg-clear-report-for
+ -zplg-compile-uncompile-all
+ -zplg-compiled
+ -zplg-compinit
+ -zplg-compute-ice
+ -zplg-confirm
+ -zplg-create
+ -zplg-delete
+ -zplg-diff-env-compute
+ -zplg-diff-functions-compute
+ -zplg-diff-options-compute
+ -zplg-diff-parameter-compute
+ -zplg-edit
+ -zplg-exists-message
+ -zplg-find-completions-of-plugin
+ -zplg-format-env
+ -zplg-format-functions
+ -zplg-format-options
+ -zplg-format-parameter
+ -zplg-get-completion-owner
+ -zplg-get-completion-owner-uspl2col
+ -zplg-get-path
+ -zplg-glance
+ -zplg-help
+ -zplg-list-bindkeys
+ -zplg-list-compdef-replay
+ -zplg-ls
+ -zplg-module
+ -zplg-prepare-readlink
+ -zplg-recall
+ -zplg-recently
+ -zplg-restore-extendedglob
+ -zplg-save-set-extendedglob
+ -zplg-search-completions
+ -zplg-self-update
+ -zplg-show-all-reports
+ -zplg-show-completions
+ -zplg-show-debug-report
+ -zplg-show-registered-plugins
+ -zplg-show-report
+ -zplg-show-times
+ -zplg-show-zstatus
+ -zplg-stress
+ -zplg-uncompile-plugin
+ -zplg-uninstall-completions
+ -zplg-unload
+ -zplg-update-or-status
+ -zplg-update-or-status-all
+ -zplg-update-or-status-snippet
+AUTOLOAD compinit
+</code></pre>
+
+<h1 id="details">DETAILS</h1>
+<h2 id="script-body">Script Body</h2>
+<p>Has 5 line(s). No functions are called (may set up e.g. a hook, a Zle
+widget bound to a key, etc.).</p>
+<p>Uses feature(s): <em>source</em></p>
+<h2 id="45zplg-any-to-uspl2">-zplg-any-to-uspl2</h2>
+<blockquote>
+<pre><code>Converts given plugin-spec to format that's used in keys for hash tables.
+So basically, creates string "user/plugin" (this format is called: uspl2).
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - (optional) plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 2 line(s). Calls functions:</p>
+<pre><code>-zplg-any-to-uspl2
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-clear-report-for
+-zplg-exists-message
+</code></pre>
+<h2 id="45zplg-at-eval">-zplg-at-eval</h2>
+<p>Has 1 line(s). Doesn’t call other functions.</p>
+<p>Uses feature(s): <em>eval</em></p>
+<p>Called by:</p>
+<pre><code>-zplg-update-or-status
+</code></pre>
+<h2 id="45zplg-build-module">-zplg-build-module</h2>
+<blockquote>
+<pre><code>Performs ./configure &amp;&amp; make on the module and displays information
+how to load the module in .zshrc.
+</code></pre>
+</blockquote>
+<p>Has 24 line(s). Calls functions:</p>
+<pre><code>-zplg-build-module
+`-- -zplg-module
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-module
+</code></pre>
+<h2 id="45zplg-cd">-zplg-cd</h2>
+<blockquote>
+<pre><code>Jumps to plugin's directory (in Zplugin's home directory).
+
+User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 13 line(s). Calls functions:</p>
+<pre><code>-zplg-cd
+`-- -zplg-get-path
+    |-- zplugin-side.zsh/-zplg-exists-physically
+    |-- zplugin-side.zsh/-zplg-shands-exp
+    |-- zplugin-side.zsh/-zplg-two-paths
+    `-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-cdisable">-zplg-cdisable</h2>
+<blockquote>
+<pre><code>Enables given installed completion.
+
+User-action entry point.
+
+$1 - e.g. "_mkdir" or "mkdir"
+</code></pre>
+</blockquote>
+<p>Has 30 line(s). Calls functions:</p>
+<pre><code>-zplg-cdisable
+|-- -zplg-check-comp-consistency
+|-- -zplg-get-completion-owner-uspl2col
+|   |-- -zplg-get-completion-owner
+|   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+`-- -zplg-prepare-readlink
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-cenable">-zplg-cenable</h2>
+<blockquote>
+<pre><code>Disables given installed completion.
+
+User-action entry point.
+
+$1 - e.g. "_mkdir" or "mkdir"
+</code></pre>
+</blockquote>
+<p>Has 31 line(s). Calls functions:</p>
+<pre><code>-zplg-cenable
+|-- -zplg-check-comp-consistency
+|-- -zplg-get-completion-owner-uspl2col
+|   |-- -zplg-get-completion-owner
+|   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+`-- -zplg-prepare-readlink
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-changes">-zplg-changes</h2>
+<blockquote>
+<pre><code>Shows `git log` of given plugin.
+
+User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 9 line(s). Calls functions:</p>
+<pre><code>-zplg-changes
+|-- zplugin-side.zsh/-zplg-exists-physically-message
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-check-comp-consistency">-zplg-check-comp-consistency</h2>
+<blockquote>
+<pre><code>Zplugin creates symlink for each installed completion.
+This function checks whether given completion (i.e.
+file like "_mkdir") is indeed a symlink. Backup file
+is a completion that is disabled - has the leading "_"
+removed.
+
+$1 - path to completion within plugin's directory
+$2 - path to backup file within plugin's directory
+</code></pre>
+</blockquote>
+<p>Has 11 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-cdisable
+-zplg-cenable
+</code></pre>
+<h2 id="45zplg-check-which-completions-are-enabled">-zplg-check-which-completions-are-enabled</h2>
+<blockquote>
+<pre><code>For each argument that each should be a path to completion
+within a plugin's dir, it checks whether that completion
+is disabled - returns 0 or 1 on corresponding positions
+in reply.
+
+Uninstalled completions will be reported as "0"
+- i.e. disabled
+
+$1, ... - path to completion within plugin's directory
+</code></pre>
+</blockquote>
+<p>Has 11 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+</code></pre>
+<h2 id="45zplg-check-which-completions-are-installed">-zplg-check-which-completions-are-installed</h2>
+<blockquote>
+<pre><code>For each argument that each should be a path to completion
+within a plugin's dir, it checks whether that completion
+is installed - returns 0 or 1 on corresponding positions
+in reply.
+
+$1, ... - path to completion within plugin's directory
+</code></pre>
+</blockquote>
+<p>Has 12 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+</code></pre>
+<h2 id="45zplg-clear-completions">-zplg-clear-completions</h2>
+<blockquote>
+<pre><code>Delete stray and improper completions.
+
+Completions live even when plugin isn't loaded - if they are
+installed and enabled.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 37 line(s). Calls functions:</p>
+<pre><code>-zplg-clear-completions
+|-- -zplg-get-completion-owner
+|-- -zplg-prepare-readlink
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-clear-report-for">-zplg-clear-report-for</h2>
+<blockquote>
+<pre><code>Clears all report data for given user/plugin. This is
+done by resetting all related global ZPLG_* hashes.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - (optional) plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 23 line(s). Calls functions:</p>
+<pre><code>-zplg-clear-report-for
+`-- -zplg-any-to-uspl2
+    `-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-unload
+zplugin.zsh/-zplg-clear-debug-report
+</code></pre>
+<h2 id="45zplg-compile-uncompile-all">-zplg-compile-uncompile-all</h2>
+<blockquote>
+<pre><code>Compiles or uncompiles all existing (on disk) plugins.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 23 line(s). Calls functions:</p>
+<pre><code>-zplg-compile-uncompile-all
+|-- -zplg-uncompile-plugin
+|   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+|-- zplugin-install.zsh/-zplg-compile-plugin
+|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-compiled">-zplg-compiled</h2>
+<blockquote>
+<pre><code>Displays list of plugins that are compiled.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 26 line(s). Calls functions:</p>
+<pre><code>-zplg-compiled
+|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-compinit">-zplg-compinit</h2>
+<blockquote>
+<pre><code>User-exposed `compinit' frontend which first ensures that all
+completions managed by Zplugin are forgotten by Zshell. After
+that it runs normal `compinit', which should more easily detect
+Zplugin's completions.
+
+No arguments.
+</code></pre>
+</blockquote>
+<p>Has 23 line(s). Calls functions:</p>
+<pre><code>-zplg-compinit
+|-- compinit
+`-- zplugin-install.zsh/-zplg-forget-completion
+</code></pre>
+<p>Uses feature(s): <em>autoload</em>, <em>unfunction</em></p>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-compute-ice">-zplg-compute-ice</h2>
+<blockquote>
+<pre><code>Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
+ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+returns path to snippet directory and optional name of snippet file (only
+valid if ZPLG_ICE[svn] is not set).
+
+Can also pack resulting ices into ZPLG_SICE (see $2).
+
+$1 - URL (also plugin-spec)
+$2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
+"pack-nf" means that disk-ices will be ignored (no-file?)
+$3 - name of output associative array, "ZPLG_ICE" is the default
+$4 - name of output string parameter, to hold path to directory ("local_dir")
+$5 - name of output string parameter, to hold filename ("filename")
+</code></pre>
+</blockquote>
+<p>Has 98 line(s). Calls functions:</p>
+<pre><code>-zplg-compute-ice
+|-- zplugin-side.zsh/-zplg-exists-physically-message
+|-- zplugin-side.zsh/-zplg-shands-exp
+|-- zplugin-side.zsh/-zplg-two-paths
+|-- zplugin.zsh/-zplg-any-to-user-plugin
+`-- zplugin.zsh/-zplg-pack-ice
+</code></pre>
+<p>Uses feature(s): <em>wait</em></p>
+<p>Called by:</p>
+<pre><code>-zplg-recall
+-zplg-update-or-status-snippet
+-zplg-update-or-status
+</code></pre>
+<h2 id="45zplg-confirm">-zplg-confirm</h2>
+<blockquote>
+<pre><code>Prints given question, waits for "y" key, evals
+given expression if "y" obtained
+
+$1 - question
+$2 - expression
+</code></pre>
+</blockquote>
+<p>Has 5 line(s). Doesn’t call other functions.</p>
+<p>Uses feature(s): <em>eval</em>, <em>read</em></p>
+<p>Called by:</p>
+<pre><code>-zplg-delete
+</code></pre>
+<h2 id="45zplg-create">-zplg-create</h2>
+<blockquote>
+<pre><code>Creates a plugin, also on Github (if not "_local/name" plugin).
+
+User-action entry point.
+
+$1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - (optional) plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 66 line(s). Calls functions:</p>
+<pre><code>-zplg-create
+|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+|-- zplugin-side.zsh/-zplg-exists-physically
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Uses feature(s): <em>vared</em></p>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-delete">-zplg-delete</h2>
+<blockquote>
+<pre><code>Deletes plugin's or snippet's directory (in Zplugin's home directory).
+
+User-action entry point.
+
+$1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 42 line(s). Calls functions:</p>
+<pre><code>-zplg-delete
+|-- -zplg-confirm
+|-- zplugin-side.zsh/-zplg-exists-physically-message
+|-- zplugin-side.zsh/-zplg-shands-exp
+|-- zplugin-side.zsh/-zplg-two-paths
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-diff-env-compute">-zplg-diff-env-compute</h2>
+<blockquote>
+<pre><code>Computes ZPLG_PATH, ZPLG_FPATH that hold (f)path components
+added by plugin. Uses data gathered earlier by -zplg-diff-env().
+
+$1 - user/plugin
+</code></pre>
+</blockquote>
+<p>Has 30 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+-zplg-unload
+</code></pre>
+<h2 id="45zplg-diff-functions-compute">-zplg-diff-functions-compute</h2>
+<blockquote>
+<pre><code>Computes ZPLG_FUNCTIONS that holds new functions added by plugin.
+Uses data gathered earlier by -zplg-diff-functions().
+
+$1 - user/plugin
+</code></pre>
+</blockquote>
+<p>Has 19 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+-zplg-unload
+</code></pre>
+<h2 id="45zplg-diff-options-compute">-zplg-diff-options-compute</h2>
+<blockquote>
+<pre><code>Computes ZPLG_OPTIONS that holds options changed by plugin.
+Uses data gathered earlier by -zplg-diff-options().
+
+$1 - user/plugin
+</code></pre>
+</blockquote>
+<p>Has 17 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+-zplg-unload
+</code></pre>
+<h2 id="45zplg-diff-parameter-compute">-zplg-diff-parameter-compute</h2>
+<blockquote>
+<pre><code>Computes ZPLG_PARAMETERS_PRE, ZPLG_PARAMETERS_POST that hold
+parameters created or changed (their type) by plugin. Uses
+data gathered earlier by -zplg-diff-parameter().
+
+$1 - user/plugin
+</code></pre>
+</blockquote>
+<p>Has 28 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+-zplg-unload
+</code></pre>
+<h2 id="45zplg-edit">-zplg-edit</h2>
+<blockquote>
+<pre><code>Runs $EDITOR on source of given plugin. If the variable is not
+set then defaults to `vim'.
+
+User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 13 line(s). Calls functions:</p>
+<pre><code>-zplg-edit
+|-- zplugin-side.zsh/-zplg-exists-physically-message
+|-- zplugin-side.zsh/-zplg-first
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-exists-message">-zplg-exists-message</h2>
+<blockquote>
+<pre><code>Checks if plugin is loaded. Testable. Also outputs error
+message if plugin is not loaded.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - (optional) plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 7 line(s). Calls functions:</p>
+<pre><code>-zplg-exists-message
+|-- -zplg-any-to-uspl2
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+-zplg-unload
+</code></pre>
+<h2 id="45zplg-find-completions-of-plugin">-zplg-find-completions-of-plugin</h2>
+<blockquote>
+<pre><code>Searches for completions owned by given plugin.
+Returns them in `reply' array.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 6 line(s). Calls functions:</p>
+<pre><code>-zplg-find-completions-of-plugin
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+</code></pre>
+<h2 id="45zplg-format-env">-zplg-format-env</h2>
+<blockquote>
+<pre><code>Creates one-column text about FPATH or PATH elements
+added when given plugin was loaded.
+
+$1 - user/plugin (i.e. uspl2 format of plugin-spec)
+$2 - if 1, then examine PATH, if 2, then examine FPATH
+</code></pre>
+</blockquote>
+<p>Has 16 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+</code></pre>
+<h2 id="45zplg-format-functions">-zplg-format-functions</h2>
+<blockquote>
+<pre><code>Creates a one or two columns text with functions created
+by given plugin.
+
+$1 - user/plugin (i.e. uspl2 format of plugin-spec)
+</code></pre>
+</blockquote>
+<p>Has 36 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+</code></pre>
+<h2 id="45zplg-format-options">-zplg-format-options</h2>
+<blockquote>
+<pre><code>Creates one-column text about options that changed when
+plugin "$1" was loaded.
+
+$1 - user/plugin (i.e. uspl2 format of plugin-spec)
+</code></pre>
+</blockquote>
+<p>Has 21 line(s). Calls functions:</p>
+<pre><code>-zplg-format-options
+|-- -zplg-restore-extendedglob
+`-- -zplg-save-set-extendedglob
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+</code></pre>
+<h2 id="45zplg-format-parameter">-zplg-format-parameter</h2>
+<blockquote>
+<pre><code>Creates one column text that lists global parameters that
+changed when the given plugin was loaded.
+
+$1 - user/plugin (i.e. uspl2 format of plugin-spec)
+</code></pre>
+</blockquote>
+<p>Has 34 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-show-report
+</code></pre>
+<h2 id="45zplg-get-completion-owner">-zplg-get-completion-owner</h2>
+<blockquote>
+<pre><code>Returns "user---plugin" string (uspl1 format) of plugin that
+owns given completion.
+
+Both :A and readlink will be used, then readlink's output if
+results differ. Readlink might not be available.
+
+:A will read the link "twice" and give the final repository
+directory, possibly without username in the uspl format;
+readlink will read the link "once"
+
+$1 - absolute path to completion file (in COMPLETIONS_DIR)
+$2 - readlink command (":" or "readlink")
+</code></pre>
+</blockquote>
+<p>Has 22 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-clear-completions
+-zplg-get-completion-owner-uspl2col
+-zplg-show-completions
+</code></pre>
+<h2 id="45zplg-get-completion-owner-uspl2col">-zplg-get-completion-owner-uspl2col</h2>
+<blockquote>
+<pre><code>For shortening of code - returns colorized plugin name
+that owns given completion.
+
+$1 - absolute path to completion file (in COMPLETIONS_DIR)
+$2 - readlink command (":" or "readlink")
+</code></pre>
+</blockquote>
+<p>Has 2 line(s). Calls functions:</p>
+<pre><code>-zplg-get-completion-owner-uspl2col
+|-- -zplg-get-completion-owner
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-cdisable
+-zplg-cenable
+</code></pre>
+<h2 id="45zplg-get-path">-zplg-get-path</h2>
+<blockquote>
+<pre><code>Returns path of given ID-string, which may be a plugin-spec
+(like "user/plugin" or "user" "plugin"), an absolute path
+("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
+nickname (i.e. id-as'' ice-mod), or a snippet nickname.
+</code></pre>
+</blockquote>
+<p>Has 35 line(s). Calls functions:</p>
+<pre><code>-zplg-get-path
+|-- zplugin-side.zsh/-zplg-exists-physically
+|-- zplugin-side.zsh/-zplg-shands-exp
+|-- zplugin-side.zsh/-zplg-two-paths
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-cd
+-zplg-uninstall-completions
+</code></pre>
+<h2 id="45zplg-glance">-zplg-glance</h2>
+<blockquote>
+<pre><code>Shows colorized source code of plugin. Is able to use pygmentize,
+highlight, GNU source-highlight.
+
+User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 39 line(s). Calls functions:</p>
+<pre><code>-zplg-glance
+|-- zplugin-side.zsh/-zplg-exists-physically-message
+|-- zplugin-side.zsh/-zplg-first
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-help">-zplg-help</h2>
+<blockquote>
+<pre><code>Shows usage information.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 68 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-list-bindkeys">-zplg-list-bindkeys</h2>
+<p>Has 42 line(s). Calls functions:</p>
+<pre><code>-zplg-list-bindkeys
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-list-compdef-replay">-zplg-list-compdef-replay</h2>
+<blockquote>
+<pre><code>Shows recorded compdefs (called by plugins loaded earlier).
+Plugins often call `compdef' hoping for `compinit' being
+already ran. Zplugin solves this by recording compdefs.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 5 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-ls">-zplg-ls</h2>
+<p>Has 19 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-module">-zplg-module</h2>
+<blockquote>
+<pre><code>Function that has sub-commands passed as long-options (with two dashes, --).
+It's an attempt to plugin only this one function into `zplugin' function
+defined in zplugin.zsh, to not make this file longer than it's needed.
+</code></pre>
+</blockquote>
+<p>Has 24 line(s). Calls functions:</p>
+<pre><code>-zplg-module
+`-- -zplg-build-module
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-build-module
+zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-prepare-readlink">-zplg-prepare-readlink</h2>
+<blockquote>
+<pre><code>Prepares readlink command, used for establishing completion's owner.
+
+$REPLY = ":" or "readlink"
+</code></pre>
+</blockquote>
+<p>Has 4 line(s). Doesn’t call other functions.</p>
+<p>Uses feature(s): <em>type</em></p>
+<p>Called by:</p>
+<pre><code>-zplg-cdisable
+-zplg-cenable
+-zplg-clear-completions
+-zplg-show-completions
+</code></pre>
+<h2 id="45zplg-recall">-zplg-recall</h2>
+<p>Has 37 line(s). Calls functions:</p>
+<pre><code>-zplg-recall
+`-- -zplg-compute-ice
+    |-- zplugin-side.zsh/-zplg-exists-physically-message
+    |-- zplugin-side.zsh/-zplg-shands-exp
+    |-- zplugin-side.zsh/-zplg-two-paths
+    |-- zplugin.zsh/-zplg-any-to-user-plugin
+    `-- zplugin.zsh/-zplg-pack-ice
+</code></pre>
+<p>Uses feature(s): <em>wait</em></p>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-recently">-zplg-recently</h2>
+<blockquote>
+<pre><code>Shows plugins that obtained commits in specified past time.
+
+User-action entry point.
+
+$1 - time spec, e.g. "1 week"
+</code></pre>
+</blockquote>
+<p>Has 26 line(s). Calls functions:</p>
+<pre><code>-zplg-recently
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-restore-extendedglob">-zplg-restore-extendedglob</h2>
+<blockquote>
+<pre><code>Restores extendedglob-option from state saved earlier.
+</code></pre>
+</blockquote>
+<p>Has 1 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-format-options
+-zplg-show-registered-plugins
+-zplg-unload
+</code></pre>
+<h2 id="45zplg-save-set-extendedglob">-zplg-save-set-extendedglob</h2>
+<blockquote>
+<pre><code>Enables extendedglob-option first saving if it was already
+enabled, for restoration of this state later.
+</code></pre>
+</blockquote>
+<p>Has 2 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>-zplg-format-options
+-zplg-show-registered-plugins
+-zplg-unload
+</code></pre>
+<h2 id="45zplg-search-completions">-zplg-search-completions</h2>
+<blockquote>
+<pre><code>While -zplg-show-completions() shows what completions are
+installed, this functions searches through all plugin dirs
+showing what's available in general (for installation).
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 43 line(s). Calls functions:</p>
+<pre><code>-zplg-search-completions
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-self-update">-zplg-self-update</h2>
+<blockquote>
+<pre><code>Updates Zplugin code (does a git pull).
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 23 line(s). Doesn’t call other functions.</p>
+<p>Uses feature(s): <em>zcompile</em></p>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-show-all-reports">-zplg-show-all-reports</h2>
+<blockquote>
+<pre><code>Displays reports of all loaded plugins.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 5 line(s). Calls functions:</p>
+<pre><code>-zplg-show-all-reports
+`-- -zplg-show-report
+    |-- -zplg-check-which-completions-are-enabled
+    |-- -zplg-check-which-completions-are-installed
+    |-- -zplg-diff-env-compute
+    |-- -zplg-diff-functions-compute
+    |-- -zplg-diff-options-compute
+    |-- -zplg-diff-parameter-compute
+    |-- -zplg-exists-message
+    |   |-- -zplg-any-to-uspl2
+    |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+    |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+    |-- -zplg-find-completions-of-plugin
+    |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+    |-- -zplg-format-env
+    |-- -zplg-format-functions
+    |-- -zplg-format-options
+    |   |-- -zplg-restore-extendedglob
+    |   `-- -zplg-save-set-extendedglob
+    |-- -zplg-format-parameter
+    `-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-show-completions">-zplg-show-completions</h2>
+<blockquote>
+<pre><code>Display installed (enabled and disabled), completions. Detect
+stray and improper ones.
+
+Completions live even when plugin isn't loaded - if they are
+installed and enabled.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 72 line(s). Calls functions:</p>
+<pre><code>-zplg-show-completions
+|-- -zplg-get-completion-owner
+|-- -zplg-prepare-readlink
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-show-debug-report">-zplg-show-debug-report</h2>
+<blockquote>
+<pre><code>Displays dtrace report (data recorded in interactive session).
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 1 line(s). Calls functions:</p>
+<pre><code>-zplg-show-debug-report
+`-- -zplg-show-report
+    |-- -zplg-check-which-completions-are-enabled
+    |-- -zplg-check-which-completions-are-installed
+    |-- -zplg-diff-env-compute
+    |-- -zplg-diff-functions-compute
+    |-- -zplg-diff-options-compute
+    |-- -zplg-diff-parameter-compute
+    |-- -zplg-exists-message
+    |   |-- -zplg-any-to-uspl2
+    |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+    |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+    |-- -zplg-find-completions-of-plugin
+    |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+    |-- -zplg-format-env
+    |-- -zplg-format-functions
+    |-- -zplg-format-options
+    |   |-- -zplg-restore-extendedglob
+    |   `-- -zplg-save-set-extendedglob
+    |-- -zplg-format-parameter
+    `-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-show-registered-plugins">-zplg-show-registered-plugins</h2>
+<blockquote>
+<pre><code>Lists loaded plugins (subcommands list, lodaded).
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 21 line(s). Calls functions:</p>
+<pre><code>-zplg-show-registered-plugins
+|-- -zplg-restore-extendedglob
+|-- -zplg-save-set-extendedglob
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-show-report">-zplg-show-report</h2>
+<blockquote>
+<pre><code>Displays report of the plugin given.
+
+User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 63 line(s). Calls functions:</p>
+<pre><code>-zplg-show-report
+|-- -zplg-check-which-completions-are-enabled
+|-- -zplg-check-which-completions-are-installed
+|-- -zplg-diff-env-compute
+|-- -zplg-diff-functions-compute
+|-- -zplg-diff-options-compute
+|-- -zplg-diff-parameter-compute
+|-- -zplg-exists-message
+|   |-- -zplg-any-to-uspl2
+|   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+|   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+|-- -zplg-find-completions-of-plugin
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+|-- -zplg-format-env
+|-- -zplg-format-functions
+|-- -zplg-format-options
+|   |-- -zplg-restore-extendedglob
+|   `-- -zplg-save-set-extendedglob
+|-- -zplg-format-parameter
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-show-all-reports
+-zplg-show-debug-report
+zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-show-times">-zplg-show-times</h2>
+<blockquote>
+<pre><code>Shows loading times of all loaded plugins.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 42 line(s). Calls functions:</p>
+<pre><code>-zplg-show-times
+`-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-show-zstatus">-zplg-show-zstatus</h2>
+<blockquote>
+<pre><code>Shows Zplugin status, i.e. number of loaded plugins,
+of available completions, etc.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 41 line(s). Doesn’t call other functions.</p>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-stress">-zplg-stress</h2>
+<blockquote>
+<pre><code>Compiles plugin with various options on and off to see
+how well the code is written. The options are:
+
+NO_SHORT_LOOPS, IGNORE_BRACES, IGNORE_CLOSE_BRACES, SH_GLOB,
+CSH_JUNKIE_QUOTES, NO_MULTI_FUNC_DEF.
+
+User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 35 line(s). Calls functions:</p>
+<pre><code>-zplg-stress
+|-- zplugin-side.zsh/-zplg-exists-physically-message
+|-- zplugin-side.zsh/-zplg-first
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Uses feature(s): <em>zcompile</em></p>
+<p>Not called by script or any function (may be e.g. a hook, a Zle widget,
+etc.).</p>
+<h2 id="45zplg-uncompile-plugin">-zplg-uncompile-plugin</h2>
+<blockquote>
+<pre><code>Uncompiles given plugin.
+
+User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 22 line(s). Calls functions:</p>
+<pre><code>-zplg-uncompile-plugin
+|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-compile-uncompile-all
+zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-uninstall-completions">-zplg-uninstall-completions</h2>
+<blockquote>
+<pre><code>Removes all completions of given plugin from Zshell (i.e. from FPATH).
+The FPATH is typically `~/.zplugin/completions/'.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 41 line(s). Calls functions:</p>
+<pre><code>-zplg-uninstall-completions
+|-- -zplg-get-path
+|   |-- zplugin-side.zsh/-zplg-exists-physically
+|   |-- zplugin-side.zsh/-zplg-shands-exp
+|   |-- zplugin-side.zsh/-zplg-two-paths
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+`-- zplugin-install.zsh/-zplg-forget-completion
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-unload">-zplg-unload</h2>
+<blockquote>
+<ol>
+<li>
+<p>Unfunction functions (created by plugin)</p>
+</li>
+<li>
+<p>Delete bindkeys (…​)</p>
+</li>
+<li>
+<p>Delete Zstyles</p>
+</li>
+<li>
+<p>Restore options</p>
+</li>
+<li>
+<p>Remove aliases</p>
+</li>
+<li>
+<p>Restore Zle state</p>
+</li>
+<li>
+<p>Clean-up FPATH and PATH</p>
+</li>
+<li>
+<p>Delete created variables</p>
+</li>
+<li>
+<p>Forget the plugin</p>
+<pre><code>User-action entry point.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</li>
+</ol>
+</blockquote>
+<p>Has 247 line(s). Calls functions:</p>
+<pre><code>-zplg-unload
+|-- -zplg-clear-report-for
+|   `-- -zplg-any-to-uspl2
+|       `-- zplugin.zsh/-zplg-any-to-user-plugin
+|-- -zplg-diff-env-compute
+|-- -zplg-diff-functions-compute
+|-- -zplg-diff-options-compute
+|-- -zplg-diff-parameter-compute
+|-- -zplg-exists-message
+|   |-- -zplg-any-to-uspl2
+|   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+|   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+|-- -zplg-restore-extendedglob
+|-- -zplg-save-set-extendedglob
+|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+|-- zplugin.zsh/-zplg-any-to-user-plugin
+|-- zplugin.zsh/-zplg-clear-debug-report
+`-- zplugin.zsh/-zplg-unregister-plugin
+</code></pre>
+<p>Uses feature(s): <em>alias</em>, <em>bindkey</em>, <em>unalias</em>, <em>unfunction</em>, <em>zle</em>,
+<em>zstyle</em></p>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/-zplg-debug-unload
+zplugin.zsh/-zplg-run-task
+zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-update-or-status">-zplg-update-or-status</h2>
+<blockquote>
+<pre><code>Updates (git pull) or does `git status' for given plugin.
+
+User-action entry point.
+
+$1 - "status" for status, other for update
+$2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+$3 - plugin (only when $1 - i.e. user - given)
+</code></pre>
+</blockquote>
+<p>Has 210 line(s). Calls functions:</p>
+<pre><code>-zplg-update-or-status
+|-- -zplg-at-eval
+|-- -zplg-compute-ice
+|   |-- zplugin-side.zsh/-zplg-exists-physically-message
+|   |-- zplugin-side.zsh/-zplg-shands-exp
+|   |-- zplugin-side.zsh/-zplg-two-paths
+|   |-- zplugin.zsh/-zplg-any-to-user-plugin
+|   `-- zplugin.zsh/-zplg-pack-ice
+|-- -zplg-update-or-status-snippet
+|   |-- -zplg-compute-ice
+|   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+|   |   |-- zplugin-side.zsh/-zplg-shands-exp
+|   |   |-- zplugin-side.zsh/-zplg-two-paths
+|   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
+|   |   `-- zplugin.zsh/-zplg-pack-ice
+|   `-- zplugin.zsh/-zplg-load-snippet
+|-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
+|-- zplugin-install.zsh/-zplg-setup-plugin-dir
+|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+|-- zplugin-side.zsh/-zplg-exists-physically-message
+|-- zplugin-side.zsh/-zplg-store-ices
+|-- zplugin-side.zsh/-zplg-two-paths
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Uses feature(s): <em>kill</em>, <em>read</em>, <em>source</em>, <em>wait</em></p>
+<p>Called by:</p>
+<pre><code>-zplg-update-or-status-all
+zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-update-or-status-all">-zplg-update-or-status-all</h2>
+<blockquote>
+<pre><code>Updates (git pull) or does `git status` for all existing plugins.
+This includes also plugins that are not loaded into Zsh (but exist
+on disk). Also updates (i.e. redownloads) snippets.
+
+User-action entry point.
+</code></pre>
+</blockquote>
+<p>Has 63 line(s). Calls functions:</p>
+<pre><code>-zplg-update-or-status-all
+|-- -zplg-update-or-status
+|   |-- -zplg-at-eval
+|   |-- -zplg-compute-ice
+|   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+|   |   |-- zplugin-side.zsh/-zplg-shands-exp
+|   |   |-- zplugin-side.zsh/-zplg-two-paths
+|   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
+|   |   `-- zplugin.zsh/-zplg-pack-ice
+|   |-- -zplg-update-or-status-snippet
+|   |   |-- -zplg-compute-ice
+|   |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+|   |   |   |-- zplugin-side.zsh/-zplg-shands-exp
+|   |   |   |-- zplugin-side.zsh/-zplg-two-paths
+|   |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
+|   |   |   `-- zplugin.zsh/-zplg-pack-ice
+|   |   `-- zplugin.zsh/-zplg-load-snippet
+|   |-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
+|   |-- zplugin-install.zsh/-zplg-setup-plugin-dir
+|   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+|   |-- zplugin-side.zsh/-zplg-exists-physically-message
+|   |-- zplugin-side.zsh/-zplg-store-ices
+|   |-- zplugin-side.zsh/-zplg-two-paths
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+|-- -zplg-update-or-status-snippet
+|   |-- -zplg-compute-ice
+|   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
+|   |   |-- zplugin-side.zsh/-zplg-shands-exp
+|   |   |-- zplugin-side.zsh/-zplg-two-paths
+|   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
+|   |   `-- zplugin.zsh/-zplg-pack-ice
+|   `-- zplugin.zsh/-zplg-load-snippet
+|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+</code></pre>
+<p>Called by:</p>
+<pre><code>zplugin.zsh/zplugin
+</code></pre>
+<h2 id="45zplg-update-or-status-snippet">-zplg-update-or-status-snippet</h2>
+<blockquote>
+<pre><code>Implements update or status operation for snippet given by URL.
+
+$1 - "status" or "update"
+$2 - snippet URL
+</code></pre>
+</blockquote>
+<p>Has 19 line(s). Calls functions:</p>
+<pre><code>-zplg-update-or-status-snippet
+|-- -zplg-compute-ice
+|   |-- zplugin-side.zsh/-zplg-exists-physically-message
+|   |-- zplugin-side.zsh/-zplg-shands-exp
+|   |-- zplugin-side.zsh/-zplg-two-paths
+|   |-- zplugin.zsh/-zplg-any-to-user-plugin
+|   `-- zplugin.zsh/-zplg-pack-ice
+`-- zplugin.zsh/-zplg-load-snippet
+</code></pre>
+<p>Called by:</p>
+<pre><code>-zplg-update-or-status-all
+-zplg-update-or-status
+</code></pre>
+<h2 id="compinit">compinit</h2>
+<p>Has 544 line(s). Doesn’t call other functions.</p>
+<p>Uses feature(s): <em>autoload</em>, <em>bindkey</em>, <em>eval</em>, <em>read</em>, <em>unfunction</em>,
+<em>zle</em>, <em>zstyle</em></p>
+<p>Called by:</p>
+<pre><code>-zplg-compinit
+</code></pre>
+                
+                  
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        
+          <a href="../zplugin-install.zsh/" title="zplugin-install.zsh" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                zplugin-install.zsh
+              </span>
+            </div>
+          </a>
+        
+        
+          <a href="../declare-zsh/" title="declare-zsh" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                declare-zsh
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        powered by
+        <a href="https://www.mkdocs.org">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/">
+          Material for MkDocs</a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../assets/javascripts/application.245445c6.js"></script>
+      
+      <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+    
+  </body>
+</html>
