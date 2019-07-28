@@ -1,6 +1,6 @@
 # Preinstalling Plugins
 
-If you create a Docker image that uses Zplugin, or want to install turbo-loaded plugins before the shell starts interactively,
+If you create a Docker image that uses Zplugin, or want to install Turbo-loaded plugins before the shell starts interactively,
 you can invoke the zplugin-scheduler function in such a way, that it:
 
  - installs plugins without waiting for the prompt (i.e. it's script friendly),

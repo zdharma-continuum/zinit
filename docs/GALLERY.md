@@ -32,7 +32,7 @@ zplugin ice as"program" pick"yank" make
 zplugin light mptre/yank
 
 zplugin ice wait"2" lucid as'command' pick'src/vramsteg' \
-    atclone'cmake .' atpull'%atclone' make  # use turbo-mode
+    atclone'cmake .' atpull'%atclone' make  # use Turbo-mode
 zplugin light psprint/vramsteg-zsh
 
 zplugin ice atclone"./libexec/pyenv init - > zpyenv.zsh" \
@@ -132,7 +132,7 @@ zplugin ice nocompletions atclone'prompt_zinc_compile' atpull'%atclone' \
 zplugin load robobenklein/zinc
 
 # ZINC git info is already async, but if you want it 
-# even faster with gitstatus in turbo mode:
+# even faster with gitstatus in Turbo mode:
 # https://github.com/romkatv/gitstatus
 zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
 zplugin load romkatv/gitstatus

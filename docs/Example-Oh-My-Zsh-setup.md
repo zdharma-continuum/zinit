@@ -49,8 +49,8 @@ executed using function `zpcdreplay` appended after `zpcompinit;` in
 `atinit''` of G.
 
 Above setup loads everything after prompt, because of preceding
-`wait"0"` ice. That is called turbo-mode, it shortens Zsh startup time
-by 39%-50%. The same setup without turbo mode (prompt will be initially
+`wait"0"` ice. That is called Turbo-mode, it shortens Zsh startup time
+by 39%-50%. The same setup without Turbo mode (prompt will be initially
 set):
 
 ``` zsh

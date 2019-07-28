@@ -15,20 +15,17 @@ and much more.
 ## Example use
 
 ``` zsh
-% zplugin load zdharma/history-search-multi-word
-% zplugin light zsh-users/zsh-syntax-highlighting
+zplugin load zdharma/history-search-multi-word
+zplugin light zsh-users/zsh-syntax-highlighting
 ```
 
 Above commands show two ways of basic plugin loading. `load` causes
 reporting to be enabled – you can track what plugin does, view the
 information with `zplugin report {plugin-spec}`. `light` is a
-significantly faster loading without tracking and reporting
-
-!!!note 
-    **Plugin-unloading needs the tracking.**
+significantly faster loading without tracking and reporting.
 
 !!!note
-    **In turbo mode the slowdown caused by tracking is neglectable.**
+    **In Turbo Mode the slowdown caused by tracking is negligible.**
 
 ## Oh My Zsh, Prezto
 
@@ -37,18 +34,18 @@ are single files downloaded by `curl`, `wget`, etc. directly from URL.
 For example:
 
 ``` zsh
-% zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
-% zplugin snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
+zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+zplugin snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
 ```
 
 Also, you can use `OMZ::` and `PZT::` shorthands:
 
 ``` zsh
-% zplugin snippet OMZ::plugins/git/git.plugin.zsh
-% zplugin snippet PZT::modules/helper/init.zsh
+zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zplugin snippet PZT::modules/helper/init.zsh
 ```
 
-Moreover, snippets support `Subversion` protocol, supported also by
+Moreover, snippets support Subversion protocol, supported also by
 Github. This allows to load snippets that are multi-file (for example a
 Prezto module can have file `init.zsh` and file `alias.zsh`). Default
 files that will be sourced are: `.plugin.zsh`, `init.zsh`,
@@ -56,12 +53,12 @@ files that will be sourced are: `.plugin.zsh`, `init.zsh`,
 
 ``` zsh
 # URL points to directory
-% zplugin ice svn; zplugin snippet PZT::modules/docker
+zplugin ice svn; zplugin snippet PZT::modules/docker
 ```
 
 ## Snippets and performance
 
-Using `curl`, `wget`, etc., `Subversion` allows to almost completely
+Using `curl`, `wget`, etc. along with Subversion allows to almost completely
 avoid code dedicated to Oh My Zsh and Prezto, and also to other
 frameworks. This gives profits in performance of `Zplugin`, it is really
 fast and also compact (low memory usage, short loading time).
@@ -76,10 +73,10 @@ and something that’s added (e.g. to a drink or a coffee). Using other
 Ice-modifier "**pick**" user can explicitly select the file to source:
 
 ``` zsh
-% zplugin ice svn pick"init.zsh"; zplugin snippet PZT::modules/git
+zplugin ice svn pick"init.zsh"; zplugin snippet PZT::modules/git
 ```
 
-Content of Ice-modifier is simply put into `"…​"`, `'…​'`, or `$'…​'`.
+Content of Ice-modifier is simply put into `"..."`, `'...'`, or `$'...'`.
 No need for `":"` after Ice-mod name. This way editors like `vim` and
 `emacs` will highlight contents of Ice-modifiers.
 
@@ -90,8 +87,8 @@ A plugin might not be a file for sourcing, but a command to be added to
 `program`.
 
 ``` zsh
-% zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
-% zplugin light b4b4r07/httpstat
+zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
+zplugin light b4b4r07/httpstat
 ```
 
 Above command will add plugin directory to `$PATH`, copy file
@@ -100,7 +97,7 @@ file selected with `pick`, i.e. to `httpstat`. Other Ice-mod exists,
 `mv`, which works like `cp` but **moves** a file instead of **copying**
 it. `mv` is ran before `cp`.
 
-## atpull"…​"
+## atpull"..."
 
 Copying file is safe for doing later updates – original files of
 repository are unmodified and `Git` will report no conflicts. However,
@@ -108,9 +105,9 @@ repository are unmodified and `Git` will report no conflicts. However,
 **update** of plugin) will be used:
 
 ``` zsh
-% zplugin ice as"program" mv"httpstat.sh -> httpstat" \
+zplugin ice as"program" mv"httpstat.sh -> httpstat" \
       pick"httpstat" atpull'!git reset --hard'
-% zplugin light b4b4r07/httpstat
+zplugin light b4b4r07/httpstat
 ```
 
 If `atpull` starts with exclamation mark, then it will be run before
@@ -124,15 +121,15 @@ commits (doing fast-forward), **then** `mv` is ran again so that the
 command is `httpstat` not `httpstat.sh`.
 
 For exclamation mark to not be expanded by Zsh in interactive session,
-use `'…​'` not `"…​"` to enclose contents of `atpull` Ice-mod.
+use `'...'` not `"..."` to enclose contents of `atpull` Ice-mod.
 
 ## Snippets-commands
 
 Commands can also be added to `$PATH` using **snippets**. For example:
 
 ``` zsh
-% zplugin ice mv"httpstat.sh -> httpstat" pick"httpstat" as"program"
-% zplugin snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
+zplugin ice mv"httpstat.sh -> httpstat" pick"httpstat" as"program"
+zplugin snippet https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 ```
 
 Snippets also support `atpull` Ice-mod, so it’s possible to do e.g.
@@ -156,8 +153,8 @@ Zplugin allows to disable and enable each completion in every plugin.
 Try installing a popular plugin that provides completions:
 
 ``` zsh
-% zplugin ice blockf
-% zplugin light zsh-users/zsh-completions
+zplugin ice blockf
+zplugin light zsh-users/zsh-completions
 ```
 
 First command will block the traditional method of adding completions.
@@ -166,8 +163,8 @@ Zplugin uses own method (based on symlinks instead of adding to
 downloaded plugin. To uninstall, and install again, use
 
 ``` zsh
-% zplugin cuninstall zsh-users/zsh-completions   # uninstall
-% zplugin creinstall zsh-users/zsh-completions   # install
+zplugin cuninstall zsh-users/zsh-completions   # uninstall
+zplugin creinstall zsh-users/zsh-completions   # install
 ```
 
 ### Listing completions
@@ -176,7 +173,7 @@ To see what completions **all** plugins provide, in tabular formatting and
 with name of each plugin, use:
 
 ``` zsh
-% zplugin clist
+zplugin clist
 ```
 
 This command is specially adapted for plugins like
@@ -210,9 +207,9 @@ be used. The commands are very basic, they only need completion
 **name**:
 
 ```zsh
-% zplugin cdisable cmake
+zplugin cdisable cmake
 # Disabled cmake completion belonging to zsh-users/zsh-completions
-% zplugin cenable cmake
+zplugin cenable cmake
 # Enabled cmake completion belonging to zsh-users/zsh-completions
 ```
 
@@ -227,13 +224,13 @@ In general, to use **subdirectories** of Github projects as snippets add
 `/trunk/{path-to-dir}` to URL, for example:
 
 ``` zsh
-% zplugin ice svn
-% zplugin snippet https://github.com/zsh-users/zsh-completions/trunk/src
+zplugin ice svn
+zplugin snippet https://github.com/zsh-users/zsh-completions/trunk/src
 
 # For Oh My Zsh and Prezto, the OMZ:: and PZT:: prefixes work
 # without the need to add the `/trunk/` infix (however the path
 # should point to a directory, not to a file):
-% zplugin ice svn; zplugin snippet PZT::modules/docker
+zplugin ice svn; zplugin snippet PZT::modules/docker
 ```
 
 Snippets too have completions installed by default, like plugins.
@@ -328,8 +325,8 @@ active, not only till first activation.
 
 Note that unloading a plugin needs it to be loaded with tracking (so
 `zplugin
-load …​`, not `zplugin light …​`). Tracking causes slight slowdown,
-however this doesn’t matter in turbo mode, as Zsh startup isn’t slowed
+load ...`, not `zplugin light ...`). Tracking causes slight slowdown,
+however this doesn’t matter in Turbo Mode, as Zsh startup isn’t slowed
 down.
 
 **See also Wiki on [multiple prompts](../Multiple-prompts).**

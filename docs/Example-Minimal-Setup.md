@@ -20,7 +20,7 @@ zplugin light zdharma/fast-syntax-highlighting
  - the `atinit` of the plugin runs also `zcdreplay` (i.e. "*zplugin-compdef-replay*"), because after `compinit` is loaded, the `compdef` function becomes available, and one can re-run the all earlier automatically-caught`compdef` calls,
  - add `lucid` ice-mod to silence the under-prompt messages.
 
-The same setup but without using turbo-mode (i.e. no `wait''` ice):
+The same setup but without using Turbo-mode (i.e. no `wait''` ice):
 
 ```zsh
 zplugin ice blockf; zplugin light zsh-users/zsh-completions

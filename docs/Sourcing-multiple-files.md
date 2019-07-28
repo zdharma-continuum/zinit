@@ -36,16 +36,26 @@ The all possible ways to use the `multisrc''` ice-mod:
 ```zsh
 zplugin ice depth"1" multisrc="lib/{functions,misc}.zsh" pick"/dev/null"
 zplugin load robbyrussell/oh-my-zsh
+
 zplugin ice svn multisrc"{functions,misc}.zsh" pick"/dev/null"
 zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc"\${array[@]}" \
-    pick"/dev/null"; zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc"${array[@]}" \
-    pick"/dev/null"; zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc"\$array" pick"/dev/null"
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc"\${array[@]}" pick"/dev/null"
 zplugin snippet OMZ::lib
-array=( {functions,misc}.zsh ); zplg ice svn multisrc"$array" pick"/dev/null"
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc"${array[@]}" pick"/dev/null"
 zplugin snippet OMZ::lib
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc"\$array" pick"/dev/null"
+zplugin snippet OMZ::lib
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc"$array" pick"/dev/null"
+zplugin snippet OMZ::lib
+
 zplugin ice svn multisrc"misc.zsh functions.zsh" pick"/dev/null"
 zplugin snippet OMZ::lib
 ```
