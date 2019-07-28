@@ -1752,9 +1752,12 @@ zplugin() {
         }
     }
 
-    integer retval=0
+    integer retval=0 correct=0
     local -a match mbegin mend reply
     local MATCH REPLY; integer MBEGIN MEND
+
+    [[ -o ksharrays ]] && correct=1
+
     local -A opt_map
     opt_map=(
        -q       opt_-q,--quiet
@@ -1845,7 +1848,7 @@ zplugin() {
                    -zplg-show-zstatus
                    ;;
                (times)
-                   -zplg-show-times "${@[2,-1]}"
+                   -zplg-show-times "${@[2-correct,-1]}"
                    ;;
                (self-update)
                    -zplg-self-update
@@ -2003,7 +2006,7 @@ zplugin() {
                    -zplg-list-compdef-replay
                    ;;
                (cd|delete|recall|edit|glance|changes|create|stress)
-                   -zplg-"$1" "${@[2,-1]%%(/|//|///)}"; retval=$?
+                   -zplg-"$1" "${@[2-correct,-1]%%(/|//|///)}"; retval=$?
                    ;;
                (recently)
                    shift
@@ -2028,7 +2031,7 @@ zplugin() {
                    } "$@"
                    ;;
                (module)
-                   -zplg-module "${@[2,-1]}"; retval=$?
+                   -zplg-module "${@[2-correct,-1]}"; retval=$?
                    ;;
                (*)
                    print "Unknown command \`$1' (use \`help' to get usage information)"
