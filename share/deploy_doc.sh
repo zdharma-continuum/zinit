@@ -25,6 +25,7 @@ LIST_ORIGINAL=( out/* )
 
 # Remove existing contents
 mv -v out/site site_out
+mv -v out/wiki wiki_out
 mv -v out/highlight highlight_out
 mv -v out/.git .git_out
 mv -v out/index.html .
@@ -32,6 +33,7 @@ mv -v out/.gitignore .
 rm -rf out
 mkdir out
 mv -v site_out out/site
+mv -v wiki_out out/wiki
 mv -v highlight_out out/highlight
 mv -v .git_out out/.git
 mv -v index.html out
