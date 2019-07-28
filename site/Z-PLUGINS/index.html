@@ -57,6 +57,10 @@
     <link rel="stylesheet" href="../assets/fonts/material-icons.css">
     
     
+      <link rel="stylesheet" href="../css/theme.css">
+    
+      <link rel="stylesheet" href="../css/fonts.css">
+    
     
       
     
@@ -86,7 +90,7 @@
       <div class="md-flex__cell md-flex__cell--shrink">
         <a href=".." title="Zplugin Wiki" class="md-header-nav__button md-logo">
           
-            <i class="md-icon"></i>
+            <i class="md-icon">home</i>
           
         </a>
       </div>
@@ -145,6 +149,96 @@
         
       
       
+        
+
+  
+
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../INTRODUCTION/" title="Introduction" class="md-tabs__link">
+          Introduction
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Multiple-prompts/" title="Ice modifiers" class="md-tabs__link">
+          Ice modifiers
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Example-Minimal-Setup/" title="Examples" class="md-tabs__link">
+          Examples
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="./" title="Z-Plugins" class="md-tabs__link md-tabs__link--active">
+          Z-Plugins
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+          Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../Code-Documentation/" title="Code Documentation" class="md-tabs__link">
+          Code Documentation
+        </a>
+      
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+      
       <main class="md-main">
         <div class="md-main__inner md-grid" data-md-component="container">
           
@@ -156,7 +250,7 @@
   <label class="md-nav__title md-nav__title--site" for="__drawer">
     <a href=".." title="Zplugin Wiki" class="md-nav__button md-logo">
       
-        <i class="md-icon"></i>
+        <i class="md-icon">home</i>
       
     </a>
     Zplugin Wiki
@@ -169,10 +263,34 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1" type="checkbox" id="nav-1">
+    
+    <label class="md-nav__link" for="nav-1">
+      Introduction
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-1">
+        Introduction
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href=".." title="Home" class="md-nav__link">
-      Home
+    <a href="../INTRODUCTION/" title="Introduction" class="md-nav__link">
+      Introduction
     </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -181,10 +299,82 @@
       
 
 
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
+    
+    <label class="md-nav__link" for="nav-2">
+      Ice modifiers
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-2">
+        Ice modifiers
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
   <li class="md-nav__item">
-    <a href="../INTRODUCTION/" title="Introduction" class="md-nav__link">
-      Introduction
+    <a href="../Multiple-prompts/" title="Multiple Prompts" class="md-nav__link">
+      Multiple Prompts
     </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Example-wait-conditions/" title="Example wait Conditions" class="md-nav__link">
+      Example wait Conditions
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Installing-with-make/" title="Installing With Make" class="md-nav__link">
+      Installing With Make
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../Sourcing-multiple-files/" title="Sourcing Multiple Files" class="md-nav__link">
+      Sourcing Multiple Files
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
+      Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
   </li>
 
     
@@ -300,17 +490,19 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
     
     <label class="md-nav__link" for="nav-4">
-      Ice modifiers
+      Z-Plugins
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-4">
-        Ice modifiers
+        Z-Plugins
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -318,71 +510,6 @@
           
           
           
-
-
-  <li class="md-nav__item">
-    <a href="../Multiple-prompts/" title="Multiple Prompts" class="md-nav__link">
-      Multiple Prompts
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../Example-wait-conditions/" title="Example wait Conditions" class="md-nav__link">
-      Example wait Conditions
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../Installing-with-make/" title="Installing With Make" class="md-nav__link">
-      Installing With Make
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../Sourcing-multiple-files/" title="Sourcing Multiple Files" class="md-nav__link">
-      Sourcing Multiple Files
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
-      Nickname a Plugin or Snippet
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
-      
-      
-      
 
   
 
@@ -450,6 +577,11 @@
     
   </li>
 
+        
+      </ul>
+    </nav>
+  </li>
+
     
       
       
@@ -458,13 +590,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-5" type="checkbox" id="nav-5">
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-5">
       Hints
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-5">
         Hints
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -506,13 +638,13 @@
 
   <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
-    <label class="md-nav__link" for="nav-7">
+    <label class="md-nav__link" for="nav-6">
       Code Documentation
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
+      <label class="md-nav__title" for="nav-6">
         Code Documentation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -688,7 +820,7 @@ Zplugin – the dash and the plural form.</p>
 </ol>
 <h2 id="how-to-code-them">How To Code Them?</h2>
 <p>Below is an example body of an <code>atclone</code> hook (taken from
-<a href="https://github.com/zdharma/z-p-submods">zdharma/z-p-submods</a> z-plugin).
+<a href="https://github.com/zdharma/z-p-submods"><strong>zdharma/z-p-submods</strong></a> z-plugin).
 It shows how to:</p>
 <ol>
 <li>
@@ -766,7 +898,7 @@ zplugin snippet PZT::modules/autosuggestions
 </code></pre>
 
 <p>Checkout the project which fully implements this idea,
-<a href="https://github.com/zdharma/z-p-submods">zdharma/z-p-submods</a>. It e.g.
+<a href="https://github.com/zdharma/z-p-submods"><strong>zdharma/z-p-submods</strong></a>. It e.g.
 also implements the <code>atpull</code> hook, i.e. supports automatic update of the
 submodules. The <code>z-p-*</code> prefix is recommended for projects that are
 being z-plugins.</p>
@@ -815,7 +947,7 @@ being z-plugins.</p>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../GALLERY/" title="Gallery" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -824,7 +956,7 @@ being z-plugins.</p>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Nickname a Plugin or Snippet
+                Gallery
               </span>
             </div>
           </a>
