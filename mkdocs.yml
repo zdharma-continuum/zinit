@@ -27,6 +27,8 @@ nav:
   - "zplugin-side.zsh": zplugin-side.zsh.md
   - "zplugin-install.zsh": zplugin-install.zsh.md
   - "zplugin-autoload.zsh": zplugin-autoload.zsh.md
+- "declare-zsh":
+  - "declare-zsh": declare-zsh.md
 
 theme:
   name: 'material'
