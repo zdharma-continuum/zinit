@@ -1,6 +1,7 @@
 # declare-zsh
 
-`declare-zsh` is a parser for `zplugin` commands in `.zshrc`. It allows to
+[declare-zsh](https://github.com/zdharma/declare-zsh) is a parser for
+`zplugin` commands in `.zshrc`. It allows to
 perform the following actions on `.zshrc` **from the command-line**:
   - enable and disable selected plugins and snippets,
   - add plugins and snippets,
