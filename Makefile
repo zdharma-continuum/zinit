@@ -7,4 +7,5 @@ gh-pages: site
 	command rm -rf site
 	command mv -vf site_ site
 	git add -A site
+	echo "Site build ["`date "+%m/%d/%Y %H:%M:%S"`"]" > .git/COMMIT_EDITMSG
 
