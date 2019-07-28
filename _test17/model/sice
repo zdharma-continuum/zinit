@@ -1,2 +1,2 @@
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
-svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools atpull '!command cp version2 version2a.cpy' cp 'version2 -> version2b.cpy' 
+subscribe '' svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' atpull '!command cp version2 version2a.cpy' cp 'version2 -> version2b.cpy' 

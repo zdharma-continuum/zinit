@@ -1,2 +1,2 @@
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
-pick n-help as command svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools mv 'zsh-navigation-tools.plugin.zsh -> plugin.text' atclone 'chmod -x znt-tmux.zsh' src plugin.text 
+pick n-help as command subscribe '' svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' mv 'zsh-navigation-tools.plugin.zsh -> plugin.text' atclone 'chmod -x znt-tmux.zsh' src plugin.text 

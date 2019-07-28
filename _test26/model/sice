@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh
-teleid OMZ::plugins/git/git.plugin.zsh atpull 'builtin print -- --Added Line-- >>! git.plugin.zsh' 
+subscribe '' teleid OMZ::plugins/git/git.plugin.zsh wait '' atpull 'builtin print -- --Added Line-- >>! git.plugin.zsh' 

@@ -32,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '2'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'pick zsh-select2 as command teleid psprint/zsh-select mv '\''zsh-select -> zs'\'' from gl atclone '\''command chmod -x zsh-select2 || builtin print >! Test_Failed'\'' cp '\''zs -> zsh-select2'\'' '
+ZPLG_SICE: 'psprint/zsh-select' 'pick zsh-select2 as command subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' mv '\''zsh-select -> zs'\'' from gl atclone '\''command chmod -x zsh-select2 || builtin print >! Test_Failed'\'' cp '\''zs -> zsh-select2'\'' '
 ZPLG_FUNCTIONS: 'psprint/zsh-select' ''
 ZPLG_OPTIONS: 'psprint/zsh-select' ''
 ZPLG_PATH: 'psprint/zsh-select' '_test2/answer/plugins/psprint---zsh-select '

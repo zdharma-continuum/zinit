@@ -1,0 +1,1 @@
+echo ${REPO_DIR:t} > var

@@ -27,8 +27,8 @@ zplugin.zsh
 ---
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
-ZPLG_SNIPPETS: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'ice-order <svn>'
-ZPLG_SICE: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'svn '\'''\'' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order atload '\''cp -v Makefile.copy3 Makefile.copy4'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
+ZPLG_SNIPPETS: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order <svn>'
+ZPLG_SICE: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'subscribe '\'''\'' svn '\'''\'' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '\'''\'' atload '\''cp -v Makefile.copy3 Makefile.copy4'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
 ZPLG_FUNCTIONS: 
 ZPLG_OPTIONS: 
 ZPLG_PATH: 

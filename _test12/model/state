@@ -27,8 +27,8 @@ zplugin.zsh
 ---
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
-ZPLG_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'zsh-navigation-tools <svn>'
-ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'pick n-help2 as command svn '\'''\'' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools mv '\''n-help -> nh'\'' atclone '\''chmod -x znt-tmux.zsh'\'' cp '\''nh -> n-help2'\'' '
+ZPLG_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools <svn>'
+ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'pick n-help2 as command subscribe '\'''\'' svn '\'''\'' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '\'''\'' mv '\''n-help -> nh'\'' atclone '\''chmod -x znt-tmux.zsh'\'' cp '\''nh -> n-help2'\'' '
 ZPLG_FUNCTIONS: 
 ZPLG_OPTIONS: 
 ZPLG_PATH: 

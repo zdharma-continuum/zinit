@@ -1,0 +1,1 @@
+print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out

@@ -32,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-editing-workbench'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-editing-workbench' '2'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-editing-workbench' 'teleid psprint/zsh-editing-workbench '
+ZPLG_SICE: 'psprint/zsh-editing-workbench' 'teleid psprint/zsh-editing-workbench wait '\'''\'' '
 ZPLG_FUNCTIONS: 'psprint/zsh-editing-workbench' '-zconvey_pinfo -zew-rotate-shell-words __zconvey_zle_paster backward-kill-word-match backward-word-match capitalize-word-match copy-earlier-word down-case-word-match forward-word-match kill-word-match select-word-style transpose-words-match up-case-word-match zew zew-backward-kill-shell-word zew-history-complete-word zew-transpose-shell-words zew_help '
 ZPLG_OPTIONS: 'psprint/zsh-editing-workbench' 'histlexwords off autopushd off histignoredups off pushdignoredups off'
 ZPLG_PATH: 'psprint/zsh-editing-workbench' ''

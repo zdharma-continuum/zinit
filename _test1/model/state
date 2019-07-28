@@ -32,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '2'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'teleid psprint/zsh-select depth 1 '
+ZPLG_SICE: 'psprint/zsh-select' 'subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' depth 1 '
 ZPLG_FUNCTIONS: 'psprint/zsh-select' ''
 ZPLG_OPTIONS: 'psprint/zsh-select' ''
 ZPLG_PATH: 'psprint/zsh-select' '_test1/answer/plugins/psprint---zsh-select '
