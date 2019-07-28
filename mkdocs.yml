@@ -1,0 +1,43 @@
+site_name: Zplugin Wiki
+nav:
+- "Introduction":
+  - "Introduction": INTRODUCTION.md
+- "Ice modifiers":
+  - "Multiple Prompts": Multiple-prompts.md
+  - "Example wait Conditions": Example-wait-conditions.md
+  - "Installing With Make": Installing-with-make.md
+  - "Sourcing Multiple Files": Sourcing-multiple-files.md
+  - "Nickname a Plugin or Snippet": id-as.md
+- "Examples":
+  - "Example Minimal Setup": Example-Minimal-Setup.md
+  - "Example Oh My Zsh Setup": Example-Oh-My-Zsh-setup.md
+  - "LS_COLORS Explanation": LS_COLORS-explanation.md
+  - "Direnv Explanation": Direnv-explanation.md
+  - "Compiling Programs": Compiling-programs.md
+  - "Profiling Plugins": Profiling-plugins.md
+  - "Gallery": GALLERY.md
+- "Z-Plugins":
+  - "Z-Plugins": Z-PLUGINS.md
+- "Hints": 
+  - "Zsh Plugin Standard": zsh-plugin-standard.md
+  - "Preinstalling Plugins": preinstalling-plugins.md
+- "Code Documentation": 
+  - "Intro": Code-Documentation.md
+  - "zplugin.zsh": zplugin.zsh.md
+  - "zplugin-side.zsh": zplugin-side.zsh.md
+  - "zplugin-install.zsh": zplugin-install.zsh.md
+  - "zplugin-autoload.zsh": zplugin-autoload.zsh.md
+
+theme:
+  name: 'material'
+  logo:
+    icon: home
+  feature:
+    tabs: true
+markdown_extensions:
+  - admonition
+  - pymdownx.betterem:
+      smart_enable: all
+extra_css:
+  - css/theme.css
+  - css/fonts.css
