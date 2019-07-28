@@ -13,6 +13,7 @@ addons:
   apt:
     packages:
     - zsh
+    - mailutils
 
 env:
   global:

@@ -27,11 +27,13 @@ LIST_ORIGINAL=( out/* )
 mv -v out/site site_out
 mv -v out/.git .git_out
 mv -v out/index.html .
+mv -v out/.gitignore .
 rm -rf out
 mkdir out
 mv -v site_out out/site
 mv -v .git_out out/.git
 mv -v index.html out
+mv -v .gitignore out
 touch out/.nojekyll
 
 # Copy the PDFs (built earlier by .travis.yml / make)
@@ -78,3 +80,5 @@ echo
 git push "$SSH_REPO" "$TARGET_BRANCH"
 
 rm -f ../share/deploy_key
+
+mail -s "The Zplugin deploy done on $( date '+%m/%d/%Y' )" sgniazdowski@gmail.com <<< 'The deploy has been done'
