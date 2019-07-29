@@ -42,5 +42,5 @@ markdown_extensions:
   - pymdownx.betterem:
       smart_enable: all
   - toc:
-      permalinks: '#'
+      permalink: '#'
       separator: '_'
