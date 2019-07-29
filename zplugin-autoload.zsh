@@ -2842,7 +2842,7 @@ EOF
 —— update [-q] ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
 —— status ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
 —— report ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}               – show plugin's report (or all plugins' if ——all passed)
-—— delete ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL           – remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
+—— delete [--all|--clean] ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL – remove plugin or snippet from disk (good to forget wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
 —— loaded|list [keyword]         – show what plugins are loaded (filter with \'keyword')
 —— cd ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}                   – cd into plugin's directory; also support snippets, if feed with URL
 —— create ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}               – create plugin (also together with Github repository)

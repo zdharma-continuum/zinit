@@ -50,6 +50,13 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 Here are the new features and updates added to zplugin in the last 60 days. To see the full history check [the changelog.](CHANGELOG.md)
 
+* 29-07-2019
+  - `delete` now supports following options:
+    * `--all` – deletes all plugins and snippets (a purge, similar to `rm -rf
+      ${ZPLGM[PLUGINS_DIR]} ${ZPLGM[SNIPPETS_DIR]}`)
+    * `--clean` – deletes only plugins and snippets that are **currently not loaded**
+      in the current session.
+
 * 09-07-2019
   - Zplugin can now have **its own plugins**, called **z-plugins**! Check out an
     example but fully functional z-plugin
@@ -364,7 +371,7 @@ Usage:
 —— update [-q] plg-spec|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
 —— status plg-spec|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
 —— report plg-spec               – show plugin's report (or all plugins' if ——all passed)
-—— delete plg-spec|URL           – remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
+—— delete [--clean|--all] plg-spec|URL – remove plugin or snippet from disk (good to forget wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
 —— loaded|list [keyword]         – show what plugins are loaded (filter with 'keyword')
 —— cd plg-spec                   – cd into plugin's directory; also support snippets, if feed with URL
 —— create plg-spec               – create plugin (also together with Github repository)
