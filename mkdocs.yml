@@ -2,7 +2,7 @@ site_name: Zplugin Wiki
 nav:
 - "Introduction":
   - "Introduction": INTRODUCTION.md
-- "Ice modifiers":
+- "Ice Modifiers":
   - "Multiple Prompts": Multiple-prompts.md
   - "Example wait Conditions": Example-wait-conditions.md
   - "Installing With Make": Installing-with-make.md
@@ -27,8 +27,9 @@ nav:
   - "zplugin-side.zsh": zplugin-side.zsh.md
   - "zplugin-install.zsh": zplugin-install.zsh.md
   - "zplugin-autoload.zsh": zplugin-autoload.zsh.md
-- "declare-zsh":
+- "Zplugin Extensions":
   - "declare-zsh": declare-zsh.md
+  - "Crasis": crasis.md
 
 theme:
   name: 'material'
@@ -40,6 +41,6 @@ markdown_extensions:
   - admonition
   - pymdownx.betterem:
       smart_enable: all
-extra_css:
-  - css/theme.css
-  - css/fonts.css
+  - toc:
+      permalinks: '#'
+      separator: '_'
