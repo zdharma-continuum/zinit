@@ -245,7 +245,7 @@ That’s all on completions. There’s one more command, `zplugin csearch`,
 that will **search** all plugin directories for available completions,
 and show if they are installed:
 
-![#csearch screenshot](img/csearch.png)
+![#csearch screenshot](../img/csearch.png)
 
 This sums up to complete control over completions.
 
