@@ -1,7 +1,7 @@
 language: ruby
 dist: bionic
 rvm:
-  - 2.4
+  - 2.6
 install: gem install asciidoctor-pdf --pre
 
 git:
@@ -20,6 +20,11 @@ env:
   - ENCRYPTION_LABEL: "de1faff15945"
   - COMMIT_AUTHOR_EMAIL: "psprint@zdharma.org"
 
+before_script:
+- apt-get install -y zsh
+- zsh --version
+- >-
+    zsh -c 'print -rl -- "ZSH_VERSION: $ZSH_VERSION" "ZSH_PATCHLEVEL: $ZSH_PATCHLEVEL" "OSTYPE: $OSTYPE" "CPUTYPE: $CPUTYPE" "MACHTYPE: $MACHTYPE"'
 script:
 - git fetch --depth=1 origin tests:tests
 - git worktree add test tests
