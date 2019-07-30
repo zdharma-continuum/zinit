@@ -729,6 +729,25 @@ builtin setopt noaliases
     done
 }
 # }}}
+# FUNCTION: -zplg-wrap-track-functions {{{
+-zplg-wrap-track-functions() {
+    local user="$1" plugin="$2" id_as="$3" f
+    local -a wt
+    wt=( ${(@s.;.)ZPLG_ICE[wrap-track]} )
+    for f in ${wt[@]}; do
+        functions[${f}-zplugin-bkp]="${functions[$f]}"
+        eval "
+function $f {
+    ZPLGM[CUR_USR]=\"$user\" ZPLG_CUR_PLUGIN=\"$plugin\" ZPLGM[CUR_USPL2]=\"$id_as\"
+    -zplg-shadow-on load
+    ${f}-zplugin-bkp \"\$@\"
+    -zplg-shadow-off load
+    ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
+    functions[${f}]=\${functions[${f}-zplugin-bkp]}
+}"
+    done
+}
+# }}}
 
 #
 # Diff functions
@@ -1148,6 +1167,10 @@ builtin setopt noaliases
             done
         }
         
+        # Run the functions' wrapping & tracking requests
+        [[ -n "${ZPLG_ICE[wrap-track]}" ]] && \
+            -zplg-wrap-track-functions "$save_url" "" "$id_as"
+
         [[ "${tmp[1-correct]}" -gt 0 && "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; (( 1 )); } || eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
         (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
@@ -1193,6 +1216,10 @@ builtin setopt noaliases
                     "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
                 done
             }
+
+            # Run the functions' wrapping & tracking requests
+            [[ -n "${ZPLG_ICE[wrap-track]}" ]] && \
+                -zplg-wrap-track-functions "$save_url" "" "$id_as"
 
             [[ "${tmp[1-correct]}" -gt 0 && "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; ((1)); } || eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
@@ -1316,6 +1343,10 @@ builtin setopt noaliases
             done
         }
 
+        # Run the functions' wrapping & tracking requests
+        [[ -n "${ZPLG_ICE[wrap-track]}" ]] && \
+            -zplg-wrap-track-functions "$user" "$plugin" "$id_as"
+
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
     elif [[ "${ZPLG_ICE[as]}" = "completion" ]]; then
         ((1))
@@ -1363,6 +1394,10 @@ builtin setopt noaliases
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
             done
         }
+
+        # Run the functions' wrapping & tracking requests
+        [[ -n "${ZPLG_ICE[wrap-track]}" ]] && \
+            -zplg-wrap-track-functions "$user" "$plugin" "$id_as"
 
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; ((1)); } || eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
         builtin unsetopt noaliases

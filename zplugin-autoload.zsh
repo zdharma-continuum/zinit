@@ -1498,7 +1498,7 @@ ZPLGM[EXTENDED_GLOB]=""
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt
+        reset-prompt wrap-track
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -2718,7 +2718,7 @@ EOF
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt
+        reset-prompt wrap-track
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -2894,5 +2894,5 @@ Available ice-modifiers:
         unload blockf on-update-of subscribe pick bpick src as ver silent
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions reset-prompt"
+        nocompletions reset-prompt wrap-track"
 } # }}}
