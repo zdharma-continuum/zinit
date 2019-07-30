@@ -1128,10 +1128,16 @@ ZPLGM[EXTENDED_GLOB]=""
     local msg="Plugin report for $user${${user:#(%|/)*}:+/}$plugin"
     print -- "${ZPLGM[col-bar]}${(r:${#msg}::-:)tmp__}${ZPLGM[col-rst]}"
 
+    local -A map
+    map=(
+        Error:  ${ZPLGM[col-error]}
+        Warning:  ${ZPLGM[col-error]}
+        Note:  ${ZPLGM[col-note]}
+    )
     # Print report gathered via shadowing
     () {
         setopt localoptions extendedglob
-        print -rl -- "${(@)${(f@)ZPLG_REPORTS[$uspl2]}/(#b)(#s)([^[:space:]]##)([[:space:]]##)/${${${(M)match[1]:#(Warning:|Error:)}:+${ZPLGM[col-error]}${match[1]}${ZPLGM[col-rst]}}:-${ZPLGM[col-keyword]}${match[1]}${ZPLGM[col-rst]}}${match[2]}}"
+        print -rl -- "${(@)${(f@)ZPLG_REPORTS[$uspl2]}/(#b)(#s)([^[:space:]]##)([[:space:]]##)/${map[${match[1]}]:-${ZPLGM[col-keyword]}}${match[1]}${ZPLGM[col-rst]}${match[2]}}"
     }
 
     # Print report gathered via $functions-diffing

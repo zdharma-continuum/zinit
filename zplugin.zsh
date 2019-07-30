@@ -151,6 +151,7 @@ zmodload zsh/termcap 2>/dev/null
         "col-pname"     $'\e[33m'
         "col-uname"     $'\e[35m'
         "col-keyword"   $'\e[32m'
+        "col-note"      $'\e[33m'
         "col-error"     $'\e[31m'
         "col-p"         $'\e[01m\e[34m'
         "col-bar"       $'\e[01m\e[35m'
@@ -565,7 +566,7 @@ builtin setopt noaliases
                 [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_SAVED[_dtrace/_dtrace]+="$quoted "
              # These will be deleted
              else
-                 -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
+                 -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Note: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
                  local quoted="$2"
                  quoted="${(q)quoted}"
                  # Remember only when load is in progress (it can be dstart that leads execution here)
