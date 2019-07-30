@@ -21,7 +21,7 @@ env:
   - COMMIT_AUTHOR_EMAIL: "psprint@zdharma.org"
 
 before_script:
-- apt-get install -y zsh
+- sudo apt-get install -y zsh
 - zsh --version
 - >-
     zsh -c 'print -rl -- "ZSH_VERSION: $ZSH_VERSION" "ZSH_PATCHLEVEL: $ZSH_PATCHLEVEL" "OSTYPE: $OSTYPE" "CPUTYPE: $CPUTYPE" "MACHTYPE: $MACHTYPE"'
