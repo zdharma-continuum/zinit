@@ -1095,7 +1095,7 @@ function $f {
     [[ -z "${opts[(r)-u]}" ]] && { ZPLGM[CUR_USPL2]="$id_as"; ZPLG_REPORTS[$id_as]=""; }
 
     local -a arr
-    [[ "${tmp[1-correct]}" -gt 0 ]] && {
+    [[ "${tmp[1-correct]}" -gt 0 && -z "${opts[(r)-u]}" ]] && {
         reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atinit <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
@@ -1106,7 +1106,7 @@ function $f {
     (( ${+ZPLG_ICE[atinit]} && tmp[1-correct] )) && [[ -z "${opts[(r)-u]}" ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     local -a list
-    [[ "${tmp[1-correct]}" -gt 0 ]] && {
+    [[ "${tmp[1-correct]}" -gt 0 && -z "${opts[(r)-u]}" ]] && {
         reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atinit <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
