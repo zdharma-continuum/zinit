@@ -533,6 +533,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zle() {
+    setopt localoptions noerrreturn noerrexit
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zle $*"
 
     # Remember to perform the actual zle call
