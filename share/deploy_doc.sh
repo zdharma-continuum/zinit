@@ -85,4 +85,4 @@ git push "$SSH_REPO" "$TARGET_BRANCH"
 
 rm -f ../share/deploy_key
 
-mail -c psprint@zdharma.org -s "The Zplugin deploy done on $( date '+%m/%d/%Y' )" sgniazdowski@gmail.com <<< 'The deploy has been done'
+mail -s "The Zplugin deploy done on $( date '+%m/%d/%Y' )" sgniazdowski@gmail.com,psprint@zdharma.org <<< 'The deploy has been done'
