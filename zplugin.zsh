@@ -1073,6 +1073,8 @@ builtin setopt noaliases
 
     ZPLG_SNIPPETS[$id_as]="$id_as <${${ZPLG_ICE[svn]+svn}:-single file}>"
 
+    [[ -z "${opts[(r)-u]}" ]] && { ZPLGM[CUR_USPL2]="$id_as"; ZPLG_REPORTS[$id_as]=""; }
+
     local -a arr
     [[ "${tmp[1-correct]}" -gt 0 ]] && {
         reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atinit <->]} )
@@ -1224,6 +1226,7 @@ builtin setopt noaliases
     (( ${+ZPLG_ICE[notify]} == 1 )) && { [[ "$retval" -eq 0 || -n "${(M)ZPLG_ICE[notify]#\!}" ]] && { local msg; eval "msg=\"${ZPLG_ICE[notify]#\!}\""; -zplg-deploy-message @msg "$msg" } || -zplg-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
     (( ${+ZPLG_ICE[reset-prompt]} == 1 )) && -zplg-deploy-message @rst
 
+    ZPLGM[CUR_USPL2]=""
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as}]=$SECONDS
     return $retval
