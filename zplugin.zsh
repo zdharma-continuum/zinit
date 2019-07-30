@@ -402,15 +402,17 @@ builtin setopt noaliases
 
     # A. Shadow off. Unfunction bindkey
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLGM[bkp-bindkey]} )) && functions[bindkey]="${ZPLGM[bkp-bindkey]}" || unfunction "bindkey"
+    # UNUSED because of the `builtin' precedence method
+    # (( ${+ZPLGM[bkp-bindkey]} )) && functions[bindkey]="${ZPLGM[bkp-bindkey]}" || unfunction "bindkey"
 
     # Actual bindkey
     builtin bindkey "${pos[@]}"
     integer ret=$?
 
     # A. Shadow on. Custom function could unfunction itself
-    (( ${+functions[bindkey]} )) && ZPLGM[bkp-bindkey]="${functions[bindkey]}" || unset "ZPLGM[bkp-bindkey]"
-    functions[bindkey]='--zplg-shadow-bindkey "$@";'
+    # UNUSED because of the `builtin' precedence method
+    # (( ${+functions[bindkey]} )) && ZPLGM[bkp-bindkey]="${functions[bindkey]}" || unset "ZPLGM[bkp-bindkey]"
+    #functions[bindkey]='--zplg-shadow-bindkey "$@";'
 
     return $ret # testable
 } # }}}
@@ -450,15 +452,17 @@ builtin setopt noaliases
 
     # B. Shadow off. Unfunction zstyle
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLGM[bkp-zstyle]} )) && functions[zstyle]="${ZPLGM[bkp-zstyle]}" || unfunction "zstyle"
+    # UNUSED because of the `builtin' precedence method
+    #(( ${+ZPLGM[bkp-zstyle]} )) && functions[zstyle]="${ZPLGM[bkp-zstyle]}" || unfunction "zstyle"
 
     # Actual zstyle
-    zstyle "${pos[@]}"
+    builtin zstyle "${pos[@]}"
     integer ret=$?
 
     # B. Shadow on. Custom function could unfunction itself
-    (( ${+functions[zstyle]} )) && ZPLGM[bkp-zstyle]="${functions[zstyle]}" || unset "ZPLGM[bkp-zstyle]"
-    functions[zstyle]='--zplg-shadow-zstyle "$@";'
+    # UNUSED because of the `builtin' precedence method
+    #(( ${+functions[zstyle]} )) && ZPLGM[bkp-zstyle]="${functions[zstyle]}" || unset "ZPLGM[bkp-zstyle]"
+    #functions[zstyle]='--zplg-shadow-zstyle "$@";'
 
     return $ret # testable
 } # }}}
@@ -509,15 +513,17 @@ builtin setopt noaliases
 
     # C. Shadow off. Unfunction alias
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLGM[bkp-alias]} )) && functions[alias]="${ZPLGM[bkp-alias]}" || unfunction "alias"
+    # UNUSED because of the `builtin' precedence method
+    #(( ${+ZPLGM[bkp-alias]} )) && functions[alias]="${ZPLGM[bkp-alias]}" || unfunction "alias"
 
     # Actual alias
-    alias "${pos[@]}"
+    builtin alias "${pos[@]}"
     integer ret=$?
 
     # C. Shadow on. Custom function could unfunction itself
-    (( ${+functions[alias]} )) && ZPLGM[bkp-alias]="${functions[alias]}" || unset "ZPLGM[bkp-alias]"
-    functions[alias]='--zplg-shadow-alias "$@";'
+    # UNUSED because of the `builtin' precedence method
+    #(( ${+functions[alias]} )) && ZPLGM[bkp-alias]="${functions[alias]}" || unset "ZPLGM[bkp-alias]"
+    #functions[alias]='--zplg-shadow-alias "$@";'
 
     return $ret # testable
 } # }}}
@@ -579,15 +585,17 @@ builtin setopt noaliases
 
     # D. Shadow off. Unfunction zle
     # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    (( ${+ZPLGM[bkp-zle]} )) && functions[zle]="${ZPLGM[bkp-zle]}" || unfunction "zle"
+    # UNUSED because of the `builtin' precedence method
+    #(( ${+ZPLGM[bkp-zle]} )) && functions[zle]="${ZPLGM[bkp-zle]}" || unfunction "zle"
 
     # Actual zle
-    zle "${pos[@]}"
+    builtin zle "${pos[@]}"
     integer ret=$?
 
     # D. Shadow on. Custom function could unfunction itself
-    (( ${+functions[zle]} )) && ZPLGM[bkp-zle]="${functions[zle]}" || unset "ZPLGM[bkp-zle]"
-    functions[zle]='--zplg-shadow-zle "$@";'
+    # UNUSED because of the `builtin' precedence method
+    #(( ${+functions[zle]} )) && ZPLGM[bkp-zle]="${functions[zle]}" || unset "ZPLGM[bkp-zle]"
+    #functions[zle]='--zplg-shadow-zle "$@";'
 
     return $ret # testable
 } # }}}
@@ -680,8 +688,8 @@ builtin setopt noaliases
     ZPLGM[SHADOWING]="inactive"
 
     if [[ "$mode" != "compdef" ]]; then
-    # 0. Unfunction "autoload"
-    (( ${+ZPLGM[bkp-autoload]} )) && functions[autoload]="${ZPLGM[bkp-autoload]}" || unfunction "autoload"
+        # 0. Unfunction "autoload"
+        (( ${+ZPLGM[bkp-autoload]} )) && functions[autoload]="${ZPLGM[bkp-autoload]}" || unfunction "autoload"
     fi
 
     # E. Restore original compdef if it existed
