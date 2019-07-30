@@ -9,7 +9,7 @@ typeset -gaH ZPLG_REGISTERED_PLUGINS ZPLG_TASKS ZPLG_RUN
 typeset -ga zsh_loaded_plugins
 ZPLG_TASKS=( "<no-data>" )
 # Snippets loaded, url -> file name
-typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICE ZPLG_SICE ZPLG_CUR_BIND_MAP ZPLG_EXTS
+typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICES ZPLG_SICE ZPLG_CUR_BIND_MAP ZPLG_EXTS
 
 #
 # Common needed values
@@ -1468,11 +1468,11 @@ unload|on-update-of|subscribe|if|has|cloneonly|blockf|svn|pick|\
 nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|\
 atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|\
 compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|\
-nocd|once${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICE[${match[1]}]="${match[2]#(:|=)}"
+nocd|once|wrap-track${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICES[${match[1]}]="${match[2]#(:|=)}"
     done
-    [[ "${ZPLG_ICE[as]}" = "program" ]] && ZPLG_ICE[as]="command"
-    ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
-    [[ -n "${ZPLG_ICE[pick]}" ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
+    [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
+    ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
+    [[ -n "${ZPLG_ICES[pick]}" ]] && ZPLG_ICES[pick]="${ZPLG_ICES[pick]//\$ZPFX/${ZPFX%/}}"
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
@@ -1749,8 +1749,8 @@ zplugin() {
     [[ "$1" != "ice" ]] && {
         local -A ice ICE_OPTS
 
-        ice=( "${(kv)ZPLG_ICE[@]}" )
-        ZPLG_ICE=()
+        ice=( "${(kv)ZPLG_ICES[@]}" )
+        ZPLG_ICES=()
 
         local -A ZPLG_ICE
         () {
