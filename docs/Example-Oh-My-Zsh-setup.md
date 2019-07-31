@@ -27,21 +27,21 @@ zplugin ice wait"0" atinit"zpcompinit" lucid
 zplugin light zdharma/fast-syntax-highlighting
 ```
 
-1.  Most themes use this option.
+A -  Most themes use this option.
 
-2.  OMZ themes use this library.
+B -  OMZ themes use this library.
 
-3.  Some OMZ themes use this plugin. It provides many aliases –
+C -  Some OMZ themes use this plugin. It provides many aliases –
     `atload''` shows how to disable some of them (to use program
     `rgburke/grv`).
 
-4.  Example functional plugin.
+D -  Example functional plugin.
 
-5.  Set OMZ theme.
+E -  Set OMZ theme.
 
-6.  Load Docker completion
+F -  Load Docker completion.
 
-7.  Normal plugin (syntax-highlighting, at the end, like it is
+G -  Normal plugin (syntax-highlighting, at the end, like it is
     suggested).
 
 Completions provided by git plugin are catched, but ignored. They can be
