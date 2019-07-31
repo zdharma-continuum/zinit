@@ -761,6 +761,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 } # }}}
 # FUNCTION: -zplg-unload {{{
+# 0. Call the Zsh Plugin's Standard *_plugin_unload function
 # 1. Unfunction functions (created by plugin)
 # 2. Delete bindkeys (...)
 # 3. Delete Zstyles
@@ -794,6 +795,12 @@ ZPLGM[EXTENDED_GLOB]=""
     # Store report of the plugin in variable LASTREPORT
     typeset -g LASTREPORT
     LASTREPORT=`-zplg-show-report "$1" "$2"`
+
+    #
+    # Call the Zsh Plugin's Standard *_plugin_unload function
+    #
+
+    (( ${+functions[${plugin}_plugin_unload]} )) && ${plugin}_plugin_unload
 
     #
     # 1. Unfunction
