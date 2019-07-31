@@ -814,7 +814,7 @@ ZPLGM[EXTENDED_GLOB]=""
         [[ -z "$f" ]] && continue
         f="${(Q)f}"
         (( quiet )) || print "Deleting function $f"
-        unfunction -- "$f"
+        (( ${+functions[$f]} )) && unfunction -- "$f"
         (( ${+precmd_functions} )) && precmd_functions=( ${precmd_functions[@]:#$f} )
         (( ${+preexec_functions} )) && preexec_functions=( ${preexec_functions[@]:#$f} )
         (( ${+chpwd_functions} )) && chpwd_functions=( ${chpwd_functions[@]:#$f} )
