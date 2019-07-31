@@ -1,5 +1,5 @@
 documentation:
-	@git checkout documentation || { print RETRYING WITH STASH; git stash; git checkout documentation; }
+	@git checkout documentation || { echo RETRYING WITH STASH; git stash; git checkout documentation; }
 
 master:
-	@git checkout master || { print RETRYING WITH STASH; git stash; git checkout master; }
+	@git checkout master || { echo RETRYING WITH STASH; git stash; git checkout master; }
