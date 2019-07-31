@@ -1,14 +1,15 @@
-site: docs/*.md docs/css/*.css
-	mkdocs build
+wiki: docs/*.md docs/css/*.css
+	mkdocs build -d wiki
 	./high.sh
 
-gh-pages: site
-	command mv -vf site site_
+gh-pages: wiki
+	command mv -vf wiki wiki_
 	git checkout gh-pages
-	command rm -rf site
-	command mv -vf site_ site
-	git add -A site
+	command rm -rf wiki
+	command mv -vf wiki_ wiki
+	git add -A wiki
 	echo "Site build ["`date "+%m/%d/%Y %H:%M:%S"`"]" > .git/COMMIT_EDITMSG
+	cat .git/COMMIT_EDITMSG
 
-master: site
+master: wiki
 	git checkout master
