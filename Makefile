@@ -1,6 +1,5 @@
 wiki: docs/*.md docs/css/*.css
 	mkdocs build -d wiki
-	./high.sh
 
 gh-pages: wiki
 	command mv -vf wiki wiki_
