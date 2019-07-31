@@ -9,6 +9,7 @@ gh-pages: wiki
 	git add -A wiki
 	echo "Site build ["`date "+%m/%d/%Y %H:%M:%S"`"]" > .git/COMMIT_EDITMSG
 	cat .git/COMMIT_EDITMSG
+	git commit -t .git/COMMIT_EDITMSG && git push -f origin gh-pages
 
 master: wiki
 	git checkout master
