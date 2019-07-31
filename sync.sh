@@ -16,8 +16,10 @@ print $fg_bold[green]Copying files...$reset_color
 sleep 1
 cp -f ~/github/zplugin_readme/docs/*.md docs
 git add -A docs
-cp -vf ~/github/zplugin_readme/mkdocs.yml .
+cp -fv ~/github/zplugin_readme/mkdocs.yml .
 git add mkdocs.yml
+cp -fv ~/github/zplugin_readme/docs/css/* docs/css
+git add -A docs/css
 print $fg_bold[green]Commiting:$reset_color
 sleep 1
 git commit ${${(M)1:#(a|am|amend)}:+--amend} && \
