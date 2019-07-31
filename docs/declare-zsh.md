@@ -25,5 +25,3 @@ snippets!:
 # Usage
 
 ![usage screenshot](https://raw.githubusercontent.com/zdharma/declare-zsh/master/img/usage.png)
-
-<!-- vim:tw=72:wrap

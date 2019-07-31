@@ -44,3 +44,9 @@ markdown_extensions:
   - toc:
       permalink: '#'
       separator: '_'
+extra_css:
+  - css/theme.css
+  - css/syntax-highlighting.css
+extra_javascript:
+  - js/syntax-highlighting.js
+  - js/init.js

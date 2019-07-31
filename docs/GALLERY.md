@@ -115,20 +115,16 @@ zplugin light geometry-zsh/geometry
 zplugin ice pick"async.zsh" src"pure.zsh"
 zplugin light sindresorhus/pure
 
-zplugin ice pick"powerless.zsh" src"utilities.zsh"
-zplugin light martinrotter/powerless
-
 zplugin light mafredri/zsh-async  # dependency
 zplugin ice svn silent atload'prompt sorin'
 zplugin snippet PZT::modules/prompt
 
 zplugin ice atload"fpath+=( \$PWD );"
 zplugin light chauncey-garrett/zsh-prompt-garrett
-zplugin ice svn atload"prompt garrett"
+zplugin ice svn atload"prompt garrett" silent
 zplugin snippet PZT::modules/prompt
 
-zplugin ice nocompletions atclone'prompt_zinc_compile' atpull'%atclone' \
-    compile"{zinc_functions/*,segments/*,zinc.zsh}"
+zplugin ice nocompletions compile"{zinc_functions/*,segments/*,zinc.zsh}"
 zplugin load robobenklein/zinc
 
 # ZINC git info is already async, but if you want it 
@@ -137,6 +133,8 @@ zplugin load robobenklein/zinc
 zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
 zplugin load romkatv/gitstatus
 
+# After finishing the configuration wizard change the atload'' ice to:
+# -> atload'source ~/.p10k.zsh; _p9k_precmd'
 zplugin ice wait'!' lucid atload'true; _p9k_precmd' nocd
 zplugin light romkatv/powerlevel10k
 ```
