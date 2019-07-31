@@ -12,7 +12,7 @@ In the document below you’ll find out how to:
 
 and much more.
 
-## Example use
+## Basic Plugin Loading
 
 ``` zsh
 zplugin load zdharma/history-search-multi-word
@@ -62,7 +62,7 @@ zplugin ice svn
 zplugin snippet PZT::modules/docker
 ```
 
-## Snippets and performance
+## Snippets and Performance
 
 Using `curl`, `wget`, etc. along with Subversion allows to almost
 completely avoid code dedicated to Oh My Zsh and Prezto, and also to
@@ -70,7 +70,7 @@ other frameworks. This gives profits in performance of `Zplugin`, it
 is really fast and also compact (causing low memory footprint and
 short loading time).
 
-## Some Ice-modifiers
+## Some Ice-Modifiers
 
 The command `zplugin ice` provides Ice-modifiers for single next command
 (see the README subsection
@@ -148,7 +148,7 @@ on this below at [**\*\***](#on_svn_revert)).
 For exclamation mark to not be expanded by Zsh in interactive session,
 use `'...'` not `"..."` to enclose contents of `atpull` Ice-mod.
 
-## Snippets-commands
+## Snippets-Commands
 
 Commands can also be added to `$PATH` using **snippets**. For example:
 
@@ -164,7 +164,7 @@ zplugin snippet \
 `atpull'!svn revert'`. There’s also `atinit` Ice-mod, executed before
 each loading of plugin or snippet.
 
-## Snippets-completions
+## Snippets-Completions
 
 By using the `as''` ice-mod with value `completion` you can point the
 `snippet` subcommand directly to a completion file, e.g.:
@@ -195,7 +195,7 @@ zplugin cuninstall zsh-users/zsh-completions   # uninstall
 zplugin creinstall zsh-users/zsh-completions   # install
 ```
 
-### Listing completions
+### Listing Completions
 
 To see what completions **all** plugins provide, in tabular formatting
 and with name of each plugin, use:
@@ -228,7 +228,7 @@ console, dad, debuild, dget, dhcpcd, diana     zsh-users/zsh-completions
 ...
 ```
 
-### Enabling and disabling completions
+### Enabling and Disabling Completions
 
 Completions can be disabled, so that e.g. original Zsh completion will
 be used. The commands are very basic, they only need completion
@@ -249,7 +249,7 @@ and show if they are installed:
 
 This sums up to complete control over completions.
 
-## Subversion For Subdirectories
+## Subversion for Subdirectories
 
 In general, to use **subdirectories** of Github projects as snippets add
 `/trunk/{path-to-dir}` to URL, for example:
@@ -329,7 +329,7 @@ action](https://asciinema.org/a/149725)**. This feature requires
 `zdharma/fast-syntax-highlighting` (it builds the `ZLAST_COMMANDS`
 array).
 
-### Automatic Load/Unload On Condition
+### Automatic Load/Unload on Condition
 
 Ices `load` and `unload` allow to define when you want plugins active or
 unactive. For example:
