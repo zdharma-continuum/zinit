@@ -20,6 +20,9 @@ cp -fv ~/github/zplugin_readme/mkdocs.yml .
 git add mkdocs.yml
 cp -fv ~/github/zplugin_readme/docs/css/* docs/css
 git add -A docs/css
+mkdir -p docs/js
+cp -fv ~/github/zplugin_readme/docs/js/* docs/js
+git add -A docs/js
 print $fg_bold[green]Commiting:$reset_color
 sleep 1
 { git commit ${${(M)1:#(a|am|amend)}:+--amend} || git status } && \
