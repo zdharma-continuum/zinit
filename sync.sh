@@ -22,6 +22,6 @@ cp -fv ~/github/zplugin_readme/docs/css/* docs/css
 git add -A docs/css
 print $fg_bold[green]Commiting:$reset_color
 sleep 1
-git commit ${${(M)1:#(a|am|amend)}:+--amend} && \
+{ git commit ${${(M)1:#(a|am|amend)}:+--amend} || git status } && \
     git push -f origin documentation && \
         make gh-pages
