@@ -768,23 +768,28 @@ zplugin snippet OMZ::lib
 <pre><code class="zsh">zplugin ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
 zplugin load robbyrussell/oh-my-zsh
 
-zplugin ice svn multisrc&quot;{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
-
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\${array[@]}&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
-
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;${array[@]}&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
-
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
+# Can use patterns
+zplugin ice svn multisrc&quot;{funct*,misc}.zsh&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
 
 array=( {functions,misc}.zsh )
 zplugin ice svn multisrc&quot;$array&quot; pick&quot;/dev/null&quot;
+zplugin snippet OMZ::lib
+
+# Will use the array's value at the moment of plugin load
+# – this can matter in case of using turbo mode
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
+zplugin snippet OMZ::lib
+
+# Compatible with KSH_ARRAYS option
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc&quot;${array[*]}&quot; pick&quot;/dev/null&quot;
+zplugin snippet OMZ::lib
+
+# Compatible with KSH_ARRAYS option
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc&quot;\${array[*]}&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
 
 zplugin ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
