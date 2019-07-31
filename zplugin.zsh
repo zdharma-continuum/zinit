@@ -1300,8 +1300,8 @@ function $f {
 # $2, ... - the text
 -zplg-add-report() {
     # Use zplugin binary module if available
-    ZPLG_REPORTS[$1]+="$2"$'\n'
-    [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_REPORTS[_dtrace/_dtrace]+="$2"$'\n'
+    [[ -n "$1" ]] && { (( ${+builtins[zpmod]} )) && zpmod report-append "$1" "$2"$'\n' || ZPLG_REPORTS[$1]+="$2"$'\n'; }
+    [[ "${ZPLGM[DTRACE]}" = "1" ]] && { (( ${+builtins[zpmod]} )) && zpmod report-append "$1" "$2"$'\n' || ZPLG_REPORTS[_dtrace/_dtrace]+="$2"$'\n'; }
 } # }}}
 # FUNCTION: -zplg-load-plugin {{{
 # Lower-level function for loading a plugin.
