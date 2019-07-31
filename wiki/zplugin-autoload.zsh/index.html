@@ -59,7 +59,7 @@
     
       <link rel="stylesheet" href="../css/theme.css">
     
-      <link rel="stylesheet" href="../css/fonts.css">
+      <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
       
@@ -175,8 +175,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="../Multiple-prompts/" title="Ice modifiers" class="md-tabs__link">
-          Ice modifiers
+        <a href="../Multiple-prompts/" title="Ice Modifiers" class="md-tabs__link">
+          Ice Modifiers
         </a>
       
     </li>
@@ -240,8 +240,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
-          declare-zsh
+        <a href="../declare-zsh/" title="Zplugin Extensions" class="md-tabs__link">
+          Zplugin Extensions
         </a>
       
     </li>
@@ -317,11 +317,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
-      Ice modifiers
+      Ice Modifiers
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
-        Ice modifiers
+        Ice Modifiers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -688,11 +688,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      declare-zsh
+      Zplugin Extensions
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
-        declare-zsh
+        Zplugin Extensions
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -705,6 +705,18 @@
   <li class="md-nav__item">
     <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
       declare-zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../crasis/" title="Crasis" class="md-nav__link">
+      Crasis
     </a>
   </li>
 
@@ -742,11 +754,11 @@
               
                 
                 
-                <h1 id="name">NAME</h1>
+                <h1 id="name">NAME<a class="headerlink" href="#name" title="Permanent link">#</a></h1>
 <p>zplugin-autoload.zsh - a shell script</p>
-<h1 id="synopsis">SYNOPSIS</h1>
+<h1 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">#</a></h1>
 <p>Documentation automatically generated with `zshelldoc'</p>
-<h1 id="functions">FUNCTIONS</h1>
+<h1 id="functions">FUNCTIONS<a class="headerlink" href="#functions" title="Permanent link">#</a></h1>
 <pre><code> -zplg-any-to-uspl2
  -zplg-at-eval
  -zplg-build-module
@@ -810,12 +822,12 @@
 AUTOLOAD compinit
 </code></pre>
 
-<h1 id="details">DETAILS</h1>
-<h2 id="script-body">Script Body</h2>
+<h1 id="details">DETAILS<a class="headerlink" href="#details" title="Permanent link">#</a></h1>
+<h2 id="script_body">Script Body<a class="headerlink" href="#script_body" title="Permanent link">#</a></h2>
 <p>Has 5 line(s). No functions are called (may set up e.g. a hook, a Zle
 widget bound to a key, etc.).</p>
 <p>Uses feature(s): <em>source</em></p>
-<h2 id="45zplg-any-to-uspl2">-zplg-any-to-uspl2</h2>
+<h2 id="45zplg-any-to-uspl2">-zplg-any-to-uspl2<a class="headerlink" href="#45zplg-any-to-uspl2" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Converts given plugin-spec to format that's used in keys for hash tables.
 So basically, creates string "user/plugin" (this format is called: uspl2).
@@ -832,13 +844,13 @@ $2 - (optional) plugin (only when $1 - i.e. user - given)
 <pre><code>-zplg-clear-report-for
 -zplg-exists-message
 </code></pre>
-<h2 id="45zplg-at-eval">-zplg-at-eval</h2>
+<h2 id="45zplg-at-eval">-zplg-at-eval<a class="headerlink" href="#45zplg-at-eval" title="Permanent link">#</a></h2>
 <p>Has 1 line(s). Doesn’t call other functions.</p>
 <p>Uses feature(s): <em>eval</em></p>
 <p>Called by:</p>
 <pre><code>-zplg-update-or-status
 </code></pre>
-<h2 id="45zplg-build-module">-zplg-build-module</h2>
+<h2 id="45zplg-build-module">-zplg-build-module<a class="headerlink" href="#45zplg-build-module" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Performs ./configure &amp;&amp; make on the module and displays information
 how to load the module in .zshrc.
@@ -851,7 +863,7 @@ how to load the module in .zshrc.
 <p>Called by:</p>
 <pre><code>-zplg-module
 </code></pre>
-<h2 id="45zplg-cd">-zplg-cd</h2>
+<h2 id="45zplg-cd">-zplg-cd<a class="headerlink" href="#45zplg-cd" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Jumps to plugin's directory (in Zplugin's home directory).
 
@@ -871,7 +883,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-cdisable">-zplg-cdisable</h2>
+<h2 id="45zplg-cdisable">-zplg-cdisable<a class="headerlink" href="#45zplg-cdisable" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Enables given installed completion.
 
@@ -891,7 +903,7 @@ $1 - e.g. "_mkdir" or "mkdir"
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-cenable">-zplg-cenable</h2>
+<h2 id="45zplg-cenable">-zplg-cenable<a class="headerlink" href="#45zplg-cenable" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Disables given installed completion.
 
@@ -911,7 +923,7 @@ $1 - e.g. "_mkdir" or "mkdir"
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-changes">-zplg-changes</h2>
+<h2 id="45zplg-changes">-zplg-changes<a class="headerlink" href="#45zplg-changes" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Shows `git log` of given plugin.
 
@@ -928,7 +940,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-check-comp-consistency">-zplg-check-comp-consistency</h2>
+<h2 id="45zplg-check-comp-consistency">-zplg-check-comp-consistency<a class="headerlink" href="#45zplg-check-comp-consistency" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Zplugin creates symlink for each installed completion.
 This function checks whether given completion (i.e.
@@ -945,7 +957,7 @@ $2 - path to backup file within plugin's directory
 <pre><code>-zplg-cdisable
 -zplg-cenable
 </code></pre>
-<h2 id="45zplg-check-which-completions-are-enabled">-zplg-check-which-completions-are-enabled</h2>
+<h2 id="45zplg-check-which-completions-are-enabled">-zplg-check-which-completions-are-enabled<a class="headerlink" href="#45zplg-check-which-completions-are-enabled" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>For each argument that each should be a path to completion
 within a plugin's dir, it checks whether that completion
@@ -962,7 +974,7 @@ $1, ... - path to completion within plugin's directory
 <p>Called by:</p>
 <pre><code>-zplg-show-report
 </code></pre>
-<h2 id="45zplg-check-which-completions-are-installed">-zplg-check-which-completions-are-installed</h2>
+<h2 id="45zplg-check-which-completions-are-installed">-zplg-check-which-completions-are-installed<a class="headerlink" href="#45zplg-check-which-completions-are-installed" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>For each argument that each should be a path to completion
 within a plugin's dir, it checks whether that completion
@@ -976,7 +988,7 @@ $1, ... - path to completion within plugin's directory
 <p>Called by:</p>
 <pre><code>-zplg-show-report
 </code></pre>
-<h2 id="45zplg-clear-completions">-zplg-clear-completions</h2>
+<h2 id="45zplg-clear-completions">-zplg-clear-completions<a class="headerlink" href="#45zplg-clear-completions" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Delete stray and improper completions.
 
@@ -995,7 +1007,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-clear-report-for">-zplg-clear-report-for</h2>
+<h2 id="45zplg-clear-report-for">-zplg-clear-report-for<a class="headerlink" href="#45zplg-clear-report-for" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Clears all report data for given user/plugin. This is
 done by resetting all related global ZPLG_* hashes.
@@ -1013,7 +1025,7 @@ $2 - (optional) plugin (only when $1 - i.e. user - given)
 <pre><code>-zplg-unload
 zplugin.zsh/-zplg-clear-debug-report
 </code></pre>
-<h2 id="45zplg-compile-uncompile-all">-zplg-compile-uncompile-all</h2>
+<h2 id="45zplg-compile-uncompile-all">-zplg-compile-uncompile-all<a class="headerlink" href="#45zplg-compile-uncompile-all" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Compiles or uncompiles all existing (on disk) plugins.
 
@@ -1032,7 +1044,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-compiled">-zplg-compiled</h2>
+<h2 id="45zplg-compiled">-zplg-compiled<a class="headerlink" href="#45zplg-compiled" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Displays list of plugins that are compiled.
 
@@ -1047,7 +1059,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-compinit">-zplg-compinit</h2>
+<h2 id="45zplg-compinit">-zplg-compinit<a class="headerlink" href="#45zplg-compinit" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>User-exposed `compinit' frontend which first ensures that all
 completions managed by Zplugin are forgotten by Zshell. After
@@ -1066,7 +1078,7 @@ No arguments.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-compute-ice">-zplg-compute-ice</h2>
+<h2 id="45zplg-compute-ice">-zplg-compute-ice<a class="headerlink" href="#45zplg-compute-ice" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
 ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
@@ -1097,7 +1109,7 @@ $5 - name of output string parameter, to hold filename ("filename")
 -zplg-update-or-status-snippet
 -zplg-update-or-status
 </code></pre>
-<h2 id="45zplg-confirm">-zplg-confirm</h2>
+<h2 id="45zplg-confirm">-zplg-confirm<a class="headerlink" href="#45zplg-confirm" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Prints given question, waits for "y" key, evals
 given expression if "y" obtained
@@ -1111,7 +1123,7 @@ $2 - expression
 <p>Called by:</p>
 <pre><code>-zplg-delete
 </code></pre>
-<h2 id="45zplg-create">-zplg-create</h2>
+<h2 id="45zplg-create">-zplg-create<a class="headerlink" href="#45zplg-create" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Creates a plugin, also on Github (if not "_local/name" plugin).
 
@@ -1130,7 +1142,7 @@ $2 - (optional) plugin (only when $1 - i.e. user - given)
 <p>Uses feature(s): <em>vared</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-delete">-zplg-delete</h2>
+<h2 id="45zplg-delete">-zplg-delete<a class="headerlink" href="#45zplg-delete" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Deletes plugin's or snippet's directory (in Zplugin's home directory).
 
@@ -1150,7 +1162,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-diff-env-compute">-zplg-diff-env-compute</h2>
+<h2 id="45zplg-diff-env-compute">-zplg-diff-env-compute<a class="headerlink" href="#45zplg-diff-env-compute" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Computes ZPLG_PATH, ZPLG_FPATH that hold (f)path components
 added by plugin. Uses data gathered earlier by -zplg-diff-env().
@@ -1163,7 +1175,7 @@ $1 - user/plugin
 <pre><code>-zplg-show-report
 -zplg-unload
 </code></pre>
-<h2 id="45zplg-diff-functions-compute">-zplg-diff-functions-compute</h2>
+<h2 id="45zplg-diff-functions-compute">-zplg-diff-functions-compute<a class="headerlink" href="#45zplg-diff-functions-compute" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Computes ZPLG_FUNCTIONS that holds new functions added by plugin.
 Uses data gathered earlier by -zplg-diff-functions().
@@ -1176,7 +1188,7 @@ $1 - user/plugin
 <pre><code>-zplg-show-report
 -zplg-unload
 </code></pre>
-<h2 id="45zplg-diff-options-compute">-zplg-diff-options-compute</h2>
+<h2 id="45zplg-diff-options-compute">-zplg-diff-options-compute<a class="headerlink" href="#45zplg-diff-options-compute" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Computes ZPLG_OPTIONS that holds options changed by plugin.
 Uses data gathered earlier by -zplg-diff-options().
@@ -1189,7 +1201,7 @@ $1 - user/plugin
 <pre><code>-zplg-show-report
 -zplg-unload
 </code></pre>
-<h2 id="45zplg-diff-parameter-compute">-zplg-diff-parameter-compute</h2>
+<h2 id="45zplg-diff-parameter-compute">-zplg-diff-parameter-compute<a class="headerlink" href="#45zplg-diff-parameter-compute" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Computes ZPLG_PARAMETERS_PRE, ZPLG_PARAMETERS_POST that hold
 parameters created or changed (their type) by plugin. Uses
@@ -1203,7 +1215,7 @@ $1 - user/plugin
 <pre><code>-zplg-show-report
 -zplg-unload
 </code></pre>
-<h2 id="45zplg-edit">-zplg-edit</h2>
+<h2 id="45zplg-edit">-zplg-edit<a class="headerlink" href="#45zplg-edit" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Runs $EDITOR on source of given plugin. If the variable is not
 set then defaults to `vim'.
@@ -1222,7 +1234,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-exists-message">-zplg-exists-message</h2>
+<h2 id="45zplg-exists-message">-zplg-exists-message<a class="headerlink" href="#45zplg-exists-message" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Checks if plugin is loaded. Testable. Also outputs error
 message if plugin is not loaded.
@@ -1241,7 +1253,7 @@ $2 - (optional) plugin (only when $1 - i.e. user - given)
 <pre><code>-zplg-show-report
 -zplg-unload
 </code></pre>
-<h2 id="45zplg-find-completions-of-plugin">-zplg-find-completions-of-plugin</h2>
+<h2 id="45zplg-find-completions-of-plugin">-zplg-find-completions-of-plugin<a class="headerlink" href="#45zplg-find-completions-of-plugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Searches for completions owned by given plugin.
 Returns them in `reply' array.
@@ -1257,7 +1269,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 <p>Called by:</p>
 <pre><code>-zplg-show-report
 </code></pre>
-<h2 id="45zplg-format-env">-zplg-format-env</h2>
+<h2 id="45zplg-format-env">-zplg-format-env<a class="headerlink" href="#45zplg-format-env" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Creates one-column text about FPATH or PATH elements
 added when given plugin was loaded.
@@ -1270,7 +1282,7 @@ $2 - if 1, then examine PATH, if 2, then examine FPATH
 <p>Called by:</p>
 <pre><code>-zplg-show-report
 </code></pre>
-<h2 id="45zplg-format-functions">-zplg-format-functions</h2>
+<h2 id="45zplg-format-functions">-zplg-format-functions<a class="headerlink" href="#45zplg-format-functions" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Creates a one or two columns text with functions created
 by given plugin.
@@ -1282,7 +1294,7 @@ $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 <p>Called by:</p>
 <pre><code>-zplg-show-report
 </code></pre>
-<h2 id="45zplg-format-options">-zplg-format-options</h2>
+<h2 id="45zplg-format-options">-zplg-format-options<a class="headerlink" href="#45zplg-format-options" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Creates one-column text about options that changed when
 plugin "$1" was loaded.
@@ -1298,7 +1310,7 @@ $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 <p>Called by:</p>
 <pre><code>-zplg-show-report
 </code></pre>
-<h2 id="45zplg-format-parameter">-zplg-format-parameter</h2>
+<h2 id="45zplg-format-parameter">-zplg-format-parameter<a class="headerlink" href="#45zplg-format-parameter" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Creates one column text that lists global parameters that
 changed when the given plugin was loaded.
@@ -1310,7 +1322,7 @@ $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 <p>Called by:</p>
 <pre><code>-zplg-show-report
 </code></pre>
-<h2 id="45zplg-get-completion-owner">-zplg-get-completion-owner</h2>
+<h2 id="45zplg-get-completion-owner">-zplg-get-completion-owner<a class="headerlink" href="#45zplg-get-completion-owner" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Returns "user---plugin" string (uspl1 format) of plugin that
 owns given completion.
@@ -1332,7 +1344,7 @@ $2 - readlink command (":" or "readlink")
 -zplg-get-completion-owner-uspl2col
 -zplg-show-completions
 </code></pre>
-<h2 id="45zplg-get-completion-owner-uspl2col">-zplg-get-completion-owner-uspl2col</h2>
+<h2 id="45zplg-get-completion-owner-uspl2col">-zplg-get-completion-owner-uspl2col<a class="headerlink" href="#45zplg-get-completion-owner-uspl2col" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>For shortening of code - returns colorized plugin name
 that owns given completion.
@@ -1350,7 +1362,7 @@ $2 - readlink command (":" or "readlink")
 <pre><code>-zplg-cdisable
 -zplg-cenable
 </code></pre>
-<h2 id="45zplg-get-path">-zplg-get-path</h2>
+<h2 id="45zplg-get-path">-zplg-get-path<a class="headerlink" href="#45zplg-get-path" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Returns path of given ID-string, which may be a plugin-spec
 (like "user/plugin" or "user" "plugin"), an absolute path
@@ -1369,7 +1381,7 @@ nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 <pre><code>-zplg-cd
 -zplg-uninstall-completions
 </code></pre>
-<h2 id="45zplg-glance">-zplg-glance</h2>
+<h2 id="45zplg-glance">-zplg-glance<a class="headerlink" href="#45zplg-glance" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Shows colorized source code of plugin. Is able to use pygmentize,
 highlight, GNU source-highlight.
@@ -1388,7 +1400,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-help">-zplg-help</h2>
+<h2 id="45zplg-help">-zplg-help<a class="headerlink" href="#45zplg-help" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Shows usage information.
 
@@ -1399,7 +1411,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-list-bindkeys">-zplg-list-bindkeys</h2>
+<h2 id="45zplg-list-bindkeys">-zplg-list-bindkeys<a class="headerlink" href="#45zplg-list-bindkeys" title="Permanent link">#</a></h2>
 <p>Has 42 line(s). Calls functions:</p>
 <pre><code>-zplg-list-bindkeys
 `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -1407,7 +1419,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-list-compdef-replay">-zplg-list-compdef-replay</h2>
+<h2 id="45zplg-list-compdef-replay">-zplg-list-compdef-replay<a class="headerlink" href="#45zplg-list-compdef-replay" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Shows recorded compdefs (called by plugins loaded earlier).
 Plugins often call `compdef' hoping for `compinit' being
@@ -1420,12 +1432,12 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-ls">-zplg-ls</h2>
+<h2 id="45zplg-ls">-zplg-ls<a class="headerlink" href="#45zplg-ls" title="Permanent link">#</a></h2>
 <p>Has 19 line(s). Doesn’t call other functions.</p>
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-module">-zplg-module</h2>
+<h2 id="45zplg-module">-zplg-module<a class="headerlink" href="#45zplg-module" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Function that has sub-commands passed as long-options (with two dashes, --).
 It's an attempt to plugin only this one function into `zplugin' function
@@ -1440,7 +1452,7 @@ defined in zplugin.zsh, to not make this file longer than it's needed.
 <pre><code>-zplg-build-module
 zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-prepare-readlink">-zplg-prepare-readlink</h2>
+<h2 id="45zplg-prepare-readlink">-zplg-prepare-readlink<a class="headerlink" href="#45zplg-prepare-readlink" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Prepares readlink command, used for establishing completion's owner.
 
@@ -1455,7 +1467,7 @@ $REPLY = ":" or "readlink"
 -zplg-clear-completions
 -zplg-show-completions
 </code></pre>
-<h2 id="45zplg-recall">-zplg-recall</h2>
+<h2 id="45zplg-recall">-zplg-recall<a class="headerlink" href="#45zplg-recall" title="Permanent link">#</a></h2>
 <p>Has 37 line(s). Calls functions:</p>
 <pre><code>-zplg-recall
 `-- -zplg-compute-ice
@@ -1468,7 +1480,7 @@ $REPLY = ":" or "readlink"
 <p>Uses feature(s): <em>wait</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-recently">-zplg-recently</h2>
+<h2 id="45zplg-recently">-zplg-recently<a class="headerlink" href="#45zplg-recently" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Shows plugins that obtained commits in specified past time.
 
@@ -1484,7 +1496,7 @@ $1 - time spec, e.g. "1 week"
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-restore-extendedglob">-zplg-restore-extendedglob</h2>
+<h2 id="45zplg-restore-extendedglob">-zplg-restore-extendedglob<a class="headerlink" href="#45zplg-restore-extendedglob" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Restores extendedglob-option from state saved earlier.
 </code></pre>
@@ -1495,7 +1507,7 @@ $1 - time spec, e.g. "1 week"
 -zplg-show-registered-plugins
 -zplg-unload
 </code></pre>
-<h2 id="45zplg-save-set-extendedglob">-zplg-save-set-extendedglob</h2>
+<h2 id="45zplg-save-set-extendedglob">-zplg-save-set-extendedglob<a class="headerlink" href="#45zplg-save-set-extendedglob" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Enables extendedglob-option first saving if it was already
 enabled, for restoration of this state later.
@@ -1507,7 +1519,7 @@ enabled, for restoration of this state later.
 -zplg-show-registered-plugins
 -zplg-unload
 </code></pre>
-<h2 id="45zplg-search-completions">-zplg-search-completions</h2>
+<h2 id="45zplg-search-completions">-zplg-search-completions<a class="headerlink" href="#45zplg-search-completions" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>While -zplg-show-completions() shows what completions are
 installed, this functions searches through all plugin dirs
@@ -1523,7 +1535,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-self-update">-zplg-self-update</h2>
+<h2 id="45zplg-self-update">-zplg-self-update<a class="headerlink" href="#45zplg-self-update" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Updates Zplugin code (does a git pull).
 
@@ -1535,7 +1547,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-show-all-reports">-zplg-show-all-reports</h2>
+<h2 id="45zplg-show-all-reports">-zplg-show-all-reports<a class="headerlink" href="#45zplg-show-all-reports" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Displays reports of all loaded plugins.
 
@@ -1568,7 +1580,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-show-completions">-zplg-show-completions</h2>
+<h2 id="45zplg-show-completions">-zplg-show-completions<a class="headerlink" href="#45zplg-show-completions" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Display installed (enabled and disabled), completions. Detect
 stray and improper ones.
@@ -1588,7 +1600,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-show-debug-report">-zplg-show-debug-report</h2>
+<h2 id="45zplg-show-debug-report">-zplg-show-debug-report<a class="headerlink" href="#45zplg-show-debug-report" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Displays dtrace report (data recorded in interactive session).
 
@@ -1621,7 +1633,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-show-registered-plugins">-zplg-show-registered-plugins</h2>
+<h2 id="45zplg-show-registered-plugins">-zplg-show-registered-plugins<a class="headerlink" href="#45zplg-show-registered-plugins" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Lists loaded plugins (subcommands list, lodaded).
 
@@ -1637,7 +1649,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-show-report">-zplg-show-report</h2>
+<h2 id="45zplg-show-report">-zplg-show-report<a class="headerlink" href="#45zplg-show-report" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Displays report of the plugin given.
 
@@ -1674,7 +1686,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 -zplg-show-debug-report
 zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-show-times">-zplg-show-times</h2>
+<h2 id="45zplg-show-times">-zplg-show-times<a class="headerlink" href="#45zplg-show-times" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Shows loading times of all loaded plugins.
 
@@ -1688,7 +1700,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-show-zstatus">-zplg-show-zstatus</h2>
+<h2 id="45zplg-show-zstatus">-zplg-show-zstatus<a class="headerlink" href="#45zplg-show-zstatus" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Shows Zplugin status, i.e. number of loaded plugins,
 of available completions, etc.
@@ -1700,7 +1712,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-stress">-zplg-stress</h2>
+<h2 id="45zplg-stress">-zplg-stress<a class="headerlink" href="#45zplg-stress" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Compiles plugin with various options on and off to see
 how well the code is written. The options are:
@@ -1723,7 +1735,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 <p>Uses feature(s): <em>zcompile</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-uncompile-plugin">-zplg-uncompile-plugin</h2>
+<h2 id="45zplg-uncompile-plugin">-zplg-uncompile-plugin<a class="headerlink" href="#45zplg-uncompile-plugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Uncompiles given plugin.
 
@@ -1742,7 +1754,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 <pre><code>-zplg-compile-uncompile-all
 zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-uninstall-completions">-zplg-uninstall-completions</h2>
+<h2 id="45zplg-uninstall-completions">-zplg-uninstall-completions<a class="headerlink" href="#45zplg-uninstall-completions" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Removes all completions of given plugin from Zshell (i.e. from FPATH).
 The FPATH is typically `~/.zplugin/completions/'.
@@ -1763,7 +1775,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-unload">-zplg-unload</h2>
+<h2 id="45zplg-unload">-zplg-unload<a class="headerlink" href="#45zplg-unload" title="Permanent link">#</a></h2>
 <blockquote>
 <ol>
 <li>
@@ -1827,7 +1839,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 zplugin.zsh/-zplg-run-task
 zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-update-or-status">-zplg-update-or-status</h2>
+<h2 id="45zplg-update-or-status">-zplg-update-or-status<a class="headerlink" href="#45zplg-update-or-status" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Updates (git pull) or does `git status' for given plugin.
 
@@ -1868,7 +1880,7 @@ $3 - plugin (only when $1 - i.e. user - given)
 <pre><code>-zplg-update-or-status-all
 zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-update-or-status-all">-zplg-update-or-status-all</h2>
+<h2 id="45zplg-update-or-status-all">-zplg-update-or-status-all<a class="headerlink" href="#45zplg-update-or-status-all" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Updates (git pull) or does `git status` for all existing plugins.
 This includes also plugins that are not loaded into Zsh (but exist
@@ -1916,7 +1928,7 @@ User-action entry point.
 <p>Called by:</p>
 <pre><code>zplugin.zsh/zplugin
 </code></pre>
-<h2 id="45zplg-update-or-status-snippet">-zplg-update-or-status-snippet</h2>
+<h2 id="45zplg-update-or-status-snippet">-zplg-update-or-status-snippet<a class="headerlink" href="#45zplg-update-or-status-snippet" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements update or status operation for snippet given by URL.
 
@@ -1938,7 +1950,7 @@ $2 - snippet URL
 <pre><code>-zplg-update-or-status-all
 -zplg-update-or-status
 </code></pre>
-<h2 id="compinit">compinit</h2>
+<h2 id="compinit">compinit<a class="headerlink" href="#compinit" title="Permanent link">#</a></h2>
 <p>Has 544 line(s). Doesn’t call other functions.</p>
 <p>Uses feature(s): <em>autoload</em>, <em>bindkey</em>, <em>eval</em>, <em>read</em>, <em>unfunction</em>,
 <em>zle</em>, <em>zstyle</em></p>
@@ -2017,6 +2029,10 @@ $2 - snippet URL
       <script src="../assets/javascripts/application.245445c6.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+        <script src="../js/syntax-highlighting.js"></script>
+      
+        <script src="../js/init.js"></script>
       
     
   </body>

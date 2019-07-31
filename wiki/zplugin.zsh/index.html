@@ -59,7 +59,7 @@
     
       <link rel="stylesheet" href="../css/theme.css">
     
-      <link rel="stylesheet" href="../css/fonts.css">
+      <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
       
@@ -175,8 +175,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="../Multiple-prompts/" title="Ice modifiers" class="md-tabs__link">
-          Ice modifiers
+        <a href="../Multiple-prompts/" title="Ice Modifiers" class="md-tabs__link">
+          Ice Modifiers
         </a>
       
     </li>
@@ -240,8 +240,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
-          declare-zsh
+        <a href="../declare-zsh/" title="Zplugin Extensions" class="md-tabs__link">
+          Zplugin Extensions
         </a>
       
     </li>
@@ -317,11 +317,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
-      Ice modifiers
+      Ice Modifiers
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
-        Ice modifiers
+        Ice Modifiers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -688,11 +688,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      declare-zsh
+      Zplugin Extensions
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
-        declare-zsh
+        Zplugin Extensions
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -705,6 +705,18 @@
   <li class="md-nav__item">
     <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
       declare-zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../crasis/" title="Crasis" class="md-nav__link">
+      Crasis
     </a>
   </li>
 
@@ -742,11 +754,11 @@
               
                 
                 
-                <h1 id="name">NAME</h1>
+                <h1 id="name">NAME<a class="headerlink" href="#name" title="Permanent link">#</a></h1>
 <p>zplugin.zsh - a shell script</p>
-<h1 id="synopsis">SYNOPSIS</h1>
+<h1 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">#</a></h1>
 <p>Documentation automatically generated with `zshelldoc'</p>
-<h1 id="functions">FUNCTIONS</h1>
+<h1 id="functions">FUNCTIONS<a class="headerlink" href="#functions" title="Permanent link">#</a></h1>
 <pre><code> --zplg-reload-and-run
  --zplg-shadow-alias
  --zplg-shadow-autoload
@@ -795,8 +807,8 @@ AUTOLOAD is-at-least
 PRECMD-HOOK -zplg-scheduler
 </code></pre>
 
-<h1 id="details">DETAILS</h1>
-<h2 id="script-body">Script Body</h2>
+<h1 id="details">DETAILS<a class="headerlink" href="#details" title="Permanent link">#</a></h1>
+<h2 id="script_body">Script Body<a class="headerlink" href="#script_body" title="Permanent link">#</a></h2>
 <p>Has 137 line(s). Calls functions:</p>
 <pre><code>Script-Body
 |-- -zplg-prepare-home
@@ -805,7 +817,7 @@ PRECMD-HOOK -zplg-scheduler
 </code></pre>
 <p>Uses feature(s): <em>alias</em>, <em>autoload</em>, <em>export</em>, <em>zmodload</em>, <em>zstyle</em></p>
 <p><em>Exports (environment):</em> ZPFX</p>
-<h2 id="45-zplg-reload-and-run">--zplg-reload-and-run</h2>
+<h2 id="45-zplg-reload-and-run">--zplg-reload-and-run<a class="headerlink" href="#45-zplg-reload-and-run" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Marks given function ($3) for autoloading, and executes it triggering the
 load. $1 is the fpath dedicated to the function, $2 are autoload options.
@@ -826,7 +838,7 @@ Author: Bart Schaefer
 <p>Uses feature(s): <em>autoload</em>, <em>unfunction</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45-zplg-shadow-alias">--zplg-shadow-alias</h2>
+<h2 id="45-zplg-shadow-alias">--zplg-shadow-alias<a class="headerlink" href="#45-zplg-shadow-alias" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Function defined to hijack plugin's calls to `alias' builtin.
 
@@ -840,7 +852,7 @@ The hijacking is to gather report data (which is used in unload).
 <p>Uses feature(s): <em>alias</em>, <em>unfunction</em>, <em>zparseopts</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45-zplg-shadow-autoload">--zplg-shadow-autoload</h2>
+<h2 id="45-zplg-shadow-autoload">--zplg-shadow-autoload<a class="headerlink" href="#45-zplg-shadow-autoload" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Function defined to hijack plugin's calls to `autoload' builtin.
 
@@ -855,7 +867,7 @@ run custom `autoload' function, that doesn't need FPATH.
 <p>Uses feature(s): <em>autoload</em>, <em>eval</em>, <em>zparseopts</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45-zplg-shadow-bindkey">--zplg-shadow-bindkey</h2>
+<h2 id="45-zplg-shadow-bindkey">--zplg-shadow-bindkey<a class="headerlink" href="#45-zplg-shadow-bindkey" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Function defined to hijack plugin's calls to `bindkey' builtin.
 
@@ -869,7 +881,7 @@ The hijacking is to gather report data (which is used in unload).
 <p>Uses feature(s): <em>bindkey</em>, <em>unfunction</em>, <em>zparseopts</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45-zplg-shadow-compdef">--zplg-shadow-compdef</h2>
+<h2 id="45-zplg-shadow-compdef">--zplg-shadow-compdef<a class="headerlink" href="#45-zplg-shadow-compdef" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Function defined to hijack plugin's calls to `compdef' function.
 The hijacking is not only for reporting, but also to save compdef
@@ -882,7 +894,7 @@ calls so that `compinit' can be called after loading plugins.
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45-zplg-shadow-zle">--zplg-shadow-zle</h2>
+<h2 id="45-zplg-shadow-zle">--zplg-shadow-zle<a class="headerlink" href="#45-zplg-shadow-zle" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Function defined to hijack plugin's calls to `zle' builtin.
 
@@ -896,7 +908,7 @@ The hijacking is to gather report data (which is used in unload).
 <p>Uses feature(s): <em>unfunction</em>, <em>zle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45-zplg-shadow-zstyle">--zplg-shadow-zstyle</h2>
+<h2 id="45-zplg-shadow-zstyle">--zplg-shadow-zstyle<a class="headerlink" href="#45-zplg-shadow-zstyle" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Function defined to hijack plugin's calls to `zstyle' builtin.
 
@@ -910,7 +922,7 @@ The hijacking is to gather report data (which is used in unload).
 <p>Uses feature(s): <em>unfunction</em>, <em>zparseopts</em>, <em>zstyle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-add-report">-zplg-add-report</h2>
+<h2 id="45zplg-add-report">-zplg-add-report<a class="headerlink" href="#45zplg-add-report" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Adds a report line for given plugin.
 
@@ -928,7 +940,7 @@ $2, ... - the text
 --zplg-shadow-zstyle
 -zplg-load-plugin
 </code></pre>
-<h2 id="45zplg-any-to-user-plugin">-zplg-any-to-user-plugin</h2>
+<h2 id="45zplg-any-to-user-plugin">-zplg-any-to-user-plugin<a class="headerlink" href="#45zplg-any-to-user-plugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Allows elastic plugin-spec across the code.
 
@@ -966,7 +978,7 @@ zplugin-side.zsh/-zplg-any-colorify-as-uspl2
 zplugin-side.zsh/-zplg-exists-physically
 zplugin-side.zsh/-zplg-first
 </code></pre>
-<h2 id="45zplg-clear-debug-report">-zplg-clear-debug-report</h2>
+<h2 id="45zplg-clear-debug-report">-zplg-clear-debug-report<a class="headerlink" href="#45zplg-clear-debug-report" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Forgets dtrace repport gathered up to this moment.
 </code></pre>
@@ -979,7 +991,7 @@ zplugin-side.zsh/-zplg-first
 <pre><code>zplugin
 zplugin-autoload.zsh/-zplg-unload
 </code></pre>
-<h2 id="45zplg-compdef-clear">-zplg-compdef-clear</h2>
+<h2 id="45zplg-compdef-clear">-zplg-compdef-clear<a class="headerlink" href="#45zplg-compdef-clear" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements user-exposed functionality to clear gathered compdefs.
 </code></pre>
@@ -989,7 +1001,7 @@ zplugin-autoload.zsh/-zplg-unload
 <pre><code>zpcdclear
 zplugin
 </code></pre>
-<h2 id="45zplg-compdef-replay">-zplg-compdef-replay</h2>
+<h2 id="45zplg-compdef-replay">-zplg-compdef-replay<a class="headerlink" href="#45zplg-compdef-replay" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Runs gathered compdef calls. This allows to run `compinit'
 after loading plugins.
@@ -1000,7 +1012,7 @@ after loading plugins.
 <pre><code>zpcdreplay
 zplugin
 </code></pre>
-<h2 id="45zplg-debug-start">-zplg-debug-start</h2>
+<h2 id="45zplg-debug-start">-zplg-debug-start<a class="headerlink" href="#45zplg-debug-start" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Starts Dtrace, i.e. session tracking for changes in Zsh state.
 </code></pre>
@@ -1016,7 +1028,7 @@ zplugin
 <p>Called by:</p>
 <pre><code>zplugin
 </code></pre>
-<h2 id="45zplg-debug-stop">-zplg-debug-stop</h2>
+<h2 id="45zplg-debug-stop">-zplg-debug-stop<a class="headerlink" href="#45zplg-debug-stop" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Stops Dtrace, i.e. session tracking for changes in Zsh state.
 </code></pre>
@@ -1032,7 +1044,7 @@ zplugin
 <p>Called by:</p>
 <pre><code>zplugin
 </code></pre>
-<h2 id="45zplg-debug-unload">-zplg-debug-unload</h2>
+<h2 id="45zplg-debug-unload">-zplg-debug-unload<a class="headerlink" href="#45zplg-debug-unload" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Reverts changes detected by dtrace run.
 </code></pre>
@@ -1044,7 +1056,7 @@ zplugin
 <p>Called by:</p>
 <pre><code>zplugin
 </code></pre>
-<h2 id="45zplg-deploy-message">-zplg-deploy-message</h2>
+<h2 id="45zplg-deploy-message">-zplg-deploy-message<a class="headerlink" href="#45zplg-deploy-message" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Deploys a sub-prompt message to be displayed OR a `zle
 .reset-prompt' call to be invoked
@@ -1056,7 +1068,7 @@ zplugin
 <pre><code>-zplg-load-snippet
 -zplg-load
 </code></pre>
-<h2 id="45zplg-diff-env">-zplg-diff-env</h2>
+<h2 id="45zplg-diff-env">-zplg-diff-env<a class="headerlink" href="#45zplg-diff-env" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements detection of change in PATH and FPATH.
 
@@ -1070,7 +1082,7 @@ $2 - command, can be "begin" or "end"
 -zplg-debug-stop
 -zplg-load-plugin
 </code></pre>
-<h2 id="45zplg-diff-functions">-zplg-diff-functions</h2>
+<h2 id="45zplg-diff-functions">-zplg-diff-functions<a class="headerlink" href="#45zplg-diff-functions" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements detection of newly created functions. Performs
 data gathering, computation is done in *-compute().
@@ -1085,7 +1097,7 @@ $2 - command, can be "begin" or "end"
 -zplg-debug-stop
 -zplg-load-plugin
 </code></pre>
-<h2 id="45zplg-diff-options">-zplg-diff-options</h2>
+<h2 id="45zplg-diff-options">-zplg-diff-options<a class="headerlink" href="#45zplg-diff-options" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements detection of change in option state. Performs
 data gathering, computation is done in *-compute().
@@ -1100,7 +1112,7 @@ $2 - command, can be "begin" or "end"
 -zplg-debug-stop
 -zplg-load-plugin
 </code></pre>
-<h2 id="45zplg-diff-parameter">-zplg-diff-parameter</h2>
+<h2 id="45zplg-diff-parameter">-zplg-diff-parameter<a class="headerlink" href="#45zplg-diff-parameter" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements detection of change in any parameter's existence and type.
 Performs data gathering, computation is done in *-compute().
@@ -1115,7 +1127,7 @@ $2 - command, can be "begin" or "end"
 -zplg-debug-stop
 -zplg-load-plugin
 </code></pre>
-<h2 id="45zplg-find-other-matches">-zplg-find-other-matches</h2>
+<h2 id="45zplg-find-other-matches">-zplg-find-other-matches<a class="headerlink" href="#45zplg-find-other-matches" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Plugin's main source file is in general `name.plugin.zsh'. However,
 there can be different conventions, if that file is not found, then
@@ -1128,7 +1140,7 @@ sanity.
 <pre><code>-zplg-load-plugin
 zplugin-side.zsh/-zplg-first
 </code></pre>
-<h2 id="45zplg-ice">-zplg-ice</h2>
+<h2 id="45zplg-ice">-zplg-ice<a class="headerlink" href="#45zplg-ice" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Parses ICE specification (`zplg ice' subcommand), puts the result
 into ZPLG_ICE global hash. The ice-spec is valid for next command
@@ -1141,7 +1153,7 @@ e.g. at update.
 <pre><code>zplugin
 </code></pre>
 <p><em>Environment variables used:</em> ZPFX</p>
-<h2 id="45zplg-load">-zplg-load</h2>
+<h2 id="45zplg-load">-zplg-load<a class="headerlink" href="#45zplg-load" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements the exposed-to-user action of loading a plugin.
 
@@ -1172,7 +1184,7 @@ $2 - plugin name, if the third format is used
 -zplg-service
 zplugin
 </code></pre>
-<h2 id="45zplg-load-plugin">-zplg-load-plugin</h2>
+<h2 id="45zplg-load-plugin">-zplg-load-plugin<a class="headerlink" href="#45zplg-load-plugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Lower-level function for loading a plugin.
 
@@ -1196,7 +1208,7 @@ $3 - mode (light or load)
 <p>Called by:</p>
 <pre><code>-zplg-load
 </code></pre>
-<h2 id="45zplg-load-snippet">-zplg-load-snippet</h2>
+<h2 id="45zplg-load-snippet">-zplg-load-snippet<a class="headerlink" href="#45zplg-load-snippet" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Implements the exposed-to-user action of loading a snippet.
 
@@ -1218,7 +1230,7 @@ pmodload
 zplugin
 zplugin-autoload.zsh/-zplg-update-or-status-snippet
 </code></pre>
-<h2 id="45zplg-pack-ice">-zplg-pack-ice</h2>
+<h2 id="45zplg-pack-ice">-zplg-pack-ice<a class="headerlink" href="#45zplg-pack-ice" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Remembers all ice-mods, assigns them to concrete plugin. Ice spec
 is in general forgotten for second-next command (that's why it's
@@ -1233,7 +1245,7 @@ or snippet) mentioned in the next command – for later use with e.g.
 -zplg-load
 zplugin-autoload.zsh/-zplg-compute-ice
 </code></pre>
-<h2 id="45zplg-prepare-home">-zplg-prepare-home</h2>
+<h2 id="45zplg-prepare-home">-zplg-prepare-home<a class="headerlink" href="#45zplg-prepare-home" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Creates all directories needed by Zplugin, first checks if they
 already exist.
@@ -1244,7 +1256,7 @@ already exist.
 <pre><code>Script-Body
 </code></pre>
 <p><em>Environment variables used:</em> ZPFX</p>
-<h2 id="45zplg-register-plugin">-zplg-register-plugin</h2>
+<h2 id="45zplg-register-plugin">-zplg-register-plugin<a class="headerlink" href="#45zplg-register-plugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Adds the plugin to ZPLG_REGISTERED_PLUGINS array and to the
 LOADED_PLUGINS array (managed according to the plugin standard:
@@ -1255,7 +1267,7 @@ http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html)
 <p>Called by:</p>
 <pre><code>-zplg-load
 </code></pre>
-<h2 id="45zplg-run-task">-zplg-run-task</h2>
+<h2 id="45zplg-run-task">-zplg-run-task<a class="headerlink" href="#45zplg-run-task" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>A backend, worker function of -zplg-scheduler. It obtains the tasks
 index and a few of its properties (like the type: plugin, snippet,
@@ -1297,7 +1309,7 @@ $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 <p>Called by:</p>
 <pre><code>-zplg-scheduler
 </code></pre>
-<h2 id="45zplg-scheduler">-zplg-scheduler</h2>
+<h2 id="45zplg-scheduler">-zplg-scheduler<a class="headerlink" href="#45zplg-scheduler" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Searches for timeout tasks, executes them. There's an array of tasks
 waiting for execution, this scheduler manages them, detects which ones
@@ -1343,7 +1355,7 @@ script, not from prompt
 <p>Uses feature(s): <em>sched</em>, <em>zle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-service">-zplg-service</h2>
+<h2 id="45zplg-service">-zplg-service<a class="headerlink" href="#45zplg-service" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Handles given service, i.e. obtains lock, runs it, or waits if no lock
 
@@ -1377,7 +1389,7 @@ $3 - id - URL or plugin ID or alias name (from id-as'')
 <p>Uses feature(s): <em>kill</em>, <em>read</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="45zplg-shadow-off">-zplg-shadow-off</h2>
+<h2 id="45zplg-shadow-off">-zplg-shadow-off<a class="headerlink" href="#45zplg-shadow-off" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Turn off shadowing completely for a given mode ("load", "light",
 "light-b" (i.e. the `trackbinds' mode) or "compdef").
@@ -1389,7 +1401,7 @@ etc.).</p>
 <pre><code>-zplg-debug-stop
 -zplg-load-plugin
 </code></pre>
-<h2 id="45zplg-shadow-on">-zplg-shadow-on</h2>
+<h2 id="45zplg-shadow-on">-zplg-shadow-on<a class="headerlink" href="#45zplg-shadow-on" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Turn on shadowing of builtins and functions according to passed
 mode ("load", "light", "light-b" or "compdef"). The shadowing is
@@ -1402,7 +1414,7 @@ to gather report data, and to hijack `autoload', `bindkey' and
 <pre><code>-zplg-debug-start
 -zplg-load-plugin
 </code></pre>
-<h2 id="45zplg-submit-turbo">-zplg-submit-turbo</h2>
+<h2 id="45zplg-submit-turbo">-zplg-submit-turbo<a class="headerlink" href="#45zplg-submit-turbo" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
 preceded with `wait', `load', `unload' or `on-update-of`/`subscribe'
@@ -1415,7 +1427,7 @@ and this function adds it to internal data structures, so that
 <p>Called by:</p>
 <pre><code>zplugin
 </code></pre>
-<h2 id="45zplg-unregister-plugin">-zplg-unregister-plugin</h2>
+<h2 id="45zplg-unregister-plugin">-zplg-unregister-plugin<a class="headerlink" href="#45zplg-unregister-plugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Removes the plugin from ZPLG_REGISTERED_PLUGINS array and from the
 LOADED_PLUGINS array (managed according to the plugin standard)
@@ -1428,7 +1440,7 @@ LOADED_PLUGINS array (managed according to the plugin standard)
 <p>Called by:</p>
 <pre><code>zplugin-autoload.zsh/-zplg-unload
 </code></pre>
-<h2 id="45zplugin95scheduler95add95sh">-zplugin_scheduler_add_sh</h2>
+<h2 id="45zplugin95scheduler95add95sh">-zplugin_scheduler_add_sh<a class="headerlink" href="#45zplugin95scheduler95add95sh" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Copies task into ZPLG_RUN array, called when a task timeouts.
 A small function ran from pattern in /-substitution as a math
@@ -1438,7 +1450,7 @@ function.
 <p>Has 7 line(s). Doesn’t call other functions.</p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="zplg-register-z-plugin">@zplg-register-z-plugin</h2>
+<h2 id="zplg-register-z-plugin">@zplg-register-z-plugin<a class="headerlink" href="#zplg-register-z-plugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Registers the z-plugin inside Zplugin – i.e. an Zplugin extension
 </code></pre>
@@ -1446,7 +1458,7 @@ etc.).</p>
 <p>Has 4 line(s). Doesn’t call other functions.</p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="pmodload">pmodload</h2>
+<h2 id="pmodload">pmodload<a class="headerlink" href="#pmodload" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Compatibility with Prezto. Calls can be recursive.
 </code></pre>
@@ -1461,7 +1473,7 @@ etc.).</p>
 <p>Uses feature(s): <em>zstyle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="zpcdclear">zpcdclear</h2>
+<h2 id="zpcdclear">zpcdclear<a class="headerlink" href="#zpcdclear" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>A wrapper for `zplugin cdclear -q' which can be called from hook
 ices like the atinit'', atload'', etc. ices.
@@ -1473,7 +1485,7 @@ ices like the atinit'', atload'', etc. ices.
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="zpcdreplay">zpcdreplay</h2>
+<h2 id="zpcdreplay">zpcdreplay<a class="headerlink" href="#zpcdreplay" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>A function that can be invoked from within `atinit', `atload', etc.
 ice-mod.  It works like `zplugin cdreplay', which cannot be invoked
@@ -1486,7 +1498,7 @@ from such hook ices.
 </code></pre>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="zpcompdef">zpcompdef</h2>
+<h2 id="zpcompdef">zpcompdef<a class="headerlink" href="#zpcompdef" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Stores compdef for a replay with `zpcdreplay' (Turbo mode) or
 with `zplugin cdreplay' (normal mode). An utility functton of
@@ -1496,7 +1508,7 @@ an undefined use case.
 <p>Has 1 line(s). Doesn’t call other functions.</p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="zpcompinit">zpcompinit</h2>
+<h2 id="zpcompinit">zpcompinit<a class="headerlink" href="#zpcompinit" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>A function that can be invoked from within `atinit', `atload', etc.
 ice-mod.  It runs `autoload compinit; compinit' and respects
@@ -1510,7 +1522,7 @@ ZPLGM[ZCOMPDUMP_PATH] and ZPLGM[COMPINIT_OPTS].
 <p>Uses feature(s): <em>autoload</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="zplugin">zplugin</h2>
+<h2 id="zplugin">zplugin<a class="headerlink" href="#zplugin" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Main function directly exposed to user, obtains subcommand and its
 arguments, has completion.
@@ -1591,14 +1603,14 @@ arguments, has completion.
 <p>Uses feature(s): <em>autoload</em>, <em>eval</em>, <em>source</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget,
 etc.).</p>
-<h2 id="add-zsh-hook">add-zsh-hook</h2>
+<h2 id="add-zsh-hook">add-zsh-hook<a class="headerlink" href="#add-zsh-hook" title="Permanent link">#</a></h2>
 <p>Has 93 line(s). Doesn’t call other functions.</p>
 <p>Uses feature(s): <em>autoload</em>, <em>getopts</em></p>
 <p>Called by:</p>
 <pre><code>-zplg-scheduler
 Script-Body
 </code></pre>
-<h2 id="compinit">compinit</h2>
+<h2 id="compinit">compinit<a class="headerlink" href="#compinit" title="Permanent link">#</a></h2>
 <p>Has 544 line(s). Doesn’t call other functions.</p>
 <p>Uses feature(s): <em>autoload</em>, <em>bindkey</em>, <em>eval</em>, <em>read</em>, <em>unfunction</em>,
 <em>zle</em>, <em>zstyle</em></p>
@@ -1606,7 +1618,7 @@ Script-Body
 <pre><code>zpcompinit
 zplugin
 </code></pre>
-<h2 id="is-at-least">is-at-least</h2>
+<h2 id="is-at-least">is-at-least<a class="headerlink" href="#is-at-least" title="Permanent link">#</a></h2>
 <p>Has 56 line(s). Doesn’t call other functions.</p>
 <p>Called by:</p>
 <pre><code>Script-Body
@@ -1683,6 +1695,10 @@ zplugin
       <script src="../assets/javascripts/application.245445c6.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+        <script src="../js/syntax-highlighting.js"></script>
+      
+        <script src="../js/init.js"></script>
       
     
   </body>

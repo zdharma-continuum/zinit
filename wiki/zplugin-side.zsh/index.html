@@ -59,7 +59,7 @@
     
       <link rel="stylesheet" href="../css/theme.css">
     
-      <link rel="stylesheet" href="../css/fonts.css">
+      <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
       
@@ -175,8 +175,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="../Multiple-prompts/" title="Ice modifiers" class="md-tabs__link">
-          Ice modifiers
+        <a href="../Multiple-prompts/" title="Ice Modifiers" class="md-tabs__link">
+          Ice Modifiers
         </a>
       
     </li>
@@ -240,8 +240,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="../declare-zsh/" title="declare-zsh" class="md-tabs__link">
-          declare-zsh
+        <a href="../declare-zsh/" title="Zplugin Extensions" class="md-tabs__link">
+          Zplugin Extensions
         </a>
       
     </li>
@@ -317,11 +317,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
-      Ice modifiers
+      Ice Modifiers
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
-        Ice modifiers
+        Ice Modifiers
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -688,11 +688,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
     
     <label class="md-nav__link" for="nav-7">
-      declare-zsh
+      Zplugin Extensions
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-7">
-        declare-zsh
+        Zplugin Extensions
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -705,6 +705,18 @@
   <li class="md-nav__item">
     <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
       declare-zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../crasis/" title="Crasis" class="md-nav__link">
+      Crasis
     </a>
   </li>
 
@@ -742,11 +754,11 @@
               
                 
                 
-                <h1 id="name">NAME</h1>
+                <h1 id="name">NAME<a class="headerlink" href="#name" title="Permanent link">#</a></h1>
 <p>zplugin-side.zsh - a shell script</p>
-<h1 id="synopsis">SYNOPSIS</h1>
+<h1 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">#</a></h1>
 <p>Documentation automatically generated with `zshelldoc'</p>
-<h1 id="functions">FUNCTIONS</h1>
+<h1 id="functions">FUNCTIONS<a class="headerlink" href="#functions" title="Permanent link">#</a></h1>
 <pre><code>-zplg-any-colorify-as-uspl2
 -zplg-exists-physically
 -zplg-exists-physically-message
@@ -756,11 +768,11 @@
 -zplg-store-ices
 -zplg-two-paths
 </code></pre>
-<h1 id="details">DETAILS</h1>
-<h2 id="script-body">Script Body</h2>
+<h1 id="details">DETAILS<a class="headerlink" href="#details" title="Permanent link">#</a></h1>
+<h2 id="script_body">Script Body<a class="headerlink" href="#script_body" title="Permanent link">#</a></h2>
 <p>Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle
 widget bound to a key, etc.).</p>
-<h2 id="45zplg-any-colorify-as-uspl2">-zplg-any-colorify-as-uspl2</h2>
+<h2 id="45zplg-any-colorify-as-uspl2">-zplg-any-colorify-as-uspl2<a class="headerlink" href="#45zplg-any-colorify-as-uspl2" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Returns ANSI-colorified "user/plugin" string, from any supported
 plugin spec (user---plugin, user/plugin, user plugin, plugin).
@@ -795,7 +807,7 @@ zplugin-autoload.zsh/-zplg-update-or-status
 zplugin-install.zsh/-zplg-install-completions
 zplugin-install.zsh/-zplg-setup-plugin-dir
 </code></pre>
-<h2 id="45zplg-exists-physically">-zplg-exists-physically</h2>
+<h2 id="45zplg-exists-physically">-zplg-exists-physically<a class="headerlink" href="#45zplg-exists-physically" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Checks if directory of given plugin exists in PLUGIN_DIR.
 
@@ -815,7 +827,7 @@ $2 - plugin (only when $1 - i.e. user - given)
 zplugin-autoload.zsh/-zplg-create
 zplugin-autoload.zsh/-zplg-get-path
 </code></pre>
-<h2 id="45zplg-exists-physically-message">-zplg-exists-physically-message</h2>
+<h2 id="45zplg-exists-physically-message">-zplg-exists-physically-message<a class="headerlink" href="#45zplg-exists-physically-message" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Checks if directory of given plugin exists in PLUGIN_DIR,
 and outputs error message if it doesn't.
@@ -845,7 +857,7 @@ zplugin-autoload.zsh/-zplg-stress
 zplugin-autoload.zsh/-zplg-update-or-status
 zplugin-install.zsh/-zplg-install-completions
 </code></pre>
-<h2 id="45zplg-first">-zplg-first</h2>
+<h2 id="45zplg-first">-zplg-first<a class="headerlink" href="#45zplg-first" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Finds the main file of plugin. There are multiple file name
 formats, they are ordered in order starting from more correct
@@ -870,12 +882,12 @@ zplugin-autoload.zsh/-zplg-glance
 zplugin-autoload.zsh/-zplg-stress
 zplugin-install.zsh/-zplg-compile-plugin
 </code></pre>
-<h2 id="45zplg-get-plg-dir">-zplg-get-plg-dir</h2>
+<h2 id="45zplg-get-plg-dir">-zplg-get-plg-dir<a class="headerlink" href="#45zplg-get-plg-dir" title="Permanent link">#</a></h2>
 <p>Has 9 line(s). Doesn’t call other functions.</p>
 <p>Called by:</p>
 <pre><code>-zplg-first
 </code></pre>
-<h2 id="45zplg-shands-exp">-zplg-shands-exp</h2>
+<h2 id="45zplg-shands-exp">-zplg-shands-exp<a class="headerlink" href="#45zplg-shands-exp" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Does expansion of currently little unstandarized
 shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
@@ -889,7 +901,7 @@ zplugin-autoload.zsh/-zplg-compute-ice
 zplugin-autoload.zsh/-zplg-delete
 zplugin-autoload.zsh/-zplg-get-path
 </code></pre>
-<h2 id="45zplg-store-ices">-zplg-store-ices</h2>
+<h2 id="45zplg-store-ices">-zplg-store-ices<a class="headerlink" href="#45zplg-store-ices" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Saves ice mods in given hash onto disk.
 
@@ -906,7 +918,7 @@ $4 - additional keys of hash to store, empty-meaningful ices, space separated
 zplugin-install.zsh/-zplg-download-snippet
 zplugin-install.zsh/-zplg-setup-plugin-dir
 </code></pre>
-<h2 id="45zplg-two-paths">-zplg-two-paths</h2>
+<h2 id="45zplg-two-paths">-zplg-two-paths<a class="headerlink" href="#45zplg-two-paths" title="Permanent link">#</a></h2>
 <blockquote>
 <pre><code>Obtains a snippet URL without specification if it is an SVN URL (points to
 directory) or regular URL (points to file), returns 2 possible paths for
@@ -992,6 +1004,10 @@ zplugin-autoload.zsh/-zplg-update-or-status
       <script src="../assets/javascripts/application.245445c6.js"></script>
       
       <script>app.initialize({version:"1.0.4",url:{base:".."}})</script>
+      
+        <script src="../js/syntax-highlighting.js"></script>
+      
+        <script src="../js/init.js"></script>
       
     
   </body>
