@@ -744,8 +744,25 @@ zplugin light vim/vim
 <li><code>as"program"</code> – add file selected by <code>pick''</code> to <code>$PATH</code>, do not source it,</li>
 <li><code>atclone"..."</code> – execute code after downloading,</li>
 <li><code>atpull"%atclone"</code> – execute the same code <code>atclone''</code> is given, but after successful update,</li>
-<li><code>make</code> – run <code>make</code> after <code>atclone''</code> and <code>atpull''</code>. <code>make'!'</code> will execute before them,</li>
+<li><code>make</code> – run <code>make</code> after <code>atclone''</code> and <code>atpull''</code> (note: <code>make'!'</code> will execute before them),</li>
 <li><code>pick"src/vim"</code> – set executable flag on <code>src/vim</code>, hint that <code>src/</code> should be added to <code>$PATH</code>.</li>
+</ul>
+<hr />
+<p>The same but with <strong>installation</strong> (i.e. <code>make install</code> is being run) under
+<code>$ZPFX</code> (<code>~/.zplugin/polaris</code> by default):</p>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; \
+    ./configure --prefix=$ZPFX&quot; atpull&quot;%atclone&quot; \
+    make&quot;all install&quot; pick&quot;$ZPFX/bin/vim&quot;
+zplugin light vim/vim
+</code></pre>
+
+<ul>
+<li><code>as"program"</code> – as above,</li>
+<li><code>atclone"..."</code> – as above <strong>plus</strong> pass <code>--prefix=$ZPFX</code> to <code>./configure</code>, to
+  set the installation directory,</li>
+<li><code>atpull"%atclone"</code> – as above,</li>
+<li><code>make</code> – as above, but also run the <code>install</code> target,</li>
+<li><code>pick"src/vim"</code> – as above, but for different path (<code>$ZPFX/bin/vim</code>).</li>
 </ul>
 <hr />
 <pre><code class="zsh">zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
@@ -757,7 +774,11 @@ zplugin light direnv/direnv
 <li><code>make'!'</code> – execute <code>make</code> before <code>atclone''</code> and before <code>atpull''</code> (see <code>make</code> above),</li>
 <li><code>src"zhook.zsh"</code> – source file <code>zhook.zsh</code>.</li>
 </ul>
-<p>Direnv is hooked up to Zsh. The code that does this is provided by program <code>direnv</code> (build by <code>make''</code>). Above <code>atclone''</code> puts this code into file <code>zhook.zsh</code>, <code>src''</code> sources it. This way <code>direnv hook zsh</code> is executed only on clone and update, and Zsh starts faster.</p>
+<p>In general, Direnv works by hooking up to Zsh. The code that does this is
+provided by program <code>direnv</code> (built by <code>make''</code>). Above <code>atclone''</code> puts this
+code into file <code>zhook.zsh</code>, <code>src''</code> sources it. This way <code>direnv hook zsh</code> is
+executed only on clone and update, and Zsh starts faster.</p>
+<p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
                 

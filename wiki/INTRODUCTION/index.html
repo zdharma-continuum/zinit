@@ -1166,14 +1166,18 @@ adding completions. Zplugin uses own method (based on symlinks instead
 of adding a number of directories to <code>$fpath</code>). Zplugin will
 automatically <strong>install</strong> completions of a newly downloaded plugin. To
 uninstall the completions and install them again, you would use:</p>
-<pre><code class="zsh">zplugin cuninstall zsh-users/zsh-completions   # uninstall
-zplugin creinstall zsh-users/zsh-completions   # install
+<pre><code class="zsh">zplg cuninstall zsh-users/zsh-completions   # uninstall
+zplg creinstall zsh-users/zsh-completions   # install
 </code></pre>
 
 <h3 id="listing_completions">Listing Completions<a class="headerlink" href="#listing_completions" title="Permanent link">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong><code>zplg</code> is an alias that can be used in interactive sessions.</strong></p>
+</div>
 <p>To see what completions <strong>all</strong> plugins provide, in tabular formatting
 and with name of each plugin, use:</p>
-<pre><code class="zsh">zplugin clist
+<pre><code class="zsh">zplg clist
 </code></pre>
 
 <p>This command is specially adapted for plugins like
@@ -1188,7 +1192,7 @@ cask, cf, chattr             zsh-users/zsh-completions
 </code></pre>
 
 <p>You can show more completions per line by providing an <strong>argument</strong> to
-<code>clist</code>, e.g. <code>zplugin clist 6</code>, will show:</p>
+<code>clist</code>, e.g. <code>zplg clist 6</code>, will show:</p>
 <pre><code class="zsh">...
 bundle, caffeinate, cap, cask, cf, chattr      zsh-users/zsh-completions
 cheat, choc, cmake, coffee, column, composer   zsh-users/zsh-completions
@@ -1200,9 +1204,9 @@ console, dad, debuild, dget, dhcpcd, diana     zsh-users/zsh-completions
 <p>Completions can be disabled, so that e.g. original Zsh completion will
 be used. The commands are very basic, they only need completion
 <strong>name</strong>:</p>
-<pre><code class="zsh">$ zplugin cdisable cmake
+<pre><code class="zsh">$ zplg cdisable cmake
 Disabled cmake completion belonging to zsh-users/zsh-completions
-$ zplugin cenable cmake
+$ zplg cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
 </code></pre>
 
@@ -1248,8 +1252,8 @@ is now sufficient to provide just the word <code>wait</code>, it’ll work like
 <code>wait'0'</code> (and <code>wait'!'</code> like <code>wait'!0'</code>).</p>
 <p>The exclamation mark causes Zplugin to reset-prompt after loading
 plugin. The same with Prezto prompts, with a longer delay:</p>
-<pre><code class="zsh">zplugin ice svn silent wait'!1' atload'prompt smiley'
-zplugin snippet PZT::modules/prompt
+<pre><code class="zsh">zplg ice svn silent wait'!1' atload'prompt smiley'
+zplg snippet PZT::modules/prompt
 </code></pre>
 
 <p>Using <code>zsh-users/zsh-autosuggestions</code> without any drawbacks:</p>
