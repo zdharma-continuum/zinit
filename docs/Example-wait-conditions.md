@@ -20,7 +20,8 @@ zplugin light zdharma/zplugin-crasis
  - `(r)` searches for element that matches given pattern (`cras*`) and returns it,
  - `-n` means: not-empty, so it will be true when users enters "cras",
  - after 1 second or less, Zplugin will detect that `wait''` condition is true, and load the plugin, which provides command *crasis*,
- - [![screencast](https://asciinema.org/a/149725.svg)](https://asciinema.org/a/149725) that presents the feature.
+ - Screencast that presents the feature:
+    [![screencast](https://asciinema.org/a/149725.svg)](https://asciinema.org/a/149725)
 
 ***
 
