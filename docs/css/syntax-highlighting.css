@@ -1,6 +1,4 @@
-/*
- * Start of Zplugin config.
- * */
+/*Start of Zplugin config.*/
 
 .hljs-zpl {
   color: #a71d5d;
@@ -18,24 +16,12 @@
   color: #63a35c;
 }
 
-.hljs-comment{
-  color: #969896;
-  font-style: italic;
-}
-
-.hljs-string{
-  color: #df5000;
-}
-
-/* Enables syntax highlighting for inlined code. */
+/* Enables syntax highlighting for inlined code.*/
 code.hljs{
   display:inline;
 }
 
-
-/*
- * End of Zplugin config.
- * */
+/*End of Zplugin config.*/
 
 .hljs {
   display: block;
@@ -45,11 +31,13 @@ code.hljs{
   overflow-x: auto;
 }
 
+.hljs-comment,
 .hljs-meta {
   color: #969896;
   font-style: italic;
 }
 
+.hljs-string,
 .hljs-variable,
 .hljs-template-variable,
 .hljs-strong,
