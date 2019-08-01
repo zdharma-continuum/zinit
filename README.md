@@ -245,6 +245,9 @@ zplugin light zdharma/fast-syntax-highlighting
 # Plugin history-search-multi-word loaded with tracking.
 zplugin load zdharma/history-search-multi-word
 
+# Load the pure theme, with zsh-async library that's bundled with it.
+zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+
 # Binary release in archive, from Github-releases page. 
 # After automatic unpacking it provides program "fzf".
 zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
@@ -260,19 +263,16 @@ zplugin load docker/compose
 # Vim repository on Github – a typical source code that needs compilation – Zplugin
 # can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
 # Ice-mod `pick` selects a binary program to add to $PATH. You could also install the
-# package under the path $ZPFX with make"install PREFIX=$ZPFX"
+# package under the path $ZPFX, see: http://zdharma.org/zplugin/wiki/Compiling-programs
 zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
     atpull"%atclone" make pick"src/vim"
 zplugin light vim/vim
 
 # Scripts that are built at install (there's single default make target, "install",
-# and it constructs scripts by `cat'ing a few files). The make"" ice could also be:
+# and it constructs scripts by `cat'ing a few files). The make'' ice could also be:
 # `make"install PREFIX=$ZPFX"`, if "install" wouldn't be the only, default target.
 zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zplugin light tj/git-extras
-
-# Load the pure theme, with zsh-async library that's bundled with it.
-zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
 
 # Handle completions without loading any plugin, see "clist" command.
 # This one is to be ran just once, in interactive session.
@@ -376,7 +376,7 @@ Usage:
 —— update [-q] plg-spec|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
 —— status plg-spec|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
 —— report plg-spec               – show plugin's report (or all plugins' if ——all passed)
-—— delete plg-spec|URL           – remove plugin or snippet from disk (good to forget wrongly passed ice-mods)
+—— delete [--clean|--all] plg-spec|URL – remove plugin or snippet from disk (good to forge t wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
 —— loaded|list [keyword]         – show what plugins are loaded (filter with 'keyword')
 —— cd plg-spec                   – cd into plugin's directory; also support snippets, if feed with URL
 —— create plg-spec               – create plugin (also together with Github repository)
