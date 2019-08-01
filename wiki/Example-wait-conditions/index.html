@@ -735,14 +735,17 @@
                 
                   <h1>Example wait Conditions</h1>
                 
-                <p><code>wait''</code> ice needs Zsh &gt;= 5.3.</p>
+                <div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Turbo mode, i.e. the <code>wait</code> ice that implements it needs Zsh &gt;= 5.3.</strong></p>
+</div>
 <pre><code class="zsh">zplugin ice wait'0' # or just: zplugin ice wait
-zplugin light zdharma/zconvey
+zplugin light wfxr/forgit
 </code></pre>
 
 <ul>
 <li>waits for prompt,</li>
-<li>0 seconds after prompt loads given plugin.</li>
+<li>instantly ("0" seconds) after prompt loads given plugin.</li>
 </ul>
 <hr />
 <pre><code class="zsh">zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
@@ -753,15 +756,16 @@ zplugin light zdharma/zplugin-crasis
 <li><code>$ZLAST_COMMANDS</code> is an array build by <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a>, it contains commands currently entered at prompt,</li>
 <li><code>(r)</code> searches for element that matches given pattern (<code>cras*</code>) and returns it,</li>
 <li><code>-n</code> means: not-empty, so it will be true when users enters "cras",</li>
-<li>after 1 second or less, Zplugin will detect that <code>wait''</code> condition is true, and load the plugin, which provides command <em>crasis</em>.</li>
+<li>after 1 second or less, Zplugin will detect that <code>wait''</code> condition is true, and load the plugin, which provides command <em>crasis</em>,</li>
+<li><a href="https://asciinema.org/a/149725"><img alt="screencast" src="https://asciinema.org/a/149725.svg" /></a> that presents the feature.</li>
 </ul>
 <hr />
-<pre><code class="zsh">zplugin ice wait'[[ $PWD = */github* ]]'
+<pre><code class="zsh">zplugin ice wait'[[ $PWD = */github || $PWD = */github/* ]]'
 zplugin load unixorn/git-extra-commands
 </code></pre>
 
 <ul>
-<li>Waits until user enters directory with string "github*".</li>
+<li>waits until user enters a <code>github</code> directory.</li>
 </ul>
                 
                   
