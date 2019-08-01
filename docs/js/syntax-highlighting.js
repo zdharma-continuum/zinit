@@ -719,9 +719,9 @@ hljs.registerLanguage("bash", function(e) {
     l: /\b-?[a-z\._]+\b/,
     k: {
       "ice-mod":
-        "blockf svn pick as cp mv atpull wait atload silent unload make id -as run -atpull atclone atinit src multisrc depth from",
+        "blockf svn pick as cp mv atpull wait atload silent unload make id -as run -atpull atclone atinit src multisrc depth from lucid nocd compile submods",
       command:
-        "load light snippet cuninstall creinstall clist cdisable cenable report lucid nocompile nocompletions reset -prompt",
+        "load light snippet cuninstall creinstall clist cdisable cenable report nocompile nocompletions reset -prompt delete update csearch times help",
       zpl: "zplugin",
       ice: "ice"
     },
@@ -759,7 +759,7 @@ hljs.registerLanguage("shell", function(s) {
     c: [
       {
         cN: "meta",
-        b: "^\\s{0,3}[\\w\\d\\[\\]()@-]*[>%$#]",
+        b: "^\\s{0,3}[\\w\\d\\[\\]()@-]*[>#]",
         starts: {
           e: "$",
           sL: "bash"
