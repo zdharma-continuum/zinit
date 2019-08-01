@@ -16,6 +16,11 @@
   color: #63a35c;
 }
 
+/* Enables syntax highlighting for inlined code.*/
+code.hljs{
+  display:inline;
+}
+
 /*End of Zplugin config.*/
 
 .hljs {

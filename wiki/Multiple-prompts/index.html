@@ -740,16 +740,13 @@ zplugin ice load'![[ $MYPROMPT = 1 ]]' unload'![[ $MYPROMPT != 1 ]]'
 zplugin load halfo/lambda-mod-zsh-theme
 
 # Load when MYPROMPT == 2
-zplugin ice load'![[ $MYPROMPT = 2 ]]' unload'![[ $MYPROMPT != 2 ]]'
-zplugin load ergenekonyigit/lambda-gitster
+zplugin ice load'![[ $MYPROMPT = 2 ]]' unload'![[ $MYPROMPT != 2 ]]' \
+    pick&quot;/dev/null&quot; multisrc&quot;{async,pure}.zsh&quot;
+zplugin load sindresorhus/pure
 
 # Load when MYPROMPT == 3
 zplugin ice load'![[ $MYPROMPT = 3 ]]' unload'![[ $MYPROMPT != 3 ]]'
 zplugin load geometry-zsh/geometry
-
-# Load Oh My Zsh dependency for lambda-gitster prompt
-zplugin ice wait&quot;0&quot;
-zplugin snippet OMZ::lib/git.zsh
 </code></pre>
 
 <ul>
@@ -759,7 +756,8 @@ zplugin snippet OMZ::lib/git.zsh
 <li>conditions are checked every second,</li>
 <li>you can use conditions like <code>![[ $PWD == *github* ]]</code> to change prompt after changing directory to <code>*github*</code>,</li>
 <li>the exclamation mark <code>![[ ... ]]</code> causes prompt to be reset after loading or unloading the plugin,</li>
-<li><code>wait"0"</code> – load snippet 0 seconds after prompt (actually after c.a. 100 milliseconds).</li>
+<li><code>pick'/dev/null'</code> – disable sourcing of the default-found file</li>
+<li><code>multisrc''</code> – source multiple files</li>
 </ul>
                 
                   
