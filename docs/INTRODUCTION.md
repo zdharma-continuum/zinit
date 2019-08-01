@@ -191,17 +191,20 @@ automatically **install** completions of a newly downloaded plugin. To
 uninstall the completions and install them again, you would use:
 
 ``` zsh
-zplugin cuninstall zsh-users/zsh-completions   # uninstall
-zplugin creinstall zsh-users/zsh-completions   # install
+zplg cuninstall zsh-users/zsh-completions   # uninstall
+zplg creinstall zsh-users/zsh-completions   # install
 ```
 
 ### Listing Completions
+
+!!!note
+    **`zplg` is an alias that can be used in interactive sessions.**
 
 To see what completions **all** plugins provide, in tabular formatting
 and with name of each plugin, use:
 
 ``` zsh
-zplugin clist
+zplg clist
 ```
 
 This command is specially adapted for plugins like
@@ -218,7 +221,7 @@ cask, cf, chattr             zsh-users/zsh-completions
 ```
 
 You can show more completions per line by providing an **argument** to
-`clist`, e.g. `zplugin clist 6`, will show:
+`clist`, e.g. `zplg clist 6`, will show:
 
 ``` zsh
 ...
@@ -235,9 +238,9 @@ be used. The commands are very basic, they only need completion
 **name**:
 
 ```zsh
-$ zplugin cdisable cmake
+$ zplg cdisable cmake
 Disabled cmake completion belonging to zsh-users/zsh-completions
-$ zplugin cenable cmake
+$ zplg cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
 ```
 
@@ -297,8 +300,8 @@ The exclamation mark causes Zplugin to reset-prompt after loading
 plugin. The same with Prezto prompts, with a longer delay:
 
 ``` zsh
-zplugin ice svn silent wait'!1' atload'prompt smiley'
-zplugin snippet PZT::modules/prompt
+zplg ice svn silent wait'!1' atload'prompt smiley'
+zplg snippet PZT::modules/prompt
 ```
 
 Using `zsh-users/zsh-autosuggestions` without any drawbacks:

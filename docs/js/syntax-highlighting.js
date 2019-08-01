@@ -804,7 +804,7 @@ hljs.registerLanguage("bash", function (e)
     {
       "ice-mod": "svn proto from teleid bindmap cloneopts depth if wait load unload blockf subscribe pick bpick as ver silent lucid notify mv cp atinit atclone atload atpull nocd has cloneonly make service trackbinds multisrc compile nocompile nocompletions submods",
       command: "load light snippet cuninstall creinstall clist cdisable cenable report nocompile nocompletions delete update csearch times help",
-      zpl: "zplugin",
+      zpl: "zplugin zplg",
       ice: "ice"
     },
     c: [
