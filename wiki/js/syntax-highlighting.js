@@ -687,6 +687,12 @@
     a
   );
 });
+
+
+//
+//The actual highlighting rules is defined below.
+//
+
 hljs.registerLanguage("bash", function(e) {
   var t = {
       cN: "variable",
@@ -718,14 +724,21 @@ hljs.registerLanguage("bash", function(e) {
     aliases: ["sh", "zsh"],
     l: /\b-?[a-z\._]+\b/,
     k: {
-      "ice-mod":
-        "blockf svn pick as cp mv atpull wait atload silent unload make id -as run -atpull atclone atinit src multisrc depth from lucid nocd compile submods",
+      "ice-mod": "svn proto from teleid bindmap cloneopts depth if wait load unload blockf subscribe pick bpick as ver silent lucid notify mv cp atinit atclone atload atpull nocd has cloneonly make service trackbinds compile nocompile nocompletions",
       command:
-        "load light snippet cuninstall creinstall clist cdisable cenable report nocompile nocompletions reset -prompt delete update csearch times help",
-      zpl: "zplugin",
+        "load light snippet cuninstall creinstall clist cdisable cenable report delete update csearch times help",
+      zpl: "",
       ice: "ice"
     },
     c: [
+      {
+        cN: "ice-mod",
+	b: /id-as|on-update-of|run-atpull|reset-prompt|(multi|^| )src(?!\/)/,
+      },
+      {
+        cN: "zpl",
+	b: /zplugin(?!\S)|zplg(?!\S)/,
+      },
       {
         cN: "meta",
         b: /^#![^\n]+sh\s*$/,
@@ -749,22 +762,6 @@ hljs.registerLanguage("bash", function(e) {
         b: /'/,
         e: /'/
       },
-      t
-    ]
-  };
-});
-hljs.registerLanguage("shell", function(s) {
-  return {
-    aliases: ["console"],
-    c: [
-      {
-        cN: "meta",
-        b: "^\\s{0,3}[\\w\\d\\[\\]()@-]*[>#]",
-        starts: {
-          e: "$",
-          sL: "bash"
-        }
-      }
     ]
   };
 });
