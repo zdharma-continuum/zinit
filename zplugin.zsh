@@ -401,21 +401,9 @@ builtin setopt noaliases
         fi
     fi
 
-    # A. Shadow off. Unfunction bindkey
-    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    # UNUSED because of the `builtin' precedence method
-    # (( ${+ZPLGM[bkp-bindkey]} )) && functions[bindkey]="${ZPLGM[bkp-bindkey]}" || unfunction "bindkey"
-
     # Actual bindkey
     builtin bindkey "${pos[@]}"
-    integer ret=$?
-
-    # A. Shadow on. Custom function could unfunction itself
-    # UNUSED because of the `builtin' precedence method
-    # (( ${+functions[bindkey]} )) && ZPLGM[bkp-bindkey]="${functions[bindkey]}" || unset "ZPLGM[bkp-bindkey]"
-    #functions[bindkey]='--zplg-shadow-bindkey "$@";'
-
-    return $ret # testable
+    return $? # testable
 } # }}}
 # FUNCTION: --zplg-shadow-zstyle {{{
 # Function defined to hijack plugin's calls to `zstyle' builtin.
@@ -451,21 +439,9 @@ builtin setopt noaliases
         fi
     fi
 
-    # B. Shadow off. Unfunction zstyle
-    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    # UNUSED because of the `builtin' precedence method
-    #(( ${+ZPLGM[bkp-zstyle]} )) && functions[zstyle]="${ZPLGM[bkp-zstyle]}" || unfunction "zstyle"
-
     # Actual zstyle
     builtin zstyle "${pos[@]}"
-    integer ret=$?
-
-    # B. Shadow on. Custom function could unfunction itself
-    # UNUSED because of the `builtin' precedence method
-    #(( ${+functions[zstyle]} )) && ZPLGM[bkp-zstyle]="${functions[zstyle]}" || unset "ZPLGM[bkp-zstyle]"
-    #functions[zstyle]='--zplg-shadow-zstyle "$@";'
-
-    return $ret # testable
+    return $? # testable
 } # }}}
 # FUNCTION: --zplg-shadow-alias {{{
 # Function defined to hijack plugin's calls to `alias' builtin.
@@ -512,21 +488,9 @@ builtin setopt noaliases
         [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_ALIASES[_dtrace/_dtrace]+="$quoted "
     done
 
-    # C. Shadow off. Unfunction alias
-    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    # UNUSED because of the `builtin' precedence method
-    #(( ${+ZPLGM[bkp-alias]} )) && functions[alias]="${ZPLGM[bkp-alias]}" || unfunction "alias"
-
     # Actual alias
     builtin alias "${pos[@]}"
-    integer ret=$?
-
-    # C. Shadow on. Custom function could unfunction itself
-    # UNUSED because of the `builtin' precedence method
-    #(( ${+functions[alias]} )) && ZPLGM[bkp-alias]="${functions[alias]}" || unset "ZPLGM[bkp-alias]"
-    #functions[alias]='--zplg-shadow-alias "$@";'
-
-    return $ret # testable
+    return $? # testable
 } # }}}
 # FUNCTION: --zplg-shadow-zle {{{
 # Function defined to hijack plugin's calls to `zle' builtin.
@@ -585,21 +549,9 @@ builtin setopt noaliases
         [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_DELETE[_dtrace/_dtrace]+="$quoted "
     fi
 
-    # D. Shadow off. Unfunction zle
-    # 0.autoload, A.bindkey, B.zstyle, C.alias, D.zle, E.compdef
-    # UNUSED because of the `builtin' precedence method
-    #(( ${+ZPLGM[bkp-zle]} )) && functions[zle]="${ZPLGM[bkp-zle]}" || unfunction "zle"
-
     # Actual zle
     builtin zle "${pos[@]}"
-    integer ret=$?
-
-    # D. Shadow on. Custom function could unfunction itself
-    # UNUSED because of the `builtin' precedence method
-    #(( ${+functions[zle]} )) && ZPLGM[bkp-zle]="${functions[zle]}" || unset "ZPLGM[bkp-zle]"
-    #functions[zle]='--zplg-shadow-zle "$@";'
-
-    return $ret # testable
+    return $? # testable
 } # }}}
 # FUNCTION: --zplg-shadow-compdef {{{
 # Function defined to hijack plugin's calls to `compdef' function.
