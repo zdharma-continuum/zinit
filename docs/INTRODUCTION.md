@@ -356,3 +356,5 @@ Turbo Mode.
 **See also Wiki on [multiple prompts](../Multiple-prompts).**
 
 []( vim:set filetype=markdown tw=70: )
+
+[]( vim:set ft=markdown set tw=80: )

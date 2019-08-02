@@ -14,3 +14,5 @@ zplugin light trapd00r/LS_COLORS
 - `nocompile'!'` – invokes compilation **after** the `atclone''` ice-mod (the exclamation mark causes this).
 
 This way, except for the plugin installation and update, `dircolors` isn't ran, just normal sourcing is done. The every-day sourced file (i.e. `c.zsh`) is even being compiled to speed up the loading.
+
+[]( vim:set ft=markdown set tw=80: )

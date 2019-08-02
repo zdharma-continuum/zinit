@@ -32,3 +32,5 @@ zplugin light direnv/direnv
  - `atclone'...'`, `atpull'...'` – as in previous example,
  - `pick"direnv"` – as in previous example,
  - `as"program"` – as in previous example.
+
+[]( vim:set ft=markdown set tw=80: )

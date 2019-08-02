@@ -136,3 +136,5 @@ There are 2 or 3 subtypes for each of the hook:
     update. The `%` version is being **always** run, regardless if the
     update will pull any actual commits or not, and it is being ran
     **after** the `atpull` **ice-mod**.
+
+[]( vim:set ft=markdown set tw=80: )

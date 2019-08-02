@@ -1392,3 +1392,5 @@ Uses feature(s): *autoload*, *bindkey*, *eval*, *read*, *unfunction*,
 Called by:
 
     -zplg-compinit
+
+[]( vim:set ft=markdown set tw=80: )

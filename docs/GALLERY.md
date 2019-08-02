@@ -138,3 +138,5 @@ zplugin load romkatv/gitstatus
 zplugin ice wait'!' lucid atload'true; _p9k_precmd' nocd
 zplugin light romkatv/powerlevel10k
 ```
+
+[]( vim:set ft=markdown set tw=80: )

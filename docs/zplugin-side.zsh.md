@@ -208,3 +208,5 @@ Called by:
     zplugin-autoload.zsh/-zplg-delete
     zplugin-autoload.zsh/-zplg-get-path
     zplugin-autoload.zsh/-zplg-update-or-status
+
+[]( vim:set ft=markdown set tw=80: )

@@ -244,3 +244,5 @@ Called by:
 
     zplugin-autoload.zsh/-zplg-update-or-status
     zplugin.zsh/-zplg-load
+
+[]( vim:set ft=markdown set tw=80: )

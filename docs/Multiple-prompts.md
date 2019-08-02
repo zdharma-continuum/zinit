@@ -22,3 +22,5 @@ zplugin load geometry-zsh/geometry
  - `pick'/dev/null'` – disable sourcing of the default-found file
  - `multisrc''` – source multiple files
 
+
+[]( vim:set ft=markdown set tw=80: )

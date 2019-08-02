@@ -64,3 +64,5 @@ zplugin snippet OMZ::lib
 zplugin ice svn multisrc"misc.zsh functions.zsh" pick"/dev/null"
 zplugin snippet OMZ::lib
 ```
+
+[]( vim:set ft=markdown set tw=80: )

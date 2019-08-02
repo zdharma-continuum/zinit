@@ -23,3 +23,5 @@ zplugin ice as"program" pick"$ZPFX/sdkman/bin/sdk" id-as'sdkman' run-atpull \
     atinit"export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh"
 zplugin light zdharma/null
 ```
+
+[]( vim:set ft=markdown set tw=80: )

@@ -1036,3 +1036,5 @@ Has 56 line(s). Doesn’t call other functions.
 Called by:
 
     Script-Body
+
+[]( vim:set ft=markdown set tw=80: )
