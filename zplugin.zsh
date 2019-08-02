@@ -741,9 +741,11 @@ builtin setopt noaliases
         eval "
 function $f {
     ZPLGM[CUR_USR]=\"$user\" ZPLG_CUR_PLUGIN=\"$plugin\" ZPLGM[CUR_USPL2]=\"$id_as\"
+    -zplg-add-report \"\${ZPLGM[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
     -zplg-shadow-on load
     ${f}-zplugin-bkp \"\$@\"
     -zplg-shadow-off load
+    -zplg-add-report \"\${ZPLGM[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
     functions[${f}]=\${functions[${f}-zplugin-bkp]}
 }"
