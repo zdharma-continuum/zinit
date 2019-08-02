@@ -2,6 +2,9 @@ tst_verbosity
 
 unset ZCONVEY_ID ZCONVEY_FD 2>/dev/null
 
+local up_case_word=${widgets[up-case-word]}
+local backward_kill_word=${widgets[backward-kill-word]}
+
 # The plugin has:
 # - 8 aliases
 # - 8 autoloads
@@ -21,23 +24,34 @@ zplugin unload psprint/zsh-editing-workbench
 
 # Verify that changes were reverted
 
-(( ${+aliases[nhistory]} )) && echo >! answer/aliases_incorrect
-[[ ${aliases[zplg]} != "zplugin" ]] && echo >! answer/aliases_incorrect
-(( ${+functions[zew-backward-kill-shell-word]} )) && echo >! answer/functions_incorrect
-(( ${+functions[-zew-rotate-shell-words]} )) && echo >! answer/functions_incorrect
-(( ${+functions[__zconvey_zle_paster]} )) && echo >! answer/functions_incorrect
-(( ${+widgets[zew-backward-kill-shell-word]} )) && echo >! answer/widgets_incorrect
-(( ${+widgets[__zconvey_zle_paster]} )) && echo >! answer/widgets_incorrect
-[[ $(bindkey '^[w') = *zew-* ]] && echo >! answer/bindkeys_incorrect
-[[ $(bindkey '^[R') = *zew-* ]] && echo >! answer/bindkeys_incorrect
-[[ -o hist_lex_words ]] && echo >! answer/options_incorrect
+[[ ${aliases[zplg]} != "zplugin" ]] && echo >! answer/aliases_incorrect_1
+[[ ${aliases[zpl]} != "zplugin" ]] && echo >! answer/aliases_incorrect_2
+(( ${+aliases[nkill]} )) && echo >! answer/aliases_incorrect_3
+(( ${+aliases[nfunctions]} )) && echo >! answer/aliases_incorrect_4
+(( ${+aliases[naliases]}  )) && echo >! answer/aliases_incorrect_5
+(( ${+functions[-zconvey_pinfo]} )) && echo >! answer/functions_incorrect_1
+(( ${+functions[-zew-rotate-shell-words]} )) && echo >! answer/functions_incorrect_2
+(( ${+functions[__zconvey_zle_paster]} )) && echo >! answer/functions_incorrect_3
+(( ${+functions[zew-backward-kill-shell-word]} )) && echo >! answer/functions_incorrect_4
+(( ${+functions[zew_help]} )) && echo >! answer/functions_incorrect_5
+(( ${+widgets[__zconvey_zle_paster]} )) && echo >! answer/widgets_incorrect_1
+(( ${+widgets[zew-backward-kill-shell-word]} )) && echo >! answer/widgets_incorrect_2
+[[ ${widgets[up-case-word]} != $up_case_word ]] && echo >! answer/widgets_incorrect_3
+[[ ${widgets[backward-kill-word]} != $backward_kill_word ]] && echo >! answer/widgets_incorrect_4
+[[ $(bindkey '^[w') = *zew-* ]] && echo >! answer/bindkeys_incorrect_1
+[[ $(bindkey '^[R') = *zew-* ]] && echo >! answer/bindkeys_incorrect_2
+[[ -o auto_pushd ]] && echo >! answer/options_incorrect_1
+[[ -o hist_lex_words ]] && echo >! answer/options_incorrect_2
+[[ -o pushd_ignore_dups ]] && echo >! answer/options_incorrect_3
 
 local value
 zstyle -s ':completion:*' range value
 [[ $value = *000* ]] && echo >! answer/zstyles_incorrect
 
-(( ${+parameters[ZCONVEY_IO_DIR]} )) && echo >! answer/params_incorrect
-(( ${+parameters[TEST_FLOAT]} )) && echo >! answer/params_incorrect
+(( ${+parameters[REPO_DIR]} )) && echo >! answer/params_incorrect_1
+(( ${+parameters[ZCONVEY_IO_DIR]} )) && echo >! answer/params_incorrect_2
+(( ${+parameters[TEST_FLOAT]} )) && echo >! answer/params_incorrect_3
+(( ${+parameters[TEST_INTEGER]} )) && echo >! answer/params_incorrect_4
 
 return 0
 # vim:ft=zsh
