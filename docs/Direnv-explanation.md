@@ -33,4 +33,4 @@ zplugin light direnv/direnv
  - `pick"direnv"` – as in previous example,
  - `as"program"` – as in previous example.
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

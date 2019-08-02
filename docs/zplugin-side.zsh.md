@@ -209,4 +209,4 @@ Called by:
     zplugin-autoload.zsh/-zplg-get-path
     zplugin-autoload.zsh/-zplg-update-or-status
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

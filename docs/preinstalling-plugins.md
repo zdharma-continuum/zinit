@@ -16,4 +16,4 @@ RUN zsh -i -c -- '-zplg-scheduler burst || true'
 An example `Dockerfile` can be found
 [**here**](https://github.com/robobenklein/configs/blob/master/Dockerfile).
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

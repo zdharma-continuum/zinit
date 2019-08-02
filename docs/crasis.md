@@ -63,4 +63,4 @@ buttons. Check out `Crasis` code documentation:
 [Asciidoc](https://github.com/zdharma/zplugin-crasis/blob/master/zsdoc/crasis.adoc),
 [PDF](http://zdharma.org/zplugin-crasis/crasis.pdf).
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

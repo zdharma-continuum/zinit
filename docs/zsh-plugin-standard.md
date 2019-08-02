@@ -241,6 +241,4 @@ v0.9, 12/12/2017: Remove ZERO references (wrong design), add TOC.
 
 Reminder: The date format that uses slashes is `MM/DD/YYYY`.
 
-[]( vim:set ft=markdown:set tw=80: )
-
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

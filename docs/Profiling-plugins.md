@@ -7,4 +7,4 @@ zplugin light zdharma/fast-syntax-highlighting
  - `atload''` works after loading the plugin – shows profiling results (`zprof | head`), unloads `zsh/zprof`,
  - the `light` loads without reporting enabled, so less Zplugin code is being run.
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

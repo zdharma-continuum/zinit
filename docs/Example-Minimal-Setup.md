@@ -33,4 +33,4 @@ zplugin light zdharma/fast-syntax-highlighting
 ```
  - `light` – as above
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

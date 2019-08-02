@@ -9,4 +9,4 @@ lists all functions, interactions between them, their comments and features used
  * **zplugin-install.zsh** – functions used only when installing a plugin or snippet ([**pdf**](http://zdharma.org/zplugin/zplugin-install.zsh.pdf))
  * **zplugin-autoload.zsh** – functions used only in interactive `Zplugin` invocations ([**pdf**](http://zdharma.org/zplugin/zplugin-autoload.zsh.pdf))
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

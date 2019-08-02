@@ -76,4 +76,4 @@ for all plugins. It needs Zsh \>= 5.3.
 The **Introduction** contains [**more
 information**](,,/INTRODUCTION/#turbo_mode_zsh_62_53) on Turbo mode.
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )

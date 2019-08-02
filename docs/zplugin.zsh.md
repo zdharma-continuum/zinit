@@ -1037,4 +1037,4 @@ Called by:
 
     Script-Body
 
-[]( vim:set ft=markdown set tw=80: )
+[]( vim:set ft=markdown tw=80: )
