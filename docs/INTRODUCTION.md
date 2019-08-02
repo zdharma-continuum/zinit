@@ -19,42 +19,38 @@ zplugin load zdharma/history-search-multi-word
 zplugin light zsh-users/zsh-syntax-highlighting
 ```
 
-Above commands show two ways of basic plugin loading. `load` causes
-reporting to be enabled – you can track what plugin does, view the
-information with `zplugin report {plugin-spec}` and then also unload
-the plugin with `zplugin unload {plugin-spec}`. `light` is a
-significantly faster loading without tracking and reporting, by using
-which user resigns of the ability to view the plugin report and to
-unload it.
+Above commands show two ways of basic plugin loading. `load` causes reporting to
+be enabled – you can track what plugin does, view the information with `zplugin
+report {plugin-spec}` and then also unload the plugin with `zplugin unload
+{plugin-spec}`. `light` is a significantly faster loading without tracking and
+reporting, by using which user resigns of the ability to view the plugin report
+and to unload it.
 
 !!!note
     **In Turbo Mode the slowdown caused by tracking is negligible.**
 
 ## Oh My Zsh, Prezto
 
-To load Oh My Zsh and Prezto plugins, use `snippet` feature. Snippets
-are single files downloaded by `curl`, `wget`, etc. (an automatic
-detection of the download tool is being performed) directly from URL.
-For example:
+To load Oh My Zsh and Prezto plugins, use `snippet` feature. Snippets are single
+files downloaded by `curl`, `wget`, etc. (an automatic detection of the download
+tool is being performed) directly from URL. For example:
 
 ``` zsh
 zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
 zplugin snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
 ```
 
-Also, for Oh My Zsh and Prezto, you can use `OMZ::` and `PZT::`
-shorthands:
+Also, for Oh My Zsh and Prezto, you can use `OMZ::` and `PZT::` shorthands:
 
 ``` zsh
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin snippet PZT::modules/helper/init.zsh
 ```
 
-Moreover, snippets support Subversion protocol, supported also by
-Github. This allows to load snippets that are multi-file (for example
-a Prezto module can consist of two or more files, e.g. `init.zsh` and
-`alias.zsh`). Default files that will be sourced are: `*.plugin.zsh`,
-`init.zsh`, `*.zsh-theme`:
+Moreover, snippets support Subversion protocol, supported also by Github. This
+allows to load snippets that are multi-file (for example a Prezto module can
+consist of two or more files, e.g. `init.zsh` and `alias.zsh`). Default files
+that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`:
 
 ``` zsh
 # URL points to directory
@@ -64,67 +60,62 @@ zplugin snippet PZT::modules/docker
 
 ## Snippets and Performance
 
-Using `curl`, `wget`, etc. along with Subversion allows to almost
-completely avoid code dedicated to Oh My Zsh and Prezto, and also to
-other frameworks. This gives profits in performance of `Zplugin`, it
-is really fast and also compact (causing low memory footprint and
-short loading time).
+Using `curl`, `wget`, etc. along with Subversion allows to almost completely
+avoid code dedicated to Oh My Zsh and Prezto, and also to other frameworks. This
+gives profits in performance of `Zplugin`, it is really fast and also compact
+(causing low memory footprint and short loading time).
 
 ## Some Ice-Modifiers
 
-The command `zplugin ice` provides Ice-modifiers for single next command
-(see the README subsection
-[**ice-modifiers**](https://github.com/zdharma/zplugin#ice-modifiers)).
-The logic is that "ice" is something something that’s added (e.g. to a
-drink or a coffee) – and in the Zplugin sense this means that ice is a
-modifier added to the next Zplugin command, and also something that
-melts (so it doesn’t last long) – and in the Zplugin use it means that
-the modifier lasts for only single next Zplugin command. Using one
-other Ice-modifier "**pick**" user can explicitly **select the file to
-source**:
+The command `zplugin ice` provides Ice-modifiers for single next command (see
+the README subsection
+[**ice-modifiers**](https://github.com/zdharma/zplugin#ice-modifiers)). The
+logic is that "ice" is something something that’s added (e.g. to a drink or a
+coffee) – and in the Zplugin sense this means that ice is a modifier added to
+the next Zplugin command, and also something that melts (so it doesn’t last
+long) – and in the Zplugin use it means that the modifier lasts for only single
+next Zplugin command. Using one other Ice-modifier "**pick**" user can
+explicitly **select the file to source**:
 
 ``` zsh
 zplugin ice svn pick"init.zsh"
 zplugin snippet PZT::modules/git
 ```
 
-Content of Ice-modifier is simply put into `"..."`, `'...'`, or
-`$'...'`.  No need for `":"` after Ice-mod name (although it's
-allowed, so as the equal sign `=`, so e.g. `pick="init.zsh"` or
-`pick=init.zsh` are being correctly recognized) . This way editors
-like `vim` and `emacs` and also  `zsh-users/zsh-syntax-highlighting`
-and `zdharma/fast-syntax-highlighting` will highlight contents of
-Ice-modifiers.
+Content of Ice-modifier is simply put into `"..."`, `'...'`, or `$'...'`. No
+need for `":"` after Ice-mod name (although it's allowed, so as the equal sign
+`=`, so e.g. `pick="init.zsh"` or `pick=init.zsh` are being correctly
+recognized) . This way editors like `vim` and `emacs` and also
+`zsh-users/zsh-syntax-highlighting` and `zdharma/fast-syntax-highlighting` will
+highlight contents of Ice-modifiers.
 
 ## as"program"
 
-A plugin might not be a file for sourcing, but a command to be added to
-`$PATH`. To obtain this effect, use Ice-modifier `as` with value
-`program` (or an alias value `command`).
+A plugin might not be a file for sourcing, but a command to be added to `$PATH`.
+To obtain this effect, use Ice-modifier `as` with value `program` (or an alias
+value `command`).
 
 ``` zsh
 zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
 zplugin light b4b4r07/httpstat
 ```
 
-Above command will add plugin directory to `$PATH`, copy file
-`httpstat.sh` into `httpstat` and add execution rights (`+x`) to the
-file selected with `pick`, i.e. to `httpstat`. Other Ice-mod exists,
-`mv`, which works like `cp` but **moves** a file instead of
-**copying** it. `mv` is ran before `cp`.
+Above command will add plugin directory to `$PATH`, copy file `httpstat.sh` into
+`httpstat` and add execution rights (`+x`) to the file selected with `pick`,
+i.e. to `httpstat`. Other Ice-mod exists, `mv`, which works like `cp` but
+**moves** a file instead of **copying** it. `mv` is ran before `cp`.
 
 !!!note
-    **The `cp` and `mv` ices (and also as some other ones, like
-    `atclone`) are being run when the plugin or snippet is being
-    _installed_. To test them again first delete the plugin or snippet
-    by `zplugin delete PZT::modules/osx` (for example).**
+    **The `cp` and `mv` ices (and also as some other ones, like `atclone`) are
+    being run when the plugin or snippet is being _installed_. To test them
+    again first delete the plugin or snippet by `zplugin delete
+    PZT::modules/osx` (for example).**
 
 ## atpull"..."
 
-Copying file is safe for doing later updates – original files of
-repository are unmodified and `Git` will report no conflicts. However,
-`mv` also can be used, if a proper `atpull` (an Ice–modifier ran at
-**update** of plugin) will be used:
+Copying file is safe for doing later updates – original files of repository are
+unmodified and `Git` will report no conflicts. However, `mv` also can be used,
+if a proper `atpull` (an Ice–modifier ran at **update** of plugin) will be used:
 
 ``` zsh
 zplugin ice as"program" mv"httpstat.sh -> httpstat" \
@@ -132,21 +123,21 @@ zplugin ice as"program" mv"httpstat.sh -> httpstat" \
 zplugin light b4b4r07/httpstat
 ```
 
-If `atpull` starts with exclamation mark, then it will be run before
-`git pull`, and before `mv`. Nevertheless, `atpull`, `mv`, `cp` are
-ran **only if new commits are to be fetched**. So in summary, when
-user runs `zplugin update b4b4r07/httpstat` to update this plugin, and
-there are new commits, what happens first is that `git reset --hard`
-is ran – and it **restores** original `httpstat.sh`, **then** `git
-pull` is ran and it downloads new commits (doing fast-forward),
-**then** `mv` is ran again so that the command is `httpstat` not
-`httpstat.sh`. This way the `mv` ice can be used to induce a permanent
-changes into the plugin's contents without blocking the ability to
-update it with `git` (or with `subversion` in case of snippets, more
-on this below at [**\*\***](#on_svn_revert)).
+If `atpull` starts with exclamation mark, then it will be run before `git pull`,
+and before `mv`. Nevertheless, `atpull`, `mv`, `cp` are ran **only if new
+commits are to be fetched**. So in summary, when user runs `zplugin update
+b4b4r07/httpstat` to update this plugin, and there are new commits, what happens
+first is that `git reset --hard` is ran – and it **restores** original
+`httpstat.sh`, **then** `git pull` is ran and it downloads new commits (doing
+fast-forward), **then** `mv` is ran again so that the command is `httpstat` not
+`httpstat.sh`. This way the `mv` ice can be used to induce a permanent changes
+into the plugin's contents without blocking the ability to update it with `git`
+(or with `subversion` in case of snippets, more on this below at
+[**\*\***](#on_svn_revert)).
 
-For exclamation mark to not be expanded by Zsh in interactive session,
-use `'...'` not `"..."` to enclose contents of `atpull` Ice-mod.
+!!!note
+    **For exclamation mark to not be expanded by Zsh in interactive session, use
+    `'...'` not `"..."` to enclose contents of `atpull` Ice-mod.**
 
 ## Snippets-Commands
 
@@ -161,13 +152,13 @@ zplugin snippet \
 
 <a id="on_svn_revert"></a>
 (**\*\***) Snippets also support `atpull` Ice-mod, so it’s possible to do e.g.
-`atpull'!svn revert'`. There’s also `atinit` Ice-mod, executed before
-each loading of plugin or snippet.
+`atpull'!svn revert'`. There’s also `atinit` Ice-mod, executed before each
+loading of plugin or snippet.
 
 ## Snippets-Completions
 
-By using the `as''` ice-mod with value `completion` you can point the
-`snippet` subcommand directly to a completion file, e.g.:
+By using the `as''` ice-mod with value `completion` you can point the `snippet`
+subcommand directly to a completion file, e.g.:
 
 ``` zsh
 zplugin ice as"completion"
@@ -176,19 +167,19 @@ zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh
 
 ## Completion Management
 
-Zplugin allows to disable and enable each completion in every plugin.
-Try installing a popular plugin that provides completions:
+Zplugin allows to disable and enable each completion in every plugin. Try
+installing a popular plugin that provides completions:
 
 ``` zsh
 zplugin ice blockf
 zplugin light zsh-users/zsh-completions
 ```
 
-First command (the `blockf` ice) will block the traditional method of
-adding completions. Zplugin uses own method (based on symlinks instead
-of adding a number of directories to `$fpath`). Zplugin will
-automatically **install** completions of a newly downloaded plugin. To
-uninstall the completions and install them again, you would use:
+First command (the `blockf` ice) will block the traditional method of adding
+completions. Zplugin uses own method (based on symlinks instead of adding a
+number of directories to `$fpath`). Zplugin will automatically **install**
+completions of a newly downloaded plugin. To uninstall the completions and
+install them again, you would use:
 
 ``` zsh
 zplg cuninstall zsh-users/zsh-completions   # uninstall
@@ -200,17 +191,16 @@ zplg creinstall zsh-users/zsh-completions   # install
 !!!note
     **`zplg` is an alias that can be used in interactive sessions.**
 
-To see what completions **all** plugins provide, in tabular formatting
-and with name of each plugin, use:
+To see what completions **all** plugins provide, in tabular formatting and with
+name of each plugin, use:
 
 ``` zsh
 zplg clist
 ```
 
-This command is specially adapted for plugins like
-`zsh-users/zsh-completions`, which provide many completions – listing
-will have `3` completions per line (so that a smaller number of
-terminal pages will be occupied) like this:
+This command is specially adapted for plugins like `zsh-users/zsh-completions`,
+which provide many completions – listing will have `3` completions per line (so
+that a smaller number of terminal pages will be occupied) like this:
 
 ``` zsh
 ...
@@ -220,8 +210,8 @@ cask, cf, chattr             zsh-users/zsh-completions
 ...
 ```
 
-You can show more completions per line by providing an **argument** to
-`clist`, e.g. `zplg clist 6`, will show:
+You can show more completions per line by providing an **argument** to `clist`,
+e.g. `zplg clist 6`, will show:
 
 ``` zsh
 ...
@@ -233,9 +223,8 @@ console, dad, debuild, dget, dhcpcd, diana     zsh-users/zsh-completions
 
 ### Enabling and Disabling Completions
 
-Completions can be disabled, so that e.g. original Zsh completion will
-be used. The commands are very basic, they only need completion
-**name**:
+Completions can be disabled, so that e.g. original Zsh completion will be used.
+The commands are very basic, they only need completion **name**:
 
 ```zsh
 $ zplg cdisable cmake
@@ -244,9 +233,9 @@ $ zplg cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
 ```
 
-That’s all on completions. There’s one more command, `zplugin csearch`,
-that will **search** all plugin directories for available completions,
-and show if they are installed:
+That’s all on completions. There’s one more command, `zplugin csearch`, that
+will **search** all plugin directories for available completions, and show if
+they are installed:
 
 ![#csearch screenshot](img/csearch.png)
 
@@ -271,17 +260,19 @@ Snippets too have completions installed by default, like plugins.
 
 ## Turbo Mode (Zsh \>= 5.3)
 
-The Ice-mod `wait` allows you to postpone loading of a plugin to the
-moment when processing of `.zshrc` is finished and prompt is being
-shown. It is like Windows – during startup, it shows desktop even
-though it still loads data in background. This has drawbacks, but is
-for sure better than blank screen for 10 minutes. And here, in
-Zplugin, there are no drawbacks of this approach – no lags, freezes,
-etc. – the command line is fully usable while the plugins are being
-loaded, for number of such plugins like `10` or `20`.
+The Ice-mod `wait` allows you to postpone loading of a plugin to the moment when
+processing of `.zshrc` is finished and prompt is being shown. It is like Windows
+– during startup, it shows desktop even though it still loads data in
+background. This has drawbacks, but is for sure better than blank screen for 10
+minutes. And here, in Zplugin, there are no drawbacks of this approach – no
+lags, freezes, etc. – the command line is fully usable while the plugins are
+being loaded, for number of such plugins like `10` or `20`.
 
-Zsh 5.3 or greater is required. To use this Turbo Mode add `wait` ice to
-the target plugin in one of following ways:
+!!!note
+    **Turbo mode will speed up Zsh startup by <u>50%–73%</u>. For example instead of 200 ms, it'll be 50 ms (!)**
+
+Zsh 5.3 or greater is required. To use this Turbo Mode add `wait` ice to the
+target plugin in one of following ways:
 
 ``` zsh
 PS1="READY > "
@@ -289,15 +280,14 @@ zplugin ice wait'!0' atload'promptinit; prompt scala3'
 zplugin load psprint/zprompts
 ```
 
-This sets plugin `psprint/zprompts` to be loaded `0` seconds after
-`zshrc`. It will fire up after c.a. 1 ms of showing of the basic
-prompt `READY >`. I’ve started to use this method of setting up a
-prompt 2 years ago now and I run it without any problems. **NEW**: It
-is now sufficient to provide just the word `wait`, it’ll work like
-`wait'0'` (and `wait'!'` like `wait'!0'`).
+This sets plugin `psprint/zprompts` to be loaded `0` seconds after `zshrc`. It
+will fire up after c.a. 1 ms of showing of the basic prompt `READY >`. I’ve
+started to use this method of setting up a prompt 2 years ago now and I run it
+without any problems. **NEW**: It is now sufficient to provide just the word
+`wait`, it’ll work like `wait'0'` (and `wait'!'` like `wait'!0'`).
 
-The exclamation mark causes Zplugin to reset-prompt after loading
-plugin. The same with Prezto prompts, with a longer delay:
+The exclamation mark causes Zplugin to reset-prompt after loading plugin. The
+same with Prezto prompts, with a longer delay:
 
 ``` zsh
 zplg ice svn silent wait'!1' atload'prompt smiley'
@@ -307,30 +297,29 @@ zplg snippet PZT::modules/prompt
 Using `zsh-users/zsh-autosuggestions` without any drawbacks:
 
 ``` zsh
-zplugin ice wait'1' atload'_zsh_autosuggest_start'
+zplugin ice wait atload'_zsh_autosuggest_start'
 zplugin light zsh-users/zsh-autosuggestions
 ```
 
-Autosuggestions uses `precmd` hook that is called right after processing
-`zshrc` (right before the first prompt). Turbo Mode will wait `1`
-second so `precmd` will not be installed and thus not called at that
-first prompt. This makes autosuggestions inactive at first prompt.
-**However** the given `atload` Ice-mod fixes this, it calls the same
-function `precmd` would, right after loading autosuggestions,
-resulting in exactly the same behavior of the plugin.
+Explanation: Autosuggestions uses `precmd` hook, which is being called right
+after processing `zshrc` (right before the first prompt). Turbo Mode will wait
+`1` second after that, so `precmd` will not be installed and thus not called at
+that first prompt. This makes autosuggestions inactive at the first prompt.
+**However** the given `atload` Ice-mod fixes this, it calls the same function
+that `precmd` would, right after loading autosuggestions, resulting in exactly
+the same behavior of the plugin.
 
 ``` zsh
 zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
 zplugin load zdharma/zplugin-crasis
 ```
 
-The plugin `zplugin-crasis` provides command `crasis`. Ice-mod `wait` is
-set to [wait on condition](../Example-wait-conditions). When user enters
-`cras` at command line, the plugin is within 1 second loaded and command
-`crasis` becomes available.  **[See this feature in
+The plugin `zplugin-crasis` provides command `crasis`. Ice-mod `wait` is set to
+[wait on condition](../Example-wait-conditions). When user enters `cras` at
+command line, the plugin will be loaded within 1 second and command `crasis`
+will become available. **[See the feature in
 action](https://asciinema.org/a/149725)**. This feature requires
-`zdharma/fast-syntax-highlighting` (it builds the `ZLAST_COMMANDS`
-array).
+`zdharma/fast-syntax-highlighting` (it builds the `ZLAST_COMMANDS` array).
 
 ### Automatic Load/Unload on Condition
 
@@ -350,20 +339,20 @@ zplugin ice load'![[ $PWD != */tmp* ]]' unload'![[ $PWD = */tmp* ]]'
 zplugin load russjohnson/angry-fly-zsh
 ```
 
-Two prompts, each active in different directories. This can be used to
-have plugin-sets, e.g. by defining parameter `$PLUGINS` with possible
-values like `cpp`, `web`, `admin` and by setting `load` / `unload`
-conditions to activate different plugins on `cpp`, on `web`, etc.
+Two prompts, each active in different directories. This technique can be used to
+have plugin-sets, e.g. by defining parameter `$PLUGINS` with possible values
+like `cpp`, `web`, `admin` and by setting `load` / `unload` conditions to
+activate different plugins on `cpp`, on `web`, etc.
 
-The difference with `wait` is that `load` / `unload` are constantly
-active, not only till first activation.
+!!!note
+    **The difference with `wait` is that `load` / `unload` are constantly
+    active, not only till first activation.**
 
-Note that unloading a plugin needs it to be loaded with tracking (so
-`zplugin load ...`, not `zplugin light ...`). Tracking causes slight
-slowdown, however this doesn’t matter in Turbo Mode, as Zsh startup
-isn’t slowed down.
+Note that for unloading of a plugin to work the plugin needs to be loaded with
+tracking (so `zplugin load ...`, not `zplugin light ...`). Tracking causes
+slight slowdown, however this doesn’t influence Zsh startup time when using
+Turbo Mode.
 
 **See also Wiki on [multiple prompts](../Multiple-prompts).**
 
-<!-- vim:tw=70
--->
+[]( vim:set filetype=markdown tw=70: )
