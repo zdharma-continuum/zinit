@@ -92,6 +92,21 @@ nav.md-nav.md-nav--secondary ul.md-nav__list li.md-nav__item nav.md-nav {
   font-weight: bold;
 }
 
+/*Tables*/
+
+table{
+  table-layout: fixed;
+  border: 1px solid black;
+}
+
+table > :first-child{
+  font-size: 120%;
+}
+
+tr{
+  font-size: 130%;
+}
+
 /*Moved browser specific options last as to not tamper with mobile settings.*/
 @media only screen and (min-width: 768px) {
   article.md-content__inner.md-typeset {

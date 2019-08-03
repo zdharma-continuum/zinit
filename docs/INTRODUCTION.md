@@ -19,7 +19,7 @@ zplugin load zdharma/history-search-multi-word
 zplugin light zsh-users/zsh-syntax-highlighting
 ```
 
-Above commands show two ways of basic plugin loading. `load` causes reporting to
+Above commands show two ways of basic plugin loading. <code>load &#8203;</code>  causes reporting to
 be enabled – you can track what plugin does, view the information with `zplugin
 report {plugin-spec}` and then also unload the plugin with `zplugin unload
 {plugin-spec}`. `light` is a significantly faster loading without tracking and

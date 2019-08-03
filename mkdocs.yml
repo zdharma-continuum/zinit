@@ -16,23 +16,22 @@ nav:
   - "Compiling Programs": Compiling-programs.md
   - "Profiling Plugins": Profiling-plugins.md
   - "Gallery": GALLERY.md
-- "Z-Plugins":
+- "Zplugin Extensions":
   - "Z-Plugins": Z-PLUGINS.md
+  - "declare-zsh": declare-zsh.md
+  - "Crasis": crasis.md
 - "Hints": 
   - "Zsh Plugin Standard": zsh-plugin-standard.md
   - "Preinstalling Plugins": preinstalling-plugins.md
 - "Code Documentation": 
-  - "Intro": Code-Documentation.md
+  - "Overview": Code-Documentation.md
   - "zplugin.zsh": zplugin.zsh.md
   - "zplugin-side.zsh": zplugin-side.zsh.md
   - "zplugin-install.zsh": zplugin-install.zsh.md
   - "zplugin-autoload.zsh": zplugin-autoload.zsh.md
-- "Zplugin Extensions":
-  - "declare-zsh": declare-zsh.md
-  - "Crasis": crasis.md
 
 theme:
-  name: 'material'
+  name: material
   logo:
     icon: home
   feature:

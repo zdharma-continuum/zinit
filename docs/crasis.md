@@ -11,7 +11,7 @@ now you can just **press a button**.
 
 `Crasis` uses pure-Zshell [ZUI](http://github.com/zdharma/zui/) library to create `ncurses` interface.
 
-# Installation & Basic Use
+## Installation & Basic Use
 
 Install [Zplugin](https://github.com/zdharma/zplugin) and add following commands to `.zshrc`:
 
@@ -30,7 +30,7 @@ CRASIS_THEME="zdharma-256" CRASIS_LAYOUT="contract" crasis
 
 `256`-color themes require Zsh `5.3` or later.
 
-# Key Bindings
+## Key Bindings
 
 | Key(s) | Description |
 |--------|-------------|
@@ -49,13 +49,13 @@ CRASIS_THEME="zdharma-256" CRASIS_LAYOUT="contract" crasis
 | `Ctrl-K` | Delete whole line (in incremental search)          |
 | Up and down | Resize text field when editing it (e.g. to make the text fit in) |
 
-# Screenshots
+## Screenshots
 
 ![clean-256](https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/clean-256.png)
 
 ![zdharma-256](https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/zdharma-256.png)
 
-# Code Documentation
+## Code Documentation
 
 `Crasis` is a [ZUI](http://github.com/zdharma/zui/) application. `ZUI` is a pure-Zshell library
 where user generates simple text with hyperlinks, which is then turned into active document with

@@ -724,7 +724,7 @@ hljs.registerLanguage("bash", function(e) {
     aliases: ["sh", "zsh"],
     l: /\b-?[a-z\._]+\b/,
     k: {
-      "ice-mod": "svn proto from teleid bindmap cloneopts depth if wait load unload blockf subscribe pick bpick as ver silent lucid notify mv cp atinit atclone atload atpull nocd has cloneonly make service trackbinds compile nocompile nocompletions",
+      "ice-mod": "svn proto from teleid bindmap cloneopts depth if wait blockf subscribe pick bpick as ver silent lucid notify mv cp atinit atclone atpull nocd has cloneonly make service trackbinds compile nocompile nocompletions",
       command:
         "load light snippet cuninstall creinstall clist cdisable cenable report delete update csearch times help",
       zpl: "",
@@ -733,7 +733,7 @@ hljs.registerLanguage("bash", function(e) {
     c: [
       {
         cN: "ice-mod",
-	b: /id-as|on-update-of|run-atpull|reset-prompt|(multi|^| )src(?!\/)/,
+	b: /id-as|on-update-of|run-atpull|reset-prompt|(multi|^| )src(?!\/)|((un|at)?)load(?! )/,
       },
       {
         cN: "zpl",
