@@ -197,8 +197,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-tabs__link">
-          Z-Plugins
+        <a href="../Z-PLUGINS/" title="Zplugin Extensions" class="md-tabs__link">
+          Zplugin Extensions
         </a>
       
     </li>
@@ -225,19 +225,6 @@
       
         <a href="../Code-Documentation/" title="Code Documentation" class="md-tabs__link">
           Code Documentation
-        </a>
-      
-    </li>
-  
-
-      
-        
-  
-  
-    <li class="md-tabs__item">
-      
-        <a href="../declare-zsh/" title="Zplugin Extensions" class="md-tabs__link">
-          Zplugin Extensions
         </a>
       
     </li>
@@ -514,11 +501,11 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
     
     <label class="md-nav__link" for="nav-4">
-      Z-Plugins
+      Zplugin Extensions
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-4">
-        Z-Plugins
+        Zplugin Extensions
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -531,6 +518,30 @@
   <li class="md-nav__item">
     <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-nav__link">
       Z-Plugins
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
+      declare-zsh
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../crasis/" title="Crasis" class="md-nav__link">
+      Crasis
     </a>
   </li>
 
@@ -613,8 +624,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../Code-Documentation/" title="Intro" class="md-nav__link">
-      Intro
+    <a href="../Code-Documentation/" title="Overview" class="md-nav__link">
+      Overview
     </a>
   </li>
 
@@ -672,54 +683,6 @@
   </li>
 
     
-      
-      
-      
-
-
-  <li class="md-nav__item md-nav__item--nested">
-    
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
-    
-    <label class="md-nav__link" for="nav-7">
-      Zplugin Extensions
-    </label>
-    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-7">
-        Zplugin Extensions
-      </label>
-      <ul class="md-nav__list" data-md-scrollfix>
-        
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../declare-zsh/" title="declare-zsh" class="md-nav__link">
-      declare-zsh
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
-    <a href="../crasis/" title="Crasis" class="md-nav__link">
-      Crasis
-    </a>
-  </li>
-
-        
-      </ul>
-    </nav>
-  </li>
-
-    
   </ul>
 </nav>
                   </div>
@@ -752,7 +715,7 @@ zplugin load geometry-zsh/geometry
 <ul>
 <li><code>load''</code> – condition that when fulfilled will cause plugin to be loaded,</li>
 <li><code>unload''</code> – as above, but will unload plugin,</li>
-<li>note that plugins are loaded with <code>zplugin load</code>, not <code>zplugin light</code>, to track what plugin does, to be able to unload it,</li>
+<li>note that plugins are loaded with <code>zplugin load &#8203;</code>, not <code>zplugin light</code>, to track what plugin does, to be able to unload it,</li>
 <li>conditions are checked every second,</li>
 <li>you can use conditions like <code>![[ $PWD == *github* ]]</code> to change prompt after changing directory to <code>*github*</code>,</li>
 <li>the exclamation mark <code>![[ ... ]]</code> causes prompt to be reset after loading or unloading the plugin,</li>
