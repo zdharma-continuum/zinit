@@ -22,10 +22,6 @@ HOME_DIR
 _test2/answer
 HOME_READY
 1
-OPTIONS_AFTER__psprint/zsh-select
-
-OPTIONS_BEFORE__psprint/zsh-select
-
 OPTIONS__psprint/zsh-select
 
 PATH__psprint/zsh-select

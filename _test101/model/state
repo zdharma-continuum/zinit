@@ -30,14 +30,6 @@ HOME_DIR
 _test101/answer
 HOME_READY
 1
-OPTIONS_AFTER__psprint/zsh-select
-
-OPTIONS_AFTER__zdharma/ice-order
-
-OPTIONS_BEFORE__psprint/zsh-select
-
-OPTIONS_BEFORE__zdharma/ice-order
-
 OPTIONS__psprint/zsh-select
 
 OPTIONS__zdharma/ice-order

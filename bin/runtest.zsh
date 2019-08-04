@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh-5.7.1-dev-0
+#!/usr/bin/env zsh
 
 local emul="zsh";
 [[ -f ./emulate ]] && emul="$(<./emulate)"
@@ -173,6 +173,7 @@ store_state() {
     not_show_keys=( UPAR 1 DOWNAR 1 RIGHTAR 1 LEFTAR 1 \
             FUNCTIONS_BEFORE__\* 1 FUNCTIONS_AFTER__\* 1 \
             PARAMETERS_BEFORE__\* 1 PARAMETERS_AFTER__\* 1
+            OPTIONS_BEFORE__\* 1 OPTIONS_AFTER__\* 1
             FPATH_BEFORE__\* 1 FPATH_AFTER__\* 1
             PATH_BEFORE__\* 1 PATH_AFTER__\* 1
         )

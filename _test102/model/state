@@ -22,10 +22,6 @@ HOME_DIR
 _test102/answer
 HOME_READY
 1
-OPTIONS_AFTER__psprint/zsh-editing-workbench
-
-OPTIONS_BEFORE__psprint/zsh-editing-workbench
-
 OPTIONS__psprint/zsh-editing-workbench
 
 PARAMETERS_POST__psprint/zsh-editing-workbench
