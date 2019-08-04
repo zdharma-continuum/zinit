@@ -699,9 +699,9 @@
                   <h1>Sourcing Multiple Files</h1>
                 
                 <p>Normally <code>src''</code> can be used to specify additional file to source:</p>
-<pre><code class="zsh">zplugin ice pick&quot;powerless.zsh&quot; src&quot;utilities.zsh&quot;
+<div class="highlight"><pre><span></span>zplugin ice pick<span class="s2">&quot;powerless.zsh&quot;</span> src<span class="s2">&quot;utilities.zsh&quot;</span>
 zplugin light martinrotter/powerless
-</code></pre>
+</pre></div>
 
 <ul>
 <li><code>pick''</code> – provide main file to source (can be pattern like <code>*.sh</code>, alphabetically first matched file is sourced),</li>
@@ -709,10 +709,10 @@ zplugin light martinrotter/powerless
 </ul>
 <hr />
 <p>However, via <code>atload''</code> ice one can provide simple loop to source more files:</p>
-<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; \
-    atload'local f; for f in git.zsh misc.zsh; do source $f; done'
+<div class="highlight"><pre><span></span>zplugin ice svn pick<span class="s2">&quot;completion.zsh&quot;</span> <span class="se">\</span>
+    atload<span class="s1">&#39;local f; for f in git.zsh misc.zsh; do source $f; done&#39;</span>
 zplugin snippet OMZ::lib
-</code></pre>
+</pre></div>
 
 <ul>
 <li><code>svn</code> – use Subversion to clone <code>OMZ::lib</code> (Oh My Zsh <code>lib/</code> directory),</li>
@@ -722,42 +722,42 @@ zplugin snippet OMZ::lib
 </ul>
 <hr />
 <p><strong>NEW</strong>: The <code>multisrc''</code> ice, which loads <strong>multiple</strong> files enumerated with spaces as the separator (e.g. <code>multisrc'misc.zsh grep.zsh'</code>) and also using brace-expansion syntax (e.g. <code>multisrc'{misc,grep}.zsh')</code>. Example:</p>
-<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; multisrc'git.zsh \
-    functions.zsh {history,grep}.zsh'
+<div class="highlight"><pre><span></span>zplugin ice svn pick<span class="s2">&quot;completion.zsh&quot;</span> multisrc<span class="s1">&#39;git.zsh \</span>
+<span class="s1">    functions.zsh {history,grep}.zsh&#39;</span>
 zplugin snippet OMZ::lib
-</code></pre>
+</pre></div>
 
 <p>The all possible ways to use the <code>multisrc''</code> ice-mod:</p>
-<pre><code class="zsh">zplugin ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
+<div class="highlight"><pre><span></span>zplugin ice depth<span class="s2">&quot;1&quot;</span> <span class="nv">multisrc</span><span class="o">=</span><span class="s2">&quot;lib/{functions,misc}.zsh&quot;</span> pick<span class="s2">&quot;/dev/null&quot;</span>
 zplugin load robbyrussell/oh-my-zsh
 
-# Can use patterns
-zplugin ice svn multisrc&quot;{funct*,misc}.zsh&quot; pick&quot;/dev/null&quot;
+<span class="c1"># Can use patterns</span>
+zplugin ice svn multisrc<span class="s2">&quot;{funct*,misc}.zsh&quot;</span> pick<span class="s2">&quot;/dev/null&quot;</span>
 zplugin snippet OMZ::lib
 
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;$array&quot; pick&quot;/dev/null&quot;
+<span class="nv">array</span><span class="o">=(</span> <span class="o">{</span>functions,misc<span class="o">}</span>.zsh <span class="o">)</span>
+zplugin ice svn multisrc<span class="s2">&quot;</span><span class="nv">$array</span><span class="s2">&quot;</span> pick<span class="s2">&quot;/dev/null&quot;</span>
 zplugin snippet OMZ::lib
 
-# Will use the array's value at the moment of plugin load
-# – this can matter in case of using turbo mode
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
+<span class="c1"># Will use the array&#39;s value at the moment of plugin load</span>
+<span class="c1"># – this can matter in case of using turbo mode</span>
+<span class="nv">array</span><span class="o">=(</span> <span class="o">{</span>functions,misc<span class="o">}</span>.zsh <span class="o">)</span>
+zplugin ice svn multisrc<span class="s2">&quot;\$array&quot;</span> pick<span class="s2">&quot;/dev/null&quot;</span>
 zplugin snippet OMZ::lib
 
-# Compatible with KSH_ARRAYS option
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;${array[*]}&quot; pick&quot;/dev/null&quot;
+<span class="c1"># Compatible with KSH_ARRAYS option</span>
+<span class="nv">array</span><span class="o">=(</span> <span class="o">{</span>functions,misc<span class="o">}</span>.zsh <span class="o">)</span>
+zplugin ice svn multisrc<span class="s2">&quot;</span><span class="si">${</span><span class="nv">array</span><span class="p">[*]</span><span class="si">}</span><span class="s2">&quot;</span> pick<span class="s2">&quot;/dev/null&quot;</span>
 zplugin snippet OMZ::lib
 
-# Compatible with KSH_ARRAYS option
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\${array[*]}&quot; pick&quot;/dev/null&quot;
+<span class="c1"># Compatible with KSH_ARRAYS option</span>
+<span class="nv">array</span><span class="o">=(</span> <span class="o">{</span>functions,misc<span class="o">}</span>.zsh <span class="o">)</span>
+zplugin ice svn multisrc<span class="s2">&quot;\${array[*]}&quot;</span> pick<span class="s2">&quot;/dev/null&quot;</span>
 zplugin snippet OMZ::lib
 
-zplugin ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
+zplugin ice svn multisrc<span class="s2">&quot;misc.zsh functions.zsh&quot;</span> pick<span class="s2">&quot;/dev/null&quot;</span>
 zplugin snippet OMZ::lib
-</code></pre>
+</pre></div>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 

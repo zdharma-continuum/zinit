@@ -718,15 +718,15 @@
                 
                 
                 <h1 id="example_minimal_setup">Example Minimal Setup<a class="headerlink" href="#example_minimal_setup" title="Permanent link">#</a></h1>
-<pre><code class="zsh">zplugin ice wait&quot;0&quot; blockf
+<div class="highlight"><pre><span></span>zplugin ice wait<span class="s2">&quot;0&quot;</span> blockf
 zplugin light zsh-users/zsh-completions
 
-zplugin ice wait&quot;0&quot; atload&quot;_zsh_autosuggest_start&quot;
+zplugin ice wait<span class="s2">&quot;0&quot;</span> atload<span class="s2">&quot;_zsh_autosuggest_start&quot;</span>
 zplugin light zsh-users/zsh-autosuggestions
 
-zplugin ice wait&quot;0&quot; atinit&quot;zpcompinit; zpcdreplay&quot;
+zplugin ice wait<span class="s2">&quot;0&quot;</span> atinit<span class="s2">&quot;zpcompinit; zpcdreplay&quot;</span>
 zplugin light zdharma/fast-syntax-highlighting
-</code></pre>
+</pre></div>
 
 <ul>
 <li><code>light</code> – load the plugin in <code>light</code> mode, in which the tracking of plugin (i.e. activity report gathering, accessible via the <code>zplugin report {plugin-spec}</code> subcommand) is being disabled; note that for TurboMode, the performance gains are actually <code>0</code>, so in this mode you can load all plugins with the tracking, i.e. by using <code>zplugin ice wait'0'; zplugin load {plugin-spec}</code> commands,</li>
@@ -740,14 +740,14 @@ zplugin light zdharma/fast-syntax-highlighting
 <li>add <code>lucid</code> ice-mod to silence the under-prompt messages.</li>
 </ul>
 <p>The same setup but without using Turbo-mode (i.e. no <code>wait''</code> ice):</p>
-<pre><code class="zsh">zplugin ice blockf; zplugin light zsh-users/zsh-completions
+<div class="highlight"><pre><span></span>zplugin ice blockf<span class="p">;</span> zplugin light zsh-users/zsh-completions
 zplugin light zsh-users/zsh-autosuggestions
 
 autoload compinit
 compinit
 
 zplugin light zdharma/fast-syntax-highlighting
-</code></pre>
+</pre></div>
 
 <ul>
 <li><code>light</code> – as above</li>

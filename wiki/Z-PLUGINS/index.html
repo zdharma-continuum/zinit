@@ -864,31 +864,31 @@ It shows how to:</p>
 </ol>
 <!-- end list -->
 
-<pre><code class="zsh">emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
+<div class="highlight"><pre><span></span>emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
 
-[[ -z &quot;${ZPLG_ICE[submods]}&quot; ]] &amp;&amp; return 0
+<span class="o">[[</span> -z <span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZPLG_ICE</span><span class="p">[submods]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="k">return</span> <span class="m">0</span>
 
-# (1)
-[[ &quot;$1&quot; = plugin ]] &amp;&amp; \
-    local type=&quot;$1&quot; user=&quot;$2&quot; plugin=&quot;$3&quot; id_as=&quot;$4&quot; dir=&quot;$5&quot; || \
-    local type=&quot;$1&quot; url=&quot;$2&quot; id_as=&quot;$3&quot; dir=&quot;$4&quot; # type: snippet
+<span class="c1"># (1)</span>
+<span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="o">=</span> plugin <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    <span class="nb">local</span> <span class="nv">type</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="nv">user</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span> <span class="nv">plugin</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span> <span class="nv">id_as</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$4</span><span class="s2">&quot;</span> <span class="nv">dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$5</span><span class="s2">&quot;</span> <span class="o">||</span> <span class="se">\</span>
+    <span class="nb">local</span> <span class="nv">type</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="nv">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span> <span class="nv">id_as</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span> <span class="nv">dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$4</span><span class="s2">&quot;</span> <span class="c1"># type: snippet</span>
 
-local -a mods parts
-local mod
+<span class="nb">local</span> -a mods parts
+<span class="nb">local</span> mod
 
-# (2)
-mods=( ${(@s.;.)ZPLG_ICE[submods]} )
-for mod in &quot;${mods[@]}&quot;; do
-    parts=( &quot;${(@s:-&gt;:)mod}&quot; )
-    # (3) Remove only leading and trailing whitespace
-    parts=( &quot;${parts[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}&quot; )
+<span class="c1"># (2)</span>
+<span class="nv">mods</span><span class="o">=(</span> <span class="si">${</span><span class="p">(@s.;.)ZPLG_ICE[submods]</span><span class="si">}</span> <span class="o">)</span>
+<span class="k">for</span> mod in <span class="s2">&quot;</span><span class="si">${</span><span class="nv">mods</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nv">parts</span><span class="o">=(</span> <span class="s2">&quot;</span><span class="si">${</span><span class="p">(@s</span><span class="k">:-</span><span class="p">&gt;:)mod</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">)</span>
+    <span class="c1"># (3) Remove only leading and trailing whitespace</span>
+    <span class="nv">parts</span><span class="o">=(</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">parts</span><span class="p">[@]//((#s)[[:</span><span class="nv">space</span><span class="p">:]]##|[[:</span><span class="nv">space</span><span class="p">:]]##(#e))/</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">)</span>
 
-    print &quot;\nCloning submodule: ${parts[1]} to dir: ${parts[2]}&quot;
-    parts[1]=&quot;https://github.com/${parts[1]}&quot;
-    # (4) – the: -C &quot;$dir&quot;
-    command git -C &quot;$dir&quot; clone --progress &quot;${parts[1]}&quot; &quot;${parts[2]}&quot;
-done
-</code></pre>
+    print <span class="s2">&quot;\nCloning submodule: </span><span class="si">${</span><span class="nv">parts</span><span class="p">[1]</span><span class="si">}</span><span class="s2"> to dir: </span><span class="si">${</span><span class="nv">parts</span><span class="p">[2]</span><span class="si">}</span><span class="s2">&quot;</span>
+    parts<span class="o">[</span><span class="m">1</span><span class="o">]=</span><span class="s2">&quot;https://github.com/</span><span class="si">${</span><span class="nv">parts</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># (4) – the: -C &quot;$dir&quot;</span>
+    <span class="nb">command</span> git -C <span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span> clone --progress <span class="s2">&quot;</span><span class="si">${</span><span class="nv">parts</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">parts</span><span class="p">[2]</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</pre></div>
 
 <p>The recommended method of creating a hook is to place its body into a
 file that starts with a colon, and also a <code>zp-</code> prefix, e.g.
@@ -896,19 +896,19 @@ file that starts with a colon, and also a <code>zp-</code> prefix, e.g.
 <code>autoload -Uz :zp-myproject-atclone-hook</code>. Then register the hook
 (presumably in the <code>myproject.plugin.zsh</code> file) with the API call:
 <code>@zplg-register-z-plugin</code>:</p>
-<pre><code class="zsh">@zplg-register-z-plugin &quot;myproject&quot; hook:atclone \
-    :zp-myproject-atclone-handler \
-    :zp-myproject-atclone-help-handler \
-    &quot;submods''&quot; # register a new ice-mod: submods''
-</code></pre>
+<div class="highlight"><pre><span></span>@zplg-register-z-plugin <span class="s2">&quot;myproject&quot;</span> hook:atclone <span class="se">\</span>
+    :zp-myproject-atclone-handler <span class="se">\</span>
+    :zp-myproject-atclone-help-handler <span class="se">\</span>
+    <span class="s2">&quot;submods&#39;&#39;&quot;</span> <span class="c1"># register a new ice-mod: submods&#39;&#39;</span>
+</pre></div>
 
 <p>The general syntax of the API call is:</p>
-<pre><code class="zsh">@zplg-register-z-plugin {project-name} \
-    {hook:&lt;hook-type&gt;|subcommand:&lt;new-subcommand-name&gt;} \
-    {name-of-the-handler-function} \
-    {name-of-the-HELP-handler-function} \
-    &quot;{ice-mod1}|{ice-mod2}|...&quot;
-</code></pre>
+<div class="highlight"><pre><span></span>@zplg-register-z-plugin <span class="o">{</span>project-name<span class="o">}</span> <span class="se">\</span>
+    <span class="o">{</span>hook:&lt;hook-type&gt;<span class="p">|</span>subcommand:&lt;new-subcommand-name&gt;<span class="o">}</span> <span class="se">\</span>
+    <span class="o">{</span>name-of-the-handler-function<span class="o">}</span> <span class="se">\</span>
+    <span class="o">{</span>name-of-the-HELP-handler-function<span class="o">}</span> <span class="se">\</span>
+    <span class="s2">&quot;{ice-mod1}|{ice-mod2}|...&quot;</span>
+</pre></div>
 
 <p>The last argument, i.e. the <code>|</code>-separated ice-list, is optional. That’s
 all! After this loading the plugin <code>myproject</code> will set up the new
@@ -916,10 +916,10 @@ ice-mod <code>submods</code> that will have syntax <code>submods'{user}/{plugin}
 {output-dir};
 …​'</code> and will clone submodules when installing the original plugin or
 snippet! Example real-world use of the ice-mod:</p>
-<pre><code class="zsh"># Load the `zsh-autosuggestions' plugin via Prezto module: `autosuggestions'
-zplugin ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
+<div class="highlight"><pre><span></span><span class="c1"># Load the `zsh-autosuggestions&#39; plugin via Prezto module: `autosuggestions&#39;</span>
+zplugin ice svn submods<span class="s1">&#39;zsh-users/zsh-autosuggestions -&gt; external&#39;</span>
 zplugin snippet PZT::modules/autosuggestions
-</code></pre>
+</pre></div>
 
 <p>Checkout the project which fully implements this idea,
 <a href="https://github.com/zdharma/z-p-submods"><strong>zdharma/z-p-submods</strong></a>. It e.g.

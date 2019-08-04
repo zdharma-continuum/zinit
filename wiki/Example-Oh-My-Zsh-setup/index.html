@@ -698,34 +698,34 @@
                 
                   <h1>Example Oh My Zsh Setup</h1>
                 
-                <pre><code class="zsh"># A.
+                <div class="highlight"><pre><span></span><span class="c1"># A.</span>
 setopt promptsubst
 
-# B.
-zplugin ice wait lucid
+<span class="c1"># B.</span>
+zplugin ice <span class="nb">wait</span> lucid
 zplugin snippet OMZ::lib/git.zsh
 
-# C.
-zplugin ice wait atload&quot;unalias grv&quot; lucid
+<span class="c1"># C.</span>
+zplugin ice <span class="nb">wait</span> atload<span class="s2">&quot;unalias grv&quot;</span> lucid
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
 
-# D.
-PS1=&quot;READY &gt;&quot; # provide a nice prompt till the theme loads
-zplugin wait lucid
+<span class="c1"># D.</span>
+<span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;READY &gt;&quot;</span> <span class="c1"># provide a nice prompt till the theme loads</span>
+zplugin <span class="nb">wait</span> lucid
 zplugin snippet OMZ::themes/dstufft.zsh-theme
 
-# E.
-zplugin ice wait lucid
+<span class="c1"># E.</span>
+zplugin ice <span class="nb">wait</span> lucid
 zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
-# F.
-zplugin ice wait as&quot;completion&quot; lucid
+<span class="c1"># F.</span>
+zplugin ice <span class="nb">wait</span> as<span class="s2">&quot;completion&quot;</span> lucid
 zplugin snippet OMZ::plugins/docker/_docker
 
-# G.
-zplugin ice wait atinit&quot;zpcompinit&quot; lucid
+<span class="c1"># G.</span>
+zplugin ice <span class="nb">wait</span> atinit<span class="s2">&quot;zpcompinit&quot;</span> lucid
 zplugin light zdharma/fast-syntax-highlighting
-</code></pre>
+</pre></div>
 
 <p><strong>A</strong> -  Most themes use this option.</p>
 <p><strong>B</strong> -  OMZ themes use this library.</p>
@@ -746,21 +746,34 @@ e.g. instead of 200 ms, you'll be getting your shell started up after <strong>50
 <p>The same setup without Turbo mode (prompt will be initially set like in typical,
 normal setup – <strong>you can remove <code>wait</code> only from the theme plugin</strong> to have the
 same effect while still using Turbo mode for everything remaining):</p>
-<pre><code class="zsh">setopt promptsubst
+<div class="highlight"><pre><span></span><span class="c1"># A.</span>
+setopt promptsubst
+
+<span class="c1"># B.</span>
 zplugin snippet OMZ::lib/git.zsh
-zplugin ice atload&quot;unalias grv&quot;
+
+<span class="c1"># C.</span>
+zplugin ice atload<span class="s2">&quot;unalias grv&quot;</span>
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
+
+<span class="c1"># D.</span>
 zplugin snippet OMZ::themes/dstufft.zsh-theme
+
+<span class="c1"># E.</span>
 zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
-zplugin ice as&quot;completion&quot;
+
+<span class="c1"># F.</span>
+zplugin ice as<span class="s2">&quot;completion&quot;</span>
 zplugin snippet OMZ::plugins/docker/_docker
-zplugin ice atinit&quot;zpcompinit&quot;
+
+<span class="c1"># G.</span>
+zplugin ice atinit<span class="s2">&quot;zpcompinit&quot;</span>
 zplugin light zdharma/fast-syntax-highlighting
-</code></pre>
+</pre></div>
 
 <p>In general, Turbo mode can be optionally enabled only for a subset of plugins or
 for all plugins. It needs Zsh >= 5.3.</p>
-<p>The <strong>Introduction</strong> contains <a href=",,/INTRODUCTION/#turbo_mode_zsh_62_53"><strong>more
+<p>The <strong>Introduction</strong> contains <a href="http://zdharma.org/zplugin/wiki/INTRODUCTION/#turbo_mode_zsh_62_53"><strong>more
 information</strong></a> on Turbo mode.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
