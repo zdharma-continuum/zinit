@@ -5,7 +5,8 @@ zplugin ice pick"powerless.zsh" src"utilities.zsh"
 zplugin light martinrotter/powerless
 ```
 
-- `pick''` – provide main file to source (can be pattern like `*.sh`, alphabetically first matched file is sourced),
+- `pick''` – provide main file to source (can be a pattern like `*.sh` –
+  alphabetically first matched file is sourced),
 - `src''` – provide second file to source (not a pattern, plain file name)
 
 ***
@@ -18,14 +19,22 @@ zplugin ice svn pick"completion.zsh" \
 zplugin snippet OMZ::lib
 ```
 
-- `svn` – use Subversion to clone `OMZ::lib` (Oh My Zsh `lib/` directory),
-- note that `atload''` uses apostrophes not double quotes, to literally put `$f` into the string,
-- `atload''` code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you prepend its value by exclamation mark, i.e. `atload'!local f; for ...'`,
+- `svn` – use Subversion to clone `OMZ::lib` (the whole Oh My Zsh `lib/`
+  directory),
+- note that `atload''` uses apostrophes not double quotes, to literally put `$f`
+  into the string,
+- `atload`'s code is automatically being run **within the snippet's (or
+  plugin's) directory**,
+- `atload''` code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you
+  load a plugin (not a snippet) with `zplugin load …` and prepend the value of
+  the ice with exclamation mark, i.e.  `atload'!local f; for ...'`,
 - `atload''` is executed after loading main files (`pick''` and `src''` ones).
 
 ****
 
-**NEW**: The `multisrc''` ice, which loads **multiple** files enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh')`. Example:
+**NEW**: The `multisrc''` ice, which loads **multiple** files enumerated with
+spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using
+brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh')`. Example:
 
 ```zsh
 zplugin ice svn pick"completion.zsh" multisrc'git.zsh \
