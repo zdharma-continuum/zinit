@@ -777,6 +777,15 @@ function $f {
     ZPLG_PARAMETERS_PRE[$1]=""
     ZPLG_PARAMETERS_POST[$1]=""
 } # }}}
+# FUNCTION: -zplg-diff {{{
+# Performs diff actions of all types
+-zplg-diff() {
+    -zplg-diff-functions "$1" "$2"
+    -zplg-diff-options "$1" "$2"
+    -zplg-diff-env "$1" "$2"
+    -zplg-diff-parameter "$1" "$2"
+}
+# }}}
 
 #
 # Utility functions
@@ -1325,12 +1334,7 @@ function $f {
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Source $fname ${${${(M)mode:#light}:+(no reporting)}:-$ZPLGM[col-info2](reporting enabled)$ZPLGM[col-rst]}"
 
         # Light and compdef mode doesn't do diffs and shadowing
-        if [[ "$mode" != (light|light-b) ]]; then
-            -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" begin
-            -zplg-diff-options "${ZPLGM[CUR_USPL2]}" begin
-            -zplg-diff-env "${ZPLGM[CUR_USPL2]}" begin
-            -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" begin
-        fi
+        [[ "$mode" != (light|light-b) ]] && -zplg-diff "${ZPLGM[CUR_USPL2]}" begin
 
         -zplg-shadow-on "${mode:-load}"
 
@@ -1361,12 +1365,7 @@ function $f {
 
         -zplg-shadow-off "${mode:-load}"
 
-        if [[ "$mode" != (light|light-b) ]]; then
-            -zplg-diff-parameter "${ZPLGM[CUR_USPL2]}" end
-            -zplg-diff-env "${ZPLGM[CUR_USPL2]}" end
-            -zplg-diff-options "${ZPLGM[CUR_USPL2]}" end
-            -zplg-diff-functions "${ZPLGM[CUR_USPL2]}" end
-        fi
+        [[ "$mode" != (light|light-b) ]] && -zplg-diff "${ZPLGM[CUR_USPL2]}" end
     fi
 
     # Run the atload hooks right before the possible atload ice
@@ -1407,10 +1406,7 @@ function $f {
 
     ZPLGM[DTRACE]="1"
 
-    -zplg-diff-functions "_dtrace/_dtrace" begin
-    -zplg-diff-options "_dtrace/_dtrace" begin
-    -zplg-diff-env "_dtrace/_dtrace" begin
-    -zplg-diff-parameter "_dtrace/_dtrace" begin
+    -zplg-diff "_dtrace/_dtrace" begin
 
     # Full shadowing on
     -zplg-shadow-on "dtrace"
@@ -1424,10 +1420,7 @@ function $f {
     -zplg-shadow-off "dtrace"
 
     # Gather end data now, for diffing later
-    -zplg-diff-parameter "_dtrace/_dtrace" end
-    -zplg-diff-env "_dtrace/_dtrace" end
-    -zplg-diff-options "_dtrace/_dtrace" end
-    -zplg-diff-functions "_dtrace/_dtrace" end
+    -zplg-diff "_dtrace/_dtrace" end
 } # }}}
 # FUNCTION: -zplg-clear-debug-report {{{
 # Forgets dtrace repport gathered up to this moment.
