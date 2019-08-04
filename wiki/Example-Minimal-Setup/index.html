@@ -729,18 +729,36 @@ zplugin light zdharma/fast-syntax-highlighting
 </pre></div>
 
 <ul>
-<li><code>light</code> – load the plugin in <code>light</code> mode, in which the tracking of plugin (i.e. activity report gathering, accessible via the <code>zplugin report {plugin-spec}</code> subcommand) is being disabled; note that for TurboMode, the performance gains are actually <code>0</code>, so in this mode you can load all plugins with the tracking, i.e. by using <code>zplugin ice wait'0'; zplugin load {plugin-spec}</code> commands,</li>
+<li><code>light</code> – load the plugin in <code>light</code> mode, in which the tracking of plugin
+   (i.e. activity report gathering, accessible via the <code>zplugin report
+   {plugin-spec}</code> subcommand) is being disabled; note that for TurboMode, the
+   performance gains are actually <code>0</code>, so in this mode you can load all plugins
+   with the tracking, i.e. by using <code>zplugin ice wait'0'; zplugin load
+   {plugin-spec}</code> commands,</li>
 <li><code>wait"0"</code> – load 0 seconds (about 110 ms exactly) after prompt,</li>
 <li><code>atinit''</code> – execute code before loading plugin,</li>
 <li><code>atload''</code> – execute code after loading plugin,</li>
 <li><code>zpcompinit</code> – equals to <code>autoload compinit; compinit</code>,</li>
-<li><code>zpcdreplay</code> – execute <code>compdef ...</code> calls that plugins did – they were recorded, so that <code>compinit</code> can be called later (it provides the <code>compdef</code> function, so it must be ran before issuing <code>compdef</code>s),</li>
-<li>syntax-highlighting plugins (like <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a> or <a href="https://github.com/zsh-users/zsh-syntax-highlighting"><strong>zsh-syntax-highlighting</strong></a>) expect to be loaded last, even after the completion initialization (i.e. <code>compinit</code> function), hence the <code>atinit''</code>, which will load <code>compinit</code> right before the plugin,</li>
-<li>the <code>atinit</code> of the plugin runs also <code>zcdreplay</code> (i.e. "<em>zplugin-compdef-replay</em>"), because after <code>compinit</code> is loaded, the <code>compdef</code> function becomes available, and one can re-run the all earlier automatically-caught<code>compdef</code> calls,</li>
+<li><code>zpcdreplay</code> – execute <code>compdef ...</code> calls that plugins did – they were
+   recorded, so that <code>compinit</code> can be called later (it provides the <code>compdef</code>
+   function, so it must be ran before issuing <code>compdef</code>s),</li>
+<li>syntax-highlighting plugins (like
+   <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a>
+   or
+   <a href="https://github.com/zsh-users/zsh-syntax-highlighting"><strong>zsh-syntax-highlighting</strong></a>)
+   expect to be loaded last, even after the completion initialization (i.e.
+   <code>compinit</code> function), hence the <code>atinit''</code>, which will load <code>compinit</code> right
+   before the plugin,</li>
+<li>the <code>atinit</code> of the plugin runs also <code>zcdreplay</code> (i.e.
+   "<em>zplugin-compdef-replay</em>"), because after <code>compinit</code> is loaded, the
+   <code>compdef</code> function becomes available, and one can re-run the all earlier
+   automatically-caught<code>compdef</code> calls, loosing nothing from the original
+   behavior,</li>
 <li>add <code>lucid</code> ice-mod to silence the under-prompt messages.</li>
 </ul>
 <p>The same setup but without using Turbo-mode (i.e. no <code>wait''</code> ice):</p>
-<div class="highlight"><pre><span></span>zplugin ice blockf<span class="p">;</span> zplugin light zsh-users/zsh-completions
+<div class="highlight"><pre><span></span>zplugin ice blockf
+zplugin light zsh-users/zsh-completions
 zplugin light zsh-users/zsh-autosuggestions
 
 autoload compinit
