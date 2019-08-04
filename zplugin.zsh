@@ -694,9 +694,11 @@ builtin setopt noaliases
 function $f {
     ZPLGM[CUR_USR]=\"$user\" ZPLG_CUR_PLUGIN=\"$plugin\" ZPLGM[CUR_USPL2]=\"$id_as\"
     -zplg-add-report \"\${ZPLGM[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
+    -zplg-diff \"\${ZPLGM[CUR_USPL2]}\" begin
     -zplg-shadow-on load
     ${f}-zplugin-bkp \"\$@\"
     -zplg-shadow-off load
+    -zplg-diff \"\${ZPLGM[CUR_USPL2]}\" end
     -zplg-add-report \"\${ZPLGM[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
     functions[${f}]=\${functions[${f}-zplugin-bkp]}
@@ -719,8 +721,11 @@ function $f {
     local uspl2="$1"
     local cmd="$2"
 
-    ZPLG_FUNCTIONS[$uspl2]=""
-    [[ "$cmd" = "begin" ]] && ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}" || ZPLG_FUNCTIONS_AFTER[$uspl2]="${(j: :)${(qk)functions[@]}}"
+    [[ "$cmd" = "begin" ]] && \
+        { [[ -z "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" ]] && \
+                ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}"
+        } || \
+        ZPLG_FUNCTIONS_AFTER[$uspl2]+=" ${(j: :)${(qk)functions[@]}}"
 } # }}}
 # FUNCTION: -zplg-diff-options {{{
 # Implements detection of change in option state. Performs
@@ -731,9 +736,11 @@ function $f {
 -zplg-diff-options() {
     local IFS=" "
 
-    [[ "$2" = "begin" ]] && ZPLG_OPTIONS_BEFORE[$1]="${(kv)options[@]}" || ZPLG_OPTIONS_AFTER[$1]="${(kv)options[@]}"
-
-    ZPLG_OPTIONS[$1]=""
+    [[ "$2" = "begin" ]] && \
+        { [[ -z "${ZPLG_OPTIONS_BEFORE[$uspl2]}" ]] && \
+            ZPLG_OPTIONS_BEFORE[$1]="${(kv)options[@]}"
+        } || \
+        ZPLG_OPTIONS_AFTER[$1]+=" ${(kv)options[@]}"
 } # }}}
 # FUNCTION: -zplg-diff-env {{{
 # Implements detection of change in PATH and FPATH.
@@ -745,19 +752,20 @@ function $f {
     local IFS=" "
 
     [[ "$2" = "begin" ]] && {
-            tmp=( "${(q)path[@]}" )
-            ZPLG_PATH_BEFORE[$1]="${tmp[*]}"
-            tmp=( "${(q)fpath[@]}" )
-            ZPLG_FPATH_BEFORE[$1]="${tmp[*]}"
+            { [[ -z "${ZPLG_PATH_BEFORE[$uspl2]}" ]] && \
+                tmp=( "${(q)path[@]}" )
+                ZPLG_PATH_BEFORE[$1]="${tmp[*]}"
+            }
+            { [[ -z "${ZPLG_FPATH_BEFORE[$uspl2]}" ]] && \
+                tmp=( "${(q)fpath[@]}" )
+                ZPLG_FPATH_BEFORE[$1]="${tmp[*]}"
+            }
     } || {
             tmp=( "${(q)path[@]}" )
-            ZPLG_PATH_AFTER[$1]="${tmp[*]}"
+            ZPLG_PATH_AFTER[$1]+=" ${tmp[*]}"
             tmp=( "${(q)fpath[@]}" )
-            ZPLG_FPATH_AFTER[$1]="${tmp[*]}"
+            ZPLG_FPATH_AFTER[$1]+=" ${tmp[*]}"
     }
-
-    ZPLG_PATH[$1]=""
-    ZPLG_FPATH[$1]=""
 } # }}}
 # FUNCTION: -zplg-diff-parameter {{{
 # Implements detection of change in any parameter's existence and type.
@@ -769,13 +777,12 @@ function $f {
     typeset -a tmp
 
     [[ "$2" = "begin" ]] && {
-        ZPLG_PARAMETERS_BEFORE[$1]="${(j: :)${(qkv)parameters[@]}}" # RPROMPT ${(q)RPROMPT} RPS1 ${(q)RPS1} RPS2 ${(q)RPS2} PROMPT ${(q)PROMPT} PS1 ${(q)PS1}"
+        { [[ -z "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" ]] && \
+            ZPLG_PARAMETERS_BEFORE[$1]="${(j: :)${(qkv)parameters[@]}}"
+        }
     } || {
-        ZPLG_PARAMETERS_AFTER[$1]="${(j: :)${(qkv)parameters[@]}}"
+        ZPLG_PARAMETERS_AFTER[$1]+=" ${(j: :)${(qkv)parameters[@]}}"
     }
-
-    ZPLG_PARAMETERS_PRE[$1]=""
-    ZPLG_PARAMETERS_POST[$1]=""
 } # }}}
 # FUNCTION: -zplg-diff {{{
 # Performs diff actions of all types
