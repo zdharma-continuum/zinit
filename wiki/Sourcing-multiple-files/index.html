@@ -704,7 +704,8 @@ zplugin light martinrotter/powerless
 </pre></div>
 
 <ul>
-<li><code>pick''</code> – provide main file to source (can be pattern like <code>*.sh</code>, alphabetically first matched file is sourced),</li>
+<li><code>pick''</code> – provide main file to source (can be a pattern like <code>*.sh</code> –
+  alphabetically first matched file is sourced),</li>
 <li><code>src''</code> – provide second file to source (not a pattern, plain file name)</li>
 </ul>
 <hr />
@@ -715,13 +716,21 @@ zplugin snippet OMZ::lib
 </pre></div>
 
 <ul>
-<li><code>svn</code> – use Subversion to clone <code>OMZ::lib</code> (Oh My Zsh <code>lib/</code> directory),</li>
-<li>note that <code>atload''</code> uses apostrophes not double quotes, to literally put <code>$f</code> into the string,</li>
-<li><code>atload''</code> code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you prepend its value by exclamation mark, i.e. <code>atload'!local f; for ...'</code>,</li>
+<li><code>svn</code> – use Subversion to clone <code>OMZ::lib</code> (the whole Oh My Zsh <code>lib/</code>
+  directory),</li>
+<li>note that <code>atload''</code> uses apostrophes not double quotes, to literally put <code>$f</code>
+  into the string,</li>
+<li><code>atload</code>'s code is automatically being run <strong>within the snippet's (or
+  plugin's) directory</strong>,</li>
+<li><code>atload''</code> code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you
+  load a plugin (not a snippet) with <code>zplugin load …</code> and prepend the value of
+  the ice with exclamation mark, i.e.  <code>atload'!local f; for ...'</code>,</li>
 <li><code>atload''</code> is executed after loading main files (<code>pick''</code> and <code>src''</code> ones).</li>
 </ul>
 <hr />
-<p><strong>NEW</strong>: The <code>multisrc''</code> ice, which loads <strong>multiple</strong> files enumerated with spaces as the separator (e.g. <code>multisrc'misc.zsh grep.zsh'</code>) and also using brace-expansion syntax (e.g. <code>multisrc'{misc,grep}.zsh')</code>. Example:</p>
+<p><strong>NEW</strong>: The <code>multisrc''</code> ice, which loads <strong>multiple</strong> files enumerated with
+spaces as the separator (e.g. <code>multisrc'misc.zsh grep.zsh'</code>) and also using
+brace-expansion syntax (e.g. <code>multisrc'{misc,grep}.zsh')</code>. Example:</p>
 <div class="highlight"><pre><span></span>zplugin ice svn pick<span class="s2">&quot;completion.zsh&quot;</span> multisrc<span class="s1">&#39;git.zsh \</span>
 <span class="s1">    functions.zsh {history,grep}.zsh&#39;</span>
 zplugin snippet OMZ::lib
