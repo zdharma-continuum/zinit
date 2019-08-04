@@ -29,6 +29,7 @@ zplugin light zdharma/zplugin-crasis
 zplugin ice wait'[[ $PWD = */github || $PWD = */github/* ]]'
 zplugin load unixorn/git-extra-commands
 ```
+
 - waits until user enters a `github` directory.
 
 []( vim:set ft=markdown tw=80: )

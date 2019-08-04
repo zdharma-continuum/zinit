@@ -10,6 +10,7 @@ zplugin light zsh-users/zsh-autosuggestions
 zplugin ice wait"0" atinit"zpcompinit; zpcdreplay"
 zplugin light zdharma/fast-syntax-highlighting
 ```
+
  - `light` – load the plugin in `light` mode, in which the tracking of plugin (i.e. activity report gathering, accessible via the `zplugin report {plugin-spec}` subcommand) is being disabled; note that for TurboMode, the performance gains are actually `0`, so in this mode you can load all plugins with the tracking, i.e. by using `zplugin ice wait'0'; zplugin load {plugin-spec}` commands,
  - `wait"0"` – load 0 seconds (about 110 ms exactly) after prompt,
  - `atinit''` – execute code before loading plugin,
@@ -31,6 +32,7 @@ compinit
 
 zplugin light zdharma/fast-syntax-highlighting
 ```
+
  - `light` – as above
 
 []( vim:set ft=markdown tw=80: )

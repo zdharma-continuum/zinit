@@ -58,14 +58,27 @@ normal setup – **you can remove `wait` only from the theme plugin** to have th
 same effect while still using Turbo mode for everything remaining):
 
 ``` zsh
+# A.
 setopt promptsubst
+
+# B.
 zplugin snippet OMZ::lib/git.zsh
+
+# C.
 zplugin ice atload"unalias grv"
 zplugin snippet OMZ::plugins/git/git.plugin.zsh
+
+# D.
 zplugin snippet OMZ::themes/dstufft.zsh-theme
+
+# E.
 zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+
+# F.
 zplugin ice as"completion"
 zplugin snippet OMZ::plugins/docker/_docker
+
+# G.
 zplugin ice atinit"zpcompinit"
 zplugin light zdharma/fast-syntax-highlighting
 ```
@@ -74,6 +87,6 @@ In general, Turbo mode can be optionally enabled only for a subset of plugins or
 for all plugins. It needs Zsh \>= 5.3.
 
 The **Introduction** contains [**more
-information**](,,/INTRODUCTION/#turbo_mode_zsh_62_53) on Turbo mode.
+information**](http://zdharma.org/zplugin/wiki/INTRODUCTION/#turbo_mode_zsh_62_53) on Turbo mode.
 
 []( vim:set ft=markdown tw=80: )

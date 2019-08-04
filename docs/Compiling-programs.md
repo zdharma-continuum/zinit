@@ -36,6 +36,7 @@ zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
     atpull'%atclone' src"zhook.zsh"
 zplugin light direnv/direnv
 ```
+
 - `make'!'` – execute `make` before `atclone''` and before `atpull''` (see `make` above),
 - `src"zhook.zsh"` – source file `zhook.zsh`.
 

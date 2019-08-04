@@ -4,6 +4,7 @@ Normally `src''` can be used to specify additional file to source:
 zplugin ice pick"powerless.zsh" src"utilities.zsh"
 zplugin light martinrotter/powerless
 ```
+
 - `pick''` – provide main file to source (can be pattern like `*.sh`, alphabetically first matched file is sourced),
 - `src''` – provide second file to source (not a pattern, plain file name)
 
@@ -16,6 +17,7 @@ zplugin ice svn pick"completion.zsh" \
     atload'local f; for f in git.zsh misc.zsh; do source $f; done'
 zplugin snippet OMZ::lib
 ```
+
 - `svn` – use Subversion to clone `OMZ::lib` (Oh My Zsh `lib/` directory),
 - note that `atload''` uses apostrophes not double quotes, to literally put `$f` into the string,
 - `atload''` code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you prepend its value by exclamation mark, i.e. `atload'!local f; for ...'`,

@@ -9,11 +9,11 @@ now you can just **press a button**.
 
 [![asciicast](https://asciinema.org/a/147225.png)](https://asciinema.org/a/147225)
 
-`Crasis` uses pure-Zshell [ZUI](http://github.com/zdharma/zui/) library to create `ncurses` interface.
+`Crasis` uses pure-Zshell [**ZUI**](http://github.com/zdharma/zui/) library to create `ncurses` interface.
 
 ## Installation & Basic Use
 
-Install [Zplugin](https://github.com/zdharma/zplugin) and add following commands to `.zshrc`:
+Install [**Zplugin**](https://github.com/zdharma/zplugin) and add following commands to `.zshrc`:
 
 ```SystemVerilog
 zplugin light zdharma/zui
@@ -57,10 +57,10 @@ CRASIS_THEME="zdharma-256" CRASIS_LAYOUT="contract" crasis
 
 ## Code Documentation
 
-`Crasis` is a [ZUI](http://github.com/zdharma/zui/) application. `ZUI` is a pure-Zshell library
+`Crasis` is a [**ZUI**](http://github.com/zdharma/zui/) application. `ZUI` is a pure-Zshell library
 where user generates simple text with hyperlinks, which is then turned into active document with
 buttons. Check out `Crasis` code documentation:
-[Asciidoc](https://github.com/zdharma/zplugin-crasis/blob/master/zsdoc/crasis.adoc),
-[PDF](http://zdharma.org/zplugin-crasis/crasis.pdf).
+[**Asciidoc**](https://github.com/zdharma/zplugin-crasis/blob/master/zsdoc/crasis.adoc),
+[**PDF**](http://zdharma.org/zplugin-crasis/crasis.pdf).
 
 []( vim:set ft=markdown tw=80: )

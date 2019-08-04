@@ -1,5 +1,8 @@
 # Home
 
-This is the Zplugin wiki. The goal is to complement the README by providing a more in-depth information.
+This is the Zplugin wiki. The goal is to complement the README by providing a
+more easy to approach, more intuitively organized (with use of the
+[MkDocs](https://www.mkdocs.org/) project documentation tool) and also a more
+in-depth information.
 
 []( vim:set ft=markdown tw=80: )
