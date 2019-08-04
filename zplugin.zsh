@@ -10,6 +10,7 @@ typeset -ga zsh_loaded_plugins
 ZPLG_TASKS=( "<no-data>" )
 # Snippets loaded, url -> file name
 typeset -gAH ZPLGM ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_REPORTS ZPLG_ICES ZPLG_SICE ZPLG_CUR_BIND_MAP ZPLG_EXTS
+typeset -gaH ZPLG_COMPDEF_REPLAY
 
 #
 # Common needed values
@@ -77,57 +78,7 @@ ZPLGM[SHADOWING]="inactive"
 ZPLGM[DTRACE]="0"
 typeset -gH ZPLG_CUR_PLUGIN=""
 # }}}
-# Parameters - function diffing {{{
-typeset -gAH ZPLG_FUNCTIONS_BEFORE
-typeset -gAH ZPLG_FUNCTIONS_AFTER
-# Functions computed to be associated with plugin
-typeset -gAH ZPLG_FUNCTIONS
-#}}}
-# Parameters - option diffing {{{
-typeset -gAH ZPLG_OPTIONS_BEFORE
-typeset -gAH ZPLG_OPTIONS_AFTER
-# Concatenated options that changed, hold as they were before plugin load
-typeset -gAH ZPLG_OPTIONS
-# }}}
-# Parameters - environment diffing {{{
-typeset -gAH ZPLG_PATH_BEFORE
-typeset -gAH ZPLG_PATH_AFTER
-# Concatenated new elements of PATH (after diff)
-typeset -gAH ZPLG_PATH
-typeset -gAH ZPLG_FPATH_BEFORE
-typeset -gAH ZPLG_FPATH_AFTER
-# Concatenated new elements of FPATH (after diff)
-typeset -gAH ZPLG_FPATH
-# }}}
-# Parameters - parameter diffing {{{
-typeset -gAH ZPLG_PARAMETERS_BEFORE
-typeset -gAH ZPLG_PARAMETERS_AFTER
-# Concatenated *changed* previous elements of $parameters (before)
-typeset -gAH ZPLG_PARAMETERS_PRE
-# Concatenated *changed* current elements of $parameters (after)
-typeset -gAH ZPLG_PARAMETERS_POST
-# }}}
-# Parameters - zstyle, bindkey, alias, zle remembering {{{
-# Holds concatenated Zstyles declared by each plugin
-# Concatenated after quoting, so (z)-splittable
-typeset -gAH ZPLG_ZSTYLES
-
-# Holds concatenated bindkeys declared by each plugin
-typeset -gAH ZPLG_BINDKEYS
-
-# Holds concatenated aliases declared by each plugin
-typeset -gAH ZPLG_ALIASES
-
-# Holds concatenated pairs "widget_name save_name" for use with zle -A
-typeset -gAH ZPLG_WIDGETS_SAVED
-
-# Holds concatenated names of widgets that should be deleted
-typeset -gAH ZPLG_WIDGETS_DELETE
-
-# Holds compdef calls (i.e. "${(j: :)${(q)@}}" of each call)
-typeset -gaH ZPLG_COMPDEF_REPLAY
-# }}}
-# Parameters - ICE, swiss-knife {{{
+# Parameters - ICE, {{{
 declare -gA ZPLG_1MAP ZPLG_2MAP
 ZPLG_1MAP=(
     "OMZ::" "https://github.com/robbyrussell/oh-my-zsh/trunk/"
@@ -361,9 +312,9 @@ builtin setopt noaliases
         quoted="${(q)quoted}"
 
         # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLGM[CUR_USPL2]}]+="$quoted "
+        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[BINDKEYS__${ZPLGM[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
-        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[_dtrace/_dtrace]+="$quoted "
+        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[BINDKEYS___dtrace/_dtrace]+="$quoted "
     else
         # bindkey -A newkeymap main?
         # Negative indices for KSH_ARRAYS immunity
@@ -380,8 +331,8 @@ builtin setopt noaliases
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-            [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLGM[CUR_USPL2]}]+="$quoted "
-            [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[_dtrace/_dtrace]+="$quoted "
+            [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[BINDKEYS__${ZPLGM[CUR_USPL2]}]+="$quoted "
+            [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[BINDKEYS___dtrace/_dtrace]+="$quoted "
 
             -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
         # bindkey -N newkeymap [other]
@@ -394,8 +345,8 @@ builtin setopt noaliases
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
-            [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_BINDKEYS[${ZPLGM[CUR_USPL2]}]+="$quoted "
-            [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_BINDKEYS[_dtrace/_dtrace]+="$quoted "
+            [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[BINDKEYS__${ZPLGM[CUR_USPL2]}]+="$quoted "
+            [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[BINDKEYS___dtrace/_dtrace]+="$quoted "
         else
             -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${opts[*]}"
         fi
@@ -428,9 +379,9 @@ builtin setopt noaliases
         ps="${(q)ps}"
 
         # Remember the zstyle, only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_ZSTYLES[${ZPLGM[CUR_USPL2]}]+="$ps "
+        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[ZSTYLES__${ZPLGM[CUR_USPL2]}]+="$ps "
         # Remember for dtrace
-        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_ZSTYLES[_dtrace/_dtrace]+="$ps "
+        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[ZSTYLES___dtrace/_dtrace]+="$ps "
     else
         if [[ ! "${#opts[@]}" = "1" && ( "${+opts[(r)-s]}" = "1" || "${+opts[(r)-b]}" = "1" || "${+opts[(r)-a]}" = "1" ||
                                       "${+opts[(r)-t]}" = "1" || "${+opts[(r)-T]}" = "1" || "${+opts[(r)-m]}" = "1" ) ]]
@@ -483,9 +434,9 @@ builtin setopt noaliases
         quoted="${(q)quoted}"
 
         # Remember the alias, only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_ALIASES[${ZPLGM[CUR_USPL2]}]+="$quoted "
+        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[ALIASES__${ZPLGM[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
-        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_ALIASES[_dtrace/_dtrace]+="$quoted "
+        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[ALIASES___dtrace/_dtrace]+="$quoted "
     done
 
     # Actual alias
@@ -513,7 +464,7 @@ builtin setopt noaliases
                 local quoted="$2"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
-                [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLGM[CUR_USPL2]}]+="$quoted "
+                [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_DELETE__${ZPLGM[CUR_USPL2]}]+="$quoted "
             # These will be saved and restored
             elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
@@ -526,27 +477,27 @@ builtin setopt noaliases
                 local quoted="$widname $saved_widname"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
-                [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_WIDGETS_SAVED[${ZPLGM[CUR_USPL2]}]+="$quoted "
+                [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_SAVED__${ZPLGM[CUR_USPL2]}]+="$quoted "
                 # Remember for dtrace
-                [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_SAVED[_dtrace/_dtrace]+="$quoted "
+                [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[WIDGETS_SAVED___dtrace/_dtrace]+="$quoted "
              # These will be deleted
              else
                  -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Note: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
                  local quoted="$2"
                  quoted="${(q)quoted}"
                  # Remember only when load is in progress (it can be dstart that leads execution here)
-                 [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLGM[CUR_USPL2]}]+="$quoted "
+                 [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_DELETE__${ZPLGM[CUR_USPL2]}]+="$quoted "
                  # Remember for dtrace
-                 [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_DELETE[_dtrace/_dtrace]+="$quoted "
+                 [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[WIDGETS_DELETE___dtrace/_dtrace]+="$quoted "
              fi
     # Creation of new widgets. They will be removed on unload
     elif [[ "$1" = "-N" && "$#" = "2" ]]; then
         local quoted="$2"
         quoted="${(q)quoted}"
         # Remember only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLG_WIDGETS_DELETE[${ZPLGM[CUR_USPL2]}]+="$quoted "
+        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_DELETE__${ZPLGM[CUR_USPL2]}]+="$quoted "
         # Remember for dtrace
-        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLG_WIDGETS_DELETE[_dtrace/_dtrace]+="$quoted "
+        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[WIDGETS_DELETE___dtrace/_dtrace]+="$quoted "
     fi
 
     # Actual zle
@@ -722,10 +673,10 @@ function $f {
     local cmd="$2"
 
     [[ "$cmd" = "begin" ]] && \
-        { [[ -z "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" ]] && \
-                ZPLG_FUNCTIONS_BEFORE[$uspl2]="${(j: :)${(qk)functions[@]}}"
+        { [[ -z "${ZPLGM[FUNCTIONS_BEFORE__$uspl2]}" ]] && \
+                ZPLGM[FUNCTIONS_BEFORE__$uspl2]="${(j: :)${(qk)functions[@]}}"
         } || \
-        ZPLG_FUNCTIONS_AFTER[$uspl2]+=" ${(j: :)${(qk)functions[@]}}"
+        ZPLGM[FUNCTIONS_AFTER__$uspl2]+=" ${(j: :)${(qk)functions[@]}}"
 } # }}}
 # FUNCTION: -zplg-diff-options {{{
 # Implements detection of change in option state. Performs
@@ -737,10 +688,10 @@ function $f {
     local IFS=" "
 
     [[ "$2" = "begin" ]] && \
-        { [[ -z "${ZPLG_OPTIONS_BEFORE[$uspl2]}" ]] && \
-            ZPLG_OPTIONS_BEFORE[$1]="${(kv)options[@]}"
+        { [[ -z "${ZPLGM[OPTIONS_BEFORE__$uspl2]}" ]] && \
+            ZPLGM[OPTIONS_BEFORE__$1]="${(kv)options[@]}"
         } || \
-        ZPLG_OPTIONS_AFTER[$1]+=" ${(kv)options[@]}"
+        ZPLGM[OPTIONS_AFTER__$1]+=" ${(kv)options[@]}"
 } # }}}
 # FUNCTION: -zplg-diff-env {{{
 # Implements detection of change in PATH and FPATH.
@@ -752,19 +703,19 @@ function $f {
     local IFS=" "
 
     [[ "$2" = "begin" ]] && {
-            { [[ -z "${ZPLG_PATH_BEFORE[$uspl2]}" ]] && \
+            { [[ -z "${ZPLGM[PATH_BEFORE__$uspl2]}" ]] && \
                 tmp=( "${(q)path[@]}" )
-                ZPLG_PATH_BEFORE[$1]="${tmp[*]}"
+                ZPLGM[PATH_BEFORE__$1]="${tmp[*]}"
             }
-            { [[ -z "${ZPLG_FPATH_BEFORE[$uspl2]}" ]] && \
+            { [[ -z "${ZPLGM[FPATH_BEFORE__$uspl2]}" ]] && \
                 tmp=( "${(q)fpath[@]}" )
-                ZPLG_FPATH_BEFORE[$1]="${tmp[*]}"
+                ZPLGM[FPATH_BEFORE__$1]="${tmp[*]}"
             }
     } || {
             tmp=( "${(q)path[@]}" )
-            ZPLG_PATH_AFTER[$1]+=" ${tmp[*]}"
+            ZPLGM[PATH_AFTER__$1]+=" ${tmp[*]}"
             tmp=( "${(q)fpath[@]}" )
-            ZPLG_FPATH_AFTER[$1]+=" ${tmp[*]}"
+            ZPLGM[FPATH_AFTER__$1]+=" ${tmp[*]}"
     }
 } # }}}
 # FUNCTION: -zplg-diff-parameter {{{
@@ -777,11 +728,11 @@ function $f {
     typeset -a tmp
 
     [[ "$2" = "begin" ]] && {
-        { [[ -z "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" ]] && \
-            ZPLG_PARAMETERS_BEFORE[$1]="${(j: :)${(qkv)parameters[@]}}"
+        { [[ -z "${ZPLGM[PARAMETERS_BEFORE__$uspl2]}" ]] && \
+            ZPLGM[PARAMETERS_BEFORE__$1]="${(j: :)${(qkv)parameters[@]}}"
         }
     } || {
-        ZPLG_PARAMETERS_AFTER[$1]+=" ${(j: :)${(qkv)parameters[@]}}"
+        ZPLGM[PARAMETERS_AFTER__$1]+=" ${(j: :)${(qkv)parameters[@]}}"
     }
 } # }}}
 # FUNCTION: -zplg-diff {{{
@@ -882,15 +833,19 @@ function $f {
     # Full or light load?
     [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
 
-    ZPLG_REPORTS[$uspl2]=""          ZPLG_CUR_BIND_MAP=( empty 1 )
+    ZPLG_REPORTS[$uspl2]=""            ZPLG_CUR_BIND_MAP=( empty 1 )
     # Functions
-    ZPLG_FUNCTIONS_BEFORE[$uspl2]="" ZPLG_FUNCTIONS_AFTER[$uspl2]="" ZPLG_FUNCTIONS[$uspl2]=""
+    ZPLGM[FUNCTIONS_BEFORE__$uspl2]=""   ZPLGM[FUNCTIONS_AFTER__$uspl2]=""
+    ZPLGM[FUNCTIONS__$uspl2]=""
     # Objects
-    ZPLG_ZSTYLES[$uspl2]=""          ZPLG_BINDKEYS[$uspl2]=""        ZPLG_ALIASES[$uspl2]=""
+    ZPLGM[ZSTYLES__$uspl2]=""            ZPLGM[BINDKEYS__$uspl2]=""
+    ZPLGM[ALIASES__$uspl2]=""
     # Widgets
-    ZPLG_WIDGETS_SAVED[$uspl2]=""    ZPLG_WIDGETS_DELETE[$uspl2]=""
+    ZPLGM[WIDGETS_SAVED__$uspl2]=""      ZPLGM[WIDGETS_DELETE__$uspl2]=""
     # Rest (options and (f)path)
-    ZPLG_OPTIONS[$uspl2]=""          ZPLG_PATH[$uspl2]=""            ZPLG_FPATH[$uspl2]=""
+    ZPLGM[OPTIONS__$uspl2]=""            ZPLGM[PATH__$uspl2]=""
+    ZPLGM[OPTIONS_BEFORE__$uspl2]=""     ZPLGM[OPTIONS_AFTER__$uspl2]=""
+    ZPLGM[FPATH__$uspl2]=""
 
     return $ret
 } # }}}
@@ -1842,7 +1797,7 @@ zplugin() {
            (( ${#reply} )) && {
                reply=( "${(Q)${(z@)reply[1]}[@]}" )
                (( ${+functions[${reply[5]}]} )) && { "${reply[5]}" "$@"; return $?; } ||
-                 { print -rl -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-plugin \`${reply[3]}')"; return 1; }
+                 { print -r -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-plugin \`${reply[3]}')"; return 1; }
            }
            (( ${+functions[-zplg-confirm]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
            case "$1" in

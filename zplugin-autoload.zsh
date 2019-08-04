@@ -10,7 +10,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 
 # FUNCTION: -zplg-diff-functions-compute {{{
-# Computes ZPLG_FUNCTIONS that holds new functions added by plugin.
+# Computes FUNCTIONS that holds new functions added by plugin.
 # Uses data gathered earlier by -zplg-diff-functions().
 #
 # $1 - user/plugin
@@ -21,32 +21,32 @@ ZPLGM[EXTENDED_GLOB]=""
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
 
     builtin setopt localoptions extendedglob nokshglob noksharrays
-    [[ "${ZPLG_FUNCTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FUNCTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+    [[ "${ZPLGM[FUNCTIONS_BEFORE__$uspl2]}" != *[$'! \t']* || "${ZPLGM[FUNCTIONS_AFTER__$uspl2]}" != *[$'! \t']* ]] && return 1
 
     typeset -A func
     local i
 
     # This includes new functions. Quoting is kept (i.e. no i=${(Q)i})
-    for i in "${(z)ZPLG_FUNCTIONS_AFTER[$uspl2]}"; do
+    for i in "${(z)ZPLGM[FUNCTIONS_AFTER__$uspl2]}"; do
         func[$i]=1
     done
 
     # Remove duplicated entries, i.e. existing before. Quoting is kept
-    for i in "${(z)ZPLG_FUNCTIONS_BEFORE[$uspl2]}"; do
+    for i in "${(z)ZPLGM[FUNCTIONS_BEFORE__$uspl2]}"; do
         # if would do unset, then: func[opp+a\[]: invalid parameter name
         func[$i]=0
     done
 
     # Store the functions, associating them with plugin ($uspl2)
-    ZPLG_FUNCTIONS[$uspl2]=""
+    ZPLGM[FUNCTIONS__$uspl2]=""
     for i in "${(onk)func[@]}"; do
-        [[ "${func[$i]}" = "1" ]] && ZPLG_FUNCTIONS[$uspl2]+="$i "
+        [[ "${func[$i]}" = "1" ]] && ZPLGM[FUNCTIONS__$uspl2]+="$i "
     done
 
     return 0
 } # }}}
 # FUNCTION: -zplg-diff-options-compute {{{
-# Computes ZPLG_OPTIONS that holds options changed by plugin.
+# Computes OPTIONS that holds options changed by plugin.
 # Uses data gathered earlier by -zplg-diff-options().
 #
 # $1 - user/plugin
@@ -56,11 +56,11 @@ ZPLGM[EXTENDED_GLOB]=""
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
     builtin setopt localoptions extendedglob nokshglob noksharrays
-    [[ "${ZPLG_OPTIONS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_OPTIONS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+    [[ "${ZPLGM[OPTIONS_BEFORE__$uspl2]}" != *[$'! \t']* || "${ZPLGM[OPTIONS_AFTER__$uspl2]}" != *[$'! \t']* ]] && return 1
 
     typeset -A opts_before opts_after opts
-    opts_before=( "${(z)ZPLG_OPTIONS_BEFORE[$uspl2]}" )
-    opts_after=( "${(z)ZPLG_OPTIONS_AFTER[$uspl2]}" )
+    opts_before=( "${(z)ZPLGM[OPTIONS_BEFORE__$uspl2]}" )
+    opts_after=( "${(z)ZPLGM[OPTIONS_AFTER__$uspl2]}" )
     opts=( )
 
     # Iterate through first array (keys the same
@@ -74,7 +74,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Serialize for reporting
     local IFS=" "
-    ZPLG_OPTIONS[$uspl2]="${(kv)opts[@]}"
+    ZPLGM[OPTIONS__$uspl2]="${(kv)opts[@]}"
     return 0
 } # }}}
 # FUNCTION: -zplg-diff-env-compute {{{
@@ -89,8 +89,8 @@ ZPLGM[EXTENDED_GLOB]=""
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
     builtin setopt localoptions extendedglob nokshglob noksharrays
-    [[ "${ZPLG_PATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
-    [[ "${ZPLG_FPATH_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_FPATH_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+    [[ "${ZPLGM[PATH_BEFORE__$uspl2]}" != *[$'! \t']* || "${ZPLGM[PATH_AFTER__$uspl2]}" != *[$'! \t']* ]] && return 1
+    [[ "${ZPLGM[FPATH_BEFORE__$uspl2]}" != *[$'! \t']* || "${ZPLGM[FPATH_AFTER__$uspl2]}" != *[$'! \t']* ]] && return 1
 
     typeset -A path_state fpath_state
     local i
@@ -100,19 +100,19 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     # This includes new path elements
-    for i in "${(z)ZPLG_PATH_AFTER[$uspl2]}"; do
+    for i in "${(z)ZPLGM[PATH_AFTER__$uspl2]}"; do
         path_state[$i]=1
     done
 
     # Remove duplicated entries, i.e. existing before
-    for i in "${(z)ZPLG_PATH_BEFORE[$uspl2]}"; do
+    for i in "${(z)ZPLGM[PATH_BEFORE__$uspl2]}"; do
         unset "path_state[$i]"
     done
 
     # Store the path elements, associating them with plugin ($uspl2)
-    ZPLG_PATH[$uspl2]=""
+    ZPLGM[PATH__$uspl2]=""
     for i in "${(onk)path_state[@]}"; do
-        ZPLG_PATH[$uspl2]+="$i "
+        ZPLGM[PATH__$uspl2]+="$i "
     done
 
     #
@@ -120,19 +120,19 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     # This includes new path elements
-    for i in "${(z)ZPLG_FPATH_AFTER[$uspl2]}"; do
+    for i in "${(z)ZPLGM[FPATH_AFTER__$uspl2]}"; do
         fpath_state[$i]=1
     done
 
     # Remove duplicated entries, i.e. existing before
-    for i in "${(z)ZPLG_FPATH_BEFORE[$uspl2]}"; do
+    for i in "${(z)ZPLGM[FPATH_BEFORE__$uspl2]}"; do
         unset "fpath_state[$i]"
     done
 
     # Store the path elements, associating them with plugin ($uspl2)
-    ZPLG_FPATH[$uspl2]=""
+    ZPLGM[FPATH__$uspl2]=""
     for i in "${(onk)fpath_state[@]}"; do
-        ZPLG_FPATH[$uspl2]+="$i "
+        ZPLGM[FPATH__$uspl2]+="$i "
     done
 
     return 0
@@ -150,12 +150,12 @@ ZPLGM[EXTENDED_GLOB]=""
     # Cannot run diff if *_BEFORE or *_AFTER variable is not set
     # Following is paranoid for *_BEFORE and *_AFTER being only spaces
     builtin setopt localoptions extendedglob nokshglob noksharrays
-    [[ "${ZPLG_PARAMETERS_BEFORE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_AFTER[$uspl2]}" != *[$'! \t']* ]] && return 1
+    [[ "${ZPLGM[PARAMETERS_BEFORE__$uspl2]}" != *[$'! \t']* || "${ZPLGM[PARAMETERS_AFTER__$uspl2]}" != *[$'! \t']* ]] && return 1
 
     # Un-concatenated parameters from moment of diff start and of diff end
     typeset -A params_before params_after
-    params_before=( "${(z)ZPLG_PARAMETERS_BEFORE[$uspl2]}" )
-    params_after=( "${(z)ZPLG_PARAMETERS_AFTER[$uspl2]}" )
+    params_before=( "${(z)ZPLGM[PARAMETERS_BEFORE__$uspl2]}" )
+    params_after=( "${(z)ZPLGM[PARAMETERS_AFTER__$uspl2]}" )
 
     # The parameters that changed, with save of what
     # parameter was when diff started or when diff ended
@@ -186,8 +186,8 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     # Serialize for reporting
-    ZPLG_PARAMETERS_PRE[$uspl2]="${(j: :)${(qkv)params_pre[@]}}"
-    ZPLG_PARAMETERS_POST[$uspl2]="${(j: :)${(qkv)params_post[@]}}"
+    ZPLGM[PARAMETERS_PRE__$uspl2]="${(j: :)${(qkv)params_pre[@]}}"
+    ZPLGM[PARAMETERS_POST__$uspl2]="${(j: :)${(qkv)params_post[@]}}"
 
     return 0
 } # }}}
@@ -234,35 +234,35 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Shadowing
     ZPLG_REPORTS[$REPLY]=""
-    ZPLG_BINDKEYS[$REPLY]=""
-    ZPLG_ZSTYLES[$REPLY]=""
-    ZPLG_ALIASES[$REPLY]=""
-    ZPLG_WIDGETS_SAVED[$REPLY]=""
-    ZPLG_WIDGETS_DELETE[$REPLY]=""
+    ZPLGM[BINDKEYS__$REPLY]=""
+    ZPLGM[ZSTYLES__$REPLY]=""
+    ZPLGM[ALIASES__$REPLY]=""
+    ZPLGM[WIDGETS_SAVED__$REPLY]=""
+    ZPLGM[WIDGETS_DELETE__$REPLY]=""
 
     # Function diffing
-    ZPLG_FUNCTIONS[$REPLY]=""
-    ZPLG_FUNCTIONS_BEFORE[$REPLY]=""
-    ZPLG_FUNCTIONS_AFTER[$REPLY]=""
+    ZPLGM[FUNCTIONS__$REPLY]=""
+    ZPLGM[FUNCTIONS_BEFORE__$REPLY]=""
+    ZPLGM[FUNCTIONS_AFTER__$REPLY]=""
 
     # Option diffing
-    ZPLG_OPTIONS[$REPLY]=""
-    ZPLG_OPTIONS_BEFORE[$REPLY]=""
-    ZPLG_OPTIONS_AFTER[$REPLY]=""
+    ZPLGM[OPTIONS__$REPLY]=""
+    ZPLGM[OPTIONS_BEFORE__$REPLY]=""
+    ZPLGM[OPTIONS_AFTER__$REPLY]=""
 
     # Environment diffing
-    ZPLG_PATH[$REPLY]=""
-    ZPLG_PATH_BEFORE[$REPLY]=""
-    ZPLG_PATH_AFTER[$REPLY]=""
-    ZPLG_FPATH[$REPLY]=""
-    ZPLG_FPATH_BEFORE[$REPLY]=""
-    ZPLG_FPATH_AFTER[$REPLY]=""
+    ZPLGM[PATH__$REPLY]=""
+    ZPLGM[PATH_BEFORE__$REPLY]=""
+    ZPLGM[PATH_AFTER__$REPLY]=""
+    ZPLGM[FPATH__$REPLY]=""
+    ZPLGM[FPATH_BEFORE__$REPLY]=""
+    ZPLGM[FPATH_AFTER__$REPLY]=""
 
     # Parameter diffing
-    ZPLG_PARAMETERS_PRE[$REPLY]=""
-    ZPLG_PARAMETERS_POST[$REPLY]=""
-    ZPLG_PARAMETERS_BEFORE[$REPLY]=""
-    ZPLG_PARAMETERS_AFTER[$REPLY]=""
+    ZPLGM[PARAMETERS_PRE__$REPLY]=""
+    ZPLGM[PARAMETERS_POST__$REPLY]=""
+    ZPLGM[PARAMETERS_BEFORE__$REPLY]=""
+    ZPLGM[PARAMETERS_AFTER__$REPLY]=""
 } # }}}
 # FUNCTION: -zplg-exists-message {{{
 # Checks if plugin is loaded. Testable. Also outputs error
@@ -298,7 +298,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local uspl2="$1"
 
     typeset -a func
-    func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
+    func=( "${(z)ZPLGM[FUNCTIONS__$uspl2]}" )
 
     # Get length of longest left-right string pair,
     # and length of longest left string
@@ -354,12 +354,12 @@ ZPLGM[EXTENDED_GLOB]=""
     # Paranoid, don't want bad key/value pair error
     integer empty=0
     -zplg-save-set-extendedglob
-    [[ "${ZPLG_OPTIONS[$uspl2]}" != *[$'! \t']* ]] && empty=1
+    [[ "${ZPLGM[OPTIONS__$uspl2]}" != *[$'! \t']* ]] && empty=1
     -zplg-restore-extendedglob
     (( empty )) && return 0
 
     typeset -A opts
-    opts=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
+    opts=( "${(z)ZPLGM[OPTIONS__$uspl2]}" )
 
     # Get length of longest option
     integer longest=0
@@ -387,10 +387,10 @@ ZPLGM[EXTENDED_GLOB]=""
     # Format PATH?
     if [[ "$which" = "1" ]]; then
         typeset -a elem
-        elem=( "${(z@)ZPLG_PATH[$uspl2]}" )
+        elem=( "${(z@)ZPLGM[PATH__$uspl2]}" )
     elif [[ "$which" = "2" ]]; then
         typeset -a elem
-        elem=( "${(z@)ZPLG_FPATH[$uspl2]}" )
+        elem=( "${(z@)ZPLGM[FPATH__$uspl2]}" )
     fi
 
     # Enumerate elements added
@@ -415,11 +415,11 @@ ZPLGM[EXTENDED_GLOB]=""
     # i.e. include white spaces as empty
     builtin setopt localoptions extendedglob nokshglob noksharrays
     REPLY=""
-    [[ "${ZPLG_PARAMETERS_PRE[$uspl2]}" != *[$'! \t']* || "${ZPLG_PARAMETERS_POST[$uspl2]}" != *[$'! \t']* ]] && return 0
+    [[ "${ZPLGM[PARAMETERS_PRE__$uspl2]}" != *[$'! \t']* || "${ZPLGM[PARAMETERS_POST__$uspl2]}" != *[$'! \t']* ]] && return 0
 
     typeset -A elem_pre elem_post
-    elem_pre=( "${(z)ZPLG_PARAMETERS_PRE[$uspl2]}" )
-    elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
+    elem_pre=( "${(z)ZPLGM[PARAMETERS_PRE__$uspl2]}" )
+    elem_post=( "${(z)ZPLGM[PARAMETERS_POST__$uspl2]}" )
 
     # Find longest key and longest value
     integer longest=0 vlongest1=0 vlongest2=0
@@ -808,7 +808,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-diff-functions-compute "$uspl2"
     typeset -a func
-    func=( "${(z)ZPLG_FUNCTIONS[$uspl2]}" )
+    func=( "${(z)ZPLGM[FUNCTIONS__$uspl2]}" )
     local f
     for f in "${(on)func[@]}"; do
         [[ -z "$f" ]] && continue
@@ -828,7 +828,7 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     typeset -a string_widget
-    string_widget=( "${(z)ZPLG_BINDKEYS[$uspl2]}" )
+    string_widget=( "${(z)ZPLGM[BINDKEYS__$uspl2]}" )
     local sw
     for sw in "${(Oa)string_widget[@]}"; do
         [[ -z "$sw" ]] && continue
@@ -870,7 +870,7 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     typeset -a pattern_style
-    pattern_style=( "${(z)ZPLG_ZSTYLES[$uspl2]}" )
+    pattern_style=( "${(z)ZPLGM[ZSTYLES__$uspl2]}" )
     local ps
     for ps in "${(Oa)pattern_style[@]}"; do
         [[ -z "$ps" ]] && continue
@@ -896,12 +896,12 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-diff-options-compute "$uspl2"
     integer empty=0
     -zplg-save-set-extendedglob
-    [[ "${ZPLG_OPTIONS[$uspl2]}" != *[$'! \t']* ]] && empty=1
+    [[ "${ZPLGM[OPTIONS__$uspl2]}" != *[$'! \t']* ]] && empty=1
     -zplg-restore-extendedglob
 
     if (( empty != 1 )); then
         typeset -A opts
-        opts=( "${(z)ZPLG_OPTIONS[$uspl2]}" )
+        opts=( "${(z)ZPLGM[OPTIONS__$uspl2]}" )
         local k
         for k in "${(kon)opts[@]}"; do
             # Internal options
@@ -922,7 +922,7 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     typeset -a aname_avalue
-    aname_avalue=( "${(z)ZPLG_ALIASES[$uspl2]}" )
+    aname_avalue=( "${(z)ZPLGM[ALIASES__$uspl2]}" )
     local nv
     for nv in "${(Oa)aname_avalue[@]}"; do
         [[ -z "$nv" ]] && continue
@@ -971,7 +971,7 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     typeset -a delete_widgets
-    delete_widgets=( "${(z)ZPLG_WIDGETS_DELETE[$uspl2]}" )
+    delete_widgets=( "${(z)ZPLGM[WIDGETS_DELETE__$uspl2]}" )
     local wid
     for wid in "${(Oa)delete_widgets[@]}"; do
         [[ -z "$wid" ]] && continue
@@ -985,7 +985,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     typeset -a restore_widgets
-    restore_widgets=( "${(z)ZPLG_WIDGETS_SAVED[$uspl2]}" )
+    restore_widgets=( "${(z)ZPLGM[WIDGETS_SAVED__$uspl2]}" )
     for wid in "${(Oa)restore_widgets[@]}"; do
         [[ -z "$wid" ]] && continue
         wid="${(Q)wid}"
@@ -1009,9 +1009,9 @@ ZPLGM[EXTENDED_GLOB]=""
     # Have to iterate over $path elements and
     # skip those that were added by the plugin
     typeset -a new elem p
-    elem=( "${(z)ZPLG_PATH[$uspl2]}" )
+    elem=( "${(z)ZPLGM[PATH__$uspl2]}" )
     for p in "${path[@]}"; do
-        [[ -z "${elem[(r)$p]}" ]] && new+=( "$p" ) || {
+        [[ -z "${elem[(r)$p]}" ]] && { new+=( "$p" ); } || {
             (( quiet )) || print "Removing PATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
             [[ -d "$p" ]] || (( quiet )) || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
         }
@@ -1019,10 +1019,10 @@ ZPLGM[EXTENDED_GLOB]=""
     path=( "${new[@]}" )
 
     # The same for $fpath
-    elem=( "${(z)ZPLG_FPATH[$uspl2]}" )
+    elem=( "${(z)ZPLGM[FPATH__$uspl2]}" )
     new=( )
     for p in "${fpath[@]}"; do
-        [[ -z "${elem[(r)$p]}" ]] && new+=( "$p" ) || {
+        [[ -z "${elem[(r)$p]}" ]] && { new+=( "$p" ); } || {
             (( quiet )) || print "Removing FPATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
             [[ -d "$p" ]] || (( quiet )) || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
         }
@@ -1038,13 +1038,13 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-diff-parameter-compute "$uspl2"
     empty=0
     -zplg-save-set-extendedglob
-    [[ "${ZPLG_PARAMETERS_POST[$uspl2]}" != *[$'! \t']* ]] && empty=1
+    [[ "${ZPLGM[PARAMETERS_POST__$uspl2]}" != *[$'! \t']* ]] && empty=1
     -zplg-restore-extendedglob
 
     if (( empty != 1 )); then
         typeset -A elem_pre elem_post
-        elem_pre=( "${(z)ZPLG_PARAMETERS_PRE[$uspl2]}" )
-        elem_post=( "${(z)ZPLG_PARAMETERS_POST[$uspl2]}" )
+        elem_pre=( "${(z)ZPLGM[PARAMETERS_PRE__$uspl2]}" )
+        elem_post=( "${(z)ZPLGM[PARAMETERS_POST__$uspl2]}" )
 
         # Find variables created or modified
         local wl found
@@ -1137,9 +1137,9 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local -A map
     map=(
-        Error:  ${ZPLGM[col-error]}
-        Warning:  ${ZPLGM[col-error]}
-        Note:  ${ZPLGM[col-note]}
+        Error:  "${ZPLGM[col-error]}"
+        Warning:  "${ZPLGM[col-error]}"
+        Note:  "${ZPLGM[col-note]}"
     )
     # Print report gathered via shadowing
     () {
@@ -1820,8 +1820,8 @@ ZPLGM[EXTENDED_GLOB]=""
     integer correct=0
     [[ -o "KSH_ARRAYS" ]] && correct=1
 
-    for uspl2 in "${(ko)ZPLG_BINDKEYS[@]}"; do
-        [[ -z "${ZPLG_BINDKEYS[$uspl2]}" ]] && continue
+    for uspl2 in "${(ko)ZPLGM[BINDKEYS__@]}"; do
+        [[ -z "${ZPLGM[BINDKEYS__$uspl2]}" ]] && continue
 
         (( !first )) && print
         first=0
@@ -1830,7 +1830,7 @@ ZPLGM[EXTENDED_GLOB]=""
         uspl2col="$REPLY"
         print "$uspl2col"
 
-        string_widget=( "${(z@)ZPLG_BINDKEYS[$uspl2]}" )
+        string_widget=( "${(z@)ZPLGM[BINDKEYS__$uspl2]}" )
         for sw in "${(Oa)string_widget[@]}"; do
             [[ -z "$sw" ]] && continue
             # Remove one level of quoting to split using (z)
