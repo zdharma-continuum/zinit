@@ -698,9 +698,9 @@
                 
                   <h1>Installing With Make</h1>
                 
-                <div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> pick<span class="s2">&quot;</span><span class="nv">$ZPFX</span><span class="s2">/bin/git-*&quot;</span> make<span class="s2">&quot;PREFIX=</span><span class="nv">$ZPFX</span><span class="s2">&quot;</span>
+                <pre><code class="zsh">zplugin ice as&quot;program&quot; pick&quot;$ZPFX/bin/git-*&quot; make&quot;PREFIX=$ZPFX&quot;
 zplugin light tj/git-extras
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>Makefile</code> of this project has only one needed target – <code>install</code>, which is called by default,</li>
@@ -711,15 +711,15 @@ zplugin light tj/git-extras
 </ul>
 <hr />
 <p>Below is a hard core but fully working method of managing a software (<a href="https://sdkman.io"><strong>sdkman.io</strong></a>) with Zplugin.</p>
-<div class="highlight"><pre><span></span><span class="c1"># The invocation uses https://github.com/zdharma/null repo as a placeholder</span>
-<span class="c1"># for the atclone&#39;&#39; and atpull&#39;&#39; hooks</span>
+<pre><code class="zsh"># The invocation uses https://github.com/zdharma/null repo as a placeholder
+# for the atclone'' and atpull'' hooks
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> pick<span class="s2">&quot;</span><span class="nv">$ZPFX</span><span class="s2">/sdkman/bin/sdk&quot;</span> id-as<span class="s1">&#39;sdkman&#39;</span> run-atpull <span class="se">\</span>
-    atclone<span class="s2">&quot;wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=</span><span class="nv">$ZPFX</span><span class="s2">/sdkman bash scr.sh&quot;</span> <span class="se">\</span>
-    atpull<span class="s2">&quot;SDKMAN_DIR=</span><span class="nv">$ZPFX</span><span class="s2">/sdkman sdk selfupdate&quot;</span> <span class="se">\</span>
-    atinit<span class="s2">&quot;export SDKMAN_DIR=</span><span class="nv">$ZPFX</span><span class="s2">/sdkman; source </span><span class="nv">$ZPFX</span><span class="s2">/sdkman/bin/sdkman-init.sh&quot;</span>
+zplugin ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdkman' run-atpull \
+    atclone&quot;wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh&quot; \
+    atpull&quot;SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate&quot; \
+    atinit&quot;export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh&quot;
 zplugin light zdharma/null
-</pre></div>
+</code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 

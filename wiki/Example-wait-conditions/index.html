@@ -702,18 +702,18 @@
 <p class="admonition-title">Note</p>
 <p><strong>Turbo mode, i.e. the <code>wait</code> ice that implements it needs Zsh &gt;= 5.3.</strong></p>
 </div>
-<div class="highlight"><pre><span></span>zplugin ice wait<span class="s1">&#39;0&#39;</span> <span class="c1"># or just: zplugin ice wait</span>
+<pre><code class="zsh">zplugin ice wait'0' # or just: zplugin ice wait
 zplugin light wfxr/forgit
-</pre></div>
+</code></pre>
 
 <ul>
 <li>waits for prompt,</li>
 <li>instantly ("0" seconds) after prompt loads given plugin.</li>
 </ul>
 <hr />
-<div class="highlight"><pre><span></span>zplugin ice wait<span class="s1">&#39;[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]&#39;</span>
+<pre><code class="zsh">zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
 zplugin light zdharma/zplugin-crasis
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>$ZLAST_COMMANDS</code> is an array build by <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a>, it contains commands currently entered at prompt,</li>
@@ -724,9 +724,9 @@ zplugin light zdharma/zplugin-crasis
     <a href="https://asciinema.org/a/149725"><img alt="screencast" src="https://asciinema.org/a/149725.svg" /></a></li>
 </ul>
 <hr />
-<div class="highlight"><pre><span></span>zplugin ice wait<span class="s1">&#39;[[ $PWD = */github || $PWD = */github/* ]]&#39;</span>
+<pre><code class="zsh">zplugin ice wait'[[ $PWD = */github || $PWD = */github/* ]]'
 zplugin load unixorn/git-extra-commands
-</pre></div>
+</code></pre>
 
 <ul>
 <li>waits until user enters a <code>github</code> directory.</li>

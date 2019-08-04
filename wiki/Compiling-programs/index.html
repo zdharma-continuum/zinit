@@ -698,10 +698,10 @@
                 
                   <h1>Compiling Programs</h1>
                 
-                <div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> atclone<span class="s2">&quot;rm -f src/auto/config.cache; ./configure&quot;</span> <span class="se">\</span>
-    atpull<span class="s2">&quot;%atclone&quot;</span> make pick<span class="s2">&quot;src/vim&quot;</span>
+                <pre><code class="zsh">zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
+    atpull&quot;%atclone&quot; make pick&quot;src/vim&quot;
 zplugin light vim/vim
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>as"program"</code> – add file selected by <code>pick''</code> to <code>$PATH</code>, do not source it,</li>
@@ -713,11 +713,11 @@ zplugin light vim/vim
 <hr />
 <p>The same but with <strong>installation</strong> (i.e. <code>make install</code> is being run) under
 <code>$ZPFX</code> (<code>~/.zplugin/polaris</code> by default):</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> atclone<span class="s2">&quot;rm -f src/auto/config.cache; \</span>
-<span class="s2">    ./configure --prefix=</span><span class="nv">$ZPFX</span><span class="s2">&quot;</span> atpull<span class="s2">&quot;%atclone&quot;</span> <span class="se">\</span>
-    make<span class="s2">&quot;all install&quot;</span> pick<span class="s2">&quot;</span><span class="nv">$ZPFX</span><span class="s2">/bin/vim&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; \
+    ./configure --prefix=$ZPFX&quot; atpull&quot;%atclone&quot; \
+    make&quot;all install&quot; pick&quot;$ZPFX/bin/vim&quot;
 zplugin light vim/vim
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>as"program"</code> – as above,</li>
@@ -728,10 +728,10 @@ zplugin light vim/vim
 <li><code>pick"src/vim"</code> – as above, but for different path (<code>$ZPFX/bin/vim</code>).</li>
 </ul>
 <hr />
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> make<span class="s1">&#39;!&#39;</span> atclone<span class="s1">&#39;./direnv hook zsh &gt; zhook.zsh&#39;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;%atclone&#39;</span> src<span class="s2">&quot;zhook.zsh&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
+    atpull'%atclone' src&quot;zhook.zsh&quot;
 zplugin light direnv/direnv
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>make'!'</code> – execute <code>make</code> before <code>atclone''</code> and before <code>atpull''</code> (see <code>make</code> above),</li>

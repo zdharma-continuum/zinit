@@ -816,15 +816,15 @@ create <code>ncurses</code> interface.</p>
 <h2 id="installation_basic_use">Installation &amp; Basic Use<a class="headerlink" href="#installation_basic_use" title="Permanent link">#</a></h2>
 <p>Install <a href="https://github.com/zdharma/zplugin"><strong>Zplugin</strong></a> and add following
 commands to <code>.zshrc</code>:</p>
-<div class="highlight"><pre><span></span><span class="n">zplugin</span> <span class="n">light</span> <span class="n">zdharma</span><span class="o">/</span><span class="n">zui</span>
-<span class="n">zplugin</span> <span class="n">light</span> <span class="n">zdharma</span><span class="o">/</span><span class="n">zplugin</span><span class="o">-</span><span class="n">crasis</span>
-</pre></div>
+<pre><code class="SystemVerilog">zplugin light zdharma/zui
+zplugin light zdharma/zplugin-crasis
+</code></pre>
 
 <p>To use, invoke <code>crasis [optional zshrc path]</code> or press <code>Ctrl-o-k</code>. Global
 variables <code>CRASIS_THEME</code> and <code>CRASIS_LAYOUT</code> can be used to override
 configuration file <code>crasis.conf</code> (located in plugin's tree), i.e.:</p>
-<div class="highlight"><pre><span></span><span class="no">CRASIS_THEME</span><span class="o">=</span><span class="s">&quot;zdharma-256&quot;</span> <span class="no">CRASIS_LAYOUT</span><span class="o">=</span><span class="s">&quot;contract&quot;</span> <span class="n">crasis</span>
-</pre></div>
+<pre><code class="SystemVerilog">CRASIS_THEME=&quot;zdharma-256&quot; CRASIS_LAYOUT=&quot;contract&quot; crasis
+</code></pre>
 
 <p><code>256</code>-color themes require Zsh <code>5.3</code> or later.</p>
 <h2 id="key_bindings">Key Bindings<a class="headerlink" href="#key_bindings" title="Permanent link">#</a></h2>

@@ -698,10 +698,10 @@
                 
                   <h1>Profiling Plugins</h1>
                 
-                <div class="highlight"><pre><span></span>zplugin ice atinit<span class="s1">&#39;zmodload zsh/zprof&#39;</span> <span class="se">\</span>
-    atload<span class="s1">&#39;zprof | head; zmodload -u zsh/zprof&#39;</span>
+                <pre><code class="zsh">zplugin ice atinit'zmodload zsh/zprof' \
+    atload'zprof | head; zmodload -u zsh/zprof'
 zplugin light zdharma/fast-syntax-highlighting
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>atinit''</code> loads <code>zsh/zprof</code> module before loading plugin – this starts profiling,</li>
