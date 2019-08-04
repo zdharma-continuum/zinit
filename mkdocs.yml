@@ -38,7 +38,6 @@ theme:
     tabs: true
 markdown_extensions:
   - admonition
-  - pymdownx.superfences
   - pymdownx.betterem:
       smart_enable: all
   - toc:
