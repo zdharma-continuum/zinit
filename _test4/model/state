@@ -1,3 +1,7 @@
+ALIASES__zdharma/ice-order
+
+BINDKEYS__zdharma/ice-order
+
 BIN_DIR
 test
 COMPLETIONS_DIR
@@ -10,10 +14,22 @@ DTRACE
 0
 EXTENDED_GLOB
 
+FPATH__zdharma/ice-order
+
+FUNCTIONS__zdharma/ice-order
+
 HOME_DIR
 _test4/answer
 HOME_READY
 1
+OPTIONS_AFTER__zdharma/ice-order
+
+OPTIONS_BEFORE__zdharma/ice-order
+
+OPTIONS__zdharma/ice-order
+
+PATH__zdharma/ice-order
+
 PLUGINS_DIR
 _test4/answer/plugins
 SERVICES_DIR
@@ -26,24 +42,19 @@ TIME_1_zdharma---ice-order
 __reset-by-test__
 TIME_INDEX
 1
+WIDGETS_DELETE__zdharma/ice-order
+
+WIDGETS_SAVED__zdharma/ice-order
+
 ZERO
 zplugin.zsh
+ZSTYLES__zdharma/ice-order
+
 ---
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'zdharma/ice-order'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'zdharma/ice-order' '1'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' '
-ZPLG_FUNCTIONS: 'zdharma/ice-order' ''
-ZPLG_OPTIONS: 'zdharma/ice-order' ''
-ZPLG_PATH: 'zdharma/ice-order' ''
-ZPLG_FPATH: 'zdharma/ice-order' ''
-ZPLG_PARAMETERS_PRE: 
-ZPLG_PARAMETERS_POST: 
-ZPLG_ZSTYLES: 'zdharma/ice-order' ''
-ZPLG_BINDKEYS: 'zdharma/ice-order' ''
-ZPLG_ALIASES: 'zdharma/ice-order' ''
-ZPLG_WIDGETS_SAVED: 'zdharma/ice-order' ''
-ZPLG_WIDGETS_DELETE: 'zdharma/ice-order' ''
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

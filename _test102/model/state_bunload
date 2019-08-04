@@ -1,3 +1,7 @@
+ALIASES__psprint/zsh-editing-workbench
+naliases\ \'\' ncd\ \'\' nenv\ \'\' nfunctions\ \'\' nhistory\ \'\' nkill\ \'\' zpl\ zplugin zplg\ zplugin
+BINDKEYS__psprint/zsh-editing-workbench
+\\\^\\\[w\ zew-backward-kill-shell-word \\\^\\\[t\ zew-transpose-shell-words \\\^\\\[m\ copy-earlier-word \\\^\\\[M\ copy-prev-shell-word \\\^\\\[.\ insert-last-word \\\^W\ backward-kill-word \\\^\\\[y\ transpose-words-match \\\^\\\[/\ _history-complete-older \\\^\\\[h\ zew-history-complete-word \\\^\\\[H\ zew-history-complete-word-backwards \\\^J\ self-insert \\\^_\ undo \\\^\\\[r\ zew-rotate-shell-words \\\^\\\[R\ zew-rotate-shell-words-backwards
 BIN_DIR
 test
 COMPLETIONS_DIR
@@ -10,10 +14,22 @@ DTRACE
 0
 EXTENDED_GLOB
 
+FPATH__psprint/zsh-editing-workbench
+
+FUNCTIONS__psprint/zsh-editing-workbench
+
 HOME_DIR
 _test102/answer
 HOME_READY
 1
+OPTIONS_AFTER__psprint/zsh-editing-workbench
+posixargzero off autolist on printexitvalue off kshzerosubscript off histreduceblanks off chaselinks off extendedglob on localloops off histnostore off automenu on globcomplete off unset on listpacked off promptsubst off shwordsplit off pathdirs off kshtypeset off listtypes on warncreateglobal on promptbang off dotglob off braceexpand on listbeep on correctall off privileged off numericglobsort off histverify off trackall on histsubstpattern off globstarshort off cbases off rcquotes off posixaliases off histfindnodups off bashautolist off sharehistory off overstrike off kshautoload off incappendhistory off appendcreate off promptcr on mailwarn off pushdignoredups on interactive off ignoreeof off globsubst off rematchpcre off monitor off histsavebycopy on histbeep on debugbeforecmd on magicequalsubst off rmstarsilent off posixjobs off hashcmds on posixtraps off extendedhistory off notify on kshoptionprint off histexpiredupsfirst off glob on posixcd off braceccl off badpattern on longlistjobs off banghist on dvorak off alwaystoend off hashall on warnnestedvar off globalexport on ksharrays off correct off cdsilent off autonamedirs off histexpand on typesetsilent on rmstarwait off histnofunctions off autoparamslash on trapsasync off sunkeyboardhack off promptsp on histsavenodups off autocd off allexport off posixidentifiers off cshjunkiehistory off autopushd on completeinword off completealiases off aliases on autocontinue off appendhistory on aliasfuncdef off singlelinezle off hashlistall on ignoreclosebraces off recexact off localoptions on interactivecomments off errexit off cshjunkiequotes off markdirs off hashdirs on cdablevars off rcexpandparam off vi off printeightbit off multifuncdef on xtrace off login off cshjunkieloops off histappend on histignorespace off evallineno on shfileexpansion off rcs on functionargzero on errreturn off combiningchars off histignoredups on histfcntllock off beep on autoremoveslash on hup on globdots off checkrunningjobs on autoparamkeys on shnullcmd off multibyte on zle off promptpercent on flowcontrol on continueonerror off incappendhistorytime off autoresume off globassign off caseglob on shortloops on bsdecho off cprecedences off log on transientrprompt off verbose off localpatterns on ignorebraces off pipefail off equals on menucomplete off cshnullglob off casematch on promptvars off histallowclobber off bareglobqual on shinstdin off restricted off pushdminus off nullglob off chasedots off mailwarning off listambiguous on cshnullcmd off bashrematch off octalzeroes off forcefloat off exec on multios on emacs off nomatch on pathscript off localtraps on stdin off onecmd off kshglob off clobber on posixbuiltins off alwayslastprompt on pushdtohome off histignorealldups off hashexecutablesonly off pushdsilent off shoptionletters off physical off sourcetrace off histlexwords on bgnice on globalrcs on posixstrings off checkjobs on shglob off singlecommand off listrowsfirst off
+OPTIONS_BEFORE__psprint/zsh-editing-workbench
+posixargzero off autolist on printexitvalue off kshzerosubscript off histreduceblanks off chaselinks off extendedglob on localloops off histnostore off automenu on globcomplete off unset on listpacked off promptsubst off shwordsplit off pathdirs off kshtypeset off listtypes on warncreateglobal on promptbang off dotglob off braceexpand on listbeep on correctall off privileged off numericglobsort off histverify off trackall on histsubstpattern off globstarshort off cbases off rcquotes off posixaliases off histfindnodups off bashautolist off sharehistory off overstrike off kshautoload off incappendhistory off appendcreate off promptcr on mailwarn off pushdignoredups off interactive off ignoreeof off globsubst off rematchpcre off monitor off histsavebycopy on histbeep on debugbeforecmd on magicequalsubst off rmstarsilent off posixjobs off hashcmds on posixtraps off extendedhistory off notify on kshoptionprint off histexpiredupsfirst off glob on posixcd off braceccl off badpattern on longlistjobs off banghist on dvorak off alwaystoend off hashall on warnnestedvar off globalexport on ksharrays off correct off cdsilent off autonamedirs off histexpand on typesetsilent on rmstarwait off histnofunctions off autoparamslash on trapsasync off sunkeyboardhack off promptsp on histsavenodups off autocd off allexport off posixidentifiers off cshjunkiehistory off autopushd off completeinword off completealiases off aliases on autocontinue off appendhistory on aliasfuncdef off singlelinezle off hashlistall on ignoreclosebraces off recexact off localoptions on interactivecomments off errexit off cshjunkiequotes off markdirs off hashdirs on cdablevars off rcexpandparam off vi off printeightbit off multifuncdef on xtrace off login off cshjunkieloops off histappend on histignorespace off evallineno on shfileexpansion off rcs on functionargzero on errreturn off combiningchars off histignoredups off histfcntllock off beep on autoremoveslash on hup on globdots off checkrunningjobs on autoparamkeys on shnullcmd off multibyte on zle off promptpercent on flowcontrol on continueonerror off incappendhistorytime off autoresume off globassign off caseglob on shortloops on bsdecho off cprecedences off log on transientrprompt off verbose off localpatterns on ignorebraces off pipefail off equals on menucomplete off cshnullglob off casematch on promptvars off histallowclobber off bareglobqual on shinstdin off restricted off pushdminus off nullglob off chasedots off mailwarning off listambiguous on cshnullcmd off bashrematch off octalzeroes off forcefloat off exec on multios on emacs off nomatch on pathscript off localtraps on stdin off onecmd off kshglob off clobber on posixbuiltins off alwayslastprompt on pushdtohome off histignorealldups off hashexecutablesonly off pushdsilent off shoptionletters off physical off sourcetrace off histlexwords off bgnice on globalrcs on posixstrings off checkjobs on shglob off singlecommand off listrowsfirst off
+OPTIONS__psprint/zsh-editing-workbench
+
+PATH__psprint/zsh-editing-workbench
+
 PLUGINS_DIR
 _test102/answer/plugins
 SERVICES_DIR
@@ -26,24 +42,19 @@ TIME_1_psprint---zsh-editing-workbench
 __reset-by-test__
 TIME_INDEX
 1
+WIDGETS_DELETE__psprint/zsh-editing-workbench
+zew-backward-kill-shell-word zew-transpose-shell-words copy-earlier-word transpose-words-match zew-history-complete-word zew-history-complete-word-backwards zew-rotate-shell-words zew-rotate-shell-words-backwards __zconvey_zle_paster
+WIDGETS_SAVED__psprint/zsh-editing-workbench
+backward-kill-word\ zplugin-saved-backward-kill-word backward-word\ zplugin-saved-backward-word capitalize-word\ zplugin-saved-capitalize-word down-case-word\ zplugin-saved-down-case-word forward-word\ zplugin-saved-forward-word kill-word\ zplugin-saved-kill-word transpose-words\ zplugin-saved-transpose-words up-case-word\ zplugin-saved-up-case-word
 ZERO
 zplugin.zsh
+ZSTYLES__psprint/zsh-editing-workbench
+:zle:\\\*\ word-chars :zle:\\\*\ skip-whitespace-first :zle:\\\*\ word-style :completion:history-words:\\\*\ remove-all-dups :completion:history-words:\\\*\ sort :completion:\\\*\ range :completion::complete:n-kill::bits\ matcher
 ---
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-editing-workbench'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-editing-workbench' '2'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'psprint/zsh-editing-workbench' 'teleid psprint/zsh-editing-workbench wait '\'''\'' '
-ZPLG_FUNCTIONS: 'psprint/zsh-editing-workbench' '-zconvey_pinfo -zew-rotate-shell-words __zconvey_zle_paster backward-kill-word-match backward-word-match capitalize-word-match copy-earlier-word down-case-word-match forward-word-match kill-word-match select-word-style transpose-words-match up-case-word-match zew zew-backward-kill-shell-word zew-history-complete-word zew-transpose-shell-words zew_help '
-ZPLG_OPTIONS: 'psprint/zsh-editing-workbench' 'histlexwords off autopushd off histignoredups off pushdignoredups off'
-ZPLG_PATH: 'psprint/zsh-editing-workbench' ''
-ZPLG_FPATH: 'psprint/zsh-editing-workbench' ''
-ZPLG_PARAMETERS_PRE: 'psprint/zsh-editing-workbench' 'REPO_DIR \"\" ZCONVEY_SCHEDULE_ORIGIN \"\" CONFIG_DIR \"\" ZCONVEY_ID \"\" TEST_ARRAY \"\" ZCONVEY_FD \"\" TEST_FLOAT \"\" TEST_HASH \"\" ZCONVEY_LOCKS_DIR \"\" preexec_functions \"\" ZCONVEY_IO_DIR \"\" TEST_INTEGER \"\"'
-ZPLG_PARAMETERS_POST: 'psprint/zsh-editing-workbench' 'REPO_DIR scalar ZCONVEY_SCHEDULE_ORIGIN scalar CONFIG_DIR scalar ZCONVEY_ID integer TEST_ARRAY array ZCONVEY_FD scalar-hide-hideval TEST_FLOAT float TEST_HASH association ZCONVEY_LOCKS_DIR scalar-hide-hideval preexec_functions array ZCONVEY_IO_DIR scalar-hide-hideval TEST_INTEGER integer'
-ZPLG_ZSTYLES: 'psprint/zsh-editing-workbench' ':zle:\\\*\ word-chars :zle:\\\*\ skip-whitespace-first :zle:\\\*\ word-style :completion:history-words:\\\*\ remove-all-dups :completion:history-words:\\\*\ sort :completion:\\\*\ range :completion::complete:n-kill::bits\ matcher '
-ZPLG_BINDKEYS: 'psprint/zsh-editing-workbench' '\\\^\\\[w\ zew-backward-kill-shell-word \\\^\\\[t\ zew-transpose-shell-words \\\^\\\[m\ copy-earlier-word \\\^\\\[M\ copy-prev-shell-word \\\^\\\[.\ insert-last-word \\\^W\ backward-kill-word \\\^\\\[y\ transpose-words-match \\\^\\\[/\ _history-complete-older \\\^\\\[h\ zew-history-complete-word \\\^\\\[H\ zew-history-complete-word-backwards \\\^J\ self-insert \\\^_\ undo \\\^\\\[r\ zew-rotate-shell-words \\\^\\\[R\ zew-rotate-shell-words-backwards '
-ZPLG_ALIASES: 'psprint/zsh-editing-workbench' 'naliases\ \'\''\'\'' ncd\ \'\''\'\'' nenv\ \'\''\'\'' nfunctions\ \'\''\'\'' nhistory\ \'\''\'\'' nkill\ \'\''\'\'' zpl\ zplugin zplg\ zplugin '
-ZPLG_WIDGETS_SAVED: 'psprint/zsh-editing-workbench' 'backward-kill-word\ zplugin-saved-backward-kill-word backward-word\ zplugin-saved-backward-word capitalize-word\ zplugin-saved-capitalize-word down-case-word\ zplugin-saved-down-case-word forward-word\ zplugin-saved-forward-word kill-word\ zplugin-saved-kill-word transpose-words\ zplugin-saved-transpose-words up-case-word\ zplugin-saved-up-case-word '
-ZPLG_WIDGETS_DELETE: 'psprint/zsh-editing-workbench' 'zew-backward-kill-shell-word zew-transpose-shell-words copy-earlier-word transpose-words-match zew-history-complete-word zew-history-complete-word-backwards zew-rotate-shell-words zew-rotate-shell-words-backwards __zconvey_zle_paster '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

@@ -1,3 +1,7 @@
+ALIASES__psprint/zsh-select
+
+BINDKEYS__psprint/zsh-select
+
 BIN_DIR
 test
 COMPLETIONS_DIR
@@ -10,10 +14,22 @@ DTRACE
 0
 EXTENDED_GLOB
 
+FPATH__psprint/zsh-select
+
+FUNCTIONS__psprint/zsh-select
+
 HOME_DIR
 _test8/answer
 HOME_READY
 1
+OPTIONS_AFTER__psprint/zsh-select
+posixargzero off autolist on printexitvalue off kshzerosubscript off histreduceblanks off chaselinks off extendedglob on localloops off histnostore off automenu on globcomplete off unset on listpacked off promptsubst off shwordsplit off pathdirs off kshtypeset off listtypes on warncreateglobal on promptbang off dotglob off braceexpand on listbeep on correctall off privileged off numericglobsort off histverify off trackall on histsubstpattern off globstarshort off cbases off rcquotes off posixaliases off histfindnodups off bashautolist off sharehistory off overstrike off kshautoload off incappendhistory off appendcreate off promptcr on mailwarn off pushdignoredups off interactive off ignoreeof off globsubst off rematchpcre off monitor off histsavebycopy on histbeep on debugbeforecmd on magicequalsubst off rmstarsilent off posixjobs off hashcmds on posixtraps off extendedhistory off notify on kshoptionprint off histexpiredupsfirst off glob on posixcd off braceccl off badpattern on longlistjobs off banghist on dvorak off alwaystoend off hashall on warnnestedvar off globalexport on ksharrays off correct off cdsilent off autonamedirs off histexpand on typesetsilent on rmstarwait off histnofunctions off autoparamslash on trapsasync off sunkeyboardhack off promptsp on histsavenodups off autocd off allexport off posixidentifiers off cshjunkiehistory off autopushd off completeinword off completealiases off aliases on autocontinue off appendhistory on aliasfuncdef off singlelinezle off hashlistall on ignoreclosebraces off recexact off localoptions on interactivecomments off errexit off cshjunkiequotes off markdirs off hashdirs on cdablevars off rcexpandparam off vi off printeightbit off multifuncdef on xtrace off login off cshjunkieloops off histappend on histignorespace off evallineno on shfileexpansion off rcs on functionargzero on errreturn off combiningchars off histignoredups off histfcntllock off beep on autoremoveslash on hup on globdots off checkrunningjobs on autoparamkeys on shnullcmd off multibyte on zle off promptpercent on flowcontrol on continueonerror off incappendhistorytime off autoresume off globassign off caseglob on shortloops on bsdecho off cprecedences off log on transientrprompt off verbose off localpatterns on ignorebraces off pipefail off equals on menucomplete off cshnullglob off casematch on promptvars off histallowclobber off bareglobqual on shinstdin off restricted off pushdminus off nullglob off chasedots off mailwarning off listambiguous on cshnullcmd off bashrematch off octalzeroes off forcefloat off exec on multios on emacs off nomatch on pathscript off localtraps on stdin off onecmd off kshglob off clobber on posixbuiltins off alwayslastprompt on pushdtohome off histignorealldups off hashexecutablesonly off pushdsilent off shoptionletters off physical off sourcetrace off histlexwords off bgnice on globalrcs on posixstrings off checkjobs on shglob off singlecommand off listrowsfirst off
+OPTIONS_BEFORE__psprint/zsh-select
+posixargzero off autolist on printexitvalue off kshzerosubscript off histreduceblanks off chaselinks off extendedglob on localloops off histnostore off automenu on globcomplete off unset on listpacked off promptsubst off shwordsplit off pathdirs off kshtypeset off listtypes on warncreateglobal on promptbang off dotglob off braceexpand on listbeep on correctall off privileged off numericglobsort off histverify off trackall on histsubstpattern off globstarshort off cbases off rcquotes off posixaliases off histfindnodups off bashautolist off sharehistory off overstrike off kshautoload off incappendhistory off appendcreate off promptcr on mailwarn off pushdignoredups off interactive off ignoreeof off globsubst off rematchpcre off monitor off histsavebycopy on histbeep on debugbeforecmd on magicequalsubst off rmstarsilent off posixjobs off hashcmds on posixtraps off extendedhistory off notify on kshoptionprint off histexpiredupsfirst off glob on posixcd off braceccl off badpattern on longlistjobs off banghist on dvorak off alwaystoend off hashall on warnnestedvar off globalexport on ksharrays off correct off cdsilent off autonamedirs off histexpand on typesetsilent on rmstarwait off histnofunctions off autoparamslash on trapsasync off sunkeyboardhack off promptsp on histsavenodups off autocd off allexport off posixidentifiers off cshjunkiehistory off autopushd off completeinword off completealiases off aliases on autocontinue off appendhistory on aliasfuncdef off singlelinezle off hashlistall on ignoreclosebraces off recexact off localoptions on interactivecomments off errexit off cshjunkiequotes off markdirs off hashdirs on cdablevars off rcexpandparam off vi off printeightbit off multifuncdef on xtrace off login off cshjunkieloops off histappend on histignorespace off evallineno on shfileexpansion off rcs on functionargzero on errreturn off combiningchars off histignoredups off histfcntllock off beep on autoremoveslash on hup on globdots off checkrunningjobs on autoparamkeys on shnullcmd off multibyte on zle off promptpercent on flowcontrol on continueonerror off incappendhistorytime off autoresume off globassign off caseglob on shortloops on bsdecho off cprecedences off log on transientrprompt off verbose off localpatterns on ignorebraces off pipefail off equals on menucomplete off cshnullglob off casematch on promptvars off histallowclobber off bareglobqual on shinstdin off restricted off pushdminus off nullglob off chasedots off mailwarning off listambiguous on cshnullcmd off bashrematch off octalzeroes off forcefloat off exec on multios on emacs off nomatch on pathscript off localtraps on stdin off onecmd off kshglob off clobber on posixbuiltins off alwayslastprompt on pushdtohome off histignorealldups off hashexecutablesonly off pushdsilent off shoptionletters off physical off sourcetrace off histlexwords off bgnice on globalrcs on posixstrings off checkjobs on shglob off singlecommand off listrowsfirst off
+OPTIONS__psprint/zsh-select
+
+PATH__psprint/zsh-select
+
 PLUGINS_DIR
 _test8/answer/plugins
 SERVICES_DIR
@@ -26,24 +42,19 @@ TIME_1_psprint---zsh-select
 __reset-by-test__
 TIME_INDEX
 1
+WIDGETS_DELETE__psprint/zsh-select
+
+WIDGETS_SAVED__psprint/zsh-select
+
 ZERO
 zplugin.zsh
+ZSTYLES__psprint/zsh-select
+
 ---
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '2'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'psprint/zsh-select' 'subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' atpull '\''!command echo local\ change >! version4'\'' cp '\''LICENSE -> LICENSE.bkp'\'' depth 1  '
-ZPLG_FUNCTIONS: 'psprint/zsh-select' ''
-ZPLG_OPTIONS: 'psprint/zsh-select' ''
-ZPLG_PATH: 'psprint/zsh-select' '_test8/answer/plugins/psprint---zsh-select '
-ZPLG_FPATH: 'psprint/zsh-select' ''
-ZPLG_PARAMETERS_PRE: 'psprint/zsh-select' ''
-ZPLG_PARAMETERS_POST: 'psprint/zsh-select' ''
-ZPLG_ZSTYLES: 'psprint/zsh-select' ''
-ZPLG_BINDKEYS: 'psprint/zsh-select' ''
-ZPLG_ALIASES: 'psprint/zsh-select' ''
-ZPLG_WIDGETS_SAVED: 'psprint/zsh-select' ''
-ZPLG_WIDGETS_DELETE: 'psprint/zsh-select' ''
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

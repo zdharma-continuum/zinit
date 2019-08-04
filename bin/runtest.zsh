@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env zsh-5.7.1-dev-0
 
 local emul="zsh";
 [[ -f ./emulate ]] && emul="$(<./emulate)"
@@ -169,8 +169,13 @@ store_state() {
     local out="$1" out2="$2"
     (( ${+functions[-zplg-diff-env-compute]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
 
-    local -a not_show_keys
-    not_show_keys=( UPAR DOWNAR RIGHTAR LEFTAR )
+    local -A not_show_keys
+    not_show_keys=( UPAR 1 DOWNAR 1 RIGHTAR 1 LEFTAR 1 \
+            FUNCTIONS_BEFORE__\* 1 FUNCTIONS_AFTER__\* 1 \
+            PARAMETERS_BEFORE__\* 1 PARAMETERS_AFTER__\* 1
+            FPATH_BEFORE__\* 1 FPATH_AFTER__\* 1
+            PATH_BEFORE__\* 1 PATH_AFTER__\* 1
+        )
 
     local -A mymap
     mymap=( "${(kv)ZPLGM[@]}" )
@@ -193,8 +198,11 @@ store_state() {
 
     # Sort and print
     for k in "${(ko)ZPLGM[@]}"; do
-        [[ -n "${not_show_keys[(r)$k]}" ]] && continue
-        print -rl -- "$k" "${ZPLGM[$k]}" >>! "$out"
+        [[ -n "${not_show_keys[(k)$k]}" ]] && continue
+        local -a arr
+        arr=( "${(z@)ZPLGM[$k]}" )
+        local val="${(j: :o)arr}"
+        print -rl -- "$k" "$val" >>! "$out"
     done
 
     print -r -- "---" >>! "$out"
@@ -203,10 +211,10 @@ store_state() {
 
     # Normalize PATH and FPATH
     local -a path2 fpath2
-    path2=( "${path[@]/${PWD:h}\//}" )
-    path2=( "${path2[@]/${${PWD:h}:h}\//}" )
-    fpath2=( "${fpath[@]/${PWD:h}\//}" )
-    fpath2=( "${fpath2[@]/${${PWD:h}:h}\//}" )
+    path=( "${path[@]/${PWD:h}\//}" )
+    path=( "${path[@]/${${PWD:h}:h}\//}" )
+    fpath=( "${fpath[@]/${${PWD:h}:h}\//}" )
+    fpath=( "${fpath[@]/${PWD:h}\//}" )
 
     for k in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
         -zplg-diff-functions-compute "$k" || print -r -- "Failed: -zplg-diff-functions-compute for $k" >>! "$out2"
@@ -215,18 +223,9 @@ store_state() {
         -zplg-diff-parameter-compute "$k" || print -r -- "Failed: -zplg-diff-parameter-compute $k" >>! "$out2"
     done
 
-    ZPLG_PATH=( "${(kv@)ZPLG_PATH/${PWD:h}\//}" )
-    ZPLG_PATH=( "${(kv@)ZPLG_PATH/${${PWD:h}:h}\//}" )
-    ZPLG_FPATH=( "${(kv@)ZPLG_FPATH/${PWD:h}\//}" )
-    ZPLG_FPATH=( "${(kv@)ZPLG_FPATH/${${PWD:h}:h}\//}" )
-
     print -r -- "ZPLG_REGISTERED_PLUGINS:${${:- ${(qq@)ZPLG_REGISTERED_PLUGINS}}:# }" >>! "$out"
 
-    keys=( ZPLG_REGISTERED_STATES ZPLG_SNIPPETS
-           ZPLG_SICE ZPLG_FUNCTIONS ZPLG_OPTIONS ZPLG_PATH ZPLG_FPATH
-           ZPLG_PARAMETERS_PRE ZPLG_PARAMETERS_POST ZPLG_ZSTYLES ZPLG_BINDKEYS
-           ZPLG_ALIASES ZPLG_WIDGETS_SAVED ZPLG_WIDGETS_DELETE
-    )
+    keys=( ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_SICE )
 
     for k in "${keys[@]}"; do
         [[ "${(ok@)#${(Pk@)k}}" -gt 0 ]] && print -rn -- "$k:" >>! "$out" || print -rn -- "$k: " >>! "$out"

@@ -2,6 +2,8 @@ BIN_DIR
 test
 COMPLETIONS_DIR
 _test22/answer/completions
+CUR_USPL2
+
 DTRACE
 0
 EXTENDED_GLOB
@@ -29,17 +31,6 @@ ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'OMZ::plugins/git/git.plugin.zsh <single file>'
 ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'atinit '\''command cp after_cp_test after_atclone_test'\'' pick git2.plugin.zsh as command subscribe '\'''\'' teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command cp git2.plugin.zsh after_cp_test'\'' cp '\''gp -> git2.plugin.zsh'\'' '
-ZPLG_FUNCTIONS: 
-ZPLG_OPTIONS: 
-ZPLG_PATH: 
-ZPLG_FPATH: 
-ZPLG_PARAMETERS_PRE: 
-ZPLG_PARAMETERS_POST: 
-ZPLG_ZSTYLES: 
-ZPLG_BINDKEYS: 
-ZPLG_ALIASES: 
-ZPLG_WIDGETS_SAVED: 
-ZPLG_WIDGETS_DELETE: 
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

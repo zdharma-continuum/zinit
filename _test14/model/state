@@ -2,6 +2,8 @@ BIN_DIR
 test
 COMPLETIONS_DIR
 _test14/answer/completions
+CUR_USPL2
+
 DTRACE
 0
 EXTENDED_GLOB
@@ -29,17 +31,6 @@ ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order <svn>'
 ZPLG_SICE: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'subscribe '\'''\'' svn '\'''\'' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '\'''\'' '
-ZPLG_FUNCTIONS: 
-ZPLG_OPTIONS: 
-ZPLG_PATH: 
-ZPLG_FPATH: 
-ZPLG_PARAMETERS_PRE: 
-ZPLG_PARAMETERS_POST: 
-ZPLG_ZSTYLES: 
-ZPLG_BINDKEYS: 
-ZPLG_ALIASES: 
-ZPLG_WIDGETS_SAVED: 
-ZPLG_WIDGETS_DELETE: 
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

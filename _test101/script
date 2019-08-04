@@ -9,14 +9,14 @@ print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
 store_state answer/state_bunload answer/errors_bunload
 
-[[ ${FPATH[(i)test101]} != ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath || echo >! answer/incorrect_fpath
-[[ $PATH = *zsh-select* ]] && echo >! answer/correct_path || echo >! answer/incorrect_path
+[[ ${FPATH[(i)test101]} != ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath || echo >! answer/incorrect_fpath_1
+[[ $PATH = *zsh-select* ]] && echo >! answer/correct_path || echo >! answer/incorrect_path_1
 
 zplugin unload zdharma/ice-order
-[[ ${FPATH[(i)test101]} = ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath_af || echo >! answer/incorrect_fpath_af
-[[ $PATH = *zsh-select* ]] && echo >! answer/correct_path2 || echo >! answer/incorrect_path2
+[[ ${FPATH[(i)test101]} = ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath_af || echo >! answer/incorrect_fpath_af_2"${FPATH[(i)test101]} = ${FPATH[(I)test101]}" 
+[[ $PATH = *zsh-select* ]] && echo >! answer/correct_path2 || echo >! answer/incorrect_path_2
 
 zplugin unload psprint/zsh-select
-[[ $PATH != *zsh-select* ]] && echo >! answer/correct_path_af || echo >! answer/incorrect_path_af
+[[ $PATH != *zsh-select* ]] && echo >! answer/correct_path_af || echo >! answer/incorrect_path_af_3
 
 # vim:ft=zsh

@@ -1,3 +1,11 @@
+ALIASES__psprint/zsh-select
+
+ALIASES__zdharma/ice-order
+
+BINDKEYS__psprint/zsh-select
+
+BINDKEYS__zdharma/ice-order
+
 BIN_DIR
 test
 COMPLETIONS_DIR
@@ -10,10 +18,42 @@ DTRACE
 0
 EXTENDED_GLOB
 
+FPATH__psprint/zsh-select
+
+FPATH__zdharma/ice-order
+
+FUNCTIONS__psprint/zsh-select
+
+FUNCTIONS__zdharma/ice-order
+
 HOME_DIR
 _test101/answer
 HOME_READY
 1
+OPTIONS_AFTER__psprint/zsh-select
+
+OPTIONS_AFTER__zdharma/ice-order
+
+OPTIONS_BEFORE__psprint/zsh-select
+
+OPTIONS_BEFORE__zdharma/ice-order
+
+OPTIONS__psprint/zsh-select
+
+OPTIONS__zdharma/ice-order
+
+PARAMETERS_POST__psprint/zsh-select
+
+PARAMETERS_POST__zdharma/ice-order
+
+PARAMETERS_PRE__psprint/zsh-select
+
+PARAMETERS_PRE__zdharma/ice-order
+
+PATH__psprint/zsh-select
+
+PATH__zdharma/ice-order
+
 PLUGINS_DIR
 _test101/answer/plugins
 SERVICES_DIR
@@ -28,24 +68,25 @@ TIME_2_zdharma---ice-order
 __reset-by-test__
 TIME_INDEX
 2
+WIDGETS_DELETE__psprint/zsh-select
+
+WIDGETS_DELETE__zdharma/ice-order
+
+WIDGETS_SAVED__psprint/zsh-select
+
+WIDGETS_SAVED__zdharma/ice-order
+
 ZERO
 zplugin.zsh
+ZSTYLES__psprint/zsh-select
+
+ZSTYLES__zdharma/ice-order
+
 ---
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '0' 'zdharma/ice-order' '0'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'psprint/zsh-select' 'subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' depth 1 ' 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' '
-ZPLG_FUNCTIONS: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_OPTIONS: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_PATH: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_FPATH: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_PARAMETERS_PRE: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_PARAMETERS_POST: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_ZSTYLES: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_BINDKEYS: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_ALIASES: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_WIDGETS_SAVED: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
-ZPLG_WIDGETS_DELETE: 'psprint/zsh-select' '' 'zdharma/ice-order' ''
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---
