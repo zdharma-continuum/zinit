@@ -718,14 +718,15 @@
                 
                 
                 <h1 id="preinstalling_plugins">Preinstalling Plugins<a class="headerlink" href="#preinstalling_plugins" title="Permanent link">#</a></h1>
-<p>If you create a Docker image that uses Zplugin, or want to install Turbo-loaded plugins before the shell starts interactively,
-you can invoke the zplugin-scheduler function in such a way, that it:</p>
+<p>If you create a Docker image that uses Zplugin, or want to install Turbo-loaded
+plugins before the shell starts interactively, you can invoke the
+zplugin-scheduler function in such a way, that it:</p>
 <ul>
 <li>installs plugins without waiting for the prompt (i.e. it's script friendly),</li>
 <li>installs <strong>all</strong> plugins instantly, without respecting the <code>wait''</code> argument.</li>
 </ul>
-<p>To accomplish this, use <code>burst</code> argument and call <code>-zplg-scheduler</code> function. Example
-<code>Dockerfile</code> entry:</p>
+<p>To accomplish this, use <code>burst</code> argument and call <code>-zplg-scheduler</code> function.
+Example <code>Dockerfile</code> entry:</p>
 <div class="highlight"><pre><span></span>RUN zsh -i -c -- <span class="s1">&#39;-zplg-scheduler burst || true&#39;</span>
 </pre></div>
 

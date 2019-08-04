@@ -886,7 +886,8 @@ zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh
 <div class="highlight"><pre><span></span><span class="c1"># For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the</span>
 <span class="c1"># coreutils package from Homebrew or using https://github.com/ogham/exa)</span>
 zplugin ice atclone<span class="s2">&quot;dircolors -b LS_COLORS &gt; c.zsh&quot;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;%atclone&#39;</span> pick<span class="s2">&quot;c.zsh&quot;</span> nocompile<span class="s1">&#39;!&#39;</span>
+    atpull<span class="s1">&#39;%atclone&#39;</span> pick<span class="s2">&quot;c.zsh&quot;</span> nocompile<span class="s1">&#39;!&#39;</span> <span class="se">\</span>
+    atload<span class="s1">&#39;zstyle &quot;:completion:*&quot; list-colors “${(s.:.)LS_COLORS}”&#39;</span> <span class="c1"># Style the Zsh completion</span>
 zplugin light trapd00r/LS_COLORS
 
 zplugin ice as<span class="s2">&quot;program&quot;</span> pick<span class="s2">&quot;</span><span class="nv">$ZPFX</span><span class="s2">/bin/git-*&quot;</span> make<span class="s2">&quot;PREFIX=</span><span class="nv">$ZPFX</span><span class="s2">&quot;</span> nocompile
