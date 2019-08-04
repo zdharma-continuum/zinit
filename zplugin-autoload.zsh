@@ -1388,9 +1388,10 @@ ZPLGM[EXTENDED_GLOB]=""
             )
         fi
 
-        (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-           command git submodule foreach git pull origin master
-        )
+        [[ -d "$local_dir/.git" ]] && \
+            (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
+               command git submodule foreach git pull origin master
+            )
 
         local -a log
         { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
