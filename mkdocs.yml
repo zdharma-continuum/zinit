@@ -40,6 +40,8 @@ markdown_extensions:
   - admonition
   - pymdownx.betterem:
       smart_enable: all
+  - pymdownx.mark:
+  - pymdownx.smartsymbols:
   - toc:
       permalink: '#'
       separator: '_'
