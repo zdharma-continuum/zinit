@@ -805,24 +805,26 @@
                 
                 
                 <h1 id="crasis_semigraphical_interface_to_zplugin">Crasis – semigraphical interface to Zplugin<a class="headerlink" href="#crasis_semigraphical_interface_to_zplugin" title="Permanent link">#</a></h1>
-<p>Zsh exposes its parser via <code>(z)</code> substitution flag. Parsing <code>.zshrc</code> is totally possible.
-This way <code>Crasis</code> lets you edit your <code>Zplugin</code> commands located in <code>.zshrc</code>. All in pure
-<code>Zshell</code> code.</p>
-<p>No more commenting-out a line with a text editor to disable plugin, cluttering <code>.zshrc</code>,
-now you can just <strong>press a button</strong>.</p>
+<p>Zsh exposes its parser via <code>(z)</code> substitution flag. Parsing <code>.zshrc</code> is totally
+possible. This way <code>Crasis</code> lets you edit your <code>Zplugin</code> commands located in
+<code>.zshrc</code>. All in pure <code>Zshell</code> code.</p>
+<p>No more commenting-out a line with a text editor to disable plugin, cluttering
+<code>.zshrc</code>, now you can just <strong>press a button</strong>.</p>
 <p><a href="https://asciinema.org/a/147225"><img alt="asciicast" src="https://asciinema.org/a/147225.png" /></a></p>
-<p><code>Crasis</code> uses pure-Zshell <a href="http://github.com/zdharma/zui/"><strong>ZUI</strong></a> library to create <code>ncurses</code> interface.</p>
+<p><code>Crasis</code> uses pure-Zshell <a href="http://github.com/zdharma/zui/"><strong>ZUI</strong></a> library to
+create <code>ncurses</code> interface.</p>
 <h2 id="installation_basic_use">Installation &amp; Basic Use<a class="headerlink" href="#installation_basic_use" title="Permanent link">#</a></h2>
-<p>Install <a href="https://github.com/zdharma/zplugin"><strong>Zplugin</strong></a> and add following commands to <code>.zshrc</code>:</p>
-<pre><code class="SystemVerilog">zplugin light zdharma/zui
-zplugin light zdharma/zplugin-crasis
-</code></pre>
+<p>Install <a href="https://github.com/zdharma/zplugin"><strong>Zplugin</strong></a> and add following
+commands to <code>.zshrc</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">zplugin</span> <span class="n">light</span> <span class="n">zdharma</span><span class="o">/</span><span class="n">zui</span>
+<span class="n">zplugin</span> <span class="n">light</span> <span class="n">zdharma</span><span class="o">/</span><span class="n">zplugin</span><span class="o">-</span><span class="n">crasis</span>
+</pre></div>
 
-<p>To use, invoke <code>crasis [optional zshrc path]</code> or press <code>Ctrl-o-k</code>. Global variables <code>CRASIS_THEME</code>
-and <code>CRASIS_LAYOUT</code> can be used to override configuration file <code>crasis.conf</code> (located in plugin's
-tree), i.e.:</p>
-<pre><code class="SystemVerilog">CRASIS_THEME=&quot;zdharma-256&quot; CRASIS_LAYOUT=&quot;contract&quot; crasis
-</code></pre>
+<p>To use, invoke <code>crasis [optional zshrc path]</code> or press <code>Ctrl-o-k</code>. Global
+variables <code>CRASIS_THEME</code> and <code>CRASIS_LAYOUT</code> can be used to override
+configuration file <code>crasis.conf</code> (located in plugin's tree), i.e.:</p>
+<div class="highlight"><pre><span></span><span class="no">CRASIS_THEME</span><span class="o">=</span><span class="s">&quot;zdharma-256&quot;</span> <span class="no">CRASIS_LAYOUT</span><span class="o">=</span><span class="s">&quot;contract&quot;</span> <span class="n">crasis</span>
+</pre></div>
 
 <p><code>256</code>-color themes require Zsh <code>5.3</code> or later.</p>
 <h2 id="key_bindings">Key Bindings<a class="headerlink" href="#key_bindings" title="Permanent link">#</a></h2>
@@ -896,9 +898,10 @@ tree), i.e.:</p>
 <p><img alt="clean-256" src="https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/clean-256.png" /></p>
 <p><img alt="zdharma-256" src="https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/zdharma-256.png" /></p>
 <h2 id="code_documentation">Code Documentation<a class="headerlink" href="#code_documentation" title="Permanent link">#</a></h2>
-<p><code>Crasis</code> is a <a href="http://github.com/zdharma/zui/"><strong>ZUI</strong></a> application. <code>ZUI</code> is a pure-Zshell library
-where user generates simple text with hyperlinks, which is then turned into active document with
-buttons. Check out <code>Crasis</code> code documentation:
+<p><code>Crasis</code> is a <a href="http://github.com/zdharma/zui/"><strong>ZUI</strong></a> application. <code>ZUI</code> is a
+pure-Zshell library where user generates simple text with hyperlinks, which is
+then turned into active document with buttons. Check out <code>Crasis</code> code
+documentation:
 <a href="https://github.com/zdharma/zplugin-crasis/blob/master/zsdoc/crasis.adoc"><strong>Asciidoc</strong></a>,
 <a href="http://zdharma.org/zplugin-crasis/crasis.pdf"><strong>PDF</strong></a>.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>

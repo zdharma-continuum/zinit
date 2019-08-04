@@ -806,13 +806,13 @@
                 
                 <h1 id="z-plugins">z-plugins<a class="headerlink" href="#z-plugins" title="Permanent link">#</a></h1>
 <h2 id="what_are_they">What Are They?<a class="headerlink" href="#what_are_they" title="Permanent link">#</a></h2>
-<p>They are Zplugin extensions. Note the difference in the name from the
-Zplugin – the dash and the plural form.</p>
+<p>They are Zplugin extensions. Note the difference in the name from the Zplugin –
+the dash and the plural form.</p>
 <h2 id="what_can_they_do">What Can They Do?<a class="headerlink" href="#what_can_they_do" title="Permanent link">#</a></h2>
 <ol>
 <li>
-<p>Add a new Zplugin subcommand (i.e. the command that’s placed after
-    the function <code>zplugin …​</code> when calling Zplugin).</p>
+<p>Add a new Zplugin subcommand (i.e. the command that’s placed after the
+    function <code>zplugin …​</code> when calling Zplugin).</p>
 </li>
 <li>
 <p>Add new ice-modifiers</p>
@@ -821,16 +821,15 @@ Zplugin – the dash and the plural form.</p>
 <p>Register four type of hooks:</p>
 <ol>
 <li>
-<p><code>atclone</code> hook – run after cloning any plugin or downloading any
-    snippet</p>
+<p><code>atclone</code> hook – run after cloning any plugin or downloading any snippet</p>
 </li>
 <li>
-<p><code>atpull</code> hook – run after pulling new commits (i.e. updating)
-    for any plugin / snippet</p>
+<p><code>atpull</code> hook – run after pulling new commits (i.e. updating) for any
+    plugin / snippet</p>
 </li>
 <li>
-<p><code>atinit</code> hook – run before loading any plugin / snippet, after
-    it has been set-up (i.e. downloaded)</p>
+<p><code>atinit</code> hook – run before loading any plugin / snippet, after it has
+    been set-up (i.e. downloaded)</p>
 </li>
 <li>
 <p><code>atload</code> hook – run after loading any plugin / snippet</p>
@@ -844,8 +843,8 @@ Zplugin – the dash and the plural form.</p>
 </ol>
 <h2 id="how_to_code_them">How To Code Them?<a class="headerlink" href="#how_to_code_them" title="Permanent link">#</a></h2>
 <p>Below is an example body of an <code>atclone</code> hook (taken from
-<a href="https://github.com/zdharma/z-p-submods"><strong>zdharma/z-p-submods</strong></a> z-plugin).
-It shows how to:</p>
+<a href="https://github.com/zdharma/z-p-submods"><strong>zdharma/z-p-submods</strong></a> z-plugin). It
+shows how to:</p>
 <ol>
 <li>
 <p>Obtain the arguments passed to the hook.</p>
@@ -854,8 +853,8 @@ It shows how to:</p>
 <p>Use an ice modifier.</p>
 </li>
 <li>
-<p>It also shows an useful snippet that will trim the whitespace in
-    array elements.</p>
+<p>It also shows an useful snippet that will trim the whitespace in array
+    elements.</p>
 </li>
 <li>
 <p>Utilize the last hook argument – the plugin’s/snippet’s containing
@@ -864,91 +863,85 @@ It shows how to:</p>
 </ol>
 <!-- end list -->
 
-<pre><code class="zsh">emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
+<div class="highlight"><pre><span></span>emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
 
-[[ -z &quot;${ZPLG_ICE[submods]}&quot; ]] &amp;&amp; return 0
+<span class="o">[[</span> -z <span class="s2">&quot;</span><span class="si">${</span><span class="nv">ZPLG_ICE</span><span class="p">[submods]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="k">return</span> <span class="m">0</span>
 
-# (1)
-[[ &quot;$1&quot; = plugin ]] &amp;&amp; \
-    local type=&quot;$1&quot; user=&quot;$2&quot; plugin=&quot;$3&quot; id_as=&quot;$4&quot; dir=&quot;$5&quot; || \
-    local type=&quot;$1&quot; url=&quot;$2&quot; id_as=&quot;$3&quot; dir=&quot;$4&quot; # type: snippet
+<span class="c1"># (1)</span>
+<span class="o">[[</span> <span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="o">=</span> plugin <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="se">\</span>
+    <span class="nb">local</span> <span class="nv">type</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="nv">user</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span> <span class="nv">plugin</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span> <span class="nv">id_as</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$4</span><span class="s2">&quot;</span> <span class="nv">dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$5</span><span class="s2">&quot;</span> <span class="o">||</span> <span class="se">\</span>
+    <span class="nb">local</span> <span class="nv">type</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$1</span><span class="s2">&quot;</span> <span class="nv">url</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$2</span><span class="s2">&quot;</span> <span class="nv">id_as</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$3</span><span class="s2">&quot;</span> <span class="nv">dir</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$4</span><span class="s2">&quot;</span> <span class="c1"># type: snippet</span>
 
-local -a mods parts
-local mod
+<span class="nb">local</span> -a mods parts
+<span class="nb">local</span> mod
 
-# (2)
-mods=( ${(@s.;.)ZPLG_ICE[submods]} )
-for mod in &quot;${mods[@]}&quot;; do
-    parts=( &quot;${(@s:-&gt;:)mod}&quot; )
-    # (3) Remove only leading and trailing whitespace
-    parts=( &quot;${parts[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}&quot; )
+<span class="c1"># (2)</span>
+<span class="nv">mods</span><span class="o">=(</span> <span class="si">${</span><span class="p">(@s.;.)ZPLG_ICE[submods]</span><span class="si">}</span> <span class="o">)</span>
+<span class="k">for</span> mod in <span class="s2">&quot;</span><span class="si">${</span><span class="nv">mods</span><span class="p">[@]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span> <span class="k">do</span>
+    <span class="nv">parts</span><span class="o">=(</span> <span class="s2">&quot;</span><span class="si">${</span><span class="p">(@s</span><span class="k">:-</span><span class="p">&gt;:)mod</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">)</span>
+    <span class="c1"># (3) Remove only leading and trailing whitespace</span>
+    <span class="nv">parts</span><span class="o">=(</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">parts</span><span class="p">[@]//((#s)[[:</span><span class="nv">space</span><span class="p">:]]##|[[:</span><span class="nv">space</span><span class="p">:]]##(#e))/</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">)</span>
 
-    print &quot;\nCloning submodule: ${parts[1]} to dir: ${parts[2]}&quot;
-    parts[1]=&quot;https://github.com/${parts[1]}&quot;
-    # (4) – the: -C &quot;$dir&quot;
-    command git -C &quot;$dir&quot; clone --progress &quot;${parts[1]}&quot; &quot;${parts[2]}&quot;
-done
-</code></pre>
+    print <span class="s2">&quot;\nCloning submodule: </span><span class="si">${</span><span class="nv">parts</span><span class="p">[1]</span><span class="si">}</span><span class="s2"> to dir: </span><span class="si">${</span><span class="nv">parts</span><span class="p">[2]</span><span class="si">}</span><span class="s2">&quot;</span>
+    parts<span class="o">[</span><span class="m">1</span><span class="o">]=</span><span class="s2">&quot;https://github.com/</span><span class="si">${</span><span class="nv">parts</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="c1"># (4) – the: -C &quot;$dir&quot;</span>
+    <span class="nb">command</span> git -C <span class="s2">&quot;</span><span class="nv">$dir</span><span class="s2">&quot;</span> clone --progress <span class="s2">&quot;</span><span class="si">${</span><span class="nv">parts</span><span class="p">[1]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">parts</span><span class="p">[2]</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</pre></div>
 
-<p>The recommended method of creating a hook is to place its body into a
-file that starts with a colon, and also a <code>zp-</code> prefix, e.g.
-<code>:zp-myproject-atclone-hook</code> and then to mark it for autoloading via
-<code>autoload -Uz :zp-myproject-atclone-hook</code>. Then register the hook
-(presumably in the <code>myproject.plugin.zsh</code> file) with the API call:
-<code>@zplg-register-z-plugin</code>:</p>
-<pre><code class="zsh">@zplg-register-z-plugin &quot;myproject&quot; hook:atclone \
-    :zp-myproject-atclone-handler \
-    :zp-myproject-atclone-help-handler \
-    &quot;submods''&quot; # register a new ice-mod: submods''
-</code></pre>
+<p>The recommended method of creating a hook is to place its body into a file that
+starts with a colon, and also a <code>zp-</code> prefix, e.g.  <code>:zp-myproject-atclone-hook</code>
+and then to mark it for autoloading via <code>autoload -Uz
+:zp-myproject-atclone-hook</code>. Then register the hook (presumably in the
+<code>myproject.plugin.zsh</code> file) with the API call: <code>@zplg-register-z-plugin</code>:</p>
+<div class="highlight"><pre><span></span>@zplg-register-z-plugin <span class="s2">&quot;myproject&quot;</span> hook:atclone <span class="se">\</span>
+    :zp-myproject-atclone-handler <span class="se">\</span>
+    :zp-myproject-atclone-help-handler <span class="se">\</span>
+    <span class="s2">&quot;submods&#39;&#39;&quot;</span> <span class="c1"># register a new ice-mod: submods&#39;&#39;</span>
+</pre></div>
 
 <p>The general syntax of the API call is:</p>
-<pre><code class="zsh">@zplg-register-z-plugin {project-name} \
-    {hook:&lt;hook-type&gt;|subcommand:&lt;new-subcommand-name&gt;} \
-    {name-of-the-handler-function} \
-    {name-of-the-HELP-handler-function} \
-    &quot;{ice-mod1}|{ice-mod2}|...&quot;
-</code></pre>
+<div class="highlight"><pre><span></span>@zplg-register-z-plugin <span class="o">{</span>project-name<span class="o">}</span> <span class="se">\</span>
+    <span class="o">{</span>hook:&lt;hook-type&gt;<span class="p">|</span>subcommand:&lt;new-subcommand-name&gt;<span class="o">}</span> <span class="se">\</span>
+    <span class="o">{</span>name-of-the-handler-function<span class="o">}</span> <span class="se">\</span>
+    <span class="o">{</span>name-of-the-HELP-handler-function<span class="o">}</span> <span class="se">\</span>
+    <span class="s2">&quot;{ice-mod1}|{ice-mod2}|...&quot;</span>
+</pre></div>
 
-<p>The last argument, i.e. the <code>|</code>-separated ice-list, is optional. That’s
-all! After this loading the plugin <code>myproject</code> will set up the new
-ice-mod <code>submods</code> that will have syntax <code>submods'{user}/{plugin} –&gt;
-{output-dir};
-…​'</code> and will clone submodules when installing the original plugin or
-snippet! Example real-world use of the ice-mod:</p>
-<pre><code class="zsh"># Load the `zsh-autosuggestions' plugin via Prezto module: `autosuggestions'
-zplugin ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
+<p>The last argument, i.e. the <code>|</code>-separated ice-list, is optional. That’s all!
+After this loading the plugin <code>myproject</code> will set up the new ice-mod <code>submods</code>
+that will have syntax <code>submods'{user}/{plugin} –&gt; {output-dir}; …​'</code> and
+will clone submodules when installing the original plugin or snippet! Example
+real-world use of the ice-mod:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Load the `zsh-autosuggestions&#39; plugin via Prezto module: `autosuggestions&#39;</span>
+zplugin ice svn submods<span class="s1">&#39;zsh-users/zsh-autosuggestions -&gt; external&#39;</span>
 zplugin snippet PZT::modules/autosuggestions
-</code></pre>
+</pre></div>
 
 <p>Checkout the project which fully implements this idea,
-<a href="https://github.com/zdharma/z-p-submods"><strong>zdharma/z-p-submods</strong></a>. It e.g.
-also implements the <code>atpull</code> hook, i.e. supports automatic update of the
-submodules. The <code>z-p-*</code> prefix is recommended for projects that are
-being z-plugins.</p>
+<a href="https://github.com/zdharma/z-p-submods"><strong>zdharma/z-p-submods</strong></a>. It e.g. also
+implements the <code>atpull</code> hook, i.e. supports automatic update of the submodules.
+The <code>z-p-*</code> prefix is recommended for projects that are being z-plugins.</p>
 <h2 id="details">Details<a class="headerlink" href="#details" title="Permanent link">#</a></h2>
 <p>There are 2 or 3 subtypes for each of the hook:</p>
 <ol>
 <li>
 <p><code>atinit</code> or <code>!atinit</code> – the <code>!</code> version is ran before the <code>atinit</code>
-    <strong>ice-mod</strong> (i.e. before <code>zplugin ice atinit’echo this!'; …​</code>),
-    while the normal version runs after it.</p>
+    <strong>ice-mod</strong> (i.e. before <code>zplugin ice atinit’echo this!'; …​</code>), while
+    the normal version runs after it.</p>
 </li>
 <li>
-<p><code>atload</code> or <code>!atload</code> – analogous to the <code>atinit</code> case: the <code>!</code>
-    version runs before the <code>atload</code> <strong>ice-mod</strong> (while the normal
-    version runs after it).</p>
+<p><code>atload</code> or <code>!atload</code> – analogous to the <code>atinit</code> case: the <code>!</code> version runs
+    before the <code>atload</code> <strong>ice-mod</strong> (while the normal version runs after it).</p>
 </li>
 <li>
-<p><code>atclone</code> or <code>!atclone</code> – analogous to the <code>atinit</code> and <code>atload</code>
-    cases.</p>
+<p><code>atclone</code> or <code>!atclone</code> – analogous to the <code>atinit</code> and <code>atload</code> cases.</p>
 </li>
 <li>
-<p><code>atpull</code>, <code>!atpull</code> or <code>%atpull</code> – the first two are being ran
-    <strong>only when there are new commits to be downloaded</strong> during the
-    update. The <code>%</code> version is being <strong>always</strong> run, regardless if the
-    update will pull any actual commits or not, and it is being ran
-    <strong>after</strong> the <code>atpull</code> <strong>ice-mod</strong>.</p>
+<p><code>atpull</code>, <code>!atpull</code> or <code>%atpull</code> – the first two are being ran <strong>only when
+    there are new commits to be downloaded</strong> during the update. The <code>%</code> version
+    is being <strong>always</strong> run, regardless if the update will pull any actual
+    commits or not, and it is being ran <strong>after</strong> the <code>atpull</code> <strong>ice-mod</strong>.</p>
 </li>
 </ol>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>

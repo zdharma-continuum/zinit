@@ -698,19 +698,19 @@
                 
                   <h1>Multiple Prompts</h1>
                 
-                <pre><code class="zsh"># Load when MYPROMPT == 1
-zplugin ice load'![[ $MYPROMPT = 1 ]]' unload'![[ $MYPROMPT != 1 ]]'
+                <div class="highlight"><pre><span></span><span class="c1"># Load when MYPROMPT == 1</span>
+zplugin ice load<span class="s1">&#39;![[ $MYPROMPT = 1 ]]&#39;</span> unload<span class="s1">&#39;![[ $MYPROMPT != 1 ]]&#39;</span>
 zplugin load halfo/lambda-mod-zsh-theme
 
-# Load when MYPROMPT == 2
-zplugin ice load'![[ $MYPROMPT = 2 ]]' unload'![[ $MYPROMPT != 2 ]]' \
-    pick&quot;/dev/null&quot; multisrc&quot;{async,pure}.zsh&quot;
+<span class="c1"># Load when MYPROMPT == 2</span>
+zplugin ice load<span class="s1">&#39;![[ $MYPROMPT = 2 ]]&#39;</span> unload<span class="s1">&#39;![[ $MYPROMPT != 2 ]]&#39;</span> <span class="se">\</span>
+    pick<span class="s2">&quot;/dev/null&quot;</span> multisrc<span class="s2">&quot;{async,pure}.zsh&quot;</span>
 zplugin load sindresorhus/pure
 
-# Load when MYPROMPT == 3
-zplugin ice load'![[ $MYPROMPT = 3 ]]' unload'![[ $MYPROMPT != 3 ]]'
+<span class="c1"># Load when MYPROMPT == 3</span>
+zplugin ice load<span class="s1">&#39;![[ $MYPROMPT = 3 ]]&#39;</span> unload<span class="s1">&#39;![[ $MYPROMPT != 3 ]]&#39;</span>
 zplugin load geometry-zsh/geometry
-</code></pre>
+</pre></div>
 
 <ul>
 <li><code>load''</code> – condition that when fulfilled will cause plugin to be loaded,</li>
