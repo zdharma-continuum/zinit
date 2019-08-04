@@ -700,10 +700,10 @@
                 
                 <p>A plugin <a href="https://github.com/trapd00r/LS_COLORS"><strong>trapd00r/LS_COLORS</strong></a> provides a file with color definitions for GNU <code>ls</code> command (and also for <a href="https://github.com/ogham/exa"><strong>ogham/exa</strong></a>). Typically one does <code>eval $( dircolors -b $HOME/LS_COLORS )</code> to process this file and set environment for <code>ls</code>. However this means <code>dircolors</code> is ran every shell startup.</p>
 <p>This costs much time, because a fork has to be done and the program (i.e. <code>dircolors</code>) binary needs to be loaded and executed, and because <code>dircolors</code> loads the colors' definitions and processes them. Following Zplugin invocation solves this problem:</p>
-<div class="highlight"><pre><span></span>zplugin ice atclone<span class="s2">&quot;dircolors -b LS_COLORS &gt; clrs.zsh&quot;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;%atclone&#39;</span> pick<span class="s2">&quot;clrs.zsh&quot;</span> nocompile<span class="s1">&#39;!&#39;</span>
+<pre><code class="zsh">zplugin ice atclone&quot;dircolors -b LS_COLORS &gt; clrs.zsh&quot; \
+    atpull'%atclone' pick&quot;clrs.zsh&quot; nocompile'!'
 zplugin light trapd00r/LS_COLORS
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>atclone"..."</code> – generate shell script, but instead of passing it to <code>eval</code>, save it to file,</li>

@@ -719,28 +719,28 @@
                 
                 <h1 id="nickname_a_plugin_or_snippet">Nickname a plugin or snippet<a class="headerlink" href="#nickname_a_plugin_or_snippet" title="Permanent link">#</a></h1>
 <p>Zplugin supports loading a plugin or snippet with a nickname. Set the nickname through the <code>id-as</code> ice-mod. For example, one could try to load docker/compose from Github binary releases:</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> from<span class="s2">&quot;gh-r&quot;</span> mv<span class="s2">&quot;docker-compose* -&gt; docker-compose&quot;</span>
-zplugin light <span class="s2">&quot;docker/compose&quot;</span>
-</pre></div>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; from&quot;gh-r&quot; mv&quot;docker-compose* -&gt; docker-compose&quot;
+zplugin light &quot;docker/compose&quot;
+</code></pre>
 
 <p>This registers plugin under ID docker/compose. Now the user could want to load a completion from Github repository (not the binary release catalog) also called docker/compose. The two IDs, both being docker/compose, will collide. The user can however resolve the conflict via <code>id-as</code> ice-mod by loading the completion under a nickname, for example "dc-completion":</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;completion&quot;</span> id-as<span class="s2">&quot;dc-completion&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;completion&quot; id-as&quot;dc-completion&quot;
 zplugin load docker/compose
-</pre></div>
+</code></pre>
 
 <p>The completion is now seen under ID dc-completion. Issuing <code>zplugin report dc-completion</code> works, so as other Zplugin commands:</p>
-<div class="highlight"><pre><span></span>~ zplugin report dc-completion
-Plugin report <span class="k">for</span> dc-completion
+<pre><code class="zsh">~ zplugin report dc-completion
+Plugin report for dc-completion
 -------------------------------
 
 Completions:
-_docker-compose <span class="o">[</span>enabled<span class="o">]</span>
-</pre></div>
+_docker-compose [enabled]
+</code></pre>
 
 <p>This can be also used to nickname snippets. For example, you can use this to create handlers in place of long urls:</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> id-as<span class="s2">&quot;git-unique&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; id-as&quot;git-unique&quot;
 zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
-</pre></div>
+</code></pre>
 
 <p><code>zplugin delete git-unique</code> will work, <code>zplugin times</code> will show <code>git-unique</code> instead of the URL.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>

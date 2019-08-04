@@ -835,128 +835,129 @@
                 <h1 id="gallery_of_zplugin_invocations">Gallery Of Zplugin Invocations<a class="headerlink" href="#gallery_of_zplugin_invocations" title="Permanent link">#</a></h1>
 <p>PRs welcomed :)</p>
 <h2 id="programs">Programs<a class="headerlink" href="#programs" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span>zplugin ice from<span class="s2">&quot;gh-r&quot;</span> as<span class="s2">&quot;program&quot;</span>
+<pre><code class="zsh">zplugin ice from&quot;gh-r&quot; as&quot;program&quot;
 zplugin light junegunn/fzf-bin
 
-zplugin ice from<span class="s2">&quot;gh-r&quot;</span> as<span class="s2">&quot;program&quot;</span> mv<span class="s2">&quot;docker* -&gt; docker-compose&quot;</span>
+zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;docker* -&gt; docker-compose&quot;
 zplugin light docker/compose
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> atclone<span class="s2">&quot;rm -f src/auto/config.cache; ./configure&quot;</span> <span class="se">\</span>
-    atpull<span class="s2">&quot;%atclone&quot;</span> make pick<span class="s2">&quot;src/vim&quot;</span>
+zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
+    atpull&quot;%atclone&quot; make pick&quot;src/vim&quot;
 zplugin light vim/vim
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> make<span class="s1">&#39;!&#39;</span> atclone<span class="s1">&#39;./direnv hook zsh &gt; zhook.zsh&#39;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;%atclone&#39;</span> src<span class="s2">&quot;zhook.zsh&quot;</span>
+zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
+    atpull'%atclone' src&quot;zhook.zsh&quot;
 zplugin light direnv/direnv
 
-zplugin ice from<span class="s2">&quot;gh-r&quot;</span> as<span class="s2">&quot;program&quot;</span> mv<span class="s2">&quot;direnv* -&gt; direnv&quot;</span>
+zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot;
 zplugin light direnv/direnv
 
-zplugin ice from<span class="s2">&quot;gh-r&quot;</span> as<span class="s2">&quot;program&quot;</span> mv<span class="s2">&quot;shfmt* -&gt; shfmt&quot;</span>
+zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;shfmt* -&gt; shfmt&quot;
 zplugin light mvdan/sh
 
-zplugin ice from<span class="s2">&quot;gh-r&quot;</span> as<span class="s2">&quot;program&quot;</span> mv<span class="s2">&quot;gotcha_* -&gt; gotcha&quot;</span>
+zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;gotcha_* -&gt; gotcha&quot;
 zplugin light b4b4r07/gotcha
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> pick<span class="s2">&quot;yank&quot;</span> make
+zplugin ice as&quot;program&quot; pick&quot;yank&quot; make
 zplugin light mptre/yank
 
-zplugin ice wait<span class="s2">&quot;2&quot;</span> lucid as<span class="s1">&#39;command&#39;</span> pick<span class="s1">&#39;src/vramsteg&#39;</span> <span class="se">\</span>
-    atclone<span class="s1">&#39;cmake .&#39;</span> atpull<span class="s1">&#39;%atclone&#39;</span> make  <span class="c1"># use Turbo-mode</span>
+zplugin ice wait&quot;2&quot; lucid as'command' pick'src/vramsteg' \
+    atclone'cmake .' atpull'%atclone' make  # use Turbo-mode
 zplugin light psprint/vramsteg-zsh
 
-zplugin ice atclone<span class="s2">&quot;./libexec/pyenv init - &gt; zpyenv.zsh&quot;</span> <span class="se">\</span>
-    atinit<span class="s1">&#39;export PYENV_ROOT=&quot;$PWD&quot;&#39;</span> atpull<span class="s2">&quot;%atclone&quot;</span> <span class="se">\</span>
-    as<span class="s1">&#39;command&#39;</span> pick<span class="s1">&#39;bin/pyenv&#39;</span> src<span class="s2">&quot;zpyenv.zsh&quot;</span> nocompile<span class="s1">&#39;!&#39;</span>
+zplugin ice atclone&quot;./libexec/pyenv init - &gt; zpyenv.zsh&quot; \
+    atinit'export PYENV_ROOT=&quot;$PWD&quot;' atpull&quot;%atclone&quot; \
+    as'command' pick'bin/pyenv' src&quot;zpyenv.zsh&quot; nocompile'!'
 zplugin light pyenv/pyenv
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> pick<span class="s2">&quot;</span><span class="nv">$ZPFX</span><span class="s2">/sdkman/bin/sdk&quot;</span> id-as<span class="s1">&#39;sdkman&#39;</span> run-atpull <span class="se">\</span>
-    atclone<span class="s2">&quot;wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=</span><span class="nv">$ZPFX</span><span class="s2">/sdkman bash scr.sh&quot;</span> <span class="se">\</span>
-    atpull<span class="s2">&quot;SDKMAN_DIR=</span><span class="nv">$ZPFX</span><span class="s2">/sdkman sdk selfupdate&quot;</span> <span class="se">\</span>
-    atinit<span class="s2">&quot;export SDKMAN_DIR=</span><span class="nv">$ZPFX</span><span class="s2">/sdkman; source </span><span class="nv">$ZPFX</span><span class="s2">/sdkman/bin/sdkman-init.sh&quot;</span>
+zplugin ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdkman' run-atpull \
+    atclone&quot;wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh&quot; \
+    atpull&quot;SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate&quot; \
+    atinit&quot;export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh&quot;
 zplugin light zdharma/null
-</pre></div>
+</code></pre>
 
 <h2 id="completions">Completions<a class="headerlink" href="#completions" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;completion&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;completion&quot;
 zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
-</pre></div>
+</code></pre>
 
 <h2 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span><span class="c1"># For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the</span>
-<span class="c1"># coreutils package from Homebrew or using https://github.com/ogham/exa)</span>
-zplugin ice atclone<span class="s2">&quot;dircolors -b LS_COLORS &gt; c.zsh&quot;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;%atclone&#39;</span> pick<span class="s2">&quot;c.zsh&quot;</span> nocompile<span class="s1">&#39;!&#39;</span>
+<pre><code class="zsh"># For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
+# coreutils package from Homebrew or using https://github.com/ogham/exa)
+zplugin ice atclone&quot;dircolors -b LS_COLORS &gt; c.zsh&quot; \
+    atpull'%atclone' pick&quot;c.zsh&quot; nocompile'!'
 zplugin light trapd00r/LS_COLORS
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> pick<span class="s2">&quot;</span><span class="nv">$ZPFX</span><span class="s2">/bin/git-*&quot;</span> make<span class="s2">&quot;PREFIX=</span><span class="nv">$ZPFX</span><span class="s2">&quot;</span> nocompile
+zplugin ice as&quot;program&quot; pick&quot;$ZPFX/bin/git-*&quot; make&quot;PREFIX=$ZPFX&quot; nocompile
 zplugin light tj/git-extras
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> atclone<span class="s1">&#39;perl Makefile.PL PREFIX=$ZPFX&#39;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;%atclone&#39;</span> make<span class="s1">&#39;install&#39;</span> pick<span class="s2">&quot;</span><span class="nv">$ZPFX</span><span class="s2">/bin/git-cal&quot;</span>
+zplugin ice as&quot;program&quot; atclone'perl Makefile.PL PREFIX=$ZPFX' \
+    atpull'%atclone' make'install' pick&quot;$ZPFX/bin/git-cal&quot;
 zplugin light k4rthik/git-cal
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> id-as<span class="s2">&quot;git-unique&quot;</span> pick<span class="s2">&quot;git-unique&quot;</span>
+zplugin ice as&quot;program&quot; id-as&quot;git-unique&quot; pick&quot;git-unique&quot;
 zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> cp<span class="s2">&quot;wd.sh -&gt; wd&quot;</span> mv<span class="s2">&quot;_wd.sh -&gt; _wd&quot;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;!git reset --hard&#39;</span> pick<span class="s2">&quot;wd&quot;</span>
+zplugin ice as&quot;program&quot; cp&quot;wd.sh -&gt; wd&quot; mv&quot;_wd.sh -&gt; _wd&quot; \
+    atpull'!git reset --hard' pick&quot;wd&quot;
 zplugin light mfaerevaag/wd
 
-zplugin ice as<span class="s2">&quot;program&quot;</span> pick<span class="s2">&quot;bin/archey&quot;</span>
+zplugin ice as&quot;program&quot; pick&quot;bin/archey&quot;
 zplugin load obihann/archey-osx
-</pre></div>
+</code></pre>
 
 <h2 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span>zplugin ice pick<span class="s2">&quot;h.sh&quot;</span>
+<pre><code class="zsh">zplugin ice pick&quot;h.sh&quot;
 zplugin light paoloantinori/hhighlighter
-</pre></div>
+</code></pre>
 
 <h2 id="snippets">Snippets<a class="headerlink" href="#snippets" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span>zplugin ice svn pick<span class="s2">&quot;completion.zsh&quot;</span> src<span class="s2">&quot;git.zsh&quot;</span>
+<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; src&quot;git.zsh&quot;
 zplugin snippet OMZ::lib
 
-zplugin ice svn wait<span class="s2">&quot;0&quot;</span> lucid atinit<span class="s2">&quot;local ZSH=\$PWD&quot;</span> <span class="se">\</span>
-    atclone<span class="s2">&quot;mkdir -p plugins; cd plugins; ln -sfn ../. osx&quot;</span>
+zplugin ice svn wait&quot;0&quot; lucid atinit&quot;local ZSH=\$PWD&quot; \
+    atclone&quot;mkdir -p plugins; cd plugins; ln -sfn ../. osx&quot;
 zplugin snippet OMZ::plugins/osx
 
-<span class="c1"># Or with most recent Zplugin and with ~/.zplugin/snippets </span>
-<span class="c1"># directory pruned (rm -rf -- ${ZPLGM[SNIPPETS_DIR]}):</span>
+# Or with most recent Zplugin and with ~/.zplugin/snippets 
+# directory pruned (rm -rf -- ${ZPLGM[SNIPPETS_DIR]}):
 zplugin ice svn
 zplugin snippet OMZ::plugins/osx
-</pre></div>
+
+</code></pre>
 
 <h2 id="themes">Themes<a class="headerlink" href="#themes" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span><span class="nv">GEOMETRY_COLOR_DIR</span><span class="o">=</span><span class="m">152</span>
-zplugin ice wait<span class="s2">&quot;0&quot;</span> lucid atload<span class="s2">&quot;prompt_geometry_render&quot;</span>
+<pre><code class="zsh">GEOMETRY_COLOR_DIR=152
+zplugin ice wait&quot;0&quot; lucid atload&quot;prompt_geometry_render&quot;
 zplugin light geometry-zsh/geometry
 
-zplugin ice pick<span class="s2">&quot;async.zsh&quot;</span> src<span class="s2">&quot;pure.zsh&quot;</span>
+zplugin ice pick&quot;async.zsh&quot; src&quot;pure.zsh&quot;
 zplugin light sindresorhus/pure
 
-zplugin light mafredri/zsh-async  <span class="c1"># dependency</span>
-zplugin ice svn silent atload<span class="s1">&#39;prompt sorin&#39;</span>
+zplugin light mafredri/zsh-async  # dependency
+zplugin ice svn silent atload'prompt sorin'
 zplugin snippet PZT::modules/prompt
 
-zplugin ice atload<span class="s2">&quot;fpath+=( \$PWD );&quot;</span>
+zplugin ice atload&quot;fpath+=( \$PWD );&quot;
 zplugin light chauncey-garrett/zsh-prompt-garrett
-zplugin ice svn atload<span class="s2">&quot;prompt garrett&quot;</span> silent
+zplugin ice svn atload&quot;prompt garrett&quot; silent
 zplugin snippet PZT::modules/prompt
 
-zplugin ice nocompletions compile<span class="s2">&quot;{zinc_functions/*,segments/*,zinc.zsh}&quot;</span>
+zplugin ice nocompletions compile&quot;{zinc_functions/*,segments/*,zinc.zsh}&quot;
 zplugin load robobenklein/zinc
 
-<span class="c1"># ZINC git info is already async, but if you want it </span>
-<span class="c1"># even faster with gitstatus in Turbo mode:</span>
-<span class="c1"># https://github.com/romkatv/gitstatus</span>
-zplugin ice wait<span class="s1">&#39;1&#39;</span> atload<span class="s1">&#39;zinc_optional_depenency_loaded&#39;</span>
+# ZINC git info is already async, but if you want it 
+# even faster with gitstatus in Turbo mode:
+# https://github.com/romkatv/gitstatus
+zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
 zplugin load romkatv/gitstatus
 
-<span class="c1"># After finishing the configuration wizard change the atload&#39;&#39; ice to:</span>
-<span class="c1"># -&gt; atload&#39;source ~/.p10k.zsh; _p9k_precmd&#39;</span>
-zplugin ice wait<span class="s1">&#39;!&#39;</span> lucid atload<span class="s1">&#39;true; _p9k_precmd&#39;</span> nocd
+# After finishing the configuration wizard change the atload'' ice to:
+# -&gt; atload'source ~/.p10k.zsh; _p9k_precmd'
+zplugin ice wait'!' lucid atload'true; _p9k_precmd' nocd
 zplugin light romkatv/powerlevel10k
-</pre></div>
+</code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 

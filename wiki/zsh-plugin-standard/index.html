@@ -932,11 +932,11 @@ loaded via Zsh’s <code>autoload</code> mechanism (a single function per-file).
 plugin" and the actions of plugin managers – the proposed standardization.</p>
 <h2 id="146_standardized_0_handling">1. Standardized $0 Handling<a class="headerlink" href="#146_standardized_0_handling" title="Permanent link">#</a></h2>
 <p>To get the plugin’s location, plugins should do:</p>
-<div class="highlight"><pre><span></span><span class="nv">0</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${${</span><span class="nv">ZERO</span><span class="k">:-</span><span class="si">${</span><span class="nv">0</span><span class="p">:#</span><span class="nv">$ZSH_ARGZERO</span><span class="si">}}</span><span class="k">:-</span><span class="si">${</span><span class="p">(%)</span><span class="k">:-</span><span class="p">%N</span><span class="si">}}</span><span class="s2">&quot;</span>
-<span class="nv">0</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${${</span><span class="p">(M)0:#/*</span><span class="si">}</span><span class="k">:-</span><span class="nv">$PWD</span><span class="p">/</span><span class="nv">$0</span><span class="si">}</span><span class="s2">&quot;</span>
+<pre><code class="zsh">0=&quot;${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}&quot;
+0=&quot;${${(M)0:#/*}:-$PWD/$0}&quot;
 
-<span class="c1"># Then ${0:h} to get plugin’s directory</span>
-</pre></div>
+# Then ${0:h} to get plugin’s directory
+</code></pre>
 
 <p>The one-line code above will:</p>
 <ol>
@@ -1033,12 +1033,12 @@ copy of <code>zsh-async</code>, having also reliable <code>$0</code> defined by 
 (note: <code>pure</code> doesn’t normally do this).</p>
 <p>The second item allows a plugin to e.g. set up <code>$fpath</code>, knowing that plugin
 manager will not handle this:</p>
-<div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[[</span> <span class="o">(</span><span class="si">${</span><span class="p">+zsh_loaded_plugins</span><span class="si">}</span> <span class="o">=</span> <span class="m">0</span> <span class="o">||</span> <span class="si">${</span><span class="nv">zsh_loaded_plugins</span><span class="p">[-1]</span><span class="si">}</span> !<span class="o">=</span> */kalc<span class="o">)</span> <span class="se">\</span>
-    <span class="o">&amp;&amp;</span> -z <span class="si">${</span><span class="nv">fpath</span><span class="p">[(r)</span><span class="si">${</span><span class="nv">0</span><span class="p">:</span><span class="nv">h</span><span class="si">}</span><span class="p">]</span><span class="si">}</span> <span class="o">]]</span>
-<span class="k">then</span>
-    <span class="nv">fpath</span><span class="o">+=(</span> <span class="s2">&quot;</span><span class="si">${</span><span class="nv">0</span><span class="p">:</span><span class="nv">h</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">)</span>
-<span class="k">fi</span>
-</pre></div>
+<pre><code class="zsh">if [[ (${+zsh_loaded_plugins} = 0 || ${zsh_loaded_plugins[-1]} != */kalc) \
+    &amp;&amp; -z ${fpath[(r)${0:h}]} ]]
+then
+    fpath+=( &quot;${0:h}&quot; )
+fi
+</code></pre>
 
 <p>This will allow user to reliably source the plugin without using a plugin
 manager.</p>
@@ -1070,8 +1070,8 @@ information in this section.</p>
 <h3 id="use_of_add-zsh-hook_to_install_hooks">Use Of <code>add-zsh-hook</code> To Install Hooks<a class="headerlink" href="#use_of_add-zsh-hook_to_install_hooks" title="Permanent link">#</a></h3>
 <p>Zsh ships with a function <code>add-zsh-hook</code>. It has the following invocation
 syntax:</p>
-<div class="highlight"><pre><span></span>add-zsh-hook <span class="o">[</span> -L <span class="p">|</span> -dD <span class="o">]</span> <span class="o">[</span> -Uzk <span class="o">]</span> hook <span class="k">function</span>
-</pre></div>
+<pre><code class="zsh">add-zsh-hook [ -L | -dD ] [ -Uzk ] hook function
+</code></pre>
 
 <p>The function installs a <code>function</code> as one of the supported zsh <code>hook</code> entries.
 which are one of: <code>chpwd</code>, <code>periodic</code>, <code>precmd</code>, <code>preexec</code>, <code>zshaddhistory</code>,
@@ -1085,8 +1085,8 @@ than Zsh functions that are allowed to be ran in Zle context, i.e. from the Zle
 editor (plus a few minor differences, like the <code>$WIDGET</code> parameter that’s
 automatically set by the Zle editor).</p>
 <p>The syntax of the call is:</p>
-<div class="highlight"><pre><span></span>add-zle-hook-widget <span class="o">[</span> -L <span class="p">|</span> -dD <span class="o">]</span> <span class="o">[</span> -Uzk <span class="o">]</span> hook widgetname
-</pre></div>
+<pre><code class="zsh">add-zle-hook-widget [ -L | -dD ] [ -Uzk ] hook widgetname
+</code></pre>
 
 <p>The call resembles the syntax of the <code>add-zsh-hook</code> function. The only
 difference is that it takes a <code>widgetname</code>, not a function name, and that the

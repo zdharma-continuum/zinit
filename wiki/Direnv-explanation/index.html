@@ -700,10 +700,10 @@
                 
                 <p>The project <a href="https://github.com/direnv/direnv"><strong>direnv/direnv</strong></a> registers itself in Zshell to modify environment on directory change. This registration is most often done by <code>eval "$(direnv hook zsh)"</code> added to zshrc.</p>
 <p>Drawback of this standard procedure is that <code>direnv</code> binary is ran on every shell startup and significantly slows it down. Zplugin allows to solve this in following way:</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> make<span class="s1">&#39;!&#39;</span> atclone<span class="s1">&#39;./direnv hook zsh &gt; zhook.zsh&#39;</span> <span class="se">\</span>
-    atpull<span class="s1">&#39;%atclone&#39;</span> pick<span class="s2">&quot;direnv&quot;</span> src<span class="s2">&quot;zhook.zsh&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
+    atpull'%atclone' pick&quot;direnv&quot; src&quot;zhook.zsh&quot;
 zplugin light direnv/direnv
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>make'!'</code> – compile <code>direnv</code> (it's written in Go lang); the exclamation mark means: run the <code>make</code> first, before <code>atclone</code> and <code>atpull</code> hooks,</li>
@@ -716,10 +716,10 @@ zplugin light direnv/direnv
 <p>This way registration code is generated once every installation and update, to then be simply sourced without running <code>direnv</code>.</p>
 <hr />
 <p>The project is also available as binary Github release. This distribution can be installed by:</p>
-<div class="highlight"><pre><span></span>zplugin ice from<span class="s2">&quot;gh-r&quot;</span> as<span class="s2">&quot;program&quot;</span> mv<span class="s2">&quot;direnv* -&gt; direnv&quot;</span> <span class="se">\</span>
-    <span class="s1">&#39;./direnv hook zsh &gt; zhook.zsh&#39;</span> atpull<span class="s1">&#39;%atclone&#39;</span> pick<span class="s2">&quot;direnv&quot;</span>
+<pre><code class="zsh">zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot; \
+    './direnv hook zsh &gt; zhook.zsh' atpull'%atclone' pick&quot;direnv&quot;
 zplugin light direnv/direnv
-</pre></div>
+</code></pre>
 
 <ul>
 <li><code>from"gh-r"</code> – install from Github <strong>releases</strong>,</li>

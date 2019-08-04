@@ -726,8 +726,8 @@ you can invoke the zplugin-scheduler function in such a way, that it:</p>
 </ul>
 <p>To accomplish this, use <code>burst</code> argument and call <code>-zplg-scheduler</code> function. Example
 <code>Dockerfile</code> entry:</p>
-<div class="highlight"><pre><span></span>RUN zsh -i -c -- <span class="s1">&#39;-zplg-scheduler burst || true&#39;</span>
-</pre></div>
+<pre><code class="zsh">RUN zsh -i -c -- '-zplg-scheduler burst || true'
+</code></pre>
 
 <p>An example <code>Dockerfile</code> can be found
 <a href="https://github.com/robobenklein/configs/blob/master/Dockerfile"><strong>here</strong></a>.</p>

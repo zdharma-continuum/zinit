@@ -986,9 +986,9 @@
 </ul>
 <p>and much more.</p>
 <h2 id="basic_plugin_loading">Basic Plugin Loading<a class="headerlink" href="#basic_plugin_loading" title="Permanent link">#</a></h2>
-<div class="highlight"><pre><span></span>zplugin load zdharma/history-search-multi-word
+<pre><code class="zsh">zplugin load zdharma/history-search-multi-word
 zplugin light zsh-users/zsh-syntax-highlighting
-</pre></div>
+</code></pre>
 
 <p>Above commands show two ways of basic plugin loading. <code>load &#8203;</code>  causes reporting to
 be enabled – you can track what plugin does, view the information with <code>zplugin
@@ -1004,23 +1004,23 @@ and to unload it.</p>
 <p>To load Oh My Zsh and Prezto plugins, use <code>snippet</code> feature. Snippets are single
 files downloaded by <code>curl</code>, <code>wget</code>, etc. (an automatic detection of the download
 tool is being performed) directly from URL. For example:</p>
-<div class="highlight"><pre><span></span>zplugin snippet <span class="s1">&#39;https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh&#39;</span>
-zplugin snippet <span class="s1">&#39;https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh&#39;</span>
-</pre></div>
+<pre><code class="zsh">zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+zplugin snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
+</code></pre>
 
 <p>Also, for Oh My Zsh and Prezto, you can use <code>OMZ::</code> and <code>PZT::</code> shorthands:</p>
-<div class="highlight"><pre><span></span>zplugin snippet OMZ::plugins/git/git.plugin.zsh
+<pre><code class="zsh">zplugin snippet OMZ::plugins/git/git.plugin.zsh
 zplugin snippet PZT::modules/helper/init.zsh
-</pre></div>
+</code></pre>
 
 <p>Moreover, snippets support Subversion protocol, supported also by Github. This
 allows to load snippets that are multi-file (for example a Prezto module can
 consist of two or more files, e.g. <code>init.zsh</code> and <code>alias.zsh</code>). Default files
 that will be sourced are: <code>*.plugin.zsh</code>, <code>init.zsh</code>, <code>*.zsh-theme</code>:</p>
-<div class="highlight"><pre><span></span><span class="c1"># URL points to directory</span>
+<pre><code class="zsh"># URL points to directory
 zplugin ice svn
 zplugin snippet PZT::modules/docker
-</pre></div>
+</code></pre>
 
 <h2 id="snippets_and_performance">Snippets and Performance<a class="headerlink" href="#snippets_and_performance" title="Permanent link">#</a></h2>
 <p>Using <code>curl</code>, <code>wget</code>, etc. along with Subversion allows to almost completely
@@ -1037,9 +1037,9 @@ the next Zplugin command, and also something that melts (so it doesn’t last
 long) – and in the Zplugin use it means that the modifier lasts for only single
 next Zplugin command. Using one other Ice-modifier "<strong>pick</strong>" user can
 explicitly <strong>select the file to source</strong>:</p>
-<div class="highlight"><pre><span></span>zplugin ice svn pick<span class="s2">&quot;init.zsh&quot;</span>
+<pre><code class="zsh">zplugin ice svn pick&quot;init.zsh&quot;
 zplugin snippet PZT::modules/git
-</pre></div>
+</code></pre>
 
 <p>Content of Ice-modifier is simply put into <code>"..."</code>, <code>'...'</code>, or <code>$'...'</code>. No
 need for <code>":"</code> after Ice-mod name (although it's allowed, so as the equal sign
@@ -1051,9 +1051,9 @@ highlight contents of Ice-modifiers.</p>
 <p>A plugin might not be a file for sourcing, but a command to be added to <code>$PATH</code>.
 To obtain this effect, use Ice-modifier <code>as</code> with value <code>program</code> (or an alias
 value <code>command</code>).</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> cp<span class="s2">&quot;httpstat.sh -&gt; httpstat&quot;</span> pick<span class="s2">&quot;httpstat&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; cp&quot;httpstat.sh -&gt; httpstat&quot; pick&quot;httpstat&quot;
 zplugin light b4b4r07/httpstat
-</pre></div>
+</code></pre>
 
 <p>Above command will add plugin directory to <code>$PATH</code>, copy file <code>httpstat.sh</code> into
 <code>httpstat</code> and add execution rights (<code>+x</code>) to the file selected with <code>pick</code>,
@@ -1070,10 +1070,10 @@ PZT::modules/osx</code> (for example).</strong></p>
 <p>Copying file is safe for doing later updates – original files of repository are
 unmodified and <code>Git</code> will report no conflicts. However, <code>mv</code> also can be used,
 if a proper <code>atpull</code> (an Ice–modifier ran at <strong>update</strong> of plugin) will be used:</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;program&quot;</span> mv<span class="s2">&quot;httpstat.sh -&gt; httpstat&quot;</span> <span class="se">\</span>
-      pick<span class="s2">&quot;httpstat&quot;</span> atpull<span class="s1">&#39;!git reset --hard&#39;</span>
+<pre><code class="zsh">zplugin ice as&quot;program&quot; mv&quot;httpstat.sh -&gt; httpstat&quot; \
+      pick&quot;httpstat&quot; atpull'!git reset --hard'
 zplugin light b4b4r07/httpstat
-</pre></div>
+</code></pre>
 
 <p>If <code>atpull</code> starts with exclamation mark, then it will be run before <code>git pull</code>,
 and before <code>mv</code>. Nevertheless, <code>atpull</code>, <code>mv</code>, <code>cp</code> are ran <strong>only if new
@@ -1093,11 +1093,11 @@ into the plugin's contents without blocking the ability to update it with <code>
 </div>
 <h2 id="snippets-commands">Snippets-Commands<a class="headerlink" href="#snippets-commands" title="Permanent link">#</a></h2>
 <p>Commands can also be added to <code>$PATH</code> using <strong>snippets</strong>. For example:</p>
-<div class="highlight"><pre><span></span>zplugin ice mv<span class="s2">&quot;httpstat.sh -&gt; httpstat&quot;</span> <span class="se">\</span>
-        pick<span class="s2">&quot;httpstat&quot;</span> as<span class="s2">&quot;program&quot;</span>
-zplugin snippet <span class="se">\</span>
+<pre><code class="zsh">zplugin ice mv&quot;httpstat.sh -&gt; httpstat&quot; \
+        pick&quot;httpstat&quot; as&quot;program&quot;
+zplugin snippet \
     https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
-</pre></div>
+</code></pre>
 
 <p><a id="on_svn_revert"></a>
 (<strong>**</strong>) Snippets also support <code>atpull</code> Ice-mod, so it’s possible to do e.g.
@@ -1106,25 +1106,25 @@ loading of plugin or snippet.</p>
 <h2 id="snippets-completions">Snippets-Completions<a class="headerlink" href="#snippets-completions" title="Permanent link">#</a></h2>
 <p>By using the <code>as''</code> ice-mod with value <code>completion</code> you can point the <code>snippet</code>
 subcommand directly to a completion file, e.g.:</p>
-<div class="highlight"><pre><span></span>zplugin ice as<span class="s2">&quot;completion&quot;</span>
+<pre><code class="zsh">zplugin ice as&quot;completion&quot;
 zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
-</pre></div>
+</code></pre>
 
 <h2 id="completion_management">Completion Management<a class="headerlink" href="#completion_management" title="Permanent link">#</a></h2>
 <p>Zplugin allows to disable and enable each completion in every plugin. Try
 installing a popular plugin that provides completions:</p>
-<div class="highlight"><pre><span></span>zplugin ice blockf
+<pre><code class="zsh">zplugin ice blockf
 zplugin light zsh-users/zsh-completions
-</pre></div>
+</code></pre>
 
 <p>First command (the <code>blockf</code> ice) will block the traditional method of adding
 completions. Zplugin uses own method (based on symlinks instead of adding a
 number of directories to <code>$fpath</code>). Zplugin will automatically <strong>install</strong>
 completions of a newly downloaded plugin. To uninstall the completions and
 install them again, you would use:</p>
-<div class="highlight"><pre><span></span>zplg cuninstall zsh-users/zsh-completions   <span class="c1"># uninstall</span>
-zplg creinstall zsh-users/zsh-completions   <span class="c1"># install</span>
-</pre></div>
+<pre><code class="zsh">zplg cuninstall zsh-users/zsh-completions   # uninstall
+zplg creinstall zsh-users/zsh-completions   # install
+</code></pre>
 
 <h3 id="listing_completions">Listing Completions<a class="headerlink" href="#listing_completions" title="Permanent link">#</a></h3>
 <div class="admonition note">
@@ -1133,36 +1133,36 @@ zplg creinstall zsh-users/zsh-completions   <span class="c1"># install</span>
 </div>
 <p>To see what completions <strong>all</strong> plugins provide, in tabular formatting and with
 name of each plugin, use:</p>
-<div class="highlight"><pre><span></span>zplg clist
-</pre></div>
+<pre><code class="zsh">zplg clist
+</code></pre>
 
 <p>This command is specially adapted for plugins like <code>zsh-users/zsh-completions</code>,
 which provide many completions – listing will have <code>3</code> completions per line (so
 that a smaller number of terminal pages will be occupied) like this:</p>
-<div class="highlight"><pre><span></span>...
+<pre><code class="zsh">...
 atach, bitcoin-cli, bower    zsh-users/zsh-completions
 bundle, caffeinate, cap      zsh-users/zsh-completions
 cask, cf, chattr             zsh-users/zsh-completions
 ...
-</pre></div>
+</code></pre>
 
 <p>You can show more completions per line by providing an <strong>argument</strong> to <code>clist</code>,
 e.g. <code>zplg clist 6</code>, will show:</p>
-<div class="highlight"><pre><span></span>...
+<pre><code class="zsh">...
 bundle, caffeinate, cap, cask, cf, chattr      zsh-users/zsh-completions
 cheat, choc, cmake, coffee, column, composer   zsh-users/zsh-completions
 console, dad, debuild, dget, dhcpcd, diana     zsh-users/zsh-completions
 ...
-</pre></div>
+</code></pre>
 
 <h3 id="enabling_and_disabling_completions">Enabling and Disabling Completions<a class="headerlink" href="#enabling_and_disabling_completions" title="Permanent link">#</a></h3>
 <p>Completions can be disabled, so that e.g. original Zsh completion will be used.
 The commands are very basic, they only need completion <strong>name</strong>:</p>
-<div class="highlight"><pre><span></span>$ zplg cdisable cmake
+<pre><code class="zsh">$ zplg cdisable cmake
 Disabled cmake completion belonging to zsh-users/zsh-completions
 $ zplg cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
-</pre></div>
+</code></pre>
 
 <p>That’s all on completions. There’s one more command, <code>zplugin csearch</code>, that
 will <strong>search</strong> all plugin directories for available completions, and show if
@@ -1172,14 +1172,14 @@ they are installed:</p>
 <h2 id="subversion_for_subdirectories">Subversion for Subdirectories<a class="headerlink" href="#subversion_for_subdirectories" title="Permanent link">#</a></h2>
 <p>In general, to use <strong>subdirectories</strong> of Github projects as snippets add
 <code>/trunk/{path-to-dir}</code> to URL, for example:</p>
-<div class="highlight"><pre><span></span>zplugin ice svn
+<pre><code class="zsh">zplugin ice svn
 zplugin snippet https://github.com/zsh-users/zsh-completions/trunk/src
 
-<span class="c1"># For Oh My Zsh and Prezto, the OMZ:: and PZT:: prefixes work</span>
-<span class="c1"># without the need to add the `/trunk/` infix (however the path</span>
-<span class="c1"># should point to a directory, not to a file):</span>
-zplugin ice svn<span class="p">;</span> zplugin snippet PZT::modules/docker
-</pre></div>
+# For Oh My Zsh and Prezto, the OMZ:: and PZT:: prefixes work
+# without the need to add the `/trunk/` infix (however the path
+# should point to a directory, not to a file):
+zplugin ice svn; zplugin snippet PZT::modules/docker
+</code></pre>
 
 <p>Snippets too have completions installed by default, like plugins.</p>
 <h2 id="turbo_mode_zsh_62_53">Turbo Mode (Zsh >= 5.3)<a class="headerlink" href="#turbo_mode_zsh_62_53" title="Permanent link">#</a></h2>
@@ -1196,10 +1196,10 @@ being loaded, for number of such plugins like <code>10</code> or <code>20</code>
 </div>
 <p>Zsh 5.3 or greater is required. To use this Turbo Mode add <code>wait</code> ice to the
 target plugin in one of following ways:</p>
-<div class="highlight"><pre><span></span><span class="nv">PS1</span><span class="o">=</span><span class="s2">&quot;READY &gt; &quot;</span>
-zplugin ice wait<span class="s1">&#39;!0&#39;</span> atload<span class="s1">&#39;promptinit; prompt scala3&#39;</span>
+<pre><code class="zsh">PS1=&quot;READY &gt; &quot;
+zplugin ice wait'!0' atload'promptinit; prompt scala3'
 zplugin load psprint/zprompts
-</pre></div>
+</code></pre>
 
 <p>This sets plugin <code>psprint/zprompts</code> to be loaded <code>0</code> seconds after <code>zshrc</code>. It
 will fire up after c.a. 1 ms of showing of the basic prompt <code>READY &gt;</code>. I’ve
@@ -1208,14 +1208,14 @@ without any problems. <strong>NEW</strong>: It is now sufficient to provide just
 <code>wait</code>, it’ll work like <code>wait'0'</code> (and <code>wait'!'</code> like <code>wait'!0'</code>).</p>
 <p>The exclamation mark causes Zplugin to reset-prompt after loading plugin. The
 same with Prezto prompts, with a longer delay:</p>
-<div class="highlight"><pre><span></span>zplg ice svn silent wait<span class="s1">&#39;!1&#39;</span> atload<span class="s1">&#39;prompt smiley&#39;</span>
+<pre><code class="zsh">zplg ice svn silent wait'!1' atload'prompt smiley'
 zplg snippet PZT::modules/prompt
-</pre></div>
+</code></pre>
 
 <p>Using <code>zsh-users/zsh-autosuggestions</code> without any drawbacks:</p>
-<div class="highlight"><pre><span></span>zplugin ice <span class="nb">wait</span> atload<span class="s1">&#39;_zsh_autosuggest_start&#39;</span>
+<pre><code class="zsh">zplugin ice wait atload'_zsh_autosuggest_start'
 zplugin light zsh-users/zsh-autosuggestions
-</pre></div>
+</code></pre>
 
 <p>Explanation: Autosuggestions uses <code>precmd</code> hook, which is being called right
 after processing <code>zshrc</code> (right before the first prompt). Turbo Mode will wait
@@ -1224,9 +1224,9 @@ that first prompt. This makes autosuggestions inactive at the first prompt.
 <strong>However</strong> the given <code>atload</code> Ice-mod fixes this, it calls the same function
 that <code>precmd</code> would, right after loading autosuggestions, resulting in exactly
 the same behavior of the plugin.</p>
-<div class="highlight"><pre><span></span>zplugin ice wait<span class="s1">&#39;[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]&#39;</span>
+<pre><code class="zsh">zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
 zplugin load zdharma/zplugin-crasis
-</pre></div>
+</code></pre>
 
 <p>The plugin <code>zplugin-crasis</code> provides command <code>crasis</code>. Ice-mod <code>wait</code> is set to
 <a href="../Example-wait-conditions">wait on condition</a>. When user enters <code>cras</code> at
@@ -1237,17 +1237,17 @@ action</a></strong>. This feature requires
 <h3 id="automatic_loadunload_on_condition">Automatic Load/Unload on Condition<a class="headerlink" href="#automatic_loadunload_on_condition" title="Permanent link">#</a></h3>
 <p>Ices <code>load</code> and <code>unload</code> allow to define when you want plugins active or
 unactive. For example:</p>
-<div class="highlight"><pre><span></span><span class="c1"># Load when in ~/tmp</span>
+<pre><code class="zsh"># Load when in ~/tmp
 
-zplugin ice load<span class="s1">&#39;![[ $PWD = */tmp* ]]&#39;</span> unload<span class="s1">&#39;![[ $PWD != */tmp* ]]&#39;</span> <span class="se">\</span>
-    atload<span class="s2">&quot;promptinit; prompt sprint3&quot;</span>
+zplugin ice load'![[ $PWD = */tmp* ]]' unload'![[ $PWD != */tmp* ]]' \
+    atload&quot;promptinit; prompt sprint3&quot;
 zplugin load psprint/zprompts
 
-<span class="c1"># Load when NOT in ~/tmp</span>
+# Load when NOT in ~/tmp
 
-zplugin ice load<span class="s1">&#39;![[ $PWD != */tmp* ]]&#39;</span> unload<span class="s1">&#39;![[ $PWD = */tmp* ]]&#39;</span>
+zplugin ice load'![[ $PWD != */tmp* ]]' unload'![[ $PWD = */tmp* ]]'
 zplugin load russjohnson/angry-fly-zsh
-</pre></div>
+</code></pre>
 
 <p>Two prompts, each active in different directories. This technique can be used to
 have plugin-sets, e.g. by defining parameter <code>$PLUGINS</code> with possible values
