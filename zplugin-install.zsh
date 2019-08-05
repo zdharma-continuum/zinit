@@ -11,7 +11,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - user
 # $2 - plugin
 -zplg-setup-plugin-dir() {
-    setopt localoptions extendedglob typesetsilent noksharrays
+    setopt localoptions extendedglob typesetsilent noksharrays warncreateglobal
 
     local user="$1" plugin="$2" id_as="$3" remote_url_path="${1:+$1/}$2" local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}"
 
@@ -41,6 +41,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         "cygwin"  "(windows|cygwin)"
         "windows" "(windows|cygwin)"
     )
+
+    local -a arr
 
     if [[ "$user" = "_local" ]]; then
         print "Warning: no local plugin \`$plugin\'"
@@ -207,7 +209,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $2 - plugin (only when $1 - i.e. user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
 -zplg-install-completions() {
-    builtin setopt localoptions nullglob extendedglob unset nokshglob
+    builtin setopt localoptions nullglob extendedglob unset nokshglob warncreateglobal
 
     # $id_as - a /-separated pair if second element
     # is not empty and first is not "%" - then it's
@@ -302,7 +304,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $2 - mode, "" - normal, "-u" - update, "-t" - test
 # $3 - subdirectory (not path) with working copy, needed for -t and -u
 -zplg-mirror-using-svn() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob warncreateglobal
     local url="$1" update="$2" directory="$3"
 
     (( ${+commands[svn]} )) || print -r -- "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
@@ -424,7 +426,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # supports Subversion protocol and allows to clone subdirectories.
 # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 -zplg-download-snippet() {
-    setopt localoptions extendedglob noksharrays noshwordsplit
+    setopt localoptions extendedglob noksharrays noshwordsplit warncreateglobal
 
     local save_url="$1" url="$2" id_as="$3" id_as_clean="${3%%\?*}" local_dir="$4" dirname="$5" filename="$6" update="$7"
     local -a list arr
@@ -691,7 +693,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
 -zplg-get-latest-gh-r-version() {
-    setopt localoptions extendedglob
+    setopt localoptions extendedglob warncreateglobal
 
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
@@ -716,7 +718,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - url
 # $2 - file
 -zplg-handle-binary-file() {
-    setopt localoptions extendedglob nokshglob
+    setopt localoptions extendedglob nokshglob warncreateglobal
 
     local url="$1" file="$2"
 
@@ -766,6 +768,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     }
     unfunction -- -zplg-extract-wrapper
 
+    local -a execs
     execs=( ${(@f)"$( file **/*(N-.) )"} )
     execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
     execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
