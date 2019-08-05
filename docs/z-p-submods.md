@@ -30,6 +30,7 @@ Zplugin:
 zplugin light zdharma/z-p-submods
 ```
 
-After executing this command you can then use the `submods''` ice.
+After executing this command you can then use the `submods''` ice. The command
+should be placed in `~/.zshrc`.
 
 []( vim:set ft=markdown tw=80: )
