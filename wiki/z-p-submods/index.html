@@ -36,7 +36,7 @@
     
     
       
-        <title>Example wait Conditions - Zplugin Wiki</title>
+        <title>z-p-submods - Zplugin Wiki</title>
       
     
     
@@ -79,6 +79,10 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
+      <a href="#introduction" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid">
@@ -101,7 +105,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Example wait Conditions
+                z-p-submods
               
             </span>
           
@@ -171,7 +175,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../Multiple-prompts/" title="Ice Modifiers" class="md-tabs__link md-tabs__link--active">
+        <a href="../Multiple-prompts/" title="Ice Modifiers" class="md-tabs__link">
           Ice Modifiers
         </a>
       
@@ -197,7 +201,7 @@
   
     <li class="md-tabs__item">
       
-        <a href="../Z-PLUGINS/" title="Zplugin Extensions" class="md-tabs__link">
+        <a href="../Z-PLUGINS/" title="Zplugin Extensions" class="md-tabs__link md-tabs__link--active">
           Zplugin Extensions
         </a>
       
@@ -294,12 +298,10 @@
       
       
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2">
     
     <label class="md-nav__link" for="nav-2">
       Ice Modifiers
@@ -327,18 +329,11 @@
           
           
 
-  
 
-
-  <li class="md-nav__item md-nav__item--active">
-    
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-    
-    
-    <a href="./" title="Example wait Conditions" class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Example-wait-conditions/" title="Example wait Conditions" class="md-nav__link">
       Example wait Conditions
     </a>
-    
   </li>
 
         
@@ -495,10 +490,12 @@
       
       
 
+  
 
-  <li class="md-nav__item md-nav__item--nested">
+
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4">
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4" type="checkbox" id="nav-4" checked>
     
     <label class="md-nav__link" for="nav-4">
       Zplugin Extensions
@@ -526,11 +523,20 @@
           
           
 
+  
 
-  <li class="md-nav__item">
-    <a href="../z-p-submods/" title="z-p-submods" class="md-nav__link">
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+    <a href="./" title="z-p-submods" class="md-nav__link md-nav__link--active">
       z-p-submods
     </a>
+    
   </li>
 
         
@@ -702,47 +708,49 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary">
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Example wait Conditions</h1>
-                
-                <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>Turbo mode, i.e. the <code>wait</code> ice that implements it needs Zsh &gt;= 5.3.</strong></p>
-</div>
-<pre><code class="zsh">zplugin ice wait'0' # or just: zplugin ice wait
-zplugin light wfxr/forgit
+                <h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h1>
+<p>A z-plugin (i.e. a plugin for the Zplugin – <a href="../Z-PLUGINS/">more information</a>)
+that allows Zplugin to clone additional submodules when installing a plugin or
+snippet.  The submodules are then automatically updated on the <code>zplugin update
+...</code> command.</p>
+<p>This z-plugin adds <code>submods''</code> ice to Zplugin which has the following syntax:</p>
+<pre><code class="zsh">submods'{user}/{plugin} -&gt; {output directory}; ...'
 </code></pre>
 
-<ul>
-<li>waits for prompt,</li>
-<li>instantly ("0" seconds) after prompt loads given plugin.</li>
-</ul>
-<hr />
-<pre><code class="zsh">zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
-zplugin light zdharma/zplugin-crasis
+<p>An example command utilizing the z-plugin and its ice:</p>
+<pre><code class="zsh"># Load the `zsh-autosuggestions' plugin via Prezto module: `autosuggestions'
+zplugin ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
+zplugin snippet PZT::modules/autosuggestions
 </code></pre>
 
-<ul>
-<li><code>$ZLAST_COMMANDS</code> is an array build by <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a>, it contains commands currently entered at prompt,</li>
-<li><code>(r)</code> searches for element that matches given pattern (<code>cras*</code>) and returns it,</li>
-<li><code>-n</code> means: not-empty, so it will be true when users enters "cras",</li>
-<li>after 1 second or less, Zplugin will detect that <code>wait''</code> condition is true, and load the plugin, which provides command <em>crasis</em>,</li>
-<li>Screencast that presents the feature:
-    <a href="https://asciinema.org/a/149725"><img alt="screencast" src="https://asciinema.org/a/149725.svg" /></a></li>
-</ul>
-<hr />
-<pre><code class="zsh">zplugin ice wait'[[ $PWD = */github || $PWD = */github/* ]]'
-zplugin load unixorn/git-extra-commands
+<p><img alt="screenshot" src="https://raw.githubusercontent.com/zdharma/z-p-submods/master/images/screenshot.png" /></p>
+<h1 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h1>
+<p>Simply load as a plugin. This will install the z-plugin within Zplugin:</p>
+<pre><code class="zsh">zplugin light zdharma/z-p-submods
 </code></pre>
 
-<ul>
-<li>waits until user enters a <code>github</code> directory.</li>
-</ul>
+<p>After this you can use the <code>submods''</code> ice.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
@@ -764,7 +772,7 @@ zplugin load unixorn/git-extra-commands
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid">
         
-          <a href="../Multiple-prompts/" title="Multiple Prompts" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../Z-PLUGINS/" title="Z-Plugins" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-flex__cell md-flex__cell--shrink">
               <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
             </div>
@@ -773,19 +781,19 @@ zplugin load unixorn/git-extra-commands
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Multiple Prompts
+                Z-Plugins
               </span>
             </div>
           </a>
         
         
-          <a href="../Installing-with-make/" title="Installing With Make" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../declare-zsh/" title="declare-zsh" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Installing With Make
+                declare-zsh
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
