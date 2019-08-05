@@ -18,6 +18,7 @@ nav:
   - "Gallery": GALLERY.md
 - "Zplugin Extensions":
   - "Z-Plugins": Z-PLUGINS.md
+  - "z-p-submods": z-p-submods.md
   - "declare-zsh": declare-zsh.md
   - "Crasis": crasis.md
 - "Hints": 
