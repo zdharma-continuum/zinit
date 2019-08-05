@@ -27,6 +27,8 @@ git add -A docs/css
 mkdir -p docs/js
 cp -fv ~/github/zplugin_readme/docs/js/* docs/js
 git add -A docs/js
+cp -fv ~/github/zplugin_readme/docs/img/* docs/img
+git add -A docs/img
 print $fg_bold[green]Commiting:$reset_color
 sleep 1
 { git commit ${${(M)1:#(a|am|amend)}:+--amend} || git status } && \
