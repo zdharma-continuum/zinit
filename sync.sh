@@ -10,7 +10,11 @@ git -C ~/github/zplugin_readme checkout gh-pages || {
     git -C ~/github/zplugin_readme checkout gh-pages || exit 1
 }
 git -C ~/github/zplugin_readme llf
-git -C ~/github/zplugin_readme rebase || exit 2
+git -C ~/github/zplugin_readme rebase || {
+    print $fg_bold[green]Couldn\'t rebase, trying stash first...$reset_color
+    git -C ~/github/zplugin_readme stash || exit 2
+    git -C ~/github/zplugin_readme rebase || exit 3
+}
 
 print $fg_bold[green]Copying files...$reset_color
 sleep 1
