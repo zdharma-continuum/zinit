@@ -30,7 +30,7 @@ mv -v out/highlight highlight_out
 mv -v out/.git .git_out
 mv -v out/index.html .
 mv -v out/.gitignore .
-mv -v out/Makefile .
+mv -v out/Makefile Makefile_out
 rm -rf out
 mkdir out
 mv -v site_out out/site
@@ -39,7 +39,7 @@ mv -v highlight_out out/highlight
 mv -v .git_out out/.git
 mv -v index.html out
 mv -v .gitignore out
-mv -v Makefile out
+mv -v Makefile_out out/Makefile
 touch out/.nojekyll
 
 # Copy the PDFs (built earlier by .travis.yml / make)
