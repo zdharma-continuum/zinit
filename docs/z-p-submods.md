@@ -19,7 +19,7 @@ zplugin ice svn submods'zsh-users/zsh-autosuggestions -> external'
 zplugin snippet PZT::modules/autosuggestions
 ```
 
-![screenshot](https://raw.githubusercontent.com/zdharma/z-p-submods/master/images/screenshot.png)
+![screenshot](img/z-p-submods.png)
 
 # Installation
 
