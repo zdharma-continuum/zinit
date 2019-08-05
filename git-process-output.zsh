@@ -26,8 +26,11 @@ local first=1
 # Code by leoj3n
 timeline() {
   local sp='▚▞'; sp="${sp:$2%2:1}"
-  local bar="$(print -f "%-$2s▓%$(($3-$2-1))s" "" "")"
+  # Maximal width is 24 characters
+  local bar="$(print -f "%.$2s█%0$(($3-$2-1))s" "████████████████████████" "")"
+  print -nPr "%F{214}"
   print -f "%s %s" "${bar// /░}" ""
+  print -nPr "%f"
 }
 
 # $1 - n. of objects
@@ -36,12 +39,19 @@ timeline() {
 # $4 - receiving percentage
 # $5 - resolving percentage
 print_my_line() {
-    print -nr -- "OBJ: $1, PACK: $2/$3${${4:#...}:+, REC: $4%}${${5:#...}:+, RESOL: $5%}  "
+    local col="%F{214}" col3="%F{214}" col4="%F{214}" col5="%F{214}"
+    [[ -n "${4#...}" && -z "${5#...}" ]] && col3="%F{33}"
+    [[ -n "${5#...}" ]] && col4="%F{33}"
+    print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3${${4:#...}:+, ${col3}REC%f: $4%}${${5:#...}:+, ${col4}RESOL%f: $5%}  "
     print -n $'\015'
 }
 
 print_my_line_compress() {
-    print -nr -- "OBJ: $1, PACK: $2/$3, COMPR: $4%${${5:#...}:+, REC: $5%}${${6:#...}:+, RESOL: $6%}  "
+    local col="%F{214}" col3="%F{214}" col4="%F{214}" col5="%F{214}"
+    [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && col3="%F{33}"
+    [[ -n "${5#...}" && -z "${6#...}" ]] && col4="%F{33}"
+    [[ -n "${6#...}" ]] && col5="%F{33}"
+    print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3, ${col3}COMPR%f: $4%%${${5:#...}:+, ${col4}REC%f: $5%%}${${6:#...}:+, ${col5}RESOL%f: $6%%}  "
     print -n $'\015'
 }
 
@@ -80,9 +90,13 @@ while read -r line; do
         have_2_total=1
         total_2="${match[1]}" total_packed_2="${match[2]}"
     fi
-    if [[ "$line" = (#b)"Receiving objects:"[\ ]#([0-9]##)%* ]]; then
+    if [[ "$line" = (#b)"Receiving objects:"[\ ]#([0-9]##)%([[:blank:]]#\(([0-9]##)/([0-9]##)\)|)* ]]; then
         have_3_receiving=1
         receiving_3="${match[1]}"
+        [[ -n "${match[2]}" ]] && {
+            have_2_total=1
+            total_packed_2="${match[3]}" total_2="${match[4]}"
+        }
     fi
     if [[ "$line" = (#b)"Resolving deltas:"[\ ]#([0-9]##)%* ]]; then
         have_4_deltas=1
