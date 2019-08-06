@@ -990,7 +990,7 @@
 <p>manage completions,</p>
 </li>
 <li>
-<p>use the Turbo Mode,</p>
+<p>use the Turbo mode,</p>
 </li>
 <li>
 <p>use the ice-mods like <code>as"program"</code>,</p>
@@ -1002,7 +1002,7 @@
 zplugin light zsh-users/zsh-syntax-highlighting
 </code></pre>
 
-<p>Above commands show two ways of basic plugin loading. <code>load &#8203;</code>  causes reporting to
+<p>Above commands show two ways of basic plugin loading. <code>load </code>  causes reporting to
 be enabled – you can track what plugin does, view the information with <code>zplugin
 report {plugin-spec}</code> and then also unload the plugin with <code>zplugin unload
 {plugin-spec}</code>. <code>light</code> is a significantly faster loading without tracking and
@@ -1010,7 +1010,7 @@ reporting, by using which user resigns of the ability to view the plugin report
 and to unload it.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong>In Turbo Mode the slowdown caused by tracking is negligible.</strong></p>
+<p><strong>In Turbo mode the slowdown caused by tracking is negligible.</strong></p>
 </div>
 <h2 id="oh_my_zsh_prezto">Oh My Zsh, Prezto<a class="headerlink" href="#oh_my_zsh_prezto" title="Permanent link">#</a></h2>
 <p>To load Oh My Zsh and Prezto plugins, use <code>snippet</code> feature. Snippets are single
@@ -1134,8 +1134,8 @@ completions. Zplugin uses own method (based on symlinks instead of adding a
 number of directories to <code>$fpath</code>). Zplugin will automatically <strong>install</strong>
 completions of a newly downloaded plugin. To uninstall the completions and
 install them again, you would use:</p>
-<pre><code class="zsh">zplg cuninstall zsh-users/zsh-completions   # uninstall
-zplg creinstall zsh-users/zsh-completions   # install
+<pre><code class="zsh">zplugin cuninstall zsh-users/zsh-completions   # uninstall
+zplugin creinstall zsh-users/zsh-completions   # install
 </code></pre>
 
 <h3 id="listing_completions">Listing Completions<a class="headerlink" href="#listing_completions" title="Permanent link">#</a></h3>
@@ -1206,7 +1206,7 @@ being loaded, for number of such plugins like <code>10</code> or <code>20</code>
 <p class="admonition-title">Note</p>
 <p><strong>Turbo mode will speed up Zsh startup by <u>50%–73%</u>. For example instead of 200 ms, it'll be 50 ms (!)</strong></p>
 </div>
-<p>Zsh 5.3 or greater is required. To use this Turbo Mode add <code>wait</code> ice to the
+<p>Zsh 5.3 or greater is required. To use this Turbo mode add <code>wait</code> ice to the
 target plugin in one of following ways:</p>
 <pre><code class="zsh">PS1=&quot;READY &gt; &quot;
 zplugin ice wait'!0' atload'promptinit; prompt scala3'
@@ -1216,7 +1216,7 @@ zplugin load psprint/zprompts
 <p>This sets plugin <code>psprint/zprompts</code> to be loaded <code>0</code> seconds after <code>zshrc</code>. It
 will fire up after c.a. 1 ms of showing of the basic prompt <code>READY &gt;</code>. I’ve
 started to use this method of setting up a prompt 2 years ago now and I run it
-without any problems. <strong>NEW</strong>: It is now sufficient to provide just the word
+without any problems. It is also sufficient to provide just the word
 <code>wait</code>, it’ll work like <code>wait'0'</code> (and <code>wait'!'</code> like <code>wait'!0'</code>).</p>
 <p>The exclamation mark causes Zplugin to reset-prompt after loading plugin. The
 same with Prezto prompts, with a longer delay:</p>
@@ -1230,7 +1230,7 @@ zplugin light zsh-users/zsh-autosuggestions
 </code></pre>
 
 <p>Explanation: Autosuggestions uses <code>precmd</code> hook, which is being called right
-after processing <code>zshrc</code> (right before the first prompt). Turbo Mode will wait
+after processing <code>zshrc</code> (right before the first prompt). Turbo mode will wait
 <code>1</code> second after that, so <code>precmd</code> will not be installed and thus not called at
 that first prompt. This makes autosuggestions inactive at the first prompt.
 <strong>However</strong> the given <code>atload</code> Ice-mod fixes this, it calls the same function
@@ -1273,7 +1273,7 @@ active, not only till first activation.</strong></p>
 <p>Note that for unloading of a plugin to work the plugin needs to be loaded with
 tracking (so <code>zplugin load ...</code>, not <code>zplugin light ...</code>). Tracking causes
 slight slowdown, however this doesn’t influence Zsh startup time when using
-Turbo Mode.</p>
+Turbo mode.</p>
 <p><strong>See also Wiki on <a href="../Multiple-prompts">multiple prompts</a>.</strong></p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
