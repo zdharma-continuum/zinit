@@ -1233,7 +1233,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $3 - plugin (only when $1 - i.e. user - given)
 -zplg-update-or-status() {
-    setopt localoptions extendedglob nokshglob noksharrays nullglob rmstarsilent
+    setopt localoptions extendedglob nokshglob noksharrays \
+            nullglob rmstarsilent warncreateglobal
+
+    local -a arr
 
     -zplg-two-paths "$2${${2:#(%|/)*}:+${3:+/}}$3"
     if [[ -n "${reply[-3]}" || -n "${reply[-1]}" ]]; then
