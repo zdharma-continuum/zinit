@@ -32,7 +32,7 @@ zplugin snippet OMZ::lib
 
 ****
 
-**NEW**: The `multisrc''` ice, which loads **multiple** files enumerated with
+The `multisrc''` ice, which loads **multiple** files enumerated with
 spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using
 brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh')`. Example:
 
@@ -57,7 +57,7 @@ zplugin ice svn multisrc"$array" pick"/dev/null"
 zplugin snippet OMZ::lib
 
 # Will use the array's value at the moment of plugin load
-# – this can matter in case of using turbo mode
+# – this can matter in case of using Turbo mode
 array=( {functions,misc}.zsh )
 zplugin ice svn multisrc"\$array" pick"/dev/null"
 zplugin snippet OMZ::lib

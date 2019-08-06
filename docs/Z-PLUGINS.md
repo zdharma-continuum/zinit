@@ -117,7 +117,7 @@ The `z-p-*` prefix is recommended for projects that are being z-plugins.
 There are 2 or 3 subtypes for each of the hook:
 
 1.  `atinit` or `!atinit` – the `!` version is ran before the `atinit`
-    **ice-mod** (i.e. before `zplugin ice atinit’echo this!'; …​`), while
+    **ice-mod** (i.e. before `zplugin ice atinit'echo this!'; …​`), while
     the normal version runs after it.
 
 2.  `atload` or `!atload` – analogous to the `atinit` case: the `!` version runs

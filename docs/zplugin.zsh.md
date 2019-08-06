@@ -679,7 +679,7 @@ Called by:
 > 
 >     if "burst", then all tasks are marked timeout and executed one
 >     by one; this is handy if e.g. a docker image starts up and
->     needs to install all Turbo-mode plugins without any hesitation
+>     needs to install all Turbo mode plugins without any hesitation
 >     (delay), i.e. "burst" allows to run package installations from
 >     script, not from prompt
 
@@ -790,7 +790,7 @@ Called by:
 > 
 >     If `zplugin load`, `zplugin light` or `zplugin snippet`  will be
 >     preceded with `wait', `load', `unload' or `on-update-of`/`subscribe'
->     ice-mods then the plugin or snipped is to be loaded in Turbo-mode,
+>     ice-mods then the plugin or snipped is to be loaded in Turbo mode,
 >     and this function adds it to internal data structures, so that
 >     -zplg-scheduler can run (load, unload) this as a task.
 

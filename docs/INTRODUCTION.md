@@ -6,7 +6,7 @@ In the document below you’ll find out how to:
 
   - manage completions,
 
-  - use the Turbo Mode,
+  - use the Turbo mode,
 
   - use the ice-mods like `as"program"`,
 
@@ -19,7 +19,7 @@ zplugin load zdharma/history-search-multi-word
 zplugin light zsh-users/zsh-syntax-highlighting
 ```
 
-Above commands show two ways of basic plugin loading. <code>load &#8203;</code>  causes reporting to
+Above commands show two ways of basic plugin loading. <code>load </code>  causes reporting to
 be enabled – you can track what plugin does, view the information with `zplugin
 report {plugin-spec}` and then also unload the plugin with `zplugin unload
 {plugin-spec}`. `light` is a significantly faster loading without tracking and
@@ -27,7 +27,7 @@ reporting, by using which user resigns of the ability to view the plugin report
 and to unload it.
 
 !!!note
-    **In Turbo Mode the slowdown caused by tracking is negligible.**
+    **In Turbo mode the slowdown caused by tracking is negligible.**
 
 ## Oh My Zsh, Prezto
 
@@ -182,8 +182,8 @@ completions of a newly downloaded plugin. To uninstall the completions and
 install them again, you would use:
 
 ``` zsh
-zplg cuninstall zsh-users/zsh-completions   # uninstall
-zplg creinstall zsh-users/zsh-completions   # install
+zplugin cuninstall zsh-users/zsh-completions   # uninstall
+zplugin creinstall zsh-users/zsh-completions   # install
 ```
 
 ### Listing Completions
@@ -271,7 +271,7 @@ being loaded, for number of such plugins like `10` or `20`.
 !!!note
     **Turbo mode will speed up Zsh startup by <u>50%–73%</u>. For example instead of 200 ms, it'll be 50 ms (!)**
 
-Zsh 5.3 or greater is required. To use this Turbo Mode add `wait` ice to the
+Zsh 5.3 or greater is required. To use this Turbo mode add `wait` ice to the
 target plugin in one of following ways:
 
 ``` zsh
@@ -283,7 +283,7 @@ zplugin load psprint/zprompts
 This sets plugin `psprint/zprompts` to be loaded `0` seconds after `zshrc`. It
 will fire up after c.a. 1 ms of showing of the basic prompt `READY >`. I’ve
 started to use this method of setting up a prompt 2 years ago now and I run it
-without any problems. **NEW**: It is now sufficient to provide just the word
+without any problems. It is also sufficient to provide just the word
 `wait`, it’ll work like `wait'0'` (and `wait'!'` like `wait'!0'`).
 
 The exclamation mark causes Zplugin to reset-prompt after loading plugin. The
@@ -302,7 +302,7 @@ zplugin light zsh-users/zsh-autosuggestions
 ```
 
 Explanation: Autosuggestions uses `precmd` hook, which is being called right
-after processing `zshrc` (right before the first prompt). Turbo Mode will wait
+after processing `zshrc` (right before the first prompt). Turbo mode will wait
 `1` second after that, so `precmd` will not be installed and thus not called at
 that first prompt. This makes autosuggestions inactive at the first prompt.
 **However** the given `atload` Ice-mod fixes this, it calls the same function
@@ -351,7 +351,7 @@ activate different plugins on `cpp`, on `web`, etc.
 Note that for unloading of a plugin to work the plugin needs to be loaded with
 tracking (so `zplugin load ...`, not `zplugin light ...`). Tracking causes
 slight slowdown, however this doesn’t influence Zsh startup time when using
-Turbo Mode.
+Turbo mode.
 
 **See also Wiki on [multiple prompts](../Multiple-prompts).**
 

@@ -49,7 +49,7 @@ executed using function `zpcdreplay` appended after `zpcompinit;` in `atinit''`
 of **G**.
 
 Above setup loads everything after prompt, because of preceding `wait` ice. That
-is called **Turbo-mode**, it shortens Zsh startup time by <u>50%-73%</u>, so
+is called **Turbo mode**, it shortens Zsh startup time by <u>50%-73%</u>, so
 e.g. instead of 200 ms, you'll be getting your shell started up after **50 ms**
 (!).
 

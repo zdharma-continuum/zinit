@@ -13,7 +13,7 @@ zplugin light zdharma/fast-syntax-highlighting
 
  - `light` – load the plugin in `light` mode, in which the tracking of plugin
    (i.e. activity report gathering, accessible via the `zplugin report
-   {plugin-spec}` subcommand) is being disabled; note that for TurboMode, the
+   {plugin-spec}` subcommand) is being disabled; note that for Turbo mode, the
    performance gains are actually `0`, so in this mode you can load all plugins
    with the tracking, i.e. by using `zplugin ice wait'0'; zplugin load
    {plugin-spec}` commands,
@@ -38,7 +38,7 @@ zplugin light zdharma/fast-syntax-highlighting
    behavior,
  - add `lucid` ice-mod to silence the under-prompt messages.
 
-The same setup but without using Turbo-mode (i.e. no `wait''` ice):
+The same setup but without using Turbo mode (i.e. no `wait''` ice):
 
 ```zsh
 zplugin ice blockf
