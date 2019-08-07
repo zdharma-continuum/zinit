@@ -15,7 +15,9 @@ However, via `atload''` ice one can provide simple loop to source more files:
 
 ```zsh
 zplugin ice svn pick"completion.zsh" \
-    atload'local f; for f in git.zsh misc.zsh; do source $f; done'
+    atload'local f; for f in git.zsh misc.zsh; do \
+        source $f \
+    done'
 zplugin snippet OMZ::lib
 ```
 
