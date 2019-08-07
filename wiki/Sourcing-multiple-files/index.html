@@ -778,6 +778,18 @@ zplugin snippet OMZ::lib
 
 zplugin ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
+
+# Also – hack Zplugin: the ice's contents is simply `eval'-uated like follows:
+# eval &quot;reply=( $multisrc )&quot;. So it might get handy on an occasion to pass code
+# there, but first you must close the parenthesis and then don't forget to assign
+# `reply', and to provide a trailing opening parenthesis. In the code be
+# careful to not redefine any variable used internally by Zplugin – `i' is safe:
+
+array=( {functions,misc}.zsh )
+zplugin ice svn multisrc'); local i; for i in $array; do \
+            reply+=( ${i/.zsh/.sh} ); \
+        done; ((1)' pick&quot;/dev/null&quot;
+zplugin snippet OMZ::lib
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
