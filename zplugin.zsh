@@ -467,6 +467,8 @@ builtin setopt noaliases
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_DELETE__${ZPLGM[CUR_USPL2]}]+="$quoted "
+                # Remember for dtrace
+                [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[WIDGETS_DELETE___dtrace/_dtrace]+="$quoted "
             # These will be saved and restored
             elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
