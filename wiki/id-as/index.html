@@ -742,15 +742,15 @@ zplugin light &quot;docker/compose&quot;
 want to also load a completion from the project's GitHub repository (not the
 binary release catalog) which is also available under the GitHub url-path
 <strong>…/docker/compose</strong>. The two IDs, both being "docker/compose", will collide.</p>
-<p>The solution to this problem – the <code>id-as</code> ice to which this document is
-devoted: by using the <code>id-as</code> ice the user can resolve the conflict by loading
-the completion under a kind of a <em>nickname</em>, for example under "<em>dc-complete</em>"
-by issuing the following commands:</p>
+<p>The solution to this problem – the <code>id-as</code> (to be read as: <em>identify-as</em>) ice to
+which this document is devoted: by using the <code>id-as</code> ice the user can resolve
+the conflict by loading the completion under a kind of a <em>nickname</em>, for example
+under "<em>dc-complete</em>", by issuing the following commands:</p>
 <pre><code class="zsh">zplugin ice as&quot;completion&quot; id-as&quot;dc-complete&quot;
 zplugin load docker/compose
 </code></pre>
 
-<p>The completion is now seen under ID <code>dc-complete</code>:</p>
+<p>The plugin (of the type <code>completion</code>) is now seen under ID <code>dc-complete</code>:</p>
 <pre><code class="zsh">~ zplugin list | grep -i dc-complete
 dc-complete
 </code></pre>
@@ -770,9 +770,9 @@ create handy IDs in place of long urls:</p>
 zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 </code></pre>
 
-<p><code>zplugin update git-unique</code>, <code>zplugin delete git-unique</code> and other commands will
-work normally and e.g. <code>zplugin times</code> will show the <em>nickname</em>-ID <code>git-unique</code>
-instead of the long URL.</p>
+<p>The commands <code>zplugin update git-unique</code>, <code>zplugin delete git-unique</code> and other
+will work normally and e.g. <code>zplugin times</code> will show the <em>nickname</em>-ID
+<code>git-unique</code> instead of the long URL.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
