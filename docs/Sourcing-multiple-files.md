@@ -75,11 +75,12 @@ zplugin snippet OMZ::lib
 zplugin ice svn multisrc"misc.zsh functions.zsh" pick"/dev/null"
 zplugin snippet OMZ::lib
 
-# Also – hack Zplugin: the ice's contents is simply `eval'-uated like follows:
-# eval "reply=( $multisrc )". So it might get handy on an occasion to pass code
-# there, but first you must close the parenthesis and then don't forget to assign
-# `reply', and to provide a trailing opening parenthesis. In the code be
-# careful to not redefine any variable used internally by Zplugin – `i' is safe:
+# Also – hack Zplugin: the ice's contents is simply `eval'-uated
+# like follows: eval "reply=($multisrc)". So it might get handy on
+# an occasion to pass code there, but first you must close the paren
+# and then don't forget to assign `reply', and to provide a trailing
+# opening paren. In the code be careful to not redefine any variable
+# used internally by Zplugin – e.g.: `i' is safe:
 
 array=( {functions,misc}.zsh )
 zplugin ice svn multisrc'); local i; for i in $array; do \
