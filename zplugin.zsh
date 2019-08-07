@@ -473,7 +473,7 @@ builtin setopt noaliases
             elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
-                local widname="$2" saved_widname="zplugin-saved-$2"
+                local widname="$2" saved_widname="zplugin-saved-${ZPLGM[CUR_USPL2]}-$2"
                 builtin zle -A -- "$widname" "$saved_widname"
 
                 widname="${(q)widname}"
