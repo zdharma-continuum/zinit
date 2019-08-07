@@ -732,7 +732,7 @@
                 <h1 id="nickname_a_plugin_or_snippet">Nickname a plugin or snippet<a class="headerlink" href="#nickname_a_plugin_or_snippet" title="Permanent link">#</a></h1>
 <p>Zplugin supports loading a plugin or snippet with a nickname. Set the nickname
 through the <code>id-as</code> ice-mod. For example, one could try to load
-<a href="https://github.com/docker/compose"><strong>docker/compose</strong></a> from Github binary
+<a href="https://github.com/docker/compose"><strong>docker/compose</strong></a> from GitHub binary
 releases:</p>
 <pre><code class="zsh">zplugin ice as&quot;program&quot; from&quot;gh-r&quot; mv&quot;docker-c* -&gt; docker-compose&quot;
 zplugin light &quot;docker/compose&quot;
@@ -741,16 +741,21 @@ zplugin light &quot;docker/compose&quot;
 <p>This registers plugin under the ID <code>docker/compose</code>. Now suppose the user would
 want to also load a completion from the project's GitHub repository (not the
 binary release catalog) which is also available under the GitHub url-path
-<strong>…/docker/compose</strong>. The two IDs, both being "docker/compose", will collide.
-The solution – the <code>id-as</code> ice to which this document is devoted: by using the
-<code>id-as</code> ice the user can resolve the conflict by loading the completion under a
-nickname, for example "dc-complete":</p>
+<strong>…/docker/compose</strong>. The two IDs, both being "docker/compose", will collide.</p>
+<p>The solution to this problem – the <code>id-as</code> ice to which this document is
+devoted: by using the <code>id-as</code> ice the user can resolve the conflict by loading
+the completion under a kind of a <em>nickname</em>, for example under "<em>dc-complete</em>"
+by issuing the following commands:</p>
 <pre><code class="zsh">zplugin ice as&quot;completion&quot; id-as&quot;dc-complete&quot;
 zplugin load docker/compose
 </code></pre>
 
-<p>The completion is now seen under ID <code>dc-complete</code>. Issuing <code>zplugin report
-dc-complete</code> works, so as other Zplugin commands:</p>
+<p>The completion is now seen under ID <code>dc-complete</code>:</p>
+<pre><code class="zsh">~ zplugin list | grep -i dc-complete
+dc-complete
+</code></pre>
+
+<p>Issuing <code>zplugin report dc-complete</code> also works, so as other Zplugin commands:</p>
 <pre><code class="zsh">~ zplugin report dc-complete
 Plugin report for dc-complete
 -------------------------------
@@ -766,8 +771,8 @@ zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 </code></pre>
 
 <p><code>zplugin update git-unique</code>, <code>zplugin delete git-unique</code> and other commands will
-work normally and e.g. <code>zplugin times</code> will show <code>git-unique</code> instead of the
-long URL.</p>
+work normally and e.g. <code>zplugin times</code> will show the <em>nickname</em>-ID <code>git-unique</code>
+instead of the long URL.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
