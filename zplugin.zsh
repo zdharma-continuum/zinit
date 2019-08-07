@@ -458,7 +458,9 @@ builtin setopt noaliases
     set -- "${@:#--}"
 
     # Try to catch game-changing "-N"
-    if [[ "$1" = "-N" && "$#" = "3" ]]; then
+    if [[ "$1" = "-N" && ( "$#" = "2" || "$#" = "3" ) ]]; then
+        local quoted="$2"
+        quoted="${(q)quoted}"
             # Hooks
             if [[ "${ZPLG_ZLE_HOOKS_LIST[$2]}" = "1" ]]; then
                 local quoted="$2"
@@ -490,14 +492,6 @@ builtin setopt noaliases
                  # Remember for dtrace
                  [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[WIDGETS_DELETE___dtrace/_dtrace]+="$quoted "
              fi
-    # Creation of new widgets. They will be removed on unload
-    elif [[ "$1" = "-N" && "$#" = "2" ]]; then
-        local quoted="$2"
-        quoted="${(q)quoted}"
-        # Remember only when load is in progress (it can be dstart that leads execution here)
-        [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_DELETE__${ZPLGM[CUR_USPL2]}]+="$quoted "
-        # Remember for dtrace
-        [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[WIDGETS_DELETE___dtrace/_dtrace]+="$quoted "
     fi
 
     # Actual zle
