@@ -1,3 +1,17 @@
+test/
+txt/
+*.txt
+*.zwc
+*.zini
+.ycm_extra_conf.py
+zmodules/COMPILED_AT
+zmodules/RECOMPILE_REQUEST
+*deploy*key*
+*.bundle
+site*/
+other
+TODO*
+
 tags
 TAGS
 *.o
@@ -34,6 +48,7 @@ zmodules/Src/*.mdh.tmp
 zmodules/Src/*.mdhi
 zmodules/Src/*.mdhs
 zmodules/Src/*.syms
+zmodules/Src/*.dSYM
 zmodules/Src/Makemod.in
 zmodules/Src/Makemod
 zmodules/Src/[_a-zA-Z0-9]*.pro
@@ -65,6 +80,7 @@ zmodules/Src/zdharma/so_locations
 zmodules/Src/zdharma/*.pro
 zmodules/Src/zdharma/*.epro
 zmodules/Src/zdharma/*.syms
+zmodules/Src/zdharma/*.dSYM
 zmodules/Src/zdharma/*.mdh
 zmodules/Src/zdharma/*.mdhi
 zmodules/Src/zdharma/*.mdhs
@@ -73,23 +89,5 @@ zmodules/Src/zdharma/errnames.c
 zmodules/Src/zdharma/errcount.h
 zmodules/Src/zdharma/curses_keys.h
 
-test/test_plugins/zsh-select/.git
-test/test_plugins/zsh-select/.test_git/COMMIT_EDITMSG
-test/test_plugins/zsh-select-more/.test_git/COMMIT_EDITMSG
-test/test_plugins/ice-order/.test_git/COMMIT_EDITMSG
-*.zwc
-answer
-test/data
-test/zplugin*.zsh
-test/_zplugin
-*.txt
-*.zini
-.ycm_extra_conf.py
-zmodules/COMPILED_AT
-zmodules/Src/*.dSYM
-zmodules/Src/zdharma/*.dSYM
-
 zmodules/Test/*.tmp
 /.project
-zmodules/ValTest/test_type
-/*deploy*key*
