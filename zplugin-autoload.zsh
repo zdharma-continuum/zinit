@@ -1029,7 +1029,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 fi
             else
                 (( quiet )) || print "Restoring Zle widget $orig_saved1"
-                if [[ "$orig_saved2" = builtin ]]; then
+                if [[ "$orig_saved3" = builtin ]]; then
                     zle -A ".$orig_saved1" "$orig_saved1"
                 else
                     zle -N "$orig_saved1" "${orig_saved2#user:}"
