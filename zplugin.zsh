@@ -486,7 +486,7 @@ builtin setopt noaliases
                 [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[WIDGETS_SAVED___dtrace/_dtrace]+="$quoted "
              # These will be deleted
              else
-                 -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Note: unknown widget replaced/taken via zle -N: \`$2', it is set to be deleted"
+                 -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Note: a new widget created via zle -N: \`$2'"
                  local quoted="$2"
                  quoted="${(q)quoted}"
                  # Remember only when load is in progress (it can be dstart that leads execution here)
