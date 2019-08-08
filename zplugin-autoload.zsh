@@ -409,7 +409,7 @@ ZPLGM[EXTENDED_GLOB]=""
 #
 # $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 -zplg-format-parameter() {
-    local uspl2="$1" infoc="${ZPLGM[col-info]}"
+    local uspl2="$1" infoc="${ZPLGM[col-info]}" k
 
     # Paranoid for type of empty value,
     # i.e. include white spaces as empty
@@ -777,8 +777,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-unload() {
+    setopt localoptions warncreateglobal extendedglob typesetsilent
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
+    local k
 
     -zplg-any-colorify-as-uspl2 "$uspl2"
     print -r -- "${ZPLGM[col-bar]}===${ZPLGM[col-rst]} Unloading plugin: $REPLY ${ZPLGM[col-bar]}===${ZPLGM[col-rst]}"
