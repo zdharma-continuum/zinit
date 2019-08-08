@@ -41,7 +41,7 @@ TIME_INDEX
 WIDGETS_DELETE__psprint/zsh-editing-workbench
 zew-backward-kill-shell-word zew-transpose-shell-words copy-earlier-word transpose-words-match zew-history-complete-word zew-history-complete-word-backwards zew-rotate-shell-words zew-rotate-shell-words-backwards __zconvey_zle_paster
 WIDGETS_SAVED__psprint/zsh-editing-workbench
-backward-kill-word\ zplugin-saved-psprint/zsh-editing-workbench-backward-kill-word backward-word\ zplugin-saved-psprint/zsh-editing-workbench-backward-word capitalize-word\ zplugin-saved-psprint/zsh-editing-workbench-capitalize-word down-case-word\ zplugin-saved-psprint/zsh-editing-workbench-down-case-word forward-word\ zplugin-saved-psprint/zsh-editing-workbench-forward-word kill-word\ zplugin-saved-psprint/zsh-editing-workbench-kill-word transpose-words\ zplugin-saved-psprint/zsh-editing-workbench-transpose-words up-case-word\ zplugin-saved-psprint/zsh-editing-workbench-up-case-word
+-N\ backward-kill-word\ \'\'\ backward-kill-word-match\ builtin -N\ backward-word\ \'\'\ backward-word-match\ builtin -N\ capitalize-word\ \'\'\ capitalize-word-match\ builtin -N\ down-case-word\ \'\'\ down-case-word-match\ builtin -N\ forward-word\ \'\'\ forward-word-match\ builtin -N\ kill-word\ \'\'\ kill-word-match\ builtin -N\ transpose-words\ \'\'\ transpose-words-match\ builtin -N\ up-case-word\ \'\'\ up-case-word-match\ builtin
 ZERO
 zplugin.zsh
 ZSTYLES__psprint/zsh-editing-workbench
