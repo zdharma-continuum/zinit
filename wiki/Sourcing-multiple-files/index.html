@@ -723,7 +723,9 @@ zplugin light martinrotter/powerless
 <hr />
 <p>However, via <code>atload''</code> ice one can provide simple loop to source more files:</p>
 <pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; \
-    atload'local f; for f in git.zsh misc.zsh; do source $f; done'
+    atload'local f; for f in git.zsh misc.zsh; do \
+        source $f \
+    done'
 zplugin snippet OMZ::lib
 </code></pre>
 
@@ -779,11 +781,12 @@ zplugin snippet OMZ::lib
 zplugin ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
 zplugin snippet OMZ::lib
 
-# Also – hack Zplugin: the ice's contents is simply `eval'-uated like follows:
-# eval &quot;reply=( $multisrc )&quot;. So it might get handy on an occasion to pass code
-# there, but first you must close the parenthesis and then don't forget to assign
-# `reply', and to provide a trailing opening parenthesis. In the code be
-# careful to not redefine any variable used internally by Zplugin – `i' is safe:
+# Also – hack Zplugin: the ice's contents is simply `eval'-uated
+# like follows: eval &quot;reply=($multisrc)&quot;. So it might get handy on
+# an occasion to pass code there, but first you must close the paren
+# and then don't forget to assign `reply', and to provide a trailing
+# opening paren. In the code be careful to not redefine any variable
+# used internally by Zplugin – e.g.: `i' is safe:
 
 array=( {functions,misc}.zsh )
 zplugin ice svn multisrc'); local i; for i in $array; do \
