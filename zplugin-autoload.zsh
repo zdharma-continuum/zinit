@@ -989,6 +989,10 @@ ZPLGM[EXTENDED_GLOB]=""
         zle -D "$wid"
     done
 
+    local -a keys
+    keys=( "${(@on)ZPLGM[(I)TIME_<->_*]}" )
+    integer keys_size=${#keys}
+
     typeset -a restore_widgets
     restore_widgets=( "${(z)ZPLGM[WIDGETS_SAVED__$uspl2]}" )
     for wid in "${(Oa)restore_widgets[@]}"; do
@@ -998,11 +1002,50 @@ ZPLGM[EXTENDED_GLOB]=""
         orig_saved=( "${(z)wid}" )
 
         local orig_saved1="${(Q)orig_saved[1-correct]}" # Original widget
-        local orig_saved2="${(Q)orig_saved[2-correct]}" # Saved widget
+        local orig_saved2="${(Q)orig_saved[2-correct]}" # Saved $widget's contents
 
-        (( quiet )) || print "Restoring Zle widget $orig_saved1"
-        zle -A "$orig_saved2" "$orig_saved1"
-        zle -D "$orig_saved2"
+        local found_time_key="${keys[(r)TIME_<->_${uspl2//\//---}]}" to_process_plugin
+        integer found_time_idx=0 idx=0 found_idx2=0
+        to_process_plugin=""
+        [[ "$found_time_key" = (#b)TIME_(<->)_* ]] && found_time_idx="${match[1]}"
+        if (( found_time_idx )); then # Must be true
+            for (( idx = found_time_idx + 1; idx <= keys_size; ++ idx )); do
+                found_time_key="${keys[(r)TIME_${idx}_*]}"
+                local oth_uspl2=""
+                [[ "$found_time_key" = (#b)TIME_${idx}_(*) ]] && oth_uspl2="${match[1]//---//}"
+                local -a entry_splitted
+                entry_splitted=( "${(z@)ZPLGM[WIDGETS_SAVED__$oth_uspl2]}" )
+                found_time_idx="${entry_splitted[(I)$orig_saved1\\\ *]}"
+                if (( found_time_idx ))
+                then
+                    to_process_plugin="$oth_uspl2"
+                    break # Only the first one is needed
+                fi
+            done
+            if [[ -n "$to_process_plugin" ]]; then
+                integer found_idx2
+                found_idx2=${entry_splitted[(I)$orig_saved1\\\ *]}
+                if (( !found_idx2 )); then
+                    (( quiet )) || print "Problem (1) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
+                    continue
+                fi
+                (( quiet )) || print "Chaining widget \`$orig_saved1' to plugin $oth_uspl2"
+                local -a oth_orig_saved
+                oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx2]}}" )
+                oth_orig_saved[2]="${(q)orig_saved2}" # chain up the widget
+                entry_splitted[found_idx2]="${(q)${(j: :)oth_orig_saved}}"
+                ZPLGM[WIDGETS_SAVED__$oth_uspl2]="${(j: :)entry_splitted}"
+            else
+                (( quiet )) || print "Restoring Zle widget $orig_saved1"
+                if [[ "$orig_saved2" = builtin ]]; then
+                    zle -A ".$orig_saved1" "$orig_saved1"
+                else
+                    zle -N "$orig_saved1" "${orig_saved2#user:}"
+                fi
+            fi
+        else
+            (( quiet )) || print "Problem (2) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
+        fi
     done
 
     #

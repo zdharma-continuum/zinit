@@ -473,12 +473,12 @@ builtin setopt noaliases
             elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
-                local widname="$2" saved_widname="zplugin-saved-${ZPLGM[CUR_USPL2]}-$2"
-                builtin zle -A -- "$widname" "$saved_widname"
+                local widname="$2"
+                saved_widcontents="${widgets[$widname]}"
 
                 widname="${(q)widname}"
-                saved_widname="${(q)saved_widname}"
-                local quoted="$widname $saved_widname"
+                saved_widcontents="${(q)saved_widcontents}"
+                local quoted="$widname $saved_widcontents"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_SAVED__${ZPLGM[CUR_USPL2]}]+="$quoted "
