@@ -762,12 +762,12 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-unload {{{
 # 0. Call the Zsh Plugin's Standard *_plugin_unload function
-# 1. Unfunction functions (created by plugin)
-# 2. Delete bindkeys (...)
-# 3. Delete Zstyles
-# 4. Restore options
-# 5. Remove aliases
-# 6. Restore Zle state
+# 1. Delete bindkeys (...)
+# 2. Delete Zstyles
+# 3. Restore options
+# 4. Remove aliases
+# 5. Restore Zle state
+# 6. Unfunction functions (created by plugin)
 # 7. Clean-up FPATH and PATH
 # 8. Delete created variables
 # 9. Forget the plugin
@@ -777,7 +777,6 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-unload() {
-    setopt localoptions warncreateglobal extendedglob typesetsilent
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
     local k
@@ -808,28 +807,7 @@ ZPLGM[EXTENDED_GLOB]=""
     (( ${+functions[${plugin}_plugin_unload]} )) && ${plugin}_plugin_unload
 
     #
-    # 1. Unfunction
-    #
-
-    -zplg-diff-functions-compute "$uspl2"
-    typeset -a func
-    func=( "${(z)ZPLGM[FUNCTIONS__$uspl2]}" )
-    local f
-    for f in "${(on)func[@]}"; do
-        [[ -z "$f" ]] && continue
-        f="${(Q)f}"
-        (( quiet )) || print "Deleting function $f"
-        (( ${+functions[$f]} )) && unfunction -- "$f"
-        (( ${+precmd_functions} )) && precmd_functions=( ${precmd_functions[@]:#$f} )
-        (( ${+preexec_functions} )) && preexec_functions=( ${preexec_functions[@]:#$f} )
-        (( ${+chpwd_functions} )) && chpwd_functions=( ${chpwd_functions[@]:#$f} )
-        (( ${+periodic_functions} )) && periodic_functions=( ${periodic_functions[@]:#$f} )
-        (( ${+zshaddhistory_functions} )) && zshaddhistory_functions=( ${zshaddhistory_functions[@]:#$f} )
-        (( ${+zshexit_functions} )) && zshexit_functions=( ${zshexit_functions[@]:#$f} )
-    done
-
-    #
-    # 2. Delete done bindkeys
+    # 1. Delete done bindkeys
     #
 
     typeset -a string_widget
@@ -871,7 +849,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     #
-    # 3. Delete created Zstyles
+    # 2. Delete created Zstyles
     #
 
     typeset -a pattern_style
@@ -894,7 +872,7 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     #
-    # 4. Restore changed options
+    # 3. Restore changed options
     #
 
     # Paranoid, don't want bad key/value pair error
@@ -923,7 +901,7 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     #
-    # 5. Delete aliases
+    # 4. Delete aliases
     #
 
     typeset -a aname_avalue
@@ -972,28 +950,14 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     #
-    # 6. Restore Zle state
+    # 5. Restore Zle state
     #
-
-    typeset -a delete_widgets
-    delete_widgets=( "${(z)ZPLGM[WIDGETS_DELETE__$uspl2]}" )
-    local wid
-    for wid in "${(Oa)delete_widgets[@]}"; do
-        [[ -z "$wid" ]] && continue
-        wid="${(Q)wid}"
-        if [[ "${ZPLG_ZLE_HOOKS_LIST[$wid]}" = "1" ]]; then
-            (( quiet )) || print "Removing Zle hook \`$wid'"
-        else
-            (( quiet )) || print "Removing Zle widget \`$wid'"
-        fi
-        zle -D "$wid"
-    done
 
     local -a keys
     keys=( "${(@on)ZPLGM[(I)TIME_<->_*]}" )
     integer keys_size=${#keys}
 
-    typeset -a restore_widgets
+    typeset -a restore_widgets skip_delete
     restore_widgets=( "${(z)ZPLGM[WIDGETS_SAVED__$uspl2]}" )
     for wid in "${(Oa)restore_widgets[@]}"; do
         [[ -z "$wid" ]] && continue
@@ -1001,40 +965,68 @@ ZPLGM[EXTENDED_GLOB]=""
         typeset -a orig_saved
         orig_saved=( "${(z)wid}" )
 
-        local orig_saved1="${(Q)orig_saved[1-correct]}" # Original widget
-        local orig_saved2="${(Q)orig_saved[2-correct]}" # Saved $widget's contents
+        local tpe="${orig_saved[1-correct]}"
+        local orig_saved1="${(Q)orig_saved[2-correct]}" # Original widget
+        local comp_wid="${(Q)orig_saved[3-correct]}"
+        local orig_saved2="${(Q)orig_saved[4-correct]}" # Saved target function
+        local orig_saved3="${(Q)orig_saved[5-correct]}" # Saved previous $widget's contents
 
         local found_time_key="${keys[(r)TIME_<->_${uspl2//\//---}]}" to_process_plugin
-        integer found_time_idx=0 idx=0 found_idx2=0
+        integer found_time_idx=0 idx=0
         to_process_plugin=""
-        [[ "$found_time_key" = (#b)TIME_(<->)_* ]] && found_time_idx="${match[1]}"
+        [[ "$found_time_key" = (#b)TIME_(<->)_* ]] && found_time_idx="${match[1-correct]}"
         if (( found_time_idx )); then # Must be true
             for (( idx = found_time_idx + 1; idx <= keys_size; ++ idx )); do
                 found_time_key="${keys[(r)TIME_${idx}_*]}"
                 local oth_uspl2=""
-                [[ "$found_time_key" = (#b)TIME_${idx}_(*) ]] && oth_uspl2="${match[1]//---//}"
+                [[ "$found_time_key" = (#b)TIME_${idx}_(*) ]] && oth_uspl2="${match[1-correct]//---//}"
                 local -a entry_splitted
                 entry_splitted=( "${(z@)ZPLGM[WIDGETS_SAVED__$oth_uspl2]}" )
-                found_time_idx="${entry_splitted[(I)$orig_saved1\\\ *]}"
-                if (( found_time_idx ))
+                integer found_idx="${entry_splitted[(I)(-N|-C)\ $orig_saved1\\\ *]}"
+                if (( found_idx ))
                 then
                     to_process_plugin="$oth_uspl2"
                     break # Only the first one is needed
                 fi
             done
             if [[ -n "$to_process_plugin" ]]; then
-                integer found_idx2
-                found_idx2=${entry_splitted[(I)$orig_saved1\\\ *]}
-                if (( !found_idx2 )); then
+                if (( !found_idx )); then
                     (( quiet )) || print "Problem (1) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
                     continue
                 fi
                 (( quiet )) || print "Chaining widget \`$orig_saved1' to plugin $oth_uspl2"
                 local -a oth_orig_saved
-                oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx2]}}" )
-                oth_orig_saved[2]="${(q)orig_saved2}" # chain up the widget
-                entry_splitted[found_idx2]="${(q)${(j: :)oth_orig_saved}}"
+                oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx]}}" )
+                local oth_fun="${oth_orig_saved[4-correct]}"
+                # oth_orig_saved[2-correct]="${(q)orig_saved2}" # not do this, because
+                                                # we don't want to call other
+                                                # plugin's function at any moment
+                oth_orig_saved[5-correct]="${(q)orig_saved3}" # chain up the widget
+                entry_splitted[found_idx]="${(q)${(j: :)oth_orig_saved}}"
                 ZPLGM[WIDGETS_SAVED__$oth_uspl2]="${(j: :)entry_splitted}"
+                integer idx="${functions[$orig_saved2][(i)(#b)([^\{[:space:]]#$orig_saved1)]}"
+                if (( idx <= ${#functions[$orig_saved2]} ))
+                then
+                    local prefix_X="${match[1-correct]}"
+                    idx="${functions[$oth_fun][(i)(#b)([^\{[:space:]]#$orig_saved1)]}"
+                    if (( idx <= ${#functions[$oth_fun]} )); then
+                        local oth_prefix_uspl2_X="${match[1-correct]}"
+                        if [[ "${widgets[$prefix_X]}" = builtin ]]; then
+                            (( quiet )) || print "Builtin-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
+                            zle -A .${prefix_X#.} $oth_prefix_uspl2_X
+                        elif [[ "${widgets[$prefix_X]}" = completion:* ]]; then
+                            (( quiet )) || print "Chain*-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
+                            zle -C $oth_prefix_uspl2_X ${${(s.:.)widgets[$prefix_X]}[2-correct,3-correct]}
+                        else
+                            (( quiet )) || print "Chain-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
+                            zle -N $oth_prefix_uspl2_X ${widgets[$prefix_X]#user:}
+                        fi
+                    fi
+
+                    # The alternate method
+                    #skip_delete+=( "${match[1-correct]}" )
+                    #functions[$oth_fun]="${functions[$oth_fun]//[^\{[:space:]]#$orig_saved1/${match[1-correct]}}"
+                fi
             else
                 (( quiet )) || print "Restoring Zle widget $orig_saved1"
                 if [[ "$orig_saved2" = builtin ]]; then
@@ -1046,6 +1038,45 @@ ZPLGM[EXTENDED_GLOB]=""
         else
             (( quiet )) || print "Problem (2) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
         fi
+    done
+
+    typeset -a delete_widgets
+    delete_widgets=( "${(z)ZPLGM[WIDGETS_DELETE__$uspl2]}" )
+    local wid
+    for wid in "${(Oa)delete_widgets[@]}"; do
+        [[ -z "$wid" ]] && continue
+        wid="${(Q)wid}"
+        if [[ -n "${skip_delete[(r)$wid]}" ]]; then
+            print "Would delete $wid"
+            continue
+        fi
+        if [[ "${ZPLG_ZLE_HOOKS_LIST[$wid]}" = "1" ]]; then
+            (( quiet )) || print "Removing Zle hook \`$wid'"
+        else
+            (( quiet )) || print "Removing Zle widget \`$wid'"
+        fi
+        zle -D "$wid"
+    done
+
+    #
+    # 6. Unfunction
+    #
+
+    -zplg-diff-functions-compute "$uspl2"
+    typeset -a func
+    func=( "${(z)ZPLGM[FUNCTIONS__$uspl2]}" )
+    local f
+    for f in "${(on)func[@]}"; do
+        [[ -z "$f" ]] && continue
+        f="${(Q)f}"
+        (( quiet )) || print "Deleting function $f"
+        (( ${+functions[$f]} )) && unfunction -- "$f"
+        (( ${+precmd_functions} )) && precmd_functions=( ${precmd_functions[@]:#$f} )
+        (( ${+preexec_functions} )) && preexec_functions=( ${preexec_functions[@]:#$f} )
+        (( ${+chpwd_functions} )) && chpwd_functions=( ${chpwd_functions[@]:#$f} )
+        (( ${+periodic_functions} )) && periodic_functions=( ${periodic_functions[@]:#$f} )
+        (( ${+zshaddhistory_functions} )) && zshaddhistory_functions=( ${zshaddhistory_functions[@]:#$f} )
+        (( ${+zshexit_functions} )) && zshexit_functions=( ${zshexit_functions[@]:#$f} )
     done
 
     #
@@ -1166,6 +1197,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-show-report() {
+    setopt extendedglob warncreateglobal typesetsilent noksharrays
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
 

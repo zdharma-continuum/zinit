@@ -448,7 +448,8 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zle() {
-    setopt localoptions noerrreturn noerrexit
+    setopt localoptions noerrreturn noerrexit \
+        warncreateglobal typesetsilent extendedglob
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zle $*"
 
     # Remember to perform the actual zle call
@@ -458,9 +459,9 @@ builtin setopt noaliases
     set -- "${@:#--}"
 
     # Try to catch game-changing "-N"
-    if [[ "$1" = "-N" && ( "$#" = "2" || "$#" = "3" ) ]]; then
-        local quoted="$2"
-        quoted="${(q)quoted}"
+    if [[ ( "$1" = "-N" && ( "$#" = "2" || "$#" = "3" ) ) || \
+            ( "$1" = "-C" && "$#" = "4" )
+    ]]; then
             # Hooks
             if [[ "${ZPLG_ZLE_HOOKS_LIST[$2]}" = "1" ]]; then
                 local quoted="$2"
@@ -473,12 +474,15 @@ builtin setopt noaliases
             elif (( ${+widgets[$2]} )); then
                 # Have to remember original widget "$2" and
                 # the copy that it's going to be done
-                local widname="$2"
-                saved_widcontents="${widgets[$widname]}"
+                local widname="$2" targetfun="${${${(M)1:#-C}:+$4}:-$3}"
+                local completion_widget="${${(M)1:#-C}:+$3}"
+                local saved_widcontents="${widgets[$widname]}"
 
                 widname="${(q)widname}"
+                completion_widget="${(q)completion_widget}"
+                targetfun="${(q)targetfun}"
                 saved_widcontents="${(q)saved_widcontents}"
-                local quoted="$widname $saved_widcontents"
+                local quoted="$1 $widname $completion_widget $targetfun $saved_widcontents"
                 quoted="${(q)quoted}"
                 # Remember only when load is in progress (it can be dstart that leads execution here)
                 [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[WIDGETS_SAVED__${ZPLGM[CUR_USPL2]}]+="$quoted "
