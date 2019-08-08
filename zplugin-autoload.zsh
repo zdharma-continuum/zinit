@@ -780,6 +780,9 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-any-to-user-plugin "$1" "$2"
     local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}" user="${reply[-2]}" plugin="${reply[-1]}" quiet="${${3:+1}:-0}"
 
+    -zplg-any-colorify-as-uspl2 "$uspl2"
+    print -r -- "${ZPLGM[col-bar]}===${ZPLGM[col-rst]} Unloading plugin: $REPLY ${ZPLGM[col-bar]}===${ZPLGM[col-rst]}"
+
     # KSH_ARRAYS immunity
     integer correct=0
     [[ -o "KSH_ARRAYS" ]] && correct=1
