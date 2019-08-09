@@ -957,7 +957,7 @@ ZPLGM[EXTENDED_GLOB]=""
     keys=( "${(@on)ZPLGM[(I)TIME_<->_*]}" )
     integer keys_size=${#keys}
     () {
-        setopt localoptions extendedglob
+        setopt localoptions extendedglob noksharrays
         typeset -a restore_widgets skip_delete
         restore_widgets=( "${(z)ZPLGM[WIDGETS_SAVED__$uspl2]}" )
         for wid in "${(Oa)restore_widgets[@]}"; do
@@ -966,21 +966,21 @@ ZPLGM[EXTENDED_GLOB]=""
             typeset -a orig_saved
             orig_saved=( "${(z)wid}" )
 
-            local tpe="${orig_saved[1-correct]}"
-            local orig_saved1="${(Q)orig_saved[2-correct]}" # Original widget
-            local comp_wid="${(Q)orig_saved[3-correct]}"
-            local orig_saved2="${(Q)orig_saved[4-correct]}" # Saved target function
-            local orig_saved3="${(Q)orig_saved[5-correct]}" # Saved previous $widget's contents
+            local tpe="${orig_saved[1]}"
+            local orig_saved1="${(Q)orig_saved[2]}" # Original widget
+            local comp_wid="${(Q)orig_saved[3]}"
+            local orig_saved2="${(Q)orig_saved[4]}" # Saved target function
+            local orig_saved3="${(Q)orig_saved[5]}" # Saved previous $widget's contents
 
             local found_time_key="${keys[(r)TIME_<->_${uspl2//\//---}]}" to_process_plugin
             integer found_time_idx=0 idx=0
             to_process_plugin=""
-            [[ "$found_time_key" = (#b)TIME_(<->)_* ]] && found_time_idx="${match[1-correct]}"
+            [[ "$found_time_key" = (#b)TIME_(<->)_* ]] && found_time_idx="${match[1]}"
             if (( found_time_idx )); then # Must be true
                 for (( idx = found_time_idx + 1; idx <= keys_size; ++ idx )); do
                     found_time_key="${keys[(r)TIME_${idx}_*]}"
                     local oth_uspl2=""
-                    [[ "$found_time_key" = (#b)TIME_${idx}_(*) ]] && oth_uspl2="${match[1-correct]//---//}"
+                    [[ "$found_time_key" = (#b)TIME_${idx}_(*) ]] && oth_uspl2="${match[1]//---//}"
                     local -a entry_splitted
                     entry_splitted=( "${(z@)ZPLGM[WIDGETS_SAVED__$oth_uspl2]}" )
                     integer found_idx="${entry_splitted[(I)(-N|-C)\ $orig_saved1\\\ *]}"
@@ -998,26 +998,26 @@ ZPLGM[EXTENDED_GLOB]=""
                     (( quiet )) || print "Chaining widget \`$orig_saved1' to plugin $oth_uspl2"
                     local -a oth_orig_saved
                     oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx]}}" )
-                    local oth_fun="${oth_orig_saved[4-correct]}"
-                    # oth_orig_saved[2-correct]="${(q)orig_saved2}" # not do this, because
+                    local oth_fun="${oth_orig_saved[4]}"
+                    # oth_orig_saved[2]="${(q)orig_saved2}" # not do this, because
                                                     # we don't want to call other
                                                     # plugin's function at any moment
-                    oth_orig_saved[5-correct]="${(q)orig_saved3}" # chain up the widget
+                    oth_orig_saved[5]="${(q)orig_saved3}" # chain up the widget
                     entry_splitted[found_idx]="${(q)${(j: :)oth_orig_saved}}"
                     ZPLGM[WIDGETS_SAVED__$oth_uspl2]="${(j: :)entry_splitted}"
                     integer idx="${functions[$orig_saved2][(i)(#b)([^\{[:space:]]#$orig_saved1)]}"
                     if (( idx <= ${#functions[$orig_saved2]} ))
                     then
-                        local prefix_X="${match[1-correct]}"
+                        local prefix_X="${match[1]}"
                         idx="${functions[$oth_fun][(i)(#b)([^\{[:space:]]#$orig_saved1)]}"
                         if (( idx <= ${#functions[$oth_fun]} )); then
-                            local oth_prefix_uspl2_X="${match[1-correct]}"
+                            local oth_prefix_uspl2_X="${match[1]}"
                             if [[ "${widgets[$prefix_X]}" = builtin ]]; then
                                 (( quiet )) || print "Builtin-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
                                 zle -A .${prefix_X#.} $oth_prefix_uspl2_X
                             elif [[ "${widgets[$prefix_X]}" = completion:* ]]; then
                                 (( quiet )) || print "Chain*-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
-                                zle -C $oth_prefix_uspl2_X ${${(s.:.)widgets[$prefix_X]}[2-correct,3-correct]}
+                                zle -C $oth_prefix_uspl2_X ${${(s.:.)widgets[$prefix_X]}[2,3]}
                             else
                                 (( quiet )) || print "Chain-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
                                 zle -N $oth_prefix_uspl2_X ${widgets[$prefix_X]#user:}
@@ -1025,8 +1025,8 @@ ZPLGM[EXTENDED_GLOB]=""
                         fi
 
                         # The alternate method
-                        #skip_delete+=( "${match[1-correct]}" )
-                        #functions[$oth_fun]="${functions[$oth_fun]//[^\{[:space:]]#$orig_saved1/${match[1-correct]}}"
+                        #skip_delete+=( "${match[1]}" )
+                        #functions[$oth_fun]="${functions[$oth_fun]//[^\{[:space:]]#$orig_saved1/${match[1]}}"
                     fi
                 else
                     (( quiet )) || print "Restoring Zle widget $orig_saved1"
