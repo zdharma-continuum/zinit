@@ -957,7 +957,7 @@ ZPLGM[EXTENDED_GLOB]=""
     keys=( "${(@on)ZPLGM[(I)TIME_<->_*]}" )
     integer keys_size=${#keys}
     () {
-        setopt localoptions extendedglob noksharrays
+        setopt localoptions extendedglob noksharrays typesetsilent
         typeset -a restore_widgets skip_delete
         restore_widgets=( "${(z)ZPLGM[WIDGETS_SAVED__$uspl2]}" )
         for wid in "${(Oa)restore_widgets[@]}"; do
