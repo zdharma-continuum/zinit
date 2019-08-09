@@ -43,11 +43,11 @@ The same setup but without using Turbo mode (i.e. no `wait''` ice):
 ```zsh
 zplugin ice blockf
 zplugin light zsh-users/zsh-completions
+
 zplugin light zsh-users/zsh-autosuggestions
 
 autoload compinit
 compinit
-
 zplugin light zdharma/fast-syntax-highlighting
 ```
 

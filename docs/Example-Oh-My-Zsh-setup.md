@@ -12,7 +12,7 @@ zplugin snippet OMZ::plugins/git/git.plugin.zsh
 
 # D.
 PS1="READY >" # provide a nice prompt till the theme loads
-zplugin wait lucid
+zplugin ice wait lucid
 zplugin snippet OMZ::themes/dstufft.zsh-theme
 
 # E.
