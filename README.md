@@ -51,6 +51,14 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 09-08-2019
+  - A new ice-mod `wrap-track''` which gets `;`-separated list of functions that are to
+    be tracked **once** when executing. In other words you can extend the tracking
+    beyond the moment of loading of a plugin.
+  - The unloading of Zle widgets is now more smart – it takes into account the chains
+    of plugins that can overload the Zle widgets, and solves the interractions that
+    result out of it.
+
 * 29-07-2019
   - `delete` now supports following options:
     * `--all` – deletes all plugins and snippets (a purge, similar to `rm -rf
