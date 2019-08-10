@@ -1036,6 +1036,8 @@ ZPLGM[EXTENDED_GLOB]=""
                     (( quiet )) || print "Restoring Zle widget $orig_saved1"
                     if [[ "$orig_saved3" = builtin ]]; then
                         zle -A ".$orig_saved1" "$orig_saved1"
+                    elif [[ "$orig_saved3" = completion:* ]]; then
+                        zle -C "$orig_saved1" "${(@)${(@s.:.)${orig_saved3#user:}}[2,3]}"
                     else
                         zle -N "$orig_saved1" "${orig_saved3#user:}"
                     fi
