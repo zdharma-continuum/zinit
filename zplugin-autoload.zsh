@@ -986,8 +986,12 @@ ZPLGM[EXTENDED_GLOB]=""
                     integer found_idx="${entry_splitted[(I)(-N|-C)\ $orig_saved1\\\ *]}"
                     if (( found_idx ))
                     then
-                        to_process_plugin="$oth_uspl2"
-                        break # Only the first one is needed
+                        # Skip multiple loads of the same plugin
+                        # TODO: Fully handle multiple plugin loads
+                        if [[ "$oth_uspl2" != "$uspl2" ]]; then
+                            to_process_plugin="$oth_uspl2"
+                            break # Only the first one is needed
+                        fi
                     fi
                 done
                 if [[ -n "$to_process_plugin" ]]; then
