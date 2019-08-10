@@ -824,33 +824,34 @@ the dash and the plural form.</p>
 <ol>
 <li>
 <p>Add a new Zplugin subcommand (i.e. the command that’s placed after the
-    function <code>zplugin …​</code> when calling Zplugin).</p>
+    function <code>zplugin …</code> when calling Zplugin).</p>
 </li>
 <li>
-<p>Add new ice-modifiers</p>
+<p>Add new ice-modifiers.</p>
 </li>
 <li>
 <p>Register four type of hooks:</p>
 <ol>
 <li>
-<p><code>atclone</code> hook – run after cloning any plugin or downloading any snippet</p>
+<p><code>atclone</code> hook – run after cloning any plugin or downloading any
+snippet.</p>
 </li>
 <li>
 <p><code>atpull</code> hook – run after pulling new commits (i.e. updating) for any
-    plugin / snippet</p>
+    plugin / snippet.</p>
 </li>
 <li>
 <p><code>atinit</code> hook – run before loading any plugin / snippet, after it has
-    been set-up (i.e. downloaded)</p>
+    been set-up (i.e. downloaded).</p>
 </li>
 <li>
-<p><code>atload</code> hook – run after loading any plugin / snippet</p>
+<p><code>atload</code> hook – run after loading any plugin / snippet.</p>
 </li>
 </ol>
 </li>
 <li>
 <p>Register hooks for generating help text, shown by the <code>zplugin help</code>
-    subcommand</p>
+    subcommand.</p>
 </li>
 </ol>
 <h2 id="how_to_code_them">How To Code Them?<a class="headerlink" href="#how_to_code_them" title="Permanent link">#</a></h2>
@@ -917,12 +918,12 @@ and then to mark it for autoloading via <code>autoload -Uz
     {hook:&lt;hook-type&gt;|subcommand:&lt;new-subcommand-name&gt;} \
     {name-of-the-handler-function} \
     {name-of-the-HELP-handler-function} \
-    &quot;{ice-mod1}|{ice-mod2}|...&quot;
+    &quot;{ice-mod1}|{ice-mod2}|…&quot;
 </code></pre>
 
 <p>The last argument, i.e. the <code>|</code>-separated ice-list, is optional. That’s all!
 After this loading the plugin <code>myproject</code> will set up the new ice-mod <code>submods</code>
-that will have syntax <code>submods'{user}/{plugin} –&gt; {output-dir}; …​'</code> and
+that will have syntax <code>submods'{user}/{plugin} –&gt; {output-dir}; …'</code> and
 will clone submodules when installing the original plugin or snippet! Example
 real-world use of the ice-mod:</p>
 <pre><code class="zsh"># Load the `zsh-autosuggestions' plugin via Prezto module: `autosuggestions'
@@ -939,7 +940,7 @@ The <code>z-p-*</code> prefix is recommended for projects that are being z-plugi
 <ol>
 <li>
 <p><code>atinit</code> or <code>!atinit</code> – the <code>!</code> version is ran before the <code>atinit</code>
-    <strong>ice-mod</strong> (i.e. before <code>zplugin ice atinit'echo this!'; …​</code>), while
+    <strong>ice-mod</strong> (i.e. before <code>zplugin ice atinit'echo this!'; …</code>), while
     the normal version runs after it.</p>
 </li>
 <li>

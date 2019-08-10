@@ -99,7 +99,7 @@ table{
   border: 1px solid black;
 }
 
-table > :first-child{
+th{
   font-size: 120%;
 }
 
