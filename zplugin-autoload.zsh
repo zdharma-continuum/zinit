@@ -1205,7 +1205,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-show-report() {
-    setopt extendedglob warncreateglobal typesetsilent noksharrays
+    setopt localoptions extendedglob warncreateglobal typesetsilent noksharrays
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
 
