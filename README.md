@@ -15,8 +15,9 @@ reports](DONATIONS.md) about what is being done with the money received.
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [News](#news)
-- [Getting Help](#getting-help)
 - [Zplugin](#zplugin)
+- [Zplugin Wiki](#zplugin-wiki)
+- [Getting Help](#getting-help)
 - [Installation](#installation)
   - [Option 1 - Automatic Installation (Recommended)](#option-1---automatic-installation-recommended)
   - [Option 2 - Manual Installation](#option-2---manual-installation)
@@ -39,9 +40,8 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Debugging](#debugging)
 - [Hints and Tips](#hints-and-tips)
   - [Customizing Paths](#customizing-paths)
-  - [Non-Github (Local) Plugins](#non-github-local-plugins)
+  - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
-- [Additional Resources](#additional-resources)
 - [IRC Channel](#irc-channel)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -112,7 +112,7 @@ reports](DONATIONS.md) about what is being done with the money received.
 * 22-06-2019
   - New ice mod `reset-prompt` that will issue `zle .reset-prompt` after loading the
     plugin or snippet, causing the prompt to be recomputed. Useful with themes &
-    turbo-mode.
+    Turbo mode.
 
   - New ice-mod `notify''` which will cause to display an under-prompt notification
     when the plugin or snippet gets loaded. E.g.:
@@ -136,7 +136,7 @@ reports](DONATIONS.md) about what is being done with the money received.
     Refer to [Ice Modifiers](#ice-modifiers) section for a complete description.
 
 * 29-05-2019
-  - Turbo-Mode, i.e. the `wait''` ice-mode now supports a suffix – the letter `a`, `b`
+  - Turbo mode, i.e. the `wait''` ice-mode now supports a suffix – the letter `a`, `b`
     or `c`. The meaning is illustrated by the following example:
 
     ```zsh
@@ -163,23 +163,13 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 To see the full history check [the changelog](CHANGELOG.md).
 
-# Getting Help
-
-If you need help you can do the following:
-
-- [Check if the information is in the Zplugin Wiki](http://zdharma.org/zplugin/wiki/)
-
-- Ask in our subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
-
-- [Ask in our IRC channel.](#irc-channel) 
-
 # Zplugin
 
 Zplugin is an elastic and fast Zshell plugin manager that will allow you to
-install everything from Github and other sites. 
+install everything from GitHub and other sites. 
 
 Zplugin is currently the only plugin manager out there that has Turbo
-Mode which yields **39-50%
+mode which yields **39-50%
 faster Zsh startup!**
 
 Zplugin gives **reports** from plugin load describing what aliases, functions,
@@ -193,6 +183,18 @@ The system does not use `$FPATH`, loading multiple plugins doesn't clutter
 `$FPATH` with the same number of entries (e.g. `10`). Code is immune to
 `KSH_ARRAYS`. Completion management functionality is provided to allow user
 to call `compinit` only once in `.zshrc`.
+
+# Zplugin Wiki
+
+The information in this README is complemented by the [Zplugin wiki](http://zdharma.org/zplugin/wiki/). The README is an introductory overview of Zplugin while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of Zplugin.
+
+# Getting Help
+
+If you need help you can do the following:
+
+- Ask in our subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
+
+- [Ask in our IRC channel.](#irc-channel) 
 
 # Installation
 
@@ -232,14 +234,13 @@ autoload -Uz _zplugin
 
 Various paths can be customized, see section [Customizing Paths](#customizing-paths).
 
-After installing and reloading shell give Zplugin a quick try with `zplugin help` and
-compile it with `zplugin self-update`.
+After installing and reloading the shell compile Zplugin with `zplugin self-update`.
 
 # Usage
 
 ## Introduction
 
-[Click here to read the introduction to Zplugin.](http://zdharma.org/zplugin/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zplugin such as the Turbo Mode. If you're new to Zplugin we highly recommend you read it at least once.
+[Click here to read the introduction to Zplugin](http://zdharma.org/zplugin/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zplugin such as the Turbo mode. If you're new to Zplugin we highly recommend you read it at least once.
 
 ## Example Usage
 
@@ -256,7 +257,7 @@ zplugin load zdharma/history-search-multi-word
 # Load the pure theme, with zsh-async library that's bundled with it.
 zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
 
-# Binary release in archive, from Github-releases page. 
+# Binary release in archive, from GitHub-releases page. 
 # After automatic unpacking it provides program "fzf".
 zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
 
@@ -268,7 +269,7 @@ zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
 zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
 zplugin load docker/compose
 
-# Vim repository on Github – a typical source code that needs compilation – Zplugin
+# Vim repository on GitHub – a typical source code that needs compilation – Zplugin
 # can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
 # Ice-mod `pick` selects a binary program to add to $PATH. You could also install the
 # package under the path $ZPFX, see: http://zdharma.org/zplugin/wiki/Compiling-programs
@@ -324,12 +325,12 @@ appropriate wiki page for an extended explanation.
 | Modifier | <p align="center"> <p align="center"> Description </p> </p> | Works with plugins | Works with snippets |
 |:-:|-|:-:|:-:|
 | `proto` | Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. | :heavy_check_mark: | :heavy_multiplication_x: |
-| `from` | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for Github enterprise). | :heavy_check_mark: | :heavy_multiplication_x: |
+| `from` | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for GitHub enterprise). | :heavy_check_mark: | :heavy_multiplication_x: |
 | `as` | Can be `as"program"` (also alias `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"`. | :heavy_check_mark: | :heavy_check_mark: |
 | [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) | Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. | :heavy_check_mark: | :heavy_check_mark: |
 | `ver` | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. | :heavy_check_mark: | :heavy_check_mark: |
 | [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"program"`), e.g. `zplugin ice pick"*.plugin.zsh"`. | :heavy_check_mark: | :heavy_check_mark: |
-| `bpick` | Used to select which release from Github Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` | :heavy_check_mark: | :heavy_multiplication_x: |
+| `bpick` | Used to select which release from GitHub Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` | :heavy_check_mark: | :heavy_multiplication_x: |
 | `depth` | Pass `--depth` to `git`, i.e. limit how much of history to download. | :heavy_check_mark: | :heavy_multiplication_x: |
 | `cloneopts` | Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. | :heavy_check_mark: | :heavy_multiplication_x: |
 | `bindmap` | To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. | :heavy_check_mark: | :heavy_multiplication_x: |
@@ -350,7 +351,7 @@ appropriate wiki page for an extended explanation.
 | `run-atpull` | Always run the atpull hook (when updating), not only when there are new commits to be downloaded. | :heavy_check_mark: | :heavy_check_mark: |
 | `cloneonly` | Don't load the plugin / snippet, only download it | :heavy_check_mark: | :heavy_check_mark: |
 | `nocd` | Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. | :heavy_check_mark: | :heavy_check_mark: |
-| `svn` | Use Subversion for downloading snippet. Github supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). | :heavy_multiplication_x: | :heavy_check_mark: |
+| `svn` | Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). | :heavy_multiplication_x: | :heavy_check_mark: |
 | [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) | Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. | :heavy_check_mark: | :heavy_check_mark: |
 | [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) | Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). | :heavy_check_mark: | :heavy_check_mark: |
 | [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). **Fact:** when `wait` is used without value, it works as `wait'0'`. | :heavy_check_mark: | :heavy_check_mark: |
@@ -384,10 +385,10 @@ Usage:
 —— update [-q] plg-spec|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
 —— status plg-spec|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
 —— report plg-spec               – show plugin's report (or all plugins' if ——all passed)
-—— delete [--clean|--all] plg-spec|URL – remove plugin or snippet from disk (good to forge t wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
+—— delete [--clean|--all] plg-spec|URL – remove plugin or snippet from disk (good to forget wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
 —— loaded|list [keyword]         – show what plugins are loaded (filter with 'keyword')
 —— cd plg-spec                   – cd into plugin's directory; also support snippets, if feed with URL
-—— create plg-spec               – create plugin (also together with Github repository)
+—— create plg-spec               – create plugin (also together with GitHub repository)
 —— edit plg-spec                 – edit plugin's file with $EDITOR
 —— glance plg-spec               – look at plugin's source (pygmentize, {,source-}highlight)
 —— stress plg-spec               – test plugin for compatibility with set of options
@@ -457,7 +458,7 @@ If the library will not be loaded, then similar to following errors will be appe
 ........:1: command not found: git_prompt_short_sha
 ```
 
-Then you can use the themes as snippets (`zplugin snippet {file path or Github URL}`).
+Then you can use the themes as snippets (`zplugin snippet {file path or GitHub URL}`).
 Some themes require not only Oh My Zsh's Git **library**, but also Git **plugin** (error
 about `current_branch` function can be appearing). Load this Git-plugin as single-file
 snippet directly from OMZ:
@@ -491,7 +492,7 @@ setopt promptsubst
 # Load theme from OMZ
 zplugin snippet OMZ::themes/dstufft.zsh-theme
 
-# Load normal Github plugin with theme depending on OMZ Git library
+# Load normal GitHub plugin with theme depending on OMZ Git library
 zplugin light NicoSantangelo/Alpharized
 ```
 
@@ -499,7 +500,7 @@ zplugin light NicoSantangelo/Alpharized
 
 ## Calling `compinit` Without Turbo Mode
 
-With no turbo mode in use, compinit can be called normally, i.e.: as `autoload compinit;
+With no Turbo mode in use, compinit can be called normally, i.e.: as `autoload compinit;
 compinit`. This should be done after loading of all plugins and before possibly calling
 `zplugin cdreplay`.  Also, plugins aren't allowed to simply run `compdefs`. You can
 decide whether to run `compdefs` by issuing `zplugin cdreplay` (reads: `compdef`-replay).
@@ -535,7 +536,7 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 
 ## Calling `compinit` With Turbo Mode
 
-If you load completions using `wait''` turbo-mode then you can add
+If you load completions using `wait''` Turbo mode then you can add
 `atinit'zpcompinit'` to syntax-highlighting plugin (which should be the last
 one loaded, as their (2 projects, [z-sy-h](https://github.com/zsh-users/zsh-syntax-highlighting) &
 [f-sy-h](https://github.com/zdharma/fast-syntax-highlighting))
@@ -661,14 +662,14 @@ declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loa
 There is also `$ZPFX`, set by default to `~/.zplugin/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
 
-## Non-Github (Local) Plugins
+## Non-GitHub (Local) Plugins
 
 Use `create` subcommand with user name `_local` (the default) to create plugin's
-skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with Github repository
+skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with GitHub repository
 (because of user name being `_local`). To enter the plugin's directory use `cd` command
 with just plugin's name (without `_local`, it's optional).
 
-If user name will not be `_local`, then Zplugin will create repository also on Github
+If user name will not be `_local`, then Zplugin will create repository also on GitHub
 and setup correct repository origin.
 
 
@@ -682,30 +683,25 @@ Zplugin has many benefits:
    brings also git-related setup,
  - easy update by e.g. `zplugin update --all`.
 
-Below is a configuration that adds multiple git extensions, loaded in Turbo Mode,
+Below is a configuration that adds multiple git extensions, loaded in Turbo mode,
 two seconds after prompt:
 
 ```zsh
 zplugin ice wait"2" lucid as"program" pick"bin/git-dsf"
 zplugin light zdharma/zsh-diff-so-fancy
+
 zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-now" make"prefix=$ZPFX install"
 zplugin light iwata/git-now
+
 zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX" nocompile
 zplugin light tj/git-extras
+
 zplugin ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \
             make'install' pick"$ZPFX/bin/git-cal"
 zplugin light k4rthik/git-cal
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
-
-# Additional Resources
-
-Besides the main-knowledge source, i.e. this README, there are subpages that are
-**guides** and also an external web-page:
-
- - [Wiki](http://zdharma.org/zplugin/wiki/)
- - [Zplugin semigraphical dashboard](https://github.com/psprint/zplugin-crasis)
 
 # IRC Channel
 Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
