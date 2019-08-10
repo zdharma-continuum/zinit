@@ -8,24 +8,25 @@ the dash and the plural form.
 ## What Can They Do?
 
 1.  Add a new Zplugin subcommand (i.e. the command that’s placed after the
-    function `zplugin …​` when calling Zplugin).
+    function `zplugin …` when calling Zplugin).
 
-2.  Add new ice-modifiers
+2.  Add new ice-modifiers.
 
 3.  Register four type of hooks:
     
-    1.  `atclone` hook – run after cloning any plugin or downloading any snippet
+    1.  `atclone` hook – run after cloning any plugin or downloading any
+	snippet.
     
     2.  `atpull` hook – run after pulling new commits (i.e. updating) for any
-        plugin / snippet
+        plugin / snippet.
     
     3.  `atinit` hook – run before loading any plugin / snippet, after it has
-        been set-up (i.e. downloaded)
+        been set-up (i.e. downloaded).
     
-    4.  `atload` hook – run after loading any plugin / snippet
+    4.  `atload` hook – run after loading any plugin / snippet.
 
 4.  Register hooks for generating help text, shown by the `zplugin help`
-    subcommand
+    subcommand.
 
 ## How To Code Them?
 
@@ -92,12 +93,12 @@ The general syntax of the API call is:
     {hook:<hook-type>|subcommand:<new-subcommand-name>} \
     {name-of-the-handler-function} \
     {name-of-the-HELP-handler-function} \
-    "{ice-mod1}|{ice-mod2}|..."
+    "{ice-mod1}|{ice-mod2}|…"
 ```
 
 The last argument, i.e. the `|`-separated ice-list, is optional. That’s all\!
 After this loading the plugin `myproject` will set up the new ice-mod `submods`
-that will have syntax `submods'{user}/{plugin} –> {output-dir}; …​'` and
+that will have syntax `submods'{user}/{plugin} –> {output-dir}; …'` and
 will clone submodules when installing the original plugin or snippet\! Example
 real-world use of the ice-mod:
 
@@ -117,7 +118,7 @@ The `z-p-*` prefix is recommended for projects that are being z-plugins.
 There are 2 or 3 subtypes for each of the hook:
 
 1.  `atinit` or `!atinit` – the `!` version is ran before the `atinit`
-    **ice-mod** (i.e. before `zplugin ice atinit'echo this!'; …​`), while
+    **ice-mod** (i.e. before `zplugin ice atinit'echo this!'; …`), while
     the normal version runs after it.
 
 2.  `atload` or `!atload` – analogous to the `atinit` case: the `!` version runs

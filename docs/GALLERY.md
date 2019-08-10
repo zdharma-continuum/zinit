@@ -103,7 +103,6 @@ zplugin snippet OMZ::plugins/osx
 # directory pruned (rm -rf -- ${ZPLGM[SNIPPETS_DIR]}):
 zplugin ice svn
 zplugin snippet OMZ::plugins/osx
-
 ```
 
 ## Themes
