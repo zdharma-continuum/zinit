@@ -1018,13 +1018,13 @@ ZPLGM[EXTENDED_GLOB]=""
                             local oth_prefix_uspl2_X="${match[1]}"
                             if [[ "${widgets[$prefix_X]}" = builtin ]]; then
                                 (( quiet )) || print "Builtin-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
-                                zle -A .${prefix_X#.} $oth_prefix_uspl2_X
+                                zle -A ".${prefix_X#.}" "$oth_prefix_uspl2_X"
                             elif [[ "${widgets[$prefix_X]}" = completion:* ]]; then
                                 (( quiet )) || print "Chain*-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
-                                zle -C $oth_prefix_uspl2_X ${${(s.:.)widgets[$prefix_X]}[2,3]}
+                                zle -C "$oth_prefix_uspl2_X" "${(@)${(@s.:.)${orig_saved3#user:}}[2,3]}"
                             else
                                 (( quiet )) || print "Chain-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
-                                zle -N $oth_prefix_uspl2_X ${widgets[$prefix_X]#user:}
+                                zle -N "$oth_prefix_uspl2_X" "${widgets[$prefix_X]#user:}"
                             fi
                         fi
 
@@ -1037,7 +1037,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     if [[ "$orig_saved3" = builtin ]]; then
                         zle -A ".$orig_saved1" "$orig_saved1"
                     else
-                        zle -N "$orig_saved1" "${orig_saved2#user:}"
+                        zle -N "$orig_saved1" "${orig_saved3#user:}"
                     fi
                 fi
             else
