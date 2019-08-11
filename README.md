@@ -254,11 +254,13 @@ zplugin light zdharma/fast-syntax-highlighting
 zplugin load zdharma/history-search-multi-word
 
 # Load the pure theme, with zsh-async library that's bundled with it.
-zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+zplugin ice pick"async.zsh" src"pure.zsh"
+zplugin light sindresorhus/pure
 
 # Binary release in archive, from GitHub-releases page. 
 # After automatic unpacking it provides program "fzf".
-zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
+zplugin ice from"gh-r" as"program"
+zplugin load junegunn/fzf-bin
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
@@ -289,7 +291,7 @@ zplugin creinstall %HOME/my_completions
 
 ```zsh
 # For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
-# coreutils package from Homebrew or using https://github.com/ogham/exa)
+# coreutils package from Homebrew; you can also use https://github.com/ogham/exa)
 zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
 zplugin light trapd00r/LS_COLORS
 ```
@@ -494,6 +496,9 @@ zplugin snippet OMZ::themes/dstufft.zsh-theme
 # Load normal GitHub plugin with theme depending on OMZ Git library
 zplugin light NicoSantangelo/Alpharized
 ```
+
+See also the Wiki page: [Example Oh My Zsh
+Setup](http://zdharma.org/zplugin/wiki/Example-Oh-My-Zsh-setup/).
 
 # Completions
 
