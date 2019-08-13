@@ -214,8 +214,21 @@
   
     <li class="md-tabs__item">
       
-        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+        <a href="../preinstalling-plugins/" title="Hints" class="md-tabs__link">
           Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Plugin Standard" class="md-tabs__link">
+          Plugin Standard
         </a>
       
     </li>
@@ -347,8 +360,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#atpull" title="atpull"..."" class="md-nav__link">
-    atpull"..."
+  <a href="#atpull" title="atpull"…"" class="md-nav__link">
+    atpull"…"
   </a>
   
 </li>
@@ -406,18 +419,12 @@
     Turbo Mode (Zsh >= 5.3)
   </a>
   
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#automatic_loadunload_on_condition" title="Automatic Load/Unload on Condition" class="md-nav__link">
     Automatic Load/Unload on Condition
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -512,6 +519,18 @@
   <li class="md-nav__item">
     <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
       Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../wrap-track/" title="Tracking precmd-based Plugins" class="md-nav__link">
+      Tracking precmd-based Plugins
     </a>
   </li>
 
@@ -726,18 +745,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
-      Zsh Plugin Standard
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
       Preinstalling Plugins
     </a>
@@ -759,10 +766,46 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
     <label class="md-nav__link" for="nav-6">
-      Code Documentation
+      Plugin Standard
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-6">
+        Plugin Standard
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Code Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
         Code Documentation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -889,8 +932,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#atpull" title="atpull"..."" class="md-nav__link">
-    atpull"..."
+  <a href="#atpull" title="atpull"…"" class="md-nav__link">
+    atpull"…"
   </a>
   
 </li>
@@ -948,18 +991,12 @@
     Turbo Mode (Zsh >= 5.3)
   </a>
   
-    <nav class="md-nav">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#automatic_loadunload_on_condition" title="Automatic Load/Unload on Condition" class="md-nav__link">
     Automatic Load/Unload on Condition
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1053,7 +1090,7 @@ explicitly <strong>select the file to source</strong>:</p>
 zplugin snippet PZT::modules/git
 </code></pre>
 
-<p>Content of Ice-modifier is simply put into <code>"..."</code>, <code>'...'</code>, or <code>$'...'</code>. No
+<p>Content of Ice-modifier is simply put into <code>"…"</code>, <code>'…'</code>, or <code>$'…'</code>. No
 need for <code>":"</code> after Ice-mod name (although it's allowed, so as the equal sign
 <code>=</code>, so e.g. <code>pick="init.zsh"</code> or <code>pick=init.zsh</code> are being correctly
 recognized) . This way editors like <code>vim</code> and <code>emacs</code> and also
@@ -1078,7 +1115,7 @@ being run when the plugin or snippet is being <em>installed</em>. To test them
 again first delete the plugin or snippet by <code>zplugin delete
 PZT::modules/osx</code> (for example).</strong></p>
 </div>
-<h2 id="atpull">atpull"..."<a class="headerlink" href="#atpull" title="Permanent link">#</a></h2>
+<h2 id="atpull">atpull"…"<a class="headerlink" href="#atpull" title="Permanent link">#</a></h2>
 <p>Copying file is safe for doing later updates – original files of repository are
 unmodified and <code>Git</code> will report no conflicts. However, <code>mv</code> also can be used,
 if a proper <code>atpull</code> (an Ice–modifier ran at <strong>update</strong> of plugin) will be used:</p>
@@ -1101,7 +1138,7 @@ into the plugin's contents without blocking the ability to update it with <code>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>For exclamation mark to not be expanded by Zsh in interactive session, use
-<code>'...'</code> not <code>"..."</code> to enclose contents of <code>atpull</code> Ice-mod.</strong></p>
+<code>'…'</code> not <code>"…"</code> to enclose contents of <code>atpull</code> Ice-mod.</strong></p>
 </div>
 <h2 id="snippets-commands">Snippets-Commands<a class="headerlink" href="#snippets-commands" title="Permanent link">#</a></h2>
 <p>Commands can also be added to <code>$PATH</code> using <strong>snippets</strong>. For example:</p>
@@ -1246,7 +1283,7 @@ command line, the plugin will be loaded within 1 second and command <code>crasis
 will become available. <strong><a href="https://asciinema.org/a/149725">See the feature in
 action</a></strong>. This feature requires
 <code>zdharma/fast-syntax-highlighting</code> (it builds the <code>ZLAST_COMMANDS</code> array).</p>
-<h3 id="automatic_loadunload_on_condition">Automatic Load/Unload on Condition<a class="headerlink" href="#automatic_loadunload_on_condition" title="Permanent link">#</a></h3>
+<h2 id="automatic_loadunload_on_condition">Automatic Load/Unload on Condition<a class="headerlink" href="#automatic_loadunload_on_condition" title="Permanent link">#</a></h2>
 <p>Ices <code>load</code> and <code>unload</code> allow to define when you want plugins active or
 unactive. For example:</p>
 <pre><code class="zsh"># Load when in ~/tmp
@@ -1271,7 +1308,7 @@ activate different plugins on <code>cpp</code>, on <code>web</code>, etc.</p>
 active, not only till first activation.</strong></p>
 </div>
 <p>Note that for unloading of a plugin to work the plugin needs to be loaded with
-tracking (so <code>zplugin load ...</code>, not <code>zplugin light ...</code>). Tracking causes
+tracking (so <code>zplugin load …</code>, not <code>zplugin light …</code>). Tracking causes
 slight slowdown, however this doesn’t influence Zsh startup time when using
 Turbo mode.</p>
 <p><strong>See also Wiki on <a href="../Multiple-prompts">multiple prompts</a>.</strong></p>

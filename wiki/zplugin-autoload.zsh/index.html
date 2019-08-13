@@ -214,8 +214,21 @@
   
     <li class="md-tabs__item">
       
-        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+        <a href="../preinstalling-plugins/" title="Hints" class="md-tabs__link">
           Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Plugin Standard" class="md-tabs__link">
+          Plugin Standard
         </a>
       
     </li>
@@ -369,6 +382,18 @@
   <li class="md-nav__item">
     <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
       Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../wrap-track/" title="Tracking precmd-based Plugins" class="md-nav__link">
+      Tracking precmd-based Plugins
     </a>
   </li>
 
@@ -583,11 +608,35 @@
 
 
   <li class="md-nav__item">
-    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
-      Zsh Plugin Standard
+    <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
+      Preinstalling Plugins
     </a>
   </li>
 
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Plugin Standard
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Plugin Standard
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -595,8 +644,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
-      Preinstalling Plugins
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
     </a>
   </li>
 
@@ -615,13 +664,13 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-7">
       Code Documentation
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-7">
         Code Documentation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -942,7 +991,7 @@ in reply.
 Uninstalled completions will be reported as "0"
 - i.e. disabled
 
-$1, ... - path to completion within plugin's directory
+$1, … - path to completion within plugin's directory
 </code></pre>
 </blockquote>
 <p>Has 11 line(s). Doesn’t call other functions.</p>
@@ -956,7 +1005,7 @@ within a plugin's dir, it checks whether that completion
 is installed - returns 0 or 1 on corresponding positions
 in reply.
 
-$1, ... - path to completion within plugin's directory
+$1, … - path to completion within plugin's directory
 </code></pre>
 </blockquote>
 <p>Has 12 line(s). Doesn’t call other functions.</p>
@@ -1341,7 +1390,7 @@ $2 - readlink command (":" or "readlink")
 <blockquote>
 <pre><code>Returns path of given ID-string, which may be a plugin-spec
 (like "user/plugin" or "user" "plugin"), an absolute path
-("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
+("%" "/home/…" and also "%SNIPPETS/…" etc.), or a plugin
 nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 </code></pre>
 </blockquote>

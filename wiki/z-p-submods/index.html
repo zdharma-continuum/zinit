@@ -214,8 +214,21 @@
   
     <li class="md-tabs__item">
       
-        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+        <a href="../preinstalling-plugins/" title="Hints" class="md-tabs__link">
           Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Plugin Standard" class="md-tabs__link">
+          Plugin Standard
         </a>
       
     </li>
@@ -369,6 +382,18 @@
   <li class="md-nav__item">
     <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
       Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../wrap-track/" title="Tracking precmd-based Plugins" class="md-nav__link">
+      Tracking precmd-based Plugins
     </a>
   </li>
 
@@ -594,18 +619,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
-      Zsh Plugin Standard
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
       Preinstalling Plugins
     </a>
@@ -627,10 +640,46 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
     <label class="md-nav__link" for="nav-6">
-      Code Documentation
+      Plugin Standard
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-6">
+        Plugin Standard
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Code Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
         Code Documentation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -733,10 +782,10 @@
 <p>A z-plugin (i.e. a plugin for the Zplugin – <a href="../Z-PLUGINS/">more information</a>)
 that allows Zplugin to clone additional submodules when installing a plugin or
 snippet. The submodules are then automatically updated on the <code>zplugin update
-...</code>
+…</code>
 command.</p>
 <p>This z-plugin adds <code>submods''</code> ice to Zplugin which has the following syntax:</p>
-<pre><code class="zsh">submods'{user}/{plugin} -&gt; {output directory}; ...'
+<pre><code class="zsh">submods'{user}/{plugin} -&gt; {output directory}; …'
 </code></pre>
 
 <p>An example command utilizing the z-plugin and its ice:</p>

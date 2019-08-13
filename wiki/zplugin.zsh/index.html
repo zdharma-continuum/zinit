@@ -214,8 +214,21 @@
   
     <li class="md-tabs__item">
       
-        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+        <a href="../preinstalling-plugins/" title="Hints" class="md-tabs__link">
           Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Plugin Standard" class="md-tabs__link">
+          Plugin Standard
         </a>
       
     </li>
@@ -369,6 +382,18 @@
   <li class="md-nav__item">
     <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
       Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../wrap-track/" title="Tracking precmd-based Plugins" class="md-nav__link">
+      Tracking precmd-based Plugins
     </a>
   </li>
 
@@ -583,11 +608,35 @@
 
 
   <li class="md-nav__item">
-    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
-      Zsh Plugin Standard
+    <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
+      Preinstalling Plugins
     </a>
   </li>
 
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
+    
+    <label class="md-nav__link" for="nav-6">
+      Plugin Standard
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-6">
+        Plugin Standard
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
         
           
           
@@ -595,8 +644,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
-      Preinstalling Plugins
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
     </a>
   </li>
 
@@ -615,13 +664,13 @@
 
   <li class="md-nav__item md-nav__item--active md-nav__item--nested">
     
-      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6" checked>
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7" checked>
     
-    <label class="md-nav__link" for="nav-6">
+    <label class="md-nav__link" for="nav-7">
       Code Documentation
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
-      <label class="md-nav__title" for="nav-6">
+      <label class="md-nav__title" for="nav-7">
         Code Documentation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -902,7 +951,7 @@ etc.).</p>
 <pre><code>Adds a report line for given plugin.
 
 $1 - uspl2, i.e. user/plugin
-$2, ... - the text
+$2, … - the text
 </code></pre>
 </blockquote>
 <p>Has 2 line(s). Doesn’t call other functions.</p>
@@ -1211,7 +1260,7 @@ zplugin-autoload.zsh/-zplg-update-or-status-snippet
 is in general forgotten for second-next command (that's why it's
 called "ice" - it melts), however they glue to the object (plugin
 or snippet) mentioned in the next command – for later use with e.g.
-`zplugin update ...'
+`zplugin update …'
 </code></pre>
 </blockquote>
 <p>Has 3 line(s). Doesn’t call other functions.</p>
@@ -1252,7 +1301,7 @@ additional conditions (like non-numeric wait'' ice).
 $1 - the pass number, either 1st or 2nd pass
 $2 - the time assigned to the task
 $3 - type: plugin, snippet, service plugin, service snippet
-$4 - task's index in the ZPLGM[WAIT_ICE_...] fields
+$4 - task's index in the ZPLGM[WAIT_ICE_…] fields
 $5 - mode: load or light
 $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 </code></pre>

@@ -210,8 +210,21 @@
   
     <li class="md-tabs__item">
       
-        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+        <a href="../preinstalling-plugins/" title="Hints" class="md-tabs__link">
           Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Plugin Standard" class="md-tabs__link">
+          Plugin Standard
         </a>
       
     </li>
@@ -365,6 +378,18 @@
   <li class="md-nav__item">
     <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
       Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../wrap-track/" title="Tracking precmd-based Plugins" class="md-nav__link">
+      Tracking precmd-based Plugins
     </a>
   </li>
 
@@ -588,18 +613,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
-      Zsh Plugin Standard
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
       Preinstalling Plugins
     </a>
@@ -621,10 +634,46 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
     <label class="md-nav__link" for="nav-6">
-      Code Documentation
+      Plugin Standard
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-6">
+        Plugin Standard
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Code Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
         Code Documentation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -719,7 +768,7 @@ zplugin light direnv/direnv
 
 <ul>
 <li><code>make'!'</code> – compile <code>direnv</code> (it's written in Go lang); the exclamation mark means: run the <code>make</code> first, before <code>atclone</code> and <code>atpull</code> hooks,</li>
-<li><code>atclone'...'</code> – initially (right after installing the plugin) generate the registration code and save it to <code>zhook.zsh</code> (instead of passing to <code>eval</code>),</li>
+<li><code>atclone'…'</code> – initially (right after installing the plugin) generate the registration code and save it to <code>zhook.zsh</code> (instead of passing to <code>eval</code>),</li>
 <li><code>atpull'%atclone'</code> – regenerate the registration code also on update (<code>atclone''</code> runs on <em>installation</em> while <code>atpull</code> runs on <em>update</em> of the plugin),</li>
 <li><code>src"zhook.zsh"</code> – load (<code>source</code>) the generated registration code,</li>
 <li><code>pick"direnv"</code> – ensure <code>+x</code> permission on the binary,</li>
@@ -735,8 +784,8 @@ zplugin light direnv/direnv
 
 <ul>
 <li><code>from"gh-r"</code> – install from Github <strong>releases</strong>,</li>
-<li><code>mv"..."</code> – after installation, rename <code>direnv.linux-386</code> or similar file to <code>direnv</code>,</li>
-<li><code>atclone'...'</code>, <code>atpull'...'</code> – as in previous example,</li>
+<li><code>mv"…"</code> – after installation, rename <code>direnv.linux-386</code> or similar file to <code>direnv</code>,</li>
+<li><code>atclone'…'</code>, <code>atpull'…'</code> – as in previous example,</li>
 <li><code>pick"direnv"</code> – as in previous example,</li>
 <li><code>as"program"</code> – as in previous example.</li>
 </ul>

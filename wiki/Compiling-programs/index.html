@@ -210,8 +210,21 @@
   
     <li class="md-tabs__item">
       
-        <a href="../zsh-plugin-standard/" title="Hints" class="md-tabs__link">
+        <a href="../preinstalling-plugins/" title="Hints" class="md-tabs__link">
           Hints
+        </a>
+      
+    </li>
+  
+
+      
+        
+  
+  
+    <li class="md-tabs__item">
+      
+        <a href="../zsh-plugin-standard/" title="Plugin Standard" class="md-tabs__link">
+          Plugin Standard
         </a>
       
     </li>
@@ -365,6 +378,18 @@
   <li class="md-nav__item">
     <a href="../id-as/" title="Nickname a Plugin or Snippet" class="md-nav__link">
       Nickname a Plugin or Snippet
+    </a>
+  </li>
+
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../wrap-track/" title="Tracking precmd-based Plugins" class="md-nav__link">
+      Tracking precmd-based Plugins
     </a>
   </li>
 
@@ -588,18 +613,6 @@
 
 
   <li class="md-nav__item">
-    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
-      Zsh Plugin Standard
-    </a>
-  </li>
-
-        
-          
-          
-          
-
-
-  <li class="md-nav__item">
     <a href="../preinstalling-plugins/" title="Preinstalling Plugins" class="md-nav__link">
       Preinstalling Plugins
     </a>
@@ -621,10 +634,46 @@
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6" type="checkbox" id="nav-6">
     
     <label class="md-nav__link" for="nav-6">
-      Code Documentation
+      Plugin Standard
     </label>
     <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
       <label class="md-nav__title" for="nav-6">
+        Plugin Standard
+      </label>
+      <ul class="md-nav__list" data-md-scrollfix>
+        
+        
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../zsh-plugin-standard/" title="Zsh Plugin Standard" class="md-nav__link">
+      Zsh Plugin Standard
+    </a>
+  </li>
+
+        
+      </ul>
+    </nav>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item md-nav__item--nested">
+    
+      <input class="md-toggle md-nav__toggle" data-md-toggle="nav-7" type="checkbox" id="nav-7">
+    
+    <label class="md-nav__link" for="nav-7">
+      Code Documentation
+    </label>
+    <nav class="md-nav" data-md-component="collapsible" data-md-level="1">
+      <label class="md-nav__title" for="nav-7">
         Code Documentation
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
@@ -717,7 +766,7 @@ zplugin light vim/vim
 
 <ul>
 <li><code>as"program"</code> – add file selected by <code>pick''</code> to <code>$PATH</code>, do not source it,</li>
-<li><code>atclone"..."</code> – execute code after downloading,</li>
+<li><code>atclone"…"</code> – execute code after downloading,</li>
 <li><code>atpull"%atclone"</code> – execute the same code <code>atclone''</code> is given, but after successful update,</li>
 <li><code>make</code> – run <code>make</code> after <code>atclone''</code> and <code>atpull''</code> (note: <code>make'!'</code> will execute before them),</li>
 <li><code>pick"src/vim"</code> – set executable flag on <code>src/vim</code>, hint that <code>src/</code> should be added to <code>$PATH</code>.</li>
@@ -733,7 +782,7 @@ zplugin light vim/vim
 
 <ul>
 <li><code>as"program"</code> – as above,</li>
-<li><code>atclone"..."</code> – as above <strong>plus</strong> pass <code>--prefix=$ZPFX</code> to <code>./configure</code>, to
+<li><code>atclone"…"</code> – as above <strong>plus</strong> pass <code>--prefix=$ZPFX</code> to <code>./configure</code>, to
   set the installation directory,</li>
 <li><code>atpull"%atclone"</code> – as above,</li>
 <li><code>make</code> – as above, but also run the <code>install</code> target,</li>
