@@ -885,7 +885,6 @@ ZPLGM[EXTENDED_GLOB]=""
     if (( empty != 1 )); then
         typeset -A opts
         opts=( "${(z)ZPLGM[OPTIONS__$uspl2]}" )
-        local k
         for k in "${(kon)opts[@]}"; do
             # Internal options
             [[ "$k" = "physical" ]] && continue
