@@ -782,7 +782,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local k
 
     -zplg-any-colorify-as-uspl2 "$uspl2"
-    print -r -- "${ZPLGM[col-bar]}===${ZPLGM[col-rst]} Unloading plugin: $REPLY ${ZPLGM[col-bar]}===${ZPLGM[col-rst]}"
+    (( quiet )) || print -r -- "${ZPLGM[col-bar]}===${ZPLGM[col-rst]} Unloading plugin: $REPLY ${ZPLGM[col-bar]}===${ZPLGM[col-rst]}"
 
     # KSH_ARRAYS immunity
     integer correct=0
