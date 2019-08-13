@@ -21,7 +21,7 @@ zplugin light zdharma/fast-syntax-highlighting
  - `atinit''` – execute code before loading plugin,
  - `atload''` – execute code after loading plugin,
  - `zpcompinit` – equals to `autoload compinit; compinit`,
- - `zpcdreplay` – execute `compdef ...` calls that plugins did – they were
+ - `zpcdreplay` – execute `compdef …` calls that plugins did – they were
    recorded, so that `compinit` can be called later (it provides the `compdef`
    function, so it must be ran before issuing `compdef`s),
  - syntax-highlighting plugins (like

@@ -5,7 +5,7 @@ zplugin light vim/vim
 ```
 
 - `as"program"` – add file selected by `pick''` to `$PATH`, do not source it,
-- `atclone"..."` – execute code after downloading,
+- `atclone"…"` – execute code after downloading,
 - `atpull"%atclone"` – execute the same code `atclone''` is given, but after successful update,
 - `make` – run `make` after `atclone''` and `atpull''` (note: `make'!'` will execute before them),
 - `pick"src/vim"` – set executable flag on `src/vim`, hint that `src/` should be added to `$PATH`.
@@ -23,7 +23,7 @@ zplugin light vim/vim
 ```
 
 - `as"program"` – as above,
-- `atclone"..."` – as above **plus** pass `--prefix=$ZPFX` to `./configure`, to
+- `atclone"…"` – as above **plus** pass `--prefix=$ZPFX` to `./configure`, to
   set the installation directory,
 - `atpull"%atclone"` – as above,
 - `make` – as above, but also run the `install` target,

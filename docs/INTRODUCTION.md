@@ -82,7 +82,7 @@ zplugin ice svn pick"init.zsh"
 zplugin snippet PZT::modules/git
 ```
 
-Content of Ice-modifier is simply put into `"..."`, `'...'`, or `$'...'`. No
+Content of Ice-modifier is simply put into `"…"`, `'…'`, or `$'…'`. No
 need for `":"` after Ice-mod name (although it's allowed, so as the equal sign
 `=`, so e.g. `pick="init.zsh"` or `pick=init.zsh` are being correctly
 recognized) . This way editors like `vim` and `emacs` and also
@@ -111,7 +111,7 @@ i.e. to `httpstat`. Other Ice-mod exists, `mv`, which works like `cp` but
     again first delete the plugin or snippet by `zplugin delete
     PZT::modules/osx` (for example).**
 
-## atpull"..."
+## atpull"…"
 
 Copying file is safe for doing later updates – original files of repository are
 unmodified and `Git` will report no conflicts. However, `mv` also can be used,
@@ -137,7 +137,7 @@ into the plugin's contents without blocking the ability to update it with `git`
 
 !!!note
     **For exclamation mark to not be expanded by Zsh in interactive session, use
-    `'...'` not `"..."` to enclose contents of `atpull` Ice-mod.**
+    `'…'` not `"…"` to enclose contents of `atpull` Ice-mod.**
 
 ## Snippets-Commands
 
@@ -321,7 +321,7 @@ will become available. **[See the feature in
 action](https://asciinema.org/a/149725)**. This feature requires
 `zdharma/fast-syntax-highlighting` (it builds the `ZLAST_COMMANDS` array).
 
-### Automatic Load/Unload on Condition
+## Automatic Load/Unload on Condition
 
 Ices `load` and `unload` allow to define when you want plugins active or
 unactive. For example:
@@ -349,7 +349,7 @@ activate different plugins on `cpp`, on `web`, etc.
     active, not only till first activation.**
 
 Note that for unloading of a plugin to work the plugin needs to be loaded with
-tracking (so `zplugin load ...`, not `zplugin light ...`). Tracking causes
+tracking (so `zplugin load …`, not `zplugin light …`). Tracking causes
 slight slowdown, however this doesn’t influence Zsh startup time when using
 Turbo mode.
 

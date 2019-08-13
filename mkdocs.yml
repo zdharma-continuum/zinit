@@ -8,6 +8,7 @@ nav:
   - "Installing With Make": Installing-with-make.md
   - "Sourcing Multiple Files": Sourcing-multiple-files.md
   - "Nickname a Plugin or Snippet": id-as.md
+  - "Tracking precmd-based Plugins": wrap-track.md
 - "Examples":
   - "Example Minimal Setup": Example-Minimal-Setup.md
   - "Example Oh My Zsh Setup": Example-Oh-My-Zsh-setup.md
@@ -22,8 +23,9 @@ nav:
   - "declare-zsh": declare-zsh.md
   - "Crasis": crasis.md
 - "Hints": 
-  - "Zsh Plugin Standard": zsh-plugin-standard.md
   - "Preinstalling Plugins": preinstalling-plugins.md
+- "Plugin Standard":
+  - "Zsh Plugin Standard": zsh-plugin-standard.md
 - "Code Documentation": 
   - "Overview": Code-Documentation.md
   - "zplugin.zsh": zplugin.zsh.md

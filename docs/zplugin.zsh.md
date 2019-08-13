@@ -211,7 +211,7 @@ etc.).
 >     Adds a report line for given plugin.
 > 
 >     $1 - uspl2, i.e. user/plugin
->     $2, ... - the text
+>     $2, … - the text
 
 Has 2 line(s). Doesn’t call other functions.
 
@@ -579,7 +579,7 @@ Called by:
 >     is in general forgotten for second-next command (that's why it's
 >     called "ice" - it melts), however they glue to the object (plugin
 >     or snippet) mentioned in the next command – for later use with e.g.
->     `zplugin update ...'
+>     `zplugin update …'
 
 Has 3 line(s). Doesn’t call other functions.
 
@@ -630,7 +630,7 @@ Called by:
 >     $1 - the pass number, either 1st or 2nd pass
 >     $2 - the time assigned to the task
 >     $3 - type: plugin, snippet, service plugin, service snippet
->     $4 - task's index in the ZPLGM[WAIT_ICE_...] fields
+>     $4 - task's index in the ZPLGM[WAIT_ICE_…] fields
 >     $5 - mode: load or light
 >     $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 

@@ -248,7 +248,7 @@ Called by:
 >     Uninstalled completions will be reported as "0"
 >     - i.e. disabled
 > 
->     $1, ... - path to completion within plugin's directory
+>     $1, … - path to completion within plugin's directory
 
 Has 11 line(s). Doesn’t call other functions.
 
@@ -265,7 +265,7 @@ Called by:
 >     is installed - returns 0 or 1 on corresponding positions
 >     in reply.
 > 
->     $1, ... - path to completion within plugin's directory
+>     $1, … - path to completion within plugin's directory
 
 Has 12 line(s). Doesn’t call other functions.
 
@@ -723,7 +723,7 @@ Called by:
 > 
 >     Returns path of given ID-string, which may be a plugin-spec
 >     (like "user/plugin" or "user" "plugin"), an absolute path
->     ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
+>     ("%" "/home/…" and also "%SNIPPETS/…" etc.), or a plugin
 >     nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 
 Has 35 line(s). Calls functions:

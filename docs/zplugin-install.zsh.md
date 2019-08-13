@@ -43,7 +43,7 @@ Called by:
 > 
 > 
 >     Compiles given plugin (its main source file, and also an
->     additional "....zsh" file if it exists).
+>     additional "….zsh" file if it exists).
 > 
 >     $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 >     $2 - plugin (only when $1 - i.e. user - given)

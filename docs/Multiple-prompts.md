@@ -18,7 +18,7 @@ zplugin load geometry-zsh/geometry
  - note that plugins are loaded with <code>zplugin load </code>, not `zplugin light`, to track what plugin does, to be able to unload it,
  - conditions are checked every second,
  - you can use conditions like `![[ $PWD == *github* ]]` to change prompt after changing directory to `*github*`,
- - the exclamation mark `![[ ... ]]` causes prompt to be reset after loading or unloading the plugin,
+ - the exclamation mark `![[ … ]]` causes prompt to be reset after loading or unloading the plugin,
  - `pick'/dev/null'` – disable sourcing of the default-found file
  - `multisrc''` – source multiple files
 

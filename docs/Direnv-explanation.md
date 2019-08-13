@@ -9,7 +9,7 @@ zplugin light direnv/direnv
 ```
 
  - `make'!'` – compile `direnv` (it's written in Go lang); the exclamation mark means: run the `make` first, before `atclone` and `atpull` hooks,
- - `atclone'...'` – initially (right after installing the plugin) generate the registration code and save it to `zhook.zsh` (instead of passing to `eval`),
+ - `atclone'…'` – initially (right after installing the plugin) generate the registration code and save it to `zhook.zsh` (instead of passing to `eval`),
  - `atpull'%atclone'` – regenerate the registration code also on update (`atclone''` runs on *installation* while `atpull` runs on *update* of the plugin),
  - `src"zhook.zsh"` – load (`source`) the generated registration code,
  - `pick"direnv"` – ensure `+x` permission on the binary,
@@ -28,8 +28,8 @@ zplugin light direnv/direnv
 ```
 
  - `from"gh-r"` – install from Github **releases**,
- - `mv"..."` – after installation, rename `direnv.linux-386` or similar file to `direnv`,
- - `atclone'...'`, `atpull'...'` – as in previous example,
+ - `mv"…"` – after installation, rename `direnv.linux-386` or similar file to `direnv`,
+ - `atclone'…'`, `atpull'…'` – as in previous example,
  - `pick"direnv"` – as in previous example,
  - `as"program"` – as in previous example.
 

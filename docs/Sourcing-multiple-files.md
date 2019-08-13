@@ -29,7 +29,7 @@ zplugin snippet OMZ::lib
   plugin's) directory**,
 - `atload''` code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you
   load a plugin (not a snippet) with `zplugin load …` and prepend the value of
-  the ice with exclamation mark, i.e.  `atload'!local f; for ...'`,
+  the ice with exclamation mark, i.e.  `atload'!local f; for …'`,
 - `atload''` is executed after loading main files (`pick''` and `src''` ones).
 
 ****
