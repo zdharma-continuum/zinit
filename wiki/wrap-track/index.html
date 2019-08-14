@@ -781,13 +781,18 @@
                 <h1 id="the_wrap-track_ice">The <code>wrap-track</code> Ice<a class="headerlink" href="#the_wrap-track_ice" title="Permanent link">#</a></h1>
 <p>The <code>wrap-track</code> ice-mod allows to extend the tracking (i.e. gathering of report
 and unload data) of a plugin beyond the moment of sourcing it's main file(s). It
-works by wrapping the functions with a tracking-enabling and disabling snippet
-of code.  This is useful especially with prompts, as they very often do their
-initialization in the first call to their <code>precmd</code> <a href="http://zsh.sourceforge.net/Doc/Release/Functions.html#Hook-Functions"><strong>hook</strong>
+works by wrapping the given functions with a tracking-enabling and disabling
+snippet of code. This is useful especially with prompts, as they very often do
+their initialization in the first call to their <code>precmd</code> <a href="http://zsh.sourceforge.net/Doc/Release/Functions.html#Hook-Functions"><strong>hook</strong>
 </a>
 function. For example,
 <a href="https://github.com/romkatv/powerlevel10k"><strong>romkatv/powerlevel10k</strong></a> works this
 way.</p>
+<p>The ice takes a list of function names, with the elements separated by <code>;</code>:</p>
+<pre><code class="zsh">zplugin ice wrap-track&quot;func1;func2;…&quot; …
+…
+</code></pre>
+
 <p>Therefore, to e.g. load and unload the example powerlevel10k prompt in the
 fashion of <a href="../Multiple-prompts/"><strong>Multiple prompts</strong></a> article, the <code>precmd</code>
 function of the plugin – called <code>_p9k_precmd</code> – should be passed to
