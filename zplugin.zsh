@@ -646,12 +646,12 @@ function $f {
     -zplg-add-report \"\${ZPLGM[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
     -zplg-diff \"\${ZPLGM[CUR_USPL2]}\" begin
     -zplg-shadow-on load
-    ${f}-zplugin-bkp \"\$@\"
+    functions[${f}]=\${functions[${f}-zplugin-bkp]}
+    ${f} \"\$@\"
     -zplg-shadow-off load
     -zplg-diff \"\${ZPLGM[CUR_USPL2]}\" end
     -zplg-add-report \"\${ZPLGM[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
     ZPLGM[CUR_USR]="" ZPLG_CUR_PLUGIN="" ZPLGM[CUR_USPL2]=""
-    functions[${f}]=\${functions[${f}-zplugin-bkp]}
 }"
     done
 }
