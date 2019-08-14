@@ -19,7 +19,8 @@ zplugin ice wrap-track"func1;func2;…" …
 
 Therefore, to e.g. load and unload the example powerlevel10k prompt in the
 fashion of [**Multiple prompts**](../Multiple-prompts/) article, the `precmd`
-function of the plugin – called `_p9k_precmd` – should be passed to
+function of the plugin – called `_p9k_precmd` (to get the name of the function
+do `echo $precmd_functions` after loading a theme) – should be passed to
 `wrap-track''` ice, like so:
 
 ```zsh
@@ -30,7 +31,7 @@ zplugin load romkatv/powerlevel10k
 ```
 
 This way the actions done during the first call to `_p9k_precmd()` will be
-normally recorded, which can be viewed in the `report` of the
+normally recorded, which can be viewed in the report of the
 [**romkatv/powerlevel10k**](https://github.com/romkatv/powerlevel10k) theme:
 
 ```
