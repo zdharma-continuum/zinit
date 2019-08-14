@@ -795,7 +795,8 @@ way.</p>
 
 <p>Therefore, to e.g. load and unload the example powerlevel10k prompt in the
 fashion of <a href="../Multiple-prompts/"><strong>Multiple prompts</strong></a> article, the <code>precmd</code>
-function of the plugin – called <code>_p9k_precmd</code> – should be passed to
+function of the plugin – called <code>_p9k_precmd</code> (to get the name of the function
+do <code>echo $precmd_functions</code> after loading a theme) – should be passed to
 <code>wrap-track''</code> ice, like so:</p>
 <pre><code class="zsh"># Load when MYPROMPT == 4
 zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
@@ -804,7 +805,7 @@ zplugin load romkatv/powerlevel10k
 </code></pre>
 
 <p>This way the actions done during the first call to <code>_p9k_precmd()</code> will be
-normally recorded, which can be viewed in the <code>report</code> of the
+normally recorded, which can be viewed in the report of the
 <a href="https://github.com/romkatv/powerlevel10k"><strong>romkatv/powerlevel10k</strong></a> theme:</p>
 <pre><code>~ zplg report romkatv/powerlevel10k:
 Plugin report for romkatv/powerlevel10k
