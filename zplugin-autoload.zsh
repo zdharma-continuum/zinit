@@ -823,28 +823,49 @@ ZPLGM[EXTENDED_GLOB]=""
         # Remove one level of quoting to pass to bindkey
         local sw_arr1="${(Q)sw_arr[1-correct]}" # Keys
         local sw_arr2="${(Q)sw_arr[2-correct]}" # Widget
-        local sw_arr3="${(Q)sw_arr[3-correct]}" # Optional -M or -A or -N
-        local sw_arr4="${(Q)sw_arr[4-correct]}" # Optional map name
-        local sw_arr5="${(Q)sw_arr[5-correct]}" # Optional -R (not with -A, -N)
+        local sw_arr3="${(Q)sw_arr[3-correct]}" # Optional previous-bound widget
+        local sw_arr4="${(Q)sw_arr[4-correct]}" # Optional -M or -A or -N
+        local sw_arr5="${(Q)sw_arr[5-correct]}" # Optional map name
+        local sw_arr6="${(Q)sw_arr[6-correct]}" # Optional -R (not with -A, -N)
 
-        if [[ "$sw_arr3" = "-M" && "$sw_arr5" != "-R" ]]; then
-            (( quiet )) || print "Deleting bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}mapped to $sw_arr4${ZPLGM[col-rst]}"
-            bindkey -M "$sw_arr4" -r "$sw_arr1"
-        elif [[ "$sw_arr3" = "-M" && "$sw_arr5" = "-R" ]]; then
-            (( quiet )) || print "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2 ${ZPLGM[col-info]}mapped to $sw_arr4${ZPLGM[col-rst]}"
-            bindkey -M "$sw_arr4" -Rr "$sw_arr1"
-        elif [[ "$sw_arr3" != "-M" && "$sw_arr5" = "-R" ]]; then
-            (( quiet )) || print "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey $sw_arr1 $sw_arr2"
-            bindkey -Rr "$sw_arr1"
-        elif [[ "$sw_arr3" = "-A" ]]; then
-            (( quiet )) || print "Linking backup-\`main' keymap \`$sw_arr4' back to \`main'"
-            bindkey -A "$sw_arr4" "main"
-        elif [[ "$sw_arr3" = "-N" ]]; then
-            (( quiet )) || print "Deleting keymap \`$sw_arr4'"
-            bindkey -D "$sw_arr4"
+        if [[ "$sw_arr4" = "-M" && "$sw_arr6" != "-R" ]]; then
+            if [[ -n "$sw_arr3" ]]; then
+                (( quiet )) || print -r "Restoring bindkey ${(q)sw_arr1} $sw_arr3 ${ZPLGM[col-info]}in map ${ZPLGM[col-rst]}$sw_arr5"
+                bindkey -M "$sw_arr5" "$sw_arr1" "$sw_arr3"
+            else
+                (( quiet )) || print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2 ${ZPLGM[col-info]}in map ${ZPLGM[col-rst]}$sw_arr5"
+                bindkey -M "$sw_arr5" -r "$sw_arr1"
+            fi
+        elif [[ "$sw_arr4" = "-M" && "$sw_arr6" = "-R" ]]; then
+            if [[ -n "$sw_arr3" ]]; then
+                (( quiet )) || print -r "Restoring ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey ${(q)sw_arr1} $sw_arr3 ${ZPLGM[col-info]}in map ${ZPLGM[col-rst]}$sw_arr5"
+                bindkey -RM "$sw_arr5" "$sw_arr1" "$sw_arr3"
+            else
+                (( quiet )) || print -r "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey ${(q)sw_arr1} $sw_arr2 ${ZPLGM[col-info]}in map ${ZPLGM[col-rst]}$sw_arr5"
+                bindkey -M "$sw_arr5" -Rr "$sw_arr1"
+            fi
+        elif [[ "$sw_arr4" != "-M" && "$sw_arr6" = "-R" ]]; then
+            if [[ -n "$sw_arr3" ]]; then
+                (( quiet )) || print -r "Restoring ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey ${(q)sw_arr1} $sw_arr3"
+                bindkey -R "$sw_arr1" "$sw_arr3"
+            else
+                (( quiet )) || print -r "Deleting ${ZPLGM[col-info]}range${ZPLGM[col-rst]} bindkey ${(q)sw_arr1} $sw_arr2"
+                bindkey -Rr "$sw_arr1"
+            fi
+        elif [[ "$sw_arr4" = "-A" ]]; then
+            (( quiet )) || print -r "Linking backup-\`main' keymap \`$sw_arr5' back to \`main'"
+            bindkey -A "$sw_arr5" "main"
+        elif [[ "$sw_arr4" = "-N" ]]; then
+            (( quiet )) || print -r "Deleting keymap \`$sw_arr5'"
+            bindkey -D "$sw_arr5"
         else
-            (( quiet )) || print "Deleting bindkey $sw_arr1 $sw_arr2"
-            bindkey -r "$sw_arr1"
+            if [[ -n "$sw_arr3" ]]; then
+                (( quiet )) || print -r "Restoring bindkey ${(q)sw_arr1} $sw_arr3"
+                bindkey "$sw_arr1" "$sw_arr3"
+            else
+                (( quiet )) || print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2"
+                bindkey -r "$sw_arr1"
+            fi
         fi
     done
 

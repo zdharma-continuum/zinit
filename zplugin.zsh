@@ -226,7 +226,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-bindkey() {
-    -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey $*"
+    -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q)@}}"
 
     # Remember to perform the actual bindkey call
     typeset -a pos
@@ -278,6 +278,8 @@ builtin setopt noaliases
         fi
         [[ "$bmap_val" = "hold" ]] && return 0
 
+        local prev="${(q)${(s: :)$(builtin bindkey ${(Q)string})}[-1]#undefined-key}"
+
         # "-M map" given?
         if (( ${+opts[-M]} )); then
             local Mopt="-M"
@@ -286,9 +288,9 @@ builtin setopt noaliases
             Mopt="${(q)Mopt}"
             Marg="${(q)Marg}"
 
-            quoted="$string $widget $Mopt $Marg"
+            quoted="$string $widget $prev $Mopt $Marg"
         else
-            quoted="$string $widget"
+            quoted="$string $widget $prev"
         fi
 
         # -R given?
@@ -323,8 +325,8 @@ builtin setopt noaliases
             builtin bindkey -N "$name" main
 
             # Remember occurence of main keymap substitution, to revert on unload
-            local keys="_" widget="_" optA="-A" mapname="${name}" optR="_"
-            local quoted="${(q)keys} ${(q)widget} ${(q)optA} ${(q)mapname} ${(q)optR}"
+            local keys="_" widget="_" prev="" optA="-A" mapname="${name}" optR="_"
+            local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optA} ${(q)mapname} ${(q)optR}"
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
@@ -337,8 +339,8 @@ builtin setopt noaliases
             local Nopt="-N"
             local Narg="${opts[-N]}"
 
-            local keys="_" widget="_" optN="-N" mapname="${Narg}" optR="_"
-            local quoted="${(q)keys} ${(q)widget} ${(q)optN} ${(q)mapname} ${(q)optR}"
+            local keys="_" widget="_" prev="" optN="-N" mapname="${Narg}" optR="_"
+            local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optN} ${(q)mapname} ${(q)optR}"
             quoted="${(q)quoted}"
 
             # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here)
