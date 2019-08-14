@@ -1,7 +1,5 @@
 ALIASES__psprint/zsh-editing-workbench
 
-BINDKEYS__psprint/zsh-editing-workbench
-
 BIN_DIR
 test
 COMPLETIONS_DIR

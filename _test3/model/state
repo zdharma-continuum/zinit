@@ -1,7 +1,5 @@
 ALIASES__zdharma/ice-order
 
-BINDKEYS__zdharma/ice-order
-
 BIN_DIR
 test
 COMPLETIONS_DIR

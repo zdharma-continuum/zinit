@@ -2,10 +2,6 @@ ALIASES__psprint/zsh-select
 
 ALIASES__zdharma/ice-order
 
-BINDKEYS__psprint/zsh-select
-
-BINDKEYS__zdharma/ice-order
-
 BIN_DIR
 test
 COMPLETIONS_DIR

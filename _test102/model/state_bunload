@@ -1,7 +1,5 @@
 ALIASES__psprint/zsh-editing-workbench
 naliases\ \'\' ncd\ \'\' nenv\ \'\' nfunctions\ \'\' nhistory\ \'\' nkill\ \'\' zpl\ zplugin zplg\ zplugin
-BINDKEYS__psprint/zsh-editing-workbench
-\\\^\\\[w\ zew-backward-kill-shell-word\ \'\' \\\^\\\[t\ zew-transpose-shell-words\ \'\' \\\^\\\[m\ copy-earlier-word\ \'\' \\\^\\\[M\ copy-prev-shell-word\ \'\' \\\^\\\[.\ insert-last-word\ \'\' \\\^W\ backward-kill-word\ vi-backward-kill-word \\\^\\\[y\ transpose-words-match\ \'\' \\\^\\\[/\ _history-complete-older\ \'\' \\\^\\\[h\ zew-history-complete-word\ \'\' \\\^\\\[H\ zew-history-complete-word-backwards\ \'\' \\\^J\ self-insert\ accept-line \\\^_\ undo\ self-insert \\\^\\\[r\ zew-rotate-shell-words\ \'\' \\\^\\\[R\ zew-rotate-shell-words-backwards\ \'\'
 BIN_DIR
 test
 COMPLETIONS_DIR

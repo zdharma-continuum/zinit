@@ -176,6 +176,7 @@ store_state() {
             OPTIONS_BEFORE__\* 1 OPTIONS_AFTER__\* 1
             FPATH_BEFORE__\* 1 FPATH_AFTER__\* 1
             PATH_BEFORE__\* 1 PATH_AFTER__\* 1
+            BINDKEYS__\* 1
         )
 
     local -A mymap

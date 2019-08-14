@@ -1,7 +1,5 @@
 ALIASES__psprint/zsh-select
 
-BINDKEYS__psprint/zsh-select
-
 BIN_DIR
 test
 COMPLETIONS_DIR
