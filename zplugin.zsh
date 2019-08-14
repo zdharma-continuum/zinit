@@ -235,19 +235,16 @@ builtin setopt noaliases
     # Check if we have regular bindkey call, i.e.
     # with no options or with -s, plus possible -M
     # option
-    local -A optsA
-    zparseopts -A optsA -D ${(s::):-lLdDAmrsevaR} "M:" "N:"
+    local -A opts
+    zparseopts -A opts -D ${(s::):-lLdDAmrsevaR} "M:" "N:"
 
-    local -a opts
-    opts=( "${(k)optsA[@]}" )
-
-    if [[ "${#opts}" -eq "0" ||
-        ( "${#opts}" -eq "1" && "${+opts[(r)-M]}" = "1" ) ||
-        ( "${#opts}" -eq "1" && "${+opts[(r)-R]}" = "1" ) ||
-        ( "${#opts}" -eq "1" && "${+opts[(r)-s]}" = "1" ) ||
-        ( "${#opts}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-s]}" = "1" ) ||
-        ( "${#opts}" -le "2" && "${+opts[(r)-M]}" = "1" && "${+opts[(r)-R]}" = "1" )
-    ]]; then
+    if (( ${#opts} == 0 ||
+        ( ${#opts} == 1 && ${+opts[-M]} ) ||
+        ( ${#opts} == 1 && ${+opts[-R]} ) ||
+        ( ${#opts} == 1 && ${+opts[-s]} ) ||
+        ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-s]} ) ||
+        ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-R]} )
+    )); then
         local string="${(q)1}" widget="${(q)2}"
         local quoted
 
@@ -282,9 +279,9 @@ builtin setopt noaliases
         [[ "$bmap_val" = "hold" ]] && return 0
 
         # "-M map" given?
-        if (( ${+opts[(r)-M]} )); then
+        if (( ${+opts[-M]} )); then
             local Mopt="-M"
-            local Marg="${optsA[-M]}"
+            local Marg="${opts[-M]}"
 
             Mopt="${(q)Mopt}"
             Marg="${(q)Marg}"
@@ -295,11 +292,11 @@ builtin setopt noaliases
         fi
 
         # -R given?
-        if (( ${+opts[(r)-R]} )); then
+        if (( ${+opts[-R]} )); then
             local Ropt="-R"
             Ropt="${(q)Ropt}"
 
-            if (( ${+opts[(r)-M]} )); then
+            if (( ${+opts[-M]} )); then
                 quoted="$quoted $Ropt"
             else
                 # Two empty fields for non-existent -M arg
@@ -318,7 +315,7 @@ builtin setopt noaliases
     else
         # bindkey -A newkeymap main?
         # Negative indices for KSH_ARRAYS immunity
-        if [[ "${#opts[@]}" -eq "1" && "${+opts[(r)-A]}" = "1" && "${#pos[@]}" = "3" && "${pos[-1]}" = "main" && "${pos[-2]}" != "-A" ]]; then
+        if [[ "${#opts}" -eq "1" && "${+opts[-A]}" = "1" && "${#pos}" = "3" && "${pos[-1]}" = "main" && "${pos[-2]}" != "-A" ]]; then
             # Save a copy of main keymap
             (( ZPLGM[BINDKEY_MAIN_IDX] = ${ZPLGM[BINDKEY_MAIN_IDX]:-0} + 1 ))
             local pname="${ZPLG_CUR_PLUGIN:-_dtrace}"
@@ -336,9 +333,9 @@ builtin setopt noaliases
 
             -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
         # bindkey -N newkeymap [other]
-        elif [[ "${#opts[@]}" -eq 1 && "${+opts[(r)-N]}" = "1" ]]; then
+        elif [[ "${#opts}" -eq 1 && "${+opts[-N]}" = "1" ]]; then
             local Nopt="-N"
-            local Narg="${optsA[-N]}"
+            local Narg="${opts[-N]}"
 
             local keys="_" widget="_" optN="-N" mapname="${Narg}" optR="_"
             local quoted="${(q)keys} ${(q)widget} ${(q)optN} ${(q)mapname} ${(q)optR}"
@@ -348,7 +345,7 @@ builtin setopt noaliases
             [[ -n "${ZPLGM[CUR_USPL2]}" ]] && ZPLGM[BINDKEYS__${ZPLGM[CUR_USPL2]}]+="$quoted "
             [[ "${ZPLGM[DTRACE]}" = "1" ]] && ZPLGM[BINDKEYS___dtrace/_dtrace]+="$quoted "
         else
-            -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${opts[*]}"
+            -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${(kv)opts[*]}"
         fi
     fi
 
