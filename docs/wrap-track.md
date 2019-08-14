@@ -2,13 +2,20 @@
 
 The `wrap-track` ice-mod allows to extend the tracking (i.e. gathering of report
 and unload data) of a plugin beyond the moment of sourcing it's main file(s). It
-works by wrapping the functions with a tracking-enabling and disabling snippet
-of code.  This is useful especially with prompts, as they very often do their
-initialization in the first call to their `precmd` [**hook**
+works by wrapping the given functions with a tracking-enabling and disabling
+snippet of code. This is useful especially with prompts, as they very often do
+their initialization in the first call to their `precmd` [**hook**
 ](http://zsh.sourceforge.net/Doc/Release/Functions.html#Hook-Functions)
 function. For example,
 [**romkatv/powerlevel10k**](https://github.com/romkatv/powerlevel10k) works this
 way.
+
+The ice takes a list of function names, with the elements separated by `;`:
+
+```zsh
+zplugin ice wrap-track"func1;func2;…" …
+…
+```
 
 Therefore, to e.g. load and unload the example powerlevel10k prompt in the
 fashion of [**Multiple prompts**](../Multiple-prompts/) article, the `precmd`
