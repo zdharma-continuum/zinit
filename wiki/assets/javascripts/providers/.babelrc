@@ -1,0 +1,8 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      "loose": true,
+      "targets": " > 1%, last 2 versions"
+    }]
+  ]
+}
