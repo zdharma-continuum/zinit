@@ -25,10 +25,17 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Introduction](#introduction)
   - [Example Usage](#example-usage)
   - [Ice Modifiers](#ice-modifiers)
+    - [Cloning Options](#cloning-options)
+    - [Selection of Files (To Source, …)](#selection-of-files-to-source-)
+    - [Conditional Loading](#conditional-loading)
+    - [Plugin Output](#plugin-output)
+    - [Completions](#completions)
+    - [Command Execution After Cloning, Updating or Loading](#command-execution-after-cloning-updating-or-loading)
+    - [Others](#others)
   - [Zplugin Commands](#zplugin-commands)
   - [Updating Zplugin and Plugins](#updating-zplugin-and-plugins)
   - [Using Oh My Zsh Themes](#using-oh-my-zsh-themes)
-- [Completions](#completions)
+- [Completions](#completions-1)
   - [Calling `compinit` Without Turbo Mode](#calling-compinit-without-turbo-mode)
   - [Calling `compinit` With Turbo Mode](#calling-compinit-with-turbo-mode)
   - [Ignoring Compdefs](#ignoring-compdefs)
@@ -56,7 +63,7 @@ reports](DONATIONS.md) about what is being done with the money received.
     be tracked **once** when executing. In other words you can extend the tracking
     beyond the moment of loading of a plugin.
   - The unloading of Zle widgets is now more smart – it takes into account the chains
-    of plugins that can overload the Zle widgets, and solves the interractions that
+    of plugins that can overload the Zle widgets, and solves the interactions that
     result out of it.
 
 * 29-07-2019
@@ -323,47 +330,73 @@ next `zplugin` command.
 Some Ice-modifiers are highlighted and clicking on them will take you to the
 appropriate wiki page for an extended explanation.
 
-| Modifier | <p align="center"> <p align="center"> Description </p> </p> | Works with plugins | Works with snippets |
+### Cloning Options
+| Modifier | Description | Works with plugins | Works with snippets |
 |:-:|-|:-:|:-:|
-| `proto` | Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. | :heavy_check_mark: | :heavy_multiplication_x: |
-| `from` | Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for GitHub enterprise). | :heavy_check_mark: | :heavy_multiplication_x: |
-| `as` | Can be `as"program"` (also alias `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"`. | :heavy_check_mark: | :heavy_check_mark: |
-| [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) | Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. | :heavy_check_mark: | :heavy_check_mark: |
-| `ver` | Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. | :heavy_check_mark: | :heavy_check_mark: |
-| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) | Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"program"`), e.g. `zplugin ice pick"*.plugin.zsh"`. | :heavy_check_mark: | :heavy_check_mark: |
-| `bpick` | Used to select which release from GitHub Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` | :heavy_check_mark: | :heavy_multiplication_x: |
-| `depth` | Pass `--depth` to `git`, i.e. limit how much of history to download. | :heavy_check_mark: | :heavy_multiplication_x: |
-| `cloneopts` | Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. | :heavy_check_mark: | :heavy_multiplication_x: |
-| `bindmap` | To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. | :heavy_check_mark: | :heavy_multiplication_x: |
-| `trackbinds` | Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. | :heavy_check_mark: | :heavy_multiplication_x: |
-| `if` | Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. | :heavy_check_mark: | :heavy_check_mark: |
-| `has` | Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` | :heavy_check_mark: | :heavy_check_mark: |
-| `blockf` | Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. | :heavy_check_mark: | :heavy_check_mark: |
-| `silent` | Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. | :heavy_check_mark: | :heavy_check_mark: |
-| `lucid` | Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). | :heavy_check_mark: | :heavy_check_mark: |
-| `notify` | Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems. | :heavy_check_mark: | :heavy_check_mark: |
-| `reset-prompt` | Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`. | :heavy_check_mark: | :heavy_check_mark: |
-| `mv` | Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. | :heavy_check_mark: | :heavy_check_mark: |
-| `cp` | Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. | :heavy_check_mark: | :heavy_check_mark: |
-| `atinit` | Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. | :heavy_check_mark: | :heavy_check_mark: |
-| `atclone` | Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. | :heavy_check_mark: | :heavy_check_mark: |
-| `atload` | Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`). | :heavy_check_mark: | :heavy_check_mark: |
-| `atpull` | Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. | :heavy_check_mark: | :heavy_check_mark: |
-| `run-atpull` | Always run the atpull hook (when updating), not only when there are new commits to be downloaded. | :heavy_check_mark: | :heavy_check_mark: |
-| `cloneonly` | Don't load the plugin / snippet, only download it | :heavy_check_mark: | :heavy_check_mark: |
-| `nocd` | Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. | :heavy_check_mark: | :heavy_check_mark: |
-| `svn` | Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). | :heavy_multiplication_x: | :heavy_check_mark: |
-| [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) | Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. | :heavy_check_mark: | :heavy_check_mark: |
-| [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) | Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). | :heavy_check_mark: | :heavy_check_mark: |
-| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) | Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). **Fact:** when `wait` is used without value, it works as `wait'0'`. | :heavy_check_mark: | :heavy_check_mark: |
-| [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) | A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. | :heavy_check_mark: | :heavy_check_mark: |
-| [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) | A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. | :heavy_check_mark: | :heavy_check_mark: |
-| `subscribe` / `on-update-of` | Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` | :heavy_check_mark: | :heavy_check_mark: |
-| `service` | Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices org](https://github.com/zservices). | :heavy_check_mark: | :heavy_check_mark: |
-| `compile` | Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\ | :heavy_check_mark: | :heavy_check_mark: |
-| `nocompletions` | Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. | :heavy_check_mark: | :heavy_check_mark: |
-| `nocompile` | Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at location of installation). | :heavy_check_mark: | :heavy_check_mark: |
-| [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) | Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). | :heavy_check_mark: | :heavy_check_mark: |
+| `proto` |<div align="justify" style="text-align: justify;"> Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| `from` |<div align="justify" style="text-align: justify;"> Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for GitHub enterprise). </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| `ver` |<div align="justify" style="text-align: justify;"> Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| `depth` |<div align="justify" style="text-align: justify;"> Pass `--depth` to `git`, i.e. limit how much of history to download. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| `cloneopts` |<div align="justify" style="text-align: justify;"> Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). </div>| :heavy_multiplication_x: | :heavy_check_mark: |
+
+### Selection of Files (To Source, …)
+| Modifier | Description | Works with plugins | Works with snippets |
+|:-:|-|:-:|:-:|
+| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or ICE `as"program"`), e.g. `zplugin ice pick"*.plugin.zsh"; zplugin load …`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). </div>| :heavy_check_mark: | :heavy_check_mark: |
+| [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Allows to specify multiple files for sourcing, enumerated with spaces as the separator (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). </div>| :heavy_check_mark: | :heavy_check_mark: |
+
+### Conditional Loading
+| Modifier | Description | Works with plugins | Works with snippets |
+|:-:|-|:-:|:-:|
+| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) |<div align="justify" style="text-align: justify;"> Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 39% faster thanks to postponed loading (result obtained in test with `11` plugins). **Fact:** when `wait` is used without value, it works as `wait'0'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `cloneonly` |<div align="justify" style="text-align: justify;"> Don't load the plugin / snippet, only download it </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `subscribe` / `on-update-of` |<div align="justify" style="text-align: justify;"> Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` </div>| :heavy_check_mark: | :heavy_check_mark: |
+
+### Plugin Output
+| Modifier | Description | Works with plugins | Works with snippets |
+|:-:|-|:-:|:-:|
+| `silent` |<div align="justify" style="text-align: justify;"> Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `lucid` |<div align="justify" style="text-align: justify;"> Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `notify` |<div align="justify" style="text-align: justify;"> Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems. </div>| :heavy_check_mark: | :heavy_check_mark: |
+
+### Completions
+| Modifier | Description | Works with plugins | Works with snippets |
+|:-:|-|:-:|:-:|
+| `blockf` |<div align="justify" style="text-align: justify;"> Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `nocompletions` |<div align="justify" style="text-align: justify;"> Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+
+### Command Execution After Cloning, Updating or Loading
+| Modifier | Description | Works with plugins | Works with snippets |
+|:-:|-|:-:|:-:|
+| `mv` |<div align="justify" style="text-align: justify;"> Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `cp` |<div align="justify" style="text-align: justify;"> Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `atinit` |<div align="justify" style="text-align: justify;"> Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `atclone` |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `atload` |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`). </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `atpull` |<div align="justify" style="text-align: justify;"> Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+
+### Others
+| Modifier | Description | Works with plugins | Works with snippets |
+|:-:|-|:-:|:-:|
+| `as` |<div align="justify" style="text-align: justify;"> Can be `as"program"` (also the alias: `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"` – use with plugins or snippets in whose only underscore-starting `_*` files you are interested in. . </div>| :heavy_check_mark: | :heavy_check_mark: |
+| [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) |<div align="justify" style="text-align: justify;"> Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.\</div> | :heavy_check_mark: | :heavy_check_mark: |
+| `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation). </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions)</div>| :heavy_check_mark: | :heavy_multiplication_x: |
 
 Order of execution of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
 
@@ -424,7 +457,7 @@ Available ice-modifiers:
         unload blockf on-update-of subscribe pick bpick src as ver silent
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions reset-prompt
+        nocompletions reset-prompt wrap-track
 ```
 
 ## Updating Zplugin and Plugins
@@ -475,7 +508,7 @@ update all snippets (and plugins).
 Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
 prompt will appear as something like: `... $(build_prompt) ...`.
 
-You might want to supress completions provided by the git plugin by issuing `zplugin cdclear -q`
+You might want to suppress completions provided by the git plugin by issuing `zplugin cdclear -q`
 (`-q` is for quiet) – see below **Ignoring Compdefs**.
 
 To summarize:
