@@ -110,10 +110,10 @@ plugin-ID), then it can provide a function, `kalc_plugin_unload`, that can be
 called by a plugin manager to undo the effects of loading that plugin.
 
 A plugin manager can implement its own tracking of changes made by a plugin so
-this is in general optional. However, to properly unload e.g. a prompt, detailed
-tracking (easy to do by the plugin creator) can provide better, predictable
-results. Any special, uncommon effects of loading a plugin are possible to undo
-only by a dedicated function.
+this is in general optional. However, to properly unload e.g. a prompt,
+dedicated tracking (easy to do for the plugin creator) can provide better,
+predictable results. Any special, uncommon effects of loading a plugin are
+possible to undo only by a dedicated function.
 
 However, an interesting compromise approach is available – to withdraw only the
 special effects of loading a plugin via the dedicated, plugin-provided function
@@ -126,7 +126,7 @@ develoment process.
 
 Plugin managers should set the `$zsh_loaded_plugins` array to contain all
 previously loaded plugins and the plugin currently being loaded (as the last
-element). This will allow plugins to:
+element). This will allow any plugin to:
 
  1. Check which plugins are already loaded.
  2. Check if it is being loaded by a plugin manager (i.e. not just sourced).
@@ -134,10 +134,10 @@ element). This will allow plugins to:
 The first item allows a plugin to e.g. issue a notice about missing
 dependencies. Instead of issuing a notice, it may be able to satisfy the
 dependencies from resources it provides. For example, `pure` prompt provides
-`zsh-async` dependency library, which is a separate project and can be loaded by
-the user directly. Consequently, the prompt can decide to source its private
-copy of `zsh-async`, having also reliable `$0` defined by previous section
-(note: `pure` doesn’t normally do this).
+`zsh-async` dependency library within its source tree, which is normally a
+separate project. Consequently, the prompt can decide to source its private copy
+of `zsh-async`, having also reliable `$0` defined by previous section (note:
+`pure` doesn’t normally do this).
 
 The second item allows a plugin to e.g. set up `$fpath`, knowing that plugin
 manager will not handle this:
@@ -162,11 +162,11 @@ Zplugin uses this name and places this directory at `~/.zplugin/polaris` by
 default.
 
 User can then configure hooks (feature of e.g. zplug and Zplugin) to invoke e.g.
-`make PREFIX=$ZPFX install` to install software like e.g.
-[**tj/git-extras**](https://github.com/tj/git-extras). This is a developing role
-of Zsh plugin managers as package managers, where `.zshrc` has a similar role to
-Chef or Puppet configuration and allows to **declare** system state, and have
-the same state on different accounts / machines.
+`make PREFIX=$ZPFX install` at clone & update of the plugin to install software
+like e.g. [**tj/git-extras**](https://github.com/tj/git-extras). This is a
+developing role of Zsh plugin managers as package managers, where `.zshrc` has a
+similar role to Chef or Puppet configuration and allows to **declare** system
+state, and have the same state on different accounts / machines.
 
 No-narration facts-list related to `$ZPFX`:
 
@@ -192,7 +192,7 @@ syntax:
 add-zsh-hook [ -L | -dD ] [ -Uzk ] hook function
 ```
 
-The function installs a `function` as one of the supported zsh `hook` entries.
+The command installs a `function` as one of the supported zsh `hook` entries.
 which are one of: `chpwd`, `periodic`, `precmd`, `preexec`, `zshaddhistory`,
 `zshexit`, `zsh_directory_name`. For their meaning refer to the
 [**Zsh
@@ -203,7 +203,7 @@ documentation**](http://zsh.sourceforge.net/Doc/Release/Functions.html#Hook-Func
 Zle editor is the part of the Zsh that is responsible for receiving the text
 from the user. It can be said that it’s based on widgets, which are nothing more
 than Zsh functions that are allowed to be ran in Zle context, i.e. from the Zle
-editor (plus a few minor differences, like the `$WIDGET` parameter that’s
+editor (plus a few minor differences, like e.g.: the `$WIDGET` parameter that’s
 automatically set by the Zle editor).
 
 The syntax of the call is:
