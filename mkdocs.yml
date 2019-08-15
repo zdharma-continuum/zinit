@@ -34,7 +34,7 @@ nav:
   - "zplugin-autoload.zsh": zplugin-autoload.zsh.md
 
 theme:
-  name: null
+  name: material
   custom_dir: 'docs/theme'
   logo:
     icon: home
