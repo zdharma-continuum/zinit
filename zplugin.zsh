@@ -226,7 +226,9 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-bindkey() {
-    -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q+)@}}"
+    is-at-least 5.3 && \
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q+)@}}" || \
+        -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q)@}}"
 
     # Remember to perform the actual bindkey call
     typeset -a pos
