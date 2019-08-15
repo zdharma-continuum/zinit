@@ -31,7 +31,7 @@ zplugin light zdharma/fast-syntax-highlighting
    expect to be loaded last, even after the completion initialization (i.e.
    `compinit` function), hence the `atinit''`, which will load `compinit` right
    before the plugin,
- - the `atinit` of the plugin runs also `zcdreplay` (i.e.
+ - the `atinit` of the plugin runs also `zpcdreplay` (i.e.
    "*zplugin-compdef-replay*"), because after `compinit` is loaded, the
    `compdef` function becomes available, and one can re-run the all earlier
    automatically-caught`compdef` calls, loosing nothing from the original

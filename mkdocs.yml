@@ -35,6 +35,7 @@ nav:
 
 theme:
   name: material
+  custom_dir: 'docs/theme'
   logo:
     icon: home
   feature:
@@ -54,3 +55,9 @@ extra_css:
 extra_javascript:
   - js/syntax-highlighting.js
   - js/init.js
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/zdharma/zplugin'
+    - type: 'reddit'
+      link: 'https://www.reddit.com/r/zplugin/'

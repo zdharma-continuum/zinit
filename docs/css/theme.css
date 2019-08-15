@@ -22,14 +22,8 @@
 
 /*Remove prev/next sections in footer and a "skip to contents" button that was
  * acting weird.*/
-.md-skip,
-.md-footer-nav {
+.md-skip{
   display: none;
-}
-
-/*Remove "created by mkdocs..." message in footer.*/
-.md-footer-copyright {
-  visibility: hidden;
 }
 
 /*Borders around code blocks.*/
