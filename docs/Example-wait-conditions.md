@@ -32,4 +32,31 @@ zplugin load unixorn/git-extra-commands
 
 - waits until user enters a `github` directory.
 
+***
+
+Turbo mode also support a suffix – the letter `a`, `b` or `c`. The meaning is
+illustrated by the following example:
+
+```
+zplugin ice wait"0b" as"command" pick"wd.sh" atinit"echo Firing 1" lucid
+zplugin light mfaerevaag/wd
+zplugin ice wait"0a" as"command" pick"wd.sh" atinit"echo Firing 2" lucid
+zplugin light mfaerevaag/wd
+
+# The output
+Firing 2
+Firing 1
+```
+
+As it can be seen, the second plugin has been loaded first. That's because there
+are now three sub-slots (the `a`, `b` and `c`) in which the plugin/snippet
+loadings can be put into. Plugins from the same time-slot with suffix `a` will
+be loaded before plugins with suffix `b`, etc.
+
+In other words, instead of `wait'1'` you can enter `wait'1a'`, `wait'1b'` and
+`wait'1c'` – to this way **impose order** on the loadings **regardless of the
+order of `zplugin` commands**. 
+
+
+
 []( vim:set ft=markdown tw=80: )
