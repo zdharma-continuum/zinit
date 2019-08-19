@@ -1507,7 +1507,8 @@ nocd|once|wrap-track${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICES[${match[1
         { local -a fts_arr
           eval "fts_arr=( ${ZPLG_ICE[subscribe]}(Nms-$(( EPOCHSECONDS -
                  ZPLGM[fts-${ZPLG_ICE[subscribe]}] ))) ); (( \${#fts_arr} ))" && \
-                 { ZPLGM[fts-${ZPLG_ICE[subscribe]}]="$EPOCHSECONDS"; __s=${+ZPLG_ICE[once]}; } || (( 0 ))
+             { ZPLGM[fts-${ZPLG_ICE[subscribe]}]="$EPOCHSECONDS"; __s=${+ZPLG_ICE[once]}; } || \
+             (( 0 ))
         }
     then
         __action="${(M)ZPLG_ICE[subscribe]#\!}load"
@@ -1680,7 +1681,8 @@ nocd|once|wrap-track${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICES[${match[1
     local __task __idx=0 __count=0 __idx2
     for __task in "${ZPLG_RUN[@]}"; do
         -zplg-run-task 1 "${(@z)__task}" && ZPLG_TASKS+=( "$__task" )
-        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 5 && "$1" != "burst" ]] && { sched +0 -zplg-scheduler following-additional; break; }
+        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 5 && "$1" != "burst" ]] && \
+            { sched +0 -zplg-scheduler following-additional; break; }
     done
     for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
         -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2-correct]}"
