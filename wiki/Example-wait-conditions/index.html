@@ -2006,6 +2006,26 @@ zplugin load unixorn/git-extra-commands
 <ul>
 <li>waits until user enters a <code>github</code> directory.</li>
 </ul>
+<hr />
+<p>Turbo mode also support a suffix – the letter <code>a</code>, <code>b</code> or <code>c</code>. The meaning is
+illustrated by the following example:</p>
+<pre><code>zplugin ice wait&quot;0b&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 1&quot; lucid
+zplugin light mfaerevaag/wd
+zplugin ice wait&quot;0a&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 2&quot; lucid
+zplugin light mfaerevaag/wd
+
+# The output
+Firing 2
+Firing 1
+</code></pre>
+
+<p>As it can be seen, the second plugin has been loaded first. That's because there
+are now three sub-slots (the <code>a</code>, <code>b</code> and <code>c</code>) in which the plugin/snippet
+loadings can be put into. Plugins from the same time-slot with suffix <code>a</code> will
+be loaded before plugins with suffix <code>b</code>, etc.</p>
+<p>In other words, instead of <code>wait'1'</code> you can enter <code>wait'1a'</code>, <code>wait'1b'</code> and
+<code>wait'1c'</code> – to this way <strong>impose order</strong> on the loadings <strong>regardless of the
+order of <code>zplugin</code> commands</strong>. </p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
