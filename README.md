@@ -425,7 +425,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | `cdreplay [-q]` |<div align="justify" style="text-align: justify;"> Replay compdefs (to be done after compinit). `-q` – quiet. </div>|
 | `cdclear [-q]` |<div align="justify" style="text-align: justify;"> Clear compdef replay list. `-q` – quiet. </div>|
 
-### Tracking Of The Active Session
+### Tracking of the Active Session
 
 | Command | Description |
 |:-:|-|
