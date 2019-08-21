@@ -17,7 +17,6 @@ reports](DONATIONS.md) about what is being done with the money received.
 - [News](#news)
 - [Zplugin](#zplugin)
 - [Zplugin Wiki](#zplugin-wiki)
-- [Getting Help](#getting-help)
 - [Installation](#installation)
   - [Option 1 - Automatic Installation (Recommended)](#option-1---automatic-installation-recommended)
   - [Option 2 - Manual Installation](#option-2---manual-installation)
@@ -25,17 +24,10 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Introduction](#introduction)
   - [Example Usage](#example-usage)
   - [Ice Modifiers](#ice-modifiers)
-    - [Cloning Options](#cloning-options)
-    - [Selection of Files (To Source, …)](#selection-of-files-to-source-)
-    - [Conditional Loading](#conditional-loading)
-    - [Plugin Output](#plugin-output)
-    - [Completions](#completions)
-    - [Command Execution After Cloning, Updating or Loading](#command-execution-after-cloning-updating-or-loading)
-    - [Others](#others)
   - [Zplugin Commands](#zplugin-commands)
   - [Updating Zplugin and Plugins](#updating-zplugin-and-plugins)
   - [Using Oh My Zsh Themes](#using-oh-my-zsh-themes)
-- [Completions](#completions-1)
+- [Completions](#completions)
   - [Calling `compinit` Without Turbo Mode](#calling-compinit-without-turbo-mode)
   - [Calling `compinit` With Turbo Mode](#calling-compinit-with-turbo-mode)
   - [Ignoring Compdefs](#ignoring-compdefs)
@@ -49,7 +41,7 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Customizing Paths](#customizing-paths)
   - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
-- [IRC Channel](#irc-channel)
+- [Getting Help and Community](#getting-help-and-community)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -194,14 +186,6 @@ to call `compinit` only once in `.zshrc`.
 
 The information in this README is complemented by the [Zplugin wiki](http://zdharma.org/zplugin/wiki/). The README is an introductory overview of Zplugin while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of Zplugin.
 
-# Getting Help
-
-If you need help you can do the following:
-
-- Ask in our subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
-
-- [Ask in our IRC channel.](#irc-channel) 
-
 # Installation
 
 ## Option 1 - Automatic Installation (Recommended)
@@ -330,135 +314,166 @@ next `zplugin` command.
 Some Ice-modifiers are highlighted and clicking on them will take you to the
 appropriate wiki page for an extended explanation.
 
+You may safely assume a given ice works with both plugins and snippets unless
+explicitly stated otherwise.
+
 ### Cloning Options
-| Modifier | Description | Works with plugins | Works with snippets |
-|:-:|-|:-:|:-:|
-| `proto` |<div align="justify" style="text-align: justify;"> Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| `from` |<div align="justify" style="text-align: justify;"> Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for GitHub enterprise). </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| `ver` |<div align="justify" style="text-align: justify;"> Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose` </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| `depth` |<div align="justify" style="text-align: justify;"> Pass `--depth` to `git`, i.e. limit how much of history to download. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| `cloneopts` |<div align="justify" style="text-align: justify;"> Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). </div>| :heavy_multiplication_x: | :heavy_check_mark: |
+| Modifier | Description |
+|:-:|-|
+| `proto` |<div align="justify" style="text-align: justify;"> Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. **Does not work with snippets.** </div>|
+| `from` |<div align="justify" style="text-align: justify;"> Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for GitHub enterprise). **Does not work with snippets.**</div>|
+| `ver` |<div align="justify" style="text-align: justify;"> Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. **Does not work with snippets.**</div>|
+| `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose`. **Does not work with snippets.** </div>|
+| `depth` |<div align="justify" style="text-align: justify;"> Pass `--depth` to `git`, i.e. limit how much of history to download. **Does not work with snippets.**</div>|
+| `cloneopts` |<div align="justify" style="text-align: justify;"> Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. **Does not work with snippets.** </div>|
+| `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**</div>|
 
 ### Selection of Files (To Source, …)
-| Modifier | Description | Works with plugins | Works with snippets |
-|:-:|-|:-:|:-:|
-| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or the ice `as"program"`); it is a pattern, alphabetically first matched file is being chosen; e.g. `zplugin ice pick"*.plugin.zsh"; zplugin load …`. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). It is not a pattern but a plain file name.</div>| :heavy_check_mark: | :heavy_check_mark: |
-| [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). Supports patterns.</div>| :heavy_check_mark: | :heavy_check_mark: |
+| Modifier | Description |
+|:-:|-|
+| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or the ice `as"program"`); it is a pattern, alphabetically first matched file is being chosen; e.g. `zplugin ice pick"*.plugin.zsh"; zplugin load …`. </div>|
+| [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). It is not a pattern but a plain file name.</div>|
+| [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). Supports patterns.</div>| 
 
 ### Conditional Loading
-| Modifier | Description | Works with plugins | Works with snippets |
-|:-:|-|:-:|:-:|
-| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) |<div align="justify" style="text-align: justify;"> Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. **Fact:** when `wait` is used without value, it works as `wait'0'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `cloneonly` |<div align="justify" style="text-align: justify;"> Don't load the plugin / snippet, only download it </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `subscribe` / `on-update-of` |<div align="justify" style="text-align: justify;"> Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` </div>| :heavy_check_mark: | :heavy_check_mark: |
+| Modifier | Description |
+|:-:|-|
+| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) |<div align="justify" style="text-align: justify;"> Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. **Fact:** when `wait` is used without value, it works as `wait'0'`. </div>|
+| [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. </div>|
+| [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. </div>|
+| `cloneonly` |<div align="justify" style="text-align: justify;"> Don't load the plugin / snippet, only download it </div>|
+| `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. </div>|
+| `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>| 
+| `subscribe` / `on-update-of` |<div align="justify" style="text-align: justify;"> Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` </div>|
 
 ### Plugin Output
-| Modifier | Description | Works with plugins | Works with snippets |
-|:-:|-|:-:|:-:|
-| `silent` |<div align="justify" style="text-align: justify;"> Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `lucid` |<div align="justify" style="text-align: justify;"> Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `notify` |<div align="justify" style="text-align: justify;"> Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| Modifier | Description |
+|:-:|-|
+| `silent` |<div align="justify" style="text-align: justify;"> Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. </div>|
+| `lucid` |<div align="justify" style="text-align: justify;"> Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). </div>|
+| `notify` |<div align="justify" style="text-align: justify;"> Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems. </div>|
 
 ### Completions
-| Modifier | Description | Works with plugins | Works with snippets |
-|:-:|-|:-:|:-:|
-| `blockf` |<div align="justify" style="text-align: justify;"> Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `nocompletions` |<div align="justify" style="text-align: justify;"> Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| Modifier | Description |
+|:-:|-|
+| `blockf` |<div align="justify" style="text-align: justify;"> Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. </div>|
+| `nocompletions` |<div align="justify" style="text-align: justify;"> Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. </div>|
 
 ### Command Execution After Cloning, Updating or Loading
-| Modifier | Description | Works with plugins | Works with snippets |
-|:-:|-|:-:|:-:|
-| `mv` |<div align="justify" style="text-align: justify;"> Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `cp` |<div align="justify" style="text-align: justify;"> Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `atinit` |<div align="justify" style="text-align: justify;"> Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `atclone` |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `atload` |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`). </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `atpull` |<div align="justify" style="text-align: justify;"> Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. </div>| :heavy_check_mark: | :heavy_check_mark: |
+| Modifier | Description |
+|:-:|-|
+| `mv` |<div align="justify" style="text-align: justify;"> Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. </div>|
+| `cp` |<div align="justify" style="text-align: justify;"> Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. </div>|
+| `atinit` |<div align="justify" style="text-align: justify;"> Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. </div>|
+| `atclone` |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. </div>|
+| `atload` |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`). </div>|
+| `atpull` |<div align="justify" style="text-align: justify;"> Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. </div>|
+| `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded. </div>|
+| `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. </div>|
+| [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. </div>|
 
 ### Others
-| Modifier | Description | Works with plugins | Works with snippets |
-|:-:|-|:-:|:-:|
-| `as` |<div align="justify" style="text-align: justify;"> Can be `as"program"` (also the alias: `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"` – use with plugins or snippets in whose only underscore-starting `_*` files you are interested in. . </div>| :heavy_check_mark: | :heavy_check_mark: |
-| [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) |<div align="justify" style="text-align: justify;"> Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.\</div> | :heavy_check_mark: | :heavy_check_mark: |
-| `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation). </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`. </div>| :heavy_check_mark: | :heavy_check_mark: |
-| `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. </div>| :heavy_check_mark: | :heavy_multiplication_x: |
-| [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions)</div>| :heavy_check_mark: | :heavy_multiplication_x: |
+| Modifier | Description |
+|:-:|-|
+| `as` |<div align="justify" style="text-align: justify;"> Can be `as"program"` (also the alias: `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"` – use with plugins or snippets in whose only underscore-starting `_*` files you are interested in. . </div>|
+| [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) |<div align="justify" style="text-align: justify;"> Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. </div>|
+| `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.\</div> | 
+| `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation). </div>| 
+| `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page. </div>|
+| `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`. </div>| 
+| `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**</div>| 
+| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>| 
+| [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>| 
+
+### Order of Execution
 
 Order of execution of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
 
 ## Zplugin Commands
 
-```
-% zpl help
-Usage:
-—— -h|--help|help                – usage information
-—— man                           – manual
-—— self-update                   – updates and compiles Zplugin
-—— times [-s]                    – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds
-—— zstatus                       – overall Zplugin status
-—— load plg-spec                 – load plugin, can also receive absolute local path
-—— light [-b] plg-spec           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)
-—— unload plg-spec               – unload plugin loaded with `zplugin load ...', -q – quiet
-—— snippet [-f] {url}            – source local or remote file (by direct URL), -f: force – don't use cache
-—— ls                            – list snippets in formatted and colorized manner
-—— ice <ice specification>       – add ICE to next command, argument is e.g. from"gitlab"
-—— update [-q] plg-spec|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
-—— status plg-spec|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
-—— report plg-spec               – show plugin's report (or all plugins' if ——all passed)
-—— delete [--clean|--all] plg-spec|URL – remove plugin or snippet from disk (good to forget wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
-—— loaded|list [keyword]         – show what plugins are loaded (filter with 'keyword')
-—— cd plg-spec                   – cd into plugin's directory; also support snippets, if feed with URL
-—— create plg-spec               – create plugin (also together with GitHub repository)
-—— edit plg-spec                 – edit plugin's file with $EDITOR
-—— glance plg-spec               – look at plugin's source (pygmentize, {,source-}highlight)
-—— stress plg-spec               – test plugin for compatibility with set of options
-—— changes plg-spec              – view plugin's git log
-—— recently [time-spec]          – show plugins that changed recently, argument is e.g. 1 month 2 days
-—— clist|completions             – list completions in use
-—— cdisable cname                – disable completion `cname'
-—— cenable cname                 – enable completion `cname'
-—— creinstall plg-spec           – install completions for plugin, can also receive absolute local path; -q – quiet
-—— cuninstall plg-spec           – uninstall completions for plugin
-—— csearch                       – search for available completions from any plugin
-—— compinit                      – refresh installed completions
-—— dtrace|dstart                 – start tracking what's going on in session
-—— dstop                         – stop tracking what's going on in session
-—— dunload                       – revert changes recorded between dstart and dstop
-—— dreport                       – report what was going on in session
-—— dclear                        – clear report of what was going on in session
-—— compile plg-spec              – compile plugin (or all plugins if ——all passed)
-—— uncompile plg-spec            – remove compiled version of plugin (or of all plugins if ——all passed)
-—— compiled                      – list plugins that are compiled
-—— cdlist                        – show compdef replay list
-—— cdreplay [-q]                 – replay compdefs (to be done after compinit), -q – quiet
-—— cdclear [-q]                  – clear compdef replay list, -q – quiet
-—— srv {service-id} [cmd]        – control a service, command can be: stop,start,restart,next,quit; `next' moves the service to another Zshell
-—— recall plg-spec|URL      – fetch saved ice modifiers and construct `zplugin ice ...' command
-—— env-whitelist [-v|-h] {env..} – allows to specify names (also patterns) of variables left unchanged during an unload. -v – verbose
-—— bindkeys                      – lists bindkeys set up by each plugin
-—— module                        – manage binary Zsh module shipped with Zplugin, see `zplugin module help'
+Following commands are passed to `zplugin ...` to obtain described effects.
 
-Available ice-modifiers:
-        svn proto from teleid bindmap cloneopts id-as depth if wait load
-        unload blockf on-update-of subscribe pick bpick src as ver silent
-        lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
-        cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions reset-prompt wrap-track
-```
+### Help
+
+| Command | Description |
+|:-:|-|
+| `-h, --help, help` |<div align="justify" style="text-align: justify;"> Usage information. </div>|
+| `man` |<div align="justify" style="text-align: justify;"> Manual. </div>|
+
+### Loading and Unloading
+
+| Command | Description |
+|:-:|-|
+| `load {plg-spec}` |<div align="justify" style="text-align: justify;"> Load plugin, can also receive absolute local path. </div>|
+| `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/tracking. `-b` – track `bindkey`-calls only. </div>|
+| `unload [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Unload plugin loaded with `zplugin load ...`. `-q` – quiet. </div>|
+| `snippet [-f] {url}` |<div align="justify" style="text-align: justify;"> Source local or remote file (by direct URL). `-f` – don't use cache (force redownload). </div>|
+
+### Completions
+
+| Command | Description |
+|:-:|-|
+| `clist, completions` |<div align="justify" style="text-align: justify;"> List completions in use. </div>|
+| `cdisable {cname}` |<div align="justify" style="text-align: justify;"> Disable completion `cname`. </div>|
+| `cenable {cname}` |<div align="justify" style="text-align: justify;"> Enable completion `cname`. </div>|
+| `creinstall [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Install completions for plugin, can also receive absolute local path. `-q` – quiet. </div>|
+| `cuninstall {plg-spec}` |<div align="justify" style="text-align: justify;"> Uninstall completions for plugin. </div>|
+| `csearch` |<div align="justify" style="text-align: justify;"> Search for available completions from any plugin. </div>|
+| `compinit` |<div align="justify" style="text-align: justify;"> Refresh installed completions. </div>|
+| `cclear` |<div align="justify" style="text-align: justify;"> Clear stray and improper completions. </div>|
+| `cdlist` |<div align="justify" style="text-align: justify;"> Show compdef replay list. </div>|
+| `cdreplay [-q]` |<div align="justify" style="text-align: justify;"> Replay compdefs (to be done after compinit). `-q` – quiet. </div>|
+| `cdclear [-q]` |<div align="justify" style="text-align: justify;"> Clear compdef replay list. `-q` – quiet. </div>|
+
+### Tracking Of The Active Session
+
+| Command | Description |
+|:-:|-|
+| `dtrace, dstart` |<div align="justify" style="text-align: justify;"> Start tracking what's going on in session.</div>|
+| `dstop` |<div align="justify" style="text-align: justify;"> Stop tracking what's going on in session.</div>|
+| `dunload` |<div align="justify" style="text-align: justify;"> Revert changes recorded between dstart and dstop.</div>|
+| `dreport` |<div align="justify" style="text-align: justify;"> Report what was going on in session.</div>|
+| `dclear` |<div align="justify" style="text-align: justify;"> Clear report of what was going on in session.</div>|
+
+### Reports and Statistics
+
+| Command | Description |
+|:-:|-|
+| `times [-s]` |<div align="justify" style="text-align: justify;"> Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds. </div>|
+| `zstatus` |<div align="justify" style="text-align: justify;"> Overall Zplugin status. </div>|
+| `report {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Show plugin report. `--all` – do it for all plugins. </div>|
+| `loaded [keyword], list [keyword]` |<div align="justify" style="text-align: justify;"> Show what plugins are loaded (filter with 'keyword'). </div>|
+| `ls` |<div align="justify" style="text-align: justify;"> List snippets in formatted and colorized manner. </div>|
+| `status {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets. </div>|
+| `recently [time-spec]` |<div align="justify" style="text-align: justify;"> Show plugins that changed recently, argument is e.g. 1 month 2 days. </div>|
+| `bindkeys` |<div align="justify" style="text-align: justify;"> Lists bindkeys set up by each plugin. </div>|
+
+### Compiling
+
+| Command | Description |
+|:-:|-|
+| `compile {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Compile plugin. `--all` – compile all plugins. </div>|
+| `uncompile {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Remove compiled version of plugin. `--all` – do it for all plugins. </div>|
+| `compiled` |<div align="justify" style="text-align: justify;"> List plugins that are compiled. </div>|
+
+### Other
+
+| Command | Description |
+|:-:|-|
+| `self-update` |<div align="justify" style="text-align: justify;"> Updates and compiles Zplugin. </div>|
+| `update [-q] [-r] {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git update plugin or snippet. <br> `--all` – update all plugins and snippets. <br>  `-q` – quiet. <br> `-r` \| `--reset` – run git reset before doing the update. <br> `--hard` – svn revert before pulling changes </div>|
+| `ice <ice specification>` |<div align="justify" style="text-align: justify;"> Add ice to next command, argument is e.g. from"gitlab". </div>|
+| `delete {plg-spec}\|URL\|--clean\|--all` |<div align="justify" style="text-align: justify;"> Remove plugin or snippet from disk (good to forget wrongly passed ice-mods).  <br> `--all` – purge. <br> `--clean` – delete plugins and snippets that are not loaded. </div>|
+| `cd {plg-spec}` |<div align="justify" style="text-align: justify;"> Cd into plugin's directory. Also support snippets if fed with URL. </div>|
+| `edit {plg-spec}` |<div align="justify" style="text-align: justify;"> Edit plugin's file with $EDITOR. </div>|
+| `glance {plg-spec}` |<div align="justify" style="text-align: justify;"> Look at plugin's source (pygmentize, {,source-}highlight). </div>|
+| `stress {plg-spec}` |<div align="justify" style="text-align: justify;"> Test plugin for compatibility with set of options. </div>|
+| `changes {plg-spec}` |<div align="justify" style="text-align: justify;"> View plugin's git log. </div>|
+| `create {plg-spec}` |<div align="justify" style="text-align: justify;"> Create plugin (also together with GitHub repository). </div>|
+| `srv {service-id} [cmd]` |<div align="justify" style="text-align: justify;"> Control a service, command can be: stop,start,restart,next,quit; `next` moves the service to another Zshell. </div>|
+| `recall {plg-spec}\|URL` |<div align="justify" style="text-align: justify;"> Fetch saved ice modifiers and construct `zplugin ice ...` command. </div>|
+| `env-whitelist [-v] [-h] {env..}` |<div align="justify" style="text-align: justify;"> Allows to specify names (also patterns) of variables left unchanged during an unload. `-v` – verbose. </div>|
+| `module` |<div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zplugin, see `zplugin module help`. </div>|
 
 ## Updating Zplugin and Plugins
 
@@ -635,7 +650,7 @@ command and tracking updates to the plugin – in Zplugin case: by using `compil
 
 ## Installation
 
-**Without Zplugin**
+### Without Zplugin
 
 To install just the binary Zplugin module **standalone** (Zplugin is not needed, the module can be used with any
 other plugin manager), execute:
@@ -646,7 +661,7 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc
 
 This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
 
-**With Zplugin**
+### With Zplugin
 
 Zplugin users can build the module by issuing following command instead of running above `mod-install.sh` script
 (the script is for e.g. `zgen` users or users of any other plugin manager):
@@ -740,8 +755,13 @@ zplugin light k4rthik/git-cal
 
 Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
 
-# IRC Channel
-Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
+# Getting Help and Community
+
+Do you need help or wish to get in touch with other Zplugin users?
+
+- Visit our subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
+
+- Chat with us in our IRC channel. Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
 Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
 
