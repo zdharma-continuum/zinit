@@ -901,6 +901,9 @@ function $f {
 
         # Prepare mock-like plugin for Zplugin itself
         command ln -s "${ZPLGM[BIN_DIR]}/_zplugin" "${ZPLGM[PLUGINS_DIR]}/_local---zplugin"
+
+        # Also set up */bin and ZPFX in general
+        command mkdir 2>/dev/null -p ${ZPFX}/bin
     }
     [[ ! -d "${ZPLGM[COMPLETIONS_DIR]}" ]] && {
         command mkdir "${ZPLGM[COMPLETIONS_DIR]}"
@@ -909,6 +912,9 @@ function $f {
 
         # Symlink _zplugin completion into _local---zplugin directory
         command ln -s "${ZPLGM[PLUGINS_DIR]}/_local---zplugin/_zplugin" "${ZPLGM[COMPLETIONS_DIR]}"
+
+        # Also set up */bin and ZPFX in general
+        command mkdir 2>/dev/null -p ${ZPFX}/bin
     }
     [[ ! -d "${ZPLGM[SNIPPETS_DIR]}" ]] && {
         command mkdir "${ZPLGM[SNIPPETS_DIR]}"
@@ -918,6 +924,9 @@ function $f {
         # Also create the SERVICES_DIR
         command mkdir -p "${ZPLGM[SERVICES_DIR]}"
         command chmod go-w "${ZPLGM[SERVICES_DIR]}"
+
+        # Also set up */bin and ZPFX in general
+        command mkdir 2>/dev/null -p ${ZPFX}/bin
     }
 } # }}}
 # FUNCTION: -zplg-load {{{
