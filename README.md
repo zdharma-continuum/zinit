@@ -41,6 +41,7 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Customizing Paths](#customizing-paths)
   - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
+  - [Preinstalling Plugins](#preinstalling-plugins)
 - [Getting Help and Community](#getting-help-and-community)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -461,7 +462,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | Command | Description |
 |:-:|-|
 | `self-update` |<div align="justify" style="text-align: justify;"> Updates and compiles Zplugin. </div>|
-| `update [-q] [-r] {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git update plugin or snippet. <br> `--all` – update all plugins and snippets. <br>  `-q` – quiet. <br> `-r` \| `--reset` – run git reset before doing the update. <br> `--hard` – svn revert before pulling changes </div>|
+| `update [-q] [-r] {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git update plugin or snippet. <br> `--all` – update all plugins and snippets. <br>  `-q` – quiet. <br> `-r` \| `--reset` – run `git reset --hard` / `svn revert` before pulling changes. </div>|
 | `ice <ice specification>` |<div align="justify" style="text-align: justify;"> Add ice to next command, argument is e.g. from"gitlab". </div>|
 | `delete {plg-spec}\|URL\|--clean\|--all` |<div align="justify" style="text-align: justify;"> Remove plugin or snippet from disk (good to forget wrongly passed ice-mods).  <br> `--all` – purge. <br> `--clean` – delete plugins and snippets that are not loaded. </div>|
 | `cd {plg-spec}` |<div align="justify" style="text-align: justify;"> Cd into plugin's directory. Also support snippets if fed with URL. </div>|
@@ -754,6 +755,25 @@ zplugin light k4rthik/git-cal
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
+
+## Preinstalling Plugins
+
+If you create a Docker image that uses Zplugin, or want to install Turbo-loaded
+plugins before the shell starts interactively, you can invoke the
+zplugin-scheduler function in such a way, that it:
+
+ - installs plugins without waiting for the prompt (i.e. it's script friendly),
+ - installs **all** plugins instantly, without respecting the `wait''` argument.
+
+To accomplish this, use `burst` argument and call `-zplg-scheduler` function.
+Example `Dockerfile` entry:
+
+``` zsh
+RUN zsh -i -c -- '-zplg-scheduler burst || true'
+```
+
+An example `Dockerfile` can be found
+[**here**](https://github.com/robobenklein/configs/blob/master/Dockerfile).
 
 # Getting Help and Community
 
