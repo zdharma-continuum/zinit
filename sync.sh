@@ -29,7 +29,7 @@ cp -fv ~/github/zplugin_readme/docs/js/* docs/js
 git add -A docs/js
 cp -fv ~/github/zplugin_readme/docs/img/* docs/img
 git add -A docs/img
-cp -vR ~/github/zplugin_readme/docs/theme/ docs/theme
+cp -vR ~/github/zplugin_readme/docs/theme/* docs/theme
 git add -A docs/theme
 print $fg_bold[green]Commiting:$reset_color
 sleep 1
