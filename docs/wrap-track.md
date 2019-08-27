@@ -17,6 +17,8 @@ zplugin ice wrap-track"func1;func2;…" …
 …
 ```
 
+## Example
+
 Therefore, to e.g. load and unload the example powerlevel10k prompt in the
 fashion of [**Multiple prompts**](../Multiple-prompts/) article, the `precmd`
 function of the plugin – called `_p9k_precmd` (to get the name of the function
@@ -66,6 +68,8 @@ Functions created:
 
 (…)
 ```
+
+## Summary
 
 As it can be seen, creation of four additional Zle-widgets has been recorded
 (the `Zle -N …` lines). They will be properly deleted/restored on the plugin
