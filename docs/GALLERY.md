@@ -109,7 +109,7 @@ zplugin snippet OMZ::plugins/osx
 
 ```zsh
 GEOMETRY_COLOR_DIR=152
-zplugin ice wait"0" lucid atload"prompt_geometry_render"
+zplugin ice wait"0" lucid atload"geometry::prompt"
 zplugin light geometry-zsh/geometry
 
 zplugin ice pick"async.zsh" src"pure.zsh"
