@@ -22,8 +22,6 @@ nav:
   - "z-p-submods": z-p-submods.md
   - "declare-zsh": declare-zsh.md
   - "Crasis": crasis.md
-- "Hints": 
-  - "Preinstalling Plugins": preinstalling-plugins.md
 - "Plugin Standard":
   - "Zsh Plugin Standard": zsh-plugin-standard.md
 - "Code Documentation": 
