@@ -22,8 +22,9 @@ nav:
   - "z-p-submods": z-p-submods.md
   - "declare-zsh": declare-zsh.md
   - "Crasis": crasis.md
-- "Plugin Standard":
+- "Various Documents":
   - "Zsh Plugin Standard": zsh-plugin-standard.md
+  - "Zsh Native Scripting Handbook": zsh-native-scripting-handbook.md
 - "Code Documentation": 
   - "Overview": Code-Documentation.md
   - "zplugin.zsh": zplugin.zsh.md
