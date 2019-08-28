@@ -332,56 +332,56 @@ explicitly stated otherwise.
 ### Selection of Files (To Source, …)
 | Modifier | Description |
 |:-:|-|
-| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or the ice `as"program"`); it is a pattern, alphabetically first matched file is being chosen; e.g. `zplugin ice pick"*.plugin.zsh"; zplugin load …`. </div>|
+| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or the ice `as"program"`); it is a pattern, alphabetically first matched file is being chosen; e.g. `zplugin ice pick"*.plugin.zsh"; zplugin load …`.</div>|
 | [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). It is not a pattern but a plain file name.</div>|
 | [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). Supports patterns.</div>| 
 
 ### Conditional Loading
 | Modifier | Description |
 |:-:|-|
-| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) |<div align="justify" style="text-align: justify;"> Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. **Fact:** when `wait` is used without value, it works as `wait'0'`. </div>|
-| [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`. </div>|
-| [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`. </div>|
+| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) |<div align="justify" style="text-align: justify;"> Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. **Fact:** when `wait` is used without value, it works as `wait'0'`.</div>|
+| [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`.</div>|
+| [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`.</div>|
 | `cloneonly` |<div align="justify" style="text-align: justify;"> Don't load the plugin / snippet, only download it </div>|
-| `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`. </div>|
+| `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`.</div>|
 | `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>| 
 | `subscribe` / `on-update-of` |<div align="justify" style="text-align: justify;"> Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` </div>|
 
 ### Plugin Output
 | Modifier | Description |
 |:-:|-|
-| `silent` |<div align="justify" style="text-align: justify;"> Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages. </div>|
-| `lucid` |<div align="justify" style="text-align: justify;"> Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`). </div>|
-| `notify` |<div align="justify" style="text-align: justify;"> Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems. </div>|
+| `silent` |<div align="justify" style="text-align: justify;"> Mute plugin's or snippet's `stderr` & `stdout`. Also skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins, and completion-installation messages.</div>|
+| `lucid` |<div align="justify" style="text-align: justify;"> Skip `Loaded ...` message under prompt for `wait`, etc. loaded plugins (a subset of `silent`).</div>|
+| `notify` |<div align="justify" style="text-align: justify;"> Output given message under-prompt after successfully loading a plugin/snippet. In case of problems with the loading, output a warning message and the return code. If starts with `!` it will then always output the given message. Hint: if the message is empty, then it will just notify about problems.</div>|
 
 ### Completions
 | Modifier | Description |
 |:-:|-|
-| `blockf` |<div align="justify" style="text-align: justify;"> Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them. </div>|
-| `nocompletions` |<div align="justify" style="text-align: justify;"> Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`. </div>|
+| `blockf` |<div align="justify" style="text-align: justify;"> Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them.</div>|
+| `nocompletions` |<div align="justify" style="text-align: justify;"> Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`.</div>|
 
 ### Command Execution After Cloning, Updating or Loading
 | Modifier | Description |
 |:-:|-|
-| `mv` |<div align="justify" style="text-align: justify;"> Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets. </div>|
-| `cp` |<div align="justify" style="text-align: justify;"> Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`. </div>|
-| `atinit` |<div align="justify" style="text-align: justify;"> Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading. </div>|
-| `atclone` |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet. </div>|
-| `atload` |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`). </div>|
-| `atpull` |<div align="justify" style="text-align: justify;"> Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod. </div>|
-| `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded. </div>|
-| `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc. </div>|
-| [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`. </div>|
+| `mv` |<div align="justify" style="text-align: justify;"> Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets.</div>|
+| `cp` |<div align="justify" style="text-align: justify;"> Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`.</div>|
+| `atinit` |<div align="justify" style="text-align: justify;"> Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.</div>|
+| `atclone` |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet.</div>|
+| `atload` |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`).</div>|
+| `atpull` |<div align="justify" style="text-align: justify;"> Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod.</div>|
+| `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded.</div>|
+| `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc.</div>|
+| [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`.</div>|
 
 ### Others
 | Modifier | Description |
 |:-:|-|
-| `as` |<div align="justify" style="text-align: justify;"> Can be `as"program"` (also the alias: `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"` – use with plugins or snippets in whose only underscore-starting `_*` files you are interested in. . </div>|
-| [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) |<div align="justify" style="text-align: justify;"> Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet. </div>|
+| `as` |<div align="justify" style="text-align: justify;"> Can be `as"program"` (also the alias: `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"` – use with plugins or snippets in whose only underscore-starting `_*` files you are interested in.</div>|
+| [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) |<div align="justify" style="text-align: justify;"> Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.</div>|
 | `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.\</div> | 
-| `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation). </div>| 
-| `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page. </div>|
-| `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`. </div>| 
+| `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation).</div>| 
+| `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page.</div>|
+| `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.</div>| 
 | `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**</div>| 
 | `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>| 
 | [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>| 
@@ -398,33 +398,33 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 
 | Command | Description |
 |:-:|-|
-| `-h, --help, help` |<div align="justify" style="text-align: justify;"> Usage information. </div>|
-| `man` |<div align="justify" style="text-align: justify;"> Manual. </div>|
+| `-h, --help, help` |<div align="justify" style="text-align: justify;"> Usage information.</div>|
+| `man` |<div align="justify" style="text-align: justify;"> Manual.</div>|
 
 ### Loading and Unloading
 
 | Command | Description |
 |:-:|-|
-| `load {plg-spec}` |<div align="justify" style="text-align: justify;"> Load plugin, can also receive absolute local path. </div>|
-| `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/tracking. `-b` – track `bindkey`-calls only. </div>|
-| `unload [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Unload plugin loaded with `zplugin load ...`. `-q` – quiet. </div>|
-| `snippet [-f] {url}` |<div align="justify" style="text-align: justify;"> Source local or remote file (by direct URL). `-f` – don't use cache (force redownload). </div>|
+| `load {plg-spec}` |<div align="justify" style="text-align: justify;"> Load plugin, can also receive absolute local path.</div>|
+| `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/tracking. `-b` – track `bindkey`-calls only.</div>|
+| `unload [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Unload plugin loaded with `zplugin load ...`. `-q` – quiet.</div>|
+| `snippet [-f] {url}` |<div align="justify" style="text-align: justify;"> Source local or remote file (by direct URL). `-f` – don't use cache (force redownload).</div>|
 
 ### Completions
 
 | Command | Description |
 |:-:|-|
-| `clist, completions` |<div align="justify" style="text-align: justify;"> List completions in use. </div>|
-| `cdisable {cname}` |<div align="justify" style="text-align: justify;"> Disable completion `cname`. </div>|
-| `cenable {cname}` |<div align="justify" style="text-align: justify;"> Enable completion `cname`. </div>|
-| `creinstall [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Install completions for plugin, can also receive absolute local path. `-q` – quiet. </div>|
-| `cuninstall {plg-spec}` |<div align="justify" style="text-align: justify;"> Uninstall completions for plugin. </div>|
-| `csearch` |<div align="justify" style="text-align: justify;"> Search for available completions from any plugin. </div>|
-| `compinit` |<div align="justify" style="text-align: justify;"> Refresh installed completions. </div>|
-| `cclear` |<div align="justify" style="text-align: justify;"> Clear stray and improper completions. </div>|
-| `cdlist` |<div align="justify" style="text-align: justify;"> Show compdef replay list. </div>|
-| `cdreplay [-q]` |<div align="justify" style="text-align: justify;"> Replay compdefs (to be done after compinit). `-q` – quiet. </div>|
-| `cdclear [-q]` |<div align="justify" style="text-align: justify;"> Clear compdef replay list. `-q` – quiet. </div>|
+| `clist, completions` |<div align="justify" style="text-align: justify;"> List completions in use.</div>|
+| `cdisable {cname}` |<div align="justify" style="text-align: justify;"> Disable completion `cname`.</div>|
+| `cenable {cname}` |<div align="justify" style="text-align: justify;"> Enable completion `cname`.</div>|
+| `creinstall [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Install completions for plugin, can also receive absolute local path. `-q` – quiet.</div>|
+| `cuninstall {plg-spec}` |<div align="justify" style="text-align: justify;"> Uninstall completions for plugin.</div>|
+| `csearch` |<div align="justify" style="text-align: justify;"> Search for available completions from any plugin.</div>|
+| `compinit` |<div align="justify" style="text-align: justify;"> Refresh installed completions.</div>|
+| `cclear` |<div align="justify" style="text-align: justify;"> Clear stray and improper completions.</div>|
+| `cdlist` |<div align="justify" style="text-align: justify;"> Show compdef replay list.</div>|
+| `cdreplay [-q]` |<div align="justify" style="text-align: justify;"> Replay compdefs (to be done after compinit). `-q` – quiet.</div>|
+| `cdclear [-q]` |<div align="justify" style="text-align: justify;"> Clear compdef replay list. `-q` – quiet.</div>|
 
 ### Tracking of the Active Session
 
@@ -440,41 +440,41 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 
 | Command | Description |
 |:-:|-|
-| `times [-s]` |<div align="justify" style="text-align: justify;"> Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds. </div>|
-| `zstatus` |<div align="justify" style="text-align: justify;"> Overall Zplugin status. </div>|
-| `report {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Show plugin report. `--all` – do it for all plugins. </div>|
-| `loaded [keyword], list [keyword]` |<div align="justify" style="text-align: justify;"> Show what plugins are loaded (filter with 'keyword'). </div>|
-| `ls` |<div align="justify" style="text-align: justify;"> List snippets in formatted and colorized manner. </div>|
-| `status {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets. </div>|
-| `recently [time-spec]` |<div align="justify" style="text-align: justify;"> Show plugins that changed recently, argument is e.g. 1 month 2 days. </div>|
-| `bindkeys` |<div align="justify" style="text-align: justify;"> Lists bindkeys set up by each plugin. </div>|
+| `times [-s]` |<div align="justify" style="text-align: justify;"> Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds.</div>|
+| `zstatus` |<div align="justify" style="text-align: justify;"> Overall Zplugin status.</div>|
+| `report {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Show plugin report. `--all` – do it for all plugins.</div>|
+| `loaded [keyword], list [keyword]` |<div align="justify" style="text-align: justify;"> Show what plugins are loaded (filter with 'keyword').</div>|
+| `ls` |<div align="justify" style="text-align: justify;"> List snippets in formatted and colorized manner.</div>|
+| `status {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets.</div>|
+| `recently [time-spec]` |<div align="justify" style="text-align: justify;"> Show plugins that changed recently, argument is e.g. 1 month 2 days.</div>|
+| `bindkeys` |<div align="justify" style="text-align: justify;"> Lists bindkeys set up by each plugin.</div>|
 
 ### Compiling
 
 | Command | Description |
 |:-:|-|
-| `compile {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Compile plugin. `--all` – compile all plugins. </div>|
-| `uncompile {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Remove compiled version of plugin. `--all` – do it for all plugins. </div>|
-| `compiled` |<div align="justify" style="text-align: justify;"> List plugins that are compiled. </div>|
+| `compile {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Compile plugin. `--all` – compile all plugins.</div>|
+| `uncompile {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Remove compiled version of plugin. `--all` – do it for all plugins.</div>|
+| `compiled` |<div align="justify" style="text-align: justify;"> List plugins that are compiled.</div>|
 
 ### Other
 
 | Command | Description |
 |:-:|-|
-| `self-update` |<div align="justify" style="text-align: justify;"> Updates and compiles Zplugin. </div>|
-| `update [-q] [-r] {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git update plugin or snippet. <br> `--all` – update all plugins and snippets. <br>  `-q` – quiet. <br> `-r` \| `--reset` – run `git reset --hard` / `svn revert` before pulling changes. </div>|
-| `ice <ice specification>` |<div align="justify" style="text-align: justify;"> Add ice to next command, argument is e.g. from"gitlab". </div>|
-| `delete {plg-spec}\|URL\|--clean\|--all` |<div align="justify" style="text-align: justify;"> Remove plugin or snippet from disk (good to forget wrongly passed ice-mods).  <br> `--all` – purge. <br> `--clean` – delete plugins and snippets that are not loaded. </div>|
-| `cd {plg-spec}` |<div align="justify" style="text-align: justify;"> Cd into plugin's directory. Also support snippets if fed with URL. </div>|
-| `edit {plg-spec}` |<div align="justify" style="text-align: justify;"> Edit plugin's file with $EDITOR. </div>|
-| `glance {plg-spec}` |<div align="justify" style="text-align: justify;"> Look at plugin's source (pygmentize, {,source-}highlight). </div>|
-| `stress {plg-spec}` |<div align="justify" style="text-align: justify;"> Test plugin for compatibility with set of options. </div>|
-| `changes {plg-spec}` |<div align="justify" style="text-align: justify;"> View plugin's git log. </div>|
-| `create {plg-spec}` |<div align="justify" style="text-align: justify;"> Create plugin (also together with GitHub repository). </div>|
-| `srv {service-id} [cmd]` |<div align="justify" style="text-align: justify;"> Control a service, command can be: stop,start,restart,next,quit; `next` moves the service to another Zshell. </div>|
-| `recall {plg-spec}\|URL` |<div align="justify" style="text-align: justify;"> Fetch saved ice modifiers and construct `zplugin ice ...` command. </div>|
-| `env-whitelist [-v] [-h] {env..}` |<div align="justify" style="text-align: justify;"> Allows to specify names (also patterns) of variables left unchanged during an unload. `-v` – verbose. </div>|
-| `module` |<div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zplugin, see `zplugin module help`. </div>|
+| `self-update` |<div align="justify" style="text-align: justify;"> Updates and compiles Zplugin.</div>|
+| `update [-q] [-r] {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git update plugin or snippet.<br> `--all` – update all plugins and snippets.<br>  `-q` – quiet.<br> `-r` \| `--reset` – run `git reset --hard` / `svn revert` before pulling changes.</div>|
+| `ice <ice specification>` |<div align="justify" style="text-align: justify;"> Add ice to next command, argument is e.g. from"gitlab".</div>|
+| `delete {plg-spec}\|URL\|--clean\|--all` |<div align="justify" style="text-align: justify;"> Remove plugin or snippet from disk (good to forget wrongly passed ice-mods).  <br> `--all` – purge.<br> `--clean` – delete plugins and snippets that are not loaded.</div>|
+| `cd {plg-spec}` |<div align="justify" style="text-align: justify;"> Cd into plugin's directory. Also support snippets if fed with URL.</div>|
+| `edit {plg-spec}` |<div align="justify" style="text-align: justify;"> Edit plugin's file with $EDITOR.</div>|
+| `glance {plg-spec}` |<div align="justify" style="text-align: justify;"> Look at plugin's source (pygmentize, {,source-}highlight).</div>|
+| `stress {plg-spec}` |<div align="justify" style="text-align: justify;"> Test plugin for compatibility with set of options.</div>|
+| `changes {plg-spec}` |<div align="justify" style="text-align: justify;"> View plugin's git log.</div>|
+| `create {plg-spec}` |<div align="justify" style="text-align: justify;"> Create plugin (also together with GitHub repository).</div>|
+| `srv {service-id} [cmd]` |<div align="justify" style="text-align: justify;"> Control a service, command can be: stop,start,restart,next,quit; `next` moves the service to another Zshell.</div>|
+| `recall {plg-spec}\|URL` |<div align="justify" style="text-align: justify;"> Fetch saved ice modifiers and construct `zplugin ice ...` command.</div>|
+| `env-whitelist [-v] [-h] {env..}` |<div align="justify" style="text-align: justify;"> Allows to specify names (also patterns) of variables left unchanged during an unload. `-v` – verbose.</div>|
+| `module` |<div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zplugin, see `zplugin module help`.</div>|
 
 ## Updating Zplugin and Plugins
 
