@@ -2158,7 +2158,7 @@ do <code>echo $precmd_functions</code> after loading a theme) – should be pass
 <code>wrap-track''</code> ice, like so:</p>
 <pre><code class="zsh"># Load when MYPROMPT == 4
 zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
-            wrap-track'_p9k_precmd'
+            atload'source ~/.p10k.zsh; _p9k_precmd' wrap-track'_p9k_precmd'
 zplugin load romkatv/powerlevel10k
 </code></pre>
 
