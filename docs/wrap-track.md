@@ -28,7 +28,7 @@ do `echo $precmd_functions` after loading a theme) – should be passed to
 ```zsh
 # Load when MYPROMPT == 4
 zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
-            wrap-track'_p9k_precmd'
+            atload'source ~/.p10k.zsh; _p9k_precmd' wrap-track'_p9k_precmd'
 zplugin load romkatv/powerlevel10k
 ```
 
