@@ -25,8 +25,8 @@ FUNCTIONS
  -zplg-check-which-completions-are-installed
  -zplg-clear-completions
  -zplg-clear-report-for
- -zplg-compile-uncompile-all
  -zplg-compiled
+ -zplg-compile-uncompile-all
  -zplg-compinit
  -zplg-compute-ice
  -zplg-confirm
@@ -127,10 +127,12 @@ ____
  how to load the module in .zshrc.
 ____
 
-Has 24 line(s). Calls functions:
+Has 27 line(s). Calls functions:
 
  -zplg-build-module
  `-- -zplg-module
+
+Uses feature(s): _trap_
 
 Called by:
 
@@ -341,6 +343,26 @@ Called by:
  -zplg-unload
  zplugin.zsh/-zplg-clear-debug-report
 
+-zplg-compiled
+~~~~~~~~~~~~~~
+
+____
+ 
+ Displays list of plugins that are compiled.
+ 
+ User-action entry point.
+____
+
+Has 26 line(s). Calls functions:
+
+ -zplg-compiled
+ |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ zplugin.zsh/zplugin
+
 -zplg-compile-uncompile-all
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -358,26 +380,6 @@ Has 23 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- zplugin-install.zsh/-zplg-compile-plugin
- |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
- `-- zplugin.zsh/-zplg-any-to-user-plugin
-
-Called by:
-
- zplugin.zsh/zplugin
-
--zplg-compiled
-~~~~~~~~~~~~~~
-
-____
- 
- Displays list of plugins that are compiled.
- 
- User-action entry point.
-____
-
-Has 26 line(s). Calls functions:
-
- -zplg-compiled
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
@@ -504,7 +506,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 42 line(s). Calls functions:
+Has 54 line(s). Calls functions:
 
  -zplg-delete
  |-- -zplg-confirm
@@ -538,7 +540,7 @@ Called by:
 
 ____
  
- Computes ZPLG_FUNCTIONS that holds new functions added by plugin.
+ Computes FUNCTIONS that holds new functions added by plugin.
  Uses data gathered earlier by -zplg-diff-functions().
  
  $1 - user/plugin
@@ -556,7 +558,7 @@ Called by:
 
 ____
  
- Computes ZPLG_OPTIONS that holds options changed by plugin.
+ Computes OPTIONS that holds options changed by plugin.
  Uses data gathered earlier by -zplg-diff-options().
  
  $1 - user/plugin
@@ -1167,7 +1169,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 63 line(s). Calls functions:
+Has 71 line(s). Calls functions:
 
  -zplg-show-report
  |-- -zplg-check-which-completions-are-enabled
@@ -1315,12 +1317,13 @@ Called by:
 
 ____
  
- 1. Unfunction functions (created by plugin)
- 2. Delete bindkeys (...)
- 3. Delete Zstyles
- 4. Restore options
- 5. Remove aliases
- 6. Restore Zle state
+ 0. Call the Zsh Plugin's Standard *_plugin_unload function
+ 1. Delete bindkeys (...)
+ 2. Delete Zstyles
+ 3. Restore options
+ 4. Remove aliases
+ 5. Restore Zle state
+ 6. Unfunction functions (created by plugin)
  7. Clean-up FPATH and PATH
  8. Delete created variables
  9. Forget the plugin
@@ -1331,7 +1334,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 247 line(s). Calls functions:
+Has 347 line(s). Calls functions:
 
  -zplg-unload
  |-- -zplg-clear-report-for
@@ -1374,7 +1377,7 @@ ____
  $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 210 line(s). Calls functions:
+Has 212 line(s). Calls functions:
 
  -zplg-update-or-status
  |-- -zplg-at-eval
@@ -1491,7 +1494,7 @@ Called by:
 compinit
 ~~~~~~~~
 
-Has 544 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
 

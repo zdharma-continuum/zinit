@@ -102,7 +102,7 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 234 line(s). Calls functions:
+Has 233 line(s). Calls functions:
 
  -zplg-download-snippet
  |-- -zplg-at-eval
@@ -175,7 +175,7 @@ ____
  $2 - file
 ____
 
-Has 65 line(s). Doesn't call other functions.
+Has 66 line(s). Doesn't call other functions.
 
 Uses feature(s): _unfunction_
 
@@ -247,7 +247,7 @@ ____
  $2 - plugin
 ____
 
-Has 180 line(s). Calls functions:
+Has 182 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
  |-- -zplg-compile-plugin

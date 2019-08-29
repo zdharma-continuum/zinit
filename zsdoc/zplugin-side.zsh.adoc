@@ -52,8 +52,8 @@ Called by:
 
  -zplg-exists-physically-message
  zplugin-autoload.zsh/-zplg-clear-completions
- zplugin-autoload.zsh/-zplg-compile-uncompile-all
  zplugin-autoload.zsh/-zplg-compiled
+ zplugin-autoload.zsh/-zplg-compile-uncompile-all
  zplugin-autoload.zsh/-zplg-create
  zplugin-autoload.zsh/-zplg-exists-message
  zplugin-autoload.zsh/-zplg-get-completion-owner-uspl2col
