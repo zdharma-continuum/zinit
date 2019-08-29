@@ -782,7 +782,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local k
 
     -zplg-any-colorify-as-uspl2 "$uspl2"
-    (( quiet )) || print -r -- "${ZPLGM[col-bar]}===${ZPLGM[col-rst]} Unloading plugin: $REPLY ${ZPLGM[col-bar]}===${ZPLGM[col-rst]}"
+    (( quiet )) || print -r -- "${ZPLGM[col-bar]}---${ZPLGM[col-rst]} Unloading plugin: $REPLY ${ZPLGM[col-bar]}---${ZPLGM[col-rst]}"
 
     # KSH_ARRAYS immunity
     integer correct=0
@@ -1235,12 +1235,12 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     # Print title
-    printf "${ZPLGM[col-title]}Plugin report for${ZPLGM[col-rst]} %s%s\n"\
+    printf "${ZPLGM[col-title]}Report for${ZPLGM[col-rst]} %s%s plugin\n"\
             "${user:+${ZPLGM[col-uname]}$user${ZPLGM[col-rst]}}${${user:#(%|/)*}:+/}"\
             "${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}"
 
     # Print "----------"
-    local msg="Plugin report for $user${${user:#(%|/)*}:+/}$plugin"
+    local msg="Report for $user${${user:#(%|/)*}:+/}$plugin plugin"
     print -- "${ZPLGM[col-bar]}${(r:${#msg}::-:)tmp__}${ZPLGM[col-rst]}"
 
     local -A map
