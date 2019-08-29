@@ -414,7 +414,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 
 | Command | Description |
 |:-:|-|
-| `clist, completions` |<div align="justify" style="text-align: justify;"> List completions in use.</div>|
+| <code> clist [*columns*], completions [*columns*] </code> |<div align="justify" style="text-align: justify;"> List completions in use, with <code>*columns*</code> completions per line. `zpl clist 5` will for example print 5 completions per line. Default is 3.</div>|
 | `cdisable {cname}` |<div align="justify" style="text-align: justify;"> Disable completion `cname`.</div>|
 | `cenable {cname}` |<div align="justify" style="text-align: justify;"> Enable completion `cname`.</div>|
 | `creinstall [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Install completions for plugin, can also receive absolute local path. `-q` – quiet.</div>|
@@ -444,7 +444,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | `zstatus` |<div align="justify" style="text-align: justify;"> Overall Zplugin status.</div>|
 | `report {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Show plugin report. `--all` – do it for all plugins.</div>|
 | `loaded [keyword], list [keyword]` |<div align="justify" style="text-align: justify;"> Show what plugins are loaded (filter with 'keyword').</div>|
-| `ls` |<div align="justify" style="text-align: justify;"> List snippets in formatted and colorized manner.</div>|
+| `ls` |<div align="justify" style="text-align: justify;"> List snippets in formatted and colorized manner. Requires **tree** program.</div>|
 | `status {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets.</div>|
 | `recently [time-spec]` |<div align="justify" style="text-align: justify;"> Show plugins that changed recently, argument is e.g. 1 month 2 days.</div>|
 | `bindkeys` |<div align="justify" style="text-align: justify;"> Lists bindkeys set up by each plugin.</div>|
@@ -708,7 +708,7 @@ declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loa
 | ZPLGM[PLUGINS_DIR]     | Override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins" |
 | ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"     |
 | ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
-| ZPLGM[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. it's name can be different) |
+| ZPLGM[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. its name can be different) |
 | ZPLGM[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zpcompinit`), use to pass -C to speed up loading |
 | ZPLGM[MUTE_WARNINGS]   | If set to `1`, then mutes some of the Zplugin warnings, specifically the `plugin already registered` warning |
 
