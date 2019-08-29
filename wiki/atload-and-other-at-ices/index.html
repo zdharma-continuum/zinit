@@ -36,7 +36,7 @@
     
     
       
-        <title>Sourcing Multiple Files - Zplugin Wiki</title>
+        <title>Tracking precmd-based Plugins (2) - Zplugin Wiki</title>
       
     
     
@@ -78,6 +78,10 @@
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#the_atload_ice_and_other_at_ices" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
     
     
       <!--
@@ -136,7 +140,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Sourcing Multiple Files
+                Tracking precmd-based Plugins (2)
               
             </span>
           
@@ -828,33 +832,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active">
-    
-
-    <!-- Active checkbox expands items contained within nested section -->
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
-        type="checkbox" id="__toc" />
-
-    <!-- Hack: see partials/toc.html for more information -->
-    
-
-    <!-- Render table of contents, if not empty -->
-    
-    <a href="./" title="Sourcing Multiple Files"
-        class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Sourcing-multiple-files/" title="Sourcing Multiple Files"
+        class="md-nav__link">
       Sourcing Multiple Files
     </a>
-
-    <!-- Show table of contents -->
-    
   </li>
-
-<!-- Main navigation item -->
 
         
           
@@ -960,15 +946,261 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item">
-    <a href="../atload-and-other-at-ices/" title="Tracking precmd-based Plugins (2)"
-        class="md-nav__link">
+  <li class="md-nav__item md-nav__item--active">
+    
+
+    <!-- Active checkbox expands items contained within nested section -->
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
+        type="checkbox" id="__toc" />
+
+    <!-- Hack: see partials/toc.html for more information -->
+    
+      
+    
+
+    <!-- Render table of contents, if not empty -->
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Tracking precmd-based Plugins (2)
+      </label>
+    
+    <a href="./" title="Tracking precmd-based Plugins (2)"
+        class="md-nav__link md-nav__link--active">
       Tracking precmd-based Plugins (2)
     </a>
+
+    <!-- Show table of contents -->
+    
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+    
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#exclamation_mark-preceded_atload" title="Exclamation mark-preceded atload"
+      class="md-nav__link">
+    Exclamation mark-preceded atload
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#example" title="Example"
+      class="md-nav__link">
+    Example
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#practical_example" title="Practical example"
+      class="md-nav__link">
+    Practical example
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#summary" title="Summary"
+      class="md-nav__link">
+    Summary
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+    
   </li>
+
+<!-- Main navigation item -->
 
         
       </ul>
@@ -1905,99 +2137,325 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+    
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#exclamation_mark-preceded_atload" title="Exclamation mark-preceded atload"
+      class="md-nav__link">
+    Exclamation mark-preceded atload
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#example" title="Example"
+      class="md-nav__link">
+    Example
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#practical_example" title="Practical example"
+      class="md-nav__link">
+    Practical example
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#summary" title="Summary"
+      class="md-nav__link">
+    Summary
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Sourcing Multiple Files</h1>
-                
-                <p>Normally <code>src''</code> can be used to specify additional file to source:</p>
-<pre><code class="zsh">zplugin ice pick&quot;powerless.zsh&quot; src&quot;utilities.zsh&quot;
-zplugin light martinrotter/powerless
-</code></pre>
-
+                <h1 id="the_atload_ice_and_other_at_ices">The <code>atload</code> Ice (and other <code>at…</code> ices)<a class="headerlink" href="#the_atload_ice_and_other_at_ices" title="Permanent link">#</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>There are four code-receiving ices: <code>atclone</code>, <code>atpull</code>, <code>atinit</code>, <code>atload</code>.
+Their role is to <strong>receive a portion of Zsh code and execute it in certain
+moments of the plugin life-cycle</strong>. The <strong><code>atclone</code></strong> executes it:</p>
 <ul>
-<li><code>pick''</code> – provide main file to source (can be a pattern like <code>*.sh</code> –
-  alphabetically first matched file is sourced),</li>
-<li><code>src''</code> – provide second file to source (not a pattern, plain file name)</li>
+<li><strong>after cloning</strong> the associated plugin or snippet to the disk.</li>
 </ul>
-<hr />
-<p>However, via <code>atload''</code> ice one can provide simple loop to source more files:</p>
-<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; \
-    atload'local f; for f in git.zsh misc.zsh; do \
-        source $f \
-    done'
-zplugin snippet OMZ::lib
-</code></pre>
-
+<p>The <strong><code>atpull</code></strong> is similar, but works:</p>
 <ul>
-<li><code>svn</code> – use Subversion to clone <code>OMZ::lib</code> (the whole Oh My Zsh <code>lib/</code>
-  directory),</li>
-<li>note that <code>atload''</code> uses apostrophes not double quotes, to literally put <code>$f</code>
-  into the string,</li>
-<li><code>atload</code>'s code is automatically being run <strong>within the snippet's (or
-  plugin's) directory</strong>,</li>
-<li><code>atload''</code> code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you
-  load a plugin (not a snippet) with <code>zplugin load …</code> and prepend the value of
-  the ice with exclamation mark, i.e.  <code>atload'!local f; for …'</code>,</li>
-<li><code>atload''</code> is executed after loading main files (<code>pick''</code> and <code>src''</code> ones).</li>
+<li><strong>after updating</strong> the associated plugin or snippet. </li>
 </ul>
-<hr />
-<p>The <code>multisrc''</code> ice, which loads <strong>multiple</strong> files enumerated with
-spaces as the separator (e.g. <code>multisrc'misc.zsh grep.zsh'</code>) and also using
-brace-expansion syntax (e.g. <code>multisrc'{misc,grep}.zsh')</code>. Example:</p>
-<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; multisrc'git.zsh \
-    functions.zsh {history,grep}.zsh'
-zplugin snippet OMZ::lib
+<p>Next, <strong><code>atinit</code></strong> works similar, but is being activated:</p>
+<ul>
+<li><strong>before loading</strong> of the associated plugin or snippet.</li>
+</ul>
+<p>Last, <strong><code>atload</code></strong> is being activated:</p>
+<ul>
+<li><strong>after loading</strong> of the associated plugin or snippet.</li>
+</ul>
+<p>For convenience, you can use each of the ices multiple times in single <code>zplugin
+ice …</code> invocation – all the passed commands will be executed in the given order.</p>
+<p>The <code>atpull</code> ice recognizes a special value: <code>%atclone</code> (so the code looks i.e.:
+<code>atpull'%atclone'</code>). It causes the contents of the <code>atclone</code> ice to be copied
+into the contents of the <code>atpull</code> ice. This is handy when the same tasks have to
+be performed on clone <strong>and</strong> on update of plugin or snippet, like e.g.: in the
+<a href="../Direnv-explanation"><strong>Direnv example</strong></a>.</p>
+<h2 id="exclamation_mark-preceded_atload"><em>Exclamation mark</em>-preceded <code>atload</code><a class="headerlink" href="#exclamation_mark-preceded_atload" title="Permanent link">#</a></h2>
+<p>The <code>wrap-track</code> ice allows to track and unload plugins that defer their
+initialization into a function run later after sourcing the plugin's script –
+when the function is called, the plugin is then being fully initialized.
+However, if the function is being called from the <code>atload</code> ice, then there is a
+simpler method than the <code>wrap-track</code> ice – an <em>exclamation mark</em>-preceded
+<code>atload</code> contents. The exclamation mark causes the effects of the execution of
+the code passed to <code>atload</code> ice to be recorded.</p>
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h2>
+<p>For example, in the following invocation:</p>
+<pre><code class="zsh">zplugin ice id-as'test' atload'!PATH+=:~/share'
+zplugin load zdharma/null
 </code></pre>
 
-<p>The all possible ways to use the <code>multisrc''</code> ice-mod:</p>
-<pre><code class="zsh">zplugin ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
-zplugin load robbyrussell/oh-my-zsh
+<p>the <code>$PATH</code> is being changed within <code>atload</code> ice. Zplugin's tracking records
+<code>$PATH</code> changes and withdraws them on plugin unload, and also shows information
+loading:</p>
+<pre>
+<code>
+$ zplg report test
+Report for test plugin
+<span class="hljs-blue">----------------------</span>
+Source  (reporting enabled)
 
-# Can use patterns
-zplugin ice svn multisrc&quot;{funct*,misc}.zsh&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+<span class="hljs-orange">PATH elements added:</span>
+/home/sg/share
+</code>
+</pre>
 
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;$array&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+<p>As it can be seen, the <code>atload</code> code is being correctly tracked and can be
+unloaded &amp; viewed. Below is the result of using the <code>unload</code> subcommand to
+unload the <code>test</code> plugin:</p>
+<pre>
+<code>
+$ zplugin unload test
+<span class="hljs-blue">--- Unloading plugin: test ---</span>
+Removing PATH element /home/sg/share
+Unregistering plugin test
+Plugin report saved to $LASTREPORT
+</code>
+</pre>
 
-# Will use the array's value at the moment of plugin load
-# – this can matter in case of using Turbo mode
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
-
-# Compatible with KSH_ARRAYS option
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;${array[*]}&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
-
-# Compatible with KSH_ARRAYS option
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\${array[*]}&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
-
-zplugin ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
-
-# Also – hack Zplugin: the ice's contents is simply `eval'-uated
-# like follows: eval &quot;reply=($multisrc)&quot;. So it might get handy on
-# an occasion to pass code there, but first you must close the paren
-# and then don't forget to assign `reply', and to provide a trailing
-# opening paren. In the code be careful to not redefine any variable
-# used internally by Zplugin – e.g.: `i' is safe:
-
-array=( {functions,misc}.zsh )
-zplugin ice svn multisrc'); local i; for i in $array; do \
-            reply+=( ${i/.zsh/.sh} ); \
-        done; ((1)' pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+<h2 id="practical_example">Practical example<a class="headerlink" href="#practical_example" title="Permanent link">#</a></h2>
+<p>The same example as in the <a href="../wrap-track/"><strong>Tracking precmd-based Plugins</strong></a>
+article, but using the <em>exclamation mark</em>-preceded <code>atload</code> instead of
+<code>wrap-track</code>:</p>
+<pre><code class="zsh"># Load when MYPROMPT == 4
+zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
+            atload'!source ~/.p10k.zsh; _p9k_precmd'
+zplugin load romkatv/powerlevel10k
 </code></pre>
 
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">#</a></h2>
+<p>The creation of the four additional Zle-widgets will be recorded (see the
+<a href="../wrap-track"><strong>article</strong></a> on <code>wrap-track</code> for more information) – the effect will
+be exactly the same as with the <code>wrap-track</code> ice.  The widgets will be properly
+deleted/restored on the plugin unload with <code>MYPROMPT=3</code> (for example) and the
+shell state will be clean, ready to load a new prompt.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   

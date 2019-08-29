@@ -16,6 +16,14 @@
   color: #63a35c;
 }
 
+.hljs-blue {
+  color: #0000ff;
+}
+
+.hljs-orange {
+  color: #ffa500;
+}
+
 /* Enables syntax highlighting for inlined code.*/
 code.hljs{
   display:inline;
@@ -77,11 +85,6 @@ code.hljs{
 .hljs-addition {
   color: #55a532;
   background-color: #eaffea;
-}
-
-.hljs-deletion {
-  color: #bd2c00;
-  background-color: #ffecec;
 }
 
 .hljs-link {
