@@ -36,10 +36,10 @@ This way the actions done during the first call to `_p9k_precmd()` will be
 normally recorded, which can be viewed in the report of the
 [**romkatv/powerlevel10k**](https://github.com/romkatv/powerlevel10k) theme:
 
-```
-~ zplg report romkatv/powerlevel10k:
-Plugin report for romkatv/powerlevel10k
----------------------------------------
+<pre>
+<code>~ zplg report romkatv/powerlevel10k:
+Report for romkatv/powerlevel10k plugin
+<span class="hljs-blue">---------------------------------------</span>
 Source powerlevel10k.zsh-theme (reporting enabled)
 Autoload is-at-least with options -U -z
 
@@ -63,11 +63,11 @@ Note: a new widget created via zle -N: zle-line-pre-redraw
 Zle -N -- zle-keymap-select _p9k_wrapper__p9k_zle_keymap_select
 Note: === Ended tracking function: _p9k_precmd ===
 
-Functions created:
+<span class="hljs-orange">Functions created:</span>
 +vi-git-aheadbehind                      +vi-git-remotebranch
 
 (…)
-```
+</code></pre>
 
 ## Summary
 

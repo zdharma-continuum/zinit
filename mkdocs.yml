@@ -9,6 +9,7 @@ nav:
   - "Sourcing Multiple Files": Sourcing-multiple-files.md
   - "Nickname a Plugin or Snippet": id-as.md
   - "Tracking precmd-based Plugins": wrap-track.md
+  - "Tracking precmd-based Plugins (2)": atload-and-other-at-ices.md
 - "Examples":
   - "Example Minimal Setup": Example-Minimal-Setup.md
   - "Example Oh My Zsh Setup": Example-Oh-My-Zsh-setup.md
