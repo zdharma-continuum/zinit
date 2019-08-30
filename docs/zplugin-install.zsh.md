@@ -7,7 +7,7 @@ zplugin-install.zsh - a shell script
 
 SYNOPSIS
 --------
-Documentation automatically generated with `zshelldoc'
+Documentation automatically generated with \`zshelldoc'
 
 FUNCTIONS
 ---------

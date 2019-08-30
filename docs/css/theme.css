@@ -26,16 +26,6 @@
   display: none;
 }
 
-/*Borders around code blocks.*/
-.codehilite code,
-.codehilite pre {
-  color: #3f3f3f;
-  background-color: #f7f7f7;
-  overflow: auto;
-  box-sizing: border-box;
-  border: 1px solid #ccc !important;
-}
-
 /*Headers*/
 
 /*h1*/
