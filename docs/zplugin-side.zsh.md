@@ -1,212 +1,242 @@
-# NAME
+zplugin-side.zsh(1)
+===================
 
+NAME
+----
 zplugin-side.zsh - a shell script
 
-# SYNOPSIS
+SYNOPSIS
+--------
+Documentation automatically generated with `zshelldoc'
 
-Documentation automatically generated with \`zshelldoc'
+FUNCTIONS
+---------
 
-# FUNCTIONS
+```text
+-zplg-any-colorify-as-uspl2
+-zplg-exists-physically
+-zplg-exists-physically-message
+-zplg-first
+-zplg-get-plg-dir
+-zplg-shands-exp
+-zplg-store-ices
+-zplg-two-paths
+```
 
-    -zplg-any-colorify-as-uspl2
-    -zplg-exists-physically
-    -zplg-exists-physically-message
-    -zplg-first
-    -zplg-get-plg-dir
-    -zplg-shands-exp
-    -zplg-store-ices
-    -zplg-two-paths
-
-# DETAILS
+DETAILS
+-------
 
 ## Script Body
 
-Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle
-widget bound to a key, etc.).
+Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
-## \-zplg-any-colorify-as-uspl2
+## -zplg-any-colorify-as-uspl2
 
-> 
-> 
->     Returns ANSI-colorified "user/plugin" string, from any supported
->     plugin spec (user---plugin, user/plugin, user plugin, plugin).
-> 
->     $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
->     $2 - plugin (only when $1 - i.e. user - given)
->     $REPLY = ANSI-colorified "user/plugin" string
+```text
+Returns ANSI-colorified "user/plugin" string, from any supported
+plugin spec (user---plugin, user/plugin, user plugin, plugin).
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+$REPLY = ANSI-colorified "user/plugin" string
+```
 
 Has 11 line(s). Calls functions:
 
-    -zplg-any-colorify-as-uspl2
-    `-- zplugin.zsh/-zplg-any-to-user-plugin
+```text
+-zplg-any-colorify-as-uspl2
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+```
 
 Called by:
 
-    -zplg-exists-physically-message
-    zplugin-autoload.zsh/-zplg-clear-completions
-    zplugin-autoload.zsh/-zplg-compile-uncompile-all
-    zplugin-autoload.zsh/-zplg-compiled
-    zplugin-autoload.zsh/-zplg-create
-    zplugin-autoload.zsh/-zplg-exists-message
-    zplugin-autoload.zsh/-zplg-get-completion-owner-uspl2col
-    zplugin-autoload.zsh/-zplg-list-bindkeys
-    zplugin-autoload.zsh/-zplg-recently
-    zplugin-autoload.zsh/-zplg-search-completions
-    zplugin-autoload.zsh/-zplg-show-completions
-    zplugin-autoload.zsh/-zplg-show-registered-plugins
-    zplugin-autoload.zsh/-zplg-show-times
-    zplugin-autoload.zsh/-zplg-uncompile-plugin
-    zplugin-autoload.zsh/-zplg-unload
-    zplugin-autoload.zsh/-zplg-update-or-status-all
-    zplugin-autoload.zsh/-zplg-update-or-status
-    zplugin-install.zsh/-zplg-install-completions
-    zplugin-install.zsh/-zplg-setup-plugin-dir
+```text
+-zplg-exists-physically-message
+zplugin-autoload.zsh/-zplg-clear-completions
+zplugin-autoload.zsh/-zplg-compiled
+zplugin-autoload.zsh/-zplg-compile-uncompile-all
+zplugin-autoload.zsh/-zplg-create
+zplugin-autoload.zsh/-zplg-exists-message
+zplugin-autoload.zsh/-zplg-get-completion-owner-uspl2col
+zplugin-autoload.zsh/-zplg-list-bindkeys
+zplugin-autoload.zsh/-zplg-recently
+zplugin-autoload.zsh/-zplg-search-completions
+zplugin-autoload.zsh/-zplg-show-completions
+zplugin-autoload.zsh/-zplg-show-registered-plugins
+zplugin-autoload.zsh/-zplg-show-times
+zplugin-autoload.zsh/-zplg-uncompile-plugin
+zplugin-autoload.zsh/-zplg-unload
+zplugin-autoload.zsh/-zplg-update-or-status-all
+zplugin-autoload.zsh/-zplg-update-or-status
+zplugin-install.zsh/-zplg-install-completions
+zplugin-install.zsh/-zplg-setup-plugin-dir
+```
 
-## \-zplg-exists-physically
+## -zplg-exists-physically
 
-> 
-> 
->     Checks if directory of given plugin exists in PLUGIN_DIR.
-> 
->     Testable.
-> 
->     $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
->     $2 - plugin (only when $1 - i.e. user - given)
+```text
+Checks if directory of given plugin exists in PLUGIN_DIR.
+
+Testable.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+```
 
 Has 10 line(s). Calls functions:
 
-    -zplg-exists-physically
-    |-- -zplg-shands-exp
-    `-- zplugin.zsh/-zplg-any-to-user-plugin
+```text
+-zplg-exists-physically
+|-- -zplg-shands-exp
+`-- zplugin.zsh/-zplg-any-to-user-plugin
+```
 
 Called by:
 
-    -zplg-exists-physically-message
-    zplugin-autoload.zsh/-zplg-create
-    zplugin-autoload.zsh/-zplg-get-path
+```text
+-zplg-exists-physically-message
+zplugin-autoload.zsh/-zplg-create
+zplugin-autoload.zsh/-zplg-get-path
+```
 
-## \-zplg-exists-physically-message
+## -zplg-exists-physically-message
 
-> 
-> 
->     Checks if directory of given plugin exists in PLUGIN_DIR,
->     and outputs error message if it doesn't.
-> 
->     Testable.
-> 
->     $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
->     $2 - plugin (only when $1 - i.e. user - given)
+```text 
+Checks if directory of given plugin exists in PLUGIN_DIR,
+and outputs error message if it doesn't.
+
+Testable.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+```
 
 Has 11 line(s). Calls functions:
 
-    -zplg-exists-physically-message
-    |-- -zplg-any-colorify-as-uspl2
-    |   `-- zplugin.zsh/-zplg-any-to-user-plugin
-    |-- -zplg-exists-physically
-    |   |-- -zplg-shands-exp
-    |   `-- zplugin.zsh/-zplg-any-to-user-plugin
-    `-- -zplg-shands-exp
+```text
+-zplg-exists-physically-message
+|-- -zplg-any-colorify-as-uspl2
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+|-- -zplg-exists-physically
+|   |-- -zplg-shands-exp
+|   `-- zplugin.zsh/-zplg-any-to-user-plugin
+`-- -zplg-shands-exp
+```
 
 Called by:
 
-    zplugin-autoload.zsh/-zplg-changes
-    zplugin-autoload.zsh/-zplg-compute-ice
-    zplugin-autoload.zsh/-zplg-delete
-    zplugin-autoload.zsh/-zplg-edit
-    zplugin-autoload.zsh/-zplg-glance
-    zplugin-autoload.zsh/-zplg-stress
-    zplugin-autoload.zsh/-zplg-update-or-status
-    zplugin-install.zsh/-zplg-install-completions
+```text
+zplugin-autoload.zsh/-zplg-changes
+zplugin-autoload.zsh/-zplg-compute-ice
+zplugin-autoload.zsh/-zplg-delete
+zplugin-autoload.zsh/-zplg-edit
+zplugin-autoload.zsh/-zplg-glance
+zplugin-autoload.zsh/-zplg-stress
+zplugin-autoload.zsh/-zplg-update-or-status
+zplugin-install.zsh/-zplg-install-completions
+```
 
-## \-zplg-first
+## -zplg-first
 
-> 
-> 
->     Finds the main file of plugin. There are multiple file name
->     formats, they are ordered in order starting from more correct
->     ones, and matched. -zplg-load-plugin() has similar code parts
->     and doesn't call -zplg-first() – for performance. Obscure matching
->     is done in -zplg-find-other-matches, here and in -zplg-load().
->     Obscure = non-standard main-file naming convention.
-> 
->     $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
->     $2 - plugin (only when $1 - i.e. user - given)
+```text
+Finds the main file of plugin. There are multiple file name
+formats, they are ordered in order starting from more correct
+ones, and matched. -zplg-load-plugin() has similar code parts
+and doesn't call -zplg-first() – for performance. Obscure matching
+is done in -zplg-find-other-matches, here and in -zplg-load().
+Obscure = non-standard main-file naming convention.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
+```
 
 Has 17 line(s). Calls functions:
 
-    -zplg-first
-    |-- -zplg-get-plg-dir
-    |-- zplugin.zsh/-zplg-any-to-user-plugin
-    `-- zplugin.zsh/-zplg-find-other-matches
+```text
+-zplg-first
+|-- -zplg-get-plg-dir
+|-- zplugin.zsh/-zplg-any-to-user-plugin
+`-- zplugin.zsh/-zplg-find-other-matches
+```
 
 Called by:
 
-    zplugin-autoload.zsh/-zplg-edit
-    zplugin-autoload.zsh/-zplg-glance
-    zplugin-autoload.zsh/-zplg-stress
-    zplugin-install.zsh/-zplg-compile-plugin
+```text
+zplugin-autoload.zsh/-zplg-edit
+zplugin-autoload.zsh/-zplg-glance
+zplugin-autoload.zsh/-zplg-stress
+zplugin-install.zsh/-zplg-compile-plugin
+```
 
-## \-zplg-get-plg-dir
+## -zplg-get-plg-dir
 
-Has 9 line(s). Doesn’t call other functions.
-
-Called by:
-
-    -zplg-first
-
-## \-zplg-shands-exp
-
-> 
-> 
->     Does expansion of currently little unstandarized
->     shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
-
-Has 3 line(s). Doesn’t call other functions.
+Has 9 line(s). Doesn't call other functions.
 
 Called by:
 
-    -zplg-exists-physically-message
-    -zplg-exists-physically
-    zplugin-autoload.zsh/-zplg-compute-ice
-    zplugin-autoload.zsh/-zplg-delete
-    zplugin-autoload.zsh/-zplg-get-path
+```text
+-zplg-first
+```
 
-## \-zplg-store-ices
+## -zplg-shands-exp
 
-> 
-> 
->     Saves ice mods in given hash onto disk.
-> 
->     $1 - directory where to create / delete files
->     $2 - name of hash that holds values
->     $3 - additional keys of hash to store, space separated
->     $4 - additional keys of hash to store, empty-meaningful ices, space separated
+```text
+Does expansion of currently little unstandarized
+shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
+```
 
-Has 30 line(s). Doesn’t call other functions.
-
-Uses feature(s): *wait*
+Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
-    zplugin-autoload.zsh/-zplg-update-or-status
-    zplugin-install.zsh/-zplg-download-snippet
-    zplugin-install.zsh/-zplg-setup-plugin-dir
+```text
+-zplg-exists-physically-message
+-zplg-exists-physically
+zplugin-autoload.zsh/-zplg-compute-ice
+zplugin-autoload.zsh/-zplg-delete
+zplugin-autoload.zsh/-zplg-get-path
+```
 
-## \-zplg-two-paths
+## -zplg-store-ices
 
-> 
-> 
->     Obtains a snippet URL without specification if it is an SVN URL (points to
->     directory) or regular URL (points to file), returns 2 possible paths for
->     further examination
+```text
+Saves ice mods in given hash onto disk.
 
-Has 19 line(s). Doesn’t call other functions.
+$1 - directory where to create / delete files
+$2 - name of hash that holds values
+$3 - additional keys of hash to store, space separated
+$4 - additional keys of hash to store, empty-meaningful ices, space separated
+```
+
+Has 30 line(s). Doesn't call other functions.
+
+Uses feature(s): _wait_
 
 Called by:
 
-    zplugin-autoload.zsh/-zplg-compute-ice
-    zplugin-autoload.zsh/-zplg-delete
-    zplugin-autoload.zsh/-zplg-get-path
-    zplugin-autoload.zsh/-zplg-update-or-status
+```text
+zplugin-autoload.zsh/-zplg-update-or-status
+zplugin-install.zsh/-zplg-download-snippet
+zplugin-install.zsh/-zplg-setup-plugin-dir
+```
 
-[]( vim:set ft=markdown tw=80: )
+## -zplg-two-paths
+
+```text
+Obtains a snippet URL without specification if it is an SVN URL (points to
+directory) or regular URL (points to file), returns 2 possible paths for
+further examination
+```
+
+Has 19 line(s). Doesn't call other functions.
+
+Called by:
+
+```text
+zplugin-autoload.zsh/-zplg-compute-ice
+zplugin-autoload.zsh/-zplg-delete
+zplugin-autoload.zsh/-zplg-get-path
+zplugin-autoload.zsh/-zplg-update-or-status
+```
+
+

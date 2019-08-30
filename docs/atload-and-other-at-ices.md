@@ -52,31 +52,25 @@ the `$PATH` is being changed within `atload` ice. Zplugin's tracking records
 `$PATH` changes and withdraws them on plugin unload, and also shows information
 loading:
 
-<pre>
-<code>
-$ zplg report test
+<pre><code>$ zplg report test
 Report for test plugin
 <span class="hljs-blue">----------------------</span>
 Source  (reporting enabled)
 
 <span class="hljs-orange">PATH elements added:</span>
 /home/sg/share
-</code>
-</pre>
+</code></pre>
 
 As it can be seen, the `atload` code is being correctly tracked and can be
 unloaded & viewed. Below is the result of using the `unload` subcommand to
 unload the `test` plugin:
 
-<pre>
-<code>
-$ zplugin unload test
+<pre><code>$ zplugin unload test
 <span class="hljs-blue">--- Unloading plugin: test ---</span>
 Removing PATH element /home/sg/share
 Unregistering plugin test
 Plugin report saved to $LASTREPORT
-</code>
-</pre>
+</code></pre>
 
 ## Practical example
 
