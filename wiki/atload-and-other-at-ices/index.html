@@ -2415,30 +2415,24 @@ zplugin load zdharma/null
 <p>the <code>$PATH</code> is being changed within <code>atload</code> ice. Zplugin's tracking records
 <code>$PATH</code> changes and withdraws them on plugin unload, and also shows information
 loading:</p>
-<pre>
-<code>
-$ zplg report test
+<pre><code>$ zplg report test
 Report for test plugin
 <span class="hljs-blue">----------------------</span>
 Source  (reporting enabled)
 
 <span class="hljs-orange">PATH elements added:</span>
 /home/sg/share
-</code>
-</pre>
+</code></pre>
 
 <p>As it can be seen, the <code>atload</code> code is being correctly tracked and can be
 unloaded &amp; viewed. Below is the result of using the <code>unload</code> subcommand to
 unload the <code>test</code> plugin:</p>
-<pre>
-<code>
-$ zplugin unload test
+<pre><code>$ zplugin unload test
 <span class="hljs-blue">--- Unloading plugin: test ---</span>
 Removing PATH element /home/sg/share
 Unregistering plugin test
 Plugin report saved to $LASTREPORT
-</code>
-</pre>
+</code></pre>
 
 <h2 id="practical_example">Practical example<a class="headerlink" href="#practical_example" title="Permanent link">#</a></h2>
 <p>The same example as in the <a href="../wrap-track/"><strong>Tracking precmd-based Plugins</strong></a>
