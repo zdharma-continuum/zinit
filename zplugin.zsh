@@ -587,7 +587,7 @@ builtin setopt noaliases
 # Turn off shadowing completely for a given mode ("load", "light",
 # "light-b" (i.e. the `trackbinds' mode) or "compdef").
 -zplg-shadow-off() {
-    builtin setopt localoptions noaliases
+    builtin setopt localoptions noaliases warncreateglobal
     local mode="$1"
 
     # Disable shadowing only once
@@ -1422,7 +1422,7 @@ function $f {
 # only (i.e. it "melts"), but it can then stick to plugin and activate
 # e.g. at update.
 -zplg-ice() {
-    setopt localoptions extendedglob noksharrays
+    setopt localoptions extendedglob noksharrays warncreateglobal
     local bit
     for bit; do
         [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|\
@@ -1718,7 +1718,7 @@ zplugin() {
 
         local -A ZPLG_ICE
         () {
-            setopt localoptions extendedglob
+            setopt localoptions extendedglob warncreateglobal
             ZPLG_ICE=( "${(kv@)ice[(I)^opt_*]}" )
             ICE_OPTS=( "${(kv@)ice[(I)opt_*]}" )
         }
@@ -1992,7 +1992,7 @@ zplugin() {
                    -zplg-ls "$@"
                    ;;
                (srv)
-                   () { setopt localoptions extendedglob
+                   () { setopt localoptions extendedglob warncreateglobal
                    [[ ! -e ${ZPLGM[SERVICES_DIR]}/"$2".fifo ]] && { print "No such service: $2"; } ||
                        { [[ "$3" = (#i)(next|stop|quit|restart) ]] &&
                            { print "${(U)3}" >>! ${ZPLGM[SERVICES_DIR]}/"$2".fifo || print "Service $2 inactive"; retval=1; } ||
