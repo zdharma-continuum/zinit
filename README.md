@@ -491,6 +491,11 @@ commits will be shown:
 Some plugins require performing an action each time they're updated. One way you can do
 this is by using the `atpull` ice modifier. For example, writing `zplugin ice atpull'./configure'` before loading a plugin will execute `./configure` after a successful update. Refer to [Ice Modifiers](#ice-modifiers) for more information.
 
+The ice modifiers for any plugin or snippet are stored in their directory in a
+`._zplugin` subdirectory, hence the plugin doesn't have to be loaded to be correctly
+updated. There's one other file created there, `.zplugin_lstupd` – it holds the log of
+the new commits pulled-in in the last update.
+
 ## Using Oh My Zsh Themes
 
 To use **themes** created for Oh My Zsh you might want to first source the `git` library there:
