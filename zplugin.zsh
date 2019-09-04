@@ -170,6 +170,7 @@ builtin setopt noaliases
 # The hijacking is not only to gather report data, but also to
 # run custom `autoload' function, that doesn't need FPATH.
 --zplg-shadow-autoload () {
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
     local -a opts
     local func
 
@@ -229,6 +230,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-bindkey() {
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
     is-at-least 5.3 && \
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q+)@}}" || \
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q)@}}"
@@ -257,7 +259,7 @@ builtin setopt noaliases
             local -a pairs
             pairs=( "${(@s,;,)ZPLG_ICE[bindmap]}" )
             () {
-                setopt localoptions extendedglob noksharrays noshwordsplit;
+                builtin setopt localoptions extendedglob noksharrays noshwordsplit;
                 pairs=( "${(@)${(@)${(@s:->:)pairs}##[[:space:]]##}%%[[:space:]]##}" )
             }
             ZPLG_CUR_BIND_MAP=( empty 0 )
@@ -365,6 +367,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zstyle() {
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zstyle $*"
 
     # Remember to perform the actual zstyle call
@@ -403,6 +406,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-alias() {
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Alias $*"
 
     # Remember to perform the actual alias call
@@ -452,8 +456,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zle() {
-    setopt localoptions noerrreturn noerrexit \
-        warncreateglobal typesetsilent extendedglob
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zle $*"
 
     # Remember to perform the actual zle call
@@ -513,6 +516,7 @@ builtin setopt noaliases
 # The hijacking is not only for reporting, but also to save compdef
 # calls so that `compinit' can be called after loading plugins.
 --zplg-shadow-compdef() {
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Saving \`compdef $*' for replay"
     ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
 
@@ -587,7 +591,7 @@ builtin setopt noaliases
 # Turn off shadowing completely for a given mode ("load", "light",
 # "light-b" (i.e. the `trackbinds' mode) or "compdef").
 -zplg-shadow-off() {
-    builtin setopt localoptions noaliases warncreateglobal
+    builtin setopt localoptions noaliases noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
     local mode="$1"
 
     # Disable shadowing only once
@@ -1070,7 +1074,7 @@ function $f {
         [[ -d "$local_dir/$dirname/functions" ]] && {
             [[ -z "${fpath[(r)$local_dir/$dirname/functions]}" ]] && fpath+=( "$local_dir/$dirname/functions" )
             () {
-                setopt localoptions extendedglob
+                builtin setopt localoptions extendedglob
                 autoload $local_dir/$dirname/functions/^([_.]*|prompt_*_setup|README*)(-.N:t)
             }
         }
@@ -1422,7 +1426,7 @@ function $f {
 # only (i.e. it "melts"), but it can then stick to plugin and activate
 # e.g. at update.
 -zplg-ice() {
-    setopt localoptions extendedglob noksharrays warncreateglobal
+    builtin setopt localoptions noksharrays extendedglob warncreateglobal typesetsilent noshortloops
     local bit
     for bit; do
         [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|\
@@ -1630,8 +1634,8 @@ nocd|once|wrap-track${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICES[${match[1
 
     [[ -n "$1" ]] && {
         () {
-            emulate -L zsh
-            setopt extendedglob
+            builtin emulate -L zsh
+            builtin setopt extendedglob
             # Example entry:
             # 1531252764+2+1 p 18 light zdharma/zsh-diff-so-fancy
             #
@@ -1671,8 +1675,8 @@ nocd|once|wrap-track${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICES[${match[1
     } || {
         add-zsh-hook -d -- precmd -zplg-scheduler
         () {
-            emulate -L zsh
-            setopt extendedglob
+            builtin emulate -L zsh
+            builtin setopt extendedglob
             # No "+" in this pattern, it will match only "1531252764"
             # in "1531252764+2" and replace it with current time
             ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
@@ -1718,7 +1722,7 @@ zplugin() {
 
         local -A ZPLG_ICE
         () {
-            setopt localoptions extendedglob warncreateglobal
+            builtin setopt localoptions extendedglob warncreateglobal
             ZPLG_ICE=( "${(kv@)ice[(I)^opt_*]}" )
             ICE_OPTS=( "${(kv@)ice[(I)opt_*]}" )
         }
