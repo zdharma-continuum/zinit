@@ -17,7 +17,7 @@ zman z-p-man
 zman -c zdharma/z-p-man
 ```
 
-# Screenshots
+## Screenshots
 
 Main manual (of the project):
 
