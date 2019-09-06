@@ -27,7 +27,7 @@ Code documentation for the plugin.zsh file (of the project):
 
 ![Code documentation](https://raw.githubusercontent.com/zdharma/z-p-zman/master/images/zman-cd.png)
 
-# Installation
+## Installation
 
 Simply load as a plugin. This will install the extension within Zplugin:
 
