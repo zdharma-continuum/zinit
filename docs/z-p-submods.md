@@ -1,4 +1,4 @@
-# Introduction
+## Introduction
 
 A z-plugin (i.e. a plugin for the Zplugin – [more information](../Z-PLUGINS/))
 that allows Zplugin to clone additional submodules when installing a plugin or
@@ -22,7 +22,7 @@ zplugin snippet PZT::modules/autosuggestions
 
 ![screenshot](img/z-p-submods.png)
 
-# Installation
+## Installation
 
 Simply load as a plugin. The following command will install the z-plugin within
 Zplugin:

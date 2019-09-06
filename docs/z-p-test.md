@@ -1,4 +1,4 @@
-# z-p-test
+## Introduction
 
 Zplugin extension that runs tests (via `make test`, for example) – if it finds
 any of them  – after installing and updating a plugin or snippet. Simply load it

@@ -1,4 +1,4 @@
-# z-p-man
+## Introduction
 
 A Zplugin [extension](../Z-PLUGINS/) that automatically generates:
 
