@@ -313,8 +313,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         (
             () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
             local -a out1 out2
-            out1=( "${(f@)"$(svn info -r HEAD)"}" )
-            out2=( "${(f@)"$(svn info)"}" )
+            out1=( "${(f@)"$(LANG=C svn info -r HEAD)"}" )
+            out2=( "${(f@)"$(LANG=C svn info)"}" )
 
             out1=( "${(M)out1[@]:#Revision:*}" )
             out2=( "${(M)out2[@]:#Revision:*}" )
