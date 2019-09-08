@@ -1389,10 +1389,10 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ -z "${ice[is_release]}" && "${ice[from]}" = (gh-r|github-rel) ]]; then
             ice[is_release]=true
         fi
-        if [[ -n "${ice[is_release]}" ]]; then
+        if [[ -n "${ice[is_release]}" ]] {
             (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
             -zplg-get-latest-gh-r-version "$user" "$plugin"
-            if [[ "${ice[is_release]/\/$REPLY\//}" != "${ice[is_release]}" ]]; then
+            if [[ "${ice[is_release]}" = *$REPLY* ]] {
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
                     print -- "\rBinary release already up to date (version: $REPLY)"
 
@@ -1411,7 +1411,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                     ZPLG_ICE=()
                 }
-            else
+            } else {
                 ZPLG_ICE=( "${(kv)ice[@]}" )
                 # Run z-plugins atpull hooks (the before atpull-ice ones)
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
@@ -1434,8 +1434,8 @@ ZPLGM[EXTENDED_GLOB]=""
                 }
                 -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "-u"
                 ZPLG_ICE=()
-            fi
-        else
+            }
+        } else {
             ( builtin cd -q "$local_dir" || return 1
               [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
                   [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
@@ -1497,7 +1497,7 @@ ZPLGM[EXTENDED_GLOB]=""
                   }
               }
             )
-        fi
+        }
 
         [[ -d "$local_dir/.git" ]] && \
             (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
