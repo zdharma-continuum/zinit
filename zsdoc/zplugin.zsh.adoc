@@ -75,7 +75,7 @@ Has 117 line(s). Calls functions:
  |-- is-at-least
  `-- -zplg-prepare-home
 
-Uses feature(s): _alias_, _autoload_, _export_, _zmodload_, _zstyle_
+Uses feature(s): _alias_, _autoload_, _export_, _setopt_, _zmodload_, _zstyle_
 
 _Exports (environment):_ ZPFX
 
@@ -486,6 +486,8 @@ ____
 
 Has 8 line(s). Doesn't call other functions.
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin
@@ -524,7 +526,7 @@ Has 42 line(s). Calls functions:
  |-- -zplg-register-plugin
  `-- zplugin-install.zsh/-zplg-setup-plugin-dir
 
-Uses feature(s): _eval_, _source_, _zle_
+Uses feature(s): _eval_, _setopt_, _source_, _zle_
 
 Called by:
 
@@ -559,7 +561,7 @@ Has 96 line(s). Calls functions:
  |-- -zplg-shadow-on
  `-- -zplg-wrap-track-functions
 
-Uses feature(s): _eval_, _source_, _zle_
+Uses feature(s): _eval_, _setopt_, _source_, _zle_
 
 Called by:
 
@@ -583,7 +585,7 @@ Has 180 line(s). Calls functions:
  |-- -zplg-wrap-track-functions
  `-- zplugin-install.zsh/-zplg-download-snippet
 
-Uses feature(s): _autoload_, _eval_, _source_, _unfunction_, _zparseopts_, _zstyle_
+Uses feature(s): _autoload_, _eval_, _setopt_, _source_, _unfunction_, _zparseopts_, _zstyle_
 
 Called by:
 
@@ -788,7 +790,7 @@ Has 62 line(s). *Is a precmd hook*. Calls functions:
      |   `-- zplugin-install.zsh/-zplg-download-snippet
      `-- zplugin-autoload.zsh/-zplg-unload
 
-Uses feature(s): _sched_, _zle_
+Uses feature(s): _sched_, _setopt_, _zle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -845,12 +847,12 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 34 line(s). Calls functions:
+Has 35 line(s). Calls functions:
 
  --zplg-shadow-alias
  `-- -zplg-add-report
 
-Uses feature(s): _alias_, _zparseopts_
+Uses feature(s): _alias_, _setopt_, _zparseopts_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -865,12 +867,12 @@ ____
  run custom `autoload' function, that doesn't need FPATH.
 ____
 
-Has 48 line(s). Calls functions:
+Has 49 line(s). Calls functions:
 
  --zplg-shadow-autoload
  `-- -zplg-add-report
 
-Uses feature(s): _autoload_, _eval_, _zparseopts_
+Uses feature(s): _autoload_, _eval_, _setopt_, _zparseopts_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -884,13 +886,13 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 104 line(s). Calls functions:
+Has 105 line(s). Calls functions:
 
  --zplg-shadow-bindkey
  |-- is-at-least
  `-- -zplg-add-report
 
-Uses feature(s): _bindkey_, _zparseopts_
+Uses feature(s): _bindkey_, _setopt_, _zparseopts_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -904,10 +906,12 @@ ____
  calls so that `compinit' can be called after loading plugins.
 ____
 
-Has 4 line(s). Calls functions:
+Has 5 line(s). Calls functions:
 
  --zplg-shadow-compdef
  `-- -zplg-add-report
+
+Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -922,7 +926,7 @@ ____
 
 Has 18 line(s). Doesn't call other functions.
 
-Uses feature(s): _unfunction_
+Uses feature(s): _setopt_, _unfunction_
 
 Called by:
 
@@ -957,12 +961,12 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 38 line(s). Calls functions:
+Has 37 line(s). Calls functions:
 
  --zplg-shadow-zle
  `-- -zplg-add-report
 
-Uses feature(s): _zle_
+Uses feature(s): _setopt_, _zle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -976,12 +980,12 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 21 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  --zplg-shadow-zstyle
  `-- -zplg-add-report
 
-Uses feature(s): _zparseopts_, _zstyle_
+Uses feature(s): _setopt_, _zparseopts_, _zstyle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1121,9 +1125,13 @@ Has 290 line(s). Calls functions:
  |-- zplugin-install.zsh/-zplg-forget-completion
  `-- zplugin-install.zsh/-zplg-install-completions
 
-Uses feature(s): _autoload_, _eval_, _source_
+Uses feature(s): _autoload_, _eval_, _setopt_, _source_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ script/Script-Body
+ test-excl-id-as/Script-Body
+ test-id-as/Script-Body
 
 -zplugin_scheduler_add_sh
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1142,6 +1150,20 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 add-zsh-hook
 ~~~~~~~~~~~~
 
+____
+ 
+ Add to HOOK the given FUNCTION.
+ HOOK is one of chpwd, precmd, preexec, periodic, zshaddhistory,
+ zshexit, zsh_directory_name (the _functions subscript is not required).
+ 
+ With -d, remove the function from the hook instead; delete the hook
+ variable if it is empty.
+ 
+ -D behaves like -d, but pattern characters are active in the
+ function name, so any matching function will be deleted from the hook.
+ 
+____
+
 Has 93 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _getopts_
@@ -1154,9 +1176,23 @@ Called by:
 compinit
 ~~~~~~~~
 
+____
+ 
+ Initialisation for new style completion. This mainly contains some helper
+ functions and setup. Everything else is split into different files that
+ will automatically be made autoloaded (see the end of this file).  The
+ names of the files that will be considered for autoloading are those that
+ begin with an underscores (like `_condition).
+ 
+ The first line of each of these files is read and must indicate what
+ should be done with its contents:
+ 
+ `#compdef <names ...>'
+____
+
 Has 549 line(s). Doesn't call other functions.
 
-Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
@@ -1165,6 +1201,20 @@ Called by:
 
 is-at-least
 ~~~~~~~~~~~
+
+____
+ 
+ 
+ Test whether $ZSH_VERSION (or some value of your choice, if a second argument
+ is provided) is greater than or equal to x.y.z-r (in argument one). In fact,
+ it'll accept any dot/dash-separated string of numbers as its second argument
+ and compare it to the dot/dash-separated first argument. Leading non-number
+ parts of a segment (such as the "zefram" in 3.1.2-zefram4) are not considered
+ when the comparison is done; only the numbers matter. Any left-out segments
+ in the first argument that are present in the version string compared are
+ considered as zeroes, eg 3 == 3.0 == 3.0.0 == 3.0.0.0 and so on.
+ 
+____
 
 Has 56 line(s). Doesn't call other functions.
 

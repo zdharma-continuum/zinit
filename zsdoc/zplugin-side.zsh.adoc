@@ -223,6 +223,8 @@ ____
 
 Has 19 line(s). Doesn't call other functions.
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin-autoload.zsh/-zplg-compute-ice

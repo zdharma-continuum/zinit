@@ -115,7 +115,7 @@ Has 233 line(s). Calls functions:
  |-- -zplg-mirror-using-svn
  `-- zplugin-side.zsh/-zplg-store-ices
 
-Uses feature(s): _eval_, _zcompile_
+Uses feature(s): _eval_, _setopt_, _zcompile_
 
 Called by:
 
@@ -157,6 +157,8 @@ Has 14 line(s). Calls functions:
  -zplg-get-latest-gh-r-version
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin-autoload.zsh/-zplg-update-or-status
@@ -177,7 +179,7 @@ ____
 
 Has 66 line(s). Doesn't call other functions.
 
-Uses feature(s): _unfunction_
+Uses feature(s): _setopt_, _unfunction_
 
 Called by:
 
@@ -206,6 +208,8 @@ Has 34 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-exists-physically-message
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses feature(s): _setopt_
+
 Called by:
 
  -zplg-download-snippet
@@ -229,6 +233,8 @@ ____
 ____
 
 Has 27 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -263,7 +269,7 @@ Has 182 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  `-- zplugin-side.zsh/-zplg-store-ices
 
-Uses feature(s): _eval_
+Uses feature(s): _eval_, _setopt_
 
 Called by:
 

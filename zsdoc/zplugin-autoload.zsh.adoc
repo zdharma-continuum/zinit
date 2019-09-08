@@ -132,7 +132,7 @@ Has 27 line(s). Calls functions:
  -zplg-build-module
  `-- -zplg-module
 
-Uses feature(s): _trap_
+Uses feature(s): _setopt_, _trap_
 
 Called by:
 
@@ -159,6 +159,8 @@ Has 13 line(s). Calls functions:
      |-- zplugin-side.zsh/-zplg-shands-exp
      |-- zplugin-side.zsh/-zplg-two-paths
      `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -316,6 +318,8 @@ Has 37 line(s). Calls functions:
  |-- -zplg-prepare-readlink
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -359,6 +363,8 @@ Has 26 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -383,6 +389,8 @@ Has 23 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -406,7 +414,7 @@ Has 23 line(s). Calls functions:
  |-- compinit
  `-- zplugin-install.zsh/-zplg-forget-completion
 
-Uses feature(s): _autoload_, _unfunction_
+Uses feature(s): _autoload_, _setopt_, _unfunction_
 
 Called by:
 
@@ -441,7 +449,7 @@ Has 98 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin.zsh/-zplg-pack-ice
 
-Uses feature(s): _wait_
+Uses feature(s): _setopt_, _wait_
 
 Called by:
 
@@ -482,7 +490,7 @@ ____
  $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
-Has 66 line(s). Calls functions:
+Has 67 line(s). Calls functions:
 
  -zplg-create
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -515,6 +523,8 @@ Has 54 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses feature(s): _setopt_
+
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-diff-env-compute
@@ -529,6 +539,8 @@ ____
 ____
 
 Has 30 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -548,6 +560,8 @@ ____
 
 Has 19 line(s). Doesn't call other functions.
 
+Uses feature(s): _setopt_
+
 Called by:
 
  -zplg-show-report
@@ -565,6 +579,8 @@ ____
 ____
 
 Has 17 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -584,6 +600,8 @@ ____
 ____
 
 Has 28 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -653,6 +671,8 @@ Has 6 line(s). Calls functions:
 
  -zplg-find-completions-of-plugin
  `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -727,6 +747,8 @@ ____
 
 Has 34 line(s). Doesn't call other functions.
 
+Uses feature(s): _setopt_
+
 Called by:
 
  -zplg-show-report
@@ -751,6 +773,8 @@ ____
 ____
 
 Has 22 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -799,6 +823,8 @@ Has 35 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-shands-exp
  |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -879,6 +905,8 @@ Called by:
 
 Has 19 line(s). Doesn't call other functions.
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -958,6 +986,8 @@ Has 26 line(s). Calls functions:
  -zplg-recently
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -971,6 +1001,8 @@ ____
 ____
 
 Has 1 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -988,6 +1020,8 @@ ____
 ____
 
 Has 2 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -1012,6 +1046,8 @@ Has 43 line(s). Calls functions:
  -zplg-search-completions
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -1028,7 +1064,7 @@ ____
 
 Has 23 line(s). Doesn't call other functions.
 
-Uses feature(s): _zcompile_
+Uses feature(s): _setopt_, _zcompile_
 
 Called by:
 
@@ -1092,6 +1128,8 @@ Has 72 line(s). Calls functions:
  |-- -zplg-get-completion-owner
  |-- -zplg-prepare-readlink
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -1192,6 +1230,8 @@ Has 71 line(s). Calls functions:
  |-- -zplg-format-parameter
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses feature(s): _setopt_
+
 Called by:
 
  -zplg-show-all-reports
@@ -1213,6 +1253,8 @@ Has 42 line(s). Calls functions:
  -zplg-show-times
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -1229,6 +1271,8 @@ ____
 ____
 
 Has 41 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -1258,7 +1302,7 @@ Has 35 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-first
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses feature(s): _zcompile_
+Uses feature(s): _setopt_, _zcompile_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1280,6 +1324,8 @@ Has 22 line(s). Calls functions:
  -zplg-uncompile-plugin
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -1307,6 +1353,8 @@ Has 41 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-two-paths
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  `-- zplugin-install.zsh/-zplg-forget-completion
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -1355,7 +1403,7 @@ Has 347 line(s). Calls functions:
  |-- zplugin.zsh/-zplg-clear-debug-report
  `-- zplugin.zsh/-zplg-unregister-plugin
 
-Uses feature(s): _alias_, _bindkey_, _unalias_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _alias_, _bindkey_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
@@ -1403,7 +1451,7 @@ Has 212 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses feature(s): _kill_, _read_, _source_, _wait_
+Uses feature(s): _kill_, _read_, _setopt_, _source_, _wait_
 
 Called by:
 
@@ -1459,6 +1507,8 @@ Has 63 line(s). Calls functions:
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
+Uses feature(s): _setopt_
+
 Called by:
 
  zplugin.zsh/zplugin
@@ -1494,9 +1544,23 @@ Called by:
 compinit
 ~~~~~~~~
 
+____
+ 
+ Initialisation for new style completion. This mainly contains some helper
+ functions and setup. Everything else is split into different files that
+ will automatically be made autoloaded (see the end of this file).  The
+ names of the files that will be considered for autoloading are those that
+ begin with an underscores (like `_condition).
+ 
+ The first line of each of these files is read and must indicate what
+ should be done with its contents:
+ 
+ `#compdef <names ...>'
+____
+
 Has 549 line(s). Doesn't call other functions.
 
-Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
