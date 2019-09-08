@@ -1501,7 +1501,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         [[ -d "$local_dir/.git" ]] && \
             (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-               command git submodule foreach git pull origin master
+               command git pull --recurse-submodules
             )
 
         local -a log
