@@ -475,7 +475,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                                 }
 
                                 [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
-                                ((1))
+
+                                return 0
+
                             } || return 2
                         }
 
