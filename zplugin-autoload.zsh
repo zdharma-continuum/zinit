@@ -1410,9 +1410,9 @@ ZPLGM[EXTENDED_GLOB]=""
                     command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)
                 }
                 ZPLG_ICE=( "${(kv)ice[@]}" )
-                # Run z-plugins atpull hooks (the before atpull-ice ones)
+                # Run annexes' atpull hooks (the before atpull-ice ones)
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
-                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
@@ -1476,9 +1476,9 @@ ZPLGM[EXTENDED_GLOB]=""
                       command git reset --hard HEAD
                   }
                   ZPLG_ICE=( "${(kv)ice[@]}" )
-                  # Run z-plugins atpull hooks (the before atpull-ice ones)
+                  # Run annexes' atpull hooks (the before atpull-ice ones)
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
-                      reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                      reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                           "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
@@ -1528,9 +1528,9 @@ ZPLGM[EXTENDED_GLOB]=""
             fi
 
             ZPLG_ICE=( "${(kv)ice[@]}" )
-            # Run z-plugins atpull hooks (the before atpull-ice ones)
+            # Run annexes' atpull hooks (the before atpull-ice ones)
             [[ ${ice[atpull]} != "!"* ]] && {
-                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
+                reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                     "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
@@ -1541,8 +1541,8 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
 
-            # Run z-plugins atpull hooks (the after atpull-ice ones)
-            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atpull <->]} )
+            # Run annexes' atpull hooks (the after atpull-ice ones)
+            reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
@@ -1554,8 +1554,8 @@ ZPLGM[EXTENDED_GLOB]=""
         -zplg-store-ices "$local_dir/._zplugin" ice "" "" "" ""
     fi
     ZPLG_ICE=( "${(kv)ice[@]}" )
-    # Run z-plugins atpull hooks (the `always' after atpull-ice ones)
-    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:%atpull <->]} )
+    # Run annexes' atpull hooks (the `always' after atpull-ice ones)
+    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
@@ -3003,10 +3003,10 @@ EOF
     for type in subcommand hook; do
         for (( idx=1; idx <= ZPLG_EXTS[seqno]; ++ idx )); do
             key="${(k)ZPLG_EXTS[(r)$idx *]}"
-            [[ -z "$key" || "$key" != "z-plugin $type:"* ]] && continue
+            [[ -z "$key" || "$key" != "z-annex $type:"* ]] && continue
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
             (( ${+functions[${arr[6]}]} )) && { "${arr[6]}"; ((1)); } || \
-                { print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-plugin \`${arr[3]}')"; }
+                { print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-annex \`${arr[3]}')"; }
         done
     done
 

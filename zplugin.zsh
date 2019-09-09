@@ -870,12 +870,12 @@ function $f {
     zsh_loaded_plugins[${zsh_loaded_plugins[(i)$uspl2]}]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
 } # }}}
-# FUNCTION: @zplg-register-z-plugin {{{
-# Registers the z-plugin inside Zplugin – i.e. an Zplugin extension
-@zplg-register-z-plugin() {
-    local name="$1" type="$2" handler="$3" helphandler="$4" icemods="$5" key="z-plugin ${(q)2}"
+# FUNCTION: @zplg-register-z-annex {{{
+# Registers the z-annex inside Zplugin – i.e. an Zplugin extension
+@zplg-register-annex() {
+    local name="$1" type="$2" handler="$3" helphandler="$4" icemods="$5" key="z-annex ${(q)2}"
     ZPLG_EXTS[seqno]=$(( ${ZPLG_EXTS[seqno]:-0} + 1 ))
-    ZPLG_EXTS[$key${${(M)type#hook:}:+ ${ZPLG_EXTS[seqno]}}]="${ZPLG_EXTS[seqno]} z-plugin-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler} ${(q)icemods}"
+    ZPLG_EXTS[$key${${(M)type#hook:}:+ ${ZPLG_EXTS[seqno]}}]="${ZPLG_EXTS[seqno]} z-annex-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler} ${(q)icemods}"
     ZPLG_EXTS[ice-mods]="${ZPLG_EXTS[ice-mods]}${icemods:+|}$icemods"
 }
 # }}}
@@ -961,7 +961,7 @@ function $f {
     -zplg-register-plugin "$id_as" "$mode"
 
     local -a arr
-    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atinit <->]} )
+    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
@@ -969,7 +969,7 @@ function $f {
 
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atinit <->]} )
+    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atinit <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
@@ -1040,7 +1040,7 @@ function $f {
 
     local -a arr
     [[ "${tmp[1-correct]}" -gt 0 && -z "${opts[(r)-u]}" ]] && {
-        reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atinit <->]} )
+        reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
             "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
@@ -1051,7 +1051,7 @@ function $f {
 
     local -a list
     [[ "${tmp[1-correct]}" -gt 0 && -z "${opts[(r)-u]}" ]] && {
-        reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atinit <->]} )
+        reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atinit <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
             "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
@@ -1104,7 +1104,7 @@ function $f {
 
         # Run the atload hooks right before atload ice
         [[ "${tmp[1-correct]}" -gt 0 && "${ZPLG_ICE[atload][1]}" = "!" ]] && {
-            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atload <->]} )
+            reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
@@ -1154,7 +1154,7 @@ function $f {
 
             # Run the atload hooks right before atload ice
             [[ "${tmp[1-correct]}" -gt 0 && "${ZPLG_ICE[atload][1]}" = "!" ]] && {
-                reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atload <->]} )
+                reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                     "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
@@ -1177,7 +1177,7 @@ function $f {
 
     # Run the atload hooks right before the possible atload ice
     [[ "${tmp[1-correct]}" -gt 0 && "${ZPLG_ICE[atload][1]}" != "!" ]] && {
-        reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atload <->]} )
+        reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
             "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
@@ -1187,7 +1187,7 @@ function $f {
     (( ${+ZPLG_ICE[atload]} && tmp[1-correct] )) && [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]}"; ((1)); } || eval "${ZPLG_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
     [[ "${tmp[1-correct]}" -gt 0 ]] && {
-        reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atload <->]} )
+        reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atload <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
             "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
@@ -1280,7 +1280,7 @@ function $f {
 
         # Run the atload hooks right before atload ice
         [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && {
-            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atload <->]} )
+            reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
@@ -1327,7 +1327,7 @@ function $f {
 
         # Run the atload hooks right before atload ice
         [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && {
-            reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atload <->]} )
+            reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
@@ -1349,7 +1349,7 @@ function $f {
 
     # Run the atload hooks right before the possible atload ice
     [[ "${ZPLG_ICE[atload][1]}" != "!" ]] && {
-        reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atload <->]} )
+        reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
             "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
@@ -1358,7 +1358,7 @@ function $f {
 
     [[ "${+ZPLG_ICE[atload]}" = 1 && "${ZPLG_ICE[atload][1]}" != "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]}"; ((1)); } || eval "${ZPLG_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:atload <->]} )
+    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atload <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
@@ -1811,12 +1811,12 @@ zplugin() {
            }
            ;;
        (*)
-           # Check if there is a z-plugin registered for the subcommand
-           reply=( ${ZPLG_EXTS[z-plugin subcommand:${(q)1}]} )
+           # Check if there is a z-annex registered for the subcommand
+           reply=( ${ZPLG_EXTS[z-annex subcommand:${(q)1}]} )
            (( ${#reply} )) && {
                reply=( "${(Q)${(z@)reply[1]}[@]}" )
                (( ${+functions[${reply[5]}]} )) && { "${reply[5]}" "$@"; return $?; } ||
-                 { print -r -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-plugin \`${reply[3]}')"; return 1; }
+                 { print -r -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-annex \`${reply[3]}')"; return 1; }
            }
            (( ${+functions[-zplg-confirm]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
            case "$1" in
