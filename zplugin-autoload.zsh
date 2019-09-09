@@ -1419,7 +1419,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     done
                 }
 
-                (( ${+ZPLG_ICE[reset]} )) && (
+                (( !skip_pull && ${+ZPLG_ICE[reset]} )) && (
                     [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-rm -rf ${local_dir:-/tmp/xyzabc312}/*}%f"
                     eval ${ZPLG_ICE[reset]:-command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)}
                 )
