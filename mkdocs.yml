@@ -21,7 +21,7 @@ nav:
 - "Zplugin Extensions":
   - "Annexes": Annexes.md
   - "z-p-submods": z-p-submods.md
-  - "z-p-man": z-p-man.md
+  - "z-a-man": z-a-man.md
   - "z-p-test": z-p-test.md
   - "declare-zsh": declare-zsh.md
   - "Crasis": crasis.md
