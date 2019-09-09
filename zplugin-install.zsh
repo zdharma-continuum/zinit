@@ -444,7 +444,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         command mkdir -p "$local_dir"
     fi
 
-    [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
+    [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- $'\n'"${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
 
     (
         if [[ "$url" = (http|https|ftp|ftps|scp)://* ]] {
@@ -491,7 +491,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
-                                print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
+                                print -r -- $'\n'"${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
                                 print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
                             }
                             -zplg-mirror-using-svn "$url" "-u" "$dirname" || return 1
