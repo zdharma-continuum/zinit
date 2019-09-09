@@ -1407,7 +1407,7 @@ ZPLGM[EXTENDED_GLOB]=""
             if (( do_update )) {
                 (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
                     [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Removing the previous file(s) (-r/--reset given)..."
-                    command rm -rf ${local_dir:-/tmp/xyzabc312}/*(N)
+                    command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)
                 }
                 ZPLG_ICE=( "${(kv)ice[@]}" )
                 # Run z-plugins atpull hooks (the before atpull-ice ones)
