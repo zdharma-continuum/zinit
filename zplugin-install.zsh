@@ -457,7 +457,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 if (( ${+ZPLG_ICE[svn]} )); then
                     [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
                         [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
-                        command svn revert $filename/.
+                        command svn revert --recursive $filename/.
                     }
 
                     local skip_pull=0
