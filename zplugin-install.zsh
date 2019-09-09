@@ -447,8 +447,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
 
     (
-        if [[ "$url" = (http|https|ftp|ftps|scp)://* ]]
-        then
+        if [[ "$url" = (http|https|ftp|ftps|scp)://* ]] {
             # URL
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
@@ -461,23 +460,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         command svn revert $filename/.
                     }
 
-                    if [[ "$update" = "-u" ]];then
+                    local skip_pull=0
+                    if [[ "$update" = "-u" ]] {
                         # Test if update available
                         -zplg-mirror-using-svn "$url" "-t" "$dirname" || {
                             (( ${+ZPLG_ICE[run-atpull]} )) && {
-                                [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
-                                    reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
-                                    for key in "${reply[@]}"; do
-                                        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                                        "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
-
-                                    done
-                                }
-
-                                [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
-
-                                return 0
-
+                                skip_pull=1
                             } || return 2
                         }
 
@@ -493,15 +481,19 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
                         [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
-                        # Do the update
-                        [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
-                            print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
-                            print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                        if (( !skip_pull )) {
+                            # Do the update
+                            # The condition is reversed on purpose – to show only
+                            # the messages on an actual update
+                            [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                                print -r -- "${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
+                                print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                            }
+                            -zplg-mirror-using-svn "$url" "-u" "$dirname" || return 1
                         }
-                        -zplg-mirror-using-svn "$url" "-u" "$dirname" || return 1
-                    else
+                    } else {
                         -zplg-mirror-using-svn "$url" "" "$dirname" || return 1
-                    fi
+                    }
 
                     # Redundant code, just to compile SVN snippet
                     if [[ ${ZPLG_ICE[as]} != "command" ]]; then
@@ -569,7 +561,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     }
                 }
             fi
-        else
+        } else {
             # Run z-plugins atpull hooks (the before atpull-ice ones)
             [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
                 reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
@@ -592,9 +584,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             command mkdir -p "$local_dir/$dirname"
             print "Copying $filename..."
             command cp -v "$url" "$local_dir/$dirname/$filename" || { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
-        fi
-
-    (( retval == 1 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
+        }
 
         if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
             # Store ices at "clone" and update of snippet, SVN and single-file
@@ -605,6 +595,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             print "disk, please report at https://github.com/zdharma/zplugin/issues"
             print "providing the commands \`zplugin ice {...}; zplugin snippet {...}'"
         fi
+
+        (( retval == 1 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
 
         (( retval == 2 )) && {
             # Run z-plugins atpull hooks (the `always' after atpull-ice ones)
