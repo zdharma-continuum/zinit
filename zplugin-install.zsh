@@ -479,6 +479,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             done
                         }
 
+                        (( ${+ZPLG_ICE[reset]} )) && (
+                            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-svn revert --recursive $filename/.}%f"
+                            eval "${ZPLG_ICE[reset]:-command svn revert --recursive $filename/.}"
+                        )
+
                         [[ ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
                         if (( !skip_pull )) {
@@ -577,6 +582,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 done
             }
 
+            (( ${+ZPLG_ICE[reset]} )) && (
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f"
+                eval "${ZPLG_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
+            )
 
             [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 

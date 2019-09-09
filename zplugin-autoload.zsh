@@ -1419,6 +1419,11 @@ ZPLGM[EXTENDED_GLOB]=""
                     done
                 }
 
+                (( ${+ZPLG_ICE[reset]} )) && (
+                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-rm -rf ${local_dir:-/tmp/xyzabc312}/*}%f"
+                    eval ${ZPLG_ICE[reset]:-command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)}
+                )
+
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
 
@@ -1479,6 +1484,10 @@ ZPLGM[EXTENDED_GLOB]=""
                           "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
                       done
                   }
+                  (( ${+ZPLG_ICE[reset]} )) && (
+                      [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-git reset --hard HEAD}%f"
+                      eval "${ZPLG_ICE[reset]:-command git reset --hard HEAD}"
+                  )
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                   ZPLG_ICE=()
                   (( !skip_pull )) && command git pull --no-stat
@@ -1610,7 +1619,7 @@ ZPLGM[EXTENDED_GLOB]=""
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track
+        reset-prompt wrap-track reset
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -1688,7 +1697,7 @@ ZPLGM[EXTENDED_GLOB]=""
     } 2>/dev/null
 
     # Handle flag-Ices; svn must be last
-    for __key in make pick nocompile ${nval_ices[@]}; do
+    for __key in make pick nocompile reset ${nval_ices[@]}; do
         (( 0 == ${+ZPLG_ICE[no$__key]} )) && continue
 
         if [[ "$__key" = "svn" ]]; then
@@ -2831,7 +2840,7 @@ EOF
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track
+        reset-prompt wrap-track reset
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -2853,7 +2862,7 @@ EOF
             cand2="${(qq)val}"
             if [[ -n "$val" ]]; then
                 [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
-            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify) ) ]]; then
+            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]]; then
                 output+=( "$el" )
             fi
         done
@@ -3007,5 +3016,5 @@ Available ice-modifiers:
         unload blockf on-update-of subscribe pick bpick src as ver silent
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions reset-prompt wrap-track"
+        nocompletions reset-prompt wrap-track reset"
 } # }}}

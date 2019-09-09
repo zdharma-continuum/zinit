@@ -175,7 +175,7 @@
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track
+        reset-prompt wrap-track reset
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -198,7 +198,7 @@
     done
 
     # Ices that even empty mean something
-    for __key in make pick nocompile ${nval_ices[@]} ${(s: :)__add_ices2[@]}; do
+    for __key in make pick nocompile reset ${nval_ices[@]} ${(s: :)__add_ices2[@]}; do
         __var_name="${__ice_var}[$__key]"
         (( ${(P)+__var_name} )) && print -r -- "${(P)__var_name}" >! "$__pfx"/$__key || command rm -f "$__pfx"/$__key
     done
