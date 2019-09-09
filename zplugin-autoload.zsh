@@ -1195,6 +1195,8 @@ ZPLGM[EXTENDED_GLOB]=""
                         # There cannot be parameter starting with
                         # "-" but let's defensively use "--" here
                         unset -- "$k"
+                    else
+                        print "Skipping unset of variable $k (whitelist)"
                     fi
                 fi
             fi
