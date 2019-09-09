@@ -1405,6 +1405,10 @@ ZPLGM[EXTENDED_GLOB]=""
             }
 
             if (( do_update )) {
+                (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Removing the previous file(s) (-r/--reset given)..."
+                    command rm -rf ${local_dir:-/tmp/xyzabc312}/*(N)
+                }
                 ZPLG_ICE=( "${(kv)ice[@]}" )
                 # Run z-plugins atpull hooks (the before atpull-ice ones)
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
@@ -1423,21 +1427,12 @@ ZPLGM[EXTENDED_GLOB]=""
                         -zplg-any-colorify-as-uspl2 "$id_as"
                         print "\nUpdating plugin $REPLY"
                     }
-                    [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Removing the previous file(s) (-r/--reset given)..."
-                        command rm -rf ${local_dir:-/tmp/xyzabc312}/*
-                    }
                     -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "-u"
                 }
                 ZPLG_ICE=()
             }
         } else {
             ( builtin cd -q "$local_dir" || return 1
-              [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                  [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
-                  command git reset --hard HEAD
-              }
-
               integer had_output=0
               local IFS=$'\n'
               command git fetch --quiet && \
@@ -1471,6 +1466,10 @@ ZPLGM[EXTENDED_GLOB]=""
                   }
 
               if (( do_update )) {
+                  (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                      [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
+                      command git reset --hard HEAD
+                  }
                   ZPLG_ICE=( "${(kv)ice[@]}" )
                   # Run z-plugins atpull hooks (the before atpull-ice ones)
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {

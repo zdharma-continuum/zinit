@@ -455,11 +455,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
                 if (( ${+ZPLG_ICE[svn]} )); then
-                    [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
-                        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
-                        command svn revert --recursive $filename/.
-                    }
-
                     local skip_pull=0
                     if [[ "$update" = "-u" ]] {
                         # Test if update available
@@ -467,6 +462,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             (( ${+ZPLG_ICE[run-atpull]} )) && {
                                 skip_pull=1
                             } || return 2
+                        }
+
+                        (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
+                            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
+                            command svn revert --recursive $filename/.
                         }
 
                         # Run z-plugins atpull hooks (the before atpull-ice ones)
@@ -511,6 +511,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 else
                     command mkdir -p "$local_dir/$dirname"
 
+                    [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
+                        command rm -f "$dirname/$filename"
+                    }
+
                     # Run z-plugins atpull hooks (the before atpull-ice ones)
                     [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
                         reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
@@ -518,11 +523,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                             "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
                         done
-                    }
-
-                    [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
-                        command rm -f "$dirname/$filename"
                     }
 
                     [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
@@ -562,6 +562,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 }
             fi
         } else {
+            # File
+            [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$local_dir/$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
+                command rm -f "$local_dir/$dirname/$filename"
+            }
+
             # Run z-plugins atpull hooks (the before atpull-ice ones)
             [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && {
                 reply=( ${(on)ZPLG_EXTS[(I)z-plugin hook:\\\!atpull <->]} )
@@ -571,11 +577,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 done
             }
 
-            # File
-            [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$local_dir/$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
-                command rm -f "$local_dir/$dirname/$filename"
-            }
 
             [[ "$update" = "-u" && ${${ZPLG_ICE[atpull]}[1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
