@@ -116,7 +116,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         --config transfer.fsckobjects=false \
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
-                            |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
+                            |& { ${ZPLGM[BIN_DIR]}/git-process-output.zsh || cat; }
                     (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
                     ;;
                 (git|http|ftp|ftps|rsync|ssh)
@@ -127,7 +127,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         --config transfer.fsckobjects=false \
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
-                            |& ${ZPLGM[BIN_DIR]}/git-process-output.zsh
+                            |& { ${ZPLGM[BIN_DIR]}/git-process-output.zsh || cat; }
                     (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
                     ;;
                 (*)
