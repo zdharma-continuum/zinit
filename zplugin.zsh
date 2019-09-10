@@ -1649,21 +1649,21 @@ nocd|once|wrap-track|reset|noreset${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_
                     # The following substitution could be just (well, 'just'..) this:
                     #
                     # ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/
-                    # ${ZPLG_TASKS[$(( (${match[1-correct]}+${match[2-correct]}) <= $__t ?
-                    # zplugin_scheduler_add(__i++ - correct, ${match[2-correct]},
-                    # ${(M)match[3-correct]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
+                    # ${ZPLG_TASKS[$(( (${match[1]}+${match[2]}) <= $__t ?
+                    # zplugin_scheduler_add(__i++, ${match[2]},
+                    # ${(M)match[3]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
                     #
                     # However, there's a severe bug in Zsh <= 5.3.1 - use of the period
                     # (,) is impossible inside ${..//$arr[$(( ... ))]}.
                     __i=2
 
                     ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/${ZPLG_TASKS[
-                    $(( (__ar2=${match[2-correct]}+1) ? (
-                        (__ar3=${(M)match[3-correct]%[1-3]}) ? (
+                    $(( (__ar2=${match[2]}+1) ? (
+                        (__ar3=${(M)match[3]%[1-3]}) ? (
                         (__ar4=__idx1+1) ? (
                         (__ar5=__idx2) ? (
-            (${match[1-correct]}+${match[2-correct]}) <= $__t ?
-            zplugin_scheduler_add(__i++ - correct) : __i++ )
+            (${match[1]}+${match[2]}) <= $__t ?
+            zplugin_scheduler_add(__i++) : __i++ )
                         : 1 )
                         : 1 )
                         : 1 )
@@ -1679,7 +1679,7 @@ nocd|once|wrap-track|reset|noreset${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_
             builtin setopt extendedglob
             # No "+" in this pattern, it will match only "1531252764"
             # in "1531252764+2" and replace it with current time
-            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1-correct]} <= 1 ? ${match[1-correct]} : __t ))${match[2-correct]}} )
+            ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)(*)/$(( ${match[1]} <= 1 ? ${match[1]} : __t ))${match[2]}} )
         }
         # There's a bug in Zsh: first sched call would not be issued
         # until a key-press, if "sched +1 ..." would be called inside
