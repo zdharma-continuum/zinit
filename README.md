@@ -56,7 +56,7 @@ reports](DONATIONS.md) about what is being done with the money received.
     before `git pull` and `atpull''` ice. It can be used it to implement altering (i.e.
     patching) of the plugin's files inside the `atpull''` ice – `git` will report no
     conflicts when doing `pull`, and the changes can be then again introduced by the
-    `atpull''` ice..
+    `atpull''` ice.
   - Three new Zplugin annexes (i.e.
     [extensions](http://zdharma.org/zplugin/wiki/Annexes/)):
 
@@ -68,7 +68,7 @@ reports](DONATIONS.md) about what is being done with the money received.
 
       - [z-a-test](https://github.com/zplugin/z-a-test)
 
-        Runs tests (if detected `test' target in a `Makefile` or any `*.zunit` files)
+        Runs tests (if detected `test` target in a `Makefile` or any `*.zunit` files)
         on plugin installation and non-empty update.
 
       - [z-a-patch-dl](https://github.com/zplugin/z-a-patch-dl)
