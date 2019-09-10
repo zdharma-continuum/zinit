@@ -71,4 +71,4 @@ autoload -Uz _zplugin
 (( \${+_comps} )) && _comps[zplugin]=_zplugin
 ### End of Zplugin installer's chunk
 EOF
-echo ">>> Done"
+echo "[34m❯❯❯[0m Done"
