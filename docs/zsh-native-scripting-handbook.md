@@ -150,7 +150,7 @@ local needle="?" required_preceding='[[:space:]]#'
 It does a single fork (calls `svn status`). The `${~variable}` means (the `~`
 in it): "the variable is holding a pattern, interpret it". All in all, instead
 of regular expressions we were using patterns (globs) (see
-link:#built-in-regular-expressions-engine[this section]).
+[this section](#using_built-in_regular_expressions_engine)).
 
 ### Pattern matching in AND-fashion
 
@@ -281,8 +281,8 @@ declare -a array; array=( a b " c1" d ); print ${array[(r)[[:space:]][[:alpha:]]
 `\[[:space:]]` contains unicode spaces. This is often used in conditional
 expression like `[[ -z ${array[(r)...]} ]]`.
 
-Note that link:#skipping-grep[Skipping grep] that uses `:#` substitution can also be
-used to search arrays.
+Note that [Skipping grep](#skipping_grep) that uses `:#` substitution can also
+be used to search arrays.
 
 ### Code execution in `//` substitution
 
