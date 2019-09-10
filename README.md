@@ -51,6 +51,35 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 10-09-2019
+  - A new ice-mod `reset''` that ivokes `git reset --hard` (or the provided command)
+    before `git pull` and `atpull''` ice. It can be used it to implement altering (i.e.
+    patching) of the plugin's files inside the `atpull''` ice – `git` will report no
+    conflicts when doing `pull`, and the changes can be then again introduced by the
+    `atpull''` ice..
+  - Three new Zplugin annexes (i.e.
+    [extensions](http://zdharma.org/zplugin/wiki/Annexes/)):
+
+      - [z-a-man](https://github.com/zplugin/z-a-man)
+
+        Generates man pages and code-documentation man pages from plugin's README.md
+        and source files (the code documentation is obtained from
+        [Zshelldoc](https://github.com/zdharma/zshelldoc)).
+
+      - [z-a-test](https://github.com/zplugin/z-a-test)
+
+        Runs tests (if detected `test' target in a `Makefile` or any `*.zunit` files)
+        on plugin installation and non-empty update.
+
+      - [z-a-patch-dl](https://github.com/zplugin/z-a-patch-dl)
+
+        Allows easy download and applying of patches, to e.g. aid building a binary
+        program equipped in the plugin.
+
+  - A new variable is being recognized by the installation script:
+    `$ZPLG_BIN_DIR_NAME`. It configures the directory within `$ZPLG_HOME` to which
+    Zplugin should be cloned.
+
 * 09-08-2019
   - A new ice-mod `wrap-track''` which gets `;`-separated list of functions that are to
     be tracked **once** when executing. In other words you can extend the tracking

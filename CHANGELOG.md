@@ -9,6 +9,62 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 10-09-2019
+  - A new ice-mod `reset''` that ivokes `git reset --hard` (or the provided command)
+    before `git pull` and `atpull''` ice. It can be used it to implement altering (i.e.
+    patching) of the plugin's files inside the `atpull''` ice – `git` will report no
+    conflicts when doing `pull`, and the changes can be then again introduced by the
+    `atpull''` ice..
+  - Three new Zplugin annexes (i.e.
+    [extensions](http://zdharma.org/zplugin/wiki/Annexes/)):
+
+      - [z-a-man](https://github.com/zplugin/z-a-man)
+
+        Generates man pages and code-documentation man pages from plugin's README.md
+        and source files (the code documentation is obtained from
+        [Zshelldoc](https://github.com/zdharma/zshelldoc)).
+
+      - [z-a-test](https://github.com/zplugin/z-a-test)
+
+        Runs tests (if detected `test' target in a `Makefile` or any `*.zunit` files)
+        on plugin installation and non-empty update.
+
+      - [z-a-patch-dl](https://github.com/zplugin/z-a-patch-dl)
+
+        Allows easy download and applying of patches, to e.g. aid building a binary
+        program equipped in the plugin.
+
+  - A new variable is being recognized by the installation script:
+    `$ZPLG_BIN_DIR_NAME`. It configures the directory within `$ZPLG_HOME` to which
+    Zplugin should be cloned.
+
+* 09-08-2019
+  - A new ice-mod `wrap-track''` which gets `;`-separated list of functions that are to
+    be tracked **once** when executing. In other words you can extend the tracking
+    beyond the moment of loading of a plugin.
+  - The unloading of Zle widgets is now more smart – it takes into account the chains
+    of plugins that can overload the Zle widgets, and solves the interactions that
+    result out of it.
+
+* 29-07-2019
+  - `delete` now supports following options:
+    * `--all` – deletes all plugins and snippets (a purge, similar to `rm -rf
+      ${ZPLGM[PLUGINS_DIR]} ${ZPLGM[SNIPPETS_DIR]}`)
+    * `--clean` – deletes only plugins and snippets that are **currently not loaded**
+      in the current session.
+
+* 09-07-2019
+  - Zplugin can now have **its own plugins**, called **z-plugins**! Check out an
+    example but fully functional z-plugin
+    [zdharma/z-p-submods](https://github.com/zdharma/z-p-submods) and a document that
+    explains on how to implement your own z-plugin
+    ([here](../../wiki/Z-PLUGINS)).
+
+* 08-07-2019
+  - You can now do `zplugin ice wait ...` and it will work as `zplugin ice wait'0' ...`
+    :) I.e. when there's no value to the `wait''` ice then a value of `0` is being
+    substituted.
+
 * 02-07-2019
   - [Cooperation of Fast-Syntax-Highlighting and
     Zplugin](https://asciinema.org/a/254630) – a new precise highlighting for
