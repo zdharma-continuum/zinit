@@ -3888,7 +3888,7 @@ version):</p>
 <p>It does a single fork (calls <code>svn status</code>). The <code>${~variable}</code> means (the <code>~</code>
 in it): "the variable is holding a pattern, interpret it". All in all, instead
 of regular expressions we were using patterns (globs) (see
-link:#built-in-regular-expressions-engine[this section]).</p>
+<a href="#using_built-in_regular_expressions_engine">this section</a>).</p>
 <h3 id="pattern_matching_in_and-fashion">Pattern matching in AND-fashion<a class="headerlink" href="#pattern_matching_in_and-fashion" title="Permanent link">#</a></h3>
 <pre><code>[[ &quot;abc xyz efg&quot; = *abc*~^*efg* ]] &amp;&amp; print Match found
 </code></pre>
@@ -3987,8 +3987,8 @@ and <code>(P)</code> flag, to assign arrays and hashes by-name.</p>
 
 <p><code>\[[:space:]]</code> contains unicode spaces. This is often used in conditional
 expression like <code>[[ -z ${array[(r)...]} ]]</code>.</p>
-<p>Note that link:#skipping-grep[Skipping grep] that uses <code>:#</code> substitution can also be
-used to search arrays.</p>
+<p>Note that <a href="#skipping_grep">Skipping grep</a> that uses <code>:#</code> substitution can also
+be used to search arrays.</p>
 <h3 id="code_execution_in_substitution">Code execution in <code>//</code> substitution<a class="headerlink" href="#code_execution_in_substitution" title="Permanent link">#</a></h3>
 <pre><code>append() { gathered+=( $array[$1] ); }
 functions -M append 1 1 append
