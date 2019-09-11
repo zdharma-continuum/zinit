@@ -1427,14 +1427,14 @@ function $f {
 # e.g. at update.
 -zplg-ice() {
     builtin setopt localoptions noksharrays extendedglob warncreateglobal typesetsilent noshortloops
-    local bit
+    local bit exts="${~ZPLG_EXTS[ice-mods]//\'\'/}"
     for bit; do
         [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|\
 unload|on-update-of|subscribe|if|has|cloneonly|blockf|svn|pick|\
 nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|\
 atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|\
 compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|\
-nocd|once|wrap-track|reset|noreset${~ZPLG_EXTS[ice-mods]//\'\'/})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}"
+nocd|once|wrap-track|reset|noreset|${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
     ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
