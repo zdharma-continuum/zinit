@@ -165,7 +165,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             -zplg-compile-plugin "$id_as" ""
         fi
 
-        if [[ "$3" != "-u" ]]; then
+        if [[ "$4" != "-u" ]]; then
             # Store ices at clone of a plugin
             -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
