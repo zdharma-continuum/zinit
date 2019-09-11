@@ -162,7 +162,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
         if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} != '!' ]]; then
             # Compile plugin
-            -zplg-compile-plugin "$id_as" ""
+            [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+                -zplg-compile-plugin "$id_as" ""
+            }
         fi
 
         if [[ "$4" != "-u" ]]; then
@@ -192,7 +194,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} = '!' ]]; then
             # Compile plugin
             LANG=C sleep 0.3
-            -zplg-compile-plugin "$id_as" ""
+            [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+                -zplg-compile-plugin "$id_as" ""
+            }
         fi
 
     ) || return $?
@@ -397,9 +401,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local fname="${first#$pdir_path/}"
 
         print "Compiling ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]}..."
-        zcompile "$first" || {
-            print "Compilation failed. Don't worry, the plugin will work also without compilation"
-            print "Consider submitting an error report to Zplugin or to the plugin's author"
+        [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+            zcompile "$first" || {
+                print "Compilation failed. Don't worry, the plugin will work also without compilation"
+                print "Consider submitting an error report to Zplugin or to the plugin's author"
+            }
         }
         # Try to catch possible additional file
         zcompile "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
@@ -509,9 +515,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                                    $local_dir/$dirname/*.zsh-theme(N) )
                         fi
 
-                        [[ -e "${list[1]}" ]] && { zcompile "${list[1]}" || {
-                            print -r "Warning: Couldn't compile \`${list[1]}'"
-                        } }
+                        [[ -e "${list[1]}" ]] && {
+                            [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+                                zcompile "${list[1]}" || {
+                                    print -r "Warning: Couldn't compile \`${list[1]}'"
+                                }
+                            }
+                        }
                     fi
                 else
                     command mkdir -p "$local_dir/$dirname"
@@ -558,11 +568,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
             if [[ $ZPLG_ICE[as] != "command" ]] && (( ${+ZPLG_ICE[svn]} == 0 )); then
                 [[ -e "$local_dir/$dirname/$filename" ]] && {
-                    zcompile "$local_dir/$dirname/$filename" 2>/dev/null || {
-                        print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
-                        print -r "(snippet URL points to a directory instead of a file?"
-                        print -r "to download directory, use preceding: zplugin ice svn;)"
-                        retval=1
+                    [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+                        zcompile "$local_dir/$dirname/$filename" 2>/dev/null || {
+                            print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
+                            print -r "(snippet URL points to a directory instead of a file?"
+                            print -r "to download directory, use preceding: zplugin ice svn;)"
+                            retval=1
+                        }
                     }
                 }
             fi
