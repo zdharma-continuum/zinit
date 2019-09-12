@@ -1619,14 +1619,15 @@ ZPLGM[EXTENDED_GLOB]=""
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track reset
+        reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
+        \!csh
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions svn
+            nocompletions svn sh \!sh bash \!bash ksh \!ksh csh \!csh
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
@@ -2840,14 +2841,15 @@ EOF
         unload blockf pick bpick src as ver silent lucid notify mv cp
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track reset
+        reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
+        \!csh
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions svn
+            nocompletions svn sh \!sh bash \!bash ksh \!ksh csh \!csh
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
