@@ -879,15 +879,6 @@ function $f {
     ZPLG_EXTS[ice-mods]="${ZPLG_EXTS[ice-mods]}${icemods:+|}$icemods"
 }
 # }}}
-# FUNCTION: -zplg-source {{{
-# A source wrapper that conditionally runs:
-# emulate [-R] ... -c "source ..."
--zplg-source() {
-    [[ -n "$precm" ]] && \
-        { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || \
-        builtin source "$ZERO"
-}
-# }}}
 
 #
 # Remaining functions
@@ -1111,13 +1102,13 @@ function $f {
 
         [[ -f "${list[1-correct]}" ]] && {
             ZERO="${list[1-correct]}"
-            (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }
+            (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }
             (( 0 == retval )) && [[ "$id_as" = PZT::* || "$id_as" = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
             (( 1 ))
         } || { [[ ${+ZPLG_ICE[pick]} = 1 && -z "${ZPLG_ICE[pick]}" ]] || { print -r -- "Snippet not loaded ($id_as)"; retval=1; } }
 
-        [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }; }
-        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }; done; }
+        [[ -n "${ZPLG_ICE[src]}" ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
         [[ "${tmp[1-correct]}" -gt 0 && "${ZPLG_ICE[atload][1]}" = "!" ]] && {
@@ -1165,9 +1156,9 @@ function $f {
             fi
             if [[ -n "${ZPLG_ICE[src]}" ]]; then
                 ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"
-                (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }
+                (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }
             fi
-            [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }; done; }
+            [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }; done; }
 
             # Run the atload hooks right before atload ice
             [[ "${tmp[1-correct]}" -gt 0 && "${ZPLG_ICE[atload][1]}" = "!" ]] && {
@@ -1301,8 +1292,8 @@ function $f {
         [[ -n "${reply[1-correct]}" && ! -x "${reply[1-correct]}" ]] && command chmod a+x ${reply[@]}
 
         local ZERO
-        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }; }
-        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }; done; }
+        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
         [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && {
@@ -1347,9 +1338,9 @@ function $f {
         (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         local ZERO="$pdir_path/$fname"
         builtin setopt noaliases
-        (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }
-        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); }; }
-        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { -zplg-source 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); -zplg-source; (( retval += $? )); } done; }
+        (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }
+        [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); }; }
+        [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); [[ -n "$precm" ]] && { print -rl $precm; builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO"; (( retval += $? )); } done; }
 
         # Run the atload hooks right before atload ice
         [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && {
