@@ -51,6 +51,23 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 11-09-2019
+  - New ice-mods `sh`,`bash`,`ksh`,`csh` that load plugins (and snippets) with the
+    **sticky emulation** feature of Zsh – all functions defined within the plugin will
+    automatically switch to the desired emulation mode before executing and switch back
+    thereafter. In other words it is now possible to load e.g. bash plugins with
+    Zplugin, provided that the emulation level done by Zsh is sufficient, e.g.:
+
+    ```zsh
+    zplugin ice bash pick"bash_it.sh" \
+            atinit"BASH_IT=${ZPLGM[PLUGINS_DIR]}/Bash-it---bash-it" \
+            atclone"yes n | ./install.sh"
+    zplugin load Bash-it/bash-it
+    ```
+
+    This script loads correctly thanks to the emulation, however it isn't functional
+    because it uses `type -t …` to check if a function exists.
+
 * 10-09-2019
   - A new ice-mod `reset''` that ivokes `git reset --hard` (or the provided command)
     before `git pull` and `atpull''` ice. It can be used it to implement altering (i.e.
@@ -401,6 +418,14 @@ explicitly stated otherwise.
 | `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded.</div>|
 | `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc.</div>|
 | [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`.</div>|
+
+### Sticky-Emulation Of Other Shells
+| Modifier | Description |
+|:-:|-|
+| `sh`, `!sh` |<div align="justify" style="text-align: justify;">Source the plugin's (or snippet's) script with `sh` emulation so that also all functions declared within the file will get a *sticky* emulation assigned – when invoked they'll execute also with the `sh` emulation set-up. The `!sh` version switches additional options that are rather not important from the portability perspective.</div>|
+| `bash`, `!bash` |<div align="justify" style="text-align: justify;">The same as `sh`, but with the `SH_GLOB` option disabled, so that Bash regular expressions work.</div>|
+| `ksh`, `!ksh` |<div align="justify" style="text-align: justify;">The same as `sh`, but emulating `ksh` shell.</div>|
+| `csh`, `!csh` |<div align="justify" style="text-align: justify;">The same as `sh`, but emulating `csh` shell.</div>|
 
 ### Others
 | Modifier | Description |
