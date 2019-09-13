@@ -51,6 +51,10 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 13-09-2019
+  - New ice `aliases` which loads plugin with the aliases mechanism enabled. Use for
+    plugins that define **and use** aliases in their scripts.
+
 * 11-09-2019
   - New ice-mods `sh`,`bash`,`ksh`,`csh` that load plugins (and snippets) with the
     **sticky emulation** feature of Zsh – all functions defined within the plugin will
@@ -439,6 +443,7 @@ explicitly stated otherwise.
 | `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**</div>| 
 | `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>| 
 | [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>| 
+| `aliases` |<div align="justify" style="text-align: justify;">Load the plugin with the aliases mechanism enabled. Use with plugins that define **and use** aliases in their scripts.</div>|
 
 ### Order of Execution
 
