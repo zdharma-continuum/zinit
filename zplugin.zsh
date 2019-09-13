@@ -998,7 +998,7 @@ function $f {
             emulate
             ${${(M)${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
             ${${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}
-            ${${ZPLG_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob}}
+            ${${ZPLG_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
             -c
         )
     # Remove leading whitespace and trailing /
@@ -1270,7 +1270,7 @@ function $f {
             emulate
             ${${(M)${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
             ${${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}
-            ${${ZPLG_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob}}
+            ${${ZPLG_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
             -c
         )
 
