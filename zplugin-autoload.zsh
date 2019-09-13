@@ -3020,5 +3020,5 @@ Available ice-modifiers:
         unload blockf on-update-of subscribe pick bpick src as ver silent
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions reset-prompt wrap-track reset"
+        nocompletions reset-prompt wrap-track reset aliases sh bash ksh csh"
 } # }}}
