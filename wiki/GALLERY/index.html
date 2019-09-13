@@ -1500,6 +1500,39 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#services" title="Services"
+      class="md-nav__link">
+    Services
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#snippets" title="Snippets"
       class="md-nav__link">
     Snippets
@@ -2448,6 +2481,39 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#services" title="Services"
+      class="md-nav__link">
+    Services
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#snippets" title="Snippets"
       class="md-nav__link">
     Snippets
@@ -2519,6 +2585,18 @@
 <pre><code class="zsh">zplugin ice from&quot;gh-r&quot; as&quot;program&quot;
 zplugin light junegunn/fzf-bin
 
+# sharkdp/fd
+zplugin ice as&quot;command&quot; from&quot;gh-r&quot; mv&quot;fd* -&gt; fd&quot; pick&quot;fd/fd&quot;
+zplugin light sharkdp/fd
+
+# sharkdp/bat
+zplugin ice as&quot;command&quot; from&quot;gh-r&quot; mv&quot;bat* -&gt; bat&quot; pick&quot;bat/bat&quot;
+zplugin light sharkdp/bat
+
+# ogham/exa, replacement for ls
+zplugin ice wait&quot;2&quot; lucid from&quot;gh-r&quot; as&quot;program&quot; mv&quot;exa* -&gt; exa&quot;
+zplugin light ogham/exa
+
 zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;docker* -&gt; docker-compose&quot;
 zplugin light docker/compose
 
@@ -2556,6 +2634,15 @@ zplugin ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdk
     atpull&quot;SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate&quot; \
     atinit&quot;export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh&quot;
 zplugin light zdharma/null
+
+# asciinema
+zplugin ice as&quot;command&quot; wait lucid \
+    atinit&quot;export PYTHONPATH=$ZPFX/lib/python3.7/site-packages/&quot; \
+    atclone&quot;PYTHONPATH=$ZPFX/lib/python3.7/site-packages/ \
+    python3 setup.py --quiet install --prefix $ZPFX&quot; \
+    atpull'%atclone' test'0' \
+    pick&quot;$ZPFX/bin/asciinema&quot;
+zplugin load asciinema/asciinema.git
 </code></pre>
 
 <h2 id="completions">Completions<a class="headerlink" href="#completions" title="Permanent link">#</a></h2>
@@ -2564,12 +2651,24 @@ zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh
 </code></pre>
 
 <h2 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">#</a></h2>
-<pre><code class="zsh"># For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
-# coreutils package from Homebrew or using https://github.com/ogham/exa)
-zplugin ice atclone&quot;dircolors -b LS_COLORS &gt; c.zsh&quot; \
+<pre><code class="zsh"># ogham/exa also uses the definitions
+zplugin ice wait&quot;0c&quot; lucid reset \
+    atclone&quot;local P=${${(M)OSTYPE:#*darwin*}:+g}
+            \${P}sed -i \
+            '/DIR/c\DIR 38;5;63;1' LS_COLORS; \
+            \${P}dircolors -b LS_COLORS &gt; c.zsh&quot; \
     atpull'%atclone' pick&quot;c.zsh&quot; nocompile'!' \
-    atload'zstyle &quot;:completion:*&quot; list-colors “${(s.:.)LS_COLORS}”' # Style the Zsh completion
+    atload'zstyle &quot;:completion:*&quot; list-colors “${(s.:.)LS_COLORS}”'
 zplugin light trapd00r/LS_COLORS
+
+# revolver
+zplugin ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;revolver&quot;
+zplugin light molovo/revolver
+
+# zunit
+zplugin ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;zunit&quot; \
+            atclone&quot;./build.zsh&quot; atpull&quot;%atclone&quot;
+zplugin load molovo/zunit
 
 zplugin ice as&quot;program&quot; pick&quot;$ZPFX/bin/git-*&quot; make&quot;PREFIX=$ZPFX&quot; nocompile
 zplugin light tj/git-extras
@@ -2592,6 +2691,93 @@ zplugin load obihann/archey-osx
 <h2 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">#</a></h2>
 <pre><code class="zsh">zplugin ice pick&quot;h.sh&quot;
 zplugin light paoloantinori/hhighlighter
+
+# zsh-tag-search; after ^G, prepend with &quot;/&quot; for the regular search
+zplugin ice wait lucid bindmap&quot;^R -&gt; ^G&quot;
+zplugin light -b zdharma/zsh-tag-search
+
+# forgit
+zplugin ice wait lucid
+zplugin load 'wfxr/forgit'
+
+# diff-so-fancy
+zplugin ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;bin/git-dsf&quot;
+zplugin load zdharma/zsh-diff-so-fancy
+
+# zsh-startify, a vim-startify like plugin
+zplugin ice wait&quot;0b&quot; lucid atload&quot;zsh-startify&quot;
+zplugin load zdharma/zsh-startify
+
+# declare-zsh
+zplugin ice wait&quot;2&quot; lucid
+zplugin load zdharma/declare-zsh
+
+# fzf-marks
+zplugin ice wait lucid
+zplugin load urbainvaes/fzf-marks
+
+# zsh-autopair
+zplugin ice wait lucid
+zplugin load hlissner/zsh-autopair
+
+zplugin ice wait&quot;1&quot; lucid
+zplugin load psprint/zsh-navigation-tools
+
+# zdharma/history-search-multi-word
+zstyle &quot;:history-search-multi-word&quot; page-size &quot;11&quot;
+zplugin ice wait&quot;1&quot; lucid
+zplugin load zdharma/history-search-multi-word
+
+# ZUI and Crasis
+zplugin ice wait&quot;1&quot; lucid
+zplugin load zdharma/zui
+
+zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cra*]} ]]' lucid
+zplugin load zdharma/zplugin-crasis
+
+# Gitignore plugin – commands gii and gi
+zplugin ice wait&quot;2&quot; lucid
+zplugin load voronkovich/gitignore.plugin.zsh
+
+# Autosuggestions &amp; fast-syntax-highlighting
+zplugin ice wait&quot;1&quot; lucid atinit&quot;ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay&quot;
+zplugin light zdharma/fast-syntax-highlighting
+# zsh-autosuggestions
+zplugin ice wait&quot;1&quot; lucid atload&quot;!_zsh_autosuggest_start&quot;
+zplugin load zsh-users/zsh-autosuggestions
+
+# F-Sy-H automatic themes plugin – available for patrons:
+# https://patreon.com/psprint
+zplugin ice wait&quot;1&quot; lucid from&quot;psprint@gitlab.com&quot;
+zplugin load psprint/fsh-auto-themes
+
+# zredis together with some binding/tying
+# – defines the variable $rdhash
+zstyle &quot;:plugin:zredis&quot; configure_opts &quot;--without-tcsetpgrp&quot;
+zstyle &quot;:plugin:zredis&quot; cflags  &quot;-Wall -O2 -g -Wno-unused-but-set-variable&quot;
+zplugin ice wait&quot;1&quot; lucid \
+    atload'ztie -d db/redis -a 127.0.0.1:4815/5 -zSL main rdhash'
+zplugin load zdharma/zredis
+
+# Github-Issue-Tracker – the notifier thread
+zplugin ice lucid id-as&quot;GitHub-notify&quot; \
+        on-update-of'~/.cache/zsh-github-issues/new_titles.log' \
+        notify'New issue: $NOTIFY_MESSAGE'
+zplugin light zdharma/zsh-github-issues
+</code></pre>
+
+<h2 id="services">Services<a class="headerlink" href="#services" title="Permanent link">#</a></h2>
+<pre><code class="zsh"># a service that runs the redis database, in background, single instance
+zplugin ice wait&quot;1&quot; lucid service&quot;redis&quot;
+zplugin light zservices/redis
+</code></pre>
+
+<pre><code class="zsh"># Github-Issue-Tracker – the issue-puller thread
+GIT_SLEEP_TIME=700
+GIT_PROJECTS=zdharma/zsh-github-issues:zdharma/zplugin
+
+zplugin ice wait&quot;2&quot; lucid service&quot;GIT&quot; pick&quot;zsh-github-issues.service.zsh&quot;
+zplugin light zdharma/zsh-github-issues
 </code></pre>
 
 <h2 id="snippets">Snippets<a class="headerlink" href="#snippets" title="Permanent link">#</a></h2>
@@ -2602,7 +2788,7 @@ zplugin ice svn wait&quot;0&quot; lucid atinit&quot;local ZSH=\$PWD&quot; \
     atclone&quot;mkdir -p plugins; cd plugins; ln -sfn ../. osx&quot;
 zplugin snippet OMZ::plugins/osx
 
-# Or with most recent Zplugin and with ~/.zplugin/snippets 
+# Or with most recent Zplugin and with ~/.zplugin/snippets
 # directory pruned (rm -rf -- ${ZPLGM[SNIPPETS_DIR]}):
 zplugin ice svn
 zplugin snippet OMZ::plugins/osx
@@ -2625,10 +2811,12 @@ zplugin light chauncey-garrett/zsh-prompt-garrett
 zplugin ice svn atload&quot;prompt garrett&quot; silent
 zplugin snippet PZT::modules/prompt
 
-zplugin ice nocompletions compile&quot;{zinc_functions/*,segments/*,zinc.zsh}&quot;
+zplugin ice wait'!' lucid nocompletions \
+         compile&quot;{zinc_functions/*,segments/*,zinc.zsh}&quot; \
+         atload'!prompt_zinc_setup; prompt_zinc_precmd'
 zplugin load robobenklein/zinc
 
-# ZINC git info is already async, but if you want it 
+# ZINC git info is already async, but if you want it
 # even faster with gitstatus in Turbo mode:
 # https://github.com/romkatv/gitstatus
 zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
