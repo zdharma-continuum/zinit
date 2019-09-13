@@ -1620,7 +1620,7 @@ ZPLGM[EXTENDED_GLOB]=""
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh
+        \!csh aliases
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -1628,6 +1628,7 @@ ZPLGM[EXTENDED_GLOB]=""
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions svn sh \!sh bash \!bash ksh \!ksh csh \!csh
+            aliases
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
@@ -2842,7 +2843,7 @@ EOF
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh
+        \!csh aliases
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -2850,6 +2851,7 @@ EOF
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions svn sh \!sh bash \!bash ksh \!ksh csh \!csh
+            aliases
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value

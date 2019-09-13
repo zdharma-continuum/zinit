@@ -1338,7 +1338,7 @@ function $f {
         # We need some state, but user wants his for his plugins
         (( ${+ZPLG_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         local ZERO="$pdir_path/$fname"
-        builtin setopt noaliases
+        (( ${+ZPLG_ICE[aliases]} )) || builtin setopt noaliases
         (( ${+ZPLG_ICE[silent]} )) && { { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" }; (( retval += $? )); }
         [[ -n ${ZPLG_ICE[src]} ]] && { ZERO="${${(M)ZPLG_ICE[src]##/*}:-$pdir_orig/${ZPLG_ICE[src]}}"; (( ${+ZPLG_ICE[silent]} )) && { { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" }; (( retval += $? )); }; }
         [[ -n ${ZPLG_ICE[multisrc]} ]] && { eval "reply=(${ZPLG_ICE[multisrc]})"; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$pdir_orig/$fname}"; (( ${+ZPLG_ICE[silent]} )) && { { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" }; (( retval += $? )); } done; }
@@ -1357,7 +1357,7 @@ function $f {
             -zplg-wrap-track-functions "$user" "$plugin" "$id_as"
 
         [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; ((1)); } || eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
-        builtin unsetopt noaliases
+        (( ${+ZPLG_ICE[aliases]} )) || builtin unsetopt noaliases
         (( ${+ZPLG_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
         -zplg-shadow-off "${mode:-load}"
@@ -1452,8 +1452,8 @@ unload|on-update-of|subscribe|if|has|cloneonly|blockf|svn|pick|\
 nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|\
 atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|\
 compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|\
-nocd|once|wrap-track|reset|noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh\
-${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}"
+nocd|once|wrap-track|reset|noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
+aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
     ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
