@@ -65,7 +65,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                           command grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
             list=( "${list[@]#href=?}" )
 
-            [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)${~ZPLG_ICE[bpick]}}" )
+            [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)*/${~ZPLG_ICE[bpick]}}" )
 
             [[ ${#list} -gt 1 ]] && {
                 list2=( "${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*}" )
