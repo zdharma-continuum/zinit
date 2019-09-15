@@ -51,6 +51,11 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 14-09-2019
+  - There's a Vim plugin which extends syntax highlighting of zsh scripts with coloring
+    of the Zplugin commands. [Project
+    homepage](https://github.com/zplugin/zplugin-vim-syntax).
+
 * 13-09-2019
   - New ice `aliases` which loads plugin with the aliases mechanism enabled. Use for
     plugins that define **and use** aliases in their scripts.
