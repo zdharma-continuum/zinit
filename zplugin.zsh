@@ -964,7 +964,7 @@ function $f {
     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
+        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" \!atinit
     done
 
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
@@ -972,7 +972,7 @@ function $f {
     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atinit <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
+        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" atinit
     done
 
     -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"; retval=$?
@@ -1051,7 +1051,7 @@ function $f {
         reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atinit
         done
     }
 
@@ -1062,7 +1062,7 @@ function $f {
         reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atinit <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atinit
         done
     }
 
@@ -1115,7 +1115,7 @@ function $f {
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atload
             done
         }
         
@@ -1165,7 +1165,7 @@ function $f {
                 reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atload
                 done
             }
 
@@ -1188,7 +1188,7 @@ function $f {
         reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atload
         done
     }
 
@@ -1198,7 +1198,7 @@ function $f {
         reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atload <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atload
         done
     }
 
@@ -1301,7 +1301,7 @@ function $f {
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig" \!atload
             done
         }
 
@@ -1348,7 +1348,7 @@ function $f {
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig" \!atload
             done
         }
 
@@ -1370,7 +1370,7 @@ function $f {
         reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atload <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-            "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
+            "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig" \!atload
         done
     }
 
@@ -1379,7 +1379,7 @@ function $f {
     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atload <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig"
+        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$pdir_orig" atload
     done
 
     # Mark no load is in progress

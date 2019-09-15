@@ -1415,7 +1415,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+                        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \!atpull
                     done
                 }
 
@@ -1481,7 +1481,7 @@ ZPLGM[EXTENDED_GLOB]=""
                       reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+                          "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \!atpull
                       done
                   }
                   (( ${+ZPLG_ICE[reset]} )) && (
@@ -1533,7 +1533,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                    "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+                    "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \!atpull
                 done
             }
 
@@ -1545,7 +1545,7 @@ ZPLGM[EXTENDED_GLOB]=""
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" atpull
             done
             ZPLG_ICE=()
         }
@@ -1558,7 +1558,7 @@ ZPLGM[EXTENDED_GLOB]=""
     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir"
+        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \%atpull
     done
     ZPLG_ICE=()
 

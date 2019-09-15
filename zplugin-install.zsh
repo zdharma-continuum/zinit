@@ -174,7 +174,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atclone <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path"
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path" \!atclone
             done
 
             [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!}}; }
@@ -184,7 +184,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atclone <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path"
+                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path" atclone
             done
         fi
 
@@ -480,7 +480,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                             for key in "${reply[@]}"; do
                                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
 
                             done
                         }
@@ -536,7 +536,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                         for key in "${reply[@]}"; do
                             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
                         done
                     }
 
@@ -590,7 +590,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
                 done
             }
 
@@ -625,7 +625,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
             return 0;
         }
@@ -658,7 +658,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                    "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
                 done
             }
 
@@ -668,7 +668,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atclone <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atclone
             done
 
             (( ${+ZPLG_ICE[atclone]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
@@ -677,7 +677,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atclone <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atclone
             done
         fi
 
@@ -688,13 +688,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atpull
             done
             # Run annexes' atpull hooks (the `always' after atpull-ice ones)
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname"
+                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
         }
         ((1))
