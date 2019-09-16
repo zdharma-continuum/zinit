@@ -2398,6 +2398,15 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     }
 } # }}}
+# FUNCTION: -zplg-run-delete-hooks() {
+-zplg-run-delete-hooks() {
+    local -a arr
+    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atdelete <->]} )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+        "${arr[5]}" "$1" "$2" $3 "$4" "$5" atdelete
+    done
+}
 # FUNCTION: -zplg-delete {{{
 # Deletes plugin's or snippet's directory (in Zplugin's home directory).
 #
@@ -2445,13 +2454,13 @@ ZPLGM[EXTENDED_GLOB]=""
 
         [[ "${+sice[svn]}" = "1" || -n "$s_svn" ]] && {
             [[ "$s_path" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
-            [[ -e "$s_path" ]] && -zplg-confirm "Delete $s_path?\n[y/n]" "command rm -rf ${(q)s_path}" || { print "No such snippet"; return 1; }
+            [[ -e "$s_path" ]] && -zplg-confirm "Delete $s_path?\n[y/n]" "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \"$s_path\"; command rm -rf ${(q)s_path}" || { print "No such snippet"; return 1; }
         } || {
             [[ "$_path" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
             if [[ -e "$_path/$_filename" ]]; then
-                -zplg-confirm "Delete $_path (it holds \`$_filename')?\n[y/n]" "command rm -rf ${(q)_path};"
+                -zplg-confirm "Delete $_path (it holds \`$_filename')?\n[y/n]" "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \"$_path\"; command rm -rf ${(q)_path};"
             elif [[ -e "$_path" ]]; then
-                -zplg-confirm "Delete $_path (it is empty)?\n[y/n]" "command rm -rf ${(q)_path};"
+                -zplg-confirm "Delete $_path (it is empty)?\n[y/n]" "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \"$_path\"; command rm -rf ${(q)_path};"
             else
                 print "No such snippet"
                 return 1
@@ -2465,10 +2474,10 @@ ZPLGM[EXTENDED_GLOB]=""
 
         -zplg-shands-exp "$1" "$2" && {
             [[ "$REPLY" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
-            [[ -e "$REPLY" ]] && -zplg-confirm "Delete $REPLY?\n[y/n]" "command rm -rf ${(q)REPLY}" || { print -r -- "No such plugin or snippet"; return 1; }
+            [[ -e "$REPLY" ]] && -zplg-confirm "Delete $REPLY?\n[y/n]" "-zplg-run-delete-hooks plugin \"?\" \"?\" \"$the_id\" \"$REPLY\"; command rm -rf ${(q)REPLY}" || { print -r -- "No such plugin or snippet"; return 1; }
         } || {
             [[ "$user" = "%" ]] && local dir="$plugin" || local dir="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
-            [[ -e "$dir" ]] && -zplg-confirm "Delete $dir?\n[y/n]" "command rm -rf ${(q)dir}" || { print -r -- "No such plugin or snippet"; return 1; }
+            [[ -e "$dir" ]] && -zplg-confirm "Delete $dir?\n[y/n]" "-zplg-run-delete-hooks plugin \"?\" \"?\" \"$the_id\" \"$dir\"; command rm -rf ${(q)dir}" || { print -r -- "No such plugin or snippet"; return 1; }
         }
     fi
 
