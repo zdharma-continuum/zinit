@@ -2469,6 +2469,15 @@ ZPLGM[EXTENDED_GLOB]=""
 
     ZPLG_ICE[teleid]="${ZPLG_ICE[teleid]:-${ZPLG_ICE[id-as]}}"
 
+    local -a files
+    files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
+        "$local_dir"/*(*DN:t) "$local_dir"/*(@DN:t)
+        "$local_dir"/*~*/.(_zplugin|svn|git)(/DN:t) "$local_dir"/*(=DN:t)
+        "$local_dir"/*(pDN:t) "$local_dir"/*(%DN:t)
+    )
+    (( !${#files} )) && files=( "no files?" )
+    files=( ${(@)files[1,4]} ${files[4]+more…} )
+
     if (( is_snippet )); then
         if [[ "${+ZPLG_ICE[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
@@ -2483,14 +2492,6 @@ ZPLGM[EXTENDED_GLOB]=""
             fi
         } else {
             if [[ -e "$local_dir/${filename:-abcYZX321}" ]]; then
-                local -a files
-                files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
-                    "$local_dir"/*(*DN:t) "$local_dir"/*(@DN:t)
-                    "$local_dir"/*~*/.(_zplugin|svn|git)(/DN:t) "$local_dir"/*(=DN:t)
-                    "$local_dir"/*(pDN:t) "$local_dir"/*(%DN:t)
-                )
-                (( !${#files} )) && files=( "no files?" )
-                files=( ${(@)files[1,4]} ${files[4]+more…} )
                 -zplg-confirm "Delete $local_dir (it holds: ${(j:, :)files})?" \
                     "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
