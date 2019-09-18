@@ -1569,20 +1569,21 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
 # Deploys a sub-prompt message to be displayed OR a `zle
 # .reset-prompt' call to be invoked
 -zplg-deploy-message() {
-    [[ "$1" = <-> && ${#} -eq 1 ]] && { zle && {
-            local alltext text IFS=$'\n' nl=$'\n'
-            repeat 25; do read -r -u"$1" text; alltext+="${text:+$text$nl}"; done
-            [[ "$alltext" = "@rst$nl" ]] && zle .reset-prompt || \
-                { [[ -n "$alltext" ]] && zle -M "$alltext"; }
-        }
-        zle -F "$1"; exec {1}<&-
-        return 0
+    [[ "$1" = <-> && ${#} -eq 1 ]] && { builtin zle && {
+        local alltext text IFS=$'\n' nl=$'\n'
+        repeat 25; do read -r -u"$1" text; alltext+="${text:+$text$nl}"; done
+        [[ "$alltext" = "@rst$nl" ]] && builtin zle .reset-prompt || \
+            { [[ -n "$alltext" ]] && builtin zle -M "$alltext"; }
     }
-    local THEFD
+    builtin zle -F "$1"; exec {1}<&-
+    return 0
+    }
+    local THEFD hasw
     # The expansion is: if there is @sleep: pfx, then use what's after
     # it, otherwise substitute 0
     exec {THEFD} < <(LANG=C sleep $(( 0.01 + ${${${(M)1#@sleep:}:+${1#@sleep:}}:-0} )); print -r -- ${1:#(@msg|@sleep:*)} "${@[2,-1]}")
-    zle -F "$THEFD" -zplg-deploy-message
+    is-at-least 5.0.6 && hasw=1 || hasw=0
+    builtin zle -F ${${hasw:#0}:+-w} "$THEFD" -zplg-deploy-message
 }
 # }}}
 
