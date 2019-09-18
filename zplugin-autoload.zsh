@@ -2471,7 +2471,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local -a files
     files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
-        "$local_dir"/*(*DN:t) "$local_dir"/*(@DN:t)
+        "$local_dir"/*(*DN:t) "$local_dir"/*(@DN:t) "$local_dir"/*(.DN:t)
         "$local_dir"/*~*/.(_zplugin|svn|git)(/DN:t) "$local_dir"/*(=DN:t)
         "$local_dir"/*(pDN:t) "$local_dir"/*(%DN:t)
     )
@@ -2491,13 +2491,8 @@ ZPLGM[EXTENDED_GLOB]=""
                 return 1
             fi
         } else {
-            if [[ -e "$local_dir/${filename:-abcYZX321}" ]]; then
-                -zplg-confirm "Delete $local_dir (it holds: ${(j:, :)files})?" \
-                    "-zplg-run-delete-hooks snippet \"${ZPLG_ICE[teleid]}\" \"\" \"$the_id\" \
-                    \"$local_dir\"; command rm -rf \
-                        ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
-            elif [[ -e "$local_dir" ]]; then
-                -zplg-confirm "Delete $local_dir (it is empty)?" \
+            if [[ -e "$local_dir" ]]; then
+                -zplg-confirm "Delete $local_dir? (it holds: ${(j:, :)files})" \
                     "-zplg-run-delete-hooks snippet \"${ZPLG_ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
