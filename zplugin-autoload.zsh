@@ -1355,7 +1355,9 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     -zplg-any-to-user-plugin "$2" "$3"
-    local user="${reply[-2]}" plugin="${reply[-1]}" st="$1" local_dir filename key id_as="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
+    local user="${reply[-2]}" plugin="${reply[-1]}" st="$1" \
+        local_dir filename is_snippet key \
+        id_as="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
     local -A ice
 
     -zplg-exists-physically-message "$user" "$plugin" || return 1
@@ -1367,7 +1369,8 @@ ZPLGM[EXTENDED_GLOB]=""
 
     (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$user/$plugin]=""; local nf="-nftid"; }
 
-    -zplg-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" ice local_dir filename || return 1
+    -zplg-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" \
+        ice local_dir filename is_snippet || return 1
     [[ "${ice[teleid]:-$id_as}" = (#b)([^/]##)/(*) ]] && { user="${match[1]}"; plugin="${match[2]}"; } || { user=""; plugin="${ice[teleid]:-$id_as}"; }
 
     # Check if repository has a remote set, if it is _local
@@ -1571,9 +1574,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - "status" or "update"
 # $2 - snippet URL
 -zplg-update-or-status-snippet() {
-    local st="$1" URL="${2%/}" local_dir filename
+    local st="$1" URL="${2%/}" local_dir filename is_snippet
     (( ${#ZPLG_ICE[@]} > 0 )) && { ZPLG_SICE[$URL]=""; local nf="-nf"; }
-    -zplg-compute-ice "$URL" "pack$nf" ZPLG_ICE local_dir filename || return 1
+    -zplg-compute-ice "$URL" "pack$nf" \
+        ZPLG_ICE local_dir filename is_snippet || return 1
 
     if [[ "$st" = "status" ]]; then
         if (( ${+ZPLG_ICE[svn]} )); then
@@ -2851,7 +2855,7 @@ EOF
 # FUNCTION: -zplg-recall {{{
 -zplg-recall() {
     local -A ice
-    local el val cand1 cand2 local_dir filename
+    local el val cand1 cand2 local_dir filename is_snippet
 
     local -a ice_order nval_ices output
     ice_order=(
@@ -2878,7 +2882,8 @@ EOF
             # Must be last
             svn
     )
-    -zplg-compute-ice "$1${${1:#(%|/)*}:+${2:+/}}$2" "pack" ice local_dir filename || return 1
+    -zplg-compute-ice "$1${${1:#(%|/)*}:+${2:+/}}$2" "pack" \
+        ice local_dir filename is_snippet || return 1
 
     [[ -e "$local_dir" ]] && {
         for el in "${ice_order[@]}"; do
