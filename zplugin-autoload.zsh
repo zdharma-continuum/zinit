@@ -2466,6 +2466,9 @@ ZPLGM[EXTENDED_GLOB]=""
         print "Obtained a risky, not-absolute path ($local_dir), aborting"
         return 1
     fi
+
+    ZPLG_ICE[teleid]="${ZPLG_ICE[teleid]:-${ZPLG_ICE[id-as]}}"
+
     if (( is_snippet )); then
         if [[ "${+ZPLG_ICE[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
