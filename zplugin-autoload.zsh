@@ -2524,6 +2524,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - expression
 -zplg-confirm() {
     print "$1"
+    print "[yY/n…]"
     local ans
     read -q ans
     [[ "$ans" = "y" ]] && { eval "$2"; print "\nDone (action executed, exit code: $?)"; } || { print "\nBreak, no action"; return 1; }
