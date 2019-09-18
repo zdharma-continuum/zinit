@@ -2493,12 +2493,12 @@ ZPLGM[EXTENDED_GLOB]=""
         } else {
             if [[ -e "$local_dir/${filename:-abcYZX321}" ]]; then
                 -zplg-confirm "Delete $local_dir (it holds: ${(j:, :)files})?" \
-                    "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \
+                    "-zplg-run-delete-hooks snippet \"${ZPLG_ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
             elif [[ -e "$local_dir" ]]; then
                 -zplg-confirm "Delete $local_dir (it is empty)?" \
-                    "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \
+                    "-zplg-run-delete-hooks snippet \"${ZPLG_ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
             else
