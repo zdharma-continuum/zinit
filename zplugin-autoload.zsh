@@ -2455,42 +2455,63 @@ ZPLGM[EXTENDED_GLOB]=""
         return $?
     fi
 
-    -zplg-two-paths "$the_id"
-    local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
+    local -A ZPLG_ICE
+    local local_dir filename is_snippet
 
-    if [[ -n "$s_svn" || -n "$_filename" ]]; then
-        local -A sice
-        local -a tmp
-        tmp=( "${(z@)ZPLG_SICE[$the_id]}" )
-        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
+    -zplg-compute-ice "$the_id" "pack" \
+        ZPLG_ICE local_dir filename is_snippet || return 1
 
-        [[ "${+sice[svn]}" = "1" || -n "$s_svn" ]] && {
-            [[ "$s_path" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
-            [[ -e "$s_path" ]] && -zplg-confirm "Delete $s_path?\n[y/n]" "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \"$s_path\"; command rm -rf ${(q)s_path}" || { print "No such snippet"; return 1; }
+    if [[ "$local_dir" != /* ]]
+    then
+        print "Obtained a risky, not-absolute path ($local_dir), aborting"
+        return 1
+    fi
+    if (( is_snippet )); then
+        [[ "${+ZPLG_ICE[svn]}" = "1" ]] && {
+            if [[ -e "$local_dir" ]]
+            then
+                -zplg-confirm "Delete $local_dir?" "-zplg-run-delete-hooks \
+                    snippet \"${ZPLG_ICE[teleid]}\" \"\" \"$the_id\" \
+                    \"$local_dir\"; \
+                    command rm -rf ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
+            else
+                print "No such snippet"
+                return 1
+            fi
         } || {
-            [[ "$_path" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
-            if [[ -e "$_path/$_filename" ]]; then
-                -zplg-confirm "Delete $_path (it holds \`$_filename')?\n[y/n]" "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \"$_path\"; command rm -rf ${(q)_path};"
-            elif [[ -e "$_path" ]]; then
-                -zplg-confirm "Delete $_path (it is empty)?\n[y/n]" "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \"$_path\"; command rm -rf ${(q)_path};"
+            if [[ -e "$local_dir/${filename:-abcYZX321}" ]]; then
+                local -a files
+                files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
+                    "$local_dir"/*(*DN:t) "$local_dir"/*(@DN:t)
+                    "$local_dir"/*~*/._zplugin(/DN:t) "$local_dir"/*(=DN:t)
+                    "$local_dir"/*(pDN:t) "$local_dir"/*(%DN:t)
+                )
+                (( !${#files} )) && files=( "no files?" )
+                files=( ${(@)files[1,4]} ${files[4]+more…} )
+                -zplg-confirm "Delete $local_dir (it holds: ${(j:, :)files})?" \
+                    "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \
+                    \"$local_dir\"; command rm -rf \
+                        ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
+            elif [[ -e "$local_dir" ]]; then
+                -zplg-confirm "Delete $local_dir (it is empty)?" \
+                    "-zplg-run-delete-hooks snippet \"?\" \"\" \"$the_id\" \
+                    \"$local_dir\"; command rm -rf \
+                        ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
             else
                 print "No such snippet"
                 return 1
             fi
         }
     else
-        -zplg-any-to-user-plugin "$1" "$2"
-        local user="${reply[-2]}" plugin="${reply[-1]}"
-
-        -zplg-exists-physically-message "$user" "$plugin" || return 1
-
-        -zplg-shands-exp "$1" "$2" && {
-            [[ "$REPLY" != /* ]] && { print "Obtained a risky, not-absolute path, aborting"; return 1; }
-            [[ -e "$REPLY" ]] && -zplg-confirm "Delete $REPLY?\n[y/n]" "-zplg-run-delete-hooks plugin \"?\" \"?\" \"$the_id\" \"$REPLY\"; command rm -rf ${(q)REPLY}" || { print -r -- "No such plugin or snippet"; return 1; }
-        } || {
-            [[ "$user" = "%" ]] && local dir="$plugin" || local dir="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
-            [[ -e "$dir" ]] && -zplg-confirm "Delete $dir?\n[y/n]" "-zplg-run-delete-hooks plugin \"?\" \"?\" \"$the_id\" \"$dir\"; command rm -rf ${(q)dir}" || { print -r -- "No such plugin or snippet"; return 1; }
-        }
+        if [[ -e "$local_dir" ]]; then
+            -zplg-confirm "Delete $local_dir?" "-zplg-run-delete-hooks \
+                plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
+                \"$local_dir\"; \
+                command rm -rf ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
+        else
+            print -r -- "No such plugin or snippet"
+            return 1
+        fi
     fi
 
     return 0
