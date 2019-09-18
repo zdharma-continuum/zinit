@@ -2467,7 +2467,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     fi
     if (( is_snippet )); then
-        [[ "${+ZPLG_ICE[svn]}" = "1" ]] && {
+        if [[ "${+ZPLG_ICE[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
             then
                 -zplg-confirm "Delete $local_dir?" "-zplg-run-delete-hooks \
@@ -2478,7 +2478,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 print "No such snippet"
                 return 1
             fi
-        } || {
+        } else {
             if [[ -e "$local_dir/${filename:-abcYZX321}" ]]; then
                 local -a files
                 files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
