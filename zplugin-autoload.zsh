@@ -1601,8 +1601,9 @@ ZPLGM[EXTENDED_GLOB]=""
 # Can also pack resulting ices into ZPLG_SICE (see $2).
 #
 # $1 - URL (also plugin-spec)
-# $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
-#      "pack-nf" means that disk-ices will be ignored (no-file?)
+# $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE
+#      wins with static ice; "pack-nf" means that disk-ices will
+#      be ignored (no-file?)
 # $3 - name of output associative array, "ZPLG_ICE" is the default
 # $4 - name of output string parameter, to hold path to directory ("local_dir")
 # $5 - name of output string parameter, to hold filename ("filename")
@@ -1627,12 +1628,16 @@ ZPLGM[EXTENDED_GLOB]=""
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions svn sh \!sh bash \!bash ksh \!ksh csh \!csh
+            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
             aliases
+
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
             ${(@)${(@s.|.)ZPLG_EXTS[ice-mods]}:#*\'\'*}
+
+            # Must be last
+            svn
     )
 
     # Remove whitespace from beginning of URL
@@ -2859,12 +2864,16 @@ EOF
     )
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions svn sh \!sh bash \!bash ksh \!ksh csh \!csh
+            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
             aliases
+
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
             ${(@)${(@s.|.)ZPLG_EXTS[ice-mods]}:#*\'\'*}
+
+            # Must be last
+            svn
     )
     -zplg-compute-ice "$1${${1:#(%|/)*}:+${2:+/}}$2" "pack" ice local_dir filename || return 1
 
