@@ -2506,6 +2506,7 @@ ZPLGM[EXTENDED_GLOB]=""
             fi
         }
     else
+        -zplg-any-to-user-plugin "${ZPLG_ICE[teleid]}"
         if [[ -e "$local_dir" ]]; then
             -zplg-confirm "Delete $local_dir?" "-zplg-run-delete-hooks \
                 plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
