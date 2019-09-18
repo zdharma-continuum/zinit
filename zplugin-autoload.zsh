@@ -2483,7 +2483,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 local -a files
                 files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
                     "$local_dir"/*(*DN:t) "$local_dir"/*(@DN:t)
-                    "$local_dir"/*~*/._zplugin(/DN:t) "$local_dir"/*(=DN:t)
+                    "$local_dir"/*~*/.(_zplugin|svn|git)(/DN:t) "$local_dir"/*(=DN:t)
                     "$local_dir"/*(pDN:t) "$local_dir"/*(%DN:t)
                 )
                 (( !${#files} )) && files=( "no files?" )
