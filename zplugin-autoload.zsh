@@ -2894,6 +2894,7 @@ EOF
         else
             print -zr "zplugin ice ${output[*]}; zplugin "
         fi
+        -zplg-deploy-message @rst
     } || print -r -- "No such plugin or snippet"
 }
 # }}}
