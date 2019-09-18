@@ -1607,11 +1607,13 @@ ZPLGM[EXTENDED_GLOB]=""
 # $3 - name of output associative array, "ZPLG_ICE" is the default
 # $4 - name of output string parameter, to hold path to directory ("local_dir")
 # $5 - name of output string parameter, to hold filename ("filename")
+# $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
 -zplg-compute-ice() {
     setopt localoptions extendedglob nokshglob noksharrays
 
-    local __URL="${1%/}" __pack="$2" is_snippet=0
-    local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" __var_name3="${5:-filename}"
+    local __URL="${1%/}" __pack="$2" __is_snippet=0
+    local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" \
+        __var_name3="${5:-filename}" __var_name4="${6:-is_snippet}"
 
     # Copy from -zplg-recall
     local -a ice_order nval_ices
@@ -1647,7 +1649,7 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-two-paths "$__URL"
     local __s_path="${reply[-4]}" __s_svn="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
     if [[ -n "$__s_svn" || -n "$__filename" ]]; then
-        is_snippet=1
+        __is_snippet=1
     else
         # Plugin
         -zplg-shands-exp "$__URL" && __URL="$REPLY"
@@ -1666,11 +1668,11 @@ ZPLGM[EXTENDED_GLOB]=""
     (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
 
     if [[ "${+__sice[svn]}" = "1" || -n "$__s_svn" ]]; then
-        if (( !is_snippet && ${+__sice[svn]} == 1 )); then
+        if (( !__is_snippet && ${+__sice[svn]} == 1 )); then
             print -r -- "The \`svn' ice is given, but the argument ($__URL) is a plugin"
             print -r -- "(\`svn' can be used only with snippets)"
             return 1
-        elif (( !is_snippet )); then
+        elif (( !__is_snippet )); then
             print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zplugin/issues"
             return 1
         fi
@@ -1730,6 +1732,7 @@ ZPLGM[EXTENDED_GLOB]=""
     : ${(PA)__var_name1::="${(kv)__MY_ICE[@]}"}
     : ${(P)__var_name2::=$__local_dir}
     : ${(P)__var_name3::=$__filename}
+    : ${(P)__var_name4::=$__is_snippet}
 
     return 0
 }
