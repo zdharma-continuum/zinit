@@ -36,7 +36,7 @@
     
     
       
-        <title>Compiling Programs - Zplugin Wiki</title>
+        <title>z-a-patch-dl - Zplugin Wiki</title>
       
     
     
@@ -78,6 +78,10 @@
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#introduction" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
     
     
       <!--
@@ -136,7 +140,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Compiling Programs
+                z-a-patch-dl
               
             </span>
           
@@ -358,7 +362,7 @@
     <li class="md-tabs__item">
       
         <a href="../Example-Minimal-Setup/"
-            title="Examples" class="md-tabs__link md-tabs__link--active">
+            title="Examples" class="md-tabs__link">
           Examples
         </a>
       
@@ -397,7 +401,7 @@
     <li class="md-tabs__item">
       
         <a href="../Annexes/"
-            title="Zplugin Extensions" class="md-tabs__link">
+            title="Zplugin Extensions" class="md-tabs__link md-tabs__link--active">
           Zplugin Extensions
         </a>
       
@@ -985,17 +989,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-3"
-          type="checkbox" id="nav-3" checked />
+          type="checkbox" id="nav-3" />
     
 
     <!-- Expand active pages -->
@@ -1191,33 +1193,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active">
-    
-
-    <!-- Active checkbox expands items contained within nested section -->
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
-        type="checkbox" id="__toc" />
-
-    <!-- Hack: see partials/toc.html for more information -->
-    
-
-    <!-- Render table of contents, if not empty -->
-    
-    <a href="./" title="Compiling Programs"
-        class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Compiling-programs/" title="Compiling Programs"
+        class="md-nav__link">
       Compiling Programs
     </a>
-
-    <!-- Show table of contents -->
-    
   </li>
-
-<!-- Main navigation item -->
 
         
           
@@ -1330,15 +1314,17 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4"
-          type="checkbox" id="nav-4" />
+          type="checkbox" id="nav-4" checked />
     
 
     <!-- Expand active pages -->
@@ -1458,15 +1444,158 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item">
-    <a href="../z-a-patch-dl/" title="z-a-patch-dl"
-        class="md-nav__link">
+  <li class="md-nav__item md-nav__item--active">
+    
+
+    <!-- Active checkbox expands items contained within nested section -->
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
+        type="checkbox" id="__toc" />
+
+    <!-- Hack: see partials/toc.html for more information -->
+    
+
+    <!-- Render table of contents, if not empty -->
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        z-a-patch-dl
+      </label>
+    
+    <a href="./" title="z-a-patch-dl"
+        class="md-nav__link md-nav__link--active">
       z-a-patch-dl
     </a>
+
+    <!-- Show table of contents -->
+    
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#installation" title="Installation"
+      class="md-nav__link">
+    Installation
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+    
   </li>
+
+<!-- Main navigation item -->
 
         
           
@@ -2057,58 +2186,180 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#installation" title="Installation"
+      class="md-nav__link">
+    Installation
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Compiling Programs</h1>
+                  <h1>z-a-patch-dl</h1>
                 
-                <pre><code class="zsh">zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
-    atpull&quot;%atclone&quot; make pick&quot;src/vim&quot;
-zplugin light vim/vim
+                <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>A Zsh-Zplugin extension (i.e. an
+<a href="http://zdharma.org/zplugin/wiki/Annexes/">annex</a>) that downloads files and
+applies patches. It adds two ice modifiers:</p>
+<pre><code class="zsh">zplugin ice dl'{URL} [-&gt; {optional-output-file-name}]; …' …
 </code></pre>
 
-<ul>
-<li><code>as"program"</code> – add file selected by <code>pick''</code> to <code>$PATH</code>, do not source it,</li>
-<li><code>atclone"…"</code> – execute code after downloading,</li>
-<li><code>atpull"%atclone"</code> – execute the same code <code>atclone''</code> is given, but after successful update,</li>
-<li><code>make</code> – run <code>make</code> after <code>atclone''</code> and <code>atpull''</code> (note: <code>make'!'</code> will execute before them),</li>
-<li><code>pick"src/vim"</code> – set executable flag on <code>src/vim</code>, hint that <code>src/</code> should be added to <code>$PATH</code>.</li>
-</ul>
-<hr />
-<p>The same but with <strong>installation</strong> (i.e. <code>make install</code> is being run) under
-<code>$ZPFX</code> (<code>~/.zplugin/polaris</code> by default):</p>
-<pre><code class="zsh">zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; \
-    ./configure --prefix=$ZPFX&quot; atpull&quot;%atclone&quot; \
-    make&quot;all install&quot; pick&quot;$ZPFX/bin/vim&quot;
-zplugin light vim/vim
+<p>and</p>
+<pre><code class="zsh">zplugin ice patch'{file-name-with-the-patch-to-apply}; …' …
 </code></pre>
 
-<ul>
-<li><code>as"program"</code> – as above,</li>
-<li><code>atclone"…"</code> – as above <strong>plus</strong> pass <code>--prefix=$ZPFX</code> to <code>./configure</code>, to
-  set the installation directory,</li>
-<li><code>atpull"%atclone"</code> – as above,</li>
-<li><code>make</code> – as above, but also run the <code>install</code> target,</li>
-<li><code>pick"src/vim"</code> – as above, but for different path (<code>$ZPFX/bin/vim</code>).</li>
-</ul>
-<hr />
-<pre><code class="zsh">zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
-    atpull'%atclone' src&quot;zhook.zsh&quot;
-zplugin light direnv/direnv
+<p>The annex (i.e. Zplugin extension) will download the given <code>{URL}</code> under the
+path <code>{optional-output-file-name}</code> (if no file name given, then it is taken from
+last segment of the URL) in case of the <code>dl''</code> ice-mod, and apply a patch given
+by the <code>{file-name-with-the-patch-to-apply}</code> in case of the <code>patch''</code> ice-mod.</p>
+<p>You can use this functionality to download and apply patches. For example, to
+install <code>fbterm</code>, two patches are being needed, one to fix the operation, the
+other one to fix the build:</p>
+<pre><code class="zsn">zplugin ice \
+    as&quot;command&quot; pick&quot;$ZPFX/bin/fbterm&quot; \
+    dl&quot;https://bugs.archlinux.org/task/46860?getfile=13513 -&gt; ins.patch&quot; \
+    dl&quot;https://aur.archlinux.org/cgit/aur.git/plain/0001-Fix-build-with-gcc-6.patch?h=fbterm-git&quot; \
+    patch&quot;ins.patch; 0001-Fix-build-with-gcc-6.patch&quot; \
+    atclone&quot;./configure --prefix=$ZPFX&quot; \
+    atpull&quot;%atclone&quot; \
+    make&quot;install&quot; reset
+zplugin load izmntuk/fbterm
 </code></pre>
 
-<ul>
-<li><code>make'!'</code> – execute <code>make</code> before <code>atclone''</code> and before <code>atpull''</code> (see <code>make</code> above),</li>
-<li><code>src"zhook.zsh"</code> – source file <code>zhook.zsh</code>.</li>
-</ul>
-<p>In general, Direnv works by hooking up to Zsh. The code that does this is
-provided by program <code>direnv</code> (built by <code>make''</code>). Above <code>atclone''</code> puts this
-code into file <code>zhook.zsh</code>, <code>src''</code> sources it. This way <code>direnv hook zsh</code> is
-executed only on clone and update, and Zsh starts faster.</p>
-<p><a href="vim:set ft=markdown tw=80:"></a></p>
+<p>This command will result in:</p>
+<p><img alt="fbterm
+example" src="https://raw.githubusercontent.com/zplugin/z-a-patch-dl/master/images/fbterm-ex.png" /></p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
+<p>Simply load like a plugin, i.e. the following will add the annex to Zplugin:</p>
+<pre><code class="zsh">zplugin light zplugin/z-a-patch-dl
+</code></pre>
+
+<p>After executing this command you can then use the <code>dl''</code> and <code>patch''</code> ice-mods.</p>
+<!-- vim:set ft=markdown tw=80 et sw=4 sts=4: -->
                 
                   
                 
