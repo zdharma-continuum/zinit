@@ -20,9 +20,11 @@ nav:
   - "Gallery": GALLERY.md
 - "Zplugin Extensions":
   - "Annexes": Annexes.md
-  - "z-p-submods": z-p-submods.md
+  - "z-a-bin-gem-node": z-a-bin-gem-node.md
+  - "z-a-patch-dl": z-a-patch-dl.md
   - "z-a-man": z-a-man.md
-  - "z-p-test": z-p-test.md
+  - "z-a-test": z-a-test.md
+  - "z-a-submods": z-a-submods.md
   - "declare-zsh": declare-zsh.md
   - "Crasis": crasis.md
 - "Various Documents":
