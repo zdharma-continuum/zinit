@@ -769,6 +769,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         (*.tar.7z|*.t7z)
             -zplg-extract() { command 7z x -so "$file" | command tar -xf -; }
             ;;
+        (*.tar)
+            -zplg-extract() { command tar -xf "$file"; }
+            ;;
         (*.gz)
             -zplg-extract() { command gunzip "$file"; }
             ;;
