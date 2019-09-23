@@ -46,8 +46,6 @@ theme:
     tabs: true
 markdown_extensions:
   - admonition
-  - pymdownx.mark:
-  - pymdownx.smartsymbols:
   - toc:
       permalink: '#'
       separator: '_'
