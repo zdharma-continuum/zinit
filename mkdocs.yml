@@ -38,7 +38,7 @@ nav:
   - "zplugin-autoload.zsh": zplugin-autoload.zsh.md
 
 theme:
-  name: material
+  name: readthedocs
   custom_dir: 'docs/theme'
   logo:
     icon: home
