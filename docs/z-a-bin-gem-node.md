@@ -11,7 +11,8 @@ allows to:
      [$NODE_PATH](https://nodejs.org/api/modules.html#modules_loading_from_the_global_folders)
      automatically set,
   3. Run programs, scripts and functions with automatic `cd` into the plugin
-     or snippet directory,
+     or snippet directory, plus also with automatic standard output
+     & standard error redirecting.
   4. Source scripts through an automatically created function with the above
      `$GEM_HOME`, `$NODE_PATH` and `cd` features available,
   5. Create the so called `shims` known from
@@ -87,6 +88,7 @@ an embedded path to it. Thus, no `$PATH` changes are needed!
 ## The Ice Modifiers Provided By The Annex
 
 There are 7 ice-modifiers provided and handled by the annex. They are:
+
   1. `fbin''` – creates functions for binaries and scripts,
   2. `sbin''` – creates `shims` for binaries and scripts,
   3. `gem''` – installs and updates gems + creates functions for gems'
@@ -102,7 +104,7 @@ There are 7 ice-modifiers provided and handled by the annex. They are:
 
 ---
 
-# **`fbin"[{g|n|c}:]{path-to-binary}[ -> {name-of-the-function}]; …"`**
+# 1. **`fbin"[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-function}]; …"`**
 
 Creates a wrapper function of the name the same as the last segment of the
 path or as `{name-of-the-function}`. The optional preceding flags mean:
@@ -110,7 +112,13 @@ path or as `{name-of-the-function}`. The optional preceding flags mean:
   - `g` – set `$GEM_HOME` variable,
   - `n` – set `$NODE_PATH` variable,
   - `c` – cd to the plugin's directory before running the function and then
-    cd back after it has been run.
+    cd back after it has been run,
+  - `N` – append `&>/dev/null` to the call of the binary, i.e. redirect both
+    standard output and standard error to `/dev/null`,
+  - `E` – append `2>/dev/null` to the call of the binary, i.e. redirect
+    standard error to `/dev/null`,
+  - `O` – append `>/dev/null` to the call of the binary, i.e. redirect
+    standard output to `/dev/null`.
 
 Example:
 
@@ -127,7 +135,7 @@ myfzf () {
 
 ---
 
-# **`gem"{gem-name}; …"`**
+# 2. **`gem"{gem-name}; …"`**
 # **`gem"[{path-to-binary} <-] !{gem-name} [-> {name-of-the-function}]; …"`**
 
 Installs the gem of name `{gem-name}` with `$GEM_HOME` set to the plugin's or
@@ -152,7 +160,7 @@ asciidoctor () {
 
 ---
 
-# **`node"{node-module}; …"`**
+# 3. **`node"{node-module}; …"`**
 # **`node"[{path-to-binary} <-] !{node-module} [-> {name-of-the-function}]; …"`**
 
 Installs the node module of name `{node-module}` inside the plugin's or
@@ -186,8 +194,8 @@ has been used.
 
 ---
 
-# **`fmod"[{g|n|c}:]{function-name}; …"`**
-# **`fmod"[{g|n|c}:]{function-name} -> {wrapping-function-name}; …"`**
+# 4. **`fmod"[{g|n|c|N|E|O}:]{function-name}; …"`**
+# **`fmod"[{g|n|c|N|E|O}:]{function-name} -> {wrapping-function-name}; …"`**
 
 It wraps given function with the ability to set `$GEM_HOME`, etc. – the
 meaning of the `g`,`n` and `c` flags is the same as in the `fbin''` ice.
@@ -221,7 +229,7 @@ README.md
 
 ---
 
-# **`sbin"[{g|n|c}:]{path-to-binary}[ -> {name-of-the-script}]; …"`**
+# 5. **`sbin"[{g|n|c|N|E|O}:]{path-to-binary}[ -> {name-of-the-script}]; …"`**
 
 It creates the so called `shim` known from `rbenv` – a wrapper script that
 forwards the call to the actual binary. The script is created always under
@@ -254,8 +262,8 @@ fzf "$@"
 
 ---
 
-# **`fsrc"[{g|n|c}:]{path-to-script}[ -> {name-of-the-function}]; …"`**
-# **`ferc"[{g|n|c}:]{path-to-script}[ -> {name-of-the-function}]; …"`**
+# 6. **`fsrc"[{g|n|c|N|E|O}:]{path-to-script}[ -> {name-of-the-function}]; …"`**
+# 7. **`ferc"[{g|n|c|N|E|O}:]{path-to-script}[ -> {name-of-the-function}]; …"`**
 
 Creates a wrapper function that at each invocation sources the given file.
 The second ice, `ferc''` works the same with the single difference that it
