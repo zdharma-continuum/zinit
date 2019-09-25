@@ -2404,7 +2404,8 @@ allows to:</p>
      <a href="https://nodejs.org/api/modules.html#modules_loading_from_the_global_folders">$NODE_PATH</a>
      automatically set,</li>
 <li>Run programs, scripts and functions with automatic <code>cd</code> into the plugin
-     or snippet directory,</li>
+     or snippet directory, plus also with automatic standard output
+     &amp; standard error redirecting.</li>
 <li>Source scripts through an automatically created function with the above
      <code>$GEM_HOME</code>, <code>$NODE_PATH</code> and <code>cd</code> features available,</li>
 <li>Create the so called <code>shims</code> known from
@@ -2462,27 +2463,35 @@ fzf () {
 <p>Running the function will forward the call to the program accessed through
 an embedded path to it. Thus, no <code>$PATH</code> changes are needed!</p>
 <h2 id="the_ice_modifiers_provided_by_the_annex">The Ice Modifiers Provided By The Annex<a class="headerlink" href="#the_ice_modifiers_provided_by_the_annex" title="Permanent link">#</a></h2>
-<p>There are 7 ice-modifiers provided and handled by the annex. They are:
-  1. <code>fbin''</code> – creates functions for binaries and scripts,
-  2. <code>sbin''</code> – creates <code>shims</code> for binaries and scripts,
-  3. <code>gem''</code> – installs and updates gems + creates functions for gems'
-     binaries,
-  4. <code>node''</code> – installs and updates node_modules + creates functions for
-     binaries of the modules,
-  5. <code>fmod''</code> – creates wrapping functions for other functions,
-  6. <code>fsrc''</code> – creates functions that source given scripts,
-  7. <code>ferc''</code> – the same as <code>fsrc''</code>, but using an alternate script-loading
-     method.</p>
+<p>There are 7 ice-modifiers provided and handled by the annex. They are:</p>
+<ol>
+<li><code>fbin''</code> – creates functions for binaries and scripts,</li>
+<li><code>sbin''</code> – creates <code>shims</code> for binaries and scripts,</li>
+<li><code>gem''</code> – installs and updates gems + creates functions for gems'
+     binaries,</li>
+<li><code>node''</code> – installs and updates node_modules + creates functions for
+     binaries of the modules,</li>
+<li><code>fmod''</code> – creates wrapping functions for other functions,</li>
+<li><code>fsrc''</code> – creates functions that source given scripts,</li>
+<li><code>ferc''</code> – the same as <code>fsrc''</code>, but using an alternate script-loading
+     method.</li>
+</ol>
 <p><strong>The ice-modifiers in detail:</strong></p>
 <hr />
-<h1 id="fbingncpath-to-binary_-gt_name-of-the-function"><strong><code>fbin"[{g|n|c}:]{path-to-binary}[ -&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#fbingncpath-to-binary_-gt_name-of-the-function" title="Permanent link">#</a></h1>
+<h1 id="1_fbingncneopath-to-binary_-gt_name-of-the-function">1. <strong><code>fbin"[{g|n|c|N|E|O}:]{path-to-binary}[ -&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#1_fbingncneopath-to-binary_-gt_name-of-the-function" title="Permanent link">#</a></h1>
 <p>Creates a wrapper function of the name the same as the last segment of the
 path or as <code>{name-of-the-function}</code>. The optional preceding flags mean:</p>
 <ul>
 <li><code>g</code> – set <code>$GEM_HOME</code> variable,</li>
 <li><code>n</code> – set <code>$NODE_PATH</code> variable,</li>
 <li><code>c</code> – cd to the plugin's directory before running the function and then
-    cd back after it has been run.</li>
+    cd back after it has been run,</li>
+<li><code>N</code> – append <code>&amp;&gt;/dev/null</code> to the call of the binary, i.e. redirect both
+    standard output and standard error to <code>/dev/null</code>,</li>
+<li><code>E</code> – append <code>2&gt;/dev/null</code> to the call of the binary, i.e. redirect
+    standard error to <code>/dev/null</code>,</li>
+<li><code>O</code> – append <code>&gt;/dev/null</code> to the call of the binary, i.e. redirect
+    standard output to <code>/dev/null</code>.</li>
 </ul>
 <p>Example:</p>
 <pre><code class="zsh">% zplugin ice from&quot;gh-r&quot; fbin&quot;g:fzf -&gt; myfzf&quot;
@@ -2496,7 +2505,7 @@ myfzf () {
 </code></pre>
 
 <hr />
-<h1 id="gemgem-name"><strong><code>gem"{gem-name}; …"</code></strong><a class="headerlink" href="#gemgem-name" title="Permanent link">#</a></h1>
+<h1 id="2_gemgem-name">2. <strong><code>gem"{gem-name}; …"</code></strong><a class="headerlink" href="#2_gemgem-name" title="Permanent link">#</a></h1>
 <h1 id="gempath-to-binary_lt-_gem-name_-gt_name-of-the-function"><strong><code>gem"[{path-to-binary} &lt;-] !{gem-name} [-&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#gempath-to-binary_lt-_gem-name_-gt_name-of-the-function" title="Permanent link">#</a></h1>
 <p>Installs the gem of name <code>{gem-name}</code> with <code>$GEM_HOME</code> set to the plugin's or
 snippet's directory. In other words, the gem and its dependencies will be
@@ -2515,7 +2524,7 @@ asciidoctor () {
 </code></pre>
 
 <hr />
-<h1 id="nodenode-module"><strong><code>node"{node-module}; …"</code></strong><a class="headerlink" href="#nodenode-module" title="Permanent link">#</a></h1>
+<h1 id="3_nodenode-module">3. <strong><code>node"{node-module}; …"</code></strong><a class="headerlink" href="#3_nodenode-module" title="Permanent link">#</a></h1>
 <h1 id="nodepath-to-binary_lt-_node-module_-gt_name-of-the-function"><strong><code>node"[{path-to-binary} &lt;-] !{node-module} [-&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#nodepath-to-binary_lt-_node-module_-gt_name-of-the-function" title="Permanent link">#</a></h1>
 <p>Installs the node module of name <code>{node-module}</code> inside the plugin's or
 snippet's directory.</p>
@@ -2542,8 +2551,8 @@ remark () {
 different from its name, hence the second form with the <code>b &lt;- a -&gt; c</code> syntax
 has been used.</p>
 <hr />
-<h1 id="fmodgncfunction-name"><strong><code>fmod"[{g|n|c}:]{function-name}; …"</code></strong><a class="headerlink" href="#fmodgncfunction-name" title="Permanent link">#</a></h1>
-<h1 id="fmodgncfunction-name_-gt_wrapping-function-name"><strong><code>fmod"[{g|n|c}:]{function-name} -&gt; {wrapping-function-name}; …"</code></strong><a class="headerlink" href="#fmodgncfunction-name_-gt_wrapping-function-name" title="Permanent link">#</a></h1>
+<h1 id="4_fmodgncneofunction-name">4. <strong><code>fmod"[{g|n|c|N|E|O}:]{function-name}; …"</code></strong><a class="headerlink" href="#4_fmodgncneofunction-name" title="Permanent link">#</a></h1>
+<h1 id="fmodgncneofunction-name_-gt_wrapping-function-name"><strong><code>fmod"[{g|n|c|N|E|O}:]{function-name} -&gt; {wrapping-function-name}; …"</code></strong><a class="headerlink" href="#fmodgncneofunction-name_-gt_wrapping-function-name" title="Permanent link">#</a></h1>
 <p>It wraps given function with the ability to set <code>$GEM_HOME</code>, etc. – the
 meaning of the <code>g</code>,<code>n</code> and <code>c</code> flags is the same as in the <code>fbin''</code> ice.</p>
 <p>Example:</p>
@@ -2572,7 +2581,7 @@ README.md
 </code></pre>
 
 <hr />
-<h1 id="sbingncpath-to-binary_-gt_name-of-the-script"><strong><code>sbin"[{g|n|c}:]{path-to-binary}[ -&gt; {name-of-the-script}]; …"</code></strong><a class="headerlink" href="#sbingncpath-to-binary_-gt_name-of-the-script" title="Permanent link">#</a></h1>
+<h1 id="5_sbingncneopath-to-binary_-gt_name-of-the-script">5. <strong><code>sbin"[{g|n|c|N|E|O}:]{path-to-binary}[ -&gt; {name-of-the-script}]; …"</code></strong><a class="headerlink" href="#5_sbingncneopath-to-binary_-gt_name-of-the-script" title="Permanent link">#</a></h1>
 <p>It creates the so called <code>shim</code> known from <code>rbenv</code> – a wrapper script that
 forwards the call to the actual binary. The script is created always under
 the same, standard and single <code>$PATH</code> entry: <code>$ZPFX/bin</code> (which is
@@ -2599,8 +2608,8 @@ fzf &quot;$@&quot;
 </code></pre>
 
 <hr />
-<h1 id="fsrcgncpath-to-script_-gt_name-of-the-function"><strong><code>fsrc"[{g|n|c}:]{path-to-script}[ -&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#fsrcgncpath-to-script_-gt_name-of-the-function" title="Permanent link">#</a></h1>
-<h1 id="fercgncpath-to-script_-gt_name-of-the-function"><strong><code>ferc"[{g|n|c}:]{path-to-script}[ -&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#fercgncpath-to-script_-gt_name-of-the-function" title="Permanent link">#</a></h1>
+<h1 id="6_fsrcgncneopath-to-script_-gt_name-of-the-function">6. <strong><code>fsrc"[{g|n|c|N|E|O}:]{path-to-script}[ -&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#6_fsrcgncneopath-to-script_-gt_name-of-the-function" title="Permanent link">#</a></h1>
+<h1 id="7_fercgncneopath-to-script_-gt_name-of-the-function">7. <strong><code>ferc"[{g|n|c|N|E|O}:]{path-to-script}[ -&gt; {name-of-the-function}]; …"</code></strong><a class="headerlink" href="#7_fercgncneopath-to-script_-gt_name-of-the-function" title="Permanent link">#</a></h1>
 <p>Creates a wrapper function that at each invocation sources the given file.
 The second ice, <code>ferc''</code> works the same with the single difference that it
 uses <code>eval "$(&lt;{path-to-script})"</code> instead of <code>source "{path-to-script}"</code> to
