@@ -1641,7 +1641,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
 #
 -zplg-scheduler() {
     integer __ret=$?
-    [[ "$1" = "following" ]] && sched +1 "-zplg-scheduler following \$_"
+    [[ "$1" = "following" ]] && sched +1 "ZPLGM[underscore]=\$_; ZPLGM[printexitvalue_opt]=\$options[printexitvalue]; -zplg-scheduler following \${ZPLGM[underscore]}"
     [[ -n "$1" && "$1" != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
 
@@ -1703,7 +1703,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
         # There's a bug in Zsh: first sched call would not be issued
         # until a key-press, if "sched +1 ..." would be called inside
         # zle -F handler. So it's done here, in precmd-handle code.
-        sched +1 "-zplg-scheduler following \$_"
+        sched +1 "ZPLGM[underscore]=\$_; ZPLGM[printexitvalue_opt]=\$options[printexitvalue]; -zplg-scheduler following \${ZPLGM[underscore]}"
 
         local ANFD="13371337" # for older Zsh + noclobber option
         exec {ANFD}< <(builtin echo run;)
@@ -1721,7 +1721,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
     done
     ZPLG_RUN[1-correct,__idx-correct]=()
 
-    return $__ret
+    [[ ${ZPLGM[printexitvalue_opt]} = "on" ]] && return 0 || return $__ret
 }
 # }}}
 
