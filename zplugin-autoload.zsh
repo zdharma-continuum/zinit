@@ -2978,7 +2978,7 @@ EOF
           }
       }
       print -r -- ${ZPLGM[col-p]}-- ./configure --${ZPLGM[col-rst]}
-      CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm && {
+      CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           print -r -- ${ZPLGM[col-p]}-- make --${ZPLGM[col-rst]}
           make && {
             [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
