@@ -1,13 +1,13 @@
 # Example Minimal Setup
 
 ```zsh
-zplugin ice wait"0" blockf atpull'zplugin creinstall -q .'
+zplugin ice wait blockf atpull'zplugin creinstall -q .'
 zplugin light zsh-users/zsh-completions
 
-zplugin ice wait"0" atinit"zpcompinit; zpcdreplay"
+zplugin ice wait atinit"zpcompinit; zpcdreplay"
 zplugin light zdharma/fast-syntax-highlighting
 
-zplugin ice wait"0" atload"_zsh_autosuggest_start"
+zplugin ice wait atload"_zsh_autosuggest_start"
 zplugin light zsh-users/zsh-autosuggestions
 ```
 
@@ -17,7 +17,7 @@ zplugin light zsh-users/zsh-autosuggestions
    performance gains are actually `0`, so in this mode you can load all plugins
    with the tracking, i.e. by using `zplugin ice wait'0'; zplugin load
    {plugin-spec}` commands,
- - `wait"0"` – load 0 seconds (about 110 ms exactly) after prompt,
+ - `wait` – load 0 seconds (about 5 ms exactly) after prompt,
  - `atpull''` – execute after updating the plugin – the command in the ice will
    install any new completions,
  - `atinit''` – execute code before loading plugin,
