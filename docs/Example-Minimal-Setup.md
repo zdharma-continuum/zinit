@@ -1,14 +1,14 @@
 # Example Minimal Setup
 
 ```zsh
-zplugin ice wait"0" blockf
+zplugin ice wait"0" blockf atpull'zplugin creinstall -q .'
 zplugin light zsh-users/zsh-completions
-
-zplugin ice wait"0" atload"_zsh_autosuggest_start"
-zplugin light zsh-users/zsh-autosuggestions
 
 zplugin ice wait"0" atinit"zpcompinit; zpcdreplay"
 zplugin light zdharma/fast-syntax-highlighting
+
+zplugin ice wait"0" atload"_zsh_autosuggest_start"
+zplugin light zsh-users/zsh-autosuggestions
 ```
 
  - `light` – load the plugin in `light` mode, in which the tracking of plugin
@@ -18,6 +18,8 @@ zplugin light zdharma/fast-syntax-highlighting
    with the tracking, i.e. by using `zplugin ice wait'0'; zplugin load
    {plugin-spec}` commands,
  - `wait"0"` – load 0 seconds (about 110 ms exactly) after prompt,
+ - `atpull''` – execute after updating the plugin – the command in the ice will
+   install any new completions,
  - `atinit''` – execute code before loading plugin,
  - `atload''` – execute code after loading plugin,
  - `zpcompinit` – equals to `autoload compinit; compinit`,
@@ -31,6 +33,10 @@ zplugin light zdharma/fast-syntax-highlighting
    expect to be loaded last, even after the completion initialization (i.e.
    `compinit` function), hence the `atinit''`, which will load `compinit` right
    before the plugin,
+ - however the true last-loaded plugin is the
+   [**zsh-users/zsh-autosuggestions**](https://github.com/zsh-users/zsh-autosuggestions),
+   because it runs a function in an `precmd` hook, i.e. right before first
+   prompt,
  - the `atinit` of the plugin runs also `zpcdreplay` (i.e.
    "*zplugin-compdef-replay*"), because after `compinit` is loaded, the
    `compdef` function becomes available, and one can re-run the all earlier
@@ -41,14 +47,15 @@ zplugin light zdharma/fast-syntax-highlighting
 The same setup but without using Turbo mode (i.e. no `wait''` ice):
 
 ```zsh
-zplugin ice blockf
+zplugin ice blockf atpull'zplugin creinstall -q .'
 zplugin light zsh-users/zsh-completions
-
-zplugin light zsh-users/zsh-autosuggestions
 
 autoload compinit
 compinit
+
 zplugin light zdharma/fast-syntax-highlighting
+
+zplugin light zsh-users/zsh-autosuggestions
 ```
 
 []( vim:set ft=markdown tw=80: )
