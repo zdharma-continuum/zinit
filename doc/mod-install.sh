@@ -46,7 +46,7 @@ test -f Makefile && { [ "$1" = "--clean" ] && {
   }
 }
 echo "$col_info2-- ./configure --$col_rst"
-CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm && {
+CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
   echo "$col_info2-- make --$col_rst"
   make && {
     echo "${col_info}Module has been built correctly.$col_rst"
