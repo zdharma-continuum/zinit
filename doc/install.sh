@@ -47,6 +47,8 @@ else
     if [ -d "$ZPLG_BIN_DIR_NAME" ]; then
         echo
         echo "[1;34m❯❯❯[0m Zplugin succesfully installed at [1;32m$ZPLG_HOME/$ZPLG_BIN_DIR_NAME[0m"
+        VERSION="$(cat "$ZPLG_HOME/$ZPLG_BIN_DIR_NAME/.git/refs/heads/master" | cut -c1-10)"
+        echo "[1;34m❯❯❯[0m Version: [1;32m$VERSION[0m"
     else
         echo
         echo "[1;31m❯❯❯[0m Something went wrong, couldn't install Zplugin at [1;33m$ZPLG_HOME/$ZPLG_BIN_DIR_NAME[0m"
