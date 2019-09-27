@@ -2118,14 +2118,14 @@
                 
                 
                 <h1 id="example_minimal_setup">Example Minimal Setup<a class="headerlink" href="#example_minimal_setup" title="Permanent link">#</a></h1>
-<pre><code class="zsh">zplugin ice wait&quot;0&quot; blockf
+<pre><code class="zsh">zplugin ice wait&quot;0&quot; blockf atpull'zplugin creinstall -q .'
 zplugin light zsh-users/zsh-completions
-
-zplugin ice wait&quot;0&quot; atload&quot;_zsh_autosuggest_start&quot;
-zplugin light zsh-users/zsh-autosuggestions
 
 zplugin ice wait&quot;0&quot; atinit&quot;zpcompinit; zpcdreplay&quot;
 zplugin light zdharma/fast-syntax-highlighting
+
+zplugin ice wait&quot;0&quot; atload&quot;_zsh_autosuggest_start&quot;
+zplugin light zsh-users/zsh-autosuggestions
 </code></pre>
 
 <ul>
@@ -2136,6 +2136,8 @@ zplugin light zdharma/fast-syntax-highlighting
    with the tracking, i.e. by using <code>zplugin ice wait'0'; zplugin load
    {plugin-spec}</code> commands,</li>
 <li><code>wait"0"</code> – load 0 seconds (about 110 ms exactly) after prompt,</li>
+<li><code>atpull''</code> – execute after updating the plugin – the command in the ice will
+   install any new completions,</li>
 <li><code>atinit''</code> – execute code before loading plugin,</li>
 <li><code>atload''</code> – execute code after loading plugin,</li>
 <li><code>zpcompinit</code> – equals to <code>autoload compinit; compinit</code>,</li>
@@ -2149,6 +2151,10 @@ zplugin light zdharma/fast-syntax-highlighting
    expect to be loaded last, even after the completion initialization (i.e.
    <code>compinit</code> function), hence the <code>atinit''</code>, which will load <code>compinit</code> right
    before the plugin,</li>
+<li>however the true last-loaded plugin is the
+   <a href="https://github.com/zsh-users/zsh-autosuggestions"><strong>zsh-users/zsh-autosuggestions</strong></a>,
+   because it runs a function in an <code>precmd</code> hook, i.e. right before first
+   prompt,</li>
 <li>the <code>atinit</code> of the plugin runs also <code>zpcdreplay</code> (i.e.
    "<em>zplugin-compdef-replay</em>"), because after <code>compinit</code> is loaded, the
    <code>compdef</code> function becomes available, and one can re-run the all earlier
@@ -2157,14 +2163,15 @@ zplugin light zdharma/fast-syntax-highlighting
 <li>add <code>lucid</code> ice-mod to silence the under-prompt messages.</li>
 </ul>
 <p>The same setup but without using Turbo mode (i.e. no <code>wait''</code> ice):</p>
-<pre><code class="zsh">zplugin ice blockf
+<pre><code class="zsh">zplugin ice blockf atpull'zplugin creinstall -q .'
 zplugin light zsh-users/zsh-completions
-
-zplugin light zsh-users/zsh-autosuggestions
 
 autoload compinit
 compinit
+
 zplugin light zdharma/fast-syntax-highlighting
+
+zplugin light zsh-users/zsh-autosuggestions
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
