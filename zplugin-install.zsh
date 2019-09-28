@@ -446,7 +446,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZPLG_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
 
     if [[ ! -d "$local_dir/$dirname" ]]; then
-        [[ "$update" != "-u" ]] && print "${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (as $id_as)}"
+        [[ "$update" != "-u" ]] && print "\n${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (as $id_as)}"
         command mkdir -p "$local_dir"
     fi
 
