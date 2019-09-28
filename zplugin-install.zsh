@@ -250,7 +250,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
                 command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$bkpfile"
             fi
-            (( quiet )) || print "Symlinking completion ${ZPLGM[col-uname]}$cfile${ZPLGM[col-rst]} to \${ZPLGM[COMPLETIONS_DIR]}"
+            (( quiet )) || print "Symlinking completion ${ZPLGM[col-uname]}$cfile${ZPLGM[col-rst]} to completions directory"
             command ln -s "$c" "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
             -zplg-forget-completion "$cfile" "$quiet"
