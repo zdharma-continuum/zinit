@@ -1560,6 +1560,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
     # The expansion is: if there is @sleep: pfx, then use what's after
     # it, otherwise substitute 0
     exec {THEFD} < <(LANG=C sleep $(( 0.01 + ${${${(M)1#@sleep:}:+${1#@sleep:}}:-0} )); print -r -- ${1:#(@msg|@sleep:*)} "${@[2,-1]}"; )
+    command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
     builtin zle -F "$THEFD" -zplg-deploy-message
 }
 # }}}
@@ -1685,6 +1686,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
 
         local ANFD="13371337" # for older Zsh + noclobber option
         exec {ANFD}< <(builtin echo run;)
+	command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
         zle -F "$ANFD" -zplg-scheduler
     }
 
