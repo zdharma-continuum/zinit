@@ -153,7 +153,7 @@
     local_dirB="${${${url2%%\?*}:h}/:\/\//--}"
     [[ "$local_dirB" = "." ]] && local_dirB="" || local_dirB="${${${${${local_dirB#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dirB="${ZPLGM[SNIPPETS_DIR]}${local_dirB:+/$local_dirB}"
-    fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.OnN[1]) )
+    fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.DOnN[1]) )
 
     reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 }

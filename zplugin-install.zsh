@@ -146,7 +146,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-              afr=( ${~from}(N) )
+              afr=( ${~from}(DN) )
               [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
             )
         fi
@@ -155,7 +155,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-              afr=( ${~from}(N) )
+              afr=( ${~from}(DN) )
               [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
             )
         fi
@@ -231,7 +231,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(^/) ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(^/) )
+    [[ "$user" = "%" ]] && completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(N^/) ) || completions=( "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(N^/) )
     already_symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
     backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
 
@@ -388,7 +388,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     if [[ ${sice[as]} != "command" && ( ${+sice[nocompile]} = "0" || ${sice[nocompile]} = "!" ) ]]; then
         if [[ -n "${sice[pick]}" ]]; then
-            list=( ${~${(M)sice[pick]:#/*}:-$plugin_dir/$sice[pick]}(N) )
+            list=( ${~${(M)sice[pick]:#/*}:-$plugin_dir/$sice[pick]}(DN) )
             [[ ${#list} -eq 0 ]] && {
                 print "No files for compilation found (pick-ice didn't match)"
                 return 1
@@ -416,7 +416,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     if [[ -n "${sice[compile]}" ]]; then
-        eval "list=( \$plugin_dir/${~sice[compile]}(N) )"
+        eval "list=( \$plugin_dir/${~sice[compile]}(DN) )"
         [[ ${#list} -eq 0 ]] && {
             print "Warning: Ice mod compile'' didn't match any files"
         } || {
@@ -513,10 +513,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     # Redundant code, just to compile SVN snippet
                     if [[ ${ZPLG_ICE[as]} != "command" ]]; then
                         if [[ -n ${ZPLG_ICE[pick]} ]]; then
-                            list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
+                            list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
                         elif [[ -z ${ZPLG_ICE[pick]} ]]; then
-                            list=( $local_dir/$dirname/*.plugin.zsh(N) $local_dir/$dirname/init.zsh(N)
-                                   $local_dir/$dirname/*.zsh-theme(N) )
+                            list=( $local_dir/$dirname/*.plugin.zsh(DN) $local_dir/$dirname/init.zsh(DN)
+                                   $local_dir/$dirname/*.zsh-theme(DN) )
                         fi
 
                         [[ -e "${list[1]}" ]] && {
@@ -558,7 +558,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             ) || retval=$?
 
             if [[ -n "${ZPLG_ICE[compile]}" ]]; then
-                list=( ${(M)~ZPLG_ICE[compile]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[compile]}(N) )
+                list=( ${(M)~ZPLG_ICE[compile]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[compile]}(DN) )
                 [[ ${#list} -eq 0 ]] && {
                     print "Warning: Ice-mod compile'' didn't match any files"
                 } || {
@@ -640,7 +640,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
-              afr=( ${~from}(N) )
+              afr=( ${~from}(DN) )
               [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
             )
         fi
@@ -649,7 +649,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
-              afr=( ${~from}(N) )
+              afr=( ${~from}(DN) )
               [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
             )
         fi
@@ -743,8 +743,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local url="$1" file="$2"
 
     command mkdir -p ._backup
-    command rm -f ._backup/*(N)
-    command mv -f *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(N) ._backup 2>/dev/null
+    command rm -f ._backup/*(DN)
+    command mv -f *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(DN) ._backup 2>/dev/null
 
     -zplg-extract-wrapper() {
         local file="$1" fun="$2" retval
@@ -792,7 +792,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     unfunction -- -zplg-extract-wrapper
 
     local -a execs
-    execs=( ${(@f)"$( file **/*(N-.) )"} )
+    execs=( ${(@f)"$( file **/*(DN-.) )"} )
     execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
     execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
 

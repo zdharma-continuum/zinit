@@ -815,8 +815,8 @@ function $f {
         reply=( "$pdir_path/${pbase}.theme.zsh" )
     else
         reply=(
-            $pdir_path/*.plugin.zsh(N) $pdir_path/*.zsh-theme(N)
-            $pdir_path/*.zsh(N) $pdir_path/*.sh(N) $pdir_path/.zshrc(N)
+            $pdir_path/*.plugin.zsh(DN) $pdir_path/*.zsh-theme(DN)
+            $pdir_path/*.zsh(DN) $pdir_path/*.sh(DN) $pdir_path/.zshrc(DN)
         )
     fi
 } # }}}
@@ -1083,20 +1083,20 @@ function $f {
             [[ -z "${fpath[(r)$local_dir/$dirname/functions]}" ]] && fpath+=( "$local_dir/$dirname/functions" )
             () {
                 builtin setopt localoptions extendedglob
-                autoload $local_dir/$dirname/functions/^([_.]*|prompt_*_setup|README*)(-.N:t)
+                autoload $local_dir/$dirname/functions/^([_.]*|prompt_*_setup|README*)(D-.N:t)
             }
         }
 
         # Source
         if (( ${+ZPLG_ICE[svn]} == 0 )); then
             [[ ${tmp[1-correct]} = 1 && ${+ZPLG_ICE[pick]} = 0 ]] && list=( "$local_dir/$dirname/$filename" )
-            [[ -n ${ZPLG_ICE[pick]} ]] && list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
+            [[ -n ${ZPLG_ICE[pick]} ]] && list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
         else
             if [[ -n ${ZPLG_ICE[pick]} ]]; then
-                list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
+                list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
             elif (( ${+ZPLG_ICE[pick]} == 0 )); then
-                list=( $local_dir/$dirname/*.plugin.zsh(N) $local_dir/$dirname/init.zsh(N)
-                       $local_dir/$dirname/*.zsh-theme(N) )
+                list=( $local_dir/$dirname/*.plugin.zsh(DN) $local_dir/$dirname/init.zsh(DN)
+                       $local_dir/$dirname/*.zsh-theme(DN) )
             fi
         fi
 
@@ -1130,7 +1130,7 @@ function $f {
         # Subversion - directory and multiple files possible
         if (( ${+ZPLG_ICE[svn]} )); then
             if [[ -n ${ZPLG_ICE[pick]} ]]; then
-                list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
+                list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
                 [[ -n "${list[1-correct]}" ]] && local xpath="${list[1-correct]:h}" xfilepath="${list[1-correct]}"
             else
                 local xpath="$local_dir/$dirname"
@@ -1139,7 +1139,7 @@ function $f {
             local xpath="$local_dir/$dirname" xfilepath="$local_dir/$dirname/$filename"
             # This doesn't make sense, but users may come up with something
             [[ -n ${ZPLG_ICE[pick]} ]] && {
-                list=( ${(M)~ZPLG_ICE[pick]##/*}(N) $local_dir/$dirname/${~ZPLG_ICE[pick]}(N) )
+                list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
                 [[ -n "${list[1-correct]}" ]] && xpath="${list[1-correct]:h}" xfilepath="${list[1-correct]}"
             }
         fi
@@ -1272,7 +1272,7 @@ function $f {
     if [[ "${ZPLG_ICE[as]}" = "command" ]]; then
         reply=()
         if [[ -n "${ZPLG_ICE[pick]}" && "${ZPLG_ICE[pick]}" != "/dev/null" ]]; then
-            reply=( ${(M)~ZPLG_ICE[pick]##/*}(N) $pdir_path/${~ZPLG_ICE[pick]}(N) )
+            reply=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $pdir_path/${~ZPLG_ICE[pick]}(DN) )
             [[ -n "${reply[1-correct]}" ]] && pdir_path="${reply[1-correct]:h}"
         fi
         [[ -z "${path[(er)$pdir_path]}" ]] && {
@@ -1303,7 +1303,7 @@ function $f {
         ((1))
     else
         if [[ -n ${ZPLG_ICE[pick]} ]]; then
-            [[ "${ZPLG_ICE[pick]}" = "/dev/null" ]] && reply=( "/dev/null" ) || reply=( ${(M)~ZPLG_ICE[pick]##/*}(N) $pdir_path/${~ZPLG_ICE[pick]}(N) )
+            [[ "${ZPLG_ICE[pick]}" = "/dev/null" ]] && reply=( "/dev/null" ) || reply=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $pdir_path/${~ZPLG_ICE[pick]}(DN) )
         elif [[ -e "$pdir_path/${pbase}.plugin.zsh" ]]; then
             reply=( "$pdir_path/${pbase}.plugin.zsh" )
         else
@@ -1515,7 +1515,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
         __action="${(M)ZPLG_ICE[unload]#\!}remove"
     elif [[ -n "${ZPLG_ICE[subscribe]#\!}" && -n $(( __s=0 )) && "$__pass" = 2 ]] && \
         { local -a fts_arr
-          eval "fts_arr=( ${ZPLG_ICE[subscribe]}(Nms-$(( EPOCHSECONDS -
+          eval "fts_arr=( ${ZPLG_ICE[subscribe]}(DNms-$(( EPOCHSECONDS -
                  ZPLGM[fts-${ZPLG_ICE[subscribe]}] ))) ); (( \${#fts_arr} ))" && \
              { ZPLGM[fts-${ZPLG_ICE[subscribe]}]="$EPOCHSECONDS"; __s=${+ZPLG_ICE[once]}; } || \
              (( 0 ))

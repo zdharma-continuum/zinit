@@ -525,7 +525,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl
     [[ "$user" = "%" ]] && uspl="${user}${plugin}" || uspl="${reply[-2]}${reply[-2]:+---}${reply[-1]//\//---}"
 
-    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN) )
 } # }}}
 # FUNCTION: -zplg-check-comp-consistency {{{
 # Zplugin creates symlink for each installed completion.
@@ -614,7 +614,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-get-path "$1" "$2"
     [[ -e "$REPLY" ]] && {
-        completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+        completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN) )
     } || {
         print "No such completion or snippet $1${${1:#(%|/)*}:+${2:+/}}$2"
         return 1
@@ -725,7 +725,7 @@ ZPLGM[EXTENDED_GLOB]=""
         command git pull --no-stat;
     )
     builtin print -- "Compiling Zplugin (zcompile)..."
-    command rm -f "${ZPLGM[BIN_DIR]}"/*.zwc(N)
+    command rm -f "${ZPLGM[BIN_DIR]}"/*.zwc(DN)
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-side.zsh
     zcompile "${ZPLGM[BIN_DIR]}"/zplugin-install.zsh
@@ -1516,7 +1516,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 local from="${ice[mv]%%[[:space:]]#->*}" to="${ice[mv]##*->[[:space:]]#}"
                 local -a afr
                 ( builtin cd -q "$local_dir" || return 1
-                  afr=( ${~from}(N) )
+                  afr=( ${~from}(DN) )
                   [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
@@ -1525,7 +1525,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 local from="${ice[cp]%%[[:space:]]#->*}" to="${ice[cp]##*->[[:space:]]#}"
                 local -a afr
                 ( builtin cd -q "$local_dir" || return 1
-                  afr=( ${~from}(N) )
+                  afr=( ${~from}(DN) )
                   [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
                 )
             fi
@@ -1757,12 +1757,12 @@ ZPLGM[EXTENDED_GLOB]=""
     ZPLG_ICE=()
 
     local -a snipps
-    snipps=( ${ZPLGM[SNIPPETS_DIR]}/**/._zplugin(N) )
+    snipps=( ${ZPLGM[SNIPPETS_DIR]}/**/._zplugin(ND) )
 
     [[ "$st" != "status" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -n "$snipps" ]] && \
         print "${ZPLGM[col-info]}Note:${ZPLGM[col-rst]} updating also unloaded snippets"
 
-    for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode; do
+    for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode(D); do
         [[ ! -f "${snip:h}/id-as" ]] && continue
         -zplg-update-or-status-snippet "$st" "${$(<${snip:h}/id-as):-$(<${snip:h}/url)}"
         ZPLG_ICE=()
@@ -1847,20 +1847,20 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # Downloaded plugins, without _zlocal/zplugin, custom
     typeset -a plugins
-    plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
+    plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(DN) )
     print "Downloaded plugins: ${infoc}$(( ${#plugins} - 1 ))${ZPLGM[col-rst]}"
 
     # Number of enabled completions, with _zlocal/zplugin
     typeset -a completions
-    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
+    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]#(DN) )
     print "Enabled completions: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Number of disabled completions, with _zlocal/zplugin
-    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
+    completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]#(DN) )
     print "Disabled completions: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Number of completions existing in all plugins
-    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)* )
+    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN) )
     print "Completions available overall: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Enumerate snippets loaded
@@ -1869,7 +1869,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Number of compiled plugins
     typeset -a matches m
     integer count=0
-    matches=( ${ZPLGM[PLUGINS_DIR]}/*/*.zwc )
+    matches=( ${ZPLGM[PLUGINS_DIR]}/*/*.zwc(DN) )
 
     local cur_plugin="" uspl1
     for m in "${matches[@]}"; do
@@ -1992,7 +1992,7 @@ ZPLGM[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob
 
     typeset -a matches m
-    matches=( ${ZPLGM[PLUGINS_DIR]}/*/*.zwc )
+    matches=( ${ZPLGM[PLUGINS_DIR]}/*/*.zwc(DN) )
 
     if [[ "${#matches[@]}" -eq "0" ]]; then
         print "No compiled plugins"
@@ -2026,7 +2026,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local compile="$1"
 
     typeset -a plugins
-    plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
+    plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(DN) )
 
     local p user plugin
     for p in "${plugins[@]}"; do
@@ -2063,7 +2063,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # have ".zsh" there
     [[ "$user" = "%" ]] && local pdir_path="$plugin" || local pdir_path="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
     typeset -a matches m
-    matches=( $pdir_path/*.zwc )
+    matches=( $pdir_path/*.zwc(DN) )
 
     if [[ "${#matches[@]}" -eq "0" ]]; then
         if [[ "$silent" = "1" ]]; then
@@ -2238,7 +2238,7 @@ ZPLGM[EXTENDED_GLOB]=""
     builtin setopt localoptions nullglob extendedglob nokshglob noksharrays
 
     typeset -a plugin_paths
-    plugin_paths=( "${ZPLGM[PLUGINS_DIR]}"/* )
+    plugin_paths=( "${ZPLGM[PLUGINS_DIR]}"/*(DN) )
 
     # Find longest plugin name. Things are ran twice here, first pass
     # is to get longest name of plugin which is having any completions
@@ -2246,7 +2246,7 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(^/) )
+        completions=( "$pp"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN^/) )
         if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
             [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
@@ -2257,7 +2257,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(^/) )
+        completions=( "$pp"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN^/) )
 
         if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
@@ -2565,7 +2565,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -z "$timespec" ]] && timespec="1.week"
 
     typeset -a plugins
-    plugins=( "${ZPLGM[PLUGINS_DIR]}"/* )
+    plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(DN) )
 
     local p uspl1
     for p in "${plugins[@]}"; do
