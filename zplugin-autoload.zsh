@@ -616,7 +616,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -e "$REPLY" ]] && {
         completions=( "$REPLY"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN) )
     } || {
-        print "No such completion or snippet $1${${1:#(%|/)*}:+${2:+/}}$2"
+        print "No such completion $1${${1:#(%|/)*}:+${2:+/}}$2"
         return 1
     }
 
