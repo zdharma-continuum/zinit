@@ -61,7 +61,8 @@ ZPLGM[PLUGINS_DIR]=${~ZPLGM[PLUGINS_DIR]}
 ZPLGM[COMPLETIONS_DIR]=${~ZPLGM[COMPLETIONS_DIR]}
 ZPLGM[SNIPPETS_DIR]=${~ZPLGM[SNIPPETS_DIR]}
 ZPLGM[SERVICES_DIR]=${~ZPLGM[SERVICES_DIR]}
-export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}"
+export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache/zplugin}"
+[[ ! -d $ZSH_CACHE_DIR ]] && command mkdir -p "$ZSH_CACHE_DIR"
 [[ -n "${ZPLGM[ZCOMPDUMP_PATH]}" ]] && ZPLGM[ZCOMPDUMP_PATH]=${~ZPLGM[ZCOMPDUMP_PATH]}
 
 ZPLGM[UPAR]=";:^[[A;:^[OA;:\\e[A;:\\eOA;:${termcap[ku]/$'\e'/^\[};:${terminfo[kcuu1]/$'\e'/^\[};:"
