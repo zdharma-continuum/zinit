@@ -1848,11 +1848,11 @@ zplugin() {
                    (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
                    : ${@[@]//(#b)(--quiet|-q|--reset|-r)/${ICE_OPTS[${opt_map[${match[1]}]}]::=1}}
                    set -- "${@[@]:#(--quiet|-q|--reset|-r)}"
-                   if [[ "$2" = "--all" || ( -z "$2" && -z "$3" ) ]]; then
+                   if [[ "$2" = "--all" || ( -z "$2" && -z "$3" && -z ${ZPLG_ICE[teleid]} && -z ${ZPLG_ICE[id-as]} ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-update-or-status-all "update"; retval=$?
                    else
-                       -zplg-update-or-status "update" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
+                       -zplg-update-or-status "update" "${${2%%(/|//|///)}:-${ZPLG_ICE[id-as]:-$ZPLG_ICE[teleid]}}" "${3%%(/|//|///)}"; retval=$?
                    fi
                    ;;
                (status)
