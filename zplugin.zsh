@@ -1744,7 +1744,8 @@ zplugin() {
        --reset  opt_-r,--reset
        --all    opt_--all
        --clean  opt_--clean
-       --yes    opt_--yes
+       --yes    opt_-y,--yes
+       -y       opt_-y,--yes
     )
 
     case "$1" in

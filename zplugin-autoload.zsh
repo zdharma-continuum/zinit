@@ -2428,13 +2428,14 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-delete() {
     setopt localoptions extendedglob nokshglob noksharrays warncreateglobal
-    local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
     # Parse options
     local -a opts
-    opts=( --all --clean --yes )
+    opts=( --all --clean --yes -y -q --quiet )
     : ${@[@]//(#b)(${(~j.|.)opts})/${ICE_OPTS[${opt_map[${match[1]}]}]::=1}}
-    set -- "${@[@]:#(--all|--clean)}"
+    set -- "${@[@]:#(--all|--clean|--yes|-y|-q|--quiet)}"
+
+    local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
     # --all given?
     if (( ICE_OPTS[opt_--all] )); then
@@ -2523,11 +2524,17 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - question
 # $2 - expression
 -zplg-confirm() {
-    print "$1"
-    print "[yY/n…]"
-    local ans
-    read -q ans
-    [[ "$ans" = "y" ]] && { eval "$2"; print "\nDone (action executed, exit code: $?)"; } || { print "\nBreak, no action"; return 1; }
+    if (( ICE_OPTS[opt_-y,--yes] )); then
+        integer retval
+        eval "$2"; retval=$?
+        (( ICE_OPTS[opt_-q,--quiet] )) || print "\nDone (action executed, exit code: $retval)"
+    else
+        print "$1"
+        print "[yY/n…]"
+        local ans
+        read -q ans
+        [[ "$ans" = "y" ]] && { eval "$2"; print "\nDone (action executed, exit code: $?)"; } || { print "\nBreak, no action"; return 1; }
+    fi
     return 0
 }
 # }}}
