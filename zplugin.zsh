@@ -816,7 +816,7 @@ function $f {
         reply=( "$pdir_path/${pbase}.theme.zsh" )
     else
         reply=(
-            $pdir_path/*.plugin.zsh(DN) $pdir_path/*.zsh-theme(DN)
+            $pdir_path/*.plugin.zsh(DN) $pdir_path/*.zsh-theme(DN) $pdir_path/init.zsh(DN)
             $pdir_path/*.zsh(DN) $pdir_path/*.sh(DN) $pdir_path/.zshrc(DN)
         )
     fi
