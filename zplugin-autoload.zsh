@@ -2483,7 +2483,7 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ "${+ZPLG_ICE[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
             then
-                -zplg-confirm "Delete $local_dir? (it holds: ${(j:, :)files})" \
+                -zplg-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                     "-zplg-run-delete-hooks snippet \"${ZPLG_ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; \
                     command rm -rf ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
@@ -2493,7 +2493,7 @@ ZPLGM[EXTENDED_GLOB]=""
             fi
         } else {
             if [[ -e "$local_dir" ]]; then
-                -zplg-confirm "Delete $local_dir? (it holds: ${(j:, :)files})" \
+                -zplg-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                     "-zplg-run-delete-hooks snippet \"${ZPLG_ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
@@ -2505,7 +2505,7 @@ ZPLGM[EXTENDED_GLOB]=""
     else
         -zplg-any-to-user-plugin "${ZPLG_ICE[teleid]}"
         if [[ -e "$local_dir" ]]; then
-            -zplg-confirm "Delete $local_dir? (it holds: ${(j:, :)files})" \
+            -zplg-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                 "-zplg-run-delete-hooks plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
                 \"$local_dir\"; \
                 command rm -rf ${(q)${${local_dir:#/}:-/tmp/abcYZX321}}"
