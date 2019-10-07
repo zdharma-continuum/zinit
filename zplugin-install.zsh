@@ -523,7 +523,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
                         [[ -e "${list[1]}" ]] && {
                             [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
-                                zcompile "${list[1]}" || {
+                                zcompile "${list[1]}" &>/dev/null || {
                                     print -r "Warning: Couldn't compile \`${list[1]}'"
                                 }
                             }
