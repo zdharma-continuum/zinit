@@ -573,14 +573,17 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             fi
 
             if [[ $ZPLG_ICE[as] != "command" ]] && (( ${+ZPLG_ICE[svn]} == 0 )); then
-                [[ -e "$local_dir/$dirname/$filename" ]] && {
-                    [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
-                        zcompile "$local_dir/$dirname/$filename" 2>/dev/null || {
-                            print -r "Couldn't compile \`$filename', it might be wrongly downloaded"
-                            print -r "(snippet URL points to a directory instead of a file?"
-                            print -r "to download directory, use preceding: zplugin ice svn;)"
-                            retval=1
-                        }
+                local file_path="$local_dir/$dirname/$filename"
+                if [[ -n "${ZPLG_ICE[pick]}" ]]; then
+                    list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
+                    file_path="${list[1]}"
+                fi
+                [[ -e $file_path && -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} && $file_path != */dev/null ]] && {
+                    zcompile "$file_path" 2>/dev/null || {
+                        print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
+                        print -r "(snippet URL points to a directory instead of a file?"
+                        print -r "to download directory, use preceding: zplugin ice svn)"
+                        retval=1
                     }
                 }
             fi
