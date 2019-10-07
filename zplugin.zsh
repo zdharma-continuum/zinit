@@ -211,8 +211,7 @@ builtin setopt noaliases
                 builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
             elif [[ "${ZPLGM[NEW_AUTOLOAD]}" = "1" ]]; then
                 eval "function ${(q)func} {
-                    local -a fpath
-                    fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath} )
+                    local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
                     builtin autoload -X ${(j: :)${(q-)opts[@]}}
                 }"
             else
