@@ -411,8 +411,6 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-format-parameter() {
     local uspl2="$1" infoc="${ZPLGM[col-info]}" k
 
-    # Paranoid for type of empty value,
-    # i.e. include white spaces as empty
     builtin setopt localoptions extendedglob nokshglob noksharrays
     REPLY=""
     [[ "${ZPLGM[PARAMETERS_PRE__$uspl2]}" != *[$'! \t']* || "${ZPLGM[PARAMETERS_POST__$uspl2]}" != *[$'! \t']* ]] && return 0
@@ -1140,8 +1138,6 @@ ZPLGM[EXTENDED_GLOB]=""
     # 8. Delete created variables
     #
 
-    # Paranoid for type of empty value,
-    # i.e. include white spaces as empty
     -zplg-diff-parameter-compute "$uspl2"
     empty=0
     -zplg-save-set-extendedglob
@@ -1165,7 +1161,7 @@ ZPLGM[EXTENDED_GLOB]=""
             # "" means a variable was deleted, not created/changed
             if [[ "$v2" != "\"\"" ]]; then
                 # Don't unset readonly variables
-                [[ "${v1/-readonly/}" != "$v1" || "${v2/-readonly/}" != "$v2" ]] && continue
+                [[ "$v1" = *-readonly* || "$v2" = *-readonly* ]] && continue
 
                 # Don't unset arrays managed by add-zsh-hook,
                 # also ignore a few special parameters
