@@ -1349,7 +1349,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local -a arr
 
     -zplg-two-paths "$2${${2:#(%|/)*}:+${3:+/}}$3"
-    if [[ -n "${reply[-3]}" || -n "${reply[-1]}" ]]; then
+    if [[ -d "${reply[-4]}" || -d "${reply[-2]}" ]]; then
         -zplg-update-or-status-snippet "$1" "$2" "$3"
         return $?
     fi
@@ -1652,7 +1652,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Snippet?
     -zplg-two-paths "$__URL"
     local __s_path="${reply[-4]}" __s_svn="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
-    if [[ -n "$__s_svn" || -n "$__filename" ]]; then
+    if [[ -d "$__s_path" || -d "$___path" ]]; then
         __is_snippet=1
     else
         # Plugin
@@ -2853,7 +2853,7 @@ EOF
     reply=()
     REPLY=""
 
-    if [[ -n "$s_svn" || -n "$_filename" ]]; then
+    if [[ -d "$s_path" || -d "$_path" ]]; then
         local -A sice
         local -a tmp
         tmp=( "${(z@)ZPLG_SICE[$the_id]}" )
@@ -2868,6 +2868,7 @@ EOF
     else
         -zplg-any-to-user-plugin "$1" "$2"
         local user="${reply[-2]}" plugin="${reply[-1]}"
+        reply=()
 
         -zplg-exists-physically "$user" "$plugin" || return 1
 
