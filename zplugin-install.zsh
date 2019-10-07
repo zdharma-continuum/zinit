@@ -464,7 +464,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
 
-                if (( ${+ZPLG_ICE[svn]} )); then
+                if (( ${+ZPLG_ICE[svn]} )) {
                     local skip_pull=0
                     if [[ "$update" = "-u" ]] {
                         # Test if update available
@@ -529,7 +529,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             }
                         }
                     fi
-                else
+                } else {
                     command mkdir -p "$local_dir/$dirname"
 
                     [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
@@ -555,7 +555,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             return 1
                         }
                     }
-                fi
+                }
                 return 0
             ) || retval=$?
 
