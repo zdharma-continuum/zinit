@@ -515,8 +515,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         if [[ -n ${ZPLG_ICE[pick]} ]]; then
                             list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
                         elif [[ -z ${ZPLG_ICE[pick]} ]]; then
-                            list=( $local_dir/$dirname/*.plugin.zsh(DN) $local_dir/$dirname/init.zsh(DN)
-                                   $local_dir/$dirname/*.zsh-theme(DN) )
+                            list=(
+                                $local_dir/$dirname/*.plugin.zsh(DN) $local_dir/$dirname/*.zsh-theme(DN) $local_dir/$dirname/init.zsh(DN)
+                                $local_dir/$dirname/*.zsh(DN) $local_dir/$dirname/*.sh(DN) $local_dir/$dirname/.zshrc(DN)
+                            )
                         fi
 
                         [[ -e "${list[1]}" ]] && {
