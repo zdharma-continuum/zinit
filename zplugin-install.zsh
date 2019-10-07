@@ -521,11 +521,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             )
                         fi
 
-                        [[ -e "${list[1]}" ]] && {
-                            [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
-                                zcompile "${list[1]}" &>/dev/null || {
-                                    print -r "Warning: Couldn't compile \`${list[1]}'"
-                                }
+                        [[ -e "${list[1]}" && "${list[1]}" != */dev/null && \
+                            -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
+                        {
+                            zcompile "${list[1]}" &>/dev/null || {
+                                print -r "Warning: Couldn't compile \`${list[1]}'"
                             }
                         }
                     fi
