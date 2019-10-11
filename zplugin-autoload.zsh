@@ -678,7 +678,7 @@ ZPLGM[EXTENDED_GLOB]=""
         cfile="_${cfile#_}"
         bkpfile="${cfile#_}"
 
-        print "${ZPLGM[col-info]}Processing completion $cfile${ZPLGM[col-rst]}"
+        #print "${ZPLGM[col-info]}Processing completion $cfile${ZPLGM[col-rst]}"
         -zplg-forget-completion "$cfile"
     done
 

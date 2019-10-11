@@ -352,14 +352,17 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" ) # TODO: "${${(k)_comps[(R)$f]}[@]}" ?
 
-    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print "Forgetting commands completed by \`$f':"
+    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -n "Forgetting commands completed by \`${ZPLGM[col-pname]}$f${ZPLGM[col-rst]}': "
 
     local k
+    integer first=1
     for k in "${commands[@]}"; do
         [[ -n "$k" ]] || continue
         unset "_comps[$k]"
-        (( quiet )) || print "Unsetting $k"
+        (( quiet )) || print -n "${${first:#1}:+, }${ZPLGM[col-info]}$k${ZPLGM[col-rst]}"
+        first=0
     done
+    (( quiet )) || print
 
     unfunction -- 2>/dev/null "$f"
 } # }}}
