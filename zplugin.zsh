@@ -1754,9 +1754,11 @@ zplugin() {
                if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                    ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
                    [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
+                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${3:-${2:t}}"
                    -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                else
                    [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
+                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${3:-${2:t}}"
                    -zplg-load "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}" "${1/load/}"; retval=$?
                fi
            fi
@@ -1770,9 +1772,12 @@ zplugin() {
                (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
                if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                    ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
+                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${${${4:t}:-${${3:t}:-${2:t}}}}"
                    -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                else
                    ZPLG_SICE[${2%%(/|//|///)}]=""
+                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${${${4:t}:-${${3:t}:-${2:t}}}}"
+                   # TODO: handling of $4 also above
                    -zplg-load-snippet "${2%%(/|//|///)}" "${3%%(/|//|///)}" "${4%%(/|//|///)}"; retval=$?
                fi
            fi
