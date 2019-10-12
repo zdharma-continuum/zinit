@@ -1770,10 +1770,10 @@ zplugin() {
                (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
                if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                    ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
-                   -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "$3"; retval=$?
+                   -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                else
                    ZPLG_SICE[${2%%(/|//|///)}]=""
-                   -zplg-load-snippet "${2%%(/|//|///)}" "$3"; retval=$?
+                   -zplg-load-snippet "${2%%(/|//|///)}" "${3%%(/|//|///)}" "${4%%(/|//|///)}"; retval=$?
                fi
            fi
            ;;
