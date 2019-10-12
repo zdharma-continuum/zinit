@@ -51,6 +51,17 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 12-10-2019
+  - Special value for the `id-as''` ice – `auto`. It sets the plugin/snippet ID
+    automatically to the last component of its spec, e.g.:
+
+    ```zsh
+    zplugin ice id-as"auto"
+    zplugin load robobenklein/zinc
+    ```
+
+    will load the plugin as `id-as'zinc'`.
+
 * 14-09-2019
   - There's a Vim plugin which extends syntax highlighting of zsh scripts with coloring
     of the Zplugin commands. [Project
