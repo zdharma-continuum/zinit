@@ -1047,7 +1047,7 @@ function $f {
     [[ -z "${opts[(r)-u]}" ]] && { ZPLGM[CUR_USPL2]="$id_as"; ZPLG_REPORTS[$id_as]=""; }
 
     local -a arr
-    [[ "${opts[(r)-u]}" ]] && {
+    [[ -n "${opts[(r)-u]}" ]] && {
         reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
