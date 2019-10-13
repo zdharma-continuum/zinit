@@ -46,7 +46,6 @@ _docker-compose [enabled]
 This can be also used to nickname snippets. For example, you can use this to
 create handy IDs in place of long urls:
 
-
 ```zsh
 zplugin ice as"program" id-as"git-unique"
 zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
@@ -55,5 +54,25 @@ zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 The commands `zplugin update git-unique`, `zplugin delete git-unique` and other
 will work normally and e.g. `zplugin times` will show the _nickname_-ID
 `git-unique` instead of the long URL.
+
+## `id-as'auto'`
+
+There's a special value to the `id-as''` ice – `auto`. It causes the nickname to
+be automatically set to the last component of the plugin name or snippet URL.
+For example:
+
+```zsh
+zplugin ice as"program" id-as"auto"
+zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+```
+
+will work the same as before, i.e.: like if the ice used was
+`id-as'git-unique'`. Example with a plugin:
+
+```zsh
+# Will work as if id-as'zsh-autopair' was passed
+zplugin ice wait lucid id-as"auto"
+zplugin load hlissner/zsh-autopair
+```
 
 []( vim:set ft=markdown tw=80: )

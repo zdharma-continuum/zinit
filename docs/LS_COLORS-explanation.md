@@ -32,7 +32,7 @@ zplugin light trapd00r/LS_COLORS
   provided by the trapd00r package.
 
 This way, except for the plugin installation and update, `dircolors` isn't ran,
-just normal sourcing is done. The every-day sourced file (i.e. `c.zsh`) is even
+just normal sourcing is done. The every-day sourced file (i.e. `clrs.zsh`) is even
 being compiled to speed up the loading.
 
 []( vim:set ft=markdown tw=80: )
