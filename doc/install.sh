@@ -65,10 +65,11 @@ if grep zplugin "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
 fi
 
 echo "[34m❯❯❯[0m Updating $THE_ZDOTDIR/.zshrc (3 lines of code, at the bottom)"
+ZPLG_HOME="$(echo $ZPLG_HOME | sed "s|$HOME|\$HOME|")"
 cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
 
 ### Added by Zplugin's installer
-source '$ZPLG_HOME/$ZPLG_BIN_DIR_NAME/zplugin.zsh'
+source "$ZPLG_HOME/$ZPLG_BIN_DIR_NAME/zplugin.zsh"
 autoload -Uz _zplugin
 (( \${+_comps} )) && _comps[zplugin]=_zplugin
 ### End of Zplugin installer's chunk
