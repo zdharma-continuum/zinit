@@ -654,6 +654,8 @@ ZPLGM[EXTENDED_GLOB]=""
         print "${ZPLGM[col-info]}Uninstalled $global_action completions${ZPLGM[col-rst]}"
     fi
 
+    (( ${+functions[-zplg-forget-completion]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
+    -zplg-compinit >/dev/null
 } # }}}
 
 #
