@@ -653,43 +653,7 @@ ZPLGM[EXTENDED_GLOB]=""
     if (( global_action > 0 )); then
         print "${ZPLGM[col-info]}Uninstalled $global_action completions${ZPLGM[col-rst]}"
     fi
-} # }}}
-# FUNCTION: -zplg-compinit {{{
-# User-exposed `compinit' frontend which first ensures that all
-# completions managed by Zplugin are forgotten by Zshell. After
-# that it runs normal `compinit', which should more easily detect
-# Zplugin's completions.
-#
-# No arguments.
--zplg-compinit() {
-    builtin setopt localoptions nullglob extendedglob nokshglob noksharrays
 
-    typeset -a symlinked backup_comps
-    local c cfile bkpfile
-
-    symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]# )
-    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]# )
-
-    # Delete completions if they are really there, either
-    # as completions (_fname) or backups (fname)
-    for c in "${symlinked[@]}" "${backup_comps[@]}"; do
-        action=0
-        cfile="${c:t}"
-        cfile="_${cfile#_}"
-        bkpfile="${cfile#_}"
-
-        #print "${ZPLGM[col-info]}Processing completion $cfile${ZPLGM[col-rst]}"
-        -zplg-forget-completion "$cfile"
-    done
-
-    print "Initializing completion (compinit)..."
-    command rm -f ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
-
-    # Workaround for a nasty trick in _vim
-    (( ${+functions[_vim_files]} )) && unfunction _vim_files
-
-    builtin autoload -Uz compinit
-    compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
 } # }}}
 
 #
