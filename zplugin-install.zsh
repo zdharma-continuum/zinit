@@ -232,10 +232,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
     [[ "$user" = "%" ]] && \
-        completions=( "${plugin}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN^/) ) || \
-        completions=( "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.][^.]#~*(_zsh_highlight|/zsdoc/)*(DN^/) )
-    already_symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.][^.]#(DN) )
-    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.][^.]#(DN) )
+        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|_zsh_highlight*|/zsdoc/*)(DN^/) ) || \
+        completions=( "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|_zsh_highlight*|/zsdoc/*)(DN^/) )
+    already_symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
+    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
 
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
