@@ -1452,7 +1452,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
 # $3 - id - URL or plugin ID or alias name (from id-as'')
 -zplg-service() {
     local __tpe="$1" __mode="$2" __id="$3" __fle="${ZPLGM[SERVICES_DIR]}/${ZPLG_ICE[service]}.lock" __fd __cmd __tmp __lckd __strd=0
-    { builtin echo -n >! "$__fle"; } 2>/dev/null 1>&2
+    { builtin print -n >! "$__fle"; } 2>/dev/null 1>&2
     [[ ! -e "${__fle:r}.fifo" ]] && command mkfifo "${__fle:r}.fifo" 2>/dev/null 1>&2
     [[ ! -e "${__fle:r}.fifo2" ]] && command mkfifo "${__fle:r}.fifo2" 2>/dev/null 1>&2
 
@@ -1474,7 +1474,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
                 fi
 
                 [[ "$__cmd" = (#i)"NEXT" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; exec {__fd}>&-; __lckd=0; __strd=0; builtin read -t 10 __tmp <>"${__fle:r}.fifo2"; }
-                [[ "$__cmd" = (#i)"STOP" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; __strd=0; builtin echo >! "${__fle:r}.stop"; }
+                [[ "$__cmd" = (#i)"STOP" ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 __tmp <>"${__fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; __strd=0; builtin print >! "${__fle:r}.stop"; }
                 [[ "$__cmd" = (#i)"QUIT" ]] && { kill -HUP ${sysparams[pid]}; return 1; }
                 [[ "$__cmd" != (#i)"RESTART" ]] && { __cmd=""; builtin read -t 1 __tmp <>"${__fle:r}.fifo2"; }
             done
@@ -1683,7 +1683,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
         sched +1 "ZPLGM[underscore]=\$_; ZPLGM[printexitvalue_opt]=\$options[printexitvalue]; -zplg-scheduler following \${ZPLGM[underscore]}"
 
         ANFD="13371337" # for older Zsh + noclobber option
-        exec {ANFD}< <(builtin echo run;)
+        exec {ANFD}< <(builtin print run;)
 	command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
         zle -F "$ANFD" -zplg-scheduler
     }
@@ -1694,7 +1694,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
         [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && "$1" != "burst" ]] && \
             { 
                 ANFD="13371337" # for older Zsh + noclobber option
-                exec {ANFD}< <(builtin echo run;)
+                exec {ANFD}< <(builtin print run;)
                 command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
                 zle -F "$ANFD" -zplg-scheduler
                 break
