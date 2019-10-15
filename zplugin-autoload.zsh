@@ -1878,12 +1878,24 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ "$opt" = "-s" ]]; then
             if [[ "${sice[as]}" == "command" ]]; then
                 print "${ZPLGM[$entry]} sec" - "$REPLY (command)"
+            elif [[ -n "${sice[sbin]}" ]]; then
+                print "${ZPLGM[$entry]} sec" - "$REPLY (sbin command)"
+            elif [[ -n "${sice[fbin]}" ]]; then
+                print "${ZPLGM[$entry]} sec" - "$REPLY (fbin command)"
+            elif [[ "${sice[pick]}" = "/dev/null" && ${+sice[make]} = 1 ]]; then
+                print "${ZPLGM[$entry]} sec" - "$REPLY (/dev/null make plugin)"
             else
                 print "${ZPLGM[$entry]} sec" - "$REPLY"
             fi
         else
             if [[ "${sice[as]}" == "command" ]]; then
                 print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (command)"
+            elif [[ -n "${sice[sbin]}" ]]; then
+                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (sbin command)"
+            elif [[ -n "${sice[fbin]}" ]]; then
+                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (fbin command)"
+            elif [[ "${sice[pick]}" = "/dev/null" && ${+sice[make]} = 1 ]]; then
+                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (/dev/null make plugin)"
             else
                 print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY"
             fi
