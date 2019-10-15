@@ -1416,7 +1416,7 @@ ZPLGM[EXTENDED_GLOB]=""
                               print "\r\nUpdating plugin $REPLY"
                           }
                       }
-                      echo $line
+                      print $line
                   }
                 done | \
                 command tee .zplugin_lstupd | \
