@@ -1624,7 +1624,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
 
     integer __t=EPOCHSECONDS __i correct=0
     local -a match mbegin mend reply
-    local REPLY
+    local REPLY ANFD
 
     [[ -o ksharrays ]] && correct=1
 
@@ -1682,7 +1682,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
         # zle -F handler. So it's done here, in precmd-handle code.
         sched +1 "ZPLGM[underscore]=\$_; ZPLGM[printexitvalue_opt]=\$options[printexitvalue]; -zplg-scheduler following \${ZPLGM[underscore]}"
 
-        local ANFD="13371337" # for older Zsh + noclobber option
+        ANFD="13371337" # for older Zsh + noclobber option
         exec {ANFD}< <(builtin echo run;)
 	command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
         zle -F "$ANFD" -zplg-scheduler
@@ -1691,8 +1691,14 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
     local __task __idx=0 __count=0 __idx2
     for __task in "${ZPLG_RUN[@]}"; do
         -zplg-run-task 1 "${(@z)__task}" && ZPLG_TASKS+=( "$__task" )
-        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 5 && "$1" != "burst" ]] && \
-            { sched +0 -zplg-scheduler following-additional; break; }
+        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 1 && "$1" != "burst" ]] && \
+            { 
+                ANFD="13371337" # for older Zsh + noclobber option
+                exec {ANFD}< <(builtin echo run;)
+                command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
+                zle -F "$ANFD" -zplg-scheduler
+                break
+            }
     done
     for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
         -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2-correct]}"
