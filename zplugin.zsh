@@ -1691,7 +1691,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
     local __task __idx=0 __count=0 __idx2
     for __task in "${ZPLG_RUN[@]}"; do
         -zplg-run-task 1 "${(@z)__task}" && ZPLG_TASKS+=( "$__task" )
-        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 1 && "$1" != "burst" ]] && \
+        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && "$1" != "burst" ]] && \
             { 
                 ANFD="13371337" # for older Zsh + noclobber option
                 exec {ANFD}< <(builtin echo run;)
