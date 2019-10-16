@@ -13,10 +13,12 @@ store_state answer/state_bunload answer/errors_bunload
 [[ $PATH = *zsh-select* ]] && echo >! answer/correct_path || echo >! answer/incorrect_path_1
 
 zplugin unload zdharma/ice-order
+print -r -- "After unload ice-order FPATH: $FPATH"
 [[ ${FPATH[(i)test101]} = ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath_af || echo >! answer/incorrect_fpath_af_2"${FPATH[(i)test101]} = ${FPATH[(I)test101]}" 
 [[ $PATH = *zsh-select* ]] && echo >! answer/correct_path2 || echo >! answer/incorrect_path_2
 
 zplugin unload psprint/zsh-select
+print -r -- "After unload zsh-select PATH: $PATH"
 [[ $PATH != *zsh-select* ]] && echo >! answer/correct_path_af || echo >! answer/incorrect_path_af_3
 
 # vim:ft=zsh
