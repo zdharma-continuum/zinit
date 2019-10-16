@@ -943,6 +943,7 @@ ZPLGM[EXTENDED_GLOB]=""
     () {
         setopt localoptions extendedglob noksharrays typesetsilent
         typeset -a restore_widgets skip_delete
+        local wid
         restore_widgets=( "${(z)ZPLGM[WIDGETS_SAVED__$uspl2]}" )
         for wid in "${(Oa)restore_widgets[@]}"; do
             [[ -z "$wid" ]] && continue
