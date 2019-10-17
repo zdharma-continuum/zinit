@@ -523,7 +523,7 @@ ZPLGM[EXTENDED_GLOB]=""
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl
     [[ "$user" = "%" ]] && uspl="${user}${plugin}" || uspl="${reply[-2]}${reply[-2]:+---}${reply[-1]//\//---}"
 
-    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.]*~*(*.zwc|_zsh_highlight*|/zsdoc/*)(DN) )
+    reply=( "${ZPLGM[PLUGINS_DIR]}/$uspl"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|_zsh_highlight*|/zsdoc/*)(DN) )
 } # }}}
 # FUNCTION: -zplg-check-comp-consistency {{{
 # Zplugin creates symlink for each installed completion.
@@ -612,7 +612,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     -zplg-get-path "$1" "$2"
     [[ -e "$REPLY" ]] && {
-        completions=( "$REPLY"/**/_[^_.]*~*(*.zwc|_zsh_highlight*|/zsdoc/*)(DN) )
+        completions=( "$REPLY"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|_zsh_highlight*|/zsdoc/*)(DN) )
     } || {
         print "No such completion $1${${1:#(%|/)*}:+${2:+/}}$2"
         return 1
@@ -1823,7 +1823,7 @@ ZPLGM[EXTENDED_GLOB]=""
     print "Disabled completions: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Number of completions existing in all plugins
-    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.]*~*(*.zwc|_zsh_highlight*|/zsdoc/*)(DN) )
+    completions=( "${ZPLGM[PLUGINS_DIR]}"/*/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|_zsh_highlight*|/zsdoc/*)(DN) )
     print "Completions available overall: ${infoc}${#completions[@]}${ZPLGM[col-rst]}"
 
     # Enumerate snippets loaded
@@ -2221,7 +2221,7 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.]*~*(*.zwc|_zsh_highlight*|/zsdoc/*)(DN^/) )
+        completions=( "$pp"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|_zsh_highlight*|/zsdoc/*)(DN^/) )
         if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
             [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
@@ -2232,7 +2232,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.]*~*(*.zwc|_zsh_highlight*|/zsdoc/*)(DN^/) )
+        completions=( "$pp"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|_zsh_highlight*|/zsdoc/*)(DN^/) )
 
         if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
