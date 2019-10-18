@@ -1916,11 +1916,13 @@ ZPLGM[EXTENDED_GLOB]=""
     integer correct=0
     [[ -o "KSH_ARRAYS" ]] && correct=1
 
-    for uspl2 in "${(ko)ZPLGM[BINDKEYS__@]}"; do
-        [[ -z "${ZPLGM[BINDKEYS__$uspl2]}" ]] && continue
+    for uspl2 in "${(@ko)ZPLGM[(I)BINDKEYS__*]}"; do
+        [[ -z "${ZPLGM[$uspl2]}" ]] && continue
 
         (( !first )) && print
         first=0
+
+        uspl2="${uspl2#BINDKEYS__}"
 
         -zplg-any-colorify-as-uspl2 "$uspl2"
         uspl2col="$REPLY"
