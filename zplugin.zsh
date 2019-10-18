@@ -1155,6 +1155,9 @@ function $f {
             else
                 (( ++ ZPLGM[SHADOWING] ))
             fi
+        }
+
+        if [[ -z ${opts[(r)-u]} ]] {
             if [[ -n "${ZPLG_ICE[src]}" ]]; then
                 ZERO="${${(M)ZPLG_ICE[src]##/*}:-$local_dir/$dirname/${ZPLG_ICE[src]}}"
                 (( ${+ZPLG_ICE[silent]} )) && { { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n "$precm" ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" }; (( retval += $? )); }
@@ -1173,6 +1176,8 @@ function $f {
                 -zplg-wrap-track-functions "$save_url" "" "$id_as"
 
             [[ "${ZPLG_ICE[atload][1]}" = "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; ((1)); } || eval "${ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+        }
+        [[ -z "${opts[(r)-u]}" && ( -n "${ZPLG_ICE[src]}" || -n "${ZPLG_ICE[multisrc]}" || "${ZPLG_ICE[atload][1]}" = "!" ) ]] && {
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]="inactive"; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction "compdef"; builtin setopt aliases; }
         }
     elif [[ "${ZPLG_ICE[as]}" = "completion" ]]; then
