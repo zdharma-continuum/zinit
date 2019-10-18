@@ -1,6 +1,6 @@
 #compdef zplugin
 
-local context state state_descr line ret=1
+local curcontext="$curcontext" state state_descr line ret=1
 typeset -A opt_args
 
 typeset -a commands
