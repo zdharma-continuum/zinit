@@ -402,7 +402,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         (( quiet )) || print -n "${${first:#1}:+, }${ZPLGM[col-info]}$k${ZPLGM[col-rst]}"
         first=0
     done
-    (( quiet )) || print
+    (( quiet || first )) || print
 
     unfunction -- 2>/dev/null "$f"
 } # }}}
