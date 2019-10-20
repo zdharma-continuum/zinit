@@ -54,6 +54,11 @@ reports](DONATIONS.md) about what is being done with the money received.
 * 20-10-2019
   - The `zplugin` completion now completes also snippets! The command `snippet`, but
     also `delete`, `recall`, `edit`, `cd`, etc. all receive such completing.
+  - The `ice` subcommand can now be skipped – just pass in the ices, e.g.:
+    ```zsh
+    zplugin atload"zpcompinit; zpcdreplay" blockf
+    zplugin light zsh-users/zsh-completions
+    ```
   - The `compile` command is able to compile snippets.
   - The plugins that add their subdirectories into `$fpath` can be now `blockf`-ed –
     the functions located in the dirs will be correctly auto-loaded.
