@@ -1443,6 +1443,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
     [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
     ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
     [[ -n "${ZPLG_ICES[pick]}" ]] && ZPLG_ICES[pick]="${ZPLG_ICES[pick]//\$ZPFX/${ZPFX%/}}"
+    return 0
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
@@ -1749,6 +1750,13 @@ zplugin() {
        --yes    opt_-y,--yes
        -y       opt_-y,--yes
     )
+
+    [[ $1 != (-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
+update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
+completions|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
+dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
+env-whitelist|bindkeys|module) ]] && \
+    { -zplg-ice "$@"; return $?; }
 
     case "$1" in
        (load|light)
