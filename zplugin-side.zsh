@@ -158,6 +158,151 @@
     reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 }
 # }}}
+# FUNCTION: -zplg-compute-ice {{{
+# Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
+# ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+# returns path to snippet directory and optional name of snippet file (only
+# valid if ZPLG_ICE[svn] is not set).
+#
+# Can also pack resulting ices into ZPLG_SICE (see $2).
+#
+# $1 - URL (also plugin-spec)
+# $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE
+#      wins with static ice; "pack-nf" means that disk-ices will
+#      be ignored (no-file?)
+# $3 - name of output associative array, "ZPLG_ICE" is the default
+# $4 - name of output string parameter, to hold path to directory ("local_dir")
+# $5 - name of output string parameter, to hold filename ("filename")
+# $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
+-zplg-compute-ice() {
+    setopt localoptions extendedglob nokshglob noksharrays
+
+    local __URL="${1%/}" __pack="$2" __is_snippet=0
+    local __var_name1="${3:-ZPLG_ICE}" __var_name2="${4:-local_dir}" \
+        __var_name3="${5:-filename}" __var_name4="${6:-is_snippet}"
+
+    # Copy from -zplg-recall
+    local -a ice_order nval_ices
+    ice_order=(
+        svn proto from teleid bindmap cloneopts id-as depth if wait load
+        unload blockf pick bpick src as ver silent lucid notify mv cp
+        atinit atclone atload atpull nocd run-atpull has cloneonly make
+        service trackbinds multisrc compile nocompile nocompletions
+        reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
+        \!csh aliases
+        # Include all additional ices – after
+        # stripping them from the possible: ''
+        ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
+    )
+    nval_ices=(
+            blockf silent lucid trackbinds cloneonly nocd run-atpull
+            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
+            aliases
+
+            # Include only those additional ices,
+            # don't have the '' in their name, i.e.
+            # aren't designed to hold value
+            ${(@)${(@s.|.)ZPLG_EXTS[ice-mods]}:#*\'\'*}
+
+            # Must be last
+            svn
+    )
+
+    # Remove whitespace from beginning of URL
+    __URL="${${__URL#"${__URL%%[! $'\t']*}"}%/}"
+
+    # Snippet?
+    -zplg-two-paths "$__URL"
+    local __s_path="${reply[-4]}" __s_svn="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
+    if [[ -d "$__s_path" || -d "$___path" ]]; then
+        __is_snippet=1
+    else
+        # Plugin
+        -zplg-shands-exp "$__URL" && __URL="$REPLY"
+        -zplg-any-to-user-plugin "$__URL" ""
+        local __user="${reply[-2]}" __plugin="${reply[-1]}"
+        __s_path="" __filename=""
+        [[ "$__user" = "%" ]] && ___path="$__plugin" || ___path="${ZPLGM[PLUGINS_DIR]}/${__user:+${__user}---}${__plugin//\//---}"
+        -zplg-exists-physically-message "$__user" "$__plugin" || return 1
+    fi
+
+    [[ "$__pack" = pack* ]] && -zplg-pack-ice "${__user-$__URL}" "$__plugin"
+
+    local -A __sice
+    local -a __tmp
+    __tmp=( "${(z@)ZPLG_SICE[$__user${${__user:#(%|/)*}:+/}$__plugin]}" )
+    (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
+
+    if [[ "${+__sice[svn]}" = "1" || -n "$__s_svn" ]]; then
+        if (( !__is_snippet && ${+__sice[svn]} == 1 )); then
+            print -r -- "The \`svn' ice is given, but the argument ($__URL) is a plugin"
+            print -r -- "(\`svn' can be used only with snippets)"
+            return 1
+        elif (( !__is_snippet )); then
+            print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zplugin/issues"
+            return 1
+        fi
+        if [[ -e "$__s_path" && -n "$__s_svn" ]]; then
+            __sice[svn]=""
+            __local_dir="$__s_path"
+        else
+            [[ ! -e "$___path" ]] && { print -r -- "No such snippet, looked at paths (1): $__s_path, and: $___path"; return 1; }
+            unset '__sice[svn]'
+            __local_dir="$___path"
+        fi
+    else
+        if [[ -e "$___path" ]]; then
+            unset '__sice[svn]'
+            __local_dir="$___path"
+        else
+            print -r -- "No such snippet, looked at paths (2): $__s_path, and: $___path"
+            return 1
+        fi
+    fi
+
+    local __zplugin_path="$__local_dir/._zplugin"
+
+    # Read disk-Ice
+    local -A __mdata
+    local __key
+    { for __key in mode url is_release ${ice_order[@]}; do
+        [[ -f "$__zplugin_path/$__key" ]] && __mdata[$__key]="$(<$__zplugin_path/$__key)"
+      done
+      [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
+    } 2>/dev/null
+
+    # Handle flag-Ices; svn must be last
+    for __key in make pick nocompile reset ${nval_ices[@]}; do
+        (( 0 == ${+ZPLG_ICE[no$__key]} )) && continue
+
+        if [[ "$__key" = "svn" ]]; then
+            command print -r -- "0" >! "$__zplugin_path/mode"
+            __mdata[mode]=0
+        else
+            command rm -f -- "$__zplugin_path/$__key"
+        fi
+        unset "__mdata[$__key]" "__sice[$__key]" "ZPLG_ICE[$__key]"
+    done
+
+    # Final decision, static ice vs. saved ice
+    local -A __MY_ICE
+    for __key in mode url is_release ${ice_order[@]}; do
+        (( ${+__sice[$__key]} + ${${${__pack:#pack-nf*}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+    done
+    # One more round for the special case – update, which ALWAYS
+    # needs the tleid from the disk or static ice
+    __key=teleid; [[ "$__pack" = pack-nftid ]] && {
+        (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+    }
+
+    : ${(PA)__var_name1::="${(kv)__MY_ICE[@]}"}
+    : ${(P)__var_name2::=$__local_dir}
+    : ${(P)__var_name3::=$__filename}
+    : ${(P)__var_name4::=$__is_snippet}
+
+    return 0
+}
+# }}}
 # FUNCTION: -zplg-store-ices {{{
 # Saves ice mods in given hash onto disk.
 #

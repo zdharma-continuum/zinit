@@ -419,7 +419,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" first plugin_dir filename is_snippet
     local -a list
 
-    (( ${+functions[-zplg-confirm]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
     local -A ICE
     -zplg-compute-ice "$id_as" "pack" \
         ICE plugin_dir filename is_snippet || return 1
