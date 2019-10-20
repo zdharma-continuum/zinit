@@ -81,7 +81,7 @@ case $state in
             times)
                 _message "Hit enter to get plugin load time statistics" && ret=0
                 ;;
-            load|light|compile|stress|edit|glance|recall)
+            load|light)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
                 plugins=( "${plugins[@]//---//}" )
@@ -92,25 +92,34 @@ case $state in
                 #    compadd "$@" -a - plugins && ret=0
                 _alternative 'directories:directory:_directories' 'plugins:plugin:compadd -a - plugins'
                 ;;
-            update|status|cd|changes)
+            compile|stress|edit|glance|recall|update|status|cd|changes|delete)
+                # Plugins
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
                 plugins=( "${plugins[@]//---//}" )
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
 
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
-                ;;
-            delete)
-                typeset -a plugins
-                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
-                plugins=( "${plugins[@]//---//}" )
-                plugins=( "${plugins[@]:#_local/zplugin}" )
-                plugins=( "${plugins[@]:#custom}" )
+                # Snippets
+                local -a snippets snippet_alreadyld
+                local sni
 
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
+                snippets=( "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin(D/:h) )
+                snippets=( ${snippets[@]#${ZPLGM[SNIPPETS_DIR]}/} )
+                snippets=( ${snippets[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
+                snippets=( ${snippets[@]/--//} )
+
+                for sni ( ${snippets[@]} ) {
+                    if [[ -n ${ZPLG_SNIPPETS[$sni]} ]]; then
+                        snippets_alreadyld+=( $sni )
+                        snippets=( ${snippets[@]:#$sni} )
+                    fi
+                }
+
+                _alternative 'snippets:downloaded snippets:compadd -a - snippets' \
+                    'snippets:already loaded snippets:compadd -a - snippets_alreadyld' \
+                    'plugins:plugins:compadd -a - plugins' && \
+                        ret=1
                 ;;
             unload|report)
                 typeset -a plugins absolute normal
@@ -203,9 +212,9 @@ case $state in
 
                 snippets=( "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin(D/:h) )
                 snippets=( ${snippets[@]#${ZPLGM[SNIPPETS_DIR]}/} )
+                snippets=( ${snippets[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
                 snippets=( ${snippets[@]/--//} )
 
-                # Select candidates
                 for sni ( ${snippets[@]} ) {
                     if [[ -n ${ZPLG_SNIPPETS[$sni]} ]]; then
                         snippets_alreadyld+=( $sni )
@@ -213,7 +222,6 @@ case $state in
                     fi
                 }
 
-                # Select the exact matches
                 _alternative 'snippets:downloaded snippets:compadd -a - snippets' \
                     'snippets:already loaded snippets:compadd -a - snippets_alreadyld' \
                     'files:file:_files' && \
