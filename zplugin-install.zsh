@@ -567,8 +567,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         [[ -e "${list[1]}" && "${list[1]}" != */dev/null && \
                             -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
                         {
-                            zcompile "${list[1]}" &>/dev/null || {
-                                print -r "Warning: Couldn't compile \`${list[1]}'"
+                            (( !${+ZPLG_ICE[nocompile]} )) && {
+                                zcompile "${list[1]}" &>/dev/null || {
+                                    print -r "Warning: Couldn't compile \`${list[1]}'"
+                                }
                             }
                         }
                     fi
@@ -622,11 +624,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     file_path="${list[1]}"
                 fi
                 [[ -e $file_path && -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} && $file_path != */dev/null ]] && {
-                    zcompile "$file_path" 2>/dev/null || {
-                        print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
-                        print -r "(snippet URL points to a directory instead of a file?"
-                        print -r "to download directory, use preceding: zplugin ice svn)"
-                        retval=1
+                    (( !${+ZPLG_ICE[nocompile]} )) && {
+                        zcompile "$file_path" 2>/dev/null || {
+                            print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
+                            print -r "(snippet URL points to a directory instead of a file?"
+                            print -r "to download directory, use preceding: zplugin ice svn)"
+                            retval=1
+                        }
                     }
                 }
             fi
