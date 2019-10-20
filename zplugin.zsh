@@ -204,10 +204,6 @@ builtin setopt noaliases
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
     done
 
-    # Do ZPLUGIN's "native" autoloads
-    [[ "$ZPLGM[CUR_USR]" = "%" ]] && \
-        local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || \
-        local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${${ZPLGM[CUR_USR]}:+${ZPLGM[CUR_USR]}---}${ZPLG_CUR_PLUGIN//\//---}"
 
     for func; do
         # Real autoload doesn't touch function if it already exists
