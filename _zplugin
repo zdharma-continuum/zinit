@@ -101,7 +101,7 @@ case $state in
                 plugins=( "${plugins[@]:#custom}" )
 
                 # Snippets
-                local -a snippets snippet_alreadyld
+                local -a snippets snippets_alreadyld
                 local sni
 
                 snippets=( "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin(D/:h) )
@@ -207,7 +207,7 @@ case $state in
                 _message "Hit enter to refresh completion system" && ret=0
                 ;;
             snippet)
-                local -a snippets snippet_alreadyld
+                local -a snippets snippets_alreadyld
                 local sni
 
                 snippets=( "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin(D/:h) )
