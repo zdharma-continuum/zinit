@@ -51,6 +51,13 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 20-10-2019
+  - The `zplugin` completion now completes also snippets! The command `snippet`, but
+    also `delete`, `recall`, `edit`, `cd`, etc. all receive such completing.
+  - The `compile` command is able to compile snippets.
+  - The plugins that add their subdirectories into `$fpath` can be now `blockf`-ed –
+    the functions located in the dirs will be correctly auto-loaded.
+
 * 12-10-2019
   - Special value for the `id-as''` ice – `auto`. It sets the plugin/snippet ID
     automatically to the last component of its spec, e.g.:
