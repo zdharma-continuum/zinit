@@ -1728,11 +1728,9 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
 # Main function directly exposed to user, obtains subcommand and its
 # arguments, has completion.
 zplugin() {
-    [[ "$1" != "ice" ]] && {
-        local -A ZPLG_ICE
-        ZPLG_ICE=( "${(kv)ZPLG_ICES[@]}" )
-        ZPLG_ICES=()
-    }
+    local -A ZPLG_ICE
+    ZPLG_ICE=( "${(kv)ZPLG_ICES[@]}" )
+    ZPLG_ICES=()
 
     integer retval=0 correct=0
     local -a match mbegin mend reply
