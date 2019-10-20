@@ -2709,21 +2709,28 @@ EOF
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 -zplg-edit() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}"
+    local -A ZPLG_ICE
+    local local_dir filename is_snippet the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
-    -zplg-exists-physically-message "$user" "$plugin" || return 1
+    -zplg-compute-ice "$the_id" "pack" \
+        ZPLG_ICE local_dir filename is_snippet || return 1
 
-    # builtin cd -q "${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
-    -zplg-first "$1" "$2" || {
-        print "${ZPLGM[col-error]}No source file found, cannot edit${ZPLGM[col-rst]}"
-        return 1
-    }
+    ZPLG_ICE[teleid]="${ZPLG_ICE[teleid]:-${ZPLG_ICE[id-as]}}"
 
-    local fname="${reply[-1]}"
+    if (( is_snippet )); then
+        if [[ ! -e "$local_dir" ]]; then
+            print "No such snippet"
+            return 1
+        fi
+    else
+        if [[ ! -e "$local_dir" ]]; then
+            print -r -- "No such plugin or snippet"
+            return 1
+        fi
+    fi
 
-    print "Editting ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]} with ${ZPLGM[col-p]}${EDITOR:-vim}${ZPLGM[col-rst]}"
-    "${EDITOR:-vim}" "$fname"
+    "${EDITOR:-vim}" "$local_dir"
+    return 0
 } # }}}
 # FUNCTION: -zplg-stress {{{
 # Compiles plugin with various options on and off to see
