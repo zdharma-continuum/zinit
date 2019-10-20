@@ -1,5 +1,8 @@
 #compdef zplugin
 
+emulate -LR zsh
+setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+
 local curcontext="$curcontext" state state_descr line ret=1
 typeset -A opt_args
 
@@ -195,10 +198,26 @@ case $state in
                 _message "Hit enter to refresh completion system" && ret=0
                 ;;
             snippet)
-                typeset -a soptions 
-                soptions=( "-f" "--command" )
-                _wanted soptions expl "Options" \
-                    compadd "$@" -a - soptions && ret=0
+                local -a snippets snippet_alreadyld
+                local sni
+
+                snippets=( "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin(D/:h) )
+                snippets=( ${snippets[@]#${ZPLGM[SNIPPETS_DIR]}/} )
+                snippets=( ${snippets[@]/--//} )
+
+                # Select candidates
+                for sni ( ${snippets[@]} ) {
+                    if [[ -n ${ZPLG_SNIPPETS[$sni]} ]]; then
+                        snippets_alreadyld+=( $sni )
+                        snippets=( ${snippets[@]:#$sni} )
+                    fi
+                }
+
+                # Select the exact matches
+                _alternative 'snippets:downloaded snippets:compadd -a - snippets' \
+                    'snippets:already loaded snippets:compadd -a - snippets_alreadyld' \
+                    'files:file:_files' && \
+                        ret=1
                 ;;
             dstart|dtrace)
                 _message "Hit enter to start tracking this session" && ret=0
