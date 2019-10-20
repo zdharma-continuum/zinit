@@ -416,31 +416,34 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # $id_as - a /-separated pair if second element
     # is not empty and first is not "%" - then it's
     # just $1 in first case, or $1$2 in second case
-    local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}"
-
-    -zplg-any-to-user-plugin "$id_as" ""
-    local user="${reply[-2]}" plugin="${reply[-1]}" first
-    local plugin_dir="${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}}"
+    local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" first plugin_dir filename is_snippet
     local -a list
 
-    # No ICE packing because this command is ran
-    # from -zplg-load-plugin which does that
-    local -A sice
-    sice=( "${(@Q)${(z@)ZPLG_SICE[$id_as]:-no op}}" )
-    [[ "${sice[pick]}" = "/dev/null" ]] && return 0
+    local -A ICE
+    -zplg-compute-ice "$id_as" "pack" \
+        ICE plugin_dir filename is_snippet || return 1
 
-    if [[ ${sice[as]} != "command" && ( ${+sice[nocompile]} = "0" || ${sice[nocompile]} = "!" ) ]]; then
-        if [[ -n "${sice[pick]}" ]]; then
-            list=( ${~${(M)sice[pick]:#/*}:-$plugin_dir/$sice[pick]}(DN) )
+    [[ "${ICE[pick]}" = "/dev/null" ]] && return 0
+
+    if [[ ${ICE[as]} != "command" && ( ${+ICE[nocompile]} = "0" || ${ICE[nocompile]} = "!" ) ]]; then
+        if [[ -n "${ICE[pick]}" ]]; then
+            list=( ${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN) )
             [[ ${#list} -eq 0 ]] && {
                 print "No files for compilation found (pick-ice didn't match)"
                 return 1
             }
             reply=( "${list[1]:h}" "${list[1]}" )
         else
-            -zplg-first "$1" "$2" || {
-                print "No files for compilation found"
-                return 1
+            if (( is_snippet )) {
+                -zplg-first "%" "$plugin_dir" || {
+                    print "No files for compilation found"
+                    return 1
+                }
+            } else {
+                -zplg-first "$1" "$2" || {
+                    print "No files for compilation found"
+                    return 1
+                }
             }
         fi
         local pdir_path="${reply[-2]}"
@@ -448,7 +451,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local fname="${first#$pdir_path/}"
 
         print "Compiling ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]}..."
-        [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+        [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
             zcompile "$first" || {
                 print "Compilation failed. Don't worry, the plugin will work also without compilation"
                 print "Consider submitting an error report to Zplugin or to the plugin's author"
@@ -458,8 +461,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         zcompile "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
     fi
 
-    if [[ -n "${sice[compile]}" ]]; then
-        eval "list=( \$plugin_dir/${~sice[compile]}(DN) )"
+    if [[ -n "${ICE[compile]}" ]]; then
+        eval "list=( \$plugin_dir/${~ICE[compile]}(DN) )"
         [[ ${#list} -eq 0 ]] && {
             print "Warning: Ice mod compile'' didn't match any files"
         } || {
