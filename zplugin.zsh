@@ -204,6 +204,8 @@ builtin setopt noaliases
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
     done
 
+    local -a fpath_elements
+    fpath_elements=( ${(@)fpath[(r)$PLUGIN_DIR/*]} )
 
     for func; do
         # Real autoload doesn't touch function if it already exists
@@ -214,12 +216,12 @@ builtin setopt noaliases
                 builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
             elif [[ "${ZPLGM[NEW_AUTOLOAD]}" = "1" ]]; then
                 eval "function ${(q)func} {
-                    local FPATH=${(qqq)PLUGIN_DIR}:${(qqq)FPATH}
+                    local FPATH=${(qqq)PLUGIN_DIR}:${(j,:,)${(qqq)fpath_elements[@]}}${fpath_elements:+:}${(qqq)FPATH}
                     builtin autoload -X ${(j: :)${(q-)opts[@]}}
                 }"
             else
                 eval "function ${(q)func} {
-                    --zplg-reload-and-run ${(q)PLUGIN_DIR} ${(qq)opts[*]} ${(q)func} "'"$@"
+                    --zplg-reload-and-run ${(qqq)PLUGIN_DIR}:${(j,:,)${(qqq)fpath_elements[@]}} ${(qq)opts[*]} ${(q)func} "'"$@"
                 }'
             fi
             builtin unsetopt noaliases
