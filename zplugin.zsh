@@ -1729,17 +1729,9 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
 # arguments, has completion.
 zplugin() {
     [[ "$1" != "ice" ]] && {
-        local -A ice ICE_OPTS
-
-        ice=( "${(kv)ZPLG_ICES[@]}" )
-        ZPLG_ICES=()
-
         local -A ZPLG_ICE
-        () {
-            builtin setopt localoptions extendedglob warncreateglobal
-            ZPLG_ICE=( "${(kv@)ice[(I)^opt_*]}" )
-            ICE_OPTS=( "${(kv@)ice[(I)opt_*]}" )
-        }
+        ZPLG_ICE=( "${(kv)ZPLG_ICES[@]}" )
+        ZPLG_ICES=()
     }
 
     integer retval=0 correct=0
@@ -1748,7 +1740,7 @@ zplugin() {
 
     [[ -o ksharrays ]] && correct=1
 
-    local -A opt_map
+    local -A opt_map ICE_OPTS
     opt_map=(
        -q       opt_-q,--quiet
        --quiet  opt_-q,--quiet
