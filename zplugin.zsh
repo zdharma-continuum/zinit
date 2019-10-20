@@ -158,7 +158,7 @@ builtin setopt noaliases
     # Unfunction caller function (its name is given)
     unfunction -- "$func"
 
-    [[ "$FPATH" != *$fpath_prefix* ]] && local +h FPATH="$fpath_prefix:$FPATH"
+    local +h FPATH="$fpath_prefix:$FPATH"
 
     # After this the function exists again
     builtin autoload ${(s: :)autoload_opts} -- "$func"
@@ -178,6 +178,10 @@ builtin setopt noaliases
 
     zparseopts -D -a opts ${(s::):-RTUXdkmrtWz}
 
+    [[ "$ZPLGM[CUR_USR]" = "%" ]] && \
+        local PLUGIN_DIR="$ZPLG_CUR_PLUGIN" || \
+        local PLUGIN_DIR="${ZPLGM[PLUGINS_DIR]}/${${ZPLGM[CUR_USR]}:+${ZPLGM[CUR_USR]}---}${ZPLG_CUR_PLUGIN//\//---}"
+
     if (( ${+opts[(r)-X]} )); then
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
         print -u2 "builtin autoload required for ${(j: :)opts[@]}"
@@ -185,11 +189,13 @@ builtin setopt noaliases
     fi
     if (( ${+opts[(r)-w]} )); then
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
+        local +h FPATH="$PLUGINS_DIR:$FPATH"
         builtin autoload ${opts[@]} "$@"
         return 0
     fi
     if [[ -n ${(M)@:#+X} ]]; then
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
+        local +h FPATH="$PLUGINS_DIR:$FPATH"
         builtin autoload +X ${opts[@]} "${@:#+X}"
         return 0
     fi
