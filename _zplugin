@@ -116,8 +116,8 @@ case $state in
                     fi
                 }
 
-                _alternative 'snippets:downloaded snippets:compadd -a - snippets' \
-                    'snippets:already loaded snippets:compadd -a - snippets_alreadyld' \
+                _alternative 'dsnippets:downloaded snippet:compadd -a - snippets' \
+                    'lsnippets:already loaded snippet:compadd -a - snippets_alreadyld' \
                     'plugins:plugins:compadd -a - plugins' && \
                         ret=1
                 ;;
@@ -222,8 +222,8 @@ case $state in
                     fi
                 }
 
-                _alternative 'snippets:downloaded snippets:compadd -a - snippets' \
-                    'snippets:already loaded snippets:compadd -a - snippets_alreadyld' \
+                _alternative 'dsnippets:downloaded snippet:compadd -a - snippets' \
+                    'lsnippets:already loaded snippet:compadd -a - snippets_alreadyld' \
                     'files:file:_files' && \
                         ret=1
                 ;;
