@@ -1708,7 +1708,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
         [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && "$1" != "burst" ]] && \
             {
                 ANFD="13371337" # for older Zsh + noclobber option
-                exec {ANFD}< <(LANG=C command sleep 0.002; builtin print run;)
+                exec {ANFD}< <(LANG=C command sleep 0.0002; builtin print run;)
                 command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
                 zle -F "$ANFD" -zplg-scheduler
                 break
