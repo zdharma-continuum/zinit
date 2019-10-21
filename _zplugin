@@ -1,7 +1,8 @@
 #compdef zplugin
 
 emulate -LR zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+setopt extendedglob warncreateglobal typesetsilent \
+        noshortloops rcquotes noautopushd
 
 local curcontext="$curcontext" state state_descr line ret=1
 typeset -A opt_args
