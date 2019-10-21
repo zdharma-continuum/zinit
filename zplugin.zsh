@@ -1635,6 +1635,7 @@ aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}$
     [[ "$1" = "following" ]] && sched +1 "-zplg-scheduler following \$_"
     [[ -n "$1" && "$1" != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
+    ZPLGM[START_TIME]=${ZPLGM[START_TIME]:-$EPOCHREALTIME}
 
     integer __t=EPOCHSECONDS __i correct=0
     local -a match mbegin mend reply
@@ -2071,7 +2072,6 @@ autoload add-zsh-hook
 zmodload zsh/datetime && add-zsh-hook -- precmd -zplg-scheduler  # zsh/datetime required for wait/load/unload ice-mods
 functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
-ZPLGM[START_TIME]=$EPOCHREALTIME
 
 # code {{{
 builtin unsetopt noaliases
