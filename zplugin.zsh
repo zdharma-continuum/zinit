@@ -2090,4 +2090,5 @@ zstyle ':prezto:module:completion' loaded 1
 # Colorize completions for commands unload, report, creinstall, cuninstall
 zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==1;35=1;33'
 zstyle ':completion:*:zplugin:argument-rest:plugins' matcher 'r:|=** l:|=*'
+zstyle ':completion:*:*:zplugin:*' group-name ""
 # }}}
