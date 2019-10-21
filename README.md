@@ -51,6 +51,10 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 21-10-2019
+  - The `times` command has a new option `-m` – it shows the **moments** of the plugin
+    load times – i.e.: how late after loading Zplugin a plugin has been loaded.
+
 * 20-10-2019
   - The `zplugin` completion now completes also snippets! The command `snippet`, but
     also `delete`, `recall`, `edit`, `cd`, etc. all receive such completing.
@@ -527,7 +531,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 
 | Command | Description |
 |:-:|-|
-| `times [-s]` |<div align="justify" style="text-align: justify;"> Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds.</div>|
+| `times [-s] [-m]` |<div align="justify" style="text-align: justify;"> Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds. `-m` – show plugin loading moments.</div>|
 | `zstatus` |<div align="justify" style="text-align: justify;"> Overall Zplugin status.</div>|
 | `report {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Show plugin report. `--all` – do it for all plugins.</div>|
 | `loaded [keyword], list [keyword]` |<div align="justify" style="text-align: justify;"> Show what plugins are loaded (filter with 'keyword').</div>|
