@@ -985,6 +985,7 @@ function $f {
     (( ${+ZPLG_ICE[reset-prompt]} == 1 )) && -zplg-deploy-message @rst
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as//\//---}]=$SECONDS
+    ZPLGM[AT_TIME_${ZPLGM[TIME_INDEX]}_${id_as//\//---}]=$EPOCHREALTIME
     return $retval
 } # }}}
 # FUNCTION: -zplg-load-snippet {{{
@@ -1206,6 +1207,7 @@ function $f {
     ZPLGM[CUR_USPL2]=""
     ZPLGM[TIME_INDEX]=$(( ${ZPLGM[TIME_INDEX]:-0} + 1 ))
     ZPLGM[TIME_${ZPLGM[TIME_INDEX]}_${id_as}]=$SECONDS
+    ZPLGM[AT_TIME_${ZPLGM[TIME_INDEX]}_${id_as}]=$EPOCHREALTIME
     return $retval
 } # }}}
 # FUNCTION: -zplg-compdef-replay {{{
@@ -2069,6 +2071,7 @@ autoload add-zsh-hook
 zmodload zsh/datetime && add-zsh-hook -- precmd -zplg-scheduler  # zsh/datetime required for wait/load/unload ice-mods
 functions -M -- zplugin_scheduler_add 1 1 -zplugin_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
+ZPLGM[START_TIME]=$EPOCHREALTIME
 
 # code {{{
 builtin unsetopt noaliases

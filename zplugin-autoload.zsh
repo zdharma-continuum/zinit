@@ -1707,14 +1707,18 @@ ZPLGM[EXTENDED_GLOB]=""
 # User-action entry point.
 -zplg-show-times() {
     setopt localoptions extendedglob nokshglob noksharrays
-    local opt="$1" entry entry2 user plugin
+    local opt="$1 $2 $3" entry entry2 entry3 user plugin
     float -F 3 sum=0.0
     local -A sice
     local -a tmp
 
-    print "Plugin loading times:"
+    [[ "$opt" = *-[a-z]#m[a-z]#* ]] && \
+        { print "Plugin loading moments:"; ((1)); } || \
+        print "Plugin loading times:"
+
     for entry in "${(@on)ZPLGM[(I)TIME_[0-9]##_*]}"; do
         entry2="${entry#TIME_[0-9]##_}"
+        entry3="AT_$entry"
         if [[ "$entry2" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
             REPLY="${ZPLGM[col-pname]}$entry2${ZPLGM[col-rst]}"
 
@@ -1731,30 +1735,29 @@ ZPLGM[EXTENDED_GLOB]=""
             (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" ) || sice=()
         fi
 
-        if [[ "$opt" = "-s" ]]; then
-            if [[ "${sice[as]}" == "command" ]]; then
-                print "${ZPLGM[$entry]} sec" - "$REPLY (command)"
-            elif [[ -n "${sice[sbin]}" ]]; then
-                print "${ZPLGM[$entry]} sec" - "$REPLY (sbin command)"
-            elif [[ -n "${sice[fbin]}" ]]; then
-                print "${ZPLGM[$entry]} sec" - "$REPLY (fbin command)"
-            elif [[ "${sice[pick]}" = "/dev/null" && ${+sice[make]} = 1 ]]; then
-                print "${ZPLGM[$entry]} sec" - "$REPLY (/dev/null make plugin)"
-            else
-                print "${ZPLGM[$entry]} sec" - "$REPLY"
-            fi
+        local attime=$(( ZPLGM[$entry3] - ZPLGM[START_TIME] ))
+        if [[ "$opt" = *-[a-z]#s[a-z]#* ]]; then
+            local time="$ZPLGM[$entry] sec"
+            attime="${(M)attime#*.???} sec"
         else
-            if [[ "${sice[as]}" == "command" ]]; then
-                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (command)"
-            elif [[ -n "${sice[sbin]}" ]]; then
-                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (sbin command)"
-            elif [[ -n "${sice[fbin]}" ]]; then
-                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (fbin command)"
-            elif [[ "${sice[pick]}" = "/dev/null" && ${+sice[make]} = 1 ]]; then
-                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY (/dev/null make plugin)"
-            else
-                print "${(l:5:: :)$(( ZPLGM[$entry] * 1000  ))%%[,.]*} ms" - "$REPLY"
-            fi
+            local time="${(l:5:: :)$(( ZPLGM[$entry] * 1000 ))%%[,.]*} ms"
+            attime="${(l:5:: :)$(( attime * 1000 ))%%[,.]*} ms"
+        fi
+
+        if [[ "$opt" = *-[a-z]#m[a-z]#* ]]; then
+            time="$attime"
+        fi
+
+        if [[ "${sice[as]}" == "command" ]]; then
+            print "$time" - "$REPLY (command)"
+        elif [[ -n "${sice[sbin]}" ]]; then
+            print "$time" - "$REPLY (sbin command)"
+        elif [[ -n "${sice[fbin]}" ]]; then
+            print "$time" - "$REPLY (fbin command)"
+        elif [[ "${sice[pick]}" = "/dev/null" && ${+sice[make]} = 1 ]]; then
+            print "$time" - "$REPLY (/dev/null make plugin)"
+        else
+            print "$time" - "$REPLY"
         fi
 
         (( sum += ZPLGM[$entry] ))
