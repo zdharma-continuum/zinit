@@ -189,7 +189,7 @@
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases
+        \!csh aliases countdown
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -197,7 +197,7 @@
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases
+            aliases countdown
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
@@ -321,7 +321,7 @@
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases
+        \!csh aliases countdown
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -329,7 +329,7 @@
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases
+            aliases countdown
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
@@ -357,5 +357,26 @@
     for __key in url mode; do
         [[ -n "${(P)__key}" ]] && print -r -- "${(P)__key}" >! "$__pfx"/$__key
     done
+}
+# }}}
+# FUNCTION: -zplg-countdown {{{
+# Displays a countdown 5...4... etc. and returns 0 if it
+# sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
+-zplg-countdown() {
+    (( !${+ZPLG_ICE[countdown]} )) && return 0
+
+    emulate -L zsh
+    trap "print \"${ZPLGM[col-pname]}ABORTING, the ice not ran${ZPLGM[col-rst]}\"; return 1" INT
+    local count=5 tpe="$1" ice
+    ice="${ZPLG_ICE[$tpe]}"
+    [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ZPLG_ICE[atclone]}"
+    ice="$tpe:$ice"
+    print -nr "${ZPLGM[col-pname]}Running ${ZPLGM[col-bold]}${ZPLGM[col-uname]}$ice${ZPLGM[col-rst]}${ZPLGM[col-pname]} ice in...${ZPLGM[col-rst]} "
+    while (( -- count + 1 )) {
+        print -nr -- "${ZPLGM[col-bold]}${ZPLGM[col-error]}"$(( count + 1 ))..."${ZPLGM[col-rst]}"
+        sleep 1
+    }
+    print -r -- "${ZPLGM[col-bold]}${ZPLGM[col-error]}0 <running now>...${ZPLGM[col-rst]}"
+    return 0
 }
 # }}}

@@ -114,6 +114,7 @@ zmodload zsh/termcap 2>/dev/null
         "col-success"   $'\e[01m\e[32m'
         "col-failure"   $'\e[31m'
         "col-rst"       $'\e[0m'
+        "col-bold"      $'\e[1m'
     )
 }
 
@@ -1454,7 +1455,7 @@ nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|\
 atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|\
 compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|\
 nocd|once|wrap-track|reset|noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
-aliases${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}"
+aliases|countdown${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}"
     done
     [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
     ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
