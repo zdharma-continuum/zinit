@@ -721,7 +721,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 done
             }
 
-            [[ ${+ZPLG_ICE[atpull]} = 1 && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ -n "${ZPLG_ICE[atpull]}" && ${${ZPLG_ICE[atpull]}[1]} != *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
         else
             # Run annexes' atclone hooks (the before atclone-ice ones)
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atclone <->]} )
