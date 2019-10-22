@@ -1,0 +1,57 @@
+ALIASES__psprint/zsh-editing-workbench
+naliases\ \'\' ncd\ \'\' nenv\ \'\' nfunctions\ \'\' nhistory\ \'\' nkill\ \'\' zpl\ zplugin zplg\ zplugin
+AT_TIME_1_psprint---zsh-editing-workbench
+__reset-by-test__
+BIN_DIR
+test
+COMPLETIONS_DIR
+_test104/answer/completions
+CUR_USPL2
+
+CUR_USR
+
+DTRACE
+0
+EXTENDED_GLOB
+
+FPATH__psprint/zsh-editing-workbench
+
+FUNCTIONS__psprint/zsh-editing-workbench
+
+HOME_DIR
+_test104/answer
+HOME_READY
+1
+OPTIONS__psprint/zsh-editing-workbench
+
+PATH__psprint/zsh-editing-workbench
+
+PLUGINS_DIR
+_test104/answer/plugins
+SERVICES_DIR
+_test104/answer/services
+SHADOWING
+inactive
+SNIPPETS_DIR
+_test104/answer/snippets
+TIME_1_psprint---zsh-editing-workbench
+__reset-by-test__
+TIME_INDEX
+1
+WIDGETS_DELETE__psprint/zsh-editing-workbench
+zew-backward-kill-shell-word zew-transpose-shell-words copy-earlier-word transpose-words-match zew-history-complete-word zew-history-complete-word-backwards zew-rotate-shell-words zew-rotate-shell-words-backwards __zconvey_zle_paster
+WIDGETS_SAVED__psprint/zsh-editing-workbench
+-N\ backward-kill-word\ \'\'\ backward-kill-word-match\ builtin -N\ backward-word\ \'\'\ backward-word-match\ builtin -N\ capitalize-word\ \'\'\ capitalize-word-match\ builtin -N\ down-case-word\ \'\'\ down-case-word-match\ builtin -N\ forward-word\ \'\'\ forward-word-match\ builtin -N\ kill-word\ \'\'\ kill-word-match\ builtin -N\ transpose-words\ \'\'\ transpose-words-match\ builtin -N\ up-case-word\ \'\'\ up-case-word-match\ builtin
+ZERO
+zplugin.zsh
+ZSTYLES__psprint/zsh-editing-workbench
+:zle:\\\*\ word-chars :zle:\\\*\ skip-whitespace-first :zle:\\\*\ word-style :completion:history-words:\\\*\ remove-all-dups :completion:history-words:\\\*\ sort :completion:\\\*\ range :completion::complete:n-kill::bits\ matcher
+---
+ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-editing-workbench'
+ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-editing-workbench' '2'
+ZPLG_SNIPPETS: 
+ZPLG_SICE: 'psprint/zsh-editing-workbench' 'teleid psprint/zsh-editing-workbench wait '\'''\'' '
+ZPLG_COMPDEF_REPLAY: 
+ZPLG_CUR_PLUGIN: ''
+---
+Parameter module: 1

@@ -1,0 +1,61 @@
+ALIASES__psprint/zsh-editing-workbench
+
+AT_TIME_1_psprint---zsh-editing-workbench
+__reset-by-test__
+BIN_DIR
+test
+COMPLETIONS_DIR
+_test104/answer/completions
+CUR_USPL2
+
+CUR_USR
+
+DTRACE
+0
+EXTENDED_GLOB
+
+FPATH__psprint/zsh-editing-workbench
+
+FUNCTIONS__psprint/zsh-editing-workbench
+
+HOME_DIR
+_test104/answer
+HOME_READY
+1
+OPTIONS__psprint/zsh-editing-workbench
+
+PARAMETERS_POST__psprint/zsh-editing-workbench
+
+PARAMETERS_PRE__psprint/zsh-editing-workbench
+
+PATH__psprint/zsh-editing-workbench
+
+PLUGINS_DIR
+_test104/answer/plugins
+SERVICES_DIR
+_test104/answer/services
+SHADOWING
+inactive
+SNIPPETS_DIR
+_test104/answer/snippets
+TIME_1_psprint---zsh-editing-workbench
+__reset-by-test__
+TIME_INDEX
+1
+WIDGETS_DELETE__psprint/zsh-editing-workbench
+
+WIDGETS_SAVED__psprint/zsh-editing-workbench
+
+ZERO
+zplugin.zsh
+ZSTYLES__psprint/zsh-editing-workbench
+
+---
+ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
+ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-editing-workbench' '0'
+ZPLG_SNIPPETS: 
+ZPLG_SICE: 'psprint/zsh-editing-workbench' 'teleid psprint/zsh-editing-workbench wait '\'''\'' '
+ZPLG_COMPDEF_REPLAY: 
+ZPLG_CUR_PLUGIN: ''
+---
+Parameter module: 1

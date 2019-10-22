@@ -1,0 +1,106 @@
+Report for psprint/zsh-editing-workbench plugin
+-----------------------------------------------
+Source zsh-editing-workbench.plugin.zsh (reporting enabled)
+Autoload zew-backward-kill-shell-word with options -U -z
+Autoload zew-transpose-shell-words with options -U -z
+Autoload -zew-rotate-shell-words with options -U -z
+Autoload select-word-style with options -U -z
+Autoload zew with options -U -z
+Zle -N -- zew-backward-kill-shell-word
+Note: a new widget created via zle -N: `zew-backward-kill-shell-word'
+Bindkey '^[w' zew-backward-kill-shell-word
+Zle -N zew-transpose-shell-words
+Note: a new widget created via zle -N: `zew-transpose-shell-words'
+Bindkey '^[t' zew-transpose-shell-words
+Autoload copy-earlier-word with options -U -z
+Zle -N copy-earlier-word
+Note: a new widget created via zle -N: `copy-earlier-word'
+Bindkey '^[m' copy-earlier-word
+Bindkey -- '^[M' copy-prev-shell-word
+Bindkey '^[.' insert-last-word
+Zle -l backward-kill-word
+Autoload backward-kill-word-match with options -U -z
+Zle -N backward-kill-word backward-kill-word-match
+Autoload backward-word-match with options -U -z
+Zle -N backward-word backward-word-match
+Autoload capitalize-word-match with options -U -z
+Zle -N capitalize-word capitalize-word-match
+Autoload down-case-word-match with options -U -z
+Zle -N down-case-word down-case-word-match
+Autoload forward-word-match with options -U -z
+Zle -N forward-word forward-word-match
+Autoload kill-word-match with options -U -z
+Zle -N kill-word kill-word-match
+Autoload transpose-words-match with options -U -z
+Zle -N transpose-words transpose-words-match
+Autoload up-case-word-match with options -U -z
+Zle -N up-case-word up-case-word-match
+Zstyle :zle:* word-chars 
+Zstyle :zle:* skip-whitespace-first true
+Zstyle :zle:* word-style standard
+Bindkey '^W' backward-kill-word
+Autoload transpose-words-match with options -U -z
+Zle -N transpose-words-match
+Note: a new widget created via zle -N: `transpose-words-match'
+Bindkey '^[y' transpose-words-match
+Bindkey '^[/' _history-complete-older
+Zstyle :completion:history-words:* remove-all-dups true
+Zstyle :completion:history-words:* sort true
+Zstyle -- :completion:* range 50000:10000
+Autoload zew-history-complete-word
+Zle -N zew-history-complete-word
+Note: a new widget created via zle -N: `zew-history-complete-word'
+Zle -N zew-history-complete-word-backwards zew-history-complete-word
+Note: a new widget created via zle -N: `zew-history-complete-word-backwards'
+Bindkey '^[h' zew-history-complete-word
+Bindkey '^[H' zew-history-complete-word-backwards
+Bindkey '^J' self-insert
+Bindkey '^_' undo
+Zle -N zew-rotate-shell-words
+Note: a new widget created via zle -N: `zew-rotate-shell-words'
+Zle -N zew-rotate-shell-words-backwards zew-rotate-shell-words
+Note: a new widget created via zle -N: `zew-rotate-shell-words-backwards'
+Bindkey '^[r' zew-rotate-shell-words
+Bindkey '^[R' zew-rotate-shell-words-backwards
+Alias naliases=n-aliases ncd=n-cd nenv=n-env nfunctions=n-functions nhistory=n-history
+Alias nkill=n-kill
+Alias -- zpl=echo zplg=print
+Warning: redefining alias `zpl', previous value: zplugin
+Warning: redefining alias `zplg', previous value: zplugin
+Zstyle :completion::complete:n-kill::bits matcher r:|=** l:|=*
+Autoload zew_help
+Autoload -zconvey_pinfo
+Zle -N __zconvey_zle_paster
+Note: a new widget created via zle -N: `__zconvey_zle_paster'
+
+Functions created:
+-zconvey_pinfo               -zew-rotate-shell-words
+__zconvey_zle_paster         backward-kill-word-match
+backward-word-match          capitalize-word-match
+copy-earlier-word            down-case-word-match
+forward-word-match           kill-word-match
+select-word-style            transpose-words-match
+up-case-word-match           zew
+zew-backward-kill-shell-word zew-history-complete-word
+zew-transpose-shell-words    zew_help
+
+Options changed:
+autopushd       was set
+histignoredups  was set
+histlexwords    was set
+pushdignoredups was set
+
+Variables added or redefined:
+REPO_DIR                 [        "" -> scalar                                    ]
+ZCONVEY_SCHEDULE_ORIGIN  [        "" -> scalar                                    ]
+CONFIG_DIR               [        "" -> scalar                                    ]
+ZCONVEY_ID               [        "" -> integer                                   ]
+TEST_ARRAY               [        "" -> array                                     ]
+widgets                  [ undefined -> association-readonly-hide-hideval-special ]
+ZCONVEY_FD               [        "" -> scalar-hide-hideval                       ]
+TEST_FLOAT               [        "" -> float                                     ]
+TEST_HASH                [        "" -> association                               ]
+ZCONVEY_LOCKS_DIR        [        "" -> scalar-hide-hideval                       ]
+ZCONVEY_IO_DIR           [        "" -> scalar-hide-hideval                       ]
+preexec_functions        [        "" -> array                                     ]
+TEST_INTEGER             [        "" -> integer                                   ]
