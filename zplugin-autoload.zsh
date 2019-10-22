@@ -1473,7 +1473,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         # Any new commits?
         [[ ${#log} -gt 0 ]] && {
-            [[ ${+ice[make]} = 1 && ${ice[make]} = "!!"* ]] && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
+            [[ ${+ice[make]} = 1 && ${ice[make]} = "!!"* ]] && -zplg-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
 
             if [[ -z "${ice[is_release]}" && -n "${ice[mv]}" ]]; then
                 local from="${ice[mv]%%[[:space:]]#->*}" to="${ice[mv]##*->[[:space:]]#}"
@@ -1503,9 +1503,9 @@ ZPLGM[EXTENDED_GLOB]=""
                 done
             }
 
-            [[ ${+ice[make]} = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
+            [[ ${+ice[make]} = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
             [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
-            [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
+            [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && -zplg-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
 
             # Run annexes' atpull hooks (the after atpull-ice ones)
             reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atpull <->]} )
