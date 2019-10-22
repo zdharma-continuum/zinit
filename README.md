@@ -454,6 +454,7 @@ explicitly stated otherwise.
 | `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded.</div>|
 | `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc.</div>|
 | [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`.</div>|
+| `countdown` |<div align="justify" style="text-align: justify;">Causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0 to be displayed before executing `atclone''` and `atpull''` ices</div>|
 
 ### Sticky-Emulation Of Other Shells
 | Modifier | Description |
