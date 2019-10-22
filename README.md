@@ -51,6 +51,10 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 22-10-2019
+  - A new ice `countdown` – causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0
+    to be displayed before running the `atclone''` and `atpull''` ices.
+
 * 21-10-2019
   - The `times` command has a new option `-m` – it shows the **moments** of the plugin
     load times – i.e.: how late after loading Zplugin a plugin has been loaded.
