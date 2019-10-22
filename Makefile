@@ -26,7 +26,7 @@ svn: test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 \
 curl: test21 test22 test23 test24 test25 test26 test27 test29 test30 \
       test70
 
-general: test100 test101 test102
+general: test100 test101 test102 test104
 
 prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh
 	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin ../git-process-output.zsh .
