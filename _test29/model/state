@@ -1,3 +1,5 @@
+AT_TIME_1_OMZ::plugins/git/git.plugin.zsh
+__reset-by-test__
 BIN_DIR
 test
 COMPLETIONS_DIR

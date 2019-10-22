@@ -1,3 +1,5 @@
+AT_TIME_1_OMZ::plugins/make/Makefile2
+__reset-by-test__
 BIN_DIR
 test
 COMPLETIONS_DIR
@@ -30,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'OMZ::plugins/make/Makefile2' 'OMZ::plugins/make/Makefile2 <single file>'
-ZPLG_SICE: 'OMZ::plugins/make/Makefile2' 'pick Makefile.copy4 atinit '\''cp -v Makefile.copy3 Makefile.copy4'\'' as command subscribe '\'''\'' teleid OMZ::plugins/make/Makefile2 wait '\'''\'' atload '\''cp -v Makefile.copy4 Makefile.copy5'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
+ZPLG_SICE: 'OMZ::plugins/make/Makefile2' 'as command atinit '\''cp -v Makefile.copy3 Makefile.copy4'\'' pick Makefile.copy4 subscribe '\'''\'' teleid OMZ::plugins/make/Makefile2 wait '\'''\'' atload '\''cp -v Makefile.copy4 Makefile.copy5'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

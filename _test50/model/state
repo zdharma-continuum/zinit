@@ -1,5 +1,7 @@
 ALIASES__psprint/zsh-select
 
+AT_TIME_1_psprint---zsh-select
+__reset-by-test__
 BIN_DIR
 test
 COMPLETIONS_DIR
@@ -48,7 +50,7 @@ ZSTYLES__psprint/zsh-select
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '2'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' atload '\''echo ${REPO_DIR:t} > var'\'' mv '\''zsh-select.plugin.zsh -> orig.plugin.zsh'\'' from gl atclone '\''command echo "touch \${ZPLGM[PLUGINS_DIR]}/load.mark" >! zsh-select.plugin.zsh'\'' src orig.plugin.zsh '
+ZPLG_SICE: 'psprint/zsh-select' 'subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' atload '\''echo ${REPO_DIR:t} > var'\'' mv '\''zsh-select.plugin.zsh -> orig.plugin.zsh'\'' atclone '\''command echo "touch \${ZPLGM[PLUGINS_DIR]}/load.mark" >! zsh-select.plugin.zsh'\'' from gl src orig.plugin.zsh '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

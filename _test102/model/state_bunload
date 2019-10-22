@@ -1,5 +1,7 @@
 ALIASES__psprint/zsh-editing-workbench
 naliases\ \'\' ncd\ \'\' nenv\ \'\' nfunctions\ \'\' nhistory\ \'\' nkill\ \'\' zpl\ zplugin zplg\ zplugin
+AT_TIME_1_psprint---zsh-editing-workbench
+__reset-by-test__
 BIN_DIR
 test
 COMPLETIONS_DIR

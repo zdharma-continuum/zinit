@@ -1,3 +1,5 @@
+AT_TIME_1_https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+__reset-by-test__
 BIN_DIR
 test
 COMPLETIONS_DIR

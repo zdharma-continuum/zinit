@@ -2,6 +2,10 @@ ALIASES__psprint/zsh-select
 
 ALIASES__zdharma/ice-order
 
+AT_TIME_1_psprint---zsh-select
+__reset-by-test__
+AT_TIME_2_zdharma---ice-order
+__reset-by-test__
 BIN_DIR
 test
 COMPLETIONS_DIR

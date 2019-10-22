@@ -1,3 +1,5 @@
+AT_TIME_1_OMZ::plugins/git/git.plugin.zsh
+__reset-by-test__
 BIN_DIR
 test
 COMPLETIONS_DIR
@@ -30,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'OMZ::plugins/git/git.plugin.zsh <single file>'
-ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'atinit '\''command cp after_cp_test after_atclone_test'\'' pick git2.plugin.zsh as command subscribe '\'''\'' teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command cp git2.plugin.zsh after_cp_test'\'' cp '\''gp -> git2.plugin.zsh'\'' '
+ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'as command pick git2.plugin.zsh atinit '\''command cp after_cp_test after_atclone_test'\'' subscribe '\'''\'' teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command cp git2.plugin.zsh after_cp_test'\'' cp '\''gp -> git2.plugin.zsh'\'' '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---
