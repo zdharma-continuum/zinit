@@ -1390,7 +1390,7 @@ ZPLGM[EXTENDED_GLOB]=""
                     eval ${ZPLG_ICE[reset]:-command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)}
                 )
 
-                [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                [[ ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
 
                 if (( !skip_pull )) {
@@ -1454,7 +1454,7 @@ ZPLGM[EXTENDED_GLOB]=""
                       [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-git reset --hard HEAD}%f"
                       eval "${ZPLG_ICE[reset]:-command git reset --hard HEAD}"
                   )
-                  [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
+                  [[ ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" ${ice[atclone]}; )
                   ZPLG_ICE=()
                   (( !skip_pull )) && command git pull --no-stat
               }
@@ -1504,7 +1504,7 @@ ZPLGM[EXTENDED_GLOB]=""
             }
 
             [[ ${+ice[make]} = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
-            [[ ${+ice[atpull]} = 1 && ${${ice[atpull]}[1]} != "!" ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
+            [[ -n ${ice[atpull]} && ${${ice[atpull]}[1]} != "!" ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; ((1)); } || -zplg-at-eval "${ice[atpull]}" ${ice[atclone]}; )
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && -zplg-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
 
             # Run annexes' atpull hooks (the after atpull-ice ones)
