@@ -508,7 +508,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
 
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}..."
 
                 if (( ${+ZPLG_ICE[svn]} )) {
                     local skip_pull=0
