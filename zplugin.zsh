@@ -885,6 +885,14 @@ function $f {
     ZPLG_EXTS[ice-mods]="${ZPLG_EXTS[ice-mods]}${icemods:+|}$icemods"
 }
 # }}}
+# FUNCTION: @zsh-plugin-run-on-update {{{
+# The Plugin Standard required mechanism, see:
+# http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
+@zsh-plugin-run-on-unload() {
+    ZPLG_ICE[ps-on-unload]="${(j.; .)@}"
+    -zplg-pack-ice "$id_as" ""
+}
+# }}}
 
 #
 # Remaining functions

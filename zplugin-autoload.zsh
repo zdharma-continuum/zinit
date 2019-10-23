@@ -726,6 +726,7 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-unload {{{
 # 0. Call the Zsh Plugin's Standard *_plugin_unload function
+# 0. Call the code provided by the Zsh Plugin's Standard @zsh-plugin-run-at-update
 # 1. Delete bindkeys (...)
 # 2. Delete Zstyles
 # 3. Restore options
@@ -769,6 +770,20 @@ ZPLGM[EXTENDED_GLOB]=""
     #
 
     (( ${+functions[${plugin}_plugin_unload]} )) && ${plugin}_plugin_unload
+
+    #
+    # Call the code provided by the Zsh Plugin's Standard @zsh-plugin-run-at-update
+    #
+
+    local -a tmp
+    local -A sice
+    tmp=( "${(z@)ZPLG_SICE[$uspl2]}" )
+    (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" ) || sice=()
+
+    if [[ -n ${sice[ps-on-unload]} ]]; then
+        (( quiet )) || print -r "Running plugin's provided unload code: ${ZPLGM[col-info]}${sice[ps-on-unload][1,50]}${sice[ps-on-unload][51]:+…}${ZPLGM[col-rst]}"
+        eval "${sice[ps-on-unload]}"
+    fi
 
     #
     # 1. Delete done bindkeys
