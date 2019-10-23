@@ -2752,7 +2752,7 @@ EOF
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases countdown
+        \!csh aliases countdown ps-on-unload
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
