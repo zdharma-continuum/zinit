@@ -893,6 +893,13 @@ function $f {
     -zplg-pack-ice "$id_as" ""
 }
 # }}}
+# FUNCTION: @zsh-plugin-run-on-update {{{
+# The Plugin Standard required mechanism
+@zsh-plugin-run-on-update() {
+    ZPLG_ICE[ps-on-update]="${(j.; .)@}"
+    -zplg-pack-ice "$id_as" ""
+}
+# }}}
 
 #
 # Remaining functions

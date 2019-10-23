@@ -686,6 +686,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
+
+            if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
+                (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-unload][1,50]}${ZPLG_ICE[ps-on-unload][51]:+…}${ZPLGM[col-rst]}"
+                eval "${ZPLG_ICE[ps-on-unload]}"
+            fi
             return 0;
         }
 
@@ -755,6 +760,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
+
+            if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
+                (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+                eval "${ZPLG_ICE[ps-on-update]}"
+            fi
         }
         ((1))
     ) || return $?

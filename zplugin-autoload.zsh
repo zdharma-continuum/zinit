@@ -1541,6 +1541,11 @@ ZPLGM[EXTENDED_GLOB]=""
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \%atpull
     done
+
+    if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
+        (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+        eval "${ZPLG_ICE[ps-on-update]}"
+    fi
     ZPLG_ICE=()
 
     return 0
@@ -2752,7 +2757,7 @@ EOF
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases countdown ps-on-unload
+        \!csh aliases countdown ps-on-unload ps-on-update
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
