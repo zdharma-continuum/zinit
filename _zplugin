@@ -5,6 +5,7 @@ setopt extendedglob warncreateglobal typesetsilent \
         noshortloops rcquotes noautopushd
 
 local curcontext="$curcontext" state state_descr line ret=1
+local -a expl
 
 typeset -a commands
 commands=(
