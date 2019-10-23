@@ -2276,8 +2276,8 @@ ZPLGM[EXTENDED_GLOB]=""
     if (( ICE_OPTS[opt_--all] )); then
         -zplg-confirm "Prune all plugins in \`${ZPLGM[PLUGINS_DIR]}'"\
 "and snippets in \`${ZPLGM[SNIPPETS_DIR]}'?" \
-"command rm -rf ${${ZPLGM[PLUGINS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/_local---zplugin "\
-"${${ZPLGM[SNIPPETS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/plugins"
+"command rm -rf ${${ZPLGM[PLUGINS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/_local---zplugin(ND) "\
+"${${ZPLGM[SNIPPETS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/plugins(ND)"
         return $?
     fi
 
@@ -2286,8 +2286,8 @@ ZPLGM[EXTENDED_GLOB]=""
         -zplg-confirm "Prune ${ZPLGM[col-info]}CURRENTLY NOT LOADED${ZPLGM[col-rst]}"\
 " plugins in ${ZPLGM[PLUGINS_DIR]}"\
 " and snippets in ${ZPLGM[SNIPPETS_DIR]}?" \
-"command rm -rf ${${ZPLGM[PLUGINS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/(${(j:|:)${ZPLG_REGISTERED_PLUGINS[@]//\//---}})(N) "\
-"${${ZPLGM[SNIPPETS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/(plugins|OMZ::lib|${(j:|:)${(@)${(@)${${ZPLG_SNIPPETS[@]% <*>}[@]:h}//\//--}}})(N)"
+"command rm -rf ${${ZPLGM[PLUGINS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/(${(j:|:)${ZPLG_REGISTERED_PLUGINS[@]//\//---}})(ND) "\
+"${${ZPLGM[SNIPPETS_DIR]##[[:space:]]##}:-/tmp/abcEFG312}/*~*/(plugins|OMZ::lib|${(j:|:)${(@)${(@)${${ZPLG_SNIPPETS[@]% <*>}[@]:h}//\//--}}})(ND)"
         return $?
     fi
 
