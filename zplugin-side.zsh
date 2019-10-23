@@ -226,7 +226,8 @@
         -zplg-exists-physically-message "$__user" "$__plugin" || return 1
     fi
 
-    [[ "$__pack" = pack* ]] && -zplg-pack-ice "${__user-$__URL}" "$__plugin"
+    [[ $__pack = pack* ]] && (( ${#ZPLG_ICE} > 0 )) && \
+        -zplg-pack-ice "${__user-$__URL}" "$__plugin"
 
     local -A __sice
     local -a __tmp
