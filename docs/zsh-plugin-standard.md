@@ -122,6 +122,36 @@ maintaining of such function (if it is to withdraw **all** plugin side-effects)
 can be a daunting task requiring constant monitoring of it during the plugin
 develoment process.
 
+## 3. `@zsh-plugin-run-on-unload` call
+
+The plugin manager can provide a function `@zsh-plugin-run-on-unload` which
+has the following call syntax:
+
+```zsh
+@zsh-plugin-run-on-unload "{code-snippet-1}" "{code-snippet-2}" …
+```
+
+The function registers pieces of code to be run by the plugin manager **on
+unload of the plugin**. The execution of the code should be done by the `eval`
+builtin in the same order as they are passed to the call.
+
+The mechanism thus provides another way, side to the [unload
+function](#246_unload_function), for the plugin to participate in the process of
+unloading it.
+
+## 4. `@zsh-plugin-run-on-update` call
+
+The plugin manager can provide a function `@zsh-plugin-run-on-update` which
+has the following call syntax:
+
+```zsh
+@zsh-plugin-run-on-update "{code-snippet-1}" "{code-snippet-2}" …
+```
+
+The function registers pieces of code to be run by the plugin manager **on
+update of the plugin**. The execution of the code should be done by the `eval`
+builtin in the same order as they are passed to the call.
+
 ## 3\. Plugin Manager Activity Indicator
 
 Plugin managers should set the `$zsh_loaded_plugins` array to contain all
@@ -226,9 +256,51 @@ The use of this function is recommended because it allows to install
 widget with the name of one of the special widgets. Now, after the function has
 been introduced in Zsh `5.3` it should be used instead.
 
+### Standard recommended options
+
+The following code snippet is recommended to be included at the beginning of
+each of the main functions provided by the plugin:
+
+```zsh
+emulate -L zsh
+setopt extendedglob warncreateglobal typesetsilent \
+        noshortloops rcquotes noautopushd
+```
+
+It resets all the options to their default state according to the `zsh`
+emulation mode, with use of the `localoptions` option – so the options will be
+restored to their previous state when leaving the function.
+
+It then alters the emulation by `6` different options:
+
+- `extendedglob` – enables one of the main Zshell features – the advanced,
+  built-in regex-like globing mechanism,
+- `warncreateglobal` – enables warnings to be printed each time a (global)
+  variable is defined without being explicitly defined by a `typeset`, `local`,
+  `declare`, etc.  call; it allows to catch typos and missing localizations of
+  the variables and thus prevents from writing a bad code,
+- `typesetsilent` – it allows to call `typeset`, `local`, etc. multiple times on
+  the same variable; without it the second call causes the variable contents to
+  be printed first; using this option allows to declare variables inside loops,
+  near the place of their use, which sometimes helps to write a more readable
+  code,
+- `noshortloops` – disables the short-loops syntax; this is done because when
+  the syntax is enabled it limits the parser's ability to detect errors (see
+  this [zsh-workers post](https://www.zsh.org/mla/workers/2011/msg01050.html)
+  for the details),
+- `rcquotes` – adds useful ability to insert apostrophes into an
+  apostrophe-quoted string, by use of `''` inside it, e.g.: `'a string''s
+  example'` will yield the string `a string's example`,
+- `noautopushd` - disables the automatic push of the directory passed to `cd`
+  builtin onto the directory stack; this is useful, because otherwise the
+  internal directory changes done by the plugin will pollute the global
+  directory stack.
 
 ## Appendix A: Revision History (History Of Updates To The Document)
 
+v0.97, 10/23/2019: Added `Standard recommended option` section  
+v0.96, 10/23/2019: Added `@zsh-plugin-run-on-unload` and
+`@zsh-plugin-run-on-update` calls  
 v0.95, 07/31/2019: Plugin unload function `*_unload_plugin` -->
 `*_plugin_unload`  
 v0.94, 07/20/2019: Add initial version of the best practices section  
