@@ -2245,7 +2245,7 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     }
 } # }}}
-# FUNCTION: -zplg-run-delete-hooks() {
+# FUNCTION: -zplg-run-delete-hooks {{{
 -zplg-run-delete-hooks() {
     local -a arr
     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atdelete <->]} )
@@ -2254,6 +2254,7 @@ ZPLGM[EXTENDED_GLOB]=""
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" atdelete
     done
 }
+# }}}
 # FUNCTION: -zplg-delete {{{
 # Deletes plugin's or snippet's directory (in Zplugin's home directory).
 #
