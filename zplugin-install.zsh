@@ -689,7 +689,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
             if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
                 (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
-                eval "${ZPLG_ICE[ps-on-update]}"
+                (
+                    builtin cd -q "$local_dir/$dirname";
+                    eval "${ZPLG_ICE[ps-on-update]}"
+                )
             fi
             return 0;
         }
