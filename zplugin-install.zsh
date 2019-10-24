@@ -688,8 +688,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             done
 
             if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
-                (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-unload][1,50]}${ZPLG_ICE[ps-on-unload][51]:+…}${ZPLGM[col-rst]}"
-                eval "${ZPLG_ICE[ps-on-unload]}"
+                (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+                eval "${ZPLG_ICE[ps-on-update]}"
             fi
             return 0;
         }
