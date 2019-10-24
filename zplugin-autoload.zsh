@@ -749,6 +749,9 @@ ZPLGM[EXTENDED_GLOB]=""
     -zplg-any-colorify-as-uspl2 "$uspl2"
     (( quiet )) || print -r -- "${ZPLGM[col-bar]}---${ZPLGM[col-rst]} Unloading plugin: $REPLY ${ZPLGM[col-bar]}---${ZPLGM[col-rst]}"
 
+    local __dir
+    [[ "$user" = "%" ]] && __dir="$plugin" || __dir="${ZPLGM[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
+
     # KSH_ARRAYS immunity
     integer correct=0
     [[ -o "KSH_ARRAYS" ]] && correct=1
@@ -782,7 +785,10 @@ ZPLGM[EXTENDED_GLOB]=""
 
     if [[ -n ${sice[ps-on-unload]} ]]; then
         (( quiet )) || print -r "Running plugin's provided unload code: ${ZPLGM[col-info]}${sice[ps-on-unload][1,50]}${sice[ps-on-unload][51]:+…}${ZPLGM[col-rst]}"
+        local __oldcd="$PWD"
+        () { setopt localoptions noautopushd; builtin cd -q "$__dir"; }
         eval "${sice[ps-on-unload]}"
+        () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }
     fi
 
     #
