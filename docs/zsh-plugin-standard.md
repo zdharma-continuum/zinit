@@ -29,7 +29,7 @@ From a more broad perspective, a plugin consists of:
    completions, Makefiles, backend programs, documentation).
 
 2. A sourcable script that obtains the path to its directory via `$0` (see the
-   [**next section**](#zero-handling) for a related enhancement proposal).
+   [**next section**](#146_standardized_0_handling) for a related enhancement proposal).
 
 3. A Github (or other site) repository identified by two components
    **username**/**pluginname**.
@@ -379,7 +379,7 @@ However when adopted, the proposition will solve the following issues:
 
 2. Not using a prefix at all – this is also an unwanted practice as it pollutes
    the command namespace
-   [**an example**](https://github.com/zdharma/fast-syntax-highlighting/issues/157)
+   ([**an example**](https://github.com/zdharma/fast-syntax-highlighting/issues/157)
    of such issue appearing).
 
 3. It would allow to quickly discriminate between function types – e.g.: seeing
@@ -402,7 +402,9 @@ The proposition of the standard prefixes is as follows:
    `.prompt_zinc_get_value`.
 
 2. `:`: for hook-like functions, so it should be used e.g.: for the
-   [**Zsh hooks**](#azh) and the [**Zle hooks**](#azhw), but also for any other
+   [**Zsh hooks**](##use_of_add-zsh-hook_to_install_hooks) and the [**Zle
+   hooks**](#use_of_add-zle-hook-widget_to_install_zle_hooks), but also for any
+   other
    custom hook-like mechanism in the plugin (e.g.: Zplugin annexes
    [**use**](http://zdharma.org/zplugin/wiki/Annexes/#how_to_code_them) such
    prefix for the Zplugin hook functions). Example function name:
@@ -422,7 +424,7 @@ The proposition of the standard prefixes is as follows:
 5. `@`: for API-like functions, i.e: for functions that are on a boundary to a
    subsystem and expose its functionality through a well-defined, in general
    fixed interface. For example this plugin standard
-   [**defines**](#update-register-call) the function `@zsh-plugin-run-on-update`,
+   [**defines**](#4_zsh-plugin-run-on-update_call) the function `@zsh-plugin-run-on-update`,
    which is exposing a plugin manager's functionality in a well-defined way.
 
 ##### Example Code Utilizing The Prefixes
