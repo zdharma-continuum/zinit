@@ -103,6 +103,14 @@ The last, 5th point also allows to use the `$0` handling in scripts (i.e.
 runnables with the hashbang `#!…`) to get the directory in which the script
 file resides.
 
+##### Adoption Status
+
+1. Plugin managers: Zplugin, Zgen (after and if the
+   [**PR**](https://github.com/tarjoilija/zgen/pull/124) will be merged)
+
+2. Plugins:
+   [**GitHub search**](https://github.com/search?q=%22${ZERO:-${0:%23$ZSH_ARGZERO}}%22&type=Code)
+
 ## 2\. Unload Function
 
 If a plugin is named e.g. `kalc` (and is available via `an-user/kalc`
@@ -122,6 +130,16 @@ maintaining of such function (if it is to withdraw **all** plugin side-effects)
 can be a daunting task requiring constant monitoring of it during the plugin
 develoment process.
 
+##### Adoption Status
+
+1. One plugin manager, Zplugin, implements plugin unloading and calls the
+   function.
+2. One plugin, `romkatv/powerlevel10k`, is
+   [**using**](https://github.com/romkatv/powerlevel10k/blob/f17081ca/internal/p10k.zsh#L5390)
+   the function to execute a specific task: shutdown of the binary, background
+   [**gitstatus**](https://github.com/romkatv/gitstatus) demon, with a very good
+   results.
+
 ## 3. `@zsh-plugin-run-on-unload` call
 
 The plugin manager can provide a function `@zsh-plugin-run-on-unload` which
@@ -135,9 +153,15 @@ The function registers pieces of code to be run by the plugin manager **on
 unload of the plugin**. The execution of the code should be done by the `eval`
 builtin in the same order as they are passed to the call.
 
+The code should be executed in the plugin's directory, in the current shell.
+
 The mechanism thus provides another way, side to the [unload
 function](#246_unload_function), for the plugin to participate in the process of
 unloading it.
+##### Adoption Status
+
+It's a recent addition to the standard and only one plugin manager, Zplugin,
+implements it.
 
 ## 4. `@zsh-plugin-run-on-update` call
 
@@ -152,7 +176,16 @@ The function registers pieces of code to be run by the plugin manager **on
 update of the plugin**. The execution of the code should be done by the `eval`
 builtin in the same order as they are passed to the call.
 
-## 3\. Plugin Manager Activity Indicator
+The code should be executed in the plugin's directory, possibly in a subshell.
+
+##### Adoption Status
+
+It's a recent addition to the standard and only one plugin manager, Zplugin,
+implements it.
+
+## 5\. Plugin Manager Activity Indicator
+
+
 
 Plugin managers should set the `$zsh_loaded_plugins` array to contain all
 previously loaded plugins and the plugin currently being loaded (as the last
@@ -183,7 +216,15 @@ fi
 This will allow user to reliably source the plugin without using a plugin
 manager.
 
-## 4\. Global Parameter With PREFIX For Make, Configure, Etc.
+##### Adoption Status
+
+1. Plugin managers: Zplugin, Zgen (after and if the
+   [**PR**](https://github.com/tarjoilija/zgen/pull/124) will be merged)
+
+2. Plugins:
+   [**GitHub search**](https://github.com/search?q=if+%22zsh_loaded_plugins%22&type=Code)
+
+## 5\. Global Parameter With PREFIX For Make, Configure, Etc.
 
 Plugin managers may export the parameter `$ZPFX` which should contain a path to
 a directory dedicated for user-land software, i.e. for directories `$ZPFX/bin`,
@@ -206,6 +247,10 @@ No-narration facts-list related to `$ZPFX`:
  4. `cmake -DCMAKE_INSTALL_PREFIX=$ZPFX .`
  5. `zplugin ice make"PREFIX=$ZPFX install"`
  6. `zplug … hook-build:"make PREFIX=$PFX install"`
+
+##### Adoption Status
+
+One plugin manager, Zplugin, provides the `$ZPFX` parameter.
 
 ## Zsh Plugin-Programming Best Practices
 
@@ -263,42 +308,214 @@ each of the main functions provided by the plugin:
 
 ```zsh
 emulate -L zsh
-setopt extendedglob warncreateglobal typesetsilent \
-        noshortloops rcquotes noautopushd
+setopt extended_glob warn_create_global typeset_silent \
+        no_short_loops rc_quotes no_auto_pushd
 ```
 
 It resets all the options to their default state according to the `zsh`
-emulation mode, with use of the `localoptions` option – so the options will be
+emulation mode, with use of the `local_options` option – so the options will be
 restored to their previous state when leaving the function.
 
 It then alters the emulation by `6` different options:
 
-- `extendedglob` – enables one of the main Zshell features – the advanced,
+- `extended_glob` – enables one of the main Zshell features – the advanced,
   built-in regex-like globing mechanism,
-- `warncreateglobal` – enables warnings to be printed each time a (global)
+- `warn_create_global` – enables warnings to be printed each time a (global)
   variable is defined without being explicitly defined by a `typeset`, `local`,
   `declare`, etc.  call; it allows to catch typos and missing localizations of
   the variables and thus prevents from writing a bad code,
-- `typesetsilent` – it allows to call `typeset`, `local`, etc. multiple times on
+- `typeset_silent` – it allows to call `typeset`, `local`, etc. multiple times on
   the same variable; without it the second call causes the variable contents to
   be printed first; using this option allows to declare variables inside loops,
   near the place of their use, which sometimes helps to write a more readable
   code,
-- `noshortloops` – disables the short-loops syntax; this is done because when
+- `no_short_loops` – disables the short-loops syntax; this is done because when
   the syntax is enabled it limits the parser's ability to detect errors (see
-  this [zsh-workers post](https://www.zsh.org/mla/workers/2011/msg01050.html)
+  this [**zsh-workers post**](https://www.zsh.org/mla/workers/2011/msg01050.html)
   for the details),
-- `rcquotes` – adds useful ability to insert apostrophes into an
+- `rc_quotes` – adds useful ability to insert apostrophes into an
   apostrophe-quoted string, by use of `''` inside it, e.g.: `'a string''s
   example'` will yield the string `a string's example`,
-- `noautopushd` - disables the automatic push of the directory passed to `cd`
+- `no_auto_pushd` - disables the automatic push of the directory passed to `cd`
   builtin onto the directory stack; this is useful, because otherwise the
   internal directory changes done by the plugin will pollute the global
   directory stack.
 
+### Standard Recommended Variables
+
+It's good to localize the following variables at the entry of the main function
+of a plugin:
+
+```shell
+local MATCH REPLY; integer MBEGIN MEND
+local -a match mbegin mend reply
+```
+
+The variables starting with `m` and `M` are being used by the substitutions
+utilizing `(#b)` and `(#m)` flags, respectively. They should not leak to the
+global scope. Also, their automatic creation would trigger the warning from the
+`warn_create_global` option.
+
+The `reply` and `REPLY` parameters are being normally used to return an array or
+a scalar from a function, respectively – it's the standard way of passing values
+from functions. Their use is naturally limited to the functions called from the
+main function of a plugin – they should not be used to pass data around e.g.: in
+between prompts, thus it's natural to localize them in the main function.
+
+### Standard Function Name-Space Prefixes
+
+The recommendation is purely subjective opinion of the author. It can evolve –
+if you have any remarks, don't hesitate to
+[**fill them**](https://github.com/zdharma/Zsh-100-Commits-Club/issues/new).
+
+##### The Problems Solved By The Proposition
+
+However when adopted, the proposition will solve the following issues:
+
+1. Using the underscore `_` to namespace functions – this isn't the right thing
+   to do because the prefix is being already used by the completion functions,
+   so the namespace is already filled up greatly and the plugin functions get
+   lost in it.
+
+2. Not using a prefix at all – this is also an unwanted practice as it pollutes
+   the command namespace
+   [**an example**](https://github.com/zdharma/fast-syntax-highlighting/issues/157)
+   of such issue appearing).
+
+3. It would allow to quickly discriminate between function types – e.g.: seeing
+   the `:` prefix informs the user that it's a hook-type function, while seeing
+   the `@` prefix informs the user that it's an API-like function, etc.
+
+4. It also provides an improvement during programming, by allowing to quickly
+   limit the number of completions offered by the editor, e.g.: for Vim's
+   `Ctrl-P` completing, when entering `+<Ctrl-P>`, then only a subset of the
+   functions is being completed (see below for the type of the functions).
+   **Note:** the editor has to be configured so that it accepts such special
+   characters as part of keywords, for Vim it's: `:set isk+=@-@,.,+,/,:` for all
+   of the proposed prefixes.
+
+##### The Proposed Function-Name Prefixes
+
+The proposition of the standard prefixes is as follows:
+
+1. `.`: for regular private functions. Example function:
+   `.prompt_zinc_get_value`.
+
+2. `:`: for hook-like functions, so it should be used e.g.: for the
+   [**Zsh hooks**](#azh) and the [**Zle hooks**](#azhw), but also for any other
+   custom hook-like mechanism in the plugin (e.g.: Zplugin annexes
+   [**use**](http://zdharma.org/zplugin/wiki/Annexes/#how_to_code_them) such
+   prefix for the Zplugin hook functions). Example function name:
+   `:prompt_zinc_precmd`.
+
+3. `+`: for output functions, i.e.: for functions that print to the standard
+   output and error or to a log, etc. Example function name:
+   `+prompt_zinc_output_segment`.
+
+4. `/`: for debug functions, i.e: for functions that output debug messages to
+   the screen or to a log or e.g.: gather some debug data. **Note:** the slash
+   makes it impossible for such functions to be auto-loaded via the `autoload`
+   mechanism. It is somewhat risky to assume, that this will never be needed for
+   the functions, however the limited number of available ASCII characters
+   justifies such allocation. Example function name: `/prompt_zinc_dmsg`.
+
+5. `@`: for API-like functions, i.e: for functions that are on a boundary to a
+   subsystem and expose its functionality through a well-defined, in general
+   fixed interface. For example this plugin standard
+   [**defines**](#update-register-call) the function `@zsh-plugin-run-on-update`,
+   which is exposing a plugin manager's functionality in a well-defined way.
+
+##### Example Code Utilizing The Prefixes
+
+```shell
+.zinc_register_hooks() {
+    add-zsh-hook precmd :zinc_precmd
+    /zinc_dmsg "Installed precmd hook with result: $?"
+    @zsh-plugin-run-on-unload "add-zsh-hook -d precmd :zinc_precmd"
+    +zinc_print "Zinc initialization complete"
+}
+```
+
+### Preventing Function Pollution
+
+When writing a larger autoload function, it very often is the case that the
+function contains definitions of other functions. When the main function
+finishes executing, the functions are being left defined. This might be
+undesired, e.g.: because of the command name-space pollution. The following
+snippet of code, when added at the beginning of the main function will
+automatically unset the sub-functions when leaving the main function:
+
+```shell
+# Don't leak any functions
+typeset -g prjef
+prjef=( ${(k)functions} )
+trap "unset -f -- \"\${(k)functions[@]:|prjef}\" &>/dev/null; unset prjef" EXIT
+trap "unset -f -- \"\${(k)functions[@]:|prjef}\" &>/dev/null; unset prjef; return 1" INT
+```
+
+Replace the `prj*` prefix with your project name, e.g.: `rustef` for a
+`rust`-related plugin. The `*ef` stands for "entry functions". The snippet works
+as follows:
+
+1. The line `prjef=( ${(k)functions} )` remembers all the functions that are
+   currently defined – which means that the list excludes the functions that are
+   to be yet defined by the body of the main function.
+
+2. The code `unset -f -- "${(k)functions[@]:|prjef}"` first does an subtraction
+   of array contents – the `:|` substitution operator – of the functions that
+   are defined at the moment of leaving of the function (the `trap`-s invoke the
+   code in this moment) with the list of functions from the start of the main
+   function – the ones stored in the variables `$prjef`.
+
+3. It then unsets the resulting list of the functions – being only the newly
+   defined functions in the main function – by passing it to `unset -f …`.
+
+This way the functions defined by the body of the main (most often an autoload)
+function will be only set during the execution of the function.
+
+### Preventing Parameter Pollution
+
+When writing a plugin one often needs to keep a state during the Zsh
+session. To do this it is natural to use global parameters. However,
+when the number of the parameters grows one might want to limit it.
+
+With the following method, only a single global parameter per plugin can be
+sufficient:
+
+```shell
+typeset -A PLGMAP
+typeset -A some_map
+typeset -a some_array
+
+# Use
+PLGMAP[state]=1
+some_map[state]=1
+some_array[1]=state
+```
+
+can be converted into:
+
+```shell
+typeset -A PLGMAP
+
+# Use
+PLGMAP[state]=1
+PLGMAP[some_map__state]=1
+PLGMAP[some_array__1]=state
+```
+
+The use of this method is very unproblematic. The author reduced the number of
+global parameters in one of projects by 21 by using an automatic conversion with
+Vim substitution patterns with back references without any problems.
+
 ## Appendix A: Revision History (History Of Updates To The Document)
 
-v0.97, 10/23/2019: Added `Standard recommended option` section  
+v0.99, 10/26/2019: Added `Adoption Status` sub-sections  
+v0.98, 10/25/2019: 1/ Added `Standard Recommended Variables` section  
+v0.98, 10/25/2019: 2/ Added `Standard Function Name-Space Prefixes` section  
+v0.98, 10/25/2019: 3/ Added `Preventing Function Pollution` section  
+v0.98, 10/25/2019: 4/ Added `Preventing Parameter Pollution` section  
+v0.97, 10/23/2019: Added `Standard Recommended Options` section  
 v0.96, 10/23/2019: Added `@zsh-plugin-run-on-unload` and
 `@zsh-plugin-run-on-update` calls  
 v0.95, 07/31/2019: Plugin unload function `*_unload_plugin` -->
