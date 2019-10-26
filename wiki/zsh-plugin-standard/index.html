@@ -3969,7 +3969,7 @@ loaded via Zsh’s <code>autoload</code> mechanism (a single function per-file).
 </li>
 <li>
 <p>A sourcable script that obtains the path to its directory via <code>$0</code> (see the
-   <a href="#zero-handling"><strong>next section</strong></a> for a related enhancement proposal).</p>
+   <a href="#146_standardized_0_handling"><strong>next section</strong></a> for a related enhancement proposal).</p>
 </li>
 <li>
 <p>A Github (or other site) repository identified by two components
@@ -4284,7 +4284,7 @@ if you have any remarks, don't hesitate to
 <li>
 <p>Not using a prefix at all – this is also an unwanted practice as it pollutes
    the command namespace
-   <a href="https://github.com/zdharma/fast-syntax-highlighting/issues/157"><strong>an example</strong></a>
+   (<a href="https://github.com/zdharma/fast-syntax-highlighting/issues/157"><strong>an example</strong></a>
    of such issue appearing).</p>
 </li>
 <li>
@@ -4311,7 +4311,9 @@ if you have any remarks, don't hesitate to
 </li>
 <li>
 <p><code>:</code>: for hook-like functions, so it should be used e.g.: for the
-   <a href="#azh"><strong>Zsh hooks</strong></a> and the <a href="#azhw"><strong>Zle hooks</strong></a>, but also for any other
+   <a href="##use_of_add-zsh-hook_to_install_hooks"><strong>Zsh hooks</strong></a> and the <a href="#use_of_add-zle-hook-widget_to_install_zle_hooks"><strong>Zle
+   hooks</strong></a>, but also for any
+   other
    custom hook-like mechanism in the plugin (e.g.: Zplugin annexes
    <a href="http://zdharma.org/zplugin/wiki/Annexes/#how_to_code_them"><strong>use</strong></a> such
    prefix for the Zplugin hook functions). Example function name:
@@ -4334,7 +4336,7 @@ if you have any remarks, don't hesitate to
 <p><code>@</code>: for API-like functions, i.e: for functions that are on a boundary to a
    subsystem and expose its functionality through a well-defined, in general
    fixed interface. For example this plugin standard
-   <a href="#update-register-call"><strong>defines</strong></a> the function <code>@zsh-plugin-run-on-update</code>,
+   <a href="#4_zsh-plugin-run-on-update_call"><strong>defines</strong></a> the function <code>@zsh-plugin-run-on-update</code>,
    which is exposing a plugin manager's functionality in a well-defined way.</p>
 </li>
 </ol>
