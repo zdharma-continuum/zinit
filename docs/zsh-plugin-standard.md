@@ -402,7 +402,7 @@ The proposition of the standard prefixes is as follows:
    `.prompt_zinc_get_value`.
 
 2. `:`: for hook-like functions, so it should be used e.g.: for the
-   [**Zsh hooks**](##use_of_add-zsh-hook_to_install_hooks) and the [**Zle
+   [**Zsh hooks**](#use_of_add-zsh-hook_to_install_hooks) and the [**Zle
    hooks**](#use_of_add-zle-hook-widget_to_install_zle_hooks), but also for any
    other
    custom hook-like mechanism in the plugin (e.g.: Zplugin annexes
