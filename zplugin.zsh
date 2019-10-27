@@ -1467,6 +1467,7 @@ function $f {
 # e.g. at update.
 -zplg-ice() {
     builtin setopt localoptions noksharrays extendedglob warncreateglobal typesetsilent noshortloops
+    integer retval
     local bit exts="${~ZPLG_EXTS[ice-mods]//\'\'/}"
     for bit; do
         [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|\
@@ -1475,12 +1476,14 @@ nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|\
 atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|\
 compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|\
 nocd|once|wrap-track|reset|noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
-aliases|countdown${~exts})(*) ]] && ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}"
+aliases|countdown${~exts})(*) ]] && \
+        ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}" || \
+        retval=1
     done
     [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
     ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
     [[ -n "${ZPLG_ICES[pick]}" ]] && ZPLG_ICES[pick]="${ZPLG_ICES[pick]//\$ZPFX/${ZPFX%/}}"
-    return 0
+    return $retval
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
@@ -1794,7 +1797,7 @@ update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|rec
 completions|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module) ]] && \
-    { -zplg-ice "$@"; return $?; }
+    { -zplg-ice "$@" || print "Unknown command \`$1' (use \`help' to get usage information)"; return $?; }
 
     case "$1" in
        (load|light)
