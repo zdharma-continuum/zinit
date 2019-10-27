@@ -1794,7 +1794,7 @@ zplugin() {
 
     [[ $1 != (-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
-completions|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
+completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module) ]] && \
     { -zplg-ice "$@" || print "Unknown command \`$1' (use \`help' to get usage information)"; return $?; }
