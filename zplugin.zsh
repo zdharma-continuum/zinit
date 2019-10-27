@@ -1471,12 +1471,13 @@ function $f {
     local bit exts="${~ZPLG_EXTS[ice-mods]//\'\'/}"
     for bit; do
         [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|\
-unload|on-update-of|subscribe|if|has|cloneonly|blockf|svn|pick|\
-nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|atload|atpull|\
-atclone|run-atpull|make|nomake|notify|reset-prompt|nosvn|service|\
-compile|nocompletions|nocompile|multisrc|id-as|bindmap|trackbinds|\
-nocd|once|wrap-track|reset|noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
-aliases|countdown${~exts})(*) ]] && \
+unload|on-update-of|subscribe|if|has|cloneonly|nocloneonly|blockf|\
+svn|nosvn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|\
+atload|atpull|atclone|run-atpull|norun-atpull|make|nomake|notify|\
+nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
+id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
+noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
+countdown|nocountdown${~exts})(*) ]] && \
         ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}" || \
         retval=1
     done
