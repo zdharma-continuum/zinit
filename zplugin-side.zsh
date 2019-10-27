@@ -274,7 +274,8 @@
 
     # Handle flag-Ices; svn must be last
     for __key in make pick nocompile reset ${nval_ices[@]}; do
-        (( 0 == ${+ZPLG_ICE[no$__key]} )) && continue
+        (( 0 == ${+ZPLG_ICE[no$__key]} && 0 == ${+__sice[no$__key]} )) && continue
+        (( 0 == ${+ZPLG_ICE[no$__key]} && 1 == ${+__sice[no$__key]} )) && continue
 
         if [[ "$__key" = "svn" ]]; then
             command print -r -- "0" >! "$__zplugin_path/mode"
