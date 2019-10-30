@@ -445,6 +445,7 @@ explicitly stated otherwise.
 | `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`.</div>|
 | `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>| 
 | `subscribe` / `on-update-of` |<div align="justify" style="text-align: justify;"> Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` </div>|
+| `trigger-load` |<div align="justify" style="text-align: justify;">Creates a function that loads the associated plugin/snippet, with an option (to use it, precede the ice content with `!`) to automatically forward the call afterwards, to a command of the same name as the function.</div> |
 
 ### Plugin Output
 | Modifier | Description |
