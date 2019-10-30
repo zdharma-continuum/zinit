@@ -1477,7 +1477,7 @@ atload|atpull|atclone|run-atpull|norun-atpull|make|nomake|notify|\
 nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
 id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
-countdown|nocountdown${~exts})(*) ]] && \
+countdown|nocountdown|trigger-load${~exts})(*) ]] && \
         ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}" || \
         retval=1
     done
@@ -1799,6 +1799,21 @@ completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrac
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module) ]] && \
     { -zplg-ice "$@" || print "Unknown command \`$1' (use \`help' to get usage information)"; return $?; }
+
+    if [[ -n ${ZPLG_ICE[trigger-load]} && $1 = (load|light|snippet|update) ]] {
+        eval "${ZPLG_ICE[trigger-load]#!}() {
+            ${${(M)ZPLG_ICE[trigger-load]#!}:+unset -f ${ZPLG_ICE[trigger-load]#!}}
+            local a b; local -a ices
+            # The wait'' ice is filtered-out
+            for a b ( ${(qqkv@)${(kv@)ZPLG_ICE[(I)^(trigger-load|wait)]}} ) {
+                ices+=( \"\$a\$b\" )
+            }
+            zplugin ice \${ices[@]}; zplugin $1 ${(qqq)2}
+            ${${(M)ZPLG_ICE[trigger-load]#!}:+# Forward the call
+            eval ${ZPLG_ICE[trigger-load]#!} \$@}
+        }"
+        return $?
+    }
 
     case "$1" in
        (load|light)
