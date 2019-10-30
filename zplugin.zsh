@@ -153,16 +153,18 @@ builtin setopt noaliases
 #
 # Author: Bart Schaefer
 --zplg-reload-and-run () {
-    local fpath_prefix="$1" autoload_opts="$2" func="$3" nul=$'\0'
+    local fpath_prefix="$1" autoload_opts="$2" func="$3"
     shift 3
 
     # Unfunction caller function (its name is given)
     unfunction -- "$func"
 
+    local -a __fpath
+    __fpath=( ${fpath[@]} )
     local -a +h fpath
     # See #127
-    [[ $FPATH != *${${(@ps:$nul:)fpath_prefix}[1]}* ]] && \
-        fpath=( ${(ps:$nul:)fpath_prefix} ${fpath[@]} )
+    [[ $FPATH != *${${(@0)fpath_prefix}[1]}* ]] && \
+        fpath=( ${(@0)fpath_prefix} ${__fpath[@]} )
 
     # After this the function exists again
     builtin autoload ${(s: :)autoload_opts} -- "$func"
@@ -208,7 +210,6 @@ builtin setopt noaliases
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
     done
 
-    local nul=$'\0'
     local -a fpath_elements
     fpath_elements=( ${(@)fpath[(r)$PLUGIN_DIR/*]} )
 
@@ -227,7 +228,7 @@ builtin setopt noaliases
                 }"
             else
                 eval "function ${(q)func} {
-                    --zplg-reload-and-run ${(qqq)PLUGIN_DIR}$nul${(pj,$nul,)${(qqq)fpath_elements[@]}} ${(qq)opts[*]} ${(q)func} "'"$@"
+                    --zplg-reload-and-run ${(qqq)PLUGIN_DIR}"$'\0'"${(pj,\0,)${(qqq)fpath_elements[@]}} ${(qq)opts[*]} ${(q)func} "'"$@"
                 }'
             fi
             builtin unsetopt noaliases
