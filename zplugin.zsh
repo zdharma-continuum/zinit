@@ -1670,8 +1670,9 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
 #      script, not from prompt
 #
 -zplg-scheduler() {
-    integer __ret=$?
-    [[ "$1" = "following" ]] && sched +1 "-zplg-scheduler following \$_"
+    integer __ret=${${ZPLGM[lro-data]%:*}##*:}
+    # lro stands for lastarg-retval-option
+    [[ "$1" = "following" ]] && sched +1 'ZPLGM[lro-data]="$_:$?:${options[printexitvalue]}"; -zplg-scheduler following ${ZPLGM[lro-data]%:*:*}'
     [[ -n "$1" && "$1" != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
     ZPLGM[START_TIME]=${ZPLGM[START_TIME]:-$EPOCHREALTIME}
@@ -1734,7 +1735,7 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
         # There's a bug in Zsh: first sched call would not be issued
         # until a key-press, if "sched +1 ..." would be called inside
         # zle -F handler. So it's done here, in precmd-handle code.
-        sched +1 "-zplg-scheduler following \$_"
+        sched +1 'ZPLGM[lro-data]="$_:$?:${options[printexitvalue]}"; -zplg-scheduler following ${ZPLGM[lro-data]%:*:*}'
 
         ANFD="13371337" # for older Zsh + noclobber option
         exec {ANFD}< <(LANG=C command sleep 0.002; builtin print run;)
@@ -1751,6 +1752,8 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
                 ANFD="13371337" # for older Zsh + noclobber option
                 exec {ANFD}< <(LANG=C command sleep 0.0002; builtin print run;)
                 command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
+                # The $? and $_ will be preserved automatically by Zsh
+                # – that's how calling the -F handler is implemented
                 zle -F "$ANFD" -zplg-scheduler
                 break
             }
@@ -1765,7 +1768,7 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
     done
     ZPLG_RUN[1-correct,__idx-correct]=()
 
-    return $__ret
+    [[ ${ZPLGM[lro-data]##*:} = "on" ]] && return 0 || return $__ret
 }
 # }}}
 
