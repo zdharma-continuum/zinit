@@ -1826,7 +1826,7 @@ env-whitelist|bindkeys|module) ]] && \
                     eval ${MATCH#!} \$@}
                 }"
             }
-        }
+        } "$@"
         return $?
     }
 
