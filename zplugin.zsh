@@ -1801,17 +1801,19 @@ env-whitelist|bindkeys|module) ]] && \
     { -zplg-ice "$@" || print "Unknown command \`$1' (use \`help' to get usage information)"; return $?; }
 
     if [[ -n ${ZPLG_ICE[trigger-load]} && $1 = (load|light|snippet|update) ]] {
-        eval "${ZPLG_ICE[trigger-load]#!}() {
-            ${${(M)ZPLG_ICE[trigger-load]#!}:+unset -f ${ZPLG_ICE[trigger-load]#!}}
-            local a b; local -a ices
-            # The wait'' ice is filtered-out
-            for a b ( ${(qqkv@)${(kv@)ZPLG_ICE[(I)^(trigger-load|wait)]}} ) {
-                ices+=( \"\$a\$b\" )
-            }
-            zplugin ice \${ices[@]}; zplugin $1 ${(qqq)2}
-            ${${(M)ZPLG_ICE[trigger-load]#!}:+# Forward the call
-            eval ${ZPLG_ICE[trigger-load]#!} \$@}
-        }"
+        for MATCH ( ${(s.;.)ZPLG_ICE[trigger-load]} ) {
+            eval "${MATCH#!}() {
+                ${${(M)MATCH#!}:+unset -f ${MATCH#!}}
+                local a b; local -a ices
+                # The wait'' ice is filtered-out
+                for a b ( ${(qqkv@)${(kv@)ZPLG_ICE[(I)^(trigger-load|wait)]}} ) {
+                    ices+=( \"\$a\$b\" )
+                }
+                zplugin ice \${ices[@]}; zplugin $1 ${(qqq)2}
+                ${${(M)MATCH#!}:+# Forward the call
+                eval ${MATCH#!} \$@}
+            }"
+        }
         return $?
     }
 
