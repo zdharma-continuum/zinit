@@ -261,7 +261,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             (( quiet )) || print "${ZPLGM[col-info2]}Use \`${ZPLGM[col-pname]}zplugin creinstall $abbrev_pspec${ZPLGM[col-info2]}' to force install${ZPLGM[col-rst]}"
         fi
     done
-    -zplg-compinit >/dev/null
+    -zplg-compinit &>/dev/null
 } # }}}
 # FUNCTION: -zplg-compinit {{{
 # User-exposed `compinit' frontend which first ensures that all
