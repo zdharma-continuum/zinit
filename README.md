@@ -51,6 +51,19 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 30-10-2019
+  - A new ice `trigger-load''` – create a function that loads given plugin/snippet,
+    with an option (to use it, precede the ice content with `!`) to automatically
+    forward the call afterwards. Example use:
+
+    ```zsh
+    # Invoking the command `crasis' will load the plugin that
+    # provides the function `crasis', and it will be then
+    # immediately invoked with the same arguments
+    zplugin ice trigger-load'!crasis'
+    zplugin load zdharma/zplugin-crasis
+    ```
+
 * 22-10-2019
   - A new ice `countdown` – causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0
     to be displayed before running the `atclone''`, `atpull''` and `make` ices.
