@@ -1694,8 +1694,8 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
             # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
             integer __idx1 __idx2
             local __ar2 __ar3 __ar4 __ar5
-            for (( __idx1 = 0; __idx1 <= 10; __idx1 ++ )); do
-                for (( __idx2 = 1; __idx2 <= 3; __idx2 ++ )); do
+            for (( __idx1 = 0; __idx1 <= 7; __idx1 ++ )); do
+                for (( __idx2 = 1; __idx2 <= (__idx >= 4 ? 1 : 3); __idx2 ++ )); do
                     # The following substitution could be just (well, 'just'..) this:
                     #
                     # ZPLG_TASKS=( ${ZPLG_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/
