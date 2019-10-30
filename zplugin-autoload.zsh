@@ -2769,7 +2769,7 @@ EOF
         atinit atclone atload atpull nocd run-atpull has cloneonly make
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases countdown ps-on-unload ps-on-update
+        \!csh aliases countdown ps-on-unload ps-on-update trigger-load
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -2953,5 +2953,5 @@ Available ice-modifiers:
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
         nocompletions reset-prompt wrap-track reset aliases sh bash ksh csh
-        countdown"
+        countdown trigger-load"
 } # }}}
