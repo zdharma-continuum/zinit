@@ -1558,11 +1558,11 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
         __action="${(M)ZPLG_ICE[wait]#\!}load"
     elif [[ $__pass = 1 && -n "${ZPLG_ICE[wait]#\!}" ]] && { eval "${ZPLG_ICE[wait]#\!}" || [[ $(( __s=0 )) = 1 ]]; }; then
         __action="${(M)ZPLG_ICE[wait]#\!}load"
-    elif [[ -n "${ZPLG_ICE[load]#\!}" && -n $(( __s=0 )) && $__pass = 2 && -z "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[load]#\!}"; then
+    elif [[ -n "${ZPLG_ICE[load]#\!}" && -n $(( __s=0 )) && $__pass = 3 && -z "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[load]#\!}"; then
         __action="${(M)ZPLG_ICE[load]#\!}load"
-    elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( __s=0 )) && $__pass = 1 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
+    elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( __s=0 )) && $__pass = 2 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
         __action="${(M)ZPLG_ICE[unload]#\!}remove"
-    elif [[ -n "${ZPLG_ICE[subscribe]#\!}" && -n $(( __s=0 )) && "$__pass" = 2 ]] && \
+    elif [[ -n "${ZPLG_ICE[subscribe]#\!}" && -n $(( __s=0 )) && "$__pass" = 3 ]] && \
         { local -a fts_arr
           eval "fts_arr=( ${ZPLG_ICE[subscribe]}(DNms-$(( EPOCHSECONDS -
                  ZPLGM[fts-${ZPLG_ICE[subscribe]}] ))) ); (( \${#fts_arr} ))" && \
@@ -1743,9 +1743,10 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
     }
 
     local __task __idx=0 __count=0 __idx2
+    # All wait'' objects
     for __task in "${ZPLG_RUN[@]}"; do
         -zplg-run-task 1 "${(@z)__task}" && ZPLG_TASKS+=( "$__task" )
-        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && "$1" != "burst" ]] && \
+        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && $1 != burst ]] && \
             {
                 ANFD="13371337" # for older Zsh + noclobber option
                 exec {ANFD}< <(LANG=C command sleep 0.0002; builtin print run;)
@@ -1754,8 +1755,13 @@ countdown|nocountdown|trigger-load${~exts})(*) ]] && \
                 break
             }
     done
+    # All unload'' objects
     for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
         -zplg-run-task 2 "${(@z)ZPLG_RUN[__idx2-correct]}"
+    done
+    # All load'' & subscribe'' objects
+    for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
+        -zplg-run-task 3 "${(@z)ZPLG_RUN[__idx2-correct]}"
     done
     ZPLG_RUN[1-correct,__idx-correct]=()
 
