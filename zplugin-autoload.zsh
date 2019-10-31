@@ -2885,7 +2885,7 @@ EOF
 #
 # User-action entry point.
 -zplg-help() {
-           print "${ZPLGM[col-p]}Usage${ZPLGM[col-rst]}:
+           print -r -- "${ZPLGM[col-p]}Usage${ZPLGM[col-rst]}:
 —— -h|--help|help                – usage information
 —— man                           – manual
 —— self-update                   – updates and compiles Zplugin
@@ -2931,7 +2931,9 @@ EOF
 —— recall ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]}|URL           – fetch saved ice modifiers and construct \`zplugin ice ...' command
 —— env-whitelist [-v|-h] {env..} – allows to specify names (also patterns) of variables left unchanged during an unload. -v – verbose
 —— bindkeys                      – lists bindkeys set up by each plugin
-—— module                        – manage binary Zsh module shipped with Zplugin, see \`zplugin module help'"
+—— module                        – manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
+—— add-fpath|fpath ${ZPLGM[col-info]}[-f|--front]${ZPLGM[col-rst]} \\
+    ${ZPLGM[col-pname]}plg-spec ${ZPLGM[col-info]}[subdirectory]${ZPLGM[col-rst]}     – Adds given plugin directory to \$fpath. If the second argument is given, it is appended to the directory path. If the option -f/--front is given, the directory path is prepended instead of appended to \$fpath. The ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]} can be absolute path."
 
     integer idx
     local type key
