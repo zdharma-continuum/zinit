@@ -585,6 +585,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | `recall {plg-spec}\|URL` |<div align="justify" style="text-align: justify;"> Fetch saved ice modifiers and construct `zplugin ice ...` command.</div>|
 | `env-whitelist [-v] [-h] {env..}` |<div align="justify" style="text-align: justify;"> Allows to specify names (also patterns) of variables left unchanged during an unload. `-v` – verbose.</div>|
 | `module` |<div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zplugin, see `zplugin module help`.</div>|
+| `add-fpath\|fpath` `[-f\|--front]` `{plg-spec}` `[subdirectory]` |<div align="justify" style="text-align: justify;">Adds given plugin (not yet snippet) directory to `$fpath`. If the second argument is given, it is appended to the directory path. If the option `-f`/`--front` is given, the directory path is prepended instead of appended to `$fpath`. The `{plg-spec}` can be absolute path, i.e.: it's possible to also add regular directories.</div>|
 
 ## Updating Zplugin and Plugins
 
