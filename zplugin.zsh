@@ -1423,6 +1423,32 @@ function $f {
         )
 }
 # }}}
+# FUNCTION: -zplg-run {{{
+# Run code inside plugin's folder
+# It uses the `correct' parameter from upper's scope zplugin()
+-zplg-run() {
+    if [[ "$1" = (-l|--last) ]]; then
+        { set -- "${ZPLGM[last-run-plugin]:-$(<${ZPLGM[BIN_DIR]}/last-run-object.txt)}" "${@[2-correct,-1]}"; } &>/dev/null
+        [[ -z "$1" ]] && { print "${ZPLGM[col-error]}Error: No last plugin available, please specify as the first argument${ZPLGM[col-rst]}"; return 1; }
+    else
+        integer __nolast=1
+    fi
+    -zplg-any-to-user-plugin "$1" ""
+    local __id_as="$1" __user="${reply[-2]}" __plugin="${reply[-1]}" __oldpwd="$PWD"
+    () {
+        setopt localoptions noautopushd
+        builtin cd &>/dev/null -q "${${${(M)__user:#%}:+$__plugin}:-${ZPLGM[PLUGINS_DIR]}/${__id_as//\//---}}"
+    }
+    if (( $? == 0 )); then
+        (( __nolast )) && { print -r "$1" >! ${ZPLGM[BIN_DIR]}/last-run-object.txt; }
+        ZPLGM[last-run-plugin]="$1"
+        eval "${@[2-correct,-1]}"
+        () { setopt localoptions noautopushd; builtin cd -q "$__oldpwd"; }
+    else
+        print "${ZPLGM[col-error]}Error: no such plugin${ZPLGM[col-rst]}"
+    fi
+}
+# }}}
 
 #
 # Dtrace
@@ -1819,7 +1845,7 @@ zplugin() {
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
-env-whitelist|bindkeys|module|add-fpath|fpath) ]] && \
+env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
     { -zplg-ice "$@" || print "Unknown command \`$1' (use \`help' to get usage information)"; return $?; }
 
     if [[ -n ${ZPLG_ICE[trigger-load]} && $1 = (load|light|snippet|update) ]] {
@@ -1893,6 +1919,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath) ]] && \
            ;;
        (add-fpath|fpath)
            -zplg-add-fpath "${@[2-correct,-1]}"
+           ;;
+       (run)
+           -zplg-run "${@[2-correct,-1]}"
            ;;
        (dstart|dtrace)
            -zplg-debug-start
