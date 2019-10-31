@@ -1411,6 +1411,18 @@ function $f {
     (( $5 )) && { print; zle .reset-prompt; }
     return $retval
 } # }}}
+# FUNCTION: -zplg-add-fpath {{{
+-zplg-add-fpath() {
+    [[ "$1" = (-f|--front) ]] && { shift; integer front=1; }
+    -zplg-any-to-user-plugin "$1" ""
+    local id_as="$1" add_dir="$2" user="${reply[-2]}" plugin="${reply[-1]}"
+    (( front )) && \
+        fpath[1,0]=${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir} || \
+        fpath+=( 
+            ${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir}
+        )
+}
+# }}}
 
 #
 # Dtrace
@@ -1807,7 +1819,7 @@ zplugin() {
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
-env-whitelist|bindkeys|module) ]] && \
+env-whitelist|bindkeys|module|add-fpath|fpath) ]] && \
     { -zplg-ice "$@" || print "Unknown command \`$1' (use \`help' to get usage information)"; return $?; }
 
     if [[ -n ${ZPLG_ICE[trigger-load]} && $1 = (load|light|snippet|update) ]] {
@@ -1878,6 +1890,9 @@ env-whitelist|bindkeys|module) ]] && \
            ;;
        (cdclear)
            -zplg-compdef-clear "$2"
+           ;;
+       (add-fpath|fpath)
+           -zplg-add-fpath "${@[2,-1]}"
            ;;
        (dstart|dtrace)
            -zplg-debug-start
