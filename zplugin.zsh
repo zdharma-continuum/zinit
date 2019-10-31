@@ -1892,7 +1892,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath) ]] && \
            -zplg-compdef-clear "$2"
            ;;
        (add-fpath|fpath)
-           -zplg-add-fpath "${@[2,-1]}"
+           -zplg-add-fpath "${@[2-correct,-1]}"
            ;;
        (dstart|dtrace)
            -zplg-debug-start
