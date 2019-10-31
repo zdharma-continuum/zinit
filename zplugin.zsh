@@ -991,7 +991,7 @@ function $f {
     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" \!atinit
+        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}" \!atinit
     done
 
     (( ${+ZPLG_ICE[atinit]} )) && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
@@ -999,7 +999,7 @@ function $f {
     reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atinit <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" atinit
+        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}" atinit
     done
 
     -zplg-load-plugin "$user" "$plugin" "$id_as" "$mode" "$rst"; retval=$?
