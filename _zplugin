@@ -94,7 +94,9 @@ case $state in
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
 
-                _alternative 'directories:directory:_directories' 'plugins:plugin:compadd -a - plugins'
+                _alternative \
+                    'plugins:plugin:compadd -a - plugins' \
+                    'directories:directory:_directories' && ret=0
                 ;;
 
             run|fpath|add-fpath)
