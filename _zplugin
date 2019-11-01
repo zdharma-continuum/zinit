@@ -95,8 +95,9 @@ case $state in
                 plugins=( "${plugins[@]:#custom}" )
 
                 _alternative \
-                    'plugins:plugin:compadd -a - plugins' \
-                    'directories:directory:_directories' && ret=0
+                    'plugins:-- Plugin --:compadd -a - plugins' \
+                    'directories:-- Directory --:_directories' && \
+                        ret=0
                 ;;
 
             run|fpath|add-fpath)
@@ -114,10 +115,10 @@ case $state in
                 fi
 
                 _alternative \
-                    'plugins:plugin:compadd -a - plugins' \
-                    'directories:directory:_directories' \
-                    'opts:option:compadd -a - opts' \
-                    && ret=0
+                    'plugins:-- Plugin --:compadd -a - plugins' \
+                    'directories:-- Directory --:_directories' \
+                    'opts:-- Option --:compadd -a - opts' && \
+                        ret=0
                 ;;
 
             compile|stress|edit|glance|recall|update|status|cd|changes|delete)
@@ -144,10 +145,10 @@ case $state in
                     fi
                 }
 
-                _alternative 'dsnippets:downloaded snippet:compadd -a - snippets' \
-                    'lsnippets:already loaded snippet:compadd -a - snippets_alreadyld' \
-                    'plugins:plugins:compadd -a - plugins' && \
-                        ret=1
+                _alternative 'dsnippets:-- Downloaded Snippet --:compadd -a - snippets' \
+                    'lsnippets:-- Already Loaded Snippet --:compadd -a - snippets_alreadyld' \
+                    'plugins:-- Plugin --:compadd -a - plugins' && \
+                        ret=0
                 ;;
 
             unload|report)
@@ -160,8 +161,9 @@ case $state in
                 absolute=( "${absolute[@]/$hm/HOME}" )
                 plugins=( $absolute $normal )
 
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
+                _wanted plugins expl "-- Plugin --" \
+                    compadd "$@" -a - plugins && \
+                        ret=0
                 ;;
 
             all-reports)
@@ -185,14 +187,18 @@ case $state in
                 typeset -a completions
                 completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_*(N:t) )
                 completions=( "${completions[@]#_}" )
-                compadd "$@" -a - completions && ret=0
+                _wanted plugins expl "-- Completion --" \
+                    compadd "$@" -a - completions && \
+                        ret=0
                 ;;
 
             cenable)
                 # Find disabled
                 typeset -a completions
                 completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_]*(N:t) )
-                compadd "$@" -a - completions && ret=0
+                _wanted plugins expl "-- Completion --" \
+                    compadd "$@" -a - completions && \
+                        ret=0
                 ;;
 
             creinstall)
@@ -212,8 +218,9 @@ case $state in
                         break
                     done
                 done
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
+                _wanted plugins expl "-- Plugin --" \
+                    compadd "$@" -a - plugins && \
+                        ret=0
                 ;;
 
             cuninstall)
@@ -237,8 +244,9 @@ case $state in
                         fi
                     done
                 done
-                _wanted plugins expl "Plugins" \
-                    compadd "$@" -a - plugins && ret=0
+                _wanted plugins expl "-- Plugin --" \
+                    compadd "$@" -a - plugins && \
+                        ret=0
                 ;;
 
             compinit)
@@ -261,10 +269,10 @@ case $state in
                     fi
                 }
 
-                _alternative 'dsnippets:downloaded snippet:compadd -a - snippets' \
-                    'lsnippets:already loaded snippet:compadd -a - snippets_alreadyld' \
-                    'files:file:_files' && \
-                        ret=1
+                _alternative 'dsnippets:-- Downloaded Snippet --:compadd -a - snippets' \
+                    'lsnippets:-- Already Loaded Snippet --:compadd -a - snippets_alreadyld' \
+                    'files:-- File --:_files' && \
+                        ret=0
                 ;;
 
             dstart|dtrace)
@@ -307,8 +315,9 @@ case $state in
                     fi
                 done
 
-                _wanted show_plugins expl "Plugins" \
-                    compadd "$@" -a - show_plugins && ret=0
+                _wanted show_plugins expl "-- Plugin --" \
+                    compadd "$@" -a - show_plugins && \
+                        ret=0
                 ;;
 
             uncompile-all)
@@ -351,4 +360,4 @@ case $state in
         esac
 esac
 
-return "$ret"
+return $ret
