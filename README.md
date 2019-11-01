@@ -899,6 +899,8 @@ Do you need help or wish to get in touch with other Zplugin users?
 
 - Chat with us in our IRC channel. Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin.
 
+- Or via Gitter [![Chat at https://gitter.im/zplugin/Lobby][lobby-badge]][lobby-link]
+
 Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
 
 [status-badge]: https://travis-ci.org/zdharma/zplugin.svg?branch=master
