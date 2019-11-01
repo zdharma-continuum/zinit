@@ -68,20 +68,25 @@ case $state in
     command)
         _describe -t commands "Zplugin command" commands && ret=0
         ;;
+
     argument)
         case $words[2] in
             help)
                 _message "Hit enter to get usage information" && ret=0
                 ;;
+
             man)
                 _message "Hit enter to view manual" && ret=0
                 ;;
+
             zstatus)
                 _message "Hit enter to get overall status information" && ret=0
                 ;;
+
             times)
                 _message "Hit enter to get plugin load time statistics" && ret=0
                 ;;
+
             load|light)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
@@ -89,10 +94,9 @@ case $state in
                 plugins=( "${plugins[@]:#_local/zplugin}" )
                 plugins=( "${plugins[@]:#custom}" )
 
-                # _wanted plugins expl "Plugins" \
-                #    compadd "$@" -a - plugins && ret=0
                 _alternative 'directories:directory:_directories' 'plugins:plugin:compadd -a - plugins'
                 ;;
+
             run|fpath|add-fpath)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
@@ -143,6 +147,7 @@ case $state in
                     'plugins:plugins:compadd -a - plugins' && \
                         ret=1
                 ;;
+
             unload|report)
                 typeset -a plugins absolute normal
                 plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
@@ -156,18 +161,23 @@ case $state in
                 _wanted plugins expl "Plugins" \
                     compadd "$@" -a - plugins && ret=0
                 ;;
+
             all-reports)
                 _message "Hit enter to get all reports (for all loaded plugins)" && ret=0
                 ;;
+
             loaded|list)
                 _message "Hit enter or give part of plugin name" && ret=0
                 ;;
+
             clist|completions)
                 _message "Hit enter to get list of completions" && ret=0
                 ;;
+
             cclear)
                 _message "Hit enter to clear stray and improper completions" && ret=0
                 ;;
+
             cdisable)
                 # Find enabled completions
                 typeset -a completions
@@ -175,12 +185,14 @@ case $state in
                 completions=( "${completions[@]#_}" )
                 compadd "$@" -a - completions && ret=0
                 ;;
+
             cenable)
                 # Find disabled
                 typeset -a completions
                 completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_]*(N:t) )
                 compadd "$@" -a - completions && ret=0
                 ;;
+
             creinstall)
                 # Complete only plugins that have any completions
                 # We must iterate each plugin to check
@@ -201,6 +213,7 @@ case $state in
                 _wanted plugins expl "Plugins" \
                     compadd "$@" -a - plugins && ret=0
                 ;;
+
             cuninstall)
                 # We must iterate each plugin and check if
                 # it has completions that are installed
@@ -225,9 +238,11 @@ case $state in
                 _wanted plugins expl "Plugins" \
                     compadd "$@" -a - plugins && ret=0
                 ;;
+
             compinit)
                 _message "Hit enter to refresh completion system" && ret=0
                 ;;
+
             snippet)
                 local -a snippets snippets_alreadyld
                 local sni
@@ -249,24 +264,31 @@ case $state in
                     'files:file:_files' && \
                         ret=1
                 ;;
+
             dstart|dtrace)
                 _message "Hit enter to start tracking this session" && ret=0
                 ;;
+
             dstop)
                 _message "Hit enter to stop tracking this session" && ret=0
                 ;;
+
             dunload)
                 _message "Hit enter to revert changes recorded between dstart and dstop" && ret=0
                 ;;
+
             dreport)
                 _message "Hit enter to show report of what was going on in session" && ret=0
                 ;;
+
             dclear)
                 _message "Hit enter to clear report of what was going on in session" && ret=0
                 ;;
+
             compile-all)
                 _message 'Hit enter to compile all downloaded plugins' && ret=0
                 ;;
+
             uncompile)
                 typeset -a plugins
                 plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N) )
@@ -286,21 +308,27 @@ case $state in
                 _wanted show_plugins expl "Plugins" \
                     compadd "$@" -a - show_plugins && ret=0
                 ;;
+
             uncompile-all)
                 _message 'Hit enter remove compiled versions of all downloaded plugins' && ret=0
                 ;;
+
             compiled)
                 _message 'Hit enter to get list of compiled plugins' && ret=0
                 ;;
+
             cdlist)
                 _message 'Hit enter to show compdef replay list' && ret=0
                 ;;
+
             cdreplay)
                 _message 'Hit enter to replay recorded compdefs' && ret=0
                 ;;
+
             cdclear)
                 _message 'Hit enter to clear compdef replay list' && ret=0
                 ;;
+
             recently)
                 typeset -a timespecs
                 timespecs=(
@@ -310,9 +338,11 @@ case $state in
                 )
                 _describe -t timespecs "Time spec" timespecs && ret=0
                 ;;
+
             create)
                 _message 'Plugin spec or just enter, to create new plugin' && ret=0
                 ;;
+
             *)
                 ret=1
                 ;;
