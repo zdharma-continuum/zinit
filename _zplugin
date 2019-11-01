@@ -56,6 +56,8 @@ commands=(
     env-whitelist:'allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose'
     bindkeys:'lists bindkeys set up by each plugin'
     module:'manage binary Zsh module shipped with Zplugin, see `zplugin module help'''
+    run:"execute code inside plugin's folder"
+    {add-fpath,fpath}:'add plugin folder to $fpath'
 )
 
 _arguments -C \
@@ -91,6 +93,27 @@ case $state in
                 #    compadd "$@" -a - plugins && ret=0
                 _alternative 'directories:directory:_directories' 'plugins:plugin:compadd -a - plugins'
                 ;;
+            run|fpath|add-fpath)
+                typeset -a plugins
+                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${plugins[@]//---//}" )
+                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                local -a opts
+                if [[ $words[2] = run ]]; then
+                    opts=( -l )
+                else
+                    opts=( -f --front )
+                fi
+
+                _alternative \
+                    'plugins:plugin:compadd -a - plugins' \
+                    'directories:directory:_directories' \
+                    'opts:option:compadd -a - opts' \
+                    && ret=0
+                ;;
+
             compile|stress|edit|glance|recall|update|status|cd|changes|delete)
                 # Plugins
                 typeset -a plugins
