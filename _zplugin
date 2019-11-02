@@ -159,7 +159,7 @@ case $state in
                 absolute=( "${absolute[@]/\%\/\//%/}" )
                 local hm="${HOME%/}"
                 absolute=( "${absolute[@]/$hm/HOME}" )
-                plugins=( $absolute $normal )
+                plugins=( $normal $absolute )
 
                 _wanted plugins expl "-- Plugin --" \
                     compadd "$@" -a - plugins && \
