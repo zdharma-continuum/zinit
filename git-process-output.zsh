@@ -2,6 +2,21 @@
 
 emulate -LR zsh -o typesetsilent -o extendedglob -o warncreateglobal
 
+# Credit to molovo/revolver for the ideas
+typeset -ga progress_frames
+progress_frames=(
+  '0.2 ▹▹▹▹▹ ▸▹▹▹▹ ▹▸▹▹▹ ▹▹▸▹▹ ▹▹▹▸▹ ▹▹▹▹▸'
+  '0.2 ▁ ▃ ▄ ▅ ▆ ▇ ▆ ▅ ▄ ▃'
+  '0.2 ▏ ▎ ▍ ▌ ▋ ▊ ▉ ▊ ▋ ▌ ▍ ▎'
+  '0.2 ▖ ▘ ▝ ▗'
+  '0.2 ◢ ◣ ◤ ◥'
+  '0.2 ▌ ▀ ▐ ▄'
+  '0.2 ✶ ✸ ✹ ✺ ✹ ✷'
+)
+
+integer -g progress_style=$(( RANDOM % 7 + 1 )) cur_frame=1
+typeset -F SECONDS=0 last_time=0
+
 # Alpine Linux doesn't have tput; FreeBSD and Dragonfly BSD have termcap
 if whence tput &> /dev/null; then
   if [[ $OSTYPE == freebsd* ]] || [[ $OSTYPE == dragonfly* ]]; then
@@ -28,6 +43,16 @@ timeline() {
   local sp='▚▞'; sp="${sp:$2%2:1}"
   # Maximal width is 24 characters
   local bar="$(print -f "%.$2s█%0$(($3-$2-1))s" "████████████████████████" "")"
+
+  local -a frames_splitted
+  frames_splitted=( ${(@zQ)progress_frames[progress_style]} )
+  if (( SECONDS - last_time >= frames_splitted[1] )) {
+      (( cur_frame = (cur_frame+1) % (${#frames_splitted}+1-1) ))
+      (( cur_frame = cur_frame ? cur_frame : 1 ))
+      last_time=$SECONDS
+  }
+
+  print -nr -- ${frames_splitted[cur_frame+1]}" "
   print -nPr "%F{214}"
   print -f "%s %s" "${bar// /░}" ""
   print -nPr "%f"
