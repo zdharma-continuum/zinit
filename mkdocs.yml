@@ -3,11 +3,12 @@ nav:
 - "Introduction":
   - "Introduction": INTRODUCTION.md
 - "Ice Modifiers":
+  - "Nickname a Plugin or Snippet": id-as.md
+  - "Loading Plugins From Private Repositories": Private-Repositories.md
   - "Multiple Prompts": Multiple-prompts.md
   - "Example wait Conditions": Example-wait-conditions.md
   - "Installing With Make": Installing-with-make.md
   - "Sourcing Multiple Files": Sourcing-multiple-files.md
-  - "Nickname a Plugin or Snippet": id-as.md
   - "Tracking precmd-based Plugins": wrap-track.md
   - "Tracking precmd-based Plugins (2)": atload-and-other-at-ices.md
 - "Examples":
