@@ -1099,7 +1099,7 @@ function $f {
     local ZERO
     if [[ -z ${opts[(r)-u]} && -z ${opts[(r)--command]} && ( -z ${ZPLG_ICE[as]} || ${ZPLG_ICE[as]} = null ) ]]; then
         # Source the file with compdef shadowing
-        if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
+        if [[ ${ZPLGM[SHADOWING]} = inactive ]]; then
             # Shadowing code is inlined from -zplg-shadow-on
             (( ${+functions[compdef]} )) && ZPLGM[bkp-compdef]="${functions[compdef]}" || builtin unset "ZPLGM[bkp-compdef]"
             functions[compdef]='--zplg-shadow-compdef "$@";'
@@ -1109,8 +1109,8 @@ function $f {
         fi
 
         # Add to fpath
-        [[ -d "$local_dir/$dirname/functions" ]] && {
-            [[ -z "${fpath[(r)$local_dir/$dirname/functions]}" ]] && fpath+=( "$local_dir/$dirname/functions" )
+        [[ -d $local_dir/$dirname/functions ]] && {
+            [[ -z ${fpath[(r)$local_dir/$dirname/functions]} ]] && fpath+=( "$local_dir/$dirname/functions" )
             () {
                 builtin setopt localoptions extendedglob
                 autoload $local_dir/$dirname/functions/^([_.]*|prompt_*_setup|README*)(D-.N:t)
