@@ -53,8 +53,9 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 * 03-11-2019
   - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
-    `pick"/dev/null" nocompletion", i.e.: it disables the sourcing of the default
-    script file of a plugin or snippet and also disables installation of completions.
+    `pick"/dev/null" nocompletions`, i.e.: it disables the sourcing of the default
+    script file of a plugin or snippet and also disables the installation of
+    completions.
 
 * 30-10-2019
   - A new ice `trigger-load''` – create a function that loads given plugin/snippet,
