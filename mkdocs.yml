@@ -3,6 +3,7 @@ nav:
 - "Introduction":
   - "Introduction": INTRODUCTION.md
 - "Ice Modifiers":
+  - "Alternate Ice Syntax": Alternate-Ice-Syntax.md
   - "Nickname a Plugin or Snippet": id-as.md
   - "Loading Plugins From Private Repositories": Private-Repositories.md
   - "Multiple Prompts": Multiple-prompts.md
