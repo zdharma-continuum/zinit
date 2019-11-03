@@ -406,11 +406,12 @@ You can also check out the [Gallery of Zplugin Invocations](http://zdharma.org/z
 
 ## Ice Modifiers
 
-Following `ice` modifiers are to be passed to `zplugin ice ...` to obtain described effects.
-The word `ice` means something that's added (like ice to a drink) – and in Zplugin it
-means adding modifier to a next `zplugin` command, and also something that's temporary
-because it melts – and this means that the modification will last only for a **single**
-next `zplugin` command.
+Following `ice` modifiers are to be
+[passed](http://zdharma.org/zplugin/wiki/Alternate-Ice-Syntax/) to `zplugin ice ...` to
+obtain described effects.  The word `ice` means something that's added (like ice to a
+drink) – and in Zplugin it means adding modifier to a next `zplugin` command, and also
+something that's temporary because it melts – and this means that the modification will
+last only for a **single** next `zplugin` command.
 
 Some Ice-modifiers are highlighted and clicking on them will take you to the
 appropriate wiki page for an extended explanation.
