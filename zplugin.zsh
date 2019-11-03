@@ -1033,6 +1033,8 @@ function $f {
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
     ZPLG_ICE[teleid]="$url"
+    [[ ${ZPLG_ICE[as]} = null ]] && \
+        ZPLG_ICE[pick]="${ZPLG_ICE[pick]:-/dev/null}"
 
     local local_dir dirname filename save_url="$url" id_as="${ZPLG_ICE[id-as]:-$url}"
     [[ -z "${opts[(r)-i]}" ]] && -zplg-pack-ice "$id_as" ""
@@ -1095,7 +1097,7 @@ function $f {
     }
 
     local ZERO
-    if [[ -z "${opts[(r)-u]}" && -z "${opts[(r)--command]}" && -z "${ZPLG_ICE[as]}" ]]; then
+    if [[ -z ${opts[(r)-u]} && -z ${opts[(r)--command]} && ( -z ${ZPLG_ICE[as]} || ${ZPLG_ICE[as]} = null ) ]]; then
         # Source the file with compdef shadowing
         if [[ "${ZPLGM[SHADOWING]}" = "inactive" ]]; then
             # Shadowing code is inlined from -zplg-shadow-on
@@ -1295,6 +1297,9 @@ function $f {
             ${${ZPLG_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
             -c
         )
+
+    [[ ${ZPLG_ICE[as]} = null ]] && \
+        ZPLG_ICE[pick]="${ZPLG_ICE[pick]:-/dev/null}"
 
     local pbase="${${plugin:t}%(.plugin.zsh|.zsh|.git)}"
     [[ "$user" = "%" ]] && local pdir_path="$plugin" || local pdir_path="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"

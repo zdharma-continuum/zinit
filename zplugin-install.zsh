@@ -189,7 +189,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         fi
 
         # After additional executions like atclone'' - install completions (1 - plugins)
-        (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
+        [[ 1 = ${+ZPLG_ICE[nocompletions]} || ${ZPLG_ICE[as]} = null ]] || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
 
         if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} = '!' ]]; then
             # Compile plugin
@@ -773,7 +773,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     ) || return $?
 
     # After additional executions like atclone'' - install completions (2 - snippets)
-    (( ${+ZPLG_ICE[nocompletions]} )) || -zplg-install-completions "%" "$local_dir/$dirname" 0
+    [[ 1 = ${+ZPLG_ICE[nocompletions]} || ${ZPLG_ICE[as]} = null ]] || -zplg-install-completions "%" "$local_dir/$dirname" 0
     return $retval
 }
 # }}}
