@@ -1037,7 +1037,7 @@ function $f {
         ZPLG_ICE[pick]="${ZPLG_ICE[pick]:-/dev/null}"
 
     local local_dir dirname filename save_url="$url" id_as="${ZPLG_ICE[id-as]:-$url}"
-    [[ -z "${opts[(r)-i]}" ]] && -zplg-pack-ice "$id_as" ""
+    [[ -z ${opts[(r)-u]} ]] && -zplg-pack-ice "$id_as" ""
 
     # - case A: called from `update --all', ZPLG_ICE not packed (above), static ice will win
     # - case B: called from `snippet', ZPLG_ICE packed, so it will win
