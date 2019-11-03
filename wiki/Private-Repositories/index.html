@@ -853,6 +853,39 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#explanation" title="Explanation"
       class="md-nav__link">
     Explanation
@@ -2331,6 +2364,39 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#explanation" title="Explanation"
       class="md-nav__link">
     Explanation
@@ -2430,6 +2496,7 @@
                 
                 
                 <h1 id="loading_plugins_from_private_repositories_and_not_only">Loading Plugins From Private Repositories And Not Only<a class="headerlink" href="#loading_plugins_from_private_repositories_and_not_only" title="Permanent link">#</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
 <p>In order to install and load a plugin whose repository is private - i.e.:
 requires providing credentials in order to log in – use the <code>from''</code> ice in the
 following way:</p>
@@ -2439,9 +2506,9 @@ zplugin load psprint/fsh-auto-themes
 
 <h2 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">#</a></h2>
 <p>The point is that when the <code>from''</code> ice isn't one of <code>gh</code>, <code>github</code>, <code>gl</code>,
-<code>gitlab</code>, <code>bb</code>, <code>bitbucket</code>, <code>nb</code>, <code>notabug</code>, then <em>it is treaten as a domain
-name</em> and inserted into the domain position into the clone url. I.e.: the
-following (more or less) <code>git clone</code> command is being run:</p>
+<code>gitlab</code>, <code>bb</code>, <code>bitbucket</code>, <code>nb</code>, <code>notabug</code>, <code>gh-r</code>, <code>github-rel</code> then <strong>it is
+treaten as a domain name</strong> and inserted into the domain position into the clone
+url.  I.e.: the following (more or less) <code>git clone</code> command is being run:</p>
 <pre><code class="zsh">git clone https://{from-ice-contents}/user/plugin
 </code></pre>
 
