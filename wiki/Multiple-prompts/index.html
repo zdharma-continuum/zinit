@@ -2142,28 +2142,42 @@
                   <h1>Multiple Prompts</h1>
                 
                 <pre><code class="zsh"># Load when MYPROMPT == 1
-zplugin ice load'![[ $MYPROMPT = 1 ]]' unload'![[ $MYPROMPT != 1 ]]'
+zplugin ice load'![[ $MYPROMPT = 1 ]]' unload'![[ $MYPROMPT != 1 ]]' lucid
 zplugin load halfo/lambda-mod-zsh-theme
 
 # Load when MYPROMPT == 2
 zplugin ice load'![[ $MYPROMPT = 2 ]]' unload'![[ $MYPROMPT != 2 ]]' \
-    pick&quot;/dev/null&quot; multisrc&quot;{async,pure}.zsh&quot;
+    pick&quot;/dev/null&quot; multisrc&quot;{async,pure}.zsh&quot; \
+    atload'!prompt_pure_precmd' lucid nocd
 zplugin load sindresorhus/pure
 
 # Load when MYPROMPT == 3
-zplugin ice load'![[ $MYPROMPT = 3 ]]' unload'![[ $MYPROMPT != 3 ]]'
+zplugin ice load'![[ $MYPROMPT = 3 ]]' unload'![[ $MYPROMPT != 3 ]]' \
+          atload'!geometry::prompt' lucid nocd
 zplugin load geometry-zsh/geometry
 </code></pre>
 
 <ul>
 <li><code>load''</code> – condition that when fulfilled will cause plugin to be loaded,</li>
 <li><code>unload''</code> – as above, but will unload plugin,</li>
-<li>note that plugins are loaded with <code>zplugin load </code>, not <code>zplugin light</code>, to track what plugin does, to be able to unload it,</li>
+<li>note that plugins are loaded with <code>zplugin load </code>, not <code>zplugin
+   light</code>, to track what plugin does, to be able to unload it,</li>
+<li><code>atload'!…'</code> – run the <code>precmd</code> hooks to make the prompts fully initialized
+   when loaded in the middle of the prompt (<code>precmd</code> hooks are being normally
+   run before each <strong>new</strong> prompt); exclamation mark causes the effects of the
+   functions to be tracked, to allow better unloading,</li>
 <li>conditions are checked every second,</li>
-<li>you can use conditions like <code>![[ $PWD == *github* ]]</code> to change prompt after changing directory to <code>*github*</code>,</li>
-<li>the exclamation mark <code>![[ … ]]</code> causes prompt to be reset after loading or unloading the plugin,</li>
-<li><code>pick'/dev/null'</code> – disable sourcing of the default-found file</li>
-<li><code>multisrc''</code> – source multiple files</li>
+<li>you can use conditions like <code>![[ $PWD == *github* ]]</code> to change prompt after
+   changing directory to <code>*github*</code>,</li>
+<li>the exclamation mark <code>![[ … ]]</code> causes prompt to be reset after loading or
+   unloading the plugin,</li>
+<li><code>pick'/dev/null'</code> – disable sourcing of the default-found file,</li>
+<li><code>multisrc''</code> – source multiple files,</li>
+<li><code>lucid</code> – don't show the under-prompt message that says e.g.: <code>Loaded
+   geometry-zsh/geometry</code>,</li>
+<li><code>nocd</code> – don't cd into the plugin's directory when executing the <code>atload''</code>
+   ice – it could make the path that's displayed by the theme to point to that
+   directory.</li>
 </ul>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 

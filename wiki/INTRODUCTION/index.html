@@ -1127,6 +1127,45 @@
 
   <!-- Render nested item list -->
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#turbo-loading_sophisticated_prompts" title="Turbo-Loading Sophisticated Prompts"
+      class="md-nav__link">
+    Turbo-Loading Sophisticated Prompts
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <!--
@@ -3147,6 +3186,45 @@
 
   <!-- Render nested item list -->
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#turbo-loading_sophisticated_prompts" title="Turbo-Loading Sophisticated Prompts"
+      class="md-nav__link">
+    Turbo-Loading Sophisticated Prompts
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <!--
@@ -3434,8 +3512,8 @@ being loaded, for number of such plugins like <code>10</code> or <code>20</code>
 <p>Zsh 5.3 or greater is required. To use this Turbo mode add <code>wait</code> ice to the
 target plugin in one of following ways:</p>
 <pre><code class="zsh">PS1=&quot;READY &gt; &quot;
-zplugin ice wait'!0' atload'promptinit; prompt scala3'
-zplugin load psprint/zprompts
+zplugin ice wait'!0' 
+zplugin load halfo/lambda-mod-zsh-theme
 </code></pre>
 
 <p>This sets plugin <code>psprint/zprompts</code> to be loaded <code>0</code> seconds after <code>zshrc</code>. It
@@ -3443,14 +3521,14 @@ will fire up after c.a. 1 ms of showing of the basic prompt <code>READY &gt;</co
 started to use this method of setting up a prompt 2 years ago now and I run it
 without any problems. It is also sufficient to provide just the word
 <code>wait</code>, it’ll work like <code>wait'0'</code> (and <code>wait'!'</code> like <code>wait'!0'</code>).</p>
-<p>The exclamation mark causes Zplugin to reset-prompt after loading plugin. The
-same with Prezto prompts, with a longer delay:</p>
+<p>The exclamation mark causes Zplugin to reset-prompt after loading plugin, so it
+is needed for themes. The same with Prezto prompts, with a longer delay:</p>
 <pre><code class="zsh">zplg ice svn silent wait'!1' atload'prompt smiley'
 zplg snippet PZT::modules/prompt
 </code></pre>
 
 <p>Using <code>zsh-users/zsh-autosuggestions</code> without any drawbacks:</p>
-<pre><code class="zsh">zplugin ice wait atload'_zsh_autosuggest_start'
+<pre><code class="zsh">zplugin ice wait lucid atload'_zsh_autosuggest_start'
 zplugin light zsh-users/zsh-autosuggestions
 </code></pre>
 
@@ -3461,23 +3539,41 @@ that first prompt. This makes autosuggestions inactive at the first prompt.
 <strong>However</strong> the given <code>atload</code> Ice-mod fixes this, it calls the same function
 that <code>precmd</code> would, right after loading autosuggestions, resulting in exactly
 the same behavior of the plugin.</p>
-<pre><code class="zsh">zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
-zplugin load zdharma/zplugin-crasis
+<p>The ice <code>lucid</code> causes the under-prompt message saying <code>Loaded
+zsh-users/zsh-autosuggestions</code> that normally appears for every Turbo-loaded
+plugin to not show.</p>
+<h3 id="turbo-loading_sophisticated_prompts">Turbo-Loading Sophisticated Prompts<a class="headerlink" href="#turbo-loading_sophisticated_prompts" title="Permanent link">#</a></h3>
+<p>For some, mostly advanced themes the initialization of the prompt is being done
+in a <code>precmd</code>-hook, i.e.; in a function that's gets called before each prompt.
+The hook is installed by the
+<a href="http://zdharma.org/zplugin/wiki/zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks">add-zsh-hook</a>
+Zsh function by adding its name to the <code>$precmd_functions</code> array.</p>
+<p>To make the prompt fully initialized after Turbo loading in the middle of the
+prompt (the same situation as with the <code>zsh-autosuggestions</code> plugin), the hook
+should be called from <code>atload''</code> ice.</p>
+<p>First, find the name of the hook function by examining the <code>$precmd_functions</code>
+array. For example, for <code>robobenklein/zinc</code> theme, they'll be two functions:
+<code>prompt_zinc_setup</code> and <code>prompt_zinc_precmd</code>:</p>
+<pre><code class="zsh">root@sg &gt; ~ &gt; print $precmd_functions                       &lt; ✔ &lt; 22:21:33
+_zsh_autosuggest_start prompt_zinc_setup prompt_zinc_precmd
 </code></pre>
 
-<p>The plugin <code>zplugin-crasis</code> provides command <code>crasis</code>. Ice-mod <code>wait</code> is set to
-<a href="../Example-wait-conditions">wait on condition</a>. When user enters <code>cras</code> at
-command line, the plugin will be loaded within 1 second and command <code>crasis</code>
-will become available. <strong><a href="https://asciinema.org/a/149725">See the feature in
-action</a></strong>. This feature requires
-<code>zdharma/fast-syntax-highlighting</code> (it builds the <code>ZLAST_COMMANDS</code> array).</p>
+<p>Then, add them to the ice-list in the <code>atload''</code> ice:</p>
+<pre><code class="zsh">zplugin ice wait'!' lucid nocd \
+    atload'!prompt_zinc_setup; prompt_zinc_precmd'
+zplugin load robobenklein/zinc
+</code></pre>
+
+<p>The exclamation mark in <code>atload'!…'</code> is to track the functions allowing the
+plugin to be unloaded, as described <a href="../atload-and-other-at-ices/">here</a>. It
+might be useful for the multi-prompt setup described next.</p>
 <h2 id="automatic_loadunload_on_condition">Automatic Load/Unload on Condition<a class="headerlink" href="#automatic_loadunload_on_condition" title="Permanent link">#</a></h2>
 <p>Ices <code>load</code> and <code>unload</code> allow to define when you want plugins active or
 unactive. For example:</p>
 <pre><code class="zsh"># Load when in ~/tmp
 
 zplugin ice load'![[ $PWD = */tmp* ]]' unload'![[ $PWD != */tmp* ]]' \
-    atload&quot;promptinit; prompt sprint3&quot;
+    atload&quot;!promptinit; prompt sprint3&quot;
 zplugin load psprint/zprompts
 
 # Load when NOT in ~/tmp
@@ -3499,7 +3595,9 @@ active, not only till first activation.</strong></p>
 tracking (so <code>zplugin load …</code>, not <code>zplugin light …</code>). Tracking causes
 slight slowdown, however this doesn’t influence Zsh startup time when using
 Turbo mode.</p>
-<p><strong>See also Wiki on <a href="../Multiple-prompts">multiple prompts</a>.</strong></p>
+<p><strong>See also Wiki on <a href="../Multiple-prompts/">multiple prompts</a>.</strong> It contains a
+more real-world examples of a multi-prompt setup, which is being close to what
+the author uses in own setup.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
