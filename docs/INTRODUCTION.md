@@ -276,8 +276,8 @@ target plugin in one of following ways:
 
 ``` zsh
 PS1="READY > "
-zplugin ice wait'!0' atload'promptinit; prompt scala3'
-zplugin load psprint/zprompts
+zplugin ice wait'!0' 
+zplugin load halfo/lambda-mod-zsh-theme
 ```
 
 This sets plugin `psprint/zprompts` to be loaded `0` seconds after `zshrc`. It
@@ -286,8 +286,8 @@ started to use this method of setting up a prompt 2 years ago now and I run it
 without any problems. It is also sufficient to provide just the word
 `wait`, it’ll work like `wait'0'` (and `wait'!'` like `wait'!0'`).
 
-The exclamation mark causes Zplugin to reset-prompt after loading plugin. The
-same with Prezto prompts, with a longer delay:
+The exclamation mark causes Zplugin to reset-prompt after loading plugin, so it
+is needed for themes. The same with Prezto prompts, with a longer delay:
 
 ``` zsh
 zplg ice svn silent wait'!1' atload'prompt smiley'
@@ -297,7 +297,7 @@ zplg snippet PZT::modules/prompt
 Using `zsh-users/zsh-autosuggestions` without any drawbacks:
 
 ``` zsh
-zplugin ice wait atload'_zsh_autosuggest_start'
+zplugin ice wait lucid atload'_zsh_autosuggest_start'
 zplugin light zsh-users/zsh-autosuggestions
 ```
 
@@ -309,17 +309,42 @@ that first prompt. This makes autosuggestions inactive at the first prompt.
 that `precmd` would, right after loading autosuggestions, resulting in exactly
 the same behavior of the plugin.
 
-``` zsh
-zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
-zplugin load zdharma/zplugin-crasis
+The ice `lucid` causes the under-prompt message saying `Loaded
+zsh-users/zsh-autosuggestions` that normally appears for every Turbo-loaded
+plugin to not show.
+
+### Turbo-Loading Sophisticated Prompts
+
+For some, mostly advanced themes the initialization of the prompt is being done
+in a `precmd`-hook, i.e.; in a function that's gets called before each prompt.
+The hook is installed by the
+[add-zsh-hook](http://zdharma.org/zplugin/wiki/zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks)
+Zsh function by adding its name to the `$precmd_functions` array.
+
+To make the prompt fully initialized after Turbo loading in the middle of the
+prompt (the same situation as with the `zsh-autosuggestions` plugin), the hook
+should be called from `atload''` ice.
+
+First, find the name of the hook function by examining the `$precmd_functions`
+array. For example, for `robobenklein/zinc` theme, they'll be two functions:
+`prompt_zinc_setup` and `prompt_zinc_precmd`:
+
+```zsh
+root@sg > ~ > print $precmd_functions                       < ✔ < 22:21:33
+_zsh_autosuggest_start prompt_zinc_setup prompt_zinc_precmd
 ```
 
-The plugin `zplugin-crasis` provides command `crasis`. Ice-mod `wait` is set to
-[wait on condition](../Example-wait-conditions). When user enters `cras` at
-command line, the plugin will be loaded within 1 second and command `crasis`
-will become available. **[See the feature in
-action](https://asciinema.org/a/149725)**. This feature requires
-`zdharma/fast-syntax-highlighting` (it builds the `ZLAST_COMMANDS` array).
+Then, add them to the ice-list in the `atload''` ice:
+
+```zsh
+zplugin ice wait'!' lucid nocd \
+    atload'!prompt_zinc_setup; prompt_zinc_precmd'
+zplugin load robobenklein/zinc
+```
+
+The exclamation mark in `atload'!…'` is to track the functions allowing the
+plugin to be unloaded, as described [here](../atload-and-other-at-ices/). It
+might be useful for the multi-prompt setup described next.
 
 ## Automatic Load/Unload on Condition
 
@@ -330,7 +355,7 @@ unactive. For example:
 # Load when in ~/tmp
 
 zplugin ice load'![[ $PWD = */tmp* ]]' unload'![[ $PWD != */tmp* ]]' \
-    atload"promptinit; prompt sprint3"
+    atload"!promptinit; prompt sprint3"
 zplugin load psprint/zprompts
 
 # Load when NOT in ~/tmp
@@ -353,6 +378,8 @@ tracking (so `zplugin load …`, not `zplugin light …`). Tracking causes
 slight slowdown, however this doesn’t influence Zsh startup time when using
 Turbo mode.
 
-**See also Wiki on [multiple prompts](../Multiple-prompts).**
+**See also Wiki on [multiple prompts](../Multiple-prompts/).** It contains a
+more real-world examples of a multi-prompt setup, which is being close to what
+the author uses in own setup.
 
 []( vim:set ft=markdown tw=80: )
