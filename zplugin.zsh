@@ -1625,7 +1625,7 @@ countdown|nocountdown|trigger-load|light${~exts})(*)
         elif [[ "$__tpe" = "s" ]]; then
             -zplg-load-snippet $__opt "$__id"; (( __retval += $? ))
         elif [[ "$__tpe" = "p1" || "$__tpe" = "s1" ]]; then
-            zpty -b "${__id//\//:}" '-zplg-service '"${(M)__tpe#?}"' "$__mode" "$__id"'
+            zpty -b "${__id//\//:} / ${ZPLG_ICE[service]}" '-zplg-service '"${(M)__tpe#?}"' "$__mode" "$__id"'
         fi
         (( ${+ZPLG_ICE[silent]} == 0 && ${+ZPLG_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ "$__action" = *remove ]]; then
