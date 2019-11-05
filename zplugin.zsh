@@ -1521,9 +1521,11 @@ atload|atpull|atclone|run-atpull|norun-atpull|make|nomake|notify|\
 nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
 id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
-countdown|nocountdown|trigger-load${~exts})(*) ]] && \
-        ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}" || \
-        retval=1
+countdown|nocountdown|trigger-load|light${~exts})(*)
+        ]] && \
+            ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}" || \
+            break
+        retval+=1
     done
     [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
     ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
@@ -1851,7 +1853,38 @@ update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|rec
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
-    { -zplg-ice "$@" || print "Unknown command \`$1' (use \`help' to get usage information)"; return $?; }
+    {
+        -zplg-ice "$@"
+        shift $?
+        if [[ $# -gt 0 && $1 != "for" ]]; then
+            print "Unknown command or ice: \`$1' (use \`help' to get usage information)"
+            return 1
+        fi
+        integer __retval
+        if (( $# )); then
+            shift
+            local -a __ices
+            __ices=( "${(kv)ZPLG_ICES[@]}" )
+            ZPLG_ICES=()
+            while (( $# )) {
+                -zplg-ice "$@"
+                shift $?
+                if [[ -n $1 ]]; then
+                    ZPLG_ICE=( "${__ices[@]}" "${(kv)ZPLG_ICES[@]}" )
+                    ZPLG_ICES=()
+                    if [[ $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ]]; then
+                        -zplg-load-snippet "$1"
+                        __retval+=$?
+                    else
+                        -zplg-load "$1" "" "${ZPLG_ICE[light]+light}"
+                        __retval+=$?
+                    fi
+                fi
+                (( $# )) && shift
+            }
+        fi
+        return __retval
+    }
 
     if [[ -n ${ZPLG_ICE[trigger-load]} && $1 = (load|light|snippet|update) ]] {
         () {
