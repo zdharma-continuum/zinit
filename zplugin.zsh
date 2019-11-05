@@ -1716,12 +1716,12 @@ countdown|nocountdown|trigger-load|light${~exts})(*)
 #      script, not from prompt
 #
 -zplg-scheduler() {
-    integer __ret=${${ZPLGM[lro-data]%:*}##*:}
+    integer __ret="${${ZPLGM[lro-data]%:*}##*:}"
     # lro stands for lastarg-retval-option
-    [[ "$1" = "following" ]] && sched +1 'ZPLGM[lro-data]="$_:$?:${options[printexitvalue]}"; -zplg-scheduler following ${ZPLGM[lro-data]%:*:*}'
+    [[ $1 = following ]] && sched +1 'ZPLGM[lro-data]="$_:$?:${options[printexitvalue]}"; -zplg-scheduler following "${ZPLGM[lro-data]%:*:*}"'
     [[ -n "$1" && "$1" != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ "$1" = "burst" ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
-    ZPLGM[START_TIME]=${ZPLGM[START_TIME]:-$EPOCHREALTIME}
+    ZPLGM[START_TIME]="${ZPLGM[START_TIME]:-$EPOCHREALTIME}"
 
     integer __t=EPOCHSECONDS __i correct=0
     local -a match mbegin mend reply
