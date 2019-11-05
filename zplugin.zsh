@@ -1860,7 +1860,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
             print "Unknown command or ice: \`$1' (use \`help' to get usage information)"
             return 1
         fi
-        integer __retval
+        integer __retval __is_snippet
         if (( $# )); then
             shift
             local -a __ices
@@ -1872,11 +1872,35 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
                 if [[ -n $1 ]]; then
                     ZPLG_ICE=( "${__ices[@]}" "${(kv)ZPLG_ICES[@]}" )
                     ZPLG_ICES=()
-                    if [[ $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ]]; then
-                        -zplg-load-snippet "$1"
+
+                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { (( $# )) && shift; continue; }; }
+                    (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || { (( $# )) && shift; continue; }; }
+                    [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${1:t}"
+
+                    __is_snippet=0
+                    [[ $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ]] && \
+                        __is_snippet=1
+
+                    ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
+                    if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
+                        ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
+                        if (( __is_snippet )); then
+                            ZPLG_SICE[${1%%(/|//|///)}]=""
+                            -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" \
+                                "${1%%(/|//|///)}" ""
+                        else
+                            ZPLG_SICE[${${1#https://github.com/}%%(/|//|///)}]=""
+                            -zplg-submit-turbo p${ZPLG_ICE[service]:+1} \
+                                "${${${(M)+ZPLG_ICE[light]:#1}:+light}:-load}" \
+                                "${${1#https://github.com/}%%(/|//|///)}" ""
+                        fi
                         __retval+=$?
                     else
-                        -zplg-load "$1" "" "${ZPLG_ICE[light]+light}"
+                        if (( __is_snippet )); then
+                            -zplg-load-snippet "${1%%(/|//|///)}"
+                        else
+                            -zplg-load "${${1#https://github.com/}%%(/|//|///)}" "" "${ZPLG_ICE[light]+light}"
+                        fi
                         __retval+=$?
                     fi
                 fi
