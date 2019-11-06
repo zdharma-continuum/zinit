@@ -842,13 +842,14 @@ function $f {
 
     if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" ]]; then
         ZPLG_REGISTERED_PLUGINS+=( "$uspl2" )
-        # Support Zsh plugin standard
-        zsh_loaded_plugins+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
         [[ -z "${ZPLGM[TEST]}${${+ZPLG_ICE[wait]}:#0}${ZPLG_ICE[load]}${ZPLG_ICE[subscribe]}" && ${ZPLGM[MUTE_WARNINGS]} != 1 ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
         ret=1
     fi
+
+    # Support Zsh plugin standard
+    zsh_loaded_plugins+=( "$uspl2" )
 
     # Full or light load?
     [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
