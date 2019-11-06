@@ -1853,17 +1853,56 @@ zplugin() {
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
-env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
+env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) ]] && \
     {
-        -zplg-ice "$@"
-        shift $?
-        if [[ $# -gt 0 && $1 != "for" ]]; then
-            print "Unknown command or ice: \`$1' (use \`help' to get usage information)"
-            return 1
+        if [[ $1 = (load|light|snippet) ]]; then
+            # Trigger-load short-circuit
+            if [[ -n ${ZPLG_ICE[trigger-load]} ]] {
+                () {
+                    setopt localoptions extendedglob
+                    for MATCH ( ${(s.;.)ZPLG_ICE[trigger-load]} ) {
+                        eval "${MATCH#!}() {
+                            ${${(M)MATCH#!}:+unset -f ${MATCH#!}}
+                            local a b; local -a ices
+                            # The wait'' ice is filtered-out
+                            for a b ( ${(qqkv@)${(kv@)ZPLG_ICE[(I)^(trigger-load|wait)]}} ) {
+                                ices+=( \"\$a\$b\" )
+                            }
+                            zplugin ice \${ices[@]}; zplugin $1 ${(qqq)2}
+                            ${${(M)MATCH#!}:+# Forward the call
+                            eval ${MATCH#!} \$@}
+                        }"
+                    }
+                } "$@"
+                return $?
+            }
+
+            # Classic syntax -> simulate a call through the for-syntax
+            : ${@[@]//(#b)(-b|--command|-f)/${ICE_OPTS[${match[1]}]::=1}}
+            set -- "${@[@]:#(-b|--command|-f)}"
+            [[ $1 = light && -z ${ICE_OPTS[(I)-b]} ]] && ZPLG_ICE[light-mode]=""
+            [[ $1 = snippet ]] && ZPLG_ICE[is-snippet]=""
+            shift
+
+            ZPLG_ICES=( "${(kv)ZPLG_ICE[@]}" )
+            ZPLG_ICE=()
+            1="$1${2:+/$2}"
+            (( $# > 1 )) && { shift -p $(( $# - 1 )); }
+            [[ -z "$1" ]] && {
+               print "Argument needed, try: help"
+               return 1
+            }
+        else
+            -zplg-ice "$@"
+            shift $?
+            if [[ $# -gt 0 && $1 != "for" ]]; then
+                print "Unknown command or ice: \`$1' (use \`help' to get usage information)"
+                return 1
+            fi
+            [[ $1 = for ]] && shift
         fi
         integer __retval __is_snippet
         if (( $# )); then
-            shift
             local -a __ices
             __ices=( "${(kv)ZPLG_ICES[@]}" )
             ZPLG_ICES=()
@@ -1879,7 +1918,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
                     [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${1:t}"
 
                     __is_snippet=0
-                    [[ $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ]] && \
+                    [[ -n ${ZPLG_ICE[is-snippet]+1} || $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ]] && \
                         __is_snippet=1
 
                     ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
@@ -1888,7 +1927,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
                         if (( __is_snippet )); then
                             ZPLG_SICE[${1%%(/|//|///)}]=""
                             -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" \
-                                "${1%%(/|//|///)}" ""
+                                "${1%%(/|//|///)}" \
+                                "${(k)ICE_OPTS[@]}"
                         else
                             ZPLG_SICE[${${1#https://github.com/}%%(/|//|///)}]=""
                             -zplg-submit-turbo p${ZPLG_ICE[service]:+1} \
@@ -1898,7 +1938,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
                         __retval+=$?
                     else
                         if (( __is_snippet )); then
-                            -zplg-load-snippet "${1%%(/|//|///)}"
+                            -zplg-load-snippet ${(k)ICE_OPTS[@]} "${1%%(/|//|///)}"
                         else
                             -zplg-load "${${1#https://github.com/}%%(/|//|///)}" "" \
                                 "${${ZPLG_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
@@ -1912,65 +1952,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
         return __retval
     }
 
-    if [[ -n ${ZPLG_ICE[trigger-load]} && $1 = (load|light|snippet|update) ]] {
-        () {
-            setopt localoptions extendedglob
-            for MATCH ( ${(s.;.)ZPLG_ICE[trigger-load]} ) {
-                eval "${MATCH#!}() {
-                    ${${(M)MATCH#!}:+unset -f ${MATCH#!}}
-                    local a b; local -a ices
-                    # The wait'' ice is filtered-out
-                    for a b ( ${(qqkv@)${(kv@)ZPLG_ICE[(I)^(trigger-load|wait)]}} ) {
-                        ices+=( \"\$a\$b\" )
-                    }
-                    zplugin ice \${ices[@]}; zplugin $1 ${(qqq)2}
-                    ${${(M)MATCH#!}:+# Forward the call
-                    eval ${MATCH#!} \$@}
-                }"
-            }
-        } "$@"
-        return $?
-    }
-
     case "$1" in
-       (load|light)
-           (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
-           (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
-           if [[ -z "$2" && -z "$3" ]]; then
-               print "Argument needed, try: help"
-           else
-               ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
-               if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
-                   ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
-                   [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
-                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${3:-${2:t}}"
-                   -zplg-submit-turbo p${ZPLG_ICE[service]:+1} "$1" "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
-               else
-                   [[ "$2" = "-b" && "$1" = "light" ]] && { shift; 1="light-b"; }
-                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${3:-${2:t}}"
-                   -zplg-load "${${2#https://github.com/}%%(/|//|///)}" "${3%%(/|//|///)}" "${1/load/}"; retval=$?
-               fi
-           fi
-           ;;
-       (snippet)
-           if [[ -z "$2" ]]; then
-               print "Argument needed, try: help"
-           else
-               ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
-               (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
-               (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
-               if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
-                   ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
-                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${${${4:t}:-${${3:t}:-${2:t}}}}"
-                   -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
-               else
-                   ZPLG_SICE[${2%%(/|//|///)}]=""
-                   [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${${${4:t}:-${${3:t}:-${2:t}}}}"
-                   # TODO: handling of $4 also above
-                   -zplg-load-snippet "${2%%(/|//|///)}" "${3%%(/|//|///)}" "${4%%(/|//|///)}"; retval=$?
-               fi
-           fi
-           ;;
        (ice)
            shift
            -zplg-ice "$@"
