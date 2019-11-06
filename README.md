@@ -51,6 +51,34 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 06-11-2019
+  - A new syntax, called for-syntax. Example:
+
+  ```zsh
+   zplugin as"program" atload'print Hi!' for \
+       atinit'print First!' zdharma/null \
+       atinit'print Second!' svn OMZ::plugins/git
+  ```
+
+  The output:
+
+  ```
+  First!
+  Hi!
+  Second!
+  Hi!
+  ```
+
+  And also:
+
+  ```zsh
+  % print -rl $path | egrep -i '(/git|null)'
+  /root/.zplugin/snippets/OMZ::plugins/git
+  /root/.zplugin/plugins/zdharma---null
+  ```
+
+  To load in light mode, use a new `light-mode` ice.
+
 * 03-11-2019
   - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
     `pick"/dev/null" nocompletions`, i.e.: it disables the sourcing of the default
