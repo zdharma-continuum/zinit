@@ -1522,7 +1522,7 @@ atload|atpull|atclone|run-atpull|norun-atpull|make|nomake|notify|\
 nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
 id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
-countdown|nocountdown|trigger-load|light${~exts})(*)
+countdown|nocountdown|trigger-load|light-mode${~exts})(*)
         ]] && \
             ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}" || \
             break
@@ -1892,7 +1892,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
                         else
                             ZPLG_SICE[${${1#https://github.com/}%%(/|//|///)}]=""
                             -zplg-submit-turbo p${ZPLG_ICE[service]:+1} \
-                                "${${${(M)+ZPLG_ICE[light]:#1}:+light}:-load}" \
+                                "${${${ZPLG_ICE[light-mode]+light}}:-load}" \
                                 "${${1#https://github.com/}%%(/|//|///)}" ""
                         fi
                         __retval+=$?
@@ -1900,7 +1900,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) ]] && \
                         if (( __is_snippet )); then
                             -zplg-load-snippet "${1%%(/|//|///)}"
                         else
-                            -zplg-load "${${1#https://github.com/}%%(/|//|///)}" "" "${ZPLG_ICE[light]+light}"
+                            -zplg-load "${${1#https://github.com/}%%(/|//|///)}" "" \
+                                "${${ZPLG_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
                         __retval+=$?
                     fi
