@@ -523,7 +523,7 @@ explicitly stated otherwise.
 |:-:|-|
 | `as` |<div align="justify" style="text-align: justify;"> Can be `as"program"` (also the alias: `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"` – use with plugins or snippets in whose only underscore-starting `_*` files you are interested in. The third possible value is `as"null"` – a shorthand for `pick"/dev/null" nocompletions` – i.e.: it disables the default script-file sourcing and also the installation of completions.</div>|
 | [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) |<div align="justify" style="text-align: justify;"> Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.</div>|
-| `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.\</div> | 
+| `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.</div> | 
 | `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation).</div>| 
 | `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page.</div>|
 | `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.</div>| 
@@ -531,6 +531,7 @@ explicitly stated otherwise.
 | `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>| 
 | [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>| 
 | `aliases` |<div align="justify" style="text-align: justify;">Load the plugin with the aliases mechanism enabled. Use with plugins that define **and use** aliases in their scripts.</div>|
+| `light-mode` |<div align="justify" style="text-align: justify;">Load the plugin without the tracking, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand</div>|
 
 ### Order of Execution
 
@@ -552,7 +553,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | Command | Description |
 |:-:|-|
 | `load {plg-spec}` |<div align="justify" style="text-align: justify;"> Load plugin, can also receive absolute local path.</div>|
-| `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/tracking. `-b` – track `bindkey`-calls only.</div>|
+| `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/tracking. `-b` – track `bindkey`-calls only. There's also `light-mode` ice which can be used to induce the no-tracking (i.e.: *light*) loading, regardless of the command used.</div>|
 | `unload [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Unload plugin loaded with `zplugin load ...`. `-q` – quiet.</div>|
 | `snippet [-f] {url}` |<div align="justify" style="text-align: justify;"> Source local or remote file (by direct URL). `-f` – don't use cache (force redownload).</div>|
 
