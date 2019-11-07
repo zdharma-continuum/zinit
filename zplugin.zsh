@@ -1908,7 +1908,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                         () {
                             setopt localoptions extendedglob
                             local mode
-                            (( __is_snippet )) && mode="snippet" || mode="${${${ZPLG_ICE[light-mode]+light}}:-load}"
+                            (( __is_snippet > 0 )) && mode="snippet" || mode="${${${ZPLG_ICE[light-mode]+light}}:-load}"
                             for MATCH ( ${(s.;.)ZPLG_ICE[trigger-load]} ) {
                                 eval "${MATCH#!}() {
                                     ${${(M)MATCH#!}:+unset -f ${MATCH#!}}
@@ -1924,7 +1924,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                             }
                         } "$@"
                         __retval+=$?
-                        (( __retval )) && return __retval || { (( $# )) && shift; continue; }
+                        (( $# )) && shift
+                        continue
                     }
 
                     ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
