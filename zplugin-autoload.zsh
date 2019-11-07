@@ -2297,8 +2297,8 @@ ZPLGM[EXTENDED_GLOB]=""
     # Parse options
     local -a opts
     opts=( --all --clean --yes -y -q --quiet )
-    : ${@[@]//(#b)(${(~j.|.)opts})/${ICE_OPTS[${opt_map[${match[1]}]}]::=1}}
-    set -- "${@[@]:#(--all|--clean|--yes|-y|-q|--quiet)}"
+    : ${@[@]//(#b)([ $'\t']##|(#s))(${(~j.|.)opts})([ $'\t']##|(#e))/${ICE_OPTS[${opt_map[${match[2]}]}]::=1}}
+    set -- "${@[@]:#(${(~j.|.)opts})}"
 
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 

@@ -2036,7 +2036,10 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                (update)
                    (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || return 1; }
                    (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
-                   : ${@[@]//(#b)(--quiet|-q|--reset|-r)/${ICE_OPTS[${opt_map[${match[1]}]}]::=1}}
+                   () {
+                       setopt localoptions extendedglob
+                       : ${@[@]//(#b)([ $'\t']##|(#s))(--quiet|-q|--reset|-r)([ $'\t']##|(#e))/${ICE_OPTS[${opt_map[${match[2]}]}]::=1}}
+                   } "$@"
                    set -- "${@[@]:#(--quiet|-q|--reset|-r)}"
                    if [[ "$2" = "--all" || ( -z "$2" && -z "$3" && -z ${ZPLG_ICE[teleid]} && -z ${ZPLG_ICE[id-as]} ) ]]; then
                        [[ -z "$2" ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
