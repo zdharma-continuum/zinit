@@ -2777,7 +2777,7 @@ EOF
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode
+            aliases countdown light-mode is-snippet
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
@@ -2955,5 +2955,5 @@ Available ice-modifiers:
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
         nocompletions reset-prompt wrap-track reset aliases sh bash ksh csh
-        countdown trigger-load light-mode"
+        countdown trigger-load light-mode is-snippet"
 } # }}}

@@ -197,7 +197,7 @@
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode
+            aliases countdown light-mode is-snippet
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
@@ -332,7 +332,7 @@
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode
+            aliases countdown light-mode is-snippet
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
