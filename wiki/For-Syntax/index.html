@@ -36,7 +36,7 @@
     
     
       
-        <title>Example wait Conditions - Zplugin Wiki</title>
+        <title>The For Syntax - Zplugin Wiki</title>
       
     
     
@@ -78,6 +78,10 @@
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
+    
+      <a href="#the_for-syntax" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
     
     
       <!--
@@ -136,7 +140,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Example wait Conditions
+                The For Syntax
               
             </span>
           
@@ -280,7 +284,7 @@
     <li class="md-tabs__item">
       
         <a href="../INTRODUCTION/"
-            title="Introduction" class="md-tabs__link">
+            title="Introduction" class="md-tabs__link md-tabs__link--active">
           Introduction
         </a>
       
@@ -319,7 +323,7 @@
     <li class="md-tabs__item">
       
         <a href="../Alternate-Ice-Syntax/"
-            title="Ice Modifiers" class="md-tabs__link md-tabs__link--active">
+            title="Ice Modifiers" class="md-tabs__link">
           Ice Modifiers
         </a>
       
@@ -563,15 +567,17 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1"
-          type="checkbox" id="nav-1" />
+          type="checkbox" id="nav-1" checked />
     
 
     <!-- Expand active pages -->
@@ -653,15 +659,195 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item">
-    <a href="../For-Syntax/" title="The For Syntax"
-        class="md-nav__link">
+  <li class="md-nav__item md-nav__item--active">
+    
+
+    <!-- Active checkbox expands items contained within nested section -->
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
+        type="checkbox" id="__toc" />
+
+    <!-- Hack: see partials/toc.html for more information -->
+    
+      
+    
+
+    <!-- Render table of contents, if not empty -->
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        The For Syntax
+      </label>
+    
+    <a href="./" title="The For Syntax"
+        class="md-nav__link md-nav__link--active">
       The For Syntax
     </a>
+
+    <!-- Show table of contents -->
+    
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+    
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#a_few_remarks" title="A Few Remarks"
+      class="md-nav__link">
+    A Few Remarks
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#examples" title="Examples"
+      class="md-nav__link">
+    Examples
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+    
   </li>
+
+<!-- Main navigation item -->
 
         
       </ul>
@@ -698,17 +884,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2"
-          type="checkbox" id="nav-2" checked />
+          type="checkbox" id="nav-2" />
     
 
     <!-- Expand active pages -->
@@ -904,33 +1088,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active">
-    
-
-    <!-- Active checkbox expands items contained within nested section -->
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
-        type="checkbox" id="__toc" />
-
-    <!-- Hack: see partials/toc.html for more information -->
-    
-
-    <!-- Render table of contents, if not empty -->
-    
-    <a href="./" title="Example wait Conditions"
-        class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Example-wait-conditions/" title="Example wait Conditions"
+        class="md-nav__link">
       Example wait Conditions
     </a>
-
-    <!-- Show table of contents -->
-    
   </li>
-
-<!-- Main navigation item -->
 
         
           
@@ -2171,68 +2337,233 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+    
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#a_few_remarks" title="A Few Remarks"
+      class="md-nav__link">
+    A Few Remarks
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#examples" title="Examples"
+      class="md-nav__link">
+    Examples
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Example wait Conditions</h1>
-                
-                <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><strong>Turbo mode, i.e. the <code>wait</code> ice that implements it needs Zsh &gt;= 5.3.</strong></p>
-</div>
-<pre><code class="zsh">zplugin ice wait'0' # or just: zplugin ice wait
-zplugin light wfxr/forgit
+                <h1 id="the_for-syntax">The For-Syntax<a class="headerlink" href="#the_for-syntax" title="Permanent link">#</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>The <a href="../INTRODUCTION/">Introduction</a> covers the classic Zplugin invocation
+syntax, which is:</p>
+<pre><code class="zsh">zplugin ice …
+zplugin load … # or zplugin light, zplugin snippet
 </code></pre>
 
+<p>It is a fundamental Zplugin syntax. However, a more concise, optimized syntax,
+called <em>for-syntax</em>, is also available. It is best presented by a real-world
+example:</p>
+<pre><code class="zsh">zplugin as&quot;null&quot; wait&quot;3&quot; lucid for \
+    sbin&quot;git-recall&quot;   Fakerr/git-recall \
+    sbin&quot;git-open&quot;     paulirish/git-open \
+    sbin&quot;git-recent&quot;   paulirish/git-recent \
+    sbin&quot;git-my&quot;       davidosomething/git-my \
+    make&quot;PREFIX=$ZPFX install&quot;   iwata/git-now \
+    make&quot;PREFIX=$ZPFX&quot;           tj/git-extras
+</code></pre>
+
+<p>Above single command installs 6 plugins (Git extension-packages), with the base
+ices <code>as"null" wait"3" lucid</code> that are common to all of the plugins and
+6 plugin-specific add-on ices.</p>
+<h2 id="a_few_remarks">A Few Remarks<a class="headerlink" href="#a_few_remarks" title="Permanent link">#</a></h2>
 <ul>
-<li>waits for prompt,</li>
-<li>instantly ("0" seconds) after prompt loads given plugin.</li>
+<li>The syntax automatically detects if the object is a snippet or a plugin, by
+  checking if the object is an URL, i.e.: if it starts with <code>http*://</code> or
+  <code>OMZ::</code>, etc.</li>
+<li>To load a local-file snippet (which will be treaten as a local-directory
+  plugin by default) use the <code>is-snippet</code> ice,</li>
+<li>To load a plugin in <code>light</code> mode use the <code>light-mode</code> ice.</li>
+<li>If the plugin name collides with an ice name, precede the plugin name with
+  <code>@</code>, e.g.: <code>@sharkdp/fd</code> (collides with the <code>sh</code> ice, Zplugin will take the
+  plugin name as <code>sh"arkdp/fd"</code>), see the next section for an example.</li>
 </ul>
-<hr />
-<pre><code class="zsh">zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
-zplugin light zdharma/zplugin-crasis
+<h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h2>
+<p>Load a few useful binary (i.e.: binary packages from the GitHub Releases) utils:</p>
+<pre><code class="zsh">zplugin as&quot;null&quot; wait&quot;2&quot; lucid from&quot;gh-r&quot; for \
+    mv&quot;exa* -&gt; exa&quot; sbin&quot;exa&quot;  ogham/exa \
+    mv&quot;fd* -&gt; fd&quot; sbin&quot;fd/fd&quot;  @sharkdp/fd \
+    sbin&quot;fzf&quot;  junegunn/fzf-bin
 </code></pre>
 
-<ul>
-<li><code>$ZLAST_COMMANDS</code> is an array build by <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a>, it contains commands currently entered at prompt,</li>
-<li><code>(r)</code> searches for element that matches given pattern (<code>cras*</code>) and returns it,</li>
-<li><code>-n</code> means: not-empty, so it will be true when users enters "cras",</li>
-<li>after 1 second or less, Zplugin will detect that <code>wait''</code> condition is true, and load the plugin, which provides command <em>crasis</em>,</li>
-<li>Screencast that presents the feature:
-    <a href="https://asciinema.org/a/149725"><img alt="screencast" src="https://asciinema.org/a/149725.svg" /></a></li>
-</ul>
-<hr />
-<pre><code class="zsh">zplugin ice wait'[[ $PWD = */github || $PWD = */github/* ]]'
-zplugin load unixorn/git-extra-commands
+<p>Note: <code>sbin''</code> is an ice added by the
+<a href="https://github.com/zplugin/z-a-bin-gem-node">z-a-bin-gem-node</a> annex, it
+provides the command to the command line without altering <code>$PATH</code>.</p>
+<p>Turbo load some plugins, without any plugin-specific ices:</p>
+<pre><code class="zsh">zplugin wait lucid for \
+            hlissner/zsh-autopair \
+            urbainvaes/fzf-marks
 </code></pre>
 
-<ul>
-<li>waits until user enters a <code>github</code> directory.</li>
-</ul>
-<hr />
-<p>Turbo mode also support a suffix – the letter <code>a</code>, <code>b</code> or <code>c</code>. The meaning is
-illustrated by the following example:</p>
-<pre><code>zplugin ice wait&quot;0b&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 1&quot; lucid
-zplugin light mfaerevaag/wd
-zplugin ice wait&quot;0a&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 2&quot; lucid
-zplugin light mfaerevaag/wd
-
-# The output
-Firing 2
-Firing 1
+<p>Load two Oh My Zsh files as snippets, in Turbo:</p>
+<pre><code class="zsh">zplugin wait lucid for \
+                        OMZ::lib/git.zsh \
+    atload&quot;unalias grv&quot; OMZ::plugins/git/git.plugin.zsh
 </code></pre>
 
-<p>As it can be seen, the second plugin has been loaded first. That's because there
-are now three sub-slots (the <code>a</code>, <code>b</code> and <code>c</code>) in which the plugin/snippet
-loadings can be put into. Plugins from the same time-slot with suffix <code>a</code> will
-be loaded before plugins with suffix <code>b</code>, etc.</p>
-<p>In other words, instead of <code>wait'1'</code> you can enter <code>wait'1a'</code>, <code>wait'1b'</code> and
-<code>wait'1c'</code> – to this way <strong>impose order</strong> on the loadings <strong>regardless of the
-order of <code>zplugin</code> commands</strong>. </p>
-<p><a href="vim:set ft=markdown tw=80:"></a></p>
+<p><a href="vim:set ft=markdown tw=80 fo+=a1n autoindent:"></a></p>
                 
                   
                 
