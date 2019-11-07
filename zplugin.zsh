@@ -1855,6 +1855,7 @@ completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrac
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) ]] && \
     {
+        integer  __is_snippet
         if [[ $1 = (load|light|snippet) ]]; then
             # Trigger-load short-circuit
             if [[ -n ${ZPLG_ICE[trigger-load]} ]] {
@@ -1881,7 +1882,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
             : ${@[@]//(#b)(-b|--command|-f)/${ICE_OPTS[${match[1]}]::=1}}
             set -- "${@[@]:#(-b|--command|-f)}"
             [[ $1 = light && -z ${ICE_OPTS[(I)-b]} ]] && ZPLG_ICE[light-mode]=""
-            [[ $1 = snippet ]] && ZPLG_ICE[is-snippet]=""
+            [[ $1 = snippet ]] && ZPLG_ICE[is-snippet]="" || __is_snippet=-1
             shift
 
             ZPLG_ICES=( "${(kv)ZPLG_ICE[@]}" )
@@ -1901,7 +1902,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
             fi
             [[ $1 = for ]] && shift
         fi
-        integer __retval __is_snippet
+        integer __retval
         if (( $# )); then
             local -a __ices
             __ices=( "${(kv)ZPLG_ICES[@]}" )
@@ -1918,14 +1919,16 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                     (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || { (( $# )) && shift; continue; }; }
                     [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${1:t}"
 
-                    __is_snippet=0
-                    [[ -n ${ZPLG_ICE[is-snippet]+1} || $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ]] && \
+                    [[ $__is_snippet -ge 0 && 
+                        ( -n ${ZPLG_ICE[is-snippet]+1} ||
+                          $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* )
+                    ]] && \
                         __is_snippet=1
 
                     ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
                     if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                         ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
-                        if (( __is_snippet )); then
+                        if (( __is_snippet > 0 )); then
                             ZPLG_SICE[${1%%(/|//|///)}]=""
                             -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" \
                                 "${1%%(/|//|///)}" \
@@ -1938,7 +1941,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                         fi
                         __retval+=$?
                     else
-                        if (( __is_snippet )); then
+                        if (( __is_snippet > 0 )); then
                             -zplg-load-snippet ${(k)ICE_OPTS[@]} "${1%%(/|//|///)}"
                         else
                             -zplg-load "${${1#https://github.com/}%%(/|//|///)}" "" \
