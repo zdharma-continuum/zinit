@@ -1399,7 +1399,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 ZPLG_ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones)
                 [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
-                    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
+                    reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \!atpull
@@ -1465,7 +1465,7 @@ ZPLGM[EXTENDED_GLOB]=""
                   ZPLG_ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones)
                   [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
-                      reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
+                      reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                           "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \!atpull
@@ -1517,7 +1517,7 @@ ZPLGM[EXTENDED_GLOB]=""
             ZPLG_ICE=( "${(kv)ice[@]}" )
             # Run annexes' atpull hooks (the before atpull-ice ones)
             [[ ${ice[atpull]} != "!"* ]] && {
-                reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]} )
+                reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                     "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \!atpull
@@ -1529,7 +1529,7 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && -zplg-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
 
             # Run annexes' atpull hooks (the after atpull-ice ones)
-            reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atpull <->]} )
+            reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atpull <->]}" )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" atpull
@@ -1542,7 +1542,7 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
     ZPLG_ICE=( "${(kv)ice[@]}" )
     # Run annexes' atpull hooks (the `always' after atpull-ice ones)
-    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
+    reply=( ${(@on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
         "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \%atpull
@@ -2277,7 +2277,7 @@ ZPLGM[EXTENDED_GLOB]=""
 # FUNCTION: -zplg-run-delete-hooks {{{
 -zplg-run-delete-hooks() {
     local -a arr
-    reply=( ${(on)ZPLG_EXTS[(I)z-annex hook:atdelete <->]} )
+    reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atdelete <->]}" )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" atdelete
