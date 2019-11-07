@@ -54,30 +54,30 @@ reports](DONATIONS.md) about what is being done with the money received.
 * 06-11-2019
   - A new syntax, called for-syntax. Example:
 
-  ```zsh
-   zplugin as"program" atload'print Hi!' for \
-       atinit'print First!' zdharma/null \
-       atinit'print Second!' svn OMZ::plugins/git
-  ```
+    ```zsh
+     zplugin as"program" atload'print Hi!' for \
+         atinit'print First!' zdharma/null \
+         atinit'print Second!' svn OMZ::plugins/git
+    ```
 
-  The output:
+    The output:
 
-  ```
-  First!
-  Hi!
-  Second!
-  Hi!
-  ```
+    ```
+    First!
+    Hi!
+    Second!
+    Hi!
+    ```
 
-  And also:
+    And also:
 
-  ```zsh
-  % print -rl $path | egrep -i '(/git|null)'
-  /root/.zplugin/snippets/OMZ::plugins/git
-  /root/.zplugin/plugins/zdharma---null
-  ```
+    ```zsh
+    % print -rl $path | egrep -i '(/git|null)'
+    /root/.zplugin/snippets/OMZ::plugins/git
+    /root/.zplugin/plugins/zdharma---null
+    ```
 
-  To load in light mode, use a new `light-mode` ice.
+    To load in light mode, use a new `light-mode` ice.
 
 * 03-11-2019
   - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
