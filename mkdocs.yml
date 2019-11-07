@@ -2,6 +2,7 @@ site_name: Zplugin Wiki
 nav:
 - "Introduction":
   - "Introduction": INTRODUCTION.md
+  - "The For Syntax": For-Syntax.md
 - "Ice Modifiers":
   - "Alternate Ice Syntax": Alternate-Ice-Syntax.md
   - "Nickname a Plugin or Snippet": id-as.md
