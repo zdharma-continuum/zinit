@@ -1901,11 +1901,13 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                     (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || { (( $# )) && shift; continue; }; }
                     [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${1:t}"
 
-                    [[ $__is_snippet -ge 0 && 
-                        ( -n ${ZPLG_ICE[is-snippet]+1} ||
-                          ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* )
-                    ]] && \
-                        __is_snippet=1
+                    [[ $__is_snippet -ge 0 ]] && {
+                        [[ -n ${ZPLG_ICE[is-snippet]+1} ||
+                          ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))*
+                        ]] && \
+                            __is_snippet=1 || \
+                            __is_snippet=0
+                    }
 
                     if [[ -n ${ZPLG_ICE[trigger-load]} ]] {
                         () {
