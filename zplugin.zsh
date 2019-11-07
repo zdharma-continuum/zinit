@@ -1858,7 +1858,10 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
         integer  __is_snippet
         if [[ $1 = (load|light|snippet) ]]; then
             # Classic syntax -> simulate a call through the for-syntax
-            : ${@[@]//(#b)(-b|--command|-f)/${ICE_OPTS[${match[1]}]::=1}}
+            () {
+                setopt localoptions extendedglob
+                : ${@[@]//(#b)([ $'\t']##|(#s))(-b|--command|-f)([ $'\t']##|(#e))/${ICE_OPTS[${match[2]}]::=1}}
+            } "$@"
             set -- "${@[@]:#(-b|--command|-f)}"
             [[ $1 = light && -z ${ICE_OPTS[(I)-b]} ]] && ZPLG_ICE[light-mode]=""
             [[ $1 = snippet ]] && ZPLG_ICE[is-snippet]="" || __is_snippet=-1
