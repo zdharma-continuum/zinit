@@ -68,6 +68,9 @@ reports](DONATIONS.md) about what is being done with the money received.
     [z-a-bin-gem-node](https://github.com/zplugin/z-a-bin-gem-node) annex, it provides
     the command to the command line without altering `$PATH`.
 
+    See the [Zplugin Wiki](http://zdharma.org/zplugin/wiki/For-Syntax/) for more
+    information on the for-syntax.
+
 * 06-11-2019
   - A new syntax, called for-syntax. Example:
 
@@ -94,7 +97,8 @@ reports](DONATIONS.md) about what is being done with the money received.
     /root/.zplugin/plugins/zdharma---null
     ```
 
-    To load in light mode, use a new `light-mode` ice.
+    To load in light mode, use a new `light-mode` ice. More examples and information
+    can be found on the [Zplugin Wiki](http://zdharma.org/zplugin/wiki/For-Syntax/).
 
 * 03-11-2019
   - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
