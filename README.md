@@ -51,6 +51,23 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 07-11-2019
+  - Added a prefix-char: `@` that can be used before plugins if their name collides
+    with one of the ice-names. For example `sharkdp/fd` collides with the `sh` ice
+    (which causes the plugin to be loaded with the POSIX `sh` emulation applied). To
+    load it, do e.g.:
+
+    ```zsh
+    zplugin as"null" wait"2" lucid from"gh-r" for \
+        mv"exa* -> exa" sbin"exa"  ogham/exa \
+        mv"fd* -> fd" sbin"fd/fd"  @sharkdp/fd \
+        sbin"fzf" junegunn/fzf-bin
+    ```
+
+    i.e.: precede the plugin name with `@`. Note: `sbin''` is an ice added by the
+    [z-a-bin-gem-node](https://github.com/zplugin/z-a-bin-gem-node) annex, it provides
+    the command to the command line without altering `$PATH`.
+
 * 06-11-2019
   - A new syntax, called for-syntax. Example:
 
@@ -290,7 +307,7 @@ reports](DONATIONS.md) about what is being done with the money received.
 
     In other words, instead of `wait'1'` you can enter `wait'1a'`,
     `wait'1b'` and `wait'1c'` – to this way **impose order** on the loadings
-    **regardless of the order of `zplugin` commands**. 
+    **regardless of the order of `zplugin` commands**.
 
 </details>
 
@@ -299,7 +316,7 @@ To see the full history check [the changelog](CHANGELOG.md).
 # Zplugin
 
 Zplugin is an elastic and fast Zshell plugin manager that will allow you to
-install everything from GitHub and other sites. 
+install everything from GitHub and other sites.
 
 Zplugin is currently the only plugin manager out there that has Turbo mode which yields
 **50-73% faster Zsh startup!**. Check out a speed comparison with other popular plugin
@@ -325,7 +342,7 @@ The information in this README is complemented by the [Zplugin wiki](http://zdha
 
 ## Option 1 - Automatic Installation (Recommended)
 
-The easiest way to install Zplugin is to execute: 
+The easiest way to install Zplugin is to execute:
 
 ```zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
@@ -383,7 +400,7 @@ zplugin load zdharma/history-search-multi-word
 zplugin ice pick"async.zsh" src"pure.zsh"
 zplugin light sindresorhus/pure
 
-# Binary release in archive, from GitHub-releases page. 
+# Binary release in archive, from GitHub-releases page.
 # After automatic unpacking it provides program "fzf".
 zplugin ice from"gh-r" as"program"
 zplugin load junegunn/fzf-bin
@@ -412,7 +429,7 @@ zplugin light tj/git-extras
 
 # Handle completions without loading any plugin, see "clist" command.
 # This one is to be ran just once, in interactive session.
-zplugin creinstall %HOME/my_completions  
+zplugin creinstall %HOME/my_completions
 ```
 
 ```zsh
@@ -430,7 +447,7 @@ zplugin light direnv/direnv
 ```
 [You can see an extended explanation of direnv in the wiki.](http://zdharma.org/zplugin/wiki/Direnv-explanation/)
 
-If you're interested in more examples then check out the [zplugin-configs 
+If you're interested in more examples then check out the [zplugin-configs
 repository](https://github.com/zdharma/zplugin-configs) where users have uploaded their
 `~/.zshrc` and Zplugin configurations. Feel free to
 [submit](https://github.com/zdharma/zplugin-configs/issues/new?template=request-to-add-zshrc-to-the-zplugin-configs-repo.md)
@@ -469,7 +486,7 @@ explicitly stated otherwise.
 |:-:|-|
 | [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or the ice `as"program"`); it is a pattern, alphabetically first matched file is being chosen; e.g. `zplugin ice pick"*.plugin.zsh"; zplugin load …`.</div>|
 | [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). It is not a pattern but a plain file name.</div>|
-| [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). Supports patterns.</div>| 
+| [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). Supports patterns.</div>|
 
 ### Conditional Loading
 | Modifier | Description |
@@ -479,7 +496,7 @@ explicitly stated otherwise.
 | [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`.</div>|
 | `cloneonly` |<div align="justify" style="text-align: justify;"> Don't load the plugin / snippet, only download it </div>|
 | `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`.</div>|
-| `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>| 
+| `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>|
 | `subscribe` / `on-update-of` |<div align="justify" style="text-align: justify;"> Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` </div>|
 | `trigger-load` |<div align="justify" style="text-align: justify;">Creates a function that loads the associated plugin/snippet, with an option (to use it, precede the ice content with `!`) to automatically forward the call afterwards, to a command of the same name as the function. Can obtain multiple functions to create – sparate with `;`.</div> |
 
@@ -523,13 +540,13 @@ explicitly stated otherwise.
 |:-:|-|
 | `as` |<div align="justify" style="text-align: justify;"> Can be `as"program"` (also the alias: `as"command"`), and will cause to add script/program to `$PATH` instead of sourcing (see `pick`). Can also be `as"completion"` – use with plugins or snippets in whose only underscore-starting `_*` files you are interested in. The third possible value is `as"null"` – a shorthand for `pick"/dev/null" nocompletions` – i.e.: it disables the default script-file sourcing and also the installation of completions.</div>|
 | [**`id-as`**](http://zdharma.org/zplugin/wiki/id-as/) |<div align="justify" style="text-align: justify;"> Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.</div>|
-| `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.</div> | 
-| `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation).</div>| 
+| `compile` |<div align="justify" style="text-align: justify;"> Pattern (+ possible `{...}` expansion, like `{a/*,b*}`) to select additional files to compile, e.g. `compile"(pure\|async).zsh"` for `sindresorhus/pure`.</div> |
+| `nocompile` |<div align="justify" style="text-align: justify;"> Don't try to compile `pick`-pointed files. If passed the exclamation mark (i.e. `nocompile'!'`), then do compile, but after `make''` and `atclone''` (useful if Makefile installs some scripts, to point `pick''` at the location of their installation).</div>|
 | `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page.</div>|
-| `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.</div>| 
-| `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**</div>| 
-| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>| 
-| [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>| 
+| `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.</div>|
+| `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**</div>|
+| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>|
+| [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>|
 | `aliases` |<div align="justify" style="text-align: justify;">Load the plugin with the aliases mechanism enabled. Use with plugins that define **and use** aliases in their scripts.</div>|
 | `light-mode` |<div align="justify" style="text-align: justify;">Load the plugin without the tracking, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand</div>|
 
