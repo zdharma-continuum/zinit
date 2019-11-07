@@ -1909,8 +1909,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
             ZPLG_ICES=()
             while (( $# )) {
                 -zplg-ice "$@"
-                [[ -z $ZPLG_ICES[subscribe] ]] && unset 'ZPLG_ICES[subscribe]'
                 shift $?
+                [[ -z $ZPLG_ICES[subscribe] ]] && unset 'ZPLG_ICES[subscribe]'
                 if [[ -n $1 ]]; then
                     ZPLG_ICE=( "${__ices[@]}" "${(kv)ZPLG_ICES[@]}" )
                     ZPLG_ICES=()
