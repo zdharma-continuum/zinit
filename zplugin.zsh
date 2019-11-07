@@ -1866,7 +1866,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
 
             ZPLG_ICES=( "${(kv)ZPLG_ICE[@]}" )
             ZPLG_ICE=()
-            1="$1${2:+/$2}"
+            1="${1#@}${2:+/$2}"
             (( $# > 1 )) && { shift -p $(( $# - 1 )); }
             [[ -z "$1" ]] && {
                print "Argument needed, try: help"
@@ -1900,7 +1900,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
 
                     [[ $__is_snippet -ge 0 && 
                         ( -n ${ZPLG_ICE[is-snippet]+1} ||
-                          $1 = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* )
+                          ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* )
                     ]] && \
                         __is_snippet=1
 
@@ -1917,7 +1917,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                                     for a b ( ${(qqkv@)${(kv@)ZPLG_ICE[(I)^(trigger-load|wait|light-mode)]}} ) {
                                         ices+=( \"\$a\$b\" )
                                     }
-                                    zplugin ice \${ices[@]}; zplugin $mode ${(qqq)1}
+                                    zplugin ice \${ices[@]}; zplugin $mode ${(qqq)${1#@}}
                                     ${${(M)MATCH#!}:+# Forward the call
                                     eval ${MATCH#!} \$@}
                                 }"
@@ -1932,22 +1932,22 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                     if [[ -n "${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]}" ]]; then
                         ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
                         if (( __is_snippet > 0 )); then
-                            ZPLG_SICE[${1%%(/|//|///)}]=""
+                            ZPLG_SICE[${${1#@}%%(/|//|///)}]=""
                             -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" \
-                                "${1%%(/|//|///)}" \
+                                "${${1#@}%%(/|//|///)}" \
                                 "${(k)ICE_OPTS[@]}"
                         else
-                            ZPLG_SICE[${${1#https://github.com/}%%(/|//|///)}]=""
+                            ZPLG_SICE[${${${1#@}#https://github.com/}%%(/|//|///)}]=""
                             -zplg-submit-turbo p${ZPLG_ICE[service]:+1} \
                                 "${${${ZPLG_ICE[light-mode]+light}}:-load}" \
-                                "${${1#https://github.com/}%%(/|//|///)}" ""
+                                "${${${1#@}#https://github.com/}%%(/|//|///)}" ""
                         fi
                         __retval+=$?
                     else
                         if (( __is_snippet > 0 )); then
-                            -zplg-load-snippet ${(k)ICE_OPTS[@]} "${1%%(/|//|///)}"
+                            -zplg-load-snippet ${(k)ICE_OPTS[@]} "${${1#@}%%(/|//|///)}"
                         else
-                            -zplg-load "${${1#https://github.com/}%%(/|//|///)}" "" \
+                            -zplg-load "${${${1#@}#https://github.com/}%%(/|//|///)}" "" \
                                 "${${ZPLG_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
                         __retval+=$?
