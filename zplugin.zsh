@@ -1624,7 +1624,7 @@ countdown|nocountdown|trigger-load|light-mode|is-snippet${~exts})(*)
         if [[ "$__tpe" = "p" ]]; then
             -zplg-load "$__id" "" "$__mode"; (( __retval += $? ))
         elif [[ "$__tpe" = "s" ]]; then
-            -zplg-load-snippet $__opt "$__id"; (( __retval += $? ))
+            -zplg-load-snippet $__opt "${(@)=__id}"; (( __retval += $? ))
         elif [[ "$__tpe" = "p1" || "$__tpe" = "s1" ]]; then
             zpty -b "${__id//\//:} / ${ZPLG_ICE[service]}" '-zplg-service '"${(M)__tpe#?}"' "$__mode" "$__id"'
         fi
@@ -1935,7 +1935,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                             ZPLG_SICE[${${1#@}%%(/|//|///)}]=""
                             -zplg-submit-turbo s${ZPLG_ICE[service]:+1} "" \
                                 "${${1#@}%%(/|//|///)}" \
-                                "${(k)ICE_OPTS[@]}"
+                                "${(k)ICE_OPTS[*]}"
                         else
                             ZPLG_SICE[${${${1#@}#https://github.com/}%%(/|//|///)}]=""
                             -zplg-submit-turbo p${ZPLG_ICE[service]:+1} \
