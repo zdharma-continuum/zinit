@@ -1515,7 +1515,7 @@ function $f {
     integer retval
     local bit exts="${~ZPLG_EXTS[ice-mods]//\'\'/}"
     for bit; do
-        [[ "$bit" = (#b)(teleid|from|proto|cloneopts|depth|wait|load|\
+        [[ "$bit" = (#b)(--|)(teleid|from|proto|cloneopts|depth|wait|load|\
 unload|on-update-of|subscribe|if|has|cloneonly|nocloneonly|blockf|\
 svn|nosvn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|\
 atload|atpull|atclone|run-atpull|norun-atpull|make|nomake|notify|\
@@ -1524,7 +1524,7 @@ id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
 countdown|nocountdown|trigger-load|light-mode|is-snippet${~exts})(*)
         ]] && \
-            ZPLG_ICES[${match[1]}]+="${ZPLG_ICES[${match[1]}]:+;}${match[2]#(:|=)}" || \
+            ZPLG_ICES[${match[2]}]+="${ZPLG_ICES[${match[2]}]:+;}${match[3]#(:|=|/)}" || \
             break
         retval+=1
     done
