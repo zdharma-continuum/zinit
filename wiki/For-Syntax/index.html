@@ -2517,12 +2517,12 @@ zplugin load … # or zplugin light, zplugin snippet
 called <em>for-syntax</em>, is also available. It is best presented by a real-world
 example:</p>
 <pre><code class="zsh">zplugin as&quot;null&quot; wait&quot;3&quot; lucid for \
-    sbin&quot;git-recall&quot;   Fakerr/git-recall \
-    sbin&quot;git-open&quot;     paulirish/git-open \
-    sbin&quot;git-recent&quot;   paulirish/git-recent \
-    sbin&quot;git-my&quot;       davidosomething/git-my \
-    make&quot;PREFIX=$ZPFX install&quot;   iwata/git-now \
-    make&quot;PREFIX=$ZPFX&quot;           tj/git-extras
+    sbin  Fakerr/git-recall \
+    sbin  paulirish/git-open \
+    sbin  paulirish/git-recent \
+    sbin  davidosomething/git-my \
+    make&quot;PREFIX=$ZPFX install&quot;  iwata/git-now \
+    make&quot;PREFIX=$ZPFX&quot;          tj/git-extras
 </code></pre>
 
 <p>Above single command installs 6 plugins (Git extension-packages), with the base
@@ -2543,14 +2543,16 @@ ices <code>as"null" wait"3" lucid</code> that are common to all of the plugins a
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h2>
 <p>Load a few useful binary (i.e.: binary packages from the GitHub Releases) utils:</p>
 <pre><code class="zsh">zplugin as&quot;null&quot; wait&quot;2&quot; lucid from&quot;gh-r&quot; for \
-    mv&quot;exa* -&gt; exa&quot; sbin&quot;exa&quot;  ogham/exa \
+    mv&quot;exa* -&gt; exa&quot; sbin       ogham/exa \
     mv&quot;fd* -&gt; fd&quot; sbin&quot;fd/fd&quot;  @sharkdp/fd \
     sbin&quot;fzf&quot;  junegunn/fzf-bin
 </code></pre>
 
 <p>Note: <code>sbin''</code> is an ice added by the
 <a href="https://github.com/zplugin/z-a-bin-gem-node">z-a-bin-gem-node</a> annex, it
-provides the command to the command line without altering <code>$PATH</code>.</p>
+provides the command to the command line without altering <code>$PATH</code>. If the name
+of the command is the same as the name of the plugin, the ice contents can be
+skipped.</p>
 <p>Turbo load some plugins, without any plugin-specific ices:</p>
 <pre><code class="zsh">zplugin wait lucid for \
             hlissner/zsh-autopair \
