@@ -17,12 +17,12 @@ example:
 
 ```zsh
 zplugin as"null" wait"3" lucid for \
-    sbin"git-recall"   Fakerr/git-recall \
-    sbin"git-open"     paulirish/git-open \
-    sbin"git-recent"   paulirish/git-recent \
-    sbin"git-my"       davidosomething/git-my \
-    make"PREFIX=$ZPFX install"   iwata/git-now \
-    make"PREFIX=$ZPFX"           tj/git-extras
+    sbin  Fakerr/git-recall \
+    sbin  paulirish/git-open \
+    sbin  paulirish/git-recent \
+    sbin  davidosomething/git-my \
+    make"PREFIX=$ZPFX install"  iwata/git-now \
+    make"PREFIX=$ZPFX"          tj/git-extras
 ```
 
 Above single command installs 6 plugins (Git extension-packages), with the base
@@ -47,14 +47,16 @@ Load a few useful binary (i.e.: binary packages from the GitHub Releases) utils:
 
 ```zsh
 zplugin as"null" wait"2" lucid from"gh-r" for \
-    mv"exa* -> exa" sbin"exa"  ogham/exa \
+    mv"exa* -> exa" sbin       ogham/exa \
     mv"fd* -> fd" sbin"fd/fd"  @sharkdp/fd \
     sbin"fzf"  junegunn/fzf-bin
 ```
 
 Note: `sbin''` is an ice added by the
 [z-a-bin-gem-node](https://github.com/zplugin/z-a-bin-gem-node) annex, it
-provides the command to the command line without altering `$PATH`.
+provides the command to the command line without altering `$PATH`. If the name
+of the command is the same as the name of the plugin, the ice contents can be
+skipped.
 
 Turbo load some plugins, without any plugin-specific ices:
 
