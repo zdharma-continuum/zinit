@@ -14,17 +14,31 @@ zplugin load …
 
 ## The Alternative Syntaxes
 
-However, Zplugin supports also two other syntaxes: the equal (`=`) syntax:
+However, Zplugin supports also other syntaxes: the equal (`=`) syntax:
 
 ```zsh
 zplugin wait=1 from=gh-r atload="print Hello World"
 zplugin load …
 ```
 
-and the colon (`:`) syntax:
+the colon (`:`) syntax:
 
 ```zsh
 zplugin wait:1 from:gh-r atload:"print Hello World"
+zplugin load …
+```
+
+the slash (`/`) syntax:
+
+```zsh
+zplugin wait/1 from/gh-r atload/"print Hello World"
+zplugin load …
+```
+
+and also – with conjunction with all of the above – the GNU syntax:
+
+```zsh
+zplugin --wait=1 --from=gh-r --atload="print Hello World"
 zplugin load …
 ```
 
