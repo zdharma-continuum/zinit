@@ -2515,13 +2515,23 @@ zplugin load …
 
 <p>(note that there's no <code>ice</code> subcommand - that is currently being fully allowed)</p>
 <h2 id="the_alternative_syntaxes">The Alternative Syntaxes<a class="headerlink" href="#the_alternative_syntaxes" title="Permanent link">#</a></h2>
-<p>However, Zplugin supports also two other syntaxes: the equal (<code>=</code>) syntax:</p>
+<p>However, Zplugin supports also other syntaxes: the equal (<code>=</code>) syntax:</p>
 <pre><code class="zsh">zplugin wait=1 from=gh-r atload=&quot;print Hello World&quot;
 zplugin load …
 </code></pre>
 
-<p>and the colon (<code>:</code>) syntax:</p>
+<p>the colon (<code>:</code>) syntax:</p>
 <pre><code class="zsh">zplugin wait:1 from:gh-r atload:&quot;print Hello World&quot;
+zplugin load …
+</code></pre>
+
+<p>the slash (<code>/</code>) syntax:</p>
+<pre><code class="zsh">zplugin wait/1 from/gh-r atload/&quot;print Hello World&quot;
+zplugin load …
+</code></pre>
+
+<p>and also – with conjunction with all of the above – the GNU syntax:</p>
+<pre><code class="zsh">zplugin --wait=1 --from=gh-r --atload=&quot;print Hello World&quot;
 zplugin load …
 </code></pre>
 
