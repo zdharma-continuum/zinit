@@ -1869,7 +1869,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
 
             ZPLG_ICES=( "${(kv)ZPLG_ICE[@]}" )
             ZPLG_ICE=()
-            1="@${1#@}${2:+/$2}"
+            1="${1:+@}${1#@}${2:+/$2}"
             (( $# > 1 )) && { shift -p $(( $# - 1 )); }
             [[ -z "$1" ]] && {
                print "Argument needed, try: help"
