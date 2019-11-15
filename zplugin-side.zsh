@@ -314,8 +314,12 @@
 # $2 - name of hash that holds values
 # $3 - additional keys of hash to store, space separated
 # $4 - additional keys of hash to store, empty-meaningful ices, space separated
+# $5 – the URL, if applicable
+# $6 – the mode (1 - svn, 0 - single file), if applicable
 -zplg-store-ices() {
-    local __pfx="$1" __ice_var="$2" __add_ices="$3" __add_ices2="$4" url="$5" mode="$6"
+    local __pfx="$1" __ice_var="$2" \
+          __add_ices="$3" __add_ices2="$4" \
+          url="$5" mode="$6"
 
     # Copy from -zplg-recall
     local -a ice_order nval_ices
