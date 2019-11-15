@@ -364,8 +364,9 @@
         }
     done
 
+    # url and mode are declared at the beginning of the body
     for __key in url mode; do
-        [[ -n "${(P)__key}" ]] && print -r -- "${(P)__key}" >! "$__pfx"/$__key
+        [[ -n "${(P)__key}" ]] && print -r -- "${(P)__key}" >! "$__pfx"/"$__key"
     done
 }
 # }}}
