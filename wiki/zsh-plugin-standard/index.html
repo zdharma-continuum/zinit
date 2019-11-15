@@ -4263,8 +4263,7 @@ of <code>zsh-async</code>, having also reliable <code>$0</code> defined by previ
 <code>pure</code> doesn’t normally do this).</p>
 <p>The second item allows a plugin to e.g. set up <code>$fpath</code>, knowing that plugin
 manager will not handle this:</p>
-<pre><code class="zsh">if [[ (${+zsh_loaded_plugins} = 0 || ${zsh_loaded_plugins[-1]} != */kalc) \
-    &amp;&amp; -z ${fpath[(r)${0:h}]} ]]
+<pre><code class="zsh">if [[ $zsh_loaded_plugins[-1] != */kalc &amp;&amp; -z $fpath[(r)${0:h}] ]]
 then
     fpath+=( &quot;${0:h}&quot; )
 fi
