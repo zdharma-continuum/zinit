@@ -354,6 +354,10 @@ case $state in
                 _message 'Plugin spec or just enter, to create new plugin' && ret=0
                 ;;
 
+            env-whitelist)
+                _wanted plugins expl "-- Parameter To White List During Any Plugin Unload --" \
+                    _parameters && ret=0
+                ;;
             *)
                 ret=1
                 ;;
