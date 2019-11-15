@@ -4198,11 +4198,24 @@ develoment process.</p>
 <ol>
 <li>One plugin manager, Zplugin, implements plugin unloading and calls the
    function.</li>
-<li>One plugin, <code>romkatv/powerlevel10k</code>, is
-   <a href="https://github.com/romkatv/powerlevel10k/blob/f17081ca/internal/p10k.zsh#L5390"><strong>using</strong></a>
-   the function to execute a specific task: shutdown of the binary, background
-   <a href="https://github.com/romkatv/gitstatus"><strong>gitstatus</strong></a> demon, with a very good
-   results.</li>
+<li>One plugin, <code>romkatv/powerlevel10k</code>, is</li>
+<li>
+<p>Two plugins:</p>
+<ul>
+<li>
+<p><code>romkatv/powerlevel10k</code>, is
+  <a href="https://github.com/romkatv/powerlevel10k/blob/f17081ca/internal/p10k.zsh#L5390"><strong>using</strong></a>
+  the function to execute a specific task: shutdown of the binary, background
+  <a href="https://github.com/romkatv/gitstatus"><strong>gitstatus</strong></a> demon, with a very good
+  results,</p>
+</li>
+<li>
+<p><code>agkozak/agkozak-zsh-prompt</code>, is
+  <a href="https://github.com/agkozak/agkozak-zsh-prompt/commit/08b5879a"><strong>using</strong></a>
+  the function for the full unload of the theme.</p>
+</li>
+</ul>
+</li>
 </ol>
 <h2 id="3_zsh-plugin-run-on-unload_call">3. <code>@zsh-plugin-run-on-unload</code> call<a class="headerlink" href="#3_zsh-plugin-run-on-unload_call" title="Permanent link">#</a></h2>
 <p>The plugin manager can provide a function <code>@zsh-plugin-run-on-unload</code> which
