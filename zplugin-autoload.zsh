@@ -101,7 +101,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # This includes new path elements
     for i in "${(z)ZPLGM[PATH_AFTER__$uspl2]}"; do
-        path_state[$i]=1
+        path_state[${(Q)i}]=1
     done
 
     # Remove duplicated entries, i.e. existing before
@@ -112,7 +112,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Store the path elements, associating them with plugin ($uspl2)
     ZPLGM[PATH__$uspl2]=""
     for i in "${(onk)path_state[@]}"; do
-        ZPLGM[PATH__$uspl2]+="$i "
+        ZPLGM[PATH__$uspl2]+="${(q)i} "
     done
 
     #
@@ -121,7 +121,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # This includes new path elements
     for i in "${(z)ZPLGM[FPATH_AFTER__$uspl2]}"; do
-        fpath_state[$i]=1
+        fpath_state[${(Q)i}]=1
     done
 
     # Remove duplicated entries, i.e. existing before
@@ -132,7 +132,7 @@ ZPLGM[EXTENDED_GLOB]=""
     # Store the path elements, associating them with plugin ($uspl2)
     ZPLGM[FPATH__$uspl2]=""
     for i in "${(onk)fpath_state[@]}"; do
-        ZPLGM[FPATH__$uspl2]+="$i "
+        ZPLGM[FPATH__$uspl2]+="${(q)i} "
     done
 
     return 0
@@ -1104,7 +1104,7 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -a new elem p
     elem=( "${(z)ZPLGM[PATH__$uspl2]}" )
     for p in "${path[@]}"; do
-        [[ -z "${elem[(r)$p]}" ]] && { new+=( "$p" ); } || {
+        [[ -z "${elem[(r)${(q)p}]}" ]] && { new+=( "$p" ); } || {
             (( quiet )) || print "Removing PATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
             [[ -d "$p" ]] || (( quiet )) || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
         }
@@ -1115,7 +1115,7 @@ ZPLGM[EXTENDED_GLOB]=""
     elem=( "${(z)ZPLGM[FPATH__$uspl2]}" )
     new=( )
     for p in "${fpath[@]}"; do
-        [[ -z "${elem[(r)$p]}" ]] && { new+=( "$p" ); } || {
+        [[ -z "${elem[(r)${(q)p}]}" ]] && { new+=( "$p" ); } || {
             (( quiet )) || print "Removing FPATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
             [[ -d "$p" ]] || (( quiet )) || print "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} it didn't exist on disk"
         }
