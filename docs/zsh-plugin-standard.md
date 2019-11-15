@@ -135,10 +135,17 @@ develoment process.
 1. One plugin manager, Zplugin, implements plugin unloading and calls the
    function.
 2. One plugin, `romkatv/powerlevel10k`, is
-   [**using**](https://github.com/romkatv/powerlevel10k/blob/f17081ca/internal/p10k.zsh#L5390)
-   the function to execute a specific task: shutdown of the binary, background
-   [**gitstatus**](https://github.com/romkatv/gitstatus) demon, with a very good
-   results.
+2. Two plugins:
+
+    - `romkatv/powerlevel10k`, is
+      [**using**](https://github.com/romkatv/powerlevel10k/blob/f17081ca/internal/p10k.zsh#L5390)
+      the function to execute a specific task: shutdown of the binary, background
+      [**gitstatus**](https://github.com/romkatv/gitstatus) demon, with a very good
+      results,
+
+    - `agkozak/agkozak-zsh-prompt`, is
+      [**using**](https://github.com/agkozak/agkozak-zsh-prompt/commit/08b5879a)
+      the function for the full unload of the theme.
 
 ## 3. `@zsh-plugin-run-on-unload` call
 
