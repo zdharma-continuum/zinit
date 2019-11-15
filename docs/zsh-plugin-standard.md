@@ -213,8 +213,7 @@ The second item allows a plugin to e.g. set up `$fpath`, knowing that plugin
 manager will not handle this:
 
 ``` zsh
-if [[ (${+zsh_loaded_plugins} = 0 || ${zsh_loaded_plugins[-1]} != */kalc) \
-    && -z ${fpath[(r)${0:h}]} ]]
+if [[ $zsh_loaded_plugins[-1] != */kalc && -z $fpath[(r)${0:h}] ]]
 then
     fpath+=( "${0:h}" )
 fi
