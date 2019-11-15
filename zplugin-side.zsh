@@ -350,7 +350,8 @@
     # No nval_ices here
     for __key in ${ice_order[@]:#(${(~j:|:)nval_ices[@]})} ${(s: :)__add_ices[@]}; do
         __var_name="${__ice_var}[$__key]"
-        print -r -- "${(P)__var_name}" >! "$__pfx"/$__key
+        (( ${(P)+__var_name} )) && \
+            print -r -- "${(P)__var_name}" >! "$__pfx"/"$__key"
     done
 
     # Ices that even empty mean something
