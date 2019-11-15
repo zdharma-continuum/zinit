@@ -357,7 +357,11 @@
     # Ices that even empty mean something
     for __key in make pick nocompile reset ${nval_ices[@]} ${(s: :)__add_ices2[@]}; do
         __var_name="${__ice_var}[$__key]"
-        (( ${(P)+__var_name} )) && print -r -- "${(P)__var_name}" >! "$__pfx"/$__key || command rm -f "$__pfx"/$__key
+        if (( ${(P)+__var_name} )) {
+            print -r -- "${(P)__var_name}" >! "$__pfx"/"$__key"
+        } else {
+            command rm -f "$__pfx"/"$__key"
+        }
     done
 
     for __key in url mode; do
