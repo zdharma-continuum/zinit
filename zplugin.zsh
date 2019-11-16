@@ -999,10 +999,19 @@ function $f {
     -zplg-pack-ice "$id_as"
     if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-        if ! -zplg-setup-plugin-dir "$user" "$plugin" "$id_as"; then
-            zle && { print; zle .reset-prompt; }
-            return 1
-        fi
+        if (( ${+ZPLG_ICE[pack]} )) {
+            if ! -zplg-get-package "$user" "$plugin" "$id_as" \
+                    "${ZPLG_ICE[pack]:-default}"
+            then
+                zle && { print; zle .reset-prompt; }
+                return 1
+            fi
+        } else {
+            if ! -zplg-setup-plugin-dir "$user" "$plugin" "$id_as"; then
+                zle && { print; zle .reset-prompt; }
+                return 1
+            fi
+        }
         zle && rst=1
     fi
 

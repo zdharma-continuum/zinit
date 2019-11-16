@@ -3,6 +3,110 @@
 
 builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
+# FUNCTION: -zplg-parse-json {{{
+# Retrievies the ice-list from given profile from
+# the JSON of the package.json.
+-zplg-parse-json() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent
+
+    local -A pos_to_level level_to_pos pair_map final_pairs Strings Counts
+    local input=$1 _mybuf=$1 profile=$2 __style __quoting
+    integer nest=$3 __idx=0 __pair_idx __level=0 __start __end \
+        count=0 __sidx=1
+    local -a match mbegin mend pair_order
+
+    pair_map=( "(" ")" "{" "}" "[" "]" )
+    while [[ $_mybuf = (#b)[^"{}()[]\\\"'"]#((["({[]})\"'"])|[\\](*))(*) ]]; do
+        [[ -n ${match[3]} ]] && {
+            __idx+=${mbegin[1]}
+
+            [[ $__quoting = \' ]] && \
+                { _mybuf=${match[3]}; } || \
+                { _mybuf=${match[3]:1}; (( ++ __idx )); }
+
+        } || {
+            __idx+=${mbegin[1]}
+            [[ -z $__quoting ]] && {
+                if [[ ${match[1]} = ["({["] ]]; then
+                    pos_to_level[$__idx]=$(( ++__level ))
+                    level_to_pos[$__level]=$__idx
+                    (( Counts[$__level] += 1 ))
+                elif [[ ${match[1]} = ["]})"] ]]; then
+                    if (( __level > 0 )); then
+                        __pair_idx=${level_to_pos[$__level]}
+                        pos_to_level[$__idx]=$(( __level -- ))
+                        [[ ${pair_map[${input[__pair_idx]}]} = ${input[__idx]} ]] && {
+                            final_pairs[$__idx]=$__pair_idx
+                            final_pairs[$__pair_idx]=$__idx
+                            pair_order+=( $__idx )
+                        }
+                    else
+                        pos_to_level[$__idx]=-1
+                    fi
+                fi
+            }
+
+            [[ ${match[1]} = \" && $__quoting != \' ]] && \
+                {
+                    if [[ $__quoting = '"' ]]; then
+                        Strings[$__level/${Counts[$__level]}]+=" ${(q)input[__sidx,__idx-1]}"
+                        __quoting=""
+                    else
+                        __sidx=__idx+1
+                        __quoting='"'
+                    fi
+                }
+            [[ ${match[1]} = \' && $__quoting != \" ]] && \
+                {
+                    if [[ $__quoting = "'" ]]; then
+                        __quoting=""
+                    else
+                        __quoting="'"
+                    fi
+                }
+
+            _mybuf=${match[4]}
+        }
+    done
+
+    local text value found
+    integer pair_a pair_b
+    for pair_a ( "${pair_order[@]}" ) {
+        (( ++ count ))
+        pair_b="${final_pairs[$pair_a]}"
+        text="${input[pair_b,pair_a]}"
+        if [[ $text = \{\"zplugin-ices\"* ]]; then
+            if (( nest != 2 )) {
+                found="$text"
+            }
+        fi
+    }
+
+    if (( nest == 2 )) {
+        local -a profiles
+        count=0
+        profiles=( "${(Q@)${(@z)Strings[2/1]}}" )
+        for text ( "${profiles[@]}" ) {
+            (( ++ count ))
+            [[ $text != $profile ]] && continue
+            ZPLG_ICE=( "${(Q@)${(@z)Strings[3/$count]}}" "${(kv)ZPLG_ICE[@]}" )
+            break
+        }
+    }
+
+    if [[ -n $found && $nest -lt 2 ]] {
+        -zplg-parse-json "$found" "$profile" 2
+    }
+}
+# }}}
+# FUNCTION: -zplg-get-package {{{
+-zplg-get-package() {
+    local user="$1" plugin="$2" id_as="$3" profile="$4" \
+        local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}"
+    -zplg-parse-json "$(-zplg-download-file-stdout https://registry.npmjs.org/./$id_as)" "$profile" 1
+}
+# }}}
 # FUNCTION: -zplg-setup-plugin-dir {{{
 # Clones given plugin into PLUGIN_DIR. Supports multiple
 # sites (respecting `from' and `proto' ice modifiers).
@@ -310,11 +414,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     if (( restart )); then
         (( ${path[(I)/usr/local/bin]} )) || \
-            { 
+            {
                 path+=( "/usr/local/bin" );
                 trap "path[-1]=()" EXIT
             }
-    
+
         if (( ${+commands[curl]} )) then
             command curl -fsSL "$url" || return 1
         elif (( ${+commands[wget]} )); then
