@@ -1692,7 +1692,7 @@ countdown|nocountdown|trigger-load|light-mode|is-snippet${~exts})(*)
 # function.
 -zplugin_scheduler_add_sh() {
     local idx="$1" in_wait="$__ar2" in_abc="$__ar3" ver_wait="$__ar4" ver_abc="$__ar5"
-    if [[ ( "$in_wait" = "$ver_wait" || "$in_wait" -ge 10 ) && "$in_abc" = "$ver_abc" ]]; then
+    if [[ ( "$in_wait" = "$ver_wait" || "$in_wait" -ge 4 ) && "$in_abc" = "$ver_abc" ]]; then
         ZPLG_RUN+=( "${ZPLG_TASKS[$idx]}" )
         return 1
     else
@@ -1742,7 +1742,7 @@ countdown|nocountdown|trigger-load|light-mode|is-snippet${~exts})(*)
             # an entry with "<no-data>", i.e. ZPLG_TASKS[1] entry.
             integer __idx1 __idx2
             local __ar2 __ar3 __ar4 __ar5
-            for (( __idx1 = 0; __idx1 <= 7; __idx1 ++ )); do
+            for (( __idx1 = 0; __idx1 <= 4; __idx1 ++ )); do
                 for (( __idx2 = 1; __idx2 <= (__idx >= 4 ? 1 : 3); __idx2 ++ )); do
                     # The following substitution could be just (well, 'just'..) this:
                     #
