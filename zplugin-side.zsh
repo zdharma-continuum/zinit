@@ -274,8 +274,14 @@
     } 2>/dev/null
 
     # Handle flag-Ices; svn must be last
-    for __key in make pick nocompile reset ${nval_ices[@]}; do
+    for __key in ${ice_order[@]}; do
         (( 0 == ${+ZPLG_ICE[no$__key]} && 0 == ${+__sice[no$__key]} )) && continue
+        # "If there is such ice currently, and there's no no* ice given,
+        # and there's the no* ice in the static ice" – skip, don't unset.
+        # With conjunction with the previous line this has the proper
+        # meaning: uset if at least in one – current or static – ice
+        # there's the no* ice, but not if it's only in the static ice
+        # (unless there's on such ice "anyway").
         (( 1 == ${+ZPLG_ICE[$__key]} && 0 == ${+ZPLG_ICE[no$__key]} && \
             1 == ${+__sice[no$__key]} )) && continue
 
