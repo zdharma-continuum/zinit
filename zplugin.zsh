@@ -961,6 +961,28 @@ function $f {
         command mkdir 2>/dev/null -p ${ZPFX}/bin
     }
 } # }}}
+# FUNCTION: -zplg-load-ices {{{
+-zplg-load-ices() {
+    local user="$1" plugin="$2" id_as="$3" __key __path
+    local -a ice_order
+    ice_order=(
+        svn proto from teleid bindmap cloneopts id-as depth if wait load
+        unload blockf pick bpick src as ver silent lucid notify mv cp
+        atinit atclone atload atpull nocd run-atpull has cloneonly make
+        service trackbinds multisrc compile nocompile nocompletions
+        reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
+        \!csh aliases countdown ps-on-unload ps-on-update trigger-load
+        light-mode is-snippet
+        ${(@us.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
+    )
+    __path="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}/._zplugin"
+    for __key in "${ice_order[@]}"; do
+        (( ${+ZPLG_ICE[$__key]} )) && continue
+        [[ -f "$__path"/"$__key" ]] && ZPLG_ICE[$__key]="$(<$__path/$__key)"
+    done
+
+}
+# }}}
 # FUNCTION: -zplg-load {{{
 # Implements the exposed-to-user action of loading a plugin.
 #
@@ -986,6 +1008,9 @@ function $f {
 
     (( ${+ZPLG_ICE[cloneonly]} )) && return 0
 
+    (( ${+ZPLG_ICE[pack]} || 1 )) && {
+        -zplg-load-ices "$user" "$plugin" "$id_as"
+    }
     -zplg-register-plugin "$id_as" "$mode"
 
     local -a arr
@@ -1522,7 +1547,7 @@ atload|atpull|atclone|run-atpull|norun-atpull|make|nomake|notify|\
 nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
 id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
-countdown|nocountdown|trigger-load|light-mode|is-snippet${~exts})(*)
+countdown|nocountdown|trigger-load|light-mode|is-snippet|pack${~exts})(*)
         ]] && \
             ZPLG_ICES[${match[2]}]+="${ZPLG_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
             break
