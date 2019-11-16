@@ -28,13 +28,6 @@ zplugin wait:1 from:gh-r atload:"print Hello World"
 zplugin load …
 ```
 
-the slash (`/`) syntax:
-
-```zsh
-zplugin wait/1 from/gh-r atload/"print Hello World"
-zplugin load …
-```
-
 and also – with conjunction with all of the above – the GNU syntax:
 
 ```zsh
