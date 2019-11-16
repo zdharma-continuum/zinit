@@ -1524,7 +1524,7 @@ id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
 countdown|nocountdown|trigger-load|light-mode|is-snippet${~exts})(*)
         ]] && \
-            ZPLG_ICES[${match[2]}]+="${ZPLG_ICES[${match[2]}]:+;}${match[3]#(:|=|/)}" || \
+            ZPLG_ICES[${match[2]}]+="${ZPLG_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
             break
         retval+=1
     done
