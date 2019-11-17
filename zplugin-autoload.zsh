@@ -2471,9 +2471,18 @@ ZPLGM[EXTENDED_GLOB]=""
         return 1
     fi
 
+    # Read whether to create under organization
+    local isorg
+    vared -cp 'Create under an organization? (y/n): ' isorg
+
+    if [[ $isorg = (y|yes) ]]; then
+        local org="$user"
+        vared -cp "Github organization name: " org
+    fi
+
     # Read user
     local compcontext="user:User Name:(\"$USER\" \"$user\")"
-    vared -cp "Github user name or just \"_local\" (or even leave blank, for an userless plugin): " user
+    vared -cp "Github user name or just \"_local\" (or leave blank, for an userless plugin): " user
 
     # Read plugin
     unset compcontext
@@ -2498,8 +2507,12 @@ ZPLGM[EXTENDED_GLOB]=""
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
         print "${ZPLGM[col-info]}Creating Github repository${ZPLGM[col-rst]}"
-        curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
-        command git clone "https://github.com/${user}/${plugin}.git" "${user}---${plugin//\//---}" || {
+        if [[ $isorg = (y|yes) ]]; then
+            curl --silent -u "$user" https://api.github.com/orgs/$org/repos -d '{"name":"'"$plugin"'"}'
+        else
+            curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
+        fi
+        command git clone "https://github.com/${${${(M)isorg:#(y|yes)}:+$org}:-$user}/${plugin}.git" "${user}---${plugin//\//---}" || {
             print "${ZPLGM[col-error]}Creation of remote repository $uspl2col ${ZPLGM[col-error]}failed${ZPLGM[col-rst]}"
             print "${ZPLGM[col-error]}Bad credentials?${ZPLGM[col-rst]}"
             return 1
