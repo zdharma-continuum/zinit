@@ -1476,15 +1476,17 @@ ZPLGM[EXTENDED_GLOB]=""
                       eval "${ZPLG_ICE[reset]:-command git reset --hard HEAD}"
                   )
                   [[ ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
+				  (( !skip_pull )) && {
+                  [[ -n "${ZPLG_ICE[ver]}" ]] && command git merge --no-stat "${ZPLG_ICE[ver]}" || command git pull --no-stat
+                  }
                   ZPLG_ICE=()
-                  (( !skip_pull )) && command git pull --no-stat
               }
             )
         }
 
         [[ -d "$local_dir/.git" ]] && \
             (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-               command git pull --recurse-submodules
+               command git submodule update --init --recursive
             )
 
         local -a log
@@ -1535,7 +1537,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" atpull
             done
             ZPLG_ICE=()
-        }
+        } || print "Already up to date."
 
         # Store ices to disk at update of plugin
         -zplg-store-ices "$local_dir/._zplugin" ice "" "" "" ""
