@@ -1597,7 +1597,7 @@ ZPLGM[EXTENDED_GLOB]=""
 -zplg-update-or-status-all() {
     builtin setopt localoptions nullglob nokshglob noksharrays typesetsilent
 
-    local st="$1"
+    local st="$1" id_as
     local repo snip pd user plugin
 
     local -A ZPLG_ICE
@@ -1610,8 +1610,11 @@ ZPLGM[EXTENDED_GLOB]=""
         print "${ZPLGM[col-info]}Note:${ZPLGM[col-rst]} updating also unloaded snippets"
 
     for snip in "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin/mode(D); do
-        [[ ! -f "${snip:h}/id-as" ]] && continue
-        -zplg-update-or-status-snippet "$st" "${$(<${snip:h}/id-as):-$(<${snip:h}/url)}"
+        [[ ! -f "${snip:h}/url" ]] && continue
+        [[ -f "${snip:h}/id-as" ]] && \
+            id_as="$(<${snip:h}/id-as)" ||
+            id_as=""
+        -zplg-update-or-status-snippet "$st" "${id_as:-$(<${snip:h}/url)}"
         ZPLG_ICE=()
     done
     [[ -n "$snipps" ]] && print
