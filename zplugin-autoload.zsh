@@ -2517,7 +2517,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print "${ZPLGM[col-error]}Bad credentials?${ZPLGM[col-rst]}"
             return 1
         }
-        builtin cd -q "${user}---${plugin//\//---}"
+        builtin cd -q "${${${(M)isorg:#(y|yes)}:+$org}:-$user}---${plugin//\//---}"
         command git config credential.https://github.com.username "${user}"
     else
         print "${ZPLGM[col-info]}Creating local git repository${${user:+.}:-, ${ZPLGM[col-pname]}free-style, without the \"_local/\" part${ZPLGM[col-info]}.}${ZPLGM[col-rst]}"
