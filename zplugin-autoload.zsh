@@ -2494,11 +2494,11 @@ ZPLGM[EXTENDED_GLOB]=""
     fi
 
     plugin="${plugin//[^a-zA-Z0-9_]##/-}"
-    -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+    -zplg-any-colorify-as-uspl2 "${${${(M)isorg:#(y|yes)}:+$org}:-$user}" "$plugin"
     local uspl2col="$REPLY"
     print "Plugin is $uspl2col"
 
-    if -zplg-exists-physically "$user" "$plugin"; then
+    if -zplg-exists-physically "${${${(M)isorg:#(y|yes)}:+$org}:-$user}" "$plugin"; then
         print "${ZPLGM[col-error]}Repository${ZPLGM[col-rst]} $uspl2col ${ZPLGM[col-error]}already exists locally${ZPLGM[col-rst]}"
         return 1
     fi
@@ -2512,7 +2512,7 @@ ZPLGM[EXTENDED_GLOB]=""
         else
             curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         fi
-        command git clone "https://github.com/${${${(M)isorg:#(y|yes)}:+$org}:-$user}/${plugin}.git" "${user}---${plugin//\//---}" || {
+        command git clone "https://github.com/${${${(M)isorg:#(y|yes)}:+$org}:-$user}/${plugin}.git" "${${${(M)isorg:#(y|yes)}:+$org}:-$user}---${plugin//\//---}" || {
             print "${ZPLGM[col-error]}Creation of remote repository $uspl2col ${ZPLGM[col-error]}failed${ZPLGM[col-rst]}"
             print "${ZPLGM[col-error]}Bad credentials?${ZPLGM[col-rst]}"
             return 1
@@ -2541,6 +2541,7 @@ EOF
 
     print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZPLGM[BIN_DIR]}/LICENSE" LICENSE
+    command cp -vf "${ZPLGM[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
         print "Remote repository $uspl2col set up as origin."
