@@ -894,7 +894,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local user="${reply[-2]}"
     local plugin="${reply[-1]}"
 
-    local url="https://github.com/$user/$plugin/releases/latest"
+    local url="https://github.com/$user/$plugin/releases/${ice[ver]:-latest}"
 
     local -a list
     list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
