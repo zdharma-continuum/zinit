@@ -1686,7 +1686,7 @@ countdown|nocountdown|trigger-load|light-mode|is-snippet|pack${~exts})(*)
         builtin zle -F "$1"; exec {1}<&-
         return 0
     }
-    local THEFD hasw
+    local THEFD="13371337" hasw
     # The expansion is: if there is @sleep: pfx, then use what's after
     # it, otherwise substitute 0
     exec {THEFD} < <(LANG=C sleep $(( 0.01 + ${${${(M)1#@sleep:}:+${1#@sleep:}}:-0} )); print -r -- ${1:#(@msg|@sleep:*)} "${@[2,-1]}"; )
