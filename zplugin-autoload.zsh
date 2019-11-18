@@ -1535,7 +1535,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" atpull
             done
             ZPLG_ICE=()
-        } || { [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Already up to date." }
+        } || { [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -z "${ice[is_release]}" ]] && print "Already up to date." }
 
         # Store ices to disk at update of plugin
         -zplg-store-ices "$local_dir/._zplugin" ice "" "" "" ""
