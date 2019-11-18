@@ -61,7 +61,8 @@ ZPLGM[PLUGINS_DIR]=${~ZPLGM[PLUGINS_DIR]}
 ZPLGM[COMPLETIONS_DIR]=${~ZPLGM[COMPLETIONS_DIR]}
 ZPLGM[SNIPPETS_DIR]=${~ZPLGM[SNIPPETS_DIR]}
 ZPLGM[SERVICES_DIR]=${~ZPLGM[SERVICES_DIR]}
-export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache/zplugin}" PATH=${~ZPFX}/bin:"$PATH"
+export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache/zplugin}"
+[[ -n ${path[(re)$ZPFX/bin]} ]] || path=( "$ZPFX/bin" ${path[@]} )
 
 [[ ! -d $ZSH_CACHE_DIR ]] && command mkdir -p "$ZSH_CACHE_DIR"
 [[ -n "${ZPLGM[ZCOMPDUMP_PATH]}" ]] && ZPLGM[ZCOMPDUMP_PATH]=${~ZPLGM[ZCOMPDUMP_PATH]}
@@ -1458,7 +1459,7 @@ function $f {
     local id_as="$1" add_dir="$2" user="${reply[-2]}" plugin="${reply[-1]}"
     (( front )) && \
         fpath[1,0]=${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir} || \
-        fpath+=( 
+        fpath+=(
             ${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir}
         )
 }
