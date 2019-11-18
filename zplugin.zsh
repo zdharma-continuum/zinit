@@ -1017,7 +1017,7 @@ function $f {
 
     (( ${+ZPLG_ICE[cloneonly]} )) && return 0
 
-    (( ${+ZPLG_ICE[pack]} || 1 )) && {
+    (( ${+ZPLG_ICE[pack]} )) && {
         -zplg-load-ices "$user" "$plugin" "$id_as"
     }
     -zplg-register-plugin "$id_as" "$mode"
