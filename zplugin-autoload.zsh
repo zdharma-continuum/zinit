@@ -1786,7 +1786,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print "$time" - "$REPLY (sbin command)"
         elif [[ -n "${sice[fbin]}" ]]; then
             print "$time" - "$REPLY (fbin command)"
-        elif [[ "${sice[pick]}" = "/dev/null" && ${+sice[make]} = 1 ]]; then
+        elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && ${+sice[make]} = 1 ]]; then
             print "$time" - "$REPLY (/dev/null make plugin)"
         else
             print "$time" - "$REPLY"
