@@ -1780,11 +1780,11 @@ ZPLGM[EXTENDED_GLOB]=""
             time="$attime"
         fi
 
-        if [[ "${sice[as]}" == "command" ]]; then
+        if [[ ${sice[as]} == "command" ]]; then
             print "$time" - "$REPLY (command)"
-        elif [[ -n "${sice[sbin]}" ]]; then
+        elif [[ -n ${sice[sbin]} ]]; then
             print "$time" - "$REPLY (sbin command)"
-        elif [[ -n "${sice[fbin]}" ]]; then
+        elif [[ -n ${sice[fbin]} ]]; then
             print "$time" - "$REPLY (fbin command)"
         elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && ${+sice[make]} = 1 ]]; then
             print "$time" - "$REPLY (/dev/null make plugin)"
