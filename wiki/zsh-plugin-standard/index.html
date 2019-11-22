@@ -4053,7 +4053,8 @@
               
                 
                 
-                <h1 id="zsh_plugin_standard">Zsh Plugin Standard<a class="headerlink" href="#zsh_plugin_standard" title="Permanent link">#</a></h1>
+                <p><center><strong>Version: 1.0,  11/22/2019</strong></center></p>
+<h1 id="zsh_plugin_standard">Zsh Plugin Standard<a class="headerlink" href="#zsh_plugin_standard" title="Permanent link">#</a></h1>
 <p>This document defines the Zsh Plugin Standard. Zplugin fully supports
 this standard.</p>
 <p>This document is also available as a
@@ -4065,8 +4066,10 @@ in a particular way.</p>
 <p>At a simple level, a plugin:</p>
 <ol>
 <li>
-<p>Has its directory added to <code>$fpath</code>
-(<a href="http://zsh.sourceforge.net/Doc/Release/Functions.html#Autoloading-Functions"><strong>Zsh documentation</strong></a>).</p>
+<p>Has its directory added to <code>$fpath</code> (<a href="http://zsh.sourceforge.net/Doc/Release/Functions.html#Autoloading-Functions"><strong>Zsh
+  documentation</strong></a>).
+  This is being done either by a plugin manager or by the plugin itself (see
+  <a href="#546_plugin_manager_activity_indicator">5<sup>th</sup> section</a> for more information).</p>
 </li>
 <li>
 <p>Has its first <code>*.plugin.zsh</code> file sourced (or <code>*.zsh</code>, <code>init.zsh</code>, <code>*.sh</code>,
@@ -4099,8 +4102,8 @@ loaded via Zsh’s <code>autoload</code> mechanism (a single function per-file).
 plugin" and the actions of plugin managers – the proposed standardization.</p>
 <h2 id="146_standardized_0_handling">1. Standardized $0 Handling<a class="headerlink" href="#146_standardized_0_handling" title="Permanent link">#</a></h2>
 <p>To get the plugin’s location, plugins should do:</p>
-<pre><code class="zsh">0=&quot;${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}&quot;
-0=&quot;${${(M)0:#/*}:-$PWD/$0}&quot;
+<pre><code class="zsh">0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
+0=${${(M)0:#/*}:-$PWD/$0}
 
 # Then ${0:h} to get plugin’s directory
 </code></pre>
@@ -4263,14 +4266,16 @@ of <code>zsh-async</code>, having also reliable <code>$0</code> defined by previ
 <code>pure</code> doesn’t normally do this).</p>
 <p>The second item allows a plugin to e.g. set up <code>$fpath</code>, knowing that plugin
 manager will not handle this:</p>
-<pre><code class="zsh">if [[ $zsh_loaded_plugins[-1] != */kalc &amp;&amp; -z $fpath[(r)${0:h}] ]]
+<pre><code class="zsh">if [[ ${zsh_loaded_plugins[-1]} != */kalc &amp;&amp; -z ${fpath[(r)${0:h}]} ]]
 then
     fpath+=( &quot;${0:h}&quot; )
 fi
 </code></pre>
 
 <p>This will allow user to reliably source the plugin without using a plugin
-manager.</p>
+manager. The code uses the wrapping braces around variables (i.e.: e.g.:
+<code>${fpath…}</code>) to make it compatible with the <code>KSH_ARRAYS</code> option and the quoting
+around <code>${0:h}</code> to make it compatible with the <code>SH_WORD_SPLIT</code> option.</p>
 <h5 id="adoption_status_4">Adoption Status<a class="headerlink" href="#adoption_status_4" title="Permanent link">#</a></h5>
 <ol>
 <li>
@@ -4541,7 +4546,8 @@ PLGMAP[some_array__1]=state
 global parameters in one of projects by 21 by using an automatic conversion with
 Vim substitution patterns with back references without any problems.</p>
 <h2 id="appendix_a_revision_history_history_of_updates_to_the_document">Appendix A: Revision History (History Of Updates To The Document)<a class="headerlink" href="#appendix_a_revision_history_history_of_updates_to_the_document" title="Permanent link">#</a></h2>
-<p>v0.99, 10/26/2019: Added <code>Adoption Status</code> sub-sections<br />
+<p>v1.0, 11/22/2019: Removed quoting from the <code>$0</code> assignments 
+v0.99, 10/26/2019: Added <code>Adoption Status</code> sub-sections<br />
 v0.98, 10/25/2019: 1/ Added <code>Standard Recommended Variables</code> section<br />
 v0.98, 10/25/2019: 2/ Added <code>Standard Function Name-Space Prefixes</code> section<br />
 v0.98, 10/25/2019: 3/ Added <code>Preventing Function Pollution</code> section<br />
