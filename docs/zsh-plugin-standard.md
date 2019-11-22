@@ -1,3 +1,5 @@
+<center>**Version: 1.0,  11/22/2019**</center>
+
 # Zsh Plugin Standard
 
 This document defines the Zsh Plugin Standard. Zplugin fully supports
@@ -14,8 +16,11 @@ in a particular way.
 
 At a simple level, a plugin:
 
-1. Has its directory added to `$fpath`
-([**Zsh documentation**](http://zsh.sourceforge.net/Doc/Release/Functions.html#Autoloading-Functions)).
+1. Has its directory added to `$fpath` ([**Zsh
+  documentation**](http://zsh.sourceforge.net/Doc/Release/Functions.html#Autoloading-Functions)).
+  This is being done either by a plugin manager or by the plugin itself (see
+  [5th section](#546_plugin_manager_activity_indicator) for more information).
+
 
 2. Has its first `*.plugin.zsh` file sourced (or `*.zsh`, `init.zsh`, `*.sh`,
    these are non-standard).
@@ -47,8 +52,8 @@ plugin" and the actions of plugin managers – the proposed standardization.
 To get the plugin’s location, plugins should do:
 
 ``` zsh
-0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
-0="${${(M)0:#/*}:-$PWD/$0}"
+0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
+0=${${(M)0:#/*}:-$PWD/$0}
 
 # Then ${0:h} to get plugin’s directory
 ```
@@ -213,14 +218,16 @@ The second item allows a plugin to e.g. set up `$fpath`, knowing that plugin
 manager will not handle this:
 
 ``` zsh
-if [[ $zsh_loaded_plugins[-1] != */kalc && -z $fpath[(r)${0:h}] ]]
+if [[ ${zsh_loaded_plugins[-1]} != */kalc && -z ${fpath[(r)${0:h}]} ]]
 then
     fpath+=( "${0:h}" )
 fi
 ```
 
 This will allow user to reliably source the plugin without using a plugin
-manager.
+manager. The code uses the wrapping braces around variables (i.e.: e.g.:
+`${fpath…}`) to make it compatible with the `KSH_ARRAYS` option and the quoting
+around `${0:h}` to make it compatible with the `SH_WORD_SPLIT` option.
 
 ##### Adoption Status
 
@@ -518,6 +525,7 @@ Vim substitution patterns with back references without any problems.
 
 ## Appendix A: Revision History (History Of Updates To The Document)
 
+v1.0, 11/22/2019: Removed quoting from the `$0` assignments 
 v0.99, 10/26/2019: Added `Adoption Status` sub-sections  
 v0.98, 10/25/2019: 1/ Added `Standard Recommended Variables` section  
 v0.98, 10/25/2019: 2/ Added `Standard Function Name-Space Prefixes` section  
