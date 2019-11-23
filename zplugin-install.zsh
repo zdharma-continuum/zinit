@@ -159,6 +159,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local site
     [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
+    [[ -z $site && ${ZPLG_ICE[from]} = *(gh-r|github-rel)* ]] && {
+        site="${ZPLG_ICE[from]/(gh-r|github-re)/${sites[gh-r]}}"
+    }
 
     (
         if [[ "$site" = *"releases" ]]; then
