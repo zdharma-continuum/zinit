@@ -31,11 +31,11 @@ script:
 - make
 - make -C zsdoc pdf
 - share/deploy_doc.sh
-- make test VERBOSE=1
-- make testB VERBOSE=1
-- make testC VERBOSE=1
-- make testD VERBOSE=1
-- make testE VERBOSE=1
+- make -C test test VERBOSE=1
+- make -C test testB VERBOSE=1
+- make -C test testC VERBOSE=1
+- make -C test testD VERBOSE=1
+- make -C test testE VERBOSE=1
 
 notifications:
   irc:
