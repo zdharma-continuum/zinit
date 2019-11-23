@@ -1563,9 +1563,9 @@ countdown|nocountdown|trigger-load|light-mode|is-snippet|pack${~exts})(*)
             break
         retval+=1
     done
-    [[ "${ZPLG_ICES[as]}" = "program" ]] && ZPLG_ICES[as]="command"
-    ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
-    [[ -n "${ZPLG_ICES[pick]}" ]] && ZPLG_ICES[pick]="${ZPLG_ICES[pick]//\$ZPFX/${ZPFX%/}}"
+    [[ ${ZPLG_ICES[as]} = program ]] && ZPLG_ICES[as]="command"
+    [[ -n ${ZPLG_ICES[on-update-of]} ]] && ZPLG_ICES[subscribe]="${ZPLG_ICES[subscribe]:-${ZPLG_ICES[on-update-of]}}"
+    [[ -n ${ZPLG_ICES[pick]} ]] && ZPLG_ICES[pick]="${ZPLG_ICES[pick]//\$ZPFX/${ZPFX%/}}"
     return $retval
 } # }}}
 # FUNCTION: -zplg-pack-ice {{{
