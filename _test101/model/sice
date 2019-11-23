@@ -1,4 +1,4 @@
 psprint/zsh-select
-subscribe '' teleid psprint/zsh-select wait '' depth 1 
+teleid psprint/zsh-select wait '' depth 1 
 teleid zdharma/ice-order wait '' 
 zdharma/ice-order

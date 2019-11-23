@@ -1,2 +1,2 @@
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
-subscribe '' svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' 
+svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' is-snippet '' 

@@ -32,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'OMZ::plugins/git/git.plugin.zsh <single file>'
-ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'atinit '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out'\'' subscribe '\'''\'' teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' atpull %atclone atload '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out'\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command echo "touch \${ZPLGM[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh'\'' src gp  '
+ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'atinit '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out'\'' teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' atpull %atclone atload '\''print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out'\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command echo "touch \${ZPLGM[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh'\'' is-snippet '\'''\'' src gp '
 ZPLG_COMPDEF_REPLAY: '_git gcount' '_git gdv=git-diff' '_grep gfg' '_git ggf=git-checkout' '_git ggl=git-checkout' '_git ggp=git-checkout' '_git ggpnp=git-checkout' '_git ggu=git-checkout' '_git ggpur=git-checkout' '_git ggpull=git-checkout' '_git ggpush=git-checkout' '_git git-svn-dcommit-push=git' '_git gk=gitk' '_git gke=gitk' '_git glp=git-log' '_git gpoat=git-push'
 ZPLG_CUR_PLUGIN: ''
 ---

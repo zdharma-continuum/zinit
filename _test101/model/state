@@ -78,7 +78,7 @@ ZSTYLES__zdharma/ice-order
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '0' 'zdharma/ice-order' '0'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' depth 1 ' 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' '
+ZPLG_SICE: 'psprint/zsh-select' 'teleid psprint/zsh-select wait '\'''\'' depth 1 ' 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

@@ -1,2 +1,2 @@
 https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
-subscribe '' svn '' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '' 
+svn '' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '' is-snippet '' 

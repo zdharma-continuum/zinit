@@ -1,2 +1,2 @@
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
-subscribe '' svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' atpull '!command cp LICENSE LICENSE.cpy' cp 'LICENSE -> LICENSE.bkp' 
+svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' atpull '!command cp LICENSE LICENSE.cpy' is-snippet '' cp 'LICENSE -> LICENSE.bkp' 

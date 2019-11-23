@@ -32,7 +32,7 @@ zplugin.zsh
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
 ZPLG_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools <svn>'
-ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'subscribe '\'''\'' svn '\'''\'' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '\'''\'' atpull %atclone atclone '\''builtin echo >! test_file'\''  '
+ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'svn '\'''\'' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '\'''\'' atpull %atclone atclone '\''builtin echo >! test_file'\'' is-snippet '\'''\'' '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh
-subscribe '' teleid OMZ::plugins/git/git.plugin.zsh wait '' atpull %atclone atclone 'builtin echo >! test_file' 
+teleid OMZ::plugins/git/git.plugin.zsh wait '' atpull %atclone atclone 'builtin echo >! test_file' is-snippet '' 

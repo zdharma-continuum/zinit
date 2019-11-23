@@ -1,2 +1,2 @@
-as command pick n-help2 subscribe '' svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' mv 'n-help -> nh' atclone 'chmod -x znt-tmux.zsh' cp 'nh -> n-help2' 
+as command pick n-help2 svn '' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '' mv 'n-help -> nh' atclone 'chmod -x znt-tmux.zsh' is-snippet '' cp 'nh -> n-help2' 
 https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools

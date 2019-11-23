@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh
-teleid OMZ::plugins/git/git.plugin.zsh wait '' 
+teleid OMZ::plugins/git/git.plugin.zsh wait '' is-snippet '' 

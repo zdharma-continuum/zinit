@@ -50,7 +50,7 @@ ZSTYLES__psprint/zsh-select
 ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select'
 ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '2'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'as command pick zsh-select2 subscribe '\'''\'' teleid psprint/zsh-select wait '\'''\'' mv '\''zsh-select -> zs'\'' atclone '\''command chmod -x zsh-select2 || builtin print >! Test_Failed'\'' from gl cp '\''zs -> zsh-select2'\'' '
+ZPLG_SICE: 'psprint/zsh-select' 'as command pick zsh-select2 teleid psprint/zsh-select wait '\'''\'' mv '\''zsh-select -> zs'\'' atclone '\''command chmod -x zsh-select2 || builtin print >! Test_Failed'\'' from gl cp '\''zs -> zsh-select2'\'' '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

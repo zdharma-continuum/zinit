@@ -1,2 +1,2 @@
 https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
-subscribe '' svn '' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '' atload 'cp -v Makefile.copy3 Makefile.copy4' mv 'Makefile2 -> Makefile' atclone 'cp -v Makefile.copy Makefile.copy2' cp 'Makefile -> Makefile.copy' make '' 
+svn '' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '' atload 'cp -v Makefile.copy3 Makefile.copy4' mv 'Makefile2 -> Makefile' atclone 'cp -v Makefile.copy Makefile.copy2' is-snippet '' cp 'Makefile -> Makefile.copy' make '' 
