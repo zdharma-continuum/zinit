@@ -10,101 +10,122 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent
 
-    local -A pos_to_level level_to_pos pair_map final_pairs Strings Counts
-    local input=$1 _mybuf=$1 profile=$2 __style __quoting
-    integer nest=$3 __idx=0 __pair_idx __level=0 __start __end \
-        count=0 __sidx=1
-    local -a match mbegin mend pair_order
+    local -A __pos_to_level __level_to_pos __pair_map \
+        __final_pairs __Strings __Counts
+    local __input=$1 __workbuf=$1 __key=$2 __varname=$3 \
+        __style __quoting
+    integer __nest=${4:-1} __idx=0 __pair_idx __level=0 \
+        __start __end __sidx=1 __had_quoted_value=0
+    local -a match mbegin mend __pair_order
 
-    pair_map=( "(" ")" "{" "}" "[" "]" )
-    while [[ $_mybuf = (#b)[^"{}()[]\\\"'"]#((["({[]})\"'"])|[\\](*))(*) ]]; do
+    (( ${(P)+__varname} )) || typeset -gA "$__varname"
+
+    __pair_map=( "(" ")" "{" "}" "[" "]" )
+    while [[ $__workbuf = (#b)[^"{}()[]\\\"'",]#((["({[]})\"'",])|[\\](*))(*) ]]; do
         [[ -n ${match[3]} ]] && {
             __idx+=${mbegin[1]}
 
             [[ $__quoting = \' ]] && \
-                { _mybuf=${match[3]}; } || \
-                { _mybuf=${match[3]:1}; (( ++ __idx )); }
+                { __workbuf=${match[3]}; } || \
+                { __workbuf=${match[3]:1}; (( ++ __idx )); }
 
         } || {
             __idx+=${mbegin[1]}
             [[ -z $__quoting ]] && {
                 if [[ ${match[1]} = ["({["] ]]; then
-                    pos_to_level[$__idx]=$(( ++__level ))
-                    level_to_pos[$__level]=$__idx
-                    (( Counts[$__level] += 1 ))
+                    __pos_to_level[$__idx]=$(( ++ __level ))
+                    __level_to_pos[$__level]=$__idx
+                    (( __Counts[$__level] += 1 ))
+                    __sidx=__idx+1
+                    __had_quoted_value=0
                 elif [[ ${match[1]} = ["]})"] ]]; then
+                    (( !__had_quoted_value )) && \
+                        __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
+                    __had_quoted_value=1
                     if (( __level > 0 )); then
-                        __pair_idx=${level_to_pos[$__level]}
-                        pos_to_level[$__idx]=$(( __level -- ))
-                        [[ ${pair_map[${input[__pair_idx]}]} = ${input[__idx]} ]] && {
-                            final_pairs[$__idx]=$__pair_idx
-                            final_pairs[$__pair_idx]=$__idx
-                            pair_order+=( $__idx )
+                        __pair_idx=${__level_to_pos[$__level]}
+                        __pos_to_level[$__idx]=$(( __level -- ))
+                        [[ ${__pair_map[${__input[__pair_idx]}]} = ${__input[__idx]} ]] && {
+                            __final_pairs[$__idx]=$__pair_idx
+                            __final_pairs[$__pair_idx]=$__idx
+                            __pair_order+=( $__idx )
                         }
                     else
-                        pos_to_level[$__idx]=-1
+                        __pos_to_level[$__idx]=-1
                     fi
                 fi
             }
 
             [[ ${match[1]} = \" && $__quoting != \' ]] && \
+                if [[ $__quoting = '"' ]]; then
+                    __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]}"
+                    __quoting=""
+                else
+                    __had_quoted_value=1
+                    __sidx=__idx+1
+                    __quoting='"'
+                fi
+
+            [[ ${match[1]} = , && -z $__quoting ]] && \
                 {
-                    if [[ $__quoting = '"' ]]; then
-                        Strings[$__level/${Counts[$__level]}]+=" ${(q)input[__sidx,__idx-1]}"
-                        __quoting=""
-                    else
-                        __sidx=__idx+1
-                        __quoting='"'
-                    fi
-                }
-            [[ ${match[1]} = \' && $__quoting != \" ]] && \
-                {
-                    if [[ $__quoting = "'" ]]; then
-                        __quoting=""
-                    else
-                        __quoting="'"
-                    fi
+                    (( !__had_quoted_value )) && \
+                        __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
+                    __sidx=__idx+1
+                    __had_quoted_value=0
                 }
 
-            _mybuf=${match[4]}
+            [[ ${match[1]} = \' && $__quoting != \" ]] && \
+                if [[ $__quoting = "'" ]]; then
+                    __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]}"
+                    __quoting=""
+                else
+                    __had_quoted_value=1
+                    __sidx=__idx+1
+                    __quoting="'"
+                fi
+
+            __workbuf=${match[4]}
         }
     done
 
-    local text value found
-    integer pair_a pair_b
-    for pair_a ( "${pair_order[@]}" ) {
-        (( ++ count ))
-        pair_b="${final_pairs[$pair_a]}"
-        text="${input[pair_b,pair_a]}"
-        if [[ $text = \{\"zplugin-ices\"* ]]; then
-            if (( nest != 2 )) {
-                found="$text"
+    local __text value __found
+    integer __pair_a __pair_b
+    for __pair_a ( "${__pair_order[@]}" ) {
+        __pair_b="${__final_pairs[$__pair_a]}"
+        __text="${__input[__pair_b,__pair_a]}"
+        if [[ $__text = [[:space:]]#\{[[:space:]]#[\"\']${__key}[\"\']* ]]; then
+            if (( __nest != 2 )) {
+                __found="$__text"
             }
         fi
     }
 
-    if (( nest == 2 )) {
-        local -a profiles
-        count=0
-        profiles=( "${(Q@)${(@z)Strings[2/1]}}" )
-        for text ( "${profiles[@]}" ) {
-            (( ++ count ))
-            [[ $text != $profile ]] && continue
-            ZPLG_ICE=( "${(Q@)${(@z)Strings[3/$count]}}" "${(kv)ZPLG_ICE[@]}" )
-            break
-        }
+    if [[ -n $__found && $__nest -lt 2 ]] {
+        -zplg-parse-json "$__found" "$__key" "$__varname" 2
     }
 
-    if [[ -n $found && $nest -lt 2 ]] {
-        -zplg-parse-json "$found" "$profile" 2
+    if (( __nest == 2 )) {
+        : ${(PAA)__varname::="${(kv)__Strings[@]}"}
     }
 }
 # }}}
 # FUNCTION: -zplg-get-package {{{
 -zplg-get-package() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent
+
     local user="$1" plugin="$2" id_as="$3" profile="$4" \
         local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}"
-    -zplg-parse-json "$(-zplg-download-file-stdout https://registry.npmjs.org/./$id_as)" "$profile" 1
+    local -A Strings
+    -zplg-parse-json "$(-zplg-download-file-stdout https://registry.npmjs.org/./$id_as || \
+                -zplg-download-file-stdout https://registry.npmjs.org/./$id_as 1)" \
+                "zplugin-ices" Strings
+
+    integer pos
+    pos=${${(@Q)${(@z)Strings[2/1]}}[(I)bgn]}
+    if (( pos )) {
+        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$pos]}}" )
+    }
 }
 # }}}
 # FUNCTION: -zplg-setup-plugin-dir {{{
