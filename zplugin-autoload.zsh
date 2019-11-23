@@ -1103,7 +1103,6 @@ ZPLGM[EXTENDED_GLOB]=""
     # skip those that were added by the plugin
     typeset -a new elem p
     elem=( "${(z)ZPLGM[PATH__$uspl2]}" )
-    print -rl ELEM: $elem
     for p in "${path[@]}"; do
         [[ -z "${elem[(r)${(q)p}]}" ]] && { new+=( "$p" ); } || {
             (( quiet )) || print "Removing PATH element ${ZPLGM[col-info]}$p${ZPLGM[col-rst]}"
