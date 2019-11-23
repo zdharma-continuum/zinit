@@ -95,6 +95,7 @@ ZPLGM[EXTENDED_GLOB]=""
     typeset -A path_state fpath_state
     local i
 
+    print -rl $funcfiletrace[-1] $funcsourcetrace[-1]
     #
     # PATH processing
     #
