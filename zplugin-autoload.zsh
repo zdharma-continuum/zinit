@@ -1484,7 +1484,9 @@ ZPLGM[EXTENDED_GLOB]=""
 
         [[ -d "$local_dir/.git" ]] && \
             (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-               command git submodule update --init --recursive
+               [[ -z ${ZPLG_ICE[ver]} ]] && \
+                   { command git pull --recurse-submodules ((1)); } || \
+                   command git submodule update --init --recursive
             )
 
         local -a log
