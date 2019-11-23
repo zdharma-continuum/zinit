@@ -101,13 +101,11 @@ ZPLGM[EXTENDED_GLOB]=""
 
     # This includes new path elements
     for i in "${(z)ZPLGM[PATH_AFTER__$uspl2]}"; do
-        print -rl A:"$i"
         path_state[${(Q)i}]=1
     done
 
     # Remove duplicated entries, i.e. existing before
     for i in "${(z)ZPLGM[PATH_BEFORE__$uspl2]}"; do
-        print -rl B:"$i"
         unset "path_state[$i]"
     done
 
