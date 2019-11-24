@@ -125,9 +125,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     local -A Strings
-    -zplg-parse-json "$(-zplg-download-file-stdout https://registry.npmjs.org/./$id_as || \
-                -zplg-download-file-stdout https://registry.npmjs.org/./$id_as 1)" \
-                "zplugin-ices" Strings
+    -zplg-parse-json "$pkgjson" "zplugin-ices" Strings
 
     integer pos
     pos=${${(@Q)${(@z)Strings[2/1]}}[(I)bgn]}
