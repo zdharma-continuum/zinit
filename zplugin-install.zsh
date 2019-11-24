@@ -116,8 +116,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local user="$1" plugin="$2" id_as="$3" profile="$4" \
         local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson
-    pkgjson="$(-zplg-download-file-stdout https://registry.npmjs.org/./$id_as || \
-                -zplg-download-file-stdout https://registry.npmjs.org/./$id_as 1)"
+    pkgjson="$(-zplg-download-file-stdout https://registry.npmjs.org/./$id_as 2>/dev/null || \
+                -zplg-download-file-stdout https://registry.npmjs.org/./$id_as 1 2>/dev/null)"
 
     if [[ -z $pkgjson ]]; then
         print -r -- "${ZPLGM[col-error]}Error: the package $id_as couldn't be found"
