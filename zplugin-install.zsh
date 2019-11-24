@@ -128,9 +128,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     -zplg-parse-json "$pkgjson" "zplugin-ices" Strings
 
     integer pos
-    pos=${${(@Q)${(@z)Strings[2/1]}}[(I)bgn]}
+    pos=${${(@Q)${(@z)Strings[2/1]}}[(I)$profile]}
     if (( pos )) {
         ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$pos]}}" )
+    } else {
+        print -r $Strings[2/1]
+        print -r -- "${ZPLGM[col-error]}Error: the profile \`$profile' couldn't be found, aborting"
+        return 1
     }
 }
 # }}}
