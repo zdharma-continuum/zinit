@@ -2542,6 +2542,11 @@ ZPLGM[EXTENDED_GLOB]=""
 0="\${\${(M)0:#/*}:-\$PWD/\$0}"
 
 # Then \${0:h} to get plugin's directory
+
+if [[ \${zsh_loaded_plugins[-1]} != */${plugin:t} && -z \${fpath[(r)\${0:h}]} ]]
+then
+    fpath+=( "\${0:h}" )
+fi
 EOF
 
     print -r -- "# $plugin" >! "README.md"
