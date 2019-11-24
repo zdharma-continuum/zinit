@@ -2513,7 +2513,7 @@ ZPLGM[EXTENDED_GLOB]=""
     if [[ "$user" != "_local" && -n "$user" ]]; then
         print "${ZPLGM[col-info]}Creating Github repository${ZPLGM[col-rst]}"
         if [[ $isorg = (y|yes) ]]; then
-            curl --silent -u "$user" https://api.github.com/orgs/$org/repos -d '{"name":"'"$plugin"'"}'
+            curl --silent -u "$user" https://api.github.com/orgs/$org/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         else
             curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         fi
