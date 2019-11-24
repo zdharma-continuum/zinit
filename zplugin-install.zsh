@@ -33,6 +33,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             __idx+=${mbegin[1]}
             [[ -z $__quoting ]] && {
                 if [[ ${match[1]} = ["({["] ]]; then
+                    __Strings[$__level/${__Counts[$__level]}]+=" $'\0'--object--$'\0'"
                     __pos_to_level[$__idx]=$(( ++ __level ))
                     __level_to_pos[$__level]=$__idx
                     (( __Counts[$__level] += 1 ))
@@ -132,10 +133,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     if (( pos )) {
         ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$pos]}}" )
     } else {
-        print -r $Strings[2/1]
         print -r -- "${ZPLGM[col-error]}Error: the profile \`$profile' couldn't be found, aborting"
         return 1
     }
+
+    -zplg-parse-json "$pkgjson" "_from" Strings
+    local -A jsondata
+    jsondata=( "${(@Q)${(@z)Strings[1/1]}}" )
 }
 # }}}
 # FUNCTION: -zplg-setup-plugin-dir {{{
