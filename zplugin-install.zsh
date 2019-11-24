@@ -21,7 +21,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     (( ${(P)+__varname} )) || typeset -gA "$__varname"
 
     __pair_map=( "(" ")" "{" "}" "[" "]" )
-    while [[ $__workbuf = (#b)[^"{}()[]\\\"'",]#((["({[]})\"'",])|[\\](*))(*) ]]; do
+    while [[ $__workbuf = (#b)[^"{}()[]\\\"'":,]#((["({[]})\"'":,])|[\\](*))(*) ]]; do
         [[ -n ${match[3]} ]] && {
             __idx+=${mbegin[1]}
 
@@ -73,6 +73,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
                     __sidx=__idx+1
                     __had_quoted_value=0
+                }
+
+            [[ ${match[1]} = : && -z $__quoting ]] && \
+                {
+                    __had_quoted_value=0
+                    __sidx=__idx+1
                 }
 
             [[ ${match[1]} = \' && $__quoting != \" ]] && \
