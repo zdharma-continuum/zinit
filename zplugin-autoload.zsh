@@ -1428,7 +1428,7 @@ ZPLGM[EXTENDED_GLOB]=""
               integer had_output=0
               local IFS=$'\n'
               command git fetch --quiet && \
-                command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset%n' .."${ice[ver]:-FETCH_HEAD}" | \
+                command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset%n' ..FETCH_HEAD | \
                 while read line; do
                   [[ -n "${line%%[[:space:]]##}" ]] && {
                       [[ $had_output -eq 0 ]] && {
@@ -1476,19 +1476,15 @@ ZPLGM[EXTENDED_GLOB]=""
                       eval "${ZPLG_ICE[reset]:-command git reset --hard HEAD}"
                   )
                   [[ ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
-                  (( !skip_pull )) && {
-                     command git "${${+ZPLG_ICE[ver]:+merge}:-pull}" --no-stat ${ZPLG_ICE[ver]}
-                 }
                   ZPLG_ICE=()
+                  (( !skip_pull )) && command git pull --no-stat
               }
             )
         }
 
         [[ -d "$local_dir/.git" ]] && \
             (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-               [[ -z ${ice[ver]} ]] && \
-                   { command git pull --recurse-submodules ((1)); } || \
-                   command git submodule update --init --recursive
+               command git pull --recurse-submodules
             )
 
         local -a log
@@ -1539,7 +1535,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" atpull
             done
             ZPLG_ICE=()
-        } || { [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -z ${ice[is_release]} && -n ${ice[ver]} ]] && print "Already up to date." }
+        }
 
         # Store ices to disk at update of plugin
         -zplg-store-ices "$local_dir/._zplugin" ice "" "" "" ""
