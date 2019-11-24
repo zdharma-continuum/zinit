@@ -1476,7 +1476,9 @@ ZPLGM[EXTENDED_GLOB]=""
                       eval "${ZPLG_ICE[reset]:-command git reset --hard HEAD}"
                   )
                   [[ ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
-                  (( !skip_pull )) && command git "${${+ZPLG_ICE[ver]+merge}:-pull}" --no-stat ${ZPLG_ICE[ver]}
+                  (( !skip_pull )) && {
+                     command git "${${+ZPLG_ICE[ver]:+merge}:-pull}" --no-stat ${ZPLG_ICE[ver]}
+                 }
                   ZPLG_ICE=()
               }
             )
@@ -1484,7 +1486,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         [[ -d "$local_dir/.git" ]] && \
             (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-               [[ -z ${ZPLG_ICE[ver]} ]] && \
+               [[ -z ${ice[ver]} ]] && \
                    { command git pull --recurse-submodules ((1)); } || \
                    command git submodule update --init --recursive
             )
