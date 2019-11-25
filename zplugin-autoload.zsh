@@ -2546,13 +2546,16 @@ then
     fpath+=( "\${0:h}" )
 fi
 
+typeset -g ${(U)plugin:t}_DIR=${0:h}
+
 autoload -Uz example-script
 EOF
-
     print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZPLGM[BIN_DIR]}/LICENSE" LICENSE
     command cp -vf "${ZPLGM[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
     command cp -vf "${ZPLGM[BIN_DIR]}/doc/example-script" .
+
+    command sed -i -e "s/MY_PLUGIN_DIR/${(U)plugin:t}_DIR/g" example-script
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
         print "Remote repository $uspl2col set up as origin."
