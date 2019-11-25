@@ -19,11 +19,13 @@ if [[ $0 != example-script || -n $ZSH_SCRIPT ]]; then
     # In case of the script using other scripts from the
     # plugin, either set up $fpath and autoload, or add
     # the directory to $PATH
-    fpath+=( $MY_PLUGIN_DIR )
+    # Quoting the values as the emulation isn't yet set
+    # and SH_WORD_SPLIT option might be enabled
+    fpath+=( "$MY_PLUGIN_DIR" )
     autoload …
 
     # OR
-    path+=( $MY_PLUGIN_DIR )
+    path+=( "$MY_PLUGIN_DIR" )
 fi
 
 # Set the base and typically useful options
