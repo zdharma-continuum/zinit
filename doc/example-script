@@ -12,7 +12,7 @@ if [[ $0 != example-script || -n $ZSH_SCRIPT ]]; then
     0=${${(M)0##/*}:-$PWD/$0}
 
     # Such global variable is expected to be typeset'd -g in the plugin.zsh
-    # file. Here it's restored in case of the function being ran as a script.
+    # file. Here it's restored in case of the function being run as a script.
     typeset MY_PLUGIN_DIR=${0:h}
 
     # In case of the script using other scripts from the plugin, either set
