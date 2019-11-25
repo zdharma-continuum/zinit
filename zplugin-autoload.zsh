@@ -2545,11 +2545,14 @@ if [[ \${zsh_loaded_plugins[-1]} != */${plugin:t} && -z \${fpath[(r)\${0:h}]} ]]
 then
     fpath+=( "\${0:h}" )
 fi
+
+autoload -Uz example-script
 EOF
 
     print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZPLGM[BIN_DIR]}/LICENSE" LICENSE
     command cp -vf "${ZPLGM[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
+    command cp -vf "${ZPLGM[BIN_DIR]}/doc/example-script" .
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
         print "Remote repository $uspl2col set up as origin."
