@@ -52,9 +52,9 @@ reports](DONATIONS.md) about what is being done with the money received.
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
 * 25-11-2019
-  - A new subcommand `run` that executes a command in the given plugin directory.  It
-    has an `-l` option that will reuse the previously provided plugin. So that you can
-    do:
+  - A new subcommand `run` that executes a command in the given plugin's directory. It
+    has an `-l` option that will reuse the previously provided plugin. So that it's
+    possible to do:
 
     ```zsh
     zplg run my/plugin ls
