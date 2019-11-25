@@ -51,6 +51,17 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 25-11-2019
+  - A new subcommand `run` that executes a command in the given plugin directory.  It
+    has an `-l` option that will reuse the previously provided plugin. So that you can
+    do:
+
+    ```zsh
+    zplg run my/plugin ls
+    zplg run -l cat \*.plugin.zsh
+    zplg run -l pwd
+    ```
+
 * 07-11-2019
   - Added a prefix-char: `@` that can be used before plugins if their name collides
     with one of the ice-names. For example `sharkdp/fd` collides with the `sh` ice
@@ -644,6 +655,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | `env-whitelist [-v] [-h] {env..}` |<div align="justify" style="text-align: justify;"> Allows to specify names (also patterns) of variables left unchanged during an unload. `-v` – verbose.</div>|
 | `module` |<div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zplugin, see `zplugin module help`.</div>|
 | `add-fpath\|fpath` `[-f\|--front]` `{plg-spec}` `[subdirectory]` |<div align="justify" style="text-align: justify;">Adds given plugin (not yet snippet) directory to `$fpath`. If the second argument is given, it is appended to the directory path. If the option `-f`/`--front` is given, the directory path is prepended instead of appended to `$fpath`. The `{plg-spec}` can be absolute path, i.e.: it's possible to also add regular directories.</div>|
+| `run` `[-l]` `[plugin]` `{command}` |<div align="justify" style="text-align: justify;">Runs the given command in the given plugin's directory. If the option `-l` will be given then the plugin should be skipped – the option will cause the previous plugin to be reused.</div>|
 
 ## Updating Zplugin and Plugins
 

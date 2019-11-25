@@ -2962,7 +2962,8 @@ EOF
 —— bindkeys                      – lists bindkeys set up by each plugin
 —— module                        – manage binary Zsh module shipped with Zplugin, see \`zplugin module help'
 —— add-fpath|fpath ${ZPLGM[col-info]}[-f|--front]${ZPLGM[col-rst]} \\
-    ${ZPLGM[col-pname]}plg-spec ${ZPLGM[col-info]}[subdirectory]${ZPLGM[col-rst]}     – Adds given plugin directory to \$fpath. If the second argument is given, it is appended to the directory path. If the option -f/--front is given, the directory path is prepended instead of appended to \$fpath. The ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]} can be absolute path."
+    ${ZPLGM[col-pname]}plg-spec ${ZPLGM[col-info]}[subdirectory]${ZPLGM[col-rst]}      – adds given plugin directory to \$fpath; if the second argument is given, it is appended to the directory path; if the option -f/--front is given, the directory path is prepended instead of appended to \$fpath. The ${ZPLGM[col-pname]}plg-spec${ZPLGM[col-rst]} can be absolute path
+—— run [-l] [plugin] {command}   – runs the given command in the given plugin's directory; if the option -l will be given then the plugin should be skipped – the option will cause the previous plugin to be reused"
 
     integer idx
     local type key
