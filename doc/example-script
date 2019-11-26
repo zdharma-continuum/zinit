@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 
-# An example of type-agnostic script/function, i.e.: the file can be ran
+# An example of type-agnostic script/function, i.e.: the file can be run
 # as a +x script or as an autoload function.
 
 # Run as script? ZSH_SCRIPT is a Zsh 5.3 addition
