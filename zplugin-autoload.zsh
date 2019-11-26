@@ -927,29 +927,35 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ "$nv_arr3" = "-s" ]]; then
             if [[ -n "$nv_arr2" ]]; then
                 (( quiet )) || print "Restoring ${ZPLGM[col-info]}suffix${ZPLGM[col-rst]} alias ${nv_arr1}=${nv_arr2}"
-                unalias -s -- "$nv_arr1"
+                alias "$nv_arr1" &> /dev/null && unalias -s -- "$nv_arr1"
                 alias -s -- "${nv_arr1}=${nv_arr2}"
             else
-                (( quiet )) || print "Removing ${ZPLGM[col-info]}suffix${ZPLGM[col-rst]} alias ${nv_arr1}"
-                unalias -s -- "$nv_arr1"
+                (( quiet )) || alias "$nv_arr1" &> /dev/null && {
+                    print "Removing ${ZPLGM[col-info]}suffix${ZPLGM[col-rst]} alias ${nv_arr1}"
+                    unalias -s -- "$nv_arr1"
+                }
             fi
         elif [[ "$nv_arr3" = "-g" ]]; then
             if [[ -n "$nv_arr2" ]]; then
                 (( quiet )) || print "Restoring ${ZPLGM[col-info]}global${ZPLGM[col-rst]} alias ${nv_arr1}=${nv_arr2}"
-                unalias -g -- "$nv_arr1"
+                alias "$nv_arr1" &> /dev/null && unalias -g -- "$nv_arr1"
                 alias -g -- "${nv_arr1}=${nv_arr2}"
             else
-                (( quiet )) || print "Removing ${ZPLGM[col-info]}global${ZPLGM[col-rst]} alias ${nv_arr1}"
-                unalias -- "${(q)nv_arr1}"
+                (( quiet )) || alias "$nv_arr1" &> /dev/null && {
+                    print "Removing ${ZPLGM[col-info]}global${ZPLGM[col-rst]} alias ${nv_arr1}"
+                    unalias -- "${(q)nv_arr1}"
+                }
             fi
         else
             if [[ -n "$nv_arr2" ]]; then
                 (( quiet )) || print "Restoring alias ${nv_arr1}=${nv_arr2}"
-                unalias -- "$nv_arr1"
+                alias "$nv_arr1" &> /dev/null && unalias -- "$nv_arr1"
                 alias -- "${nv_arr1}=${nv_arr2}"
             else
-                (( quiet )) || print "Removing alias ${nv_arr1}"
-                unalias -- "$nv_arr1"
+                (( quiet )) || alias "$nv_arr1" &> /dev/null && {
+                    print "Removing alias ${nv_arr1}"
+                    unalias -- "$nv_arr1"
+                }
             fi
         fi
     done
