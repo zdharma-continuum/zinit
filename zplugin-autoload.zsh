@@ -2538,7 +2538,14 @@ ZPLGM[EXTENDED_GLOB]=""
         }
     fi
 
+    local user_name="$(command git config user.name 2>/dev/null)"
+    local year="${$(command date "+%Y"):-2019}"
+
     command cat >! "${plugin:t}.plugin.zsh" <<EOF
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+
+# Copyright (c) $year $user_name
+
 # According to the Zsh Plugin Standard:
 # http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
 
@@ -2555,13 +2562,18 @@ fi
 typeset -g ${(U)plugin:t}_DIR=${0:h}
 
 autoload -Uz example-script
+
+# vim:ft=zsh:sw=4:sts=4:et
 EOF
+
     print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZPLGM[BIN_DIR]}/LICENSE" LICENSE
     command cp -vf "${ZPLGM[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
     command cp -vf "${ZPLGM[BIN_DIR]}/doc/example-script" .
 
     command sed -i -e "s/MY_PLUGIN_DIR/${(U)plugin:t}_DIR/g" example-script
+    command sed -i -e "s/USER_NAME/$user_name/g" example-script
+    command sed -i -e "s/YEAR/$year/g" example-script
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
         print "Remote repository $uspl2col set up as origin."
