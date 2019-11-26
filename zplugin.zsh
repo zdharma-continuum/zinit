@@ -1,5 +1,5 @@
-# -*- mode: shell-script -*-
-# vim:ft=zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# Copyright (c) 2019 Sebastian Gniazdowski and contributors
 
 #
 # Main state variables
@@ -2305,3 +2305,5 @@ zstyle ':completion:*:zplugin:argument-rest:plugins' list-colors '=(#b)(*)/(*)==
 zstyle ':completion:*:zplugin:argument-rest:plugins' matcher 'r:|=** l:|=*'
 zstyle ':completion:*:*:zplugin:*' group-name ""
 # }}}
+
+# vim:ft=zsh:sw=4:sts=4:et

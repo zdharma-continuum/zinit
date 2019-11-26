@@ -1,5 +1,5 @@
-# -*- mode: shell-script -*-
-# vim:ft=zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# Copyright (c) 2019 Sebastian Gniazdowski and contributors
 
 builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
@@ -1031,3 +1031,5 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     [[ "$1" = "%atclone" ]] && { eval "$2"; ((1)); } || eval "$1"
 }
 # }}}
+
+# vim:ft=zsh:sw=4:sts=4:et
