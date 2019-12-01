@@ -773,7 +773,7 @@ function $f {
 # FUNCTION: -zplg-any-to-user-plugin {{{
 # Allows elastic plugin-spec across the code.
 #
-# $1 - plugin spec (2 formats: user/plugin, user plugin)
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 #
 # Returns user and plugin in $reply
