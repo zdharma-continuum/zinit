@@ -61,7 +61,7 @@ ZPLGM[PLUGINS_DIR]=${~ZPLGM[PLUGINS_DIR]}
 ZPLGM[COMPLETIONS_DIR]=${~ZPLGM[COMPLETIONS_DIR]}
 ZPLGM[SNIPPETS_DIR]=${~ZPLGM[SNIPPETS_DIR]}
 ZPLGM[SERVICES_DIR]=${~ZPLGM[SERVICES_DIR]}
-export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache/zplugin}"
+export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache/zplugin}}"
 [[ -n ${path[(re)$ZPFX/bin]} ]] || path=( "$ZPFX/bin" ${path[@]} )
 
 [[ ! -d $ZSH_CACHE_DIR ]] && command mkdir -p "$ZSH_CACHE_DIR"
