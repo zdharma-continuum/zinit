@@ -330,6 +330,12 @@ To see the full history check [the changelog](CHANGELOG.md).
 
 # Zplugin
 
+<p align="center">
+<a href="https://github.com/zdharma/pm-perf-test">
+<img width="550px" src="https://raw.githubusercontent.com/zdharma/zplugin/images/startup-times.png"/>
+</a>
+</p>
+
 Zplugin is an elastic and fast Zshell plugin manager that will allow you to
 install everything from GitHub and other sites.
 
