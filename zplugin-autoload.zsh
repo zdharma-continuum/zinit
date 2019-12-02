@@ -2563,7 +2563,7 @@ then
     fpath+=( "\${0:h}" )
 fi
 
-typeset -g ${(U)plugin:t}_DIR=${0:h}
+typeset -g ${${(U)plugin:t}//-/_}_DIR=\${0:h}
 
 autoload -Uz example-script
 
@@ -2575,7 +2575,7 @@ EOF
     command cp -vf "${ZPLGM[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
     command cp -vf "${ZPLGM[BIN_DIR]}/doc/example-script" .
 
-    command sed -i -e "s/MY_PLUGIN_DIR/${(U)plugin:t}_DIR/g" example-script
+    command sed -i -e "s/MY_PLUGIN_DIR/${${(U)plugin:t}//-/_}_DIR/g" example-script
     command sed -i -e "s/USER_NAME/$user_name/g" example-script
     command sed -i -e "s/YEAR/$year/g" example-script
 
