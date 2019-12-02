@@ -2472,6 +2472,10 @@ ZPLGM[EXTENDED_GLOB]=""
 # $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - (optional) plugin (only when $1 - i.e. user - given)
 -zplg-create() {
+    emulate -LR zsh
+    setopt localoptions extendedglob warncreateglobal typesetsilent \
+        noshortloops rcquotes 
+
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
