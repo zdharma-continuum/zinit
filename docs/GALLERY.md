@@ -47,7 +47,7 @@ zplugin ice wait"2" lucid as'command' pick'src/vramsteg' \
     atclone'cmake .' atpull'%atclone' make  # use Turbo mode
 zplugin light psprint/vramsteg-zsh
 
-zplugin ice atclone"./libexec/pyenv init - > zpyenv.zsh" \
+zplugin ice atclone'PYENV_ROOT="$PWD" ./libexec/pyenv init - > zpyenv.zsh' \
     atinit'export PYENV_ROOT="$PWD"' atpull"%atclone" \
     as'command' pick'bin/pyenv' src"zpyenv.zsh" nocompile'!'
 zplugin light pyenv/pyenv
