@@ -190,7 +190,7 @@
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet
+        light-mode is-snippet atdelete
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@us.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -336,7 +336,7 @@
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet
+        light-mode is-snippet atdelete
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}

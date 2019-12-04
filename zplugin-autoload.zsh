@@ -2285,6 +2285,11 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-run-delete-hooks {{{
 -zplg-run-delete-hooks() {
+    if [[ -n ${ZPLG_ICE[atdelete]} ]]; then
+        -zplg-countdown "atdelete" && ( (( ${+ZPLG_ICE[nocd]} == 0 )) && \
+                { builtin cd -q "$5" && eval "${ZPLG_ICE[atdelete]}"; ((1)); } || \
+                eval "${ZPLG_ICE[atdelete]}" )
+    fi
     local -a arr
     reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atdelete <->]}" )
     for key in "${reply[@]}"; do
@@ -2820,7 +2825,7 @@ EOF
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet
+        light-mode is-snippet atdelete
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@us.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -3007,7 +3012,7 @@ Available ice-modifiers:
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
         nocompletions reset-prompt wrap-track reset aliases sh bash ksh csh
-        countdown trigger-load light-mode is-snippet"
+        countdown trigger-load light-mode is-snippet atdelete"
 } # }}}
 
 # vim:ft=zsh:sw=4:sts=4:et
