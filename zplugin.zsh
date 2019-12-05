@@ -838,7 +838,7 @@ function $f {
 # zsh_loaded_plugins array (managed according to the plugin standard:
 # http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html)
 -zplg-register-plugin() {
-    local uspl2="$1" mode="$2"
+    local uspl2="$1" mode="$2" teleid="$3"
     integer ret=0
 
     if [[ -z "${ZPLG_REGISTERED_PLUGINS[(r)$uspl2]}" ]]; then
@@ -850,7 +850,7 @@ function $f {
     fi
 
     # Support Zsh plugin standard
-    zsh_loaded_plugins+=( "$uspl2" )
+    zsh_loaded_plugins+=( "$teleid" )
 
     # Full or light load?
     [[ "$mode" = "light" ]] && ZPLG_REGISTERED_STATES[$uspl2]="1" || ZPLG_REGISTERED_STATES[$uspl2]="2"
@@ -876,12 +876,13 @@ function $f {
 # zsh_loaded_plugins array (managed according to the plugin standard)
 -zplg-unregister-plugin() {
     -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
+    local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}" \
+        teleid="$3"
 
     # If not found, the index will be length+1
     ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
     # Support Zsh plugin standard
-    zsh_loaded_plugins[${zsh_loaded_plugins[(i)$uspl2]}]=()
+    zsh_loaded_plugins[${zsh_loaded_plugins[(i)$teleid]}]=()
     ZPLG_REGISTERED_STATES[$uspl2]="0"
 } # }}}
 # FUNCTION: @zplg-register-z-annex {{{
@@ -1021,7 +1022,7 @@ function $f {
     (( ${+ZPLG_ICE[pack]} )) && {
         -zplg-load-ices "$user" "$plugin" "$id_as"
     }
-    -zplg-register-plugin "$id_as" "$mode"
+    -zplg-register-plugin "$id_as" "$mode" "${ZPLG_ICE[teleid]}"
 
     local -a arr
     reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
