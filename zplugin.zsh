@@ -871,20 +871,6 @@ function $f {
 
     return $ret
 } # }}}
-# FUNCTION: -zplg-unregister-plugin {{{
-# Removes the plugin from ZPLG_REGISTERED_PLUGINS array and from the
-# zsh_loaded_plugins array (managed according to the plugin standard)
--zplg-unregister-plugin() {
-    -zplg-any-to-user-plugin "$1" "$2"
-    local uspl2="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}" \
-        teleid="$3"
-
-    # If not found, the index will be length+1
-    ZPLG_REGISTERED_PLUGINS[${ZPLG_REGISTERED_PLUGINS[(i)$uspl2]}]=()
-    # Support Zsh plugin standard
-    zsh_loaded_plugins[${zsh_loaded_plugins[(i)$teleid]}]=()
-    ZPLG_REGISTERED_STATES[$uspl2]="0"
-} # }}}
 # FUNCTION: @zplg-register-z-annex {{{
 # Registers the z-annex inside Zplugin – i.e. an Zplugin extension
 @zplg-register-annex() {
