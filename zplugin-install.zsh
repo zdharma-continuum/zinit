@@ -141,12 +141,16 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     print -r -- "Parsing ${ZPLGM[col-info2]}package.json${ZPLGM[col-rst]}..."
 
     local -A Strings
-    -zplg-parse-json "$pkgjson" "zplugin-ices" Strings
+    -zplg-parse-json "$pkgjson" "plugin-info" Strings
+
+    local -A jsondata
+    jsondata=( ${(@Q)${(@z)Strings[2/1]}} )
+    local user=${jsondata[user]} plugin=${jsondata[plugin]} required=${jsondata[required]}
 
     integer pos
-    pos=${${(@Q)${(@z)Strings[2/1]}}[(I)$profile]}
+    pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
     if (( pos )) {
-        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$pos]}}" id-as "$id_as" )
+        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" id-as "$id_as" )
     } else {
         print -r -- "${ZPLGM[col-error]}Error: the profile \`$profile' couldn't be found, aborting"
         return 1
@@ -159,12 +163,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local URL=${jsondata[_resolved]}
     local fname="${${URL%%\?*}:t}" tmpdir="$(mktemp -d)"
 
-    -zplg-parse-json "$pkgjson" "plugin-info" Strings
-    jsondata=( "${(@Q)${(@z)Strings[2/1]}}" )
-
     if (( !${+ZPLG_ICE[git]} )) {
         (
-            local dir="${ZPLGM[PLUGINS_DIR]}/${${ZPLG_ICE[id-as]//\//---}:-${jsondata[user]}---${jsondata[plugin]}}"
+            local dir="${ZPLGM[PLUGINS_DIR]}/${${ZPLG_ICE[id-as]//\//---}:-$user---$plugin}"
             command mkdir -p $dir || return 1
             builtin cd -q $dir
 
@@ -181,11 +182,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             -zplg-handle-binary-file "$URL" "$fname" --move
             return 0
         ) && {
-            reply=( "${jsondata[user]}" "${jsondata[plugin]}" )
+            reply=( "$user" "$plugin" )
             REPLY=tarball
         }
     } else {
-            reply=( "${jsondata[user]}" "${jsondata[plugin]}" )
+            reply=( "$user" "$plugin" )
             REPLY=git
     }
 
