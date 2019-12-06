@@ -960,7 +960,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local url="$1" file="$2"
 
     command mkdir -p ._backup
-    command rm -f ._backup/*(DN)
+    command rm -rf ._backup/*(DN)
     command mv -f *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(DN) ._backup 2>/dev/null
 
     -zplg-extract-wrapper() {
