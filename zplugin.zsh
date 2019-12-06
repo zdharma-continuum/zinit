@@ -1625,13 +1625,15 @@ atdelete${~exts})(*)
     local -A ZPLG_ICE
     ZPLG_ICE=( "${(@Q)${(z@)ZPLGM[WAIT_ICE_${__idx}]}}" )
 
+    local __id_as=${ZPLG_ICE[id-as]:-$__id}
+
     if [[ $__pass = 1 && "${${ZPLG_ICE[wait]#\!}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}" = <-> ]]; then
         __action="${(M)ZPLG_ICE[wait]#\!}load"
     elif [[ $__pass = 1 && -n "${ZPLG_ICE[wait]#\!}" ]] && { eval "${ZPLG_ICE[wait]#\!}" || [[ $(( __s=0 )) = 1 ]]; }; then
         __action="${(M)ZPLG_ICE[wait]#\!}load"
-    elif [[ -n "${ZPLG_ICE[load]#\!}" && -n $(( __s=0 )) && $__pass = 3 && -z "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[load]#\!}"; then
+    elif [[ -n "${ZPLG_ICE[load]#\!}" && -n $(( __s=0 )) && $__pass = 3 && -z "${ZPLG_REGISTERED_PLUGINS[(r)$__id_as]}" ]] && eval "${ZPLG_ICE[load]#\!}"; then
         __action="${(M)ZPLG_ICE[load]#\!}load"
-    elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( __s=0 )) && $__pass = 2 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$__id]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
+    elif [[ -n "${ZPLG_ICE[unload]#\!}" && -n $(( __s=0 )) && $__pass = 2 && -n "${ZPLG_REGISTERED_PLUGINS[(r)$__id_as]}" ]] && eval "${ZPLG_ICE[unload]#\!}"; then
         __action="${(M)ZPLG_ICE[unload]#\!}remove"
     elif [[ -n "${ZPLG_ICE[subscribe]#\!}" && -n $(( __s=0 )) && "$__pass" = 3 ]] && \
         { local -a fts_arr
@@ -1655,7 +1657,8 @@ atdelete${~exts})(*)
         (( ${+ZPLG_ICE[silent]} == 0 && ${+ZPLG_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ "$__action" = *remove ]]; then
         (( ${+functions[-zplg-confirm]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-autoload.zsh"
-        [[ "$__tpe" = "p" ]] && -zplg-unload "$__id" "" "-q"
+        [[ "$__tpe" = "p" ]] && -zplg-unload "$__id_as" "" "-q"
+        (( ${+ZPLG_ICE[silent]} == 0 && ${+ZPLG_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Unloaded $__id_as"
     fi
 
     [[ "${REPLY::=$__action}" = \!* ]] && zle && zle .reset-prompt
