@@ -103,7 +103,6 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         if [[ $__text = [[:space:]]#\{[[:space:]]#[\"\']${__key}[\"\']* ]]; then
             if (( __nest != 2 )) {
                 __found="$__text"
-                break
             }
         fi
     }
