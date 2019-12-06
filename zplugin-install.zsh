@@ -179,9 +179,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - user
 # $2 - plugin
 -zplg-setup-plugin-dir() {
-    setopt localoptions extendedglob typesetsilent noksharrays warncreateglobal
+    emulate -LR zsh
+    setopt extendedglob typesetsilent warncreateglobal noshortloops rcquotes
 
-    local user="$1" plugin="$2" id_as="$3" remote_url_path="${1:+$1/}$2" local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}"
+    local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
+        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---}
 
     local -A sites
     sites=(
