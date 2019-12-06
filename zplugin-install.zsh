@@ -126,6 +126,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson \
         tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" URL="https://registry.npmjs.org/."
 
+    print -r -- "Downloading ${ZPLGM[col-info2]}package.json${ZPLGM[col-rst]}" \
+        "for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}"
+
     -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 2>/dev/null > $tmpfile || \
         { rm -f $tmpfile; -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 1 2>/dev/null > $tmpfile }
 
@@ -135,6 +138,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         print -r -- "${ZPLGM[col-error]}Error: the package $id_as couldn't be found"
         return 1
     fi
+
+    print -r -- "Parsing ${ZPLGM[col-info2]}package.json${ZPLGM[col-rst]}..."
 
     local -A Strings
     -zplg-parse-json "$pkgjson" "zplugin-ices" Strings
@@ -163,6 +168,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local dir="${ZPLGM[PLUGINS_DIR]}/${${ZPLG_ICE[id-as]//\//---}:-${jsondata[user]}---${jsondata[plugin]}}"
             command mkdir -p $dir || return 1
             builtin cd -q $dir
+
+            print -r -- "Downloading tarball for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}..."
 
             -zplg-download-file-stdout "$URL" >! "$fname" || {
                 -zplg-download-file-stdout "$URL" 1 >! "$fname" || {
