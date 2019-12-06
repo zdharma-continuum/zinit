@@ -179,7 +179,8 @@ builtin setopt noaliases
 # The hijacking is not only to gather report data, but also to
 # run custom `autoload' function, that doesn't need FPATH.
 --zplg-shadow-autoload () {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+        typesetsilent noshortloops unset
     local -a opts
     local func
 
