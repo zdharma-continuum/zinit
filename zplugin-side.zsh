@@ -190,7 +190,7 @@
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet atdelete
+        light-mode is-snippet atdelete pack git verbose
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@us.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -198,7 +198,7 @@
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode is-snippet
+            aliases countdown light-mode is-snippet git verbose
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
@@ -336,7 +336,7 @@
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet atdelete
+        light-mode is-snippet atdelete pack git verbose
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
@@ -344,7 +344,7 @@
     nval_ices=(
             blockf silent lucid trackbinds cloneonly nocd run-atpull
             nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode is-snippet
+            aliases countdown light-mode is-snippet git verbose
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.

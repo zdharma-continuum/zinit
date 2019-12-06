@@ -967,7 +967,7 @@ function $f {
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet atdelete
+        light-mode is-snippet atdelete pack git verbose
         ${(@us.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
     )
     __path="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}/._zplugin"
@@ -1553,7 +1553,7 @@ nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
 id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
 countdown|nocountdown|trigger-load|light-mode|is-snippet|pack|\
-atdelete|git${~exts})(*)
+atdelete|git|verbose${~exts})(*)
         ]] && \
             ZPLG_ICES[${match[2]}]+="${ZPLG_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
             break
