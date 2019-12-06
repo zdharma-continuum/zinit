@@ -120,12 +120,16 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # FUNCTION: -zplg-get-package {{{
 -zplg-get-package() {
     emulate -LR zsh
-    setopt extendedglob warncreateglobal typesetsilent
+    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     local user="$1" plugin="$2" id_as="$3" profile="$4" \
-        local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson
-    pkgjson="$(-zplg-download-file-stdout https://registry.npmjs.org/./$id_as 2>/dev/null || \
-                -zplg-download-file-stdout https://registry.npmjs.org/./$id_as 1 2>/dev/null)"
+        local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson \
+        tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" URL="https://registry.npmjs.org/."
+
+    -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 2>/dev/null > $tmpfile || \
+        { rm -f $tmpfile; -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 1 2>/dev/null > $tmpfile }
+
+    pkgjson="$(<$tmpfile)"
 
     if [[ -z $pkgjson ]]; then
         print -r -- "${ZPLGM[col-error]}Error: the package $id_as couldn't be found"
@@ -138,7 +142,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     integer pos
     pos=${${(@Q)${(@z)Strings[2/1]}}[(I)$profile]}
     if (( pos )) {
-        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$pos]}}" )
+        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$pos]}}" id-as "$id_as" )
     } else {
         print -r -- "${ZPLGM[col-error]}Error: the profile \`$profile' couldn't be found, aborting"
         return 1
@@ -154,21 +158,32 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     -zplg-parse-json "$pkgjson" "plugin-info" Strings
     jsondata=( "${(@Q)${(@z)Strings[2/1]}}" )
 
-    (
-        local dir="${ZPLGM[PLUGINS_DIR]}/${jsondata[user]}---${jsondata[plugin]}"
-        command mkdir -p $dir || return 1
-        builtin cd -q $dir
+    if (( !${+ZPLG_ICE[git]} )) {
+        (
+            local dir="${ZPLGM[PLUGINS_DIR]}/${${ZPLG_ICE[id-as]//\//---}:-${jsondata[user]}---${jsondata[plugin]}}"
+            command mkdir -p $dir || return 1
+            builtin cd -q $dir
 
-        -zplg-download-file-stdout "$URL" >! "$fname" || {
-            -zplg-download-file-stdout "$URL" 1 >! "$fname" || {
-                command rm -f "$fname"
-                print -r "Download of \`$fname' failed. No available download tool? (one of: cURL, wget, lftp, lynx)"
-                return 1
+            -zplg-download-file-stdout "$URL" >! "$fname" || {
+                -zplg-download-file-stdout "$URL" 1 >! "$fname" || {
+                    command rm -f "$fname"
+                    print -r "Download of \`$fname' failed. No available download tool? (one of: cURL, wget, lftp, lynx)"
+                    return 1
+                }
             }
-        }
 
-        -zplg-handle-binary-file "$URL" "$fname" --move
-    )
+            -zplg-handle-binary-file "$URL" "$fname" --move
+            return 0
+        ) && {
+            reply=( "${jsondata[user]}" "${jsondata[plugin]}" )
+            REPLY=tarball
+        }
+    } else {
+            reply=( "${jsondata[user]}" "${jsondata[plugin]}" )
+            REPLY=git
+    }
+
+    return $?
 }
 # }}}
 # FUNCTION: -zplg-setup-plugin-dir {{{
@@ -183,7 +198,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     setopt extendedglob typesetsilent warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
-        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---}
+        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---} tpe=$4
 
     local -A sites
     sites=(

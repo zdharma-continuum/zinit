@@ -994,6 +994,7 @@ function $f {
     -zplg-pack-ice "$id_as"
     if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
+        reply=( "$user" "$plugin" ) REPLY=git
         if (( ${+ZPLG_ICE[pack]} )) {
             if ! -zplg-get-package "$user" "$plugin" "$id_as" \
                     "${ZPLG_ICE[pack]:-default}"
@@ -1001,12 +1002,12 @@ function $f {
                 zle && { print; zle .reset-prompt; }
                 return 1
             fi
-        } else {
-            if ! -zplg-setup-plugin-dir "$user" "$plugin" "$id_as"; then
-                zle && { print; zle .reset-prompt; }
-                return 1
-            fi
         }
+        user=${reply[-2]} plugin=${reply[-1]}
+        if ! -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "$REPLY"; then
+            zle && { print; zle .reset-prompt; }
+            return 1
+        fi
         zle && rst=1
     fi
 
@@ -1552,7 +1553,7 @@ nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
 id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
 noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
 countdown|nocountdown|trigger-load|light-mode|is-snippet|pack|\
-atdelete${~exts})(*)
+atdelete|git${~exts})(*)
         ]] && \
             ZPLG_ICES[${match[2]}]+="${ZPLG_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
             break
