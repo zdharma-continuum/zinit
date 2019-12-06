@@ -8,6 +8,7 @@ nav:
   - "Nickname a Plugin or Snippet": id-as.md
   - "Loading Plugins From Private Repositories": Private-Repositories.md
   - "Multiple Prompts": Multiple-prompts.md
+  - "Multiple p10k Configs": Multiple-p10k-configs.md
   - "Example wait Conditions": Example-wait-conditions.md
   - "Installing With Make": Installing-with-make.md
   - "Sourcing Multiple Files": Sourcing-multiple-files.md
