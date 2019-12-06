@@ -213,7 +213,7 @@ builtin setopt noaliases
     done
 
     local -a fpath_elements
-    fpath_elements=( ${(@)fpath[(r)$PLUGIN_DIR/*]} )
+    fpath_elements=( ${fpath[(r)$PLUGIN_DIR/*]} )
 
     for func; do
         # Real autoload doesn't touch function if it already exists
