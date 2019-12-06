@@ -187,34 +187,34 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local -A sites
     sites=(
-        "github"    "github.com"
-        "gh"        "github.com"
-        "bitbucket" "bitbucket.org"
-        "bb"        "bitbucket.org"
-        "gitlab"    "gitlab.com"
-        "gl"        "gitlab.com"
-        "notabug"   "notabug.org"
-        "nb"        "notabug.org"
-        "github-rel" "github.com/$remote_url_path/releases"
-        "gh-r"      "github.com/$remote_url_path/releases"
+        github    github.com
+        gh        github.com
+        bitbucket bitbucket.org
+        bb        bitbucket.org
+        gitlab    gitlab.com
+        gl        gitlab.com
+        notabug   notabug.org
+        nb        notabug.org
+        github-rel github.com/$remote_url_path/releases
+        gh-r      github.com/$remote_url_path/releases
     )
 
     local -A matchstr
     matchstr=(
-        "i386"    "(386|686)"
-        "i686"    "(386|686)"
-        "x86_64"  "(x86_64|amd64|intel)"
-        "amd64"   "(x86_64|amd64|intel)"
-        "aarch64" "aarch64"
-        "linux"   "(linux|linux-gnu)"
-        "darwin"  "(darwin|macos|mac-os|osx|os-x)"
-        "cygwin"  "(windows|cygwin)"
-        "windows" "(windows|cygwin)"
+        i386    "(386|686)"
+        i686    "(386|686)"
+        x86_64  "(x86_64|amd64|intel)"
+        amd64   "(x86_64|amd64|intel)"
+        aarch64 "aarch64"
+        linux   "(linux|linux-gnu)"
+        darwin  "(darwin|macos|mac-os|osx|os-x)"
+        cygwin  "(windows|cygwin)"
+        windows "(windows|cygwin)"
     )
 
     local -a arr
 
-    if [[ "$user" = "_local" ]]; then
+    if [[ $user = _local ]]; then
         print "Warning: no local plugin \`$plugin\'"
         print "(should be located at: $local_path)"
         return 1
@@ -224,30 +224,30 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     print "\\nDownloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
 
     local site
-    [[ -n "${ZPLG_ICE[from]}" ]] && site="${sites[${ZPLG_ICE[from]}]}"
+    [[ -n ${ZPLG_ICE[from]} ]] && site=${sites[${ZPLG_ICE[from]}]}
     [[ -z $site && ${ZPLG_ICE[from]} = *(gh-r|github-rel)* ]] && {
-        site="${ZPLG_ICE[from]/(gh-r|github-re)/${sites[gh-r]}}"
+        site=${ZPLG_ICE[from]/(gh-r|github-re)/${sites[gh-r]}}
     }
 
     (
-        if [[ "$site" = *"releases" ]]; then
-            local url="$site/${ZPLG_ICE[ver]}"
+        if [[ $site = *releases ]]; then
+            local url=$site/${ZPLG_ICE[ver]}
             local -a list list2
 
             list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
                           command grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
-            list=( "${list[@]#href=?}" )
+            list=( ${list[@]#href=?} )
 
-            [[ -n "${ZPLG_ICE[bpick]}" ]] && list=( "${(M)list[@]:#(#i)*/${~ZPLG_ICE[bpick]}}" )
+            [[ -n ${ZPLG_ICE[bpick]} ]] && list=( ${(M)list[@]:#(#i)*/${~ZPLG_ICE[bpick]}} )
 
             [[ ${#list} -gt 1 ]] && {
-                list2=( "${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*}" )
-                [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
+                list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
+                [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
             }
 
             [[ ${#list} -gt 1 ]] && {
-                list2=( "${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*}" )
-                [[ ${#list2} -gt 0 ]] && list=( "${list2[@]}" )
+                list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*} )
+                [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
             }
 
             [[ ${#list} -eq 0 ]] && {
@@ -308,15 +308,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     return 1
             esac
 
-            if [[ -n "${ZPLG_ICE[ver]}" ]]; then
+            if [[ -n ${ZPLG_ICE[ver]} ]]; then
                 command git -C "$local_path" checkout "${ZPLG_ICE[ver]}"
             fi
         fi
 
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
 
-        if [[ -n "${ZPLG_ICE[mv]}" ]]; then
-            local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
+        if [[ -n ${ZPLG_ICE[mv]} ]]; then
+            local from=${ZPLG_ICE[mv]%%[[:space:]]#->*} to=${ZPLG_ICE[mv]##*->[[:space:]]#}
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
@@ -324,8 +324,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             )
         fi
 
-        if [[ -n "${ZPLG_ICE[cp]}" ]]; then
-            local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
+        if [[ -n ${ZPLG_ICE[cp]} ]]; then
+            local from=${ZPLG_ICE[cp]%%[[:space:]]#->*} to=${ZPLG_ICE[cp]##*->[[:space:]]#}
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
@@ -333,14 +333,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             )
         fi
 
-        if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} != '!' ]]; then
+        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} != '!' ]]; then
             # Compile plugin
             [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
                 -zplg-compile-plugin "$id_as" ""
             }
         fi
 
-        if [[ "$4" != "-u" ]]; then
+        if [[ $4 != -u ]]; then
             # Store ices at clone of a plugin
             -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
@@ -364,7 +364,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         # After additional executions like atclone'' - install completions (1 - plugins)
         [[ 1 = ${+ZPLG_ICE[nocompletions]} || ${ZPLG_ICE[as]} = null ]] || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
 
-        if [[ "$site" != *"releases" && ${ZPLG_ICE[nocompile]} = '!' ]]; then
+        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} = '!' ]]; then
             # Compile plugin
             LANG=C sleep 0.3
             [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
