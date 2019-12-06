@@ -958,6 +958,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     setopt localoptions extendedglob nokshglob warncreateglobal
 
     local url="$1" file="$2"
+    integer move=${${(M)3:#--move}:+1}
 
     command mkdir -p ._backup
     command rm -rf ._backup/*(DN)
@@ -1020,6 +1021,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         else
             print -r -- "Successfully installed executables (\"${(j:", ":)execs}\") contained in \`$file'."
         fi
+    }
+
+    (( move )) && {
+        command mv -f **/*~(*/*/*|^*/*|._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN) .
     }
 
     REPLY="${execs[1]}"
