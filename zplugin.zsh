@@ -244,7 +244,8 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-bindkey() {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+        typesetsilent noshortloops unset
     is-at-least 5.3 && \
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q+)@}}" || \
         -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Bindkey ${(j: :)${(q)@}}"
@@ -381,7 +382,8 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zstyle() {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+        typesetsilent noshortloops unset
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zstyle $*"
 
     # Remember to perform the actual zstyle call
@@ -420,7 +422,8 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-alias() {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+        typesetsilent noshortloops unset
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Alias $*"
 
     # Remember to perform the actual alias call
@@ -470,7 +473,8 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 --zplg-shadow-zle() {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+        typesetsilent noshortloops unset
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Zle $*"
 
     # Remember to perform the actual zle call
@@ -530,7 +534,8 @@ builtin setopt noaliases
 # The hijacking is not only for reporting, but also to save compdef
 # calls so that `compinit' can be called after loading plugins.
 --zplg-shadow-compdef() {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+        typesetsilent noshortloops unset
     -zplg-add-report "${ZPLGM[CUR_USPL2]}" "Saving \`compdef $*' for replay"
     ZPLG_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
 
@@ -605,7 +610,8 @@ builtin setopt noaliases
 # Turn off shadowing completely for a given mode ("load", "light",
 # "light-b" (i.e. the `trackbinds' mode) or "compdef").
 -zplg-shadow-off() {
-    builtin setopt localoptions noaliases noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+        typesetsilent noshortloops unset
     local mode="$1"
 
     # Disable shadowing only once
