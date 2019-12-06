@@ -242,13 +242,16 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     fi
 
-    -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-    print "\\nDownloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
+    [[ $tpe != tarball ]] && {
+        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+        print "\\nDownloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
 
-    local site
-    [[ -n ${ZPLG_ICE[from]} ]] && site=${sites[${ZPLG_ICE[from]}]}
-    [[ -z $site && ${ZPLG_ICE[from]} = *(gh-r|github-rel)* ]] && {
-        site=${ZPLG_ICE[from]/(gh-r|github-re)/${sites[gh-r]}}
+
+        local site
+        [[ -n ${ZPLG_ICE[from]} ]] && site=${sites[${ZPLG_ICE[from]}]}
+        [[ -z $site && ${ZPLG_ICE[from]} = *(gh-r|github-rel)* ]] && {
+            site=${ZPLG_ICE[from]/(gh-r|github-re)/${sites[gh-r]}}
+        }
     }
 
     (
