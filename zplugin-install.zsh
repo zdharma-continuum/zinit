@@ -147,6 +147,28 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     -zplg-parse-json "$pkgjson" "_from" Strings
     local -A jsondata
     jsondata=( "${(@Q)${(@z)Strings[1/1]}}" )
+
+    local URL=${jsondata[_resolved]}
+    local fname="${${URL%%\?*}:t}" tmpdir="$(mktemp -d)"
+
+    -zplg-parse-json "$pkgjson" "plugin-info" Strings
+    jsondata=( "${(@Q)${(@z)Strings[2/1]}}" )
+
+    (
+        local dir="${ZPLGM[PLUGINS_DIR]}/${jsondata[user]}---${jsondata[plugin]}"
+        command mkdir -p $dir || return 1
+        builtin cd -q $dir
+
+        -zplg-download-file-stdout "$URL" >! "$fname" || {
+            -zplg-download-file-stdout "$URL" 1 >! "$fname" || {
+                command rm -f "$fname"
+                print -r "Download of \`$fname' failed. No available download tool? (one of: cURL, wget, lftp, lynx)"
+                return 1
+            }
+        }
+
+        -zplg-handle-binary-file "$URL" "$fname" --move
+    )
 }
 # }}}
 # FUNCTION: -zplg-setup-plugin-dir {{{
