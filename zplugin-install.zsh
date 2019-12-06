@@ -230,7 +230,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     }
 
     (
-        if [[ $site = *releases ]]; then
+        if [[ $site = *releases ]] {
             local url=$site/${ZPLG_ICE[ver]}
             local -a list list2
 
@@ -279,7 +279,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             ) || {
                 return 1
             }
-        else
+        } elif [[ $tpe = git ]] {
             case "${ZPLG_ICE[proto]}" in
                 (|https)
                     command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
@@ -308,39 +308,39 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     return 1
             esac
 
-            if [[ -n ${ZPLG_ICE[ver]} ]]; then
+            if [[ -n ${ZPLG_ICE[ver]} ]] {
                 command git -C "$local_path" checkout "${ZPLG_ICE[ver]}"
-            fi
-        fi
+            }
+        }
 
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]#\!\!}}; }
 
-        if [[ -n ${ZPLG_ICE[mv]} ]]; then
+        if [[ -n ${ZPLG_ICE[mv]} ]] {
             local from=${ZPLG_ICE[mv]%%[[:space:]]#->*} to=${ZPLG_ICE[mv]##*->[[:space:]]#}
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
               [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
             )
-        fi
+        }
 
-        if [[ -n ${ZPLG_ICE[cp]} ]]; then
+        if [[ -n ${ZPLG_ICE[cp]} ]] {
             local from=${ZPLG_ICE[cp]%%[[:space:]]#->*} to=${ZPLG_ICE[cp]##*->[[:space:]]#}
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
               [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
             )
-        fi
+        }
 
-        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} != '!' ]]; then
+        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} != '!' ]] {
             # Compile plugin
             [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
                 -zplg-compile-plugin "$id_as" ""
             }
-        fi
+        }
 
-        if [[ $4 != -u ]]; then
+        if [[ $4 != -u ]] {
             # Store ices at clone of a plugin
             -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
 
@@ -359,19 +359,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path" atclone
             done
-        fi
+        }
 
         # After additional executions like atclone'' - install completions (1 - plugins)
         [[ 1 = ${+ZPLG_ICE[nocompletions]} || ${ZPLG_ICE[as]} = null ]] || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
 
-        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} = '!' ]]; then
+        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} = '!' ]] {
             # Compile plugin
             LANG=C sleep 0.3
             [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
                 -zplg-compile-plugin "$id_as" ""
             }
-        fi
-
+        }
     ) || return $?
 
     return 0
