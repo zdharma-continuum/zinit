@@ -1009,7 +1009,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     unfunction -- -zplg-extract-wrapper
 
     local -a execs
-    execs=( ${(@f)"$( file **/*(DN-.) )"} )
+    execs=( ${(@f)"$( file **/*~(._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN-.) )"} )
     execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
     execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
 
