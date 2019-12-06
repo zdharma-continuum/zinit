@@ -95,16 +95,16 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         }
     done
 
-    local __text value __found
-    integer __pair_a __pair_b
-    for __pair_a ( "${__pair_order[@]}" ) {
-        __pair_b="${__final_pairs[$__pair_a]}"
-        __text="${__input[__pair_b,__pair_a]}"
-        if [[ $__text = [[:space:]]#\{[[:space:]]#[\"\']${__key}[\"\']* ]]; then
-            if (( __nest != 2 )) {
+    local __text __found
+    if (( __nest != 2 )) {
+        integer __pair_a __pair_b
+        for __pair_a ( "${__pair_order[@]}" ) {
+            __pair_b="${__final_pairs[$__pair_a]}"
+            __text="${__input[__pair_b,__pair_a]}"
+            if [[ $__text = [[:space:]]#\{[[:space:]]#[\"\']${__key}[\"\']* ]]; then
                 __found="$__text"
-            }
-        fi
+            fi
+        }
     }
 
     if [[ -n $__found && $__nest -lt 2 ]] {
