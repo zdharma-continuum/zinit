@@ -1805,6 +1805,7 @@ atdelete${~exts})(*)
         }
     } || {
         add-zsh-hook -d -- precmd -zplg-scheduler
+        add-zsh-hook -- chpwd -zplg-scheduler
         () {
             builtin emulate -L zsh
             builtin setopt extendedglob
