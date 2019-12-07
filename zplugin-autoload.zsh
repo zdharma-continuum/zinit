@@ -676,6 +676,18 @@ ZPLGM[EXTENDED_GLOB]=""
 # User-exposed functions
 #
 
+# FUNCTION: -zplg-pager {{{
+# BusyBox less lacks the -X and -i options, so it can use more
+-zplg-pager() {
+    setopt LOCAL_OPTIONS EQUALS
+    if [[ ${${:-=less}:A:t} = 'busybox' ]]; then
+        more
+    else
+        less -FRXi
+    fi
+}
+# }}}
+
 # FUNCTION: -zplg-self-update {{{
 # Updates Zplugin code (does a git pull).
 #
@@ -698,7 +710,7 @@ ZPLGM[EXTENDED_GLOB]=""
             # Replace what follows "|| ..." with the same thing but with no newlines,
             # and also only first 10 words (the (w)-flag enables word-indexing)
             lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
-            builtin print -rl -- "${lines[@]}" | command less -FRXi
+            builtin print -rl -- "${lines[@]}" | -zplg-pager
         fi
         command git pull --no-stat;
     )
@@ -1462,10 +1474,10 @@ ZPLGM[EXTENDED_GLOB]=""
                   }
                 done | \
                 command tee .zplugin_lstupd | \
-                command less -FRXi &
-                integer less_pid=$!
-                { sleep 20 && kill -9 $less_pid 2>/dev/null 1>&2; } &!
-                { wait $less_pid; } > /dev/null 2>&1
+                -zplg-pager &
+                integer pager_pid=$!
+                { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
+                { wait $pager_pid; } > /dev/null 2>&1
 
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
@@ -2651,7 +2663,7 @@ EOF
         fi
     } | {
         if [[ -t 1 ]]; then
-            less -iRFX
+            -zplg-pager
         else
             cat
         fi
