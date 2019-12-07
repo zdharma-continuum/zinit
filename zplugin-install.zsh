@@ -150,7 +150,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     integer pos
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
     if (( pos )) {
-        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]}" "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" id-as "$id_as" )
+        ZPLG_ICE=( "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" "${(kv)ZPLG_ICE[@]}" id-as "$id_as" )
     } else {
         print -r -- "${ZPLGM[col-error]}Error: the profile \`$profile' couldn't be found, aborting"
         return 1
