@@ -967,7 +967,8 @@ function $f {
         service trackbinds multisrc compile nocompile nocompletions
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet atdelete pack git verbose
+        light-mode is-snippet atdelete pack git verbose on-update-of
+        subscribe
         ${(@us.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
     )
     __path="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}/._zplugin"
