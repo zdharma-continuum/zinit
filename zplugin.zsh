@@ -1016,9 +1016,6 @@ function $f {
 
     (( ${+ZPLG_ICE[cloneonly]} )) && return 0
 
-    (( ${+ZPLG_ICE[pack]} )) && {
-        -zplg-load-ices "$user" "$plugin" "$id_as"
-    }
     -zplg-register-plugin "$id_as" "$mode" "${ZPLG_ICE[teleid]}"
 
     local -a arr
@@ -1934,6 +1931,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                 if [[ -n $1 ]]; then
                     ZPLG_ICE=( "${__ices[@]}" "${(kv)ZPLG_ICES[@]}" )
                     ZPLG_ICES=()
+
+                    (( ${+ZPLG_ICE[pack]} )) && {
+                        -zplg-load-ices "${1#@}"
+                        [[ -z ${ZPLG_ICE[wait]} ]] && unset 'ZPLG_ICE[wait]'
+                    }
 
                     [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${1:t}"
 
