@@ -143,9 +143,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local -A Strings
     -zplg-parse-json "$pkgjson" "plugin-info" Strings
 
-    local -A jsondata
-    jsondata=( ${(@Q)${(@z)Strings[2/1]}} )
-    local user=${jsondata[user]} plugin=${jsondata[plugin]} required=${jsondata[required]}
+    local -A jsondata1
+    jsondata1=( ${(@Q)${(@z)Strings[2/1]}} )
+    local user=${jsondata1[user]} plugin=${jsondata1[plugin]} required=${jsondata1[required]}
 
     integer pos
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
@@ -156,17 +156,20 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     }
 
-    -zplg-parse-json "$pkgjson" "_from" Strings
-    local -A jsondata
-    jsondata=( "${(@Q)${(@z)Strings[1/1]}}" )
-
-    local URL=${jsondata[_resolved]}
-    local fname="${${URL%%\?*}:t}" tmpdir="$(mktemp -d)"
 
     if (( !${+ZPLG_ICE[git]} )) {
         (
-            local dir="${ZPLGM[PLUGINS_DIR]}/${${ZPLG_ICE[id-as]//\//---}:-$user---$plugin}"
-            command mkdir -p $dir || return 1
+            -zplg-parse-json "$pkgjson" "_from" Strings
+            local -A jsondata
+            jsondata=( "${(@Q)${(@z)Strings[1/1]}}" )
+
+            local URL=${jsondata[_resolved]}
+            local fname="${${URL%%\?*}:t}"
+
+            command mkdir -p $dir || {
+                print -r -- "${ZPLGM[col-error]}Couldn't create directory: \`$dir', aborting${ZPLGM[col-rst]}"
+                return 1
+            }
             builtin cd -q $dir
 
             print -r -- "Downloading tarball for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}..."
