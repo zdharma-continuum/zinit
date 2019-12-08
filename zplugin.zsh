@@ -958,7 +958,7 @@ function $f {
 } # }}}
 # FUNCTION: -zplg-load-ices {{{
 -zplg-load-ices() {
-    local user="$1" plugin="$2" id_as="$3" __key __path
+    local id_as="$1" __key __path
     local -a ice_order
     ice_order=(
         svn proto from teleid bindmap cloneopts id-as depth if wait load
