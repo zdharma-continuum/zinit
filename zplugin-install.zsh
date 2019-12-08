@@ -121,7 +121,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
-    local user="$1" plugin="$2" id_as="$3" profile="$4" \
+    local user="$1" plugin="$2" id_as="$3" dir="$4" profile="$5" tpe="$6" \
         local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson \
         tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" URL="https://registry.npmjs.org/."
 

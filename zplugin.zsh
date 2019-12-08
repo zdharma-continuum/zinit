@@ -1000,7 +1000,8 @@ function $f {
         reply=( "$user" "$plugin" ) REPLY=git
         if (( ${+ZPLG_ICE[pack]} )) {
             if ! -zplg-get-package "$user" "$plugin" "$id_as" \
-                    "${ZPLG_ICE[pack]:-default}"
+                "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" \
+                "${ZPLG_ICE[pack]:-default}" plugin
             then
                 zle && { print; zle .reset-prompt; }
                 return 1
