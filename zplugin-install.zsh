@@ -170,7 +170,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 print -r -- "${ZPLGM[col-error]}Couldn't create directory: \`$dir', aborting${ZPLGM[col-rst]}"
                 return 1
             }
-            builtin cd -q $dir
+            builtin cd -q $dir || return 1
 
             print -r -- "Downloading tarball for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}..."
 
