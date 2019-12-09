@@ -200,7 +200,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 return 1
             fi
         else
-            if ! command -v $required 2>/dev/null; then
+            if ! command -v $required &>/dev/null; then
                 print -- "${ZPLGM[col-error]}ERROR: the" \
                     "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZPLGM[col-pname]}$profile${ZPLGM[col-error]}\'}:-\\b}" \
