@@ -158,7 +158,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     }
 
-    [[ ${+ZPLG_ICE[is-snippet]} ]] && {
+    print -n -- \\n${jsondata1[version]:+${ZPLGM[col-pname]}Version: ${ZPLGM[col-info2]}${jsondata1[version]}${ZPLGM[col-rst]}\\n}
+    [[ -n ${jsondata1[message]} ]] && \
+        print -- "${ZPLGM[col-info]}${jsondata1[message]}${ZPLGM[col-rst]}"
 
     (( ${+ZPLG_ICE[is-snippet]} )) && {
         reply=( "" "$url" )
