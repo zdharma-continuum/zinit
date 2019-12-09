@@ -8,7 +8,7 @@ this standard.
 This document is also available as a
 [**PDF**](http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.pdf).
 
-## What is a Zsh plugin?
+## What Is A Zsh Plugin?
 
 Historically, Zsh plugins were first defined by Oh My Zsh. They provide for a
 way to package together files that extend or configure the shell’s functionality
@@ -52,8 +52,8 @@ plugin" and the actions of plugin managers – the proposed standardization.
 To get the plugin’s location, plugins should do:
 
 ``` zsh
-0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
-0=${${(M)0:#/*}:-$PWD/$0}
+0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
+0="${${(M)0:#/*}:-$PWD/$0}"
 
 # Then ${0:h} to get plugin’s directory
 ```
@@ -108,6 +108,11 @@ The last, 5th point also allows to use the `$0` handling in scripts (i.e.
 runnables with the hashbang `#!…`) to get the directory in which the script
 file resides.
 
+The assignment uses quoting to make it resilient to combination of `GLOB_SUBST`
+and `GLOB_ASSIGN` options. It's a standard snippet of code, so it has to be
+always working. When you'll set e.g.: the `zsh` emulation in a function, you in
+general don't have to quote assignments.
+
 ##### Adoption Status
 
 1. Plugin managers: Zplugin, Zgen (after and if the
@@ -152,7 +157,7 @@ develoment process.
       [**using**](https://github.com/agkozak/agkozak-zsh-prompt/commit/08b5879a)
       the function for the full unload of the theme.
 
-## 3. `@zsh-plugin-run-on-unload` call
+## 3. `@zsh-plugin-run-on-unload` Call
 
 The plugin manager can provide a function `@zsh-plugin-run-on-unload` which
 has the following call syntax:
@@ -175,7 +180,7 @@ unloading it.
 It's a recent addition to the standard and only one plugin manager, Zplugin,
 implements it.
 
-## 4. `@zsh-plugin-run-on-update` call
+## 4. `@zsh-plugin-run-on-update` Call
 
 The plugin manager can provide a function `@zsh-plugin-run-on-update` which
 has the following call syntax:
@@ -314,7 +319,7 @@ The use of this function is recommended because it allows to install
 widget with the name of one of the special widgets. Now, after the function has
 been introduced in Zsh `5.3` it should be used instead.
 
-### Standard recommended options
+### Standard Recommended Options
 
 The following code snippet is recommended to be included at the beginning of
 each of the main functions provided by the plugin:
