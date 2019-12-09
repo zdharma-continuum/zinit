@@ -116,6 +116,27 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     }
 }
 # }}}
+# FUNCTION: -zplg-substitute {{{
+-zplg-substitute() {
+    local -A __subst_map
+    __subst_map=(
+        "%ID%"   "${id_as_clean:-$id_as}"
+        "%USER%" "$user"
+        "%PLUGIN%" "${plugin:-$save_url}"
+        "%URL%" "${save_url:-${user:+$user/}$plugin}"
+        "%DIR%" "${local_path:-$local_dir${dirname:+/$dirname}}"
+        '$ZPFX' "$ZPFX"
+        '${ZPFX}' "$ZPFX"
+    )
+
+    local __var_name
+    for __var_name; do
+        local __value=${(P)__var_name}
+        __value=${__value//(#m)(${(~j.|.k)__subst_map})/${__subst_map[$MATCH]}}
+        : ${(P)__var_name::=$__value}
+    done
+}
+# }}}
 # FUNCTION: -zplg-get-package {{{
 -zplg-get-package() {
     emulate -LR zsh
@@ -361,10 +382,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             }
         }
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { command make -C "$local_path" ${(@s; ;)${${ZPLG_ICE[make]#\!\!}//(\$ZPFX|\$\{ZPFX\})/$ZPFX}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!\!}}; }
 
         if [[ -n ${ZPLG_ICE[mv]} ]] {
             local from=${ZPLG_ICE[mv]%%[[:space:]]#->*} to=${ZPLG_ICE[mv]##*->[[:space:]]#}
+            -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
@@ -374,6 +396,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
         if [[ -n ${ZPLG_ICE[cp]} ]] {
             local from=${ZPLG_ICE[cp]%%[[:space:]]#->*} to=${ZPLG_ICE[cp]##*->[[:space:]]#}
+            -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
@@ -398,9 +421,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path" \!atclone
             done
 
-            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { command make -C "$local_path" ${(@s; ;)${${ZPLG_ICE[make]#\!}//(\$ZPFX|\$\{ZPFX\})/$ZPFX}}; }
-            (( ${+ZPLG_ICE[atclone]} )) && -zplg-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
-            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && -zplg-countdown make && { command make -C "$local_path" ${(@s; ;)${ZPLG_ICE[make]//(\$ZPFX|\$\{ZPFX\})/$ZPFX}}; }
+            local atclone=${ZPLG_ICE[atclone]}
+            [[ -n $atclone ]] && -zplg-substitute atclone
+
+            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!}}; }
+            (( ${+ZPLG_ICE[atclone]} )) && -zplg-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
 
             reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atclone <->]}" )
             for key in "${reply[@]}"; do
@@ -918,10 +944,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             return 0;
         }
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { command make -C "$local_dir/$dirname" ${(@s; ;)${${ZPLG_ICE[make]#\!\!}//(\$ZPFX|\$\{ZPFX\})/$ZPFX}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!\!}}; }
 
         if [[ -n "${ZPLG_ICE[mv]}" ]]; then
             local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
+            -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
@@ -931,6 +958,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
         if [[ -n "${ZPLG_ICE[cp]}" ]]; then
             local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
+            -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
@@ -938,7 +966,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             )
         fi
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { command make -C "$local_dir/$dirname" ${(@s; ;)${${ZPLG_ICE[make]#\!}//(\$ZPFX|\$\{ZPFX\})/$ZPFX}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!}}; }
 
         if [[ "$update" = "-u" ]]; then
             # Run annexes' atpull hooks (the before atpull-ice ones)
@@ -959,6 +987,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atclone
             done
 
+            local atclone=${ZPLG_ICE[atclone]}
+            [[ -n $atclone ]] && -zplg-substitute atclone
+
             (( ${+ZPLG_ICE[atclone]} )) && -zplg-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
             # Run annexes' atclone hooks (the after atclone-ice ones)
@@ -969,7 +1000,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             done
         fi
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && -zplg-countdown make && { command make -C "$local_dir/$dirname" ${(@s; ;)${ZPLG_ICE[make]//(\$ZPFX|\$\{ZPFX\})/$ZPFX}}; }
+        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)make}; }
 
         # Run annexes' atpull hooks (the after atpull-ice ones)
         [[ "$update" = "-u" ]] && {
@@ -1105,7 +1136,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # }}}
 # FUNCTION: -zplg-at-eval {{{
 -zplg-at-eval() {
-    [[ "$1" = "%atclone" ]] && { eval "$2"; ((1)); } || eval "$1"
+    local atclone="$1" atpull="$2"
+    -zplg-substitute atclone atpull
+    [[ "$atpull" = "%atclone" ]] && { eval "$atclone"; ((1)); } || eval "$atpull"
 }
 # }}}
 
