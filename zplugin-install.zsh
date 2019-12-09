@@ -173,7 +173,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     jsondata1=( ${(@Q)${(@z)Strings[2/1]}} )
     local user=${jsondata1[user]} plugin=${jsondata1[plugin]} \
         url=${jsondata1[url]} message=${jsondata1[message]} \
-        required=${jsondata1[required]}
+        required=${jsondata1[required]:-${jsondata1[requires]}}
 
     integer pos
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
