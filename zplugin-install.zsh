@@ -225,7 +225,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $2 - plugin
 -zplg-setup-plugin-dir() {
     emulate -LR zsh
-    setopt extendedglob typesetsilent warncreateglobal noshortloops rcquotes
+    setopt extendedglob warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
         local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---} tpe=$4
@@ -702,7 +702,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # supports Subversion protocol and allows to clone subdirectories.
 # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 -zplg-download-snippet() {
-    setopt localoptions extendedglob noksharrays noshwordsplit warncreateglobal
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal noshortloops
 
     local save_url="$1" url="$2" id_as="$3" id_as_clean="${3%%\?*}" local_dir="$4" dirname="$5" filename="$6" update="$7"
     local -a list arr
