@@ -159,6 +159,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     }
 
     [[ ${+ZPLG_ICE[is-snippet]} ]] && {
+
+    (( ${+ZPLG_ICE[is-snippet]} )) && {
         reply=( "" "$url" )
         REPLY=snippet
         return 0
