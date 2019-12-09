@@ -1980,9 +1980,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#what_is_a_zsh_plugin" title="What is a Zsh plugin?"
+  <a href="#what_is_a_zsh_plugin" title="What Is A Zsh Plugin?"
       class="md-nav__link">
-    What is a Zsh plugin?
+    What Is A Zsh Plugin?
   </a>
 
   <!-- Render nested item list -->
@@ -2157,9 +2157,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#3_zsh-plugin-run-on-unload_call" title="3. @zsh-plugin-run-on-unload call"
+  <a href="#3_zsh-plugin-run-on-unload_call" title="3. @zsh-plugin-run-on-unload Call"
       class="md-nav__link">
-    3. @zsh-plugin-run-on-unload call
+    3. @zsh-plugin-run-on-unload Call
   </a>
 
   <!-- Render nested item list -->
@@ -2229,9 +2229,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#4_zsh-plugin-run-on-update_call" title="4. @zsh-plugin-run-on-update call"
+  <a href="#4_zsh-plugin-run-on-update_call" title="4. @zsh-plugin-run-on-update Call"
       class="md-nav__link">
-    4. @zsh-plugin-run-on-update call
+    4. @zsh-plugin-run-on-update Call
   </a>
 
   <!-- Render nested item list -->
@@ -2545,9 +2545,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#standard_recommended_options" title="Standard recommended options"
+  <a href="#standard_recommended_options" title="Standard Recommended Options"
       class="md-nav__link">
-    Standard recommended options
+    Standard Recommended Options
   </a>
 
   <!-- Render nested item list -->
@@ -3219,9 +3219,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#what_is_a_zsh_plugin" title="What is a Zsh plugin?"
+  <a href="#what_is_a_zsh_plugin" title="What Is A Zsh Plugin?"
       class="md-nav__link">
-    What is a Zsh plugin?
+    What Is A Zsh Plugin?
   </a>
 
   <!-- Render nested item list -->
@@ -3396,9 +3396,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#3_zsh-plugin-run-on-unload_call" title="3. @zsh-plugin-run-on-unload call"
+  <a href="#3_zsh-plugin-run-on-unload_call" title="3. @zsh-plugin-run-on-unload Call"
       class="md-nav__link">
-    3. @zsh-plugin-run-on-unload call
+    3. @zsh-plugin-run-on-unload Call
   </a>
 
   <!-- Render nested item list -->
@@ -3468,9 +3468,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#4_zsh-plugin-run-on-update_call" title="4. @zsh-plugin-run-on-update call"
+  <a href="#4_zsh-plugin-run-on-update_call" title="4. @zsh-plugin-run-on-update Call"
       class="md-nav__link">
-    4. @zsh-plugin-run-on-update call
+    4. @zsh-plugin-run-on-update Call
   </a>
 
   <!-- Render nested item list -->
@@ -3784,9 +3784,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#standard_recommended_options" title="Standard recommended options"
+  <a href="#standard_recommended_options" title="Standard Recommended Options"
       class="md-nav__link">
-    Standard recommended options
+    Standard Recommended Options
   </a>
 
   <!-- Render nested item list -->
@@ -4097,7 +4097,7 @@
 this standard.</p>
 <p>This document is also available as a
 <a href="http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.pdf"><strong>PDF</strong></a>.</p>
-<h2 id="what_is_a_zsh_plugin">What is a Zsh plugin?<a class="headerlink" href="#what_is_a_zsh_plugin" title="Permanent link">#</a></h2>
+<h2 id="what_is_a_zsh_plugin">What Is A Zsh Plugin?<a class="headerlink" href="#what_is_a_zsh_plugin" title="Permanent link">#</a></h2>
 <p>Historically, Zsh plugins were first defined by Oh My Zsh. They provide for a
 way to package together files that extend or configure the shell’s functionality
 in a particular way.</p>
@@ -4140,8 +4140,8 @@ loaded via Zsh’s <code>autoload</code> mechanism (a single function per-file).
 plugin" and the actions of plugin managers – the proposed standardization.</p>
 <h2 id="146_standardized_0_handling">1. Standardized $0 Handling<a class="headerlink" href="#146_standardized_0_handling" title="Permanent link">#</a></h2>
 <p>To get the plugin’s location, plugins should do:</p>
-<pre><code class="zsh">0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
-0=${${(M)0:#/*}:-$PWD/$0}
+<pre><code class="zsh">0=&quot;${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}&quot;
+0=&quot;${${(M)0:#/*}:-$PWD/$0}&quot;
 
 # Then ${0:h} to get plugin’s directory
 </code></pre>
@@ -4209,6 +4209,10 @@ might however provide a use case.</p>
 <p>The last, 5<sup>th</sup> point also allows to use the <code>$0</code> handling in scripts (i.e.
 runnables with the hashbang <code>#!…</code>) to get the directory in which the script
 file resides.</p>
+<p>The assignment uses quoting to make it resilient to combination of <code>GLOB_SUBST</code>
+and <code>GLOB_ASSIGN</code> options. It's a standard snippet of code, so it has to be
+always working. When you'll set e.g.: the <code>zsh</code> emulation in a function, you in
+general don't have to quote assignments.</p>
 <h5 id="adoption_status">Adoption Status<a class="headerlink" href="#adoption_status" title="Permanent link">#</a></h5>
 <ol>
 <li>
@@ -4258,7 +4262,7 @@ develoment process.</p>
 </ul>
 </li>
 </ol>
-<h2 id="3_zsh-plugin-run-on-unload_call">3. <code>@zsh-plugin-run-on-unload</code> call<a class="headerlink" href="#3_zsh-plugin-run-on-unload_call" title="Permanent link">#</a></h2>
+<h2 id="3_zsh-plugin-run-on-unload_call">3. <code>@zsh-plugin-run-on-unload</code> Call<a class="headerlink" href="#3_zsh-plugin-run-on-unload_call" title="Permanent link">#</a></h2>
 <p>The plugin manager can provide a function <code>@zsh-plugin-run-on-unload</code> which
 has the following call syntax:</p>
 <pre><code class="zsh">@zsh-plugin-run-on-unload &quot;{code-snippet-1}&quot; &quot;{code-snippet-2}&quot; …
@@ -4274,7 +4278,7 @@ unloading it.</p>
 <h5 id="adoption_status_2">Adoption Status<a class="headerlink" href="#adoption_status_2" title="Permanent link">#</a></h5>
 <p>It's a recent addition to the standard and only one plugin manager, Zplugin,
 implements it.</p>
-<h2 id="4_zsh-plugin-run-on-update_call">4. <code>@zsh-plugin-run-on-update</code> call<a class="headerlink" href="#4_zsh-plugin-run-on-update_call" title="Permanent link">#</a></h2>
+<h2 id="4_zsh-plugin-run-on-update_call">4. <code>@zsh-plugin-run-on-update</code> Call<a class="headerlink" href="#4_zsh-plugin-run-on-update_call" title="Permanent link">#</a></h2>
 <p>The plugin manager can provide a function <code>@zsh-plugin-run-on-update</code> which
 has the following call syntax:</p>
 <pre><code class="zsh">@zsh-plugin-run-on-update &quot;{code-snippet-1}&quot; &quot;{code-snippet-2}&quot; …
@@ -4385,7 +4389,7 @@ documentation</strong></a>.</p>
 <code>add-zle-hook-widget</code> function the "normal" way to install a hook was to define
 widget with the name of one of the special widgets. Now, after the function has
 been introduced in Zsh <code>5.3</code> it should be used instead.</p>
-<h3 id="standard_recommended_options">Standard recommended options<a class="headerlink" href="#standard_recommended_options" title="Permanent link">#</a></h3>
+<h3 id="standard_recommended_options">Standard Recommended Options<a class="headerlink" href="#standard_recommended_options" title="Permanent link">#</a></h3>
 <p>The following code snippet is recommended to be included at the beginning of
 each of the main functions provided by the plugin:</p>
 <pre><code class="zsh">emulate -L zsh
