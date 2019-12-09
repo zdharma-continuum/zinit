@@ -128,8 +128,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     print -r -- "Downloading ${ZPLGM[col-info2]}package.json${ZPLGM[col-rst]}" \
         "for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}"
 
-    -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 2>/dev/null > $tmpfile || \
-        { rm -f $tmpfile; -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 1 2>/dev/null > $tmpfile }
+    if [[ $profile != ./* ]]; then
+        -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 2>/dev/null > $tmpfile || \
+            { rm -f $tmpfile; -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 1 2>/dev/null > $tmpfile }
+    else
+        tmpfile=${profile%:*}
+        profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
+    fi
 
     pkgjson="$(<$tmpfile)"
 
