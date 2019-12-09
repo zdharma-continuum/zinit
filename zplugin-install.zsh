@@ -20,8 +20,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     (( ${(P)+__varname} )) || typeset -gA "$__varname"
 
-    __pair_map=( "(" ")" "{" "}" "[" "]" )
-    while [[ $__workbuf = (#b)[^"{}()[]\\\"'":,]#((["({[]})\"'":,])|[\\](*))(*) ]]; do
+    __pair_map=( "{" "}" "[" "]" )
+    while [[ $__workbuf = (#b)[^"{}[]\\\"'":,]#((["{[]}\"'":,])|[\\](*))(*) ]]; do
         [[ -n ${match[3]} ]] && {
             __idx+=${mbegin[1]}
 
