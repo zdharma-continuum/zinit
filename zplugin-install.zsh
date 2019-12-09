@@ -121,7 +121,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
-    local user="$1" plugin="$2" id_as="$3" dir="$4" profile="$5" tpe="$6" \
+    local user="$1" plugin="$2" id_as="$3" dir="$4" profile="$5" \
         local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson \
         tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" URL="https://registry.npmjs.org/."
 
@@ -145,7 +145,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local -A jsondata1
     jsondata1=( ${(@Q)${(@z)Strings[2/1]}} )
-    local user=${jsondata1[user]} plugin=${jsondata1[plugin]} required=${jsondata1[required]}
+    local user=${jsondata1[user]} plugin=${jsondata1[plugin]} \
+        url=${jsondata1[url]} message=${jsondata1[message]} \
+        required=${jsondata1[required]}
 
     integer pos
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
@@ -156,6 +158,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     }
 
+    [[ ${+ZPLG_ICE[is-snippet]} ]] && {
+        reply=( "" "$url" )
+        REPLY=snippet
+        return 0
+    }
 
     if (( !${+ZPLG_ICE[git]} )) {
         (

@@ -971,7 +971,8 @@ function $f {
         subscribe
         ${(@us.|.)${ZPLG_EXTS[ice-mods]//\'\'/}}
     )
-    __path="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}/._zplugin"
+    __path=${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}/._zplugin
+    [[ -d $__path ]] || __path=${ZPLGM[SNIPPETS_DIR]}/$id_as/._zplugin
     for __key in "${ice_order[@]}"; do
         (( ${+ZPLG_ICE[$__key]} )) && continue
         [[ -f "$__path"/"$__key" ]] && ZPLG_ICE[$__key]="$(<$__path/$__key)"
@@ -979,6 +980,7 @@ function $f {
     [[ -n ${ZPLG_ICE[on-update-of]} ]] && ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
     [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]="command"
     [[ -n ${ZPLG_ICE[pick]} ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
+    return 0
 }
 # }}}
 # FUNCTION: -zplg-load {{{
@@ -1001,13 +1003,17 @@ function $f {
         if (( ${+ZPLG_ICE[pack]} )) {
             if ! -zplg-get-package "$user" "$plugin" "$id_as" \
                 "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" \
-                "${ZPLG_ICE[pack]:-default}" plugin
+                "${ZPLG_ICE[pack]:-default}"
             then
                 zle && { print; zle .reset-prompt; }
                 return 1
             fi
         }
         user=${reply[-2]} plugin=${reply[-1]}
+        [[ $REPLY = snippet ]] && {
+            -zplg-load-snippet $plugin
+            return $?
+        }
         if ! -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "$REPLY"; then
             zle && { print; zle .reset-prompt; }
             return 1
@@ -1070,6 +1076,9 @@ function $f {
 
     local local_dir dirname filename save_url="$url" id_as="${ZPLG_ICE[id-as]:-$url}"
     [[ -z ${opts[(r)-u]} ]] && -zplg-pack-ice "$id_as" ""
+
+    # Allow things like $OSTYPE in the URL
+    eval "url=\"$url\""
 
     # - case A: called from `update --all', ZPLG_ICE not packed (above), static ice will win
     # - case B: called from `snippet', ZPLG_ICE packed, so it will win
