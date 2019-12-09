@@ -166,6 +166,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     }
 
+    print -r -- "Found the profile \`${ZPLGM[col-pname]}$profile${ZPLGM[col-rst]}'"
     print -n -- \\n${jsondata1[version]:+${ZPLGM[col-pname]}Version: ${ZPLGM[col-info2]}${jsondata1[version]}${ZPLGM[col-rst]}\\n}
     [[ -n ${jsondata1[message]} ]] && \
         print -- "${ZPLGM[col-info]}${jsondata1[message]}${ZPLGM[col-rst]}"
