@@ -187,6 +187,30 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     }
 
+    local -a req
+    req=( ${(s.;.)${required:-$required\;${ZPLG_ICE[required]}}} )
+    for required ( $req ) {
+        if [[ $required = bgn ]]; then
+            if [[ -z ${(k)ZPLG_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ]]; then
+                print -- "${ZPLGM[col-error]}ERROR: the" \
+                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
+                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZPLGM[col-pname]}$profile${ZPLGM[col-error]}\'}:-\\b}" \
+                    "requires" "Bin-Gem-Node annex" \
+                    "(see https://github.com/zplugin/z-a-bin-gem-node)"
+                return 1
+            fi
+        else
+            if ! command -v $required 2>/dev/null; then
+                print -- "${ZPLGM[col-error]}ERROR: the" \
+                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
+                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZPLGM[col-pname]}$profile${ZPLGM[col-error]}\'}:-\\b}" \
+                    "requires" \
+                    "\`${ZPLGM[col-pname]}$required${ZPLGM[col-error]}' command"
+                return 1
+            fi
+        fi
+    }
+
     print -r -- "Found the profile \`${ZPLGM[col-pname]}$profile${ZPLGM[col-rst]}'"
     print -n -- \\n${jsondata1[version]:+${ZPLGM[col-pname]}Version: ${ZPLGM[col-info2]}${jsondata1[version]}${ZPLGM[col-rst]}\\n}
     [[ -n ${jsondata1[message]} ]] && \
