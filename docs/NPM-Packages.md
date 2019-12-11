@@ -102,7 +102,7 @@ has several advantages:
 
 Thus, summing up 1. with 4., it might be nice/convenient to e.g.: have the
 latest ECS CLI binary installed in the home directory, without using root access
-and always the latest and – summing up with 2. and 3. – to, for example, have
+and always the latest, and – summing up with 2. and 3. – to, for example, have
 always the latest `README` downloaded by an additional ice:
 `dl'https://raw.githubusercontent.com/aws/amazon-ecs-cli/master/README.md'` (and
 then to have the `README` turned into a man page by the `remark` tool or other
