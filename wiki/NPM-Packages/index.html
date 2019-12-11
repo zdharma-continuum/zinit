@@ -36,7 +36,7 @@
     
     
       
-        <title>z-a-submods - Zplugin Wiki</title>
+        <title>Zsh/NPM Packages - Zplugin Wiki</title>
       
     
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#introduction" tabindex="1" class="md-skip">
+      <a href="#zshnpm_packages" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -140,7 +140,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                z-a-submods
+                Zsh/NPM Packages
               
             </span>
           
@@ -284,7 +284,7 @@
     <li class="md-tabs__item">
       
         <a href="../INTRODUCTION/"
-            title="Introduction" class="md-tabs__link">
+            title="Introduction" class="md-tabs__link md-tabs__link--active">
           Introduction
         </a>
       
@@ -401,7 +401,7 @@
     <li class="md-tabs__item">
       
         <a href="../Annexes/"
-            title="Zplugin Extensions" class="md-tabs__link md-tabs__link--active">
+            title="Zplugin Extensions" class="md-tabs__link">
           Zplugin Extensions
         </a>
       
@@ -567,15 +567,17 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-1"
-          type="checkbox" id="nav-1" />
+          type="checkbox" id="nav-1" checked />
     
 
     <!-- Expand active pages -->
@@ -695,15 +697,261 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item">
-    <a href="../NPM-Packages/" title="Zsh/NPM Packages"
-        class="md-nav__link">
+  <li class="md-nav__item md-nav__item--active">
+    
+
+    <!-- Active checkbox expands items contained within nested section -->
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
+        type="checkbox" id="__toc" />
+
+    <!-- Hack: see partials/toc.html for more information -->
+    
+      
+    
+
+    <!-- Render table of contents, if not empty -->
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Zsh/NPM Packages
+      </label>
+    
+    <a href="./" title="Zsh/NPM Packages"
+        class="md-nav__link md-nav__link--active">
       Zsh/NPM Packages
     </a>
+
+    <!-- Show table of contents -->
+    
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+    
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#motivation" title="Motivation"
+      class="md-nav__link">
+    Motivation
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introductory_example" title="Introductory Example"
+      class="md-nav__link">
+    Introductory Example
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#the_zsh-packages_organization" title="The Zsh-Packages Organization"
+      class="md-nav__link">
+    The Zsh-Packages Organization
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#adding_your_own_package" title="Adding Your Own Package"
+      class="md-nav__link">
+    Adding Your Own Package
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+    
   </li>
+
+<!-- Main navigation item -->
 
         
       </ul>
@@ -1504,17 +1752,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4"
-          type="checkbox" id="nav-4" checked />
+          type="checkbox" id="nav-4" />
     
 
     <!-- Expand active pages -->
@@ -1748,158 +1994,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active">
-    
-
-    <!-- Active checkbox expands items contained within nested section -->
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
-        type="checkbox" id="__toc" />
-
-    <!-- Hack: see partials/toc.html for more information -->
-    
-
-    <!-- Render table of contents, if not empty -->
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        z-a-submods
-      </label>
-    
-    <a href="./" title="z-a-submods"
-        class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../z-a-submods/" title="z-a-submods"
+        class="md-nav__link">
       z-a-submods
     </a>
-
-    <!-- Show table of contents -->
-    
-      <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-
-
-<!-- Table of contents -->
-<nav class="md-nav md-nav--secondary">
-  
-
-  <!--
-    Hack: check whether the content contains a h1 headline. If it does, the
-    top-level anchor must be skipped, since it would be redundant to the link
-    to the current page that is located just above the anchor. Therefore we
-    directly continue with the children of the anchor.
-  -->
-  
-
-  <!-- Render item list -->
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#introduction" title="Introduction"
-      class="md-nav__link">
-    Introduction
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#installation" title="Installation"
-      class="md-nav__link">
-    Installation
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-
-      <!-- Source files -->
-      
-
-      <!-- Set from config but allow override -->
-      
-      
-
-      <!-- Disqus integration -->
-      
-    </ul>
-  
-</nav>
-    
   </li>
-
-<!-- Main navigation item -->
 
         
           
@@ -2414,6 +2517,8 @@
     directly continue with the children of the anchor.
   -->
   
+    
+  
 
   <!-- Render item list -->
   
@@ -2477,9 +2582,108 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#installation" title="Installation"
+  <a href="#motivation" title="Motivation"
       class="md-nav__link">
-    Installation
+    Motivation
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#introductory_example" title="Introductory Example"
+      class="md-nav__link">
+    Introductory Example
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#the_zsh-packages_organization" title="The Zsh-Packages Organization"
+      class="md-nav__link">
+    The Zsh-Packages Organization
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#adding_your_own_package" title="Adding Your Own Package"
+      class="md-nav__link">
+    Adding Your Own Package
   </a>
 
   <!-- Render nested item list -->
@@ -2509,34 +2713,112 @@
               
                 
                 
-                  <h1>z-a-submods</h1>
-                
-                <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>A z-plugin (i.e. a plugin for the Zplugin – <a href="../Z-PLUGINS/">more information</a>)
-that allows Zplugin to clone additional submodules when installing a plugin or
-snippet. The submodules are then automatically updated on the <code>zplugin update
-…</code>
-command.</p>
-<p>This z-plugin adds <code>submods''</code> ice to Zplugin which has the following syntax:</p>
-<pre><code class="zsh">submods'{user}/{plugin} -&gt; {output directory}; …'
+                <h1 id="zshnpm_packages">Zsh/NPM Packages<a class="headerlink" href="#zshnpm_packages" title="Permanent link">#</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
+<p>Zplugin can install NPM packages if they contain Zsh-related metadata (i.e.: the
+field "zsh-data") in the <code>package.json</code>.</p>
+<p>So basically what this means is that you can install plugins by using metadata
+stored in the NPM package registry. This way you don't have to (but still can)
+specify ices, which might be handy when the ice-mod list is long and complex.</p>
+<h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">#</a></h2>
+<p>The motivation for adding such functionality was:</p>
+<ol>
+<li>
+<p>Zplugin is a very flexible plugin manager however users often feel
+   overwhelmed by its configuration.</p>
+</li>
+<li>
+<p>It has many package-manager -like features, such as: it can run <code>Makefiles</code>,
+   automatically provide <em>shims</em> (i.e.: forwarder scripts) for the binaries,
+   extend <code>$PATH</code> to expose the binaries, and more.</p>
+</li>
+<li>
+<p><strong>So a solution came up</strong>: why not publish a package at the NPM-registry with
+   the plugin configurations (i.e.: ice-mods) stored in the <code>package.json</code> file?</p>
+</li>
+</ol>
+<h2 id="introductory_example">Introductory Example<a class="headerlink" href="#introductory_example" title="Permanent link">#</a></h2>
+<p>This way, instead of the following command used to install <code>fzf</code>:</p>
+<pre><code class="zsh">zplugin lucid as=program pick=&quot;$ZPFX/bin/(fzf|fzf-tmux)&quot; \
+    atclone=&quot;cp shell/completion.zsh _fzf_completion; \
+      cp bin/(fzf|fzf-tmux) $ZPFX/bin&quot; \
+    make=&quot;PREFIX=$ZPFX install&quot; for \
+        junegunn/fzf
 </code></pre>
 
-<p>An example command utilizing the z-plugin and its ice:</p>
-<pre><code class="zsh"># Load zsh-autosuggestions plugin via Prezto module: autosuggestions
-zplugin ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
-zplugin snippet PZT::modules/autosuggestions
+<p>you only need:</p>
+<pre><code class="zsh">zplugin pack for fzf
 </code></pre>
 
-<p><img alt="screenshot" src="../img/z-p-submods.png" /></p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
-<p>Simply load as a plugin. The following command will install the z-plugin within
-Zplugin:</p>
-<pre><code class="zsh">zplugin light zdharma/z-p-submods
-</code></pre>
-
-<p>After executing this command you can then use the <code>submods''</code> ice. The command
-should be placed in <code>~/.zshrc</code>.</p>
-<p><a href="vim:set ft=markdown tw=80:"></a></p>
+<p>to get the complete setup of the fuzzy finder, including:</p>
+<ul>
+<li>the completion,</li>
+<li>the additional executable-script <code>fzf-tmux</code>.</li>
+</ul>
+<p>The installation is real, package-manager -like, because you don't need to
+invoke Zplugin anymore once installed to use <code>fzf</code> (that's because <code>fzf</code> is just
+a binary program and not e.g.: a shell function).</p>
+<p>You can also update the package with <code>zplugin update fzf</code> – it'll cause the
+project to refresh and rebuild, like with a "normal" package manager such as
+<code>apt-get</code>. However, it'll actually be more like to <code>emerge</code> from Gentoo, because
+the installation will be from the source… unless… you'll pick a binary
+installation :) So Zplugin is like <code>apt-get</code> and <code>emerge</code> in one!</p>
+<h2 id="the_zsh-packages_organization">The <code>Zsh-Packages</code> Organization<a class="headerlink" href="#the_zsh-packages_organization" title="Permanent link">#</a></h2>
+<p>The home for the packages is <a href="https://github.com/Zsh-Packages">Zsh-Packages</a>
+GitHub organization. You can find the available packages there, which as of
+<code>2019-12-11</code> include:</p>
+<ul>
+<li><a href="https://github.com/Zsh-Packages/asciidoctor">asciidoctor</a> – the AsciiDoc
+  converter, installed as a Gem locally in the plugin directory with use of the
+  <a href="../z-a-bin-gem-node">Bin-Gem-Node</a> annex,</li>
+<li><a href="https://github.com/Zsh-Packages/doctoc">doctoc</a> – the TOC (table of contents)
+  generator for Markdown documents, installed as a Node package locally in the
+  plugin directory with use of the <code>Bin-Gem-Node</code> annex,</li>
+<li><a href="https://github.com/Zsh-Packages/ecs-cli">ecs-cli</a> – the Amazon ECS command
+  line tool, downloaded directly from the
+  <a href="https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest">URL</a> (or
+  from the
+  <a href="https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-darwin-amd64-latest">URL</a> for
+  OS X – automatically selected),</li>
+<li><a href="https://github.com/Zsh-Packages/firefox-dev">firefox-dev</a> – Firefox Developer
+  Edition, downloaded from the
+  <a href="https://download.mozilla.org/?product=firefox-devedition-latest-ssl&amp;os=linux64&amp;lang=en-US">URL</a>
+  (or from the
+  <a href="https://download.mozilla.org/?product=firefox-devedition-latest-ssl&amp;os=osx&amp;lang=en-US">URL</a>
+  for OS X; the OS X installation only downloads the <code>dmg</code> image, so it is'nt
+  yet complete),</li>
+<li><a href="https://github.com/Zsh-Packages/fzf">fzf</a> – the fuzzy-finder, installed from
+  source (the binary installation like with <code>from'gh-r'</code> is very near),</li>
+<li><a href="https://github.com/Zsh-Packages/LS_COLORS">LS_COLORS</a> – the
+  <a href="https://github.com/trapd00r/LS_COLORS">trapd00r/LS_COLORS</a> color definitions
+  for GNU <code>ls</code>, <code>ogham/exa</code> and Zshell's completion.</li>
+</ul>
+<h2 id="adding_your_own_package">Adding Your Own Package<a class="headerlink" href="#adding_your_own_package" title="Permanent link">#</a></h2>
+<p>You can contact me to have the repository at the Zsh-Packages organization.
+Then, you'll only need to:</p>
+<ol>
+<li>
+<p>Create a NPM account</p>
+</li>
+<li>
+<p>Invoke <code>npm login</code>.</p>
+</li>
+<li>
+<p>Populate the <code>package.json</code> – I suggest grabbing the one for <code>fzf</code> or
+<code>doctoc</code> and doing a few substitutions like <code>doctoc</code> → <code>your-project</code> and then
+simply filling the <code>default</code> profile in the <code>zplugin-ices</code> object – it's
+obvious how to do this.</p>
+</li>
+<li>
+<p>The project name in the <code>package.json</code> should start with <code>zsh-</code>. The prefix
+will be skipped when soecifying it with Zplugin.</p>
+</li>
+<li>
+<p>Commit and invoke <code>npm publish</code>.</p>
+</li>
+</ol>
+<p>That's all!</p>
+<p><a href="vim:set ft=markdown tw=80 fo+=a1n autoindent:"></a></p>
                 
                   
                 
