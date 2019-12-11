@@ -88,15 +88,15 @@ has several advantages:
 4. The installations are located in the user home directory, which doesn't
    require root access. Also, for Gems and Node modules, they are installed in
    their plugin directory, which can have advantages (e.g.: isolation allowing
-   e.g: easy removal by `rm -rf …`). 
-   
+   e.g: easy removal by `rm -rf …`).
+
 Thus, summing up 1. with 4., it might be nice / convenient to e.g.: have the
 latest ECS CLI binary installed in the home directory, without using root access
 and always the latest and – summing up with 2. and 3. – to have always latest
 `README` downloaded by an additional ice:
-`dl'https://raw.githubusercontent.com/aws/amazon-ecs-cli/master/README.md'`
-(which can be then turned into a manual by the `remark` tool or other via an
-`atclone''` ice, etc.). 
+`dl'https://raw.githubusercontent.com/aws/amazon-ecs-cli/master/README.md'` (and
+then have the `README` turned into a manual by the `remark` tool or other via an
+`atclone''` ice, etc.).
 
 ## The `Zsh-Packages` Organization
 
