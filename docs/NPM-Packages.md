@@ -138,12 +138,12 @@ Then, you'll only need to:
 2. Invoke `npm login`.
 
 3. Populate the `package.json` – I suggest grabbing the one for `fzf` or
-`doctoc` and doing a few substitutions like `doctoc` → `your-project` and then
-simply filling the `default` profile in the `zplugin-ices` object – it's
-obvious how to do this.
+   `doctoc` and doing a few substitutions like `doctoc` → `your-project` and
+   then simply filling the `default` profile in the `zplugin-ices` object – it's
+   obvious how to do this.
 
 4. The project name in the `package.json` should start with `zsh-`. The prefix
-will be skipped when soecifying it with Zplugin.
+   will be skipped when specifying it with Zplugin.
 
 5. Commit and invoke `npm publish`.
 
