@@ -223,7 +223,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 0
     }
 
-    if (( !${+ZPLG_ICE[git]} )) {
+    if (( !${+ZPLG_ICE[git]} && !${+ZPLG_ICE[from]} )) {
         (
             -zplg-parse-json "$pkgjson" "_from" Strings
             local -A jsondata
@@ -255,8 +255,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             REPLY=tarball
         }
     } else {
-            reply=( "$user" "$plugin" )
-            REPLY=git
+            reply=( "${ZPLG_ICE[user]:-$user}" "${ZPLG_ICE[plugin]:-$plugin}" )
+            if [[ ${ZPLG_ICE[from]} = (|gh-r|github-rel) ]]; then
+                REPLY=github
+            else
+                REPLY=unknown
+            fi
     }
 
     return $?
@@ -373,7 +377,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             ) || {
                 return 1
             }
-        } elif [[ $tpe = git ]] {
+        } elif [[ $tpe = github ]] {
             case "${ZPLG_ICE[proto]}" in
                 (|https)
                     command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \

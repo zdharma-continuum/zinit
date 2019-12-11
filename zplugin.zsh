@@ -999,7 +999,7 @@ function $f {
     -zplg-pack-ice "$id_as"
     if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
-        reply=( "$user" "$plugin" ) REPLY=git
+        reply=( "$user" "$plugin" ) REPLY=github
         if (( ${+ZPLG_ICE[pack]} )) {
             if ! -zplg-get-package "$user" "$plugin" "$id_as" \
                 "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" \
