@@ -92,7 +92,7 @@ GitHub organization. You can find the available packages there, which as of
 You can contact me to have the repository at the Zsh-Packages organization.
 Then, you'll only need to:
 
-1. Create a NPM account
+1. Create an NPM account
 
 2. Invoke `npm login`.
 
