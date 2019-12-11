@@ -124,7 +124,7 @@ GitHub organization. You can find the available packages there, which as of
   for OS X; the OS X installation only downloads the `dmg` image, so it is'nt
   yet complete),
 - [fzf](https://github.com/Zsh-Packages/fzf) – the fuzzy-finder, installed from
-  source (the binary installation like with `from'gh-r'` is very near),
+  source or from the GitHub-releases binary,
 - [LS\_COLORS](https://github.com/Zsh-Packages/LS_COLORS) – the
   [trapd00r/LS\_COLORS](https://github.com/trapd00r/LS_COLORS) color definitions
   for GNU `ls`, `ogham/exa` and Zshell's completion.
