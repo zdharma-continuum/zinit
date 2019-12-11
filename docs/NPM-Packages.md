@@ -3,11 +3,12 @@
 ## Introduction
 
 Zplugin can install NPM packages if they contain Zsh-related metadata (i.e.: the
-field "zsh-data") in the `package.json`.
+field `"zsh-data"`) in the `package.json`.
 
-So basically what this means is that you can install plugins by using metadata
-stored in the NPM package registry. This way you don't have to (but still can)
-specify ices, which might be handy when the ice-mod list is long and complex.
+So basically what this means is that you can install plugins normally, like
+before, however with use of a metadata stored in the NPM package registry. This
+way you don't have to (but still can) specify ices, which might be handy when
+the ice-mod list is long and complex.
 
 ## Motivation
 
@@ -16,11 +17,16 @@ The motivation for adding such functionality was:
 1. Zplugin is a very flexible plugin manager however users often feel
    overwhelmed by its configuration.
 
-2. It has many package-manager -like features, such as: it can run `Makefiles`,
-   automatically provide *shims* (i.e.: forwarder scripts) for the binaries,
-   extend `$PATH` to expose the binaries, and more.
+2. It has many package-manager -like features, such as:
+    - it can run `Makefiles`, 
+    - automatically provide *shims* (i.e.: forwarder scripts) for the binaries,
+    - extend `$PATH` to expose the binaries, and more.
 
-3. **So a solution came up**: why not publish a package at the NPM-registry with
+3. In general, Zplugin has many hooks which allow surprising and beautiful
+   things, however their content often evolves to a gradually better and better
+   one and it's hard to keep track of the current version of them.
+
+4. **So a solution came up**: why not publish a package at the NPM-registry with
    the plugin configurations (i.e.: ice-mods) stored in the `package.json` file?
 
 ## Introductory Example
@@ -61,14 +67,14 @@ installation :) So Zplugin is like `apt-get` and `emerge` in one!
 Using Zplugin to install software where one could use a regular package manager
 has several advantages:
 
-1. The Zplugin NPM packages typically use the URLs to the official and latest
-   distributions of the software (like e.g.: the
+1. **Pro:** The Zplugin NPM packages typically use the URLs to the official and
+   *latest* distributions of the software (like e.g.: the
    [ecs-cli](https://github.com/Zsh-Packages/ecs-cli) package, which uses the
    URL: `https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest`
    when installing on Linux).
 
-2. You can influence the installation easily by specifying Zplugin ice-mods,
-   e.g.:
+2. **Pro:** You can influence the installation easily by specifying Zplugin
+   ice-mods, e.g.:
 
     ```
     zplugin pack=bgn atclone="cp fzy.1 $ZPFX/man/man1" for fzy
@@ -77,26 +83,30 @@ has several advantages:
     to install also the man page for the `fzy` fuzzy finder (this omission in
     the package will be fixed soon).
 
-3. The installation is much more flexible. Available example degrees of freedom:
+3. **Pro:** The installation is much more flexible than a normal package
+   manager.  Example available degrees of freedom:
 
-    - to install from Git, from release-tarball or from binary-release file,
+    - to install from Git or from release-tarball, or from binary-release file,
     - to install via shims or via extending `$PATH`, or by copying to
       `$ZPFX/bin`,
-    - to apply patches to the source by using the [Patch-Dl](../z-a-patch-dl/)
-      annex features.
+    - to download and apply patches to the source by using the
+      [Patch-Dl](../z-a-patch-dl/) annex features.
 
-4. The installations are located in the user home directory, which doesn't
-   require root access. Also, for Gems and Node modules, they are installed in
-   their plugin directory, which can have advantages (e.g.: isolation allowing
-   e.g: easy removal by `rm -rf …`).
+4. **Pro:** The installations are located in the user home directory, which
+   doesn't require root access. Also, for Gems and Node modules, they are
+   installed in their plugin directory, which can have advantages (e.g.:
+   isolation allowing e.g: easy removal by `rm -rf …`).
 
-Thus, summing up 1. with 4., it might be nice / convenient to e.g.: have the
+5. **Con:** You're somewhat "on your own", with no support from any package
+   maintainer.
+
+Thus, summing up 1. with 4., it might be nice/convenient to e.g.: have the
 latest ECS CLI binary installed in the home directory, without using root access
-and always the latest and – summing up with 2. and 3. – to have always latest
-`README` downloaded by an additional ice:
+and always the latest and – summing up with 2. and 3. – to, for example, have
+always the latest `README` downloaded by an additional ice:
 `dl'https://raw.githubusercontent.com/aws/amazon-ecs-cli/master/README.md'` (and
-then have the `README` turned into a man page by the `remark` tool or other via
-an `atclone''` ice, as the tool doesn't have any man page).
+then to have the `README` turned into a man page by the `remark` tool or other
+via an `atclone''` ice, as the tool doesn't have any official man page).
 
 ## The `Zsh-Packages` Organization
 
@@ -124,7 +134,7 @@ GitHub organization. You can find the available packages there, which as of
   for OS X; the OS X installation only downloads the `dmg` image, so it is'nt
   yet complete),
 - [fzf](https://github.com/Zsh-Packages/fzf) – the fuzzy-finder, installed from
-  source or from the GitHub-releases binary,
+  source (from a tarball or Git) or from the GitHub-releases binary,
 - [LS\_COLORS](https://github.com/Zsh-Packages/LS_COLORS) – the
   [trapd00r/LS\_COLORS](https://github.com/trapd00r/LS_COLORS) color definitions
   for GNU `ls`, `ogham/exa` and Zshell's completion.
