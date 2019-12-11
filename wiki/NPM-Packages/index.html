@@ -2782,10 +2782,11 @@
                 <h1 id="zshnpm_packages">Zsh/NPM Packages<a class="headerlink" href="#zshnpm_packages" title="Permanent link">#</a></h1>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
 <p>Zplugin can install NPM packages if they contain Zsh-related metadata (i.e.: the
-field "zsh-data") in the <code>package.json</code>.</p>
-<p>So basically what this means is that you can install plugins by using metadata
-stored in the NPM package registry. This way you don't have to (but still can)
-specify ices, which might be handy when the ice-mod list is long and complex.</p>
+field <code>"zsh-data"</code>) in the <code>package.json</code>.</p>
+<p>So basically what this means is that you can install plugins normally, like
+before, however with use of a metadata stored in the NPM package registry. This
+way you don't have to (but still can) specify ices, which might be handy when
+the ice-mod list is long and complex.</p>
 <h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">#</a></h2>
 <p>The motivation for adding such functionality was:</p>
 <ol>
@@ -2794,9 +2795,17 @@ specify ices, which might be handy when the ice-mod list is long and complex.</p
    overwhelmed by its configuration.</p>
 </li>
 <li>
-<p>It has many package-manager -like features, such as: it can run <code>Makefiles</code>,
-   automatically provide <em>shims</em> (i.e.: forwarder scripts) for the binaries,
-   extend <code>$PATH</code> to expose the binaries, and more.</p>
+<p>It has many package-manager -like features, such as:</p>
+<ul>
+<li>it can run <code>Makefiles</code>, </li>
+<li>automatically provide <em>shims</em> (i.e.: forwarder scripts) for the binaries,</li>
+<li>extend <code>$PATH</code> to expose the binaries, and more.</li>
+</ul>
+</li>
+<li>
+<p>In general, Zplugin has many hooks which allow surprising and beautiful
+   things, however their content often evolves to a gradually better and better
+   one and it's hard to keep track of the current version of them.</p>
 </li>
 <li>
 <p><strong>So a solution came up</strong>: why not publish a package at the NPM-registry with
@@ -2834,43 +2843,48 @@ installation :) So Zplugin is like <code>apt-get</code> and <code>emerge</code> 
 has several advantages:</p>
 <ol>
 <li>
-<p>The Zplugin NPM packages typically use the URLs to the official and latest
-   distributions of the software (like e.g.: the
+<p><strong>Pro:</strong> The Zplugin NPM packages typically use the URLs to the official and
+   <em>latest</em> distributions of the software (like e.g.: the
    <a href="https://github.com/Zsh-Packages/ecs-cli">ecs-cli</a> package, which uses the
    URL: <code>https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest</code>
    when installing on Linux).</p>
 </li>
 <li>
-<p>You can influence the installation easily by specifying Zplugin ice-mods,
-   e.g.:</p>
+<p><strong>Pro:</strong> You can influence the installation easily by specifying Zplugin
+   ice-mods, e.g.:</p>
 <p><code>zplugin pack=bgn atclone="cp fzy.1 $ZPFX/man/man1" for fzy</code></p>
 <p>to install also the man page for the <code>fzy</code> fuzzy finder (this omission in
 the package will be fixed soon).</p>
 </li>
 <li>
-<p>The installation is much more flexible. Available example degrees of freedom:</p>
+<p><strong>Pro:</strong> The installation is much more flexible than a normal package
+   manager.  Example available degrees of freedom:</p>
 <ul>
-<li>to install from Git, from release-tarball or from binary-release file,</li>
+<li>to install from Git or from release-tarball, or from binary-release file,</li>
 <li>to install via shims or via extending <code>$PATH</code>, or by copying to
   <code>$ZPFX/bin</code>,</li>
-<li>to apply patches to the source by using the <a href="../z-a-patch-dl/">Patch-Dl</a>
-  annex features.</li>
+<li>to download and apply patches to the source by using the
+  <a href="../z-a-patch-dl/">Patch-Dl</a> annex features.</li>
 </ul>
 </li>
 <li>
-<p>The installations are located in the user home directory, which doesn't
-   require root access. Also, for Gems and Node modules, they are installed in
-   their plugin directory, which can have advantages (e.g.: isolation allowing
-   e.g: easy removal by <code>rm -rf …</code>).</p>
+<p><strong>Pro:</strong> The installations are located in the user home directory, which
+   doesn't require root access. Also, for Gems and Node modules, they are
+   installed in their plugin directory, which can have advantages (e.g.:
+   isolation allowing e.g: easy removal by <code>rm -rf …</code>).</p>
+</li>
+<li>
+<p><strong>Con:</strong> You're somewhat "on your own", with no support from any package
+   maintainer.</p>
 </li>
 </ol>
-<p>Thus, summing up 1. with 4., it might be nice / convenient to e.g.: have the
+<p>Thus, summing up 1. with 4., it might be nice/convenient to e.g.: have the
 latest ECS CLI binary installed in the home directory, without using root access
-and always the latest and – summing up with 2. and 3. – to have always latest
-<code>README</code> downloaded by an additional ice:
+and always the latest and – summing up with 2. and 3. – to, for example, have
+always the latest <code>README</code> downloaded by an additional ice:
 <code>dl'https://raw.githubusercontent.com/aws/amazon-ecs-cli/master/README.md'</code> (and
-then have the <code>README</code> turned into a man page by the <code>remark</code> tool or other via
-an <code>atclone''</code> ice, as the tool doesn't have any man page).</p>
+then to have the <code>README</code> turned into a man page by the <code>remark</code> tool or other
+via an <code>atclone''</code> ice, as the tool doesn't have any official man page).</p>
 <h2 id="the_zsh-packages_organization">The <code>Zsh-Packages</code> Organization<a class="headerlink" href="#the_zsh-packages_organization" title="Permanent link">#</a></h2>
 <p>The home for the packages is <a href="https://github.com/Zsh-Packages">Zsh-Packages</a>
 GitHub organization. You can find the available packages there, which as of
@@ -2896,7 +2910,7 @@ GitHub organization. You can find the available packages there, which as of
   for OS X; the OS X installation only downloads the <code>dmg</code> image, so it is'nt
   yet complete),</li>
 <li><a href="https://github.com/Zsh-Packages/fzf">fzf</a> – the fuzzy-finder, installed from
-  source or from the GitHub-releases binary,</li>
+  source (from a tarball or Git) or from the GitHub-releases binary,</li>
 <li><a href="https://github.com/Zsh-Packages/LS_COLORS">LS_COLORS</a> – the
   <a href="https://github.com/trapd00r/LS_COLORS">trapd00r/LS_COLORS</a> color definitions
   for GNU <code>ls</code>, <code>ogham/exa</code> and Zshell's completion.</li>
