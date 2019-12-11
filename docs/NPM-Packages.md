@@ -64,7 +64,8 @@ has several advantages:
 1. The Zplugin NPM packages typically use the URLs to the official and latest
    distributions of the software (like e.g.: the
    [ecs-cli](https://github.com/Zsh-Packages/ecs-cli) package, which uses the
-   URL: `https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest`).
+   URL: `https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest`
+   when installing on Linux).
 
 2. You can influence the installation easily by specifying Zplugin ice-mods,
    e.g.:
