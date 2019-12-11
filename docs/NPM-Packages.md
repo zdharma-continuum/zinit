@@ -56,6 +56,47 @@ project to refresh and rebuild, like with a "normal" package manager such as
 the installation will be from the source… unless… you'll pick a binary
 installation :) So Zplugin is like `apt-get` and `emerge` in one!
 
+## Pros Of Using Zplugin NPM-Support For Regular Software Installations
+
+Using Zplugin to install software where one could use a regular package manager
+has several advantages:
+
+1. The Zplugin NPM packages typically use the URLs to the official and latest
+   distributions of the software (like e.g.: the
+   [ecs-cli](https://github.com/Zsh-Packages/ecs-cli) package, which uses the
+   URL: `https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest`).
+
+2. You can influence the installation easily by specifying Zplugin ice-mods,
+   e.g.:
+
+    ```zsh
+    zplugin pack"bgn" atclone"cp fzy.1 $ZPFX/man/man1" for fzy
+    ```
+
+    to install also the man page (this omission in the package will be fixed
+    soon).
+
+3. The installation is much more flexible. Available example degrees of freedom:
+
+    - to install from Git, from release-tarball or from binary-release file,
+    - to install via shims or via extending `$PATH`, or by copying to
+      `$ZPFX/bin`,
+    - to apply patches to the source by using the [Patch-Dl](../z-a-patch-dl/)
+      annex features.
+
+4. The installations are located in the user home directory, which doesn't
+   require root access. Also, for Gems and Node modules, they are installed in
+   their plugin directory, which can have advantages (e.g.: isolation allowing
+   e.g: easy removal by `rm -rf …`). 
+   
+Thus, summing up 1. with 4., it might be nice / convenient to e.g.: have the
+latest ECS CLI binary installed in the home directory, without using root access
+and always the latest and – summing up with 2. and 3. – to have always latest
+`README` downloaded by an additional ice:
+`dl'https://raw.githubusercontent.com/aws/amazon-ecs-cli/master/README.md'`
+(which can be then turned into a manual by the `remark` tool or other via an
+`atclone''` ice, etc.). 
+
 ## The `Zsh-Packages` Organization
 
 The home for the packages is [Zsh-Packages](https://github.com/Zsh-Packages)
