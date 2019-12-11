@@ -89,7 +89,7 @@ has several advantages:
     - to install from Git or from release-tarball, or from binary-release file,
     - to install via shims or via extending `$PATH`, or by copying to
       `$ZPFX/bin`,
-    - to download and apply patches to the source by using the
+    - to download files and apply patches to the source by using the
       [Patch-Dl](../z-a-patch-dl/) annex features.
 
 4. **Pro:** The installations are located in the user home directory, which
