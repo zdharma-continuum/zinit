@@ -1,0 +1,111 @@
+# Zsh/NPM Packages
+
+## Introduction
+
+Zplugin can install NPM packages if they contain Zsh-related metadata (i.e.: the
+field "zsh-data") in the `package.json`.
+
+So basically what this means is that you can install plugins by using metadata
+stored in the NPM package registry. This way you don't have to (but still can)
+specify ices, which might be handy when the ice-mod list is long and complex.
+
+## Motivation
+
+The motivation for adding such functionality was:
+
+1. Zplugin is a very flexible plugin manager however users often feel
+   overwhelmed by its configuration.
+
+2. It has many package-manager -like features, such as: it can run `Makefiles`,
+   automatically provide *shims* (i.e.: forwarder scripts) for the binaries,
+   extend `$PATH` to expose the binaries, and more.
+
+3. **So a solution came up**: why not publish a package at the NPM-registry with
+   the plugin configurations (i.e.: ice-mods) stored in the `package.json` file?
+
+## Introductory Example
+
+This way, instead of the following command used to install `fzf`:
+
+```zsh
+zplugin lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
+    atclone="cp shell/completion.zsh _fzf_completion; \
+      cp bin/(fzf|fzf-tmux) $ZPFX/bin" \
+    make="PREFIX=$ZPFX install" for \
+        junegunn/fzf
+```
+
+you only need:
+
+```zsh
+zplugin pack for fzf
+```
+
+to get the complete setup of the fuzzy finder, including:
+
+- the completion,
+- the additional executable-script `fzf-tmux`.
+
+The installation is real, package-manager -like, because you don't need to
+invoke Zplugin anymore once installed to use `fzf` (that's because `fzf` is just
+a binary program and not e.g.: a shell function).
+
+You can also update the package with `zplugin update fzf` – it'll cause the
+project to refresh and rebuild, like with a "normal" package manager such as
+`apt-get`. However, it'll actually be more like to `emerge` from Gentoo, because
+the installation will be from the source… unless… you'll pick a binary
+installation :) So Zplugin is like `apt-get` and `emerge` in one!
+
+## The `Zsh-Packages` Organization
+
+The home for the packages is [Zsh-Packages](https://github.com/Zsh-Packages)
+GitHub organization. You can find the available packages there, which as of
+`2019-12-11` include:
+
+- [asciidoctor](https://github.com/Zsh-Packages/asciidoctor) – the AsciiDoc
+  converter, installed as a Gem locally in the plugin directory with use of the
+  [Bin-Gem-Node](../z-a-bin-gem-node) annex,
+- [doctoc](https://github.com/Zsh-Packages/doctoc) – the TOC (table of contents)
+  generator for Markdown documents, installed as a Node package locally in the
+  plugin directory with use of the `Bin-Gem-Node` annex,
+- [ecs-cli](https://github.com/Zsh-Packages/ecs-cli) – the Amazon ECS command
+  line tool, downloaded directly from the
+  [URL](https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest) (or
+  from the
+  [URL](https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-darwin-amd64-latest) for
+  OS X – automatically selected),
+- [firefox-dev](https://github.com/Zsh-Packages/firefox-dev) – Firefox Developer
+  Edition, downloaded from the
+  [URL](https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US)
+  (or from the
+  [URL](https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US)
+  for OS X; the OS X installation only downloads the `dmg` image, so it is'nt
+  yet complete),
+- [fzf](https://github.com/Zsh-Packages/fzf) – the fuzzy-finder, installed from
+  source (the binary installation like with `from'gh-r'` is very near),
+- [LS\_COLORS](https://github.com/Zsh-Packages/LS_COLORS) – the
+  [trapd00r/LS\_COLORS](https://github.com/trapd00r/LS_COLORS) color definitions
+  for GNU `ls`, `ogham/exa` and Zshell's completion.
+
+## Adding Your Own Package
+
+You can contact me to have the repository at the Zsh-Packages organization.
+Then, you'll only need to:
+
+1. Create a NPM account
+
+2. Invoke `npm login`.
+
+3. Populate the `package.json` – I suggest grabbing the one for `fzf` or
+`doctoc` and doing a few substitutions like `doctoc` → `your-project` and then
+simply filling the `default` profile in the `zplugin-ices` object – it's
+obvious how to do this.
+
+4. The project name in the `package.json` should start with `zsh-`. The prefix
+will be skipped when soecifying it with Zplugin.
+
+5. Commit and invoke `npm publish`.
+
+That's all!
+
+[]( vim:set ft=markdown tw=80 fo+=a1n autoindent: )
