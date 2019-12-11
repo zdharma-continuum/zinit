@@ -71,7 +71,7 @@ has several advantages:
    e.g.:
 
     ```
-    zplugin pack"bgn" atclone"cp fzy.1 $ZPFX/man/man1" for fzy
+    zplugin pack=bgn atclone="cp fzy.1 $ZPFX/man/man1" for fzy
     ```
 
     to install also the man page for the `fzy` fuzzy finder (this omission in
