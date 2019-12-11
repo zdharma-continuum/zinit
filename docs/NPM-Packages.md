@@ -73,8 +73,8 @@ has several advantages:
     zplugin pack"bgn" atclone"cp fzy.1 $ZPFX/man/man1" for fzy
     ```
 
-    to install also the man page (this omission in the package will be fixed
-    soon).
+    to install also the man page for the `fzy` fuzzy finder (this omission in
+    the package will be fixed soon).
 
 3. The installation is much more flexible. Available example degrees of freedom:
 
