@@ -69,7 +69,7 @@ has several advantages:
 2. You can influence the installation easily by specifying Zplugin ice-mods,
    e.g.:
 
-    ```zsh
+    ```
     zplugin pack"bgn" atclone"cp fzy.1 $ZPFX/man/man1" for fzy
     ```
 
