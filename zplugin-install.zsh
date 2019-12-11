@@ -179,6 +179,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
     if (( pos )) {
         ZPLG_ICE=( "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" "${(kv)ZPLG_ICE[@]}" id-as "$id_as" )
+        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]//\\\"/\"}" )
         [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]=command
         [[ -n ${ZPLG_ICE[on-update-of]} ]] && ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
         [[ -n ${ZPLG_ICE[pick]} ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
