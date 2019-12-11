@@ -51,6 +51,12 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 11-12-2019
+  - Zplugin now supports installing special-Zsh NPM packages! Bye-bye the long and
+    complex ice-lists! Check out the
+    [Wiki](http://zdharma.org/zplugin/wiki/NPM-Packages/) for an introductory document
+    on the feature.
+
 * 25-11-2019
   - A new subcommand `run` that executes a command in the given plugin's directory. It
     has an `-l` option that will reuse the previously provided plugin. So that it's
