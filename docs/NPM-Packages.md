@@ -105,8 +105,9 @@ the latest ECS CLI binary installed in the home directory, without using root
 access and always the latest, and – summing up with 2. and 3. – to, for example,
 have always the latest `README` downloaded by an additional ice:
 `dl'https://raw.githubusercontent.com/aws/amazon-ecs-cli/master/README.md'` (and
-then to have the `README` converted into a man page by the `remark` command or
-other via an `atclone''` ice, as the tool doesn't have any official man page).
+then to have the `README` converted into a man page by the `remark` Markdown
+processor or other via an `atclone''` ice, as the tool doesn't have any official
+man page).
 
 ## The `Zsh-Packages` Organization
 
