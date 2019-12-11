@@ -136,7 +136,7 @@ GitHub organization. You can find the available packages there, which as of
   yet complete),
 - [fzf](https://github.com/Zsh-Packages/fzf) – the fuzzy-finder, installed from
   source (from a tarball or Git) or from the GitHub-releases binary,
-- [LS\_COLORS](https://github.com/Zsh-Packages/LS_COLORS) – the
+- [ls\_colors](https://github.com/Zsh-Packages/ls_colors) – the
   [trapd00r/LS\_COLORS](https://github.com/trapd00r/LS_COLORS) color definitions
   for GNU `ls`, `ogham/exa` and Zshell's completion.
 
