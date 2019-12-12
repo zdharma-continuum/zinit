@@ -1049,7 +1049,7 @@ function $f {
             fi
             id_as="${ZPLG_ICE[id-as]:-${user}${${user:#(%|/)*}:+/}$plugin}"
         }
-        user=${reply[-2]} plugin=${reply[-1]}
+        user="${reply[-2]}" plugin="${reply[-1]}"
         [[ $REPLY = snippet ]] && {
             -zplg-load-snippet $plugin
             return $?
