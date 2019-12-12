@@ -147,9 +147,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local __var_name
     for __var_name; do
-        local __value=${(P)__var_name}
-        __value=${__value//(#m)(${(~j.|.k)__subst_map})/${__subst_map[$MATCH]}}
-        : ${(P)__var_name::=$__value}
+        local __value="${(P)__var_name}"
+        __value="${__value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${__subst_map[$MATCH]}}"
+        : "${(P)__var_name::=$__value}"
     done
 }
 # }}}
