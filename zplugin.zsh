@@ -806,7 +806,8 @@ function $f {
     __add=( "${ZPLG_ICE[param]:+${(@Q)${(@z)ZPLG_ICE[PARAM_SUBST]}}}" )
     (( ${#__add} % 2 == 0 )) && __subst_map+=( "${__add[@]}" )
 
-    local __var_name
+    local __var_name MATCH
+    integer MBEGIN MEND
     for __var_name; do
         local __value="${(P)__var_name}"
         __value="${__value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${__subst_map[$MATCH]}}"
