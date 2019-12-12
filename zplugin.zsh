@@ -995,8 +995,6 @@ function $f {
     local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     ZPLG_ICE[teleid]="$user${${user:#(%|/)*}:+/}$plugin"
 
-    ZPLG_SICE[$id_as]=""
-    -zplg-pack-ice "$id_as"
     if [[ "$user" != "%" && ! -d "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}" ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
         reply=( "$user" "$plugin" ) REPLY=github
@@ -1008,6 +1006,7 @@ function $f {
                 zle && { print; zle .reset-prompt; }
                 return 1
             fi
+            id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
         }
         user=${reply[-2]} plugin=${reply[-1]}
         [[ $REPLY = snippet ]] && {
@@ -1020,6 +1019,9 @@ function $f {
         fi
         zle && rst=1
     fi
+
+    ZPLG_SICE[$id_as]=""
+    -zplg-pack-ice "$id_as"
 
     (( ${+ZPLG_ICE[cloneonly]} )) && return 0
 
