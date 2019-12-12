@@ -808,11 +808,14 @@ function $f {
 
     local __var_name MATCH
     integer MBEGIN MEND
-    for __var_name; do
-        local __value="${(P)__var_name}"
-        __value="${__value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${__subst_map[$MATCH]}}"
-        : "${(P)__var_name::=$__value}"
-    done
+    () {
+        setopt localoptions extendedglob
+        for __var_name; do
+            local __value="${(P)__var_name}"
+            __value="${__value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${__subst_map[$MATCH]}}"
+            : "${(P)__var_name::=$__value}"
+        done
+    }
 }
 # }}}
 # FUNCTION: -zplg-any-to-user-plugin {{{
