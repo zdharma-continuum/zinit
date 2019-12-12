@@ -162,7 +162,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]=command
         [[ -n ${ZPLG_ICE[on-update-of]} ]] && ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
         [[ -n ${ZPLG_ICE[pick]} ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
-        [[ -n ${ZPLG_ICE[id-as]} ]] && -zplg-substitute 'ZPLG_ICE[id-as]'
+        [[ -n ${ZPLG_ICE[id-as]} ]] && {
+            -zplg-substitute 'ZPLG_ICE[id-as]'
+            local -A map
+            map=( "\"" "\\\"" "\\" "\\" )
+            eval "ZPLG_ICE[id-as]=\"${ZPLG_ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
+        }
     } else {
         print -r -- "${ZPLGM[col-error]}Error: the profile \`$profile' couldn't be found, aborting"
         return 1
