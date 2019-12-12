@@ -815,7 +815,7 @@ function $f {
             __value="${__value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${__subst_map[$MATCH]}}"
             : "${(P)__var_name::=$__value}"
         done
-    }
+    } "$@"
 }
 # }}}
 # FUNCTION: -zplg-any-to-user-plugin {{{
