@@ -128,6 +128,22 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         '$ZPFX' "$ZPFX"
         '${ZPFX}' "$ZPFX"
     )
+    if [[ -n ${ZPLG_ICE[param]} && ${ZPLGM[SUBST_DONE_FOR]} != ${ZPLG_ICE[param]} ]] {
+        ZPLGM[SUBST_DONE_FOR]="${ZPLG_ICE[param]}"
+        ZPLG_ICE[PARAM_SUBST]=""
+        local -a __params
+        __params=( ${(s.;.)ZPLG_ICE[param]} )
+        local __param __from __to
+        for __param ( ${__params[@]} ) {
+            local __from="${${__param%%([[:space:]]|)(->|→)*}##[[:space:]]##}" \
+                __to="${${__param##*(->|→)([[:space:]]|)}%[[:space:]]}"
+            ZPLG_ICE[PARAM_SUBST]+="%${(q)__from}% ${(q)__to} "
+        }
+    }
+
+    local -a __add
+    __add=( "${ZPLG_ICE[param]:+${(@Q)${(@z)ZPLG_ICE[PARAM_SUBST]}}}" )
+    (( ${#__add} % 2 == 0 )) && __subst_map+=( "${__add[@]}" )
 
     local __var_name
     for __var_name; do
