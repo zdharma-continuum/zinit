@@ -1047,7 +1047,7 @@ function $f {
                 zle && { print; zle .reset-prompt; }
                 return 1
             fi
-            id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
+            id_as="${ZPLG_ICE[id-as]:-${user}${${user:#(%|/)*}:+/}$plugin}"
         }
         user=${reply[-2]} plugin=${reply[-1]}
         [[ $REPLY = snippet ]] && {
