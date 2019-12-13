@@ -155,10 +155,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         url=${jsondata1[url]} message=${jsondata1[message]} \
         required=${jsondata1[required]:-${jsondata1[requires]}}
 
+    local key value
     integer pos
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
     if (( pos )) {
-        ZPLG_ICE=( "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" "${(kv)ZPLG_ICE[@]}" ${ZPLG_ICE[id-as]:+id-as} ${ZPLG_ICE[id-as]} )
+        for key value ( "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" ) {
+            (( ${+ZPLG_ICE[$key]} )) && [[ ${ZPLG_ICE[$key]} != +* ]] && continue
+            ZPLG_ICE[$key]=$value${ZPLG_ICE[$key]#+}
+        }
         ZPLG_ICE=( "${(kv)ZPLG_ICE[@]//\\\"/\"}" )
         [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]=command
         [[ -n ${ZPLG_ICE[on-update-of]} ]] && ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
