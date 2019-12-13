@@ -3,7 +3,7 @@ nav:
 - "Introduction":
   - "Introduction": INTRODUCTION.md
   - "The For Syntax": For-Syntax.md
-  - "Zsh/NPM Packages": NPM-Packages.md
+  - "Zplugin Packages": Zplugin-Packages.md
 - "Ice Modifiers":
   - "Alternate Ice Syntax": Alternate-Ice-Syntax.md
   - "Nickname a Plugin or Snippet": id-as.md
