@@ -1015,8 +1015,8 @@ function $f {
     __path=${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}/._zplugin
     [[ -d $__path ]] || __path=${ZPLGM[SNIPPETS_DIR]}/$id_as/._zplugin
     for __key in "${ice_order[@]}"; do
-        (( ${+ZPLG_ICE[$__key]} )) && continue
-        [[ -f "$__path"/"$__key" ]] && ZPLG_ICE[$__key]="$(<$__path/$__key)"
+        (( ${+ZPLG_ICE[$__key]} )) && [[ ${ZPLG_ICE[$__key]} != +* ]] && continue
+        [[ -f "$__path"/"$__key" ]] && ZPLG_ICE[$__key]="$(<$__path/$__key)${ZPLG_ICE[$__key]#+}"
     done
     [[ -n ${ZPLG_ICE[on-update-of]} ]] && ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
     [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]="command"
