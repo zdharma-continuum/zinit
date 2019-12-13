@@ -70,6 +70,7 @@ reports](DONATIONS.md) about what is being done with the money received.
 
     The binaries will be exposed without altering the PATH via shims
     ([Bin-Gem-Node](https://github.com/zplugin/z-a-bin-gem-node) annex is needed).
+    Shims are correctly removed when deleting a plugin with `zplugin delete …`.
 
 * 11-12-2019
   - Zplugin now supports installing special-Zsh NPM packages! Bye-bye the long and
