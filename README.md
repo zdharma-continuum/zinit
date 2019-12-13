@@ -51,6 +51,25 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
+* 13-12-2019
+  - The packages have been disconnected from NPM registry and now live only on Zsh
+    Packages organization. Publishing to NPM isn't needed.
+  - There are two interesting packages,
+    [any-gem](https://github.com/Zsh-Packages/any-gem) and
+    [any-node](https://github.com/Zsh-Packages/any-node). They allow to install any
+    Gem(s) or Node module(s) locally in a newly created plugin directory. For example:
+
+    ```zsh
+    zplugin pack param='GEM -> rails' for any-gem
+    zplugin pack param='MOD -> doctoc' for any-node
+    # To have the command in zshrc, add an id-as'' ice so that
+    # Zplugin knows that the package is already installed
+    zplugin id-as=jekyll pack param='GEM -> jekyll' for any-gem
+    ```
+
+    The binaries will be exposed without altering the PATH via shims
+    ([Bin-Gem-Node](https://github.com/zplugin/z-a-bin-gem-node) annex is needed).
+
 * 11-12-2019
   - Zplugin now supports installing special-Zsh NPM packages! Bye-bye the long and
     complex ice-lists! Check out the
