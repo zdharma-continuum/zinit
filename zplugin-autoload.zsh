@@ -628,7 +628,7 @@ ZPLGM[EXTENDED_GLOB]=""
     [[ -e "$REPLY" ]] && {
         completions=( "$REPLY"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|_zsh_highlight*|/zsdoc/*)(DN) )
     } || {
-        print "No such completion $1${${1:#(%|/)*}:+${2:+/}}$2"
+        print "No completions found for \`$1${${1:#(%|/)*}:+${2:+/}}$2'"
         return 1
     }
 
