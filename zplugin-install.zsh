@@ -123,14 +123,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     local user="$1" plugin="$2" id_as="$3" dir="$4" profile="$5" \
         local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson \
-        tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" URL="https://registry.npmjs.org/."
+        tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" \
+        URL="https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json"
 
     print -r -- "Downloading ${ZPLGM[col-info2]}package.json${ZPLGM[col-rst]}" \
         "for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}"
 
     if [[ $profile != ./* ]]; then
-        -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 2>/dev/null > $tmpfile || \
-            { rm -f $tmpfile; -zplg-download-file-stdout $URL/zsh-${plugin#zsh-} 1 2>/dev/null > $tmpfile }
+        -zplg-download-file-stdout $URL 2>/dev/null > $tmpfile || \
+            { rm -f $tmpfile; -zplg-download-file-stdout $URL 1 2>/dev/null > $tmpfile }
     else
         tmpfile=${profile%:*}
         profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
