@@ -2805,6 +2805,11 @@ EOF
 
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
+    if [[ $the_id = (%|/)* ]]; then
+        REPLY=${the_id#%}
+        return 0
+    fi
+
     -zplg-two-paths "$the_id"
     local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
 
