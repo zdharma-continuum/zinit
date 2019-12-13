@@ -2800,7 +2800,9 @@ EOF
 # ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
 # nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 -zplg-get-path() {
-    setopt localoptions extendedglob nokshglob noksharrays
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops
+
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
     -zplg-two-paths "$the_id"
