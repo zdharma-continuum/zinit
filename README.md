@@ -64,7 +64,8 @@ reports](DONATIONS.md) about what is being done with the money received.
     zplugin pack param='MOD -> doctoc' for any-node
     # To have the command in zshrc, add an id-as'' ice so that
     # Zplugin knows that the package is already installed
-    zplugin id-as=jekyll pack param='GEM -> jekyll' for any-gem
+    # (also: the Unicode arrow is allowed)
+    zplugin id-as=jekyll pack param='GEM → jekyll' for any-gem
     ```
 
     The binaries will be exposed without altering the PATH via shims
