@@ -164,7 +164,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             ZPLG_ICE[$key]=$value${ZPLG_ICE[$key]#+}
         }
         ZPLG_ICE=( "${(kv)ZPLG_ICE[@]//\\\"/\"}" )
-        [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]=command
+        [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]="command"
         [[ -n ${ZPLG_ICE[on-update-of]} ]] && ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
         [[ -n ${ZPLG_ICE[pick]} ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
         [[ -n ${ZPLG_ICE[id-as]} ]] && {
