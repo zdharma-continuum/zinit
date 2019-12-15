@@ -84,11 +84,11 @@ typeset -gH ZPLG_CUR_PLUGIN=""
 # Parameters - ICE, {{{
 declare -gA ZPLG_1MAP ZPLG_2MAP
 ZPLG_1MAP=(
-    "OMZ::" "https://github.com/robbyrussell/oh-my-zsh/trunk/"
+    "OMZ::" "https://github.com/ohmyzsh/ohmyzsh/trunk/"
     "PZT::" "https://github.com/sorin-ionescu/prezto/trunk/"
 )
 ZPLG_2MAP=(
-    "OMZ::" "https://github.com/robbyrussell/oh-my-zsh/raw/master/"
+    "OMZ::" "https://github.com/ohmyzsh/ohmyzsh/raw/master/"
     "PZT::" "https://github.com/sorin-ionescu/prezto/raw/master/"
 )
 # }}}

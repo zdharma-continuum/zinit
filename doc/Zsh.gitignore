@@ -15,7 +15,7 @@
 # zdharma/zshelldoc tool's files
 zsdoc/data
 
-# robbyrussell/oh-my-zsh/plugins/per-directory-history plugin's files
+# ohmyzsh/ohmyzsh/plugins/per-directory-history plugin's files
 # (when set-up to store the history in the local directory)
 .directory_history
 

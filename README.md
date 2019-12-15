@@ -716,7 +716,7 @@ the new commits pulled-in in the last update.
 To use **themes** created for Oh My Zsh you might want to first source the `git` library there:
 
 ```SystemVerilog
-zplugin snippet http://github.com/robbyrussell/oh-my-zsh/raw/master/lib/git.zsh
+zplugin snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
 # Or using OMZ:: shorthand:
 zplugin snippet OMZ::lib/git.zsh
 ```
