@@ -1124,7 +1124,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] && {
         -zplg-extract-wrapper "$file" -zplg-extract || {
             print "Extraction of archive had problems, restoring previous version of the command"
-            command mv ._backup/*(D) .
+            command mv ._backup/*(DN) . 2>/dev/null
             return 1
         }
         unfunction -- -zplg-extract
