@@ -574,6 +574,7 @@ explicitly stated otherwise.
 | `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc.</div>|
 | [**`make`**](http://zdharma.org/zplugin/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`.</div>|
 | `countdown` |<div align="justify" style="text-align: justify;">Causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0 to be displayed before executing `atclone''`,`atpull''` and `make` ices</div>|
+| `reset` |<div align="justify" style="text-align: justify;">Invokes `git reset --hard HEAD` for plugins or `svn revert` for snippets before pulling any new changes. This way `git` or `svn` will not report conflicts if some changes were done in e.g.: `atclone''` ice.</div>|
 
 ### Sticky-Emulation Of Other Shells
 | Modifier | Description |
