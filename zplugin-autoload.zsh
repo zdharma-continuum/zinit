@@ -1529,7 +1529,11 @@ ZPLGM[EXTENDED_GLOB]=""
             [[ ${+ice[make]} = 1 && ${ice[make]} = "!!"* ]] && -zplg-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
 
             if [[ -z "${ice[is_release]}" && -n "${ice[mv]}" ]]; then
-                local from="${ice[mv]%%[[:space:]]#->*}" to="${ice[mv]##*->[[:space:]]#}"
+                if [[ ${ice[mv]} = *("->"|"→")* ]] {
+                    local from=${ice[mv]%%[[:space:]]#(->|→)*} to=${ice[mv]##*(->|→)[[:space:]]#} || \
+                } else {
+                    local from=${ice[mv]%%[[:space:]]##*} to=${ice[mv]##*[[:space:]]##}
+                }
                 local -a afr
                 ( builtin cd -q "$local_dir" || return 1
                   afr=( ${~from}(DN) )
@@ -1538,7 +1542,11 @@ ZPLGM[EXTENDED_GLOB]=""
             fi
 
             if [[ -z "${ice[is_release]}" && -n "${ice[cp]}" ]]; then
-                local from="${ice[cp]%%[[:space:]]#->*}" to="${ice[cp]##*->[[:space:]]#}"
+                if [[ ${ice[cp]} = *("->"|"→")* ]] {
+                    local from=${ice[cp]%%[[:space:]]#(->|→)*} to=${ice[cp]##*(->|→)[[:space:]]#} || \
+                } else {
+                    local from=${ice[cp]%%[[:space:]]##*} to=${ice[cp]##*[[:space:]]##}
+                }
                 local -a afr
                 ( builtin cd -q "$local_dir" || return 1
                   afr=( ${~from}(DN) )

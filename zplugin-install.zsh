@@ -404,7 +404,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!\!}}; }
 
         if [[ -n ${ZPLG_ICE[mv]} ]] {
-            local from=${ZPLG_ICE[mv]%%[[:space:]]#->*} to=${ZPLG_ICE[mv]##*->[[:space:]]#}
+            if [[ ${ZPLG_ICE[mv]} = *("->"|"→")* ]] {
+                local from=${ZPLG_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[mv]##*(->|→)[[:space:]]#} || \
+            } else {
+                local from=${ZPLG_ICE[mv]%%[[:space:]]##*} to=${ZPLG_ICE[mv]##*[[:space:]]##}
+            }
             -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
@@ -414,7 +418,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         }
 
         if [[ -n ${ZPLG_ICE[cp]} ]] {
-            local from=${ZPLG_ICE[cp]%%[[:space:]]#->*} to=${ZPLG_ICE[cp]##*->[[:space:]]#}
+            if [[ ${ZPLG_ICE[cp]} = *("->"|"→")* ]] {
+                local from=${ZPLG_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[cp]##*(->|→)[[:space:]]#} || \
+            } else {
+                local from=${ZPLG_ICE[cp]%%[[:space:]]##*} to=${ZPLG_ICE[cp]##*[[:space:]]##}
+            }
             -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
@@ -966,7 +974,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!\!}}; }
 
         if [[ -n "${ZPLG_ICE[mv]}" ]]; then
-            local from="${ZPLG_ICE[mv]%%[[:space:]]#->*}" to="${ZPLG_ICE[mv]##*->[[:space:]]#}"
+            if [[ ${ZPLG_ICE[mv]} = *("->"|"→")* ]] {
+                local from=${ZPLG_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[mv]##*(->|→)[[:space:]]#} || \
+            } else {
+                local from=${ZPLG_ICE[mv]%%[[:space:]]##*} to=${ZPLG_ICE[mv]##*[[:space:]]##}
+            }
             -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
@@ -976,7 +988,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         fi
 
         if [[ -n "${ZPLG_ICE[cp]}" ]]; then
-            local from="${ZPLG_ICE[cp]%%[[:space:]]#->*}" to="${ZPLG_ICE[cp]##*->[[:space:]]#}"
+            if [[ ${ZPLG_ICE[cp]} = *("->"|"→")* ]] {
+                local from=${ZPLG_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[cp]##*(->|→)[[:space:]]#} || \
+            } else {
+                local from=${ZPLG_ICE[cp]%%[[:space:]]##*} to=${ZPLG_ICE[cp]##*[[:space:]]##}
+            }
             -zplg-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
