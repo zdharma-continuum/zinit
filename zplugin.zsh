@@ -1972,7 +1972,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
             fi
             [[ $1 = for ]] && shift
         fi
-        integer __retval
+        integer __retval __had_wait
         if (( $# )); then
             local -a __ices
             __ices=( "${(kv)ZPLG_ICES[@]}" )
@@ -1986,8 +1986,10 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                     ZPLG_ICES=()
 
                     (( ${+ZPLG_ICE[pack]} )) && {
+                        __had_wait=${+ZPLG_ICE[wait]}
                         -zplg-load-ices "${1#@}"
-                        [[ -z ${ZPLG_ICE[wait]} ]] && unset 'ZPLG_ICE[wait]'
+                        [[ -z ${ZPLG_ICE[wait]} && $__had_wait == 0 ]] && \
+                            unset 'ZPLG_ICE[wait]'
                     }
 
                     [[ ${ZPLG_ICE[id-as]} = auto ]] && ZPLG_ICE[id-as]="${1:t}"
