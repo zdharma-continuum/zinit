@@ -1148,7 +1148,7 @@ function $f {
     # Download or copy the file
     if [[ -n ${opts[(r)-f]} || ! -e $local_dir/$dirname/._zplugin ]]; then
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}/zplugin-install.zsh
-        [[ $url = *github.com* && ! $url = */raw/* ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
+        [[ $url = *github.com* && $url != */raw/* ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
         -zplg-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
     fi
 
