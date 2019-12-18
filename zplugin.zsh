@@ -1125,7 +1125,7 @@ function $f {
 
     # - case A: called from `update --all', ZPLG_ICE not packed (above), static ice will win
     # - case B: called from `snippet', ZPLG_ICE packed, so it will win
-    # - case C: called from `update', ZPLG_ICE packed, so it will win
+    # - case C: called from `update', ZPLG_ICE packed, so it will win ← TODO
     tmp=( "${(Q@)${(z@)ZPLG_SICE[$id_as]}}" )
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && { ice=( "${(kv)ZPLG_ICE[@]}" "${tmp[@]}" ); ZPLG_ICE=( "${ice[@]}" ); }
     tmp=( 1 )
@@ -1161,7 +1161,7 @@ function $f {
     [[ -z "${opts[(r)-u]}" ]] && { ZPLGM[CUR_USPL2]="$id_as"; ZPLG_REPORTS[$id_as]=""; }
 
     local -a arr
-    [[ -n "${opts[(r)-u]}" ]] && {
+    [[ -z ${opts[(r)-u]} ]] && {
         reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
