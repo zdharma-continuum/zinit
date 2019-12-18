@@ -2325,6 +2325,7 @@ ZPLGM[EXTENDED_GLOB]=""
                 eval "${ZPLG_ICE[atdelete]}" )
     fi
     local -a arr
+    local key
     reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atdelete <->]}" )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
