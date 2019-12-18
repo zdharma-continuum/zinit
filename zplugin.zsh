@@ -1034,6 +1034,14 @@ function $f {
     local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     ZPLG_ICE[teleid]="$user${${user:#(%|/)*}:+/}$plugin"
 
+    local -a arr
+    reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:preinit <->]}" )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}" preinit || \
+            return $(( 10 - $? ))
+    done
+
     if [[ $user != % && ! -d ${ZPLGM[PLUGINS_DIR]}/${id_as//\//---} ]]; then
         (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}/zplugin-install.zsh
         reply=( "$user" "$plugin" ) REPLY=github
@@ -1066,7 +1074,6 @@ function $f {
 
     -zplg-register-plugin "$id_as" "$mode" "${ZPLG_ICE[teleid]}"
 
-    local -a arr
     reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
@@ -1145,6 +1152,17 @@ function $f {
     [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dir="${ZPLGM[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
+    [[ -z ${opts[(r)-u]} ]] && {
+        local -a arr
+        local key
+        reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:preinit <->]}" )
+        for key in "${reply[@]}"; do
+            arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" preinit || \
+                return $(( 10 - $? ))
+        done
+    }
+
     # Download or copy the file
     if [[ -n ${opts[(r)-f]} || ! -e $local_dir/$dirname/._zplugin ]]; then
         (( ${+functions[-zplg-download-snippet]} )) || builtin source ${ZPLGM[BIN_DIR]}/zplugin-install.zsh
@@ -1158,7 +1176,6 @@ function $f {
 
     [[ -z ${opts[(r)-u]} ]] && { ZPLGM[CUR_USPL2]="$id_as"; ZPLG_REPORTS[$id_as]=; }
 
-    local -a arr
     [[ -z ${opts[(r)-u]} ]] && {
         reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
         for key in "${reply[@]}"; do
@@ -1169,7 +1186,6 @@ function $f {
 
     (( ${+ZPLG_ICE[atinit]} )) && [[ -z ${opts[(r)-u]} ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atinit]}"; ((1)); } || eval "${ZPLG_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-    local -a list
     [[ -z ${opts[(r)-u]} ]] && {
         reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atinit <->]}" )
         for key in "${reply[@]}"; do
@@ -1178,7 +1194,9 @@ function $f {
         done
     }
 
+    local -a list
     local ZERO
+
     if [[ -z ${opts[(r)-u]} && -z ${opts[(r)--command]} && ( -z ${ZPLG_ICE[as]} || ${ZPLG_ICE[as]} = null ) ]]; then
         # Source the file with compdef shadowing
         if [[ ${ZPLGM[SHADOWING]} = inactive ]]; then
@@ -1385,7 +1403,7 @@ function $f {
 
     local pbase="${${plugin:t}%(.plugin.zsh|.zsh|.git)}"
     [[ $user = % ]] && local pdir_path="$plugin" || local pdir_path="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
-    local pdir_orig="$pdir_path"
+    local pdir_orig="$pdir_path" key
 
     if [[ ${ZPLG_ICE[as]} = command ]]; then
         reply=()
