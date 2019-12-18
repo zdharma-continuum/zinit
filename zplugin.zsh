@@ -1151,16 +1151,14 @@ function $f {
     [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dir="${ZPLGM[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
-    [[ -z ${opts[(r)-u]} ]] && {
-        local -a arr
-        local key
-        reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:preinit <->]}" )
-        for key in "${reply[@]}"; do
-            arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
-            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" preinit || \
-                return $(( 10 - $? ))
-        done
-    }
+    local -a arr
+    local key
+    reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:preinit <->]}" )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" preinit || \
+            return $(( 10 - $? ))
+    done
 
     # Download or copy the file
     if [[ -n ${opts[(r)-f]} || ! -e $local_dir/$dirname/._zplugin ]]; then
