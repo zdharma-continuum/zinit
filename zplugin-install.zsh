@@ -178,8 +178,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     }
 
+    ZPLG_ICE[required]=${ZPLG_ICE[required]:-$ZPLG_ICE[requires]}
     local -a req
-    req=( ${(s.;.)${required:-$required\;${ZPLG_ICE[required]}}} )
+    req=( ${(s.;.)${:-${required:+$required\;}${ZPLG_ICE[required]}}} )
     for required ( $req ) {
         if [[ $required = bgn ]]; then
             if [[ -z ${(k)ZPLG_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ]]; then
