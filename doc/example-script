@@ -3,8 +3,8 @@
 
 # Copyright (c) YEAR USER_NAME
 
-# An example of type-agnostic script/function, i.e.: the file can be run
-# as a +x script or as an autoload function.
+# An example of type-agnostic script/function, i.e.: the file can be run as a +x
+# script or as an autoload function.
 
 # Run as script? ZSH_SCRIPT is a Zsh 5.3 addition
 if [[ $0 != example-script || -n $ZSH_SCRIPT ]]; then
@@ -17,10 +17,10 @@ if [[ $0 != example-script || -n $ZSH_SCRIPT ]]; then
     # file. Here it's restored in case of the function being run as a script.
     typeset MY_PLUGIN_DIR=${0:h}
 
-    # In case of the script using other scripts from the plugin, either set
-    # up $fpath and autoload, or add the directory to $PATH.
-    # Quoting the values as the emulation isn't yet set and SH_WORD_SPLIT
-    # option might be enabled.
+    # In case of the script using other scripts from the plugin, either set up
+    # $fpath and autoload, or add the directory to $PATH.
+    # Quoting the values as the emulation isn't yet set and SH_WORD_SPLIT option
+    # might be enabled.
     fpath+=( "$MY_PLUGIN_DIR" )
     autoload …
 
@@ -35,4 +35,4 @@ setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 # The script/function contents possibly using $MY_PLUGIN_DIR …
 # …
 
-# vim:ft=zsh:sw=4:sts=4:et
+# vim:ft=zsh:tw=80:sw=4:sts=4:et
