@@ -177,7 +177,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             eval "ZPLG_ICE[id-as]=\"${ZPLG_ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
         }
     } else {
-        print -r -- "${ZPLGM[col-error]}Error: the profile \`$profile' couldn't be found, aborting"
+        print -P -r -- "${ZPLGM[col-error]}Error: the profile \`%F{221}$profile${ZPLGM[col-error]}' couldn't be found, aborting%f"
+        print -r -- "Available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
         return 1
     }
 
