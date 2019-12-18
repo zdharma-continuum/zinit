@@ -2027,7 +2027,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                     (( ${+ZPLG_ICE[if]} )) && { eval "${ZPLG_ICE[if]}" || { (( $# )) && shift; continue; }; }
                     (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || { (( $# )) && shift; continue; }; }
 
-                    ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${${ZPLG_ICE[wait]#!}:-${(M)ZPLG_ICE[wait]#!}0}}"
+                    ZPLG_ICE[wait]="${${(M)${+ZPLG_ICE[wait]}:#1}:+${(M)ZPLG_ICE[wait]#!}${${ZPLG_ICE[wait]#!}:-0}}"
                     if [[ -n ${ZPLG_ICE[wait]}${ZPLG_ICE[load]}${ZPLG_ICE[unload]}${ZPLG_ICE[service]}${ZPLG_ICE[subscribe]} ]]; then
                         ZPLG_ICE[wait]="${ZPLG_ICE[wait]:-${ZPLG_ICE[service]:+0}}"
                         if (( __is_snippet > 0 )); then
