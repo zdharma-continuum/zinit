@@ -2606,7 +2606,7 @@ typeset -g ${${(U)plugin:t}//-/_}_DIR=\${0:h}
 
 autoload -Uz example-script
 
-# vim:ft=zsh:sw=4:sts=4:et
+# vim:ft=zsh:tw=80:sw=4:sts=4:et
 EOF
 
     print -r -- "# $plugin" >! "README.md"
