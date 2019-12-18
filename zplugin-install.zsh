@@ -155,8 +155,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         url=${jsondata1[url]} message=${jsondata1[message]} \
         required=${jsondata1[required]:-${jsondata1[requires]}}
 
+    local -a profiles
     local key value
     integer pos
+    profiles=( ${(@Q)${(@z)Strings[2/2]}} )
+    profiles=( ${profiles[@]:#$'\0'--object--$'\0'} )
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
     if (( pos )) {
         for key value ( "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" ) {
@@ -178,32 +181,35 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 1
     }
 
+    print -r -- "Found the profile \`${ZPLGM[col-pname]}$profile${ZPLGM[col-rst]}'"
+
     ZPLG_ICE[required]=${ZPLG_ICE[required]:-$ZPLG_ICE[requires]}
     local -a req
     req=( ${(s.;.)${:-${required:+$required\;}${ZPLG_ICE[required]}}} )
     for required ( $req ) {
         if [[ $required = bgn ]]; then
             if [[ -z ${(k)ZPLG_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ]]; then
-                print -- "${ZPLGM[col-error]}ERROR: the" \
+                print -P -- "${ZPLGM[col-error]}ERROR: the" \
                     "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZPLGM[col-pname]}$profile${ZPLGM[col-error]}\'}:-\\b}" \
                     "requires" "Bin-Gem-Node annex" \
-                    "(see https://github.com/zplugin/z-a-bin-gem-node)"
+                    "\nSee: %F{221}https://github.com/zplugin/z-a-bin-gem-node%f"
+                print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
                 return 1
             fi
         else
             if ! command -v $required &>/dev/null; then
-                print -- "${ZPLGM[col-error]}ERROR: the" \
+                print -P -- "${ZPLGM[col-error]}ERROR: the" \
                     "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZPLGM[col-pname]}$profile${ZPLGM[col-error]}\'}:-\\b}" \
                     "requires" \
-                    "\`${ZPLGM[col-pname]}$required${ZPLGM[col-error]}' command"
+                    "\`${ZPLGM[col-pname]}$required${ZPLGM[col-error]}' command%f"
+                print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
                 return 1
             fi
         fi
     }
 
-    print -r -- "Found the profile \`${ZPLGM[col-pname]}$profile${ZPLGM[col-rst]}'"
     print -n -- \\n${jsondata1[version]:+${ZPLGM[col-pname]}Version: ${ZPLGM[col-info2]}${jsondata1[version]}${ZPLGM[col-rst]}\\n}
     [[ -n ${jsondata1[message]} ]] && \
         print -- "${ZPLGM[col-info]}${jsondata1[message]}${ZPLGM[col-rst]}"
