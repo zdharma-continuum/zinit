@@ -1149,13 +1149,15 @@ zpextract() {
             ;;
     esac
 
-    [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] && {
+    if [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] {
         -zplg-extract-wrapper "$file" -zplg-extract || {
             print "Extraction of archive had problems, restoring previous version of the command"
             command mv ._backup/*(DN) . 2>/dev/null
             return 1
         }
         unfunction -- -zplg-extract
+    } else {
+        print -P -r -- "%F{160}Warning: %F{141}\`zpextract' didn't recognize the archive type%f"
     }
     unfunction -- -zplg-extract-wrapper
 
