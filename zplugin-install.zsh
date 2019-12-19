@@ -1156,6 +1156,39 @@ zpextract() {
         (*.gz)
             -zplg-extract() { command gunzip "$file"; }
             ;;
+        (*.dmg)
+            -zplg-extract() {
+                local prog
+                for prog ( hdiutil cp ) {
+                    if ! command -v $prog &>/dev/null; then
+                        print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+                            "${ZPLGM[col-error]}ERROR:${ZPLGM[col-msg2]}" \
+                            "no \`${ZPLGM[col-obj]}$prog${ZPLGM[col-msg2]}'" \
+                            "command found – it is required to extract a" \
+                            "${ZPLGM[col-obj]}dmg${ZPLGM[col-msg2]} image." \
+                            ${ZPLGM[col-rst]}
+                        return 1
+                    fi
+                }
+
+                integer retval
+                local attached_vol="$( command hdiutil attach "$file" | \
+                           command tail -n1 | command cut -f 3 )"
+
+                command cp -Rf $attached_vol/*(D) .
+                retval=$?
+                command hdiutil detach $attached_vol
+
+                (( retval )) && {
+                    print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+                            "${ZPLGM[col-error]}Warning:${ZPLGM[col-msg1]}" \
+                            "problem occurred when attempted to copy the files" \
+                            "from the mounted image: " \
+                            "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'."
+                }
+                return $retval
+            }
+            ;;
     esac
 
     if [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] {
