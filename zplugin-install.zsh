@@ -1101,7 +1101,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - url
 # $2 - file
 zpextract() {
-    setopt localoptions extendedglob nokshglob warncreateglobal
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     local -a opts
     zparseopts -D -E -a opts -move || \
