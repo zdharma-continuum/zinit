@@ -1103,8 +1103,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 zpextract() {
     setopt localoptions extendedglob nokshglob warncreateglobal
 
+    local -a opts
+    zparseopts -D -E -a opts -move || \
+        { print -P -r -- "%F{160}Incorrect options given to \`zpextract' (available are: %F{221}--move%F{160})%f"; return 1; }
+
     local file="$1"
-    integer move=${${(M)3:#--move}:+1}
+    integer move=${${${(M)${#opts}:#0}:+0}:-1}
 
     command mkdir -p ._backup
     command rm -rf ._backup/*(DN)
