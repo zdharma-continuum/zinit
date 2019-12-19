@@ -1151,13 +1151,28 @@ zpextract() {
 
     if [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] {
         -zplg-extract-wrapper "$file" -zplg-extract || {
-            print "Extraction of archive had problems, restoring previous version of the command"
-            command mv ._backup/*(DN) . 2>/dev/null
+            local -a bfiles
+            bfiles=( ._backup/*(DN) )
+            if (( ${#bfiles} )) {
+                print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+                    "${ZPLGM[col-error]}WARNING:${ZPLGM[col-msg1]}" \
+                    "extraction of archive had problems, restoring previous" \
+                    "version of the plugin/snippet.${ZPLGM[col-rst]}"
+                command mv ._backup/*(DN) . 2>/dev/null
+            } else {
+                print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+                    "${ZPLGM[col-error]}WARNING:${ZPLGM[col-msg1]}" \
+                    "extraction of the archive" \
+                    "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}' had problems." \
+                    ${ZPLGM[col-rst]}
+            }
             return 1
         }
         unfunction -- -zplg-extract
     } else {
-        print -P -r -- "%F{160}Warning: %F{141}\`zpextract' didn't recognize the archive type%f"
+        print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+            "${ZPLGM[col-error]}WARNING: ${ZPLGM[col-msg1]}didn't recognize the archive" \
+            "type (no extraction has been done).${ZPLGM[col-rst]}"
     }
     unfunction -- -zplg-extract-wrapper
 
