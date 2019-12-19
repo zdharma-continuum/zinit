@@ -789,6 +789,8 @@ function $f {
         "%DIR%" "${local_path:-$local_dir${dirname:+/$dirname}}"
         '$ZPFX' "$ZPFX"
         '${ZPFX}' "$ZPFX"
+        '%OS%' "${OSTYPE%(-gnu|[0-9]##)}" '%MACH%' "$MACHTYPE" '%CPU%' "$CPUTYPE"
+        '%VENDOR%' "$VENDOR" '%HOST%' "$HOST" '%UID%' "$UID" '%GID%' "$GID"
     )
     if [[ -n ${ZPLG_ICE[param]} && ${ZPLGM[SUBST_DONE_FOR]} != ${ZPLG_ICE[param]} ]] {
         ZPLGM[SUBST_DONE_FOR]="${ZPLG_ICE[param]}"
