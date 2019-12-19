@@ -113,6 +113,10 @@ zmodload zsh/termcap 2>/dev/null
         col-failure   $'\e[31m'
         col-rst       $'\e[0m'
         col-bold      $'\e[1m'
+
+        col-pre    $'\e[38;5;141m'
+        col-obj    $'\e[38;5;221m'
+        col-file   $'\e[38;5;110m'
     )
 }
 
