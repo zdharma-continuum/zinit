@@ -1236,7 +1236,7 @@ zpextract() {
             local sep="${ZPLGM[col-rst]},${ZPLGM[col-obj]} "
             print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]} Successfully" \
                 "extracted and marked executable the appropriate files" \
-                "(${ZPLGM[col-obj]}${(pj:$sep:)execs}${ZPLGM[col-rst]}) contained" \
+                "(${ZPLGM[col-obj]}${(pj:$sep:)${execs[@]:t}}${ZPLGM[col-rst]}) contained" \
                 "in \`${ZPLGM[col-file]}$file${ZPLGM[col-rst]}'."
         fi
     }
