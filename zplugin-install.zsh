@@ -1162,9 +1162,12 @@ zpextract() {
     unfunction -- -zplg-extract-wrapper
 
     local -a execs
-    execs=( ${(@f)"$( file **/*~(._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN-.) )"} )
-    execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
-    execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
+    execs=( **/*~(._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN-.) )
+    [[ ${#execs} -gt 0 && -n $execs ]] && {
+        execs=( ${(@f)"$( file ${execs[@]} )"} )
+        execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
+        execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
+    }
 
     [[ ${#execs} -gt 0 ]] && {
         command chmod a+x "${execs[@]}"
