@@ -1114,7 +1114,7 @@ zpextract() {
         local file="$1" fun="$2" retval
         print "Extracting files from: \`${ZPLGM[col-info2]}$file${ZPLGM[col-rst]}'..."
         $fun; retval=$?
-        command rm -f "$file"
+        (( retval == 0 )) && command rm -f "$file"
         return $retval
     }
 
