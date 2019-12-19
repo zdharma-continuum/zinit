@@ -1452,7 +1452,7 @@ function $f {
         [[ -n ${ZPLG_ICE[wrap-track]} ]] && \
             -zplg-wrap-track-functions "$user" "$plugin" "$id_as"
 
-        [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { -zplg-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+        [[ ${ZPLG_ICE[atload][1]} = "!" ]] && { -zplg-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZPLG_ICE[atload]#\!}"; } || eval "{ZPLG_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
         [[ -n ${ZPLG_ICE[src]} || -n ${ZPLG_ICE[multisrc]} || ${ZPLG_ICE[atload][1]} = "!" ]] && {
             (( -- ZPLGM[SHADOWING] == 0 )) && { ZPLGM[SHADOWING]=inactive; builtin setopt noaliases; (( ${+ZPLGM[bkp-compdef]} )) && functions[compdef]="${ZPLGM[bkp-compdef]}" || unfunction compdef; builtin setopt aliases; }
