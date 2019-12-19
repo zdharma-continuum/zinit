@@ -1110,6 +1110,13 @@ zpextract() {
     local file="$1"
     integer move=${${${(M)${#opts}:#0}:+0}:-1}
 
+    if [[ ! -e $file ]] {
+        print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+            "${ZPLGM[col-error]}ERROR:${ZPLGM[col-msg2]}" \
+            "the file \`${ZPLGM[col-obj]}$file${ZPLGM[col-msg2]}'" \
+            "doesn't exist, aborting the extraction."
+        return 1
+    }
     command mkdir -p ._backup
     command rm -rf ._backup/*(DN)
     command mv -f *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(DN) ._backup 2>/dev/null
