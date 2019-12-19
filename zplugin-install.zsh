@@ -1116,7 +1116,7 @@ zpextract() {
     zparseopts -D -E -a opts -move || \
         { print -P -r -- "%F{160}Incorrect options given to \`zpextract' (available are: %F{221}--move%F{160})%f"; return 1; }
 
-    local file="$1"
+    local file="$1" ext="$2"
     integer move=${${${(M)${#opts}:#0}:+0}:-1}
 
     if [[ ! -e $file ]] {
@@ -1143,7 +1143,7 @@ zpextract() {
         return $retval
     }
 
-    case "$file" in
+    case "${${ext:+.$ext}:-$file}" in
         (*.zip)
             -zplg-extract() { command unzip "$file"; }
             ;;
