@@ -1116,7 +1116,8 @@ zpextract() {
 
     -zplg-extract-wrapper() {
         local file="$1" fun="$2" retval
-        print "Extracting files from: \`${ZPLGM[col-info2]}$file${ZPLGM[col-rst]}'..."
+        print "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-msg1]} Unpacking files from:" \
+            "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'...${ZPLGM[col-rst]}"
         $fun; retval=$?
         (( retval == 0 )) && command rm -f "$file"
         return $retval
