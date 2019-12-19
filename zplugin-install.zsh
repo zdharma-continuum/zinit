@@ -246,7 +246,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 }
             }
 
-            -zplg-handle-binary-file "$URL" "$fname" --move
+            zpextract "$fname" --move
             return 0
         ) && {
             reply=( "$user" "$plugin" )
@@ -368,15 +368,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 }
 
                 command mkdir -p ._zplugin
-                print -r -- "$url" >! ._zplugin/url
-                print -r -- "${list[1]}" >! ._zplugin/is_release
-                -zplg-handle-binary-file "$url" "${list[1]:t}"
+                print -r -- $url >! ._zplugin/url
+                print -r -- ${list[1]} >! ._zplugin/is_release
+                zpextract ${list[1]:t}
                 return $?
             ) || {
                 return 1
             }
         } elif [[ $tpe = github ]] {
-            case "${ZPLG_ICE[proto]}" in
+            case ${ZPLG_ICE[proto]} in
                 (|https)
                     command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
                         ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} \
@@ -1092,7 +1092,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     REPLY="${list[1]}"
 }
 # }}}
-# FUNCTION: -zplg-handle-binary-file {{{
+# FUNCTION: zpextract {{{
 # If the file is an archive, it is extracted by this function.
 # Next stage is scanning of files with the common utility `file',
 # to detect executables. They are given +x mode. There are also
@@ -1100,10 +1100,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 #
 # $1 - url
 # $2 - file
--zplg-handle-binary-file() {
+zpextract() {
     setopt localoptions extendedglob nokshglob warncreateglobal
 
-    local url="$1" file="$2"
+    local file="$1"
     integer move=${${(M)3:#--move}:+1}
 
     command mkdir -p ._backup
