@@ -1033,7 +1033,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local atclone=${ZPLG_ICE[atclone]}
             [[ -n $atclone ]] && -zplg-substitute atclone
 
-            (( ${+ZPLG_ICE[atclone]} )) && -zplg-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZPLG_ICE[atclone]}"; ((1)); } || eval "${ZPLG_ICE[atclone]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            (( ${+ZPLG_ICE[atclone]} )) && -zplg-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
             # Run annexes' atclone hooks (the after atclone-ice ones)
             reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atclone <->]}" )
