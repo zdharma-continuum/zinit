@@ -1135,7 +1135,11 @@ zpextract() {
         print "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-msg1]} Unpacking the files from:" \
             "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'...${ZPLGM[col-rst]}"
         $fun; retval=$?
-        (( retval == 0 )) && command rm -f "$file"
+        (( retval == 0 )) && {
+            local -a files
+            files=( *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(DN) )
+            (( ${#files} )) && command rm -f "$file"
+        }
         return $retval
     }
 
