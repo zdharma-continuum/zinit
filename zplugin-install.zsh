@@ -211,6 +211,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         fi
     }
 
+    if [[ -n ${ZPLG_ICE[dl]} && -z ${(k)ZPLG_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
+        print -- "\n${ZPLGM[col-error]}WARNING:${ZPLGM[col-msg2]} the profile uses" \
+            "${ZPLGM[col-obj]}dl''${ZPLGM[col-msg2]} ice however there's no" \
+            "${ZPLGM[col-obj2]}z-a-patch-dl${ZPLGM[col-msg2]} annex loaded" \
+            "(the ice will be inactive, i.e.: no additional files will" \
+            "be downloaded)${ZPLGM[col-rst]}"
+    }
+
     print -n -- \\n${jsondata1[version]:+${ZPLGM[col-pname]}Version: ${ZPLGM[col-info2]}${jsondata1[version]}${ZPLGM[col-rst]}\\n}
     [[ -n ${jsondata1[message]} ]] && \
         print -- "${ZPLGM[col-info]}${jsondata1[message]}${ZPLGM[col-rst]}"
