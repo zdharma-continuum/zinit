@@ -1253,9 +1253,10 @@ zpextract() {
         command mv -f *~(._zplugin|.git|._backup)(DN[1]) .tmp231ABC
         command mv -f **/*~(*/*/*|^*/*|._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN) .
         command rmdir .tmp231ABC
+        REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
+    } || {
+        REPLY="${execs[1]}"
     }
-
-    REPLY="${execs[1]}"
     return 0
 }
 # }}}
