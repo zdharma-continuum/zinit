@@ -1171,10 +1171,16 @@ zpextract() {
 
     [[ ${#execs} -gt 0 ]] && {
         command chmod a+x "${execs[@]}"
-        if [[ "${execs[1]}" = "$file" ]]; then
-            print -r -- "Successfully downloaded and installed the executable: \`$file'."
+        if (( ${#execs} == 1 )); then
+            print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+                "Successfully extracted and given +x to the file:" \
+                "\`${ZPLGM[col-obj]}${execs[1]}${ZPLGM[col-rst]}'."
         else
-            print -r -- "Successfully installed executables (\"${(j:", ":)execs}\") contained in \`$file'."
+            local sep="${ZPLGM[col-rst]},${ZPLGM[col-obj]} "
+            print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]} Successfully" \
+                "extracted and marked executable the appropriate files" \
+                "(${ZPLGM[col-obj]}${(pj:$sep:)execs}${ZPLGM[col-rst]}) contained" \
+                "in \`${ZPLGM[col-file]}$file${ZPLGM[col-rst]}'."
         fi
     }
 
