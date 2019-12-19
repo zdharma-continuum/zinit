@@ -1197,7 +1197,7 @@ zpextract() {
         command chmod a+x "${execs[@]}"
         if (( ${#execs} == 1 )); then
             print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-                "Successfully extracted and given +x to the file:" \
+                "Successfully extracted and assigned +x chmod to the file:" \
                 "\`${ZPLGM[col-obj]}${execs[1]}${ZPLGM[col-rst]}'."
         else
             local sep="${ZPLGM[col-rst]},${ZPLGM[col-obj]} "
