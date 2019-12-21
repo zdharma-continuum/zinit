@@ -1550,8 +1550,12 @@ function $f {
     -zplg-any-to-user-plugin "$1" ""
     local __id_as="$1" __user="${reply[-2]}" __plugin="${reply[-1]}" __oldpwd="$PWD"
     () {
-        setopt localoptions noautopushd
-        builtin cd &>/dev/null -q "${${${(M)__user:#%}:+$__plugin}:-${ZPLGM[PLUGINS_DIR]}/${__id_as//\//---}}"
+        emulate -LR zsh
+        builtin cd &>/dev/null -q ${${${(M)__user:#%}:+$__plugin}:-${ZPLGM[PLUGINS_DIR]}/${__id_as//\//---}} || {
+            local local_dir=${${__id_as%%\?*}/:\/\//--}
+            local_dir=${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}
+            [[ -n $local_dir ]] && builtin cd &>/dev/null -q ${ZPLGM[SNIPPETS_DIR]}/$local_dir
+        }
     }
     if (( $? == 0 )); then
         (( __nolast )) && { print -r "$1" >! ${ZPLGM[BIN_DIR]}/last-run-object.txt; }
@@ -1559,7 +1563,7 @@ function $f {
         eval "${@[2-correct,-1]}"
         () { setopt localoptions noautopushd; builtin cd -q "$__oldpwd"; }
     else
-        print "${ZPLGM[col-error]}Error: no such plugin${ZPLGM[col-rst]}"
+        print "${ZPLGM[col-error]}Error: no such plugin or snippet${ZPLGM[col-rst]}"
     fi
 }
 # }}}
