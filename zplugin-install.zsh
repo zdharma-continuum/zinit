@@ -862,7 +862,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         {
                             (( !${+ZPLG_ICE[nocompile]} )) && {
                                 zcompile "${list[1]}" &>/dev/null || {
-                                    print -r "Warning: Couldn't compile \`${list[1]}'"
+                                    print -r "Warning: couldn't compile \`${list[1]}'"
                                 }
                             }
                         }
