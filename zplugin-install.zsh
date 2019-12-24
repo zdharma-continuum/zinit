@@ -960,7 +960,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
             # Store ices at "clone" and update of snippet, SVN and single-file
             local pfx="$local_dir/$dirname/._zplugin"
-            -zplg-store-ices "$pfx" ZPLG_ICE "" "" "$save_url" "${+ZPLG_ICE[svn]}"
+            -zplg-store-ices "$pfx" ZPLG_ICE "url_rsvd" "" "$save_url" "${+ZPLG_ICE[svn]}"
         else
             print "${ZPLGM[col-error]}Warning${ZPLGM[col-rst]}: inconsistency #2 occurred - skipped storing ice-mods to"
             print "disk, please report at https://github.com/zdharma/zplugin/issues"

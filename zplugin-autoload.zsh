@@ -1622,7 +1622,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print
         fi
     else
-        -zplg-load-snippet "${ZPLG_ICE[teleid]:-$URL}" "-i" "-f" "-u"
+        -zplg-load-snippet "${ZPLG_ICE[teleid]:-$URL}" "-i" "-u"
     fi
 
     ZPLG_ICE=()
