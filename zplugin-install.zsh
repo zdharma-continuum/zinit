@@ -922,7 +922,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                             print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
                             print -r "(snippet URL points to a directory instead of a file?"
                             print -r "to download directory, use preceding: zplugin ice svn)"
-                            retval=1
+                            retval=0
                         }
                     }
                 }
