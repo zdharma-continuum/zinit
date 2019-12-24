@@ -1145,7 +1145,7 @@ zpextract() {
 
     case "${${ext:+.$ext}:-$file}" in
         (*.zip)
-            -zplg-extract() { command unzip "$file"; }
+            -zplg-extract() { command unzip -o "$file"; }
             ;;
         (*.rar)
             -zplg-extract() { command unrar x "$file"; }
