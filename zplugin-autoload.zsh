@@ -1451,7 +1451,7 @@ ZPLGM[EXTENDED_GLOB]=""
                         -zplg-any-colorify-as-uspl2 "$id_as"
                         print "\nUpdating plugin $REPLY"
                     }
-                    -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" "-u"
+                    -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" release -u
                 }
                 ZPLG_ICE=()
             }

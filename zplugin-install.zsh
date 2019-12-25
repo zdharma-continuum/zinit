@@ -284,7 +284,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     setopt extendedglob warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
-        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---} tpe=$4
+        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---} tpe=$4 update=$5
 
     local -A sites
     sites=(
@@ -322,9 +322,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
 
     [[ $tpe != tarball ]] && {
-        -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-        print "\\nDownloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
-
+        [[ -z $update ]] && {
+            -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+            print "\\nDownloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
+        }
 
         local site
         [[ -n ${ZPLG_ICE[from]} ]] && site=${sites[${ZPLG_ICE[from]}]}
