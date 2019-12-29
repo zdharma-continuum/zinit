@@ -963,9 +963,10 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local pfx="$local_dir/$dirname/._zplugin"
             -zplg-store-ices "$pfx" ZPLG_ICE "url_rsvd" "" "$save_url" "${+ZPLG_ICE[svn]}"
         else
-            print "${ZPLGM[col-error]}Warning${ZPLGM[col-rst]}: inconsistency #2 occurred - skipped storing ice-mods to"
-            print "disk, please report at https://github.com/zdharma/zplugin/issues"
-            print "providing the commands \`zplugin ice {...}; zplugin snippet {...}'"
+            print "${ZPLGM[col-error]}Warning${ZPLGM[col-rst]}: inconsistency #2 occurred" \
+                "- skipped storing ice-mods to" \
+                "disk, please report at https://github.com/zdharma/zplugin/issues" \
+                "providing the commands \`zplugin ice {...}; zplugin snippet {...}'"
         fi
 
         (( retval == 1 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
