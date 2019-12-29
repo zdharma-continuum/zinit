@@ -613,7 +613,7 @@ builtin setopt noaliases
 # "light-b" (i.e. the `trackbinds' mode) or "compdef").
 -zplg-shadow-off() {
     builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
-        typesetsilent noshortloops unset
+        typesetsilent noshortloops unset noaliases
     local mode="$1"
 
     # Disable shadowing only once
