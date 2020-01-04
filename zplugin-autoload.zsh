@@ -1359,8 +1359,8 @@ ZPLGM[EXTENDED_GLOB]=""
 # $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $3 - plugin (only when $1 - i.e. user - given)
 -zplg-update-or-status() {
-    setopt localoptions extendedglob nokshglob noksharrays \
-            nullglob rmstarsilent warncreateglobal
+    emulate -LR zsh
+    setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
     local -a arr
 
