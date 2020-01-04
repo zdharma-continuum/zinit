@@ -1229,7 +1229,8 @@ zpextract() {
         print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
             "${ZPLGM[col-error]}WARNING: ${ZPLGM[col-msg1]}didn't recognize the archive" \
             "type of \`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'" \
-            "(no extraction has been done).${ZPLGM[col-rst]}"
+            "${ext:+${ZPLGM[col-obj2]}/ $ext${ZPLGM[col-msg1]} }"\
+"(no extraction has been done).${ZPLGM[col-rst]}"
     }
     unfunction -- -zplg-extract-wrapper
 
