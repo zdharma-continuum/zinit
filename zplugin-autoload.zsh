@@ -1389,6 +1389,15 @@ ZPLGM[EXTENDED_GLOB]=""
         ice local_dir filename is_snippet || return 1
     [[ "${ice[teleid]:-$id_as}" = (#b)([^/]##)/(*) ]] && { user="${match[1]}"; plugin="${match[2]}"; } || { user=""; plugin="${ice[teleid]:-$id_as}"; }
 
+    -zplg-any-to-user-plugin ${ice[teleid]:-$id_as}
+    local -a arr
+    reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:preinit <->]}" )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+        "${arr[5]}" plugin "${reply[-2]}" "${reply[-1]}" "$id_as" "${${${(M)user:#%}:+$plugin}:-${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}}" preinit || \
+            return $(( 10 - $? ))
+    done
+
     # Check if repository has a remote set, if it is _local
     local repo="${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"
     if [[ -f "$repo/.git/config" ]]; then
