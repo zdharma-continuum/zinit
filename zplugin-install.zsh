@@ -1258,6 +1258,7 @@ zpextract() {
     }
 
     (( move )) && {
+        # TODO: mkdir .tmp231ABC
         command mv -f *~(._zplugin|.git|._backup)(DN[1]) .tmp231ABC
         command mv -f **/*~(*/*/*|^*/*|._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN) .
         command rmdir .tmp231ABC
