@@ -1653,7 +1653,7 @@ atdelete|git|verbose|param${~exts})(*)
 # or snippet) mentioned in the next command – for later use with e.g.
 # `zplugin update ...'
 -zplg-pack-ice() {
-    ZPLG_SICE[$1${1:+${2:+/}}$2]+="${(j: :)${(q-kv)ZPLG_ICE[@]}} "
+    ZPLG_SICE[$1${1:+${2:+/}}$2]+="${(j: :)${(qkv)ZPLG_ICE[@]}} "
     ZPLG_SICE[$1${1:+${2:+/}}$2]="${ZPLG_SICE[$1${1:+${2:+/}}$2]# }"
     return 0
 } # }}}
