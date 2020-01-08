@@ -64,11 +64,18 @@ if grep zplugin "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
     exit 0
 fi
 
-echo "[34m▓▒░[0m Updating $THE_ZDOTDIR/.zshrc (3 lines of code, at the bottom)"
+echo "[34m▓▒░[0m Updating $THE_ZDOTDIR/.zshrc (10 lines of code, at the bottom)"
 ZPLG_HOME="$(echo $ZPLG_HOME | sed "s|$HOME|\$HOME|")"
 cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
 
 ### Added by Zplugin's installer
+if [[ ! -d $ZPLG_HOME/$ZPLG_BIN_DIR_NAME ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing Zplugin…%f"
+    command mkdir -p $ZPLG_HOME
+    command git clone https://github.com/zdharma/zplugin $ZPLG_HOME/$ZPLG_BIN_DIR_NAME && \\
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%F" || \\
+        print -P "%F{160}▓▒░ The clone has failed.%F"
+fi
 source "$ZPLG_HOME/$ZPLG_BIN_DIR_NAME/zplugin.zsh"
 autoload -Uz _zplugin
 (( \${+_comps} )) && _comps[zplugin]=_zplugin
