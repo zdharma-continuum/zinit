@@ -2399,9 +2399,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#ternary_expressions_with_--_substitutions" title="Ternary expressions with \+,-,:+,:- substitutions"
+  <a href="#ternary_expressions_with_--_substitutions" title="Ternary expressions with +,-,:+,:- substitutions"
       class="md-nav__link">
-    Ternary expressions with \+,-,:+,:- substitutions
+    Ternary expressions with +,-,:+,:- substitutions
   </a>
 
   <!-- Render nested item list -->
@@ -3555,9 +3555,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#ternary_expressions_with_--_substitutions" title="Ternary expressions with \+,-,:+,:- substitutions"
+  <a href="#ternary_expressions_with_--_substitutions" title="Ternary expressions with +,-,:+,:- substitutions"
       class="md-nav__link">
-    Ternary expressions with \+,-,:+,:- substitutions
+    Ternary expressions with +,-,:+,:- substitutions
   </a>
 
   <!-- Render nested item list -->
@@ -4105,8 +4105,8 @@ second double-quoting isn't actually needed.</p>
 declare -a grepped; grepped=( ${(M)lines:#*query*} )
 </code></pre>
 
-<p>To have <code>grep -v</code> effect, skip <code>M</code>-flag. To grep case insensitively, use <code>\#i</code> glob
-flag (<code>...:#(#i)\*query*}</code>).</p>
+<p>To have <code>grep -v</code> effect, skip <code>M</code>-flag. To grep case insensitively, use <code>#i</code> glob
+flag (<code>...:#(#i)*query*}</code>).</p>
 <p>As it can be seen, <code>${...:#...}</code> substitution is a filtering of array, which by
 default filters-out elements (<code>(M)</code> flag induces the opposite behavior). When
 used with string, not an array, it behaves similarily: returns empty string when
@@ -4117,7 +4117,7 @@ substitutions, to retain what's matched by the pattern instead of removing that.
 <p>Suppose you have a Subversion repository and want to check if it contains files
 being not under version control. You could do this in Bash style like follows:</p>
 <pre><code class="zsh">local svn_status=&quot;$(svn status)&quot;
-if [[ -n &quot;$(echo &quot;$svn_status&quot; | \grep \^\?)&quot; ]]; then
+if [[ -n &quot;$(echo &quot;$svn_status&quot; | grep \^\?)&quot; ]]; then
     echo found
 fi
 </code></pre>
@@ -4159,11 +4159,11 @@ of regular expressions we were using patterns (globs) (see
 <pre><code>[[ &quot;abc xyz efg&quot; = *abc*~^*efg* ]] &amp;&amp; print Match found
 </code></pre>
 
-<p>The <code>~</code> is a negation -- <code>match \*abc* but not ...</code>. Then, <code>^</code> is also a negation.
-The effect is: <code>\*abc* but not those that don't have \*efg*</code> which equals to:
-<code>\*abc* but those that have also \*efg*</code>. This is a regular pattern and it can
+<p>The <code>~</code> is a negation -- <code>match *abc* but not ...</code>. Then, <code>^</code> is also a negation.
+The effect is: <code>*abc* but not those that don't have *efg*</code> which equals to:
+<code>*abc* but those that have also *efg*</code>. This is a regular pattern and it can
 be used with <code>:#</code> above to search arrays, or with <code>R</code>-subscript flag to search
-hashes (<code>${hsh[\(R)\*pattern*]}</code>), etc. Inventor of those patterns is Mikael
+hashes (<code>${hsh[(R)*pattern*]}</code>), etc. Inventor of those patterns is Mikael
 Magnusson.</p>
 <h3 id="skipping_tr">Skipping tr<a class="headerlink" href="#skipping_tr" title="Permanent link">#</a></h3>
 <pre><code>declare -A map; map=( a 1 b 2 );
@@ -4175,13 +4175,13 @@ print $text ▶ 12 21
 <p><code>#m</code> flag enables the <code>$MATCH</code> parameter. At each <code>//</code> substitution, <code>$map</code> is
 queried for character-replacement. You can substitute a text variable too, just
 skip <code>[@]</code> and parentheses in assignment.</p>
-<h3 id="ternary_expressions_with_--_substitutions">Ternary expressions with <code>\+,-,:+,:-</code> substitutions<a class="headerlink" href="#ternary_expressions_with_--_substitutions" title="Permanent link">#</a></h3>
+<h3 id="ternary_expressions_with_--_substitutions">Ternary expressions with <code>+,-,:+,:-</code> substitutions<a class="headerlink" href="#ternary_expressions_with_--_substitutions" title="Permanent link">#</a></h3>
 <pre><code>HELP=&quot;yes&quot;; print ${${HELP:+help enabled}:-help disabled} ▶ help enabled
 HELP=&quot;&quot;; print ${${HELP:+help enabled}:-help disabled} ▶ help disabled
 </code></pre>
 
 <p>Ternary expression is known from <code>C</code> language but exists also in Zsh, but
-directly only in math context, i.e. <code>\(( a = a &gt; 0 ? b : c ))</code>. Flexibility of
+directly only in math context, i.e. <code>(( a = a &gt; 0 ? b : c ))</code>. Flexibility of
 Zsh allows such expressions also in normal context. Above is an example. <code>:+</code> is
 "if not empty, substitute …" <code>:-</code> is "if empty, substitute …". You can save
 great number of lines of code with those substitutions, it's normally at least
@@ -4197,7 +4197,7 @@ code that makes 10-line function a 20-line one.</p>
 <pre><code>[[ &quot;aabbb&quot; = (#b)(a##)*(b(#c2,2)) ]] &amp;&amp; print ${match[1]}-${match[2]} ▶ aa-bb
 </code></pre>
 
-<p><code>\##</code> is: "1 or more". <code>(#c2,2)</code> is: "exactly 2". A few other constructs: <code>#</code> is
+<p><code>##</code> is: "1 or more". <code>(#c2,2)</code> is: "exactly 2". A few other constructs: <code>#</code> is
 "0 or more", <code>?</code> is "any character", <code>(a|b|)</code> is "a or b or empty match". <code>#b</code>
 enables the <code>$match</code> parameters. There's also <code>#m</code> but it has one parameter
 <code>$MATCH</code> for whole matched text, not for any parenthesis.</p>
@@ -4251,7 +4251,7 @@ and <code>(P)</code> flag, to assign arrays and hashes by-name.</p>
 <pre><code>declare -a array; array=( a b &quot; c1&quot; d ); print ${array[(r)[[:space:]][[:alpha:]]*]} ▶ c1
 </code></pre>
 
-<p><code>\[[:space:]]</code> contains unicode spaces. This is often used in conditional
+<p><code>[[:space:]]</code> contains unicode spaces. This is often used in conditional
 expression like <code>[[ -z ${array[(r)...]} ]]</code>.</p>
 <p>Note that <a href="#skipping_grep">Skipping grep</a> that uses <code>:#</code> substitution can also
 be used to search arrays.</p>
