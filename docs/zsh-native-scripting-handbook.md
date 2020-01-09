@@ -88,8 +88,8 @@ declare -a lines; lines=( "${(@f)"$(<path/file)"}" )
 declare -a grepped; grepped=( ${(M)lines:#*query*} )
 ```
 
-To have `grep -v` effect, skip `M`-flag. To grep case insensitively, use `\#i` glob
-flag (`...:#(#i)\*query*}`).
+To have `grep -v` effect, skip `M`-flag. To grep case insensitively, use `#i` glob
+flag (`...:#(#i)*query*}`).
 
 As it can be seen, `${...:#...}` substitution is a filtering of array, which by
 default filters-out elements (`(M)` flag induces the opposite behavior). When
@@ -106,7 +106,7 @@ being not under version control. You could do this in Bash style like follows:
 
 ```zsh
 local svn_status="$(svn status)"
-if [[ -n "$(echo "$svn_status" | \grep \^\?)" ]]; then
+if [[ -n "$(echo "$svn_status" | grep \^\?)" ]]; then
     echo found
 fi
 ```
@@ -158,11 +158,11 @@ of regular expressions we were using patterns (globs) (see
 [[ "abc xyz efg" = *abc*~^*efg* ]] && print Match found
 ```
 
-The `~` is a negation -- `match \*abc* but not ...`. Then, `^` is also a negation.
-The effect is: `\*abc* but not those that don't have \*efg*` which equals to:
-`\*abc* but those that have also \*efg*`. This is a regular pattern and it can
+The `~` is a negation -- `match *abc* but not ...`. Then, `^` is also a negation.
+The effect is: `*abc* but not those that don't have *efg*` which equals to:
+`*abc* but those that have also *efg*`. This is a regular pattern and it can
 be used with `:#` above to search arrays, or with `R`-subscript flag to search
-hashes (`${hsh[\(R)\*pattern*]}`), etc. Inventor of those patterns is Mikael
+hashes (`${hsh[(R)*pattern*]}`), etc. Inventor of those patterns is Mikael
 Magnusson.
 
 ### Skipping tr
@@ -178,7 +178,7 @@ print $text ▶ 12 21
 queried for character-replacement. You can substitute a text variable too, just
 skip `[@]` and parentheses in assignment.
 
-### Ternary expressions with `\+,-,:+,:-` substitutions
+### Ternary expressions with `+,-,:+,:-` substitutions
 
 ```
 HELP="yes"; print ${${HELP:+help enabled}:-help disabled} ▶ help enabled
@@ -186,7 +186,7 @@ HELP=""; print ${${HELP:+help enabled}:-help disabled} ▶ help disabled
 ```
 
 Ternary expression is known from `C` language but exists also in Zsh, but
-directly only in math context, i.e. `\(( a = a > 0 ? b : c ))`. Flexibility of
+directly only in math context, i.e. `(( a = a > 0 ? b : c ))`. Flexibility of
 Zsh allows such expressions also in normal context. Above is an example. `:+` is
 "if not empty, substitute …" `:-` is "if empty, substitute …". You can save
 great number of lines of code with those substitutions, it's normally at least
@@ -208,7 +208,7 @@ code that makes 10-line function a 20-line one.
 [[ "aabbb" = (#b)(a##)*(b(#c2,2)) ]] && print ${match[1]}-${match[2]} ▶ aa-bb
 ```
 
-`\##` is: "1 or more". `(#c2,2)` is: "exactly 2". A few other constructs: `#` is
+`##` is: "1 or more". `(#c2,2)` is: "exactly 2". A few other constructs: `#` is
 "0 or more", `?` is "any character", `(a|b|)` is "a or b or empty match". `#b`
 enables the `$match` parameters. There's also `#m` but it has one parameter
 `$MATCH` for whole matched text, not for any parenthesis.
@@ -278,7 +278,7 @@ and `(P)` flag, to assign arrays and hashes by-name.
 declare -a array; array=( a b " c1" d ); print ${array[(r)[[:space:]][[:alpha:]]*]} ▶ c1
 ```
 
-`\[[:space:]]` contains unicode spaces. This is often used in conditional
+`[[:space:]]` contains unicode spaces. This is often used in conditional
 expression like `[[ -z ${array[(r)...]} ]]`.
 
 Note that [Skipping grep](#skipping_grep) that uses `:#` substitution can also
