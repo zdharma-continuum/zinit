@@ -1604,11 +1604,18 @@ ZPLGM[EXTENDED_GLOB]=""
     done
 
     if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
-        (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
-        (
-            builtin cd -q "$local_dir"
-            eval "${ZPLG_ICE[ps-on-update]}"
-        )
+        if (( !ICE_OPTS[opt_-q,--quiet] )) {
+            print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+            (
+                builtin cd -q "$local_dir"
+                eval "${ZPLG_ICE[ps-on-update]}"
+            )
+        } else {
+            (
+                builtin cd -q "$local_dir"
+                eval "${ZPLG_ICE[ps-on-update]}" &> /dev/null
+            )
+        }
     fi
     ZPLG_ICE=()
 

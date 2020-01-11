@@ -980,11 +980,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             done
 
             if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
-                (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
-                (
-                    builtin cd -q "$local_dir/$dirname";
-                    eval "${ZPLG_ICE[ps-on-update]}"
-                )
+                if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                    print -r "Running snippet's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+                    (
+                        builtin cd -q "$local_dir/$dirname";
+                        eval "${ZPLG_ICE[ps-on-update]}"
+                    )
+                } else {
+                    (
+                        builtin cd -q "$local_dir/$dirname";
+                        eval "${ZPLG_ICE[ps-on-update]}" &> /dev/null
+                    )
+                }
             fi
             return 0;
         }
@@ -1070,7 +1077,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             done
 
             if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
-                (( quiet )) || print -r "Running plugin's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+                if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                    print -r "Running snippet's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+                }
                 eval "${ZPLG_ICE[ps-on-update]}"
             fi
         }
