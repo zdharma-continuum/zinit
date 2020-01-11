@@ -14,6 +14,8 @@ FUNCTIONS
 ---------
 
  -zplg-any-colorify-as-uspl2
+ -zplg-compute-ice
+ -zplg-countdown
  -zplg-exists-physically
  -zplg-exists-physically-message
  -zplg-first
@@ -70,6 +72,74 @@ Called by:
  zplugin-install.zsh/-zplg-install-completions
  zplugin-install.zsh/-zplg-setup-plugin-dir
 
+-zplg-compute-ice
+~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
+ ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+ returns path to snippet directory and optional name of snippet file (only
+ valid if ZPLG_ICE[svn] is not set).
+ 
+ Can also pack resulting ices into ZPLG_SICE (see $2).
+ 
+ $1 - URL (also plugin-spec)
+ $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE
+ wins with static ice; "pack-nf" means that disk-ices will
+ be ignored (no-file?)
+ $3 - name of output associative array, "ZPLG_ICE" is the default
+ $4 - name of output string parameter, to hold path to directory ("local_dir")
+ $5 - name of output string parameter, to hold filename ("filename")
+ $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
+____
+
+Has 107 line(s). Calls functions:
+
+ -zplg-compute-ice
+ |-- -zplg-exists-physically-message
+ |   |-- -zplg-any-colorify-as-uspl2
+ |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |   |-- -zplg-exists-physically
+ |   |   |-- -zplg-shands-exp
+ |   |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |   `-- -zplg-shands-exp
+ |-- -zplg-shands-exp
+ |-- -zplg-two-paths
+ |-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- zplugin.zsh/-zplg-pack-ice
+
+Uses feature(s): _setopt_, _wait_
+
+Called by:
+
+ zplugin-autoload.zsh/-zplg-delete
+ zplugin-autoload.zsh/-zplg-edit
+ zplugin-autoload.zsh/-zplg-recall
+ zplugin-autoload.zsh/-zplg-update-or-status-snippet
+ zplugin-autoload.zsh/-zplg-update-or-status
+ zplugin-install.zsh/-zplg-compile-plugin
+
+-zplg-countdown
+~~~~~~~~~~~~~~~
+
+____
+ 
+ Displays a countdown 5...4... etc. and returns 0 if it
+ sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
+____
+
+Has 15 line(s). Doesn't call other functions.
+
+Uses feature(s): _trap_
+
+Called by:
+
+ zplugin-autoload.zsh/-zplg-run-delete-hooks
+ zplugin-autoload.zsh/-zplg-update-or-status
+ zplugin-install.zsh/-zplg-download-snippet
+ zplugin-install.zsh/-zplg-setup-plugin-dir
+
 -zplg-exists-physically
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -121,10 +191,8 @@ Has 11 line(s). Calls functions:
 
 Called by:
 
+ -zplg-compute-ice
  zplugin-autoload.zsh/-zplg-changes
- zplugin-autoload.zsh/-zplg-compute-ice
- zplugin-autoload.zsh/-zplg-delete
- zplugin-autoload.zsh/-zplg-edit
  zplugin-autoload.zsh/-zplg-glance
  zplugin-autoload.zsh/-zplg-stress
  zplugin-autoload.zsh/-zplg-update-or-status
@@ -155,7 +223,6 @@ Has 17 line(s). Calls functions:
 
 Called by:
 
- zplugin-autoload.zsh/-zplg-edit
  zplugin-autoload.zsh/-zplg-glance
  zplugin-autoload.zsh/-zplg-stress
  zplugin-install.zsh/-zplg-compile-plugin
@@ -182,10 +249,9 @@ Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
+ -zplg-compute-ice
  -zplg-exists-physically-message
  -zplg-exists-physically
- zplugin-autoload.zsh/-zplg-compute-ice
- zplugin-autoload.zsh/-zplg-delete
  zplugin-autoload.zsh/-zplg-get-path
 
 -zplg-store-ices
@@ -199,9 +265,11 @@ ____
  $2 - name of hash that holds values
  $3 - additional keys of hash to store, space separated
  $4 - additional keys of hash to store, empty-meaningful ices, space separated
+ $5 – the URL, if applicable
+ $6 – the mode (1 - svn, 0 - single file), if applicable
 ____
 
-Has 30 line(s). Doesn't call other functions.
+Has 41 line(s). Doesn't call other functions.
 
 Uses feature(s): _wait_
 
@@ -227,8 +295,7 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zplugin-autoload.zsh/-zplg-compute-ice
- zplugin-autoload.zsh/-zplg-delete
+ -zplg-compute-ice
  zplugin-autoload.zsh/-zplg-get-path
  zplugin-autoload.zsh/-zplg-update-or-status
 

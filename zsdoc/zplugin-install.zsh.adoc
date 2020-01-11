@@ -13,16 +13,20 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
+ zpextract
  -zplg-at-eval
  -zplg-compile-plugin
+ -zplg-compinit
  -zplg-download-file-stdout
  -zplg-download-snippet
  -zplg-forget-completion
  -zplg-get-latest-gh-r-version
- -zplg-handle-binary-file
+ -zplg-get-package
  -zplg-install-completions
  -zplg-mirror-using-svn
+ -zplg-parse-json
  -zplg-setup-plugin-dir
+AUTOLOAD compinit
 
 DETAILS
 -------
@@ -34,10 +38,36 @@ Has 3 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 
 Uses feature(s): _source_
 
+zpextract
+~~~~~~~~~
+
+____
+ 
+ If the file is an archive, it is extracted by this function.
+ Next stage is scanning of files with the common utility `file',
+ to detect executables. They are given +x mode. There are also
+ messages to the user on performed actions.
+ 
+ $1 - url
+ $2 - file
+____
+
+Has 156 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_, _unfunction_, _zparseopts_
+
+Called by:
+
+ -zplg-get-package
+ -zplg-setup-plugin-dir
+
 -zplg-at-eval
 ~~~~~~~~~~~~~
 
-Has 1 line(s). Doesn't call other functions.
+Has 3 line(s). Calls functions:
+
+ -zplg-at-eval
+ `-- zplugin.zsh/-zplg-substitute
 
 Uses feature(s): _eval_
 
@@ -57,11 +87,11 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 50 line(s). Calls functions:
+Has 58 line(s). Calls functions:
 
  -zplg-compile-plugin
- |-- zplugin-side.zsh/-zplg-first
- `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- zplugin-side.zsh/-zplg-compute-ice
+ `-- zplugin-side.zsh/-zplg-first
 
 Uses feature(s): _eval_, _zcompile_
 
@@ -69,6 +99,33 @@ Called by:
 
  -zplg-setup-plugin-dir
  zplugin-autoload.zsh/-zplg-compile-uncompile-all
+ zplugin.zsh/zplugin
+
+-zplg-compinit
+~~~~~~~~~~~~~~
+
+____
+ 
+ User-exposed `compinit' frontend which first ensures that all
+ completions managed by Zplugin are forgotten by Zshell. After
+ that it runs normal `compinit', which should more easily detect
+ Zplugin's completions.
+ 
+ No arguments.
+____
+
+Has 21 line(s). Calls functions:
+
+ -zplg-compinit
+ |-- compinit
+ `-- -zplg-forget-completion
+
+Uses feature(s): _autoload_, _compinit_, _setopt_, _unfunction_
+
+Called by:
+
+ -zplg-install-completions
+ zplugin-autoload.zsh/-zplg-uninstall-completions
  zplugin.zsh/zplugin
 
 -zplg-download-file-stdout
@@ -80,15 +137,16 @@ ____
  curl, wget, lftp, lynx. Used by snippet loading.
 ____
 
-Has 32 line(s). Calls functions:
+Has 36 line(s). Calls functions:
 
  -zplg-download-file-stdout
 
-Uses feature(s): _type_
+Uses feature(s): _setopt_, _trap_, _type_
 
 Called by:
 
  -zplg-download-snippet
+ -zplg-get-package
  -zplg-setup-plugin-dir
 
 -zplg-download-snippet
@@ -102,18 +160,24 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 233 line(s). Calls functions:
+Has 310 line(s). Calls functions:
 
  -zplg-download-snippet
  |-- -zplg-at-eval
+ |   `-- zplugin.zsh/-zplg-substitute
  |-- -zplg-download-file-stdout
  |-- -zplg-install-completions
+ |   |-- -zplg-compinit
+ |   |   |-- compinit
+ |   |   `-- -zplg-forget-completion
  |   |-- -zplg-forget-completion
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- -zplg-mirror-using-svn
- `-- zplugin-side.zsh/-zplg-store-ices
+ |-- zplugin-side.zsh/-zplg-countdown
+ |-- zplugin-side.zsh/-zplg-store-ices
+ `-- zplugin.zsh/-zplg-substitute
 
 Uses feature(s): _eval_, _setopt_, _zcompile_
 
@@ -132,14 +196,14 @@ ____
  $1 - completion function name, e.g. "_cp"; can also be "cp"
 ____
 
-Has 15 line(s). Doesn't call other functions.
+Has 18 line(s). Doesn't call other functions.
 
 Uses feature(s): _unfunction_
 
 Called by:
 
+ -zplg-compinit
  -zplg-install-completions
- zplugin-autoload.zsh/-zplg-compinit
  zplugin-autoload.zsh/-zplg-uninstall-completions
  zplugin.zsh/zplugin
 
@@ -163,27 +227,24 @@ Called by:
 
  zplugin-autoload.zsh/-zplg-update-or-status
 
--zplg-handle-binary-file
-~~~~~~~~~~~~~~~~~~~~~~~~
+-zplg-get-package
+~~~~~~~~~~~~~~~~~
 
-____
- 
- If the file is an archive, it is extracted by this function.
- Next stage is scanning of files with the common utility `file',
- to detect executables. They are given +x mode. There are also
- messages to the user on performed actions.
- 
- $1 - url
- $2 - file
-____
+Has 152 line(s). Calls functions:
 
-Has 66 line(s). Doesn't call other functions.
+ -zplg-get-package
+ |-- zpextract
+ |-- -zplg-download-file-stdout
+ |-- -zplg-parse-json
+ `-- zplugin.zsh/-zplg-substitute
 
-Uses feature(s): _setopt_, _unfunction_
+Uses feature(s): _eval_, _setopt_
 
 Called by:
 
- -zplg-setup-plugin-dir
+ zplugin.zsh/-zplg-load
+
+_Environment variables used:_ zplugin.zsh -> ZPFX
 
 -zplg-install-completions
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -200,9 +261,12 @@ ____
  $3 - if 1, then reinstall, otherwise only install completions that aren't there
 ____
 
-Has 34 line(s). Calls functions:
+Has 38 line(s). Calls functions:
 
  -zplg-install-completions
+ |-- -zplg-compinit
+ |   |-- compinit
+ |   `-- -zplg-forget-completion
  |-- -zplg-forget-completion
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin-side.zsh/-zplg-exists-physically-message
@@ -240,6 +304,25 @@ Called by:
 
  -zplg-download-snippet
 
+-zplg-parse-json
+~~~~~~~~~~~~~~~~
+
+____
+ 
+ Retrievies the ice-list from given profile from
+ the JSON of the package.json.
+____
+
+Has 107 line(s). Calls functions:
+
+ -zplg-parse-json
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ -zplg-get-package
+
 -zplg-setup-plugin-dir
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -253,21 +336,26 @@ ____
  $2 - plugin
 ____
 
-Has 182 line(s). Calls functions:
+Has 223 line(s). Calls functions:
 
  -zplg-setup-plugin-dir
+ |-- zpextract
  |-- -zplg-compile-plugin
- |   |-- zplugin-side.zsh/-zplg-first
- |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |   |-- zplugin-side.zsh/-zplg-compute-ice
+ |   `-- zplugin-side.zsh/-zplg-first
  |-- -zplg-download-file-stdout
- |-- -zplg-handle-binary-file
  |-- -zplg-install-completions
+ |   |-- -zplg-compinit
+ |   |   |-- compinit
+ |   |   `-- -zplg-forget-completion
  |   |-- -zplg-forget-completion
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
- `-- zplugin-side.zsh/-zplg-store-ices
+ |-- zplugin-side.zsh/-zplg-countdown
+ |-- zplugin-side.zsh/-zplg-store-ices
+ `-- zplugin.zsh/-zplg-substitute
 
 Uses feature(s): _eval_, _setopt_
 
@@ -275,4 +363,29 @@ Called by:
 
  zplugin-autoload.zsh/-zplg-update-or-status
  zplugin.zsh/-zplg-load
+
+compinit
+~~~~~~~~
+
+____
+ 
+ Initialisation for new style completion. This mainly contains some helper
+ functions and setup. Everything else is split into different files that
+ will automatically be made autoloaded (see the end of this file).  The
+ names of the files that will be considered for autoloading are those that
+ begin with an underscores (like `_condition).
+ 
+ The first line of each of these files is read and must indicate what
+ should be done with its contents:
+ 
+ `#compdef <names ...>'
+____
+
+Has 549 line(s). Doesn't call other functions.
+
+Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
+
+Called by:
+
+ -zplg-compinit
 

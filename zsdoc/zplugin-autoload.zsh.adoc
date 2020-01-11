@@ -27,8 +27,6 @@ FUNCTIONS
  -zplg-clear-report-for
  -zplg-compiled
  -zplg-compile-uncompile-all
- -zplg-compinit
- -zplg-compute-ice
  -zplg-confirm
  -zplg-create
  -zplg-delete
@@ -52,10 +50,12 @@ FUNCTIONS
  -zplg-list-compdef-replay
  -zplg-ls
  -zplg-module
+ -zplg-pager
  -zplg-prepare-readlink
  -zplg-recall
  -zplg-recently
  -zplg-restore-extendedglob
+ -zplg-run-delete-hooks
  -zplg-save-set-extendedglob
  -zplg-search-completions
  -zplg-self-update
@@ -70,10 +70,10 @@ FUNCTIONS
  -zplg-uncompile-plugin
  -zplg-uninstall-completions
  -zplg-unload
+ -zplg-unregister-plugin
  -zplg-update-or-status
  -zplg-update-or-status-all
  -zplg-update-or-status-snippet
-AUTOLOAD compinit
 
 DETAILS
 -------
@@ -395,68 +395,6 @@ Called by:
 
  zplugin.zsh/zplugin
 
--zplg-compinit
-~~~~~~~~~~~~~~
-
-____
- 
- User-exposed `compinit' frontend which first ensures that all
- completions managed by Zplugin are forgotten by Zshell. After
- that it runs normal `compinit', which should more easily detect
- Zplugin's completions.
- 
- No arguments.
-____
-
-Has 23 line(s). Calls functions:
-
- -zplg-compinit
- |-- compinit
- `-- zplugin-install.zsh/-zplg-forget-completion
-
-Uses feature(s): _autoload_, _setopt_, _unfunction_
-
-Called by:
-
- zplugin.zsh/zplugin
-
--zplg-compute-ice
-~~~~~~~~~~~~~~~~~
-
-____
- 
- Computes ZPLG_ICE array (default, it can be specified via $3) from a) input
- ZPLG_ICE, b) static ice, c) saved ice, taking priorities into account. Also
- returns path to snippet directory and optional name of snippet file (only
- valid if ZPLG_ICE[svn] is not set).
- 
- Can also pack resulting ices into ZPLG_SICE (see $2).
- 
- $1 - URL (also plugin-spec)
- $2 - "pack" or "nopack" or "pack-nf" - packing means ZPLG_ICE wins with static ice;
- "pack-nf" means that disk-ices will be ignored (no-file?)
- $3 - name of output associative array, "ZPLG_ICE" is the default
- $4 - name of output string parameter, to hold path to directory ("local_dir")
- $5 - name of output string parameter, to hold filename ("filename")
-____
-
-Has 98 line(s). Calls functions:
-
- -zplg-compute-ice
- |-- zplugin-side.zsh/-zplg-exists-physically-message
- |-- zplugin-side.zsh/-zplg-shands-exp
- |-- zplugin-side.zsh/-zplg-two-paths
- |-- zplugin.zsh/-zplg-any-to-user-plugin
- `-- zplugin.zsh/-zplg-pack-ice
-
-Uses feature(s): _setopt_, _wait_
-
-Called by:
-
- -zplg-recall
- -zplg-update-or-status-snippet
- -zplg-update-or-status
-
 -zplg-confirm
 ~~~~~~~~~~~~~
 
@@ -469,7 +407,7 @@ ____
  $2 - expression
 ____
 
-Has 5 line(s). Doesn't call other functions.
+Has 12 line(s). Doesn't call other functions.
 
 Uses feature(s): _eval_, _read_
 
@@ -490,14 +428,14 @@ ____
  $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
-Has 67 line(s). Calls functions:
+Has 100 line(s). Calls functions:
 
  -zplg-create
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin-side.zsh/-zplg-exists-physically
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses feature(s): _vared_
+Uses feature(s): _autoload_, _setopt_, _vared_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -514,13 +452,11 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 54 line(s). Calls functions:
+Has 70 line(s). Calls functions:
 
  -zplg-delete
  |-- -zplg-confirm
- |-- zplugin-side.zsh/-zplg-exists-physically-message
- |-- zplugin-side.zsh/-zplg-shands-exp
- |-- zplugin-side.zsh/-zplg-two-paths
+ |-- zplugin-side.zsh/-zplg-compute-ice
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
 Uses feature(s): _setopt_
@@ -622,12 +558,10 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 13 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  -zplg-edit
- |-- zplugin-side.zsh/-zplg-exists-physically-message
- |-- zplugin-side.zsh/-zplg-first
- `-- zplugin.zsh/-zplg-any-to-user-plugin
+ `-- zplugin-side.zsh/-zplg-compute-ice
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -745,7 +679,7 @@ ____
  $1 - user/plugin (i.e. uspl2 format of plugin-spec)
 ____
 
-Has 34 line(s). Doesn't call other functions.
+Has 35 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
@@ -816,7 +750,7 @@ ____
  nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 ____
 
-Has 35 line(s). Calls functions:
+Has 43 line(s). Calls functions:
 
  -zplg-get-path
  |-- zplugin-side.zsh/-zplg-exists-physically
@@ -848,6 +782,7 @@ ____
 Has 39 line(s). Calls functions:
 
  -zplg-glance
+ |-- -zplg-pager
  |-- zplugin-side.zsh/-zplg-exists-physically-message
  |-- zplugin-side.zsh/-zplg-first
  `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -864,7 +799,7 @@ ____
  User-action entry point.
 ____
 
-Has 68 line(s). Doesn't call other functions.
+Has 72 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -873,7 +808,7 @@ Called by:
 -zplg-list-bindkeys
 ~~~~~~~~~~~~~~~~~~~
 
-Has 42 line(s). Calls functions:
+Has 44 line(s). Calls functions:
 
  -zplg-list-bindkeys
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -931,6 +866,24 @@ Called by:
  -zplg-build-module
  zplugin.zsh/zplugin
 
+-zplg-pager
+~~~~~~~~~~~
+
+____
+ 
+ BusyBox less lacks the -X and -i options, so it can use more
+____
+
+Has 6 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ -zplg-glance
+ -zplg-self-update
+ -zplg-update-or-status
+
 -zplg-prepare-readlink
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -955,15 +908,11 @@ Called by:
 -zplg-recall
 ~~~~~~~~~~~~
 
-Has 37 line(s). Calls functions:
+Has 44 line(s). Calls functions:
 
  -zplg-recall
- `-- -zplg-compute-ice
-     |-- zplugin-side.zsh/-zplg-exists-physically-message
-     |-- zplugin-side.zsh/-zplg-shands-exp
-     |-- zplugin-side.zsh/-zplg-two-paths
-     |-- zplugin.zsh/-zplg-any-to-user-plugin
-     `-- zplugin.zsh/-zplg-pack-ice
+ |-- zplugin-side.zsh/-zplg-compute-ice
+ `-- zplugin.zsh/-zplg-deploy-message
 
 Uses feature(s): _wait_
 
@@ -1009,6 +958,18 @@ Called by:
  -zplg-format-options
  -zplg-show-registered-plugins
  -zplg-unload
+
+-zplg-run-delete-hooks
+~~~~~~~~~~~~~~~~~~~~~~
+
+Has 12 line(s). Calls functions:
+
+ -zplg-run-delete-hooks
+ `-- zplugin-side.zsh/-zplg-countdown
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 -zplg-save-set-extendedglob
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1062,7 +1023,10 @@ ____
  User-action entry point.
 ____
 
-Has 23 line(s). Doesn't call other functions.
+Has 23 line(s). Calls functions:
+
+ -zplg-self-update
+ `-- -zplg-pager
 
 Uses feature(s): _setopt_, _zcompile_
 
@@ -1248,7 +1212,7 @@ ____
  User-action entry point.
 ____
 
-Has 42 line(s). Calls functions:
+Has 57 line(s). Calls functions:
 
  -zplg-show-times
  `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
@@ -1295,7 +1259,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 35 line(s). Calls functions:
+Has 38 line(s). Calls functions:
 
  -zplg-stress
  |-- zplugin-side.zsh/-zplg-exists-physically-message
@@ -1344,7 +1308,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 41 line(s). Calls functions:
+Has 44 line(s). Calls functions:
 
  -zplg-uninstall-completions
  |-- -zplg-get-path
@@ -1352,9 +1316,10 @@ Has 41 line(s). Calls functions:
  |   |-- zplugin-side.zsh/-zplg-shands-exp
  |   |-- zplugin-side.zsh/-zplg-two-paths
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
+ |-- zplugin-install.zsh/-zplg-compinit
  `-- zplugin-install.zsh/-zplg-forget-completion
 
-Uses feature(s): _setopt_
+Uses feature(s): _setopt_, _source_
 
 Called by:
 
@@ -1366,6 +1331,7 @@ Called by:
 ____
  
  0. Call the Zsh Plugin's Standard *_plugin_unload function
+ 0. Call the code provided by the Zsh Plugin's Standard @zsh-plugin-run-at-update
  1. Delete bindkeys (...)
  2. Delete Zstyles
  3. Restore options
@@ -1382,7 +1348,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 347 line(s). Calls functions:
+Has 373 line(s). Calls functions:
 
  -zplg-unload
  |-- -zplg-clear-report-for
@@ -1398,18 +1364,37 @@ Has 347 line(s). Calls functions:
  |   `-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- -zplg-restore-extendedglob
  |-- -zplg-save-set-extendedglob
+ |-- -zplg-unregister-plugin
+ |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  |-- zplugin.zsh/-zplg-any-to-user-plugin
- |-- zplugin.zsh/-zplg-clear-debug-report
- `-- zplugin.zsh/-zplg-unregister-plugin
+ `-- zplugin.zsh/-zplg-clear-debug-report
 
-Uses feature(s): _alias_, _bindkey_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
+Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
  zplugin.zsh/-zplg-debug-unload
  zplugin.zsh/-zplg-run-task
  zplugin.zsh/zplugin
+
+-zplg-unregister-plugin
+~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Removes the plugin from ZPLG_REGISTERED_PLUGINS array and from the
+ zsh_loaded_plugins array (managed according to the plugin standard)
+____
+
+Has 6 line(s). Calls functions:
+
+ -zplg-unregister-plugin
+ `-- zplugin.zsh/-zplg-any-to-user-plugin
+
+Called by:
+
+ -zplg-unload
 
 -zplg-update-or-status
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -1425,33 +1410,25 @@ ____
  $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 212 line(s). Calls functions:
+Has 265 line(s). Calls functions:
 
  -zplg-update-or-status
  |-- -zplg-at-eval
- |-- -zplg-compute-ice
- |   |-- zplugin-side.zsh/-zplg-exists-physically-message
- |   |-- zplugin-side.zsh/-zplg-shands-exp
- |   |-- zplugin-side.zsh/-zplg-two-paths
- |   |-- zplugin.zsh/-zplg-any-to-user-plugin
- |   `-- zplugin.zsh/-zplg-pack-ice
+ |-- -zplg-pager
  |-- -zplg-update-or-status-snippet
- |   |-- -zplg-compute-ice
- |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
- |   |   |-- zplugin-side.zsh/-zplg-shands-exp
- |   |   |-- zplugin-side.zsh/-zplg-two-paths
- |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
- |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   |-- zplugin-side.zsh/-zplg-compute-ice
  |   `-- zplugin.zsh/-zplg-load-snippet
  |-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
  |-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |-- zplugin-side.zsh/-zplg-compute-ice
+ |-- zplugin-side.zsh/-zplg-countdown
  |-- zplugin-side.zsh/-zplg-exists-physically-message
  |-- zplugin-side.zsh/-zplg-store-ices
  |-- zplugin-side.zsh/-zplg-two-paths
  `-- zplugin.zsh/-zplg-any-to-user-plugin
 
-Uses feature(s): _kill_, _read_, _setopt_, _source_, _wait_
+Uses feature(s): _eval_, _kill_, _read_, _setopt_, _source_, _wait_
 
 Called by:
 
@@ -1470,39 +1447,26 @@ ____
  User-action entry point.
 ____
 
-Has 63 line(s). Calls functions:
+Has 66 line(s). Calls functions:
 
  -zplg-update-or-status-all
  |-- -zplg-update-or-status
  |   |-- -zplg-at-eval
- |   |-- -zplg-compute-ice
- |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
- |   |   |-- zplugin-side.zsh/-zplg-shands-exp
- |   |   |-- zplugin-side.zsh/-zplg-two-paths
- |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
- |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   |-- -zplg-pager
  |   |-- -zplg-update-or-status-snippet
- |   |   |-- -zplg-compute-ice
- |   |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
- |   |   |   |-- zplugin-side.zsh/-zplg-shands-exp
- |   |   |   |-- zplugin-side.zsh/-zplg-two-paths
- |   |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
- |   |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   |   |-- zplugin-side.zsh/-zplg-compute-ice
  |   |   `-- zplugin.zsh/-zplg-load-snippet
  |   |-- zplugin-install.zsh/-zplg-get-latest-gh-r-version
  |   |-- zplugin-install.zsh/-zplg-setup-plugin-dir
  |   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
+ |   |-- zplugin-side.zsh/-zplg-compute-ice
+ |   |-- zplugin-side.zsh/-zplg-countdown
  |   |-- zplugin-side.zsh/-zplg-exists-physically-message
  |   |-- zplugin-side.zsh/-zplg-store-ices
  |   |-- zplugin-side.zsh/-zplg-two-paths
  |   `-- zplugin.zsh/-zplg-any-to-user-plugin
  |-- -zplg-update-or-status-snippet
- |   |-- -zplg-compute-ice
- |   |   |-- zplugin-side.zsh/-zplg-exists-physically-message
- |   |   |-- zplugin-side.zsh/-zplg-shands-exp
- |   |   |-- zplugin-side.zsh/-zplg-two-paths
- |   |   |-- zplugin.zsh/-zplg-any-to-user-plugin
- |   |   `-- zplugin.zsh/-zplg-pack-ice
+ |   |-- zplugin-side.zsh/-zplg-compute-ice
  |   `-- zplugin.zsh/-zplg-load-snippet
  |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
  `-- zplugin.zsh/-zplg-any-to-user-plugin
@@ -1525,44 +1489,14 @@ ____
  $2 - snippet URL
 ____
 
-Has 19 line(s). Calls functions:
+Has 20 line(s). Calls functions:
 
  -zplg-update-or-status-snippet
- |-- -zplg-compute-ice
- |   |-- zplugin-side.zsh/-zplg-exists-physically-message
- |   |-- zplugin-side.zsh/-zplg-shands-exp
- |   |-- zplugin-side.zsh/-zplg-two-paths
- |   |-- zplugin.zsh/-zplg-any-to-user-plugin
- |   `-- zplugin.zsh/-zplg-pack-ice
+ |-- zplugin-side.zsh/-zplg-compute-ice
  `-- zplugin.zsh/-zplg-load-snippet
 
 Called by:
 
  -zplg-update-or-status-all
  -zplg-update-or-status
-
-compinit
-~~~~~~~~
-
-____
- 
- Initialisation for new style completion. This mainly contains some helper
- functions and setup. Everything else is split into different files that
- will automatically be made autoloaded (see the end of this file).  The
- names of the files that will be considered for autoloading are those that
- begin with an underscores (like `_condition).
- 
- The first line of each of these files is read and must indicate what
- should be done with its contents:
- 
- `#compdef <names ...>'
-____
-
-Has 549 line(s). Doesn't call other functions.
-
-Uses feature(s): _autoload_, _bindkey_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
-
-Called by:
-
- -zplg-compinit
 
