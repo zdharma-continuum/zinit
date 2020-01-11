@@ -509,6 +509,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     # is not empty and first is not "%" - then it's
     # just $1 in first case, or $1$2 in second case
     local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" reinstall="${3:-0}" quiet="${${4:+1}:-0}"
+    (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
 
     -zplg-any-to-user-plugin "$id_as" ""
     local user="${reply[-2]}"
