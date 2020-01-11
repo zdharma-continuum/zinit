@@ -430,7 +430,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+              [[ ${#afr} -gt 0 ]] && {
+                  if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                      command mv -vf "${afr[1]}" "$to"
+                      command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  } else {
+                      command mv -f "${afr[1]}" "$to"
+                      command mv -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  }
+              }
             )
         }
 
@@ -444,7 +452,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+              [[ ${#afr} -gt 0 ]] && {
+                  if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                      command cp -vf "${afr[1]}" "$to"
+                      command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  } else {
+                      command cp -f "${afr[1]}" "$to"
+                      command cp -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  }
+              }
             )
         }
 
@@ -1015,7 +1031,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+              [[ ${#afr} -gt 0 ]] && {
+                  if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                      command mv -vf "${afr[1]}" "$to"
+                      command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  } else {
+                      command mv -f "${afr[1]}" "$to"
+                      command mv -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  }
+              }
             )
         fi
 
@@ -1029,7 +1053,15 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+              [[ ${#afr} -gt 0 ]] && {
+                  if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                      command cp -vf "${afr[1]}" "$to"
+                      command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  } else {
+                      command cp -f "${afr[1]}" "$to"
+                      command cp -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                  }
+              }
             )
         fi
 

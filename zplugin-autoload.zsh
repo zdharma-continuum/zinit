@@ -1552,7 +1552,15 @@ ZPLGM[EXTENDED_GLOB]=""
                 local -a afr
                 ( builtin cd -q "$local_dir" || return 1
                   afr=( ${~from}(DN) )
-                  [[ ${#afr} -gt 0 ]] && { command mv -vf "${afr[1]}" "$to"; command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+                  [[ ${#afr} -gt 0 ]] && { 
+                      if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                          command mv -vf "${afr[1]}" "$to"
+                          command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null;
+                      } else {
+                          command mv -f "${afr[1]}" "$to"
+                          command mv -f "${afr[1]}".zwc "$to".zwc 2>/dev/null;
+                      }
+                  }
                 )
             fi
 
@@ -1565,7 +1573,15 @@ ZPLGM[EXTENDED_GLOB]=""
                 local -a afr
                 ( builtin cd -q "$local_dir" || return 1
                   afr=( ${~from}(DN) )
-                  [[ ${#afr} -gt 0 ]] && { command cp -vf "${afr[1]}" "$to"; command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null; }
+                  [[ ${#afr} -gt 0 ]] && {
+                      if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                          command cp -vf "${afr[1]}" "$to"
+                          command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                      } else {
+                          command cp -f "${afr[1]}" "$to"
+                          command cp -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
+                      }
+                  }
                 )
             fi
 
