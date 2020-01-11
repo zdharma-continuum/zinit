@@ -954,8 +954,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             # Currently redundant, but theoretically it has its place
             [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
             command mkdir -p "$local_dir/$dirname"
-            print "Copying $filename..."
-            command cp -v "$url" "$local_dir/$dirname/$filename" || { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
+            if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                print -P "${ZPLGM[col-msg1]}Copying ${ZPLGM[col-obj]}$filename${ZPLGM[col-msg1]}...%f"
+                command cp -v "$url" "$local_dir/$dirname/$filename" || \
+                    { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
+            } else {
+                command cp "$url" "$local_dir/$dirname/$filename" || \
+                    { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
+            }
         }
 
         if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
