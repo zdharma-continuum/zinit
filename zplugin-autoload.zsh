@@ -1526,7 +1526,7 @@ ZPLGM[EXTENDED_GLOB]=""
 
         [[ -d "$local_dir/.git" ]] && \
             (  builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
-               command git pull --recurse-submodules
+               command git pull --recurse-submodules | grep -v "Already up to date."
             )
 
         local -a log
