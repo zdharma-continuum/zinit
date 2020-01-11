@@ -1426,8 +1426,8 @@ ZPLGM[EXTENDED_GLOB]=""
             if [[ "${ice[is_release]}" = */$REPLY/* ]] {
                 [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
                     print -- "\rBinary release already up to date (version: $REPLY)"
-
-                (( ${+ice[run-atpull]} )) && { do_update=1; skip_pull=1; }
+                skip_pull=1
+                (( ${+ice[run-atpull]} )) && { do_update=1; }
             } else {
                 do_update=1
             }
@@ -1492,8 +1492,9 @@ ZPLGM[EXTENDED_GLOB]=""
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
               [[ ${#log} -gt 0 ]] && do_update=1 || \
                   {
+                      skip_pull=1
                       (( ${+ice[run-atpull]} )) && {
-                          do_update=1; skip_pull=1
+                          do_update=1
                           print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
                       }
                   }
