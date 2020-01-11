@@ -1134,8 +1134,9 @@ zpextract() {
 
     -zplg-extract-wrapper() {
         local file="$1" fun="$2" retval
-        print "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-msg1]} Unpacking the files from:" \
-            "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'...${ZPLGM[col-rst]}"
+        (( !ICE_OPTS[opt_-q,--quiet] )) && \
+            print "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-msg1]} Unpacking the files from:" \
+                "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'...${ZPLGM[col-rst]}"
         $fun; retval=$?
         (( retval == 0 )) && {
             local -a files
@@ -1244,17 +1245,18 @@ zpextract() {
 
     [[ ${#execs} -gt 0 ]] && {
         command chmod a+x "${execs[@]}"
-        if (( ${#execs} == 1 )); then
-            print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-                "Successfully extracted and assigned +x chmod to the file:" \
-                "\`${ZPLGM[col-obj]}${execs[1]}${ZPLGM[col-rst]}'."
-        else
-            local sep="${ZPLGM[col-rst]},${ZPLGM[col-obj]} "
-            print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]} Successfully" \
-                "extracted and marked executable the appropriate files" \
-                "(${ZPLGM[col-obj]}${(pj:$sep:)${execs[@]:t}}${ZPLGM[col-rst]}) contained" \
-                "in \`${ZPLGM[col-file]}$file${ZPLGM[col-rst]}'."
-        fi
+        (( !ICE_OPTS[opt_-q,--quiet] )) && \
+            if (( ${#execs} == 1 )); then
+                    print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+                        "Successfully extracted and assigned +x chmod to the file:" \
+                        "\`${ZPLGM[col-obj]}${execs[1]}${ZPLGM[col-rst]}'."
+            else
+                local sep="${ZPLGM[col-rst]},${ZPLGM[col-obj]} "
+                print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]} Successfully" \
+                    "extracted and marked executable the appropriate files" \
+                    "(${ZPLGM[col-obj]}${(pj:$sep:)${execs[@]:t}}${ZPLGM[col-rst]}) contained" \
+                    "in \`${ZPLGM[col-file]}$file${ZPLGM[col-rst]}'."
+            fi
     }
 
     (( move )) && {
