@@ -861,7 +861,8 @@ custom_try_source_file(char *file)
         ops.ind['U'] = 1;
 
         /* Invoke compilation */
-        if ( access( file, R_OK ) == 0 ) {
+        if ( access( file, R_OK ) == 0 && access( file, F_OK ) == 0 && 
+                0 != strcmp( file, "/dev/null" ) && 0 != strcmp( file, "./" ) ) {
             bin_zcompile("ZpluginModule_", args, &ops, 0);
         } else {
            if ( 0 == strcmp(
