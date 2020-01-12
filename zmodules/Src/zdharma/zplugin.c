@@ -604,9 +604,9 @@ bin_custom_dot(char *name, char **argv, UNUSED(Options ops), UNUSED(int func))
     if (ret == SOURCE_NOT_FOUND) {
 	if (isset(zp_conv_opt(POSIXBUILTINS__))) {
 	    /* hard error in POSIX (we'll exit later) */
-	    zerrnam(name, "%e: %s", errno, enam);
+	    zerrnam(name, "%d: %e: %s", __LINE__, errno, enam);
 	} else {
-	    zwarnnam(name, "%e: %s", errno, enam);
+	    zwarnnam(name, "%d: %e: %s", __LINE__, errno, enam);
 	}
     }
     zsfree(arg0);
@@ -862,7 +862,7 @@ custom_try_source_file(char *file)
 
         /* Invoke compilation */
         if ( access( file, R_OK ) == 0 ) {
-            bin_zcompile("ZpluginModule", args, &ops, 0);
+            bin_zcompile("ZpluginModule_", args, &ops, 0);
         } else {
            if ( 0 == strcmp(
                     getsparam( "ZPLG_MOD_DEBUG" ) ?
@@ -870,8 +870,8 @@ custom_try_source_file(char *file)
                     "1" )
           ) {
                zwarnnam( "ZpluginModule",
-                         "Couldn't read the script: `%s', compilation skipped",
-                         file );
+                         "%d: Couldn't read the script: `%s', compilation skipped",
+                         __LINE__, file );
           }
 
         }
@@ -1162,7 +1162,7 @@ custom_load_dump_header(char *nam, char *name, int err)
 
     if ((fd = open(name, O_RDONLY)) < 0) {
 	if (err)
-	    zwarnnam(nam, "can't open zwc file: %s", name);
+	    zwarnnam(nam, "%d: can't open zwc file: %s", __LINE__, name);
 	return NULL;
     }
     if (read(fd, buf, (FD_PRELEN + 1) * sizeof(wordcode)) !=
@@ -1171,10 +1171,10 @@ custom_load_dump_header(char *nam, char *name, int err)
 	strcmp(fdversion(buf), getsparam("ZSH_VERSION"))) {
 	if (err) {
 	    if (!v) {
-		zwarnnam(nam, "zwc file has wrong version (zsh-%s): %s",
-			 fdversion(buf), name);
+		zwarnnam(nam, "%d: zwc file has wrong version (zsh-%s): %s",
+                        __LINE__, fdversion(buf), name);
 	    } else
-		zwarnnam(nam, "invalid zwc file: %s" , name);
+		zwarnnam(nam, "%d: invalid zwc file: %s" , __LINE__, name);
 	}
 	close(fd);
 	return NULL;
@@ -1192,7 +1192,7 @@ custom_load_dump_header(char *nam, char *name, int err)
 	    if (lseek(fd, o, 0) == -1 ||
 		read(fd, buf, (FD_PRELEN + 1) * sizeof(wordcode)) !=
 		((FD_PRELEN + 1) * sizeof(wordcode))) {
-		zwarnnam(nam, "invalid zwc file: %s" , name);
+		zwarnnam(nam, "%d: invalid zwc file: %s", __LINE__, name);
 		close(fd);
 		return NULL;
 	    }
@@ -1204,7 +1204,7 @@ custom_load_dump_header(char *nam, char *name, int err)
 	len -= (FD_PRELEN + 1) * sizeof(wordcode);
 	if (read(fd, head + (FD_PRELEN + 1), len) != len) {
 	    close(fd);
-	    zwarnnam(nam, "invalid zwc file: %s" , name);
+	    zwarnnam(nam, "%d: invalid zwc file: %s", __LINE__, name);
 	    return NULL;
 	}
 	close(fd);
@@ -1290,7 +1290,7 @@ int bin_readarray( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int fu
 
     /* The name of output array */
     if ( !*argv ) {
-        zwarnnam( nam, "Name of the output array is required, aborting" );
+        zwarnnam( nam, "%d: Name of the output array is required, aborting", __LINE__ );
         return 1;
     } else {
         oarr_name = ztrdup( *argv );
@@ -1299,13 +1299,13 @@ int bin_readarray( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int fu
 
     /* Extra arguments -> error */
     if ( *argv ) {
-        zwarnnam( nam, "Extra arguments detected, only one argument is needed, see -h, aborting" );
+        zwarnnam( nam, "%d: Extra arguments detected, only one argument is needed, see -h, aborting", __LINE__ );
         return 1;
     }
 
     stream = fdopen( srcfd, "r" );
     if ( !stream ) {
-        zwarnnam( nam, "Couldn't read descriptor: %d" , nam, srcfd );
+        zwarnnam( nam, "%d: Couldn't read descriptor: %d", __LINE__, nam, srcfd );
         return 1;
     }
 
@@ -1340,7 +1340,7 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
     }
 
     if ( !*argv ) {
-        zwarnnam( nam, "`zpmod' takes a sub-command as first argument, see -h" );
+        zwarnnam( nam, "%d: `zpmod' takes a sub-command as first argument, see -h", __LINE__ );
         return 1;
     }
 
@@ -1352,18 +1352,18 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
 
         target = *argv ++;
         if ( !target ) {
-            zwarnnam( nam, "`report-append' is missing the target plugin ID (like \"zdharma/zbrowse\", see -h" );
+            zwarnnam( nam, "%d: `report-append' is missing the target plugin ID (like \"zdharma/zbrowse\", see -h", __LINE__ );
             return 1;
         }
         target = zp_unmetafy_zalloc( target, &target_len );
         if ( !target ) {
-            zwarnnam( nam, "Couldn't allocate new memory (1), operation aborted" );
+            zwarnnam( nam, "%d: Couldn't allocate new memory (1), operation aborted", __LINE__ );
             return 1;
         }
 
         body = *argv ++;
         if ( !body ) {
-            zwarnnam( nam, "`report-append' is missing the report-body to append, see -h" );
+            zwarnnam( nam, "%d: `report-append' is missing the report-body to append, see -h", __LINE__ );
             return 1;
         }
         body_len = strlen( body );
@@ -1382,7 +1382,7 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
             zsfree( report );
         }
     } else {
-        zwarnnam( nam, "Unknown zplugin-module command: `%s', see `-h'", subcmd );
+        zwarnnam( nam, "%d: Unknown zplugin-module command: `%s', see `-h'", __LINE__, subcmd );
     }
 
     return ret;
@@ -1427,7 +1427,7 @@ zp_append_report( const char *nam, const char *target, int target_len, const cha
     /* Get ZPLG_REPORTS associative array */
     pm = ( Param ) paramtab->getnode( paramtab, "ZPLG_REPORTS" );
     if ( !pm ) {
-        zwarnnam( nam, "Parameter $ZPLG_REPORTS isn't declared. Zplugin is not loaded? I.e. not sourced." );
+        zwarnnam( nam, "%d: Parameter $ZPLG_REPORTS isn't declared. Zplugin is not loaded? I.e. not sourced.", __LINE__ );
         return 1;
     }
 
@@ -1436,7 +1436,7 @@ zp_append_report( const char *nam, const char *target, int target_len, const cha
     hn = gethashnode2( ht, target );
     val_pm = ( Param ) hn;
     if ( !val_pm ) {
-        zwarnnam( nam, "Plugin %s isn't registered, cannot append to its report.", target );
+        zwarnnam( nam, "%d: Plugin %s isn't registered, cannot append to its report.", __LINE__, target );
         return 1;
     }
 
@@ -1457,7 +1457,7 @@ zp_append_report( const char *nam, const char *target, int target_len, const cha
     new_extended_len = target_string_len + body_len;
     target_string = realloc( target_string, ( new_extended_len + 1 ) * sizeof( char ) );
     if ( NULL == target_string ) {
-        zwarnnam( nam, "Couldn't allocate new memory (2), operation aborted" );
+        zwarnnam( nam, "%d: Couldn't allocate new memory (2), operation aborted", __LINE__ );
         return 1;
     }
 
@@ -1582,7 +1582,7 @@ zp_createhashparam( char *name, int flags )
     if ( !pm->u.hash ) {
         paramtab->removenode( paramtab, name );
         paramtab->freenode( &pm->node );
-        zwarnnam( name, "Out of memory when allocating user-visible hash parameter" );
+        zwarnnam( name, "%d: Out of memory when allocating user-visible hash parameter", __LINE__ );
         return NULL;
     }
 
