@@ -1487,9 +1487,6 @@ ZPLGM[EXTENDED_GLOB]=""
                 done | \
                 command tee .zplugin_lstupd | \
                 -zplg-pager &
-                if (( ICE_OPTS[opt_-q,--quiet] != 1 && had_output )) {
-                    print
-                }
 
               integer pager_pid=$!
               { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
@@ -1528,6 +1525,9 @@ ZPLGM[EXTENDED_GLOB]=""
                   [[ ${ice[atpull]} = "!"* ]] && -zplg-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || -zplg-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                   ZPLG_ICE=()
                   (( !skip_pull )) && command git pull --no-stat
+                  if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
+                      print
+                  }
               }
             )
         }
