@@ -1490,12 +1490,14 @@ ZPLGM[EXTENDED_GLOB]=""
                 if (( ICE_OPTS[opt_-q,--quiet] != 1 && had_output )) {
                     print
                 }
-                integer pager_pid=$!
-                { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
-                { wait $pager_pid; } > /dev/null 2>&1
+
+              integer pager_pid=$!
+              { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
+              { wait $pager_pid; } > /dev/null 2>&1
 
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zplugin_lstupd)"} ); } 2>/dev/null
+
               [[ ${#log} -gt 0 ]] && do_update=1 || \
                   {
                       skip_pull=1
