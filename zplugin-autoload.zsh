@@ -1459,10 +1459,11 @@ ZPLGM[EXTENDED_GLOB]=""
                     if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
                         -zplg-any-colorify-as-uspl2 "$id_as"
                         print "\nUpdating plugin $REPLY"
-                    } else {
-                        print
                     }
                     -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" release -u
+                    if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
+                        print
+                    }
                 }
                 ZPLG_ICE=()
             }
@@ -1479,8 +1480,6 @@ ZPLGM[EXTENDED_GLOB]=""
                           if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
                               -zplg-any-colorify-as-uspl2 "$id_as"
                               print "\r\nUpdating plugin $REPLY"
-                          } else {
-                              print
                           }
                       }
                       print $line
@@ -1488,6 +1487,9 @@ ZPLGM[EXTENDED_GLOB]=""
                 done | \
                 command tee .zplugin_lstupd | \
                 -zplg-pager &
+                if (( ICE_OPTS[opt_-q,--quiet] != 1 && had_output )) {
+                    print
+                }
                 integer pager_pid=$!
                 { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
                 { wait $pager_pid; } > /dev/null 2>&1
