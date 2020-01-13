@@ -44,7 +44,8 @@ From a more broad perspective, a plugin consists of:
    directories to `$PATH`.
 
 Below follow proposed enhancements and codifications of the definition of a "Zsh
-plugin" and the actions of plugin managers – the proposed standardization.
+plugin" and the actions of plugin managers – the proposed standardization. They
+cover the information of how to write a Zsh plugin.
 
 
 ## 1\. Standardized $0 Handling
