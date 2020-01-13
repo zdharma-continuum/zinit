@@ -4175,7 +4175,8 @@ loaded via Zsh’s <code>autoload</code> mechanism (a single function per-file).
 </li>
 </ol>
 <p>Below follow proposed enhancements and codifications of the definition of a "Zsh
-plugin" and the actions of plugin managers – the proposed standardization.</p>
+plugin" and the actions of plugin managers – the proposed standardization. They
+cover the information of how to write a Zsh plugin.</p>
 <h2 id="146_standardized_0_handling">1. Standardized $0 Handling<a class="headerlink" href="#146_standardized_0_handling" title="Permanent link">#</a></h2>
 <p>To get the plugin’s location, plugins should do:</p>
 <pre><code class="zsh">0=&quot;${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}&quot;
