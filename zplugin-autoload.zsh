@@ -1737,7 +1737,7 @@ ZPLGM[EXTENDED_GLOB]=""
         # Must be a git repository or a binary release
         if [[ ! -d "$repo/.git" && ! -f "$repo/._zplugin/is_release" ]]; then
             [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
-                print "\n$REPLY not a git repository"
+                print "\n$REPLY: not a git repository"
             continue
         fi
 
