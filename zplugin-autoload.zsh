@@ -1456,9 +1456,11 @@ ZPLGM[EXTENDED_GLOB]=""
                 print -r -- "<mark>" >! "$local_dir/.zplugin_lstupd"
 
                 if (( !skip_pull )) {
-                    [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                    if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
                         -zplg-any-colorify-as-uspl2 "$id_as"
                         print "\nUpdating plugin $REPLY"
+                    } else {
+                        print
                     }
                     -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" release -u
                 }
@@ -1474,9 +1476,11 @@ ZPLGM[EXTENDED_GLOB]=""
                   [[ -n "${line%%[[:space:]]##}" ]] && {
                       [[ $had_output -eq 0 ]] && {
                           had_output=1
-                          [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                          if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
                               -zplg-any-colorify-as-uspl2 "$id_as"
                               print "\r\nUpdating plugin $REPLY"
+                          } else {
+                              print
                           }
                       }
                       print $line
@@ -1741,7 +1745,7 @@ ZPLGM[EXTENDED_GLOB]=""
             print "\nStatus for plugin $REPLY"
             ( builtin cd -q "$repo"; command git status )
         else
-            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "\nUpdating plugin $REPLY" || print -n .
+            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Updating plugin $REPLY" || print -n .
             -zplg-update-or-status "update" "$user" "$plugin"
         fi
     done
