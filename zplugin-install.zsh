@@ -1362,8 +1362,10 @@ zpextract() {
 # FUNCTION: -zplg-at-eval {{{
 -zplg-at-eval() {
     local atclone="$2" atpull="$1"
+    integer retval
     -zplg-substitute atclone atpull
-    [[ "$atpull" = "%atclone" ]] && { eval "$atclone"; ((1)); } || eval "$atpull"
+    [[ $atpull = "%atclone" ]] && { eval "$atclone"; retval=$?; } || { eval "$atpull"; retval=$?; }
+    return $retval
 }
 # }}}
 
