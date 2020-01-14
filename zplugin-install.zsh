@@ -668,7 +668,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     elif (( ${+commands[wget]} )) || type wget 2>/dev/null 1>&2; then
         cmd=(command wget --server-response --spider -q "$url" -O -)
     else
-        REPLY=$(( $(date +"%s") + 1000 ))
+        REPLY=$(( $(date +"%s") ))
         return 2
     fi
 
@@ -677,12 +677,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     done
 
     [[ -z $header ]] && {
-        REPLY=$(( $(date +"%s") + 1000 ))
+        REPLY=$(( $(date +"%s") ))
         return 3
     }
     
     LANG=C strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
-        REPLY=$(( $(date +"%s") + 1000 ))
+        REPLY=$(( $(date +"%s") ))
         return 4
     }
 
