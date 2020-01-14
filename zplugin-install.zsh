@@ -672,7 +672,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         return 2
     fi
 
-    "${cmd[@]}" | command grep Last-Modified: | while read -r line; do
+    "${cmd[@]}" |& command grep Last-Modified: | while read -r line; do
         header="${line#*, }"
     done
 
