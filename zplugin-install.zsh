@@ -942,7 +942,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         done
                     }
 
-                    [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                    [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
                     -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
                         -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
@@ -1006,7 +1006,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 eval "${ZPLG_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
             )
 
-            [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
             # Currently redundant, but theoretically it has its place
             [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
