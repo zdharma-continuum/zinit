@@ -657,7 +657,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     setopt localoptions localtraps
 
-    (( \!${path[(I)/usr/local/bin]} )) && \
+    (( !${path[(I)/usr/local/bin]} )) && \
         {
             path+=( "/usr/local/bin" );
             trap "path[-1]=()" EXIT
