@@ -648,6 +648,46 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     return 0
 } # }}}
+# FUNCTION: -zplg-get-url-mtime {{{
+# For the given URL returns the date in the Last-Modified
+# header as a time stamp
+-zplg-get-url-mtime() {
+    local url="$1" IFS line header
+    local -a cmd
+
+    setopt localoptions localtraps
+
+    (( \!${path[(I)/usr/local/bin]} )) && \
+        {
+            path+=( "/usr/local/bin" );
+            trap "path[-1]=()" EXIT
+        }
+
+    if (( ${+commands[curl]} )) || type curl 2>/dev/null 1>&2; then
+        cmd=(command curl -sI "$url")
+    elif (( ${+commands[wget]} )) || type wget 2>/dev/null 1>&2; then
+        cmd=(command wget --server-response --spider -q "$url" -O -)
+    else
+        REPLY=$(( $(date +"%s") + 1000 ))
+        return 2
+    fi
+
+    "${cmd[@]}" | command grep Last-Modified: | while read -r line; do
+        header="${line#*, }"
+    done
+
+    [[ -z $header ]] && {
+        REPLY=$(( $(date +"%s") + 1000 ))
+        return 3
+    }
+    
+    LANG=C strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
+        REPLY=$(( $(date +"%s") + 1000 ))
+        return 4
+    }
+
+    return 0
+} # }}}
 # FUNCTION: -zplg-mirror-using-svn {{{
 # Used to clone subdirectories from Github. If in update mode
 # (see $2), then invokes `svn update', in normal mode invokes
