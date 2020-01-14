@@ -664,7 +664,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         }
 
     if (( ${+commands[curl]} )) || type curl 2>/dev/null 1>&2; then
-        cmd=(command curl -sI "$url")
+        cmd=(command curl -sIL "$url")
     elif (( ${+commands[wget]} )) || type wget 2>/dev/null 1>&2; then
         cmd=(command wget --server-response --spider -q "$url" -O -)
     else
