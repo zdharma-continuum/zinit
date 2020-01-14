@@ -295,7 +295,11 @@ ZPLGM[EXTENDED_GLOB]=""
 } # }}}
 # FUNCTION: -zplg-at-eval {{{
 -zplg-at-eval() {
-    [[ "$1" = "%atclone" ]] && { eval "$2"; return $?; } || { eval "$1"; return $?; }
+    local atclone="$2" atpull="$1"
+    integer retval
+    -zplg-substitute atclone atpull
+    [[ $atpull = "%atclone" ]] && { eval "$atclone"; retval=$?; } || { eval "$atpull"; retval=$?; }
+    return $retval
 }
 # }}}
 
