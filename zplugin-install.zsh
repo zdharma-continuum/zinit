@@ -940,7 +940,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     integer skip_dl
                     local -a matched
                     matched=( "$local_dir"/"$dirname"/"$filename"(DNms-$secs) )
-                    (( ${#matched} && ${+ZPLG_ICE[run-atpull]} )) && skip_dl=1 || return 2
+                    (( ${#matched} )) && {
+                        (( ${+ZPLG_ICE[run-atpull]} )) && skip_dl=1 || return 2
+                    }
 
                     if (( !skip_dl )) {
                         [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
