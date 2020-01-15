@@ -928,9 +928,25 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 } else {
                     command mkdir -p "$local_dir/$dirname"
 
-                    [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
-                        command rm -f "$dirname/$filename"
+                    -zplg-get-url-mtime "$url"
+
+                    # Returned is: modification time of the remote file.
+                    # Thus, EPOCHSECONDS - REPLY is: allowed window for the
+                    # local file to be modified in. ms-$secs is: files accessed
+                    # within last $secs seconds. Thus, if there's no match, the
+                    # local file is out of date.
+
+                    local secs=$(( EPOCHSECONDS - REPLY ))
+                    integer skip_dl
+                    local -a matched
+                    matched=( "$local_dir"/"$dirname"/"$filename"(DNms-$secs) )
+                    (( ${#matched} && ${+ZPLG_ICE[run-atpull]} )) && skip_dl=1 || return 2
+
+                    if (( !skip_dl )) {
+                        [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -f "$dirname/$filename" ]] && print "Removing the file (-r/--reset given)..."
+                            command rm -f "$dirname/$filename"
+                        }
                     }
 
                     # Run annexes' atpull hooks (the before atpull-ice ones)
@@ -943,12 +959,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     }
 
                     [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
-
-                    -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
-                        -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
-                            command rm -f "$dirname/$filename"
-                            print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
-                            return 1
+                    
+                    if (( !skip_dl )) {
+                        -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
+                            -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
+                                command rm -f "$dirname/$filename"
+                                print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                                return 1
+                            }
                         }
                     }
                 }
