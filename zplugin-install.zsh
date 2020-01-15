@@ -928,7 +928,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 } else {
                     command mkdir -p "$local_dir/$dirname"
 
-                    -zplg-get-url-mtime "$url"
+                    if (( !ICE_OPTS[opt_-f,--force] )) {
+                        -zplg-get-url-mtime "$url"
+                    } else {
+                        REPLY=$EPOCHSECONDS
+                    }
 
                     # Returned is: modification time of the remote file.
                     # Thus, EPOCHSECONDS - REPLY is: allowed window for the

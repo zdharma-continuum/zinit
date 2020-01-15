@@ -1964,6 +1964,8 @@ zplugin() {
        --clean  opt_--clean
        --yes    opt_-y,--yes
        -y       opt_-y,--yes
+       -f       opt_-f,--force
+       --force  opt_-f,--force
     )
 
     [[ $1 != (-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
@@ -2165,9 +2167,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
                    (( ${+ZPLG_ICE[has]} )) && { (( ${+commands[${ZPLG_ICE[has]}]} )) || return 1; }
                    () {
                        setopt localoptions extendedglob
-                       : ${@[@]//(#b)([ $'\t']##|(#s))(--quiet|-q|--reset|-r)([ $'\t']##|(#e))/${ICE_OPTS[${opt_map[${match[2]}]}]::=1}}
+                       : ${@[@]//(#b)([ $'\t']##|(#s))(-q|--quiet|-r|--reset|-f|--force)([ $'\t']##|(#e))/${ICE_OPTS[${opt_map[${match[2]}]}]::=1}}
                    } "$@"
-                   set -- "${@[@]:#(--quiet|-q|--reset|-r)}"
+                   set -- "${@[@]:#(--quiet|-q|--reset|-r|-f|--force)}"
                    if [[ $2 = --all || ( -z $2 && -z $3 && -z ${ZPLG_ICE[teleid]} && -z ${ZPLG_ICE[id-as]} ) ]]; then
                        [[ -z $2 ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        -zplg-update-or-status-all update; retval=$?
