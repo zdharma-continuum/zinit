@@ -367,8 +367,9 @@ Zplugin is an elastic and fast Zshell plugin manager that will allow you to
 install everything from GitHub and other sites.
 
 Zplugin is currently the only plugin manager out there that has Turbo mode which yields
-**50-73% faster Zsh startup!**. Check out a speed comparison with other popular plugin
-managers [here](https://github.com/zdharma/pm-perf-test).
+**50-80% faster Zsh startup!** (i.e.: the shell will start **5** times faster!). Check
+out a speed comparison with other popular plugin managers
+[here](https://github.com/zdharma/pm-perf-test).
 
 Zplugin gives **reports** from plugin load describing what aliases, functions,
 bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
@@ -539,7 +540,7 @@ explicitly stated otherwise.
 ### Conditional Loading
 | Modifier | Description |
 |:-:|-|
-| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) |<div align="justify" style="text-align: justify;"> Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. **Fact:** when `wait` is used without value, it works as `wait'0'`.</div>|
+| [**`wait`**](http://zdharma.org/zplugin/wiki/Example-wait-conditions) |<div align="justify" style="text-align: justify;"> Postpone loading a plugin or snippet. For `wait'1'`, loading is done `1` second after prompt. For `wait'[[ ... ]]'`, `wait'(( ... ))'`, loading is done when given condition is meet. For `wait'!...'`, prompt is reset after load. Zsh can start 80% (i.e.: 5x) faster thanks to postponed loading. **Fact:** when `wait` is used without value, it works as `wait'0'`.</div>|
 | [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`.</div>|
 | [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`.</div>|
 | `cloneonly` |<div align="justify" style="text-align: justify;"> Don't load the plugin / snippet, only download it </div>|
