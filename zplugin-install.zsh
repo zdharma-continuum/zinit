@@ -1202,12 +1202,12 @@ zpextract() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-    local -a opts
-    zparseopts -D -E -a opts -move || \
+    local -a opt_move opt_norm
+    zparseopts -D -E -move=opt_move -norm=opt_norm || \
         { print -P -r -- "%F{160}Incorrect options given to \`zpextract' (available are: %F{221}--move%F{160})%f"; return 1; }
 
     local file="$1" ext="$2"
-    integer move=${${${(M)${#opts}:#0}:+0}:-1}
+    integer move=${${${(M)${#opt_move}:#0}:+0}:-1} norm=${${${(M)${#opt_norm}:#0}:+0}:-1}
 
     if [[ ! -e $file ]] {
         print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
@@ -1229,7 +1229,7 @@ zpextract() {
         (( retval == 0 )) && {
             local -a files
             files=( *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(DN) )
-            (( ${#files} )) && command rm -f "$file"
+            (( ${#files} && !norm )) && command rm -f "$file"
         }
         return $retval
     }
