@@ -52,7 +52,7 @@ reports](DONATIONS.md) about what is being done with the money received.
   <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
 
 * 15-01-2020
-  - There's a new function, `zpextract`, which unpacks given file. It supports many
+  - There's a new function, `zpextract`, which unpacks the given file. It supports many
     formats (notably also `dmg` images) – if there's a format that's unsupported please
     don't hesitate to [make a
     request](https://github.com/zdharma/zplugin/issues/new?template=feature_request.md)
@@ -62,10 +62,10 @@ reports](DONATIONS.md) about what is being done with the money received.
     - it has an optional `--move` option which moves all the files from a subdirectory
       up one level,
     - one other option `--norm` prevents the archive from being deleted upon unpacking.
-  - The snippets now aren't re-downloaded unless they're newer on the HTTP server. Use
-    this with the `--norm` option of `zpextract` to prevent unnecessary updates. For
+  - snippets now aren't re-downloaded unless they're newer on the HTTP server; use
+    this with the `--norm` option of `zpextract` to prevent unnecessary updates; for
     example, the [firefox-dev package](https://github.com/Zsh-Packages/firefox-dev)
-    uses this option for this purpose.
+    uses this option for this purpose,
   - GitHub doesn't report proper `Last-Modified` HTTP server for the files in the
     repositories so the feature doesn't yet work with such files.
 
