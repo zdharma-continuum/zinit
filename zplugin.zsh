@@ -1038,7 +1038,7 @@ function $f {
     local mode="$3" rst=0 retval=0 key
     -zplg-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZPLG_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
-    ZPLG_ICE[teleid]="$user${${user:#(%|/)*}:+/}$plugin"
+    ZPLG_ICE[teleid]="${ZPLG_ICE[teleid]:-$user${${user:#(%|/)*}:+/}$plugin}"
 
     local -a arr
     reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:preinit <->]}" )
@@ -1062,6 +1062,7 @@ function $f {
             id_as="${ZPLG_ICE[id-as]:-${user}${${user:#(%|/)*}:+/}$plugin}"
         }
         user="${reply[-2]}" plugin="${reply[-1]}"
+        ZPLG_ICE[teleid]="$user${${user:#(%|/)*}:+/}$plugin"
         [[ $REPLY = snippet ]] && {
             ZPLG_ICE[id-as]="${ZPLG_ICE[id-as]:-$id_as}"
             -zplg-load-snippet $plugin
