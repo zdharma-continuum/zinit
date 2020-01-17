@@ -1427,8 +1427,9 @@ ZPLGM[EXTENDED_GLOB]=""
         if [[ -n "${ice[is_release]}" ]] {
             (( ${+functions[-zplg-setup-plugin-dir]} )) || builtin source ${ZPLGM[BIN_DIR]}"/zplugin-install.zsh"
             -zplg-get-latest-gh-r-version "$user" "$plugin"
-            if [[ "${ice[is_release]}" = */$REPLY/* ]] {
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+            local version=$REPLY
+            if [[ ${ice[is_release]} = */$version/* ]] {
+                (( !ICE_OPTS[opt_-q,--quiet] )) && \
                     print -- "\rBinary release already up to date (version: $REPLY)"
                 skip_pull=1
                 (( ${+ice[run-atpull]} )) && { do_update=1; }
@@ -1464,7 +1465,7 @@ ZPLGM[EXTENDED_GLOB]=""
                         -zplg-any-colorify-as-uspl2 "$id_as"
                         print "\nUpdating plugin $REPLY"
                     }
-                    -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" release -u
+                    -zplg-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version
                     if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
                         print
                     }

@@ -284,7 +284,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     setopt extendedglob warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
-        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---} tpe=$4 update=$5
+        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---} tpe=$4 update=$5 \
+        version=$6
 
     local -A sites
     sites=(
@@ -366,7 +367,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
                 url="https://github.com${list[1]}"
-                print "(Requesting \`${list[1]:t}'...)"
+                print "(Requesting \`${list[1]:t}'${version:+, version $version}...)"
                 -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
                     -zplg-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
                         command rm -f "${list[1]:t}"
