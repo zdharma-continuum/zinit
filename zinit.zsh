@@ -66,6 +66,9 @@ ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICE
 export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache/zinit}}"
 [[ -n ${path[(re)$ZPFX/bin]} ]] || path=( "$ZPFX/bin" ${path[@]} )
 
+# Add completions directory to fpath
+fpath=( "${ZINIT[COMPLETIONS_DIR]}" "${fpath[@]}" )
+
 [[ ! -d $ZSH_CACHE_DIR ]] && command mkdir -p "$ZSH_CACHE_DIR"
 [[ -n ${ZINIT[ZCOMPDUMP_PATH]} ]] && ZINIT[ZCOMPDUMP_PATH]=${~ZINIT[ZCOMPDUMP_PATH]}
 
@@ -980,6 +983,8 @@ function $f {
         command mkdir 2>/dev/null -p ${ZPFX}/bin
 
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+        (( ${+functions[.zinit-confirm]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-autoload.zsh
+        .zinit-clear-completions &>/dev/null
         .zinit-compinit &>/dev/null
     }
     [[ ! -d ${ZINIT[COMPLETIONS_DIR]} ]] && {
@@ -992,6 +997,9 @@ function $f {
 
         # Also set up */bin and ZPFX in general
         command mkdir 2>/dev/null -p ${ZPFX}/bin
+
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+        .zinit-compinit &>/dev/null
     }
     [[ ! -d ${ZINIT[SNIPPETS_DIR]} ]] && {
         command mkdir "${ZINIT[SNIPPETS_DIR]}"
@@ -2399,9 +2407,6 @@ builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
 # This will allow to cuninstall of its completion
 ZINIT_REGISTERED_PLUGINS=( _local/zinit "${(u)ZINIT_REGISTERED_PLUGINS[@]:#_local/zinit}" )
 ZINIT_REGISTERED_STATES[_local/zinit]=1
-
-# Add completions directory to fpath
-fpath=( "${ZINIT[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
 # Inform Prezto that the compdef function is available
 zstyle ':prezto:module:completion' loaded 1
