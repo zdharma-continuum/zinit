@@ -4,19 +4,18 @@
 <br/>New: You can request a feature when donating, even fancy or advanced ones get implemented this way. [There are
 reports](DONATIONS.md) about what is being done with the money received.
 
-<p align="center">
-<img src="https://raw.githubusercontent.com/zdharma/zplugin/master/doc/img/zplugin.png" />
-</p>
+<h2 align="center">The project undergoes a name change from Zplugin to Zinit.</h2>
+<h2 align="center">Please report any observed issues.</h2>
 
-[![Status][status-badge]][status-link] [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Chat at https://gitter.im/zplugin/Lobby][lobby-badge]][lobby-link]
+[![Status][status-badge]][status-link] [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Chat at https://gitter.im/zinit/Lobby][lobby-badge]][lobby-link]
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
 - [News](#news)
-- [Zplugin](#zplugin)
-- [Zplugin Wiki](#zplugin-wiki)
+- [Zinit](#zinit)
+- [Zinit Wiki](#zinit-wiki)
 - [Installation](#installation)
   - [Option 1 - Automatic Installation (Recommended)](#option-1---automatic-installation-recommended)
   - [Option 2 - Manual Installation](#option-2---manual-installation)
@@ -24,15 +23,15 @@ reports](DONATIONS.md) about what is being done with the money received.
   - [Introduction](#introduction)
   - [Example Usage](#example-usage)
   - [Ice Modifiers](#ice-modifiers)
-  - [Zplugin Commands](#zplugin-commands)
-  - [Updating Zplugin and Plugins](#updating-zplugin-and-plugins)
+  - [Zinit Commands](#zinit-commands)
+  - [Updating Zinit and Plugins](#updating-zinit-and-plugins)
   - [Using Oh My Zsh Themes](#using-oh-my-zsh-themes)
 - [Completions](#completions)
   - [Calling `compinit` Without Turbo Mode](#calling-compinit-without-turbo-mode)
   - [Calling `compinit` With Turbo Mode](#calling-compinit-with-turbo-mode)
   - [Ignoring Compdefs](#ignoring-compdefs)
   - [Disabling System-Wide `compinit` Call (Ubuntu)](#disabling-system-wide-compinit-call-ubuntu)
-- [Zplugin Module](#zplugin-module)
+- [Zinit Module](#zinit-module)
   - [Motivation](#motivation)
   - [Installation](#installation-1)
   - [Measuring Time of `source`s](#measuring-time-of-sources)
@@ -49,13 +48,13 @@ reports](DONATIONS.md) about what is being done with the money received.
 # News
 
 <details>
-  <summary>Here are the new features and updates added to zplugin in the last 90 days.</summary>
+  <summary>Here are the new features and updates added to zinit in the last 90 days.</summary>
 
 * 15-01-2020
   - There's a new function, `zpextract`, which unpacks the given file. It supports many
     formats (notably also `dmg` images) – if there's a format that's unsupported please
     don't hesitate to [make a
-    request](https://github.com/zdharma/zplugin/issues/new?template=feature_request.md)
+    request](https://github.com/zdharma/zinit/issues/new?template=feature_request.md)
     for it to be added. A few facts:
     - the function is available only at the time of the plugin/snippet installation,
     - it's to be used within `atclone` and `atpull` ices,
@@ -78,20 +77,20 @@ reports](DONATIONS.md) about what is being done with the money received.
     Gem(s) or Node module(s) locally in a newly created plugin directory. For example:
 
     ```zsh
-    zplugin pack param='GEM -> rails' for any-gem
-    zplugin pack param='MOD -> doctoc' for any-node
+    zinit pack param='GEM -> rails' for any-gem
+    zinit pack param='MOD -> doctoc' for any-node
     # To have the command in zshrc, add an id-as'' ice so that
-    # Zplugin knows that the package is already installed
+    # Zinit knows that the package is already installed
     # (also: the Unicode arrow is allowed)
-    zplugin id-as=jekyll pack param='GEM → jekyll' for any-gem
+    zinit id-as=jekyll pack param='GEM → jekyll' for any-gem
     ```
 
     The binaries will be exposed without altering the PATH via shims
-    ([Bin-Gem-Node](https://github.com/zplugin/z-a-bin-gem-node) annex is needed).
-    Shims are correctly removed when deleting a plugin with `zplugin delete …`.
+    ([Bin-Gem-Node](https://github.com/zinit-zsh/z-a-bin-gem-node) annex is needed).
+    Shims are correctly removed when deleting a plugin with `zinit delete …`.
 
 * 11-12-2019
-  - Zplugin now supports installing special-Zsh NPM packages! Bye-bye the long and
+  - Zinit now supports installing special-Zsh NPM packages! Bye-bye the long and
     complex ice-lists! Check out the
     [Wiki](http://zdharma.org/zplugin/wiki/NPM-Packages/) for an introductory document
     on the feature.
@@ -114,24 +113,24 @@ reports](DONATIONS.md) about what is being done with the money received.
     load it, do e.g.:
 
     ```zsh
-    zplugin as"null" wait"2" lucid from"gh-r" for \
+    zinit as"null" wait"2" lucid from"gh-r" for \
         mv"exa* -> exa" sbin"exa"  ogham/exa \
         mv"fd* -> fd" sbin"fd/fd"  @sharkdp/fd \
         sbin"fzf" junegunn/fzf-bin
     ```
 
     i.e.: precede the plugin name with `@`. Note: `sbin''` is an ice added by the
-    [z-a-bin-gem-node](https://github.com/zplugin/z-a-bin-gem-node) annex, it provides
+    [z-a-bin-gem-node](https://github.com/zinit/z-a-bin-gem-node) annex, it provides
     the command to the command line without altering `$PATH`.
 
-    See the [Zplugin Wiki](http://zdharma.org/zplugin/wiki/For-Syntax/) for more
+    See the [Zinit Wiki](http://zdharma.org/zplugin/wiki/For-Syntax/) for more
     information on the for-syntax.
 
 * 06-11-2019
   - A new syntax, called for-syntax. Example:
 
     ```zsh
-     zplugin as"program" atload'print Hi!' for \
+     zinit as"program" atload'print Hi!' for \
          atinit'print First!' zdharma/null \
          atinit'print Second!' svn OMZ::plugins/git
     ```
@@ -149,12 +148,12 @@ reports](DONATIONS.md) about what is being done with the money received.
 
     ```zsh
     % print -rl $path | egrep -i '(/git|null)'
-    /root/.zplugin/snippets/OMZ::plugins/git
-    /root/.zplugin/plugins/zdharma---null
+    /root/.zinit/snippets/OMZ::plugins/git
+    /root/.zinit/plugins/zdharma---null
     ```
 
     To load in light mode, use a new `light-mode` ice. More examples and information
-    can be found on the [Zplugin Wiki](http://zdharma.org/zplugin/wiki/For-Syntax/).
+    can be found on the [Zinit Wiki](http://zdharma.org/zplugin/wiki/For-Syntax/).
 
 * 03-11-2019
   - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
@@ -171,8 +170,8 @@ reports](DONATIONS.md) about what is being done with the money received.
     # Invoking the command `crasis' will load the plugin that
     # provides the function `crasis', and it will be then
     # immediately invoked with the same arguments
-    zplugin ice trigger-load'!crasis'
-    zplugin load zdharma/zplugin-crasis
+    zinit ice trigger-load'!crasis'
+    zinit load zdharma/zinit-crasis
     ```
 
 * 22-10-2019
@@ -181,15 +180,15 @@ reports](DONATIONS.md) about what is being done with the money received.
 
 * 21-10-2019
   - The `times` command has a new option `-m` – it shows the **moments** of the plugin
-    load times – i.e.: how late after loading Zplugin a plugin has been loaded.
+    load times – i.e.: how late after loading Zinit a plugin has been loaded.
 
 * 20-10-2019
-  - The `zplugin` completion now completes also snippets! The command `snippet`, but
+  - The `zinit` completion now completes also snippets! The command `snippet`, but
     also `delete`, `recall`, `edit`, `cd`, etc. all receive such completing.
   - The `ice` subcommand can now be skipped – just pass in the ices, e.g.:
     ```zsh
-    zplugin atload"zpcompinit; zpcdreplay" blockf
-    zplugin light zsh-users/zsh-completions
+    zinit atload"zpcompinit; zpcdreplay" blockf
+    zinit light zsh-users/zsh-completions
     ```
   - The `compile` command is able to compile snippets.
   - The plugins that add their subdirectories into `$fpath` can be now `blockf`-ed –
@@ -200,16 +199,16 @@ reports](DONATIONS.md) about what is being done with the money received.
     automatically to the last component of its spec, e.g.:
 
     ```zsh
-    zplugin ice id-as"auto"
-    zplugin load robobenklein/zinc
+    zinit ice id-as"auto"
+    zinit load robobenklein/zinc
     ```
 
     will load the plugin as `id-as'zinc'`.
 
 * 14-09-2019
   - There's a Vim plugin which extends syntax highlighting of zsh scripts with coloring
-    of the Zplugin commands. [Project
-    homepage](https://github.com/zplugin/zplugin-vim-syntax).
+    of the Zinit commands. [Project
+    homepage](https://github.com/zinit/zinit-vim-syntax).
 
 * 13-09-2019
   - New ice `aliases` which loads plugin with the aliases mechanism enabled. Use for
@@ -220,13 +219,13 @@ reports](DONATIONS.md) about what is being done with the money received.
     **sticky emulation** feature of Zsh – all functions defined within the plugin will
     automatically switch to the desired emulation mode before executing and switch back
     thereafter. In other words it is now possible to load e.g. bash plugins with
-    Zplugin, provided that the emulation level done by Zsh is sufficient, e.g.:
+    Zinit, provided that the emulation level done by Zsh is sufficient, e.g.:
 
     ```zsh
-    zplugin ice bash pick"bash_it.sh" \
-            atinit"BASH_IT=${ZPLGM[PLUGINS_DIR]}/Bash-it---bash-it" \
+    zinit ice bash pick"bash_it.sh" \
+            atinit"BASH_IT=${ZINIT[PLUGINS_DIR]}/Bash-it---bash-it" \
             atclone"yes n | ./install.sh"
-    zplugin load Bash-it/bash-it
+    zinit load Bash-it/bash-it
     ```
 
     This script loads correctly thanks to the emulation, however it isn't functional
@@ -238,28 +237,28 @@ reports](DONATIONS.md) about what is being done with the money received.
     patching) of the plugin's files inside the `atpull''` ice – `git` will report no
     conflicts when doing `pull`, and the changes can be then again introduced by the
     `atpull''` ice.
-  - Three new Zplugin annexes (i.e.
+  - Three new Zinit annexes (i.e.
     [extensions](http://zdharma.org/zplugin/wiki/Annexes/)):
 
-      - [z-a-man](https://github.com/zplugin/z-a-man)
+      - [z-a-man](https://github.com/zinit/z-a-man)
 
         Generates man pages and code-documentation man pages from plugin's README.md
         and source files (the code documentation is obtained from
         [Zshelldoc](https://github.com/zdharma/zshelldoc)).
 
-      - [z-a-test](https://github.com/zplugin/z-a-test)
+      - [z-a-test](https://github.com/zinit/z-a-test)
 
         Runs tests (if detected `test` target in a `Makefile` or any `*.zunit` files)
         on plugin installation and non-empty update.
 
-      - [z-a-patch-dl](https://github.com/zplugin/z-a-patch-dl)
+      - [z-a-patch-dl](https://github.com/zinit/z-a-patch-dl)
 
         Allows easy download and applying of patches, to e.g. aid building a binary
         program equipped in the plugin.
 
   - A new variable is being recognized by the installation script:
     `$ZPLG_BIN_DIR_NAME`. It configures the directory within `$ZPLG_HOME` to which
-    Zplugin should be cloned.
+    Zinit should be cloned.
 
 * 09-08-2019
   - A new ice-mod `wrap-track''` which gets `;`-separated list of functions that are to
@@ -272,26 +271,26 @@ reports](DONATIONS.md) about what is being done with the money received.
 * 29-07-2019
   - `delete` now supports following options:
     * `--all` – deletes all plugins and snippets (a purge, similar to `rm -rf
-      ${ZPLGM[PLUGINS_DIR]} ${ZPLGM[SNIPPETS_DIR]}`)
+      ${ZINIT[PLUGINS_DIR]} ${ZINIT[SNIPPETS_DIR]}`)
     * `--clean` – deletes only plugins and snippets that are **currently not loaded**
       in the current session.
 
 * 09-07-2019
-  - Zplugin can now have **its own plugins**, called **z-plugins**! Check out an
+  - Zinit can now have **its own plugins**, called **z-plugins**! Check out an
     example but fully functional z-plugin
     [zdharma/z-p-submods](https://github.com/zdharma/z-p-submods) and a document that
     explains on how to implement your own z-plugin
     ([here](../../wiki/Z-PLUGINS)).
 
 * 08-07-2019
-  - You can now do `zplugin ice wait ...` and it will work as `zplugin ice wait'0' ...`
+  - You can now do `zinit ice wait ...` and it will work as `zinit ice wait'0' ...`
     :) I.e. when there's no value to the `wait''` ice then a value of `0` is being
     substituted.
 
 * 02-07-2019
   - [Cooperation of Fast-Syntax-Highlighting and
-    Zplugin](https://asciinema.org/a/254630) – a new precise highlighting for
-    Zplugin in F-Sy-H.
+    Zinit](https://asciinema.org/a/254630) – a new precise highlighting for
+    Zinit in F-Sy-H.
 
 * 01-07-2019
   - `atclone''`, `atpull''` & `make''` get run in the same subshell, thus an e.g.
@@ -308,10 +307,10 @@ reports](DONATIONS.md) about what is being done with the money received.
     triggers loading of the plugin/snippet:
 
     ```zsh
-    % zplugin ice on-update-of'{~/files-*,/tmp/files-*}' lucid \
+    % zinit ice on-update-of'{~/files-*,/tmp/files-*}' lucid \
         atload"echo I have been loaded" \
         notify"Yes that's true :)"
-    % zplugin load zdharma/null
+    % zinit load zdharma/null
     % touch ~/files-1
     The plugin has been loaded
     %
@@ -328,8 +327,8 @@ reports](DONATIONS.md) about what is being done with the money received.
     when the plugin or snippet gets loaded. E.g.:
 
     ```zsh
-    % zplugin ice wait"0" lucid notify"zdharma/null has been loaded"
-    % zplugin light zdharma/null
+    % zinit ice wait"0" lucid notify"zdharma/null has been loaded"
+    % zinit light zdharma/null
     %
     zdharma/null has been loaded
     ```
@@ -337,8 +336,8 @@ reports](DONATIONS.md) about what is being done with the money received.
     In case of problems with the loading a warning message will be output:
 
     ```
-    % zplugin ice notify atload'return 7'
-    % zplugin light zdharma/null
+    % zinit ice notify atload'return 7'
+    % zinit light zdharma/null
     %
     notify: Plugin not loaded / loaded with problem, the return code: 7
     ```
@@ -350,10 +349,10 @@ reports](DONATIONS.md) about what is being done with the money received.
     or `c`. The meaning is illustrated by the following example:
 
     ```zsh
-    zplugin ice wait"0b" as"command" pick"wd.sh" atinit"echo Firing 1" lucid
-    zplugin light mfaerevaag/wd
-    zplugin ice wait"0a" as"command" pick"wd.sh" atinit"echo Firing 2" lucid
-    zplugin light mfaerevaag/wd
+    zinit ice wait"0b" as"command" pick"wd.sh" atinit"echo Firing 1" lucid
+    zinit light mfaerevaag/wd
+    zinit ice wait"0a" as"command" pick"wd.sh" atinit"echo Firing 2" lucid
+    zinit light mfaerevaag/wd
 
     # The output
     Firing 2
@@ -367,29 +366,29 @@ reports](DONATIONS.md) about what is being done with the money received.
 
     In other words, instead of `wait'1'` you can enter `wait'1a'`,
     `wait'1b'` and `wait'1c'` – to this way **impose order** on the loadings
-    **regardless of the order of `zplugin` commands**.
+    **regardless of the order of `zinit` commands**.
 
 </details>
 
 To see the full history check [the changelog](CHANGELOG.md).
 
-# Zplugin
+# Zinit
 
 <p align="center">
 <a href="https://github.com/zdharma/pm-perf-test">
-<img width="550px" src="https://raw.githubusercontent.com/zdharma/zplugin/images/startup-times.png"/>
+<img width="550px" src="https://raw.githubusercontent.com/zdharma/zinit/images/startup-times.png"/>
 </a>
 </p>
 
-Zplugin is an elastic and fast Zshell plugin manager that will allow you to
+Zinit is an elastic and fast Zshell plugin manager that will allow you to
 install everything from GitHub and other sites.
 
-Zplugin is currently the only plugin manager out there that has Turbo mode which yields
+Zinit is currently the only plugin manager out there that has Turbo mode which yields
 **50-80% faster Zsh startup!** (i.e.: the shell will start up to **5** times faster!). Check
 out a speed comparison with other popular plugin managers
 [here](https://github.com/zdharma/pm-perf-test).
 
-Zplugin gives **reports** from plugin load describing what aliases, functions,
+Zinit gives **reports** from plugin load describing what aliases, functions,
 bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
 elements a plugin has set up.
 
@@ -401,135 +400,135 @@ The system does not use `$FPATH`, loading multiple plugins doesn't clutter
 `KSH_ARRAYS`. Completion management functionality is provided to allow user
 to call `compinit` only once in `.zshrc`.
 
-# Zplugin Wiki
+# Zinit Wiki
 
-The information in this README is complemented by the [Zplugin wiki](http://zdharma.org/zplugin/wiki/). The README is an introductory overview of Zplugin while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of Zplugin.
+The information in this README is complemented by the [Zinit wiki](http://zdharma.org/zplugin/wiki/). The README is an introductory overview of Zinit while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of Zinit.
 
 # Installation
 
 ## Option 1 - Automatic Installation (Recommended)
 
-The easiest way to install Zplugin is to execute:
+The easiest way to install Zinit is to execute:
 
 ```zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 ```
 
-This will install Zplugin in `~/.zplugin/bin`. `.zshrc` will be updated with three
+This will install Zinit in `~/.zinit/bin`. `.zshrc` will be updated with three
 lines of code that will be added to the bottom. The lines will be sourcing
-`zplugin.zsh` and setting up completion for command `zplugin`. After installing and
-reloading the shell compile Zplugin with `zplugin self-update`.
+`zinit.zsh` and setting up completion for command `zinit`. After installing and
+reloading the shell compile Zinit with `zinit self-update`.
 
 ## Option 2 - Manual Installation
 
-To manually install Zplugin clone the repo to e.g. `~/.zplugin/bin`:
+To manually install Zinit clone the repo to e.g. `~/.zinit/bin`:
 
 ```sh
-mkdir ~/.zplugin
-git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
+mkdir ~/.zinit
+git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
 ```
 
 and source it from `.zshrc` (above compinit):
 
 ```sh
-source ~/.zplugin/bin/zplugin.zsh
+source ~/.zinit/bin/zinit.zsh
 ```
 
 If you place the `source` below `compinit`, then add those two lines after the `source`:
 ```sh
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 ```
 
 Various paths can be customized, see section [Customizing Paths](#customizing-paths).
 
-After installing and reloading the shell compile Zplugin with `zplugin self-update`.
+After installing and reloading the shell compile Zinit with `zinit self-update`.
 
 # Usage
 
 ## Introduction
 
-[Click here to read the introduction to Zplugin](http://zdharma.org/zplugin/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zplugin such as the Turbo mode. If you're new to Zplugin we highly recommend you read it at least once.
+[Click here to read the introduction to Zinit](http://zdharma.org/zplugin/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zinit such as the Turbo mode. If you're new to Zinit we highly recommend you read it at least once.
 
 ## Example Usage
 
-After installing Zplugin you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
+After installing Zinit you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
 
 ```zsh
 # Two regular plugins loaded without tracking.
-zplugin light zsh-users/zsh-autosuggestions
-zplugin light zdharma/fast-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+zinit light zdharma/fast-syntax-highlighting
 
 # Plugin history-search-multi-word loaded with tracking.
-zplugin load zdharma/history-search-multi-word
+zinit load zdharma/history-search-multi-word
 
 # Load the pure theme, with zsh-async library that's bundled with it.
-zplugin ice pick"async.zsh" src"pure.zsh"
-zplugin light sindresorhus/pure
+zinit ice pick"async.zsh" src"pure.zsh"
+zinit light sindresorhus/pure
 
 # Binary release in archive, from GitHub-releases page.
 # After automatic unpacking it provides program "fzf".
-zplugin ice from"gh-r" as"program"
-zplugin load junegunn/fzf-bin
+zinit ice from"gh-r" as"program"
+zinit load junegunn/fzf-bin
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
 # single version, for OS X, Linux and Windows – so ice-mod `bpick' is used to
-# select Linux package – in this case this is actually not needed, Zplugin will
+# select Linux package – in this case this is actually not needed, Zinit will
 # grep operating system name and architecture automatically when there's no `bpick'.
-zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
-zplugin load docker/compose
+zinit ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
+zinit load docker/compose
 
-# Vim repository on GitHub – a typical source code that needs compilation – Zplugin
+# Vim repository on GitHub – a typical source code that needs compilation – Zinit
 # can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
 # Ice-mod `pick` selects a binary program to add to $PATH. You could also install the
 # package under the path $ZPFX, see: http://zdharma.org/zplugin/wiki/Compiling-programs
-zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
+zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
     atpull"%atclone" make pick"src/vim"
-zplugin light vim/vim
+zinit light vim/vim
 
 # Scripts that are built at install (there's single default make target, "install",
 # and it constructs scripts by `cat'ing a few files). The make'' ice could also be:
 # `make"install PREFIX=$ZPFX"`, if "install" wouldn't be the only, default target.
-zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
-zplugin light tj/git-extras
+zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
+zinit light tj/git-extras
 
 # Handle completions without loading any plugin, see "clist" command.
 # This one is to be ran just once, in interactive session.
-zplugin creinstall %HOME/my_completions
+zinit creinstall %HOME/my_completions
 ```
 
 ```zsh
 # For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
 # coreutils package from Homebrew; you can also use https://github.com/ogham/exa)
-zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
-zplugin light trapd00r/LS_COLORS
+zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
+zinit light trapd00r/LS_COLORS
 ```
 [You can see an extended explanation of LS_COLORS in the wiki.](http://zdharma.org/zplugin/wiki/LS_COLORS-explanation/)
 
 ```zsh
 # make'!...' -> run make before atclone & atpull
-zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
-zplugin light direnv/direnv
+zinit ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
+zinit light direnv/direnv
 ```
 [You can see an extended explanation of direnv in the wiki.](http://zdharma.org/zplugin/wiki/Direnv-explanation/)
 
-If you're interested in more examples then check out the [zplugin-configs
-repository](https://github.com/zdharma/zplugin-configs) where users have uploaded their
-`~/.zshrc` and Zplugin configurations. Feel free to
-[submit](https://github.com/zdharma/zplugin-configs/issues/new?template=request-to-add-zshrc-to-the-zplugin-configs-repo.md)
-your `~/.zshrc` there if it contains Zplugin commands.
+If you're interested in more examples then check out the [zinit-configs
+repository](https://github.com/zdharma/zinit-configs) where users have uploaded their
+`~/.zshrc` and Zinit configurations. Feel free to
+[submit](https://github.com/zdharma/zinit-configs/issues/new?template=request-to-add-zshrc-to-the-zinit-configs-repo.md)
+your `~/.zshrc` there if it contains Zinit commands.
 
-You can also check out the [Gallery of Zplugin Invocations](http://zdharma.org/zplugin/wiki/GALLERY/) for some additional examples.
+You can also check out the [Gallery of Zinit Invocations](http://zdharma.org/zplugin/wiki/GALLERY/) for some additional examples.
 
 ## Ice Modifiers
 
 Following `ice` modifiers are to be
-[passed](http://zdharma.org/zplugin/wiki/Alternate-Ice-Syntax/) to `zplugin ice ...` to
+[passed](http://zdharma.org/zplugin/wiki/Alternate-Ice-Syntax/) to `zinit ice ...` to
 obtain described effects.  The word `ice` means something that's added (like ice to a
-drink) – and in Zplugin it means adding modifier to a next `zplugin` command, and also
+drink) – and in Zinit it means adding modifier to a next `zinit` command, and also
 something that's temporary because it melts – and this means that the modification will
-last only for a **single** next `zplugin` command.
+last only for a **single** next `zinit` command.
 
 Some Ice-modifiers are highlighted and clicking on them will take you to the
 appropriate wiki page for an extended explanation.
@@ -546,12 +545,12 @@ explicitly stated otherwise.
 | `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose`. **Does not work with snippets.** </div>|
 | `depth` |<div align="justify" style="text-align: justify;"> Pass `--depth` to `git`, i.e. limit how much of history to download. **Does not work with snippets.**</div>|
 | `cloneopts` |<div align="justify" style="text-align: justify;"> Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. **Does not work with snippets.** </div>|
-| `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zplugin ice svn; zplugin snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**</div>|
+| `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zinit ice svn; zinit snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**</div>|
 
 ### Selection of Files (To Source, …)
 | Modifier | Description |
 |:-:|-|
-| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or the ice `as"program"`); it is a pattern, alphabetically first matched file is being chosen; e.g. `zplugin ice pick"*.plugin.zsh"; zplugin load …`.</div>|
+| [**`pick`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files/) |<div align="justify" style="text-align: justify;"> Select the file to source, or the file to set as command (when using `snippet --command` or the ice `as"program"`); it is a pattern, alphabetically first matched file is being chosen; e.g. `zinit ice pick"*.plugin.zsh"; zinit load …`.</div>|
 | [**`src`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Specify additional file to source after sourcing main file or after setting up command (via `as"program"`). It is not a pattern but a plain file name.</div>|
 | [**`multisrc`**](http://zdharma.org/zplugin/wiki/Sourcing-multiple-files) |<div align="justify" style="text-align: justify;"> Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. `multisrc'misc.zsh grep.zsh'`) and also using brace-expansion syntax (e.g. `multisrc'{misc,grep}.zsh'`). Supports patterns.</div>|
 
@@ -562,8 +561,8 @@ explicitly stated otherwise.
 | [**`load`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see `unload` below). E.g.: `load'[[ $PWD = */github* ]]'`.</div>|
 | [**`unload`**](http://zdharma.org/zplugin/wiki/Multiple-prompts) |<div align="justify" style="text-align: justify;"> A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: `unload'[[ $PWD != */github* ]]'`.</div>|
 | `cloneonly` |<div align="justify" style="text-align: justify;"> Don't load the plugin / snippet, only download it </div>|
-| `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zplugin ice if'[[ -n "$commands[otool]" ]]'; zplugin load ...`.</div>|
-| `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zplugin ice has'git' ...` </div>|
+| `if` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given condition is fulfilled, for example: `zinit ice if'[[ -n "$commands[otool]" ]]'; zinit load ...`.</div>|
+| `has` |<div align="justify" style="text-align: justify;"> Load plugin or snippet only when given command is available (in $PATH), e.g. `zinit ice has'git' ...` </div>|
 | `subscribe` / `on-update-of` |<div align="justify" style="text-align: justify;"> Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. `subscribe'{~/files-*,/tmp/files-*}'` </div>|
 | `trigger-load` |<div align="justify" style="text-align: justify;">Creates a function that loads the associated plugin/snippet, with an option (to use it, precede the ice content with `!`) to automatically forward the call afterwards, to a command of the same name as the function. Can obtain multiple functions to create – sparate with `;`.</div> |
 
@@ -577,15 +576,15 @@ explicitly stated otherwise.
 ### Completions
 | Modifier | Description |
 |:-:|-|
-| `blockf` |<div align="justify" style="text-align: justify;"> Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them.</div>|
-| `nocompletions` |<div align="justify" style="text-align: justify;"> Don't detect, install and manage completions for this plugin. Completions can be installed later with `zplugin creinstall {plugin-spec}`.</div>|
+| `blockf` |<div align="justify" style="text-align: justify;"> Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zinit can manage completions and plugin can be blocked from exposing them.</div>|
+| `nocompletions` |<div align="justify" style="text-align: justify;"> Don't detect, install and manage completions for this plugin. Completions can be installed later with `zinit creinstall {plugin-spec}`.</div>|
 
 ### Command Execution After Cloning, Updating or Loading
 | Modifier | Description |
 |:-:|-|
 | `mv` |<div align="justify" style="text-align: justify;"> Move file after cloning or after update (then, only if new commits were downloaded). Example: `mv "fzf-* -> fzf"`. It uses `->` as separator for old and new file names. Works also with snippets.</div>|
 | `cp` |<div align="justify" style="text-align: justify;"> Copy file after cloning or after update (then, only if new commits were downloaded). Example: `cp "docker-c* -> dcompose"`. Ran after `mv`.</div>|
-| [**`atclone`**](http://zdharma.org/zplugin/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zplugin ice atclone"echo Cloned"`. Ran also after downloading snippet.</div>|
+| [**`atclone`**](http://zdharma.org/zplugin/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zinit ice atclone"echo Cloned"`. Ran also after downloading snippet.</div>|
 | [**`atpull`**](http://zdharma.org/zplugin/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod.</div>|
 | [**`atinit`**](http://zdharma.org/zplugin/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.</div>|
 | [**`atload`**](http://zdharma.org/zplugin/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`).</div>|
@@ -613,7 +612,7 @@ explicitly stated otherwise.
 | `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page.</div>|
 | `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.</div>|
 | `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**</div>|
-| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zplugin light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zplugin light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>|
+| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zinit light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zinit light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>|
 | [**`wrap-track`**](http://zdharma.org/zplugin/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>|
 | `aliases` |<div align="justify" style="text-align: justify;">Load the plugin with the aliases mechanism enabled. Use with plugins that define **and use** aliases in their scripts.</div>|
 | `light-mode` |<div align="justify" style="text-align: justify;">Load the plugin without the tracking, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand</div>|
@@ -622,9 +621,9 @@ explicitly stated otherwise.
 
 Order of execution of related Ice-mods: `atinit` -> `atpull!` -> `make'!!'` -> `mv` -> `cp` -> `make!` -> `atclone`/`atpull` -> `make` -> `(plugin script loading)` -> `src` -> `multisrc` -> `atload`.
 
-## Zplugin Commands
+## Zinit Commands
 
-Following commands are passed to `zplugin ...` to obtain described effects.
+Following commands are passed to `zinit ...` to obtain described effects.
 
 ### Help
 
@@ -639,7 +638,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 |:-:|-|
 | `load {plg-spec}` |<div align="justify" style="text-align: justify;"> Load plugin, can also receive absolute local path.</div>|
 | `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/tracking. `-b` – track `bindkey`-calls only. There's also `light-mode` ice which can be used to induce the no-tracking (i.e.: *light*) loading, regardless of the command used.</div>|
-| `unload [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Unload plugin loaded with `zplugin load ...`. `-q` – quiet.</div>|
+| `unload [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Unload plugin loaded with `zinit load ...`. `-q` – quiet.</div>|
 | `snippet [-f] {url}` |<div align="justify" style="text-align: justify;"> Source local or remote file (by direct URL). `-f` – don't use cache (force redownload).</div>|
 
 ### Completions
@@ -673,7 +672,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | Command | Description |
 |:-:|-|
 | `times [-s] [-m]` |<div align="justify" style="text-align: justify;"> Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds. `-m` – show plugin loading moments.</div>|
-| `zstatus` |<div align="justify" style="text-align: justify;"> Overall Zplugin status.</div>|
+| `zstatus` |<div align="justify" style="text-align: justify;"> Overall Zinit status.</div>|
 | `report {plg-spec}\|--all` |<div align="justify" style="text-align: justify;"> Show plugin report. `--all` – do it for all plugins.</div>|
 | `loaded [keyword], list [keyword]` |<div align="justify" style="text-align: justify;"> Show what plugins are loaded (filter with 'keyword').</div>|
 | `ls` |<div align="justify" style="text-align: justify;"> List snippets in formatted and colorized manner. Requires **tree** program.</div>|
@@ -693,7 +692,7 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 
 | Command | Description |
 |:-:|-|
-| `self-update` |<div align="justify" style="text-align: justify;"> Updates and compiles Zplugin.</div>|
+| `self-update` |<div align="justify" style="text-align: justify;"> Updates and compiles Zinit.</div>|
 | `update [-q] [-r] {plg-spec}\|URL\|--all` |<div align="justify" style="text-align: justify;"> Git update plugin or snippet.<br> `--all` – update all plugins and snippets.<br>  `-q` – quiet.<br> `-r` \| `--reset` – run `git reset --hard` / `svn revert` before pulling changes.</div>|
 | `ice <ice specification>` |<div align="justify" style="text-align: justify;"> Add ice to next command, argument is e.g. from"gitlab".</div>|
 | `delete {plg-spec}\|URL\|--clean\|--all` |<div align="justify" style="text-align: justify;"> Remove plugin or snippet from disk (good to forget wrongly passed ice-mods).  <br> `--all` – purge.<br> `--clean` – delete plugins and snippets that are not loaded.</div>|
@@ -704,18 +703,18 @@ Following commands are passed to `zplugin ...` to obtain described effects.
 | `changes {plg-spec}` |<div align="justify" style="text-align: justify;"> View plugin's git log.</div>|
 | `create {plg-spec}` |<div align="justify" style="text-align: justify;"> Create plugin (also together with GitHub repository).</div>|
 | `srv {service-id} [cmd]` |<div align="justify" style="text-align: justify;"> Control a service, command can be: stop,start,restart,next,quit; `next` moves the service to another Zshell.</div>|
-| `recall {plg-spec}\|URL` |<div align="justify" style="text-align: justify;"> Fetch saved ice modifiers and construct `zplugin ice ...` command.</div>|
+| `recall {plg-spec}\|URL` |<div align="justify" style="text-align: justify;"> Fetch saved ice modifiers and construct `zinit ice ...` command.</div>|
 | `env-whitelist [-v] [-h] {env..}` |<div align="justify" style="text-align: justify;"> Allows to specify names (also patterns) of variables left unchanged during an unload. `-v` – verbose.</div>|
-| `module` |<div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zplugin, see `zplugin module help`.</div>|
+| `module` |<div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zinit, see `zinit module help`.</div>|
 | `add-fpath\|fpath` `[-f\|--front]` `{plg-spec}` `[subdirectory]` |<div align="justify" style="text-align: justify;">Adds given plugin (not yet snippet) directory to `$fpath`. If the second argument is given, it is appended to the directory path. If the option `-f`/`--front` is given, the directory path is prepended instead of appended to `$fpath`. The `{plg-spec}` can be absolute path, i.e.: it's possible to also add regular directories.</div>|
 | `run` `[-l]` `[plugin]` `{command}` |<div align="justify" style="text-align: justify;">Runs the given command in the given plugin's directory. If the option `-l` will be given then the plugin should be skipped – the option will cause the previous plugin to be reused.</div>|
 
-## Updating Zplugin and Plugins
+## Updating Zinit and Plugins
 
-To update Zplugin issue `zplugin self-update` in the command line.
+To update Zinit issue `zinit self-update` in the command line.
 
-To update all plugins and snippets, issue `zplugin update`. If you wish to update only
-a single plugin/snippet instead issue `zplugin update NAME_OF_PLUGIN`. A list of
+To update all plugins and snippets, issue `zinit update`. If you wish to update only
+a single plugin/snippet instead issue `zinit update NAME_OF_PLUGIN`. A list of
 commits will be shown:
 
 <p align="center">
@@ -723,11 +722,11 @@ commits will be shown:
 </p>
 
 Some plugins require performing an action each time they're updated. One way you can do
-this is by using the `atpull` ice modifier. For example, writing `zplugin ice atpull'./configure'` before loading a plugin will execute `./configure` after a successful update. Refer to [Ice Modifiers](#ice-modifiers) for more information.
+this is by using the `atpull` ice modifier. For example, writing `zinit ice atpull'./configure'` before loading a plugin will execute `./configure` after a successful update. Refer to [Ice Modifiers](#ice-modifiers) for more information.
 
 The ice modifiers for any plugin or snippet are stored in their directory in a
-`._zplugin` subdirectory, hence the plugin doesn't have to be loaded to be correctly
-updated. There's one other file created there, `.zplugin_lstupd` – it holds the log of
+`._zinit` subdirectory, hence the plugin doesn't have to be loaded to be correctly
+updated. There's one other file created there, `.zinit_lstupd` – it holds the log of
 the new commits pulled-in in the last update.
 
 ## Using Oh My Zsh Themes
@@ -735,9 +734,9 @@ the new commits pulled-in in the last update.
 To use **themes** created for Oh My Zsh you might want to first source the `git` library there:
 
 ```SystemVerilog
-zplugin snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
+zinit snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
 # Or using OMZ:: shorthand:
-zplugin snippet OMZ::lib/git.zsh
+zinit snippet OMZ::lib/git.zsh
 ```
 
 If the library will not be loaded, then similar to following errors will be appearing:
@@ -747,42 +746,42 @@ If the library will not be loaded, then similar to following errors will be appe
 ........:1: command not found: git_prompt_short_sha
 ```
 
-Then you can use the themes as snippets (`zplugin snippet {file path or GitHub URL}`).
+Then you can use the themes as snippets (`zinit snippet {file path or GitHub URL}`).
 Some themes require not only Oh My Zsh's Git **library**, but also Git **plugin** (error
 about `current_branch` function can be appearing). Load this Git-plugin as single-file
 snippet directly from OMZ:
 
 ```SystemVerilog
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 ```
 
 Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
-a fresh version of a snippet, or `zplugin update {URL}`. Can also use `zplugin update --all` to
+a fresh version of a snippet, or `zinit update {URL}`. Can also use `zinit update --all` to
 update all snippets (and plugins).
 
 Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
 prompt will appear as something like: `... $(build_prompt) ...`.
 
-You might want to suppress completions provided by the git plugin by issuing `zplugin cdclear -q`
+You might want to suppress completions provided by the git plugin by issuing `zinit cdclear -q`
 (`-q` is for quiet) – see below **Ignoring Compdefs**.
 
 To summarize:
 
 ```SystemVerilog
 # Load OMZ Git library
-zplugin snippet OMZ::lib/git.zsh
+zinit snippet OMZ::lib/git.zsh
 
 # Load Git plugin from OMZ
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin cdclear -q # <- forget completions provided up to this moment
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit cdclear -q # <- forget completions provided up to this moment
 
 setopt promptsubst
 
 # Load theme from OMZ
-zplugin snippet OMZ::themes/dstufft.zsh-theme
+zinit snippet OMZ::themes/dstufft.zsh-theme
 
 # Load normal GitHub plugin with theme depending on OMZ Git library
-zplugin light NicoSantangelo/Alpharized
+zinit light NicoSantangelo/Alpharized
 ```
 
 See also the Wiki page: [Example Oh My Zsh
@@ -794,32 +793,32 @@ Setup](http://zdharma.org/zplugin/wiki/Example-Oh-My-Zsh-setup/).
 
 With no Turbo mode in use, compinit can be called normally, i.e.: as `autoload compinit;
 compinit`. This should be done after loading of all plugins and before possibly calling
-`zplugin cdreplay`.  Also, plugins aren't allowed to simply run `compdefs`. You can
-decide whether to run `compdefs` by issuing `zplugin cdreplay` (reads: `compdef`-replay).
+`zinit cdreplay`.  Also, plugins aren't allowed to simply run `compdefs`. You can
+decide whether to run `compdefs` by issuing `zinit cdreplay` (reads: `compdef`-replay).
 To summarize:
 
 ```sh
-source ~/.zplugin/bin/zplugin.zsh
+source ~/.zinit/bin/zinit.zsh
 
-zplugin load "some/plugin"
+zinit load "some/plugin"
 ...
-compdef _gnu_generic fd  # this will be intercepted by Zplugin, because as the compinit
+compdef _gnu_generic fd  # this will be intercepted by Zinit, because as the compinit
                          # isn't yet loaded, thus there's no such function `compdef'; yet
-                         # Zplugin provides its own `compdef' function which saves the
-                         # completion-definition for later possible re-run with `zplugin
+                         # Zinit provides its own `compdef' function which saves the
+                         # completion-definition for later possible re-run with `zinit
                          # cdreplay` or `zpcdreplay` (the second one can be used in hooks
                          # like atload'', atinit'', etc.)
 ...
-zplugin load "other/plugin"
+zinit load "other/plugin"
 
 autoload -Uz compinit
 compinit
 
-zplugin cdreplay -q # -q is for quiet; actually run all the `compdef's saved before
+zinit cdreplay -q # -q is for quiet; actually run all the `compdef's saved before
                     #`compinit` call (`compinit' declares the `compdef' function, so
-                    # it cannot be used until `compinit` is ran; Zplugin solves this
+                    # it cannot be used until `compinit` is ran; Zinit solves this
                     # via intercepting the `compdef'-calls and storing them for later
-                    # use with `zplugin cdreplay')
+                    # use with `zinit cdreplay')
 ```
 
 This allows to call compinit once.
@@ -844,22 +843,22 @@ of the last one).
 ## Ignoring Compdefs
 
 If you want to ignore compdefs provided by some plugins or snippets, place their load commands
-before commands loading other plugins or snippets, and issue `zplugin cdclear` (or
+before commands loading other plugins or snippets, and issue `zinit cdclear` (or
 `zpcdclear`, designed to be used in hooks like `atload''`):
 
 ```SystemVerilog
-source ~/.zplugin/bin/zplugin.zsh
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin cdclear -q # <- forget completions provided by Git plugin
+source ~/.zinit/bin/zinit.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit cdclear -q # <- forget completions provided by Git plugin
 
-zplugin load "some/plugin"
+zinit load "some/plugin"
 ...
-zplugin load "other/plugin"
+zinit load "other/plugin"
 
 autoload -Uz compinit
 compinit
-zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
-zplugin cdlist # look at gathered compdefs
+zinit cdreplay -q # <- execute compdefs provided by rest of plugins
+zinit cdlist # look at gathered compdefs
 ```
 
 ## Disabling System-Wide `compinit` Call (Ubuntu)
@@ -875,39 +874,39 @@ loads any completion-equipped plugins, i.e. almost on 100% – add the following
 skip_global_compinit=1
 ```
 
-# Zplugin Module
+# Zinit Module
 
 ## Motivation
 
 The module is a binary Zsh module (think about `zmodload` Zsh command, it's that topic) which transparently and
 automatically **compiles sourced scripts**. Many plugin managers do not offer compilation of plugins, the module is
-a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can
+a solution to this. Even if a plugin manager does compile plugin's main script (like Zinit does), the script can
 source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
 and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
-command and tracking updates to the plugin – in Zplugin case: by using `compile` ice-mod).
+command and tracking updates to the plugin – in Zinit case: by using `compile` ice-mod).
 
-  ![image](https://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png)
+  ![image](https://raw.githubusercontent.com/zdharma/zinit/images/mod-auto-compile.png)
 
 ## Installation
 
-### Without Zplugin
+### Without Zinit
 
-To install just the binary Zplugin module **standalone** (Zplugin is not needed, the module can be used with any
+To install just the binary Zinit module **standalone** (Zinit is not needed, the module can be used with any
 other plugin manager), execute:
 
 ```zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/mod-install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/mod-install.sh)"
 ```
 
 This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
 
-### With Zplugin
+### With Zinit
 
-Zplugin users can build the module by issuing following command instead of running above `mod-install.sh` script
+Zinit users can build the module by issuing following command instead of running above `mod-install.sh` script
 (the script is for e.g. `zgen` users or users of any other plugin manager):
 
 ```zsh
-zplugin module build
+zinit module build
 ```
 
 This command will compile the module and display instructions on what to add to `~/.zshrc`.
@@ -932,83 +931,83 @@ typeset -g ZPLG_MOD_DEBUG=1
 
 ## Customizing Paths
 
-Following variables can be set to custom values, before sourcing Zplugin. The
+Following variables can be set to custom values, before sourcing Zinit. The
 previous global variables like `$ZPLG_HOME` have been removed to not pollute
-the namespace – there's single `$ZPLGM` ("*ZPLUGIN MAP*") hash instead of `8` string
+the namespace – there's single `$ZINIT` hash instead of `8` string
 variables. Please update your dotfiles.
 
 ```
-declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loading Zplugin, and then:
+declare -A ZINIT  # initial Zinit's hash definition, if configuring before loading Zinit, and then:
 ```
 | Hash Field | Description |
 -------------|--------------
-| ZPLGM[BIN_DIR]         | Where Zplugin code resides, e.g.: "~/.zplugin/bin"                      |
-| ZPLGM[HOME_DIR]        | Where Zplugin should create all working directories, e.g.: "~/.zplugin" |
-| ZPLGM[PLUGINS_DIR]     | Override single working directory – for plugins, e.g. "/opt/zsh/zplugin/plugins" |
-| ZPLGM[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"     |
-| ZPLGM[SNIPPETS_DIR]    | As above, but for snippets |
-| ZPLGM[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. its name can be different) |
-| ZPLGM[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zpcompinit`), use to pass -C to speed up loading |
-| ZPLGM[MUTE_WARNINGS]   | If set to `1`, then mutes some of the Zplugin warnings, specifically the `plugin already registered` warning |
+| ZINIT[BIN_DIR]         | Where Zinit code resides, e.g.: "~/.zinit/bin"                      |
+| ZINIT[HOME_DIR]        | Where Zinit should create all working directories, e.g.: "~/.zinit" |
+| ZINIT[PLUGINS_DIR]     | Override single working directory – for plugins, e.g. "/opt/zsh/zinit/plugins" |
+| ZINIT[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zinit/root_completions"     |
+| ZINIT[SNIPPETS_DIR]    | As above, but for snippets |
+| ZINIT[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. its name can be different) |
+| ZINIT[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zpcompinit`), use to pass -C to speed up loading |
+| ZINIT[MUTE_WARNINGS]   | If set to `1`, then mutes some of the Zinit warnings, specifically the `plugin already registered` warning |
 
-There is also `$ZPFX`, set by default to `~/.zplugin/polaris` – a directory
+There is also `$ZPFX`, set by default to `~/.zinit/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
 
 ## Non-GitHub (Local) Plugins
 
 Use `create` subcommand with user name `_local` (the default) to create plugin's
-skeleton in `$ZPLGM[PLUGINS_DIR]`. It will be not connected with GitHub repository
+skeleton in `$ZINIT[PLUGINS_DIR]`. It will be not connected with GitHub repository
 (because of user name being `_local`). To enter the plugin's directory use `cd` command
 with just plugin's name (without `_local`, it's optional).
 
-If user name will not be `_local`, then Zplugin will create repository also on GitHub
+If user name will not be `_local`, then Zinit will create repository also on GitHub
 and setup correct repository origin.
 
 
 ## Extending Git
 
 There are several projects that provide git extensions. Installing them with
-Zplugin has many benefits:
+Zinit has many benefits:
 
  - all files are under `$HOME` – no administrator rights needed,
  - declarative setup (like Chef or Puppet) – copying `.zshrc` to different account
    brings also git-related setup,
- - easy update by e.g. `zplugin update --all`.
+ - easy update by e.g. `zinit update --all`.
 
 Below is a configuration that adds multiple git extensions, loaded in Turbo mode,
 two seconds after prompt:
 
 ```zsh
-zplugin ice wait"2" lucid as"program" pick"bin/git-dsf"
-zplugin light zdharma/zsh-diff-so-fancy
+zinit ice wait"2" lucid as"program" pick"bin/git-dsf"
+zinit light zdharma/zsh-diff-so-fancy
 
-zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-now" make"prefix=$ZPFX install"
-zplugin light iwata/git-now
+zinit ice wait"2" lucid as"program" pick"$ZPFX/bin/git-now" make"prefix=$ZPFX install"
+zinit light iwata/git-now
 
-zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX" nocompile
-zplugin light tj/git-extras
+zinit ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX" nocompile
+zinit light tj/git-extras
 
-zplugin ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \
+zinit ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \
             make'install' pick"$ZPFX/bin/git-cal"
-zplugin light k4rthik/git-cal
+zinit light k4rthik/git-cal
 ```
 
-Target directory for installed files is `$ZPFX` (`~/.zplugin/polaris` by default).
+Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
 
 ## Preinstalling Plugins
 
-If you create a Docker image that uses Zplugin, or want to install Turbo-loaded
+If you create a Docker image that uses Zinit, or want to install Turbo-loaded
 plugins before the shell starts interactively, you can invoke the
-zplugin-scheduler function in such a way, that it:
+zinit-scheduler function in such a way, that it:
 
  - installs plugins without waiting for the prompt (i.e. it's script friendly),
  - installs **all** plugins instantly, without respecting the `wait''` argument.
 
-To accomplish this, use `burst` argument and call `-zplg-scheduler` function.
+To accomplish this, use `burst` argument and call `@zinit-scheduler` function.
 Example `Dockerfile` entry:
 
 ``` zsh
-RUN zsh -i -c -- '-zplg-scheduler burst || true'
+RUN zsh -i -c -- '@zinit-scheduler burst || true'
 ```
 
 An example `Dockerfile` can be found
@@ -1016,23 +1015,23 @@ An example `Dockerfile` can be found
 
 # Getting Help and Community
 
-Do you need help or wish to get in touch with other Zplugin users?
+Do you need help or wish to get in touch with other Zinit users?
 
-- Visit our subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
+- Visit our subreddit [r/zinit](https://www.reddit.com/r/zinit/).
 
-- Chat with us in our IRC channel. Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin) and join #zplugin. Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
+- Chat with us in our IRC channel. Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zinit) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zinit) and join #zinit. Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zinit.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zinit)
 
-- Or via Gitter [![Chat at https://gitter.im/zplugin/Lobby][lobby-badge]][lobby-link]
+- Or via Gitter [![Chat at https://gitter.im/zinit/Lobby][lobby-badge]][lobby-link]
 
-[status-badge]: https://travis-ci.org/zdharma/zplugin.svg?branch=master
-[status-link]: https://travis-ci.org/zdharma/zplugin
+[status-badge]: https://travis-ci.org/zdharma/zinit.svg?branch=master
+[status-link]: https://travis-ci.org/zdharma/zinit
 [MIT-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [MIT-link]: ./LICENSE
-[ver-badge]: https://img.shields.io/github/tag/zdharma/zplugin.svg
-[ver-link]: https://github.com/zdharma/zplugin/releases
-[act-badge]: https://img.shields.io/github/commit-activity/y/zdharma/zplugin.svg
-[lobby-badge]: https://badges.gitter.im/zplugin/Lobby.svg
-[lobby-link]: https://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[ver-badge]: https://img.shields.io/github/tag/zdharma/zinit.svg
+[ver-link]: https://github.com/zdharma/zinit/releases
+[act-badge]: https://img.shields.io/github/commit-activity/y/zdharma/zinit.svg
+[lobby-badge]: https://badges.gitter.im/zinit/Lobby.svg
+[lobby-link]: https://gitter.im/zinit/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 <!-- vim:tw=87
 -->
