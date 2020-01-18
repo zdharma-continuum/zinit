@@ -14,7 +14,6 @@ typeset -gaH ZINIT_COMPDEF_REPLAY
 
 # Compatibility with pre-rename project (Zinit)
 typeset -gAH ZPLGM
-print -rl "${(kvq)ZPLGM[@]}"
 ZINIT=( "${(kv)ZPLGM[@]}" )
 unset ZPLGM
 
