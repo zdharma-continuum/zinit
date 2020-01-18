@@ -21,19 +21,19 @@ typeset -F SECONDS=0 last_time=0
 if whence tput &> /dev/null; then
   if [[ $OSTYPE == freebsd* ]] || [[ $OSTYPE == dragonfly* ]]; then
     # termcap commands
-    ZPLG_CNORM='tput ve'
-    ZPLG_CIVIS='tput vi'
+    ZINIT_CNORM='tput ve'
+    ZINIT_CIVIS='tput vi'
   else
     # terminfo is more common
-    ZPLG_CNORM='tput cnorm'
-    ZPLG_CIVIS='tput civis'
+    ZINIT_CNORM='tput cnorm'
+    ZINIT_CIVIS='tput civis'
   fi
 fi
 
-if (( $+ZPLG_CNORM )); then
-  trap $ZPLG_CNORM EXIT
-  trap $ZPLG_CNORM INT
-  trap $ZPLG_CNORM TERM
+if (( $+ZINIT_CNORM )); then
+  trap $ZINIT_CNORM EXIT
+  trap $ZINIT_CNORM INT
+  trap $ZINIT_CNORM TERM
 fi
 
 local first=1
@@ -86,7 +86,7 @@ integer loop_count=0
 
 IFS=''
 
-(( $+ZPLG_CIVIS )) && eval $ZPLG_CIVIS
+(( $+ZINIT_CIVIS )) && eval $ZINIT_CIVIS
 
 { command perl -pe 'BEGIN { $|++; $/ = \1 }; tr/\r/\n/' || \
     gstdbuf -o0 gtr '\r' '\n' || \
@@ -157,6 +157,6 @@ done
 
 print
 
-(( $+ZPLG_CNORM )) && eval $ZPLG_CNORM
+(( $+ZINIT_CNORM )) && eval $ZINIT_CNORM
 
-unset ZPLG_CNORM ZPLG_CIVIS
+unset ZINIT_CNORM ZINIT_CIVIS
