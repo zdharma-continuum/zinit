@@ -1,12 +1,12 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2019 Sebastian Gniazdowski and contributors
 
-builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
+builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
-# FUNCTION: -zplg-parse-json {{{
+# FUNCTION: .zinit-parse-json <<<
 # Retrievies the ice-list from given profile from
 # the JSON of the package.json.
--zplg-parse-json() {
+.zinit-parse-json() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent
 
@@ -108,30 +108,30 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     }
 
     if [[ -n $__found && $__nest -lt 2 ]] {
-        -zplg-parse-json "$__found" "$__key" "$__varname" 2
+        .zinit-parse-json "$__found" "$__key" "$__varname" 2
     }
 
     if (( __nest == 2 )) {
         : ${(PAA)__varname::="${(kv)__Strings[@]}"}
     }
 }
-# }}}
-# FUNCTION: -zplg-get-package {{{
--zplg-get-package() {
+# >>>
+# FUNCTION: .zinit-get-package <<<
+.zinit-get-package() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     local user="$1" plugin="$2" id_as="$3" dir="$4" profile="$5" \
-        local_path="${ZPLGM[PLUGINS_DIR]}/${3//\//---}" pkgjson \
+        local_path="${ZINIT[PLUGINS_DIR]}/${3//\//---}" pkgjson \
         tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" \
         URL="https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json"
 
-    print -r -- "Downloading ${ZPLGM[col-info2]}package.json${ZPLGM[col-rst]}" \
-        "for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}"
+    print -r -- "Downloading ${ZINIT[col-info2]}package.json${ZINIT[col-rst]}" \
+        "for ${ZINIT[col-pname]}$plugin${ZINIT[col-rst]}"
 
     if [[ $profile != ./* ]]; then
-        -zplg-download-file-stdout $URL 2>/dev/null > $tmpfile || \
-            { rm -f $tmpfile; -zplg-download-file-stdout $URL 1 2>/dev/null > $tmpfile }
+        .zinit-download-file-stdout $URL 2>/dev/null > $tmpfile || \
+            { rm -f $tmpfile; .zinit-download-file-stdout $URL 1 2>/dev/null > $tmpfile }
     else
         tmpfile=${profile%:*}
         profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
@@ -140,14 +140,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     pkgjson="$(<$tmpfile)"
 
     if [[ -z $pkgjson ]]; then
-        print -r -- "${ZPLGM[col-error]}Error: the package $id_as couldn't be found"
+        print -r -- "${ZINIT[col-error]}Error: the package $id_as couldn't be found"
         return 1
     fi
 
-    print -r -- "Parsing ${ZPLGM[col-info2]}package.json${ZPLGM[col-rst]}..."
+    print -r -- "Parsing ${ZINIT[col-info2]}package.json${ZINIT[col-rst]}..."
 
     local -A Strings
-    -zplg-parse-json "$pkgjson" "plugin-info" Strings
+    .zinit-parse-json "$pkgjson" "plugin-info" Strings
 
     local -A jsondata1
     jsondata1=( ${(@Q)${(@z)Strings[2/1]}} )
@@ -163,75 +163,75 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
     if (( pos )) {
         for key value ( "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" ) {
-            (( ${+ZPLG_ICE[$key]} )) && [[ ${ZPLG_ICE[$key]} != +* ]] && continue
-            ZPLG_ICE[$key]=$value${ZPLG_ICE[$key]#+}
+            (( ${+ZINIT_ICE[$key]} )) && [[ ${ZINIT_ICE[$key]} != +* ]] && continue
+            ZINIT_ICE[$key]=$value${ZINIT_ICE[$key]#+}
         }
-        ZPLG_ICE=( "${(kv)ZPLG_ICE[@]//\\\"/\"}" )
-        [[ ${ZPLG_ICE[as]} = program ]] && ZPLG_ICE[as]="command"
-        [[ -n ${ZPLG_ICE[on-update-of]} ]] && ZPLG_ICE[subscribe]="${ZPLG_ICE[subscribe]:-${ZPLG_ICE[on-update-of]}}"
-        [[ -n ${ZPLG_ICE[pick]} ]] && ZPLG_ICE[pick]="${ZPLG_ICE[pick]//\$ZPFX/${ZPFX%/}}"
-        [[ -n ${ZPLG_ICE[id-as]} ]] && {
-            -zplg-substitute 'ZPLG_ICE[id-as]'
+        ZINIT_ICE=( "${(kv)ZINIT_ICE[@]//\\\"/\"}" )
+        [[ ${ZINIT_ICE[as]} = program ]] && ZINIT_ICE[as]="command"
+        [[ -n ${ZINIT_ICE[on-update-of]} ]] && ZINIT_ICE[subscribe]="${ZINIT_ICE[subscribe]:-${ZINIT_ICE[on-update-of]}}"
+        [[ -n ${ZINIT_ICE[pick]} ]] && ZINIT_ICE[pick]="${ZINIT_ICE[pick]//\$ZPFX/${ZPFX%/}}"
+        [[ -n ${ZINIT_ICE[id-as]} ]] && {
+            @zinit-substitute 'ZINIT_ICE[id-as]'
             local -A map
             map=( "\"" "\\\"" "\\" "\\" )
-            eval "ZPLG_ICE[id-as]=\"${ZPLG_ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
+            eval "ZINIT_ICE[id-as]=\"${ZINIT_ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
         }
     } else {
-        print -P -r -- "${ZPLGM[col-error]}Error: the profile \`%F{221}$profile${ZPLGM[col-error]}' couldn't be found, aborting%f"
+        print -P -r -- "${ZINIT[col-error]}Error: the profile \`%F{221}$profile${ZINIT[col-error]}' couldn't be found, aborting%f"
         print -r -- "Available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
         return 1
     }
 
-    print -r -- "Found the profile \`${ZPLGM[col-pname]}$profile${ZPLGM[col-rst]}'"
+    print -r -- "Found the profile \`${ZINIT[col-pname]}$profile${ZINIT[col-rst]}'"
 
-    ZPLG_ICE[required]=${ZPLG_ICE[required]:-$ZPLG_ICE[requires]}
+    ZINIT_ICE[required]=${ZINIT_ICE[required]:-$ZINIT_ICE[requires]}
     local -a req
-    req=( ${(s.;.)${:-${required:+$required\;}${ZPLG_ICE[required]}}} )
+    req=( ${(s.;.)${:-${required:+$required\;}${ZINIT_ICE[required]}}} )
     for required ( $req ) {
         if [[ $required = bgn ]]; then
-            if [[ -z ${(k)ZPLG_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ]]; then
-                print -P -- "${ZPLGM[col-error]}ERROR: the" \
-                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
-                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZPLGM[col-pname]}$profile${ZPLGM[col-error]}\'}:-\\b}" \
+            if [[ -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ]]; then
+                print -P -- "${ZINIT[col-error]}ERROR: the" \
+                    "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
+                    "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
                     "requires" "Bin-Gem-Node annex" \
-                    "\nSee: %F{221}https://github.com/zplugin/z-a-bin-gem-node%f"
+                    "\nSee: %F{221}https://github.com/zinit/z-a-bin-gem-node%f"
                 print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
                 return 1
             fi
         else
             if ! command -v $required &>/dev/null; then
-                print -P -- "${ZPLGM[col-error]}ERROR: the" \
-                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
-                    "${${${(MS)ZPLG_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZPLGM[col-pname]}$profile${ZPLGM[col-error]}\'}:-\\b}" \
+                print -P -- "${ZINIT[col-error]}ERROR: the" \
+                    "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
+                    "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
                     "requires" \
-                    "\`${ZPLGM[col-pname]}$required${ZPLGM[col-error]}' command%f"
+                    "\`${ZINIT[col-pname]}$required${ZINIT[col-error]}' command%f"
                 print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
                 return 1
             fi
         fi
     }
 
-    if [[ -n ${ZPLG_ICE[dl]} && -z ${(k)ZPLG_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
-        print -- "\n${ZPLGM[col-error]}WARNING:${ZPLGM[col-msg2]} the profile uses" \
-            "${ZPLGM[col-obj]}dl''${ZPLGM[col-msg2]} ice however there's no" \
-            "${ZPLGM[col-obj2]}z-a-patch-dl${ZPLGM[col-msg2]} annex loaded" \
+    if [[ -n ${ZINIT_ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
+        print -- "\n${ZINIT[col-error]}WARNING:${ZINIT[col-msg2]} the profile uses" \
+            "${ZINIT[col-obj]}dl''${ZINIT[col-msg2]} ice however there's no" \
+            "${ZINIT[col-obj2]}z-a-patch-dl${ZINIT[col-msg2]} annex loaded" \
             "(the ice will be inactive, i.e.: no additional files will" \
-            "be downloaded)${ZPLGM[col-rst]}"
+            "be downloaded)${ZINIT[col-rst]}"
     }
 
-    print -n -- \\n${jsondata1[version]:+${ZPLGM[col-pname]}Version: ${ZPLGM[col-info2]}${jsondata1[version]}${ZPLGM[col-rst]}\\n}
+    print -n -- \\n${jsondata1[version]:+${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}${ZINIT[col-rst]}\\n}
     [[ -n ${jsondata1[message]} ]] && \
-        print -- "${ZPLGM[col-info]}${jsondata1[message]}${ZPLGM[col-rst]}"
+        print -- "${ZINIT[col-info]}${jsondata1[message]}${ZINIT[col-rst]}"
 
-    (( ${+ZPLG_ICE[is-snippet]} )) && {
+    (( ${+ZINIT_ICE[is-snippet]} )) && {
         reply=( "" "$url" )
         REPLY=snippet
         return 0
     }
 
-    if (( !${+ZPLG_ICE[git]} && !${+ZPLG_ICE[from]} )) {
+    if (( !${+ZINIT_ICE[git]} && !${+ZINIT_ICE[from]} )) {
         (
-            -zplg-parse-json "$pkgjson" "_from" Strings
+            .zinit-parse-json "$pkgjson" "_from" Strings
             local -A jsondata
             jsondata=( "${(@Q)${(@z)Strings[1/1]}}" )
 
@@ -239,30 +239,30 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             local fname="${${URL%%\?*}:t}"
 
             command mkdir -p $dir || {
-                print -r -- "${ZPLGM[col-error]}Couldn't create directory: \`$dir', aborting${ZPLGM[col-rst]}"
+                print -r -- "${ZINIT[col-error]}Couldn't create directory: \`$dir', aborting${ZINIT[col-rst]}"
                 return 1
             }
             builtin cd -q $dir || return 1
 
-            print -r -- "Downloading tarball for ${ZPLGM[col-pname]}$plugin${ZPLGM[col-rst]}..."
+            print -r -- "Downloading tarball for ${ZINIT[col-pname]}$plugin${ZINIT[col-rst]}..."
 
-            -zplg-download-file-stdout "$URL" >! "$fname" || {
-                -zplg-download-file-stdout "$URL" 1 >! "$fname" || {
+            .zinit-download-file-stdout "$URL" >! "$fname" || {
+                .zinit-download-file-stdout "$URL" 1 >! "$fname" || {
                     command rm -f "$fname"
                     print -r "Download of \`$fname' failed. No available download tool? (one of: cURL, wget, lftp, lynx)"
                     return 1
                 }
             }
 
-            zpextract "$fname" --move
+            ziextract "$fname" --move
             return 0
         ) && {
             reply=( "$user" "$plugin" )
             REPLY=tarball
         }
     } else {
-            reply=( "${ZPLG_ICE[user]:-$user}" "${ZPLG_ICE[plugin]:-$plugin}" )
-            if [[ ${ZPLG_ICE[from]} = (|gh-r|github-rel) ]]; then
+            reply=( "${ZINIT_ICE[user]:-$user}" "${ZINIT_ICE[plugin]:-$plugin}" )
+            if [[ ${ZINIT_ICE[from]} = (|gh-r|github-rel) ]]; then
                 REPLY=github
             else
                 REPLY=unknown
@@ -271,20 +271,20 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     return $?
 }
-# }}}
-# FUNCTION: -zplg-setup-plugin-dir {{{
+# >>>
+# FUNCTION: .zinit-setup-plugin-dir <<<
 # Clones given plugin into PLUGIN_DIR. Supports multiple
 # sites (respecting `from' and `proto' ice modifiers).
 # Invokes compilation of plugin's main file.
 #
 # $1 - user
 # $2 - plugin
--zplg-setup-plugin-dir() {
+.zinit-setup-plugin-dir() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
-        local_path=${ZPLGM[PLUGINS_DIR]}/${3//\//---} tpe=$4 update=$5 \
+        local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} tpe=$4 update=$5 \
         version=$6
 
     local -A sites
@@ -324,27 +324,27 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 
     [[ $tpe != tarball ]] && {
         [[ -z $update ]] && {
-            -zplg-any-colorify-as-uspl2 "$user" "$plugin"
-            print "\\nDownloading $REPLY...${ZPLG_ICE[id-as]:+ (as ${id_as}...)}"
+            .zinit-any-colorify-as-uspl2 "$user" "$plugin"
+            print "\\nDownloading $REPLY...${ZINIT_ICE[id-as]:+ (as ${id_as}...)}"
         }
 
         local site
-        [[ -n ${ZPLG_ICE[from]} ]] && site=${sites[${ZPLG_ICE[from]}]}
-        [[ -z $site && ${ZPLG_ICE[from]} = *(gh-r|github-rel)* ]] && {
-            site=${ZPLG_ICE[from]/(gh-r|github-re)/${sites[gh-r]}}
+        [[ -n ${ZINIT_ICE[from]} ]] && site=${sites[${ZINIT_ICE[from]}]}
+        [[ -z $site && ${ZINIT_ICE[from]} = *(gh-r|github-rel)* ]] && {
+            site=${ZINIT_ICE[from]/(gh-r|github-re)/${sites[gh-r]}}
         }
     }
 
     (
         if [[ $site = *releases ]] {
-            local url=$site/${ZPLG_ICE[ver]}
+            local url=$site/${ZINIT_ICE[ver]}
             local -a list list2
 
-            list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
+            list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
                           command grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
             list=( ${list[@]#href=?} )
 
-            [[ -n ${ZPLG_ICE[bpick]} ]] && list=( ${(M)list[@]:#(#i)*/${~ZPLG_ICE[bpick]}} )
+            [[ -n ${ZINIT_ICE[bpick]} ]] && list=( ${(M)list[@]:#(#i)*/${~ZINIT_ICE[bpick]}} )
 
             [[ ${#list} -gt 1 ]] && {
                 list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
@@ -368,8 +368,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
                 url="https://github.com${list[1]}"
                 print "(Requesting \`${list[1]:t}'${version:+, version $version}...)"
-                -zplg-download-file-stdout "$url" >! "${list[1]:t}" || {
-                    -zplg-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
+                .zinit-download-file-stdout "$url" >! "${list[1]:t}" || {
+                    .zinit-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
                         command rm -f "${list[1]:t}"
                         print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                         print -r "Tried url: $url"
@@ -377,57 +377,57 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     }
                 }
 
-                command mkdir -p ._zplugin
-                print -r -- $url >! ._zplugin/url
-                print -r -- ${list[1]} >! ._zplugin/is_release
-                zpextract ${list[1]:t}
+                command mkdir -p ._zinit
+                print -r -- $url >! ._zinit/url
+                print -r -- ${list[1]} >! ._zinit/is_release
+                ziextract ${list[1]:t}
                 return $?
             ) || {
                 return 1
             }
         } elif [[ $tpe = github ]] {
-            case ${ZPLG_ICE[proto]} in
+            case ${ZINIT_ICE[proto]} in
                 (|https)
-                    command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
-                        ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} \
-                        "https://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" \
+                    command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
+                        ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
+                        "https://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
                         "$local_path" \
                         --config transfer.fsckobjects=false \
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
-                            |& { ${ZPLGM[BIN_DIR]}/git-process-output.zsh || cat; }
-                    (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
+                            |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
+                    (( pipestatus[1] )) && { print "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]})${ZINIT[col-rst]}"; return 1; }
                     ;;
                 (git|http|ftp|ftps|rsync|ssh)
-                    command git clone --progress ${=ZPLG_ICE[cloneopts]:---recursive} \
-                        ${=ZPLG_ICE[depth]:+--depth ${ZPLG_ICE[depth]}} \
-                        "${ZPLG_ICE[proto]}://${site:-${ZPLG_ICE[from]:-github.com}}/$remote_url_path" \
+                    command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
+                        ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
+                        "${ZINIT_ICE[proto]}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
                         "$local_path" \
                         --config transfer.fsckobjects=false \
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
-                            |& { ${ZPLGM[BIN_DIR]}/git-process-output.zsh || cat; }
-                    (( pipestatus[1] )) && { print "${ZPLGM[col-error]}Clone failed (code: ${pipestatus[1]})${ZPLGM[col-rst]}"; return 1; }
+                            |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
+                    (( pipestatus[1] )) && { print "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]})${ZINIT[col-rst]}"; return 1; }
                     ;;
                 (*)
-                    print "${ZPLGM[col-error]}Unknown protocol:${ZPLGM[col-rst]} ${ZPLG_ICE[proto]}"
+                    print "${ZINIT[col-error]}Unknown protocol:${ZINIT[col-rst]} ${ZINIT_ICE[proto]}"
                     return 1
             esac
 
-            if [[ -n ${ZPLG_ICE[ver]} ]] {
-                command git -C "$local_path" checkout "${ZPLG_ICE[ver]}"
+            if [[ -n ${ZINIT_ICE[ver]} ]] {
+                command git -C "$local_path" checkout "${ZINIT_ICE[ver]}"
             }
         }
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!\!}}; }
+        [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = "!!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!\!}}; }
 
-        if [[ -n ${ZPLG_ICE[mv]} ]] {
-            if [[ ${ZPLG_ICE[mv]} = *("->"|"→")* ]] {
-                local from=${ZPLG_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[mv]##*(->|→)[[:space:]]#} || \
+        if [[ -n ${ZINIT_ICE[mv]} ]] {
+            if [[ ${ZINIT_ICE[mv]} = *("->"|"→")* ]] {
+                local from=${ZINIT_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[mv]##*(->|→)[[:space:]]#} || \
             } else {
-                local from=${ZPLG_ICE[mv]%%[[:space:]]##*} to=${ZPLG_ICE[mv]##*[[:space:]]##}
+                local from=${ZINIT_ICE[mv]%%[[:space:]]##*} to=${ZINIT_ICE[mv]##*[[:space:]]##}
             }
-            -zplg-substitute from to
+            @zinit-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
@@ -443,13 +443,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             )
         }
 
-        if [[ -n ${ZPLG_ICE[cp]} ]] {
-            if [[ ${ZPLG_ICE[cp]} = *("->"|"→")* ]] {
-                local from=${ZPLG_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[cp]##*(->|→)[[:space:]]#} || \
+        if [[ -n ${ZINIT_ICE[cp]} ]] {
+            if [[ ${ZINIT_ICE[cp]} = *("->"|"→")* ]] {
+                local from=${ZINIT_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[cp]##*(->|→)[[:space:]]#} || \
             } else {
-                local from=${ZPLG_ICE[cp]%%[[:space:]]##*} to=${ZPLG_ICE[cp]##*[[:space:]]##}
+                local from=${ZINIT_ICE[cp]%%[[:space:]]##*} to=${ZINIT_ICE[cp]##*[[:space:]]##}
             }
-            -zplg-substitute from to
+            @zinit-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
@@ -465,52 +465,52 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             )
         }
 
-        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} != '!' ]] {
+        if [[ $site != *releases && ${ZINIT_ICE[nocompile]} != '!' ]] {
             # Compile plugin
-            [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
-                -zplg-compile-plugin "$id_as" ""
+            [[ -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+                .zinit-compile-plugin "$id_as" ""
             }
         }
 
         if [[ $4 != -u ]] {
             # Store ices at clone of a plugin
-            -zplg-store-ices "$local_path/._zplugin" ZPLG_ICE "" "" "" ""
+            .zinit-store-ices "$local_path/._zinit" ZINIT_ICE "" "" "" ""
 
-            reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atclone <->]}" )
+            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone <->]}" )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path" \!atclone
             done
 
-            local atclone=${ZPLG_ICE[atclone]}
-            [[ -n $atclone ]] && -zplg-substitute atclone
+            local atclone=${ZINIT_ICE[atclone]}
+            [[ -n $atclone ]] && @zinit-substitute atclone
 
-            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!}}; }
-            (( ${+ZPLG_ICE[atclone]} )) && -zplg-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
-            [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
+            [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!}}; }
+            (( ${+ZINIT_ICE[atclone]} )) && .zinit-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
 
-            reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atclone <->]}" )
+            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atclone <->]}" )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                 "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_path" atclone
             done
         }
 
         # After additional executions like atclone'' - install completions (1 - plugins)
-        [[ 1 = ${+ZPLG_ICE[nocompletions]} || ${ZPLG_ICE[as]} = null ]] || -zplg-install-completions "$id_as" "" "0" ${ZPLG_ICE[silent]+-q}
+        [[ 1 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} = null ]] || .zinit-install-completions "$id_as" "" "0" ${ZINIT_ICE[silent]+-q}
 
-        if [[ $site != *releases && ${ZPLG_ICE[nocompile]} = '!' ]] {
+        if [[ $site != *releases && ${ZINIT_ICE[nocompile]} = '!' ]] {
             # Compile plugin
             LANG=C sleep 0.3
-            [[ -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
-                -zplg-compile-plugin "$id_as" ""
+            [[ -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+                .zinit-compile-plugin "$id_as" ""
             }
         }
     ) || return $?
 
     return 0
-} # }}}
-# FUNCTION: -zplg-install-completions {{{
+} # >>>
+# FUNCTION: .zinit-install-completions <<<
 # Installs all completions of given plugin. After that they are
 # visible to `compinit'. Visible completions can be selectively
 # disabled and enabled. User can access completion data with
@@ -519,7 +519,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
--zplg-install-completions() {
+.zinit-install-completions() {
     builtin setopt localoptions nullglob extendedglob unset nokshglob warncreateglobal
 
     # $id_as - a /-separated pair if second element
@@ -528,22 +528,22 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" reinstall="${3:-0}" quiet="${${4:+1}:-0}"
     (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
 
-    -zplg-any-to-user-plugin "$id_as" ""
+    .zinit-any-to-user-plugin "$id_as" ""
     local user="${reply[-2]}"
     local plugin="${reply[-1]}"
-    -zplg-any-colorify-as-uspl2 "$user" "$plugin"
+    .zinit-any-colorify-as-uspl2 "$user" "$plugin"
     local abbrev_pspec="$REPLY"
 
-    -zplg-exists-physically-message "$id_as" "" || return 1
+    .zinit-exists-physically-message "$id_as" "" || return 1
 
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
     [[ "$user" = "%" ]] && \
         completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|_zsh_highlight*|/zsdoc/*)(DN^/) ) || \
-        completions=( "${ZPLGM[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|_zsh_highlight*|/zsdoc/*)(DN^/) )
-    already_symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
-    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
+        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|_zsh_highlight*|/zsdoc/*)(DN^/) )
+    already_symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
+    backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
 
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
@@ -557,35 +557,35 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         ]]; then
             if [[ "$reinstall" = "1" ]]; then
                 # Remove old files
-                command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
-                command rm -f "${ZPLGM[COMPLETIONS_DIR]}/$bkpfile"
+                command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile"
+                command rm -f "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
             fi
-            (( quiet )) || print "Symlinking completion ${ZPLGM[col-uname]}$cfile${ZPLGM[col-rst]} to completions directory"
-            command ln -s "$c" "${ZPLGM[COMPLETIONS_DIR]}/$cfile"
+            (( quiet )) || print "Symlinking completion ${ZINIT[col-uname]}$cfile${ZINIT[col-rst]} to completions directory"
+            command ln -s "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
-            -zplg-forget-completion "$cfile" "$quiet"
+            .zinit-forget-completion "$cfile" "$quiet"
         else
             (( quiet )) || print "Not symlinking completion \`$cfile', it already exists"
-            (( quiet )) || print "${ZPLGM[col-info2]}Use \`${ZPLGM[col-pname]}zplugin creinstall $abbrev_pspec${ZPLGM[col-info2]}' to force install${ZPLGM[col-rst]}"
+            (( quiet )) || print "${ZINIT[col-info2]}Use \`${ZINIT[col-pname]}zinit creinstall $abbrev_pspec${ZINIT[col-info2]}' to force install${ZINIT[col-rst]}"
         fi
     done
-    -zplg-compinit &>/dev/null
-} # }}}
-# FUNCTION: -zplg-compinit {{{
+    .zinit-compinit &>/dev/null
+} # >>>
+# FUNCTION: .zinit-compinit <<<
 # User-exposed `compinit' frontend which first ensures that all
-# completions managed by Zplugin are forgotten by Zshell. After
+# completions managed by Zinit are forgotten by Zshell. After
 # that it runs normal `compinit', which should more easily detect
-# Zplugin's completions.
+# Zinit's completions.
 #
 # No arguments.
--zplg-compinit() {
+.zinit-compinit() {
     builtin setopt localoptions nullglob extendedglob nokshglob noksharrays warncreateglobal
 
     typeset -a symlinked backup_comps
     local c cfile bkpfile action
 
-    symlinked=( "${ZPLGM[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc )
-    backup_comps=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_.]*~*.zwc )
+    symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc )
+    backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc )
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
@@ -595,23 +595,23 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         cfile="_${cfile#_}"
         bkpfile="${cfile#_}"
 
-        #print "${ZPLGM[col-info]}Processing completion $cfile${ZPLGM[col-rst]}"
-        -zplg-forget-completion "$cfile"
+        #print "${ZINIT[col-info]}Processing completion $cfile${ZINIT[col-rst]}"
+        .zinit-forget-completion "$cfile"
     done
 
     print "Initializing completion (compinit)..."
-    command rm -f ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+    command rm -f ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
     # Workaround for a nasty trick in _vim
     (( ${+functions[_vim_files]} )) && unfunction _vim_files
 
     builtin autoload -Uz compinit
-    compinit -d ${ZPLGM[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZPLGM[COMPINIT_OPTS]}}"
-} # }}}
-# FUNCTION: -zplg-download-file-stdout {{{
+    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
+} # >>>
+# FUNCTION: .zinit-download-file-stdout <<<
 # Downloads file to stdout. Supports following backend commands:
 # curl, wget, lftp, lynx. Used by snippet loading.
--zplg-download-file-stdout() {
+.zinit-download-file-stdout() {
     local url="$1" restart="$2"
 
     setopt localoptions localtraps
@@ -642,17 +642,17 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         elif type lftp 2>/dev/null 1>&2; then
             command lftp -c "cat $url" || return 1
         else
-            -zplg-download-file-stdout "$url" "1"
+            .zinit-download-file-stdout "$url" "1"
             return $?
         fi
     fi
 
     return 0
-} # }}}
-# FUNCTION: -zplg-get-url-mtime {{{
+} # >>>
+# FUNCTION: .zinit-get-url-mtime <<<
 # For the given URL returns the date in the Last-Modified
 # header as a time stamp
--zplg-get-url-mtime() {
+.zinit-get-url-mtime() {
     local url="$1" IFS line header
     local -a cmd
 
@@ -688,8 +688,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     }
 
     return 0
-} # }}}
-# FUNCTION: -zplg-mirror-using-svn {{{
+} # >>>
+# FUNCTION: .zinit-mirror-using-svn <<<
 # Used to clone subdirectories from Github. If in update mode
 # (see $2), then invokes `svn update', in normal mode invokes
 # `svn checkout --non-interactive -q <URL>'. In test mode only
@@ -699,11 +699,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 # $1 - URL
 # $2 - mode, "" - normal, "-u" - update, "-t" - test
 # $3 - subdirectory (not path) with working copy, needed for -t and -u
--zplg-mirror-using-svn() {
+.zinit-mirror-using-svn() {
     setopt localoptions extendedglob warncreateglobal
     local url="$1" update="$2" directory="$3"
 
-    (( ${+commands[svn]} )) || print -r -- "${ZPLGM[col-error]}Warning:${ZPLGM[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
+    (( ${+commands[svn]} )) || print -r -- "${ZINIT[col-error]}Warning:${ZINIT[col-rst]} Subversion not found, please install it to use \`svn' ice-mod"
 
     if [[ "$update" = "-t" ]]; then
         (
@@ -728,39 +728,39 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     fi
     return $?
 }
-# }}}
-# FUNCTION: -zplg-forget-completion {{{
+# >>>
+# FUNCTION: .zinit-forget-completion <<<
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
 #
 # $1 - completion function name, e.g. "_cp"; can also be "cp"
--zplg-forget-completion() {
+.zinit-forget-completion() {
     local f="$1" quiet="$2"
 
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" ) # TODO: "${${(k)_comps[(R)$f]}[@]}" ?
 
-    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -n "Forgetting commands completed by \`${ZPLGM[col-pname]}$f${ZPLGM[col-rst]}': "
+    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -n "Forgetting commands completed by \`${ZINIT[col-pname]}$f${ZINIT[col-rst]}': "
 
     local k
     integer first=1
     for k in "${commands[@]}"; do
         [[ -n "$k" ]] || continue
         unset "_comps[$k]"
-        (( quiet )) || print -n "${${first:#1}:+, }${ZPLGM[col-info]}$k${ZPLGM[col-rst]}"
+        (( quiet )) || print -n "${${first:#1}:+, }${ZINIT[col-info]}$k${ZINIT[col-rst]}"
         first=0
     done
     (( quiet || first )) || print
 
     unfunction -- 2>/dev/null "$f"
-} # }}}
-# FUNCTION: -zplg-compile-plugin {{{
+} # >>>
+# FUNCTION: .zinit-compile-plugin <<<
 # Compiles given plugin (its main source file, and also an
 # additional "....zsh" file if it exists).
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
--zplg-compile-plugin() {
+.zinit-compile-plugin() {
     # $id_as - a /-separated pair if second element
     # is not empty and first is not "%" - then it's
     # just $1 in first case, or $1$2 in second case
@@ -768,7 +768,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     local -a list
 
     local -A ICE
-    -zplg-compute-ice "$id_as" "pack" \
+    .zinit-compute-ice "$id_as" "pack" \
         ICE plugin_dir filename is_snippet || return 1
 
     [[ "${ICE[pick]}" = "/dev/null" ]] && return 0
@@ -783,12 +783,12 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             reply=( "${list[1]:h}" "${list[1]}" )
         else
             if (( is_snippet )) {
-                -zplg-first "%" "$plugin_dir" || {
+                .zinit-first "%" "$plugin_dir" || {
                     print "No files for compilation found"
                     return 1
                 }
             } else {
-                -zplg-first "$1" "$2" || {
+                .zinit-first "$1" "$2" || {
                     print "No files for compilation found"
                     return 1
                 }
@@ -798,11 +798,11 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
         first="${reply[-1]}"
         local fname="${first#$pdir_path/}"
 
-        print "Compiling ${ZPLGM[col-info]}$fname${ZPLGM[col-rst]}..."
+        print "Compiling ${ZINIT[col-info]}$fname${ZINIT[col-rst]}..."
         [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
             zcompile "$first" || {
                 print "Compilation failed. Don't worry, the plugin will work also without compilation"
-                print "Consider submitting an error report to Zplugin or to the plugin's author"
+                print "Consider submitting an error report to Zinit or to the plugin's author"
             }
         }
         # Try to catch possible additional file
@@ -817,19 +817,19 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             for first in "${list[@]}"; do
                 zcompile "$first"
             done
-            local sep="${ZPLGM[col-pname]},${ZPLGM[col-rst]} "
-            print "Compiled following additional files (${ZPLGM[col-pname]}the compile''-ice${ZPLGM[col-rst]}): ${(pj:$sep:)${(@)${list[@]//(#b).([^.\/]##(#e))/.${ZPLGM[col-info]}${match[1]}${ZPLGM[col-rst]}}#$plugin_dir/}}"
+            local sep="${ZINIT[col-pname]},${ZINIT[col-rst]} "
+            print "Compiled following additional files (${ZINIT[col-pname]}the compile''-ice${ZINIT[col-rst]}): ${(pj:$sep:)${(@)${list[@]//(#b).([^.\/]##(#e))/.${ZINIT[col-info]}${match[1]}${ZINIT[col-rst]}}#$plugin_dir/}}"
         }
     fi
 
     return 0
-} # }}}
-# FUNCTION: -zplg-download-snippet {{{
+} # >>>
+# FUNCTION: .zinit-download-snippet <<<
 # Downloads snippet – either a file – with curl, wget, lftp or lynx,
 # or a directory, with Subversion – when svn-ICE is active. Github
 # supports Subversion protocol and allows to clone subdirectories.
 # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
--zplg-download-snippet() {
+.zinit-download-snippet() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal noshortloops
 
@@ -842,14 +842,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
     } || local sname="$id_as_clean"
 
     # Change the url to point to raw github content if it isn't like that
-    [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZPLG_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
+    [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZINIT_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
 
     if [[ ! -d "$local_dir/$dirname" ]]; then
-        [[ "$update" != "-u" ]] && print "\n${ZPLGM[col-info]}Setting up snippet ${ZPLGM[col-p]}${(l:10:: :)}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (as $id_as)}"
+        [[ "$update" != "-u" ]] && print "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname${ZINIT[col-rst]}${ZINIT_ICE[id-as]:+... (as $id_as)}"
         command mkdir -p "$local_dir"
     fi
 
-    [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- $'\n'"${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
+    [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname${ZINIT[col-rst]}${ZINIT_ICE[id-as]:+... (identified as $id_as)}"
 
     (
         if [[ "$url" = (http|https|ftp|ftps|scp)://* ]] {
@@ -857,14 +857,14 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
 
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}..."
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}..."
 
-                if (( ${+ZPLG_ICE[svn]} )) {
+                if (( ${+ZINIT_ICE[svn]} )) {
                     local skip_pull=0
                     if [[ "$update" = "-u" ]] {
                         # Test if update available
-                        -zplg-mirror-using-svn "$url" "-t" "$dirname" || {
-                            (( ${+ZPLG_ICE[run-atpull]} )) && {
+                        .zinit-mirror-using-svn "$url" "-t" "$dirname" || {
+                            (( ${+ZINIT_ICE[run-atpull]} )) && {
                                 skip_pull=1
                             } || return 2
                         }
@@ -875,41 +875,41 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         }
 
                         # Run annexes' atpull hooks (the before atpull-ice ones)
-                        [[ ${ZPLG_ICE[atpull][1]} = *"!"* ]] && {
-                            reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
+                        [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] && {
+                            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                             for key in "${reply[@]}"; do
-                                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
 
                             done
                         }
 
-                        (( ${+ZPLG_ICE[reset]} )) && (
-                            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-svn revert --recursive $filename/.}%f"
-                            eval "${ZPLG_ICE[reset]:-command svn revert --recursive $filename/.}"
+                        (( ${+ZINIT_ICE[reset]} )) && (
+                            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-svn revert --recursive $filename/.}%f"
+                            eval "${ZINIT_ICE[reset]:-command svn revert --recursive $filename/.}"
                         )
 
-                        [[ ${ZPLG_ICE[atpull][1]} = *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                        [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
                         if (( !skip_pull )) {
                             # Do the update
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
-                                print -r -- $'\n'"${ZPLGM[col-info]}Updating snippet ${ZPLGM[col-p]}$sname${ZPLGM[col-rst]}${ZPLG_ICE[id-as]:+... (identified as $id_as)}"
-                                print "Downloading \`$sname'${${ZPLG_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                                print -r -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname${ZINIT[col-rst]}${ZINIT_ICE[id-as]:+... (identified as $id_as)}"
+                                print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
                             }
-                            -zplg-mirror-using-svn "$url" "-u" "$dirname" || return 1
+                            .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 1
                         }
                     } else {
-                        -zplg-mirror-using-svn "$url" "" "$dirname" || return 1
+                        .zinit-mirror-using-svn "$url" "" "$dirname" || return 1
                     }
 
                     # Redundant code, just to compile SVN snippet
-                    if [[ ${ZPLG_ICE[as]} != "command" ]]; then
-                        if [[ -n ${ZPLG_ICE[pick]} ]]; then
-                            list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
-                        elif [[ -z ${ZPLG_ICE[pick]} ]]; then
+                    if [[ ${ZINIT_ICE[as]} != "command" ]]; then
+                        if [[ -n ${ZINIT_ICE[pick]} ]]; then
+                            list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
+                        elif [[ -z ${ZINIT_ICE[pick]} ]]; then
                             list=(
                                 $local_dir/$dirname/*.plugin.zsh(DN) $local_dir/$dirname/*.zsh-theme(DN) $local_dir/$dirname/init.zsh(DN)
                                 $local_dir/$dirname/*.zsh(DN) $local_dir/$dirname/*.sh(DN) $local_dir/$dirname/.zshrc(DN)
@@ -917,9 +917,9 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                         fi
 
                         [[ -e "${list[1]}" && "${list[1]}" != */dev/null && \
-                            -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
+                            -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
                         {
-                            (( !${+ZPLG_ICE[nocompile]} )) && {
+                            (( !${+ZINIT_ICE[nocompile]} )) && {
                                 zcompile "${list[1]}" &>/dev/null || {
                                     print -r "Warning: couldn't compile \`${list[1]}'"
                                 }
@@ -930,7 +930,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     command mkdir -p "$local_dir/$dirname"
 
                     if (( !ICE_OPTS[opt_-f,--force] )) {
-                        -zplg-get-url-mtime "$url"
+                        .zinit-get-url-mtime "$url"
                     } else {
                         REPLY=$EPOCHSECONDS
                     }
@@ -946,7 +946,7 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     local -a matched
                     matched=( "$local_dir"/"$dirname"/"$filename"(DNms-$secs) )
                     (( ${#matched} )) && {
-                        (( ${+ZPLG_ICE[run-atpull]} )) && skip_dl=1 || return 2
+                        (( ${+ZINIT_ICE[run-atpull]} )) && skip_dl=1 || return 2
                     }
 
                     if (( !skip_dl )) {
@@ -957,19 +957,19 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                     }
 
                     # Run annexes' atpull hooks (the before atpull-ice ones)
-                    [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && {
-                        reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
+                    [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && {
+                        reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                         for key in "${reply[@]}"; do
-                            arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                             "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
                         done
                     }
 
-                    [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                    [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
                     
                     if (( !skip_dl )) {
-                        -zplg-download-file-stdout "$url" >! "$dirname/$filename" || {
-                            -zplg-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
+                        .zinit-download-file-stdout "$url" >! "$dirname/$filename" || {
+                            .zinit-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
                                 command rm -f "$dirname/$filename"
                                 print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                                 return 1
@@ -980,8 +980,8 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 return 0
             ) || retval=$?
 
-            if [[ -n "${ZPLG_ICE[compile]}" ]]; then
-                list=( ${(M)~ZPLG_ICE[compile]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[compile]}(DN) )
+            if [[ -n "${ZINIT_ICE[compile]}" ]]; then
+                list=( ${(M)~ZINIT_ICE[compile]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[compile]}(DN) )
                 [[ ${#list} -eq 0 ]] && {
                     print "Warning: Ice-mod compile'' didn't match any files"
                 } || {
@@ -993,18 +993,18 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
                 }
             fi
 
-            if [[ $ZPLG_ICE[as] != "command" ]] && (( ${+ZPLG_ICE[svn]} == 0 )); then
+            if [[ $ZINIT_ICE[as] != "command" ]] && (( ${+ZINIT_ICE[svn]} == 0 )); then
                 local file_path="$local_dir/$dirname/$filename"
-                if [[ -n "${ZPLG_ICE[pick]}" ]]; then
-                    list=( ${(M)~ZPLG_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZPLG_ICE[pick]}(DN) )
+                if [[ -n "${ZINIT_ICE[pick]}" ]]; then
+                    list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
                     file_path="${list[1]}"
                 fi
-                [[ -e $file_path && -z ${ZPLG_ICE[(i)(\!|)(sh|bash|ksh|csh)]} && $file_path != */dev/null ]] && {
-                    (( !${+ZPLG_ICE[nocompile]} )) && {
+                [[ -e $file_path && -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} && $file_path != */dev/null ]] && {
+                    (( !${+ZINIT_ICE[nocompile]} )) && {
                         zcompile "$file_path" 2>/dev/null || {
                             print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
                             print -r "(snippet URL points to a directory instead of a file?"
-                            print -r "to download directory, use preceding: zplugin ice svn)"
+                            print -r "to download directory, use preceding: zinit ice svn)"
                             retval=0
                         }
                     }
@@ -1018,81 +1018,81 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             }
 
             # Run annexes' atpull hooks (the before atpull-ice ones)
-            [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && {
-                reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
+            [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && {
+                reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                 for key in "${reply[@]}"; do
-                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                     "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
                 done
             }
 
-            (( ${+ZPLG_ICE[reset]} )) && (
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZPLG_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f"
-                eval "${ZPLG_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
+            (( ${+ZINIT_ICE[reset]} )) && (
+                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f"
+                eval "${ZINIT_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
             )
 
-            [[ "$update" = "-u" && ${ZPLG_ICE[atpull][1]} = *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
             # Currently redundant, but theoretically it has its place
             [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
             command mkdir -p "$local_dir/$dirname"
             if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                print -P "${ZPLGM[col-msg1]}Copying ${ZPLGM[col-obj]}$filename${ZPLGM[col-msg1]}...%f"
+                print -P "${ZINIT[col-msg1]}Copying ${ZINIT[col-obj]}$filename${ZINIT[col-msg1]}...%f"
                 command cp -v "$url" "$local_dir/$dirname/$filename" || \
-                    { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
+                    { print -r -- "${ZINIT[col-error]}An error occured${ZINIT[col-rst]}"; retval=1; }
             } else {
                 command cp "$url" "$local_dir/$dirname/$filename" || \
-                    { print -r -- "${ZPLGM[col-error]}An error occured${ZPLGM[col-rst]}"; retval=1; }
+                    { print -r -- "${ZINIT[col-error]}An error occured${ZINIT[col-rst]}"; retval=1; }
             }
         }
 
-        if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZPLGM[SNIPPETS_DIR]}" ]]; then
+        if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZINIT[SNIPPETS_DIR]}" ]]; then
             # Store ices at "clone" and update of snippet, SVN and single-file
-            local pfx="$local_dir/$dirname/._zplugin"
-            -zplg-store-ices "$pfx" ZPLG_ICE "url_rsvd" "" "$save_url" "${+ZPLG_ICE[svn]}"
+            local pfx="$local_dir/$dirname/._zinit"
+            .zinit-store-ices "$pfx" ZINIT_ICE "url_rsvd" "" "$save_url" "${+ZINIT_ICE[svn]}"
         else
-            print "${ZPLGM[col-error]}Warning${ZPLGM[col-rst]}: inconsistency #2 occurred" \
+            print "${ZINIT[col-error]}Warning${ZINIT[col-rst]}: inconsistency #2 occurred" \
                 "- skipped storing ice-mods to" \
-                "disk, please report at https://github.com/zdharma/zplugin/issues" \
-                "providing the commands \`zplugin ice {...}; zplugin snippet {...}'"
+                "disk, please report at https://github.com/zdharma/zinit/issues" \
+                "providing the commands \`zinit ice {...}; zinit snippet {...}'"
         fi
 
         (( retval == 1 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
 
         (( retval == 2 )) && {
             # Run annexes' atpull hooks (the `always' after atpull-ice ones)
-            reply=( ${(@on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
+            reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
 
-            if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
+            if [[ -n ${ZINIT_ICE[ps-on-update]} ]]; then
                 if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                    print -r "Running snippet's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+                    print -r "Running snippet's provided update code: ${ZINIT[col-info]}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}${ZINIT[col-rst]}"
                     (
                         builtin cd -q "$local_dir/$dirname";
-                        eval "${ZPLG_ICE[ps-on-update]}"
+                        eval "${ZINIT_ICE[ps-on-update]}"
                     )
                 } else {
                     (
                         builtin cd -q "$local_dir/$dirname";
-                        eval "${ZPLG_ICE[ps-on-update]}" &> /dev/null
+                        eval "${ZINIT_ICE[ps-on-update]}" &> /dev/null
                     )
                 }
             fi
             return 0;
         }
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = "!!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!\!}}; }
+        [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = "!!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!\!}}; }
 
-        if [[ -n "${ZPLG_ICE[mv]}" ]]; then
-            if [[ ${ZPLG_ICE[mv]} = *("->"|"→")* ]] {
-                local from=${ZPLG_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[mv]##*(->|→)[[:space:]]#} || \
+        if [[ -n "${ZINIT_ICE[mv]}" ]]; then
+            if [[ ${ZINIT_ICE[mv]} = *("->"|"→")* ]] {
+                local from=${ZINIT_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[mv]##*(->|→)[[:space:]]#} || \
             } else {
-                local from=${ZPLG_ICE[mv]%%[[:space:]]##*} to=${ZPLG_ICE[mv]##*[[:space:]]##}
+                local from=${ZINIT_ICE[mv]%%[[:space:]]##*} to=${ZINIT_ICE[mv]##*[[:space:]]##}
             }
-            -zplg-substitute from to
+            @zinit-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
@@ -1108,13 +1108,13 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             )
         fi
 
-        if [[ -n "${ZPLG_ICE[cp]}" ]]; then
-            if [[ ${ZPLG_ICE[cp]} = *("->"|"→")* ]] {
-                local from=${ZPLG_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZPLG_ICE[cp]##*(->|→)[[:space:]]#} || \
+        if [[ -n "${ZINIT_ICE[cp]}" ]]; then
+            if [[ ${ZINIT_ICE[cp]} = *("->"|"→")* ]] {
+                local from=${ZINIT_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[cp]##*(->|→)[[:space:]]#} || \
             } else {
-                local from=${ZPLG_ICE[cp]%%[[:space:]]##*} to=${ZPLG_ICE[cp]##*[[:space:]]##}
+                local from=${ZINIT_ICE[cp]%%[[:space:]]##*} to=${ZINIT_ICE[cp]##*[[:space:]]##}
             }
-            -zplg-substitute from to
+            @zinit-substitute from to
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
@@ -1130,92 +1130,92 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
             )
         fi
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} = ("!"[^\!]*|"!") ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!}}; }
+        [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!}}; }
 
         if [[ "$update" = "-u" ]]; then
             # Run annexes' atpull hooks (the before atpull-ice ones)
-            [[ ${ZPLG_ICE[atpull][1]} != *"!"* ]] && {
-                reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
+            [[ ${ZINIT_ICE[atpull][1]} != *"!"* ]] && {
+                reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                 for key in "${reply[@]}"; do
-                    arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                     "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
                 done
             }
 
-            [[ -n "${ZPLG_ICE[atpull]}" && ${ZPLG_ICE[atpull][1]} != *"!"* ]] && -zplg-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; ((1)); } || -zplg-at-eval "${ZPLG_ICE[atpull]#!}" ${ZPLG_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ -n "${ZINIT_ICE[atpull]}" && ${ZINIT_ICE[atpull][1]} != *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
         else
             # Run annexes' atclone hooks (the before atclone-ice ones)
-            reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:\\\!atclone <->]}" )
+            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone <->]}" )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atclone
             done
 
-            local atclone=${ZPLG_ICE[atclone]}
-            [[ -n $atclone ]] && -zplg-substitute atclone
+            local atclone=${ZINIT_ICE[atclone]}
+            [[ -n $atclone ]] && @zinit-substitute atclone
 
-            (( ${+ZPLG_ICE[atclone]} )) && -zplg-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZPLG_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            (( ${+ZINIT_ICE[atclone]} )) && .zinit-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
             # Run annexes' atclone hooks (the after atclone-ice ones)
-            reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atclone <->]}" )
+            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atclone <->]}" )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atclone
             done
         fi
 
-        [[ ${+ZPLG_ICE[make]} = 1 && ${ZPLG_ICE[make]} != "!"* ]] && -zplg-countdown make && { local make=${ZPLG_ICE[make]}; -zplg-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)make}; }
+        [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)make}; }
 
         # Run annexes' atpull hooks (the after atpull-ice ones)
         [[ "$update" = "-u" ]] && {
-            reply=( "${(@on)ZPLG_EXTS[(I)z-annex hook:atpull <->]}" )
+            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}" )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atpull
             done
             # Run annexes' atpull hooks (the `always' after atpull-ice ones)
-            reply=( ${(@on)ZPLG_EXTS[(I)z-annex hook:%atpull <->]} )
+            reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZPLG_EXTS[$key]}[@]}" )
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                 "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
 
-            if [[ -n ${ZPLG_ICE[ps-on-update]} ]]; then
+            if [[ -n ${ZINIT_ICE[ps-on-update]} ]]; then
                 if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                    print -r "Running snippet's provided update code: ${ZPLGM[col-info]}${ZPLG_ICE[ps-on-update][1,50]}${ZPLG_ICE[ps-on-update][51]:+…}${ZPLGM[col-rst]}"
+                    print -r "Running snippet's provided update code: ${ZINIT[col-info]}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}${ZINIT[col-rst]}"
                 }
-                eval "${ZPLG_ICE[ps-on-update]}"
+                eval "${ZINIT_ICE[ps-on-update]}"
             fi
         }
         ((1))
     ) || return $?
 
     # After additional executions like atclone'' - install completions (2 - snippets)
-    [[ 1 = ${+ZPLG_ICE[nocompletions]} || ${ZPLG_ICE[as]} = null ]] || -zplg-install-completions "%" "$local_dir/$dirname" 0
+    [[ 1 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} = null ]] || .zinit-install-completions "%" "$local_dir/$dirname" 0
     return $retval
 }
-# }}}
-# FUNCTION: -zplg-get-latest-gh-r-version {{{
+# >>>
+# FUNCTION: .zinit-get-latest-gh-r-version <<<
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
--zplg-get-latest-gh-r-version() {
+.zinit-get-latest-gh-r-version() {
     setopt localoptions extendedglob warncreateglobal
 
-    -zplg-any-to-user-plugin "$1" "$2"
+    .zinit-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}"
     local plugin="${reply[-1]}"
 
     local url="https://github.com/$user/$plugin/releases/latest"
 
     local -a list
-    list=( ${(@f)"$( { -zplg-download-file-stdout $url || -zplg-download-file-stdout $url 1; } 2>/dev/null | \
+    list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
                   command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
 
     list=( "${(uOn)list[@]/(#b)href=?(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}" )
     REPLY="${list[1]}"
 }
-# }}}
-# FUNCTION: zpextract {{{
+# >>>
+# FUNCTION: ziextract <<<
 # If the file is an archive, it is extracted by this function.
 # Next stage is scanning of files with the common utility `file',
 # to detect executables. They are given +x mode. There are also
@@ -1223,37 +1223,37 @@ builtin source ${ZPLGM[BIN_DIR]}"/zplugin-side.zsh"
 #
 # $1 - url
 # $2 - file
-zpextract() {
+ziextract() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     local -a opt_move opt_norm
     zparseopts -D -E -move=opt_move -norm=opt_norm || \
-        { print -P -r -- "%F{160}Incorrect options given to \`zpextract' (available are: %F{221}--move%F{160})%f"; return 1; }
+        { print -P -r -- "%F{160}Incorrect options given to \`ziextract' (available are: %F{221}--move%F{160})%f"; return 1; }
 
     local file="$1" ext="$2"
     integer move=${${${(M)${#opt_move}:#0}:+0}:-1} norm=${${${(M)${#opt_norm}:#0}:+0}:-1}
 
     if [[ ! -e $file ]] {
-        print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-            "${ZPLGM[col-error]}ERROR:${ZPLGM[col-msg2]}" \
-            "the file \`${ZPLGM[col-obj]}$file${ZPLGM[col-msg2]}'" \
+        print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
+            "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
+            "the file \`${ZINIT[col-obj]}$file${ZINIT[col-msg2]}'" \
             "doesn't exist, aborting the extraction."
         return 1
     }
     command mkdir -p ._backup
     command rm -rf ._backup/*(DN)
-    command mv -f *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(DN) ._backup 2>/dev/null
+    command mv -f *~(._zinit*|.zinit_lastupd|._backup|.git|$file)(DN) ._backup 2>/dev/null
 
-    -zplg-extract-wrapper() {
+    .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            print "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-msg1]} Unpacking the files from:" \
-                "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'...${ZPLGM[col-rst]}"
+            print "${ZINIT[col-pre]}ziextract:${ZINIT[col-msg1]} Unpacking the files from:" \
+                "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'...${ZINIT[col-rst]}"
         $fun; retval=$?
         (( retval == 0 )) && {
             local -a files
-            files=( *~(._zplugin*|.zplugin_lstupd|._backup|.git|$file)(DN) )
+            files=( *~(._zinit*|.zinit_lastupd|._backup|.git|$file)(DN) )
             (( ${#files} && !norm )) && command rm -f "$file"
         }
         return $retval
@@ -1261,40 +1261,40 @@ zpextract() {
 
     case "${${ext:+.$ext}:-$file}" in
         (*.zip)
-            -zplg-extract() { command unzip -o "$file"; }
+            :zinit-extract() { command unzip -o "$file"; }
             ;;
         (*.rar)
-            -zplg-extract() { command unrar x "$file"; }
+            :zinit-extract() { command unrar x "$file"; }
             ;;
         (*.tar.bz2|*.tbz2)
-            -zplg-extract() { command bzip2 -dc "$file" | command tar -xf -; }
+            :zinit-extract() { command bzip2 -dc "$file" | command tar -xf -; }
             ;;
         (*.tar.gz|*.tgz)
-            -zplg-extract() { command gzip -dc "$file" | command tar -xf -; }
+            :zinit-extract() { command gzip -dc "$file" | command tar -xf -; }
             ;;
         (*.tar.xz|*.txz)
-            -zplg-extract() { command xz -dc "$file" | command tar -xf -; }
+            :zinit-extract() { command xz -dc "$file" | command tar -xf -; }
             ;;
         (*.tar.7z|*.t7z)
-            -zplg-extract() { command 7z x -so "$file" | command tar -xf -; }
+            :zinit-extract() { command 7z x -so "$file" | command tar -xf -; }
             ;;
         (*.tar)
-            -zplg-extract() { command tar -xf "$file"; }
+            :zinit-extract() { command tar -xf "$file"; }
             ;;
         (*.gz)
-            -zplg-extract() { command gunzip "$file"; }
+            :zinit-extract() { command gunzip "$file"; }
             ;;
         (*.dmg)
-            -zplg-extract() {
+            :zinit-extract() {
                 local prog
                 for prog ( hdiutil cp ) {
                     if ! command -v $prog &>/dev/null; then
-                        print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-                            "${ZPLGM[col-error]}ERROR:${ZPLGM[col-msg2]}" \
-                            "no \`${ZPLGM[col-obj]}$prog${ZPLGM[col-msg2]}'" \
+                        print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
+                            "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
+                            "no \`${ZINIT[col-obj]}$prog${ZINIT[col-msg2]}'" \
                             "command found – it is required to extract a" \
-                            "${ZPLGM[col-obj]}dmg${ZPLGM[col-msg2]} image." \
-                            ${ZPLGM[col-rst]}
+                            "${ZINIT[col-obj]}dmg${ZINIT[col-msg2]} image." \
+                            ${ZINIT[col-rst]}
                         return 1
                     fi
                 }
@@ -1308,48 +1308,48 @@ zpextract() {
                 command hdiutil detach $attached_vol
 
                 (( retval )) && {
-                    print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-                            "${ZPLGM[col-error]}Warning:${ZPLGM[col-msg1]}" \
+                    print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
+                            "${ZINIT[col-error]}Warning:${ZINIT[col-msg1]}" \
                             "problem occurred when attempted to copy the files" \
                             "from the mounted image: " \
-                            "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'."
+                            "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'."
                 }
                 return $retval
             }
             ;;
     esac
 
-    if [[ $(typeset -f + -- -zplg-extract) == "-zplg-extract" ]] {
-        -zplg-extract-wrapper "$file" -zplg-extract || {
+    if [[ $(typeset -f + -- :zinit-extract) == ":zinit-extract" ]] {
+        .zinit-extract-wrapper "$file" :zinit-extract || {
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} )) {
-                print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-                    "${ZPLGM[col-error]}WARNING:${ZPLGM[col-msg1]}" \
+                print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
+                    "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
                     "extraction of archive had problems, restoring previous" \
-                    "version of the plugin/snippet.${ZPLGM[col-rst]}"
+                    "version of the plugin/snippet.${ZINIT[col-rst]}"
                 command mv ._backup/*(DN) . 2>/dev/null
             } else {
-                print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-                    "${ZPLGM[col-error]}WARNING:${ZPLGM[col-msg1]}" \
+                print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
+                    "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
                     "extraction of the archive" \
-                    "\`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}' had problems." \
-                    ${ZPLGM[col-rst]}
+                    "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}' had problems." \
+                    ${ZINIT[col-rst]}
             }
             return 1
         }
-        unfunction -- -zplg-extract
+        unfunction -- :zinit-extract
     } else {
-        print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
-            "${ZPLGM[col-error]}WARNING: ${ZPLGM[col-msg1]}didn't recognize the archive" \
-            "type of \`${ZPLGM[col-obj]}$file${ZPLGM[col-msg1]}'" \
-            "${ext:+${ZPLGM[col-obj2]}/ $ext${ZPLGM[col-msg1]} }"\
-"(no extraction has been done).${ZPLGM[col-rst]}"
+        print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
+            "${ZINIT[col-error]}WARNING: ${ZINIT[col-msg1]}didn't recognize the archive" \
+            "type of \`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'" \
+            "${ext:+${ZINIT[col-obj2]}/ $ext${ZINIT[col-msg1]} }"\
+"(no extraction has been done).${ZINIT[col-rst]}"
     }
-    unfunction -- -zplg-extract-wrapper
+    unfunction -- .zinit-extract-wrapper
 
     local -a execs
-    execs=( **/*~(._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN-.) )
+    execs=( **/*~(._zinit(|/*)|.git(|/*)|._backup(|/*))(DN-.) )
     [[ ${#execs} -gt 0 && -n $execs ]] && {
         execs=( ${(@f)"$( file ${execs[@]} )"} )
         execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
@@ -1360,22 +1360,22 @@ zpextract() {
         command chmod a+x "${execs[@]}"
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
             if (( ${#execs} == 1 )); then
-                    print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]}" \
+                    print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
                         "Successfully extracted and assigned +x chmod to the file:" \
-                        "\`${ZPLGM[col-obj]}${execs[1]}${ZPLGM[col-rst]}'."
+                        "\`${ZINIT[col-obj]}${execs[1]}${ZINIT[col-rst]}'."
             else
-                local sep="${ZPLGM[col-rst]},${ZPLGM[col-obj]} "
-                print -r -- "${ZPLGM[col-pre]}zpextract:${ZPLGM[col-rst]} Successfully" \
+                local sep="${ZINIT[col-rst]},${ZINIT[col-obj]} "
+                print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]} Successfully" \
                     "extracted and marked executable the appropriate files" \
-                    "(${ZPLGM[col-obj]}${(pj:$sep:)${execs[@]:t}}${ZPLGM[col-rst]}) contained" \
-                    "in \`${ZPLGM[col-file]}$file${ZPLGM[col-rst]}'."
+                    "(${ZINIT[col-obj]}${(pj:$sep:)${execs[@]:t}}${ZINIT[col-rst]}) contained" \
+                    "in \`${ZINIT[col-file]}$file${ZINIT[col-rst]}'."
             fi
     }
 
     (( move )) && {
         # TODO: mkdir .tmp231ABC
-        command mv -f *~(._zplugin|.git|._backup)(DN[1]) .tmp231ABC
-        command mv -f **/*~(*/*/*|^*/*|._zplugin(|/*)|.git(|/*)|._backup(|/*))(DN) .
+        command mv -f *~(._zinit|.git|._backup)(DN[1]) .tmp231ABC
+        command mv -f **/*~(*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
         command rmdir .tmp231ABC
         REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
     } || {
@@ -1383,15 +1383,18 @@ zpextract() {
     }
     return 0
 }
-# }}}
-# FUNCTION: -zplg-at-eval {{{
--zplg-at-eval() {
+# >>>
+# FUNCTION: zpextract <<<
+zpextract() { ziextract "$@"; }
+# >>>
+# FUNCTION: .zinit-at-eval <<<
+.zinit-at-eval() {
     local atclone="$2" atpull="$1"
     integer retval
-    -zplg-substitute atclone atpull
+    @zinit-substitute atclone atpull
     [[ $atpull = "%atclone" ]] && { eval "$atclone"; retval=$?; } || { eval "$atpull"; retval=$?; }
     return $retval
 }
-# }}}
+# >>>
 
-# vim:ft=zsh:sw=4:sts=4:et
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker=<<<,>>>

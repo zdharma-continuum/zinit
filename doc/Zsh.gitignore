@@ -9,8 +9,8 @@
 .zcalc_history
 
 # A popular plugin manager's files
-._zplugin
-.zplugin_lstupd
+._zinit
+.zinit_lastupd
 
 # zdharma/zshelldoc tool's files
 zsdoc/data

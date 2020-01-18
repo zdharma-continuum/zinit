@@ -1,4 +1,4 @@
-#compdef zplugin
+#compdef zinit
 
 setopt localoptions warncreateglobal typesetsilent
 
@@ -7,9 +7,9 @@ local -a expl
 
 typeset -a commands
 commands=(
-    zstatus:'overall Zplugin status'
+    zstatus:'overall Zinit status'
     times:'statistics on plugin loading times'
-    self-update:'updates Zplugin'
+    self-update:'updates Zinit'
     help:'usage information'
     man:'manual'
     env-whitelist:'specify names (also patterns) of parameters to be left unchanged during an unload'
@@ -52,10 +52,10 @@ commands=(
     cdreplay:'replay compdefs (to be done after compinit)'
     cdclear:'clear compdef replay list'
     srv:'control a service, command can be: stop,start,restart,next,quit; `next'' moves the service to another Zshell'
-    recall:'fetch saved ice modifiers and construct `zplugin ice ...'' command'
+    recall:'fetch saved ice modifiers and construct `zinit ice ...'' command'
     env-whitelist:'allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose'
     bindkeys:'lists bindkeys set up by each plugin'
-    module:'manage binary Zsh module shipped with Zplugin, see `zplugin module help'''
+    module:'manage binary Zsh module shipped with Zinit, see `zinit module help'''
     run:"execute code inside plugin's folder"
     {add-fpath,fpath}:'add plugin folder to $fpath'
 )
@@ -66,7 +66,7 @@ _arguments -C \
 
 case $state in
     command)
-        _describe -t commands "Zplugin command" commands && ret=0
+        _describe -t commands "Zinit command" commands && ret=0
         ;;
 
     argument)
@@ -89,9 +89,9 @@ case $state in
 
             load|light)
                 typeset -a plugins
-                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N:t) )
                 plugins=( "${plugins[@]//---//}" )
-                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#_local/zinit}" )
                 plugins=( "${plugins[@]:#custom}" )
 
                 _alternative \
@@ -102,9 +102,9 @@ case $state in
 
             run|fpath|add-fpath)
                 typeset -a plugins
-                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N:t) )
                 plugins=( "${plugins[@]//---//}" )
-                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#_local/zinit}" )
                 plugins=( "${plugins[@]:#custom}" )
 
                 local -a opts
@@ -124,22 +124,22 @@ case $state in
             compile|stress|edit|glance|recall|update|status|cd|changes|delete)
                 # Plugins
                 typeset -a plugins
-                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N:t) )
                 plugins=( "${plugins[@]//---//}" )
-                plugins=( "${plugins[@]:#_local/zplugin}" )
+                plugins=( "${plugins[@]:#_local/zinit}" )
                 plugins=( "${plugins[@]:#custom}" )
 
                 # Snippets
                 local -a snippets snippets_alreadyld
                 local sni
 
-                snippets=( "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin(D/:h) )
-                snippets=( ${snippets[@]#${ZPLGM[SNIPPETS_DIR]}/} )
+                snippets=( "${ZINIT[SNIPPETS_DIR]}"/**/._zinit(D/:h) )
+                snippets=( ${snippets[@]#${ZINIT[SNIPPETS_DIR]}/} )
                 snippets=( ${snippets[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
                 snippets=( ${snippets[@]/--//} )
 
                 for sni ( ${snippets[@]} ) {
-                    if [[ -n ${ZPLG_SNIPPETS[$sni]} ]]; then
+                    if [[ -n ${ZINIT_SNIPPETS[$sni]} ]]; then
                         snippets_alreadyld+=( $sni )
                         snippets=( ${snippets[@]:#$sni} )
                     fi
@@ -153,7 +153,7 @@ case $state in
 
             unload|report)
                 typeset -a plugins absolute normal
-                plugins=( "${ZPLG_REGISTERED_PLUGINS[@]:#_local/zplugin}" )
+                plugins=( "${ZINIT_REGISTERED_PLUGINS[@]:#_local/zinit}" )
                 normal=( "${plugins[@]:#%*}" )
                 absolute=( "${(M)plugins[@]:#%*}" )
                 absolute=( "${absolute[@]/\%\/\//%/}" )
@@ -185,7 +185,7 @@ case $state in
             cdisable)
                 # Find enabled completions
                 typeset -a completions
-                completions=( "${ZPLGM[COMPLETIONS_DIR]}"/_*(N:t) )
+                completions=( "${ZINIT[COMPLETIONS_DIR]}"/_*(N:t) )
                 completions=( "${completions[@]#_}" )
                 _wanted plugins expl "-- Completion --" \
                     compadd "$@" -a - completions && \
@@ -195,7 +195,7 @@ case $state in
             cenable)
                 # Find disabled
                 typeset -a completions
-                completions=( "${ZPLGM[COMPLETIONS_DIR]}"/[^_]*(N:t) )
+                completions=( "${ZINIT[COMPLETIONS_DIR]}"/[^_]*(N:t) )
                 _wanted plugins expl "-- Completion --" \
                     compadd "$@" -a - completions && \
                         ret=0
@@ -207,7 +207,7 @@ case $state in
                 # for completions that can be installed
                 typeset -a plugins completions
                 local p c user plugin
-                for p in "${ZPLGM[PLUGINS_DIR]}"/*; do
+                for p in "${ZINIT[PLUGINS_DIR]}"/*; do
                     completions=( "$p"/**/_[^_.][^.]#(N) )
                     for c in "${completions[@]}"; do
                         p="${p:t}"
@@ -228,13 +228,13 @@ case $state in
                 # it has completions that are installed
                 typeset -a plugins completions
                 local p c user plugin
-                for p in "${ZPLGM[PLUGINS_DIR]}"/*; do
+                for p in "${ZINIT[PLUGINS_DIR]}"/*; do
                     completions=( "$p"/**/_[^_.][^.]#(N) )
                     for c in "${completions[@]}"; do
                         cfile="${c:t}"
                         bkpfile="${cfile#_}"
                         # Completion installed, either enabled or disabled?
-                        if [[ -e "${ZPLGM[COMPLETIONS_DIR]}"/"$cfile" || -e "${ZPLGM[COMPLETIONS_DIR]}"/"$bkpfile" ]]; then
+                        if [[ -e "${ZINIT[COMPLETIONS_DIR]}"/"$cfile" || -e "${ZINIT[COMPLETIONS_DIR]}"/"$bkpfile" ]]; then
                             p="${p:t}"
                             user="${p%%---*}"
                             plugin="${p#*---}"
@@ -257,13 +257,13 @@ case $state in
                 local -a snippets snippets_alreadyld
                 local sni
 
-                snippets=( "${ZPLGM[SNIPPETS_DIR]}"/**/._zplugin(D/:h) )
-                snippets=( ${snippets[@]#${ZPLGM[SNIPPETS_DIR]}/} )
+                snippets=( "${ZINIT[SNIPPETS_DIR]}"/**/._zinit(D/:h) )
+                snippets=( ${snippets[@]#${ZINIT[SNIPPETS_DIR]}/} )
                 snippets=( ${snippets[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
                 snippets=( ${snippets[@]/--//} )
 
                 for sni ( ${snippets[@]} ) {
-                    if [[ -n ${ZPLG_SNIPPETS[$sni]} ]]; then
+                    if [[ -n ${ZINIT_SNIPPETS[$sni]} ]]; then
                         snippets_alreadyld+=( $sni )
                         snippets=( ${snippets[@]:#$sni} )
                     fi
@@ -301,14 +301,14 @@ case $state in
 
             uncompile)
                 typeset -a plugins
-                plugins=( "${ZPLGM[PLUGINS_DIR]}"/*(N) )
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N) )
 
                 typeset -a show_plugins p matches
                 for p in "${plugins[@]}"; do
                     matches=( $p/*.zwc(N) )
                     if [ "$#matches" -ne "0" ]; then
                         p="${p:t}"
-                        [ "$p" = "_local---zplugin" ] && continue
+                        [ "$p" = "_local---zinit" ] && continue
                         [ "$p" = "custom" ] && continue
                         p="${p//---//}"
                         show_plugins+=( "$p" )

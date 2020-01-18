@@ -847,8 +847,8 @@ custom_try_source_file(char *file)
     /* If there is no zwc file, or if it is less recent than script file */
     if ( ( !rn && ( rc || ( stc.st_mtime < stn.st_mtime ) ) ) &&
             ( access( file_dup, W_OK ) == 0 || 0 == strcmp(
-                getsparam( "ZPLG_MOD_DEBUG" ) ?
-                    getsparam( "ZPLG_MOD_DEBUG" ) : "0",
+                getsparam( "ZINIT_MOD_DEBUG" ) ?
+                    getsparam( "ZINIT_MOD_DEBUG" ) : "0",
                 "1" ) )
     ) {
         char *args[] = { file, NULL };
@@ -866,8 +866,8 @@ custom_try_source_file(char *file)
             bin_zcompile("ZpluginModule_", args, &ops, 0);
         } else {
            if ( 0 == strcmp(
-                    getsparam( "ZPLG_MOD_DEBUG" ) ?
-                        getsparam( "ZPLG_MOD_DEBUG" ) : "0",
+                    getsparam( "ZINIT_MOD_DEBUG" ) ?
+                        getsparam( "ZINIT_MOD_DEBUG" ) : "0",
                     "1" )
           ) {
                zwarnnam( "ZpluginModule",
@@ -1399,7 +1399,7 @@ void zpmod_usage() {
                      "[33mCommand <report-append>:[0m\n"
                      "\n"
                      "Used by Zplugin internally to speed up loading plugins with tracking (reporting).\n"
-                     "It extends the given field {plugin-ID} in $ZPLG_REPORTS hash, with the given string\n"
+                     "It extends the given field {plugin-ID} in $ZINIT_REPORTS hash, with the given string\n"
                      "{new-report-body}.\n"
                      "\n"
                      "[33mCommand <source-study>:[0m\n"
@@ -1425,14 +1425,14 @@ zp_append_report( const char *nam, const char *target, int target_len, const cha
     char *target_string = NULL;
     int target_string_len = 0, new_extended_len = 0;
 
-    /* Get ZPLG_REPORTS associative array */
-    pm = ( Param ) paramtab->getnode( paramtab, "ZPLG_REPORTS" );
+    /* Get ZINIT_REPORTS associative array */
+    pm = ( Param ) paramtab->getnode( paramtab, "ZINIT_REPORTS" );
     if ( !pm ) {
-        zwarnnam( nam, "%d: Parameter $ZPLG_REPORTS isn't declared. Zplugin is not loaded? I.e. not sourced.", __LINE__ );
+        zwarnnam( nam, "%d: Parameter $ZINIT_REPORTS isn't declared. Zplugin is not loaded? I.e. not sourced.", __LINE__ );
         return 1;
     }
 
-    /* Get ZPLG_REPORTS[{target}] hashed Param */
+    /* Get ZINIT_REPORTS[{target}] hashed Param */
     ht = pm->u.hash;
     hn = gethashnode2( ht, target );
     val_pm = ( Param ) hn;
