@@ -5,7 +5,6 @@ txt/
 *.zini
 .ycm_extra_conf.py
 zmodules/COMPILED_AT
-zmodules/RECOMPILE_REQUEST
 *deploy*key*
 *.bundle
 site*/
