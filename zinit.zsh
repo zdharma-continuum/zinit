@@ -1626,10 +1626,9 @@ function $f {
 #
 
 # FUNCTION: .zinit-ice <<<
-# Parses ICE specification (`zplg ice' subcommand), puts the result
-# into ZINIT_ICE global hash. The ice-spec is valid for next command
-# only (i.e. it "melts"), but it can then stick to plugin and activate
-# e.g. at update.
+# Parses ICE specification, puts the result into ZINIT_ICE global hash.
+# The ice-spec is valid for next command only (i.e. it "melts"), but
+# it can then stick to plugin and activate e.g. at update.
 .zinit-ice() {
     builtin setopt localoptions noksharrays extendedglob warncreateglobal typesetsilent noshortloops
     integer retval
