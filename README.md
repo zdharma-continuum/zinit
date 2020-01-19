@@ -56,6 +56,8 @@ reports](DONATIONS.md) about what is being done with the money received.
   - In general, you don't have to do anything after the name change.
   - Only a run of `zinit update --all` might be necessary.
   - You might also want to rename your `zplugin` calls in `zshrc` to `zinit`.
+  - Zinit will reuse `~/.zplugin` directory if it exists, otherwise it'll create
+    `~/.zinit`.
 
 * 15-01-2020
   - There's a new function, `zpextract`, which unpacks the given file. It supports many
