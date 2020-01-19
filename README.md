@@ -51,7 +51,8 @@ reports](DONATIONS.md) about what is being done with the money received.
   <summary>Here are the new features and updates added to zinit in the last 90 days.</summary>
 
 * 19-01-2020
-  - The name has been changed to **Zinit** based on the results of the pool #235.
+  - The name has been changed to **Zinit** based on the results of the
+    [poll](https://github.com/zdharma/zinit/issues/235).
   - In general, you don't have to do anything after the name change.
   - Only a run of `zinit update --all` might be necessary.
   - You might also want to rename your `zplugin` calls in `zshrc` to `zinit`.
