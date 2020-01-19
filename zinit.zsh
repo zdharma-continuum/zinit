@@ -1398,7 +1398,7 @@ function $f {
 # $2, ... - the text
 .zinit-add-report() {
     # Use zinit binary module if available
-    [[ -n $1 ]] && { (( ${+builtins[zpmod]} )) && zpmod report-append "$1" "$2"$'\n' || ZINIT_REPORTS[$1]+="$2"$'\n'; }
+    [[ -n $1 ]] && { (( ${+builtins[zpmod]} && 0 )) && zpmod report-append "$1" "$2"$'\n' || ZINIT_REPORTS[$1]+="$2"$'\n'; }
     [[ ${ZINIT[DTRACE]} = 1 ]] && { (( ${+builtins[zpmod]} )) && zpmod report-append _dtrace/_dtrace "$2"$'\n' || ZINIT_REPORTS[_dtrace/_dtrace]+="$2"$'\n'; }
     return 0
 } # >>>
