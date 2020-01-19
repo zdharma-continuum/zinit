@@ -50,6 +50,12 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zinit in the last 90 days.</summary>
 
+* 19-01-2020
+  - The name has been changed to **Zinit** based on the results of the pool #235.
+  - In general, you don't have to do anything after the name change.
+  - Only a run of `zinit update --all` might be necessary.
+  - You might also want to rename your `zplugin` calls in `zshrc` to `zinit`.
+
 * 15-01-2020
   - There's a new function, `zpextract`, which unpacks the given file. It supports many
     formats (notably also `dmg` images) – if there's a format that's unsupported please
@@ -542,7 +548,7 @@ explicitly stated otherwise.
 | `proto` |<div align="justify" style="text-align: justify;"> Change protocol to `git`,`ftp`,`ftps`,`ssh`, `rsync`, etc. Default is `https`. **Does not work with snippets.** </div>|
 | [**`from`**](http://zdharma.org/zinit/wiki/Private-Repositories/) |<div align="justify" style="text-align: justify;"> Clone plugin from given site. Supported are `from"github"` (default), `..."github-rel"`, `..."gitlab"`, `..."bitbucket"`, `..."notabug"` (short names: `gh`, `gh-r`, `gl`, `bb`, `nb`). Can also be a full domain name (e.g. for GitHub enterprise). **Does not work with snippets.**</div>|
 | `ver` |<div align="justify" style="text-align: justify;"> Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. **Does not work with snippets.**</div>|
-| `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose`. **Does not work with snippets.** </div>|
+| `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zini ice from"gh-r" as"program" bpick"*Darwin*"; zini load docker/compose`. **Does not work with snippets.** </div>|
 | `depth` |<div align="justify" style="text-align: justify;"> Pass `--depth` to `git`, i.e. limit how much of history to download. **Does not work with snippets.**</div>|
 | `cloneopts` |<div align="justify" style="text-align: justify;"> Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. **Does not work with snippets.** </div>|
 | `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zinit ice svn; zinit snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**</div>|
