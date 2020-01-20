@@ -2635,7 +2635,7 @@ ZINIT[EXTENDED_GLOB]=""
     fi
 
     local user_name="$(command git config user.name 2>/dev/null)"
-    local year="${$(command date "+%Y"):-2019}"
+    local year="${$(command date "+%Y"):-2020}"
 
     command cat >! "${plugin:t}.plugin.zsh" <<EOF
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
