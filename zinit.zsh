@@ -291,9 +291,9 @@ builtin setopt noaliases
             (( ${#pairs} > 1 && ${#pairs[@]} % 2 == 0 )) && ZINIT_CUR_BIND_MAP+=( "${pairs[@]}" )
         fi
 
-        1="${1#"${1%%[! $'\t']*}"}" # leading whitespace
-        1="${1%"${1##*[! $'\t']}"}" # trailing whitespace
         local bmap_val="${ZINIT_CUR_BIND_MAP[${1}]}"
+        [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)1}]}"
+        [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)${(Q)1}}]}"
         if [[ -n $bmap_val ]]; then
             string="${(q)bmap_val}"
             pos[1]="$bmap_val"
