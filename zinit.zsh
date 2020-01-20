@@ -301,7 +301,7 @@ builtin setopt noaliases
             if (( val )) {
                 [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
             } else {
-                [[ ${pos[1]} = "-M" ]] && pos[3]="$bmap_val" || pos[1]="$bmap_val"
+                [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
             }
             .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
             (( 1 ))
@@ -314,7 +314,7 @@ builtin setopt noaliases
             if (( val )) {
                 [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
             } else {
-                [[ ${pos[1]} = "-M" ]] && pos[3]="$bmap_val" || pos[1]="$bmap_val"
+                [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
             }
             .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as cursor-key and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
         fi
