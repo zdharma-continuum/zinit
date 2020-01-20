@@ -294,9 +294,15 @@ builtin setopt noaliases
         local bmap_val="${ZINIT_CUR_BIND_MAP[${1}]}"
         [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)1}]}"
         [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)${(Q)1}}]}"
+        [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)1}]}"; integer val=1; }
+        [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)${(Q)1}}]}"
         if [[ -n $bmap_val ]]; then
             string="${(q)bmap_val}"
-            [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
+            if (( val )) {
+                [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
+            } else {
+                [[ ${pos[1]} = "-M" ]] && pos[3]="$bmap_val" || pos[1]="$bmap_val"
+            }
             .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
             (( 1 ))
         elif [[ ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[UPAR]}} && -n ${${ZINIT[UPAR]}[(r);:${(q)1};:]} ) || \
@@ -305,7 +311,11 @@ builtin setopt noaliases
                 ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[LEFTAR]}} && -n ${${ZINIT[LEFTAR]}[(r);:${(q)1};:]} )
         ]]; then
             string="${(q)bmap_val}"
-            pos[1]="$bmap_val"
+            if (( val )) {
+                [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
+            } else {
+                [[ ${pos[1]} = "-M" ]] && pos[3]="$bmap_val" || pos[1]="$bmap_val"
+            }
             .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as cursor-key and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
         fi
         [[ $bmap_val = hold ]] && return 0
