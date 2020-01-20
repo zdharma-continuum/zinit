@@ -6,6 +6,10 @@
 # An example of type-agnostic script/function, i.e.: the file can be run as a +x
 # script or as an autoload function.
 
+# Set the base and typically useful options
+emulate -LR zsh
+setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+
 # Run as script? ZSH_SCRIPT is a Zsh 5.3 addition
 if [[ $0 != example-script || -n $ZSH_SCRIPT ]]; then
     # Handle $0 according to the Zsh Plugin Standard:
@@ -20,18 +24,12 @@ if [[ $0 != example-script || -n $ZSH_SCRIPT ]]; then
 
     # In case of the script using other scripts from the plugin, either set up
     # $fpath and autoload, or add the directory to $PATH.
-    # Quoting the values as the emulation isn't yet set and SH_WORD_SPLIT option
-    # might be enabled.
-    fpath+=( "$Plugins[MY_PLUGIN_DIR]" )
+    fpath+=( $Plugins[MY_PLUGIN_DIR] )
     autoload …
 
     # OR
-    path+=( "$Plugins[MY_PLUGIN_DIR]" )
+    path+=( $Plugins[MY_PLUGIN_DIR] )
 fi
-
-# Set the base and typically useful options
-emulate -LR zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
 # The script/function contents possibly using $Plugins[MY_PLUGIN_DIR] …
 # …
