@@ -15,24 +15,25 @@ if [[ $0 != example-script || -n $ZSH_SCRIPT ]]; then
 
     # Such global variable is expected to be typeset'd -g in the plugin.zsh
     # file. Here it's restored in case of the function being run as a script.
-    typeset MY_PLUGIN_DIR=${0:h}
+    typeset -gA Plugins
+    Plugins[MY_PLUGIN_DIR]=${0:h}
 
     # In case of the script using other scripts from the plugin, either set up
     # $fpath and autoload, or add the directory to $PATH.
     # Quoting the values as the emulation isn't yet set and SH_WORD_SPLIT option
     # might be enabled.
-    fpath+=( "$MY_PLUGIN_DIR" )
+    fpath+=( "$Plugins[MY_PLUGIN_DIR]" )
     autoload …
 
     # OR
-    path+=( "$MY_PLUGIN_DIR" )
+    path+=( "$Plugins[MY_PLUGIN_DIR]" )
 fi
 
 # Set the base and typically useful options
 emulate -LR zsh
 setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
-# The script/function contents possibly using $MY_PLUGIN_DIR …
+# The script/function contents possibly using $Plugins[MY_PLUGIN_DIR] …
 # …
 
 # vim:ft=zsh:tw=80:sw=4:sts=4:et
