@@ -227,7 +227,7 @@ case $state in
                 # We must iterate each plugin and check if
                 # it has completions that are installed
                 typeset -a plugins completions
-                local p c user plugin
+                local p c user plugin cfile bkpfile
                 for p in "${ZINIT[PLUGINS_DIR]}"/*; do
                     completions=( "$p"/**/_[^_.][^.]#(N) )
                     for c in "${completions[@]}"; do
