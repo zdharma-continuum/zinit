@@ -10,12 +10,12 @@ zinit light zinit-zsh/z-a-test
 
 Example activation in the default quiet mode:
 
-![z-a-test activation](https://raw.githubusercontent.com/zinit-zsh/z-a-test/master/images/z-a-test-1.png)
+![z-a-test activation](https://raw.githubusercontent.com/zinit-zsh/z-a-test/master/images/z-p-test-1.png)
 
 
 Example activation in non-quiet mode:
 
-![z-a-test activation](https://raw.githubusercontent.com/zinit-zsh/z-a-test/master/images/z-a-test-2.png)
+![z-a-test activation](https://raw.githubusercontent.com/zinit-zsh/z-a-test/master/images/z-p-test-2.png)
 
 ## Installation
 
