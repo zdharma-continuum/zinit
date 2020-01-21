@@ -75,8 +75,8 @@ if [[ ! -f $ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh ]]; then
     print -P "%F{33}▓▒░ %F{220}Installing DHARMA Initiative Plugin Manager (zdharma/zinit)…%f"
     command mkdir -p $ZINIT_HOME
     command git clone https://github.com/zdharma/zinit $ZINIT_HOME/$ZINIT_BIN_DIR_NAME && \\
-        print -P "%F{33}▓▒░ %F{34}Installation successful.%F" || \\
-        print -P "%F{160}▓▒░ The clone has failed.%F"
+        print -P "%F{33}▓▒░ %F{34}Installation successful.%f" || \\
+        print -P "%F{160}▓▒░ The clone has failed.%f"
 fi
 source "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh"
 autoload -Uz _zinit
