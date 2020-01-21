@@ -19,7 +19,7 @@ commands to `.zshrc`:
 
 ```SystemVerilog
 zinit light zdharma/zui
-zinit light zdharma/zinit-crasis
+zinit light zdharma/zplugin-crasis
 ```
 
 To use, invoke `crasis [optional zshrc path]` or press `Ctrl-o-k`. Global
@@ -53,9 +53,9 @@ CRASIS_THEME="zdharma-256" CRASIS_LAYOUT="contract" crasis
 
 ## Screenshots
 
-![clean-256](https://raw.githubusercontent.com/zdharma/zinit-crasis/master/themes/screenshots/clean-256.png)
+![clean-256](https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/clean-256.png)
 
-![zdharma-256](https://raw.githubusercontent.com/zdharma/zinit-crasis/master/themes/screenshots/zdharma-256.png)
+![zdharma-256](https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/zdharma-256.png)
 
 ## Code Documentation
 
@@ -63,7 +63,7 @@ CRASIS_THEME="zdharma-256" CRASIS_LAYOUT="contract" crasis
 pure-Zshell library where user generates simple text with hyperlinks, which is
 then turned into active document with buttons. Check out `Crasis` code
 documentation:
-[**Asciidoc**](https://github.com/zdharma/zinit-crasis/blob/master/zsdoc/crasis.adoc),
-[**PDF**](http://zdharma.org/zinit-crasis/crasis.pdf).
+[**Asciidoc**](https://github.com/zdharma/zplugin-crasis/blob/master/zsdoc/crasis.adoc),
+[**PDF**](http://zdharma.org/zplugin-crasis/crasis.pdf).
 
 []( vim:set ft=markdown tw=80: )
