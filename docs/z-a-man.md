@@ -14,18 +14,18 @@ and it then generates the manpages. To view them there's a `zman` command:
 # View README.md manpage in the terminal
 zman z-a-man
 # View the code documentation (via the full plugin name, as demonstrated)
-zman -c zinit/z-a-man
+zman -c zinit-zsh/z-a-man
 ```
 
 ## Examples
 
 Main manual (of the project):
 
-![README](https://raw.githubusercontent.com/zinit/z-a-man/master/images/zman-readme.png)
+![README](https://raw.githubusercontent.com/zinit-zsh/z-a-man/master/images/zman-readme.png)
 
 Code documentation for the plugin.zsh file (of the project):
 
-![Code documentation](https://raw.githubusercontent.com/zinit/z-a-man/master/images/zman-cd.png)
+![Code documentation](https://raw.githubusercontent.com/zinit-zsh/z-a-man/master/images/zman-cd.png)
 
 ## Installation
 
@@ -33,7 +33,7 @@ Simply load like any other plugin, i.e.: the following command will install the
 extension within Zinit:
 
 ```zsh
-zinit light zinit/z-a-man
+zinit light zinit-zsh/z-a-man
 ```
 
 []( vim:set ft=markdown tw=80: )

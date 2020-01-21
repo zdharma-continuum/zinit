@@ -32,7 +32,7 @@ allows to:
 Simply load like a regular plugin, i.e.:
 
 ```zsh
-zinit light zinit/z-a-bin-gem-node
+zinit light zinit-zsh/z-a-bin-gem-node
 ```
 
 After executing this command you can then use the dl'' and patch'' ice-mods.
@@ -42,7 +42,7 @@ After executing this command you can then use the dl'' and patch'' ice-mods.
 Below is a diagram explaining the major feature – exposing a binary program
 or script through a Zsh function of the same name:
 
-![diagram](https://raw.githubusercontent.com/zinit/z-a-bin-gem-node/master/images/diag.png)
+![diagram](https://raw.githubusercontent.com/zinit-zsh/z-a-bin-gem-node/master/images/diag.png)
 
 This way there is no need to add anything to `$PATH` – `z-a-bin-gem-node`
 will automatically create a function that will wrap the binary and provide it

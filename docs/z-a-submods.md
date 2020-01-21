@@ -1,6 +1,6 @@
 ## Introduction
 
-A z-plugin (i.e. a plugin for the Zinit – [more information](../Z-PLUGINS/))
+A z-plugin (i.e. a plugin for the Zinit – [more information](../Annexes/))
 that allows Zinit to clone additional submodules when installing a plugin or
 snippet. The submodules are then automatically updated on the `zinit update
 …`
@@ -28,7 +28,7 @@ Simply load as a plugin. The following command will install the z-plugin within
 Zinit:
 
 ```zsh
-zinit light zdharma/z-p-submods
+zinit light zinit-zsh/z-a-submods
 ```
 
 After executing this command you can then use the `submods''` ice. The command

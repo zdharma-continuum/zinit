@@ -1,7 +1,7 @@
 ## Introduction
 
 A Zsh-Zinit extension (i.e. an
-[annex](http://zdharma.org/zinit/wiki/Annexes/)) that downloads files and
+[annex](../Annexes/)) that downloads files and
 applies patches. It adds two ice modifiers:
 
 ```zsh
@@ -38,14 +38,14 @@ zinit load izmntuk/fbterm
 This command will result in:
 
 ![fbterm
-example](https://raw.githubusercontent.com/zinit/z-a-patch-dl/master/images/fbterm-ex.png)
+example](https://raw.githubusercontent.com/zinit-zsh/z-a-patch-dl/master/images/fbterm-ex.png)
 
 ## Installation
 
 Simply load like a plugin, i.e. the following will add the annex to Zinit:
 
 ```zsh
-zinit light zinit/z-a-patch-dl
+zinit light zinit-zsh/z-a-patch-dl
 ```
 
 After executing this command you can then use the `dl''` and `patch''` ice-mods.
