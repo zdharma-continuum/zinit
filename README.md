@@ -50,6 +50,14 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to zinit in the last 90 days.</summary>
 
+* 21-01-2020
+  - A few tips for the project rename following the field reports (the issues created
+    by users):
+    - the `ZPLGM` hash is now `ZINIT`,
+    - the annexes are moved under [zinit-zsh](https://github.com/zinit-zsh)
+      organization (it needs a logo, could you create one, if you're skilled in
+      graphics?).
+
 * 19-01-2020
   - The name has been changed to **Zinit** based on the results of the
     [poll](https://github.com/zdharma/zinit/issues/235).
