@@ -737,7 +737,7 @@ hljs.registerLanguage("bash", function(e) {
       },
       {
         cN: "zpl",
-	b: /zplugin(?!\S)|zplg(?!\S)|for(?!\S)/,
+	b: /zinit(?!\S)|zplg(?!\S)|for(?!\S)/,
       },
       {
         cN: "meta",
