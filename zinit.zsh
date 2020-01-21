@@ -402,7 +402,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-shadow-zstyle() {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
+    builtin setopt localoptions noerrreturn noerrexit extendedglob nowarncreateglobal \
         typesetsilent noshortloops unset
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Zstyle $*"
 
