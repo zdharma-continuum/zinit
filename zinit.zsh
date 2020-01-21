@@ -1269,7 +1269,7 @@ function $f {
         [[ -f ${list[1-correct]} ]] && {
             ZERO="${list[1-correct]}"
             (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; (( 1 )); } || builtin source "$ZERO" }; (( retval += $? )); }
-            (( 0 == retval )) && [[ $id_as = PZT::* || $id_as = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
+            (( 0 == retval )) && [[ $url = PZT::* || $url = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
             (( 1 ))
         } || { [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} || ${ZINIT_ICE[pick]} = /dev/null ]] || { print -r -- "Snippet not loaded ($id_as)"; retval=1; } }
 
