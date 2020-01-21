@@ -36,7 +36,7 @@
     
     
       
-        <title>Zplugin install.zsh - Zinit Wiki</title>
+        <title>zinit-side.zsh - Zinit Wiki</title>
       
     
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#zinit-installzsh1" tabindex="1" class="md-skip">
+      <a href="#zinit-sidezsh1" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -140,7 +140,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Zplugin install.zsh
+                zinit-side.zsh
               
             </span>
           
@@ -245,9 +245,11 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Tabs with outline -->
-<nav class="md-tabs" data-md-component="tabs">
+<nav class="md-tabs md-tabs--active" data-md-component="tabs">
   <div class="md-tabs__inner md-grid">
     <ul class="md-tabs__list">
       
@@ -477,7 +479,7 @@
     <li class="md-tabs__item">
       
         <a href="../Code-Documentation/"
-            title="Code Documentation" class="md-tabs__link">
+            title="Code Documentation" class="md-tabs__link md-tabs__link--active">
           Code Documentation
         </a>
       
@@ -2000,15 +2002,17 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-6"
-          type="checkbox" id="nav-6" />
+          type="checkbox" id="nav-6" checked />
     
 
     <!-- Expand active pages -->
@@ -2128,15 +2132,525 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item">
-    <a href="../zinit-side.zsh/" title="zinit-side.zsh"
-        class="md-nav__link">
+  <li class="md-nav__item md-nav__item--active">
+    
+
+    <!-- Active checkbox expands items contained within nested section -->
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
+        type="checkbox" id="__toc" />
+
+    <!-- Hack: see partials/toc.html for more information -->
+    
+      
+    
+
+    <!-- Render table of contents, if not empty -->
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        zinit-side.zsh
+      </label>
+    
+    <a href="./" title="zinit-side.zsh"
+        class="md-nav__link md-nav__link--active">
       zinit-side.zsh
     </a>
+
+    <!-- Show table of contents -->
+    
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+    
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#name" title="NAME"
+      class="md-nav__link">
+    NAME
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#synopsis" title="SYNOPSIS"
+      class="md-nav__link">
+    SYNOPSIS
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#functions" title="FUNCTIONS"
+      class="md-nav__link">
+    FUNCTIONS
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#details" title="DETAILS"
+      class="md-nav__link">
+    DETAILS
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#script_body" title="Script Body"
+      class="md-nav__link">
+    Script Body
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-any-colorify-as-uspl2" title=".zinit-any-colorify-as-uspl2"
+      class="md-nav__link">
+    .zinit-any-colorify-as-uspl2
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-exists-physically" title=".zinit-exists-physically"
+      class="md-nav__link">
+    .zinit-exists-physically
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-exists-physically-message" title=".zinit-exists-physically-message"
+      class="md-nav__link">
+    .zinit-exists-physically-message
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-first" title=".zinit-first"
+      class="md-nav__link">
+    .zinit-first
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-get-plg-dir" title=".zinit-get-plg-dir"
+      class="md-nav__link">
+    .zinit-get-plg-dir
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-shands-exp" title=".zinit-shands-exp"
+      class="md-nav__link">
+    .zinit-shands-exp
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-store-ices" title=".zinit-store-ices"
+      class="md-nav__link">
+    .zinit-store-ices
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#zinit-two-paths" title=".zinit-two-paths"
+      class="md-nav__link">
+    .zinit-two-paths
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+    
   </li>
+
+<!-- Main navigation item -->
 
         
           
@@ -2464,9 +2978,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-at-eval" title=".zinit-at-eval"
+  <a href="#zinit-any-colorify-as-uspl2" title=".zinit-any-colorify-as-uspl2"
       class="md-nav__link">
-    .zinit-at-eval
+    .zinit-any-colorify-as-uspl2
   </a>
 
   <!-- Render nested item list -->
@@ -2497,9 +3011,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-compile-plugin" title=".zinit-compile-plugin"
+  <a href="#zinit-exists-physically" title=".zinit-exists-physically"
       class="md-nav__link">
-    .zinit-compile-plugin
+    .zinit-exists-physically
   </a>
 
   <!-- Render nested item list -->
@@ -2530,9 +3044,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-download-file-stdout" title=".zinit-download-file-stdout"
+  <a href="#zinit-exists-physically-message" title=".zinit-exists-physically-message"
       class="md-nav__link">
-    .zinit-download-file-stdout
+    .zinit-exists-physically-message
   </a>
 
   <!-- Render nested item list -->
@@ -2563,9 +3077,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-download-snippet" title=".zinit-download-snippet"
+  <a href="#zinit-first" title=".zinit-first"
       class="md-nav__link">
-    .zinit-download-snippet
+    .zinit-first
   </a>
 
   <!-- Render nested item list -->
@@ -2596,9 +3110,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-forget-completion" title=".zinit-forget-completion"
+  <a href="#zinit-get-plg-dir" title=".zinit-get-plg-dir"
       class="md-nav__link">
-    .zinit-forget-completion
+    .zinit-get-plg-dir
   </a>
 
   <!-- Render nested item list -->
@@ -2629,9 +3143,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-get-latest-gh-r-version" title=".zinit-get-latest-gh-r-version"
+  <a href="#zinit-shands-exp" title=".zinit-shands-exp"
       class="md-nav__link">
-    .zinit-get-latest-gh-r-version
+    .zinit-shands-exp
   </a>
 
   <!-- Render nested item list -->
@@ -2662,9 +3176,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-handle-binary-file" title=".zinit-handle-binary-file"
+  <a href="#zinit-store-ices" title=".zinit-store-ices"
       class="md-nav__link">
-    .zinit-handle-binary-file
+    .zinit-store-ices
   </a>
 
   <!-- Render nested item list -->
@@ -2695,75 +3209,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#zinit-install-completions" title=".zinit-install-completions"
+  <a href="#zinit-two-paths" title=".zinit-two-paths"
       class="md-nav__link">
-    .zinit-install-completions
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#zinit-mirror-using-svn" title=".zinit-mirror-using-svn"
-      class="md-nav__link">
-    .zinit-mirror-using-svn
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#zinit-setup-plugin-dir" title=".zinit-setup-plugin-dir"
-      class="md-nav__link">
-    .zinit-setup-plugin-dir
+    .zinit-two-paths
   </a>
 
   <!-- Render nested item list -->
@@ -2793,213 +3241,188 @@
               
                 
                 
-                <h1 id="zinit-installzsh1">zinit-install.zsh(1)<a class="headerlink" href="#zinit-installzsh1" title="Permanent link">#</a></h1>
+                <h1 id="zinit-sidezsh1">zinit-side.zsh(1)<a class="headerlink" href="#zinit-sidezsh1" title="Permanent link">#</a></h1>
 <h2 id="name">NAME<a class="headerlink" href="#name" title="Permanent link">#</a></h2>
-<p>zinit-install.zsh - a shell script</p>
+<p>zinit-side.zsh - a shell script</p>
 <h2 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">#</a></h2>
 <p>Documentation automatically generated with `zshelldoc'</p>
 <h2 id="functions">FUNCTIONS<a class="headerlink" href="#functions" title="Permanent link">#</a></h2>
-<pre><code class="text">.zinit-at-eval
-.zinit-compile-plugin
-.zinit-download-file-stdout
-.zinit-download-snippet
-.zinit-forget-completion
-.zinit-get-latest-gh-r-version
-.zinit-handle-binary-file
-.zinit-install-completions
-.zinit-mirror-using-svn
-.zinit-setup-plugin-dir
+<pre><code class="text">.zinit-any-colorify-as-uspl2
+.zinit-exists-physically
+.zinit-exists-physically-message
+.zinit-first
+.zinit-get-plg-dir
+.zinit-shands-exp
+.zinit-store-ices
+.zinit-two-paths
 </code></pre>
 
 <h2 id="details">DETAILS<a class="headerlink" href="#details" title="Permanent link">#</a></h2>
 <h2 id="script_body">Script Body<a class="headerlink" href="#script_body" title="Permanent link">#</a></h2>
-<p>Has 3 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).</p>
-<p>Uses feature(s): <em>source</em></p>
-<h2 id="zinit-at-eval">.zinit-at-eval<a class="headerlink" href="#zinit-at-eval" title="Permanent link">#</a></h2>
-<p>Has 1 line(s). Doesn't call other functions.</p>
-<p>Uses feature(s): <em>eval</em></p>
-<p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
-</code></pre>
-
-<h2 id="zinit-compile-plugin">.zinit-compile-plugin<a class="headerlink" href="#zinit-compile-plugin" title="Permanent link">#</a></h2>
-<pre><code class="text">Compiles given plugin (its main source file, and also an
-additional &quot;....zsh&quot; file if it exists).
+<p>Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).</p>
+<h2 id="zinit-any-colorify-as-uspl2">.zinit-any-colorify-as-uspl2<a class="headerlink" href="#zinit-any-colorify-as-uspl2" title="Permanent link">#</a></h2>
+<pre><code class="text">Returns ANSI-colorified &quot;user/plugin&quot; string, from any supported
+plugin spec (user---plugin, user/plugin, user plugin, plugin).
 
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
+$REPLY = ANSI-colorified &quot;user/plugin&quot; string
 </code></pre>
 
-<p>Has 50 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-compile-plugin
-|-- zinit-side.zsh/.zinit-first
+<p>Has 11 line(s). Calls functions:</p>
+<pre><code class="text">.zinit-any-colorify-as-uspl2
 `-- zinit.zsh/.zinit-any-to-user-plugin
 </code></pre>
 
-<p>Uses feature(s): <em>eval</em>, <em>zcompile</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-setup-plugin-dir
+<pre><code class="text">.zinit-exists-physically-message
+zinit-autoload.zsh/.zinit-clear-completions
+zinit-autoload.zsh/.zinit-compiled
 zinit-autoload.zsh/.zinit-compile-uncompile-all
-zinit.zsh/zinit
+zinit-autoload.zsh/.zinit-create
+zinit-autoload.zsh/.zinit-exists-message
+zinit-autoload.zsh/.zinit-get-completion-owner-uspl2col
+zinit-autoload.zsh/.zinit-list-bindkeys
+zinit-autoload.zsh/.zinit-recently
+zinit-autoload.zsh/.zinit-search-completions
+zinit-autoload.zsh/.zinit-show-completions
+zinit-autoload.zsh/.zinit-show-registered-plugins
+zinit-autoload.zsh/.zinit-show-times
+zinit-autoload.zsh/.zinit-uncompile-plugin
+zinit-autoload.zsh/.zinit-unload
+zinit-autoload.zsh/.zinit-update-or-status-all
+zinit-autoload.zsh/.zinit-update-or-status
+zinit-install.zsh/.zinit-install-completions
+zinit-install.zsh/.zinit-setup-plugin-dir
 </code></pre>
 
-<h2 id="zinit-download-file-stdout">.zinit-download-file-stdout<a class="headerlink" href="#zinit-download-file-stdout" title="Permanent link">#</a></h2>
-<pre><code class="text">Downloads file to stdout. Supports following backend commands:
-curl, wget, lftp, lynx. Used by snippet loading.
-</code></pre>
+<h2 id="zinit-exists-physically">.zinit-exists-physically<a class="headerlink" href="#zinit-exists-physically" title="Permanent link">#</a></h2>
+<pre><code class="text">Checks if directory of given plugin exists in PLUGIN_DIR.
 
-<p>Has 32 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-download-file-stdout
-</code></pre>
-
-<p>Uses feature(s): <em>type</em></p>
-<p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
-.zinit-setup-plugin-dir
-</code></pre>
-
-<h2 id="zinit-download-snippet">.zinit-download-snippet<a class="headerlink" href="#zinit-download-snippet" title="Permanent link">#</a></h2>
-<pre><code class="text">Downloads snippet – either a file – with curl, wget, lftp or lynx,
-or a directory, with Subversion – when svn-ICE is active. Github
-supports Subversion protocol and allows to clone subdirectories.
-This is used to provide a layer of support for Oh-My-Zsh and Prezto.
-</code></pre>
-
-<p>Has 233 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-download-snippet
-|-- .zinit-at-eval
-|-- .zinit-download-file-stdout
-|-- .zinit-install-completions
-|   |-- .zinit-forget-completion
-|   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
-|   |-- zinit-side.zsh/.zinit-exists-physically-message
-|   `-- zinit.zsh/.zinit-any-to-user-plugin
-|-- .zinit-mirror-using-svn
-`-- zinit-side.zsh/.zinit-store-ices
-</code></pre>
-
-<p>Uses feature(s): <em>eval</em>, <em>zcompile</em></p>
-<p>Called by:</p>
-<pre><code class="text">zinit.zsh/.zinit-load-snippet
-</code></pre>
-
-<h2 id="zinit-forget-completion">.zinit-forget-completion<a class="headerlink" href="#zinit-forget-completion" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements alternation of Zsh state so that already initialized
-completion stops being visible to Zsh.
-
-$1 - completion function name, e.g. &quot;_cp&quot;; can also be &quot;cp&quot;
-</code></pre>
-
-<p>Has 15 line(s). Doesn't call other functions.</p>
-<p>Uses feature(s): <em>unfunction</em></p>
-<p>Called by:</p>
-<pre><code class="text">.zinit-install-completions
-zinit-autoload.zsh/.zinit-compinit
-zinit-autoload.zsh/.zinit-uninstall-completions
-zinit.zsh/zinit
-</code></pre>
-
-<h2 id="zinit-get-latest-gh-r-version">.zinit-get-latest-gh-r-version<a class="headerlink" href="#zinit-get-latest-gh-r-version" title="Permanent link">#</a></h2>
-<pre><code class="text">Gets version string of latest release of given Github
-package. Connects to Github releases page.
-</code></pre>
-
-<p>Has 14 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-get-latest-gh-r-version
-`-- zinit.zsh/.zinit-any-to-user-plugin
-</code></pre>
-
-<p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-update-or-status
-</code></pre>
-
-<h2 id="zinit-handle-binary-file">.zinit-handle-binary-file<a class="headerlink" href="#zinit-handle-binary-file" title="Permanent link">#</a></h2>
-<pre><code class="text">If the file is an archive, it is extracted by this function.
-Next stage is scanning of files with the common utility `file',
-to detect executables. They are given +x mode. There are also
-messages to the user on performed actions.
-
-$1 - url
-$2 - file
-</code></pre>
-
-<p>Has 66 line(s). Doesn't call other functions.</p>
-<p>Uses feature(s): <em>unfunction</em></p>
-<p>Called by:</p>
-<pre><code class="text">.zinit-setup-plugin-dir
-</code></pre>
-
-<h2 id="zinit-install-completions">.zinit-install-completions<a class="headerlink" href="#zinit-install-completions" title="Permanent link">#</a></h2>
-<pre><code class="text">Installs all completions of given plugin. After that they are
-visible to `compinit'. Visible completions can be selectively
-disabled and enabled. User can access completion data with
-`clist' or `completions' subcommand.
+Testable.
 
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
-$3 - if 1, then reinstall, otherwise only install completions that aren't there
 </code></pre>
 
-<p>Has 34 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-install-completions
-|-- .zinit-forget-completion
-|-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
-|-- zinit-side.zsh/.zinit-exists-physically-message
+<p>Has 10 line(s). Calls functions:</p>
+<pre><code class="text">.zinit-exists-physically
+|-- .zinit-shands-exp
 `-- zinit.zsh/.zinit-any-to-user-plugin
 </code></pre>
 
 <p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
-.zinit-setup-plugin-dir
-zinit.zsh/zinit
+<pre><code class="text">.zinit-exists-physically-message
+zinit-autoload.zsh/.zinit-create
+zinit-autoload.zsh/.zinit-get-path
 </code></pre>
 
-<h2 id="zinit-mirror-using-svn">.zinit-mirror-using-svn<a class="headerlink" href="#zinit-mirror-using-svn" title="Permanent link">#</a></h2>
-<pre><code class="text">Used to clone subdirectories from Github. If in update mode
-(see $2), then invokes `svn update', in normal mode invokes
-`svn checkout --non-interactive -q &lt;URL&gt;'. In test mode only
-compares remote and local revision and outputs true if update
-is needed.
+<h2 id="zinit-exists-physically-message">.zinit-exists-physically-message<a class="headerlink" href="#zinit-exists-physically-message" title="Permanent link">#</a></h2>
+<pre><code class="text">Checks if directory of given plugin exists in PLUGIN_DIR,
+and outputs error message if it doesn't.
 
-$1 - URL
-$2 - mode, &quot;&quot; - normal, &quot;-u&quot; - update, &quot;-t&quot; - test
-$3 - subdirectory (not path) with working copy, needed for -t and -u
+Testable.
+
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
 
-<p>Has 27 line(s). Doesn't call other functions.</p>
+<p>Has 11 line(s). Calls functions:</p>
+<pre><code class="text">.zinit-exists-physically-message
+|-- .zinit-any-colorify-as-uspl2
+|   `-- zinit.zsh/.zinit-any-to-user-plugin
+|-- .zinit-exists-physically
+|   |-- .zinit-shands-exp
+|   `-- zinit.zsh/.zinit-any-to-user-plugin
+`-- .zinit-shands-exp
+</code></pre>
+
 <p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
+<pre><code class="text">zinit-autoload.zsh/.zinit-changes
+zinit-autoload.zsh/.zinit-compute-ice
+zinit-autoload.zsh/.zinit-delete
+zinit-autoload.zsh/.zinit-edit
+zinit-autoload.zsh/.zinit-glance
+zinit-autoload.zsh/.zinit-stress
+zinit-autoload.zsh/.zinit-update-or-status
+zinit-install.zsh/.zinit-install-completions
 </code></pre>
 
-<h2 id="zinit-setup-plugin-dir">.zinit-setup-plugin-dir<a class="headerlink" href="#zinit-setup-plugin-dir" title="Permanent link">#</a></h2>
-<pre><code class="text">Clones given plugin into PLUGIN_DIR. Supports multiple
-sites (respecting `from' and `proto' ice modifiers).
-Invokes compilation of plugin's main file.
+<h2 id="zinit-first">.zinit-first<a class="headerlink" href="#zinit-first" title="Permanent link">#</a></h2>
+<pre><code class="text">Finds the main file of plugin. There are multiple file name
+formats, they are ordered in order starting from more correct
+ones, and matched. .zinit-load-plugin() has similar code parts
+and doesn't call .zinit-first() – for performance. Obscure matching
+is done in .zinit-find-other-matches, here and in .zinit-load().
+Obscure = non-standard main-file naming convention.
 
-$1 - user
-$2 - plugin
+$1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+$2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
 
-<p>Has 182 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-setup-plugin-dir
-|-- .zinit-compile-plugin
-|   |-- zinit-side.zsh/.zinit-first
-|   `-- zinit.zsh/.zinit-any-to-user-plugin
-|-- .zinit-download-file-stdout
-|-- .zinit-handle-binary-file
-|-- .zinit-install-completions
-|   |-- .zinit-forget-completion
-|   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
-|   |-- zinit-side.zsh/.zinit-exists-physically-message
-|   `-- zinit.zsh/.zinit-any-to-user-plugin
-|-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
-`-- zinit-side.zsh/.zinit-store-ices
+<p>Has 17 line(s). Calls functions:</p>
+<pre><code class="text">.zinit-first
+|-- .zinit-get-plg-dir
+|-- zinit.zsh/.zinit-any-to-user-plugin
+`-- zinit.zsh/.zinit-find-other-matches
 </code></pre>
 
-<p>Uses feature(s): <em>eval</em></p>
+<p>Called by:</p>
+<pre><code class="text">zinit-autoload.zsh/.zinit-edit
+zinit-autoload.zsh/.zinit-glance
+zinit-autoload.zsh/.zinit-stress
+zinit-install.zsh/.zinit-compile-plugin
+</code></pre>
+
+<h2 id="zinit-get-plg-dir">.zinit-get-plg-dir<a class="headerlink" href="#zinit-get-plg-dir" title="Permanent link">#</a></h2>
+<p>Has 9 line(s). Doesn't call other functions.</p>
+<p>Called by:</p>
+<pre><code class="text">.zinit-first
+</code></pre>
+
+<h2 id="zinit-shands-exp">.zinit-shands-exp<a class="headerlink" href="#zinit-shands-exp" title="Permanent link">#</a></h2>
+<pre><code class="text">Does expansion of currently little unstandarized
+shorthands like &quot;%SNIPPETS&quot;, &quot;%HOME&quot;, &quot;OMZ::&quot;, &quot;PZT::&quot;.
+</code></pre>
+
+<p>Has 3 line(s). Doesn't call other functions.</p>
+<p>Called by:</p>
+<pre><code class="text">.zinit-exists-physically-message
+.zinit-exists-physically
+zinit-autoload.zsh/.zinit-compute-ice
+zinit-autoload.zsh/.zinit-delete
+zinit-autoload.zsh/.zinit-get-path
+</code></pre>
+
+<h2 id="zinit-store-ices">.zinit-store-ices<a class="headerlink" href="#zinit-store-ices" title="Permanent link">#</a></h2>
+<pre><code class="text">Saves ice mods in given hash onto disk.
+
+$1 - directory where to create / delete files
+$2 - name of hash that holds values
+$3 - additional keys of hash to store, space separated
+$4 - additional keys of hash to store, empty-meaningful ices, space separated
+</code></pre>
+
+<p>Has 30 line(s). Doesn't call other functions.</p>
+<p>Uses feature(s): <em>wait</em></p>
 <p>Called by:</p>
 <pre><code class="text">zinit-autoload.zsh/.zinit-update-or-status
-zinit.zsh/.zinit-load
+zinit-install.zsh/.zinit-download-snippet
+zinit-install.zsh/.zinit-setup-plugin-dir
+</code></pre>
+
+<h2 id="zinit-two-paths">.zinit-two-paths<a class="headerlink" href="#zinit-two-paths" title="Permanent link">#</a></h2>
+<pre><code class="text">Obtains a snippet URL without specification if it is an SVN URL (points to
+directory) or regular URL (points to file), returns 2 possible paths for
+further examination
+</code></pre>
+
+<p>Has 19 line(s). Doesn't call other functions.</p>
+<p>Called by:</p>
+<pre><code class="text">zinit-autoload.zsh/.zinit-compute-ice
+zinit-autoload.zsh/.zinit-delete
+zinit-autoload.zsh/.zinit-get-path
+zinit-autoload.zsh/.zinit-update-or-status
 </code></pre>
                 
                   
