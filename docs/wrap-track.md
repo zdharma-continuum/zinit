@@ -13,7 +13,7 @@ way.
 The ice takes a list of function names, with the elements separated by `;`:
 
 ```zsh
-zplugin ice wrap-track"func1;func2;…" …
+zinit ice wrap-track"func1;func2;…" …
 …
 ```
 
@@ -27,9 +27,9 @@ do `echo $precmd_functions` after loading a theme) – should be passed to
 
 ```zsh
 # Load when MYPROMPT == 4
-zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
+zinit ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
             atload'source ~/.p10k.zsh; _p9k_precmd' wrap-track'_p9k_precmd'
-zplugin load romkatv/powerlevel10k
+zinit load romkatv/powerlevel10k
 ```
 
 This way the actions done during the first call to `_p9k_precmd()` will be

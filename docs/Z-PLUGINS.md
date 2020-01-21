@@ -2,13 +2,13 @@
 
 ## What Are They?
 
-They are Zplugin extensions. Note the difference in the name from the Zplugin –
+They are Zinit extensions. Note the difference in the name from the Zinit –
 the dash and the plural form.
 
 ## What Can They Do?
 
-1.  Add a new Zplugin subcommand (i.e. the command that’s placed after the
-    function `zplugin …` when calling Zplugin).
+1.  Add a new Zinit subcommand (i.e. the command that’s placed after the
+    function `zinit …` when calling Zinit).
 
 2.  Add new ice-modifiers.
 
@@ -25,7 +25,7 @@ the dash and the plural form.
     
     4.  `atload` hook – run after loading any plugin / snippet.
 
-4.  Register hooks for generating help text, shown by the `zplugin help`
+4.  Register hooks for generating help text, shown by the `zinit help`
     subcommand.
 
 ## How To Code Them?
@@ -104,8 +104,8 @@ real-world use of the ice-mod:
 
 ``` zsh
 # Load the `zsh-autosuggestions' plugin via Prezto module: `autosuggestions'
-zplugin ice svn submods'zsh-users/zsh-autosuggestions -> external'
-zplugin snippet PZT::modules/autosuggestions
+zinit ice svn submods'zsh-users/zsh-autosuggestions -> external'
+zinit snippet PZT::modules/autosuggestions
 ```
 
 Checkout the project which fully implements this idea,
@@ -118,7 +118,7 @@ The `z-p-*` prefix is recommended for projects that are being z-plugins.
 There are 2 or 3 subtypes for each of the hook:
 
 1.  `atinit` or `!atinit` – the `!` version is ran before the `atinit`
-    **ice-mod** (i.e. before `zplugin ice atinit'echo this!'; …`), while
+    **ice-mod** (i.e. before `zinit ice atinit'echo this!'; …`), while
     the normal version runs after it.
 
 2.  `atload` or `!atload` – analogous to the `atinit` case: the `!` version runs

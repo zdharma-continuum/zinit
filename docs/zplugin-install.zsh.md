@@ -1,9 +1,9 @@
-zplugin-install.zsh(1)
+zinit-install.zsh(1)
 ======================
 
 NAME
 ----
-zplugin-install.zsh - a shell script
+zinit-install.zsh - a shell script
 
 SYNOPSIS
 --------
@@ -13,16 +13,16 @@ FUNCTIONS
 ---------
 
 ```text
--zplg-at-eval
--zplg-compile-plugin
--zplg-download-file-stdout
--zplg-download-snippet
--zplg-forget-completion
--zplg-get-latest-gh-r-version
--zplg-handle-binary-file
--zplg-install-completions
--zplg-mirror-using-svn
--zplg-setup-plugin-dir
+.zinit-at-eval
+.zinit-compile-plugin
+.zinit-download-file-stdout
+.zinit-download-snippet
+.zinit-forget-completion
+.zinit-get-latest-gh-r-version
+.zinit-handle-binary-file
+.zinit-install-completions
+.zinit-mirror-using-svn
+.zinit-setup-plugin-dir
 ```
 
 DETAILS
@@ -34,7 +34,7 @@ Has 3 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 
 Uses feature(s): _source_
 
-## -zplg-at-eval
+## .zinit-at-eval
 
 Has 1 line(s). Doesn't call other functions.
 
@@ -43,10 +43,10 @@ Uses feature(s): _eval_
 Called by:
 
 ```text
--zplg-download-snippet
+.zinit-download-snippet
 ```
 
-## -zplg-compile-plugin
+## .zinit-compile-plugin
 
 ```text 
 Compiles given plugin (its main source file, and also an
@@ -59,9 +59,9 @@ $2 - plugin (only when $1 - i.e. user - given)
 Has 50 line(s). Calls functions:
 
 ```text
--zplg-compile-plugin
-|-- zplugin-side.zsh/-zplg-first
-`-- zplugin.zsh/-zplg-any-to-user-plugin
+.zinit-compile-plugin
+|-- zinit-side.zsh/.zinit-first
+`-- zinit.zsh/.zinit-any-to-user-plugin
 ```
 
 Uses feature(s): _eval_, _zcompile_
@@ -69,12 +69,12 @@ Uses feature(s): _eval_, _zcompile_
 Called by:
 
 ```text
--zplg-setup-plugin-dir
-zplugin-autoload.zsh/-zplg-compile-uncompile-all
-zplugin.zsh/zplugin
+.zinit-setup-plugin-dir
+zinit-autoload.zsh/.zinit-compile-uncompile-all
+zinit.zsh/zinit
 ```
 
-## -zplg-download-file-stdout
+## .zinit-download-file-stdout
 
 ```text 
 Downloads file to stdout. Supports following backend commands:
@@ -84,7 +84,7 @@ curl, wget, lftp, lynx. Used by snippet loading.
 Has 32 line(s). Calls functions:
 
 ```text
--zplg-download-file-stdout
+.zinit-download-file-stdout
 ```
 
 Uses feature(s): _type_
@@ -92,11 +92,11 @@ Uses feature(s): _type_
 Called by:
 
 ```text
--zplg-download-snippet
--zplg-setup-plugin-dir
+.zinit-download-snippet
+.zinit-setup-plugin-dir
 ```
 
-## -zplg-download-snippet
+## .zinit-download-snippet
 
 ```text
 Downloads snippet – either a file – with curl, wget, lftp or lynx,
@@ -108,16 +108,16 @@ This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 Has 233 line(s). Calls functions:
 
 ```text
--zplg-download-snippet
-|-- -zplg-at-eval
-|-- -zplg-download-file-stdout
-|-- -zplg-install-completions
-|   |-- -zplg-forget-completion
-|   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
-|   |-- zplugin-side.zsh/-zplg-exists-physically-message
-|   `-- zplugin.zsh/-zplg-any-to-user-plugin
-|-- -zplg-mirror-using-svn
-`-- zplugin-side.zsh/-zplg-store-ices
+.zinit-download-snippet
+|-- .zinit-at-eval
+|-- .zinit-download-file-stdout
+|-- .zinit-install-completions
+|   |-- .zinit-forget-completion
+|   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+|   |-- zinit-side.zsh/.zinit-exists-physically-message
+|   `-- zinit.zsh/.zinit-any-to-user-plugin
+|-- .zinit-mirror-using-svn
+`-- zinit-side.zsh/.zinit-store-ices
 ```
 
 Uses feature(s): _eval_, _zcompile_
@@ -125,10 +125,10 @@ Uses feature(s): _eval_, _zcompile_
 Called by:
 
 ```text
-zplugin.zsh/-zplg-load-snippet
+zinit.zsh/.zinit-load-snippet
 ```
 
-## -zplg-forget-completion
+## .zinit-forget-completion
 
 ```text 
 Implements alternation of Zsh state so that already initialized
@@ -144,13 +144,13 @@ Uses feature(s): _unfunction_
 Called by:
 
 ```text
--zplg-install-completions
-zplugin-autoload.zsh/-zplg-compinit
-zplugin-autoload.zsh/-zplg-uninstall-completions
-zplugin.zsh/zplugin
+.zinit-install-completions
+zinit-autoload.zsh/.zinit-compinit
+zinit-autoload.zsh/.zinit-uninstall-completions
+zinit.zsh/zinit
 ```
 
-## -zplg-get-latest-gh-r-version
+## .zinit-get-latest-gh-r-version
 
 ```text 
 Gets version string of latest release of given Github
@@ -160,17 +160,17 @@ package. Connects to Github releases page.
 Has 14 line(s). Calls functions:
 
 ```text
--zplg-get-latest-gh-r-version
-`-- zplugin.zsh/-zplg-any-to-user-plugin
+.zinit-get-latest-gh-r-version
+`-- zinit.zsh/.zinit-any-to-user-plugin
 ```
 
 Called by:
 
 ```text
-zplugin-autoload.zsh/-zplg-update-or-status
+zinit-autoload.zsh/.zinit-update-or-status
 ```
 
-## -zplg-handle-binary-file
+## .zinit-handle-binary-file
 
 ```text 
 If the file is an archive, it is extracted by this function.
@@ -189,10 +189,10 @@ Uses feature(s): _unfunction_
 Called by:
 
 ```text
--zplg-setup-plugin-dir
+.zinit-setup-plugin-dir
 ```
 
-## -zplg-install-completions
+## .zinit-install-completions
 
 ```text 
 Installs all completions of given plugin. After that they are
@@ -208,22 +208,22 @@ $3 - if 1, then reinstall, otherwise only install completions that aren't there
 Has 34 line(s). Calls functions:
 
 ```text
--zplg-install-completions
-|-- -zplg-forget-completion
-|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
-|-- zplugin-side.zsh/-zplg-exists-physically-message
-`-- zplugin.zsh/-zplg-any-to-user-plugin
+.zinit-install-completions
+|-- .zinit-forget-completion
+|-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+|-- zinit-side.zsh/.zinit-exists-physically-message
+`-- zinit.zsh/.zinit-any-to-user-plugin
 ```
 
 Called by:
 
 ```text
--zplg-download-snippet
--zplg-setup-plugin-dir
-zplugin.zsh/zplugin
+.zinit-download-snippet
+.zinit-setup-plugin-dir
+zinit.zsh/zinit
 ```
 
-## -zplg-mirror-using-svn
+## .zinit-mirror-using-svn
 
 ```text
 Used to clone subdirectories from Github. If in update mode
@@ -242,10 +242,10 @@ Has 27 line(s). Doesn't call other functions.
 Called by:
 
 ```text
--zplg-download-snippet
+.zinit-download-snippet
 ```
 
-## -zplg-setup-plugin-dir
+## .zinit-setup-plugin-dir
 
 ```text 
 Clones given plugin into PLUGIN_DIR. Supports multiple
@@ -259,19 +259,19 @@ $2 - plugin
 Has 182 line(s). Calls functions:
 
 ```text
--zplg-setup-plugin-dir
-|-- -zplg-compile-plugin
-|   |-- zplugin-side.zsh/-zplg-first
-|   `-- zplugin.zsh/-zplg-any-to-user-plugin
-|-- -zplg-download-file-stdout
-|-- -zplg-handle-binary-file
-|-- -zplg-install-completions
-|   |-- -zplg-forget-completion
-|   |-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
-|   |-- zplugin-side.zsh/-zplg-exists-physically-message
-|   `-- zplugin.zsh/-zplg-any-to-user-plugin
-|-- zplugin-side.zsh/-zplg-any-colorify-as-uspl2
-`-- zplugin-side.zsh/-zplg-store-ices
+.zinit-setup-plugin-dir
+|-- .zinit-compile-plugin
+|   |-- zinit-side.zsh/.zinit-first
+|   `-- zinit.zsh/.zinit-any-to-user-plugin
+|-- .zinit-download-file-stdout
+|-- .zinit-handle-binary-file
+|-- .zinit-install-completions
+|   |-- .zinit-forget-completion
+|   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+|   |-- zinit-side.zsh/.zinit-exists-physically-message
+|   `-- zinit.zsh/.zinit-any-to-user-plugin
+|-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+`-- zinit-side.zsh/.zinit-store-ices
 ```
 
 Uses feature(s): _eval_
@@ -279,7 +279,7 @@ Uses feature(s): _eval_
 Called by:
 
 ```text
-zplugin-autoload.zsh/-zplg-update-or-status
-zplugin.zsh/-zplg-load
+zinit-autoload.zsh/.zinit-update-or-status
+zinit.zsh/.zinit-load
 ```
 

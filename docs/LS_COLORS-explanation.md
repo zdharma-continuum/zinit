@@ -7,14 +7,14 @@ this means `dircolors` is ran every shell startup.
 
 This costs much time, because a fork has to be done and the program (i.e.
 `dircolors`) binary needs to be loaded and executed, and because `dircolors`
-loads the colors' definitions and processes them. Following Zplugin invocation
+loads the colors' definitions and processes them. Following Zinit invocation
 solves this problem:
 
 ```zsh
-zplugin ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
+zinit ice atclone"dircolors -b LS_COLORS > clrs.zsh" \
     atpull'%atclone' pick"clrs.zsh" nocompile'!' \
     atload'zstyle ":completion:*" list-colors “${(s.:.)LS_COLORS}”'
-zplugin light trapd00r/LS_COLORS
+zinit light trapd00r/LS_COLORS
 ```
 
 - `atclone"…"` – generate shell script, but instead of passing it to `eval`,

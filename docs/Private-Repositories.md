@@ -7,8 +7,8 @@ requires providing credentials in order to log in – use the `from''` ice in th
 following way:
 
 ```zsh
-zplugin ice from"psprint@github.com"
-zplugin load psprint/fsh-auto-themes
+zinit ice from"psprint@github.com"
+zinit load psprint/fsh-auto-themes
 ```
 
 ## Explanation

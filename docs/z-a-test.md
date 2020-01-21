@@ -1,11 +1,11 @@
 ## Introduction
 
-Zplugin extension that runs tests (via `make test`, for example) – if it finds
+Zinit extension that runs tests (via `make test`, for example) – if it finds
 any of them  – after installing and updating a plugin or snippet. Simply load it
 as a plugin to make it active:
 
 ```zsh
-zplugin light zdharma/z-p-test
+zinit light zdharma/z-p-test
 ```
 
 Example activation in the default quiet mode:
@@ -19,10 +19,10 @@ Example activation in non-quiet mode:
 
 ## Installation
 
-Simply load as a plugin. This will install the extension within Zplugin:
+Simply load as a plugin. This will install the extension within Zinit:
 
 ```zsh
-zplugin light zdharma/z-p-test
+zinit light zdharma/z-p-test
 ```
 
 []( vim:set ft=markdown tw=80: )

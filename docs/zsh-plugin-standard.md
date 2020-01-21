@@ -2,7 +2,7 @@
 
 # Zsh Plugin Standard
 
-This document defines the Zsh Plugin Standard. Zplugin fully supports
+This document defines the Zsh Plugin Standard. Zinit fully supports
 this standard.
 
 This document is also available as a
@@ -116,7 +116,7 @@ general don't have to quote assignments.
 
 ##### Adoption Status
 
-1. Plugin managers: Zplugin, Zgen (after and if the
+1. Plugin managers: Zinit, Zgen (after and if the
    [**PR**](https://github.com/tarjoilija/zgen/pull/124) will be merged)
 
 2. Plugins:
@@ -143,7 +143,7 @@ develoment process.
 
 ##### Adoption Status
 
-1. One plugin manager, Zplugin, implements plugin unloading and calls the
+1. One plugin manager, Zinit, implements plugin unloading and calls the
    function.
 2. One plugin, `romkatv/powerlevel10k`, is
 2. Two plugins:
@@ -178,7 +178,7 @@ function](#246_unload_function), for the plugin to participate in the process of
 unloading it.
 ##### Adoption Status
 
-It's a recent addition to the standard and only one plugin manager, Zplugin,
+It's a recent addition to the standard and only one plugin manager, Zinit,
 implements it.
 
 ## 4. `@zsh-plugin-run-on-update` Call
@@ -198,7 +198,7 @@ The code should be executed in the plugin's directory, possibly in a subshell.
 
 ##### Adoption Status
 
-It's a recent addition to the standard and only one plugin manager, Zplugin,
+It's a recent addition to the standard and only one plugin manager, Zinit,
 implements it.
 
 ## 5\. Plugin Manager Activity Indicator
@@ -237,7 +237,7 @@ around `${0:h}` to make it compatible with the `SH_WORD_SPLIT` option.
 
 ##### Adoption Status
 
-1. Plugin managers: Zplugin, Zgen (after and if the
+1. Plugin managers: Zinit, Zgen (after and if the
    [**PR**](https://github.com/tarjoilija/zgen/pull/124) will be merged)
 
 2. Plugins:
@@ -248,10 +248,10 @@ around `${0:h}` to make it compatible with the `SH_WORD_SPLIT` option.
 Plugin managers may export the parameter `$ZPFX` which should contain a path to
 a directory dedicated for user-land software, i.e. for directories `$ZPFX/bin`,
 `$ZPFX/lib`, `$ZPFX/share`, etc. Suggested name of the directory is `polaris`,
-Zplugin uses this name and places this directory at `~/.zplugin/polaris` by
+Zinit uses this name and places this directory at `~/.zinit/polaris` by
 default.
 
-User can then configure hooks (feature of e.g. zplug and Zplugin) to invoke e.g.
+User can then configure hooks (feature of e.g. zplug and Zinit) to invoke e.g.
 `make PREFIX=$ZPFX install` at clone & update of the plugin to install software
 like e.g. [**tj/git-extras**](https://github.com/tj/git-extras). This is a
 developing role of Zsh plugin managers as package managers, where `.zshrc` has a
@@ -260,16 +260,16 @@ state, and have the same state on different accounts / machines.
 
 No-narration facts-list related to `$ZPFX`:
 
- 1. `export ZPFX="$HOME/polaris"` (or e.g. `$HOME/.zplugin/polaris`)
+ 1. `export ZPFX="$HOME/polaris"` (or e.g. `$HOME/.zinit/polaris`)
  2. `make PREFIX=$ZPFX install`
  3. `./configure --prefix=$ZPFX`
  4. `cmake -DCMAKE_INSTALL_PREFIX=$ZPFX .`
- 5. `zplugin ice make"PREFIX=$ZPFX install"`
+ 5. `zinit ice make"PREFIX=$ZPFX install"`
  6. `zplug … hook-build:"make PREFIX=$PFX install"`
 
 ##### Adoption Status
 
-One plugin manager, Zplugin, provides the `$ZPFX` parameter.
+One plugin manager, Zinit, provides the `$ZPFX` parameter.
 
 ## Zsh Plugin-Programming Best Practices
 
@@ -424,9 +424,9 @@ The proposition of the standard prefixes is as follows:
    [**Zsh hooks**](#use_of_add-zsh-hook_to_install_hooks) and the [**Zle
    hooks**](#use_of_add-zle-hook-widget_to_install_zle_hooks), but also for any
    other
-   custom hook-like mechanism in the plugin (e.g.: Zplugin annexes
-   [**use**](http://zdharma.org/zplugin/wiki/Annexes/#how_to_code_them) such
-   prefix for the Zplugin hook functions). Example function name:
+   custom hook-like mechanism in the plugin (e.g.: Zinit annexes
+   [**use**](http://zdharma.org/zinit/wiki/Annexes/#how_to_code_them) such
+   prefix for the Zinit hook functions). Example function name:
    `:prompt_zinc_precmd`.
 
 3. `+`: for output functions, i.e.: for functions that print to the standard

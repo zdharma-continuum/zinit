@@ -45,19 +45,19 @@ Video](https://raw.githubusercontent.com/zdharma/fast-syntax-highlighting/master
 
 ## Installation
 
-Example `zdharma/zplugin` invocation:
+Example `zdharma/zinit` invocation:
 
 ```zsh
-zplugin ice from"<USERNAME>@github.com"
-zplugin light psprint/fsh-auto-themes
+zinit ice from"<USERNAME>@github.com"
+zinit light psprint/fsh-auto-themes
 ```
 
 With [Turbo
-Mode](http://zdharma.org/zplugin/wiki/INTRODUCTION/#turbo_mode_zsh_62_53):
+Mode](http://zdharma.org/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_62_53):
 
 ```zsh
-zplugin ice wait'1' lucid from"<USERNAME>@github.com"
-zplugin light psprint/fsh-auto-themes
+zinit ice wait'1' lucid from"<USERNAME>@github.com"
+zinit light psprint/fsh-auto-themes
 ```
 
 []( vim:set ft=markdown tw=80 fo+=a2n autoindent: )

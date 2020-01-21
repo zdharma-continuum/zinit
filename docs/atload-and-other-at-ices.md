@@ -20,7 +20,7 @@ Last, **`atload`** is being activated:
 
   - **after loading** of the associated plugin or snippet.
 
-For convenience, you can use each of the ices multiple times in single `zplugin
+For convenience, you can use each of the ices multiple times in single `zinit
 ice …` invocation – all the passed commands will be executed in the given order.
 
 The `atpull` ice recognizes a special value: `%atclone` (so the code looks i.e.:
@@ -44,11 +44,11 @@ the code passed to `atload` ice to be recorded.
 For example, in the following invocation:
 
 ```zsh
-zplugin ice id-as'test' atload'!PATH+=:~/share'
-zplugin load zdharma/null
+zinit ice id-as'test' atload'!PATH+=:~/share'
+zinit load zdharma/null
 ```
 
-the `$PATH` is being changed within `atload` ice. Zplugin's tracking records
+the `$PATH` is being changed within `atload` ice. Zinit's tracking records
 `$PATH` changes and withdraws them on plugin unload, and also shows information
 loading:
 
@@ -65,7 +65,7 @@ As it can be seen, the `atload` code is being correctly tracked and can be
 unloaded & viewed. Below is the result of using the `unload` subcommand to
 unload the `test` plugin:
 
-<pre><code>$ zplugin unload test
+<pre><code>$ zinit unload test
 <span class="hljs-blue">--- Unloading plugin: test ---</span>
 Removing PATH element /home/sg/share
 Unregistering plugin test
@@ -80,9 +80,9 @@ article, but using the *exclamation mark*-preceded `atload` instead of
 
 ```zsh
 # Load when MYPROMPT == 4
-zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
+zinit ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
             atload'!source ~/.p10k.zsh; _p9k_precmd'
-zplugin load romkatv/powerlevel10k
+zinit load romkatv/powerlevel10k
 ```
 
 ## Summary

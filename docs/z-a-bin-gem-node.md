@@ -2,7 +2,7 @@
 
 ## Introduction
 
-A Zsh-Zplugin annex (i.e. an extension) that provides functionality, which
+A Zsh-Zinit annex (i.e. an extension) that provides functionality, which
 allows to:
 
   1. Run programs and scripts without adding anything to `$PATH`,
@@ -25,14 +25,14 @@ allows to:
      **script** created in `$ZPFX/bin`, not a **function** (the first item
      uses a function-based mechanism),
   6. Automatic updates of Ruby gems and Node modules during regular plugin and
-     snippet updates with `zplugin update …`.
+     snippet updates with `zinit update …`.
 
 ## Installation
 
 Simply load like a regular plugin, i.e.:
 
 ```zsh
-zplugin light zplugin/z-a-bin-gem-node
+zinit light zinit/z-a-bin-gem-node
 ```
 
 After executing this command you can then use the dl'' and patch'' ice-mods.
@@ -42,7 +42,7 @@ After executing this command you can then use the dl'' and patch'' ice-mods.
 Below is a diagram explaining the major feature – exposing a binary program
 or script through a Zsh function of the same name:
 
-![diagram](https://raw.githubusercontent.com/zplugin/z-a-bin-gem-node/master/images/diag.png)
+![diagram](https://raw.githubusercontent.com/zinit/z-a-bin-gem-node/master/images/diag.png)
 
 This way there is no need to add anything to `$PATH` – `z-a-bin-gem-node`
 will automatically create a function that will wrap the binary and provide it
@@ -65,15 +65,15 @@ architecture. It is possible to do it in the standard way – by adding the
 plugin's directory to the `$PATH`:
 
 ```zsh
-zplugin ice as"command" from"github-rel"
-zplugin load junegunn/fzf-bin
+zinit ice as"command" from"github-rel"
+zinit load junegunn/fzf-bin
 ```
 
 After this command, the `$PATH` variable will contain e.g.:
 
 ```zsh
 % print $PATH
-/home/sg/.zplugin/plugins/junegunn---fzf-bin:/bin:/usr/bin:/usr/sbin:/sbin
+/home/sg/.zinit/plugins/junegunn---fzf-bin:/bin:/usr/bin:/usr/sbin:/sbin
 ```
 
 For many such programs loaded as plugins the PATH can become quite cluttered.
@@ -81,8 +81,8 @@ I've had 26 entries before switching to `z-a-bin-gem-node`. To solve this,
 load with use of `fbin''` ice provided and handled by `z-a-bin-gem-node`:
 
 ```zsh
-zplugin ice from"gh-r" fbin"fzf"
-zplugin load junegunn/fzf-bin
+zinit ice from"gh-r" fbin"fzf"
+zinit load junegunn/fzf-bin
 ```
 
 The `$PATH` will remain unchanged and an `fzf` function will be created:
@@ -90,7 +90,7 @@ The `$PATH` will remain unchanged and an `fzf` function will be created:
 ```zsh
 % which fzf
 fzf () {
-        local bindir="/home/sg/.zplugin/plugins/junegunn---fzf-bin"
+        local bindir="/home/sg/.zinit/plugins/junegunn---fzf-bin"
         "$bindir"/"fzf" "$@"
 }
 ```
@@ -136,12 +136,12 @@ path or as `{name-of-the-function}`. The optional preceding flags mean:
 Example:
 
 ```zsh
-% zplugin ice from"gh-r" fbin"g:fzf -> myfzf"
-% zplugin load junegunn/fzf-bin
+% zinit ice from"gh-r" fbin"g:fzf -> myfzf"
+% zinit load junegunn/fzf-bin
 % which myfzf
 myfzf () {
-        local bindir="/home/sg/.zplugin/plugins/junegunn---fzf-bin"
-        local -x GEM_HOME="/home/sg/.zplugin/plugins/junegunn---fzf-bin"
+        local bindir="/home/sg/.zinit/plugins/junegunn---fzf-bin"
+        local -x GEM_HOME="/home/sg/.zinit/plugins/junegunn---fzf-bin"
         "$bindir"/"fzf" "$@"
 }
 ```
@@ -161,12 +161,12 @@ created with `fbin''` ice.
 Example:
 
 ```zsh
-% zplugin ice gem'!asciidoctor'
-% zplugin load zdharma/null
+% zinit ice gem'!asciidoctor'
+% zinit load zdharma/null
 % which asciidoctor
 asciidoctor () {
-        local bindir="/home/sg/.zplugin/plugins/zdharma---null/bin" 
-        local -x GEM_HOME="/home/sg/.zplugin/plugins/zdharma---null" 
+        local bindir="/home/sg/.zinit/plugins/zdharma---null/bin" 
+        local -x GEM_HOME="/home/sg/.zinit/plugins/zdharma---null" 
         "$bindir"/"asciidoctor" "$@"
 }
 ```
@@ -185,18 +185,18 @@ created with `fbin''` ice.
 Example:
 
 ```zsh
-% zplugin delete zdharma/null
-Delete /home/sg/.zplugin/plugins/zdharma---null?
+% zinit delete zdharma/null
+Delete /home/sg/.zinit/plugins/zdharma---null?
 [yY/n…]
 y
 Done (action executed, exit code: 0)
-% zplugin ice node'remark <- !remark-cli -> remark; remark-man'
-% zplugin load zdharma/null
+% zinit ice node'remark <- !remark-cli -> remark; remark-man'
+% zinit load zdharma/null
 …installation messages…
 % which remark
 remark () {
-        local bindir="/home/sg/.zplugin/plugins/zdharma---null/node_modules/.bin"
-        local -x NODE_PATH="/home/sg/.zplugin/plugins/zdharma---null"/node_modules
+        local bindir="/home/sg/.zinit/plugins/zdharma---null/node_modules/.bin"
+        local -x NODE_PATH="/home/sg/.zinit/plugins/zdharma---null"/node_modules
         "$bindir"/"remark" "$@"
 }
 ```
@@ -217,16 +217,16 @@ Example:
 
 ```zsh
 % myfun() { pwd; ls -1 }
-% zplugin ice fmod'cgn:myfun'
-% zplugin load zdharma/null
+% zinit ice fmod'cgn:myfun'
+% zinit load zdharma/null
 % which myfun
 myfun () {
-        local -x GEM_HOME="/home/sg/.zplugin/plugins/zdharma---null"
-        local -x NODE_PATH="/home/sg/.zplugin/plugins/zdharma---null"/node_modules
-        local oldpwd="/home/sg/.zplugin/plugins/zplugin---z-a-bin-gem-node"
+        local -x GEM_HOME="/home/sg/.zinit/plugins/zdharma---null"
+        local -x NODE_PATH="/home/sg/.zinit/plugins/zdharma---null"/node_modules
+        local oldpwd="/home/sg/.zinit/plugins/zinit---z-a-bin-gem-node"
         () {
                 setopt localoptions noautopushd
-                builtin cd -q "/home/sg/.zplugin/plugins/zdharma---null"
+                builtin cd -q "/home/sg/.zinit/plugins/zdharma---null"
         }
         "myfun--za-bgn-orig" "$@"
         () {
@@ -235,7 +235,7 @@ myfun () {
         }
 }
 % myfun
-/home/sg/.zplugin/plugins/zdharma---null
+/home/sg/.zinit/plugins/zdharma---null
 LICENSE
 README.md
 ```
@@ -247,26 +247,26 @@ README.md
 It creates the so called `shim` known from `rbenv` – a wrapper script that
 forwards the call to the actual binary. The script is created always under
 the same, standard and single `$PATH` entry: `$ZPFX/bin` (which is
-`~/.zplugin/polaris/bin` by default).
+`~/.zinit/polaris/bin` by default).
 
 The flags have the same meaning as with `fbin''` ice.
 
 Example:
 
 ```zsh
-% zplugin delete junegunn/fzf-bin
-Delete /home/sg/.zplugin/plugins/junegunn---fzf-bin?
+% zinit delete junegunn/fzf-bin
+Delete /home/sg/.zinit/plugins/junegunn---fzf-bin?
 [yY/n…]
 y
 Done (action executed, exit code: 0)
-% zplugin ice from"gh-r" sbin"fzf"
-% zplugin load junegunn/fzf-bin
+% zinit ice from"gh-r" sbin"fzf"
+% zinit load junegunn/fzf-bin
 …installation messages…
 % cat $ZPFX/bin/fzf
 #!/usr/bin/env zsh
 
 function fzf {
-    local bindir="/home/sg/.zplugin/plugins/junegunn---fzf-bin"
+    local bindir="/home/sg/.zinit/plugins/junegunn---fzf-bin"
     "$bindir"/"fzf" "$@"
 }
 
@@ -286,18 +286,18 @@ load the script.
 Example:
 
 ```zsh
-% zplugin ice fsrc"myscript -> myfunc" ferc"myscript"
-% zplugin load zdharma/null
+% zinit ice fsrc"myscript -> myfunc" ferc"myscript"
+% zinit load zdharma/null
 % which myfunc
 myfunc () {
-        local bindir="/home/sg/.zplugin/plugins/zdharma---null"
+        local bindir="/home/sg/.zinit/plugins/zdharma---null"
         () {
                 source "$bindir"/"myscript"
         } "$@"
 }
 % which myscript
 myscript () {
-        local bindir="/home/sg/.zplugin/snippets/OMZ::plugins--git/git.plugin.zsh"
+        local bindir="/home/sg/.zinit/snippets/OMZ::plugins--git/git.plugin.zsh"
         () {
                 eval "$(<"$bindir"/"myscript")"
         } "$@"

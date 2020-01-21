@@ -3,29 +3,29 @@
 setopt promptsubst
 
 # B.
-zplugin ice wait lucid
-zplugin snippet OMZ::lib/git.zsh
+zinit ice wait lucid
+zinit snippet OMZ::lib/git.zsh
 
 # C.
-zplugin ice wait atload"unalias grv" lucid
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit ice wait atload"unalias grv" lucid
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 # D.
 PS1="READY >" # provide a nice prompt till the theme loads
-zplugin ice wait'!' lucid
-zplugin snippet OMZ::themes/dstufft.zsh-theme
+zinit ice wait'!' lucid
+zinit snippet OMZ::themes/dstufft.zsh-theme
 
 # E.
-zplugin ice wait lucid
-zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit ice wait lucid
+zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
 # F.
-zplugin ice wait as"completion" lucid
-zplugin snippet OMZ::plugins/docker/_docker
+zinit ice wait as"completion" lucid
+zinit snippet OMZ::plugins/docker/_docker
 
 # G.
-zplugin ice wait atinit"zpcompinit" lucid
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait atinit"zpcompinit" lucid
+zinit light zdharma/fast-syntax-highlighting
 ```
 
 **A** -  Most themes use this option.
@@ -62,31 +62,31 @@ same effect while still using Turbo mode for everything remaining):
 setopt promptsubst
 
 # B.
-zplugin snippet OMZ::lib/git.zsh
+zinit snippet OMZ::lib/git.zsh
 
 # C.
-zplugin ice atload"unalias grv"
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit ice atload"unalias grv"
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 # D.
-zplugin snippet OMZ::themes/dstufft.zsh-theme
+zinit snippet OMZ::themes/dstufft.zsh-theme
 
 # E.
-zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
 # F.
-zplugin ice as"completion"
-zplugin snippet OMZ::plugins/docker/_docker
+zinit ice as"completion"
+zinit snippet OMZ::plugins/docker/_docker
 
 # G.
-zplugin ice atinit"zpcompinit"
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice atinit"zpcompinit"
+zinit light zdharma/fast-syntax-highlighting
 ```
 
 In general, Turbo mode can be optionally enabled only for a subset of plugins or
 for all plugins. It needs Zsh \>= 5.3.
 
 The **Introduction** contains [**more
-information**](http://zdharma.org/zplugin/wiki/INTRODUCTION/#turbo_mode_zsh_62_53) on Turbo mode.
+information**](http://zdharma.org/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_62_53) on Turbo mode.
 
 []( vim:set ft=markdown tw=80: )

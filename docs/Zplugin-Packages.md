@@ -1,9 +1,9 @@
-# Zplugin Packages
+# Zinit Packages
 
 ## Introduction
 
-Zplugin can install from so-called *packages* – GitHub repositories holding
-a `package.json` file with the Zplugin meta-data in them.
+Zinit can install from so-called *packages* – GitHub repositories holding
+a `package.json` file with the Zinit meta-data in them.
 
 This way you don't have to (but still can) specify ices, which might be handy
 when the ice-mod list is long and complex.
@@ -12,7 +12,7 @@ when the ice-mod list is long and complex.
 
 The motivation for adding such functionality was:
 
-1. Zplugin is a very flexible plugin manager however users often feel
+1. Zinit is a very flexible plugin manager however users often feel
    overwhelmed by its configuration.
 
 2. It has many package-manager -like features, such as:
@@ -20,7 +20,7 @@ The motivation for adding such functionality was:
     - automatically provide *shims* (i.e.: forwarder scripts) for the binaries,
     - extend `$PATH` to expose the binaries, and more.
 
-3. In general, Zplugin has many hooks which allow surprising and beautiful
+3. In general, Zinit has many hooks which allow surprising and beautiful
    things, however their content often evolves to a gradually better and better
    one and it's hard to keep track of the current version of them.
 
@@ -33,7 +33,7 @@ The motivation for adding such functionality was:
 This way, instead of the following command used to install `fzf`:
 
 ```zsh
-zplugin lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
+zinit lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
     atclone="cp shell/completion.zsh _fzf_completion; \
       cp bin/(fzf|fzf-tmux) $ZPFX/bin" \
     make="PREFIX=$ZPFX install" for \
@@ -43,7 +43,7 @@ zplugin lucid as=program pick="$ZPFX/bin/(fzf|fzf-tmux)" \
 you only need:
 
 ```zsh
-zplugin pack for fzf
+zinit pack for fzf
 ```
 
 to get the complete setup of the fuzzy finder, including:
@@ -52,31 +52,31 @@ to get the complete setup of the fuzzy finder, including:
 - the additional executable-script `fzf-tmux`.
 
 The installation is real, package-manager -like, because you don't need to
-invoke Zplugin anymore once installed to use `fzf` (that's because `fzf` is just
+invoke Zinit anymore once installed to use `fzf` (that's because `fzf` is just
 a binary program and not e.g.: a shell function).
 
-You can also update the package with `zplugin update fzf` – it'll cause the
+You can also update the package with `zinit update fzf` – it'll cause the
 project to refresh and rebuild, like with a "normal" package manager such as
 `apt-get`. However, it'll actually be more like to `emerge` from Gentoo, because
 the installation will be from the source… unless… you'll pick a binary
-installation :) So Zplugin is like `apt-get` and `emerge` in one!
+installation :) So Zinit is like `apt-get` and `emerge` in one!
 
-## Pros Of Using Zplugin Package For Regular Software Installations
+## Pros Of Using Zinit Package For Regular Software Installations
 
-Using Zplugin to install software where one could use a regular package manager
+Using Zinit to install software where one could use a regular package manager
 has several advantages:
 
-1. **Pro:** The Zplugin packages typically use the URLs to the official and
+1. **Pro:** The Zinit packages typically use the URLs to the official and
    *latest* distributions of the software (like e.g.: the
    [ecs-cli](https://github.com/Zsh-Packages/ecs-cli) package, which uses the
    URL: `https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest`
    when installing on Linux).
 
-2. **Pro:** You can influence the installation easily by specifying Zplugin
+2. **Pro:** You can influence the installation easily by specifying Zinit
    ice-mods, e.g.:
 
     ```
-    zplugin pack=bgn atclone="cp fzy.1 $ZPFX/man/man1" for fzy
+    zinit pack=bgn atclone="cp fzy.1 $ZPFX/man/man1" for fzy
     ```
 
     to install also the man page for the `fzy` fuzzy finder (this omission in
@@ -145,11 +145,11 @@ GitHub organization. You can find the available packages there, which as of
 
 2. Populate the `package.json` – I suggest grabbing the one for `fzf` or
    `doctoc` and doing a few substitutions like `doctoc` → `your-project` and
-   then simply filling the `default` profile in the `zplugin-ices` object – it's
+   then simply filling the `default` profile in the `zinit-ices` object – it's
    obvious how to do this.
 
 3. The project name in the `package.json` should start with `zsh-`. The prefix
-   will be skipped when specifying it with Zplugin.
+   will be skipped when specifying it with Zinit.
 
 4. Commit and push.
 

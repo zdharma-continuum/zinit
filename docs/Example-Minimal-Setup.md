@@ -1,21 +1,21 @@
 # Example Minimal Setup
 
 ```zsh
-zplugin ice wait blockf atpull'zplugin creinstall -q .'
-zplugin light zsh-users/zsh-completions
+zinit ice wait blockf atpull'zinit creinstall -q .'
+zinit light zsh-users/zsh-completions
 
-zplugin ice wait atinit"zpcompinit; zpcdreplay"
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait atinit"zpcompinit; zpcdreplay"
+zinit light zdharma/fast-syntax-highlighting
 
-zplugin ice wait atload"_zsh_autosuggest_start"
-zplugin light zsh-users/zsh-autosuggestions
+zinit ice wait atload"_zsh_autosuggest_start"
+zinit light zsh-users/zsh-autosuggestions
 ```
 
  - `light` – load the plugin in `light` mode, in which the tracking of plugin
-   (i.e. activity report gathering, accessible via the `zplugin report
+   (i.e. activity report gathering, accessible via the `zinit report
    {plugin-spec}` subcommand) is being disabled; note that for Turbo mode, the
    performance gains are actually `0`, so in this mode you can load all plugins
-   with the tracking, i.e. by using `zplugin ice wait'0'; zplugin load
+   with the tracking, i.e. by using `zinit ice wait'0'; zinit load
    {plugin-spec}` commands,
  - `wait` – load 0 seconds (about 5 ms exactly) after prompt,
  - `atpull''` – execute after updating the plugin – the command in the ice will
@@ -38,7 +38,7 @@ zplugin light zsh-users/zsh-autosuggestions
    because it runs a function in an `precmd` hook, i.e. right before first
    prompt,
  - the `atinit` of the plugin runs also `zpcdreplay` (i.e.
-   "*zplugin-compdef-replay*"), because after `compinit` is loaded, the
+   "*zinit-compdef-replay*"), because after `compinit` is loaded, the
    `compdef` function becomes available, and one can re-run the all earlier
    automatically-caught`compdef` calls, loosing nothing from the original
    behavior,
@@ -47,15 +47,15 @@ zplugin light zsh-users/zsh-autosuggestions
 The same setup but without using Turbo mode (i.e. no `wait''` ice):
 
 ```zsh
-zplugin ice blockf atpull'zplugin creinstall -q .'
-zplugin light zsh-users/zsh-completions
+zinit ice blockf atpull'zinit creinstall -q .'
+zinit light zsh-users/zsh-completions
 
 autoload compinit
 compinit
 
-zplugin light zdharma/fast-syntax-highlighting
+zinit light zdharma/fast-syntax-highlighting
 
-zplugin light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-autosuggestions
 ```
 
 []( vim:set ft=markdown tw=80: )

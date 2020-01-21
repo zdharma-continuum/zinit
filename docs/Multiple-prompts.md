@@ -1,23 +1,23 @@
 ```zsh
 # Load when MYPROMPT == 1
-zplugin ice load'![[ $MYPROMPT = 1 ]]' unload'![[ $MYPROMPT != 1 ]]' lucid
-zplugin load halfo/lambda-mod-zsh-theme
+zinit ice load'![[ $MYPROMPT = 1 ]]' unload'![[ $MYPROMPT != 1 ]]' lucid
+zinit load halfo/lambda-mod-zsh-theme
 
 # Load when MYPROMPT == 2
-zplugin ice load'![[ $MYPROMPT = 2 ]]' unload'![[ $MYPROMPT != 2 ]]' \
+zinit ice load'![[ $MYPROMPT = 2 ]]' unload'![[ $MYPROMPT != 2 ]]' \
     pick"/dev/null" multisrc"{async,pure}.zsh" \
     atload'!prompt_pure_precmd' lucid nocd
-zplugin load sindresorhus/pure
+zinit load sindresorhus/pure
 
 # Load when MYPROMPT == 3
-zplugin ice load'![[ $MYPROMPT = 3 ]]' unload'![[ $MYPROMPT != 3 ]]' \
+zinit ice load'![[ $MYPROMPT = 3 ]]' unload'![[ $MYPROMPT != 3 ]]' \
           atload'!geometry::prompt' lucid nocd
-zplugin load geometry-zsh/geometry
+zinit load geometry-zsh/geometry
 ```
 
  - `load''` – condition that when fulfilled will cause plugin to be loaded,
  - `unload''` – as above, but will unload plugin,
- - note that plugins are loaded with <code>zplugin load </code>, not `zplugin
+ - note that plugins are loaded with <code>zinit load </code>, not `zinit
    light`, to track what plugin does, to be able to unload it,
  - `atload'!…'` – run the `precmd` hooks to make the prompts fully initialized
    when loaded in the middle of the prompt (`precmd` hooks are being normally

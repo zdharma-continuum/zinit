@@ -15,13 +15,13 @@ and much more.
 ## Basic Plugin Loading
 
 ``` zsh
-zplugin load zdharma/history-search-multi-word
-zplugin light zsh-users/zsh-syntax-highlighting
+zinit load zdharma/history-search-multi-word
+zinit light zsh-users/zsh-syntax-highlighting
 ```
 
 Above commands show two ways of basic plugin loading. <code>load </code>  causes reporting to
-be enabled – you can track what plugin does, view the information with `zplugin
-report {plugin-spec}` and then also unload the plugin with `zplugin unload
+be enabled – you can track what plugin does, view the information with `zinit
+report {plugin-spec}` and then also unload the plugin with `zinit unload
 {plugin-spec}`. `light` is a significantly faster loading without tracking and
 reporting, by using which user resigns of the ability to view the plugin report
 and to unload it.
@@ -36,15 +36,15 @@ files downloaded by `curl`, `wget`, etc. (an automatic detection of the download
 tool is being performed) directly from URL. For example:
 
 ``` zsh
-zplugin snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
-zplugin snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
+zinit snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+zinit snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
 ```
 
 Also, for Oh My Zsh and Prezto, you can use `OMZ::` and `PZT::` shorthands:
 
 ``` zsh
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin snippet PZT::modules/helper/init.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet PZT::modules/helper/init.zsh
 ```
 
 Moreover, snippets support Subversion protocol, supported also by Github. This
@@ -54,32 +54,32 @@ that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`:
 
 ``` zsh
 # URL points to directory
-zplugin ice svn
-zplugin snippet PZT::modules/docker
+zinit ice svn
+zinit snippet PZT::modules/docker
 ```
 
 ## Snippets and Performance
 
 Using `curl`, `wget`, etc. along with Subversion allows to almost completely
 avoid code dedicated to Oh My Zsh and Prezto, and also to other frameworks. This
-gives profits in performance of `Zplugin`, it is really fast and also compact
+gives profits in performance of `Zinit`, it is really fast and also compact
 (causing low memory footprint and short loading time).
 
 ## Some Ice-Modifiers
 
-The command `zplugin ice` provides Ice-modifiers for single next command (see
+The command `zinit ice` provides Ice-modifiers for single next command (see
 the README subsection
-[**ice-modifiers**](https://github.com/zdharma/zplugin#ice-modifiers)). The
+[**ice-modifiers**](https://github.com/zdharma/zinit#ice-modifiers)). The
 logic is that "ice" is something something that’s added (e.g. to a drink or a
-coffee) – and in the Zplugin sense this means that ice is a modifier added to
-the next Zplugin command, and also something that melts (so it doesn’t last
-long) – and in the Zplugin use it means that the modifier lasts for only single
-next Zplugin command. Using one other Ice-modifier "**pick**" user can
+coffee) – and in the Zinit sense this means that ice is a modifier added to
+the next Zinit command, and also something that melts (so it doesn’t last
+long) – and in the Zinit use it means that the modifier lasts for only single
+next Zinit command. Using one other Ice-modifier "**pick**" user can
 explicitly **select the file to source**:
 
 ``` zsh
-zplugin ice svn pick"init.zsh"
-zplugin snippet PZT::modules/git
+zinit ice svn pick"init.zsh"
+zinit snippet PZT::modules/git
 ```
 
 Content of Ice-modifier is simply put into `"…"`, `'…'`, or `$'…'`. No
@@ -96,8 +96,8 @@ To obtain this effect, use Ice-modifier `as` with value `program` (or an alias
 value `command`).
 
 ``` zsh
-zplugin ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
-zplugin light b4b4r07/httpstat
+zinit ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
+zinit light b4b4r07/httpstat
 ```
 
 Above command will add plugin directory to `$PATH`, copy file `httpstat.sh` into
@@ -108,7 +108,7 @@ i.e. to `httpstat`. Other Ice-mod exists, `mv`, which works like `cp` but
 !!!note
     **The `cp` and `mv` ices (and also as some other ones, like `atclone`) are
     being run when the plugin or snippet is being _installed_. To test them
-    again first delete the plugin or snippet by `zplugin delete
+    again first delete the plugin or snippet by `zinit delete
     PZT::modules/osx` (for example).**
 
 ## atpull"…"
@@ -118,14 +118,14 @@ unmodified and `Git` will report no conflicts. However, `mv` also can be used,
 if a proper `atpull` (an Ice–modifier ran at **update** of plugin) will be used:
 
 ``` zsh
-zplugin ice as"program" mv"httpstat.sh -> httpstat" \
+zinit ice as"program" mv"httpstat.sh -> httpstat" \
       pick"httpstat" atpull'!git reset --hard'
-zplugin light b4b4r07/httpstat
+zinit light b4b4r07/httpstat
 ```
 
 If `atpull` starts with exclamation mark, then it will be run before `git pull`,
 and before `mv`. Nevertheless, `atpull`, `mv`, `cp` are ran **only if new
-commits are to be fetched**. So in summary, when user runs `zplugin update
+commits are to be fetched**. So in summary, when user runs `zinit update
 b4b4r07/httpstat` to update this plugin, and there are new commits, what happens
 first is that `git reset --hard` is ran – and it **restores** original
 `httpstat.sh`, **then** `git pull` is ran and it downloads new commits (doing
@@ -144,9 +144,9 @@ into the plugin's contents without blocking the ability to update it with `git`
 Commands can also be added to `$PATH` using **snippets**. For example:
 
 ``` zsh
-zplugin ice mv"httpstat.sh -> httpstat" \
+zinit ice mv"httpstat.sh -> httpstat" \
         pick"httpstat" as"program"
-zplugin snippet \
+zinit snippet \
     https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 ```
 
@@ -161,29 +161,29 @@ By using the `as''` ice-mod with value `completion` you can point the `snippet`
 subcommand directly to a completion file, e.g.:
 
 ``` zsh
-zplugin ice as"completion"
-zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+zinit ice as"completion"
+zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 ```
 
 ## Completion Management
 
-Zplugin allows to disable and enable each completion in every plugin. Try
+Zinit allows to disable and enable each completion in every plugin. Try
 installing a popular plugin that provides completions:
 
 ``` zsh
-zplugin ice blockf
-zplugin light zsh-users/zsh-completions
+zinit ice blockf
+zinit light zsh-users/zsh-completions
 ```
 
 First command (the `blockf` ice) will block the traditional method of adding
-completions. Zplugin uses own method (based on symlinks instead of adding a
-number of directories to `$fpath`). Zplugin will automatically **install**
+completions. Zinit uses own method (based on symlinks instead of adding a
+number of directories to `$fpath`). Zinit will automatically **install**
 completions of a newly downloaded plugin. To uninstall the completions and
 install them again, you would use:
 
 ``` zsh
-zplugin cuninstall zsh-users/zsh-completions   # uninstall
-zplugin creinstall zsh-users/zsh-completions   # install
+zinit cuninstall zsh-users/zsh-completions   # uninstall
+zinit creinstall zsh-users/zsh-completions   # install
 ```
 
 ### Listing Completions
@@ -233,7 +233,7 @@ $ zplg cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
 ```
 
-That’s all on completions. There’s one more command, `zplugin csearch`, that
+That’s all on completions. There’s one more command, `zinit csearch`, that
 will **search** all plugin directories for available completions, and show if
 they are installed:
 
@@ -247,13 +247,13 @@ In general, to use **subdirectories** of Github projects as snippets add
 `/trunk/{path-to-dir}` to URL, for example:
 
 ``` zsh
-zplugin ice svn
-zplugin snippet https://github.com/zsh-users/zsh-completions/trunk/src
+zinit ice svn
+zinit snippet https://github.com/zsh-users/zsh-completions/trunk/src
 
 # For Oh My Zsh and Prezto, the OMZ:: and PZT:: prefixes work
 # without the need to add the `/trunk/` infix (however the path
 # should point to a directory, not to a file):
-zplugin ice svn; zplugin snippet PZT::modules/docker
+zinit ice svn; zinit snippet PZT::modules/docker
 ```
 
 Snippets too have completions installed by default, like plugins.
@@ -264,7 +264,7 @@ The Ice-mod `wait` allows you to postpone loading of a plugin to the moment when
 processing of `.zshrc` is finished and prompt is being shown. It is like Windows
 – during startup, it shows desktop even though it still loads data in
 background. This has drawbacks, but is for sure better than blank screen for 10
-minutes. And here, in Zplugin, there are no drawbacks of this approach – no
+minutes. And here, in Zinit, there are no drawbacks of this approach – no
 lags, freezes, etc. – the command line is fully usable while the plugins are
 being loaded, for number of such plugins like `10` or `20`.
 
@@ -276,8 +276,8 @@ target plugin in one of following ways:
 
 ``` zsh
 PS1="READY > "
-zplugin ice wait'!0' 
-zplugin load halfo/lambda-mod-zsh-theme
+zinit ice wait'!0' 
+zinit load halfo/lambda-mod-zsh-theme
 ```
 
 This sets plugin `psprint/zprompts` to be loaded `0` seconds after `zshrc`. It
@@ -286,7 +286,7 @@ started to use this method of setting up a prompt 2 years ago now and I run it
 without any problems. It is also sufficient to provide just the word
 `wait`, it’ll work like `wait'0'` (and `wait'!'` like `wait'!0'`).
 
-The exclamation mark causes Zplugin to reset-prompt after loading plugin, so it
+The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
 is needed for themes. The same with Prezto prompts, with a longer delay:
 
 ``` zsh
@@ -297,8 +297,8 @@ zplg snippet PZT::modules/prompt
 Using `zsh-users/zsh-autosuggestions` without any drawbacks:
 
 ``` zsh
-zplugin ice wait lucid atload'_zsh_autosuggest_start'
-zplugin light zsh-users/zsh-autosuggestions
+zinit ice wait lucid atload'_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
 ```
 
 Explanation: Autosuggestions uses `precmd` hook, which is being called right
@@ -318,7 +318,7 @@ plugin to not show.
 For some, mostly advanced themes the initialization of the prompt is being done
 in a `precmd`-hook, i.e.; in a function that's gets called before each prompt.
 The hook is installed by the
-[add-zsh-hook](http://zdharma.org/zplugin/wiki/zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks)
+[add-zsh-hook](http://zdharma.org/zinit/wiki/zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks)
 Zsh function by adding its name to the `$precmd_functions` array.
 
 To make the prompt fully initialized after Turbo loading in the middle of the
@@ -337,9 +337,9 @@ _zsh_autosuggest_start prompt_zinc_setup prompt_zinc_precmd
 Then, add them to the ice-list in the `atload''` ice:
 
 ```zsh
-zplugin ice wait'!' lucid nocd \
+zinit ice wait'!' lucid nocd \
     atload'!prompt_zinc_setup; prompt_zinc_precmd'
-zplugin load robobenklein/zinc
+zinit load robobenklein/zinc
 ```
 
 The exclamation mark in `atload'!…'` is to track the functions allowing the
@@ -354,14 +354,14 @@ unactive. For example:
 ``` zsh
 # Load when in ~/tmp
 
-zplugin ice load'![[ $PWD = */tmp* ]]' unload'![[ $PWD != */tmp* ]]' \
+zinit ice load'![[ $PWD = */tmp* ]]' unload'![[ $PWD != */tmp* ]]' \
     atload"!promptinit; prompt sprint3"
-zplugin load psprint/zprompts
+zinit load psprint/zprompts
 
 # Load when NOT in ~/tmp
 
-zplugin ice load'![[ $PWD != */tmp* ]]' unload'![[ $PWD = */tmp* ]]'
-zplugin load russjohnson/angry-fly-zsh
+zinit ice load'![[ $PWD != */tmp* ]]' unload'![[ $PWD = */tmp* ]]'
+zinit load russjohnson/angry-fly-zsh
 ```
 
 Two prompts, each active in different directories. This technique can be used to
@@ -374,7 +374,7 @@ activate different plugins on `cpp`, on `web`, etc.
     active, not only till first activation.**
 
 Note that for unloading of a plugin to work the plugin needs to be loaded with
-tracking (so `zplugin load …`, not `zplugin light …`). Tracking causes
+tracking (so `zinit load …`, not `zinit light …`). Tracking causes
 slight slowdown, however this doesn’t influence Zsh startup time when using
 Turbo mode.
 

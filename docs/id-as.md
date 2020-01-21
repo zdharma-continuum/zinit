@@ -1,13 +1,13 @@
 # Nickname a plugin or snippet
 
-Zplugin supports loading a plugin or snippet with a nickname. Set the nickname
+Zinit supports loading a plugin or snippet with a nickname. Set the nickname
 through the `id-as` ice-mod. For example, one could try to load
 [**docker/compose**](https://github.com/docker/compose) from GitHub binary
 releases:
 
 ```zsh
-zplugin ice as"program" from"gh-r" mv"docker-c* -> docker-compose"
-zplugin light "docker/compose"
+zinit ice as"program" from"gh-r" mv"docker-c* -> docker-compose"
+zinit light "docker/compose"
 ```
 
 This registers plugin under the ID `docker/compose`. Now suppose the user would
@@ -21,21 +21,21 @@ the conflict by loading the completion under a kind of a _nickname_, for example
 under "_dc-complete_", by issuing the following commands:
 
 ```zsh
-zplugin ice as"completion" id-as"dc-complete"
-zplugin load docker/compose
+zinit ice as"completion" id-as"dc-complete"
+zinit load docker/compose
 ```
 
 The plugin (of the type `completion`) is now seen under ID `dc-complete`:
 
 ```zsh
-~ zplugin list | grep -i dc-complete
+~ zinit list | grep -i dc-complete
 dc-complete
 ```
 
-Issuing `zplugin report dc-complete` also works, so as other Zplugin commands:
+Issuing `zinit report dc-complete` also works, so as other Zinit commands:
 
 ```zsh
-~ zplugin report dc-complete
+~ zinit report dc-complete
 Plugin report for dc-complete
 -------------------------------
 
@@ -47,12 +47,12 @@ This can be also used to nickname snippets. For example, you can use this to
 create handy IDs in place of long urls:
 
 ```zsh
-zplugin ice as"program" id-as"git-unique"
-zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+zinit ice as"program" id-as"git-unique"
+zinit snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 ```
 
-The commands `zplugin update git-unique`, `zplugin delete git-unique` and other
-will work normally and e.g. `zplugin times` will show the _nickname_-ID
+The commands `zinit update git-unique`, `zinit delete git-unique` and other
+will work normally and e.g. `zinit times` will show the _nickname_-ID
 `git-unique` instead of the long URL.
 
 ## `id-as'auto'`
@@ -62,8 +62,8 @@ be automatically set to the last component of the plugin name or snippet URL.
 For example:
 
 ```zsh
-zplugin ice as"program" id-as"auto"
-zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+zinit ice as"program" id-as"auto"
+zinit snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 ```
 
 will work the same as before, i.e.: like if the ice used was
@@ -71,8 +71,8 @@ will work the same as before, i.e.: like if the ice used was
 
 ```zsh
 # Will work as if id-as'zsh-autopair' was passed
-zplugin ice wait lucid id-as"auto"
-zplugin load hlissner/zsh-autopair
+zinit ice wait lucid id-as"auto"
+zinit load hlissner/zsh-autopair
 ```
 
 []( vim:set ft=markdown tw=80: )

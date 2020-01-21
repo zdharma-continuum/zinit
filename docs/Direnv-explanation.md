@@ -1,11 +1,11 @@
 The project [**direnv/direnv**](https://github.com/direnv/direnv) registers itself in Zshell to modify environment on directory change. This registration is most often done by `eval "$(direnv hook zsh)"` added to zshrc.
 
-Drawback of this standard procedure is that `direnv` binary is ran on every shell startup and significantly slows it down. Zplugin allows to solve this in following way:
+Drawback of this standard procedure is that `direnv` binary is ran on every shell startup and significantly slows it down. Zinit allows to solve this in following way:
 
 ```zsh
-zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
+zinit ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
     atpull'%atclone' pick"direnv" src"zhook.zsh"
-zplugin light direnv/direnv
+zinit light direnv/direnv
 ```
 
  - `make'!'` – compile `direnv` (it's written in Go lang); the exclamation mark means: run the `make` first, before `atclone` and `atpull` hooks,
@@ -22,9 +22,9 @@ This way registration code is generated once every installation and update, to t
 The project is also available as binary Github release. This distribution can be installed by:
 
 ```zsh
-zplugin ice from"gh-r" as"program" mv"direnv* -> direnv" \
+zinit ice from"gh-r" as"program" mv"direnv* -> direnv" \
     './direnv hook zsh > zhook.zsh' atpull'%atclone' pick"direnv"
-zplugin light direnv/direnv
+zinit light direnv/direnv
 ```
 
  - `from"gh-r"` – install from Github **releases**,

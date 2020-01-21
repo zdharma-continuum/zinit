@@ -1,7 +1,7 @@
 # declare-zsh
 
 [**declare-zsh**](https://github.com/zdharma/declare-zsh) is a parser for
-`zplugin` commands in `.zshrc`. It allows to perform the following actions on
+`zinit` commands in `.zshrc`. It allows to perform the following actions on
 `.zshrc` **from the command-line**:
 
   - enable and disable selected plugins and snippets,
@@ -14,8 +14,8 @@ In other words, by issuing a `declzsh` command the user deploys a task of:
 
 1. Reading and parsing of the `~/.zshrc`.
 
-2. Making changes (like removal of a plugin, i.e. of `zplugin load
-   {removed-plugin}` command together with the possible associated `zplugin ice
+2. Making changes (like removal of a plugin, i.e. of `zinit load
+   {removed-plugin}` command together with the possible associated `zinit ice
    …` command) and then…
 
 3. Writing the result back to the `zshrc` (by default, the result is stored to

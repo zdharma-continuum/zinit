@@ -1,7 +1,7 @@
 ```zsh
-zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
+zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
     atpull"%atclone" make pick"src/vim"
-zplugin light vim/vim
+zinit light vim/vim
 ```
 
 - `as"program"` – add file selected by `pick''` to `$PATH`, do not source it,
@@ -13,13 +13,13 @@ zplugin light vim/vim
 ***
 
 The same but with **installation** (i.e. `make install` is being run) under
-`$ZPFX` (`~/.zplugin/polaris` by default):
+`$ZPFX` (`~/.zinit/polaris` by default):
 
 ```zsh
-zplugin ice as"program" atclone"rm -f src/auto/config.cache; \
+zinit ice as"program" atclone"rm -f src/auto/config.cache; \
     ./configure --prefix=$ZPFX" atpull"%atclone" \
     make"all install" pick"$ZPFX/bin/vim"
-zplugin light vim/vim
+zinit light vim/vim
 ```
 
 - `as"program"` – as above,
@@ -32,9 +32,9 @@ zplugin light vim/vim
 ***
 
 ```zsh
-zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
+zinit ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
     atpull'%atclone' src"zhook.zsh"
-zplugin light direnv/direnv
+zinit light direnv/direnv
 ```
 
 - `make'!'` – execute `make` before `atclone''` and before `atpull''` (see `make` above),
