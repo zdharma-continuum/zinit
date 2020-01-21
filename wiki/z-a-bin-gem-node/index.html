@@ -2742,14 +2742,14 @@ allows to:</p>
 </ol>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
 <p>Simply load like a regular plugin, i.e.:</p>
-<pre><code class="zsh">zinit light zinit/z-a-bin-gem-node
+<pre><code class="zsh">zinit light zinit-zsh/z-a-bin-gem-node
 </code></pre>
 
 <p>After executing this command you can then use the dl'' and patch'' ice-mods.</p>
 <h2 id="how_it_works_birds-eye_view">How it works – bird's-eye view<a class="headerlink" href="#how_it_works_birds-eye_view" title="Permanent link">#</a></h2>
 <p>Below is a diagram explaining the major feature – exposing a binary program
 or script through a Zsh function of the same name:</p>
-<p><img alt="diagram" src="https://raw.githubusercontent.com/zinit/z-a-bin-gem-node/master/images/diag.png" /></p>
+<p><img alt="diagram" src="https://raw.githubusercontent.com/zinit-zsh/z-a-bin-gem-node/master/images/diag.png" /></p>
 <p>This way there is no need to add anything to <code>$PATH</code> – <code>z-a-bin-gem-node</code>
 will automatically create a function that will wrap the binary and provide it
 on the command line like if it was being placed in the <code>$PATH</code>.</p>
