@@ -1,9 +1,9 @@
-site_name: Zplugin Wiki
+site_name: Zinit Wiki
 nav:
 - "Introduction":
   - "Introduction": INTRODUCTION.md
   - "The For Syntax": For-Syntax.md
-  - "Zplugin Packages": Zplugin-Packages.md
+  - "Zinit Packages": Zinit-Packages.md
 - "Ice Modifiers":
   - "Alternate Ice Syntax": Alternate-Ice-Syntax.md
   - "Nickname a Plugin or Snippet": id-as.md
@@ -23,7 +23,7 @@ nav:
   - "Compiling Programs": Compiling-programs.md
   - "Profiling Plugins": Profiling-plugins.md
   - "Gallery": GALLERY.md
-- "Zplugin Extensions":
+- "Zinit Extensions":
   - "Annexes": Annexes.md
   - "z-a-bin-gem-node": z-a-bin-gem-node.md
   - "z-a-patch-dl": z-a-patch-dl.md
@@ -37,10 +37,10 @@ nav:
   - "Zsh Native Scripting Handbook": zsh-native-scripting-handbook.md
 - "Code Documentation": 
   - "Overview": Code-Documentation.md
-  - "zplugin.zsh": zplugin.zsh.md
-  - "zplugin-side.zsh": zplugin-side.zsh.md
-  - "zplugin-install.zsh": zplugin-install.zsh.md
-  - "zplugin-autoload.zsh": zplugin-autoload.zsh.md
+  - "zinit.zsh": zinit.zsh.md
+  - "zinit-side.zsh": zinit-side.zsh.md
+  - "zinit-install.zsh": zinit-install.zsh.md
+  - "zinit-autoload.zsh": zinit-autoload.zsh.md
 
 theme:
   name: material
@@ -67,6 +67,6 @@ extra_javascript:
 extra:
   social:
     - type: 'github'
-      link: 'https://github.com/zdharma/zplugin'
+      link: 'https://github.com/zdharma/zinit'
     - type: 'reddit'
-      link: 'https://www.reddit.com/r/zplugin/'
+      link: 'https://www.reddit.com/r/zinit/'
