@@ -188,13 +188,17 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     local -a req
     req=( ${(s.;.)${:-${required:+$required\;}${ZINIT_ICE[required]}}} )
     for required ( $req ) {
-        if [[ $required = bgn ]]; then
-            if [[ -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ]]; then
+        if [[ $required == (bgn|dl) ]]; then
+            if [[ ( $required == bgn && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ) || \
+                ( $required == dl && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} )
+            ]]; then
+                local -A namemap
+                namemap=( bgn Bin-Gem-Node dl Patch-Dl )
                 print -P -- "${ZINIT[col-error]}ERROR: the" \
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
-                    "requires" "Bin-Gem-Node annex" \
-                    "\nSee: %F{221}https://github.com/zinit/z-a-bin-gem-node%f"
+                    "requires ${namemap[$required]} annex" \
+                    "\nSee: %F{221}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}%f"
                 print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
                 return 1
             fi
