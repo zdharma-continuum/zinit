@@ -2256,8 +2256,8 @@
                   <h1>Sourcing Multiple Files</h1>
                 
                 <p>Normally <code>src''</code> can be used to specify additional file to source:</p>
-<pre><code class="zsh">zplugin ice pick&quot;powerless.zsh&quot; src&quot;utilities.zsh&quot;
-zplugin light martinrotter/powerless
+<pre><code class="zsh">zinit ice pick&quot;powerless.zsh&quot; src&quot;utilities.zsh&quot;
+zinit light martinrotter/powerless
 </code></pre>
 
 <ul>
@@ -2267,11 +2267,11 @@ zplugin light martinrotter/powerless
 </ul>
 <hr />
 <p>However, via <code>atload''</code> ice one can provide simple loop to source more files:</p>
-<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; \
+<pre><code class="zsh">zinit ice svn pick&quot;completion.zsh&quot; \
     atload'local f; for f in git.zsh misc.zsh; do \
         source $f \
     done'
-zplugin snippet OMZ::lib
+zinit snippet OMZ::lib
 </code></pre>
 
 <ul>
@@ -2281,8 +2281,8 @@ zplugin snippet OMZ::lib
   into the string,</li>
 <li><code>atload</code>'s code is automatically being run <strong>within the snippet's (or
   plugin's) directory</strong>,</li>
-<li><code>atload''</code> code isn't tracked by Zplugin, i.e. cannot be unloaded, unless you
-  load a plugin (not a snippet) with <code>zplugin load …</code> and prepend the value of
+<li><code>atload''</code> code isn't tracked by Zinit, i.e. cannot be unloaded, unless you
+  load a plugin (not a snippet) with <code>zinit load …</code> and prepend the value of
   the ice with exclamation mark, i.e.  <code>atload'!local f; for …'</code>,</li>
 <li><code>atload''</code> is executed after loading main files (<code>pick''</code> and <code>src''</code> ones).</li>
 </ul>
@@ -2290,54 +2290,54 @@ zplugin snippet OMZ::lib
 <p>The <code>multisrc''</code> ice, which loads <strong>multiple</strong> files enumerated with
 spaces as the separator (e.g. <code>multisrc'misc.zsh grep.zsh'</code>) and also using
 brace-expansion syntax (e.g. <code>multisrc'{misc,grep}.zsh')</code>. Example:</p>
-<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; multisrc'git.zsh \
+<pre><code class="zsh">zinit ice svn pick&quot;completion.zsh&quot; multisrc'git.zsh \
     functions.zsh {history,grep}.zsh'
-zplugin snippet OMZ::lib
+zinit snippet OMZ::lib
 </code></pre>
 
 <p>The all possible ways to use the <code>multisrc''</code> ice-mod:</p>
-<pre><code class="zsh">zplugin ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
-zplugin load robbyrussell/oh-my-zsh
+<pre><code class="zsh">zinit ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
+zinit load robbyrussell/oh-my-zsh
 
 # Can use patterns
-zplugin ice svn multisrc&quot;{funct*,misc}.zsh&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+zinit ice svn multisrc&quot;{funct*,misc}.zsh&quot; pick&quot;/dev/null&quot;
+zinit snippet OMZ::lib
 
 array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;$array&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+zinit ice svn multisrc&quot;$array&quot; pick&quot;/dev/null&quot;
+zinit snippet OMZ::lib
 
 # Will use the array's value at the moment of plugin load
 # – this can matter in case of using Turbo mode
 array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+zinit ice svn multisrc&quot;\$array&quot; pick&quot;/dev/null&quot;
+zinit snippet OMZ::lib
 
 # Compatible with KSH_ARRAYS option
 array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;${array[*]}&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+zinit ice svn multisrc&quot;${array[*]}&quot; pick&quot;/dev/null&quot;
+zinit snippet OMZ::lib
 
 # Compatible with KSH_ARRAYS option
 array=( {functions,misc}.zsh )
-zplugin ice svn multisrc&quot;\${array[*]}&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+zinit ice svn multisrc&quot;\${array[*]}&quot; pick&quot;/dev/null&quot;
+zinit snippet OMZ::lib
 
-zplugin ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+zinit ice svn multisrc&quot;misc.zsh functions.zsh&quot; pick&quot;/dev/null&quot;
+zinit snippet OMZ::lib
 
-# Also – hack Zplugin: the ice's contents is simply `eval'-uated
+# Also – hack Zinit: the ice's contents is simply `eval'-uated
 # like follows: eval &quot;reply=($multisrc)&quot;. So it might get handy on
 # an occasion to pass code there, but first you must close the paren
 # and then don't forget to assign `reply', and to provide a trailing
 # opening paren. In the code be careful to not redefine any variable
-# used internally by Zplugin – e.g.: `i' is safe:
+# used internally by Zinit – e.g.: `i' is safe:
 
 array=( {functions,misc}.zsh )
-zplugin ice svn multisrc'); local i; for i in $array; do \
+zinit ice svn multisrc'); local i; for i in $array; do \
             reply+=( ${i/.zsh/.sh} ); \
         done; ((1)' pick&quot;/dev/null&quot;
-zplugin snippet OMZ::lib
+zinit snippet OMZ::lib
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>

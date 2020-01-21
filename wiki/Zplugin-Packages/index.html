@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#zplugin_packages" tabindex="1" class="md-skip">
+      <a href="#zinit_packages" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -893,9 +893,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#pros_of_using_zplugin_package_for_regular_software_installations" title="Pros Of Using Zplugin Package For Regular Software Installations"
+  <a href="#pros_of_using_zinit_package_for_regular_software_installations" title="Pros Of Using Zinit Package For Regular Software Installations"
       class="md-nav__link">
-    Pros Of Using Zplugin Package For Regular Software Installations
+    Pros Of Using Zinit Package For Regular Software Installations
   </a>
 
   <!-- Render nested item list -->
@@ -2681,9 +2681,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#pros_of_using_zplugin_package_for_regular_software_installations" title="Pros Of Using Zplugin Package For Regular Software Installations"
+  <a href="#pros_of_using_zinit_package_for_regular_software_installations" title="Pros Of Using Zinit Package For Regular Software Installations"
       class="md-nav__link">
-    Pros Of Using Zplugin Package For Regular Software Installations
+    Pros Of Using Zinit Package For Regular Software Installations
   </a>
 
   <!-- Render nested item list -->
@@ -2779,17 +2779,17 @@
               
                 
                 
-                <h1 id="zplugin_packages">Zplugin Packages<a class="headerlink" href="#zplugin_packages" title="Permanent link">#</a></h1>
+                <h1 id="zinit_packages">Zinit Packages<a class="headerlink" href="#zinit_packages" title="Permanent link">#</a></h1>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>Zplugin can install from so-called <em>packages</em> – GitHub repositories holding
-a <code>package.json</code> file with the Zplugin meta-data in them.</p>
+<p>Zinit can install from so-called <em>packages</em> – GitHub repositories holding
+a <code>package.json</code> file with the Zinit meta-data in them.</p>
 <p>This way you don't have to (but still can) specify ices, which might be handy
 when the ice-mod list is long and complex.</p>
 <h2 id="motivation">Motivation<a class="headerlink" href="#motivation" title="Permanent link">#</a></h2>
 <p>The motivation for adding such functionality was:</p>
 <ol>
 <li>
-<p>Zplugin is a very flexible plugin manager however users often feel
+<p>Zinit is a very flexible plugin manager however users often feel
    overwhelmed by its configuration.</p>
 </li>
 <li>
@@ -2801,7 +2801,7 @@ when the ice-mod list is long and complex.</p>
 </ul>
 </li>
 <li>
-<p>In general, Zplugin has many hooks which allow surprising and beautiful
+<p>In general, Zinit has many hooks which allow surprising and beautiful
    things, however their content often evolves to a gradually better and better
    one and it's hard to keep track of the current version of them.</p>
 </li>
@@ -2813,7 +2813,7 @@ when the ice-mod list is long and complex.</p>
 </ol>
 <h2 id="introductory_example">Introductory Example<a class="headerlink" href="#introductory_example" title="Permanent link">#</a></h2>
 <p>This way, instead of the following command used to install <code>fzf</code>:</p>
-<pre><code class="zsh">zplugin lucid as=program pick=&quot;$ZPFX/bin/(fzf|fzf-tmux)&quot; \
+<pre><code class="zsh">zinit lucid as=program pick=&quot;$ZPFX/bin/(fzf|fzf-tmux)&quot; \
     atclone=&quot;cp shell/completion.zsh _fzf_completion; \
       cp bin/(fzf|fzf-tmux) $ZPFX/bin&quot; \
     make=&quot;PREFIX=$ZPFX install&quot; for \
@@ -2821,7 +2821,7 @@ when the ice-mod list is long and complex.</p>
 </code></pre>
 
 <p>you only need:</p>
-<pre><code class="zsh">zplugin pack for fzf
+<pre><code class="zsh">zinit pack for fzf
 </code></pre>
 
 <p>to get the complete setup of the fuzzy finder, including:</p>
@@ -2830,28 +2830,28 @@ when the ice-mod list is long and complex.</p>
 <li>the additional executable-script <code>fzf-tmux</code>.</li>
 </ul>
 <p>The installation is real, package-manager -like, because you don't need to
-invoke Zplugin anymore once installed to use <code>fzf</code> (that's because <code>fzf</code> is just
+invoke Zinit anymore once installed to use <code>fzf</code> (that's because <code>fzf</code> is just
 a binary program and not e.g.: a shell function).</p>
-<p>You can also update the package with <code>zplugin update fzf</code> – it'll cause the
+<p>You can also update the package with <code>zinit update fzf</code> – it'll cause the
 project to refresh and rebuild, like with a "normal" package manager such as
 <code>apt-get</code>. However, it'll actually be more like to <code>emerge</code> from Gentoo, because
 the installation will be from the source… unless… you'll pick a binary
-installation :) So Zplugin is like <code>apt-get</code> and <code>emerge</code> in one!</p>
-<h2 id="pros_of_using_zplugin_package_for_regular_software_installations">Pros Of Using Zplugin Package For Regular Software Installations<a class="headerlink" href="#pros_of_using_zplugin_package_for_regular_software_installations" title="Permanent link">#</a></h2>
-<p>Using Zplugin to install software where one could use a regular package manager
+installation :) So Zinit is like <code>apt-get</code> and <code>emerge</code> in one!</p>
+<h2 id="pros_of_using_zinit_package_for_regular_software_installations">Pros Of Using Zinit Package For Regular Software Installations<a class="headerlink" href="#pros_of_using_zinit_package_for_regular_software_installations" title="Permanent link">#</a></h2>
+<p>Using Zinit to install software where one could use a regular package manager
 has several advantages:</p>
 <ol>
 <li>
-<p><strong>Pro:</strong> The Zplugin packages typically use the URLs to the official and
+<p><strong>Pro:</strong> The Zinit packages typically use the URLs to the official and
    <em>latest</em> distributions of the software (like e.g.: the
    <a href="https://github.com/Zsh-Packages/ecs-cli">ecs-cli</a> package, which uses the
    URL: <code>https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest</code>
    when installing on Linux).</p>
 </li>
 <li>
-<p><strong>Pro:</strong> You can influence the installation easily by specifying Zplugin
+<p><strong>Pro:</strong> You can influence the installation easily by specifying Zinit
    ice-mods, e.g.:</p>
-<p><code>zplugin pack=bgn atclone="cp fzy.1 $ZPFX/man/man1" for fzy</code></p>
+<p><code>zinit pack=bgn atclone="cp fzy.1 $ZPFX/man/man1" for fzy</code></p>
 <p>to install also the man page for the <code>fzy</code> fuzzy finder (this omission in
 the package will be fixed soon).</p>
 </li>
@@ -2923,12 +2923,12 @@ GitHub organization. You can find the available packages there, which as of
 <li>
 <p>Populate the <code>package.json</code> – I suggest grabbing the one for <code>fzf</code> or
    <code>doctoc</code> and doing a few substitutions like <code>doctoc</code> → <code>your-project</code> and
-   then simply filling the <code>default</code> profile in the <code>zplugin-ices</code> object – it's
+   then simply filling the <code>default</code> profile in the <code>zinit-ices</code> object – it's
    obvious how to do this.</p>
 </li>
 <li>
 <p>The project name in the <code>package.json</code> should start with <code>zsh-</code>. The prefix
-   will be skipped when specifying it with Zplugin.</p>
+   will be skipped when specifying it with Zinit.</p>
 </li>
 <li>
 <p>Commit and push.</p>

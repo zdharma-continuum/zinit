@@ -2450,12 +2450,12 @@
                 
                 
                 <h1 id="nickname_a_plugin_or_snippet">Nickname a plugin or snippet<a class="headerlink" href="#nickname_a_plugin_or_snippet" title="Permanent link">#</a></h1>
-<p>Zplugin supports loading a plugin or snippet with a nickname. Set the nickname
+<p>Zinit supports loading a plugin or snippet with a nickname. Set the nickname
 through the <code>id-as</code> ice-mod. For example, one could try to load
 <a href="https://github.com/docker/compose"><strong>docker/compose</strong></a> from GitHub binary
 releases:</p>
-<pre><code class="zsh">zplugin ice as&quot;program&quot; from&quot;gh-r&quot; mv&quot;docker-c* -&gt; docker-compose&quot;
-zplugin light &quot;docker/compose&quot;
+<pre><code class="zsh">zinit ice as&quot;program&quot; from&quot;gh-r&quot; mv&quot;docker-c* -&gt; docker-compose&quot;
+zinit light &quot;docker/compose&quot;
 </code></pre>
 
 <p>This registers plugin under the ID <code>docker/compose</code>. Now suppose the user would
@@ -2466,17 +2466,17 @@ binary release catalog) which is also available under the GitHub url-path
 which this document is devoted: by using the <code>id-as</code> ice the user can resolve
 the conflict by loading the completion under a kind of a <em>nickname</em>, for example
 under "<em>dc-complete</em>", by issuing the following commands:</p>
-<pre><code class="zsh">zplugin ice as&quot;completion&quot; id-as&quot;dc-complete&quot;
-zplugin load docker/compose
+<pre><code class="zsh">zinit ice as&quot;completion&quot; id-as&quot;dc-complete&quot;
+zinit load docker/compose
 </code></pre>
 
 <p>The plugin (of the type <code>completion</code>) is now seen under ID <code>dc-complete</code>:</p>
-<pre><code class="zsh">~ zplugin list | grep -i dc-complete
+<pre><code class="zsh">~ zinit list | grep -i dc-complete
 dc-complete
 </code></pre>
 
-<p>Issuing <code>zplugin report dc-complete</code> also works, so as other Zplugin commands:</p>
-<pre><code class="zsh">~ zplugin report dc-complete
+<p>Issuing <code>zinit report dc-complete</code> also works, so as other Zinit commands:</p>
+<pre><code class="zsh">~ zinit report dc-complete
 Plugin report for dc-complete
 -------------------------------
 
@@ -2486,26 +2486,26 @@ _docker-compose [enabled]
 
 <p>This can be also used to nickname snippets. For example, you can use this to
 create handy IDs in place of long urls:</p>
-<pre><code class="zsh">zplugin ice as&quot;program&quot; id-as&quot;git-unique&quot;
-zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+<pre><code class="zsh">zinit ice as&quot;program&quot; id-as&quot;git-unique&quot;
+zinit snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 </code></pre>
 
-<p>The commands <code>zplugin update git-unique</code>, <code>zplugin delete git-unique</code> and other
-will work normally and e.g. <code>zplugin times</code> will show the <em>nickname</em>-ID
+<p>The commands <code>zinit update git-unique</code>, <code>zinit delete git-unique</code> and other
+will work normally and e.g. <code>zinit times</code> will show the <em>nickname</em>-ID
 <code>git-unique</code> instead of the long URL.</p>
 <h2 id="id-asauto"><code>id-as'auto'</code><a class="headerlink" href="#id-asauto" title="Permanent link">#</a></h2>
 <p>There's a special value to the <code>id-as''</code> ice – <code>auto</code>. It causes the nickname to
 be automatically set to the last component of the plugin name or snippet URL.
 For example:</p>
-<pre><code class="zsh">zplugin ice as&quot;program&quot; id-as&quot;auto&quot;
-zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+<pre><code class="zsh">zinit ice as&quot;program&quot; id-as&quot;auto&quot;
+zinit snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 </code></pre>
 
 <p>will work the same as before, i.e.: like if the ice used was
 <code>id-as'git-unique'</code>. Example with a plugin:</p>
 <pre><code class="zsh"># Will work as if id-as'zsh-autopair' was passed
-zplugin ice wait lucid id-as&quot;auto&quot;
-zplugin load hlissner/zsh-autopair
+zinit ice wait lucid id-as&quot;auto&quot;
+zinit load hlissner/zsh-autopair
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>

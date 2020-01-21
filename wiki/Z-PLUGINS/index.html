@@ -2432,13 +2432,13 @@
                 
                 <h1 id="z-plugins">z-plugins<a class="headerlink" href="#z-plugins" title="Permanent link">#</a></h1>
 <h2 id="what_are_they">What Are They?<a class="headerlink" href="#what_are_they" title="Permanent link">#</a></h2>
-<p>They are Zplugin extensions. Note the difference in the name from the Zplugin –
+<p>They are Zinit extensions. Note the difference in the name from the Zinit –
 the dash and the plural form.</p>
 <h2 id="what_can_they_do">What Can They Do?<a class="headerlink" href="#what_can_they_do" title="Permanent link">#</a></h2>
 <ol>
 <li>
-<p>Add a new Zplugin subcommand (i.e. the command that’s placed after the
-    function <code>zplugin …</code> when calling Zplugin).</p>
+<p>Add a new Zinit subcommand (i.e. the command that’s placed after the
+    function <code>zinit …</code> when calling Zinit).</p>
 </li>
 <li>
 <p>Add new ice-modifiers.</p>
@@ -2464,7 +2464,7 @@ snippet.</p>
 </ol>
 </li>
 <li>
-<p>Register hooks for generating help text, shown by the <code>zplugin help</code>
+<p>Register hooks for generating help text, shown by the <code>zinit help</code>
     subcommand.</p>
 </li>
 </ol>
@@ -2541,8 +2541,8 @@ that will have syntax <code>submods'{user}/{plugin} –&gt; {output-dir}; …'</
 will clone submodules when installing the original plugin or snippet! Example
 real-world use of the ice-mod:</p>
 <pre><code class="zsh"># Load the `zsh-autosuggestions' plugin via Prezto module: `autosuggestions'
-zplugin ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
-zplugin snippet PZT::modules/autosuggestions
+zinit ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
+zinit snippet PZT::modules/autosuggestions
 </code></pre>
 
 <p>Checkout the project which fully implements this idea,
@@ -2554,7 +2554,7 @@ The <code>z-p-*</code> prefix is recommended for projects that are being z-plugi
 <ol>
 <li>
 <p><code>atinit</code> or <code>!atinit</code> – the <code>!</code> version is ran before the <code>atinit</code>
-    <strong>ice-mod</strong> (i.e. before <code>zplugin ice atinit'echo this!'; …</code>), while
+    <strong>ice-mod</strong> (i.e. before <code>zinit ice atinit'echo this!'; …</code>), while
     the normal version runs after it.</p>
 </li>
 <li>

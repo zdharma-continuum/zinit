@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#crasis_semigraphical_interface_to_zplugin" tabindex="1" class="md-skip">
+      <a href="#crasis_semigraphical_interface_to_zinit" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -2647,9 +2647,9 @@
               
                 
                 
-                <h1 id="crasis_semigraphical_interface_to_zplugin">Crasis – semigraphical interface to Zplugin<a class="headerlink" href="#crasis_semigraphical_interface_to_zplugin" title="Permanent link">#</a></h1>
+                <h1 id="crasis_semigraphical_interface_to_zinit">Crasis – semigraphical interface to Zinit<a class="headerlink" href="#crasis_semigraphical_interface_to_zinit" title="Permanent link">#</a></h1>
 <p>Zsh exposes its parser via <code>(z)</code> substitution flag. Parsing <code>.zshrc</code> is totally
-possible. This way <code>Crasis</code> lets you edit your <code>Zplugin</code> commands located in
+possible. This way <code>Crasis</code> lets you edit your <code>Zinit</code> commands located in
 <code>.zshrc</code>. All in pure <code>Zshell</code> code.</p>
 <p>No more commenting-out a line with a text editor to disable plugin, cluttering
 <code>.zshrc</code>, now you can just <strong>press a button</strong>.</p>
@@ -2657,10 +2657,10 @@ possible. This way <code>Crasis</code> lets you edit your <code>Zplugin</code> c
 <p><code>Crasis</code> uses pure-Zshell <a href="http://github.com/zdharma/zui/"><strong>ZUI</strong></a> library to
 create <code>ncurses</code> interface.</p>
 <h2 id="installation_basic_use">Installation &amp; Basic Use<a class="headerlink" href="#installation_basic_use" title="Permanent link">#</a></h2>
-<p>Install <a href="https://github.com/zdharma/zplugin"><strong>Zplugin</strong></a> and add following
+<p>Install <a href="https://github.com/zdharma/zinit"><strong>Zinit</strong></a> and add following
 commands to <code>.zshrc</code>:</p>
-<pre><code class="SystemVerilog">zplugin light zdharma/zui
-zplugin light zdharma/zplugin-crasis
+<pre><code class="SystemVerilog">zinit light zdharma/zui
+zinit light zdharma/zinit-crasis
 </code></pre>
 
 <p>To use, invoke <code>crasis [optional zshrc path]</code> or press <code>Ctrl-o-k</code>. Global
@@ -2738,15 +2738,15 @@ configuration file <code>crasis.conf</code> (located in plugin's tree), i.e.:</p
 </tbody>
 </table>
 <h2 id="screenshots">Screenshots<a class="headerlink" href="#screenshots" title="Permanent link">#</a></h2>
-<p><img alt="clean-256" src="https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/clean-256.png" /></p>
-<p><img alt="zdharma-256" src="https://raw.githubusercontent.com/zdharma/zplugin-crasis/master/themes/screenshots/zdharma-256.png" /></p>
+<p><img alt="clean-256" src="https://raw.githubusercontent.com/zdharma/zinit-crasis/master/themes/screenshots/clean-256.png" /></p>
+<p><img alt="zdharma-256" src="https://raw.githubusercontent.com/zdharma/zinit-crasis/master/themes/screenshots/zdharma-256.png" /></p>
 <h2 id="code_documentation">Code Documentation<a class="headerlink" href="#code_documentation" title="Permanent link">#</a></h2>
 <p><code>Crasis</code> is a <a href="http://github.com/zdharma/zui/"><strong>ZUI</strong></a> application. <code>ZUI</code> is a
 pure-Zshell library where user generates simple text with hyperlinks, which is
 then turned into active document with buttons. Check out <code>Crasis</code> code
 documentation:
-<a href="https://github.com/zdharma/zplugin-crasis/blob/master/zsdoc/crasis.adoc"><strong>Asciidoc</strong></a>,
-<a href="http://zdharma.org/zplugin-crasis/crasis.pdf"><strong>PDF</strong></a>.</p>
+<a href="https://github.com/zdharma/zinit-crasis/blob/master/zsdoc/crasis.adoc"><strong>Asciidoc</strong></a>,
+<a href="http://zdharma.org/zinit-crasis/crasis.pdf"><strong>PDF</strong></a>.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   

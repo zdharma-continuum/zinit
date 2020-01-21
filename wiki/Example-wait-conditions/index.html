@@ -2259,8 +2259,8 @@
 <p class="admonition-title">Note</p>
 <p><strong>Turbo mode, i.e. the <code>wait</code> ice that implements it needs Zsh &gt;= 5.3.</strong></p>
 </div>
-<pre><code class="zsh">zplugin ice wait'0' # or just: zplugin ice wait
-zplugin light wfxr/forgit
+<pre><code class="zsh">zinit ice wait'0' # or just: zinit ice wait
+zinit light wfxr/forgit
 </code></pre>
 
 <ul>
@@ -2268,21 +2268,21 @@ zplugin light wfxr/forgit
 <li>instantly ("0" seconds) after prompt loads given plugin.</li>
 </ul>
 <hr />
-<pre><code class="zsh">zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
-zplugin light zdharma/zplugin-crasis
+<pre><code class="zsh">zinit ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
+zinit light zdharma/zinit-crasis
 </code></pre>
 
 <ul>
 <li><code>$ZLAST_COMMANDS</code> is an array build by <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a>, it contains commands currently entered at prompt,</li>
 <li><code>(r)</code> searches for element that matches given pattern (<code>cras*</code>) and returns it,</li>
 <li><code>-n</code> means: not-empty, so it will be true when users enters "cras",</li>
-<li>after 1 second or less, Zplugin will detect that <code>wait''</code> condition is true, and load the plugin, which provides command <em>crasis</em>,</li>
+<li>after 1 second or less, Zinit will detect that <code>wait''</code> condition is true, and load the plugin, which provides command <em>crasis</em>,</li>
 <li>Screencast that presents the feature:
     <a href="https://asciinema.org/a/149725"><img alt="screencast" src="https://asciinema.org/a/149725.svg" /></a></li>
 </ul>
 <hr />
-<pre><code class="zsh">zplugin ice wait'[[ $PWD = */github || $PWD = */github/* ]]'
-zplugin load unixorn/git-extra-commands
+<pre><code class="zsh">zinit ice wait'[[ $PWD = */github || $PWD = */github/* ]]'
+zinit load unixorn/git-extra-commands
 </code></pre>
 
 <ul>
@@ -2291,10 +2291,10 @@ zplugin load unixorn/git-extra-commands
 <hr />
 <p>Turbo mode also support a suffix – the letter <code>a</code>, <code>b</code> or <code>c</code>. The meaning is
 illustrated by the following example:</p>
-<pre><code>zplugin ice wait&quot;0b&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 1&quot; lucid
-zplugin light mfaerevaag/wd
-zplugin ice wait&quot;0a&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 2&quot; lucid
-zplugin light mfaerevaag/wd
+<pre><code>zinit ice wait&quot;0b&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 1&quot; lucid
+zinit light mfaerevaag/wd
+zinit ice wait&quot;0a&quot; as&quot;command&quot; pick&quot;wd.sh&quot; atinit&quot;echo Firing 2&quot; lucid
+zinit light mfaerevaag/wd
 
 # The output
 Firing 2
@@ -2307,7 +2307,7 @@ loadings can be put into. Plugins from the same time-slot with suffix <code>a</c
 be loaded before plugins with suffix <code>b</code>, etc.</p>
 <p>In other words, instead of <code>wait'1'</code> you can enter <code>wait'1a'</code>, <code>wait'1b'</code> and
 <code>wait'1c'</code> – to this way <strong>impose order</strong> on the loadings <strong>regardless of the
-order of <code>zplugin</code> commands</strong>. </p>
+order of <code>zinit</code> commands</strong>. </p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   

@@ -2255,9 +2255,9 @@
                 
                   <h1>Profiling Plugins</h1>
                 
-                <pre><code class="zsh">zplugin ice atinit'zmodload zsh/zprof' \
+                <pre><code class="zsh">zinit ice atinit'zmodload zsh/zprof' \
     atload'zprof | head -n 20; zmodload -u zsh/zprof'
-zplugin light zdharma/fast-syntax-highlighting
+zinit light zdharma/fast-syntax-highlighting
 </code></pre>
 
 <ul>
@@ -2268,8 +2268,8 @@ zplugin light zdharma/fast-syntax-highlighting
    single plugin (in this case <code>zdharma/fast-syntax-highlighting</code>) will be
    profiled while the rest of the e.g. zshrc processing will go on completely
    normally,</li>
-<li>the <code>light</code> loads without reporting enabled, so less Zplugin code is being
-   run – no Zplugin code responsible for the tracking (i.e. the automatic data
+<li>the <code>light</code> loads without reporting enabled, so less Zinit code is being
+   run – no Zinit code responsible for the tracking (i.e. the automatic data
    gathering, during loading of a plugin, for the reports and the possibility to
    unload the plugin) will be activated and the functions will not appear in the
    <code>zprof</code> report.</li>

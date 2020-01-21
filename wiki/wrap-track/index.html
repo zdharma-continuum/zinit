@@ -2526,7 +2526,7 @@ function. For example,
 <a href="https://github.com/romkatv/powerlevel10k"><strong>romkatv/powerlevel10k</strong></a> works this
 way.</p>
 <p>The ice takes a list of function names, with the elements separated by <code>;</code>:</p>
-<pre><code class="zsh">zplugin ice wrap-track&quot;func1;func2;…&quot; …
+<pre><code class="zsh">zinit ice wrap-track&quot;func1;func2;…&quot; …
 …
 </code></pre>
 
@@ -2537,9 +2537,9 @@ function of the plugin – called <code>_p9k_precmd</code> (to get the name of t
 do <code>echo $precmd_functions</code> after loading a theme) – should be passed to
 <code>wrap-track''</code> ice, like so:</p>
 <pre><code class="zsh"># Load when MYPROMPT == 4
-zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
+zinit ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
             atload'source ~/.p10k.zsh; _p9k_precmd' wrap-track'_p9k_precmd'
-zplugin load romkatv/powerlevel10k
+zinit load romkatv/powerlevel10k
 </code></pre>
 
 <p>This way the actions done during the first call to <code>_p9k_precmd()</code> will be

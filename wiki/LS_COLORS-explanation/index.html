@@ -2263,12 +2263,12 @@ $HOME/LS_COLORS)</code> to process this file and set environment for <code>ls</c
 this means <code>dircolors</code> is ran every shell startup.</p>
 <p>This costs much time, because a fork has to be done and the program (i.e.
 <code>dircolors</code>) binary needs to be loaded and executed, and because <code>dircolors</code>
-loads the colors' definitions and processes them. Following Zplugin invocation
+loads the colors' definitions and processes them. Following Zinit invocation
 solves this problem:</p>
-<pre><code class="zsh">zplugin ice atclone&quot;dircolors -b LS_COLORS &gt; clrs.zsh&quot; \
+<pre><code class="zsh">zinit ice atclone&quot;dircolors -b LS_COLORS &gt; clrs.zsh&quot; \
     atpull'%atclone' pick&quot;clrs.zsh&quot; nocompile'!' \
     atload'zstyle &quot;:completion:*&quot; list-colors “${(s.:.)LS_COLORS}”'
-zplugin light trapd00r/LS_COLORS
+zinit light trapd00r/LS_COLORS
 </code></pre>
 
 <ul>

@@ -2329,20 +2329,20 @@ include:</p>
 </li>
 </ol>
 <pre><code class="zsh"># Load within zshrc – for the instant prompt
-zplugin atload'!source ~/.p10k.zsh' lucid nocd
-zplugin load romkatv/powerlevel10k
+zinit atload'!source ~/.p10k.zsh' lucid nocd
+zinit load romkatv/powerlevel10k
 
-# Load ~/.p10k_zplugin.zsh when in ~/github/zplugin.git
-zplugin id-as'zplugin-prompt' nocd lucid \
-    unload'[[ $PWD != */zplugin.git(|/*) ]]' \
-    load'![[ $PWD = */zplugin.git(|/*) ]]' \
-    atload'!source ~/.p10k_zplugin.zsh; _p9k_precmd' for \
+# Load ~/.p10k_zinit.zsh when in ~/github/zinit.git
+zinit id-as'zinit-prompt' nocd lucid \
+    unload'[[ $PWD != */zinit.git(|/*) ]]' \
+    load'![[ $PWD = */zinit.git(|/*) ]]' \
+    atload'!source ~/.p10k_zinit.zsh; _p9k_precmd' for \
         zdharma/null
 
 # Load ~/.p10k.zsh when in any other directory
-zplugin id-as'normal-prompt' nocd lucid \
-    unload'[[ $PWD = */zplugin.git(|/*) ]]' \
-    load'![[ $PWD != */zplugin.git(|/*) ]]' \
+zinit id-as'normal-prompt' nocd lucid \
+    unload'[[ $PWD = */zinit.git(|/*) ]]' \
+    load'![[ $PWD != */zinit.git(|/*) ]]' \
     atload'!source ~/.p10k.zsh; _p9k_precmd' for \
         zdharma/null
 </code></pre>

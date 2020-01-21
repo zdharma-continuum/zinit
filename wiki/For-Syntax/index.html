@@ -2583,16 +2583,16 @@
                 
                 <h1 id="the_for-syntax">The For-Syntax<a class="headerlink" href="#the_for-syntax" title="Permanent link">#</a></h1>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>The <a href="../INTRODUCTION/">Introduction</a> covers the classic Zplugin invocation
+<p>The <a href="../INTRODUCTION/">Introduction</a> covers the classic Zinit invocation
 syntax, which is:</p>
-<pre><code class="zsh">zplugin ice …
-zplugin load … # or zplugin light, zplugin snippet
+<pre><code class="zsh">zinit ice …
+zinit load … # or zinit light, zinit snippet
 </code></pre>
 
-<p>It is a fundamental Zplugin syntax. However, a more concise, optimized syntax,
+<p>It is a fundamental Zinit syntax. However, a more concise, optimized syntax,
 called <em>for-syntax</em>, is also available. It is best presented by a real-world
 example:</p>
-<pre><code class="zsh">zplugin as&quot;null&quot; wait&quot;3&quot; lucid for \
+<pre><code class="zsh">zinit as&quot;null&quot; wait&quot;3&quot; lucid for \
     sbin  Fakerr/git-recall \
     sbin  paulirish/git-open \
     sbin  paulirish/git-recent \
@@ -2613,30 +2613,30 @@ ices <code>as"null" wait"3" lucid</code> that are common to all of the plugins a
   plugin by default) use the <code>is-snippet</code> ice,</li>
 <li>To load a plugin in <code>light</code> mode use the <code>light-mode</code> ice.</li>
 <li>If the plugin name collides with an ice name, precede the plugin name with
-  <code>@</code>, e.g.: <code>@sharkdp/fd</code> (collides with the <code>sh</code> ice, Zplugin will take the
+  <code>@</code>, e.g.: <code>@sharkdp/fd</code> (collides with the <code>sh</code> ice, Zinit will take the
   plugin name as <code>sh"arkdp/fd"</code>), see the next section for an example.</li>
 </ul>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h2>
 <p>Load a few useful binary (i.e.: binary packages from the GitHub Releases) utils:</p>
-<pre><code class="zsh">zplugin as&quot;null&quot; wait&quot;2&quot; lucid from&quot;gh-r&quot; for \
+<pre><code class="zsh">zinit as&quot;null&quot; wait&quot;2&quot; lucid from&quot;gh-r&quot; for \
     mv&quot;exa* -&gt; exa&quot; sbin       ogham/exa \
     mv&quot;fd* -&gt; fd&quot; sbin&quot;fd/fd&quot;  @sharkdp/fd \
     sbin&quot;fzf&quot;  junegunn/fzf-bin
 </code></pre>
 
 <p>Note: <code>sbin''</code> is an ice added by the
-<a href="https://github.com/zplugin/z-a-bin-gem-node">z-a-bin-gem-node</a> annex, it
+<a href="https://github.com/zinit/z-a-bin-gem-node">z-a-bin-gem-node</a> annex, it
 provides the command to the command line without altering <code>$PATH</code>. If the name
 of the command is the same as the name of the plugin, the ice contents can be
 skipped.</p>
 <p>Turbo load some plugins, without any plugin-specific ices:</p>
-<pre><code class="zsh">zplugin wait lucid for \
+<pre><code class="zsh">zinit wait lucid for \
             hlissner/zsh-autopair \
             urbainvaes/fzf-marks
 </code></pre>
 
 <p>Load two Oh My Zsh files as snippets, in Turbo:</p>
-<pre><code class="zsh">zplugin wait lucid for \
+<pre><code class="zsh">zinit wait lucid for \
                         OMZ::lib/git.zsh \
     atload&quot;unalias grv&quot; OMZ::plugins/git/git.plugin.zsh
 </code></pre>

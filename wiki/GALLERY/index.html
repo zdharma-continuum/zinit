@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#gallery_of_zplugin_invocations" tabindex="1" class="md-skip">
+      <a href="#gallery_of_zinit_invocations" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -2845,253 +2845,253 @@
               
                 
                 
-                <h1 id="gallery_of_zplugin_invocations">Gallery Of Zplugin Invocations<a class="headerlink" href="#gallery_of_zplugin_invocations" title="Permanent link">#</a></h1>
+                <h1 id="gallery_of_zinit_invocations">Gallery Of Zinit Invocations<a class="headerlink" href="#gallery_of_zinit_invocations" title="Permanent link">#</a></h1>
 <p>PRs welcomed :)</p>
 <h2 id="programs">Programs<a class="headerlink" href="#programs" title="Permanent link">#</a></h2>
-<pre><code class="zsh">zplugin ice from&quot;gh-r&quot; as&quot;program&quot;
-zplugin light junegunn/fzf-bin
+<pre><code class="zsh">zinit ice from&quot;gh-r&quot; as&quot;program&quot;
+zinit light junegunn/fzf-bin
 
 # sharkdp/fd
-zplugin ice as&quot;command&quot; from&quot;gh-r&quot; mv&quot;fd* -&gt; fd&quot; pick&quot;fd/fd&quot;
-zplugin light sharkdp/fd
+zinit ice as&quot;command&quot; from&quot;gh-r&quot; mv&quot;fd* -&gt; fd&quot; pick&quot;fd/fd&quot;
+zinit light sharkdp/fd
 
 # sharkdp/bat
-zplugin ice as&quot;command&quot; from&quot;gh-r&quot; mv&quot;bat* -&gt; bat&quot; pick&quot;bat/bat&quot;
-zplugin light sharkdp/bat
+zinit ice as&quot;command&quot; from&quot;gh-r&quot; mv&quot;bat* -&gt; bat&quot; pick&quot;bat/bat&quot;
+zinit light sharkdp/bat
 
 # ogham/exa, replacement for ls
-zplugin ice wait&quot;2&quot; lucid from&quot;gh-r&quot; as&quot;program&quot; mv&quot;exa* -&gt; exa&quot;
-zplugin light ogham/exa
+zinit ice wait&quot;2&quot; lucid from&quot;gh-r&quot; as&quot;program&quot; mv&quot;exa* -&gt; exa&quot;
+zinit light ogham/exa
 
-zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;docker* -&gt; docker-compose&quot;
-zplugin light docker/compose
+zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;docker* -&gt; docker-compose&quot;
+zinit light docker/compose
 
-zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
+zinit ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
     atpull&quot;%atclone&quot; make pick&quot;src/vim&quot;
-zplugin light vim/vim
+zinit light vim/vim
 
-zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
+zinit ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
     atpull'%atclone' src&quot;zhook.zsh&quot;
-zplugin light direnv/direnv
+zinit light direnv/direnv
 
-zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot;
-zplugin light direnv/direnv
+zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot;
+zinit light direnv/direnv
 
-zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;shfmt* -&gt; shfmt&quot;
-zplugin light mvdan/sh
+zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;shfmt* -&gt; shfmt&quot;
+zinit light mvdan/sh
 
-zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;gotcha_* -&gt; gotcha&quot;
-zplugin light b4b4r07/gotcha
+zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;gotcha_* -&gt; gotcha&quot;
+zinit light b4b4r07/gotcha
 
-zplugin ice as&quot;program&quot; pick&quot;yank&quot; make
-zplugin light mptre/yank
+zinit ice as&quot;program&quot; pick&quot;yank&quot; make
+zinit light mptre/yank
 
-zplugin ice wait&quot;2&quot; lucid as'command' pick'src/vramsteg' \
+zinit ice wait&quot;2&quot; lucid as'command' pick'src/vramsteg' \
     atclone'cmake .' atpull'%atclone' make  # use Turbo mode
-zplugin light psprint/vramsteg-zsh
+zinit light psprint/vramsteg-zsh
 
-zplugin ice atclone'PYENV_ROOT=&quot;$PWD&quot; ./libexec/pyenv init - &gt; zpyenv.zsh' \
+zinit ice atclone'PYENV_ROOT=&quot;$PWD&quot; ./libexec/pyenv init - &gt; zpyenv.zsh' \
     atinit'export PYENV_ROOT=&quot;$PWD&quot;' atpull&quot;%atclone&quot; \
     as'command' pick'bin/pyenv' src&quot;zpyenv.zsh&quot; nocompile'!'
-zplugin light pyenv/pyenv
+zinit light pyenv/pyenv
 
-zplugin ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdkman' run-atpull \
+zinit ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdkman' run-atpull \
     atclone&quot;wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh&quot; \
     atpull&quot;SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate&quot; \
     atinit&quot;export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh&quot;
-zplugin light zdharma/null
+zinit light zdharma/null
 
 # asciinema
-zplugin ice as&quot;command&quot; wait lucid \
+zinit ice as&quot;command&quot; wait lucid \
     atinit&quot;export PYTHONPATH=$ZPFX/lib/python3.7/site-packages/&quot; \
     atclone&quot;PYTHONPATH=$ZPFX/lib/python3.7/site-packages/ \
     python3 setup.py --quiet install --prefix $ZPFX&quot; \
     atpull'%atclone' test'0' \
     pick&quot;$ZPFX/bin/asciinema&quot;
-zplugin load asciinema/asciinema.git
+zinit load asciinema/asciinema.git
 </code></pre>
 
 <h2 id="completions">Completions<a class="headerlink" href="#completions" title="Permanent link">#</a></h2>
-<pre><code class="zsh">zplugin ice as&quot;completion&quot;
-zplugin snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+<pre><code class="zsh">zinit ice as&quot;completion&quot;
+zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 </code></pre>
 
 <h2 id="scripts">Scripts<a class="headerlink" href="#scripts" title="Permanent link">#</a></h2>
 <pre><code class="zsh"># ogham/exa also uses the definitions
-zplugin ice wait&quot;0c&quot; lucid reset \
+zinit ice wait&quot;0c&quot; lucid reset \
     atclone&quot;local P=${${(M)OSTYPE:#*darwin*}:+g}
             \${P}sed -i \
             '/DIR/c\DIR 38;5;63;1' LS_COLORS; \
             \${P}dircolors -b LS_COLORS &gt; c.zsh&quot; \
     atpull'%atclone' pick&quot;c.zsh&quot; nocompile'!' \
     atload'zstyle &quot;:completion:*&quot; list-colors “${(s.:.)LS_COLORS}”'
-zplugin light trapd00r/LS_COLORS
+zinit light trapd00r/LS_COLORS
 
 # revolver
-zplugin ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;revolver&quot;
-zplugin light molovo/revolver
+zinit ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;revolver&quot;
+zinit light molovo/revolver
 
 # zunit
-zplugin ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;zunit&quot; \
+zinit ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;zunit&quot; \
             atclone&quot;./build.zsh&quot; atpull&quot;%atclone&quot;
-zplugin load molovo/zunit
+zinit load molovo/zunit
 
-zplugin ice as&quot;program&quot; pick&quot;$ZPFX/bin/git-*&quot; make&quot;PREFIX=$ZPFX&quot; nocompile
-zplugin light tj/git-extras
+zinit ice as&quot;program&quot; pick&quot;$ZPFX/bin/git-*&quot; make&quot;PREFIX=$ZPFX&quot; nocompile
+zinit light tj/git-extras
 
-zplugin ice as&quot;program&quot; atclone'perl Makefile.PL PREFIX=$ZPFX' \
+zinit ice as&quot;program&quot; atclone'perl Makefile.PL PREFIX=$ZPFX' \
     atpull'%atclone' make'install' pick&quot;$ZPFX/bin/git-cal&quot;
-zplugin light k4rthik/git-cal
+zinit light k4rthik/git-cal
 
-zplugin ice as&quot;program&quot; id-as&quot;git-unique&quot; pick&quot;git-unique&quot;
-zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+zinit ice as&quot;program&quot; id-as&quot;git-unique&quot; pick&quot;git-unique&quot;
+zinit snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 
-zplugin ice as&quot;program&quot; cp&quot;wd.sh -&gt; wd&quot; mv&quot;_wd.sh -&gt; _wd&quot; \
+zinit ice as&quot;program&quot; cp&quot;wd.sh -&gt; wd&quot; mv&quot;_wd.sh -&gt; _wd&quot; \
     atpull'!git reset --hard' pick&quot;wd&quot;
-zplugin light mfaerevaag/wd
+zinit light mfaerevaag/wd
 
-zplugin ice as&quot;program&quot; pick&quot;bin/archey&quot;
-zplugin load obihann/archey-osx
+zinit ice as&quot;program&quot; pick&quot;bin/archey&quot;
+zinit load obihann/archey-osx
 </code></pre>
 
 <h2 id="plugins">Plugins<a class="headerlink" href="#plugins" title="Permanent link">#</a></h2>
-<pre><code class="zsh">zplugin ice pick&quot;h.sh&quot;
-zplugin light paoloantinori/hhighlighter
+<pre><code class="zsh">zinit ice pick&quot;h.sh&quot;
+zinit light paoloantinori/hhighlighter
 
 # zsh-tag-search; after ^G, prepend with &quot;/&quot; for the regular search
-zplugin ice wait lucid bindmap&quot;^R -&gt; ^G&quot;
-zplugin light -b zdharma/zsh-tag-search
+zinit ice wait lucid bindmap&quot;^R -&gt; ^G&quot;
+zinit light -b zdharma/zsh-tag-search
 
 # forgit
-zplugin ice wait lucid
-zplugin load 'wfxr/forgit'
+zinit ice wait lucid
+zinit load 'wfxr/forgit'
 
 # diff-so-fancy
-zplugin ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;bin/git-dsf&quot;
-zplugin load zdharma/zsh-diff-so-fancy
+zinit ice wait&quot;2&quot; lucid as&quot;program&quot; pick&quot;bin/git-dsf&quot;
+zinit load zdharma/zsh-diff-so-fancy
 
 # zsh-startify, a vim-startify like plugin
-zplugin ice wait&quot;0b&quot; lucid atload&quot;zsh-startify&quot;
-zplugin load zdharma/zsh-startify
+zinit ice wait&quot;0b&quot; lucid atload&quot;zsh-startify&quot;
+zinit load zdharma/zsh-startify
 
 # declare-zsh
-zplugin ice wait&quot;2&quot; lucid
-zplugin load zdharma/declare-zsh
+zinit ice wait&quot;2&quot; lucid
+zinit load zdharma/declare-zsh
 
 # fzf-marks
-zplugin ice wait lucid
-zplugin load urbainvaes/fzf-marks
+zinit ice wait lucid
+zinit load urbainvaes/fzf-marks
 
 # zsh-autopair
-zplugin ice wait lucid
-zplugin load hlissner/zsh-autopair
+zinit ice wait lucid
+zinit load hlissner/zsh-autopair
 
-zplugin ice wait&quot;1&quot; lucid
-zplugin load psprint/zsh-navigation-tools
+zinit ice wait&quot;1&quot; lucid
+zinit load psprint/zsh-navigation-tools
 
 # zdharma/history-search-multi-word
 zstyle &quot;:history-search-multi-word&quot; page-size &quot;11&quot;
-zplugin ice wait&quot;1&quot; lucid
-zplugin load zdharma/history-search-multi-word
+zinit ice wait&quot;1&quot; lucid
+zinit load zdharma/history-search-multi-word
 
 # ZUI and Crasis
-zplugin ice wait&quot;1&quot; lucid
-zplugin load zdharma/zui
+zinit ice wait&quot;1&quot; lucid
+zinit load zdharma/zui
 
-zplugin ice wait'[[ -n ${ZLAST_COMMANDS[(r)cra*]} ]]' lucid
-zplugin load zdharma/zplugin-crasis
+zinit ice wait'[[ -n ${ZLAST_COMMANDS[(r)cra*]} ]]' lucid
+zinit load zdharma/zinit-crasis
 
 # Gitignore plugin – commands gii and gi
-zplugin ice wait&quot;2&quot; lucid
-zplugin load voronkovich/gitignore.plugin.zsh
+zinit ice wait&quot;2&quot; lucid
+zinit load voronkovich/gitignore.plugin.zsh
 
 # Autosuggestions &amp; fast-syntax-highlighting
-zplugin ice wait&quot;1&quot; lucid atinit&quot;ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay&quot;
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait&quot;1&quot; lucid atinit&quot;ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay&quot;
+zinit light zdharma/fast-syntax-highlighting
 # zsh-autosuggestions
-zplugin ice wait&quot;1&quot; lucid atload&quot;!_zsh_autosuggest_start&quot;
-zplugin load zsh-users/zsh-autosuggestions
+zinit ice wait&quot;1&quot; lucid atload&quot;!_zsh_autosuggest_start&quot;
+zinit load zsh-users/zsh-autosuggestions
 
 # F-Sy-H automatic themes plugin – available for patrons:
 # https://patreon.com/psprint
-zplugin ice wait&quot;1&quot; lucid from&quot;psprint@gitlab.com&quot;
-zplugin load psprint/fsh-auto-themes
+zinit ice wait&quot;1&quot; lucid from&quot;psprint@gitlab.com&quot;
+zinit load psprint/fsh-auto-themes
 
 # zredis together with some binding/tying
 # – defines the variable $rdhash
 zstyle &quot;:plugin:zredis&quot; configure_opts &quot;--without-tcsetpgrp&quot;
 zstyle &quot;:plugin:zredis&quot; cflags  &quot;-Wall -O2 -g -Wno-unused-but-set-variable&quot;
-zplugin ice wait&quot;1&quot; lucid \
+zinit ice wait&quot;1&quot; lucid \
     atload'ztie -d db/redis -a 127.0.0.1:4815/5 -zSL main rdhash'
-zplugin load zdharma/zredis
+zinit load zdharma/zredis
 
 # Github-Issue-Tracker – the notifier thread
-zplugin ice lucid id-as&quot;GitHub-notify&quot; \
+zinit ice lucid id-as&quot;GitHub-notify&quot; \
         on-update-of'~/.cache/zsh-github-issues/new_titles.log' \
         notify'New issue: $NOTIFY_MESSAGE'
-zplugin light zdharma/zsh-github-issues
+zinit light zdharma/zsh-github-issues
 </code></pre>
 
 <h2 id="services">Services<a class="headerlink" href="#services" title="Permanent link">#</a></h2>
 <pre><code class="zsh"># a service that runs the redis database, in background, single instance
-zplugin ice wait&quot;1&quot; lucid service&quot;redis&quot;
-zplugin light zservices/redis
+zinit ice wait&quot;1&quot; lucid service&quot;redis&quot;
+zinit light zservices/redis
 </code></pre>
 
 <pre><code class="zsh"># Github-Issue-Tracker – the issue-puller thread
 GIT_SLEEP_TIME=700
-GIT_PROJECTS=zdharma/zsh-github-issues:zdharma/zplugin
+GIT_PROJECTS=zdharma/zsh-github-issues:zdharma/zinit
 
-zplugin ice wait&quot;2&quot; lucid service&quot;GIT&quot; pick&quot;zsh-github-issues.service.zsh&quot;
-zplugin light zdharma/zsh-github-issues
+zinit ice wait&quot;2&quot; lucid service&quot;GIT&quot; pick&quot;zsh-github-issues.service.zsh&quot;
+zinit light zdharma/zsh-github-issues
 </code></pre>
 
 <h2 id="snippets">Snippets<a class="headerlink" href="#snippets" title="Permanent link">#</a></h2>
-<pre><code class="zsh">zplugin ice svn pick&quot;completion.zsh&quot; src&quot;git.zsh&quot;
-zplugin snippet OMZ::lib
+<pre><code class="zsh">zinit ice svn pick&quot;completion.zsh&quot; src&quot;git.zsh&quot;
+zinit snippet OMZ::lib
 
-zplugin ice svn wait&quot;0&quot; lucid atinit&quot;local ZSH=\$PWD&quot; \
+zinit ice svn wait&quot;0&quot; lucid atinit&quot;local ZSH=\$PWD&quot; \
     atclone&quot;mkdir -p plugins; cd plugins; ln -sfn ../. osx&quot;
-zplugin snippet OMZ::plugins/osx
+zinit snippet OMZ::plugins/osx
 
-# Or with most recent Zplugin and with ~/.zplugin/snippets
+# Or with most recent Zinit and with ~/.zinit/snippets
 # directory pruned (rm -rf -- ${ZPLGM[SNIPPETS_DIR]}):
-zplugin ice svn
-zplugin snippet OMZ::plugins/osx
+zinit ice svn
+zinit snippet OMZ::plugins/osx
 </code></pre>
 
 <h2 id="themes">Themes<a class="headerlink" href="#themes" title="Permanent link">#</a></h2>
 <pre><code class="zsh">GEOMETRY_COLOR_DIR=152
-zplugin ice wait&quot;0&quot; lucid atload&quot;geometry::prompt&quot;
-zplugin light geometry-zsh/geometry
+zinit ice wait&quot;0&quot; lucid atload&quot;geometry::prompt&quot;
+zinit light geometry-zsh/geometry
 
-zplugin ice pick&quot;async.zsh&quot; src&quot;pure.zsh&quot;
-zplugin light sindresorhus/pure
+zinit ice pick&quot;async.zsh&quot; src&quot;pure.zsh&quot;
+zinit light sindresorhus/pure
 
-zplugin light mafredri/zsh-async  # dependency
-zplugin ice svn silent atload'prompt sorin'
-zplugin snippet PZT::modules/prompt
+zinit light mafredri/zsh-async  # dependency
+zinit ice svn silent atload'prompt sorin'
+zinit snippet PZT::modules/prompt
 
-zplugin ice atload&quot;fpath+=( \$PWD );&quot;
-zplugin light chauncey-garrett/zsh-prompt-garrett
-zplugin ice svn atload&quot;prompt garrett&quot; silent
-zplugin snippet PZT::modules/prompt
+zinit ice atload&quot;fpath+=( \$PWD );&quot;
+zinit light chauncey-garrett/zsh-prompt-garrett
+zinit ice svn atload&quot;prompt garrett&quot; silent
+zinit snippet PZT::modules/prompt
 
-zplugin ice wait'!' lucid nocompletions \
+zinit ice wait'!' lucid nocompletions \
          compile&quot;{zinc_functions/*,segments/*,zinc.zsh}&quot; \
          atload'!prompt_zinc_setup; prompt_zinc_precmd'
-zplugin load robobenklein/zinc
+zinit load robobenklein/zinc
 
 # ZINC git info is already async, but if you want it
 # even faster with gitstatus in Turbo mode:
 # https://github.com/romkatv/gitstatus
-zplugin ice wait'1' atload'zinc_optional_depenency_loaded'
-zplugin load romkatv/gitstatus
+zinit ice wait'1' atload'zinc_optional_depenency_loaded'
+zinit load romkatv/gitstatus
 
 # After finishing the configuration wizard change the atload'' ice to:
 # -&gt; atload'source ~/.p10k.zsh; _p9k_precmd'
-zplugin ice wait'!' lucid atload'true; _p9k_precmd' nocd
-zplugin light romkatv/powerlevel10k
+zinit ice wait'!' lucid atload'true; _p9k_precmd' nocd
+zinit light romkatv/powerlevel10k
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>

@@ -2715,7 +2715,7 @@
                 
                 <h1 id="z-a-bin-gem-node">z-a-bin-gem-node<a class="headerlink" href="#z-a-bin-gem-node" title="Permanent link">#</a></h1>
 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>A Zsh-Zplugin annex (i.e. an extension) that provides functionality, which
+<p>A Zsh-Zinit annex (i.e. an extension) that provides functionality, which
 allows to:</p>
 <ol>
 <li>Run programs and scripts without adding anything to <code>$PATH</code>,</li>
@@ -2738,18 +2738,18 @@ allows to:</p>
      <strong>script</strong> created in <code>$ZPFX/bin</code>, not a <strong>function</strong> (the first item
      uses a function-based mechanism),</li>
 <li>Automatic updates of Ruby gems and Node modules during regular plugin and
-     snippet updates with <code>zplugin update …</code>.</li>
+     snippet updates with <code>zinit update …</code>.</li>
 </ol>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
 <p>Simply load like a regular plugin, i.e.:</p>
-<pre><code class="zsh">zplugin light zplugin/z-a-bin-gem-node
+<pre><code class="zsh">zinit light zinit/z-a-bin-gem-node
 </code></pre>
 
 <p>After executing this command you can then use the dl'' and patch'' ice-mods.</p>
 <h2 id="how_it_works_birds-eye_view">How it works – bird's-eye view<a class="headerlink" href="#how_it_works_birds-eye_view" title="Permanent link">#</a></h2>
 <p>Below is a diagram explaining the major feature – exposing a binary program
 or script through a Zsh function of the same name:</p>
-<p><img alt="diagram" src="https://raw.githubusercontent.com/zplugin/z-a-bin-gem-node/master/images/diag.png" /></p>
+<p><img alt="diagram" src="https://raw.githubusercontent.com/zinit/z-a-bin-gem-node/master/images/diag.png" /></p>
 <p>This way there is no need to add anything to <code>$PATH</code> – <code>z-a-bin-gem-node</code>
 will automatically create a function that will wrap the binary and provide it
 on the command line like if it was being placed in the <code>$PATH</code>.</p>
@@ -2765,26 +2765,26 @@ the same functionality.</p>
 Releases, which contains only single file – the <code>fzf</code> binary for the selected
 architecture. It is possible to do it in the standard way – by adding the
 plugin's directory to the <code>$PATH</code>:</p>
-<pre><code class="zsh">zplugin ice as&quot;command&quot; from&quot;github-rel&quot;
-zplugin load junegunn/fzf-bin
+<pre><code class="zsh">zinit ice as&quot;command&quot; from&quot;github-rel&quot;
+zinit load junegunn/fzf-bin
 </code></pre>
 
 <p>After this command, the <code>$PATH</code> variable will contain e.g.:</p>
 <pre><code class="zsh">% print $PATH
-/home/sg/.zplugin/plugins/junegunn---fzf-bin:/bin:/usr/bin:/usr/sbin:/sbin
+/home/sg/.zinit/plugins/junegunn---fzf-bin:/bin:/usr/bin:/usr/sbin:/sbin
 </code></pre>
 
 <p>For many such programs loaded as plugins the PATH can become quite cluttered.
 I've had 26 entries before switching to <code>z-a-bin-gem-node</code>. To solve this,
 load with use of <code>fbin''</code> ice provided and handled by <code>z-a-bin-gem-node</code>:</p>
-<pre><code class="zsh">zplugin ice from&quot;gh-r&quot; fbin&quot;fzf&quot;
-zplugin load junegunn/fzf-bin
+<pre><code class="zsh">zinit ice from&quot;gh-r&quot; fbin&quot;fzf&quot;
+zinit load junegunn/fzf-bin
 </code></pre>
 
 <p>The <code>$PATH</code> will remain unchanged and an <code>fzf</code> function will be created:</p>
 <pre><code class="zsh">% which fzf
 fzf () {
-        local bindir=&quot;/home/sg/.zplugin/plugins/junegunn---fzf-bin&quot;
+        local bindir=&quot;/home/sg/.zinit/plugins/junegunn---fzf-bin&quot;
         &quot;$bindir&quot;/&quot;fzf&quot; &quot;$@&quot;
 }
 </code></pre>
@@ -2823,12 +2823,12 @@ path or as <code>{name-of-the-function}</code>. The optional preceding flags mea
     standard output to <code>/dev/null</code>.</li>
 </ul>
 <p>Example:</p>
-<pre><code class="zsh">% zplugin ice from&quot;gh-r&quot; fbin&quot;g:fzf -&gt; myfzf&quot;
-% zplugin load junegunn/fzf-bin
+<pre><code class="zsh">% zinit ice from&quot;gh-r&quot; fbin&quot;g:fzf -&gt; myfzf&quot;
+% zinit load junegunn/fzf-bin
 % which myfzf
 myfzf () {
-        local bindir=&quot;/home/sg/.zplugin/plugins/junegunn---fzf-bin&quot;
-        local -x GEM_HOME=&quot;/home/sg/.zplugin/plugins/junegunn---fzf-bin&quot;
+        local bindir=&quot;/home/sg/.zinit/plugins/junegunn---fzf-bin&quot;
+        local -x GEM_HOME=&quot;/home/sg/.zinit/plugins/junegunn---fzf-bin&quot;
         &quot;$bindir&quot;/&quot;fzf&quot; &quot;$@&quot;
 }
 </code></pre>
@@ -2842,12 +2842,12 @@ installed locally in that directory.</p>
 <p>In the second form it also creates a wrapper function identical to the one
 created with <code>fbin''</code> ice.</p>
 <p>Example:</p>
-<pre><code class="zsh">% zplugin ice gem'!asciidoctor'
-% zplugin load zdharma/null
+<pre><code class="zsh">% zinit ice gem'!asciidoctor'
+% zinit load zdharma/null
 % which asciidoctor
 asciidoctor () {
-        local bindir=&quot;/home/sg/.zplugin/plugins/zdharma---null/bin&quot; 
-        local -x GEM_HOME=&quot;/home/sg/.zplugin/plugins/zdharma---null&quot; 
+        local bindir=&quot;/home/sg/.zinit/plugins/zdharma---null/bin&quot; 
+        local -x GEM_HOME=&quot;/home/sg/.zinit/plugins/zdharma---null&quot; 
         &quot;$bindir&quot;/&quot;asciidoctor&quot; &quot;$@&quot;
 }
 </code></pre>
@@ -2860,18 +2860,18 @@ snippet's directory.</p>
 <p>In the second form it also creates a wrapper function identical to the one
 created with <code>fbin''</code> ice.</p>
 <p>Example:</p>
-<pre><code class="zsh">% zplugin delete zdharma/null
-Delete /home/sg/.zplugin/plugins/zdharma---null?
+<pre><code class="zsh">% zinit delete zdharma/null
+Delete /home/sg/.zinit/plugins/zdharma---null?
 [yY/n…]
 y
 Done (action executed, exit code: 0)
-% zplugin ice node'remark &lt;- !remark-cli -&gt; remark; remark-man'
-% zplugin load zdharma/null
+% zinit ice node'remark &lt;- !remark-cli -&gt; remark; remark-man'
+% zinit load zdharma/null
 …installation messages…
 % which remark
 remark () {
-        local bindir=&quot;/home/sg/.zplugin/plugins/zdharma---null/node_modules/.bin&quot;
-        local -x NODE_PATH=&quot;/home/sg/.zplugin/plugins/zdharma---null&quot;/node_modules
+        local bindir=&quot;/home/sg/.zinit/plugins/zdharma---null/node_modules/.bin&quot;
+        local -x NODE_PATH=&quot;/home/sg/.zinit/plugins/zdharma---null&quot;/node_modules
         &quot;$bindir&quot;/&quot;remark&quot; &quot;$@&quot;
 }
 </code></pre>
@@ -2886,16 +2886,16 @@ has been used.</p>
 meaning of the <code>g</code>,<code>n</code> and <code>c</code> flags is the same as in the <code>fbin''</code> ice.</p>
 <p>Example:</p>
 <pre><code class="zsh">% myfun() { pwd; ls -1 }
-% zplugin ice fmod'cgn:myfun'
-% zplugin load zdharma/null
+% zinit ice fmod'cgn:myfun'
+% zinit load zdharma/null
 % which myfun
 myfun () {
-        local -x GEM_HOME=&quot;/home/sg/.zplugin/plugins/zdharma---null&quot;
-        local -x NODE_PATH=&quot;/home/sg/.zplugin/plugins/zdharma---null&quot;/node_modules
-        local oldpwd=&quot;/home/sg/.zplugin/plugins/zplugin---z-a-bin-gem-node&quot;
+        local -x GEM_HOME=&quot;/home/sg/.zinit/plugins/zdharma---null&quot;
+        local -x NODE_PATH=&quot;/home/sg/.zinit/plugins/zdharma---null&quot;/node_modules
+        local oldpwd=&quot;/home/sg/.zinit/plugins/zinit---z-a-bin-gem-node&quot;
         () {
                 setopt localoptions noautopushd
-                builtin cd -q &quot;/home/sg/.zplugin/plugins/zdharma---null&quot;
+                builtin cd -q &quot;/home/sg/.zinit/plugins/zdharma---null&quot;
         }
         &quot;myfun--za-bgn-orig&quot; &quot;$@&quot;
         () {
@@ -2904,7 +2904,7 @@ myfun () {
         }
 }
 % myfun
-/home/sg/.zplugin/plugins/zdharma---null
+/home/sg/.zinit/plugins/zdharma---null
 LICENSE
 README.md
 </code></pre>
@@ -2914,22 +2914,22 @@ README.md
 <p>It creates the so called <code>shim</code> known from <code>rbenv</code> – a wrapper script that
 forwards the call to the actual binary. The script is created always under
 the same, standard and single <code>$PATH</code> entry: <code>$ZPFX/bin</code> (which is
-<code>~/.zplugin/polaris/bin</code> by default).</p>
+<code>~/.zinit/polaris/bin</code> by default).</p>
 <p>The flags have the same meaning as with <code>fbin''</code> ice.</p>
 <p>Example:</p>
-<pre><code class="zsh">% zplugin delete junegunn/fzf-bin
-Delete /home/sg/.zplugin/plugins/junegunn---fzf-bin?
+<pre><code class="zsh">% zinit delete junegunn/fzf-bin
+Delete /home/sg/.zinit/plugins/junegunn---fzf-bin?
 [yY/n…]
 y
 Done (action executed, exit code: 0)
-% zplugin ice from&quot;gh-r&quot; sbin&quot;fzf&quot;
-% zplugin load junegunn/fzf-bin
+% zinit ice from&quot;gh-r&quot; sbin&quot;fzf&quot;
+% zinit load junegunn/fzf-bin
 …installation messages…
 % cat $ZPFX/bin/fzf
 #!/usr/bin/env zsh
 
 function fzf {
-    local bindir=&quot;/home/sg/.zplugin/plugins/junegunn---fzf-bin&quot;
+    local bindir=&quot;/home/sg/.zinit/plugins/junegunn---fzf-bin&quot;
     &quot;$bindir&quot;/&quot;fzf&quot; &quot;$@&quot;
 }
 
@@ -2944,18 +2944,18 @@ The second ice, <code>ferc''</code> works the same with the single difference th
 uses <code>eval "$(&lt;{path-to-script})"</code> instead of <code>source "{path-to-script}"</code> to
 load the script.</p>
 <p>Example:</p>
-<pre><code class="zsh">% zplugin ice fsrc&quot;myscript -&gt; myfunc&quot; ferc&quot;myscript&quot;
-% zplugin load zdharma/null
+<pre><code class="zsh">% zinit ice fsrc&quot;myscript -&gt; myfunc&quot; ferc&quot;myscript&quot;
+% zinit load zdharma/null
 % which myfunc
 myfunc () {
-        local bindir=&quot;/home/sg/.zplugin/plugins/zdharma---null&quot;
+        local bindir=&quot;/home/sg/.zinit/plugins/zdharma---null&quot;
         () {
                 source &quot;$bindir&quot;/&quot;myscript&quot;
         } &quot;$@&quot;
 }
 % which myscript
 myscript () {
-        local bindir=&quot;/home/sg/.zplugin/snippets/OMZ::plugins--git/git.plugin.zsh&quot;
+        local bindir=&quot;/home/sg/.zinit/snippets/OMZ::plugins--git/git.plugin.zsh&quot;
         () {
                 eval &quot;$(&lt;&quot;$bindir&quot;/&quot;myscript&quot;)&quot;
         } &quot;$@&quot;

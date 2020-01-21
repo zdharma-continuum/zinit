@@ -2259,29 +2259,29 @@
 setopt promptsubst
 
 # B.
-zplugin ice wait lucid
-zplugin snippet OMZ::lib/git.zsh
+zinit ice wait lucid
+zinit snippet OMZ::lib/git.zsh
 
 # C.
-zplugin ice wait atload&quot;unalias grv&quot; lucid
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit ice wait atload&quot;unalias grv&quot; lucid
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 # D.
 PS1=&quot;READY &gt;&quot; # provide a nice prompt till the theme loads
-zplugin ice wait'!' lucid
-zplugin snippet OMZ::themes/dstufft.zsh-theme
+zinit ice wait'!' lucid
+zinit snippet OMZ::themes/dstufft.zsh-theme
 
 # E.
-zplugin ice wait lucid
-zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit ice wait lucid
+zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
 # F.
-zplugin ice wait as&quot;completion&quot; lucid
-zplugin snippet OMZ::plugins/docker/_docker
+zinit ice wait as&quot;completion&quot; lucid
+zinit snippet OMZ::plugins/docker/_docker
 
 # G.
-zplugin ice wait atinit&quot;zpcompinit&quot; lucid
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait atinit&quot;zpcompinit&quot; lucid
+zinit light zdharma/fast-syntax-highlighting
 </code></pre>
 
 <p><strong>A</strong> -  Most themes use this option.</p>
@@ -2307,30 +2307,30 @@ same effect while still using Turbo mode for everything remaining):</p>
 setopt promptsubst
 
 # B.
-zplugin snippet OMZ::lib/git.zsh
+zinit snippet OMZ::lib/git.zsh
 
 # C.
-zplugin ice atload&quot;unalias grv&quot;
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit ice atload&quot;unalias grv&quot;
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 # D.
-zplugin snippet OMZ::themes/dstufft.zsh-theme
+zinit snippet OMZ::themes/dstufft.zsh-theme
 
 # E.
-zplugin snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
 
 # F.
-zplugin ice as&quot;completion&quot;
-zplugin snippet OMZ::plugins/docker/_docker
+zinit ice as&quot;completion&quot;
+zinit snippet OMZ::plugins/docker/_docker
 
 # G.
-zplugin ice atinit&quot;zpcompinit&quot;
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice atinit&quot;zpcompinit&quot;
+zinit light zdharma/fast-syntax-highlighting
 </code></pre>
 
 <p>In general, Turbo mode can be optionally enabled only for a subset of plugins or
 for all plugins. It needs Zsh >= 5.3.</p>
-<p>The <strong>Introduction</strong> contains <a href="http://zdharma.org/zplugin/wiki/INTRODUCTION/#turbo_mode_zsh_62_53"><strong>more
+<p>The <strong>Introduction</strong> contains <a href="http://zdharma.org/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_62_53"><strong>more
 information</strong></a> on Turbo mode.</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 

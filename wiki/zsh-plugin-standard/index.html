@@ -4131,7 +4131,7 @@
                 
                 <p><center><strong>Version: 1.0,  11/22/2019</strong></center></p>
 <h1 id="zsh_plugin_standard">Zsh Plugin Standard<a class="headerlink" href="#zsh_plugin_standard" title="Permanent link">#</a></h1>
-<p>This document defines the Zsh Plugin Standard. Zplugin fully supports
+<p>This document defines the Zsh Plugin Standard. Zinit fully supports
 this standard.</p>
 <p>This document is also available as a
 <a href="http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.pdf"><strong>PDF</strong></a>.</p>
@@ -4255,7 +4255,7 @@ general don't have to quote assignments.</p>
 <h5 id="adoption_status">Adoption Status<a class="headerlink" href="#adoption_status" title="Permanent link">#</a></h5>
 <ol>
 <li>
-<p>Plugin managers: Zplugin, Zgen (after and if the
+<p>Plugin managers: Zinit, Zgen (after and if the
    <a href="https://github.com/tarjoilija/zgen/pull/124"><strong>PR</strong></a> will be merged)</p>
 </li>
 <li>
@@ -4280,7 +4280,7 @@ can be a daunting task requiring constant monitoring of it during the plugin
 develoment process.</p>
 <h5 id="adoption_status_1">Adoption Status<a class="headerlink" href="#adoption_status_1" title="Permanent link">#</a></h5>
 <ol>
-<li>One plugin manager, Zplugin, implements plugin unloading and calls the
+<li>One plugin manager, Zinit, implements plugin unloading and calls the
    function.</li>
 <li>One plugin, <code>romkatv/powerlevel10k</code>, is</li>
 <li>
@@ -4315,7 +4315,7 @@ builtin in the same order as they are passed to the call.</p>
 function</a>, for the plugin to participate in the process of
 unloading it.</p>
 <h5 id="adoption_status_2">Adoption Status<a class="headerlink" href="#adoption_status_2" title="Permanent link">#</a></h5>
-<p>It's a recent addition to the standard and only one plugin manager, Zplugin,
+<p>It's a recent addition to the standard and only one plugin manager, Zinit,
 implements it.</p>
 <h2 id="4_zsh-plugin-run-on-update_call">4. <code>@zsh-plugin-run-on-update</code> Call<a class="headerlink" href="#4_zsh-plugin-run-on-update_call" title="Permanent link">#</a></h2>
 <p>The plugin manager can provide a function <code>@zsh-plugin-run-on-update</code> which
@@ -4328,7 +4328,7 @@ update of the plugin</strong>. The execution of the code should be done by the <
 builtin in the same order as they are passed to the call.</p>
 <p>The code should be executed in the plugin's directory, possibly in a subshell.</p>
 <h5 id="adoption_status_3">Adoption Status<a class="headerlink" href="#adoption_status_3" title="Permanent link">#</a></h5>
-<p>It's a recent addition to the standard and only one plugin manager, Zplugin,
+<p>It's a recent addition to the standard and only one plugin manager, Zinit,
 implements it.</p>
 <h2 id="546_plugin_manager_activity_indicator">5. Plugin Manager Activity Indicator<a class="headerlink" href="#546_plugin_manager_activity_indicator" title="Permanent link">#</a></h2>
 <p>Plugin managers should set the <code>$zsh_loaded_plugins</code> array to contain all
@@ -4360,7 +4360,7 @@ around <code>${0:h}</code> to make it compatible with the <code>SH_WORD_SPLIT</c
 <h5 id="adoption_status_4">Adoption Status<a class="headerlink" href="#adoption_status_4" title="Permanent link">#</a></h5>
 <ol>
 <li>
-<p>Plugin managers: Zplugin, Zgen (after and if the
+<p>Plugin managers: Zinit, Zgen (after and if the
    <a href="https://github.com/tarjoilija/zgen/pull/124"><strong>PR</strong></a> will be merged)</p>
 </li>
 <li>
@@ -4372,9 +4372,9 @@ around <code>${0:h}</code> to make it compatible with the <code>SH_WORD_SPLIT</c
 <p>Plugin managers may export the parameter <code>$ZPFX</code> which should contain a path to
 a directory dedicated for user-land software, i.e. for directories <code>$ZPFX/bin</code>,
 <code>$ZPFX/lib</code>, <code>$ZPFX/share</code>, etc. Suggested name of the directory is <code>polaris</code>,
-Zplugin uses this name and places this directory at <code>~/.zplugin/polaris</code> by
+Zinit uses this name and places this directory at <code>~/.zinit/polaris</code> by
 default.</p>
-<p>User can then configure hooks (feature of e.g. zplug and Zplugin) to invoke e.g.
+<p>User can then configure hooks (feature of e.g. zplug and Zinit) to invoke e.g.
 <code>make PREFIX=$ZPFX install</code> at clone &amp; update of the plugin to install software
 like e.g. <a href="https://github.com/tj/git-extras"><strong>tj/git-extras</strong></a>. This is a
 developing role of Zsh plugin managers as package managers, where <code>.zshrc</code> has a
@@ -4382,15 +4382,15 @@ similar role to Chef or Puppet configuration and allows to <strong>declare</stro
 state, and have the same state on different accounts / machines.</p>
 <p>No-narration facts-list related to <code>$ZPFX</code>:</p>
 <ol>
-<li><code>export ZPFX="$HOME/polaris"</code> (or e.g. <code>$HOME/.zplugin/polaris</code>)</li>
+<li><code>export ZPFX="$HOME/polaris"</code> (or e.g. <code>$HOME/.zinit/polaris</code>)</li>
 <li><code>make PREFIX=$ZPFX install</code></li>
 <li><code>./configure --prefix=$ZPFX</code></li>
 <li><code>cmake -DCMAKE_INSTALL_PREFIX=$ZPFX .</code></li>
-<li><code>zplugin ice make"PREFIX=$ZPFX install"</code></li>
+<li><code>zinit ice make"PREFIX=$ZPFX install"</code></li>
 <li><code>zplug … hook-build:"make PREFIX=$PFX install"</code></li>
 </ol>
 <h5 id="adoption_status_5">Adoption Status<a class="headerlink" href="#adoption_status_5" title="Permanent link">#</a></h5>
-<p>One plugin manager, Zplugin, provides the <code>$ZPFX</code> parameter.</p>
+<p>One plugin manager, Zinit, provides the <code>$ZPFX</code> parameter.</p>
 <h2 id="zsh_plugin-programming_best_practices">Zsh Plugin-Programming Best Practices<a class="headerlink" href="#zsh_plugin-programming_best_practices" title="Permanent link">#</a></h2>
 <p>The document is to define a <em>Zsh-plugin</em> but also to serve as an information
 source for plugin creators. Therefore, it covers also a best practices
@@ -4526,9 +4526,9 @@ if you have any remarks, don't hesitate to
    <a href="#use_of_add-zsh-hook_to_install_hooks"><strong>Zsh hooks</strong></a> and the <a href="#use_of_add-zle-hook-widget_to_install_zle_hooks"><strong>Zle
    hooks</strong></a>, but also for any
    other
-   custom hook-like mechanism in the plugin (e.g.: Zplugin annexes
-   <a href="http://zdharma.org/zplugin/wiki/Annexes/#how_to_code_them"><strong>use</strong></a> such
-   prefix for the Zplugin hook functions). Example function name:
+   custom hook-like mechanism in the plugin (e.g.: Zinit annexes
+   <a href="http://zdharma.org/zinit/wiki/Annexes/#how_to_code_them"><strong>use</strong></a> such
+   prefix for the Zinit hook functions). Example function name:
    <code>:prompt_zinc_precmd</code>.</p>
 </li>
 <li>

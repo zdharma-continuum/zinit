@@ -2256,10 +2256,10 @@
                   <h1>Direnv Explanation</h1>
                 
                 <p>The project <a href="https://github.com/direnv/direnv"><strong>direnv/direnv</strong></a> registers itself in Zshell to modify environment on directory change. This registration is most often done by <code>eval "$(direnv hook zsh)"</code> added to zshrc.</p>
-<p>Drawback of this standard procedure is that <code>direnv</code> binary is ran on every shell startup and significantly slows it down. Zplugin allows to solve this in following way:</p>
-<pre><code class="zsh">zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
+<p>Drawback of this standard procedure is that <code>direnv</code> binary is ran on every shell startup and significantly slows it down. Zinit allows to solve this in following way:</p>
+<pre><code class="zsh">zinit ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
     atpull'%atclone' pick&quot;direnv&quot; src&quot;zhook.zsh&quot;
-zplugin light direnv/direnv
+zinit light direnv/direnv
 </code></pre>
 
 <ul>
@@ -2273,9 +2273,9 @@ zplugin light direnv/direnv
 <p>This way registration code is generated once every installation and update, to then be simply sourced without running <code>direnv</code>.</p>
 <hr />
 <p>The project is also available as binary Github release. This distribution can be installed by:</p>
-<pre><code class="zsh">zplugin ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot; \
+<pre><code class="zsh">zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot; \
     './direnv hook zsh &gt; zhook.zsh' atpull'%atclone' pick&quot;direnv&quot;
-zplugin light direnv/direnv
+zinit light direnv/direnv
 </code></pre>
 
 <ul>

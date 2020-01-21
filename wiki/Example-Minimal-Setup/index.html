@@ -2308,22 +2308,22 @@
                 
                 
                 <h1 id="example_minimal_setup">Example Minimal Setup<a class="headerlink" href="#example_minimal_setup" title="Permanent link">#</a></h1>
-<pre><code class="zsh">zplugin ice wait blockf atpull'zplugin creinstall -q .'
-zplugin light zsh-users/zsh-completions
+<pre><code class="zsh">zinit ice wait blockf atpull'zinit creinstall -q .'
+zinit light zsh-users/zsh-completions
 
-zplugin ice wait atinit&quot;zpcompinit; zpcdreplay&quot;
-zplugin light zdharma/fast-syntax-highlighting
+zinit ice wait atinit&quot;zpcompinit; zpcdreplay&quot;
+zinit light zdharma/fast-syntax-highlighting
 
-zplugin ice wait atload&quot;_zsh_autosuggest_start&quot;
-zplugin light zsh-users/zsh-autosuggestions
+zinit ice wait atload&quot;_zsh_autosuggest_start&quot;
+zinit light zsh-users/zsh-autosuggestions
 </code></pre>
 
 <ul>
 <li><code>light</code> – load the plugin in <code>light</code> mode, in which the tracking of plugin
-   (i.e. activity report gathering, accessible via the <code>zplugin report
+   (i.e. activity report gathering, accessible via the <code>zinit report
    {plugin-spec}</code> subcommand) is being disabled; note that for Turbo mode, the
    performance gains are actually <code>0</code>, so in this mode you can load all plugins
-   with the tracking, i.e. by using <code>zplugin ice wait'0'; zplugin load
+   with the tracking, i.e. by using <code>zinit ice wait'0'; zinit load
    {plugin-spec}</code> commands,</li>
 <li><code>wait</code> – load 0 seconds (about 5 ms exactly) after prompt,</li>
 <li><code>atpull''</code> – execute after updating the plugin – the command in the ice will
@@ -2346,22 +2346,22 @@ zplugin light zsh-users/zsh-autosuggestions
    because it runs a function in an <code>precmd</code> hook, i.e. right before first
    prompt,</li>
 <li>the <code>atinit</code> of the plugin runs also <code>zpcdreplay</code> (i.e.
-   "<em>zplugin-compdef-replay</em>"), because after <code>compinit</code> is loaded, the
+   "<em>zinit-compdef-replay</em>"), because after <code>compinit</code> is loaded, the
    <code>compdef</code> function becomes available, and one can re-run the all earlier
    automatically-caught<code>compdef</code> calls, loosing nothing from the original
    behavior,</li>
 <li>add <code>lucid</code> ice-mod to silence the under-prompt messages.</li>
 </ul>
 <p>The same setup but without using Turbo mode (i.e. no <code>wait''</code> ice):</p>
-<pre><code class="zsh">zplugin ice blockf atpull'zplugin creinstall -q .'
-zplugin light zsh-users/zsh-completions
+<pre><code class="zsh">zinit ice blockf atpull'zinit creinstall -q .'
+zinit light zsh-users/zsh-completions
 
 autoload compinit
 compinit
 
-zplugin light zdharma/fast-syntax-highlighting
+zinit light zdharma/fast-syntax-highlighting
 
-zplugin light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-autosuggestions
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>

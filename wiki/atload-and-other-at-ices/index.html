@@ -2733,7 +2733,7 @@ moments of the plugin life-cycle</strong>. The <strong><code>atclone</code></str
 <ul>
 <li><strong>after loading</strong> of the associated plugin or snippet.</li>
 </ul>
-<p>For convenience, you can use each of the ices multiple times in single <code>zplugin
+<p>For convenience, you can use each of the ices multiple times in single <code>zinit
 ice …</code> invocation – all the passed commands will be executed in the given order.</p>
 <p>The <code>atpull</code> ice recognizes a special value: <code>%atclone</code> (so the code looks i.e.:
 <code>atpull'%atclone'</code>). It causes the contents of the <code>atclone</code> ice to be copied
@@ -2750,11 +2750,11 @@ simpler method than the <code>wrap-track</code> ice – an <em>exclamation mark<
 the code passed to <code>atload</code> ice to be recorded.</p>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h2>
 <p>For example, in the following invocation:</p>
-<pre><code class="zsh">zplugin ice id-as'test' atload'!PATH+=:~/share'
-zplugin load zdharma/null
+<pre><code class="zsh">zinit ice id-as'test' atload'!PATH+=:~/share'
+zinit load zdharma/null
 </code></pre>
 
-<p>the <code>$PATH</code> is being changed within <code>atload</code> ice. Zplugin's tracking records
+<p>the <code>$PATH</code> is being changed within <code>atload</code> ice. Zinit's tracking records
 <code>$PATH</code> changes and withdraws them on plugin unload, and also shows information
 loading:</p>
 <pre><code>$ zplg report test
@@ -2769,7 +2769,7 @@ Source  (reporting enabled)
 <p>As it can be seen, the <code>atload</code> code is being correctly tracked and can be
 unloaded &amp; viewed. Below is the result of using the <code>unload</code> subcommand to
 unload the <code>test</code> plugin:</p>
-<pre><code>$ zplugin unload test
+<pre><code>$ zinit unload test
 <span class="hljs-blue">--- Unloading plugin: test ---</span>
 Removing PATH element /home/sg/share
 Unregistering plugin test
@@ -2781,9 +2781,9 @@ Plugin report saved to $LASTREPORT
 article, but using the <em>exclamation mark</em>-preceded <code>atload</code> instead of
 <code>wrap-track</code>:</p>
 <pre><code class="zsh"># Load when MYPROMPT == 4
-zplugin ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
+zinit ice load'![[ $MYPROMPT = 4 ]]' unload'![[ $MYPROMPT != 4 ]]' \
             atload'!source ~/.p10k.zsh; _p9k_precmd'
-zplugin load romkatv/powerlevel10k
+zinit load romkatv/powerlevel10k
 </code></pre>
 
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">#</a></h2>

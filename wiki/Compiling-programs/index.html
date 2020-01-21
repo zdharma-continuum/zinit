@@ -2255,9 +2255,9 @@
                 
                   <h1>Compiling Programs</h1>
                 
-                <pre><code class="zsh">zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
+                <pre><code class="zsh">zinit ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
     atpull&quot;%atclone&quot; make pick&quot;src/vim&quot;
-zplugin light vim/vim
+zinit light vim/vim
 </code></pre>
 
 <ul>
@@ -2269,11 +2269,11 @@ zplugin light vim/vim
 </ul>
 <hr />
 <p>The same but with <strong>installation</strong> (i.e. <code>make install</code> is being run) under
-<code>$ZPFX</code> (<code>~/.zplugin/polaris</code> by default):</p>
-<pre><code class="zsh">zplugin ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; \
+<code>$ZPFX</code> (<code>~/.zinit/polaris</code> by default):</p>
+<pre><code class="zsh">zinit ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; \
     ./configure --prefix=$ZPFX&quot; atpull&quot;%atclone&quot; \
     make&quot;all install&quot; pick&quot;$ZPFX/bin/vim&quot;
-zplugin light vim/vim
+zinit light vim/vim
 </code></pre>
 
 <ul>
@@ -2285,9 +2285,9 @@ zplugin light vim/vim
 <li><code>pick"src/vim"</code> – as above, but for different path (<code>$ZPFX/bin/vim</code>).</li>
 </ul>
 <hr />
-<pre><code class="zsh">zplugin ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
+<pre><code class="zsh">zinit ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
     atpull'%atclone' src&quot;zhook.zsh&quot;
-zplugin light direnv/direnv
+zinit light direnv/direnv
 </code></pre>
 
 <ul>

@@ -2585,25 +2585,25 @@
 <h2 id="the_standard_syntax">The Standard Syntax<a class="headerlink" href="#the_standard_syntax" title="Permanent link">#</a></h2>
 <p>The normal way of specifying ices and their values is by concatenating the ice
 name and its value quoted, i.e.:</p>
-<pre><code class="zsh">zplugin wait&quot;1&quot; from&quot;gh-r&quot; atload&quot;print Hello World&quot;
-zplugin load …
+<pre><code class="zsh">zinit wait&quot;1&quot; from&quot;gh-r&quot; atload&quot;print Hello World&quot;
+zinit load …
 </code></pre>
 
 <p>(note that there's no <code>ice</code> subcommand - that is currently being fully allowed)</p>
 <h2 id="the_alternative_syntaxes">The Alternative Syntaxes<a class="headerlink" href="#the_alternative_syntaxes" title="Permanent link">#</a></h2>
-<p>However, Zplugin supports also other syntaxes: the equal (<code>=</code>) syntax:</p>
-<pre><code class="zsh">zplugin wait=1 from=gh-r atload=&quot;print Hello World&quot;
-zplugin load …
+<p>However, Zinit supports also other syntaxes: the equal (<code>=</code>) syntax:</p>
+<pre><code class="zsh">zinit wait=1 from=gh-r atload=&quot;print Hello World&quot;
+zinit load …
 </code></pre>
 
 <p>the colon (<code>:</code>) syntax:</p>
-<pre><code class="zsh">zplugin wait:1 from:gh-r atload:&quot;print Hello World&quot;
-zplugin load …
+<pre><code class="zsh">zinit wait:1 from:gh-r atload:&quot;print Hello World&quot;
+zinit load …
 </code></pre>
 
 <p>and also – with conjunction with all of the above – the GNU syntax:</p>
-<pre><code class="zsh">zplugin --wait=1 --from=gh-r --atload=&quot;print Hello World&quot;
-zplugin load …
+<pre><code class="zsh">zinit --wait=1 --from=gh-r --atload=&quot;print Hello World&quot;
+zinit load …
 </code></pre>
 
 <h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">#</a></h2>
@@ -2611,8 +2611,8 @@ zplugin load …
 standard syntax was: to utilize the syntax highlighting of editors like Vim –
 and have the strings following ice names colorized with a distinct color and
 this way separated from them. However, with the
-<a href="https://github.com/zplugin/zplugin-vim-syntax">zplugin/zplugin-vim-syntax</a>
-syntax definition this motivation can be superseded with the Zplugin-specific
+<a href="https://github.com/zinit/zinit-vim-syntax">zinit/zinit-vim-syntax</a>
+syntax definition this motivation can be superseded with the Zinit-specific
 highlighting, at least for Vim.  NOTE: the Vim syntax doesn't yet support the
 alternate syntaxes, it will soon (PR welcomed).</p>
 <p><a href="vim:set ft=markdown tw=80 fo+=a2n autoindent:"></a></p>

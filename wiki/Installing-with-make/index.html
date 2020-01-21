@@ -2255,8 +2255,8 @@
                 
                   <h1>Installing With Make</h1>
                 
-                <pre><code class="zsh">zplugin ice as&quot;program&quot; pick&quot;$ZPFX/bin/git-*&quot; make&quot;PREFIX=$ZPFX&quot;
-zplugin light tj/git-extras
+                <pre><code class="zsh">zinit ice as&quot;program&quot; pick&quot;$ZPFX/bin/git-*&quot; make&quot;PREFIX=$ZPFX&quot;
+zinit light tj/git-extras
 </code></pre>
 
 <ul>
@@ -2264,18 +2264,18 @@ zplugin light tj/git-extras
 <li>it also does building of the scripts that it installs, so it does 2 tasks,</li>
 <li>for <code>Makefile</code> with 2 targets, one could use <code>make"all install PREFIX=…"</code>,</li>
 <li><code>pick'…'</code> will <code>chmod +x</code> all matching files and add <code>$ZPFX/bin/</code> to <code>$PATH</code>,</li>
-<li><code>$ZPFX</code> is provided by Zplugin, it is <code>~/.zplugin/polaris</code> by default, can be also customized.</li>
+<li><code>$ZPFX</code> is provided by Zinit, it is <code>~/.zinit/polaris</code> by default, can be also customized.</li>
 </ul>
 <hr />
-<p>Below is a hard core but fully working method of managing a software (<a href="https://sdkman.io"><strong>sdkman.io</strong></a>) with Zplugin.</p>
+<p>Below is a hard core but fully working method of managing a software (<a href="https://sdkman.io"><strong>sdkman.io</strong></a>) with Zinit.</p>
 <pre><code class="zsh"># The invocation uses https://github.com/zdharma/null repo as a placeholder
 # for the atclone'' and atpull'' hooks
 
-zplugin ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdkman' run-atpull \
+zinit ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdkman' run-atpull \
     atclone&quot;wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh&quot; \
     atpull&quot;SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate&quot; \
     atinit&quot;export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh&quot;
-zplugin light zdharma/null
+zinit light zdharma/null
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
