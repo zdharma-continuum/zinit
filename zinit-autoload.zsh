@@ -3002,7 +3002,7 @@ EOF
     setopt localoptions localtraps
     trap 'return 1' INT TERM
     ( builtin cd -q "${ZINIT[BIN_DIR]}"/zmodules
-      print -r -- "${ZINIT[col-pname]}== Building module zdharma/zinit, running: make clean, then ./configure and then make ==${ZINIT[col-rst]}"
+      print -r -- "${ZINIT[col-pname]}== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==${ZINIT[col-rst]}"
       print -r -- "${ZINIT[col-pname]}== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules ==${ZINIT[col-rst]}"
       [[ -f Makefile ]] && { [[ "$1" = "--clean" ]] && {
               print -r -- ${ZINIT[col-p]}-- make distclean --${ZINIT[col-rst]}
@@ -3017,7 +3017,7 @@ EOF
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           print -r -- ${ZINIT[col-p]}-- make --${ZINIT[col-rst]}
           make && {
-            [[ -f Src/zdharma/zinit.so ]] && cp -vf Src/zdharma/zinit.{so,bundle}
+            [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
             print -r -- "${ZINIT[col-info]}Module has been built correctly.${ZINIT[col-rst]}"
             .zinit-module info
           } || {
