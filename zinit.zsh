@@ -12,7 +12,7 @@ ZINIT_TASKS=( "<no-data>" )
 typeset -gAH ZINIT ZINIT_REGISTERED_STATES ZINIT_SNIPPETS ZINIT_REPORTS ZINIT_ICES ZINIT_SICE ZINIT_CUR_BIND_MAP ZINIT_EXTS
 typeset -gaH ZINIT_COMPDEF_REPLAY
 
-# Compatibility with pre-rename project (Zinit)
+# Compatibility with pre-rename project (Zplugin)
 typeset -gAH ZPLGM
 ZINIT=( "${(kv)ZPLGM[@]}" "${(kv)ZINIT[@]}" )
 unset ZPLGM
