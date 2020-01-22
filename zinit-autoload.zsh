@@ -2661,7 +2661,10 @@ Plugins[${${(U)plugin:t}//-/_}_DIR]=\${0:h}
 
 autoload -Uz example-script
 
-# vim:ft=zsh:tw=80:sw=4:sts=4:et
+# Use alternate vim marks [[[ and ]]] as the original ones can
+# confuse nested substitutions, e.g.: \${\${\${VAR}}}
+
+# vim:ft=zsh:tw=80:sw=4:sts=4:et:foldmarker=[[[,]]]
 EOF
 
     print -r -- "# $plugin" >! "README.md"
