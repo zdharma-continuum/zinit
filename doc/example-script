@@ -34,4 +34,7 @@ fi
 # The script/function contents possibly using $Plugins[MY_PLUGIN_DIR] …
 # …
 
-# vim:ft=zsh:tw=80:sw=4:sts=4:et
+# Use alternate marks [[[ and ]]] as the original ones can confuse nested
+# substitutions, e.g.: ${${${VAR}}}
+
+# vim:ft=zsh:tw=80:sw=4:sts=4:et:foldmarker=[[[,]]]
