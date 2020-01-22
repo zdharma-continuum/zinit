@@ -49,7 +49,7 @@ else
     if [ -d "$ZINIT_BIN_DIR_NAME" ]; then
         echo
         echo "[1;34m▓▒░[0m Zinit succesfully installed at [1;32m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-        VERSION="$(cat "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/.git/refs/heads/master" | cut -c1-10)"
+        VERSION="$(command git -C "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME" describe --tags)" 
         echo "[1;34m▓▒░[0m Version: [1;32m$VERSION[0m"
     else
         echo
