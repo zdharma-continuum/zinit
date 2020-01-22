@@ -2981,7 +2981,7 @@ EOF
         else
             print -r "To load the module, add following 2 lines to .zshrc, at top:"
             print -r "    module_path+=( \"${ZINIT[BIN_DIR]}/zmodules/Src\" )"
-            print -r "    zmodload zdharma/zinit"
+            print -r "    zmodload zdharma/zplugin"
             print -r ""
             print -r "After loading, use command \`zpmod' to communicate with the module."
             print -r "See \`zpmod -h' for more information."
