@@ -684,7 +684,7 @@ ZINIT[EXTENDED_GLOB]=""
 # BusyBox less lacks the -X and -i options, so it can use more
 .zinit-pager() {
     setopt LOCAL_OPTIONS EQUALS
-    if [[ ${${:-=less}:A:t} = 'busybox' ]]; then
+    if [[ ${${:-=less}:A:t} = busybox* ]]; then
         more
     else
         less -FRXi
