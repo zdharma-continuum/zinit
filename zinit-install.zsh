@@ -3,7 +3,7 @@
 
 builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
-# FUNCTION: .zinit-parse-json <<<
+# FUNCTION: .zinit-parse-json [[[
 # Retrievies the ice-list from given profile from
 # the JSON of the package.json.
 .zinit-parse-json() {
@@ -115,8 +115,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         : ${(PAA)__varname::="${(kv)__Strings[@]}"}
     }
 }
-# >>>
-# FUNCTION: .zinit-get-package <<<
+# ]]]
+# FUNCTION: .zinit-get-package [[[
 .zinit-get-package() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
@@ -275,8 +275,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
     return $?
 }
-# >>>
-# FUNCTION: .zinit-setup-plugin-dir <<<
+# ]]]
+# FUNCTION: .zinit-setup-plugin-dir [[[
 # Clones given plugin into PLUGIN_DIR. Supports multiple
 # sites (respecting `from' and `proto' ice modifiers).
 # Invokes compilation of plugin's main file.
@@ -513,8 +513,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     ) || return $?
 
     return 0
-} # >>>
-# FUNCTION: .zinit-install-completions <<<
+} # ]]]
+# FUNCTION: .zinit-install-completions [[[
 # Installs all completions of given plugin. After that they are
 # visible to `compinit'. Visible completions can be selectively
 # disabled and enabled. User can access completion data with
@@ -574,8 +574,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         fi
     done
     .zinit-compinit &>/dev/null
-} # >>>
-# FUNCTION: .zinit-compinit <<<
+} # ]]]
+# FUNCTION: .zinit-compinit [[[
 # User-exposed `compinit' frontend which first ensures that all
 # completions managed by Zinit are forgotten by Zshell. After
 # that it runs normal `compinit', which should more easily detect
@@ -611,8 +611,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
     builtin autoload -Uz compinit
     compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
-} # >>>
-# FUNCTION: .zinit-download-file-stdout <<<
+} # ]]]
+# FUNCTION: .zinit-download-file-stdout [[[
 # Downloads file to stdout. Supports following backend commands:
 # curl, wget, lftp, lynx. Used by snippet loading.
 .zinit-download-file-stdout() {
@@ -652,8 +652,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     fi
 
     return 0
-} # >>>
-# FUNCTION: .zinit-get-url-mtime <<<
+} # ]]]
+# FUNCTION: .zinit-get-url-mtime [[[
 # For the given URL returns the date in the Last-Modified
 # header as a time stamp
 .zinit-get-url-mtime() {
@@ -692,8 +692,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     }
 
     return 0
-} # >>>
-# FUNCTION: .zinit-mirror-using-svn <<<
+} # ]]]
+# FUNCTION: .zinit-mirror-using-svn [[[
 # Used to clone subdirectories from Github. If in update mode
 # (see $2), then invokes `svn update', in normal mode invokes
 # `svn checkout --non-interactive -q <URL>'. In test mode only
@@ -732,8 +732,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     fi
     return $?
 }
-# >>>
-# FUNCTION: .zinit-forget-completion <<<
+# ]]]
+# FUNCTION: .zinit-forget-completion [[[
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
 #
@@ -757,8 +757,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     (( quiet || first )) || print
 
     unfunction -- 2>/dev/null "$f"
-} # >>>
-# FUNCTION: .zinit-compile-plugin <<<
+} # ]]]
+# FUNCTION: .zinit-compile-plugin [[[
 # Compiles given plugin (its main source file, and also an
 # additional "....zsh" file if it exists).
 #
@@ -827,8 +827,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     fi
 
     return 0
-} # >>>
-# FUNCTION: .zinit-download-snippet <<<
+} # ]]]
+# FUNCTION: .zinit-download-snippet [[[
 # Downloads snippet – either a file – with curl, wget, lftp or lynx,
 # or a directory, with Subversion – when svn-ICE is active. Github
 # supports Subversion protocol and allows to clone subdirectories.
@@ -1198,8 +1198,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     [[ 1 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} = null ]] || .zinit-install-completions "%" "$local_dir/$dirname" 0
     return $retval
 }
-# >>>
-# FUNCTION: .zinit-get-latest-gh-r-version <<<
+# ]]]
+# FUNCTION: .zinit-get-latest-gh-r-version [[[
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
 .zinit-get-latest-gh-r-version() {
@@ -1218,8 +1218,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     list=( "${(uOn)list[@]/(#b)href=?(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}" )
     REPLY="${list[1]}"
 }
-# >>>
-# FUNCTION: ziextract <<<
+# ]]]
+# FUNCTION: ziextract [[[
 # If the file is an archive, it is extracted by this function.
 # Next stage is scanning of files with the common utility `file',
 # to detect executables. They are given +x mode. There are also
@@ -1387,11 +1387,11 @@ ziextract() {
     }
     return 0
 }
-# >>>
-# FUNCTION: zpextract <<<
+# ]]]
+# FUNCTION: zpextract [[[
 zpextract() { ziextract "$@"; }
-# >>>
-# FUNCTION: .zinit-at-eval <<<
+# ]]]
+# FUNCTION: .zinit-at-eval [[[
 .zinit-at-eval() {
     local atclone="$2" atpull="$1"
     integer retval
@@ -1399,6 +1399,6 @@ zpextract() { ziextract "$@"; }
     [[ $atpull = "%atclone" ]] && { eval "$atclone"; retval=$?; } || { eval "$atpull"; retval=$?; }
     return $retval
 }
-# >>>
+# ]]]
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=<<<,>>>
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]

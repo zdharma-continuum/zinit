@@ -1,7 +1,7 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
 
-# FUNCTION: .zinit-shands-exp <<<
+# FUNCTION: .zinit-shands-exp [[[
 # Does expansion of currently little unstandarized
 # shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
 .zinit-shands-exp() {
@@ -15,8 +15,8 @@
     # Testable
     [[ "$REPLY" != "$1$2" ]]
 }
-# >>>
-# FUNCTION: .zinit-exists-physically <<<
+# ]]]
+# FUNCTION: .zinit-exists-physically [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR.
 #
 # Testable.
@@ -35,8 +35,8 @@
     else
         [[ -d "${ZINIT[PLUGINS_DIR]}/${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---}" ]] && return 0 || return 1
     fi
-} # >>>
-# FUNCTION: .zinit-exists-physically-message <<<
+} # ]]]
+# FUNCTION: .zinit-exists-physically-message [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR,
 # and outputs error message if it doesn't.
 #
@@ -56,8 +56,8 @@
         return 1
     fi
     return 0
-} # >>>
-# FUNCTION: .zinit-plgdir <<<
+} # ]]]
+# FUNCTION: .zinit-plgdir [[[
 .zinit-get-plg-dir() {
     # There are plugins having ".plugin.zsh"
     # in ${plugin} directory name, also some
@@ -72,8 +72,8 @@
     reply=( "$dname" "$pdir" )
     return 0
 }
-# >>>
-# FUNCTION: .zinit-first <<<
+# ]]]
+# FUNCTION: .zinit-first [[[
 # Finds the main file of plugin. There are multiple file name
 # formats, they are ordered in order starting from more correct
 # ones, and matched. .zinit-load-plugin() has similar code parts
@@ -106,8 +106,8 @@
     # Take first entry (ksharrays resilience)
     reply=( "$dname" "${reply[-${#reply}]}" )
     return 0
-} # >>>
-# FUNCTION: .zinit-any-colorify-as-uspl2 <<<
+} # ]]]
+# FUNCTION: .zinit-any-colorify-as-uspl2 [[[
 # Returns ANSI-colorified "user/plugin" string, from any supported
 # plugin spec (user---plugin, user/plugin, user plugin, plugin).
 #
@@ -126,8 +126,8 @@
         plugin="${plugin/$HOME/HOME}"
         REPLY="${ZINIT[col-uname]}%${ZINIT[col-rst]}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
     } || REPLY="${user:+${ZINIT[col-uname]}${user}${ZINIT[col-rst]}/}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
-} # >>>
-# FUNCTION: .zinit-two-paths <<<
+} # ]]]
+# FUNCTION: .zinit-two-paths [[[
 # Obtains a snippet URL without specification if it is an SVN URL (points to
 # directory) or regular URL (points to file), returns 2 possible paths for
 # further examination
@@ -157,8 +157,8 @@
 
     reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 }
-# >>>
-# FUNCTION: .zinit-compute-ice <<<
+# ]]]
+# FUNCTION: .zinit-compute-ice [[[
 # Computes ZINIT_ICE array (default, it can be specified via $3) from a) input
 # ZINIT_ICE, b) static ice, c) saved ice, taking priorities into account. Also
 # returns path to snippet directory and optional name of snippet file (only
@@ -328,8 +328,8 @@
 
     return 0
 }
-# >>>
-# FUNCTION: .zinit-store-ices <<<
+# ]]]
+# FUNCTION: .zinit-store-ices [[[
 # Saves ice mods in given hash onto disk.
 #
 # $1 - directory where to create / delete files
@@ -396,8 +396,8 @@
         [[ -n "${(P)__key}" ]] && print -r -- "${(P)__key}" >! "$__pfx"/"$__key"
     done
 }
-# >>>
-# FUNCTION: .zinit-countdown <<<
+# ]]]
+# FUNCTION: .zinit-countdown [[[
 # Displays a countdown 5...4... etc. and returns 0 if it
 # sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
 .zinit-countdown() {
@@ -417,6 +417,6 @@
     print -r -- "${ZINIT[col-bold]}${ZINIT[col-error]}0 <running now>...${ZINIT[col-rst]}"
     return 0
 }
-# >>>
+# ]]]
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=<<<,>>>
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]
