@@ -7,7 +7,7 @@ reports](DONATIONS.md) about what is being done with the money received.
 <h2 align="center">The project undergoes a name change from Zplugin to Zinit.</h2>
 <h2 align="center">Please report any observed issues.</h2>
 
-[![Status][status-badge]][status-link] [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Chat at https://gitter.im/zinit/Lobby][lobby-badge]][lobby-link]
+[![Status][status-badge]][status-link] [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Join the chat at https://gitter.im/zdharma/zinit][gitter-badge]][gitter-link]
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -1038,7 +1038,7 @@ Do you need help or wish to get in touch with other Zinit users?
 
 - Chat with us in our IRC channel. Connect to [chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zinit) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zinit) and join #zinit. Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zinit.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zinit)
 
-- Or via Gitter [![Chat at https://gitter.im/zinit/Lobby][lobby-badge]][lobby-link]
+- Or via Gitter [![Join the chat at https://gitter.im/zdharma/zinit][gitter-badge]][gitter-link]
 
 [status-badge]: https://travis-ci.org/zdharma/zinit.svg?branch=master
 [status-link]: https://travis-ci.org/zdharma/zinit
@@ -1047,8 +1047,8 @@ Do you need help or wish to get in touch with other Zinit users?
 [ver-badge]: https://img.shields.io/github/tag/zdharma/zinit.svg
 [ver-link]: https://github.com/zdharma/zinit/releases
 [act-badge]: https://img.shields.io/github/commit-activity/y/zdharma/zinit.svg
-[lobby-badge]: https://badges.gitter.im/zinit/Lobby.svg
-[lobby-link]: https://gitter.im/zinit/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gitter-badge]: https://badges.gitter.im/zdharma/zinit.svg
+[gitter-link]: https://gitter.im/zdharma/zinit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
 <!-- vim:tw=87
 -->
