@@ -33,8 +33,7 @@ the passwords as plain text in `.zshrc`.
 
 The plugin used in the example really exists and really is private. It's
 available to my sponsors. The plugin README is available
-[here](../fsh-auto-themes/index.html). My GitHub sponsors page – if you're
-interested in receiving the benefit:
-[here](https://github.com/sponsors/psprint).
+[here](../fsh-auto-themes/). My GitHub sponsors page – if you're interested in
+receiving the benefit: [here](https://github.com/sponsors/psprint).
 
 []( vim:set ft=markdown tw=80 fo+=a2n autoindent: )
