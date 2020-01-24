@@ -2896,7 +2896,7 @@ zinit ice atclone'PYENV_ROOT=&quot;$PWD&quot; ./libexec/pyenv init - &gt; zpyenv
 zinit light pyenv/pyenv
 
 zinit ice as&quot;program&quot; pick&quot;$ZPFX/sdkman/bin/sdk&quot; id-as'sdkman' run-atpull \
-    atclone&quot;wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh&quot; \
+    atclone&quot;wget https://get.sdkman.io/?rcupdate=false -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh&quot; \
     atpull&quot;SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate&quot; \
     atinit&quot;export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh&quot;
 zinit light zdharma/null
