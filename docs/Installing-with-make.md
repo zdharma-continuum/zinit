@@ -18,7 +18,7 @@ Below is a hard core but fully working method of managing a software ([**sdkman.
 # for the atclone'' and atpull'' hooks
 
 zinit ice as"program" pick"$ZPFX/sdkman/bin/sdk" id-as'sdkman' run-atpull \
-    atclone"wget https://get.sdkman.io -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh" \
+    atclone"wget https://get.sdkman.io?rcupdate=false -O scr.sh; SDKMAN_DIR=$ZPFX/sdkman bash scr.sh" \
     atpull"SDKMAN_DIR=$ZPFX/sdkman sdk selfupdate" \
     atinit"export SDKMAN_DIR=$ZPFX/sdkman; source $ZPFX/sdkman/bin/sdkman-init.sh"
 zinit light zdharma/null
