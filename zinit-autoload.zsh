@@ -846,7 +846,10 @@ ZINIT[EXTENDED_GLOB]=""
 
         if [[ "$sw_arr4" = "-M" && "$sw_arr6" != "-R" ]]; then
             if [[ -n "$sw_arr3" ]]; then
-                (( quiet )) || print -r "Restoring bindkey ${(q)sw_arr1} $sw_arr3 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
+                () {
+                    emulate -LR zsh -o extendedglob
+                    (( quiet )) || print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
+                }
                 bindkey -M "$sw_arr5" "$sw_arr1" "$sw_arr3"
             else
                 (( quiet )) || print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
@@ -876,7 +879,10 @@ ZINIT[EXTENDED_GLOB]=""
             bindkey -D "$sw_arr5"
         else
             if [[ -n "$sw_arr3" ]]; then
-                (( quiet )) || print -r "Restoring bindkey ${(q)sw_arr1} $sw_arr3"
+                () {
+                    emulate -LR zsh -o extendedglob
+                    (( quiet )) || print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3"
+                }
                 bindkey "$sw_arr1" "$sw_arr3"
             else
                 (( quiet )) || print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2"
