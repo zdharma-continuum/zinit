@@ -1033,7 +1033,10 @@ ZINIT[EXTENDED_GLOB]=""
                     local -a entry_splitted
                     entry_splitted=( "${(z@)ZINIT[WIDGETS_SAVED__$oth_uspl2]}" )
                     integer found_idx="${entry_splitted[(I)(-N|-C)\ $orig_saved1\\\ *]}"
-                    if (( found_idx ))
+                    local -a entry_splitted2
+                    entry_splitted2=( "${(z@)ZINIT[BINDKEYS__$oth_uspl2]}" )
+                    integer found_idx2="${entry_splitted2[(I)*\ $orig_saved1\ *]}"
+                    if (( found_idx || found_idx2 ))
                     then
                         # Skip multiple loads of the same plugin
                         # TODO: Fully handle multiple plugin loads
@@ -1044,26 +1047,35 @@ ZINIT[EXTENDED_GLOB]=""
                     fi
                 done
                 if [[ -n "$to_process_plugin" ]]; then
-                    if (( !found_idx )); then
+                    if (( !found_idx && !found_idx2 )); then
                         (( quiet )) || print "Problem (1) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
                         continue
                     fi
                     (( quiet )) || print "Chaining widget \`$orig_saved1' to plugin $oth_uspl2"
                     local -a oth_orig_saved
-                    oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx]}}" )
-                    local oth_fun="${oth_orig_saved[4]}"
-                    # oth_orig_saved[2]="${(q)orig_saved2}" # not do this, because
-                                                    # we don't want to call other
-                                                    # plugin's function at any moment
-                    oth_orig_saved[5]="${(q)orig_saved3}" # chain up the widget
-                    entry_splitted[found_idx]="${(q)${(j: :)oth_orig_saved}}"
-                    ZINIT[WIDGETS_SAVED__$oth_uspl2]="${(j: :)entry_splitted}"
-                    integer idx="${functions[$orig_saved2][(i)(#b)([^\{[:space:]]#${orig_saved1}[^\{[:space:]]#)]}"
+                    if (( found_idx )) {
+                        oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx]}}" )
+                        local oth_fun="${oth_orig_saved[4]}"
+                        # oth_orig_saved[2]="${(q)orig_saved2}" # not do this, because
+                                                        # we don't want to call other
+                                                        # plugin's function at any moment
+                        oth_orig_saved[5]="${(q)orig_saved3}" # chain up the widget
+                        entry_splitted[found_idx]="${(q)${(j: :)oth_orig_saved}}"
+                        ZINIT[WIDGETS_SAVED__$oth_uspl2]="${(j: :)entry_splitted}"
+                    } else {
+                        oth_orig_saved=( "${(z)${(Q)entry_splitted2[found_idx2]}}" )
+                        local oth_fun="${widgets[${oth_orig_saved[3]}]#*:}"
+                        print func:$oth_fun
+                    }
+                    integer idx="${functions[$orig_saved2][(i)(#b)([^[:space:]]#${orig_saved1}[^[:space:]]#)]}"
                     if (( idx <= ${#functions[$orig_saved2]} ))
                     then
-                        local prefix_X="${match[1]}"
-                        idx="${functions[$oth_fun][(i)(#b)([^\{[:space:]]#${orig_saved1}[^\}[:space:]]#)]}"
+                        local prefix_X="${match[1]#\{}"
+                        [[ $prefix_X != \$* ]] && prefix_X="${prefix_X%\}}"
+                        idx="${functions[$oth_fun][(i)(#b)([^[:space:]]#${orig_saved1}[^[:space:]]#)]}"
                         if (( idx <= ${#functions[$oth_fun]} )); then
+                            match[1]="${match[1]#\{}"
+                            [[ ${match[1]} != \$* ]] && match[1]="${match[1]%\}}"
                             local oth_prefix_uspl2_X="${match[1]}"
                             if [[ "${widgets[$prefix_X]}" = builtin ]]; then
                                 (( quiet )) || print "Builtin-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
