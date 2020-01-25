@@ -1065,7 +1065,6 @@ ZINIT[EXTENDED_GLOB]=""
                     } else {
                         oth_orig_saved=( "${(z)${(Q)entry_splitted2[found_idx2]}}" )
                         local oth_fun="${widgets[${oth_orig_saved[3]}]#*:}"
-                        print func:$oth_fun
                     }
                     integer idx="${functions[$orig_saved2][(i)(#b)([^[:space:]]#${orig_saved1}[^[:space:]]#)]}"
                     if (( idx <= ${#functions[$orig_saved2]} ))
