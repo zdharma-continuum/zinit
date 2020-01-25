@@ -1076,7 +1076,7 @@ ZINIT[EXTENDED_GLOB]=""
                         if (( idx <= ${#functions[$oth_fun]} )); then
                             match[1]="${match[1]#\{}"
                             [[ ${match[1]} != \$* ]] && match[1]="${match[1]%\}}"
-                            local oth_prefix_uspl2_X="${match[1]}"
+                            eval "local oth_prefix_uspl2_X=\"${match[1]}\""
                             if [[ "${widgets[$prefix_X]}" = builtin ]]; then
                                 (( quiet )) || print "Builtin-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
                                 zle -A ".${prefix_X#.}" "$oth_prefix_uspl2_X"
