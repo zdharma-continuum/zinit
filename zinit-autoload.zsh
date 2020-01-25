@@ -1184,7 +1184,7 @@ ZINIT[EXTENDED_GLOB]=""
             local v2="${(Q)elem_post[$k]}"
 
             # "" means a variable was deleted, not created/changed
-            if [[ "$v2" != "\"\"" ]]; then
+            if [[ $v2 != '""' ]]; then
                 # Don't unset readonly variables
                 [[ "$v1" = *-readonly* || "$v2" = *-readonly* ]] && continue
 
@@ -1201,8 +1201,9 @@ ZINIT[EXTENDED_GLOB]=""
 
                 # Don't unset redefined variables, only newly defined
                 # "" means variable didn't exist before plugin load
-                # (didn't have a type)
-                if [[ "$v1" = "\"\"" || ( "$k" = (RPROMPT|RPS1|RPS2|PROMPT|PS1) && "$v1" != "$v2" ) ]]; then
+                # (didn't have a type).
+                # Do an exception for the prompt variables.
+                if [[ $v1 = '""' || ( $k = (RPROMPT|RPS1|RPS2|PROMPT|PS1|PS2|PS3|PS4) && $v1 != $v2 ) ]]; then
                     found=0
                     for wl in "${whitelist[@]}"; do
                         if [[ "$k" = ${~wl} ]]; then
