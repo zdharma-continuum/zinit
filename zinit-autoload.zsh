@@ -1186,7 +1186,7 @@ ZINIT[EXTENDED_GLOB]=""
             # "" means a variable was deleted, not created/changed
             if [[ $v2 != '""' ]]; then
                 # Don't unset readonly variables
-                [[ "$v1" = *-readonly* || "$v2" = *-readonly* ]] && continue
+                [[ ${(tP)k} == *-readonly(|-*) ]] && continue
 
                 # Don't unset arrays managed by add-zsh-hook,
                 # also ignore a few special parameters
