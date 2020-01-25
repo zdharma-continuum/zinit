@@ -1052,7 +1052,7 @@ ZINIT[EXTENDED_GLOB]=""
                     oth_orig_saved[5]="${(q)orig_saved3}" # chain up the widget
                     entry_splitted[found_idx]="${(q)${(j: :)oth_orig_saved}}"
                     ZINIT[WIDGETS_SAVED__$oth_uspl2]="${(j: :)entry_splitted}"
-                    integer idx="${functions[$orig_saved2][(i)(#b)([^\{[:space:]]#${orig_saved1}[^\{[:space:]])#]}"
+                    integer idx="${functions[$orig_saved2][(i)(#b)([^\{[:space:]]#${orig_saved1}[^\{[:space:]]#)]}"
                     if (( idx <= ${#functions[$orig_saved2]} ))
                     then
                         local prefix_X="${match[1]}"
