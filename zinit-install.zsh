@@ -500,9 +500,6 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             done
         }
 
-        # After additional executions like atclone'' - install completions (1 - plugins)
-        [[ 1 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} = null ]] || .zinit-install-completions "$id_as" "" "0" ${ZINIT_ICE[silent]+-q}
-
         if [[ $site != *releases && ${ZINIT_ICE[nocompile]} = '!' ]] {
             # Compile plugin
             LANG=C sleep 0.3
@@ -511,6 +508,12 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             }
         }
     ) || return $?
+
+    # After additional executions like atclone'' - install completions (1 - plugins)
+    local -A ICE_OPTS
+    ICE_OPTS[opt_-q,--quiet]=1
+    [[ 1 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} = null ]] || \
+        .zinit-install-completions "$id_as" "" "0"
 
     return 0
 } # ]]]
@@ -531,6 +534,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     # just $1 in first case, or $1$2 in second case
     local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" reinstall="${3:-0}" quiet="${${4:+1}:-0}"
     (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
+    typeset -ga INSTALLED_COMPS SKIPPED_COMPS
+    INSTALLED_COMPS=() SKIPPED_COMPS=()
 
     .zinit-any-to-user-plugin "$id_as" ""
     local user="${reply[-2]}"
@@ -564,15 +569,30 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                 command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile"
                 command rm -f "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
             fi
+            INSTALLED_COMPS+=( $cfile )
             (( quiet )) || print "Symlinking completion ${ZINIT[col-uname]}$cfile${ZINIT[col-rst]} to completions directory"
             command ln -s "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
             .zinit-forget-completion "$cfile" "$quiet"
         else
+            SKIPPED_COMPS+=( $cfile )
             (( quiet )) || print "Not symlinking completion \`$cfile', it already exists"
             (( quiet )) || print "${ZINIT[col-info2]}Use \`${ZINIT[col-pname]}zinit creinstall $abbrev_pspec${ZINIT[col-info2]}' to force install${ZINIT[col-rst]}"
         fi
     done
+
+    (( quiet )) && {
+        print -r "${ZINIT[col-msg1]}Installed ${ZINIT[col-obj]}${#INSTALLED_COMPS}" \
+            "${ZINIT[col-msg1]}completions. They are stored in${ZINIT[col-obj2]}" \
+            "\$INSTALLED_COMPS${ZINIT[col-msg1]} array.${ZINIT[col-rst]}"
+        if (( ${#SKIPPED_COMPS} )) {
+            print -r "${ZINIT[col-msg1]}Skipped installing" \
+                "${ZINIT[col-obj]}${#SKIPPED_COMPS}${ZINIT[col-msg1]} completions." \
+                "They are stored in ${ZINIT[col-obj2]}\$SKIPPED_COMPS${ZINIT[col-msg1]} array." \
+                ${ZINIT[col-rst]}
+        }
+    }
+
     .zinit-compinit &>/dev/null
 } # ]]]
 # FUNCTION: .zinit-compinit [[[
@@ -1195,7 +1215,11 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     ) || return $?
 
     # After additional executions like atclone'' - install completions (2 - snippets)
-    [[ 1 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} = null ]] || .zinit-install-completions "%" "$local_dir/$dirname" 0
+    local -A ICE_OPTS
+    ICE_OPTS[opt_-q,--quiet]=1
+    [[ 1 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} = null ]] || \
+        .zinit-install-completions "%" "$local_dir/$dirname" 0
+
     return $retval
 }
 # ]]]
