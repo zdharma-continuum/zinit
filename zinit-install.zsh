@@ -581,7 +581,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         fi
     done
 
-    (( quiet )) && {
+    (( quiet && (INSTALLED_COMPS || SKIPPED_COMPS) )) && {
         print -r "${ZINIT[col-msg1]}Installed ${ZINIT[col-obj]}${#INSTALLED_COMPS}" \
             "${ZINIT[col-msg1]}completions. They are stored in${ZINIT[col-obj2]}" \
             "\$INSTALLED_COMPS${ZINIT[col-msg1]} array.${ZINIT[col-rst]}"
