@@ -61,7 +61,7 @@ fi
 # Modify .zshrc
 #
 THE_ZDOTDIR="${ZDOTDIR:-$HOME}"
-if grep zinit\\.zsh "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
+if egrep '(zinit|zplugin)\.zsh' "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
     echo "[34m▓▒░[0m .zshrc already updated, not making changes"
     exit 0
 fi
