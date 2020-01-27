@@ -208,7 +208,7 @@ case $state in
                 typeset -a plugins completions
                 local p c user plugin
                 for p in "${ZINIT[PLUGINS_DIR]}"/*; do
-                    completions=( "$p"/**/_[^_.][^.]#(N) )
+                    completions=( "$p"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|_zsh_highlight*|/zsdoc/*)(DN) )
                     for c in "${completions[@]}"; do
                         p="${p:t}"
                         user="${p%%---*}"
