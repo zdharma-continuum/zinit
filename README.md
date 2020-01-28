@@ -204,7 +204,7 @@ reports](DONATIONS.md) about what is being done with the money received.
     also `delete`, `recall`, `edit`, `cd`, etc. all receive such completing.
   - The `ice` subcommand can now be skipped – just pass in the ices, e.g.:
     ```zsh
-    zinit atload"zpcompinit; zpcdreplay" blockf
+    zinit atload"zicompinit; zicdreplay" blockf
     zinit light zsh-users/zsh-completions
     ```
   - The `compile` command is able to compile snippets.
@@ -810,9 +810,18 @@ Setup](http://zdharma.org/zinit/wiki/Example-Oh-My-Zsh-setup/).
 
 With no Turbo mode in use, compinit can be called normally, i.e.: as `autoload compinit;
 compinit`. This should be done after loading of all plugins and before possibly calling
-`zinit cdreplay`.  Also, plugins aren't allowed to simply run `compdefs`. You can
-decide whether to run `compdefs` by issuing `zinit cdreplay` (reads: `compdef`-replay).
-To summarize:
+`zinit cdreplay`. 
+
+The `cdreplay` subcommand is provided to re-play all catched `compdef` calls. The
+`compdef` calls are used to define a completion for a command. For example, `compdef
+_git git` defines that the `git` command should be completed by a `_git` function.
+
+The `compdef` function is provided by `compinit` call. As it should be called later,
+after loading all of the plugins, Zinit provides its own `compdef` function that
+catches (i.e.: records in an array) the arguments of the call, so that the loaded
+plugins can freely call `compdef`. Then, the `cdreplay` (*compdef-replay*) can be used,
+after `compinit` will be called (and the original `compdef` function will become
+available), to execute all detected `compdef` calls. To summarize:
 
 ```sh
 source ~/.zinit/bin/zinit.zsh
@@ -823,7 +832,7 @@ compdef _gnu_generic fd  # this will be intercepted by Zinit, because as the com
                          # isn't yet loaded, thus there's no such function `compdef'; yet
                          # Zinit provides its own `compdef' function which saves the
                          # completion-definition for later possible re-run with `zinit
-                         # cdreplay` or `zpcdreplay` (the second one can be used in hooks
+                         # cdreplay` or `zicdreplay` (the second one can be used in hooks
                          # like atload'', atinit'', etc.)
 ...
 zinit load "other/plugin"
@@ -845,23 +854,36 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 ## Calling `compinit` With Turbo Mode
 
 If you load completions using `wait''` Turbo mode then you can add
-`atinit'zpcompinit'` to syntax-highlighting plugin (which should be the last
+`atinit'zicompinit'` to syntax-highlighting plugin (which should be the last
 one loaded, as their (2 projects, [z-sy-h](https://github.com/zsh-users/zsh-syntax-highlighting) &
 [f-sy-h](https://github.com/zdharma/fast-syntax-highlighting))
- documentation state), or `atload'zpcompinit'` to last
-completion-related plugin. `zpcompinit` is a function that just runs `autoload
-compinit; compinit`, created for convenience. There's also `zpcdreplay` which
-will replay any caught compdefs so you can also do: `atinit'zpcompinit;
-zpcdreplay'`, etc. Basically, the whole topic is the same as normal `compinit` call,
+ documentation state), or `atload'zicompinit'` to last
+completion-related plugin. `zicompinit` is a function that just runs `autoload
+compinit; compinit`, created for convenience. There's also `zicdreplay` which
+will replay any caught compdefs so you can also do: `atinit'zicompinit;
+zicdreplay'`, etc. Basically, the whole topic is the same as normal `compinit` call,
 but it is done in `atinit` or `atload` hook of the last related plugin with use of the
-helper functions (`zpcompinit`,`zpcdreplay` & `zpcdclear` – see below for explanation
-of the last one).
+helper functions (`zicompinit`,`zicdreplay` & `zicdclear` – see below for explanation
+of the last one). To summarize:
+
+```zsh
+source ~/.zinit/bin/zinit.zsh
+
+# Load using the for-syntax
+zinit wait lucid for \
+    "some/plugin"
+zinit wait lucid for \
+    "other/plugin"
+
+zinit wait lucid atload"zicompinit; zicdreplay" blockf for \
+    zsh-users/zsh-completions
+```
 
 ## Ignoring Compdefs
 
 If you want to ignore compdefs provided by some plugins or snippets, place their load commands
 before commands loading other plugins or snippets, and issue `zinit cdclear` (or
-`zpcdclear`, designed to be used in hooks like `atload''`):
+`zicdclear`, designed to be used in hooks like `atload''`):
 
 ```SystemVerilog
 source ~/.zinit/bin/zinit.zsh
@@ -964,7 +986,7 @@ declare -A ZINIT  # initial Zinit's hash definition, if configuring before loadi
 | ZINIT[COMPLETIONS_DIR] | As above, but for completion files, e.g. "/opt/zsh/zinit/root_completions"     |
 | ZINIT[SNIPPETS_DIR]    | As above, but for snippets |
 | ZINIT[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. its name can be different) |
-| ZINIT[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zpcompinit`), use to pass -C to speed up loading |
+| ZINIT[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zicompinit`), use to pass -C to speed up loading |
 | ZINIT[MUTE_WARNINGS]   | If set to `1`, then mutes some of the Zinit warnings, specifically the `plugin already registered` warning |
 
 There is also `$ZPFX`, set by default to `~/.zinit/polaris` – a directory
