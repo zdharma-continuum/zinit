@@ -1,6 +1,8 @@
 #!/usr/bin/env zsh
 
-emulate -LR zsh -o typesetsilent -o extendedglob -o warncreateglobal
+emulate -LR zsh
+
+setopt typesetsilent extendedglob warncreateglobal
 
 # Credit to molovo/revolver for the ideas
 typeset -ga progress_frames
