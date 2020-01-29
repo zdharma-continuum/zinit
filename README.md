@@ -900,6 +900,10 @@ zinit cdreplay -q # <- execute compdefs provided by rest of plugins
 zinit cdlist # look at gathered compdefs
 ```
 
+The `cdreplay` is important if you use plugins like
+`OMZ::plugins/kubectl/kubectl.plugin.zsh` or `asdf-vm/asdf`, because those plugins call
+`compdef`.
+
 ## Disabling System-Wide `compinit` Call (Ubuntu)
 
 On Ubuntu users might get surprised that e.g. their completions work while they didn't
