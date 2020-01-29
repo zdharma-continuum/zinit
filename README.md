@@ -832,7 +832,7 @@ compdef _gnu_generic fd  # this will be intercepted by Zinit, because as the com
                          # isn't yet loaded, thus there's no such function `compdef'; yet
                          # Zinit provides its own `compdef' function which saves the
                          # completion-definition for later possible re-run with `zinit
-                         # cdreplay` or `zicdreplay` (the second one can be used in hooks
+                         # cdreplay' or `zicdreplay' (the second one can be used in hooks
                          # like atload'', atinit'', etc.)
 ...
 zinit load "other/plugin"
@@ -840,9 +840,9 @@ zinit load "other/plugin"
 autoload -Uz compinit
 compinit
 
-zinit cdreplay -q # -q is for quiet; actually run all the `compdef's saved before
+zinit cdreplay -q   # -q is for quiet; actually run all the `compdef's saved before
                     #`compinit` call (`compinit' declares the `compdef' function, so
-                    # it cannot be used until `compinit` is ran; Zinit solves this
+                    # it cannot be used until `compinit' is ran; Zinit solves this
                     # via intercepting the `compdef'-calls and storing them for later
                     # use with `zinit cdreplay')
 ```
