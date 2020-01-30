@@ -23,6 +23,9 @@ zinit light ogham/exa
 zinit ice from"gh-r" as"program" mv"docker* -> docker-compose"
 zinit light docker/compose
 
+# jarun/nnn, a file browser, using the for-syntax
+zinit pick"misc/quitcd/quitcd.zsh" sbin make light-mode for jarun/nnn
+
 zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \
     atpull"%atclone" make pick"src/vim"
 zinit light vim/vim
@@ -169,13 +172,13 @@ zinit ice wait"2" lucid
 zinit load voronkovich/gitignore.plugin.zsh
 
 # Autosuggestions & fast-syntax-highlighting
-zinit ice wait"1" lucid atinit"ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay"
+zinit ice wait lucid atinit"ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay"
 zinit light zdharma/fast-syntax-highlighting
 # zsh-autosuggestions
-zinit ice wait"1" lucid atload"!_zsh_autosuggest_start"
+zinit ice wait lucid atload"!_zsh_autosuggest_start"
 zinit load zsh-users/zsh-autosuggestions
 
-# F-Sy-H automatic themes plugin – available for patrons:
+# F-Sy-H automatic per-directory themes plugin – available for patrons:
 # https://patreon.com/psprint
 zinit ice wait"1" lucid from"psprint@gitlab.com"
 zinit load psprint/fsh-auto-themes
