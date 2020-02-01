@@ -2668,10 +2668,9 @@ ZINIT[EXTENDED_GLOB]=""
 
 # Then \${0:h} to get plugin's directory
 
-if [[ \${zsh_loaded_plugins[-1]} != */${plugin:t} && -z \${fpath[(r)\${0:h}]} ]]
-then
+if [[ \${zsh_loaded_plugins[-1]} != */${plugin:t} && -z \${fpath[(r)\${0:h}]} ]] {
     fpath+=( "\${0:h}" )
-fi
+}
 
 # Standard hash for plugins, to not pollute the namespace
 typeset -gA Plugins
