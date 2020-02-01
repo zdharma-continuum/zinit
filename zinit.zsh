@@ -2439,6 +2439,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]]; then
             builtin print -r -- "${ZINIT[col-error]}WARNING:${ZINIT[col-rst]}" \
                 "${ZINIT[col-msg1]}Zplugin -> Zinit project rename needs a new" \
                 "module - ${ZINIT[col-obj]}recompiling${ZINIT[col-rst]}…${reset_color}"
+            command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null
             if command make -C "${ZINIT[BIN_DIR]}/zmodules" &>/dev/null; then
                 print -r -- "${ZINIT[col-pre]}Compilation successful!${ZINIT[col-rst]}"
             else
