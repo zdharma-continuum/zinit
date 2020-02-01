@@ -72,8 +72,8 @@ zinit load asciinema/asciinema.git
 
 # Installation of Rust compiler environment via the z-a-rust annex
 zplugin id-as"rust" wait=1 as=null sbin="bin/*" lucid rustup \
-    atclone="sched +0 zi creinstall -q rust" atpull="%atclone" \
-    atload="export CARGO_HOME=\$PWD; export RUSTUP_HOME=\$PWD/rustup" for \
+    atload="[[ ! -f ${ZINIT[COMPLETIONS_DIR]}/_cargo ]] && zi creinstall -q rust; \
+    export CARGO_HOME=\$PWD; export RUSTUP_HOME=\$PWD/rustup" for \
         zdharma/null
 ```
 
