@@ -2866,6 +2866,9 @@ zinit light ogham/exa
 zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;docker* -&gt; docker-compose&quot;
 zinit light docker/compose
 
+# jarun/nnn, a file browser, using the for-syntax
+zinit pick&quot;misc/quitcd/quitcd.zsh&quot; sbin make light-mode for jarun/nnn
+
 zinit ice as&quot;program&quot; atclone&quot;rm -f src/auto/config.cache; ./configure&quot; \
     atpull&quot;%atclone&quot; make pick&quot;src/vim&quot;
 zinit light vim/vim
@@ -2909,6 +2912,12 @@ zinit ice as&quot;command&quot; wait lucid \
     atpull'%atclone' test'0' \
     pick&quot;$ZPFX/bin/asciinema&quot;
 zinit load asciinema/asciinema.git
+
+# Installation of Rust compiler environment via the z-a-rust annex
+zplugin id-as&quot;rust&quot; wait=1 as=null sbin=&quot;bin/*&quot; lucid rustup \
+    atclone=&quot;sched +0 zi creinstall -q rust&quot; atpull=&quot;%atclone&quot; \
+    atload=&quot;export CARGO_HOME=\$PWD; export RUSTUP_HOME=\$PWD/rustup&quot; for \
+        zdharma/null
 </code></pre>
 
 <h2 id="completions">Completions<a class="headerlink" href="#completions" title="Permanent link">#</a></h2>
@@ -3006,13 +3015,13 @@ zinit ice wait&quot;2&quot; lucid
 zinit load voronkovich/gitignore.plugin.zsh
 
 # Autosuggestions &amp; fast-syntax-highlighting
-zinit ice wait&quot;1&quot; lucid atinit&quot;ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay&quot;
+zinit ice wait lucid atinit&quot;ZPLGM[COMPINIT_OPTS]=-C; zpcompinit; zpcdreplay&quot;
 zinit light zdharma/fast-syntax-highlighting
 # zsh-autosuggestions
-zinit ice wait&quot;1&quot; lucid atload&quot;!_zsh_autosuggest_start&quot;
+zinit ice wait lucid atload&quot;!_zsh_autosuggest_start&quot;
 zinit load zsh-users/zsh-autosuggestions
 
-# F-Sy-H automatic themes plugin – available for patrons:
+# F-Sy-H automatic per-directory themes plugin – available for patrons:
 # https://patreon.com/psprint
 zinit ice wait&quot;1&quot; lucid from&quot;psprint@gitlab.com&quot;
 zinit load psprint/fsh-auto-themes
