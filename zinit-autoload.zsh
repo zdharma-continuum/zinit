@@ -2675,7 +2675,7 @@ fi
 
 # Standard hash for plugins, to not pollute the namespace
 typeset -gA Plugins
-Plugins[${${(U)plugin:t}//-/_}_DIR]=\${0:h}
+Plugins[${${(U)plugin:t}//-/_}_DIR]="\${0:h}"
 
 autoload -Uz example-script
 
