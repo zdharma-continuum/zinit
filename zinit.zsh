@@ -2443,7 +2443,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]]; then
             command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null
             .zinit-module build &>/dev/null
             if command make -C "${ZINIT[BIN_DIR]}/zmodules" &>/dev/null; then
-                print -r -- "${ZINIT[col-pre]}Compilation successful!${ZINIT[col-rst]}"
+                print -r -- "${ZINIT[col-pre]}Build successful!${ZINIT[col-rst]}"
             else
                 print -r -- "${ZINIT[col-error]}Compilation failed.${ZINIT[col-rst]}" \
                      "${ZINIT[col-pre]}You can enter the following command:${ZINIT[col-rst]}" \
