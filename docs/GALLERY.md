@@ -69,6 +69,12 @@ zinit ice as"command" wait lucid \
     atpull'%atclone' test'0' \
     pick"$ZPFX/bin/asciinema"
 zinit load asciinema/asciinema.git
+
+# Installation of Rust compiler environment via the z-a-rust annex
+zplugin id-as"rust" wait=1 as=null sbin="bin/*" lucid rustup \
+    atclone="sched +0 zi creinstall -q rust" atpull="%atclone" \
+    atload="export CARGO_HOME=\$PWD; export RUSTUP_HOME=\$PWD/rustup" for \
+        zdharma/null
 ```
 
 ## Completions
