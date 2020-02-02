@@ -3558,11 +3558,11 @@ zinit creinstall zsh-users/zsh-completions   # install
 <h3 id="listing_completions">Listing Completions<a class="headerlink" href="#listing_completions" title="Permanent link">#</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><strong><code>zplg</code> is an alias that can be used in interactive sessions.</strong></p>
+<p><strong><code>zi</code> is an alias that can be used in interactive sessions.</strong></p>
 </div>
 <p>To see what completions <strong>all</strong> plugins provide, in tabular formatting and with
 name of each plugin, use:</p>
-<pre><code class="zsh">zplg clist
+<pre><code class="zsh">zi clist
 </code></pre>
 
 <p>This command is specially adapted for plugins like <code>zsh-users/zsh-completions</code>,
@@ -3576,7 +3576,7 @@ cask, cf, chattr             zsh-users/zsh-completions
 </code></pre>
 
 <p>You can show more completions per line by providing an <strong>argument</strong> to <code>clist</code>,
-e.g. <code>zplg clist 6</code>, will show:</p>
+e.g. <code>zi clist 6</code>, will show:</p>
 <pre><code class="zsh">...
 bundle, caffeinate, cap, cask, cf, chattr      zsh-users/zsh-completions
 cheat, choc, cmake, coffee, column, composer   zsh-users/zsh-completions
@@ -3587,9 +3587,9 @@ console, dad, debuild, dget, dhcpcd, diana     zsh-users/zsh-completions
 <h3 id="enabling_and_disabling_completions">Enabling and Disabling Completions<a class="headerlink" href="#enabling_and_disabling_completions" title="Permanent link">#</a></h3>
 <p>Completions can be disabled, so that e.g. original Zsh completion will be used.
 The commands are very basic, they only need completion <strong>name</strong>:</p>
-<pre><code class="zsh">$ zplg cdisable cmake
+<pre><code class="zsh">$ zi cdisable cmake
 Disabled cmake completion belonging to zsh-users/zsh-completions
-$ zplg cenable cmake
+$ zi cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
 </code></pre>
 
@@ -3637,8 +3637,8 @@ without any problems. It is also sufficient to provide just the word
 <code>wait</code>, it’ll work like <code>wait'0'</code> (and <code>wait'!'</code> like <code>wait'!0'</code>).</p>
 <p>The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
 is needed for themes. The same with Prezto prompts, with a longer delay:</p>
-<pre><code class="zsh">zplg ice svn silent wait'!1' atload'prompt smiley'
-zplg snippet PZT::modules/prompt
+<pre><code class="zsh">zi ice svn silent wait'!1' atload'prompt smiley'
+zi snippet PZT::modules/prompt
 </code></pre>
 
 <p>Using <code>zsh-users/zsh-autosuggestions</code> without any drawbacks:</p>
