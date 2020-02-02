@@ -189,13 +189,13 @@ zinit creinstall zsh-users/zsh-completions   # install
 ### Listing Completions
 
 !!!note
-    **`zplg` is an alias that can be used in interactive sessions.**
+    **`zi` is an alias that can be used in interactive sessions.**
 
 To see what completions **all** plugins provide, in tabular formatting and with
 name of each plugin, use:
 
 ``` zsh
-zplg clist
+zi clist
 ```
 
 This command is specially adapted for plugins like `zsh-users/zsh-completions`,
@@ -211,7 +211,7 @@ cask, cf, chattr             zsh-users/zsh-completions
 ```
 
 You can show more completions per line by providing an **argument** to `clist`,
-e.g. `zplg clist 6`, will show:
+e.g. `zi clist 6`, will show:
 
 ``` zsh
 ...
@@ -227,9 +227,9 @@ Completions can be disabled, so that e.g. original Zsh completion will be used.
 The commands are very basic, they only need completion **name**:
 
 ```zsh
-$ zplg cdisable cmake
+$ zi cdisable cmake
 Disabled cmake completion belonging to zsh-users/zsh-completions
-$ zplg cenable cmake
+$ zi cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
 ```
 
@@ -290,8 +290,8 @@ The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
 is needed for themes. The same with Prezto prompts, with a longer delay:
 
 ``` zsh
-zplg ice svn silent wait'!1' atload'prompt smiley'
-zplg snippet PZT::modules/prompt
+zi ice svn silent wait'!1' atload'prompt smiley'
+zi snippet PZT::modules/prompt
 ```
 
 Using `zsh-users/zsh-autosuggestions` without any drawbacks:
