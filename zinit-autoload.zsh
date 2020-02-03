@@ -1458,7 +1458,7 @@ ZINIT[EXTENDED_GLOB]=""
 
             if (( do_update )) {
                 (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Removing the previous file(s) (-r/--reset given)..."
+                    print -P "${ZINIT[col-msg2]}Removing the previous file(s) (-r/--reset given)...%f"
                     command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)
                 }
                 ZINIT_ICE=( "${(kv)ice[@]}" )
@@ -1530,7 +1530,7 @@ ZINIT[EXTENDED_GLOB]=""
 
               if (( do_update )) {
                   (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                      print "Resetting the repository (-r/--reset given)..."
+                      print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f"
                       command git reset --hard HEAD
                   }
                   ZINIT_ICE=( "${(kv)ice[@]}" )
