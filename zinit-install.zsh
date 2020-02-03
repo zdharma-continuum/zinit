@@ -975,7 +975,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
                     if (( !skip_dl )) {
                         [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                            [[ -f "$dirname/$filename" ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f"
+                            [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f"
                             command rm -f "$dirname/$filename"
                         }
                     }
@@ -1037,7 +1037,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         } else {
             # File
             [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                [[ -f "$local_dir/$dirname/$filename" ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f"
+                [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f"
                 command rm -f "$local_dir/$dirname/$filename"
             }
 
