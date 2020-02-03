@@ -1530,7 +1530,7 @@ ZINIT[EXTENDED_GLOB]=""
 
               if (( do_update )) {
                   (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                      [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Resetting the repository (-r/--reset given)..."
+                      print "Resetting the repository (-r/--reset given)..."
                       command git reset --hard HEAD
                   }
                   ZINIT_ICE=( "${(kv)ice[@]}" )
