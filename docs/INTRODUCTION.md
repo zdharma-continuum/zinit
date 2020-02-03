@@ -269,7 +269,7 @@ lags, freezes, etc. – the command line is fully usable while the plugins are
 being loaded, for number of such plugins like `10` or `20`.
 
 !!!note
-    **Turbo mode will speed up Zsh startup by <u>50%–73%</u>. For example instead of 200 ms, it'll be 50 ms (!)**
+    **Turbo mode will speed up Zsh startup by <u>50%–80%</u>. For example instead of 200 ms, it'll be 40 ms (!)**
 
 Zsh 5.3 or greater is required. To use this Turbo mode add `wait` ice to the
 target plugin in one of following ways:
