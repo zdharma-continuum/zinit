@@ -27,7 +27,6 @@ zinit wait"1" lucid from"gh-r" as"null" for \
      sbin"**/fd"        @sharkdp/fd \
      sbin"**/bat"       @sharkdp/bat \
      sbin"exa* -> exa"  ogham/exa
-    
 
 zinit ice from"gh-r" as"program" mv"docker* -> docker-compose"
 zinit light docker/compose
