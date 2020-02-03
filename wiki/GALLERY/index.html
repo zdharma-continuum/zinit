@@ -2848,7 +2848,8 @@
                 <h1 id="gallery_of_zinit_invocations">Gallery Of Zinit Invocations<a class="headerlink" href="#gallery_of_zinit_invocations" title="Permanent link">#</a></h1>
 <p>PRs welcomed :)</p>
 <h2 id="programs">Programs<a class="headerlink" href="#programs" title="Permanent link">#</a></h2>
-<pre><code class="zsh">zinit ice from&quot;gh-r&quot; as&quot;program&quot;
+<pre><code class="zsh"># junegunn/fzf-bin
+zinit ice from&quot;gh-r&quot; as&quot;program&quot;
 zinit light junegunn/fzf-bin
 
 # sharkdp/fd
@@ -2862,6 +2863,14 @@ zinit light sharkdp/bat
 # ogham/exa, replacement for ls
 zinit ice wait&quot;2&quot; lucid from&quot;gh-r&quot; as&quot;program&quot; mv&quot;exa* -&gt; exa&quot;
 zinit light ogham/exa
+
+# All of the above using the for-syntax and also z-a-bin-gem-node annex
+zinit wait&quot;1&quot; lucid from&quot;gh-r&quot; as&quot;null&quot; for \
+     sbin&quot;fzf&quot;          junegunn/fzf-bin \
+     sbin&quot;**/fd&quot;        @sharkdp/fd \
+     sbin&quot;**/bat&quot;       @sharkdp/bat \
+     sbin&quot;exa* -&gt; exa&quot;  ogham/exa
+
 
 zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;docker* -&gt; docker-compose&quot;
 zinit light docker/compose
@@ -2914,7 +2923,7 @@ zinit ice as&quot;command&quot; wait lucid \
 zinit load asciinema/asciinema.git
 
 # Installation of Rust compiler environment via the z-a-rust annex
-zplugin id-as&quot;rust&quot; wait=1 as=null sbin=&quot;bin/*&quot; lucid rustup \
+zinit id-as&quot;rust&quot; wait=1 as=null sbin=&quot;bin/*&quot; lucid rustup \
     atload=&quot;[[ ! -f ${ZINIT[COMPLETIONS_DIR]}/_cargo ]] &amp;&amp; zi creinstall -q rust; \
     export CARGO_HOME=\$PWD; export RUSTUP_HOME=\$PWD/rustup&quot; for \
         zdharma/null
