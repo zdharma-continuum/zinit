@@ -727,7 +727,7 @@ hljs.registerLanguage("bash", function(e) {
       "ice-mod": "svn proto from teleid bindmap cloneopts depth wait blockf subscribe pick bpick as ver silent lucid notify mv cp atinit atclone atpull nocd has cloneonly make service trackbinds compile nocompile nocompletions submods countdown trigger-load light-mode is-snippet sh bash ksh csh test zman submod dl patch sbin fbin fsrc ferc fmod gem node rustup cargo",
       command:
         "load unload light snippet cuninstall creinstall clist cdisable cenable report delete update csearch times help",
-      zini: "",
+      zpl: "",
       ice: "ice"
     },
     c: [
@@ -736,7 +736,7 @@ hljs.registerLanguage("bash", function(e) {
 	b: /wrap-track|id-as|on-update-of|run-atpull|reset-prompt|(multi|^| )src(?!\/)|((un|at)?)load(?![\w-\s])|if(?![\s\w])/,
       },
       {
-        cN: "zini",
+        cN: "zpl",
 	b: /zinit(?!\S)|zi(?!\S)|zini(?!\S)|for(?!\S)/,
       },
       {
