@@ -5,6 +5,7 @@ PRs welcomed :)
 ## Programs
 
 ```zsh
+# junegunn/fzf-bin
 zinit ice from"gh-r" as"program"
 zinit light junegunn/fzf-bin
 
@@ -19,6 +20,14 @@ zinit light sharkdp/bat
 # ogham/exa, replacement for ls
 zinit ice wait"2" lucid from"gh-r" as"program" mv"exa* -> exa"
 zinit light ogham/exa
+
+# All of the above using the for-syntax and also z-a-bin-gem-node annex
+zinit wait"1" lucid from"gh-r" as"null" for \
+     sbin"fzf"          junegunn/fzf-bin \
+     sbin"**/fd"        @sharkdp/fd \
+     sbin"**/bat"       @sharkdp/bat \
+     sbin"exa* -> exa"  ogham/exa
+    
 
 zinit ice from"gh-r" as"program" mv"docker* -> docker-compose"
 zinit light docker/compose
@@ -71,7 +80,7 @@ zinit ice as"command" wait lucid \
 zinit load asciinema/asciinema.git
 
 # Installation of Rust compiler environment via the z-a-rust annex
-zplugin id-as"rust" wait=1 as=null sbin="bin/*" lucid rustup \
+zinit id-as"rust" wait=1 as=null sbin="bin/*" lucid rustup \
     atload="[[ ! -f ${ZINIT[COMPLETIONS_DIR]}/_cargo ]] && zi creinstall -q rust; \
     export CARGO_HOME=\$PWD; export RUSTUP_HOME=\$PWD/rustup" for \
         zdharma/null
