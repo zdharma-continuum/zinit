@@ -1307,7 +1307,7 @@ ziextract() {
                             fname=${file2%:*} desc=${file2##*:}
                             local type2=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                             if [[ $type != $type2 && \
-                                $type = (zip|rar|xz|7-zip|gzip|bzip2|tar)
+                                $type2 = (zip|rar|xz|7-zip|gzip|bzip2|tar)
                             ]] {
                                 # TODO: if multiple archives are really in the archive,
                                 # this might delete too soon… However, it's unusual case.
