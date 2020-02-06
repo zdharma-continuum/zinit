@@ -1275,11 +1275,14 @@ ziextract() {
         }
         # Second, try to find the archive via `file' tool
         if (( !${#files} )) {
-            local -a output
-            output=( ${(@f)"$(command file -- **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)(DN) 2>&1)"} )
+            local -a output infiles
+            infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)(DN) )
+            output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
             for file ( $output ) {
-                local fname=${file%:*} desc=${file##*:} type
-                type=${(L)desc/(#b)(#i)* (zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[1]}
+                local fname=${(M)file#(${(~j:|:)infiles}): } desc=${file#(${(~j:|:)infiles}): } type
+                fname=${fname%%??}
+                [[ -z $fname ]] && { print skipping …; continue; }
+                type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar) ]] {
                     print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
                         "Note:${ZINIT[col-rst]}" \
@@ -1302,7 +1305,7 @@ ziextract() {
                         local file2
                         for file2 ( $output2 ) {
                             fname=${file2%:*} desc=${file2##*:}
-                            local type2=${(L)desc/(#b)(#i)* (zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[1]}
+                            local type2=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                             if [[ $type != $type2 && \
                                 $type = (zip|rar|xz|7-zip|gzip|bzip2|tar)
                             ]] {
