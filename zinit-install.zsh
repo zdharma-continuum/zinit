@@ -1268,7 +1268,7 @@ ziextract() {
         # First try known file extensions
         local -a files
         integer ret_val
-        files=( **/*.(zip|rar|tgz|tbz2|tar.gz|tar.bz2|txz|tar.xz|gz|xz|dmg)~*/.(_backup|git)/*(DN) )
+        files=( **/*.(zip|rar|tgz|tbz2|tar.gz|tar.bz2|txz|tar.xz|gz|xz|tar|dmg)~*/.(_backup|git)/*(DN) )
         for file ( $files ) {
             ziextract "$file" $opt_move $opt_norm
             ret_val+=$?
