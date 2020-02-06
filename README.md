@@ -55,8 +55,8 @@ reports](DONATIONS.md) about what is being done with the money received.
     by users):
     - the `ZPLGM` hash is now `ZINIT`,
     - the annexes are moved under [zinit-zsh](https://github.com/zinit-zsh)
-      organization (it needs a logo, could you create one, if you're skilled in
-      graphics?).
+      organization (it needs a logo, soon a poll about selecting one will start! you
+      can submit your own proposal – just open an issue).
 
 * 19-01-2020
   - The name has been changed to **Zinit** based on the results of the
