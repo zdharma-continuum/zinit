@@ -1286,23 +1286,33 @@ ziextract() {
                         "detected a ${ZINIT[col-obj]}$type${ZINIT[col-rst]}" \
                         "archive in the file ${ZINIT[col-file]}$fname" \
                         "${ZINIT[col-rst]}"
-                    ziextract "$fname" "$type" $opt_move $opt_norm
+                    ziextract "$fname" "$type" $opt_move $opt_norm --norm
                     integer iret_val=$?
                     ret_val+=iret_val
 
                     (( iret_val )) && continue
 
                     # Support nested tar.(bz2|gz|…) archives
+                    local infname=$fname
                     [[ -f $fname.out ]] && fname=$fname.out
+                    files=( *.tar(ND) )
                     if [[ -f $fname || -f ${fname:r} ]] {
-                        output=( ${(@f)"$(command file -- "$fname"(N) "${fname:r}"(N) 2>&1)"} )
-                        fname=${output[1]%:*} desc=${output[1]##*:}
-                        local type2=${(L)desc/(#b)(#i)* (zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[1]}
-                        if [[ $type != $type2 && \
-                            $type = (zip|rar|xz|7-zip|gzip|bzip2|tar)
-                        ]] {
-                            ziextract "$fname" "$type2" $opt_move $opt_norm
-                            ret_val+=$?
+                        local -a output2
+                        output2=( ${(@f)"$(command file -- "$fname"(N) "${fname:r}"(N) $files[1](N) 2>&1)"} )
+                        local file2
+                        for file2 ( $output2 ) {
+                            fname=${file2%:*} desc=${file2##*:}
+                            local type2=${(L)desc/(#b)(#i)* (zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[1]}
+                            if [[ $type != $type2 && \
+                                $type = (zip|rar|xz|7-zip|gzip|bzip2|tar)
+                            ]] {
+                                # TODO: if multiple archives are really in the archive,
+                                # this might delete too soon… However, it's unusual case.
+                                [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
+                                ziextract "$fname" "$type2" $opt_move $opt_norm
+                                print ziextract "$fname" "$type2" $opt_move $opt_norm
+                                ret_val+=$?
+                            }
                         }
                     }
                 }
