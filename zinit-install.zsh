@@ -490,7 +490,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             [[ -n $atclone ]] && @zinit-substitute atclone
 
             [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!}}; }
-            (( ${+ZINIT_ICE[atclone]} )) && .zinit-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ -n $atclone ]] && .zinit-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
             [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
 
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atclone <->]}" )
@@ -1042,7 +1042,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             }
 
             # Run annexes' atpull hooks (the before atpull-ice ones)
-            [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && {
+            [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && {
                 reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
@@ -1178,7 +1178,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             local atclone=${ZINIT_ICE[atclone]}
             [[ -n $atclone ]] && @zinit-substitute atclone
 
-            (( ${+ZINIT_ICE[atclone]} )) && .zinit-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ -n $atclone ]] && .zinit-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
             # Run annexes' atclone hooks (the after atclone-ice ones)
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atclone <->]}" )
