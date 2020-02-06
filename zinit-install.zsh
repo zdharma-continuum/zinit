@@ -1371,6 +1371,9 @@ ziextract() {
             }
             :zinit-extract() { command xz -d "$file"; }
             ;;
+        (*.7z|*.7-zip)
+            :zinit-extract() { command 7z x "$file" >/dev/null;  }
+            ;;
         (*.dmg)
             :zinit-extract() {
                 local prog
