@@ -1273,6 +1273,36 @@ ziextract() {
             ziextract "$file" $opt_move $opt_norm
             ret_val+=$?
         }
+        # Second, try to find the archive via `file' tool
+        if (( !${#files} )) {
+            local -a output
+            output=( ${(@f)"$(command file -- **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)(DN) 2>&1)"} )
+            for file ( $output ) {
+                local fname=${file%:*} desc=${file##*:} type
+                type=${(L)desc/(#b)(#i)* (zip|rar|gzip|bzip2|tar) */$match[1]}
+                if [[ $type = (zip|rar|gzip|bzip2|tar) ]]; then
+                    print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
+                        "Note:${ZINIT[col-rst]}" \
+                        "detected a ${ZINIT[col-obj]}$type${ZINIT[col-rst]}" \
+                        "archive in the file ${ZINIT[col-file]}$fname" \
+                        "${ZINIT[col-rst]}"
+                    ziextract "$fname" "$type" $opt_move $opt_norm
+                    ret_val+=$?
+
+                    # Support nested tar.(bz2|gz|…) archives
+                    [[ -f $fname.out ]] && fname=$fname.out
+                    if [[ -f $fname ]] {
+                        output=( ${(@f)"$(command file -- "$fname" 2>&1)"} )
+                        fname=${output[1]%:*} desc=${output[1]##*:}
+                        type=${(L)desc/(#b)(#i)* (zip|rar|gzip|bzip2|tar) */$match[1]}
+                        if [[ $type = (zip|rar|gzip|bzip2|tar) ]] {
+                            ziextract "$fname" "$type" $opt_move $opt_norm
+                            ret_val+=$?
+                        }
+                    }
+                fi
+            }
+        }
         return $ret_val
     }
 
