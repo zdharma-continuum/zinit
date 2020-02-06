@@ -1360,6 +1360,10 @@ ziextract() {
             :zinit-extract() { command bunzip2 "$file"; }
             ;;
         (*.xz)
+            if [[ $file != *.xz ]] {
+                command mv $file $file.xz
+                file=$file.xz
+            }
             :zinit-extract() { command xz -d "$file"; }
             ;;
         (*.dmg)
