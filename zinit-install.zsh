@@ -1323,7 +1323,7 @@ ziextract() {
         (*.tar)
             :zinit-extract() { command tar -xf "$file"; }
             ;;
-        (*.gz)
+        (*.gz|*.gzip)
             :zinit-extract() { command gunzip "$file"; }
             ;;
         (*.dmg)
