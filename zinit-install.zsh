@@ -1310,7 +1310,6 @@ ziextract() {
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
                                 ziextract "$fname" "$type2" $opt_move $opt_norm
-                                print ziextract "$fname" "$type2" $opt_move $opt_norm
                                 ret_val+=$?
                             }
                         }
