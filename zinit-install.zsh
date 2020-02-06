@@ -1255,12 +1255,26 @@ ziextract() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-    local -a opt_move opt_norm
-    zparseopts -D -E -move=opt_move -norm=opt_norm || \
+    local -a opt_move opt_norm opt_auto
+    zparseopts -D -E -move=opt_move -norm=opt_norm -auto=opt_auto || \
         { print -P -r -- "%F{160}Incorrect options given to \`ziextract' (available are: %F{221}--move%F{160})%f"; return 1; }
 
     local file="$1" ext="$2"
-    integer move=${${${(M)${#opt_move}:#0}:+0}:-1} norm=${${${(M)${#opt_norm}:#0}:+0}:-1}
+    integer move=${${${(M)${#opt_move}:#0}:+0}:-1} \
+            norm=${${${(M)${#opt_norm}:#0}:+0}:-1} \
+            auto=${${${(M)${#opt_auto}:#0}:+0}:-1}
+
+    if (( auto )) {
+        # First try known file extensions
+        local -a files
+        integer ret_val
+        files=( **/*.(zip|rar|tgz|tbz2|tar.gz|tar.bz2|txz|tar.xz|gz|xz|dmg)~*/.(_backup|git)/*(DN) )
+        for file ( $files ) {
+            ziextract "$file" $opt_move $opt_norm
+            ret_val+=$?
+        }
+        return $ret_val
+    }
 
     if [[ ! -e $file ]] {
         print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
