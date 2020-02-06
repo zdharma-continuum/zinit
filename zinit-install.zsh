@@ -1371,6 +1371,10 @@ ziextract() {
             :zinit-extract() { command tar -xf "$file"; }
             ;;
         (*.gz|*.gzip)
+            if [[ $file != *.gz ]] {
+                command mv $file $file.gz
+                file=$file.gz
+            }
             :zinit-extract() { command gunzip "$file"; }
             ;;
         (*.bz2|*.bzip2)
