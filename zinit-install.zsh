@@ -1326,6 +1326,12 @@ ziextract() {
         (*.gz|*.gzip)
             :zinit-extract() { command gunzip "$file"; }
             ;;
+        (*.bz2|*.bzip2)
+            :zinit-extract() { command bunzip2 "$file"; }
+            ;;
+        (*.xz)
+            :zinit-extract() { command xz -d "$file"; }
+            ;;
         (*.dmg)
             :zinit-extract() {
                 local prog
