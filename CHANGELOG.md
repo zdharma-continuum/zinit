@@ -9,6 +9,204 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 21-01-2020
+  - A few tips for the project rename following the field reports (the issues created
+    by users):
+    - the `ZPLGM` hash is now `ZINIT`,
+    - the annexes are moved under [zinit-zsh](https://github.com/zinit-zsh)
+      organization (it needs a logo, could you create one, if you're skilled in
+      graphics?).
+
+* 19-01-2020
+  - The name has been changed to **Zinit** based on the results of the
+    [poll](https://github.com/zdharma/zinit/issues/235).
+  - In general, you don't have to do anything after the name change.
+  - Only a run of `zinit update --all` might be necessary.
+  - You might also want to rename your `zplugin` calls in `zshrc` to `zinit`.
+  - Zinit will reuse `~/.zplugin` directory if it exists, otherwise it'll create
+    `~/.zinit`.
+
+* 15-01-2020
+  - There's a new function, `zpextract`, which unpacks the given file. It supports many
+    formats (notably also `dmg` images) – if there's a format that's unsupported please
+    don't hesitate to [make a
+    request](https://github.com/zdharma/zinit/issues/new?template=feature_request.md)
+    for it to be added. A few facts:
+    - the function is available only at the time of the plugin/snippet installation,
+    - it's to be used within `atclone` and `atpull` ices,
+    - it has an optional `--move` option which moves all the files from a subdirectory
+      up one level,
+    - one other option `--norm` prevents the archive from being deleted upon unpacking.
+  - snippets now aren't re-downloaded unless they're newer on the HTTP server; use
+    this with the `--norm` option of `zpextract` to prevent unnecessary updates; for
+    example, the [firefox-dev package](https://github.com/Zsh-Packages/firefox-dev)
+    uses this option for this purpose,
+  - GitHub doesn't report proper `Last-Modified` HTTP server for the files in the
+    repositories so the feature doesn't yet work with such files.
+
+* 13-12-2019
+  - The packages have been disconnected from NPM registry and now live only on Zsh
+    Packages organization. Publishing to NPM isn't needed.
+  - There are two interesting packages,
+    [any-gem](https://github.com/Zsh-Packages/any-gem) and
+    [any-node](https://github.com/Zsh-Packages/any-node). They allow to install any
+    Gem(s) or Node module(s) locally in a newly created plugin directory. For example:
+
+    ```zsh
+    zinit pack param='GEM -> rails' for any-gem
+    zinit pack param='MOD -> doctoc' for any-node
+    # To have the command in zshrc, add an id-as'' ice so that
+    # Zinit knows that the package is already installed
+    # (also: the Unicode arrow is allowed)
+    zinit id-as=jekyll pack param='GEM → jekyll' for any-gem
+    ```
+
+    The binaries will be exposed without altering the PATH via shims
+    ([Bin-Gem-Node](https://github.com/zinit-zsh/z-a-bin-gem-node) annex is needed).
+    Shims are correctly removed when deleting a plugin with `zinit delete …`.
+
+* 11-12-2019
+  - Zinit now supports installing special-Zsh NPM packages! Bye-bye the long and
+    complex ice-lists! Check out the
+    [Wiki](http://zdharma.org/zinit/wiki/NPM-Packages/) for an introductory document
+    on the feature.
+
+* 25-11-2019
+  - A new subcommand `run` that executes a command in the given plugin's directory. It
+    has an `-l` option that will reuse the previously provided plugin. So that it's
+    possible to do:
+
+    ```zsh
+    zplg run my/plugin ls
+    zplg run -l cat \*.plugin.zsh
+    zplg run -l pwd
+    ```
+
+* 07-11-2019
+  - Added a prefix-char: `@` that can be used before plugins if their name collides
+    with one of the ice-names. For example `sharkdp/fd` collides with the `sh` ice
+    (which causes the plugin to be loaded with the POSIX `sh` emulation applied). To
+    load it, do e.g.:
+
+    ```zsh
+    zinit as"null" wait"2" lucid from"gh-r" for \
+        mv"exa* -> exa" sbin"exa"  ogham/exa \
+        mv"fd* -> fd" sbin"fd/fd"  @sharkdp/fd \
+        sbin"fzf" junegunn/fzf-bin
+    ```
+
+    i.e.: precede the plugin name with `@`. Note: `sbin''` is an ice added by the
+    [z-a-bin-gem-node](https://github.com/zinit/z-a-bin-gem-node) annex, it provides
+    the command to the command line without altering `$PATH`.
+
+    See the [Zinit Wiki](http://zdharma.org/zinit/wiki/For-Syntax/) for more
+    information on the for-syntax.
+
+* 06-11-2019
+  - A new syntax, called for-syntax. Example:
+
+    ```zsh
+     zinit as"program" atload'print Hi!' for \
+         atinit'print First!' zdharma/null \
+         atinit'print Second!' svn OMZ::plugins/git
+    ```
+
+    The output:
+
+    ```
+    First!
+    Hi!
+    Second!
+    Hi!
+    ```
+
+    And also:
+
+    ```zsh
+    % print -rl $path | egrep -i '(/git|null)'
+    /root/.zinit/snippets/OMZ::plugins/git
+    /root/.zinit/plugins/zdharma---null
+    ```
+
+    To load in light mode, use a new `light-mode` ice. More examples and information
+    can be found on the [Zinit Wiki](http://zdharma.org/zinit/wiki/For-Syntax/).
+
+* 03-11-2019
+  - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
+    `pick"/dev/null" nocompletions`, i.e.: it disables the sourcing of the default
+    script file of a plugin or snippet and also disables the installation of
+    completions.
+
+* 30-10-2019
+  - A new ice `trigger-load''` – create a function that loads given plugin/snippet,
+    with an option (to use it, precede the ice content with `!`) to automatically
+    forward the call afterwards. Example use:
+
+    ```zsh
+    # Invoking the command `crasis' will load the plugin that
+    # provides the function `crasis', and it will be then
+    # immediately invoked with the same arguments
+    zinit ice trigger-load'!crasis'
+    zinit load zdharma/zinit-crasis
+    ```
+
+* 22-10-2019
+  - A new ice `countdown` – causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0
+    to be displayed before running the `atclone''`, `atpull''` and `make` ices.
+
+* 21-10-2019
+  - The `times` command has a new option `-m` – it shows the **moments** of the plugin
+    load times – i.e.: how late after loading Zinit a plugin has been loaded.
+
+* 20-10-2019
+  - The `zinit` completion now completes also snippets! The command `snippet`, but
+    also `delete`, `recall`, `edit`, `cd`, etc. all receive such completing.
+  - The `ice` subcommand can now be skipped – just pass in the ices, e.g.:
+    ```zsh
+    zinit atload"zicompinit; zicdreplay" blockf
+    zinit light zsh-users/zsh-completions
+    ```
+  - The `compile` command is able to compile snippets.
+  - The plugins that add their subdirectories into `$fpath` can be now `blockf`-ed –
+    the functions located in the dirs will be correctly auto-loaded.
+
+* 12-10-2019
+  - Special value for the `id-as''` ice – `auto`. It sets the plugin/snippet ID
+    automatically to the last component of its spec, e.g.:
+
+    ```zsh
+    zinit ice id-as"auto"
+    zinit load robobenklein/zinc
+    ```
+
+    will load the plugin as `id-as'zinc'`.
+
+* 14-09-2019
+  - There's a Vim plugin which extends syntax highlighting of zsh scripts with coloring
+    of the Zinit commands. [Project
+    homepage](https://github.com/zinit/zinit-vim-syntax).
+
+* 13-09-2019
+  - New ice `aliases` which loads plugin with the aliases mechanism enabled. Use for
+    plugins that define **and use** aliases in their scripts.
+
+* 11-09-2019
+  - New ice-mods `sh`,`bash`,`ksh`,`csh` that load plugins (and snippets) with the
+    **sticky emulation** feature of Zsh – all functions defined within the plugin will
+    automatically switch to the desired emulation mode before executing and switch back
+    thereafter. In other words it is now possible to load e.g. bash plugins with
+    Zinit, provided that the emulation level done by Zsh is sufficient, e.g.:
+
+    ```zsh
+    zinit ice bash pick"bash_it.sh" \
+            atinit"BASH_IT=${ZINIT[PLUGINS_DIR]}/Bash-it---bash-it" \
+            atclone"yes n | ./install.sh"
+    zinit load Bash-it/bash-it
+    ```
+
+    This script loads correctly thanks to the emulation, however it isn't functional
+    because it uses `type -t …` to check if a function exists.
+
 * 10-09-2019
   - A new ice-mod `reset''` that ivokes `git reset --hard` (or the provided command)
     before `git pull` and `atpull''` ice. It can be used it to implement altering (i.e.
