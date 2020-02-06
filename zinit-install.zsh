@@ -1415,10 +1415,18 @@ ziextract() {
     }
 
     (( move )) && {
-        # TODO: mkdir .tmp231ABC
-        command mv -f *~(._zinit|.git|._backup)(DN[1]) .tmp231ABC
-        command mv -f **/*~(*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
-        command rmdir .tmp231ABC
+        local -a files
+        files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN[1]) )
+        if (( ${#files} )) && [[ -d $files[1] ]] {
+            if (( ${#files} > 1 )) {
+                # TODO: make this unusual situation have more chance of working
+                # E.g.: improve the -d check above
+                command mkdir -p .tmp231ABC
+            }
+            command mv -f $files .tmp231ABC
+            command mv -f **/*~(*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
+            command rmdir .tmp231ABC
+        }
         REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
     } || {
         REPLY="${execs[1]}"
