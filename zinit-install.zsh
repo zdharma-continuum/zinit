@@ -1379,7 +1379,7 @@ ziextract() {
     }
     command mkdir -p ._backup
     command rm -rf ._backup/*(DN)
-    command mv -f *~(._zinit*|.zinit_lastupd|._backup|.git|$file)(DN) ._backup 2>/dev/null
+    command mv -f *~(._zinit*|.zinit_lastupd|._backup|.git|.svn|.hg|$file)(DN) ._backup 2>/dev/null
 
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
@@ -1389,7 +1389,7 @@ ziextract() {
         $fun; retval=$?
         (( retval == 0 )) && {
             local -a files
-            files=( *~(._zinit*|.zinit_lastupd|._backup|.git|$file)(DN) )
+            files=( *~(._zinit*|.zinit_lastupd|._backup|.git|.svn|.hg|$file)(DN) )
             (( ${#files} && !norm )) && command rm -f "$file"
         }
         return $retval
@@ -1501,7 +1501,7 @@ ziextract() {
     unfunction -- .zinit-extract-wrapper
 
     local -a execs
-    execs=( **/*~(._zinit(|/*)|.git(|/*)|._backup(|/*))(DN-.) )
+    execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
     [[ ${#execs} -gt 0 && -n $execs ]] && {
         execs=( ${(@f)"$( file ${execs[@]} )"} )
         execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
