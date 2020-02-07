@@ -892,7 +892,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         if [[ "$url" = (http|https|ftp|ftps|scp)://* ]] {
             # URL
             (
-                () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
+                () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
                 (( !ICE_OPTS[opt_-q,--quiet] )) && print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}..."
 
@@ -938,10 +938,10 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                                 print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
                                 print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
                             }
-                            .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 1
+                            .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
                         }
                     } else {
-                        .zinit-mirror-using-svn "$url" "" "$dirname" || return 1
+                        .zinit-mirror-using-svn "$url" "" "$dirname" || return 4
                     }
 
                     # Redundant code, just to compile SVN snippet
@@ -1019,7 +1019,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             .zinit-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
                                 command rm -f "$dirname/$filename"
                                 print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
-                                return 1
+                                return 4
                             }
                         }
                     }
