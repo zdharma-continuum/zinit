@@ -1339,6 +1339,10 @@ ziextract() {
                                 ziextract "$fname" "$type2" $opt_move $opt_norm
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
+                                if [[ $fname == *.out ]] {
+                                    command mv -f "$fname" "${fname%.out}"
+                                    stage2_processed+=( ${fname%.out} )
+                                }
                             }
                         }
                     }
