@@ -1406,6 +1406,10 @@ ZINIT[EXTENDED_GLOB]=""
         return 0
     fi
 
+    # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
+    # 2 – full update/there are new commits to download.
+    ZINIT[annex-multi-flag:pull-active]=0
+
     (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$user/$plugin]=""; local nf="-nftid"; }
 
     .zinit-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" \
@@ -1455,6 +1459,7 @@ ZINIT[EXTENDED_GLOB]=""
             } else {
                 do_update=1
             }
+            ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
 
             if (( do_update )) {
                 (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
@@ -1528,6 +1533,8 @@ ZINIT[EXTENDED_GLOB]=""
                       }
                   }
 
+              ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
+
               if (( do_update )) {
                   (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
                       print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f"
@@ -1553,7 +1560,9 @@ ZINIT[EXTENDED_GLOB]=""
                       print
                   }
               }
+              return ${ZINIT[annex-multi-flag:pull-active]}
             )
+            ZINIT[annex-multi-flag:pull-active]=$?
         }
 
         [[ -d "$local_dir/.git" ]] && \

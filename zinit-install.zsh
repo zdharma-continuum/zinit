@@ -875,6 +875,11 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
     [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -r -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname${ZINIT[col-rst]}${ZINIT_ICE[id-as]:+... (identified as $id_as)}"
 
+    # A flag for the annexes telling whether there have been any
+    # new commits / updated files to download. 0 – no new commits,
+    # 1 – run-atpull mode, 2 – full update/there are new commits.
+    ZINIT[annex-multi-flag:pull-active]=0
+
     (
         if [[ "$url" = (http|https|ftp|ftps|scp)://* ]] {
             # URL
@@ -890,8 +895,10 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                         .zinit-mirror-using-svn "$url" "-t" "$dirname" || {
                             (( ${+ZINIT_ICE[run-atpull]} )) && {
                                 skip_pull=1
-                            } || return 2
+                            } || return 2 # Will return when no updates thus the
+                                          # atpull'' code doesn't need any checks
                         }
+                        ZINIT[annex-multi-flag:pull-active]=$(( 2 - skip_pull ))
 
                         (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
                             print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f"
@@ -950,6 +957,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             }
                         }
                     fi
+
+                    return $(( skip_pull ? 3 : 0 ))
                 } else {
                     command mkdir -p "$local_dir/$dirname"
 
@@ -972,6 +981,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                     (( ${#matched} )) && {
                         (( ${+ZINIT_ICE[run-atpull]} )) && skip_dl=1 || return 2
                     }
+
+                    ZINIT[annex-multi-flag:pull-active]=$(( (2 - skip_dl) * ( secs > 1 ) ))
 
                     if (( !skip_dl )) {
                         [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
@@ -1000,9 +1011,16 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             }
                         }
                     }
+                    # Return 4 if the file's status couldn't be checked
+                    # - to indicate that the hooks should be run, however
+                    # the flag should be set to 0
+                    return $(( skip_dl ? 3 : (secs <= 1) * 4 ))
                 }
-                return 0
             ) || retval=$?
+
+            # Overestimate the pull-level to 2 also in error situations
+            # – no hooks will be run anyway because of the error
+            ZINIT[annex-multi-flag:pull-active]=$(( retval == 3 ? 1 : ((retval == 2 || retval == 4) ? 0 : 2) ))
 
             if [[ -n "${ZINIT_ICE[compile]}" ]]; then
                 list=( ${(M)~ZINIT_ICE[compile]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[compile]}(DN) )
