@@ -1296,7 +1296,7 @@ ziextract() {
         }
         # Second, try to find the archive via `file' tool
         if (( !${#files} )) {
-            local -a output infiles
+            local -aU output infiles
             infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)~*/*/*(-.DN) )
             output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
             for file ( $output ) {
@@ -1320,7 +1320,7 @@ ziextract() {
                     [[ -f $fname.out ]] && fname=$fname.out
                     files=( *.tar(ND) )
                     if [[ -f $fname || -f ${fname:r} ]] {
-                        local -a output2
+                        local -aU output2
                         output2=( ${(@f)"$(command file -- "$fname"(N) "${fname:r}"(N) $files[1](N) 2>&1)"} )
                         local file2
                         for file2 ( $output2 ) {
