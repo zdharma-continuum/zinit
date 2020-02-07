@@ -1462,6 +1462,11 @@ ZINIT[EXTENDED_GLOB]=""
             ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
 
             if (( do_update )) {
+                if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
+                    .zinit-any-colorify-as-uspl2 "$id_as"
+                    print "\nUpdating plugin $REPLY"
+                }
+
                 (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
                     print -P "${ZINIT[col-msg2]}Removing the previous file(s) (-r/--reset given)...%f"
                     command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)
@@ -1485,10 +1490,6 @@ ZINIT[EXTENDED_GLOB]=""
                 print -r -- "<mark>" >! "$local_dir/.zinit_lastupd"
 
                 if (( !skip_pull )) {
-                    if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
-                        .zinit-any-colorify-as-uspl2 "$id_as"
-                        print "\nUpdating plugin $REPLY"
-                    }
                     .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version
                     if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
                         print
