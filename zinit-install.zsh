@@ -1564,10 +1564,22 @@ ziextract() {
                 "isn't accessible.%f%b"
                 return 1
             }
-        ziextract ${${extract##(\!|-)##}:---auto} \
-            ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}// / }(-.DN) \
-            ${${(MS)extract[1,2]##-}:+--norm} \
-            ${${(MS)extract[1,2]##\!}:+--move}
+        local -a files
+        files=( ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}// / }(-.DN) )
+        [[ ${#files} -eq 0 && -n ${extract##(\!-|-\!|\!|-)} ]] && {
+                print -P -- "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]} The" \
+                    "files (\`${ZINIT[col-file]}${extract##(\!-|-\!|\!|-)}${ZINIT[col-msg2]}')" \
+                    "not found, cannot extract.%f%b"
+                return 1
+        } || { (( !${#files} )) && files=( "" ); }
+        local file
+        for file ( "${files[@]}" ) {
+            ziextract ${${(M)extract:#(\!|-)##}:+--auto} \
+                $file \
+                ${${(MS)extract[1,2]##-}:+--norm} \
+                ${${(MS)extract[1,2]##\!}:+--move} \
+                ${${${#files}:#1}:+--nobkp}
+        }
     )
 }
 # ]]]
