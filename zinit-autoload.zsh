@@ -1408,7 +1408,8 @@ ZINIT[EXTENDED_GLOB]=""
     fi
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
-    # 2 – full update/there are new commits to download.
+    # 2 – full update/there are new commits to download, 3 - full but
+    # a forced download (i.e.: the medium doesn't allow to peek update)
     ZINIT[annex-multi-flag:pull-active]=0
 
     (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$user/$plugin]=""; local nf="-nftid"; }
@@ -1670,6 +1671,14 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-store-ices "$local_dir/._zinit" ice "" "" "" ""
     fi
     ZINIT_ICE=( "${(kv)ice[@]}" )
+
+    if (( ZINIT[annex-multi-flag:pull-active] > 0 && ${+ZINIT_ICE[extract]} )) {
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+        local extract=${ZINIT_ICE[extract]}
+        [[ -n $extract ]] && @zinit-substitute extract
+        .zinit-extract plugin "$extract" "$local_dir"
+    }
+
     # Run annexes' atpull hooks (the `always' after atpull-ice ones)
     reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
     for key in "${reply[@]}"; do
@@ -2970,7 +2979,7 @@ EOF
         reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
         \!csh aliases countdown ps-on-unload ps-on-update trigger-load
         light-mode is-snippet atdelete pack git verbose on-update-of
-        subscribe param
+        subscribe param extract
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
