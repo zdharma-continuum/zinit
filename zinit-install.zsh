@@ -223,7 +223,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             "become downloaded)%f%b"
     }
 
-    print -Pn -- \\n${jsondata1[version]:+${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}%f%b\\n}
+    print -Pn -- ${jsondata1[version]:+\\n${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}%f%b\\n}
     [[ -n ${jsondata1[message]} ]] && \
         print -P -- "${ZINIT[col-info]}${jsondata1[message]}%f%b"
 
