@@ -1286,7 +1286,7 @@ ziextract() {
         # First try known file extensions
         local -a files
         integer ret_val
-        files=( **/*.(zip|rar|7z|tgz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg)~*/.(_backup|git)/*(DN) )
+        files=( (#i)**/*.(zip|rar|7z|tgz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
             ziextract "$file" $opt_move $opt_norm
             ret_val+=$?
@@ -1294,7 +1294,7 @@ ziextract() {
         # Second, try to find the archive via `file' tool
         if (( !${#files} )) {
             local -a output infiles
-            infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)(DN) )
+            infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)~*/*/*(-.DN) )
             output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
             for file ( $output ) {
                 local fname=${(M)file#(${(~j:|:)infiles}): } desc=${file#(${(~j:|:)infiles}): } type
