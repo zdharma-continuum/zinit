@@ -1575,6 +1575,7 @@ ziextract() {
         local file
         for file ( "${files[@]}" ) {
             ziextract ${${(M)extract:#(\!|-)##}:+--auto} \
+                ${extract:---auto} \
                 $file \
                 ${${(MS)extract[1,2]##-}:+--norm} \
                 ${${(MS)extract[1,2]##\!}:+--move} \
