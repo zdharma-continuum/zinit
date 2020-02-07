@@ -91,5 +91,35 @@ zinit ice svn multisrc'); local i; for i in $array; do \
 zinit snippet OMZ::lib
 ```
 
+--
+
+## Changes In The Recent Zinit
+
+Recently, Zinit has been extended with the [For-Syntax](../For-Syntax/) which
+can in some situations replace a typical `multisrc''` loading. The point is that
+this syntax allows to easily specify snippets to source – and do this within a
+single Zinit command. Thus, instead of:
+
+```shell
+zinit ice multisrc'(functions|misc|completion).zsh'
+zinit snippet OMZ::lib
+```
+
+it's possible to write:
+
+```shell
+zinit for \
+    OMZ::lib/functions.zsh \
+    OMZ::lib/misc.zsh \
+    OMZ::lib/completion.zsh
+```
+
+which is somewhat easier on eyes. Also – an **important** property: the multiple
+snippets loaded with the for-syntax are being loaded *separately*, which means
+that they will not cause a longer keyboard blockage, which could have been
+noticeable – when using Turbo. The Zinit scheduler will distribute the work over
+time and will allow activation of keyboard in between the snippets. The
+`multisrc''` way doesn't work this way – sourcing many files can cause
+noticeable keyboard freezes (in Turbo).
 
 []( vim:set ft=markdown tw=80: )
