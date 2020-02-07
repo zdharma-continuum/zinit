@@ -830,7 +830,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         first="${reply[-1]}"
         local fname="${first#$pdir_path/}"
 
-        print -Pr "Compiling ${ZINIT[col-info]}$fname%f%b..."
+        print -Pr "Compiling ${ZINIT[col-info]}$fname%f%b."
         [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
             zcompile "$first" || {
                 print "Compilation failed. Don't worry, the plugin will work also without compilation"
