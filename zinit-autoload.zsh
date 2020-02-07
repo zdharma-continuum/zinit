@@ -1570,9 +1570,11 @@ ZINIT[EXTENDED_GLOB]=""
                   )
                   [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                   ZINIT_ICE=()
-                  (( !skip_pull )) && command git pull --no-stat
-                  if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
-                      print
+                  (( !skip_pull )) && {
+                      command git pull --no-stat
+                      if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
+                          print
+                      }
                   }
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
