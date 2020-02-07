@@ -48,8 +48,24 @@ reports](DONATIONS.md) about what is being done with the money received.
 # News
 
 <details>
-  <summary>Here are the new features and updates added to zinit in the last 90 days.</summary>
+  <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 07-02-2020
+  - A new ice `extract` which extracts:
+    * all files with recognized archive extensions like `zip`, `tar.gz`, etc.,
+    * if no such files will be found, then: all files with recognized archive
+      **types** (examined with the `file` command),
+    * OR, IF GIVEN – the given files, e.g.: `extract'file1.zip file2.tgz'`,
+    * the automatic searching for archives ignores files in sub-sub-directories and
+      located deeper,
+  - It has a `!` flag – i.e.: `extract'!…'` – it'll cause the files to be moved
+    one directory-level up upon unpacking,
+  - and also a `-` flag – i.e.: `extract'-…'` – it'll prevent removal of the archive
+    after unpacking; useful to allow comparing timestamps with the server in case of
+    snippet-downloaded file,
+  - the flags can be combined, e.g.: `extract'!-'`,
+  - also, the function `ziextract` has a new option `--auto`, which causes the
+    automatic behavior identical to the empty `extract` ice.
 * 21-01-2020
   - A few tips for the project rename following the field reports (the issues created
     by users):
@@ -68,7 +84,7 @@ reports](DONATIONS.md) about what is being done with the money received.
     `~/.zinit`.
 
 * 15-01-2020
-  - There's a new function, `zpextract`, which unpacks the given file. It supports many
+  - There's a new function, `ziextract`, which unpacks the given file. It supports many
     formats (notably also `dmg` images) – if there's a format that's unsupported please
     don't hesitate to [make a
     request](https://github.com/zdharma/zinit/issues/new?template=feature_request.md)
@@ -79,7 +95,7 @@ reports](DONATIONS.md) about what is being done with the money received.
       up one level,
     - one other option `--norm` prevents the archive from being deleted upon unpacking.
   - snippets now aren't re-downloaded unless they're newer on the HTTP server; use
-    this with the `--norm` option of `zpextract` to prevent unnecessary updates; for
+    this with the `--norm` option of `ziextract` to prevent unnecessary updates; for
     example, the [firefox-dev package](https://github.com/Zsh-Packages/firefox-dev)
     uses this option for this purpose,
   - GitHub doesn't report proper `Last-Modified` HTTP server for the files in the
