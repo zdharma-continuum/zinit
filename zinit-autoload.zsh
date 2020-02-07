@@ -1386,6 +1386,7 @@ ZINIT[EXTENDED_GLOB]=""
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
     local -a arr
+    ZINIT[first-plugin-mark]=${${ZINIT[first-plugin-mark]:#init}:-1}
 
     .zinit-two-paths "$2${${2:#(%|/)*}:+${3:+/}}$3"
     if [[ -d "${reply[-4]}" || -d "${reply[-2]}" ]]; then
@@ -1464,7 +1465,10 @@ ZINIT[EXTENDED_GLOB]=""
             if (( do_update )) {
                 if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
                     .zinit-any-colorify-as-uspl2 "$id_as"
-                    print "\nUpdating plugin $REPLY"
+                    (( ZINIT[first-plugin-mark] )) && {
+                        ZINIT[first-plugin-mark]=0
+                    } || print
+                    print "\rUpdating plugin $REPLY"
                 }
 
                 (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
@@ -1509,7 +1513,10 @@ ZINIT[EXTENDED_GLOB]=""
                           had_output=1
                           if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
                               .zinit-any-colorify-as-uspl2 "$id_as"
-                              print "\r\nUpdating plugin $REPLY"
+                              (( ZINIT[first-plugin-mark] )) && {
+                                  ZINIT[first-plugin-mark]=0
+                              } || print
+                              print "\rUpdating plugin $REPLY"
                           }
                       }
                       print $line
@@ -1748,6 +1755,8 @@ ZINIT[EXTENDED_GLOB]=""
         [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
             print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} updating also unloaded plugins"
     fi
+
+    ZINIT[first-plugin-mark]=init
 
     for repo in "${ZINIT[PLUGINS_DIR]}"/*; do
         pd="${repo:t}"
