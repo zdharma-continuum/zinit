@@ -886,7 +886,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 1
 
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}..."
+                (( !ICE_OPTS[opt_-q,--quiet] )) && print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}..."
 
                 if (( ${+ZINIT_ICE[svn]} )) {
                     local skip_pull=0
@@ -916,7 +916,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                         }
 
                         (( ${+ZINIT_ICE[reset]} )) && (
-                            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-svn revert --recursive $filename/.}%f"
+                            (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-svn revert --recursive $filename/.}%f"
                             eval "${ZINIT_ICE[reset]:-command svn revert --recursive $filename/.}"
                         )
 
@@ -926,7 +926,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             # Do the update
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
-                            [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] && {
+                            (( ICE_OPTS[opt_-q,--quiet] )) && {
                                 print -r -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname${ZINIT[col-rst]}${ZINIT_ICE[id-as]:+... (identified as $id_as)}"
                                 print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
                             }
@@ -1069,7 +1069,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             }
 
             (( ${+ZINIT_ICE[reset]} )) && (
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f"
+                (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f"
                 eval "${ZINIT_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
             )
 

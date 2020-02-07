@@ -1432,7 +1432,7 @@ ZINIT[EXTENDED_GLOB]=""
         local -a config
         config=( ${(f)"$(<$repo/.git/config)"} )
         if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
-            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && {
+            (( !ICE_OPTS[opt_-q,--quiet] )) && {
                 .zinit-any-colorify-as-uspl2 "$id_as"
                 [[ "$id_as" = _local/* ]] && print -r -- "Skipping local plugin $REPLY" || \
                     print -r -- "$REPLY doesn't have a remote set, will not fetch"
@@ -1463,7 +1463,7 @@ ZINIT[EXTENDED_GLOB]=""
             ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
 
             if (( do_update )) {
-                if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
+                if (( ICE_OPTS[opt_-q,--quiet] )) {
                     .zinit-any-colorify-as-uspl2 "$id_as"
                     (( ZINIT[first-plugin-mark] )) && {
                         ZINIT[first-plugin-mark]=0
@@ -1486,7 +1486,7 @@ ZINIT[EXTENDED_GLOB]=""
                 }
 
                 (( !skip_pull && ${+ZINIT_ICE[reset]} )) && (
-                    [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -rf ${local_dir:-/tmp/xyzabc312}/*}%f"
+                    (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -rf ${local_dir:-/tmp/xyzabc312}/*}%f"
                     eval ${ZINIT_ICE[reset]:-command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)}
                 )
 
@@ -1511,7 +1511,7 @@ ZINIT[EXTENDED_GLOB]=""
                   [[ -n "${line%%[[:space:]]##}" ]] && {
                       [[ $had_output -eq 0 ]] && {
                           had_output=1
-                          if [[ "${ICE_OPTS[opt_-q,--quiet]}" = 1 ]] {
+                          if (( ICE_OPTS[opt_-q,--quiet] )) {
                               .zinit-any-colorify-as-uspl2 "$id_as"
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
@@ -1565,7 +1565,7 @@ ZINIT[EXTENDED_GLOB]=""
                       done
                   }
                   (( ${+ZINIT_ICE[reset]} )) && (
-                      [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f"
+                      (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f"
                       eval "${ZINIT_ICE[reset]:-command git reset --hard HEAD}"
                   )
                   [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
@@ -1758,10 +1758,10 @@ ZINIT[EXTENDED_GLOB]=""
     ZINIT_ICE=()
 
     if [[ "$st" = "status" ]]; then
-        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+        (( !ICE_OPTS[opt_-q,--quiet] )) && \
             print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} status done also for unloaded plugins"
     else
-        [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+        (( !ICE_OPTS[opt_-q,--quiet] )) && \
             print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} updating also unloaded plugins"
     fi
 
@@ -1780,7 +1780,7 @@ ZINIT[EXTENDED_GLOB]=""
             local -a config
             config=( ${(f)"$(<$repo/.git/config)"} )
             if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
-                [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
+                (( !ICE_OPTS[opt_-q,--quiet] )) && \
                     [[ "$pd" = _local---* ]] && print -- "\nSkipping local plugin $REPLY" || \
                         print "\n$REPLY doesn't have a remote set, will not fetch"
                 continue
@@ -1792,8 +1792,8 @@ ZINIT[EXTENDED_GLOB]=""
 
         # Must be a git repository or a binary release
         if [[ ! -d "$repo/.git" && ! -f "$repo/._zinit/is_release" ]]; then
-            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && \
-                print "\n$REPLY: not a git repository"
+            (( !ICE_OPTS[opt_-q,--quiet] )) && \
+                print "$REPLY: not a git repository"
             continue
         fi
 
@@ -1801,7 +1801,7 @@ ZINIT[EXTENDED_GLOB]=""
             print "\nStatus for plugin $REPLY"
             ( builtin cd -q "$repo"; command git status )
         else
-            [[ "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print "Updating plugin $REPLY" || print -n .
+            (( !ICE_OPTS[opt_-q,--quiet] )) && print "Updating plugin $REPLY" || print -n .
             .zinit-update-or-status "update" "$user" "$plugin"
         fi
     done
