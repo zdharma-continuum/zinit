@@ -1538,6 +1538,13 @@ ZINIT[EXTENDED_GLOB]=""
                       (( ${+ice[run-atpull]} )) && {
                           do_update=1
                           print -r -- "<mark>" >! "$local_dir/.zinit_lastupd"
+                          if (( ICE_OPTS[opt_-q,--quiet] )) {
+                              .zinit-any-colorify-as-uspl2 "$id_as"
+                              (( ZINIT[first-plugin-mark] )) && {
+                                  ZINIT[first-plugin-mark]=0
+                              } || print
+                              print "\rUpdating plugin $REPLY"
+                          }
                       }
                   }
 
