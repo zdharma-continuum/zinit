@@ -177,12 +177,12 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             eval "ZINIT_ICE[id-as]=\"${ZINIT_ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
         }
     } else {
-        print -P -r -- "${ZINIT[col-error]}Error: the profile \`%F{221}$profile${ZINIT[col-error]}' couldn't be found, aborting%f"
+        print -P -r -- "${ZINIT[col-error]}Error: the profile \`%F{221}$profile${ZINIT[col-error]}' couldn't be found, aborting%f%b"
         print -r -- "Available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
         return 1
     }
 
-    print -Pr -- "Found the profile \`${ZINIT[col-pname]}$profile%f'"
+    print -Pr -- "Found the profile \`${ZINIT[col-pname]}$profile%f%b'"
 
     ZINIT_ICE[required]=${ZINIT_ICE[required]:-$ZINIT_ICE[requires]}
     local -a req
@@ -198,7 +198,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
                     "requires ${namemap[$required]} annex" \
-                    "\nSee: %F{221}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}%f"
+                    "\nSee: %F{221}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}%f%b"
                 print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
                 return 1
             fi
@@ -208,7 +208,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
                     "requires" \
-                    "\`${ZINIT[col-pname]}$required${ZINIT[col-error]}' command%f"
+                    "\`${ZINIT[col-pname]}$required${ZINIT[col-error]}' command%f%b"
                 print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}"
                 return 1
             fi
@@ -220,12 +220,12 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             "${ZINIT[col-obj]}dl''${ZINIT[col-msg2]} ice however there's no" \
             "${ZINIT[col-obj2]}z-a-patch-dl${ZINIT[col-msg2]} annex loaded" \
             "(the ice will be inactive, i.e.: no additional files will" \
-            "become downloaded)%f"
+            "become downloaded)%f%b"
     }
 
-    print -Pn -- \\n${jsondata1[version]:+${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}%f\\n}
+    print -Pn -- \\n${jsondata1[version]:+${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}%f%b\\n}
     [[ -n ${jsondata1[message]} ]] && \
-        print -P -- "${ZINIT[col-info]}${jsondata1[message]}%f"
+        print -P -- "${ZINIT[col-info]}${jsondata1[message]}%f%b"
 
     (( ${+ZINIT_ICE[is-snippet]} )) && {
         reply=( "" "$url" )
@@ -244,12 +244,12 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
             command mkdir -p $dir || {
                 print -Pr -- "${ZINIT[col-error]}Couldn't create directory:" \
-                    "\`${ZINIT[col-msg2]}$dir${ZINIT[col-error]}', aborting.%f"
+                    "\`${ZINIT[col-msg2]}$dir${ZINIT[col-error]}', aborting.%f%b"
                 return 1
             }
             builtin cd -q $dir || return 1
 
-            print -Pr -- "Downloading tarball for ${ZINIT[col-pname]}$plugin%f..."
+            print -Pr -- "Downloading tarball for ${ZINIT[col-pname]}$plugin%f%b..."
 
             .zinit-download-file-stdout "$URL" >! "$fname" || {
                 .zinit-download-file-stdout "$URL" 1 >! "$fname" || {
@@ -330,7 +330,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     [[ $tpe != tarball ]] && {
         [[ -z $update ]] && {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            print "\\nDownloading $REPLY...${ZINIT_ICE[id-as]:+ (as ${id_as}...)}"
+            print "\\nDownloading $REPLY...${id_as:+ (as ${id_as}...)}"
         }
 
         local site
@@ -401,7 +401,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
                             |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
-                    (( pipestatus[1] )) && { print -Pr -- "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]})%f"; return 1; }
+                    (( pipestatus[1] )) && { print -Pr -- "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]})%f%b"; return 1; }
                     ;;
                 (git|http|ftp|ftps|rsync|ssh)
                     command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
@@ -412,10 +412,10 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
                             |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
-                    (( pipestatus[1] )) && { print -Pr "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]}).%f"; return 1; }
+                    (( pipestatus[1] )) && { print -Pr "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]}).%f%b"; return 1; }
                     ;;
                 (*)
-                    print -Pr "${ZINIT[col-error]}Unknown protocol:%f ${ZINIT_ICE[proto]}"
+                    print -Pr "${ZINIT[col-error]}Unknown protocol:%f%b ${ZINIT_ICE[proto]}"
                     return 1
             esac
 
@@ -571,14 +571,14 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                 command rm -f "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
             fi
             INSTALLED_COMPS+=( $cfile )
-            (( quiet )) || print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f to completions directory"
+            (( quiet )) || print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory"
             command ln -s "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
             .zinit-forget-completion "$cfile" "$quiet"
         else
             SKIPPED_COMPS+=( $cfile )
-            (( quiet )) || print -Pr "Not symlinking completion \`${ZINIT[col-obj]}$cfile%f', it already exists."
-            (( quiet )) || print -Pr "${ZINIT[col-info2]}Use \`${ZINIT[col-pname]}zinit creinstall $abbrev_pspec${ZINIT[col-info2]}' to force install.%f"
+            (( quiet )) || print -Pr "Not symlinking completion \`${ZINIT[col-obj]}$cfile%f%b', it already exists."
+            (( quiet )) || print -Pr "${ZINIT[col-info2]}Use \`${ZINIT[col-pname]}zinit creinstall $abbrev_pspec${ZINIT[col-info2]}' to force install.%f%b"
         fi
     done
 
@@ -620,7 +620,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         cfile="_${cfile#_}"
         bkpfile="${cfile#_}"
 
-        #print -Pr "${ZINIT[col-info]}Processing completion $cfile%f"
+        #print -Pr "${ZINIT[col-info]}Processing completion $cfile%f%b"
         .zinit-forget-completion "$cfile"
     done
 
@@ -729,8 +729,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     local url="$1" update="$2" directory="$3"
 
     (( ${+commands[svn]} )) || \
-        print -Pr -- "${ZINIT[col-error]}Warning:%f Subversion not found" \
-            ", please install it to use \`${ZINIT[col-obj]}svn%f' ice-mod"
+        print -Pr -- "${ZINIT[col-error]}Warning:%f%b Subversion not found" \
+            ", please install it to use \`${ZINIT[col-obj]}svn%f%b' ice."
 
     if [[ "$update" = "-t" ]]; then
         (
@@ -767,14 +767,14 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" ) # TODO: "${${(k)_comps[(R)$f]}[@]}" ?
 
-    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -Prn "Forgetting commands completed by \`${ZINIT[col-obj]}$f%f': "
+    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -Prn "Forgetting commands completed by \`${ZINIT[col-obj]}$f%f%b': "
 
     local k
     integer first=1
     for k in "${commands[@]}"; do
         [[ -n "$k" ]] || continue
         unset "_comps[$k]"
-        (( quiet )) || print -Prn "${${first:#1}:+, }${ZINIT[col-info]}$k%f"
+        (( quiet )) || print -Prn "${${first:#1}:+, }${ZINIT[col-info]}$k%f%b"
         first=0
     done
     (( quiet || first )) || print
@@ -825,7 +825,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         first="${reply[-1]}"
         local fname="${first#$pdir_path/}"
 
-        print -Pr "Compiling ${ZINIT[col-info]}$fname%f..."
+        print -Pr "Compiling ${ZINIT[col-info]}$fname%f%b..."
         [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
             zcompile "$first" || {
                 print "Compilation failed. Don't worry, the plugin will work also without compilation"
@@ -845,7 +845,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                 zcompile "$first"
             done
             local sep="${ZINIT[col-pname]},${ZINIT[col-rst]} "
-            print -Pr -- "Compiled following additional files (${ZINIT[col-pname]}the compile''-ice%f: ${(pj:$sep:)${(@)${list[@]//(#b).([^.\/]##(#e))/.${ZINIT[col-info]}${match[1]}${ZINIT[col-rst]}}#$plugin_dir/}}"
+            print -Pr -- "Compiled following additional files (${ZINIT[col-pname]}the compile''-ice%f%b: ${(pj:$sep:)${(@)${list[@]//(#b).([^.\/]##(#e))/.${ZINIT[col-info]}${match[1]}${ZINIT[col-rst]}}#$plugin_dir/}}"
         }
     fi
 
@@ -872,11 +872,11 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZINIT_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
 
     if [[ ! -d "$local_dir/$dirname" ]]; then
-        [[ "$update" != "-u" ]] && print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f${ZINIT_ICE[id-as]:+... (as $id_as)}"
+        [[ "$update" != "-u" ]] && print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
         command mkdir -p "$local_dir"
     fi
 
-    [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
+    [[ "$update" = "-u" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 ]] && print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
 
     # A flag for the annexes telling whether there have been any
     # new commits / updated files to download. 0 – no new commits,
@@ -904,7 +904,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                         ZINIT[annex-multi-flag:pull-active]=$(( 2 - skip_pull ))
 
                         (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 && -d "$filename/.svn" ]] && {
-                            print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f"
+                            print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f%b"
                             command svn revert --recursive $filename/.
                         }
 
@@ -919,7 +919,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                         }
 
                         (( ${+ZINIT_ICE[reset]} )) && (
-                            (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-svn revert --recursive $filename/.}%f"
+                            (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-svn revert --recursive $filename/.}%f%b"
                             eval "${ZINIT_ICE[reset]:-command svn revert --recursive $filename/.}"
                         )
 
@@ -930,7 +930,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             (( ICE_OPTS[opt_-q,--quiet] )) && {
-                                print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
+                                print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
                                 print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
                             }
                             .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 1
@@ -989,7 +989,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
                     if (( !skip_dl )) {
                         [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                            [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f"
+                            [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f%b"
                             command rm -f "$dirname/$filename"
                         }
                     }
@@ -1058,7 +1058,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         } else {
             # File
             [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
-                [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f"
+                [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f%b"
                 command rm -f "$local_dir/$dirname/$filename"
             }
 
@@ -1072,7 +1072,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             }
 
             (( ${+ZINIT_ICE[reset]} )) && (
-                (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f"
+                (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f%b"
                 eval "${ZINIT_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
             )
 
@@ -1082,12 +1082,12 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
             command mkdir -p "$local_dir/$dirname"
             if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                print -P "${ZINIT[col-msg1]}Copying ${ZINIT[col-obj]}$filename${ZINIT[col-msg1]}...%f"
+                print -P "${ZINIT[col-msg1]}Copying ${ZINIT[col-obj]}$filename${ZINIT[col-msg1]}...%f%b"
                 command cp -v "$url" "$local_dir/$dirname/$filename" || \
-                    { print -Pr -- "${ZINIT[col-error]}An error occured%f"; retval=1; }
+                    { print -Pr -- "${ZINIT[col-error]}An error occured%f%b"; retval=1; }
             } else {
                 command cp "$url" "$local_dir/$dirname/$filename" || \
-                    { print -Pr -- "${ZINIT[col-error]}An error occured%f"; retval=1; }
+                    { print -Pr -- "${ZINIT[col-error]}An error occured%f%b"; retval=1; }
             }
         }
 
@@ -1096,7 +1096,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             local pfx="$local_dir/$dirname/._zinit"
             .zinit-store-ices "$pfx" ZINIT_ICE "url_rsvd" "" "$save_url" "${+ZINIT_ICE[svn]}"
         else
-            print -Pr "${ZINIT[col-error]}Warning%f: inconsistency #2 occurred" \
+            print -Pr "${ZINIT[col-error]}Warning%f%b: inconsistency #2 occurred" \
                 "- skipped storing ice-mods to" \
                 "disk, please report at https://github.com/zdharma/zinit/issues" \
                 "providing the commands \`zinit ice {...}; zinit snippet {...}'"
@@ -1278,7 +1278,7 @@ ziextract() {
 
     local -a opt_move opt_norm opt_auto
     zparseopts -D -E -move=opt_move -norm=opt_norm -auto=opt_auto || \
-        { print -P -r -- "%F{160}Incorrect options given to \`ziextract' (available are: %F{221}--move%F{160})%f"; return 1; }
+        { print -P -r -- "%F{160}Incorrect options given to \`ziextract' (available are: %F{221}--move%F{160})%f%b"; return 1; }
 
     local file="$1" ext="$2"
     integer move=${${${(M)${#opt_move}:#0}:+0}:-1} \
@@ -1306,9 +1306,9 @@ ziextract() {
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar) ]] {
                     print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
-                        "Note:%f" \
-                        "detected a ${ZINIT[col-obj]}$type%f" \
-                        "archive in the file ${ZINIT[col-file]}$fname%f"
+                        "Note:%f%b" \
+                        "detected a ${ZINIT[col-obj]}$type%f%b" \
+                        "archive in the file ${ZINIT[col-file]}$fname%f%b"
                     ziextract "$fname" "$type" $opt_move $opt_norm --norm
                     integer iret_val=$?
                     ret_val+=iret_val
@@ -1333,9 +1333,9 @@ ziextract() {
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
                                 print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
-                                    "Note:%f" \
-                                    "detected a ${ZINIT[col-obj]}$type2%f" \
-                                    "archive in the file ${ZINIT[col-file]}$fname%f"
+                                    "Note:%f%b" \
+                                    "detected a ${ZINIT[col-obj]}$type2%f%b" \
+                                    "archive in the file ${ZINIT[col-file]}$fname%f%b"
                                 ziextract "$fname" "$type2" $opt_move $opt_norm
                                 ret_val+=$?
                             }
@@ -1348,7 +1348,7 @@ ziextract() {
     }
 
     if [[ ! -e $file ]] {
-        print -Pr -- "${ZINIT[col-pre]}ziextract:%f" \
+        print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
             "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
             "the file \`${ZINIT[col-obj]}$file${ZINIT[col-msg2]}'" \
             "doesn't exist, aborting the extraction."
@@ -1362,7 +1362,7 @@ ziextract() {
         local file="$1" fun="$2" retval
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
             print -Pr "${ZINIT[col-pre]}ziextract:${ZINIT[col-msg1]} Unpacking the files from:" \
-                "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'...%f"
+                "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'...%f%b"
         $fun; retval=$?
         (( retval == 0 )) && {
             local -a files
@@ -1423,7 +1423,7 @@ ziextract() {
                             "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
                             "no \`${ZINIT[col-obj]}$prog${ZINIT[col-msg2]}'" \
                             "command found – it is required to extract a" \
-                            "${ZINIT[col-obj]}dmg${ZINIT[col-msg2]} image.%f"
+                            "${ZINIT[col-obj]}dmg${ZINIT[col-msg2]} image.%f%b"
                         return 1
                     fi
                 }
@@ -1441,7 +1441,7 @@ ziextract() {
                             "${ZINIT[col-error]}Warning:${ZINIT[col-msg1]}" \
                             "problem occurred when attempted to copy the files" \
                             "from the mounted image:" \
-                            "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'.%f"
+                            "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'.%f%b"
                 }
                 return $retval
             }
@@ -1456,13 +1456,13 @@ ziextract() {
                 print -Pr -- "${ZINIT[col-pre]}ziextract:" \
                     "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
                     "extraction of archive had problems, restoring previous" \
-                    "version of the plugin/snippet.%f"
+                    "version of the plugin/snippet.%f%b"
                 command mv ._backup/*(DN) . 2>/dev/null
             } else {
                 print -Pr -- "${ZINIT[col-pre]}ziextract:" \
                     "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
                     "extraction of the archive" \
-                    "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}' had problems.%f"
+                    "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}' had problems.%f%b"
             }
             unfunction -- :zinit-extract 2>/dev/null
             return 1
@@ -1473,7 +1473,7 @@ ziextract() {
             "${ZINIT[col-error]}WARNING: ${ZINIT[col-msg1]}didn't recognize the archive" \
             "type of \`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'" \
             "${ext:+${ZINIT[col-obj2]}/ $ext${ZINIT[col-msg1]} }"\
-"(no extraction has been done).%f"
+"(no extraction has been done).%f%b"
     }
     unfunction -- .zinit-extract-wrapper
 
@@ -1489,15 +1489,15 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
             if (( ${#execs} == 1 )); then
-                    print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]}" \
+                    print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
                         "Successfully extracted and assigned +x chmod to the file:" \
-                        "\`${ZINIT[col-obj]}${execs[1]}${ZINIT[col-rst]}'."
+                        "\`${ZINIT[col-obj]}${execs[1]}%f%b'."
             else
                 local sep="${ZINIT[col-rst]},${ZINIT[col-obj]} "
-                print -r -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-rst]} Successfully" \
+                print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b Successfully" \
                     "extracted and marked executable the appropriate files" \
-                    "(${ZINIT[col-obj]}${(pj:$sep:)${execs[@]:t}}${ZINIT[col-rst]}) contained" \
-                    "in \`${ZINIT[col-file]}$file${ZINIT[col-rst]}'."
+                    "(${ZINIT[col-obj]}${(pj:$sep:)${execs[@]:t}}%f%b) contained" \
+                    "in \`${ZINIT[col-file]}$file%f%b'."
             fi
     }
 
