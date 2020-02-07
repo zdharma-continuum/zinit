@@ -1460,6 +1460,7 @@ ziextract() {
                     "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}' had problems." \
                     ${ZINIT[col-rst]}
             }
+            unfunction -- :zinit-extract 2>/dev/null
             return 1
         }
         unfunction -- :zinit-extract
