@@ -1681,12 +1681,12 @@ ZINIT[EXTENDED_GLOB]=""
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
             print -r "Running plugin's provided update code: ${ZINIT[col-info]}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}${ZINIT[col-rst]}"
             (
-                builtin cd -q "$local_dir"
+                builtin cd -q "$local_dir" || return 1
                 eval "${ZINIT_ICE[ps-on-update]}"
             )
         } else {
             (
-                builtin cd -q "$local_dir"
+                builtin cd -q "$local_dir" || return 1
                 eval "${ZINIT_ICE[ps-on-update]}" &> /dev/null
             )
         }
