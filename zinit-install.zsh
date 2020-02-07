@@ -476,7 +476,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             }
         }
 
-        if [[ $4 != -u ]] {
+        if [[ $update != -u ]] {
             # Store ices at clone of a plugin
             .zinit-store-ices "$local_path/._zinit" ZINIT_ICE "" "" "" ""
 
