@@ -1294,14 +1294,16 @@ ziextract() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-    local -a opt_move opt_norm opt_auto
-    zparseopts -D -E -move=opt_move -norm=opt_norm -auto=opt_auto || \
-        { print -P -r -- "%F{160}Incorrect options given to \`ziextract' (available are: %F{221}--auto%F{160},%F{221}--move%F{160},%F{221}--norm%F{160}).%f%b"; return 1; }
+    local -a opt_move opt_norm opt_auto opt_nobkp
+    zparseopts -D -E -move=opt_move -norm=opt_norm \
+            -auto=opt_auto -nobkp=opt_nobkp || \
+        { print -P -r -- "%F{160}Incorrect options given to \`ziextract' (available are: %F{221}--auto%F{160},%F{221}--move%F{160},%F{221}--norm%F{160},%F{221}--nobkp%F{160}).%f%b"; return 1; }
 
     local file="$1" ext="$2"
     integer move=${${${(M)${#opt_move}:#0}:+0}:-1} \
             norm=${${${(M)${#opt_norm}:#0}:+0}:-1} \
-            auto=${${${(M)${#opt_auto}:#0}:+0}:-1}
+            auto=${${${(M)${#opt_auto}:#0}:+0}:-1} \
+            nobkp=${${${(M)${#opt_nobkp}:#0}:+0}:-1}
 
     if (( auto )) {
         # First try known file extensions
@@ -1377,9 +1379,11 @@ ziextract() {
             "doesn't exist, aborting the extraction."
         return 1
     }
-    command mkdir -p ._backup
-    command rm -rf ._backup/*(DN)
-    command mv -f *~(._zinit*|.zinit_lastupd|._backup|.git|.svn|.hg|$file)(DN) ._backup 2>/dev/null
+    if (( !nobkp )) {
+        command mkdir -p ._backup
+        command rm -rf ._backup/*(DN)
+        command mv -f *~(._zinit*|.zinit_lastupd|._backup|.git|.svn|.hg|$file)(DN) ._backup 2>/dev/null
+    }
 
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
@@ -1476,11 +1480,16 @@ ziextract() {
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} )) {
-                print -Pr -- "${ZINIT[col-pre]}ziextract:" \
+                print -nPr -- "${ZINIT[col-pre]}ziextract:" \
                     "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
-                    "extraction of archive had problems, restoring previous" \
-                    "version of the plugin/snippet.%f%b"
-                command mv ._backup/*(DN) . 2>/dev/null
+                    "extraction of archive had problems"
+                if (( !nobkp )) {
+                    print ", restoring previous" \
+                        "version of the plugin/snippet.%f%b"
+                    command mv ._backup/*(DN) . 2>/dev/null
+                } else {
+                    print -P ".%f%b"
+                }
             } else {
                 print -Pr -- "${ZINIT[col-pre]}ziextract:" \
                     "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
