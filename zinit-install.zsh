@@ -1296,13 +1296,13 @@ ziextract() {
         }
         # Second, try to find the archive via `file' tool
         if (( !${#files} )) {
-            local -aU output infiles
+            local -aU output infiles stage2_processed
             infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)~*/*/*(-.DN) )
             output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
             for file ( $output ) {
                 local fname=${(M)file#(${(~j:|:)infiles}): } desc=${file#(${(~j:|:)infiles}): } type
                 fname=${fname%%??}
-                [[ -z $fname ]] && { print skipping …; continue; }
+                [[ -z $fname || -n ${stage2_processed[(r)$fname]} ]] && continue
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar) ]] {
                     print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
@@ -1338,6 +1338,7 @@ ziextract() {
                                     "archive in the file ${ZINIT[col-file]}$fname%f%b"
                                 ziextract "$fname" "$type2" $opt_move $opt_norm
                                 ret_val+=$?
+                                stage2_processed+=( $fname )
                             }
                         }
                     }
