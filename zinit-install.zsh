@@ -1367,48 +1367,48 @@ ziextract() {
     }
 
     case "${${ext:+.$ext}:-$file}" in
-        (*.zip)
+        ((#i)*.zip)
             :zinit-extract() { command unzip -o "$file"; }
             ;;
-        (*.rar)
+        ((#i)*.rar)
             :zinit-extract() { command unrar x "$file"; }
             ;;
-        (*.tar.bz2|*.tbz2)
+        ((#i)*.tar.bz2|(#i)*.tbz2)
             :zinit-extract() { command bzip2 -dc "$file" | command tar -xf -; }
             ;;
-        (*.tar.gz|*.tgz)
+        ((#i)*.tar.gz|(#i)*.tgz)
             :zinit-extract() { command gzip -dc "$file" | command tar -xf -; }
             ;;
-        (*.tar.xz|*.txz)
+        ((#i)*.tar.xz|(#i)*.txz)
             :zinit-extract() { command xz -dc "$file" | command tar -xf -; }
             ;;
-        (*.tar.7z|*.t7z)
+        ((#i)*.tar.7z|(#i)*.t7z)
             :zinit-extract() { command 7z x -so "$file" | command tar -xf -; }
             ;;
-        (*.tar)
+        ((#i)*.tar)
             :zinit-extract() { command tar -xf "$file"; }
             ;;
-        (*.gz|*.gzip)
-            if [[ $file != *.gz ]] {
+        ((#i)*.gz|(#i)*.gzip)
+            if [[ $file != (#i)*.gz ]] {
                 command mv $file $file.gz
                 file=$file.gz
             }
             :zinit-extract() { command gunzip "$file"; }
             ;;
-        (*.bz2|*.bzip2)
+        ((#i)*.bz2|(#i)*.bzip2)
             :zinit-extract() { command bunzip2 "$file"; }
             ;;
-        (*.xz)
-            if [[ $file != *.xz ]] {
+        ((#i)*.xz)
+            if [[ $file != (#i)*.xz ]] {
                 command mv $file $file.xz
                 file=$file.xz
             }
             :zinit-extract() { command xz -d "$file"; }
             ;;
-        (*.7z|*.7-zip)
+        ((#i)*.7z|(#i)*.7-zip)
             :zinit-extract() { command 7z x "$file" >/dev/null;  }
             ;;
-        (*.dmg)
+        ((#i)*.dmg)
             :zinit-extract() {
                 local prog
                 for prog ( hdiutil cp ) {
