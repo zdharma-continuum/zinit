@@ -981,7 +981,7 @@ function $f {
         # For compaudit
         command chmod go-w "${ZINIT[HOME_DIR]}"
         # Also set up */bin and ZPFX in general
-        command mkdir 2>/dev/null -p ${ZPFX}/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin
     }
     [[ ! -d ${ZINIT[PLUGINS_DIR]}/_local---zinit ]] && {
         command rm -rf "${ZINIT[PLUGINS_DIR]:-/tmp/132bcaCAB}/_local---zplugin"
@@ -990,7 +990,7 @@ function $f {
         command ln -s "${ZINIT[BIN_DIR]}/_zinit" "${ZINIT[PLUGINS_DIR]}/_local---zinit"
 
         # Also set up */bin and ZPFX in general
-        command mkdir 2>/dev/null -p ${ZPFX}/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin
 
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
         (( ${+functions[.zinit-confirm]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-autoload.zsh
@@ -1006,7 +1006,7 @@ function $f {
         command ln -s "${ZINIT[PLUGINS_DIR]}/_local---zinit/_zinit" "${ZINIT[COMPLETIONS_DIR]}"
 
         # Also set up */bin and ZPFX in general
-        command mkdir 2>/dev/null -p ${ZPFX}/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin
 
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
         .zinit-compinit &>/dev/null
@@ -1021,7 +1021,7 @@ function $f {
         command chmod go-w "${ZINIT[SERVICES_DIR]}"
 
         # Also set up */bin and ZPFX in general
-        command mkdir 2>/dev/null -p ${ZPFX}/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin
     }
 } # ]]]
 # FUNCTION: .zinit-load-ices [[[
