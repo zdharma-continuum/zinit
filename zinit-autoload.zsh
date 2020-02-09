@@ -684,11 +684,14 @@ ZINIT[EXTENDED_GLOB]=""
 # BusyBox less lacks the -X and -i options, so it can use more
 .zinit-pager() {
     setopt LOCAL_OPTIONS EQUALS
-    if [[ ${${:-=less}:A:t} = busybox* ]]; then
-        more
-    else
-        less -FRXi
-    fi
+    if [[ ${${:-=less}:A:t} = busybox* ]] {
+        more 2>/dev/null
+        (( ${+commands[more]} ))
+    } else {
+        less -FRXi 2>/dev/null
+        (( ${+commands[less]} ))
+    }
+    (( $? )) && cat
 }
 # ]]]
 
@@ -1517,7 +1520,7 @@ ZINIT[EXTENDED_GLOB]=""
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
                               } || print
-                              print "\rUpdating plugin $REPLY"
+                              print "Updating plugin $REPLY"
                           }
                       }
                       print $line
