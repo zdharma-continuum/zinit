@@ -1503,11 +1503,7 @@ ziextract() {
         }
         unfunction -- :zinit-extract
     } else {
-        print -Pr -- "${ZINIT[col-pre]}ziextract:" \
-            "${ZINIT[col-error]}WARNING: ${ZINIT[col-msg1]}didn't recognize the archive" \
-            "type of \`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'" \
-            "${ext:+${ZINIT[col-obj2]}/ $ext${ZINIT[col-msg1]} }"\
-"(no extraction has been done).%f%b"
+        integer warning=1
     }
     unfunction -- .zinit-extract-wrapper
 
@@ -1519,9 +1515,9 @@ ziextract() {
         execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
     }
 
-    [[ ${#execs} -gt 0 ]] && {
+    if [[ ${#execs} -gt 0 ]] {
         command chmod a+x "${execs[@]}"
-        (( !ICE_OPTS[opt_-q,--quiet] )) && \
+        if (( !ICE_OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
                     print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
                         "Successfully extracted and assigned +x chmod to the file:" \
@@ -1533,6 +1529,13 @@ ziextract() {
                     "(${ZINIT[col-obj]}${(pj:$sep:)${execs[@]:t}}%f%b) contained" \
                     "in \`${ZINIT[col-file]}$file%f%b'."
             fi
+        }
+    } elif (( warning )) {
+        print -Pr -- "${ZINIT[col-pre]}ziextract:" \
+            "${ZINIT[col-error]}WARNING: ${ZINIT[col-msg1]}didn't recognize the archive" \
+            "type of \`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'" \
+            "${ext:+${ZINIT[col-obj2]}/ $ext${ZINIT[col-msg1]} }"\
+"(no extraction has been done).%f%b"
     }
 
     (( move )) && {
