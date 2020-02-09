@@ -816,12 +816,14 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
         else
             if (( is_snippet )) {
                 .zinit-first "%" "$plugin_dir" || {
-                    print "No files for compilation found."
+                    [[ ${ZINIT_ICE[as]} != null ]] && \
+                        print "No files for compilation found."
                     return 1
                 }
             } else {
                 .zinit-first "$1" "$2" || {
-                    print "No files for compilation found."
+                    [[ ${ZINIT_ICE[as]} != null ]] && \
+                        print "No files for compilation found."
                     return 1
                 }
             }
