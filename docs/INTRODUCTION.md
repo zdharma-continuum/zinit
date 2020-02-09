@@ -48,7 +48,7 @@ zinit snippet PZT::modules/helper/init.zsh
 ```
 
 Moreover, snippets support Subversion protocol, supported also by Github. This
-allows to load snippets that are multi-file (for example a Prezto module can
+allows to load snippets that are multi-file (for example, a Prezto module can
 consist of two or more files, e.g. `init.zsh` and `alias.zsh`). Default files
 that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`:
 
@@ -266,10 +266,10 @@ processing of `.zshrc` is finished and prompt is being shown. It is like Windows
 background. This has drawbacks, but is for sure better than blank screen for 10
 minutes. And here, in Zinit, there are no drawbacks of this approach – no
 lags, freezes, etc. – the command line is fully usable while the plugins are
-being loaded, for number of such plugins like `10` or `20`.
+being loaded, for any number of plugins. 
 
 !!!note
-    **Turbo mode will speed up Zsh startup by <u>50%–80%</u>. For example instead of 200 ms, it'll be 40 ms (!)**
+    **Turbo will speed up Zsh startup by <u>50%–80%</u>. For example, instead of 200 ms, it'll be 40 ms (!)**
 
 Zsh 5.3 or greater is required. To use this Turbo mode add `wait` ice to the
 target plugin in one of following ways:
