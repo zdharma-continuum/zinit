@@ -50,6 +50,11 @@ reports](DONATIONS.md) about what is being done with the money received.
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 09-02-2020
+
+  Note that the ice `extract` can handle files with spaces – to encode such a name use
+  the non-breaking space (Right Alt + Space) in place of the in-filename spaces :).
+
 * 07-02-2020
   - A new ice `extract` which extracts:
     * all files with recognized archive extensions like `zip`, `tar.gz`, etc.,
@@ -71,8 +76,7 @@ reports](DONATIONS.md) about what is being done with the money received.
     by users):
     - the `ZPLGM` hash is now `ZINIT`,
     - the annexes are moved under [zinit-zsh](https://github.com/zinit-zsh)
-      organization (it needs a logo, soon a poll about selecting one will start! you
-      can submit your own proposal – just open an issue).
+      organization.
 
 * 19-01-2020
   - The name has been changed to **Zinit** based on the results of the
