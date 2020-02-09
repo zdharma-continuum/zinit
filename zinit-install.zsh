@@ -1579,9 +1579,9 @@ ziextract() {
         } || { (( !${#files} )) && files=( "" ); }
         local file
         for file ( "${files[@]}" ) {
+            [[ -z $extract ]] && local auto2=--auto
             ziextract ${${(M)extract:#(\!|-)##}:+--auto} \
-                ${extract:---auto} \
-                $file \
+                $auto2 $file \
                 ${${(MS)extract[1,2]##-}:+--norm} \
                 ${${(MS)extract[1,2]##\!}:+--move} \
                 ${${${#files}:#1}:+--nobkp}
