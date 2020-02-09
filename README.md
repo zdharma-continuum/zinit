@@ -1,11 +1,6 @@
 [![paypal](https://img.shields.io/badge/-Donate-yellow.svg?longCache=true&style=for-the-badge)](https://www.paypal.me/ZdharmaInitiative)
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D54B3S7C6HGME)
 [![patreon](https://img.shields.io/badge/-Patreon-orange.svg?longCache=true&style=for-the-badge)](https://www.patreon.com/psprint)
-<br/>New: You can request a feature when donating, even fancy or advanced ones get implemented this way. [There are
-reports](DONATIONS.md) about what is being done with the money received.
-
-<h2 align="center">The project undergoes a name change from Zplugin to Zinit.</h2>
-<h2 align="center">Please report any observed issues.</h2>
 
 [![Status][status-badge]][status-link] [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Join the chat at https://gitter.im/zdharma/zinit][gitter-badge]][gitter-link]
 
