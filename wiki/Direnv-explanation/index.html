@@ -2255,17 +2255,25 @@
                 
                   <h1>Direnv Explanation</h1>
                 
-                <p>The project <a href="https://github.com/direnv/direnv"><strong>direnv/direnv</strong></a> registers itself in Zshell to modify environment on directory change. This registration is most often done by <code>eval "$(direnv hook zsh)"</code> added to zshrc.</p>
-<p>Drawback of this standard procedure is that <code>direnv</code> binary is ran on every shell startup and significantly slows it down. Zinit allows to solve this in following way:</p>
-<pre><code class="zsh">zinit ice as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
-    atpull'%atclone' pick&quot;direnv&quot; src&quot;zhook.zsh&quot;
-zinit light direnv/direnv
+                <p>The project <a href="https://github.com/direnv/direnv"><strong>direnv/direnv</strong></a> registers
+itself in Zshell to modify environment on directory change. This registration is
+most often done by <code>eval "$(direnv hook zsh)"</code> added to zshrc.</p>
+<p>Drawback of this standard procedure is that <code>direnv</code> binary is ran on every
+shell startup and significantly slows it down. Zinit allows to solve this in
+following way:</p>
+<pre><code class="zsh">zinit as&quot;program&quot; make'!' atclone'./direnv hook zsh &gt; zhook.zsh' \
+    atpull'%atclone' pick&quot;direnv&quot; src&quot;zhook.zsh&quot; for \
+        direnv/direnv
 </code></pre>
 
 <ul>
-<li><code>make'!'</code> – compile <code>direnv</code> (it's written in Go lang); the exclamation mark means: run the <code>make</code> first, before <code>atclone</code> and <code>atpull</code> hooks,</li>
-<li><code>atclone'…'</code> – initially (right after installing the plugin) generate the registration code and save it to <code>zhook.zsh</code> (instead of passing to <code>eval</code>),</li>
-<li><code>atpull'%atclone'</code> – regenerate the registration code also on update (<code>atclone''</code> runs on <em>installation</em> while <code>atpull</code> runs on <em>update</em> of the plugin),</li>
+<li><code>make'!'</code> – compile <code>direnv</code> (it's written in Go lang); the exclamation mark
+   means: run the <code>make</code> first, before <code>atclone</code> and <code>atpull</code> hooks,</li>
+<li><code>atclone'…'</code> – initially (right after installing the plugin) generate the
+   registration code and save it to <code>zhook.zsh</code> (instead of passing to <code>eval</code>),</li>
+<li><code>atpull'%atclone'</code> – regenerate the registration code also on update
+   (<code>atclone''</code> runs on <em>installation</em> while <code>atpull</code> runs on <em>update</em> of the
+   plugin),</li>
 <li><code>src"zhook.zsh"</code> – load (<code>source</code>) the generated registration code,</li>
 <li><code>pick"direnv"</code> – ensure <code>+x</code> permission on the binary,</li>
 <li><code>as"program"</code> – the plugin is a program, there's no main file to source.</li>
@@ -2273,14 +2281,16 @@ zinit light direnv/direnv
 <p>This way registration code is generated once every installation and update, to then be simply sourced without running <code>direnv</code>.</p>
 <hr />
 <p>The project is also available as binary Github release. This distribution can be installed by:</p>
-<pre><code class="zsh">zinit ice from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot; \
-    './direnv hook zsh &gt; zhook.zsh' atpull'%atclone' pick&quot;direnv&quot;
-zinit light direnv/direnv
+<pre><code class="zsh">zinit from&quot;gh-r&quot; as&quot;program&quot; mv&quot;direnv* -&gt; direnv&quot; \
+    atclone'./direnv hook zsh &gt; zhook.zsh' atpull'%atclone' \
+    pick&quot;direnv&quot; src=&quot;zhook.zsh&quot; for \
+        direnv/direnv
 </code></pre>
 
 <ul>
 <li><code>from"gh-r"</code> – install from Github <strong>releases</strong>,</li>
-<li><code>mv"…"</code> – after installation, rename <code>direnv.linux-386</code> or similar file to <code>direnv</code>,</li>
+<li><code>mv"…"</code> – after installation, rename <code>direnv.linux-386</code> or similar file to
+   <code>direnv</code>,</li>
 <li><code>atclone'…'</code>, <code>atpull'…'</code> – as in previous example,</li>
 <li><code>pick"direnv"</code> – as in previous example,</li>
 <li><code>as"program"</code> – as in previous example.</li>
