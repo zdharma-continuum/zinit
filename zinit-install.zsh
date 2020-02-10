@@ -1102,16 +1102,15 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             }
         }
 
-        if [[ "${${:-$local_dir/$dirname}%%/##}" != "${ZINIT[SNIPPETS_DIR]}" ]]; then
+        if [[ ${${:-$local_dir/$dirname}%%/##} != ${ZINIT[SNIPPETS_DIR]} ]] {
             # Store ices at "clone" and update of snippet, SVN and single-file
-            local pfx="$local_dir/$dirname/._zinit"
-            .zinit-store-ices "$pfx" ZINIT_ICE "url_rsvd" "" "$save_url" "${+ZINIT_ICE[svn]}"
-        else
-            print -Pr "${ZINIT[col-error]}Warning%f%b: inconsistency #2 occurred" \
-                "- skipped storing ice-mods to" \
-                "disk, please report at https://github.com/zdharma/zinit/issues" \
-                "providing the commands \`zinit ice {...}; zinit snippet {...}'."
-        fi
+            local pfx=$local_dir/$dirname/._zinit
+            .zinit-store-ices "$pfx" ZINIT_ICE url_rsvd "" "$save_url" "${+ZINIT_ICE[svn]}"
+        } elif [[ -n $id_as ]] {
+            print -Pr "${ZINIT[col-error]}Warning%f%b: the snippet" \
+                "${ZINIT[col-obj]}${(qqq)id_as}%f%b isn't fully downloaded - you should" \
+                "remove it with ${ZINIT[col-file]}\`zinit delete ${(qqq)id_as}'%f%b."
+        }
 
         (( retval == 4 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
 
