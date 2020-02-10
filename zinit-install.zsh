@@ -772,7 +772,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" ) # TODO: "${${(k)_comps[(R)$f]}[@]}" ?
 
-    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -Prn "Forgetting commands completed by \`${ZINIT[col-obj]}$f%f%b': "
+    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -Prn "Forgetting commands completed by \\\`${ZINIT[col-obj]}$f%f%b': "
 
     local k
     integer first=1
