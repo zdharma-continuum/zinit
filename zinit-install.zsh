@@ -767,7 +767,9 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 #
 # $1 - completion function name, e.g. "_cp"; can also be "cp"
 .zinit-forget-completion() {
-    emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal
+    emulate -LR zsh
+    setopt extendedglob typesetsilent warncreateglobal
+
     local f="$1" quiet="$2"
 
     typeset -a commands
@@ -1560,7 +1562,8 @@ ziextract() {
 # ]]]
 # FUNCTION: .zinit-extract() [[[
 .zinit-extract() {
-    emulate -LR zsh -o extendedglob -o warncreateglobal -o typesetsilent
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent
     local tpe=$1 extract=$2 local_dir=$3
     (
         builtin cd -q "$local_dir" || \
