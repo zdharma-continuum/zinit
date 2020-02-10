@@ -777,12 +777,11 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
     local k
     integer first=1
-    for k in "${commands[@]}"; do
-        [[ -n "$k" ]] || continue
+    for k ( $commands ) {
         unset "_comps[$k]"
         (( quiet )) || print -Prn "${${first:#1}:+, }${ZINIT[col-info]}$k%f%b"
         first=0
-    done
+    }
     (( quiet || first )) || print
 
     unfunction -- 2>/dev/null "$f"
