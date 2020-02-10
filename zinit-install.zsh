@@ -767,12 +767,13 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 #
 # $1 - completion function name, e.g. "_cp"; can also be "cp"
 .zinit-forget-completion() {
+    emulate -LR zsh -o extendedglob -o typesetsilent -o warncreateglobal
     local f="$1" quiet="$2"
 
     typeset -a commands
     commands=( "${(k@)_comps[(R)$f]}" ) # TODO: "${${(k)_comps[(R)$f]}[@]}" ?
 
-    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -Prn "Forgetting commands completed by \\\`${ZINIT[col-obj]}$f%f%b': "
+    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && print -Prn "Forgetting commands completed by \`${ZINIT[col-obj]}$f%f%b': "
 
     local k
     integer first=1
