@@ -1091,13 +1091,16 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
             # Currently redundant, but theoretically it has its place
             [[ -f "$local_dir/$dirname/$filename" ]] && command rm -f "$local_dir/$dirname/$filename"
+            retval=2
             command mkdir -p "$local_dir/$dirname"
             if (( !ICE_OPTS[opt_-q,--quiet] )) {
                 print -P "${ZINIT[col-msg1]}Copying ${ZINIT[col-obj]}$filename${ZINIT[col-msg1]}...%f%b"
-                command cp -v "$url" "$local_dir/$dirname/$filename" || \
+                command cp -v "$url" "$local_dir/$dirname/$filename" && \
+                    retval=2 || \
                     { print -Pr -- "${ZINIT[col-error]}An error occured.%f%b"; retval=4; }
             } else {
-                command cp "$url" "$local_dir/$dirname/$filename" || \
+                command cp "$url" "$local_dir/$dirname/$filename" && \
+                    retval=2 || \
                     { print -Pr -- "${ZINIT[col-error]}An error occured.%f%b"; retval=4; }
             }
         }
