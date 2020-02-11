@@ -1728,21 +1728,27 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-compute-ice "$URL" "pack$nf" \
         ZINIT_ICE local_dir filename is_snippet || return 1
 
+    integer retval
+
     if [[ "$st" = "status" ]]; then
         if (( ${+ZINIT_ICE[svn]} )); then
             print -r -- "${ZINIT[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZINIT[col-rst]}"
             ( builtin cd -q "$local_dir"; command svn status -vu )
+            retval=$?
             print
         else
             print -r -- "${ZINIT[col-info]}Status for ${${local_dir:h}##*--}/$filename${ZINIT[col-rst]}"
             ( builtin cd -q "$local_dir"; command ls -lth $filename )
+            retval=$?
             print
         fi
     else
         .zinit-load-snippet "${ZINIT_ICE[teleid]:-$URL}" "-i" "-u"
+        retval=$?
     fi
 
     ZINIT_ICE=()
+    return $retval
 }
 # ]]]
 # FUNCTION: .zinit-update-or-status-all [[[
