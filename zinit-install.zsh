@@ -362,7 +362,8 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             }
 
             [[ ${#list} -eq 0 ]] && {
-                print "Didn't find correct Github release-file to download (for \`$remote_url_path'), try adapting bpick-ICE."
+                print "Didn't find correct Github release-file to download" \
+                    "(for \`$remote_url_path'), try adapting bpick-ICE."
                 return 1
             }
 
