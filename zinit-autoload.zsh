@@ -1391,10 +1391,12 @@ ZINIT[EXTENDED_GLOB]=""
     local -a arr
     ZINIT[first-plugin-mark]=${${ZINIT[first-plugin-mark]:#init}:-1}
 
+    integer retval was_snippet
     .zinit-two-paths "$2${${2:#(%|/)*}:+${3:+/}}$3"
     if [[ -d "${reply[-4]}" || -d "${reply[-2]}" ]]; then
         .zinit-update-or-status-snippet "$1" "$2${${2:#(%|/)*}:+${3:+/}}$3"
-        return $?
+        retval=$?
+        was_snippet=1
     fi
 
     .zinit-any-to-user-plugin "$2" "$3"
@@ -1403,11 +1405,18 @@ ZINIT[EXTENDED_GLOB]=""
         id_as="${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}"
     local -A ice
 
-    .zinit-exists-physically-message "$user" "$plugin" || return 1
+    if (( was_snippet )) {
+        .zinit-exists-physically "$user" "$plugin" || return $retval
+        .zinit-any-colorify-as-uspl2 "$2" "$3"
+        print -Pr "${ZINIT[col-msg2]}Updating also $REPLY%b${ZINIT[col-msg2]}" \
+            "plugin (already updated a snippet of the same name)...%f%b"
+    } else {
+        .zinit-exists-physically-message "$user" "$plugin" || return 1
+    }
 
     if [[ "$st" = "status" ]]; then
         ( builtin cd -q "${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"; command git status; )
-        return 0
+        return $retval
     fi
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
@@ -1705,7 +1714,7 @@ ZINIT[EXTENDED_GLOB]=""
     fi
     ZINIT_ICE=()
 
-    return 0
+    return $retval
 } # ]]]
 # FUNCTION: .zinit-update-or-status-snippet [[[
 #
