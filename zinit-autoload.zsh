@@ -1829,7 +1829,7 @@ ZINIT[EXTENDED_GLOB]=""
             print "\nStatus for plugin $REPLY"
             ( builtin cd -q "$repo"; command git status )
         else
-            (( !ICE_OPTS[opt_-q,--quiet] )) && print "Updating plugin $REPLY" || print -n .
+            (( !ICE_OPTS[opt_-q,--quiet] )) && print "Updating $REPLY" || print -n .
             .zinit-update-or-status "update" "$user" "$plugin"
         fi
     done
