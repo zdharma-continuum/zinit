@@ -2740,6 +2740,13 @@ autoload -Uz example-script
 # vim:ft=zsh:tw=80:sw=4:sts=4:et:foldmarker=[[[,]]]
 EOF
 
+    command cat >>! .git/config <<EOF
+
+[diff "zsh"]
+    xfuncname = "^((function[[:blank:]]+[^[:blank:]]+[[:blank:]]*(\\\\(\\\\)|))|([^[:blank:]]+[[:blank:]]*\\\\(\\\\)))[[:blank:]]*(\\\\{|)[[:blank:]]*$"
+EOF
+
+    print -r -- "*.zsh  diff=zsh" >! .gitattributes
     print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZINIT[BIN_DIR]}/LICENSE" LICENSE
     command cp -vf "${ZINIT[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
