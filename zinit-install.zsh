@@ -1328,10 +1328,11 @@ ziextract() {
                 [[ -z $fname || -n ${stage2_processed[(r)$fname]} ]] && continue
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar) ]] {
-                    print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
-                        "Note:%f%b" \
-                        "detected a ${ZINIT[col-obj]}$type%f%b" \
-                        "archive in the file ${ZINIT[col-file]}$fname%f%b."
+                    (( !ICE_OPTS[opt_-q,--quiet] )) && \
+                        print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
+                            "Note:%f%b" \
+                            "detected a ${ZINIT[col-obj]}$type%f%b" \
+                            "archive in the file ${ZINIT[col-file]}$fname%f%b."
                     ziextract "$fname" "$type" $opt_move $opt_norm --norm
                     integer iret_val=$?
                     ret_val+=iret_val
@@ -1355,10 +1356,11 @@ ziextract() {
                                 # TODO: if multiple archives are really in the archive,
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
-                                print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
-                                    "Note:%f%b" \
-                                    "detected a ${ZINIT[col-obj]}$type2%f%b" \
-                                    "archive in the file ${ZINIT[col-file]}$fname%f%b."
+                                (( !ICE_OPTS[opt_-q,--quiet] )) && \
+                                    print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
+                                        "Note:%f%b" \
+                                        "detected a ${ZINIT[col-obj]}$type2%f%b" \
+                                        "archive in the file ${ZINIT[col-file]}$fname%f%b."
                                 ziextract "$fname" "$type2" $opt_move $opt_norm
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
