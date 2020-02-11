@@ -1393,7 +1393,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     .zinit-two-paths "$2${${2:#(%|/)*}:+${3:+/}}$3"
     if [[ -d "${reply[-4]}" || -d "${reply[-2]}" ]]; then
-        .zinit-update-or-status-snippet "$1" "$2" "$3"
+        .zinit-update-or-status-snippet "$1" "$2${${2:#(%|/)*}:+${3:+/}}$3"
         return $?
     fi
 
