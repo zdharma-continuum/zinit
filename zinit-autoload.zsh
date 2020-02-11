@@ -1484,7 +1484,7 @@ ZINIT[EXTENDED_GLOB]=""
                     print "\rUpdating plugin $REPLY"
                 }
 
-                (( !skip_pull )) && [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                (( !skip_pull && ICE_OPTS[opt_-r,--reset] )) && {
                     print -P "${ZINIT[col-msg2]}Removing the previous file(s) (-r/--reset given)...%f"
                     command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)
                 }
