@@ -1507,7 +1507,8 @@ ZINIT[EXTENDED_GLOB]=""
                 print -r -- "<mark>" >! "$local_dir/.zinit_lastupd"
 
                 if (( !skip_pull )) {
-                    .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version
+                    .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version || \
+                        ZINIT[annex-multi-flag:pull-active]=0
                     if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
                         print
                     }
