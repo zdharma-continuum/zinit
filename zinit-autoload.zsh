@@ -1408,8 +1408,9 @@ ZINIT[EXTENDED_GLOB]=""
     if (( was_snippet )) {
         .zinit-exists-physically "$user" "$plugin" || return $retval
         .zinit-any-colorify-as-uspl2 "$2" "$3"
-        print -Pr "${ZINIT[col-msg2]}Updating also $REPLY%b${ZINIT[col-msg2]}" \
-            "plugin (already updated a snippet of the same name)...%f%b"
+        (( !ICE_OPTS[opt_-q,--quiet] )) && \
+            print -Pr "${ZINIT[col-msg2]}Updating also \`$REPLY%b${ZINIT[col-msg2]}'" \
+                "plugin (already updated a snippet of the same name)...%f%b"
     } else {
         .zinit-exists-physically-message "$user" "$plugin" || return 1
     }
