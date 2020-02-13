@@ -1726,7 +1726,7 @@ ZINIT[EXTENDED_GLOB]=""
 # $2 - snippet URL
 .zinit-update-or-status-snippet() {
     local st="$1" URL="${2%/}" local_dir filename is_snippet
-    (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$URL]=""; local nf="-nf"; }
+    (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$URL]=""; local nf="-nftid"; }
     .zinit-compute-ice "$URL" "pack$nf" \
         ZINIT_ICE local_dir filename is_snippet || return 1
 
