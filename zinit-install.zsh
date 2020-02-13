@@ -868,7 +868,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 .zinit-download-snippet() {
     emulate -LR zsh
-    setopt extendedglob warncreateglobal noshortloops
+    setopt extendedglob warncreateglobal typesetsilent
 
     local save_url="$1" url="$2" id_as="$3" id_as_clean="${3%%\?*}" local_dir="$4" dirname="$5" filename="$6" update="$7"
     local -a list arr
