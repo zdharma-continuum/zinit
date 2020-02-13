@@ -1771,7 +1771,7 @@ ZINIT[EXTENDED_GLOB]=""
     local -a snipps
     snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
 
-    [[ "$st" != "status" && "${ICE_OPTS[opt_-q,--quiet]}" != 1 && -n "$snipps" ]] && \
+    [[ $st != status && ${ICE_OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
         print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} updating also unloaded snippets"
 
     for snip in "${ZINIT[SNIPPETS_DIR]}"/**/(._zinit|._zplugin)/mode(D); do
