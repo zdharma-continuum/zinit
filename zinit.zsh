@@ -1179,8 +1179,7 @@ function $f {
 
     # Construct containing directory, extract final directory
     # into handy-variable $dirname
-    filename="${${id_as%%\?*}:t}"
-    dirname="${${id_as%%\?*}:t}"
+    filename="${${id_as%%\?*}:t}" dirname="${${id_as%%\?*}:t}"
     local_dir="${${${id_as%%\?*}:h}/:\/\//--}"
     [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
     local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
