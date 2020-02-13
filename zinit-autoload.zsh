@@ -1745,7 +1745,8 @@ ZINIT[EXTENDED_GLOB]=""
             print
         fi
     else
-        .zinit-load-snippet "${ZINIT_ICE[teleid]:-$URL}" "-i" "-u"
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+        .zinit-update-snippet "${ZINIT_ICE[teleid]:-$URL}"
         retval=$?
     fi
 

@@ -1265,6 +1265,77 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     return $retval
 }
 # ]]]
+# FUNCTION: .zinit-update-snippet [[[
+.zinit-update-snippet() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+
+    local -a tmp ice opts
+    local url=$1
+    integer correct=0
+    [[ -o ksharrays ]] && correct=1
+    opts=( -u ) # for z-a-as-monitor
+
+    # Remove leading whitespace and trailing /
+    url=${${url#${url%%[! $'\t']*}}%/}
+    ZINIT_ICE[teleid]=${ZINIT_ICE[teleid]:-$url}
+    [[ ${ZINIT_ICE[as]} = null ]] && \
+        ZINIT_ICE[pick]=${ZINIT_ICE[pick]:-/dev/null}
+
+    local local_dir dirname filename save_url=$url \
+        id_as=${ZINIT_ICE[id-as]:-$url}
+
+    .zinit-pack-ice "$id_as" ""
+
+    # Allow things like $OSTYPE in the URL
+    eval "url=\"$url\""
+
+    # - case A: called from `update --all', ZINIT_ICE empty, static ice will win
+    # - case B: called from `update', ZINIT_ICE packed, so it will win
+    tmp=( "${(Q@)${(z@)ZINIT_SICE[$id_as]}}" )
+    (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && \
+        { ice=( "${(kv)ZINIT_ICE[@]}" "${tmp[@]}" ); ZINIT_ICE=( "${ice[@]}" ); } || \
+        { [[ -n ${ZINIT_SICE[$id_as]} ]] && \
+            print -Pr "${ZINIT[col-error]}WARNING:${ZINIT[col-msg2]} Inconsistency #3" \
+            "occurred, please report the string:" \
+            "\`${ZINIT[col-obj]}${ZINIT_SICE[$id_as]}${ZINIT[col-msg2]}'" \
+            "on GitHub issues page: https://github.com/zdharma/zinit/issues/%f%b"
+        }
+    id_as=${ZINIT_ICE[id-as]:-$id_as}
+
+    # Oh-My-Zsh, Prezto and manual shorthands
+    (( ${+ZINIT_ICE[svn]} )) && {
+        [[ $url = *(OMZ::|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH=${ZINIT[SNIPPETS_DIR]}
+        url[1-correct,5-correct]=${ZINIT_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
+    } || {
+        url[1-correct,5-correct]=${ZINIT_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
+    }
+
+    # Construct containing directory, extract final directory
+    # into handy-variable $dirname
+    filename=${${id_as%%\?*}:t}
+    dirname=${${id_as%%\?*}:t}
+    local_dir=${${${id_as%%\?*}:h}/:\/\//--}
+    local -A map
+    map=( "/" -- "=" -EQ- "?" -QM- "&" -AMP- )
+    [[ $local_dir = . ]] && local_dir= || local_dir=${${local_dir#/}//(#m)[\/=\?\&]/${map[$MATCH]}}
+    local_dir=${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}
+
+    local -a arr
+    local key
+    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
+        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" u-preinit || \
+            return $(( 10 - $? ))
+    done
+
+    # Download or copy the file
+    [[ $url = *github.com* && $url != */raw/* ]] && url=${url/\/(blob|tree)\///raw/}
+    .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "-u"
+    return $?
+}
+# ]]]
 # FUNCTION: .zinit-get-latest-gh-r-version [[[
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.

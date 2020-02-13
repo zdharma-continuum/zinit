@@ -1156,7 +1156,7 @@ function $f {
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
 
     local local_dir dirname filename save_url="$url" id_as="${ZINIT_ICE[id-as]:-$url}"
-    [[ -z ${opts[(r)-u]} ]] && .zinit-pack-ice "$id_as" ""
+    .zinit-pack-ice "$id_as" ""
 
     # Allow things like $OSTYPE in the URL
     eval "url=\"$url\""
@@ -1182,7 +1182,7 @@ function $f {
     filename="${${id_as%%\?*}:t}"
     dirname="${${id_as%%\?*}:t}"
     local_dir="${${${id_as%%\?*}:h}/:\/\//--}"
-    [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
+    [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
     local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
     local -a arr
@@ -1195,44 +1195,40 @@ function $f {
     done
 
     # Download or copy the file
-    if [[ -n ${opts[(r)(-f|-u)]} || ! ( -e $local_dir/$dirname/._zinit || \
+    if [[ -n ${opts[(r)-f]} || ! ( -e $local_dir/$dirname/._zinit || \
         -e $local_dir/$dirname/._zplugin )
     ]]; then
         (( ${+functions[.zinit-download-snippet]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
         [[ $url = *github.com* && $url != */raw/* ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
-        .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "${opts[(r)-u]}" || tmp=( 0 )
+        .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" || tmp=( 0 )
     fi
 
     (( ${+ZINIT_ICE[cloneonly]} || !tmp[1-correct] )) && return 0
 
     ZINIT_SNIPPETS[$id_as]="$id_as <${${ZINIT_ICE[svn]+svn}:-single file}>"
 
-    [[ -z ${opts[(r)-u]} ]] && { ZINIT[CUR_USPL2]="$id_as"; ZINIT_REPORTS[$id_as]=; }
+    ZINIT[CUR_USPL2]="$id_as" ZINIT_REPORTS[$id_as]=
 
-    [[ -z ${opts[(r)-u]} ]] && {
-        reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
-        for key in "${reply[@]}"; do
-            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atinit || \
-                return $(( 10 - $? ))
-        done
-    }
+    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
+        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atinit || \
+            return $(( 10 - $? ))
+    done
 
-    (( ${+ZINIT_ICE[atinit]} )) && [[ -z ${opts[(r)-u]} ]] && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZINIT_ICE[atinit]}"; ((1)); } || eval "${ZINIT_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+    (( ${+ZINIT_ICE[atinit]} )) && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZINIT_ICE[atinit]}"; ((1)); } || eval "${ZINIT_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-    [[ -z ${opts[(r)-u]} ]] && {
-        reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atinit <->]}" )
-        for key in "${reply[@]}"; do
-            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atinit || \
-                return $(( 10 - $? ))
-        done
-    }
+    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atinit <->]}" )
+    for key in "${reply[@]}"; do
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
+        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atinit || \
+            return $(( 10 - $? ))
+    done
 
     local -a list
     local ZERO
 
-    if [[ -z ${opts[(r)-u]} && -z ${opts[(r)--command]} && ( -z ${ZINIT_ICE[as]} || ${ZINIT_ICE[as]} = null ) ]]; then
+    if [[ -z ${opts[(r)--command]} && ( -z ${ZINIT_ICE[as]} || ${ZINIT_ICE[as]} = null ) ]]; then
         # Source the file with compdef shadowing
         if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
             # Shadowing code is inlined from .zinit-shadow-on
@@ -1308,9 +1304,9 @@ function $f {
                 [[ -n ${list[1-correct]} ]] && xpath="${list[1-correct]:h}" xfilepath="${list[1-correct]}"
             }
         fi
-        [[ -z ${opts[(r)-u]} && -n $xpath && -z ${path[(er)$xpath]} ]] && path=( "${xpath%/}" ${path[@]} )
+        [[ -n $xpath && -z ${path[(er)$xpath]} ]] && path=( "${xpath%/}" ${path[@]} )
         [[ -n $xfilepath && -f $xfilepath && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
-        [[ -z ${opts[(r)-u]} && ( -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ) ]] && {
+        [[ -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
             if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
                 # Shadowing code is inlined from .zinit-shadow-on
                 (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}" || builtin unset "ZINIT[bkp-compdef]"
@@ -1321,36 +1317,31 @@ function $f {
             fi
         }
 
-        if [[ -z ${opts[(r)-u]} ]] {
-            if [[ -n ${ZINIT_ICE[src]} ]]; then
-                ZERO="${${(M)ZINIT_ICE[src]##/*}:-$local_dir/$dirname/${ZINIT_ICE[src]}}"
-                (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
-            fi
-            [[ -n ${ZINIT_ICE[multisrc]} ]] && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
+        if [[ -n ${ZINIT_ICE[src]} ]]; then
+            ZERO="${${(M)ZINIT_ICE[src]##/*}:-$local_dir/$dirname/${ZINIT_ICE[src]}}"
+            (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
+        fi
+        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
 
-            # Run the atload hooks right before atload ice
-            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]}" )
-            for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atload
-            done
+        # Run the atload hooks right before atload ice
+        reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]}" )
+        for key in "${reply[@]}"; do
+            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
+            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atload
+        done
 
-            # Run the functions' wrapping & tracking requests
-            [[ -n ${ZINIT_ICE[wrap-track]} ]] && \
-                .zinit-wrap-track-functions "$save_url" "" "$id_as"
+        # Run the functions' wrapping & tracking requests
+        [[ -n ${ZINIT_ICE[wrap-track]} ]] && \
+            .zinit-wrap-track-functions "$save_url" "" "$id_as"
 
-            [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
-        }
+        [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
-        [[ -z ${opts[(r)-u]} && ( -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ) ]] && {
+        [[ -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
             (( -- ZINIT[SHADOWING] == 0 )) && { ZINIT[SHADOWING]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; builtin setopt aliases; }
         }
     elif [[ ${ZINIT_ICE[as]} = completion ]]; then
         ((1))
     fi
-
-    # Updating – not sourcing, etc.
-    [[ -n ${opts[(r)-u]} ]] && return 0
 
     (( ${+ZINIT_ICE[atload]} )) && [[ ${ZINIT_ICE[atload][1]} != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]}"; ((1)); } || eval "${ZINIT_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
