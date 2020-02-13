@@ -1425,7 +1425,7 @@ ZINIT[EXTENDED_GLOB]=""
     # a forced download (i.e.: the medium doesn't allow to peek update)
     ZINIT[annex-multi-flag:pull-active]=0
 
-    (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$user/$plugin]=""; local nf="-nftid"; }
+    (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$user${${user:#(%|/)*}:+/}$plugin]=""; local nf="-nftid"; }
 
     .zinit-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" \
         ice local_dir filename is_snippet || return 1
