@@ -2951,7 +2951,7 @@ EOF
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-    local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
+    local the_id=$1${${1:#(%|/)*}:+${2:+/}}$2
 
     if [[ $the_id = (%|/)* ]]; then
         REPLY=${the_id#%}
@@ -2959,18 +2959,19 @@ EOF
     fi
 
     .zinit-two-paths "$the_id"
-    local s_path="${reply[-4]}" s_svn="${reply[-3]}" _path="${reply[-2]}" _filename="${reply[-1]}"
+    local s_path=${reply[-4]} s_svn=${reply[-3]} \
+            _path=${reply[-2]} _filename=${reply[-1]}
 
     reply=()
     REPLY=""
 
-    if [[ -d "$s_path" || -d "$_path" ]]; then
+    if [[ -d $s_path || -d $_path ]]; then
         local -A sice
         local -a tmp
         tmp=( "${(z@)ZINIT_SICE[$the_id]}" )
         (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
 
-        [[ "${+sice[svn]}" = "1" || -n "$s_svn" ]] && {
+        [[ ${+sice[svn]} = 1 || -n $s_svn ]] && {
             [[ -e "$s_path" ]] && REPLY="$s_path"
         } || {
             reply=( ${_filename:+"$_filename"} )
