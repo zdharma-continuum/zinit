@@ -1761,9 +1761,10 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-update-or-status-all() {
-    builtin setopt localoptions nullglob nokshglob noksharrays typesetsilent
+    emulate -LR zsh
+    setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
-    local st="$1" id_as
+    local st=$1 id_as
     local repo snip pd user plugin
 
     local -A ZINIT_ICE
@@ -1775,19 +1776,19 @@ ZINIT[EXTENDED_GLOB]=""
     [[ $st != status && ${ICE_OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
         print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} updating also unloaded snippets"
 
-    for snip in "${ZINIT[SNIPPETS_DIR]}"/**/(._zinit|._zplugin)/mode(D); do
-        [[ ! -f "${snip:h}/url" ]] && continue
-        [[ -f "${snip:h}/id-as" ]] && \
-            id_as="$(<${snip:h}/id-as)" ||
-            id_as=""
+    for snip in ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D); do
+        [[ ! -f ${snip:h}/url ]] && continue
+        [[ -f ${snip:h}/id-as ]] && \
+            id_as="$(<${snip:h}/id-as)" || \
+            id_as=
         .zinit-update-or-status-snippet "$st" "${id_as:-$(<${snip:h}/url)}"
         ZINIT_ICE=()
     done
-    [[ -n "$snipps" ]] && print
+    [[ -n $snipps ]] && print
 
     ZINIT_ICE=()
 
-    if [[ "$st" = "status" ]]; then
+    if [[ $st = status ]]; then
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
             print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} status done also for unloaded plugins"
     else
@@ -1797,42 +1798,42 @@ ZINIT[EXTENDED_GLOB]=""
 
     ZINIT[first-plugin-mark]=init
 
-    for repo in "${ZINIT[PLUGINS_DIR]}"/*; do
-        pd="${repo:t}"
+    for repo in ${ZINIT[PLUGINS_DIR]}/*; do
+        pd=${repo:t}
 
         # Two special cases
-        [[ "$pd" = "custom" || "$pd" = "_local---zinit" ]] && continue
+        [[ $pd = custom || $pd = _local---zinit ]] && continue
 
         .zinit-any-colorify-as-uspl2 "$pd"
 
         # Check if repository has a remote set
-        if [[ -f "$repo/.git/config" ]]; then
+        if [[ -f $repo/.git/config ]]; then
             local -a config
             config=( ${(f)"$(<$repo/.git/config)"} )
             if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                    [[ "$pd" = _local---* ]] && print -- "\nSkipping local plugin $REPLY" || \
+                    [[ $pd = _local---* ]] && print -- "\nSkipping local plugin $REPLY" || \
                         print "\n$REPLY doesn't have a remote set, will not fetch"
                 continue
             fi
         fi
 
         .zinit-any-to-user-plugin "$pd"
-        local user="${reply[-2]}" plugin="${reply[-1]}"
+        local user=${reply[-2]} plugin=${reply[-1]}
 
         # Must be a git repository or a binary release
-        if [[ ! -d "$repo/.git" && ! -f "$repo/._zinit/is_release" ]]; then
+        if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]]; then
             (( !ICE_OPTS[opt_-q,--quiet] )) && \
                 print "$REPLY: not a git repository"
             continue
         fi
 
-        if [[ "$st" = "status" ]]; then
+        if [[ $st = status ]]; then
             print "\nStatus for plugin $REPLY"
             ( builtin cd -q "$repo"; command git status )
         else
             (( !ICE_OPTS[opt_-q,--quiet] )) && print "Updating $REPLY" || print -n .
-            .zinit-update-or-status "update" "$user" "$plugin"
+            .zinit-update-or-status update "$user" "$plugin"
         fi
     done
 } # ]]]
