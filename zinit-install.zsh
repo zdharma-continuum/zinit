@@ -941,7 +941,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             # the messages on an actual update
                             (( ICE_OPTS[opt_-q,--quiet] )) && {
                                 print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
-                                print "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with wget, curl, lftp\)}..."
+                                print "Downloading \`$sname' (with Subversion)..."
                             }
                             .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
                         }
