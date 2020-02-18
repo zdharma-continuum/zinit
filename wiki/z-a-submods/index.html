@@ -2512,16 +2512,16 @@
                   <h1>z-a-submods</h1>
                 
                 <h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
-<p>A z-plugin (i.e. a plugin for the Zinit – <a href="../Annexes/">more information</a>)
+<p>An annex (i.e. an extension for Zinit – <a href="../Annexes/">more information</a>)
 that allows Zinit to clone additional submodules when installing a plugin or
 snippet. The submodules are then automatically updated on the <code>zinit update
 …</code>
 command.</p>
-<p>This z-plugin adds <code>submods''</code> ice to Zinit which has the following syntax:</p>
+<p>This annex adds <code>submods''</code> ice to Zinit which has the following syntax:</p>
 <pre><code class="zsh">submods'{user}/{plugin} -&gt; {output directory}; …'
 </code></pre>
 
-<p>An example command utilizing the z-plugin and its ice:</p>
+<p>An example command utilizing the annex and its ice:</p>
 <pre><code class="zsh"># Load zsh-autosuggestions plugin via Prezto module: autosuggestions
 zinit ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
 zinit snippet PZT::modules/autosuggestions
@@ -2529,7 +2529,7 @@ zinit snippet PZT::modules/autosuggestions
 
 <p><img alt="screenshot" src="../img/z-p-submods.png" /></p>
 <h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">#</a></h2>
-<p>Simply load as a plugin. The following command will install the z-plugin within
+<p>Simply load as a plugin. The following command will install the annex within
 Zinit:</p>
 <pre><code class="zsh">zinit light zinit-zsh/z-a-submods
 </code></pre>
