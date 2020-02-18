@@ -2606,7 +2606,9 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # $1 - time spec, e.g. "1 week"
 .zinit-recently() {
-    builtin setopt localoptions nullglob extendedglob nokshglob noksharrays
+    emulate -LR zsh
+    builtin setopt nullglob extendedglob warncreateglobal \
+                typesetsilent noshortloops
 
     local IFS="."
     local gitout
