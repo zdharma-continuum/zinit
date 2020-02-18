@@ -1365,7 +1365,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 # $2 - file
 ziextract() {
     emulate -LR zsh
-    setopt extendedglob warncreateglobal typesetsilent noshortloops
+    setopt extendedglob typesetsilent noshortloops # warncreateglobal
 
     local -a opt_move opt_norm opt_auto opt_nobkp
     zparseopts -D -E -move=opt_move -norm=opt_norm \
