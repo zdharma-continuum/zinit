@@ -873,16 +873,16 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     local save_url="$1" url="$2" id_as="$3" id_as_clean="${3%%\?*}" local_dir="$4" dirname="$5" filename="$6" update="$7"
     local -a list arr
     integer retval=0
-    [[ "$id_as" = (http|https|ftp|ftps|scp)://* ]] && {
+    [[ $id_as = (http|https|ftp|ftps|scp)://* ]] && {
         local sname="${${id_as_clean:h}:t}/${id_as_clean:t}"
-        [[ "$sname" = */trunk* ]] && sname="${${id_as_clean%%/trunk*}:t}/${id_as_clean:t}"
+        [[ $sname = */trunk* ]] && sname=${${id_as_clean%%/trunk*}:t}/${id_as_clean:t}
     } || local sname="$id_as_clean"
 
     # Change the url to point to raw github content if it isn't like that
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZINIT_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
 
-    if [[ ! -d "$local_dir/$dirname" ]]; then
-        [[ "$update" != "-u" ]] && print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
+    if [[ ! -d $local_dir/$dirname ]]; then
+        [[ $update != -u ]] && print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
         command mkdir -p "$local_dir"
     fi
 
@@ -894,7 +894,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     ZINIT[annex-multi-flag:pull-active]=0
 
     (
-        if [[ "$url" = (http|https|ftp|ftps|scp)://* ]] {
+        if [[ $url = (http|https|ftp|ftps|scp)://* ]] {
             # URL
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
@@ -903,7 +903,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
                 if (( ${+ZINIT_ICE[svn]} )) {
                     local skip_pull=0
-                    if [[ "$update" = "-u" ]] {
+                    if [[ $update = -u ]] {
                         # Test if update available
                         .zinit-mirror-using-svn "$url" "-t" "$dirname" || {
                             (( ${+ZINIT_ICE[run-atpull]} )) && {
@@ -933,7 +933,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             eval "${ZINIT_ICE[reset]:-command svn revert --recursive $filename/.}"
                         )
 
-                        [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                        [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
                         if (( !skip_pull )) {
                             # Do the update
@@ -950,7 +950,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                     }
 
                     # Redundant code, just to compile SVN snippet
-                    if [[ ${ZINIT_ICE[as]} != "command" ]]; then
+                    if [[ ${ZINIT_ICE[as]} != command ]]; then
                         if [[ -n ${ZINIT_ICE[pick]} ]]; then
                             list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
                         elif [[ -z ${ZINIT_ICE[pick]} ]]; then
@@ -960,7 +960,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                             )
                         fi
 
-                        [[ -e "${list[1]}" && "${list[1]}" != */dev/null && \
+                        [[ -e ${list[1]} && ${list[1]} != */dev/null && \
                             -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
                         {
                             (( !${+ZINIT_ICE[nocompile]} )) && {
@@ -1002,22 +1002,22 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                     }
 
                     if (( !skip_dl )) {
-                        [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+                        [[ ${ICE_OPTS[opt_-r,--reset]} = 1 ]] && {
                             [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f%b"
                             command rm -f "$dirname/$filename"
                         }
                     }
 
                     # Run annexes' atpull hooks (the before atpull-ice ones)
-                    [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && {
+                    [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && {
                         reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                         for key in "${reply[@]}"; do
                             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                            "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
+                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
                         done
                     }
 
-                    [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                    [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
                     
                     if (( !skip_dl )) {
                         .zinit-download-file-stdout "$url" >! "$dirname/$filename" || {
@@ -1037,24 +1037,24 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             # – no hooks will be run anyway because of the error
             ZINIT[annex-multi-flag:pull-active]=$retval
 
-            if [[ -n "${ZINIT_ICE[compile]}" ]]; then
+            if [[ -n ${ZINIT_ICE[compile]} ]]; then
                 list=( ${(M)~ZINIT_ICE[compile]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[compile]}(DN) )
                 [[ ${#list} -eq 0 ]] && {
                     print "Warning: ice compile'' didn't match any files."
                 } || {
                     local matched
-                    for matched in "${list[@]}"; do
+                    for matched in ${list[@]}; do
                         builtin zcompile "$matched"
                     done
                     ((1))
                 }
             fi
 
-            if [[ $ZINIT_ICE[as] != "command" ]] && (( ${+ZINIT_ICE[svn]} == 0 )); then
-                local file_path="$local_dir/$dirname/$filename"
-                if [[ -n "${ZINIT_ICE[pick]}" ]]; then
+            if [[ $ZINIT_ICE[as] != command ]] && (( ${+ZINIT_ICE[svn]} == 0 )); then
+                local file_path=$local_dir/$dirname/$filename
+                if [[ -n ${ZINIT_ICE[pick]} ]]; then
                     list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
-                    file_path="${list[1]}"
+                    file_path=${list[1]}
                 fi
                 [[ -e $file_path && -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} && $file_path != */dev/null ]] && {
                     (( !${+ZINIT_ICE[nocompile]} )) && {
@@ -1069,7 +1069,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             fi
         } else {
             # File
-            [[ "${ICE_OPTS[opt_-r,--reset]}" = 1 ]] && {
+            [[ ${ICE_OPTS[opt_-r,--reset]} = 1 ]] && {
                 [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f%b"
                 command rm -f "$local_dir/$dirname/$filename"
             }
@@ -1088,7 +1088,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                 eval "${ZINIT_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
             )
 
-            [[ "$update" = "-u" && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
 
             retval=2
             command mkdir -p "$local_dir/$dirname"
@@ -1119,7 +1119,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
 
             if [[ -n ${ZINIT_ICE[ps-on-update]} ]]; then
@@ -1141,7 +1141,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
         [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = "!!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!\!}}; }
 
-        if [[ -n "${ZINIT_ICE[mv]}" ]]; then
+        if [[ -n ${ZINIT_ICE[mv]} ]]; then
             if [[ ${ZINIT_ICE[mv]} = *("->"|"→")* ]] {
                 local from=${ZINIT_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[mv]##*(->|→)[[:space:]]#} || \
             } else {
@@ -1163,7 +1163,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             )
         fi
 
-        if [[ -n "${ZINIT_ICE[cp]}" ]]; then
+        if [[ -n ${ZINIT_ICE[cp]} ]]; then
             if [[ ${ZINIT_ICE[cp]} = *("->"|"→")* ]] {
                 local from=${ZINIT_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[cp]##*(->|→)[[:space:]]#} || \
             } else {
@@ -1187,7 +1187,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
         [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!}}; }
 
-        if [[ "$update" = "-u" ]] {
+        if [[ $update = -u ]] {
             # Run annexes' atpull hooks (the before atpull-ice ones)
             [[ ${ZINIT_ICE[atpull][1]} != *"!"* ]] && {
                 reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
@@ -1197,19 +1197,19 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
                 done
             }
 
-            [[ -n "${ZINIT_ICE[atpull]}" && ${ZINIT_ICE[atpull][1]} != *"!"* ]] && .zinit-countdown "atpull" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ -n ${ZINIT_ICE[atpull]} && ${ZINIT_ICE[atpull][1]} != *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
         } else {
             # Run annexes' atclone hooks (the before atclone-ice ones)
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone <->]}" )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \!atclone
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atclone
             done
 
             local atclone=${ZINIT_ICE[atclone]} extract=${ZINIT_ICE[extract]}
             @zinit-substitute atclone extract
 
-            [[ -n $atclone ]] && .zinit-countdown "atclone" && { local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ -n $atclone ]] && .zinit-countdown atclone && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
             if (( ${+ZINIT_ICE[extract]} )) {
                 .zinit-extract snippet "$extract" "$local_dir/$dirname"
@@ -1219,18 +1219,18 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atclone <->]}" )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atclone
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atclone
             done
         }
 
         [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)make}; }
 
         # Run annexes' atpull hooks (the after atpull-ice ones)
-        [[ "$update" = "-u" ]] && {
+        [[ $update = -u ]] && {
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}" )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" atpull
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atpull
             done
 
             if (( ZINIT[annex-multi-flag:pull-active] > 0 && ${+ZINIT_ICE[extract]} )) {
@@ -1243,7 +1243,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" "snippet" "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
             done
 
             if [[ -n ${ZINIT_ICE[ps-on-update]} ]]; then
