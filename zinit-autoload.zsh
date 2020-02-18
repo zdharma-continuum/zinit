@@ -2610,24 +2610,24 @@ ZINIT[EXTENDED_GLOB]=""
     builtin setopt nullglob extendedglob warncreateglobal \
                 typesetsilent noshortloops
 
-    local IFS="."
+    local IFS=.
     local gitout
-    local timespec="${*// ##/.}"
-    timespec="${timespec//.##/.}"
-    [[ -z "$timespec" ]] && timespec="1.week"
+    local timespec=${*// ##/.}
+    timespec=${timespec//.##/.}
+    [[ -z $timespec ]] && timespec=1.week
 
     typeset -a plugins
-    plugins=( "${ZINIT[PLUGINS_DIR]}"/*(DN) )
+    plugins=( ${ZINIT[PLUGINS_DIR]}/*(DN) )
 
     local p uspl1
-    for p in "${plugins[@]}"; do
-        uspl1="${p:t}"
-        [[ "$uspl1" = "custom" || "$uspl1" = "_local---zinit" ]] && continue
+    for p in ${plugins[@]}; do
+        uspl1=${p:t}
+        [[ $uspl1 = custom || $uspl1 = _local---zinit ]] && continue
 
         pushd "$p" >/dev/null
-        if [[ -d ".git" ]]; then
+        if [[ -d .git ]]; then
             gitout=`command git log --all --max-count=1 --since=$timespec 2>/dev/null`
-            if [[ -n "$gitout" ]]; then
+            if [[ -n $gitout ]]; then
                 .zinit-any-colorify-as-uspl2 "$uspl1"
                 print -r -- "$REPLY"
             fi
