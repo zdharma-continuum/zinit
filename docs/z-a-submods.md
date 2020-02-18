@@ -1,18 +1,18 @@
 ## Introduction
 
-A z-plugin (i.e. a plugin for the Zinit – [more information](../Annexes/))
+An annex (i.e. an extension for Zinit – [more information](../Annexes/))
 that allows Zinit to clone additional submodules when installing a plugin or
 snippet. The submodules are then automatically updated on the `zinit update
 …`
 command.
 
-This z-plugin adds `submods''` ice to Zinit which has the following syntax:
+This annex adds `submods''` ice to Zinit which has the following syntax:
 
 ```zsh
 submods'{user}/{plugin} -> {output directory}; …'
 ```
 
-An example command utilizing the z-plugin and its ice:
+An example command utilizing the annex and its ice:
 
 ```zsh
 # Load zsh-autosuggestions plugin via Prezto module: autosuggestions
@@ -24,7 +24,7 @@ zinit snippet PZT::modules/autosuggestions
 
 ## Installation
 
-Simply load as a plugin. The following command will install the z-plugin within
+Simply load as a plugin. The following command will install the annex within
 Zinit:
 
 ```zsh
