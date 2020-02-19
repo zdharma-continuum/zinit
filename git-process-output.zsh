@@ -69,7 +69,7 @@ print_my_line() {
     local col="%F{214}" col3="%F{214}" col4="%F{214}" col5="%F{214}"
     [[ -n "${4#...}" && -z "${5#...}" ]] && col3="%F{33}"
     [[ -n "${5#...}" ]] && col4="%F{33}"
-    print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3${${4:#...}:+, ${col3}REC%f: $4%}${${5:#...}:+, ${col4}RESOL%f: $5%}  "
+    print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3${${4:#...}:+, ${col3}REC%f: $4%}${${5:#...}:+, ${col4}RES%f: $5%}  "
     print -n $'\015'
 }
 
@@ -78,7 +78,7 @@ print_my_line_compress() {
     [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && col3="%F{33}"
     [[ -n "${5#...}" && -z "${6#...}" ]] && col4="%F{33}"
     [[ -n "${6#...}" ]] && col5="%F{33}"
-    print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3, ${col3}COMPR%f: $4%%${${5:#...}:+, ${col4}REC%f: $5%%}${${6:#...}:+, ${col5}RESOL%f: $6%%}  "
+    print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3, ${col3}COMPR%f: $4%%${${5:#...}:+, ${col4}REC%f: $5%%}${${6:#...}:+, ${col5}RES%f: $6%%}  "
     print -n $'\015'
 }
 
