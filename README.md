@@ -45,6 +45,11 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 19=02-2020
+  
+  The project has a fresh, new subreddit [r/zinit](https://www.reddit.com/r/zinit/).
+  You can also visit the old subreddit [r/zplugin](https://www.reddit.com/r/zplugin/).
+
 * 09-02-2020
 
   Note that the ice `extract` can handle files with spaces – to encode such a name use
