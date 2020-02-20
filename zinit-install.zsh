@@ -1094,7 +1094,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
 
             retval=2
             command mkdir -p "$local_dir/$dirname"
-            if (( !ICE_OPTS[opt_-q,--quiet] )) {
+            if (( !ICE_OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
                 print -P "${ZINIT[col-msg1]}Copying ${ZINIT[col-obj]}$filename${ZINIT[col-msg1]}...%f%b"
                 command cp -vf "$url" "$local_dir/$dirname/$filename" || \
                     { print -Pr -- "${ZINIT[col-error]}An error occured.%f%b"; retval=4; }
