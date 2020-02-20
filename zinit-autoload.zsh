@@ -1477,7 +1477,7 @@ ZINIT[EXTENDED_GLOB]=""
             ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
 
             if (( do_update )) {
-                if (( ICE_OPTS[opt_-q,--quiet] )) {
+                if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                     .zinit-any-colorify-as-uspl2 "$id_as"
                     (( ZINIT[first-plugin-mark] )) && {
                         ZINIT[first-plugin-mark]=0
@@ -1526,7 +1526,7 @@ ZINIT[EXTENDED_GLOB]=""
                   [[ -n ${line%%[[:space:]]##} ]] && {
                       [[ $had_output -eq 0 ]] && {
                           had_output=1
-                          if (( ICE_OPTS[opt_-q,--quiet] )) {
+                          if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                               .zinit-any-colorify-as-uspl2 "$id_as"
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
@@ -1553,7 +1553,7 @@ ZINIT[EXTENDED_GLOB]=""
                       (( ${+ice[run-atpull]} )) && {
                           do_update=1
                           print -r -- mark >! $local_dir/.zinit_lastupd
-                          if (( ICE_OPTS[opt_-q,--quiet] )) {
+                          if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                               .zinit-any-colorify-as-uspl2 "$id_as"
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
@@ -1716,6 +1716,10 @@ ZINIT[EXTENDED_GLOB]=""
     fi
     ZINIT_ICE=()
 
+    if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
+        print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
+    }
+
     return $retval
 } # ]]]
 # FUNCTION: .zinit-update-or-status-snippet [[[
@@ -1751,6 +1755,11 @@ ZINIT[EXTENDED_GLOB]=""
     fi
 
     ZINIT_ICE=()
+
+    if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
+        print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
+    }
+
     return $retval
 }
 # ]]]
@@ -1764,11 +1773,17 @@ ZINIT[EXTENDED_GLOB]=""
     emulate -LR zsh
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
-    local st=$1 id_as
-    local repo snip pd user plugin
+    if (( ICE_OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
+        (( !ICE_OPTS[opt_-q,--quiet] )) && \
+            print -Pr -- "$ZINIT[col-info2]Parallel Update Starts Now...%f"
+        .zinit-update-all-parallel
+        return $?
+    }
+
+    local st=$1 id_as repo snip pd user plugin
+    integer PUPDATE=0
 
     local -A ZINIT_ICE
-    ZINIT_ICE=()
 
     local -a snipps
     snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
@@ -1837,6 +1852,135 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     done
 } # ]]]
+# FUNCTION: .zinit-update-in-parallel [[[
+.zinit-update-all-parallel() {
+    emulate -LR zsh
+    setopt extendedglob nullglob warncreateglobal typesetsilent \
+        noshortloops nomonitor nonotify
+
+    local id_as repo snip uspl user plugin PUDIR="$(mktemp -d)"
+
+    local -A ZINIT_ICE PUAssocArray map
+    map=( / --  "=" -EQ-  "?" -QM-  "&" -AMP-  : - )
+    local -a snipps files
+    snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
+    integer main_counter counter PUPDATE=1
+
+    files=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D) )
+    main_counter=${#files}
+    for snip ( "${files[@]}" ) {
+        main_counter=main_counter-1
+        # The continue may cause the tail of processes to
+        # fall-through to the following plugins-specific `wait'
+        # Should happen only in a very special conditions
+        # TODO handle this
+        [[ ! -f ${snip:h}/url ]] && continue
+        [[ -f ${snip:h}/id-as ]] && \
+            id_as="$(<${snip:h}/id-as)" || \
+            id_as=
+
+        counter+=1
+        local ef_id="${id_as:-$(<${snip:h}/url)}"
+        local PUFILEMAIN=${${ef_id#/}//(#m)[\/=\?\&:]/${map[$MATCH]}}
+        local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
+
+        .zinit-update-or-status-snippet "$st" "$ef_id" &>! $PUFILE &
+
+        PUAssocArray[$!]=$PUFILE
+
+        if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
+            print wait ${(k)PUAssocArray}
+            wait ${(k)PUAssocArray}
+            local ind_file
+            for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
+                command cat ${ind_file:r}
+                command rm -f $ind_file
+            }
+            command rm -f ${(v)PUAssocArray}
+            counter=0
+            PUAssocArray=()
+        } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
+            print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
+                "$ICE_OPTS[value]$ZINIT[col-obj] parallel update jobs...%f"
+        }
+
+        ZINIT_ICE=()
+    }
+
+    counter=0
+    PUAssocArray=()
+    print HERE
+
+    local -a files2
+    files=( ${ZINIT[PLUGINS_DIR]}/*(ND/) )
+
+    # Pre-process plugins
+    for repo ( $files ) {
+        uspl=${repo:t}
+        # Two special cases
+        [[ $uspl = custom || $uspl = _local---zinit ]] && continue
+
+        # Check if repository has a remote set
+        if [[ -f $repo/.git/config ]] {
+            local -a config
+            config=( ${(f)"$(<$repo/.git/config)"} )
+            if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]] {
+                continue
+            }
+        }
+
+        .zinit-any-to-user-plugin "$uspl"
+        local user=${reply[-2]} plugin=${reply[-1]}
+
+        # Must be a git repository or a binary release
+        if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]] {
+            continue
+        }
+        files2+=( $repo )
+    }
+
+    main_counter=${#files2}
+    for repo ( $files2 ) {
+        main_counter=main_counter-1
+
+        uspl=${repo:t}
+        id_as=${uspl//---//}
+
+        counter+=1
+        local PUFILEMAIN=${${id_as#/}//(#m)[\/=\?\&:]/${map[$MATCH]}}
+        local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
+
+        .zinit-any-colorify-as-uspl2 "$uspl"
+        print -r -- "Updating $REPLY..." >! $PUFILE
+
+        .zinit-any-to-user-plugin "$uspl"
+        local user=${reply[-2]} plugin=${reply[-1]}
+
+        .zinit-update-or-status update "$user" "$plugin" &>>! $PUFILE &
+
+        PUAssocArray[$!]=$PUFILE
+
+        if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
+            print wait ${(k)PUAssocArray}
+            wait ${(k)PUAssocArray}
+            local ind_file
+            for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
+                command cat ${ind_file:r}
+                command rm -f $ind_file
+            }
+            command rm -f ${(v)PUAssocArray}
+            counter=0
+            PUAssocArray=()
+        } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
+            print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
+                "$ICE_OPTS[value]$ZINIT[col-obj] parallel update jobs...%f"
+        }
+
+    }
+    # Shouldn't happen
+    # (( ${#PUAssocArray} > 0 )) && wait ${(k)PUAssocArray}
+}
+# ]]]
 # FUNCTION: .zinit-show-zstatus [[[
 # Shows Zinit status, i.e. number of loaded plugins,
 # of available completions, etc.
