@@ -9,7 +9,7 @@ It is active if the ice is empty (or contains only flags – more on them later)
 It works as follow:
 
 1. At first, a recursive search for files of known [file
-   extensions](#supported-file-formats) located not deeper than in
+   extensions](#supported_file_formats) located not deeper than in
    a sub-directory is being performed. All such found files are then extracted.
     - The directory-level limit is to skip extraction of some helper archive
       files, which are typically located somewhere deeper in the directory tree.
