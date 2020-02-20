@@ -1460,6 +1460,13 @@ ziextract() {
         return $ret_val
     }
 
+    if [[ -z $file ]] {
+        print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
+            "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
+            "argument needed (the file to extract) or" \
+            "the --auto option"
+        return 1
+    }
     if [[ ! -e $file ]] {
         print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
             "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
