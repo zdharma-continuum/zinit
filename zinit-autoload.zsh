@@ -1482,7 +1482,7 @@ ZINIT[EXTENDED_GLOB]=""
                     (( ZINIT[first-plugin-mark] )) && {
                         ZINIT[first-plugin-mark]=0
                     } || print
-                    print "\rUpdating plugin $REPLY"
+                    print "\rUpdating $REPLY"
                 }
 
                 (( !skip_pull && ICE_OPTS[opt_-r,--reset] )) && {
@@ -1531,7 +1531,7 @@ ZINIT[EXTENDED_GLOB]=""
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
                               } || print
-                              print "Updating plugin $REPLY"
+                              print "Updating $REPLY"
                           }
                       }
                       print $line
@@ -1558,7 +1558,7 @@ ZINIT[EXTENDED_GLOB]=""
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
                               } || print
-                              print "\rUpdating plugin $REPLY"
+                              print "\rUpdating $REPLY"
                           }
                       }
                   }
