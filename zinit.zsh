@@ -1286,6 +1286,8 @@ function $f {
 
         (( -- ZINIT[SHADOWING] == 0 )) && { ZINIT[SHADOWING]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; builtin setopt aliases; }
     elif [[ -n ${opts[(r)--command]} || ${ZINIT_ICE[as]} = command ]]; then
+        [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
+            ZINIT_ICE[pick]="${id_as:t}"
         # Subversion - directory and multiple files possible
         if (( ${+ZINIT_ICE[svn]} )); then
             if [[ -n ${ZINIT_ICE[pick]} ]]; then
@@ -1430,6 +1432,8 @@ function $f {
     local pdir_orig="$pdir_path" key
 
     if [[ ${ZINIT_ICE[as]} = command ]]; then
+        [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
+            ZINIT_ICE[pick]="${id_as:t}"
         reply=()
         if [[ -n ${ZINIT_ICE[pick]} && ${ZINIT_ICE[pick]} != /dev/null ]]; then
             reply=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $pdir_path/${~ZINIT_ICE[pick]}(DN) )
