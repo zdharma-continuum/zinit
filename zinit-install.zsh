@@ -1395,15 +1395,16 @@ ziextract() {
         integer ret_val
         files=( (#i)**/*.(zip|rar|7z|tgz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
-            ziextract "$file" $opt_move $opt_norm
+            ziextract "$file" $opt_move $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
             ret_val+=$?
         }
         # Second, try to find the archive via `file' tool
         if (( !${#files} )) {
-            local -aU output infiles stage2_processed
+            local -aU output infiles stage2_processed archives
             infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)~*/*/*(-.DN) )
             output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
-            for file ( $output ) {
+            archives=( ${(M)output[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) *} )
+            for file ( $archives ) {
                 local fname=${(M)file#(${(~j:|:)infiles}): } desc=${file#(${(~j:|:)infiles}): } type
                 fname=${fname%%??}
                 [[ -z $fname || -n ${stage2_processed[(r)$fname]} ]] && continue
@@ -1414,7 +1415,7 @@ ziextract() {
                             "Note:%f%b" \
                             "detected a ${ZINIT[col-obj]}$type%f%b" \
                             "archive in the file ${ZINIT[col-file]}$fname%f%b."
-                    ziextract "$fname" "$type" $opt_move $opt_norm --norm
+                    ziextract "$fname" "$type" $opt_move $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
                     integer iret_val=$?
                     ret_val+=iret_val
 
@@ -1425,10 +1426,11 @@ ziextract() {
                     [[ -f $fname.out ]] && fname=$fname.out
                     files=( *.tar(ND) )
                     if [[ -f $fname || -f ${fname:r} ]] {
-                        local -aU output2
+                        local -aU output2 archives2
                         output2=( ${(@f)"$(command file -- "$fname"(N) "${fname:r}"(N) $files[1](N) 2>&1)"} )
+                        archives2=( ${(M)output2[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) *} )
                         local file2
-                        for file2 ( $output2 ) {
+                        for file2 ( $archives2 ) {
                             fname=${file2%:*} desc=${file2##*:}
                             local type2=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                             if [[ $type != $type2 && \
@@ -1442,7 +1444,7 @@ ziextract() {
                                         "Note:%f%b" \
                                         "detected a ${ZINIT[col-obj]}$type2%f%b" \
                                         "archive in the file ${ZINIT[col-file]}$fname%f%b."
-                                ziextract "$fname" "$type2" $opt_move $opt_norm
+                                ziextract "$fname" "$type2" $opt_move $opt_norm ${${${#archives}:#1}:+--nobkp}
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
                                 if [[ $fname == *.out ]] {
