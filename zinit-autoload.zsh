@@ -1860,7 +1860,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     local id_as repo snip uspl user plugin PUDIR="$(mktemp -d)"
 
-    local -A ZINIT_ICE PUAssocArray map
+    local -A PUAssocArray map
     map=( / --  "=" -EQ-  "?" -QM-  "&" -AMP-  : - )
     local -a snipps files
     snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
@@ -1888,7 +1888,6 @@ ZINIT[EXTENDED_GLOB]=""
 
         PUAssocArray[$!]=$PUFILE
 
-        ZINIT_ICE=()
         .zinit-wait-for-update-jobs
     }
 
