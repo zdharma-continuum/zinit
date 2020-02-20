@@ -724,7 +724,7 @@ hljs.registerLanguage("bash", function(e) {
     aliases: ["sh", "zsh"],
     l: /\b-?[a-z\._]+\b/,
     k: {
-      "ice-mod": "svn proto from teleid bindmap cloneopts depth wait blockf subscribe pick bpick as ver silent lucid notify mv cp atinit atclone atpull nocd has cloneonly make service trackbinds compile nocompile nocompletions submods countdown trigger-load light-mode is-snippet sh bash ksh csh test zman submod dl patch sbin fbin fsrc ferc fmod gem node rustup cargo",
+      "ice-mod": "svn proto from teleid bindmap cloneopts depth wait blockf subscribe pick bpick as ver silent lucid notify mv cp atinit atclone atpull nocd has cloneonly make service trackbinds compile nocompile nocompletions submods countdown trigger-load light-mode is-snippet sh bash ksh csh test zman submod dl patch sbin fbin fsrc ferc fmod gem node rustup cargo extract",
       command:
         "load unload light snippet cuninstall creinstall clist cdisable cenable report delete update csearch times help",
       zpl: "",
