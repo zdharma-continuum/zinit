@@ -893,7 +893,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
     # a forced download (i.e.: the medium doesn't allow to peek update)
-    ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+0}:-2}
+    ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
     (
         if [[ $url = (http|https|ftp|ftps|scp)://* ]] {
@@ -1277,6 +1277,15 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
     integer correct=0
     [[ -o ksharrays ]] && correct=1
     opts=( -u ) # for z-a-as-monitor
+
+    # Create a local copy of ICE_OPTS, basically
+    # for z-a-as-monitor annex
+    local -A ice_opts
+    ice_opts=( "${(kv)ICE_OPTS[@]}" )
+    local -A ICE_OPTS
+    ICE_OPTS=( "${(kv)ice_opts[@]}" )
+
+    ZINIT[annex-multi-flag:pull-active]=0
 
     # Remove leading whitespace and trailing /
     url=${${url#${url%%[! $'\t']*}}%/}
