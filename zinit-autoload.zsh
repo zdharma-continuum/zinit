@@ -1922,7 +1922,7 @@ ZINIT[EXTENDED_GLOB]=""
     }
 
     main_counter=${#files2}
-    for repo ( $files2 ) {
+    for repo ( "${files2[@]}" ) {
         main_counter=main_counter-1
 
         uspl=${repo:t}
