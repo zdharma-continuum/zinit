@@ -1855,7 +1855,7 @@ ZINIT[EXTENDED_GLOB]=""
 # FUNCTION: .zinit-update-in-parallel [[[
 .zinit-update-all-parallel() {
     emulate -LR zsh
-    setopt extendedglob nullglob warncreateglobal typesetsilent \
+    setopt extendedglob warncreateglobal typesetsilent \
         noshortloops nomonitor nonotify
 
     local id_as repo snip uspl user plugin PUDIR="$(mktemp -d)"
@@ -1865,7 +1865,7 @@ ZINIT[EXTENDED_GLOB]=""
     local -a files
     integer main_counter counter PUPDATE=1
 
-    files=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D) )
+    files=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(ND) )
     main_counter=${#files}
     for snip ( "${files[@]}" ) {
         main_counter=main_counter-1
