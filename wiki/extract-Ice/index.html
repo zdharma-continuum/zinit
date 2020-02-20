@@ -36,7 +36,7 @@
     
     
       
-        <title>Annexes - Zinit Wiki</title>
+        <title>extract Ice - Zinit Wiki</title>
       
     
     
@@ -79,7 +79,7 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
-      <a href="#annexes" tabindex="1" class="md-skip">
+      <a href="#the_automatic_archive-extraction_ice-tool" tabindex="1" class="md-skip">
         Skip to content
       </a>
     
@@ -140,7 +140,7 @@
             </span>
             <span class="md-header-nav__topic">
               
-                Annexes
+                extract Ice
               
             </span>
           
@@ -323,7 +323,7 @@
     <li class="md-tabs__item">
       
         <a href="../Alternate-Ice-Syntax/"
-            title="Ice Modifiers" class="md-tabs__link">
+            title="Ice Modifiers" class="md-tabs__link md-tabs__link--active">
           Ice Modifiers
         </a>
       
@@ -400,8 +400,8 @@
   
     <li class="md-tabs__item">
       
-        <a href="./"
-            title="Zinit Extensions" class="md-tabs__link md-tabs__link--active">
+        <a href="../Annexes/"
+            title="Zinit Extensions" class="md-tabs__link">
           Zinit Extensions
         </a>
       
@@ -740,15 +740,17 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-2"
-          type="checkbox" id="nav-2" />
+          type="checkbox" id="nav-2" checked />
     
 
     <!-- Expand active pages -->
@@ -1096,15 +1098,300 @@
 <!-- Determine class according to level -->
 
 
+  
+
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item">
-    <a href="../extract-Ice/" title="extract Ice"
-        class="md-nav__link">
+  <li class="md-nav__item md-nav__item--active">
+    
+
+    <!-- Active checkbox expands items contained within nested section -->
+    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
+        type="checkbox" id="__toc" />
+
+    <!-- Hack: see partials/toc.html for more information -->
+    
+      
+    
+
+    <!-- Render table of contents, if not empty -->
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        extract Ice
+      </label>
+    
+    <a href="./" title="extract Ice"
+        class="md-nav__link md-nav__link--active">
       extract Ice
     </a>
+
+    <!-- Show table of contents -->
+    
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+    
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#automatic_mode" title="Automatic Mode"
+      class="md-nav__link">
+    Automatic Mode
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#fixed_mode" title="Fixed Mode"
+      class="md-nav__link">
+    Fixed Mode
+  </a>
+
+  <!-- Render nested item list -->
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#filenames_with_spaces" title="Filenames With Spaces"
+      class="md-nav__link">
+    Filenames With Spaces
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#flags" title="Flags"
+      class="md-nav__link">
+    Flags
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#ziextract_function" title="ziextract Function"
+      class="md-nav__link">
+    ziextract Function
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#supported_file_formats" title="Supported File Formats"
+      class="md-nav__link">
+    Supported File Formats
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+    
   </li>
+
+<!-- Main navigation item -->
 
         
           
@@ -1542,17 +1829,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+  <li class="md-nav__item md-nav__item--nested">
 
     <!-- Active checkbox expands items contained within nested section -->
     
       <input class="md-toggle md-nav__toggle" data-md-toggle="nav-4"
-          type="checkbox" id="nav-4" checked />
+          type="checkbox" id="nav-4" />
     
 
     <!-- Expand active pages -->
@@ -1596,228 +1881,15 @@
 <!-- Determine class according to level -->
 
 
-  
-
 
 <!-- Main navigation item with nested items -->
 
-  <li class="md-nav__item md-nav__item--active">
-    
-
-    <!-- Active checkbox expands items contained within nested section -->
-    <input class="md-toggle md-nav__toggle" data-md-toggle="toc"
-        type="checkbox" id="__toc" />
-
-    <!-- Hack: see partials/toc.html for more information -->
-    
-      
-    
-
-    <!-- Render table of contents, if not empty -->
-    
-      <label class="md-nav__link md-nav__link--active" for="__toc">
-        Annexes
-      </label>
-    
-    <a href="./" title="Annexes"
-        class="md-nav__link md-nav__link--active">
+  <li class="md-nav__item">
+    <a href="../Annexes/" title="Annexes"
+        class="md-nav__link">
       Annexes
     </a>
-
-    <!-- Show table of contents -->
-    
-      <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-
-
-<!-- Table of contents -->
-<nav class="md-nav md-nav--secondary">
-  
-
-  <!--
-    Hack: check whether the content contains a h1 headline. If it does, the
-    top-level anchor must be skipped, since it would be redundant to the link
-    to the current page that is located just above the anchor. Therefore we
-    directly continue with the children of the anchor.
-  -->
-  
-    
-  
-
-  <!-- Render item list -->
-  
-    <label class="md-nav__title" for="__toc">Table of contents</label>
-    <ul class="md-nav__list" data-md-scrollfix>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#what_are_they" title="What Are They?"
-      class="md-nav__link">
-    What Are They?
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#what_can_they_do" title="What Can They Do?"
-      class="md-nav__link">
-    What Can They Do?
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#how_to_code_them" title="How To Code Them?"
-      class="md-nav__link">
-    How To Code Them?
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-        <!--
-  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
-
-  Permission is hereby granted, free of charge, to any person obtaining a copy
-  of this software and associated documentation files (the "Software"), to
-  deal in the Software without restriction, including without limitation the
-  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-  sell copies of the Software, and to permit persons to whom the Software is
-  furnished to do so, subject to the following conditions:
-
-  The above copyright notice and this permission notice shall be included in
-  all copies or substantial portions of the Software.
-
-  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
-  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  IN THE SOFTWARE.
--->
-
-<!-- Table of contents item -->
-<li class="md-nav__item">
-  <a href="#details" title="Details"
-      class="md-nav__link">
-    Details
-  </a>
-
-  <!-- Render nested item list -->
-  
-</li>
-      
-
-      <!-- Source files -->
-      
-
-      <!-- Set from config but allow override -->
-      
-      
-
-      <!-- Disqus integration -->
-      
-    </ul>
-  
-</nav>
-    
   </li>
-
-<!-- Main navigation item -->
 
         
           
@@ -2554,9 +2626,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#what_are_they" title="What Are They?"
+  <a href="#automatic_mode" title="Automatic Mode"
       class="md-nav__link">
-    What Are They?
+    Automatic Mode
   </a>
 
   <!-- Render nested item list -->
@@ -2587,9 +2659,81 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#what_can_they_do" title="What Can They Do?"
+  <a href="#fixed_mode" title="Fixed Mode"
       class="md-nav__link">
-    What Can They Do?
+    Fixed Mode
+  </a>
+
+  <!-- Render nested item list -->
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#filenames_with_spaces" title="Filenames With Spaces"
+      class="md-nav__link">
+    Filenames With Spaces
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#flags" title="Flags"
+      class="md-nav__link">
+    Flags
   </a>
 
   <!-- Render nested item list -->
@@ -2620,9 +2764,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#how_to_code_them" title="How To Code Them?"
+  <a href="#ziextract_function" title="ziextract Function"
       class="md-nav__link">
-    How To Code Them?
+    ziextract Function
   </a>
 
   <!-- Render nested item list -->
@@ -2653,9 +2797,9 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#details" title="Details"
+  <a href="#supported_file_formats" title="Supported File Formats"
       class="md-nav__link">
-    Details
+    Supported File Formats
   </a>
 
   <!-- Render nested item list -->
@@ -2685,148 +2829,91 @@
               
                 
                 
-                <h1 id="annexes">Annexes<a class="headerlink" href="#annexes" title="Permanent link">#</a></h1>
-<h2 id="what_are_they">What Are They?<a class="headerlink" href="#what_are_they" title="Permanent link">#</a></h2>
-<p>They are Zinit extensions. An annex is added to Zinit by simply loading it
-just as any other plugin.</p>
-<h2 id="what_can_they_do">What Can They Do?<a class="headerlink" href="#what_can_they_do" title="Permanent link">#</a></h2>
+                <h1 id="the_automatic_archive-extraction_ice-tool">The Automatic Archive-Extraction Ice-Tool<a class="headerlink" href="#the_automatic_archive-extraction_ice-tool" title="Permanent link">#</a></h1>
+<p>Zinit has a swiss-knife tool for unpacking all kinds of archives – the
+<code>extract''</code> ice. It works in two modes – automatic mode and fixed mode.</p>
+<h2 id="automatic_mode">Automatic Mode<a class="headerlink" href="#automatic_mode" title="Permanent link">#</a></h2>
+<p>It is active if the ice is empty (or contains only flags – more on them later).
+It works as follow:</p>
 <ol>
-<li>
-<p>Add a new Zinit subcommand (i.e. the command that’s placed after the
-    function <code>zinit …</code> when calling Zinit).</p>
+<li>At first, a recursive search for files of known <a href="#supported-file-formats">file
+   extensions</a> located not deeper than in
+   a sub-directory is being performed. All such found files are then extracted.<ul>
+<li>The directory-level limit is to skip extraction of some helper archive
+  files, which are typically located somewhere deeper in the directory tree.</li>
+</ul>
 </li>
-<li>
-<p>Add new ice-modifiers.</p>
+<li><strong>IF</strong> no such files will be found, then a recursive search for files of
+   known archive <strong>types</strong> will be performed. This is basically done by running
+   the <code>file</code> Unix command on each file in the plugin or snippet directory and
+   then grepping the output for strings like <code>Zip</code>, <code>bzip2</code>, etc. All such
+   discovered files are then extracted.<ul>
+<li>The directory-level requirement is imposed also during this stage - files
+  located deeper in the tree than in a sub-directory are omitted.</li>
+</ul>
 </li>
-<li>
-<p>Register four type of hooks:</p>
+<li>If no archive files will be discovered then no action is being performed and
+   also no warning message is being printed.</li>
+</ol>
+<h2 id="fixed_mode">Fixed Mode<a class="headerlink" href="#fixed_mode" title="Permanent link">#</a></h2>
+<p>It is active when a filename is being passed as the <code>extract</code>'s argument, e.g.:
+<code>zinit extract=archive.zip for zdharma/null</code>. Multiple files can be specified
+– separated by spaces. In this mode all and only the specified files are being
+extracted.</p>
+<h4 id="filenames_with_spaces">Filenames With Spaces<a class="headerlink" href="#filenames_with_spaces" title="Permanent link">#</a></h4>
+<p>The filenames with spaces in them are supported by a trick – to correctly pass
+such a filename to <code>extract</code> use the non-breaking space in place of the
+in-filename original spaces. The non-breaking space is easy to type by pressing
+right Alt and the Space.</p>
+<h2 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">#</a></h2>
+<p>The value of the ice can begin with a two special characters:</p>
 <ol>
-<li>
-<p><code>atclone</code> hook – run after cloning any plugin or downloading any
-snippet.</p>
-</li>
-<li>
-<p><code>atpull</code> hook – run after pulling new commits (i.e. updating) for any
-    plugin / snippet.</p>
-</li>
-<li>
-<p><code>atinit</code> hook – run before loading any plugin / snippet, after it has
-    been set-up (i.e. downloaded).</p>
-</li>
-<li>
-<p><code>atload</code> hook – run after loading any plugin / snippet.</p>
+<li>Exclamation mark (<code>!</code>), i.e.: <code>extract='!…'</code> – it'll cause the files to be
+   moved one directory-level up upon unpacking,</li>
+<li>Dash (<code>-</code>), i.e.: <code>extract'-…'</code> – it'll prevent removal of the archive after
+   unpacking.<ul>
+<li>This flag is useful to allow comparing timestamps with the server in case
+  of snippet-downloaded file – it will prevent unnecessary downloads during
+  <code>zinit update</code>, as the timestamp of the archive file on the disk will be
+  first compared with the HTTP last-modification time header.</li>
+</ul>
 </li>
 </ol>
-</li>
-<li>
-<p>Register hooks for generating help text, shown by the <code>zinit help</code>
-    subcommand.</p>
-</li>
-</ol>
-<h2 id="how_to_code_them">How To Code Them?<a class="headerlink" href="#how_to_code_them" title="Permanent link">#</a></h2>
-<p>Below is an example body of an <code>atclone</code> hook (taken from
-<a href="https://github.com/zinit/z-a-submods"><strong>zinit/z-a-submods</strong></a> annex). It
-shows how to:</p>
+<p>The flags can be combined in any order, e.g.: <code>extract'!-'</code>.</p>
+<h2 id="ziextract_function"><code>ziextract</code> Function<a class="headerlink" href="#ziextract_function" title="Permanent link">#</a></h2>
+<p>Sometimes a more uncommon unpacking operation is needed. In such case you can
+directly use the function that implements the ice – it is called <code>ziextract</code>. It
+recognizes the following options:</p>
 <ol>
-<li>
-<p>Obtain the arguments passed to the hook.</p>
-</li>
-<li>
-<p>Use an ice modifier.</p>
-</li>
-<li>
-<p>It also shows an useful snippet that will trim the whitespace in array
-    elements.</p>
-</li>
-<li>
-<p>Utilize the last hook argument – the plugin’s/snippet’s containing
-    directory.</p>
+<li><code>--auto</code> – runs the automatic extraction.</li>
+<li><code>--move</code> – performs the one-directory-level-up move of the files after
+   unpacking.</li>
+<li><code>--norm</code> - prevents the archive file removal.</li>
+<li>And also one option specific only to the function: <code>--nobkp</code>, which prevents
+   clearing of the plugin's dir before the extraction – normally all the files
+   except the archive are being moved into <code>._backup</code> directory and after that
+   the extraction is performed.<ul>
+<li><code>extract</code> ice also skips creating the backup <strong>if</strong> more than one archive
+  is found or given as the argument.</li>
+</ul>
 </li>
 </ol>
-<!-- end list -->
-
-<pre><code class="zsh">emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
-
-[[ -z &quot;${ZPLG_ICE[submods]}&quot; ]] &amp;&amp; return 0
-
-# (1)
-[[ &quot;$1&quot; = plugin ]] &amp;&amp; \
-    local type=&quot;$1&quot; user=&quot;$2&quot; plugin=&quot;$3&quot; id_as=&quot;$4&quot; dir=&quot;$5&quot; || \
-    local type=&quot;$1&quot; url=&quot;$2&quot; id_as=&quot;$3&quot; dir=&quot;$4&quot; # type: snippet
-
-local -a mods parts
-local mod
-
-# (2)
-mods=( ${(@s.;.)ZPLG_ICE[submods]} )
-for mod in &quot;${mods[@]}&quot;; do
-    parts=( &quot;${(@s:-&gt;:)mod}&quot; )
-    # (3) Remove only leading and trailing whitespace
-    parts=( &quot;${parts[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}&quot; )
-
-    print &quot;\nCloning submodule: ${parts[1]} to dir: ${parts[2]}&quot;
-    parts[1]=&quot;https://github.com/${parts[1]}&quot;
-    # (4) – the: -C &quot;$dir&quot;
-    command git -C &quot;$dir&quot; clone --progress &quot;${parts[1]}&quot; &quot;${parts[2]}&quot;
-done
-</code></pre>
-
-<p>The recommended method of creating a hook is to place its body into a file that
-starts with a colon, and also a <code>za-</code> prefix, e.g.  <code>:za-myproject-atclone-hook</code>
-and then to mark it for autoloading via <code>autoload -Uz
-:za-myproject-atclone-hook</code>. Then register the hook (presumably in the
-<code>myproject.plugin.zsh</code> file) with the API call: <code>@zplg-register-annex</code>:</p>
-<pre><code class="zsh">@zplg-register-annex &quot;myproject&quot; hook:atclone \
-    :za-myproject-atclone-handler \
-    :za-myproject-atclone-help-handler \
-    &quot;submods''&quot; # register a new ice-mod: submods''
-</code></pre>
-
-<p>The general syntax of the API call is:</p>
-<pre><code class="zsh">@zplg-register-annex {project-name} \
-    {hook:&lt;hook-type&gt;|subcommand:&lt;new-subcommand-name&gt;} \
-    {name-of-the-handler-function} \
-    {name-of-the-HELP-handler-function} \
-    &quot;{ice-mod1}|{ice-mod2}|…&quot;
-</code></pre>
-
-<p>The last argument, i.e. the <code>|</code>-separated ice-list, is optional. That’s all!
-After this loading the plugin <code>myproject</code> will set up the new ice-mod <code>submods</code>
-that will have syntax <code>submods'{user}/{plugin} –&gt; {output-dir}; …'</code> and
-will clone submodules when installing the original plugin or snippet! Example
-real-world use of the ice-mod:</p>
-<pre><code class="zsh"># Load the `zsh-autosuggestions' plugin via Prezto module: `autosuggestions'
-zinit ice svn submods'zsh-users/zsh-autosuggestions -&gt; external'
-zinit snippet PZT::modules/autosuggestions
-</code></pre>
-
-<p>Checkout the project which fully implements this idea,
-<a href="https://github.com/zinit/z-a-submods"><strong>zinit/z-a-submods</strong></a>. It e.g. also
-implements the <code>atpull</code> hook, i.e. supports automatic update of the submodules.
-The <code>z-a-*</code> prefix is recommended for projects that are being annexes.</p>
-<h2 id="details">Details<a class="headerlink" href="#details" title="Permanent link">#</a></h2>
-<p>There are 2 or 3 subtypes for each of the hook:</p>
-<ol>
-<li>
-<p><code>atinit</code> or <code>!atinit</code> – the <code>!</code> version is ran before the <code>atinit</code>
-    <strong>ice-mod</strong> (i.e. before <code>zinit ice atinit'echo this!'; …</code>), while
-    the normal version runs after it.</p>
-</li>
-<li>
-<p><code>atload</code> or <code>!atload</code> – analogous to the <code>atinit</code> case: the <code>!</code> version runs
-    before the <code>atload</code> <strong>ice-mod</strong> (while the normal version runs after it).</p>
-</li>
-<li>
-<p><code>atclone</code> or <code>!atclone</code> – analogous to the <code>atinit</code> and <code>atload</code> cases.</p>
-</li>
-<li>
-<p><code>atpull</code>, <code>!atpull</code> or <code>%atpull</code> – the first two are being ran <strong>only when
-    there are new commits to be downloaded</strong> during the update. The <code>%</code> version
-    is being <strong>always</strong> run, regardless if the update will pull any actual
-    commits or not, and it is being ran <strong>after</strong> the <code>atpull</code> <strong>ice-mod</strong>.</p>
-</li>
-</ol>
-<p><a href="vim:set ft=markdown tw=80:"></a></p>
+<h2 id="supported_file_formats">Supported File Formats<a class="headerlink" href="#supported_file_formats" title="Permanent link">#</a></h2>
+<ul>
+<li>Zip,</li>
+<li>RAR,</li>
+<li>tar.gz,</li>
+<li>tar.bz2,</li>
+<li>tar.xz,</li>
+<li>tar.7z,</li>
+<li>tar,</li>
+<li>gz,</li>
+<li>bz2,</li>
+<li>xz,</li>
+<li>7z,</li>
+<li>OS X <strong>dmg images</strong>.</li>
+</ul>
+<p><a href="vim:set ft=markdown tw=80 fo+=a1n autoindent:"></a></p>
                 
                   
                 
