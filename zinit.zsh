@@ -1920,7 +1920,7 @@ atdelete|git|verbose|param|extract${~exts})(*)
         sched +1 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following ${ZINIT[lro-data]%:*:*}'
 
         ANFD=13371337 # for older Zsh + noclobber option
-        exec {ANFD}< <(zselect -t 1)
+        exec {ANFD}< <(LANG=C command sleep 0.002; builtin print run;)
 	command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
         zle -F "$ANFD" @zinit-scheduler
     }
@@ -1932,7 +1932,7 @@ atdelete|git|verbose|param|extract${~exts})(*)
         [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && $1 != burst ]] && \
             {
                 ANFD=13371337 # for older Zsh + noclobber option
-                exec {ANFD}< /dev/null
+                exec {ANFD}< <(LANG=C command sleep 0.0002; builtin print run;)
                 command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
                 # The $? and $_ will be preserved automatically by Zsh
                 # – that's how calling the -F handler is implemented
@@ -2400,8 +2400,7 @@ zpcompdef() { ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
 #
 
 autoload add-zsh-hook
-{ zmodload zsh/datetime && zmodload zsh/zselect && \
-    add-zsh-hook -- precmd @zinit-scheduler } 2>/dev/null
+zmodload zsh/datetime && add-zsh-hook -- precmd @zinit-scheduler  # zsh/datetime required for wait/load/unload ice-mods
 functions -M -- zinit_scheduler_add 1 1 -zinit_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
 
