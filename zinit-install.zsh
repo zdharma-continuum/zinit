@@ -580,7 +580,7 @@ builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
             fi
             INSTALLED_COMPS+=( $cfile )
             (( quiet )) || print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory."
-            command ln -s "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
+            command ln -fs "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
             .zinit-forget-completion "$cfile" "$quiet"
         else
