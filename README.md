@@ -47,19 +47,22 @@
 
 * 20-02-2020
 
-  A new feature - **parallel updates** of all plugins and snippets – Zinit runs series
-  of sets of 15 concurrent update jobs to speed up the update process. To activate,
-  pass `-p`/`--parallel` to `update`, e.g.:
+  - A new feature - **parallel updates** of all plugins and snippets – Zinit runs
+    series of spawned concurrent-job groups of size 15 to speed up the update process.
+    To activate, pass `-p`/`--parallel` to `update`, e.g.:
 
-  ```zsh
-  zinit update -p
-  zinit update --parallel
-  # Increase the number of concurrent jobs in a set to 40
-  zinit update --parallel 40 
-  ```
+    ```zsh
+    zinit update -p
+    zinit update --parallel
+    # Increase the number of jobs in a concurrent-set to 40
+    zinit update --parallel 40 
+    ```
 
-  See a demo [asciicast1](https://asciinema.org/a/303174),
-  [asciicast2](https://asciinema.org/a/303184).
+    See a demo [asciicast1](https://asciinema.org/a/303174),
+    [asciicast2](https://asciinema.org/a/303184).
+
+  - A new article is available on the Wiki – about the
+    [**`extract`**](http://zdharma.org/zinit/wiki/extract-Ice/) ice.
 
 * 19-02-2020
   
