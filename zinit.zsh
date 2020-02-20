@@ -82,8 +82,7 @@ is-at-least 5.1 && ZINIT[NEW_AUTOLOAD]=1 || ZINIT[NEW_AUTOLOAD]=0
 #is-at-least 5.4 && ZINIT[NEW_AUTOLOAD]=2
 
 # Parameters - shadowing [[[
-ZINIT[SHADOWING]=inactive   ZINIT[DTRACE]=0
-typeset -gH ZINIT_CUR_PLUGIN=
+ZINIT[SHADOWING]=inactive   ZINIT[DTRACE]=0    ZINIT[CUR_PLUGIN]=
 # ]]]
 # Parameters - ICE [[[
 declare -gA ZINIT_1MAP ZINIT_2MAP
@@ -198,8 +197,8 @@ builtin setopt noaliases
     zparseopts -D -a opts ${(s::):-RTUXdkmrtWz}
 
     [[ $ZINIT[CUR_USR] = % ]] && \
-        local PLUGIN_DIR="$ZINIT_CUR_PLUGIN" || \
-        local PLUGIN_DIR="${ZINIT[PLUGINS_DIR]}/${${ZINIT[CUR_USR]}:+${ZINIT[CUR_USR]}---}${ZINIT_CUR_PLUGIN//\//---}"
+        local PLUGIN_DIR="$ZINIT[CUR_PLUGIN]" || \
+        local PLUGIN_DIR="${ZINIT[PLUGINS_DIR]}/${${ZINIT[CUR_USR]}:+${ZINIT[CUR_USR]}---}${ZINIT[CUR_PLUGIN]//\//---}"
 
     if (( ${+opts[(r)-X]} )); then
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
@@ -363,7 +362,7 @@ builtin setopt noaliases
         if [[ ${#opts} -eq 1 && ${+opts[-A]} = 1 && ${#pos} = 3 && ${pos[-1]} = main && ${pos[-2]} != -A ]]; then
             # Save a copy of main keymap
             (( ZINIT[BINDKEY_MAIN_IDX] = ${ZINIT[BINDKEY_MAIN_IDX]:-0} + 1 ))
-            local pname="${ZINIT_CUR_PLUGIN:-_dtrace}"
+            local pname="${ZINIT[CUR_PLUGIN]:-_dtrace}"
             local name="${(q)pname}-main-${ZINIT[BINDKEY_MAIN_IDX]}"
             builtin bindkey -N "$name" main
 
@@ -690,7 +689,7 @@ builtin setopt noaliases
         functions[${f}-zinit-bkp]="${functions[$f]}"
         eval "
 function $f {
-    ZINIT[CUR_USR]=\"$user\" ZINIT_CUR_PLUGIN=\"$plugin\" ZINIT[CUR_USPL2]=\"$id_as\"
+    ZINIT[CUR_USR]=\"$user\" ZINIT[CUR_PLUGIN]=\"$plugin\" ZINIT[CUR_USPL2]=\"$id_as\"
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" begin
     .zinit-shadow-on load
@@ -699,7 +698,7 @@ function $f {
     .zinit-shadow-off load
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" end
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
-    ZINIT[CUR_USR]= ZINIT_CUR_PLUGIN= ZINIT[CUR_USPL2]=
+    ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 }"
     done
 }
@@ -1411,7 +1410,7 @@ function $f {
 # $3 - mode (light or load)
 .zinit-load-plugin() {
     local user="$1" plugin="$2" id_as="$3" mode="$4" correct=0 retval=0
-    ZINIT[CUR_USR]="$user" ZINIT_CUR_PLUGIN="$plugin" ZINIT[CUR_USPL2]="$id_as"
+    ZINIT[CUR_USR]="$user" ZINIT[CUR_PLUGIN]="$plugin" ZINIT[CUR_USPL2]="$id_as"
     [[ -o ksharrays ]] && correct=1
 
     [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
@@ -1536,7 +1535,7 @@ function $f {
     done
 
     # Mark no load is in progress
-    ZINIT[CUR_USR]= ZINIT_CUR_PLUGIN= ZINIT[CUR_USPL2]=
+    ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 
     (( $5 )) && { print; zle .reset-prompt; }
     return $retval
