@@ -13,6 +13,7 @@ nav:
   - "Example wait Conditions": Example-wait-conditions.md
   - "Installing With Make": Installing-with-make.md
   - "Sourcing Multiple Files": Sourcing-multiple-files.md
+  - "extract Ice": extract-Ice.md
   - "Tracking precmd-based Plugins": wrap-track.md
   - "Tracking precmd-based Plugins (2)": atload-and-other-at-ices.md
 - "Examples":
