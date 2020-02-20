@@ -1900,7 +1900,7 @@ ZINIT[EXTENDED_GLOB]=""
             PUAssocArray=()
         } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
             print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
-                "$ICE_OPTS[value]$ZINIT[col-obj] parallel update jobs...%f"
+                "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs...%f"
         }
 
         ZINIT_ICE=()
@@ -1908,7 +1908,6 @@ ZINIT[EXTENDED_GLOB]=""
 
     counter=0
     PUAssocArray=()
-    print HERE
 
     local -a files2
     files=( ${ZINIT[PLUGINS_DIR]}/*(ND/) )
@@ -1971,7 +1970,7 @@ ZINIT[EXTENDED_GLOB]=""
             PUAssocArray=()
         } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
             print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
-                "$ICE_OPTS[value]$ZINIT[col-obj] parallel update jobs...%f"
+                "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs...%f"
         }
 
     }
