@@ -1889,7 +1889,6 @@ ZINIT[EXTENDED_GLOB]=""
         PUAssocArray[$!]=$PUFILE
 
         if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
-            print wait ${(k)PUAssocArray}
             wait ${(k)PUAssocArray}
             local ind_file
             for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
@@ -1961,7 +1960,6 @@ ZINIT[EXTENDED_GLOB]=""
         PUAssocArray[$!]=$PUFILE
 
         if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
-            print wait ${(k)PUAssocArray}
             wait ${(k)PUAssocArray}
             local ind_file
             for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
