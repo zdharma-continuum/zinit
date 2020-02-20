@@ -1888,22 +1888,8 @@ ZINIT[EXTENDED_GLOB]=""
 
         PUAssocArray[$!]=$PUFILE
 
-        if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
-            wait ${(k)PUAssocArray}
-            local ind_file
-            for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
-                command cat ${ind_file:r}
-                command rm -f $ind_file
-            }
-            command rm -f ${(v)PUAssocArray}
-            counter=0
-            PUAssocArray=()
-        } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
-            print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
-                "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs...%f"
-        }
-
         ZINIT_ICE=()
+        .zinit-wait-for-update-jobs
     }
 
     counter=0
@@ -1958,24 +1944,29 @@ ZINIT[EXTENDED_GLOB]=""
 
         PUAssocArray[$!]=$PUFILE
 
-        if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
-            wait ${(k)PUAssocArray}
-            local ind_file
-            for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
-                command cat ${ind_file:r}
-                command rm -f $ind_file
-            }
-            command rm -f ${(v)PUAssocArray}
-            counter=0
-            PUAssocArray=()
-        } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
-            print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
-                "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs...%f"
-        }
+        .zinit-wait-for-update-jobs
 
     }
     # Shouldn't happen
     # (( ${#PUAssocArray} > 0 )) && wait ${(k)PUAssocArray}
+}
+# ]]]
+# FUNCTION: .zinit-wait-for-update-jobs [[[
+.zinit-wait-for-update-jobs() {
+    if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
+        wait ${(k)PUAssocArray}
+        local ind_file
+        for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
+            command cat ${ind_file:r}
+            command rm -f $ind_file
+        }
+        command rm -f ${(v)PUAssocArray}
+        counter=0
+        PUAssocArray=()
+    } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
+        print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
+            "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs...%f"
+    }
 }
 # ]]]
 # FUNCTION: .zinit-show-zstatus [[[
