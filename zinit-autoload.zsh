@@ -1862,8 +1862,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     local -A PUAssocArray map
     map=( / --  "=" -EQ-  "?" -QM-  "&" -AMP-  : - )
-    local -a snipps files
-    snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
+    local -a files
     integer main_counter counter PUPDATE=1
 
     files=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D) )
