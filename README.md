@@ -58,7 +58,7 @@
     zinit update --parallel 40 
     ```
 
-    See a demo [asciicast1](https://asciinema.org/a/303174),
+    See a demo: [asciicast1](https://asciinema.org/a/303174),
     [asciicast2](https://asciinema.org/a/303184).
 
   - A new article is available on the Wiki – about the
