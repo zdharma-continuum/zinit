@@ -45,6 +45,21 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 20-02-2020
+
+  A new feature - **parallel updates** of all plugins and snippets – Zinit runs series
+  of sets of 15 concurrent update jobs to speed up the update process. To activate,
+  pass `-p`/`--parallel` to `update`, e.g.:
+
+  ```zsh
+  zinit update -p
+  zinit update --parallel
+  # Increase the number of concurrent jobs in a set to 40
+  zinit update --parallel 40 
+  ```
+
+  See a demo [asciicast](https://asciinema.org/a/303174).
+
 * 19-02-2020
   
   The project has a fresh, new subreddit [r/zinit](https://www.reddit.com/r/zinit/).
