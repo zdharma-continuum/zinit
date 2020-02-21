@@ -1682,6 +1682,9 @@ atdelete|git|verbose|param|extract${~exts})(*)
 # $2 - mode - for plugin (light or load)
 # $3 - id - URL or plugin ID or alias name (from id-as'')
 .zinit-service() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops
+
     local __tpe="$1" __mode="$2" __id="$3" __fle="${ZINIT[SERVICES_DIR]}/${ZINIT_ICE[service]}.lock" __fd __cmd __tmp __lckd __strd=0
     { builtin print -n >! "$__fle"; } 2>/dev/null 1>&2
     [[ ! -e ${__fle:r}.fifo ]] && command mkfifo "${__fle:r}.fifo" 2>/dev/null 1>&2
