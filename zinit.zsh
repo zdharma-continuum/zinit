@@ -1991,11 +1991,14 @@ zinit() {
        --parallel opt_-p,--parallel
     )
 
+
+    reply=( ${ZINIT_EXTS[(I)z-annex subcommand:*]} )
+
     [[ $1 != (-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
-env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) ]] && \
+env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#z-annex subcommand:}"}}) || $1 = (load|light|snippet) ]] && \
     {
         integer  __is_snippet
         if [[ $1 = (load|light|snippet) ]]; then
