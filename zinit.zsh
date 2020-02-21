@@ -2048,13 +2048,16 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run) || $1 = (load|light|snippet) 
 
                     [[ ${ZINIT_ICE[id-as]} = auto ]] && ZINIT_ICE[id-as]="${1:t}"
 
-                    [[ $__is_snippet -ge 0 ]] && {
-                        [[ -n ${ZINIT_ICE[is-snippet]+1} ||
-                          ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))*
-                        ]] && \
-                            __is_snippet=1 || \
-                            __is_snippet=0
-                    }
+                    () {
+                        setopt localoptions extendedglob
+                        [[ $__is_snippet -ge 0 ]] && {
+                            [[ -n ${ZINIT_ICE[is-snippet]+1} ||
+                              ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))*
+                            ]] && \
+                                __is_snippet=1 || \
+                                __is_snippet=0
+                        }
+                    } "$@"
 
                     if [[ -n ${ZINIT_ICE[trigger-load]} ]] {
                         () {
