@@ -115,7 +115,7 @@
 # $2 - plugin (only when $1 - i.e. user - given)
 # $REPLY = ANSI-colorified "user/plugin" string
 .zinit-any-colorify-as-uspl2() {
-    .zinit-any-to-user-plugin "${1//---//}" "${2//---//}"
+    .zinit-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
     [[ "$user" = "%" ]] && {
         plugin="${plugin/${ZINIT[SNIPPETS_DIR]}/SNIPPETS}"

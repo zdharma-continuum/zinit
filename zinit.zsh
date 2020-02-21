@@ -871,12 +871,13 @@ function $f {
     # Rest is for single component given
     # It doesn't touch $2
 
+    1="${1//---//}"
     if [[ $1 = */* ]]; then
         reply=( "${1%%/*}" "${1#*/}" )
         return 0
     fi
 
-    reply=( "${${(M)1#*---}%---}" "${${${1#*---}//---//}:-_unknown}" )
+    reply=( "" "${1:-_unknown}" )
 
     return 0
 } # ]]]
