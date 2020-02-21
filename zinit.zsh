@@ -2164,8 +2164,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
            reply=( ${ZINIT_EXTS[z-annex subcommand:${(q)1}]} )
            (( ${#reply} )) && {
                reply=( "${(Q)${(z@)reply[1]}[@]}" )
-               (( ${+functions[${reply[5]}]} )) && { "${reply[5]}" "$@"; return $?; } ||
-                 { print -r -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-annex \`${reply[3]}')"; return 1; }
+               (( ${+functions[${reply[5]}]} )) && \
+                   { "${reply[5]}" "$@"; return $?; } || \
+                   { print -r -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-annex \`${reply[3]}')"; return 1; }
            }
            (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
            case "$1" in
