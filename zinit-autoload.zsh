@@ -3328,7 +3328,8 @@ Available ice-modifiers:
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
         nocompletions reset-prompt wrap-track reset aliases sh bash ksh csh
-        countdown trigger-load light-mode is-snippet atdelete pack git verbose"
+        countdown trigger-load light-mode is-snippet atdelete pack git extract
+        param"
 } # ]]]
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]
