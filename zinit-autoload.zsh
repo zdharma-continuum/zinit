@@ -1,7 +1,7 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
 
-builtin source ${ZINIT[BIN_DIR]}"/zinit-side.zsh"
+builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
 
 ZINIT[EXTENDED_GLOB]=""
 

@@ -991,8 +991,8 @@ function $f {
         # Also set up */bin and ZPFX in general
         command mkdir 2>/dev/null -p $ZPFX/bin
 
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
-        (( ${+functions[.zinit-confirm]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-autoload.zsh
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+        (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
         .zinit-clear-completions &>/dev/null
         .zinit-compinit &>/dev/null
     }
@@ -1007,7 +1007,7 @@ function $f {
         # Also set up */bin and ZPFX in general
         command mkdir 2>/dev/null -p $ZPFX/bin
 
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
         .zinit-compinit &>/dev/null
     }
     [[ ! -d ${ZINIT[SNIPPETS_DIR]} ]] && {
@@ -1071,7 +1071,7 @@ function $f {
     done
 
     if [[ $user != % && ! -d ${ZINIT[PLUGINS_DIR]}/${id_as//\//---} ]]; then
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
         reply=( "$user" "$plugin" ) REPLY=github
         if (( ${+ZINIT_ICE[pack]} )) {
             if ! .zinit-get-package "$user" "$plugin" "$id_as" \
@@ -1196,7 +1196,7 @@ function $f {
     if [[ -n ${opts[(r)-f]} || ! ( -e $local_dir/$dirname/._zinit || \
         -e $local_dir/$dirname/._zplugin )
     ]]; then
-        (( ${+functions[.zinit-download-snippet]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+        (( ${+functions[.zinit-download-snippet]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
         [[ $url = *github.com* && $url != */raw/* ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
         .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" || tmp=( 0 )
     fi
@@ -1766,7 +1766,7 @@ atdelete|git|verbose|param|extract${~exts})(*)
         fi
         (( ${+ZINIT_ICE[silent]} == 0 && ${+ZINIT_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ $__action = *remove ]]; then
-        (( ${+functions[.zinit-confirm]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-autoload.zsh
+        (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
         [[ $__tpe = p ]] && .zinit-unload "$__id_as" "" -q
         (( ${+ZINIT_ICE[silent]} == 0 && ${+ZINIT_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Unloaded $__id_as"
     fi
@@ -2166,7 +2166,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                (( ${+functions[${reply[5]}]} )) && { "${reply[5]}" "$@"; return $?; } ||
                  { print -r -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-annex \`${reply[3]}')"; return 1; }
            }
-           (( ${+functions[.zinit-confirm]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-autoload.zsh
+           (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
            case "$1" in
                (zstatus)
                    .zinit-show-zstatus
@@ -2178,7 +2178,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    .zinit-self-update
                    ;;
                (unload)
-                   (( ${+functions[.zinit-unload]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-autoload.zsh
+                   (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
                    if [[ -z $2 && -z $3 ]]; then
                        print "Argument needed, try: help"; retval=1
                    else
@@ -2245,7 +2245,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        # Disable completion given by completion function name
                        # with or without leading _, e.g. cp, _cp
                        if .zinit-cdisable "$f"; then
-                           (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
                            .zinit-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
@@ -2263,7 +2263,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        # Enable completion given by completion function name
                        # with or without leading _, e.g. cp, _cp
                        if .zinit-cenable "$f"; then
-                           (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
                            .zinit-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
@@ -2274,7 +2274,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    fi
                    ;;
                (creinstall)
-                   (( ${+functions[.zinit-install-completions]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+                   (( ${+functions[.zinit-install-completions]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ $2 = -q ]] && { 5=-q; shift; }
@@ -2287,7 +2287,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    if [[ -z $2 && -z $3 ]]; then
                        print "Argument needed, try: help"; retval=1
                    else
-                       (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+                       (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
                        # Uninstalls completions for plugin
                        .zinit-uninstall-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
                        print "Initializing completion (compinit)..."
@@ -2299,7 +2299,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    .zinit-search-completions
                    ;;
                (compinit)
-                   (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+                   (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
                    .zinit-compinit; retval=$?
                    ;;
                (dreport)
@@ -2312,7 +2312,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    .zinit-debug-unload
                    ;;
                (compile)
-                   (( ${+functions[.zinit-compile-plugin]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-install.zsh
+                   (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
                        [[ -z $2 ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-compile-uncompile-all 1; retval=$?
@@ -2444,7 +2444,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]]; then
             builtin print -r -- "${ZINIT[col-error]}WARNING:${ZINIT[col-rst]}" \
                 "${ZINIT[col-msg1]}A ${ZINIT[col-obj]}recompilation${ZINIT[col-rst]}" \
                 "of the Zinit module has been requested… ${ZINIT[col-obj]}Building${ZINIT[col-rst]}…"
-            (( ${+functions[.zinit-confirm]} )) || builtin source ${ZINIT[BIN_DIR]}/zinit-autoload.zsh
+            (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
             command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null
             .zinit-module build &>/dev/null
             if command make -C "${ZINIT[BIN_DIR]}/zmodules" &>/dev/null; then
