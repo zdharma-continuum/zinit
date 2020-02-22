@@ -46,8 +46,7 @@ nav:
 theme:
   name: material
   custom_dir: 'docs/theme'
-  logo:
-    icon: home
+  logo: 'img/logo.png'
   feature:
     tabs: true
 markdown_extensions:

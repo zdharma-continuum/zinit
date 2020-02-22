@@ -1,5 +1,4 @@
-# Home
-
+# ![logo](img/zinit.png)
 This is the Zinit wiki. The goal is to complement the
 [**README**](https://github.com/zdharma/zinit/blob/master/README.md) by providing
 a more easy to approach, more intuitively organized (with help of the
