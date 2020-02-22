@@ -4,12 +4,6 @@
 
 [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Join the chat at https://gitter.im/zdharma/zinit][gitter-badge]][gitter-link]
 
-<p align="center">
-<a href="https://github.com/zdharma/zinit">
-<img src="https://raw.githubusercontent.com/zdharma/zinit/images/zinit.png"/>
-</a>
-</p>
-
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
@@ -45,6 +39,12 @@
 - [Getting Help and Community](#getting-help-and-community)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+<p align="center">
+<a href="https://github.com/zdharma/zinit">
+<img src="https://raw.githubusercontent.com/zdharma/zinit/images/zinit.png"/>
+</a>
+</p>
 
 # News
 
