@@ -2,7 +2,13 @@
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D54B3S7C6HGME)
 [![patreon](https://img.shields.io/badge/-Patreon-orange.svg?longCache=true&style=for-the-badge)](https://www.patreon.com/psprint)
 
-[![Status][status-badge]][status-link] [![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Join the chat at https://gitter.im/zdharma/zinit][gitter-badge]][gitter-link]
+[![MIT License][MIT-badge]][MIT-link] [![][ver-badge]][ver-link] ![][act-badge] [![Join the chat at https://gitter.im/zdharma/zinit][gitter-badge]][gitter-link]
+
+<p align="center">
+<a href="https://github.com/zdharma/zinit">
+<img height=80 src="https://raw.githubusercontent.com/zdharma/zinit/images/zinit.png"/>
+</a>
+</p>
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
