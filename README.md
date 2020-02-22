@@ -6,7 +6,7 @@
 
 <p align="center">
 <a href="https://github.com/zdharma/zinit">
-<img height=60% width=60% src="https://raw.githubusercontent.com/zdharma/zinit/images/zinit.png"/>
+<img src="https://raw.githubusercontent.com/zdharma/zinit/images/zinit.png"/>
 </a>
 </p>
 
