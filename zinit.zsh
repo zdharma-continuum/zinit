@@ -964,6 +964,28 @@ function $f {
     .zinit-pack-ice "$id_as" ""
 }
 # ]]]
+# FUNCTION: .zinit-get-object-dir [[[
+.zinit-get-object-path() {
+    local type="$1" id_as="$2" local_dir dirname
+    integer exists
+
+    # Remove leading whitespace and trailing /
+    id_as="${${id_as#"${id_as%%[! $'\t']*}"}%/}"
+
+    if [[ $type == snippet ]] {
+        dirname="${${id_as%%\?*}:t}"
+        local_dir="${${${id_as%%\?*}/:\/\//--}:h}"
+        [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
+        local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
+
+        [[ -e $local_dir/$dirname/._zinit || -e $local_dir/$dirname/._zplugin ]] && exists=1
+    } else {
+        local_dir=${${${(M)id_as#%}:+${id_as#%}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
+        [[ -e $local_dir/._zinit || -e $local_dir/._zplugin ]] && exists=1
+    }
+    reply=( "$local_dir" "$dirname" "$exists" )
+}
+# ]]]
 
 #
 # Remaining functions
@@ -1040,6 +1062,7 @@ function $f {
         ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
     )
     __path=${ZINIT[PLUGINS_DIR]}/${id_as//\//---}/._zinit
+    # TODO snippet's dir computation…
     [[ -d $__path ]] || __path=${ZINIT[SNIPPETS_DIR]}/$id_as/._zinit
     for __key in "${ice_order[@]}"; do
         (( ${+ZINIT_ICE[$__key]} )) && [[ ${ZINIT_ICE[$__key]} != +* ]] && continue
@@ -1138,7 +1161,7 @@ function $f {
     local -a opts
     zparseopts -E -D -a opts f -command u i || { print -r -- "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
-    integer correct=0 retval=0
+    integer correct retval exists
     [[ -o ksharrays ]] && correct=1
 
     [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
@@ -1174,10 +1197,9 @@ function $f {
 
     # Construct containing directory, extract final directory
     # into handy-variable $dirname
-    filename="${${id_as%%\?*}:t}" dirname="${${id_as%%\?*}:t}"
-    local_dir="${${${id_as%%\?*}/:\/\//--}:h}"
-    [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
-    local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
+    .zinit-get-object-path snippet "$id_as"
+    filename="${reply[-2]}" dirname="${reply[-2]}"
+    local_dir="${reply[-3]}" exists=${reply[-1]}
 
     local -a arr
     local key
@@ -1189,9 +1211,7 @@ function $f {
     done
 
     # Download or copy the file
-    if [[ -n ${opts[(r)-f]} || ! ( -e $local_dir/$dirname/._zinit || \
-        -e $local_dir/$dirname/._zplugin )
-    ]]; then
+    if [[ -n ${opts[(r)-f]} || $exists -eq 0 ]]; then
         (( ${+functions[.zinit-download-snippet]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
         [[ $url = *github.com* && $url != */raw/* ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
         .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename"
