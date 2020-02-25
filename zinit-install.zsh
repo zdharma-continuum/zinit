@@ -1305,7 +1305,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     # - case B: called from `update', ZINIT_ICE packed, so it will win
     tmp=( "${(Q@)${(z@)ZINIT_SICE[$id_as]}}" )
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && \
-        { ice=( "${(kv)ZINIT_ICE[@]}" "${tmp[@]}" ); ZINIT_ICE=( "${ice[@]}" ); } || \
+        ZINIT_ICE=( "${(kv)ZINIT_ICE[@]}" "${tmp[@]}" ) || \
         { [[ -n ${ZINIT_SICE[$id_as]} ]] && \
             print -Pr "${ZINIT[col-error]}WARNING:${ZINIT[col-msg2]} Inconsistency #3" \
             "occurred, please report the string:" \
