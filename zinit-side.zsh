@@ -133,8 +133,11 @@
 # directory) or regular URL (points to file), returns 2 possible paths for
 # further examination
 .zinit-two-paths() {
-    setopt localoptions extendedglob nokshglob noksharrays noshwordsplit
-    local url="$1" url1 url2 local_dirA svn_dirA local_dirB dirnameA dirnameB
+    emulate -LR zsh
+    setopt extendedglob typesetsilent warncreateglobal noshortloops
+
+    local url=$1 url1 url2 local_dirA dirnameA svn_dirA \
+            local_dirB dirnameB
     local -a fileB_there
 
     # Remove leading whitespace and trailing /
