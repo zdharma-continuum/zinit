@@ -65,8 +65,9 @@
     local dname="${ZINIT[alias-map-${user:+${user}/}$plugin]}"
     local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
     [[ -z "$dname" ]] && {
-        [[ "$user" = "%" ]] && dname="$plugin" || \
-                dname="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
+        [[ "$user" = "%" ]] && \
+            dname="$plugin" || \
+            dname="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
     }
 
     reply=( "$dname" "$pdir" )
