@@ -1065,9 +1065,14 @@ function $f {
         subscribe extract
         ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
     )
-    __path=${ZINIT[PLUGINS_DIR]}/${id_as//\//---}/._zinit
+    __path="${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/._zinit
     # TODO snippet's dir computation…
-    [[ -d $__path ]] || __path=${ZINIT[SNIPPETS_DIR]}/$id_as/._zinit
+    if [[ ! -d $__path ]] {
+        if ! .zinit-get-object-path snippet "$id_as"; then
+            return 1
+        fi
+        __path="${reply[-3]%/}/${reply[-2]}"/._zinit
+    }
     for __key in "${ice_order[@]}"; do
         (( ${+ZINIT_ICE[$__key]} )) && [[ ${ZINIT_ICE[$__key]} != +* ]] && continue
         [[ -f $__path/$__key ]] && ZINIT_ICE[$__key]="$(<$__path/$__key)"
@@ -1075,6 +1080,7 @@ function $f {
     [[ -n ${ZINIT_ICE[on-update-of]} ]] && ZINIT_ICE[subscribe]="${ZINIT_ICE[subscribe]:-${ZINIT_ICE[on-update-of]}}"
     [[ ${ZINIT_ICE[as]} = program ]] && ZINIT_ICE[as]=command
     [[ -n ${ZINIT_ICE[pick]} ]] && ZINIT_ICE[pick]="${ZINIT_ICE[pick]//\$ZPFX/${ZPFX%/}}"
+
     return 0
 }
 # ]]]
