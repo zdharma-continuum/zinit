@@ -2074,6 +2074,7 @@ ZINIT[EXTENDED_GLOB]=""
             local time="${(l:5:: :)$(( ZINIT[$entry] * 1000 ))%%[,.]*} ms"
             attime="${(l:5:: :)$(( attime * 1000 ))%%[,.]*} ms"
         fi
+        [[ -z $EPOCHREALTIME ]] && attime="<no zsh/datetime module → no time data>"
 
         if [[ "$opt" = *-[a-z]#m[a-z]#* ]]; then
             time="$attime"
