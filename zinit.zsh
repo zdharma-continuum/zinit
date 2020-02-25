@@ -1115,8 +1115,9 @@ function $f {
         ZINIT_ICE[teleid]="$user${${user:#(%|/)*}:+/}$plugin"
         [[ $REPLY = snippet ]] && {
             ZINIT_ICE[id-as]="${ZINIT_ICE[id-as]:-$id_as}"
-            .zinit-load-snippet $plugin
-            return $?
+            .zinit-load-snippet $plugin && return
+            zle && { print; zle .reset-prompt; }
+            return 1
         }
         if ! .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" "$REPLY"; then
             zle && { print; zle .reset-prompt; }
