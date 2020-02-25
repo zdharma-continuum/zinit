@@ -1568,9 +1568,10 @@ function $f {
     () {
         emulate -LR zsh
         builtin cd &>/dev/null -q ${${${(M)__user:#%}:+$__plugin}:-${ZINIT[PLUGINS_DIR]}/${__id_as//\//---}} || {
-            local local_dir=${${__id_as%%\?*}/:\/\//--}
-            local_dir=${${${${${local_dir#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}
-            [[ -n $local_dir ]] && builtin cd &>/dev/null -q ${ZINIT[SNIPPETS_DIR]}/$local_dir
+            local dirname="${${__id_as%%\?*}:t}" local_dir="${${${__id_as%%\?*}/:\/\//--}:h}"
+            [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
+            local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
+            builtin cd &>/dev/null -q $local_dir/$dirname
         }
     }
     if (( $? == 0 )); then
