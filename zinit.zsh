@@ -984,6 +984,8 @@ function $f {
         [[ -e $local_dir/._zinit || -e $local_dir/._zplugin ]] && exists=1
     }
     reply=( "$local_dir" "$dirname" "$exists" )
+
+    return $(( 1 - exists ))
 }
 # ]]]
 
