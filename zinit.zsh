@@ -1161,12 +1161,6 @@ function $f {
     # Allow things like $OSTYPE in the URL
     eval "url=\"$url\""
 
-    # - case A: called from `update --all', ZINIT_ICE not packed (above), static ice will win
-    # - case B: called from `snippet', ZINIT_ICE packed, so it will win
-    # - case C: called from `update', ZINIT_ICE packed, so it will win ← TODO
-    tmp=( "${(Q@)${(z@)ZINIT_SICE[$id_as]}}" )
-    (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && { ice=( "${(kv)ZINIT_ICE[@]}" "${tmp[@]}" ); ZINIT_ICE=( "${ice[@]}" ); }
-    tmp=( 1 )
     id_as="${ZINIT_ICE[id-as]:-$id_as}"
 
     # Oh-My-Zsh, Prezto and manual shorthands
@@ -1199,10 +1193,11 @@ function $f {
     ]]; then
         (( ${+functions[.zinit-download-snippet]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
         [[ $url = *github.com* && $url != */raw/* ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
-        .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" || tmp=( 0 )
+        .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename"
+        retval=$?
     fi
 
-    (( ${+ZINIT_ICE[cloneonly]} || !tmp[1-correct] )) && return 0
+    (( ${+ZINIT_ICE[cloneonly]} || retval )) && return 0
 
     ZINIT_SNIPPETS[$id_as]="$id_as <${${ZINIT_ICE[svn]+svn}:-single file}>"
 
