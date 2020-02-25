@@ -1325,7 +1325,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     # Construct containing directory, extract final directory
     # into handy-variable $dirname
     filename=${${id_as%%\?*}:t} dirname=${${id_as%%\?*}:t}
-    local_dir=${${${id_as%%\?*}:h}/:\/\//--}
+    local_dir=${${${id_as%%\?*}/:\/\//--}:h}
     local -A map
     map=( "/" -- "=" -EQ- "?" -QM- "&" -AMP- )
     [[ $local_dir = . ]] && local_dir= || local_dir=${${local_dir#/}//(#m)[\/=\?\&]/${map[$MATCH]}}

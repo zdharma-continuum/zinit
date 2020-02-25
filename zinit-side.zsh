@@ -144,13 +144,13 @@
     #url2[1,5]="${ZINIT_2MAP[${url[1,5]}]:-${url[1,5]}}" # normal
 
     dirnameA="${${url1%%\?*}:t}"
-    local_dirA="${${${url1%%\?*}:h}/:\/\//--}"
+    local_dirA="${${${url1%%\?*}/:\/\//--}:h}"
     [[ "$local_dirA" = "." ]] && local_dirA="" || local_dirA="${${${${${local_dirA#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dirA="${ZINIT[SNIPPETS_DIR]}${local_dirA:+/$local_dirA}"
     [[ -d "$local_dirA/$dirnameA/.svn" ]] && svn_dirA=".svn"
 
     dirnameB="${${url2%%\?*}:t}"
-    local_dirB="${${${url2%%\?*}:h}/:\/\//--}"
+    local_dirB="${${${url2%%\?*}/:\/\//--}:h}"
     [[ "$local_dirB" = "." ]] && local_dirB="" || local_dirB="${${${${${local_dirB#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
     local_dirB="${ZINIT[SNIPPETS_DIR]}${local_dirB:+/$local_dirB}"
     fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.DOnN[1]) )
