@@ -1071,7 +1071,7 @@ function $f {
             return $(( 10 - $? ))
     done
 
-    if [[ $user != % && ! -d ${ZINIT[PLUGINS_DIR]}/${id_as//\//---} ]]; then
+    if [[ $user != % && ! -d ${ZINIT[PLUGINS_DIR]}/${id_as//\//---} ]] {
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
         reply=( "$user" "$plugin" ) REPLY=github
         if (( ${+ZINIT_ICE[pack]} )) {
@@ -1096,7 +1096,7 @@ function $f {
             return 1
         fi
         zle && rst=1
-    fi
+    }
 
     ZINIT_SICE[$id_as]=
     .zinit-pack-ice "$id_as"
