@@ -1491,7 +1491,7 @@ function $f {
         [[ -n ${ZINIT_ICE[wrap-track]} ]] && \
             .zinit-wrap-track-functions "$user" "$plugin" "$id_as"
 
-        [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; } || eval "{ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+        [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
 
         [[ -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
             (( -- ZINIT[SHADOWING] == 0 )) && { ZINIT[SHADOWING]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; builtin setopt aliases; }
@@ -1501,10 +1501,9 @@ function $f {
     else
         if [[ -n ${ZINIT_ICE[pick]} ]]; then
             [[ ${ZINIT_ICE[pick]} = /dev/null ]] && reply=( /dev/null ) || reply=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $pdir_path/${~ZINIT_ICE[pick]}(DN) )
-        elif [[ -e $pdir_path/${pbase}.plugin.zsh ]]; then
-            reply=( "$pdir_path/${pbase}.plugin.zsh" )
+        elif [[ -e $pdir_path/$pbase.plugin.zsh ]]; then
+            reply=( "$pdir_path/$pbase".plugin.zsh )
         else
-            # The common file to source isn't there, so:
             .zinit-find-other-matches "$pdir_path" "$pbase"
         fi
 
@@ -1517,7 +1516,7 @@ function $f {
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Source $fname ${${${(M)mode:#light}:+(no reporting)}:-$ZINIT[col-info2](reporting enabled)$ZINIT[col-rst]}"
 
         # Light and compdef mode doesn't do diffs and shadowing
-        [[ $mode != (light|light-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" begin
+        [[ $mode != light(|-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" begin
 
         .zinit-shadow-on "${mode:-load}"
 
@@ -1546,7 +1545,7 @@ function $f {
 
         .zinit-shadow-off "${mode:-load}"
 
-        [[ $mode != (light|light-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" end
+        [[ $mode != light(|-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" end
     fi
 
     [[ ${+ZINIT_ICE[atload]} = 1 && ${ZINIT_ICE[atload][1]} != "!" ]] && { ZERO="$pdir_orig/-atload-"; local __oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]}"; ((1)); } || eval "${ZINIT_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
