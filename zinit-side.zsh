@@ -142,22 +142,15 @@
 
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
-    url1="$url" url2="$url"
+    url1=$url url2=$url
 
-    #url1[1,5]="${ZINIT_1MAP[${url[1,5]}]:-${url[1,5]}}" # svn
-    #url2[1,5]="${ZINIT_2MAP[${url[1,5]}]:-${url[1,5]}}" # normal
-
-    dirnameA="${${url1%%\?*}:t}"
-    local_dirA="${${${url1%%\?*}/:\/\//--}:h}"
-    [[ "$local_dirA" = "." ]] && local_dirA="" || local_dirA="${${${${${local_dirA#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-    local_dirA="${ZINIT[SNIPPETS_DIR]}${local_dirA:+/$local_dirA}"
+    .zinit-get-object-path snippet "$url1"
+    local_dirA=$reply[-3] dirnameA=$reply[-2]
     [[ -d "$local_dirA/$dirnameA/.svn" ]] && svn_dirA=".svn"
 
-    dirnameB="${${url2%%\?*}:t}"
-    local_dirB="${${${url2%%\?*}/:\/\//--}:h}"
-    [[ "$local_dirB" = "." ]] && local_dirB="" || local_dirB="${${${${${local_dirB#/}//\//--}//=/--EQ--}//\?/--QM--}//\&/--AMP--}"
-    local_dirB="${ZINIT[SNIPPETS_DIR]}${local_dirB:+/$local_dirB}"
-    fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.DOnN[1]) )
+    .zinit-get-object-path snippet "$url2"
+    local_dirB=$reply[-3] dirnameB=$reply[-2]
+    fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.-DOnN[1]) )
 
     reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 }
