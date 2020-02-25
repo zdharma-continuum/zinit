@@ -884,23 +884,25 @@ function $f {
 # FUNCTION: .zinit-find-other-matches [[[
 # Plugin's main source file is in general `name.plugin.zsh'. However,
 # there can be different conventions, if that file is not found, then
-# this functions examines other conventions in order of most expected
-# sanity.
+# this functions examines other conventions in the most sane order.
 .zinit-find-other-matches() {
     local pdir_path="$1" pbase="$2"
 
-    if [[ -e $pdir_path/init.zsh ]]; then
-        reply=( "$pdir_path/init.zsh" )
-    elif [[ -e $pdir_path/${pbase}.zsh-theme ]]; then
-        reply=( "$pdir_path/${pbase}.zsh-theme" )
-    elif [[ -e $pdir_path/${pbase}.theme.zsh ]]; then
-        reply=( "$pdir_path/${pbase}.theme.zsh" )
-    else
+    if [[ -e $pdir_path/init.zsh ]] {
+        reply=( "$pdir_path"/init.zsh )
+    } elif [[ -e $pdir_path/$pbase.zsh-theme ]] {
+        reply=( "$pdir_path/$pbase".zsh-theme )
+    } elif [[ -e $pdir_path/$pbase.theme.zsh ]] {
+        reply=( "$pdir_path/$pbase".theme.zsh )
+    } else {
         reply=(
-            $pdir_path/*.plugin.zsh(DN) $pdir_path/*.zsh-theme(DN) $pdir_path/init.zsh(DN)
-            $pdir_path/*.zsh(DN) $pdir_path/*.sh(DN) $pdir_path/.zshrc(DN)
+            "$pdir_path"/*.plugin.zsh(DN) "$pdir_path"/*.zsh-theme(DN) "$pdir_path"/*.lib.zsh(DN)
+            "$pdir_path"/*.zsh(DN) "$pdir_path"/*.sh(DN) "$pdir_path"/.zshrc(DN)
         )
-    fi
+    }
+    reply=( "${(u)reply[@]}" )
+
+    return $(( ${#reply} > 0 ? 0 : 1 ))
 } # ]]]
 # FUNCTION: .zinit-register-plugin [[[
 # Adds the plugin to ZINIT_REGISTERED_PLUGINS array and to the
