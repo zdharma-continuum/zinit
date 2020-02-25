@@ -964,7 +964,7 @@ function $f {
     .zinit-pack-ice "$id_as" ""
 }
 # ]]]
-# FUNCTION: .zinit-get-object-dir [[[
+# FUNCTION: .zinit-get-object-path [[[
 .zinit-get-object-path() {
     local type="$1" id_as="$2" local_dir dirname
     integer exists
@@ -1588,10 +1588,8 @@ function $f {
     () {
         emulate -LR zsh
         builtin cd &>/dev/null -q ${${${(M)__user:#%}:+$__plugin}:-${ZINIT[PLUGINS_DIR]}/${__id_as//\//---}} || {
-            local dirname="${${__id_as%%\?*}:t}" local_dir="${${${__id_as%%\?*}/:\/\//--}:h}"
-            [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
-            local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
-            builtin cd &>/dev/null -q $local_dir/$dirname
+            .zinit-get-object-path snippet "$__id_as"
+            builtin cd &>/dev/null -q ${reply[-3]}/${reply[-2]}
         }
     }
     if (( $? == 0 )); then
