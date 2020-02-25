@@ -2879,9 +2879,12 @@ EOF
 
 [diff "zsh"]
     xfuncname = "^((function[[:blank:]]+[^[:blank:]]+[[:blank:]]*(\\\\(\\\\)|))|([^[:blank:]]+[[:blank:]]*\\\\(\\\\)))[[:blank:]]*(\\\\{|)[[:blank:]]*$"
+[diff "markdown"]
+    xfuncname = "^#+[[:blank:]].*$"
 EOF
 
     print -r -- "*.zsh  diff=zsh" >! .gitattributes
+    print -r -- "*.md   diff=markdown" >! .gitattributes
     print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZINIT[BIN_DIR]}/LICENSE" LICENSE
     command cp -vf "${ZINIT[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
