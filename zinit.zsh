@@ -1135,7 +1135,7 @@ function $f {
 # $1 - url (can be local, absolute path)
 .zinit-load-snippet() {
     typeset -F 3 SECONDS=0
-    local -a opts tmp ice
+    local -a opts
     zparseopts -E -D -a opts f -command u i || { print -r -- "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
     integer correct=0 retval=0
@@ -1155,13 +1155,14 @@ function $f {
     [[ ${ZINIT_ICE[as]} = null ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
 
-    local local_dir dirname filename save_url="$url" id_as="${ZINIT_ICE[id-as]:-$url}"
-    .zinit-pack-ice "$id_as" ""
+    local local_dir dirname filename save_url="$url"
 
     # Allow things like $OSTYPE in the URL
     eval "url=\"$url\""
 
-    id_as="${ZINIT_ICE[id-as]:-$id_as}"
+    local id_as="${ZINIT_ICE[id-as]:-$url}"
+
+    .zinit-pack-ice "$id_as" ""
 
     # Oh-My-Zsh, Prezto and manual shorthands
     (( ${+ZINIT_ICE[svn]} )) && {
