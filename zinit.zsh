@@ -34,7 +34,7 @@ ZINIT[BIN_DIR]="${${(M)ZINIT[BIN_DIR]:#/*}:-$PWD/${ZINIT[BIN_DIR]}}"
 
 # Final test of ZINIT[BIN_DIR]
 if [[ ! -e ${ZINIT[BIN_DIR]}/zinit.zsh ]]; then
-    print "Could not establish ZINIT[BIN_DIR] hash field. It should point where Zinit's git repository is."
+    print -P "%F{196}Could not establish ZINIT[BIN_DIR] hash field. It should point where Zinit's Git repository is.%f"
     return 1
 fi
 
@@ -97,8 +97,8 @@ ZINIT_2MAP=(
 # ]]]
 
 # Init [[[
-zmodload zsh/zutil || return 1
-zmodload zsh/parameter || return 1
+zmodload zsh/zutil || { print -P "%F{196}zsh/zutil module is required, aborting Zinit set up.%f"; return 1; }
+zmodload zsh/parameter || { print -P "%F{196}zsh/parameter module is required, aborting Zinit set up.%f"; return 1; }
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
