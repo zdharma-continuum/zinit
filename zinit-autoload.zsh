@@ -1466,7 +1466,7 @@ ZINIT[EXTENDED_GLOB]=""
             (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
             .zinit-get-latest-gh-r-version "$user" "$plugin" || return $?
             local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
-            if [[ ${ice[is_release]} = *$REPLY* ]] {
+            if [[ ${ice[is_release]} = $REPLY ]] {
                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
                     print -- "\rBinary release already up to date (version: $version)"
                 skip_pull=1
