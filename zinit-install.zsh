@@ -1317,7 +1317,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     local user=$1 plugin=$2 urlpart=$3
 
     [[ -z $urlpart ]] && {
-        local url=https://github.com/$user/$plugin/releases/${${ZPLG_ICE[ver]:-$ice[ver]}:-latest}
+        local url=https://github.com/$user/$plugin/releases/${ZPLG_ICE[ver]:-latest}
     } || {
         local url=https://$urlpart
     }
@@ -1340,7 +1340,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
                   command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
     list=( ${list[@]#href=?} )
 
-    [[ -n ${ZINIT_ICE[bpick]:-${ice[bpick]}} ]] && list=( ${(M)list[@]:#(#i)*/${~ZINIT_ICE[bpick]:-${~ice[bpick]}}} )
+    [[ -n $ZINIT_ICE[bpick] ]] && list=( ${(M)list[@]:#(#i)*/$~ZINIT_ICE[bpick]} )
 
     [[ ${#list} -gt 1 ]] && {
         list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
@@ -1355,11 +1355,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     [[ $#list -eq 0 ]] && {
         print -nr "${ZINIT[col-msg2]}Didn't find correct Github" \
             "release-file to download"
-        if [[ -n ${ZINIT_ICE[bpick]:-$ice[bpick]} ]] {
+        if [[ -n $ZINIT_ICE[bpick] ]] {
             print -nr ", try adapting" \
                 "${ZINIT[col-obj]}bpick${ZINIT[col-msg2]}-ICE" \
                 "(currently it is:${ZINIT[col-file]}" \
-                "${ZINIT_ICE[bpick]:-$ice[bpick]}${ZINIT[col-msg2]})."
+                "$ZINIT_ICE[bpick]${ZINIT[col-msg2]})."
         } else {
             print -n .
         }
