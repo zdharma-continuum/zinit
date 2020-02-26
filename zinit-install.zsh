@@ -1313,6 +1313,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
+    REPLY=
     local user=$1 plugin=$2 urlpart=$3
 
     [[ -z $urlpart ]] && {
