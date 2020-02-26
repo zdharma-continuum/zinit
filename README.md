@@ -57,6 +57,10 @@
     the object – it'll be installed before prompt, not after it and also
     immediately (without waiting the number of seconds given to `wait''`), which
     is the intuitively expected behavior.
+  - The additional disk accesses for the checks cost about 10 ms out of 150 ms
+    (i.e.: the Zsh startup time increases from 140 ms to 150 ms). If you want,
+    you may disable the feature by setting `$ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]`
+    to `1`.
   - A bug in Turbo has been fixed that was delaying the objects' loadings,
     especially when there were no keystrokes issued.
 
