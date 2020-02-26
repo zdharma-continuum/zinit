@@ -1353,9 +1353,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     }
 
     [[ $#list -eq 0 ]] && {
-        print -P "${ZINIT[col-msg2]}Didn't find correct Github" \
-            "release-file to download, try adapting" \
-            "${ZINIT[col-obj]}bpick${ZINIT[col-msg2]}-ICE%f%b"
+        print -nr "${ZINIT[col-msg2]}Didn't find correct Github" \
+            "release-file to download"
+        if [[ -n ${ZINIT_ICE[bpick]:-$ice[bpick]} ]] {
+            print -nr ", try adapting" \
+                "${ZINIT[col-obj]}bpick${ZINIT[col-msg2]}-ICE" \
+                "(currently it is:${ZINIT[col-file]}" \
+                "${ZINIT_ICE[bpick]:-$ice[bpick]}${ZINIT[col-msg2]})."
+        } else {
+            print -n .
+        }
+        print -P "%f%b"
         return 1
     }
 
