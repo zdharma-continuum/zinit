@@ -51,6 +51,15 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 26-02-2020
+  - If the loaded object (plugin or snippet) is not already installed when
+    loading, then Turbo gets automatically disabled for this single loading of
+    the object – it'll be installed before prompt, not after it and also
+    immediately (without waiting the number of seconds given to `wait''`), which
+    is the intuitively expected behavior.
+  - A bug in Turbo has been fixed that was delaying the objects' loadings,
+    especially when there were no keystrokes issued.
+
 * 20-02-2020
 
   - A new feature - **parallel updates** of all plugins and snippets – Zinit runs
@@ -64,7 +73,7 @@
     zinit update --parallel 40 
     ```
 
-    See a demo: [asciicast1](https://asciinema.org/a/303174),
+    See demos: [asciicast1](https://asciinema.org/a/303174),
     [asciicast2](https://asciinema.org/a/303184).
 
   - A new article is available on the Wiki – about the
@@ -1014,5 +1023,4 @@ Do you need help or wish to get in touch with other Zinit users?
 [gitter-badge]: https://badges.gitter.im/zdharma/zinit.svg
 [gitter-link]: https://gitter.im/zdharma/zinit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 
-<!-- vim:tw=87
--->
+<!-- vim:set ft=markdown tw=80 fo+=1n: -->
