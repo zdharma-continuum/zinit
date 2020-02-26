@@ -126,8 +126,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" \
         URL="https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json"
 
-    print -Pr -- "Downloading ${ZINIT[col-info2]}package.json%f%b" \
-        "for ${ZINIT[col-pname]}$plugin%f%b."
+    print -P -- "\n%F{yellow}%B===%f Downloading ${ZINIT[col-info2]}package.json%f" \
+        "for ${ZINIT[col-pname]}$plugin %F{yellow}===%f%b"
 
     if [[ $profile != ./* ]]; then
         .zinit-download-file-stdout $URL 2>/dev/null > $tmpfile || \
