@@ -795,6 +795,16 @@ function $f {
 # Utility functions
 #
 
+# FUNCTION: .zinit-get-mtime-into [[[
+.zinit-get-mtime-into() {
+    if (( ZINIT[HAVE_ZSTAT] )) {
+        local -a arr
+        { zstat +mtime -A arr "$1"; } 2>/dev/null
+        : ${(P)2::="${arr[1]}"}
+    } else {
+        { : ${(P)2::="$(stat -c %Y "$1")"}; } 2>/dev/null
+    }
+} # ]]]
 # FUNCTION: @zinit-substitute [[[
 @zinit-substitute() {
     local -A __subst_map
@@ -2454,11 +2464,17 @@ autoload add-zsh-hook
 zmodload zsh/datetime && add-zsh-hook -- precmd @zinit-scheduler  # zsh/datetime required for wait/load/unload ice-mods
 functions -M -- zinit_scheduler_add 1 1 -zinit_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
+zmodload -F zsh/stat b:zstat 2>/dev/null && ZINIT[HAVE_ZSTAT]=1
 
 # code [[[
 builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
 
 .zinit-prepare-home
+
+# Remember source's timestamps for the automatic-reload feature
+for ZINIT_TMP ( "" -side -install -autoload ) {
+    .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$ZINIT_TMP.zsh" "ZINIT[mtime$ZINIT_TMP]"
+}
 
 # Simulate existence of _local/zinit plugin
 # This will allow to cuninstall of its completion

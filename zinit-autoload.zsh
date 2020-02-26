@@ -735,6 +735,11 @@ ZINIT[EXTENDED_GLOB]=""
     source $ZINIT[BIN_DIR]/zinit-side.zsh
     source $ZINIT[BIN_DIR]/zinit-install.zsh
     source $ZINIT[BIN_DIR]/zinit-autoload.zsh
+    # Read and remember the new modification timestamps
+    local file
+    for file ( "" -side -install -autoload ) {
+        .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
+    }
 } # ]]]
 # FUNCTION: .zinit-show-registered-plugins [[[
 # Lists loaded plugins (subcommands list, lodaded).
@@ -1784,6 +1789,28 @@ ZINIT[EXTENDED_GLOB]=""
 .zinit-update-or-status-all() {
     emulate -LR zsh
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
+
+    local file
+    integer sum el
+    for file ( "" -side -install -autoload ) {
+        .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" el; sum+=el
+    }
+
+    # Reload Zinit?
+    if (( ZINIT[mtime] + ZINIT[mtime-side] +
+        ZINIT[mtime-install] + ZINIT[mtime-autoload] != sum
+    )) {
+        print -P "$ZINIT[col-msg2]Detected Zinit update in another session -" \
+            "$ZINIT[col-pre]reloading Zinit$ZINIT[col-msg2]...%f%b"
+        source $ZINIT[BIN_DIR]/zinit.zsh
+        source $ZINIT[BIN_DIR]/zinit-side.zsh
+        source $ZINIT[BIN_DIR]/zinit-install.zsh
+        source $ZINIT[BIN_DIR]/zinit-autoload.zsh
+        for file ( "" -side -install -autoload ) {
+            .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
+        }
+        print -P "%B$ZINIT[col-pname]Done.%f%b\n"
+    }
 
     if (( ICE_OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
