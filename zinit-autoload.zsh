@@ -1464,9 +1464,12 @@ ZINIT[EXTENDED_GLOB]=""
         local do_update=0 skip_pull=0
         if [[ -n ${ice[is_release]} ]] {
             (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
-            ZINIT_ICE=( "${(kv)ice[@]}" )
-            .zinit-get-latest-gh-r-version "$user" "$plugin" || return $?
-            ZINIT_ICE=()
+            {
+                ZINIT_ICE=( "${(kv)ice[@]}" )
+                .zinit-get-latest-gh-r-version "$user" "$plugin" || return $?
+            } always {
+                ZINIT_ICE=()
+            }
             local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
             if [[ ${ice[is_release]} = $REPLY ]] {
                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
