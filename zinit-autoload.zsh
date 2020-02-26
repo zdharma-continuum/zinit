@@ -704,7 +704,7 @@ ZINIT[EXTENDED_GLOB]=""
     setopt extendedglob typesetsilent warncreateglobal
     local nl=$'\n' escape=$'\x1b['
     local -a lines
-    (   builtin cd -q "${ZINIT[BIN_DIR]}" && \
+    (   builtin cd -q "$ZINIT[BIN_DIR]" && \
         command git fetch --quiet && \
             lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
         if (( ${#lines} > 0 )); then
@@ -722,13 +722,13 @@ ZINIT[EXTENDED_GLOB]=""
         fi
         command git pull --no-stat;
     )
-    builtin print -- "Compiling Zinit (zcompile)..."
-    command rm -f "${ZINIT[BIN_DIR]}"/*.zwc(DN)
-    zcompile "${ZINIT[BIN_DIR]}"/zinit.zsh
-    zcompile "${ZINIT[BIN_DIR]}"/zinit-side.zsh
-    zcompile "${ZINIT[BIN_DIR]}"/zinit-install.zsh
-    zcompile "${ZINIT[BIN_DIR]}"/zinit-autoload.zsh
-    zcompile "${ZINIT[BIN_DIR]}"/git-process-output.zsh
+    builtin print "Compiling Zinit (zcompile)..."
+    command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
+    zcompile $ZINIT[BIN_DIR]/zinit.zsh
+    zcompile $ZINIT[BIN_DIR]/zinit-side.zsh
+    zcompile $ZINIT[BIN_DIR]/zinit-install.zsh
+    zcompile $ZINIT[BIN_DIR]/zinit-autoload.zsh
+    zcompile $ZINIT[BIN_DIR]/git-process-output.zsh
 } # ]]]
 # FUNCTION: .zinit-show-registered-plugins [[[
 # Lists loaded plugins (subcommands list, lodaded).
