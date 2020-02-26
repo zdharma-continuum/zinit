@@ -2044,7 +2044,7 @@ ZINIT[EXTENDED_GLOB]=""
     local -a tmp
 
     [[ "$opt" = *-[a-z]#m[a-z]#* ]] && \
-        { print "Plugin loading moments:"; ((1)); } || \
+        { print "Plugin loading moments (relative to the first prompt):"; ((1)); } || \
         print "Plugin loading times:"
 
     for entry in "${(@on)ZINIT[(I)TIME_[0-9]##_*]}"; do
