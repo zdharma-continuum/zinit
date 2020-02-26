@@ -1313,15 +1313,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-    [[ -z $3 ]] && {
-        .zinit-any-to-user-plugin "$1" "$2"
-        local user="${reply[-2]}"
-        local plugin="${reply[-1]}"
-        local url="https://github.com/$user/$plugin/releases/${ice[ver]:-latest}"
+    local user=$1 plugin=$2 urlpart=$3
+
+    [[ -z $urlpart ]] && {
+        local url=https://github.com/$user/$plugin/releases/${${ZPLG_ICE[ver]:-$ice[ver]}:-latest}
     } || {
-        local user="$1"
-        local plugin="$2"
-        local url="https://$3"
+        local url=https://$urlpart
     }
 
     local -A matchstr
