@@ -24,7 +24,7 @@ unset ZPLGM
 [[ ! -e ${ZINIT[BIN_DIR]}/zinit.zsh ]] && ZINIT[BIN_DIR]=
 
 ZINIT[ZERO]="$0"
-[[ ! -o functionargzero || ${ZINIT[ZERO]/\//} = ${ZINIT[ZERO]} ]] && ZINIT[ZERO]="${(%):-%N}"
+[[ ! -o functionargzero || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
 
 [[ -z ${ZINIT[BIN_DIR]} ]] && ZINIT[BIN_DIR]="${ZINIT[ZERO]:h}"
 [[ ${ZINIT[BIN_DIR]} = \~* ]] && ZINIT[BIN_DIR]=${~ZINIT[BIN_DIR]}
@@ -64,10 +64,10 @@ ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMP
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
 export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache/zinit}}" \
     PMSPEC=0uUpiPs
-[[ -n ${path[(re)$ZPFX/bin]} ]] || path=( "$ZPFX/bin" ${path[@]} )
+[[ -z ${path[(re)$ZPFX/bin]} ]] && path=( "$ZPFX/bin" ${path[@]} )
 
 # Add completions directory to fpath
-fpath=( "${ZINIT[COMPLETIONS_DIR]}" "${fpath[@]}" )
+[[ -z ${fpath[(re)${ZINIT[COMPLETIONS_DIR]}]} ]] && fpath=( "${ZINIT[COMPLETIONS_DIR]}" "${fpath[@]}" )
 
 [[ ! -d $ZSH_CACHE_DIR ]] && command mkdir -p "$ZSH_CACHE_DIR"
 [[ -n ${ZINIT[ZCOMPDUMP_PATH]} ]] && ZINIT[ZCOMPDUMP_PATH]=${~ZINIT[ZCOMPDUMP_PATH]}
@@ -2446,13 +2446,16 @@ zpcompdef() { ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
 # Source-executed code
 #
 
+builtin unsetopt noaliases
+
+(( ZINIT[SOURCED] ++ )) && return
+
 autoload add-zsh-hook
 zmodload zsh/datetime && add-zsh-hook -- precmd @zinit-scheduler  # zsh/datetime required for wait/load/unload ice-mods
 functions -M -- zinit_scheduler_add 1 1 -zinit_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
 
 # code [[[
-builtin unsetopt noaliases
 builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
 
 .zinit-prepare-home

@@ -729,6 +729,12 @@ ZINIT[EXTENDED_GLOB]=""
     zcompile $ZINIT[BIN_DIR]/zinit-install.zsh
     zcompile $ZINIT[BIN_DIR]/zinit-autoload.zsh
     zcompile $ZINIT[BIN_DIR]/git-process-output.zsh
+    # Load for the current session
+    builtin print "Reloading Zinit for the current session..."
+    source $ZINIT[BIN_DIR]/zinit.zsh
+    source $ZINIT[BIN_DIR]/zinit-side.zsh
+    source $ZINIT[BIN_DIR]/zinit-install.zsh
+    source $ZINIT[BIN_DIR]/zinit-autoload.zsh
 } # ]]]
 # FUNCTION: .zinit-show-registered-plugins [[[
 # Lists loaded plugins (subcommands list, lodaded).
