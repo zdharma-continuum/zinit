@@ -1359,7 +1359,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         return 1
     }
 
-    REPLY="${list[1]}"
+    REPLY=$list[1]
 }
 # ]]]
 # FUNCTION: ziextract [[[
