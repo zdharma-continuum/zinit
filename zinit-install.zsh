@@ -1360,6 +1360,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     }
 
     REPLY=$list[1]
+
+    [[ -n $REPLY ]] # testable
 }
 # ]]]
 # FUNCTION: ziextract [[[
