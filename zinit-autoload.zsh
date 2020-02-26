@@ -1790,6 +1790,9 @@ ZINIT[EXTENDED_GLOB]=""
     emulate -LR zsh
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
+    [[ $2 = restart ]] && \
+        print -P "$ZINIT[col-msg2]Restarting the update with the new codebase loaded.%f%b\n"
+
     local file
     integer sum el
     for file ( "" -side -install -autoload ) {
@@ -1797,7 +1800,7 @@ ZINIT[EXTENDED_GLOB]=""
     }
 
     # Reload Zinit?
-    if (( ZINIT[mtime] + ZINIT[mtime-side] +
+    if [[ $2 != restart ]] && (( ZINIT[mtime] + ZINIT[mtime-side] +
         ZINIT[mtime-install] + ZINIT[mtime-autoload] != sum
     )) {
         print -P "$ZINIT[col-msg2]Detected Zinit update in another session -" \
@@ -1810,6 +1813,8 @@ ZINIT[EXTENDED_GLOB]=""
             .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
         }
         print -P "%B$ZINIT[col-pname]Done.%f%b\n"
+        .zinit-update-or-status-all "$1" restart
+        return $?
     }
 
     if (( ICE_OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
