@@ -2475,13 +2475,13 @@ zstyle ':completion:*:*:zinit:*' group-name ""
 # ]]]
 
 # module recompilation for the project rename [[[
-if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]]; then
-    if [[ ! -f ${${ZINIT[BIN_DIR]}}/zmodules/COMPILED_AT || ( ${${ZINIT[BIN_DIR]}}/zmodules/COMPILED_AT -ot ${${ZINIT[BIN_DIR]}}/zmodules/RECOMPILE_REQUEST ) ]]; then
+if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
+    if [[ ! -f ${${ZINIT[BIN_DIR]}}/zmodules/COMPILED_AT || ( ${${ZINIT[BIN_DIR]}}/zmodules/COMPILED_AT -ot ${${ZINIT[BIN_DIR]}}/zmodules/RECOMPILE_REQUEST ) ]] {
         # Don't trust access times and verify hard stored values
         [[ -e ${${ZINIT[BIN_DIR]}}/module/COMPILED_AT ]] && local compiled_at_ts="$(<${${ZINIT[BIN_DIR]}}/module/COMPILED_AT)"
         [[ -e ${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST ]] && local recompile_request_ts="$(<${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST)"
 
-        if [[ ${recompile_request_ts:-1} -gt ${compiled_at_ts:-0} ]]; then
+        if [[ ${recompile_request_ts:-1} -gt ${compiled_at_ts:-0} ]] {
             builtin print -r -- "${ZINIT[col-error]}WARNING:${ZINIT[col-rst]}" \
                 "${ZINIT[col-msg1]}A ${ZINIT[col-obj]}recompilation${ZINIT[col-rst]}" \
                 "of the Zinit module has been requested… ${ZINIT[col-obj]}Building${ZINIT[col-rst]}…"
@@ -2499,9 +2499,9 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]]; then
             fi
 
             command date '+%s' >! "${ZINIT[BIN_DIR]}/zmodules/COMPILED_AT"
-        fi
-    fi
-fi
+        }
+    }
+}
 # ]]]
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]
