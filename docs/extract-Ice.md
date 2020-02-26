@@ -6,7 +6,7 @@ Zinit has a swiss-knife tool for unpacking all kinds of archives – the
 ## Automatic Mode
 
 It is active if the ice is empty (or contains only flags – more on them later).
-It works as follow:
+It works as follows:
 
 1. At first, a recursive search for files of known [file
    extensions](#supported_file_formats) located not deeper than in
