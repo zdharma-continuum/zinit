@@ -1288,7 +1288,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         url[1-correct,5-correct]=${ZINIT_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
     }
 
-    .zinit-get-object-path snippet "$id_as"
+    .zinit-get-object-path snippet "$id_as" || \
+        { print -P "$ZINIT[col-msg2]Error: the snippet" \
+            "\`$ZINIT[col-obj]$id_as$ZINIT[col-msg2]'" \
+            "doesn't exist, aborting the update.%f%b"
+          return 1
+        }
     filename=$reply[-2] dirname=$reply[-2] local_dir=$reply[-3]
 
     local -a arr
