@@ -984,25 +984,6 @@ zinit light k4rthik/git-cal
 
 Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
 
-## Preinstalling Plugins
-
-If you create a Docker image that uses Zinit, or want to install Turbo-loaded
-plugins before the shell starts interactively, you can invoke the
-zinit-scheduler function in such a way, that it:
-
- - installs plugins without waiting for the prompt (i.e. it's script friendly),
- - installs **all** plugins instantly, without respecting the `wait''` argument.
-
-To accomplish this, use `burst` argument and call `@zinit-scheduler` function.
-Example `Dockerfile` entry:
-
-``` zsh
-RUN zsh -i -c -- '@zinit-scheduler burst || true'
-```
-
-An example `Dockerfile` can be found
-[**here**](https://github.com/robobenklein/configs/blob/master/Dockerfile).
-
 # Getting Help and Community
 
 Do you need help or wish to get in touch with other Zinit users?
