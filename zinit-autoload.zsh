@@ -700,7 +700,8 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-self-update() {
-    setopt localoptions extendedglob nokshglob noksharrays noshwordsplit
+    emulate -LR zsh
+    setopt extendedglob typesetsilent warncreateglobal
     local nl=$'\n' escape=$'\x1b['
     local -a lines
     (   builtin cd -q "${ZINIT[BIN_DIR]}" && \
