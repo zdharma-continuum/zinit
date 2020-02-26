@@ -52,6 +52,13 @@
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
 * 26-02-2020
+  - From now on `zinit self-update` reloads Zinit for the current session (after
+    updating the plugin manager), and `zinit update --all/-p/--parallel` detects
+    that `self-update` has been run in another session and also reloads Zinit
+    right before performing the update. This way the update code is always the
+    newest and consistent.
+
+* 26-02-2020
   - If the loaded object (plugin or snippet) is not already installed when
     loading, then Turbo gets automatically disabled for this single loading of
     the object – it'll be installed before prompt, not after it and also
