@@ -306,19 +306,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         gh-r      github.com/$remote_url_path/releases
     )
 
-    local -A matchstr
-    matchstr=(
-        i386    "(386|686)"
-        i686    "(386|686)"
-        x86_64  "(x86_64|amd64|intel)"
-        amd64   "(x86_64|amd64|intel)"
-        aarch64 "aarch64"
-        linux   "(linux|linux-gnu)"
-        darwin  "(darwin|macos|mac-os|osx|os-x)"
-        cygwin  "(windows|cygwin)"
-        windows "(windows|cygwin)"
-    )
-
     ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
     local -a arr
@@ -345,40 +332,19 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     (
         if [[ $site = *releases ]] {
             local url=$site/${ZINIT_ICE[ver]}
-            local -a list list2
 
-            list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
-                          command grep -o 'href=./'$remote_url_path'/releases/download/[^"]\+')"} )
-            list=( ${list[@]#href=?} )
-
-            [[ -n ${ZINIT_ICE[bpick]} ]] && list=( ${(M)list[@]:#(#i)*/${~ZINIT_ICE[bpick]}} )
-
-            [[ ${#list} -gt 1 ]] && {
-                list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
-                [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-            }
-
-            [[ ${#list} -gt 1 ]] && {
-                list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*} )
-                [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-            }
-
-            [[ ${#list} -eq 0 ]] && {
-                print "Didn't find correct Github release-file to download" \
-                    "(for \`$remote_url_path'), try adapting bpick-ICE."
-                return 1
-            }
+            .zinit-get-latest-gh-r-version "$user" "$plugin" "$url"
 
             command mkdir -p "$local_path"
             [[ -d "$local_path" ]] || return 1
 
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-                url="https://github.com${list[1]}"
-                print "(Requesting \`${list[1]:t}'${version:+, version $version}...)"
-                .zinit-download-file-stdout "$url" >! "${list[1]:t}" || {
-                    .zinit-download-file-stdout "$url" 1 >! "${list[1]:t}" || {
-                        command rm -f "${list[1]:t}"
+                url="https://github.com${REPLY}"
+                print "(Requesting \`${REPLY:t}'${version:+, version $version}...)"
+                .zinit-download-file-stdout "$url" >! "${REPLY:t}" || {
+                    .zinit-download-file-stdout "$url" 1 >! "${REPLY:t}" || {
+                        command rm -f "${REPLY:t}"
                         print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                         print -r "Tried url: $url."
                         return 1
@@ -387,8 +353,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
 
                 command mkdir -p ._zinit
                 print -r -- $url >! ._zinit/url
-                print -r -- ${list[1]} >! ._zinit/is_release
-                ziextract ${list[1]:t}
+                print -r -- ${REPLY} >! ._zinit/is_release
+                ziextract ${REPLY:t}
                 return $?
             ) || {
                 return 1
@@ -1346,17 +1312,52 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
 .zinit-get-latest-gh-r-version() {
     setopt localoptions extendedglob warncreateglobal
 
-    .zinit-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}"
-    local plugin="${reply[-1]}"
+    [[ -z $3 ]] && {
+        .zinit-any-to-user-plugin "$1" "$2"
+        local user="${reply[-2]}"
+        local plugin="${reply[-1]}"
+        local url="https://github.com/$user/$plugin/releases/${ice[ver]:-latest}"
+    } || {
+        local user="$1"
+        local plugin="$2"
+        local url="https://$3"
+    }
 
-    local url="https://github.com/$user/$plugin/releases/latest"
+    local -A matchstr
+    matchstr=(
+        i386    "(386|686)"
+        i686    "(386|686)"
+        x86_64  "(x86_64|amd64|intel)"
+        amd64   "(x86_64|amd64|intel)"
+        aarch64 "aarch64"
+        linux   "(linux|linux-gnu)"
+        darwin  "(darwin|macos|mac-os|osx|os-x)"
+        cygwin  "(windows|cygwin)"
+        windows "(windows|cygwin)"
+    )
 
-    local -a list
+    local -a list list2
     list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
                   command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+    list=( ${list[@]#href=?} )
 
-    list=( "${(uOn)list[@]/(#b)href=?(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}" )
+    [[ -n ${ZINIT_ICE[bpick]:-${ice[bpick]}} ]] && list=( ${(M)list[@]:#(#i)*/${~ZINIT_ICE[bpick]:-${~ice[bpick]}}} )
+
+    [[ ${#list} -gt 1 ]] && {
+        list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
+        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
+    }
+
+    [[ ${#list} -gt 1 ]] && {
+        list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*} )
+        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
+    }
+
+    [[ ${#list} -eq 0 ]] && {
+        print "Didn't find correct Github release-file to download, try adapting bpick-ICE"
+        return 1
+    }
+
     REPLY="${list[1]}"
 }
 # ]]]
