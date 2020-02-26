@@ -54,7 +54,7 @@
 * 26-02-2020
   - From now on `zinit self-update` reloads Zinit for the current session (after
     updating the plugin manager), and `zinit update --all/-p/--parallel` detects
-    that `self-update` has been run in another session and also reloads Zinit
+    that `self-update` has been run in **another session** and also reloads Zinit
     right before performing the update. This way the update code is always the
     newest and consistent.
 
