@@ -943,6 +943,7 @@ declare -A ZINIT  # initial Zinit's hash definition, if configuring before loadi
 | ZINIT[ZCOMPDUMP_PATH]  | Path to `.zcompdump` file, with the file included (i.e. its name can be different) |
 | ZINIT[COMPINIT_OPTS]   | Options for `compinit` call (i.e. done by `zicompinit`), use to pass -C to speed up loading |
 | ZINIT[MUTE_WARNINGS]   | If set to `1`, then mutes some of the Zinit warnings, specifically the `plugin already registered` warning |
+| ZINIT[OPTIMIZE_OUT_DISK_ACCESSES] | If set to `1`, then Zinit will skip checking if a Turbo-loaded object exists on the disk. By default Zinit skips Turbo for non-existing objects (plugins or snippets) to install them before the first prompt – without any delays, during the normal processing of `zshrc`. This option can give a performance gain of about 10 ms out of 150 ms (i.e.: Zsh will start up in 140 ms instead of 150 ms).|
 
 There is also `$ZPFX`, set by default to `~/.zinit/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
