@@ -333,7 +333,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         if [[ $site = *releases ]] {
             local url=$site/${ZINIT_ICE[ver]}
 
-            .zinit-get-latest-gh-r-version "$user" "$plugin" "$url"
+            .zinit-get-latest-gh-r-version "$user" "$plugin" "$url" || return $?
 
             command mkdir -p "$local_path"
             [[ -d "$local_path" ]] || return 1
