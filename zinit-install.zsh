@@ -1352,8 +1352,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
-    [[ ${#list} -eq 0 ]] && {
-        print "Didn't find correct Github release-file to download, try adapting bpick-ICE"
+    [[ $#list -eq 0 ]] && {
+        print -P "${ZINIT[col-msg2]}Didn't find correct Github" \
+            "release-file to download, try adapting" \
+            "${ZINIT[col-obj]}bpick${ZINIT[col-msg2]}-ICE%f%b"
         return 1
     }
 
