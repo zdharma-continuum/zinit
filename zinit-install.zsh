@@ -1310,7 +1310,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
 .zinit-get-latest-gh-r-version() {
-    setopt localoptions extendedglob warncreateglobal
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     [[ -z $3 ]] && {
         .zinit-any-to-user-plugin "$1" "$2"
