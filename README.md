@@ -55,8 +55,9 @@
   - If the loaded object (plugin or snippet) is not already installed when
     loading, then Turbo gets automatically disabled for this single loading of
     the object – it'll be installed before prompt, not after it and also
-    immediately (without waiting the number of seconds given to `wait''`), which
-    is the intuitively expected behavior.
+    immediately (without waiting the number of seconds given to `wait''`), i.e.:
+    during the normal processing of `zshrc`, which intuitively is the expected
+    behavior.
   - The additional disk accesses for the checks cost about 10 ms out of 150 ms
     (i.e.: the Zsh startup time increases from 140 ms to 150 ms). If you want,
     you may disable the feature by setting `$ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]`
