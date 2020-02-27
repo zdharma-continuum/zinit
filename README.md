@@ -52,6 +52,11 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 27-02-2020
+  - An **important fix** has been pushed – due to a bug Turbo has been disabled
+    for non-for syntax invocations of Zinit. Issue `zinit self-update` to
+    resolve the mistake.
+
 * 26-02-2020
   - From now on `zinit self-update` reloads Zinit for the current session (after
     updating the plugin manager), and `zinit update --all/-p/--parallel` detects
