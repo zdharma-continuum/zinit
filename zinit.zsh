@@ -2099,9 +2099,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        ]] && (( !ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]
                     )) {
                         if (( __is_snippet )) {
-                            .zinit-get-object-path snippet "${${1#@}%%(/|//|///)}"
+                            .zinit-get-object-path snippet "${${1#@}%%(///|//|/)}"
                         } else {
-                            .zinit-get-object-path plugin "${${${1#@}#https://github.com/}%%(/|//|///)}"
+                            .zinit-get-object-path plugin "${${${1#@}#https://github.com/}%%(///|//|/)}"
                         }
                     } else {
                         reply=( 1 )
@@ -2141,22 +2141,22 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     ]] {
                         ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
                         if (( __is_snippet > 0 )); then
-                            ZINIT_SICE[${${1#@}%%(/|//|///)}]=
+                            ZINIT_SICE[${${1#@}%%(///|//|/)}]=
                             .zinit-submit-turbo s${ZINIT_ICE[service]:+1} "" \
-                                "${${1#@}%%(/|//|///)}" \
+                                "${${1#@}%%(///|//|/)}" \
                                 "${(k)ICE_OPTS[*]}"
                         else
-                            ZINIT_SICE[${${${1#@}#https://github.com/}%%(/|//|///)}]=
+                            ZINIT_SICE[${${${1#@}#https://github.com/}%%(///|//|/)}]=
                             .zinit-submit-turbo p${ZINIT_ICE[service]:+1} \
                                 "${${${ZINIT_ICE[light-mode]+light}}:-load}" \
-                                "${${${1#@}#https://github.com/}%%(/|//|///)}" ""
+                                "${${${1#@}#https://github.com/}%%(///|//|/)}" ""
                         fi
                         __retval+=$?
                     } else {
                         if (( __is_snippet > 0 )); then
-                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${1#@}%%(/|//|///)}"
+                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${1#@}%%(///|//|/)}"
                         else
-                            .zinit-load "${${${1#@}#https://github.com/}%%(/|//|///)}" "" \
+                            .zinit-load "${${${1#@}#https://github.com/}%%(///|//|/)}" "" \
                                 "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
                         __retval+=$?
@@ -2234,7 +2234,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        [[ $2 = -q ]] && { 5=-q; shift; }
                        # Unload given plugin. Cloned directory remains intact
                        # so as are completions
-                       .zinit-unload "${2%%(/|//|///)}" "${${3:#-q}%%(/|//|///)}" "${${(M)4:#-q}:-${(M)3:#-q}}"; retval=$?
+                       .zinit-unload "${2%%(///|//|/)}" "${${3:#-q}%%(///|//|/)}" "${${(M)4:#-q}:-${(M)3:#-q}}"; retval=$?
                    fi
                    ;;
                (bindkeys)
@@ -2254,7 +2254,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                            ICE_OPTS[value]=${${${${${(M)2:#--all}:+$3}:-$2}:#--all}:-15}
                        .zinit-update-or-status-all update; retval=$?
                    else
-                       .zinit-update-or-status update "${${2%%(/|//|///)}:-${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}}" "${3%%(/|//|///)}"; retval=$?
+                       .zinit-update-or-status update "${${2%%(///|//|/)}:-${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}}" "${3%%(///|//|/)}"; retval=$?
                    fi
                    ;;
                (status)
@@ -2262,7 +2262,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        [[ -z $2 ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-update-or-status-all status; retval=$?
                    else
-                       .zinit-update-or-status status "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
+                       .zinit-update-or-status status "${2%%(///|//|/)}" "${3%%(///|//|/)}"; retval=$?
                    fi
                    ;;
                (report)
@@ -2270,7 +2270,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        [[ -z $2 ]] && { print -r -- "Assuming --all is passed"; sleep 3; }
                        .zinit-show-all-reports
                    else
-                       .zinit-show-report "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
+                       .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; retval=$?
                    fi
                    ;;
                (loaded|list)
@@ -2327,7 +2327,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ $2 = -q ]] && { 5=-q; shift; }
-                   .zinit-install-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}" 1 "${(M)4:#-q}"; retval=$?
+                   .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-q}"; retval=$?
                    [[ -z ${(M)4:#-q} ]] && print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
                    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
@@ -2338,7 +2338,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    else
                        (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
                        # Uninstalls completions for plugin
-                       .zinit-uninstall-completions "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
+                       .zinit-uninstall-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}"; retval=$?
                        print "Initializing completion (compinit)..."
                        builtin autoload -Uz compinit
                        compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
@@ -2366,7 +2366,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        [[ -z $2 ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-compile-uncompile-all 1; retval=$?
                    else
-                       .zinit-compile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
+                       .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; retval=$?
                    fi
                    ;;
                (uncompile)
@@ -2374,7 +2374,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        [[ -z $2 ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-compile-uncompile-all 0; retval=$?
                    else
-                       .zinit-uncompile-plugin "${2%%(/|//|///)}" "${3%%(/|//|///)}"; retval=$?
+                       .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; retval=$?
                    fi
                    ;;
                (compiled)
@@ -2384,7 +2384,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    .zinit-list-compdef-replay
                    ;;
                (cd|delete|recall|edit|glance|changes|create|stress)
-                   .zinit-"$1" "${@[2-correct,-1]%%(/|//|///)}"; retval=$?
+                   .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; retval=$?
                    ;;
                (recently)
                    shift
