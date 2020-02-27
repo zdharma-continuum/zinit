@@ -1895,13 +1895,13 @@ atdelete|git|verbose|param|extract${~exts})(*)
     [[ $1 = burst ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
     ZINIT[START_TIME]="${ZINIT[START_TIME]:-$EPOCHREALTIME}"
 
-    integer __t=EPOCHSECONDS __i correct=0
+    integer __t=EPOCHSECONDS __i correct
     local -a match mbegin mend reply
-    local REPLY ANFD
+    local REPLY AFD
 
     [[ -o ksharrays ]] && correct=1
 
-    [[ -n $1 ]] && {
+    if [[ -n $1 ]] {
         () {
             builtin emulate -L zsh
             builtin setopt extendedglob
@@ -1913,8 +1913,8 @@ atdelete|git|verbose|param|extract${~exts})(*)
             # an entry with "<no-data>", i.e. ZINIT_TASKS[1] entry.
             integer __idx1 __idx2
             local __ar2 __ar3 __ar4 __ar5
-            for (( __idx1 = 0; __idx1 <= 4; __idx1 ++ )); do
-                for (( __idx2 = 1; __idx2 <= (__idx >= 4 ? 1 : 3); __idx2 ++ )); do
+            for (( __idx1 = 0; __idx1 <= 4; __idx1 ++ )) {
+                for (( __idx2 = 1; __idx2 <= (__idx >= 4 ? 1 : 3); __idx2 ++ )) {
                     # The following substitution could be just (well, 'just'..) this:
                     #
                     # ZINIT_TASKS=( ${ZINIT_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/
@@ -1938,10 +1938,10 @@ atdelete|git|verbose|param|extract${~exts})(*)
                         : 1 )
                         : 1  ))]}} )
                     ZINIT_TASKS=( "<no-data>" ${ZINIT_TASKS[@]:#<no-data>} )
-                done
-            done
+                }
+            }
         }
-    } || {
+    } else {
         add-zsh-hook -d -- precmd @zinit-scheduler
         add-zsh-hook -- chpwd @zinit-scheduler
         () {
@@ -1956,35 +1956,33 @@ atdelete|git|verbose|param|extract${~exts})(*)
         # zle -F handler. So it's done here, in precmd-handle code.
         sched +1 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following ${ZINIT[lro-data]%:*:*}'
 
-        ANFD=13371337 # for older Zsh + noclobber option
-        exec {ANFD}< <(LANG=C command sleep 0.002; builtin print run;)
+        AFD=13371337 # for older Zsh + noclobber option
+        exec {AFD}< <(LANG=C command sleep 0.002; builtin print run;)
 	command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
-        zle -F "$ANFD" @zinit-scheduler
+        zle -F "$AFD" @zinit-scheduler
     }
 
     local __task __idx=0 __count=0 __idx2
     # All wait'' objects
-    for __task in "${ZINIT_RUN[@]}"; do
+    for __task ( "${ZINIT_RUN[@]}" ) {
         .zinit-run-task 1 "${(@z)__task}" && ZINIT_TASKS+=( "$__task" )
-        [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && $1 != burst ]] && \
-            {
-                ANFD=13371337 # for older Zsh + noclobber option
-                exec {ANFD}< <(LANG=C command sleep 0.0002; builtin print run;)
-                command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
-                # The $? and $_ will be preserved automatically by Zsh
-                # – that's how calling the -F handler is implemented
-                zle -F "$ANFD" @zinit-scheduler
-                break
-            }
-    done
+        if [[ $(( ++__idx, __count += ${${REPLY:+1}:-0} )) -gt 0 && $1 != burst ]] {
+            AFD=13371337 # for older Zsh + noclobber option
+            exec {AFD}< <(LANG=C command sleep 0.0002; builtin print run;)
+            command true
+            # The $? and $_ will be left unchanged automatically by Zsh
+            zle -F "$AFD" @zinit-scheduler
+            break
+        }
+    }
     # All unload'' objects
-    for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
+    for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )) {
         .zinit-run-task 2 "${(@z)ZINIT_RUN[__idx2-correct]}"
-    done
+    }
     # All load'' & subscribe'' objects
-    for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )); do
+    for (( __idx2=1; __idx2 <= __idx; ++ __idx2 )) {
         .zinit-run-task 3 "${(@z)ZINIT_RUN[__idx2-correct]}"
-    done
+    }
     ZINIT_RUN[1-correct,__idx-correct]=()
 
     [[ ${ZINIT[lro-data]##*:} = on ]] && return 0 || return $__ret
