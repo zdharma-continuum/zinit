@@ -2098,7 +2098,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             ${ZINIT_ICE[wait]} = (\!|)<->(a|b|c|) 
                        ]] && (( !ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]
                     )) {
-                        if (( __is_snippet )) {
+                        if (( __is_snippet > 0 )) {
                             .zinit-get-object-path snippet "${${1#@}%%(///|//|/)}"
                         } else {
                             .zinit-get-object-path plugin "${${${1#@}#https://github.com/}%%(///|//|/)}"
