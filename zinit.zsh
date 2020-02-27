@@ -1902,42 +1902,44 @@ atdelete|git|verbose|param|extract${~exts})(*)
     [[ -o ksharrays ]] && correct=1
 
     if [[ -n $1 ]] {
-        () {
-            builtin emulate -L zsh
-            builtin setopt extendedglob
-            # Example entry:
-            # 1531252764+2+1 p 18 light zdharma/zsh-diff-so-fancy
-            #
-            # This either doesn't change ZINIT_TASKS entry - when
-            # __i is used in the ternary expression, or replaces
-            # an entry with "<no-data>", i.e. ZINIT_TASKS[1] entry.
-            integer __idx1 __idx2
-            local __ar2 __ar3 __ar4 __ar5
-            for (( __idx1 = 0; __idx1 <= 4; __idx1 ++ )) {
-                for (( __idx2 = 1; __idx2 <= (__idx >= 4 ? 1 : 3); __idx2 ++ )) {
-                    # The following substitution could be just (well, 'just'..) this:
-                    #
-                    # ZINIT_TASKS=( ${ZINIT_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/
-                    # ${ZINIT_TASKS[$(( (${match[1]}+${match[2]}) <= $__t ?
-                    # zinit_scheduler_add(__i++, ${match[2]},
-                    # ${(M)match[3]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
-                    #
-                    # However, there's a severe bug in Zsh <= 5.3.1 - use of the period
-                    # (,) is impossible inside ${..//$arr[$(( ... ))]}.
-                    __i=2
+        if (( ${#ZINIT_RUN} <= 2 )) || [[ $1 = following ]]  {
+            () {
+                builtin emulate -L zsh
+                builtin setopt extendedglob
+                # Example entry:
+                # 1531252764+2+1 p 18 light zdharma/zsh-diff-so-fancy
+                #
+                # This either doesn't change ZINIT_TASKS entry - when
+                # __i is used in the ternary expression, or replaces
+                # an entry with "<no-data>", i.e. ZINIT_TASKS[1] entry.
+                integer __idx1 __idx2
+                local __ar2 __ar3 __ar4 __ar5
+                for (( __idx1 = 0; __idx1 <= 4; __idx1 ++ )) {
+                    for (( __idx2 = 1; __idx2 <= (__idx >= 4 ? 1 : 3); __idx2 ++ )) {
+                        # The following substitution could be just (well, 'just'..) this:
+                        #
+                        # ZINIT_TASKS=( ${ZINIT_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/
+                        # ${ZINIT_TASKS[$(( (${match[1]}+${match[2]}) <= $__t ?
+                        # zinit_scheduler_add(__i++, ${match[2]},
+                        # ${(M)match[3]%[1-3]}, __idx1, __idx2) : __i++ ))]}} )
+                        #
+                        # However, there's a severe bug in Zsh <= 5.3.1 - use of the period
+                        # (,) is impossible inside ${..//$arr[$(( ... ))]}.
+                        __i=2
 
-                    ZINIT_TASKS=( ${ZINIT_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/${ZINIT_TASKS[
-                    $(( (__ar2=${match[2]}+1) ? (
-                        (__ar3=${(M)match[3]%[1-3]}) ? (
-                        (__ar4=__idx1+1) ? (
-                        (__ar5=__idx2) ? (
-            (${match[1]}+${match[2]}) <= $__t ?
-            zinit_scheduler_add(__i++) : __i++ )
-                        : 1 )
-                        : 1 )
-                        : 1 )
-                        : 1  ))]}} )
-                    ZINIT_TASKS=( "<no-data>" ${ZINIT_TASKS[@]:#<no-data>} )
+                        ZINIT_TASKS=( ${ZINIT_TASKS[@]/(#b)([0-9]##)+([0-9]##)+([1-3])(*)/${ZINIT_TASKS[
+                        $(( (__ar2=${match[2]}+1) ? (
+                            (__ar3=${(M)match[3]%[1-3]}) ? (
+                            (__ar4=__idx1+1) ? (
+                            (__ar5=__idx2) ? (
+                (${match[1]}+${match[2]}) <= $__t ?
+                zinit_scheduler_add(__i++) : __i++ )
+                            : 1 )
+                            : 1 )
+                            : 1 )
+                            : 1  ))]}} )
+                        ZINIT_TASKS=( "<no-data>" ${ZINIT_TASKS[@]:#<no-data>} )
+                    }
                 }
             }
         }
