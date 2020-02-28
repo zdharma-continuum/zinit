@@ -365,19 +365,19 @@ To see the full history check [the changelog](CHANGELOG.md).
 </a>
 </p>
 
-Zinit is an elastic and fast Zshell plugin manager that will allow you to
+Zinit is a flexible and fast Zshell plugin manager that will allow you to
 install everything from GitHub and other sites.
 
 Zinit is currently the only plugin manager out there that provides Turbo mode
-which yields **50-80% faster Zsh startup!** (i.e.: the shell will start up to
+which yields **50-80% faster Zsh startup** (i.e.: the shell will start up to
 **5** times faster!). Check out a speed comparison with other popular plugin
 managers [here](https://github.com/zdharma/pm-perf-test).
 
-Zinit gives **reports** from plugin load describing what aliases, functions,
-bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
-elements a plugin has set up. This allows to quickly familiarize oneself with
-a new plugin and provides rich and easy to digest information which might be
-helpful on various occasions.
+The plugin manager gives **reports** from plugin loadings describing what
+aliases, functions, bindkeys, Zle widgets, zstyles, completions, variables,
+`PATH` and `FPATH` elements a plugin has set up. This allows to quickly
+familiarize oneself with a new plugin and provides rich and easy to digest
+information which might be helpful on various occasions.
 
 Supported is unloading of plugin and ability to list, (un)install and
 **selectively disable**, **enable** plugin's completions.
