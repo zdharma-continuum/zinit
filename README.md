@@ -393,6 +393,11 @@ The system does not use `$FPATH`, loading multiple plugins doesn't clutter
 immune to `KSH_ARRAYS` and other options typically causing compatibility
 problems.
 
+Zinit supports special, dedicated **packages** that offload the user from
+providing long and complex commands. See the
+[Zsh-Packages](https://github.com/Zsh-Packages) organization for a growing,
+complete list of Zinit packages.
+
 Also, specialized Zinit extensions – called *annexes* – allow to extend the
 plugin manager with new commands, URL-preprocessors (used by e.g.:
 [z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) annex),
