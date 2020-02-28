@@ -261,8 +261,8 @@ Snippets too have completions installed by default, like plugins.
 ## Turbo Mode (Zsh \>= 5.3)
 
 The Ice-mod `wait` allows the user postponing loading of a plugin to the moment
-when processing of `.zshrc` is finished and the first prompt is being shown. It
-is like Windows – during startup, it shows desktop even though it still loads
+when the processing of `.zshrc` is finished and the first prompt is being shown.
+It is like Windows – during startup, it shows desktop even though it still loads
 data in background. This has drawbacks, but is for sure better than blank screen
 for 10 minutes. And here, in Zinit, there are no drawbacks of this approach – no
 lags, freezes, etc. – the command line is fully usable while the plugins are
