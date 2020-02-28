@@ -281,9 +281,9 @@ zinit load halfo/lambda-mod-zsh-theme
 ```
 
 This sets plugin `halfo/lambda-mod-zsh-theme` to be loaded `0` seconds after
-`zshrc`. It will fire up after c.a. 1 ms of showing of the basic prompt `READY
->`. You probably won't load the prompt in such a way, however it is a good
-example in which Turbo can be directly observed.
+`zshrc`. It will fire up after c.a. 1 ms of showing of the basic prompt `READY >`.
+You probably won't load the prompt in such a way, however it is a good example
+in which Turbo can be directly observed.
 
 The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
 is needed for themes. The same with Prezto prompts, with a longer delay:
