@@ -2476,6 +2476,7 @@ builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
 .zinit-prepare-home
 
 # Remember source's timestamps for the automatic-reload feature
+typeset -g ZINIT_TMP
 for ZINIT_TMP ( "" -side -install -autoload ) {
     .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$ZINIT_TMP.zsh" "ZINIT[mtime$ZINIT_TMP]"
 }
