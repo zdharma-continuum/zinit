@@ -366,46 +366,48 @@ To see the full history check [the changelog](CHANGELOG.md).
 </p>
 
 Zinit is a flexible and fast Zshell plugin manager that will allow you to
-install everything from GitHub and other sites.
+install everything from GitHub and other sites. Its characteristics are:
 
-Zinit is currently the only plugin manager out there that provides Turbo mode
-which yields **50-80% faster Zsh startup** (i.e.: the shell will start up to
-**5** times faster!). Check out a speed comparison with other popular plugin
-managers [here](https://github.com/zdharma/pm-perf-test).
+1. Zinit is currently the only plugin manager out there that provides Turbo mode
+   which yields **50-80% faster Zsh startup** (i.e.: the shell will start up to
+   **5** times faster!). Check out a speed comparison with other popular plugin
+   managers [here](https://github.com/zdharma/pm-perf-test).
 
-The plugin manager gives **reports** from plugin loadings describing what
-aliases, functions, bindkeys, Zle widgets, zstyles, completions, variables,
-`PATH` and `FPATH` elements a plugin has set up. This allows to quickly
-familiarize oneself with a new plugin and provides rich and easy to digest
-information which might be helpful on various occasions.
+2. The plugin manager gives **reports** from plugin loadings describing what
+   **aliases**, functions, **bindkeys**, Zle widgets, zstyles, **completions**,
+   variables, `PATH` and `FPATH` elements a plugin has set up. This allows to
+   quickly familiarize oneself with a new plugin and provides rich and easy to
+   digest information which might be helpful on various occasions.
 
-Supported is unloading of plugin and ability to list, (un)install and
-**selectively disable**, **enable** plugin's completions.
+3. Supported is unloading of plugin and ability to list, (un)install and
+   **selectively disable**, **enable** plugin's completions.
 
-The plugin manager supports loading Oh My Zsh and Prezto plugins and
-libraries, however the implementation isn't framework specific and doesn't bloat
-the plugin manager with such code (more on this topic can be found on the Wiki,
-in the
-[Introduction](https://zdharma.org/zinit/wiki/INTRODUCTION/#oh_my_zsh_prezto)).
+4. The plugin manager supports loading Oh My Zsh and Prezto plugins and
+   libraries, however the implementation isn't framework specific and doesn't
+   bloat the plugin manager with such code (more on this topic can be found on
+   the Wiki, in the
+   [Introduction](https://zdharma.org/zinit/wiki/INTRODUCTION/#oh_my_zsh_prezto)).
 
-The system does not use `$FPATH`, loading multiple plugins doesn't clutter
-`$FPATH` with the same number of entries (e.g. `10`, `15` or more). Code is
-immune to `KSH_ARRAYS` and other options typically causing compatibility
-problems.
+5. The system does not use `$FPATH`, loading multiple plugins doesn't clutter
+   `$FPATH` with the same number of entries (e.g. `10`, `15` or more). Code is
+   immune to `KSH_ARRAYS` and other options typically causing compatibility
+   problems.
 
-Zinit supports special, dedicated **packages** that offload the user from
-providing long and complex commands. See the
-[Zsh-Packages](https://github.com/Zsh-Packages) organization for a growing,
-complete list of Zinit packages.
+6. Zinit supports special, dedicated **packages** that offload the user from
+   providing long and complex commands. See the
+   [Zsh-Packages](https://github.com/Zsh-Packages) organization for a growing,
+   complete list of Zinit packages and the [Wiki
+   page](https://zdharma.org/zinit/wiki/Zinit-Packages/) for an article about
+   the feature.
 
-Also, specialized Zinit extensions – called **annexes** – allow to extend the
-plugin manager with new commands, URL-preprocessors (used by e.g.:
-[z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) annex),
-post-install and post-update hooks and much more. See the
-[zinit-zsh](https://github.com/zinit-zsh) organization for a growing, complete
-list of available Zinit extensions and refer to the [Wiki
-article](https://zdharma.org/zinit/wiki/Annexes/) for an introduction on
-creating your own annex.
+7. Also, specialized Zinit extensions – called **annexes** – allow to extend the
+   plugin manager with new commands, URL-preprocessors (used by e.g.:
+   [z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) annex),
+   post-install and post-update hooks and much more. See the
+   [zinit-zsh](https://github.com/zinit-zsh) organization for a growing,
+   complete list of available Zinit extensions and refer to the [Wiki
+   article](https://zdharma.org/zinit/wiki/Annexes/) for an introduction on
+   creating your own annex.
 
 # Zinit Wiki
 
