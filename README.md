@@ -385,6 +385,15 @@ The system does not use `$FPATH`, loading multiple plugins doesn't clutter
 `KSH_ARRAYS`. Completion management functionality is provided to allow user
 to call `compinit` only once in `.zshrc`.
 
+Also, specialized Zinit extensions – called *annexes* – allow to extend the 
+plugin manager with new commands, URL-preprocessors (used by e.g.:
+[z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) annex),
+post-install and post-update hooks and much more. See the
+[zinit-zsh](https://github.com/zinit-zsh) organization for a complete list of
+available Zinit extensions and refer to [Wiki
+article](https://zdharma.org/zinit/wiki/Annexes/) for an introduction into
+creating your own annex.
+
 # Zinit Wiki
 
 The information in this README is complemented by the [Zinit wiki](http://zdharma.org/zinit/wiki/). The README is an introductory overview of Zinit while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of Zinit.
