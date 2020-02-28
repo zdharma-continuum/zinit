@@ -475,6 +475,16 @@ zinit load zdharma/history-search-multi-word
 zinit ice pick"async.zsh" src"pure.zsh"
 zinit light sindresorhus/pure
 
+# A glance at the new for-syntax – load all of the above
+# plugins with a single command. For more information see:
+# https://zdharma.org/zinit/wiki/For-Syntax/
+zinit for \
+    light-mode  zsh-users/zsh-autosuggestions \
+    light-mode  zdharma/fast-syntax-highlighting \
+                zdharma/history-search-multi-word \
+    pick"async.zsh" src"pure.zsh" \
+                sindresorhus/pure
+
 # Binary release in archive, from GitHub-releases page.
 # After automatic unpacking it provides program "fzf".
 zinit ice from"gh-r" as"program"
