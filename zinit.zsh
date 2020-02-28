@@ -981,6 +981,8 @@ function $f {
     local type="$1" id_as="$2" local_dir dirname
     integer exists
 
+    id_as="${ZINIT_ICE[id-as]:-$id_as}"
+
     # Remove leading whitespace and trailing /
     id_as="${${id_as#"${id_as%%[! $'\t']*}"}%/}"
 
