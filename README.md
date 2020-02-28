@@ -398,7 +398,7 @@ providing long and complex commands. See the
 [Zsh-Packages](https://github.com/Zsh-Packages) organization for a growing,
 complete list of Zinit packages.
 
-Also, specialized Zinit extensions – called *annexes* – allow to extend the
+Also, specialized Zinit extensions – called **annexes** – allow to extend the
 plugin manager with new commands, URL-preprocessors (used by e.g.:
 [z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) annex),
 post-install and post-update hooks and much more. See the
