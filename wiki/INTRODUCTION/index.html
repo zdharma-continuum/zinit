@@ -1154,6 +1154,39 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#a_quick_glance_at_the_for-syntax" title="A Quick Glance At The For-Syntax"
+      class="md-nav__link">
+    A Quick Glance At The For-Syntax
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+        
+          <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#turbo-loading_sophisticated_prompts" title="Turbo-Loading Sophisticated Prompts"
       class="md-nav__link">
     Turbo-Loading Sophisticated Prompts
@@ -3365,6 +3398,39 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#a_quick_glance_at_the_for-syntax" title="A Quick Glance At The For-Syntax"
+      class="md-nav__link">
+    A Quick Glance At The For-Syntax
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+        
+          <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#turbo-loading_sophisticated_prompts" title="Turbo-Loading Sophisticated Prompts"
       class="md-nav__link">
     Turbo-Loading Sophisticated Prompts
@@ -3672,10 +3738,10 @@ zinit load halfo/lambda-mod-zsh-theme
 <code>zshrc</code>. It will fire up after c.a. 1 ms of showing of the basic prompt <code>READY &gt;</code>.
 You probably won't load the prompt in such a way, however it is a good example
 in which Turbo can be directly observed.</p>
-<p>The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
+<p>The exclamation mark causes Zinit to reset the prompt after loading plugin – it
 is needed for themes. The same with Prezto prompts, with a longer delay:</p>
-<pre><code class="zsh">zi ice svn silent wait'!1' atload'prompt smiley'
-zi snippet PZT::modules/prompt
+<pre><code class="zsh">zinit ice svn silent wait'!1' atload'prompt smiley'
+zinit snippet PZT::modules/prompt
 </code></pre>
 
 <p>Using <code>zsh-users/zsh-autosuggestions</code> without any drawbacks:</p>
@@ -3694,6 +3760,22 @@ the plugin.</p>
 <p>The ice <code>lucid</code> causes the under-prompt message saying <code>Loaded
 zsh-users/zsh-autosuggestions</code> that normally appears for every Turbo-loaded
 plugin to not show.</p>
+<h3 id="a_quick_glance_at_the_for-syntax">A Quick Glance At The <a href="https://zdharma.org/zinit/wiki/For-Syntax/">For-Syntax</a><a class="headerlink" href="#a_quick_glance_at_the_for-syntax" title="Permanent link">#</a></h3>
+<p>This introduction is based on the classic, two-command syntax (<code>zinit ice …;
+zinit load/light/snippet …</code>) of Zinit. However, there's also available a
+recently added so-called <em>for-syntax</em>. It is a right moment to take a glance at
+it, by rewriting the above autosuggestions invocation using it:</p>
+<pre><code class="zsh">zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
+    zsh-users/zsh-autosuggestions
+</code></pre>
+
+<p>The syntax is a more concise one. The single command will work exactly the same
+as the previous classic-syntax invocation. It also allows solving some typical
+problems when using Zinit, like providing common/default ices for a set of
+plugins or <a href="https://zdharma.org/zinit/wiki/Sourcing-multiple-files/">sourcing multiple
+files</a>. For more
+information refer to the page dedicated to the new syntax
+(<a href="https://zdharma.org/zinit/wiki/For-Syntax/">here</a>).</p>
 <h3 id="turbo-loading_sophisticated_prompts">Turbo-Loading Sophisticated Prompts<a class="headerlink" href="#turbo-loading_sophisticated_prompts" title="Permanent link">#</a></h3>
 <p>For some, mostly advanced themes the initialization of the prompt is being done
 in a <code>precmd</code>-hook, i.e.; in a function that's gets called before each prompt.
