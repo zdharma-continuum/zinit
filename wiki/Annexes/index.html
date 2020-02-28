@@ -2736,7 +2736,7 @@ shows how to:</p>
 </li>
 <li>
 <p>It also shows an useful snippet that will trim the whitespace in array
-    elements.</p>
+    elements (see <code># (4) …</code> in the code).</p>
 </li>
 <li>
 <p>Utilize the last hook argument – the plugin’s/snippet’s containing
@@ -2747,43 +2747,49 @@ shows how to:</p>
 
 <pre><code class="zsh">emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
 
-[[ -z &quot;${ZPLG_ICE[submods]}&quot; ]] &amp;&amp; return 0
+[[ -z &quot;${ZINIT_ICE[submods]}&quot; ]] &amp;&amp; return 0
 
-# (1)
+# (1) – get arguments
 [[ &quot;$1&quot; = plugin ]] &amp;&amp; \
-    local type=&quot;$1&quot; user=&quot;$2&quot; plugin=&quot;$3&quot; id_as=&quot;$4&quot; dir=&quot;$5&quot; || \
-    local type=&quot;$1&quot; url=&quot;$2&quot; id_as=&quot;$3&quot; dir=&quot;$4&quot; # type: snippet
+    local type=&quot;$1&quot; user=&quot;$2&quot; plugin=&quot;$3&quot; id_as=&quot;$4&quot; dir=&quot;$5&quot; hook=&quot;$6&quot; || \
+    local type=&quot;$1&quot; url=&quot;$2&quot; id_as=&quot;$3&quot; dir=&quot;$4&quot; hook=&quot;$6&quot; # type: snippet
+
+# (2) – we're interested only in plugins/snippets
+# which have the submods'' ice in their load command
+[[ -z ${ZINIT_ICE[submods]} ]] &amp;&amp; return 0
 
 local -a mods parts
 local mod
 
-# (2)
-mods=( ${(@s.;.)ZPLG_ICE[submods]} )
+# (3) – process the submods'' ice
+mods=( ${(@s.;.)ZINIT_ICE[submods]} )
 for mod in &quot;${mods[@]}&quot;; do
     parts=( &quot;${(@s:-&gt;:)mod}&quot; )
-    # (3) Remove only leading and trailing whitespace
+    # (4) Remove only leading and trailing whitespace
     parts=( &quot;${parts[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}&quot; )
 
     print &quot;\nCloning submodule: ${parts[1]} to dir: ${parts[2]}&quot;
     parts[1]=&quot;https://github.com/${parts[1]}&quot;
-    # (4) – the: -C &quot;$dir&quot;
+    # (5) – the use of the input argument: `$dir'
     command git -C &quot;$dir&quot; clone --progress &quot;${parts[1]}&quot; &quot;${parts[2]}&quot;
 done
 </code></pre>
 
 <p>The recommended method of creating a hook is to place its body into a file that
-starts with a colon, and also a <code>za-</code> prefix, e.g.  <code>:za-myproject-atclone-hook</code>
-and then to mark it for autoloading via <code>autoload -Uz
-:za-myproject-atclone-hook</code>. Then register the hook (presumably in the
-<code>myproject.plugin.zsh</code> file) with the API call: <code>@zplg-register-annex</code>:</p>
-<pre><code class="zsh">@zplg-register-annex &quot;myproject&quot; hook:atclone \
-    :za-myproject-atclone-handler \
-    :za-myproject-atclone-help-handler \
+starts with a right arrow <code>→</code> (<a href="http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html#namespacing">more
+information</a>,
+and also a <code>za-</code> prefix, e.g. <code>→za-myproject-atclone-hook</code> and then to mark it
+for autoloading via <code>autoload -Uz →za-myproject-atclone-hook</code>. Then register the
+hook (presumably in the <code>myproject.plugin.zsh</code> file) with the API call:
+<code>@zinit-register-annex</code>:</p>
+<pre><code class="zsh">@zinit-register-annex myproject hook:atclone \
+    →za-myproject-atclone-handler \
+    →za-myproject-atclone-help-handler \
     &quot;submods''&quot; # register a new ice-mod: submods''
 </code></pre>
 
 <p>The general syntax of the API call is:</p>
-<pre><code class="zsh">@zplg-register-annex {project-name} \
+<pre><code class="zsh">@zinit-register-annex {project-name} \
     {hook:&lt;hook-type&gt;|subcommand:&lt;new-subcommand-name&gt;} \
     {name-of-the-handler-function} \
     {name-of-the-HELP-handler-function} \
