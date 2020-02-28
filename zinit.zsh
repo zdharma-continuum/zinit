@@ -2097,7 +2097,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     } "$@"
 
                     if [[ -n ${ZINIT_ICE[trigger-load]} || \
-                            ${ZINIT_ICE[wait]} = (\!|)<->(a|b|c|) 
+                          ( ${+ZINIT_ICE[wait]} == 1 &&
+                              ${ZINIT_ICE[wait]} = (\!|)(<->(a|b|c|)|) )
                        ]] && (( !ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]
                     )) {
                         if (( __is_snippet > 0 )) {
