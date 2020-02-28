@@ -3684,12 +3684,13 @@ zinit light zsh-users/zsh-autosuggestions
 </code></pre>
 
 <p>Explanation: Autosuggestions uses <code>precmd</code> hook, which is being called right
-after processing <code>zshrc</code> – <code>precmd</code> hooks are being called <strong>right before the
-first prompt</strong>. Turbo with the empty <code>wait</code> ice will postpone the loading <code>1</code>
-ms after that, so <code>precmd</code> will not be called at that first prompt. This makes
-autosuggestions inactive at the first prompt. <strong>However</strong> the given <code>atload</code>
-Ice-mod fixes this, it calls the same function that <code>precmd</code> would, right after
-loading autosuggestions, resulting in exactly the same behavior of the plugin.</p>
+after processing <code>zshrc</code> – <code>precmd</code> hooks are being called <strong>right before
+displaying each prompt</strong>. Turbo with the empty <code>wait</code> ice will postpone the
+loading <code>1</code> ms after that, so <code>precmd</code> will not be called at that first prompt.
+This makes autosuggestions inactive at the first prompt. <strong>However</strong> the given
+<code>atload</code> Ice-mod fixes this, it calls the same function that <code>precmd</code> would,
+right after loading autosuggestions, resulting in exactly the same behavior of
+the plugin.</p>
 <p>The ice <code>lucid</code> causes the under-prompt message saying <code>Loaded
 zsh-users/zsh-autosuggestions</code> that normally appears for every Turbo-loaded
 plugin to not show.</p>
