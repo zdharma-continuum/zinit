@@ -67,14 +67,14 @@ gives profits in performance of `Zinit`, it is really fast and also compact
 
 ## Some Ice-Modifiers
 
-The command `zinit ice` provides Ice-modifiers for single next command (see
+The command `zinit ice` provides ice-modifiers for single next command (see
 the README subsection
 [**ice-modifiers**](https://github.com/zdharma/zinit#ice-modifiers)). The
 logic is that "ice" is something something that’s added (e.g. to a drink or a
 coffee) – and in the Zinit sense this means that ice is a modifier added to
 the next Zinit command, and also something that melts (so it doesn’t last
 long) – and in the Zinit use it means that the modifier lasts for only single
-next Zinit command. Using one other Ice-modifier "**pick**" user can
+next Zinit command. Using one other ice-modifier "**pick**" user can
 explicitly **select the file to source**:
 
 ``` zsh
@@ -82,17 +82,17 @@ zinit ice svn pick"init.zsh"
 zinit snippet PZT::modules/git
 ```
 
-Content of Ice-modifier is simply put into `"…"`, `'…'`, or `$'…'`. No
-need for `":"` after Ice-mod name (although it's allowed, so as the equal sign
+Content of ice-modifier is simply put into `"…"`, `'…'`, or `$'…'`. No
+need for `":"` after ice-mod name (although it's allowed, so as the equal sign
 `=`, so e.g. `pick="init.zsh"` or `pick=init.zsh` are being correctly
 recognized) . This way editors like `vim` and `emacs` and also
 `zsh-users/zsh-syntax-highlighting` and `zdharma/fast-syntax-highlighting` will
-highlight contents of Ice-modifiers.
+highlight contents of ice-modifiers.
 
 ## as"program"
 
 A plugin might not be a file for sourcing, but a command to be added to `$PATH`.
-To obtain this effect, use Ice-modifier `as` with value `program` (or an alias
+To obtain this effect, use ice-modifier `as` with value `program` (or an alias
 value `command`).
 
 ``` zsh
@@ -102,7 +102,7 @@ zinit light b4b4r07/httpstat
 
 Above command will add plugin directory to `$PATH`, copy file `httpstat.sh` into
 `httpstat` and add execution rights (`+x`) to the file selected with `pick`,
-i.e. to `httpstat`. Other Ice-mod exists, `mv`, which works like `cp` but
+i.e. to `httpstat`. Other ice-mod exists, `mv`, which works like `cp` but
 **moves** a file instead of **copying** it. `mv` is ran before `cp`.
 
 !!!note
@@ -115,7 +115,7 @@ i.e. to `httpstat`. Other Ice-mod exists, `mv`, which works like `cp` but
 
 Copying file is safe for doing later updates – original files of repository are
 unmodified and `Git` will report no conflicts. However, `mv` also can be used,
-if a proper `atpull` (an Ice–modifier ran at **update** of plugin) will be used:
+if a proper `atpull` (an ice–modifier ran at **update** of plugin) will be used:
 
 ``` zsh
 zinit ice as"program" mv"httpstat.sh -> httpstat" \
@@ -137,7 +137,7 @@ into the plugin's contents without blocking the ability to update it with `git`
 
 !!!note
     **For exclamation mark to not be expanded by Zsh in interactive session, use
-    `'…'` not `"…"` to enclose contents of `atpull` Ice-mod.**
+    `'…'` not `"…"` to enclose contents of `atpull` ice-mod.**
 
 ## Snippets-Commands
 
@@ -151,8 +151,8 @@ zinit snippet \
 ```
 
 <a id="on_svn_revert"></a>
-(**\*\***) Snippets also support `atpull` Ice-mod, so it’s possible to do e.g.
-`atpull'!svn revert'`. There’s also `atinit` Ice-mod, executed before each
+(**\*\***) Snippets also support `atpull` ice-mod, so it’s possible to do e.g.
+`atpull'!svn revert'`. There’s also `atinit` ice-mod, executed before each
 loading of plugin or snippet.
 
 ## Snippets-Completions
@@ -260,7 +260,7 @@ Snippets too have completions installed by default, like plugins.
 
 ## Turbo Mode (Zsh \>= 5.3)
 
-The Ice-mod `wait` allows the user postponing loading of a plugin to the moment
+The ice-mod `wait` allows the user postponing loading of a plugin to the moment
 when the processing of `.zshrc` is finished and the first prompt is being shown.
 It is like Windows – during startup, it shows desktop even though it still loads
 data in background. This has drawbacks, but is for sure better than blank screen
@@ -305,7 +305,7 @@ after processing `zshrc` – `precmd` hooks are being called **right before
 displaying each prompt**. Turbo with the empty `wait` ice will postpone the
 loading `1` ms after that, so `precmd` will not be called at that first prompt.
 This makes autosuggestions inactive at the first prompt. **However** the given
-`atload` Ice-mod fixes this, it calls the same function that `precmd` would,
+`atload` ice-mod fixes this, it calls the same function that `precmd` would,
 right after loading autosuggestions, resulting in exactly the same behavior of
 the plugin.
 
