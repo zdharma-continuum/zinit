@@ -260,11 +260,11 @@ Snippets too have completions installed by default, like plugins.
 
 ## Turbo Mode (Zsh \>= 5.3)
 
-The Ice-mod `wait` allows you to postpone loading of a plugin to the moment when
-processing of `.zshrc` is finished and prompt is being shown. It is like Windows
-– during startup, it shows desktop even though it still loads data in
-background. This has drawbacks, but is for sure better than blank screen for 10
-minutes. And here, in Zinit, there are no drawbacks of this approach – no
+The Ice-mod `wait` allows the user postponing loading of a plugin to the moment
+when processing of `.zshrc` is finished and the first prompt is being shown. It
+is like Windows – during startup, it shows desktop even though it still loads
+data in background. This has drawbacks, but is for sure better than blank screen
+for 10 minutes. And here, in Zinit, there are no drawbacks of this approach – no
 lags, freezes, etc. – the command line is fully usable while the plugins are
 being loaded, for any number of plugins. 
 
@@ -280,11 +280,10 @@ zinit ice wait'!0'
 zinit load halfo/lambda-mod-zsh-theme
 ```
 
-This sets plugin `psprint/zprompts` to be loaded `0` seconds after `zshrc`. It
-will fire up after c.a. 1 ms of showing of the basic prompt `READY >`. I’ve
-started to use this method of setting up a prompt 2 years ago now and I run it
-without any problems. It is also sufficient to provide just the word
-`wait`, it’ll work like `wait'0'` (and `wait'!'` like `wait'!0'`).
+This sets plugin `halfo/lambda-mod-zsh-theme` to be loaded `0` seconds after
+`zshrc`. It will fire up after c.a. 1 ms of showing of the basic prompt `READY
+>`. You probably won't load the prompt in such a way, however it is a good
+example in which Turbo can be directly observed.
 
 The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
 is needed for themes. The same with Prezto prompts, with a longer delay:
@@ -302,12 +301,12 @@ zinit light zsh-users/zsh-autosuggestions
 ```
 
 Explanation: Autosuggestions uses `precmd` hook, which is being called right
-after processing `zshrc` (right before the first prompt). Turbo mode will wait
-`1` second after that, so `precmd` will not be installed and thus not called at
-that first prompt. This makes autosuggestions inactive at the first prompt.
-**However** the given `atload` Ice-mod fixes this, it calls the same function
-that `precmd` would, right after loading autosuggestions, resulting in exactly
-the same behavior of the plugin.
+after processing `zshrc` – `precmd` hooks are being called **right before the
+first prompt**. Turbo with the empty `wait` ice will postpone the loading `1`
+ms after that, so `precmd` will not be called at that first prompt. This makes
+autosuggestions inactive at the first prompt. **However** the given `atload`
+Ice-mod fixes this, it calls the same function that `precmd` would, right after
+loading autosuggestions, resulting in exactly the same behavior of the plugin.
 
 The ice `lucid` causes the under-prompt message saying `Loaded
 zsh-users/zsh-autosuggestions` that normally appears for every Turbo-loaded
