@@ -14,7 +14,7 @@ and much more.
 
 ## Basic Plugin Loading
 
-``` zsh
+```zsh
 zinit load zdharma/history-search-multi-word
 zinit light zsh-users/zsh-syntax-highlighting
 ```
@@ -35,14 +35,14 @@ To load Oh My Zsh and Prezto plugins, use `snippet` feature. Snippets are single
 files downloaded by `curl`, `wget`, etc. (an automatic detection of the download
 tool is being performed) directly from URL. For example:
 
-``` zsh
+```zsh
 zinit snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
 zinit snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
 ```
 
 Also, for Oh My Zsh and Prezto, you can use `OMZ::` and `PZT::` shorthands:
 
-``` zsh
+```zsh
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit snippet PZT::modules/helper/init.zsh
 ```
@@ -52,7 +52,7 @@ allows to load snippets that are multi-file (for example, a Prezto module can
 consist of two or more files, e.g. `init.zsh` and `alias.zsh`). Default files
 that will be sourced are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`:
 
-``` zsh
+```zsh
 # URL points to directory
 zinit ice svn
 zinit snippet PZT::modules/docker
@@ -77,7 +77,7 @@ long) – and in the Zinit use it means that the modifier lasts for only single
 next Zinit command. Using one other ice-modifier "**pick**" user can
 explicitly **select the file to source**:
 
-``` zsh
+```zsh
 zinit ice svn pick"init.zsh"
 zinit snippet PZT::modules/git
 ```
@@ -95,7 +95,7 @@ A plugin might not be a file for sourcing, but a command to be added to `$PATH`.
 To obtain this effect, use ice-modifier `as` with value `program` (or an alias
 value `command`).
 
-``` zsh
+```zsh
 zinit ice as"program" cp"httpstat.sh -> httpstat" pick"httpstat"
 zinit light b4b4r07/httpstat
 ```
@@ -117,7 +117,7 @@ Copying file is safe for doing later updates – original files of repository a
 unmodified and `Git` will report no conflicts. However, `mv` also can be used,
 if a proper `atpull` (an ice–modifier ran at **update** of plugin) will be used:
 
-``` zsh
+```zsh
 zinit ice as"program" mv"httpstat.sh -> httpstat" \
       pick"httpstat" atpull'!git reset --hard'
 zinit light b4b4r07/httpstat
@@ -143,7 +143,7 @@ into the plugin's contents without blocking the ability to update it with `git`
 
 Commands can also be added to `$PATH` using **snippets**. For example:
 
-``` zsh
+```zsh
 zinit ice mv"httpstat.sh -> httpstat" \
         pick"httpstat" as"program"
 zinit snippet \
@@ -160,7 +160,7 @@ loading of plugin or snippet.
 By using the `as''` ice-mod with value `completion` you can point the `snippet`
 subcommand directly to a completion file, e.g.:
 
-``` zsh
+```zsh
 zinit ice as"completion"
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 ```
@@ -170,7 +170,7 @@ zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_
 Zinit allows to disable and enable each completion in every plugin. Try
 installing a popular plugin that provides completions:
 
-``` zsh
+```zsh
 zinit ice blockf
 zinit light zsh-users/zsh-completions
 ```
@@ -181,7 +181,7 @@ number of directories to `$fpath`). Zinit will automatically **install**
 completions of a newly downloaded plugin. To uninstall the completions and
 install them again, you would use:
 
-``` zsh
+```zsh
 zinit cuninstall zsh-users/zsh-completions   # uninstall
 zinit creinstall zsh-users/zsh-completions   # install
 ```
@@ -194,7 +194,7 @@ zinit creinstall zsh-users/zsh-completions   # install
 To see what completions **all** plugins provide, in tabular formatting and with
 name of each plugin, use:
 
-``` zsh
+```zsh
 zi clist
 ```
 
@@ -202,7 +202,7 @@ This command is specially adapted for plugins like `zsh-users/zsh-completions`,
 which provide many completions – listing will have `3` completions per line (so
 that a smaller number of terminal pages will be occupied) like this:
 
-``` zsh
+```zsh
 ...
 atach, bitcoin-cli, bower    zsh-users/zsh-completions
 bundle, caffeinate, cap      zsh-users/zsh-completions
@@ -213,7 +213,7 @@ cask, cf, chattr             zsh-users/zsh-completions
 You can show more completions per line by providing an **argument** to `clist`,
 e.g. `zi clist 6`, will show:
 
-``` zsh
+```zsh
 ...
 bundle, caffeinate, cap, cask, cf, chattr      zsh-users/zsh-completions
 cheat, choc, cmake, coffee, column, composer   zsh-users/zsh-completions
@@ -246,7 +246,7 @@ This sums up to complete control over completions.
 In general, to use **subdirectories** of Github projects as snippets add
 `/trunk/{path-to-dir}` to URL, for example:
 
-``` zsh
+```zsh
 zinit ice svn
 zinit snippet https://github.com/zsh-users/zsh-completions/trunk/src
 
@@ -274,7 +274,7 @@ being loaded, for any number of plugins.
 Zsh 5.3 or greater is required. To use this Turbo mode add `wait` ice to the
 target plugin in one of following ways:
 
-``` zsh
+```zsh
 PS1="READY > "
 zinit ice wait'!0' 
 zinit load halfo/lambda-mod-zsh-theme
@@ -285,17 +285,17 @@ This sets plugin `halfo/lambda-mod-zsh-theme` to be loaded `0` seconds after
 You probably won't load the prompt in such a way, however it is a good example
 in which Turbo can be directly observed.
 
-The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
+The exclamation mark causes Zinit to reset the prompt after loading plugin – it
 is needed for themes. The same with Prezto prompts, with a longer delay:
 
-``` zsh
-zi ice svn silent wait'!1' atload'prompt smiley'
-zi snippet PZT::modules/prompt
+```zsh
+zinit ice svn silent wait'!1' atload'prompt smiley'
+zinit snippet PZT::modules/prompt
 ```
 
 Using `zsh-users/zsh-autosuggestions` without any drawbacks:
 
-``` zsh
+```zsh
 zinit ice wait lucid atload'_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
 ```
@@ -312,6 +312,26 @@ the plugin.
 The ice `lucid` causes the under-prompt message saying `Loaded
 zsh-users/zsh-autosuggestions` that normally appears for every Turbo-loaded
 plugin to not show.
+
+### A Quick Glance At The [For-Syntax](https://zdharma.org/zinit/wiki/For-Syntax/)
+
+This introduction is based on the classic, two-command syntax (`zinit ice …;
+zinit load/light/snippet …`) of Zinit. However, there's also available a
+recently added so-called *for-syntax*. It is a right moment to take a glance at
+it, by rewriting the above autosuggestions invocation using it:
+
+```zsh
+zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
+    zsh-users/zsh-autosuggestions
+```
+
+The syntax is a more concise one. The single command will work exactly the same
+as the previous classic-syntax invocation. It also allows solving some typical
+problems when using Zinit, like providing common/default ices for a set of
+plugins or [sourcing multiple
+files](https://zdharma.org/zinit/wiki/Sourcing-multiple-files/). For more
+information refer to the page dedicated to the new syntax
+([here](https://zdharma.org/zinit/wiki/For-Syntax/)).
 
 ### Turbo-Loading Sophisticated Prompts
 
@@ -351,7 +371,7 @@ might be useful for the multi-prompt setup described next.
 Ices `load` and `unload` allow to define when you want plugins active or
 unactive. For example:
 
-``` zsh
+```zsh
 # Load when in ~/tmp
 
 zinit ice load'![[ $PWD = */tmp* ]]' unload'![[ $PWD != */tmp* ]]' \
