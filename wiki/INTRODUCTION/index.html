@@ -3650,11 +3650,11 @@ zinit ice svn; zinit snippet PZT::modules/docker
 
 <p>Snippets too have completions installed by default, like plugins.</p>
 <h2 id="turbo_mode_zsh_62_53">Turbo Mode (Zsh >= 5.3)<a class="headerlink" href="#turbo_mode_zsh_62_53" title="Permanent link">#</a></h2>
-<p>The Ice-mod <code>wait</code> allows you to postpone loading of a plugin to the moment when
-processing of <code>.zshrc</code> is finished and prompt is being shown. It is like Windows
-– during startup, it shows desktop even though it still loads data in
-background. This has drawbacks, but is for sure better than blank screen for 10
-minutes. And here, in Zinit, there are no drawbacks of this approach – no
+<p>The Ice-mod <code>wait</code> allows the user postponing loading of a plugin to the moment
+when processing of <code>.zshrc</code> is finished and the first prompt is being shown. It
+is like Windows – during startup, it shows desktop even though it still loads
+data in background. This has drawbacks, but is for sure better than blank screen
+for 10 minutes. And here, in Zinit, there are no drawbacks of this approach – no
 lags, freezes, etc. – the command line is fully usable while the plugins are
 being loaded, for any number of plugins. </p>
 <div class="admonition note">
@@ -3668,11 +3668,12 @@ zinit ice wait'!0'
 zinit load halfo/lambda-mod-zsh-theme
 </code></pre>
 
-<p>This sets plugin <code>psprint/zprompts</code> to be loaded <code>0</code> seconds after <code>zshrc</code>. It
-will fire up after c.a. 1 ms of showing of the basic prompt <code>READY &gt;</code>. I’ve
-started to use this method of setting up a prompt 2 years ago now and I run it
-without any problems. It is also sufficient to provide just the word
-<code>wait</code>, it’ll work like <code>wait'0'</code> (and <code>wait'!'</code> like <code>wait'!0'</code>).</p>
+<p>This sets plugin <code>halfo/lambda-mod-zsh-theme</code> to be loaded <code>0</code> seconds after
+<code>zshrc</code>. It will fire up after c.a. 1 ms of showing of the basic prompt `READY</p>
+<blockquote>
+<p>`. You probably won't load the prompt in such a way, however it is a good
+example in which Turbo can be directly observed.</p>
+</blockquote>
 <p>The exclamation mark causes Zinit to reset-prompt after loading plugin, so it
 is needed for themes. The same with Prezto prompts, with a longer delay:</p>
 <pre><code class="zsh">zi ice svn silent wait'!1' atload'prompt smiley'
@@ -3685,12 +3686,12 @@ zinit light zsh-users/zsh-autosuggestions
 </code></pre>
 
 <p>Explanation: Autosuggestions uses <code>precmd</code> hook, which is being called right
-after processing <code>zshrc</code> (right before the first prompt). Turbo mode will wait
-<code>1</code> second after that, so <code>precmd</code> will not be installed and thus not called at
-that first prompt. This makes autosuggestions inactive at the first prompt.
-<strong>However</strong> the given <code>atload</code> Ice-mod fixes this, it calls the same function
-that <code>precmd</code> would, right after loading autosuggestions, resulting in exactly
-the same behavior of the plugin.</p>
+after processing <code>zshrc</code> – <code>precmd</code> hooks are being called <strong>right before the
+first prompt</strong>. Turbo with the empty <code>wait</code> ice will postpone the loading <code>1</code>
+ms after that, so <code>precmd</code> will not be called at that first prompt. This makes
+autosuggestions inactive at the first prompt. <strong>However</strong> the given <code>atload</code>
+Ice-mod fixes this, it calls the same function that <code>precmd</code> would, right after
+loading autosuggestions, resulting in exactly the same behavior of the plugin.</p>
 <p>The ice <code>lucid</code> causes the under-prompt message saying <code>Loaded
 zsh-users/zsh-autosuggestions</code> that normally appears for every Turbo-loaded
 plugin to not show.</p>
