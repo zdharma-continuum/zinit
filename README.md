@@ -368,30 +368,38 @@ To see the full history check [the changelog](CHANGELOG.md).
 Zinit is an elastic and fast Zshell plugin manager that will allow you to
 install everything from GitHub and other sites.
 
-Zinit is currently the only plugin manager out there that has Turbo mode which yields
-**50-80% faster Zsh startup!** (i.e.: the shell will start up to **5** times faster!). Check
-out a speed comparison with other popular plugin managers
-[here](https://github.com/zdharma/pm-perf-test).
+Zinit is currently the only plugin manager out there that provides Turbo mode
+which yields **50-80% faster Zsh startup!** (i.e.: the shell will start up to
+**5** times faster!). Check out a speed comparison with other popular plugin
+managers [here](https://github.com/zdharma/pm-perf-test).
 
 Zinit gives **reports** from plugin load describing what aliases, functions,
 bindkeys, Zle widgets, zstyles, completions, variables, `PATH` and `FPATH`
-elements a plugin has set up.
+elements a plugin has set up. This allows to quickly familiarize oneself with
+a new plugin and provides rich and easy to digest information which might be
+helpful on various occasions.
 
-Supported is **unloading** of plugin and ability to list, (un)install and
-selectively disable, enable plugin's completions.
+Supported is unloading of plugin and ability to list, (un)install and
+**selectively disable**, **enable** plugin's completions.
+
+The plugin manager supports loading Oh My Zsh and Prezto plugins and
+libraries, however the implementation isn't framework specific and doesn't bloat
+the plugin manager with such code (more on this topic can be found on the Wiki,
+in the
+[Introduction](https://zdharma.org/zinit/wiki/INTRODUCTION/#oh_my_zsh_prezto)).
 
 The system does not use `$FPATH`, loading multiple plugins doesn't clutter
-`$FPATH` with the same number of entries (e.g. `10`). Code is immune to
-`KSH_ARRAYS`. Completion management functionality is provided to allow user
-to call `compinit` only once in `.zshrc`.
+`$FPATH` with the same number of entries (e.g. `10`, `15` or more). Code is
+immune to `KSH_ARRAYS` and other options typically causing compatibility
+problems.
 
-Also, specialized Zinit extensions – called *annexes* – allow to extend the 
+Also, specialized Zinit extensions – called *annexes* – allow to extend the
 plugin manager with new commands, URL-preprocessors (used by e.g.:
 [z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) annex),
 post-install and post-update hooks and much more. See the
-[zinit-zsh](https://github.com/zinit-zsh) organization for a complete list of
-available Zinit extensions and refer to [Wiki
-article](https://zdharma.org/zinit/wiki/Annexes/) for an introduction into
+[zinit-zsh](https://github.com/zinit-zsh) organization for a growing, complete
+list of available Zinit extensions and refer to the [Wiki
+article](https://zdharma.org/zinit/wiki/Annexes/) for an introduction on
 creating your own annex.
 
 # Zinit Wiki
