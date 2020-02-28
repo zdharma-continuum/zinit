@@ -3495,28 +3495,28 @@ avoid code dedicated to Oh My Zsh and Prezto, and also to other frameworks. This
 gives profits in performance of <code>Zinit</code>, it is really fast and also compact
 (causing low memory footprint and short loading time).</p>
 <h2 id="some_ice-modifiers">Some Ice-Modifiers<a class="headerlink" href="#some_ice-modifiers" title="Permanent link">#</a></h2>
-<p>The command <code>zinit ice</code> provides Ice-modifiers for single next command (see
+<p>The command <code>zinit ice</code> provides ice-modifiers for single next command (see
 the README subsection
 <a href="https://github.com/zdharma/zinit#ice-modifiers"><strong>ice-modifiers</strong></a>). The
 logic is that "ice" is something something that’s added (e.g. to a drink or a
 coffee) – and in the Zinit sense this means that ice is a modifier added to
 the next Zinit command, and also something that melts (so it doesn’t last
 long) – and in the Zinit use it means that the modifier lasts for only single
-next Zinit command. Using one other Ice-modifier "<strong>pick</strong>" user can
+next Zinit command. Using one other ice-modifier "<strong>pick</strong>" user can
 explicitly <strong>select the file to source</strong>:</p>
 <pre><code class="zsh">zinit ice svn pick&quot;init.zsh&quot;
 zinit snippet PZT::modules/git
 </code></pre>
 
-<p>Content of Ice-modifier is simply put into <code>"…"</code>, <code>'…'</code>, or <code>$'…'</code>. No
-need for <code>":"</code> after Ice-mod name (although it's allowed, so as the equal sign
+<p>Content of ice-modifier is simply put into <code>"…"</code>, <code>'…'</code>, or <code>$'…'</code>. No
+need for <code>":"</code> after ice-mod name (although it's allowed, so as the equal sign
 <code>=</code>, so e.g. <code>pick="init.zsh"</code> or <code>pick=init.zsh</code> are being correctly
 recognized) . This way editors like <code>vim</code> and <code>emacs</code> and also
 <code>zsh-users/zsh-syntax-highlighting</code> and <code>zdharma/fast-syntax-highlighting</code> will
-highlight contents of Ice-modifiers.</p>
+highlight contents of ice-modifiers.</p>
 <h2 id="asprogram">as"program"<a class="headerlink" href="#asprogram" title="Permanent link">#</a></h2>
 <p>A plugin might not be a file for sourcing, but a command to be added to <code>$PATH</code>.
-To obtain this effect, use Ice-modifier <code>as</code> with value <code>program</code> (or an alias
+To obtain this effect, use ice-modifier <code>as</code> with value <code>program</code> (or an alias
 value <code>command</code>).</p>
 <pre><code class="zsh">zinit ice as&quot;program&quot; cp&quot;httpstat.sh -&gt; httpstat&quot; pick&quot;httpstat&quot;
 zinit light b4b4r07/httpstat
@@ -3524,7 +3524,7 @@ zinit light b4b4r07/httpstat
 
 <p>Above command will add plugin directory to <code>$PATH</code>, copy file <code>httpstat.sh</code> into
 <code>httpstat</code> and add execution rights (<code>+x</code>) to the file selected with <code>pick</code>,
-i.e. to <code>httpstat</code>. Other Ice-mod exists, <code>mv</code>, which works like <code>cp</code> but
+i.e. to <code>httpstat</code>. Other ice-mod exists, <code>mv</code>, which works like <code>cp</code> but
 <strong>moves</strong> a file instead of <strong>copying</strong> it. <code>mv</code> is ran before <code>cp</code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -3536,7 +3536,7 @@ PZT::modules/osx</code> (for example).</strong></p>
 <h2 id="atpull">atpull"…"<a class="headerlink" href="#atpull" title="Permanent link">#</a></h2>
 <p>Copying file is safe for doing later updates – original files of repository are
 unmodified and <code>Git</code> will report no conflicts. However, <code>mv</code> also can be used,
-if a proper <code>atpull</code> (an Ice–modifier ran at <strong>update</strong> of plugin) will be used:</p>
+if a proper <code>atpull</code> (an ice–modifier ran at <strong>update</strong> of plugin) will be used:</p>
 <pre><code class="zsh">zinit ice as&quot;program&quot; mv&quot;httpstat.sh -&gt; httpstat&quot; \
       pick&quot;httpstat&quot; atpull'!git reset --hard'
 zinit light b4b4r07/httpstat
@@ -3556,7 +3556,7 @@ into the plugin's contents without blocking the ability to update it with <code>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><strong>For exclamation mark to not be expanded by Zsh in interactive session, use
-<code>'…'</code> not <code>"…"</code> to enclose contents of <code>atpull</code> Ice-mod.</strong></p>
+<code>'…'</code> not <code>"…"</code> to enclose contents of <code>atpull</code> ice-mod.</strong></p>
 </div>
 <h2 id="snippets-commands">Snippets-Commands<a class="headerlink" href="#snippets-commands" title="Permanent link">#</a></h2>
 <p>Commands can also be added to <code>$PATH</code> using <strong>snippets</strong>. For example:</p>
@@ -3567,8 +3567,8 @@ zinit snippet \
 </code></pre>
 
 <p><a id="on_svn_revert"></a>
-(<strong>**</strong>) Snippets also support <code>atpull</code> Ice-mod, so it’s possible to do e.g.
-<code>atpull'!svn revert'</code>. There’s also <code>atinit</code> Ice-mod, executed before each
+(<strong>**</strong>) Snippets also support <code>atpull</code> ice-mod, so it’s possible to do e.g.
+<code>atpull'!svn revert'</code>. There’s also <code>atinit</code> ice-mod, executed before each
 loading of plugin or snippet.</p>
 <h2 id="snippets-completions">Snippets-Completions<a class="headerlink" href="#snippets-completions" title="Permanent link">#</a></h2>
 <p>By using the <code>as''</code> ice-mod with value <code>completion</code> you can point the <code>snippet</code>
@@ -3650,7 +3650,7 @@ zinit ice svn; zinit snippet PZT::modules/docker
 
 <p>Snippets too have completions installed by default, like plugins.</p>
 <h2 id="turbo_mode_zsh_62_53">Turbo Mode (Zsh >= 5.3)<a class="headerlink" href="#turbo_mode_zsh_62_53" title="Permanent link">#</a></h2>
-<p>The Ice-mod <code>wait</code> allows the user postponing loading of a plugin to the moment
+<p>The ice-mod <code>wait</code> allows the user postponing loading of a plugin to the moment
 when the processing of <code>.zshrc</code> is finished and the first prompt is being shown.
 It is like Windows – during startup, it shows desktop even though it still loads
 data in background. This has drawbacks, but is for sure better than blank screen
@@ -3688,7 +3688,7 @@ after processing <code>zshrc</code> – <code>precmd</code> hooks are being call
 displaying each prompt</strong>. Turbo with the empty <code>wait</code> ice will postpone the
 loading <code>1</code> ms after that, so <code>precmd</code> will not be called at that first prompt.
 This makes autosuggestions inactive at the first prompt. <strong>However</strong> the given
-<code>atload</code> Ice-mod fixes this, it calls the same function that <code>precmd</code> would,
+<code>atload</code> ice-mod fixes this, it calls the same function that <code>precmd</code> would,
 right after loading autosuggestions, resulting in exactly the same behavior of
 the plugin.</p>
 <p>The ice <code>lucid</code> causes the under-prompt message saying <code>Loaded
