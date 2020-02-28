@@ -1870,9 +1870,11 @@ ZINIT[EXTENDED_GLOB]=""
             local -a config
             config=( ${(f)"$(<$repo/.git/config)"} )
             if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
-                (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                    [[ $pd = _local---* ]] && print -- "\nSkipping local plugin $REPLY" || \
+                if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                    [[ $pd = _local---* ]] && \
+                        print -- "\nSkipping local plugin $REPLY" || \
                         print "\n$REPLY doesn't have a remote set, will not fetch"
+                }
                 continue
             fi
         fi
