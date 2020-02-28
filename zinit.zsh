@@ -2089,12 +2089,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 
                     () {
                         setopt localoptions extendedglob
-                        [[ $__is_snippet -ge 0 ]] && {
-                            [[ -n ${ZINIT_ICE[is-snippet]+1} ||
-                              ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))*
-                            ]] && \
-                                __is_snippet=1 || \
-                                __is_snippet=0
+                        if [[ $__is_snippet -ge 0 &&
+                            ( -n ${ZINIT_ICE[is-snippet]+1} ||
+                            ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* )
+                        ]] {
+                            __is_snippet=1
                         }
                     } "$@"
 
