@@ -1928,7 +1928,7 @@ ZINIT[EXTENDED_GLOB]=""
 
         PUAssocArray[$!]=$PUFILE
 
-        .zinit-wait-for-update-jobs
+        .zinit-wait-for-update-jobs snippets
     }
 
     counter=0
@@ -1983,7 +1983,7 @@ ZINIT[EXTENDED_GLOB]=""
 
         PUAssocArray[$!]=$PUFILE
 
-        .zinit-wait-for-update-jobs
+        .zinit-wait-for-update-jobs plugins
 
     }
     # Shouldn't happen
@@ -1992,6 +1992,7 @@ ZINIT[EXTENDED_GLOB]=""
 # ]]]
 # FUNCTION: .zinit-wait-for-update-jobs [[[
 .zinit-wait-for-update-jobs() {
+    local tpe=$1
     if (( counter > ICE_OPTS[value] || main_counter == 0 )) {
         wait ${(k)PUAssocArray}
         local ind_file
@@ -2004,7 +2005,8 @@ ZINIT[EXTENDED_GLOB]=""
         PUAssocArray=()
     } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
         print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
-            "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs...%f"
+            "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs" \
+            "($ZINIT[col-msg2]%F{191}$tpe$ZINIT[col-obj])...%f%b"
     }
 }
 # ]]]
