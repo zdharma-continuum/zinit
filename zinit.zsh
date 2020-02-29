@@ -2036,8 +2036,8 @@ completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrac
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#z-annex subcommand:}"}}) || $1 = (load|light|snippet) ]] && \
     {
-        integer  __is_snippet
         if [[ $1 = (load|light|snippet) ]]; then
+            integer  __is_snippet
             # Classic syntax -> simulate a call through the for-syntax
             () {
                 setopt localoptions extendedglob
@@ -2087,14 +2087,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 
                     [[ ${ZINIT_ICE[id-as]} = auto ]] && ZINIT_ICE[id-as]="${1:t}"
 
+                    integer  __is_snippet=0
                     () {
                         setopt localoptions extendedglob
-                        [[ $__is_snippet -ge 0 ]] && {
-                            [[ -n ${ZINIT_ICE[is-snippet]+1} ||
-                              ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))*
-                            ]] && \
-                                __is_snippet=1 || \
-                                __is_snippet=0
+                        if [[ $__is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ) ]] {
+                            __is_snippet=1
                         }
                     } "$@"
 
