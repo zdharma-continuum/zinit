@@ -720,7 +720,7 @@ ZINIT[EXTENDED_GLOB]=""
             lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
             builtin print -rl -- "${lines[@]}" | .zinit-pager
         fi
-        command git pull --no-stat;
+        command git pull --no-stat
     )
     builtin print "Compiling Zinit (zcompile)..."
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
@@ -1602,12 +1602,7 @@ ZINIT[EXTENDED_GLOB]=""
                   )
                   [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                   ZINIT_ICE=()
-                  (( !skip_pull )) && {
-                      command git pull --no-stat
-                      if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
-                          print
-                      }
-                  }
+                  (( !skip_pull )) && command git pull --no-stat
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
             )
