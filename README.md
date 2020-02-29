@@ -411,7 +411,10 @@ install everything from GitHub and other sites. Its characteristics are:
 
 # Zinit Wiki
 
-The information in this README is complemented by the [Zinit wiki](http://zdharma.org/zinit/wiki/). The README is an introductory overview of Zinit while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of Zinit.
+The information in this README is complemented by the [Zinit
+wiki](http://zdharma.org/zinit/wiki/). The README is an introductory overview of
+Zinit while the wiki gives a complete information with examples. Make sure to
+read it to get the most out of Zinit.
 
 # Installation
 
