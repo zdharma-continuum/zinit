@@ -1904,7 +1904,7 @@ atdelete|git|verbose|param|extract${~exts})(*)
     [[ -o ksharrays ]] && correct=1
 
     if [[ -n $1 ]] {
-        if [[ ${#ZINIT_RUN} -eq 0 || $1 = following ]]  {
+        if [[ ${#ZINIT_RUN} -le 1 || $1 = following ]]  {
             () {
                 builtin emulate -L zsh
                 builtin setopt extendedglob
