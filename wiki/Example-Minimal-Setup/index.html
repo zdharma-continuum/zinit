@@ -2346,51 +2346,49 @@
                 
                 
                 <h1 id="example_minimal_setup">Example Minimal Setup<a class="headerlink" href="#example_minimal_setup" title="Permanent link">#</a></h1>
-<pre><code class="zsh">zinit ice wait blockf atpull'zinit creinstall -q .'
-zinit light zsh-users/zsh-completions
-
-zinit ice wait atinit&quot;zpcompinit; zpcdreplay&quot;
-zinit light zdharma/fast-syntax-highlighting
-
-zinit ice wait atload&quot;_zsh_autosuggest_start&quot;
-zinit light zsh-users/zsh-autosuggestions
+<pre><code class="zsh">zinit wait lucid light-mode for \
+  atinit&quot;zicompinit; zicdreplay&quot; \
+      zdharma/fast-syntax-highlighting \
+  atload&quot;_zsh_autosuggest_start&quot; \
+      zsh-users/zsh-autosuggestions \
+  blockf atpull'zinit creinstall -q .' \
+      zinit light zsh-users/zsh-completions
 </code></pre>
 
 <ul>
-<li><code>light</code> – load the plugin in <code>light</code> mode, in which the tracking of plugin
-   (i.e. activity report gathering, accessible via the <code>zinit report
+<li><code>wait</code> – load 0 seconds (about 5 ms exactly) after prompt (<strong>Turbo mode</strong>),</li>
+<li><code>lucid</code> – silence the under-prompt messages ("<code>Loaded {name of the plugin}</code>"),</li>
+<li><code>light-mode</code> – load the plugin in <code>light</code> mode, in which the tracking of
+   plugin (i.e. activity report gathering, accessible via the <code>zinit report
    {plugin-spec}</code> subcommand) is being disabled; note that for Turbo mode, the
-   performance gains are actually <code>0</code>, so in this mode you can load all plugins
-   with the tracking, i.e. by using <code>zinit ice wait'0'; zinit load
-   {plugin-spec}</code> commands,</li>
-<li><code>wait</code> – load 0 seconds (about 5 ms exactly) after prompt,</li>
+   performance gains are almost <code>0</code>, so in this mode you can load all plugins
+   with the tracking, i.e.: the <code>light-mode</code> ice can be removed from the
+   command, </li>
 <li><code>atpull''</code> – execute after updating the plugin – the command in the ice will
    install any new completions,</li>
 <li><code>atinit''</code> – execute code before loading plugin,</li>
 <li><code>atload''</code> – execute code after loading plugin,</li>
-<li><code>zpcompinit</code> – equals to <code>autoload compinit; compinit</code>,</li>
-<li><code>zpcdreplay</code> – execute <code>compdef …</code> calls that plugins did – they were
-   recorded, so that <code>compinit</code> can be called later (it provides the <code>compdef</code>
-   function, so it must be ran before issuing <code>compdef</code>s),</li>
+<li><code>zicompinit</code> – equals to <code>autoload compinit; compinit</code>,</li>
+<li><code>zicdreplay</code> – execute <code>compdef …</code> calls that plugins did – they were
+   recorded, so that <code>compinit</code> can be called later (<code>compinit</code> provides the
+   <code>compdef</code> function, so it must be ran before issuing the taken-over
+   <code>compdef</code>s with <code>zicdreplay</code>),</li>
 <li>syntax-highlighting plugins (like
    <a href="https://github.com/zdharma/fast-syntax-highlighting"><strong>fast-syntax-highlighting</strong></a>
    or
    <a href="https://github.com/zsh-users/zsh-syntax-highlighting"><strong>zsh-syntax-highlighting</strong></a>)
-   expect to be loaded last, even after the completion initialization (i.e.
-   <code>compinit</code> function), hence the <code>atinit''</code>, which will load <code>compinit</code> right
-   before the plugin,</li>
-<li>however the true last-loaded plugin is the
-   <a href="https://github.com/zsh-users/zsh-autosuggestions"><strong>zsh-users/zsh-autosuggestions</strong></a>,
-   because it runs a function in an <code>precmd</code> hook, i.e. right before first
-   prompt,</li>
-<li>the <code>atinit</code> of the plugin runs also <code>zpcdreplay</code> (i.e.
-   "<em>zinit-compdef-replay</em>"), because after <code>compinit</code> is loaded, the
-   <code>compdef</code> function becomes available, and one can re-run the all earlier
-   automatically-caught<code>compdef</code> calls, loosing nothing from the original
-   behavior,</li>
-<li>add <code>lucid</code> ice-mod to silence the under-prompt messages.</li>
+   theoretically expect to be loaded last, even after the completion
+   initialization (i.e.  <code>compinit</code> function), however, in practice, you just
+   have to ensure that such plugin is loaded after plugins that are issuing
+   <code>compdef</code>s – which basically means completions that aren't using the
+   underscore-starting function file; the completion initialization still has to
+   be performed before syntax-highlighting plugin, hence the <code>atinit''</code> ice,
+   which will load <code>compinit</code> right before loading the plugin,</li>
+<li>the syntax-highlighting and suggestions plugins are loaded early for a better
+   user experience.</li>
 </ul>
-<p>The same setup but without using Turbo mode (i.e. no <code>wait''</code> ice):</p>
+<p>The same setup but without using Turbo mode (i.e. no <code>wait''</code> ice) and without
+the <a href="https://zdharma.org/zinit/wiki/For-Syntax/">for-syntax</a>:</p>
 <pre><code class="zsh">zinit ice blockf atpull'zinit creinstall -q .'
 zinit light zsh-users/zsh-completions
 
@@ -2402,6 +2400,9 @@ zinit light zdharma/fast-syntax-highlighting
 zinit light zsh-users/zsh-autosuggestions
 </code></pre>
 
+<p>Without Turbo the syntax-highlighting plugin can be loaded at the end, as it
+doesn't make any difference (the prompt will appear after loading all objects,
+anyway).</p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
