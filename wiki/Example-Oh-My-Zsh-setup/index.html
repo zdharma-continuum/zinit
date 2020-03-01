@@ -79,6 +79,10 @@
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
     <label class="md-overlay" data-md-component="overlay" for="__drawer"></label>
     
+      <a href="#using_turbo_mode_and_for-syntax" tabindex="1" class="md-skip">
+        Skip to content
+      </a>
+    
     
       <!--
   Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
@@ -1322,12 +1326,137 @@
 
     <!-- Render table of contents, if not empty -->
     
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Example Oh My Zsh Setup
+      </label>
+    
     <a href="./" title="Example Oh My Zsh Setup"
         class="md-nav__link md-nav__link--active">
       Example Oh My Zsh Setup
     </a>
 
     <!-- Show table of contents -->
+    
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#using_turbo_mode_and_for-syntax" title="Using Turbo mode and for-syntax"
+      class="md-nav__link">
+    Using Turbo mode and for-syntax
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#without_using_turbo_and_for-syntax" title="Without using Turbo and for-syntax"
+      class="md-nav__link">
+    Without using Turbo and for-syntax
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
     
   </li>
 
@@ -2285,6 +2414,133 @@
               </div>
             
             
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+
+
+<!-- Table of contents -->
+<nav class="md-nav md-nav--secondary">
+  
+
+  <!--
+    Hack: check whether the content contains a h1 headline. If it does, the
+    top-level anchor must be skipped, since it would be redundant to the link
+    to the current page that is located just above the anchor. Therefore we
+    directly continue with the children of the anchor.
+  -->
+  
+
+  <!-- Render item list -->
+  
+    <label class="md-nav__title" for="__toc">Table of contents</label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#using_turbo_mode_and_for-syntax" title="Using Turbo mode and for-syntax"
+      class="md-nav__link">
+    Using Turbo mode and for-syntax
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#without_using_turbo_and_for-syntax" title="Without using Turbo and for-syntax"
+      class="md-nav__link">
+    Without using Turbo and for-syntax
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+
+      <!-- Source files -->
+      
+
+      <!-- Set from config but allow override -->
+      
+      
+
+      <!-- Disqus integration -->
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content">
             <article class="md-content__inner md-typeset">
@@ -2293,54 +2549,50 @@
                 
                   <h1>Example Oh My Zsh Setup</h1>
                 
-                <pre><code class="zsh"># A.
+                <h2 id="using_turbo_mode_and_for-syntax">Using Turbo mode and for-syntax<a class="headerlink" href="#using_turbo_mode_and_for-syntax" title="Permanent link">#</a></h2>
+<pre><code class="zsh"># A.
 setopt promptsubst
 
 # B.
-zinit ice wait lucid
-zinit snippet OMZ::lib/git.zsh
+zinit wait lucid for \
+        OMZ::lib/git.zsh \
+  atload&quot;unalias grv&quot; \
+        OMZ::plugins/git/git.plugin.zsh
+
+PS1=&quot;READY &gt;&quot; # provide a simple prompt till the theme loads
 
 # C.
-zinit ice wait atload&quot;unalias grv&quot; lucid
-zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit wait'!' lucid for OMZ::themes/dstufft.zsh-theme
 
 # D.
-PS1=&quot;READY &gt;&quot; # provide a nice prompt till the theme loads
-zinit ice wait'!' lucid
-zinit snippet OMZ::themes/dstufft.zsh-theme
-
-# E.
-zinit ice wait lucid
-zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
-
-# F.
-zinit ice wait as&quot;completion&quot; lucid
-zinit snippet OMZ::plugins/docker/_docker
-
-# G.
-zinit ice wait atinit&quot;zpcompinit&quot; lucid
-zinit light zdharma/fast-syntax-highlighting
+zinit wait lucid for \
+  atinit&quot;zicompinit; zicdreplay&quot;  \
+        zdharma/fast-syntax-highlighting \
+      OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
+  as&quot;completion&quot; \
+        OMZ::plugins/docker/_docker
 </code></pre>
 
-<p><strong>A</strong> -  Most themes use this option.</p>
-<p><strong>B</strong> -  OMZ themes use this library.</p>
-<p><strong>C</strong> -  Some OMZ themes use this plugin. It provides many aliases – <code>atload''</code>
-shows how to disable some of them (to use program <code>rgburke/grv</code>).</p>
-<p><strong>D</strong> -  Set OMZ theme.</p>
-<p><strong>E</strong> -  Example functional plugin.</p>
-<p><strong>F</strong> -  Load Docker completion.</p>
-<p><strong>G</strong> -  Normal plugin (syntax-highlighting, at the end, like it is suggested by
-the plugin's README).</p>
-<p>Completions provided by git plugin are catched, but ignored. They can be
-executed using function <code>zpcdreplay</code> appended after <code>zpcompinit;</code> in <code>atinit''</code>
-of <strong>G</strong>.</p>
+<p><strong>A</strong> - Most themes use this option.</p>
+<p><strong>B</strong> - OMZ themes use this library and some other use also the plugin. It
+provides many aliases – <code>atload''</code> shows how to disable some of them (e.g.: to
+use program <code>rgburke/grv</code>).</p>
+<p><strong>C</strong> - Set OMZ theme. Loaded separately because the theme needs the <code>!</code> passed
+        to the <code>wait</code> ice to reset the prompt after loading the snippet in Turbo.</p>
+<p><strong>D</strong> - Some plugins: a) syntax-highlighting, loaded possibly early for a
+        better user experience), b) example functional plugin, c) Docker
+        completion.</p>
 <p>Above setup loads everything after prompt, because of preceding <code>wait</code> ice. That
-is called <strong>Turbo mode</strong>, it shortens Zsh startup time by <u>50%-73%</u>, so
-e.g. instead of 200 ms, you'll be getting your shell started up after <strong>50 ms</strong>
+is called <strong>Turbo mode</strong>, it shortens Zsh startup time by <u>50%-80%</u>, so
+e.g. instead of 200 ms, it'll be getting your shell started up after <strong>40 ms</strong>
 (!).</p>
-<p>The same setup without Turbo mode (prompt will be initially set like in typical,
-normal setup – <strong>you can remove <code>wait</code> only from the theme plugin</strong> to have the
-same effect while still using Turbo mode for everything remaining):</p>
+<p>It is using the for-syntax, which is a recent addition to Zinit and it's
+described in detail <a href="https://zdharma.org/zinit/wiki/For-Syntax/">on this page</a>.</p>
+<h2 id="without_using_turbo_and_for-syntax">Without using Turbo and for-syntax<a class="headerlink" href="#without_using_turbo_and_for-syntax" title="Permanent link">#</a></h2>
+<p>The same setup using the classic syntax and without Turbo mode (prompt will be
+initially set like in typical, normal setup – <strong>you can remove <code>wait</code> only from
+the theme plugin</strong> and its dependencies to have the same effect while still
+using Turbo for everything remaining):</p>
 <pre><code class="zsh"># A.
 setopt promptsubst
 
@@ -2362,14 +2614,15 @@ zinit ice as&quot;completion&quot;
 zinit snippet OMZ::plugins/docker/_docker
 
 # G.
-zinit ice atinit&quot;zpcompinit&quot;
+zinit ice atinit&quot;zicompinit; zicdreplay&quot;
 zinit light zdharma/fast-syntax-highlighting
 </code></pre>
 
-<p>In general, Turbo mode can be optionally enabled only for a subset of plugins or
-for all plugins. It needs Zsh >= 5.3.</p>
+<p>In general, Turbo can be optionally enabled only for a subset of plugins or for
+all plugins. It needs Zsh >= 5.3.</p>
 <p>The <strong>Introduction</strong> contains <a href="http://zdharma.org/zinit/wiki/INTRODUCTION/#turbo_mode_zsh_62_53"><strong>more
-information</strong></a> on Turbo mode.</p>
+information</strong></a>
+on Turbo. </p>
 <p><a href="vim:set ft=markdown tw=80:"></a></p>
                 
                   
