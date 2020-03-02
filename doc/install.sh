@@ -16,7 +16,8 @@ fi
 
 if ! test -d "$ZINIT_HOME"; then
     mkdir "$ZINIT_HOME"
-    chmod g-rwX "$ZINIT_HOME"
+    chmod g-w "$ZINIT_HOME"
+    chmod o-w "$ZINIT_HOME"
 fi
 
 if ! command -v git >/dev/null 2>&1; then
