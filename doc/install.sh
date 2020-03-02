@@ -21,7 +21,7 @@ if ! test -d "$ZINIT_HOME"; then
 fi
 
 if ! command -v git >/dev/null 2>&1; then
-    echo "[1;31m▓▒░[0m Something went wrong: no [1;32mgit[0m available, cannot proceed"
+    echo "[1;31m▓▒░[0m Something went wrong: no [1;32mgit[0m available, cannot proceed."
     exit 1
 fi
 
@@ -30,12 +30,12 @@ if command -v curl >/dev/null 2>&1; then
     mkdir -p /tmp/zinit
     cd /tmp/zinit 
     curl -fsSLO https://raw.githubusercontent.com/zdharma/zinit/master/git-process-output.zsh && \
-        chmod +x /tmp/zinit/git-process-output.zsh
+        chmod a+x /tmp/zinit/git-process-output.zsh
 elif command -v wget >/dev/null 2>&1; then
     mkdir -p /tmp/zinit
     cd /tmp/zinit 
     wget -q https://raw.githubusercontent.com/zdharma/zinit/master/git-process-output.zsh && \
-        chmod +x /tmp/zinit/git-process-output.zsh
+        chmod a+x /tmp/zinit/git-process-output.zsh
 fi
 
 echo
