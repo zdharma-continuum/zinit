@@ -412,8 +412,8 @@ install everything from GitHub and other sites. Its characteristics are:
 # Zinit Wiki
 
 The information in this README is complemented by the [Zinit
-wiki](http://zdharma.org/zinit/wiki/). The README is an introductory overview of
-Zinit while the wiki gives a complete information with examples. Make sure to
+Wiki](http://zdharma.org/zinit/wiki/). The README is an introductory overview of
+Zinit while the Wiki gives a complete information with examples. Make sure to
 read it to get the most out of Zinit.
 
 # Installation
@@ -526,14 +526,14 @@ zinit creinstall %HOME/my_completions
 zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
 zinit light trapd00r/LS_COLORS
 ```
-[You can see an extended explanation of LS_COLORS in the wiki.](http://zdharma.org/zinit/wiki/LS_COLORS-explanation/)
+[You can see an extended explanation of LS_COLORS in the Wiki.](http://zdharma.org/zinit/wiki/LS_COLORS-explanation/)
 
 ```zsh
 # make'!...' -> run make before atclone & atpull
 zinit ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
 zinit light direnv/direnv
 ```
-[You can see an extended explanation of direnv in the wiki.](http://zdharma.org/zinit/wiki/Direnv-explanation/)
+[You can see an extended explanation of direnv in the Wiki.](http://zdharma.org/zinit/wiki/Direnv-explanation/)
 
 If you're interested in more examples then check out the [zinit-configs
 repository](https://github.com/zdharma/zinit-configs) where users have uploaded their
@@ -541,7 +541,13 @@ repository](https://github.com/zdharma/zinit-configs) where users have uploaded 
 [submit](https://github.com/zdharma/zinit-configs/issues/new?template=request-to-add-zshrc-to-the-zinit-configs-repo.md)
 your `~/.zshrc` there if it contains Zinit commands.
 
-You can also check out the [Gallery of Zinit Invocations](http://zdharma.org/zinit/wiki/GALLERY/) for some additional examples.
+You can also check out the [Gallery of Zinit
+Invocations](http://zdharma.org/zinit/wiki/GALLERY/) for some additional
+examples.
+
+Also, two articles on the Wiki present an example setup
+[here](https://zdharma.org/zinit/wiki/Example-Minimal-Setup/) and
+[here](https://zdharma.org/zinit/wiki/Example-Oh-My-Zsh-setup/).
 
 ## Ice Modifiers
 
@@ -553,7 +559,7 @@ something that's temporary because it melts – and this means that the modifica
 last only for a **single** next `zinit` command.
 
 Some Ice-modifiers are highlighted and clicking on them will take you to the
-appropriate wiki page for an extended explanation.
+appropriate Wiki page for an extended explanation.
 
 You may safely assume a given ice works with both plugins and snippets unless
 explicitly stated otherwise.
