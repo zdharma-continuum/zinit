@@ -2161,7 +2161,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             .zinit-load "${${${1#@}#https://github.com/}%%(///|//|/)}" "" \
                                 "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
-                        __retval+=$?
+                        __retval+=$? __is_snippet=0
                     }
                 fi
                 (( $# )) && shift
