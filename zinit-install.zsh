@@ -442,7 +442,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         if [[ $site != *releases && ${ZINIT_ICE[nocompile]} != '!' ]] {
             # Compile plugin
             [[ -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
-                .zinit-compile-plugin "$id_as" ""
+                () {
+                    emulate -LR zsh
+                    setopt extendedglob warncreateglobal
+                    .zinit-compile-plugin "$id_as" ""
+                }
             }
         }
 
@@ -479,7 +483,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             # Compile plugin
             LANG=C sleep 0.3
             [[ -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
-                .zinit-compile-plugin "$id_as" ""
+                () {
+                    emulate -LR zsh
+                    setopt extendedglob warncreateglobal
+                    .zinit-compile-plugin "$id_as" ""
+                }
             }
         }
     ) || return $?
