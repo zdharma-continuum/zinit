@@ -2087,7 +2087,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 
                     [[ ${ZINIT_ICE[id-as]} = auto ]] && ZINIT_ICE[id-as]="${1:t}"
 
-                    integer  __is_snippet=${${(M)__is_snippet:#-1}:+0}
+                    integer  __is_snippet=${${(M)__is_snippet:#-1}:-0}
                     () {
                         setopt localoptions extendedglob
                         if [[ $__is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ) ]] {
