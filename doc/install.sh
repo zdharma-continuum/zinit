@@ -82,6 +82,30 @@ fi
 source "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh"
 autoload -Uz _zinit
 (( \${+_comps} )) && _comps[zinit]=_zinit
-### End of Zinit installer's chunk
 EOF
-echo "[34m▓▒░[0m Done"
+
+echo
+echo "[38;5;219m▓▒░[0m Would you like to add 3 useful plugins - annexes (Zinit extensions) as well?"
+echo -n "[38;5;219m▓▒░[0m Enter y/n and press Return: "
+
+read input
+if [ "$input" = y ] || [ "$input" = Y ]; then
+    command cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
+
+zinit light-mode for \\
+    zinit-zsh/z-a-patch-dl \\
+    zinit-zsh/z-a-as-monitor \\
+    zinit-zsh/z-a-bin-gem-node
+
+EOF
+    echo
+    echo "[34m▓▒░[0m Done."
+else
+    echo
+    echo "[34m▓▒░[0m Done (skipped the annexes chunk)."
+fi
+
+command cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
+### End of Zinit's installer chunk
+EOF
+
