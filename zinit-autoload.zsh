@@ -1503,8 +1503,8 @@ ZINIT[EXTENDED_GLOB]=""
                 }
 
                 (( !skip_pull && ICE_OPTS[opt_-r,--reset] )) && {
-                    print -P "${ZINIT[col-msg2]}Removing the previous file(s) (-r/--reset given)...%f"
-                    command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)
+                    print -P "$ZINIT[col-obj]reset (-r/--reset given): running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${ZINIT[PLUGINS_DIR]:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}/}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
+                    builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${ZINIT[PLUGINS_DIR]:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
                 ZINIT_ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones)
@@ -1517,8 +1517,8 @@ ZINIT[EXTENDED_GLOB]=""
                 }
 
                 (( !skip_pull && ${+ZINIT_ICE[reset]} )) && (
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -rf ${local_dir:-/tmp/xyzabc312}/*}%f"
-                    eval ${ZINIT_ICE[reset]:-command rm -rf "${local_dir:-/tmp/xyzabc312}"/*(ND)}
+                    (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "$ZINIT[col-obj]reset: running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${ZINIT[PLUGINS_DIR]:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}/}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
+                    builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${ZINIT[PLUGINS_DIR]:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 )
 
                 [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )

@@ -424,7 +424,7 @@ builtin setopt noaliases
         # Remember the zstyle, only when load is in progress (it can be dstart that leads execution here)
         [[ -n ${ZINIT[CUR_USPL2]} ]] && ZINIT[ZSTYLES__${ZINIT[CUR_USPL2]}]+="$ps "
         # Remember for dtrace
-        [[ ${ZINIT[DTRACE]} = 1 ]] && ZINIT[ZSTYLES___dtrace/_dtrace]+=$ps 
+        [[ ${ZINIT[DTRACE]} = 1 ]] && ZINIT[ZSTYLES___dtrace/_dtrace]+=$ps
     else
         if [[ ! ${#opts[@]} = 1 && ( ${+opts[(r)-s]} = 1 || ${+opts[(r)-b]} = 1 || ${+opts[(r)-a]} = 1 ||
               ${+opts[(r)-t]} = 1 || ${+opts[(r)-T]} = 1 || ${+opts[(r)-m]} = 1 )
@@ -934,7 +934,7 @@ function $f {
     zsh_loaded_plugins+=( "$teleid" )
 
     # Full or light load?
-    [[ $mode = light ]] && ZINIT_REGISTERED_STATES[$uspl2]=1 || ZINIT_REGISTERED_STATES[$uspl2]=2
+    [[ $mode == light ]] && ZINIT_REGISTERED_STATES[$uspl2]=1 || ZINIT_REGISTERED_STATES[$uspl2]=2
 
     ZINIT_REPORTS[$uspl2]=             ZINIT_CUR_BIND_MAP=( empty 1 )
     # Functions
@@ -1050,9 +1050,9 @@ function $f {
         .zinit-compinit &>/dev/null
     }
     [[ ! -d ${ZINIT[SNIPPETS_DIR]} ]] && {
-        command mkdir "${ZINIT[SNIPPETS_DIR]}"
+        command mkdir -p "${ZINIT[SNIPPETS_DIR]}/OMZ::plugins"
         command chmod go-w "${ZINIT[SNIPPETS_DIR]}"
-        ( cd ${ZINIT[SNIPPETS_DIR]}; command ln -s OMZ::plugins plugins; )
+        ( builtin cd ${ZINIT[SNIPPETS_DIR]}; command ln -s OMZ::plugins plugins; )
 
         # Also create the SERVICES_DIR
         command mkdir -p "${ZINIT[SERVICES_DIR]}"
@@ -1085,10 +1085,10 @@ function $f {
         fi
         __path="${reply[-3]%/}/${reply[-2]}"/._zinit
     }
-    for __key in "${ice_order[@]}"; do
+    for __key ( "${ice_order[@]}" ) {
         (( ${+ZINIT_ICE[$__key]} )) && [[ ${ZINIT_ICE[$__key]} != +* ]] && continue
         [[ -f $__path/$__key ]] && ZINIT_ICE[$__key]="$(<$__path/$__key)"
-    done
+    }
     [[ -n ${ZINIT_ICE[on-update-of]} ]] && ZINIT_ICE[subscribe]="${ZINIT_ICE[subscribe]:-${ZINIT_ICE[on-update-of]}}"
     [[ ${ZINIT_ICE[as]} = program ]] && ZINIT_ICE[as]=command
     [[ -n ${ZINIT_ICE[pick]} ]] && ZINIT_ICE[pick]="${ZINIT_ICE[pick]//\$ZPFX/${ZPFX%/}}"
