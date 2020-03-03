@@ -2080,7 +2080,9 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-show-times() {
-    setopt localoptions extendedglob nokshglob noksharrays
+    emulate -LR zsh
+    setopt  extendedglob warncreateglobal noshortloops
+
     local opt="$1 $2 $3" entry entry2 entry3 user plugin
     float -F 3 sum=0.0
     local -A sice
