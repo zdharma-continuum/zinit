@@ -2649,6 +2649,9 @@ ZINIT[EXTENDED_GLOB]=""
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent
 
+    local -a opts match mbegin mend
+    local MATCH; integer MBEGIN MEND
+
     # Parse options
     local -a opts
     opts=( --all --clean --yes -y -q --quiet )
