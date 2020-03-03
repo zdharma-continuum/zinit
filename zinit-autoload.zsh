@@ -1998,9 +1998,11 @@ ZINIT[EXTENDED_GLOB]=""
         local ind_file
         for ind_file ( ${^${(von)PUAssocArray}}.ind(DN.) ) {
             command cat ${ind_file:r}
-            command rm -f $ind_file
+            (( !ICE_OPTS[opt_-d,--debug] && !ZINIT[DEBUG_MODE] )) && \
+                command rm -f $ind_file
         }
-        command rm -f ${(v)PUAssocArray}
+        (( !ICE_OPTS[opt_-d,--debug] && !ZINIT[DEBUG_MODE] )) && \
+            command rm -f ${(v)PUAssocArray}
         counter=0
         PUAssocArray=()
     } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
