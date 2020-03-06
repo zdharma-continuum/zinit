@@ -404,7 +404,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
-              (( ${#afr} )) && {
+              if (( ${#afr} )) {
                   if (( !ICE_OPTS[opt_-q,--quiet] )) {
                       command mv -vf "${afr[1]}" "$to"
                       command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
@@ -426,7 +426,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
-              (( ${#afr} )) && {
+              if (( ${#afr} )) {
                   if (( !ICE_OPTS[opt_-q,--quiet] )) {
                       command cp -vf "${afr[1]}" "$to"
                       command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
@@ -1126,7 +1126,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && {
+              if (( ${#afr} )) {
                   if (( !ICE_OPTS[opt_-q,--quiet] )) {
                       command mv -vf "${afr[1]}" "$to"
                       command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
@@ -1148,7 +1148,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && {
+              if (( ${#afr} )) {
                   if (( !ICE_OPTS[opt_-q,--quiet] )) {
                       command cp -vf "${afr[1]}" "$to"
                       command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
