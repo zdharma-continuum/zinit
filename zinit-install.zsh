@@ -293,7 +293,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
 
     .zinit-get-object-path plugin "$id_as" || \
         { print -Pr "$ZINIT[col-msg2]A plugin named $ZINIT[col-obj]$id_as" \
-            "$ZINIT[col-msg2] already exists, aborting."
+            "$ZINIT[col-msg2]already exists, aborting.%f%b"
           return 1
         }
     local_path=$REPLY
