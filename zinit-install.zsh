@@ -289,8 +289,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     setopt extendedglob warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
-        local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} tpe=$4 update=$5 \
-        version=$6
+        local_path tpe=$4 update=$5 version=$6
+
+    .zinit-get-object-path plugin "$id_as" || \
+        { print -Pr "$ZINIT[col-msg2]A plugin named $ZINIT[col-obj]$id_as" \
+            "$ZINIT[col-msg2] already exists, aborting."
+          return 1
+        }
+    local_path=$REPLY
 
     local -A sites
     sites=(
@@ -350,7 +356,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
                         return 1
                     }
                 }
-                if .zinit-download-file-stdout "$url.sig" >! "${REPLY:t}.sig"; then
+                if .zinit-download-file-stdout "$url.sig" 2>/dev/null >! "${REPLY:t}.sig"; then
                     :
                 fi
 
@@ -365,27 +371,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             }
         } elif [[ $tpe = github ]] {
             case ${ZINIT_ICE[proto]} in
-                (|https)
+                (|https|git|http|ftp|ftps|rsync|ssh)
                     command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
                         ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
-                        "https://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
+                        "${ZINIT_ICE[proto]:-https}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
                         "$local_path" \
                         --config transfer.fsckobjects=false \
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
                             |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
                     (( pipestatus[1] )) && { print -Pr -- "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]}).%f%b"; return 1; }
-                    ;;
-                (git|http|ftp|ftps|rsync|ssh)
-                    command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
-                        ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
-                        "${ZINIT_ICE[proto]}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
-                        "$local_path" \
-                        --config transfer.fsckobjects=false \
-                        --config receive.fsckobjects=false \
-                        --config fetch.fsckobjects=false \
-                            |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
-                    (( pipestatus[1] )) && { print -Pr "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]}).%f%b"; return 1; }
                     ;;
                 (*)
                     print -Pr "${ZINIT[col-error]}Unknown protocol:%f%b ${ZINIT_ICE[proto]}."
@@ -409,7 +404,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && {
+              (( ${#afr} )) && {
                   if (( !ICE_OPTS[opt_-q,--quiet] )) {
                       command mv -vf "${afr[1]}" "$to"
                       command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
@@ -431,7 +426,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             local -a afr
             ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
               afr=( ${~from}(DN) )
-              [[ ${#afr} -gt 0 ]] && {
+              (( ${#afr} )) && {
                   if (( !ICE_OPTS[opt_-q,--quiet] )) {
                       command cp -vf "${afr[1]}" "$to"
                       command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
