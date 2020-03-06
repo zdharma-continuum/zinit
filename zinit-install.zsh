@@ -342,18 +342,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
                 url="https://github.com${REPLY}"
                 print "(Requesting \`${REPLY:t}'${version:+, version $version}...)"
-                .zinit-download-file-stdout "$url" >! "${REPLY:t}" || {
-                    .zinit-download-file-stdout "$url" 1 >! "${REPLY:t}" || {
+                if { ! .zinit-download-file-stdout "$url" >! "${REPLY:t}" } {
+                    if { ! .zinit-download-file-stdout "$url" 1 >! "${REPLY:t}" } {
                         command rm -f "${REPLY:t}"
                         print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                         print -r "Tried url: $url."
                         return 1
                     }
                 }
+                if .zinit-download-file-stdout "$url.sig" >! "${REPLY:t}.sig"; then
+                    :
+                fi
 
                 command mkdir -p ._zinit
-                print -r -- $url >! ._zinit/url
-                print -r -- ${REPLY} >! ._zinit/is_release
+                [[ -d ._zinit ]] || return 2
+                print -r -- $url >! ._zinit/url || return 3
+                print -r -- ${REPLY} >! ._zinit/is_release || return 4
                 ziextract ${REPLY:t}
                 return $?
             ) || {
@@ -996,8 +1000,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
                     [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
                     
                     if (( !skip_dl )) {
-                        .zinit-download-file-stdout "$url" >! "$dirname/$filename" || {
-                            .zinit-download-file-stdout "$url" 1 >! "$dirname/$filename" || {
+                        if { ! .zinit-download-file-stdout "$url" >! "$dirname/$filename" } {
+                            if { ! .zinit-download-file-stdout "$url" 1 >! "$dirname/$filename" } {
                                 command rm -f "$dirname/$filename"
                                 print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                                 return 4
@@ -1329,9 +1333,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     REPLY=
     local user=$1 plugin=$2 urlpart=$3
 
-    [[ -z $urlpart ]] && {
+    if [[ -z $urlpart ]] {
         local url=https://github.com/$user/$plugin/releases/${ZINIT_ICE[ver]:-latest}
-    } || {
+    } else {
         local url=https://$urlpart
     }
 
