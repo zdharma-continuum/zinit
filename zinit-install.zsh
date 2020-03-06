@@ -291,12 +291,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
         local_path tpe=$4 update=$5 version=$6
 
-    .zinit-get-object-path plugin "$id_as" || \
+    .zinit-get-object-path plugin "$id_as" && \
         { print -Pr "$ZINIT[col-msg2]A plugin named $ZINIT[col-obj]$id_as" \
             "$ZINIT[col-msg2]already exists, aborting.%f%b"
           return 1
         }
-    local_path=$REPLY
+    local_path=$reply[-3]
 
     local -A sites
     sites=(
