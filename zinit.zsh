@@ -190,7 +190,7 @@ builtin setopt noaliases
 # run custom `autoload' function, that doesn't need FPATH.
 :zinit-shadow-autoload () {
     builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
-        typesetsilent noshortloops unset
+        norcexpandparam typesetsilent noshortloops unset
     local -a opts
     local func
 
