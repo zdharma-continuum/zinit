@@ -2450,7 +2450,10 @@ You can try to prepend $__q@' if the last ice is in fact a plugin.%f%b"
                    .zinit-module "${@[2-correct,-1]}"; retval=$?
                    ;;
                (*)
-                   print "Unknown command \`$1' (use \`help' to get usage information)"
+                   print -Pr "${ZINIT[col-error]}Unknown command" \
+                       "$__q${ZINIT[col-obj]}$1${ZINIT[col-error]}'" \
+                       "(use $__q${ZINIT[col-obj]}help${ZINIT[col-error]}'" \
+                       "to get usage information).%f%b"
                    retval=1
                    ;;
             esac
