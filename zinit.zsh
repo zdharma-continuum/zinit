@@ -2195,7 +2195,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     print -Pr " (the last recognized ice was: ${ZINIT[col-obj]}"\
 "${last_ice/(#m)(${~ZINIT[ice-list]})/${ZINIT[col-obj]}$MATCH$__q2${ZINIT[col-file]}}"\
 "${ZINIT[col-obj]}'${ZINIT[col-error]}).
-You can try to prepend $__q@' if the last ice is in fact a plugin.%f%b"
+You can try to prepend $__q${ZINIT[col-obj]}@${ZINIT[col-error]}' if the last ice is in fact a plugin.%f%b"
                 } else {
                     print -Pr '%f%b'
                 }
