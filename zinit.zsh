@@ -2011,7 +2011,8 @@ zinit() {
 
     integer retval=0 correct=0
     local -a match mbegin mend reply
-    local MATCH REPLY; integer MBEGIN MEND
+    local MATCH REPLY __q="\`" __q2="'"; integer MBEGIN MEND
+                
 
     [[ -o ksharrays ]] && correct=1
 
@@ -2062,11 +2063,18 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             }
         } else {
             .zinit-ice "$@"
-            shift $?
-            if [[ $# -gt 0 && $1 != for ]]; then
-                print "Unknown command or ice: \`$1' (use \`help' to get usage information)"
+            integer retval=$?
+            local last_ice=${@[retval]}
+            shift $retval
+            if [[ $# -gt 0 && $1 != for ]] {
+                print -Pr "${ZINIT[col-error]}Unknown command or ice: " \
+                        "$__q${ZINIT[col-obj]}$1${ZINIT[col-error]}'" \
+                        "(use $__q${ZINIT[col-info2]}help${ZINIT[col-error]}'" \
+                        "to get usage information).%f%b"
                 return 1
-            fi
+            } elif (( $# == 0 )) {
+                integer error=1
+            }
             [[ $1 = for ]] && shift
         }
         integer __retval __had_wait
@@ -2076,9 +2084,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             ZINIT_ICES=()
             while (( $# )) {
                 .zinit-ice "$@"
-                shift $?
+                integer retval=$?
+                local last_ice=${@[retval]}
+                shift $retval
                 [[ -z ${ZINIT_ICES[subscribe]} ]] && unset 'ZINIT_ICES[subscribe]'
-                if [[ -n $1 ]]; then
+                if [[ -n $1 ]] {
                     ZINIT_ICE=( "${__ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICES=()
 
@@ -2167,11 +2177,33 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         fi
                         __retval+=$? __is_snippet=0
                     }
-                fi
+                } else {
+                    integer error=1
+                }
                 (( $# )) && shift
             }
-        return __retval
+        } else {
+            integer error=1
         }
+        
+        if (( error )) {
+            () {
+                emulate -LR zsh
+                setopt extendedglob
+                print -nPr "${ZINIT[col-error]}Error: No plugin or snippet ID given"
+                if [[ -n $last_ice ]] {
+                    print -Pr " (the last recognized ice was: ${ZINIT[col-obj]}"\
+"${last_ice/(#m)(${~ZINIT[ice-list]})/${ZINIT[col-obj]}$MATCH$__q2${ZINIT[col-file]}}"\
+"${ZINIT[col-obj]}'${ZINIT[col-error]}).
+You can try to prepend $__q@' if the last ice is in fact a plugin.%f%b"
+                } else {
+                    print -Pr '%f%b'
+                }
+           }
+           return 2
+       } elif (( ! $# )) {
+           return 2
+       }
     }
 
     case "$1" in
@@ -2396,7 +2428,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                    shift
                    .zinit-recently "$@"; retval=$?
                    ;;
-               (-h|--help|help|"")
+               (-h|--help|help)
                    .zinit-help
                    ;;
                (ls)
