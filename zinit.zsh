@@ -264,8 +264,9 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-shadow-bindkey() {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
-        typesetsilent noshortloops unset
+    emulate -LR zsh
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
+
     is-at-least 5.3 && \
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Bindkey ${(j: :)${(q+)@}}" || \
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Bindkey ${(j: :)${(q)@}}"
