@@ -2066,7 +2066,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             1="${1:+@}${1#@}${2:+/$2}"
             (( $# > 1 )) && { shift -p $(( $# - 1 )); }
             [[ -z $1 ]] && {
-               print -Pr "Argument needed, try: ${ZINIT[col-obj]}help.%f%b"
+               +zinit-message "Argument needed, try: [obj]help[rst]."
                return 1
             }
         } else {
