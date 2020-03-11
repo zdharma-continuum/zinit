@@ -3326,6 +3326,7 @@ EOF
               .zinit-module info --link
           }
       }
+      print $EPOCHSECONDS >! "${ZINIT[BIN_DIR]}"/zmodules/COMPILED_AT
     )
 }
 # ]]]
