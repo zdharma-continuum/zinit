@@ -2040,7 +2040,7 @@ completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrac
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#z-annex subcommand:}"}}) || $1 = (load|light|snippet) ]] && \
     {
-        if [[ $1 = (load|light|snippet) ]]; then
+        if [[ $1 = (load|light|snippet) ]] {
             integer  __is_snippet
             # Classic syntax -> simulate a call through the for-syntax
             () {
@@ -2060,7 +2060,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                print "Argument needed, try: help"
                return 1
             }
-        else
+        } else {
             .zinit-ice "$@"
             shift $?
             if [[ $# -gt 0 && $1 != for ]]; then
@@ -2068,9 +2068,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 return 1
             fi
             [[ $1 = for ]] && shift
-        fi
+        }
         integer __retval __had_wait
-        if (( $# )); then
+        if (( $# )) {
             local -a __ices
             __ices=( "${(kv)ZINIT_ICES[@]}" )
             ZINIT_ICES=()
@@ -2170,8 +2170,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 fi
                 (( $# )) && shift
             }
-        fi
         return __retval
+        }
     }
 
     case "$1" in
