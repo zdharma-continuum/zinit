@@ -2196,8 +2196,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
         
         if (( error )) {
             () {
-                emulate -LR zsh
-                setopt extendedglob
+                emulate -LR zsh -o extendedglob
                 +zinit-message -n "[error]Error: No plugin or snippet ID given"
                 if [[ -n $last_ice ]] {
                     +zinit-message "(the last recognized ice was: [obj]"\
