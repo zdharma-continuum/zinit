@@ -1996,8 +1996,8 @@ atdelete|git|verbose|param|extract${~exts})(*)
     [[ ${ZINIT[lro-data]##*:} = on ]] && return 0 || return $__ret
 }
 # ]]]
-# # FUNCTION: .zinit-message [[[
-.zinit-message() {
+# # FUNCTION: +zinit-message [[[
++zinit-message() {
     builtin emulate -LR zsh -o extendedglob 
     [[ $1 = -n ]] && { local n="-n"; shift }
     local msg=${(j: :)${@//(#b)\[([^\]]##)\]/$ZINIT[col-$match[1]]}}
