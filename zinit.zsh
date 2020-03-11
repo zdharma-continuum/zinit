@@ -1189,14 +1189,16 @@ function $f {
     integer correct retval exists
     [[ -o ksharrays ]] && correct=1
 
-    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
-        local -a precm=(
+    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+        local -a precm
+        precm=(
             emulate
             ${${(M)${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
             ${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}
             ${${ZINIT_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
             -c
         )
+    }
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
     ZINIT_ICE[teleid]="$url"
@@ -1455,14 +1457,16 @@ function $f {
     ZINIT[CUR_USR]="$user" ZINIT[CUR_PLUGIN]="$plugin" ZINIT[CUR_USPL2]="$id_as"
     [[ -o ksharrays ]] && correct=1
 
-    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && \
-        local -a precm=(
+    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+        local -a precm
+        precm=(
             emulate
             ${${(M)${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
             ${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}
             ${${ZINIT_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
             -c
         )
+    }
 
     [[ ${ZINIT_ICE[as]} = null ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
@@ -2205,8 +2209,8 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                 } else {
                     +zinit-message ".[rst]"
                 }
-           }
-           return 2
+            }
+            return 2
        } elif (( ! $# )) {
            return 2
        }
