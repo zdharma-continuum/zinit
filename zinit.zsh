@@ -2075,10 +2075,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             local last_ice=${@[retval]}
             shift $retval
             if [[ $# -gt 0 && $1 != for ]] {
-                print -Pr "${ZINIT[col-error]}Unknown command or ice: " \
-                        "$__q${ZINIT[col-obj]}$1${ZINIT[col-error]}'" \
-                        "(use $__q${ZINIT[col-info2]}help${ZINIT[col-error]}'" \
-                        "to get usage information).%f%b"
+                +zinit-message "[error]Unknown command or ice: ${__q}[obj]${1}[error]'" \
+                    "(use ${__q}[info2]help[error]' to get usage information).%f%b"
                 return 1
             } elif (( $# == 0 )) {
                 integer error=1
@@ -2198,14 +2196,13 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             () {
                 emulate -LR zsh
                 setopt extendedglob
-                print -nPr "${ZINIT[col-error]}Error: No plugin or snippet ID given"
+                +zinit-message -n "[error]Error: No plugin or snippet ID given"
                 if [[ -n $last_ice ]] {
-                    print -Pr " (the last recognized ice was: ${ZINIT[col-obj]}"\
-"${last_ice/(#m)(${~ZINIT[ice-list]})/${ZINIT[col-obj]}$MATCH$__q2${ZINIT[col-file]}}"\
-"${ZINIT[col-obj]}'${ZINIT[col-error]}).
-You can try to prepend $__q${ZINIT[col-obj]}@${ZINIT[col-error]}' if the last ice is in fact a plugin.%f%b"
+                    +zinit-message "(the last recognized ice was: [obj]"\
+"${last_ice/(#m)(${~ZINIT[ice-list]})/[obj]$MATCH${__q2}[file]}[obj]'[error]).
+You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.[rst]"
                 } else {
-                    print -Pr '%f%b'
+                    +zinit-message "[rst]"
                 }
            }
            return 2
@@ -2458,10 +2455,8 @@ You can try to prepend $__q${ZINIT[col-obj]}@${ZINIT[col-error]}' if the last ic
                    .zinit-module "${@[2-correct,-1]}"; retval=$?
                    ;;
                (*)
-                   print -Pr "${ZINIT[col-error]}Unknown command" \
-                       "$__q${ZINIT[col-obj]}$1${ZINIT[col-error]}'" \
-                       "(use $__q${ZINIT[col-obj]}help${ZINIT[col-error]}'" \
-                       "to get usage information).%f%b"
+                   +zinit-message "[error]Unknown command ${__q}[obj]${1}[error]'" \
+                       "(use ${__q}[obj]help[error]' to get usage information).[rst]"
                    retval=1
                    ;;
             esac
@@ -2549,9 +2544,8 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
         [[ -e ${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST ]] && local recompile_request_ts="$(<${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST)"
 
         if [[ ${recompile_request_ts:-1} -gt ${compiled_at_ts:-0} ]] {
-            builtin print -r -- "${ZINIT[col-error]}WARNING:${ZINIT[col-rst]}" \
-                "${ZINIT[col-msg1]}A ${ZINIT[col-obj]}recompilation${ZINIT[col-rst]}" \
-                "of the Zinit module has been requested… ${ZINIT[col-obj]}Building${ZINIT[col-rst]}…"
+            builtin print -r -- "[error]WARNING:[rst][msg1]A [obj]recompilation[rst]" \
+                "of the Zinit module has been requested… [obj]Building[rst]…"
             (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
             command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null
             .zinit-module build &>/dev/null
