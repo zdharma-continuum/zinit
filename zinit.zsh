@@ -836,7 +836,7 @@ function $f {
         local __param __from __to
         for __param ( ${__params[@]} ) {
             local __from="${${__param%%([[:space:]]|)(->|→)*}##[[:space:]]##}" \
-                __to="${${__param##*(->|→)([[:space:]]|)}%[[:space:]]}"
+                __to="${${__param#*(->|→)([[:space:]]|)}%[[:space:]]}"
             ZINIT[PARAM_SUBST]+="%${(q)__from}% ${(q)__to} "
         }
     }
@@ -2112,7 +2112,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             shift $retval
             if [[ $# -gt 0 && $1 != for ]] {
                 +zinit-message "[error]Unknown command or ice: ${__q}[obj]${1}[error]'" \
-                    "(use ${__q}[info2]help[error]' to get usage information).%f%b"
+                    "(use ${__q}[info2]help[error]' to get usage information).[rst]"
                 return 1
             } elif (( $# == 0 )) {
                 error=1
