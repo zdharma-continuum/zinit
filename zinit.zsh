@@ -2049,6 +2049,7 @@ completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrac
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
 env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#z-annex subcommand:}"}}) || $1 = (load|light|snippet) ]] && \
     {
+        integer error
         if [[ $1 = (load|light|snippet) ]] {
             integer  __is_snippet
             # Classic syntax -> simulate a call through the for-syntax
@@ -2079,9 +2080,10 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     "(use ${__q}[info2]help[error]' to get usage information).%f%b"
                 return 1
             } elif (( $# == 0 )) {
-                integer error=1
+                error=1
+            } else {
+                shift
             }
-            [[ $1 = for ]] && shift
         }
         integer __retval __had_wait
         if (( $# )) {
@@ -2184,12 +2186,12 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         __retval+=$? __is_snippet=0
                     }
                 } else {
-                    integer error=1
+                    error=1
                 }
                 (( $# )) && shift
             }
         } else {
-            integer error=1
+            error=1
         }
         
         if (( error )) {
@@ -2202,7 +2204,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 "${last_ice/(#m)(${~ZINIT[ice-list]})/[obj]$MATCH${__q2}[file]}[obj]'[error]).
 You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.[rst]"
                 } else {
-                    +zinit-message "[rst]"
+                    +zinit-message ".[rst]"
                 }
            }
            return 2
