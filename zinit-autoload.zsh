@@ -3303,26 +3303,26 @@ EOF
     setopt localoptions localtraps
     trap 'return 1' INT TERM
     ( builtin cd -q "${ZINIT[BIN_DIR]}"/zmodules
-      print -r -- "${ZINIT[col-pname]}== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==${ZINIT[col-rst]}"
-      print -r -- "${ZINIT[col-pname]}== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules ==${ZINIT[col-rst]}"
+      +zinit-message "[pname]== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==[rst]"
+      +zinit-message "[pname]== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules ==[rst]"
       [[ -f Makefile ]] && { [[ "$1" = "--clean" ]] && {
-              print -r -- ${ZINIT[col-p]}-- make distclean --${ZINIT[col-rst]}
+              noglob +zinit-message [p]-- make distclean --[rst]
               make distclean
               ((1))
           } || {
-              print -r -- ${ZINIT[col-p]}-- make clean --${ZINIT[col-rst]}
+              noglob +zinit-message [p]-- make clean --[rst]
               make clean
           }
       }
-      print -r -- ${ZINIT[col-p]}-- ./configure --${ZINIT[col-rst]}
+      noglob +zinit-message  [p]-- ./configure --[rst]
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
-          print -r -- ${ZINIT[col-p]}-- make --${ZINIT[col-rst]}
+          noglob +zinit-message [p]-- make --[rst]
           make && {
             [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
-            print -r -- "${ZINIT[col-info]}Module has been built correctly.${ZINIT[col-rst]}"
+            noglob +zinit-message "[info]Module has been built correctly.[rst]"
             .zinit-module info
           } || {
-              print -rn -- "${ZINIT[col-error]}Module didn't build.${ZINIT[col-rst]} "
+              noglob +zinit-message  "[error]Module didn't build.[rst] "
               .zinit-module info --link
           }
       }
