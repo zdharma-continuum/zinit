@@ -59,7 +59,7 @@ service|trackbinds|multisrc|compile|nocompile|nocompletions|\
 reset-prompt|wrap-track|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
-subscribe|extract"
+subscribe|extract|param"
 
 # Can be customized
 : ${ZINIT[PLUGINS_DIR]:=${ZINIT[HOME_DIR]}/plugins}
@@ -1212,6 +1212,12 @@ function $f {
 
     local id_as="${ZINIT_ICE[id-as]:-$url}"
 
+    # Set up param'' objects (parameters)
+    .zinit-setup-params && \
+        for REPLY ( ${reply[@]} ) {
+            local ${REPLY%%=*}=${REPLY#*=} 
+        }
+
     .zinit-pack-ice "$id_as" ""
 
     # Oh-My-Zsh, Prezto and manual shorthands
@@ -1474,6 +1480,12 @@ function $f {
     local pbase="${${plugin:t}%(.plugin.zsh|.zsh|.git)}"
     [[ $user = % ]] && local pdir_path="$plugin" || local pdir_path="${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"
     local pdir_orig="$pdir_path" key
+
+    # Set up param'' objects (parameters)
+    .zinit-setup-params && \
+        for REPLY ( ${reply[@]} ) {
+            local ${REPLY%%=*}=${REPLY#*=} 
+        }
 
     if [[ ${ZINIT_ICE[as]} = command ]]; then
         [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
@@ -2006,6 +2018,25 @@ atdelete|git|verbose|param|extract${~exts})(*)
     [[ $1 = -n ]] && { local n="-n"; shift }
     local msg=${(j: :)${@//(#b)\[([^\]]##)\]/$ZINIT[col-$match[1]]}}
     builtin print -Pr $n -- $msg
+}
+# ]]]
+# FUNCTION: .zinit-setup-params [[[
+.zinit-setup-params() {
+    local -a params param_to_value
+    params=( ${(s.;.)ZINIT_ICE[param]} )
+    reply=( )
+    local param
+    for param ( ${params[@]} ) {
+        if [[ $param = *(-\>|→)* ]] {
+            param_to_value=( "${param%%( |)( |)(-\>|→)*}" "${param##*(-\>|→)( |)( |)}" )
+        } else {
+            param_to_value=( "${${param## ( |)( |)( |)}%% ( |)( |)( |)}" )
+        }
+        integer count=0
+        param_to_value=( ${(@)param_to_value#${$(( ++count )):+}${param_to_value[$count]%%[! $'\t']*}} )
+        reply+=( "${param_to_value[1]}=${param_to_value[2]}" )
+    }
+    (( ${#params} )) && return 0 || return 2
 }
 # ]]]
 
