@@ -1320,7 +1320,7 @@ function $f {
             (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
             (( 0 == retval )) && [[ $url = PZT::* || $url = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
             ((1))
-        } || { [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} || ${ZINIT_ICE[pick]} = /dev/null ]] || { print -r -- "Snippet not loaded ($id_as)"; retval=1; } }
+        } || { [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} || ${ZINIT_ICE[pick]} = /dev/null ]] || { +zinit-message "Snippet not loaded ([info2]$id_as[rst])"; retval=1; } }
 
         [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$local_dir/$dirname/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; }
         [[ -n ${ZINIT_ICE[multisrc]} ]] && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
@@ -1423,7 +1423,7 @@ function $f {
 
     # Check if compinit was loaded
     if [[ ${+functions[compdef]} = 0 ]]; then
-        print "Compinit isn't loaded, cannot do compdef replay"
+        +zinit-message "Compinit isn't loaded, cannot do compdef replay"
         return 1
     fi
 
@@ -1434,7 +1434,7 @@ function $f {
         # When ZINIT_COMPDEF_REPLAY empty (also when only white spaces)
         [[ ${#pos[@]} = 1 && -z ${pos[-1]} ]] && continue
         pos=( "${(Q)pos[@]}" )
-        [[ $quiet = -q ]] || print "Running compdef ${pos[*]}"
+        [[ $quiet = -q ]] || +zinit-message "Running compdef: [obj]${pos[*]}[rst]"
         compdef "${pos[@]}"
     done
 
@@ -1445,7 +1445,7 @@ function $f {
 .zinit-compdef-clear() {
     local quiet="$1" count="${#ZINIT_COMPDEF_REPLAY}"
     ZINIT_COMPDEF_REPLAY=( )
-    [[ $quiet = -q ]] || print "Compdef-replay cleared (had $count entries)"
+    [[ $quiet = -q ]] || +zinit-message "Compdef-replay cleared (had [obj]${count}[rst] entries)"
 } # ]]]
 # FUNCTION: .zinit-add-report [[[
 # Adds a report line for given plugin.
@@ -1625,7 +1625,7 @@ function $f {
 .zinit-run() {
     if [[ $1 = (-l|--last) ]]; then
         { set -- "${ZINIT[last-run-plugin]:-$(<${ZINIT[BIN_DIR]}/last-run-object.txt)}" "${@[2-correct,-1]}"; } &>/dev/null
-        [[ -z $1 ]] && { print "${ZINIT[col-error]}Error: No last plugin available, please specify as the first argument${ZINIT[col-rst]}"; return 1; }
+        [[ -z $1 ]] && { +zinit-message "[error]Error: No last plugin available, please specify as the first argument.[rst]"; return 1; }
     else
         integer __nolast=1
     fi
@@ -1644,7 +1644,7 @@ function $f {
         eval "${@[2-correct,-1]}"
         () { setopt localoptions noautopushd; builtin cd -q "$__oldpwd"; }
     else
-        print "${ZINIT[col-error]}Error: no such plugin or snippet${ZINIT[col-rst]}"
+        +zinit-message "[error]Error: no such plugin or snippet.[rst]"
     fi
 }
 # ]]]
@@ -1657,7 +1657,7 @@ function $f {
 # Starts Dtrace, i.e. session tracking for changes in Zsh state.
 .zinit-debug-start() {
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        print "${ZINIT[col-error]}Dtrace is already active, stop it first with \`dstop'${ZINIT[col-rst]}"
+        +zinit-message "[error]Dtrace is already active, stop it first with \`dstop'[rst]"
         return 1
     fi
 
@@ -1688,7 +1688,7 @@ function $f {
 # Reverts changes detected by dtrace run.
 .zinit-debug-unload() {
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        print "Dtrace is still active, end it with \`dstop'"
+        +zinit-message "[error]Dtrace is still active, stop it first with \`dstop'[rst]"
     else
         .zinit-unload _dtrace _dtrace
     fi
@@ -2268,13 +2268,13 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
        (env-whitelist)
            shift
            [[ $1 = -v ]] && { shift; local verbose=1; }
-           [[ $1 = -h ]] && { shift; print "Usage: zinit env-whitelist [-v] VAR1 ...\nSaves names (also patterns) of parameters left unchanged during an unload. -v - verbose."; }
+           [[ $1 = -h ]] && { shift; +zinit-message "[info2]Usage:[rst] zinit env-whitelist [-v] VAR1 ...\nSaves names (also patterns) of parameters left unchanged during an unload. -v - verbose."; }
            (( $# == 0 )) && {
                ZINIT[ENV-WHITELIST]=
-               (( verbose )) && print "Cleared parameter whitelist"
+               (( verbose )) && +zinit-message "Cleared parameter whitelist"
            } || {
                ZINIT[ENV-WHITELIST]+="${(j: :)${(q-kv)@}} "
-               (( verbose )) && print "Extended parameter whitelist"
+               (( verbose )) && +zinit-message "Extended parameter whitelist"
            }
            ;;
        (*)
@@ -2284,7 +2284,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                reply=( "${(Q)${(z@)reply[1]}[@]}" )
                (( ${+functions[${reply[5]}]} )) && \
                    { "${reply[5]}" "$@"; return $?; } || \
-                   { print -r -- "(Couldn't find the subcommand-handler \`${reply[5]}' of the z-annex \`${reply[3]}')"; return 1; }
+                   { +zinit-message "([error]Couldn't find the subcommand-handler \`[obj]${reply[5]}[error]' of the z-annex \`[file]${reply[3]}[error]')"; return 1; }
            }
            (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
            case "$1" in
