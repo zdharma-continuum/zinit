@@ -2024,7 +2024,7 @@ function $f {
     params=( ${(s.;.)ZINIT_ICE[param]} ) reply=( )
     local param
     for param ( ${params[@]} ) {
-        param_to_value=( "${param%%( |)( |)(-\>|→)*}" "${${(MS)param##*(-\>|→)}:+${param##*(-\>|→)( |)( |)}}" )
+        param_to_value=( "${param%%(-\>|→)*}" "${${(MS)param##*(-\>|→)}:+${param##*(-\>|→)}}" )
         param_to_value=( "${param_to_value[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
         reply+=( "${param_to_value[1]}=${param_to_value[2]}" )
     }
