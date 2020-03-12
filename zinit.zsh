@@ -821,6 +821,9 @@ function $f {
 } # ]]]
 # FUNCTION: @zinit-substitute [[[
 @zinit-substitute() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops
+
     local -A __subst_map
     __subst_map=(
         "%ID%"   "${id_as_clean:-$id_as}"
@@ -834,14 +837,16 @@ function $f {
         '%VENDOR%' "$VENDOR" '%HOST%' "$HOST" '%UID%' "$UID" '%GID%' "$GID"
     )
     if [[ -n ${ZINIT_ICE[param]} && ${ZINIT[SUBST_DONE_FOR]} != ${ZINIT_ICE[param]} ]] {
-        ZINIT[SUBST_DONE_FOR]="${ZINIT_ICE[param]}"
+        ZINIT[SUBST_DONE_FOR]=${ZINIT_ICE[param]}
         ZINIT[PARAM_SUBST]=
         local -a __params
         __params=( ${(s.;.)ZINIT_ICE[param]} )
         local __param __from __to
         for __param ( ${__params[@]} ) {
-            local __from="${${__param%%([[:space:]]|)(->|→)*}##[[:space:]]##}" \
-                __to="${${__param#*(->|→)([[:space:]]|)}%[[:space:]]}"
+            local __from=${${__param%%([[:space:]]|)(->|→)*}##[[:space:]]##} \
+                __to=${${__param#*(->|→)([[:space:]]|)}%[[:space:]]}
+            __from=${__from//((#s)[[:space:]]##|[[:space:]]##(#e))/}
+            __to=${__to//((#s)[[:space:]]##|[[:space:]]##(#e))/}
             ZINIT[PARAM_SUBST]+="%${(q)__from}% ${(q)__to} "
         }
     }
@@ -850,16 +855,12 @@ function $f {
     __add=( "${ZINIT_ICE[param]:+${(@Q)${(@z)ZINIT[PARAM_SUBST]}}}" )
     (( ${#__add} % 2 == 0 )) && __subst_map+=( "${__add[@]}" )
 
-    local __var_name MATCH
-    integer MBEGIN MEND
-    () {
-        setopt localoptions extendedglob
-        for __var_name; do
-            local __value="${(P)__var_name}"
-            __value="${__value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${__subst_map[$MATCH]}}"
-            : "${(P)__var_name::=$__value}"
-        done
-    } "$@"
+    local __var_name
+    for __var_name; do
+        local __value=${(P)__var_name}
+        __value=${__value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${__subst_map[$MATCH]}}
+        : ${(P)__var_name::=$__value}
+    done
 }
 # ]]]
 # FUNCTION: .zinit-any-to-user-plugin [[[
@@ -2008,7 +2009,7 @@ function $f {
     [[ ${ZINIT[lro-data]##*:} = on ]] && return 0 || return $__ret
 }
 # ]]]
-# # FUNCTION: +zinit-message [[[
+# FUNCTION: +zinit-message [[[
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob 
     [[ $1 = -n ]] && { local n="-n"; shift }
