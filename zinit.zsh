@@ -60,6 +60,9 @@ reset-prompt|wrap-track|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
 subscribe|extract|param"
+ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
+nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
+aliases|countdown|light-mode|is-snippet|git|verbose"
 
 # Can be customized
 : ${ZINIT[PLUGINS_DIR]:=${ZINIT[HOME_DIR]}/plugins}

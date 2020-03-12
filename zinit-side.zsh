@@ -183,14 +183,13 @@
     local -a ice_order nval_ices
     ice_order=(
         ${(s.|.)ZINIT[ice-list]}
+
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode is-snippet git verbose
+            ${(s.|.)ZINIT[nval-ice-list]}
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
@@ -342,9 +341,7 @@
         ${(@s.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode is-snippet git verbose
+            ${(s.|.)ZINIT[nval-ice-list]}
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
