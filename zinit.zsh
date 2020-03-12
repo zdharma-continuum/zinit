@@ -2026,12 +2026,10 @@ atdelete|git|verbose|param|extract${~exts})(*)
 .zinit-setup-params() {
     emulate -LR zsh -o extendedglob
     local -a params param_to_value
-    params=( ${(s.;.)ZINIT_ICE[param]} )
-    reply=( )
+    params=( ${(s.;.)ZINIT_ICE[param]} ) reply=( )
     local param
     for param ( ${params[@]} ) {
         param_to_value=( "${param%%( |)( |)(-\>|→)*}" "${${(MS)param##*(-\>|→)}:+${param##*(-\>|→)( |)( |)}}" )
-        integer count=0
         param_to_value=( "${param_to_value[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
         reply+=( "${param_to_value[1]}=${param_to_value[2]}" )
     }
