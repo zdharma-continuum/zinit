@@ -1182,7 +1182,7 @@ function $f {
 .zinit-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts
-    zparseopts -E -D -a opts f -command u i || { print -r -- "Incorrect options (accepted ones: -f, --command)"; return 1; }
+    zparseopts -E -D -a opts f -command || { print -r -- "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
     integer correct retval exists
     [[ -o ksharrays ]] && correct=1
