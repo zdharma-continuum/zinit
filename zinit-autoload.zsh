@@ -3237,19 +3237,19 @@ EOF
     .zinit-compute-ice "$1${${1:#(%|/)*}:+${2:+/}}$2" "pack" \
         ice local_dir filename is_snippet || return 1
 
-    [[ -e "$local_dir" ]] && {
-        for el in "${ice_order[@]}"; do
+    [[ -e $local_dir ]] && {
+        for el ( ${ice_order[@]} ) {
             val="${ice[$el]}"
             cand1="${(qqq)val}"
             cand2="${(qq)val}"
-            if [[ -n "$val" ]]; then
+            if [[ -n "$val" ]] {
                 [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
-            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]]; then
+            } elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]] {
                 output+=( "$el" )
-            fi
-        done
+            }
+        }
 
-        if [[ "${#output}" = 0 ]]; then
+        if [[ ${#output} = 0 ]]; then
             print -zr "# No Ice modifiers"
         else
             print -zr "zinit ice ${output[*]}; zinit "
