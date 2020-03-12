@@ -3211,6 +3211,9 @@ EOF
 # ]]]
 # FUNCTION: .zinit-recall [[[
 .zinit-recall() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops
+
     local -A ice
     local el val cand1 cand2 local_dir filename is_snippet
 
