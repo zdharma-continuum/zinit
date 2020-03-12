@@ -1703,16 +1703,7 @@ function $f {
     integer retval
     local bit exts="${~ZINIT_EXTS[ice-mods]//\'\'/}"
     for bit; do
-        [[ $bit = (#b)(--|)(teleid|from|proto|cloneopts|depth|wait|load|\
-unload|on-update-of|subscribe|if|has|cloneonly|nocloneonly|blockf|\
-svn|nosvn|pick|nopick|src|bpick|as|ver|silent|lucid|mv|cp|atinit|\
-atload|atpull|atclone|run-atpull|norun-atpull|make|nomake|notify|\
-nonotify|reset-prompt|service|compile|nocompile|nocompletions|multisrc|\
-id-as|bindmap|trackbinds|notrackbinds|nocd|once|wrap-track|reset|\
-noreset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|aliases|noaliases|\
-countdown|nocountdown|trigger-load|light-mode|is-snippet|pack|\
-atdelete|git|verbose|param|extract${~exts})(*)
-        ]] && \
+        [[ $bit = (#b)(--|)(${~ZINIT[ice-list]}${~exts})(*) ]] && \
             ZINIT_ICES[${match[2]}]+="${ZINIT_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
             break
         retval+=1
