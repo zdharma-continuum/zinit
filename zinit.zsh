@@ -1287,13 +1287,8 @@ function $f {
         }
 
         # Source
-<<<<<<< HEAD
-        if (( $+ZINIT_ICE[svn] == 0 )) {
-            [[ $+ZINIT_ICE[pick] = 0 ]] && list=( "$local_dir/$dirname/$filename" )
-=======
-        if (( ${+ZINIT_ICE[svn]} == 0 )); then
+        if (( ${+ZINIT_ICE[svn]} == 0 )) {
             [[ ${+ZINIT_ICE[pick]} = 0 ]] && list=( "$local_dir/$dirname/$filename" )
->>>>>>> parent of f811bf36... all: Cleanup
             [[ -n ${ZINIT_ICE[pick]} ]] && list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
         } else {
             if [[ -n ${ZINIT_ICE[pick]} ]]; then
@@ -1308,12 +1303,7 @@ function $f {
             ZERO="${list[1-correct]}"
             (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
             (( 0 == retval )) && [[ $url = PZT::* || $url = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
-<<<<<<< HEAD
-        } else { [[ $+ZINIT_ICE[pick] = 1 && -z ${ZINIT_ICE[pick]} || ${ZINIT_ICE[pick]} = /dev/null ]] || { print -r -- "Snippet not loaded ($id_as)"; retval=1; } }
-=======
-            ((1))
-        } || { [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} || ${ZINIT_ICE[pick]} = /dev/null ]] || { print -r -- "Snippet not loaded ($id_as)"; retval=1; } }
->>>>>>> parent of f811bf36... all: Cleanup
+        } else { [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} || ${ZINIT_ICE[pick]} = /dev/null ]] || { print -r -- "Snippet not loaded ($id_as)"; retval=1; } }
 
         [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$local_dir/$dirname/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; }
         [[ -n ${ZINIT_ICE[multisrc]} ]] && { local __oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
