@@ -672,7 +672,7 @@ ZINIT[EXTENDED_GLOB]=""
         print "${ZINIT[col-info]}Uninstalled $global_action completions${ZINIT[col-rst]}"
     fi
 
-    (( $+functions[.zinit-forget-completion] )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+    (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
     .zinit-compinit >/dev/null
 } # ]]]
 
@@ -686,10 +686,10 @@ ZINIT[EXTENDED_GLOB]=""
     setopt LOCAL_OPTIONS EQUALS
     if [[ ${${:-=less}:A:t} = busybox* ]] {
         more 2>/dev/null
-        (( $+commands[more] ))
+        (( ${+commands[more]} ))
     } else {
         less -FRXi 2>/dev/null
-        (( $+commands[less] ))
+        (( ${+commands[less]} ))
     }
     (( $? )) && cat
 }
@@ -818,7 +818,7 @@ ZINIT[EXTENDED_GLOB]=""
     # Call the Zsh Plugin's Standard *_plugin_unload function
     #
 
-    (( $+functions[${plugin}_plugin_unload] )) && ${plugin}_plugin_unload
+    (( ${+functions[${plugin}_plugin_unload]} )) && ${plugin}_plugin_unload
 
     #
     # Call the code provided by the Zsh Plugin's Standard @zsh-plugin-run-at-update
@@ -1153,7 +1153,7 @@ ZINIT[EXTENDED_GLOB]=""
         [[ -z "$f" ]] && continue
         f="${(Q)f}"
         (( quiet )) || print "Deleting function $f"
-        (( $+functions[$f] )) && unfunction -- "$f"
+        (( ${+functions[$f]} )) && unfunction -- "$f"
         (( ${+precmd_functions} )) && precmd_functions=( ${precmd_functions[@]:#$f} )
         (( ${+preexec_functions} )) && preexec_functions=( ${preexec_functions[@]:#$f} )
         (( ${+chpwd_functions} )) && chpwd_functions=( ${chpwd_functions[@]:#$f} )
@@ -1475,7 +1475,7 @@ ZINIT[EXTENDED_GLOB]=""
         fi
         local do_update=0 skip_pull=0
         if [[ -n ${ice[is_release]} ]] {
-            (( $+functions[.zinit-setup-plugin-dir] )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+            (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
             {
                 ZINIT_ICE=( "${(kv)ice[@]}" )
                 .zinit-get-latest-gh-r-version "$user" "$plugin" || return $?
@@ -1487,7 +1487,7 @@ ZINIT[EXTENDED_GLOB]=""
                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
                     print -- "\rBinary release already up to date (version: $version)"
                 skip_pull=1
-                (( $+ice[run-atpull] )) && { do_update=1; }
+                (( ${+ice[run-atpull]} )) && { do_update=1; }
             } else {
                 do_update=1
             }
@@ -1508,7 +1508,7 @@ ZINIT[EXTENDED_GLOB]=""
                 }
                 ZINIT_ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones)
-                [[ $+ice[atpull] = 1 && ${ice[atpull]} = "!"* ]] && {
+                [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
                     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
@@ -1516,12 +1516,12 @@ ZINIT[EXTENDED_GLOB]=""
                     done
                 }
 
-                (( !skip_pull && $+ZINIT_ICE[reset] )) && (
+                (( !skip_pull && ${+ZINIT_ICE[reset]} )) && (
                     (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "$ZINIT[col-obj]reset: running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
                     builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 )
 
-                [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( $+ice[nocd] == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
+                [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                 print -r -- mark >! $local_dir/.zinit_lastupd
 
                 if (( !skip_pull )) {
@@ -1567,7 +1567,7 @@ ZINIT[EXTENDED_GLOB]=""
               [[ ${#log} -gt 0 ]] && do_update=1 || \
                   {
                       skip_pull=1
-                      (( $+ice[run-atpull] )) && {
+                      (( ${+ice[run-atpull]} )) && {
                           do_update=1
                           print -r -- mark >! $local_dir/.zinit_lastupd
                           if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
@@ -1589,18 +1589,18 @@ ZINIT[EXTENDED_GLOB]=""
                   }
                   ZINIT_ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones)
-                  [[ $+ice[atpull] = 1 && ${ice[atpull]} = "!"* ]] && {
+                  [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
                       reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                           "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \!atpull
                       done
                   }
-                  (( $+ZINIT_ICE[reset] )) && (
+                  (( ${+ZINIT_ICE[reset]} )) && (
                       (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f%b"
                       eval "${ZINIT_ICE[reset]:-command git reset --hard HEAD}"
                   )
-                  [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( $+ice[nocd] == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
+                  [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                   ZINIT_ICE=()
                   (( !skip_pull )) && command git pull --no-stat
               }
@@ -1626,7 +1626,7 @@ ZINIT[EXTENDED_GLOB]=""
 
         # Any new commits?
         [[ ${#log} -gt 0 ]] && {
-            [[ $+ice[make] = 1 && ${ice[make]} = "!!"* ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
+            [[ ${+ice[make]} = 1 && ${ice[make]} = "!!"* ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
 
             if [[ -z ${ice[is_release]} && -n ${ice[mv]} ]]; then
                 if [[ ${ice[mv]} = *("->"|"→")* ]] {
@@ -1680,9 +1680,9 @@ ZINIT[EXTENDED_GLOB]=""
                 done
             }
 
-            [[ $+ice[make] = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
-            [[ -n ${ice[atpull]} && ${ice[atpull][1]} != "!" ]] && .zinit-countdown "atpull" && ( (( $+ice[nocd] == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; )
-            [[ $+ice[make] = 1 && ${ice[make]} != "!"* ]] && .zinit-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
+            [[ ${+ice[make]} = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
+            [[ -n ${ice[atpull]} && ${ice[atpull][1]} != "!" ]] && .zinit-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; )
+            [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && .zinit-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
 
             # Run annexes' atpull hooks (the after atpull-ice ones)
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}" )
@@ -1698,8 +1698,8 @@ ZINIT[EXTENDED_GLOB]=""
     fi
     ZINIT_ICE=( "${(kv)ice[@]}" )
 
-    if (( ZINIT[annex-multi-flag:pull-active] > 0 && $+ZINIT_ICE[extract] )) {
-        (( $+functions[.zinit-setup-plugin-dir] )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+    if (( ZINIT[annex-multi-flag:pull-active] > 0 && ${+ZINIT_ICE[extract]} )) {
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
         local extract=${ZINIT_ICE[extract]}
         [[ -n $extract ]] && @zinit-substitute extract
         .zinit-extract plugin "$extract" "$local_dir"
@@ -1749,7 +1749,7 @@ ZINIT[EXTENDED_GLOB]=""
     integer retval
 
     if [[ "$st" = "status" ]]; then
-        if (( $+ZINIT_ICE[svn] )); then
+        if (( ${+ZINIT_ICE[svn]} )); then
             print -r -- "${ZINIT[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZINIT[col-rst]}"
             ( builtin cd -q "$local_dir"; command svn status -vu )
             retval=$?
@@ -1761,7 +1761,7 @@ ZINIT[EXTENDED_GLOB]=""
             print
         fi
     else
-        (( $+functions[.zinit-setup-plugin-dir] )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
         .zinit-update-snippet "${ZINIT_ICE[teleid]:-$URL}"
         retval=$?
     fi
@@ -2133,7 +2133,7 @@ ZINIT[EXTENDED_GLOB]=""
             print "$time" - "$REPLY (sbin command)"
         elif [[ -n ${sice[fbin]} ]]; then
             print "$time" - "$REPLY (fbin command)"
-        elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && $+sice[make] = 1 ]]; then
+        elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && ${+sice[make]} = 1 ]]; then
             print "$time" - "$REPLY (/dev/null make plugin)"
         else
             print "$time" - "$REPLY"
@@ -2627,7 +2627,7 @@ ZINIT[EXTENDED_GLOB]=""
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks() {
     if [[ -n ${ZINIT_ICE[atdelete]} ]]; then
-        .zinit-countdown "atdelete" && ( (( $+ZINIT_ICE[nocd] == 0 )) && \
+        .zinit-countdown "atdelete" && ( (( ${+ZINIT_ICE[nocd]} == 0 )) && \
                 { builtin cd -q "$5" && eval "${ZINIT_ICE[atdelete]}"; ((1)); } || \
                 eval "${ZINIT_ICE[atdelete]}" )
     fi
@@ -2732,7 +2732,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
     files=( ${(@)files[1,4]} ${files[4]+more…} )
 
     if (( is_snippet )); then
-        if [[ $+ZINIT_ICE[svn] = 1 ]] {
+        if [[ "${+ZINIT_ICE[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
             then
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
@@ -2744,7 +2744,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
                 return 1
             fi
         } else {
-            if [[ -e $local_dir ]]; then
+            if [[ -e "$local_dir" ]]; then
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                     ".zinit-run-delete-hooks snippet \"${ZINIT_ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
@@ -2859,7 +2859,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
     .zinit-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
-    if (( $+commands[curl] == 0 || $+commands[git] == 0 )); then
+    if (( ${+commands[curl]} == 0 || ${+commands[git]} == 0 )); then
         print "${ZINIT[col-error]}curl and git are needed${ZINIT[col-rst]}"
         return 1
     fi
@@ -3008,17 +3008,17 @@ EOF
     [[ "$TERM" = xterm* || "$TERM" = "screen" ]] && has_256_colors=1
 
     {
-        if (( $+commands[pygmentize] )); then
+        if (( ${+commands[pygmentize]} )); then
             print "Glancing with ${ZINIT[col-info]}pygmentize${ZINIT[col-rst]}"
             pygmentize -l bash -g "$fname"
-        elif (( $+commands[highlight] )); then
+        elif (( ${+commands[highlight]} )); then
             print "Glancing with ${ZINIT[col-info]}highlight${ZINIT[col-rst]}"
             if (( has_256_colors )); then
                 highlight -q --force -S sh -O xterm256 "$fname"
             else
                 highlight -q --force -S sh -O ansi "$fname"
             fi
-        elif (( $+commands[source-highlight] )); then
+        elif (( ${+commands[source-highlight]} )); then
             print "Glancing with ${ZINIT[col-info]}source-highlight${ZINIT[col-rst]}"
             source-highlight -fesc --failsafe -s zsh -o STDOUT -i "$fname"
         else
@@ -3130,7 +3130,7 @@ EOF
 } # ]]]
 # FUNCTION: .zinit-ls [[[
 .zinit-ls() {
-    (( $+commands[tree] )) || {
+    (( ${+commands[tree]} )) || {
         print "${ZINIT[col-error]}No \`tree' program, it is required by the subcommand \`ls\'${ZINIT[col-rst]}"
         print "Download from: http://mama.indstate.edu/users/ice/tree/"
         print "It is also available probably in all distributions and Homebrew, as package \`tree'"
@@ -3186,7 +3186,7 @@ EOF
         tmp=( "${(z@)ZINIT_SICE[$the_id]}" )
         (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
 
-        [[ $+sice[svn] = 1 || -n $s_svn ]] && {
+        [[ ${+sice[svn]} = 1 || -n $s_svn ]] && {
             [[ -e $s_path ]] && REPLY=$s_path
         } || {
             reply=( ${_filename:+"$_filename"} )
@@ -3251,7 +3251,7 @@ EOF
             cand2="${(qq)val}"
             if [[ -n "$val" ]]; then
                 [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
-            elif [[ $+ice[$el] = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]]; then
+            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]]; then
                 output+=( "$el" )
             fi
         done
@@ -3398,7 +3398,7 @@ EOF
             key="${(k)ZINIT_EXTS[(r)$idx *]}"
             [[ -z "$key" || "$key" != "z-annex $type:"* ]] && continue
             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-            (( $+functions[${arr[6]}] )) && { "${arr[6]}"; ((1)); } || \
+            (( ${+functions[${arr[6]}]} )) && { "${arr[6]}"; ((1)); } || \
                 { print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-annex \`${arr[3]}')"; }
         done
     done

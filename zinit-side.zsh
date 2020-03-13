@@ -234,8 +234,8 @@
     __tmp=( "${(z@)ZINIT_SICE[$__user${${__user:#(%|/)*}:+/}$__plugin]}" )
     (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
 
-    if [[ "$+__sice[svn]" = "1" || -n "$__s_svn" ]]; then
-        if (( !__is_snippet && $+__sice[svn] == 1 )); then
+    if [[ "${+__sice[svn]}" = "1" || -n "$__s_svn" ]]; then
+        if (( !__is_snippet && ${+__sice[svn]} == 1 )); then
             print -r -- "The \`svn' ice is given, but the argument ($__URL) is a plugin"
             print -r -- "(\`svn' can be used only with snippets)"
             return 1
@@ -288,15 +288,15 @@
 
     # Handle flag-Ices; svn must be last
     for __key in ${ice_order[@]}; do
-        (( 0 == $+ZINIT_ICE[no$__key] && 0 == $+__sice[no$__key] )) && continue
+        (( 0 == ${+ZINIT_ICE[no$__key]} && 0 == ${+__sice[no$__key]} )) && continue
         # "If there is such ice currently, and there's no no* ice given,
         # and there's the no* ice in the static ice" – skip, don't unset.
         # With conjunction with the previous line this has the proper
         # meaning: uset if at least in one – current or static – ice
         # there's the no* ice, but not if it's only in the static ice
         # (unless there's on such ice "anyway").
-        (( 1 == $+ZINIT_ICE[$__key] && 0 == $+ZINIT_ICE[no$__key] && \
-            1 == $+__sice[no$__key] )) && continue
+        (( 1 == ${+ZINIT_ICE[$__key]} && 0 == ${+ZINIT_ICE[no$__key]} && \
+            1 == ${+__sice[no$__key]} )) && continue
 
         if [[ "$__key" = "svn" ]]; then
             command print -r -- "0" >! "$__zinit_path/mode"
@@ -310,12 +310,12 @@
     # Final decision, static ice vs. saved ice
     local -A __MY_ICE
     for __key in mode url is_release ${ice_order[@]}; do
-        (( $+__sice[$__key] + ${${${__pack:#pack-nf*}:+$+__mdata[$__key]}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+        (( ${+__sice[$__key]} + ${${${__pack:#pack-nf*}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     done
     # One more round for the special case – update, which ALWAYS
     # needs the tleid from the disk or static ice
     __key=teleid; [[ "$__pack" = pack-nftid ]] && {
-        (( $+__sice[$__key] + $+__mdata[$__key] )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+        (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
     }
 
     : ${(PA)__var_name1::="${(kv)__MY_ICE[@]}"}
@@ -398,7 +398,7 @@
 # Displays a countdown 5...4... etc. and returns 0 if it
 # sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
 .zinit-countdown() {
-    (( !$+ZINIT_ICE[countdown] )) && return 0
+    (( !${+ZINIT_ICE[countdown]} )) && return 0
 
     emulate -L zsh
     trap "print \"${ZINIT[col-pname]}ABORTING, the ice not ran${ZINIT[col-rst]}\"; return 1" INT
