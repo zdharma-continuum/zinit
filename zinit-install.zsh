@@ -1514,48 +1514,48 @@ ziextract() {
 
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
-            →zinit-extract() { command unzip -o "$file"; }
+            :zinit-extract() { command unzip -o "$file"; }
             ;;
         ((#i)*.rar)
-            →zinit-extract() { command unrar x "$file"; }
+            :zinit-extract() { command unrar x "$file"; }
             ;;
         ((#i)*.tar.bz2|(#i)*.tbz2)
-            →zinit-extract() { command bzip2 -dc "$file" | command tar -xf -; }
+            :zinit-extract() { command bzip2 -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.gz|(#i)*.tgz)
-            →zinit-extract() { command gzip -dc "$file" | command tar -xf -; }
+            :zinit-extract() { command gzip -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.xz|(#i)*.txz)
-            →zinit-extract() { command xz -dc "$file" | command tar -xf -; }
+            :zinit-extract() { command xz -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.7z|(#i)*.t7z)
-            →zinit-extract() { command 7z x -so "$file" | command tar -xf -; }
+            :zinit-extract() { command 7z x -so "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar)
-            →zinit-extract() { command tar -xf "$file"; }
+            :zinit-extract() { command tar -xf "$file"; }
             ;;
         ((#i)*.gz|(#i)*.gzip)
             if [[ $file != (#i)*.gz ]] {
                 command mv $file $file.gz
                 file=$file.gz
             }
-            →zinit-extract() { command gunzip "$file"; }
+            :zinit-extract() { command gunzip "$file"; }
             ;;
         ((#i)*.bz2|(#i)*.bzip2)
-            →zinit-extract() { command bunzip2 "$file"; }
+            :zinit-extract() { command bunzip2 "$file"; }
             ;;
         ((#i)*.xz)
             if [[ $file != (#i)*.xz ]] {
                 command mv $file $file.xz
                 file=$file.xz
             }
-            →zinit-extract() { command xz -d "$file"; }
+            :zinit-extract() { command xz -d "$file"; }
             ;;
         ((#i)*.7z|(#i)*.7-zip)
-            →zinit-extract() { command 7z x "$file" >/dev/null;  }
+            :zinit-extract() { command 7z x "$file" >/dev/null;  }
             ;;
         ((#i)*.dmg)
-            →zinit-extract() {
+            :zinit-extract() {
                 local prog
                 for prog ( hdiutil cp ) {
                     if ! command -v $prog &>/dev/null; then
@@ -1588,8 +1588,8 @@ ziextract() {
             ;;
     esac
 
-    if [[ $(typeset -f + -- →zinit-extract) == "→zinit-extract" ]] {
-        .zinit-extract-wrapper "$file" →zinit-extract || {
+    if [[ $(typeset -f + -- :zinit-extract) == ":zinit-extract" ]] {
+        .zinit-extract-wrapper "$file" :zinit-extract || {
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} )) {
@@ -1609,10 +1609,10 @@ ziextract() {
                     "extraction of the archive" \
                     "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}' had problems.%f%b"
             }
-            unfunction -- →zinit-extract 2>/dev/null
+            unfunction -- :zinit-extract 2>/dev/null
             return 1
         }
-        unfunction -- →zinit-extract
+        unfunction -- :zinit-extract
     } else {
         integer warning=1
     }
