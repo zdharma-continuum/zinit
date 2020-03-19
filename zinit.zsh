@@ -26,7 +26,7 @@ unset ZPLGM
 ZINIT[ZERO]="$0"
 [[ ! -o functionargzero || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
 
-[[ -z ${ZINIT[BIN_DIR]} ]] && ZINIT[BIN_DIR]="${ZINIT[ZERO]:h}"
+: ${ZINIT[BIN_DIR]:="${ZINIT[ZERO]:h}"}
 [[ ${ZINIT[BIN_DIR]} = \~* ]] && ZINIT[BIN_DIR]=${~ZINIT[BIN_DIR]}
 
 # Make ZINIT[BIN_DIR] path absolute
@@ -45,7 +45,7 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
         ZINIT[HOME_DIR]="$HOME/.zinit"
     elif [[ -d $HOME/.zplugin ]]; then
         ZINIT[HOME_DIR]="$HOME/.zplugin"
-    elif [[ -d ${ZDOTDIR:-HOME}/.zplugin ]]; then
+    elif [[ -d ${ZDOTDIR:-$HOME}/.zplugin ]]; then
         ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zplugin"
     else
         ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zinit"
@@ -64,7 +64,7 @@ ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMP
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
 export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache/zinit}}" \
     PMSPEC=0uUpiPs
-[[ -z ${path[(re)$ZPFX/bin]} ]] && path=( "$ZPFX/bin" ${path[@]} )
+[[ -z ${path[(re)$ZPFX/bin]} ]] && path=( "$ZPFX/bin" "${path[@]}" )
 
 # Add completions directory to fpath
 [[ -z ${fpath[(re)${ZINIT[COMPLETIONS_DIR]}]} ]] && fpath=( "${ZINIT[COMPLETIONS_DIR]}" "${fpath[@]}" )
