@@ -1364,6 +1364,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
+    [[ ${#list} -gt 1 ]] && {
+        list2=( ${list[@]:#(#i)*.sha256} )
+        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
+    }
+
     [[ $#list -eq 0 ]] && {
         print -nr "${ZINIT[col-msg2]}Didn't find correct Github" \
             "release-file to download"

@@ -182,22 +182,14 @@
     # Copy from .zinit-recall
     local -a ice_order nval_ices
     ice_order=(
-        svn proto from teleid bindmap cloneopts id-as depth if wait load
-        unload blockf pick bpick src as ver silent lucid notify mv cp
-        atinit atclone atload atpull nocd run-atpull has cloneonly make
-        service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet atdelete pack git verbose on-update-of
-        subscribe param extract
+        ${(s.|.)ZINIT[ice-list]}
+
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode is-snippet git verbose
+            ${(s.|.)ZINIT[nval-ice-list]}
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
@@ -343,22 +335,13 @@
     # Copy from .zinit-recall
     local -a ice_order nval_ices
     ice_order=(
-        svn proto from teleid bindmap cloneopts id-as depth if wait load
-        unload blockf pick bpick src as ver silent lucid notify mv cp
-        atinit atclone atload atpull nocd run-atpull has cloneonly make
-        service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet atdelete pack git verbose on-update-of
-        subscribe param extract
+        ${(s.|.)ZINIT[ice-list]}
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@s.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode is-snippet git verbose
+            ${(s.|.)ZINIT[nval-ice-list]}
 
             # Include only those additional ices,
             # don't have the '' in their name, i.e.

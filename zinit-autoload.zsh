@@ -3211,28 +3211,22 @@ EOF
 # ]]]
 # FUNCTION: .zinit-recall [[[
 .zinit-recall() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops
+
     local -A ice
     local el val cand1 cand2 local_dir filename is_snippet
 
     local -a ice_order nval_ices output
     ice_order=(
-        svn proto from teleid bindmap cloneopts id-as depth if wait load
-        unload blockf pick bpick src as ver silent lucid notify mv cp
-        atinit atclone atload atpull nocd run-atpull has cloneonly make
-        service trackbinds multisrc compile nocompile nocompletions
-        reset-prompt wrap-track reset sh \!sh bash \!bash ksh \!ksh csh
-        \!csh aliases countdown ps-on-unload ps-on-update trigger-load
-        light-mode is-snippet atdelete pack git verbose on-update-of
-        subscribe param extract
+        ${(s.|.)ZINIT[ice-list]}
+
         # Include all additional ices – after
         # stripping them from the possible: ''
         ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
     )
     nval_ices=(
-            blockf silent lucid trackbinds cloneonly nocd run-atpull
-            nocompletions sh \!sh bash \!bash ksh \!ksh csh \!csh
-            aliases countdown light-mode is-snippet git verbose
-
+            ${(s.|.)ZINIT[nval-ice-list]}
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
@@ -3244,19 +3238,19 @@ EOF
     .zinit-compute-ice "$1${${1:#(%|/)*}:+${2:+/}}$2" "pack" \
         ice local_dir filename is_snippet || return 1
 
-    [[ -e "$local_dir" ]] && {
-        for el in "${ice_order[@]}"; do
+    [[ -e $local_dir ]] && {
+        for el ( ${ice_order[@]} ) {
             val="${ice[$el]}"
             cand1="${(qqq)val}"
             cand2="${(qq)val}"
-            if [[ -n "$val" ]]; then
+            if [[ -n "$val" ]] {
                 [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
-            elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]]; then
+            } elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]] {
                 output+=( "$el" )
-            fi
-        done
+            }
+        }
 
-        if [[ "${#output}" = 0 ]]; then
+        if [[ ${#output} = 0 ]]; then
             print -zr "# No Ice modifiers"
         else
             print -zr "zinit ice ${output[*]}; zinit "
@@ -3303,29 +3297,30 @@ EOF
     setopt localoptions localtraps
     trap 'return 1' INT TERM
     ( builtin cd -q "${ZINIT[BIN_DIR]}"/zmodules
-      print -r -- "${ZINIT[col-pname]}== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==${ZINIT[col-rst]}"
-      print -r -- "${ZINIT[col-pname]}== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules ==${ZINIT[col-rst]}"
+      +zinit-message "[pname]== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==[rst]"
+      +zinit-message "[pname]== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules ==[rst]"
       [[ -f Makefile ]] && { [[ "$1" = "--clean" ]] && {
-              print -r -- ${ZINIT[col-p]}-- make distclean --${ZINIT[col-rst]}
+              noglob +zinit-message [p]-- make distclean --[rst]
               make distclean
               ((1))
           } || {
-              print -r -- ${ZINIT[col-p]}-- make clean --${ZINIT[col-rst]}
+              noglob +zinit-message [p]-- make clean --[rst]
               make clean
           }
       }
-      print -r -- ${ZINIT[col-p]}-- ./configure --${ZINIT[col-rst]}
+      noglob +zinit-message  [p]-- ./configure --[rst]
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
-          print -r -- ${ZINIT[col-p]}-- make --${ZINIT[col-rst]}
+          noglob +zinit-message [p]-- make --[rst]
           make && {
             [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
-            print -r -- "${ZINIT[col-info]}Module has been built correctly.${ZINIT[col-rst]}"
+            noglob +zinit-message "[info]Module has been built correctly.[rst]"
             .zinit-module info
           } || {
-              print -rn -- "${ZINIT[col-error]}Module didn't build.${ZINIT[col-rst]} "
+              noglob +zinit-message  "[error]Module didn't build.[rst] "
               .zinit-module info --link
           }
       }
+      print $EPOCHSECONDS >! "${ZINIT[BIN_DIR]}"/zmodules/COMPILED_AT
     )
 }
 # ]]]
