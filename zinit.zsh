@@ -63,7 +63,7 @@ typeset -g ZPFX
 ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMPLETIONS_DIR]}
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
 export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache/zinit}}" \
-    PMSPEC=0uUpiPs
+    PMSPEC=0uUpiPsf
 [[ -z ${path[(re)$ZPFX/bin]} ]] && path=( "$ZPFX/bin" "${path[@]}" )
 
 # Add completions directory to fpath
@@ -224,6 +224,8 @@ builtin setopt noaliases
 
     local -a fpath_elements
     fpath_elements=( ${fpath[(r)$PLUGIN_DIR/*]} )
+
+    [[ -d $PLUGIN_DIR/functions ]] && fpath_elements+=( "$PLUGIN_DIR"/functions )
 
     for func; do
         # Real autoload doesn't touch function if it already exists
