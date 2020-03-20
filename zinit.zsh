@@ -189,8 +189,8 @@ builtin setopt noaliases
 # The hijacking is not only to gather report data, but also to
 # run custom `autoload' function, that doesn't need FPATH.
 :zinit-shadow-autoload () {
-    builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
-        norcexpandparam typesetsilent noshortloops unset
+    emulate -LR zsh
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
     local -a opts
     local func
 
