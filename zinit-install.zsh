@@ -1333,7 +1333,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     local user=$1 plugin=$2 urlpart=$3
 
     if [[ -z $urlpart ]] {
-        local url=https://github.com/$user/$plugin/releases/${ZINIT_ICE[ver]:-latest}
+        local url=https://github.com/$user/$plugin/releases/$ZINIT_ICE[ver]
     } else {
         local url=https://$urlpart
     }
