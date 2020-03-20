@@ -347,7 +347,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
                 url="https://github.com${REPLY}"
-                print "(Requesting \`${REPLY:t}'${version:+, version $version}...)"
+                if [[ -d $local_path/._zinit ]] {
+                    { local old_version="$(<$local_path/._zinit/is_release)"; } 2>/dev/null
+                    old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
+                }
+                print "(Requesting \`${REPLY:t}'${version:+, version $version}...${old_version:+ Current version: $old_version.})"
                 if { ! .zinit-download-file-stdout "$url" >! "${REPLY:t}" } {
                     if { ! .zinit-download-file-stdout "$url" 1 >! "${REPLY:t}" } {
                         command rm -f "${REPLY:t}"
