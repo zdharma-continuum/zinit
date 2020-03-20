@@ -2572,13 +2572,13 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
         [[ -e ${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST ]] && local recompile_request_ts="$(<${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST)"
 
         if [[ ${recompile_request_ts:-1} -gt ${compiled_at_ts:-0} ]] {
-            builtin print -r -- "[error]WARNING:[rst][msg1]A [obj]recompilation[rst]" \
+            +zinit-message "[error]WARNING:[rst][msg1]A [obj]recompilation[rst]" \
                 "of the Zinit module has been requested… [obj]Building[rst]…"
             (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
             command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null
             .zinit-module build &>/dev/null
             if command make -C "${ZINIT[BIN_DIR]}/zmodules" &>/dev/null; then
-                print -r -- "${ZINIT[col-pre]}Build successful!${ZINIT[col-rst]}"
+                +zinit-message "[pre]Build successful![rst]"
             else
                 print -r -- "${ZINIT[col-error]}Compilation failed.${ZINIT[col-rst]}" \
                      "${ZINIT[col-pre]}You can enter the following command:${ZINIT[col-rst]}" \
