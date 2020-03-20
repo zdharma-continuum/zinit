@@ -2013,7 +2013,7 @@ function $f {
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob 
     [[ $1 = -n ]] && { local n="-n"; shift }
-    local msg=${(j: :)${@//(#b)\[([^\]]##)\]/$ZINIT[col-$match[1]]}}
+    local msg=${(j: :)${@//(#b)\[([^\]]##)\]/${ZINIT[col-$match[1]]:-\[$match[1]\]}}}
     builtin print -Pr $n -- $msg
 }
 # ]]]
