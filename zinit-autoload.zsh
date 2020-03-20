@@ -1478,7 +1478,7 @@ ZINIT[EXTENDED_GLOB]=""
             (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
             {
                 ZINIT_ICE=( "${(kv)ice[@]}" )
-                .zinit-get-latest-gh-r-version "$user" "$plugin" || return $?
+                .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
             } always {
                 ZINIT_ICE=()
             }

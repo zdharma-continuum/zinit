@@ -339,7 +339,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         if [[ $site = *releases ]] {
             local url=$site/${ZINIT_ICE[ver]}
 
-            .zinit-get-latest-gh-r-version "$user" "$plugin" "$url" || return $?
+            .zinit-get-latest-gh-r-url-part "$user" "$plugin" "$url" || return $?
 
             command mkdir -p "$local_path"
             [[ -d "$local_path" ]] || return 1
@@ -1322,10 +1322,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     return $?
 }
 # ]]]
-# FUNCTION: .zinit-get-latest-gh-r-version [[[
+# FUNCTION: .zinit-get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
-.zinit-get-latest-gh-r-version() {
+.zinit-get-latest-gh-r-url-part() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
