@@ -1093,7 +1093,7 @@ function $f {
     __path="${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/._zinit
     # TODO snippet's dir computation…
     if [[ ! -d $__path ]] {
-        if ! .zinit-get-object-path snippet "$id_as"; then
+        if ! .zinit-get-object-path snippet "${id_as//\//---}"; then
             return 1
         fi
         __path="${reply[-3]%/}/${reply[-2]}"/._zinit
