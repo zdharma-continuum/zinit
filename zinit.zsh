@@ -24,7 +24,7 @@ unset ZPLGM
 [[ ! -e ${ZINIT[BIN_DIR]}/zinit.zsh ]] && ZINIT[BIN_DIR]=
 
 ZINIT[ZERO]="$0"
-[[ ! -o functionargzero || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
+[[ ! -o functionargzero || -o posixargzero || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
 
 : ${ZINIT[BIN_DIR]:="${ZINIT[ZERO]:h}"}
 [[ ${ZINIT[BIN_DIR]} = \~* ]] && ZINIT[BIN_DIR]=${~ZINIT[BIN_DIR]}
