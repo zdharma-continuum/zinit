@@ -1009,11 +1009,14 @@ function $f {
         [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
         local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
-        [[ -e $local_dir/$dirname/._zinit || -e $local_dir/$dirname/._zplugin ]] && exists=1
     } else {
         local_dir=${${${(M)id_as#%}:+${id_as#%}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
-        [[ -e $local_dir/._zinit || -e $local_dir/._zplugin ]] && exists=1
+        [[ $id_as == _local/* && -d $local_dir && ! -d $local_dir/._zinit ]] && command mkdir -p "$local_dir"/._zinit
     }
+
+    [[ -e $local_dir/${dirname:+$dirname/}._zinit || \
+        -e $local_dir/${dirname:+$dirname/}._zplugin ]] && exists=1
+
     reply=( "$local_dir" "$dirname" "$exists" )
 
     return $(( 1 - exists ))
