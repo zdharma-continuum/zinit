@@ -1690,14 +1690,14 @@ ziextract() {
 
     (( move )) && {
         local -a files
-        files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN/[1]) )
+        files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN/) )
         if (( ${#files} )) {
             if (( ${#files} > 1 )) {
                 # TODO: make this unusual situation have more chance of working
-                # E.g.: improve the -d check above
                 command mkdir -p .tmp231ABC
             }
-            command mv -f $files .tmp231ABC
+            [[ -e ''(._zinit|.git|._backup|.tmp231ABC)(#qDN.-[1]) ]] && \
+                command mv -f *~(._zinit|.git|._backup|.tmp231ABC)(DN.-) .tmp231ABC
             command mv -f **/*~(*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
             command rmdir .tmp231ABC
         }
