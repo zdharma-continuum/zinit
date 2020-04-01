@@ -322,6 +322,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         return 1
     fi
 
+    command rm -f /tmp/zinit-execs.$$.lst
+
     [[ $tpe != tarball ]] && {
         [[ -z $update ]] && {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
@@ -494,6 +496,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
             }
         }
     ) || return $?
+
+    typeset -ga INSTALLED_EXECS
+    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.lst)}" ) } 2>/dev/null
+    command rm -f /tmp/zinit-execs.$$.lst
 
     # After additional executions like atclone'' - install completions (1 - plugins)
     local -A ICE_OPTS
@@ -867,6 +873,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
 
     [[ $update = -u && ${ICE_OPTS[opt_-q,--quiet]} != 1 ]] && print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
 
+    command rm -f /tmp/zinit-execs.$$.lst
+
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
     # a forced download (i.e.: the medium doesn't allow to peek update)
@@ -1235,6 +1243,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         ((1))
     ) || return $?
 
+    typeset -ga INSTALLED_EXECS
+    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
+    command rm -f /tmp/zinit-execs.$$.lst
+
     # After additional executions like atclone'' - install completions (2 - snippets)
     local -A ICE_OPTS
     ICE_OPTS[opt_-q,--quiet]=1
@@ -1261,6 +1273,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     ice_opts=( "${(kv)ICE_OPTS[@]}" )
     local -A ICE_OPTS
     ICE_OPTS=( "${(kv)ice_opts[@]}" )
+
+    command rm -f /tmp/zinit-execs.$$.lst
 
     ZINIT[annex-multi-flag:pull-active]=0
 
@@ -1319,6 +1333,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     # Download or copy the file
     [[ $url = *github.com* && $url != */raw/* ]] && url=${url/\/(blob|tree)\///raw/}
     .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "-u"
+
+    typeset -ga INSTALLED_EXECS
+    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
+    command rm -f /tmp/zinit-execs.$$.lst
+
     return $?
 }
 # ]]]
@@ -1635,6 +1654,7 @@ ziextract() {
         execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
     }
 
+    print -rl -- ${execs[@]} >! /tmp/zinit-execs.$$.lst
     if [[ ${#execs} -gt 0 ]] {
         command chmod a+x "${execs[@]}"
         if (( !ICE_OPTS[opt_-q,--quiet] )) {

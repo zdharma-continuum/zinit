@@ -1432,6 +1432,8 @@ ZINIT[EXTENDED_GLOB]=""
         return $retval
     fi
 
+    command rm -f /tmp/zinit-execs.$$.lst
+
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
     # a forced download (i.e.: the medium doesn't allow to peek update)
@@ -1727,6 +1729,10 @@ ZINIT[EXTENDED_GLOB]=""
         }
     fi
     ZINIT_ICE=()
+
+    typeset -ga INSTALLED_EXECS
+    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
+    command rm -f /tmp/zinit-execs.$$.lst
 
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
         print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
