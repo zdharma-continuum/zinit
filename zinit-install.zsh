@@ -1663,11 +1663,21 @@ ziextract() {
                         "Successfully extracted and assigned +x chmod to the file:" \
                         "\`${ZINIT[col-obj]}${execs[1]}%f%b'."
             else
-                local sep="${ZINIT[col-rst]},${ZINIT[col-obj]} "
-                print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b Successfully" \
-                    "extracted and marked executable the appropriate files" \
-                    "(${ZINIT[col-obj]}${(pj:$sep:)${execs[@]:t}}%f%b) contained" \
-                    "in \`${ZINIT[col-file]}$file%f%b'."
+                local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
+                if (( ${#execs} > 7 )) {
+                    print -Pr -- "$ZINIT[col-pre]ziextract:%f%b Successfully" \
+                        "extracted and marked executable the appropriate files" \
+                        "($ZINIT[col-obj]${(pj:$sep:)${(@)execs[1,5]:t}},…%f%b) contained" \
+                        "in \`$ZINIT[col-file]$file%f%b'. All the extracted" \
+                        "$ZINIT[col-obj]${#execs}%f%b executables are" \
+                        "available in the $ZINIT[col-msg2]INSTALLED_EXECS%f%b" \
+                        "array."
+                } else {
+                    print -Pr -- "$ZINIT[col-pre]ziextract:%f%b Successfully" \
+                        "extracted and marked executable the appropriate files" \
+                        "($ZINIT[col-obj]${(pj:$sep:)${execs[@]:t}}%f%b) contained" \
+                        "in \`$ZINIT[col-file]$file%f%b'."
+                }
             fi
         }
     } elif (( warning )) {
