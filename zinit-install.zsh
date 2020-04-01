@@ -1494,7 +1494,7 @@ ziextract() {
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
                                 if [[ $fname == *.out ]] {
-                                    command mv -f "$fname" "${fname%.out}"
+                                    [[ -f $fname ]] && command mv -f "$fname" "${fname%.out}"
                                     stage2_processed+=( ${fname%.out} )
                                 }
                             }
@@ -1699,7 +1699,7 @@ ziextract() {
             [[ -e ''(._zinit|.git|._backup|.tmp231ABC)(#qDN.-[1]) ]] && \
                 command mv -f *~(._zinit|.git|._backup|.tmp231ABC)(DN.-) .tmp231ABC
             command mv -f **/*~(*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
-            command rmdir .tmp231ABC
+            [[ -d .tmp231ABC ]] && command rmdir .tmp231ABC
         }
         REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
     } || {
