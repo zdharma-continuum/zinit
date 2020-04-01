@@ -52,6 +52,12 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 01-04-2020
+  - As a user [noticed](https://github.com/zdharma/zinit/issues/293), Subversion
+    isn't distributed with Xcode Command Line Tools anymore. Here's a [helpful
+    snippet](https://www.reddit.com/r/zinit/wiki/gallery#wiki_building_and_installation_of_subversion)
+    that installs Subversion with use of Zinit.
+
 * 27-02-2020
   - An **important fix** has been pushed – due to a bug Turbo has been disabled
     for non-for syntax invocations of Zinit. Issue `zinit self-update` to
