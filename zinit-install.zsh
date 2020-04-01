@@ -1660,8 +1660,8 @@ ziextract() {
 
     (( move )) && {
         local -a files
-        files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN[1]) )
-        if (( ${#files} )) && [[ -d $files[1] ]] {
+        files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN/[1]) )
+        if (( ${#files} )) {
             if (( ${#files} > 1 )) {
                 # TODO: make this unusual situation have more chance of working
                 # E.g.: improve the -d check above
