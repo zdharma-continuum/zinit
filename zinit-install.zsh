@@ -1457,10 +1457,10 @@ ziextract() {
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar) ]] {
                     (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                        print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
+                        print -Pr -- "$ZINIT[col-pre]ziextract:$ZINIT[col-info2]" \
                             "Note:%f%b" \
-                            "detected a ${ZINIT[col-obj]}$type%f%b" \
-                            "archive in the file ${ZINIT[col-file]}$fname%f%b."
+                            "detected a $ZINIT[col-obj]$type%f%b" \
+                            "archive in the file $ZINIT[col-file]$fname%f%b."
                     ziextract "$fname" "$type" $opt_move $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
                     integer iret_val=$?
                     ret_val+=iret_val
@@ -1486,10 +1486,10 @@ ziextract() {
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
                                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                                    print -Pr -- "${ZINIT[col-pre]}ziextract:${ZINIT[col-info2]}" \
+                                    print -Pr -- "$ZINIT[col-pre]ziextract:$ZINIT[col-info2]" \
                                         "Note:%f%b" \
-                                        "detected a ${ZINIT[col-obj]}$type2%f%b" \
-                                        "archive in the file ${ZINIT[col-file]}$fname%f%b."
+                                        "detected a $ZINIT[col-obj]$type2%f%b" \
+                                        "archive in the file $ZINIT[col-file]$fname%f%b."
                                 ziextract "$fname" "$type2" $opt_move $opt_norm ${${${#archives}:#1}:+--nobkp}
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
@@ -1507,16 +1507,16 @@ ziextract() {
     }
 
     if [[ -z $file ]] {
-        print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
-            "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
+        print -Pr -- "$ZINIT[col-pre]ziextract:%f%b" \
+            "$ZINIT[col-error]ERROR:$ZINIT[col-msg2]" \
             "argument needed (the file to extract) or" \
             "the --auto option"
         return 1
     }
     if [[ ! -e $file ]] {
-        print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
-            "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
-            "the file \`${ZINIT[col-obj]}$file${ZINIT[col-msg2]}'" \
+        print -Pr -- "$ZINIT[col-pre]ziextract:%f%b" \
+            "$ZINIT[col-error]ERROR:$ZINIT[col-msg2]" \
+            "the file \`$ZINIT[col-obj]$file$ZINIT[col-msg2]'" \
             "doesn't exist, aborting the extraction."
         return 1
     }
@@ -1529,8 +1529,8 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            print -Pr "${ZINIT[col-pre]}ziextract:${ZINIT[col-msg1]} Unpacking the files from:" \
-                "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'...%f%b"
+            print -Pr "$ZINIT[col-pre]ziextract:$ZINIT[col-msg1] Unpacking the files from:" \
+                "\`$ZINIT[col-obj]$file$ZINIT[col-msg1]'...%f%b"
         $fun; retval=$?
         (( retval == 0 )) && {
             local -a files
@@ -1587,11 +1587,11 @@ ziextract() {
                 local prog
                 for prog ( hdiutil cp ) {
                     if ! command -v $prog &>/dev/null; then
-                        print -Pr -- "${ZINIT[col-pre]}ziextract:" \
-                            "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]}" \
-                            "no \`${ZINIT[col-obj]}$prog${ZINIT[col-msg2]}'" \
+                        print -Pr -- "$ZINIT[col-pre]ziextract:" \
+                            "$ZINIT[col-error]ERROR:$ZINIT[col-msg2]" \
+                            "no \`$ZINIT[col-obj]$prog$ZINIT[col-msg2]'" \
                             "command found – it is required to extract a" \
-                            "${ZINIT[col-obj]}dmg${ZINIT[col-msg2]} image.%f%b"
+                            "$ZINIT[col-obj]dmg$ZINIT[col-msg2] image.%f%b"
                         return 1
                     fi
                 }
@@ -1605,11 +1605,11 @@ ziextract() {
                 command hdiutil detach $attached_vol
 
                 (( retval )) && {
-                    print -Pr -- "${ZINIT[col-pre]}ziextract:" \
-                            "${ZINIT[col-error]}Warning:${ZINIT[col-msg1]}" \
+                    print -Pr -- "$ZINIT[col-pre]ziextract:" \
+                            "$ZINIT[col-error]Warning:$ZINIT[col-msg1]" \
                             "problem occurred when attempted to copy the files" \
                             "from the mounted image:" \
-                            "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'.%f%b"
+                            "\`$ZINIT[col-obj]$file$ZINIT[col-msg1]'.%f%b"
                 }
                 return $retval
             }
@@ -1621,8 +1621,8 @@ ziextract() {
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} )) {
-                print -nPr -- "${ZINIT[col-pre]}ziextract:" \
-                    "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
+                print -nPr -- "$ZINIT[col-pre]ziextract:" \
+                    "$ZINIT[col-error]WARNING:$ZINIT[col-msg1]" \
                     "extraction of archive had problems"
                 if (( !nobkp )) {
                     print ", restoring previous" \
@@ -1632,10 +1632,10 @@ ziextract() {
                     print -P ".%f%b"
                 }
             } else {
-                print -Pr -- "${ZINIT[col-pre]}ziextract:" \
-                    "${ZINIT[col-error]}WARNING:${ZINIT[col-msg1]}" \
+                print -Pr -- "$ZINIT[col-pre]ziextract:" \
+                    "$ZINIT[col-error]WARNING:$ZINIT[col-msg1]" \
                     "extraction of the archive" \
-                    "\`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}' had problems.%f%b"
+                    "\`$ZINIT[col-obj]$file$ZINIT[col-msg1]' had problems.%f%b"
             }
             unfunction -- →zinit-extract 2>/dev/null
             return 1
@@ -1659,9 +1659,9 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
-                    print -Pr -- "${ZINIT[col-pre]}ziextract:%f%b" \
+                    print -Pr -- "$ZINIT[col-pre]ziextract:%f%b" \
                         "Successfully extracted and assigned +x chmod to the file:" \
-                        "\`${ZINIT[col-obj]}${execs[1]}%f%b'."
+                        "\`$ZINIT[col-obj]${execs[1]}%f%b'."
             else
                 local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
                 if (( ${#execs} > 7 )) {
@@ -1681,10 +1681,10 @@ ziextract() {
             fi
         }
     } elif (( warning )) {
-        print -Pr -- "${ZINIT[col-pre]}ziextract:" \
-            "${ZINIT[col-error]}WARNING: ${ZINIT[col-msg1]}didn't recognize the archive" \
-            "type of \`${ZINIT[col-obj]}$file${ZINIT[col-msg1]}'" \
-            "${ext:+${ZINIT[col-obj2]}/ $ext${ZINIT[col-msg1]} }"\
+        print -Pr -- "$ZINIT[col-pre]ziextract:" \
+            "$ZINIT[col-error]WARNING: $ZINIT[col-msg1]didn't recognize the archive" \
+            "type of \`$ZINIT[col-obj]$file$ZINIT[col-msg1]'" \
+            "${ext:+$ZINIT[col-obj2]/ $ext$ZINIT[col-msg1] }"\
 "(no extraction has been done).%f%b"
     }
 
