@@ -491,7 +491,7 @@ zinit for \
     light-mode  zsh-users/zsh-autosuggestions \
     light-mode  zdharma/fast-syntax-highlighting \
                 zdharma/history-search-multi-word \
-    pick"async.zsh" src"pure.zsh" \
+    light-mode pick"async.zsh" src"pure.zsh" \
                 sindresorhus/pure
 
 # Binary release in archive, from GitHub-releases page.
