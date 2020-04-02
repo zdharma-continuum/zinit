@@ -200,7 +200,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
                     "requires ${namemap[$required]} annex." \
                     "\nSee: %F{221}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}%f%b."
-                print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
+                (( ${#profiles[@]:#$profile} > 0 )) && print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
                 return 1
             fi
         else
