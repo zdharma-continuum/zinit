@@ -473,11 +473,11 @@ After installing and reloading the shell compile Zinit with `zinit self-update`.
 After installing Zinit you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
 
 ```zsh
-# Two regular plugins loaded without tracking.
+# Two regular plugins loaded without investigating.
 zinit light zsh-users/zsh-autosuggestions
 zinit light zdharma/fast-syntax-highlighting
 
-# Plugin history-search-multi-word loaded with tracking.
+# Plugin history-search-multi-word loaded with investigating.
 zinit load zdharma/history-search-multi-word
 
 # Load the pure theme, with zsh-async library that's bundled with it.
@@ -621,7 +621,7 @@ explicitly stated otherwise.
 | [**`atclone`**](http://zdharma.org/zinit/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after cloning, within plugin's directory, e.g. `zinit ice atclone"echo Cloned"`. Ran also after downloading snippet.</div>|
 | [**`atpull`**](http://zdharma.org/zinit/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after updating (**only if new commits are waiting for download**), within plugin's directory. If starts with "!" then command will be ran before `mv` & `cp` ices and before `git pull` or `svn update`. Otherwise it is ran after them. Can be `atpull'%atclone'`, to repeat `atclone` Ice-mod.</div>|
 | [**`atinit`**](http://zdharma.org/zinit/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.</div>|
-| [**`atload`**](http://zdharma.org/zinit/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be tracked (if using `load`, not `light`).</div>|
+| [**`atload`**](http://zdharma.org/zinit/wiki/atload-and-other-at-ices) |<div align="justify" style="text-align: justify;"> Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with `!`, it will then be investigated (if using `load`, not `light`).</div>|
 | `run-atpull` |<div align="justify" style="text-align: justify;"> Always run the atpull hook (when updating), not only when there are new commits to be downloaded.</div>|
 | `nocd` |<div align="justify" style="text-align: justify;"> Don't switch the current directory into the plugin's directory when evaluating the above ice-mods `atinit''`,`atload''`, etc.</div>|
 | [**`make`**](http://zdharma.org/zinit/wiki/Installing-with-make) |<div align="justify" style="text-align: justify;"> Run `make` command after cloning/updating and executing `mv`, `cp`, `atpull`, `atclone` Ice mods. Can obtain argument, e.g. `make"install PREFIX=/opt"`. If the value starts with `!` then `make` is ran before `atclone`/`atpull`, e.g. `make'!'`.</div>|
@@ -646,10 +646,10 @@ explicitly stated otherwise.
 | `service` |<div align="justify" style="text-align: justify;"> Make following plugin or snippet a *service*, which will be ran in background, and only in single Zshell instance. See [zservices-organization](https://github.com/zservices) page.</div>|
 | `reset-prompt` |<div align="justify" style="text-align: justify;"> Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.</div>|
 | `bindmap` |<div align="justify" style="text-align: justify;"> To hold `;`-separated strings like `Key(s)A -> Key(s)B`, e.g. `^R -> ^T; ^A -> ^B`. In general, `bindmap''`changes bindings (done with the `bindkey` builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. **Does not work with snippets.**</div>|
-| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zinit light ...`, i.e. even with tracking disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zinit light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>|
-| [**`wrap-track`**](http://zdharma.org/zinit/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be tracked (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the tracking beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>|
+| `trackbinds` |<div align="justify" style="text-align: justify;"> Shadow but only `bindkey` calls even with `zinit light ...`, i.e. even with investigating disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zinit light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**</div>|
+| [**`wrap-track`**](http://zdharma.org/zinit/wiki/wrap-track) |<div align="justify" style='text-align: justify;'> Takes a `;`-separated list of function names that are to be investigated (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a investigating-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the investigating beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**</div>|
 | `aliases` |<div align="justify" style="text-align: justify;">Load the plugin with the aliases mechanism enabled. Use with plugins that define **and use** aliases in their scripts.</div>|
-| `light-mode` |<div align="justify" style="text-align: justify;">Load the plugin without the tracking, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand</div>|
+| `light-mode` |<div align="justify" style="text-align: justify;">Load the plugin without the investigating, i.e.: as if it would be loaded with the `light` command. Useful for the for-syntax, where there is no `load` nor `light` subcommand</div>|
 | [**`extract`**](http://zdharma.org/zinit/wiki/extract-Ice/) |<div align="justify" style="text-align: justify;">Performs archive extraction supporting multiple formats like `zip`, `tar.gz`, etc. and also notably OS X `dmg` images. If it has no value, then it works in the *auto* mode – it automatically extracts all files of known archive extensions IF they aren't located deeper than in a sub-directory (this is to prevent extraction of some helper archive files, typically located somewhere deeper in the tree). If no such files will be found, then it extracts all found files of known **type** – the type is being read by the `file` Unix command. If not empty, then takes names of the files to extract. Refer to the Wiki page for further information.</div>|
 
 ### Order of Execution
@@ -672,7 +672,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 | Command | Description |
 |:-:|-|
 | `load {plg-spec}` |<div align="justify" style="text-align: justify;"> Load plugin, can also receive absolute local path.</div>|
-| `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/tracking. `-b` – track `bindkey`-calls only. There's also `light-mode` ice which can be used to induce the no-tracking (i.e.: *light*) loading, regardless of the command used.</div>|
+| `light [-b] {plg-spec}` |<div align="justify" style="text-align: justify;"> Light plugin load, without reporting/investigating. `-b` – investigate `bindkey`-calls only. There's also `light-mode` ice which can be used to induce the no-investigating (i.e.: *light*) loading, regardless of the command used.</div>|
 | `unload [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Unload plugin loaded with `zinit load ...`. `-q` – quiet.</div>|
 | `snippet [-f] {url}` |<div align="justify" style="text-align: justify;"> Source local or remote file (by direct URL). `-f` – don't use cache (force redownload).</div>|
 
@@ -696,8 +696,8 @@ Following commands are passed to `zinit ...` to obtain described effects.
 
 | Command | Description |
 |:-:|-|
-| `dtrace, dstart` |<div align="justify" style="text-align: justify;"> Start tracking what's going on in session.</div>|
-| `dstop` |<div align="justify" style="text-align: justify;"> Stop tracking what's going on in session.</div>|
+| `dtrace, dstart` |<div align="justify" style="text-align: justify;"> Start investigating what's going on in session.</div>|
+| `dstop` |<div align="justify" style="text-align: justify;"> Stop investigating what's going on in session.</div>|
 | `dunload` |<div align="justify" style="text-align: justify;"> Revert changes recorded between dstart and dstop.</div>|
 | `dreport` |<div align="justify" style="text-align: justify;"> Report what was going on in session.</div>|
 | `dclear` |<div align="justify" style="text-align: justify;"> Clear report of what was going on in session.</div>|
@@ -944,7 +944,7 @@ automatically **compiles sourced scripts**. Many plugin managers do not offer co
 a solution to this. Even if a plugin manager does compile plugin's main script (like Zinit does), the script can
 source smaller helper scripts or dependency libraries (for example, the prompt `geometry-zsh/geometry` does that)
 and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
-command and tracking updates to the plugin – in Zinit case: by using `compile` ice-mod).
+command and investigating updates to the plugin – in Zinit case: by using `compile` ice-mod).
 
   ![image](https://raw.githubusercontent.com/zdharma/zinit/images/mod-auto-compile.png)
 
@@ -978,7 +978,7 @@ Besides the compilation-feature, the module also measures **duration** of each s
 source-study` after loading the module at top of `~/.zshrc` to see a list of all sourced files with the time the
 sourcing took in milliseconds on the left. This feature allows to profile the shell startup. Also, no script can
 pass-through that check and you will obtain a complete list of all loaded scripts, like if Zshell itself was
-tracking this. The list can be surprising.
+investigating this. The list can be surprising.
 
 ## Debugging
 
