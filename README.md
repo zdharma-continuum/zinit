@@ -1037,21 +1037,24 @@ Zinit has many benefits:
  - easy update by e.g. `zinit update --all`.
 
 Below is a configuration that adds multiple git extensions, loaded in Turbo mode,
-two seconds after prompt:
+1 second after prompt, with use of the
+[Bin-Gem-Node](https://github.com/zinit-zsh/z-a-bin-gem-node) annex:
 
 ```zsh
-zinit ice wait"2" lucid as"program" pick"bin/git-dsf"
-zinit light zdharma/zsh-diff-so-fancy
-
-zinit ice wait"2" lucid as"program" pick"git-now"
-zinit light iwata/git-now
-
-zinit ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX" nocompile
-zinit light tj/git-extras
-
-zinit ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \
-            make'install' pick"$ZPFX/bin/git-cal"
-zinit light k4rthik/git-cal
+zinit as"null" wait"1" lucid for \
+    sbin    Fakerr/git-recall \
+    sbin    paulirish/git-open \
+    sbin    paulirish/git-recent \
+    sbin    davidosomething/git-my \
+    sbin atload"export _MENU_THEME=legacy" \
+            arzzen/git-quick-stats \
+    sbin    iwata/git-now \
+    make"PREFIX=$ZPFX install"
+            tj/git-extras \
+    sbin"bin/git-dsf;bin/diff-so-fancy"
+            zdharma/zsh-diff-so-fancy \
+    sbin"git-url;git-guclone" make"GITURL_NO_CGITURL=1"
+            zdharma/git-url
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
