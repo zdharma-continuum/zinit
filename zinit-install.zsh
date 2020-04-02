@@ -1567,10 +1567,10 @@ ziextract() {
                 command mv $file $file.gz
                 file=$file.gz
             }
-            →zinit-extract() { command gunzip "$file"; }
+            →zinit-extract() { command gunzip "$file" |& command egrep -v '.out$'; }
             ;;
         ((#i)*.bz2|(#i)*.bzip2)
-            →zinit-extract() { command bunzip2 "$file"; }
+            →zinit-extract() { command bunzip2 "$file" |& command egrep -v '.out$'; }
             ;;
         ((#i)*.xz)
             if [[ $file != (#i)*.xz ]] {
