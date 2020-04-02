@@ -1049,11 +1049,11 @@ zinit as"null" wait"1" lucid for \
     sbin atload"export _MENU_THEME=legacy" \
             arzzen/git-quick-stats \
     sbin    iwata/git-now \
-    make"PREFIX=$ZPFX install"
+    make"PREFIX=$ZPFX install" \
             tj/git-extras \
-    sbin"bin/git-dsf;bin/diff-so-fancy"
+    sbin"bin/git-dsf;bin/diff-so-fancy" \
             zdharma/zsh-diff-so-fancy \
-    sbin"git-url;git-guclone" make"GITURL_NO_CGITURL=1"
+    sbin"git-url;git-guclone" make"GITURL_NO_CGITURL=1" \
             zdharma/git-url
 ```
 
