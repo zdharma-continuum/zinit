@@ -188,12 +188,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     local -a req
     req=( ${(s.;.)${:-${required:+$required\;}${ZINIT_ICE[required]}}} )
     for required ( $req ) {
-        if [[ $required == (bgn|dl) ]]; then
+        if [[ $required == (bgn|dl|monitor) ]]; then
             if [[ ( $required == bgn && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ) || \
-                ( $required == dl && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} )
+                ( $required == dl && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ) || \
+                ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-as-monitor *]} )
             ]]; then
                 local -A namemap
-                namemap=( bgn Bin-Gem-Node dl Patch-Dl )
+                namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor As-Monitor )
                 print -P -- "${ZINIT[col-error]}ERROR: the" \
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ZINIT_ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
