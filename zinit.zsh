@@ -1100,7 +1100,7 @@ function $f {
     }
     for __key ( "${ice_order[@]}" ) {
         (( ${+ZINIT_ICE[$__key]} )) && [[ ${ZINIT_ICE[$__key]} != +* ]] && continue
-        [[ -f $__path/$__key ]] && ZINIT_ICE[$__key]="$(<$__path/$__key)"
+        [[ -e $__path/$__key ]] && ZINIT_ICE[$__key]="$(<$__path/$__key)"
     }
     [[ -n ${ZINIT_ICE[on-update-of]} ]] && ZINIT_ICE[subscribe]="${ZINIT_ICE[subscribe]:-${ZINIT_ICE[on-update-of]}}"
     [[ ${ZINIT_ICE[as]} = program ]] && ZINIT_ICE[as]=command
