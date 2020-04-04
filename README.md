@@ -58,9 +58,9 @@
 
     ```zsh
     # Equivalent of `local myparam=1 myparam2=1' right before loading of the plugin
-    zinit param'myparam → 1; myparam2 -> 1'
-    # Equivalent of `local myparam myparam2' right before loading of the plugin
-    zinit param'myparam; myparam2'
+    zinit param'myparam → 1; myparam2 -> 1' for zdharma/null
+    # Equivalent of `local myparam myparam2' before loading of the plugin
+    zinit param'myparam; myparam2' for zdharma/null
     ```
 
   - The `atinit''` ice can now be investigated – if it'll be prepended with `!`,
