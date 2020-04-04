@@ -182,7 +182,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
         return 1
     }
 
-    print -Pr -- "Found the profile \`${ZINIT[col-pname]}$profile%f%b.'"
+    print -Pr -- "Found the profile \`${ZINIT[col-pname]}$profile%f%b'."
 
     ZINIT_ICE[required]=${ZINIT_ICE[required]:-$ZINIT_ICE[requires]}
     local -a req
