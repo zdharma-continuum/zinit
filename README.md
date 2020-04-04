@@ -52,6 +52,20 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 07-04-2020
+  - A new feature – `param''` ice that defines params for the time of loading of
+    the plugin or snippet. E.g.:
+
+    ```zsh
+    # Equivalent of `local myparam=1 myparam2=1' right before loading of the plugin
+    zinit param'myparam → 1; myparam2 -> 1'
+    # Equivalent of `local myparam myparam2' right before loading of the plugin
+    zinit param'myparam; myparam2'
+    ```
+
+  - The `atinit''` ice can now be investigated – if it'll be prepended with `!`,
+    i.e.: `atinit'!…'`.
+
 * 01-04-2020
   - As a user [noticed](https://github.com/zdharma/zinit/issues/293), Subversion
     isn't distributed with Xcode Command Line Tools anymore. Here's a [helpful
