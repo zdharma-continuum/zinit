@@ -1224,7 +1224,7 @@ function $f {
     local id_as="${ZINIT_ICE[id-as]:-$url}"
 
     # Set up param'' objects (parameters)
-    .zinit-setup-params && local ${(Q)reply[@]}
+    [[ -n ${ZINIT_ICE[param]} ]] && .zinit-setup-params && local ${(Q)reply[@]}
 
     .zinit-pack-ice "$id_as" ""
 
@@ -1489,7 +1489,7 @@ function $f {
     local pdir_orig="$pdir_path" key
 
     # Set up param'' objects (parameters)
-    .zinit-setup-params && local ${(Q)reply[@]}
+    [[ -n ${ZINIT_ICE[param]} ]] && .zinit-setup-params && local ${(Q)reply[@]}
 
     if [[ ${ZINIT_ICE[as]} = command ]]; then
         [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
