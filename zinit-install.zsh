@@ -1611,6 +1611,9 @@ ziextract() {
                 return $retval
             }
             ;;
+        ((#i)*.deb)
+            →zinit-extract() { →zinit-check dpkg-deb "$file"; command dpkg-deb -R "$file" .; }
+            ;;
     esac
 
     if [[ $(typeset -f + -- →zinit-extract) == "→zinit-extract" ]] {
