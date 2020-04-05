@@ -1541,61 +1541,57 @@ ziextract() {
         return $retval
     }
 
+    →zinit-check() { (( ${+commands[$1]} )) || \
+        print -Pr "$ZINIT[col-error]Error:%f%b No command $ZINIT[col-obj]$1%f%b," \
+            "it is required to unpack $ZINIT[col-file]$2%f%b."
+    }
+
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
-            →zinit-extract() { command unzip -o "$file"; }
+            →zinit-extract() { →zinit-check unzip "$file"; command unzip -o "$file"; }
             ;;
         ((#i)*.rar)
-            →zinit-extract() { command unrar x "$file"; }
+            →zinit-extract() { →zinit-check unrar "$file"; command unrar x "$file"; }
             ;;
         ((#i)*.tar.bz2|(#i)*.tbz2)
-            →zinit-extract() { command bzip2 -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check bzip2 "$file"; command bzip2 -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.gz|(#i)*.tgz)
-            →zinit-extract() { command gzip -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check gzip "$file"; command gzip -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.xz|(#i)*.txz)
-            →zinit-extract() { command xz -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check xz "$file"; command xz -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.7z|(#i)*.t7z)
-            →zinit-extract() { command 7z x -so "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check 7z "$file"; command 7z x -so "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar)
-            →zinit-extract() { command tar -xf "$file"; }
+            →zinit-extract() { →zinit-check tar "$file"; command tar -xf "$file"; }
             ;;
         ((#i)*.gz|(#i)*.gzip)
             if [[ $file != (#i)*.gz ]] {
                 command mv $file $file.gz
                 file=$file.gz
             }
-            →zinit-extract() { command gunzip "$file" |& command egrep -v '.out$'; return $pipestatus[1]; }
+            →zinit-extract() { →zinit-check gunzip "$file"; command gunzip "$file" |& command egrep -v '.out$'; return $pipestatus[1]; }
             ;;
         ((#i)*.bz2|(#i)*.bzip2)
-            →zinit-extract() { command bunzip2 "$file" |& command egrep -v '.out$'; return $pipestatus[1];}
+            →zinit-extract() { →zinit-check bunzip2 "$file"; command bunzip2 "$file" |& command egrep -v '.out$'; return $pipestatus[1];}
             ;;
         ((#i)*.xz)
             if [[ $file != (#i)*.xz ]] {
                 command mv $file $file.xz
                 file=$file.xz
             }
-            →zinit-extract() { command xz -d "$file"; }
+            →zinit-extract() { →zinit-check xz "$file"; command xz -d "$file"; }
             ;;
         ((#i)*.7z|(#i)*.7-zip)
-            →zinit-extract() { command 7z x "$file" >/dev/null;  }
+            →zinit-extract() { →zinit-check 7z "$file"; command 7z x "$file" >/dev/null;  }
             ;;
         ((#i)*.dmg)
             →zinit-extract() {
                 local prog
-                for prog ( hdiutil cp ) {
-                    if ! command -v $prog &>/dev/null; then
-                        print -Pr -- "$ZINIT[col-pre]ziextract:" \
-                            "$ZINIT[col-error]ERROR:$ZINIT[col-msg2]" \
-                            "no \`$ZINIT[col-obj]$prog$ZINIT[col-msg2]'" \
-                            "command found – it is required to extract a" \
-                            "$ZINIT[col-obj]dmg$ZINIT[col-msg2] image.%f%b"
-                        return 1
-                    fi
-                }
+                for prog ( hdiutil cp ) { →zinit-check $prog "$file"; }
 
                 integer retval
                 local attached_vol="$( command hdiutil attach "$file" | \
@@ -1638,10 +1634,10 @@ ziextract() {
                     "extraction of the archive" \
                     "\`$ZINIT[col-obj]$file$ZINIT[col-msg1]' had problems.%f%b"
             }
-            unfunction -- →zinit-extract 2>/dev/null
+            unfunction -- →zinit-extract →zinit-check 2>/dev/null
             return 1
         }
-        unfunction -- →zinit-extract
+        unfunction -- →zinit-extract →zinit-check
     } else {
         integer warning=1
     }
