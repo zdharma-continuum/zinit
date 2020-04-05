@@ -1389,7 +1389,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"
     }
 
     [[ ${#list} -gt 1 ]] && {
-        list2=( ${list[@]:#(#i)*.sha256} )
+        list2=( ${list[@]:#(#i)*.sha[[:digit:]]#} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
