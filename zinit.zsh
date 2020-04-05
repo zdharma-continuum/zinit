@@ -1224,7 +1224,7 @@ function $f {
     local id_as="${ZINIT_ICE[id-as]:-$url}"
 
     # Set up param'' objects (parameters)
-    .zinit-setup-params && local ${reply[@]}
+    .zinit-setup-params && local ${(Q)reply[@]}
 
     .zinit-pack-ice "$id_as" ""
 
@@ -1489,7 +1489,7 @@ function $f {
     local pdir_orig="$pdir_path" key
 
     # Set up param'' objects (parameters)
-    .zinit-setup-params && local ${reply[@]}
+    .zinit-setup-params && local ${(Q)reply[@]}
 
     if [[ ${ZINIT_ICE[as]} = command ]]; then
         [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
@@ -2018,15 +2018,8 @@ function $f {
 # FUNCTION: .zinit-setup-params [[[
 .zinit-setup-params() {
     emulate -LR zsh -o extendedglob
-    local -a params param_to_value
-    params=( ${(s.;.)ZINIT_ICE[param]} ) reply=( )
-    local param
-    for param ( ${params[@]} ) {
-        param_to_value=( "${param%%(-\>|→)*}" "${${(MS)param##*(-\>|→)}:+${param##*(-\>|→)}}" )
-        param_to_value=( "${param_to_value[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" )
-        reply+=( "${param_to_value[1]}=${param_to_value[2]}" )
-    }
-    (( ${#params} )) && return 0 || return 2
+    reply=( ${(@)${(@s.;.)ZINIT_ICE[param]}/(#m)*/${${MATCH%%(-\>|→)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(MS)MATCH#*(-\>|→)}:+\=${${MATCH#*(-\>|→)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
+    (( ${#reply} )) && return 0 || return 1
 }
 # ]]]
 
