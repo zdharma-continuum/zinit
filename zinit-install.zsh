@@ -1614,6 +1614,9 @@ ziextract() {
         ((#i)*.deb)
             →zinit-extract() { →zinit-check dpkg-deb "$file"; command dpkg-deb -R "$file" .; }
             ;;
+        ((#i)*.rpm)
+            →zinit-extract() { →zinit-check cpio "$file"; $ZINIT[BIN_DIR]/rpm2cpio.zsh "$file" | command cpio -imd --no-absolute-filenames; }
+            ;;
     esac
 
     if [[ $(typeset -f + -- →zinit-extract) == "→zinit-extract" ]] {
