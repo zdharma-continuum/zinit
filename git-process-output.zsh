@@ -90,6 +90,8 @@ IFS=''
 
 (( $+ZINIT_CIVIS )) && eval $ZINIT_CIVIS
 
+if [[ -n $TERM ]] {
+
 { command perl -pe 'BEGIN { $|++; $/ = \1 }; tr/\r/\n/' || \
     gstdbuf -o0 gtr '\r' '\n' || \
     cat } |& \
@@ -156,6 +158,10 @@ while read -r line; do
         fi
     fi
 done
+
+} else {
+    cat
+}
 
 print
 
