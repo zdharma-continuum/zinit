@@ -1685,6 +1685,7 @@ function $f {
 # FUNCTION: .zinit-debug-unload [[[
 # Reverts changes detected by dtrace run.
 .zinit-debug-unload() {
+    (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
         +zinit-message "[error]Dtrace is still active, stop it first with \`dstop'[rst]"
     else
