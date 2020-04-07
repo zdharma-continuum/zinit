@@ -160,7 +160,7 @@ while read -r line; do
 done
 
 } else {
-    cat
+    grep fatal:
 }
 
 print
