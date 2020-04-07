@@ -1164,6 +1164,9 @@ function $f {
 
     .zinit-register-plugin "$id_as" "$mode" "${ZINIT_ICE[teleid]}"
 
+    # Set up param'' objects (parameters)
+    [[ -n ${ZINIT_ICE[param]} ]] && .zinit-setup-params && local ${(Q)reply[@]}
+
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
@@ -1487,9 +1490,6 @@ function $f {
     local pbase="${${plugin:t}%(.plugin.zsh|.zsh|.git)}"
     [[ $user = % ]] && local pdir_path="$plugin" || local pdir_path="${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"
     local pdir_orig="$pdir_path" key
-
-    # Set up param'' objects (parameters)
-    [[ -n ${ZINIT_ICE[param]} ]] && .zinit-setup-params && local ${(Q)reply[@]}
 
     if [[ ${ZINIT_ICE[as]} = command ]]; then
         [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
