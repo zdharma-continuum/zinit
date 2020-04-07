@@ -1050,8 +1050,8 @@ function $f {
         # Also set up */bin and ZPFX in general
         command mkdir 2>/dev/null -p $ZPFX/bin
 
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
-        (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+        (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
         .zinit-clear-completions &>/dev/null
         .zinit-compinit &>/dev/null
     }
@@ -1066,7 +1066,7 @@ function $f {
         # Also set up */bin and ZPFX in general
         command mkdir 2>/dev/null -p $ZPFX/bin
 
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         .zinit-compinit &>/dev/null
     }
     [[ ! -d ${ZINIT[SNIPPETS_DIR]} ]] && {
@@ -1130,7 +1130,7 @@ function $f {
     done
 
     if [[ $user != % && ! -d ${ZINIT[PLUGINS_DIR]}/${id_as//\//---} ]] {
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         reply=( "$user" "$plugin" ) REPLY=github
         if (( ${+ZINIT_ICE[pack]} )) {
             if ! .zinit-get-package "$user" "$plugin" "$id_as" \
@@ -1256,7 +1256,7 @@ function $f {
 
     # Download or copy the file
     if [[ -n ${opts[(r)-f]} || $exists -eq 0 ]] {
-        (( ${+functions[.zinit-download-snippet]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+        (( ${+functions[.zinit-download-snippet]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         [[ $url = *github.com* && $url != */raw/* ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
         .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename"
         retval=$?
@@ -1817,7 +1817,7 @@ function $f {
         fi
         (( ${+ZINIT_ICE[silent]} == 0 && ${+ZINIT_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Loaded $__id"
     elif [[ $__action = *remove ]]; then
-        (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
+        (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
         [[ $__tpe = p ]] && .zinit-unload "$__id_as" "" -q
         (( ${+ZINIT_ICE[silent]} == 0 && ${+ZINIT_ICE[lucid]} == 0 && __retval == 0 )) && zle && zle -M "Unloaded $__id_as"
     fi
@@ -2277,7 +2277,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                    { "${reply[5]}" "$@"; return $?; } || \
                    { +zinit-message "([error]Couldn't find the subcommand-handler \`[obj]${reply[5]}[error]' of the z-annex \`[file]${reply[3]}[error]')"; return 1; }
            }
-           (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
+           (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
            case "$1" in
                (zstatus)
                    .zinit-show-zstatus
@@ -2289,7 +2289,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                    .zinit-self-update
                    ;;
                (unload)
-                   (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
+                   (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
                    if [[ -z $2 && -z $3 ]]; then
                        print "Argument needed, try: help"; retval=1
                    else
@@ -2356,7 +2356,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                        # Disable completion given by completion function name
                        # with or without leading _, e.g. cp, _cp
                        if .zinit-cdisable "$f"; then
-                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
@@ -2374,7 +2374,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                        # Enable completion given by completion function name
                        # with or without leading _, e.g. cp, _cp
                        if .zinit-cenable "$f"; then
-                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$f"
                            print "Initializing completion system (compinit)..."
                            builtin autoload -Uz compinit
@@ -2385,7 +2385,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                    fi
                    ;;
                (creinstall)
-                   (( ${+functions[.zinit-install-completions]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+                   (( ${+functions[.zinit-install-completions]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ $2 = -q ]] && { 5=-q; shift; }
@@ -2398,7 +2398,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                    if [[ -z $2 && -z $3 ]]; then
                        print "Argument needed, try: help"; retval=1
                    else
-                       (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+                       (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                        # Uninstalls completions for plugin
                        .zinit-uninstall-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}"; retval=$?
                        print "Initializing completion (compinit)..."
@@ -2410,7 +2410,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                    .zinit-search-completions
                    ;;
                (compinit)
-                   (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+                   (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                    .zinit-compinit; retval=$?
                    ;;
                (dreport)
@@ -2423,7 +2423,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
                    .zinit-debug-unload
                    ;;
                (compile)
-                   (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh"
+                   (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
                        [[ -z $2 ]] && { print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-compile-uncompile-all 1; retval=$?
@@ -2564,7 +2564,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
         if [[ ${recompile_request_ts:-1} -gt ${compiled_at_ts:-0} ]] {
             +zinit-message "[error]WARNING:[rst][msg1]A [obj]recompilation[rst]" \
                 "of the Zinit module has been requested… [obj]Building[rst]…"
-            (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh"
+            (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
             command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null
             .zinit-module build &>/dev/null
             if command make -C "${ZINIT[BIN_DIR]}/zmodules" &>/dev/null; then
