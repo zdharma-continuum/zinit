@@ -3261,7 +3261,7 @@ EOF
         else
             print -zr "zinit ice ${output[*]}; zinit "
         fi
-        .zinit-deploy-message @rst
+        +zinit-deploy-message @rst
     } || print -r -- "No such plugin or snippet"
 }
 # ]]]
