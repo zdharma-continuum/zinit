@@ -303,10 +303,7 @@ builtin setopt noaliases
                 local prev
                 pairs=( ${pairs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${prev:+$prev\;}}${match[3]}${${prev::=${match[2]:+${prev:+$prev\;}}${match[2]}}:+}} )
             }
-            () {
-                builtin setopt localoptions extendedglob noksharrays noshwordsplit;
-                pairs=( "${(@)${(@)${(@s:->:)pairs}##[[:space:]]##}%%[[:space:]]##}" )
-            }
+            pairs=( "${(@)${(@)${(@s:->:)pairs}##[[:space:]]##}%%[[:space:]]##}" )
             ZINIT_CUR_BIND_MAP=( empty 0 )
             (( ${#pairs} > 1 && ${#pairs[@]} % 2 == 0 )) && ZINIT_CUR_BIND_MAP+=( "${pairs[@]}" )
         fi
