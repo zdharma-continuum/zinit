@@ -299,6 +299,10 @@ builtin setopt noaliases
         if [[ -n ${ZINIT_ICE[bindmap]} && ${ZINIT_CUR_BIND_MAP[empty]} -eq 1 ]]; then
             local -a pairs
             pairs=( "${(@s,;,)ZINIT_ICE[bindmap]}" )
+            if [[ -n ${(M)pairs:#*\\(#e)} ]] {
+                local prev
+                pairs=( ${pairs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${prev:+$prev\;}}${match[3]}${${prev::=${match[2]:+${prev:+$prev\;}}${match[2]}}:+}} )
+            }
             () {
                 builtin setopt localoptions extendedglob noksharrays noshwordsplit;
                 pairs=( "${(@)${(@)${(@s:->:)pairs}##[[:space:]]##}%%[[:space:]]##}" )
@@ -308,10 +312,12 @@ builtin setopt noaliases
         fi
 
         local bmap_val="${ZINIT_CUR_BIND_MAP[${1}]}"
-        [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)1}]}"
-        [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)${(Q)1}}]}"
-        [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)1}]}"; integer val=1; }
-        [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)${(Q)1}}]}"
+        if (( !ZINIT_CUR_BIND_MAP[empty] )) {
+            [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)1}]}"
+            [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)${(Q)1}}]}"
+            [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)1}]}"; integer val=1; }
+            [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)${(Q)1}}]}"
+        }
         if [[ -n $bmap_val ]]; then
             string="${(q)bmap_val}"
             if (( val )) {
