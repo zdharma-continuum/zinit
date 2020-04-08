@@ -94,7 +94,7 @@ builtin autoload -Uz is-at-least
 is-at-least 5.1 && ZINIT[NEW_AUTOLOAD]=1 || ZINIT[NEW_AUTOLOAD]=0
 #is-at-least 5.4 && ZINIT[NEW_AUTOLOAD]=2
 
-# Parameters - shadowing [[[
+# Parameters - shadeing [[[
 ZINIT[SHADOWING]=inactive   ZINIT[DTRACE]=0    ZINIT[CUR_PLUGIN]=
 # ]]]
 # Parameters - ICE [[[
@@ -196,12 +196,12 @@ builtin setopt noaliases
     # User wanted to call the function, not only load it
     "$func" "$@"
 } # ]]]
-# FUNCTION: :zinit-shadow-autoload [[[
+# FUNCTION: :zinit-shade-autoload [[[
 # Function defined to hijack plugin's calls to `autoload' builtin.
 #
 # The hijacking is not only to gather report data, but also to
 # run custom `autoload' function, that doesn't need FPATH.
-:zinit-shadow-autoload () {
+:zinit-shade-autoload () {
     emulate -LR zsh
     builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
     local -a opts
@@ -264,11 +264,11 @@ builtin setopt noaliases
 
     return 0
 } # ]]]
-# FUNCTION: :zinit-shadow-bindkey [[[
+# FUNCTION: :zinit-shade-bindkey [[[
 # Function defined to hijack plugin's calls to `bindkey' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
-:zinit-shadow-bindkey() {
+:zinit-shade-bindkey() {
     emulate -LR zsh
     builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
 
@@ -413,11 +413,11 @@ builtin setopt noaliases
     builtin bindkey "${pos[@]}"
     return $? # testable
 } # ]]]
-# FUNCTION: :zinit-shadow-zstyle [[[
+# FUNCTION: :zinit-shade-zstyle [[[
 # Function defined to hijack plugin's calls to `zstyle' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
-:zinit-shadow-zstyle() {
+:zinit-shade-zstyle() {
     builtin setopt localoptions noerrreturn noerrexit extendedglob nowarncreateglobal \
         typesetsilent noshortloops unset
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Zstyle $*"
@@ -453,11 +453,11 @@ builtin setopt noaliases
     builtin zstyle "${pos[@]}"
     return $? # testable
 } # ]]]
-# FUNCTION: :zinit-shadow-alias [[[
+# FUNCTION: :zinit-shade-alias [[[
 # Function defined to hijack plugin's calls to `alias' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
-:zinit-shadow-alias() {
+:zinit-shade-alias() {
     builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
         typesetsilent noshortloops unset
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Alias $*"
@@ -504,11 +504,11 @@ builtin setopt noaliases
     builtin alias "${pos[@]}"
     return $? # testable
 } # ]]]
-# FUNCTION: :zinit-shadow-zle [[[
+# FUNCTION: :zinit-shade-zle [[[
 # Function defined to hijack plugin's calls to `zle' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
-:zinit-shadow-zle() {
+:zinit-shade-zle() {
     builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
         typesetsilent noshortloops unset
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Zle $*"
@@ -563,11 +563,11 @@ builtin setopt noaliases
     builtin zle "${pos[@]}"
     return $? # testable
 } # ]]]
-# FUNCTION: :zinit-shadow-compdef [[[
+# FUNCTION: :zinit-shade-compdef [[[
 # Function defined to hijack plugin's calls to `compdef' function.
 # The hijacking is not only for reporting, but also to save compdef
 # calls so that `compinit' can be called after loading plugins.
-:zinit-shadow-compdef() {
+:zinit-shade-compdef() {
     builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
         typesetsilent noshortloops unset
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Saving \`compdef $*' for replay"
@@ -575,17 +575,17 @@ builtin setopt noaliases
 
     return 0 # testable
 } # ]]]
-# FUNCTION: .zinit-shadow-on [[[
-# Turn on shadowing of builtins and functions according to passed
-# mode ("load", "light", "light-b" or "compdef"). The shadowing is
+# FUNCTION: .zinit-shade-on [[[
+# Turn on shadeing of builtins and functions according to passed
+# mode ("load", "light", "light-b" or "compdef"). The shadeing is
 # to gather report data, and to hijack `autoload', `bindkey' and
 # `compdef' calls.
-.zinit-shadow-on() {
+.zinit-shade-on() {
     local mode="$1"
 
-    # Enable shadowing only once
+    # Enable shadeing only once
     #
-    # One could expect possibility of widening of shadowing, however
+    # One could expect possibility of widening of shadeing, however
     # such sequence doesn't exist, e.g. "light" then "load"/"dtrace",
     # "compdef" then "load"/"dtrace", "light" then "compdef",
     # "compdef" then "light"
@@ -606,14 +606,14 @@ builtin setopt noaliases
     if [[ $mode != compdef ]]; then
         # 0. Used, but not in temporary restoration, which doesn't happen for autoload
         (( ${+functions[autoload]} )) && ZINIT[bkp-autoload]="${functions[autoload]}"
-        functions[autoload]=':zinit-shadow-autoload "$@";'
+        functions[autoload]=':zinit-shade-autoload "$@";'
     fi
 
-    # E. Always shadow compdef
+    # E. Always shade compdef
     (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}"
-    functions[compdef]=':zinit-shadow-compdef "$@";'
+    functions[compdef]=':zinit-shade-compdef "$@";'
 
-    # Light and compdef shadowing stops here. Dtrace and load go on
+    # Light and compdef shadeing stops here. Dtrace and load go on
     [[ ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
 
     # Defensive code, shouldn't be needed. A, B, C, D
@@ -621,35 +621,35 @@ builtin setopt noaliases
 
     # A.
     (( ${+functions[bindkey]} )) && ZINIT[bkp-bindkey]="${functions[bindkey]}"
-    functions[bindkey]=':zinit-shadow-bindkey "$@";'
+    functions[bindkey]=':zinit-shade-bindkey "$@";'
 
     # B, when `zinit light -b ...' or when `zinit ice trackbinds ...; zinit light ...'
     [[ $mode = light-b || ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 1 ) ]] && return 0
 
     # B.
     (( ${+functions[zstyle]} )) && ZINIT[bkp-zstyle]="${functions[zstyle]}"
-    functions[zstyle]=':zinit-shadow-zstyle "$@";'
+    functions[zstyle]=':zinit-shade-zstyle "$@";'
 
     # C.
     (( ${+functions[alias]} )) && ZINIT[bkp-alias]="${functions[alias]}"
-    functions[alias]=':zinit-shadow-alias "$@";'
+    functions[alias]=':zinit-shade-alias "$@";'
 
     # D.
     (( ${+functions[zle]} )) && ZINIT[bkp-zle]="${functions[zle]}"
-    functions[zle]=':zinit-shadow-zle "$@";'
+    functions[zle]=':zinit-shade-zle "$@";'
 
     builtin return 0
 } # ]]]
-# FUNCTION: .zinit-shadow-off [[[
-# Turn off shadowing completely for a given mode ("load", "light",
+# FUNCTION: .zinit-shade-off [[[
+# Turn off shadeing completely for a given mode ("load", "light",
 # "light-b" (i.e. the `trackbinds' mode) or "compdef").
-.zinit-shadow-off() {
+.zinit-shade-off() {
     builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
         typesetsilent noshortloops unset noaliases
     local mode="$1"
 
-    # Disable shadowing only once
-    # Disable shadowing only the way it was enabled first
+    # Disable shadeing only once
+    # Disable shadeing only the way it was enabled first
     [[ ${ZINIT[SHADOWING]} = inactive || ${ZINIT[SHADOWING]} != $mode ]] && return 0
 
     ZINIT[SHADOWING]=inactive
@@ -662,10 +662,10 @@ builtin setopt noaliases
     # E. Restore original compdef if it existed
     (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef
 
-    # Light and compdef shadowing stops here
+    # Light and compdef shadeing stops here
     [[ ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
 
-    # Unfunction shadowing functions
+    # Unfunction shadeing functions
 
     # A.
     (( ${+ZINIT[bkp-bindkey]} )) && functions[bindkey]="${ZINIT[bkp-bindkey]}" || unfunction bindkey
@@ -708,10 +708,10 @@ function $f {
     ZINIT[CUR_USR]=\"$user\" ZINIT[CUR_PLUGIN]=\"$plugin\" ZINIT[CUR_USPL2]=\"$id_as\"
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" begin
-    .zinit-shadow-on load
+    .zinit-shade-on load
     functions[${f}]=\${functions[${f}-zinit-bkp]}
     ${f} \"\$@\"
-    .zinit-shadow-off load
+    .zinit-shade-off load
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" end
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
@@ -1212,7 +1212,7 @@ function $f {
         [[ ${ZINIT_ICE[atinit]} = '!'* || -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
             if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
                 (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}" || builtin unset "ZINIT[bkp-compdef]"
-                functions[compdef]=':zinit-shadow-compdef "$@";'
+                functions[compdef]=':zinit-shade-compdef "$@";'
                 ZINIT[SHADOWING]=1
             else
                 (( ++ ZINIT[SHADOWING] ))
@@ -1259,10 +1259,10 @@ function $f {
 
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Source $fname ${${${(M)mode:#light}:+(no reporting)}:-$ZINIT[col-info2](reporting enabled)$ZINIT[col-rst]}"
 
-        # Light and compdef mode doesn't do diffs and shadowing
+        # Light and compdef mode doesn't do diffs and shadeing
         [[ $mode != light(|-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" begin
 
-        .zinit-shadow-on "${mode:-load}"
+        .zinit-shade-on "${mode:-load}"
 
         # We need some state, but user wants his for his plugins
         (( ${+ZINIT_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
@@ -1288,7 +1288,7 @@ function $f {
         (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
         (( ${+ZINIT_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
-        .zinit-shadow-off "${mode:-load}"
+        .zinit-shade-off "${mode:-load}"
 
         [[ $mode != light(|-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" end
     fi
@@ -1404,11 +1404,11 @@ function $f {
     local ZERO
 
     if [[ -z ${opts[(r)--command]} && ( -z ${ZINIT_ICE[as]} || ${ZINIT_ICE[as]} = null ) ]]; then
-        # Source the file with compdef shadowing
+        # Source the file with compdef shadeing
         if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
-            # Shadowing code is inlined from .zinit-shadow-on
+            # Shadowing code is inlined from .zinit-shade-on
             (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}" || builtin unset "ZINIT[bkp-compdef]"
-            functions[compdef]=':zinit-shadow-compdef "$@";'
+            functions[compdef]=':zinit-shade-compdef "$@";'
             ZINIT[SHADOWING]=1
         else
             (( ++ ZINIT[SHADOWING] ))
@@ -1482,9 +1482,9 @@ function $f {
         [[ -n $xfilepath && -f $xfilepath && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
         [[ -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
             if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
-                # Shadowing code is inlined from .zinit-shadow-on
+                # Shadowing code is inlined from .zinit-shade-on
                 (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}" || builtin unset "ZINIT[bkp-compdef]"
-                functions[compdef]=':zinit-shadow-compdef "$@";'
+                functions[compdef]=':zinit-shade-compdef "$@";'
                 ZINIT[SHADOWING]=1
             else
                 (( ++ ZINIT[SHADOWING] ))
@@ -1665,8 +1665,8 @@ function $f {
 
     .zinit-diff _dtrace/_dtrace begin
 
-    # Full shadowing on
-    .zinit-shadow-on dtrace
+    # Full shadeing on
+    .zinit-shade-on dtrace
 } # ]]]
 # FUNCTION: .zinit-debug-stop [[[
 # Stops Dtrace, i.e. session tracking for changes in Zsh state.
@@ -1674,7 +1674,7 @@ function $f {
     ZINIT[DTRACE]=0
 
     # Shadowing fully off
-    .zinit-shadow-off dtrace
+    .zinit-shade-off dtrace
 
     # Gather end data now, for diffing later
     .zinit-diff _dtrace/_dtrace end
