@@ -88,7 +88,7 @@ integer loop_count=0
 
 IFS=''
 
-(( $+ZINIT_CIVIS )) && eval $ZINIT_CIVIS
+[[ $+ZINIT_CIVIS == 1 && -n $TERM ]] && eval $ZINIT_CIVIS
 
 if [[ -n $TERM ]] {
 
@@ -165,6 +165,6 @@ done
 
 print
 
-(( $+ZINIT_CNORM )) && eval $ZINIT_CNORM
+[[ $+ZINIT_CNORM == 1 && -n $TERM ]] && eval $ZINIT_CNORM
 
 unset ZINIT_CNORM ZINIT_CIVIS
