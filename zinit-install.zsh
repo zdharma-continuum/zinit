@@ -1369,6 +1369,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         darwin  "(darwin|macos|mac-os|osx|os-x)"
         cygwin  "(windows|cygwin)"
         windows "(windows|cygwin)"
+        armv7l  "(arm7|armv7)"
+        armv6l  "(arm6|armv6)"
+        armv5l  "(arm5|armv5)"
     )
 
     local -a list list2
@@ -1380,6 +1383,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
     [[ ${#list} -gt 1 ]] && {
         list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
+        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
+    }
+
+    [[ ${#list} -gt 1 ]] && {
+        list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE}]:-${CPUTYPE#(#i)(i|amd)}}*} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
