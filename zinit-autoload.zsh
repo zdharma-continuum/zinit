@@ -1994,6 +1994,8 @@ ZINIT[EXTENDED_GLOB]=""
     }
     # Shouldn't happen
     # (( ${#PUAssocArray} > 0 )) && wait ${(k)PUAssocArray}
+
+    .zinit-compinit &>/dev/null
 }
 # ]]]
 # FUNCTION: .zinit-wait-for-update-jobs [[[
