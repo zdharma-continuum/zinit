@@ -1379,7 +1379,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     [[ -n $ZINIT_ICE[bpick] ]] && list=( ${(M)list[@]:#(#i)*/$~ZINIT_ICE[bpick]} )
 
     [[ ${#list} -gt 1 ]] && {
-        list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
+        list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
