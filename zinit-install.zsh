@@ -393,11 +393,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                         :zinit-git-clone
                         integer retval=$?
                         if (( retval )) {
-                            print -Pr -- "${ZINIT[col-error]}Clone failed (code: $retval).%f%b"
+                            print -Pr -- "$ZINIT[col-error]Clone failed (code: $ZINIT[col-obj]$retval$ZINIT[col-error]).%f%b"
                             return 1
                         }
                     } elif (( pipestatus[1] )) {
-                        print -Pr -- "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]}).%f%b"
+                        print -Pr -- "$ZINIT[col-error]Clone failed (code: $ZINIT[col-obj]$pipestatus[1]$ZINIT[col-error]).%f%b"
                         return 1
                     }
                     ;;
