@@ -2689,7 +2689,9 @@ zinit bindmap='!&quot; &quot; -&gt; magic-space; !&quot;^ &quot; -&gt; globalias
 <h2 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">#</a></h2>
 <p>As it can be seen, the <code>bindmap''</code> ice has two modes of operation: normal and
 exclamation-mark (<code>bindmap'!…'</code>). In the first mode, the remapping is beind done
-from-key to-key, i.e.: <code>bindmap'fromkey -&gt; to-key'</code>.</p>
+from-key to-key, i.e.: <code>bindmap'fromkey -&gt; to-key'</code>. In this mode, the given key
+is being changed to the second given key in the <code>bindkey</code> command that's being
+actually issued when loading the plugin.</p>
 <p>In the second mode, the remapping is being done from-key to-widget, i.e.:
 <code>bindmap'!from-key -&gt; to-widget'</code>. In this mode, the given key is being mapped
 to the given widget instead of the widget specified in the <code>bindkey</code> command,
