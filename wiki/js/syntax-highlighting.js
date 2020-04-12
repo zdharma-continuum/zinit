@@ -733,7 +733,7 @@ hljs.registerLanguage("bash", function(e) {
     c: [
       {
         cN: "ice-mod",
-	b: /wrap-track|id-as|on-update-of|run-atpull|reset-prompt|(multi|^| )src(?!\/)|((un|at)?)load(?![\w-\s])|if(?![\s\w])/,
+	b: /light-mode|wrap-track|id-as|on-update-of|run-atpull|reset-prompt|(multi|^| )src(?!\/)|((un|at)?)load(?![\w-\s])|if(?![\s\w])/,
       },
       {
         cN: "zpl",
