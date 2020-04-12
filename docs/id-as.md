@@ -1,5 +1,7 @@
 # Nickname a plugin or snippet
 
+## Introduction
+
 Zinit supports loading a plugin or snippet with a nickname. Set the nickname
 through the `id-as` ice-mod. For example, one could try to load
 [**docker/compose**](https://github.com/docker/compose) from GitHub binary
@@ -72,6 +74,16 @@ will work the same as before, i.e.: like if the ice used was
 ```zsh
 # Will work as if id-as'zsh-autopair' was passed
 zinit ice wait lucid id-as"auto"
+zinit load hlissner/zsh-autopair
+```
+
+## Empty `id-as''`
+
+An empty `id-as''` will work the same as `id-as'auto'`, i.e.:
+
+```zsh
+# Will work as if id-as'zsh-autopair' was passed
+zinit ice wait lucid id-as
 zinit load hlissner/zsh-autopair
 ```
 
