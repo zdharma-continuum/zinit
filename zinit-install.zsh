@@ -379,15 +379,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         } elif [[ $tpe = github ]] {
             case ${ZINIT_ICE[proto]} in
                 (|https|git|http|ftp|ftps|rsync|ssh)
-                    command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
-                        ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
-                        "${ZINIT_ICE[proto]:-https}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
-                        "$local_path" \
-                        --config transfer.fsckobjects=false \
-                        --config receive.fsckobjects=false \
-                        --config fetch.fsckobjects=false \
-                            |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
-                    if (( pipestatus[1] == 141 )) {
+                    :zinit-git-clone() {
                         command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
                             ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
                             "${ZINIT_ICE[proto]:-https}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
@@ -395,6 +387,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                             --config transfer.fsckobjects=false \
                             --config receive.fsckobjects=false \
                             --config fetch.fsckobjects=false
+                    }
+                    :zinit-git-clone |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
+                    if (( pipestatus[1] == 141 )) {
+                        :zinit-git-clone
                         integer retval=$?
                         if (( retval )) {
                             print -Pr -- "${ZINIT[col-error]}Clone failed (code: $retval).%f%b"
