@@ -55,6 +55,8 @@
 * 12-04-2020
   - A new document on the Wiki is available – about the [**bindmap''
     ice**](https://zdharma.org/zinit/wiki/Bindkeys/).
+  - If `id-as''` will have no value, then it'll work as
+    [**id-as'auto'**](https://zdharma.org/zinit/wiki/id-as/#id-asauto).
 
 * 07-04-2020
   - A new feature – `param''` ice that defines params for the time of loading of
