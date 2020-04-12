@@ -37,7 +37,9 @@ zinit bindmap='!" " -> magic-space; !"^ " -> globalias' nocompletions \
 
 As it can be seen, the `bindmap''` ice has two modes of operation: normal and
 exclamation-mark (`bindmap'!…'`). In the first mode, the remapping is beind done
-from-key to-key, i.e.: `bindmap'fromkey -> to-key'`.
+from-key to-key, i.e.: `bindmap'fromkey -> to-key'`. In this mode, the given key
+is being changed to the second given key in the `bindkey` command that's being
+actually issued when loading the plugin.
 
 In the second mode, the remapping is being done from-key to-widget, i.e.:
 `bindmap'!from-key -> to-widget'`. In this mode, the given key is being mapped
