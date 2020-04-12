@@ -929,9 +929,75 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#id-asauto" title="id-as'auto'"
       class="md-nav__link">
     id-as'auto'
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#empty_id-as" title="Empty id-as''"
+      class="md-nav__link">
+    Empty id-as''
   </a>
 
   <!-- Render nested item list -->
@@ -2493,9 +2559,75 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
+  <a href="#introduction" title="Introduction"
+      class="md-nav__link">
+    Introduction
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
   <a href="#id-asauto" title="id-as'auto'"
       class="md-nav__link">
     id-as'auto'
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#empty_id-as" title="Empty id-as''"
+      class="md-nav__link">
+    Empty id-as''
   </a>
 
   <!-- Render nested item list -->
@@ -2526,6 +2658,7 @@
                 
                 
                 <h1 id="nickname_a_plugin_or_snippet">Nickname a plugin or snippet<a class="headerlink" href="#nickname_a_plugin_or_snippet" title="Permanent link">#</a></h1>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h2>
 <p>Zinit supports loading a plugin or snippet with a nickname. Set the nickname
 through the <code>id-as</code> ice-mod. For example, one could try to load
 <a href="https://github.com/docker/compose"><strong>docker/compose</strong></a> from GitHub binary
@@ -2581,6 +2714,13 @@ zinit snippet https://github.com/Osse/git-scripts/blob/master/git-unique
 <code>id-as'git-unique'</code>. Example with a plugin:</p>
 <pre><code class="zsh"># Will work as if id-as'zsh-autopair' was passed
 zinit ice wait lucid id-as&quot;auto&quot;
+zinit load hlissner/zsh-autopair
+</code></pre>
+
+<h2 id="empty_id-as">Empty <code>id-as''</code><a class="headerlink" href="#empty_id-as" title="Permanent link">#</a></h2>
+<p>An empty <code>id-as''</code> will work the same as <code>id-as'auto'</code>, i.e.:</p>
+<pre><code class="zsh"># Will work as if id-as'zsh-autopair' was passed
+zinit ice wait lucid id-as
 zinit load hlissner/zsh-autopair
 </code></pre>
 
