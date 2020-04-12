@@ -387,7 +387,23 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                         --config receive.fsckobjects=false \
                         --config fetch.fsckobjects=false \
                             |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
-                    (( pipestatus[1] )) && { print -Pr -- "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]}).%f%b"; return 1; }
+                    if (( pipestatus[1] == 141 )) {
+                        command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
+                            ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
+                            "${ZINIT_ICE[proto]:-https}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
+                            "$local_path" \
+                            --config transfer.fsckobjects=false \
+                            --config receive.fsckobjects=false \
+                            --config fetch.fsckobjects=false
+                        integer retval=$?
+                        if (( retval )) {
+                            print -Pr -- "${ZINIT[col-error]}Clone failed (code: $retval).%f%b"
+                            return 1
+                        }
+                    } elif (( pipestatus[1] )) {
+                        print -Pr -- "${ZINIT[col-error]}Clone failed (code: ${pipestatus[1]}).%f%b"
+                        return 1
+                    }
                     ;;
                 (*)
                     print -Pr "${ZINIT[col-error]}Unknown protocol:%f%b ${ZINIT_ICE[proto]}."
