@@ -2134,7 +2134,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             unset 'ZINIT_ICE[wait]'
                     }
 
-                    [[ ${ZINIT_ICE[id-as]} = auto ]] && ZINIT_ICE[id-as]="${1:t}"
+                    [[ ${ZINIT_ICE[id-as]} = (auto|) ]] && ZINIT_ICE[id-as]="${1:t}"
 
                     integer  __is_snippet=${${(M)__is_snippet:#-1}:-0}
                     () {
