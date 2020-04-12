@@ -52,6 +52,10 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 12-04-2020
+  - A new document on the Wiki is available – about the [**bindmap''
+    ice**](https://zdharma.org/zinit/wiki/Bindkeys/).
+
 * 07-04-2020
   - A new feature – `param''` ice that defines params for the time of loading of
     the plugin or snippet. E.g.:
