@@ -40,6 +40,11 @@ notifications:
     on_success: change
     on_failure: change
     skip_join: true
+  email:
+    recipients:
+      - sgniazdowski@gmail.com
+    on_success: change
+    on_failure: change
 before_install:
 - openssl aes-256-cbc -K $encrypted_52a7097f2175_key -iv $encrypted_52a7097f2175_iv
   -in share/deploy_key.enc -out share/deploy_key -d
