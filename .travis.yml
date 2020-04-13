@@ -42,4 +42,4 @@ notifications:
     skip_join: true
 before_install:
 - openssl aes-256-cbc -K $encrypted_52a7097f2175_key -iv $encrypted_52a7097f2175_iv
-  -in deploy_key.enc -out share/deploy_key -d
+  -in share/deploy_key.enc -out share/deploy_key -d
