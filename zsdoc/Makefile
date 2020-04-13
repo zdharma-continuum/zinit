@@ -10,44 +10,44 @@ all: man pdf
 # MANUALS
 # Converted with a2x from asciidoc package
 
-man: man/zplugin.zsh.1 man/zplugin-side.zsh.1 man/zplugin-install.zsh.1 man/zplugin-autoload.zsh.1
+man: man/zinit.zsh.1 man/zinit-side.zsh.1 man/zinit-install.zsh.1 man/zinit-autoload.zsh.1
 
-man/zplugin.zsh.1:
+man/zinit.zsh.1:
 	@mkdir -p man
-	a2x --verbose -L --doctype manpage --format manpage -D man zplugin.zsh.adoc
+	a2x --verbose -L --doctype manpage --format manpage -D man zinit.zsh.adoc
 
-man/zplugin-side.zsh.1:
+man/zinit-side.zsh.1:
 	@mkdir -p man
-	a2x --verbose -L --doctype manpage --format manpage -D man zplugin-side.zsh.adoc
+	a2x --verbose -L --doctype manpage --format manpage -D man zinit-side.zsh.adoc
 
-man/zplugin-install.zsh.1:
+man/zinit-install.zsh.1:
 	@mkdir -p man
-	a2x --verbose -L --doctype manpage --format manpage -D man zplugin-install.zsh.adoc
+	a2x --verbose -L --doctype manpage --format manpage -D man zinit-install.zsh.adoc
 
-man/zplugin-autoload.zsh.1:
+man/zinit-autoload.zsh.1:
 	@mkdir -p man
-	a2x --verbose -L --doctype manpage --format manpage -D man zplugin-autoload.zsh.adoc
+	a2x --verbose -L --doctype manpage --format manpage -D man zinit-autoload.zsh.adoc
 
 # PDFS
 # Uses asciidoctor not a2x (i.e. not asciidoc)
 
-pdf: pdf/zplugin.zsh.pdf pdf/zplugin-side.zsh.pdf pdf/zplugin-install.zsh.pdf pdf/zplugin-autoload.zsh.pdf
+pdf: pdf/zinit.zsh.pdf pdf/zinit-side.zsh.pdf pdf/zinit-install.zsh.pdf pdf/zinit-autoload.zsh.pdf
 
-pdf/zplugin.zsh.pdf:
+pdf/zinit.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zinit.zsh.adoc
 
-pdf/zplugin-side.zsh.pdf:
+pdf/zinit-side.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin-side.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zinit-side.zsh.adoc
 
-pdf/zplugin-install.zsh.pdf:
+pdf/zinit-install.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin-install.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zinit-install.zsh.adoc
 
-pdf/zplugin-autoload.zsh.pdf:
+pdf/zinit-autoload.zsh.pdf:
 	@mkdir -p pdf
-	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zplugin-autoload.zsh.adoc
+	asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf zinit-autoload.zsh.adoc
 
 clean:
 	rm -rf man pdf data

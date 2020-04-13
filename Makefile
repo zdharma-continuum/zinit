@@ -1,4 +1,4 @@
-all: zplugin.zsh.zwc zplugin-side.zsh.zwc zplugin-install.zsh.zwc zplugin-autoload.zsh.zwc
+all: zinit.zsh.zwc zinit-side.zsh.zwc zinit-install.zsh.zwc zinit-autoload.zsh.zwc
 
 %.zwc: %
 	doc/zcompile $<
@@ -20,12 +20,12 @@ testD:
 testE:
 	make VERBOSE=$(VERBOSE) NODIFF=$(NODIFF) DEBUG=$(DEBUG) OPTDUMP=$(OPTDUMP) OPTS="ignoreclosebraces" -C test test
 
-doc: zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh
+doc: zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
 	rm -rf zsdoc/data zsdoc/*.adoc
-	zsd -v --scomm --cignore '(\#*FUNCTION:*{{{*|\#[[:space:]]#}}}*)' zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh
+	zsd -v --scomm --cignore '(\#*FUNCTION:*{{{*|\#[[:space:]]#}}}*)' zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
 
 clean:
-	rm -f zplugin.zsh.zwc zplugin-side.zsh.zwc zplugin-install.zsh.zwc zplugin-autoload.zsh.zwc
+	rm -f zinit.zsh.zwc zinit-side.zsh.zwc zinit-install.zsh.zwc zinit-autoload.zsh.zwc
 	rm -rf zsdoc/data
 
 .PHONY: all test clean doc
