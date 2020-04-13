@@ -41,12 +41,12 @@ fi
 echo
 if test -d "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/.git"; then
     cd "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME"
-    echo "[1;34m▓▒░[0m Updating [1;33mDHARMA Initiative Plugin Manager[0m at [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
+    echo "[1;34m▓▒░[0m Updating [1;36mDHARMA[1;33m Initiative Plugin Manager[0m at [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
     git pull origin master
 else
     cd "$ZINIT_HOME"
-    echo "[1;34m▓▒░[0m Installing [1;33mDHARMA Initiative Plugin Manager[0m at [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-    { git clone --depth 1 --progress https://github.com/zdharma/zinit.git "$ZINIT_BIN_DIR_NAME" \
+    echo "[1;34m▓▒░[0m Installing [1;36mDHARMA[1;33m Initiative Plugin Manager[0m at [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
+    { git clone --progress https://github.com/zdharma/zinit.git "$ZINIT_BIN_DIR_NAME" \
         2>&1 | { /tmp/zinit/git-process-output.zsh || cat; } } 2>/dev/null
     if [ -d "$ZINIT_BIN_DIR_NAME" ]; then
         echo
@@ -76,7 +76,7 @@ if [ $RCUPDATE -eq 1 ]; then
 
 ### Added by Zinit's installer
 if [[ ! -f $ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing DHARMA Initiative Plugin Manager (zdharma/zinit)…%f"
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma/zinit%F{220})…%f"
     command mkdir -p "$ZINIT_HOME" && command chmod g-rwX "$ZINIT_HOME"
     command git clone https://github.com/zdharma/zinit "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME" && \\
         print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \\
