@@ -2144,6 +2144,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         }
                     } "$@"
 
+                    integer __action_load=0 __turbo=0
+                    if [[ -n ${(M)${+ZINIT_ICE[wait]}:#1}${ZINIT_ICE[load]}${ZINIT_ICE[unload]}${ZINIT_ICE[service]}${ZINIT_ICE[subscribe]} ]] {
+                        __turbo=1
+                    }
+
                     if [[ -n ${ZINIT_ICE[trigger-load]} || \
                           ( ${+ZINIT_ICE[wait]} == 1 &&
                               ${ZINIT_ICE[wait]} = (\!|)(<->(a|b|c|)|) )
@@ -2154,6 +2159,10 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         } else {
                             .zinit-get-object-path plugin "${${${1#@}#https://github.com/}%%(///|//|/)}"
                         }
+                        (( $? )) && { __action_load=1; }
+                    } elif (( ! __turbo )) {
+                        __action_load=1
+                        reply=( 1 )
                     } else {
                         reply=( 1 )
                     }
@@ -2186,10 +2195,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     (( ${+ZINIT_ICE[has]} )) && { (( ${+commands[${ZINIT_ICE[has]}]} )) || { (( $# )) && shift; continue; }; }
 
                     ZINIT_ICE[wait]="${${(M)${+ZINIT_ICE[wait]}:#1}:+${(M)ZINIT_ICE[wait]#!}${${ZINIT_ICE[wait]#!}:-0}}"
-                    if [[ ( ${reply[-1]} = 1 && ${ZINIT_ICE[wait]} = (\!|)<->(a|b|c|) ) || \
-                        ( -n ${ZINIT_ICE[wait]} && ${ZINIT_ICE[wait]} != (\!|)<->(a|b|c|) ) || \
-                        -n ${ZINIT_ICE[load]}${ZINIT_ICE[unload]}${ZINIT_ICE[service]}${ZINIT_ICE[subscribe]}
-                    ]] {
+                    if (( __turbo )) {
                         ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
                         if (( __is_snippet > 0 )); then
                             ZINIT_SICE[${${1#@}%%(///|//|/)}]=
@@ -2203,7 +2209,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                 "${${${1#@}#https://github.com/}%%(///|//|/)}" ""
                         fi
                         __retval+=$?
-                    } else {
+                    }
+                    if (( __action_load )) {
+                        if (( __turbo )) {
+                            ZINIT_ICE[cloneonly]=""
+                        }
                         if (( __is_snippet > 0 )); then
                             .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${1#@}%%(///|//|/)}"
                         else
