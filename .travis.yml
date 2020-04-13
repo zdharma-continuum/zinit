@@ -1,9 +1,8 @@
 language: ruby
 dist: bionic
 rvm:
-  - 2.6
+- 2.6
 install: gem install asciidoctor-pdf --pre
-
 git:
   depth: 1
 branches:
@@ -14,17 +13,15 @@ addons:
     packages:
     - zsh
     - mailutils
-
 env:
   global:
-  - ENCRYPTION_LABEL: "de1faff15945"
-  - COMMIT_AUTHOR_EMAIL: "psprint@zdharma.org"
-
+  - ENCRYPTION_LABEL: de1faff15945
+  - COMMIT_AUTHOR_EMAIL: psprint@zdharma.org
 before_script:
 - sudo apt-get install -y zsh mailutils
 - zsh --version
-- >-
-    zsh -c 'print -rl -- "ZSH_VERSION: $ZSH_VERSION" "ZSH_PATCHLEVEL: $ZSH_PATCHLEVEL" "OSTYPE: $OSTYPE" "CPUTYPE: $CPUTYPE" "MACHTYPE: $MACHTYPE"'
+- 'zsh -c ''print -rl -- "ZSH_VERSION: $ZSH_VERSION" "ZSH_PATCHLEVEL: $ZSH_PATCHLEVEL"
+  "OSTYPE: $OSTYPE" "CPUTYPE: $CPUTYPE" "MACHTYPE: $MACHTYPE"'''
 script:
 - git fetch --depth=1 origin tests:tests
 - git worktree add test tests
@@ -36,11 +33,13 @@ script:
 - make -C test testC VERBOSE=1
 - make -C test testD VERBOSE=1
 - make -C test testE VERBOSE=1
-
 notifications:
   irc:
     channels:
-      - "chat.freenode.net#zplugin"
-    on_success: change # default: always
-    on_failure: change # default: always
+    - chat.freenode.net#zplugin
+    on_success: change
+    on_failure: change
     skip_join: true
+before_install:
+- openssl aes-256-cbc -K $encrypted_52a7097f2175_key -iv $encrypted_52a7097f2175_iv
+  -in deploy_key.enc -out share/deploy_key -d
