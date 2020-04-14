@@ -702,6 +702,9 @@ ZINIT[EXTENDED_GLOB]=""
 .zinit-self-update() {
     emulate -LR zsh
     setopt extendedglob typesetsilent warncreateglobal
+
+    [[ $1 = -q ]] && builtin print -P -- "$ZINIT[col-info2]Updating Zinit...%f%b"
+
     local nl=$'\n' escape=$'\x1b['
     local -a lines
     (   builtin cd -q "$ZINIT[BIN_DIR]" && \
@@ -720,9 +723,13 @@ ZINIT[EXTENDED_GLOB]=""
             lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
             builtin print -rl -- "${lines[@]}" | .zinit-pager
         fi
-        command git pull --no-stat
+        if [[ $1 != -q ]] {
+            command git pull --no-stat
+        } else {
+            command git pull --no-stat --quiet
+        }
     )
-    builtin print "Compiling Zinit (zcompile)..."
+    [[ $1 != -q ]] && builtin print "Compiling Zinit (zcompile)..."
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile $ZINIT[BIN_DIR]/zinit.zsh
     zcompile $ZINIT[BIN_DIR]/zinit-side.zsh
@@ -730,7 +737,7 @@ ZINIT[EXTENDED_GLOB]=""
     zcompile $ZINIT[BIN_DIR]/zinit-autoload.zsh
     zcompile $ZINIT[BIN_DIR]/git-process-output.zsh
     # Load for the current session
-    builtin print "Reloading Zinit for the current session..."
+    [[ $1 != -q ]] && builtin print "Reloading Zinit for the current session..."
     source $ZINIT[BIN_DIR]/zinit.zsh
     source $ZINIT[BIN_DIR]/zinit-side.zsh
     source $ZINIT[BIN_DIR]/zinit-install.zsh
