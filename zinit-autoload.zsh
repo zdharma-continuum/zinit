@@ -1798,6 +1798,8 @@ ZINIT[EXTENDED_GLOB]=""
     emulate -LR zsh
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
+    .zinit-self-update -q
+
     [[ $2 = restart ]] && \
         print -P "$ZINIT[col-msg2]Restarting the update with the new codebase loaded.%f%b\n"
 
