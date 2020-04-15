@@ -63,9 +63,9 @@
     zinit for PZTM::rails
     ```
 
-  - New prefixes `OMZP::` **=** `OMZ::/plugins/`,
-    `OMZL::` **=** `OMZ::lib/`, `PZTM::` **=** `PZT::modules/`, for both svn and
-    snippets. Example use:
+  - New prefixes `OMZP::` **=** `OMZ::/plugins/`, `OMZT::` **=**
+    `OMZ::/themes/`, `OMZL::` **=** `OMZ::lib/`, `PZTM::` **=** `PZT::modules/`,
+    for both svn and snippets. Example use:
 
     ```zsh
     zinit for OMZP::ruby/ruby.plugin.zsh
