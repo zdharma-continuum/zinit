@@ -1071,7 +1071,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                             print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
                             print -r "(snippet URL points to a directory instead of a file?"
                             print -r "to download directory, use preceding: zinit ice svn)."
-                            retval=2
+                            retval=4
                         }
                     }
                 }
