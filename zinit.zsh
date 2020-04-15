@@ -102,6 +102,7 @@ declare -gA ZINIT_1MAP ZINIT_2MAP
 ZINIT_1MAP=(
     OMZ:: https://github.com/ohmyzsh/ohmyzsh/trunk/
     OMZP:: https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/
+    OMZT:: https://github.com/ohmyzsh/ohmyzsh/trunk/themes/
     OMZL:: https://github.com/ohmyzsh/ohmyzsh/trunk/lib/
     PZT:: https://github.com/sorin-ionescu/prezto/trunk/
     PZTM:: https://github.com/sorin-ionescu/prezto/trunk/modules/
