@@ -109,6 +109,7 @@ ZINIT_1MAP=(
 ZINIT_2MAP=(
     OMZ:: https://github.com/ohmyzsh/ohmyzsh/raw/master/
     OMZP:: https://github.com/ohmyzsh/ohmyzsh/raw/master/plugins/
+    OMZT:: https://github.com/ohmyzsh/ohmyzsh/raw/master/themes/
     OMZL:: https://github.com/ohmyzsh/ohmyzsh/raw/master/lib/
     PZT:: https://github.com/sorin-ionescu/prezto/raw/master/
     PZTM:: https://github.com/sorin-ionescu/prezto/raw/master/modules/
