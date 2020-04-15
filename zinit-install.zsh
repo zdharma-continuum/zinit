@@ -884,11 +884,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     } else {
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_2MAP})/$ZINIT_2MAP[$MATCH]}
         if [[ $save_url == (${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}})* ]] {
-            if [[ $url != *.plugin.zsh ]] {
+            if [[ $url != *.zsh ]] {
                 url+=/${${url#*::}:t}.plugin.zsh
             }
         } elif [[ $save_url = (${(~kj.|.)${(kM)ZINIT_1MAP:#PZT*}})* ]] {
-            if [[ $url != */init.zsh ]] {
+            if [[ $url != *.zsh ]] {
                 url+=/init.zsh
             }
         }
