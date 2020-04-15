@@ -61,6 +61,8 @@
     zinit for OMZP::ruby
     # Instead of: zinit for PZTM::rails/init.zsh
     zinit for PZTM::rails
+    # Instead of: zinit for OMZT::gnzh.zsh-theme
+    zinit for OMZT::gnzh
     ```
 
   - New prefixes `OMZP::` **=** `OMZ::/plugins/`, `OMZT::` **=**
