@@ -626,7 +626,7 @@ explicitly stated otherwise.
 | `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zini ice from"gh-r" as"program" bpick"*Darwin*"; zini load docker/compose`. **Does not work with snippets.** </div>|
 | `depth` |<div align="justify" style="text-align: justify;"> Pass `--depth` to `git`, i.e. limit how much of history to download. **Does not work with snippets.**</div>|
 | `cloneopts` |<div align="justify" style="text-align: justify;"> Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. **Does not work with snippets.** </div>|
-| `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zinit ice svn; zinit snippet OMZ::plugins/git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**</div>|
+| `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zinit ice svn; zinit snippet OMZP::git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**</div>|
 
 ### Selection of Files (To Source, …)
 | Modifier | Description |
@@ -817,8 +817,8 @@ To use **themes** created for Oh My Zsh you might want to first source the `git`
 
 ```SystemVerilog
 zinit snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
-# Or using OMZ:: shorthand:
-zinit snippet OMZ::lib/git.zsh
+# Or using OMZL:: shorthand:
+zinit snippet OMZL::git.zsh
 ```
 
 If the library will not be loaded, then similar to following errors will be appearing:
@@ -834,7 +834,7 @@ about `current_branch` function can be appearing). Load this Git-plugin as singl
 snippet directly from OMZ:
 
 ```SystemVerilog
-zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZP::git
 ```
 
 Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
@@ -851,10 +851,10 @@ To summarize:
 
 ```SystemVerilog
 # Load OMZ Git library
-zinit snippet OMZ::lib/git.zsh
+zinit snippet OMZL::git.zsh
 
 # Load Git plugin from OMZ
-zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZP::git
 zinit cdclear -q # <- forget completions provided up to this moment
 
 setopt promptsubst
@@ -952,7 +952,7 @@ before commands loading other plugins or snippets, and issue `zinit cdclear` (or
 
 ```SystemVerilog
 source ~/.zinit/bin/zinit.zsh
-zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZP::git
 zinit cdclear -q # <- forget completions provided by Git plugin
 
 zinit load "some/plugin"
@@ -966,7 +966,7 @@ zinit cdlist # look at gathered compdefs
 ```
 
 The `cdreplay` is important if you use plugins like
-`OMZ::plugins/kubectl/kubectl.plugin.zsh` or `asdf-vm/asdf`, because those plugins call
+`OMZP::kubectl` or `asdf-vm/asdf`, because these plugins call
 `compdef`.
 
 ## Disabling System-Wide `compinit` Call (Ubuntu)
