@@ -398,7 +398,7 @@
 
 </details>
 
-To see the full history check [the changelog](CHANGELOG.md).
+To see the full history check [the changelog](doc/CHANGELOG.md).
 
 # Zinit
 
