@@ -878,10 +878,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         [[ $sname = */trunk* ]] && sname=${${id_as_clean%%/trunk*}:t}/${id_as_clean:t}
     } || local sname="$id_as_clean"
 
-    (( ${+ZINIT_ICE[svn]} )) && {
+    if (( ${+ZINIT_ICE[svn]} )) {
         [[ $url = *(${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH=${ZINIT[SNIPPETS_DIR]}
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_1MAP})/$ZINIT_1MAP[$MATCH]}
-    } || {
+    } else {
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_2MAP})/$ZINIT_2MAP[$MATCH]}
     }
 
