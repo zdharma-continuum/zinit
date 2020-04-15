@@ -53,6 +53,14 @@
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
 * 15-04-2020
+  - The `…/name.plugin.zsh` and `…/init.zsh` can be now skipped from single-file
+    (non-svn) snippet URLs utilizing the `OMZ::…`, etc. shorthands. Example:
+
+    ```zsh
+    # Instead of: zinit for OMZP::ruby/ruby.plugin.zsh
+    zinit for OMZP::ruby
+    ```
+
   - New prefixes `OMZP::` **=** `OMZ::/plugins/`,
     `OMZL::` **=** `OMZ::lib/`, `PZTM::` **=** `PZT::modules/`, for both svn and
     snippets. Example use:
