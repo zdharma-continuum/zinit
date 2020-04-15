@@ -860,7 +860,7 @@ zinit cdclear -q # <- forget completions provided up to this moment
 setopt promptsubst
 
 # Load theme from OMZ
-zinit snippet OMZ::themes/dstufft.zsh-theme
+zinit snippet OMZT::gnzh
 
 # Load normal GitHub plugin with theme depending on OMZ Git library
 zinit light NicoSantangelo/Alpharized
