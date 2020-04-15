@@ -59,6 +59,8 @@
     ```zsh
     # Instead of: zinit for OMZP::ruby/ruby.plugin.zsh
     zinit for OMZP::ruby
+    # Instead of: zinit for PZTM::git/init.zsh
+    zinit for PZTM::git
     ```
 
   - New prefixes `OMZP::` **=** `OMZ::/plugins/`,
