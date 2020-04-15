@@ -1357,7 +1357,7 @@ function $f {
     .zinit-pack-ice "$id_as" ""
 
     # Oh-My-Zsh, Prezto and manual shorthands
-    [[ $url = *(${(~kj.|.)${(M)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH="${ZINIT[SNIPPETS_DIR]}"
+    [[ $url = *(${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH="${ZINIT[SNIPPETS_DIR]}"
 
     # Construct containing directory, extract final directory
     # into handy-variable $dirname
