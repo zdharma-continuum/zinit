@@ -883,6 +883,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_1MAP})/$ZINIT_1MAP[$MATCH]}
     } else {
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_2MAP})/$ZINIT_2MAP[$MATCH]}
+        if [[ $save_url == (${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}})* ]] {
+            if [[ $url != *.plugin.zsh ]] {
+                url+=/${${url#*::}:t}.plugin.zsh
+            }
+        } elif [[ $save_url = (${(~kj.|.)${(kM)ZINIT_1MAP:#PZT*}})* ]] {
+            if [[ $url != */init.zsh ]] {
+                url+=/init.zsh
+            }
+        }
     }
 
     # Change the url to point to raw github content if it isn't like that
