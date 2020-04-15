@@ -67,7 +67,7 @@
 
   - New prefixes `OMZP::` **=** `OMZ::/plugins/`, `OMZT::` **=**
     `OMZ::/themes/`, `OMZL::` **=** `OMZ::lib/`, `PZTM::` **=** `PZT::modules/`,
-    for both svn and snippets. Example use:
+    for both svn and single-file snippets. Example use:
 
     ```zsh
     zinit for OMZP::ruby/ruby.plugin.zsh
