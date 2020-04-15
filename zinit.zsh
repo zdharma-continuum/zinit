@@ -2245,7 +2245,7 @@ You can try to prepend ${__q}[obj]@[error]' if the last ice is in fact a plugin.
             }
             return 2
        } elif (( ! $# )) {
-           return 2
+           return 0
        }
     }
 
