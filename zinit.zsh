@@ -1352,11 +1352,6 @@ function $f {
 
     # Oh-My-Zsh, Prezto and manual shorthands
     [[ $url = *(OMZ::|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH="${ZINIT[SNIPPETS_DIR]}"
-    (( ${+ZINIT_ICE[svn]} )) && {
-        url[1-correct,5-correct]="${ZINIT_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
-    } || {
-        url[1-correct,5-correct]="${ZINIT_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}"
-    }
 
     # Construct containing directory, extract final directory
     # into handy-variable $dirname
