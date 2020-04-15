@@ -2114,7 +2114,7 @@ ZINIT[EXTENDED_GLOB]=""
     for entry in "${(@on)ZINIT[(I)TIME_[0-9]##_*]}"; do
         entry2="${entry#TIME_[0-9]##_}"
         entry3="AT_$entry"
-        if [[ "$entry2" = (http|https|ftp|ftps|scp|OMZ|PZT):* ]]; then
+        if [[ "$entry2" = (http|https|ftp|ftps|scp|${(~j.|.)${${(k)ZINIT_1MAP}%::}}):* ]]; then
             REPLY="${ZINIT[col-pname]}$entry2${ZINIT[col-rst]}"
 
             tmp=( "${(z@)ZINIT_SICE[${entry2%/}]}" )

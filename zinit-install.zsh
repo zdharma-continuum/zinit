@@ -880,9 +880,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
     (( ${+ZINIT_ICE[svn]} )) && {
         [[ $url = *(${(~kj.|.)${(M)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH=${ZINIT[SNIPPETS_DIR]}
-        url[1-correct,5-correct]=${ZINIT_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
+        url=${url/(#s)(#m)(${(~kj.|.)ZINIT_1MAP})/$ZINIT_1MAP[$MATCH]}
     } || {
-        url[1-correct,5-correct]=${ZINIT_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
+        url=${url/(#s)(#m)(${(~kj.|.)ZINIT_2MAP})/$ZINIT_2MAP[$MATCH]}
     }
 
     # Change the url to point to raw github content if it isn't like that
@@ -1329,10 +1329,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
     # Oh-My-Zsh, Prezto and manual shorthands
     (( ${+ZINIT_ICE[svn]} )) && {
-        [[ $url = *(OMZ::|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH=${ZINIT[SNIPPETS_DIR]}
-        url[1-correct,5-correct]=${ZINIT_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
+        [[ $url = *(${(~kj.|.)${(M)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH=${ZINIT[SNIPPETS_DIR]}
+        url=${url/(#s)(#m)(${(~kj.|.)ZINIT_1MAP})/$ZINIT_1MAP[$MATCH]}
     } || {
-        url[1-correct,5-correct]=${ZINIT_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
+        url=${url/(#s)(#m)(${(~kj.|.)ZINIT_2MAP})/$ZINIT_2MAP[$MATCH]}
     }
 
     .zinit-get-object-path snippet "$id_as" || \

@@ -101,11 +101,17 @@ ZINIT[SHADOWING]=inactive   ZINIT[DTRACE]=0    ZINIT[CUR_PLUGIN]=
 declare -gA ZINIT_1MAP ZINIT_2MAP
 ZINIT_1MAP=(
     OMZ:: https://github.com/ohmyzsh/ohmyzsh/trunk/
+    OMZP:: https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/
+    OMZL:: https://github.com/ohmyzsh/ohmyzsh/trunk/lib/
     PZT:: https://github.com/sorin-ionescu/prezto/trunk/
+    PZTM:: https://github.com/sorin-ionescu/prezto/trunk/modules/
 )
 ZINIT_2MAP=(
     OMZ:: https://github.com/ohmyzsh/ohmyzsh/raw/master/
+    OMZP:: https://github.com/ohmyzsh/ohmyzsh/raw/master/plugins/
+    OMZL:: https://github.com/ohmyzsh/ohmyzsh/raw/master/lib/
     PZT:: https://github.com/sorin-ionescu/prezto/raw/master/
+    PZTM:: https://github.com/sorin-ionescu/prezto/raw/master/modules
 )
 # ]]]
 
@@ -1351,7 +1357,7 @@ function $f {
     .zinit-pack-ice "$id_as" ""
 
     # Oh-My-Zsh, Prezto and manual shorthands
-    [[ $url = *(OMZ::|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH="${ZINIT[SNIPPETS_DIR]}"
+    [[ $url = *(${(~kj.|.)${(M)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH="${ZINIT[SNIPPETS_DIR]}"
 
     # Construct containing directory, extract final directory
     # into handy-variable $dirname
@@ -2133,7 +2139,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     integer  __is_snippet=${${(M)__is_snippet:#-1}:-0}
                     () {
                         setopt localoptions extendedglob
-                        if [[ $__is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || ${1#@} = ((#i)(http(s|)|ftp(s|)):/|((OMZ|PZT)::))* ) ]] {
+                        if [[ $__is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || ${1#@} = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
                             __is_snippet=1
                         }
                     } "$@"
