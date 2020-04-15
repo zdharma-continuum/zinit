@@ -1346,6 +1346,19 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_1MAP})/$ZINIT_1MAP[$MATCH]}
     } || {
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_2MAP})/$ZINIT_2MAP[$MATCH]}
+        if [[ $save_url == (${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}})* ]] {
+            if [[ $url != *.zsh(|-theme) ]] {
+                if [[ $save_url == OMZT::* ]] {
+                    url+=.zsh-theme
+                } else {
+                    url+=/${${url#*::}:t}.plugin.zsh
+                }
+            }
+        } elif [[ $save_url = (${(~kj.|.)${(kM)ZINIT_1MAP:#PZT*}})* ]] {
+            if [[ $url != *.zsh ]] {
+                url+=/init.zsh
+            }
+        }
     }
 
     .zinit-get-object-path snippet "$id_as" || \
