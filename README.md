@@ -52,6 +52,23 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 15-04-2020
+  - New prefixes `OMZP::` **=** `OMZ::/plugins/`,
+    `OMZL::` **=** `OMZ::lib/`, `PZTM::` **=** `PZT::modules/`, for both svn and
+    snippets. Example use:
+
+    ```zsh
+    zinit for OMZP::ruby/ruby.plugin.zsh
+    zinit svn for OMZP::ruby
+    ```
+
+    (instead of:
+    ```zsh
+    zinit for OMZ::plugins/ruby/ruby.plugin.zsh
+    zinit svn for OMZ::plugins/ruby
+    ```
+    ).
+
 * 12-04-2020
   - A new document on the Wiki is available – about the [**bindmap''
     ice**](https://zdharma.org/zinit/wiki/Bindkeys/).
