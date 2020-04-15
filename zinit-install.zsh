@@ -886,7 +886,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     }
 
     # Change the url to point to raw github content if it isn't like that
-    [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZINIT_ICE[svn]}" = "0" ]] && url="${url/\/blob\///raw/}"
+    [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZINIT_ICE[svn]}" = "0" ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
 
     if [[ ! -d $local_dir/$dirname ]]; then
         [[ $update != -u ]] && print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
@@ -1329,7 +1329,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
     # Oh-My-Zsh, Prezto and manual shorthands
     (( ${+ZINIT_ICE[svn]} )) && {
-        [[ $url = *(OMZ::|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH=${ZINIT[SNIPPETS_DIR]}
         url[1-correct,5-correct]=${ZINIT_1MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
     } || {
         url[1-correct,5-correct]=${ZINIT_2MAP[${url[1-correct,5-correct]}]:-${url[1-correct,5-correct]}}
