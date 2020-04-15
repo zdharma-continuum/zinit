@@ -111,7 +111,7 @@ ZINIT_2MAP=(
     OMZP:: https://github.com/ohmyzsh/ohmyzsh/raw/master/plugins/
     OMZL:: https://github.com/ohmyzsh/ohmyzsh/raw/master/lib/
     PZT:: https://github.com/sorin-ionescu/prezto/raw/master/
-    PZTM:: https://github.com/sorin-ionescu/prezto/raw/master/modules
+    PZTM:: https://github.com/sorin-ionescu/prezto/raw/master/modules/
 )
 # ]]]
 
