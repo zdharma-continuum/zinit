@@ -313,7 +313,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         gh-r      github.com/$remote_url_path/releases
     )
 
-    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst
+    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst \
+        /tmp/zinit.compiled.$$.lst
 
     ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
@@ -527,6 +528,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
         { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
         { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+    }
+
+    if [[ -e /tmp/zinit.compiled.$$.lst ]] {
+        typeset -ga ADD_COMPILED
+        { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
     return 0
@@ -866,8 +872,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
             for first in "${list[@]}"; do
                 zcompile "$first"
             done
-            local sep="${ZINIT[col-pname]},${ZINIT[col-rst]} "
-            print -Pr -- "Compiled following additional files (${ZINIT[col-pname]}the compile''-ice%f%b: ${(pj:$sep:)${(@)${list[@]//(#b).([^.\/]##(#e))/.${ZINIT[col-info]}${match[1]}${ZINIT[col-rst]}}#$plugin_dir/}}."
+            print -rl -- ${list[@]#$plugin_dir/} >! /tmp/zinit.compiled.$$.lst
+            print -Pr -- "The additional $ZINIT[col-obj]${#ADD_COMPILED}%f%b" \
+                "compiled files are stored in the" \
+                "$ZINIT[col-file]\$ADD_COMPILED%f%b array. $ZSH_SUBSHELL"
         }
     fi
 
@@ -913,7 +921,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     # Change the url to point to raw github content if it isn't like that
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZINIT_ICE[svn]}" = "0" ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
 
-    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst
+    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst \
+        /tmp/zinit.compiled.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
         [[ $update != -u ]] && print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
@@ -1306,6 +1315,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
         { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
         { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+    }
+
+    if [[ -e /tmp/zinit.compiled.$$.lst ]] {
+        typeset -ga ADD_COMPILED
+        { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
     return $retval
