@@ -2162,6 +2162,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             .zinit-get-object-path plugin "${${${1#@}#https://github.com/}%%(///|//|/)}"
                         }
                         (( $? )) && { __action_load=1; }
+                        local __object_path="${reply[-3]}"
                     } elif (( ! __turbo )) {
                         __action_load=1
                         reply=( 1 )
@@ -2223,6 +2224,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                 "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
                         __retval+=$? __is_snippet=0
+                        if (( __turbo )) {
+                            command rm -f $__object_path/._zinit/cloneonly
+                        }
                     }
                 } else {
                     error=1
