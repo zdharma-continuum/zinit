@@ -539,23 +539,23 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     # $id_as - a /-separated pair if second element
     # is not empty and first is not "%" - then it's
     # just $1 in first case, or $1$2 in second case
-    local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" reinstall="${3:-0}" quiet="${${4:+1}:-0}"
+    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} reinstall=${3:-0} quiet=${${4:+1}:-0}
     (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
     typeset -ga INSTALLED_COMPS SKIPPED_COMPS
     INSTALLED_COMPS=() SKIPPED_COMPS=()
 
     .zinit-any-to-user-plugin "$id_as" ""
-    local user="${reply[-2]}"
-    local plugin="${reply[-1]}"
+    local user=${reply[-2]}
+    local plugin=${reply[-1]}
     .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-    local abbrev_pspec="$REPLY"
+    local abbrev_pspec=$REPLY
 
     .zinit-exists-physically-message "$id_as" "" || return 1
 
     # Symlink any completion files included in plugin's directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    [[ "$user" = "%" ]] && \
+    [[ $user = % ]] && \
         completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN^/) ) || \
         completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN^/) )
     already_symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
@@ -571,7 +571,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
               -z "${backup_comps[(r)*/$bkpfile]}" ||
               "$reinstall" = "1"
         ]]; then
-            if [[ "$reinstall" = "1" ]]; then
+            if [[ $reinstall = 1 ]]; then
                 # Remove old files
                 command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile"
                 command rm -f "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
