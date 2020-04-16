@@ -313,6 +313,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         gh-r      github.com/$remote_url_path/releases
     )
 
+    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst
+
     ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
     local -a arr
@@ -521,6 +523,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     [[ 0 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} != null ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
+    if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
+        typeset -ga INSTALLED_COMPS SKIPPED_COMPS
+        { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
+        { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+    }
+
     return 0
 } # ]]]
 # FUNCTION: .zinit-install-completions [[[
@@ -596,6 +604,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                 "They are stored in ${ZINIT[col-obj2]}\$SKIPPED_COMPS${ZINIT[col-msg1]} array." \
                 ${ZINIT[col-rst]}
         }
+    }
+
+    if (( ZSH_SUBSHELL )) {
+        print -rl -- $INSTALLED_COMPS >! /tmp/zinit.installed_comps.$$.lst
+        print -rl -- $SKIPPED_COMPS >! /tmp/zinit.skipped_comps.$$.lst
     }
 
     .zinit-compinit &>/dev/null
@@ -899,6 +912,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
     # Change the url to point to raw github content if it isn't like that
     [[ "$url" = *github.com* && ! "$url" = */raw/* && "${+ZINIT_ICE[svn]}" = "0" ]] && url="${${url/\/blob\///raw/}/\/tree\///raw/}"
+
+    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
         [[ $update != -u ]] && print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
@@ -1286,6 +1301,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     ICE_OPTS[opt_-q,--quiet]=1
     [[ 0 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} != null ]] && \
         .zinit-install-completions "%" "$local_dir/$dirname" 0
+
+    if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
+        typeset -ga INSTALLED_COMPS SKIPPED_COMPS
+        { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
+        { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+    }
 
     return $retval
 }
