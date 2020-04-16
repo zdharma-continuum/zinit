@@ -52,6 +52,10 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 16-04-2020
+  - Turbo plugins will now get gracefully preinstalled first before the prompt
+    (i.e.: within `zshrc` processing) and then loaded **still** as Turbo plugins.
+
 * 15-04-2020
   - The `…/name.plugin.zsh` and `…/init.zsh` can be now skipped from single-file
     (non-svn) snippet URLs utilizing the `OMZ::…`, etc. shorthands. Example:
