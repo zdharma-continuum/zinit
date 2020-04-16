@@ -533,7 +533,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 # $2 - plugin (only when $1 - i.e. user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
 .zinit-install-completions() {
-    builtin setopt localoptions nullglob extendedglob unset nokshglob warncreateglobal
+    builtin emulate -LR zsh
+    setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
 
     # $id_as - a /-separated pair if second element
     # is not empty and first is not "%" - then it's
