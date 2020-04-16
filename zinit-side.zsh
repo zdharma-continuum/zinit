@@ -118,7 +118,7 @@
 .zinit-any-colorify-as-uspl2() {
     .zinit-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
-    [[ "$user" = "%" ]] && {
+    if [[ "$user" = "%" ]] {
         plugin="${plugin/${ZINIT[SNIPPETS_DIR]}/SNIPPETS}"
         plugin="${plugin/https--github.com--(robbyrussell--oh-my-zsh|ohmyzsh--ohmyzsh)--trunk--plugins--/OMZP::}"
         plugin="${plugin/https--github.com--(robbyrussell--oh-my-zsh|ohmyzsh--ohmyzsh)--trunk--plugins/OMZP}"
@@ -134,7 +134,9 @@
         plugin="${plugin/https--github.com--sorin-ionescu--prezto--trunk/PZT}"
         plugin="${plugin/$HOME/HOME}"
         REPLY="${ZINIT[col-uname]}%${ZINIT[col-rst]}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
-    } || REPLY="${user:+${ZINIT[col-uname]}${user}${ZINIT[col-rst]}/}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
+    } else {
+        REPLY="${user:+${ZINIT[col-uname]}${user}${ZINIT[col-rst]}/}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
+    }
 } # ]]]
 # FUNCTION: .zinit-two-paths [[[
 # Obtains a snippet URL without specification if it is an SVN URL (points to
