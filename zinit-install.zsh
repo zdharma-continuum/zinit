@@ -567,9 +567,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     for c in "${completions[@]}"; do
         cfile="${c:t}"
         bkpfile="${cfile#_}"
-        if [[ -z "${already_symlinked[(r)*/$cfile]}" &&
-              -z "${backup_comps[(r)*/$bkpfile]}" ||
-              "$reinstall" = "1"
+        if [[ ( -z ${already_symlinked[(r)*/$cfile]} || $reinstall = 1 ) &&
+              -z ${backup_comps[(r)*/$bkpfile]}
         ]]; then
             if [[ $reinstall = 1 ]]; then
                 # Remove old files
