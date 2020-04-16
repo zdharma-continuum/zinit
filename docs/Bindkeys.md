@@ -60,4 +60,14 @@ bindkey " " magic-space
 
 (for the `bindmap='!" " -> magic-space; !"^ " -> globalias'` ice).
 
+## Using the `UPAR`, etc. shorthands
+
+There are four special values that can be used on the left side of the bind-map:
+`UPAR`, `DOWNAR`, `LEFTAR`, `RIGHTAR`. They'll match up arrow, down arrow, etc.
+So that it's possible to do:
+
+```zsh
+zinit bindmap='LEFTAR -> ^F; RIGHTAR -> ^G' …
+```
+
 []( vim:set ft=markdown tw=80 fo+=a1n autoindent: )
