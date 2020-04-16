@@ -572,8 +572,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         ]]; then
             if [[ $reinstall = 1 ]]; then
                 # Remove old files
-                command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile"
-                command rm -f "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
+                command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile" "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
             fi
             INSTALLED_COMPS+=( $cfile )
             (( quiet )) || print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory."
