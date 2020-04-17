@@ -1482,6 +1482,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
+    if [[ ${#list} -gt 1 && $+commands[dpkg-deb] = 0 ]] {
+        list2=( ${list[@]:#*.deb} )
+        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
+    }
+
+    if [[ ${#list} -gt 1 && $+commands[cpio] = 0 ]] {
+        list2=( ${list[@]:#*.rpm} )
+        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
+    }
+
     [[ $#list -eq 0 ]] && {
         print -nr "${ZINIT[col-msg2]}Didn't find correct Github" \
             "release-file to download"
