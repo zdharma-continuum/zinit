@@ -2683,8 +2683,8 @@ ZINIT[EXTENDED_GLOB]=""
     if (( ICE_OPTS[opt_--all] )); then
         .zinit-confirm "Prune all plugins in \`${ZINIT[PLUGINS_DIR]}'"\
 "and snippets in \`${ZINIT[SNIPPETS_DIR]}'?" \
-"command rm -rf ${${ZINIT[PLUGINS_DIR]##[/[:space:]]##}:-/tmp/abcEFG312}/*~*/_local---zinit(ND) "\
-"${${ZINIT[SNIPPETS_DIR]##[/[:space:]]##}:-/tmp/abcEFG312}/*~*/plugins(ND)"
+"command rm -rf ${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/_local---zinit(ND) "\
+"${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/plugins(ND)"
         return $?
     fi
 
