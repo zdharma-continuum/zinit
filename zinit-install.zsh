@@ -1462,22 +1462,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
     [[ -n $ZINIT_ICE[bpick] ]] && list=( ${(M)list[@]:#(#i)*/$~ZINIT_ICE[bpick]} )
 
-    [[ ${#list} -gt 1 ]] && {
+    if [[ ${#list} -gt 1 ]] {
         list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
-    [[ ${#list} -gt 1 ]] && {
+    if [[ ${#list} -gt 1 ]] {
         list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
-    [[ ${#list} -gt 1 ]] && {
+    if [[ ${#list} -gt 1 ]] {
         list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
-    [[ ${#list} -gt 1 ]] && {
+    if [[ ${#list} -gt 1 ]] {
         list2=( ${list[@]:#(#i)*.sha[[:digit:]]#} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
