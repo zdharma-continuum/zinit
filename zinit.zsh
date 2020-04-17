@@ -7,7 +7,7 @@
 
 typeset -gaH ZINIT_REGISTERED_PLUGINS ZINIT_TASKS ZINIT_RUN
 typeset -ga zsh_loaded_plugins
-ZINIT_TASKS=( "<no-data>" )
+if (( !${#ZINIT_TASKS} )) { ZINIT_TASKS=( "<no-data>" ); }
 # Snippets loaded, url -> file name
 typeset -gAH ZINIT ZINIT_REGISTERED_STATES ZINIT_SNIPPETS ZINIT_REPORTS ZINIT_ICES ZINIT_SICE ZINIT_CUR_BIND_MAP ZINIT_EXTS
 typeset -gaH ZINIT_COMPDEF_REPLAY
