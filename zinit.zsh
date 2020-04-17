@@ -2198,7 +2198,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     (( ${+ZINIT_ICE[has]} )) && { (( ${+commands[${ZINIT_ICE[has]}]} )) || { (( $# )) && shift; continue; }; }
 
                     ZINIT_ICE[wait]="${${(M)${+ZINIT_ICE[wait]}:#1}:+${(M)ZINIT_ICE[wait]#!}${${ZINIT_ICE[wait]#!}:-0}}"
-                    if (( __turbo )) {
+                    if (( __turbo && ZINIT[HAVE_SCHEDULER] )) {
                         ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
                         if (( __is_snippet > 0 )); then
                             ZINIT_SICE[${${1#@}%%(///|//|/)}]=
@@ -2213,7 +2213,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         fi
                         __retval+=$?
                     }
-                    if (( __action_load )) {
+                    if (( __action_load || !ZINIT[HAVE_SCHEDULER] )) {
                         if (( __turbo )) {
                             ZINIT_ICE[cloneonly]=""
                         }
@@ -2549,7 +2549,10 @@ zpcompdef() { ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
 (( ZINIT[SOURCED] ++ )) && return
 
 autoload add-zsh-hook
-zmodload zsh/datetime && add-zsh-hook -- precmd @zinit-scheduler  # zsh/datetime required for wait/load/unload ice-mods
+if { zmodload zsh/datetime } {
+    add-zsh-hook -- precmd @zinit-scheduler  # zsh/datetime required for wait/load/unload ice-mods
+    ZINIT[HAVE_SCHEDULER]=1
+}
 functions -M -- zinit_scheduler_add 1 1 -zinit_scheduler_add_sh 2>/dev/null
 zmodload zsh/zpty zsh/system 2>/dev/null
 zmodload -F zsh/stat b:zstat 2>/dev/null && ZINIT[HAVE_ZSTAT]=1
