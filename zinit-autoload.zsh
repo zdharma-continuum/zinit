@@ -2717,9 +2717,9 @@ local -a dirs
 dirs=( \${\${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/(\${(~j:|:)\${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/) )
 builtin print -Prl \"\" \"\$ZINIT[col-obj]Deleting the following \"\
 \"\$ZINIT[col-file]\${#dirs}\$ZINIT[col-msg2] UNLOADED\$ZINIT[col-obj] plugins:%f%b\" \
-    \${\${\${dirs[@]:#[/:space:]]##}##\$ZINIT[PLUGINS_DIR]/#}//---//}
+    \${\${\${dirs[@]:#[/[:space:]]##}##\$ZINIT[PLUGINS_DIR]/#}//---//}
 sleep 3
-command rm -rf \${dirs[@]:#[/:space:]]##}
+command rm -rf \${dirs[@]:#[/[:space:]]##}
 integer _retval2=_retval+\$?
 builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\""
         return $(( _retval + _retval2 ))
