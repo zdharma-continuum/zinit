@@ -627,8 +627,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 #
 # No arguments.
 .zinit-compinit() {
-    builtin setopt localoptions nullglob extendedglob nokshglob noksharrays warncreateglobal
     [[ -n ${ICE_OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
+
+    emulate -LR zsh
+    builtin setopt nullglob extendedglob warncreateglobal typesetsilent
 
     typeset -a symlinked backup_comps
     local c cfile bkpfile action
