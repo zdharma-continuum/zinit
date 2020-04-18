@@ -1831,7 +1831,9 @@ ZINIT[EXTENDED_GLOB]=""
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
             print -Pr -- "$ZINIT[col-info2]Parallel Update Starts Now...%f"
         .zinit-update-all-parallel
-        return $?
+        integer retval=$?
+        .zinit-compinit 1 &>/dev/null
+        return $retval
     }
 
     local st=$1 id_as repo snip pd user plugin
@@ -1907,6 +1909,8 @@ ZINIT[EXTENDED_GLOB]=""
             .zinit-update-or-status update "$user" "$plugin"
         fi
     done
+
+    .zinit-compinit 1 &>/dev/null
 } # ]]]
 # FUNCTION: .zinit-update-in-parallel [[[
 .zinit-update-all-parallel() {
@@ -2003,8 +2007,6 @@ ZINIT[EXTENDED_GLOB]=""
     }
     # Shouldn't happen
     # (( ${#PUAssocArray} > 0 )) && wait ${(k)PUAssocArray}
-
-    .zinit-compinit &>/dev/null
 }
 # ]]]
 # FUNCTION: .zinit-wait-for-update-jobs [[[
