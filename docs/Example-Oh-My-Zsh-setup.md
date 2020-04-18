@@ -6,22 +6,24 @@ setopt promptsubst
 
 # B.
 zinit wait lucid for \
-        OMZ::lib/git.zsh \
+        OMZL::git.zsh \
   atload"unalias grv" \
-        OMZ::plugins/git/git.plugin.zsh
+        OMZP::git
 
 PS1="READY >" # provide a simple prompt till the theme loads
 
 # C.
-zinit wait'!' lucid for OMZ::themes/dstufft.zsh-theme
+zinit wait'!' lucid for \
+    OMZL::prompt_info_functions.zsh \
+    OMZT::gnzh
 
 # D.
 zinit wait lucid for \
   atinit"zicompinit; zicdreplay"  \
         zdharma/fast-syntax-highlighting \
-      OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh \
+      OMZP::colored-man-pages \
   as"completion" \
-        OMZ::plugins/docker/_docker
+        OMZP::docker/_docker
 ```
 
 **A** - Most themes use this option.
@@ -57,21 +59,21 @@ using Turbo for everything remaining):
 setopt promptsubst
 
 # B.
-zinit snippet OMZ::lib/git.zsh
+zinit snippet OMZL::git.zsh
 
 # C.
 zinit ice atload"unalias grv"
-zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZP::git
 
 # D.
-zinit snippet OMZ::themes/dstufft.zsh-theme
+zinit for OMZL::prompt_info_functions.zsh OMZT::gnzh
 
 # E.
-zinit snippet OMZ::plugins/colored-man-pages/colored-man-pages.plugin.zsh
+zinit snippet OMZP::colored-man-pages
 
 # F.
 zinit ice as"completion"
-zinit snippet OMZ::plugins/docker/_docker
+zinit snippet OMZP::docker/_docker
 
 # G.
 zinit ice atinit"zicompinit; zicdreplay"
