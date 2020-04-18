@@ -123,7 +123,7 @@ zmodload zsh/parameter || { print -P "%F{196}zsh/parameter module is required, a
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
-[[ ( ${+terminfo} = 1 && -n ${terminfo[colors]} ) || ( ${+termcap} = 1 && -n ${termcap[Co]} ) ]] && {
+[[ -z $SOURCED && ( ${+terminfo} = 1 && -n ${terminfo[colors]} ) || ( ${+termcap} = 1 && -n ${termcap[Co]} ) ]] && {
     ZINIT+=(
         col-title     ""
         col-pname     $'\e[33m'
