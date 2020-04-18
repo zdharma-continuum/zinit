@@ -120,7 +120,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     # Remove duplicated entries, i.e. existing before
     for i in "${(z)ZINIT[PATH_BEFORE__$uspl2]}"; do
-        unset "path_state[$i]"
+        unset "path_state[${(Q)i}]"
     done
 
     # Store the path elements, associating them with plugin ($uspl2)
@@ -140,7 +140,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     # Remove duplicated entries, i.e. existing before
     for i in "${(z)ZINIT[FPATH_BEFORE__$uspl2]}"; do
-        unset "fpath_state[$i]"
+        unset "fpath_state[${(Q)i}]"
     done
 
     # Store the path elements, associating them with plugin ($uspl2)
