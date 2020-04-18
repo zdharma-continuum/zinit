@@ -1105,6 +1105,9 @@ function $f {
     local user="${reply[-2]}" plugin="${reply[-1]}" id_as="${ZINIT_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-$user${${user:#(%|/)*}:+/}$plugin}"
 
+    local __m_bkp="${functions[m]}"
+    functions[m]="${functions[+zinit-message]}"
+
     local -a arr
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
     for key in "${reply[@]}"; do
@@ -1316,6 +1319,13 @@ function $f {
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 
     (( $5 )) && { print; zle .reset-prompt; }
+
+    if [[ -n $__m_bkp ]] {
+        functions[m]="$__m_bkp"
+    } else {
+        noglob unset functions[m]
+    }
+
     return $retval
 } # ]]]
 # FUNCTION: .zinit-load-snippet [[[
@@ -1352,6 +1362,9 @@ function $f {
     eval "url=\"$url\""
 
     local id_as="${ZINIT_ICE[id-as]:-$url}"
+
+    local __m_bkp="${functions[m]}"
+    functions[m]="${functions[+zinit-message]}"
 
     # Set up param'' objects (parameters)
     [[ -n ${ZINIT_ICE[param]} ]] && .zinit-setup-params && local ${(Q)reply[@]}
@@ -1537,6 +1550,12 @@ function $f {
     ZINIT[TIME_INDEX]=$(( ${ZINIT[TIME_INDEX]:-0} + 1 ))
     ZINIT[TIME_${ZINIT[TIME_INDEX]}_${id_as}]=$SECONDS
     ZINIT[AT_TIME_${ZINIT[TIME_INDEX]}_${id_as}]=$EPOCHREALTIME
+
+    if [[ -n $__m_bkp ]] {
+        functions[m]="$__m_bkp"
+    } else {
+        noglob unset functions[m]
+    }
     return $retval
 } # ]]]
 # FUNCTION: .zinit-compdef-replay [[[
