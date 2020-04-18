@@ -2650,6 +2650,7 @@ ZINIT[EXTENDED_GLOB]=""
                 { builtin cd -q "$5" && eval "${ZINIT_ICE[atdelete]}"; ((1)); } || \
                 eval "${ZINIT_ICE[atdelete]}" )
     fi
+
     local -a arr
     local key
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atdelete <->]}" )
