@@ -1104,9 +1104,42 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#using_the_upar_etc_shorthands" title="Using the UPAR, etc. shorthands"
+  <a href="#using_the_upar_etc_shorthands" title="Using The UPAR, Etc. Shorthands"
       class="md-nav__link">
-    Using the UPAR, etc. shorthands
+    Using The UPAR, Etc. Shorthands
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#using_bindmap_in_light_mode" title="Using bindmap'' In Light Mode"
+      class="md-nav__link">
+    Using bindmap'' In Light Mode
   </a>
 
   <!-- Render nested item list -->
@@ -2691,9 +2724,42 @@
 
 <!-- Table of contents item -->
 <li class="md-nav__item">
-  <a href="#using_the_upar_etc_shorthands" title="Using the UPAR, etc. shorthands"
+  <a href="#using_the_upar_etc_shorthands" title="Using The UPAR, Etc. Shorthands"
       class="md-nav__link">
-    Using the UPAR, etc. shorthands
+    Using The UPAR, Etc. Shorthands
+  </a>
+
+  <!-- Render nested item list -->
+  
+</li>
+      
+        <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Table of contents item -->
+<li class="md-nav__item">
+  <a href="#using_bindmap_in_light_mode" title="Using bindmap'' In Light Mode"
+      class="md-nav__link">
+    Using bindmap'' In Light Mode
   </a>
 
   <!-- Render nested item list -->
@@ -2772,11 +2838,28 @@ bindkey &quot; &quot; magic-space
 </code></pre>
 
 <p>(for the <code>bindmap='!" " -&gt; magic-space; !"^ " -&gt; globalias'</code> ice).</p>
-<h2 id="using_the_upar_etc_shorthands">Using the <code>UPAR</code>, etc. shorthands<a class="headerlink" href="#using_the_upar_etc_shorthands" title="Permanent link">#</a></h2>
+<h2 id="using_the_upar_etc_shorthands">Using The <code>UPAR</code>, Etc. Shorthands<a class="headerlink" href="#using_the_upar_etc_shorthands" title="Permanent link">#</a></h2>
 <p>There are four special values that can be used on the left side of the bind-map:
 <code>UPAR</code>, <code>DOWNAR</code>, <code>LEFTAR</code>, <code>RIGHTAR</code>. They'll match up arrow, down arrow, etc.
 So that it's possible to do:</p>
 <pre><code class="zsh">zinit bindmap='LEFTAR -&gt; ^F; RIGHTAR -&gt; ^G' …
+</code></pre>
+
+<p>The benefits of using the <code>UPAR</code>, … shorthands is that they cover multiple
+possible cursor-key codes for each of the cursor key, so that they'll work
+regardless of the terminal being used.</p>
+<h2 id="using_bindmap_in_light_mode">Using <code>bindmap''</code> In Light Mode<a class="headerlink" href="#using_bindmap_in_light_mode" title="Permanent link">#</a></h2>
+<p>When the investigation mode is on – i.e.: when the full loading mode is being
+used (default in the <code>for</code> syntax and when <code>zinit load …</code> is used) – then the
+<code>bindmap''</code> ice works normally. In the non-investigation, i.e.: the light mode
+– activated when <code>zinit light …</code> or the <code>light-mode</code> ice is being used – the
+<code>bindmap''</code> is unavailable, unless the <code>trackbinds</code> ice is specified, i.e.:</p>
+<pre><code class="zsh"># With use of the light-mode ice and the for-syntax:
+zinit light-mode trackbinds bindmap'^R -&gt; ^G' for zdharma/history-search-multi-word
+
+# With use of the classic syntax:
+zinit trackbinds bindmap'^R -&gt; ^G' for zdharma/history-search-multi-word
+zinit light zdharma/history-search-multi-word
 </code></pre>
 
 <p><a href="vim:set ft=markdown tw=80 fo+=a1n autoindent:"></a></p>
