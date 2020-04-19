@@ -1801,7 +1801,7 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-self-update -q
 
     [[ $2 = restart ]] && \
-        print -P "$ZINIT[col-msg2]Restarting the update with the new codebase loaded.%f%b\n"
+        +zinit-message "[msg2]Restarting the update with the new codebase loaded.[rst]"$'\n'
 
     local file
     integer sum el
@@ -1813,8 +1813,8 @@ ZINIT[EXTENDED_GLOB]=""
     if [[ $2 != restart ]] && (( ZINIT[mtime] + ZINIT[mtime-side] +
         ZINIT[mtime-install] + ZINIT[mtime-autoload] != sum
     )) {
-        print -P "$ZINIT[col-msg2]Detected Zinit update in another session -" \
-            "$ZINIT[col-pre]reloading Zinit$ZINIT[col-msg2]...%f%b"
+        +zinit-message "[msg2]Detected Zinit update in another session -" \
+            "[pre]reloading Zinit[msg2]...[rst]"
         source $ZINIT[BIN_DIR]/zinit.zsh
         source $ZINIT[BIN_DIR]/zinit-side.zsh
         source $ZINIT[BIN_DIR]/zinit-install.zsh
@@ -1822,14 +1822,14 @@ ZINIT[EXTENDED_GLOB]=""
         for file ( "" -side -install -autoload ) {
             .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
         }
-        print -P "%B$ZINIT[col-pname]Done.%f%b\n"
+        +zinit-message "%B[pname]Done.[rst]"$'\n'
         .zinit-update-or-status-all "$1" restart
         return $?
     }
 
     if (( ICE_OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            print -Pr -- "$ZINIT[col-info2]Parallel Update Starts Now...%f"
+            +zinit-message '[info2]Parallel Update Starts Now...[rst]'
         .zinit-update-all-parallel
         integer retval=$?
         .zinit-compinit 1 &>/dev/null
@@ -1845,7 +1845,7 @@ ZINIT[EXTENDED_GLOB]=""
     snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
 
     [[ $st != status && ${ICE_OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
-        print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} updating also unloaded snippets"
+        +zinit-message "[info]Note:[rst] updating also unloaded snippets"
 
     for snip in ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D); do
         [[ ! -f ${snip:h}/url ]] && continue
@@ -1861,10 +1861,10 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ $st = status ]]; then
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} status done also for unloaded plugins"
+            +zinit-message "[info]Note:[rst] status done also for unloaded plugins"
     else
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            print "${ZINIT[col-info]}Note:${ZINIT[col-rst]} updating also unloaded plugins"
+            +zinit-message "[info]Note:[rst] updating also unloaded plugins"
     fi
 
     ZINIT[first-plugin-mark]=init
@@ -2025,9 +2025,9 @@ ZINIT[EXTENDED_GLOB]=""
         counter=0
         PUAssocArray=()
     } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
-        print -Pr -- "$ZINIT[col-obj]Spawning the next$ZINIT[col-file]" \
-            "$ICE_OPTS[value]$ZINIT[col-obj] concurrent update jobs" \
-            "($ZINIT[col-msg2]%F{191}$tpe$ZINIT[col-obj])...%f%b"
+        +zinit-message "[obj]Spawning the next[file]" \
+            "${ICE_OPTS[value]}[obj] concurrent update jobs" \
+            "([msg2]%F{191}${tpe}[obj])...[rst]"
     }
 }
 # ]]]
