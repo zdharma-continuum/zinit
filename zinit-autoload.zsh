@@ -1798,6 +1798,8 @@ ZINIT[EXTENDED_GLOB]=""
     emulate -LR zsh
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
+    local -F2 SECONDS=0
+
     .zinit-self-update -q
 
     [[ $2 = restart ]] && \
@@ -1833,6 +1835,9 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-update-all-parallel
         integer retval=$?
         .zinit-compinit 1 &>/dev/null
+        if (( !ICE_OPTS[opt_-q,--quiet] )) {
+            +zinit-message "[msg2]The update took [obj]${SECONDS}[msg2] seconds[rst]"
+        }
         return $retval
     }
 
@@ -1911,6 +1916,9 @@ ZINIT[EXTENDED_GLOB]=""
     done
 
     .zinit-compinit 1 &>/dev/null
+    if (( !ICE_OPTS[opt_-q,--quiet] )) {
+        +zinit-message "[msg2]The update took [obj]${SECONDS}[msg2] seconds[rst]"
+    }
 } # ]]]
 # FUNCTION: .zinit-update-in-parallel [[[
 .zinit-update-all-parallel() {
