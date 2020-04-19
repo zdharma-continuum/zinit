@@ -60,7 +60,7 @@ bindkey " " magic-space
 
 (for the `bindmap='!" " -> magic-space; !"^ " -> globalias'` ice).
 
-## Using the `UPAR`, etc. shorthands
+## Using The `UPAR`, Etc. Shorthands
 
 There are four special values that can be used on the left side of the bind-map:
 `UPAR`, `DOWNAR`, `LEFTAR`, `RIGHTAR`. They'll match up arrow, down arrow, etc.
@@ -70,4 +70,24 @@ So that it's possible to do:
 zinit bindmap='LEFTAR -> ^F; RIGHTAR -> ^G' …
 ```
 
+The benefits of using the `UPAR`, … shorthands is that they cover multiple
+possible cursor-key codes for each of the cursor key, so that they'll work
+regardless of the terminal being used.
+
+## Using `bindmap''` In Light Mode
+
+When the investigation mode is on – i.e.: when the full loading mode is being
+used (default in the `for` syntax and when `zinit load …` is used) – then the
+`bindmap''` ice works normally. In the non-investigation, i.e.: the light mode
+– activated when `zinit light …` or the `light-mode` ice is being used – the
+`bindmap''` is unavailable, unless the `trackbinds` ice is specified, i.e.:
+
+```zsh
+# With use of the light-mode ice and the for-syntax:
+zinit light-mode trackbinds bindmap'^R -> ^G' for zdharma/history-search-multi-word
+
+# With use of the classic syntax:
+zinit trackbinds bindmap'^R -> ^G' for zdharma/history-search-multi-word
+zinit light zdharma/history-search-multi-word
+```
 []( vim:set ft=markdown tw=80 fo+=a1n autoindent: )
