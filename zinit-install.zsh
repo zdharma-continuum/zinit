@@ -1480,7 +1480,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     }
 
     if [[ ${#list} -gt 1 ]] {
-        list2=( ${list[@]:#(#i)*.sha[[:digit:]]#} )
+        list2=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
