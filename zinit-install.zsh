@@ -383,7 +383,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
             case ${ZINIT_ICE[proto]} in
                 (|https|git|http|ftp|ftps|rsync|ssh)
                     :zinit-git-clone() {
-                        command git clone --progress ${=ZINIT_ICE[cloneopts]:---recursive} \
+                        command git clone --progress ${=ZINIT_ICE[cloneopts]---recursive} \
                             ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
                             "${ZINIT_ICE[proto]:-https}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
                             "$local_path" \
