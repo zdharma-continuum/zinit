@@ -631,8 +631,8 @@ explicitly stated otherwise.
 | `ver` |<div align="justify" style="text-align: justify;"> Used with `from"gh-r"` (i.e. downloading a binary release, e.g. for use with `as"program"`) – selects which version to download. Default is latest, can also be explicitly `ver"latest"`. Works also with regular plugins, checkouts e.g. `ver"abranch"`, i.e. a specific version. **Does not work with snippets.**</div>|
 | `bpick` |<div align="justify" style="text-align: justify;"> Used to select which release from GitHub Releases to download, e.g. `zini ice from"gh-r" as"program" bpick"*Darwin*"; zini load docker/compose`. **Does not work with snippets.** </div>|
 | `depth` |<div align="justify" style="text-align: justify;"> Pass `--depth` to `git`, i.e. limit how much of history to download. **Does not work with snippets.**</div>|
-| `cloneopts` |<div align="justify" style="text-align: justify;"> Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive` i.e. Change cloning options. **Does not work with snippets.** </div>|
 | `svn` |<div align="justify" style="text-align: justify;"> Use Subversion for downloading snippet. GitHub supports `SVN` protocol, this allows to clone subdirectories as snippets, e.g. `zinit ice svn; zinit snippet OMZP::git`. Other ice `pick` can be used to select file to source (default are: `*.plugin.zsh`, `init.zsh`, `*.zsh-theme`). **Does not work with plugins.**</div>|
+| `cloneopts` |<div align="justify" style="text-align: justify;">Pass the contents of `cloneopts` to `git clone`. Defaults to `--recursive`. I.e.: change cloning options. Pass empty ice to disable recursive cloning. **Does not work with snippets.** </div>|
 
 ### Selection of Files (To Source, …)
 | Modifier | Description |
@@ -1096,7 +1096,7 @@ Below is a configuration that adds multiple git extensions, loaded in Turbo mode
 ```zsh
 zinit as"null" wait"1" lucid for \
     sbin    Fakerr/git-recall \
-    sbin    cloneopts" " paulirish/git-open \
+    sbin    cloneopts paulirish/git-open \
     sbin    paulirish/git-recent \
     sbin    davidosomething/git-my \
     sbin atload"export _MENU_THEME=legacy" \
