@@ -1096,7 +1096,7 @@ Below is a configuration that adds multiple git extensions, loaded in Turbo mode
 ```zsh
 zinit as"null" wait"1" lucid for \
     sbin    Fakerr/git-recall \
-    sbin    paulirish/git-open \
+    sbin    cloneopts" " paulirish/git-open \
     sbin    paulirish/git-recent \
     sbin    davidosomething/git-my \
     sbin atload"export _MENU_THEME=legacy" \
