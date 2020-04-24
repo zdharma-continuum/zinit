@@ -539,7 +539,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     # After additional executions like atclone'' - install completions (1 - plugins)
     local -A ICE_OPTS
     ICE_OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} != null ]] && \
+    [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
     if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
@@ -1332,7 +1332,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     # After additional executions like atclone'' - install completions (2 - snippets)
     local -A ICE_OPTS
     ICE_OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ZINIT_ICE[nocompletions]} || ${ZINIT_ICE[as]} != null ]] && \
+    [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null ]] && \
         .zinit-install-completions "%" "$local_dir/$dirname" 0
 
     if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
