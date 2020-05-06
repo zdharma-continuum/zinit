@@ -1448,6 +1448,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         x86_64  "(x86_64|amd64|intel)"
         amd64   "(x86_64|amd64|intel)"
         aarch64 "aarch64"
+        aarch64-2 "arm"
         linux   "(linux|linux-gnu)"
         darwin  "(darwin|macos|mac-os|osx|os-x)"
         cygwin  "(windows|cygwin)"
@@ -1466,6 +1467,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
     if [[ ${#list} -gt 1 ]] {
         list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
+        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
+    }
+
+    if [[ ${#list} -gt 1 && -n ${matchstr[${MACHTYPE}-2]} ]] {
+        list2=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}-2]:-${MACHTYPE#(#i)(i|amd)}}*} )
         [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
     }
 
