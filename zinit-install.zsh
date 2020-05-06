@@ -311,6 +311,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         nb        notabug.org
         github-rel github.com/$remote_url_path/releases
         gh-r      github.com/$remote_url_path/releases
+        cygwin    cygwin
     )
 
     command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst \
@@ -342,7 +343,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     }
 
     (
-        if [[ $site = *releases ]] {
+        if [[ $site = */releases ]] {
             local url=$site/${ZINIT_ICE[ver]}
 
             .zinit-get-latest-gh-r-url-part "$user" "$plugin" "$url" || return $?
@@ -379,6 +380,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
             ) || {
                 return 1
             }
+        } elif [[ $site = cygwin ]] {
+            command mkdir -p "$local_path/._zinit"
+            [[ -d "$local_path" ]] || return 1
+
+            (
+                () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+                .zinit-get-cygwin-package "$remote_url_path"
+                print -r -- >! ._zinit/is_release
+                ziextract "$REPLY"
+            ) || return $?
         } elif [[ $tpe = github ]] {
             case ${ZINIT_ICE[proto]} in
                 (|https|git|http|ftp|ftps|rsync|ssh)
@@ -1860,6 +1871,81 @@ zpextract() { ziextract "$@"; }
     @zinit-substitute atclone atpull
     [[ $atpull = "%atclone" ]] && { eval "$atclone"; retval=$?; } || { eval "$atpull"; retval=$?; }
     return $retval
+}
+# ]]]
+# FUNCTION: .zinit-get-cygwin-package [[[
+.zinit-get-cygwin-package() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+
+    local pkg=$1 nl=$'\n'
+    integer retry=3
+
+    #
+    # Download mirrors.lst
+    #
+
+    +zinit-message "[info]Downloading [obj]mirrors.lst[info]...[rst]"
+    local mlst="$(mktemp)"
+    while (( retry -- )) {
+        if ! .zinit-download-file-stdout https://cygwin.com/mirrors.lst 0 > $mlst; then
+            .zinit-download-file-stdout https://cygwin.com/mirrors.lst 1 > $mlst
+        fi
+
+        local -a mlist
+        mlist=( "${(@f)$(<$mlst)}" )
+
+        local mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
+        [[ -n $mirror ]] && break
+    }
+
+    if [[ -z $mirror ]] {
+        +zinit-message "[error]Couldn't download [obj]mirrors.lst [error]."
+        return 1
+    }
+
+    #
+    # Download setup.ini.bz2
+    #
+
+    +zinit-message "[info2]Selected mirror: [obj]${mirror}[rst]"
+    +zinit-message "[info]Downloading [obj]setup.ini[info]...[rst]"
+    local setup="$(mktemp -u)"
+    retry=3
+    while (( retry -- )) {
+        if ! .zinit-download-file-stdout ${mirror}x86_64/setup.bz2 0 1 > $setup.bz2; then
+            .zinit-download-file-stdout ${mirror}x86_64/setup.bz2 1 1 > $setup.bz2
+        fi
+
+        command bunzip2 "$setup.bz2"
+        local setup_contents="$(command grep -A 11 "@ $pkg\$" "$setup")"
+        local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
+        [[ -n $urlpart ]] && break
+        +zinit-message "[pre]Retrying #$(( 3 - $retry ))/3[rst]"
+    }
+    if [[ -z $urlpart ]] {
+        +zinit-message "[error]Couldn't download [obj]setup.ini.bz2[error].[rst]"
+        return 2
+    }
+    local url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
+
+    #
+    # Download the package
+    #
+
+    +zinit-message "[info]Downloading [file]${url:t}[info]...[rst]"
+    retry=2
+    while (( retry -- )) {
+        integer retval=0
+        if ! .zinit-download-file-stdout $url 0 1 > $outfile; then
+            if ! .zinit-download-file-stdout $url 1 1 > $outfile; then
+                +zinit-message "[error]Couldn't download [obj]${url:t}[error]."
+                retval=1
+                (( retry )) && +zinit-message "[info2]Retrying...[rst]"
+            fi
+        fi
+    }
+    REPLY=$outfile
 }
 # ]]]
 

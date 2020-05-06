@@ -1479,17 +1479,21 @@ ZINIT[EXTENDED_GLOB]=""
     command rm -f $local_dir/.zinit_lastupd
 
     if (( 1 )); then
-        if [[ -z ${ice[is_release]} && ${ice[from]} = (gh-r|github-rel) ]]; then
+        if [[ -z ${ice[is_release]} && ${ice[from]} = (gh-r|github-rel|cygwin) ]]; then
             ice[is_release]=true
         fi
         local do_update=0 skip_pull=0
         if [[ -n ${ice[is_release]} ]] {
             (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
-            {
-                ZINIT_ICE=( "${(kv)ice[@]}" )
-                .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
-            } always {
-                ZINIT_ICE=()
+            if [[ $ice[from] == (gh-r|github-rel) ]] {
+                {
+                    ZINIT_ICE=( "${(kv)ice[@]}" )
+                    .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
+                } always {
+                    ZINIT_ICE=()
+                }
+            } else {
+                REPLY=""
             }
             local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
             if [[ ${ice[is_release]} = $REPLY ]] {
