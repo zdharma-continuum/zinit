@@ -409,4 +409,4 @@
 }
 # ]]]
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
