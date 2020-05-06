@@ -663,40 +663,40 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 # Downloads file to stdout. Supports following backend commands:
 # curl, wget, lftp, lynx. Used by snippet loading.
 .zinit-download-file-stdout() {
-    local url="$1" restart="$2"
+    local url="$1" restart="$2" progress="${(M)3:#1}"
 
     setopt localoptions localtraps
 
-    if (( restart )); then
+    if (( restart )) {
         (( ${path[(I)/usr/local/bin]} )) || \
             {
                 path+=( "/usr/local/bin" );
                 trap "path[-1]=()" EXIT
             }
 
-        if (( ${+commands[curl]} )) then
-            command curl -fsSL "$url" || return 1
+        if (( ${+commands[curl]} )); then
+            command curl ${progress:--s} -fSL "$url" || return 1
         elif (( ${+commands[wget]} )); then
-            command wget -q "$url" -O - || return 1
+            command wget ${progress:--q} "$url" -O - || return 1
         elif (( ${+commands[lftp]} )); then
             command lftp -c "cat $url" || return 1
-        elif (( ${+commands[lynx]} )) then
+        elif (( ${+commands[lynx]} )); then
             command lynx -source "$url" || return 1
         else
             return 2
         fi
-    else
+    } else {
         if type curl 2>/dev/null 1>&2; then
-            command curl -fsSL "$url" || return 1
+            command curl ${progress:--s} -fSL "$url" || return 1
         elif type wget 2>/dev/null 1>&2; then
-            command wget -q "$url" -O - || return 1
+            command wget ${progress:--q} "$url" -O - || return 1
         elif type lftp 2>/dev/null 1>&2; then
             command lftp -c "cat $url" || return 1
         else
-            .zinit-download-file-stdout "$url" "1"
+            .zinit-download-file-stdout "$url" "1" "$progress"
             return $?
         fi
-    fi
+    }
 
     return 0
 } # ]]]
