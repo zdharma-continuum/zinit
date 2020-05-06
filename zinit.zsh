@@ -1666,10 +1666,10 @@ function $f {
 # ]]]
 # FUNCTION: +zinit-message [[[
 +zinit-message() {
-    builtin emulate -LR zsh -o extendedglob 
-    [[ $1 = -n ]] && { local n="-n"; shift }
+    builtin emulate -LR zsh -o extendedglob
+    [[ $1 = -* ]] && { local opt=$1; shift }
     local msg=${(j: :)${@//(#b)\[([^\]]##)\]/${ZINIT[col-$match[1]]-\[$match[1]\]}}}
-    builtin print -Pr $n -- $msg
+    builtin print -Pr $opt -- $msg
 }
 # ]]]
 
