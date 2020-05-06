@@ -1941,9 +1941,13 @@ zpextract() { ziextract "$@"; }
             if ! .zinit-download-file-stdout $url 1 1 > $outfile; then
                 +zinit-message "[error]Couldn't download [obj]${url:t}[error]."
                 retval=1
-                (( retry )) && +zinit-message "[info2]Retrying...[rst]"
+                if (( retry )) {
+                    +zinit-message "[info2]Retrying...[rst]"
+                    continue
+                }
             fi
         fi
+        break
     }
     REPLY=$outfile
 }
