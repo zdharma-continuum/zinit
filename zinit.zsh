@@ -2068,7 +2068,7 @@ zinit() {
     integer retval=0 correct=0
     local -a match mbegin mend reply
     local MATCH REPLY __q="\`" __q2="'"; integer MBEGIN MEND
-                
+
 
     [[ -o ksharrays ]] && correct=1
 
@@ -2255,7 +2255,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
         } else {
             error=1
         }
-        
+
         if (( error )) {
             () {
                 emulate -LR zsh -o extendedglob

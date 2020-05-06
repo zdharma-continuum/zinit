@@ -1646,7 +1646,7 @@ ZINIT[EXTENDED_GLOB]=""
                 local -a afr
                 ( builtin cd -q "$local_dir" || return 1
                   afr=( ${~from}(DN) )
-                  [[ ${#afr} -gt 0 ]] && { 
+                  [[ ${#afr} -gt 0 ]] && {
                       if (( !ICE_OPTS[opt_-q,--quiet] )) {
                           command mv -vf "${afr[1]}" "$to"
                           command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null;
