@@ -223,7 +223,7 @@ builtin setopt noaliases
 
     if (( ${+opts[(r)-X]} )); then
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
-        print -u2 "builtin autoload required for ${(j: :)opts[@]}"
+        +zinit-message -u2 "[error]builtin autoload required for [obj]${(j: :)opts[@]}[error] option(s)[rst]"
         return 1
     fi
     if (( ${+opts[(r)-w]} )); then
@@ -910,7 +910,7 @@ function $f {
         ZINIT_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
-        [[ -z ${ZINIT[TEST]}${${+ZINIT_ICE[wait]}:#0}${ZINIT_ICE[load]}${ZINIT_ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != 1 ]] && print "Warning: plugin \`$uspl2' already registered, will overwrite-load"
+        [[ -z ${ZINIT[TEST]}${${+ZINIT_ICE[wait]}:#0}${ZINIT_ICE[load]}${ZINIT_ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != 1 ]] && +zinit-message "[error]Warning:[rst] plugin \`[pname]${uspl2}[rst]' already registered, will overwrite-load"
         ret=1
     fi
 
@@ -1335,7 +1335,7 @@ function $f {
 .zinit-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts
-    zparseopts -E -D -a opts f -command || { print -r -- "Incorrect options (accepted ones: -f, --command)"; return 1; }
+    zparseopts -E -D -a opts f -command || { +zinit-message "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
     integer correct retval exists
     [[ -o ksharrays ]] && correct=1
