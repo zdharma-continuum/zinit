@@ -52,6 +52,16 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 07-05-2020
+  - A new `from''` value is available – `cygwin`. It'll cause to download
+    a package from the Cygwin repository – from a random mirror, and then
+    unpack it. Example use:
+
+    ```zsh
+    # Install gzip and expose it through Bin-Gem-Node annex's sbin'' ice
+    zinit from"cygwin" sbin"usr/bin/gzip.exe -> gzip" for gzip
+    ```
+
 * 16-04-2020
   - Turbo plugins will now get gracefully preinstalled first before the prompt
     (i.e.: within `zshrc` processing) and then loaded **still** as Turbo plugins.
