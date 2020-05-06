@@ -2882,7 +2882,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
 .zinit-create() {
     emulate -LR zsh
     setopt localoptions extendedglob warncreateglobal typesetsilent \
-        noshortloops rcquotes 
+        noshortloops rcquotes
 
     .zinit-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"

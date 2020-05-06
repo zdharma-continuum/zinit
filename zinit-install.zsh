@@ -732,7 +732,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         REPLY=$(( $(date +"%s") ))
         return 3
     }
-    
+
     LANG=C strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
         REPLY=$(( $(date +"%s") ))
         return 4
@@ -1798,7 +1798,7 @@ ziextract() {
 "(no extraction has been done).%f%b"
     }
 
-    (( move )) && {
+    if (( move )) {
         local -a files
         files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN/) )
         if (( ${#files} )) {
@@ -1812,7 +1812,7 @@ ziextract() {
             [[ -d .tmp231ABC ]] && command rmdir .tmp231ABC
         }
         REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
-    } || {
+    } else {
         REPLY="${execs[1]}"
     }
     return 0
