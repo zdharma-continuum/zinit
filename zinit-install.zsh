@@ -1904,6 +1904,8 @@ zpextract() { ziextract "$@"; }
         return 1
     }
 
+    mirror=http://mirror.koddos.net/cygwin/
+
     #
     # Download setup.ini.bz2
     #
@@ -1917,11 +1919,12 @@ zpextract() { ziextract "$@"; }
             .zinit-download-file-stdout ${mirror}x86_64/setup.bz2 1 1 > $setup.bz2
         fi
 
-        command bunzip2 "$setup.bz2"
+        command bunzip2 "$setup.bz2" 2>/dev/null
         local setup_contents="$(command grep -A 11 "@ $pkg\$" "$setup")"
         local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
         [[ -n $urlpart ]] && break
-        +zinit-message "[pre]Retrying #$(( 3 - $retry ))/3[rst]"
+        mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
+        +zinit-message "[pre]Retrying #$(( 3 - $retry ))/3, with mirror: [obj]${mirror}[rst]"
     }
     if [[ -z $urlpart ]] {
         +zinit-message "[error]Couldn't download [obj]setup.ini.bz2[error].[rst]"
@@ -1941,8 +1944,10 @@ zpextract() { ziextract "$@"; }
             if ! .zinit-download-file-stdout $url 1 1 > $outfile; then
                 +zinit-message "[error]Couldn't download [obj]${url:t}[error]."
                 retval=1
+                mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
+                url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
                 if (( retry )) {
-                    +zinit-message "[info2]Retrying...[rst]"
+                    +zinit-message "[info2]Retrying, with mirror: [obj]$mirror[info2]...[rst]"
                     continue
                 }
             fi
