@@ -185,9 +185,9 @@
     emulate -LR zsh
     setopt extendedglob typesetsilent warncreateglobal noshortloops
 
-    local __URL="${1%/}" __pack="$2" __is_snippet=0
-    local __var_name1="${3:-ZINIT_ICE}" __var_name2="${4:-local_dir}" \
-        __var_name3="${5:-filename}" __var_name4="${6:-is_snippet}"
+    local ___URL="${1%/}" ___pack="$2" ___is_snippet=0
+    local ___var_name1="${3:-ZINIT_ICE}" ___var_name2="${4:-local_dir}" \
+        ___var_name3="${5:-filename}" ___var_name4="${6:-is_snippet}"
 
     # Copy from .zinit-recall
     local -a ice_order nval_ices
@@ -211,62 +211,62 @@
     )
 
     # Remove whitespace from beginning of URL
-    __URL="${${__URL#"${__URL%%[! $'\t']*}"}%/}"
+    ___URL="${${___URL#"${___URL%%[! $'\t']*}"}%/}"
 
     # Snippet?
-    .zinit-two-paths "$__URL"
-    local __s_path="${reply[-4]}" __s_svn="${reply[-3]}" ___path="${reply[-2]}" __filename="${reply[-1]}" __local_dir
-    if [[ -d "$__s_path" || -d "$___path" ]]; then
-        __is_snippet=1
+    .zinit-two-paths "$___URL"
+    local ___s_path="${reply[-4]}" ___s_svn="${reply[-3]}" ___path="${reply[-2]}" ___filename="${reply[-1]}" ___local_dir
+    if [[ -d "$___s_path" || -d "$___path" ]]; then
+        ___is_snippet=1
     else
         # Plugin
-        .zinit-shands-exp "$__URL" && __URL="$REPLY"
-        .zinit-any-to-user-plugin "$__URL" ""
-        local __user="${reply[-2]}" __plugin="${reply[-1]}"
-        __s_path="" __filename=""
-        [[ "$__user" = "%" ]] && ___path="$__plugin" || ___path="${ZINIT[PLUGINS_DIR]}/${__user:+${__user}---}${__plugin//\//---}"
-        .zinit-exists-physically-message "$__user" "$__plugin" || return 1
+        .zinit-shands-exp "$___URL" && ___URL="$REPLY"
+        .zinit-any-to-user-plugin "$___URL" ""
+        local ___user="${reply[-2]}" ___plugin="${reply[-1]}"
+        ___s_path="" ___filename=""
+        [[ "$___user" = "%" ]] && ___path="$___plugin" || ___path="${ZINIT[PLUGINS_DIR]}/${___user:+${___user}---}${___plugin//\//---}"
+        .zinit-exists-physically-message "$___user" "$___plugin" || return 1
     fi
 
-    [[ $__pack = pack* ]] && (( ${#ZINIT_ICE} > 0 )) && \
-        .zinit-pack-ice "${__user-$__URL}" "$__plugin"
+    [[ $___pack = pack* ]] && (( ${#ZINIT_ICE} > 0 )) && \
+        .zinit-pack-ice "${___user-$___URL}" "$___plugin"
 
-    local -A __sice
-    local -a __tmp
-    __tmp=( "${(z@)ZINIT_SICE[$__user${${__user:#(%|/)*}:+/}$__plugin]}" )
-    (( ${#__tmp[@]} > 1 && ${#__tmp[@]} % 2 == 0 )) && __sice=( "${(Q)__tmp[@]}" )
+    local -A ___sice
+    local -a ___tmp
+    ___tmp=( "${(z@)ZINIT_SICE[$___user${${___user:#(%|/)*}:+/}$___plugin]}" )
+    (( ${#___tmp[@]} > 1 && ${#___tmp[@]} % 2 == 0 )) && ___sice=( "${(Q)___tmp[@]}" )
 
-    if [[ "${+__sice[svn]}" = "1" || -n "$__s_svn" ]]; then
-        if (( !__is_snippet && ${+__sice[svn]} == 1 )); then
-            print -r -- "The \`svn' ice is given, but the argument ($__URL) is a plugin"
+    if [[ "${+___sice[svn]}" = "1" || -n "$___s_svn" ]]; then
+        if (( !___is_snippet && ${+___sice[svn]} == 1 )); then
+            print -r -- "The \`svn' ice is given, but the argument ($___URL) is a plugin"
             print -r -- "(\`svn' can be used only with snippets)"
             return 1
-        elif (( !__is_snippet )); then
+        elif (( !___is_snippet )); then
             print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zinit/issues"
             return 1
         fi
-        if [[ -e "$__s_path" && -n "$__s_svn" ]]; then
-            __sice[svn]=""
-            __local_dir="$__s_path"
+        if [[ -e "$___s_path" && -n "$___s_svn" ]]; then
+            ___sice[svn]=""
+            ___local_dir="$___s_path"
         else
-            [[ ! -e "$___path" ]] && { print -r -- "No such snippet, looked at paths (1): $__s_path, and: $___path"; return 1; }
-            unset '__sice[svn]'
-            __local_dir="$___path"
+            [[ ! -e "$___path" ]] && { print -r -- "No such snippet, looked at paths (1): $___s_path, and: $___path"; return 1; }
+            unset '___sice[svn]'
+            ___local_dir="$___path"
         fi
     else
         if [[ -e "$___path" ]]; then
-            unset '__sice[svn]'
-            __local_dir="$___path"
+            unset '___sice[svn]'
+            ___local_dir="$___path"
         else
-            print -r -- "No such snippet, looked at paths (2): $__s_path, and: $___path"
+            print -r -- "No such snippet, looked at paths (2): $___s_path, and: $___path"
             return 1
         fi
     fi
 
-    local __zinit_path="$__local_dir/._zinit"
+    local ___zinit_path="$___local_dir/._zinit"
 
     # Zplugin -> Zinit rename upgrade code
-    if [[ ! -d $__zinit_path && -d $__local_dir/._zplugin ]]; then
+    if [[ ! -d $___zinit_path && -d $___local_dir/._zplugin ]]; then
         (
             print -Pr -- "${ZINIT[col-pre]}UPGRADING THE DIRECTORY STRUCTURE" \
                 "FOR THE ZPLUGIN -> ZINIT RENAME…%f"
@@ -280,50 +280,50 @@
     fi
 
     # Read disk-Ice
-    local -A __mdata
-    local __key
-    { for __key in mode url is_release ${ice_order[@]}; do
-        [[ -f "$__zinit_path/$__key" ]] && __mdata[$__key]="$(<$__zinit_path/$__key)"
+    local -A ___mdata
+    local ___key
+    { for ___key in mode url is_release ${ice_order[@]}; do
+        [[ -f "$___zinit_path/$___key" ]] && ___mdata[$___key]="$(<$___zinit_path/$___key)"
       done
-      [[ "${__mdata[mode]}" = "1" ]] && __mdata[svn]=""
+      [[ "${___mdata[mode]}" = "1" ]] && ___mdata[svn]=""
     } 2>/dev/null
 
     # Handle flag-Ices; svn must be last
-    for __key in ${ice_order[@]}; do
-        (( 0 == ${+ZINIT_ICE[no$__key]} && 0 == ${+__sice[no$__key]} )) && continue
+    for ___key in ${ice_order[@]}; do
+        (( 0 == ${+ZINIT_ICE[no$___key]} && 0 == ${+___sice[no$___key]} )) && continue
         # "If there is such ice currently, and there's no no* ice given,
         # and there's the no* ice in the static ice" – skip, don't unset.
         # With conjunction with the previous line this has the proper
         # meaning: uset if at least in one – current or static – ice
         # there's the no* ice, but not if it's only in the static ice
         # (unless there's on such ice "anyway").
-        (( 1 == ${+ZINIT_ICE[$__key]} && 0 == ${+ZINIT_ICE[no$__key]} && \
-            1 == ${+__sice[no$__key]} )) && continue
+        (( 1 == ${+ZINIT_ICE[$___key]} && 0 == ${+ZINIT_ICE[no$___key]} && \
+            1 == ${+___sice[no$___key]} )) && continue
 
-        if [[ "$__key" = "svn" ]]; then
-            command print -r -- "0" >! "$__zinit_path/mode"
-            __mdata[mode]=0
+        if [[ "$___key" = "svn" ]]; then
+            command print -r -- "0" >! "$___zinit_path/mode"
+            ___mdata[mode]=0
         else
-            command rm -f -- "$__zinit_path/$__key"
+            command rm -f -- "$___zinit_path/$___key"
         fi
-        unset "__mdata[$__key]" "__sice[$__key]" "ZINIT_ICE[$__key]"
+        unset "___mdata[$___key]" "___sice[$___key]" "ZINIT_ICE[$___key]"
     done
 
     # Final decision, static ice vs. saved ice
-    local -A __MY_ICE
-    for __key in mode url is_release ${ice_order[@]}; do
-        (( ${+__sice[$__key]} + ${${${__pack:#pack-nf*}:+${+__mdata[$__key]}}:-0} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+    local -A ___MY_ICE
+    for ___key in mode url is_release ${ice_order[@]}; do
+        (( ${+___sice[$___key]} + ${${${___pack:#pack-nf*}:+${+___mdata[$___key]}}:-0} )) && ___MY_ICE[$___key]="${___sice[$___key]-${___mdata[$___key]}}"
     done
     # One more round for the special case – update, which ALWAYS
     # needs the tleid from the disk or static ice
-    __key=teleid; [[ "$__pack" = pack-nftid ]] && {
-        (( ${+__sice[$__key]} + ${+__mdata[$__key]} )) && __MY_ICE[$__key]="${__sice[$__key]-${__mdata[$__key]}}"
+    ___key=teleid; [[ "$___pack" = pack-nftid ]] && {
+        (( ${+___sice[$___key]} + ${+___mdata[$___key]} )) && ___MY_ICE[$___key]="${___sice[$___key]-${___mdata[$___key]}}"
     }
 
-    : ${(PA)__var_name1::="${(kv)__MY_ICE[@]}"}
-    : ${(P)__var_name2::=$__local_dir}
-    : ${(P)__var_name3::=$__filename}
-    : ${(P)__var_name4::=$__is_snippet}
+    : ${(PA)___var_name1::="${(kv)___MY_ICE[@]}"}
+    : ${(P)___var_name2::=$___local_dir}
+    : ${(P)___var_name3::=$___filename}
+    : ${(P)___var_name4::=$___is_snippet}
 
     return 0
 }
@@ -338,8 +338,8 @@
 # $5 – the URL, if applicable
 # $6 – the mode (1 - svn, 0 - single file), if applicable
 .zinit-store-ices() {
-    local __pfx="$1" __ice_var="$2" \
-          __add_ices="$3" __add_ices2="$4" \
+    local ___pfx="$1" ___ice_var="$2" \
+          ___add_ices="$3" ___add_ices2="$4" \
           url="$5" mode="$6"
 
     # Copy from .zinit-recall
@@ -362,28 +362,28 @@
             svn
     )
 
-    command mkdir -p "$__pfx"
-    local __key __var_name
+    command mkdir -p "$___pfx"
+    local ___key ___var_name
     # No nval_ices here
-    for __key in ${ice_order[@]:#(${(~j:|:)nval_ices[@]})} ${(s: :)__add_ices[@]}; do
-        __var_name="${__ice_var}[$__key]"
-        (( ${(P)+__var_name} )) && \
-            print -r -- "${(P)__var_name}" >! "$__pfx"/"$__key"
+    for ___key in ${ice_order[@]:#(${(~j:|:)nval_ices[@]})} ${(s: :)___add_ices[@]}; do
+        ___var_name="${___ice_var}[$___key]"
+        (( ${(P)+___var_name} )) && \
+            print -r -- "${(P)___var_name}" >! "$___pfx"/"$___key"
     done
 
     # Ices that even empty mean something
-    for __key in make pick nocompile reset ${nval_ices[@]} ${(s: :)__add_ices2[@]}; do
-        __var_name="${__ice_var}[$__key]"
-        if (( ${(P)+__var_name} )) {
-            print -r -- "${(P)__var_name}" >! "$__pfx"/"$__key"
+    for ___key in make pick nocompile reset ${nval_ices[@]} ${(s: :)___add_ices2[@]}; do
+        ___var_name="${___ice_var}[$___key]"
+        if (( ${(P)+___var_name} )) {
+            print -r -- "${(P)___var_name}" >! "$___pfx"/"$___key"
         } else {
-            command rm -f "$__pfx"/"$__key"
+            command rm -f "$___pfx"/"$___key"
         }
     done
 
     # url and mode are declared at the beginning of the body
-    for __key in url mode; do
-        [[ -n "${(P)__key}" ]] && print -r -- "${(P)__key}" >! "$__pfx"/"$__key"
+    for ___key in url mode; do
+        [[ -n "${(P)___key}" ]] && print -r -- "${(P)___key}" >! "$___pfx"/"$___key"
     done
 }
 # ]]]

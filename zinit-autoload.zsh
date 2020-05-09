@@ -802,8 +802,8 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-any-colorify-as-uspl2 "$uspl2"
     (( quiet )) || print -r -- "${ZINIT[col-bar]}---${ZINIT[col-rst]} Unloading plugin: $REPLY ${ZINIT[col-bar]}---${ZINIT[col-rst]}"
 
-    local __dir
-    [[ "$user" = "%" ]] && __dir="$plugin" || __dir="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
+    local ___dir
+    [[ "$user" = "%" ]] && ___dir="$plugin" || ___dir="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
 
     # KSH_ARRAYS immunity
     integer correct=0
@@ -838,10 +838,10 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ -n ${sice[ps-on-unload]} ]]; then
         (( quiet )) || print -r "Running plugin's provided unload code: ${ZINIT[col-info]}${sice[ps-on-unload][1,50]}${sice[ps-on-unload][51]:+…}${ZINIT[col-rst]}"
-        local __oldcd="$PWD"
-        () { setopt localoptions noautopushd; builtin cd -q "$__dir"; }
+        local ___oldcd="$PWD"
+        () { setopt localoptions noautopushd; builtin cd -q "$___dir"; }
         eval "${sice[ps-on-unload]}"
-        () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }
+        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }
     fi
 
     #
@@ -2689,7 +2689,7 @@ ZINIT[EXTENDED_GLOB]=""
     # Parse options
     local -a opts
     opts=( --all --clean --yes -y -q --quiet )
-    : ${@[@]//(#b)([ $'\t']##|(#s))(${(~j.|.)opts})([ $'\t']##|(#e))/${ICE_OPTS[${opt_map[${match[2]}]}]::=1}}
+    : ${@[@]//(#b)([ $'\t']##|(#s))(${(~j.|.)opts})([ $'\t']##|(#e))/${ICE_OPTS[${___opt_map[${match[2]}]}]::=1}}
     set -- "${@[@]:#(${(~j.|.)opts})}"
 
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"

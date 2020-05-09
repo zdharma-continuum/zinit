@@ -10,109 +10,109 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent
 
-    local -A __pos_to_level __level_to_pos __pair_map \
-        __final_pairs __Strings __Counts
-    local __input=$1 __workbuf=$1 __key=$2 __varname=$3 \
-        __style __quoting
-    integer __nest=${4:-1} __idx=0 __pair_idx __level=0 \
-        __start __end __sidx=1 __had_quoted_value=0
-    local -a match mbegin mend __pair_order
+    local -A ___pos_to_level ___level_to_pos ___pair_map \
+        ___final_pairs ___Strings ___Counts
+    local ___input=$1 ___workbuf=$1 ___key=$2 ___varname=$3 \
+        ___style ___quoting
+    integer ___nest=${4:-1} ___idx=0 ___pair_idx ___level=0 \
+        ___start ___end ___sidx=1 ___had_quoted_value=0
+    local -a match mbegin mend ___pair_order
 
-    (( ${(P)+__varname} )) || typeset -gA "$__varname"
+    (( ${(P)+___varname} )) || typeset -gA "$___varname"
 
-    __pair_map=( "{" "}" "[" "]" )
-    while [[ $__workbuf = (#b)[^"{}[]\\\"'":,]#((["{[]}\"'":,])|[\\](*))(*) ]]; do
+    ___pair_map=( "{" "}" "[" "]" )
+    while [[ $___workbuf = (#b)[^"{}[]\\\"'":,]#((["{[]}\"'":,])|[\\](*))(*) ]]; do
         [[ -n ${match[3]} ]] && {
-            __idx+=${mbegin[1]}
+            ___idx+=${mbegin[1]}
 
-            [[ $__quoting = \' ]] && \
-                { __workbuf=${match[3]}; } || \
-                { __workbuf=${match[3]:1}; (( ++ __idx )); }
+            [[ $___quoting = \' ]] && \
+                { ___workbuf=${match[3]}; } || \
+                { ___workbuf=${match[3]:1}; (( ++ ___idx )); }
 
         } || {
-            __idx+=${mbegin[1]}
-            [[ -z $__quoting ]] && {
+            ___idx+=${mbegin[1]}
+            [[ -z $___quoting ]] && {
                 if [[ ${match[1]} = ["({["] ]]; then
-                    __Strings[$__level/${__Counts[$__level]}]+=" $'\0'--object--$'\0'"
-                    __pos_to_level[$__idx]=$(( ++ __level ))
-                    __level_to_pos[$__level]=$__idx
-                    (( __Counts[$__level] += 1 ))
-                    __sidx=__idx+1
-                    __had_quoted_value=0
+                    ___Strings[$___level/${___Counts[$___level]}]+=" $'\0'--object--$'\0'"
+                    ___pos_to_level[$___idx]=$(( ++ ___level ))
+                    ___level_to_pos[$___level]=$___idx
+                    (( ___Counts[$___level] += 1 ))
+                    ___sidx=___idx+1
+                    ___had_quoted_value=0
                 elif [[ ${match[1]} = ["]})"] ]]; then
-                    (( !__had_quoted_value )) && \
-                        __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
-                    __had_quoted_value=1
-                    if (( __level > 0 )); then
-                        __pair_idx=${__level_to_pos[$__level]}
-                        __pos_to_level[$__idx]=$(( __level -- ))
-                        [[ ${__pair_map[${__input[__pair_idx]}]} = ${__input[__idx]} ]] && {
-                            __final_pairs[$__idx]=$__pair_idx
-                            __final_pairs[$__pair_idx]=$__idx
-                            __pair_order+=( $__idx )
+                    (( !___had_quoted_value )) && \
+                        ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
+                    ___had_quoted_value=1
+                    if (( ___level > 0 )); then
+                        ___pair_idx=${___level_to_pos[$___level]}
+                        ___pos_to_level[$___idx]=$(( ___level -- ))
+                        [[ ${___pair_map[${___input[___pair_idx]}]} = ${___input[___idx]} ]] && {
+                            ___final_pairs[$___idx]=$___pair_idx
+                            ___final_pairs[$___pair_idx]=$___idx
+                            ___pair_order+=( $___idx )
                         }
                     else
-                        __pos_to_level[$__idx]=-1
+                        ___pos_to_level[$___idx]=-1
                     fi
                 fi
             }
 
-            [[ ${match[1]} = \" && $__quoting != \' ]] && \
-                if [[ $__quoting = '"' ]]; then
-                    __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]}"
-                    __quoting=""
+            [[ ${match[1]} = \" && $___quoting != \' ]] && \
+                if [[ $___quoting = '"' ]]; then
+                    ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]}"
+                    ___quoting=""
                 else
-                    __had_quoted_value=1
-                    __sidx=__idx+1
-                    __quoting='"'
+                    ___had_quoted_value=1
+                    ___sidx=___idx+1
+                    ___quoting='"'
                 fi
 
-            [[ ${match[1]} = , && -z $__quoting ]] && \
+            [[ ${match[1]} = , && -z $___quoting ]] && \
                 {
-                    (( !__had_quoted_value )) && \
-                        __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
-                    __sidx=__idx+1
-                    __had_quoted_value=0
+                    (( !___had_quoted_value )) && \
+                        ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
+                    ___sidx=___idx+1
+                    ___had_quoted_value=0
                 }
 
-            [[ ${match[1]} = : && -z $__quoting ]] && \
+            [[ ${match[1]} = : && -z $___quoting ]] && \
                 {
-                    __had_quoted_value=0
-                    __sidx=__idx+1
+                    ___had_quoted_value=0
+                    ___sidx=___idx+1
                 }
 
-            [[ ${match[1]} = \' && $__quoting != \" ]] && \
-                if [[ $__quoting = "'" ]]; then
-                    __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]}"
-                    __quoting=""
+            [[ ${match[1]} = \' && $___quoting != \" ]] && \
+                if [[ $___quoting = "'" ]]; then
+                    ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]}"
+                    ___quoting=""
                 else
-                    __had_quoted_value=1
-                    __sidx=__idx+1
-                    __quoting="'"
+                    ___had_quoted_value=1
+                    ___sidx=___idx+1
+                    ___quoting="'"
                 fi
 
-            __workbuf=${match[4]}
+            ___workbuf=${match[4]}
         }
     done
 
-    local __text __found
-    if (( __nest != 2 )) {
-        integer __pair_a __pair_b
-        for __pair_a ( "${__pair_order[@]}" ) {
-            __pair_b="${__final_pairs[$__pair_a]}"
-            __text="${__input[__pair_b,__pair_a]}"
-            if [[ $__text = [[:space:]]#\{[[:space:]]#[\"\']${__key}[\"\']* ]]; then
-                __found="$__text"
+    local ___text ___found
+    if (( ___nest != 2 )) {
+        integer ___pair_a ___pair_b
+        for ___pair_a ( "${___pair_order[@]}" ) {
+            ___pair_b="${___final_pairs[$___pair_a]}"
+            ___text="${___input[___pair_b,___pair_a]}"
+            if [[ $___text = [[:space:]]#\{[[:space:]]#[\"\']${___key}[\"\']* ]]; then
+                ___found="$___text"
             fi
         }
     }
 
-    if [[ -n $__found && $__nest -lt 2 ]] {
-        .zinit-parse-json "$__found" "$__key" "$__varname" 2
+    if [[ -n $___found && $___nest -lt 2 ]] {
+        .zinit-parse-json "$___found" "$___key" "$___varname" 2
     }
 
-    if (( __nest == 2 )) {
-        : ${(PAA)__varname::="${(kv)__Strings[@]}"}
+    if (( ___nest == 2 )) {
+        : ${(PAA)___varname::="${(kv)___Strings[@]}"}
     }
 }
 # ]]]
@@ -353,29 +353,34 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-                url="https://github.com${REPLY}"
-                if [[ -d $local_path/._zinit ]] {
-                    { local old_version="$(<$local_path/._zinit/is_release)"; } 2>/dev/null
-                    old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
-                }
-                print "(Requesting \`${REPLY:t}'${version:+, version $version}...${old_version:+ Current version: $old_version.})"
-                if { ! .zinit-download-file-stdout "$url" >! "${REPLY:t}" } {
-                    if { ! .zinit-download-file-stdout "$url" 1 >! "${REPLY:t}" } {
-                        command rm -f "${REPLY:t}"
-                        print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
-                        print -r "Tried url: $url."
-                        return 1
-                    }
-                }
-                if .zinit-download-file-stdout "$url.sig" 2>/dev/null >! "${REPLY:t}.sig"; then
-                    :
-                fi
+                integer count
 
-                command mkdir -p ._zinit
-                [[ -d ._zinit ]] || return 2
-                print -r -- $url >! ._zinit/url || return 3
-                print -r -- ${REPLY} >! ._zinit/is_release || return 4
-                ziextract ${REPLY:t}
+                for REPLY ( $reply ) {
+                    count+=1
+                    url="https://github.com${REPLY}"
+                    if [[ -d $local_path/._zinit ]] {
+                        { local old_version="$(<$local_path/._zinit/is_release${count:#1})"; } 2>/dev/null
+                        old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
+                    }
+                    print "(Requesting \`${REPLY:t}'${version:+, version $version}...${old_version:+ Current version: $old_version.})"
+                    if { ! .zinit-download-file-stdout "$url" >! "${REPLY:t}" } {
+                        if { ! .zinit-download-file-stdout "$url" 1 >! "${REPLY:t}" } {
+                            command rm -f "${REPLY:t}"
+                            print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                            print -r "Tried url: $url."
+                            return 1
+                        }
+                    }
+                    if .zinit-download-file-stdout "$url.sig" 2>/dev/null >! "${REPLY:t}.sig"; then
+                        :
+                    fi
+
+                    command mkdir -p ._zinit
+                    [[ -d ._zinit ]] || return 2
+                    print -r -- $url >! ._zinit/url || return 3
+                    print -r -- ${REPLY} >! ._zinit/is_release${count:#1} || return 4
+                    ziextract ${REPLY:t} ${${${#reply}:#1}:+--nobkp}
+                }
                 return $?
             ) || {
                 return 1
@@ -497,7 +502,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
             @zinit-substitute atclone extract
 
             [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!}}; }
-            [[ -n $atclone ]] && .zinit-countdown atclone && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ -n $atclone ]] && .zinit-countdown atclone && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
             [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
 
             if (( ${+ZINIT_ICE[extract]} )) {
@@ -991,7 +996,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                             eval "${ZINIT_ICE[reset]:-command svn revert --recursive $filename/.}"
                         )
 
-                        [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                        [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 
                         if (( !skip_pull )) {
                             # Do the update
@@ -1075,7 +1080,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                         done
                     }
 
-                    [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+                    [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 
                     if (( !skip_dl )) {
                         if { ! .zinit-download-file-stdout "$url" >! "$dirname/$filename" } {
@@ -1146,7 +1151,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                 eval "${ZINIT_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
             )
 
-            [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 
             retval=2
             command mkdir -p "$local_dir/$dirname"
@@ -1255,7 +1260,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                 done
             }
 
-            [[ -n ${ZINIT_ICE[atpull]} && ${ZINIT_ICE[atpull][1]} != *"!"* ]] && .zinit-countdown atpull && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; };}
+            [[ -n ${ZINIT_ICE[atpull]} && ${ZINIT_ICE[atpull][1]} != *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
         } else {
             # Run annexes' atclone hooks (the before atclone-ice ones)
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone <->]}" )
@@ -1267,7 +1272,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
             local atclone=${ZINIT_ICE[atclone]} extract=${ZINIT_ICE[extract]}
             @zinit-substitute atclone extract
 
-            [[ -n $atclone ]] && .zinit-countdown atclone && { local __oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$__oldcd"; }; }
+            [[ -n $atclone ]] && .zinit-countdown atclone && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
             if (( ${+ZINIT_ICE[extract]} )) {
                 .zinit-extract snippet "$extract" "$local_dir/$dirname"
