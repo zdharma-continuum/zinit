@@ -56,11 +56,36 @@
   - The `from'gh-r'` downloading of the binary files from GitHub releases can
     now download **multiple files** – if you specify multiple `bpick''` ices
     **or** separate the patterns with a semicolon (**`;`**). Example:
-	
 
     ```zsh
     zinit from"gh-r" as"program" mv"krew-* -> krew" bpick"*.yaml" bpick"*.tar.gz" for \
 	kubernetes-sigs/krew
+    ```
+
+  - A new ice `opts''` which takes options to **sticky-set** during sourcing of
+    the plugin. This means that thee options will be also set for all of the
+    *functions* that the plugin defines – **during their execution**
+    (<i>**only**</i>). The option list is space separated. Example:
+
+    ```zsh
+    # Suppose the example test plugin has the following in test.plugin.zsh:
+    #
+    # print $options[kshglob] $options[shglob]
+    #
+    # Then:
+
+    zinit opts"kshglob noshglob" for zdharma/test
+
+    # Outputs:
+    on off
+
+    # Can mix with the standard emulation-ices: sh, bash, ksh, csh, zsh (the
+    # default one)
+
+    zinit sh opts"kshglob" for zdharma/test
+
+    # Outputs `on' for the SH_GLOB, because sh-emulation sets this option
+    on on 
     ```
 
 * 07-05-2020
