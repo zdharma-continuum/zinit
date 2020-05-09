@@ -299,6 +299,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     }
     local_path=$reply[-3]
 
+    trap "rmdir \"$local_path\" 2>/dev/null; return 1;" INT
+
     local -A sites
     sites=(
         github    github.com
@@ -909,6 +911,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     setopt extendedglob warncreateglobal typesetsilent
 
     local save_url="$1" url="$2" id_as="$3" id_as_clean="${3%%\?*}" local_dir="$4" dirname="$5" filename="$6" update="$7"
+
+    trap "rmdir \"$local_dir/$dirname\" 2>/dev/null; return 1;" INT
+
     local -a list arr
     integer retval=0
     [[ $id_as = (http|https|ftp|ftps|scp)://* ]] && {
