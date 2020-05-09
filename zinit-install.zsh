@@ -1477,66 +1477,74 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         armv5l-2 "arm"
     )
 
-    local -a list list2
-    list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
-                  command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
-    list=( ${list[@]#href=?} )
+    local -a list init_list
 
-    [[ -n $ZINIT_ICE[bpick] ]] && list=( ${(M)list[@]:#(#i)*/$~ZINIT_ICE[bpick]} )
+    init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
+                      command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+    init_list=( ${init_list[@]#href=?} )
 
-    if [[ ${#list} -gt 1 ]] {
-        list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
-        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-    }
+    local -a list2 bpicks
+    bpicks=( ${(s.;.)ZINIT_ICE[bpick]} )
+    [[ -z $bpicks ]] && bpicks=( "" )
+    local bpick
 
-    if [[ ${#list} -gt 1 && -n ${matchstr[${MACHTYPE}-2]} ]] {
-        list2=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}-2]:-${MACHTYPE#(#i)(i|amd)}}*} )
-        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-    }
+    reply=()
+    for bpick ( "${bpicks[@]}" ) {
+        list=( $init_list )
 
-    if [[ ${#list} -gt 1 ]] {
-        list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
-        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-    }
+        [[ -n $bpick ]] && list=( ${(M)list[@]:#(#i)*/$~bpick} )
 
-    if [[ ${#list} -gt 1 ]] {
-        list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*} )
-        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-    }
-
-    if [[ ${#list} -gt 1 ]] {
-        list2=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} )
-        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-    }
-
-    if [[ ${#list} -gt 1 && $+commands[dpkg-deb] = 0 ]] {
-        list2=( ${list[@]:#*.deb} )
-        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-    }
-
-    if [[ ${#list} -gt 1 && $+commands[cpio] = 0 ]] {
-        list2=( ${list[@]:#*.rpm} )
-        [[ ${#list2} -gt 0 ]] && list=( ${list2[@]} )
-    }
-
-    [[ $#list -eq 0 ]] && {
-        print -nr "${ZINIT[col-msg2]}Didn't find correct Github" \
-            "release-file to download"
-        if [[ -n $ZINIT_ICE[bpick] ]] {
-            print -nr ", try adapting" \
-                "${ZINIT[col-obj]}bpick${ZINIT[col-msg2]}-ICE" \
-                "(currently it is:${ZINIT[col-file]}" \
-                "$ZINIT_ICE[bpick]${ZINIT[col-msg2]})."
-        } else {
-            print -n .
+        if (( $#list > 1 )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-        print -P "%f%b"
-        return 1
+
+        if (( ${#list} > 1 && ${#matchstr[${MACHTYPE}-2]} )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}-2]:-${MACHTYPE#(#i)(i|amd)}}*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        if (( $#list > 1 )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        if (( $#list > 1 )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-gnu}%%(-|)[0-9.]##}}*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        if (( $#list > 1 )) {
+            list2=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        if (( $#list > 1 && $+commands[dpkg-deb] )) {
+            list2=( ${list[@]:#*.deb} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        if (( $#list > 1 && $+commands[cpio] )) {
+            list2=( ${list[@]:#*.rpm} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        if (( !$#list )) {
+            +zinit-message -n "[error]Didn't find correct Github" \
+                "release-file to download"
+            if [[ -n $bpick ]] {
+                +zinit-message -n ", try adapting [obj]bpick[error]-ICE" \
+                    "(the current bpick is: [file]${bpick}[error])."
+            } else {
+                +zinit-message -n .
+            }
+            +zinit-message '[rst]' 
+            return 1
+        }
+
+        reply+=( $list[1] )
     }
-
-    REPLY=$list[1]
-
-    [[ -n $REPLY ]] # testable
+    [[ -n $reply ]] # testable
 }
 # ]]]
 # FUNCTION: ziextract [[[
