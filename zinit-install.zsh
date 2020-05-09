@@ -573,6 +573,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     # just $1 in first case, or $1$2 in second case
     local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} reinstall=${3:-0} quiet=${${4:+1}:-0}
     (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
+    [[ $4 = -Q ]] && quiet=2
     typeset -ga INSTALLED_COMPS SKIPPED_COMPS
     INSTALLED_COMPS=() SKIPPED_COMPS=()
 
@@ -618,7 +619,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         fi
     done
 
-    (( quiet && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) && {
+    (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) && {
         print -r "${ZINIT[col-msg1]}Installed ${ZINIT[col-obj]}${#INSTALLED_COMPS}" \
             "${ZINIT[col-msg1]}completions. They are stored in${ZINIT[col-obj2]}" \
             "\$INSTALLED_COMPS${ZINIT[col-msg1]} array.${ZINIT[col-rst]}"

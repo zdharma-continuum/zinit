@@ -2434,9 +2434,9 @@ for-syntax."
                    (( ${+functions[.zinit-install-completions]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                    # Installs completions for plugin. Enables them all. It's a
                    # reinstallation, thus every obstacle gets overwritten or removed
-                   [[ $2 = -q ]] && { 5=-q; shift; }
-                   .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-q}"; ___retval=$?
-                   [[ -z ${(M)4:#-q} ]] && print "Initializing completion (compinit)..."
+                   [[ $2 = -[qQ] ]] && { 5=$2; shift; }
+                   .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
+                   [[ -z ${(M)4:#-[qQ]} ]] && print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
                    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    ;;
