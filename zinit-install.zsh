@@ -1467,11 +1467,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         aarch64-2 "arm"
         linux   "(linux|linux-gnu)"
         darwin  "(darwin|macos|mac-os|osx|os-x)"
-        cygwin  "(windows|cygwin)"
-        windows "(windows|cygwin)"
+        cygwin  "(windows|cygwin|win)"
+        windows "(windows|cygwin|win)"
         armv7l  "(arm7|armv7)"
+        armv7l-2 "arm7"
         armv6l  "(arm6|armv6)"
+        armv6l-2 "arm"
         armv5l  "(arm5|armv5)"
+        armv5l-2 "arm"
     )
 
     local -a list list2
