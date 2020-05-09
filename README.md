@@ -52,6 +52,17 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 09-05-2020
+  - The `from'gh-r'` downloading of the binary files from GitHub releases can
+    now download **multiple files** – if you specify multiple `bpick''` ices
+    **or** separate the patterns with a semicolon (**`;`**). Example:
+	
+
+    ```zsh
+    zinit from"gh-r" as"program" mv"krew-* -> krew" bpick"*.yaml" bpick"*.tar.gz" for \
+	kubernetes-sigs/krew
+    ```
+
 * 07-05-2020
   - A new `from''` value is available – `cygwin`. It'll cause to download
     a package from the Cygwin repository – from a random mirror, and then
