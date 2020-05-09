@@ -210,8 +210,6 @@ builtin setopt noaliases
 # The hijacking is not only to gather report data, but also to
 # run custom `autoload' function, that doesn't need FPATH.
 :zinit-shade-autoload () {
-    : ${ZINIT[ALIASES_OPT]::=${${options[aliases]:#off}:+1}}
-
     emulate -LR zsh
     builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
     local -a opts
@@ -1190,8 +1188,6 @@ function $f {
     local ___user="$1" ___plugin="$2" ___id_as="$3" ___mode="$4" ___correct=0 ___retval=0
     ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
     [[ -o ksharrays ]] && ___correct=1
-
-    : ${ZINIT[ALIASES_OPT]::=${${options[aliases]:#off}:+1}}
 
     [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
         local -a ___precm
