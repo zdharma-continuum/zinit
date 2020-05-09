@@ -59,7 +59,7 @@ service|trackbinds|multisrc|compile|nocompile|nocompletions|\
 reset-prompt|wrap-track|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
-subscribe|extract|param"
+subscribe|extract|param|opts"
 ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
 nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts"
@@ -1189,13 +1189,14 @@ function $f {
     ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
     [[ -o ksharrays ]] && ___correct=1
 
-    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ZINIT_ICE[opts]} ]] && {
         local -a ___precm
         ___precm=(
             emulate
             ${${(M)${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
-            ${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}
+            ${${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
             ${${ZINIT_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
+            ${(s: :):-${${:-${(@s: :):--o}" "${(s: :)^ZINIT_ICE[opts]}}:#-o }}
             -c
         )
     }
@@ -1340,13 +1341,14 @@ function $f {
     integer correct retval exists
     [[ -o ksharrays ]] && correct=1
 
-    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] && {
+    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ZINIT_ICE[opts]} ]] && {
         local -a precm
         precm=(
             emulate
             ${${(M)${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
-            ${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}
+            ${${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
             ${${ZINIT_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
+            ${(s: :):-${${:-${(@s: :):--o}" "${(s: :)^ZINIT_ICE[opts]}}:#-o }}
             -c
         )
     }
