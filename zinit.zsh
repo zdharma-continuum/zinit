@@ -216,7 +216,7 @@ builtin setopt noaliases
     local -a opts
     local func
 
-    zparseopts -D -a opts ${(s::):-RTUXdkmrtWz}
+    zparseopts -D -a opts ${(s::):-RTUXdkmrtWzw}
 
     [[ $ZINIT[CUR_USR] = % ]] && \
         local PLUGIN_DIR="$ZINIT[CUR_PLUGIN]" || \
@@ -229,7 +229,7 @@ builtin setopt noaliases
     fi
     if (( ${+opts[(r)-w]} )); then
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
-        local +h FPATH="$PLUGINS_DIR:$FPATH"
+        fpath+=( $PLUGIN_DIR )
         builtin autoload ${opts[@]} "$@"
         return 0
     fi
