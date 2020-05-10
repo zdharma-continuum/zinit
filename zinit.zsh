@@ -59,7 +59,7 @@ service|trackbinds|multisrc|compile|nocompile|nocompletions|\
 reset-prompt|wrap-track|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
-subscribe|extract|param|opts"
+subscribe|extract|param|opts|autoload"
 ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
 nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts"
@@ -1209,6 +1209,10 @@ function $f {
     [[ $___user = % ]] && local ___pdir_path="$___plugin" || local ___pdir_path="${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}"
     local ___pdir_orig="$___pdir_path" ___key
 
+    if [[ -n ${ZINIT_ICE[autoload]} ]] {
+        :zinit-shade-autoload -Uz -- ${(s.;.)ZINIT_ICE[autoload]}
+    }
+    
     if [[ ${ZINIT_ICE[as]} = command ]]; then
         [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
             ZINIT_ICE[pick]="${___id_as:t}"
