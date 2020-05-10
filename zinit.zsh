@@ -153,13 +153,14 @@ zmodload zsh/termcap 2>/dev/null
 # List of hooks
 typeset -gAH ZINIT_ZLE_HOOKS_LIST
 ZINIT_ZLE_HOOKS_LIST=(
-    zle-line-init 1
-    zle-line-finish 1
-    paste-insert 1
     zle-isearch-exit 1
     zle-isearch-update 1
+    zle-line-pre-redraw 1
+    zle-line-init 1
+    zle-line-finish 1
     zle-history-line-set 1
     zle-keymap-select 1
+    paste-insert 1
 )
 
 builtin setopt noaliases
