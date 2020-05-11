@@ -59,7 +59,7 @@ service|trackbinds|multisrc|compile|nocompile|nocompletions|\
 reset-prompt|wrap-track|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
-subscribe|extract|param|opts|autoload"
+subscribe|extract|param|opts|autoload|subst"
 ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
 nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts"
@@ -625,6 +625,14 @@ builtin setopt noaliases
     (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}"
     functions[compdef]=':zinit-shade-compdef "$@";'
 
+    # Temporarily replace `source' if subst'' given
+    if [[ -n ${ZINIT_ICE[subst]} ]] {
+        (( ${+functions[source]} )) && ZINIT[bkp-source]="${functions[source]}"
+        (( ${+functions[.]} )) && ZINIT[bkp-.]="${functions[.]}"
+        functions[source]=':zinit-shade-source "$@";'
+        functions[.]=':zinit-shade-source "$@";'
+    }
+
     # Light and compdef shadeing stops here. Dtrace and load go on
     [[ ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
 
@@ -673,6 +681,10 @@ builtin setopt noaliases
 
     # E. Restore original compdef if it existed
     (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef
+
+    # Restore the possible source function
+    (( ${+ZINIT[bkp-source]} )) && functions[source]="${ZINIT[bkp-source]}" || unfunction source
+    (( ${+ZINIT[bkp-.]} )) && functions[.]="${ZINIT[bkp-.]}" || unfunction .
 
     # Light and compdef shadeing stops here
     [[ ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
@@ -1202,6 +1214,8 @@ function $f {
         )
     }
 
+    [[ -z ${ZINIT[subst]} ]] && local ___builtin=builtin
+    
     [[ ${ZINIT_ICE[as]} = null ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
 
@@ -1241,8 +1255,8 @@ function $f {
 
         local ZERO
         [[ $ZINIT_ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ZINIT_ICE[atinit#!]}"; ((1)); } || eval "${ZINIT_ICE[atinit]#!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
-        [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$___pdir_orig/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
-        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local ___fname; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( ___retval += $? )); }; done; }
+        [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$___pdir_orig/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
+        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local ___fname; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
         reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]}" )
@@ -1289,9 +1303,9 @@ function $f {
         local ZERO="$___pdir_path/$___fname"
         (( ${+ZINIT_ICE[aliases]} )) || builtin setopt noaliases
         [[ $ZINIT_ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ZINIT_ICE[atinit]#!}"; ((1)); } || eval "${ZINIT_ICE[atinit]#1}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
-        (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( ___retval += $? )); }
-        [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$___pdir_orig/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
-        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( ___retval += $? )); } done; }
+        (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }
+        [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$___pdir_orig/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
+        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); } done; }
 
         # Run the atload hooks right before atload ice
         reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]}" )
