@@ -735,6 +735,7 @@ ZINIT[EXTENDED_GLOB]=""
     zcompile $ZINIT[BIN_DIR]/zinit-side.zsh
     zcompile $ZINIT[BIN_DIR]/zinit-install.zsh
     zcompile $ZINIT[BIN_DIR]/zinit-autoload.zsh
+    zcompile $ZINIT[BIN_DIR]/zinit-additional.zsh
     zcompile $ZINIT[BIN_DIR]/git-process-output.zsh
     # Load for the current session
     [[ $1 != -q ]] && builtin print "Reloading Zinit for the current session..."
