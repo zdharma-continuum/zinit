@@ -282,7 +282,7 @@
     # Read disk-Ice
     local -A ___mdata
     local ___key
-    { for ___key in mode url is_release{,2..5} ${ice_order[@]}; do
+    { for ___key in mode url is_release is_release{2..5} ${ice_order[@]}; do
         [[ -f "$___zinit_path/$___key" ]] && ___mdata[$___key]="$(<$___zinit_path/$___key)"
       done
       [[ "${___mdata[mode]}" = "1" ]] && ___mdata[svn]=""
@@ -311,7 +311,7 @@
 
     # Final decision, static ice vs. saved ice
     local -A ___MY_ICE
-    for ___key in mode url is_release ${ice_order[@]}; do
+    for ___key in mode url is_release is_release{2..5} ${ice_order[@]}; do
         (( ${+___sice[$___key]} + ${${${___pack:#pack-nf*}:+${+___mdata[$___key]}}:-0} )) && ___MY_ICE[$___key]="${___sice[$___key]-${___mdata[$___key]}}"
     done
     # One more round for the special case – update, which ALWAYS

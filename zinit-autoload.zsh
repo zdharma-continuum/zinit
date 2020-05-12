@@ -1483,6 +1483,7 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ -z ${ice[is_release]} && ${ice[from]} = (gh-r|github-rel|cygwin) ]]; then
             ice[is_release]=true
         fi
+
         local do_update=0 skip_pull=0
         integer count is_release=0
         for (( count = 1; count <= 5; ++ count )) {
@@ -1490,29 +1491,41 @@ ZINIT[EXTENDED_GLOB]=""
                 is_release=1
             }
         }
-        for (( count = 1; count <=5 && is_release; ++ count )) {
-            (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
-            if [[ $ice[from] == (gh-r|github-rel) ]] {
-                {
-                    ZINIT_ICE=( "${(kv)ice[@]}" )
-                    .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
-                } always {
-                    ZINIT_ICE=()
-                }
-            } else {
-                REPLY=""
-            }
-            local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
-            if [[ ${ice[is_release${count:#1}]} = $REPLY ]] {
-                (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                    print -- "\rBinary release already up to date (version: $version)"
-                skip_pull=1
-                (( ${+ice[run-atpull]} )) && { do_update=1; }
-            } else {
-                do_update=1
-            }
-            ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
 
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
+        if [[ $ice[from] == (gh-r|github-rel) ]] {
+            {
+                ZINIT_ICE=( "${(kv)ice[@]}" )
+                .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
+            } always {
+                ZINIT_ICE=()
+            }
+        } else {
+            REPLY=""
+        }
+
+        if (( is_release )) {
+            count=0
+            for REPLY ( $reply ) {
+                count+=1
+                local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
+                if [[ ${ice[is_release${count:#1}]} = $REPLY ]] {
+                    do_update=0
+                    skip_pull=1
+                    (( ${+ice[run-atpull]} )) && { do_update=1; }
+                } else {
+                    do_update=1
+                    skip_pull=0
+                    break
+                }
+                ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
+            }
+            if (( ( !do_update || skip_pull ) && !ICE_OPTS[opt_-q,--quiet] )) {
+                print -- "\rBinary release already up to date (version: $version)"
+            }
+        }
+
+        if (( 1 )) {
             if (( do_update )) {
                 if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                     .zinit-any-colorify-as-uspl2 "$id_as"
