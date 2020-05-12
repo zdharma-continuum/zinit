@@ -1198,7 +1198,7 @@ builtin setopt noaliases
         )
     }
 
-    [[ -z ${ZINIT[subst]} ]] && local ___builtin=builtin
+    [[ -z ${ZINIT_ICE[subst]} ]] && local ___builtin=builtin
     
     [[ ${ZINIT_ICE[as]} = null ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"

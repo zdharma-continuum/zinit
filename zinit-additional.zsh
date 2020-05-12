@@ -11,7 +11,10 @@
     }
 
     # Load the plugin
-    [[ -r $1 ]] || +zinit-message "[error]source: Couldn't find the script \`[obj]${1}[error]'.[rst]"
+    if [[ ! -r $1 ]] {
+        +zinit-message "[error]source: Couldn't read the script [obj]${1}[error]" \
+            ", cannot substitute [data]${ZINIT_ICE[subst]}[error].[rst]"
+    }
 
     local ___data="$(<$1)"
 
@@ -26,7 +29,6 @@
         ___data="() { ${(F)${(@)${(f)___data[@]}:#\ #\#*}} ; } \"\${@[2,-1]}\""
     }
 
-    print -rl $___data
     builtin eval "$___data"
 }
 # ]]]
