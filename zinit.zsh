@@ -629,6 +629,7 @@ builtin setopt noaliases
     if [[ -n ${ZINIT_ICE[subst]} ]] {
         (( ${+functions[source]} )) && ZINIT[bkp-source]="${functions[source]}"
         (( ${+functions[.]} )) && ZINIT[bkp-.]="${functions[.]}"
+        (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
         functions[source]=':zinit-shade-source "$@";'
         functions[.]=':zinit-shade-source "$@";'
     }
@@ -717,29 +718,6 @@ builtin setopt noaliases
             [[ -z ${ZINIT_SNIPPETS[PZT::modules/$1${ZINIT_ICE[svn]-/init.zsh}]} && -z ${ZINIT_SNIPPETS[https://github.com/sorin-ionescu/prezto/trunk/modules/$1${ZINIT_ICE[svn]-/init.zsh}]} ]] && .zinit-load-snippet PZT::modules/"$1${ZINIT_ICE[svn]-/init.zsh}"
             shift
         fi
-    done
-}
-# ]]]
-# FUNCTION: .zinit-wrap-track-functions [[[
-.zinit-wrap-track-functions() {
-    local user="$1" plugin="$2" id_as="$3" f
-    local -a wt
-    wt=( ${(@s.;.)ZINIT_ICE[wrap-track]} )
-    for f in ${wt[@]}; do
-        functions[${f}-zinit-bkp]="${functions[$f]}"
-        eval "
-function $f {
-    ZINIT[CUR_USR]=\"$user\" ZINIT[CUR_PLUGIN]=\"$plugin\" ZINIT[CUR_USPL2]=\"$id_as\"
-    .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
-    .zinit-diff \"\${ZINIT[CUR_USPL2]}\" begin
-    .zinit-shade-on load
-    functions[${f}]=\${functions[${f}-zinit-bkp]}
-    ${f} \"\$@\"
-    .zinit-shade-off load
-    .zinit-diff \"\${ZINIT[CUR_USPL2]}\" end
-    .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
-    ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
-}"
     done
 }
 # ]]]
@@ -1165,7 +1143,10 @@ function $f {
     .zinit-register-plugin "$___id_as" "$___mode" "${ZINIT_ICE[teleid]}"
 
     # Set up param'' objects (parameters)
-    [[ -n ${ZINIT_ICE[param]} ]] && .zinit-setup-params && local ${(Q)reply[@]}
+    if [[ -n ${ZINIT_ICE[param]} ]] {
+        (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
+        .zinit-setup-params && local ${(Q)reply[@]}
+    }
 
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
     for ___key in "${reply[@]}"; do
@@ -1266,8 +1247,10 @@ function $f {
         done
 
         # Run the functions' wrapping & tracking requests
-        [[ -n ${ZINIT_ICE[wrap-track]} ]] && \
+        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$___user" "$___plugin" "$___id_as"
+        }
 
         [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
@@ -1315,8 +1298,10 @@ function $f {
         done
 
         # Run the functions' wrapping & tracking requests
-        [[ -n ${ZINIT_ICE[wrap-track]} ]] && \
+        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$___user" "$___plugin" "$___id_as"
+        }
 
         [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
         (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
@@ -1388,7 +1373,10 @@ function $f {
     functions[m]="${functions[+zinit-message]}"
 
     # Set up param'' objects (parameters)
-    [[ -n ${ZINIT_ICE[param]} ]] && .zinit-setup-params && local ${(Q)reply[@]}
+    if [[ -n ${ZINIT_ICE[param]} ]] {
+        (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
+        .zinit-setup-params && local ${(Q)reply[@]}
+    }
 
     .zinit-pack-ice "$id_as" ""
 
@@ -1492,8 +1480,10 @@ function $f {
         done
 
         # Run the functions' wrapping & tracking requests
-        [[ -n ${ZINIT_ICE[wrap-track]} ]] && \
+        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$save_url" "" "$id_as"
+        }
 
         [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
@@ -1544,8 +1534,10 @@ function $f {
         done
 
         # Run the functions' wrapping & tracking requests
-        [[ -n ${ZINIT_ICE[wrap-track]} ]] && \
+        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$save_url" "" "$id_as"
+        }
 
         [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
@@ -1695,52 +1687,6 @@ function $f {
 # ]]]
 
 #
-# Dtrace
-#
-
-# FUNCTION: .zinit-debug-start [[[
-# Starts Dtrace, i.e. session tracking for changes in Zsh state.
-.zinit-debug-start() {
-    if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "[error]Dtrace is already active, stop it first with \`dstop'[rst]"
-        return 1
-    fi
-
-    ZINIT[DTRACE]=1
-
-    .zinit-diff _dtrace/_dtrace begin
-
-    # Full shadeing on
-    .zinit-shade-on dtrace
-} # ]]]
-# FUNCTION: .zinit-debug-stop [[[
-# Stops Dtrace, i.e. session tracking for changes in Zsh state.
-.zinit-debug-stop() {
-    ZINIT[DTRACE]=0
-
-    # Shadowing fully off
-    .zinit-shade-off dtrace
-
-    # Gather end data now, for diffing later
-    .zinit-diff _dtrace/_dtrace end
-} # ]]]
-# FUNCTION: .zinit-clear-debug-report [[[
-# Forgets dtrace repport gathered up to this moment.
-.zinit-clear-debug-report() {
-    .zinit-clear-report-for _dtrace/_dtrace
-} # ]]]
-# FUNCTION: .zinit-debug-unload [[[
-# Reverts changes detected by dtrace run.
-.zinit-debug-unload() {
-    (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
-    if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "[error]Dtrace is still active, stop it first with \`dstop'[rst]"
-    else
-        .zinit-unload _dtrace _dtrace
-    fi
-} # ]]]
-
-#
 # Ice support
 #
 
@@ -1801,60 +1747,11 @@ function $f {
     return 0
 }
 # ]]]
-# FUNCTION: .zinit-setup-params [[[
-.zinit-setup-params() {
-    emulate -LR zsh -o extendedglob
-    reply=( ${(@)${(@s.;.)ZINIT_ICE[param]}/(#m)*/${${MATCH%%(-\>|→)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→)}:+\=${${MATCH#*(-\>|→)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
-    (( ${#reply} )) && return 0 || return 1
-}
-# ]]]
 
 #
 # Turbo
 #
 
-# FUNCTION: .zinit-service [[[
-# Handles given service, i.e. obtains lock, runs it, or waits if no lock
-#
-# $1 - type "p" or "s" (plugin or snippet)
-# $2 - mode - for plugin (light or load)
-# $3 - id - URL or plugin ID or alias name (from id-as'')
-.zinit-service() {
-    emulate -LR zsh
-    setopt extendedglob warncreateglobal typesetsilent noshortloops
-
-    local ___tpe="$1" ___mode="$2" ___id="$3" ___fle="${ZINIT[SERVICES_DIR]}/${ZINIT_ICE[service]}.lock" ___fd ___cmd ___tmp ___lckd ___strd=0
-    { builtin print -n >! "$___fle"; } 2>/dev/null 1>&2
-    [[ ! -e ${___fle:r}.fifo ]] && command mkfifo "${___fle:r}.fifo" 2>/dev/null 1>&2
-    [[ ! -e ${___fle:r}.fifo2 ]] && command mkfifo "${___fle:r}.fifo2" 2>/dev/null 1>&2
-
-    typeset -g ZSRV_WORK_DIR="${ZINIT[SERVICES_DIR]}" ZSRV_ID="${ZINIT_ICE[service]}"  # should be also set by other p-m
-
-    while (( 1 )); do
-        (
-            while (( 1 )); do
-                [[ ! -f ${___fle:r}.stop ]] && if (( ___lckd )) || zsystem 2>/dev/null 1>&2 flock -t 1 -f ___fd -e $___fle; then
-                    ___lckd=1
-                    if (( ! ___strd )) || [[ $___cmd = RESTART ]]; then
-                        [[ $___tpe = p ]] && { ___strd=1; .zinit-load "$___id" "" "$___mode"; }
-                        [[ $___tpe = s ]] && { ___strd=1; .zinit-load-snippet "$___id" ""; }
-                    fi
-                    ___cmd=
-                    while (( 1 )); do builtin read -t 32767 ___cmd <>"${___fle:r}.fifo" && break; done
-                else
-                    return 0
-                fi
-
-                [[ $___cmd = (#i)NEXT ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 ___tmp <>"${___fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; exec {___fd}>&-; ___lckd=0; ___strd=0; builtin read -t 10 ___tmp <>"${___fle:r}.fifo2"; }
-                [[ $___cmd = (#i)STOP ]] && { kill -TERM "$ZSRV_PID"; builtin read -t 2 ___tmp <>"${___fle:r}.fifo2"; kill -HUP "$ZSRV_PID"; ___strd=0; builtin print >! "${___fle:r}.stop"; }
-                [[ $___cmd = (#i)QUIT ]] && { kill -HUP ${sysparams[pid]}; return 1; }
-                [[ $___cmd != (#i)RESTART ]] && { ___cmd=; builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"; }
-            done
-        ) || break
-        builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"
-    done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
-}
-# ]]]
 # FUNCTION: .zinit-run-task [[[
 # A backend, worker function of .zinit-scheduler. It obtains the tasks
 # index and a few of its properties (like the type: plugin, snippet,
@@ -1900,6 +1797,7 @@ function $f {
         elif [[ $___tpe = s ]]; then
             .zinit-load-snippet $___opt "${(@)=___id}"; (( ___retval += $? ))
         elif [[ $___tpe = p1 || $___tpe = s1 ]]; then
+            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             zpty -b "${___id//\//:} / ${ZINIT_ICE[service]}" '.zinit-service '"${(M)___tpe#?}"' "$___mode" "$___id"'
         fi
         (( ${+ZINIT_ICE[silent]} == 0 && ${+ZINIT_ICE[lucid]} == 0 && ___retval == 0 )) && zle && zle -M "Loaded $___id"
@@ -2315,9 +2213,11 @@ for-syntax."
            .zinit-run "${@[2-correct,-1]}"
            ;;
        (dstart|dtrace)
+            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
            .zinit-debug-start
            ;;
        (dstop)
+            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
            .zinit-debug-stop
            ;;
        (man)
@@ -2484,9 +2384,11 @@ for-syntax."
                    .zinit-show-debug-report
                    ;;
                (dclear)
+                   (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
                    .zinit-clear-debug-report
                    ;;
                (dunload)
+                   (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
                    .zinit-debug-unload
                    ;;
                (compile)
