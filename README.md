@@ -52,6 +52,25 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 12-05-2020
+  - A new feature – ability to substitute `stringA` → `stringB` in plugin source
+    body before executing by `subst'A -> B'`. Works also for any nested `source`
+    commands. Example – renaming the `dl''` ice into a `dload''` ice in the
+    [Patch-Dl](https://github.com/zinit-zsh/z-a-patch-dl) annex:
+
+    ```zsh
+    zinit subst"dl'' -> dload''" for zinit-zsh/z-a-patch-dl
+    ```
+
+  - A new ice `autoload''` which invokes `autoload -Uz …` on the given
+    files/functions. Example – a plugin that converts `cd ...` into
+    `cd ../..` that lacks proper setup in any `*.plugin.zsh` file:
+
+    ```zsh
+    zinit as=null autoload=manydots-magic atload=manydots-magic for \
+        knu/zsh-manydots-magic
+    ```
+
 * 09-05-2020
   - The `from'gh-r'` downloading of the binary files from GitHub releases can
     now download **multiple files** – if you specify multiple `bpick''` ices
