@@ -1484,7 +1484,13 @@ ZINIT[EXTENDED_GLOB]=""
             ice[is_release]=true
         fi
         local do_update=0 skip_pull=0
-        if [[ -n ${ice[is_release]} ]] {
+        integer count is_release=0
+        for (( count = 1; count <= 5; ++ count )) {
+            if (( ${+ice[is_release${count:#1}]} )) {
+                is_release=1
+            }
+        }
+        for (( count = 1; count <=5 && is_release; ++ count )) {
             (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
             if [[ $ice[from] == (gh-r|github-rel) ]] {
                 {
@@ -1497,7 +1503,7 @@ ZINIT[EXTENDED_GLOB]=""
                 REPLY=""
             }
             local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
-            if [[ ${ice[is_release]} = $REPLY ]] {
+            if [[ ${ice[is_release${count:#1}]} = $REPLY ]] {
                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
                     print -- "\rBinary release already up to date (version: $version)"
                 skip_pull=1
@@ -1547,7 +1553,8 @@ ZINIT[EXTENDED_GLOB]=""
                 }
                 ZINIT_ICE=()
             }
-        } else {
+        } 
+        if (( ! is_release )) {
             ( builtin cd -q "$local_dir" || return 1
               integer had_output=0
               local IFS=$'\n'
@@ -1642,7 +1649,7 @@ ZINIT[EXTENDED_GLOB]=""
         [[ ${#log} -gt 0 ]] && {
             [[ ${+ice[make]} = 1 && ${ice[make]} = "!!"* ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
 
-            if [[ -z ${ice[is_release]} && -n ${ice[mv]} ]]; then
+            if [[ -z ${ice[is_release${count:#1}]} && -n ${ice[mv]} ]]; then
                 if [[ ${ice[mv]} = *("->"|"→")* ]] {
                     local from=${ice[mv]%%[[:space:]]#(->|→)*} to=${ice[mv]##*(->|→)[[:space:]]#} || \
                 } else {
@@ -1663,7 +1670,7 @@ ZINIT[EXTENDED_GLOB]=""
                 )
             fi
 
-            if [[ -z ${ice[is_release]} && -n ${ice[cp]} ]]; then
+            if [[ -z ${ice[is_release${count:#1}]} && -n ${ice[cp]} ]]; then
                 if [[ ${ice[cp]} = *("->"|"→")* ]] {
                     local from=${ice[cp]%%[[:space:]]#(->|→)*} to=${ice[cp]##*(->|→)[[:space:]]#} || \
                 } else {

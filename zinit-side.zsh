@@ -282,7 +282,7 @@
     # Read disk-Ice
     local -A ___mdata
     local ___key
-    { for ___key in mode url is_release ${ice_order[@]}; do
+    { for ___key in mode url is_release{,2..5} ${ice_order[@]}; do
         [[ -f "$___zinit_path/$___key" ]] && ___mdata[$___key]="$(<$___zinit_path/$___key)"
       done
       [[ "${___mdata[mode]}" = "1" ]] && ___mdata[svn]=""
