@@ -21,8 +21,8 @@ include:
 
 ```zsh
 # Load within zshrc – for the instant prompt
-zinit atload'!source ~/.p10k.zsh' lucid nocd
-zinit load romkatv/powerlevel10k
+zinit atload'!source ~/.p10k.zsh' lucid nocd for \
+    romkatv/powerlevel10k
 
 # Load ~/.p10k_zinit.zsh when in ~/github/zinit.git
 zinit id-as'zinit-prompt' nocd lucid \
