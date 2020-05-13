@@ -1182,7 +1182,10 @@ builtin setopt noaliases
 # $2 - plugin
 # $3 - mode (light or load)
 .zinit-load-plugin() {
-    local ___user="$1" ___plugin="$2" ___id_as="$3" ___mode="$4" ___correct=0 ___retval=0
+    local ___user="$1" ___plugin="$2" ___id_as="$3" ___mode="$4" ___rst="$5" ___correct=0 ___retval=0
+    # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
+    # within scripts that we `source`.
+    set --
     ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
     [[ -o ksharrays ]] && ___correct=1
 
@@ -1326,7 +1329,7 @@ builtin setopt noaliases
     # Mark no load is in progress
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 
-    (( $5 )) && { print; zle .reset-prompt; }
+    (( ___rst )) && { print; zle .reset-prompt; }
 
     if [[ -n $___m_bkp ]] {
         functions[m]="$___m_bkp"
@@ -1345,6 +1348,9 @@ builtin setopt noaliases
     local -a opts
     zparseopts -E -D -a opts f -command || { +zinit-message "Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
+    # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
+    # within scripts that we `source`.
+    set --
     integer correct retval exists
     [[ -o ksharrays ]] && correct=1
 
