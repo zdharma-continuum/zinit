@@ -1346,7 +1346,7 @@ builtin setopt noaliases
 .zinit-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts
-    zparseopts -E -D -a opts f -command || { +zinit-message "Incorrect options (accepted ones: -f, --command)"; return 1; }
+    zparseopts -E -D -a opts f -command || { +zinit-message "[error]Error:[rst] Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
