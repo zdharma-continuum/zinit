@@ -695,7 +695,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
             }
 
         if (( ${+commands[curl]} )); then
-            command curl ${progress:+--progress-bar} -fsSL "$url" || return 1
+            command curl ${${progress:--s}:#1} ${progress:+--progress-bar} -fSL "$url" || return 1
         elif (( ${+commands[wget]} )); then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
         elif (( ${+commands[lftp]} )); then
@@ -707,7 +707,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         fi
     } else {
         if type curl 2>/dev/null 1>&2; then
-            command curl -fsSL ${progress:+--progress-bar} "$url" || return 1
+            command curl ${${progress:--s}:#1} ${progress:+--progress-bar} -fSL "$url" || return 1
         elif type wget 2>/dev/null 1>&2; then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
         elif type lftp 2>/dev/null 1>&2; then
