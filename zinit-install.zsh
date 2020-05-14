@@ -299,7 +299,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     }
     local_path=$reply[-3]
 
-    trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1;" INT TERM QUIT HUP
+    trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
+    trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
 
     local -A sites
     sites=(
@@ -393,7 +394,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-                .zinit-get-cygwin-package "$remote_url_path"
+                .zinit-get-cygwin-package "$remote_url_path" || return 1
                 print -r -- >! ._zinit/is_release
                 ziextract "$REPLY"
             ) || return $?
