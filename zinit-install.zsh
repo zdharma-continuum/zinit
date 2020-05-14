@@ -126,6 +126,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
         tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" \
         URL="https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json"
 
+    trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
+    trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
+
     print -P -- "\n%F{yellow}%B===%f Downloading ${ZINIT[col-info2]}package.json%f" \
         "for ${ZINIT[col-pname]}$plugin %F{yellow}===%f%b"
 
