@@ -413,8 +413,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                             --config transfer.fsckobjects=false \
                             --config receive.fsckobjects=false \
                             --config fetch.fsckobjects=false
+                            unfunction :zinit-git-clone 
                     }
-                    trap 'unfunction :zinit-git-clone' EXIT
                     :zinit-git-clone |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
                     if (( pipestatus[1] == 141 )) {
                         :zinit-git-clone
