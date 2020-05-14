@@ -132,13 +132,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     print -P -- "\n%F{yellow}%B===%f Downloading ${ZINIT[col-info2]}package.json%f" \
         "for ${ZINIT[col-pname]}$plugin %F{yellow}===%f%b"
 
-    if [[ $profile != ./* ]]; then
-        .zinit-download-file-stdout $URL 2>/dev/null > $tmpfile || \
-            { rm -f $tmpfile; .zinit-download-file-stdout $URL 1 2>/dev/null > $tmpfile }
-    else
+    if [[ $profile != ./* ]] {
+        if { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
+            rm -f $tmpfile; .zinit-download-file-stdout $URL 1 1 2>/dev/null > $tmpfile
+        }
+    } else {
         tmpfile=${profile%:*}
         profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
-    fi
+    }
 
     pkgjson="$(<$tmpfile)"
 
@@ -255,8 +256,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
 
             print -Pr -- "Downloading tarball for ${ZINIT[col-pname]}$plugin%f%b..."
 
-            .zinit-download-file-stdout "$URL" >! "$fname" || {
-                .zinit-download-file-stdout "$URL" 1 >! "$fname" || {
+            if { ! .zinit-download-file-stdout "$URL" 0 1 >! "$fname" } {
+                if { ! .zinit-download-file-stdout "$URL" 1 1 >! "$fname" } {
                     command rm -f "$fname"
                     print -r "Download of \`$fname' failed. No available download tool? (one of: cURL, wget, lftp, lynx)"
                     return 1
@@ -369,8 +370,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                         old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                     }
                     print "(Requesting \`${REPLY:t}'${version:+, version $version}...${old_version:+ Current version: $old_version.})"
-                    if { ! .zinit-download-file-stdout "$url" >! "${REPLY:t}" } {
-                        if { ! .zinit-download-file-stdout "$url" 1 >! "${REPLY:t}" } {
+                    if { ! .zinit-download-file-stdout "$url" 0 1 >! "${REPLY:t}" } {
+                        if { ! .zinit-download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
                             command rm -f "${REPLY:t}"
                             print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                             print -r "Tried url: $url."
@@ -1094,8 +1095,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                     [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 
                     if (( !skip_dl )) {
-                        if { ! .zinit-download-file-stdout "$url" >! "$dirname/$filename" } {
-                            if { ! .zinit-download-file-stdout "$url" 1 >! "$dirname/$filename" } {
+                        if { ! .zinit-download-file-stdout "$url" 0 1 >! "$dirname/$filename" } {
+                            if { ! .zinit-download-file-stdout "$url" 1 1 >! "$dirname/$filename" } {
                                 command rm -f "$dirname/$filename"
                                 print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
                                 return 4
