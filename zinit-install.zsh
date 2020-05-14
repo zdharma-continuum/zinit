@@ -1950,14 +1950,14 @@ zpextract() { ziextract "$@"; }
         fi
 
         command bunzip2 "$setup.bz2" 2>/dev/null
-        local setup_contents="$(command grep -A 11 "@ $pkg\$" "$setup")"
-        local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
-        [[ -n $urlpart ]] && break
+        [[ -s $setup ]] && break
         mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
         +zinit-message "[pre]Retrying #$(( 3 - $retry ))/3, with mirror: [obj]${mirror}[rst]"
     }
+    local setup_contents="$(command grep -A 11 "@ $pkg\$" "$setup")"
+    local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
     if [[ -z $urlpart ]] {
-        +zinit-message "[error]Couldn't download [obj]setup.ini.bz2[error].[rst]"
+        +zinit-message "[error]Couldn't find package \`[data]${pkg}[error]'.[rst]"
         return 2
     }
     local url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
