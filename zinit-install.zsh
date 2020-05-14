@@ -1906,6 +1906,8 @@ zpextract() { ziextract "$@"; }
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
+    REPLY=
+
     local pkg=$1 nl=$'\n'
     integer retry=3
 
