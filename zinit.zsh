@@ -135,6 +135,7 @@ zmodload zsh/termcap 2>/dev/null
         col-bar       $'\e[01m\e[35m'
         col-info      $'\e[32m'
         col-info2     $'\e[33m'
+        col-info3     $'\e[01m\e[33m'
         col-uninst    $'\e[01m\e[34m'
         col-success   $'\e[01m\e[32m'
         col-failure   $'\e[31m'
