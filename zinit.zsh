@@ -276,7 +276,7 @@ builtin setopt noaliases
                         eval "function ${(q)${custom[++count*2]}:-$func} {
                             local body=\"\$(<${(qqq)sel}/${(qqq)func})\" body2
                             () { setopt localoptions extendedglob
-                                 body2=\"\${body#${func}[[:blank:]]#\(\)[[:space:]]#\{}\"
+                                 body2=\"\${body##[[:space:]]#${func}[[:blank:]]#\(\)[[:space:]]#\{}\"
                                  [[ \$body2 != \$body ]] && \
                                     body2=\"\${body2%\}[[:space:]]#([$nl]#([[:blank:]]#\#[^$nl]#((#e)|[$nl]))#)#}\"
                             }
