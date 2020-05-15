@@ -1546,7 +1546,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                 "release-file to download"
             if [[ -n $bpick ]] {
                 +zinit-message -n ", try adapting [obj]bpick[error]-ICE" \
-                    "(the current bpick is: [file]${bpick}[error])."
+                    "(the current bpick is[error]: [file]${bpick}[error])."
             } else {
                 +zinit-message -n .
             }
@@ -1915,7 +1915,7 @@ zpextract() { ziextract "$@"; }
     # Download mirrors.lst
     #
 
-    +zinit-message "[info]Downloading [obj]mirrors.lst[info]...[rst]"
+    +zinit-message "[info]Downloading[error]: [obj]mirrors.lst[info]...[rst]"
     local mlst="$(mktemp)"
     while (( retry -- )) {
         if ! .zinit-download-file-stdout https://cygwin.com/mirrors.lst 0 > $mlst; then
@@ -1930,7 +1930,7 @@ zpextract() { ziextract "$@"; }
     }
 
     if [[ -z $mirror ]] {
-        +zinit-message "[error]Couldn't download [obj]mirrors.lst [error]."
+        +zinit-message "[error]Couldn't download[error]: [obj]mirrors.lst [error]."
         return 1
     }
 
@@ -1940,8 +1940,8 @@ zpextract() { ziextract "$@"; }
     # Download setup.ini.bz2
     #
 
-    +zinit-message "[info2]Selected mirror: [obj]${mirror}[rst]"
-    +zinit-message "[info]Downloading [obj]setup.ini[info]...[rst]"
+    +zinit-message "[info2]Selected mirror is[error]: [url]${mirror}[rst]"
+    +zinit-message "[info]Downloading[error]: [file]setup.ini[info]...[rst]"
     local setup="$(mktemp -u)"
     retry=3
     while (( retry -- )) {
@@ -1952,12 +1952,12 @@ zpextract() { ziextract "$@"; }
         command bunzip2 "$setup.bz2" 2>/dev/null
         [[ -s $setup ]] && break
         mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
-        +zinit-message "[pre]Retrying #$(( 3 - $retry ))/3, with mirror: [obj]${mirror}[rst]"
+        +zinit-message "[pre]Retrying[error]: [hi]#[obj]$(( 3 - $retry ))/3, [pre]with mirror[error]: [url]${mirror}[rst]"
     }
     local setup_contents="$(command grep -A 26 "@ $pkg\$" "$setup")"
     local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
     if [[ -z $urlpart ]] {
-        +zinit-message "[error]Couldn't find package \`[data]${pkg}[error]'.[rst]"
+        +zinit-message "[error]Couldn't find package[error]: [data2]\`[data]${pkg}[data2]'[error].[rst]"
         return 2
     }
     local url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
@@ -1966,18 +1966,18 @@ zpextract() { ziextract "$@"; }
     # Download the package
     #
 
-    +zinit-message "[info]Downloading [file]${url:t}[info]...[rst]"
+    +zinit-message "[info]Downloading[error]: [file]${url:t}[info]...[rst]"
     retry=2
     while (( retry -- )) {
         integer retval=0
         if ! .zinit-download-file-stdout $url 0 1 > $outfile; then
             if ! .zinit-download-file-stdout $url 1 1 > $outfile; then
-                +zinit-message "[error]Couldn't download [obj]${url:t}[error]."
+                +zinit-message "[error]Couldn't download[error]: [url]${url}[error]."
                 retval=1
                 mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
                 url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
                 if (( retry )) {
-                    +zinit-message "[info2]Retrying, with mirror: [obj]$mirror[info2]...[rst]"
+                    +zinit-message "[info2]Retrying, with mirror[error]: [url]${mirror}[info2]...[rst]"
                     continue
                 }
             fi
