@@ -1954,7 +1954,7 @@ zpextract() { ziextract "$@"; }
         mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
         +zinit-message "[pre]Retrying #$(( 3 - $retry ))/3, with mirror: [obj]${mirror}[rst]"
     }
-    local setup_contents="$(command grep -A 11 "@ $pkg\$" "$setup")"
+    local setup_contents="$(command grep -A 26 "@ $pkg\$" "$setup")"
     local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
     if [[ -z $urlpart ]] {
         +zinit-message "[error]Couldn't find package \`[data]${pkg}[error]'.[rst]"
