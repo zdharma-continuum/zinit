@@ -52,6 +52,15 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 15-05-2020
+  - The `autoload''` ice can now rename the autoloaded functions, i.e.: load
+    a function from a file `func-A` as a function `func-B` via: `autoload'func-A
+    -> func-B; …'`.
+  - Also, an alternate autoloading method - via: `eval "func-file()
+    { $(<func-file); }"` – has been exposed – in order to use it, precede the
+    ice contents with an exclamation mark, i.e.: `autoload'!func-file'`. The
+    rename mode uses this method by default.
+
 * 12-05-2020
   - A new feature – ability to substitute `stringA` → `stringB` in plugin source
     body before executing by `subst'A -> B'`. Works also for any nested `source`
