@@ -145,11 +145,12 @@ zmodload zsh/termcap 2>/dev/null
         col-msg1   $'\e[0m'
         col-msg2   $'\e[38;5;172m'
         col-obj    $'\e[38;5;221m'
-        col-obj2   $'\e[38;5;140m'
-        col-file   $'\e[38;5;117m'
-        col-data   $'\e[38;5;221m'
-        col-data2  $'\e[38;5;140m'
-        col-hi     $'\e[38;5;117m'
+        col-obj2   $'\e[38;5;154m'
+        col-file   $'\e[38;5;110m'
+        col-url    $'\e[38;5;45m'
+        col-data   $'\e[38;5;82m'
+        col-data2  $'\e[38;5;89m'
+        col-hi     $'\e[38;5;184m'
     )
 }
 
