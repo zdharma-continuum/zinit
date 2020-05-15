@@ -218,11 +218,11 @@ builtin setopt noaliases
 # run custom `autoload' function, that doesn't need FPATH.
 :zinit-shade-autoload () {
     emulate -LR zsh
-    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
-    local -a opts
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+    local -a opts custom
     local func
 
-    zparseopts -D -a opts ${(s::):-RTUXdkmrtWzw}
+    zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} S+:=custom
 
     [[ $ZINIT[CUR_USR] = % ]] && \
         local PLUGIN_DIR="$ZINIT[CUR_PLUGIN]" || \
@@ -255,26 +255,50 @@ builtin setopt noaliases
 
     [[ -d $PLUGIN_DIR/functions ]] && fpath_elements+=( "$PLUGIN_DIR"/functions )
 
+    integer count
     for func; do
         # Real autoload doesn't touch function if it already exists
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer
-        if (( ${+functions[$func]} != 1 )); then
+        if (( ${+functions[$func]} != 1 )) {
             builtin setopt noaliases
             if [[ ${ZINIT[NEW_AUTOLOAD]} = 2 ]]; then
                 builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
             elif [[ ${ZINIT[NEW_AUTOLOAD]} = 1 ]]; then
-                eval "function ${(q)func} {
-                    local -a fpath
-                    fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath_elements} ${(qqq@)fpath} )
-                    builtin autoload -X ${(j: :)${(q-)opts[@]}}
-                }"
+                if (( ${+opts[(r)-C]} )) {
+                    local pth nl=$'\n' sel=""
+                    for pth ( $PLUGIN_DIR $fpath_elements $fpath ) {
+                        [[ -f $pth/$func ]] && { sel=$pth; break; }
+                    }
+                    if [[ -z $sel ]] {
+                        +zinit-message '[error]zinit: Couldn''t find autoload function[ehi]:' \
+                            "[data2]\`[data]${func}[data2]'[error] anywhere in [obj]\$fpath[error].[rst]"
+                    } else {
+                        eval "function ${(q)${custom[++count*2]}:-$func} {
+                            local body=\"\$(<${(qqq)sel}/${(qqq)func})\" body2
+                            () { setopt localoptions extendedglob
+                                 body2=\"\${body#${func}[[:blank:]]#\(\)[[:space:]]#\{}\"
+                                 [[ \$body2 != \$body ]] && \
+                                    body2=\"\${body2%\}[[:space:]]#([$nl]#([[:blank:]]#\#[^$nl]#((#e)|[$nl]))#)#}\"
+                            }
+                                
+                            functions[${${(q)custom[count*2]}:-$func}]=\"\$body2\"
+                            ${(q)${custom[count*2]}:-$func} \"\$@\"
+                        }"
+                    }
+                } else {
+                    eval "function ${(q)func} {
+                        local -a fpath
+                        fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath_elements} ${(qqq@)fpath} )
+                        builtin autoload -X ${(j: :)${(q-)opts[@]}}
+                    }"
+                }
             else
                 eval "function ${(q)func} {
                     :zinit-reload-and-run ${(qqq)PLUGIN_DIR}"$'\0'"${(pj,\0,)${(qqq)fpath_elements[@]}} ${(qq)opts[*]} ${(q)func} "'"$@"
                 }'
             fi
             (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
-        fi
+        } 
     done
 
     return 0
@@ -1214,7 +1238,9 @@ builtin setopt noaliases
     local ___pdir_orig="$___pdir_path" ___key
 
     if [[ -n ${ZINIT_ICE[autoload]} ]] {
-        :zinit-shade-autoload -Uz -- ${(s.;.)ZINIT_ICE[autoload]}
+        :zinit-shade-autoload -Uz \
+            ${(s: :)${${(s.;.)ZINIT_ICE[autoload]#\!}//(#b)((*)->(*)|(*))/${match[2]:+$match[2] -S $match[3]}${match[4]:+${match[4]} -S ${match[4]}}}} \
+            ${${(M)ZINIT_ICE[autoload]:#*->*}:+-C} ${${(M)ZINIT_ICE[autoload]#\!}:+-C}
     }
     
     if [[ ${ZINIT_ICE[as]} = command ]]; then
