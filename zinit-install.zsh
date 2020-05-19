@@ -1987,5 +1987,41 @@ zpextract() { ziextract "$@"; }
     REPLY=$outfile
 }
 # ]]]
+# FUNCTION zicp [[[
+zicp() {
+    emulate -LR zsh
+    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+
+    local cmd=cp
+    if [[ $1 = (-m|--mv) ]] { cmd=mv; shift; }
+
+    local dir
+    if [[ $1 = (-d|--dir)  ]] { dir=$2; shift 2; }
+
+    local arg
+    arg=${${(j: :)@}//(#b)(([[:space:]]~ )#(([^[:space:]]| )##)([[:space:]]~ )#(#B)(->|=>|→)(#B)([[:space:]]~ )#(#b)(([^[:space:]]| )##)|(#B)([[:space:]]~ )#(#b)(([^[:space:]]| )##))/${match[3]:+$match[3] $match[6]\;}${match[8]:+$match[8] $match[8]\;}}
+
+    (
+        if [[ -n $dir ]] { cd $dir || return 1; }
+        local a b var
+        integer retval
+        for a b ( "${(s: :)${(@s.;.)${arg%\;}}}" ) {
+            for var ( a b ) {
+                : ${(P)var::=${(P)var//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }}}
+            }
+            command $cmd ${${(M)cmd:#cp}:+-R} "$a" "${${(M)b:#/*}:-$ZPFX/$b}"
+            retval+=$?
+        }
+        return $retval
+    )
+    return
+}
+
+zimv() {
+    local dir
+    if [[ $1 = (-d|--dir) ]] { dir=$2; shift 2; }
+    zicp --mv ${dir:+--dir} $dir "$@"
+}
+# ]]]
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
