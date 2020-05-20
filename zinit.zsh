@@ -224,6 +224,8 @@ builtin setopt noaliases
 
     zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} S+:=custom
 
+    set -- ${@:#--}
+
     [[ $ZINIT[CUR_USR] = % ]] && \
         local PLUGIN_DIR="$ZINIT[CUR_PLUGIN]" || \
         local PLUGIN_DIR="${ZINIT[PLUGINS_DIR]}/${${ZINIT[CUR_USR]}:+${ZINIT[CUR_USR]}---}${ZINIT[CUR_PLUGIN]//\//---}"
