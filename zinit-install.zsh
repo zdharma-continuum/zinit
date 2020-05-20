@@ -1765,7 +1765,7 @@ ziextract() {
             ;;
     esac
 
-    if [[ $(typeset -f + -- →zinit-extract) == "→zinit-extract" ]] {
+    if [[ $(typeset -f + →zinit-extract) == "→zinit-extract" ]] {
         .zinit-extract-wrapper "$file" →zinit-extract || {
             local -a bfiles
             bfiles=( ._backup/*(DN) )
