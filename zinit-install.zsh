@@ -1870,7 +1870,7 @@ ziextract() {
                 return 1
             }
         local -a files
-        files=( ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}// / }(-.DN) )
+        files=( ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }} )
         [[ ${#files} -eq 0 && -n ${extract##(\!-|-\!|\!|-)} ]] && {
                 print -P -- "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]} The" \
                     "files (\`${ZINIT[col-file]}${extract##(\!-|-\!|\!|-)}${ZINIT[col-msg2]}')" \
