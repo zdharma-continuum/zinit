@@ -1941,7 +1941,7 @@ zpextract() { ziextract "$@"; }
     #
 
     +zinit-message "[info2]Selected mirror is[error]: [url]${mirror}[rst]"
-    +zinit-message "[info]Downloading[error]: [file]setup.ini[info]...[rst]"
+    +zinit-message "[info]Downloading[error]: [file]setup.ini.bz2[info]...[rst]"
     local setup="$(mktemp -u)"
     retry=3
     while (( retry -- )) {
