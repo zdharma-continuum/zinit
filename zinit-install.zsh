@@ -2007,7 +2007,7 @@ zicp() {
         if [[ -n $dir ]] { cd $dir || return 1; }
         local a b var
         integer retval
-        for a b ( "${(s: :)${(@s.;.)${arg%\;}}}" ) {
+        for a b ( "${(s: :)${${(@s.;.)${arg%\;}}:-* .}}" ) {
             for var ( a b ) {
                 : ${(P)var::=${(P)var//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }}}
             }
