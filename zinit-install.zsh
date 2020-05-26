@@ -1992,6 +1992,8 @@ zicp() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
+    local -a mbegin mend match
+
     local cmd=cp
     if [[ $1 = (-m|--mv) ]] { cmd=mv; shift; }
 
