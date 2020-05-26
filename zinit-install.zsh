@@ -2011,7 +2011,9 @@ zicp() {
             for var ( a b ) {
                 : ${(P)var::=${(P)var//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }}}
             }
-            command $cmd ${${(M)cmd:#cp}:+-R} "$a" "${${(M)b:#/*}:-$ZPFX/$b}"
+            if [[ $a != *\** ]] { a=${a%%/##}"/*" }
+            command mkdir -p ${~${(M)b:#/*}:-$ZPFX/$b}
+            command $cmd -f ${${(M)cmd:#cp}:+-R} $~a ${~${(M)b:#/*}:-$ZPFX/$b}
             retval+=$?
         }
         return $retval
