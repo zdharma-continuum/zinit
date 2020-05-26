@@ -300,7 +300,7 @@ builtin setopt noaliases
                 }'
             fi
             (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
-        } 
+        }
     done
 
     return 0
@@ -1241,8 +1241,8 @@ builtin setopt noaliases
 
     if [[ -n ${ZINIT_ICE[autoload]} ]] {
         :zinit-shade-autoload -Uz \
-            ${(s: :)${${(s.;.)ZINIT_ICE[autoload]#\!}//(#b)((*)->(*)|(*))/${match[2]:+$match[2] -S $match[3]}${match[4]:+${match[4]} -S ${match[4]}}}} \
-            ${${(M)ZINIT_ICE[autoload]:#*->*}:+-C} ${${(M)ZINIT_ICE[autoload]#\!}:+-C}
+            ${(s: :)${${(s.;.)ZINIT_ICE[autoload]#\!}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
+            ${${(M)ZINIT_ICE[autoload]:#*(->|=>|→)*}:+-C} ${${(M)ZINIT_ICE[autoload]#\!}:+-C}
     }
     
     if [[ ${ZINIT_ICE[as]} = command ]]; then
@@ -2515,6 +2515,13 @@ zicompinit() { autoload -Uz compinit; compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDO
 # with `zinit cdreplay' (normal mode). An utility functton of
 # an undefined use case.
 zicompdef() { ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
+# ]]]
+# FUNCTION: @autoload [[[
+@autoload() {
+    :zinit-shade-autoload -Uz \
+        ${(s: :)${${(j: :)${@#\!}}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
+        ${${${(@M)${@#\!}:#*(->|=>|→)*}}:+-C} ${${@#\!}:+-C}
+}
 # ]]]
 
 # Compatibility functions [[[
