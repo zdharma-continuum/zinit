@@ -1518,8 +1518,8 @@ ZINIT[EXTENDED_GLOB]=""
                     skip_pull=0
                     break
                 }
-                ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
             }
+            ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
             if (( ( !do_update || skip_pull ) && !ICE_OPTS[opt_-q,--quiet] )) {
                 print -- "\rBinary release already up to date (version: $version)"
             }
@@ -1566,7 +1566,7 @@ ZINIT[EXTENDED_GLOB]=""
                 }
                 ZINIT_ICE=()
             }
-        } 
+        }
         if (( ! is_release )) {
             ( builtin cd -q "$local_dir" || return 1
               integer had_output=0
