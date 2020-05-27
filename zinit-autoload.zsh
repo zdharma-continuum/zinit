@@ -1710,7 +1710,7 @@ ZINIT[EXTENDED_GLOB]=""
                 reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                    "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \!atpull
+                    "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \!atpull
                 done
             }
 
@@ -1722,7 +1722,7 @@ ZINIT[EXTENDED_GLOB]=""
             reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}" )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" atpull
+                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" atpull
             done
             ZINIT_ICE=()
         }
@@ -1743,7 +1743,7 @@ ZINIT[EXTENDED_GLOB]=""
     reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-        "${arr[5]}" "plugin" "$user" "$plugin" "$id_as" "$local_dir" \%atpull
+        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \%atpull
     done
 
     if [[ -n ${ZINIT_ICE[ps-on-update]} ]]; then
