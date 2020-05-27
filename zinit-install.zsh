@@ -1633,10 +1633,9 @@ ziextract() {
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
                                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                                    print -Pr -- "$ZINIT[col-pre]ziextract:$ZINIT[col-info2]" \
-                                        "Note:%f%b" \
-                                        "detected a $ZINIT[col-obj]$type2%f%b" \
-                                        "archive in the file $ZINIT[col-file]$fname%f%b."
+                                    +zinit-message "[pre]ziextract:[info2] Note:[rst]" \
+                                        "detected a [obj]${type2}[rst] archive in the" \
+                                        " file [file]${fname}[rst]."
                                 ziextract "$fname" "$type2" $opt_move $opt_norm ${${${#archives}:#1}:+--nobkp}
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
@@ -1654,17 +1653,13 @@ ziextract() {
     }
 
     if [[ -z $file ]] {
-        print -Pr -- "$ZINIT[col-pre]ziextract:%f%b" \
-            "$ZINIT[col-error]ERROR:$ZINIT[col-msg2]" \
-            "argument needed (the file to extract) or" \
-            "the --auto option"
+        +zinit-message "[pre]ziextract:[error] ERROR:[msg2] argument" \
+            "needed (the file to extract) or the [obj]--auto[msg2] option."
         return 1
     }
     if [[ ! -e $file ]] {
-        print -Pr -- "$ZINIT[col-pre]ziextract:%f%b" \
-            "$ZINIT[col-error]ERROR:$ZINIT[col-msg2]" \
-            "the file \`$ZINIT[col-obj]$file$ZINIT[col-msg2]'" \
-            "doesn't exist, aborting the extraction."
+        +zinit-message "[pre]ziextract:[error] ERROR:[msg2]" \
+            "the file \`[obj]${file}[msg2]' doesn't exist.[rst]"
         return 1
     }
     if (( !nobkp )) {
