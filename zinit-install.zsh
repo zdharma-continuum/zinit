@@ -1767,15 +1767,12 @@ ziextract() {
 
     if [[ $(typeset -f + →zinit-extract) == "→zinit-extract" ]] {
         .zinit-extract-wrapper "$file" →zinit-extract || {
-            +zinit-message -n "[pre]ziextract:" \
-                "[error]WARNING:[msg1]" \
-                "extraction of the archive" \
-                "\`[obj]${file}[msg1]' had problems"
+            +zinit-message -n "[pre]ziextract:[error] WARNING:[msg1]" \
+                "extraction of the archive \`[obj]${file}[msg1]' had problems"
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} && !nobkp )) {
-                +zinit-message -n ", restoring previous" \
-                    "version of the plugin/snippet"
+                +zinit-message -n ", restoring the previous version of the plugin/snippet"
                 command mv ._backup/*(DN) . 2>/dev/null
             }
             +zinit-message ".[rst]"
