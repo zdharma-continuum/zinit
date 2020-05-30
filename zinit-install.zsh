@@ -1006,10 +1006,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                             done
                         }
 
-                        if (( ${+ZINIT_ICE[reset]} )) (
+                        if (( ${+ZINIT_ICE[reset]} )) {
                             (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-svn revert --recursive $filename/.}%f%b"
-                            eval "${ZINIT_ICE[reset]:-command svn revert --recursive $filename/.}"
-                        )
+                            ( eval "${ZINIT_ICE[reset]:-command svn revert --recursive $filename/.}" )
+                        }
 
                         [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 
@@ -1157,10 +1157,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                 done
             }
 
-            if (( ${+ZINIT_ICE[reset]} )) (
+            if (( ${+ZINIT_ICE[reset]} )) {
                 (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-rm -f $local_dir/$dirname/$filename}%f%b"
-                eval "${ZINIT_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}"
-            )
+                ( eval "${ZINIT_ICE[reset]:-command rm -f $local_dir/$dirname/$filename}" )
+            }
 
             [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 
