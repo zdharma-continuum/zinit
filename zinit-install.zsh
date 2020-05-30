@@ -537,7 +537,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     ) || return $?
 
     typeset -ga INSTALLED_EXECS
-    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.lst)}" ) } 2>/dev/null
+    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
     command rm -f /tmp/zinit-execs.$$.lst
 
     # After additional executions like atclone'' - install completions (1 - plugins)
