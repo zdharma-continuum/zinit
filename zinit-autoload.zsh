@@ -1766,6 +1766,12 @@ ZINIT[EXTENDED_GLOB]=""
     { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
     command rm -f /tmp/zinit-execs.$$.lst
 
+    if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
+        typeset -ga INSTALLED_COMPS SKIPPED_COMPS
+        { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
+        { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+    }
+
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
         print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
     }
