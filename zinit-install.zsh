@@ -414,7 +414,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
                             --config fetch.fsckobjects=false
                             unfunction :zinit-git-clone 
                     }
-                    :zinit-git-clone |& { ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
+                    :zinit-git-clone |& { command ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
                     if (( pipestatus[1] == 141 )) {
                         :zinit-git-clone
                         integer retval=$?
