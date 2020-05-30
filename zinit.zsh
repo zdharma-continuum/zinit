@@ -2175,8 +2175,13 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         continue
                     }
 
-                    (( ${+ZINIT_ICE[if]} )) && { eval "${ZINIT_ICE[if]}" || { (( $# )) && shift; continue; }; }
-                    (( ${+ZINIT_ICE[has]} )) && { (( ${+commands[${ZINIT_ICE[has]}]} )) || { (( $# )) && shift; continue; }; }
+                    if (( ${+ZINIT_ICE[if]} )) {
+                        eval "${ZINIT_ICE[if]}" || { (( $# )) && shift; continue; };
+                    }
+                    for REPLY ( ${(s.;.)ZINIT_ICE[has]} ) {
+                        (( ${+commands[$REPLY]} )) || \
+                            { (( $# )) && shift; continue; }
+                    }
 
                     ZINIT_ICE[wait]="${${(M)${+ZINIT_ICE[wait]}:#1}:+${(M)ZINIT_ICE[wait]#!}${${ZINIT_ICE[wait]#!}:-0}}"
                     if (( ___turbo && ZINIT[HAVE_SCHEDULER] )) {
@@ -2313,8 +2318,13 @@ for-syntax."
                    .zinit-list-bindkeys
                    ;;
                (update)
-                   (( ${+ZINIT_ICE[if]} )) && { eval "${ZINIT_ICE[if]}" || return 1; }
-                   (( ${+ZINIT_ICE[has]} )) && { (( ${+commands[${ZINIT_ICE[has]}]} )) || return 1; }
+                   if (( ${+ZINIT_ICE[if]} )) {
+                       eval "${ZINIT_ICE[if]}" || return 1;
+                   }
+                   for REPLY ( ${(s.;.)ZINIT_ICE[has]} ) {
+                       (( ${+commands[$REPLY]} )) || return 1
+                   }
+
                    () {
                        setopt localoptions extendedglob
                        : ${@[@]//(#b)([ $'\t']##|(#s))(-q|--quiet|-r|--reset|-f|--force|-p|--parallel)([ $'\t']##|(#e))/${ICE_OPTS[${___opt_map[${match[2]}]}]::=1}}
