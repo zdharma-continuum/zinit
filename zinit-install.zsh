@@ -221,11 +221,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     }
 
     if [[ -n ${ZINIT_ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
-        print -P -- "\n${ZINIT[col-error]}WARNING:${ZINIT[col-msg2]} the profile uses" \
-            "${ZINIT[col-obj]}dl''${ZINIT[col-msg2]} ice however there's no" \
-            "${ZINIT[col-obj2]}z-a-patch-dl${ZINIT[col-msg2]} annex loaded" \
+        +zinit-message $'\n'"[error]WARNING:[msg2] the profile uses [obj]dl''[msg2]" \
+            "ice however there's no [obj2]z-a-patch-dl[msg2] annex loaded" \
             "(the ice will be inactive, i.e.: no additional files will" \
-            "become downloaded).%f%b"
+            "become downloaded).[rst]"
     }
 
     print -Pn -- ${jsondata1[version]:+\\n${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}%f%b.\\n}
