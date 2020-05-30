@@ -1746,7 +1746,7 @@ ZINIT[EXTENDED_GLOB]=""
         "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \%atpull
     done
 
-    if [[ -n ${ZINIT_ICE[ps-on-update]} ]]; then
+    if [[ -n ${ZINIT_ICE[ps-on-update]} ]] {
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
             print -r "Running plugin's provided update code: ${ZINIT[col-info]}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}${ZINIT[col-rst]}"
             (
@@ -1759,7 +1759,7 @@ ZINIT[EXTENDED_GLOB]=""
                 eval "${ZINIT_ICE[ps-on-update]}" &> /dev/null
             )
         }
-    fi
+    }
     ZINIT_ICE=()
 
     typeset -ga INSTALLED_EXECS
