@@ -12,21 +12,20 @@ when the ice-mod list is long and complex.
 
 The motivation for adding such functionality was:
 
-1. Zinit is a very flexible plugin manager however users often feel
-   overwhelmed by its configuration.
+1. Zinit is a flexible plugin manager, however, users often feel overwhelmed by
+   its configuration.
 
-2. It has many package-manager -like features, such as:
+2. It has multiple package-manager -like features, such as:
     - it can run `Makefiles`, 
     - automatically provide *shims* (i.e.: forwarder scripts) for the binaries,
     - extend `$PATH` to expose the binaries, and more.
 
-3. In general, Zinit has many hooks which allow surprising and beautiful
-   things, however their content often evolves to a gradually better and better
-   one and it's hard to keep track of the current version of them.
+3. In general, Zinit has many hooks which allow surprising things, however their
+   content often evolves to a gradually better and better one and it's hard to
+   keep track of the current version of them.
 
-4. **So a solution came up**: why not publish a package at GitHub with the
-   plugin configurations (i.e.: ice-mods) stored in an NPM package-resembling
-   `package.json` file?
+4. So a solution appeared: why not publish a package at GitHub with the plugin
+   configurations (i.e.: ice-mod lists) stored in a file?
 
 ## Introductory Example
 
@@ -58,8 +57,8 @@ a binary program and not e.g.: a shell function).
 You can also update the package with `zinit update fzf` – it'll cause the
 project to refresh and rebuild, like with a "normal" package manager such as
 `apt-get`. However, it'll actually be more like to `emerge` from Gentoo, because
-the installation will be from the source… unless… you'll pick a binary
-installation :) So Zinit is like `apt-get` and `emerge` in one!
+the installation will be from the source… unless… the user will pick up a binary
+installation by profile-argument specified in the `pack''` ice :)
 
 ## Pros Of Using Zinit Package For Regular Software Installations
 
@@ -141,7 +140,7 @@ GitHub organization. You can find the available packages there, which as of
 
 ## Adding Your Own Package
 
-1. Contact me to have the repository at Zsh-Packages organization.
+1. Contact the author to have the repository at Zsh-Packages organization.
 
 2. Populate the `package.json` – I suggest grabbing the one for `fzf` or
    `doctoc` and doing a few substitutions like `doctoc` → `your-project` and
