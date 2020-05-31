@@ -13,7 +13,7 @@ git -C ~/github/readme_zplugin llf
 git -C ~/github/readme_zplugin rebase || {
     print $fg_bold[green]Couldn\'t rebase, trying stash first...$reset_color
     git -C ~/github/readme_zplugin stash save "$(LANG=C date)" || exit 2
-    git -C ~/github/readme_zplugin rebase || exit 3
+    git -C ~/github/readme_zplugin rebase # || exit 3
 }
 
 print $fg_bold[green]Copying files...$reset_color
