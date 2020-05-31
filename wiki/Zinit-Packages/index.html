@@ -2576,11 +2576,11 @@ when the ice-mod list is long and complex.</p>
 <p>The motivation for adding such functionality was:</p>
 <ol>
 <li>
-<p>Zinit is a very flexible plugin manager however users often feel
-   overwhelmed by its configuration.</p>
+<p>Zinit is a flexible plugin manager, however, users often feel overwhelmed by
+   its configuration.</p>
 </li>
 <li>
-<p>It has many package-manager -like features, such as:</p>
+<p>It has multiple package-manager -like features, such as:</p>
 <ul>
 <li>it can run <code>Makefiles</code>, </li>
 <li>automatically provide <em>shims</em> (i.e.: forwarder scripts) for the binaries,</li>
@@ -2588,14 +2588,13 @@ when the ice-mod list is long and complex.</p>
 </ul>
 </li>
 <li>
-<p>In general, Zinit has many hooks which allow surprising and beautiful
-   things, however their content often evolves to a gradually better and better
-   one and it's hard to keep track of the current version of them.</p>
+<p>In general, Zinit has many hooks which allow surprising things, however their
+   content often evolves to a gradually better and better one and it's hard to
+   keep track of the current version of them.</p>
 </li>
 <li>
-<p><strong>So a solution came up</strong>: why not publish a package at GitHub with the
-   plugin configurations (i.e.: ice-mods) stored in an NPM package-resembling
-   <code>package.json</code> file?</p>
+<p>So a solution appeared: why not publish a package at GitHub with the plugin
+   configurations (i.e.: ice-mod lists) stored in a file?</p>
 </li>
 </ol>
 <h2 id="introductory_example">Introductory Example<a class="headerlink" href="#introductory_example" title="Permanent link">#</a></h2>
@@ -2622,8 +2621,8 @@ a binary program and not e.g.: a shell function).</p>
 <p>You can also update the package with <code>zinit update fzf</code> – it'll cause the
 project to refresh and rebuild, like with a "normal" package manager such as
 <code>apt-get</code>. However, it'll actually be more like to <code>emerge</code> from Gentoo, because
-the installation will be from the source… unless… you'll pick a binary
-installation :) So Zinit is like <code>apt-get</code> and <code>emerge</code> in one!</p>
+the installation will be from the source… unless… the user will pick up a binary
+installation by profile-argument specified in the <code>pack''</code> ice :)</p>
 <h2 id="pros_of_using_zinit_package_for_regular_software_installations">Pros Of Using Zinit Package For Regular Software Installations<a class="headerlink" href="#pros_of_using_zinit_package_for_regular_software_installations" title="Permanent link">#</a></h2>
 <p>Using Zinit to install software where one could use a regular package manager
 has several advantages:</p>
@@ -2705,7 +2704,7 @@ GitHub organization. You can find the available packages there, which as of
 <h2 id="adding_your_own_package">Adding Your Own Package<a class="headerlink" href="#adding_your_own_package" title="Permanent link">#</a></h2>
 <ol>
 <li>
-<p>Contact me to have the repository at Zsh-Packages organization.</p>
+<p>Contact the author to have the repository at Zsh-Packages organization.</p>
 </li>
 <li>
 <p>Populate the <code>package.json</code> – I suggest grabbing the one for <code>fzf</code> or
