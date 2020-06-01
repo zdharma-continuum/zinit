@@ -729,7 +729,9 @@ ZINIT[EXTENDED_GLOB]=""
             command git pull --no-stat --quiet
         }
     )
-    [[ $1 != -q ]] && builtin print "Compiling Zinit (zcompile)..."
+    if [[ $1 != -q ]] {
+        builtin print "Compiling Zinit (zcompile)..."
+    }
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile $ZINIT[BIN_DIR]/zinit.zsh
     zcompile $ZINIT[BIN_DIR]/zinit-side.zsh
@@ -1181,7 +1183,9 @@ ZINIT[EXTENDED_GLOB]=""
     typeset -a new elem p
     elem=( "${(z)ZINIT[PATH__$uspl2]}" )
     for p in "${path[@]}"; do
-        [[ -z "${elem[(r)${(q)p}]}" ]] && { new+=( "$p" ); } || {
+        if [[ -z "${elem[(r)${(q)p}]}" ]] {
+            new+=( "$p" )
+        } else {
             (( quiet )) || print "Removing PATH element ${ZINIT[col-info]}$p${ZINIT[col-rst]}"
             [[ -d "$p" ]] || (( quiet )) || print "${ZINIT[col-error]}Warning:${ZINIT[col-rst]} it didn't exist on disk"
         }
@@ -1191,12 +1195,14 @@ ZINIT[EXTENDED_GLOB]=""
     # The same for $fpath
     elem=( "${(z)ZINIT[FPATH__$uspl2]}" )
     new=( )
-    for p in "${fpath[@]}"; do
-        [[ -z "${elem[(r)${(q)p}]}" ]] && { new+=( "$p" ); } || {
+    for p ( "${fpath[@]}" ) {
+        if [[ -z "${elem[(r)${(q)p}]}" ]] {
+            new+=( "$p" )
+        } else {
             (( quiet )) || print "Removing FPATH element ${ZINIT[col-info]}$p${ZINIT[col-rst]}"
             [[ -d "$p" ]] || (( quiet )) || print "${ZINIT[col-error]}Warning:${ZINIT[col-rst]} it didn't exist on disk"
         }
-    done
+    }
     fpath=( "${new[@]}" )
 
     #
@@ -1480,9 +1486,9 @@ ZINIT[EXTENDED_GLOB]=""
     command rm -f $local_dir/.zinit_lastupd
 
     if (( 1 )); then
-        if [[ -z ${ice[is_release]} && ${ice[from]} = (gh-r|github-rel|cygwin) ]]; then
+        if [[ -z ${ice[is_release]} && ${ice[from]} = (gh-r|github-rel|cygwin) ]] {
             ice[is_release]=true
-        fi
+        }
 
         local do_update=0 skip_pull=0
         integer count is_release=0
@@ -1541,7 +1547,7 @@ ZINIT[EXTENDED_GLOB]=""
                 }
                 ZINIT_ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones)
-                [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
+                if [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] {
                     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                     for key in "${reply[@]}"; do
                         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
@@ -1623,17 +1629,17 @@ ZINIT[EXTENDED_GLOB]=""
                   }
                   ZINIT_ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones)
-                  [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] && {
+                  if [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] {
                       reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                       for key in "${reply[@]}"; do
                           arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
                           "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \!atpull
                       done
                   }
-                  (( ${+ZINIT_ICE[reset]} )) && (
+                  if (( ${+ZINIT_ICE[reset]} )) {
                       (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f%b"
-                      eval "${ZINIT_ICE[reset]:-command git reset --hard HEAD}"
-                  )
+                    ( eval "${ZINIT_ICE[reset]:-command git reset --hard HEAD}" )
+                  }
                   [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                   ZINIT_ICE=()
                   (( !skip_pull )) && command git pull --no-stat
@@ -1659,7 +1665,7 @@ ZINIT[EXTENDED_GLOB]=""
         command rm -f $local_dir/.zinit_lastupd
 
         # Any new commits?
-        [[ ${#log} -gt 0 ]] && {
+        if [[ ${#log} -gt 0 ]] {
             [[ ${+ice[make]} = 1 && ${ice[make]} = "!!"* ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
 
             if [[ -z ${ice[is_release${count:#1}]} && -n ${ice[mv]} ]]; then
@@ -1706,7 +1712,7 @@ ZINIT[EXTENDED_GLOB]=""
 
             ZINIT_ICE=( "${(kv)ice[@]}" )
             # Run annexes' atpull hooks (the before atpull-ice ones)
-            [[ ${ice[atpull]} != "!"* ]] && {
+            if [[ ${ice[atpull]} != "!"* ]] {
                 reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
@@ -2844,7 +2850,13 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
         print "[yY/n…]"
         local ans
         read -q ans
-        [[ "$ans" = "y" ]] && { eval "$2"; print "\nDone (action executed, exit code: $?)"; } || { print "\nBreak, no action"; return 1; }
+        if [[ "$ans" = "y" ]] {
+            eval "$2"
+            print "\nDone (action executed, exit code: $?)"
+        } else {
+            print "\nBreak, no action"
+            return 1
+        }
     fi
     return 0
 }
@@ -3358,11 +3370,12 @@ EOF
     ( builtin cd -q "${ZINIT[BIN_DIR]}"/zmodules
       +zinit-message "[pname]== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==[rst]"
       +zinit-message "[pname]== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules ==[rst]"
-      [[ -f Makefile ]] && { [[ "$1" = "--clean" ]] && {
+      if [[ -f Makefile ]] { 
+          if [[ "$1" = "--clean" ]] {
               noglob +zinit-message [p]-- make distclean --[rst]
               make distclean
               ((1))
-          } || {
+          } else {
               noglob +zinit-message [p]-- make clean --[rst]
               make clean
           }
@@ -3370,11 +3383,11 @@ EOF
       noglob +zinit-message  [p]-- ./configure --[rst]
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           noglob +zinit-message [p]-- make --[rst]
-          make && {
+          if make {
             [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
             noglob +zinit-message "[info]Module has been built correctly.[rst]"
             .zinit-module info
-          } || {
+          } else {
               noglob +zinit-message  "[error]Module didn't build.[rst] "
               .zinit-module info --link
           }

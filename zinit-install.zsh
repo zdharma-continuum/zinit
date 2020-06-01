@@ -1409,7 +1409,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-err
     } else {
         url=${url/(#s)(#m)(${(~kj.|.)ZINIT_2MAP})/$ZINIT_2MAP[$MATCH]}
         if [[ $save_url == (${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}})* ]] {
-            if [[ $url != *.zsh(|-theme) ]] {
+            if [[ $url != *.zsh(|-theme) && $url != */_[^/]## ]] {
                 if [[ $save_url == OMZT::* ]] {
                     url+=.zsh-theme
                 } else {
