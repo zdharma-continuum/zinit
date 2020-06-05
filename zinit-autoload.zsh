@@ -3383,7 +3383,7 @@ EOF
       noglob +zinit-message  [p]-- ./configure --[rst]
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           noglob +zinit-message [p]-- make --[rst]
-          if make {
+          if { make } {
             [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
             noglob +zinit-message "[info]Module has been built correctly.[rst]"
             .zinit-module info
