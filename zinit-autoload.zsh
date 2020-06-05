@@ -724,9 +724,9 @@ ZINIT[EXTENDED_GLOB]=""
             builtin print -rl -- "${lines[@]}" | .zinit-pager
         fi
         if [[ $1 != -q ]] {
-            command git pull --no-stat
+            command git pull --no-stat --ff-only origin master
         } else {
-            command git pull --no-stat --quiet
+            command git pull --no-stat --quiet --ff-only origin master
         }
     )
     if [[ $1 != -q ]] {
@@ -1642,7 +1642,7 @@ ZINIT[EXTENDED_GLOB]=""
                   }
                   [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                   ZINIT_ICE=()
-                  (( !skip_pull )) && command git pull --no-stat
+                  (( !skip_pull )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
             )
@@ -1653,9 +1653,9 @@ ZINIT[EXTENDED_GLOB]=""
             (
                 builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
                 if (( ICE_OPTS[opt_-q,--quiet] )) {
-                    command git pull --recurse-submodules &> /dev/null
+                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} &> /dev/null
                 } else {
-                    command git pull --recurse-submodules | grep -v "Already up to date."
+                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
                 }
             )
 
@@ -3472,8 +3472,8 @@ EOF
 
 print "
 Available ice-modifiers:
-        svn proto from teleid bindmap cloneopts id-as depth if wait load
-        unload blockf on-update-of subscribe pick bpick src as ver silent
+        svn proto from teleid bindmap cloneopts pullopts id-as depth if wait
+        load unload blockf on-update-of subscribe pick bpick src as ver silent
         lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
         cloneonly make service trackbinds multisrc compile nocompile
         nocompletions reset-prompt wrap-track reset aliases sh bash ksh csh
