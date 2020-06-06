@@ -2070,7 +2070,7 @@ ZINIT[EXTENDED_GLOB]=""
         counter=0
         PUAssocArray=()
     } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
-        +zinit-message "[obj]Spawning the next[file]" \
+        +zinit-message "[obj]-- Spawning the next[file]" \
             "${ICE_OPTS[value]}[obj] concurrent update jobs" \
             "([msg2]%F{191}${tpe}[obj])...[rst]"
     }
