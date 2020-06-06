@@ -1919,7 +1919,7 @@ zpextract() { ziextract "$@"; }
         return 1
     }
 
-    mirror=http://mirror.koddos.net/cygwin/
+    mirror=http://ftp.eq.uc.pt/software/pc/prog/cygwin/
 
     #
     # Download setup.ini.bz2
