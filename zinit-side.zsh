@@ -52,7 +52,7 @@
         .zinit-shands-exp "$1" "$2" && REPLY="${REPLY/$HOME/~}"
 
         builtin print -r -- "${ZINIT[col-error]}No such (plugin or snippet) directory${ZINIT[col-rst]}: $spec"
-        [[ "$REPLY" != "$1$2" ]] &  builtin print -r -- "(expands to: $REPLY)"
+        [[ "$REPLY" != "$1$2" ]] && builtin print -r -- "(expands to: $REPLY)"
         return 1
     fi
     return 0
@@ -249,7 +249,7 @@
             ___sice[svn]=""
             ___local_dir="$___s_path"
         else
-            [[ ! -e "$___path" ]] &&   builtin print -r -- "No such snippet, looked at paths (1): $___s_path, and: $___path"; return 1; }
+            [[ ! -e "$___path" ]] && { builtin print -r -- "No such snippet, looked at paths (1): $___s_path, and: $___path"; return 1; }
             unset '___sice[svn]'
             ___local_dir="$___path"
         fi
@@ -276,7 +276,7 @@
             builtin cd -q ${ZINIT[SNIPPETS_DIR]} || return 1
             ( zmv -W '**/._zplugin' '**/._zinit' ) &>/dev/null
             builtin print -Pr -- "${ZINIT[col-obj]}THE UPGRADE SUCCEDED!%f"
-        ) | builtin print -Pr -- "${ZINIT[col-error]}THE UPGRADE FAILED!%f"
+        ) || builtin print -Pr -- "${ZINIT[col-error]}THE UPGRADE FAILED!%f"
     fi
 
     # Read disk-Ice
@@ -301,7 +301,7 @@
             1 == ${+___sice[no$___key]} )) && continue
 
         if [[ "$___key" = "svn" ]]; then
-            comman  builtin print -r -- "0" >! "$___zinit_path/mode"
+            command builtin print -r -- "0" >! "$___zinit_path/mode"
             ___mdata[mode]=0
         else
             command rm -f -- "$___zinit_path/$___key"
@@ -383,7 +383,7 @@
 
     # url and mode are declared at the beginning of the body
     for ___key in url mode; do
-        [[ -n "${(P)___key}" ]] &  builtin print -r -- "${(P)___key}" >! "$___pfx"/"$___key"
+        [[ -n "${(P)___key}" ]] && builtin print -r -- "${(P)___key}" >! "$___pfx"/"$___key"
     done
 }
 # ]]]

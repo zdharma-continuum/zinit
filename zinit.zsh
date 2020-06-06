@@ -122,8 +122,8 @@ ZINIT_2MAP=(
 # ]]]
 
 # Init [[[
-zmodload zsh/zutil ||   builtin print -P "%F{196}zsh/zutil module is required, aborting Zinit set up.%f"; return 1; }
-zmodload zsh/parameter ||   builtin print -P "%F{196}zsh/parameter module is required, aborting Zinit set up.%f"; return 1; }
+zmodload zsh/zutil || { builtin print -P "%F{196}zsh/zutil module is required, aborting Zinit set up.%f"; return 1; }
+zmodload zsh/parameter || { builtin print -P "%F{196}zsh/parameter module is required, aborting Zinit set up.%f"; return 1; }
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
@@ -1151,7 +1151,7 @@ builtin setopt noaliases
                 "${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}" \
                 "${ZINIT_ICE[pack]:-default}"
             then
-                zle &&   builtin print; zle .reset-prompt; }
+                zle && { builtin print; zle .reset-prompt; }
                 return 1
             fi
             ___id_as="${ZINIT_ICE[id-as]:-${___user}${${___user:#(%|/)*}:+/}$___plugin}"
@@ -1161,11 +1161,11 @@ builtin setopt noaliases
         [[ $REPLY = snippet ]] && {
             ZINIT_ICE[id-as]="${ZINIT_ICE[id-as]:-$___id_as}"
             .zinit-load-snippet $___plugin && return
-            zle &&   builtin print; zle .reset-prompt; }
+            zle && { builtin print; zle .reset-prompt; }
             return 1
         }
         if ! .zinit-setup-plugin-dir "$___user" "$___plugin" "$___id_as" "$REPLY"; then
-            zle &&   builtin print; zle .reset-prompt; }
+            zle && { builtin print; zle .reset-prompt; }
             return 1
         fi
         zle && ___rst=1
@@ -1364,7 +1364,7 @@ builtin setopt noaliases
     # Mark no load is in progress
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 
-    (( ___rst )) &&   builtin print; zle .reset-prompt; }
+    (( ___rst )) && { builtin print; zle .reset-prompt; }
 
     if [[ -n $___m_bkp ]] {
         functions[m]="$___m_bkp"
@@ -1691,7 +1691,7 @@ builtin setopt noaliases
         }
     }
     if (( $? == 0 )); then
-        (( ___nolast )) &&   builtin print -r "$1" >! ${ZINIT[BIN_DIR]}/last-run-object.txt; }
+        (( ___nolast )) && { builtin print -r "$1" >! ${ZINIT[BIN_DIR]}/last-run-object.txt; }
         ZINIT[last-run-plugin]="$1"
         eval "${@[2-correct,-1]}"
         () { setopt localoptions noautopushd; builtin cd -q "$___oldpwd"; }
@@ -1716,7 +1716,7 @@ builtin setopt noaliases
     local THEFD=13371337 hasw
     # The expansion is: if there is @sleep: pfx, then use what's after
     # it, otherwise substitute 0
-    exec {THEFD} < <(LANG=C sleep $(( 0.01 + ${${${(M)1#@sleep:}:+${1#@sleep:}}:-0} ))  builtin print -r -- ${1:#(@msg|@sleep:*)} "${@[2,-1]}"; )
+    exec {THEFD} < <(LANG=C sleep $(( 0.01 + ${${${(M)1#@sleep:}:+${1#@sleep:}}:-0} )); builtin print -r -- ${1:#(@msg|@sleep:*)} "${@[2,-1]}"; )
     command true # workaround a Zsh bug, see: http://www.zsh.org/mla/workers/2018/msg00966.html
     builtin zle -F "$THEFD" +zinit-deploy-message
 }
@@ -2332,7 +2332,7 @@ for-syntax."
                    } "$@"
                    set -- "${@[@]:#(--quiet|-q|--reset|-r|-f|--force|-p|--parallel)}"
                    if [[ $2 = --all || ${ICE_OPTS[opt_-p,--parallel]} = 1 || ( -z $2 && -z $3 && -z ${ZINIT_ICE[teleid]} && -z ${ZINIT_ICE[id-as]} ) ]]; then
-                       [[ -z $2 && ${ICE_OPTS[opt_-p,--parallel]} != 1 ]] &&   builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 && ${ICE_OPTS[opt_-p,--parallel]} != 1 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
                        [[ ${ICE_OPTS[opt_-p,--parallel]} = 1 ]] && \
                            ICE_OPTS[value]=${${${${${(M)2:#--all}:+$3}:-$2}:#--all}:-15}
                        .zinit-update-or-status-all update; ___retval=$?
@@ -2342,7 +2342,7 @@ for-syntax."
                    ;;
                (status)
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] &&   builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-update-or-status-all status; ___retval=$?
                    else
                        .zinit-update-or-status status "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2350,7 +2350,7 @@ for-syntax."
                    ;;
                (report)
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] &&   builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
                        .zinit-show-all-reports
                    else
                        .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2411,7 +2411,7 @@ for-syntax."
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ $2 = -[qQ] ]] && { 5=$2; shift; }
                    .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
-                   [[ -z ${(M)4:#-[qQ]} ]] &  builtin print "Initializing completion (compinit)..."
+                   [[ -z ${(M)4:#-[qQ]} ]] && builtin print "Initializing completion (compinit)..."
                    builtin autoload -Uz compinit
                    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    ;;
@@ -2448,7 +2448,7 @@ for-syntax."
                (compile)
                    (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] &&   builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-compile-uncompile-all 1; ___retval=$?
                    else
                        .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2456,7 +2456,7 @@ for-syntax."
                    ;;
                (uncompile)
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] &&   builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
                        .zinit-compile-uncompile-all 0; ___retval=$?
                    else
                        .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2484,11 +2484,11 @@ for-syntax."
                    ;;
                (srv)
                    () { setopt localoptions extendedglob warncreateglobal
-                   [[ ! -e ${ZINIT[SERVICES_DIR]}/"$2".fifo ]] &&   builtin print "No such service: $2"; } ||
+                   [[ ! -e ${ZINIT[SERVICES_DIR]}/"$2".fifo ]] && { builtin print "No such service: $2"; } ||
                        { [[ $3 = (#i)(next|stop|quit|restart) ]] &&
-                             builtin print "${(U)3}" >>! ${ZINIT[SERVICES_DIR]}/"$2".fifo |  builtin print "Service $2 inactive"; ___retval=1; } ||
+                           { builtin print "${(U)3}" >>! ${ZINIT[SERVICES_DIR]}/"$2".fifo || builtin print "Service $2 inactive"; ___retval=1; } ||
                                { [[ $3 = (#i)start ]] && rm -f ${ZINIT[SERVICES_DIR]}/"$2".stop ||
-                                     builtin print "Unknown service-command: $3"; ___retval=1; }
+                                   { builtin print "Unknown service-command: $3"; ___retval=1; }
                                }
                        }
                    } "$@"
