@@ -51,8 +51,8 @@
 
         .zinit-shands-exp "$1" "$2" && REPLY="${REPLY/$HOME/~}"
 
-        print -r -- "${ZINIT[col-error]}No such (plugin or snippet) directory${ZINIT[col-rst]}: $spec"
-        [[ "$REPLY" != "$1$2" ]] && print -r -- "(expands to: $REPLY)"
+        builtin print -r -- "${ZINIT[col-error]}No such (plugin or snippet) directory${ZINIT[col-rst]}: $spec"
+        [[ "$REPLY" != "$1$2" ]] &  builtin print -r -- "(expands to: $REPLY)"
         return 1
     fi
     return 0
@@ -238,18 +238,18 @@
 
     if [[ "${+___sice[svn]}" = "1" || -n "$___s_svn" ]]; then
         if (( !___is_snippet && ${+___sice[svn]} == 1 )); then
-            print -r -- "The \`svn' ice is given, but the argument ($___URL) is a plugin"
-            print -r -- "(\`svn' can be used only with snippets)"
+            builtin print -r -- "The \`svn' ice is given, but the argument ($___URL) is a plugin"
+            builtin print -r -- "(\`svn' can be used only with snippets)"
             return 1
         elif (( !___is_snippet )); then
-            print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zinit/issues"
+            builtin print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zinit/issues"
             return 1
         fi
         if [[ -e "$___s_path" && -n "$___s_svn" ]]; then
             ___sice[svn]=""
             ___local_dir="$___s_path"
         else
-            [[ ! -e "$___path" ]] && { print -r -- "No such snippet, looked at paths (1): $___s_path, and: $___path"; return 1; }
+            [[ ! -e "$___path" ]] &&   builtin print -r -- "No such snippet, looked at paths (1): $___s_path, and: $___path"; return 1; }
             unset '___sice[svn]'
             ___local_dir="$___path"
         fi
@@ -258,7 +258,7 @@
             unset '___sice[svn]'
             ___local_dir="$___path"
         else
-            print -r -- "No such snippet, looked at paths (2): $___s_path, and: $___path"
+            builtin print -r -- "No such snippet, looked at paths (2): $___s_path, and: $___path"
             return 1
         fi
     fi
@@ -268,15 +268,15 @@
     # Zplugin -> Zinit rename upgrade code
     if [[ ! -d $___zinit_path && -d $___local_dir/._zplugin ]]; then
         (
-            print -Pr -- "${ZINIT[col-pre]}UPGRADING THE DIRECTORY STRUCTURE" \
+            builtin print -Pr -- "${ZINIT[col-pre]}UPGRADING THE DIRECTORY STRUCTURE" \
                 "FOR THE ZPLUGIN -> ZINIT RENAME…%f"
             builtin cd -q ${ZINIT[PLUGINS_DIR]} || return 1
             autoload -Uz zmv
             ( zmv -W '**/._zplugin' '**/._zinit' ) &>/dev/null
             builtin cd -q ${ZINIT[SNIPPETS_DIR]} || return 1
             ( zmv -W '**/._zplugin' '**/._zinit' ) &>/dev/null
-            print -Pr -- "${ZINIT[col-obj]}THE UPGRADE SUCCEDED!%f"
-        ) || print -Pr -- "${ZINIT[col-error]}THE UPGRADE FAILED!%f"
+            builtin print -Pr -- "${ZINIT[col-obj]}THE UPGRADE SUCCEDED!%f"
+        ) | builtin print -Pr -- "${ZINIT[col-error]}THE UPGRADE FAILED!%f"
     fi
 
     # Read disk-Ice
@@ -301,7 +301,7 @@
             1 == ${+___sice[no$___key]} )) && continue
 
         if [[ "$___key" = "svn" ]]; then
-            command print -r -- "0" >! "$___zinit_path/mode"
+            comman  builtin print -r -- "0" >! "$___zinit_path/mode"
             ___mdata[mode]=0
         else
             command rm -f -- "$___zinit_path/$___key"
@@ -368,14 +368,14 @@
     for ___key in ${ice_order[@]:#(${(~j:|:)nval_ices[@]})} ${(s: :)___add_ices[@]}; do
         ___var_name="${___ice_var}[$___key]"
         (( ${(P)+___var_name} )) && \
-            print -r -- "${(P)___var_name}" >! "$___pfx"/"$___key"
+            builtin print -r -- "${(P)___var_name}" >! "$___pfx"/"$___key"
     done
 
     # Ices that even empty mean something
     for ___key in make pick nocompile reset ${nval_ices[@]} ${(s: :)___add_ices2[@]}; do
         ___var_name="${___ice_var}[$___key]"
         if (( ${(P)+___var_name} )) {
-            print -r -- "${(P)___var_name}" >! "$___pfx"/"$___key"
+            builtin print -r -- "${(P)___var_name}" >! "$___pfx"/"$___key"
         } else {
             command rm -f "$___pfx"/"$___key"
         }
@@ -383,7 +383,7 @@
 
     # url and mode are declared at the beginning of the body
     for ___key in url mode; do
-        [[ -n "${(P)___key}" ]] && print -r -- "${(P)___key}" >! "$___pfx"/"$___key"
+        [[ -n "${(P)___key}" ]] &  builtin print -r -- "${(P)___key}" >! "$___pfx"/"$___key"
     done
 }
 # ]]]
@@ -399,12 +399,12 @@
     ice="${ZINIT_ICE[$tpe]}"
     [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ZINIT_ICE[atclone]}"
     ice="$tpe:$ice"
-    print -nr "${ZINIT[col-pname]}Running ${ZINIT[col-bold]}${ZINIT[col-uname]}$ice${ZINIT[col-rst]}${ZINIT[col-pname]} ice in...${ZINIT[col-rst]} "
+    builtin print -nr "${ZINIT[col-pname]}Running ${ZINIT[col-bold]}${ZINIT[col-uname]}$ice${ZINIT[col-rst]}${ZINIT[col-pname]} ice in...${ZINIT[col-rst]} "
     while (( -- count + 1 )) {
-        print -nr -- "${ZINIT[col-bold]}${ZINIT[col-error]}"$(( count + 1 ))..."${ZINIT[col-rst]}"
+        builtin print -nr -- "${ZINIT[col-bold]}${ZINIT[col-error]}"$(( count + 1 ))..."${ZINIT[col-rst]}"
         sleep 1
     }
-    print -r -- "${ZINIT[col-bold]}${ZINIT[col-error]}0 <running now>...${ZINIT[col-rst]}"
+    builtin print -r -- "${ZINIT[col-bold]}${ZINIT[col-error]}0 <running now>...${ZINIT[col-rst]}"
     return 0
 }
 # ]]]

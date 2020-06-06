@@ -1,7 +1,7 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
 
-builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."; return 1; }
+builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" ||   builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."; return 1; }
 
 ZINIT[EXTENDED_GLOB]=""
 
@@ -288,7 +288,7 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-any-to-uspl2 "$1" "$2"
     if [[ -z "${ZINIT_REGISTERED_PLUGINS[(r)$REPLY]}" ]]; then
         .zinit-any-colorify-as-uspl2 "$1" "$2"
-        print "${ZINIT[col-error]}No such plugin${ZINIT[col-rst]} $REPLY"
+        builtin print "${ZINIT[col-error]}No such plugin${ZINIT[col-rst]} $REPLY"
         return 1
     fi
     return 0
@@ -558,18 +558,18 @@ ZINIT[EXTENDED_GLOB]=""
 
     # bkpfile must be a symlink
     if [[ -e "$bkpfile" && ! -L "$bkpfile" ]]; then
-        print "${ZINIT[col-error]}Warning: completion's backup file \`${bkpfile:t}' isn't a symlink${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}Warning: completion's backup file \`${bkpfile:t}' isn't a symlink${ZINIT[col-rst]}"
         error=1
     fi
 
     # cfile must be a symlink
     if [[ -e "$cfile" && ! -L "$cfile" ]]; then
-        print "${ZINIT[col-error]}Warning: completion file \`${cfile:t}' isn't a symlink${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}Warning: completion file \`${cfile:t}' isn't a symlink${ZINIT[col-rst]}"
         error=1
     fi
 
     # Tell user that he can manually modify but should do it right
-    (( error )) && print "${ZINIT[col-error]}Manual edit of ${ZINIT[COMPLETIONS_DIR]} occured?${ZINIT[col-rst]}"
+    (( error )) &  builtin print "${ZINIT[col-error]}Manual edit of ${ZINIT[COMPLETIONS_DIR]} occured?${ZINIT[col-rst]}"
 } # ]]]
 # FUNCTION: .zinit-check-which-completions-are-installed [[[
 # For each argument that each should be a path to completion
@@ -632,7 +632,7 @@ ZINIT[EXTENDED_GLOB]=""
     [[ -e "$REPLY" ]] && {
         completions=( "$REPLY"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN) )
     } || {
-        print "No completions found for \`$1${${1:#(%|/)*}:+${2:+/}}$2'"
+        builtin print "No completions found for \`$1${${1:#(%|/)*}:+${2:+/}}$2'"
         return 1
     }
 
@@ -659,17 +659,17 @@ ZINIT[EXTENDED_GLOB]=""
         fi
 
         if (( action )); then
-            print "${ZINIT[col-info]}Uninstalling completion \`$cfile'${ZINIT[col-rst]}"
+            builtin print "${ZINIT[col-info]}Uninstalling completion \`$cfile'${ZINIT[col-rst]}"
             # Make compinit notice the change
             .zinit-forget-completion "$cfile"
             (( global_action ++ ))
         else
-            print "${ZINIT[col-info]}Completion \`$cfile' not installed${ZINIT[col-rst]}"
+            builtin print "${ZINIT[col-info]}Completion \`$cfile' not installed${ZINIT[col-rst]}"
         fi
     done
 
     if (( global_action > 0 )); then
-        print "${ZINIT[col-info]}Uninstalled $global_action completions${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-info]}Uninstalled $global_action completions${ZINIT[col-rst]}"
     fi
 
     (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
@@ -765,7 +765,7 @@ ZINIT[EXTENDED_GLOB]=""
     keyword="${keyword## ##}"
     keyword="${keyword%% ##}"
     if [[ -n "$keyword" ]]; then
-        print "Installed plugins matching ${ZINIT[col-info]}$keyword${ZINIT[col-rst]}:"
+        builtin print "Installed plugins matching ${ZINIT[col-info]}$keyword${ZINIT[col-rst]}:"
         filtered=( "${(M)ZINIT_REGISTERED_PLUGINS[@]:#*$keyword*}" )
     else
         filtered=( "${ZINIT_REGISTERED_PLUGINS[@]}" )
@@ -777,7 +777,7 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-any-colorify-as-uspl2 "$i"
         # Mark light loads
         [[ "${ZINIT_REGISTERED_STATES[$i]}" = "1" ]] && REPLY="$REPLY ${ZINIT[col-info]}*${ZINIT[col-rst]}"
-        print -r -- "$REPLY"
+        builtin print -r -- "$REPLY"
     done
 } # ]]]
 # FUNCTION: .zinit-unload [[[
@@ -803,7 +803,7 @@ ZINIT[EXTENDED_GLOB]=""
     local k
 
     .zinit-any-colorify-as-uspl2 "$uspl2"
-    (( quiet )) || print -r -- "${ZINIT[col-bar]}---${ZINIT[col-rst]} Unloading plugin: $REPLY ${ZINIT[col-bar]}---${ZINIT[col-rst]}"
+    (( quiet )) |  builtin print -r -- "${ZINIT[col-bar]}---${ZINIT[col-rst]} Unloading plugin: $REPLY ${ZINIT[col-bar]}---${ZINIT[col-rst]}"
 
     local ___dir
     [[ "$user" = "%" ]] && ___dir="$plugin" || ___dir="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
@@ -840,7 +840,7 @@ ZINIT[EXTENDED_GLOB]=""
     (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" ) || sice=()
 
     if [[ -n ${sice[ps-on-unload]} ]]; then
-        (( quiet )) || print -r "Running plugin's provided unload code: ${ZINIT[col-info]}${sice[ps-on-unload][1,50]}${sice[ps-on-unload][51]:+…}${ZINIT[col-rst]}"
+        (( quiet )) |  builtin print -r "Running plugin's provided unload code: ${ZINIT[col-info]}${sice[ps-on-unload][1,50]}${sice[ps-on-unload][51]:+…}${ZINIT[col-rst]}"
         local ___oldcd="$PWD"
         () { setopt localoptions noautopushd; builtin cd -q "$___dir"; }
         eval "${sice[ps-on-unload]}"
@@ -873,44 +873,44 @@ ZINIT[EXTENDED_GLOB]=""
             if [[ -n "$sw_arr3" ]]; then
                 () {
                     emulate -LR zsh -o extendedglob
-                    (( quiet )) || print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
+                    (( quiet )) |  builtin print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
                 }
                 bindkey -M "$sw_arr5" "$sw_arr1" "$sw_arr3"
             else
-                (( quiet )) || print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
+                (( quiet )) |  builtin print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
                 bindkey -M "$sw_arr5" -r "$sw_arr1"
             fi
         elif [[ "$sw_arr4" = "-M" && "$sw_arr6" = "-R" ]]; then
             if [[ -n "$sw_arr3" ]]; then
-                (( quiet )) || print -r "Restoring ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr3 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
+                (( quiet )) |  builtin print -r "Restoring ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr3 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
                 bindkey -RM "$sw_arr5" "$sw_arr1" "$sw_arr3"
             else
-                (( quiet )) || print -r "Deleting ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr2 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
+                (( quiet )) |  builtin print -r "Deleting ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr2 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
                 bindkey -M "$sw_arr5" -Rr "$sw_arr1"
             fi
         elif [[ "$sw_arr4" != "-M" && "$sw_arr6" = "-R" ]]; then
             if [[ -n "$sw_arr3" ]]; then
-                (( quiet )) || print -r "Restoring ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr3"
+                (( quiet )) |  builtin print -r "Restoring ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr3"
                 bindkey -R "$sw_arr1" "$sw_arr3"
             else
-                (( quiet )) || print -r "Deleting ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr2"
+                (( quiet )) |  builtin print -r "Deleting ${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey ${(q)sw_arr1} $sw_arr2"
                 bindkey -Rr "$sw_arr1"
             fi
         elif [[ "$sw_arr4" = "-A" ]]; then
-            (( quiet )) || print -r "Linking backup-\`main' keymap \`$sw_arr5' back to \`main'"
+            (( quiet )) |  builtin print -r "Linking backup-\`main' keymap \`$sw_arr5' back to \`main'"
             bindkey -A "$sw_arr5" "main"
         elif [[ "$sw_arr4" = "-N" ]]; then
-            (( quiet )) || print -r "Deleting keymap \`$sw_arr5'"
+            (( quiet )) |  builtin print -r "Deleting keymap \`$sw_arr5'"
             bindkey -D "$sw_arr5"
         else
             if [[ -n "$sw_arr3" ]]; then
                 () {
                     emulate -LR zsh -o extendedglob
-                    (( quiet )) || print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3"
+                    (( quiet )) |  builtin print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3"
                 }
                 bindkey "$sw_arr1" "$sw_arr3"
             else
-                (( quiet )) || print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2"
+                (( quiet )) |  builtin print -r "Deleting bindkey ${(q)sw_arr1} $sw_arr2"
                 bindkey -r "$sw_arr1"
             fi
         fi
@@ -934,7 +934,7 @@ ZINIT[EXTENDED_GLOB]=""
         local ps_arr1="${(Q)ps_arr[1-correct]}"
         local ps_arr2="${(Q)ps_arr[2-correct]}"
 
-        (( quiet )) || print "Deleting zstyle $ps_arr1 $ps_arr2"
+        (( quiet )) |  builtin print "Deleting zstyle $ps_arr1 $ps_arr2"
 
         zstyle -d "$ps_arr1" "$ps_arr2"
     done
@@ -958,10 +958,10 @@ ZINIT[EXTENDED_GLOB]=""
             [[ "$k" = "physical" ]] && continue
 
             if [[ "${opts[$k]}" = "on" ]]; then
-                (( quiet )) || print "Setting option $k"
+                (( quiet )) |  builtin print "Setting option $k"
                 builtin setopt "$k"
             else
-                (( quiet )) || print "Unsetting option $k"
+                (( quiet )) |  builtin print "Unsetting option $k"
                 builtin unsetopt "$k"
             fi
         done
@@ -988,34 +988,34 @@ ZINIT[EXTENDED_GLOB]=""
 
         if [[ "$nv_arr3" = "-s" ]]; then
             if [[ -n "$nv_arr2" ]]; then
-                (( quiet )) || print "Restoring ${ZINIT[col-info]}suffix${ZINIT[col-rst]} alias ${nv_arr1}=${nv_arr2}"
+                (( quiet )) |  builtin print "Restoring ${ZINIT[col-info]}suffix${ZINIT[col-rst]} alias ${nv_arr1}=${nv_arr2}"
                 alias "$nv_arr1" &> /dev/null && unalias -s -- "$nv_arr1"
                 alias -s -- "${nv_arr1}=${nv_arr2}"
             else
                 (( quiet )) || alias "$nv_arr1" &> /dev/null && {
-                    print "Removing ${ZINIT[col-info]}suffix${ZINIT[col-rst]} alias ${nv_arr1}"
+                    builtin print "Removing ${ZINIT[col-info]}suffix${ZINIT[col-rst]} alias ${nv_arr1}"
                     unalias -s -- "$nv_arr1"
                 }
             fi
         elif [[ "$nv_arr3" = "-g" ]]; then
             if [[ -n "$nv_arr2" ]]; then
-                (( quiet )) || print "Restoring ${ZINIT[col-info]}global${ZINIT[col-rst]} alias ${nv_arr1}=${nv_arr2}"
+                (( quiet )) |  builtin print "Restoring ${ZINIT[col-info]}global${ZINIT[col-rst]} alias ${nv_arr1}=${nv_arr2}"
                 alias "$nv_arr1" &> /dev/null && unalias -g -- "$nv_arr1"
                 alias -g -- "${nv_arr1}=${nv_arr2}"
             else
                 (( quiet )) || alias "$nv_arr1" &> /dev/null && {
-                    print "Removing ${ZINIT[col-info]}global${ZINIT[col-rst]} alias ${nv_arr1}"
+                    builtin print "Removing ${ZINIT[col-info]}global${ZINIT[col-rst]} alias ${nv_arr1}"
                     unalias -- "${(q)nv_arr1}"
                 }
             fi
         else
             if [[ -n "$nv_arr2" ]]; then
-                (( quiet )) || print "Restoring alias ${nv_arr1}=${nv_arr2}"
+                (( quiet )) |  builtin print "Restoring alias ${nv_arr1}=${nv_arr2}"
                 alias "$nv_arr1" &> /dev/null && unalias -- "$nv_arr1"
                 alias -- "${nv_arr1}=${nv_arr2}"
             else
                 (( quiet )) || alias "$nv_arr1" &> /dev/null && {
-                    print "Removing alias ${nv_arr1}"
+                    builtin print "Removing alias ${nv_arr1}"
                     unalias -- "$nv_arr1"
                 }
             fi
@@ -1073,10 +1073,10 @@ ZINIT[EXTENDED_GLOB]=""
                 done
                 if [[ -n "$to_process_plugin" ]]; then
                     if (( !found_idx && !found_idx2 )); then
-                        (( quiet )) || print "Problem (1) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
+                        (( quiet )) |  builtin print "Problem (1) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
                         continue
                     fi
-                    (( quiet )) || print "Chaining widget \`$orig_saved1' to plugin $oth_uspl2"
+                    (( quiet )) |  builtin print "Chaining widget \`$orig_saved1' to plugin $oth_uspl2"
                     local -a oth_orig_saved
                     if (( found_idx )) {
                         oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx]}}" )
@@ -1102,13 +1102,13 @@ ZINIT[EXTENDED_GLOB]=""
                             [[ ${match[1]} != \$* ]] && match[1]="${match[1]%\}}"
                             eval "local oth_prefix_uspl2_X=\"${match[1]}\""
                             if [[ "${widgets[$prefix_X]}" = builtin ]]; then
-                                (( quiet )) || print "Builtin-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
+                                (( quiet )) |  builtin print "Builtin-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
                                 zle -A ".${prefix_X#.}" "$oth_prefix_uspl2_X"
                             elif [[ "${widgets[$prefix_X]}" = completion:* ]]; then
-                                (( quiet )) || print "Chain*-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
+                                (( quiet )) |  builtin print "Chain*-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
                                 zle -C "$oth_prefix_uspl2_X" "${(@)${(@s.:.)${orig_saved3#user:}}[2,3]}"
                             else
-                                (( quiet )) || print "Chain-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
+                                (( quiet )) |  builtin print "Chain-restoring widget \`$oth_prefix_uspl2_X' ($oth_uspl2)"
                                 zle -N "$oth_prefix_uspl2_X" "${widgets[$prefix_X]#user:}"
                             fi
                         fi
@@ -1118,7 +1118,7 @@ ZINIT[EXTENDED_GLOB]=""
                         #functions[$oth_fun]="${functions[$oth_fun]//[^\{[:space:]]#$orig_saved1/${match[1]}}"
                     fi
                 else
-                    (( quiet )) || print "Restoring Zle widget $orig_saved1"
+                    (( quiet )) |  builtin print "Restoring Zle widget $orig_saved1"
                     if [[ "$orig_saved3" = builtin ]]; then
                         zle -A ".$orig_saved1" "$orig_saved1"
                     elif [[ "$orig_saved3" = completion:* ]]; then
@@ -1128,7 +1128,7 @@ ZINIT[EXTENDED_GLOB]=""
                     fi
                 fi
             else
-                (( quiet )) || print "Problem (2) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
+                (( quiet )) |  builtin print "Problem (2) during handling of widget \`$orig_saved1' (contents: $orig_saved2)"
             fi
         done
     }
@@ -1140,13 +1140,13 @@ ZINIT[EXTENDED_GLOB]=""
         [[ -z "$wid" ]] && continue
         wid="${(Q)wid}"
         if [[ -n "${skip_delete[(r)$wid]}" ]]; then
-            print "Would delete $wid"
+            builtin print "Would delete $wid"
             continue
         fi
         if [[ "${ZINIT_ZLE_HOOKS_LIST[$wid]}" = "1" ]]; then
-            (( quiet )) || print "Removing Zle hook \`$wid'"
+            (( quiet )) |  builtin print "Removing Zle hook \`$wid'"
         else
-            (( quiet )) || print "Removing Zle widget \`$wid'"
+            (( quiet )) |  builtin print "Removing Zle widget \`$wid'"
         fi
         zle -D "$wid"
     done
@@ -1162,7 +1162,7 @@ ZINIT[EXTENDED_GLOB]=""
     for f in "${(on)func[@]}"; do
         [[ -z "$f" ]] && continue
         f="${(Q)f}"
-        (( quiet )) || print "Deleting function $f"
+        (( quiet )) |  builtin print "Deleting function $f"
         (( ${+functions[$f]} )) && unfunction -- "$f"
         (( ${+precmd_functions} )) && precmd_functions=( ${precmd_functions[@]:#$f} )
         (( ${+preexec_functions} )) && preexec_functions=( ${preexec_functions[@]:#$f} )
@@ -1186,8 +1186,8 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ -z "${elem[(r)${(q)p}]}" ]] {
             new+=( "$p" )
         } else {
-            (( quiet )) || print "Removing PATH element ${ZINIT[col-info]}$p${ZINIT[col-rst]}"
-            [[ -d "$p" ]] || (( quiet )) || print "${ZINIT[col-error]}Warning:${ZINIT[col-rst]} it didn't exist on disk"
+            (( quiet )) |  builtin print "Removing PATH element ${ZINIT[col-info]}$p${ZINIT[col-rst]}"
+            [[ -d "$p" ]] || (( quiet )) |  builtin print "${ZINIT[col-error]}Warning:${ZINIT[col-rst]} it didn't exist on disk"
         }
     done
     path=( "${new[@]}" )
@@ -1199,8 +1199,8 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ -z "${elem[(r)${(q)p}]}" ]] {
             new+=( "$p" )
         } else {
-            (( quiet )) || print "Removing FPATH element ${ZINIT[col-info]}$p${ZINIT[col-rst]}"
-            [[ -d "$p" ]] || (( quiet )) || print "${ZINIT[col-error]}Warning:${ZINIT[col-rst]} it didn't exist on disk"
+            (( quiet )) |  builtin print "Removing FPATH element ${ZINIT[col-info]}$p${ZINIT[col-rst]}"
+            [[ -d "$p" ]] || (( quiet )) |  builtin print "${ZINIT[col-error]}Warning:${ZINIT[col-rst]} it didn't exist on disk"
         }
     }
     fpath=( "${new[@]}" )
@@ -1258,13 +1258,13 @@ ZINIT[EXTENDED_GLOB]=""
                         fi
                     done
                     if (( !found )); then
-                        (( quiet )) || print "Unsetting variable $k"
+                        (( quiet )) |  builtin print "Unsetting variable $k"
                         # Checked that 4.3.17 does support "--"
                         # There cannot be parameter starting with
                         # "-" but let's defensively use "--" here
                         unset -- "$k"
                     else
-                        print "Skipping unset of variable $k (whitelist)"
+                        builtin print "Skipping unset of variable $k (whitelist)"
                     fi
                 fi
             fi
@@ -1277,13 +1277,13 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ "$uspl2" = "_dtrace/_dtrace" ]]; then
         .zinit-clear-debug-report
-        (( quiet )) || print "dtrace report saved to \$LASTREPORT"
+        (( quiet )) |  builtin print "dtrace report saved to \$LASTREPORT"
     else
-        (( quiet )) || print "Unregistering plugin $uspl2col"
+        (( quiet )) |  builtin print "Unregistering plugin $uspl2col"
         .zinit-unregister-plugin "$user" "$plugin" "${sice[teleid]}"
         zsh_loaded_plugins[${zsh_loaded_plugins[(i)$user${${user:#(%|/)*}:+/}$plugin]}]=()  # Support Zsh plugin standard
         .zinit-clear-report-for "$user" "$plugin"
-        (( quiet )) || print "Plugin's report saved to \$LASTREPORT"
+        (( quiet )) |  builtin print "Plugin's report saved to \$LASTREPORT"
     fi
 
 } # ]]]
@@ -1305,13 +1305,13 @@ ZINIT[EXTENDED_GLOB]=""
     fi
 
     # Print title
-    printf "${ZINIT[col-title]}Report for${ZINIT[col-rst]} %s%s plugin\n"\
+    builtin printf "${ZINIT[col-title]}Report for${ZINIT[col-rst]} %s%s plugin\n"\
             "${user:+${ZINIT[col-uname]}$user${ZINIT[col-rst]}}${${user:#(%|/)*}:+/}"\
             "${ZINIT[col-pname]}$plugin${ZINIT[col-rst]}"
 
     # Print "----------"
     local msg="Report for $user${${user:#(%|/)*}:+/}$plugin plugin"
-    print -- "${ZINIT[col-bar]}${(r:${#msg}::-:)tmp__}${ZINIT[col-rst]}"
+    builtin print -- "${ZINIT[col-bar]}${(r:${#msg}::-:)tmp__}${ZINIT[col-rst]}"
 
     local -A map
     map=(
@@ -1322,35 +1322,35 @@ ZINIT[EXTENDED_GLOB]=""
     # Print report gathered via shadowing
     () {
         setopt localoptions extendedglob
-        print -rl -- "${(@)${(f@)ZINIT_REPORTS[$uspl2]}/(#b)(#s)([^[:space:]]##)([[:space:]]##)/${map[${match[1]}]:-${ZINIT[col-keyword]}}${match[1]}${ZINIT[col-rst]}${match[2]}}"
+        builtin print -rl -- "${(@)${(f@)ZINIT_REPORTS[$uspl2]}/(#b)(#s)([^[:space:]]##)([[:space:]]##)/${map[${match[1]}]:-${ZINIT[col-keyword]}}${match[1]}${ZINIT[col-rst]}${match[2]}}"
     }
 
     # Print report gathered via $functions-diffing
     REPLY=""
     .zinit-diff-functions-compute "$uspl2"
     .zinit-format-functions "$uspl2"
-    [[ -n "$REPLY" ]] && print "${ZINIT[col-p]}Functions created:${ZINIT[col-rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] &  builtin print "${ZINIT[col-p]}Functions created:${ZINIT[col-rst]}"$'\n'"$REPLY"
 
     # Print report gathered via $options-diffing
     REPLY=""
     .zinit-diff-options-compute "$uspl2"
     .zinit-format-options "$uspl2"
-    [[ -n "$REPLY" ]] && print "${ZINIT[col-p]}Options changed:${ZINIT[col-rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] &  builtin print "${ZINIT[col-p]}Options changed:${ZINIT[col-rst]}"$'\n'"$REPLY"
 
     # Print report gathered via environment diffing
     REPLY=""
     .zinit-diff-env-compute "$uspl2"
     .zinit-format-env "$uspl2" "1"
-    [[ -n "$REPLY" ]] && print "${ZINIT[col-p]}PATH elements added:${ZINIT[col-rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] &  builtin print "${ZINIT[col-p]}PATH elements added:${ZINIT[col-rst]}"$'\n'"$REPLY"
 
     REPLY=""
     .zinit-format-env "$uspl2" "2"
-    [[ -n "$REPLY" ]] && print "${ZINIT[col-p]}FPATH elements added:${ZINIT[col-rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] &  builtin print "${ZINIT[col-p]}FPATH elements added:${ZINIT[col-rst]}"$'\n'"$REPLY"
 
     # Print report gathered via parameter diffing
     .zinit-diff-parameter-compute "$uspl2"
     .zinit-format-parameter "$uspl2"
-    [[ -n "$REPLY" ]] && print "${ZINIT[col-p]}Variables added or redefined:${ZINIT[col-rst]}"$'\n'"$REPLY"
+    [[ -n "$REPLY" ]] &  builtin print "${ZINIT[col-p]}Variables added or redefined:${ZINIT[col-rst]}"$'\n'"$REPLY"
 
     # Print what completions plugin has
     .zinit-find-completions-of-plugin "$user" "$plugin"
@@ -1358,7 +1358,7 @@ ZINIT[EXTENDED_GLOB]=""
     completions=( "${reply[@]}" )
 
     if [[ "${#completions[@]}" -ge "1" ]]; then
-        print "${ZINIT[col-p]}Completions:${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-p]}Completions:${ZINIT[col-rst]}"
         .zinit-check-which-completions-are-installed "${completions[@]}"
         typeset -a installed
         installed=( "${reply[@]}" )
@@ -1369,19 +1369,19 @@ ZINIT[EXTENDED_GLOB]=""
 
         integer count="${#completions[@]}" idx
         for (( idx=1; idx <= count; idx ++ )); do
-            print -n "${completions[idx]:t}"
+            builtin print -n "${completions[idx]:t}"
             if [[ "${installed[idx]}" != "1" ]]; then
-                print -n " ${ZINIT[col-uninst]}[not installed]${ZINIT[col-rst]}"
+                builtin print -n " ${ZINIT[col-uninst]}[not installed]${ZINIT[col-rst]}"
             else
                 if [[ "${enabled[idx]}" = "1" ]]; then
-                    print -n " ${ZINIT[col-info]}[enabled]${ZINIT[col-rst]}"
+                    builtin print -n " ${ZINIT[col-info]}[enabled]${ZINIT[col-rst]}"
                 else
-                    print -n " ${ZINIT[col-error]}[disabled]${ZINIT[col-rst]}"
+                    builtin print -n " ${ZINIT[col-error]}[disabled]${ZINIT[col-rst]}"
                 fi
             fi
-            print
+            builtin print
         done
-        print
+        builtin print
     fi
 } # ]]]
 # FUNCTION: .zinit-show-all-reports [[[
@@ -1435,7 +1435,7 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-exists-physically "$user" "$plugin" || return $retval
         .zinit-any-colorify-as-uspl2 "$2" "$3"
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            print -Pr "${ZINIT[col-msg2]}Updating also \`$REPLY%b${ZINIT[col-msg2]}'" \
+            builtin print -Pr "${ZINIT[col-msg2]}Updating also \`$REPLY%b${ZINIT[col-msg2]}'" \
                 "plugin (already updated a snippet of the same name)...%f%b"
     } else {
         .zinit-exists-physically-message "$user" "$plugin" || return 1
@@ -1476,8 +1476,8 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
             (( !ICE_OPTS[opt_-q,--quiet] )) && {
                 .zinit-any-colorify-as-uspl2 "$id_as"
-                [[ $id_as = _local/* ]] && print -r -- "Skipping local plugin $REPLY" || \
-                    print -r -- "$REPLY doesn't have a remote set, will not fetch"
+                [[ $id_as = _local/* ]] &  builtin print -r -- "Skipping local plugin $REPLY" || \
+                    builtin print -r -- "$REPLY doesn't have a remote set, will not fetch"
             }
             return 1
         fi
@@ -1527,7 +1527,7 @@ ZINIT[EXTENDED_GLOB]=""
             }
             ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
             if (( ( !do_update || skip_pull ) && !ICE_OPTS[opt_-q,--quiet] )) {
-                print -- "\rBinary release already up to date (version: $version)"
+                builtin print -- "\rBinary release already up to date (version: $version)"
             }
         }
 
@@ -1537,12 +1537,12 @@ ZINIT[EXTENDED_GLOB]=""
                     .zinit-any-colorify-as-uspl2 "$id_as"
                     (( ZINIT[first-plugin-mark] )) && {
                         ZINIT[first-plugin-mark]=0
-                    } || print
-                    print "\rUpdating $REPLY"
+                    } |  builtin print
+                    builtin print "\rUpdating $REPLY"
                 }
 
                 (( !skip_pull && ICE_OPTS[opt_-r,--reset] )) && {
-                    print -P "$ZINIT[col-obj]reset (-r/--reset given): running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
+                    builtin print -P "$ZINIT[col-obj]reset (-r/--reset given): running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
                     builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
                 ZINIT_ICE=( "${(kv)ice[@]}" )
@@ -1556,18 +1556,18 @@ ZINIT[EXTENDED_GLOB]=""
                 }
 
                 (( !skip_pull && ${+ZINIT_ICE[reset]} )) && (
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "$ZINIT[col-obj]reset: running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
+                    (( !ICE_OPTS[opt_-q,--quiet] )) &  builtin print -P "$ZINIT[col-obj]reset: running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
                     builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 )
 
                 [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
-                print -r -- mark >! $local_dir/.zinit_lastupd
+                builtin print -r -- mark >! $local_dir/.zinit_lastupd
 
                 if (( !skip_pull )) {
                     .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version || \
                         ZINIT[annex-multi-flag:pull-active]=0
                     if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
-                        print
+                        builtin print
                     }
                 }
                 ZINIT_ICE=()
@@ -1587,11 +1587,11 @@ ZINIT[EXTENDED_GLOB]=""
                               .zinit-any-colorify-as-uspl2 "$id_as"
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
-                              } || print
-                              print "Updating $REPLY"
+                              } |  builtin print
+                              builtin print "Updating $REPLY"
                           }
                       }
-                      print $line
+                      builtin print $line
                   }
                 done | \
                 command tee .zinit_lastupd | \
@@ -1609,13 +1609,13 @@ ZINIT[EXTENDED_GLOB]=""
                       skip_pull=1
                       (( ${+ice[run-atpull]} )) && {
                           do_update=1
-                          print -r -- mark >! $local_dir/.zinit_lastupd
+                          builtin print -r -- mark >! $local_dir/.zinit_lastupd
                           if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                               .zinit-any-colorify-as-uspl2 "$id_as"
                               (( ZINIT[first-plugin-mark] )) && {
                                   ZINIT[first-plugin-mark]=0
-                              } || print
-                              print "\rUpdating $REPLY"
+                              } |  builtin print
+                              builtin print "\rUpdating $REPLY"
                           }
                       }
                   }
@@ -1624,7 +1624,7 @@ ZINIT[EXTENDED_GLOB]=""
 
               if (( do_update )) {
                   (( !skip_pull && ICE_OPTS[opt_-r,--reset] )) && {
-                      print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f%b"
+                      builtin print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f%b"
                       command git reset --hard HEAD
                   }
                   ZINIT_ICE=( "${(kv)ice[@]}" )
@@ -1637,7 +1637,7 @@ ZINIT[EXTENDED_GLOB]=""
                       done
                   }
                   if (( ${+ZINIT_ICE[reset]} )) {
-                      (( !ICE_OPTS[opt_-q,--quiet] )) && print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f%b"
+                      (( !ICE_OPTS[opt_-q,--quiet] )) &  builtin print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f%b"
                     ( eval "${ZINIT_ICE[reset]:-command git reset --hard HEAD}" )
                   }
                   [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
@@ -1754,7 +1754,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ -n ${ZINIT_ICE[ps-on-update]} ]] {
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
-            print -r "Running plugin's provided update code: ${ZINIT[col-info]}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}${ZINIT[col-rst]}"
+            builtin print -r "Running plugin's provided update code: ${ZINIT[col-info]}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}${ZINIT[col-rst]}"
             (
                 builtin cd -q "$local_dir" || return 1
                 eval "${ZINIT_ICE[ps-on-update]}"
@@ -1779,7 +1779,7 @@ ZINIT[EXTENDED_GLOB]=""
     }
 
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
-        print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
+        builtin print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
     }
 
     return $retval
@@ -1800,15 +1800,15 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ "$st" = "status" ]]; then
         if (( ${+ZINIT_ICE[svn]} )); then
-            print -r -- "${ZINIT[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZINIT[col-rst]}"
+            builtin print -r -- "${ZINIT[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZINIT[col-rst]}"
             ( builtin cd -q "$local_dir"; command svn status -vu )
             retval=$?
-            print
+            builtin print
         else
-            print -r -- "${ZINIT[col-info]}Status for ${${local_dir:h}##*--}/$filename${ZINIT[col-rst]}"
+            builtin print -r -- "${ZINIT[col-info]}Status for ${${local_dir:h}##*--}/$filename${ZINIT[col-rst]}"
             ( builtin cd -q "$local_dir"; command ls -lth $filename )
             retval=$?
-            print
+            builtin print
         fi
     else
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
@@ -1819,7 +1819,7 @@ ZINIT[EXTENDED_GLOB]=""
     ZINIT_ICE=()
 
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
-        print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
+        builtin print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
     }
 
     return $retval
@@ -1897,7 +1897,7 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-update-or-status-snippet "$st" "${id_as:-$(<${snip:h}/url)}"
         ZINIT_ICE=()
     done
-    [[ -n $snipps ]] && print
+    [[ -n $snipps ]] &  builtin print
 
     ZINIT_ICE=()
 
@@ -1926,8 +1926,8 @@ ZINIT[EXTENDED_GLOB]=""
             if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
                 if (( !ICE_OPTS[opt_-q,--quiet] )) {
                     [[ $pd = _local---* ]] && \
-                        print -- "\nSkipping local plugin $REPLY" || \
-                        print "\n$REPLY doesn't have a remote set, will not fetch"
+                        builtin print -- "\nSkipping local plugin $REPLY" || \
+                        builtin print "\n$REPLY doesn't have a remote set, will not fetch"
                 }
                 continue
             fi
@@ -1939,15 +1939,15 @@ ZINIT[EXTENDED_GLOB]=""
         # Must be a git repository or a binary release
         if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]]; then
             (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                print "$REPLY: not a git repository"
+                builtin print "$REPLY: not a git repository"
             continue
         fi
 
         if [[ $st = status ]]; then
-            print "\nStatus for plugin $REPLY"
+            builtin print "\nStatus for plugin $REPLY"
             ( builtin cd -q "$repo"; command git status )
         else
-            (( !ICE_OPTS[opt_-q,--quiet] )) && print "Updating $REPLY" || print -n .
+            (( !ICE_OPTS[opt_-q,--quiet] )) &  builtin print "Updating $REPLY" |  builtin print -n .
             .zinit-update-or-status update "$user" "$plugin"
         fi
     done
@@ -2038,7 +2038,7 @@ ZINIT[EXTENDED_GLOB]=""
         local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
 
         .zinit-any-colorify-as-uspl2 "$uspl"
-        print -r -- "Updating $REPLY..." >! $PUFILE
+        builtin print -r -- "Updating $REPLY..." >! $PUFILE
 
         .zinit-any-to-user-plugin "$uspl"
         local user=${reply[-2]} plugin=${reply[-1]}
@@ -2086,13 +2086,13 @@ ZINIT[EXTENDED_GLOB]=""
 
     local infoc="${ZINIT[col-info2]}"
 
-    print "Zinit's main directory: ${infoc}${ZINIT[HOME_DIR]}${ZINIT[col-rst]}"
-    print "Zinit's binary directory: ${infoc}${ZINIT[BIN_DIR]}${ZINIT[col-rst]}"
-    print "Plugin directory: ${infoc}${ZINIT[PLUGINS_DIR]}${ZINIT[col-rst]}"
-    print "Completions directory: ${infoc}${ZINIT[COMPLETIONS_DIR]}${ZINIT[col-rst]}"
+    builtin print "Zinit's main directory: ${infoc}${ZINIT[HOME_DIR]}${ZINIT[col-rst]}"
+    builtin print "Zinit's binary directory: ${infoc}${ZINIT[BIN_DIR]}${ZINIT[col-rst]}"
+    builtin print "Plugin directory: ${infoc}${ZINIT[PLUGINS_DIR]}${ZINIT[col-rst]}"
+    builtin print "Completions directory: ${infoc}${ZINIT[COMPLETIONS_DIR]}${ZINIT[col-rst]}"
 
     # Without _zlocal/zinit
-    print "Loaded plugins: ${infoc}$(( ${#ZINIT_REGISTERED_PLUGINS[@]} - 1 ))${ZINIT[col-rst]}"
+    builtin print "Loaded plugins: ${infoc}$(( ${#ZINIT_REGISTERED_PLUGINS[@]} - 1 ))${ZINIT[col-rst]}"
 
     # Count light-loaded plugins
     integer light=0
@@ -2101,28 +2101,28 @@ ZINIT[EXTENDED_GLOB]=""
         [[ "$s" = 1 ]] && (( light ++ ))
     done
     # Without _zlocal/zinit
-    print "Light loaded: ${infoc}$(( light - 1 ))${ZINIT[col-rst]}"
+    builtin print "Light loaded: ${infoc}$(( light - 1 ))${ZINIT[col-rst]}"
 
     # Downloaded plugins, without _zlocal/zinit, custom
     typeset -a plugins
     plugins=( "${ZINIT[PLUGINS_DIR]}"/*(DN) )
-    print "Downloaded plugins: ${infoc}$(( ${#plugins} - 1 ))${ZINIT[col-rst]}"
+    builtin print "Downloaded plugins: ${infoc}$(( ${#plugins} - 1 ))${ZINIT[col-rst]}"
 
     # Number of enabled completions, with _zlocal/zinit
     typeset -a completions
     completions=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
-    print "Enabled completions: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
+    builtin print "Enabled completions: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
 
     # Number of disabled completions, with _zlocal/zinit
     completions=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
-    print "Disabled completions: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
+    builtin print "Disabled completions: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
 
     # Number of completions existing in all plugins
     completions=( "${ZINIT[PLUGINS_DIR]}"/*/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN) )
-    print "Completions available overall: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
+    builtin print "Completions available overall: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
 
     # Enumerate snippets loaded
-    print "Snippets loaded: ${infoc}${(j:, :onv)ZINIT_SNIPPETS[@]}${ZINIT[col-rst]}"
+    builtin print "Snippets loaded: ${infoc}${(j:, :onv)ZINIT_SNIPPETS[@]}${ZINIT[col-rst]}"
 
     # Number of compiled plugins
     typeset -a matches m
@@ -2139,7 +2139,7 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     done
 
-    print "Compiled plugins: ${infoc}$count${ZINIT[col-rst]}"
+    builtin print "Compiled plugins: ${infoc}$count${ZINIT[col-rst]}"
 } # ]]]
 # FUNCTION: .zinit-show-times [[[
 # Shows loading times of all loaded plugins.
@@ -2155,8 +2155,8 @@ ZINIT[EXTENDED_GLOB]=""
     local -a tmp
 
     [[ "$opt" = *-[a-z]#m[a-z]#* ]] && \
-        { print "Plugin loading moments (relative to the first prompt):"; ((1)); } || \
-        print "Plugin loading times:"
+          builtin print "Plugin loading moments (relative to the first prompt):"; ((1)); } || \
+        builtin print "Plugin loading times:"
 
     for entry in "${(@on)ZINIT[(I)TIME_[0-9]##_*]}"; do
         entry2="${entry#TIME_[0-9]##_}"
@@ -2192,20 +2192,20 @@ ZINIT[EXTENDED_GLOB]=""
         fi
 
         if [[ ${sice[as]} == "command" ]]; then
-            print "$time" - "$REPLY (command)"
+            builtin print "$time" - "$REPLY (command)"
         elif [[ -n ${sice[sbin]} ]]; then
-            print "$time" - "$REPLY (sbin command)"
+            builtin print "$time" - "$REPLY (sbin command)"
         elif [[ -n ${sice[fbin]} ]]; then
-            print "$time" - "$REPLY (fbin command)"
+            builtin print "$time" - "$REPLY (fbin command)"
         elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && ${+sice[make]} = 1 ]]; then
-            print "$time" - "$REPLY (/dev/null make plugin)"
+            builtin print "$time" - "$REPLY (/dev/null make plugin)"
         else
-            print "$time" - "$REPLY"
+            builtin print "$time" - "$REPLY"
         fi
 
         (( sum += ZINIT[$entry] ))
     done
-    print "Total: $sum sec"
+    builtin print "Total: $sum sec"
 }
 # ]]]
 # FUNCTION: .zinit-list-bindkeys [[[
@@ -2220,14 +2220,14 @@ ZINIT[EXTENDED_GLOB]=""
     for uspl2 in "${(@ko)ZINIT[(I)BINDKEYS__*]}"; do
         [[ -z "${ZINIT[$uspl2]}" ]] && continue
 
-        (( !first )) && print
+        (( !first )) &  builtin print
         first=0
 
         uspl2="${uspl2#BINDKEYS__}"
 
         .zinit-any-colorify-as-uspl2 "$uspl2"
         uspl2col="$REPLY"
-        print "$uspl2col"
+        builtin print "$uspl2col"
 
         string_widget=( "${(z@)ZINIT[BINDKEYS__$uspl2]}" )
         for sw in "${(Oa)string_widget[@]}"; do
@@ -2245,17 +2245,17 @@ ZINIT[EXTENDED_GLOB]=""
             local sw_arr5="${(Q)sw_arr[5-correct]}" # Optional -R (not with -A, -N)
 
             if [[ "$sw_arr3" = "-M" && "$sw_arr5" != "-R" ]]; then
-                print "bindkey $sw_arr1 $sw_arr2 ${ZINIT[col-info]}for keymap $sw_arr4${ZINIT[col-rst]}"
+                builtin print "bindkey $sw_arr1 $sw_arr2 ${ZINIT[col-info]}for keymap $sw_arr4${ZINIT[col-rst]}"
             elif [[ "$sw_arr3" = "-M" && "$sw_arr5" = "-R" ]]; then
-                print "${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey $sw_arr1 $sw_arr2 ${ZINIT[col-info]}mapped to $sw_arr4${ZINIT[col-rst]}"
+                builtin print "${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey $sw_arr1 $sw_arr2 ${ZINIT[col-info]}mapped to $sw_arr4${ZINIT[col-rst]}"
             elif [[ "$sw_arr3" != "-M" && "$sw_arr5" = "-R" ]]; then
-                print "${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey $sw_arr1 $sw_arr2"
+                builtin print "${ZINIT[col-info]}range${ZINIT[col-rst]} bindkey $sw_arr1 $sw_arr2"
             elif [[ "$sw_arr3" = "-A" ]]; then
-                print "Override of keymap \`main'"
+                builtin print "Override of keymap \`main'"
             elif [[ "$sw_arr3" = "-N" ]]; then
-                print "New keymap \`$sw_arr4'"
+                builtin print "New keymap \`$sw_arr4'"
             else
-                print "bindkey $sw_arr1 $sw_arr2"
+                builtin print "bindkey $sw_arr1 $sw_arr2"
             fi
         done
     done
@@ -2273,7 +2273,7 @@ ZINIT[EXTENDED_GLOB]=""
     matches=( ${ZINIT[PLUGINS_DIR]}/*/*.zwc(DN) )
 
     if [[ "${#matches[@]}" -eq "0" ]]; then
-        print "No compiled plugins"
+        builtin print "No compiled plugins"
         return 0
     fi
 
@@ -2285,13 +2285,13 @@ ZINIT[EXTENDED_GLOB]=""
         user="${reply[-2]}" plugin="${reply[-1]}"
 
         if [[ "$cur_plugin" != "$uspl1" ]]; then
-            [[ -n "$cur_plugin" ]] && print # newline
+            [[ -n "$cur_plugin" ]] &  builtin print # newline
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            print -r -- "$REPLY:"
+            builtin print -r -- "$REPLY:"
             cur_plugin="$uspl1"
         fi
 
-        print "$file"
+        builtin print "$file"
     done
 } # ]]]
 # FUNCTION: .zinit-compile-uncompile-all [[[
@@ -2314,7 +2314,7 @@ ZINIT[EXTENDED_GLOB]=""
         user="${reply[-2]}" plugin="${reply[-1]}"
 
         .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-        print -r -- "$REPLY:"
+        builtin print -r -- "$REPLY:"
 
         if [[ "$compile" = "1" ]]; then
             .zinit-compile-plugin "$user" "$plugin"
@@ -2345,16 +2345,16 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ "${#matches[@]}" -eq "0" ]]; then
         if [[ "$silent" = "1" ]]; then
-            print "not compiled"
+            builtin print "not compiled"
         else
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            print -r -- "$REPLY not compiled"
+            builtin print -r -- "$REPLY not compiled"
         fi
         return 1
     fi
 
     for m in "${matches[@]}"; do
-        print "Removing ${ZINIT[col-info]}${m:t}${ZINIT[col-rst]}"
+        builtin print "Removing ${ZINIT[col-info]}${m:t}${ZINIT[col-rst]}"
         command rm -f "$m"
     done
 } # ]]]
@@ -2419,7 +2419,7 @@ ZINIT[EXTENDED_GLOB]=""
 
         (( ++ flcur ))
         flper=$(( flcur / flmax * 100 ))
-        print -u 2 -n -- "\r${flper}% "
+        builtin print -u 2 -n -- "\r${flper}% "
     done
 
     for o in "${(k)owner_to_group[@]}"; do
@@ -2430,7 +2430,7 @@ ZINIT[EXTENDED_GLOB]=""
     done
     packs=( "${(on)packs[@]}" )
 
-    print -u 2 # newline after percent
+    builtin print -u 2 # newline after percent
 
     # Find longest completion name
     integer longest=0
@@ -2444,12 +2444,12 @@ ZINIT[EXTENDED_GLOB]=""
         unpacked=( "${(Q@)${(z@)c}}" ) # TODO: ${(Q)${(z@)c}[@]} ?
 
         .zinit-any-colorify-as-uspl2 "$unpacked[2]"
-        print -n "${(r:longest+1:: :)unpacked[1]} $REPLY"
+        builtin print -n "${(r:longest+1:: :)unpacked[1]} $REPLY"
 
-        (( unpacked[3] & 0x1 )) && print -n " ${ZINIT[col-error]}[disabled]${ZINIT[col-rst]}"
-        (( unpacked[3] & 0x2 )) && print -n " ${ZINIT[col-error]}[unknown file, clean with cclear]${ZINIT[col-rst]}"
-        (( unpacked[3] & 0x4 )) && print -n " ${ZINIT[col-error]}[stray, clean with cclear]${ZINIT[col-rst]}"
-        print
+        (( unpacked[3] & 0x1 )) &  builtin print -n " ${ZINIT[col-error]}[disabled]${ZINIT[col-rst]}"
+        (( unpacked[3] & 0x2 )) &  builtin print -n " ${ZINIT[col-error]}[unknown file, clean with cclear]${ZINIT[col-rst]}"
+        (( unpacked[3] & 0x4 )) &  builtin print -n " ${ZINIT[col-error]}[stray, clean with cclear]${ZINIT[col-rst]}"
+        builtin print
     done
 } # ]]]
 # FUNCTION: .zinit-clear-completions [[[
@@ -2497,11 +2497,11 @@ ZINIT[EXTENDED_GLOB]=""
         fi
 
         if (( unknown == 1 || stray == 1 )); then
-            print -n "Removing completion: ${(r:longest+1:: :)c} $REPLY"
-            (( disabled )) && print -n " ${ZINIT[col-error]}[disabled]${ZINIT[col-rst]}"
-            (( unknown )) && print -n " ${ZINIT[col-error]}[unknown file]${ZINIT[col-rst]}"
-            (( stray )) && print -n " ${ZINIT[col-error]}[stray]${ZINIT[col-rst]}"
-            print
+            builtin print -n "Removing completion: ${(r:longest+1:: :)c} $REPLY"
+            (( disabled )) &  builtin print -n " ${ZINIT[col-error]}[disabled]${ZINIT[col-rst]}"
+            (( unknown )) &  builtin print -n " ${ZINIT[col-error]}[unknown file]${ZINIT[col-rst]}"
+            (( stray )) &  builtin print -n " ${ZINIT[col-error]}[stray]${ZINIT[col-rst]}"
+            builtin print
             command rm -f "$cpath"
         fi
     done
@@ -2531,7 +2531,7 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     done
 
-    print "${ZINIT[col-info]}[+]${ZINIT[col-rst]} is installed, ${ZINIT[col-p]}[-]${ZINIT[col-rst]} uninstalled, ${ZINIT[col-error]}[+-]${ZINIT[col-rst]} partially installed"
+    builtin print "${ZINIT[col-info]}[+]${ZINIT[col-rst]} is installed, ${ZINIT[col-p]}[-]${ZINIT[col-rst]} uninstalled, ${ZINIT[col-error]}[+-]${ZINIT[col-rst]} partially installed"
 
     local c
     for pp in "${plugin_paths[@]}"; do
@@ -2550,11 +2550,11 @@ ZINIT[EXTENDED_GLOB]=""
             done
 
             if [[ "$all_installed" -eq "${#completions[@]}" ]]; then
-                print -n "${ZINIT[col-p]}[-]${ZINIT[col-rst]} "
+                builtin print -n "${ZINIT[col-p]}[-]${ZINIT[col-rst]} "
             elif [[ "$all_installed" -eq "0" ]]; then
-                print -n "${ZINIT[col-info]}[+]${ZINIT[col-rst]} "
+                builtin print -n "${ZINIT[col-info]}[+]${ZINIT[col-rst]} "
             else
-                print -n "${ZINIT[col-error]}[+-]${ZINIT[col-rst]} "
+                builtin print -n "${ZINIT[col-error]}[+-]${ZINIT[col-rst]} "
             fi
 
             # Convert directory name to colorified $user/$plugin
@@ -2564,7 +2564,7 @@ ZINIT[EXTENDED_GLOB]=""
             # ${ZINIT[col-rst]} is used twice, so as a $ZINIT_COL)
             integer adjust_ec=$(( ${#ZINIT[col-rst]} * 2 + ${#ZINIT[col-uname]} + ${#ZINIT[col-pname]} ))
 
-            print "${(r:longest+adjust_ec:: :)REPLY} ${(j:, :)completions}"
+            builtin print "${(r:longest+adjust_ec:: :)REPLY} ${(j:, :)completions}"
         fi
     done
 } # ]]]
@@ -2582,14 +2582,14 @@ ZINIT[EXTENDED_GLOB]=""
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "${ZINIT[col-error]}No such completion \`$c'${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}No such completion \`$c'${ZINIT[col-rst]}"
         return 1
     fi
 
     # Check if there is no backup file
     # This is treated as if the completion is already enabled
     if [[ ! -e "$bkpfile" ]]; then
-        print "Completion ${ZINIT[col-info]}$c${ZINIT[col-rst]} already enabled"
+        builtin print "Completion ${ZINIT[col-info]}$c${ZINIT[col-rst]} already enabled"
 
         .zinit-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -2597,8 +2597,8 @@ ZINIT[EXTENDED_GLOB]=""
 
     # Disabled, but completion file already exists?
     if [[ -e "$cfile" ]]; then
-        print "${ZINIT[col-error]}Warning: completion's file \`${cfile:t}' exists, will overwrite${ZINIT[col-rst]}"
-        print "${ZINIT[col-error]}Completion is actually enabled and will re-enable it again${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}Warning: completion's file \`${cfile:t}' exists, will overwrite${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}Completion is actually enabled and will re-enable it again${ZINIT[col-rst]}"
         .zinit-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$cfile"
     else
@@ -2613,7 +2613,7 @@ ZINIT[EXTENDED_GLOB]=""
     # Get completion's owning plugin
     .zinit-get-completion-owner-uspl2col "$cfile" "$REPLY"
 
-    print "Enabled ${ZINIT[col-info]}$c${ZINIT[col-rst]} completion belonging to $REPLY"
+    builtin print "Enabled ${ZINIT[col-info]}$c${ZINIT[col-rst]} completion belonging to $REPLY"
 
     return 0
 } # ]]]
@@ -2631,14 +2631,14 @@ ZINIT[EXTENDED_GLOB]=""
     local bkpfile="${cfile:h}/$c"
 
     if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        print "${ZINIT[col-error]}No such completion \`$c'${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}No such completion \`$c'${ZINIT[col-rst]}"
         return 1
     fi
 
     # Check if it's already disabled
     # Not existing "$cfile" says that
     if [[ ! -e "$cfile" ]]; then
-        print "Completion ${ZINIT[col-info]}$c${ZINIT[col-rst]} already disabled"
+        builtin print "Completion ${ZINIT[col-info]}$c${ZINIT[col-rst]} already disabled"
 
         .zinit-check-comp-consistency "$cfile" "$bkpfile" 0
         return 1
@@ -2646,7 +2646,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     # No disable, but bkpfile exists?
     if [[ -e "$bkpfile" ]]; then
-        print "${ZINIT[col-error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite${ZINIT[col-rst]}"
         .zinit-check-comp-consistency "$cfile" "$bkpfile" 1
         command rm -f "$bkpfile"
     else
@@ -2661,7 +2661,7 @@ ZINIT[EXTENDED_GLOB]=""
     # Get completion's owning plugin
     .zinit-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
 
-    print "Disabled ${ZINIT[col-info]}$c${ZINIT[col-rst]} completion belonging to $REPLY"
+    builtin print "Disabled ${ZINIT[col-info]}$c${ZINIT[col-rst]} completion belonging to $REPLY"
 
     return 0
 } # ]]]
@@ -2679,12 +2679,12 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ -e "$REPLY" ]]; then
             builtin cd "$REPLY"
         else
-            print -r -- "No such plugin or snippet"
+            builtin print -r -- "No such plugin or snippet"
             return 1
         fi
-        print
+        builtin print
     } || {
-        print -r -- "No such plugin or snippet"
+        builtin print -r -- "No such plugin or snippet"
         return 1
     }
 } # ]]]
@@ -2743,11 +2743,11 @@ ZINIT[EXTENDED_GLOB]=""
 " and snippets in $ZINIT[col-file]$ZINIT[SNIPPETS_DIR]%f%b?" \
 " # Delete unloaded snippets
 local -aU loadedsnips todelete final_todelete
-loadedsnips=( \${\${ZINIT_SNIPPETS[@]% <*>}/(#m)*/\$(.zinit-get-object-path snippet \"\$MATCH\" && print -rn \$reply[1]/\$reply[2]; )} )
+loadedsnips=( \${\${ZINIT_SNIPPETS[@]% <*>}/(#m)*/\$(.zinit-get-object-path snippet \"\$MATCH\" &  builtin print -rn \$reply[1]/\$reply[2]; )} )
 local dir=\${\${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-/tmp/xyzcba231}
 todelete=( \$dir/*/*/*(ND/) \$dir/*/*(ND/) \$dir/*(ND/) )
 final_todelete=( \${todelete[@]:#*/(\${(~j:|:)loadedsnips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)} )
-final_todelete=( \${final_todelete[@]//(#m)*/\$( .zinit-get-object-path snippet \"\${\${\${MATCH##\${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/\${match[1]##--}://}//--//}\" && print -r -- \$reply[1]/\$reply[2])} )
+final_todelete=( \${final_todelete[@]//(#m)*/\$( .zinit-get-object-path snippet \"\${\${\${MATCH##\${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/\${match[1]##--}://}//--//}\" &  builtin print -r -- \$reply[1]/\$reply[2])} )
 final_todelete=( \${final_todelete[@]:#(\${(~j:|:)loadedsnips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)} )
 todelete=( \${\${\${(@)\${(@)final_todelete##\$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/\${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/\$match[1]/\$ZINIT[col-file]\$match[2]$ZINIT[col-rst]} )
 todelete=( \${todelete[@]//(#m)(#s)[^\/]##(#e)/\$ZINIT[col-file]\$MATCH\$ZINIT[col-rst]} )
@@ -2781,7 +2781,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
 
     if [[ "$local_dir" != /* ]]
     then
-        print "Obtained a risky, not-absolute path ($local_dir), aborting"
+        builtin print "Obtained a risky, not-absolute path ($local_dir), aborting"
         return 1
     fi
 
@@ -2805,7 +2805,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
                     \"$local_dir\"; \
                     command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
             else
-                print "No such snippet"
+                builtin print "No such snippet"
                 return 1
             fi
         } else {
@@ -2815,7 +2815,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
             else
-                print "No such snippet"
+                builtin print "No such snippet"
                 return 1
             fi
         }
@@ -2827,7 +2827,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
                 \"$local_dir\"; \
                 command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
         else
-            print -r -- "No such plugin or snippet"
+            builtin print -r -- "No such plugin or snippet"
             return 1
         fi
     fi
@@ -2844,17 +2844,17 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
     if (( ICE_OPTS[opt_-y,--yes] )); then
         integer retval
         eval "$2"; retval=$?
-        (( ICE_OPTS[opt_-q,--quiet] )) || print "\nDone (action executed, exit code: $retval)"
+        (( ICE_OPTS[opt_-q,--quiet] )) |  builtin print "\nDone (action executed, exit code: $retval)"
     else
-        print -Pr -- "$1"
-        print "[yY/n…]"
+        builtin print -Pr -- "$1"
+        builtin print "[yY/n…]"
         local ans
         read -q ans
         if [[ "$ans" = "y" ]] {
             eval "$2"
-            print "\nDone (action executed, exit code: $?)"
+            builtin print "\nDone (action executed, exit code: $?)"
         } else {
-            print "\nBreak, no action"
+            builtin print "\nBreak, no action"
             return 1
         }
     fi
@@ -2909,7 +2909,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
             gitout=`command git log --all --max-count=1 --since=$timespec 2>/dev/null`
             if [[ -n $gitout ]]; then
                 .zinit-any-colorify-as-uspl2 "$uspl1"
-                print -r -- "$REPLY"
+                builtin print -r -- "$REPLY"
             fi
         fi
         popd >/dev/null
@@ -2931,7 +2931,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
     if (( ${+commands[curl]} == 0 || ${+commands[git]} == 0 )); then
-        print "${ZINIT[col-error]}curl and git are needed${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}curl and git are needed${ZINIT[col-rst]}"
         return 1
     fi
 
@@ -2953,42 +2953,42 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\"
     vared -cp 'Plugin name: ' plugin
 
     if [[ "$plugin" = "_unknown" ]]; then
-        print "${ZINIT[col-error]}No plugin name entered${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}No plugin name entered${ZINIT[col-rst]}"
         return 1
     fi
 
     plugin="${plugin//[^a-zA-Z0-9_]##/-}"
     .zinit-any-colorify-as-uspl2 "${${${(M)isorg:#(y|yes)}:+$org}:-$user}" "$plugin"
     local uspl2col="$REPLY"
-    print "Plugin is $uspl2col"
+    builtin print "Plugin is $uspl2col"
 
     if .zinit-exists-physically "${${${(M)isorg:#(y|yes)}:+$org}:-$user}" "$plugin"; then
-        print "${ZINIT[col-error]}Repository${ZINIT[col-rst]} $uspl2col ${ZINIT[col-error]}already exists locally${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}Repository${ZINIT[col-rst]} $uspl2col ${ZINIT[col-error]}already exists locally${ZINIT[col-rst]}"
         return 1
     fi
 
     builtin cd -q "${ZINIT[PLUGINS_DIR]}"
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
-        print "${ZINIT[col-info]}Creating Github repository${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-info]}Creating Github repository${ZINIT[col-rst]}"
         if [[ $isorg = (y|yes) ]]; then
             curl --silent -u "$user" https://api.github.com/orgs/$org/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         else
             curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         fi
         command git clone "https://github.com/${${${(M)isorg:#(y|yes)}:+$org}:-$user}/${plugin}.git" "${${${(M)isorg:#(y|yes)}:+$org}:-$user}---${plugin//\//---}" || {
-            print "${ZINIT[col-error]}Creation of remote repository $uspl2col ${ZINIT[col-error]}failed${ZINIT[col-rst]}"
-            print "${ZINIT[col-error]}Bad credentials?${ZINIT[col-rst]}"
+            builtin print "${ZINIT[col-error]}Creation of remote repository $uspl2col ${ZINIT[col-error]}failed${ZINIT[col-rst]}"
+            builtin print "${ZINIT[col-error]}Bad credentials?${ZINIT[col-rst]}"
             return 1
         }
         builtin cd -q "${${${(M)isorg:#(y|yes)}:+$org}:-$user}---${plugin//\//---}"
         command git config credential.https://github.com.username "${user}"
     else
-        print "${ZINIT[col-info]}Creating local git repository${${user:+.}:-, ${ZINIT[col-pname]}free-style, without the \"_local/\" part${ZINIT[col-info]}.}${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-info]}Creating local git repository${${user:+.}:-, ${ZINIT[col-pname]}free-style, without the \"_local/\" part${ZINIT[col-info]}.}${ZINIT[col-rst]}"
         command mkdir "${user:+${user}---}${plugin//\//---}"
         builtin cd -q "${user:+${user}---}${plugin//\//---}"
         command git init || {
-            print "Git repository initialization failed, aborting"
+            builtin print "Git repository initialization failed, aborting"
             return 1
         }
     fi
@@ -3033,9 +3033,9 @@ EOF
     xfuncname = "^#+[[:blank:]].*$"
 EOF
 
-    print -r -- "*.zsh  diff=zsh" >! .gitattributes
-    print -r -- "*.md   diff=markdown" >! .gitattributes
-    print -r -- "# $plugin" >! "README.md"
+    builtin print -r -- "*.zsh  diff=zsh" >! .gitattributes
+    builtin print -r -- "*.md   diff=markdown" >! .gitattributes
+    builtin print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZINIT[BIN_DIR]}/LICENSE" LICENSE
     command cp -vf "${ZINIT[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
     command cp -vf "${ZINIT[BIN_DIR]}/doc/example-script" .
@@ -3045,13 +3045,13 @@ EOF
     command sed -i -e "s/YEAR/$year/g" example-script
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
-        print "Remote repository $uspl2col set up as origin."
-        print "You're in plugin's local folder, the files aren't added to git."
-        print "Your next step after commiting will be:"
-        print "git push -u origin master"
+        builtin print "Remote repository $uspl2col set up as origin."
+        builtin print "You're in plugin's local folder, the files aren't added to git."
+        builtin print "Your next step after commiting will be:"
+        builtin print "git push -u origin master"
     else
-        print "Created local $uspl2col plugin."
-        print "You're in plugin's repository folder, the files aren't added to git."
+        builtin print "Created local $uspl2col plugin."
+        builtin print "You're in plugin's repository folder, the files aren't added to git."
     fi
 } # ]]]
 # FUNCTION: .zinit-glance [[[
@@ -3069,7 +3069,7 @@ EOF
     .zinit-exists-physically-message "$user" "$plugin" || return 1
 
     .zinit-first "$1" "$2" || {
-        print "${ZINIT[col-error]}No source file found, cannot glance${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}No source file found, cannot glance${ZINIT[col-rst]}"
         return 1
     }
 
@@ -3080,17 +3080,17 @@ EOF
 
     {
         if (( ${+commands[pygmentize]} )); then
-            print "Glancing with ${ZINIT[col-info]}pygmentize${ZINIT[col-rst]}"
+            builtin print "Glancing with ${ZINIT[col-info]}pygmentize${ZINIT[col-rst]}"
             pygmentize -l bash -g "$fname"
         elif (( ${+commands[highlight]} )); then
-            print "Glancing with ${ZINIT[col-info]}highlight${ZINIT[col-rst]}"
+            builtin print "Glancing with ${ZINIT[col-info]}highlight${ZINIT[col-rst]}"
             if (( has_256_colors )); then
                 highlight -q --force -S sh -O xterm256 "$fname"
             else
                 highlight -q --force -S sh -O ansi "$fname"
             fi
         elif (( ${+commands[source-highlight]} )); then
-            print "Glancing with ${ZINIT[col-info]}source-highlight${ZINIT[col-rst]}"
+            builtin print "Glancing with ${ZINIT[col-info]}source-highlight${ZINIT[col-rst]}"
             source-highlight -fesc --failsafe -s zsh -o STDOUT -i "$fname"
         else
             cat "$fname"
@@ -3122,12 +3122,12 @@ EOF
 
     if (( is_snippet )); then
         if [[ ! -e "$local_dir" ]]; then
-            print "No such snippet"
+            builtin print "No such snippet"
             return 1
         fi
     else
         if [[ ! -e "$local_dir" ]]; then
-            print -r -- "No such plugin or snippet"
+            builtin print -r -- "No such plugin or snippet"
             return 1
         fi
     fi
@@ -3153,7 +3153,7 @@ EOF
     .zinit-exists-physically-message "$user" "$plugin" || return 1
 
     .zinit-first "$1" "$2" || {
-        print "${ZINIT[col-error]}No source file found, cannot stress${ZINIT[col-rst]}"
+        builtin print "${ZINIT[col-error]}No source file found, cannot stress${ZINIT[col-rst]}"
         return 1
     }
 
@@ -3173,11 +3173,11 @@ EOF
         builtin unsetopt shglob kshglob
         for i in "${ZINIT_STRESS_TEST_OPTIONS[@]}"; do
             builtin setopt "$i"
-            print -n "Stress-testing ${fname:t} for option $i "
+            builtin print -n "Stress-testing ${fname:t} for option $i "
             zcompile -R "$fname" 2>/dev/null && {
-                print "[${ZINIT[col-success]}Success${ZINIT[col-rst]}]"
+                builtin print "[${ZINIT[col-success]}Success${ZINIT[col-rst]}]"
             } || {
-                print "[${ZINIT[col-failure]}Fail${ZINIT[col-rst]}]"
+                builtin print "[${ZINIT[col-failure]}Fail${ZINIT[col-rst]}]"
             }
             builtin unsetopt "$i"
         done
@@ -3193,18 +3193,18 @@ EOF
 #
 # User-action entry point.
 .zinit-list-compdef-replay() {
-    print "Recorded compdefs:"
+    builtin print "Recorded compdefs:"
     local cdf
     for cdf in "${ZINIT_COMPDEF_REPLAY[@]}"; do
-        print "compdef ${(Q)cdf}"
+        builtin print "compdef ${(Q)cdf}"
     done
 } # ]]]
 # FUNCTION: .zinit-ls [[[
 .zinit-ls() {
     (( ${+commands[tree]} )) || {
-        print "${ZINIT[col-error]}No \`tree' program, it is required by the subcommand \`ls\'${ZINIT[col-rst]}"
-        print "Download from: http://mama.indstate.edu/users/ice/tree/"
-        print "It is also available probably in all distributions and Homebrew, as package \`tree'"
+        builtin print "${ZINIT[col-error]}No \`tree' program, it is required by the subcommand \`ls\'${ZINIT[col-rst]}"
+        builtin print "Download from: http://mama.indstate.edu/users/ice/tree/"
+        builtin print "It is also available probably in all distributions and Homebrew, as package \`tree'"
     }
     (
         setopt localoptions extendedglob nokshglob noksharrays
@@ -3224,7 +3224,7 @@ EOF
         list=( "${list[@]//(#b)(#s)(│   └──|    └──|    ├──|│   ├──) (*)/${match[1]} $ZINIT[col-error]${match[2]}$ZINIT[col-rst]}" )
 
         list[-1]+=", located at ZINIT[SNIPPETS_DIR], i.e. ${ZINIT[SNIPPETS_DIR]}"
-        print -rl -- "${list[@]}"
+        builtin print -rl -- "${list[@]}"
     )
 }
 # ]]]
@@ -3322,12 +3322,12 @@ EOF
         }
 
         if [[ ${#output} = 0 ]]; then
-            print -zr "# No Ice modifiers"
+            builtin print -zr "# No Ice modifiers"
         else
-            print -zr "zinit ice ${output[*]}; zinit "
+            builtin print -zr "zinit ice ${output[*]}; zinit "
         fi
         +zinit-deploy-message @rst
-    } || print -r -- "No such plugin or snippet"
+    } |  builtin print -r -- "No such plugin or snippet"
 }
 # ]]]
 # FUNCTION: .zinit-module [[[
@@ -3339,25 +3339,25 @@ EOF
         .zinit-build-module "${@[2,-1]}"
     elif [[ "$1" = "info" ]]; then
         if [[ "$2" = "--link" ]]; then
-              print -r "You can copy the error messages and submit"
-              print -r "error-report at: https://github.com/zdharma/zinit/issues"
+              builtin print -r "You can copy the error messages and submit"
+              builtin print -r "error-report at: https://github.com/zdharma/zinit/issues"
         else
-            print -r "To load the module, add following 2 lines to .zshrc, at top:"
-            print -r "    module_path+=( \"${ZINIT[BIN_DIR]}/zmodules/Src\" )"
-            print -r "    zmodload zdharma/zplugin"
-            print -r ""
-            print -r "After loading, use command \`zpmod' to communicate with the module."
-            print -r "See \`zpmod -h' for more information."
+            builtin print -r "To load the module, add following 2 lines to .zshrc, at top:"
+            builtin print -r "    module_path+=( \"${ZINIT[BIN_DIR]}/zmodules/Src\" )"
+            builtin print -r "    zmodload zdharma/zplugin"
+            builtin print -r ""
+            builtin print -r "After loading, use command \`zpmod' to communicate with the module."
+            builtin print -r "See \`zpmod -h' for more information."
         fi
     elif [[ "$1" = (help|usage) ]]; then
-        print -r "Usage: zinit module {build|info|help} [options]"
-        print -r "       zinit module build [--clean]"
-        print -r "       zinit module info [--link]"
-        print -r ""
-        print -r "To start using the zinit Zsh module run: \`zinit module build'"
-        print -r "and follow the instructions. Option --clean causes \`make distclean'"
-        print -r "to be run. To display the instructions on loading the module, run:"
-        print -r "\`zinit module info'."
+        builtin print -r "Usage: zinit module {build|info|help} [options]"
+        builtin print -r "       zinit module build [--clean]"
+        builtin print -r "       zinit module info [--link]"
+        builtin print -r ""
+        builtin print -r "To start using the zinit Zsh module run: \`zinit module build'"
+        builtin print -r "and follow the instructions. Option --clean causes \`make distclean'"
+        builtin print -r "to be run. To display the instructions on loading the module, run:"
+        builtin print -r "\`zinit module info'."
     fi
 }
 # ]]]
@@ -3392,7 +3392,7 @@ EOF
               .zinit-module info --link
           }
       }
-      print $EPOCHSECONDS >! "${ZINIT[BIN_DIR]}"/zmodules/COMPILED_AT
+      builtin print $EPOCHSECONDS >! "${ZINIT[BIN_DIR]}"/zmodules/COMPILED_AT
     )
 }
 # ]]]
@@ -3406,7 +3406,7 @@ EOF
 #
 # User-action entry point.
 .zinit-help() {
-           print -r -- "${ZINIT[col-p]}Usage${ZINIT[col-rst]}:
+           builtin print -r -- "${ZINIT[col-p]}Usage${ZINIT[col-rst]}:
 —— -h|--help|help                – usage information
 —— man                           – manual
 —— self-update                   – updates and compiles Zinit
@@ -3466,7 +3466,7 @@ EOF
             [[ -z "$key" || "$key" != "z-annex $type:"* ]] && continue
             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
             (( ${+functions[${arr[6]}]} )) && { "${arr[6]}"; ((1)); } || \
-                { print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-annex \`${arr[3]}')"; }
+                builtin print -rl -- "(Couldn't find the help-handler \`${arr[6]}' of the z-annex \`${arr[3]}')"; }
         done
     done
 
