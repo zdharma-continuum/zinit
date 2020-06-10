@@ -2181,7 +2181,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     }
                     for REPLY ( ${(s.;.)ZINIT_ICE[has]} ) {
                         (( ${+commands[$REPLY]} )) || \
-                            { (( $# )) && shift; continue; }
+                            { (( $# )) && shift; continue 2; }
                     }
 
                     ZINIT_ICE[wait]="${${(M)${+ZINIT_ICE[wait]}:#1}:+${(M)ZINIT_ICE[wait]#!}${${ZINIT_ICE[wait]#!}:-0}}"
