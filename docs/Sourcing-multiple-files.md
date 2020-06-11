@@ -109,9 +109,9 @@ it's possible to write:
 
 ```shell
 zinit for \
-    OMZ::lib/functions.zsh \
-    OMZ::lib/misc.zsh \
-    OMZ::lib/completion.zsh
+    OMZL::functions.zsh \
+    OMZL::misc.zsh \                                                                    
+    OMZL::completion.zsh
 ```
 
 which is somewhat easier on eyes. Also – an **important** property: the multiple
