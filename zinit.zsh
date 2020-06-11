@@ -1664,11 +1664,13 @@ builtin setopt noaliases
     [[ $1 = (-f|--front) ]] && { shift; integer front=1; }
     .zinit-any-to-user-plugin "$1" ""
     local id_as="$1" add_dir="$2" user="${reply[-2]}" plugin="${reply[-1]}"
-    (( front )) && \
-        fpath[1,0]=${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir} || \
+    if (( front )) {
+        fpath[1,0]=${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir}
+    } else {
         fpath+=(
             ${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir}
         )
+    }
 }
 # ]]]
 # FUNCTION: .zinit-run [[[
