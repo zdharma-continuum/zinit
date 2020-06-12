@@ -52,6 +52,16 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 12-06-2020
+  - New options to `update`: `-s/--snippets` and `-l/--plugins` – they're
+    limiting the `update --all` to only plugins or snippets. Example:
+
+    ```zsh
+        zinit update --plugins
+    ```
+
+    Work also with `-p/--parallel`.
+
 * 15-05-2020
   - The `autoload''` ice can now rename the autoloaded functions, i.e.: load
     a function from a file `func-A` as a function `func-B` via: `autoload'func-A
