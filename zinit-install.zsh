@@ -1571,13 +1571,15 @@ ziextract() {
     emulate -LR zsh
     setopt extendedglob typesetsilent noshortloops # warncreateglobal
 
-    local -a opt_move opt_norm opt_auto opt_nobkp
-    zparseopts -D -E -move=opt_move -norm=opt_norm \
+    local -a opt_move opt_move2 opt_norm opt_auto opt_nobkp
+    zparseopts -D -E -move=opt_move -move2=opt_move2 -norm=opt_norm \
             -auto=opt_auto -nobkp=opt_nobkp || \
-        { builtin print -P -r -- "%F{160}Incorrect options given to \`ziextract' (available are: %F{221}--auto%F{160},%F{221}--move%F{160},%F{221}--norm%F{160},%F{221}--nobkp%F{160}).%f%b"; return 1; }
+        { builtin print -P -r -- "%F{160}Incorrect options given to
+\`ziextract' (available are: %F{221}--auto%F{160},%F{221}--move%F{160},%F{221}--move2%F{160},%F{221}--norm%F{160},%F{221}--nobkp%F{160}).%f%b"; return 1; }
 
     local file="$1" ext="$2"
     integer move=${${${(M)${#opt_move}:#0}:+0}:-1} \
+            move2=${${${(M)${#opt_move2}:#0}:+0}:-1} \
             norm=${${${(M)${#opt_norm}:#0}:+0}:-1} \
             auto=${${${(M)${#opt_auto}:#0}:+0}:-1} \
             nobkp=${${${(M)${#opt_nobkp}:#0}:+0}:-1}
@@ -1588,7 +1590,7 @@ ziextract() {
         integer ret_val
         files=( (#i)**/*.(zip|rar|7z|tgz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
-            ziextract "$file" $opt_move $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
+            ziextract "$file" $opt_move $opt_move2 $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
             ret_val+=$?
         }
         # Second, try to find the archive via `file' tool
@@ -1608,7 +1610,7 @@ ziextract() {
                             "Note:%f%b" \
                             "detected a $ZINIT[col-obj]$type%f%b" \
                             "archive in the file $ZINIT[col-file]$fname%f%b."
-                    ziextract "$fname" "$type" $opt_move $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
+                    ziextract "$fname" "$type" $opt_move $opt_move2 $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
                     integer iret_val=$?
                     ret_val+=iret_val
 
@@ -1636,7 +1638,7 @@ ziextract() {
                                     +zinit-message "[pre]ziextract:[info2] Note:[rst]" \
                                         "detected a [obj]${type2}[rst] archive in the" \
                                         " file [file]${fname}[rst]."
-                                ziextract "$fname" "$type2" $opt_move $opt_norm ${${${#archives}:#1}:+--nobkp}
+                                ziextract "$fname" "$type2" $opt_move $opt_move2 $opt_norm ${${${#archives}:#1}:+--nobkp}
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
                                 if [[ $fname == *.out ]] {
@@ -1820,14 +1822,19 @@ ziextract() {
 "(no extraction has been done).%f%b"
     }
 
-    if (( move )) {
+    if (( move | move2 )) {
         local -a files
         files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN/) )
         if (( ${#files} )) {
             command mkdir -p .tmp231ABC
             command mv -f *~(._zinit|.git|._backup|.tmp231ABC)(D) .tmp231ABC
-            command mv -f **/*~(*/*~*/*/*|*/*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
-            [[ -d .tmp231ABC ]] && command rmdir .tmp231ABC/* .tmp231ABC
+            if (( !move2 )) {
+                command mv -f **/*~(*/*~*/*/*|*/*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
+            } else {
+                command mv -f **/*~(*/*~*/*/*/*|*/*/*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
+            }
+
+            command rm -rf .tmp231ABC
         }
         REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
     } else {
@@ -1865,6 +1872,7 @@ ziextract() {
                 $auto2 $file \
                 ${${(MS)extract[1,2]##-}:+--norm} \
                 ${${(MS)extract[1,2]##\!}:+--move} \
+                ${${(MS)extract[1,2]##\!\!}:+--move2} \
                 ${${${#files}:#1}:+--nobkp}
         }
     )
