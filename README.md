@@ -52,6 +52,25 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 13-06-2020
+  - `ziextract` has a new `--move2` option, which moves files two levels up
+    after unpacking. For example, if there will be a dir:
+    `Pulumi/bin/{pulumi,pulumi2}`, then after `ziextract` there will be the two
+    files moved to the top level dir: `./{pulumi,pulumi2}`. To obtain the same
+    effect using the `extract''` ice, pass two exclamation marks, i.e.:
+    `extract'!!'`. A real-world example – it uses
+    [z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) and
+    [z-a-bin-gem-node](https://github.com/zinit-zsh/z-a-bin-gem-node) annexes to
+    download a Zip package that has the files inside two-level nested directory
+    tree:
+
+    ```zsh
+    zi id-as`pulumi` as`monitor|null` mv`pulumi pulumi_` extract`!!` \
+        dlink=`https://get.pulumi.com/releases/sdk/pulumi-%VERSION%-windows-x64.zip` \
+        sbin`pulumi*` for \
+            https://www.pulumi.com/docs/get-started/install/versions/
+    ```
+
 * 12-06-2020
   - New options to `update`: `-s/--snippets` and `-l/--plugins` – they're
     limiting the `update --all` to only plugins or snippets. Example:
