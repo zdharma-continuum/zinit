@@ -2338,7 +2338,7 @@ for-syntax."
                    } "$@"
                    set -- "${@[@]:#(--quiet|-q|--reset|-r|-f|--force|-p|--parallel|-s|--snippets|-l|--plugins)}"
                    if [[ $2 = --all || ${ICE_OPTS[opt_-p,--parallel]} -eq 1 || ${ICE_OPTS[opt_-s,--snippets]} -eq 1 || ${ICE_OPTS[opt_-l,--plugins]} -eq 1 || ( -z $2 && -z $3 && -z ${ZINIT_ICE[teleid]} && -z ${ZINIT_ICE[id-as]} ) ]]; then
-                       [[ -z $2 && $(( ${ICE_OPTS[opt_-p,--parallel]} + ${ICE_OPTS[opt_-s,--snippets]} + ${ICE_OPTS[opt_-l,--plugins]} )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 && $(( ICE_OPTS[opt_-p,--parallel] + ICE_OPTS[opt_-s,--snippets] + ICE_OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
                        [[ ${ICE_OPTS[opt_-p,--parallel]} = 1 ]] && \
                            ICE_OPTS[value]=${${${${${(M)2:#--all}:+$3}:-$2}:#--all}:-15}
                        .zinit-update-or-status-all update; ___retval=$?
