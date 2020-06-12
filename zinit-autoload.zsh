@@ -1988,9 +1988,9 @@ ZINIT[EXTENDED_GLOB]=""
         local PUFILEMAIN=${${ef_id#/}//(#m)[\/=\?\&:]/${map[$MATCH]}}
         local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
 
-        #.zinit-update-or-status-snippet "$st" "$ef_id" &>! $PUFILE &
+        .zinit-update-or-status-snippet "$st" "$ef_id" &>! $PUFILE &
 
-        #PUAssocArray[$!]=$PUFILE
+        PUAssocArray[$!]=$PUFILE
 
         .zinit-wait-for-update-jobs snippets
     }
