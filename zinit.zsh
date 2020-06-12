@@ -2051,6 +2051,10 @@ zinit() {
        --force    opt_-f,--force
        -p         opt_-p,--parallel
        --parallel opt_-p,--parallel
+       -s         opt_-s,--snippets
+       --snippets opt_-s,--snippets
+       -l         opt_-l,--plugins
+       --plugins  opt_-l,--plugins
     )
 
 
@@ -2330,11 +2334,11 @@ for-syntax."
 
                    () {
                        setopt localoptions extendedglob
-                       : ${@[@]//(#b)([ $'\t']##|(#s))(-q|--quiet|-r|--reset|-f|--force|-p|--parallel)([ $'\t']##|(#e))/${ICE_OPTS[${___opt_map[${match[2]}]}]::=1}}
+                       : ${@[@]//(#b)([ $'\t']##|(#s))(-q|--quiet|-r|--reset|-f|--force|-p|--parallel|-s|--snippets|-l|--plugins)([ $'\t']##|(#e))/${ICE_OPTS[${___opt_map[${match[2]}]}]::=1}}
                    } "$@"
-                   set -- "${@[@]:#(--quiet|-q|--reset|-r|-f|--force|-p|--parallel)}"
-                   if [[ $2 = --all || ${ICE_OPTS[opt_-p,--parallel]} = 1 || ( -z $2 && -z $3 && -z ${ZINIT_ICE[teleid]} && -z ${ZINIT_ICE[id-as]} ) ]]; then
-                       [[ -z $2 && ${ICE_OPTS[opt_-p,--parallel]} != 1 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                   set -- "${@[@]:#(--quiet|-q|--reset|-r|-f|--force|-p|--parallel|-s|--snippets|-l|--plugins)}"
+                   if [[ $2 = --all || ${ICE_OPTS[opt_-p,--parallel]} -eq 1 || ${ICE_OPTS[opt_-s,--snippets]} -eq 1 || ${ICE_OPTS[opt_-l,--plugins]} -eq 1 || ( -z $2 && -z $3 && -z ${ZINIT_ICE[teleid]} && -z ${ZINIT_ICE[id-as]} ) ]]; then
+                       [[ -z $2 && $(( ${ICE_OPTS[opt_-p,--parallel]} + ${ICE_OPTS[opt_-s,--snippets]} + ${ICE_OPTS[opt_-l,--plugins]} )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
                        [[ ${ICE_OPTS[opt_-p,--parallel]} = 1 ]] && \
                            ICE_OPTS[value]=${${${${${(M)2:#--all}:+$3}:-$2}:#--all}:-15}
                        .zinit-update-or-status-all update; ___retval=$?

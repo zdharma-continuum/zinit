@@ -1883,23 +1883,30 @@ ZINIT[EXTENDED_GLOB]=""
 
     local -A ZINIT_ICE
 
-    local -a snipps
-    snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
 
-    [[ $st != status && ${ICE_OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
-        +zinit-message "[info]Note:[rst] updating also unloaded snippets"
+    if (( ICE_OPTS[opt_-s,--snippets] || !ICE_OPTS[opt_-l,--plugins] )) {
+        local -a snipps
+        snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
 
-    for snip in ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D); do
-        [[ ! -f ${snip:h}/url ]] && continue
-        [[ -f ${snip:h}/id-as ]] && \
-            id_as="$(<${snip:h}/id-as)" || \
-            id_as=
-        .zinit-update-or-status-snippet "$st" "${id_as:-$(<${snip:h}/url)}"
-        ZINIT_ICE=()
-    done
-    [[ -n $snipps ]] && builtin print
+        [[ $st != status && ${ICE_OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
+            +zinit-message "[info]Note:[rst] updating also unloaded snippets"
+
+        for snip ( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D) ) {
+            [[ ! -f ${snip:h}/url ]] && continue
+            [[ -f ${snip:h}/id-as ]] && \
+                id_as="$(<${snip:h}/id-as)" || \
+                id_as=
+            .zinit-update-or-status-snippet "$st" "${id_as:-$(<${snip:h}/url)}"
+            ZINIT_ICE=()
+        }
+        [[ -n $snipps ]] && builtin print
+    }
 
     ZINIT_ICE=()
+
+    if (( ICE_OPTS[opt_-s,--snippets] && !ICE_OPTS[opt_-l,--plugins] )) {
+        return
+    }
 
     if [[ $st = status ]]; then
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
@@ -1972,83 +1979,87 @@ ZINIT[EXTENDED_GLOB]=""
 
     files=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(ND) )
     main_counter=${#files}
-    for snip ( "${files[@]}" ) {
-        main_counter=main_counter-1
-        # The continue may cause the tail of processes to
-        # fall-through to the following plugins-specific `wait'
-        # Should happen only in a very special conditions
-        # TODO handle this
-        [[ ! -f ${snip:h}/url ]] && continue
-        [[ -f ${snip:h}/id-as ]] && \
-            id_as="$(<${snip:h}/id-as)" || \
-            id_as=
+    if (( ICE_OPTS[opt_-s,--snippets] || !ICE_OPTS[opt_-l,--plugins] )) {
+        for snip ( "${files[@]}" ) {
+            main_counter=main_counter-1
+            # The continue may cause the tail of processes to
+            # fall-through to the following plugins-specific `wait'
+            # Should happen only in a very special conditions
+            # TODO handle this
+            [[ ! -f ${snip:h}/url ]] && continue
+            [[ -f ${snip:h}/id-as ]] && \
+                id_as="$(<${snip:h}/id-as)" || \
+                id_as=
 
-        counter+=1
-        local ef_id="${id_as:-$(<${snip:h}/url)}"
-        local PUFILEMAIN=${${ef_id#/}//(#m)[\/=\?\&:]/${map[$MATCH]}}
-        local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
+            counter+=1
+            local ef_id="${id_as:-$(<${snip:h}/url)}"
+            local PUFILEMAIN=${${ef_id#/}//(#m)[\/=\?\&:]/${map[$MATCH]}}
+            local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
 
-        .zinit-update-or-status-snippet "$st" "$ef_id" &>! $PUFILE &
+            .zinit-update-or-status-snippet "$st" "$ef_id" &>! $PUFILE &
 
-        PUAssocArray[$!]=$PUFILE
+            PUAssocArray[$!]=$PUFILE
 
-        .zinit-wait-for-update-jobs snippets
+            .zinit-wait-for-update-jobs snippets
+        }
     }
 
     counter=0
     PUAssocArray=()
 
-    local -a files2
-    files=( ${ZINIT[PLUGINS_DIR]}/*(ND/) )
+    if (( ICE_OPTS[opt_-l,--plugins] || !ICE_OPTS[opt_-s,--snippets] )) {
+        local -a files2
+        files=( ${ZINIT[PLUGINS_DIR]}/*(ND/) )
 
-    # Pre-process plugins
-    for repo ( $files ) {
-        uspl=${repo:t}
-        # Two special cases
-        [[ $uspl = custom || $uspl = _local---zinit ]] && continue
+        # Pre-process plugins
+        for repo ( $files ) {
+            uspl=${repo:t}
+            # Two special cases
+            [[ $uspl = custom || $uspl = _local---zinit ]] && continue
 
-        # Check if repository has a remote set
-        if [[ -f $repo/.git/config ]] {
-            local -a config
-            config=( ${(f)"$(<$repo/.git/config)"} )
-            if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]] {
+            # Check if repository has a remote set
+            if [[ -f $repo/.git/config ]] {
+                local -a config
+                config=( ${(f)"$(<$repo/.git/config)"} )
+                if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]] {
+                    continue
+                }
+            }
+
+            .zinit-any-to-user-plugin "$uspl"
+            local user=${reply[-2]} plugin=${reply[-1]}
+
+            # Must be a git repository or a binary release
+            if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]] {
                 continue
             }
+            files2+=( $repo )
         }
 
-        .zinit-any-to-user-plugin "$uspl"
-        local user=${reply[-2]} plugin=${reply[-1]}
+        main_counter=${#files2}
+        for repo ( "${files2[@]}" ) {
+            main_counter=main_counter-1
 
-        # Must be a git repository or a binary release
-        if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]] {
-            continue
+            uspl=${repo:t}
+            id_as=${uspl//---//}
+
+            counter+=1
+            local PUFILEMAIN=${${id_as#/}//(#m)[\/=\?\&:]/${map[$MATCH]}}
+            local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
+
+            .zinit-any-colorify-as-uspl2 "$uspl"
+            builtin print -r -- "Updating $REPLY..." >! $PUFILE
+
+            .zinit-any-to-user-plugin "$uspl"
+            local user=${reply[-2]} plugin=${reply[-1]}
+
+            .zinit-update-or-status update "$user" "$plugin" &>>! $PUFILE &
+
+            PUAssocArray[$!]=$PUFILE
+
+            .zinit-wait-for-update-jobs plugins
+
         }
-        files2+=( $repo )
-    }
-
-    main_counter=${#files2}
-    for repo ( "${files2[@]}" ) {
-        main_counter=main_counter-1
-
-        uspl=${repo:t}
-        id_as=${uspl//---//}
-
-        counter+=1
-        local PUFILEMAIN=${${id_as#/}//(#m)[\/=\?\&:]/${map[$MATCH]}}
-        local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
-
-        .zinit-any-colorify-as-uspl2 "$uspl"
-        builtin print -r -- "Updating $REPLY..." >! $PUFILE
-
-        .zinit-any-to-user-plugin "$uspl"
-        local user=${reply[-2]} plugin=${reply[-1]}
-
-        .zinit-update-or-status update "$user" "$plugin" &>>! $PUFILE &
-
-        PUAssocArray[$!]=$PUFILE
-
-        .zinit-wait-for-update-jobs plugins
-
     }
     # Shouldn't happen
     # (( ${#PUAssocArray} > 0 )) && wait ${(k)PUAssocArray}
