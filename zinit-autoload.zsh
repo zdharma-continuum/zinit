@@ -2760,28 +2760,29 @@ todelete=( \$dir/*/*/*(ND/) \$dir/*/*(ND/) \$dir/*(ND/) )
 final_todelete=( \${todelete[@]:#*/(\${(~j:|:)loadedsnips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)} )
 final_todelete=( \${final_todelete[@]//(#m)*/\$( .zinit-get-object-path snippet \"\${\${\${MATCH##\${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/\${match[1]##--}://}//--//}\" && builtin print -r -- \$reply[1]/\$reply[2])} )
 final_todelete=( \${final_todelete[@]:#(\${(~j:|:)loadedsnips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)} )
-todelete=( \${\${\${(@)\${(@)final_todelete##\$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/\${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/\$match[1]/\$ZINIT[col-file]\$match[2]$ZINIT[col-rst]} )
+todelete=( \${\${\${(@)\${(@)final_todelete##\$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/\${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/\$match[1]/\$ZINIT[col-file]\$match[2]\$ZINIT[col-rst]} )
 todelete=( \${todelete[@]//(#m)(#s)[^\/]##(#e)/\$ZINIT[col-file]\$MATCH\$ZINIT[col-rst]} )
-print -Prln \"\$ZINIT[col-obj]Deleting the following \"\
+final_todelete=( \${\${\${(@)\${(@)final_todelete##\$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/\${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/\$match[1]/\$match[2]} )
+builtin print; print -Prln \"\$ZINIT[col-obj]Deleting the following \"\
 \"\$ZINIT[col-file]\${#todelete}\$ZINIT[col-msg2] UNLOADED\$ZINIT[col-obj] snippets:%f%b\" \
     \$todelete \"%f%b\"
 sleep 3
 local snip
 integer _retval
-for snip ( \$final_todelete ) { command rm -rf \$snip; _retval+=\$?; }
+for snip ( \$final_todelete ) { zinit delete -q -y \$snip; _retval+=\$?; }
 builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\"
 
 # Next delete unloaded plugins
 local -a dirs
 dirs=( \${\${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/(\${(~j:|:)\${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/) )
+dirs=( \${(@)\${dirs[@]##\$ZINIT[PLUGINS_DIR]/#}//---//} )
 builtin print -Prl \"\" \"\$ZINIT[col-obj]Deleting the following \"\
 \"\$ZINIT[col-file]\${#dirs}\$ZINIT[col-msg2] UNLOADED\$ZINIT[col-obj] plugins:%f%b\" \
-    \${\${\${dirs[@]:#[/[:space:]]##}##\$ZINIT[PLUGINS_DIR]/#}//---//}
+\${\${dirs//(#b)(*)(\/([^\/]##))(#e)/\${\${match[2]:+\$ZINIT[col-uname]\$match[1]\$ZINIT[col-rst]/\$ZINIT[col-pname]\$match[3]\$ZINIT[col-rst]}:-\$ZINIT[col-pname]\$match[1]}}//(#b)(^\$ZINIT[col-uname])(*)/\$ZINIT[col-pname]\$match[1]}
 sleep 3
-command rm -rf \${dirs[@]:#[/[:space:]]##}
-integer _retval2=_retval+\$?
-builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval2).%f%b\""
-        return $(( _retval + _retval2 ))
+for snip ( \$dirs ) { zinit delete -q -y \$snip; _retval+=\$?; }
+builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
+        return $(( _retval ))
     }
 
     local -A ZINIT_ICE
