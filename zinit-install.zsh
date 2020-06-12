@@ -1423,12 +1423,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         }
     }
 
-    .zinit-get-object-path snippet "$id_as" || \
-        { builtin print -P "$ZINIT[col-msg2]Error: the snippet" \
+    if { ! .zinit-get-object-path snippet "$id_as" } {
+        builtin print -P "$ZINIT[col-msg2]Error: the snippet" \
             "\`$ZINIT[col-obj]$id_as$ZINIT[col-msg2]'" \
             "doesn't exist, aborting the update.%f%b"
-          return 1
-        }
+            return 1
+    }
     filename=$reply[-2] dirname=$reply[-2] local_dir=$reply[-3]
 
     local -a arr
