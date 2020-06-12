@@ -1824,14 +1824,10 @@ ziextract() {
         local -a files
         files=( *~(._zinit|.git|._backup|.tmp231ABC)(DN/) )
         if (( ${#files} )) {
-            if (( ${#files} > 1 )) {
-                # TODO: make this unusual situation have more chance of working
-                command mkdir -p .tmp231ABC
-            }
-            [[ -e ''(._zinit|.git|._backup|.tmp231ABC)(#qDN.-[1]) ]] && \
-                command mv -f *~(._zinit|.git|._backup|.tmp231ABC)(DN.-) .tmp231ABC
-            command mv -f **/*~(*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
-            [[ -d .tmp231ABC ]] && command rmdir .tmp231ABC
+            command mkdir -p .tmp231ABC
+            command mv -f *~(._zinit|.git|._backup|.tmp231ABC)(D) .tmp231ABC
+            command mv -f **/*~(*/*~*/*/*|*/*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
+            [[ -d .tmp231ABC ]] && command rmdir .tmp231ABC/* .tmp231ABC
         }
         REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
     } else {
