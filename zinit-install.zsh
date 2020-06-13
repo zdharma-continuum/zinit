@@ -1017,10 +1017,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # Do the update
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
-                            (( ICE_OPTS[opt_-q,--quiet] )) && {
+                            if (( ICE_OPTS[opt_-q,--quiet] )); then 
                                 builtin print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
                                 builtin print "Downloading \`$sname' (with Subversion)..."
-                            }
+                            fi
                             .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
                         }
                     } else {
