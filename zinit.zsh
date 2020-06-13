@@ -112,12 +112,12 @@ ZINIT_1MAP=(
     PZTM:: https://github.com/sorin-ionescu/prezto/trunk/modules/
 )
 ZINIT_2MAP=(
-    OMZ:: https://github.com/ohmyzsh/ohmyzsh/raw/master/
-    OMZP:: https://github.com/ohmyzsh/ohmyzsh/raw/master/plugins/
-    OMZT:: https://github.com/ohmyzsh/ohmyzsh/raw/master/themes/
-    OMZL:: https://github.com/ohmyzsh/ohmyzsh/raw/master/lib/
-    PZT:: https://github.com/sorin-ionescu/prezto/raw/master/
-    PZTM:: https://github.com/sorin-ionescu/prezto/raw/master/modules/
+    OMZ:: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/
+    OMZP:: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/
+    OMZT:: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/themes/
+    OMZL:: https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/
+    PZT:: https://raw.githubusercontent.com/sorin-ionescu/prezto/master/
+    PZTM:: https://raw.githubusercontent.com/sorin-ionescu/prezto/master/modules/
 )
 # ]]]
 
