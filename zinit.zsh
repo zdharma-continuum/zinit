@@ -2117,12 +2117,12 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     ZINIT_ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICES=()
 
-                    (( ${+ZINIT_ICE[pack]} )) && {
+                    if (( ${+ZINIT_ICE[pack]} )); then
                         ___had_wait=${+ZINIT_ICE[wait]}
                         .zinit-load-ices "${1#@}"
-                        [[ -z ${ZINIT_ICE[wait]} && $___had_wait == 0 ]] && \
+                        [[ -z ${ZINIT_ICE[wait]} && $___had_wait -eq 0 ]] && \
                             unset 'ZINIT_ICE[wait]'
-                    }
+                    fi
 
                     [[ ${ZINIT_ICE[id-as]} = (auto|) && ${+ZINIT_ICE[id-as]} == 1 ]] && ZINIT_ICE[id-as]="${1:t}"
 
