@@ -1139,7 +1139,7 @@ builtin setopt noaliases
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
-        "${___arr[5]}" ___plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" preinit || \
+        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" preinit || \
             return $(( 10 - $? ))
     done
 
@@ -1187,7 +1187,7 @@ builtin setopt noaliases
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit <->]}" )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
-        "${___arr[5]}" ___plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" \!atinit || \
+        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" \!atinit || \
             return $(( 10 - $? ))
     done
 
@@ -1196,7 +1196,7 @@ builtin setopt noaliases
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atinit <->]}" )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
-        "${___arr[5]}" ___plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" atinit || \
+        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" atinit || \
             return $(( 10 - $? ))
     done
 
@@ -1284,7 +1284,7 @@ builtin setopt noaliases
         reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]}" )
         for ___key in "${reply[@]}"; do
             ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
-            "${___arr[5]}" ___plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" \!atload
+            "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" \!atload
         done
 
         # Run the functions' wrapping & tracking requests
@@ -1335,7 +1335,7 @@ builtin setopt noaliases
         reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]}" )
         for ___key in "${reply[@]}"; do
             ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
-            "${___arr[5]}" ___plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" \!atload
+            "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" \!atload
         done
 
         # Run the functions' wrapping & tracking requests
@@ -1358,7 +1358,7 @@ builtin setopt noaliases
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atload <->]}" )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
-        "${___arr[5]}" ___plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" atload
+        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" atload
     done
 
     # Mark no load is in progress
