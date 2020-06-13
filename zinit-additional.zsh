@@ -35,7 +35,7 @@
 # FUNCTION: .zinit-setup-params [[[
 .zinit-setup-params() {
     emulate -LR zsh -o extendedglob
-    reply=( ${(@)${(@s.;.)ZINIT_ICE[param]}/(#m)*/${${MATCH%%(-\>|→)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→)}:+\=${${MATCH#*(-\>|→)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
+    reply=( ${(@)${(@s.;.)ZINIT_ICE[param]}/(#m)*/${${MATCH%%(-\>|→|=\>)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→|=\>)}:+\=${${MATCH#*(-\>|→|=\>)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
     (( ${#reply} )) && return 0 || return 1
 }
 # ]]]
