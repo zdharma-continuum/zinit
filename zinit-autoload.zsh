@@ -1464,17 +1464,18 @@ ZINIT[EXTENDED_GLOB]=""
         user=; plugin=${ice[teleid]:-$id_as}
     fi
 
+    local repo=${${${(M)user:#%}:+${user#%}/$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
+
     .zinit-any-to-user-plugin ${ice[teleid]:-$id_as}
     local -a arr
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-        "${arr[5]}" plugin "${reply[-2]}" "${reply[-1]}" "$id_as" "${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}" preinit || \
+        "${arr[5]}" plugin "${reply[-2]}" "${reply[-1]}" "$id_as" "$repo" preinit || \
             return $(( 10 - $? ))
     done
 
     # Check if repository has a remote set, if it is _local
-    local repo=${ZINIT[PLUGINS_DIR]}/${id_as//\//---}
     if [[ -f $repo/.git/config ]]; then
         local -a config
         config=( ${(f)"$(<$repo/.git/config)"} )
@@ -1782,6 +1783,10 @@ ZINIT[EXTENDED_GLOB]=""
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
         { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
         { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+    }
+
+    if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
+        zinit creinstall -q "$repo"
     }
 
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
