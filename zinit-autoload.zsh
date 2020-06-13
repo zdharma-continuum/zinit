@@ -1457,7 +1457,12 @@ ZINIT[EXTENDED_GLOB]=""
 
     .zinit-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" \
         ice local_dir filename is_snippet || return 1
-    [[ ${ice[teleid]:-$id_as} = (#b)([^/]##)/(*) ]] && { user=${match[1]}; plugin=${match[2]}; } || { user=; plugin=${ice[teleid]:-$id_as}; }
+
+    if [[ ${ice[teleid]:-$id_as} = (#b)([^/]##)/(*) ]]; then
+        user=${match[1]}; plugin=${match[2]}
+    else
+        user=; plugin=${ice[teleid]:-$id_as}
+    fi
 
     .zinit-any-to-user-plugin ${ice[teleid]:-$id_as}
     local -a arr
@@ -1649,7 +1654,7 @@ ZINIT[EXTENDED_GLOB]=""
             ZINIT[annex-multi-flag:pull-active]=$?
         }
 
-        [[ -d $local_dir/.git ]] && \
+        if [[ -d $local_dir/.git ]]; then
             (
                 builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
                 if (( ICE_OPTS[opt_-q,--quiet] )) {
@@ -1658,6 +1663,7 @@ ZINIT[EXTENDED_GLOB]=""
                     command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
                 }
             )
+        fi
 
         local -a log
         { log=( ${(@f)"$(<$local_dir/.zinit_lastupd)"} ); } 2>/dev/null
