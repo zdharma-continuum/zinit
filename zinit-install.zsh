@@ -1018,8 +1018,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             if (( ICE_OPTS[opt_-q,--quiet] )); then 
-                                builtin print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
-                                builtin print "Downloading \`$sname' (with Subversion)..."
+                                +zinit-message $'\n'"[info]Updating snippet [p]${sname}[rst]${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
+                                +zinit-message "Downloading \`$sname' (with Subversion)..."
                             fi
                             .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
                         }
