@@ -868,23 +868,28 @@ builtin setopt noaliases
 # Returns user and plugin in $reply
 #
 .zinit-any-to-user-plugin() {
+    emulate -LR zsh
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+
     # Two components given?
     # That's a pretty fast track to call this function this way
-    if [[ -n $2 ]];then
+    if [[ -n $2 ]]; then
         2=${~2}
-        reply=( "${1:-${${(M)2#/}:+%}}" "${${${(M)1#%}:+$2}:-${2//---//}}" )
+        reply=( ${1:-${${(M)2#/}:+%}} ${${${(M)1#%}:+$2}:-${2//---//}} )
         return 0
     fi
 
     # Is it absolute path?
     if [[ $1 = /* ]]; then
-        reply=( "%" "$1" )
+        reply=( % $1 )
         return 0
     fi
 
     # Is it absolute path in zinit format?
     if [[ $1 = %* ]]; then
-        reply=( "%" "${${${1/\%HOME/$HOME}/\%SNIPPETS/${ZINIT[SNIPPETS_DIR]}}#%}" )
+        local -A map
+        map=( "" "" HOME $HOME SNIPPETS $ZINIT[SNIPPETS_DIR] )
+        reply=( % ${${1/(#b)(#s)%(HOME|SNIPPETS|)/$map[$match[1]]}} )
         reply[2]=${~reply[2]}
         return 0
     fi
@@ -892,9 +897,9 @@ builtin setopt noaliases
     # Rest is for single component given
     # It doesn't touch $2
 
-    1="${1//---//}"
+    1=${1//---//}
     if [[ $1 = */* ]]; then
-        reply=( "${1%%/*}" "${1#*/}" )
+        reply=( ${1%%/*} ${1#*/} )
         return 0
     fi
 
