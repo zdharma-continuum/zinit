@@ -985,7 +985,7 @@ builtin setopt noaliases
         local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
 
     } else {
-        local_dir=${${${(M)id_as#%}:+${id_as#%}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
+        local_dir=${${${(M)id_as#(%|/)}:+${id_as#%}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
         [[ $id_as == _local/* && -d $local_dir && ! -d $local_dir/._zinit ]] && command mkdir -p "$local_dir"/._zinit
     }
 
