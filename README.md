@@ -52,6 +52,18 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 17-06-2020
+  - `ziextract` and `extract''` now support Windows installers – currently the
+    installer of Firefox. Let me know if any of your installers doesn't work.
+    You can test the installer with the Firefox Developer Edition Zinit
+    [package](https://github.com/Zsh-Packages/firefox-dev):
+
+    ```zsh
+    zinit pack"bgn" for firefox-dev
+    ```
+
+    The above command will work on Windows (at least on Cygwin), Linux and OS X.
+
 * 13-06-2020
   - `ziextract` has a new `--move2` option, which moves files two levels up
     after unpacking. For example, if there will be an archive file with
