@@ -1588,7 +1588,7 @@ ziextract() {
         # First try known file extensions
         local -a files
         integer ret_val
-        files=( (#i)**/*.(zip|rar|7z|tgz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg)~(*/*|.(_backup|git))/*(-.DN) )
+        files=( (#i)**/*.(zip|rar|7z|tgz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg|exe)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
             ziextract "$file" $opt_move $opt_move2 $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
             ret_val+=$?
@@ -1598,13 +1598,13 @@ ziextract() {
             local -aU output infiles stage2_processed archives
             infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)~*/*/*(-.DN) )
             output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
-            archives=( ${(M)output[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) *} )
+            archives=( ${(M)output[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) *} )
             for file ( $archives ) {
                 local fname=${(M)file#(${(~j:|:)infiles}): } desc=${file#(${(~j:|:)infiles}): } type
                 fname=${fname%%??}
                 [[ -z $fname || -n ${stage2_processed[(r)$fname]} ]] && continue
-                type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
-                if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar) ]] {
+                type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) */$match[2]}
+                if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar|exe|pe32) ]] {
                     (( !ICE_OPTS[opt_-q,--quiet] )) && \
                         builtin print -Pr -- "$ZINIT[col-pre]ziextract:$ZINIT[col-info2]" \
                             "Note:%f%b" \
@@ -1623,11 +1623,11 @@ ziextract() {
                     if [[ -f $fname || -f ${fname:r} ]] {
                         local -aU output2 archives2
                         output2=( ${(@f)"$(command file -- "$fname"(N) "${fname:r}"(N) $files[1](N) 2>&1)"} )
-                        archives2=( ${(M)output2[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) *} )
+                        archives2=( ${(M)output2[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) *} )
                         local file2
                         for file2 ( $archives2 ) {
                             fname=${file2%:*} desc=${file2##*:}
-                            local type2=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar) */$match[2]}
+                            local type2=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) */$match[2]}
                             if [[ $type != $type2 && \
                                 $type2 = (zip|rar|xz|7-zip|gzip|bzip2|tar)
                             ]] {
@@ -1757,6 +1757,12 @@ ziextract() {
             ;;
         ((#i)*.rpm)
             →zinit-extract() { →zinit-check cpio "$file"; $ZINIT[BIN_DIR]/share/rpm2cpio.zsh "$file" | command cpio -imd --no-absolute-filenames; }
+            ;;
+        ((#i)*.exe|(#i)*.pe32)
+            →zinit-extract() {
+                chmod a+x ./$file
+                ./$file /S /D="`cygpath -w $PWD`"
+            }
             ;;
     esac
 
