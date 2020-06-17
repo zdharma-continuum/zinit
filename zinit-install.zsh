@@ -1760,7 +1760,7 @@ ziextract() {
             ;;
         ((#i)*.exe|(#i)*.pe32)
             →zinit-extract() {
-                chmod a+x ./$file
+                command chmod a+x -- ./$file
                 ./$file /S /D="`cygpath -w $PWD`"
             }
             ;;
