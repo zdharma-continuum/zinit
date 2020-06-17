@@ -1691,50 +1691,50 @@ ziextract() {
 
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
-            →zinit-extract() { →zinit-check unzip "$file"; command unzip -o "$file"; }
+            →zinit-extract() { →zinit-check unzip "$file" || return 1; command unzip -o "$file"; }
             ;;
         ((#i)*.rar)
-            →zinit-extract() { →zinit-check unrar "$file"; command unrar x "$file"; }
+            →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "$file"; }
             ;;
         ((#i)*.tar.bz2|(#i)*.tbz2)
-            →zinit-extract() { →zinit-check bzip2 "$file"; command bzip2 -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check bzip2 "$file" || return 1; command bzip2 -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.gz|(#i)*.tgz)
-            →zinit-extract() { →zinit-check gzip "$file"; command gzip -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check gzip "$file" || return 1; command gzip -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.xz|(#i)*.txz)
-            →zinit-extract() { →zinit-check xz "$file"; command xz -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check xz "$file" || return 1; command xz -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.7z|(#i)*.t7z)
-            →zinit-extract() { →zinit-check 7z "$file"; command 7z x -so "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x -so "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar)
-            →zinit-extract() { →zinit-check tar "$file"; command tar -xf "$file"; }
+            →zinit-extract() { →zinit-check tar "$file" || return 1; command tar -xf "$file"; }
             ;;
         ((#i)*.gz|(#i)*.gzip)
             if [[ $file != (#i)*.gz ]] {
                 command mv $file $file.gz
                 file=$file.gz
             }
-            →zinit-extract() { →zinit-check gunzip "$file"; command gunzip "$file" |& command egrep -v '.out$'; return $pipestatus[1]; }
+            →zinit-extract() { →zinit-check gunzip "$file" || return 1; command gunzip "$file" |& command egrep -v '.out$'; return $pipestatus[1]; }
             ;;
         ((#i)*.bz2|(#i)*.bzip2)
-            →zinit-extract() { →zinit-check bunzip2 "$file"; command bunzip2 "$file" |& command egrep -v '.out$'; return $pipestatus[1];}
+            →zinit-extract() { →zinit-check bunzip2 "$file" || return 1; command bunzip2 "$file" |& command egrep -v '.out$'; return $pipestatus[1];}
             ;;
         ((#i)*.xz)
             if [[ $file != (#i)*.xz ]] {
                 command mv $file $file.xz
                 file=$file.xz
             }
-            →zinit-extract() { →zinit-check xz "$file"; command xz -d "$file"; }
+            →zinit-extract() { →zinit-check xz "$file" || return 1; command xz -d "$file"; }
             ;;
         ((#i)*.7z|(#i)*.7-zip)
-            →zinit-extract() { →zinit-check 7z "$file"; command 7z x "$file" >/dev/null;  }
+            →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x "$file" >/dev/null;  }
             ;;
         ((#i)*.dmg)
             →zinit-extract() {
                 local prog
-                for prog ( hdiutil cp ) { →zinit-check $prog "$file"; }
+                for prog ( hdiutil cp ) { →zinit-check $prog "$file" || return 1; }
 
                 integer retval
                 local attached_vol="$( command hdiutil attach "$file" | \
@@ -1753,10 +1753,10 @@ ziextract() {
             }
             ;;
         ((#i)*.deb)
-            →zinit-extract() { →zinit-check dpkg-deb "$file"; command dpkg-deb -R "$file" .; }
+            →zinit-extract() { →zinit-check dpkg-deb "$file" || return 1; command dpkg-deb -R "$file" .; }
             ;;
         ((#i)*.rpm)
-            →zinit-extract() { →zinit-check cpio "$file"; $ZINIT[BIN_DIR]/share/rpm2cpio.zsh "$file" | command cpio -imd --no-absolute-filenames; }
+            →zinit-extract() { →zinit-check cpio "$file" || return 1; $ZINIT[BIN_DIR]/share/rpm2cpio.zsh "$file" | command cpio -imd --no-absolute-filenames; }
             ;;
         ((#i)*.exe|(#i)*.pe32)
             →zinit-extract() {
