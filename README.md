@@ -88,7 +88,7 @@
     limiting the `update --all` to only plugins or snippets. Example:
 
     ```zsh
-        zinit update --plugins
+    zinit update --plugins
     ```
 
     Work also with `-p/--parallel`.
