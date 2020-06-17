@@ -1740,7 +1740,7 @@ ziextract() {
                 local attached_vol="$( command hdiutil attach "$file" | \
                            command tail -n1 | command cut -f 3 )"
 
-                command cp -Rf $attached_vol/*(D) .
+                command cp -Rf ${attached_vol:-/tmp/acb321GEF}/*(D) .
                 retval=$?
                 command hdiutil detach $attached_vol
 
