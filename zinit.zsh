@@ -2195,32 +2195,6 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             { (( $# )) && shift; continue 2; }
                     }
 
-                    integer ___had_cloneonly=0
-                    if (( ___action_load || !ZINIT[HAVE_SCHEDULER] )) {
-                        if (( ___turbo && ZINIT[HAVE_SCHEDULER] )) {
-                            ___had_cloneonly=${+ZINIT_ICE[cloneonly]}
-                            ZINIT_ICE[cloneonly]=""
-                        }
-                        if (( ___is_snippet > 0 )); then
-                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${1#@}%%(///|//|/)}"
-                        else
-                            .zinit-load "${${${1#@}#https://github.com/}%%(///|//|/)}" "" \
-                                "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
-                        fi
-                        ___retval+=$? ___is_snippet=0
-                        if (( ___turbo && !___had_cloneonly && ZINIT[HAVE_SCHEDULER] )) {
-                            command rm -f $___object_path/._zinit/cloneonly
-                            unset 'ZINIT_ICE[cloneonly]'
-                        }
-                    }
-
-                    if (( ${+ZINIT_ICE[pack]} )); then
-                        ___had_wait=${+ZINIT_ICE[wait]}
-                        .zinit-load-ices "${1#@}"
-                        [[ -z ${ZINIT_ICE[wait]} && $___had_wait -eq 0 ]] && \
-                            unset 'ZINIT_ICE[wait]'
-                    fi
-
                     ZINIT_ICE[wait]="${${(M)${+ZINIT_ICE[wait]}:#1}:+${(M)ZINIT_ICE[wait]#!}${${ZINIT_ICE[wait]#!}:-0}}"
                     if (( ___turbo && ZINIT[HAVE_SCHEDULER] )) {
                         ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
@@ -2236,6 +2210,21 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                 "${${${1#@}#https://github.com/}%%(///|//|/)}" ""
                         fi
                         ___retval+=$?
+                    }
+                    if (( ___action_load || !ZINIT[HAVE_SCHEDULER] )) {
+                        if (( ___turbo )) {
+                            ZINIT_ICE[cloneonly]=""
+                        }
+                        if (( ___is_snippet > 0 )); then
+                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${1#@}%%(///|//|/)}"
+                        else
+                            .zinit-load "${${${1#@}#https://github.com/}%%(///|//|/)}" "" \
+                                "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
+                        fi
+                        ___retval+=$? ___is_snippet=0
+                        if (( ___turbo )) {
+                            command rm -f $___object_path/._zinit/cloneonly
+                        }
                     }
                 } else {
                     ___error=1
