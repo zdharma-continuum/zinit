@@ -1815,10 +1815,10 @@ ziextract() {
             fi
         }
     } elif (( warning )) {
-        builtin print -Pr -- "$ZINIT[col-pre]ziextract:" \
-            "$ZINIT[col-error]WARNING: $ZINIT[col-msg1]didn't recognize the archive" \
-            "type of \`$ZINIT[col-obj]$file$ZINIT[col-msg1]'" \
-            "${ext:+$ZINIT[col-obj2]/ $ext$ZINIT[col-msg1] }"\
+        +zinit-message "[pre]ziextract:" \
+            "[error]WARNING: [msg1]didn't recognize the archive" \
+            "type of \`[obj]${file}[msg1]'" \
+            "${ext:+/ [obj2]${ext}[msg1] }"\
 "(no extraction has been done).%f%b"
     }
 
