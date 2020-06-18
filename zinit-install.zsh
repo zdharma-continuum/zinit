@@ -134,7 +134,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     if [[ $profile != ./* ]] {
         if { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
-            rm -f $tmpfile; .zinit-download-file-stdout $URL 1 1 2>/dev/null > $tmpfile
+            rm -f $tmpfile; .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
         }
     } else {
         tmpfile=${profile%:*}
@@ -379,6 +379,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     }
                     if .zinit-download-file-stdout "$url.sig" 2>/dev/null >! "${REPLY:t}.sig"; then
                         :
+                    else
+                        command rm -f "${REPLY:t}.sig"
                     fi
 
                     command mkdir -p ._zinit
