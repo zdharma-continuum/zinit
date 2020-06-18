@@ -2208,7 +2208,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             .zinit-load "${${${1#@}#https://github.com/}%%(///|//|/)}" "" \
                                 "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
-                        ___retval+=$? ___is_snippet=0
+                        ___retval+=$?
                         if (( ___turbo && !___had_cloneonly && ZINIT[HAVE_SCHEDULER] )) {
                             command rm -f $___object_path/._zinit/cloneonly
                             unset 'ZINIT_ICE[cloneonly]'
@@ -2233,6 +2233,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     ___error=1
                 }
                 (( $# )) && shift
+                ___is_snippet=0
             }
         } else {
             ___error=1
