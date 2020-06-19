@@ -709,6 +709,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         elif (( ${+commands[lynx]} )); then
             command lynx -source "$url" || return 1
         else
+            +zinit-message "[error]ERROR:[rst]No download tool detected" \
+                "(one of: [obj]curl[rst], [obj]wget[rst], [obj]lftp[rst]," \
+                "[obj]lynx[rst])."
             return 2
         fi
     } else {
