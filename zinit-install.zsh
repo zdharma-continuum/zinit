@@ -372,8 +372,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     if { ! .zinit-download-file-stdout "$url" 0 1 >! "${REPLY:t}" } {
                         if { ! .zinit-download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
                             command rm -f "${REPLY:t}"
-                            builtin print -r "Download of release for \`$remote_url_path' failed. No available download tool? (one of: curl, wget, lftp, lynx)"
-                            builtin print -r "Tried url: $url."
+                            +zinit-message "Download of release for \`$remote_url_path' " \
+                                "failed.[nl]Tried url: $url."
                             return 1
                         }
                     }
@@ -1102,7 +1102,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         if { ! .zinit-download-file-stdout "$url" 0 1 >! "$dirname/$filename" } {
                             if { ! .zinit-download-file-stdout "$url" 1 1 >! "$dirname/$filename" } {
                                 command rm -f "$dirname/$filename"
-                                builtin print -r "Download failed. No available download tool? (one of: curl, wget, lftp, lynx)"
+                                +zinit-message "[error]ERROR:[rst] Download failed."
                                 return 4
                             }
                         }

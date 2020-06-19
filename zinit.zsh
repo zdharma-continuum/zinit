@@ -157,6 +157,7 @@ zmodload zsh/termcap 2>/dev/null
         col-data2  $'\e[38;5;50m'
         col-hi     $'\e[38;5;184m'
         col-ehi    $'\e[01m\e[31m'
+        col-nl     $'\n'
     )
 }
 
