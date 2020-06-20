@@ -151,6 +151,8 @@ zmodload zsh/termcap 2>/dev/null
         col-msg2   $'\e[38;5;172m'
         col-obj    $'\e[38;5;221m'
         col-obj2   $'\e[38;5;154m'
+        col-meta    $'\e[38;5;221m'
+        col-meta2   $'\e[38;5;154m'
         col-file   $'\e[38;5;110m'
         col-url    $'\e[38;5;45m'
         col-data   $'\e[38;5;82m'
@@ -2611,7 +2613,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
         [[ -e ${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST ]] && local recompile_request_ts="$(<${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST)"
 
         if [[ ${recompile_request_ts:-1} -gt ${compiled_at_ts:-0} ]] {
-            +zinit-message "{error}WARNING:{rst}{msg1}A {obj}recompilation{rst}" \
+            +zinit-message "{error}WARNING:{rst}{msg}A {obj}recompilation{rst}" \
                 "of the Zinit module has been requested… {obj}Building{rst}…"
             (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
             command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null

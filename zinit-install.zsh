@@ -1759,9 +1759,9 @@ ziextract() {
                 command hdiutil detach $attached_vol
 
                 if (( retval )) {
-                    +zinit-message "{pre}ziextract:{error} Warning:{msg1}" \
+                    +zinit-message "{pre}ziextract:{error} Warning:{msg}" \
                             "problem occurred when attempted to copy the files" \
-                            "from the mounted image: \`{obj}${file}{msg1}'.{rst}"
+                            "from the mounted image: \`{obj}${file}{msg}'.{rst}"
                 }
                 return $retval
             }
@@ -1782,8 +1782,8 @@ ziextract() {
 
     if [[ $(typeset -f + →zinit-extract) == "→zinit-extract" ]] {
         .zinit-extract-wrapper "$file" →zinit-extract || {
-            +zinit-message -n "{pre}ziextract:{error} WARNING:{msg1}" \
-                "extraction of the archive \`{obj}${file}{msg1}' had problems"
+            +zinit-message -n "{pre}ziextract:{error} WARNING:{msg}" \
+                "extraction of the archive \`{obj}${file}{msg}' had problems"
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} && !nobkp )) {
@@ -1836,9 +1836,9 @@ ziextract() {
         }
     } elif (( warning )) {
         +zinit-message "{pre}ziextract:" \
-            "{error}WARNING: {msg1}didn't recognize the archive" \
-            "type of \`{obj}${file}{msg1}'" \
-            "${ext:+/ {obj2}${ext}{msg1} }"\
+            "{error}WARNING: {msg}didn't recognize the archive" \
+            "type of \`{obj}${file}{msg}'" \
+            "${ext:+/ {obj2}${ext}{msg} }"\
 "(no extraction has been done).%f%b"
     }
 
