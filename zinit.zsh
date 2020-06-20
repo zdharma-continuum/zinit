@@ -1733,7 +1733,7 @@ builtin setopt noaliases
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob
     if [[ $1 = -* ]] { local opt=$1; shift; } else { local opt; }
-    local msg=${(j: :)${@//(#b)([\[\{])([^\]\}]##)([\]\}])/${ZINIT[col-$match[2]]-$match[1]$match[2]$match[3]}}}
+    local msg=${(j: :)${@//(#b)([\[\{]([^\]\}]##)[\]\}])/${COLORS[col-$match[2]]-$match[1]}}}
     builtin print -Pr ${opt:#--} -- $msg
 }
 # ]]]
