@@ -52,6 +52,62 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 20-06-2020
+  - The [Bin-Gem-Node](https://github.com/zinit-zsh/z-a-bin-gem-node) annex now
+    has an explicit Cygwin support – it creates additional, **extra shim files**
+    – Windows batch scripts that allow to run the shielded applications from
+    e.g.: Windows run dialog – if the `~/.zinit/polaris/bin` directory is being
+    added to the Windows `PATH` environment variable, for example (it is a good
+    idea to do so, IMHO). The Windows shims (*shims* are command-wrapper scripts
+    that are in general created with the `sbin''` ice of the annex) have the
+    same name as the standard ones (which are also being created, normally) plus
+    the `.cmd` extension. You can test the feature by e.g.: installing Firefox
+    from the Zinit package via:
+
+    ```zsh
+    zinit pack=bgn for firefox
+    ```
+
+  - All cURL progress bars are now guaranteed to be single line – this is being
+    done by a wrapper script.
+
+  - I thought that I'll share an interesting function-type that I'm using within
+    Zinit - a function that outputs messages with theming and colors easily
+    available:
+
+    ```zsh
+    typeset -gA COLORS=(
+        col-error  $'\e[31m'
+        col-file   $'\e[38;5;110m'
+        col-url    $'\e[38;5;45m'
+        col-meta   $'\e[38;5;221m'
+        col-meta2  $'\e[38;5;154m'
+        col-data   $'\e[38;5;82m'
+        col-data2  $'\e[38;5;50m'
+        col-rst    $'\e[0m'
+        col-can-be-empty ""
+    )
+    
+    m() {
+        builtin emulate -LR zsh -o extendedglob
+        if [[ $1 = -* ]] { local opt=$1; shift } else { local opt }
+        local msg=${(j: :)${@//(#b)([\[\{]([^\]\}]##)[\]\}])/${COLORS[col-$match[2]]-$match[1]}}}
+        builtin print -Pr ${opt:#--} -- $msg
+    }
+    ```
+
+    Usage is as follows:
+
+    ```zsh
+    m "{error}ERROR:{rst} The {meta}data{rst} has the value: {data}value{rst}"
+    ```
+
+    Effect:
+
+    ![screenshot](https://raw.githubusercontent.com/zdharma/zinit/master/doc/img/m.png)
+
+    The function is available in the `atinit''`, `atload''`, etc. hooks.
+
 * 17-06-2020
   - `ziextract` and `extract''` now support Windows installers – currently the
     installer of Firefox. Let me know if any of your installers doesn't work.
