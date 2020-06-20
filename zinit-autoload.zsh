@@ -1853,7 +1853,7 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-self-update -q
 
     [[ $2 = restart ]] && \
-        +zinit-message "[msg2]Restarting the update with the new codebase loaded.[rst]"$'\n'
+        +zinit-message "{msg2}Restarting the update with the new codebase loaded.{rst}"$'\n'
 
     local file
     integer sum el
@@ -1865,8 +1865,8 @@ ZINIT[EXTENDED_GLOB]=""
     if [[ $2 != restart ]] && (( ZINIT[mtime] + ZINIT[mtime-side] +
         ZINIT[mtime-install] + ZINIT[mtime-autoload] != sum
     )) {
-        +zinit-message "[msg2]Detected Zinit update in another session -" \
-            "[pre]reloading Zinit[msg2]...[rst]"
+        +zinit-message "{msg2}Detected Zinit update in another session -" \
+            "{pre}reloading Zinit{msg2}...{rst}"
         source $ZINIT[BIN_DIR]/zinit.zsh
         source $ZINIT[BIN_DIR]/zinit-side.zsh
         source $ZINIT[BIN_DIR]/zinit-install.zsh
@@ -1874,19 +1874,19 @@ ZINIT[EXTENDED_GLOB]=""
         for file ( "" -side -install -autoload ) {
             .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
         }
-        +zinit-message "%B[pname]Done.[rst]"$'\n'
+        +zinit-message "%B{pname}Done.{rst}"$'\n'
         .zinit-update-or-status-all "$1" restart
         return $?
     }
 
     if (( ICE_OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            +zinit-message '[info2]Parallel Update Starts Now...[rst]'
+            +zinit-message '{info2}Parallel Update Starts Now...{rst}'
         .zinit-update-all-parallel
         integer retval=$?
         .zinit-compinit 1 &>/dev/null
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
-            +zinit-message "[msg2]The update took [obj]${SECONDS}[msg2] seconds[rst]"
+            +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
         }
         return $retval
     }
@@ -1902,7 +1902,7 @@ ZINIT[EXTENDED_GLOB]=""
         snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
 
         [[ $st != status && ${ICE_OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
-            +zinit-message "[info]Note:[rst] updating also unloaded snippets"
+            +zinit-message "{info}Note:{rst} updating also unloaded snippets"
 
         for snip ( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D) ) {
             [[ ! -f ${snip:h}/url ]] && continue
@@ -1923,10 +1923,10 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ $st = status ]]; then
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "[info]Note:[rst] status done also for unloaded plugins"
+            +zinit-message "{info}Note:{rst} status done also for unloaded plugins"
     else
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "[info]Note:[rst] updating also unloaded plugins"
+            +zinit-message "{info}Note:{rst} updating also unloaded plugins"
     fi
 
     ZINIT[first-plugin-mark]=init
@@ -1974,7 +1974,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     .zinit-compinit 1 &>/dev/null
     if (( !ICE_OPTS[opt_-q,--quiet] )) {
-        +zinit-message "[msg2]The update took [obj]${SECONDS}[msg2] seconds[rst]"
+        +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
     }
 } # ]]]
 # FUNCTION: .zinit-update-in-parallel [[[
@@ -2094,9 +2094,9 @@ ZINIT[EXTENDED_GLOB]=""
         counter=0
         PUAssocArray=()
     } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
-        +zinit-message "[obj]Spawning the next[file]" \
-            "${ICE_OPTS[value]}[obj] concurrent update jobs" \
-            "([msg2]%F{191}${tpe}[obj])...[rst]"
+        +zinit-message "{obj}Spawning the next{file}" \
+            "${ICE_OPTS[value]}{obj} concurrent update jobs" \
+            "({msg2}%F{191}${tpe}{obj})...{rst}"
     }
 }
 # ]]]
@@ -3393,27 +3393,27 @@ EOF
     setopt localoptions localtraps
     trap 'return 1' INT TERM
     ( builtin cd -q "${ZINIT[BIN_DIR]}"/zmodules
-      +zinit-message "[pname]== Building module zdharma/zplugin, running: make clean, then ./configure and then make ==[rst]"
-      +zinit-message "[pname]== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules ==[rst]"
+      +zinit-message "{pname}== Building module zdharma/zplugin, running: make clean, then ./configure and then make =={rst}"
+      +zinit-message "{pname}== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules =={rst}"
       if [[ -f Makefile ]] { 
           if [[ "$1" = "--clean" ]] {
-              noglob +zinit-message [p]-- make distclean --[rst]
+              noglob +zinit-message {p}-- make distclean --{rst}
               make distclean
               ((1))
           } else {
-              noglob +zinit-message [p]-- make clean --[rst]
+              noglob +zinit-message {p}-- make clean --{rst}
               make clean
           }
       }
-      noglob +zinit-message  [p]-- ./configure --[rst]
+      noglob +zinit-message  {p}-- ./configure --{rst}
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
-          noglob +zinit-message [p]-- make --[rst]
+          noglob +zinit-message {p}-- make --{rst}
           if { make } {
             [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
-            noglob +zinit-message "[info]Module has been built correctly.[rst]"
+            noglob +zinit-message "{info}Module has been built correctly.{rst}"
             .zinit-module info
           } else {
-              noglob +zinit-message  "[error]Module didn't build.[rst] "
+              noglob +zinit-message  "{error}Module didn't build.{rst} "
               .zinit-module info --link
           }
       }
@@ -3447,7 +3447,7 @@ EOF
 —— status ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
 —— report ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – show plugin's report (or all plugins' if ——all passed)
 —— delete [--all|--clean] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL – remove plugin or snippet from disk (good to forget wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
-—— loaded|list [keyword]         – show what plugins are loaded (filter with \'keyword')
+—— loaded|list {keyword}         – show what plugins are loaded (filter with \'keyword')
 —— cd ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                   – cd into plugin's directory; also support snippets, if feed with URL
 —— create ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – create plugin (also together with Github repository)
 —— edit ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – edit plugin's file with \$EDITOR

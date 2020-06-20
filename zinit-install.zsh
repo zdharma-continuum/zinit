@@ -156,7 +156,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     local -A jsondata1
     jsondata1=( ${(@Q)${(@z)Strings[2/1]}} )
     local user=${jsondata1[user]} plugin=${jsondata1[plugin]} \
-        url=${jsondata1[url]} message=${jsondata1[message]} \
+        url=${jsondata1{url}} message=${jsondata1[message]} \
         required=${jsondata1[required]:-${jsondata1[requires]}}
 
     local -a profiles
@@ -221,10 +221,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     }
 
     if [[ -n ${ZINIT_ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
-        +zinit-message $'\n'"[error]WARNING:[msg2] the profile uses [obj]dl''[msg2]" \
-            "ice however there's no [obj2]z-a-patch-dl[msg2] annex loaded" \
+        +zinit-message $'\n'"{error}WARNING:{msg2} the profile uses {obj}dl''{msg2}" \
+            "ice however there's no {obj2}z-a-patch-dl{msg2} annex loaded" \
             "(the ice will be inactive, i.e.: no additional files will" \
-            "become downloaded).[rst]"
+            "become downloaded).{rst}"
     }
 
     builtin print -Pn -- ${jsondata1[version]:+\\n${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}%f%b.\\n}
@@ -373,7 +373,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         if { ! .zinit-download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
                             command rm -f "${REPLY:t}"
                             +zinit-message "Download of release for \`$remote_url_path' " \
-                                "failed.[nl]Tried url: $url."
+                                "failed.{nl}Tried url: $url."
                             return 1
                         }
                     }
@@ -714,9 +714,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         elif (( ${+commands[lynx]} )); then
             command lynx -source "$url" || return 1
         else
-            +zinit-message "[error]ERROR:[rst]No download tool detected" \
-                "(one of: [obj]curl[rst], [obj]wget[rst], [obj]lftp[rst]," \
-                "[obj]lynx[rst])."
+            +zinit-message "{error}ERROR:{rst}No download tool detected" \
+                "(one of: {obj}curl{rst}, {obj}wget{rst}, {obj}lftp{rst}," \
+                "{obj}lynx{rst})."
             return 2
         fi
     } else {
@@ -1032,7 +1032,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             if (( ICE_OPTS[opt_-q,--quiet] )); then 
-                                +zinit-message $'\n'"[info]Updating snippet [p]${sname}[rst]${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
+                                +zinit-message $'\n'"{info}Updating snippet {p}${sname}{rst}${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
                                 +zinit-message "Downloading \`$sname' (with Subversion)..."
                             fi
                             .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
@@ -1057,7 +1057,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             ${+ZINIT_ICE[nocompile]} -eq 0
                         ]] {
                             zcompile "${list[1]}" &>/dev/null || \
-                                +zinit-message "[error]Warning:[rst] couldn't compile \`[obj]${list[1]}[rst]'."
+                                +zinit-message "{error}Warning:{rst} couldn't compile \`{obj}${list[1]}{rst}'."
                         }
                     fi
 
@@ -1111,7 +1111,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         if { ! .zinit-download-file-stdout "$url" 0 1 >! "$dirname/$filename" } {
                             if { ! .zinit-download-file-stdout "$url" 1 1 >! "$dirname/$filename" } {
                                 command rm -f "$dirname/$filename"
-                                +zinit-message "[error]ERROR:[rst] Download failed."
+                                +zinit-message "{error}ERROR:{rst} Download failed."
                                 return 4
                             }
                         }
@@ -1410,9 +1410,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     if (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) { 
         ZINIT_ICE=( "${(kv)ZINIT_ICE[@]}" "${tmp[@]}" )
     } elif [[ -n ${ZINIT_SICE[$id_as]} ]] {
-        +zinit-message "[error]WARNING:[msg2] Inconsistency #3" \
-            "occurred, please report the string: \`[obj]${ZINIT_SICE[$id_as]}[msg2]' to the" \
-            "GitHub issues page: [obj]https://github.com/zdharma/zinit/issues/[msg2].[rst]"
+        +zinit-message "{error}WARNING:{msg2} Inconsistency #3" \
+            "occurred, please report the string: \`{obj}${ZINIT_SICE[$id_as]}{msg2}' to the" \
+            "GitHub issues page: {obj}https://github.com/zdharma/zinit/issues/{msg2}.{rst}"
     }
     id_as=${ZINIT_ICE[id-as]:-$id_as}
 
@@ -1556,15 +1556,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         }
 
         if (( !$#list )) {
-            +zinit-message -n "[error]Didn't find correct Github" \
+            +zinit-message -n "{error}Didn't find correct Github" \
                 "release-file to download"
             if [[ -n $bpick ]] {
-                +zinit-message -n ", try adapting [obj]bpick[error]-ICE" \
-                    "(the current bpick is[error]: [file]${bpick}[error])."
+                +zinit-message -n ", try adapting {obj}bpick{error}-ICE" \
+                    "(the current bpick is{error}: {file}${bpick}{error})."
             } else {
                 +zinit-message -n .
             }
-            +zinit-message '[rst]' 
+            +zinit-message '{rst}' 
             return 1
         }
 
@@ -1649,9 +1649,9 @@ ziextract() {
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
                                 (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                                    +zinit-message "[pre]ziextract:[info2] Note:[rst]" \
-                                        "detected a [obj]${type2}[rst] archive in the" \
-                                        " file [file]${fname}[rst]."
+                                    +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
+                                        "detected a {obj}${type2}{rst} archive in the" \
+                                        " file {file}${fname}{rst}."
                                 ziextract "$fname" "$type2" $opt_move $opt_move2 $opt_norm ${${${#archives}:#1}:+--nobkp}
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
@@ -1669,13 +1669,13 @@ ziextract() {
     }
 
     if [[ -z $file ]] {
-        +zinit-message "[pre]ziextract:[error] ERROR:[msg2] argument" \
-            "needed (the file to extract) or the [obj]--auto[msg2] option."
+        +zinit-message "{pre}ziextract:{error} ERROR:{msg2} argument" \
+            "needed (the file to extract) or the {obj}--auto{msg2} option."
         return 1
     }
     if [[ ! -e $file ]] {
-        +zinit-message "[pre]ziextract:[error] ERROR:[msg2]" \
-            "the file \`[obj]${file}[msg2]' doesn't exist.[rst]"
+        +zinit-message "{pre}ziextract:{error} ERROR:{msg2}" \
+            "the file \`{obj}${file}{msg2}' doesn't exist.{rst}"
         return 1
     }
     if (( !nobkp )) {
@@ -1759,9 +1759,9 @@ ziextract() {
                 command hdiutil detach $attached_vol
 
                 if (( retval )) {
-                    +zinit-message "[pre]ziextract:[error] Warning:[msg1]" \
+                    +zinit-message "{pre}ziextract:{error} Warning:{msg1}" \
                             "problem occurred when attempted to copy the files" \
-                            "from the mounted image: \`[obj]${file}[msg1]'.[rst]"
+                            "from the mounted image: \`{obj}${file}{msg1}'.{rst}"
                 }
                 return $retval
             }
@@ -1782,15 +1782,15 @@ ziextract() {
 
     if [[ $(typeset -f + →zinit-extract) == "→zinit-extract" ]] {
         .zinit-extract-wrapper "$file" →zinit-extract || {
-            +zinit-message -n "[pre]ziextract:[error] WARNING:[msg1]" \
-                "extraction of the archive \`[obj]${file}[msg1]' had problems"
+            +zinit-message -n "{pre}ziextract:{error} WARNING:{msg1}" \
+                "extraction of the archive \`{obj}${file}{msg1}' had problems"
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} && !nobkp )) {
                 +zinit-message -n ", restoring the previous version of the plugin/snippet"
                 command mv ._backup/*(DN) . 2>/dev/null
             }
-            +zinit-message ".[rst]"
+            +zinit-message ".{rst}"
             unfunction -- →zinit-extract →zinit-check 2>/dev/null
             return 1
         }
@@ -1835,10 +1835,10 @@ ziextract() {
             fi
         }
     } elif (( warning )) {
-        +zinit-message "[pre]ziextract:" \
-            "[error]WARNING: [msg1]didn't recognize the archive" \
-            "type of \`[obj]${file}[msg1]'" \
-            "${ext:+/ [obj2]${ext}[msg1] }"\
+        +zinit-message "{pre}ziextract:" \
+            "{error}WARNING: {msg1}didn't recognize the archive" \
+            "type of \`{obj}${file}{msg1}'" \
+            "${ext:+/ {obj2}${ext}{msg1} }"\
 "(no extraction has been done).%f%b"
     }
 
@@ -1924,7 +1924,7 @@ zpextract() { ziextract "$@"; }
     # Download mirrors.lst
     #
 
-    +zinit-message "[info]Downloading[error]: [obj]mirrors.lst[info]...[rst]"
+    +zinit-message "{info}Downloading{error}: {obj}mirrors.lst{info}...{rst}"
     local mlst="$(mktemp)"
     while (( retry -- )) {
         if ! .zinit-download-file-stdout https://cygwin.com/mirrors.lst 0 > $mlst; then
@@ -1939,7 +1939,7 @@ zpextract() { ziextract "$@"; }
     }
 
     if [[ -z $mirror ]] {
-        +zinit-message "[error]Couldn't download[error]: [obj]mirrors.lst [error]."
+        +zinit-message "{error}Couldn't download{error}: {obj}mirrors.lst {error}."
         return 1
     }
 
@@ -1949,8 +1949,8 @@ zpextract() { ziextract "$@"; }
     # Download setup.ini.bz2
     #
 
-    +zinit-message "[info2]Selected mirror is[error]: [url]${mirror}[rst]"
-    +zinit-message "[info]Downloading[error]: [file]setup.ini.bz2[info]...[rst]"
+    +zinit-message "{info2}Selected mirror is{error}: {url}${mirror}{rst}"
+    +zinit-message "{info}Downloading{error}: {file}setup.ini.bz2{info}...{rst}"
     local setup="$(mktemp -u)"
     retry=3
     while (( retry -- )) {
@@ -1961,12 +1961,12 @@ zpextract() { ziextract "$@"; }
         command bunzip2 "$setup.bz2" 2>/dev/null
         [[ -s $setup ]] && break
         mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
-        +zinit-message "[pre]Retrying[error]: [hi]#[obj]$(( 3 - $retry ))/3, [pre]with mirror[error]: [url]${mirror}[rst]"
+        +zinit-message "{pre}Retrying{error}: {hi}#{obj}$(( 3 - $retry ))/3, {pre}with mirror{error}: {url}${mirror}{rst}"
     }
     local setup_contents="$(command grep -A 26 "@ $pkg\$" "$setup")"
     local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
     if [[ -z $urlpart ]] {
-        +zinit-message "[error]Couldn't find package[error]: [data2]\`[data]${pkg}[data2]'[error].[rst]"
+        +zinit-message "{error}Couldn't find package{error}: {data2}\`{data}${pkg}{data2}'{error}.{rst}"
         return 2
     }
     local url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
@@ -1975,18 +1975,18 @@ zpextract() { ziextract "$@"; }
     # Download the package
     #
 
-    +zinit-message "[info]Downloading[error]: [file]${url:t}[info]...[rst]"
+    +zinit-message "{info}Downloading{error}: {file}${url:t}{info}...{rst}"
     retry=2
     while (( retry -- )) {
         integer retval=0
         if ! .zinit-download-file-stdout $url 0 1 > $outfile; then
             if ! .zinit-download-file-stdout $url 1 1 > $outfile; then
-                +zinit-message "[error]Couldn't download[error]: [url]${url}[error]."
+                +zinit-message "{error}Couldn't download{error}: {url}${url}{error}."
                 retval=1
                 mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
                 url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
                 if (( retry )) {
-                    +zinit-message "[info2]Retrying, with mirror[error]: [url]${mirror}[info2]...[rst]"
+                    +zinit-message "{info2}Retrying, with mirror{error}: {url}${mirror}{info2}...{rst}"
                     continue
                 }
             fi

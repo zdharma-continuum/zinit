@@ -12,8 +12,8 @@
 
     # Load the plugin
     if [[ ! -r $1 ]] {
-        +zinit-message "[error]source: Couldn't read the script [obj]${1}[error]" \
-            ", cannot substitute [data]${ZINIT_ICE[subst]}[error].[rst]"
+        +zinit-message "{error}source: Couldn't read the script {obj}${1}{error}" \
+            ", cannot substitute {data}${ZINIT_ICE[subst]}{error}.{rst}"
     }
 
     local ___data="$(<$1)"
@@ -113,7 +113,7 @@ function $f {
 # Starts Dtrace, i.e. session tracking for changes in Zsh state.
 .zinit-debug-start() {
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "[error]Dtrace is already active, stop it first with \`dstop'[rst]"
+        +zinit-message "{error}Dtrace is already active, stop it first with \`dstop'{rst}"
         return 1
     fi
 
@@ -145,7 +145,7 @@ function $f {
 .zinit-debug-unload() {
     (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "[error]Dtrace is still active, stop it first with \`dstop'[rst]"
+        +zinit-message "{error}Dtrace is still active, stop it first with \`dstop'{rst}"
     else
         .zinit-unload _dtrace _dtrace
     fi
