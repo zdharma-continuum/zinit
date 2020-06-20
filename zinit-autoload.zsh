@@ -723,6 +723,7 @@ ZINIT[EXTENDED_GLOB]=""
             # and also only first 10 words (the (w)-flag enables word-indexing)
             lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
             builtin print -rl -- "${lines[@]}" | .zinit-pager
+            builtin print
         fi
         if [[ $1 != -q ]] {
             command git pull --no-stat --ff-only origin master
