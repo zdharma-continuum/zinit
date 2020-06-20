@@ -7,7 +7,7 @@ zinit wait lucid light-mode for \
   atload"_zsh_autosuggest_start" \
       zsh-users/zsh-autosuggestions \
   blockf atpull'zinit creinstall -q .' \
-      zinit light zsh-users/zsh-completions
+      zsh-users/zsh-completions
 ```
 
  - `wait` – load 0 seconds (about 5 ms exactly) after prompt (**Turbo mode**),
