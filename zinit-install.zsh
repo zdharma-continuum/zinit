@@ -691,7 +691,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 .zinit-download-file-stdout() {
     local url="$1" restart="$2" progress="${(M)3:#1}"
 
-    setopt localoptions localtraps
+    emulate -LR zsh
+    setopt localtraps extendedglob
 
     if (( restart )) {
         (( ${path[(I)/usr/local/bin]} )) || \
@@ -701,7 +702,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             }
 
         if (( ${+commands[curl]} )); then
-            command curl ${${progress:--s}:#1} ${progress:+--progress-bar} -fSL "$url" || return 1
+            if [[ -n $progress ]]; then
+                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+            else
+                command curl -fsSL "$url" || return 1
+            fi
         elif (( ${+commands[wget]} )); then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
         elif (( ${+commands[lftp]} )); then
@@ -716,7 +721,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         fi
     } else {
         if type curl 2>/dev/null 1>&2; then
-            command curl ${${progress:--s}:#1} ${progress:+--progress-bar} -fSL "$url" || return 1
+            if [[ -n $progress ]]; then
+                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+            else
+                command curl -fsSL "$url" || return 1
+            fi
         elif type wget 2>/dev/null 1>&2; then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
         elif type lftp 2>/dev/null 1>&2; then
