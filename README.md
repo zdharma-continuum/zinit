@@ -77,7 +77,7 @@
     tree:
 
     ```zsh
-    zi id-as`pulumi` as`monitor|null` mv`pulumi pulumi_` extract`!!` \
+    zi id-as`pulumi` as`monitor|null` mv`pulumi pulumi_` extract`!` \
         dlink=`https://get.pulumi.com/releases/sdk/pulumi-%VERSION%-windows-x64.zip` \
         sbin`pulumi*` for \
             https://www.pulumi.com/docs/get-started/install/versions/
