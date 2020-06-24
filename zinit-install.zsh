@@ -156,7 +156,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     local -A jsondata1
     jsondata1=( ${(@Q)${(@z)Strings[2/1]}} )
     local user=${jsondata1[user]} plugin=${jsondata1[plugin]} \
-        url=${jsondata1{url}} message=${jsondata1[message]} \
+        url=${jsondata1[url]} message=${jsondata1[message]} \
         required=${jsondata1[required]:-${jsondata1[requires]}}
 
     local -a profiles
