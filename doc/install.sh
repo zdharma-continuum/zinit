@@ -93,13 +93,14 @@ EOF
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
 zinit light-mode for \\
+    zinit-zsh/z-a-rust \\
     zinit-zsh/z-a-as-monitor \\
     zinit-zsh/z-a-patch-dl \\
     zinit-zsh/z-a-bin-gem-node
 
 EOF
 echo
-echo "[38;5;219m▓▒░[0m Would you like to add 3 useful plugins" \
+echo "[38;5;219m▓▒░[0m Would you like to add 4 useful plugins" \
     "- the most useful annexes (Zinit extensions that add new" \
     "functions-features to the plugin manager) to the zshrc as well?" \
     "It will be the following snippet:"
