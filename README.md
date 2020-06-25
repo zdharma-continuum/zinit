@@ -52,6 +52,22 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 25-06-2020
+  - Ability to call the autoloaded function at the moment of loading it by
+    `autoload'#fun'`, i.e.: by prefixing it with the hash sigh (`#`). So that
+    it's possible to invoke e.g.:
+
+    ```zsh
+    zinit autoload'#manydots-magic' for knu/zsh-manydots-magic
+    ```
+
+    instead of:
+
+    ```zsh
+    zinit autoload'manydots-magic' atload'manydots-magic' for \
+        knu/zsh-manydots-magic
+    ```
+
 * 20-06-2020
   - The [Bin-Gem-Node](https://github.com/zinit-zsh/z-a-bin-gem-node) annex now
     has an explicit Cygwin support – it creates additional, **extra shim files**
