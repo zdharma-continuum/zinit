@@ -225,11 +225,11 @@ builtin setopt noaliases
 # run custom `autoload' function, that doesn't need FPATH.
 :zinit-shade-autoload () {
     emulate -LR zsh
-    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
-    local -a opts custom
+    builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
+    local -a opts opts2 custom
     local func
 
-    zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} S+:=custom
+    zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} I+=opts2 S+:=custom
 
     set -- ${@:#--}
 
@@ -307,6 +307,9 @@ builtin setopt noaliases
                 }'
             fi
             (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
+        }
+        if (( ${+opts2[(r)-I]} )) {
+            ${custom[count*2]:-$func}
         }
     done
 
@@ -1253,8 +1256,8 @@ builtin setopt noaliases
 
     if [[ -n ${ZINIT_ICE[autoload]} ]] {
         :zinit-shade-autoload -Uz \
-            ${(s: :)${${(s.;.)ZINIT_ICE[autoload]#\!}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
-            ${${(M)ZINIT_ICE[autoload]:#*(->|=>|→)*}:+-C} ${${(M)ZINIT_ICE[autoload]#\!}:+-C}
+            ${(s: :)${${${(s.;.)ZINIT_ICE[autoload]#[\!\#]}#[\!\#]}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
+            ${${(M)ZINIT_ICE[autoload]:#*(->|=>|→)*}:+-C} ${${(M)ZINIT_ICE[autoload]#(?\!|\!)}:+-C} ${${(M)ZINIT_ICE[autoload]#(?\#|\#)}:+-I}
     }
     
     if [[ ${ZINIT_ICE[as]} = command ]]; then
