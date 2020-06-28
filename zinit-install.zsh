@@ -1190,6 +1190,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             }
         }
 
+        (( retval == 4 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
+
         if [[ ${${:-$local_dir/$dirname}%%/##} != ${ZINIT[SNIPPETS_DIR]} ]] {
             # Store ices at "clone" and update of snippet, SVN and single-file
             local pfx=$local_dir/$dirname/._zinit
@@ -1199,8 +1201,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 "${ZINIT[col-obj]}${(qqq)id_as}%f%b isn't fully downloaded - you should" \
                 "remove it with ${ZINIT[col-file]}\`zinit delete ${(qqq)id_as}'%f%b."
         }
-
-        (( retval == 4 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }
 
         if (( retval == 0 )) {
             # Run annexes' atpull hooks (the `always' after atpull-ice ones)
