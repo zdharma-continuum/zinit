@@ -21,7 +21,7 @@ ZINIT[EXTENDED_GLOB]=""
     ZINIT_REGISTERED_PLUGINS[${ZINIT_REGISTERED_PLUGINS[(i)$uspl2]}]=()
     # Support Zsh plugin standard
     zsh_loaded_plugins[${zsh_loaded_plugins[(i)$teleid]}]=()
-    ZINIT_REGISTERED_STATES[$uspl2]="0"
+    ZINIT[STATES__$uspl2]="0"
 } # ]]]
 # FUNCTION: .zinit-diff-functions-compute [[[
 # Computes FUNCTIONS that holds new functions added by plugin.
@@ -778,7 +778,7 @@ ZINIT[EXTENDED_GLOB]=""
         [[ "$i" = "_local/zinit" ]] && continue
         .zinit-any-colorify-as-uspl2 "$i"
         # Mark light loads
-        [[ "${ZINIT_REGISTERED_STATES[$i]}" = "1" ]] && REPLY="$REPLY ${ZINIT[col-info]}*${ZINIT[col-rst]}"
+        [[ "${ZINIT[STATES__$i]}" = "1" ]] && REPLY="$REPLY ${ZINIT[col-info]}*${ZINIT[col-rst]}"
         builtin print -r -- "$REPLY"
     done
 } # ]]]
@@ -2121,7 +2121,7 @@ ZINIT[EXTENDED_GLOB]=""
     # Count light-loaded plugins
     integer light=0
     local s
-    for s in "${ZINIT_REGISTERED_STATES[@]}"; do
+    for s in "${(@v)ZINIT[(I)STATES__*]}"; do
         [[ "$s" = 1 ]] && (( light ++ ))
     done
     # Without _zlocal/zinit
