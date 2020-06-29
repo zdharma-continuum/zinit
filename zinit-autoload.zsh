@@ -2874,7 +2874,11 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         builtin print -Pr -- "$1"
         builtin print "[yY/n…]"
         local ans
-        read -q ans
+        if [[ -t 0 ]] {
+            read -q ans
+        } else {
+            read -k1 -u0 ans
+        }
         if [[ "$ans" = "y" ]] {
             eval "$2"
             builtin print "\nDone (action executed, exit code: $?)"
