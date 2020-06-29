@@ -1551,7 +1551,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
-        if (( $#list > 1 && $+commands[cpio] )) {
+        if (( $#list > 1 && $+commands[rpm] )) {
             list2=( ${list[@]:#*.rpm} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
