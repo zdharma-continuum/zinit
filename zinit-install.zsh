@@ -627,14 +627,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     done
 
     if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) {
-        builtin print -r "${ZINIT[col-msg1]}Installed ${ZINIT[col-obj]}${#INSTALLED_COMPS}" \
-            "${ZINIT[col-msg1]}completions. They are stored in${ZINIT[col-obj2]}" \
-            "\$INSTALLED_COMPS${ZINIT[col-msg1]} array.${ZINIT[col-rst]}"
+        +zinit-message "{msg1}Installed {obj}${#INSTALLED_COMPS} {msg1}completions." \
+            "They are listed in the {obj2}\$INSTALLED_COMPS{msg1} array.{rst}"
         if (( ${#SKIPPED_COMPS} )) {
-            builtin print -r "${ZINIT[col-msg1]}Skipped installing" \
-                "${ZINIT[col-obj]}${#SKIPPED_COMPS}${ZINIT[col-msg1]} completions." \
-                "They are stored in ${ZINIT[col-obj2]}\$SKIPPED_COMPS${ZINIT[col-msg1]} array." \
-                ${ZINIT[col-rst]}
+            +zinit-message "{msg1}Skipped installing {obj}${#SKIPPED_COMPS}{msg1} completions." \
+                "They are listed in the {obj2}\$SKIPPED_COMPS{msg1} array. {rst}"
         }
     }
 
@@ -913,9 +910,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 zcompile "$first"
             done
             builtin print -rl -- ${list[@]#$plugin_dir/} >! /tmp/zinit.compiled.$$.lst
-            builtin print -Pr -- "The additional $ZINIT[col-obj]${#ADD_COMPILED}%f%b" \
-                "compiled files are stored in the" \
-                "$ZINIT[col-file]\$ADD_COMPILED%f%b array. $ZSH_SUBSHELL"
+            +zinit-message  "The additional {obj}${#ADD_COMPILED}{rst} compiled files" \
+                "are listed in the {file}\$ADD_COMPILED%f%b array."
         }
     fi
 
@@ -1814,24 +1810,24 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
-                    builtin print -Pr -- "$ZINIT[col-pre]ziextract:%f%b" \
+                    +zinit-message "{pre}ziextract:{rst}" \
                         "Successfully extracted and assigned +x chmod to the file:" \
-                        "\`$ZINIT[col-obj]${execs[1]}%f%b'."
+                        "\`{obj}${execs[1]}{rst}'."
             else
                 local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
                 if (( ${#execs} > 7 )) {
-                    builtin print -Pr -- "$ZINIT[col-pre]ziextract:%f%b Successfully" \
+                    +zinit-message "{pre}ziextract:{rst} Successfully" \
                         "extracted and marked executable the appropriate files" \
-                        "($ZINIT[col-obj]${(pj:$sep:)${(@)execs[1,5]:t}},…%f%b) contained" \
-                        "in \`$ZINIT[col-file]$file%f%b'. All the extracted" \
-                        "$ZINIT[col-obj]${#execs}%f%b executables are" \
-                        "available in the $ZINIT[col-msg2]INSTALLED_EXECS%f%b" \
+                        "({obj}${(pj:$sep:)${(@)execs[1,5]:t}},…{rst}) contained" \
+                        "in \`{file}$file{rst}'. All the extracted" \
+                        "{obj}${#execs}{rst} executables are" \
+                        "available in the {msg2}INSTALLED_EXECS{rst}" \
                         "array."
                 } else {
-                    builtin print -Pr -- "$ZINIT[col-pre]ziextract:%f%b Successfully" \
+                    +zinit-message "$ZINIT[col-pre]ziextract:{rst} Successfully" \
                         "extracted and marked executable the appropriate files" \
-                        "($ZINIT[col-obj]${(pj:$sep:)${execs[@]:t}}%f%b) contained" \
-                        "in \`$ZINIT[col-file]$file%f%b'."
+                        "($ZINIT[col-obj]${(pj:$sep:)${execs[@]:t}}{rst}) contained" \
+                        "in \`$ZINIT[col-file]$file{rst}'."
                 }
             fi
         }
