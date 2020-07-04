@@ -1189,13 +1189,27 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
             retval=2
             command mkdir -p "$local_dir/$dirname"
+            if [[ ! -e $url ]] {
+                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source file {file}$url{error} doesn't exist.{rst}"
+                retval=4
+            }
+            if [[ -e $url && ! -f $url && $url != /dev/null ]] {
+                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't a regular file.{rst}"
+                retval=4
+            }
+            if [[ -e $url && ! -r $url && $url != /dev/null ]] {
+                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't" \
+                    "accessible (wrong permissions).{rst}"
+                retval=4
+            }
             if (( !ICE_OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
-                +zinit-message "{msg}Copying {obj}$filename{msg}...{rst}"
+                +zinit-message "{msg}Copying {file}$filename{msg}...{rst}"
                 command cp -vf "$url" "$local_dir/$dirname/$filename" || \
-                    { +zinit-message "{error}An error occured.{rst}"; retval=4; }
+                    { +zinit-message "{ehi}ERROR:{error} The file copying has been unsuccessful.{rst}"; retval=4; }
             } else {
-                command cp -f "$url" "$local_dir/$dirname/$filename" || \
-                    { +zinit-message "{error}An error occured.{rst}"; retval=4; }
+                command cp -f "$url" "$local_dir/$dirname/$filename" &>/dev/null || \
+                    { +zinit-message "{ehi}ERROR:{error} The copying of {file}$filename{error} has been unsuccessful"\
+"${${(M)ICE_OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
             }
         }
 
