@@ -2091,7 +2091,7 @@ zimv() {
         ( ${+ZINIT_ICE[reset]} && ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )
     )) {
         if (( ZINIT[-r/--reset-opt-hook-has-been-run] )) {
-            local msg_bit="{meta}reset{msg2} ice given{pre}" option=0
+            local msg_bit="{meta}reset{msg2} ice given{pre}" option=
         } else {
             local msg_bit="{meta2}-r/--reset{msg2} given to \`{meta}update{pre}'" option=1
         }
@@ -2104,11 +2104,26 @@ zimv() {
             } else {
                 if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
                     if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                        [[ -f $local_dir/$dirname/$filename ]] && \
-                            +zinit-message "{pre}reset ($msg_bit): {msg2}Removing the snippet-file: {file}$filename{msg2} ...{rst}" || \
-                            +zinit-message "{pre}reset ($msg_bit): {msg2}The file {file}$filename{msg2} is already deleted ...{rst}"
+                        if [[ -f $local_dir/$dirname/$filename ]] {
+                            if [[ -n $option || -z $ZINIT_ICE[reset] ]] {
+                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} ...{rst}"
+                            } else {                                         
+                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}" \
+                                    "with the supplied code: {data2}$ZINIT_ICE[reset]{msg2} ...{rst}"
+                            }
+                        } else {
+                            +zinit-message "{pre}reset ($msg_bit):{msg2} The file {file}$filename{msg2} is already deleted ...{rst}"
+                            if [[ -n $ZINIT_ICE[reset] && ! -n $option ]] {
+                                +zinit-message "{pre}reset ($msg_bit):{msg2} (skipped running the provided reset-code:" \
+                                    "{data2}$ZINIT_ICE[reset]{msg2}){rst}"
+                            }
+                        }
                     } 
-                    command rm -f "$local_dir/$dirname/$filename"
+                    if (( option )) {
+                        command rm -f "$local_dir/$dirname/$filename"
+                    } else {
+                        eval "${ZINIT_ICE[reset]:-rm -f \"$local_dir/$dirname/$filename\"}"
+                    }
                 } else {
                         [[ -f $local_dir/$dirname/$filename ]] && \
                             +zinit-message "{pre}reset ($msg_bit): {msg2}Skipping the removal of {file}$filename{msg2}" \
