@@ -1550,11 +1550,6 @@ ZINIT[EXTENDED_GLOB]=""
                     builtin print "\rUpdating $REPLY"
                 }
 
-                (( !skip_pull && ICE_OPTS[opt_-r,--reset] )) && {
-                    builtin print -P "$ZINIT[col-obj]reset (-r/--reset given): running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
-                    builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
-                }
-
                 ZINIT_ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones)
                 reply=(
@@ -1567,17 +1562,10 @@ ZINIT[EXTENDED_GLOB]=""
                     "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
                 done
 
-                (( !skip_pull && ${+ZINIT_ICE[reset]} )) && (
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && builtin print -P "$ZINIT[col-obj]reset: running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
-                    builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
-                )
-
-                [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
-                builtin print -r -- mark >! $local_dir/.zinit_lastupd
-
                 if (( !skip_pull )) {
-                    .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version || \
+                    if ! .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version; then
                         ZINIT[annex-multi-flag:pull-active]=0
+                    fi
                     if (( ICE_OPTS[opt_-q,--quiet] != 1 )) {
                         builtin print
                     }
@@ -1635,10 +1623,6 @@ ZINIT[EXTENDED_GLOB]=""
               ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
 
               if (( do_update )) {
-                  (( !skip_pull && ICE_OPTS[opt_-r,--reset] )) && {
-                      builtin print -P "${ZINIT[col-msg2]}Resetting the repository (-r/--reset given)...%f%b"
-                      command git reset --hard HEAD
-                  }
                   ZINIT_ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones)
                   reply=(
@@ -1650,12 +1634,6 @@ ZINIT[EXTENDED_GLOB]=""
                       arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                       "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
                   done
-
-                  if (( ${+ZINIT_ICE[reset]} )) {
-                      (( !ICE_OPTS[opt_-q,--quiet] )) && builtin print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f%b"
-                    ( eval "${ZINIT_ICE[reset]:-command git reset --hard HEAD}" )
-                  }
-                  [[ ${ice[atpull]} = "!"* ]] && .zinit-countdown atpull && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]#\!}" "${ice[atclone]}"; )
                   ZINIT_ICE=()
                   (( !skip_pull )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
               }
@@ -1681,51 +1659,7 @@ ZINIT[EXTENDED_GLOB]=""
         command rm -f $local_dir/.zinit_lastupd
 
         # Any new commits?
-        if [[ ${#log} -gt 0 ]] {
-            [[ ${+ice[make]} = 1 && ${ice[make]} = "!!"* ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
-
-            if [[ -z ${ice[is_release${count:#1}]} && -n ${ice[mv]} ]]; then
-                if [[ ${ice[mv]} = *("->"|"→")* ]] {
-                    local from=${ice[mv]%%[[:space:]]#(->|→)*} to=${ice[mv]##*(->|→)[[:space:]]#} || \
-                } else {
-                    local from=${ice[mv]%%[[:space:]]##*} to=${ice[mv]##*[[:space:]]##}
-                }
-                local -a afr
-                ( builtin cd -q "$local_dir" || return 1
-                  afr=( ${~from}(DN) )
-                  [[ ${#afr} -gt 0 ]] && {
-                      if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                          command mv -vf "${afr[1]}" "$to"
-                          command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null;
-                      } else {
-                          command mv -f "${afr[1]}" "$to"
-                          command mv -f "${afr[1]}".zwc "$to".zwc 2>/dev/null;
-                      }
-                  }
-                )
-            fi
-
-            if [[ -z ${ice[is_release${count:#1}]} && -n ${ice[cp]} ]]; then
-                if [[ ${ice[cp]} = *("->"|"→")* ]] {
-                    local from=${ice[cp]%%[[:space:]]#(->|→)*} to=${ice[cp]##*(->|→)[[:space:]]#} || \
-                } else {
-                    local from=${ice[cp]%%[[:space:]]##*} to=${ice[cp]##*[[:space:]]##}
-                }
-                local -a afr
-                ( builtin cd -q "$local_dir" || return 1
-                  afr=( ${~from}(DN) )
-                  [[ ${#afr} -gt 0 ]] && {
-                      if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                          command cp -vf "${afr[1]}" "$to"
-                          command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
-                      } else {
-                          command cp -f "${afr[1]}" "$to"
-                          command cp -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
-                      }
-                  }
-                )
-            fi
-
+        if (( ZINIT[annex-multi-flag:pull-active] >= 1 || ${#log} > 0 )) {
             ZINIT_ICE=( "${(kv)ice[@]}" )
             # Run annexes' atpull hooks (the before atpull[^!]…-ice ones)
             reply=(
@@ -1738,9 +1672,6 @@ ZINIT[EXTENDED_GLOB]=""
                 "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
             done
 
-            [[ ${+ice[make]} = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
-            [[ -n ${ice[atpull]} && ${ice[atpull][1]} != "!" ]] && .zinit-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; )
-            [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && .zinit-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
 
             # Run annexes' atpull hooks (the after atpull-ice ones)
             reply=(
@@ -1758,14 +1689,8 @@ ZINIT[EXTENDED_GLOB]=""
         # Store ices to disk at update of plugin
         .zinit-store-ices "$local_dir/._zinit" ice "" "" "" ""
     fi
+
     ZINIT_ICE=( "${(kv)ice[@]}" )
-
-    if (( ZINIT[annex-multi-flag:pull-active] > 0 && ${+ZINIT_ICE[extract]} )) {
-        local extract=${ZINIT_ICE[extract]}
-        [[ -n $extract ]] && @zinit-substitute extract
-        .zinit-extract plugin "$extract" "$local_dir"
-    }
-
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
         ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
@@ -1775,21 +1700,6 @@ ZINIT[EXTENDED_GLOB]=""
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
         "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
     done
-
-    if [[ -n ${ZINIT_ICE[ps-on-update]} ]] {
-        if (( !ICE_OPTS[opt_-q,--quiet] )) {
-            builtin print -r "Running plugin's provided update code: ${ZINIT[col-info]}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}${ZINIT[col-rst]}"
-            (
-                builtin cd -q "$local_dir" || return 1
-                eval "${ZINIT_ICE[ps-on-update]}"
-            )
-        } else {
-            (
-                builtin cd -q "$local_dir" || return 1
-                eval "${ZINIT_ICE[ps-on-update]}" &> /dev/null
-            )
-        }
-    }
     ZINIT_ICE=()
 
     typeset -ga INSTALLED_EXECS
