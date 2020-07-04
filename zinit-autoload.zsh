@@ -1461,15 +1461,11 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" \
         ice local_dir filename is_snippet || return 1
 
-    if [[ ${ice[teleid]:-$id_as} = (#b)([^/]##)/(*) ]]; then
-        user=${match[1]}; plugin=${match[2]}
-    else
-        user=; plugin=${ice[teleid]:-$id_as}
-    fi
-
-    local repo=${${${(M)user:#%}:+${user#%}/$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
-
     .zinit-any-to-user-plugin ${ice[teleid]:-$id_as}
+    user=${reply[1]} plugin=${reply[2]}
+
+    local repo="${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}"
+
     local -a arr
     reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
     for key in "${reply[@]}"; do
