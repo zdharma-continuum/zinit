@@ -627,11 +627,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     done
 
     if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) {
-        +zinit-message "{msg1}Installed {obj}${#INSTALLED_COMPS} {msg1}completions." \
-            "They are listed in the {obj2}\$INSTALLED_COMPS{msg1} array.{rst}"
+        +zinit-message "{msg}Installed {obj}${#INSTALLED_COMPS}" \
+            "{msg}completions. They are stored in{obj2}" \
+            "\$INSTALLED_COMPS{msg} array.{rst}"
         if (( ${#SKIPPED_COMPS} )) {
-            +zinit-message "{msg1}Skipped installing {obj}${#SKIPPED_COMPS}{msg1} completions." \
-                "They are listed in the {obj2}\$SKIPPED_COMPS{msg1} array. {rst}"
+            +zinit-message "{msg}Skipped installing" \
+                "{obj}${#SKIPPED_COMPS}{msg} completions." \
+                "They are stored in {obj2}\$SKIPPED_COMPS{msg} array." \
+                {rst}
         }
     }
 
@@ -1177,12 +1180,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             retval=2
             command mkdir -p "$local_dir/$dirname"
             if (( !ICE_OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
-                builtin print -P "${ZINIT[col-msg1]}Copying ${ZINIT[col-obj]}$filename${ZINIT[col-msg1]}...%f%b"
+                +zinit-message "{msg}Copying {obj}$filename{msg}...{rst}"
                 command cp -vf "$url" "$local_dir/$dirname/$filename" || \
-                    { builtin print -Pr -- "${ZINIT[col-error]}An error occured.%f%b"; retval=4; }
+                    { +zinit-message "{error}An error occured.{rst}"; retval=4; }
             } else {
                 command cp -f "$url" "$local_dir/$dirname/$filename" || \
-                    { builtin print -Pr -- "${ZINIT[col-error]}An error occured.%f%b"; retval=4; }
+                    { +zinit-message "{error}An error occured.{rst}"; retval=4; }
             }
         }
 
@@ -1684,8 +1687,7 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            builtin print -Pr "$ZINIT[col-pre]ziextract:$ZINIT[col-msg1] Unpacking the files from:" \
-                "\`$ZINIT[col-obj]$file$ZINIT[col-msg1]'...%f%b"
+            +zinit-message "{pre}ziextract:{msg} Unpacking the files from: \`{obj}$file{msg}'...{rst}"
         $fun; retval=$?
         if (( retval == 0 )) {
             local -a files
