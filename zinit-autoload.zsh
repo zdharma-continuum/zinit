@@ -1558,9 +1558,9 @@ ZINIT[EXTENDED_GLOB]=""
                 ZINIT_ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones)
                 reply=(
-                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
-                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
-                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
+                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1642,9 +1642,9 @@ ZINIT[EXTENDED_GLOB]=""
                   ZINIT_ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones)
                   reply=(
-                      ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
-                      ${${(M)ZINIT_ICE[atpull]#\!}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
-                      ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
+                      ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                   )
                   for key in "${reply[@]}"; do
                       arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1727,11 +1727,11 @@ ZINIT[EXTENDED_GLOB]=""
             fi
 
             ZINIT_ICE=( "${(kv)ice[@]}" )
-            # Run annexes' atpull hooks (the before atpull-ice ones)
+            # Run annexes' atpull hooks (the before atpull[^!]…-ice ones)
             reply=(
-                ${(@on)ZINIT_EXTS2[(I)zinit hook:no-\\\!atpull-pre <->]}
-                ${${ZINIT_ICE[atpull]:#\!*}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
-                ${(@on)ZINIT_EXTS2[(I)zinit hook:no-\\\!atpull-post <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
+                ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-post <->]}
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1744,9 +1744,9 @@ ZINIT[EXTENDED_GLOB]=""
 
             # Run annexes' atpull hooks (the after atpull-ice ones)
             reply=(
-                ${(@on)ZINIT_EXTS2[(I)zinit hook:atpull-pre <->]}
-                ${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}
-                ${(@on)ZINIT_EXTS2[(I)zinit hook:atpull-post <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:atpull-pre <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:atpull-post <->]}
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1761,16 +1761,15 @@ ZINIT[EXTENDED_GLOB]=""
     ZINIT_ICE=( "${(kv)ice[@]}" )
 
     if (( ZINIT[annex-multi-flag:pull-active] > 0 && ${+ZINIT_ICE[extract]} )) {
-        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
         local extract=${ZINIT_ICE[extract]}
         [[ -n $extract ]] && @zinit-substitute extract
         .zinit-extract plugin "$extract" "$local_dir"
     }
 
     reply=(
-        ${(@on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
-        ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
-        ${(@on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
+        ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
+        ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
