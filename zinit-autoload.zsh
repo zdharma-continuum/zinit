@@ -1467,10 +1467,14 @@ ZINIT[EXTENDED_GLOB]=""
     local repo="${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}"
 
     local -a arr
-    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
+    reply=(
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
+    )
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-        "${arr[5]}" plugin "${reply[-2]}" "${reply[-1]}" "$id_as" "$repo" preinit || \
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$repo" u-${${key##(zinit|z-annex) hook:}%% <->} || \
             return $(( 10 - $? ))
     done
 

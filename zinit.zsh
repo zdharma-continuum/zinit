@@ -1156,10 +1156,14 @@ builtin setopt noaliases
     functions[m]="${functions[+zinit-message]}"
 
     local -a ___arr
-    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
+    reply=(
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
+    )
     for ___key in "${reply[@]}"; do
-        ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
-        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" preinit || \
+        ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
+        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" "${${___key##(zinit|z-annex) hook:}%% <->}" || \
             return $(( 10 - $? ))
     done
 
@@ -1455,10 +1459,14 @@ builtin setopt noaliases
 
     local -a arr
     local key
-    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
+    reply=(
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
+    )
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" preinit || \
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" || \
             return $(( 10 - $? ))
     done
 

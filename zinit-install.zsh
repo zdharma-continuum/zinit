@@ -1489,10 +1489,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     local -a arr
     local key
-    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}" )
+    reply=(
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
+    )
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" u-preinit || \
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" u-${${key##(zinit|z-annex) hook:}%% <->} || \
             return $(( 10 - $? ))
     done
 
