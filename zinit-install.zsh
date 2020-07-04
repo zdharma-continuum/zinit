@@ -2142,6 +2142,11 @@ zimv() {
                                 +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}," \
                                     "with the supplied code: {data2}$ZINIT_ICE[reset]{msg2} ...{rst}"
                             }
+                            if (( option )) {
+                                command rm -f "$local_dir/$dirname/$filename"
+                            } else {
+                                eval "${ZINIT_ICE[reset]:-rm -f \"$local_dir/$dirname/$filename\"}"
+                            }
                         } else {
                             +zinit-message "{pre}reset ($msg_bit):{msg2} The file {file}$filename{msg2} is already deleted ...{rst}"
                             if [[ -n $ZINIT_ICE[reset] && ! -n $option ]] {
@@ -2150,11 +2155,6 @@ zimv() {
                             }
                         }
                     } 
-                    if (( option )) {
-                        command rm -f "$local_dir/$dirname/$filename"
-                    } else {
-                        eval "${ZINIT_ICE[reset]:-rm -f \"$local_dir/$dirname/$filename\"}"
-                    }
                 } else {
                         [[ -f $local_dir/$dirname/$filename ]] && \
                             +zinit-message "{pre}reset ($msg_bit): {msg2}Skipping the removal of {file}$filename{msg2}" \
