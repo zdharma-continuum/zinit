@@ -1288,9 +1288,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             # Run annexes' atpull hooks (the before atpull-ice ones)
             if [[ ${ZINIT_ICE[atpull][1]} != *"!"* ]] {
                 reply=(
-                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:no-\\\!atpull-pre <->]}
                     ${${ZINIT_ICE[atpull]:#\!*}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
-                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:no-\\\!atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -2075,14 +2075,14 @@ zimv() {
         ( ${+ZINIT_ICE[reset]} && ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )
     )) {
         if (( ZINIT[-r/--reset-opt-hook-has-been-run] )) {
-            local msg_bit="{meta}reset{msg2} ice given{pre}"
+            local msg_bit="{meta}reset{msg2} ice given{pre}" option=0
         } else {
-            local msg_bit="{meta2}-r/--reset{msg2} given to \`{meta}update{pre}'"
+            local msg_bit="{meta2}-r/--reset{msg2} given to \`{meta}update{pre}'" option=1
         }
         if [[ $type == snippet ]] {
             if (( $+ZINIT_ICE[svn] )) {
-                if [[ $skip_pull -eq 0 && ${ICE_OPTS[opt_-r,--reset]} = 1 && -d $filename/.svn ]] {
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) via command: {rst}svn revert --recursive {file}$filename/.{rst} ..."
+                if [[ $skip_pull -eq 0 && -d $filename/.svn ]] {
+                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive .../{file}$filename/.{rst} ..."
                     command svn revert --recursive $filename/.
                 }
             } else {
@@ -2095,10 +2095,15 @@ zimv() {
             }
         } elif [[ $type == plugin ]] {
             if (( is_release && !skip_pull )) {
-                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}"
-                builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
+                if (( option )) {
+                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*"
+                    builtin eval command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)
+                } else {
+                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}"
+                    builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
+                }
             } elif (( !skip_pull )) {
-                +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) via: {rst}git reset --hard HEAD ..."
+                +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command: {rst}git reset --hard HEAD ..."
                 command git reset --hard HEAD
             }
         }
