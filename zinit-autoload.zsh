@@ -2744,10 +2744,15 @@ ZINIT[EXTENDED_GLOB]=""
 
     local -a arr
     local key
-    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atdelete <->]}" )
+
+    reply=(
+        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete <->]}
+        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}
+    )
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-        "${arr[5]}" "$1" "$2" $3 "$4" "$5" atdelete
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}"
     done
 }
 # ]]]
