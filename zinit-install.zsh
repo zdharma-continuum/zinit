@@ -1222,9 +1222,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             local pfx=$local_dir/$dirname/._zinit
             .zinit-store-ices "$pfx" ZINIT_ICE url_rsvd "" "$save_url" "${+ZINIT_ICE[svn]}"
         } elif [[ -n $id_as ]] {
-            builtin print -Pr "${ZINIT[col-error]}Warning%f%b: the snippet" \
-                "${ZINIT[col-obj]}${(qqq)id_as}%f%b isn't fully downloaded - you should" \
-                "remove it with ${ZINIT[col-file]}\`zinit delete ${(qqq)id_as}'%f%b."
+            +zinit-message "{error}Warning{rst}: the snippet {url}$id_as{rst} isn't" \
+                "fully downloaded - you should remove it with \`{data}zinit delete $id_as{rst}'."
         }
 
         if (( retval == 0 )) {
@@ -2108,7 +2107,7 @@ zimv() {
                             if [[ -n $option || -z $ZINIT_ICE[reset] ]] {
                                 +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} ...{rst}"
                             } else {                                         
-                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}" \
+                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}," \
                                     "with the supplied code: {data2}$ZINIT_ICE[reset]{msg2} ...{rst}"
                             }
                         } else {
