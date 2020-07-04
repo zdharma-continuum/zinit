@@ -1047,7 +1047,7 @@ builtin setopt noaliases
     done
 }
 # ]]]
-# FUNCTION: @zinit-register-z-annex [[[
+# FUNCTION: @zinit-register-annex [[[
 # Registers the z-annex inside Zinit – i.e. an Zinit extension
 @zinit-register-annex() {
     local name="$1" type="$2" handler="$3" helphandler="$4" icemods="$5" key="z-annex ${(q)2}"

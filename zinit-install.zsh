@@ -995,6 +995,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
     # a forced download (i.e.: the medium doesn't allow to peek update)
+    #
+    # The below inherits the flag if it's an update call (i.e.: -u given),
+    # otherwise it sets it to 2 – a new download is treated like a full
+    # update.
     ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
     (
@@ -1013,7 +1017,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             if (( ${+ZINIT_ICE[run-atpull]} )) {
                                 skip_pull=1
                             } else { return 0; } # Will return when no updates so atpull''
-                                                 # code below doesn't need any checks
+                                                 # code below doesn't need any checks.
+                                                 # This return 0 statement also sets the
+                                                 # pull-active flag outside this subshell.
                         }
                         ZINIT[annex-multi-flag:pull-active]=$(( 2 - skip_pull ))
 
@@ -1095,12 +1101,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     local -a matched
                     matched=( $local_dir/$dirname/$filename(DNms-$secs) )
                     if (( ${#matched} )) {
+                        # Empty-update return-short path – it also decides the
+                        # pull-active flag after the return from this sub-shell
                         (( ${+ZINIT_ICE[run-atpull]} )) && skip_dl=1 || return 0
                     }
 
                     if [[ ! -f $local_dir/$dirname/$filename ]] {
                         ZINIT[annex-multi-flag:pull-active]=2
                     } else {
+                        # secs > 1 → the file is outdated, then:
+                        #   - if true, then the mode is 2 minus run-atpull-activation,
+                        #   - if false, then mode is 3 → a forced download (no remote mtime found).
                         ZINIT[annex-multi-flag:pull-active]=$(( secs > 1 ? (2 - skip_dl) : 3 ))
                     }
 
@@ -2099,7 +2110,7 @@ zimv() {
     zicp --mv ${dir:+--dir} $dir "$@"
 }
 # ]]]
-# FUNCTION ∞zinit-reset-opt-hook [[[
+# FUNCTION: ∞zinit-reset-opt-hook [[[
 ∞zinit-reset-hook() {
     # File
     if [[ "$1" = plugin ]] {
