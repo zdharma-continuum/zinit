@@ -1016,14 +1016,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         }
 
                         # Run annexes' atpull hooks (the before atpull-ice ones)
-                        if [[ ${ZINIT_ICE[atpull][1]} = *"!"* ]] {
-                            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
-                            for key in "${reply[@]}"; do
-                                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
-
-                            done
-                        }
+                        reply=(
+                            ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
+                            ${${(M)ZINIT_ICE[atpull]#\!}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                            ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                        )
+                        for key in "${reply[@]}"; do
+                            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                        done
 
                         if (( ${+ZINIT_ICE[reset]} )) {
                             (( !ICE_OPTS[opt_-q,--quiet] )) && builtin print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-svn revert --recursive $filename/.}%f%b"
@@ -1102,11 +1103,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     }
 
                     # Run annexes' atpull hooks (the before atpull-ice ones)
-                    if [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] {
-                        reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
+                    if [[ $update = -u ]] {
+                        reply=(
+                            ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
+                            ${${ZINIT_ICE[atpull]#\!}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                            ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                        )
                         for key in "${reply[@]}"; do
-                            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
+                            arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
                         done
                     }
 
@@ -1161,18 +1166,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 }
             }
         } else {
-            # File
-            if [[ ${ICE_OPTS[opt_-r,--reset]} = 1 ]] {
-                [[ ${ICE_OPTS[opt_-q,--quiet]} != 1 && -f $dirname/$filename ]] && builtin print -P "${ZINIT[col-msg2]}Removing the file (-r/--reset given)...%f%b"
-                command rm -f "$local_dir/$dirname/$filename"
-            }
 
             # Run annexes' atpull hooks (the before atpull-ice ones)
-            if [[ $update = -u && ${ZINIT_ICE[atpull][1]} = *"!"* ]] {
-                reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
+            if [[ $update = -u ]] {
+                reply=(
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
+                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                )
                 for key in "${reply[@]}"; do
-                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
+                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
                 done
             }
 
@@ -1283,10 +1287,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         if [[ $update = -u ]] {
             # Run annexes' atpull hooks (the before atpull-ice ones)
             if [[ ${ZINIT_ICE[atpull][1]} != *"!"* ]] {
-                reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
+                reply=(
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
+                    ${${ZINIT_ICE[atpull]:#\!*}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                )
                 for key in "${reply[@]}"; do
-                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atpull
+                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
                 done
             }
 
@@ -1320,10 +1328,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
         # Run annexes' atpull hooks (the after atpull-ice ones)
         if [[ $update = -u ]] {
-            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}" )
+            reply=(
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:atpull-pre <->]}
+                ${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:atpull-post <->]}
+            )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atpull
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
             done
 
             if (( ZINIT[annex-multi-flag:pull-active] > 0 && ${+ZINIT_ICE[extract]} )) {
@@ -1333,10 +1345,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             }
 
             # Run annexes' atpull hooks (the `always' after atpull-ice ones)
-            reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
+            reply=(
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
+                ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
+            )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \%atpull
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
             done
 
             if [[ -n ${ZINIT_ICE[ps-on-update]} ]]; then
@@ -1399,7 +1415,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     command rm -f /tmp/zinit-execs.$$.lst
 
-    ZINIT[annex-multi-flag:pull-active]=0
+    ZINIT[annex-multi-flag:pull-active]=0 ZINIT[-r/--reset-opt-hook-has-been-run]=0
 
     # Remove leading whitespace and trailing /
     url=${${url#${url%%[! $'\t']*}}%/}
@@ -2045,6 +2061,59 @@ zimv() {
     local dir
     if [[ $1 = (-d|--dir) ]] { dir=$2; shift 2; }
     zicp --mv ${dir:+--dir} $dir "$@"
+}
+# ]]]
+# FUNCTION ∞zinit-reset-opt-hook [[[
+∞zinit-reset-hook() {
+    # File
+    if [[ "$1" = plugin ]] {
+        local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
+    } else {
+        local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
+    }
+    if (( ( ICE_OPTS[opt_-r,--reset] && ZINIT[-r/--reset-opt-hook-has-been-run] == 0 ) || \
+        ( ${+ZINIT_ICE[reset]} && ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )
+    )) {
+        if (( ZINIT[-r/--reset-opt-hook-has-been-run] )) {
+            local msg_bit="{meta}reset{msg2} ice given{pre}"
+        } else {
+            local msg_bit="{meta2}-r/--reset{msg2} given to \`{meta}update{pre}'"
+        }
+        if [[ $type == snippet ]] {
+            if (( $+ZINIT_ICE[svn] )) {
+                if [[ $skip_pull -eq 0 && ${ICE_OPTS[opt_-r,--reset]} = 1 && -d $filename/.svn ]] {
+                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) via command: {rst}svn revert --recursive {file}$filename/.{rst} ..."
+                    command svn revert --recursive $filename/.
+                }
+            } else {
+                if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                    [[ -f $local_dir/$dirname/$filename ]] && \
+                        +zinit-message "{pre}reset ($msg_bit): {msg2}: Removing the file {file}$filename{msg2} ($msg_bit)...{rst}" || \
+                        +zinit-message "{pre}reset ($msg_bit): {msg2}: The file {file}$filename{msg2} already deleted ...{rst}"
+                }
+                command rm -f "$local_dir/$dirname/$filename"
+            }
+        } elif [[ $type == plugin ]] {
+            if (( is_release && !skip_pull )) {
+                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}"
+                builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
+            } elif (( !skip_pull )) {
+                +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) via: {rst}git reset --hard HEAD ..."
+                command git reset --hard HEAD
+            }
+        }
+    }
+
+    if (( ICE_OPTS[opt_-r,--reset] )) {
+        if (( ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )) {
+            ZINIT[-r/--reset-opt-hook-has-been-run]=0
+        } else {
+            ZINIT[-r/--reset-opt-hook-has-been-run]=1
+        }
+    } else {
+        # If there's no -r/--reset, pretend that it already has been served.
+        ZINIT[-r/--reset-opt-hook-has-been-run]=1
+    }
 }
 # ]]]
 

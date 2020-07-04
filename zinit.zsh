@@ -9,7 +9,7 @@ typeset -gaH ZINIT_REGISTERED_PLUGINS ZINIT_TASKS ZINIT_RUN
 typeset -ga zsh_loaded_plugins
 if (( !${#ZINIT_TASKS} )) { ZINIT_TASKS=( "<no-data>" ); }
 # Snippets loaded, url -> file name
-typeset -gAH ZINIT ZINIT_SNIPPETS ZINIT_REPORTS ZINIT_ICES ZINIT_SICE ZINIT_CUR_BIND_MAP ZINIT_EXTS
+typeset -gAH ZINIT ZINIT_SNIPPETS ZINIT_REPORTS ZINIT_ICES ZINIT_SICE ZINIT_CUR_BIND_MAP ZINIT_EXTS ZINIT_EXTS2
 typeset -gaH ZINIT_COMPDEF_REPLAY
 
 # Compatibility with pre-rename project (Zplugin)
@@ -1054,6 +1054,15 @@ builtin setopt noaliases
     ZINIT_EXTS[seqno]=$(( ${ZINIT_EXTS[seqno]:-0} + 1 ))
     ZINIT_EXTS[$key${${(M)type#hook:}:+ ${ZINIT_EXTS[seqno]}}]="${ZINIT_EXTS[seqno]} z-annex-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler} ${(q)icemods}"
     ZINIT_EXTS[ice-mods]="${ZINIT_EXTS[ice-mods]}${icemods:+|}$icemods"
+}
+# ]]]
+# FUNCTION: @zinit-register-hook [[[
+# Registers the z-annex inside Zinit – i.e. an Zinit extension
+@zinit-register-hook() {
+    local name="$1" type="$2" handler="$3" icemods="$4" key="zinit ${(q)2}"
+    ZINIT_EXTS2[seqno]=$(( ${ZINIT_EXTS2[seqno]:-0} + 1 ))
+    ZINIT_EXTS2[$key${${(M)type#hook:}:+ ${ZINIT_EXTS2[seqno]}}]="${ZINIT_EXTS2[seqno]} z-annex-data: ${(q)name} ${(q)type} ${(q)handler} '' ${(q)icemods}"
+    ZINIT_EXTS2[ice-mods]="${ZINIT_EXTS2[ice-mods]}${icemods:+|}$icemods"
 }
 # ]]]
 # FUNCTION: @zsh-plugin-run-on-update [[[
@@ -2636,5 +2645,8 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
     }
 }
 # ]]]
+
+@zinit-register-hook "--reset" hook:\!atpull-pre ∞zinit-reset-hook
+@zinit-register-hook "--reset" hook:\!atpull-post ∞zinit-reset-hook
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker

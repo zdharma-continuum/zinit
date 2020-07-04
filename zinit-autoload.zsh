@@ -1418,6 +1418,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     local -a arr
     ZINIT[first-plugin-mark]=${${ZINIT[first-plugin-mark]:#init}:-1}
+    ZINIT[-r/--reset-opt-hook-has-been-run]=0
 
     integer retval was_snippet
     .zinit-two-paths "$2${${2:#(%|/)*}:+${3:+/}}$3"
@@ -1553,15 +1554,18 @@ ZINIT[EXTENDED_GLOB]=""
                     builtin print -P "$ZINIT[col-obj]reset (-r/--reset given): running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
                     builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
+
                 ZINIT_ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones)
-                if [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] {
-                    reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
-                    for key in "${reply[@]}"; do
-                        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \!atpull
-                    done
-                }
+                reply=(
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
+                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                    ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                )
+                for key in "${reply[@]}"; do
+                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                    "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+                done
 
                 (( !skip_pull && ${+ZINIT_ICE[reset]} )) && (
                     (( !ICE_OPTS[opt_-q,--quiet] )) && builtin print -P "$ZINIT[col-obj]reset: running $ZINIT[col-file]${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}%f%b"
@@ -1637,13 +1641,16 @@ ZINIT[EXTENDED_GLOB]=""
                   }
                   ZINIT_ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones)
-                  if [[ ${+ice[atpull]} = 1 && ${ice[atpull]} = "!"* ]] {
-                      reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
-                      for key in "${reply[@]}"; do
-                          arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                          "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \!atpull
-                      done
-                  }
+                  reply=(
+                      ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-pre <->]}
+                      ${${(M)ZINIT_ICE[atpull]#\!}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                      ${(@on)ZINIT_EXTS2[(I)zinit hook:\\\!atpull-post <->]}
+                  )
+                  for key in "${reply[@]}"; do
+                      arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                      "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+                  done
+
                   if (( ${+ZINIT_ICE[reset]} )) {
                       (( !ICE_OPTS[opt_-q,--quiet] )) && builtin print -P "%F{220}reset: running ${ZINIT_ICE[reset]:-git reset --hard HEAD}%f%b"
                     ( eval "${ZINIT_ICE[reset]:-command git reset --hard HEAD}" )
@@ -1721,23 +1728,29 @@ ZINIT[EXTENDED_GLOB]=""
 
             ZINIT_ICE=( "${(kv)ice[@]}" )
             # Run annexes' atpull hooks (the before atpull-ice ones)
-            if [[ ${ice[atpull]} != "!"* ]] {
-                reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}" )
-                for key in "${reply[@]}"; do
-                    arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                    "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \!atpull
-                done
-            }
+            reply=(
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:no-\\\!atpull-pre <->]}
+                ${${ZINIT_ICE[atpull]:#\!*}:+${(@on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:no-\\\!atpull-post <->]}
+            )
+            for key in "${reply[@]}"; do
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+            done
 
             [[ ${+ice[make]} = 1 && ${ice[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
             [[ -n ${ice[atpull]} && ${ice[atpull][1]} != "!" ]] && .zinit-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; )
             [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && .zinit-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
 
             # Run annexes' atpull hooks (the after atpull-ice ones)
-            reply=( "${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}" )
+            reply=(
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:atpull-pre <->]}
+                ${(@on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}
+                ${(@on)ZINIT_EXTS2[(I)zinit hook:atpull-post <->]}
+            )
             for key in "${reply[@]}"; do
-                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" atpull
+                arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
             done
             ZINIT_ICE=()
         }
@@ -1754,11 +1767,14 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-extract plugin "$extract" "$local_dir"
     }
 
-    # Run annexes' atpull hooks (the `always' after atpull-ice ones)
-    reply=( ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]} )
+    reply=(
+        ${(@on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
+        ${(@on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
+        ${(@on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
+    )
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
-        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" \%atpull
+        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
     done
 
     if [[ -n ${ZINIT_ICE[ps-on-update]} ]] {
