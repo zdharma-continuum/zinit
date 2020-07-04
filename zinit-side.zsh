@@ -290,6 +290,7 @@
 
     # Handle flag-Ices; svn must be last
     for ___key in ${ice_order[@]}; do
+        [[ $___key == (no|)compile ]] && continue
         (( 0 == ${+ZINIT_ICE[no$___key]} && 0 == ${+___sice[no$___key]} )) && continue
         # "If there is such ice currently, and there's no no* ice given,
         # and there's the no* ice in the static ice" – skip, don't unset.

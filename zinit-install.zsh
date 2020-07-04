@@ -527,7 +527,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
         if [[ $site != *releases && ${ZINIT_ICE[nocompile]} = '!' ]] {
             # Compile plugin
-            LANG=C sleep 0.3
             if [[ -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
                 () {
                     emulate -LR zsh
@@ -536,6 +535,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 }
             }
         }
+        ((1))
     ) || return $?
 
     typeset -ga INSTALLED_EXECS
@@ -911,7 +911,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     }
 
     if [[ -n "${ICE[compile]}" ]]; then
-        eval "list=( \$plugin_dir/${~ICE[compile]}(DN) )"
+        eval "list=( \$plugin_dir/${~ICE[compile]}(N) )"
         if [[ ${#list} -eq 0 ]] {
             builtin print "Warning: ice compile'' didn't match any files."
         } else {
