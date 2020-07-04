@@ -1165,8 +1165,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     fi
                 }
             }
-        } else {
 
+        } else { # Local-file snippet branch
+            # Local files are (yet…) forcefully copied.
+            ZINIT[annex-multi-flag:pull-active]=3
             # Run annexes' atpull hooks (the before atpull-ice ones)
             if [[ $update = -u ]] {
                 reply=(
