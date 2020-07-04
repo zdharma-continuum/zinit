@@ -1789,6 +1789,12 @@ ZINIT[EXTENDED_GLOB]=""
 
     if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
         zinit creinstall -q "$repo"
+
+        # After any download – rehash the command table
+        # This will however miss the as"program" binaries
+        # as their PATH gets extended - and it is done
+        # later. It will however work for sbin'' ice.
+        # (( !ICE_OPTS[opt_-p,--parallel] )) && rehash
     }
 
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
@@ -1885,6 +1891,7 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-update-all-parallel
         integer retval=$?
         .zinit-compinit 1 &>/dev/null
+        rehash
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
             +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
         }

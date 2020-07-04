@@ -559,6 +559,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
+    # After any download – rehash the command table
+    # This will however miss the as"program" binaries
+    # as their PATH gets extended - and it is done
+    # later. It will however work for sbin'' ice.
+    (( !ICE_OPTS[opt_-p,--parallel] )) && rehash
+
     return 0
 } # ]]]
 # FUNCTION: .zinit-install-completions [[[
@@ -1363,6 +1369,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         typeset -ga ADD_COMPILED
         { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
+
+    # After any download – rehash the command table
+    # This will however miss the as"program" binaries
+    # as their PATH gets extended - and it is done
+    # later. It will however work for sbin'' ice.
+    (( !ICE_OPTS[opt_-p,--parallel] )) && rehash
 
     return $retval
 }
