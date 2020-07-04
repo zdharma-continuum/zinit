@@ -2102,12 +2102,20 @@ zimv() {
                     command svn revert --recursive $filename/.
                 }
             } else {
-                if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                    [[ -f $local_dir/$dirname/$filename ]] && \
-                        +zinit-message "{pre}reset ($msg_bit): {msg2}: Removing the file {file}$filename{msg2} ($msg_bit)...{rst}" || \
-                        +zinit-message "{pre}reset ($msg_bit): {msg2}: The file {file}$filename{msg2} already deleted ...{rst}"
+                if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
+                    if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                        [[ -f $local_dir/$dirname/$filename ]] && \
+                            +zinit-message "{pre}reset ($msg_bit): {msg2}Removing the snippet-file: {file}$filename{msg2} ...{rst}" || \
+                            +zinit-message "{pre}reset ($msg_bit): {msg2}The file {file}$filename{msg2} is already deleted ...{rst}"
+                    } 
+                    command rm -f "$local_dir/$dirname/$filename"
+                } else {
+                        [[ -f $local_dir/$dirname/$filename ]] && \
+                            +zinit-message "{pre}reset ($msg_bit): {msg2}Skipping the removal of {file}$filename{msg2}" \
+                                 "as there is no new copy scheduled for download.{rst}" || \
+                            +zinit-message "{pre}reset ($msg_bit): {msg2}The file {file}$filename{msg2} is already deleted" \
+                                "and {ehi}no new download is being scheduled.{rst}"
                 }
-                command rm -f "$local_dir/$dirname/$filename"
             }
         } elif [[ $type == plugin ]] {
             if (( is_release && !skip_pull )) {
@@ -2119,7 +2127,7 @@ zimv() {
                     builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
             } elif (( !skip_pull )) {
-                +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command: {rst}git reset --hard HEAD ..."
+                +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD ..."
                 command git reset --hard HEAD
             }
         }
