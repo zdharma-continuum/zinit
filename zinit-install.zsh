@@ -2033,8 +2033,8 @@ zimv() {
                 command make -C "$dir" ${(@s; ;)make}
 }
 # ]]]
-# FUNCTION: ∞zinit-make-hook [[[
-∞zinit-make-atclone-pre-hook() {
+# FUNCTION: ∞zinit-atclone-hook [[[
+∞zinit-atclone-hook() {
     if (( ${+local_path} )) {
         [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
     } elif (( ${+local_dir} )) {
