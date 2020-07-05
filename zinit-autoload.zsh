@@ -1551,7 +1551,8 @@ ZINIT[EXTENDED_GLOB]=""
                 }
 
                 ZINIT_ICE=( "${(kv)ice[@]}" )
-                # Run annexes' atpull hooks (the before atpull-ice ones)
+                # Run annexes' atpull hooks (the before atpull-ice ones).
+                # The gh-r / GitHub releases block.
                 reply=(
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
                     ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
@@ -1624,7 +1625,8 @@ ZINIT[EXTENDED_GLOB]=""
 
               if (( do_update )) {
                   ZINIT_ICE=( "${(kv)ice[@]}" )
-                  # Run annexes' atpull hooks (the before atpull-ice ones)
+                  # Run annexes' atpull hooks (the before atpull-ice ones).
+                  # The regular Git-plugins block.
                   reply=(
                       ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
                       ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
@@ -1661,7 +1663,8 @@ ZINIT[EXTENDED_GLOB]=""
         # Any new commits?
         if (( ZINIT[annex-multi-flag:pull-active] >= 1 || ${#log} > 0 )) {
             ZINIT_ICE=( "${(kv)ice[@]}" )
-            # Run annexes' atpull hooks (the before atpull[^!]…-ice ones)
+            # Run annexes' atpull hooks (the before atpull[^!]…-ice ones).
+            # Block common for Git and gh-r plugins.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
                 ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
@@ -1672,8 +1675,8 @@ ZINIT[EXTENDED_GLOB]=""
                 "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
             done
 
-
-            # Run annexes' atpull hooks (the after atpull-ice ones)
+            # Run annexes' atpull hooks (the after atpull-ice ones).
+            # Block common for Git and gh-r plugins.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:atpull-pre <->]}
                 ${(on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}
