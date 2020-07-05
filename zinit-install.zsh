@@ -848,7 +848,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 zcompile "$first"
             done
             builtin print -rl -- ${list[@]#$plugin_dir/} >! /tmp/zinit.compiled.$$.lst
-            +zinit-message  "The additional {obj}${#ADD_COMPILED}{rst} compiled files" \
+            +zinit-message  "The additional {obj}${#list}{rst} compiled files" \
                 "are listed in the {file}\$ADD_COMPILED%f%b array."
         }
     fi
