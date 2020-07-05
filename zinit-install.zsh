@@ -1982,45 +1982,55 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-make-ee-hook [[[
 ∞zinit-make-ee-hook() {
-    # Git-plugin make'' at download
-    if (( ${+local_path} )) {
-        [[ ${ZINIT_ICE[make]} = "!!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!\!}}; }
-    # Git-plugin make'' at update
-    } elif (( ${+local_dir} && ${+ice} )) {
-        [[ ${ice[make]} = "!!"* ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!\!}}; }
-    # Snippet at download and update
-    } elif (( ${+local_dir} && ${+dirname} )) {
-        [[ ${ZINIT_ICE[make]} = "!!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!\!}}; }
+    if [[ "$1" = plugin ]] {
+        local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
+    } else {
+        local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
     }
+
+    (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
+    @zinit-substitute make
+
+    # Git-plugin make'' at download
+    [[ $make = "!!"* ]] && \
+        .zinit-countdown make && \
+            command make -C "$dir" ${(@s; ;)${make#\!\!}}
 }
 # ]]]
 # FUNCTION: ∞zinit-make-e-hook [[[
 ∞zinit-make-e-hook() {
     # Git-plugin make'' at download
-    if (( ${+local_path} )) {
-        [[ ${ZINIT_ICE[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)${make#\!}}; }
-    # Git-plugin make'' at update
-    } elif (( ${+local_dir} && ${+ice} )) {
-        [[ ${ice[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { command make -C "$local_dir" ${(@s; ;)${ice[make]#\!}}; }
-    # Snippet at download and update
-    } elif (( ${+local_dir} && ${+dirname} )) {
-        [[ ${ZINIT_ICE[make]} = ("!"[^\!]*|"!") ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)${make#\!}}; }
+    if [[ "$1" = plugin ]] {
+        local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
+    } else {
+        local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
     }
+
+    (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
+    @zinit-substitute make
+
+    # Git-plugin make'' at download
+    [[ $make = ("!"[^\!]*|"!") ]] && \
+        .zinit-countdown make && \
+            command make -C "$dir" ${(@s; ;)${make#\!}}
 }
 # ]]]
 # FUNCTION: ∞zinit-make-hook [[[
 ∞zinit-make-hook() {
-    # Git-plugin make'' at download
-    # Git-plugin make'' at download
-    if (( ${+local_path} )) {
-        [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
-    # Git-plugin make'' at update
-    } elif (( ${+local_dir} && ${+ice} )) {
-        [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && .zinit-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
-    # Snippet at download and update
-    } elif (( ${+local_dir} && ${+dirname} )) {
-        [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_dir/$dirname" ${(@s; ;)make}; }
+    if [[ "$1" = plugin ]] {
+        local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
+    } else {
+        local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
     }
+
+    (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
+    @zinit-substitute make
+
+    # Git-plugin make'' at download
+    (( ${+ZINIT_ICE[make]} || ${+ice[make]} )) && \
+        [[ $make != "!"* ]] && \
+            .zinit-countdown make && \
+                command make -C "$dir" ${(@s; ;)make}
 }
 # ]]]
 # FUNCTION: ∞zinit-make-hook [[[
