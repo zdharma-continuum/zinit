@@ -1151,6 +1151,8 @@ builtin setopt noaliases
     .zinit-any-to-user-plugin "$1" "$2"
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ZINIT_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-$___user${${___user:#(%|/)*}:+/}$___plugin}"
+    local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
+    local ___pdir_orig="$___pdir_path"
 
     local ___m_bkp="${functions[m]}"
     functions[m]="${functions[+zinit-message]}"
@@ -1163,7 +1165,7 @@ builtin setopt noaliases
     )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" "${${___key##(zinit|z-annex) hook:}%% <->}" || \
+        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" "${${___key##(zinit|z-annex) hook:}%% <->}" || \
             return $(( 10 - $? ))
     done
 
@@ -1240,6 +1242,7 @@ builtin setopt noaliases
 # $3 - mode (light or load)
 .zinit-load-plugin() {
     local ___user="$1" ___plugin="$2" ___id_as="$3" ___mode="$4" ___rst="$5" ___correct=0 ___retval=0
+    local ___pbase="${${___plugin:t}%(.plugin.zsh|.zsh|.git)}" ___key
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
     set --
@@ -1262,10 +1265,6 @@ builtin setopt noaliases
     
     [[ ${ZINIT_ICE[as]} = null ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
-
-    local ___pbase="${${___plugin:t}%(.plugin.zsh|.zsh|.git)}"
-    [[ $___user = % ]] && local ___pdir_path="$___plugin" || local ___pdir_path="${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}"
-    local ___pdir_orig="$___pdir_path" ___key
 
     if [[ -n ${ZINIT_ICE[autoload]} ]] {
         :zinit-shade-autoload -Uz \
