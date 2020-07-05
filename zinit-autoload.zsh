@@ -1449,7 +1449,8 @@ ZINIT[EXTENDED_GLOB]=""
         return $retval
     fi
 
-    command rm -f /tmp/zinit-execs.$$.lst
+    command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
+                    /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
@@ -1708,12 +1709,16 @@ ZINIT[EXTENDED_GLOB]=""
 
     typeset -ga INSTALLED_EXECS
     { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
-    command rm -f /tmp/zinit-execs.$$.lst
 
     if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
         { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
         { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+    }
+
+    if [[ -e /tmp/zinit.compiled.$$.lst ]] {
+        typeset -ga ADD_COMPILED
+        { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
     if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {

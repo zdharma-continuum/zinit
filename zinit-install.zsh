@@ -320,9 +320,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         cygwin    cygwin
     )
 
-    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst \
-        /tmp/zinit.compiled.$$.lst
-
     ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
     local -a arr
@@ -333,7 +330,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         return 1
     fi
 
-    command rm -f /tmp/zinit-execs.$$.lst
+    command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
+                  /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
 
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
@@ -469,7 +467,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     typeset -ga INSTALLED_EXECS
     { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
-    command rm -f /tmp/zinit-execs.$$.lst
 
     # After additional executions like atclone'' - install completions (1 - plugins)
     local -A ICE_OPTS
@@ -902,8 +899,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         url="${${url/\/blob\///raw/}/\/tree\///raw/}"
     }
 
-    command rm -f /tmp/zinit.installed_comps.$$.lst /tmp/zinit.skipped_comps.$$.lst \
-        /tmp/zinit.compiled.$$.lst
+    command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
+                  /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
         [[ $update != -u ]] && builtin print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
@@ -911,8 +908,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     fi
 
     [[ $update = -u && ${ICE_OPTS[opt_-q,--quiet]} != 1 ]] && builtin print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
-
-    command rm -f /tmp/zinit-execs.$$.lst
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
@@ -1211,7 +1206,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     typeset -ga INSTALLED_EXECS
     { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
-    command rm -f /tmp/zinit-execs.$$.lst
 
     # After additional executions like atclone'' - install completions (2 - snippets)
     local -A ICE_OPTS
@@ -1256,8 +1250,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     ice_opts=( "${(kv)ICE_OPTS[@]}" )
     local -A ICE_OPTS
     ICE_OPTS=( "${(kv)ice_opts[@]}" )
-
-    command rm -f /tmp/zinit-execs.$$.lst
 
     ZINIT[annex-multi-flag:pull-active]=0 ZINIT[-r/--reset-opt-hook-has-been-run]=0
 
@@ -1332,10 +1324,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # Download or copy the file
     [[ $url = *github.com* && $url != */raw/* ]] && url=${url/\/(blob|tree)\///raw/}
     .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "-u"
-
-    typeset -ga INSTALLED_EXECS
-    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
-    command rm -f /tmp/zinit-execs.$$.lst
 
     return $?
 }
