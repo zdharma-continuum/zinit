@@ -945,7 +945,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         }
                         ZINIT[annex-multi-flag:pull-active]=$(( 2 - skip_pull ))
 
-                        # Run annexes' atpull hooks (the before atpull-ice ones)
+                        # Run annexes' atpull hooks (the before atpull-ice ones).
+                        # The SVN block.
                         reply=(
                             ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
                             ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
@@ -1025,7 +1026,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         ZINIT[annex-multi-flag:pull-active]=$(( secs > 1 ? (2 - skip_dl) : 3 ))
                     }
 
-                    # Run annexes' atpull hooks (the before atpull-ice ones)
+                    # Run annexes' atpull hooks (the before atpull-ice ones).
+                    # The URL-snippet block.
                     if [[ $update = -u && $ZINIT[annex-multi-flag:pull-active] -ge 1 ]] {
                         reply=(
                             ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
@@ -1076,7 +1078,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         } else { # Local-file snippet branch
             # Local files are (yet…) forcefully copied.
             ZINIT[annex-multi-flag:pull-active]=3 retval=3
-            # Run annexes' atpull hooks (the before atpull-ice ones)
+            # Run annexes' atpull hooks (the before atpull-ice ones).
+            # The local-file snippets block.
             if [[ $update = -u ]] {
                 reply=(
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
@@ -1142,7 +1145,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         }
 
         if [[ $update = -u ]] {
-            # Run annexes' atpull hooks (the before atpull-ice ones)
+            # Run annexes' atpull hooks (the before atpull-ice ones).
+            # The block is common to all 3 snippet types.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
                 ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
@@ -1176,6 +1180,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         }
 
         # Run annexes' atpull hooks (the after atpull-ice ones)
+        # The block is common to all 3 snippet types.
         if [[ $update = -u ]] {
             if (( ZINIT[annex-multi-flag:pull-active] > 0 )) {
                 reply=(
@@ -1190,6 +1195,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             }
 
             # Run annexes' atpull hooks (the `always' after atpull-ice ones)
+            # The block is common to all 3 snippet types.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
                 ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
