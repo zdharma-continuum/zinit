@@ -1605,21 +1605,22 @@ ZINIT[EXTENDED_GLOB]=""
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zinit_lastupd)"} ); } 2>/dev/null
 
-              [[ ${#log} -gt 0 ]] && do_update=1 || \
-                  {
-                      skip_pull=1
-                      (( ${+ice[run-atpull]} )) && {
-                          do_update=1
-                          builtin print -r -- mark >! $local_dir/.zinit_lastupd
-                          if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
-                              .zinit-any-colorify-as-uspl2 "$id_as"
-                              (( ZINIT[first-plugin-mark] )) && {
-                                  ZINIT[first-plugin-mark]=0
-                              } || builtin print
-                              builtin print "\rUpdating $REPLY"
-                          }
+              if [[ ${#log} -gt 0 ]] {
+                  do_update=1
+              } else {
+                  skip_pull=1
+                  if (( ${+ice[run-atpull]} )) {
+                      do_update=1
+                      builtin print -r -- mark >! $local_dir/.zinit_lastupd
+                      if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
+                          .zinit-any-colorify-as-uspl2 "$id_as"
+                          (( ZINIT[first-plugin-mark] )) && {
+                              ZINIT[first-plugin-mark]=0
+                          } || builtin print
+                          builtin print "\rUpdating $REPLY"
                       }
                   }
+              }
 
               ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
 
