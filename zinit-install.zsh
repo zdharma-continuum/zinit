@@ -1325,7 +1325,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" u-${${key##(zinit|z-annex) hook:}%% <->} || \
+        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" ${${key##(zinit|z-annex) hook:}%% <->} update || \
             return $(( 10 - $? ))
     done
 

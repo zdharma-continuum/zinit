@@ -1474,7 +1474,7 @@ ZINIT[EXTENDED_GLOB]=""
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$repo" u-${${key##(zinit|z-annex) hook:}%% <->} || \
+        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$repo" ${${key##(zinit|z-annex) hook:}%% <->} update || \
             return $(( 10 - $? ))
     done
 
