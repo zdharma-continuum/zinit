@@ -1718,6 +1718,7 @@ ziextract() {
                 command mv -f **/*~(*/*~*/*/*/*|*/*/*/*/*|^*/*|._zinit(|/*)|.git(|/*)|._backup(|/*))(DN) .
             }
 
+            command mv .tmp231ABC/$file . &>/dev/null
             command rm -rf .tmp231ABC
         }
         REPLY="${${execs[1]:h}:h}/${execs[1]:t}"
