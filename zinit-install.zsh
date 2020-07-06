@@ -1452,8 +1452,10 @@ ziextract() {
     local -a opt_move opt_move2 opt_norm opt_auto opt_nobkp
     zparseopts -D -E -move=opt_move -move2=opt_move2 -norm=opt_norm \
             -auto=opt_auto -nobkp=opt_nobkp || \
-        { builtin print -P -r -- "%F{160}Incorrect options given to
-\`ziextract' (available are: %F{221}--auto%F{160},%F{221}--move%F{160},%F{221}--move2%F{160},%F{221}--norm%F{160},%F{221}--nobkp%F{160}).%f%b"; return 1; }
+        { +zinit-message "{error}ziextract:{msg2} Incorrect options given to" \
+                  "\`{pre}ziextract{msg2}' (available are: {meta}--auto{msg2}," \
+                  "{meta}--move{msg2}, {meta}--move2{msg2}, {meta}--norm{msg2}," \
+                  "{meta}--nobkp{msg2}).{rst}"; return 1; }
 
     local file="$1" ext="$2"
     integer move=${${${(M)${#opt_move}:#0}:+0}:-1} \
@@ -1484,10 +1486,9 @@ ziextract() {
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar|exe|pe32) ]] {
                     (( !ICE_OPTS[opt_-q,--quiet] )) && \
-                        builtin print -Pr -- "$ZINIT[col-pre]ziextract:$ZINIT[col-info2]" \
-                            "Note:%f%b" \
-                            "detected a $ZINIT[col-obj]$type%f%b" \
-                            "archive in the file $ZINIT[col-file]$fname%f%b."
+                        +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
+                            "detected a {meta}$type{rst} archive in the file" \
+                            "{file}$fname{rst}."
                     ziextract "$fname" "$type" $opt_move $opt_move2 $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
                     integer iret_val=$?
                     ret_val+=iret_val
@@ -1562,8 +1563,8 @@ ziextract() {
     }
 
     →zinit-check() { (( ${+commands[$1]} )) || \
-        builtin print -Pr "$ZINIT[col-error]Error:%f%b No command $ZINIT[col-obj]$1%f%b," \
-            "it is required to unpack $ZINIT[col-file]$2%f%b."
+        +zinit-message "{error}Error:{rst} No command {data}$1{rst}," \
+                "it is required to unpack {file}$2{rst}."
     }
 
     case "${${ext:+.$ext}:-$file}" in
@@ -1733,17 +1734,16 @@ ziextract() {
     local tpe=$1 extract=$2 local_dir=$3
     (
         builtin cd -q "$local_dir" || \
-            { builtin print -P -- "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]} The path" \
-                "of the $tpe (\`${ZINIT[col-file]}$local_dir${ZINIT[col-msg2]}')" \
-                "isn't accessible.%f%b"
+            { +zinit-message "{error}ERROR:{msg2} The path of the $tpe" \
+                      "(\`{file}$local_dir{msg2}') isn't accessible.{rst}"
                 return 1
             }
         local -a files
         files=( ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }} )
         if [[ ${#files} -eq 0 && -n ${extract##(\!-|-\!|\!|-)} ]] {
-                builtin print -P -- "${ZINIT[col-error]}ERROR:${ZINIT[col-msg2]} The" \
-                    "files (\`${ZINIT[col-file]}${extract##(\!-|-\!|\!|-)}${ZINIT[col-msg2]}')" \
-                    "not found, cannot extract.%f%b"
+                +zinit-message "{error}ERROR:{msg2} The files" \
+                        "(\`{file}${extract##(\!-|-\!|\!|-)}{msg2}')" \
+                        "not found, cannot extract.{rst}"
                 return 1
         } else {
             (( !${#files} )) && files=( "" )
