@@ -1722,7 +1722,8 @@ ZINIT[EXTENDED_GLOB]=""
     }
 
     if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
-        zinit creinstall -q "$repo"
+        [[ 0 = ${+ice[nocompletions]} && ${ice[as]} != null ]] && \
+            zinit creinstall -q "$repo"
 
         # After any download – rehash the command table
         # This will however miss the as"program" binaries
