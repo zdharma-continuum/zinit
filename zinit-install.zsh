@@ -2116,7 +2116,7 @@ zimv() {
     } else {
         local tpe="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
     }
-    if [[ ( $hook = *\!at(clone|pull)* && ${ZINIT_ICE[nocompile]} != '!' ) || \
+    if [[ ( $hook = *\!at(clone|pull)* && ${+ZINIT_ICE[nocompile]} -eq 0 ) || \
             ( $hook = at(clone|pull)* && ${ZINIT_ICE[nocompile]} = '!' )
     ]] {
         # Compile plugin
