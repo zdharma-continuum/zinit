@@ -2020,7 +2020,7 @@ zimv() {
     @zinit-substitute make
 
     # Git-plugin make'' at download
-    [[ ${+ZINIT_ICE[make]} -eq 1 || ${+ice[make]} -eq 1 ]] && \
+    [[ ${+ZINIT_ICE[make]} -eq 1 || ( ${+ice} -eq 1 && ${+ice[make]} -eq 1 ) ]] && \
         [[ $make != "!"* ]] && \
             .zinit-countdown make && \
                 command make -C "$dir" ${(@s; ;)make}
