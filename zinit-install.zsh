@@ -1982,11 +1982,9 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-make-ee-hook [[[
 ∞zinit-make-ee-hook() {
-    if [[ "$1" = plugin ]] {
-        local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
-    } else {
-        local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
-    }
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
 
     (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
     @zinit-substitute make
@@ -1999,12 +1997,9 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-make-e-hook [[[
 ∞zinit-make-e-hook() {
-    # Git-plugin make'' at download
-    if [[ "$1" = plugin ]] {
-        local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
-    } else {
-        local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
-    }
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
 
     (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
     @zinit-substitute make
@@ -2017,11 +2012,9 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-make-hook [[[
 ∞zinit-make-hook() {
-    if [[ "$1" = plugin ]] {
-        local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
-    } else {
-        local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
-    }
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
 
     (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
     @zinit-substitute make
