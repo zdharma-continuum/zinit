@@ -1534,13 +1534,13 @@ ziextract() {
     }
 
     if [[ -z $file ]] {
-        +zinit-message "{pre}ziextract:{error} ERROR:{msg2} argument" \
-            "needed (the file to extract) or the {obj}--auto{msg2} option."
+        +zinit-message "{error}ziextract:{msg2} ERROR:{msg} argument" \
+            "needed (the file to extract) or the {meta}--auto{msg} option."
         return 1
     }
     if [[ ! -e $file ]] {
-        +zinit-message "{pre}ziextract:{error} ERROR:{msg2}" \
-            "the file \`{obj}${file}{msg2}' doesn't exist.{rst}"
+        +zinit-message "{error}ziextract:{msg2} ERROR:{msg}" \
+            "the file \`{meta}${file}{msg}' doesn't exist.{rst}"
         return 1
     }
     if (( !nobkp )) {
@@ -1563,7 +1563,7 @@ ziextract() {
     }
 
     →zinit-check() { (( ${+commands[$1]} )) || \
-        +zinit-message "{error}Error:{rst} No command {data}$1{rst}," \
+        +zinit-message "{error}ziextract:{msg2} Error:{msg} No command {data}$1{msg}," \
                 "it is required to unpack {file}$2{rst}."
     }
 
@@ -1623,7 +1623,7 @@ ziextract() {
                 command hdiutil detach $attached_vol
 
                 if (( retval )) {
-                    +zinit-message "{pre}ziextract:{error} Warning:{msg}" \
+                    +zinit-message "{error}ziextract:{msg2} WARNING:{msg}" \
                             "problem occurred when attempted to copy the files" \
                             "from the mounted image: \`{obj}${file}{msg}'.{rst}"
                 }
@@ -1646,8 +1646,8 @@ ziextract() {
 
     if [[ $(typeset -f + →zinit-extract) == "→zinit-extract" ]] {
         .zinit-extract-wrapper "$file" →zinit-extract || {
-            +zinit-message -n "{pre}ziextract:{error} WARNING:{msg}" \
-                "extraction of the archive \`{obj}${file}{msg}' had problems"
+            +zinit-message -n "{error}ziextract:{msg2} WARNING:{msg}" \
+                "extraction of the archive \`{file}${file}{msg}' had problems"
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} && !nobkp )) {
