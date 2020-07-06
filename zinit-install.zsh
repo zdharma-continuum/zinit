@@ -2028,21 +2028,14 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-atclone-hook [[[
 ∞zinit-atclone-hook() {
-    if (( ${+local_path} )) {
-        [[ ${+ZINIT_ICE[make]} = 1 && ${ZINIT_ICE[make]} != "!"* ]] && .zinit-countdown make && { local make=${ZINIT_ICE[make]}; @zinit-substitute make; command make -C "$local_path" ${(@s; ;)make}; }
-    } elif (( ${+local_dir} )) {
-        [[ ${+ice[make]} = 1 && ${ice[make]} != "!"* ]] && .zinit-countdown make && command make -C "$local_dir" ${(@s; ;)${ice[make]}}
-    }
-}
-# ]]]
-# FUNCTION: ∞zinit-atclone-hook [[[
-∞zinit-atclone-hook() {
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
+
     local atclone=${ZINIT_ICE[atclone]}
     @zinit-substitute atclone
-    if (( ${+dirname} && ${+local_dir} )) {
-        local local_path=$local_dir/$dirname
-    }
-    [[ -n $atclone ]] && .zinit-countdown atclone && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+
+    [[ -n $atclone ]] && .zinit-countdown atclone && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$dir"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 }
 # ]]]
 # FUNCTION: ∞zinit-extract-hook [[[
