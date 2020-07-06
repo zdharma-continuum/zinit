@@ -2052,18 +2052,9 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-mv-hook [[[
 ∞zinit-mv-hook() {
-    local -A _ZINIT_ICE
-    if (( ${+ice} )) {
-        _ZINIT_ICE=( "${(kv)ice[@]}" ) || \
-    } else {
-        _ZINIT_ICE=( "${(kv)ZINIT_ICE[@]}" )
-    }
-    local -A ZINIT_ICE
-    ZINIT_ICE=( "${(kv)_ZINIT_ICE[@]}" )
-
-    if (( ${+local_dir} && ${+dirname} )) {
-        local local_path="$local_dir/$dirname"
-    }
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
 
     if [[ -n ${ZINIT_ICE[mv]} ]] {
         if [[ ${ZINIT_ICE[mv]} = *("->"|"→")* ]] {
@@ -2073,7 +2064,7 @@ zimv() {
         }
         @zinit-substitute from to
         local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+        ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
           afr=( ${~from}(DN) )
           if (( ${#afr} )) {
               if (( !ICE_OPTS[opt_-q,--quiet] )) {
@@ -2090,18 +2081,10 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-cp-hook [[[
 ∞zinit-cp-hook() {
-    local -A _ZINIT_ICE
-    if (( ${+ice} )) {
-        _ZINIT_ICE=( "${(kv)ice[@]}" ) || \
-    } else {
-        _ZINIT_ICE=( "${(kv)ZINIT_ICE[@]}" )
-    }
-    local -A ZINIT_ICE
-    ZINIT_ICE=( "${(kv)_ZINIT_ICE[@]}" )
-
-    if (( ${+local_dir} && ${+dirname} )) {
-        local local_path="$local_dir/$dirname"
-    }
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
+    
     if [[ -n ${ZINIT_ICE[cp]} ]] {
         if [[ ${ZINIT_ICE[cp]} = *("->"|"→")* ]] {
             local from=${ZINIT_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[cp]##*(->|→)[[:space:]]#} || \
@@ -2110,7 +2093,7 @@ zimv() {
         }
         @zinit-substitute from to
         local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
+        ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
           afr=( ${~from}(DN) )
           if (( ${#afr} )) {
               if (( !ICE_OPTS[opt_-q,--quiet] )) {
