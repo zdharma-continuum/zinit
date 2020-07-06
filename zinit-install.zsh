@@ -2040,20 +2040,14 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-extract-hook [[[
 ∞zinit-extract-hook() {
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
+
     local extract=${ZINIT_ICE[extract]}
-    [[ -n $extract ]] && @zinit-substitute extract
-    if (( ${+ZINIT_ICE[extract]} )) {
-        # Plugin download
-        if (( ${+local_path} )) {
-            .zinit-extract plugin "$extract" "$local_path"
-        # Plugin update
-        } elif (( ${+local_dir} && ${+ice} )) {
-            .zinit-extract plugin "$extract" "$local_dir"
-        # Snippet update and download
-        } elif (( ${+local_dir} && ${+dirname} )) {
-            .zinit-extract snippet "$extract" "$local_dir/$dirname"
-        }
-    }
+    @zinit-substitute extract
+
+    (( ${+ZINIT_ICE[extract]} )) && .zinit-extract plugin "$extract" "$dir"
 }
 # ]]]
 # FUNCTION: ∞zinit-mv-hook [[[
