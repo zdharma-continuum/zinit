@@ -1986,7 +1986,7 @@ zimv() {
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
-    (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
+    local make=${ZINIT_ICE[make]}
     @zinit-substitute make
 
     # Git-plugin make'' at download
@@ -2001,7 +2001,7 @@ zimv() {
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
-    (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
+    local make=${ZINIT_ICE[make]}
     @zinit-substitute make
 
     # Git-plugin make'' at download
@@ -2016,11 +2016,11 @@ zimv() {
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
-    (( ${+ice} )) && local make=${ice[make]} || local make=${ZINIT_ICE[make]}
+    local make=${ZINIT_ICE[make]}
     @zinit-substitute make
 
     # Git-plugin make'' at download
-    [[ ${+ZINIT_ICE[make]} -eq 1 || ( ${+ice} -eq 1 && ${+ice[make]} -eq 1 ) ]] && \
+    (( ${+ZINIT_ICE[make]} )) && \
         [[ $make != "!"* ]] && \
             .zinit-countdown make && \
                 command make -C "$dir" ${(@s; ;)make}
