@@ -2153,13 +2153,11 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-atpull-hook [[[
 ∞zinit-atpull-hook() {
-    # Plugin update
-    if (( ${+local_dir} && ${+ice} )) {
-        [[ -n ${ice[atpull]} && ${ice[atpull][1]} != "!" ]] && .zinit-countdown "atpull" && ( (( ${+ice[nocd]} == 0 )) && { builtin cd -q "$local_dir" && .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; ((1)); } || .zinit-at-eval "${ice[atpull]}" "${ice[atclone]}"; )
-    # Snippet update
-    } elif (( ${+local_dir} && ${+dirname} )) {
-        [[ -n ${ZINIT_ICE[atpull]} && ${ZINIT_ICE[atpull][1]} != *"!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" ${ZINIT_ICE[atclone]}; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
-    }
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
+    
+    [[ -n $ZINIT_ICE[atpull] && $ZINIT_ICE[atpull] != "!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$dir"; } && .zinit-at-eval "$ZINIT_ICE[atpull]" "$ZINIT_ICE[atclone]"; ((1)); } || .zinit-at-eval "${ZINIT_ICE[atpull]#!}" $ZINIT_ICE[atclone]; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 }
 # ]]]
 # FUNCTION: ∞zinit-ps-on-update-hook [[[
