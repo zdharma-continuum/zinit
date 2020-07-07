@@ -2163,21 +2163,21 @@ zimv() {
 # FUNCTION: ∞zinit-ps-on-update-hook [[[
 ∞zinit-ps-on-update-hook() {
     if [[ -z $ZINIT_ICE[ps-on-update] ]] { return 1; }
-    if (( ${+dirname} )) {
-        local local_dir="$local_dir/$dirname" msg_bit=snippet
-    } else {
-        local msg_bit=plugin
-    }
+
+    [[ "$1" = plugin ]] && \
+        local tpe="$1" dir="${5#%}" hook="$6" subtype="$7" || \
+        local tpe="$1" dir="${4#%}" hook="$5" subtype="$6"
+
     if (( !ICE_OPTS[opt_-q,--quiet] )) {
-        +zinit-message "Running $msg_bit's provided update code: {info}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}{rst}"
+        +zinit-message "Running $tpe's provided update code: {info}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}{rst}"
         (
-            builtin cd -q "$local_dir" || return 1
-            eval "${ZINIT_ICE[ps-on-update]}"
+            builtin cd -q "$dir" || return 1
+            eval "$ZINIT_ICE[ps-on-update]"
         )
     } else {
         (
-            builtin cd -q "$local_dir" || return 1
-            eval "${ZINIT_ICE[ps-on-update]}" &> /dev/null
+            builtin cd -q "$dir" || return 1
+            eval "$ZINIT_ICE[ps-on-update]" &> /dev/null
         )
     }
 }
