@@ -1963,8 +1963,13 @@ zimv() {
                     builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
             } elif (( !skip_pull )) {
-                +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD ..."
-                command git reset --hard HEAD
+                if (( option )) {
+                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD ..."
+                    command git reset --hard HEAD
+                } else {
+                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} ${ZINIT_ICE[reset]:-git reset --hard HEAD} ..."
+                    builtin eval "${ZINIT_ICE[reset]:-git reset --hard HEAD}"
+                }
             }
         }
     }
