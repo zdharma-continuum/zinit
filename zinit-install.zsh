@@ -2115,16 +2115,15 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-compile-plugin-hook [[[
 ∞zinit-compile-plugin-hook() {
-    if [[ "$1" = plugin ]] {
-        local tpe="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
-    } else {
-        local tpe="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
-    }
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" || \
+        local dir="${4#%}" hook="$5" subtype="$6"
+
     if [[ ( $hook = *\!at(clone|pull)* && ${+ZINIT_ICE[nocompile]} -eq 0 ) || \
-            ( $hook = at(clone|pull)* && ${ZINIT_ICE[nocompile]} = '!' )
+            ( $hook = at(clone|pull)* && $ZINIT_ICE[nocompile] = '!' )
     ]] {
         # Compile plugin
-        if [[ -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
+        if [[ -z $ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)] ]] {
             () {
                 emulate -LR zsh
                 setopt extendedglob warncreateglobal
