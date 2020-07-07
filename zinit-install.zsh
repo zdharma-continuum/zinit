@@ -1691,10 +1691,10 @@ ziextract() {
                         "available in the {msg2}INSTALLED_EXECS{rst}" \
                         "array."
                 } else {
-                    +zinit-message "$ZINIT[col-pre]ziextract:{rst} Successfully" \
+                    +zinit-message "{pre}ziextract:{rst} Successfully" \
                         "extracted and marked executable the appropriate files" \
-                        "($ZINIT[col-obj]${(pj:$sep:)${execs[@]:t}}{rst}) contained" \
-                        "in \`$ZINIT[col-file]$file{rst}'."
+                        "({obj}${(pj:$sep:)${execs[@]:t}}{rst}) contained" \
+                        "in \`{file}$file{rst}'."
                 }
             fi
         }
