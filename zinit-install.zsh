@@ -2053,60 +2053,64 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-mv-hook [[[
 ∞zinit-mv-hook() {
+    [[ -z $ZINIT_ICE[mv] ]] && return
+
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
-    if [[ -n ${ZINIT_ICE[mv]} ]] {
-        if [[ ${ZINIT_ICE[mv]} = *("->"|"→")* ]] {
-            local from=${ZINIT_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[mv]##*(->|→)[[:space:]]#} || \
-        } else {
-            local from=${ZINIT_ICE[mv]%%[[:space:]]##*} to=${ZINIT_ICE[mv]##*[[:space:]]##}
-        }
-        @zinit-substitute from to
-        local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
-          afr=( ${~from}(DN) )
-          if (( ${#afr} )) {
-              if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                  command mv -vf "${afr[1]}" "$to"
-                  command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
-              } else {
-                  command mv -f "${afr[1]}" "$to"
-                  command mv -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
-              }
-          }
-        )
+    if [[ $ZINIT_ICE[mv] == *("->"|"→")* ]] {
+        local from=${ZINIT_ICE[mv]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[mv]##*(->|→)[[:space:]]#} || \
+    } else {
+        local from=${ZINIT_ICE[mv]%%[[:space:]]##*} to=${ZINIT_ICE[mv]##*[[:space:]]##}
     }
+
+    @zinit-substitute from to
+
+    local -a afr
+    ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
+      afr=( ${~from}(DN) )
+      if (( ${#afr} )) {
+          if (( !ICE_OPTS[opt_-q,--quiet] )) {
+              command mv -vf "${afr[1]}" "$to"
+              command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
+          } else {
+              command mv -f "${afr[1]}" "$to"
+              command mv -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
+          }
+      }
+    )
 }
 # ]]]
 # FUNCTION: ∞zinit-cp-hook [[[
 ∞zinit-cp-hook() {
+    [[ -z $ZINIT_ICE[cp] ]] && return
+
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
-    
-    if [[ -n ${ZINIT_ICE[cp]} ]] {
-        if [[ ${ZINIT_ICE[cp]} = *("->"|"→")* ]] {
-            local from=${ZINIT_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[cp]##*(->|→)[[:space:]]#} || \
-        } else {
-            local from=${ZINIT_ICE[cp]%%[[:space:]]##*} to=${ZINIT_ICE[cp]##*[[:space:]]##}
-        }
-        @zinit-substitute from to
-        local -a afr
-        ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
-          afr=( ${~from}(DN) )
-          if (( ${#afr} )) {
-              if (( !ICE_OPTS[opt_-q,--quiet] )) {
-                  command cp -vf "${afr[1]}" "$to"
-                  command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
-              } else {
-                  command cp -f "${afr[1]}" "$to"
-                  command cp -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
-              }
-          }
-        )
+
+    if [[ $ZINIT_ICE[cp] == *("->"|"→")* ]] {
+        local from=${ZINIT_ICE[cp]%%[[:space:]]#(->|→)*} to=${ZINIT_ICE[cp]##*(->|→)[[:space:]]#} || \
+    } else {
+        local from=${ZINIT_ICE[cp]%%[[:space:]]##*} to=${ZINIT_ICE[cp]##*[[:space:]]##}
     }
+
+    @zinit-substitute from to
+
+    local -a afr
+    ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
+      afr=( ${~from}(DN) )
+      if (( ${#afr} )) {
+          if (( !ICE_OPTS[opt_-q,--quiet] )) {
+              command cp -vf "${afr[1]}" "$to"
+              command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
+          } else {
+              command cp -f "${afr[1]}" "$to"
+              command cp -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
+          }
+      }
+    )
 }
 # ]]]
 # FUNCTION: ∞zinit-compile-plugin-hook [[[
