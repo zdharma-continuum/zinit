@@ -1810,7 +1810,7 @@ ZINIT[EXTENDED_GLOB]=""
             +zinit-message '{info2}Parallel Update Starts Now...{rst}'
         .zinit-update-all-parallel
         integer retval=$?
-        .zinit-compinit 1 &>/dev/null
+        .zinit-compinit 1 1 &>/dev/null
         rehash
         if (( !ICE_OPTS[opt_-q,--quiet] )) {
             +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
@@ -1899,7 +1899,7 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     done
 
-    .zinit-compinit 1 &>/dev/null
+    .zinit-compinit 1 1 &>/dev/null
     if (( !ICE_OPTS[opt_-q,--quiet] )) {
         +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
     }

@@ -583,7 +583,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         builtin print -rl -- $SKIPPED_COMPS >! /tmp/zinit.skipped_comps.$$.lst
     }
 
-    .zinit-compinit &>/dev/null
+    .zinit-compinit 1 1 &>/dev/null
 } # ]]]
 # FUNCTION: .zinit-compinit [[[
 # User-exposed `compinit' frontend which first ensures that all
@@ -597,6 +597,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     emulate -LR zsh
     builtin setopt nullglob extendedglob warncreateglobal typesetsilent
+
+    integer use_C=$2
 
     typeset -a symlinked backup_comps
     local c cfile bkpfile action
@@ -623,7 +625,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     (( ${+functions[_vim_files]} )) && unfunction _vim_files
 
     builtin autoload -Uz compinit
-    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
+    compinit ${${(M)use_C:#1}:+-C} -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
 } # ]]]
 # FUNCTION: .zinit-download-file-stdout [[[
 # Downloads file to stdout. Supports following backend commands:
