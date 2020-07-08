@@ -1610,6 +1610,7 @@ ZINIT[EXTENDED_GLOB]=""
                   if (( ${+ice[run-atpull]} )) {
                       ZINIT[annex-multi-flag:pull-active]=1
 
+                      # Handle the snippet/plugin boundary in the messages
                       if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                           .zinit-any-colorify-as-uspl2 "$id_as"
                           (( ZINIT[first-plugin-mark] )) && {
