@@ -2174,7 +2174,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         } else {
                             .zinit-get-object-path plugin "${${${1#@}#https://github.com/}%%(///|//|/)}"
                         }
-                        (( $? )) && { ___action_load=1; }
+                        (( $? && ${+ZSH_SCRIPT} )) && { ___action_load=1; }
                         local ___object_path="${reply[-3]}"
                     } elif (( ! ___turbo )) {
                         ___action_load=1
