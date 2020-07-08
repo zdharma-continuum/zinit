@@ -1949,7 +1949,7 @@ builtin setopt noaliases
 
     integer ___t=EPOCHSECONDS ___i correct
     local -a match mbegin mend reply
-    local REPLY AFD
+    local MATCH REPLY AFD; integer MBEGIN MEND
 
     [[ -o ksharrays ]] && correct=1
 
