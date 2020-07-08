@@ -2145,8 +2145,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     if (( ${+ZINIT_ICE[pack]} )); then
                         ___had_wait=${+ZINIT_ICE[wait]}
                         .zinit-load-ices "${${ZINIT_ICE[id-as]:-$1}#@}"
-                        [[ -z ${ZINIT_ICE[wait]} && $___had_wait -eq 0 ]] && \
-                            unset 'ZINIT_ICE[wait]'
+                        # wait'' isn't possible via the disk-ices (for
+                        # packages), only via the command's ice-spec
+                        [[ $___had_wait -eq 0 ]] && unset 'ZINIT_ICE[wait]'
                     fi
 
                     [[ ${ZINIT_ICE[id-as]} = (auto|) && ${+ZINIT_ICE[id-as]} == 1 ]] && ZINIT_ICE[id-as]="${1:t}"
