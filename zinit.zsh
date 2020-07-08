@@ -134,7 +134,6 @@ zmodload zsh/termcap 2>/dev/null
         col-bar     $'\e[01m\e[35m' col-info   $'\e[32m'       col-info2   $'\e[33m'
         col-info3   $'\e[01m\e[33m' col-uninst $'\e[01m\e[34m' col-success $'\e[01m\e[32m'
         col-failure $'\e[31m'       col-rst    $'\e[0m'        col-bold    $'\e[1m'
-
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;141m' col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
         col-obj  $'\e[38;5;221m' col-obj2  $'\e[38;5;154m' col-file  $'\e[38;5;110m'
