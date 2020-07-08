@@ -449,7 +449,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_path" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_path" "${${key##(zinit|z-annex) hook:}%% <->}" load
             done
 
             # Run annexes' atclone hooks (the after atclone-ice ones)
@@ -951,7 +951,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         )
                         for key in "${reply[@]}"; do
                             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:svn
                         done
 
                         if (( !skip_pull )) {
@@ -1033,7 +1033,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         )
                         for key in "${reply[@]}"; do
                             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:url
                         done
                     }
 
@@ -1085,7 +1085,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:file
                 done
             }
 
@@ -1135,7 +1135,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:0
             done
 
             return 0;
@@ -1151,10 +1151,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update
             done
         } else {
             # Run annexes' atclone hooks (the before atclone-ice ones)
+            # The block is common to all 3 snippet types.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-pre <->]}
                 ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone <->]}
@@ -1162,7 +1163,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" load
             done
 
             reply=(
@@ -1172,7 +1173,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" load
             done
         }
 
@@ -1187,7 +1188,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                    "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update
                 done
             }
 
@@ -1200,7 +1201,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:$ZINIT[annex-multi-flag:pull-active]
             done
         }
         ((1))

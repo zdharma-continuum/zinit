@@ -1467,6 +1467,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     local repo="${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}"
 
+    # Run annexes' preinit hooks
     local -a arr
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
@@ -1558,7 +1559,7 @@ ZINIT[EXTENDED_GLOB]=""
                 )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                    "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+                    "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:bin
                 done
 
                 if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
@@ -1634,7 +1635,7 @@ ZINIT[EXTENDED_GLOB]=""
                   )
                   for key in "${reply[@]}"; do
                       arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                      "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+                      "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:git
                   done
                   ZINIT_ICE=()
                   (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
@@ -1667,7 +1668,7 @@ ZINIT[EXTENDED_GLOB]=""
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update
             done
 
             # Run annexes' atpull hooks (the after atpull-ice ones).
@@ -1679,7 +1680,7 @@ ZINIT[EXTENDED_GLOB]=""
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+                "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update
             done
             ZINIT_ICE=()
         }
@@ -1688,6 +1689,8 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-store-ices "$local_dir/._zinit" ice "" "" "" ""
     fi
 
+    # Run annexes' atpull hooks (the `always' after atpull-ice ones)
+    # Block common for Git and gh-r plugins.
     ZINIT_ICE=( "${(kv)ice[@]}" )
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
@@ -1696,7 +1699,7 @@ ZINIT[EXTENDED_GLOB]=""
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
+        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:$ZINIT[annex-multi-flag:pull-active]
     done
     ZINIT_ICE=()
 
@@ -2658,6 +2661,7 @@ ZINIT[EXTENDED_GLOB]=""
     local -a arr
     local key
 
+    # Run annexes' atdelete hooks
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]}
         ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete <->]}
@@ -2665,7 +2669,7 @@ ZINIT[EXTENDED_GLOB]=""
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}"
+        "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 }
 # ]]]
