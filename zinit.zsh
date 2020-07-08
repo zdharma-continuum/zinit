@@ -1131,7 +1131,7 @@ builtin setopt noaliases
     local ___mode="$3" ___rst=0 ___retval=0 ___key
     .zinit-any-to-user-plugin "$1" "$2"
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ZINIT_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
-    ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-$___user${${___user:#%*}:+/}$___plugin}"
+    ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-$___user${${___user:#%}:+/}$___plugin}"
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
     local ___pdir_orig="$___pdir_path"
 
