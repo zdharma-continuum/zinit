@@ -541,7 +541,7 @@ ZINIT[EXTENDED_GLOB]=""
     local user="${reply[-2]}" plugin="${reply[-1]}" uspl
     [[ "$user" = "%" ]] && uspl="${user}${plugin}" || uspl="${reply[-2]}${reply[-2]:+---}${reply[-1]//\//---}"
 
-    reply=( "${ZINIT[PLUGINS_DIR]}/$uspl"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN) )
+    reply=( "${ZINIT[PLUGINS_DIR]}/$uspl"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN) )
 } # ]]]
 # FUNCTION: .zinit-check-comp-consistency [[[
 # Zinit creates symlink for each installed completion.
@@ -630,7 +630,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     .zinit-get-path "$1" "$2"
     [[ -e "$REPLY" ]] && {
-        completions=( "$REPLY"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN) )
+        completions=( "$REPLY"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN) )
     } || {
         builtin print "No completions found for \`$1${${1:#(%|/)*}:+${2:+/}}$2'"
         return 1
@@ -2084,7 +2084,7 @@ ZINIT[EXTENDED_GLOB]=""
     builtin print "Disabled completions: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
 
     # Number of completions existing in all plugins
-    completions=( "${ZINIT[PLUGINS_DIR]}"/*/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN) )
+    completions=( "${ZINIT[PLUGINS_DIR]}"/*/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN) )
     builtin print "Completions available overall: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
 
     # Enumerate snippets loaded
@@ -2490,7 +2490,7 @@ ZINIT[EXTENDED_GLOB]=""
     typeset -a completions
     local pp
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN^/) )
+        completions=( "$pp"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
         if [[ "${#completions[@]}" -gt 0 ]]; then
             local pd="${pp:t}"
             [[ "${#pd}" -gt "$longest" ]] && longest="${#pd}"
@@ -2501,7 +2501,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     local c
     for pp in "${plugin_paths[@]}"; do
-        completions=( "$pp"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*)(DN^/) )
+        completions=( "$pp"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
 
         if [[ "${#completions[@]}" -gt 0 ]]; then
             # Array of completions, e.g. ( _cp _xauth )
