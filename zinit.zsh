@@ -2112,6 +2112,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             }
         }
         integer ___retval ___had_wait
+        local ___id ___key
+        local -a ___arr
         if (( $# )) {
             local -a ___ices
             ___ices=( "${(kv)ZINIT_ICES[@]}" )
@@ -2125,24 +2127,37 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     ZINIT_ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICES=()
 
+                    ___id="$1"
+
                     if (( ${+ZINIT_ICE[pack]} )); then
                         ___had_wait=${+ZINIT_ICE[wait]}
-                        .zinit-load-ices "${${ZINIT_ICE[id-as]:-$1}#@}"
+                        .zinit-load-ices "${${ZINIT_ICE[id-as]:-$___id}#@}"
                         # wait'' isn't possible via the disk-ices (for
                         # packages), only via the command's ice-spec
                         [[ $___had_wait -eq 0 ]] && unset 'ZINIT_ICE[wait]'
                     fi
 
-                    [[ ${ZINIT_ICE[id-as]} = (auto|) && ${+ZINIT_ICE[id-as]} == 1 ]] && ZINIT_ICE[id-as]="${1:t}"
+                    [[ ${ZINIT_ICE[id-as]} = (auto|) && ${+ZINIT_ICE[id-as]} == 1 ]] && ZINIT_ICE[id-as]="${___id:t}"
 
                     integer  ___is_snippet=${${(M)___is_snippet:#-1}:-0}
                     () {
                         setopt localoptions extendedglob
-                        if [[ $___is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || ${1#@} = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
+                        if [[ $___is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || ${___id#@} = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
                             ___is_snippet=1
                         }
                     } "$@"
 
+                    local ___type=${${${(M)___is_snippet:#1}:+snippet}:-plugin}
+                    reply=(
+                        ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-pre <->]}
+                        ${(on)ZINIT_EXTS[(I)z-annex hook:before-load <->]}
+                        ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-post <->]}
+                    )
+                    for ___key in "${reply[@]}"; do
+                        ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
+                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" || \
+                            continue
+                    done
                     integer ___action_load=0 ___turbo=0
                     if [[ -n ${(M)${+ZINIT_ICE[wait]}:#1}${ZINIT_ICE[load]}${ZINIT_ICE[unload]}${ZINIT_ICE[service]}${ZINIT_ICE[subscribe]} ]] {
                         ___turbo=1
@@ -2154,9 +2169,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        ]] && (( !ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]
                     )) {
                         if (( ___is_snippet > 0 )) {
-                            .zinit-get-object-path snippet "${${1#@}%%(///|//|/)}"
+                            .zinit-get-object-path snippet "${${___id#@}%%(///|//|/)}"
                         } else {
-                            .zinit-get-object-path plugin "${${${1#@}#https://github.com/}%%(///|//|/)}"
+                            .zinit-get-object-path plugin "${${${___id#@}#https://github.com/}%%(///|//|/)}"
                         }
                         (( $? && ${+ZSH_SCRIPT} )) && { ___action_load=1; }
                         local ___object_path="${reply[-3]}"
@@ -2180,7 +2195,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                     for a b ( ${(qqkv@)${(kv@)ZINIT_ICE[(I)^(trigger-load|wait|light-mode)]}} ) {
                                         ices+=( \"\$a\$b\" )
                                     }
-                                    zinit ice \${ices[@]}; zinit $___mode ${(qqq)${1#@}}
+                                    zinit ice \${ices[@]}; zinit $___mode ${(qqq)${___id#@}}
                                     ${${(M)MATCH#!}:+# Forward the call
                                     eval ${MATCH#!} \$@}
                                 }"
@@ -2207,9 +2222,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             ZINIT_ICE[cloneonly]=""
                         }
                         if (( ___is_snippet > 0 )); then
-                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${1#@}%%(///|//|/)}"
+                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${___id#@}%%(///|//|/)}"
                         else
-                            .zinit-load "${${${1#@}#https://github.com/}%%(///|//|/)}" "" \
+                            .zinit-load "${${${___id#@}#https://github.com/}%%(///|//|/)}" "" \
                                 "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
                         ___retval+=$?
@@ -2221,15 +2236,15 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     if (( ___turbo && ZINIT[HAVE_SCHEDULER] )) {
                         ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
                         if (( ___is_snippet > 0 )); then
-                            ZINIT_SICE[${${1#@}%%(///|//|/)}]=
+                            ZINIT_SICE[${${___id#@}%%(///|//|/)}]=
                             .zinit-submit-turbo s${ZINIT_ICE[service]:+1} "" \
-                                "${${1#@}%%(///|//|/)}" \
+                                "${${___id#@}%%(///|//|/)}" \
                                 "${(k)ICE_OPTS[*]}"
                         else
-                            ZINIT_SICE[${${${1#@}#https://github.com/}%%(///|//|/)}]=
+                            ZINIT_SICE[${${${___id#@}#https://github.com/}%%(///|//|/)}]=
                             .zinit-submit-turbo p${ZINIT_ICE[service]:+1} \
                                 "${${${ZINIT_ICE[light-mode]+light}}:-load}" \
-                                "${${${1#@}#https://github.com/}%%(///|//|/)}" ""
+                                "${${${___id#@}#https://github.com/}%%(///|//|/)}" ""
                         fi
                         ___retval+=$?
                     }
