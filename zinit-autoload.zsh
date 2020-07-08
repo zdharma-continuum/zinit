@@ -1500,7 +1500,6 @@ ZINIT[EXTENDED_GLOB]=""
             ice[is_release]=true
         }
 
-        local do_update=0 skip_pull=0
         integer count is_release=0
         for (( count = 1; count <= 5; ++ count )) {
             if (( ${+ice[is_release${count:#1}]} )) {
@@ -1526,23 +1525,21 @@ ZINIT[EXTENDED_GLOB]=""
                 count+=1
                 local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                 if [[ ${ice[is_release${count:#1}]} = $REPLY ]] {
-                    do_update=0
-                    skip_pull=1
-                    (( ${+ice[run-atpull]} )) && { do_update=1; }
+                    (( ${+ice[run-atpull]} )) && \
+                        ZINIT[annex-multi-flag:pull-active]=1 || \
+                        ZINIT[annex-multi-flag:pull-active]=0
                 } else {
-                    do_update=1
-                    skip_pull=0
+                    ZINIT[annex-multi-flag:pull-active]=2
                     break
                 }
             }
-            ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
-            if (( ( !do_update || skip_pull ) && !ICE_OPTS[opt_-q,--quiet] )) {
+            if (( ZINIT[annex-multi-flag:pull-active] <= 1 && !ICE_OPTS[opt_-q,--quiet] )) {
                 builtin print -- "\rBinary release already up to date (version: $version)"
             }
         }
 
         if (( 1 )) {
-            if (( do_update )) {
+            if (( ZINIT[annex-multi-flag:pull-active] >= 1 )) {
                 if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                     .zinit-any-colorify-as-uspl2 "$id_as"
                     (( ZINIT[first-plugin-mark] )) && {
@@ -1564,7 +1561,7 @@ ZINIT[EXTENDED_GLOB]=""
                     "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
                 done
 
-                if (( !skip_pull )) {
+                if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
                     if ! .zinit-setup-plugin-dir "$user" "$plugin" "$id_as" release -u $version; then
                         ZINIT[annex-multi-flag:pull-active]=0
                     fi
@@ -1605,14 +1602,14 @@ ZINIT[EXTENDED_GLOB]=""
 
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zinit_lastupd)"} ); } 2>/dev/null
+              command rm -f $local_dir/.zinit_lastupd
 
               if [[ ${#log} -gt 0 ]] {
-                  do_update=1
+                  ZINIT[annex-multi-flag:pull-active]=2
               } else {
-                  skip_pull=1
                   if (( ${+ice[run-atpull]} )) {
-                      do_update=1
-                      builtin print -r -- mark >! $local_dir/.zinit_lastupd
+                      ZINIT[annex-multi-flag:pull-active]=1
+
                       if (( ICE_OPTS[opt_-q,--quiet] && !PUPDATE )) {
                           .zinit-any-colorify-as-uspl2 "$id_as"
                           (( ZINIT[first-plugin-mark] )) && {
@@ -1620,12 +1617,12 @@ ZINIT[EXTENDED_GLOB]=""
                           } || builtin print
                           builtin print "\rUpdating $REPLY"
                       }
+                  } else {
+                      ZINIT[annex-multi-flag:pull-active]=0
                   }
               }
 
-              ZINIT[annex-multi-flag:pull-active]=$(( 0 + 2*do_update - (skip_pull && do_update) ))
-
-              if (( do_update )) {
+              if (( ZINIT[annex-multi-flag:pull-active] >= 1 )) {
                   ZINIT_ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones).
                   # The regular Git-plugins block.
@@ -1639,7 +1636,7 @@ ZINIT[EXTENDED_GLOB]=""
                       "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}"
                   done
                   ZINIT_ICE=()
-                  (( !skip_pull )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
+                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
             )
@@ -1657,13 +1654,8 @@ ZINIT[EXTENDED_GLOB]=""
             )
         fi
 
-        local -a log
-        { log=( ${(@f)"$(<$local_dir/.zinit_lastupd)"} ); } 2>/dev/null
-
-        command rm -f $local_dir/.zinit_lastupd
-
         # Any new commits?
-        if (( ZINIT[annex-multi-flag:pull-active] >= 1 || ${#log} > 0 )) {
+        if (( ZINIT[annex-multi-flag:pull-active] >= 1  )) {
             ZINIT_ICE=( "${(kv)ice[@]}" )
             # Run annexes' atpull hooks (the before atpull[^!]…-ice ones).
             # Block common for Git and gh-r plugins.
