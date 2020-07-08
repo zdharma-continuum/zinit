@@ -187,8 +187,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     }
 
     local sep="$ZINIT[col-rst],$ZINIT[col-meta2] "
-    +zinit-message "Found the profile \`{meta}$profile{rst}'. Other available" \
-            "profiles are: {meta2}${(pj:$sep:)${profiles[@]:#$profile}}{rst}."
+    +zinit-message "Found the profile \`{meta2}$profile{rst}'. Other available" \
+            "profiles are: {meta}${(pj:$sep:)${profiles[@]:#$profile}}{rst}."
     if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]] {
         +zinit-message "{note}Note:{rst} The \`{meta2}bgn{glob}*{rst}' profiles are" \
             "recommended (they expose the binaries without extending {var}\$PATH{rst})."
