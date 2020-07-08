@@ -1717,17 +1717,6 @@ ZINIT[EXTENDED_GLOB]=""
         { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
-    if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
-        [[ 0 = ${+ice[nocompletions]} && ${ice[as]} != null ]] && \
-            zinit creinstall -q "$repo"
-
-        # After any download – rehash the command table
-        # This will however miss the as"program" binaries
-        # as their PATH gets extended - and it is done
-        # later. It will however work for sbin'' ice.
-        # (( !ICE_OPTS[opt_-p,--parallel] )) && rehash
-    }
-
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
         builtin print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
     }
