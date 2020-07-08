@@ -1476,7 +1476,7 @@ ziextract() {
         # Second, try to find the archive via `file' tool
         if (( !${#files} )) {
             local -aU output infiles stage2_processed archives
-            infiles=( **/*~(._zinit|.zinit_lastupd|._backup|.git)(|/*)~*/*/*(-.DN) )
+            infiles=( **/*~(._zinit*|._backup|.git)(|/*)~*/*/*(-.DN) )
             output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
             archives=( ${(M)output[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) *} )
             for file ( $archives ) {
@@ -1546,7 +1546,7 @@ ziextract() {
     if (( !nobkp )) {
         command mkdir -p ._backup
         command rm -rf ._backup/*(DN)
-        command mv -f *~(._zinit*|.zinit_lastupd|._backup|.git|.svn|.hg|$file)(DN) ._backup 2>/dev/null
+        command mv -f *~(._zinit*|._backup|.git|.svn|.hg|$file)(DN) ._backup 2>/dev/null
     }
 
     .zinit-extract-wrapper() {
@@ -1556,7 +1556,7 @@ ziextract() {
         $fun; retval=$?
         if (( retval == 0 )) {
             local -a files
-            files=( *~(._zinit*|.zinit_lastupd|._backup|.git|.svn|.hg|$file)(DN) )
+            files=( *~(._zinit*|._backup|.git|.svn|.hg|$file)(DN) )
             (( ${#files} && !norm )) && command rm -f "$file"
         }
         return $retval
