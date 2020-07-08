@@ -127,40 +127,21 @@ zmodload zsh/termcap 2>/dev/null
 
 [[ -z $SOURCED && ( ${+terminfo} = 1 && -n ${terminfo[colors]} ) || ( ${+termcap} = 1 && -n ${termcap[Co]} ) ]] && {
     ZINIT+=(
-        col-title     ""
-        col-pname     $'\e[33m'
-        col-uname     $'\e[35m'
-        col-keyword   $'\e[32m'
-        col-note      $'\e[33m'
-        col-error     $'\e[31m'
-        col-p         $'\e[01m\e[34m'
-        col-bar       $'\e[01m\e[35m'
-        col-info      $'\e[32m'
-        col-info2     $'\e[33m'
-        col-info3     $'\e[01m\e[33m'
-        col-uninst    $'\e[01m\e[34m'
-        col-success   $'\e[01m\e[32m'
-        col-failure   $'\e[31m'
-        col-rst       $'\e[0m'
-        col-bold      $'\e[1m'
+        # Old colors:
+        col-title   ""
+        col-pname   $'\e[33m'       col-uname  $'\e[35m'       col-keyword $'\e[32m'
+        col-note    $'\e[33m'       col-error  $'\e[31m'       col-p       $'\e[01m\e[34m'
+        col-bar     $'\e[01m\e[35m' col-info   $'\e[32m'       col-info2   $'\e[33m'
+        col-info3   $'\e[01m\e[33m' col-uninst $'\e[01m\e[34m' col-success $'\e[01m\e[32m'
+        col-failure $'\e[31m'       col-rst    $'\e[0m'        col-bold    $'\e[1m'
 
-        col-pre    $'\e[38;5;141m'
-        col-msg    $'\e[0m'
-        col-msg2   $'\e[38;5;172m'
-        col-obj    $'\e[38;5;221m'
-        col-obj2   $'\e[38;5;154m'
-        col-file   $'\e[38;5;110m'
-        col-url    $'\e[38;5;45m'
-        col-meta   $'\e[38;5;57m'
-        col-meta2  $'\e[38;5;32m'
-        col-data   $'\e[38;5;82m'
-        col-data2  $'\e[38;5;50m'
-        col-hi     $'\e[38;5;184m'
-        col-ehi    $'\e[01m\e[31m'
-        col-var    $'\e[38;5;63m'
-        col-glob   $'\e[38;5;226m'
-        col-cmd    $'\e[38;5;90m'
-        col-nl     $'\n'
+        # The more recent, fresh ones:
+        col-pre  $'\e[38;5;141m' col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
+        col-obj  $'\e[38;5;221m' col-obj2  $'\e[38;5;154m' col-file  $'\e[38;5;110m'
+        col-url  $'\e[38;5;45m'  col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;32m'
+        col-data $'\e[38;5;82m'  col-data2 $'\e[38;5;50m'  col-hi    $'\e[38;5;184m'
+        col-ehi  $'\e[01m\e[31m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
+        col-cmd  $'\e[38;5;90m'  col-nl    $'\n'
     )
 }
 
