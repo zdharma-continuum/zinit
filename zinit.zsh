@@ -2137,7 +2137,6 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 integer ___retval=$?
                 local ___last_ice=${@[___retval]}
                 shift $___retval
-                [[ -z ${ZINIT_ICES[subscribe]} ]] && unset 'ZINIT_ICES[subscribe]'
                 if [[ -n $1 ]] {
                     ZINIT_ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICES=()
