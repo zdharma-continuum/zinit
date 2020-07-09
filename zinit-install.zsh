@@ -909,12 +909,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
                   /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
 
+    local ldots=${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}
     if [[ ! -d $local_dir/$dirname ]]; then
-        [[ $update != -u ]] && builtin print -P "\n${ZINIT[col-info]}Setting up snippet ${ZINIT[col-p]}${(l:10:: :)}$sname%f%b${ZINIT_ICE[id-as]:+... (as $id_as)}"
+        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet: {p}$sname{rst}${ZINIT_ICE[id-as]:+"$ldots (as: {meta}$id_as{rst}")}"
         command mkdir -p "$local_dir"
     fi
 
-    [[ $update = -u && ${ICE_OPTS[opt_-q,--quiet]} != 1 ]] && builtin print -Pr -- $'\n'"${ZINIT[col-info]}Updating snippet ${ZINIT[col-p]}$sname%f%b${ZINIT_ICE[id-as]:+... (identified as: $id_as)}"
+    [[ $update = -u && ${ICE_OPTS[opt_-q,--quiet]} != 1 ]] && \
+        +zinit-message "{nl}{info}Updating snippet: {p}$sname{rst}${ZINIT_ICE[id-as]:+"$ldots (identified as: {meta}$id_as{rst})"}"
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
