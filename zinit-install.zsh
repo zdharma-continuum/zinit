@@ -877,12 +877,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     local -a list arr
     integer retval=0
-    if [[ $id_as = (http|https|ftp|ftps|scp)://* ]] {
-        local sname="${${id_as_clean:h}:t}/${id_as_clean:t}"
-        [[ $sname = */trunk* ]] && sname=${${id_as_clean%%/trunk*}:t}/${id_as_clean:t}
-    } else {
-        local sname="$id_as_clean"
-    }
+    local sname="${${ZINIT_ICE[teleid]:h}:t}/${ZINIT_ICE[teleid]:t}"
+    [[ $sname = */trunk* ]] && sname=${${ZINIT_ICE[teleid]%%/trunk*}:t}/${ZINIT_ICE[teleid]:t}
+    sname=${sname#./}
 
     if (( ${+ZINIT_ICE[svn]} )) {
         [[ $url = *(${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH=${ZINIT[SNIPPETS_DIR]}
