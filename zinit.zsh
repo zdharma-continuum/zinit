@@ -2155,7 +2155,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     )
                     for ___key in "${reply[@]}"; do
                         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" || \
+                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" load || \
                             continue
                     done
                     integer ___action_load=0 ___turbo=0
@@ -2371,7 +2371,20 @@ for-syntax."
                            ICE_OPTS[value]=${${${${${(M)2:#--all}:+$3}:-$2}:#--all}:-15}
                        .zinit-update-or-status-all update; ___retval=$?
                    else
-                       .zinit-update-or-status update "${${2%%(///|//|/)}:-${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}}" "${3%%(///|//|/)}"; ___retval=$?
+                       local ___key ___id="${2%%(///|//|/)}${3:+/}${3%%(///|//|/)}"
+                       [[ -z ${___id//[[:space:]]/} ]] && ___id="${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}"
+                       local -a ___arr
+                       reply=(
+                           ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-pre <->]}
+                           ${(on)ZINIT_EXTS[(I)z-annex hook:before-load <->]}
+                           ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-post <->]}
+                       )
+                       for ___key in "${reply[@]}"; do
+                           ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
+                           "${___arr[5]}" "" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" update || \
+                               continue
+                       done
+                       .zinit-update-or-status update "$___id" ""; ___retval=$?
                    fi
                    ;;
                (status)
