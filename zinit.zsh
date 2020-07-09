@@ -145,6 +145,11 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-ehi  $'\e[01m\e[31m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
         col-cmd  $'\e[38;5;90m'  col-nl    $'\n'
     )
+    if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
+          ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
+    ]] {
+        ZINIT+=( col-pname   $'\e[38;5;190m' col-uname  $'\e[38;5;25m' )
+    }
 }
 
 # List of hooks
