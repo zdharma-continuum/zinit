@@ -144,7 +144,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     pkgjson="$(<$tmpfile)"
 
     if [[ -z $pkgjson ]]; then
-        builtin print -r -- "${ZINIT[col-error]}Error: the package $id_as couldn't be found."
+        +zinit-message "{error}Error: the package \`{data}$id_as{error}' couldn't be found.{rst}"
         return 1
     fi
 
