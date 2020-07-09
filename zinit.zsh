@@ -126,7 +126,9 @@ zmodload zsh/parameter || { builtin print -P "%F{196}zsh/parameter module is req
 zmodload zsh/terminfo 2>/dev/null
 zmodload zsh/termcap 2>/dev/null
 
-[[ -z $SOURCED && ( ${+terminfo} = 1 && -n ${terminfo[colors]} ) || ( ${+termcap} = 1 && -n ${termcap[Co]} ) ]] && {
+if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
+      ( ${+termcap} -eq 1 && -n ${termcap[Co]} )
+]] {
     ZINIT+=(
         # Old colors:
         col-title   ""
