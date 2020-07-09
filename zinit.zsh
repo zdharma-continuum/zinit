@@ -2176,7 +2176,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         } else {
                             .zinit-get-object-path plugin "${${${___id#@}#https://github.com/}%%(///|//|/)}"
                         }
-                        (( $? && ${+ZSH_SCRIPT} )) && { ___action_load=1; }
+                        (( $? )) && [[ ${zsh_eval_context[1]} = file ]] && { ___action_load=1; }
                         local ___object_path="${reply[-3]}"
                     } elif (( ! ___turbo )) {
                         ___action_load=1
@@ -2230,13 +2230,14 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             .zinit-load "${${${___id#@}#https://github.com/}%%(///|//|/)}" "" \
                                 "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
-                        ___retval+=$?
+                        integer ___last_retval=$?
+                        ___retval+=___last_retval
                         if (( ___turbo && !___had_cloneonly && ZINIT[HAVE_SCHEDULER] )) {
                             command rm -f $___object_path/._zinit/cloneonly
                             unset 'ZINIT_ICE[cloneonly]'
                         }
                     }
-                    if (( ___turbo && ZINIT[HAVE_SCHEDULER] )) {
+                    if (( ___turbo && ZINIT[HAVE_SCHEDULER] && 0 == ___last_retval )) {
                         ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
                         if (( ___is_snippet > 0 )); then
                             ZINIT_SICE[${${___id#@}%%(///|//|/)}]=
