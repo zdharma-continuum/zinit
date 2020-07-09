@@ -339,10 +339,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
                   /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
 
+    local ldots=${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}
+
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            builtin print "\\nDownloading $REPLY...${id_as:+ (as ${id_as}...)}"
+            +zinit-message "{nl}Downloading $REPLY$ldots${id_as:+" (as{ehi}:{rst} {meta2}$id_as{rst}$ldots)"}"
         }
 
         local site
