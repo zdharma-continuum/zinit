@@ -1471,7 +1471,7 @@ ZINIT[EXTENDED_GLOB]=""
     local -a arr
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit-<-> <->]}
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
     )
     for key in "${reply[@]}"; do
@@ -1554,7 +1554,7 @@ ZINIT[EXTENDED_GLOB]=""
                 # The gh-r / GitHub releases block.
                 reply=(
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
@@ -1630,7 +1630,7 @@ ZINIT[EXTENDED_GLOB]=""
                   # The regular Git-plugins block.
                   reply=(
                       ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                      ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                      ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                       ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                   )
                   for key in "${reply[@]}"; do
@@ -1663,7 +1663,7 @@ ZINIT[EXTENDED_GLOB]=""
             # Block common for Git and gh-r plugins.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
-                ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1675,7 +1675,7 @@ ZINIT[EXTENDED_GLOB]=""
             # Block common for Git and gh-r plugins.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:atpull-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:atpull-<-> <->]}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:atpull-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1694,7 +1694,7 @@ ZINIT[EXTENDED_GLOB]=""
     ZINIT_ICE=( "${(kv)ice[@]}" )
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull-<-> <->]}
         ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
     )
     for key in "${reply[@]}"; do
@@ -2653,7 +2653,7 @@ ZINIT[EXTENDED_GLOB]=""
     # Run annexes' atdelete hooks
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]}
         ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}
     )
     for key in "${reply[@]}"; do

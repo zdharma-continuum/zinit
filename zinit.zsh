@@ -1142,7 +1142,7 @@ builtin setopt noaliases
     local -a ___arr
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit-<-> <->]}
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
     )
     for ___key in "${reply[@]}"; do
@@ -1192,7 +1192,7 @@ builtin setopt noaliases
         .zinit-setup-params && local ${(Q)reply[@]}
     }
 
-    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit <->]} )
+    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit-<-> <->]} )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
         "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" \!atinit || \
@@ -1201,7 +1201,7 @@ builtin setopt noaliases
 
     [[ ${+ZINIT_ICE[atinit]} = 1 && $ZINIT_ICE[atinit] != '!'*   ]] && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ZINIT_ICE[atinit]}"; ((1)); } || eval "${ZINIT_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
-    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit <->]} )
+    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit-<-> <->]} )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
         "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}" atinit || \
@@ -1286,7 +1286,7 @@ builtin setopt noaliases
         [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local ___fname; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
-        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]} )
+        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
         for ___key in "${reply[@]}"; do
             ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
             "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" \!atload
@@ -1337,7 +1337,7 @@ builtin setopt noaliases
         [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); } done; }
 
         # Run the atload hooks right before atload ice
-        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]} )
+        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
         for ___key in "${reply[@]}"; do
             ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
             "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" \!atload
@@ -1360,7 +1360,7 @@ builtin setopt noaliases
 
     [[ ${+ZINIT_ICE[atload]} = 1 && ${ZINIT_ICE[atload][1]} != "!" ]] && { ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]}"; ((1)); } || eval "${ZINIT_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
-    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload <->]} )
+    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload-<-> <->]} )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
         "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" atload
@@ -1442,7 +1442,7 @@ builtin setopt noaliases
     local key
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit-<-> <->]}
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
     )
     for key in "${reply[@]}"; do
@@ -1464,7 +1464,7 @@ builtin setopt noaliases
 
     ZINIT[CUR_USPL2]="$id_as" ZINIT_REPORTS[$id_as]=
 
-    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit <->]} )
+    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atinit-<-> <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
         "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atinit || \
@@ -1473,7 +1473,7 @@ builtin setopt noaliases
 
     (( ${+ZINIT_ICE[atinit]} )) && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZINIT_ICE[atinit]}"; ((1)); } || eval "${ZINIT_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
-    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit <->]} )
+    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit-<-> <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
         "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atinit || \
@@ -1526,7 +1526,7 @@ builtin setopt noaliases
         [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
-        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]} )
+        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
             "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atload
@@ -1580,7 +1580,7 @@ builtin setopt noaliases
         [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
-        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload <->]} )
+        reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
         for key in "${reply[@]}"; do
             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
             "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" \!atload
@@ -1603,7 +1603,7 @@ builtin setopt noaliases
 
     (( ${+ZINIT_ICE[atload]} )) && [[ ${ZINIT_ICE[atload][1]} != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]}"; ((1)); } || eval "${ZINIT_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
-    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload <->]} )
+    reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload-<-> <->]} )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]}[@]}" )
         "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atload
@@ -2150,7 +2150,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     local ___type=${${${(M)___is_snippet:#1}:+snippet}:-plugin}
                     reply=(
                         ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-pre <->]}
-                        ${(on)ZINIT_EXTS[(I)z-annex hook:before-load <->]}
+                        ${(on)ZINIT_EXTS[(I)z-annex hook:before-load-<-> <->]}
                         ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-post <->]}
                     )
                     for ___key in "${reply[@]}"; do
@@ -2380,7 +2380,7 @@ for-syntax."
                        local -a ___arr
                        reply=(
                            ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-pre <->]}
-                           ${(on)ZINIT_EXTS[(I)z-annex hook:before-load <->]}
+                           ${(on)ZINIT_EXTS[(I)z-annex hook:before-load-<-> <->]}
                            ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-post <->]}
                        )
                        for ___key in "${reply[@]}"; do

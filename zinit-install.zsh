@@ -450,7 +450,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             .zinit-store-ices "$local_path/._zinit" ZINIT_ICE "" "" "" ""
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone-<-> <->]}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -461,7 +461,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             # Run annexes' atclone hooks (the after atclone-ice ones)
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:atclone-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:atclone <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:atclone-<-> <->]}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:atclone-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -953,7 +953,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         # The SVN block.
                         reply=(
                             ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                            ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                            ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                             ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                         )
                         for key in "${reply[@]}"; do
@@ -1035,7 +1035,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     if [[ $update = -u && $ZINIT[annex-multi-flag:pull-active] -ge 1 ]] {
                         reply=(
                             ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                            ${${ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                            ${${ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                             ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                         )
                         for key in "${reply[@]}"; do
@@ -1087,7 +1087,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             if [[ $update = -u ]] {
                 reply=(
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
@@ -1137,7 +1137,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             # Run annexes' atpull hooks (the `always' after atpull-ice ones)
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull-<-> <->]}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1153,7 +1153,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             # The block is common to all 3 snippet types.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
-                ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull <->]}}
+                ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1165,7 +1165,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             # The block is common to all 3 snippet types.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone-<-> <->]}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1175,7 +1175,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:atclone-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:atclone <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:atclone-<-> <->]}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:atclone-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1190,7 +1190,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             if (( ZINIT[annex-multi-flag:pull-active] > 0 )) {
                 reply=(
                     ${(on)ZINIT_EXTS2[(I)zinit hook:atpull-pre <->]}
-                    ${(on)ZINIT_EXTS[(I)z-annex hook:atpull <->]}
+                    ${(on)ZINIT_EXTS[(I)z-annex hook:atpull-<-> <->]}
                     ${(on)ZINIT_EXTS2[(I)zinit hook:atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
@@ -1203,7 +1203,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             # The block is common to all 3 snippet types.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull-<-> <->]}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1322,7 +1322,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     local key
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit <->]}
+        ${(on)ZINIT_EXTS[(I)z-annex hook:preinit-<-> <->]}
         ${(on)ZINIT_EXTS2[(I)zinit hook:preinit-post <->]}
     )
     for key in "${reply[@]}"; do
