@@ -864,7 +864,8 @@ builtin setopt noaliases
 #
 .zinit-any-to-user-plugin() {
     emulate -LR zsh
-    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+    builtin setopt extendedglob typesetsilent noshortloops rcquotes \
+         ${${${+reply}:#0}:+warncreateglobal}
 
     # Two components given?
     # That's a pretty fast track to call this function this way
