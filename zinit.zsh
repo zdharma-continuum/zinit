@@ -2155,8 +2155,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     )
                     for ___key in "${reply[@]}"; do
                         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" load || \
-                            continue
+                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" load || {
+                            ___retval+=$?
+                            (( $# )) && shift
+                            continue 2
+                        }
                     done
                     integer ___action_load=0 ___turbo=0
                     if [[ -n ${(M)${+ZINIT_ICE[wait]}:#1}${ZINIT_ICE[load]}${ZINIT_ICE[unload]}${ZINIT_ICE[service]}${ZINIT_ICE[subscribe]} ]] {
@@ -2382,7 +2385,7 @@ for-syntax."
                        for ___key in "${reply[@]}"; do
                            ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
                            "${___arr[5]}" "" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" update || \
-                               continue
+                               return 0
                        done
                        .zinit-update-or-status update "$___id" ""; ___retval=$?
                    fi
