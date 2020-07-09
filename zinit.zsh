@@ -2049,9 +2049,14 @@ zinit() {
     ZINIT_ICES=()
 
     integer ___retval=0 ___correct=0
-    local -a match mbegin mend reply
-    local MATCH REPLY ___q="\`" ___q2="'"; integer MBEGIN MEND
+    local -a match mbegin mend
+    local MATCH ___q="\`" ___q2="'"; integer MBEGIN MEND
 
+    # An annex's subcommand might use the reply vars
+    match=( ${ZINIT_EXTS[(I)z-annex subcommand:$1]} )
+    if (( !${#match} )) {
+        local -a reply; local REPLY
+    }
 
     [[ -o ksharrays ]] && ___correct=1
 
