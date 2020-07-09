@@ -144,6 +144,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-data $'\e[38;5;82m'  col-data2 $'\e[38;5;50m'  col-hi    $'\e[38;5;184m'
         col-ehi  $'\e[01m\e[31m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
         col-cmd  $'\e[38;5;90m'  col-nl    $'\n'
+        col-dots ${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
