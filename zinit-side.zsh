@@ -72,8 +72,10 @@
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
     .zinit-any-to-pid "$1" "$2"
-    .zinit-get-object-path plugin "$REPLY" || return 1
+    .zinit-get-object-path plugin "$REPLY"
+    integer ret=$? 
     local dname="${reply[-3]}"
+    (( ret )) && { reply=( "$dname" "" ); return 1; }
 
     # Look for file to compile. First look for the most common one
     # (optimization) then for other possibilities
