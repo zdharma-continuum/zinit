@@ -904,6 +904,50 @@ builtin setopt noaliases
 
     return 0
 } # ]]]
+# FUNCTION: .zinit-any-to-pid [[[
+.zinit-any-to-pid() {
+    emulate -LR zsh
+    builtin setopt extendedglob typesetsilent noshortloops rcquotes \
+         ${${${+REPLY}:#0}:+warncreateglobal}
+
+    1=${~1} 2=${~2}
+
+    # Two components given?
+    if [[ -n $2 ]] {
+        if [[ $1 == (%|/)* || ( -z $1 && $2 == /* ) ]] {
+            .zinit-util-shands-path $1${${(M)1#(%/?|%[^/]|/?)}:+/}$2
+            REPLY=${${REPLY:#%*}:+%}$REPLY
+        } else {
+            REPLY=$1${1:+/}$2
+        }
+        return 0
+    }
+
+    # Is it absolute path?
+    if [[ $1 = (%|/|\~)* ]] {
+        .zinit-util-shands-path $1
+        REPLY=${${REPLY:#%*}:+%}$REPLY
+        return 0
+    }
+
+    # Single component given
+    REPLY=${1//---//}
+
+    return 0
+} # ]]]
+# FUNCTION: .zinit-util-shands-path [[[
+# Replaces parts of path with %HOME, etc.
+.zinit-util-shands-path() {
+    emulate -LR zsh
+    builtin setopt extendedglob typesetsilent noshortloops rcquotes \
+         ${${${+REPLY}:#0}:+warncreateglobal}
+
+    local -A map
+    map=( \~ %HOME $HOME %HOME $ZINIT[SNIPPETS_DIR] %SNIPPETS $ZINIT[PLUGINS_DIR] %PLUGINS
+        HOME %HOME SNIPPETS %SNIPPETS PLUGINS %PLUGINS "" "" )
+    REPLY=${${1/(#b)(#s)(%|)(${(~j:|:)${(@k)map:#$HOME}}|$HOME|)/$map[$match[2]]}}
+    return 0
+} # ]]]
 # FUNCTION: .zinit-find-other-matches [[[
 # Plugin's main source file is in general `name.plugin.zsh'. However,
 # there can be different conventions, if that file is not found, then
