@@ -2328,10 +2328,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 +zinit-message -n "{error}Error: No plugin or snippet ID given"
                 if [[ -n $___last_ice ]] {
                     +zinit-message "(the last recognized ice was: {obj}"\
-"${___last_ice/(#m)(${~ZINIT[ice-list]})/{obj}$MATCH${___q2}{file}}{obj}'{error}).
+"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{obj}$MATCH${___q2}{file}"}{obj}'{error}).
 You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin.{rst}
-{info2}Note:{rst}The \`ice' subcommand is now again required if not using the
-for-syntax."
+{info2}Note:{rst}The \`ice' subcommand is now again required if not using the for-syntax."
                 } else {
                     +zinit-message ".{rst}"
                 }
