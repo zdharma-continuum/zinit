@@ -885,8 +885,8 @@ builtin setopt noaliases
     # Is it absolute path in zinit format?
     if [[ $1 = %* ]]; then
         local -A map
-        map=( "" "" HOME $HOME SNIPPETS $ZINIT[SNIPPETS_DIR] )
-        reply=( % ${${1/(#b)(#s)%(HOME|SNIPPETS|)/$map[$match[1]]}} )
+        map=( HOME $HOME SNIPPETS $ZINIT[SNIPPETS_DIR] PLUGINS $ZINIT[PLUGINS_DIR] )
+        reply=( % ${${1/(#b)(#s)%(${(~j:|:)${(@k)map}}|)/$map[$match[1]]}} )
         reply[2]=${~reply[2]}
         return 0
     fi
