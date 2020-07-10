@@ -57,23 +57,6 @@
     fi
     return 0
 } # ]]]
-# FUNCTION: .zinit-plgdir [[[
-.zinit-get-plg-dir() {
-    # There are plugins having ".plugin.zsh"
-    # in ${plugin} directory name, also some
-    # have ".zsh" there
-    local dname="${ZINIT[alias-map-${user:+${user}/}$plugin]}"
-    local pdir="${${${${plugin:t}%.plugin.zsh}%.zsh}%.git}"
-    [[ -z "$dname" ]] && {
-        [[ "$user" = "%" ]] && \
-            dname="$plugin" || \
-            dname="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
-    }
-
-    reply=( "$dname" "$pdir" )
-    return 0
-}
-# ]]]
 # FUNCTION: .zinit-first [[[
 # Finds the main file of plugin. There are multiple file name
 # formats, they are ordered in order starting from more correct
@@ -88,8 +71,9 @@
     .zinit-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
 
-    .zinit-get-plg-dir "$user" "$plugin"
-    local dname="${reply[-2]}"
+    .zinit-any-to-pid "$1" "$2"
+    .zinit-get-object-path plugin "$REPLY"
+    local dname="${reply[-3]}"
 
     # Look for file to compile. First look for the most common one
     # (optimization) then for other possibilities
