@@ -818,7 +818,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             reply=( "${list[1]:h}" "${list[1]}" )
         else
             if (( is_snippet )) {
-                .zinit-first "%" "$plugin_dir" || {
+                if [[ -f $plugin_dir/$filename ]] {
+                    reply=( $plugin_dir $plugin_dir/$filename )
+                } elif { ! .zinit-first "%" "$plugin_dir" } {
                     [[ ${ZINIT_ICE[as]} != null ]] && \
                         builtin print "No files for compilation found."
                     return 1
