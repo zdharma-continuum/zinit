@@ -872,13 +872,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent
 
-    local save_url="$1" url="$2" id_as="$3" id_as_clean="${3%%\?*}" local_dir="$4" dirname="$5" filename="$6" update="$7"
+    local save_url=$1 url=$2 id_as=$3 local_dir=$4 dirname=$5 filename=$6 update=$7
 
     trap "command rmdir ${(qqq)local_dir}/${(qqq)dirname} 2>/dev/null; return 1;" INT TERM QUIT HUP
 
     local -a list arr
-    integer retval=0
-    local sname="${${ZINIT_ICE[teleid]:h}:t}/${ZINIT_ICE[teleid]:t}"
+    integer retval
+    local teleid_clean=${ZINIT_ICE[teleid]%%\?*}
+    local sname=${${teleid_clean:h}:t}/${teleid_clean:t}
     [[ $sname = */trunk* ]] && sname=${${ZINIT_ICE[teleid]%%/trunk*}:t}/${ZINIT_ICE[teleid]:t}
     sname=${sname#./}
 
