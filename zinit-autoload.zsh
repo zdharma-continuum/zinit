@@ -2704,11 +2704,11 @@ ZINIT[EXTENDED_GLOB]=""
 " and snippets in $ZINIT[col-file]$ZINIT[SNIPPETS_DIR]%f%b?" \
 " # Delete unloaded snippets
 local -aU loadedsnips todelete final_todelete
-loadedsnips=( \${\${ZINIT_SNIPPETS[@]% <*>}/(#m)*/\$(.zinit-get-object-path snippet \"\$MATCH\" && builtin print -rn \$reply[1]/\$reply[2]; )} )
+loadedsnips=( \${\${ZINIT_SNIPPETS[@]% <*>}/(#m)*/\$(.zinit-get-object-path snippet \"\$MATCH\" && builtin print -rn \$REPLY; )} )
 local dir=\${\${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-/tmp/xyzcba231}
 todelete=( \$dir/*/*/*(ND/) \$dir/*/*(ND/) \$dir/*(ND/) )
 final_todelete=( \${todelete[@]:#*/(\${(~j:|:)loadedsnips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)} )
-final_todelete=( \${final_todelete[@]//(#m)*/\$( .zinit-get-object-path snippet \"\${\${\${MATCH##\${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/\${match[1]##--}://}//--//}\" && builtin print -r -- \$reply[1]/\$reply[2])} )
+final_todelete=( \${final_todelete[@]//(#m)*/\$( .zinit-get-object-path snippet \"\${\${\${MATCH##\${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/\${match[1]##--}://}//--//}\" && builtin print -r -- \$REPLY)} )
 final_todelete=( \${final_todelete[@]:#(\${(~j:|:)loadedsnips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)} )
 todelete=( \${\${\${(@)\${(@)final_todelete##\$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/\${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/\$match[1]/\$ZINIT[col-file]\$match[2]\$ZINIT[col-rst]} )
 todelete=( \${todelete[@]//(#m)(#s)[^\/]##(#e)/\$ZINIT[col-file]\$MATCH\$ZINIT[col-rst]} )
