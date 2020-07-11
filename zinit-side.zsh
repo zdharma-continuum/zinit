@@ -1,21 +1,6 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
 
-# FUNCTION: .zinit-shands-exp [[[
-# Does expansion of currently little unstandarized
-# shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
-.zinit-shands-exp() {
-    REPLY="$1$2"
-    REPLY="${${${REPLY/\%HOME/$HOME}/\%SNIPPETS/${ZINIT[SNIPPETS_DIR]}}#%}"
-    #REPLY="${REPLY/OMZ::/https--github.com--robbyrussell--oh-my-zsh--trunk--}"
-    #REPLY="${REPLY/\/OMZ//https--github.com--robbyrussell--oh-my-zsh--trunk}"
-    #REPLY="${REPLY/PZT::/https--github.com--sorin-ionescu--prezto--trunk--}"
-    #REPLY="${REPLY/\/PZT//https--github.com--sorin-ionescu--prezto--trunk}"
-
-    # Testable
-    [[ "$REPLY" != "$1$2" ]]
-}
-# ]]]
 # FUNCTION: .zinit-exists-physically [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR.
 #
@@ -25,15 +10,14 @@
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-exists-physically() {
     .zinit-any-to-user-plugin "$1" "$2"
-    if [[ "${reply[-2]}" = "%" ]]; then
-        # Shorthands, little unstandarized
-        .zinit-shands-exp "$1" "$2" && {
-            [[ -d "$REPLY" ]] && return 0 || return 1
-        } || {
-            [[ -d "${reply[-1]}" ]] && return 0 || return 1
-        }
+    if [[ ${reply[-2]} = % ]]; then
+        [[ -d ${reply[-1]} ]] && \
+            return 0 || \
+            return 1
     else
-        [[ -d "${ZINIT[PLUGINS_DIR]}/${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---}" ]] && return 0 || return 1
+        [[ -d ${ZINIT[PLUGINS_DIR]}/${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---} ]] && \
+            return 0 || \
+            return 1
     fi
 } # ]]]
 # FUNCTION: .zinit-exists-physically-message [[[
@@ -45,14 +29,26 @@
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-exists-physically-message() {
+    builtin emulate -LR zsh
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
     if ! .zinit-exists-physically "$1" "$2"; then
+        .zinit-any-to-user-plugin "$1" "$2"
+        if [[ $reply[1] = % ]] {
+            .zinit-any-to-pid "$1" "$2"
+            local spec1=$REPLY
+            if [[ $1 = %* ]] {
+                local spec2=%${1#%}${${1#%}:+${2:+/}}$2
+            } elif [[ -z $1 || -z $2 ]] {
+                local spec3=%${1#%}${2#%}
+            }
+        } else {
+            integer nospec=1
+        }
         .zinit-any-colorify-as-uspl2 "$1" "$2"
-        local spec="$REPLY"
 
-        .zinit-shands-exp "$1" "$2" && REPLY="${REPLY/$HOME/~}"
-
-        builtin print -r -- "${ZINIT[col-error]}No such (plugin or snippet) directory${ZINIT[col-rst]}: $spec"
-        [[ "$REPLY" != "$1$2" ]] && builtin print -r -- "(expands to: $REPLY)"
+        +zinit-message "{error}No such (plugin or snippet){rst}: $REPLY."
+        [[ $nospec -eq 0 && $spec1 != $spec2 ]] && \
+            +zinit-message "(expands to: {file}${spec2#%}{rst})."
         return 1
     fi
     return 0
@@ -119,7 +115,9 @@
         plugin="${plugin/https--github.com--sorin-ionescu--prezto--trunk--/PZT::}"
         plugin="${plugin/https--github.com--sorin-ionescu--prezto--trunk/PZT}"
         plugin="${plugin/$HOME/HOME}"
-        REPLY="${ZINIT[col-uname]}%${ZINIT[col-rst]}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
+        REPLY="${ZINIT[col-uname]}%%${ZINIT[col-rst]}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
+    } elif [[ $user == http(|s): ]] {
+        REPLY="${ZINIT[col-ice]}${user}/${plugin}${ZINIT[col-rst]}"
     } else {
         REPLY="${user:+${ZINIT[col-uname]}${user}${ZINIT[col-rst]}/}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
     }
@@ -206,7 +204,6 @@
         ___is_snippet=1
     else
         # Plugin
-        .zinit-shands-exp "$___URL" && ___URL="$REPLY"
         .zinit-any-to-user-plugin "$___URL" ""
         local ___user="${reply[-2]}" ___plugin="${reply[-1]}"
         ___s_path="" ___filename=""
