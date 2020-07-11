@@ -1753,7 +1753,7 @@ builtin setopt noaliases
         emulate -LR zsh
         builtin cd &>/dev/null -q ${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}} || {
             .zinit-get-object-path snippet "$___id_as"
-            builtin cd &>/dev/null -q ${reply[-3]}/${reply[-2]}
+            builtin cd &>/dev/null -q $REPLY
         }
     }
     if (( $? == 0 )); then
@@ -1844,7 +1844,7 @@ builtin setopt noaliases
         if ! .zinit-get-object-path snippet "${id_as//\//---}"; then
             return 1
         fi
-        ___path="${reply[-3]%/}/${reply[-2]}"/._zinit
+        ___path="$REPLY"/._zinit
     }
     for ___key ( "${ice_order[@]}" ) {
         (( ${+ZINIT_ICE[$___key]} )) && [[ ${ZINIT_ICE[$___key]} != +* ]] && continue
@@ -2237,7 +2237,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             .zinit-get-object-path plugin "${${${___id#@}#https://github.com/}%%(///|//|/)}"
                         }
                         (( $? )) && [[ ${zsh_eval_context[1]} = file ]] && { ___action_load=1; }
-                        local ___object_path="${reply[-3]}/${reply[-2]}"
+                        local ___object_path="$REPLY"
                     } elif (( ! ___turbo )) {
                         ___action_load=1
                         reply=( 1 )
