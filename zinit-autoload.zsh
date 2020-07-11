@@ -2627,17 +2627,19 @@ ZINIT[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-cd() {
-    setopt localoptions extendedglob nokshglob noksharrays
+    builtin emulate -LR zsh
+    builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
+
     .zinit-get-path "$1" "$2" && {
-        if [[ -e "$REPLY" ]]; then
-            builtin cd "$REPLY"
+        if [[ -e $REPLY ]]; then
+            builtin cd $REPLY
         else
-            builtin print -r -- "No such plugin or snippet"
+            +zinit-message "No such plugin or snippet"
             return 1
         fi
         builtin print
     } || {
-        builtin print -r -- "No such plugin or snippet"
+        +zinit-message "No such plugin or snippet"
         return 1
     }
 } # ]]]
