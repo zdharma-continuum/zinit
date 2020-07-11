@@ -1467,7 +1467,7 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-any-to-user-plugin ${ice[teleid]:-$id_as}
     user=${reply[1]} plugin=${reply[2]}
 
-    local repo="${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}"
+    local repo="${${${(M)id_as#%}:+${id_as#%}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}"
 
     # Run annexes' preinit hooks
     local -a arr
