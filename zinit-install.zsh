@@ -302,11 +302,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         local_path tpe=$4 update=$5 version=$6
 
     if .zinit-get-object-path plugin "$id_as" && [[ -z $update ]] {
-        builtin print -Pr "$ZINIT[col-msg2]A plugin named $ZINIT[col-obj]$id_as" \
-            "$ZINIT[col-msg2]already exists, aborting.%f%b"
+        +zinit-message "{msg2}A plugin named {obj}$id_as" \
+                "{msg2}already exists, aborting.{rst}"
         return 1
     }
-    local_path=$reply[-3]
+    local_path=$REPLY
 
     trap "rmdir ${(qqq)local_path}/._zinit ${(qqq)local_path} 2>/dev/null" EXIT
     trap "rmdir ${(qqq)local_path}/._zinit ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
@@ -514,10 +514,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     builtin emulate -LR zsh
     setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
 
-    # $id_as - a /-separated pair if second element
-    # is not empty and first is not "%" - then it's
-    # just $1 in first case, or $1$2 in second case
-    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} reinstall=${3:-0} quiet=${${4:+1}:-0}
+    [[ $1 == % ]] && local id_as=%$2 || local id_as=$1${1:+/}$2
+    local reinstall=${3:-0} quiet=${${4:+1}:-0}
     (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
     [[ $4 = -Q ]] && quiet=2
     typeset -ga INSTALLED_COMPS SKIPPED_COMPS
@@ -796,10 +794,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-compile-plugin() {
-    # $id_as - a /-separated pair if second element
-    # is not empty and first is not "%" - then it's
-    # just $1 in first case, or $1$2 in second case
-    local id_as="$1${2:+${${${(M)1:#%}:+$2}:-/$2}}" first plugin_dir filename is_snippet
+    builtin emulate -LR zsh
+    builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
+
+    [[ $1 == % ]] && local id_as=%$2 || local id_as=$1${1:+/}$2
+    local first plugin_dir filename is_snippet
     local -a list
 
     local -A ICE
@@ -808,8 +807,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     [[ "${ICE[pick]}" = "/dev/null" ]] && return 0
 
-    if [[ ${ICE[as]} != "command" && ( ${+ICE[nocompile]} = "0" || ${ICE[nocompile]} = "!" ) ]] {
-        if [[ -n "${ICE[pick]}" ]]; then
+    if [[ ${ICE[as]} != command && ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! ) ]] {
+        if [[ -n ${ICE[pick]} ]]; then
             list=( ${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN) )
             if [[ ${#list} -eq 0 ]] {
                 builtin print "No files for compilation found (pick-ice didn't match)."
@@ -819,7 +818,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         else
             if (( is_snippet )) {
                 if [[ -f $plugin_dir/$filename ]] {
-                    reply=( $plugin_dir $plugin_dir/$filename )
+                    reply=( "$plugin_dir" $plugin_dir/$filename )
                 } elif { ! .zinit-first "%" "$plugin_dir" } {
                     [[ ${ZINIT_ICE[as]} != null ]] && \
                         builtin print "No files for compilation found."
@@ -833,9 +832,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 }
             }
         fi
-        local pdir_path="${reply[-2]}"
-        first="${reply[-1]}"
-        local fname="${first#$pdir_path/}"
+        local pdir_path=${reply[-2]}
+        first=${reply[-1]}
+        local fname=${first#$pdir_path/}
 
         builtin print -Pr "Compiling ${ZINIT[col-info]}$fname%f%b."
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
@@ -1312,9 +1311,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     }
 
     if { ! .zinit-get-object-path snippet "$id_as" } {
-        builtin print -P "$ZINIT[col-msg2]Error: the snippet" \
-            "\`$ZINIT[col-obj]$id_as$ZINIT[col-msg2]'" \
-            "doesn't exist, aborting the update.%f%b"
+        +zinit-message "{msg2}Error: the snippet \`{obj}$id_as{msg2}'" \
+                "doesn't exist, aborting the update.{rst}"
             return 1
     }
     filename=$reply[-2] dirname=$reply[-2] local_dir=$reply[-3]
