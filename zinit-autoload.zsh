@@ -3203,47 +3203,11 @@ EOF
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-    local the_id=$1${${1:#(%|/)*}:+${2:+/}}$2
+    [[ $1 == % ]] && local id_as=%$2 || local id_as=$1${1:+/}$2
+    .zinit-get-object-path snippet "$id_as" || \
+        .zinit-get-object-path plugin "$id_as"
 
-    if [[ $the_id = (%|/)* ]]; then
-        REPLY=${the_id#%}
-        return 0
-    fi
-
-    .zinit-two-paths "$the_id"
-    local s_path=${reply[-4]} s_svn=${reply[-3]} \
-            _path=${reply[-2]} _filename=${reply[-1]}
-
-    reply=()
-    REPLY=
-
-    if [[ -d $s_path || -d $_path ]]; then
-        local -A sice
-        local -a tmp
-        tmp=( "${(z@)ZINIT_SICE[$the_id]}" )
-        (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) && sice=( "${(Q)tmp[@]}" )
-
-        [[ ${+sice[svn]} = 1 || -n $s_svn ]] && {
-            [[ -e $s_path ]] && REPLY=$s_path
-        } || {
-            reply=( ${_filename:+"$_filename"} )
-            [[ -e $_path ]] && REPLY=$_path
-        }
-    else
-        .zinit-any-to-user-plugin "$1" "$2"
-        local user=${reply[-2]} plugin=${reply[-1]}
-        reply=()
-
-        .zinit-exists-physically "$user" "$plugin" || return 1
-
-        .zinit-shands-exp "$1" "$2" && {
-            :
-        } || {
-            REPLY=${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}
-        }
-    fi
-
-    return 0
+    return $(( 1 - reply[3] ))
 }
 # ]]]
 # FUNCTION: .zinit-recall [[[
