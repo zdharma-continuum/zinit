@@ -1025,7 +1025,6 @@ builtin setopt noaliases
         local_dir="${${${id_as%%\?*}/:\/\//--}:h}"
         [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
         local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
-
     } else {
         .zinit-any-to-user-plugin "$id_as"
         local_dir=${${${(M)reply[-2]:#%}:+${reply[2]}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
@@ -1036,6 +1035,7 @@ builtin setopt noaliases
         -e $local_dir/${dirname:+$dirname/}._zplugin ]] && exists=1
 
     reply=( "$local_dir" "$dirname" "$exists" )
+    REPLY="$local_dir${dirname:+/$dirname}"
 
     return $(( 1 - exists ))
 }
