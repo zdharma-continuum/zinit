@@ -880,7 +880,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     integer retval
     local teleid_clean=${ZINIT_ICE[teleid]%%\?*}
     [[ $teleid_clean == *://* ]] && \
-        local sname=${(M)teleid_clean##*://[^/]##(/[^/]##)(#c0,3)} || \
+        local sname=${(M)teleid_clean##*://[^/]##(/[^/]##)(#c0,4)} || \
         local sname=${${teleid_clean:h}:t}/${teleid_clean:t}
     [[ $sname = */trunk* ]] && sname=${${ZINIT_ICE[teleid]%%/trunk*}:t}/${ZINIT_ICE[teleid]:t}
     sname=${sname#./}
