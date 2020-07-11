@@ -622,57 +622,59 @@ ZINIT[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-uninstall-completions() {
-    builtin setopt localoptions nullglob extendedglob unset nokshglob noksharrays noshwordsplit
+    builtin emulate -LR zsh
+    builtin setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
 
     typeset -a completions symlinked backup_comps
     local c cfile bkpfile
     integer action global_action=0
 
     .zinit-get-path "$1" "$2"
-    [[ -e "$REPLY" ]] && {
-        completions=( "$REPLY"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN) )
+    [[ -e $REPLY ]] && {
+        completions=( $REPLY/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN) )
     } || {
         builtin print "No completions found for \`$1${${1:#(%|/)*}:+${2:+/}}$2'"
         return 1
     }
 
-    symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc )
-    backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc )
+    symlinked=( ${ZINIT[COMPLETIONS_DIR]}/_[^_.]*~*.zwc )
+    backup_comps=( ${ZINIT[COMPLETIONS_DIR]}/[^_.]*~*.zwc )
+
+    (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
 
     # Delete completions if they are really there, either
     # as completions (_fname) or backups (fname)
-    for c in "${completions[@]}"; do
+    for c in ${completions[@]}; do
         action=0
-        cfile="${c:t}"
-        bkpfile="${cfile#_}"
+        cfile=${c:t}
+        bkpfile=${cfile#_}
 
         # Remove symlink to completion
-        if [[ -n "${symlinked[(r)*/$cfile]}" ]]; then
-            command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile"
+        if [[ -n ${symlinked[(r)*/$cfile]} ]]; then
+            command rm -f ${ZINIT[COMPLETIONS_DIR]}/$cfile
             action=1
         fi
 
         # Remove backup symlink (created by cdisable)
-        if [[ -n "${backup_comps[(r)*/$bkpfile]}" ]]; then
-            command rm -f "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
+        if [[ -n ${backup_comps[(r)*/$bkpfile]} ]]; then
+            command rm -f ${ZINIT[COMPLETIONS_DIR]}/$bkpfile
             action=1
         fi
 
         if (( action )); then
-            builtin print "${ZINIT[col-info]}Uninstalling completion \`$cfile'${ZINIT[col-rst]}"
+            +zinit-message "{info}Uninstalling completion \`{file}$cfile{info}'{dots}{rst}"
             # Make compinit notice the change
             .zinit-forget-completion "$cfile"
             (( global_action ++ ))
         else
-            builtin print "${ZINIT[col-info]}Completion \`$cfile' not installed${ZINIT[col-rst]}"
+            +zinit-message "{info}Completion \`{file}$cfile{info}' not installed.{rst}"
         fi
     done
 
     if (( global_action > 0 )); then
-        builtin print "${ZINIT[col-info]}Uninstalled $global_action completions${ZINIT[col-rst]}"
+        +zinit-message "{info}Uninstalled {num}$global_action{info} completions.{rst}"
     fi
 
-    (( ${+functions[.zinit-forget-completion]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
     .zinit-compinit >/dev/null
 } # ]]]
 
