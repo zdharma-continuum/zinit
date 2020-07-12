@@ -514,7 +514,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     builtin emulate -LR zsh
     setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
 
-    [[ $1 == % ]] && local id_as=%$2 || local id_as=$1${1:+/}$2
+    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}}
     local reinstall=${3:-0} quiet=${${4:+1}:-0}
     (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
     [[ $4 = -Q ]] && quiet=2
@@ -797,7 +797,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     builtin emulate -LR zsh
     builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
 
-    [[ $1 == % ]] && local id_as=%$2 || local id_as=$1${1:+/}$2
+    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}}
+
     local first plugin_dir filename is_snippet
     local -a list
 
