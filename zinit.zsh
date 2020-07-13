@@ -1090,7 +1090,11 @@ builtin setopt noaliases
     local name="$1" type="$2" handler="$3" helphandler="$4" icemods="$5" key="z-annex ${(q)2}"
     ZINIT_EXTS[seqno]=$(( ${ZINIT_EXTS[seqno]:-0} + 1 ))
     ZINIT_EXTS[$key${${(M)type#hook:}:+ ${ZINIT_EXTS[seqno]}}]="${ZINIT_EXTS[seqno]} z-annex-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler} ${(q)icemods}"
-    ZINIT_EXTS[ice-mods]="${ZINIT_EXTS[ice-mods]}${icemods:+|}$icemods"
+    () {
+        emulate -LR zsh -o extendedglob
+        integer index="${type##[%a-zA-Z:_!-]##}"
+        ZINIT_EXTS[ice-mods]="${ZINIT_EXTS[ice-mods]}${icemods:+|}${(j:|:)${(@)${(@s:|:)icemods}/(#b)(#s)(?)/$index-$match[1]}}"
+    }
 }
 # ]]]
 # FUNCTION: @zinit-register-hook [[[
@@ -1807,7 +1811,7 @@ builtin setopt noaliases
 .zinit-ice() {
     builtin setopt localoptions noksharrays extendedglob warncreateglobal typesetsilent noshortloops
     integer retval
-    local bit exts="${~ZINIT_EXTS[ice-mods]//\'\'/}"
+    local bit exts="${(j:|:)${(@)${(@kons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}}"
     for bit; do
         [[ $bit = (#b)(--|)(${~ZINIT[ice-list]}${~exts})(*) ]] && \
             ZINIT_ICES[${match[2]}]+="${ZINIT_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
