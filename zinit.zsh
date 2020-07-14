@@ -1811,7 +1811,7 @@ builtin setopt noaliases
 .zinit-ice() {
     builtin setopt localoptions noksharrays extendedglob warncreateglobal typesetsilent noshortloops
     integer retval
-    local bit exts="${(j:|:)${(@)${(@kons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}}"
+    local bit exts="${(j:|:)${(@)${(@Akons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}}"
     for bit; do
         [[ $bit = (#b)(--|)(${~ZINIT[ice-list]}${~exts})(*) ]] && \
             ZINIT_ICES[${match[2]}]+="${ZINIT_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
@@ -1840,7 +1840,7 @@ builtin setopt noaliases
     local -a ice_order
     ice_order=(
         ${(As:|:)ZINIT[ice-list]}
-        ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
+        ${(@)${(@Akons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
     )
     ___path="${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/._zinit
     # TODO snippet's dir computation…

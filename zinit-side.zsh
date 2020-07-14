@@ -179,7 +179,7 @@
 
         # Include all additional ices – after
         # stripping them from the possible: ''
-        ${(@us.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
+        ${(@)${(@Akons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
     )
     nval_ices=(
             ${(s.|.)ZINIT[nval-ice-list]}
@@ -187,7 +187,7 @@
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
-            ${(@)${(@s.|.)ZINIT_EXTS[ice-mods]}:#*\'\'*}
+            ${(@)${(@)${(@Akons:|:)ZINIT_EXTS[ice-mods]}:#*\'\'*}/(#s)<->-/}
 
             # Must be last
             svn
@@ -329,9 +329,10 @@
     local -a ice_order nval_ices
     ice_order=(
         ${(s.|.)ZINIT[ice-list]}
+
         # Include all additional ices – after
         # stripping them from the possible: ''
-        ${(@s.|.)${ZINIT_EXTS[ice-mods]//\'\'/}}
+        ${(@)${(@Akons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
     )
     nval_ices=(
             ${(s.|.)ZINIT[nval-ice-list]}
@@ -339,7 +340,7 @@
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
-            ${(@)${(@s.|.)ZINIT_EXTS[ice-mods]}:#*\'\'*}
+            ${(@)${(@)${(@Akons:|:)ZINIT_EXTS[ice-mods]}:#*\'\'*}/(#s)<->-/}
 
             # Must be last
             svn
