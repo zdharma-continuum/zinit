@@ -411,8 +411,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             case ${ZINIT_ICE[proto]} in
                 (|https|git|http|ftp|ftps|rsync|ssh)
                     :zinit-git-clone() {
-                        command git clone --progress ${=ZINIT_ICE[cloneopts]---recursive} \
-                            ${=ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
+                        command git clone --progress ${(s: :)ZINIT_ICE[cloneopts]---recursive} \
+                            ${(s: :)ZINIT_ICE[depth]:+--depth ${ZINIT_ICE[depth]}} \
                             "${ZINIT_ICE[proto]:-https}://${site:-${ZINIT_ICE[from]:-github.com}}/$remote_url_path" \
                             "$local_path" \
                             --config transfer.fsckobjects=false \
