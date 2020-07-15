@@ -1021,19 +1021,23 @@ builtin setopt noaliases
     # Remove leading whitespace and trailing /
     id_as="${${id_as#"${id_as%%[! $'\t']*}"}%/}"
 
-    if [[ $type == snippet ]] {
-        dirname="${${id_as%%\?*}:t}"
-        local_dir="${${${id_as%%\?*}/:\/\//--}:h}"
-        [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
-        local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
-    } else {
-        .zinit-any-to-user-plugin "$id_as"
-        local_dir=${${${(M)reply[-2]:#%}:+${reply[2]}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
-        [[ $id_as == _local/* && -d $local_dir && ! -d $local_dir/._zinit ]] && command mkdir -p "$local_dir"/._zinit
+    for type ( ${=${${(M)type:#AUTO}:+snippet plugin}:-$type} ) {
+        if [[ $type == snippet ]] {
+            dirname="${${id_as%%\?*}:t}"
+            local_dir="${${${id_as%%\?*}/:\/\//--}:h}"
+            [[ $local_dir = . ]] && local_dir= || local_dir="${${${${${local_dir#/}//\//--}//=/-EQ-}//\?/-QM-}//\&/-AMP-}"
+            local_dir="${ZINIT[SNIPPETS_DIR]}${local_dir:+/$local_dir}"
+        } else {
+            .zinit-any-to-user-plugin "$id_as"
+            local_dir=${${${(M)reply[-2]:#%}:+${reply[2]}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
+            [[ $id_as == _local/* && -d $local_dir && ! -d $local_dir/._zinit ]] && command mkdir -p "$local_dir"/._zinit
+        }
+        [[ -e $local_dir/${dirname:+$dirname/}._zinit || \
+            -e $local_dir/${dirname:+$dirname/}._zplugin ]] && exists=1
+
+        (( exists )) && break
     }
 
-    [[ -e $local_dir/${dirname:+$dirname/}._zinit || \
-        -e $local_dir/${dirname:+$dirname/}._zplugin ]] && exists=1
 
     reply=( "$local_dir" "$dirname" "$exists" )
     REPLY="$local_dir${dirname:+/$dirname}"
