@@ -1801,8 +1801,9 @@ builtin setopt noaliases
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob
     if [[ $1 = -* ]] { local opt=$1; shift; } else { local opt; }
-    local msg=${(j: :)${(@)${@//(#b)([\[]([^\]]##)[\]])/${ZINIT[col-$match[2]]-$match[1]}}//(#b)([\{]([^\}]##)[\}])/${ZINIT[col-$match[2]]-$match[1]}}}
-    builtin print -Pr ${opt:#--} -- $msg
+    local -a msg
+    msg=( ${(@)${(@)${@//(#b)([\\]([\[]([^\]]##)[\]])|([\[]([^\]]##)[\]]))/$match[2]${ZINIT[col-$match[5]]-$match[4]}}//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}]))/$match[2]${ZINIT[col-$match[5]]-$match[4]}}} )
+    builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
 
