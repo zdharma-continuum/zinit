@@ -60,11 +60,11 @@ reset-prompt|wrap-track|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
 subscribe|extract|param|opts|autoload|subst|install|pullopts|\
-debug"
+debug|null"
 ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
 nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\
-pullopts|debug"
+pullopts|debug|null"
 
 # Can be customized
 : ${ZINIT[PLUGINS_DIR]:=${ZINIT[HOME_DIR]}/plugins}
@@ -1304,7 +1304,7 @@ builtin setopt noaliases
 
     [[ -z ${ZINIT_ICE[subst]} ]] && local ___builtin=builtin
     
-    [[ ${ZINIT_ICE[as]} = null ]] && \
+    [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
 
     if [[ -n ${ZINIT_ICE[autoload]} ]] {
@@ -1467,7 +1467,7 @@ builtin setopt noaliases
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
     ZINIT_ICE[teleid]="$url"
-    [[ ${ZINIT_ICE[as]} = null ]] && \
+    [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
 
     local local_dir dirname filename save_url="$url"
@@ -1542,7 +1542,7 @@ builtin setopt noaliases
     local -a list
     local ZERO
 
-    if [[ -z ${opts[(r)--command]} && ( -z ${ZINIT_ICE[as]} || ${ZINIT_ICE[as]} = null ) ]]; then
+    if [[ -z ${opts[(r)--command]} && ( -z ${ZINIT_ICE[as]} || ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 ) ]]; then
         # Source the file with compdef shadeing
         if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
             # Shadowing code is inlined from .zinit-shade-on

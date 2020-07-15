@@ -479,7 +479,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # After additional executions like atclone'' - install completions (1 - plugins)
     local -A ICE_OPTS
     ICE_OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null ]] && \
+    [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null && ${+ZINIT_ICE[null]} -eq 0 ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
     if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
@@ -806,9 +806,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     .zinit-compute-ice "$id_as" "pack" \
         ICE plugin_dir filename is_snippet || return 1
 
-    [[ "${ICE[pick]}" = "/dev/null" ]] && return 0
-
-    if [[ ${ICE[as]} != command && ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! ) ]] {
+    if [[ ${ICE[pick]} != /dev/null && ${ZINIT_ICE[as]} != null && \
+        ${+ZINIT_ICE[null]} -eq 0 && ${ICE[as]} != command && \
+        ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! )
+    ]] {
         if [[ -n ${ICE[pick]} ]]; then
             list=( ${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN) )
             if [[ ${#list} -eq 0 ]] {
@@ -1225,7 +1226,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # After additional executions like atclone'' - install completions (2 - snippets)
     local -A ICE_OPTS
     ICE_OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null ]] && \
+    [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null && ${+ZINIT_ICE[null]} -eq 0 ]] && \
         .zinit-install-completions "%" "$local_dir/$dirname" 0
 
     if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
@@ -1271,7 +1272,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # Remove leading whitespace and trailing /
     url=${${url#${url%%[! $'\t']*}}%/}
     ZINIT_ICE[teleid]=${ZINIT_ICE[teleid]:-$url}
-    [[ ${ZINIT_ICE[as]} = null ]] && \
+    [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 ]] && \
         ZINIT_ICE[pick]=${ZINIT_ICE[pick]:-/dev/null}
 
     local local_dir dirname filename save_url=$url \
