@@ -795,11 +795,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-compile-plugin() {
     builtin emulate -LR zsh
-    builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
-    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}}
-
-    local first plugin_dir filename is_snippet
+    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet
     local -a list
 
     local -A ICE
@@ -821,15 +819,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             if (( is_snippet )) {
                 if [[ -f $plugin_dir/$filename ]] {
                     reply=( "$plugin_dir" $plugin_dir/$filename )
-                } elif { ! .zinit-first "%" "$plugin_dir" } {
-                    [[ ${ZINIT_ICE[as]} != null ]] && \
-                        builtin print "No files for compilation found."
+                } elif { ! .zinit-first % "$plugin_dir" } {
+                    [[ ${ZINIT_ICE[as]} != null && ${+ZINIT_ICE[null]} -eq 0 ]] && \
+                        +zinit-message "No files for compilation found."
                     return 1
                 }
             } else {
                 .zinit-first "$1" "$2" || {
-                    [[ ${ZINIT_ICE[as]} != null ]] && \
-                        builtin print "No files for compilation found."
+                    [[ ${ZINIT_ICE[as]} != null && ${+ZINIT_ICE[null]} -eq 0 ]] && \
+                        +zinit-message "No files for compilation found."
                     return 1
                 }
             }
@@ -838,11 +836,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         first=${reply[-1]}
         local fname=${first#$pdir_path/}
 
-        builtin print -Pr "Compiling ${ZINIT[col-info]}$fname%f%b."
+        +zinit-message -n "{note}Note:{rst} Compiling {info}$fname{rst}{dots}"
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
-            zcompile "$first" || {
-                builtin print "Compilation failed. Don't worry, the plugin will work also without compilation"
-                builtin print "Consider submitting an error report to Zinit or to the plugin's author."
+            if { ! zcompile "$first" } {
+                +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
+                +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
+            } else {
+                +zinit-message " {ok}OK{rst}."
             }
         }
         # Try to catch possible additional file
@@ -852,14 +852,21 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     if [[ -n "${ICE[compile]}" ]]; then
         eval "list=( \$plugin_dir/${~ICE[compile]}(N) )"
         if [[ ${#list} -eq 0 ]] {
-            builtin print "Warning: ice compile'' didn't match any files."
+            +zinit-message "{warn}Warning:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
         } else {
-            for first in "${list[@]}"; do
-                zcompile "$first"
+            integer retval
+            for first in $list; do
+                zcompile "$first"; retval+=$?
             done
             builtin print -rl -- ${list[@]#$plugin_dir/} >! /tmp/zinit.compiled.$$.lst
-            +zinit-message  "The additional {obj}${#list}{rst} compiled files" \
-                "are listed in the {file}\$ADD_COMPILED%f%b array."
+            if (( retval )) {
+                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
+                    "are listed in the {file}\$ADD_COMPILED%f%b array (operation exit" \
+                    "code: {ehi}$retval{rst})."
+            } else {
+                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
+                    "are listed in the {file}\$ADD_COMPILED%f%b array."
+            }
         }
     fi
 
