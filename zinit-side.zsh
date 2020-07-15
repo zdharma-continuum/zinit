@@ -377,18 +377,18 @@
 .zinit-countdown() {
     (( !${+ZINIT_ICE[countdown]} )) && return 0
 
-    emulate -L zsh
-    trap "print \"${ZINIT[col-pname]}ABORTING, the ice not ran${ZINIT[col-rst]}\"; return 1" INT
+    emulate -L zsh -o extendedglob
+    trap "+zinit-message \"{ehi}ABORTING, the ice {ice}$ice{ehi} not ran{rst}\"; return 1" INT
     local count=5 tpe="$1" ice
     ice="${ZINIT_ICE[$tpe]}"
     [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ZINIT_ICE[atclone]}"
-    ice="$tpe:$ice"
-    builtin print -nr "${ZINIT[col-pname]}Running ${ZINIT[col-bold]}${ZINIT[col-uname]}$ice${ZINIT[col-rst]}${ZINIT[col-pname]} ice in...${ZINIT[col-rst]} "
+    ice="{bold}{ice}$tpe{ehi}:{rst}{meta2}${ice//(#b)(\{[a-z0-9]##\})/\\$match[1]}"
+    +zinit-message -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
     while (( -- count + 1 )) {
-        builtin print -nr -- "${ZINIT[col-bold]}${ZINIT[col-error]}"$(( count + 1 ))..."${ZINIT[col-rst]}"
+        +zinit-message -n -- "{bold}{error}"$(( count + 1 ))"{dots}{rst}"
         sleep 1
     }
-    builtin print -r -- "${ZINIT[col-bold]}${ZINIT[col-error]}0 <running now>...${ZINIT[col-rst]}"
+    +zinit-message -r -- "{bold}{error}0 <running now>{dots}{rst}"
     return 0
 }
 # ]]]
