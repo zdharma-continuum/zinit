@@ -850,7 +850,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     }
 
     if [[ -n "${ICE[compile]}" ]]; then
-        eval "list=( \$plugin_dir/${~ICE[compile]}(N) )"
+        local -a pats
+        pats=( ${(s.;.)ICE[compile]} )
+        local pat
+        list=()
+        for pat ( $pats ) {
+            eval "list+=( \$plugin_dir/$~pat(N) )"
+        }
         if [[ ${#list} -eq 0 ]] {
             +zinit-message "{warn}Warning:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
         } else {
