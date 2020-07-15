@@ -1031,6 +1031,7 @@ builtin setopt noaliases
             .zinit-any-to-user-plugin "$id_as"
             local_dir=${${${(M)reply[-2]:#%}:+${reply[2]}}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}
             [[ $id_as == _local/* && -d $local_dir && ! -d $local_dir/._zinit ]] && command mkdir -p "$local_dir"/._zinit
+            dirname=""
         }
         [[ -e $local_dir/${dirname:+$dirname/}._zinit || \
             -e $local_dir/${dirname:+$dirname/}._zplugin ]] && exists=1
