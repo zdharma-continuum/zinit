@@ -2100,7 +2100,7 @@ zinit() {
 
     integer ___retval=0 ___correct=0
     local -a match mbegin mend
-    local MATCH ___q="\`" ___q2="'"; integer MBEGIN MEND IFS=$' \t\n\0'
+    local MATCH ___q="\`" ___q2="'" IFS=$' \t\n\0'; integer MBEGIN MEND
 
     # An annex's subcommand might use the reply vars
     match=( ${ZINIT_EXTS[(I)z-annex subcommand:$1]} )
