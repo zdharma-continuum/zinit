@@ -52,6 +52,45 @@
 <details>
   <summary>Here are the new features and updates added to Zinit in the last 90 days.</summary>
 
+* 16-07-2020
+  - A new ice `null` which works exactly the same as `as"null"`, i.e.: it makes
+    the plugin a *null* one ↔ without any scripts sourced (by default, unless
+    `src''` or `multisrc''` are given) and compiled, and without any completions
+    searched / installed. Example use case:
+
+        zi null sbin"vims" for MilesCranmer/vim-stream
+    
+    instead of:
+    
+        zi as"null" sbin"vims" for MilesCranmer/vim-stream
+    .
+
+  - A **new annex** [**Unscope**](https://github.com/zinit-zsh/z-a-unscope) :)
+    It's goal is: to allow the usage of the unscoped — i.e.: given without any
+    GitHub user name — plugin IDs. Basically it allows to specify **zinit load 
+    zsh-syntax-highlighting** instead of **zinit load
+    zsh-users/zsh-syntax-highlighting**. It'll automatically send a request to
+    the GitHub API searching for the best candidate (max. # of stars and of
+    forks). It also has an embedded, static database of short *nicknames* for
+    some of the plugins (requests for addition are welcomed!), e.g.:
+    **vi-reg** for **zsh-vi-more/evil-registers**.
+
+  - A fresh and elastic hook-based architecture has been implemented and
+    deployed — the code is much cleaner and the development will be easier,
+    i.e.: quicker :).
+
+  - Bunch of small improvements: **a)** `silent''` mutes the `Snippet not loaded`
+    error message, **b)** much shorter lag/pause after a plugin installation or
+    update, **c)** the 256 color palette is being now used for plugin IDs, if
+    available, **d)** if possible (a UTF-8 locale is needed to be set), the Unicode
+    three-dots `…` will be used instead of `...` in the messages, **e)**
+    nicer snippet IDs in the installation and update messages, **f)** the
+    annexes can be now loaded in any order without influencing their operation
+    in any way (there have been some issues with
+    [Patch-Dl](https://github.com/zinit-zsh/z-a-patch-dl) and
+    [As-Monitor](https://github.com/zinit-zsh/z-a-as-monitor) annexes), **g)**
+    `compile''` can obtain multiple patterns separated via semicolon (`;`).
+
 * 25-06-2020
   - Ability to call the autoloaded function at the moment of loading it by
     `autoload'#fun'`, i.e.: by prefixing it with the hash sigh (`#`). So that
@@ -70,9 +109,9 @@
 
 * 20-06-2020
   - The [Bin-Gem-Node](https://github.com/zinit-zsh/z-a-bin-gem-node) annex now
-    has an explicit Cygwin support – it creates additional, **extra shim files**
-    – Windows batch scripts that allow to run the shielded applications from
-    e.g.: Windows run dialog – if the `~/.zinit/polaris/bin` directory is being
+    has an explicit Cygwin support — it creates additional, **extra shim files**
+    — Windows batch scripts that allow to run the shielded applications from
+    e.g.: Windows run dialog — if the `~/.zinit/polaris/bin` directory is being
     added to the Windows `PATH` environment variable, for example (it is a good
     idea to do so, IMHO). The Windows shims (*shims* are command-wrapper scripts
     that are in general created with the `sbin''` ice of the annex) have the
@@ -84,7 +123,7 @@
     zinit pack=bgn for firefox
     ```
 
-  - All cURL progress bars are now guaranteed to be single line – this is being
+  - All cURL progress bars are now guaranteed to be single line — this is being
     done by a wrapper script.
 
   - I thought that I'll share an interesting function-type that I'm using within
@@ -125,7 +164,7 @@
     The function is available in the `atinit''`, `atload''`, etc. hooks.
 
 * 17-06-2020
-  - `ziextract` and `extract''` now support Windows installers – currently the
+  - `ziextract` and `extract''` now support Windows installers — currently the
     installer of Firefox. Let me know if any of your installers doesn't work.
     You can test the installer with the Firefox Developer Edition Zinit
     [package](https://github.com/Zsh-Packages/firefox-dev):
@@ -142,7 +181,7 @@
     directory structure: `Pulumi/bin/{pulumi,pulumi2}`, then after `ziextract
     --move2 --auto` there will be the two files moved to the top level dir:
     `./{pulumi,pulumi2}`. To obtain the same effect using the `extract''` ice,
-    pass two exclamation marks, i.e.: `extract'!!'`. A real-world example – it
+    pass two exclamation marks, i.e.: `extract'!!'`. A real-world example — it
     uses [z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) and
     [z-a-bin-gem-node](https://github.com/zinit-zsh/z-a-bin-gem-node) annexes to
     download a Zip package that has the files inside two-level nested directory
@@ -156,7 +195,7 @@
     ```
 
 * 12-06-2020
-  - New options to `update`: `-s/--snippets` and `-l/--plugins` – they're
+  - New options to `update`: `-s/--snippets` and `-l/--plugins` — they're
     limiting the `update --all` to only plugins or snippets. Example:
 
     ```zsh
@@ -170,14 +209,14 @@
     a function from a file `func-A` as a function `func-B` via: `autoload'func-A
     -> func-B; …'`.
   - Also, an alternate autoloading method - via: `eval "func-file()
-    { $(<func-file); }"` – has been exposed – in order to use it, precede the
+    { $(<func-file); }"` — has been exposed — in order to use it, precede the
     ice contents with an exclamation mark, i.e.: `autoload'!func-file'`. The
     rename mode uses this method by default.
 
 * 12-05-2020
-  - A new feature – ability to substitute `stringA` → `stringB` in plugin source
+  - A new feature — ability to substitute `stringA` → `stringB` in plugin source
     body before executing by `subst'A -> B'`. Works also for any nested `source`
-    commands. Example – renaming the `dl''` ice into a `dload''` ice in the
+    commands. Example — renaming the `dl''` ice into a `dload''` ice in the
     [Patch-Dl](https://github.com/zinit-zsh/z-a-patch-dl) annex:
 
     ```zsh
@@ -185,7 +224,7 @@
     ```
 
   - A new ice `autoload''` which invokes `autoload -Uz …` on the given
-    files/functions. Example – a plugin that converts `cd ...` into
+    files/functions. Example — a plugin that converts `cd ...` into
     `cd ../..` that lacks proper setup in any `*.plugin.zsh` file:
 
     ```zsh
@@ -195,7 +234,7 @@
 
 * 09-05-2020
   - The `from'gh-r'` downloading of the binary files from GitHub releases can
-    now download **multiple files** – if you specify multiple `bpick''` ices
+    now download **multiple files** — if you specify multiple `bpick''` ices
     **or** separate the patterns with a semicolon (**`;`**). Example:
 
     ```zsh
@@ -205,7 +244,7 @@
 
   - A new ice `opts''` which takes options to **sticky-set** during sourcing of
     the plugin. This means that thee options will be also set for all of the
-    *functions* that the plugin defines – **during their execution**
+    *functions* that the plugin defines — **during their execution**
     (<i>**only**</i>). The option list is space separated. Example:
 
     ```zsh
@@ -230,8 +269,8 @@
     ```
 
 * 07-05-2020
-  - A new `from''` value is available – `cygwin`. It'll cause to download
-    a package from the Cygwin repository – from a random mirror, and then
+  - A new `from''` value is available — `cygwin`. It'll cause to download
+    a package from the Cygwin repository — from a random mirror, and then
     unpack it. Example use:
 
     ```zsh
@@ -273,13 +312,13 @@
     ).
 
 * 12-04-2020
-  - A new document on the Wiki is available – about the [**bindmap''
+  - A new document on the Wiki is available — about the [**bindmap''
     ice**](https://zdharma.org/zinit/wiki/Bindkeys/).
   - If `id-as''` will have no value, then it'll work as
     [**id-as'auto'**](https://zdharma.org/zinit/wiki/id-as/#id-asauto).
 
 * 07-04-2020
-  - A new feature – `param''` ice that defines params for the time of loading of
+  - A new feature — `param''` ice that defines params for the time of loading of
     the plugin or snippet. E.g.:
 
     ```zsh
@@ -289,7 +328,7 @@
     zinit param'myparam; myparam2' for zdharma/null
     ```
 
-  - The `atinit''` ice can now be investigated – if it'll be prepended with `!`,
+  - The `atinit''` ice can now be investigated — if it'll be prepended with `!`,
     i.e.: `atinit'!…'`.
 
 * 01-04-2020
@@ -299,7 +338,7 @@
     that installs Subversion with use of Zinit.
 
 * 27-02-2020
-  - An **important fix** has been pushed – due to a bug Turbo has been disabled
+  - An **important fix** has been pushed — due to a bug Turbo has been disabled
     for non-for syntax invocations of Zinit. Issue `zinit self-update` to
     resolve the mistake.
     * If you haven't updated yesterday, please restrain from running `zinit
@@ -317,7 +356,7 @@
 * 26-02-2020
   - If the loaded object (plugin or snippet) is not already installed when
     loading, then Turbo gets automatically disabled for this single loading of
-    the object – it'll be installed before prompt, not after it and also
+    the object — it'll be installed before prompt, not after it and also
     immediately (without waiting the number of seconds given to `wait''`), i.e.:
     during the normal processing of `zshrc`, which intuitively is the expected
     behavior.
@@ -330,7 +369,7 @@
 
 * 20-02-2020
 
-  - A new feature - **parallel updates** of all plugins and snippets – Zinit runs
+  - A new feature - **parallel updates** of all plugins and snippets — Zinit runs
     series of spawned concurrent-job groups of size 15 to speed up the update process.
     To activate, pass `-p`/`--parallel` to `update`, e.g.:
 
@@ -344,7 +383,7 @@
     See demos: [asciicast1](https://asciinema.org/a/303174),
     [asciicast2](https://asciinema.org/a/303184).
 
-  - A new article is available on the Wiki – about the
+  - A new article is available on the Wiki — about the
     [**`extract`**](http://zdharma.org/zinit/wiki/extract-Ice/) ice.
 
 * 19-02-2020
@@ -354,7 +393,7 @@
 
 * 09-02-2020
 
-  Note that the ice `extract` can handle files with spaces – to encode such a name use
+  Note that the ice `extract` can handle files with spaces — to encode such a name use
   the non-breaking space (Right Alt + Space) in place of the in-filename spaces :).
 
 * 07-02-2020
@@ -362,12 +401,12 @@
     * all files with recognized archive extensions like `zip`, `tar.gz`, etc.,
     * if no such files will be found, then: all files with recognized archive
       **types** (examined with the `file` command),
-    * OR, IF GIVEN – the given files, e.g.: `extract'file1.zip file2.tgz'`,
+    * OR, IF GIVEN — the given files, e.g.: `extract'file1.zip file2.tgz'`,
     * the automatic searching for archives ignores files in sub-sub-directories and
       located deeper,
-  - It has a `!` flag – i.e.: `extract'!…'` – it'll cause the files to be moved
+  - It has a `!` flag — i.e.: `extract'!…'` — it'll cause the files to be moved
     one directory-level up upon unpacking,
-  - and also a `-` flag – i.e.: `extract'-…'` – it'll prevent removal of the archive
+  - and also a `-` flag — i.e.: `extract'-…'` — it'll prevent removal of the archive
     after unpacking; useful to allow comparing timestamps with the server in case of
     snippet-downloaded file,
   - the flags can be combined, e.g.: `extract'!-'`,
@@ -391,7 +430,7 @@
 
 * 15-01-2020
   - There's a new function, `ziextract`, which unpacks the given file. It supports many
-    formats (notably also `dmg` images) – if there's a format that's unsupported please
+    formats (notably also `dmg` images) — if there's a format that's unsupported please
     don't hesitate to [make a
     request](https://github.com/zdharma/zinit/issues/new?template=feature_request.md)
     for it to be added. A few facts:
@@ -495,13 +534,13 @@
     can be found on the [Zinit Wiki](http://zdharma.org/zinit/wiki/For-Syntax/).
 
 * 03-11-2019
-  - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
+  - A new value for the `as''` ice — `null`. Specifying `as"null"` is like specifying
     `pick"/dev/null" nocompletions`, i.e.: it disables the sourcing of the default
     script file of a plugin or snippet and also disables the installation of
     completions.
 
 * 30-10-2019
-  - A new ice `trigger-load''` – create a function that loads given plugin/snippet,
+  - A new ice `trigger-load''` — create a function that loads given plugin/snippet,
     with an option (to use it, precede the ice content with `!`) to automatically
     forward the call afterwards. Example use:
 
@@ -514,27 +553,27 @@
     ```
 
 * 22-10-2019
-  - A new ice `countdown` – causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0
+  - A new ice `countdown` — causes an interruptable (by Ctrl-C) countdown 5…4…3…2…1…0
     to be displayed before running the `atclone''`, `atpull''` and `make` ices.
 
 * 21-10-2019
-  - The `times` command has a new option `-m` – it shows the **moments** of the plugin
-    load times – i.e.: how late after loading Zinit a plugin has been loaded.
+  - The `times` command has a new option `-m` — it shows the **moments** of the plugin
+    load times — i.e.: how late after loading Zinit a plugin has been loaded.
 
 * 20-10-2019
   - The `zinit` completion now completes also snippets! The command `snippet`, but
     also `delete`, `recall`, `edit`, `cd`, etc. all receive such completing.
-  - The `ice` subcommand can now be skipped – just pass in the ices, e.g.:
+  - The `ice` subcommand can now be skipped — just pass in the ices, e.g.:
     ```zsh
     zinit atload"zicompinit; zicdreplay" blockf
     zinit light zsh-users/zsh-completions
     ```
   - The `compile` command is able to compile snippets.
-  - The plugins that add their subdirectories into `$fpath` can be now `blockf`-ed –
+  - The plugins that add their subdirectories into `$fpath` can be now `blockf`-ed —
     the functions located in the dirs will be correctly auto-loaded.
 
 * 12-10-2019
-  - Special value for the `id-as''` ice – `auto`. It sets the plugin/snippet ID
+  - Special value for the `id-as''` ice — `auto`. It sets the plugin/snippet ID
     automatically to the last component of its spec, e.g.:
 
     ```zsh
@@ -555,7 +594,7 @@
 
 * 11-09-2019
   - New ice-mods `sh`,`bash`,`ksh`,`csh` that load plugins (and snippets) with the
-    **sticky emulation** feature of Zsh – all functions defined within the plugin will
+    **sticky emulation** feature of Zsh — all functions defined within the plugin will
     automatically switch to the desired emulation mode before executing and switch back
     thereafter. In other words it is now possible to load e.g. bash plugins with
     Zinit, provided that the emulation level done by Zsh is sufficient, e.g.:
@@ -573,7 +612,7 @@
 * 10-09-2019
   - A new ice-mod `reset''` that ivokes `git reset --hard` (or the provided command)
     before `git pull` and `atpull''` ice. It can be used it to implement altering (i.e.
-    patching) of the plugin's files inside the `atpull''` ice – `git` will report no
+    patching) of the plugin's files inside the `atpull''` ice — `git` will report no
     conflicts when doing `pull`, and the changes can be then again introduced by the
     `atpull''` ice.
   - Three new Zinit annexes (i.e.
@@ -646,7 +685,7 @@ install everything from GitHub and other sites. Its characteristics are:
    page](https://zdharma.org/zinit/wiki/Zinit-Packages/) for an article about
    the feature.
 
-7. Also, specialized Zinit extensions – called **annexes** – allow to extend the
+7. Also, specialized Zinit extensions — called **annexes** — allow to extend the
    plugin manager with new commands, URL-preprocessors (used by e.g.:
    [z-a-as-monitor](https://github.com/zinit-zsh/z-a-as-monitor) annex),
    post-install and post-update hooks and much more. See the
