@@ -67,12 +67,12 @@
 
   - A **new annex** [**Unscope**](https://github.com/zinit-zsh/z-a-unscope) :)
     It's goal is: to allow the usage of the unscoped — i.e.: given without any
-    GitHub user name — plugin IDs. Basically it allows to specify **zinit load 
+    GitHub user name — plugin IDs. Basically it allows to specify, e.g.: **zinit load 
     _zsh-syntax-highlighting_** instead of **zinit load
     _zsh-users/zsh-syntax-highlighting_**. It'll automatically send a request to
     the GitHub API searching for the best candidate (max. # of stars and of
     forks). It also has an embedded, static database of short *nicknames* for
-    some of the plugins out there (requests for addition are welcomed!), e.g.:
+    some of the plugins out there (requests for addition are welcomed), e.g.:
     **vi-reg** for **zsh-vi-more/evil-registers**.
 
   - A fresh and elastic hook-based architecture has been implemented and
