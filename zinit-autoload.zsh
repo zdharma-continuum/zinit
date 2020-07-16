@@ -2632,7 +2632,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     .zinit-get-path "$1" "$2" && {
         if [[ -e $REPLY ]]; then
-            builtin cd $REPLY
+            builtin pushd $REPLY
         else
             +zinit-message "No such plugin or snippet"
             return 1
