@@ -54,7 +54,7 @@
 
 * 16-07-2020
   - A new ice `null` which works exactly the same as `as"null"`, i.e.: it makes
-    the plugin a *null* one ↔ without any scripts sourced (by default, unless
+    the plugin a *null*-one ↔ without any scripts sourced (by default, unless
     `src''` or `multisrc''` are given) and compiled, and without any completions
     searched / installed. Example use case:
 
@@ -68,18 +68,18 @@
   - A **new annex** [**Unscope**](https://github.com/zinit-zsh/z-a-unscope) :)
     It's goal is: to allow the usage of the unscoped — i.e.: given without any
     GitHub user name — plugin IDs. Basically it allows to specify **zinit load 
-    zsh-syntax-highlighting** instead of **zinit load
-    zsh-users/zsh-syntax-highlighting**. It'll automatically send a request to
+    _zsh-syntax-highlighting_** instead of **zinit load
+    _zsh-users/zsh-syntax-highlighting_**. It'll automatically send a request to
     the GitHub API searching for the best candidate (max. # of stars and of
     forks). It also has an embedded, static database of short *nicknames* for
-    some of the plugins (requests for addition are welcomed!), e.g.:
+    some of the plugins out there (requests for addition are welcomed!), e.g.:
     **vi-reg** for **zsh-vi-more/evil-registers**.
 
   - A fresh and elastic hook-based architecture has been implemented and
     deployed — the code is much cleaner and the development will be easier,
     i.e.: quicker :).
 
-  - Bunch of small improvements: **a)** `silent''` mutes the `Snippet not loaded`
+  - Set of small improvements: **a)** `silent''` mutes the `Snippet not loaded`
     error message, **b)** much shorter lag/pause after a plugin installation or
     update, **c)** the 256 color palette is being now used for plugin IDs, if
     available, **d)** if possible (a UTF-8 locale is needed to be set), the Unicode
@@ -89,7 +89,7 @@
     in any way (there have been some issues with
     [Patch-Dl](https://github.com/zinit-zsh/z-a-patch-dl) and
     [As-Monitor](https://github.com/zinit-zsh/z-a-as-monitor) annexes), **g)**
-    `compile''` can obtain multiple patterns separated via semicolon (`;`).
+    `compile''` can now obtain multiple patterns separated via semicolon (`;`).
 
 * 25-06-2020
   - Ability to call the autoloaded function at the moment of loading it by
