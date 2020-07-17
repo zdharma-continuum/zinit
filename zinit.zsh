@@ -2233,6 +2233,26 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             # An error is actually only an odd return code
                             ___retval+=$(( ___retval2 & 1 ? ___retval2 : 0 ))
                             (( $# )) && shift
+
+                            # Override $@?
+                            if (( ___retval2 & 2 )) {
+                                local -a ___args
+                                ___args=( "${(Q@)${(@z)ZINIT[annex-before-load:new-@]}}" )
+                                set -- "${___args[@]}"
+                            } 
+
+                            # Override $___ices?
+                            if (( ___retval2 & 4 )) {
+                                local -a ___new_ices
+                                ___new_ices=( "${(Q@)${(@z)ZINIT[annex-before-load:new-global-ices]}}" )
+                                (( 0 == ${#___new_ices} % 2 )) && \
+                                    ___ices=( "${___new_ices[@]}" ) || \
+                                        { (( !ZINIT[MUTE_WARNINGS] )) && \
+                                            +zinit-message "{warn}Warning:{msg} Bad new-ices returned" \
+                                              "from the annex{ehi}:{rst} {meta}${___arr[3]}{msg}.{rst}"
+                                            ___ices=(  )
+                                        }
+                            } 
                             continue 2
                         }
                     done
