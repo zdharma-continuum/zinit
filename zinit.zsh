@@ -2187,6 +2187,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
         integer ___had_wait
         local ___id ___key
         local -a ___arr
+        ZINIT[annex-exposed-processed-IDs]=
         if (( $# )) {
             local -a ___ices
             ___ices=( "${(kv)ZINIT_ICES[@]}" )
@@ -2202,6 +2203,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     integer ___msgs=${+ZINIT_ICE[debug]}
                     (( ___msgs )) && +zinit-message "{pre}zinit-main:{dbg} Processing {pname}$1{dbg}{dots}{rst}"
 
+                    # Delete up to the final space to get the previously-processed ID.
+                    ZINIT[annex-exposed-processed-IDs]+="${___id:+ $___id}"
                     ___id="$1"
 
                     if (( ${+ZINIT_ICE[pack]} )); then
