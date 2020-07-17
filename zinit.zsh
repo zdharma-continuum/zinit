@@ -2481,17 +2481,6 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    else
                        local ___key ___id="${2%%(///|//|/)}${3:+/}${3%%(///|//|/)}"
                        [[ -z ${___id//[[:space:]]/} ]] && ___id="${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}"
-                       local -a ___arr
-                       reply=(
-                           ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-pre <->]}
-                           ${(on)ZINIT_EXTS[(I)z-annex hook:before-load-<-> <->]}
-                           ${(on)ZINIT_EXTS2[(I)zinit hook:before-load-post <->]}
-                       )
-                       for ___key in "${reply[@]}"; do
-                           ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-                           "${___arr[5]}" "" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" update || \
-                               return 0
-                       done
                        .zinit-update-or-status update "$___id" ""; ___retval=$?
                    fi
                    ;;
