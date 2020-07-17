@@ -747,7 +747,12 @@ builtin setopt noaliases
 # FUNCTION: pmodload [[[
 # {function:pmodload} Compatibility with Prezto. Calls can be recursive.
 (( ${+functions[pmodload]} )) || pmodload() {
+    local -A ices
+    ices=( "${(kv)ZINIT_ICE[@]}" teleid '' )
+    local -A ZINIT_ICE
+    ZINIT_ICE=( "${(kv)ices[@]}" )
     while (( $# )); do
+        ZINIT_ICE[teleid]="PZT::modules/$1${ZINIT_ICE[svn]-/init.zsh}"
         if zstyle -t ":prezto:module:$1" loaded 'yes' 'no'; then
             shift
             continue
@@ -1199,9 +1204,14 @@ builtin setopt noaliases
     local ___mode="$3" ___rst=0 ___retval=0 ___key
     .zinit-any-to-user-plugin "$1" "$2"
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ZINIT_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
-    ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-$___user${${___user:#%}:+/}$___plugin}"
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
     local ___pdir_orig="$___pdir_path"
+    if [[ -n ${ZINIT_ICE[teleid]} ]] {
+        .zinit-any-to-user-plugin "${ZINIT_ICE[teleid]}"
+        ___user="${reply[-2]}" ___plugin="${reply[-1]}"
+    } else {
+        ZINIT_ICE[teleid]="$___user${${___user:#%}:+/}$___plugin"
+    }
 
     local ___m_bkp="${functions[m]}"
     functions[m]="${functions[+zinit-message]}"
@@ -1455,6 +1465,7 @@ builtin setopt noaliases
     local -a opts
     zparseopts -E -D -a opts f -command || { +zinit-message "{error}Error:{rst} Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
+    [[ -n ${ZINIT_ICE[teleid]} ]] && url="${ZINIT_ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
     set --
@@ -1474,7 +1485,7 @@ builtin setopt noaliases
     }
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
-    ZINIT_ICE[teleid]="$url"
+    ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-$url}"
     [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 ]] && \
         ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
 
