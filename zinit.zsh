@@ -2249,8 +2249,10 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                     ___ices=( "${___new_ices[@]}" ) || \
                                         { (( !ZINIT[MUTE_WARNINGS] )) && \
                                             +zinit-message "{warn}Warning:{msg} Bad new-ices returned" \
-                                              "from the annex{ehi}:{rst} {meta}${___arr[3]}{msg}.{rst}"
-                                            ___ices=(  )
+                                                "from the annex{ehi}:{rst} {meta}${___arr[3]}{msg}," \
+                                                "please file an issue report at:{url}" \
+                                    "https://github.com/zinit-zsh/${___arr[3]}/issues/new{msg}.{rst}"
+                                            ___ices=(  ) ___retval+=7
                                         }
                             } 
                             continue 2
