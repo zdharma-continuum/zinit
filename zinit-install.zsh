@@ -837,7 +837,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         first=${reply[-1]}
         local fname=${first#$pdir_path/}
 
-        +zinit-message -n "{note}Note:{rst} Compiling {info}$fname{rst}{dots}"
+        +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {info}$fname{rst}{dots}"
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
             if { ! zcompile "$first" } {
                 +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
