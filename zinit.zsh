@@ -219,16 +219,18 @@ builtin setopt noaliases
 :zinit-shade-autoload () {
     emulate -LR zsh
     builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
-    local -a opts opts2 custom
+    local -a opts opts2 custom reply
     local func
 
     zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} I+=opts2 S+:=custom
 
     set -- ${@:#--}
 
-    [[ $ZINIT[CUR_USR] = % ]] && \
-        local PLUGIN_DIR="$ZINIT[CUR_PLUGIN]" || \
-        local PLUGIN_DIR="${ZINIT[PLUGINS_DIR]}/${${ZINIT[CUR_USR]}:+${ZINIT[CUR_USR]}---}${ZINIT[CUR_PLUGIN]//\//---}"
+    # Process the id-as''/teleid'' to get the plugin dir.
+    .zinit-any-to-user-plugin $ZINIT[CUR_USPL2]
+    [[ $reply[1] = % ]] && \
+        local PLUGIN_DIR="$reply[2]" || \
+        local PLUGIN_DIR="$ZINIT[PLUGINS_DIR]/${reply[1]:+$reply[1]---}${reply[2]//\//---}"
 
     if (( ${+opts[(r)-X]} )); then
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
