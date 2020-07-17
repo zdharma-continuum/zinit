@@ -2352,7 +2352,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
             }
             return 2
        } elif (( ! $# )) {
-           return 0
+           return ___retval
        }
     }
 
