@@ -146,6 +146,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-cmd  $'\e[38;5;90m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num   $'\e[38;5;207m' col-term  $'\e[38;5;34m'
         col-warn $'\e[38;5;172m' col-apo   $'\e[38;5;220m' col-ok    $'\e[38;5;220m'
+        col-dbg  $'\e[38;5;238m'
         col-dots ${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
@@ -2196,6 +2197,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 if [[ -n $1 ]] {
                     ZINIT_ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICES=()
+                    integer ___msgs=${+ZINIT_ICE[debug]}
+                    (( ___msgs )) && +zinit-message "{pre}zinit-main:{dbg} Processing {pname}$1{dbg}{dots}{rst}"
 
                     ___id="$1"
 
