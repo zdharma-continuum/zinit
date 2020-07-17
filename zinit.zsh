@@ -2235,7 +2235,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         if (( ___retval2 )) {
                             # An error is actually only an odd return code
                             ___retval+=$(( ___retval2 & 1 ? ___retval2 : 0 ))
-                            (( $# )) && shift
+                            (( ___retval2 & 1 && $# )) && shift
 
                             # Override $@?
                             if (( ___retval2 & 2 )) {
