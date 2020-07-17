@@ -32,13 +32,6 @@
     builtin eval "$___data"
 }
 # ]]]
-# FUNCTION: .zinit-setup-params [[[
-.zinit-setup-params() {
-    emulate -LR zsh -o extendedglob
-    reply=( ${(@)${(@s.;.)ZINIT_ICE[param]}/(#m)*/${${MATCH%%(-\>|→|=\>)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→|=\>)}:+\=${${MATCH#*(-\>|→|=\>)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
-    (( ${#reply} )) && return 0 || return 1
-}
-# ]]]
 # FUNCTION: .zinit-service [[[
 # Handles given service, i.e. obtains lock, runs it, or waits if no lock
 #

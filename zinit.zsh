@@ -1265,7 +1265,6 @@ builtin setopt noaliases
 
     # Set up param'' objects (parameters)
     if [[ -n ${ZINIT_ICE[param]} ]] {
-        (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
         .zinit-setup-params && local ${(Q)reply[@]}
     }
 
@@ -1501,7 +1500,6 @@ builtin setopt noaliases
 
     # Set up param'' objects (parameters)
     if [[ -n ${ZINIT_ICE[param]} ]] {
-        (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
         .zinit-setup-params && local ${(Q)reply[@]}
     }
 
@@ -1879,6 +1877,13 @@ builtin setopt noaliases
     [[ -n ${ZINIT_ICE[pick]} ]] && ZINIT_ICE[pick]="${ZINIT_ICE[pick]//\$ZPFX/${ZPFX%/}}"
 
     return 0
+}
+# ]]]
+# FUNCTION: .zinit-setup-params [[[
+.zinit-setup-params() {
+    emulate -LR zsh -o extendedglob
+    reply=( ${(@)${(@s.;.)ZINIT_ICE[param]}/(#m)*/${${MATCH%%(-\>|→|=\>)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→|=\>)}:+\=${${MATCH#*(-\>|→|=\>)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
+    (( ${#reply} )) && return 0 || return 1
 }
 # ]]]
 
