@@ -2104,7 +2104,7 @@ zinit() {
     ZINIT_ICE=( "${(kv)ZINIT_ICES[@]}" )
     ZINIT_ICES=()
 
-    integer ___retval=0 ___correct=0
+    integer ___retval ___retval2 ___correct
     local -a match mbegin mend
     local MATCH ___q="\`" ___q2="'" IFS=$' \t\n\0'; integer MBEGIN MEND
 
@@ -2168,9 +2168,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             }
         } else {
             .zinit-ice "$@"
-            integer ___retval=$?
-            local ___last_ice=${@[___retval]}
-            shift $___retval
+            ___retval2=$?
+            local ___last_ice=${@[___retval2]}
+            shift ___retval2
             if [[ $# -gt 0 && $1 != for ]] {
                 +zinit-message "{error}Unknown command or ice: ${___q}{obj}${1}{error}'" \
                     "(use ${___q}{info2}help{error}' to get usage information).{rst}"
@@ -2181,7 +2181,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 shift
             }
         }
-        integer ___retval ___had_wait
+        integer ___had_wait
         local ___id ___key
         local -a ___arr
         if (( $# )) {
@@ -2190,9 +2190,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             ZINIT_ICES=()
             while (( $# )) {
                 .zinit-ice "$@"
-                integer ___retval=$?
-                local ___last_ice=${@[___retval]}
-                shift $___retval
+                ___retval2=$?
+                local ___last_ice=${@[___retval2]}
+                shift ___retval2
                 if [[ -n $1 ]] {
                     ZINIT_ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICES=()
@@ -2225,8 +2225,13 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     )
                     for ___key in "${reply[@]}"; do
                         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" "${${___key##(zinit|z-annex) hook:}%% <->}" load || {
-                            ___retval+=$?
+                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" \
+                            "${(j: :)${(q)@}}" "${(j: :)${(qkv)___ices[@]}}" \
+                            "${${___key##(zinit|z-annex) hook:}%% <->}" load
+                        ___retval2=$?
+                        if (( ___retval2 )) {
+                            # An error is actually only an odd return code
+                            ___retval+=$(( ___retval2 & 1 ? ___retval2 : 0 ))
                             (( $# )) && shift
                             continue 2
                         }
