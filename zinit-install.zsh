@@ -806,7 +806,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         ICE plugin_dir filename is_snippet || return 1
 
     if [[ ${ICE[pick]} != /dev/null && ${ZINIT_ICE[as]} != null && \
-        ${+ZINIT_ICE[null]} -eq 0 && ${ICE[as]} != command && \
+        ${+ZINIT_ICE[null]} -eq 0 && ${ICE[as]} != command && ${+ZINIT_ICE[binary]} -eq 0 && \
         ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! )
     ]] {
         if [[ -n ${ICE[pick]} ]]; then
@@ -1286,7 +1286,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # Remove leading whitespace and trailing /
     url=${${url#${url%%[! $'\t']*}}%/}
     ZINIT_ICE[teleid]=${ZINIT_ICE[teleid]:-$url}
-    [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 ]] && \
+    [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 || ${+ZINIT_ICE[binary]} -eq 1 ]] && \
         ZINIT_ICE[pick]=${ZINIT_ICE[pick]:-/dev/null}
 
     local local_dir dirname filename save_url=$url \
