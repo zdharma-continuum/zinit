@@ -2185,7 +2185,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             }
         }
         integer ___had_wait
-        local ___id ___key
+        local ___id ___ehid ___etid ___key
         local -a ___arr
         ZINIT[annex-exposed-processed-IDs]=
         if (( $# )) {
@@ -2205,22 +2205,34 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 
                     # Delete up to the final space to get the previously-processed ID.
                     ZINIT[annex-exposed-processed-IDs]+="${___id:+ $___id}"
-                    ___id="$1"
+
+                    # Strip the ID-qualifier (`@') and GitHub domain from the ID.
+                    ___id="${${1##(@|)(https://github.com/|)}%%(///|//|/)}"
+
+                    # Effective handle-ID – the label under which the object
+                    # will be identified / referred-to by Zinit.
+                    ___ehid="${ZINIT_ICE[id-as]:-$___id}"
+
+                    # Effective remote-ID (i.e.: URL, GitHub username/repo,
+                    # package name, etc.). teleid'' allows "overriding" of $1.
+                    # In case of a package using teleid'', the value here
+                    # is being took from the given ices, before disk-ices.
+                    ___etid="${ZINIT_ICE[teleid]:-$___id}"
 
                     if (( ${+ZINIT_ICE[pack]} )); then
                         ___had_wait=${+ZINIT_ICE[wait]}
-                        .zinit-load-ices "${${ZINIT_ICE[id-as]:-$___id}#@}"
+                        .zinit-load-ices "$___ehid"
                         # wait'' isn't possible via the disk-ices (for
                         # packages), only via the command's ice-spec
                         [[ $___had_wait -eq 0 ]] && unset 'ZINIT_ICE[wait]'
                     fi
 
-                    [[ ${ZINIT_ICE[id-as]} = (auto|) && ${+ZINIT_ICE[id-as]} == 1 ]] && ZINIT_ICE[id-as]="${___id:t}"
+                    [[ ${ZINIT_ICE[id-as]} = (auto|) && ${+ZINIT_ICE[id-as]} == 1 ]] && ZINIT_ICE[id-as]="${___etid:t}"
 
                     integer  ___is_snippet=${${(M)___is_snippet:#-1}:-0}
                     () {
                         setopt localoptions extendedglob
-                        if [[ $___is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || ${___id#@} = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
+                        if [[ $___is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || $___etid = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
                             ___is_snippet=1
                         }
                     } "$@"
@@ -2277,9 +2289,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                        ]] && (( !ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]
                     )) {
                         if (( ___is_snippet > 0 )) {
-                            .zinit-get-object-path snippet "${${___id#@}%%(///|//|/)}"
+                            .zinit-get-object-path snippet $___ehid
                         } else {
-                            .zinit-get-object-path plugin "${${${___id#@}#https://github.com/}%%(///|//|/)}"
+                            .zinit-get-object-path plugin $___ehid
                         }
                         (( $? )) && [[ ${zsh_eval_context[1]} = file ]] && { ___action_load=1; }
                         local ___object_path="$REPLY"
@@ -2303,7 +2315,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                     for a b ( ${(qqkv@)${(kv@)ZINIT_ICE[(I)^(trigger-load|wait|light-mode)]}} ) {
                                         ices+=( \"\$a\$b\" )
                                     }
-                                    zinit ice \${ices[@]}; zinit $___mode ${(qqq)${___id#@}}
+                                    zinit ice \${ices[@]}; zinit $___mode ${(qqq)___id}
                                     ${${(M)MATCH#!}:+# Forward the call
                                     eval ${MATCH#!} \$@}
                                 }"
@@ -2330,10 +2342,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             ZINIT_ICE[cloneonly]=""
                         }
                         if (( ___is_snippet > 0 )); then
-                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "${${___id#@}%%(///|//|/)}"
+                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "$___id"
                         else
-                            .zinit-load "${${${___id#@}#https://github.com/}%%(///|//|/)}" "" \
-                                "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
+                            .zinit-load "$___id" "" "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
                         fi
                         integer ___last_retval=$?
                         ___retval+=___last_retval
@@ -2345,15 +2356,14 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     if (( ___turbo && ZINIT[HAVE_SCHEDULER] && 0 == ___last_retval )) {
                         ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
                         if (( ___is_snippet > 0 )); then
-                            ZINIT_SICE[${${___id#@}%%(///|//|/)}]=
+                            ZINIT_SICE[$___ehid]=
                             .zinit-submit-turbo s${ZINIT_ICE[service]:+1} "" \
-                                "${${___id#@}%%(///|//|/)}" \
-                                "${(k)ICE_OPTS[*]}"
+                                "$___id" "${(k)ICE_OPTS[*]}"
                         else
-                            ZINIT_SICE[${${${___id#@}#https://github.com/}%%(///|//|/)}]=
+                            ZINIT_SICE[$___ehid]=
                             .zinit-submit-turbo p${ZINIT_ICE[service]:+1} \
                                 "${${${ZINIT_ICE[light-mode]+light}}:-load}" \
-                                "${${${___id#@}#https://github.com/}%%(///|//|/)}" ""
+                                "$___id" ""
                         fi
                         ___retval+=$?
                     }
