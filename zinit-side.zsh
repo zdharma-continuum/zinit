@@ -215,7 +215,7 @@
 
     local -A ___sice
     local -a ___tmp
-    ___tmp=( "${(z@)ZINIT_SICE[$___user${${___user:#(%|/)*}:+/}$___plugin]}" )
+    ___tmp=( "${(z@)ZINIT_SICE[${___user-$___URL}${${___user:#(%|/)*}:+/}$___plugin]}" )
     (( ${#___tmp[@]} > 1 && ${#___tmp[@]} % 2 == 0 )) && ___sice=( "${(Q)___tmp[@]}" )
 
     if [[ "${+___sice[svn]}" = "1" || -n "$___s_svn" ]]; then
@@ -295,10 +295,12 @@
     # Final decision, static ice vs. saved ice
     local -A ___MY_ICE
     for ___key in mode url is_release is_release{2..5} ${ice_order[@]}; do
+        # The second sum is: if the pack is *not* pack-nf, then depending
+        # on the disk availability, otherwise: no disk ice
         (( ${+___sice[$___key]} + ${${${___pack:#pack-nf*}:+${+___mdata[$___key]}}:-0} )) && ___MY_ICE[$___key]="${___sice[$___key]-${___mdata[$___key]}}"
     done
     # One more round for the special case – update, which ALWAYS
-    # needs the tleid from the disk or static ice
+    # needs the teleid from the disk or static ice
     ___key=teleid; [[ "$___pack" = pack-nftid ]] && {
         (( ${+___sice[$___key]} + ${+___mdata[$___key]} )) && ___MY_ICE[$___key]="${___sice[$___key]-${___mdata[$___key]}}"
     }

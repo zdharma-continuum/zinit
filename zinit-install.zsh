@@ -1031,6 +1031,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     # local file is out of date.
 
                     local secs=$(( EPOCHSECONDS - REPLY ))
+                    # Guard so that it's positive
+                    (( $secs >= 0 )) || secs=0
                     integer skip_dl
                     local -a matched
                     matched=( $local_dir/$dirname/$filename(DNms-$secs) )
