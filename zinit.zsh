@@ -748,7 +748,7 @@ builtin setopt noaliases
 # {function:pmodload} Compatibility with Prezto. Calls can be recursive.
 (( ${+functions[pmodload]} )) || pmodload() {
     local -A ices
-    ices=( "${(kv)ZINIT_ICE[@]}" teleid '' )
+    (( ${+ZINIT_ICE} )) && ices=( "${(kv)ZINIT_ICE[@]}" teleid '' )
     local -A ZINIT_ICE
     ZINIT_ICE=( "${(kv)ices[@]}" )
     while (( $# )); do
