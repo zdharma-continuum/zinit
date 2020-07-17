@@ -1009,7 +1009,7 @@ builtin setopt noaliases
     ZINIT[OPTIONS_BEFORE__$uspl2]=    ZINIT[OPTIONS_AFTER__$uspl2]=
     ZINIT[FPATH__$uspl2]=
 
-    return $ret
+    return ret
 } # ]]]
 # FUNCTION: .zinit-get-object-path [[[
 .zinit-get-object-path() {
@@ -1038,7 +1038,6 @@ builtin setopt noaliases
 
         (( exists )) && break
     }
-
 
     reply=( "$local_dir" "$dirname" "$exists" )
     REPLY="$local_dir${dirname:+/$dirname}"
@@ -1279,7 +1278,7 @@ builtin setopt noaliases
     ZINIT[TIME_INDEX]=$(( ${ZINIT[TIME_INDEX]:-0} + 1 ))
     ZINIT[TIME_${ZINIT[TIME_INDEX]}_${___id_as//\//---}]=$SECONDS
     ZINIT[AT_TIME_${ZINIT[TIME_INDEX]}_${___id_as//\//---}]=$EPOCHREALTIME
-    return $___retval
+    return ___retval
 } # ]]]
 # FUNCTION: .zinit-load-plugin [[[
 # Lower-level function for loading a plugin.
@@ -1442,7 +1441,7 @@ builtin setopt noaliases
         noglob unset functions[m]
     }
 
-    return $___retval
+    return ___retval
 } # ]]]
 # FUNCTION: .zinit-load-snippet [[[
 # Implements the exposed-to-user action of loading a snippet.
@@ -1687,7 +1686,7 @@ builtin setopt noaliases
     } else {
         noglob unset functions[m]
     }
-    return $retval
+    return retval
 } # ]]]
 # FUNCTION: .zinit-compdef-replay [[[
 # Runs gathered compdef calls. This allows to run `compinit'
@@ -1828,7 +1827,7 @@ builtin setopt noaliases
     [[ ${ZINIT_ICES[as]} = program ]] && ZINIT_ICES[as]=command
     [[ -n ${ZINIT_ICES[on-update-of]} ]] && ZINIT_ICES[subscribe]="${ZINIT_ICES[subscribe]:-${ZINIT_ICES[on-update-of]}}"
     [[ -n ${ZINIT_ICES[pick]} ]] && ZINIT_ICES[pick]="${ZINIT_ICES[pick]//\$ZPFX/${ZPFX%/}}"
-    return $retval
+    return retval
 } # ]]]
 # FUNCTION: .zinit-pack-ice [[[
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
@@ -1930,7 +1929,7 @@ builtin setopt noaliases
 
     [[ ${REPLY::=$___action} = \!* ]] && zle && zle .reset-prompt
 
-    return $___s
+    return ___s
 }
 # ]]]
 
@@ -1969,7 +1968,7 @@ builtin setopt noaliases
         ZINIT_RUN+=( "${ZINIT_TASKS[$idx]}" )
         return 1
     else
-        return $idx
+        return idx
     fi
 }
 # ]]]
@@ -2089,7 +2088,7 @@ builtin setopt noaliases
     }
     ZINIT_RUN[1-correct,___idx-correct]=()
 
-    [[ ${ZINIT[lro-data]##*:} = on ]] && return 0 || return $___ret
+    [[ ${ZINIT[lro-data]##*:} = on ]] && return 0 || return ___ret
 }
 # ]]]
 
@@ -2626,7 +2625,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
             ;;
     esac
 
-    return $___retval
+    return ___retval
 } # ]]]
 # FUNCTION: zicdreplay [[[
 # A function that can be invoked from within `atinit', `atload', etc.
