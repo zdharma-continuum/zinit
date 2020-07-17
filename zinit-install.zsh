@@ -1854,7 +1854,7 @@ zpextract() { ziextract "$@"; }
         command bunzip2 "$setup.bz2" 2>/dev/null
         [[ -s $setup ]] && break
         mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
-        +zinit-message "{pre}Retrying{error}: {hi}#{obj}$(( 3 - $retry ))/3, {pre}with mirror{error}: {url}${mirror}{rst}"
+        +zinit-message "{pre}Retrying{error}: {meta}#{obj}$(( 3 - $retry ))/3, {pre}with mirror{error}: {url}${mirror}{rst}"
     }
     local setup_contents="$(command grep -A 26 "@ $pkg\$" "$setup")"
     local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
