@@ -2229,7 +2229,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     for ___key in "${reply[@]}"; do
                         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
                         "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" \
-                            "${(j: :)${(q)@}}" "${(j: :)${(qkv)___ices[@]}}" \
+                            "${(j: :)${(q)@[2,-1]}}" "${(j: :)${(qkv)___ices[@]}}" \
                             "${${___key##(zinit|z-annex) hook:}%% <->}" load
                         ___retval2=$?
                         if (( ___retval2 )) {
