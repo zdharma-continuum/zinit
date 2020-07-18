@@ -140,7 +140,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;135m' col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
         col-obj  $'\e[38;5;221m' col-obj2  $'\e[38;5;154m' col-file  $'\e[38;5;110m'
-        col-url  $'\e[38;5;45m'  col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;32m'
+        col-meta $'\e[38;5;57m'  col-meta2 $'\e[38;5;32m'
         col-data $'\e[38;5;82m'  col-data2 $'\e[38;5;50m'  col-hi    $'\e[1m\e[38;5;160m'
         col-ehi  $'\e[01m\e[31m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
         col-cmd  $'\e[38;5;90m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
@@ -1809,11 +1809,13 @@ builtin setopt noaliases
 }
 # ]]]
 # FUNCTION: +zinit-message [[[
+.zinit-formatter-pid() { .zinit-any-colorify-as-uspl2 "$1"; }
+.zinit-formatter-url() { .zinit-any-colorify-as-uspl2 "$1"; }
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob
     if [[ $1 = -* ]] { local opt=$1; shift; } else { local opt; }
     local -a msg
-    msg=( ${(@)${(@)${@//(#b)([\\]([\[]([^\]]##)[\]])|([\[]([^\]]##)[\]]))/$match[2]${ZINIT[col-$match[5]]-$match[4]}}//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}]))/$match[2]${ZINIT[col-$match[5]]-$match[4]}}} )
+    msg=( ${(@)${@//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\{\\]#))/$match[2]${${functions[.zinit-formatter-$match[5]]:+$(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY)}-${ZINIT[col-$match[5]]-$match[4]}$match[6]}}} )
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
