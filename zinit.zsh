@@ -2239,7 +2239,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     ZINIT[annex-exposed-processed-IDs]+="${___id:+ $___id}"
 
                     # Strip the ID-qualifier (`@') and GitHub domain from the ID.
-                    ___id="${${1##(@|)(https://github.com/|)}%%(///|//|/)}"
+                    ___id="${${1#@}%%(///|//|/)}"
+                    (( ___is_snippet == -1 )) && ___id="${___id#https://github.com/}"
 
                     # Effective handle-ID – the label under which the object
                     # will be identified / referred-to by Zinit.
