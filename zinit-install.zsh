@@ -129,9 +129,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
     trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
 
-    builtin print -P -- "\n%F{yellow}%B===%f Downloading ${ZINIT[col-info2]}package.json%f" \
-        "for ${ZINIT[col-pname]}$plugin %F{yellow}===%f%b"
-
     if [[ $profile != ./* ]] {
         if { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
             rm -f $tmpfile; .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
@@ -147,8 +144,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         +zinit-message "{error}Error: the package \`{data}$id_as{error}' couldn't be found.{rst}"
         return 1
     fi
-
-    builtin print -Pr -- "Parsing ${ZINIT[col-info2]}package.json%f%b..."
 
     local -A Strings
     .zinit-parse-json "$pkgjson" "plugin-info" Strings
@@ -181,14 +176,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             eval "ZINIT_ICE[id-as]=\"${ZINIT_ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
         }
     } else {
-        builtin print -P -r -- "${ZINIT[col-error]}Error: the profile \`%F{221}$profile${ZINIT[col-error]}' couldn't be found, aborting.%f%b"
-        builtin print -r -- "Available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
+        local sep="$ZINIT[col-error],$ZINIT[col-meta2] "
+        +zinit-message "{error}Error: the profile \`{meta}$profile{error}'" \
+            "couldn't be found, aborting. Available profiles are:" \
+            "{meta2}${(pj:$sep:)${profiles[@]:#$profile}}{error}.{rst}"
         return 1
     }
 
     local sep="$ZINIT[col-rst],$ZINIT[col-meta2] "
-    +zinit-message "Found the profile \`{meta2}$profile{rst}'. Other available" \
-        "profiles are:${${${(M)profile:#default}:+"{meta2}"}:-"{meta}"}" \
+    +zinit-message "{info3}Package{ehi}:{rst} {pname}$plugin{rst}. Selected" \
+        "profile{ehi}:{rst} {meta2}$profile{rst}. Available" \
+        "profiles:${${${(M)profile:#default}:+"{meta2}"}:-"{meta}"}" \
         "${(pj:$sep:)${profiles[@]:#$profile}}{rst}."
     if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]] {
         +zinit-message "{note}Note:{rst} The \`{meta2}bgn{glob}*{rst}' profiles are" \
@@ -234,9 +232,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             "become downloaded).{rst}"
     }
 
-    builtin print -Pn -- ${jsondata1[version]:+\\n${ZINIT[col-pname]}Version: ${ZINIT[col-info2]}${jsondata1[version]}%f%b.\\n}
     [[ -n ${jsondata1[message]} ]] && \
-        builtin print -P -- "${ZINIT[col-info]}${jsondata1[message]}%f%b"
+        +zinit-message "{info}${jsondata1[message]}{rst}"
 
     if (( ${+ZINIT_ICE[is-snippet]} )) {
         reply=( "" "$url" )
@@ -254,18 +251,19 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             local fname="${${URL%%\?*}:t}"
 
             command mkdir -p $dir || {
-                builtin print -Pr -- "${ZINIT[col-error]}Couldn't create directory:" \
-                    "\`${ZINIT[col-msg2]}$dir${ZINIT[col-error]}', aborting.%f%b"
+                +zinit-message "{error}Couldn't create directory: {msg2}$dir{error}, aborting.{rst}"
                 return 1
             }
             builtin cd -q $dir || return 1
 
-            builtin print -Pr -- "Downloading tarball for ${ZINIT[col-pname]}$plugin%f%b..."
+            +zinit-message "Downloading tarball for {pname}$plugin{rst}{dots}"
 
             if { ! .zinit-download-file-stdout "$URL" 0 1 >! "$fname" } {
                 if { ! .zinit-download-file-stdout "$URL" 1 1 >! "$fname" } {
                     command rm -f "$fname"
-                    builtin print -r "Download of \`$fname' failed. No available download tool? (one of: cURL, wget, lftp, lynx)"
+                    +zinit-message "Download of \`{file}$fname{rst}' failed. No available download" \
+                            "tool? one of: {obj}${(pj:$sep:)${=:-curl wget lftp lynx}}{rst})."
+
                     return 1
                 }
             }
@@ -343,7 +341,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            +zinit-message "{nl}Downloading $REPLY{dots}${id_as:+" (as{ehi}:{rst} {meta2}$id_as{rst}{dots})"}"
+            (( $+ZINIT_ICE[pack] )) && local infix_m="({bold}{ice}pack{apo}''{rst}) "
+            +zinit-message "{nl}Downloading $infix_m$REPLY{dots}${id_as:+" (as{ehi}:{rst} {meta2}$id_as{rst}{dots})"}"
         }
 
         local site
