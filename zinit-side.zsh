@@ -139,11 +139,17 @@
 
     .zinit-get-object-path snippet "$url1"
     local_dirA=$reply[-3] dirnameA=$reply[-2]
-    [[ -d "$local_dirA/$dirnameA/.svn" ]] && svn_dirA=".svn"
+    [[ -d "$local_dirA/$dirnameA/.svn" ]] && {
+        svn_dirA=".svn"
+        if { .zinit-first % "$local_dirA/$dirnameA"; } {
+            fileB_there=( ${reply[-1]} )
+        }
+    }
 
     .zinit-get-object-path snippet "$url2"
     local_dirB=$reply[-3] dirnameB=$reply[-2]
-    fileB_there=( "$local_dirB/$dirnameB"/*~*.zwc(.-DOnN[1]) )
+    [[ -z $svn_dirA ]] && \
+        fileB_there=( "$local_dirB/$dirnameB"/*~*.(zwc|md|js|html)(.-DOnN[1]) )
 
     reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
 }
