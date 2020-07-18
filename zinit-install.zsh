@@ -809,6 +809,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         ${+ZINIT_ICE[null]} -eq 0 && ${ICE[as]} != command && ${+ZINIT_ICE[binary]} -eq 0 && \
         ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! )
     ]] {
+        reply=()
         if [[ -n ${ICE[pick]} ]]; then
             list=( ${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN) )
             if [[ ${#list} -eq 0 ]] {
@@ -837,15 +838,18 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
         +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {info}$fname{rst}{dots}"
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
-            if { ! zcompile "$first" } {
-                +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
-                +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
-            } else {
-                +zinit-message " {ok}OK{rst}."
+            () {
+                builtin emulate -LR zsh -o extendedglob
+                if { ! zcompile "$first" } {
+                    +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
+                    +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
+                } else {
+                    +zinit-message " {ok}OK{rst}."
+                }
+                # Try to catch possible additional file
+                zcompile "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
             }
         }
-        # Try to catch possible additional file
-        zcompile "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
     }
 
     if [[ -n "${ICE[compile]}" ]]; then
@@ -861,7 +865,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         } else {
             integer retval
             for first in $list; do
-                zcompile "$first"; retval+=$?
+                () {
+                    builtin emulate -LR zsh -o extendedglob
+                    zcompile "$first"; retval+=$?
+                }
             done
             builtin print -rl -- ${list[@]#$plugin_dir/} >! /tmp/zinit.compiled.$$.lst
             if (( retval )) {
@@ -1007,8 +1014,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} && \
                             ${+ZINIT_ICE[nocompile]} -eq 0
                         ]] {
-                            zcompile "${list[1]}" &>/dev/null || \
-                                +zinit-message "{error}Warning:{rst} couldn't compile \`{file}${list[1]}{rst}'."
+                            () {
+                                builtin emulate -LR zsh -o extendedglob
+                                zcompile "${list[1]}" &>/dev/null || \
+                                    +zinit-message "{error}Warning:{rst} couldn't compile \`{file}${list[1]}{rst}'."
+                            }
                         }
                     fi
 
@@ -1091,12 +1101,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 if [[ -e $file_path && -z ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]} && \
                         $file_path != */dev/null && ${+ZINIT_ICE[nocompile]} -eq 0
                 ]] {
-                    if ! zcompile "$file_path" 2>/dev/null; then
-                        builtin print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
-                        builtin print -r "(snippet URL points to a directory instead of a file?"
-                        builtin print -r "to download directory, use preceding: zinit ice svn)."
-                        retval=4
-                    fi
+                    () {
+                        builtin emulate -LR zsh -o extendedglob
+                        if ! zcompile "$file_path" 2>/dev/null; then
+                            builtin print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
+                            builtin print -r "(snippet URL points to a directory instead of a file?"
+                            builtin print -r "to download directory, use preceding: zinit ice svn)."
+                            retval=4
+                        fi
+                    }
                 }
             }
         } else { # Local-file snippet branch
