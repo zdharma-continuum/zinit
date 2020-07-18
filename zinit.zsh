@@ -1808,11 +1808,13 @@ builtin setopt noaliases
     builtin zle -F "$THEFD" +zinit-deploy-message
 }
 # ]]]
-# FUNCTION: +zinit-message [[[
+# FUNCTION: .zinit-formatter-pid [[[
 .zinit-formatter-pid() {
     ((${+functions[.zinit-first]})) || source ${ZINIT[BIN_DIR]}/zinit-side.zsh
     .zinit-any-colorify-as-uspl2 "$1";
 }
+# ]]]
+# FUNCTION: .zinit-formatter-url [[[
 .zinit-formatter-url() {
     builtin emulate -LR zsh -o extendedglob
     if [[ $1 = (#b)([^:]#)(://)([[:alnum:].+_-]##)(|/(*)) ]] {
@@ -1821,6 +1823,8 @@ builtin setopt noaliases
         REPLY=$ZINIT[col-url]$1$ZINIT[col-rst]
     }
 }
+# ]]]
+# FUNCTION: +zinit-message [[[
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob
     if [[ $1 = -* ]] { local opt=$1; shift; } else { local opt; }
