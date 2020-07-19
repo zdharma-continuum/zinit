@@ -121,10 +121,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
-    local user="$1" plugin="$2" id_as="$3" dir="$4" profile="$5" \
-        local_path="${ZINIT[PLUGINS_DIR]}/${3//\//---}" pkgjson \
-        tmpfile="${$(mktemp):-/tmp/zsh.xYzAbc123}" \
-        URL="https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json"
+    local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 \
+        local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} pkgjson \
+        tmpfile=${$(mktemp):-/tmp/zsh.xYzAbc123} \
+        URL=https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json
 
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
     trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
@@ -184,7 +184,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     }
 
     local sep="$ZINIT[col-rst],$ZINIT[col-meta2] "
-    +zinit-message "{info3}Package{ehi}:{rst} {pname}$plugin{rst}. Selected" \
+    +zinit-message "{info3}Package{ehi}:{rst} {pname}$pkg{rst}. Selected" \
         "profile{ehi}:{rst} {meta2}$profile{rst}. Available" \
         "profiles:${${${(M)profile:#default}:+"{meta2}"}:-"{meta}"}" \
         "${(pj:$sep:)${profiles[@]:#$profile}}{rst}."
