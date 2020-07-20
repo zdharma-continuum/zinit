@@ -2290,7 +2290,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             # Override $@?
                             if (( ___retval2 & 2 )) {
                                 local -a ___args
-                                ___args=( "${(Q@)${(@z)ZINIT[annex-before-load:new-@]}}" )
+                                ___args=( "${(@Q)${(@z)ZINIT[annex-before-load:new-@]}}" )
                                 set -- "${___args[@]}"
                             } 
 
