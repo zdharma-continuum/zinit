@@ -3224,14 +3224,14 @@ EOF
 
         # Include all additional ices – after
         # stripping them from the possible: ''
-        ${(@)${(@Akons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
+        ${(@)${(@Akons:|:u)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
     )
     nval_ices=(
             ${(s.|.)ZINIT[nval-ice-list]}
             # Include only those additional ices,
             # don't have the '' in their name, i.e.
             # aren't designed to hold value
-            ${(@)${(@)${(@Akons:|:)ZINIT_EXTS[ice-mods]}:#*\'\'*}/(#s)<->-/}
+            ${(@)${(@)${(@Akons:|:u)ZINIT_EXTS[ice-mods]}:#*\'\'*}/(#s)<->-/}
 
             # Must be last
             svn
