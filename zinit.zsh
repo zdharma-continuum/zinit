@@ -64,7 +64,7 @@ debug|null|binary"
 ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
 nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\
-pullopts|debug|null|binary"
+pullopts|debug|null|binary|make|nocompile|notify|reset"
 
 # Can be customized
 : ${ZINIT[PLUGINS_DIR]:=${ZINIT[HOME_DIR]}/plugins}

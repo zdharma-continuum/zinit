@@ -3246,7 +3246,7 @@ EOF
             cand2="${(qq)val}"
             if [[ -n "$val" ]] {
                 [[ "${cand1/\\\$/}" != "$cand1" || "${cand1/\\\!/}" != "$cand1" ]] && output+=( "$el$cand2" ) || output+=( "$el$cand1" )
-            } elif [[ ${+ice[$el]} = 1 && ( -n "${nval_ices[(r)$el]}" || "$el" = (make|nocompile|notify|reset) ) ]] {
+            } elif [[ ${+ice[$el]} = 1 && -n "${nval_ices[(r)$el]}" ]] {
                 output+=( "$el" )
             }
         }

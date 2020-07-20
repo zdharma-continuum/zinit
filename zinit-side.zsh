@@ -364,7 +364,7 @@
     done
 
     # Ices that even empty mean something
-    for ___key in make pick nocompile reset ${nval_ices[@]} ${(s: :)___add_ices2[@]}; do
+    for ___key in ${nval_ices[@]} ${(s: :)___add_ices2[@]}; do
         ___var_name="${___ice_var}[$___key]"
         if (( ${(P)+___var_name} )) {
             builtin print -r -- "${(P)___var_name}" >! "$___pfx"/"$___key"
