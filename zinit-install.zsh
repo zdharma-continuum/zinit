@@ -342,7 +342,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
             (( $+ZINIT_ICE[pack] )) && local infix_m="({bold}{ice}pack{apo}''{rst}) "
-            +zinit-message "{nl}Downloading $infix_m$REPLY{dots}${id_as:+" (as{ehi}:{rst} {meta2}$id_as{rst}{dots})"}"
+            +zinit-message "{nl}Downloading $infix_m$REPLY{dots}${${${id_as:#$user/$plugin}}:+" (as{ehi}:{rst} {meta2}$id_as{rst}{dots})"}"
         }
 
         local site
