@@ -3400,15 +3400,9 @@ EOF
         done
     done
 
-print "
-Available ice-modifiers:
-        svn proto from teleid bindmap cloneopts pullopts id-as depth if wait
-        load unload blockf on-update-of subscribe pick bpick src as ver silent
-        lucid notify mv cp atinit atclone atload atpull nocd run-atpull has
-        cloneonly make service trackbinds multisrc compile nocompile
-        nocompletions reset-prompt wrap-track reset aliases sh bash ksh csh
-        countdown trigger-load light-mode is-snippet atdelete pack git extract
-        param"
+local -a ice_order
+ice_order=( ${${(s.|.)ZINIT[ice-list]}:#teleid} ${(@)${(@)${(@Akons:|:u)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}:#(.*|dynamic-unscope)} )
+print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
