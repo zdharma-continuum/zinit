@@ -705,7 +705,7 @@ ZINIT[EXTENDED_GLOB]=""
     emulate -LR zsh
     setopt extendedglob typesetsilent warncreateglobal
 
-    [[ $1 = -q ]] && builtin print -P -- "$ZINIT[col-info2]Updating Zinit...%f%b"
+    [[ $1 = -q ]] && +zinit-message "{info2}Updating Zinit{dots}{rst}"
 
     local nl=$'\n' escape=$'\x1b['
     local -a lines
@@ -734,7 +734,7 @@ ZINIT[EXTENDED_GLOB]=""
         }
     )
     if [[ $1 != -q ]] {
-        builtin print "Compiling Zinit (zcompile)..."
+        +zinit-message "Compiling Zinit (zcompile){dots}"
     }
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile $ZINIT[BIN_DIR]/zinit.zsh
@@ -744,7 +744,7 @@ ZINIT[EXTENDED_GLOB]=""
     zcompile $ZINIT[BIN_DIR]/zinit-additional.zsh
     zcompile $ZINIT[BIN_DIR]/git-process-output.zsh
     # Load for the current session
-    [[ $1 != -q ]] && builtin print "Reloading Zinit for the current session..."
+    [[ $1 != -q ]] && +zinit-message "Reloading Zinit for the current session{dots}"
     source $ZINIT[BIN_DIR]/zinit.zsh
     source $ZINIT[BIN_DIR]/zinit-side.zsh
     source $ZINIT[BIN_DIR]/zinit-install.zsh
@@ -1440,8 +1440,8 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-exists-physically "$user" "$plugin" || return $retval
         .zinit-any-colorify-as-uspl2 "$2" "$3"
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            builtin print -Pr "${ZINIT[col-msg2]}Updating also \`$REPLY%b${ZINIT[col-msg2]}'" \
-                "plugin (already updated a snippet of the same name)...%f%b"
+            +zinit-message "{msg2}Updating also \`$REPLY{rst}{msg2}'" \
+                "plugin (already updated a snippet of the same name){dots}{rst}"
     } else {
         .zinit-exists-physically-message "$user" "$plugin" || return 1
     }
@@ -1794,7 +1794,7 @@ ZINIT[EXTENDED_GLOB]=""
         ZINIT[mtime-install] + ZINIT[mtime-autoload] != sum
     )) {
         +zinit-message "{msg2}Detected Zinit update in another session -" \
-            "{pre}reloading Zinit{msg2}...{rst}"
+            "{pre}reloading Zinit{msg2}{dots}{rst}"
         source $ZINIT[BIN_DIR]/zinit.zsh
         source $ZINIT[BIN_DIR]/zinit-side.zsh
         source $ZINIT[BIN_DIR]/zinit-install.zsh
@@ -1809,7 +1809,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     if (( ICE_OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
         (( !ICE_OPTS[opt_-q,--quiet] )) && \
-            +zinit-message '{info2}Parallel Update Starts Now...{rst}'
+            +zinit-message '{info2}Parallel Update Starts Now{dots}{rst}'
         .zinit-update-all-parallel
         integer retval=$?
         .zinit-compinit 1 1 &>/dev/null
@@ -1990,7 +1990,7 @@ ZINIT[EXTENDED_GLOB]=""
             local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
 
             .zinit-any-colorify-as-uspl2 "$uspl"
-            builtin print -r -- "Updating $REPLY..." >! $PUFILE
+            +zinit-message "Updating $REPLY{dots}" >! $PUFILE
 
             .zinit-any-to-user-plugin "$uspl"
             local user=${reply[-2]} plugin=${reply[-1]}
@@ -2025,7 +2025,7 @@ ZINIT[EXTENDED_GLOB]=""
     } elif (( counter == 1 && !ICE_OPTS[opt_-q,--quiet] )) {
         +zinit-message "{obj}Spawning the next{file}" \
             "${ICE_OPTS[value]}{obj} concurrent update jobs" \
-            "({msg2}%F{191}${tpe}{obj})...{rst}"
+            "({msg2}%F{191}${tpe}{obj}){dots}{rst}"
     }
 }
 # ]]]

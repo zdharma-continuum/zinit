@@ -2460,7 +2460,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
        (env-whitelist)
            shift
            [[ $1 = -v ]] && { shift; local ___verbose=1; }
-           [[ $1 = -h ]] && { shift; +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 ...\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; }
+           [[ $1 = -h ]] && { shift; +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {dots}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; }
            (( $# == 0 )) && {
                ZINIT[ENV-WHITELIST]=
                (( ___verbose )) && +zinit-message "Cleared parameter whitelist"
@@ -2566,7 +2566,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        if .zinit-cdisable "$___f"; then
                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$___f"
-                           builtin print "Initializing completion system (compinit)..."
+                           +zinit-message "Initializing completion system (compinit){dots}"
                            builtin autoload -Uz compinit
                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                        else
@@ -2584,7 +2584,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        if .zinit-cenable "$___f"; then
                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$___f"
-                           builtin print "Initializing completion system (compinit)..."
+                           +zinit-message "Initializing completion system (compinit){dots}"
                            builtin autoload -Uz compinit
                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                        else
@@ -2598,7 +2598,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ $2 = -[qQ] ]] && { 5=$2; shift; }
                    .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
-                   [[ -z ${(M)4:#-[qQ]} ]] && builtin print "Initializing completion (compinit)..."
+                   [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion (compinit){dots}"
                    builtin autoload -Uz compinit
                    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    ;;
@@ -2609,7 +2609,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                        # Uninstalls completions for plugin
                        .zinit-uninstall-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                       builtin print "Initializing completion (compinit)..."
+                       +zinit-message "Initializing completion (compinit){dots}"
                        builtin autoload -Uz compinit
                        compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    fi
