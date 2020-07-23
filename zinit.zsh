@@ -149,6 +149,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-dbg  $'\e[38;5;238m' col-opt   $'\e[38;5;33m'
         col-dots ${${${(M)LANG:#(#i)*utf-8*}:+…}:-...} col-ndash ${${${(M)LANG:#(#i)*utf-8*}:+–}:-}
         col-mdash ${${${(M)LANG:#(#i)*utf-8*}:+—}:---} col-mmdash ${${${(M)LANG:#(#i)*utf-8*}:+——}:---}
+        col-tab  $'\t'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
@@ -2198,7 +2199,7 @@ zinit() {
         --help     opt_-h,--help
         env-whitelist "-h|--help|-v|--verbose"
         update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
--q|--quuiet|-f|--force|-r|--reset|-v|--verbose|-h|--help"
+-q|--quiet|-f|--force|-r|--reset|-v|--verbose|-h|--help"
         delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet|-h|--help"
 
     )
