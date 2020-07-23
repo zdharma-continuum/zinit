@@ -146,10 +146,12 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-cmd  $'\e[38;5;90m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num   $'\e[38;5;207m' col-term  $'\e[38;5;34m'
         col-warn $'\e[38;5;172m' col-apo   $'\e[38;5;220m' col-ok    $'\e[38;5;220m'
-        col-dbg  $'\e[38;5;238m' col-opt   $'\e[38;5;33m'
+        col-dbg  $'\e[38;5;238m' col-opt   $'\e[38;5;33m'  col-lhi   $'\e[38;5;75m'
+        col-blhi $'\e[1m\e[38;5;75m' col-tab  $'\t'
         col-dots ${${${(M)LANG:#(#i)*utf-8*}:+…}:-...} col-ndash ${${${(M)LANG:#(#i)*utf-8*}:+–}:-}
         col-mdash ${${${(M)LANG:#(#i)*utf-8*}:+—}:---} col-mmdash ${${${(M)LANG:#(#i)*utf-8*}:+——}:---}
-        col-tab  $'\t'
+        col-un   $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
+        col-nun  $'\e[24m'       col-nit   $'\e[23m'       col-nst   $'\e[29m'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
