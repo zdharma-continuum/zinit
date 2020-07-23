@@ -2693,7 +2693,7 @@ ZINIT[EXTENDED_GLOB]=""
     # Parse options
     .zinit-parse-opts delete "$@"
     builtin set -- "${reply[@]}"
-    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg delete $___opt_map[delete] $@; return 1; }
+    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-prehelp-usage-message delete $___opt_map[delete] $@; return 1; }
 
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
