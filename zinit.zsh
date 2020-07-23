@@ -131,23 +131,22 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
 ]] {
     ZINIT+=(
         # Old colors:
-        col-title   ""
         col-pname   $'\e[33m'       col-uname  $'\e[35m'       col-keyword $'\e[32m'
         col-note    $'\e[33m'       col-error  $'\e[31m'       col-p       $'\e[01m\e[34m'
         col-bar     $'\e[01m\e[35m' col-info   $'\e[32m'       col-info2   $'\e[33m'
-        col-info3   $'\e[01m\e[33m' col-uninst $'\e[01m\e[34m' col-success $'\e[01m\e[32m'
+        col-info3   $'\e[01m\e[33m' col-uninst $'\e[38;5;140m' col-success $'\e[01m\e[32m'
         col-failure $'\e[31m'       col-rst    $'\e[0m'        col-bold    $'\e[1m'
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;135m' col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
         col-obj  $'\e[38;5;221m' col-obj2  $'\e[38;5;154m' col-file  $'\e[38;5;110m'
-        col-url  $'\e[38;5;33m'  col-meta $'\e[38;5;57m'  col-meta2 $'\e[38;5;32m'
+        col-url  $'\e[38;5;33m'  col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;32m'
         col-data $'\e[38;5;82m'  col-data2 $'\e[38;5;50m'  col-hi    $'\e[1m\e[38;5;160m'
         col-ehi  $'\e[01m\e[31m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
         col-cmd  $'\e[38;5;90m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num   $'\e[38;5;207m' col-term  $'\e[38;5;34m'
         col-warn $'\e[38;5;172m' col-apo   $'\e[38;5;220m' col-ok    $'\e[38;5;220m'
         col-dbg  $'\e[38;5;238m' col-opt   $'\e[38;5;33m'  col-lhi   $'\e[38;5;75m'
-        col-blhi $'\e[1m\e[38;5;75m' col-tab  $'\t'
+        col-tab  $'\t'           col-blhi  $'\e[1m\e[38;5;75m'
         col-dots "${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}" col-ndash "${${${(M)LANG:#(#i)*utf-8*}:+–}:-}"
         col-mdash "${${${(M)LANG:#(#i)*utf-8*}:+—}:---}" col-mmdash "${${${(M)LANG:#(#i)*utf-8*}:+——}:---}"
         col-un   $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
