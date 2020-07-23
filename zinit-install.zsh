@@ -959,18 +959,18 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`$sname'${${ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}{dots}"
 
                 if (( ${+ICE[svn]} )) {
-                    local skip_pull=0
                     if [[ $update = -u ]] {
                         # Test if update available
-                        .zinit-mirror-using-svn "$url" "-t" "$dirname" || {
-                            if (( ${+ICE[run-atpull]} )) {
-                                skip_pull=1
+                        if ! .zinit-mirror-using-svn "$url" "-t" "$dirname"; then
+                            if (( ${+ICE[run-atpull]} || OPTS[opt_-u,--urge] )) {
+                                ZINIT[annex-multi-flag:pull-active]=1
                             } else { return 0; } # Will return when no updates so atpull''
                                                  # code below doesn't need any checks.
                                                  # This return 0 statement also sets the
                                                  # pull-active flag outside this subshell.
-                        }
-                        ZINIT[annex-multi-flag:pull-active]=$(( 2 - skip_pull ))
+                        else
+                            ZINIT[annex-multi-flag:pull-active]=2
+                        fi
 
                         # Run annexes' atpull hooks (the before atpull-ice ones).
                         # The SVN block.
@@ -984,7 +984,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" update:svn
                         done
 
-                        if (( !skip_pull )) {
+                        if (( ZINIT[annex-multi-flag:pull-active] == 2 )) {
                             # Do the update
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
@@ -1047,7 +1047,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         +zinit-message "{info}Already up to date.{rst}"
                         # Empty-update return-short path – it also decides the
                         # pull-active flag after the return from this sub-shell
-                        (( ${+ICE[run-atpull]} )) && skip_dl=1 || return 0
+                        (( ${+ICE[run-atpull]} || OPTS[opt_-u,--urge] )) && skip_dl=1 || return 0
                     }
 
                     if [[ ! -f $local_dir/$dirname/$filename ]] {

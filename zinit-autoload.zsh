@@ -1528,7 +1528,7 @@ ZINIT[EXTENDED_GLOB]=""
                 count+=1
                 local version=${REPLY/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                 if [[ ${ice[is_release${count:#1}]} = $REPLY ]] {
-                    (( ${+ice[run-atpull]} )) && \
+                    (( ${+ice[run-atpull]} || OPTS[opt_-u,--urge] )) && \
                         ZINIT[annex-multi-flag:pull-active]=1 || \
                         ZINIT[annex-multi-flag:pull-active]=0
                 } else {
@@ -1610,7 +1610,7 @@ ZINIT[EXTENDED_GLOB]=""
               if [[ ${#log} -gt 0 ]] {
                   ZINIT[annex-multi-flag:pull-active]=2
               } else {
-                  if (( ${+ice[run-atpull]} )) {
+                  if (( ${+ice[run-atpull]} || OPTS[opt_-u,--urge] )) {
                       ZINIT[annex-multi-flag:pull-active]=1
 
                       # Handle the snippet/plugin boundary in the messages
@@ -1640,7 +1640,7 @@ ZINIT[EXTENDED_GLOB]=""
                       "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:git
                   done
                   ICE=()
-                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
+                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
             )
@@ -1653,10 +1653,17 @@ ZINIT[EXTENDED_GLOB]=""
                 if (( OPTS[opt_-q,--quiet] )) {
                     command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} &> /dev/null
                 } else {
-                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
+                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
                 }
             )
         fi
+        if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract] -ne 0 ]] {
+            (( !OPTS[opt_-q,--quiet] && ZINIT[annex-multi-flag:pull-active] == 1 )) && \
+                +zinit-message -n "{pre}[update]{msg3} Continuing with the update because "
+            (( ${+ice[run-atpull]} )) && \
+                +zinit-message "{ice}run-atpull{apo}''{msg3} ice given.{rst}" || \
+                +zinit-message "{opt}-u{msg3}/{opt}--urge{msg3} given.{rst}"
+        }
 
         # Any new commits?
         if (( ZINIT[annex-multi-flag:pull-active] >= 1  )) {
