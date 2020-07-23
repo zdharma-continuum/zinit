@@ -477,8 +477,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
 
     # After additional executions like atclone'' - install completions (1 - plugins)
-    local -A ICE_OPTS
-    ICE_OPTS[opt_-q,--quiet]=1
+    local -A OPTS
+    OPTS[opt_-q,--quiet]=1
     [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null && ${+ZINIT_ICE[null]} -eq 0 ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
@@ -497,7 +497,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # This will however miss the as"program" binaries
     # as their PATH gets extended - and it is done
     # later. It will however work for sbin'' ice.
-    (( !ICE_OPTS[opt_-p,--parallel] )) && rehash
+    (( !OPTS[opt_-p,--parallel] )) && rehash
 
     return 0
 } # ]]]
@@ -516,7 +516,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}}
     local reinstall=${3:-0} quiet=${${4:+1}:-0}
-    (( ICE_OPTS[opt_-q,--quiet] )) && quiet=1
+    (( OPTS[opt_-q,--quiet] )) && quiet=1
     [[ $4 = -Q ]] && quiet=2
     typeset -ga INSTALLED_COMPS SKIPPED_COMPS
     INSTALLED_COMPS=() SKIPPED_COMPS=()
@@ -591,7 +591,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 #
 # No arguments.
 .zinit-compinit() {
-    [[ -n ${ICE_OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
+    [[ -n ${OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
 
     emulate -LR zsh
     builtin setopt nullglob extendedglob warncreateglobal typesetsilent
@@ -938,7 +938,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         command mkdir -p "$local_dir"
     fi
 
-    [[ $update = -u && ${ICE_OPTS[opt_-q,--quiet]} != 1 ]] && \
+    [[ $update = -u && ${OPTS[opt_-q,--quiet]} != 1 ]] && \
         +zinit-message "{nl}{info}Updating snippet: {p}$sname{rst}${ZINIT_ICE[id-as]:+"{dots} (identified as{ehi}:{rst} {meta}$id_as{rst})"}"
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
@@ -956,7 +956,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
-                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}{dots}"
+                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`$sname'${${ZINIT_ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}{dots}"
 
                 if (( ${+ZINIT_ICE[svn]} )) {
                     local skip_pull=0
@@ -988,7 +988,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # Do the update
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
-                            if (( ICE_OPTS[opt_-q,--quiet] )); then 
+                            if (( OPTS[opt_-q,--quiet] )); then 
                                 +zinit-message $'\n'"{info}Updating snippet {p}${sname}{rst}${ZINIT_ICE[id-as]:+"{dots}" (identified as: $id_as)}"
                                 +zinit-message "Downloading \`$sname' (with Subversion){dots}"
                             fi
@@ -1025,7 +1025,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 } else {
                     command mkdir -p "$local_dir/$dirname"
 
-                    if (( !ICE_OPTS[opt_-f,--force] )) {
+                    if (( !OPTS[opt_-f,--force] )) {
                         .zinit-get-url-mtime "$url"
                     } else {
                         REPLY=$EPOCHSECONDS
@@ -1130,26 +1130,26 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
             command mkdir -p "$local_dir/$dirname"
             if [[ ! -e $url ]] {
-                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source file {file}$url{error} doesn't exist.{rst}"
+                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source file {file}$url{error} doesn't exist.{rst}"
                 retval=4
             }
             if [[ -e $url && ! -f $url && $url != /dev/null ]] {
-                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't a regular file.{rst}"
+                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't a regular file.{rst}"
                 retval=4
             }
             if [[ -e $url && ! -r $url && $url != /dev/null ]] {
-                (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't" \
+                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't" \
                     "accessible (wrong permissions).{rst}"
                 retval=4
             }
-            if (( !ICE_OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
+            if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
                 +zinit-message "{msg}Copying {file}$filename{msg}{dots}{rst}"
                 command cp -vf "$url" "$local_dir/$dirname/$filename" || \
                     { +zinit-message "{ehi}ERROR:{error} The file copying has been unsuccessful.{rst}"; retval=4; }
             } else {
                 command cp -f "$url" "$local_dir/$dirname/$filename" &>/dev/null || \
                     { +zinit-message "{ehi}ERROR:{error} The copying of {file}$filename{error} has been unsuccessful"\
-"${${(M)ICE_OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
+"${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
             }
         }
 
@@ -1250,8 +1250,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
 
     # After additional executions like atclone'' - install completions (2 - snippets)
-    local -A ICE_OPTS
-    ICE_OPTS[opt_-q,--quiet]=1
+    local -A OPTS
+    OPTS[opt_-q,--quiet]=1
     [[ 0 = ${+ZINIT_ICE[nocompletions]} && ${ZINIT_ICE[as]} != null && ${+ZINIT_ICE[null]} -eq 0 ]] && \
         .zinit-install-completions "%" "$local_dir/$dirname" 0
 
@@ -1270,7 +1270,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # This will however miss the as"program" binaries
     # as their PATH gets extended - and it is done
     # later. It will however work for sbin'' ice.
-    (( !ICE_OPTS[opt_-p,--parallel] )) && rehash
+    (( !OPTS[opt_-p,--parallel] )) && rehash
 
     return $retval
 }
@@ -1286,12 +1286,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     [[ -o ksharrays ]] && correct=1
     opts=( -u ) # for z-a-as-monitor
 
-    # Create a local copy of ICE_OPTS, basically
+    # Create a local copy of OPTS, basically
     # for z-a-as-monitor annex
     local -A ice_opts
-    ice_opts=( "${(kv)ICE_OPTS[@]}" )
-    local -A ICE_OPTS
-    ICE_OPTS=( "${(kv)ice_opts[@]}" )
+    ice_opts=( "${(kv)OPTS[@]}" )
+    local -A OPTS
+    OPTS=( "${(kv)ice_opts[@]}" )
 
     ZINIT[annex-multi-flag:pull-active]=0 ZINIT[-r/--reset-opt-hook-has-been-run]=0
 
@@ -1526,7 +1526,7 @@ ziextract() {
                 [[ -z $fname || -n ${stage2_processed[(r)$fname]} ]] && continue
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar|exe|pe32) ]] {
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && \
+                    (( !OPTS[opt_-q,--quiet] )) && \
                         +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
                             "detected a {meta}$type{rst} archive in the file" \
                             "{file}$fname{rst}."
@@ -1554,7 +1554,7 @@ ziextract() {
                                 # TODO: if multiple archives are really in the archive,
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
-                                (( !ICE_OPTS[opt_-q,--quiet] )) && \
+                                (( !OPTS[opt_-q,--quiet] )) && \
                                     +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
                                         "detected a {obj}${type2}{rst} archive in the" \
                                         " file {file}${fname}{rst}."
@@ -1592,7 +1592,7 @@ ziextract() {
 
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
-        (( !ICE_OPTS[opt_-q,--quiet] )) && \
+        (( !OPTS[opt_-q,--quiet] )) && \
             +zinit-message "{pre}ziextract:{msg} Unpacking the files from: \`{obj}$file{msg}'{dots}{rst}"
         $fun; retval=$?
         if (( retval == 0 )) {
@@ -1716,7 +1716,7 @@ ziextract() {
     builtin print -rl -- ${execs[@]} >! /tmp/zinit-execs.$$.lst
     if [[ ${#execs} -gt 0 ]] {
         command chmod a+x "${execs[@]}"
-        if (( !ICE_OPTS[opt_-q,--quiet] )) {
+        if (( !OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
                     +zinit-message "{pre}ziextract:{rst}" \
                         "Successfully extracted and assigned +x chmod to the file:" \
@@ -1949,7 +1949,7 @@ zimv() {
     } else {
         local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
     }
-    if (( ( ICE_OPTS[opt_-r,--reset] && ZINIT[-r/--reset-opt-hook-has-been-run] == 0 ) || \
+    if (( ( OPTS[opt_-r,--reset] && ZINIT[-r/--reset-opt-hook-has-been-run] == 0 ) || \
         ( ${+ZINIT_ICE[reset]} && ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )
     )) {
         if (( ZINIT[-r/--reset-opt-hook-has-been-run] )) {
@@ -1960,12 +1960,12 @@ zimv() {
         if [[ $type == snippet ]] {
             if (( $+ZINIT_ICE[svn] )) {
                 if [[ $skip_pull -eq 0 && -d $filename/.svn ]] {
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive {dots}/{file}$filename/.{rst} {dots}"
+                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive {dots}/{file}$filename/.{rst} {dots}"
                     command svn revert --recursive $filename/.
                 }
             } else {
                 if (( ZINIT[annex-multi-flag:pull-active] >= 2 )) {
-                    if (( !ICE_OPTS[opt_-q,--quiet] )) {
+                    if (( !OPTS[opt_-q,--quiet] )) {
                         if [[ -f $local_dir/$dirname/$filename ]] {
                             if [[ -n $option || -z $ZINIT_ICE[reset] ]] {
                                 +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} {dots}{rst}"
@@ -1997,10 +1997,10 @@ zimv() {
         } elif [[ $type == plugin ]] {
             if (( is_release && !skip_pull )) {
                 if (( option )) {
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*"
+                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*"
                     builtin eval command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)
                 } else {
-                    (( !ICE_OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}"
+                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ZINIT_ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}"
                     builtin eval ${ZINIT_ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
             } elif (( !skip_pull )) {
@@ -2015,7 +2015,7 @@ zimv() {
         }
     }
 
-    if (( ICE_OPTS[opt_-r,--reset] )) {
+    if (( OPTS[opt_-r,--reset] )) {
         if (( ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )) {
             ZINIT[-r/--reset-opt-hook-has-been-run]=0
         } else {
@@ -2117,7 +2117,7 @@ zimv() {
     ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
       afr=( ${~from}(DN) )
       if (( ${#afr} )) {
-          if (( !ICE_OPTS[opt_-q,--quiet] )) {
+          if (( !OPTS[opt_-q,--quiet] )) {
               command mv -vf "${afr[1]}" "$to"
               command mv -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
           } else {
@@ -2148,7 +2148,7 @@ zimv() {
     ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
       afr=( ${~from}(DN) )
       if (( ${#afr} )) {
-          if (( !ICE_OPTS[opt_-q,--quiet] )) {
+          if (( !OPTS[opt_-q,--quiet] )) {
               command cp -vf "${afr[1]}" "$to"
               command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
           } else {
@@ -2209,7 +2209,7 @@ zimv() {
         local tpe="$1" dir="${5#%}" hook="$6" subtype="$7" || \
         local tpe="$1" dir="${4#%}" hook="$5" subtype="$6"
 
-    if (( !ICE_OPTS[opt_-q,--quiet] )) {
+    if (( !OPTS[opt_-q,--quiet] )) {
         +zinit-message "Running $tpe's provided update code: {info}${ZINIT_ICE[ps-on-update][1,50]}${ZINIT_ICE[ps-on-update][51]:+…}{rst}"
         (
             builtin cd -q "$dir" || return 1

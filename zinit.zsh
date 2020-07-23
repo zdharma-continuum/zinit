@@ -146,8 +146,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-cmd  $'\e[38;5;90m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num   $'\e[38;5;207m' col-term  $'\e[38;5;34m'
         col-warn $'\e[38;5;172m' col-apo   $'\e[38;5;220m' col-ok    $'\e[38;5;220m'
-        col-dbg  $'\e[38;5;238m'
-        col-dots ${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}
+        col-dbg  $'\e[38;5;238m' col-opt   $'\e[38;5;33m'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
@@ -224,7 +223,7 @@ builtin setopt noaliases
 
     zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} I+=opts2 S+:=custom
 
-    set -- ${@:#--}
+    builtin set -- ${@:#--}
 
     # Process the id-as''/teleid'' to get the plugin dir.
     .zinit-any-to-user-plugin $ZINIT[CUR_USPL2]
@@ -566,7 +565,7 @@ builtin setopt noaliases
     typeset -a pos
     pos=( "$@" )
 
-    set -- "${@:#--}"
+    builtin set -- "${@:#--}"
 
     # Try to catch game-changing "-N"
     if [[ ( $1 = -N && ( $# = 2 || $# = 3 ) ) || ( $1 = -C && $# = 4 ) ]]; then
@@ -1056,7 +1055,7 @@ builtin setopt noaliases
 # FUNCTION: @zinit-substitute [[[
 @zinit-substitute() {
     emulate -LR zsh
-    setopt extendedglob warncreateglobal typesetsilent noshortloops
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     local -A ___subst_map
     ___subst_map=(
@@ -1303,7 +1302,7 @@ builtin setopt noaliases
     local ___pbase="${${___plugin:t}%(.plugin.zsh|.zsh|.git)}" ___key
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
-    set --
+    builtin set --
     ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
     [[ -o ksharrays ]] && ___correct=1
 
@@ -1467,7 +1466,7 @@ builtin setopt noaliases
     [[ -n ${ZINIT_ICE[teleid]} ]] && url="${ZINIT_ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
-    set --
+    builtin set --
     integer correct retval exists
     [[ -o ksharrays ]] && correct=1
 
@@ -1833,6 +1832,18 @@ builtin setopt noaliases
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
+# # FUNCTION: +zinit-erropt-msg [[[
++zinit-erropt-msg() {
+    local cmd=$1 allowed=$2 sep="$ZINIT[col-msg2], $ZINIT[col-ehi]" \
+        sep2="$ZINIT[col-msg2], $ZINIT[col-opt]"
+    shift 2
+    +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
+            "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
+            "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
+            "{nl}{mmdash} {opt}${allowed//\|/$sep2}{msg2}." \
+            "{nl}{dots} Aborting.{rst}"
+}
+# ]]]
 
 #
 # Ice support
@@ -2151,24 +2162,34 @@ zinit() {
 
     [[ -o ksharrays ]] && ___correct=1
 
-    local -A ___opt_map ICE_OPTS
+    local -A ___opt_map OPTS
     ___opt_map=(
        -q         opt_-q,--quiet
        --quiet    opt_-q,--quiet
+       -v         opt_-v,--verbose
+       --verbose  opt_-v,--verbose
        -r         opt_-r,--reset
        --reset    opt_-r,--reset
-       --all      opt_--all
-       --clean    opt_--clean
-       --yes      opt_-y,--yes
+       -a         opt_-a,--all
+       --all      opt_-a,--all
+       -c         opt_-c,--clean
+       --clean    opt_-c,--clean
        -y         opt_-y,--yes
+       --yes      opt_-y,--yes
        -f         opt_-f,--force
        --force    opt_-f,--force
        -p         opt_-p,--parallel
        --parallel opt_-p,--parallel
        -s         opt_-s,--snippets
        --snippets opt_-s,--snippets
-       -l         opt_-l,--plugins
+       -L         opt_-l,--plugins
        --plugins  opt_-l,--plugins
+       -h         opt_-h,--help
+       --help     opt_-h,--help
+       env-whitelist "-h|--help|-v|--verbose"
+       update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
+-q|--quiet|-f|--force|-r|--reset|-v|--verbose|-h|--help"
+
     )
 
 
@@ -2185,11 +2206,11 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             integer  ___is_snippet
             # Classic syntax -> simulate a call through the for-syntax
             () {
-                setopt localoptions extendedglob
-                : ${@[@]//(#b)([ $'\t']##|(#s))(-b|--command|-f)([ $'\t']##|(#e))/${ICE_OPTS[${match[2]}]::=1}}
+                builtin setopt localoptions extendedglob
+                : ${@[@]//(#b)([ $'\t']##|(#s))(-b|--command|-f)([ $'\t']##|(#e))/${OPTS[${match[2]}]::=1}}
             } "$@"
-            set -- "${@[@]:#(-b|--command|-f)}"
-            [[ $1 = light && -z ${ICE_OPTS[(I)-b]} ]] && ZINIT_ICE[light-mode]=
+            builtin set -- "${@[@]:#(-b|--command|-f)}"
+            [[ $1 = light && -z ${OPTS[(I)-b]} ]] && ZINIT_ICE[light-mode]=
             [[ $1 = snippet ]] && ZINIT_ICE[is-snippet]= || ___is_snippet=-1
             shift
 
@@ -2264,7 +2285,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 
                     integer  ___is_snippet=${${(M)___is_snippet:#-1}:-0}
                     () {
-                        setopt localoptions extendedglob
+                        builtin setopt localoptions extendedglob
                         if [[ $___is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || $___etid = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
                             ___is_snippet=1
                         }
@@ -2291,7 +2312,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             if (( ___retval2 & 2 )) {
                                 local -a ___args
                                 ___args=( "${(@Q)${(@z)ZINIT[annex-before-load:new-@]}}" )
-                                set -- "${___args[@]}"
+                                builtin set -- "${___args[@]}"
                             } 
 
                             # Override $___ices?
@@ -2337,7 +2358,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 
                     if [[ ${reply[-1]} -eq 1 && -n ${ZINIT_ICE[trigger-load]} ]] {
                         () {
-                            setopt localoptions extendedglob
+                            builtin setopt localoptions extendedglob
                             local ___mode
                             (( ___is_snippet > 0 )) && ___mode=snippet || ___mode="${${${ZINIT_ICE[light-mode]+light}}:-load}"
                             for MATCH ( ${(s.;.)ZINIT_ICE[trigger-load]} ) {
@@ -2375,9 +2396,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             ZINIT_ICE[cloneonly]=""
                         }
                         if (( ___is_snippet > 0 )); then
-                            .zinit-load-snippet ${(k)ICE_OPTS[@]} "$___id"
+                            .zinit-load-snippet ${(k)OPTS[@]} "$___id"
                         else
-                            .zinit-load "$___id" "" "${${ZINIT_ICE[light-mode]+light}:-${ICE_OPTS[(I)-b]:+light-b}}"
+                            .zinit-load "$___id" "" "${${ZINIT_ICE[light-mode]+light}:-${OPTS[(I)-b]:+light-b}}"
                         fi
                         integer ___last_retval=$?
                         ___retval+=___last_retval
@@ -2391,7 +2412,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         if (( ___is_snippet > 0 )); then
                             ZINIT_SICE[$___ehid]=
                             .zinit-submit-turbo s${ZINIT_ICE[service]:+1} "" \
-                                "$___id" "${(k)ICE_OPTS[*]}"
+                                "$___id" "${(k)OPTS[*]}"
                         else
                             ZINIT_SICE[$___ehid]=
                             .zinit-submit-turbo p${ZINIT_ICE[service]:+1} \
@@ -2458,17 +2479,24 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
            man "${ZINIT[BIN_DIR]}/doc/zinit.1"
            ;;
        (env-whitelist)
-           shift
-           [[ $1 = -v ]] && { shift; local ___verbose=1; }
-           [[ $1 = -h ]] && { shift; +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {dots}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; }
-           (( $# == 0 )) && {
-               ZINIT[ENV-WHITELIST]=
-               (( ___verbose )) && +zinit-message "Cleared parameter whitelist"
-           } || {
-               ZINIT[ENV-WHITELIST]+="${(j: :)${(q-kv)@}} "
-               (( ___verbose )) && +zinit-message "Extended parameter whitelist"
-           }
-           ;;
+            shift
+            () {
+                builtin setopt localoptions extendedglob
+                : "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[env-whitelist]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]}]::=1}ß←↓→}:#1ß←↓→}"
+            } "$@"
+            builtin set -- "${@:#(${(~j.|.)${(@s.|.)___opt_map[env-whitelist]}})}"
+            if (( $@[(I)-*] )) { +zinit-erropt-msg env-whitelist $___opt_map[env-whitelist] $@; return 1; }
+
+            (( OPTS[opt_-h,--help] )) && { +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {dots}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; return 0; }
+            if (( $# == 0 )) {
+                ZINIT[ENV-WHITELIST]=
+                (( OPTS[opt_-v,--verbose] )) && +zinit-message "{msg2}Cleared the parameter whitelist.{rst}"
+            } else {
+                ZINIT[ENV-WHITELIST]+="${(j: :)${(q-kv)@}} "
+                local ___sep="$ZINIT[col-msg2], $ZINIT[col-data2]"
+                (( OPTS[opt_-v,--verbose] )) && +zinit-message "{msg2}Extended the parameter whitelist with: {data2}${(pj:$___sep:)@}{msg2}.{rst}"
+            }
+            ;;
        (*)
            # Check if there is a z-annex registered for the subcommand
            reply=( ${ZINIT_EXTS[z-annex subcommand:${(q)1}]} )
@@ -2504,29 +2532,30 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    .zinit-list-bindkeys
                    ;;
                (update)
-                   if (( ${+ZINIT_ICE[if]} )) {
-                       eval "${ZINIT_ICE[if]}" || return 1;
-                   }
-                   for REPLY ( ${(s.;.)ZINIT_ICE[has]} ) {
-                       (( ${+commands[$REPLY]} )) || return 1
-                   }
+                    if (( ${+ZINIT_ICE[if]} )) {
+                        eval "${ZINIT_ICE[if]}" || return 1;
+                    }
+                    for REPLY ( ${(s.;.)ZINIT_ICE[has]} ) {
+                        (( ${+commands[$REPLY]} )) || return 1
+                    }
 
-                   () {
-                       setopt localoptions extendedglob
-                       : ${@[@]//(#b)([ $'\t']##|(#s))(-q|--quiet|-r|--reset|-f|--force|-p|--parallel|-s|--snippets|-l|--plugins)([ $'\t']##|(#e))/${ICE_OPTS[${___opt_map[${match[2]}]}]::=1}}
-                   } "$@"
-                   set -- "${@[@]:#(--quiet|-q|--reset|-r|-f|--force|-p|--parallel|-s|--snippets|-l|--plugins)}"
-                   if [[ $2 = --all || ${ICE_OPTS[opt_-p,--parallel]} -eq 1 || ${ICE_OPTS[opt_-s,--snippets]} -eq 1 || ${ICE_OPTS[opt_-l,--plugins]} -eq 1 || ( -z $2 && -z $3 && -z ${ZINIT_ICE[teleid]} && -z ${ZINIT_ICE[id-as]} ) ]]; then
-                       [[ -z $2 && $(( ICE_OPTS[opt_-p,--parallel] + ICE_OPTS[opt_-s,--snippets] + ICE_OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
-                       [[ ${ICE_OPTS[opt_-p,--parallel]} = 1 ]] && \
-                           ICE_OPTS[value]=${${${${${(M)2:#--all}:+$3}:-$2}:#--all}:-15}
-                       .zinit-update-or-status-all update; ___retval=$?
-                   else
-                       local ___key ___id="${2%%(///|//|/)}${3:+/}${3%%(///|//|/)}"
-                       [[ -z ${___id//[[:space:]]/} ]] && ___id="${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}"
-                       .zinit-update-or-status update "$___id" ""; ___retval=$?
-                   fi
-                   ;;
+                    shift
+                    () {
+                        builtin setopt localoptions extendedglob
+                        : "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[update]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]}]::=1}ß←↓→}:#1ß←↓→}"
+                    } "$@"
+                    builtin set -- "${@:#(${(~j.|.)${(@s.|.)___opt_map[update]}})}"
+                    if (( $@[(I)-*] )) { +zinit-erropt-msg update $___opt_map[update] $@; return 1; }
+                    if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ZINIT_ICE[teleid]}${ZINIT_ICE[id-as]} ]]; then
+                        [[ -z $1$2 && $(( OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                        (( OPTS[opt_-p,--parallel] )) && OPTS[value]=${1:-15}
+                        .zinit-update-or-status-all update; ___retval=$?
+                    else
+                        local ___key ___id="${1%%(///|//|/)}${2:+/}${2%%(///|//|/)}"
+                        [[ -z ${___id//[[:space:]]/} ]] && ___id="${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}"
+                        .zinit-update-or-status update "$___id" ""; ___retval=$?
+                    fi
+                    ;;
                (status)
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
