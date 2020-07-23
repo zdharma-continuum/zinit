@@ -2678,7 +2678,7 @@ ZINIT[EXTENDED_GLOB]=""
     setopt extendedglob warncreateglobal typesetsilent
 
     local -a opts match mbegin mend
-    local MATCH; integer MBEGIN MEND
+    local MATCH; integer MBEGIN MEND _retval
 
     # Parse options
     builtin set -- "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[delete]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]}]::=1}ß←↓→}:#1ß←↓→}"
@@ -2716,7 +2716,6 @@ builtin print; print -Prln \"\$ZINIT[col-obj]Deleting the following \"\
     \$todelete \"%f%b\"
 sleep 3
 local snip
-integer _retval
 for snip ( \$final_todelete ) { zinit delete -q -y \$snip; _retval+=\$?; }
 builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\"
 
@@ -2730,7 +2729,7 @@ builtin print -Prl \"\" \"\$ZINIT[col-obj]Deleting the following \"\
 sleep 3
 for snip ( \$dirs ) { zinit delete -q -y \$snip; _retval+=\$?; }
 builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
-        return $(( _retval ))
+        return _retval
     }
 
     local -A ZINIT_ICE
