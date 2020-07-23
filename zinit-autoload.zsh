@@ -1734,13 +1734,14 @@ ZINIT[EXTENDED_GLOB]=""
 .zinit-update-or-status-snippet() {
     local st="$1" URL="${2%/}" local_dir filename is_snippet
     (( ${#ICE[@]} > 0 )) && { ZINIT_SICE[$URL]=""; local nf="-nftid"; }
+    local -A ICE2
     .zinit-compute-ice "$URL" "pack$nf" \
-        ICE local_dir filename is_snippet || return 1
+        ICE2 local_dir filename is_snippet || return 1
 
     integer retval
 
     if [[ "$st" = "status" ]]; then
-        if (( ${+ICE[svn]} )); then
+        if (( ${+ICE2[svn]} )); then
             builtin print -r -- "${ZINIT[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZINIT[col-rst]}"
             ( builtin cd -q "$local_dir"; command svn status -vu )
             retval=$?
@@ -1753,7 +1754,8 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     else
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
-        .zinit-update-snippet "${ICE[teleid]:-$URL}"
+        ICE=( "${(kv)ICE2[@]}" )
+        .zinit-update-snippet "${ICE2[teleid]:-$URL}"
         retval=$?
     fi
 
@@ -2681,7 +2683,8 @@ ZINIT[EXTENDED_GLOB]=""
     local MATCH; integer MBEGIN MEND _retval
 
     # Parse options
-    builtin set -- "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[delete]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%:*}]::=1}ß←↓→}:#1ß←↓→}"
+    .zinit-parse-opts delete "$@"
+    builtin set -- "${reply[@]}"
     if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg delete $___opt_map[delete] $@; return 1; }
 
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
@@ -2732,11 +2735,11 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         return _retval
     }
 
-    local -A ICE
+    local -A ICE2
     local local_dir filename is_snippet
 
     .zinit-compute-ice "$the_id" "pack" \
-        ICE local_dir filename is_snippet || return 1
+        ICE2 local_dir filename is_snippet || return 1
 
     if [[ "$local_dir" != /* ]]
     then
@@ -2744,7 +2747,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         return 1
     fi
 
-    ICE[teleid]="${ICE[teleid]:-${ICE[id-as]}}"
+    ICE2[teleid]="${ICE2[teleid]:-${ICE2[id-as]}}"
 
     local -a files
     files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
@@ -2756,11 +2759,11 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
     files=( ${(@)files[1,4]} ${files[4]+more…} )
 
     if (( is_snippet )); then
-        if [[ "${+ICE[svn]}" = "1" ]] {
+        if [[ "${+ICE2[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
             then
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
-                    ".zinit-run-delete-hooks snippet \"${ICE[teleid]}\" \"\" \"$the_id\" \
+                    ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; \
                     command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
             else
@@ -2770,7 +2773,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         } else {
             if [[ -e "$local_dir" ]]; then
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
-                    ".zinit-run-delete-hooks snippet \"${ICE[teleid]}\" \"\" \"$the_id\" \
+                    ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
             else
@@ -2779,7 +2782,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
             fi
         }
     else
-        .zinit-any-to-user-plugin "${ICE[teleid]}"
+        .zinit-any-to-user-plugin "${ICE2[teleid]}"
         if [[ -e "$local_dir" ]]; then
             .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                 ".zinit-run-delete-hooks plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
@@ -3075,13 +3078,13 @@ EOF
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-edit() {
-    local -A ICE
+    local -A ICE2
     local local_dir filename is_snippet the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
     .zinit-compute-ice "$the_id" "pack" \
-        ICE local_dir filename is_snippet || return 1
+        ICE2 local_dir filename is_snippet || return 1
 
-    ICE[teleid]="${ICE[teleid]:-${ICE[id-as]}}"
+    ICE2[teleid]="${ICE2[teleid]:-${ICE2[id-as]}}"
 
     if (( is_snippet )); then
         if [[ ! -e "$local_dir" ]]; then
