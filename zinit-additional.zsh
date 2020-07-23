@@ -20,13 +20,13 @@
 
     () {
         builtin emulate -LR zsh -o extendedglob -o interactivecomments
-        local ___subst
+        local ___subst ___tabspc=$'\t'
         for ___subst ( "${___substs[@]}" ) {
             ___ab=( "${(@)${(@)${(@s:->:)___subst}##[[:space:]]##}%%[[:space:]]##}" )
             ___ab[2]=${___ab[2]//(#b)\\([[:digit:]])/\${match[${match[1]}]}}
             builtin eval "___data=\"\${___data//(#b)\${~___ab[1]}/${___ab[2]}}\""
         }
-        ___data="() { ${(F)${(@)${(f)___data[@]}:#\ #\#*}} ; } \"\${@[2,-1]}\""
+        ___data="() { ${(F)${(@)${(f)___data[@]}:#[$___tabspc]#\#*}} ; } \"\${@[2,-1]}\""
     }
 
     builtin eval "$___data"
