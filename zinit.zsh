@@ -1835,16 +1835,21 @@ builtin setopt noaliases
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
-# # FUNCTION: +zinit-erropt-msg [[[
-+zinit-erropt-msg() {
+# # FUNCTION: +zinit-on-options-msg [[[
++zinit-on-options-msg() {
     local cmd=$1 allowed=$2 sep="$ZINIT[col-msg2], $ZINIT[col-ehi]" \
         sep2="$ZINIT[col-msg2], $ZINIT[col-opt]"
     shift 2
-    +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
-            "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
-            "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
-            "{nl}{mmdash} {opt}${allowed//\|/$sep2}{msg2}." \
-            "{nl}{dots} Aborting.{rst}"
+    if (( OPTS[opt_-h,--help] )) {
+        # A help message:
+    } else {
+        # An error message:
+        +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
+                "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
+                "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
+                "{nl}{mmdash} {opt}${allowed//\|/$sep2}{msg2}." \
+                "{nl}{dots} Aborting.{rst}"
+    }
 }
 # ]]]
 
@@ -2169,32 +2174,32 @@ zinit() {
 
     local -A ___opt_map OPTS
     ___opt_map=(
-       -q         opt_-q,--quiet
-       --quiet    opt_-q,--quiet
-       -v         opt_-v,--verbose
-       --verbose  opt_-v,--verbose
-       -r         opt_-r,--reset
-       --reset    opt_-r,--reset
-       -a         opt_-a,--all
-       --all      opt_-a,--all
-       -c         opt_-c,--clean
-       --clean    opt_-c,--clean
-       -y         opt_-y,--yes
-       --yes      opt_-y,--yes
-       -f         opt_-f,--force
-       --force    opt_-f,--force
-       -p         opt_-p,--parallel
-       --parallel opt_-p,--parallel
-       -s         opt_-s,--snippets
-       --snippets opt_-s,--snippets
-       -L         opt_-l,--plugins
-       --plugins  opt_-l,--plugins
-       -h         opt_-h,--help
-       --help     opt_-h,--help
-       env-whitelist "-h|--help|-v|--verbose"
-       update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
--q|--quiet|-f|--force|-r|--reset|-v|--verbose|-h|--help"
-       delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet"
+        -q         opt_-q,--quiet:"Turn off any (or: almost-any) messages from the operation."
+        --quiet    opt_-q,--quiet
+        -v         opt_-v,--verbose:"Turn on more messages from the operation."
+        --verbose  opt_-v,--verbose
+        -r         opt_-r,--reset:"Reset the repository before updating (or remove the files for single-file snippets and gh-r plugins)."
+        --reset    opt_-r,--reset
+        -a         opt_-a,--all:"delete:[Delete all plugin and snippets.] update:[Update all plugins and snippets.]"
+        --all      opt_-a,--all
+        -c         opt_-c,--clean:"Delete only unloaded plugins and snippets."
+        --clean    opt_-c,--clean
+        -y         opt_-y,--yes:"Automatically confirm any yes/no prompts."
+        --yes      opt_-y,--yes
+        -f         opt_-f,--force:"Force new download of the snippet file."
+        --force    opt_-f,--force
+        -p         opt_-p,--parallel:"Turn on concurrent, multi-thread update (of all objects)."
+        --parallel opt_-p,--parallel
+        -s         opt_-s,--snippets:"Update only snippets (i.e.: skip updating plugins)."
+        --snippets opt_-s,--snippets
+        -L         opt_-l,--plugins:"Update only plugins (i.e.: skip updating snippets)."
+        --plugins  opt_-l,--plugins
+        -h         opt_-h,--help:"Show this help message."
+        --help     opt_-h,--help
+        env-whitelist "-h|--help|-v|--verbose"
+        update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
+-q|--quuiet|-f|--force|-r|--reset|-v|--verbose|-h|--help"
+        delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet|-h|--help"
 
     )
 
@@ -2488,10 +2493,10 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
             shift
             () {
                 builtin setopt localoptions extendedglob
-                : "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[env-whitelist]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]}]::=1}ß←↓→}:#1ß←↓→}"
+                : "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[env-whitelist]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%:*}]::=1}ß←↓→}:#1ß←↓→}"
             } "$@"
             builtin set -- "${@:#(${(~j.|.)${(@s.|.)___opt_map[env-whitelist]}})}"
-            if (( $@[(I)-*] )) { +zinit-erropt-msg env-whitelist $___opt_map[env-whitelist] $@; return 1; }
+            if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg env-whitelist $___opt_map[env-whitelist] $@; return 1; }
 
             (( OPTS[opt_-h,--help] )) && { +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {dots}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; return 0; }
             if (( $# == 0 )) {
@@ -2548,12 +2553,13 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                     shift
                     () {
                         builtin setopt localoptions extendedglob
-                        : "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[update]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]}]::=1}ß←↓→}:#1ß←↓→}"
+                        : "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[update]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%%:*}]::=1}ß←↓→}:#1ß←↓→}"
                     } "$@"
                     builtin set -- "${@:#(${(~j.|.)${(@s.|.)___opt_map[update]}})}"
-                    if (( $@[(I)-*] )) { +zinit-erropt-msg update $___opt_map[update] $@; return 1; }
+                    print -rl -- ${(kv)OPTS}
+                    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg update $___opt_map[update] $@; return 1; }
                     if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ICE[teleid]}${ICE[id-as]} ]]; then
-                        [[ -z $1$2 && $(( OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                        [[ -z $1$2 && $(( OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
                         (( OPTS[opt_-p,--parallel] )) && OPTS[value]=${1:-15}
                         .zinit-update-or-status-all update; ___retval=$?
                     else
@@ -2564,7 +2570,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                     ;;
                (status)
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
                        .zinit-update-or-status-all status; ___retval=$?
                    else
                        .zinit-update-or-status status "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2572,7 +2578,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    ;;
                (report)
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 4; }
                        .zinit-show-all-reports
                    else
                        .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2670,7 +2676,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                (compile)
                    (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
                        .zinit-compile-uncompile-all 1; ___retval=$?
                    else
                        .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2678,7 +2684,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    ;;
                (uncompile)
                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
+                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
                        .zinit-compile-uncompile-all 0; ___retval=$?
                    else
                        .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?

@@ -2681,8 +2681,8 @@ ZINIT[EXTENDED_GLOB]=""
     local MATCH; integer MBEGIN MEND _retval
 
     # Parse options
-    builtin set -- "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[delete]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]}]::=1}ß←↓→}:#1ß←↓→}"
-    if (( $@[(I)-*] )) { +zinit-erropt-msg delete $___opt_map[delete] $@; return 1; }
+    builtin set -- "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[delete]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%:*}]::=1}ß←↓→}:#1ß←↓→}"
+    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg delete $___opt_map[delete] $@; return 1; }
 
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
