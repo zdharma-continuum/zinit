@@ -343,9 +343,9 @@ builtin setopt noaliases
         local string="${(q)1}" widget="${(q)2}"
         local quoted
 
-        if [[ -n ${ZINIT_ICE[bindmap]} && ${ZINIT_CUR_BIND_MAP[empty]} -eq 1 ]]; then
+        if [[ -n ${ICE[bindmap]} && ${ZINIT_CUR_BIND_MAP[empty]} -eq 1 ]]; then
             local -a pairs
-            pairs=( "${(@s,;,)ZINIT_ICE[bindmap]}" )
+            pairs=( "${(@s,;,)ICE[bindmap]}" )
             if [[ -n ${(M)pairs:#*\\(#e)} ]] {
                 local prev
                 pairs=( ${pairs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${prev:+$prev\;}}${match[3]}${${prev::=${match[2]:+${prev:+$prev\;}}${match[2]}}:+}} )
@@ -664,7 +664,7 @@ builtin setopt noaliases
     functions[compdef]=':zinit-shade-compdef "$@";'
 
     # Temporarily replace `source' if subst'' given
-    if [[ -n ${ZINIT_ICE[subst]} ]] {
+    if [[ -n ${ICE[subst]} ]] {
         (( ${+functions[source]} )) && ZINIT[bkp-source]="${functions[source]}"
         (( ${+functions[.]} )) && ZINIT[bkp-.]="${functions[.]}"
         (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
@@ -673,7 +673,7 @@ builtin setopt noaliases
     }
 
     # Light and compdef shadeing stops here. Dtrace and load go on
-    [[ ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
+    [[ ( $mode = light && ${+ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
 
     # Defensive code, shouldn't be needed. A, B, C, D
     builtin unset "ZINIT[bkp-bindkey]" "ZINIT[bkp-zstyle]" "ZINIT[bkp-alias]" "ZINIT[bkp-zle]"
@@ -683,7 +683,7 @@ builtin setopt noaliases
     functions[bindkey]=':zinit-shade-bindkey "$@";'
 
     # B, when `zinit light -b ...' or when `zinit ice trackbinds ...; zinit light ...'
-    [[ $mode = light-b || ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 1 ) ]] && return 0
+    [[ $mode = light-b || ( $mode = light && ${+ICE[trackbinds]} -eq 1 ) ]] && return 0
 
     # B.
     (( ${+functions[zstyle]} )) && ZINIT[bkp-zstyle]="${functions[zstyle]}"
@@ -726,7 +726,7 @@ builtin setopt noaliases
     (( ${+ZINIT[bkp-.]} )) && functions[.]="${ZINIT[bkp-.]}" || unfunction . 2> /dev/null
 
     # Light and compdef shadeing stops here
-    [[ ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
+    [[ ( $mode = light && ${+ICE[trackbinds]} -eq 0 ) || $mode = compdef ]] && return 0
 
     # Unfunction shadeing functions
 
@@ -734,7 +734,7 @@ builtin setopt noaliases
     (( ${+ZINIT[bkp-bindkey]} )) && functions[bindkey]="${ZINIT[bkp-bindkey]}" || unfunction bindkey
 
     # When `zinit light -b ...' or when `zinit ice trackbinds ...; zinit light ...'
-    [[ $mode = light-b || ( $mode = light && ${+ZINIT_ICE[trackbinds]} -eq 1 ) ]] && return 0
+    [[ $mode = light-b || ( $mode = light && ${+ICE[trackbinds]} -eq 1 ) ]] && return 0
 
     # B.
     (( ${+ZINIT[bkp-zstyle]} )) && functions[zstyle]="${ZINIT[bkp-zstyle]}" || unfunction zstyle
@@ -749,16 +749,17 @@ builtin setopt noaliases
 # {function:pmodload} Compatibility with Prezto. Calls can be recursive.
 (( ${+functions[pmodload]} )) || pmodload() {
     local -A ices
-    (( ${+ZINIT_ICE} )) && ices=( "${(kv)ZINIT_ICE[@]}" teleid '' )
-    local -A ZINIT_ICE
-    ZINIT_ICE=( "${(kv)ices[@]}" )
+    (( ${+ICE} )) && ices=( "${(kv)ICE[@]}" teleid '' )
+    local -A ICE ZINIT_ICE
+    ICE=( "${(kv)ices[@]}" ) ZINIT_ICE=( "${(kv)ices[@]}" )
     while (( $# )); do
-        ZINIT_ICE[teleid]="PZT::modules/$1${ZINIT_ICE[svn]-/init.zsh}"
+        ICE[teleid]="PZT::modules/$1${ICE[svn]-/init.zsh}"
+        ZINIT_ICE[teleid]="PZT::modules/$1${ICE[svn]-/init.zsh}"
         if zstyle -t ":prezto:module:$1" loaded 'yes' 'no'; then
             shift
             continue
         else
-            [[ -z ${ZINIT_SNIPPETS[PZT::modules/$1${ZINIT_ICE[svn]-/init.zsh}]} && -z ${ZINIT_SNIPPETS[https://github.com/sorin-ionescu/prezto/trunk/modules/$1${ZINIT_ICE[svn]-/init.zsh}]} ]] && .zinit-load-snippet PZT::modules/"$1${ZINIT_ICE[svn]-/init.zsh}"
+            [[ -z ${ZINIT_SNIPPETS[PZT::modules/$1${ICE[svn]-/init.zsh}]} && -z ${ZINIT_SNIPPETS[https://github.com/sorin-ionescu/prezto/trunk/modules/$1${ICE[svn]-/init.zsh}]} ]] && .zinit-load-snippet PZT::modules/"$1${ICE[svn]-/init.zsh}"
             shift
         fi
     done
@@ -994,7 +995,7 @@ builtin setopt noaliases
         ZINIT_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it
-        [[ -z ${ZINIT[TEST]}${${+ZINIT_ICE[wait]}:#0}${ZINIT_ICE[load]}${ZINIT_ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != 1 ]] && +zinit-message "{error}Warning:{rst} plugin \`{pname}${uspl2}{rst}' already registered, will overwrite-load"
+        [[ -z ${ZINIT[TEST]}${${+ICE[wait]}:#0}${ICE[load]}${ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != 1 ]] && +zinit-message "{error}Warning:{rst} plugin \`{pname}${uspl2}{rst}' already registered, will overwrite-load"
         ret=1
     fi
 
@@ -1025,7 +1026,7 @@ builtin setopt noaliases
     local type="$1" id_as="$2" local_dir dirname
     integer exists
 
-    id_as="${ZINIT_ICE[id-as]:-$id_as}"
+    id_as="${ICE[id-as]:-$id_as}"
 
     # Remove leading whitespace and trailing /
     id_as="${${id_as#"${id_as%%[! $'\t']*}"}%/}"
@@ -1071,11 +1072,11 @@ builtin setopt noaliases
         '%OS%' "${OSTYPE%(-gnu|[0-9]##)}" '%MACH%' "$MACHTYPE" '%CPU%' "$CPUTYPE"
         '%VENDOR%' "$VENDOR" '%HOST%' "$HOST" '%UID%' "$UID" '%GID%' "$GID"
     )
-    if [[ -n ${ZINIT_ICE[param]} && ${ZINIT[SUBST_DONE_FOR]} != ${ZINIT_ICE[param]} ]] {
-        ZINIT[SUBST_DONE_FOR]=${ZINIT_ICE[param]}
+    if [[ -n ${ICE[param]} && ${ZINIT[SUBST_DONE_FOR]} != ${ICE[param]} ]] {
+        ZINIT[SUBST_DONE_FOR]=${ICE[param]}
         ZINIT[PARAM_SUBST]=
         local -a ___params
-        ___params=( ${(s.;.)ZINIT_ICE[param]} )
+        ___params=( ${(s.;.)ICE[param]} )
         local ___param ___from ___to
         for ___param ( ${___params[@]} ) {
             local ___from=${${___param%%([[:space:]]|)(->|→)*}##[[:space:]]##} \
@@ -1087,7 +1088,7 @@ builtin setopt noaliases
     }
 
     local -a ___add
-    ___add=( "${ZINIT_ICE[param]:+${(@Q)${(@z)ZINIT[PARAM_SUBST]}}}" )
+    ___add=( "${ICE[param]:+${(@Q)${(@z)ZINIT[PARAM_SUBST]}}}" )
     (( ${#___add} % 2 == 0 )) && ___subst_map+=( "${___add[@]}" )
 
     local ___var_name
@@ -1124,14 +1125,14 @@ builtin setopt noaliases
 # The Plugin Standard required mechanism, see:
 # http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
 @zsh-plugin-run-on-unload() {
-    ZINIT_ICE[ps-on-unload]="${(j.; .)@}"
+    ICE[ps-on-unload]="${(j.; .)@}"
     .zinit-pack-ice "$id_as" ""
 }
 # ]]]
 # FUNCTION: @zsh-plugin-run-on-update [[[
 # The Plugin Standard required mechanism
 @zsh-plugin-run-on-update() {
-    ZINIT_ICE[ps-on-update]="${(j.; .)@}"
+    ICE[ps-on-update]="${(j.; .)@}"
     .zinit-pack-ice "$id_as" ""
 }
 # ]]]
@@ -1204,14 +1205,14 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local ___mode="$3" ___rst=0 ___retval=0 ___key
     .zinit-any-to-user-plugin "$1" "$2"
-    local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ZINIT_ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
+    local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
     local ___pdir_orig="$___pdir_path"
-    if [[ -n ${ZINIT_ICE[teleid]} ]] {
-        .zinit-any-to-user-plugin "${ZINIT_ICE[teleid]}"
+    if [[ -n ${ICE[teleid]} ]] {
+        .zinit-any-to-user-plugin "${ICE[teleid]}"
         ___user="${reply[-2]}" ___plugin="${reply[-1]}"
     } else {
-        ZINIT_ICE[teleid]="$___user${${___user:#%}:+/}$___plugin"
+        ICE[teleid]="$___user${${___user:#%}:+/}$___plugin"
     }
 
     local ___m_bkp="${functions[m]}"
@@ -1232,20 +1233,20 @@ builtin setopt noaliases
     if [[ $___user != % && ! -d ${ZINIT[PLUGINS_DIR]}/${___id_as//\//---} ]] {
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         reply=( "$___user" "$___plugin" ) REPLY=github
-        if (( ${+ZINIT_ICE[pack]} )) {
+        if (( ${+ICE[pack]} )) {
             if ! .zinit-get-package "$___user" "$___plugin" "$___id_as" \
                 "${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}" \
-                "${ZINIT_ICE[pack]:-default}"
+                "${ICE[pack]:-default}"
             then
                 zle && { builtin print; zle .reset-prompt; }
                 return 1
             fi
-            ___id_as="${ZINIT_ICE[id-as]:-${___user}${${___user:#(%|/)*}:+/}$___plugin}"
+            ___id_as="${ICE[id-as]:-${___user}${${___user:#(%|/)*}:+/}$___plugin}"
         }
         ___user="${reply[-2]}" ___plugin="${reply[-1]}"
-        ZINIT_ICE[teleid]="$___user${${___user:#(%|/)*}:+/}$___plugin"
+        ICE[teleid]="$___user${${___user:#(%|/)*}:+/}$___plugin"
         [[ $REPLY = snippet ]] && {
-            ZINIT_ICE[id-as]="${ZINIT_ICE[id-as]:-$___id_as}"
+            ICE[id-as]="${ICE[id-as]:-$___id_as}"
             .zinit-load-snippet $___plugin && return
             zle && { builtin print; zle .reset-prompt; }
             return 1
@@ -1260,12 +1261,12 @@ builtin setopt noaliases
     ZINIT_SICE[$___id_as]=
     .zinit-pack-ice "$___id_as"
 
-    (( ${+ZINIT_ICE[cloneonly]} )) && return 0
+    (( ${+ICE[cloneonly]} )) && return 0
 
-    .zinit-register-plugin "$___id_as" "$___mode" "${ZINIT_ICE[teleid]}"
+    .zinit-register-plugin "$___id_as" "$___mode" "${ICE[teleid]}"
 
     # Set up param'' objects (parameters)
-    if [[ -n ${ZINIT_ICE[param]} ]] {
+    if [[ -n ${ICE[param]} ]] {
         .zinit-setup-params && local ${(Q)reply[@]}
     }
 
@@ -1276,7 +1277,7 @@ builtin setopt noaliases
             return $(( 10 - $? ))
     done
 
-    [[ ${+ZINIT_ICE[atinit]} = 1 && $ZINIT_ICE[atinit] != '!'*   ]] && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ZINIT_ICE[atinit]}"; ((1)); } || eval "${ZINIT_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+    [[ ${+ICE[atinit]} = 1 && $ICE[atinit] != '!'*   ]] && { local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ICE[atinit]}"; ((1)); } || eval "${ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit-<-> <->]} )
     for ___key in "${reply[@]}"; do
@@ -1286,8 +1287,8 @@ builtin setopt noaliases
     done
 
     .zinit-load-plugin "$___user" "$___plugin" "$___id_as" "$___mode" "$___rst"; ___retval=$?
-    (( ${+ZINIT_ICE[notify]} == 1 )) && { [[ $___retval -eq 0 || -n ${(M)ZINIT_ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ZINIT_ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $___retval"; }
-    (( ${+ZINIT_ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @___rst
+    (( ${+ICE[notify]} == 1 )) && { [[ $___retval -eq 0 || -n ${(M)ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $___retval"; }
+    (( ${+ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @___rst
     ZINIT[TIME_INDEX]=$(( ${ZINIT[TIME_INDEX]:-0} + 1 ))
     ZINIT[TIME_${ZINIT[TIME_INDEX]}_${___id_as//\//---}]=$SECONDS
     ZINIT[AT_TIME_${ZINIT[TIME_INDEX]}_${___id_as//\//---}]=$EPOCHREALTIME
@@ -1308,35 +1309,35 @@ builtin setopt noaliases
     ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
     [[ -o ksharrays ]] && ___correct=1
 
-    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ZINIT_ICE[opts]} ]] && {
+    [[ -n ${ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ICE[opts]} ]] && {
         local -a ___precm
         ___precm=(
             emulate
-            ${${(M)${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
-            ${${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
-            ${${ZINIT_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
-            ${(s: :):-${${:-${(@s: :):--o}" "${(s: :)^ZINIT_ICE[opts]}}:#-o }}
+            ${${(M)${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
+            ${${${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
+            ${${ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
+            ${(s: :):-${${:-${(@s: :):--o}" "${(s: :)^ICE[opts]}}:#-o }}
             -c
         )
     }
 
-    [[ -z ${ZINIT_ICE[subst]} ]] && local ___builtin=builtin
+    [[ -z ${ICE[subst]} ]] && local ___builtin=builtin
     
-    [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 || ${+ZINIT_ICE[binary]} -eq 1 ]] && \
-        ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
+    [[ ${ICE[as]} = null || ${+ICE[null]} -eq 1 || ${+ICE[binary]} -eq 1 ]] && \
+        ICE[pick]="${ICE[pick]:-/dev/null}"
 
-    if [[ -n ${ZINIT_ICE[autoload]} ]] {
+    if [[ -n ${ICE[autoload]} ]] {
         :zinit-shade-autoload -Uz \
-            ${(s: :)${${${(s.;.)ZINIT_ICE[autoload]#[\!\#]}#[\!\#]}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
-            ${${(M)ZINIT_ICE[autoload]:#*(->|=>|→)*}:+-C} ${${(M)ZINIT_ICE[autoload]#(?\!|\!)}:+-C} ${${(M)ZINIT_ICE[autoload]#(?\#|\#)}:+-I}
+            ${(s: :)${${${(s.;.)ICE[autoload]#[\!\#]}#[\!\#]}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
+            ${${(M)ICE[autoload]:#*(->|=>|→)*}:+-C} ${${(M)ICE[autoload]#(?\!|\!)}:+-C} ${${(M)ICE[autoload]#(?\#|\#)}:+-I}
     }
     
-    if [[ ${ZINIT_ICE[as]} = command ]]; then
-        [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
-            ZINIT_ICE[pick]="${___id_as:t}"
+    if [[ ${ICE[as]} = command ]]; then
+        [[ ${+ICE[pick]} = 1 && -z ${ICE[pick]} ]] && \
+            ICE[pick]="${___id_as:t}"
         reply=()
-        if [[ -n ${ZINIT_ICE[pick]} && ${ZINIT_ICE[pick]} != /dev/null ]]; then
-            reply=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $___pdir_path/${~ZINIT_ICE[pick]}(DN) )
+        if [[ -n ${ICE[pick]} && ${ICE[pick]} != /dev/null ]]; then
+            reply=( ${(M)~ICE[pick]##/*}(DN) $___pdir_path/${~ICE[pick]}(DN) )
             [[ -n ${reply[1-correct]} ]] && ___pdir_path="${reply[1-correct]:h}"
         fi
         [[ -z ${path[(er)$___pdir_path]} ]] && {
@@ -1347,7 +1348,7 @@ builtin setopt noaliases
         }
         [[ -n ${reply[1-correct]} && ! -x ${reply[1-correct]} ]] && command chmod a+x ${reply[@]}
 
-        [[ ${ZINIT_ICE[atinit]} = '!'* || -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
+        [[ ${ICE[atinit]} = '!'* || -n ${ICE[src]} || -n ${ICE[multisrc]} || ${ICE[atload][1]} = "!" ]] && {
             if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
                 (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}" || builtin unset "ZINIT[bkp-compdef]"
                 functions[compdef]=':zinit-shade-compdef "$@";'
@@ -1358,9 +1359,9 @@ builtin setopt noaliases
         }
 
         local ZERO
-        [[ $ZINIT_ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ZINIT_ICE[atinit#!]}"; ((1)); } || eval "${ZINIT_ICE[atinit]#!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
-        [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$___pdir_orig/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
-        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local ___fname; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; done; }
+        [[ $ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ICE[atinit#!]}"; ((1)); } || eval "${ICE[atinit]#!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+        [[ -n ${ICE[src]} ]] && { ZERO="${${(M)ICE[src]##/*}:-$___pdir_orig/${ICE[src]}}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
+        [[ -n ${ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local ___fname; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
         reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
@@ -1370,21 +1371,21 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests
-        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap-track]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$___user" "$___plugin" "$___id_as"
         }
 
-        [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ICE[atload]#\!}"; } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
-        [[ -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
+        [[ -n ${ICE[src]} || -n ${ICE[multisrc]} || ${ICE[atload][1]} = "!" ]] && {
             (( -- ZINIT[SHADOWING] == 0 )) && { ZINIT[SHADOWING]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases; }
         }
-    elif [[ ${ZINIT_ICE[as]} = completion ]]; then
+    elif [[ ${ICE[as]} = completion ]]; then
         ((1))
     else
-        if [[ -n ${ZINIT_ICE[pick]} ]]; then
-            [[ ${ZINIT_ICE[pick]} = /dev/null ]] && reply=( /dev/null ) || reply=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $___pdir_path/${~ZINIT_ICE[pick]}(DN) )
+        if [[ -n ${ICE[pick]} ]]; then
+            [[ ${ICE[pick]} = /dev/null ]] && reply=( /dev/null ) || reply=( ${(M)~ICE[pick]##/*}(DN) $___pdir_path/${~ICE[pick]}(DN) )
         elif [[ -e $___pdir_path/$___pbase.plugin.zsh ]]; then
             reply=( "$___pdir_path/$___pbase".plugin.zsh )
         else
@@ -1405,13 +1406,13 @@ builtin setopt noaliases
         .zinit-shade-on "${___mode:-load}"
 
         # We need some state, but ___user wants his for his plugins
-        (( ${+ZINIT_ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
+        (( ${+ICE[blockf]} )) && { local -a fpath_bkp; fpath_bkp=( "${fpath[@]}" ); }
         local ZERO="$___pdir_path/$___fname"
-        (( ${+ZINIT_ICE[aliases]} )) || builtin setopt noaliases
-        [[ $ZINIT_ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ZINIT_ICE[atinit]#!}"; ((1)); } || eval "${ZINIT_ICE[atinit]#1}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
-        (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }
-        [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$___pdir_orig/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
-        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); } done; }
+        (( ${+ICE[aliases]} )) || builtin setopt noaliases
+        [[ $ICE[atinit] = '!'* ]] && { local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"; } && eval "${ICE[atinit]#!}"; ((1)); } || eval "${ICE[atinit]#1}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+        (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }
+        [[ -n ${ICE[src]} ]] && { ZERO="${${(M)ICE[src]##/*}:-$___pdir_orig/${ICE[src]}}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { ((1)); { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); }; }
+        [[ -n ${ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; }; eval "reply=(${ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; for ___fname in "${reply[@]}"; do ZERO="${${(M)___fname:#/*}:-$___pdir_orig/$___fname}"; (( ${+ICE[silent]} )) && { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( ___retval += $? )); ((1)); } || { { [[ -n $___precm ]] && { builtin ${___precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); $___builtin source "$ZERO"; }; }; (( ___retval += $? )); } done; }
 
         # Run the atload hooks right before atload ice
         reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
@@ -1421,21 +1422,21 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests
-        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap-track]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$___user" "$___plugin" "$___id_as"
         }
 
-        [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
         (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
-        (( ${+ZINIT_ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
+        (( ${+ICE[blockf]} )) && { fpath=( "${fpath_bkp[@]}" ); }
 
         .zinit-shade-off "${___mode:-load}"
 
         [[ $___mode != light(|-b) ]] && .zinit-diff "${ZINIT[CUR_USPL2]}" end
     fi
 
-    [[ ${+ZINIT_ICE[atload]} = 1 && ${ZINIT_ICE[atload][1]} != "!" ]] && { ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ZINIT_ICE[atload]}"; ((1)); } || eval "${ZINIT_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+    [[ ${+ICE[atload]} = 1 && ${ICE[atload][1]} != "!" ]] && { ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ICE[atload]}"; ((1)); } || eval "${ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload-<-> <->]} )
     for ___key in "${reply[@]}"; do
@@ -1465,42 +1466,42 @@ builtin setopt noaliases
     local -a opts
     zparseopts -E -D -a opts f -command || { +zinit-message "{error}Error:{rst} Incorrect options (accepted ones: -f, --command)"; return 1; }
     local url="$1"
-    [[ -n ${ZINIT_ICE[teleid]} ]] && url="${ZINIT_ICE[teleid]}"
+    [[ -n ${ICE[teleid]} ]] && url="${ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
     builtin set --
     integer correct retval exists
     [[ -o ksharrays ]] && correct=1
 
-    [[ -n ${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ZINIT_ICE[opts]} ]] && {
+    [[ -n ${ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ICE[opts]} ]] && {
         local -a precm
         precm=(
             emulate
-            ${${(M)${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
-            ${${${ZINIT_ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
-            ${${ZINIT_ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
-            ${(s: :):-${${:-${(@s: :):--o}" "${(s: :)^ZINIT_ICE[opts]}}:#-o }}
+            ${${(M)${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
+            ${${${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
+            ${${ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
+            ${(s: :):-${${:-${(@s: :):--o}" "${(s: :)^ICE[opts]}}:#-o }}
             -c
         )
     }
     # Remove leading whitespace and trailing /
     url="${${url#"${url%%[! $'\t']*}"}%/}"
-    ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-$url}"
-    [[ ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 || ${+ZINIT_ICE[binary]} -eq 1 ]] && \
-        ZINIT_ICE[pick]="${ZINIT_ICE[pick]:-/dev/null}"
+    ICE[teleid]="${ICE[teleid]:-$url}"
+    [[ ${ICE[as]} = null || ${+ICE[null]} -eq 1 || ${+ICE[binary]} -eq 1 ]] && \
+        ICE[pick]="${ICE[pick]:-/dev/null}"
 
     local local_dir dirname filename save_url="$url"
 
     # Allow things like $OSTYPE in the URL
     eval "url=\"$url\""
 
-    local id_as="${ZINIT_ICE[id-as]:-$url}"
+    local id_as="${ICE[id-as]:-$url}"
 
     local ___m_bkp="${functions[m]}"
     functions[m]="${functions[+zinit-message]}"
 
     # Set up param'' objects (parameters)
-    if [[ -n ${ZINIT_ICE[param]} ]] {
+    if [[ -n ${ICE[param]} ]] {
         .zinit-setup-params && local ${(Q)reply[@]}
     }
 
@@ -1535,9 +1536,9 @@ builtin setopt noaliases
         retval=$?
     }
 
-    (( ${+ZINIT_ICE[cloneonly]} || retval )) && return 0
+    (( ${+ICE[cloneonly]} || retval )) && return 0
 
-    ZINIT_SNIPPETS[$id_as]="$id_as <${${ZINIT_ICE[svn]+svn}:-single file}>"
+    ZINIT_SNIPPETS[$id_as]="$id_as <${${ICE[svn]+svn}:-single file}>"
 
     ZINIT[CUR_USPL2]="$id_as" ZINIT_REPORTS[$id_as]=
 
@@ -1548,7 +1549,7 @@ builtin setopt noaliases
             return $(( 10 - $? ))
     done
 
-    (( ${+ZINIT_ICE[atinit]} )) && { local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ZINIT_ICE[atinit]}"; ((1)); } || eval "${ZINIT_ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+    (( ${+ICE[atinit]} )) && { local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && eval "${ICE[atinit]}"; ((1)); } || eval "${ICE[atinit]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atinit-<-> <->]} )
     for key in "${reply[@]}"; do
@@ -1560,7 +1561,7 @@ builtin setopt noaliases
     local -a list
     local ZERO
 
-    if [[ -z ${opts[(r)--command]} && ( -z ${ZINIT_ICE[as]} || ${ZINIT_ICE[as]} = null || ${+ZINIT_ICE[null]} -eq 1 || ${+ZINIT_ICE[binary]} -eq 1 ) ]]; then
+    if [[ -z ${opts[(r)--command]} && ( -z ${ICE[as]} || ${ICE[as]} = null || ${+ICE[null]} -eq 1 || ${+ICE[binary]} -eq 1 ) ]]; then
         # Source the file with compdef shadeing
         if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
             # Shadowing code is inlined from .zinit-shade-on
@@ -1581,13 +1582,13 @@ builtin setopt noaliases
         }
 
         # Source
-        if (( ${+ZINIT_ICE[svn]} == 0 )) {
-            [[ ${+ZINIT_ICE[pick]} = 0 ]] && list=( "$local_dir/$dirname/$filename" )
-            [[ -n ${ZINIT_ICE[pick]} ]] && list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
+        if (( ${+ICE[svn]} == 0 )) {
+            [[ ${+ICE[pick]} = 0 ]] && list=( "$local_dir/$dirname/$filename" )
+            [[ -n ${ICE[pick]} ]] && list=( ${(M)~ICE[pick]##/*}(DN) $local_dir/$dirname/${~ICE[pick]}(DN) )
         } else {
-            if [[ -n ${ZINIT_ICE[pick]} ]]; then
-                list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
-            elif (( ${+ZINIT_ICE[pick]} == 0 )); then
+            if [[ -n ${ICE[pick]} ]]; then
+                list=( ${(M)~ICE[pick]##/*}(DN) $local_dir/$dirname/${~ICE[pick]}(DN) )
+            elif (( ${+ICE[pick]} == 0 )); then
                 .zinit-find-other-matches "$local_dir/$dirname" "$filename"
                 list=( ${reply[@]} )
             fi
@@ -1595,12 +1596,12 @@ builtin setopt noaliases
 
         if [[ -f ${list[1-correct]} ]] {
             ZERO="${list[1-correct]}"
-            (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
+            (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
             (( 0 == retval )) && [[ $url = PZT::* || $url = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
-        } else { [[ ${+ZINIT_ICE[silent]} -eq 1 || ${+ZINIT_ICE[pick]} -eq 1 && -z ${ZINIT_ICE[pick]} || ${ZINIT_ICE[pick]} = /dev/null ]] || { +zinit-message "Snippet not loaded ({info2}${id_as}{rst})"; retval=1; } }
+        } else { [[ ${+ICE[silent]} -eq 1 || ${+ICE[pick]} -eq 1 && -z ${ICE[pick]} || ${ICE[pick]} = /dev/null ]] || { +zinit-message "Snippet not loaded ({info2}${id_as}{rst})"; retval=1; } }
 
-        [[ -n ${ZINIT_ICE[src]} ]] && { ZERO="${${(M)ZINIT_ICE[src]##/*}:-$local_dir/$dirname/${ZINIT_ICE[src]}}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; }
-        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
+        [[ -n ${ICE[src]} ]] && { ZERO="${${(M)ICE[src]##/*}:-$local_dir/$dirname/${ICE[src]}}"; (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; }
+        [[ -n ${ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
         reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
@@ -1610,21 +1611,21 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests
-        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap-track]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$save_url" "" "$id_as"
         }
 
-        [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
         (( -- ZINIT[SHADOWING] == 0 )) && { ZINIT[SHADOWING]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases; }
-    elif [[ -n ${opts[(r)--command]} || ${ZINIT_ICE[as]} = command ]]; then
-        [[ ${+ZINIT_ICE[pick]} = 1 && -z ${ZINIT_ICE[pick]} ]] && \
-            ZINIT_ICE[pick]="${id_as:t}"
+    elif [[ -n ${opts[(r)--command]} || ${ICE[as]} = command ]]; then
+        [[ ${+ICE[pick]} = 1 && -z ${ICE[pick]} ]] && \
+            ICE[pick]="${id_as:t}"
         # Subversion - directory and multiple files possible
-        if (( ${+ZINIT_ICE[svn]} )); then
-            if [[ -n ${ZINIT_ICE[pick]} ]]; then
-                list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
+        if (( ${+ICE[svn]} )); then
+            if [[ -n ${ICE[pick]} ]]; then
+                list=( ${(M)~ICE[pick]##/*}(DN) $local_dir/$dirname/${~ICE[pick]}(DN) )
                 [[ -n ${list[1-correct]} ]] && local xpath="${list[1-correct]:h}" xfilepath="${list[1-correct]}"
             else
                 local xpath="$local_dir/$dirname"
@@ -1632,14 +1633,14 @@ builtin setopt noaliases
         else
             local xpath="$local_dir/$dirname" xfilepath="$local_dir/$dirname/$filename"
             # This doesn't make sense, but users may come up with something
-            [[ -n ${ZINIT_ICE[pick]} ]] && {
-                list=( ${(M)~ZINIT_ICE[pick]##/*}(DN) $local_dir/$dirname/${~ZINIT_ICE[pick]}(DN) )
+            [[ -n ${ICE[pick]} ]] && {
+                list=( ${(M)~ICE[pick]##/*}(DN) $local_dir/$dirname/${~ICE[pick]}(DN) )
                 [[ -n ${list[1-correct]} ]] && xpath="${list[1-correct]:h}" xfilepath="${list[1-correct]}"
             }
         fi
         [[ -n $xpath && -z ${path[(er)$xpath]} ]] && path=( "${xpath%/}" ${path[@]} )
         [[ -n $xfilepath && -f $xfilepath && ! -x "$xfilepath" ]] && command chmod a+x "$xfilepath" ${list[@]:#$xfilepath}
-        [[ -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
+        [[ -n ${ICE[src]} || -n ${ICE[multisrc]} || ${ICE[atload][1]} = "!" ]] && {
             if [[ ${ZINIT[SHADOWING]} = inactive ]]; then
                 # Shadowing code is inlined from .zinit-shade-on
                 (( ${+functions[compdef]} )) && ZINIT[bkp-compdef]="${functions[compdef]}" || builtin unset "ZINIT[bkp-compdef]"
@@ -1650,11 +1651,11 @@ builtin setopt noaliases
             fi
         }
 
-        if [[ -n ${ZINIT_ICE[src]} ]]; then
-            ZERO="${${(M)ZINIT_ICE[src]##/*}:-$local_dir/$dirname/${ZINIT_ICE[src]}}"
-            (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
+        if [[ -n ${ICE[src]} ]]; then
+            ZERO="${${(M)ICE[src]##/*}:-$local_dir/$dirname/${ICE[src]}}"
+            (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
         fi
-        [[ -n ${ZINIT_ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ZINIT_ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ZINIT_ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
+        [[ -n ${ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
 
         # Run the atload hooks right before atload ice
         reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atload-<-> <->]} )
@@ -1664,21 +1665,21 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests
-        if [[ -n ${ZINIT_ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap-track]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             .zinit-wrap-track-functions "$save_url" "" "$id_as"
         }
 
-        [[ ${ZINIT_ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]#\!}"; ((1)); } || eval "${ZINIT_ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+        [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
-        [[ -n ${ZINIT_ICE[src]} || -n ${ZINIT_ICE[multisrc]} || ${ZINIT_ICE[atload][1]} = "!" ]] && {
+        [[ -n ${ICE[src]} || -n ${ICE[multisrc]} || ${ICE[atload][1]} = "!" ]] && {
             (( -- ZINIT[SHADOWING] == 0 )) && { ZINIT[SHADOWING]=inactive; builtin setopt noaliases; (( ${+ZINIT[bkp-compdef]} )) && functions[compdef]="${ZINIT[bkp-compdef]}" || unfunction compdef; (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases; }
         }
-    elif [[ ${ZINIT_ICE[as]} = completion ]]; then
+    elif [[ ${ICE[as]} = completion ]]; then
         ((1))
     fi
 
-    (( ${+ZINIT_ICE[atload]} )) && [[ ${ZINIT_ICE[atload][1]} != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ZINIT_ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ZINIT_ICE[atload]}"; ((1)); } || eval "${ZINIT_ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+    (( ${+ICE[atload]} )) && [[ ${ICE[atload][1]} != "!" ]] && { ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ICE[atload]}"; ((1)); } || eval "${ICE[atload]}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:atload-<-> <->]} )
     for key in "${reply[@]}"; do
@@ -1686,8 +1687,8 @@ builtin setopt noaliases
         "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" atload
     done
 
-    (( ${+ZINIT_ICE[notify]} == 1 )) && { [[ $retval -eq 0 || -n ${(M)ZINIT_ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ZINIT_ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
-    (( ${+ZINIT_ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @rst
+    (( ${+ICE[notify]} == 1 )) && { [[ $retval -eq 0 || -n ${(M)ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $retval"; }
+    (( ${+ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @rst
 
     ZINIT[CUR_USPL2]=
     ZINIT[TIME_INDEX]=$(( ${ZINIT[TIME_INDEX]:-0} + 1 ))
@@ -1852,7 +1853,7 @@ builtin setopt noaliases
 #
 
 # FUNCTION: .zinit-ice [[[
-# Parses ICE specification, puts the result into ZINIT_ICE global hash.
+# Parses ICE specification, puts the result into ICE global hash.
 # The ice-spec is valid for next command only (i.e. it "melts"), but
 # it can then stick to plugin and activate e.g. at update.
 .zinit-ice() {
@@ -1877,7 +1878,7 @@ builtin setopt noaliases
 # or snippet) mentioned in the next command – for later use with e.g.
 # `zinit update ...'
 .zinit-pack-ice() {
-    ZINIT_SICE[$1${1:+${2:+/}}$2]+="${(j: :)${(qkv)ZINIT_ICE[@]}} "
+    ZINIT_SICE[$1${1:+${2:+/}}$2]+="${(j: :)${(qkv)ICE[@]}} "
     ZINIT_SICE[$1${1:+${2:+/}}$2]="${ZINIT_SICE[$1${1:+${2:+/}}$2]# }"
     return 0
 } # ]]]
@@ -1898,12 +1899,12 @@ builtin setopt noaliases
         ___path="$REPLY"/._zinit
     }
     for ___key ( "${ice_order[@]}" ) {
-        (( ${+ZINIT_ICE[$___key]} )) && [[ ${ZINIT_ICE[$___key]} != +* ]] && continue
-        [[ -e $___path/$___key ]] && ZINIT_ICE[$___key]="$(<$___path/$___key)"
+        (( ${+ICE[$___key]} )) && [[ ${ICE[$___key]} != +* ]] && continue
+        [[ -e $___path/$___key ]] && ICE[$___key]="$(<$___path/$___key)"
     }
-    [[ -n ${ZINIT_ICE[on-update-of]} ]] && ZINIT_ICE[subscribe]="${ZINIT_ICE[subscribe]:-${ZINIT_ICE[on-update-of]}}"
-    [[ ${ZINIT_ICE[as]} = program ]] && ZINIT_ICE[as]=command
-    [[ -n ${ZINIT_ICE[pick]} ]] && ZINIT_ICE[pick]="${ZINIT_ICE[pick]//\$ZPFX/${ZPFX%/}}"
+    [[ -n ${ICE[on-update-of]} ]] && ICE[subscribe]="${ICE[subscribe]:-${ICE[on-update-of]}}"
+    [[ ${ICE[as]} = program ]] && ICE[as]=command
+    [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
 
     return 0
 }
@@ -1911,7 +1912,7 @@ builtin setopt noaliases
 # FUNCTION: .zinit-setup-params [[[
 .zinit-setup-params() {
     emulate -LR zsh -o extendedglob
-    reply=( ${(@)${(@s.;.)ZINIT_ICE[param]}/(#m)*/${${MATCH%%(-\>|→|=\>)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→|=\>)}:+\=${${MATCH#*(-\>|→|=\>)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
+    reply=( ${(@)${(@s.;.)ICE[param]}/(#m)*/${${MATCH%%(-\>|→|=\>)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→|=\>)}:+\=${${MATCH#*(-\>|→|=\>)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
     (( ${#reply} )) && return 0 || return 1
 }
 # ]]]
@@ -1935,28 +1936,29 @@ builtin setopt noaliases
 .zinit-run-task() {
     local ___pass="$1" ___t="$2" ___tpe="$3" ___idx="$4" ___mode="$5" ___id="${(Q)6}" ___opt="${(Q)7}" ___action ___s=1 ___retval=0
 
-    local -A ZINIT_ICE
-    ZINIT_ICE=( "${(@Q)${(z@)ZINIT[WAIT_ICE_${___idx}]}}" )
+    local -A ICE ZINIT_ICE
+    ICE=( "${(@Q)${(z@)ZINIT[WAIT_ICE_${___idx}]}}" )
+    ZINIT_ICE=( "${(kv)ICE[@]}" )
 
-    local ___id_as=${ZINIT_ICE[id-as]:-$___id}
+    local ___id_as=${ICE[id-as]:-$___id}
 
-    if [[ $___pass = 1 && ${${ZINIT_ICE[wait]#\!}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)} = <-> ]]; then
-        ___action="${(M)ZINIT_ICE[wait]#\!}load"
-    elif [[ $___pass = 1 && -n ${ZINIT_ICE[wait]#\!} ]] && { eval "${ZINIT_ICE[wait]#\!}" || [[ $(( ___s=0 )) = 1 ]]; }; then
-        ___action="${(M)ZINIT_ICE[wait]#\!}load"
-    elif [[ -n ${ZINIT_ICE[load]#\!} && -n $(( ___s=0 )) && $___pass = 3 && -z ${ZINIT_REGISTERED_PLUGINS[(r)$___id_as]} ]] && eval "${ZINIT_ICE[load]#\!}"; then
-        ___action="${(M)ZINIT_ICE[load]#\!}load"
-    elif [[ -n ${ZINIT_ICE[unload]#\!} && -n $(( ___s=0 )) && $___pass = 2 && -n ${ZINIT_REGISTERED_PLUGINS[(r)$___id_as]} ]] && eval "${ZINIT_ICE[unload]#\!}"; then
-        ___action="${(M)ZINIT_ICE[unload]#\!}remove"
-    elif [[ -n ${ZINIT_ICE[subscribe]#\!} && -n $(( ___s=0 )) && $___pass = 3 ]] && \
+    if [[ $___pass = 1 && ${${ICE[wait]#\!}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)} = <-> ]]; then
+        ___action="${(M)ICE[wait]#\!}load"
+    elif [[ $___pass = 1 && -n ${ICE[wait]#\!} ]] && { eval "${ICE[wait]#\!}" || [[ $(( ___s=0 )) = 1 ]]; }; then
+        ___action="${(M)ICE[wait]#\!}load"
+    elif [[ -n ${ICE[load]#\!} && -n $(( ___s=0 )) && $___pass = 3 && -z ${ZINIT_REGISTERED_PLUGINS[(r)$___id_as]} ]] && eval "${ICE[load]#\!}"; then
+        ___action="${(M)ICE[load]#\!}load"
+    elif [[ -n ${ICE[unload]#\!} && -n $(( ___s=0 )) && $___pass = 2 && -n ${ZINIT_REGISTERED_PLUGINS[(r)$___id_as]} ]] && eval "${ICE[unload]#\!}"; then
+        ___action="${(M)ICE[unload]#\!}remove"
+    elif [[ -n ${ICE[subscribe]#\!} && -n $(( ___s=0 )) && $___pass = 3 ]] && \
         { local -a fts_arr
-          eval "fts_arr=( ${ZINIT_ICE[subscribe]}(DNms-$(( EPOCHSECONDS -
-                 ZINIT[fts-${ZINIT_ICE[subscribe]}] ))) ); (( \${#fts_arr} ))" && \
-             { ZINIT[fts-${ZINIT_ICE[subscribe]}]="$EPOCHSECONDS"; ___s=${+ZINIT_ICE[once]}; } || \
+          eval "fts_arr=( ${ICE[subscribe]}(DNms-$(( EPOCHSECONDS -
+                 ZINIT[fts-${ICE[subscribe]}] ))) ); (( \${#fts_arr} ))" && \
+             { ZINIT[fts-${ICE[subscribe]}]="$EPOCHSECONDS"; ___s=${+ICE[once]}; } || \
              (( 0 ))
         }
     then
-        ___action="${(M)ZINIT_ICE[subscribe]#\!}load"
+        ___action="${(M)ICE[subscribe]#\!}load"
     fi
 
     if [[ $___action = *load ]]; then
@@ -1966,13 +1968,13 @@ builtin setopt noaliases
             .zinit-load-snippet $___opt "${(@)=___id}"; (( ___retval += $? ))
         elif [[ $___tpe = p1 || $___tpe = s1 ]]; then
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-            zpty -b "${___id//\//:} / ${ZINIT_ICE[service]}" '.zinit-service '"${(M)___tpe#?}"' "$___mode" "$___id"'
+            zpty -b "${___id//\//:} / ${ICE[service]}" '.zinit-service '"${(M)___tpe#?}"' "$___mode" "$___id"'
         fi
-        (( ${+ZINIT_ICE[silent]} == 0 && ${+ZINIT_ICE[lucid]} == 0 && ___retval == 0 )) && zle && zle -M "Loaded $___id"
+        (( ${+ICE[silent]} == 0 && ${+ICE[lucid]} == 0 && ___retval == 0 )) && zle && zle -M "Loaded $___id"
     elif [[ $___action = *remove ]]; then
         (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
         [[ $___tpe = p ]] && .zinit-unload "$___id_as" "" -q
-        (( ${+ZINIT_ICE[silent]} == 0 && ${+ZINIT_ICE[lucid]} == 0 && ___retval == 0 )) && zle && zle -M "Unloaded $___id_as"
+        (( ${+ICE[silent]} == 0 && ${+ICE[lucid]} == 0 && ___retval == 0 )) && zle && zle -M "Unloaded $___id_as"
     fi
 
     [[ ${REPLY::=$___action} = \!* ]] && zle && zle .reset-prompt
@@ -1990,19 +1992,19 @@ builtin setopt noaliases
 .zinit-submit-turbo() {
     local tpe="$1" mode="$2" opt_uspl2="$3" opt_plugin="$4"
 
-    ZINIT_ICE[wait]="${ZINIT_ICE[wait]%%.[0-9]##}"
+    ICE[wait]="${ICE[wait]%%.[0-9]##}"
     ZINIT[WAIT_IDX]=$(( ${ZINIT[WAIT_IDX]:-0} + 1 ))
-    ZINIT[WAIT_ICE_${ZINIT[WAIT_IDX]}]="${(j: :)${(qkv)ZINIT_ICE[@]}}"
-    ZINIT[fts-${ZINIT_ICE[subscribe]}]="${ZINIT_ICE[subscribe]:+$EPOCHSECONDS}"
+    ZINIT[WAIT_ICE_${ZINIT[WAIT_IDX]}]="${(j: :)${(qkv)ICE[@]}}"
+    ZINIT[fts-${ICE[subscribe]}]="${ICE[subscribe]:+$EPOCHSECONDS}"
 
     [[ $tpe = s* ]] && \
         local id="${${opt_plugin:+$opt_plugin}:-$opt_uspl2}" || \
         local id="${${opt_plugin:+$opt_uspl2${${opt_uspl2:#%*}:+/}$opt_plugin}:-$opt_uspl2}"
 
-    if [[ ${${ZINIT_ICE[wait]}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)} = (\!|.|)<-> ]]; then
-        ZINIT_TASKS+=( "$EPOCHSECONDS+${${ZINIT_ICE[wait]#(\!|.)}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}+${${${(M)ZINIT_ICE[wait]%a}:+1}:-${${${(M)ZINIT_ICE[wait]%b}:+2}:-${${${(M)ZINIT_ICE[wait]%c}:+3}:-1}}} $tpe ${ZINIT[WAIT_IDX]} ${mode:-_} ${(q)id} ${opt_plugin:+${(q)opt_uspl2}}" )
-    elif [[ -n ${ZINIT_ICE[wait]}${ZINIT_ICE[load]}${ZINIT_ICE[unload]}${ZINIT_ICE[subscribe]} ]]; then
-        ZINIT_TASKS+=( "${${ZINIT_ICE[wait]:+0}:-1}+0+1 $tpe ${ZINIT[WAIT_IDX]} ${mode:-_} ${(q)id} ${opt_plugin:+${(q)opt_uspl2}}" )
+    if [[ ${${ICE[wait]}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)} = (\!|.|)<-> ]]; then
+        ZINIT_TASKS+=( "$EPOCHSECONDS+${${ICE[wait]#(\!|.)}%%[^0-9]([^0-9]|)([^0-9]|)([^0-9]|)}+${${${(M)ICE[wait]%a}:+1}:-${${${(M)ICE[wait]%b}:+2}:-${${${(M)ICE[wait]%c}:+3}:-1}}} $tpe ${ZINIT[WAIT_IDX]} ${mode:-_} ${(q)id} ${opt_plugin:+${(q)opt_uspl2}}" )
+    elif [[ -n ${ICE[wait]}${ICE[load]}${ICE[unload]}${ICE[subscribe]} ]]; then
+        ZINIT_TASKS+=( "${${ICE[wait]:+0}:-1}+0+1 $tpe ${ZINIT[WAIT_IDX]} ${mode:-_} ${(q)id} ${opt_plugin:+${(q)opt_uspl2}}" )
     fi
 }
 # ]]]
@@ -2148,8 +2150,9 @@ builtin setopt noaliases
 # Main function directly exposed to user, obtains subcommand and its
 # arguments, has completion.
 zinit() {
-    local -A ZINIT_ICE
-    ZINIT_ICE=( "${(kv)ZINIT_ICES[@]}" )
+    local -A ICE ZINIT_ICE
+    ICE=( "${(kv)ZINIT_ICES[@]}" )
+    ZINIT_ICE=( "${(kv)ICE[@]}" )
     ZINIT_ICES=()
 
     integer ___retval ___retval2 ___correct
@@ -2213,12 +2216,12 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 : ${@[@]//(#b)([ $'\t']##|(#s))(-b|--command|-f)([ $'\t']##|(#e))/${OPTS[${match[2]}]::=1}}
             } "$@"
             builtin set -- "${@[@]:#(-b|--command|-f)}"
-            [[ $1 = light && -z ${OPTS[(I)-b]} ]] && ZINIT_ICE[light-mode]=
-            [[ $1 = snippet ]] && ZINIT_ICE[is-snippet]= || ___is_snippet=-1
+            [[ $1 = light && -z ${OPTS[(I)-b]} ]] && ICE[light-mode]=
+            [[ $1 = snippet ]] && ICE[is-snippet]= || ___is_snippet=-1
             shift
 
-            ZINIT_ICES=( "${(kv)ZINIT_ICE[@]}" )
-            ZINIT_ICE=()
+            ZINIT_ICES=( "${(kv)ICE[@]}" )
+            ICE=() ZINIT_ICE=()
             1="${1:+@}${1#@}${2:+/$2}"
             (( $# > 1 )) && { shift -p $(( $# - 1 )); }
             [[ -z $1 ]] && {
@@ -2254,9 +2257,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 local ___last_ice=${@[___retval2]}
                 shift ___retval2
                 if [[ -n $1 ]] {
-                    ZINIT_ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
-                    ZINIT_ICES=()
-                    integer ___msgs=${+ZINIT_ICE[debug]}
+                    ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
+                    ZINIT_ICE=( "${(kv)ICE[@]}" ) ZINIT_ICES=()
+                    integer ___msgs=${+ICE[debug]}
                     (( ___msgs )) && +zinit-message "{pre}zinit-main:{dbg} Processing {pname}$1{dbg}{dots}{rst}"
 
                     # Delete up to the final space to get the previously-processed ID.
@@ -2268,28 +2271,28 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
 
                     # Effective handle-ID – the label under which the object
                     # will be identified / referred-to by Zinit.
-                    ___ehid="${ZINIT_ICE[id-as]:-$___id}"
+                    ___ehid="${ICE[id-as]:-$___id}"
 
                     # Effective remote-ID (i.e.: URL, GitHub username/repo,
                     # package name, etc.). teleid'' allows "overriding" of $1.
                     # In case of a package using teleid'', the value here
                     # is being took from the given ices, before disk-ices.
-                    ___etid="${ZINIT_ICE[teleid]:-$___id}"
+                    ___etid="${ICE[teleid]:-$___id}"
 
-                    if (( ${+ZINIT_ICE[pack]} )); then
-                        ___had_wait=${+ZINIT_ICE[wait]}
+                    if (( ${+ICE[pack]} )); then
+                        ___had_wait=${+ICE[wait]}
                         .zinit-load-ices "$___ehid"
                         # wait'' isn't possible via the disk-ices (for
                         # packages), only via the command's ice-spec
-                        [[ $___had_wait -eq 0 ]] && unset 'ZINIT_ICE[wait]'
+                        [[ $___had_wait -eq 0 ]] && unset 'ICE[wait]'
                     fi
 
-                    [[ ${ZINIT_ICE[id-as]} = (auto|) && ${+ZINIT_ICE[id-as]} == 1 ]] && ZINIT_ICE[id-as]="${___etid:t}"
+                    [[ ${ICE[id-as]} = (auto|) && ${+ICE[id-as]} == 1 ]] && ICE[id-as]="${___etid:t}"
 
                     integer  ___is_snippet=${${(M)___is_snippet:#-1}:-0}
                     () {
                         builtin setopt localoptions extendedglob
-                        if [[ $___is_snippet -ge 0 && ( -n ${ZINIT_ICE[is-snippet]+1} || $___etid = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
+                        if [[ $___is_snippet -ge 0 && ( -n ${ICE[is-snippet]+1} || $___etid = ((#i)(http(s|)|ftp(s|)):/|(${(~kj.|.)ZINIT_1MAP}))* ) ]] {
                             ___is_snippet=1
                         }
                     } "$@"
@@ -2302,7 +2305,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     )
                     for ___key in "${reply[@]}"; do
                         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-                        "${___arr[5]}" "$___type" "$___id" "${ZINIT_ICE[id_as]}" \
+                        "${___arr[5]}" "$___type" "$___id" "${ICE[id_as]}" \
                             "${(j: :)${(q)@[2,-1]}}" "${(j: :)${(qkv)___ices[@]}}" \
                             "${${___key##(zinit|z-annex) hook:}%% <->}" load
                         ___retval2=$?
@@ -2336,13 +2339,13 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         }
                     done
                     integer ___action_load=0 ___turbo=0
-                    if [[ -n ${(M)${+ZINIT_ICE[wait]}:#1}${ZINIT_ICE[load]}${ZINIT_ICE[unload]}${ZINIT_ICE[service]}${ZINIT_ICE[subscribe]} ]] {
+                    if [[ -n ${(M)${+ICE[wait]}:#1}${ICE[load]}${ICE[unload]}${ICE[service]}${ICE[subscribe]} ]] {
                         ___turbo=1
                     }
 
-                    if [[ -n ${ZINIT_ICE[trigger-load]} || \
-                          ( ${+ZINIT_ICE[wait]} == 1 &&
-                              ${ZINIT_ICE[wait]} = (\!|)(<->(a|b|c|)|) )
+                    if [[ -n ${ICE[trigger-load]} || \
+                          ( ${+ICE[wait]} == 1 &&
+                              ${ICE[wait]} = (\!|)(<->(a|b|c|)|) )
                        ]] && (( !ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]
                     )) {
                         if (( ___is_snippet > 0 )) {
@@ -2359,17 +2362,17 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         reply=( 1 )
                     }
 
-                    if [[ ${reply[-1]} -eq 1 && -n ${ZINIT_ICE[trigger-load]} ]] {
+                    if [[ ${reply[-1]} -eq 1 && -n ${ICE[trigger-load]} ]] {
                         () {
                             builtin setopt localoptions extendedglob
                             local ___mode
-                            (( ___is_snippet > 0 )) && ___mode=snippet || ___mode="${${${ZINIT_ICE[light-mode]+light}}:-load}"
-                            for MATCH ( ${(s.;.)ZINIT_ICE[trigger-load]} ) {
+                            (( ___is_snippet > 0 )) && ___mode=snippet || ___mode="${${${ICE[light-mode]+light}}:-load}"
+                            for MATCH ( ${(s.;.)ICE[trigger-load]} ) {
                                 eval "${MATCH#!}() {
                                     ${${(M)MATCH#!}:+unset -f ${MATCH#!}}
                                     local a b; local -a ices
                                     # The wait'' ice is filtered-out
-                                    for a b ( ${(qqkv@)${(kv@)ZINIT_ICE[(I)^(trigger-load|wait|light-mode)]}} ) {
+                                    for a b ( ${(qqkv@)${(kv@)ICE[(I)^(trigger-load|wait|light-mode)]}} ) {
                                         ices+=( \"\$a\$b\" )
                                     }
                                     zinit ice \${ices[@]}; zinit $___mode ${(qqq)___id}
@@ -2383,43 +2386,43 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                         continue
                     }
 
-                    if (( ${+ZINIT_ICE[if]} )) {
-                        eval "${ZINIT_ICE[if]}" || { (( $# )) && shift; continue; };
+                    if (( ${+ICE[if]} )) {
+                        eval "${ICE[if]}" || { (( $# )) && shift; continue; };
                     }
-                    for REPLY ( ${(s.;.)ZINIT_ICE[has]} ) {
+                    for REPLY ( ${(s.;.)ICE[has]} ) {
                         (( ${+commands[$REPLY]} )) || \
                             { (( $# )) && shift; continue 2; }
                     }
 
                     integer ___had_cloneonly=0
-                    ZINIT_ICE[wait]="${${(M)${+ZINIT_ICE[wait]}:#1}:+${(M)ZINIT_ICE[wait]#!}${${ZINIT_ICE[wait]#!}:-0}}"
+                    ICE[wait]="${${(M)${+ICE[wait]}:#1}:+${(M)ICE[wait]#!}${${ICE[wait]#!}:-0}}"
                     if (( ___action_load || !ZINIT[HAVE_SCHEDULER] )) {
                         if (( ___turbo && ZINIT[HAVE_SCHEDULER] )) {
-                            ___had_cloneonly=${+ZINIT_ICE[cloneonly]}
-                            ZINIT_ICE[cloneonly]=""
+                            ___had_cloneonly=${+ICE[cloneonly]}
+                            ICE[cloneonly]=""
                         }
                         if (( ___is_snippet > 0 )); then
                             .zinit-load-snippet ${(k)OPTS[@]} "$___id"
                         else
-                            .zinit-load "$___id" "" "${${ZINIT_ICE[light-mode]+light}:-${OPTS[(I)-b]:+light-b}}"
+                            .zinit-load "$___id" "" "${${ICE[light-mode]+light}:-${OPTS[(I)-b]:+light-b}}"
                         fi
                         integer ___last_retval=$?
                         ___retval+=___last_retval
                         if (( ___turbo && !___had_cloneonly && ZINIT[HAVE_SCHEDULER] )) {
                             command rm -f $___object_path/._zinit/cloneonly
-                            unset 'ZINIT_ICE[cloneonly]'
+                            unset 'ICE[cloneonly]'
                         }
                     }
                     if (( ___turbo && ZINIT[HAVE_SCHEDULER] && 0 == ___last_retval )) {
-                        ZINIT_ICE[wait]="${ZINIT_ICE[wait]:-${ZINIT_ICE[service]:+0}}"
+                        ICE[wait]="${ICE[wait]:-${ICE[service]:+0}}"
                         if (( ___is_snippet > 0 )); then
                             ZINIT_SICE[$___ehid]=
-                            .zinit-submit-turbo s${ZINIT_ICE[service]:+1} "" \
+                            .zinit-submit-turbo s${ICE[service]:+1} "" \
                                 "$___id" "${(k)OPTS[*]}"
                         else
                             ZINIT_SICE[$___ehid]=
-                            .zinit-submit-turbo p${ZINIT_ICE[service]:+1} \
-                                "${${${ZINIT_ICE[light-mode]+light}}:-load}" \
+                            .zinit-submit-turbo p${ICE[service]:+1} \
+                                "${${${ICE[light-mode]+light}}:-load}" \
                                 "$___id" ""
                         fi
                         ___retval+=$?
@@ -2535,10 +2538,10 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    .zinit-list-bindkeys
                    ;;
                (update)
-                    if (( ${+ZINIT_ICE[if]} )) {
-                        eval "${ZINIT_ICE[if]}" || return 1;
+                    if (( ${+ICE[if]} )) {
+                        eval "${ICE[if]}" || return 1;
                     }
-                    for REPLY ( ${(s.;.)ZINIT_ICE[has]} ) {
+                    for REPLY ( ${(s.;.)ICE[has]} ) {
                         (( ${+commands[$REPLY]} )) || return 1
                     }
 
@@ -2549,13 +2552,13 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                     } "$@"
                     builtin set -- "${@:#(${(~j.|.)${(@s.|.)___opt_map[update]}})}"
                     if (( $@[(I)-*] )) { +zinit-erropt-msg update $___opt_map[update] $@; return 1; }
-                    if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ZINIT_ICE[teleid]}${ZINIT_ICE[id-as]} ]]; then
+                    if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ICE[teleid]}${ICE[id-as]} ]]; then
                         [[ -z $1$2 && $(( OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 2; }
                         (( OPTS[opt_-p,--parallel] )) && OPTS[value]=${1:-15}
                         .zinit-update-or-status-all update; ___retval=$?
                     else
                         local ___key ___id="${1%%(///|//|/)}${2:+/}${2%%(///|//|/)}"
-                        [[ -z ${___id//[[:space:]]/} ]] && ___id="${ZINIT_ICE[id-as]:-$ZINIT_ICE[teleid]}"
+                        [[ -z ${___id//[[:space:]]/} ]] && ___id="${ICE[id-as]:-$ICE[teleid]}"
                         .zinit-update-or-status update "$___id" ""; ___retval=$?
                     fi
                     ;;
@@ -2838,7 +2841,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 # !atpull-pre
 @zinit-register-hook "-r/--reset" hook:e-\!atpull-pre ∞zinit-reset-hook
 # !atpull-post
-@zinit-register-hook "ZINIT_ICE[reset]" hook:e-\!atpull-post ∞zinit-reset-hook
+@zinit-register-hook "ICE[reset]" hook:e-\!atpull-post ∞zinit-reset-hook
 @zinit-register-hook "atpull'!'" hook:e-\!atpull-post ∞zinit-atpull-e-hook
 
 # e-!atpull-pre

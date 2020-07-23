@@ -155,18 +155,18 @@
 }
 # ]]]
 # FUNCTION: .zinit-compute-ice [[[
-# Computes ZINIT_ICE array (default, it can be specified via $3) from a) input
-# ZINIT_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+# Computes ICE array (default, it can be specified via $3) from a) input
+# ICE, b) static ice, c) saved ice, taking priorities into account. Also
 # returns path to snippet directory and optional name of snippet file (only
-# valid if ZINIT_ICE[svn] is not set).
+# valid if ICE[svn] is not set).
 #
 # Can also pack resulting ices into ZINIT_SICE (see $2).
 #
 # $1 - URL (also plugin-spec)
-# $2 - "pack" or "nopack" or "pack-nf" - packing means ZINIT_ICE
+# $2 - "pack" or "nopack" or "pack-nf" - packing means ICE
 #      wins with static ice; "pack-nf" means that disk-ices will
 #      be ignored (no-file?)
-# $3 - name of output associative array, "ZINIT_ICE" is the default
+# $3 - name of output associative array, "ICE" is the default
 # $4 - name of output string parameter, to hold path to directory ("local_dir")
 # $5 - name of output string parameter, to hold filename ("filename")
 # $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
@@ -216,7 +216,7 @@
         .zinit-exists-physically-message "$___user" "$___plugin" || return 1
     fi
 
-    [[ $___pack = pack* ]] && (( ${#ZINIT_ICE} > 0 )) && \
+    [[ $___pack = pack* ]] && (( ${#ICE} > 0 )) && \
         .zinit-pack-ice "${___user-$___URL}" "$___plugin"
 
     local -A ___sice
@@ -279,14 +279,14 @@
     # Handle flag-Ices; svn must be last
     for ___key in ${ice_order[@]}; do
         [[ $___key == (no|)compile ]] && continue
-        (( 0 == ${+ZINIT_ICE[no$___key]} && 0 == ${+___sice[no$___key]} )) && continue
+        (( 0 == ${+ICE[no$___key]} && 0 == ${+___sice[no$___key]} )) && continue
         # "If there is such ice currently, and there's no no* ice given,
         # and there's the no* ice in the static ice" – skip, don't unset.
         # With conjunction with the previous line this has the proper
         # meaning: uset if at least in one – current or static – ice
         # there's the no* ice, but not if it's only in the static ice
         # (unless there's on such ice "anyway").
-        (( 1 == ${+ZINIT_ICE[$___key]} && 0 == ${+ZINIT_ICE[no$___key]} && \
+        (( 1 == ${+ICE[$___key]} && 0 == ${+ICE[no$___key]} && \
             1 == ${+___sice[no$___key]} )) && continue
 
         if [[ "$___key" = "svn" ]]; then
@@ -295,7 +295,7 @@
         else
             command rm -f -- "$___zinit_path/$___key"
         fi
-        unset "___mdata[$___key]" "___sice[$___key]" "ZINIT_ICE[$___key]"
+        unset "___mdata[$___key]" "___sice[$___key]" "ICE[$___key]"
     done
 
     # Final decision, static ice vs. saved ice
@@ -383,13 +383,13 @@
 # Displays a countdown 5...4... etc. and returns 0 if it
 # sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
 .zinit-countdown() {
-    (( !${+ZINIT_ICE[countdown]} )) && return 0
+    (( !${+ICE[countdown]} )) && return 0
 
     emulate -L zsh -o extendedglob
     trap "+zinit-message \"{ehi}ABORTING, the ice {ice}$ice{ehi} not ran{rst}\"; return 1" INT
     local count=5 tpe="$1" ice
-    ice="${ZINIT_ICE[$tpe]}"
-    [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ZINIT_ICE[atclone]}"
+    ice="${ICE[$tpe]}"
+    [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ICE[atclone]}"
     ice="{bold}{ice}$tpe{ehi}:{rst}{meta2}${ice//(#b)(\{[a-z0-9]##\})/\\$match[1]}"
     +zinit-message -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
     while (( -- count + 1 )) {

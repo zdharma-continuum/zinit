@@ -1459,7 +1459,7 @@ ZINIT[EXTENDED_GLOB]=""
     # a forced download (i.e.: the medium doesn't allow to peek update)
     ZINIT[annex-multi-flag:pull-active]=0
 
-    (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$user${${user:#(%|/)*}:+/}$plugin]=""; local nf="-nftid"; }
+    (( ${#ICE[@]} > 0 )) && { ZINIT_SICE[$user${${user:#(%|/)*}:+/}$plugin]=""; local nf="-nftid"; }
 
     .zinit-compute-ice "$user${${user:#(%|/)*}:+/}$plugin" "pack$nf" \
         ice local_dir filename is_snippet || return 1
@@ -1513,10 +1513,10 @@ ZINIT[EXTENDED_GLOB]=""
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
         if [[ $ice[from] == (gh-r|github-rel) ]] {
             {
-                ZINIT_ICE=( "${(kv)ice[@]}" )
+                ICE=( "${(kv)ice[@]}" )
                 .zinit-get-latest-gh-r-url-part "$user" "$plugin" || return $?
             } always {
-                ZINIT_ICE=()
+                ICE=()
             }
         } else {
             REPLY=""
@@ -1551,12 +1551,12 @@ ZINIT[EXTENDED_GLOB]=""
                     builtin print "\rUpdating $REPLY"
                 }
 
-                ZINIT_ICE=( "${(kv)ice[@]}" )
+                ICE=( "${(kv)ice[@]}" )
                 # Run annexes' atpull hooks (the before atpull-ice ones).
                 # The gh-r / GitHub releases block.
                 reply=(
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                    ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
+                    ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                     ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
@@ -1572,7 +1572,7 @@ ZINIT[EXTENDED_GLOB]=""
                         builtin print
                     }
                 }
-                ZINIT_ICE=()
+                ICE=()
             }
         }
         if (( ! is_release )) {
@@ -1627,19 +1627,19 @@ ZINIT[EXTENDED_GLOB]=""
               }
 
               if (( ZINIT[annex-multi-flag:pull-active] >= 1 )) {
-                  ZINIT_ICE=( "${(kv)ice[@]}" )
+                  ICE=( "${(kv)ice[@]}" )
                   # Run annexes' atpull hooks (the before atpull-ice ones).
                   # The regular Git-plugins block.
                   reply=(
                       ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                      ${${(M)ZINIT_ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
+                      ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                       ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
                   )
                   for key in "${reply[@]}"; do
                       arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                       "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:git
                   done
-                  ZINIT_ICE=()
+                  ICE=()
                   (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up to date\.|From.*://)'
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
@@ -1660,12 +1660,12 @@ ZINIT[EXTENDED_GLOB]=""
 
         # Any new commits?
         if (( ZINIT[annex-multi-flag:pull-active] >= 1  )) {
-            ZINIT_ICE=( "${(kv)ice[@]}" )
+            ICE=( "${(kv)ice[@]}" )
             # Run annexes' atpull hooks (the before atpull[^!]…-ice ones).
             # Block common for Git and gh-r plugins.
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
-                ${${ZINIT_ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
+                ${${ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
                 ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-post <->]}
             )
             for key in "${reply[@]}"; do
@@ -1684,7 +1684,7 @@ ZINIT[EXTENDED_GLOB]=""
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                 "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update
             done
-            ZINIT_ICE=()
+            ICE=()
         }
 
         # Store ices to disk at update of plugin
@@ -1693,7 +1693,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     # Run annexes' atpull hooks (the `always' after atpull-ice ones)
     # Block common for Git and gh-r plugins.
-    ZINIT_ICE=( "${(kv)ice[@]}" )
+    ICE=( "${(kv)ice[@]}" )
     reply=(
         ${(on)ZINIT_EXTS2[(I)zinit hook:%atpull-pre <->]}
         ${(on)ZINIT_EXTS[(I)z-annex hook:%atpull-<-> <->]}
@@ -1703,7 +1703,7 @@ ZINIT[EXTENDED_GLOB]=""
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
         "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:$ZINIT[annex-multi-flag:pull-active]
     done
-    ZINIT_ICE=()
+    ICE=()
 
     typeset -ga INSTALLED_EXECS
     { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
@@ -1733,14 +1733,14 @@ ZINIT[EXTENDED_GLOB]=""
 # $2 - snippet URL
 .zinit-update-or-status-snippet() {
     local st="$1" URL="${2%/}" local_dir filename is_snippet
-    (( ${#ZINIT_ICE[@]} > 0 )) && { ZINIT_SICE[$URL]=""; local nf="-nftid"; }
+    (( ${#ICE[@]} > 0 )) && { ZINIT_SICE[$URL]=""; local nf="-nftid"; }
     .zinit-compute-ice "$URL" "pack$nf" \
-        ZINIT_ICE local_dir filename is_snippet || return 1
+        ICE local_dir filename is_snippet || return 1
 
     integer retval
 
     if [[ "$st" = "status" ]]; then
-        if (( ${+ZINIT_ICE[svn]} )); then
+        if (( ${+ICE[svn]} )); then
             builtin print -r -- "${ZINIT[col-info]}Status for ${${${local_dir:h}:t}##*--}/${local_dir:t}${ZINIT[col-rst]}"
             ( builtin cd -q "$local_dir"; command svn status -vu )
             retval=$?
@@ -1753,11 +1753,11 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     else
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-install.zsh"
-        .zinit-update-snippet "${ZINIT_ICE[teleid]:-$URL}"
+        .zinit-update-snippet "${ICE[teleid]:-$URL}"
         retval=$?
     fi
 
-    ZINIT_ICE=()
+    ICE=()
 
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
         builtin print ${ZINIT[annex-multi-flag:pull-active]} >! $PUFILE.ind
@@ -1823,7 +1823,7 @@ ZINIT[EXTENDED_GLOB]=""
     local st=$1 id_as repo snip pd user plugin
     integer PUPDATE=0
 
-    local -A ZINIT_ICE
+    local -A ICE
 
 
     if (( OPTS[opt_-s,--snippets] || !OPTS[opt_-l,--plugins] )) {
@@ -1839,12 +1839,12 @@ ZINIT[EXTENDED_GLOB]=""
                 id_as="$(<${snip:h}/id-as)" || \
                 id_as=
             .zinit-update-or-status-snippet "$st" "${id_as:-$(<${snip:h}/url)}"
-            ZINIT_ICE=()
+            ICE=()
         }
         [[ -n $snipps ]] && builtin print
     }
 
-    ZINIT_ICE=()
+    ICE=()
 
     if (( OPTS[opt_-s,--snippets] && !OPTS[opt_-l,--plugins] )) {
         return
@@ -2645,10 +2645,10 @@ ZINIT[EXTENDED_GLOB]=""
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks() {
-    if [[ -n ${ZINIT_ICE[atdelete]} ]]; then
-        .zinit-countdown "atdelete" && ( (( ${+ZINIT_ICE[nocd]} == 0 )) && \
-                { builtin cd -q "$5" && eval "${ZINIT_ICE[atdelete]}"; ((1)); } || \
-                eval "${ZINIT_ICE[atdelete]}" )
+    if [[ -n ${ICE[atdelete]} ]]; then
+        .zinit-countdown "atdelete" && ( (( ${+ICE[nocd]} == 0 )) && \
+                { builtin cd -q "$5" && eval "${ICE[atdelete]}"; ((1)); } || \
+                eval "${ICE[atdelete]}" )
     fi
 
     local -a arr
@@ -2732,11 +2732,11 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         return _retval
     }
 
-    local -A ZINIT_ICE
+    local -A ICE
     local local_dir filename is_snippet
 
     .zinit-compute-ice "$the_id" "pack" \
-        ZINIT_ICE local_dir filename is_snippet || return 1
+        ICE local_dir filename is_snippet || return 1
 
     if [[ "$local_dir" != /* ]]
     then
@@ -2744,7 +2744,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         return 1
     fi
 
-    ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-${ZINIT_ICE[id-as]}}"
+    ICE[teleid]="${ICE[teleid]:-${ICE[id-as]}}"
 
     local -a files
     files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
@@ -2756,11 +2756,11 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
     files=( ${(@)files[1,4]} ${files[4]+more…} )
 
     if (( is_snippet )); then
-        if [[ "${+ZINIT_ICE[svn]}" = "1" ]] {
+        if [[ "${+ICE[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
             then
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
-                    ".zinit-run-delete-hooks snippet \"${ZINIT_ICE[teleid]}\" \"\" \"$the_id\" \
+                    ".zinit-run-delete-hooks snippet \"${ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; \
                     command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
             else
@@ -2770,7 +2770,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         } else {
             if [[ -e "$local_dir" ]]; then
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
-                    ".zinit-run-delete-hooks snippet \"${ZINIT_ICE[teleid]}\" \"\" \"$the_id\" \
+                    ".zinit-run-delete-hooks snippet \"${ICE[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
             else
@@ -2779,7 +2779,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
             fi
         }
     else
-        .zinit-any-to-user-plugin "${ZINIT_ICE[teleid]}"
+        .zinit-any-to-user-plugin "${ICE[teleid]}"
         if [[ -e "$local_dir" ]]; then
             .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                 ".zinit-run-delete-hooks plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
@@ -3075,13 +3075,13 @@ EOF
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-edit() {
-    local -A ZINIT_ICE
+    local -A ICE
     local local_dir filename is_snippet the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
     .zinit-compute-ice "$the_id" "pack" \
-        ZINIT_ICE local_dir filename is_snippet || return 1
+        ICE local_dir filename is_snippet || return 1
 
-    ZINIT_ICE[teleid]="${ZINIT_ICE[teleid]:-${ZINIT_ICE[id-as]}}"
+    ICE[teleid]="${ICE[teleid]:-${ICE[id-as]}}"
 
     if (( is_snippet )); then
         if [[ ! -e "$local_dir" ]]; then

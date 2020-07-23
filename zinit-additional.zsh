@@ -4,7 +4,7 @@
 # FUNCTION: :zinit-shade-source [[[
 :zinit-shade-source() {
     local -a ___substs ___ab
-    ___substs=( "${(@s.;.)ZINIT_ICE[subst]}" )
+    ___substs=( "${(@s.;.)ICE[subst]}" )
     if [[ -n ${(M)___substs:#*\\(#e)} ]] {
         local ___prev
         ___substs=( ${___substs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${___prev:+$___prev\;}}${match[3]}${${___prev::=${match[2]:+${___prev:+$___prev\;}}${match[2]}}:+}} )
@@ -13,7 +13,7 @@
     # Load the plugin
     if [[ ! -r $1 ]] {
         +zinit-message "{error}source: Couldn't read the script {obj}${1}{error}" \
-            ", cannot substitute {data}${ZINIT_ICE[subst]}{error}.{rst}"
+            ", cannot substitute {data}${ICE[subst]}{error}.{rst}"
     }
 
     local ___data="$(<$1)"
@@ -42,12 +42,12 @@
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
-    local ___tpe="$1" ___mode="$2" ___id="$3" ___fle="${ZINIT[SERVICES_DIR]}/${ZINIT_ICE[service]}.lock" ___fd ___cmd ___tmp ___lckd ___strd=0
+    local ___tpe="$1" ___mode="$2" ___id="$3" ___fle="${ZINIT[SERVICES_DIR]}/${ICE[service]}.lock" ___fd ___cmd ___tmp ___lckd ___strd=0
     { builtin print -n >! "$___fle"; } 2>/dev/null 1>&2
     [[ ! -e ${___fle:r}.fifo ]] && command mkfifo "${___fle:r}.fifo" 2>/dev/null 1>&2
     [[ ! -e ${___fle:r}.fifo2 ]] && command mkfifo "${___fle:r}.fifo2" 2>/dev/null 1>&2
 
-    typeset -g ZSRV_WORK_DIR="${ZINIT[SERVICES_DIR]}" ZSRV_ID="${ZINIT_ICE[service]}"  # should be also set by other p-m
+    typeset -g ZSRV_WORK_DIR="${ZINIT[SERVICES_DIR]}" ZSRV_ID="${ICE[service]}"  # should be also set by other p-m
 
     while (( 1 )); do
         (
@@ -78,7 +78,7 @@
 .zinit-wrap-track-functions() {
     local user="$1" plugin="$2" id_as="$3" f
     local -a wt
-    wt=( ${(@s.;.)ZINIT_ICE[wrap-track]} )
+    wt=( ${(@s.;.)ICE[wrap-track]} )
     for f in ${wt[@]}; do
         functions[${f}-zinit-bkp]="${functions[$f]}"
         eval "
