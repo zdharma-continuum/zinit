@@ -1840,13 +1840,28 @@ builtin setopt noaliases
 # ]]]
 # # FUNCTION: +zinit-on-options-msg [[[
 +zinit-on-options-msg() {
+    builtin emulate -LR zsh -o extendedglob
     local cmd=$1 allowed=$2 sep="$ZINIT[col-msg2], $ZINIT[col-ehi]" \
         sep2="$ZINIT[col-msg2], $ZINIT[col-opt]"
     shift 2
+
+    # -h/--help given?
     if (( OPTS[opt_-h,--help] )) {
-        # A help message:
+        # Yes — a help message:
+        +zinit-message "{pre}HELP FOR \`{cmd}$cmd{pre}' subcommand {mdash}" \
+                "the available {blhi}options{ehi}:{rst}"
+        local opt
+        for opt ( ${(kos:|:)allowed} ) {
+            [[ $opt == --* ]] && continue
+            local msg=${___opt_map[$opt]#*:} txt=${___opt_map[(r)opt_$opt,--[^:]##]}
+            if [[ $msg == *":["* ]] {
+                msg=${${(MS)msg##$cmd:\[[^]]##}:-${(MS)msg##\*:\[[^]]##}}
+                msg=${msg#($cmd|\*):\[}
+            }
+            +zinit-message "{opt}${(r:14:)${txt#opt_}} {rst}{ehi}→{rst}{tab} $msg"
+        }
     } else {
-        # An error message:
+        # No — an error message:
         +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
                 "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
@@ -2177,15 +2192,15 @@ zinit() {
 
     local -A ___opt_map OPTS
     ___opt_map=(
-        -q         opt_-q,--quiet:"Turn off any (or: almost-any) messages from the operation."
+        -q         opt_-q,--quiet:"update:[Turn off almost-all messages from the {cmd}update{rst} operation {blhi}FOR the objects{rst} which don't have any {blhi}new version{rst} available.] *:[Turn off any (or: almost-any) messages from the operation.]"
         --quiet    opt_-q,--quiet
         -v         opt_-v,--verbose:"Turn on more messages from the operation."
         --verbose  opt_-v,--verbose
         -r         opt_-r,--reset:"Reset the repository before updating (or remove the files for single-file snippets and gh-r plugins)."
         --reset    opt_-r,--reset
-        -a         opt_-a,--all:"delete:[Delete all plugin and snippets.] update:[Update all plugins and snippets.]"
+        -a         opt_-a,--all:"delete:[Delete {hi}all{rst} plugins and snippets.] update:[Update {blhi}all{rst} plugins and snippets.]"
         --all      opt_-a,--all
-        -c         opt_-c,--clean:"Delete only unloaded plugins and snippets."
+        -c         opt_-c,--clean:"Delete {blhi}only{rst} the {blhi}currently-not loaded{rst} plugins and snippets."
         --clean    opt_-c,--clean
         -y         opt_-y,--yes:"Automatically confirm any yes/no prompts."
         --yes      opt_-y,--yes
@@ -2201,7 +2216,7 @@ zinit() {
         --help     opt_-h,--help
         env-whitelist "-h|--help|-v|--verbose"
         update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
--q|--quiet|-f|--force|-r|--reset|-v|--verbose|-h|--help"
+-q|--quiet|-r|--reset|-v|--verbose|-h|--help"
         delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet|-h|--help"
 
     )
