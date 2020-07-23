@@ -289,7 +289,7 @@ builtin setopt noaliases
                                  [[ \$body2 != \$body ]] && \
                                     body2=\"\${body2%\}[[:space:]]#([$nl]#([[:blank:]]#\#[^$nl]#((#e)|[$nl]))#)#}\"
                             }
-                                
+
                             functions[${${(q)custom[count*2]}:-$func}]=\"\$body2\"
                             ${(q)${custom[count*2]}:-$func} \"\$@\"
                         }"
@@ -1326,7 +1326,7 @@ builtin setopt noaliases
     }
 
     [[ -z ${ICE[subst]} ]] && local ___builtin=builtin
-    
+
     [[ ${ICE[as]} = null || ${+ICE[null]} -eq 1 || ${+ICE[binary]} -eq 1 ]] && \
         ICE[pick]="${ICE[pick]:-/dev/null}"
 
@@ -1335,7 +1335,7 @@ builtin setopt noaliases
             ${(s: :)${${${(s.;.)ICE[autoload]#[\!\#]}#[\!\#]}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
             ${${(M)ICE[autoload]:#*(->|=>|→)*}:+-C} ${${(M)ICE[autoload]#(?\!|\!)}:+-C} ${${(M)ICE[autoload]#(?\#|\#)}:+-I}
     }
-    
+
     if [[ ${ICE[as]} = command ]]; then
         [[ ${+ICE[pick]} = 1 && -z ${ICE[pick]} ]] && \
             ICE[pick]="${___id_as:t}"
@@ -1839,12 +1839,11 @@ builtin setopt noaliases
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
-# FUNCTION: +zinit-on-options-msg [[[
-+zinit-on-options-msg() {
+# FUNCTION: +zinit-prehelp-usage-message [[[
++zinit-prehelp-usage-message() {
     builtin emulate -LR zsh -o extendedglob
     local cmd=$1 allowed=$2 sep="$ZINIT[col-msg2], $ZINIT[col-ehi]" \
         sep2="$ZINIT[col-msg2], $ZINIT[col-opt]"
-    shift 2
 
     # -h/--help given?
     if (( OPTS[opt_-h,--help] )) {
@@ -1861,13 +1860,27 @@ builtin setopt noaliases
             }
             +zinit-message "{opt}${(r:14:)${txt#opt_}} {rst}{ehi}→{rst}{tab} $msg"
         }
-    } else {
+    } elif [[ -n $allowed ]] {
+        shift 2
         # No — an error message:
         +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
                 "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
                 "{nl}{mmdsh} {opt}${allowed//\|/$sep2}{msg2}." \
                 "{nl}{…} Aborting.{rst}"
+    } else {
+        local -a cmds
+        cmds=( load snippet update delete )
+        local bcol="{$cmd}" sep="${ZINIT[col-rst]}${ZINIT[col-$cmd]}', \`${ZINIT[col-cmd]}"
+        +zinit-message "$bcol(it should be one of, e.g.{ehi}:" \
+                "{nb}$bcol\`{cmd}${(pj:$sep:)cmds}$bcol'," \
+                "{cmd}{…}$bcol, e.g.{ehi}: {nb}$bcol\`{lhi}zinit load" \
+                "{pid}username/reponame$bcol') or a {b}{obj}for{nb}$bcol-based" \
+                "command body (i.e.{ehi}:{rst}$bcol e.g.{ehi}: {rst}$bcol\`{lhi}zinit" \
+                    "{…}{b}ice-spec{nb}{…} {b}{obj}for{nb}{lhi} {…}{b}plugin" \
+                    "{nb}or{b} snippet {pname}ID-1 ID-2 {-…} {lhi}{nb}{…}$bcol')." \
+                "See \`{cmd}help$bcol' for more usage information and the complete" \
+                "list of the {cmd}subcommands$bcol.{rst}"
     }
 }
 # ]]]
@@ -2265,8 +2278,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             local ___last_ice=${@[___retval2]}
             shift ___retval2
             if [[ $# -gt 0 && $1 != for ]] {
-                +zinit-message "{error}Unknown command or ice: ${___q}{obj}${1}{error}'" \
-                    "(use ${___q}{info2}help{error}' to get usage information).{rst}"
+                +zinit-message -n "{error}ERROR{ehi}:{rst} Unknown subcommand{ehi}:{rst}" \
+                        "\`{obj}$1{rst}' "
+                +zinit-prehelp-usage-message rst
                 return 1
             } elif (( $# == 0 )) {
                 ___error=1
@@ -2350,7 +2364,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                 local -a ___args
                                 ___args=( "${(@Q)${(@z)ZINIT[annex-before-load:new-@]}}" )
                                 builtin set -- "${___args[@]}"
-                            } 
+                            }
 
                             # Override $___ices?
                             if (( ___retval2 & 4 )) {
@@ -2365,7 +2379,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                     "https://github.com/zinit-zsh/${___arr[3]}/issues/new{msg}.{rst}"
                                             ___ices=(  ) ___retval+=7
                                         }
-                            } 
+                            }
                             continue 2
                         }
                     done
@@ -2519,7 +2533,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
             shift
             .zinit-parse-opts env-whitelist "$@"
             builtin set -- "${reply[@]}"
-            if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg env-whitelist $___opt_map[env-whitelist] $@; return 1; }
+            if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-prehelp-usage-message env-whitelist $___opt_map[env-whitelist] $@; return 1; }
 
             (( OPTS[opt_-h,--help] )) && { +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {…}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; return 0; }
             if (( $# == 0 )) {
@@ -2576,7 +2590,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                     shift
                     .zinit-parse-opts update "$@"
                     builtin set -- "${reply[@]}"
-                    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg update $___opt_map[update] $@; return 1; }
+                    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-prehelp-usage-message update $___opt_map[update] $@; return 1; }
                     if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ICE[teleid]}${ICE[id-as]} ]]; then
                         [[ -z $1$2 && $(( OPTS[opt_-a,--all] + OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
                         (( OPTS[opt_-p,--parallel] )) && OPTS[value]=${1:-15}
@@ -2744,20 +2758,14 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    .zinit-module "${@[2-correct,-1]}"; ___retval=$?
                    ;;
                 (*)
-                    local sep="${ZINIT[col-rst]}${ZINIT[col-msg2]}', $___q${ZINIT[col-cmd]}"
-                    local -a cmds=( load snippet update delete )
-                    [[ -z $1 ]] && \
-                        +zinit-message "{error}ERROR{ehi}:{nb}{msg2} Missing a {cmd}command" \
-                                "{msg2}(one of, e.g.{ehi}:" \
-                                "{nb}{msg2}$___q{cmd}${(pj:$sep:)cmds}{msg2}'," \
-                                "{cmd}{…}{msg2}, e.g.{ehi}: {nb}{msg2}$___q{lhi}zinit load" \
-                                "{pid}username/reponame{msg2}') or a {b}{cmd}for{nb}{msg2}-based" \
-                                "command (i.e.{ehi}: {rst}{msg2}$___q{lhi}zinit" \
-                                    "{…}{b}ice-spec{nb}{…} {b}{cmd}for{nb}{lhi} {…}{b}plugin" \
-                                    "{nb}or{b} snippet {pname}ID-1 ID-2 {-…} {lhi}{nb}{…}{msg2}')." \
-                                "See $___q{cmd}help{msg2}' for more usage information.{rst}" || \
-                        +zinit-message "{error}Unknown command $___q{obj}$1{error}'" \
-                                "(use $___q{obj}help{error}' to get usage information).{rst}"
+                    if [[ -z $1 ]] {
+                        +zinit-message -n "{error}ERROR{ehi}:{rst} Missing a {cmd}subcommand "
+                        +zinit-prehelp-usage-message rst
+                    } else {
+                        +zinit-message -n "{error}ERROR{ehi}:{rst} Unknown subcommand{ehi}:{rst}" \
+                                "\`{obj}$1{error}' "
+                        +zinit-prehelp-usage-message rst
+                    }
                     ___retval=1
                     ;;
             esac
