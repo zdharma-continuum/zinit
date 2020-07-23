@@ -2191,6 +2191,7 @@ zinit() {
        env-whitelist "-h|--help|-v|--verbose"
        update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
 -q|--quiet|-f|--force|-r|--reset|-v|--verbose|-h|--help"
+       delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet"
 
     )
 

@@ -2681,15 +2681,13 @@ ZINIT[EXTENDED_GLOB]=""
     local MATCH; integer MBEGIN MEND
 
     # Parse options
-    local -a opts
-    opts=( --all --clean --yes -y -q --quiet )
-    : ${@[@]//(#b)([ $'\t']##|(#s))(${(~j.|.)opts})([ $'\t']##|(#e))/${OPTS[${___opt_map[${match[2]}]}]::=1}}
-    set -- "${@[@]:#(${(~j.|.)opts})}"
+    builtin set -- "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[delete]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]}]::=1}ß←↓→}:#1ß←↓→}"
+    if (( $@[(I)-*] )) { +zinit-erropt-msg delete $___opt_map[delete] $@; return 1; }
 
     local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
 
-    # --all given?
-    if (( OPTS[opt_--all] )); then
+    # -a/--all given?
+    if (( OPTS[opt_-a,--all] )); then
         .zinit-confirm "Prune all plugins in \`${ZINIT[PLUGINS_DIR]}'"\
 "and snippets in \`${ZINIT[SNIPPETS_DIR]}'?" \
 "command rm -rf ${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/_local---zinit(ND) "\
@@ -2697,8 +2695,8 @@ ZINIT[EXTENDED_GLOB]=""
         return $?
     fi
 
-    # --clean given?
-    if (( OPTS[opt_--clean] )) {
+    # -c/--clean given?
+    if (( OPTS[opt_-c,--clean] )) {
         .zinit-confirm "Prune ${ZINIT[col-info]}CURRENTLY NOT LOADED${ZINIT[col-rst]}"\
 " plugins in $ZINIT[col-file]$ZINIT[PLUGINS_DIR]%f%b"\
 " and snippets in $ZINIT[col-file]$ZINIT[SNIPPETS_DIR]%f%b?" \
