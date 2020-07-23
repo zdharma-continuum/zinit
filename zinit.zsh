@@ -2232,7 +2232,7 @@ zinit() {
 
     reply=( ${ZINIT_EXTS[(I)z-annex subcommand:*]} )
 
-    [[ $1 != (-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
+    [[ -n $1 && $1 != (-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
@@ -2743,11 +2743,23 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                (module)
                    .zinit-module "${@[2-correct,-1]}"; ___retval=$?
                    ;;
-               (*)
-                   +zinit-message "{error}Unknown command ${___q}{obj}${1}{error}'" \
-                       "(use ${___q}{obj}help{error}' to get usage information).{rst}"
-                   ___retval=1
-                   ;;
+                (*)
+                    local sep="${ZINIT[col-rst]}${ZINIT[col-msg2]}', $___q${ZINIT[col-cmd]}"
+                    local -a cmds=( load snippet update delete )
+                    [[ -z $1 ]] && \
+                        +zinit-message "{error}ERROR{ehi}:{nb}{msg2} Missing a {cmd}command" \
+                                "{msg2}(one of, e.g.{ehi}:" \
+                                "{nb}{msg2}$___q{cmd}${(pj:$sep:)cmds}{msg2}'," \
+                                "{cmd}{…}{msg2}, e.g.{ehi}: {nb}{msg2}$___q{lhi}zinit load" \
+                                "{pid}username/reponame{msg2}') or a {b}{cmd}for{nb}{msg2}-based" \
+                                "command (i.e.{ehi}: {rst}{msg2}$___q{lhi}zinit" \
+                                    "{…}{b}ice-spec{nb}{…} {b}{cmd}for{nb}{lhi} {…}{b}plugin" \
+                                    "{nb}or{b} snippet {pname}ID-1 ID-2 {-…} {lhi}{nb}{…}{msg2}')." \
+                                "See $___q{cmd}help{msg2}' for more usage information.{rst}" || \
+                        +zinit-message "{error}Unknown command $___q{obj}$1{error}'" \
+                                "(use $___q{obj}help{error}' to get usage information).{rst}"
+                    ___retval=1
+                    ;;
             esac
             ;;
     esac
