@@ -256,7 +256,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             }
             builtin cd -q $dir || return 1
 
-            +zinit-message "Downloading tarball for {pname}$plugin{rst}{dots}"
+            +zinit-message "Downloading tarball for {pname}$plugin{rst}{…}"
 
             if { ! .zinit-download-file-stdout "$URL" 0 1 >! "$fname" } {
                 if { ! .zinit-download-file-stdout "$URL" 1 1 >! "$fname" } {
@@ -341,8 +341,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            (( $+ICE[pack] )) && local infix_m="({bold}{ice}pack{apo}''{rst}) "
-            +zinit-message "{nl}Downloading $infix_m$REPLY{dots}${${${id_as:#$user/$plugin}}:+" (as{ehi}:{rst} {meta2}$id_as{rst}{dots})"}"
+            (( $+ICE[pack] )) && local infix_m="({b}{ice}pack{apo}''{rst}) "
+            +zinit-message "{nl}Downloading $infix_m$REPLY{…}${${${id_as:#$user/$plugin}}:+" (as{ehi}:{rst} {meta2}$id_as{rst}{…})"}"
         }
 
         local site
@@ -372,7 +372,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         { local old_version="$(<$local_path/._zinit/is_release${count:#1})"; } 2>/dev/null
                         old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                     }
-                    +zinit-message "(Requesting \`${REPLY:t}'${version:+, version $version}{dots}${old_version:+ Current version: $old_version.})"
+                    +zinit-message "(Requesting \`${REPLY:t}'${version:+, version $version}{…}${old_version:+ Current version: $old_version.})"
                     if { ! .zinit-download-file-stdout "$url" 0 1 >! "${REPLY:t}" } {
                         if { ! .zinit-download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
                             command rm -f "${REPLY:t}"
@@ -616,7 +616,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         .zinit-forget-completion "$cfile"
     done
 
-    +zinit-message "Initializing completion (compinit){dots}"
+    +zinit-message "Initializing completion (compinit){…}"
     command rm -f ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
     # Workaround for a nasty trick in _vim
@@ -835,7 +835,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         first=${reply[-1]}
         local fname=${first#$pdir_path/}
 
-        +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {info}$fname{rst}{dots}"
+        +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {info}$fname{rst}{…}"
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
             () {
                 builtin emulate -LR zsh -o extendedglob
@@ -934,12 +934,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                   /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
-        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet: {p}$sname{rst}${ICE[id-as]:+"{dots} (as{ehi}:{rst} {meta}$id_as{rst}")}"
+        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet: {p}$sname{rst}${ICE[id-as]:+"{…} (as{ehi}:{rst} {meta}$id_as{rst}")}"
         command mkdir -p "$local_dir"
     fi
 
     [[ $update = -u && ${OPTS[opt_-q,--quiet]} != 1 ]] && \
-        +zinit-message "{nl}{info}Updating snippet: {p}$sname{rst}${ICE[id-as]:+"{dots} (identified as{ehi}:{rst} {meta}$id_as{rst})"}"
+        +zinit-message "{nl}{info}Updating snippet: {p}$sname{rst}${ICE[id-as]:+"{…} (identified as{ehi}:{rst} {meta}$id_as{rst})"}"
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
@@ -956,7 +956,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
-                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`$sname'${${ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}{dots}"
+                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`$sname'${${ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}{…}"
 
                 if (( ${+ICE[svn]} )) {
                     if [[ $update = -u ]] {
@@ -989,8 +989,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             if (( OPTS[opt_-q,--quiet] )); then 
-                                +zinit-message $'\n'"{info}Updating snippet {p}${sname}{rst}${ICE[id-as]:+"{dots}" (identified as: $id_as)}"
-                                +zinit-message "Downloading \`$sname' (with Subversion){dots}"
+                                +zinit-message $'\n'"{info}Updating snippet {p}${sname}{rst}${ICE[id-as]:+"{…}" (identified as: $id_as)}"
+                                +zinit-message "Downloading \`$sname' (with Subversion){…}"
                             fi
                             .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
                         }
@@ -1143,7 +1143,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 retval=4
             }
             if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
-                +zinit-message "{msg}Copying {file}$filename{msg}{dots}{rst}"
+                +zinit-message "{msg}Copying {file}$filename{msg}{…}{rst}"
                 command cp -vf "$url" "$local_dir/$dirname/$filename" || \
                     { +zinit-message "{ehi}ERROR:{error} The file copying has been unsuccessful.{rst}"; retval=4; }
             } else {
@@ -1593,7 +1593,7 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{pre}ziextract:{msg} Unpacking the files from: \`{obj}$file{msg}'{dots}{rst}"
+            +zinit-message "{pre}ziextract:{msg} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
         $fun; retval=$?
         if (( retval == 0 )) {
             local -a files
@@ -1829,7 +1829,7 @@ zpextract() { ziextract "$@"; }
     # Download mirrors.lst
     #
 
-    +zinit-message "{info}Downloading{ehi}: {obj}mirrors.lst{info}{dots}{rst}"
+    +zinit-message "{info}Downloading{ehi}: {obj}mirrors.lst{info}{…}{rst}"
     local mlst="$(mktemp)"
     while (( retry -- )) {
         if ! .zinit-download-file-stdout https://cygwin.com/mirrors.lst 0 > $mlst; then
@@ -1855,7 +1855,7 @@ zpextract() { ziextract "$@"; }
     #
 
     +zinit-message "{info2}Selected mirror is{error}: {url}${mirror}{rst}"
-    +zinit-message "{info}Downloading{ehi}: {file}setup.ini.bz2{info}{dots}{rst}"
+    +zinit-message "{info}Downloading{ehi}: {file}setup.ini.bz2{info}{…}{rst}"
     local setup="$(mktemp -u)"
     retry=3
     while (( retry -- )) {
@@ -1880,7 +1880,7 @@ zpextract() { ziextract "$@"; }
     # Download the package
     #
 
-    +zinit-message "{info}Downloading{ehi}: {file}${url:t}{info}{dots}{rst}"
+    +zinit-message "{info}Downloading{ehi}: {file}${url:t}{info}{…}{rst}"
     retry=2
     while (( retry -- )) {
         integer retval=0
@@ -1891,7 +1891,7 @@ zpextract() { ziextract "$@"; }
                 mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
                 url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
                 if (( retry )) {
-                    +zinit-message "{info2}Retrying, with mirror{error}: {url}${mirror}{info2}{dots}{rst}"
+                    +zinit-message "{info2}Retrying, with mirror{error}: {url}${mirror}{info2}{…}{rst}"
                     continue
                 }
             fi
@@ -1960,7 +1960,7 @@ zimv() {
         if [[ $type == snippet ]] {
             if (( $+ICE[svn] )) {
                 if [[ $skip_pull -eq 0 && -d $filename/.svn ]] {
-                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive {dots}/{file}$filename/.{rst} {dots}"
+                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive {…}/{file}$filename/.{rst} {…}"
                     command svn revert --recursive $filename/.
                 }
             } else {
@@ -1968,10 +1968,10 @@ zimv() {
                     if (( !OPTS[opt_-q,--quiet] )) {
                         if [[ -f $local_dir/$dirname/$filename ]] {
                             if [[ -n $option || -z $ICE[reset] ]] {
-                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} {dots}{rst}"
+                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} {…}{rst}"
                             } else {                                         
                                 +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}," \
-                                    "with the supplied code: {data2}$ICE[reset]{msg2} {dots}{rst}"
+                                    "with the supplied code: {data2}$ICE[reset]{msg2} {…}{rst}"
                             }
                             if (( option )) {
                                 command rm -f "$local_dir/$dirname/$filename"
@@ -1979,7 +1979,7 @@ zimv() {
                                 eval "${ICE[reset]:-rm -f \"$local_dir/$dirname/$filename\"}"
                             }
                         } else {
-                            +zinit-message "{pre}reset ($msg_bit):{msg2} The file {file}$filename{msg2} is already deleted {dots}{rst}"
+                            +zinit-message "{pre}reset ($msg_bit):{msg2} The file {file}$filename{msg2} is already deleted {…}{rst}"
                             if [[ -n $ICE[reset] && ! -n $option ]] {
                                 +zinit-message "{pre}reset ($msg_bit):{msg2} (skipped running the provided reset-code:" \
                                     "{data2}$ICE[reset]{msg2}){rst}"
@@ -2005,10 +2005,10 @@ zimv() {
                 }
             } elif (( !skip_pull )) {
                 if (( option )) {
-                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD {dots}"
+                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD {…}"
                     command git reset --hard HEAD
                 } else {
-                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} ${ICE[reset]:-git reset --hard HEAD} {dots}"
+                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} ${ICE[reset]:-git reset --hard HEAD} {…}"
                     builtin eval "${ICE[reset]:-git reset --hard HEAD}"
                 }
             }

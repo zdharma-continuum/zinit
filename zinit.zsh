@@ -135,23 +135,24 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-note    $'\e[33m'       col-error  $'\e[31m'       col-p       $'\e[01m\e[34m'
         col-bar     $'\e[01m\e[35m' col-info   $'\e[32m'       col-info2   $'\e[33m'
         col-info3   $'\e[01m\e[33m' col-uninst $'\e[38;5;140m' col-success $'\e[01m\e[32m'
-        col-failure $'\e[31m'       col-rst    $'\e[0m'        col-bold    $'\e[1m'
+        col-failure $'\e[31m'       col-rst    $'\e[0m'        col-b       $'\e[1m'
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;135m' col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
         col-obj  $'\e[38;5;221m' col-obj2  $'\e[38;5;154m' col-file  $'\e[38;5;110m'
         col-url  $'\e[38;5;33m'  col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;32m'
         col-data $'\e[38;5;82m'  col-data2 $'\e[38;5;50m'  col-hi    $'\e[1m\e[38;5;160m'
         col-ehi  $'\e[01m\e[31m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
-        col-cmd  $'\e[38;5;90m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
+        col-cmd  $'\e[38;5;40m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num   $'\e[38;5;207m' col-term  $'\e[38;5;34m'
         col-warn $'\e[38;5;172m' col-apo   $'\e[38;5;220m' col-ok    $'\e[38;5;220m'
         col-dbg  $'\e[38;5;238m' col-opt   $'\e[38;5;33m'  col-lhi   $'\e[38;5;75m'
         col-tab  $'\t'           col-msg3  $'\e[38;5;238m' col-blhi  $'\e[1m\e[38;5;75m'
-        col-dots "${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}" col-ndash  "${${${(M)LANG:#(#i)*utf-8*}:+–}:-}"
-        col-mdash "${${${(M)LANG:#(#i)*utf-8*}:+—}:--}"  col-mmdash "${${${(M)LANG:#(#i)*utf-8*}:+——}:--}"
-        col-lr   "${${${(M)LANG:#(#i)*utf-8*}:+↔}:-"<->"}"
+        col-…  "${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}" col-ndsh  "${${${(M)LANG:#(#i)*utf-8*}:+–}:-}"
+        col-mdsh "${${${(M)LANG:#(#i)*utf-8*}:+—}:--}" col-mmdsh "${${${(M)LANG:#(#i)*utf-8*}:+——}:--}"
+        col--… "${${${(M)LANG:#(#i)*utf-8*}:+⋯}:-...}" col-lr "${${${(M)LANG:#(#i)*utf-8*}:+↔}:-"<->"}"
         col-un   $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
         col-nun  $'\e[24m'       col-nit   $'\e[23m'       col-nst   $'\e[29m'
+        col-nb   $'\e[21m'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
@@ -1838,7 +1839,7 @@ builtin setopt noaliases
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
-# # FUNCTION: +zinit-on-options-msg [[[
+# FUNCTION: +zinit-on-options-msg [[[
 +zinit-on-options-msg() {
     builtin emulate -LR zsh -o extendedglob
     local cmd=$1 allowed=$2 sep="$ZINIT[col-msg2], $ZINIT[col-ehi]" \
@@ -1848,7 +1849,7 @@ builtin setopt noaliases
     # -h/--help given?
     if (( OPTS[opt_-h,--help] )) {
         # Yes — a help message:
-        +zinit-message "{pre}HELP FOR \`{cmd}$cmd{pre}' subcommand {mdash}" \
+        +zinit-message "{pre}HELP FOR \`{cmd}$cmd{pre}' subcommand {mdsh}" \
                 "the available {blhi}options{ehi}:{rst}"
         local opt
         for opt ( ${(kos:|:)allowed} ) {
@@ -1865,8 +1866,8 @@ builtin setopt noaliases
         +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
                 "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
-                "{nl}{mmdash} {opt}${allowed//\|/$sep2}{msg2}." \
-                "{nl}{dots} Aborting.{rst}"
+                "{nl}{mmdsh} {opt}${allowed//\|/$sep2}{msg2}." \
+                "{nl}{…} Aborting.{rst}"
     }
 }
 # ]]]
@@ -2220,7 +2221,7 @@ zinit() {
         --plugins  opt_-l,--plugins
         -h         opt_-h,--help:"Show this help message."
         --help     opt_-h,--help
-        -u         opt_-u,--urge:"Cause all the hooks like{ehi}:{rst} {ice}atpull{apo}''{rst}, {ice}cp{apo}''{rst}, etc. to execute even when there aren't any new commits {bold}/{rst} any new version of the {bold}{meta}gh-r{rst} file {bold}/{rst} etc.{dots} available for download {ehi}{lr}{rst} simulate a non-empty update."
+        -u         opt_-u,--urge:"Cause all the hooks like{ehi}:{rst} {ice}atpull{apo}''{rst}, {ice}cp{apo}''{rst}, etc. to execute even when there aren't any new commits {b}/{rst} any new version of the {b}{meta}gh-r{rst} file {b}/{rst} etc.{…} available for download {ehi}{lr}{rst} simulate a non-empty update."
         --urge     opt_-u,--urge
         env-whitelist "-h|--help|-v|--verbose"
         update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
@@ -2290,7 +2291,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICE=( "${(kv)ICE[@]}" ) ZINIT_ICES=()
                     integer ___msgs=${+ICE[debug]}
-                    (( ___msgs )) && +zinit-message "{pre}zinit-main:{dbg} Processing {pname}$1{dbg}{dots}{rst}"
+                    (( ___msgs )) && +zinit-message "{pre}zinit-main:{dbg} Processing {pname}$1{dbg}{…}{rst}"
 
                     # Delete up to the final space to get the previously-processed ID.
                     ZINIT[annex-exposed-processed-IDs]+="${___id:+ $___id}"
@@ -2520,7 +2521,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
             builtin set -- "${reply[@]}"
             if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg env-whitelist $___opt_map[env-whitelist] $@; return 1; }
 
-            (( OPTS[opt_-h,--help] )) && { +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {dots}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; return 0; }
+            (( OPTS[opt_-h,--help] )) && { +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {…}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; return 0; }
             if (( $# == 0 )) {
                 ZINIT[ENV-WHITELIST]=
                 (( OPTS[opt_-v,--verbose] )) && +zinit-message "{msg2}Cleared the parameter whitelist.{rst}"
@@ -2625,7 +2626,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        if .zinit-cdisable "$___f"; then
                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$___f"
-                           +zinit-message "Initializing completion system (compinit){dots}"
+                           +zinit-message "Initializing completion system (compinit){…}"
                            builtin autoload -Uz compinit
                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                        else
@@ -2643,7 +2644,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        if .zinit-cenable "$___f"; then
                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$___f"
-                           +zinit-message "Initializing completion system (compinit){dots}"
+                           +zinit-message "Initializing completion system (compinit){…}"
                            builtin autoload -Uz compinit
                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                        else
@@ -2657,7 +2658,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    # reinstallation, thus every obstacle gets overwritten or removed
                    [[ $2 = -[qQ] ]] && { 5=$2; shift; }
                    .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
-                   [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion (compinit){dots}"
+                   [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion (compinit){…}"
                    builtin autoload -Uz compinit
                    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    ;;
@@ -2668,7 +2669,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                        # Uninstalls completions for plugin
                        .zinit-uninstall-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                       +zinit-message "Initializing completion (compinit){dots}"
+                       +zinit-message "Initializing completion (compinit){…}"
                        builtin autoload -Uz compinit
                        compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    fi

@@ -390,13 +390,13 @@
     local count=5 tpe="$1" ice
     ice="${ICE[$tpe]}"
     [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ICE[atclone]}"
-    ice="{bold}{ice}$tpe{ehi}:{rst}{meta2}${ice//(#b)(\{[a-z0-9]##\})/\\$match[1]}"
+    ice="{b}{ice}$tpe{ehi}:{rst}{meta2}${ice//(#b)(\{[a-z0-9]##\})/\\$match[1]}"
     +zinit-message -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
     while (( -- count + 1 )) {
-        +zinit-message -n -- "{bold}{error}"$(( count + 1 ))"{dots}{rst}"
+        +zinit-message -n -- "{b}{error}"$(( count + 1 ))"{…}{rst}"
         sleep 1
     }
-    +zinit-message -r -- "{bold}{error}0 <running now>{dots}{rst}"
+    +zinit-message -r -- "{b}{error}0 <running now>{…}{rst}"
     return 0
 }
 # ]]]
