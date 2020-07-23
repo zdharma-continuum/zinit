@@ -147,6 +147,8 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-txt  $'\e[38;5;254m' col-num   $'\e[38;5;207m' col-term  $'\e[38;5;34m'
         col-warn $'\e[38;5;172m' col-apo   $'\e[38;5;220m' col-ok    $'\e[38;5;220m'
         col-dbg  $'\e[38;5;238m' col-opt   $'\e[38;5;33m'
+        col-dots ${${${(M)LANG:#(#i)*utf-8*}:+…}:-...} col-ndash ${${${(M)LANG:#(#i)*utf-8*}:+–}:-}
+        col-mdash ${${${(M)LANG:#(#i)*utf-8*}:+—}:---} col-mmdash ${${${(M)LANG:#(#i)*utf-8*}:+——}:---}
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
