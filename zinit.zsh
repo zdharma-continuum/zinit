@@ -2557,7 +2557,6 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                         : "${(@)${@//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[update]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%%:*}]::=1}ß←↓→}:#1ß←↓→}"
                     } "$@"
                     builtin set -- "${@:#(${(~j.|.)${(@s.|.)___opt_map[update]}})}"
-                    print -rl -- ${(kv)OPTS}
                     if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-on-options-msg update $___opt_map[update] $@; return 1; }
                     if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ICE[teleid]}${ICE[id-as]} ]]; then
                         [[ -z $1$2 && $(( OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
