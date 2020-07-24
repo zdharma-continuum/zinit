@@ -133,9 +133,9 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         # Old colors:
         col-pname   $'\e[33m'       col-uname  $'\e[35m'       col-keyword $'\e[32m'
         col-note    $'\e[33m'       col-error  $'\e[31m'       col-p       $'\e[01m\e[34m'
-        col-bar     $'\e[01m\e[35m' col-info   $'\e[32m'       col-info2   $'\e[33m'
-        col-info3   $'\e[01m\e[33m' col-uninst $'\e[38;5;140m' col-success $'\e[01m\e[32m'
-        col-failure $'\e[31m'       col-rst    $'\e[0m'        col-b       $'\e[1m'
+        col-info    $'\e[32m'       col-info2  $'\e[33m'       col-b       $'\e[1m'
+        col-info3   $'\e[01m\e[33m' col-uninst $'\e[38;5;140m' col-nb      $'\e[21m'
+        col-failure $'\e[31m'       col-rst    $'\e[0m'        col-success $'\e[01m\e[32m' 
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;135m' col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
         col-obj  $'\e[38;5;221m' col-obj2  $'\e[38;5;154m' col-file  $'\e[38;5;110m'
@@ -152,7 +152,6 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col--… "${${${(M)LANG:#(#i)*utf-8*}:+⋯}:-...}" col-lr "${${${(M)LANG:#(#i)*utf-8*}:+↔}:-"<->"}"
         col-un   $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
         col-nun  $'\e[24m'       col-nit   $'\e[23m'       col-nst   $'\e[29m'
-        col-nb   $'\e[21m'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
