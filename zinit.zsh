@@ -141,7 +141,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-obj  $'\e[38;5;221m' col-obj2  $'\e[38;5;154m' col-file  $'\e[38;5;110m'
         col-url  $'\e[38;5;33m'  col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;32m'
         col-data $'\e[38;5;82m'  col-data2 $'\e[38;5;50m'  col-hi    $'\e[1m\e[38;5;160m'
-        col-ehi  $'\e[01m\e[31m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
+        col-ehi  $'\e[01m\e[178m' col-var   $'\e[38;5;63m'  col-glob  $'\e[38;5;226m'
         col-cmd  $'\e[38;5;40m'  col-ice   $'\e[38;5;27m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num   $'\e[38;5;207m' col-term  $'\e[38;5;34m'
         col-warn $'\e[38;5;172m' col-apo   $'\e[38;5;220m' col-ok    $'\e[38;5;220m'
@@ -150,8 +150,8 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-…  "${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}" col-ndsh  "${${${(M)LANG:#(#i)*utf-8*}:+–}:-}"
         col-mdsh "${${${(M)LANG:#(#i)*utf-8*}:+—}:--}" col-mmdsh "${${${(M)LANG:#(#i)*utf-8*}:+——}:--}"
         col--… "${${${(M)LANG:#(#i)*utf-8*}:+⋯}:-...}" col-lr "${${${(M)LANG:#(#i)*utf-8*}:+↔}:-"<->"}"
-        col-un   $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
-        col-nun  $'\e[24m'       col-nit   $'\e[23m'       col-nst   $'\e[29m'
+        col-u    $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
+        col-nu   $'\e[24m'       col-nit   $'\e[23m'       col-nst   $'\e[29m'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
