@@ -1638,18 +1638,19 @@ ziextract() {
             }
             →zinit-extract() { 
                 →zinit-check gunzip "$file" || return 1 
+                .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
                 command gunzip "$file" |& command egrep -v '.out$'
                 integer ret=$pipestatus[1]
-                (( !zi_was_renamed )) && command touch $file
-                unset zi_was_renamed 2>/dev/null
+                command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
                 return ret
             }
             ;;
         ((#i)*.bz2|(#i)*.bzip2)
             →zinit-extract() { →zinit-check bunzip2 "$file" || return 1
+                .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
                 command bunzip2 "$file" |& command egrep -v '.out$'
                 integer ret=$pipestatus[1]
-                command touch $file
+                command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
                 return ret
             }
             ;;
@@ -1657,13 +1658,12 @@ ziextract() {
             if [[ $file != (#i)*.xz ]] {
                 command mv $file $file.xz
                 file=$file.xz
-                integer zi_was_renamed=1
             }
             →zinit-extract() { →zinit-check xz "$file" || return 1
+                .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
                 command xz -d "$file"
                 integer ret=$?
-                (( !zi_was_renamed )) && command touch $file
-                unset zi_was_renamed 2>/dev/null
+                command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
                 return ret
              }
             ;;
