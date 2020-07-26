@@ -1387,8 +1387,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     local -A matchstr
     matchstr=(
-        i386    "(386|686)"
-        i686    "(386|686)"
+        i386    "((386|686|x86*(#e))~*x86_64*)"
+        i686    "((386|686|x86*(#e))~*x86_64*)"
         x86_64  "(x86_64|amd64|intel)"
         amd64   "(x86_64|amd64|intel)"
         aarch64 "aarch64"
