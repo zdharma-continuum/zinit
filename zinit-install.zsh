@@ -1634,18 +1634,38 @@ ziextract() {
             if [[ $file != (#i)*.gz ]] {
                 command mv $file $file.gz
                 file=$file.gz
+                integer zi_was_renamed=1
             }
-            →zinit-extract() { →zinit-check gunzip "$file" || return 1; command gunzip "$file" |& command egrep -v '.out$'; return $pipestatus[1]; }
+            →zinit-extract() { 
+                →zinit-check gunzip "$file" || return 1 
+                command gunzip "$file" |& command egrep -v '.out$'
+                integer ret=$pipestatus[1]
+                (( !zi_was_renamed )) && command touch $file
+                unset zi_was_renamed 2>/dev/null
+                return ret
+            }
             ;;
         ((#i)*.bz2|(#i)*.bzip2)
-            →zinit-extract() { →zinit-check bunzip2 "$file" || return 1; command bunzip2 "$file" |& command egrep -v '.out$'; return $pipestatus[1];}
+            →zinit-extract() { →zinit-check bunzip2 "$file" || return 1
+                command bunzip2 "$file" |& command egrep -v '.out$'
+                integer ret=$pipestatus[1]
+                command touch $file
+                return ret
+            }
             ;;
         ((#i)*.xz)
             if [[ $file != (#i)*.xz ]] {
                 command mv $file $file.xz
                 file=$file.xz
+                integer zi_was_renamed=1
             }
-            →zinit-extract() { →zinit-check xz "$file" || return 1; command xz -d "$file"; }
+            →zinit-extract() { →zinit-check xz "$file" || return 1
+                command xz -d "$file"
+                integer ret=$?
+                (( !zi_was_renamed )) && command touch $file
+                unset zi_was_renamed 2>/dev/null
+                return ret
+             }
             ;;
         ((#i)*.7z|(#i)*.7-zip)
             →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x "$file" >/dev/null;  }
