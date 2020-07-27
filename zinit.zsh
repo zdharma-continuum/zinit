@@ -1204,10 +1204,10 @@ builtin setopt noaliases
     local __type="$1" __id=$2
     local -a __opt=( ${@[2,-1]} )
 
-    if [[ $__type == plugin ]] {
-        .zinit-load "$__id"
-    } elif [[ $__type == snippet ]] {
+    if [[ $__type == snippet ]] {
         .zinit-load-snippet $__opt "$__id"
+    } elif [[ $__type == plugin ]] {
+        .zinit-load "$__id"
     }
     __retval+=$?
 
