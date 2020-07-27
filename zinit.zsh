@@ -1199,6 +1199,21 @@ builtin setopt noaliases
         command mkdir 2>/dev/null -p $ZPFX/bin
     }
 } # ]]]
+# FUNCTION: .zinit-load-object [[[
+.zinit-load-object() {
+    local __type="$1" __id=$2
+    local -a __opt=( ${@[2,-1]} )
+
+    if [[ $__type == plugin ]] {
+        .zinit-load "$__id"
+    } elif [[ $__type == snippet ]] {
+        .zinit-load-snippet $__opt "$__id"
+    }
+    __retval+=$?
+
+    return __retval
+}
+# ]]]
 # FUNCTION: .zinit-load [[[
 # Implements the exposed-to-user action of loading a plugin.
 #
@@ -2005,9 +2020,9 @@ builtin setopt noaliases
 
     if [[ $___action = *load ]]; then
         if [[ $___tpe = p ]]; then
-            .zinit-load "$___id" "" "$___mode"; (( ___retval += $? ))
+            .zinit-load "${(@)=___id}" "" "$___mode"; (( ___retval += $? ))
         elif [[ $___tpe = s ]]; then
-            .zinit-load-snippet $___opt "${(@)=___id}"; (( ___retval += $? ))
+            .zinit-load-snippet $___opt "$___id"; (( ___retval += $? ))
         elif [[ $___tpe = p1 || $___tpe = s1 ]]; then
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             zpty -b "${___id//\//:} / ${ICE[service]}" '.zinit-service '"${(M)___tpe#?}"' "$___mode" "$___id"'
@@ -2445,13 +2460,15 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                             ___had_cloneonly=${+ICE[cloneonly]}
                             ICE[cloneonly]=""
                         }
-                        if (( ___is_snippet > 0 )); then
-                            .zinit-load-snippet ${(k)OPTS[@]} "$___id"
-                        else
-                            .zinit-load "$___id" "" "${${ICE[light-mode]+light}:-${OPTS[(I)-b]:+light-b}}"
-                        fi
+
+                        (( ___is_snippet )) && \
+                            local ___opt="${(k)OPTS[*]}" || \
+                            local ___opt="${${ICE[light-mode]+light}:-${OPTS[(I)-b]:+light-b}}"
+
+                        .zinit-load-object ${${${(M)___is_snippet:#1}:+snippet}:-plugin} $___id $___opt
                         integer ___last_retval=$?
                         ___retval+=___last_retval
+
                         if (( ___turbo && !___had_cloneonly && ZINIT[HAVE_SCHEDULER] )) {
                             command rm -f $___object_path/._zinit/cloneonly
                             unset 'ICE[cloneonly]'
