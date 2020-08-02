@@ -1202,7 +1202,8 @@ builtin setopt noaliases
 # FUNCTION: .zinit-load-object [[[
 .zinit-load-object() {
     local __type="$1" __id=$2
-    local -a __opt=( ${@[2,-1]} )
+    local -a __opt
+    __opt=( ${@[2,-1]} )
 
     if [[ $__type == snippet ]] {
         .zinit-load-snippet $__opt "$__id"
