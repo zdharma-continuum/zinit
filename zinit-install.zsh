@@ -417,7 +417,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             "$local_path" \
                             --config transfer.fsckobjects=false \
                             --config receive.fsckobjects=false \
-                            --config fetch.fsckobjects=false
+                            --config fetch.fsckobjects=false \
+                            --config pull.rebase=false
                             integer retval=$?
                             unfunction :zinit-git-clone 
                             return $retval
