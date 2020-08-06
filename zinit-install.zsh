@@ -840,14 +840,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
             () {
                 builtin emulate -LR zsh -o extendedglob
-                if { ! zcompile "$first" } {
+                if { ! zcompile -U "$first" } {
                     +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
                     +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
                 } else {
                     +zinit-message " {ok}OK{rst}."
                 }
                 # Try to catch possible additional file
-                zcompile "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
+                zcompile -U "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
             }
         }
     }
@@ -867,7 +867,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             for first in $list; do
                 () {
                     builtin emulate -LR zsh -o extendedglob
-                    zcompile "$first"; retval+=$?
+                    zcompile -U "$first"; retval+=$?
                 }
             done
             builtin print -rl -- ${list[@]#$plugin_dir/} >! /tmp/zinit.compiled.$$.lst
@@ -1016,7 +1016,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         ]] {
                             () {
                                 builtin emulate -LR zsh -o extendedglob
-                                zcompile "${list[1]}" &>/dev/null || \
+                                zcompile -U "${list[1]}" &>/dev/null || \
                                     +zinit-message "{error}Warning:{rst} couldn't compile \`{file}${list[1]}{rst}'."
                             }
                         }
@@ -1103,7 +1103,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 ]] {
                     () {
                         builtin emulate -LR zsh -o extendedglob
-                        if ! zcompile "$file_path" 2>/dev/null; then
+                        if ! zcompile -U "$file_path" 2>/dev/null; then
                             builtin print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
                             builtin print -r "(snippet URL points to a directory instead of a file?"
                             builtin print -r "to download directory, use preceding: zinit ice svn)."

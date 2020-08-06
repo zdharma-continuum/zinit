@@ -737,12 +737,12 @@ ZINIT[EXTENDED_GLOB]=""
         +zinit-message "Compiling Zinit (zcompile){…}"
     }
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
-    zcompile $ZINIT[BIN_DIR]/zinit.zsh
-    zcompile $ZINIT[BIN_DIR]/zinit-side.zsh
-    zcompile $ZINIT[BIN_DIR]/zinit-install.zsh
-    zcompile $ZINIT[BIN_DIR]/zinit-autoload.zsh
-    zcompile $ZINIT[BIN_DIR]/zinit-additional.zsh
-    zcompile $ZINIT[BIN_DIR]/git-process-output.zsh
+    zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
+    zcompile -U $ZINIT[BIN_DIR]/zinit-side.zsh
+    zcompile -U $ZINIT[BIN_DIR]/zinit-install.zsh
+    zcompile -U $ZINIT[BIN_DIR]/zinit-autoload.zsh
+    zcompile -U $ZINIT[BIN_DIR]/zinit-additional.zsh
+    zcompile -U $ZINIT[BIN_DIR]/git-process-output.zsh
     # Load for the current session
     [[ $1 != -q ]] && +zinit-message "Reloading Zinit for the current session{…}"
     source $ZINIT[BIN_DIR]/zinit.zsh
@@ -3148,7 +3148,7 @@ EOF
         for i in "${ZINIT_STRESS_TEST_OPTIONS[@]}"; do
             builtin setopt "$i"
             builtin print -n "Stress-testing ${fname:t} for option $i "
-            zcompile -R "$fname" 2>/dev/null && {
+            zcompile -UR "$fname" 2>/dev/null && {
                 builtin print "[${ZINIT[col-success]}Success${ZINIT[col-rst]}]"
             } || {
                 builtin print "[${ZINIT[col-failure]}Fail${ZINIT[col-rst]}]"
@@ -3158,7 +3158,7 @@ EOF
     )
 
     command rm -f "${fname}.zwc"
-    (( compiled )) && zcompile "$fname"
+    (( compiled )) && zcompile -U "$fname"
 } # ]]]
 # FUNCTION: .zinit-list-compdef-replay [[[
 # Shows recorded compdefs (called by plugins loaded earlier).
