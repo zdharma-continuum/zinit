@@ -2831,41 +2831,8 @@ zpcompdef() { ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
 # ]]]
 
 #
-# Source-time evaluated code
+# Source-executed code
 #
-
-# !atpull-pre
-@zinit-register-hook "-r/--reset" hook:e-\!atpull-pre ∞zinit-reset-hook
-# !atpull-post
-@zinit-register-hook "ICE[reset]" hook:e-\!atpull-post ∞zinit-reset-hook
-@zinit-register-hook "atpull'!'" hook:e-\!atpull-post ∞zinit-atpull-e-hook
-
-# e-!atpull-pre
-@zinit-register-hook "make'!!'" hook:no-e-\!atpull-pre ∞zinit-make-ee-hook
-@zinit-register-hook "mv''" hook:no-e-\!atpull-pre ∞zinit-mv-hook
-@zinit-register-hook "cp''" hook:no-e-\!atpull-pre ∞zinit-cp-hook
-@zinit-register-hook "compile-plugin" hook:no-e-\!atpull-pre ∞zinit-compile-plugin-hook
-# no-e-!atpull-post
-@zinit-register-hook "make'!'" hook:no-e-\!atpull-post ∞zinit-make-e-hook
-@zinit-register-hook "atpull" hook:no-e-\!atpull-post ∞zinit-atpull-hook
-@zinit-register-hook "make''" hook:no-e-\!atpull-post ∞zinit-make-hook
-@zinit-register-hook "extract" hook:atpull-post ∞zinit-extract-hook
-# atpull-post
-@zinit-register-hook "compile-plugin" hook:atpull-post ∞zinit-compile-plugin-hook
-@zinit-register-hook "ps-on-update" hook:%atpull-post ∞zinit-ps-on-update-hook
-
-# !atclone-pre
-@zinit-register-hook "make'!!'" hook:\!atclone-pre ∞zinit-make-ee-hook
-@zinit-register-hook "mv''" hook:\!atclone-pre ∞zinit-mv-hook
-@zinit-register-hook "cp''" hook:\!atclone-pre ∞zinit-cp-hook
-@zinit-register-hook "compile-plugin" hook:\!atclone-pre ∞zinit-compile-plugin-hook
-# !atclone-post
-@zinit-register-hook "make'!'" hook:\!atclone-post ∞zinit-make-e-hook
-@zinit-register-hook "atclone" hook:\!atclone-post ∞zinit-atclone-hook
-@zinit-register-hook "make''" hook:\!atclone-post ∞zinit-make-hook
-@zinit-register-hook "extract" hook:\!atclone-post ∞zinit-extract-hook
-# atclone-post
-@zinit-register-hook "compile-plugin" hook:atclone-post ∞zinit-compile-plugin-hook
 
 (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
 (( ZINIT[SOURCED] ++ )) && return
@@ -2932,5 +2899,38 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
     }
 }
 # ]]]
+
+# !atpull-pre
+@zinit-register-hook "-r/--reset" hook:e-\!atpull-pre ∞zinit-reset-hook
+# !atpull-post
+@zinit-register-hook "ICE[reset]" hook:e-\!atpull-post ∞zinit-reset-hook
+@zinit-register-hook "atpull'!'" hook:e-\!atpull-post ∞zinit-atpull-e-hook
+
+# e-!atpull-pre
+@zinit-register-hook "make'!!'" hook:no-e-\!atpull-pre ∞zinit-make-ee-hook
+@zinit-register-hook "mv''" hook:no-e-\!atpull-pre ∞zinit-mv-hook
+@zinit-register-hook "cp''" hook:no-e-\!atpull-pre ∞zinit-cp-hook
+@zinit-register-hook "compile-plugin" hook:no-e-\!atpull-pre ∞zinit-compile-plugin-hook
+# no-e-!atpull-post
+@zinit-register-hook "make'!'" hook:no-e-\!atpull-post ∞zinit-make-e-hook
+@zinit-register-hook "atpull" hook:no-e-\!atpull-post ∞zinit-atpull-hook
+@zinit-register-hook "make''" hook:no-e-\!atpull-post ∞zinit-make-hook
+@zinit-register-hook "extract" hook:atpull-post ∞zinit-extract-hook
+# atpull-post
+@zinit-register-hook "compile-plugin" hook:atpull-post ∞zinit-compile-plugin-hook
+@zinit-register-hook "ps-on-update" hook:%atpull-post ∞zinit-ps-on-update-hook
+
+# !atclone-pre
+@zinit-register-hook "make'!!'" hook:\!atclone-pre ∞zinit-make-ee-hook
+@zinit-register-hook "mv''" hook:\!atclone-pre ∞zinit-mv-hook
+@zinit-register-hook "cp''" hook:\!atclone-pre ∞zinit-cp-hook
+@zinit-register-hook "compile-plugin" hook:\!atclone-pre ∞zinit-compile-plugin-hook
+# !atclone-post
+@zinit-register-hook "make'!'" hook:\!atclone-post ∞zinit-make-e-hook
+@zinit-register-hook "atclone" hook:\!atclone-post ∞zinit-atclone-hook
+@zinit-register-hook "make''" hook:\!atclone-post ∞zinit-make-hook
+@zinit-register-hook "extract" hook:\!atclone-post ∞zinit-extract-hook
+# atclone-post
+@zinit-register-hook "compile-plugin" hook:atclone-post ∞zinit-compile-plugin-hook
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
