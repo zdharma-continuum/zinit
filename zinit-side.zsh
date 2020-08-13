@@ -1,5 +1,5 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
-# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
 # FUNCTION: .zinit-exists-physically [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR.
