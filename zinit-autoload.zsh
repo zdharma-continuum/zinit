@@ -2156,9 +2156,9 @@ ZINIT[EXTENDED_GLOB]=""
 
         if [[ ${sice[as]} == "command" ]]; then
             builtin print "$time" - "$REPLY (command)"
-        elif [[ -n ${sice[sbin]} ]]; then
+        elif [[ -n ${sice[sbin]+abc} ]]; then
             builtin print "$time" - "$REPLY (sbin command)"
-        elif [[ -n ${sice[fbin]} ]]; then
+        elif [[ -n ${sice[fbin]+abc} ]]; then
             builtin print "$time" - "$REPLY (fbin command)"
         elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && ${+sice[make]} = 1 ]]; then
             builtin print "$time" - "$REPLY (/dev/null make plugin)"
@@ -3308,7 +3308,7 @@ EOF
     ( builtin cd -q "${ZINIT[BIN_DIR]}"/zmodules
       +zinit-message "{pname}== Building module zdharma/zplugin, running: make clean, then ./configure and then make =={rst}"
       +zinit-message "{pname}== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules =={rst}"
-      if [[ -f Makefile ]] { 
+      if [[ -f Makefile ]] {
           if [[ "$1" = "--clean" ]] {
               noglob +zinit-message {p}-- make distclean --{rst}
               make distclean
