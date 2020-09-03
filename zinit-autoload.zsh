@@ -1451,8 +1451,8 @@ ZINIT[EXTENDED_GLOB]=""
         return $retval
     fi
 
-    command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
-                    /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
+    command rm -f ${TMPDIR:-${TMPDIR:-/tmp}}/zinit-execs.$$.lst ${TMPDIR:-${TMPDIR:-/tmp}}/zinit.installed_comps.$$.lst \
+                    ${TMPDIR:-${TMPDIR:-/tmp}}/zinit.skipped_comps.$$.lst ${TMPDIR:-${TMPDIR:-/tmp}}/zinit.compiled.$$.lst
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
@@ -1714,17 +1714,17 @@ ZINIT[EXTENDED_GLOB]=""
     ICE=()
 
     typeset -ga INSTALLED_EXECS
-    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
+    { INSTALLED_EXECS=( "${(@f)$(<${TMPDIR:-${TMPDIR:-/tmp}}/zinit-execs.$$.lst)}" ) } 2>/dev/null
 
-    if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
+    if [[ -e ${TMPDIR:-${TMPDIR:-/tmp}}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-${TMPDIR:-/tmp}}/zinit.installed_comps.$$.lst ]] {
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
-        { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
-        { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+        { INSTALLED_COMPS=( "${(@f)$(<${TMPDIR:-${TMPDIR:-/tmp}}/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
+        { SKIPPED_COMPS=( "${(@f)$(<${TMPDIR:-${TMPDIR:-/tmp}}/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
     }
 
-    if [[ -e /tmp/zinit.compiled.$$.lst ]] {
+    if [[ -e ${TMPDIR:-${TMPDIR:-/tmp}}/zinit.compiled.$$.lst ]] {
         typeset -ga ADD_COMPILED
-        { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
+        { ADD_COMPILED=( "${(@f)$(<${TMPDIR:-${TMPDIR:-/tmp}}/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
     if (( PUPDATE && ZINIT[annex-multi-flag:pull-active] > 0 )) {
@@ -2701,8 +2701,8 @@ ZINIT[EXTENDED_GLOB]=""
     if (( OPTS[opt_-a,--all] )); then
         .zinit-confirm "Prune all plugins in \`${ZINIT[PLUGINS_DIR]}'"\
 "and snippets in \`${ZINIT[SNIPPETS_DIR]}'?" \
-"command rm -rf ${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/_local---zinit(ND) "\
-"${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/plugins(ND)"
+"command rm -rf ${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/_local---zinit(ND) "\
+"${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/plugins(ND)"
         return $?
     fi
 
@@ -2714,7 +2714,7 @@ ZINIT[EXTENDED_GLOB]=""
 " # Delete unloaded snippets
 local -aU loadedsnips todelete final_todelete
 loadedsnips=( \${\${ZINIT_SNIPPETS[@]% <*>}/(#m)*/\$(.zinit-get-object-path snippet \"\$MATCH\" && builtin print -rn \$REPLY; )} )
-local dir=\${\${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-/tmp/xyzcba231}
+local dir=\${\${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/xyzcba231}
 todelete=( \$dir/*/*/*(ND/) \$dir/*/*(ND/) \$dir/*(ND/) )
 final_todelete=( \${todelete[@]:#*/(\${(~j:|:)loadedsnips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)} )
 final_todelete=( \${final_todelete[@]//(#m)*/\$( .zinit-get-object-path snippet \"\${\${\${MATCH##\${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/\${match[1]##--}://}//--//}\" && builtin print -r -- \$REPLY)} )
@@ -2732,7 +2732,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\"
 
 # Next delete unloaded plugins
 local -a dirs
-dirs=( \${\${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-/tmp/abcEFG312}/*~*/(\${(~j:|:)\${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/) )
+dirs=( \${\${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/(\${(~j:|:)\${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/) )
 dirs=( \${(@)\${dirs[@]##\$ZINIT[PLUGINS_DIR]/#}//---//} )
 builtin print -Prl \"\" \"\$ZINIT[col-obj]Deleting the following \"\
 \"\$ZINIT[col-file]\${#dirs}\$ZINIT[col-msg2] UNLOADED\$ZINIT[col-obj] plugins:%f%b\" \
@@ -2773,7 +2773,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                     ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; \
-                    command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
+                    command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
             else
                 builtin print "No such snippet"
                 return 1
@@ -2783,7 +2783,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
                 .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                     ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
-                        ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
+                        ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
             else
                 builtin print "No such snippet"
                 return 1
@@ -2795,7 +2795,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
             .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
                 ".zinit-run-delete-hooks plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
                 \"$local_dir\"; \
-                command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-/tmp/abcYZX321}}"
+                command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
         else
             builtin print -r -- "No such plugin or snippet"
             return 1

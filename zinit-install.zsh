@@ -123,7 +123,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 \
         local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} pkgjson \
-        tmpfile=${$(mktemp):-/tmp/zsh.xYzAbc123} \
+        tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123} \
         URL=https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json
 
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
@@ -335,8 +335,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         return 1
     fi
 
-    command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
-                  /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
+    command rm -f ${TMPDIR:-/tmp}/zinit-execs.$$.lst ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst \
+                  ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
 
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
@@ -475,7 +475,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     ) || return $?
 
     typeset -ga INSTALLED_EXECS
-    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
+    { INSTALLED_EXECS=( "${(@f)$(<${TMPDIR:-/tmp}/zinit-execs.$$.lst)}" ) } 2>/dev/null
 
     # After additional executions like atclone'' - install completions (1 - plugins)
     local -A OPTS
@@ -483,15 +483,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
-    if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
+    if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
-        { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
-        { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+        { INSTALLED_COMPS=( "${(@f)$(<${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
+        { SKIPPED_COMPS=( "${(@f)$(<${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
     }
 
-    if [[ -e /tmp/zinit.compiled.$$.lst ]] {
+    if [[ -e ${TMPDIR:-/tmp}/zinit.compiled.$$.lst ]] {
         typeset -ga ADD_COMPILED
-        { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
+        { ADD_COMPILED=( "${(@f)$(<${TMPDIR:-/tmp}/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
     # After any download – rehash the command table
@@ -578,8 +578,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     }
 
     if (( ZSH_SUBSHELL )) {
-        builtin print -rl -- $INSTALLED_COMPS >! /tmp/zinit.installed_comps.$$.lst
-        builtin print -rl -- $SKIPPED_COMPS >! /tmp/zinit.skipped_comps.$$.lst
+        builtin print -rl -- $INSTALLED_COMPS >! ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst
+        builtin print -rl -- $SKIPPED_COMPS >! ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst
     }
 
     .zinit-compinit 1 1 &>/dev/null
@@ -870,7 +870,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     zcompile "$first"; retval+=$?
                 }
             done
-            builtin print -rl -- ${list[@]#$plugin_dir/} >! /tmp/zinit.compiled.$$.lst
+            builtin print -rl -- ${list[@]#$plugin_dir/} >! ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
             if (( retval )) {
                 +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
                     "are listed in the {file}\$ADD_COMPILED%f%b array (operation exit" \
@@ -931,8 +931,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         url="${${url/\/blob\///raw/}/\/tree\///raw/}"
     }
 
-    command rm -f /tmp/zinit-execs.$$.lst /tmp/zinit.installed_comps.$$.lst \
-                  /tmp/zinit.skipped_comps.$$.lst /tmp/zinit.compiled.$$.lst
+    command rm -f ${TMPDIR:-/tmp}/zinit-execs.$$.lst ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst \
+                  ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
         [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet: {p}$sname{rst}${ICE[id-as]:+"{…} (as{ehi}:{rst} {meta}$id_as{rst}")}"
@@ -1248,7 +1248,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     ) || return $?
 
     typeset -ga INSTALLED_EXECS
-    { INSTALLED_EXECS=( "${(@f)$(</tmp/zinit-execs.$$.lst)}" ) } 2>/dev/null
+    { INSTALLED_EXECS=( "${(@f)$(<${TMPDIR:-/tmp}/zinit-execs.$$.lst)}" ) } 2>/dev/null
 
     # After additional executions like atclone'' - install completions (2 - snippets)
     local -A OPTS
@@ -1256,15 +1256,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
         .zinit-install-completions "%" "$local_dir/$dirname" 0
 
-    if [[ -e /tmp/zinit.skipped_comps.$$.lst || -e /tmp/zinit.installed_comps.$$.lst ]] {
+    if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
-        { INSTALLED_COMPS=( "${(@f)$(</tmp/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
-        { SKIPPED_COMPS=( "${(@f)$(</tmp/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
+        { INSTALLED_COMPS=( "${(@f)$(<${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst)}" ) } 2>/dev/null
+        { SKIPPED_COMPS=( "${(@f)$(<${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst)}" ) } 2>/dev/null
     }
 
-    if [[ -e /tmp/zinit.compiled.$$.lst ]] {
+    if [[ -e ${TMPDIR:-/tmp}/zinit.compiled.$$.lst ]] {
         typeset -ga ADD_COMPILED
-        { ADD_COMPILED=( "${(@f)$(</tmp/zinit.compiled.$$.lst)}" ) } 2>/dev/null
+        { ADD_COMPILED=( "${(@f)$(<${TMPDIR:-/tmp}/zinit.compiled.$$.lst)}" ) } 2>/dev/null
     }
 
     # After any download – rehash the command table
@@ -1680,7 +1680,7 @@ ziextract() {
                 local attached_vol="$( command hdiutil attach "$file" | \
                            command tail -n1 | command cut -f 3 )"
 
-                command cp -Rf ${attached_vol:-/tmp/acb321GEF}/*(D) .
+                command cp -Rf ${attached_vol:-${TMPDIR:-/tmp}/acb321GEF}/*(D) .
                 retval=$?
                 command hdiutil detach $attached_vol
 
@@ -1734,7 +1734,7 @@ ziextract() {
         execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
     }
 
-    builtin print -rl -- ${execs[@]} >! /tmp/zinit-execs.$$.lst
+    builtin print -rl -- ${execs[@]} >! ${TMPDIR:-/tmp}/zinit-execs.$$.lst
     if [[ ${#execs} -gt 0 ]] {
         command chmod a+x "${execs[@]}"
         if (( !OPTS[opt_-q,--quiet] )) {
@@ -1895,7 +1895,7 @@ zpextract() { ziextract "$@"; }
         +zinit-message "{error}Couldn't find package{error}: {data2}\`{data}${pkg}{data2}'{error}.{rst}"
         return 2
     }
-    local url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
+    local url=$mirror/$urlpart outfile=${TMPDIR:-${TMPDIR:-/tmp}}/${urlpart:t}
 
     #
     # Download the package
@@ -1910,7 +1910,7 @@ zpextract() { ziextract "$@"; }
                 +zinit-message "{error}Couldn't download{error}: {url}${url}{error}."
                 retval=1
                 mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
-                url=$mirror/$urlpart outfile=${TMPDIR:-/tmp}/${urlpart:t}
+                url=$mirror/$urlpart outfile=${TMPDIR:-${TMPDIR:-/tmp}}/${urlpart:t}
                 if (( retry )) {
                     +zinit-message "{info2}Retrying, with mirror{error}: {url}${mirror}{info2}{…}{rst}"
                     continue
@@ -2018,11 +2018,11 @@ zimv() {
         } elif [[ $type == plugin ]] {
             if (( is_release && !skip_pull )) {
                 if (( option )) {
-                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*"
-                    builtin eval command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)
+                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}/*"
+                    builtin eval command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}"/*(ND)
                 } else {
-                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}/*}"
-                    builtin eval ${ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-/tmp/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-/tmp/xyzabc312-zinit-protection-triggered}"/*(ND)}
+                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}/*}"
+                    builtin eval ${ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
             } elif (( !skip_pull )) {
                 if (( option )) {

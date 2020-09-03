@@ -1159,7 +1159,7 @@ builtin setopt noaliases
         command mkdir 2>/dev/null -p $ZPFX/bin
     }
     [[ ! -d ${ZINIT[PLUGINS_DIR]}/_local---zinit ]] && {
-        command rm -rf "${ZINIT[PLUGINS_DIR]:-/tmp/132bcaCAB}/_local---zplugin"
+        command rm -rf "${ZINIT[PLUGINS_DIR]:-${TMPDIR:-/tmp}/132bcaCAB}/_local---zplugin"
         command mkdir -p "${ZINIT[PLUGINS_DIR]}/_local---zinit"
         command chmod go-w "${ZINIT[PLUGINS_DIR]}"
         command ln -s "${ZINIT[BIN_DIR]}/_zinit" "${ZINIT[PLUGINS_DIR]}/_local---zinit"
