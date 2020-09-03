@@ -2284,7 +2284,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             1="${1:+@}${1#@}${2:+/$2}"
             (( $# > 1 )) && { shift -p $(( $# - 1 )); }
             [[ -z $1 ]] && {
-               +zinit-message "Argument needed, try: {obj}help{rst}."
+               +zinit-message "Argument needed, try: {cmd}help{rst}."
                return 1
             }
         } else {
@@ -2294,7 +2294,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             shift ___retval2
             if [[ $# -gt 0 && $1 != for ]] {
                 +zinit-message -n "{error}ERROR{ehi}:{rst} Unknown subcommand{ehi}:{rst}" \
-                        "\`{obj}$1{rst}' "
+                        "\`{cmd}$1{rst}' "
                 +zinit-prehelp-usage-message rst
                 return 1
             } elif (( $# == 0 )) {
@@ -2504,13 +2504,12 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 emulate -LR zsh -o extendedglob
                 +zinit-message -n "{error}Error: No plugin or snippet ID given"
                 if [[ -n $___last_ice ]] {
-                    +zinit-message "(the last recognized ice was: {obj}"\
-"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{obj}$MATCH${___q2}{file}"}{obj}'{error}).
+                    +zinit-message -n " (the last recognized ice was: {ice}"\
+"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{data}$MATCH{apo}$___q2{data2}"}{apo}'{error}).
 You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin.{rst}
-{info2}Note:{rst}The \`ice' subcommand is now again required if not using the for-syntax."
-                } else {
-                    +zinit-message ".{rst}"
+{info2}Note:{rst} The \`ice' subcommand is now again required if not using the for-syntax"
                 }
+                +zinit-message ".{rst}"
             }
             return 2
        } elif (( ! $# )) {
