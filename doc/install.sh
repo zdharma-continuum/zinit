@@ -117,11 +117,11 @@ echo "[38;5;219m▓▒░[0m Would you like to add 4 useful plugins" \
         echo "[34m▓▒░[0m Done (skipped the annexes chunk)."
         echo
     fi
-fi
 
-command cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
+    command cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
 ### End of Zinit's installer chunk
 EOF
+fi
 
 command cat <<-EOF
 
