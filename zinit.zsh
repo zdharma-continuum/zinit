@@ -1201,16 +1201,16 @@ builtin setopt noaliases
 } # ]]]
 # FUNCTION: .zinit-load-object [[[
 .zinit-load-object() {
-    local __type="$1" __id=$2
-    local -a __opt
-    __opt=( ${@[2,-1]} )
+    local ___type="$1" ___id=$2
+    local -a ___opt
+    ___opt=( ${@[3,-1]} )
 
-    if [[ $__type == snippet ]] {
-        .zinit-load-snippet $__opt "$__id"
-    } elif [[ $__type == plugin ]] {
-        .zinit-load "$__id"
+    if [[ $___type == snippet ]] {
+        .zinit-load-snippet $___opt "$___id"
+    } elif [[ $___type == plugin ]] {
+        .zinit-load "$___id" "" $___opt
     }
-    __retval+=$?
+    ___retval+=$?
 
     return __retval
 }
