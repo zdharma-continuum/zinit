@@ -2871,14 +2871,14 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
     [[ -z $timespec ]] && timespec=1.week
 
     typeset -a plugins
-    plugins=( ${ZINIT[PLUGINS_DIR]}/*(DN) )
+    plugins=( ${ZINIT[PLUGINS_DIR]}/*(DN-/) )
 
     local p uspl1
     for p in ${plugins[@]}; do
         uspl1=${p:t}
         [[ $uspl1 = custom || $uspl1 = _local---zinit ]] && continue
 
-        pushd "$p" >/dev/null
+        pushd "$p" >/dev/null || continue
         if [[ -d .git ]]; then
             gitout=`command git log --all --max-count=1 --since=$timespec 2>/dev/null`
             if [[ -n $gitout ]]; then
