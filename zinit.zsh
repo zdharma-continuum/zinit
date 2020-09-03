@@ -1472,6 +1472,7 @@ builtin setopt noaliases
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
     local ___pdir_orig="$___pdir_path"
+    ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
     if [[ -n ${ICE[teleid]} ]] {
         .zinit-any-to-user-plugin "${ICE[teleid]}"
         ___user="${reply[-2]}" ___plugin="${reply[-1]}"
@@ -1553,6 +1554,10 @@ builtin setopt noaliases
     .zinit-load-plugin "$___user" "$___plugin" "$___id_as" "$___mode" "$___rst"; ___retval=$?
     (( ${+ICE[notify]} == 1 )) && { [[ $___retval -eq 0 || -n ${(M)ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $___retval"; }
     (( ${+ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @___rst
+
+    # Mark no load is in progress
+    ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
+
     ZINIT[TIME_INDEX]=$(( ${ZINIT[TIME_INDEX]:-0} + 1 ))
     ZINIT[TIME_${ZINIT[TIME_INDEX]}_${___id_as//\//---}]=$SECONDS
     ZINIT[AT_TIME_${ZINIT[TIME_INDEX]}_${___id_as//\//---}]=$EPOCHREALTIME
@@ -1570,7 +1575,6 @@ builtin setopt noaliases
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
     builtin set --
-    ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
     [[ -o ksharrays ]] && ___correct=1
 
     [[ -n ${ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ICE[opts]} ]] && {
@@ -1707,9 +1711,6 @@ builtin setopt noaliases
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]}[@]}" )
         "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" atload
     done
-
-    # Mark no load is in progress
-    ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 
     (( ___rst )) && { builtin print; zle .reset-prompt; }
 
