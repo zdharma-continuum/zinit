@@ -4,7 +4,10 @@ emulate -LR zsh
 
 setopt typesetsilent extendedglob warncreateglobal
 
-typeset -g COLS="$(tput cols)"
+{ typeset -g COLS="$(tput cols)" } 2>/dev/null
+if (( COLS < 10 )) {
+    COLS=40
+}
 # Credit to molovo/revolver for the ideas
 typeset -ga progress_frames
 progress_frames=(
