@@ -1840,8 +1840,11 @@ builtin setopt noaliases
 .zinit-formatter-url() {
     builtin emulate -LR zsh -o extendedglob
     if [[ $1 = (#b)([^:]#)(://)([[:alnum:].+_-]##)(|/(*)) ]] {
-        REPLY=$(builtin print -Pr -- %F{220}$match[1]%F{33}$match[2]%F{82}$match[3]%F{172}/$match[5]%f%b)
+        # The advanced coloring if recognized the format…
+        REPLY=$(builtin print -Pr -- %F{220}$match[1]%F{33}$match[2]\
+%F{82}$match[3]%F{172}/$match[5]%f%b)
     } else {
+        # …revert to the basic if not…
         REPLY=$ZINIT[col-url]$1$ZINIT[col-rst]
     }
 }
