@@ -1886,8 +1886,8 @@ builtin setopt noaliases
     local -a msg
     msg=( ${${@//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\{\\]#))/$match[2]${\
 ${functions[.zinit-formatter-$match[5]]:+${\
-$(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY):-←↓→}}:-\
-$(.zinit-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -rn -- "$REPLY")}}//←↓→} )
+$(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY):-←↑→}}:-\
+$(.zinit-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -rn -- "$REPLY")}}//←↑→} )
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
