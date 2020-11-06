@@ -23,7 +23,8 @@ unset ZPLGM
 
 [[ ! -e ${ZINIT[BIN_DIR]}/zinit.zsh ]] && ZINIT[BIN_DIR]=
 
-ZINIT[ZERO]="$0"
+# Respect the plugin standard too.
+ZINIT[ZERO]="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
 [[ ! -o functionargzero || ${options[posixargzero]} = on || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
 
 : ${ZINIT[BIN_DIR]:="${ZINIT[ZERO]:h}"}
@@ -43,6 +44,8 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
     # Ignore ZDOTDIR if user manually put Zinit to $HOME
     if [[ -d $HOME/.zinit ]]; then
         ZINIT[HOME_DIR]="$HOME/.zinit"
+    elif [[ -d ${ZDOTDIR:-$HOME}/.zinit ]]; then
+        ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zinit"
     elif [[ -d $HOME/.zplugin ]]; then
         ZINIT[HOME_DIR]="$HOME/.zplugin"
     elif [[ -d ${ZDOTDIR:-$HOME}/.zplugin ]]; then
