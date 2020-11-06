@@ -2049,13 +2049,13 @@ ZINIT[EXTENDED_GLOB]=""
 
     local infoc="${ZINIT[col-info2]}"
 
-    builtin print "Zinit's main directory: ${infoc}${ZINIT[HOME_DIR]}${ZINIT[col-rst]}"
-    builtin print "Zinit's binary directory: ${infoc}${ZINIT[BIN_DIR]}${ZINIT[col-rst]}"
-    builtin print "Plugin directory: ${infoc}${ZINIT[PLUGINS_DIR]}${ZINIT[col-rst]}"
-    builtin print "Completions directory: ${infoc}${ZINIT[COMPLETIONS_DIR]}${ZINIT[col-rst]}"
+    +zinit-message "Zinit's main directory: {file}${ZINIT[HOME_DIR]}{rst}"
+    +zinit-message "Zinit's binary directory: {file}${ZINIT[BIN_DIR]}{rst}"
+    +zinit-message "Plugin directory: {file}${ZINIT[PLUGINS_DIR]}{rst}"
+    +zinit-message "Completions directory: {file}${ZINIT[COMPLETIONS_DIR]}{rst}"
 
     # Without _zlocal/zinit
-    builtin print "Loaded plugins: ${infoc}$(( ${#ZINIT_REGISTERED_PLUGINS[@]} - 1 ))${ZINIT[col-rst]}"
+    +zinit-message "Loaded plugins: {num}$(( ${#ZINIT_REGISTERED_PLUGINS[@]} - 1 )){rst}"
 
     # Count light-loaded plugins
     integer light=0
@@ -2064,33 +2064,34 @@ ZINIT[EXTENDED_GLOB]=""
         [[ "$s" = 1 ]] && (( light ++ ))
     done
     # Without _zlocal/zinit
-    builtin print "Light loaded: ${infoc}$(( light - 1 ))${ZINIT[col-rst]}"
+    +zinit-message "Light loaded: {num}$(( light - 1 )){rst}"
 
     # Downloaded plugins, without _zlocal/zinit, custom
     typeset -a plugins
     plugins=( "${ZINIT[PLUGINS_DIR]}"/*(DN) )
-    builtin print "Downloaded plugins: ${infoc}$(( ${#plugins} - 1 ))${ZINIT[col-rst]}"
+    +zinit-message "Downloaded plugins: {num}$(( ${#plugins} - 1 )){rst}"
 
     # Number of enabled completions, with _zlocal/zinit
     typeset -a completions
     completions=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
-    builtin print "Enabled completions: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
+    +zinit-message "Enabled completions: {num}${#completions[@]}{rst}"
 
     # Number of disabled completions, with _zlocal/zinit
     completions=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
-    builtin print "Disabled completions: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
+    +zinit-message "Disabled completions: {num}${#completions[@]}{rst}"
 
     # Number of completions existing in all plugins
     completions=( "${ZINIT[PLUGINS_DIR]}"/*/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN) )
-    builtin print "Completions available overall: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
+    +zinit-message "Completions available overall: {num}${#completions[@]}{rst}"
 
     # Enumerate snippets loaded
-    builtin print -n "Snippets loaded: "
+    # }, ${infoc}{rst}", j:, :, {msg}"$'\e[0m, +zinit-message h
+    +zinit-message -n "Snippets loaded: "
     local sni
     for sni in ${(onv)ZINIT_SNIPPETS[@]}; do
         +zinit-message -n "{url}$sni{rst}, "
     done
-    [[ -z $sni ]] && print -n " "
+    [[ -z $sni ]] && builtin print -n " "
     builtin print '\b\b  '
 
     # Number of compiled plugins
@@ -2108,7 +2109,7 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     done
 
-    builtin print "Compiled plugins: ${infoc}$count${ZINIT[col-rst]}"
+    +zinit-message "Compiled plugins: {num}$count{rst}"
 } # ]]]
 # FUNCTION: .zinit-show-times [[[
 # Shows loading times of all loaded plugins.
