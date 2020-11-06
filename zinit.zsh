@@ -133,9 +133,9 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
       ( ${+termcap} -eq 1 && -n ${termcap[Co]} )
 ]] {
     ZINIT+=(
-        # Old colors:
-        col-pname   $'\e[1m\e[32m'       col-uname   $'\e[1m\e[35m'  col-keyword $'\e[32m'
-        col-note    $'\e[38;5;57m'       col-error   $'\e[31m'       col-p       $'\e[38;5;81'
+        # Old colors: 31m
+        col-pname   $'\e[1m\e[32m'       col-uname   $'\e[1m\e[35m'       col-keyword $'\e[32m'
+        col-note    $'\e[38;5;57m'       col-error   $'\e[1m\e[38;5;204m' col-p       $'\e[38;5;81'
         col-info    $'\e[38;5;82m'       col-info2   $'\e[38;5;227m' 
         col-uninst  $'\e[38;5;118m'      col-info3   $'\e[1m\e[38;5;227m'
         col-failure $'\e[38;5;204m'      col-happy   $'\e[1m\e[38;5;82m'
@@ -146,7 +146,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-data $'\e[38;5;82m'   col-data2 $'\e[38;5;117m' col-hi    $'\e[1m\e[38;5;204m'
         col-var  $'\e[38;5;81m'  col-glob  $'\e[38;5;227m' col-ehi   $'\e[1m\e[38;5;210m'
         col-cmd  $'\e[38;5;82m'   col-ice   $'\e[38;5;27m'  col-nl    $'\n'
-        col-txt  $'\e[38;5;254m'  col-num   $'\e[38;5;205m' col-term  $'\e[38;5;185m'
+        col-txt  $'\e[38;5;254m'  col-num   $'\e[38;5;204m' col-term  $'\e[38;5;185m'
         col-warn $'\e[38;5;214m'  col-apo   $'\e[38;5;220m' col-ok    $'\e[1m\e[38;5;220m'
         col-inv  $'\e[38;5;238m'  col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;75m'
         col-tab  $'\t'            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
@@ -2542,9 +2542,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                 +zinit-message -n "{error}Error: No plugin or snippet ID given"
                 if [[ -n $___last_ice ]] {
                     +zinit-message -n " (the last recognized ice was: {ice}"\
-"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{data}$MATCH{apo}$___q2{data2}"}{apo}'{error}).
+"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{data}$MATCH{apo}$___q2{data2}"}{apo}'{rst}).{error}
 You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin.{rst}
-{info2}Note:{rst} The \`ice' subcommand is now again required if not using the for-syntax"
+{note}Note:{rst} The \`ice' subcommand is now again required if not using the for-syntax"
                 }
                 +zinit-message ".{rst}"
             }
