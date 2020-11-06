@@ -1842,7 +1842,7 @@ builtin setopt noaliases
 .zinit-formatter-url() {
     builtin emulate -LR zsh -o extendedglob
     #              1:proto     3:domain/5:start      6:end-of-it         7:no-dot-domain     9:file-path
-    if [[ $1 = (#b)([^:]#)(://)((([[:alnum:]._+-]##).([[:alnum:]_+-]##))|([[:alnum:].+_-]##))(|/(*)) ]] {
+    if [[ $1 = (#b)([^:]#)(://|::)((([[:alnum:]._+-]##).([[:alnum:]_+-]##))|([[:alnum:].+_-]##))(|/(*)) ]] {
         # The advanced coloring if recognized the format…
         match[9]=${match[9]//\//"%F{227}%B"/"%F{81}%b"}
         if [[ -n $match[4] ]]; then
