@@ -2085,7 +2085,13 @@ ZINIT[EXTENDED_GLOB]=""
     builtin print "Completions available overall: ${infoc}${#completions[@]}${ZINIT[col-rst]}"
 
     # Enumerate snippets loaded
-    builtin print "Snippets loaded: ${infoc}${(j:, :onv)ZINIT_SNIPPETS[@]}${ZINIT[col-rst]}"
+    builtin print -n "Snippets loaded: "
+    local sni
+    for sni in ${(onv)ZINIT_SNIPPETS[@]}; do
+        +zinit-message -n "{url}$sni{rst}, "
+    done
+    [[ -z $sni ]] && print -n " "
+    builtin print '\b\b  '
 
     # Number of compiled plugins
     typeset -a matches m
