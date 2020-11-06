@@ -59,7 +59,7 @@ ZINIT[ice-list]="svn|proto|from|teleid|bindmap|cloneopts|id-as|depth|if|wait|loa
 unload|blockf|pick|bpick|src|as|ver|silent|lucid|notify|mv|cp|\
 atinit|atclone|atload|atpull|nocd|run-atpull|has|cloneonly|make|\
 service|trackbinds|multisrc|compile|nocompile|nocompletions|\
-reset-prompt|wrap-track|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
+reset-prompt|wrap|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
 subscribe|extract|param|opts|autoload|subst|install|pullopts|\
@@ -220,7 +220,7 @@ builtin setopt noaliases
     "$func" "$@"
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-autoload. [[[
-# Function defined to hijack plugin's calls to `autoload' builtin.
+# Function defined to hijack plugin's calls to the `autoload' builtin.
 #
 # The hijacking is not only to gather report data, but also to.
 # run custom `autoload' function, that doesn't need FPATH.
@@ -319,7 +319,7 @@ builtin setopt noaliases
     return 0
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-bindkey. [[[
-# Function defined to hijack plugin's calls to `bindkey' builtin.
+# Function defined to hijack plugin's calls to the `bindkey' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-tmp-subst-bindkey() {
@@ -471,7 +471,7 @@ builtin setopt noaliases
     return $? # testable
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-zstyle. [[[
-# Function defined to hijack plugin's calls to `zstyle' builtin.
+# Function defined to hijack plugin's calls to the `zstyle' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-tmp-subst-zstyle() {
@@ -479,7 +479,7 @@ builtin setopt noaliases
         typesetsilent noshortloops unset
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Zstyle $*"
 
-    # Remember to perform the actual zstyle call.
+    # Remember in order to perform the actual zstyle call.
     typeset -a pos
     pos=( "$@" )
 
@@ -511,7 +511,7 @@ builtin setopt noaliases
     return $? # testable
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-alias. [[[
-# Function defined to hijack plugin's calls to `alias' builtin.
+# Function defined to hijack plugin's calls to the `alias' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-tmp-subst-alias() {
@@ -562,7 +562,7 @@ builtin setopt noaliases
     return $? # testable
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-zle. [[[.
-# Function defined to hijack plugin's calls to `zle' builtin.
+# Function defined to hijack plugin's calls to the `zle' builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-tmp-subst-zle() {
@@ -621,7 +621,7 @@ builtin setopt noaliases
     return $? # testable
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-compdef. [[[
-# Function defined to hijack plugin's calls to `compdef' function.
+# Function defined to hijack plugin's calls to the `compdef' function.
 # The hijacking is not only for reporting, but also to save compdef
 # calls so that `compinit' can be called after loading plugins.
 :zinit-tmp-subst-compdef() {
@@ -789,7 +789,7 @@ builtin setopt noaliases
         { [[ -z ${ZINIT[FUNCTIONS_BEFORE__$uspl2]} ]] && \
                 ZINIT[FUNCTIONS_BEFORE__$uspl2]="${(j: :)${(qk)functions[@]}}"
         } || \
-        ZINIT[FUNCTIONS_AFTER__$uspl2]+=" ${(j: :)${(qk)functions[@]}}"
+            ZINIT[FUNCTIONS_AFTER__$uspl2]+=" ${(j: :)${(qk)functions[@]}}"
 } # ]]]
 # FUNCTION: .zinit-diff-options. [[[
 # Implements detection of change in option state. Performs
@@ -1371,9 +1371,9 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests.
-        if [[ -n ${ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-            .zinit-wrap-track-functions "$save_url" "" "$id_as"
+            .zinit-wrap-functions "$save_url" "" "$id_as"
         }
 
         [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
@@ -1425,9 +1425,9 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests.
-        if [[ -n ${ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-            .zinit-wrap-track-functions "$save_url" "" "$id_as"
+            .zinit-wrap-functions "$save_url" "" "$id_as"
         }
 
         [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$local_dir/$dirname/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; } && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
@@ -1641,9 +1641,9 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests.
-        if [[ -n ${ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-            .zinit-wrap-track-functions "$___user" "$___plugin" "$___id_as"
+            .zinit-wrap-functions "$___user" "$___plugin" "$___id_as"
         }
 
         [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ICE[atload]#\!}"; } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
@@ -1692,9 +1692,9 @@ builtin setopt noaliases
         done
 
         # Run the functions' wrapping & tracking requests.
-        if [[ -n ${ICE[wrap-track]} ]] {
+        if [[ -n ${ICE[wrap]} ]] {
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-            .zinit-wrap-track-functions "$___user" "$___plugin" "$___id_as"
+            .zinit-wrap-functions "$___user" "$___plugin" "$___id_as"
         }
 
         [[ ${ICE[atload][1]} = "!" ]] && { .zinit-add-report "$___id_as" "Note: Starting to track the atload'!…' ice…"; ZERO="$___pdir_orig/-atload-"; local ___oldcd="$PWD"; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$___pdir_orig"; } && builtin eval "${ICE[atload]#\!}"; ((1)); } || eval "${ICE[atload]#\!}"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
