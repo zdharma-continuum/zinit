@@ -150,9 +150,9 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-warn $'\e[38;5;214m'  col-apo   $'\e[38;5;220m' col-ok    $'\e[1m\e[38;5;220m'
         col-inv  $'\e[38;5;238m'  col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;75m'
         col-tab  $'\t'            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
-        col-…    "${${${(M)LANG:#(#i)*utf-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#(#i)*utf-8*}:+–}:-}"
-        col-mdsh "${${${(M)LANG:#(#i)*utf-8*}:+–}:--}"    col-mmdsh "${${${(M)LANG:#(#i)*utf-8*}:+――}:--}"
-        col--…   "${${${(M)LANG:#(#i)*utf-8*}:+⋯⋯}:-···}" col-lr "${${${(M)LANG:#(#i)*utf-8*}:+↔}:-"«-»"}"
+        col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
+        col-mdsh "${${${(M)LANG:#*UTF-8*}:+–}:--}"    col-mmdsh "${${${(M)LANG:#*UTF-8*}:+――}:--}"
+        col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}" col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
         col-rst  $'\e[0m'        col-b     $'\e[1m'        col-nb    $'\e[22m'
         col-u    $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
         col-nu   $'\e[24m'       col-nit   $'\e[23m'       col-nst   $'\e[29m'
@@ -1914,8 +1914,8 @@ $(.zinit-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -r
                 "{cmd}{…}$bcol, e.g.{ehi}: {nb}$bcol\`{lhi}zinit {b}{cmd}load" \
                 "{pid}username/reponame$bcol') or a {b}{obj}for{nb}$bcol-based" \
                 "command body (i.e.{ehi}:{rst}$bcol e.g.{ehi}: {rst}$bcol\`{lhi}zinit" \
-                    "{…}{b}ice-spec{nb}{…} {b}{obj}for{nb}{lhi} {…}{b}plugin" \
-                    "{nb}or{b} snippet {pname}ID-1 ID-2 {-…} {lhi}{nb}{…}$bcol')." \
+                    "{…}{b}ice-spec{nb}{…} {b}{obj}for{nb}{lhi} {…}({b}plugin" \
+                    "{nb}or{b} snippet) {pname}ID-1 ID-2 {-…} {lhi}{nb}{…}$bcol')." \
                 "See \`{cmd}help$bcol' for more usage information and the complete" \
                 "list of the {cmd}subcommands$bcol.{rst}"
     }
