@@ -148,7 +148,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-cmd  $'\e[38;5;82m'   col-ice   $'\e[38;5;27m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m'  col-num   $'\e[38;5;204m' col-term  $'\e[38;5;185m'
         col-warn $'\e[38;5;214m'  col-apo   $'\e[38;5;220m' col-ok    $'\e[1m\e[38;5;220m'
-        col-inv  $'\e[38;5;238m'  col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;75m'
+        col-inv  $'\e[38;5;238m'  col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
         col-tab  $'\t'            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
         col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
         col-mdsh "${${${(M)LANG:#*UTF-8*}:+–}:--}"    col-mmdsh "${${${(M)LANG:#*UTF-8*}:+――}:--}"
@@ -1867,7 +1867,7 @@ builtin setopt noaliases
 }
 # ]]]
 # FUNCTION: +zinit-message-formatter [[[
-.zinit-message-formatter() {
+.zinit-main-message-formatter() {
     REPLY="${ZINIT[col-$2]:-$1}$3"
     if [[ $2 == b ]]; then
         # Repeat the code so that the possible trailing
@@ -1887,7 +1887,7 @@ builtin setopt noaliases
     msg=( ${${@//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\{\\]#))/$match[2]${\
 ${functions[.zinit-formatter-$match[5]]:+${\
 $(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY):-←↑→}}:-\
-$(.zinit-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -rn -- "$REPLY")}}//←↑→} )
+$(.zinit-main-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -rn -- "$REPLY")}}//←↑→} )
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
 }
 # ]]]
@@ -1895,11 +1895,11 @@ $(.zinit-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -r
 +zinit-prehelp-usage-message() {
     builtin emulate -LR zsh -o extendedglob
     local cmd=$1 allowed=$2 sep="$ZINIT[col-msg2], $ZINIT[col-ehi]" \
-        sep2="$ZINIT[col-msg2], $ZINIT[col-opt]"
+        sep2="$ZINIT[col-msg2], $ZINIT[col-opt]" bcol
 
     # -h/--help given?
     if (( OPTS[opt_-h,--help] )) {
-        # Yes — a help message:
+        # Yes – a help message:
         +zinit-message "{pre}HELP FOR \`{cmd}$cmd{pre}' subcommand {mdsh}" \
                 "the available {b-lhi}options{ehi}:{rst}"
         local opt
@@ -1914,7 +1914,7 @@ $(.zinit-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -r
         }
     } elif [[ -n $allowed ]] {
         shift 2
-        # No — an error message:
+        # No – an error message:
         +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
                 "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
@@ -1931,8 +1931,8 @@ $(.zinit-message-formatter "$match[4]" "$match[5]" "$match[6]"; builtin print -r
                 "command body (i.e.{ehi}:{rst}$bcol e.g.{ehi}: {rst}$bcol\`{lhi}zinit" \
                     "{…}{b}ice-spec{nb}{…} {b}{obj}for{nb}{lhi} {…}({b}plugin" \
                     "{nb}or{b} snippet) {pname}ID-1 ID-2 {-…} {lhi}{nb}{…}$bcol')." \
-                "See \`{cmd}help$bcol' for more usage information and the complete" \
-                "list of the {cmd}subcommands$bcol.{rst}"
+                "See \`{cmd}help$bcol' for a more detailed usage information and" \
+                "the list of the {cmd}subcommands$bcol.{rst}"
     }
 }
 # ]]]
