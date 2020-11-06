@@ -1841,10 +1841,25 @@ builtin setopt noaliases
 # FUNCTION: .zinit-formatter-url. [[[
 .zinit-formatter-url() {
     builtin emulate -LR zsh -o extendedglob
-    if [[ $1 = (#b)([^:]#)(://)([[:alnum:].+_-]##)(|/(*)) ]] {
+    #              1:proto     3:domain/5:start      6:end-of-it         7:no-dot-domain     9:file-path
+    if [[ $1 = (#b)([^:]#)(://)((([[:alnum:]._+-]##).([[:alnum:]_+-]##))|([[:alnum:].+_-]##))(|/(*)) ]] {
         # The advanced coloring if recognized the format…
-        REPLY=$(builtin print -Pr -- %F{220}$match[1]%F{33}$match[2]\
-%F{82}$match[3]%F{172}/$match[5]%f%b)
+        match[9]=${match[9]//\//"%F{227}%B"/"%F{81}%b"}
+        if [[ -n $match[4] ]]; then
+            REPLY="$(builtin print -Pr -- %F{220}$match[1]%F{227}$match[2]\
+%B%F{82}$match[5]\
+%B%F{227}.\
+%B%F{183}$match[6]%f%b)" # … this ·case· ends at: trailing component of the with-dot domain …
+        else
+            REPLY="$(builtin print -Pr -- %F{220}$match[1]%F{227}$match[2]\
+%B%F{82}$match[7]%f%b)" # … this ·case· ends at: no-dot domain …
+        fi
+        # Is there any file-path part in the URL?
+        if [[ -n $match[9] ]]; then
+            REPLY+="$(print -Pr -- \
+%F{227}%B/%F{81}%b$match[9]%f%b)" # … append it. This ends the URL.
+        fi
+#endif
     } else {
         # …revert to the basic if not…
         REPLY=$ZINIT[col-url]$1$ZINIT[col-rst]

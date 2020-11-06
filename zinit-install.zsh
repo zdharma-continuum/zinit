@@ -935,12 +935,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                   ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
-        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet: {p}$sname{rst}${ICE[id-as]:+"{…} (as{ehi}:{rst} {meta}$id_as{rst}")}"
+        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet: {url}$sname{rst}${ICE[id-as]:+"{…} (as{ehi}:{rst} {meta}$id_as{rst}")}"
         command mkdir -p "$local_dir"
     fi
 
     [[ $update = -u && ${OPTS[opt_-q,--quiet]} != 1 ]] && \
-        +zinit-message "{nl}{info}Updating snippet: {p}$sname{rst}${ICE[id-as]:+"{…} (identified as{ehi}:{rst} {meta}$id_as{rst})"}"
+        +zinit-message "{nl}{info}Updating snippet: {url}$sname{rst}${ICE[id-as]:+"{…} (identified as{ehi}:{rst} {meta}$id_as{rst})"}"
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
@@ -957,7 +957,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
-                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`$sname'${${ICE[svn]+ \(with Subversion\)}:- \(with curl, wget, lftp\)}{…}"
+                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`{url}$sname{rst}'${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{…}"
 
                 if (( ${+ICE[svn]} )) {
                     if [[ $update = -u ]] {
