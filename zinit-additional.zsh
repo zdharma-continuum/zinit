@@ -1,8 +1,8 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
-# FUNCTION: :zinit-shade-source [[[
-:zinit-shade-source() {
+# FUNCTION: :zinit-tmp-subst-source [[[
+:zinit-tmp-subst-source() {
     local -a ___substs ___ab
     ___substs=( "${(@s.;.)ICE[subst]}" )
     if [[ -n ${(M)___substs:#*\\(#e)} ]] {
@@ -86,10 +86,10 @@ function $f {
     ZINIT[CUR_USR]=\"$user\" ZINIT[CUR_PLUGIN]=\"$plugin\" ZINIT[CUR_USPL2]=\"$id_as\"
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" begin
-    .zinit-shade-on load
+    .zinit-tmp-subst-on load
     functions[${f}]=\${functions[${f}-zinit-bkp]}
     ${f} \"\$@\"
-    .zinit-shade-off load
+    .zinit-tmp-subst-off load
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" end
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
@@ -115,7 +115,7 @@ function $f {
     .zinit-diff _dtrace/_dtrace begin
 
     # Full shadeing on
-    .zinit-shade-on dtrace
+    .zinit-tmp-subst-on dtrace
 } # ]]]
 # FUNCTION: .zinit-debug-stop [[[
 # Stops Dtrace, i.e. session tracking for changes in Zsh state.
@@ -123,7 +123,7 @@ function $f {
     ZINIT[DTRACE]=0
 
     # Shadowing fully off
-    .zinit-shade-off dtrace
+    .zinit-tmp-subst-off dtrace
 
     # Gather end data now, for diffing later
     .zinit-diff _dtrace/_dtrace end
