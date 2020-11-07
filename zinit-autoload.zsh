@@ -711,11 +711,12 @@ ZINIT[EXTENDED_GLOB]=""
     local -a lines
     (   builtin cd -q "$ZINIT[BIN_DIR]" && \
         command git checkout master &>/dev/null && \
+        command git checkout main &>/dev/null && \
         command git fetch --quiet && \
             lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
         if (( ${#lines} > 0 )); then
             # Remove the (origin/master ...) segments, to expect only tags to appear
-            lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master)[^a-zA-Z]##(HEAD|origin|master)[,[:blank:]]#)#\)/}" )
+            lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
             # Remove " ||" if it ends the line (i.e. no additional text from the body)
             lines=( "${lines[@]/ \|\|[[:blank:]]#(#e)/}" )
             # If there's no ref-name, 2 consecutive spaces occur - fix this
@@ -1575,6 +1576,13 @@ ZINIT[EXTENDED_GLOB]=""
                 ICE=()
             }
         }
+
+        if git show-ref --verify --quiet refs/heads/main; then
+            local main_branch=main
+        else
+            local main_branch=master
+        fi
+
         if (( ! is_release )) {
             ( builtin cd -q "$local_dir" || return 1
               integer had_output=0
@@ -1640,7 +1648,7 @@ ZINIT[EXTENDED_GLOB]=""
                       "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" "${${key##(zinit|z-annex) hook:}%% <->}" update:git
                   done
                   ICE=()
-                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
+                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
             )
@@ -1651,9 +1659,9 @@ ZINIT[EXTENDED_GLOB]=""
             (
                 builtin cd -q "$local_dir" # || return 1 - don't return, maybe it's some hook's logic
                 if (( OPTS[opt_-q,--quiet] )) {
-                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} &> /dev/null
+                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} &> /dev/null
                 } else {
-                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-master} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
+                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
                 }
             )
         fi
@@ -3029,7 +3037,7 @@ EOF
         builtin print "Remote repository $uspl2col set up as origin."
         builtin print "You're in plugin's local folder, the files aren't added to git."
         builtin print "Your next step after commiting will be:"
-        builtin print "git push -u origin master"
+        builtin print "git push -u origin master (or \`… -u origin main')"
     else
         builtin print "Created local $uspl2col plugin."
         builtin print "You're in plugin's repository folder, the files aren't added to git."
