@@ -1577,7 +1577,7 @@ ZINIT[EXTENDED_GLOB]=""
             }
         }
 
-        if git show-ref --verify --quiet refs/heads/main; then
+        if git -C $local_dir show-ref --verify --quiet refs/heads/main; then
             local main_branch=main
         else
             local main_branch=master
