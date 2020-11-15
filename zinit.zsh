@@ -1888,20 +1888,20 @@ builtin setopt noaliases
     # Equivalent, less verbose forms:    
     # 1. msg=( ${${@//…/$match[2]\
     #      ${${functions[.zinit-formatter-$match[5]]:+\
-    #          ${$(.zinit-formatter-$match[5] …):-←↑→}}:-\
-    #        $(.zinit-main-message-formatter… …)}}//←↑→} )
-    # 2. msg=( ${${@//…/$match[2]${${funcs[A]:+${$(Bˢ⁽ᶜᵒᵈᵉ‧‧‧⁾ …):-←↑→}}:-$(Cˢ⁽ᶜᵒᵈᵉ‧‧‧⁾ …)}}//←↑→} )
-    # 3. msg=( ${${@//…/$match[2]${${funcs[A]:+${Aᵉˣᵉ:-←↑→}}:-$Bᵉˣᵉ}}//←↑→} )
-    # 4. msg=( … $match[2]${${funcs[A]:+${Aᵉˣᵉ:-←↑→}}:-$Bᵉˣᵉ} … )
+    #          ${$(.zinit-formatter-$match[5] …):-←→}}:-\
+    #        $(.zinit-main-message-formatter… …)}}//←→} )
+    # 2. msg=( ${${@//…/$match[2]${${funcs[A]:+${$(Bˢ⁽ᶜᵒᵈᵉ‧‧‧⁾ …):-←→}}:-$(Cˢ⁽ᶜᵒᵈᵉ‧‧‧⁾ …)}}//←→} )
+    # 3. msg=( ${${@//…/$match[2]${${funcs[A]:+${Aᵉˣᵉ:-←→}}:-$Bᵉˣᵉ}}//←→} )
+    # 4. msg=( … $match[2]${${funcs[A]:+${Aᵉˣᵉ:-←→}}:-$Bᵉˣᵉ} … )
     # 5. msg=( … ··· ${${funcs[A]:+$Aᵉˣᵉ}:-$Bᵉˣᵉ} … )
 
-    # First try a dedicated formatter, marking its empty output with ←↑→, then
-    # the general formatter and in the end filter-out the ←↑→ from the message.
+    # First try a dedicated formatter, marking its empty output with ←→, then
+    # the general formatter and in the end filter-out the ←→ from the message.
     msg=( ${${@//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\{\\]#))/$match[2]\
 ${${functions[.zinit-formatter-$match[5]]:+\
-${$(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY):-←↑→}}:-\
+${$(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY):-←→}}:-\
 $(.zinit-main-message-formatter "$match[4]" "$match[5]" "$match[6]"; \
-  builtin print -rn -- "$REPLY")}}//←↑→} )
+  builtin print -rn -- "$REPLY")}}//←→} )
 
     # Output the processed message:
     builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
