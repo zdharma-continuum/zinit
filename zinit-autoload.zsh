@@ -1479,14 +1479,14 @@ ZINIT[EXTENDED_GLOB]=""
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$repo" ${${key##(zinit|z-annex) hook:}%% <->} update || \
+        "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_dir" ${${key##(zinit|z-annex) hook:}%% <->} update || \
             return $(( 10 - $? ))
     done
 
     # Check if repository has a remote set, if it is _local
-    if [[ -f $repo/.git/config ]]; then
+    if [[ -f $local_dir/.git/config ]]; then
         local -a config
-        config=( ${(f)"$(<$repo/.git/config)"} )
+        config=( ${(f)"$(<$local_dir/.git/config)"} )
         if [[ ${#${(M)config[@]:#\[remote[[:blank:]]*\]}} -eq 0 ]]; then
             (( !OPTS[opt_-q,--quiet] )) && {
                 .zinit-any-colorify-as-uspl2 "$id_as"
@@ -1577,7 +1577,7 @@ ZINIT[EXTENDED_GLOB]=""
             }
         }
 
-        if git -C $local_dir show-ref --verify --quiet refs/heads/main; then
+        if [[ -d $local_dir/.git ]] && git -C $local_dir show-ref --verify --quiet refs/heads/main; then
             local main_branch=main
         else
             local main_branch=master
