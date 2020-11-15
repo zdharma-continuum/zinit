@@ -2781,6 +2781,10 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
     (( !${#files} )) && files=( "no files?" )
     files=( ${(@)files[1,4]} ${files[4]+more…} )
 
+    # Make the ices available for the hooks.
+    local -A ICE
+    ICE=( "${(kv)ICE2[@]}" )
+    
     if (( is_snippet )); then
         if [[ "${+ICE2[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
