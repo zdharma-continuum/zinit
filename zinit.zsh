@@ -156,6 +156,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-rst  $'\e[0m'        col-b     $'\e[1m'        col-nb    $'\e[22m'
         col-u    $'\e[4m'        col-it    $'\e[3m'        col-st    $'\e[9m'
         col-nu   $'\e[24m'       col-nit   $'\e[23m'       col-nst   $'\e[29m'
+        col-bspc $'\b'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )

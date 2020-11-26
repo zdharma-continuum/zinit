@@ -205,10 +205,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 local -A namemap
                 namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
                 +zinit-message "{error}ERROR: the" \
-                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
-                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`{pname}$profile{error}\'}:-\\b}" \
-                    "requires ${namemap[$required]} annex." \
-                    "\nSee: {url}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}{rst}"
+                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+"{error}"selected profile}:-"{error}"package}" \
+                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+"\`{pname}$profile{error}'"}:-"{bspc}"}" \
+                    "{error}requires ${namemap[$required]} annex." \
+                    "{nl}{nl}See: {url}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}{rst}"
                 (( ${#profiles[@]:#$profile} > 0 )) && builtin print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
                 return 1
             fi
