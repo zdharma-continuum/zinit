@@ -204,11 +204,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             ]]; then
                 local -A namemap
                 namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
-                builtin print -P -- "${ZINIT[col-error]}ERROR: the" \
+                +zinit-message "{error}ERROR: the" \
                     "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
-                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
+                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`{pname}$profile{error}\'}:-\\b}" \
                     "requires ${namemap[$required]} annex." \
-                    "\nSee: %F{221}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}%f%b."
+                    "\nSee: {url}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}{rst}"
                 (( ${#profiles[@]:#$profile} > 0 )) && builtin print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
                 return 1
             fi
@@ -218,7 +218,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                     "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
                     "requires" \
-                    "\`${ZINIT[col-pname]}$required${ZINIT[col-error]}' command.%f%b"
+                    "\`${ZINIT[col-cmd]}$required${ZINIT[col-error]}' command.%f%b"
                 builtin print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
                 return 1
             fi
@@ -1288,7 +1288,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     opts=( -u ) # for z-a-readurl
 
     # Create a local copy of OPTS, basically
-    # for z-a-as-monitor annex
+    # for z-a-readurl annex
     local -A ice_opts
     ice_opts=( "${(kv)OPTS[@]}" )
     local -A OPTS

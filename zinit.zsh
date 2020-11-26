@@ -135,7 +135,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
     ZINIT+=(
         # Old colors: 31m
         col-pname   $'\e[1m\e[32m'       col-uname   $'\e[1m\e[35m'       col-keyword $'\e[32m'
-        col-note    $'\e[38;5;57m'       col-error   $'\e[1m\e[38;5;204m' col-p       $'\e[38;5;81'
+        col-note    $'\e[38;5;57m'       col-error   $'\e[1m\e[38;5;204m' col-p       $'\e[38;5;81m'
         col-info    $'\e[38;5;82m'       col-info2   $'\e[38;5;227m' 
         col-uninst  $'\e[38;5;118m'      col-info3   $'\e[1m\e[38;5;227m'
         col-failure $'\e[38;5;204m'      col-happy   $'\e[1m\e[38;5;82m'
