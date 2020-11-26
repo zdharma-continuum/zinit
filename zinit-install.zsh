@@ -200,7 +200,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         if [[ $required == (bgn|dl|monitor) ]]; then
             if [[ ( $required == bgn && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-bin-gem-node *]} ) || \
                 ( $required == dl && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ) || \
-                ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-as-monitor *]} )
+                ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-readurl *]} )
             ]]; then
                 local -A namemap
                 namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor As-Monitor )
