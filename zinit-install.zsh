@@ -203,7 +203,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-readurl *]} )
             ]]; then
                 local -A namemap
-                namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor As-Monitor )
+                namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
                 builtin print -P -- "${ZINIT[col-error]}ERROR: the" \
                     "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
                     "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
@@ -1285,7 +1285,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     local url=$1
     integer correct=0
     [[ -o ksharrays ]] && correct=1
-    opts=( -u ) # for z-a-as-monitor
+    opts=( -u ) # for z-a-readurl
 
     # Create a local copy of OPTS, basically
     # for z-a-as-monitor annex
