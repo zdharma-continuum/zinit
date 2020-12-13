@@ -686,6 +686,11 @@ ZINIT[EXTENDED_GLOB]=""
 # BusyBox less lacks the -X and -i options, so it can use more
 .zinit-pager() {
     setopt LOCAL_OPTIONS EQUALS
+    # Quiet mode ? → no pager.
+    if (( OPTS[opt_-n,--no-pager] )) {
+        cat
+        return 0
+    }
     if [[ ${${:-=less}:A:t} = busybox* ]] {
         more 2>/dev/null
         (( ${+commands[more]} ))
@@ -694,6 +699,7 @@ ZINIT[EXTENDED_GLOB]=""
         (( ${+commands[less]} ))
     }
     (( $? )) && cat
+    return 0
 }
 # ]]]
 

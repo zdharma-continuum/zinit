@@ -2305,9 +2305,11 @@ zinit() {
         --help     opt_-h,--help
         -u         opt_-u,--urge:"Cause all the hooks like{ehi}:{rst} {ice}atpull{apo}''{rst}, {ice}cp{apo}''{rst}, etc. to execute even when there aren't any new commits {b}/{rst} any new version of the {b}{meta}gh-r{rst} file {b}/{rst} etc.{…} available for download {ehi}{lr}{rst} simulate a non-empty update."
         --urge     opt_-u,--urge
+        -n         opt_-n,--no-pager:"Disable the use of the pager."
+        --no-pager opt_-n,--no-pager
         env-whitelist "-h|--help|-v|--verbose"
         update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
--q|--quiet|-r|--reset|-u|--urge|-v|--verbose|-h|--help"
+-q|--quiet|-r|--reset|-u|--urge|-n|--no-pager|-v|--verbose|-h|--help"
         delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet|-h|--help"
 
     )
