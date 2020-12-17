@@ -332,8 +332,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         local_path tpe=$4 update=$5 version=$6
 
     if .zinit-get-object-path plugin "$id_as" && [[ -z $update ]] {
-        +zinit-message "{msg2}A plugin named {obj}$id_as" \
-                "{msg2}already exists, aborting.{rst}"
+        +zinit-message "{u-warn}ERROR{b-warn}:{error} A plugin named {pid}$id_as{error}" \
+                "already exists, aborting."
         return 1
     }
     local_path=$REPLY
@@ -372,8 +372,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
+            local pid_hl='{pid}'
             (( $+ICE[pack] )) && local infix_m="({b}{ice}pack{apo}''{rst}) "
-            +zinit-message "{nl}Downloading $infix_m$REPLY{…}${${${id_as:#$user/$plugin}}:+" (as{ehi}:{rst} {meta2}$id_as{rst}{…})"}"
+            +zinit-message "{nl}Downloading $infix_m{pid}$user${user:+/}$plugin{…}${${${id_as:#$user/$plugin}}:+" (under id{ehi}:{rst} {id-as}$id_as{rst}{…})"}"
         }
 
         local site
