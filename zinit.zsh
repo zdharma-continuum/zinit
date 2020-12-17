@@ -1921,7 +1921,7 @@ builtin setopt noaliases
 # FUNCTION: +zinit-message-formatter [[[
 .zinit-main-message-formatter() {
     REPLY="${ZINIT[col-$2]:-$1}$3"
-    if [[ $2 == (b|u|it|st|nb|nu|nit|nst) ]]; then
+    if [[ $2 == (b|u|it|st|nb|nu|nit|nst|) ]]; then
         # Powtórzenie kodu aby zabezpieczyć ewentualne krańcowe białe znaki
         # oraz aby umożliwić akumulację tego kodu z innymi.
         REPLY+=$ZINIT[col-$2]
@@ -1959,10 +1959,11 @@ builtin setopt noaliases
     
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
-    msg=${${msg//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\{\\]#))/$match[2]\
-${${functions[.zinit-formatter-$match[5]]:+\
-${$(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY):-←→}}:-\
-$(.zinit-main-message-formatter "$match[4]" "$match[5]" "$match[6]"; \
+    msg=${${msg//(#b)(([\\]|(%F))([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\%\{\\]#))/\
+$match[3]$match[4]\
+${${functions[.zinit-formatter-$match[7]]:+\
+${$(.zinit-formatter-$match[7] "$match[8]"; builtin print -rn -- $REPLY):-←→}}:-\
+$(.zinit-main-message-formatter "$match[6]" "$match[7]" "$match[8]"; \
   builtin print -rn -- "$REPLY")}}//←→}
 
     # Output the processed message:
