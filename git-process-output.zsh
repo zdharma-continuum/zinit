@@ -59,7 +59,7 @@ timeline() {
   }
 
   print -nr -- ${frames_splitted[cur_frame+1]}" "
-  print -nPr "%F{214}"
+  print -nPr "%F{183}"
   print -f "%s %s" "${bar// /░}" ""
   print -nPr "%f"
 }
@@ -70,9 +70,9 @@ timeline() {
 # $4 - receiving percentage
 # $5 - resolving percentage
 print_my_line() {
-    local col="%F{214}" col3="%F{214}" col4="%F{214}" col5="%F{214}"
-    [[ -n "${4#...}" && -z "${5#...}" ]] && col3="%F{33}"
-    [[ -n "${5#...}" ]] && col4="%F{33}"
+    local col="%F{155}" col3="%F{155}" col4="%F{155}" col5="%F{155}"
+    [[ -n "${4#...}" && -z "${5#...}" ]] && col3="%F{81}"
+    [[ -n "${5#...}" ]] && col4="%F{81}"
     if (( COLS >= 70 )) {
         print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3${${4:#...}:+, ${col3}REC%f: $4%}${${5:#...}:+, ${col4}RES%f: $5%}  "
     } elif (( COLS >= 60 )) {
@@ -84,10 +84,10 @@ print_my_line() {
 }
 
 print_my_line_compress() {
-    local col="%F{214}" col3="%F{214}" col4="%F{214}" col5="%F{214}"
-    [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && col3="%F{33}"
-    [[ -n "${5#...}" && -z "${6#...}" ]] && col4="%F{33}"
-    [[ -n "${6#...}" ]] && col5="%F{33}"
+    local col="%F{155}" col3="%F{155}" col4="%F{155}" col5="%F{155}"
+    [[ -n "${4#...}" && -z "${5#...}" && -z "${6#...}" ]] && col3="%F{81}"
+    [[ -n "${5#...}" && -z "${6#...}" ]] && col4="%F{81}"
+    [[ -n "${6#...}" ]] && col5="%F{81}"
     if (( COLS >= 80 )) {
         print -Pnr -- "${col}OBJ%f: $1, ${col}PACK%f: $2/$3, ${col3}COMPR%f: $4%%${${5:#...}:+, ${col4}REC%f: $5%%}${${6:#...}:+, ${col5}RES%f: $6%%}  "
     } elif (( COLS >= 65 )) {
