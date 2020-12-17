@@ -244,27 +244,6 @@ builtin setopt noaliases
         local PLUGIN_DIR="$reply[2]" || \
         local PLUGIN_DIR="$ZINIT[PLUGINS_DIR]/${reply[1]:+$reply[1]---}${reply[2]//\//---}"
 
-    if (( ${+opts[(r)-X]} )); then
-        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
-        +zinit-message -u2 "{error}builtin autoload required for {obj}${(j: :)opts[@]}{error} option(s){rst}"
-        return 1
-    fi
-    if (( ${+opts[(r)-w]} )); then
-        .zinit-add-report "${ZINIT[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
-        fpath+=( $PLUGIN_DIR )
-        builtin autoload ${opts[@]} "$@"
-        return $?
-    fi
-    if [[ -n ${(M)@:#+X} ]]; then
-        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
-        local +h FPATH="$PLUGINS_DIR:$FPATH"
-        builtin autoload +X ${opts[@]} "${@:#+X}"
-        return $?
-    fi
-    # Report ZPLUGIN's "native" autoloads.
-    for func; do
-        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
-    done
 
     # "Elementy fpath" – tj. te elementy, które leżą wewnątrz katalogu wtyczki.
     # Nazwa wynika z tego, że są to wybrane elementy fpath → a więc po prostu
@@ -275,6 +254,29 @@ builtin setopt noaliases
     # Dodanie podkatalogu funkcji do elementów, jeżeli istnieje (działanie to jest
     # wg Standardu Wtyczek w wersji 1.07 i późniejszych).
     [[ -d $PLUGIN_DIR/functions ]] && fpath_elements+=( "$PLUGIN_DIR"/functions )
+
+    if (( ${+opts[(r)-X]} )); then
+        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
+        +zinit-message -u2 "{error}builtin autoload required for {obj}${(j: :)opts[@]}{error} option(s)"
+        return 1
+    fi
+    if (( ${+opts[(r)-w]} )); then
+        .zinit-add-report "${ZINIT[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
+        fpath+=( $PLUGIN_DIR )
+        builtin autoload ${opts[@]} "$@"
+        return $?
+    fi
+    if [[ -n ${(M)@:#+X} ]]; then
+        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
+        local -a fpath
+        fpath=( $PLUGIN_DIR $fpath_elements $fpath )
+        builtin autoload +X ${opts[@]} "${@:#+X}"
+        return $?
+    fi
+    # Report ZPLUGIN's "native" autoloads.
+    for func; do
+        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
+    done
 
     integer count retval
     for func; do
