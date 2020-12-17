@@ -253,32 +253,58 @@ builtin setopt noaliases
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
         fpath+=( $PLUGIN_DIR )
         builtin autoload ${opts[@]} "$@"
-        return 0
+        return $?
     fi
     if [[ -n ${(M)@:#+X} ]]; then
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
         local +h FPATH="$PLUGINS_DIR:$FPATH"
         builtin autoload +X ${opts[@]} "${@:#+X}"
-        return 0
+        return $?
     fi
     # Report ZPLUGIN's "native" autoloads.
     for func; do
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
     done
 
+    # "Elementy fpath" – tj. te elementy, które leżą wewnątrz katalogu wtyczki.
+    # Nazwa wynika z tego, że są to wybrane elementy fpath → a więc po prostu
+    # "elementy".
     local -a fpath_elements
     fpath_elements=( ${fpath[(r)$PLUGIN_DIR/*]} )
 
+    # Dodanie podkatalogu funkcji do elementów, jeżeli istnieje (działanie to jest
+    # wg Standardu Wtyczek w wersji 1.07 i późniejszych).
     [[ -d $PLUGIN_DIR/functions ]] && fpath_elements+=( "$PLUGIN_DIR"/functions )
 
-    integer count
+    integer count retval
     for func; do
         # Real autoload doesn't touch function if it already exists.
         # Author of the idea of FPATH-clean autoloading: Bart Schaefer.
         if (( ${+functions[$func]} != 1 )) {
             builtin setopt noaliases
+            if [[ $func == /* ]] && is-at-least 5.4; then
+                builtin autoload ${opts[@]} $func
+                return $?
+            elif [[ $func == /* ]]; then
+                if [[ $ZINIT[MUTE_WARNINGS] != (1|true|on|yes) && \
+                        -z $ZINIT[WARN_SHOWN_FOR_$ZINIT[CUR_USPL2]] ]]; then
+                    +zinit-message "{u-warn}Warning{b-warn}: {rst}the plugin {pid}$ZINIT[CUR_USPL2]" \
+                        "{rst}is using autoload functions specified by their absolute path," \
+                        "which is not supported by this Zsh version ({↔} {version}$ZSH_VERSION{rst}," \
+                        "required is Zsh >= {version}5.4{rst})." \
+                        $'\n'"A fallback mechanism has been applied, which works well only" \
+                        "for functions in the plugin {u}{slight}main{rst} directory." \
+                        $'\n'"(To mute this message, set" \
+                        "{var}\$ZINIT[MUTE_WARNINGS]{rst} to a truth value.)"
+                    ZINIT[WARN_SHOWN_FOR_$ZINIT[CUR_USPL2]]=1
+                fi
+
+                # Zastosowanie obejścia.
+                func=$func:t
+            fi
             if [[ ${ZINIT[NEW_AUTOLOAD]} = 2 ]]; then
                 builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
+                retval=$?
             elif [[ ${ZINIT[NEW_AUTOLOAD]} = 1 ]]; then
                 if (( ${+opts[(r)-C]} )) {
                     local pth nl=$'\n' sel=""
@@ -288,6 +314,7 @@ builtin setopt noaliases
                     if [[ -z $sel ]] {
                         +zinit-message '{error}zinit: Couldn''t find autoload function{ehi}:' \
                             "{data2}\`{data}${func}{data2}'{error} anywhere in {obj}\$fpath{error}.{rst}"
+                            retval=1
                     } else {
                         eval "function ${(q)${custom[++count*2]}:-$func} {
                             local body=\"\$(<${(qqq)sel}/${(qqq)func})\" body2
@@ -300,6 +327,7 @@ builtin setopt noaliases
                             functions[${${(q)custom[count*2]}:-$func}]=\"\$body2\"
                             ${(q)${custom[count*2]}:-$func} \"\$@\"
                         }"
+                        retval=$?
                     }
                 } else {
                     eval "function ${(q)func} {
@@ -307,20 +335,23 @@ builtin setopt noaliases
                         fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath_elements} ${(qqq@)fpath} )
                         builtin autoload -X ${(j: :)${(q-)opts[@]}}
                     }"
+                    retval=$?
                 }
             else
                 eval "function ${(q)func} {
                     :zinit-reload-and-run ${(qqq)PLUGIN_DIR}"$'\0'"${(pj,\0,)${(qqq)fpath_elements[@]}} ${(qq)opts[*]} ${(q)func} "'"$@"
                 }'
+                retval=$?
             fi
             (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
         }
         if (( ${+opts2[(r)-I]} )) {
             ${custom[count*2]:-$func}
+            retval=$?
         }
     done
 
-    return 0
+    return $retval
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-bindkey. [[[
 # Function defined to hijack plugin's calls to the `bindkey' builtin.
