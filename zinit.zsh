@@ -1902,12 +1902,22 @@ builtin setopt noaliases
 # ]]]
 # FUNCTION: .zinit-formatter-bar. [[[
 .zinit-formatter-bar() {
-    REPLY=$ZINIT[col-bar]${(l:COLUMNS-1::─:):-}$ZINIT[col-rst]
+    .zinit-formatter-bar-util ─ bar
 }
 # ]]]
 # FUNCTION: .zinit-formatter-th-bar. [[[
 .zinit-formatter-th-bar() {
-    REPLY=$ZINIT[col-th-bar]${(l:COLUMNS-1::━:):-}$ZINIT[col-rst]
+    .zinit-formatter-bar-util ━ th-bar
+}
+# FUNCTION: .zinit-formatter-bar-util. [[[
+.zinit-formatter-bar-util() {
+    if [[ $LANG == (#i)*utf-8* ]]; then
+        ch=$1
+    else
+        ch=-
+    fi
+    
+    REPLY=$ZINIT[col-$2]${(pl:COLUMNS-1::$ch:):-}$ZINIT[col-rst]
 }
 # ]]]
 # FUNCTION: .zinit-formatter-url. [[[
