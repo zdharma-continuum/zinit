@@ -393,10 +393,10 @@
     ice="{b}{ice}$tpe{ehi}:{rst}${ice//(#b)(\{[a-z0-9…–_-]##\})/\\$match[1]}"
     +zinit-message -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
     while (( -- count + 1 )) {
-        +zinit-message -n -- "{b}{error}"$(( count + 1 ))"{…}{rst}"
+        +zinit-message -n -- "{b}{error}"$(( count + 1 ))"{rst}{…}"
         sleep 1
     }
-    +zinit-message -r -- "{b}{error}0 <running now>{…}{rst}"
+    +zinit-message -r -- "{b}{error}0 <running now>{rst}{…}"
     return 0
 }
 # ]]]

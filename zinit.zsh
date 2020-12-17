@@ -1950,15 +1950,30 @@ builtin setopt noaliases
 # ]]]
 # FUNCTION: +zinit-message-formatter [[[
 .zinit-main-message-formatter() {
-    REPLY="${ZINIT[col-$2]:-$1}$3"
-    if [[ $2 == (b|u|it|st|nb|nu|nit|nst|) ]]; then
+    if [[ -z $1 && -z $2 && -z $3 ]]; then
+        REPLY=""
+        return
+    fi
+    local append in_prepend
+    if [[ $2 == (b|u|it|st|nb|nu|nit|nst) ]]; then
         # Powtórzenie kodu aby zabezpieczyć ewentualne krańcowe białe znaki
         # oraz aby umożliwić akumulację tego kodu z innymi.
-        REPLY+=$ZINIT[col-$2]
+        append=$ZINIT[col-$2]
+    elif [[ $2 == (…|ndsh|mdsh|mmdsh|-…|lr|) || -z $2 || -z $ZINIT[col-$2] ]]; then
+        # Wznowienie poprzedniego kodu escape, jeżeli jest taki zapisany.
+        if [[ $ZINIT[__last-formatter-code] != (…|ndsh|mdsh|mmdsh|-…|lr|rst|) ]]; then
+            in_prepend=$ZINIT[col-$ZINIT[__last-formatter-code]]
+        fi
+        # W przeciwnym razie brak akcji – tylko skopiowanie
+        # tego kodu bez koloru.
     else
-        REPLY+=$ZINIT[col-rst]
+        # Zakończenie aktywności kodu escape.
+        append=$ZINIT[col-rst]
     fi
-
+    
+    # Skonstruuj tekst.
+    REPLY=$in_prepend${ZINIT[col-$2]:-$1}$3$append
+    
     # Zamień nowe linie na znaki, które działają tak samo ale nie są
     # usuwane w podstawieniu $( … ) – vertical tab 0xB ↔ 13 w systemie
     # oktagonalnym połączone z powrotem karetki (015).
@@ -1990,12 +2005,17 @@ builtin setopt noaliases
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
     msg=${${msg//(#b)(([\\]|(%F))([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\%\{\\]#))/\
-$match[3]$match[4]\
+${match[4]:+${${match[3]:-$ZINIT[col-${ZINIT[__last-formatter-code]}]}:#%F}}$match[3]$match[4]\
 ${${functions[.zinit-formatter-$match[7]]:+\
 ${$(.zinit-formatter-$match[7] "$match[8]"; builtin print -rn -- $REPLY):-←→}}:-\
 $(.zinit-main-message-formatter "$match[6]" "$match[7]" "$match[8]"; \
-  builtin print -rn -- "$REPLY")}}//←→}
+  builtin print -rn -- "$REPLY"
+ )${${ZINIT[__last-formatter-code]::=${${${match[7]:#(…|ndsh|mdsh|mmdsh|-…|lr)}:+\
+$match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
+    
+    # Przywróć domyślny kolor na końcu wiadomości.
+    msg=$msg$ZINIT[col-rst]
     # Output the processed message:
     builtin print -Pr ${opt:#--} -- $msg
 
