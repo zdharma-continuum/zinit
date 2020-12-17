@@ -1037,7 +1037,7 @@ builtin setopt noaliases
         ZINIT_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it.
-        [[ -z ${ZINIT[TEST]}${${+ICE[wait]}:#0}${ICE[load]}${ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != 1 ]] && +zinit-message "{error}Warning:{rst} plugin \`{pname}${uspl2}{rst}' already registered, will overwrite-load"
+        [[ -z ${ZINIT[TEST]}${${+ICE[wait]}:#0}${ICE[load]}${ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != (1|true|on|yes) ]] && +zinit-message "{error}Warning:{rst} plugin \`{pname}${uspl2}{rst}' already registered, will overwrite-load"
         ret=1
     fi
 
@@ -2509,7 +2509,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                 ___new_ices=( "${(Q@)${(@z)ZINIT[annex-before-load:new-global-ices]}}" )
                                 (( 0 == ${#___new_ices} % 2 )) && \
                                     ___ices=( "${___new_ices[@]}" ) || \
-                                        { (( !ZINIT[MUTE_WARNINGS] )) && \
+                                        { [[ ${ZINIT[MUTE_WARNINGS]} != (1|true|on|yes) ]] && \
                                             +zinit-message "{warn}Warning:{msg} Bad new-ices returned" \
                                                 "from the annex{ehi}:{rst} {meta}${___arr[3]}{msg}," \
                                                 "please file an issue report at:{url}" \
