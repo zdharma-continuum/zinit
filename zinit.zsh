@@ -1768,12 +1768,6 @@ builtin setopt noaliases
 
     (( ___rst )) && { builtin print; zle .reset-prompt; }
 
-    if [[ -n $___m_bkp ]] {
-        functions[m]="$___m_bkp"
-    } else {
-        noglob unset functions[m]
-    }
-
     return ___retval
 } # ]]]
 # FUNCTION: .zinit-compdef-replay. [[[
