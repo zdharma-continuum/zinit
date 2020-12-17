@@ -152,6 +152,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-warn $'\e[38;5;214m'  col-apo $'\e[1;38;5;220m' col-ok    $'\e[38;5;220m'
         col-inv  $'\e[38;5;238m'  col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
         col-tab  $'\t'            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
+        col-bar  $'\e[38;5;82m'  col-th-bar $'\e[38;5;82m'
         col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
         col-mdsh "${${${(M)LANG:#*UTF-8*}:+–}:--}"    col-mmdsh "${${${(M)LANG:#*UTF-8*}:+――}:--}"
         col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}" col-lr    "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
@@ -1897,6 +1898,16 @@ builtin setopt noaliases
 
     # Dostaw spowrotem krańcowe białe znaki.
     REPLY=$REPLY$kbz
+}
+# ]]]
+# FUNCTION: .zinit-formatter-bar. [[[
+.zinit-formatter-bar() {
+    REPLY=$ZINIT[col-bar]${(l:COLUMNS-1::─:):-}$ZINIT[col-rst]
+}
+# ]]]
+# FUNCTION: .zinit-formatter-th-bar. [[[
+.zinit-formatter-th-bar() {
+    REPLY=$ZINIT[col-th-bar]${(l:COLUMNS-1::━:):-}$ZINIT[col-rst]
 }
 # ]]]
 # FUNCTION: .zinit-formatter-url. [[[
