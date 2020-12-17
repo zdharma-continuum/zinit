@@ -2052,9 +2052,9 @@ ZINIT[EXTENDED_GLOB]=""
         counter=0
         PUAssocArray=()
     } elif (( counter == 1 && !OPTS[opt_-q,--quiet] )) {
-        +zinit-message "{obj}Spawning the next{file}" \
+        +zinit-message "{obj}Spawning the next{num}" \
             "${OPTS[value]}{obj} concurrent update jobs" \
-            "({msg2}%F{191}${tpe}{obj}){…}{rst}"
+            "({msg2}%F{153}${tpe}{obj}){…}{rst}"
     }
 }
 # ]]]
