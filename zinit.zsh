@@ -156,7 +156,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
         col-mdsh "${${${(M)LANG:#*UTF-8*}:+–}:--}"    col-mmdsh "${${${(M)LANG:#*UTF-8*}:+――}:--}"
         col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}" col-lr    "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
-        col-↔    ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔'}:-$'\e[38;5;82m<->'}
+        col-↔    ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔'}:-$'\e[38;5;82m«-»'}
         col-rst  $'\e[0m'        col-b     $'\e[1m'        col-nb     $'\e[22m'
         col-u    $'\e[4m'        col-it    $'\e[3m'        col-st     $'\e[9m'
         col-nu   $'\e[24m'       col-nit   $'\e[23m'       col-nst    $'\e[29m'
