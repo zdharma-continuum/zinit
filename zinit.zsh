@@ -142,7 +142,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-id-as   $'\e[4;38;5;220m'    col-version $'\e[3;38;5;87m'
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;135m'  col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
-        col-obj  $'\e[38;5;218m'  col-obj2  $'\e[38;5;118m' col-file  $'\e[38;5;117m'
+        col-obj  $'\e[38;5;218m'  col-obj2  $'\e[38;5;118m' col-file  $'\e[3;38;5;117m'
         col-dir  $'\e[3;38;5;153m'
         col-url  $'\e[38;5;75m'   col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;147m'
         col-data $'\e[38;5;82m'   col-data2 $'\e[38;5;117m' col-hi    $'\e[1m\e[38;5;183m'
@@ -1871,8 +1871,23 @@ builtin setopt noaliases
 # ]]]
 # FUNCTION: .zinit-formatter-pid. [[[
 .zinit-formatter-pid() {
+    builtin emulate -L zsh -o extendedglob
+
+    # Zapamiętaj krańcowe białe znaki.
+    local kbz=${(M)1%%[[:space:]]##(#e)}
+    # Usuń skrajne białe znaki.
+    1=${1//((#s)[[:space:]]##|[[:space:]]##(#e))/}
+
     ((${+functions[.zinit-first]})) || source ${ZINIT[BIN_DIR]}/zinit-side.zsh
     .zinit-any-colorify-as-uspl2 "$1";
+
+    # Zamień przynajmniej jeden znak na niełamalną spację, ponieważ z
+    # powodu problemów z implementacją krańcowe białe znaki są gubione…
+    local kbz_rev="${(j::)${(@Oas::)kbz}}"
+    kbz="${(j::)${(@Oas::)${kbz_rev/ / }}}"
+
+    # Dostaw spowrotem krańcowe białe znaki.
+    REPLY=$REPLY$kbz
 }
 # ]]]
 # FUNCTION: .zinit-formatter-url. [[[
@@ -1906,13 +1921,20 @@ builtin setopt noaliases
 # FUNCTION: +zinit-message-formatter [[[
 .zinit-main-message-formatter() {
     REPLY="${ZINIT[col-$2]:-$1}$3"
-    if [[ $2 == b ]]; then
-        # Repeat the code so that the possible trailing
-        # whitespace of the message is not skipped.
+    if [[ $2 == (b|u|it|st|nb|nu|nit|nst) ]]; then
+        # Powtórzenie kodu aby zabezpieczyć ewentualne krańcowe białe znaki
+        # oraz aby umożliwić akumulację tego kodu z innymi.
         REPLY+=$ZINIT[col-$2]
     else
         REPLY+=$ZINIT[col-rst]
     fi
+
+    # Zamień nowe linie na znaki, które działają tak samo ale nie są
+    # usuwane w podstawieniu $( … ) – vertical tab 0xB ↔ 13 w systemie
+    # oktagonalnym połączone z powrotem karetki (015).
+    local nl=$'\n' vertical=$'\013' carriager=$'\015'
+    REPLY=${REPLY//$nl/$vertical$carriager}
+
 #    REPLY+="x(${3}…)"
 }
 # ]]]
@@ -1920,7 +1942,7 @@ builtin setopt noaliases
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob
     if [[ $1 = -* ]] { local opt=$1; shift; } else { local opt; }
-    local -a msg
+    local msg
 
     # Equivalent, less verbose forms:    
     # 1. msg=( ${${@//…/$match[2]\
@@ -1932,16 +1954,24 @@ builtin setopt noaliases
     # 4. msg=( … $match[2]${${funcs[A]:+${Aᵉˣᵉ:-←→}}:-$Bᵉˣᵉ} … )
     # 5. msg=( … ··· ${${funcs[A]:+$Aᵉˣᵉ}:-$Bᵉˣᵉ} … )
 
+    # Added later:
+    msg=${(j: :)${@:#--}}
+    
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
-    msg=( ${${@//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\{\\]#))/$match[2]\
+    msg=${${msg//(#b)([\\]([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\{\\]#))/$match[2]\
 ${${functions[.zinit-formatter-$match[5]]:+\
 ${$(.zinit-formatter-$match[5] "$match[6]"; builtin print -rn -- $REPLY):-←→}}:-\
 $(.zinit-main-message-formatter "$match[4]" "$match[5]" "$match[6]"; \
-  builtin print -rn -- "$REPLY")}}//←→} )
+  builtin print -rn -- "$REPLY")}}//←→}
 
     # Output the processed message:
-    builtin print -Pr ${opt:#--} -- ${msg[1]:#--} ${msg[2,-1]}
+    builtin print -Pr ${opt:#--} -- $msg
+
+    # Potrzebne aby poprawnie zakończyć wiadomość z {nl}.
+    if [[ -n ${opt:#*n*} || -z $opt ]]; then
+        print -n $'\015'
+    fi
 }
 # ]]]
 # FUNCTION: +zinit-prehelp-usage-message. [[[
