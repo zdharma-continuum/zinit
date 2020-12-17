@@ -126,6 +126,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123} \
         URL=https://raw.githubusercontent.com/Zsh-Packages/$2/master/package.json
 
+    local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
+        tool_sep="{rst}, {cmd}" \
+        lhi_hl="{lhi}" profile_hl="{profile}"
+
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
     trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
 
@@ -141,7 +145,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     pkgjson="$(<$tmpfile)"
 
     if [[ -z $pkgjson ]]; then
-        +zinit-message "{error}Error: the package \`{data}$id_as{error}' couldn't be found.{rst}"
+        +zinit-message "{u-warn}Error{b-warn}:{error} the package {apo}\`{pid}$id_as{apo}\`"\
+            "{error}couldn't be found.{rst}"
         return 1
     fi
 
@@ -176,21 +181,24 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
         }
     } else {
-        local sep="$ZINIT[col-error],$ZINIT[col-meta2] "
-        +zinit-message "{error}Error: the profile \`{meta}$profile{error}'" \
-            "couldn't be found, aborting. Available profiles are:" \
-            "{meta2}${(pj:$sep:)${profiles[@]:#$profile}}{error}.{rst}"
+        # Założenie: profil domyślny jest pierwszy w tablicy (patrz: inny kolor).
+        +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
+            "{error}couldn't be found, aborting. Available profiles are:" \
+            "{lhi}${(pj:$epro_sep:)profiles[@]}{error}.{rst}"
         return 1
     }
 
-    local sep="$ZINIT[col-rst],$ZINIT[col-meta2] "
-    +zinit-message "{info3}Package{ehi}:{rst} {pname}$pkg{rst}. Selected" \
-        "profile{ehi}:{rst} {meta2}$profile{rst}. Available" \
-        "profiles:${${${(M)profile:#default}:+"{meta2}"}:-"{meta}"}" \
-        "${(pj:$sep:)${profiles[@]:#$profile}}{rst}."
+
+    +zinit-message "{info3}Package{ehi}:{rst} {pid}$pkg{rst}. Selected" \
+        "profile{ehi}:{rst} {hi}$profile{rst}. Available" \
+        "profiles:${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl}" \
+        "${(pj:$pro_sep:)profiles[@]}{rst}."
     if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]] {
-        +zinit-message "{note}Note:{rst} The \`{meta2}bgn{glob}*{rst}' profiles are" \
-            "recommended (they expose the binaries without extending {var}\$PATH{rst})."
+         +zinit-message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}" \
+            "profiles (if any are available) are the recommended ones (the reason" \
+            "is that they expose the binaries provided by the package without" \
+            "altering (i.e.: {slight}cluttering{rst}{…}) the {var}\$PATH{rst}" \
+            "environment variable)."
     }
 
     ICE[required]=${ICE[required]:-$ICE[requires]}
@@ -204,32 +212,53 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             ]]; then
                 local -A namemap
                 namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
-                +zinit-message "{error}ERROR: the" \
-                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+"{error}"selected profile}:-"{error}"package}" \
-                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+"\`{pname}$profile{error}'"}:-"{bspc}"}" \
-                    "{error}requires ${namemap[$required]} annex." \
-                    "{nl}{nl}See: {url}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}{rst}"
-                (( ${#profiles[@]:#$profile} > 0 )) && builtin print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
+                +zinit-message -n "{warn}ERROR: {error}the "
+                if [[ -z ${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))} ]]; then
+                    +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
+                else
+                    +zinit-message -n "{error}package {pid}$pkg{error} "
+                fi
+                +zinit-message '{error}requires the {apo}`{annex}'${namemap[$required]}'{apo}`' \
+                    "{error}annex, which is currently not installed." \
+                    "{nl}{nl}If you'd like to install it, then you can visit its homepage:" \
+                    "{nl}– {url}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}{rst}" \
+                    "{nl}for instructions."
+                (( ${#profiles[@]:#$profile} > 0 )) && \
+                    +zinit-message "{nl}Other available profiles are:" \
+"{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
+
                 return 1
             fi
         else
             if ! command -v $required &>/dev/null; then
-                builtin print -P -- "${ZINIT[col-error]}ERROR: the" \
-                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+selected profile}:-package}" \
-                    "${${${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))}:+\`${ZINIT[col-pname]}$profile${ZINIT[col-error]}\'}:-\\b}" \
-                    "requires" \
-                    "\`${ZINIT[col-cmd]}$required${ZINIT[col-error]}' command.%f%b"
-                builtin print -r -- "Other available profiles are: ${(j:, :)${profiles[@]:#$profile}}."
+                +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
+                if [[ -n ${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))} ]]; then
+                    +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
+                else
+                    +zinit-message -n "{error}package {pid}$pkg{error} "
+                fi
+                +zinit-message '{error}requires a {apo}`{cmd}'$required'{apo}`{error}' \
+                    "command to be available in {var}\$PATH{error}.{rst}" \
+                    "{nl}{error}The package cannot be installed unless the" \
+                    "command will be available."
+                (( ${#profiles[@]:#$profile} > 0 )) && \
+                    +zinit-message "{nl}Other available profiles are:" \
+                        "{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
                 return 1
             fi
         fi
     }
 
     if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
-        +zinit-message $'\n'"{error}WARNING:{msg2} the profile uses {obj}dl''{msg2}" \
-            "ice however there's no {obj2}z-a-patch-dl{msg2} annex loaded" \
-            "(the ice will be inactive, i.e.: no additional files will" \
-            "become downloaded).{rst}"
+        +zinit-message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" \
+            "{ice}dl''{rst} ice however there's currently no {annex}z-a-patch-dl{rst}" \
+            "annex loaded, which provides it."
+        +zinit-message "The ice will be inactive, i.e.: no additional" \
+            "files will become downloaded (the ice downloads the given URLs)." \
+            "The package should still work, as it doesn't indicate to" \
+            "{u}{slight}require{rst} the annex."
+        +zinit-message "{nl}You can download the" \
+            "annex from its homepage at {url}https://github.com/zinit-zsh/z-a-patch-dl{rst}."
     }
 
     [[ -n ${jsondata1[message]} ]] && \
@@ -251,18 +280,20 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             local fname="${${URL%%\?*}:t}"
 
             command mkdir -p $dir || {
-                +zinit-message "{error}Couldn't create directory: {msg2}$dir{error}, aborting.{rst}"
+                +zinit-message "{u-warn}Error{b-warn}:{error} Couldn't create directory:" \
+                    "{dir}$dir{error}, aborting.{rst}"
                 return 1
             }
             builtin cd -q $dir || return 1
 
-            +zinit-message "Downloading tarball for {pname}$plugin{rst}{…}"
+            +zinit-message "Downloading tarball for {pid}$plugin{rst}{…}"
 
             if { ! .zinit-download-file-stdout "$URL" 0 1 >! "$fname" } {
                 if { ! .zinit-download-file-stdout "$URL" 1 1 >! "$fname" } {
                     command rm -f "$fname"
-                    +zinit-message "Download of \`{file}$fname{rst}' failed. No available download" \
-                            "tool? one of: {obj}${(pj:$sep:)${=:-curl wget lftp lynx}}{rst})."
+                    +zinit-message "Download of the file {apo}\`{file}$fname{apo}\`{rst}" \
+                        "failed. No available download tool? One of:" \
+                        "{cmd}${(pj:$tool_sep:)${=:-curl wget lftp lynx}}{rst}."
 
                     return 1
                 }
