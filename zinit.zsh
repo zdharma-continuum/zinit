@@ -1254,6 +1254,24 @@ builtin setopt noaliases
     return __retval
 }
 # ]]]
+# FUNCTION:.zinit-set-m-func() [[[
+# Sets and withdraws the temporary, atclone/atpull time function `m`.
+.zinit-set-m-func() {
+    if [[ $1 == set ]]; then
+        ZINIT[___m_bkp]="${functions[m]}"
+        functions[m]="${functions[+zinit-message]}"
+    elif [[ $1 == unset ]]; then
+        if [[ -n ${ZINIT[___m_bkp]} ]]; then
+            functions[m]="${ZINIT[___m_bkp]}"
+        else
+            noglob unset functions[m]
+        fi
+    else
+        +zinit-message: "{error}ERROR #1"
+        return 1
+    fi
+}
+# ]]]
 # FUNCTION: .zinit-load-snippet. [[[
 # Implements the exposed-to-user action of loading a snippet.
 #
@@ -1294,8 +1312,7 @@ builtin setopt noaliases
 
     local id_as="${ICE[id-as]:-$url}"
 
-    local ___m_bkp="${functions[m]}"
-    functions[m]="${functions[+zinit-message]}"
+    .zinit-set-m-func set
 
     # Set up param'' objects (parameters).
     if [[ -n ${ICE[param]} ]] {
@@ -1492,11 +1509,7 @@ builtin setopt noaliases
     ZINIT[TIME_${ZINIT[TIME_INDEX]}_${id_as}]=$SECONDS
     ZINIT[AT_TIME_${ZINIT[TIME_INDEX]}_${id_as}]=$EPOCHREALTIME
 
-    if [[ -n $___m_bkp ]] {
-        functions[m]="$___m_bkp"
-    } else {
-        noglob unset functions[m]
-    }
+    .zinit-set-m-func unset
     return retval
 } # ]]]
 # FUNCTION: .zinit-load. [[[
@@ -1519,8 +1532,7 @@ builtin setopt noaliases
         ICE[teleid]="$___user${${___user:#%}:+/}$___plugin"
     }
 
-    local ___m_bkp="${functions[m]}"
-    functions[m]="${functions[+zinit-message]}"
+    .zinit-set-m-func set
 
     local -a ___arr
     reply=(
@@ -1593,6 +1605,9 @@ builtin setopt noaliases
     .zinit-load-plugin "$___user" "$___plugin" "$___id_as" "$___mode" "$___rst"; ___retval=$?
     (( ${+ICE[notify]} == 1 )) && { [[ $___retval -eq 0 || -n ${(M)ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $___retval"; }
     (( ${+ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @___rst
+
+    # Wycofaj funkcję `m`.
+    .zinit-set-m-func unset
 
     # Mark no load is in progress.
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
