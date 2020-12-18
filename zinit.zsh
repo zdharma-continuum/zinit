@@ -269,7 +269,8 @@ builtin setopt noaliases
     fi
     if [[ -n ${(M)@:#+X} ]]; then
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
-        local -a fpath
+        local +h FPATH=$PLUGINS_DIR${fpath_elements:+:${(j.:.)fpath_elements[@]}}:$FPATH
+        local +h -a fpath
         fpath=( $PLUGIN_DIR $fpath_elements $fpath )
         builtin autoload +X ${opts[@]} "${@:#+X}"
         return $?
