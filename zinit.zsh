@@ -143,14 +143,14 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;135m'  col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
         col-obj  $'\e[38;5;218m'  col-obj2  $'\e[38;5;118m' col-file  $'\e[3;38;5;117m'
-        col-dir  $'\e[3;38;5;153m'
+        col-dir  $'\e[3;38;5;153m' col-func $'\e[38;5;219m'
         col-url  $'\e[38;5;75m'   col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;147m'
         col-data $'\e[38;5;82m'   col-data2 $'\e[38;5;117m' col-hi    $'\e[1m\e[38;5;183m'
-        col-var  $'\e[38;5;81m'  col-glob   $'\e[38;5;227m' col-ehi   $'\e[1m\e[38;5;210m'
+        col-var  $'\e[38;5;81m'   col-glob  $'\e[38;5;227m' col-ehi   $'\e[1m\e[38;5;210m'
         col-cmd  $'\e[38;5;82m'   col-ice   $'\e[38;5;39m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num  $'\e[3;38;5;155m' col-term  $'\e[38;5;185m'
         col-warn $'\e[38;5;214m'  col-apo $'\e[1;38;5;220m' col-ok    $'\e[38;5;220m'
-        col-inv  $'\e[38;5;238m'  col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
+        col-faint $'\e[38;5;238m' col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
         col-tab  $'\t'            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
         col-bar  $'\e[38;5;82m'  col-th-bar $'\e[38;5;82m'
         col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
@@ -275,7 +275,7 @@ builtin setopt noaliases
         builtin autoload +X ${opts[@]} "${@:#+X}"
         return $?
     fi
-    # Report ZPLUGIN's "native" autoloads.
+
     for func; do
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
     done
@@ -296,9 +296,9 @@ builtin setopt noaliases
                         "{rst}is using autoload functions specified by their absolute path," \
                         "which is not supported by this Zsh version ({↔} {version}$ZSH_VERSION{rst}," \
                         "required is Zsh >= {version}5.4{rst})." \
-                        $'\n'"A fallback mechanism has been applied, which works well only" \
+                        "{nl}A fallback mechanism has been applied, which works well only" \
                         "for functions in the plugin {u}{slight}main{rst} directory." \
-                        $'\n'"(To mute this message, set" \
+                        "{nl}(To mute this message, set" \
                         "{var}\$ZINIT[MUTE_WARNINGS]{rst} to a truth value.)"
                     ZINIT[WARN_SHOWN_FOR_$ZINIT[CUR_USPL2]]=1
                 fi
@@ -316,8 +316,8 @@ builtin setopt noaliases
                         [[ -f $pth/$func ]] && { sel=$pth; break; }
                     }
                     if [[ -z $sel ]] {
-                        +zinit-message '{error}zinit: Couldn''t find autoload function{ehi}:' \
-                            "{data2}\`{data}${func}{data2}'{error} anywhere in {obj}\$fpath{error}.{rst}"
+                        +zinit-message '{u-warn}zinit{b-warn}:{error} Couldn''t find autoload function{ehi}:' \
+                            "{apo}\`{file}${func}{apo}\`{error} anywhere in {var}\$fpath{error}."
                             retval=1
                     } else {
                         eval "function ${(q)${custom[++count*2]}:-$func} {
@@ -1039,7 +1039,7 @@ builtin setopt noaliases
         ZINIT_REGISTERED_PLUGINS+=( "$uspl2" )
     else
         # Allow overwrite-load, however warn about it.
-        [[ -z ${ZINIT[TEST]}${${+ICE[wait]}:#0}${ICE[load]}${ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != (1|true|on|yes) ]] && +zinit-message "{error}Warning:{rst} plugin \`{pname}${uspl2}{rst}' already registered, will overwrite-load"
+        [[ -z ${ZINIT[TEST]}${${+ICE[wait]}:#0}${ICE[load]}${ICE[subscribe]} && ${ZINIT[MUTE_WARNINGS]} != (1|true|on|yes) ]] && +zinit-message "{u-warn}Warning{b-warn}:{rst} plugin {apo}\`{pid}${uspl2}{apo}\`{rst} already registered, will overwrite-load."
         ret=1
     fi
 
@@ -1269,7 +1269,7 @@ builtin setopt noaliases
             noglob unset functions[m]
         fi
     else
-        +zinit-message: "{error}ERROR #1"
+        +zinit-message "{error}ERROR #1"
         return 1
     fi
 }
@@ -1281,7 +1281,7 @@ builtin setopt noaliases
 .zinit-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts
-    zparseopts -E -D -a opts f -command || { +zinit-message "{error}Error:{rst} Incorrect options (accepted ones: -f, --command)"; return 1; }
+    zparseopts -E -D -a opts f -command || { +zinit-message "{u-warn}Error{b-warn}:{rst} Incorrect options (accepted ones: {opt}-f{rst}, {opt}--command{rst})."; return 1; }
     local url="$1"
     [[ -n ${ICE[teleid]} ]] && url="${ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
@@ -1414,7 +1414,7 @@ builtin setopt noaliases
             ZERO="${list[1-correct]}"
             (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }
             (( 0 == retval )) && [[ $url = PZT::* || $url = https://github.com/sorin-ionescu/prezto/* ]] && zstyle ":prezto:module:${${id_as%/init.zsh}:t}" loaded 'yes'
-        } else { [[ ${+ICE[silent]} -eq 1 || ${+ICE[pick]} -eq 1 && -z ${ICE[pick]} || ${ICE[pick]} = /dev/null ]] || { +zinit-message "Snippet not loaded ({info2}${id_as}{rst})"; retval=1; } }
+        } else { [[ ${+ICE[silent]} -eq 1 || ${+ICE[pick]} -eq 1 && -z ${ICE[pick]} || ${ICE[pick]} = /dev/null ]] || { +zinit-message "Snippet not loaded ({url}${id_as}{rst})"; retval=1; } }
 
         [[ -n ${ICE[src]} ]] && { ZERO="${${(M)ICE[src]##/*}:-$local_dir/$dirname/${ICE[src]}}"; (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; }
         [[ -n ${ICE[multisrc]} ]] && { local ___oldcd="$PWD"; () { setopt localoptions noautopushd; builtin cd -q "$local_dir/$dirname"; }; eval "reply=(${ICE[multisrc]})"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; local fname; for fname in "${reply[@]}"; do ZERO="${${(M)fname:#/*}:-$local_dir/$dirname/$fname}"; (( ${+ICE[silent]} )) && { { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; } 2>/dev/null 1>&2; (( retval += $? )); ((1)); } || { ((1)); { [[ -n $precm ]] && { builtin ${precm[@]} 'source "$ZERO"'; ((1)); } || { ((1)); builtin source "$ZERO"; }; }; (( retval += $? )); }; done; }
@@ -1781,7 +1781,8 @@ builtin setopt noaliases
 
     # Check if compinit was loaded.
     if [[ ${+functions[compdef]} = 0 ]]; then
-        +zinit-message "Compinit isn't loaded, cannot do compdef replay"
+        +zinit-message "{u-warn}Error{b-warn}:{rst} The {func}compinit{rst}" \
+            "function hasn't been loaded, cannot do {it}{cmd}compdef replay{rst}."
         return 1
     fi
 
@@ -1792,7 +1793,7 @@ builtin setopt noaliases
         # When ZINIT_COMPDEF_REPLAY empty (also when only white spaces).
         [[ ${#pos[@]} = 1 && -z ${pos[-1]} ]] && continue
         pos=( "${(Q)pos[@]}" )
-        [[ $quiet = -q ]] || +zinit-message "Running compdef: {obj}${pos[*]}{rst}"
+        [[ $quiet = -q ]] || +zinit-message "Running compdef: {cmd}${pos[*]}{rst}"
         compdef "${pos[@]}"
     done
 
@@ -1803,7 +1804,7 @@ builtin setopt noaliases
 .zinit-compdef-clear() {
     local quiet="$1" count="${#ZINIT_COMPDEF_REPLAY}"
     ZINIT_COMPDEF_REPLAY=( )
-    [[ $quiet = -q ]] || +zinit-message "Compdef-replay cleared (had {obj}${count}{rst} entries)"
+    [[ $quiet = -q ]] || +zinit-message "Compdef-replay cleared (it had {num}${count}{rst} entries)."
 } # ]]]
 # FUNCTION: .zinit-add-report. [[[
 # Adds a report line for given plugin.
@@ -1836,7 +1837,8 @@ builtin setopt noaliases
 .zinit-run() {
     if [[ $1 = (-l|--last) ]]; then
         { set -- "${ZINIT[last-run-plugin]:-$(<${ZINIT[BIN_DIR]}/last-run-object.txt)}" "${@[2-correct,-1]}"; } &>/dev/null
-        [[ -z $1 ]] && { +zinit-message "{error}Error: No last plugin available, please specify as the first argument.{rst}"; return 1; }
+        [[ -z $1 ]] && { +zinit-message "{u-warn}Error{b-warn}:{rst} No recent plugin-ID saved on the disk yet, please specify" \
+                            "it as the first argument, i.e.{ehi}: {cmd}zi run {pid}usr/plg{slight} {…}the code to run{…} "; return 1; }
     else
         integer ___nolast=1
     fi
@@ -1855,7 +1857,7 @@ builtin setopt noaliases
         eval "${@[2-correct,-1]}"
         () { setopt localoptions noautopushd; builtin cd -q "$___oldpwd"; }
     else
-        +zinit-message "{error}Error: no such plugin or snippet.{rst}"
+        +zinit-message "{u-warn}Error{b-warn}:{rst} no such plugin or snippet."
     fi
 }
 # ]]]
@@ -2035,7 +2037,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     # -h/--help given?
     if (( OPTS[opt_-h,--help] )) {
         # Yes – a help message:
-        +zinit-message "{pre}HELP FOR \`{cmd}$cmd{pre}' subcommand {mdsh}" \
+        +zinit-message "{pre}HELP FOR \`{cmd}$cmd{pre}\` subcommand {mdsh}" \
                 "the available {b-lhi}options{ehi}:{rst}"
         local opt
         for opt ( ${(kos:|:)allowed} ) {
@@ -2052,26 +2054,26 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
         # No – an error message:
         +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
-                "{apo}\`{cmd}$cmd{apo}'{msg2} are{ehi}:{rst}" \
+                "{apo}\`{cmd}$cmd{apo}\`{msg2} are{ehi}:{rst}" \
                 "{nl}{mmdsh} {opt}${allowed//\|/$sep2}{msg2}." \
                 "{nl}{…} Aborting.{rst}"
     } else {
         local -a cmds
         cmds=( load snippet update delete )
-        local bcol="{$cmd}" sep="${ZINIT[col-rst]}${ZINIT[col-$cmd]}', \`${ZINIT[col-cmd]}"
+        local bcol="{$cmd}" sep="${ZINIT[col-rst]}${ZINIT[col-$cmd]}\`, \`${ZINIT[col-cmd]}"
         +zinit-message "$bcol(it should be one of, e.g.{ehi}:" \
-                "{nb}$bcol\`{cmd}${(pj:$sep:)cmds}$bcol'," \
+                "{nb}$bcol\`{cmd}${(pj:$sep:)cmds}$bcol\`," \
                 "{cmd}{…}$bcol, e.g.{ehi}: {nb}$bcol\`{lhi}zinit {b}{cmd}load" \
-                "{pid}username/reponame$bcol') or a {b}{obj}for{nb}$bcol-based" \
+                "{pid}username/reponame$bcol\`) or a {b}{hi}for{nb}$bcol-based" \
                 "command body (i.e.{ehi}:{rst}$bcol e.g.{ehi}: {rst}$bcol\`{lhi}zinit" \
-                    "{…}{b}ice-spec{nb}{…} {b}{obj}for{nb}{lhi} {…}({b}plugin" \
-                    "{nb}or{b} snippet) {pname}ID-1 ID-2 {-…} {lhi}{nb}{…}$bcol')." \
-                "See \`{cmd}help$bcol' for a more detailed usage information and" \
+                    "{…}{b}ice-spec{nb}{…} {hi}for{nb}{lhi} {…}({b}plugin" \
+                    "{nb}or{b} snippet) {pname}ID-1 ID-2 {-…} {lhi}{…}$bcol\`)." \
+                "See \`{cmd}help$bcol\` for a more detailed usage information and" \
                 "the list of the {cmd}subcommands$bcol.{rst}"
     }
 }
 # ]]]
-# FUNCTION: +zinit-message. [[[
+# FUNCTION: +zinit-parse-opts. [[[
 .zinit-parse-opts() {
     builtin emulate -LR zsh -o extendedglob
     reply=( "${(@)${@[2,-1]//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[$1]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%%:*}]::=1}ß←↓→}:#1ß←↓→}" )
@@ -2118,7 +2120,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     local -a ice_order
     ice_order=(
         ${(As:|:)ZINIT[ice-list]}
-        ${(@)${(@Akons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
+        ${(@)${(A@kons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
     )
     ___path="${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/._zinit
     # TODO snippet's dir computation…
@@ -2458,7 +2460,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             1="${1:+@}${1#@}${2:+/$2}"
             (( $# > 1 )) && { shift -p $(( $# - 1 )); }
             [[ -z $1 ]] && {
-               +zinit-message "Argument needed, try: {cmd}help{rst}."
+               +zinit-message "Argument needed, try: {cmd}help."
                return 1
             }
         } else {
@@ -2467,8 +2469,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             local ___last_ice=${@[___retval2]}
             shift ___retval2
             if [[ $# -gt 0 && $1 != for ]] {
-                +zinit-message -n "{error}ERROR{ehi}:{rst} Unknown subcommand{ehi}:{rst}" \
-                        "\`{cmd}$1{rst}' "
+                +zinit-message -n "{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:" \
+                        "{apo}\`{cmd}$1{apo}\`{rst} "
                 +zinit-prehelp-usage-message rst
                 return 1
             } elif (( $# == 0 )) {
@@ -2494,7 +2496,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                     ICE=( "${___ices[@]}" "${(kv)ZINIT_ICES[@]}" )
                     ZINIT_ICE=( "${(kv)ICE[@]}" ) ZINIT_ICES=()
                     integer ___msgs=${+ICE[debug]}
-                    (( ___msgs )) && +zinit-message "{pre}zinit-main:{inv} Processing {pname}$1{inv}{…}{rst}"
+                    (( ___msgs )) && +zinit-message "{pre}zinit-main:{faint} Processing {pname}$1{faint}{…}{rst}"
 
                     # Delete up to the final space to get the previously-processed ID.
                     ZINIT[annex-exposed-processed-IDs]+="${___id:+ $___id}"
@@ -2562,8 +2564,8 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                 (( 0 == ${#___new_ices} % 2 )) && \
                                     ___ices=( "${___new_ices[@]}" ) || \
                                         { [[ ${ZINIT[MUTE_WARNINGS]} != (1|true|on|yes) ]] && \
-                                            +zinit-message "{warn}Warning:{msg} Bad new-ices returned" \
-                                                "from the annex{ehi}:{rst} {meta}${___arr[3]}{msg}," \
+                                            +zinit-message "{u-warn}Warning{b-warn}:{msg} Bad new-ices returned" \
+                                                "from the annex{ehi}:{rst} {annex}${___arr[3]}{msg}," \
                                                 "please file an issue report at:{url}" \
                                     "https://github.com/zinit-zsh/${___arr[3]}/issues/new{msg}.{rst}"
                                             ___ices=(  ) ___retval+=7
@@ -2676,14 +2678,14 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
         if (( ___error )) {
             () {
                 emulate -LR zsh -o extendedglob
-                +zinit-message -n "{error}Error: No plugin or snippet ID given"
+                +zinit-message -n "{u-warn}Error{b-warn}:{rst} No plugin or snippet ID given"
                 if [[ -n $___last_ice ]] {
                     +zinit-message -n " (the last recognized ice was: {ice}"\
-"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{data}$MATCH{apo}$___q2{data2}"}{apo}'{rst}).{error}
-You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin.{rst}
-{note}Note:{rst} The \`ice' subcommand is now again required if not using the for-syntax"
+"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{data}$MATCH"}{apo}''{rst}).{error}
+You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice is in fact a plugin.{rst}
+{note}Note:{rst} The {apo}\`{ice}ice{apo}\`{rst} subcommand is now again required if not using the for-syntax"
                 }
-                +zinit-message ".{rst}"
+                +zinit-message "."
             }
             return 2
        } elif (( ! $# )) {
@@ -2830,7 +2832,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        if .zinit-cdisable "$___f"; then
                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$___f"
-                           +zinit-message "Initializing completion system (compinit){…}"
+                           +zinit-message "Initializing completion system ({func}compinit{rst}){…}"
                            builtin autoload -Uz compinit
                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                        else
@@ -2848,7 +2850,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        if .zinit-cenable "$___f"; then
                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                            .zinit-forget-completion "$___f"
-                           +zinit-message "Initializing completion system (compinit){…}"
+                           +zinit-message "Initializing completion system ({func}compinit{rst}){…}"
                            builtin autoload -Uz compinit
                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                        else
@@ -2862,7 +2864,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    # reinstallation, thus every obstacle gets overwritten or removed.
                    [[ $2 = -[qQ] ]] && { 5=$2; shift; }
                    .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
-                   [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion (compinit){…}"
+                   [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion ({func}compinit{rst}){…}"
                    builtin autoload -Uz compinit
                    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    ;;
@@ -2873,7 +2875,7 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                        (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                        # Uninstalls completions for plugin.
                        .zinit-uninstall-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                       +zinit-message "Initializing completion (compinit){…}"
+                       +zinit-message "Initializing completion ({func}compinit{rst}){…}"
                        builtin autoload -Uz compinit
                        compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
                    fi
@@ -2949,11 +2951,11 @@ You can try to prepend ${___q}{obj}@{error}' if the last ice is in fact a plugin
                    ;;
                 (*)
                     if [[ -z $1 ]] {
-                        +zinit-message -n "{error}ERROR{ehi}:{rst} Missing a {cmd}subcommand "
+                        +zinit-message -n "{u-warn}ERROR{b-warn}:{rst} Missing a {cmd}subcommand "
                         +zinit-prehelp-usage-message rst
                     } else {
-                        +zinit-message -n "{error}ERROR{ehi}:{rst} Unknown subcommand{ehi}:{rst}" \
-                                "\`{obj}$1{error}' "
+                        +zinit-message -n "{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:{rst}" \
+                                "{apo}\`{error}$1{apo}\`{rst} "
                         +zinit-prehelp-usage-message rst
                     }
                     ___retval=1
@@ -3052,13 +3054,13 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
         [[ -e ${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST ]] && local recompile_request_ts="$(<${${ZINIT[BIN_DIR]}}/module/RECOMPILE_REQUEST)"
 
         if [[ ${recompile_request_ts:-1} -gt ${compiled_at_ts:-0} ]] {
-            +zinit-message "{error}WARNING:{rst}{msg}A {obj}recompilation{rst}" \
-                "of the Zinit module has been requested… {obj}Building{rst}…"
+            +zinit-message "{u-warn}WARNING{b-warn}:{rst}{msg} A {lhi}recompilation{rst}" \
+                "of the Zinit module has been requested… {hi}Building{rst}…"
             (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
             command make -C "${ZINIT[BIN_DIR]}/zmodules" distclean &>/dev/null
             .zinit-module build &>/dev/null
             if command make -C "${ZINIT[BIN_DIR]}/zmodules" &>/dev/null; then
-                +zinit-message "{pre}Build successful!{rst}"
+                +zinit-message "{ok}Build successful!{rst}"
             else
                 builtin print -r -- "${ZINIT[col-error]}Compilation failed.${ZINIT[col-rst]}" \
                      "${ZINIT[col-pre]}You can enter the following command:${ZINIT[col-rst]}" \

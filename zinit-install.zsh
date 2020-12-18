@@ -220,7 +220,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 fi
                 +zinit-message '{error}requires the {apo}`{annex}'${namemap[$required]}'{apo}`' \
                     "{error}annex, which is currently not installed." \
-                    "{nl}{nl}If you'd like to install it, then you can visit its homepage:" \
+                    "{nl}{nl}If you'd like to install it, you can visit its homepage:" \
                     "{nl}– {url}https://github.com/zinit-zsh/z-a-${(L)namemap[$required]}{rst}" \
                     "{nl}for instructions."
                 (( ${#profiles[@]:#$profile} > 0 )) && \
