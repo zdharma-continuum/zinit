@@ -1964,7 +1964,7 @@ builtin setopt noaliases
         append=$ZINIT[col-$2]
     elif [[ $2 == (…|ndsh|mdsh|mmdsh|-…|lr|) || -z $2 || -z $ZINIT[col-$2] ]]; then
         # Wznowienie poprzedniego kodu escape, jeżeli jest taki zapisany.
-        if [[ $ZINIT[__last-formatter-code] != (…|ndsh|mdsh|mmdsh|-…|lr|rst|) ]]; then
+        if [[ $ZINIT[__last-formatter-code] != (…|ndsh|mdsh|mmdsh|-…|lr|rst|nl|) ]]; then
             in_prepend=$ZINIT[col-$ZINIT[__last-formatter-code]]
         fi
         # W przeciwnym razie brak akcji – tylko skopiowanie
@@ -2004,6 +2004,7 @@ builtin setopt noaliases
 
     # Added later:
     msg=${(j: :)${@:#--}}
+    ZINIT[__last-formatter-code]=
     
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
