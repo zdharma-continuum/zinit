@@ -1991,8 +1991,8 @@ builtin setopt noaliases
 # FUNCTION: +zinit-message. [[[
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob
-    if [[ $1 = -* ]] { local opt=$1; shift; } else { local opt; }
-    local msg
+    local opt msg
+    [[ $1 = -* ]] && { local opt=$1; shift; }
 
     ZINIT[__last-formatter-code]=
     msg=${(j: :)${@:#--}}
