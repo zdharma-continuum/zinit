@@ -70,15 +70,15 @@
     .zinit-any-to-pid "$1" "$2"
     .zinit-get-object-path plugin "$REPLY"
     integer ret=$? 
-    local dname="${reply[-3]}"
+    local dname="$REPLY"
     (( ret )) && { reply=( "$dname" "" ); return 1; }
 
     # Look for file to compile. First look for the most common one
     # (optimization) then for other possibilities
-    if [[ ! -e "$dname/${reply[-1]}.plugin.zsh" ]]; then
-        .zinit-find-other-matches "$dname" "${reply[-1]}"
+    if [[ -e "$dname/$plugin.plugin.zsh" ]]; then
+        reply=( "$dname/$plugin.plugin.zsh" )
     else
-        reply=( "$dname/${reply[-1]}.plugin.zsh" )
+        .zinit-find-other-matches "$dname" "$plugin"
     fi
 
     if [[ "${#reply}" -eq "0" ]]; then
