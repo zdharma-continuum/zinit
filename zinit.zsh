@@ -1887,6 +1887,7 @@ builtin setopt noaliases
     builtin emulate -L zsh -o extendedglob
 
     # Zapamiętaj krańcowe białe znaki.
+    local pbz=${(M)1##(#s)[[:space:]]##}
     local kbz=${(M)1%%[[:space:]]##(#e)}
     # Usuń skrajne białe znaki.
     1=${1//((#s)[[:space:]]##|[[:space:]]##(#e))/}
@@ -1896,11 +1897,12 @@ builtin setopt noaliases
 
     # Zamień przynajmniej jeden znak na niełamalną spację, ponieważ z
     # powodu problemów z implementacją krańcowe białe znaki są gubione…
+    pbz=${pbz/[[:blank:]]/ }
     local kbz_rev="${(j::)${(@Oas::)kbz}}"
-    kbz="${(j::)${(@Oas::)${kbz_rev/ / }}}"
+    kbz="${(j::)${(@Oas::)${kbz_rev/[[:blank:]]/ }}}"
 
     # Dostaw spowrotem krańcowe białe znaki.
-    REPLY=$REPLY$kbz
+    REPLY=$pbz$REPLY$kbz
 }
 # ]]]
 # FUNCTION: .zinit-formatter-bar. [[[

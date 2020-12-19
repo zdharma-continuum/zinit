@@ -372,7 +372,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            local pid_hl='{pid}' id_msg_part="(under id{ehi}:{rst} {id-as}$id_as{rst}{…})"
+            local pid_hl='{pid}' id_msg_part=" (at label{ehi}:{rst} {id-as}$id_as{rst}{…})"
             (( $+ICE[pack] )) && local infix_m="({b}{ice}pack{apo}''{rst}) "
             +zinit-message "{nl}Downloading $infix_m{pid}$user${user:+/}$plugin{…}${${${id_as:#$user/$plugin}}:+$id_msg_part}"
         }
@@ -966,15 +966,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                   ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
-        local id_msg_part="{…} (as{ehi}:{rst} {id-as}$id_as{rst})"
+        local id_msg_part="{…} (at label{ehi}:{rst} {id-as}$id_as{rst})"
         [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet:" \
                                     "{url}$sname{rst}${ICE[id-as]:+$id_msg_part}"
         command mkdir -p "$local_dir"
     fi
 
-    [[ $update = -u && ${OPTS[opt_-q,--quiet]} != 1 ]] && \
+    if [[ $update = -u && ${OPTS[opt_-q,--quiet]} != 1 ]]; then
         local id_msg_part="{…} (identified as{ehi}:{rst} {id-as}$id_as{rst})"
         +zinit-message "{nl}{info2}Updating snippet: {url}$sname{rst}${ICE[id-as]:+$id_msg_part}"
+    fi
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
@@ -1024,7 +1025,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             if (( OPTS[opt_-q,--quiet] )); then 
-                                local id_msg_part="{…} (identified as: {id-as}$id_as{rst})"
+                                local id_msg_part="{…} (identified as{ehi}: {id-as}$id_as{rst})"
                                 +zinit-message "{nl}{info2}Updating snippet {url}${sname}{rst}${ICE[id-as]:+$id_msg_part}"
                                 +zinit-message "Downloading {apo}\`{rst}$sname{apo}\`{rst} (with Subversion){…}"
                             fi
