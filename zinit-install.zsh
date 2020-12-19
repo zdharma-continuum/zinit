@@ -212,7 +212,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             ]]; then
                 local -A namemap
                 namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
-                +zinit-message -n "{warn}ERROR: {error}the "
+                +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
                 if [[ -z ${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))} ]]; then
                     +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
                 else
@@ -598,14 +598,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     done
 
     if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) {
-        +zinit-message "{msg}Installed {obj}${#INSTALLED_COMPS}" \
-            "{msg}completions. They are stored in{obj2}" \
-            "\$INSTALLED_COMPS{msg} array.{rst}"
+        +zinit-message "{msg}Installed {num}${#INSTALLED_COMPS}" \
+            "{msg}completions. They are stored in{var}" \
+            "\$INSTALLED_COMPS{msg} array."
         if (( ${#SKIPPED_COMPS} )) {
             +zinit-message "{msg}Skipped installing" \
-                "{obj}${#SKIPPED_COMPS}{msg} completions." \
-                "They are stored in {obj2}\$SKIPPED_COMPS{msg} array." \
-                {rst}
+                "{num}${#SKIPPED_COMPS}{msg} completions." \
+                "They are stored in {var}\$SKIPPED_COMPS{msg} array."
         }
     }
 
@@ -649,7 +648,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         .zinit-forget-completion "$cfile"
     done
 
-    +zinit-message "Initializing completion (compinit){…}"
+    +zinit-message "Initializing completion ({func}compinit{rst}){…}"
     command rm -f ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
     # Workaround for a nasty trick in _vim
@@ -687,9 +686,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         elif (( ${+commands[lynx]} )); then
             command lynx -source "$url" || return 1
         else
-            +zinit-message "{error}ERROR:{rst}No download tool detected" \
-                "(one of: {obj}curl{rst}, {obj}wget{rst}, {obj}lftp{rst}," \
-                "{obj}lynx{rst})."
+            +zinit-message "{u-warn}ERROR{b-warn}:{rst}No download tool detected" \
+                "(one of: {cmd}curl{rst}, {cmd}wget{rst}, {cmd}lftp{rst}," \
+                "{cmd}lynx{rst})."
             return 2
         fi
     } else {
@@ -893,7 +892,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             eval "list+=( \$plugin_dir/$~pat(N) )"
         }
         if [[ ${#list} -eq 0 ]] {
-            +zinit-message "{warn}Warning:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
+            +zinit-message "{u-warn}Warning{b-warn}:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
         } else {
             integer retval
             for first in $list; do
@@ -905,11 +904,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             builtin print -rl -- ${list[@]#$plugin_dir/} >! ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
             if (( retval )) {
                 +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
-                    "are listed in the {file}\$ADD_COMPILED%f%b array (operation exit" \
+                    "are listed in the {var}\$ADD_COMPILED{rst} array (operation exit" \
                     "code: {ehi}$retval{rst})."
             } else {
                 +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
-                    "are listed in the {file}\$ADD_COMPILED%f%b array."
+                    "are listed in the {var}\$ADD_COMPILED{rst} array."
             }
         }
     fi
@@ -967,12 +966,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                   ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
 
     if [[ ! -d $local_dir/$dirname ]]; then
-        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet: {url}$sname{rst}${ICE[id-as]:+"{…} (as{ehi}:{rst} {meta}$id_as{rst}")}"
+        local id_msg_part="{…} (as{ehi}:{rst} {id-as}$id_as{rst})"
+        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet:" \
+                                    "{url}$sname{rst}${ICE[id-as]:+$id_msg_part}"
         command mkdir -p "$local_dir"
     fi
 
     [[ $update = -u && ${OPTS[opt_-q,--quiet]} != 1 ]] && \
-        +zinit-message "{nl}{info}Updating snippet: {url}$sname{rst}${ICE[id-as]:+"{…} (identified as{ehi}:{rst} {meta}$id_as{rst})"}"
+        local id_msg_part="{…} (identified as{ehi}:{rst} {id-as}$id_as{rst})"
+        +zinit-message "{nl}{info2}Updating snippet: {url}$sname{rst}${ICE[id-as]:+$id_msg_part}"
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
     # 2 – full update/there are new commits to download, 3 - full but
@@ -989,7 +991,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
-                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading \`{url}$sname{rst}'${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{…}"
+                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading {apo}\`{url}$sname{apo}\`{rst}${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{…}"
 
                 if (( ${+ICE[svn]} )) {
                     if [[ $update = -u ]] {
@@ -1022,8 +1024,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
                             if (( OPTS[opt_-q,--quiet] )); then 
-                                +zinit-message $'\n'"{info}Updating snippet {p}${sname}{rst}${ICE[id-as]:+"{…}" (identified as: $id_as)}"
-                                +zinit-message "Downloading \`$sname' (with Subversion){…}"
+                                local id_msg_part="{…} (identified as: {id-as}$id_as{rst})"
+                                +zinit-message "{nl}{info2}Updating snippet {url}${sname}{rst}${ICE[id-as]:+$id_msg_part}"
+                                +zinit-message "Downloading {apo}\`{rst}$sname{apo}\`{rst} (with Subversion){…}"
                             fi
                             .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
                         }
@@ -1049,7 +1052,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             () {
                                 builtin emulate -LR zsh -o extendedglob
                                 zcompile -U "${list[1]}" &>/dev/null || \
-                                    +zinit-message "{error}Warning:{rst} couldn't compile \`{file}${list[1]}{rst}'."
+                                    +zinit-message "{u-warn}Warning{b-warn}:{rst} couldn't compile {apo}\`{file}${list[1]}{apo}\`{rst}."
                             }
                         }
                     fi
@@ -1110,7 +1113,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                         if { ! .zinit-download-file-stdout "$url" 0 1 >! "$dirname/$filename" } {
                             if { ! .zinit-download-file-stdout "$url" 1 1 >! "$dirname/$filename" } {
                                 command rm -f "$dirname/$filename"
-                                +zinit-message "{error}ERROR:{rst} Download failed."
+                                +zinit-message "{u-warn}ERROR{b-warn}:{rst} Download failed."
                                 return 4
                             }
                         }
@@ -1193,8 +1196,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             local pfx=$local_dir/$dirname/._zinit
             .zinit-store-ices "$pfx" ICE url_rsvd "" "$save_url" "${+ICE[svn]}"
         } elif [[ -n $id_as ]] {
-            +zinit-message "{error}Warning{rst}: the snippet {url}$id_as{rst} isn't" \
-                "fully downloaded - you should remove it with \`{data}zinit delete $id_as{rst}'."
+            +zinit-message "{u-warn}Warning{b-warn}:{rst} the snippet {url}$id_as{rst} isn't" \
+                "fully downloaded – you should remove it with {apo}\`{cmd}zinit delete $id_as{apo}\`{rst}."
         }
 
         # Empty update short-path
