@@ -1994,19 +1994,8 @@ builtin setopt noaliases
     if [[ $1 = -* ]] { local opt=$1; shift; } else { local opt; }
     local msg
 
-    # Equivalent, less verbose forms:    
-    # 1. msg=( ${${@//…/$match[2]\
-    #      ${${functions[.zinit-formatter-$match[5]]:+\
-    #          ${$(.zinit-formatter-$match[5] …):-←→}}:-\
-    #        $(.zinit-main-message-formatter… …)}}//←→} )
-    # 2. msg=( ${${@//…/$match[2]${${funcs[A]:+${$(Bˢ⁽ᶜᵒᵈᵉ‧‧‧⁾ …):-←→}}:-$(Cˢ⁽ᶜᵒᵈᵉ‧‧‧⁾ …)}}//←→} )
-    # 3. msg=( ${${@//…/$match[2]${${funcs[A]:+${Aᵉˣᵉ:-←→}}:-$Bᵉˣᵉ}}//←→} )
-    # 4. msg=( … $match[2]${${funcs[A]:+${Aᵉˣᵉ:-←→}}:-$Bᵉˣᵉ} … )
-    # 5. msg=( … ··· ${${funcs[A]:+$Aᵉˣᵉ}:-$Bᵉˣᵉ} … )
-
-    # Added later:
-    msg=${(j: :)${@:#--}}
     ZINIT[__last-formatter-code]=
+    msg=${(j: :)${@:#--}}
     
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
