@@ -1588,7 +1588,7 @@ ZINIT[EXTENDED_GLOB]=""
             }
         }
 
-        if [[ -d $local_dir/.git ]] && ( cd -q $local_dir ; git show-ref --verify --quiet refs/heads/main ); then
+        if [[ -d $local_dir/.git ]] && ( builtin cd -q $local_dir ; git show-ref --verify --quiet refs/heads/main ); then
             local main_branch=main
         else
             local main_branch=master
