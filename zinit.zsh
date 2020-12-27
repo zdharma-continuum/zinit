@@ -151,12 +151,13 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-txt  $'\e[38;5;254m' col-num  $'\e[3;38;5;155m' col-term  $'\e[38;5;185m'
         col-warn $'\e[38;5;214m'  col-apo $'\e[1;38;5;220m' col-ok    $'\e[38;5;220m'
         col-faint $'\e[38;5;238m' col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
-        col-tab  $'\t'            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
+        col-tab  $' \t '            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
         col-bar  $'\e[38;5;82m'  col-th-bar $'\e[38;5;82m'
         col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
-        col-mdsh "${${${(M)LANG:#*UTF-8*}:+–}:--}"    col-mmdsh "${${${(M)LANG:#*UTF-8*}:+――}:--}"
+        col-mdsh $'\e[1;38;5;220m'"${${${(M)LANG:#*UTF-8*}:+–}:--}"$'\e[0m'
+        col-mmdsh $'\e[1;38;5;220m'"${${${(M)LANG:#*UTF-8*}:+――}:--}"$'\e[0m'
         col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}" col-lr    "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
-        col-↔    ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔'}:-$'\e[38;5;82m«-»'}
+        col-↔    ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔\e[0m'}:-$'\e[38;5;82m«-»\e[0m'}
         col-rst  $'\e[0m'        col-b     $'\e[1m'        col-nb     $'\e[22m'
         col-u    $'\e[4m'        col-it    $'\e[3m'        col-st     $'\e[9m'
         col-nu   $'\e[24m'       col-nit   $'\e[23m'       col-nst    $'\e[29m'
@@ -1959,7 +1960,7 @@ builtin setopt noaliases
         REPLY=""
         return
     fi
-    local append in_prepend
+    local append influx in_prepend
     if [[ $2 == (b|u|it|st|nb|nu|nit|nst) ]]; then
         # Powtórzenie kodu aby zabezpieczyć ewentualne krańcowe białe znaki
         # oraz aby umożliwić akumulację tego kodu z innymi.
@@ -1968,6 +1969,7 @@ builtin setopt noaliases
         # Wznowienie poprzedniego kodu escape, jeżeli jest taki zapisany.
         if [[ $ZINIT[__last-formatter-code] != (…|ndsh|mdsh|mmdsh|-…|lr|rst|nl|) ]]; then
             in_prepend=$ZINIT[col-$ZINIT[__last-formatter-code]]
+            influx=$ZINIT[col-$ZINIT[__last-formatter-code]]
         fi
         # W przeciwnym razie brak akcji – tylko skopiowanie
         # tego kodu bez koloru.
@@ -1977,7 +1979,7 @@ builtin setopt noaliases
     fi
     
     # Skonstruuj tekst.
-    REPLY=$in_prepend${ZINIT[col-$2]:-$1}$3$append
+    REPLY=$in_prepend${ZINIT[col-$2]:-$1}$influx$3$append
     
     # Zamień nowe linie na znaki, które działają tak samo ale nie są
     # usuwane w podstawieniu $( … ) – vertical tab 0xB ↔ 13 w systemie
