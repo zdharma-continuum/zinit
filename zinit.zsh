@@ -2031,8 +2031,8 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     # -h/--help given?
     if (( OPTS[opt_-h,--help] )) {
         # Yes – a help message:
-        +zinit-message "{pre}HELP FOR \`{cmd}$cmd{pre}\` subcommand {mdsh}" \
-                "the available {b-lhi}options{ehi}:{rst}"
+        +zinit-message "{lhi}HELP FOR {apo}\`{cmd}$cmd{apo}\`{lhi} subcommand {mdsh}" \
+                "the available {b-lhi}options{ehi}:{rst}"
         local opt
         for opt ( ${(kos:|:)allowed} ) {
             [[ $opt == --* ]] && continue
@@ -2041,12 +2041,13 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
                 msg=${${(MS)msg##$cmd:\[[^]]##}:-${(MS)msg##\*:\[[^]]##}}
                 msg=${msg#($cmd|\*):\[}
             }
-            +zinit-message "{opt}${(r:14:)${txt#opt_}} {rst}{ehi}→{rst}{tab} $msg"
+            local pre_msg=`+zinit-message -n {opt}${(r:14:)${txt#opt_}}`
+            +zinit-message ${(r:35:: :)pre_msg}{rst}{ehi}→{rst}"  $msg"
         }
     } elif [[ -n $allowed ]] {
         shift 2
         # No – an error message:
-        +zinit-message "{error}ERROR{ehi}:{rst}{msg2} Incorrect options given{ehi}:" \
+        +zinit-message "{b}{u-warn}ERROR{b-warn}:{rst}{msg2} Incorrect options given{ehi}:" \
                 "${(Mpj:$sep:)@:#-*}{rst}{msg2}. Allowed for the subcommand{ehi}:{rst}" \
                 "{apo}\`{cmd}$cmd{apo}\`{msg2} are{ehi}:{rst}" \
                 "{nl}{mmdsh} {opt}${allowed//\|/$sep2}{msg2}." \
@@ -2383,7 +2384,7 @@ zinit() {
 
     integer ___retval ___retval2 ___correct
     local -a match mbegin mend
-    local MATCH ___q="\`" ___q2="'" IFS=$' \t\n\0'; integer MBEGIN MEND
+    local MATCH cmd ___q="\`" ___q2="'" IFS=$' \t\n\0'; integer MBEGIN MEND
 
     # An annex's subcommand might use the reply vars.
     match=( ${ZINIT_EXTS[(I)z-annex subcommand:$1]} )
@@ -2411,7 +2412,7 @@ zinit() {
         --force    opt_-f,--force
         -p         opt_-p,--parallel:"Turn on concurrent, multi-thread update (of all objects)."
         --parallel opt_-p,--parallel
-        -s         opt_-s,--snippets:"Update only snippets (i.e.: skip updating plugins)."
+        -s         opt_-s,--snippets:"snippets:[Update only snippets (i.e.: skip updating plugins).] times:[Show times in seconds instead of milliseconds.]"
         --snippets opt_-s,--snippets
         -L         opt_-l,--plugins:"Update only plugins (i.e.: skip updating snippets)."
         --plugins  opt_-l,--plugins
@@ -2421,12 +2422,35 @@ zinit() {
         --urge     opt_-u,--urge
         -n         opt_-n,--no-pager:"Disable the use of the pager."
         --no-pager opt_-n,--no-pager
+        -m         opt_-m,--moments:"Show the {apo}*{b-lhi}moments{apo}*{rst} of object (i.e.: a plugin or snippet) loading time."
+        --moments  opt_-m,--moments
+        -b         opt_-b,--bindkeys:"Load in light mode, however do still track {cmd}bindkey{rst} calls (to allow remapping the keys bound)."
+        --bindkeys opt_-b,--bindkeys
+        -x         opt_-x,--command:"Load the snippet as a {cmd}command{rst}, i.e.: add it to {var}\$PATH{rst} and set {b-lhi}+x{rst} on it."
+        --command  opt_-x,--command
         env-whitelist "-h|--help|-v|--verbose"
         update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
 -q|--quiet|-r|--reset|-u|--urge|-n|--no-pager|-v|--verbose|-h|--help"
         delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet|-h|--help"
-
+        unload        "-h|--help|-q|--quiet"
+        cdclear       "-h|--help|-q|--quiet"
+        cdreplay      "-h|--help|-q|--quiet"
+        times         "-h|--help|-m|-s"
+        light         "-h|--help|-b"
+        snippet       "-h|--help|-f|--force|--command|-x"
     )
+
+    cmd="$1"
+    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|\
+cdclear|delete) ]]; then
+        if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
+            .zinit-parse-opts "$cmd" "$@"
+            if (( OPTS[opt_-h,--help] )); then
+                +zinit-prehelp-usage-message $cmd $___opt_map[$cmd] $@
+                return 1;
+            fi
+        fi
+    fi
 
     reply=( ${ZINIT_EXTS[(I)z-annex subcommand:*]} )
 
@@ -2442,9 +2466,9 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             # Classic syntax -> simulate a call through the for-syntax.
             () {
                 builtin setopt localoptions extendedglob
-                : ${@[@]//(#b)([ $'\t']##|(#s))(-b|--command|-f)([ $'\t']##|(#e))/${OPTS[${match[2]}]::=1}}
+                : ${@[@]//(#b)([ $'\t']##|(#s))(-b|--command|-f|--force)([ $'\t']##|(#e))/${OPTS[${match[2]}]::=1}}
             } "$@"
-            builtin set -- "${@[@]:#(-b|--command|-f)}"
+            builtin set -- "${@[@]:#(-b|--command|-f|--force)}"
             [[ $1 = light && -z ${OPTS[(I)-b]} ]] && ICE[light-mode]=
             [[ $1 = snippet ]] && ICE[is-snippet]= || ___is_snippet=-1
             shift
@@ -2463,7 +2487,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
             local ___last_ice=${@[___retval2]}
             shift ___retval2
             if [[ $# -gt 0 && $1 != for ]] {
-                +zinit-message -n "{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:" \
+                +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:" \
                         "{apo}\`{cmd}$1{apo}\`{rst} "
                 +zinit-prehelp-usage-message rst
                 return 1
@@ -2719,9 +2743,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
             shift
             .zinit-parse-opts env-whitelist "$@"
             builtin set -- "${reply[@]}"
-            if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-prehelp-usage-message env-whitelist $___opt_map[env-whitelist] $@; return 1; }
 
-            (( OPTS[opt_-h,--help] )) && { +zinit-message "{info2}Usage:{rst} zinit env-whitelist [-v] VAR1 {…}\nSaves names (also patterns) of parameters left unchanged during an unload. -v - ___verbose."; return 0; }
             if (( $# == 0 )) {
                 ZINIT[ENV-WHITELIST]=
                 (( OPTS[opt_-v,--verbose] )) && +zinit-message "{msg2}Cleared the parameter whitelist.{rst}"
@@ -2776,7 +2798,6 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     shift
                     .zinit-parse-opts update "$@"
                     builtin set -- "${reply[@]}"
-                    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-prehelp-usage-message update $___opt_map[update] $@; return 1; }
                     if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ICE[teleid]}${ICE[id-as]} ]]; then
                         [[ -z $1$2 && $(( OPTS[opt_-a,--all] + OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
                         (( OPTS[opt_-p,--parallel] )) && OPTS[value]=${1:-15}
@@ -2945,10 +2966,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                    ;;
                 (*)
                     if [[ -z $1 ]] {
-                        +zinit-message -n "{u-warn}ERROR{b-warn}:{rst} Missing a {cmd}subcommand "
+                        +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Missing a {cmd}subcommand "
                         +zinit-prehelp-usage-message rst
                     } else {
-                        +zinit-message -n "{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:{rst}" \
+                        +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:{rst}" \
                                 "{apo}\`{error}$1{apo}\`{rst} "
                         +zinit-prehelp-usage-message rst
                     }
