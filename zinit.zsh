@@ -2764,30 +2764,30 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
            }
            (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
            case "$1" in
-               (zstatus)
-                   .zinit-show-zstatus
-                   ;;
-               (times)
-                   .zinit-show-times "${@[2-correct,-1]}"
-                   ;;
-               (self-update)
-                   .zinit-self-update
-                   ;;
-               (unload)
-                   (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
-                   if [[ -z $2 && -z $3 ]]; then
-                       builtin print "Argument needed, try: help"; ___retval=1
-                   else
-                       [[ $2 = -q ]] && { 5=-q; shift; }
-                       # Unload given plugin. Cloned directory remains intact
-                       # so as are completions.
-                       .zinit-unload "${2%%(///|//|/)}" "${${3:#-q}%%(///|//|/)}" "${${(M)4:#-q}:-${(M)3:#-q}}"; ___retval=$?
-                   fi
-                   ;;
-               (bindkeys)
-                   .zinit-list-bindkeys
-                   ;;
-               (update)
+                (zstatus)
+                    .zinit-show-zstatus
+                    ;;
+                (times)
+                    .zinit-show-times "${@[2-correct,-1]}"
+                    ;;
+                (self-update)
+                    .zinit-self-update
+                    ;;
+                (unload)
+                    (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
+                    if [[ -z $2 && -z $3 ]]; then
+                        builtin print "Argument needed, try: help"; ___retval=1
+                    else
+                        [[ $2 = -q ]] && { 5=-q; shift; }
+                        # Unload given plugin. Cloned directory remains intact
+                        # so as are completions.
+                        .zinit-unload "${2%%(///|//|/)}" "${${3:#-q}%%(///|//|/)}" "${${(M)4:#-q}:-${(M)3:#-q}}"; ___retval=$?
+                    fi
+                    ;;
+                 (bindkeys)
+                    .zinit-list-bindkeys
+                    ;;
+                 (update)
                     if (( ${+ICE[if]} )) {
                         eval "${ICE[if]}" || return 1;
                     }
@@ -2808,175 +2808,175 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                         .zinit-update-or-status update "$___id" ""; ___retval=$?
                     fi
                     ;;
-               (status)
-                   if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
-                       .zinit-update-or-status-all status; ___retval=$?
-                   else
-                       .zinit-update-or-status status "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                   fi
-                   ;;
-               (report)
-                   if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 4; }
-                       .zinit-show-all-reports
-                   else
-                       .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                   fi
-                   ;;
-               (loaded|list)
-                   # Show list of loaded plugins.
-                   .zinit-show-registered-plugins "$2"
-                   ;;
-               (clist|completions)
-                   # Show installed, enabled or disabled, completions.
-                   # Detect stray and improper ones.
-                   .zinit-show-completions "$2"
-                   ;;
-               (cclear)
-                   # Delete stray and improper completions.
-                   .zinit-clear-completions
-                   ;;
-               (cdisable)
-                   if [[ -z $2 ]]; then
-                       builtin print "Argument needed, try: help"; ___retval=1
-                   else
-                       local ___f="_${2#_}"
-                       # Disable completion given by completion function name
-                       # with or without leading _, e.g. cp, _cp.
-                       if .zinit-cdisable "$___f"; then
-                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                           .zinit-forget-completion "$___f"
-                           +zinit-message "Initializing completion system ({func}compinit{rst}){…}"
-                           builtin autoload -Uz compinit
-                           compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
-                       else
-                           ___retval=1
-                       fi
-                   fi
-                   ;;
-               (cenable)
-                   if [[ -z $2 ]]; then
-                       builtin print "Argument needed, try: help"; ___retval=1
-                   else
-                       local ___f="_${2#_}"
-                       # Enable completion given by completion function name
-                       # with or without leading _, e.g. cp, _cp.
-                       if .zinit-cenable "$___f"; then
-                           (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                           .zinit-forget-completion "$___f"
-                           +zinit-message "Initializing completion system ({func}compinit{rst}){…}"
-                           builtin autoload -Uz compinit
-                           compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
-                       else
-                           ___retval=1
-                       fi
-                   fi
-                   ;;
-               (creinstall)
-                   (( ${+functions[.zinit-install-completions]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                   # Installs completions for plugin. Enables them all. It's a
-                   # reinstallation, thus every obstacle gets overwritten or removed.
-                   [[ $2 = -[qQ] ]] && { 5=$2; shift; }
-                   .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
-                   [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion ({func}compinit{rst}){…}"
-                   builtin autoload -Uz compinit
-                   compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
-                   ;;
-               (cuninstall)
-                   if [[ -z $2 && -z $3 ]]; then
-                       builtin print "Argument needed, try: help"; ___retval=1
-                   else
-                       (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                       # Uninstalls completions for plugin.
-                       .zinit-uninstall-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                       +zinit-message "Initializing completion ({func}compinit{rst}){…}"
-                       builtin autoload -Uz compinit
-                       compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
-                   fi
-                   ;;
-               (csearch)
-                   .zinit-search-completions
-                   ;;
-               (compinit)
-                   (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                   .zinit-compinit; ___retval=$?
-                   ;;
-               (dreport)
-                   .zinit-show-debug-report
-                   ;;
-               (dclear)
-                   (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-                   .zinit-clear-debug-report
-                   ;;
-               (dunload)
-                   (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-                   .zinit-debug-unload
-                   ;;
-               (compile)
-                   (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                   if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
-                       .zinit-compile-uncompile-all 1; ___retval=$?
-                   else
-                       .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                   fi
-                   ;;
-               (uncompile)
-                   if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                       [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
-                       .zinit-compile-uncompile-all 0; ___retval=$?
-                   else
-                       .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                   fi
-                   ;;
-               (compiled)
-                   .zinit-compiled
-                   ;;
-               (cdlist)
-                   .zinit-list-compdef-replay
-                   ;;
-               (cd|delete|recall|edit|glance|changes|create|stress)
-                   .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; ___retval=$?
-                   ;;
-               (recently)
-                   shift
-                   .zinit-recently "$@"; ___retval=$?
-                   ;;
-               (-h|--help|help)
-                   .zinit-help
-                   ;;
-               (ls)
-                   shift
-                   .zinit-ls "$@"
-                   ;;
-               (srv)
-                   () { setopt localoptions extendedglob warncreateglobal
-                   [[ ! -e ${ZINIT[SERVICES_DIR]}/"$2".fifo ]] && { builtin print "No such service: $2"; } ||
-                       { [[ $3 = (#i)(next|stop|quit|restart) ]] &&
-                           { builtin print "${(U)3}" >>! ${ZINIT[SERVICES_DIR]}/"$2".fifo || builtin print "Service $2 inactive"; ___retval=1; } ||
-                               { [[ $3 = (#i)start ]] && rm -f ${ZINIT[SERVICES_DIR]}/"$2".stop ||
-                                   { builtin print "Unknown service-command: $3"; ___retval=1; }
-                               }
-                       }
-                   } "$@"
-                   ;;
-               (module)
-                   .zinit-module "${@[2-correct,-1]}"; ___retval=$?
-                   ;;
-                (*)
-                    if [[ -z $1 ]] {
-                        +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Missing a {cmd}subcommand "
-                        +zinit-prehelp-usage-message rst
-                    } else {
-                        +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:{rst}" \
-                                "{apo}\`{error}$1{apo}\`{rst} "
-                        +zinit-prehelp-usage-message rst
-                    }
-                    ___retval=1
+                (status)
+                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                        .zinit-update-or-status-all status; ___retval=$?
+                    else
+                        .zinit-update-or-status status "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
+                    fi
                     ;;
-            esac
-            ;;
+                (report)
+                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 4; }
+                     .zinit-show-all-reports
+                    else
+                        .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
+                    fi
+                    ;;
+                (loaded|list)
+                    # Show list of loaded plugins.
+                    .zinit-show-registered-plugins "$2"
+                    ;;
+                (clist|completions)
+                    # Show installed, enabled or disabled, completions.
+2                   # Detect stray and improper ones.
+                    .zinit-show-completions "$2"
+                    ;;
+                (cclear)
+                    # Delete stray and improper completions.
+                    .zinit-clear-completions
+                    ;;
+                (cdisable)
+                    if [[ -z $2 ]]; then
+                        builtin print "Argument needed, try: help"; ___retval=1
+                    else
+                        local ___f="_${2#_}"
+                        # Disable completion given by completion function name
+                        # with or without leading _, e.g. cp, _cp.
+                        if .zinit-cdisable "$___f"; then
+                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+                            .zinit-forget-completion "$___f"
+                            +zinit-message "Initializing completion system ({func}compinit{rst}){…}"
+                            builtin autoload -Uz compinit
+                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
+                        else
+                            ___retval=1
+                        fi
+                    fi
+                    ;;
+                (cenable)
+                    if [[ -z $2 ]]; then
+                        builtin print "Argument needed, try: help"; ___retval=1
+                    else
+                         local ___f="_${2#_}"
+                        # Enable completion given by completion function name
+                        # with or without leading _, e.g. cp, _cp.
+                        if .zinit-cenable "$___f"; then
+                            (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+                            .zinit-forget-completion "$___f"
+                            +zinit-message "Initializing completion system ({func}compinit{rst}){…}"
+                            builtin autoload -Uz compinit
+                            compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
+                        else
+                            ___retval=1
+                        fi
+                    fi
+                    ;;
+                (creinstall)
+                    (( ${+functions[.zinit-install-completions]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+                    # Installs completions for plugin. Enables them all. It's a
+                    # reinstallation, thus every obstacle gets overwritten or removed.
+                    [[ $2 = -[qQ] ]] && { 5=$2; shift; }
+                    .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
+                    [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion ({func}compinit{rst}){…}"
+                    builtin autoload -Uz compinit
+                    compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
+                    ;;
+                (cuninstall)
+                    if [[ -z $2 && -z $3 ]]; then
+                        builtin print "Argument needed, try: help"; ___retval=1
+                    else
+                        (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+                        # Uninstalls completions for plugin.
+                        .zinit-uninstall-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
+                        +zinit-message "Initializing completion ({func}compinit{rst}){…}"
+                        builtin autoload -Uz compinit
+                        compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
+                    fi
+                    ;;
+                (csearch)
+                    .zinit-search-completions
+                    ;;
+                (compinit)
+                    (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+                    .zinit-compinit; ___retval=$?
+                    ;;
+                (dreport)
+                    .zinit-show-debug-report
+                    ;;
+                (dclear)
+                    (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
+                    .zinit-clear-debug-report
+                    ;;
+                (dunload)
+                    (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
+                    .zinit-debug-unload
+                    ;;
+                (compile)
+                    (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                        .zinit-compile-uncompile-all 1; ___retval=$?
+                    else
+                        .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
+                    fi
+                    ;;
+                (uncompile)
+                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                        .zinit-compile-uncompile-all 0; ___retval=$?
+                    else
+                        .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
+                    fi
+                    ;;
+                (compiled)
+                    .zinit-compiled
+                    ;;
+                (cdlist)
+                    .zinit-list-compdef-replay
+                    ;;
+                (cd|delete|recall|edit|glance|changes|create|stress)
+                    .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; ___retval=$?
+                    ;;
+                (recently)
+                    shift
+                    .zinit-recently "$@"; ___retval=$?
+                    ;;
+                (-h|--help|help)
+                    .zinit-help
+                    ;;
+                (ls)
+                    shift
+                    .zinit-ls "$@"
+                    ;;
+                (srv)
+                    () { setopt localoptions extendedglob warncreateglobal
+                    [[ ! -e ${ZINIT[SERVICES_DIR]}/"$2".fifo ]] && { builtin print "No such service: $2"; } ||
+                        { [[ $3 = (#i)(next|stop|quit|restart) ]] &&
+                            { builtin print "${(U)3}" >>! ${ZINIT[SERVICES_DIR]}/"$2".fifo || builtin print "Service $2 inactive"; ___retval=1; } ||
+                                { [[ $3 = (#i)start ]] && rm -f ${ZINIT[SERVICES_DIR]}/"$2".stop ||
+                                    { builtin print "Unknown service-command: $3"; ___retval=1; }
+                                }
+                        }
+                    } "$@"
+                    ;;
+                (module)
+                    .zinit-module "${@[2-correct,-1]}"; ___retval=$?
+                    ;;
+                 (*)
+                     if [[ -z $1 ]] {
+                         +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Missing a {cmd}subcommand "
+                         +zinit-prehelp-usage-message rst
+                     } else {
+                         +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:{rst}" \
+                                 "{apo}\`{error}$1{apo}\`{rst} "
+                         +zinit-prehelp-usage-message rst
+                     }
+                     ___retval=1
+                     ;;
+             esac
+             ;;
     esac
 
     return ___retval
