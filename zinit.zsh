@@ -2830,7 +2830,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                 (clist|completions)
                     # Show installed, enabled or disabled, completions.
-2                   # Detect stray and improper ones.
+                    # Detect stray and improper ones.
                     .zinit-show-completions "$2"
                     ;;
                 (cclear)
