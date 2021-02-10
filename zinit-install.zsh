@@ -734,8 +734,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         return 2
     fi
 
-    "${cmd[@]}" |& command grep Last-Modified: | while read -r line; do
-        header="${line#*, }"
+    "${cmd[@]}" |& command grep -i Last-Modified: | while read -r line; do
+        header="${${line#*, }//$'\r'}"
     done
 
     if [[ -z $header ]] {
@@ -743,7 +743,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         return 3
     }
 
-    LANG=C strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
+    LANG=C TZ=UTC strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
         REPLY=$(( $(date +"%s") ))
         return 4
     }
