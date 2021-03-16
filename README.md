@@ -44,7 +44,6 @@
     - [Compiling](#compiling)
     - [Other](#other)
   - [Updating Zinit and Plugins](#updating-zinit-and-plugins)
-  - [Using Oh My Zsh Themes](#using-oh-my-zsh-themes)
 - [Completions](#completions-2)
   - [Calling `compinit` Without Turbo Mode](#calling-compinit-without-turbo-mode)
   - [Calling `compinit` With Turbo Mode](#calling-compinit-with-turbo-mode)
@@ -935,6 +934,9 @@ zinit ice as"completion"
 zinit snippet OMZP::fd/_fd
 ```
 
+See also the Wiki page: [Example Oh My Zsh
+Setup](http://zdharma.org/zinit/wiki/Example-Oh-My-Zsh-setup/).
+
 ### Migration from Prezto
 
 It's simillar Oh-My-Zsh.
@@ -1382,64 +1384,6 @@ The ice modifiers for any plugin or snippet are stored in their directory in a
 `._zinit` subdirectory, hence the plugin doesn't have to be loaded to be correctly
 updated. There's one other file created there, `.zinit_lstupd` – it holds the log of
 the new commits pulled-in in the last update.
-
-## Using Oh My Zsh Themes
-
-To use **themes** created for Oh My Zsh you might want to first source the `git` library there:
-
-```SystemVerilog
-zinit snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
-# Or using OMZL:: shorthand:
-zinit snippet OMZL::git.zsh
-```
-
-If the library will not be loaded, then similar to following errors will be appearing:
-
-```
-........:1: command not found: git_prompt_status
-........:1: command not found: git_prompt_short_sha
-```
-
-Then you can use the themes as snippets (`zinit snippet {file path or GitHub URL}`).
-Some themes require not only Oh My Zsh's Git **library**, but also Git **plugin** (error
-about `current_branch` function can be appearing). Load this Git-plugin as single-file
-snippet directly from OMZ:
-
-```SystemVerilog
-zinit snippet OMZP::git
-```
-
-Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
-a fresh version of a snippet, or `zinit update {URL}`. Can also use `zinit update --all` to
-update all snippets (and plugins).
-
-Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
-prompt will appear as something like: `... $(build_prompt) ...`.
-
-You might want to suppress completions provided by the git plugin by issuing `zinit cdclear -q`
-(`-q` is for quiet) – see below **Ignoring Compdefs**.
-
-To summarize:
-
-```SystemVerilog
-# Load OMZ Git library
-zinit snippet OMZL::git.zsh
-
-# Load Git plugin from OMZ
-zinit snippet OMZP::git
-zinit cdclear -q # <- forget completions provided up to this moment
-
-setopt promptsubst
-
-# Load theme from OMZ
-zinit snippet OMZT::gnzh
-
-# Load normal GitHub plugin with theme depending on OMZ Git library
-zinit light NicoSantangelo/Alpharized
-```
-
-See also the Wiki page: [Example Oh My Zsh
-Setup](http://zdharma.org/zinit/wiki/Example-Oh-My-Zsh-setup/).
 
 # Completions
 
