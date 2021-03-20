@@ -313,9 +313,9 @@
 
 * 12-04-2020
   - A new document on the Wiki is available — about the [**bindmap''
-    ice**](https://zdharma.org/zinit/wiki/Bindkeys/).
+    ice**](https://zdharma.github.io/zinit/wiki/Bindkeys/).
   - If `id-as''` will have no value, then it'll work as
-    [**id-as'auto'**](https://zdharma.org/zinit/wiki/id-as/#id-asauto).
+    [**id-as'auto'**](https://zdharma.github.io/zinit/wiki/id-as/#id-asauto).
 
 * 07-04-2020
   - A new feature — `param''` ice that defines params for the time of loading of
@@ -470,7 +470,7 @@
 * 11-12-2019
   - Zinit now supports installing special-Zsh NPM packages! Bye-bye the long and
     complex ice-lists! Check out the
-    [Wiki](http://zdharma.org/zinit/wiki/NPM-Packages/) for an introductory document
+    [Wiki](https://zdharma.github.io/zinit/wiki/Zinit-Packages/) for an introductory document
     on the feature.
 
 * 25-11-2019
@@ -531,7 +531,7 @@
     ```
 
     To load in light mode, use a new `light-mode` ice. More examples and information
-    can be found on the [Zinit Wiki](http://zdharma.org/zinit/wiki/For-Syntax/).
+    can be found on the [Zinit Wiki](https://zdharma.github.io/zinit/wiki/For-Syntax/).
 
 * 03-11-2019
   - A new value for the `as''` ice — `null`. Specifying `as"null"` is like specifying
@@ -616,7 +616,7 @@
     conflicts when doing `pull`, and the changes can be then again introduced by the
     `atpull''` ice.
   - Three new Zinit annexes (i.e.
-    [extensions](http://zdharma.org/zinit/wiki/Annexes/)):
+    [extensions](https://zdharma.github.io/zinit/wiki/Annexes/)):
 
       - [z-a-man](https://github.com/zinit/z-a-man)
 
@@ -671,7 +671,7 @@ install everything from GitHub and other sites. Its characteristics are:
    libraries, however the implementation isn't framework specific and doesn't
    bloat the plugin manager with such code (more on this topic can be found on
    the Wiki, in the
-   [Introduction](https://zdharma.org/zinit/wiki/INTRODUCTION/#oh_my_zsh_prezto)).
+   [Introduction](https://zdharma.github.io/zinit/wiki/INTRODUCTION/#oh_my_zsh_prezto)).
 
 5. The system does not use `$FPATH`, loading multiple plugins doesn't clutter
    `$FPATH` with the same number of entries (e.g. `10`, `15` or more). Code is
@@ -682,7 +682,7 @@ install everything from GitHub and other sites. Its characteristics are:
    providing long and complex commands. See the
    [Zsh-Packages](https://github.com/Zsh-Packages) organization for a growing,
    complete list of Zinit packages and the [Wiki
-   page](https://zdharma.org/zinit/wiki/Zinit-Packages/) for an article about
+   page](https://zdharma.github.io/zinit/wiki/Zinit-Packages/) for an article about
    the feature.
 
 7. Also, specialized Zinit extensions — called **annexes** — allow to extend the
@@ -691,13 +691,13 @@ install everything from GitHub and other sites. Its characteristics are:
    post-install and post-update hooks and much more. See the
    [zinit-zsh](https://github.com/zinit-zsh) organization for a growing,
    complete list of available Zinit extensions and refer to the [Wiki
-   article](https://zdharma.org/zinit/wiki/Annexes/) for an introduction on
+   article](https://zdharma.github.io/zinit/wiki/Annexes/) for an introduction on
    creating your own annex.
 
 # Zinit Wiki
 
 The information in this README is complemented by the [Zinit
-Wiki](http://zdharma.org/zinit/wiki/). The README is an introductory overview of
+Wiki](https://zdharma.github.io/zinit/wiki/). The README is an introductory overview of
 Zinit while the Wiki gives a complete information with examples. Make sure to
 read it to get the most out of Zinit.
 
@@ -745,7 +745,7 @@ After installing and reloading the shell compile Zinit with `zinit self-update`.
 
 ## Introduction
 
-[Click here to read the introduction to Zinit](http://zdharma.org/zinit/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zinit such as the Turbo mode. If you're new to Zinit we highly recommend you read it at least once.
+[Click here to read the introduction to Zinit](https://zdharma.github.io/zinit/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zinit such as the Turbo mode. If you're new to Zinit we highly recommend you read it at least once.
 
 ## Example Usage
 
@@ -765,7 +765,7 @@ zinit light sindresorhus/pure
 
 # A glance at the new for-syntax – load all of the above
 # plugins with a single command. For more information see:
-# https://zdharma.org/zinit/wiki/For-Syntax/
+# https://zdharma.github.io/zinit/wiki/For-Syntax/
 zinit for \
     light-mode  zsh-users/zsh-autosuggestions \
     light-mode  zdharma/fast-syntax-highlighting \
@@ -811,14 +811,14 @@ zinit creinstall %HOME/my_completions
 zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
 zinit light trapd00r/LS_COLORS
 ```
-[You can see an extended explanation of LS_COLORS in the Wiki.](http://zdharma.org/zinit/wiki/LS_COLORS-explanation/)
+[You can see an extended explanation of LS_COLORS in the Wiki.](https://zdharma.github.io/zinit/wiki/LS_COLORS-explanation/)
 
 ```zsh
 # make'!...' -> run make before atclone & atpull
 zinit ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
 zinit light direnv/direnv
 ```
-[You can see an extended explanation of direnv in the Wiki.](http://zdharma.org/zinit/wiki/Direnv-explanation/)
+[You can see an extended explanation of direnv in the Wiki.](https://zdharma.github.io/zinit/wiki/Direnv-explanation/)
 
 If you're interested in more examples then check out the [zinit-configs
 repository](https://github.com/zdharma/zinit-configs) where users have uploaded their
@@ -827,7 +827,7 @@ repository](https://github.com/zdharma/zinit-configs) where users have uploaded 
 your `~/.zshrc` there if it contains Zinit commands.
 
 You can also check out the [Gallery of Zinit
-Invocations](http://zdharma.org/zinit/wiki/GALLERY/) for some additional
+Invocations](https://zdharma.github.io/zinit/wiki/GALLERY/) for some additional
 examples.
 
 Also, two articles on the Wiki present an example setup
