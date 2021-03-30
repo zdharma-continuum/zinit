@@ -804,7 +804,10 @@ zinit light zdharma/fast-syntax-highlighting
 zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
 ```
 
+<details>
+  <summary>
 ### Migration from Oh-My-ZSH
+  </summary>
 Just load with Snippet!!
 
 ```zsh
@@ -936,8 +939,12 @@ zinit snippet OMZP::fd/_fd
 
 See also the Wiki page: [Example Oh My Zsh
 Setup](http://zdharma.org/zinit/wiki/Example-Oh-My-Zsh-setup/).
+</details>
 
+<details>
+  <summary>
 ### Migration from Prezto
+  </summary>
 
 It's simillar Oh-My-Zsh.
 But use `PZT`.
@@ -1011,8 +1018,12 @@ zinit light romkatv/powerlevel10k
 zinit ice pick"async.zsh" src"pure.zsh" # with zsh-async library that's bundled with it.
 zinit light sindresorhus/pure
 ```
+</details>
 
+<details>
+  <summary>
 ### Migration from Zgen
+  </summary>
 
 **Oh My Zsh**
 More reference: check [Migration from Oh-My-ZSH](#migration-from-oh-my-zsh)
@@ -1056,8 +1067,12 @@ zgen load <repo> [location] [branch]
 zinit ice ver"[branch]"
 zinit load <repo>
 ```
+</details>
 
+<details>
+  <summary>
 ### Migration from Zplug
+  </summary>
 
 **Basic**
 ```zsh
@@ -1083,6 +1098,7 @@ zinit load <repo/plugin>
 - `defer` => `wait`
 - `lazy` => `autoload`
 - `depth` => `depth`
+</details>
 
 # How to Use
 
