@@ -19,12 +19,9 @@
   - [Useage](#useage)
     - [Introduction](#introduction)
     - [Load Plugin](#load-plugin)
-    - [Migration from Oh-My-ZSH](#migration-from-oh-my-zsh)
-    - [Migration from Prezto](#migration-from-prezto)
-    - [Migration from Zgen](#migration-from-zgen)
-    - [Migration from Zplug](#migration-from-zplug)
+    - [Migration](#migration)
+    - [Example Usage](#example-usage)
 - [How to Use](#how-to-use)
-  - [Example Usage](#example-usage)
   - [Ice Modifiers](#ice-modifiers)
     - [Cloning Options](#cloning-options)
     - [Selection of Files (To Source, …)](#selection-of-files-to-source-)
@@ -804,10 +801,9 @@ zinit light zdharma/fast-syntax-highlighting
 zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
 ```
 
+### Migration
 <details>
-  <summary>
-### Migration from Oh-My-ZSH
-  </summary>
+  <summary>Migration from Oh-My-ZSH</summary>
 Just load with Snippet!!
 
 ```zsh
@@ -942,9 +938,7 @@ Setup](http://zdharma.org/zinit/wiki/Example-Oh-My-Zsh-setup/).
 </details>
 
 <details>
-  <summary>
-### Migration from Prezto
-  </summary>
+  <summary>Migration from Prezto</summary>
 
 It's simillar Oh-My-Zsh.
 But use `PZT`.
@@ -1021,9 +1015,7 @@ zinit light sindresorhus/pure
 </details>
 
 <details>
-  <summary>
-### Migration from Zgen
-  </summary>
+  <summary>Migration from Zgen</summary>
 
 **Oh My Zsh**
 More reference: check [Migration from Oh-My-ZSH](#migration-from-oh-my-zsh)
@@ -1070,9 +1062,7 @@ zinit load <repo>
 </details>
 
 <details>
-  <summary>
-### Migration from Zplug
-  </summary>
+  <summary>Migration from Zplug</summary>
 
 **Basic**
 ```zsh
@@ -1100,9 +1090,7 @@ zinit load <repo/plugin>
 - `depth` => `depth`
 </details>
 
-# How to Use
-
-## Example Usage
+### Example Usage
 
 After installing Zinit you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
 
@@ -1188,6 +1176,8 @@ examples.
 Also, two articles on the Wiki present an example setup
 [here](https://zdharma.org/zinit/wiki/Example-Minimal-Setup/) and
 [here](https://zdharma.org/zinit/wiki/Example-Oh-My-Zsh-setup/).
+
+# How to Use
 
 ## Ice Modifiers
 
