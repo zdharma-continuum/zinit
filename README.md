@@ -788,7 +788,7 @@ Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` op
 a fresh version of a snippet, or `zinit update {URL}`. Can also use `zinit update --all` to
 update all snippets (and plugins).
 
-**Example***
+**Example**
 ```zsh
 # Plugin history-search-multi-word loaded with investigating.
 zinit load zdharma/history-search-multi-word
@@ -803,7 +803,7 @@ zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
 
 ### Migration
 <details>
-  <summary>Migration from Oh-My-ZSH</summary>
+  <summary><b>Migration from Oh-My-ZSH</b></summary>
 Just load with Snippet!!
 
 ```zsh
@@ -938,7 +938,7 @@ Setup](http://zdharma.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/).
 </details>
 
 <details>
-  <summary>Migration from Prezto</summary>
+  <summary><b>Migration from Prezto</b></summary>
 
 It's simillar Oh-My-Zsh.
 But use `PZT`.
@@ -1015,10 +1015,10 @@ zinit light sindresorhus/pure
 </details>
 
 <details>
-  <summary>Migration from Zgen</summary>
+  <summary><b>Migration from Zgen</b></summary>
 
 **Oh My Zsh**
-More reference: check [Migration from Oh-My-ZSH](#migration-from-oh-my-zsh)
+More reference: check **Migration from Oh-My-ZSH**
 ```zsh
 # Load ohmyzsh base
 zgen oh-my-zsh
@@ -1030,7 +1030,7 @@ zinit snippet OMZ::<PATH>
 ```
 
 **Prezto**
-More reference: check [Migration from Prezto](#migration-from-prezto)
+More reference: check **Migration from Prezto***
 
 ```zsh
 # Load Prezto
@@ -1062,7 +1062,7 @@ zinit load <repo>
 </details>
 
 <details>
-  <summary>Migration from Zplug</summary>
+  <summary><b>Migration from Zplug</b></summary>
 
 **Basic**
 ```zsh
@@ -1090,18 +1090,11 @@ zinit load <repo/plugin>
 - `depth` => `depth`
 </details>
 
-### Example Usage
+### More Example Usage
 
 After installing Zinit you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
 
 ```zsh
-# Two regular plugins loaded without investigating.
-zinit light zsh-users/zsh-autosuggestions
-zinit light zdharma/fast-syntax-highlighting
-
-# Plugin history-search-multi-word loaded with investigating.
-zinit load zdharma/history-search-multi-word
-
 # Load the pure theme, with zsh-async library that's bundled with it.
 zinit ice pick"async.zsh" src"pure.zsh"
 zinit light sindresorhus/pure
@@ -1119,7 +1112,7 @@ zinit for \
 # Binary release in archive, from GitHub-releases page.
 # After automatic unpacking it provides program "fzf".
 zinit ice from"gh-r" as"program"
-zinit load junegunn/fzf-bin
+zinit light junegunn/fzf
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
