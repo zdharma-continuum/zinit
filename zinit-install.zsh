@@ -452,7 +452,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             --config fetch.fsckobjects=false \
                             --config pull.rebase=false
                             integer retval=$?
-                            unfunction :zinit-git-clone 
+                            unfunction :zinit-git-clone
                             return $retval
                     }
                     :zinit-git-clone |& { command ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
@@ -734,8 +734,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         return 2
     fi
 
-    "${cmd[@]}" |& command grep Last-Modified: | while read -r line; do
-        header="${line#*, }"
+    "${cmd[@]}" |& command grep -i Last-Modified: | while read -r line; do
+        header="${${line#*, }//$'\r'}"
     done
 
     if [[ -z $header ]] {
@@ -743,7 +743,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         return 3
     }
 
-    LANG=C strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
+    LANG=C TZ=UTC strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
         REPLY=$(( $(date +"%s") ))
         return 4
     }
@@ -1024,7 +1024,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             # Do the update
                             # The condition is reversed on purpose – to show only
                             # the messages on an actual update
-                            if (( OPTS[opt_-q,--quiet] )); then 
+                            if (( OPTS[opt_-q,--quiet] )); then
                                 local id_msg_part="{…} (identified as{ehi}: {id-as}$id_as{rst})"
                                 +zinit-message "{nl}{info2}Updating snippet {url}${sname}{rst}${ICE[id-as]:+$id_msg_part}"
                                 +zinit-message "Downloading {apo}\`{rst}$sname{apo}\`{rst} (with Subversion){…}"
@@ -1349,7 +1349,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     # - case A: called from `update --all', ICE empty, static ice will win
     # - case B: called from `update', ICE packed, so it will win
     tmp=( "${(Q@)${(z@)ZINIT_SICE[$id_as]}}" )
-    if (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) { 
+    if (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) {
         ICE=( "${(kv)ICE[@]}" "${tmp[@]}" )
     } elif [[ -n ${ZINIT_SICE[$id_as]} ]] {
         +zinit-message "{error}WARNING:{msg2} Inconsistency #3" \
@@ -1506,7 +1506,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             } else {
                 +zinit-message -n .
             }
-            +zinit-message '{rst}' 
+            +zinit-message '{rst}'
             return 1
         }
 
@@ -1673,8 +1673,8 @@ ziextract() {
                 file=$file.gz
                 integer zi_was_renamed=1
             }
-            →zinit-extract() { 
-                →zinit-check gunzip "$file" || return 1 
+            →zinit-extract() {
+                →zinit-check gunzip "$file" || return 1
                 .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
                 command gunzip "$file" |& command egrep -v '.out$'
                 integer ret=$pipestatus[1]
@@ -2026,7 +2026,7 @@ zimv() {
                         if [[ -f $local_dir/$dirname/$filename ]] {
                             if [[ -n $option || -z $ICE[reset] ]] {
                                 +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} {…}{rst}"
-                            } else {                                         
+                            } else {
                                 +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}," \
                                     "with the supplied code: {data2}$ICE[reset]{msg2} {…}{rst}"
                             }
@@ -2042,7 +2042,7 @@ zimv() {
                                     "{data2}$ICE[reset]{msg2}){rst}"
                             }
                         }
-                    } 
+                    }
                 } else {
                         [[ -f $local_dir/$dirname/$filename ]] && \
                             +zinit-message "{pre}reset ($msg_bit): {msg2}Skipping the removal of {file}$filename{msg2}" \
@@ -2254,7 +2254,7 @@ zimv() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
-    
+
     [[ -n $ICE[atpull] && $ICE[atpull] != "!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$dir"; } && .zinit-at-eval "$ICE[atpull]" "$ICE[atclone]"; ((1)); } || .zinit-at-eval "${ICE[atpull]#!}" $ICE[atclone]; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
 }
 # ]]]
