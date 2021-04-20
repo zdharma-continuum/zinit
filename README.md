@@ -16,11 +16,11 @@
   - [Install](#install)
     - [Automatic Installation (Recommended)](#automatic-installation-recommended)
     - [Manual Installation](#manual-installation)
-  - [Useage](#useage)
+  - [Usage](#usage)
     - [Introduction](#introduction)
-    - [Load Plugin](#load-plugin)
+    - [Plugins and snippets](#plugins-and-snippets)
     - [Migration](#migration)
-    - [Example Usage](#example-usage)
+    - [More Examples](#more-examples)
 - [How to Use](#how-to-use)
   - [Ice Modifiers](#ice-modifiers)
     - [Cloning Options](#cloning-options)
@@ -732,7 +732,6 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/i
 ```
 
 This will install Zinit in `~/.zinit/bin`.
-
 `.zshrc` will be updated with three lines of code that will be added to the bottom.
 The lines will be sourcing `zinit.zsh` and setting up completion for command `zinit`.
 
@@ -763,22 +762,22 @@ Various paths can be customized, see section [Customizing Paths](#customizing-pa
 
 After installing and reloading the shell compile Zinit with `zinit self-update`.
 
-## Useage
+## Usage
 
 ### Introduction
 
 [Click here to read the introduction to Zinit](https://zdharma.github.io/zinit/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zinit such as the Turbo mode. If you're new to Zinit we highly recommend you read it at least once.
 
-### Load Plugin
+### Plugins and snippets
 
-You can load plugin with `load` or `light`.
+Plugins can be loaded using `load` or  `light`.
 
 ```zsh
 zinit load  <repo/plugin> # Load with reporting/investigating.
 zinit light <repo/plugin> # Load without reporting/investigating.
 ```
 
-If you want source local or remote file (by direct URL) using `snippet`.
+If you want source local or remote files (using direct URL), you can do with `snippet`.
 
 ```zsh
 zinit snippet <URL>
@@ -801,10 +800,30 @@ zinit light zdharma/fast-syntax-highlighting
 zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
 ```
 
+**Prompt(Theme) Example**
+
+This is [powerlevel10k](https://github.com/romkatv/powerlevel10k), [pure](https://github.com/sindresorhus/pure), [starship](https://github.com/starship/starship) sample:
+```zsh
+# Load powerlevel10k theme
+zinit ice depth"1" # git clone depth
+zinit light romkatv/powerlevel10k
+
+# Load pure theme
+zinit ice pick"async.zsh" src"pure.zsh" # with zsh-async library that's bundled with it.
+zinit light sindresorhus/pure
+
+# Load starship theme
+zinit ice as"command" from"gh-r" \ # `starship` binary as command, from github release
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \ # starship setup at clone(create init.zsh, completion)
+          atpull"%atclone" src"init.zsh" # pull behavior same as clone, source init.zsh
+zinit light starship/starship
+```
+
 ### Migration
 <details>
   <summary><b>Migration from Oh-My-ZSH</b></summary>
-Just load with Snippet!!
+
+**Basic**
 
 ```zsh
 zinit snippet <URL>        # Raw Syntax with URL
@@ -837,7 +856,7 @@ To use **themes** created for Oh My Zsh you might want to first source the `git`
 
 Then you can use the themes as snippets (`zinit snippet <file path or GitHub URL>`).
 Some themes require not only Oh My Zsh's Git **library**, but also Git **plugin** (error
-about `current_branch` function can be appearing). Load this Git-plugin as single-file
+about `current_branch` may appear). Load this Git-plugin as single-file
 snippet directly from OMZ.
 
 Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
@@ -866,13 +885,6 @@ setopt promptsubst
 zinit snippet OMZT::robbyrussell
 ```
 
-If the `git` library will not be loaded, then similar to following errors will be appearing:
-
-```zsh
-........:1: command not found: git_prompt_status
-........:1: command not found: git_prompt_short_sha
-```
-
 External Theme Sample: [NicoSantangelo/Alpharized](https://github.com/nicosantangelo/Alpharized)
 ```zsh
 ## Oh My Zsh Setting
@@ -890,6 +902,15 @@ setopt promptsubst
 
 # Load Prompt
 zinit light NicoSantangelo/Alpharized
+```
+
+***F&A:*** Error occurs when loading OMZ's theme.
+
+If the `git` library will not be loaded, then similar to following errors will be appearing:
+
+```zsh
+........:1: command not found: git_prompt_status
+........:1: command not found: git_prompt_short_sha
 ```
 
 **Plugin**
@@ -923,7 +944,7 @@ zinit ice svn
 zinit snippet OMZP::osx
 ```
 
-Use `zinit ice as"completion"` if single file is completion.
+Use `zinit ice as"completion"` to directly add single file completion snippets.
 Like [docker](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker), [fd](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fd):
 ```zsh
 zinit ice as"completion"
@@ -933,15 +954,14 @@ zinit ice as"completion"
 zinit snippet OMZP::fd/_fd
 ```
 
-See also the Wiki page: [Example Oh My Zsh
+For more information, visit [Wiki:Example Oh My Zsh
 Setup](http://zdharma.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/).
 </details>
 
 <details>
   <summary><b>Migration from Prezto</b></summary>
 
-It's simillar Oh-My-Zsh.
-But use `PZT`.
+**Basic**
 
 ```shell
 zinit snippet <URL>        # Raw Syntax with URL
@@ -950,6 +970,8 @@ zinit snippet PZTM::<PATH> # Shorthand PZT/modules/
 ```
 
 **Modules**
+
+Let's use prezto modules with a real example.
 
 This is [environment](https://github.com/sorin-ionescu/prezto/tree/master/modules/environment), [terminal](https://github.com/sorin-ionescu/prezto/tree/master/modules/terminal) Sample:
 ```zsh
@@ -969,9 +991,6 @@ zinit snippet PZT::modules/terminal
 zinit snippet PZTM::environment
 zinit snippet PZTM::terminal
 ```
-
-F&A: What is `zstyle`?
-Read [zstyle](http://zsh.sourceforge.net/Doc/Release/Zsh-Modules.html#The-zsh_002fzutil-Module) doc (more: [What does `zstyle` do?](https://unix.stackexchange.com/questions/214657/what-does-zstyle-do)).
 
 Use `zinit ice svn` if multiple files require an entire subdirectory.
 Like [docker](https://github.com/sorin-ionescu/prezto/tree/master/modules/docker), [git](https://github.com/sorin-ionescu/prezto/tree/master/modules/git):
@@ -993,31 +1012,21 @@ zinit snippet PZTM::archive
 Use `zinit ice atclone"git clone <repo> <location>"` if module have external module.
 Like [completion](https://github.com/sorin-ionescu/prezto/tree/master/modules/completion):
 ```shell
-zplugin ice svn blockf \ # blockf: `zinit` manages $fpath. Therefore, $fpath become clean.
+zplugin ice svn blockf \ # use blockf to prevent any unnecessary additions to fpath, as zinit manages fpath
 atclone"git clone --recursive https://github.com/zsh-users/zsh-completions.git external"
 zplugin snippet PZTM::completion
 ```
 
-**Prompt(Theme)**
+***F&A:*** What is `zstyle`?
 
-Direct use external prompt.
-This is [powerlevel10k](https://github.com/romkatv/powerlevel10k), [pure](https://github.com/sindresorhus/pure) sample:
-```zsh
-# Load powerlevel10k theme
-zinit ice depth"1" # git clone depth
-zinit light romkatv/powerlevel10k
-
-# pure
-# Load the pure theme
-zinit ice pick"async.zsh" src"pure.zsh" # with zsh-async library that's bundled with it.
-zinit light sindresorhus/pure
-```
+Read [zstyle](http://zsh.sourceforge.net/Doc/Release/Zsh-Modules.html#The-zsh_002fzutil-Module) doc (more: [What does `zstyle` do?](https://unix.stackexchange.com/questions/214657/what-does-zstyle-do)).
 </details>
 
 <details>
   <summary><b>Migration from Zgen</b></summary>
 
 **Oh My Zsh**
+
 More reference: check **Migration from Oh-My-ZSH**
 ```zsh
 # Load ohmyzsh base
@@ -1030,7 +1039,8 @@ zinit snippet OMZ::<PATH>
 ```
 
 **Prezto**
-More reference: check **Migration from Prezto***
+
+More reference: check **Migration from Prezto**
 
 ```zsh
 # Load Prezto
@@ -1043,7 +1053,7 @@ zinit snippet PZTM::<modulename>
 
 # Load a repo as Prezto plugins
 zgen pmodule <reponame> <branch>
-zinit ver"<branch>"
+zinit ice ver"<branch>"
 zinit load <repo/plugin>
 
 # Set prezto options
@@ -1052,6 +1062,7 @@ zstyle ':prezto:<modulename>:' <option> <values(s)> # Set original prezto style
 ```
 
 **General**
+
 `location`: refer [Selection of Files](https://github.com/zdharma/zinit#selection-of-files-to-source-)
 ```zsh
 zgen load <repo> [location] [branch]
@@ -1075,7 +1086,7 @@ zinit load <repo/plugin>
 **Tag comparison**
 - `as` => `as`
 - `use` => `pick`, `src`, `multisrc`
-- `ignore` =>
+- `ignore` => None
 - `from` => `from`
 - `at` => `ver`
 - `rename-to` => `mv`, `cp`
@@ -1090,7 +1101,7 @@ zinit load <repo/plugin>
 - `depth` => `depth`
 </details>
 
-### More Example Usage
+### More Examples
 
 After installing Zinit you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
 
