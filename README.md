@@ -777,7 +777,7 @@ zinit load  <repo/plugin> # Load with reporting/investigating.
 zinit light <repo/plugin> # Load without reporting/investigating.
 ```
 
-If you want source local or remote files (using direct URL), you can do with `snippet`.
+If you want to source local or remote files (using direct URL), you can do so with `snippet`.
 
 ```zsh
 zinit snippet <URL>
@@ -835,7 +835,7 @@ zinit snippet OMZP::<PATH> # Shorthand OMZ/plugins/
 
 **Library**
 
-This is [clipboard](https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/clipboard.zsh), [termsupport](https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/termsupport.zsh) Sample:
+Importing the [clipboard](https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/clipboard.zsh) and [termsupport](https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/termsupport.zsh) Oh-My-Zsh Library Sample:
 ```zsh
 # Raw Syntax
 zinit snippet https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/clipboard.zsh
@@ -954,8 +954,7 @@ zinit ice as"completion"
 zinit snippet OMZP::fd/_fd
 ```
 
-For more information, visit [Wiki:Example Oh My Zsh
-Setup](http://zdharma.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/).
+[You can see an extended explanation of Oh-My-Zsh setup in the Wiki](http://zdharma.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/)
 </details>
 
 <details>
@@ -971,9 +970,7 @@ zinit snippet PZTM::<PATH> # Shorthand PZT/modules/
 
 **Modules**
 
-Let's use prezto modules with a real example.
-
-This is [environment](https://github.com/sorin-ionescu/prezto/tree/master/modules/environment), [terminal](https://github.com/sorin-ionescu/prezto/tree/master/modules/terminal) Sample:
+Importing the  [environment](https://github.com/sorin-ionescu/prezto/tree/master/modules/environment) and [terminal](https://github.com/sorin-ionescu/prezto/tree/master/modules/terminal) Prezto Modules Sample:
 ```zsh
 ## Prezto Setting
 zstyle ':prezto:load' pmodule 'environment' 'terminal'
@@ -1013,7 +1010,7 @@ Use `zinit ice atclone"git clone <repo> <location>"` if module have external mod
 Like [completion](https://github.com/sorin-ionescu/prezto/tree/master/modules/completion):
 ```shell
 zplugin ice svn blockf \ # use blockf to prevent any unnecessary additions to fpath, as zinit manages fpath
-atclone"git clone --recursive https://github.com/zsh-users/zsh-completions.git external"
+            atclone"git clone --recursive https://github.com/zsh-users/zsh-completions.git external"
 zplugin snippet PZTM::completion
 ```
 
@@ -1063,7 +1060,7 @@ zstyle ':prezto:<modulename>:' <option> <values(s)> # Set original prezto style
 
 **General**
 
-`location`: refer [Selection of Files](https://github.com/zdharma/zinit#selection-of-files-to-source-)
+`location`: refer [Selection of Files](#selection-of-files-to-source-)
 ```zsh
 zgen load <repo> [location] [branch]
 
