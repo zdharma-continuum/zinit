@@ -1262,10 +1262,14 @@ builtin setopt noaliases
 .zinit-set-m-func() {
     if [[ $1 == set ]]; then
         ZINIT[___m_bkp]="${functions[m]}"
+        setopt noaliases
         functions[m]="${functions[+zinit-message]}"
+        setopt aliases
     elif [[ $1 == unset ]]; then
         if [[ -n ${ZINIT[___m_bkp]} ]]; then
+            setopt noaliases
             functions[m]="${ZINIT[___m_bkp]}"
+            setopt aliases
         else
             noglob unset functions[m]
         fi
