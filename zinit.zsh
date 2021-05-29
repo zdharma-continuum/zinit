@@ -2001,7 +2001,7 @@ builtin setopt noaliases
     [[ $1 = -* ]] && { local opt=$1; shift; }
 
     ZINIT[__last-formatter-code]=
-    msg=${(j: :)${@:#--}}
+    msg=${${(j: :)${@:#--}}//\%/%%}
     
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
