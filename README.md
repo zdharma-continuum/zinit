@@ -12,31 +12,53 @@
 - [News](#news)
 - [Zinit](#zinit)
 - [Zinit Wiki](#zinit-wiki)
-- [Installation](#installation)
-  - [Option 1 - Automatic Installation (Recommended)](#option-1---automatic-installation-recommended)
-  - [Option 2 - Manual Installation](#option-2---manual-installation)
-- [Usage](#usage)
-  - [Introduction](#introduction)
-  - [Example Usage](#example-usage)
+- [Quick Start](#quick-start)
+  - [Install](#install)
+    - [Automatic Installation (Recommended)](#automatic-installation-recommended)
+    - [Manual Installation](#manual-installation)
+  - [Usage](#usage)
+    - [Introduction](#introduction)
+    - [Plugins and snippets](#plugins-and-snippets)
+    - [Upgrade Zinit and plugins](#upgrade-zinit-and-plugins)
+    - [Turbo and lucid](#turbo-and-lucid)
+    - [Migration](#migration)
+    - [More Examples](#more-examples)
+- [How to Use](#how-to-use)
   - [Ice Modifiers](#ice-modifiers)
+    - [Cloning Options](#cloning-options)
+    - [Selection of Files (To Source, …)](#selection-of-files-to-source-)
+    - [Conditional Loading](#conditional-loading)
+    - [Plugin Output](#plugin-output)
+    - [Completions](#completions)
+    - [Command Execution After Cloning, Updating or Loading](#command-execution-after-cloning-updating-or-loading)
+    - [Sticky-Emulation Of Other Shells](#sticky-emulation-of-other-shells)
+    - [Others](#others)
+    - [Order of Execution](#order-of-execution)
   - [Zinit Commands](#zinit-commands)
+    - [Help](#help)
+    - [Loading and Unloading](#loading-and-unloading)
+    - [Completions](#completions-1)
+    - [Tracking of the Active Session](#tracking-of-the-active-session)
+    - [Reports and Statistics](#reports-and-statistics)
+    - [Compiling](#compiling)
+    - [Other](#other)
   - [Updating Zinit and Plugins](#updating-zinit-and-plugins)
-  - [Using Oh My Zsh Themes](#using-oh-my-zsh-themes)
-- [Completions](#completions)
+- [Completions](#completions-2)
   - [Calling `compinit` Without Turbo Mode](#calling-compinit-without-turbo-mode)
   - [Calling `compinit` With Turbo Mode](#calling-compinit-with-turbo-mode)
   - [Ignoring Compdefs](#ignoring-compdefs)
   - [Disabling System-Wide `compinit` Call (Ubuntu)](#disabling-system-wide-compinit-call-ubuntu)
 - [Zinit Module](#zinit-module)
   - [Motivation](#motivation)
-  - [Installation](#installation-1)
+  - [Installation](#installation)
+    - [Without Zinit](#without-zinit)
+    - [With Zinit](#with-zinit)
   - [Measuring Time of `source`s](#measuring-time-of-sources)
   - [Debugging](#debugging)
 - [Hints and Tips](#hints-and-tips)
   - [Customizing Paths](#customizing-paths)
   - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
-  - [Preinstalling Plugins](#preinstalling-plugins)
 - [Supporting](#supporting)
 - [Getting Help and Community](#getting-help-and-community)
 
@@ -702,9 +724,9 @@ Wiki](https://zdharma.github.io/zinit/wiki/). The README is an introductory over
 Zinit while the Wiki gives a complete information with examples. Make sure to
 read it to get the most out of Zinit.
 
-# Installation
-
-## Option 1 - Automatic Installation (Recommended)
+# Quick Start
+## Install
+### Automatic Installation (Recommended)
 
 The easiest way to install Zinit is to execute:
 
@@ -712,12 +734,13 @@ The easiest way to install Zinit is to execute:
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
 ```
 
-This will install Zinit in `~/.zinit/bin`. `.zshrc` will be updated with three
-lines of code that will be added to the bottom. The lines will be sourcing
-`zinit.zsh` and setting up completion for command `zinit`. After installing and
-reloading the shell compile Zinit with `zinit self-update`.
+This will install Zinit in `~/.zinit/bin`.
+`.zshrc` will be updated with three lines of code that will be added to the bottom.
+The lines will be sourcing `zinit.zsh` and setting up completion for command `zinit`.
 
-## Option 2 - Manual Installation
+After installing and reloading the shell compile Zinit with `zinit self-update`.
+
+### Manual Installation
 
 To manually install Zinit clone the repo to e.g. `~/.zinit/bin`:
 
@@ -726,7 +749,7 @@ mkdir ~/.zinit
 git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
 ```
 
-and source it from `.zshrc` (above compinit):
+and source it from `.zshrc` (above [compinit](http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Initialization)):
 
 ```sh
 source ~/.zinit/bin/zinit.zsh
@@ -742,24 +765,403 @@ Various paths can be customized, see section [Customizing Paths](#customizing-pa
 
 After installing and reloading the shell compile Zinit with `zinit self-update`.
 
-# Usage
+## Usage
 
-## Introduction
+### Introduction
 
 [Click here to read the introduction to Zinit](https://zdharma.github.io/zinit/wiki/INTRODUCTION/). It explains basic usage and some of the more unique features of Zinit such as the Turbo mode. If you're new to Zinit we highly recommend you read it at least once.
 
-## Example Usage
+### Plugins and snippets
 
-After installing Zinit you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
+Plugins can be loaded using `load` or  `light`.
 
 ```zsh
+zinit load  <repo/plugin> # Load with reporting/investigating.
+zinit light <repo/plugin> # Load without reporting/investigating.
+```
+
+If you want to source local or remote files (using direct URL), you can do so with `snippet`.
+
+```zsh
+zinit snippet <URL>
+```
+
+Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
+a fresh version of a snippet, or `zinit update {URL}`. Can also use `zinit update --all` to
+update all snippets (and plugins).
+
+**Example**
+```zsh
+# Plugin history-search-multi-word loaded with investigating.
+zinit load zdharma/history-search-multi-word
+
 # Two regular plugins loaded without investigating.
 zinit light zsh-users/zsh-autosuggestions
 zinit light zdharma/fast-syntax-highlighting
 
-# Plugin history-search-multi-word loaded with investigating.
+# Snippet
+zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
+```
+
+**Prompt(Theme) Example**
+
+This is [powerlevel10k](https://github.com/romkatv/powerlevel10k), [pure](https://github.com/sindresorhus/pure), [starship](https://github.com/starship/starship) sample:
+```zsh
+# Load powerlevel10k theme
+zinit ice depth"1" # git clone depth
+zinit light romkatv/powerlevel10k
+
+# Load pure theme
+zinit ice pick"async.zsh" src"pure.zsh" # with zsh-async library that's bundled with it.
+zinit light sindresorhus/pure
+
+# Load starship theme
+zinit ice as"command" from"gh-r" \ # `starship` binary as command, from github release
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \ # starship setup at clone(create init.zsh, completion)
+          atpull"%atclone" src"init.zsh" # pull behavior same as clone, source init.zsh
+zinit light starship/starship
+```
+
+### Upgrade Zinit and plugins
+
+Zinit can be updated to `self-update` and plugins to `update`.
+
+```zsh
+# Self update
+zinit self-update
+
+# Plugin update
+zinit update
+
+# Plugin parallel update
+zinit update --parallel
+
+# Increase the number of jobs in a concurrent-set to 40
+zinit update --parallel 40
+```
+
+### Turbo and lucid
+
+Turbo and lucid are the most used options.
+
+<details>
+  <summary><b>Turbo Mode</b></summary>
+Turbo mode is the key to performance. It can be loaded asynchronously, which makes a huge difference when the amount of plugins increases.
+
+Usually used as `zinit ice wait"<SECONDS>"`, let's use the previous example:
+```zsh
+zinit ice wait    # wait is same wait"0"
 zinit load zdharma/history-search-multi-word
 
+zinit ice wait"2" # load after 2 seconds
+zinit load zdharma/history-search-multi-word
+
+zinit ice wait    # also be used in `light` and `snippet`
+zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
+```
+</details>
+
+<details>
+  <summary><b>Lucid</b></summary>
+
+Turbo mode is verbose, so you need an option for quiet.
+
+You can use with `lucid`:
+```zsh
+zinit ice wait lucid
+zinit load zdharma/history-search-multi-word
+```
+</details>
+
+***F&A:*** What is `ice`?
+
+`ice` is zinit's option command. The option melts like ice and is used only once.
+(more: [Ice Modifiers](#ice-modifiers))
+
+### Migration
+<details>
+  <summary><b>Migration from Oh-My-ZSH</b></summary>
+
+**Basic**
+
+```zsh
+zinit snippet <URL>        # Raw Syntax with URL
+zinit snippet OMZ::<PATH>  # Shorthand OMZ/ (http://github.com/ohmyzsh/ohmyzsh/raw/master/)
+zinit snippet OMZL::<PATH> # Shorthand OMZ/lib/
+zinit snippet OMZT::<PATH> # Shorthand OMZ/themes/
+zinit snippet OMZP::<PATH> # Shorthand OMZ/plugins/
+```
+
+**Library**
+
+Importing the [clipboard](https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/clipboard.zsh) and [termsupport](https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/termsupport.zsh) Oh-My-Zsh Library Sample:
+```zsh
+# Raw Syntax
+zinit snippet https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/clipboard.zsh
+zinit snippet https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/termsupport.zsh
+
+# OMZ Shorthand Syntax
+zinit snippet OMZ::lib/clipboard.zsh
+zinit snippet OMZ::lib/termsupport.zsh
+
+# OMZL Shorthand Syntax
+zinit snippet OMZL::clipboard.zsh
+zinit snippet OMZL::termsupport.zsh
+```
+
+**Theme**
+
+To use **themes** created for Oh My Zsh you might want to first source the `git` library there.
+
+Then you can use the themes as snippets (`zinit snippet <file path or GitHub URL>`).
+Some themes require not only Oh My Zsh's Git **library**, but also Git **plugin** (error
+about `current_branch` may appear). Load this Git-plugin as single-file
+snippet directly from OMZ.
+
+Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
+prompt will appear as something like: `... $(build_prompt) ...`.
+
+You might want to suppress completions provided by the git plugin by issuing `zinit cdclear -q`
+(`-q` is for quiet) – see below **Ignoring Compdefs**.
+
+
+To summarize:
+```zsh
+## Oh My Zsh Setting
+ZSH_THEME="robbyrussell"
+
+## Zinit Setting
+# Must Load OMZ Git library
+zinit snippet OMZL::git.zsh
+
+# Load Git plugin from OMZ
+zinit snippet OMZP::git
+zinit cdclear -q # <- forget completions provided up to this moment
+
+setopt promptsubst
+
+# Load Prompt
+zinit snippet OMZT::robbyrussell
+```
+
+External Theme Sample: [NicoSantangelo/Alpharized](https://github.com/nicosantangelo/Alpharized)
+```zsh
+## Oh My Zsh Setting
+ZSH_THEME="alpharized"
+
+## Zinit Setting
+# Must Load OMZ Git library
+zinit snippet OMZL::git.zsh
+
+# Load Git plugin from OMZ
+zinit snippet OMZP::git
+zinit cdclear -q # <- forget completions provided up to this moment
+
+setopt promptsubst
+
+# Load Prompt
+zinit light NicoSantangelo/Alpharized
+```
+
+***F&A:*** Error occurs when loading OMZ's theme.
+
+If the `git` library will not be loaded, then similar to following errors will be appearing:
+
+```zsh
+........:1: command not found: git_prompt_status
+........:1: command not found: git_prompt_short_sha
+```
+
+**Plugin**
+
+If it consists of a single file, you can just load it.
+```zsh
+## Oh-My-Zsh Setting
+plugins=(
+  git
+  dotenv
+  rake
+  rbenv
+  ruby
+)
+
+## Zinit Setting
+zinit snippet OMZP::git
+zinit snippet OMZP::dotenv
+zinit snippet OMZP::rake
+zinit snippet OMZP::rbenv
+zinit snippet OMZP::ruby
+```
+
+Use `zinit ice svn` if multiple files require an entire subdirectory.
+Like [gitfast](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast), [osx](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/osx):
+```zsh
+zinit ice svn
+zinit snippet OMZP::gitfast
+
+zinit ice svn
+zinit snippet OMZP::osx
+```
+
+Use `zinit ice as"completion"` to directly add single file completion snippets.
+Like [docker](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker), [fd](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fd):
+```zsh
+zinit ice as"completion"
+zinit snippet OMZP::docker/_docker
+
+zinit ice as"completion"
+zinit snippet OMZP::fd/_fd
+```
+
+[You can see an extended explanation of Oh-My-Zsh setup in the Wiki](http://zdharma.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/)
+</details>
+
+<details>
+  <summary><b>Migration from Prezto</b></summary>
+
+**Basic**
+
+```shell
+zinit snippet <URL>        # Raw Syntax with URL
+zinit snippet PZT::<PATH>  # Shorthand PZT/ (https://github.com/sorin-ionescu/prezto/tree/master/)
+zinit snippet PZTM::<PATH> # Shorthand PZT/modules/
+```
+
+**Modules**
+
+Importing the  [environment](https://github.com/sorin-ionescu/prezto/tree/master/modules/environment) and [terminal](https://github.com/sorin-ionescu/prezto/tree/master/modules/terminal) Prezto Modules Sample:
+```zsh
+## Prezto Setting
+zstyle ':prezto:load' pmodule 'environment' 'terminal'
+
+## Zinit Setting
+# Raw Syntax
+zinit snippet https://github.com/sorin-ionescu/prezto/blob/master/modules/environment/init.zsh
+zinit snippet https://github.com/sorin-ionescu/prezto/blob/master/modules/terminal/init.zsh
+
+# PZT Shorthand Syntax
+zinit snippet PZT::modules/environment
+zinit snippet PZT::modules/terminal
+
+# PZTM Shorthand Syntax
+zinit snippet PZTM::environment
+zinit snippet PZTM::terminal
+```
+
+Use `zinit ice svn` if multiple files require an entire subdirectory.
+Like [docker](https://github.com/sorin-ionescu/prezto/tree/master/modules/docker), [git](https://github.com/sorin-ionescu/prezto/tree/master/modules/git):
+```zsh
+zinit ice svn
+zinit snippet PZTM::docker
+
+zinit ice svn
+zinit snippet PZTM::git
+```
+
+Use `zinit ice as"null"` if don't exist `*.plugin.zsh`, `init.zsh`, `*.zsh-theme*` files in module.
+Like [archive](https://github.com/sorin-ionescu/prezto/tree/master/modules/archive):
+```zsh
+zinit ice svn as"null"
+zinit snippet PZTM::archive
+```
+
+Use `zinit ice atclone"git clone <repo> <location>"` if module have external module.
+Like [completion](https://github.com/sorin-ionescu/prezto/tree/master/modules/completion):
+```shell
+zplugin ice svn blockf \ # use blockf to prevent any unnecessary additions to fpath, as zinit manages fpath
+            atclone"git clone --recursive https://github.com/zsh-users/zsh-completions.git external"
+zplugin snippet PZTM::completion
+```
+
+***F&A:*** What is `zstyle`?
+
+Read [zstyle](http://zsh.sourceforge.net/Doc/Release/Zsh-Modules.html#The-zsh_002fzutil-Module) doc (more: [What does `zstyle` do?](https://unix.stackexchange.com/questions/214657/what-does-zstyle-do)).
+</details>
+
+<details>
+  <summary><b>Migration from Zgen</b></summary>
+
+**Oh My Zsh**
+
+More reference: check **Migration from Oh-My-ZSH**
+```zsh
+# Load ohmyzsh base
+zgen oh-my-zsh
+zinit snippet OMZL::<ALL OF THEM>
+
+# Load ohmyzsh plugins
+zgen oh-my-zsh <PATH>
+zinit snippet OMZ::<PATH>
+```
+
+**Prezto**
+
+More reference: check **Migration from Prezto**
+
+```zsh
+# Load Prezto
+zgen prezto
+zinit snippet PZTM::<COMMENT's List> # environment terminal editor history directory spectrum utility completion prompt
+
+# Load prezto plugins
+zgen prezto <modulename>
+zinit snippet PZTM::<modulename>
+
+# Load a repo as Prezto plugins
+zgen pmodule <reponame> <branch>
+zinit ice ver"<branch>"
+zinit load <repo/plugin>
+
+# Set prezto options
+zgen prezto <modulename> <option> <value(s)>
+zstyle ':prezto:<modulename>:' <option> <values(s)> # Set original prezto style
+```
+
+**General**
+
+`location`: refer [Selection of Files](#selection-of-files-to-source-)
+```zsh
+zgen load <repo> [location] [branch]
+
+zinit ice ver"[branch]"
+zinit load <repo>
+```
+</details>
+
+<details>
+  <summary><b>Migration from Zplug</b></summary>
+
+**Basic**
+```zsh
+zplug <repo/plugin>, tag1:<option1>, tag2:<option2>
+
+zinit ice tag1"<option1>" tag2"<option2>"
+zinit load <repo/plugin>
+```
+
+**Tag comparison**
+- `as` => `as`
+- `use` => `pick`, `src`, `multisrc`
+- `ignore` => None
+- `from` => `from`
+- `at` => `ver`
+- `rename-to` => `mv`, `cp`
+- `dir` => Selection(`pick`, ...) with rename
+- `if` => `if`
+- `hook-build` => `atclone`, `atpull`
+- `hook-load` => `atload`
+- `frozen` => None
+- `on` => None
+- `defer` => `wait`
+- `lazy` => `autoload`
+- `depth` => `depth`
+</details>
+
+### More Examples
+
+After installing Zinit you can start adding some actions (load some plugins) to `~/.zshrc`, at bottom. Some examples:
+
+```zsh
 # Load the pure theme, with zsh-async library that's bundled with it.
 zinit ice pick"async.zsh" src"pure.zsh"
 zinit light sindresorhus/pure
@@ -777,7 +1179,7 @@ zinit for \
 # Binary release in archive, from GitHub-releases page.
 # After automatic unpacking it provides program "fzf".
 zinit ice from"gh-r" as"program"
-zinit load junegunn/fzf-bin
+zinit light junegunn/fzf
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
@@ -834,6 +1236,8 @@ examples.
 Also, two articles on the Wiki present an example setup
 [here](https://zdharma.github.io/zinit/wiki/Example-Minimal-Setup/) and
 [here](https://zdharma.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/).
+
+# How to Use
 
 ## Ice Modifiers
 
@@ -1046,64 +1450,6 @@ The ice modifiers for any plugin or snippet are stored in their directory in a
 `._zinit` subdirectory, hence the plugin doesn't have to be loaded to be correctly
 updated. There's one other file created there, `.zinit_lstupd` – it holds the log of
 the new commits pulled-in in the last update.
-
-## Using Oh My Zsh Themes
-
-To use **themes** created for Oh My Zsh you might want to first source the `git` library there:
-
-```SystemVerilog
-zinit snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
-# Or using OMZL:: shorthand:
-zinit snippet OMZL::git.zsh
-```
-
-If the library will not be loaded, then similar to following errors will be appearing:
-
-```
-........:1: command not found: git_prompt_status
-........:1: command not found: git_prompt_short_sha
-```
-
-Then you can use the themes as snippets (`zinit snippet {file path or GitHub URL}`).
-Some themes require not only Oh My Zsh's Git **library**, but also Git **plugin** (error
-about `current_branch` function can be appearing). Load this Git-plugin as single-file
-snippet directly from OMZ:
-
-```SystemVerilog
-zinit snippet OMZP::git
-```
-
-Such lines should be added to `.zshrc`. Snippets are cached locally, use `-f` option to download
-a fresh version of a snippet, or `zinit update {URL}`. Can also use `zinit update --all` to
-update all snippets (and plugins).
-
-Most themes require `promptsubst` option (`setopt promptsubst` in `zshrc`), if it isn't set, then
-prompt will appear as something like: `... $(build_prompt) ...`.
-
-You might want to suppress completions provided by the git plugin by issuing `zinit cdclear -q`
-(`-q` is for quiet) – see below **Ignoring Compdefs**.
-
-To summarize:
-
-```SystemVerilog
-# Load OMZ Git library
-zinit snippet OMZL::git.zsh
-
-# Load Git plugin from OMZ
-zinit snippet OMZP::git
-zinit cdclear -q # <- forget completions provided up to this moment
-
-setopt promptsubst
-
-# Load theme from OMZ
-zinit snippet OMZT::gnzh
-
-# Load normal GitHub plugin with theme depending on OMZ Git library
-zinit light NicoSantangelo/Alpharized
-```
-
-See also the Wiki page: [Example Oh My Zsh
-Setup](http://zdharma.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/).
 
 # Completions
 
