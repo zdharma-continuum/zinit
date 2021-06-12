@@ -58,6 +58,8 @@
   - [Customizing Paths](#customizing-paths)
   - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
+  - [Preinstalling Plugins](#preinstalling-plugins)
+- [Supporting](#supporting)
 - [Getting Help and Community](#getting-help-and-community)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -1667,6 +1669,13 @@ zinit as"null" wait"1" lucid for \
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
+
+# Supporting
+
+Zinit is a personal, free-time project with no funding and a huge [feature request
+backlog](https://github.com/zdharma/zinit/issues). If you love it, consider supporting its
+development via [GitHub Sponsors](https://github.com/sponsors/psprint) or
+[Patreon](https://patreon.com/psprint). Any help counts!
 
 # Getting Help and Community
 
