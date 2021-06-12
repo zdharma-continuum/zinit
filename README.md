@@ -19,6 +19,7 @@
   - [Usage](#usage)
     - [Introduction](#introduction)
     - [Plugins and snippets](#plugins-and-snippets)
+    - [Upgrade Zinit and plugins](#upgrade-zinit-and-plugins)
     - [Turbo and lucid](#turbo-and-lucid)
     - [Migration](#migration)
     - [More Examples](#more-examples)
@@ -58,7 +59,6 @@
   - [Customizing Paths](#customizing-paths)
   - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
-  - [Preinstalling Plugins](#preinstalling-plugins)
 - [Supporting](#supporting)
 - [Getting Help and Community](#getting-help-and-community)
 
@@ -822,6 +822,24 @@ zinit ice as"command" from"gh-r" \ # `starship` binary as command, from github r
 zinit light starship/starship
 ```
 
+### Upgrade Zinit and plugins
+
+Zinit can be updated to `self-update` and plugins to `update`.
+
+```zsh
+# Self update
+zinit self-update
+
+# Plugin update
+zinit update
+
+# Plugin parallel update
+zinit update --parallel
+
+# Increase the number of jobs in a concurrent-set to 40
+zinit update --parallel 40
+```
+
 ### Turbo and lucid
 
 Turbo and lucid are the most used options.
@@ -830,7 +848,7 @@ Turbo and lucid are the most used options.
   <summary><b>Turbo Mode</b></summary>
 Turbo mode is the key to performance. It can be loaded asynchronously, which makes a huge difference when the amount of plugins increases.
 
-Usually used as `zinit ice wait"<Second>"`, let's use the previous example:
+Usually used as `zinit ice wait"<SECONDS>"`, let's use the previous example:
 ```zsh
 zinit ice wait    # wait is same wait"0"
 zinit load zdharma/history-search-multi-word
