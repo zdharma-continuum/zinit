@@ -1370,7 +1370,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 | <code> clist [*columns*], completions [*columns*] </code> |<div align="justify" style="text-align: justify;"> List completions in use, with <code>*columns*</code> completions per line. `zpl clist 5` will for example print 5 completions per line. Default is 3.</div>|
 | `cdisable {cname}` |<div align="justify" style="text-align: justify;"> Disable completion `cname`.</div>|
 | `cenable {cname}` |<div align="justify" style="text-align: justify;"> Enable completion `cname`.</div>|
-| `creinstall [-q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Install completions for plugin, can also receive absolute local path. `-q` – quiet.</div>|
+| `creinstall [-q] [-Q] {plg-spec}` |<div align="justify" style="text-align: justify;"> Install completions for plugin, can also receive absolute local path. `-q` – quiet. `-Q` - quiet all.</div>|
 | `cuninstall {plg-spec}` |<div align="justify" style="text-align: justify;"> Uninstall completions for plugin.</div>|
 | `csearch` |<div align="justify" style="text-align: justify;"> Search for available completions from any plugin.</div>|
 | `compinit` |<div align="justify" style="text-align: justify;"> Refresh installed completions.</div>|
