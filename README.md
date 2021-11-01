@@ -1583,8 +1583,7 @@ If you load completions using `wait''` Turbo mode then you can add
 `atinit'zicompinit'` to syntax-highlighting plugin (which should be the last
 one loaded, as their (2 projects, [z-sy-h](https://github.com/zsh-users/zsh-syntax-highlighting) &
 [f-sy-h](https://github.com/zdharma-continuum/fast-syntax-highlighting))
-
- documentation state), or `atload'zicompinit'` to last
+documentation state), or `atload'zicompinit'` to last
 completion-related plugin. `zicompinit` is a function that just runs `autoload
 compinit; compinit`, created for convenience. There's also `zicdreplay` which
 will replay any caught compdefs so you can also do: `atinit'zicompinit;
@@ -1655,7 +1654,7 @@ source smaller helper scripts or dependency libraries (for example, the prompt `
 and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
 command and investigating updates to the plugin – in Zinit case: by using `compile` ice-mod).
 
-  ![image](https://raw.githubusercontent.com/zdharma-continuum/zinit/images/mod-auto-compile.png)
+![image](https://raw.githubusercontent.com/zdharma-continuum/zinit/images/mod-auto-compile.png)
 
 
 ## Installation
@@ -1760,11 +1759,8 @@ zinit as"null" wait"1" lucid for \
     sbin    iwata/git-now \
     make"PREFIX=$ZPFX install" \
             tj/git-extras \
-    sbin"bin/git-dsf;bin/diff-so-fancy" \
-            zdharma-continuum/zsh-diff-so-fancy \
     sbin"git-url;git-guclone" make"GITURL_NO_CGITURL=1" \
             zdharma-continuum/git-url
-# NOTICE: zdharma/zsh-diff-so-fancy is still not available
 
 ```
 
