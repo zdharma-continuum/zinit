@@ -1584,8 +1584,10 @@ If you load completions using `wait''` Turbo mode then you can add
 one loaded, as their (2 projects, [z-sy-h](https://github.com/zsh-users/zsh-syntax-highlighting) &
 [f-sy-h](https://github.com/zdharma-continuum/fast-syntax-highlighting))
 documentation state), or `atload'zicompinit'` to last
-completion-related plugin. `zicompinit` is a function that just runs `autoload compinit; compinit`, created for convenience. There's also `zicdreplay` which
-will replay any caught compdefs so you can also do: `atinit'zicompinit; zicdreplay'`, etc. Basically, the whole topic is the same as normal `compinit` call,
+completion-related plugin. `zicompinit` is a function that just runs `autoload
+compinit; compinit`, created for convenience. There's also `zicdreplay` which
+will replay any caught compdefs so you can also do: `atinit'zicompinit;
+zicdreplay'`, etc. Basically, the whole topic is the same as normal `compinit` call,
 but it is done in `atinit` or `atload` hook of the last related plugin with use of the
 helper functions (`zicompinit`,`zicdreplay` & `zicdclear` – see below for explanation
 of the last one). To summarize:
@@ -1653,6 +1655,7 @@ and there are very few solutions to that, which are demanding (e.g. specifying a
 command and investigating updates to the plugin – in Zinit case: by using `compile` ice-mod).
 
 ![image](https://raw.githubusercontent.com/zdharma-continuum/zinit/images/mod-auto-compile.png)
+
 
 ## Installation
 
@@ -1756,10 +1759,9 @@ zinit as"null" wait"1" lucid for \
     sbin    iwata/git-now \
     make"PREFIX=$ZPFX install" \
             tj/git-extras \
-    sbin"bin/git-dsf;bin/diff-so-fancy" \
-            zdharma-continuum/zsh-diff-so-fancy \
     sbin"git-url;git-guclone" make"GITURL_NO_CGITURL=1" \
             zdharma-continuum/git-url
+
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
