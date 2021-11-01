@@ -19,13 +19,13 @@ if ! test -d "$ZINIT_HOME"; then
     chmod g-rwX "$ZINIT_HOME"
 fi
 
-echo ">>> Downloading zdharma/zplugin module to $ZINIT_HOME/mod-bin"
+echo ">>> Downloading zdharma-continuum/zplugin module to $ZINIT_HOME/mod-bin"
 if test -d "$ZINIT_HOME/mod-bin/.git"; then
     cd "$ZINIT_HOME/mod-bin"
     git pull origin master
 else
     cd "$ZINIT_HOME"
-    git clone --depth 10 https://github.com/zdharma/zplugin.git mod-bin
+    git clone --depth 10 https://github.com/zdharma-continuum/zplugin.git mod-bin
 fi
 echo ">>> Done"
 
@@ -34,7 +34,7 @@ echo ">>> Done"
 #
 
 cd "$ZINIT_HOME/mod-bin/zmodules"
-echo "$col_pname== Building module zdharma/zplugin, running: a make clean, then ./configure and then make ==$col_rst"
+echo "$col_pname== Building module zdharma-continuum/zplugin, running: a make clean, then ./configure and then make ==$col_rst"
 echo "$col_pname== The module sources are located at: $ZINIT_HOME/mod-bin/zmodules ==$col_rst"
 test -f Makefile && { [ "$1" = "--clean" ] && {
       echo "$col_info2-- make distclean --$col_rst"
@@ -52,7 +52,7 @@ CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./c
     echo "${col_info}Module has been built correctly.$col_rst"
     echo "To load the module, add following 2 lines to .zshrc, at top:"
     echo "    module_path+=( \"$ZINIT_HOME/mod-bin/zmodules/Src\" )"
-    echo "    zmodload zdharma/zplugin"
+    echo "    zmodload zdharma-continuum/zplugin"
     echo ""
     echo "After loading, use command \`zpmod' to communicate with the module."
     echo "See \`zpmod -h' for more information. There are two main features,"
@@ -61,6 +61,6 @@ CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./c
     echo "while the module is loaded (check with Zsh command \`zmodload')."
   } || {
       echo "${col_error}Module didn't build.$col_rst. You can copy the error messages and submit"
-      echo "error-report at: https://github.com/zdharma/zinit/issues"
+      echo "error-report at: https://github.com/zdharma-continuum/zinit/issues"
   }
 }
