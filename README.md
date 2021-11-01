@@ -62,8 +62,8 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 <p align="center">
-<a href="https://github.com/zdharma/zinit">
-<img src="https://raw.githubusercontent.com/zdharma/zinit/images/zinit.png"/>
+<a href="https://github.com/zdharma-continuum/zinit">
+<img src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/zinit.png"/>
 </a>
 </p>
 
@@ -179,7 +179,7 @@
 
     Effect:
 
-    ![screenshot](https://raw.githubusercontent.com/zdharma/zinit/master/doc/img/m.png)
+    ![screenshot](https://raw.githubusercontent.com/zdharma-continuum/zinit/master/doc/img/m.png)
 
     The function is available in the `atinit''`, `atload''`, etc. hooks.
 
@@ -343,9 +343,9 @@
 
     ```zsh
     # Equivalent of `local myparam=1 myparam2=1' right before loading of the plugin
-    zinit param'myparam → 1; myparam2 -> 1' for zdharma/null
+    zinit param'myparam → 1; myparam2 -> 1' for zdharma-continuum/null
     # Equivalent of `local myparam myparam2' before loading of the plugin
-    zinit param'myparam; myparam2' for zdharma/null
+    zinit param'myparam; myparam2' for zdharma-continuum/null
     ```
 
   - The `atinit''` ice can now be investigated — if it'll be prepended with `!`,
@@ -529,7 +529,7 @@
 
     ```zsh
      zinit as"program" atload'print Hi!' for \
-         atinit'print First!' zdharma/null \
+         atinit'print First!' zdharma-continuum/null \
          atinit'print Second!' svn OMZ::plugins/git
     ```
 
@@ -547,7 +547,7 @@
     ```zsh
     % print -rl $path | egrep -i '(/git|null)'
     /root/.zinit/snippets/OMZ::plugins/git
-    /root/.zinit/plugins/zdharma---null
+    /root/.zinit/plugins/zdharma-continuum---null
     ```
 
     To load in light mode, use a new `light-mode` ice. More examples and information
@@ -666,7 +666,7 @@ To see the full history check [the changelog](doc/CHANGELOG.md).
 
 <p align="center">
 <a href="https://github.com/zdharma/pm-perf-test">
-<img width="550px" src="https://raw.githubusercontent.com/zdharma/zinit/images/startup-times.png"/>
+<img width="550px" src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/startup-times.png"/>
 </a>
 </p>
 
@@ -728,7 +728,7 @@ read it to get the most out of Zinit.
 The easiest way to install Zinit is to execute:
 
 ```zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/master/doc/install.sh)"
 ```
 
 This will install Zinit in `~/.zinit/bin`.
@@ -743,7 +743,7 @@ To manually install Zinit clone the repo to e.g. `~/.zinit/bin`:
 
 ```sh
 mkdir ~/.zinit
-git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
+git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin
 ```
 
 and source it from `.zshrc` (above [compinit](http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Initialization)):
@@ -790,11 +790,11 @@ update all snippets (and plugins).
 **Example**
 ```zsh
 # Plugin history-search-multi-word loaded with investigating.
-zinit load zdharma/history-search-multi-word
+zinit load zdharma-continuum/history-search-multi-word
 
 # Two regular plugins loaded without investigating.
 zinit light zsh-users/zsh-autosuggestions
-zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 
 # Snippet
 zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
@@ -848,10 +848,10 @@ Turbo mode is the key to performance. It can be loaded asynchronously, which mak
 Usually used as `zinit ice wait"<SECONDS>"`, let's use the previous example:
 ```zsh
 zinit ice wait    # wait is same wait"0"
-zinit load zdharma/history-search-multi-word
+zinit load zdharma-continuum/history-search-multi-word
 
 zinit ice wait"2" # load after 2 seconds
-zinit load zdharma/history-search-multi-word
+zinit load zdharma-continuum/history-search-multi-word
 
 zinit ice wait    # also be used in `light` and `snippet`
 zinit snippet https://gist.githubusercontent.com/hightemp/5071909/raw/
@@ -866,7 +866,7 @@ Turbo mode is verbose, so you need an option for quiet.
 You can use with `lucid`:
 ```zsh
 zinit ice wait lucid
-zinit load zdharma/history-search-multi-word
+zinit load zdharma-continuum/history-search-multi-word
 ```
 </details>
 
@@ -1168,8 +1168,8 @@ zinit light sindresorhus/pure
 # https://zdharma.github.io/zinit/wiki/For-Syntax/
 zinit for \
     light-mode  zsh-users/zsh-autosuggestions \
-    light-mode  zdharma/fast-syntax-highlighting \
-                zdharma/history-search-multi-word \
+    light-mode  zdharma-continuum/fast-syntax-highlighting \
+                zdharma-continuum/history-search-multi-word \
     light-mode pick"async.zsh" src"pure.zsh" \
                 sindresorhus/pure
 
@@ -1500,7 +1500,7 @@ Performance gains are huge, example shell startup time with double `compinit`: *
 If you load completions using `wait''` Turbo mode then you can add
 `atinit'zicompinit'` to syntax-highlighting plugin (which should be the last
 one loaded, as their (2 projects, [z-sy-h](https://github.com/zsh-users/zsh-syntax-highlighting) &
-[f-sy-h](https://github.com/zdharma/fast-syntax-highlighting))
+[f-sy-h](https://github.com/zdharma-continuum/fast-syntax-highlighting))
  documentation state), or `atload'zicompinit'` to last
 completion-related plugin. `zicompinit` is a function that just runs `autoload
 compinit; compinit`, created for convenience. There's also `zicdreplay` which
@@ -1572,7 +1572,7 @@ source smaller helper scripts or dependency libraries (for example, the prompt `
 and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load
 command and investigating updates to the plugin – in Zinit case: by using `compile` ice-mod).
 
-  ![image](https://raw.githubusercontent.com/zdharma/zinit/images/mod-auto-compile.png)
+  ![image](https://raw.githubusercontent.com/zdharma-continuum/zinit/images/mod-auto-compile.png)
 
 ## Installation
 
@@ -1681,6 +1681,7 @@ zinit as"null" wait"1" lucid for \
             zdharma/zsh-diff-so-fancy \
     sbin"git-url;git-guclone" make"GITURL_NO_CGITURL=1" \
             zdharma/git-url
+            # NOTICE: zdharma/zsh-diff-so-fancy and zdharma/git-url is still not available
 ```
 
 Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
@@ -1688,7 +1689,7 @@ Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
 # Supporting
 
 Zinit is a personal, free-time project with no funding and a huge [feature request
-backlog](https://github.com/zdharma/zinit/issues). If you love it, consider supporting its
+backlog](https://github.com/zdharma-continuum/zinit/issues). If you love it, consider supporting its
 development via [GitHub Sponsors](https://github.com/sponsors/psprint) or
 [Patreon](https://patreon.com/psprint). Any help counts!
 
