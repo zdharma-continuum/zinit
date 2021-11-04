@@ -39,7 +39,7 @@ All notable changes to this project will be documented in this file.
     - one other option `--norm` prevents the archive from being deleted upon unpacking.
   - snippets now aren't re-downloaded unless they're newer on the HTTP server; use
     this with the `--norm` option of `zpextract` to prevent unnecessary updates; for
-    example, the [firefox-dev package](https://github.com/Zsh-Packages/firefox-dev)
+    example, the [firefox-dev package](https://github.com/zdharma-continuum/zsh-package-firefox-dev)
     uses this option for this purpose,
   - GitHub doesn't report proper `Last-Modified` HTTP server for the files in the
     repositories so the feature doesn't yet work with such files.
@@ -48,8 +48,8 @@ All notable changes to this project will be documented in this file.
   - The packages have been disconnected from NPM registry and now live only on Zsh
     Packages organization. Publishing to NPM isn't needed.
   - There are two interesting packages,
-    [any-gem](https://github.com/Zsh-Packages/any-gem) and
-    [any-node](https://github.com/Zsh-Packages/any-node). They allow to install any
+    [any-gem](https://github.com/zdharma-continuum/zsh-package-any-gem) and
+    [any-node](https://github.com/zdharma-continuum/zsh-package-any-node). They allow to install any
     Gem(s) or Node module(s) locally in a newly created plugin directory. For example:
 
     ```zsh
