@@ -200,7 +200,7 @@
   - `ziextract` and `extract''` now support Windows installers — currently the
     installer of Firefox. Let me know if any of your installers doesn't work.
     You can test the installer with the Firefox Developer Edition Zinit
-    [package](https://github.com/Zsh-Packages/firefox-dev):
+    [package](https://github.com/zdharma-continuum/zsh-package-firefox-dev):
 
     ```zsh
     zinit pack"bgn" for firefox-dev
@@ -491,7 +491,7 @@
     - one other option `--norm` prevents the archive from being deleted upon unpacking.
   - snippets now aren't re-downloaded unless they're newer on the HTTP server; use
     this with the `--norm` option of `ziextract` to prevent unnecessary updates; for
-    example, the [firefox-dev package](https://github.com/Zsh-Packages/firefox-dev)
+    example, the [firefox-dev package](https://github.com/zdharma-continuum/zsh-package-firefox-dev)
     uses this option for this purpose,
   - GitHub doesn't report proper `Last-Modified` HTTP server for the files in the
     repositories so the feature doesn't yet work with such files.
@@ -502,8 +502,8 @@
     Packages organization. Publishing to NPM isn't needed.
 
   - There are two interesting packages,
-    [any-gem](https://github.com/Zsh-Packages/any-gem) and
-    [any-node](https://github.com/Zsh-Packages/any-node). They allow to install any
+    [any-gem](https://github.com/zdharma-continuum/zsh-package-any-gem) and
+    [any-node](https://github.com/zdharma-continuum/zsh-package-any-node). They allow to install any
     Gem(s) or Node module(s) locally in a newly created plugin directory. For example:
 
     ```zsh
@@ -747,8 +747,8 @@ install everything from GitHub and other sites. Its characteristics are:
 
 1. Zinit supports special, dedicated **packages** that offload the user from
    providing long and complex commands. See the
-   [Zsh-Packages](https://github.com/Zsh-Packages) organization for a growing,
-   complete list of Zinit packages and the [Wiki
+   [zsh-packages-* repositories](https://github.com/orgs/zdharma-continuum/repositories)
+   for a growing, complete list of Zinit packages and the [Wiki
    page](https://zdharma-continuum.github.io/zinit/wiki/Zinit-Packages/) for an article about
    the feature.
 
