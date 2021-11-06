@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2226,7 +2285,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2455,12 +2515,9 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                 <h1 id="manage_remap_bindkeys_with_bindmap">Manage (remap) bindkeys with <code>bindmap''</code><a class="headerlink" href="#manage_remap_bindkeys_with_bindmap" title="Permanent link">#</a></h1>
@@ -2472,8 +2529,8 @@ want a different binding(s), which will require a complicated, additional
 <p>Zinit provides a solution to this problem – the ability to remap the bindkeys
 with a short ice-modifier specification with the <code>bindmap''</code> ice.</p>
 <h2 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">#</a></h2>
-<pre><code class="zsh"># Map Ctrl-G instead of Ctrl-R for the history searcher.
-zinit bindmap'^R -&gt; ^G' for zdharma/history-search-multi-word
+<pre><code class="language-zsh"># Map Ctrl-G instead of Ctrl-R for the history searcher.
+zinit bindmap'^R -&gt; ^G' for zdharma-continuum/history-search-multi-word
 
 # Map Ctrl-Shift-Left and …-Right used by URxvt instead of the Xterms' ones.
 #
@@ -2491,7 +2548,6 @@ zinit bindmap='!&quot; &quot; -&gt; magic-space; !&quot;^ &quot; -&gt; globalias
     depth=1 pick=plugins/globalias/globalias.plugin.zsh for \
         ohmyzsh/ohmyzsh
 </code></pre>
-
 <h2 id="explanation">Explanation<a class="headerlink" href="#explanation" title="Permanent link">#</a></h2>
 <p>As it can be seen, the <code>bindmap''</code> ice has two modes of operation: normal and
 exclamation-mark (<code>bindmap'!…'</code>). In the first mode, the remapping is beind done
@@ -2502,23 +2558,20 @@ actually issued when loading the plugin.</p>
 <code>bindmap'!from-key -&gt; to-widget'</code>. In this mode, the given key is being mapped
 to the given widget instead of the widget specified in the <code>bindkey</code> command,
 i.e.: instead of:</p>
-<pre><code class="zsh">bindkey &quot;^ &quot; magic-space
+<pre><code class="language-zsh">bindkey &quot;^ &quot; magic-space
 bindkey &quot; &quot; globalias
 </code></pre>
-
 <p>the actual call that'll be done will be:</p>
-<pre><code class="zsh">bindkey &quot;^ &quot; globalias
+<pre><code class="language-zsh">bindkey &quot;^ &quot; globalias
 bindkey &quot; &quot; magic-space
 </code></pre>
-
 <p>(for the <code>bindmap='!" " -&gt; magic-space; !"^ " -&gt; globalias'</code> ice).</p>
 <h2 id="using_the_upar_etc_shorthands">Using The <code>UPAR</code>, Etc. Shorthands<a class="headerlink" href="#using_the_upar_etc_shorthands" title="Permanent link">#</a></h2>
 <p>There are four special values that can be used on the left side of the bind-map:
 <code>UPAR</code>, <code>DOWNAR</code>, <code>LEFTAR</code>, <code>RIGHTAR</code>. They'll match up arrow, down arrow, etc.
 So that it's possible to do:</p>
-<pre><code class="zsh">zinit bindmap='LEFTAR -&gt; ^F; RIGHTAR -&gt; ^G' …
+<pre><code class="language-zsh">zinit bindmap='LEFTAR -&gt; ^F; RIGHTAR -&gt; ^G' …
 </code></pre>
-
 <p>The benefits of using the <code>UPAR</code>, … shorthands is that they cover multiple
 possible cursor-key codes for each of the cursor key, so that they'll work
 regardless of the terminal being used.</p>
@@ -2528,14 +2581,13 @@ used (default in the <code>for</code> syntax and when <code>zinit load …</code
 <code>bindmap''</code> ice works normally. In the non-investigation, i.e.: the light mode
 – activated when <code>zinit light …</code> or the <code>light-mode</code> ice is being used – the
 <code>bindmap''</code> is unavailable, unless the <code>trackbinds</code> ice is specified, i.e.:</p>
-<pre><code class="zsh"># With use of the light-mode ice and the for-syntax:
-zinit light-mode trackbinds bindmap'^R -&gt; ^G' for zdharma/history-search-multi-word
+<pre><code class="language-zsh"># With use of the light-mode ice and the for-syntax:
+zinit light-mode trackbinds bindmap'^R -&gt; ^G' for zdharma-continuum/history-search-multi-word
 
 # With use of the classic syntax:
-zinit trackbinds bindmap'^R -&gt; ^G' for zdharma/history-search-multi-word
-zinit light zdharma/history-search-multi-word
+zinit trackbinds bindmap'^R -&gt; ^G' for zdharma-continuum/history-search-multi-word
+zinit light zdharma-continuum/history-search-multi-word
 </code></pre>
-
 <p><a href="vim:set ft=markdown tw=80 fo+=a1n autoindent:"></a></p>
                 
               
@@ -2572,6 +2624,7 @@ zinit light zdharma/history-search-multi-word
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -2647,19 +2700,13 @@ zinit light zdharma/history-search-multi-word
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       

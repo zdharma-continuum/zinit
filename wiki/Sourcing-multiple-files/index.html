@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2090,7 +2149,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2185,21 +2245,17 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                   <h1>Sourcing Multiple Files</h1>
                 
                 <p>Normally <code>src''</code> can be used to specify additional file to source:</p>
-<pre><code class="zsh">zinit ice pick&quot;powerless.zsh&quot; src&quot;utilities.zsh&quot;
+<pre><code class="language-zsh">zinit ice pick&quot;powerless.zsh&quot; src&quot;utilities.zsh&quot;
 zinit light martinrotter/powerless
 </code></pre>
-
 <ul>
 <li><code>pick''</code> – provide main file to source (can be a pattern like <code>*.sh</code> –
   alphabetically first matched file is sourced),</li>
@@ -2207,13 +2263,12 @@ zinit light martinrotter/powerless
 </ul>
 <hr />
 <p>However, via <code>atload''</code> ice one can provide simple loop to source more files:</p>
-<pre><code class="zsh">zinit ice svn pick&quot;completion.zsh&quot; \
+<pre><code class="language-zsh">zinit ice svn pick&quot;completion.zsh&quot; \
     atload'local f; for f in git.zsh misc.zsh; do \
         source $f \
     done'
 zinit snippet OMZ::lib
 </code></pre>
-
 <ul>
 <li><code>svn</code> – use Subversion to clone <code>OMZ::lib</code> (the whole Oh My Zsh <code>lib/</code>
   directory),</li>
@@ -2230,13 +2285,12 @@ zinit snippet OMZ::lib
 <p>The <code>multisrc''</code> ice, which loads <strong>multiple</strong> files enumerated with
 spaces as the separator (e.g. <code>multisrc'misc.zsh grep.zsh'</code>) and also using
 brace-expansion syntax (e.g. <code>multisrc'{misc,grep}.zsh')</code>. Example:</p>
-<pre><code class="zsh">zinit ice svn pick&quot;completion.zsh&quot; multisrc'git.zsh \
+<pre><code class="language-zsh">zinit ice svn pick&quot;completion.zsh&quot; multisrc'git.zsh \
     functions.zsh {history,grep}.zsh'
 zinit snippet OMZ::lib
 </code></pre>
-
 <p>The all possible ways to use the <code>multisrc''</code> ice-mod:</p>
-<pre><code class="zsh">zinit ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
+<pre><code class="language-zsh">zinit ice depth&quot;1&quot; multisrc=&quot;lib/{functions,misc}.zsh&quot; pick&quot;/dev/null&quot;
 zinit load robbyrussell/oh-my-zsh
 
 # Can use patterns
@@ -2279,24 +2333,21 @@ zinit ice svn multisrc'); local i; for i in $array; do \
         done; ((1)' pick&quot;/dev/null&quot;
 zinit snippet OMZ::lib
 </code></pre>
-
 <p>--</p>
 <h2 id="changes_in_the_recent_zinit">Changes In The Recent Zinit<a class="headerlink" href="#changes_in_the_recent_zinit" title="Permanent link">#</a></h2>
 <p>Recently, Zinit has been extended with the <a href="../For-Syntax/">For-Syntax</a> which
 can in some situations replace a typical <code>multisrc''</code> loading. The point is that
 this syntax allows to easily specify snippets to source – and do this within a
 single Zinit command. Thus, instead of:</p>
-<pre><code class="shell">zinit ice multisrc'(functions|misc|completion).zsh'
+<pre><code class="language-shell">zinit ice multisrc'(functions|misc|completion).zsh'
 zinit snippet OMZ::lib
 </code></pre>
-
 <p>it's possible to write:</p>
-<pre><code class="shell">zinit for \
+<pre><code class="language-shell">zinit for \
     OMZL::functions.zsh \
     OMZL::misc.zsh \                                                                    
     OMZL::completion.zsh
 </code></pre>
-
 <p>which is somewhat easier on eyes. Also – an <strong>important</strong> property: the multiple
 snippets loaded with the for-syntax are being loaded <em>separately</em>, which means
 that they will not cause a longer keyboard blockage, which could have been
@@ -2340,6 +2391,7 @@ noticeable keyboard freezes (in Turbo).</p>
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -2415,19 +2467,13 @@ noticeable keyboard freezes (in Turbo).</p>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       

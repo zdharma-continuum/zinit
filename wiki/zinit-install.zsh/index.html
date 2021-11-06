@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2556,7 +2615,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -3115,12 +3175,9 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                 <h1 id="zinit-installzsh1">zinit-install.zsh(1)<a class="headerlink" href="#zinit-installzsh1" title="Permanent link">#</a></h1>
@@ -3129,7 +3186,7 @@
 <h2 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">#</a></h2>
 <p>Documentation automatically generated with `zshelldoc'</p>
 <h2 id="functions">FUNCTIONS<a class="headerlink" href="#functions" title="Permanent link">#</a></h2>
-<pre><code class="text">.zinit-at-eval
+<pre><code class="language-text">.zinit-at-eval
 .zinit-compile-plugin
 .zinit-download-file-stdout
 .zinit-download-snippet
@@ -3140,7 +3197,6 @@
 .zinit-mirror-using-svn
 .zinit-setup-plugin-dir
 </code></pre>
-
 <h2 id="details">DETAILS<a class="headerlink" href="#details" title="Permanent link">#</a></h2>
 <h2 id="script_body">Script Body<a class="headerlink" href="#script_body" title="Permanent link">#</a></h2>
 <p>Has 3 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).</p>
@@ -3149,54 +3205,46 @@
 <p>Has 1 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>eval</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
+<pre><code class="language-text">.zinit-download-snippet
 </code></pre>
-
 <h2 id="zinit-compile-plugin">.zinit-compile-plugin<a class="headerlink" href="#zinit-compile-plugin" title="Permanent link">#</a></h2>
-<pre><code class="text">Compiles given plugin (its main source file, and also an
+<pre><code class="language-text">Compiles given plugin (its main source file, and also an
 additional &quot;....zsh&quot; file if it exists).
 
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
-
 <p>Has 50 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-compile-plugin
+<pre><code class="language-text">.zinit-compile-plugin
 |-- zinit-side.zsh/.zinit-first
 `-- zinit.zsh/.zinit-any-to-user-plugin
 </code></pre>
-
 <p>Uses feature(s): <em>eval</em>, <em>zcompile</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-setup-plugin-dir
+<pre><code class="language-text">.zinit-setup-plugin-dir
 zinit-autoload.zsh/.zinit-compile-uncompile-all
 zinit.zsh/zinit
 </code></pre>
-
 <h2 id="zinit-download-file-stdout">.zinit-download-file-stdout<a class="headerlink" href="#zinit-download-file-stdout" title="Permanent link">#</a></h2>
-<pre><code class="text">Downloads file to stdout. Supports following backend commands:
+<pre><code class="language-text">Downloads file to stdout. Supports following backend commands:
 curl, wget, lftp, lynx. Used by snippet loading.
 </code></pre>
-
 <p>Has 32 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-download-file-stdout
+<pre><code class="language-text">.zinit-download-file-stdout
 </code></pre>
-
 <p>Uses feature(s): <em>type</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
+<pre><code class="language-text">.zinit-download-snippet
 .zinit-setup-plugin-dir
 </code></pre>
-
 <h2 id="zinit-download-snippet">.zinit-download-snippet<a class="headerlink" href="#zinit-download-snippet" title="Permanent link">#</a></h2>
-<pre><code class="text">Downloads snippet – either a file – with curl, wget, lftp or lynx,
+<pre><code class="language-text">Downloads snippet – either a file – with curl, wget, lftp or lynx,
 or a directory, with Subversion – when svn-ICE is active. Github
 supports Subversion protocol and allows to clone subdirectories.
 This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 </code></pre>
-
 <p>Has 233 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-download-snippet
+<pre><code class="language-text">.zinit-download-snippet
 |-- .zinit-at-eval
 |-- .zinit-download-file-stdout
 |-- .zinit-install-completions
@@ -3207,44 +3255,37 @@ This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 |-- .zinit-mirror-using-svn
 `-- zinit-side.zsh/.zinit-store-ices
 </code></pre>
-
 <p>Uses feature(s): <em>eval</em>, <em>zcompile</em></p>
 <p>Called by:</p>
-<pre><code class="text">zinit.zsh/.zinit-load-snippet
+<pre><code class="language-text">zinit.zsh/.zinit-load-snippet
 </code></pre>
-
 <h2 id="zinit-forget-completion">.zinit-forget-completion<a class="headerlink" href="#zinit-forget-completion" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements alternation of Zsh state so that already initialized
+<pre><code class="language-text">Implements alternation of Zsh state so that already initialized
 completion stops being visible to Zsh.
 
 $1 - completion function name, e.g. &quot;_cp&quot;; can also be &quot;cp&quot;
 </code></pre>
-
 <p>Has 15 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>unfunction</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-install-completions
+<pre><code class="language-text">.zinit-install-completions
 zinit-autoload.zsh/.zinit-compinit
 zinit-autoload.zsh/.zinit-uninstall-completions
 zinit.zsh/zinit
 </code></pre>
-
 <h2 id="zinit-get-latest-gh-r-version">.zinit-get-latest-gh-r-version<a class="headerlink" href="#zinit-get-latest-gh-r-version" title="Permanent link">#</a></h2>
-<pre><code class="text">Gets version string of latest release of given Github
+<pre><code class="language-text">Gets version string of latest release of given Github
 package. Connects to Github releases page.
 </code></pre>
-
 <p>Has 14 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-get-latest-gh-r-version
+<pre><code class="language-text">.zinit-get-latest-gh-r-version
 `-- zinit.zsh/.zinit-any-to-user-plugin
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-update-or-status
+<pre><code class="language-text">zinit-autoload.zsh/.zinit-update-or-status
 </code></pre>
-
 <h2 id="zinit-handle-binary-file">.zinit-handle-binary-file<a class="headerlink" href="#zinit-handle-binary-file" title="Permanent link">#</a></h2>
-<pre><code class="text">If the file is an archive, it is extracted by this function.
+<pre><code class="language-text">If the file is an archive, it is extracted by this function.
 Next stage is scanning of files with the common utility `file',
 to detect executables. They are given +x mode. There are also
 messages to the user on performed actions.
@@ -3252,15 +3293,13 @@ messages to the user on performed actions.
 $1 - url
 $2 - file
 </code></pre>
-
 <p>Has 66 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>unfunction</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-setup-plugin-dir
+<pre><code class="language-text">.zinit-setup-plugin-dir
 </code></pre>
-
 <h2 id="zinit-install-completions">.zinit-install-completions<a class="headerlink" href="#zinit-install-completions" title="Permanent link">#</a></h2>
-<pre><code class="text">Installs all completions of given plugin. After that they are
+<pre><code class="language-text">Installs all completions of given plugin. After that they are
 visible to `compinit'. Visible completions can be selectively
 disabled and enabled. User can access completion data with
 `clist' or `completions' subcommand.
@@ -3269,23 +3308,20 @@ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
 $3 - if 1, then reinstall, otherwise only install completions that aren't there
 </code></pre>
-
 <p>Has 34 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-install-completions
+<pre><code class="language-text">.zinit-install-completions
 |-- .zinit-forget-completion
 |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 |-- zinit-side.zsh/.zinit-exists-physically-message
 `-- zinit.zsh/.zinit-any-to-user-plugin
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
+<pre><code class="language-text">.zinit-download-snippet
 .zinit-setup-plugin-dir
 zinit.zsh/zinit
 </code></pre>
-
 <h2 id="zinit-mirror-using-svn">.zinit-mirror-using-svn<a class="headerlink" href="#zinit-mirror-using-svn" title="Permanent link">#</a></h2>
-<pre><code class="text">Used to clone subdirectories from Github. If in update mode
+<pre><code class="language-text">Used to clone subdirectories from Github. If in update mode
 (see $2), then invokes `svn update', in normal mode invokes
 `svn checkout --non-interactive -q &lt;URL&gt;'. In test mode only
 compares remote and local revision and outputs true if update
@@ -3295,23 +3331,20 @@ $1 - URL
 $2 - mode, &quot;&quot; - normal, &quot;-u&quot; - update, &quot;-t&quot; - test
 $3 - subdirectory (not path) with working copy, needed for -t and -u
 </code></pre>
-
 <p>Has 27 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-download-snippet
+<pre><code class="language-text">.zinit-download-snippet
 </code></pre>
-
 <h2 id="zinit-setup-plugin-dir">.zinit-setup-plugin-dir<a class="headerlink" href="#zinit-setup-plugin-dir" title="Permanent link">#</a></h2>
-<pre><code class="text">Clones given plugin into PLUGIN_DIR. Supports multiple
+<pre><code class="language-text">Clones given plugin into PLUGIN_DIR. Supports multiple
 sites (respecting `from' and `proto' ice modifiers).
 Invokes compilation of plugin's main file.
 
 $1 - user
 $2 - plugin
 </code></pre>
-
 <p>Has 182 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-setup-plugin-dir
+<pre><code class="language-text">.zinit-setup-plugin-dir
 |-- .zinit-compile-plugin
 |   |-- zinit-side.zsh/.zinit-first
 |   `-- zinit.zsh/.zinit-any-to-user-plugin
@@ -3325,10 +3358,9 @@ $2 - plugin
 |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 `-- zinit-side.zsh/.zinit-store-ices
 </code></pre>
-
 <p>Uses feature(s): <em>eval</em></p>
 <p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-update-or-status
+<pre><code class="language-text">zinit-autoload.zsh/.zinit-update-or-status
 zinit.zsh/.zinit-load
 </code></pre>
                 
@@ -3366,6 +3398,7 @@ zinit.zsh/.zinit-load
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -3441,19 +3474,13 @@ zinit.zsh/.zinit-load
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       

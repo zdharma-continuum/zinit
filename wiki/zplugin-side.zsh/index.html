@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -1978,7 +2037,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2471,12 +2531,9 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                 <h1 id="zinit-sidezsh1">zinit-side.zsh(1)<a class="headerlink" href="#zinit-sidezsh1" title="Permanent link">#</a></h1>
@@ -2485,7 +2542,7 @@
 <h2 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">#</a></h2>
 <p>Documentation automatically generated with `zshelldoc'</p>
 <h2 id="functions">FUNCTIONS<a class="headerlink" href="#functions" title="Permanent link">#</a></h2>
-<pre><code class="text">.zinit-any-colorify-as-uspl2
+<pre><code class="language-text">.zinit-any-colorify-as-uspl2
 .zinit-exists-physically
 .zinit-exists-physically-message
 .zinit-first
@@ -2494,26 +2551,23 @@
 .zinit-store-ices
 .zinit-two-paths
 </code></pre>
-
 <h2 id="details">DETAILS<a class="headerlink" href="#details" title="Permanent link">#</a></h2>
 <h2 id="script_body">Script Body<a class="headerlink" href="#script_body" title="Permanent link">#</a></h2>
 <p>Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).</p>
 <h2 id="zinit-any-colorify-as-uspl2">.zinit-any-colorify-as-uspl2<a class="headerlink" href="#zinit-any-colorify-as-uspl2" title="Permanent link">#</a></h2>
-<pre><code class="text">Returns ANSI-colorified &quot;user/plugin&quot; string, from any supported
+<pre><code class="language-text">Returns ANSI-colorified &quot;user/plugin&quot; string, from any supported
 plugin spec (user---plugin, user/plugin, user plugin, plugin).
 
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
 $REPLY = ANSI-colorified &quot;user/plugin&quot; string
 </code></pre>
-
 <p>Has 11 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-any-colorify-as-uspl2
+<pre><code class="language-text">.zinit-any-colorify-as-uspl2
 `-- zinit.zsh/.zinit-any-to-user-plugin
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">.zinit-exists-physically-message
+<pre><code class="language-text">.zinit-exists-physically-message
 zinit-autoload.zsh/.zinit-clear-completions
 zinit-autoload.zsh/.zinit-compiled
 zinit-autoload.zsh/.zinit-compile-uncompile-all
@@ -2533,30 +2587,26 @@ zinit-autoload.zsh/.zinit-update-or-status
 zinit-install.zsh/.zinit-install-completions
 zinit-install.zsh/.zinit-setup-plugin-dir
 </code></pre>
-
 <h2 id="zinit-exists-physically">.zinit-exists-physically<a class="headerlink" href="#zinit-exists-physically" title="Permanent link">#</a></h2>
-<pre><code class="text">Checks if directory of given plugin exists in PLUGIN_DIR.
+<pre><code class="language-text">Checks if directory of given plugin exists in PLUGIN_DIR.
 
 Testable.
 
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
-
 <p>Has 10 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-exists-physically
+<pre><code class="language-text">.zinit-exists-physically
 |-- .zinit-shands-exp
 `-- zinit.zsh/.zinit-any-to-user-plugin
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">.zinit-exists-physically-message
+<pre><code class="language-text">.zinit-exists-physically-message
 zinit-autoload.zsh/.zinit-create
 zinit-autoload.zsh/.zinit-get-path
 </code></pre>
-
 <h2 id="zinit-exists-physically-message">.zinit-exists-physically-message<a class="headerlink" href="#zinit-exists-physically-message" title="Permanent link">#</a></h2>
-<pre><code class="text">Checks if directory of given plugin exists in PLUGIN_DIR,
+<pre><code class="language-text">Checks if directory of given plugin exists in PLUGIN_DIR,
 and outputs error message if it doesn't.
 
 Testable.
@@ -2564,9 +2614,8 @@ Testable.
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
-
 <p>Has 11 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-exists-physically-message
+<pre><code class="language-text">.zinit-exists-physically-message
 |-- .zinit-any-colorify-as-uspl2
 |   `-- zinit.zsh/.zinit-any-to-user-plugin
 |-- .zinit-exists-physically
@@ -2574,9 +2623,8 @@ $2 - plugin (only when $1 - i.e. user - given)
 |   `-- zinit.zsh/.zinit-any-to-user-plugin
 `-- .zinit-shands-exp
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-changes
+<pre><code class="language-text">zinit-autoload.zsh/.zinit-changes
 zinit-autoload.zsh/.zinit-compute-ice
 zinit-autoload.zsh/.zinit-delete
 zinit-autoload.zsh/.zinit-edit
@@ -2585,9 +2633,8 @@ zinit-autoload.zsh/.zinit-stress
 zinit-autoload.zsh/.zinit-update-or-status
 zinit-install.zsh/.zinit-install-completions
 </code></pre>
-
 <h2 id="zinit-first">.zinit-first<a class="headerlink" href="#zinit-first" title="Permanent link">#</a></h2>
-<pre><code class="text">Finds the main file of plugin. There are multiple file name
+<pre><code class="language-text">Finds the main file of plugin. There are multiple file name
 formats, they are ordered in order starting from more correct
 ones, and matched. .zinit-load-plugin() has similar code parts
 and doesn't call .zinit-first() – for performance. Obscure matching
@@ -2597,67 +2644,58 @@ Obscure = non-standard main-file naming convention.
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin (only when $1 - i.e. user - given)
 </code></pre>
-
 <p>Has 17 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-first
+<pre><code class="language-text">.zinit-first
 |-- .zinit-get-plg-dir
 |-- zinit.zsh/.zinit-any-to-user-plugin
 `-- zinit.zsh/.zinit-find-other-matches
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-edit
+<pre><code class="language-text">zinit-autoload.zsh/.zinit-edit
 zinit-autoload.zsh/.zinit-glance
 zinit-autoload.zsh/.zinit-stress
 zinit-install.zsh/.zinit-compile-plugin
 </code></pre>
-
 <h2 id="zinit-get-plg-dir">.zinit-get-plg-dir<a class="headerlink" href="#zinit-get-plg-dir" title="Permanent link">#</a></h2>
 <p>Has 9 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-first
+<pre><code class="language-text">.zinit-first
 </code></pre>
-
 <h2 id="zinit-shands-exp">.zinit-shands-exp<a class="headerlink" href="#zinit-shands-exp" title="Permanent link">#</a></h2>
-<pre><code class="text">Does expansion of currently little unstandarized
+<pre><code class="language-text">Does expansion of currently little unstandarized
 shorthands like &quot;%SNIPPETS&quot;, &quot;%HOME&quot;, &quot;OMZ::&quot;, &quot;PZT::&quot;.
 </code></pre>
-
 <p>Has 3 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-exists-physically-message
+<pre><code class="language-text">.zinit-exists-physically-message
 .zinit-exists-physically
 zinit-autoload.zsh/.zinit-compute-ice
 zinit-autoload.zsh/.zinit-delete
 zinit-autoload.zsh/.zinit-get-path
 </code></pre>
-
 <h2 id="zinit-store-ices">.zinit-store-ices<a class="headerlink" href="#zinit-store-ices" title="Permanent link">#</a></h2>
-<pre><code class="text">Saves ice mods in given hash onto disk.
+<pre><code class="language-text">Saves ice mods in given hash onto disk.
 
 $1 - directory where to create / delete files
 $2 - name of hash that holds values
 $3 - additional keys of hash to store, space separated
 $4 - additional keys of hash to store, empty-meaningful ices, space separated
 </code></pre>
-
 <p>Has 30 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>wait</em></p>
 <p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-update-or-status
+<pre><code class="language-text">zinit-autoload.zsh/.zinit-update-or-status
 zinit-install.zsh/.zinit-download-snippet
 zinit-install.zsh/.zinit-setup-plugin-dir
 </code></pre>
-
 <h2 id="zinit-two-paths">.zinit-two-paths<a class="headerlink" href="#zinit-two-paths" title="Permanent link">#</a></h2>
-<pre><code class="text">Obtains a snippet URL without specification if it is an SVN URL (points to
+<pre><code class="language-text">Obtains a snippet URL without specification if it is an SVN URL (points to
 directory) or regular URL (points to file), returns 2 possible paths for
 further examination
 </code></pre>
-
 <p>Has 19 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-compute-ice
+<pre><code class="language-text">zinit-autoload.zsh/.zinit-compute-ice
 zinit-autoload.zsh/.zinit-delete
 zinit-autoload.zsh/.zinit-get-path
 zinit-autoload.zsh/.zinit-update-or-status
@@ -2697,6 +2735,7 @@ zinit-autoload.zsh/.zinit-update-or-status
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -2772,19 +2811,13 @@ zinit-autoload.zsh/.zinit-update-or-status
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       

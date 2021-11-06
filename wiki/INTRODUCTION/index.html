@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2601,7 +2660,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -3205,12 +3265,9 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                 <h1 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">#</a></h1>
@@ -3231,10 +3288,9 @@
 </ul>
 <p>and much more.</p>
 <h2 id="basic_plugin_loading">Basic Plugin Loading<a class="headerlink" href="#basic_plugin_loading" title="Permanent link">#</a></h2>
-<pre><code class="zsh">zinit load zdharma/history-search-multi-word
+<pre><code class="language-zsh">zinit load zdharma-continuum/history-search-multi-word
 zinit light zsh-users/zsh-syntax-highlighting
 </code></pre>
-
 <p>Above commands show two ways of basic plugin loading. <code>load </code>  causes reporting to
 be enabled – you can track what plugin does, view the information with <code>zinit
 report {plugin-spec}</code> and then also unload the plugin with <code>zinit unload
@@ -3249,24 +3305,21 @@ and to unload it.</p>
 <p>To load Oh My Zsh and Prezto plugins, use <code>snippet</code> feature. Snippets are single
 files downloaded by <code>curl</code>, <code>wget</code>, etc. (an automatic detection of the download
 tool is being performed) directly from URL. For example:</p>
-<pre><code class="zsh">zinit snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
+<pre><code class="language-zsh">zinit snippet 'https://github.com/robbyrussell/oh-my-zsh/raw/master/plugins/git/git.plugin.zsh'
 zinit snippet 'https://github.com/sorin-ionescu/prezto/blob/master/modules/helper/init.zsh'
 </code></pre>
-
 <p>Also, for Oh My Zsh and Prezto, you can use <code>OMZ::</code> and <code>PZT::</code> shorthands:</p>
-<pre><code class="zsh">zinit snippet OMZ::plugins/git/git.plugin.zsh
+<pre><code class="language-zsh">zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit snippet PZT::modules/helper/init.zsh
 </code></pre>
-
 <p>Moreover, snippets support Subversion protocol, supported also by Github. This
 allows to load snippets that are multi-file (for example, a Prezto module can
 consist of two or more files, e.g. <code>init.zsh</code> and <code>alias.zsh</code>). Default files
 that will be sourced are: <code>*.plugin.zsh</code>, <code>init.zsh</code>, <code>*.zsh-theme</code>:</p>
-<pre><code class="zsh"># URL points to directory
+<pre><code class="language-zsh"># URL points to directory
 zinit ice svn
 zinit snippet PZT::modules/docker
 </code></pre>
-
 <h2 id="snippets_and_performance">Snippets and Performance<a class="headerlink" href="#snippets_and_performance" title="Permanent link">#</a></h2>
 <p>Using <code>curl</code>, <code>wget</code>, etc. along with Subversion allows to almost completely
 avoid code dedicated to Oh My Zsh and Prezto, and also to other frameworks. This
@@ -3282,10 +3335,9 @@ the next Zinit command, and also something that melts (so it doesn’t last
 long) – and in the Zinit use it means that the modifier lasts for only single
 next Zinit command. Using one other ice-modifier "<strong>pick</strong>" user can
 explicitly <strong>select the file to source</strong>:</p>
-<pre><code class="zsh">zinit ice svn pick&quot;init.zsh&quot;
+<pre><code class="language-zsh">zinit ice svn pick&quot;init.zsh&quot;
 zinit snippet PZT::modules/git
 </code></pre>
-
 <p>Content of ice-modifier is simply put into <code>"…"</code>, <code>'…'</code>, or <code>$'…'</code>. No
 need for <code>":"</code> after ice-mod name (although it's allowed, so as the equal sign
 <code>=</code>, so e.g. <code>pick="init.zsh"</code> or <code>pick=init.zsh</code> are being correctly
@@ -3296,10 +3348,9 @@ highlight contents of ice-modifiers.</p>
 <p>A plugin might not be a file for sourcing, but a command to be added to <code>$PATH</code>.
 To obtain this effect, use ice-modifier <code>as</code> with value <code>program</code> (or an alias
 value <code>command</code>).</p>
-<pre><code class="zsh">zinit ice as&quot;program&quot; cp&quot;httpstat.sh -&gt; httpstat&quot; pick&quot;httpstat&quot;
+<pre><code class="language-zsh">zinit ice as&quot;program&quot; cp&quot;httpstat.sh -&gt; httpstat&quot; pick&quot;httpstat&quot;
 zinit light b4b4r07/httpstat
 </code></pre>
-
 <p>Above command will add plugin directory to <code>$PATH</code>, copy file <code>httpstat.sh</code> into
 <code>httpstat</code> and add execution rights (<code>+x</code>) to the file selected with <code>pick</code>,
 i.e. to <code>httpstat</code>. Other ice-mod exists, <code>mv</code>, which works like <code>cp</code> but
@@ -3315,11 +3366,10 @@ PZT::modules/osx</code> (for example).</strong></p>
 <p>Copying file is safe for doing later updates – original files of repository are
 unmodified and <code>Git</code> will report no conflicts. However, <code>mv</code> also can be used,
 if a proper <code>atpull</code> (an ice–modifier ran at <strong>update</strong> of plugin) will be used:</p>
-<pre><code class="zsh">zinit ice as&quot;program&quot; mv&quot;httpstat.sh -&gt; httpstat&quot; \
+<pre><code class="language-zsh">zinit ice as&quot;program&quot; mv&quot;httpstat.sh -&gt; httpstat&quot; \
       pick&quot;httpstat&quot; atpull'!git reset --hard'
 zinit light b4b4r07/httpstat
 </code></pre>
-
 <p>If <code>atpull</code> starts with exclamation mark, then it will be run before <code>git pull</code>,
 and before <code>mv</code>. Nevertheless, <code>atpull</code>, <code>mv</code>, <code>cp</code> are ran <strong>only if new
 commits are to be fetched</strong>. So in summary, when user runs <code>zinit update
@@ -3338,12 +3388,11 @@ into the plugin's contents without blocking the ability to update it with <code>
 </div>
 <h2 id="snippets-commands">Snippets-Commands<a class="headerlink" href="#snippets-commands" title="Permanent link">#</a></h2>
 <p>Commands can also be added to <code>$PATH</code> using <strong>snippets</strong>. For example:</p>
-<pre><code class="zsh">zinit ice mv&quot;httpstat.sh -&gt; httpstat&quot; \
+<pre><code class="language-zsh">zinit ice mv&quot;httpstat.sh -&gt; httpstat&quot; \
         pick&quot;httpstat&quot; as&quot;program&quot;
 zinit snippet \
     https://github.com/b4b4r07/httpstat/blob/master/httpstat.sh
 </code></pre>
-
 <p><a id="on_svn_revert"></a>
 (<strong>**</strong>) Snippets also support <code>atpull</code> ice-mod, so it’s possible to do e.g.
 <code>atpull'!svn revert'</code>. There’s also <code>atinit</code> ice-mod, executed before each
@@ -3351,26 +3400,23 @@ loading of plugin or snippet.</p>
 <h2 id="snippets-completions">Snippets-Completions<a class="headerlink" href="#snippets-completions" title="Permanent link">#</a></h2>
 <p>By using the <code>as''</code> ice-mod with value <code>completion</code> you can point the <code>snippet</code>
 subcommand directly to a completion file, e.g.:</p>
-<pre><code class="zsh">zinit ice as&quot;completion&quot;
+<pre><code class="language-zsh">zinit ice as&quot;completion&quot;
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 </code></pre>
-
 <h2 id="completion_management">Completion Management<a class="headerlink" href="#completion_management" title="Permanent link">#</a></h2>
 <p>Zinit allows to disable and enable each completion in every plugin. Try
 installing a popular plugin that provides completions:</p>
-<pre><code class="zsh">zinit ice blockf
+<pre><code class="language-zsh">zinit ice blockf
 zinit light zsh-users/zsh-completions
 </code></pre>
-
 <p>First command (the <code>blockf</code> ice) will block the traditional method of adding
 completions. Zinit uses own method (based on symlinks instead of adding a
 number of directories to <code>$fpath</code>). Zinit will automatically <strong>install</strong>
 completions of a newly downloaded plugin. To uninstall the completions and
 install them again, you would use:</p>
-<pre><code class="zsh">zinit cuninstall zsh-users/zsh-completions   # uninstall
+<pre><code class="language-zsh">zinit cuninstall zsh-users/zsh-completions   # uninstall
 zinit creinstall zsh-users/zsh-completions   # install
 </code></pre>
-
 <h3 id="listing_completions">Listing Completions<a class="headerlink" href="#listing_completions" title="Permanent link">#</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -3378,37 +3424,33 @@ zinit creinstall zsh-users/zsh-completions   # install
 </div>
 <p>To see what completions <strong>all</strong> plugins provide, in tabular formatting and with
 name of each plugin, use:</p>
-<pre><code class="zsh">zi clist
+<pre><code class="language-zsh">zi clist
 </code></pre>
-
 <p>This command is specially adapted for plugins like <code>zsh-users/zsh-completions</code>,
 which provide many completions – listing will have <code>3</code> completions per line (so
 that a smaller number of terminal pages will be occupied) like this:</p>
-<pre><code class="zsh">...
+<pre><code class="language-zsh">...
 atach, bitcoin-cli, bower    zsh-users/zsh-completions
 bundle, caffeinate, cap      zsh-users/zsh-completions
 cask, cf, chattr             zsh-users/zsh-completions
 ...
 </code></pre>
-
 <p>You can show more completions per line by providing an <strong>argument</strong> to <code>clist</code>,
 e.g. <code>zi clist 6</code>, will show:</p>
-<pre><code class="zsh">...
+<pre><code class="language-zsh">...
 bundle, caffeinate, cap, cask, cf, chattr      zsh-users/zsh-completions
 cheat, choc, cmake, coffee, column, composer   zsh-users/zsh-completions
 console, dad, debuild, dget, dhcpcd, diana     zsh-users/zsh-completions
 ...
 </code></pre>
-
 <h3 id="enabling_and_disabling_completions">Enabling and Disabling Completions<a class="headerlink" href="#enabling_and_disabling_completions" title="Permanent link">#</a></h3>
 <p>Completions can be disabled, so that e.g. original Zsh completion will be used.
 The commands are very basic, they only need completion <strong>name</strong>:</p>
-<pre><code class="zsh">$ zi cdisable cmake
+<pre><code class="language-zsh">$ zi cdisable cmake
 Disabled cmake completion belonging to zsh-users/zsh-completions
 $ zi cenable cmake
 Enabled cmake completion belonging to zsh-users/zsh-completions
 </code></pre>
-
 <p>That’s all on completions. There’s one more command, <code>zinit csearch</code>, that
 will <strong>search</strong> all plugin directories for available completions, and show if
 they are installed:</p>
@@ -3417,7 +3459,7 @@ they are installed:</p>
 <h2 id="subversion_for_subdirectories">Subversion for Subdirectories<a class="headerlink" href="#subversion_for_subdirectories" title="Permanent link">#</a></h2>
 <p>In general, to use <strong>subdirectories</strong> of Github projects as snippets add
 <code>/trunk/{path-to-dir}</code> to URL, for example:</p>
-<pre><code class="zsh">zinit ice svn
+<pre><code class="language-zsh">zinit ice svn
 zinit snippet https://github.com/zsh-users/zsh-completions/trunk/src
 
 # For Oh My Zsh and Prezto, the OMZ:: and PZT:: prefixes work
@@ -3425,7 +3467,6 @@ zinit snippet https://github.com/zsh-users/zsh-completions/trunk/src
 # should point to a directory, not to a file):
 zinit ice svn; zinit snippet PZT::modules/docker
 </code></pre>
-
 <p>Snippets too have completions installed by default, like plugins.</p>
 <h2 id="turbo_mode_zsh_53">Turbo Mode (Zsh >= 5.3)<a class="headerlink" href="#turbo_mode_zsh_53" title="Permanent link">#</a></h2>
 <p>The ice-mod <code>wait</code> allows the user postponing loading of a plugin to the moment
@@ -3441,26 +3482,23 @@ being loaded, for any number of plugins. </p>
 </div>
 <p>Zsh 5.3 or greater is required. To use this Turbo mode add <code>wait</code> ice to the
 target plugin in one of following ways:</p>
-<pre><code class="zsh">PS1=&quot;READY &gt; &quot;
+<pre><code class="language-zsh">PS1=&quot;READY &gt; &quot;
 zinit ice wait'!0' 
 zinit load halfo/lambda-mod-zsh-theme
 </code></pre>
-
 <p>This sets plugin <code>halfo/lambda-mod-zsh-theme</code> to be loaded <code>0</code> seconds after
 <code>zshrc</code>. It will fire up after c.a. 1 ms of showing of the basic prompt <code>READY &gt;</code>.
 You probably won't load the prompt in such a way, however it is a good example
 in which Turbo can be directly observed.</p>
 <p>The exclamation mark causes Zinit to reset the prompt after loading plugin – it
 is needed for themes. The same with Prezto prompts, with a longer delay:</p>
-<pre><code class="zsh">zinit ice svn silent wait'!1' atload'prompt smiley'
+<pre><code class="language-zsh">zinit ice svn silent wait'!1' atload'prompt smiley'
 zinit snippet PZT::modules/prompt
 </code></pre>
-
 <p>Using <code>zsh-users/zsh-autosuggestions</code> without any drawbacks:</p>
-<pre><code class="zsh">zinit ice wait lucid atload'_zsh_autosuggest_start'
+<pre><code class="language-zsh">zinit ice wait lucid atload'_zsh_autosuggest_start'
 zinit light zsh-users/zsh-autosuggestions
 </code></pre>
-
 <p>Explanation: Autosuggestions uses <code>precmd</code> hook, which is being called right
 after processing <code>zshrc</code> – <code>precmd</code> hooks are being called <strong>right before
 displaying each prompt</strong>. Turbo with the empty <code>wait</code> ice will postpone the
@@ -3477,10 +3515,9 @@ plugin to not show.</p>
 zinit load/light/snippet …</code>) of Zinit. However, there's also available a
 recently added so-called <em>for-syntax</em>. It is a right moment to take a glance at
 it, by rewriting the above autosuggestions invocation using it:</p>
-<pre><code class="zsh">zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
+<pre><code class="language-zsh">zinit wait lucid atload'_zsh_autosuggest_start' light-mode for \
     zsh-users/zsh-autosuggestions
 </code></pre>
-
 <p>The syntax is a more concise one. The single command will work exactly the same
 as the previous classic-syntax invocation. It also allows solving some typical
 problems when using Zinit, like providing common/default ices for a set of
@@ -3500,23 +3537,21 @@ should be called from <code>atload''</code> ice.</p>
 <p>First, find the name of the hook function by examining the <code>$precmd_functions</code>
 array. For example, for <code>robobenklein/zinc</code> theme, they'll be two functions:
 <code>prompt_zinc_setup</code> and <code>prompt_zinc_precmd</code>:</p>
-<pre><code class="zsh">root@sg &gt; ~ &gt; print $precmd_functions                       &lt; ✔ &lt; 22:21:33
+<pre><code class="language-zsh">root@sg &gt; ~ &gt; print $precmd_functions                       &lt; ✔ &lt; 22:21:33
 _zsh_autosuggest_start prompt_zinc_setup prompt_zinc_precmd
 </code></pre>
-
 <p>Then, add them to the ice-list in the <code>atload''</code> ice:</p>
-<pre><code class="zsh">zinit ice wait'!' lucid nocd \
+<pre><code class="language-zsh">zinit ice wait'!' lucid nocd \
     atload'!prompt_zinc_setup; prompt_zinc_precmd'
 zinit load robobenklein/zinc
 </code></pre>
-
 <p>The exclamation mark in <code>atload'!…'</code> is to track the functions allowing the
 plugin to be unloaded, as described <a href="../atload-and-other-at-ices/">here</a>. It
 might be useful for the multi-prompt setup described next.</p>
 <h2 id="automatic_loadunload_on_condition">Automatic Load/Unload on Condition<a class="headerlink" href="#automatic_loadunload_on_condition" title="Permanent link">#</a></h2>
 <p>Ices <code>load</code> and <code>unload</code> allow to define when you want plugins active or
 unactive. For example:</p>
-<pre><code class="zsh"># Load when in ~/tmp
+<pre><code class="language-zsh"># Load when in ~/tmp
 
 zinit ice load'![[ $PWD = */tmp* ]]' unload'![[ $PWD != */tmp* ]]' \
     atload&quot;!promptinit; prompt sprint3&quot;
@@ -3527,7 +3562,6 @@ zinit load psprint/zprompts
 zinit ice load'![[ $PWD != */tmp* ]]' unload'![[ $PWD = */tmp* ]]'
 zinit load russjohnson/angry-fly-zsh
 </code></pre>
-
 <p>Two prompts, each active in different directories. This technique can be used to
 have plugin-sets, e.g. by defining parameter <code>$PLUGINS</code> with possible values
 like <code>cpp</code>, <code>web</code>, <code>admin</code> and by setting <code>load</code> / <code>unload</code> conditions to
@@ -3580,6 +3614,7 @@ the author uses in own setup.</p>
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -3655,19 +3690,13 @@ the author uses in own setup.</p>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       

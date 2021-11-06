@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2934,7 +2993,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -3871,12 +3931,9 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                 <p><center><strong>Version: 1.0,  11/22/2019</strong></center></p>
@@ -3929,12 +3986,11 @@ plugin" and the actions of plugin managers – the proposed standardization. The
 cover the information of how to write a Zsh plugin.</p>
 <h2 id="1_standardized_0_handling">1. Standardized $0 Handling<a class="headerlink" href="#1_standardized_0_handling" title="Permanent link">#</a></h2>
 <p>To get the plugin’s location, plugins should do:</p>
-<pre><code class="zsh">0=&quot;${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}&quot;
+<pre><code class="language-zsh">0=&quot;${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}&quot;
 0=&quot;${${(M)0:#/*}:-$PWD/$0}&quot;
 
 # Then ${0:h} to get plugin’s directory
 </code></pre>
-
 <p>The one-line code above will:</p>
 <ol>
 <li>
@@ -4054,9 +4110,8 @@ develoment process.</p>
 <h2 id="3_zsh-plugin-run-on-unload_call">3. <code>@zsh-plugin-run-on-unload</code> Call<a class="headerlink" href="#3_zsh-plugin-run-on-unload_call" title="Permanent link">#</a></h2>
 <p>The plugin manager can provide a function <code>@zsh-plugin-run-on-unload</code> which
 has the following call syntax:</p>
-<pre><code class="zsh">@zsh-plugin-run-on-unload &quot;{code-snippet-1}&quot; &quot;{code-snippet-2}&quot; …
+<pre><code class="language-zsh">@zsh-plugin-run-on-unload &quot;{code-snippet-1}&quot; &quot;{code-snippet-2}&quot; …
 </code></pre>
-
 <p>The function registers pieces of code to be run by the plugin manager <strong>on
 unload of the plugin</strong>. The execution of the code should be done by the <code>eval</code>
 builtin in the same order as they are passed to the call.</p>
@@ -4070,9 +4125,8 @@ implements it.</p>
 <h2 id="4_zsh-plugin-run-on-update_call">4. <code>@zsh-plugin-run-on-update</code> Call<a class="headerlink" href="#4_zsh-plugin-run-on-update_call" title="Permanent link">#</a></h2>
 <p>The plugin manager can provide a function <code>@zsh-plugin-run-on-update</code> which
 has the following call syntax:</p>
-<pre><code class="zsh">@zsh-plugin-run-on-update &quot;{code-snippet-1}&quot; &quot;{code-snippet-2}&quot; …
+<pre><code class="language-zsh">@zsh-plugin-run-on-update &quot;{code-snippet-1}&quot; &quot;{code-snippet-2}&quot; …
 </code></pre>
-
 <p>The function registers pieces of code to be run by the plugin manager <strong>on
 update of the plugin</strong>. The execution of the code should be done by the <code>eval</code>
 builtin in the same order as they are passed to the call.</p>
@@ -4097,12 +4151,11 @@ of <code>zsh-async</code>, having also reliable <code>$0</code> defined by previ
 <code>pure</code> doesn’t normally do this).</p>
 <p>The second item allows a plugin to e.g. set up <code>$fpath</code>, knowing that plugin
 manager will not handle this:</p>
-<pre><code class="zsh">if [[ ${zsh_loaded_plugins[-1]} != */kalc &amp;&amp; -z ${fpath[(r)${0:h}]} ]]
+<pre><code class="language-zsh">if [[ ${zsh_loaded_plugins[-1]} != */kalc &amp;&amp; -z ${fpath[(r)${0:h}]} ]]
 then
     fpath+=( &quot;${0:h}&quot; )
 fi
 </code></pre>
-
 <p>This will allow user to reliably source the plugin without using a plugin
 manager. The code uses the wrapping braces around variables (i.e.: e.g.:
 <code>${fpath…}</code>) to make it compatible with the <code>KSH_ARRAYS</code> option and the quoting
@@ -4148,9 +4201,8 @@ information in this section.</p>
 <h3 id="use_of_add-zsh-hook_to_install_hooks">Use Of <code>add-zsh-hook</code> To Install Hooks<a class="headerlink" href="#use_of_add-zsh-hook_to_install_hooks" title="Permanent link">#</a></h3>
 <p>Zsh ships with a function <code>add-zsh-hook</code>. It has the following invocation
 syntax:</p>
-<pre><code class="zsh">add-zsh-hook [ -L | -dD ] [ -Uzk ] hook function
+<pre><code class="language-zsh">add-zsh-hook [ -L | -dD ] [ -Uzk ] hook function
 </code></pre>
-
 <p>The command installs a <code>function</code> as one of the supported zsh <code>hook</code> entries.
 which are one of: <code>chpwd</code>, <code>periodic</code>, <code>precmd</code>, <code>preexec</code>, <code>zshaddhistory</code>,
 <code>zshexit</code>, <code>zsh_directory_name</code>. For their meaning refer to the
@@ -4163,9 +4215,8 @@ than Zsh functions that are allowed to be ran in Zle context, i.e. from the Zle
 editor (plus a few minor differences, like e.g.: the <code>$WIDGET</code> parameter that’s
 automatically set by the Zle editor).</p>
 <p>The syntax of the call is:</p>
-<pre><code class="zsh">add-zle-hook-widget [ -L | -dD ] [ -Uzk ] hook widgetname
+<pre><code class="language-zsh">add-zle-hook-widget [ -L | -dD ] [ -Uzk ] hook widgetname
 </code></pre>
-
 <p>The call resembles the syntax of the <code>add-zsh-hook</code> function. The only
 difference is that it takes a <code>widgetname</code>, not a function name, and that the
 <code>hook</code> is being one of: <code>isearch-exit</code>, <code>isearch-update</code>, <code>line-pre-redraw</code>,
@@ -4181,11 +4232,10 @@ been introduced in Zsh <code>5.3</code> it should be used instead.</p>
 <h3 id="standard_recommended_options">Standard Recommended Options<a class="headerlink" href="#standard_recommended_options" title="Permanent link">#</a></h3>
 <p>The following code snippet is recommended to be included at the beginning of
 each of the main functions provided by the plugin:</p>
-<pre><code class="zsh">emulate -L zsh
+<pre><code class="language-zsh">emulate -L zsh
 setopt extended_glob warn_create_global typeset_silent \
         no_short_loops rc_quotes no_auto_pushd
 </code></pre>
-
 <p>It resets all the options to their default state according to the <code>zsh</code>
 emulation mode, with use of the <code>local_options</code> option – so the options will be
 restored to their previous state when leaving the function.</p>
@@ -4217,10 +4267,9 @@ restored to their previous state when leaving the function.</p>
 <h3 id="standard_recommended_variables">Standard Recommended Variables<a class="headerlink" href="#standard_recommended_variables" title="Permanent link">#</a></h3>
 <p>It's good to localize the following variables at the entry of the main function
 of a plugin:</p>
-<pre><code class="shell">local MATCH REPLY; integer MBEGIN MEND
+<pre><code class="language-shell">local MATCH REPLY; integer MBEGIN MEND
 local -a match mbegin mend reply
 </code></pre>
-
 <p>The variables starting with <code>m</code> and <code>M</code> are being used by the substitutions
 utilizing <code>(#b)</code> and <code>(#m)</code> flags, respectively. They should not leak to the
 global scope. Also, their automatic creation would trigger the warning from the
@@ -4303,14 +4352,13 @@ if you have any remarks, don't hesitate to
 </li>
 </ol>
 <h5 id="example_code_utilizing_the_prefixes">Example Code Utilizing The Prefixes<a class="headerlink" href="#example_code_utilizing_the_prefixes" title="Permanent link">#</a></h5>
-<pre><code class="shell">.zinc_register_hooks() {
+<pre><code class="language-shell">.zinc_register_hooks() {
     add-zsh-hook precmd :zinc_precmd
     /zinc_dmsg &quot;Installed precmd hook with result: $?&quot;
     @zsh-plugin-run-on-unload &quot;add-zsh-hook -d precmd :zinc_precmd&quot;
     +zinc_print &quot;Zinc initialization complete&quot;
 }
 </code></pre>
-
 <h3 id="preventing_function_pollution">Preventing Function Pollution<a class="headerlink" href="#preventing_function_pollution" title="Permanent link">#</a></h3>
 <p>When writing a larger autoload function, it very often is the case that the
 function contains definitions of other functions. When the main function
@@ -4318,13 +4366,12 @@ finishes executing, the functions are being left defined. This might be
 undesired, e.g.: because of the command name-space pollution. The following
 snippet of code, when added at the beginning of the main function will
 automatically unset the sub-functions when leaving the main function:</p>
-<pre><code class="shell"># Don't leak any functions
+<pre><code class="language-shell"># Don't leak any functions
 typeset -g prjef
 prjef=( ${(k)functions} )
 trap &quot;unset -f -- \&quot;\${(k)functions[@]:|prjef}\&quot; &amp;&gt;/dev/null; unset prjef&quot; EXIT
 trap &quot;unset -f -- \&quot;\${(k)functions[@]:|prjef}\&quot; &amp;&gt;/dev/null; unset prjef; return 1&quot; INT
 </code></pre>
-
 <p>Replace the <code>prj*</code> prefix with your project name, e.g.: <code>rustef</code> for a
 <code>rust</code>-related plugin. The <code>*ef</code> stands for "entry functions". The snippet works
 as follows:</p>
@@ -4354,7 +4401,7 @@ session. To do this it is natural to use global parameters. However,
 when the number of the parameters grows one might want to limit it.</p>
 <p>With the following method, only a single global parameter per plugin can be
 sufficient:</p>
-<pre><code class="shell">typeset -A PLGMAP
+<pre><code class="language-shell">typeset -A PLGMAP
 typeset -A some_map
 typeset -a some_array
 
@@ -4363,16 +4410,14 @@ PLGMAP[state]=1
 some_map[state]=1
 some_array[1]=state
 </code></pre>
-
 <p>can be converted into:</p>
-<pre><code class="shell">typeset -A PLGMAP
+<pre><code class="language-shell">typeset -A PLGMAP
 
 # Use
 PLGMAP[state]=1
 PLGMAP[some_map__state]=1
 PLGMAP[some_array__1]=state
 </code></pre>
-
 <p>The use of this method is very unproblematic. The author reduced the number of
 global parameters in one of projects by 21 by using an automatic conversion with
 Vim substitution patterns with back references without any problems.</p>
@@ -4432,6 +4477,7 @@ v0.9, 12/12/2017: Remove ZERO references (wrong design), add TOC.</p>
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -4507,19 +4553,13 @@ v0.9, 12/12/2017: Remove ZERO references (wrong design), add TOC.</p>
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       

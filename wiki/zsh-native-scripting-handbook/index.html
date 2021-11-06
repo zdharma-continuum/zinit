@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -2889,7 +2948,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -3781,12 +3841,9 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                 <h1 id="zsh_native_scripting_handbook">Zsh Native Scripting Handbook<a class="headerlink" href="#zsh_native_scripting_handbook" title="Permanent link">#</a></h1>
@@ -3818,30 +3875,26 @@ braces, i.e. <code>${array[@]}</code>, <code>"${array[@]}"</code> (<code>KSH_ARR
 and <code>^</code> also require it. Extended-glob is one of the main features of Zsh.</p>
 <h2 id="constructs">Constructs<a class="headerlink" href="#constructs" title="Permanent link">#</a></h2>
 <h3 id="reading_a_file">Reading a file<a class="headerlink" href="#reading_a_file" title="Permanent link">#</a></h3>
-<pre><code class="zsh">declare -a lines; lines=( &quot;${(@f)&quot;$(&lt;path/file)&quot;}&quot; )
+<pre><code class="language-zsh">declare -a lines; lines=( &quot;${(@f)&quot;$(&lt;path/file)&quot;}&quot; )
 </code></pre>
-
 <p>This preserves empty lines because of double-quoting (the outside one).
 <code>@</code>-flag is used to obtain array instead of scalar. If you don't want empty
 lines preserved, you can also skip <code>@</code>-splitting, as it is explained in
 Information section:</p>
-<pre><code class="zsh">declare -a lines; lines=( ${(f)&quot;$(&lt;path/file)&quot;} )
+<pre><code class="language-zsh">declare -a lines; lines=( ${(f)&quot;$(&lt;path/file)&quot;} )
 </code></pre>
-
 <p>Note: <code>$(&lt;...)</code> construct strips trailing empty lines.</p>
 <h3 id="reading_from_stdin">Reading from stdin<a class="headerlink" href="#reading_from_stdin" title="Permanent link">#</a></h3>
 <p>This topic is governed by the same principles a the previous paragraph
 (<code>Reading a file</code>), with the single difference that instead of the substitution
 <code>"$(&lt;file-path)"</code> the substitution that should be used is <code>"$(command arg1
 ...)"</code>, i.e.:</p>
-<pre><code class="zsh">declare -a lines; lines=( ${(f)&quot;$(command arg1 ...)&quot;} )
+<pre><code class="language-zsh">declare -a lines; lines=( ${(f)&quot;$(command arg1 ...)&quot;} )
 </code></pre>
-
 <p>This will read the <code>command's</code> output into the array <code>lines</code>. The version that
 does <code>@</code> splitting and retains any empty lines is:</p>
-<pre><code class="zsh">declare -a lines; lines=( &quot;${(f@)$(command arg1 ...)}&quot; )
+<pre><code class="language-zsh">declare -a lines; lines=( &quot;${(f@)$(command arg1 ...)}&quot; )
 </code></pre>
-
 <p>Note that instead of four double-quotes <code>"</code>, an idiom that is justified (simply
 suggested) by the Zsh documentation (and was used in the previous paragraph, in
 the snippet <code>... "${(@f)"$(&lt;path/file)"}" ...</code>), only <strong>two</strong> double-quotes are
@@ -3854,7 +3907,6 @@ second double-quoting isn't actually needed.</p>
 <pre><code>declare -a lines; lines=( &quot;${(@f)&quot;$(&lt;path/file)&quot;}&quot; )
 declare -a grepped; grepped=( ${(M)lines:#*query*} )
 </code></pre>
-
 <p>To have <code>grep -v</code> effect, skip <code>M</code>-flag. To grep case insensitively, use <code>#i</code> glob
 flag (<code>...:#(#i)*query*}</code>).</p>
 <p>As it can be seen, <code>${...:#...}</code> substitution is a filtering of array, which by
@@ -3866,41 +3918,37 @@ substitutions, to retain what's matched by the pattern instead of removing that.
 <h4 id="multi-line_matching_like_with_grep">Multi-line matching like with grep<a class="headerlink" href="#multi-line_matching_like_with_grep" title="Permanent link">#</a></h4>
 <p>Suppose you have a Subversion repository and want to check if it contains files
 being not under version control. You could do this in Bash style like follows:</p>
-<pre><code class="zsh">local svn_status=&quot;$(svn status)&quot;
+<pre><code class="language-zsh">local svn_status=&quot;$(svn status)&quot;
 if [[ -n &quot;$(echo &quot;$svn_status&quot; | grep \^\?)&quot; ]]; then
     echo found
 fi
 </code></pre>
-
 <p>That are 3 forks: for <code>svn status</code>, for <code>echo</code> and for <code>grep</code>. This can be solved
 by <code>:#</code> substitution and <code>(M)</code> flag described above in this section (just check
 if the number of matched lines is greater than 0). However, there's a more direct
 approach:</p>
-<pre><code class="zsh">local svn_status=&quot;$(svn status)&quot; nl=$'\n'
+<pre><code class="language-zsh">local svn_status=&quot;$(svn status)&quot; nl=$'\n'
 if [[ &quot;$svn_status&quot; = *((#s)|$nl)\?* ]]; then
   echo found
 fi
 </code></pre>
-
 <p>This requires <code>extendedglob</code>. The <code>(#s)</code> means: "start of the string". So
 <code>((#s)|$nl)</code> means "start of the string OR preceded by a new-line".</p>
 <p>If the <code>extendedglob</code> option cannot be used for some reason, this can be
 achieved also
 without it, but essentially it means that alternative (i.e. <code>|</code>) of two
 versions of the pattern will have to be matched:</p>
-<pre><code class="zsh">setopt localoptions noextendedglob
+<pre><code class="language-zsh">setopt localoptions noextendedglob
 local svn_status=&quot;$(svn status)&quot; nl=$'\n'
 if [[ &quot;$svn_status&quot; = (\?*|*$nl\?*) ]]; then
   echo found
 fi
 </code></pre>
-
 <p>In general, multi-line matching falls into the following idiom (<code>extendedglob</code>
 version):</p>
-<pre><code class="zsh">local needle=&quot;?&quot; required_preceding='[[:space:]]#'
+<pre><code class="language-zsh">local needle=&quot;?&quot; required_preceding='[[:space:]]#'
 [[ &quot;$(svn status)&quot; = *((#s)|$nl)${~required_preceding}${needle}* ]] &amp;&amp; echo found
 </code></pre>
-
 <p>It does a single fork (calls <code>svn status</code>). The <code>${~variable}</code> means (the <code>~</code>
 in it): "the variable is holding a pattern, interpret it". All in all, instead
 of regular expressions we were using patterns (globs) (see
@@ -3908,7 +3956,6 @@ of regular expressions we were using patterns (globs) (see
 <h3 id="pattern_matching_in_and-fashion">Pattern matching in AND-fashion<a class="headerlink" href="#pattern_matching_in_and-fashion" title="Permanent link">#</a></h3>
 <pre><code>[[ &quot;abc xyz efg&quot; = *abc*~^*efg* ]] &amp;&amp; print Match found
 </code></pre>
-
 <p>The <code>~</code> is a negation -- <code>match *abc* but not ...</code>. Then, <code>^</code> is also a negation.
 The effect is: <code>*abc* but not those that don't have *efg*</code> which equals to:
 <code>*abc* but those that have also *efg*</code>. This is a regular pattern and it can
@@ -3921,7 +3968,6 @@ text=( &quot;ab&quot; &quot;ba&quot; )
 text=( ${text[@]//(#m)?/${map[$MATCH]}} )
 print $text ▶ 12 21
 </code></pre>
-
 <p><code>#m</code> flag enables the <code>$MATCH</code> parameter. At each <code>//</code> substitution, <code>$map</code> is
 queried for character-replacement. You can substitute a text variable too, just
 skip <code>[@]</code> and parentheses in assignment.</p>
@@ -3929,7 +3975,6 @@ skip <code>[@]</code> and parentheses in assignment.</p>
 <pre><code>HELP=&quot;yes&quot;; print ${${HELP:+help enabled}:-help disabled} ▶ help enabled
 HELP=&quot;&quot;; print ${${HELP:+help enabled}:-help disabled} ▶ help disabled
 </code></pre>
-
 <p>Ternary expression is known from <code>C</code> language but exists also in Zsh, but
 directly only in math context, i.e. <code>(( a = a &gt; 0 ? b : c ))</code>. Flexibility of
 Zsh allows such expressions also in normal context. Above is an example. <code>:+</code> is
@@ -3940,13 +3985,11 @@ great number of lines of code with those substitutions, it's normally at least
 <pre><code>var=abc; print ${${${(M)var:#abc}:+is abc}:-not abc} ▶ is abc
 var=abcd; print ${${${(M)var:#abc}:+is abc}:-not abc} ▶ not abc
 </code></pre>
-
 <p>An one-line "if var = x, then …, else …". Again, can spare a great amount of boring
 code that makes 10-line function a 20-line one.</p>
 <h3 id="using_built-in_regular_expressions_engine">Using built-in regular expressions engine<a class="headerlink" href="#using_built-in_regular_expressions_engine" title="Permanent link">#</a></h3>
 <pre><code>[[ &quot;aabbb&quot; = (#b)(a##)*(b(#c2,2)) ]] &amp;&amp; print ${match[1]}-${match[2]} ▶ aa-bb
 </code></pre>
-
 <p><code>##</code> is: "1 or more". <code>(#c2,2)</code> is: "exactly 2". A few other constructs: <code>#</code> is
 "0 or more", <code>?</code> is "any character", <code>(a|b|)</code> is "a or b or empty match". <code>#b</code>
 enables the <code>$match</code> parameters. There's also <code>#m</code> but it has one parameter
@@ -3960,14 +4003,12 @@ substitution.</p>
 <pre><code>declare -aU array; array=( a a b ); print $array ▶ a b
 declare -a array; array=( a a b ); print ${(u)array} ▶ a b
 </code></pre>
-
 <p>Enable <code>-U</code> flag for array so that it guards elements to be unique, or use
 <code>u</code>-flag to uniquify elements of any array.</p>
 <h3 id="skipping_awk">Skipping awk<a class="headerlink" href="#skipping_awk" title="Permanent link">#</a></h3>
 <pre><code>declare -a list; list=( &quot;a,b,c,1,e&quot; &quot;p,q,r,2,t&quot; );
 print &quot;${list[@]/(#b)([^,]##,)(#c3,3)([^,]##)*/${match[2]}}&quot; ▶ 1 2
 </code></pre>
-
 <p>The pattern specifies 3 blocks of <code>[^,]##,</code> so 3 "not-comma multiple times, then
 comma", then single block of "not-comma multiple times" in second parentheses --
 and then replaces this with second parentheses. Result is 4<sup>th</sup> column extracted
@@ -3975,13 +4016,11 @@ from multiple lines of text, something <code>awk</code> is often used for. Other
 use of <code>s</code>-flag. For single line of text:</p>
 <pre><code>text=&quot;a,b,c,1,e&quot;; print ${${(s:,:)text}[4]} ▶ 1
 </code></pre>
-
 <p>Thanks to in-substitution code-execution capabilities it's possible to use
 <code>s</code>-flag to apply it to multiple lines:</p>
 <pre><code>declare -a list; list=( &quot;a,b,c,1,e&quot; &quot;p,q,r,2,t&quot; );
 print &quot;${list[@]/(#m)*/${${(s:,:)MATCH}[4]}}&quot; ▶ 1 2
 </code></pre>
-
 <p>There is a problem with the <code>(s::)</code> flag that can be solved if Zsh is version
 <code>5.4</code> or higher: if there will be single input column, e.g. <code>list=( "column1"
 "a,b")</code> instead of two or more columns (i.e. <code>list=( "column1,column2" "a,b"
@@ -3994,13 +4033,11 @@ parameter flag forces array result even if...</code>), it is possible to force
 print &quot;${list[@]/(#m)*/${${(As:,:)MATCH}[4]}}&quot; ▶ 1 2
 print &quot;${list[@]/(#m)*/${${(s:,:)MATCH}[4]}}&quot; ▶ 1 2 u
 </code></pre>
-
 <p>Side-note: <code>(A)</code> flag is often used together with <code>::=</code> assignment-substitution
 and <code>(P)</code> flag, to assign arrays and hashes by-name.</p>
 <h3 id="searching_arrays">Searching arrays<a class="headerlink" href="#searching_arrays" title="Permanent link">#</a></h3>
 <pre><code>declare -a array; array=( a b &quot; c1&quot; d ); print ${array[(r)[[:space:]][[:alpha:]]*]} ▶ c1
 </code></pre>
-
 <p><code>[[:space:]]</code> contains unicode spaces. This is often used in conditional
 expression like <code>[[ -z ${array[(r)...]} ]]</code>.</p>
 <p>Note that <a href="#skipping_grep">Skipping grep</a> that uses <code>:#</code> substitution can also
@@ -4013,7 +4050,6 @@ declare -a gathered; integer idx=0
 : ${array[@]/(#b)(Value ([[:digit:]]##)|*)/$(( ${#match[2]} &gt; 0 ? append(++idx) : ++idx ))}
 print $gathered ▶ Value 1 Value 2
 </code></pre>
-
 <p>Use of <code>#b</code> glob flag enables math-code execution (and not only) in <code>/</code> and <code>//</code>
 substitutions. Implementation is very fast.</p>
 <h3 id="serializing_data">Serializing data<a class="headerlink" href="#serializing_data" title="Permanent link">#</a></h3>
@@ -4022,7 +4058,6 @@ serialized=&quot;${(j: :)${(qkv@)hsh}}&quot;
 deserialized=( &quot;${(Q@)${(z@)serialized}}&quot; )
 print ${(kv)deserialized} ▶ key value
 </code></pre>
-
 <p><code>j</code>-flag means join -- by spaces, in this case. Flags <code>kv</code> mean: keys and values,
 interleaving. Important <code>q</code>-flag means: quote. So what is obtained is each key
 and value quoted, and put into string separated by spaces.</p>
@@ -4037,7 +4072,6 @@ hash <code>deserialized</code>. Use this to e.g. implement array of hashes.</p>
 printf -v serialized &quot;%q &quot; &quot;${array[@]}&quot;
 eval &quot;deserialized=($serialized)&quot;
 </code></pre>
-
 <p>This method works also with Zsh. The drawback is use of <code>eval</code>, however it's
 impossible that any problem will occurr unless someone compromises variable's
 value, but as always, <code>eval</code> should be avoided if possible.</p>
@@ -4046,14 +4080,12 @@ value, but as always, <code>eval</code> should be avoided if possible.</p>
 <p>Following code checks if there is a <code>git</code> subcommand <code>$mysub</code>:</p>
 <pre><code>if git help -a | grep &quot;^  [a-z]&quot; | tr ' ' '\n' | grep -x $mysub &gt; /dev/null &gt; /dev/null; then
 </code></pre>
-
 <p>That are <code>4</code> forks. The code can be replaced according to this guide:</p>
 <pre><code>local -a lines_list
 lines_list=( ${(f)&quot;$(git help -a)&quot;} )
 lines_list=( ${(M)${(s: :)${(M)lines_list:#  [a-z]*}}:#$mysub} )
 if (( ${#lines_list} &gt; 0 )); then
 </code></pre>
-
 <p>The result is just <code>1</code> fork.</p>
 <h3 id="counting_unquoted-only_apostrophes">Counting unquoted-only apostrophes<a class="headerlink" href="#counting_unquoted-only_apostrophes" title="Permanent link">#</a></h3>
 <p>A project was needing this to do some Zle line-continuation tricks (when you
@@ -4068,7 +4100,6 @@ integer count=0
 : ${buf//(#b)((#s)|[^\\])([\\][\\])#(\'\'#)/$(( count += ${#match[3]} ))}
 echo $count ▶ 3
 </code></pre>
-
 <p>The answer (i.e. the output) to the above presentation and example is: <code>3</code>
 (there are <code>3</code> unquoted apostrophes in total in the string kept in the variable
 <code>$buf</code>).</p>
@@ -4078,7 +4109,6 @@ buf=&quot;${(S)buf//(#b)*((#s)|[^\\])([\\][\\])#(\'\'#)*/${match[3]}}&quot;; buf
 integer count=${#buf}
 echo $count ▶ 3
 </code></pre>
-
 <p>This is possible thanks to <code>(S)</code> flag – non-greedy matching, <code>([\\][\\])#</code> trick – it
 matches only unquoted following <code>(\'\'##)</code> characters (which are the apostrophes) and
 a general strategy to replace <code>anything-apostrope(s)</code> (unquoted ones) with
@@ -4091,7 +4121,7 @@ but the hash keys like <code>$DB_CONF[db1_&lt;connection&gt;_host]</code> are ac
 intuitive.</p>
 <p>The code should be placed in file named <code>read-ini-file</code>, in <code>$fpath</code>, and
 <code>autoload read-ini-file</code> should be invoked.</p>
-<pre><code class="zsh"># Copyright (c) 2018 Sebastian Gniazdowski
+<pre><code class="language-zsh"># Copyright (c) 2018 Sebastian Gniazdowski
 #
 # $1 - path to the ini file to parse
 # $2 - name of output hash
@@ -4163,6 +4193,7 @@ return 0
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -4238,19 +4269,13 @@ return 0
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       

@@ -1,6 +1,4 @@
 
-
-
 <!doctype html>
 <html lang="en" class="no-js">
   <head>
@@ -10,8 +8,9 @@
       
       
       
-      <link rel="shortcut icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.4.0">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.6">
     
     
       
@@ -19,16 +18,20 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.fe0cca5b.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.a57b2b03.min.css">
       
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.3f5d1f46.min.css">
+        
       
     
     
     
       
-        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
-        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
       
     
     
@@ -38,14 +41,69 @@
       <link rel="stylesheet" href="../css/syntax-highlighting.css">
     
     
-      
+      <!--
+  Copyright (c) 2016-2019 Martin Donath <martin.donath@squidfunk.com>
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Google Analytics integration -->
+
+<script type="text/javascript">
+  window.ga = window.ga || function() {
+    (ga.q = ga.q || []).push(arguments)
+  }
+  ga.l = +new Date
+
+  /* Setup integration and send page view */
+  ga("create", "", "")
+  ga("set", "anonymizeIp", true)
+  ga("send", "pageview")
+
+  /* Register handler to log search on blur */
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.forms.search) {
+      var query = document.forms.search.query
+      query.addEventListener("blur", function() {
+        if (this.value) {
+          var path = document.location.pathname;
+          ga("send", "pageview", path + "?q=" + this.value)
+        }
+      })
+    }
+  })
+</script>
+<script async src="https://www.google-analytics.com/analytics.js"></script>
     
     
   </head>
   
   
-    <body dir="ltr">
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="none" data-md-color-accent="none">
   
+    
+    <script>function __prefix(e){return new URL("..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -195,16 +253,17 @@
     
     <div class="md-container" data-md-component="container">
       
+      
         
-      
-      
+          
         
       
       <main class="md-main" data-md-component="main">
         <div class="md-main__inner md-grid">
           
             
-              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -1978,7 +2037,8 @@
               </div>
             
             
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
                 <div class="md-sidebar__scrollwrap">
                   <div class="md-sidebar__inner">
                     <!--
@@ -3791,12 +3851,9 @@
               </div>
             
           
-          <div class="md-content">
+          <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-                
-                
-                  
                 
                 
                 <h1 id="zinitzsh1">zinit.zsh(1)<a class="headerlink" href="#zinitzsh1" title="Permanent link">#</a></h1>
@@ -3805,7 +3862,7 @@
 <h2 id="synopsis">SYNOPSIS<a class="headerlink" href="#synopsis" title="Permanent link">#</a></h2>
 <p>Documentation automatically generated with `zshelldoc'</p>
 <h2 id="functions">FUNCTIONS<a class="headerlink" href="#functions" title="Permanent link">#</a></h2>
-<pre><code class="text">pmodload
+<pre><code class="language-text">pmodload
 zpcdclear
 zpcdreplay
 zpcompdef
@@ -3854,87 +3911,75 @@ AUTOLOAD compinit
 AUTOLOAD is-at-least
 PRECMD-HOOK @zinit-scheduler
 </code></pre>
-
 <h2 id="details">DETAILS<a class="headerlink" href="#details" title="Permanent link">#</a></h2>
 <h2 id="script_body">Script Body<a class="headerlink" href="#script_body" title="Permanent link">#</a></h2>
 <p>Has 117 line(s). Calls functions:</p>
-<pre><code class="text">Script-Body
+<pre><code class="language-text">Script-Body
 |-- add-zsh-hook
 |-- is-at-least
 `-- .zinit-prepare-home
 </code></pre>
-
 <p>Uses feature(s): <em>alias</em>, <em>autoload</em>, <em>export</em>, <em>zmodload</em>, <em>zstyle</em></p>
 <p><em>Exports (environment):</em> ZPFX</p>
 <h2 id="pmodload">pmodload<a class="headerlink" href="#pmodload" title="Permanent link">#</a></h2>
-<pre><code class="text">Compatibility with Prezto. Calls can be recursive.
+<pre><code class="language-text">Compatibility with Prezto. Calls can be recursive.
 </code></pre>
-
 <p>Has 9 line(s). Calls functions:</p>
-<pre><code class="text">pmodload
+<pre><code class="language-text">pmodload
 `-- .zinit-load-snippet
 |-- .zinit-deploy-message
 |-- .zinit-pack-ice
 |-- .zinit-wrap-track-functions
 `-- zinit-install.zsh/.zinit-download-snippet
 </code></pre>
-
 <p>Uses feature(s): <em>zstyle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zpcdclear">zpcdclear<a class="headerlink" href="#zpcdclear" title="Permanent link">#</a></h2>
-<pre><code class="text">A wrapper for `zinit cdclear -q' which can be called from hook
+<pre><code class="language-text">A wrapper for `zinit cdclear -q' which can be called from hook
 ices like the atinit'', atload'', etc. ices.
 </code></pre>
-
 <p>Has 1 line(s). Calls functions:</p>
-<pre><code class="text">zpcdclear
+<pre><code class="language-text">zpcdclear
 `-- .zinit-compdef-clear
 </code></pre>
-
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zpcdreplay">zpcdreplay<a class="headerlink" href="#zpcdreplay" title="Permanent link">#</a></h2>
-<pre><code class="text">A function that can be invoked from within `atinit', `atload', etc.
+<pre><code class="language-text">A function that can be invoked from within `atinit', `atload', etc.
 ice-mod.  It works like `zinit cdreplay', which cannot be invoked
 from such hook ices.
 </code></pre>
-
 <p>Has 1 line(s). Calls functions:</p>
-<pre><code class="text">zpcdreplay
+<pre><code class="language-text">zpcdreplay
 `-- .zinit-compdef-replay
 </code></pre>
-
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zpcompdef">zpcompdef<a class="headerlink" href="#zpcompdef" title="Permanent link">#</a></h2>
-<pre><code class="text">Stores compdef for a replay with `zpcdreplay' (turbo mode) or
+<pre><code class="language-text">Stores compdef for a replay with `zpcdreplay' (turbo mode) or
 with `zinit cdreplay' (normal mode). An utility functton of
 an undefined use case.
 </code></pre>
-
 <p>Has 1 line(s). Doesn't call other functions.</p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zpcompinit">zpcompinit<a class="headerlink" href="#zpcompinit" title="Permanent link">#</a></h2>
-<pre><code class="text">A function that can be invoked from within `atinit', `atload', etc.
+<pre><code class="language-text">A function that can be invoked from within `atinit', `atload', etc.
 ice-mod.  It runs `autoload compinit; compinit' and respects
 ZINIT[ZCOMPDUMP_PATH] and ZINIT[COMPINIT_OPTS].
 </code></pre>
-
 <p>Has 1 line(s). Calls functions:</p>
-<pre><code class="text">zpcompinit
+<pre><code class="language-text">zpcompinit
 `-- compinit
 </code></pre>
-
 <p>Uses feature(s): <em>autoload</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-add-report">.zinit-add-report<a class="headerlink" href="#zinit-add-report" title="Permanent link">#</a></h2>
-<pre><code class="text">Adds a report line for given plugin.
+<pre><code class="language-text">Adds a report line for given plugin.
 
 $1 - uspl2, i.e. user/plugin
 $2, ... - the text
 </code></pre>
-
 <p>Has 2 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load-plugin
+<pre><code class="language-text">.zinit-load-plugin
 :zinit-shadow-alias
 :zinit-shadow-autoload
 :zinit-shadow-bindkey
@@ -3942,19 +3987,17 @@ $2, ... - the text
 :zinit-shadow-zle
 :zinit-shadow-zstyle
 </code></pre>
-
 <h2 id="zinit-any-to-user-plugin">.zinit-any-to-user-plugin<a class="headerlink" href="#zinit-any-to-user-plugin" title="Permanent link">#</a></h2>
-<pre><code class="text">Allows elastic plugin-spec across the code.
+<pre><code class="language-text">Allows elastic plugin-spec across the code.
 
 $1 - plugin spec (2 formats: user/plugin, user plugin)
 $2 - plugin (only when $1 - i.e. user - given)
 
 Returns user and plugin in $reply
 </code></pre>
-
 <p>Has 23 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load
+<pre><code class="language-text">.zinit-load
 .zinit-unregister-plugin
 zinit-autoload.zsh/.zinit-any-to-uspl2
 zinit-autoload.zsh/.zinit-changes
@@ -3980,48 +4023,39 @@ zinit-side.zsh/.zinit-any-colorify-as-uspl2
 zinit-side.zsh/.zinit-exists-physically
 zinit-side.zsh/.zinit-first
 </code></pre>
-
 <h2 id="zinit-clear-debug-report">.zinit-clear-debug-report<a class="headerlink" href="#zinit-clear-debug-report" title="Permanent link">#</a></h2>
-<pre><code class="text">Forgets dtrace repport gathered up to this moment.
+<pre><code class="language-text">Forgets dtrace repport gathered up to this moment.
 </code></pre>
-
 <p>Has 1 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-clear-debug-report
+<pre><code class="language-text">.zinit-clear-debug-report
 `-- zinit-autoload.zsh/.zinit-clear-report-for
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit
+<pre><code class="language-text">zinit
 zinit-autoload.zsh/.zinit-unload
 </code></pre>
-
 <h2 id="zinit-compdef-clear">.zinit-compdef-clear<a class="headerlink" href="#zinit-compdef-clear" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements user-exposed functionality to clear gathered compdefs.
+<pre><code class="language-text">Implements user-exposed functionality to clear gathered compdefs.
 </code></pre>
-
 <p>Has 3 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">zpcdclear
+<pre><code class="language-text">zpcdclear
 zinit
 </code></pre>
-
 <h2 id="zinit-compdef-replay">.zinit-compdef-replay<a class="headerlink" href="#zinit-compdef-replay" title="Permanent link">#</a></h2>
-<pre><code class="text">Runs gathered compdef calls. This allows to run `compinit'
+<pre><code class="language-text">Runs gathered compdef calls. This allows to run `compinit'
 after loading plugins.
 </code></pre>
-
 <p>Has 16 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">zpcdreplay
+<pre><code class="language-text">zpcdreplay
 zinit
 </code></pre>
-
 <h2 id="zinit-debug-start">.zinit-debug-start<a class="headerlink" href="#zinit-debug-start" title="Permanent link">#</a></h2>
-<pre><code class="text">Starts Dtrace, i.e. session tracking for changes in Zsh state.
+<pre><code class="language-text">Starts Dtrace, i.e. session tracking for changes in Zsh state.
 </code></pre>
-
 <p>Has 9 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-debug-start
+<pre><code class="language-text">.zinit-debug-start
 |-- .zinit-diff
 |   |-- .zinit-diff-env
 |   |-- .zinit-diff-functions
@@ -4029,17 +4063,14 @@ zinit
 |   `-- .zinit-diff-parameter
 `-- .zinit-shadow-on
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit
+<pre><code class="language-text">zinit
 </code></pre>
-
 <h2 id="zinit-debug-stop">.zinit-debug-stop<a class="headerlink" href="#zinit-debug-stop" title="Permanent link">#</a></h2>
-<pre><code class="text">Stops Dtrace, i.e. session tracking for changes in Zsh state.
+<pre><code class="language-text">Stops Dtrace, i.e. session tracking for changes in Zsh state.
 </code></pre>
-
 <p>Has 3 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-debug-stop
+<pre><code class="language-text">.zinit-debug-stop
 |-- .zinit-diff
 |   |-- .zinit-diff-env
 |   |-- .zinit-diff-functions
@@ -4047,141 +4078,118 @@ zinit
 |   `-- .zinit-diff-parameter
 `-- .zinit-shadow-off
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit
+<pre><code class="language-text">zinit
 </code></pre>
-
 <h2 id="zinit-debug-unload">.zinit-debug-unload<a class="headerlink" href="#zinit-debug-unload" title="Permanent link">#</a></h2>
-<pre><code class="text">Reverts changes detected by dtrace run.
+<pre><code class="language-text">Reverts changes detected by dtrace run.
 </code></pre>
-
 <p>Has 5 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-debug-unload
+<pre><code class="language-text">.zinit-debug-unload
 `-- zinit-autoload.zsh/.zinit-unload
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit
+<pre><code class="language-text">zinit
 </code></pre>
-
 <h2 id="zinit-deploy-message">.zinit-deploy-message<a class="headerlink" href="#zinit-deploy-message" title="Permanent link">#</a></h2>
-<pre><code class="text">Deploys a sub-prompt message to be displayed OR a `zle
+<pre><code class="language-text">Deploys a sub-prompt message to be displayed OR a `zle
 .reset-prompt' call to be invoked
 </code></pre>
-
 <p>Has 12 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>read</em>, <em>zle</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load-snippet
+<pre><code class="language-text">.zinit-load-snippet
 .zinit-load
 </code></pre>
-
 <h2 id="zinit-diff">.zinit-diff<a class="headerlink" href="#zinit-diff" title="Permanent link">#</a></h2>
-<pre><code class="text">Performs diff actions of all types
+<pre><code class="language-text">Performs diff actions of all types
 </code></pre>
-
 <p>Has 4 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-diff
+<pre><code class="language-text">.zinit-diff
 |-- .zinit-diff-env
 |-- .zinit-diff-functions
 |-- .zinit-diff-options
 `-- .zinit-diff-parameter
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">.zinit-debug-start
+<pre><code class="language-text">.zinit-debug-start
 .zinit-debug-stop
 .zinit-load-plugin
 </code></pre>
-
 <h2 id="zinit-diff-env">.zinit-diff-env<a class="headerlink" href="#zinit-diff-env" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements detection of change in PATH and FPATH.
+<pre><code class="language-text">Implements detection of change in PATH and FPATH.
 
 $1 - user/plugin (i.e. uspl2 format)
 $2 - command, can be &quot;begin&quot; or &quot;end&quot;
 </code></pre>
-
 <p>Has 18 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-diff
+<pre><code class="language-text">.zinit-diff
 .zinit-load-plugin
 </code></pre>
-
 <h2 id="zinit-diff-functions">.zinit-diff-functions<a class="headerlink" href="#zinit-diff-functions" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements detection of newly created functions. Performs
+<pre><code class="language-text">Implements detection of newly created functions. Performs
 data gathering, computation is done in *-compute().
 
 $1 - user/plugin (i.e. uspl2 format)
 $2 - command, can be &quot;begin&quot; or &quot;end&quot;
 </code></pre>
-
 <p>Has 8 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-diff
+<pre><code class="language-text">.zinit-diff
 </code></pre>
-
 <h2 id="zinit-diff-options">.zinit-diff-options<a class="headerlink" href="#zinit-diff-options" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements detection of change in option state. Performs
+<pre><code class="language-text">Implements detection of change in option state. Performs
 data gathering, computation is done in *-compute().
 
 $1 - user/plugin (i.e. uspl2 format)
 $2 - command, can be &quot;begin&quot; or &quot;end&quot;
 </code></pre>
-
 <p>Has 7 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-diff
+<pre><code class="language-text">.zinit-diff
 </code></pre>
-
 <h2 id="zinit-diff-parameter">.zinit-diff-parameter<a class="headerlink" href="#zinit-diff-parameter" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements detection of change in any parameter's existence and type.
+<pre><code class="language-text">Implements detection of change in any parameter's existence and type.
 Performs data gathering, computation is done in *-compute().
 
 $1 - user/plugin (i.e. uspl2 format)
 $2 - command, can be &quot;begin&quot; or &quot;end&quot;
 </code></pre>
-
 <p>Has 9 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-diff
+<pre><code class="language-text">.zinit-diff
 </code></pre>
-
 <h2 id="zinit-find-other-matches">.zinit-find-other-matches<a class="headerlink" href="#zinit-find-other-matches" title="Permanent link">#</a></h2>
-<pre><code class="text">Plugin's main source file is in general `name.plugin.zsh'. However,
+<pre><code class="language-text">Plugin's main source file is in general `name.plugin.zsh'. However,
 there can be different conventions, if that file is not found, then
 this functions examines other conventions in order of most expected
 sanity.
 </code></pre>
-
 <p>Has 14 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load-plugin
+<pre><code class="language-text">.zinit-load-plugin
 zinit-side.zsh/.zinit-first
 </code></pre>
-
 <h2 id="zinit-ice">.zinit-ice<a class="headerlink" href="#zinit-ice" title="Permanent link">#</a></h2>
-<pre><code class="text">Parses ICE specification (`zplg ice' subcommand), puts the result
+<pre><code class="language-text">Parses ICE specification (`zplg ice' subcommand), puts the result
 into ZINIT_ICE global hash. The ice-spec is valid for next command
 only (i.e. it &quot;melts&quot;), but it can then stick to plugin and activate
 e.g. at update.
 </code></pre>
-
 <p>Has 8 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">zinit
+<pre><code class="language-text">zinit
 </code></pre>
-
 <p><em>Environment variables used:</em> ZPFX</p>
 <h2 id="zinit-load">.zinit-load<a class="headerlink" href="#zinit-load" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements the exposed-to-user action of loading a plugin.
+<pre><code class="language-text">Implements the exposed-to-user action of loading a plugin.
 
 $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 $2 - plugin name, if the third format is used
 </code></pre>
-
 <p>Has 42 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-load
+<pre><code class="language-text">.zinit-load
 |-- .zinit-any-to-user-plugin
 |-- .zinit-deploy-message
 |-- .zinit-load-plugin
@@ -4200,24 +4208,21 @@ $2 - plugin name, if the third format is used
 |-- .zinit-register-plugin
 `-- zinit-install.zsh/.zinit-setup-plugin-dir
 </code></pre>
-
 <p>Uses feature(s): <em>eval</em>, <em>source</em>, <em>zle</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-run-task
+<pre><code class="language-text">.zinit-run-task
 .zinit-service
 zinit
 </code></pre>
-
 <h2 id="zinit-load-plugin">.zinit-load-plugin<a class="headerlink" href="#zinit-load-plugin" title="Permanent link">#</a></h2>
-<pre><code class="text">Lower-level function for loading a plugin.
+<pre><code class="language-text">Lower-level function for loading a plugin.
 
 $1 - user
 $2 - plugin
 $3 - mode (light or load)
 </code></pre>
-
 <p>Has 96 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-load-plugin
+<pre><code class="language-text">.zinit-load-plugin
 |-- .zinit-add-report
 |-- .zinit-diff
 |   |-- .zinit-diff-env
@@ -4230,80 +4235,68 @@ $3 - mode (light or load)
 |-- .zinit-shadow-on
 `-- .zinit-wrap-track-functions
 </code></pre>
-
 <p>Uses feature(s): <em>eval</em>, <em>source</em>, <em>zle</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load
+<pre><code class="language-text">.zinit-load
 </code></pre>
-
 <h2 id="zinit-load-snippet">.zinit-load-snippet<a class="headerlink" href="#zinit-load-snippet" title="Permanent link">#</a></h2>
-<pre><code class="text">Implements the exposed-to-user action of loading a snippet.
+<pre><code class="language-text">Implements the exposed-to-user action of loading a snippet.
 
 $1 - url (can be local, absolute path)
 </code></pre>
-
 <p>Has 180 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-load-snippet
+<pre><code class="language-text">.zinit-load-snippet
 |-- .zinit-deploy-message
 |-- .zinit-pack-ice
 |-- .zinit-wrap-track-functions
 `-- zinit-install.zsh/.zinit-download-snippet
 </code></pre>
-
 <p>Uses feature(s): <em>autoload</em>, <em>eval</em>, <em>source</em>, <em>unfunction</em>, <em>zparseopts</em>, <em>zstyle</em></p>
 <p>Called by:</p>
-<pre><code class="text">pmodload
+<pre><code class="language-text">pmodload
 .zinit-run-task
 .zinit-service
 zinit
 zinit-autoload.zsh/.zinit-update-or-status-snippet
 </code></pre>
-
 <h2 id="zinit-pack-ice">.zinit-pack-ice<a class="headerlink" href="#zinit-pack-ice" title="Permanent link">#</a></h2>
-<pre><code class="text">Remembers all ice-mods, assigns them to concrete plugin. Ice spec
+<pre><code class="language-text">Remembers all ice-mods, assigns them to concrete plugin. Ice spec
 is in general forgotten for second-next command (that's why it's
 called &quot;ice&quot; - it melts), however they glue to the object (plugin
 or snippet) mentioned in the next command – for later use with e.g.
 `zinit update ...'
 </code></pre>
-
 <p>Has 3 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load-snippet
+<pre><code class="language-text">.zinit-load-snippet
 .zinit-load
 zinit-autoload.zsh/.zinit-compute-ice
 </code></pre>
-
 <h2 id="zinit-prepare-home">.zinit-prepare-home<a class="headerlink" href="#zinit-prepare-home" title="Permanent link">#</a></h2>
-<pre><code class="text">Creates all directories needed by Zinit, first checks if they
+<pre><code class="language-text">Creates all directories needed by Zinit, first checks if they
 already exist.
 </code></pre>
-
 <p>Has 28 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">Script-Body
+<pre><code class="language-text">Script-Body
 </code></pre>
-
 <p><em>Environment variables used:</em> ZPFX</p>
 <h2 id="zinit-register-plugin">.zinit-register-plugin<a class="headerlink" href="#zinit-register-plugin" title="Permanent link">#</a></h2>
-<pre><code class="text">Adds the plugin to ZINIT_REGISTERED_PLUGINS array and to the
+<pre><code class="language-text">Adds the plugin to ZINIT_REGISTERED_PLUGINS array and to the
 zsh_loaded_plugins array (managed according to the plugin standard:
 http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html)
 </code></pre>
-
 <p>Has 23 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load
+<pre><code class="language-text">.zinit-load
 </code></pre>
-
 <h2 id="zplg-register-z-plugin">@zplg-register-z-plugin<a class="headerlink" href="#zplg-register-z-plugin" title="Permanent link">#</a></h2>
-<pre><code class="text">Registers the z-plugin inside Zinit – i.e. an Zinit extension
+<pre><code class="language-text">Registers the z-plugin inside Zinit – i.e. an Zinit extension
 </code></pre>
-
 <p>Has 4 line(s). Doesn't call other functions.</p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-reload-and-run">:zinit-reload-and-run<a class="headerlink" href="#zinit-reload-and-run" title="Permanent link">#</a></h2>
-<pre><code class="text">Marks given function ($3) for autoloading, and executes it triggering the
+<pre><code class="language-text">Marks given function ($3) for autoloading, and executes it triggering the
 load. $1 is the fpath dedicated to the function, $2 are autoload options.
 This function replaces &quot;autoload -X&quot;, because using that on older Zsh
 versions causes problems with traps.
@@ -4317,12 +4310,11 @@ $3 - function name (one that needs autoloading)
 
 Author: Bart Schaefer
 </code></pre>
-
 <p>Has 7 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>autoload</em>, <em>unfunction</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-run-task">.zinit-run-task<a class="headerlink" href="#zinit-run-task" title="Permanent link">#</a></h2>
-<pre><code class="text">A backend, worker function of .zinit-scheduler. It obtains the tasks
+<pre><code class="language-text">A backend, worker function of .zinit-scheduler. It obtains the tasks
 index and a few of its properties (like the type: plugin, snippet,
 service plugin, service snippet) and executes it first checking for
 additional conditions (like non-numeric wait'' ice).
@@ -4334,9 +4326,8 @@ $4 - task's index in the ZINIT[WAIT_ICE_...] fields
 $5 - mode: load or light
 $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 </code></pre>
-
 <p>Has 41 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-run-task
+<pre><code class="language-text">.zinit-run-task
 |-- .zinit-load
 |   |-- .zinit-any-to-user-plugin
 |   |-- .zinit-deploy-message
@@ -4362,14 +4353,12 @@ $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 |   `-- zinit-install.zsh/.zinit-download-snippet
 `-- zinit-autoload.zsh/.zinit-unload
 </code></pre>
-
 <p>Uses feature(s): <em>eval</em>, <em>source</em>, <em>zle</em>, <em>zpty</em></p>
 <p>Called by:</p>
-<pre><code class="text">@zinit-scheduler
+<pre><code class="language-text">@zinit-scheduler
 </code></pre>
-
 <h2 id="zinit-scheduler">@zinit-scheduler<a class="headerlink" href="#zinit-scheduler" title="Permanent link">#</a></h2>
-<pre><code class="text">Searches for timeout tasks, executes them. There's an array of tasks
+<pre><code class="language-text">Searches for timeout tasks, executes them. There's an array of tasks
 waiting for execution, this scheduler manages them, detects which ones
 should be run at current moment, decides to remove (or not) them from
 the array after execution.
@@ -4384,9 +4373,8 @@ needs to install all turbo-mode plugins without any hesitation
 (delay), i.e. &quot;burst&quot; allows to run package installations from
 script, not from prompt
 </code></pre>
-
 <p>Has 62 line(s). <em>Is a precmd hook</em>. Calls functions:</p>
-<pre><code class="text">@zinit-scheduler
+<pre><code class="language-text">@zinit-scheduler
 |-- add-zsh-hook
 `-- .zinit-run-task
 |-- .zinit-load
@@ -4414,19 +4402,17 @@ script, not from prompt
 |   `-- zinit-install.zsh/.zinit-download-snippet
 `-- zinit-autoload.zsh/.zinit-unload
 </code></pre>
-
 <p>Uses feature(s): <em>sched</em>, <em>zle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-service">.zinit-service<a class="headerlink" href="#zinit-service" title="Permanent link">#</a></h2>
-<pre><code class="text">Handles given service, i.e. obtains lock, runs it, or waits if no lock
+<pre><code class="language-text">Handles given service, i.e. obtains lock, runs it, or waits if no lock
 
 $1 - type &quot;p&quot; or &quot;s&quot; (plugin or snippet)
 $2 - mode - for plugin (light or load)
 $3 - id - URL or plugin ID or alias name (from id-as'')
 </code></pre>
-
 <p>Has 30 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-service
+<pre><code class="language-text">.zinit-service
 |-- .zinit-load
 |   |-- .zinit-any-to-user-plugin
 |   |-- .zinit-deploy-message
@@ -4451,155 +4437,131 @@ $3 - id - URL or plugin ID or alias name (from id-as'')
 |-- .zinit-wrap-track-functions
 `-- zinit-install.zsh/.zinit-download-snippet
 </code></pre>
-
 <p>Uses feature(s): <em>kill</em>, <em>read</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-shadow-alias">:zinit-shadow-alias<a class="headerlink" href="#zinit-shadow-alias" title="Permanent link">#</a></h2>
-<pre><code class="text">Function defined to hijack plugin's calls to `alias' builtin.
+<pre><code class="language-text">Function defined to hijack plugin's calls to `alias' builtin.
 
 The hijacking is to gather report data (which is used in unload).
 </code></pre>
-
 <p>Has 34 line(s). Calls functions:</p>
-<pre><code class="text">:zinit-shadow-alias
+<pre><code class="language-text">:zinit-shadow-alias
 `-- .zinit-add-report
 </code></pre>
-
 <p>Uses feature(s): <em>alias</em>, <em>zparseopts</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-shadow-autoload">:zinit-shadow-autoload<a class="headerlink" href="#zinit-shadow-autoload" title="Permanent link">#</a></h2>
-<pre><code class="text">Function defined to hijack plugin's calls to `autoload' builtin.
+<pre><code class="language-text">Function defined to hijack plugin's calls to `autoload' builtin.
 
 The hijacking is not only to gather report data, but also to
 run custom `autoload' function, that doesn't need FPATH.
 </code></pre>
-
 <p>Has 48 line(s). Calls functions:</p>
-<pre><code class="text">:zinit-shadow-autoload
+<pre><code class="language-text">:zinit-shadow-autoload
 `-- .zinit-add-report
 </code></pre>
-
 <p>Uses feature(s): <em>autoload</em>, <em>eval</em>, <em>zparseopts</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-shadow-bindkey">:zinit-shadow-bindkey<a class="headerlink" href="#zinit-shadow-bindkey" title="Permanent link">#</a></h2>
-<pre><code class="text">Function defined to hijack plugin's calls to `bindkey' builtin.
+<pre><code class="language-text">Function defined to hijack plugin's calls to `bindkey' builtin.
 
 The hijacking is to gather report data (which is used in unload).
 </code></pre>
-
 <p>Has 104 line(s). Calls functions:</p>
-<pre><code class="text">:zinit-shadow-bindkey
+<pre><code class="language-text">:zinit-shadow-bindkey
 |-- is-at-least
 `-- .zinit-add-report
 </code></pre>
-
 <p>Uses feature(s): <em>bindkey</em>, <em>zparseopts</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-shadow-compdef">:zinit-shadow-compdef<a class="headerlink" href="#zinit-shadow-compdef" title="Permanent link">#</a></h2>
-<pre><code class="text">Function defined to hijack plugin's calls to `compdef' function.
+<pre><code class="language-text">Function defined to hijack plugin's calls to `compdef' function.
 The hijacking is not only for reporting, but also to save compdef
 calls so that `compinit' can be called after loading plugins.
 </code></pre>
-
 <p>Has 4 line(s). Calls functions:</p>
-<pre><code class="text">:zinit-shadow-compdef
+<pre><code class="language-text">:zinit-shadow-compdef
 `-- .zinit-add-report
 </code></pre>
-
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-shadow-off">.zinit-shadow-off<a class="headerlink" href="#zinit-shadow-off" title="Permanent link">#</a></h2>
-<pre><code class="text">Turn off shadowing completely for a given mode (&quot;load&quot;, &quot;light&quot;,
+<pre><code class="language-text">Turn off shadowing completely for a given mode (&quot;load&quot;, &quot;light&quot;,
 &quot;light-b&quot; (i.e. the `trackbinds' mode) or &quot;compdef&quot;).
 </code></pre>
-
 <p>Has 18 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>unfunction</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-debug-stop
+<pre><code class="language-text">.zinit-debug-stop
 .zinit-load-plugin
 </code></pre>
-
 <h2 id="zinit-shadow-on">.zinit-shadow-on<a class="headerlink" href="#zinit-shadow-on" title="Permanent link">#</a></h2>
-<pre><code class="text">Turn on shadowing of builtins and functions according to passed
+<pre><code class="language-text">Turn on shadowing of builtins and functions according to passed
 mode (&quot;load&quot;, &quot;light&quot;, &quot;light-b&quot; or &quot;compdef&quot;). The shadowing is
 to gather report data, and to hijack `autoload', `bindkey' and
 `compdef' calls.
 </code></pre>
-
 <p>Has 25 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-debug-start
+<pre><code class="language-text">.zinit-debug-start
 .zinit-load-plugin
 </code></pre>
-
 <h2 id="zinit-shadow-zle">:zinit-shadow-zle<a class="headerlink" href="#zinit-shadow-zle" title="Permanent link">#</a></h2>
-<pre><code class="text">Function defined to hijack plugin's calls to `zle' builtin.
+<pre><code class="language-text">Function defined to hijack plugin's calls to `zle' builtin.
 
 The hijacking is to gather report data (which is used in unload).
 </code></pre>
-
 <p>Has 38 line(s). Calls functions:</p>
-<pre><code class="text">:zinit-shadow-zle
+<pre><code class="language-text">:zinit-shadow-zle
 `-- .zinit-add-report
 </code></pre>
-
 <p>Uses feature(s): <em>zle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-shadow-zstyle">:zinit-shadow-zstyle<a class="headerlink" href="#zinit-shadow-zstyle" title="Permanent link">#</a></h2>
-<pre><code class="text">Function defined to hijack plugin's calls to `zstyle' builtin.
+<pre><code class="language-text">Function defined to hijack plugin's calls to `zstyle' builtin.
 
 The hijacking is to gather report data (which is used in unload).
 </code></pre>
-
 <p>Has 21 line(s). Calls functions:</p>
-<pre><code class="text">:zinit-shadow-zstyle
+<pre><code class="language-text">:zinit-shadow-zstyle
 `-- .zinit-add-report
 </code></pre>
-
 <p>Uses feature(s): <em>zparseopts</em>, <em>zstyle</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="zinit-submit-turbo">.zinit-submit-turbo<a class="headerlink" href="#zinit-submit-turbo" title="Permanent link">#</a></h2>
-<pre><code class="text">If `zinit load`, `zinit light` or `zinit snippet`  will be
+<pre><code class="language-text">If `zinit load`, `zinit light` or `zinit snippet`  will be
 preceded with `wait', `load', `unload' or `on-update-of`/`subscribe'
 ice-mods then the plugin or snipped is to be loaded in turbo-mode,
 and this function adds it to internal data structures, so that
 @zinit-scheduler can run (load, unload) this as a task.
 </code></pre>
-
 <p>Has 14 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">zinit
+<pre><code class="language-text">zinit
 </code></pre>
-
 <h2 id="zinit-unregister-plugin">.zinit-unregister-plugin<a class="headerlink" href="#zinit-unregister-plugin" title="Permanent link">#</a></h2>
-<pre><code class="text">Removes the plugin from ZINIT_REGISTERED_PLUGINS array and from the
+<pre><code class="language-text">Removes the plugin from ZINIT_REGISTERED_PLUGINS array and from the
 zsh_loaded_plugins array (managed according to the plugin standard)
 </code></pre>
-
 <p>Has 5 line(s). Calls functions:</p>
-<pre><code class="text">.zinit-unregister-plugin
+<pre><code class="language-text">.zinit-unregister-plugin
 `-- .zinit-any-to-user-plugin
 </code></pre>
-
 <p>Called by:</p>
-<pre><code class="text">zinit-autoload.zsh/.zinit-unload
+<pre><code class="language-text">zinit-autoload.zsh/.zinit-unload
 </code></pre>
-
 <h2 id="zinit-wrap-track-functions">.zinit-wrap-track-functions<a class="headerlink" href="#zinit-wrap-track-functions" title="Permanent link">#</a></h2>
 <p>Has 19 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>eval</em></p>
 <p>Called by:</p>
-<pre><code class="text">.zinit-load-plugin
+<pre><code class="language-text">.zinit-load-plugin
 .zinit-load-snippet
 </code></pre>
-
 <h2 id="zinit">zinit<a class="headerlink" href="#zinit" title="Permanent link">#</a></h2>
-<pre><code class="text">Main function directly exposed to user, obtains subcommand and its
+<pre><code class="language-text">Main function directly exposed to user, obtains subcommand and its
 arguments, has completion.
 </code></pre>
-
 <p>Has 290 line(s). Calls functions:</p>
-<pre><code class="text">zinit
+<pre><code class="language-text">zinit
 |-- compinit
 |-- .zinit-clear-debug-report
 |   `-- zinit-autoload.zsh/.zinit-clear-report-for
@@ -4676,37 +4638,33 @@ arguments, has completion.
 |-- zinit-install.zsh/.zinit-forget-completion
 `-- zinit-install.zsh/.zinit-install-completions
 </code></pre>
-
 <p>Uses feature(s): <em>autoload</em>, <em>eval</em>, <em>source</em></p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="-zinit_scheduler_add_sh">-zinit_scheduler_add_sh<a class="headerlink" href="#-zinit_scheduler_add_sh" title="Permanent link">#</a></h2>
-<pre><code class="text">Copies task into ZINIT_RUN array, called when a task timeouts.
+<pre><code class="language-text">Copies task into ZINIT_RUN array, called when a task timeouts.
 A small function ran from pattern in /-substitution as a math
 function.
 </code></pre>
-
 <p>Has 7 line(s). Doesn't call other functions.</p>
 <p>Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).</p>
 <h2 id="add-zsh-hook">add-zsh-hook<a class="headerlink" href="#add-zsh-hook" title="Permanent link">#</a></h2>
 <p>Has 93 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>autoload</em>, <em>getopts</em></p>
 <p>Called by:</p>
-<pre><code class="text">Script-Body
+<pre><code class="language-text">Script-Body
 @zinit-scheduler
 </code></pre>
-
 <h2 id="compinit">compinit<a class="headerlink" href="#compinit" title="Permanent link">#</a></h2>
 <p>Has 549 line(s). Doesn't call other functions.</p>
 <p>Uses feature(s): <em>autoload</em>, <em>bindkey</em>, <em>eval</em>, <em>read</em>, <em>unfunction</em>, <em>zle</em>, <em>zstyle</em></p>
 <p>Called by:</p>
-<pre><code class="text">zpcompinit
+<pre><code class="language-text">zpcompinit
 zinit
 </code></pre>
-
 <h2 id="is-at-least">is-at-least<a class="headerlink" href="#is-at-least" title="Permanent link">#</a></h2>
 <p>Has 56 line(s). Doesn't call other functions.</p>
 <p>Called by:</p>
-<pre><code class="text">Script-Body
+<pre><code class="language-text">Script-Body
 :zinit-shadow-bindkey
 </code></pre>
                 
@@ -4744,6 +4702,7 @@ zinit
             </article>
           </div>
         </div>
+        
       </main>
       
         <!--
@@ -4819,19 +4778,13 @@ zinit
 </footer>
       
     </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": [], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.config.pipeline": "", "search.config.separator": "", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "", "search.result.more.other": "", "search.result.term.missing": "", "select.version.title": ""}, "search": "../assets/javascripts/workers/search.fcfe8b6d.min.js", "version": null}</script>
     
-      <script src="../assets/javascripts/vendor.d710d30a.min.js"></script>
-      <script src="../assets/javascripts/bundle.b39636ac.min.js"></script><script id="__lang" type="application/json">{"search.result.one": "1 matching document", "search.config.separator": "", "search.config.pipeline": "", "clipboard.copied": "Copied to clipboard", "search.config.lang": "", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "clipboard.copy": "Copy to clipboard"}</script>
-      
-      <script>
-        app = initialize({
-          base: "..",
-          features: [],
-          search: Object.assign({
-            worker: "../assets/javascripts/worker/search.a68abb33.min.js"
-          }, typeof search !== "undefined" && search)
-        })
-      </script>
+    
+      <script src="../assets/javascripts/bundle.b1047164.min.js"></script>
       
         <script src="../js/syntax-highlighting.js"></script>
       
