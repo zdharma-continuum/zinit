@@ -7,13 +7,14 @@ about: Create a report to help Zplugin improve
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior.
+**Zinit config**
+Steps to reproduce the behavior. Please include any relevant config section
+that may help the maintainers reproduce the issue.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+**Screenshots (optional)**
 If applicable, add screenshots to help explain your problem.
 
 **Versions:**
