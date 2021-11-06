@@ -9,6 +9,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 06-11-2021
+  - 📚 zinit now ensures that the man dirs under `$ZPFX/man` are created on
+startup. Please note that these directories will not necessarily be part of your
+`manpath`. You may need to set `$MANPATH`. See #8 (and #7) for more details.
+
 * 21-01-2020
   - A few tips for the project rename following the field reports (the issues created
     by users):
