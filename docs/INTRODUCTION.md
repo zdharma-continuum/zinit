@@ -15,7 +15,7 @@ and much more.
 ## Basic Plugin Loading
 
 ```zsh
-zinit load zdharma/history-search-multi-word
+zinit load zdharma-continuum/history-search-multi-word
 zinit light zsh-users/zsh-syntax-highlighting
 ```
 

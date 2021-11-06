@@ -32,7 +32,7 @@ In other words, by issuing a `declzsh` command the user deploys a task of:
 
 2. Example **addition** of a plugin via the option **-AA** – in order to also
    set up ice modifiers enclose them in a preceding square-bracket block, i.e.
-   `declzsh -AA '[ wait"1" lucid ] zdharma/null'`:
+   `declzsh -AA '[ wait"1" lucid ] zdharma-continuum/null'`:
 ![screenshot](https://raw.githubusercontent.com/zdharma/declare-zsh/master/img/add.png)
 
 3. Example **deletion** of a plugin via the **purge** option **-PP** – the

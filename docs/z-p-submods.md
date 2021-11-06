@@ -28,7 +28,7 @@ Simply load as a plugin. The following command will install the z-plugin within
 Zplugin:
 
 ```zsh
-zplugin light zdharma/z-p-submods
+zplugin light zdharma-continuum/z-p-submods
 ```
 
 After executing this command you can then use the `submods''` ice. The command

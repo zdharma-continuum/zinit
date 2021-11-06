@@ -20,7 +20,7 @@ zinit wait'!' lucid for \
 # D.
 zinit wait lucid for \
   atinit"zicompinit; zicdreplay"  \
-        zdharma/fast-syntax-highlighting \
+        zdharma-continuum/fast-syntax-highlighting \
       OMZP::colored-man-pages \
   as"completion" \
         OMZP::docker/_docker
@@ -77,7 +77,7 @@ zinit snippet OMZP::docker/_docker
 
 # G.
 zinit ice atinit"zicompinit; zicdreplay"
-zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 ```
 
 In general, Turbo can be optionally enabled only for a subset of plugins or for

@@ -5,7 +5,7 @@ any of them  – after installing and updating a plugin or snippet. Simply load 
 as a plugin to make it active:
 
 ```zsh
-zplugin light zdharma/z-p-test
+zplugin light zdharma-continuum/z-p-test
 ```
 
 Example activation in the default quiet mode:
@@ -22,7 +22,7 @@ Example activation in non-quiet mode:
 Simply load as a plugin. This will install the extension within Zplugin:
 
 ```zsh
-zplugin light zdharma/z-p-test
+zplugin light zdharma-continuum/z-p-test
 ```
 
 []( vim:set ft=markdown tw=80: )

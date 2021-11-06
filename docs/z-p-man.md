@@ -14,7 +14,7 @@ and it then generates the manpages. To view them there's a `zman` command:
 # View README.md manpage in the terminal
 zman z-p-man
 # View the code documentation (via the full plugin name, as demonstrated)
-zman -c zdharma/z-p-man
+zman -c zdharma-continuum/z-p-man
 ```
 
 ## Screenshots
@@ -32,7 +32,7 @@ Code documentation for the plugin.zsh file (of the project):
 Simply load as a plugin. This will install the extension within Zplugin:
 
 ```zsh
-zplugin light zdharma/z-p-man
+zplugin light zdharma-continuum/z-p-man
 ```
 
 []( vim:set ft=markdown tw=80: )

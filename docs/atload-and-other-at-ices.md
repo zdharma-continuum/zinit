@@ -45,7 +45,7 @@ For example, in the following invocation:
 
 ```zsh
 zinit ice id-as'test' atload'!PATH+=:~/share'
-zinit load zdharma/null
+zinit load zdharma-continuum/null
 ```
 
 the `$PATH` is being changed within `atload` ice. Zinit's tracking records

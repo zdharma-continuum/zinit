@@ -162,7 +162,7 @@ Example:
 
 ```zsh
 % zinit ice gem'!asciidoctor'
-% zinit load zdharma/null
+% zinit load zdharma-continuum/null
 % which asciidoctor
 asciidoctor () {
         local bindir="/home/sg/.zinit/plugins/zdharma---null/bin" 
@@ -185,13 +185,13 @@ created with `fbin''` ice.
 Example:
 
 ```zsh
-% zinit delete zdharma/null
+% zinit delete zdharma-continuum/null
 Delete /home/sg/.zinit/plugins/zdharma---null?
 [yY/n…]
 y
 Done (action executed, exit code: 0)
 % zinit ice node'remark <- !remark-cli -> remark; remark-man'
-% zinit load zdharma/null
+% zinit load zdharma-continuum/null
 …installation messages…
 % which remark
 remark () {
@@ -218,7 +218,7 @@ Example:
 ```zsh
 % myfun() { pwd; ls -1 }
 % zinit ice fmod'cgn:myfun'
-% zinit load zdharma/null
+% zinit load zdharma-continuum/null
 % which myfun
 myfun () {
         local -x GEM_HOME="/home/sg/.zinit/plugins/zdharma---null"
@@ -287,7 +287,7 @@ Example:
 
 ```zsh
 % zinit ice fsrc"myscript -> myfunc" ferc"myscript"
-% zinit load zdharma/null
+% zinit load zdharma-continuum/null
 % which myfunc
 myfunc () {
         local bindir="/home/sg/.zinit/plugins/zdharma---null"

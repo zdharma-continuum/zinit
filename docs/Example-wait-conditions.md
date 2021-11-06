@@ -13,7 +13,7 @@ zinit light wfxr/forgit
 
 ```zsh
 zinit ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
-zinit light zdharma/zinit-crasis
+zinit light zdharma-continuum/zinit-crasis
 ```
 
  - `$ZLAST_COMMANDS` is an array build by [**fast-syntax-highlighting**](https://github.com/zdharma/fast-syntax-highlighting), it contains commands currently entered at prompt,

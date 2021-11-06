@@ -14,7 +14,7 @@ with a short ice-modifier specification with the `bindmap''` ice.
 
 ```zsh
 # Map Ctrl-G instead of Ctrl-R for the history searcher.
-zinit bindmap'^R -> ^G' for zdharma/history-search-multi-word
+zinit bindmap'^R -> ^G' for zdharma-continuum/history-search-multi-word
 
 # Map Ctrl-Shift-Left and …-Right used by URxvt instead of the Xterms' ones.
 #
@@ -84,10 +84,10 @@ used (default in the `for` syntax and when `zinit load …` is used) – then th
 
 ```zsh
 # With use of the light-mode ice and the for-syntax:
-zinit light-mode trackbinds bindmap'^R -> ^G' for zdharma/history-search-multi-word
+zinit light-mode trackbinds bindmap'^R -> ^G' for zdharma-continuum/history-search-multi-word
 
 # With use of the classic syntax:
-zinit trackbinds bindmap'^R -> ^G' for zdharma/history-search-multi-word
-zinit light zdharma/history-search-multi-word
+zinit trackbinds bindmap'^R -> ^G' for zdharma-continuum/history-search-multi-word
+zinit light zdharma-continuum/history-search-multi-word
 ```
 []( vim:set ft=markdown tw=80 fo+=a1n autoindent: )

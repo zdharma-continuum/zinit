@@ -1,7 +1,7 @@
 ```zsh
 zinit ice atinit'zmodload zsh/zprof' \
     atload'zprof | head -n 20; zmodload -u zsh/zprof'
-zinit light zdharma/fast-syntax-highlighting
+zinit light zdharma-continuum/fast-syntax-highlighting
 ```
 
  - `atinit''` loads `zsh/zprof` module (shipped with Zsh) before loading the

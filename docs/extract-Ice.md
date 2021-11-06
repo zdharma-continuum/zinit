@@ -26,7 +26,7 @@ It works as follows:
 ## Fixed Mode
 
 It is active when a filename is being passed as the `extract`'s argument, e.g.:
-`zinit extract=archive.zip for zdharma/null`. Multiple files can be specified
+`zinit extract=archive.zip for zdharma-continuum/null`. Multiple files can be specified
 – separated by spaces. In this mode all and only the specified files are being
 extracted.
 

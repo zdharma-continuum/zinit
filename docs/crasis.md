@@ -18,8 +18,8 @@ Install [**Zinit**](https://github.com/zdharma/zinit) and add following
 commands to `.zshrc`:
 
 ```SystemVerilog
-zinit light zdharma/zui
-zinit light zdharma/zplugin-crasis
+zinit light zdharma-continuum/zui
+zinit light zdharma-continuum/zplugin-crasis
 ```
 
 To use, invoke `crasis [optional zshrc path]` or press `Ctrl-o-k`. Global
