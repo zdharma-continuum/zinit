@@ -1,0 +1,23 @@
+ARG VERSION=latest
+FROM alpine:${VERSION}
+
+ARG PUSERNAME=user01
+ARG PUID=1000
+ARG PGID=1000
+ENV PUSERNAME=${PUSERNAME} PUID=${PUID} PGID=${PGID}
+
+RUN apk --no-cache add zsh libuser curl git && \
+    sed -ir 's#^(root:.+):/bin/ash#\1:/bin/zsh#' /etc/passwd && \
+    adduser -D -u "${PUID}" -h "/home/${PUSERNAME}" -s /bin/zsh "${PUSERNAME}" && \
+    echo "source /utils.zsh" > "/home/${PUSERNAME}/.zshrc" && \
+    chown "${PUID}:${PGID}" "/home/${PUSERNAME}/.zshrc" && \
+    mkdir -p /src
+
+WORKDIR /home/${PUSERNAME}
+VOLUME ["/src"]
+
+COPY ./utils.zsh /utils.zsh
+COPY ./entrypoint.zsh /entrypoint.zsh
+
+ENTRYPOINT ["/entrypoint.zsh"]
+CMD ["/bin/zsh"]
