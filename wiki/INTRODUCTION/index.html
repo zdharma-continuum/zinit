@@ -3342,7 +3342,7 @@ zinit snippet PZT::modules/git
 need for <code>":"</code> after ice-mod name (although it's allowed, so as the equal sign
 <code>=</code>, so e.g. <code>pick="init.zsh"</code> or <code>pick=init.zsh</code> are being correctly
 recognized) . This way editors like <code>vim</code> and <code>emacs</code> and also
-<code>zsh-users/zsh-syntax-highlighting</code> and <code>zdharma/fast-syntax-highlighting</code> will
+<code>zsh-users/zsh-syntax-highlighting</code> and <code>zdharma-continuum/fast-syntax-highlighting</code> will
 highlight contents of ice-modifiers.</p>
 <h2 id="asprogram">as"program"<a class="headerlink" href="#asprogram" title="Permanent link">#</a></h2>
 <p>A plugin might not be a file for sourcing, but a command to be added to <code>$PATH</code>.
@@ -3510,7 +3510,7 @@ the plugin.</p>
 <p>The ice <code>lucid</code> causes the under-prompt message saying <code>Loaded
 zsh-users/zsh-autosuggestions</code> that normally appears for every Turbo-loaded
 plugin to not show.</p>
-<h3 id="a_quick_glance_at_the_for-syntax">A Quick Glance At The <a href="https://zdharma.org/zinit/wiki/For-Syntax/">For-Syntax</a><a class="headerlink" href="#a_quick_glance_at_the_for-syntax" title="Permanent link">#</a></h3>
+<h3 id="a_quick_glance_at_the_for-syntax">A Quick Glance At The <a href="../For-Syntax/">For-Syntax</a><a class="headerlink" href="#a_quick_glance_at_the_for-syntax" title="Permanent link">#</a></h3>
 <p>This introduction is based on the classic, two-command syntax (<code>zinit ice …;
 zinit load/light/snippet …</code>) of Zinit. However, there's also available a
 recently added so-called <em>for-syntax</em>. It is a right moment to take a glance at
@@ -3521,15 +3521,15 @@ it, by rewriting the above autosuggestions invocation using it:</p>
 <p>The syntax is a more concise one. The single command will work exactly the same
 as the previous classic-syntax invocation. It also allows solving some typical
 problems when using Zinit, like providing common/default ices for a set of
-plugins or <a href="https://zdharma.org/zinit/wiki/Sourcing-multiple-files/">sourcing multiple
+plugins or <a href="../Sourcing-multiple-files/">sourcing multiple
 files</a>. For more
 information refer to the page dedicated to the new syntax
-(<a href="https://zdharma.org/zinit/wiki/For-Syntax/">here</a>).</p>
+(<a href="../For-Syntax/">here</a>).</p>
 <h3 id="turbo-loading_sophisticated_prompts">Turbo-Loading Sophisticated Prompts<a class="headerlink" href="#turbo-loading_sophisticated_prompts" title="Permanent link">#</a></h3>
 <p>For some, mostly advanced themes the initialization of the prompt is being done
 in a <code>precmd</code>-hook, i.e.; in a function that's gets called before each prompt.
 The hook is installed by the
-<a href="http://zdharma.org/zinit/wiki/zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks">add-zsh-hook</a>
+<a href="../zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks">add-zsh-hook</a>
 Zsh function by adding its name to the <code>$precmd_functions</code> array.</p>
 <p>To make the prompt fully initialized after Turbo loading in the middle of the
 prompt (the same situation as with the <code>zsh-autosuggestions</code> plugin), the hook
