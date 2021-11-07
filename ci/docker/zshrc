@@ -1,0 +1,9 @@
+source /src/zinit.zsh
+source /utils.zsh
+
+if [[ -n "$ZINIT_ZSH_VERSION" ]]
+then
+  zinit::pack-zsh "$ZINIT_ZSH_VERSION"
+fi
+
+# vim: ft=zsh et ts=2 sw=2 :

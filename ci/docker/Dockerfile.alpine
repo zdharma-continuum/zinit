@@ -4,20 +4,32 @@ FROM alpine:${VERSION}
 ARG PUSERNAME=user01
 ARG PUID=1000
 ARG PGID=1000
-ENV PUSERNAME=${PUSERNAME} PUID=${PUID} PGID=${PGID}
+ARG ZINIT_ZSH_VERSION
+ENV PUSERNAME=${PUSERNAME} PUID=${PUID} PGID=${PGID} \
+    ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}
 
-RUN apk --no-cache add zsh libuser curl git && \
-    sed -ir 's#^(root:.+):/bin/ash#\1:/bin/zsh#' /etc/passwd && \
-    adduser -D -u "${PUID}" -h "/home/${PUSERNAME}" -s /bin/zsh "${PUSERNAME}" && \
-    echo "source /utils.zsh" > "/home/${PUSERNAME}/.zshrc" && \
-    chown "${PUID}:${PGID}" "/home/${PUSERNAME}/.zshrc" && \
+RUN apk --no-cache --virtual base add \
+        zsh curl git libuser sudo && \
+    apk --no-cache --virtual build-tools add \
+        build-base autoconf ncurses-dev
+
+RUN sed -ir 's#^(root:.+):/bin/ash#\1:/bin/zsh#' /etc/passwd && \
+    adduser -D -s /bin/zsh -u "${PUID}" -h "/home/${PUSERNAME}" \
+        "${PUSERNAME}" && \
+    printf "${PUSERNAME} ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/user && \
     mkdir -p /src
 
 WORKDIR /home/${PUSERNAME}
 VOLUME ["/src"]
 
-COPY ./utils.zsh /utils.zsh
-COPY ./entrypoint.zsh /entrypoint.zsh
+COPY --chown=${PUSERNAME} . /src
+COPY --chown=${PUSERNAME} ./ci/docker/zshrc /home/${PUSERNAME}/.zshrc
+COPY ./ci/docker/utils.zsh /utils.zsh
+COPY ./ci/docker/entrypoint.zsh /entrypoint.zsh
 
-ENTRYPOINT ["/entrypoint.zsh"]
+USER ${PUSERNAME}
+# RUN zsh -ic "ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}; source /home/${PUSERNAME}/.zshrc"
+RUN zsh -ils -c -- '@zinit-scheduler burst'
+
+# ENTRYPOINT ["/entrypoint.zsh"]
 CMD ["/bin/zsh"]

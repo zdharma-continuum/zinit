@@ -23,9 +23,11 @@ build() {
   esac
 
   docker build \
+    --no-cache \
     --build-arg "VERSION=${version}" \
+    --build-arg "ZINIT_ZSH_VERSION=5.4.2-tcsetpgrp" \
     --file "$dockerfile" \
-    --tag "zinit/zinit:${tag}" .
+    --tag "zinit/zinit:${tag}" "$(realpath ../../)"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]

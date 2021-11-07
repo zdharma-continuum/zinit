@@ -22,3 +22,9 @@ zinit::setup-minimal() {
     blockf atpull'zinit creinstall -q .' \
         zsh-users/zsh-completions
 }
+
+zinit::pack-zsh() {
+  local version="$1"
+
+  zinit pack"$version" for zsh
+}
