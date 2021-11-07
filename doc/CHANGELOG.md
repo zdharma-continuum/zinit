@@ -15,6 +15,9 @@ All notable changes to this project will be documented in this file.
 progress. If you are interested in helping or want to let us know that a
 particular project is missing, please head to
 [I_WANT_TO_HELP](https://github.com/zdharma-continuum/I_WANT_TO_HELP/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+  - 📚 zinit now ensures that the man dirs under `$ZPFX/man` are created on
+startup. Please note that these directories will not necessarily be part of your
+`manpath`. You may need to set `$MANPATH`. See #8 (and #7) for more details.
 
 * 21-01-2020
   - A few tips for the project rename following the field reports (the issues created

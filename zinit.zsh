@@ -77,6 +77,7 @@ pullopts|debug|null|binary|make|nocompile|notify|reset"
 typeset -g ZPFX
 : ${ZPFX:=${ZINIT[HOME_DIR]}/polaris}
 : ${ZINIT[ALIASES_OPT]::=${${options[aliases]:#off}:+1}}
+: ${ZINIT[MAN_DIR]:=${ZPFX}/man}
 
 ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMPLETIONS_DIR]}
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
@@ -90,6 +91,9 @@ export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.ca
 
 [[ ! -d $ZSH_CACHE_DIR ]] && command mkdir -p "$ZSH_CACHE_DIR"
 [[ -n ${ZINIT[ZCOMPDUMP_PATH]} ]] && ZINIT[ZCOMPDUMP_PATH]=${~ZINIT[ZCOMPDUMP_PATH]}
+
+# Create ZINIT[MAN_DIR]/man{1..9}
+[[ ! -d ${~ZINIT[MAN_DIR]} ]] && command mkdir -p ${~ZINIT[MAN_DIR]}/man{1..9}
 
 ZINIT[UPAR]=";:^[[A;:^[OA;:\\e[A;:\\eOA;:${termcap[ku]/$'\e'/^\[};:${terminfo[kcuu1]/$'\e'/^\[};:"
 ZINIT[DOWNAR]=";:^[[B;:^[OB;:\\e[B;:\\eOB;:${termcap[kd]/$'\e'/^\[};:${terminfo[kcud1]/$'\e'/^\[};:"
