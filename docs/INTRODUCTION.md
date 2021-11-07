@@ -69,7 +69,7 @@ gives profits in performance of `Zinit`, it is really fast and also compact
 
 The command `zinit ice` provides ice-modifiers for single next command (see
 the README subsection
-[**ice-modifiers**](https://github.com/zdharma/zinit#ice-modifiers)). The
+[**ice-modifiers**](https://github.com/zdharma-continuum/zinit#ice-modifiers)). The
 logic is that "ice" is something something that’s added (e.g. to a drink or a
 coffee) – and in the Zinit sense this means that ice is a modifier added to
 the next Zinit command, and also something that melts (so it doesn’t last

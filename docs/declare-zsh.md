@@ -1,6 +1,6 @@
 # declare-zsh
 
-[**declare-zsh**](https://github.com/zdharma/declare-zsh) is a parser for
+[**declare-zsh**](https://github.com/zdharma-continuum/declare-zsh) is a parser for
 `zinit` commands in `.zshrc`. It allows to perform the following actions on
 `.zshrc` **from the command-line**:
 

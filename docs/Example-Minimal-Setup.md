@@ -28,7 +28,7 @@ zinit wait lucid light-mode for \
    `compdef` function, so it must be ran before issuing the taken-over
    `compdef`s with `zicdreplay`),
  - syntax-highlighting plugins (like
-   [**fast-syntax-highlighting**](https://github.com/zdharma/fast-syntax-highlighting)
+   [**fast-syntax-highlighting**](https://github.com/zdharma-continuum/fast-syntax-highlighting)
    or
    [**zsh-syntax-highlighting**](https://github.com/zsh-users/zsh-syntax-highlighting))
    theoretically expect to be loaded last, even after the completion

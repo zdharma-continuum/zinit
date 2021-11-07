@@ -9,12 +9,12 @@ No more commenting-out a line with a text editor to disable plugin, cluttering
 
 [![asciicast](https://asciinema.org/a/147225.png)](https://asciinema.org/a/147225)
 
-`Crasis` uses pure-Zshell [**ZUI**](http://github.com/zdharma/zui/) library to
+`Crasis` uses pure-Zshell [**ZUI**](http://github.com/zdharma-continuum/zui/) library to
 create `ncurses` interface.
 
 ## Installation & Basic Use
 
-Install [**Zinit**](https://github.com/zdharma/zinit) and add following
+Install [**Zinit**](https://github.com/zdharma-continuum/zinit) and add following
 commands to `.zshrc`:
 
 ```SystemVerilog
@@ -59,11 +59,11 @@ CRASIS_THEME="zdharma-256" CRASIS_LAYOUT="contract" crasis
 
 ## Code Documentation
 
-`Crasis` is a [**ZUI**](http://github.com/zdharma/zui/) application. `ZUI` is a
+`Crasis` is a [**ZUI**](http://github.com/zdharma-continuum/zui/) application. `ZUI` is a
 pure-Zshell library where user generates simple text with hyperlinks, which is
 then turned into active document with buttons. Check out `Crasis` code
 documentation:
-[**Asciidoc**](https://github.com/zdharma/zplugin-crasis/blob/master/zsdoc/crasis.adoc),
+[**Asciidoc**](https://github.com/zdharma-continuum/zplugin-crasis/blob/master/zsdoc/crasis.adoc),
 [**PDF**](http://zdharma.org/zplugin-crasis/crasis.pdf).
 
 []( vim:set ft=markdown tw=80: )

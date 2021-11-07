@@ -1,6 +1,6 @@
 # Code documentation
 
-Here is code documentation generated using [**Zshelldoc**](https://github.com/zdharma/zshelldoc).
+Here is code documentation generated using [**Zshelldoc**](https://github.com/zdharma-continuum/zshelldoc).
 There are `4` Zinit's source files, the main one is zinit.zsh. The documentation
 lists all functions, interactions between them, their comments and features used.
 

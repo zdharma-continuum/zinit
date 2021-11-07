@@ -31,7 +31,7 @@ the dash and the plural form.
 ## How To Code Them?
 
 Below is an example body of an `atclone` hook (taken from
-[**zdharma/z-p-submods**](https://github.com/zdharma/z-p-submods) z-plugin). It
+[**zdharma/z-p-submods**](https://github.com/zdharma-continuum/z-p-submods) z-plugin). It
 shows how to:
 
 1.  Obtain the arguments passed to the hook.
@@ -109,7 +109,7 @@ zinit snippet PZT::modules/autosuggestions
 ```
 
 Checkout the project which fully implements this idea,
-[**zdharma/z-p-submods**](https://github.com/zdharma/z-p-submods). It e.g. also
+[**zdharma/z-p-submods**](https://github.com/zdharma-continuum/z-p-submods). It e.g. also
 implements the `atpull` hook, i.e. supports automatic update of the submodules.
 The `z-p-*` prefix is recommended for projects that are being z-plugins.
 

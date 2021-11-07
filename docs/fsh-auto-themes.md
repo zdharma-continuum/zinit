@@ -4,7 +4,7 @@
 
 In-short, `fsh-auto-themes` is a plugin that implements Zshell per-directory
 themes for
-[zdharma/fast-syntax-highlighting](https://github.com/zdharma/fast-syntax-highlighting),
+[zdharma/fast-syntax-highlighting](https://github.com/zdharma-continuum/fast-syntax-highlighting),
 i.e.: for a plugin that applies colors to the commands you type in the shell,
 (see a [screenshot](http://zdharma.org/assets/x-paragon.png)). With
 `fsh-auto-themes` you'll be able to switch the FSH theme at the moment of

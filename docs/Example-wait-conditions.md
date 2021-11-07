@@ -16,7 +16,7 @@ zinit ice wait'[[ -n ${ZLAST_COMMANDS[(r)cras*]} ]]'
 zinit light zdharma-continuum/zinit-crasis
 ```
 
- - `$ZLAST_COMMANDS` is an array build by [**fast-syntax-highlighting**](https://github.com/zdharma/fast-syntax-highlighting), it contains commands currently entered at prompt,
+ - `$ZLAST_COMMANDS` is an array build by [**fast-syntax-highlighting**](https://github.com/zdharma-continuum/fast-syntax-highlighting), it contains commands currently entered at prompt,
  - `(r)` searches for element that matches given pattern (`cras*`) and returns it,
  - `-n` means: not-empty, so it will be true when users enters "cras",
  - after 1 second or less, Zinit will detect that `wait''` condition is true, and load the plugin, which provides command *crasis*,

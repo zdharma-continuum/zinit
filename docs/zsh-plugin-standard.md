@@ -385,7 +385,7 @@ between prompts, thus it's natural to localize them in the main function.
 
 The recommendation is purely subjective opinion of the author. It can evolve –
 if you have any remarks, don't hesitate to
-[**fill them**](https://github.com/zdharma/Zsh-100-Commits-Club/issues/new).
+[**fill them**](https://github.com/zdharma-continuum/Zsh-100-Commits-Club/issues/new).
 
 ##### The Problems Solved By The Proposition
 
@@ -398,7 +398,7 @@ However when adopted, the proposition will solve the following issues:
 
 2. Not using a prefix at all – this is also an unwanted practice as it pollutes
    the command namespace
-   ([**an example**](https://github.com/zdharma/fast-syntax-highlighting/issues/157)
+   ([**an example**](https://github.com/zdharma-continuum/fast-syntax-highlighting/issues/157)
    of such issue appearing).
 
 3. It would allow to quickly discriminate between function types – e.g.: seeing
