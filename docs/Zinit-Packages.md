@@ -67,9 +67,10 @@ has several advantages:
 
 1. **Pro:** The Zinit packages typically use the URLs to the official and
    *latest* distributions of the software (like e.g.: the
-   [ecs-cli](https://github.com/Zsh-Packages/ecs-cli) package, which uses the
-   URL: `https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest`
-   when installing on Linux).
+   [ecs-cli](https://github.com/zdharma-continuum/zinit-package-ecs-cli)
+   package, which uses the URL:
+   `https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest` when
+   installing on Linux).
 
 2. **Pro:** You can influence the installation easily by specifying Zinit
    ice-mods, e.g.:
@@ -109,32 +110,31 @@ man page).
 
 ## The `Zsh-Packages` Organization
 
-The home for the packages is [Zsh-Packages](https://github.com/Zsh-Packages)
-GitHub organization. You can find the available packages there, which as of
-`2019-12-11` include:
+Packages are hosted [on GitHub, by the zdharma-continuum
+org](https://github.com/orgs/zdharma-continuum/repositories?q=zinit-package-&type=&language=):
 
-- [asciidoctor](https://github.com/Zsh-Packages/asciidoctor) – the AsciiDoc
+- [asciidoctor](https://github.com/zdharma-continuum/zinit-package-asciidoctor) – the AsciiDoc
   converter, installed as a Gem locally in the plugin directory with use of the
   [Bin-Gem-Node](../z-a-bin-gem-node) annex,
-- [doctoc](https://github.com/Zsh-Packages/doctoc) – the TOC (table of contents)
+- [doctoc](https://github.com/zdharma-continuum/zinit-package-doctoc) – the TOC (table of contents)
   generator for Markdown documents, installed as a Node package locally in the
   plugin directory with use of the `Bin-Gem-Node` annex,
-- [ecs-cli](https://github.com/Zsh-Packages/ecs-cli) – the Amazon ECS command
+- [ecs-cli](https://github.com/zdharma-continuum/zinit-package-ecs-cli) – the Amazon ECS command
   line tool, downloaded directly from the
   [URL](https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest) (or
   from the
   [URL](https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-darwin-amd64-latest) for
   OS X – automatically selected),
-- [firefox-dev](https://github.com/Zsh-Packages/firefox-dev) – Firefox Developer
+- [firefox-dev](https://github.com/zdharma-continuum/zinit-package-firefox-dev) – Firefox Developer
   Edition, downloaded from the
   [URL](https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US)
   (or from the
   [URL](https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US)
   for OS X; the OS X installation only downloads the `dmg` image, so it is'nt
   yet complete),
-- [fzf](https://github.com/Zsh-Packages/fzf) – the fuzzy-finder, installed from
+- [fzf](https://github.com/zdharma-continuum/zinit-package-fzf) – the fuzzy-finder, installed from
   source (from a tarball or Git) or from the GitHub-releases binary,
-- [ls\_colors](https://github.com/Zsh-Packages/ls_colors) – the
+- [ls\_colors](https://github.com/zdharma-continuum/zinit-package-ls_colors) – the
   [trapd00r/LS\_COLORS](https://github.com/trapd00r/LS_COLORS) color definitions
   for GNU `ls`, `ogham/exa` and Zshell's completion.
 

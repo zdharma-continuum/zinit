@@ -42,7 +42,7 @@ zinit wait lucid light-mode for \
    user experience.
 
 The same setup but without using Turbo mode (i.e. no `wait''` ice) and without
-the [for-syntax](https://zdharma.org/zinit/wiki/For-Syntax/):
+the [for-syntax](../For-Syntax/):
 
 ```zsh
 zinit ice blockf atpull'zinit creinstall -q .'

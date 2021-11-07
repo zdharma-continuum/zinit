@@ -31,7 +31,7 @@ just as any other plugin.
 ## How To Code Them?
 
 Below is an example body of an `atclone` hook (taken from
-[**zinit/z-a-submods**](https://github.com/zinit/z-a-submods) annex). It
+[**zinit/z-a-submods**](https://github.com/zdharma-continuum/z-a-submods) annex). It
 shows how to:
 
 1.  Obtain the arguments passed to the hook.
@@ -79,7 +79,7 @@ done
 
 The recommended method of creating a hook is to place its body into a file that
 starts with a right arrow `→` ([more
-information](http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html#namespacing),
+information](https://github.com/zdharma-continuum/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc#namespacing),
 and also a `za-` prefix, e.g. `→za-myproject-atclone-hook` and then to mark it
 for autoloading via `autoload -Uz →za-myproject-atclone-hook`. Then register the
 hook (presumably in the `myproject.plugin.zsh` file) with the API call:
@@ -115,7 +115,7 @@ zinit snippet PZT::modules/autosuggestions
 ```
 
 Checkout the project which fully implements this idea,
-[**zinit/z-a-submods**](https://github.com/zinit/z-a-submods). It e.g. also
+[**zinit/z-a-submods**](https://github.com/zdharma-continuum/z-a-submods). It e.g. also
 implements the `atpull` hook, i.e. supports automatic update of the submodules.
 The `z-a-*` prefix is recommended for projects that are being annexes.
 

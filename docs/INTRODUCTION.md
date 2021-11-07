@@ -86,7 +86,7 @@ Content of ice-modifier is simply put into `"…"`, `'…'`, or `$'…'`. No
 need for `":"` after ice-mod name (although it's allowed, so as the equal sign
 `=`, so e.g. `pick="init.zsh"` or `pick=init.zsh` are being correctly
 recognized) . This way editors like `vim` and `emacs` and also
-`zsh-users/zsh-syntax-highlighting` and `zdharma/fast-syntax-highlighting` will
+`zsh-users/zsh-syntax-highlighting` and `zdharma-continuum/fast-syntax-highlighting` will
 highlight contents of ice-modifiers.
 
 ## as"program"
@@ -313,7 +313,7 @@ The ice `lucid` causes the under-prompt message saying `Loaded
 zsh-users/zsh-autosuggestions` that normally appears for every Turbo-loaded
 plugin to not show.
 
-### A Quick Glance At The [For-Syntax](https://zdharma.org/zinit/wiki/For-Syntax/)
+### A Quick Glance At The [For-Syntax](../For-Syntax/)
 
 This introduction is based on the classic, two-command syntax (`zinit ice …;
 zinit load/light/snippet …`) of Zinit. However, there's also available a
@@ -329,16 +329,16 @@ The syntax is a more concise one. The single command will work exactly the same
 as the previous classic-syntax invocation. It also allows solving some typical
 problems when using Zinit, like providing common/default ices for a set of
 plugins or [sourcing multiple
-files](https://zdharma.org/zinit/wiki/Sourcing-multiple-files/). For more
+files](../Sourcing-multiple-files/). For more
 information refer to the page dedicated to the new syntax
-([here](https://zdharma.org/zinit/wiki/For-Syntax/)).
+([here](../For-Syntax/)).
 
 ### Turbo-Loading Sophisticated Prompts
 
 For some, mostly advanced themes the initialization of the prompt is being done
 in a `precmd`-hook, i.e.; in a function that's gets called before each prompt.
 The hook is installed by the
-[add-zsh-hook](http://zdharma.org/zinit/wiki/zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks)
+[add-zsh-hook](../zsh-plugin-standard/#use_of_add-zsh-hook_to_install_hooks)
 Zsh function by adding its name to the `$precmd_functions` array.
 
 To make the prompt fully initialized after Turbo loading in the middle of the
