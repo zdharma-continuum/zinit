@@ -67,6 +67,6 @@ extra_javascript:
 extra:
   social:
     - type: 'github'
-      link: 'https://github.com/zdharma/zinit'
+      link: 'https://github.com/zdharma-continuum/zinit'
     - type: 'reddit'
       link: 'https://www.reddit.com/r/zinit/'
