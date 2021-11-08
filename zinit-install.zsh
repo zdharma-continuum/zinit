@@ -124,7 +124,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 \
         local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} pkgjson \
         tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123} \
-        URL=https://raw.githubusercontent.com/zdharma-continuum/zinit-package-${pkg}/HEAD/package.json
+        URL=https://raw.githubusercontent.com/zdharma-continuum/zinit-package-$2/HEAD/package.json
 
     local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
         tool_sep="{rst}, {cmd}" \
