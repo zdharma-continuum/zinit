@@ -41,7 +41,7 @@ It's up to the user which syntax to choose. The original motivation behind the
 standard syntax was: to utilize the syntax highlighting of editors like Vim –
 and have the strings following ice names colorized with a distinct color and
 this way separated from them. However, with the
-[zinit/zinit-vim-syntax](https://github.com/zinit/zinit-vim-syntax)
+[zdharma-continuum/zinit-vim-syntax](https://github.com/zdharma-continuum/zinit-vim-syntax)
 syntax definition this motivation can be superseded with the Zinit-specific
 highlighting, at least for Vim.  NOTE: the Vim syntax doesn't yet support the
 alternate syntaxes, it will soon (PR welcomed).
