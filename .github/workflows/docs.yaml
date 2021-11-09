@@ -9,3 +9,4 @@ jobs:
           git clone https://github.com/zdharma-continuum/zshelldoc.git
           cd zshelldoc
           sudo make install
+          zsd --help
