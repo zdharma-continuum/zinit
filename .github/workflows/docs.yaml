@@ -1,0 +1,11 @@
+name: zshelldoc
+on: [push]
+jobs:
+  make-doc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install
+        run: |
+          git clone https://github.com/zdharma-continuum/zshelldoc.git
+          cd zshelldoc
+          make install
