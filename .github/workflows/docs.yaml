@@ -12,6 +12,9 @@ jobs:
           sudo make install
           zsd --help
 
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
       - name: make doc
         run: |
           make doc
