@@ -1031,7 +1031,7 @@ builtin setopt noaliases
 # FUNCTION: .zinit-register-plugin. [[[
 # Adds the plugin to ZINIT_REGISTERED_PLUGINS array and to the
 # zsh_loaded_plugins array (managed according to the plugin standard:
-# http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
+# https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
 .zinit-register-plugin() {
     local uspl2="$1" mode="$2" teleid="$3"
     integer ret=0
@@ -1168,7 +1168,7 @@ builtin setopt noaliases
 # ]]]
 # FUNCTION: @zsh-plugin-run-on-update. [[[
 # The Plugin Standard required mechanism, see:
-# http://zdharma.org/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
+# https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
 @zsh-plugin-run-on-unload() {
     ICE[ps-on-unload]="${(j.; .)@}"
     .zinit-pack-ice "$id_as" ""

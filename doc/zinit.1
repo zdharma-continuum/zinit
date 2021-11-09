@@ -1,18 +1,16 @@
 .TH "" "" "October 2019" "" ""
 News
 .P
-\fB\fBpaypal\fR \fI\(lahttps://img.shields.io/badge/-Donate-yellow.svg?longCache=true&style=for-the-badge\(ra\fR\fR \fI\(lahttps://www.paypal.me/ZdharmaInitiative\(ra\fR \fB\fBpaypal\fR \fI\(lahttps://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif\(ra\fR\fR \fI\(lahttps://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=D54B3S7C6HGME\(ra\fR \fB\fBpatreon\fR \fI\(lahttps://img.shields.io/badge/-Patreon-orange.svg?longCache=true&style=for-the-badge\(ra\fR\fR \fI\(lahttps://www.patreon.com/psprint\(ra\fR New: You can request a feature when donating, even fancy or advanced ones get implemented this way. \fBThere are reports\fR \fI\(laDONATIONS.md\(ra\fR about what is being done with the money received.
-.P
-\fB\fBStatus\fR \fI\(lahttps://travis-ci.org/zdharma/zplugin.svg?branch=master\(ra\fR\fR \fI\(lahttps://travis-ci.org/zdharma/zplugin\(ra\fR \fB\fBMIT License\fR \fI\(lahttps://img.shields.io/badge/license-MIT-blue.svg\(ra\fR\fR \fI\(la./LICENSE\(ra\fR \fBnull\fI\(lahttps://img.shields.io/github/tag/zdharma/zplugin.svg\(ra\fR\fR \fI\(lahttps://github.com/zdharma/zplugin/releases\(ra\fR null\fI\(lahttps://img.shields.io/github/commit-activity/y/zdharma/zplugin.svg\(ra\fR \fB\fBChat at https://gitter.im/zplugin/Lobby\fR \fI\(lahttps://badges.gitter.im/zplugin/Lobby.svg\(ra\fR\fR \fI\(lahttps://gitter.im/zplugin/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge\(ra\fR
+\fB\fBStatus\fR \fI\(lahttps://travis-ci.org/zdharma-continuum/zinit.svg?branch=master\(ra\fR\fR \fI\(lahttps://travis-ci.org/zdharma/zinit\(ra\fR \fB\fBMIT License\fR \fI\(lahttps://img.shields.io/badge/license-MIT-blue.svg\(ra\fR\fR \fI\(la./LICENSE\(ra\fR \fBnull\fI\(lahttps://img.shields.io/github/tag/zdharma/zinit.svg\(ra\fR\fR \fI\(lahttps://github.com/zdharma/zinit/releases\(ra\fR null\fI\(lahttps://img.shields.io/github/commit-activity/y/zdharma/zinit.svg\(ra\fR \fB\fBChat at https://gitter.im/zinit/Lobby\fR \fI\(lahttps://badges.gitter.im/zinit/Lobby.svg\(ra\fR\fR \fI\(lahttps://gitter.im/zinit/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge\(ra\fR
 .P
 \fBTable of Contents\fR \fIgenerated with \fBDocToc\fI \fI\(lahttps://github.com/thlorenz/doctoc\(ra\fI\fR
 .RS 0
 .IP \(bu 4
 \fBNews\fR \fI(News)\fR
 .IP \(bu 4
-\fBZplugin\fR \fI(Zplugin)\fR
+\fBzinit\fR \fI(zinit)\fR
 .IP \(bu 4
-\fBZplugin Wiki\fR \fI(Zplugin Wiki)\fR
+\fBzinit Wiki\fR \fI(zinit Wiki)\fR
 .IP \(bu 4
 \fBInstallation\fR \fI(Installation)\fR
 .RS 4
@@ -32,9 +30,9 @@ News
 .IP \(bu 4
 \fBIce Modifiers\fR \fI(Ice Modifiers)\fR
 .IP \(bu 4
-\fBZplugin Commands\fR \fI(Zplugin Commands)\fR
+\fBzinit Commands\fR \fI(zinit Commands)\fR
 .IP \(bu 4
-\fBUpdating Zplugin and Plugins\fR \fI(Updating Zplugin and Plugins)\fR
+\fBUpdating zinit and Plugins\fR \fI(Updating zinit and Plugins)\fR
 .IP \(bu 4
 \fBUsing Oh My Zsh Themes\fR \fI(Using Oh My Zsh Themes)\fR
 .RE 0
@@ -53,7 +51,7 @@ News
 .RE 0
 
 .IP \(bu 4
-\fBZplugin Module\fR \fI(Zplugin Module)\fR
+\fBzinit Module\fR \fI(zinit Module)\fR
 .RS 4
 .IP \(bu 4
 \fBMotivation\fR \fI(Motivation)\fR
@@ -91,8 +89,8 @@ Special value for the \fBid-as''\fR ice \[en] \fBauto\fR. It sets the plugin/sni
 .P
 .RS 2
 .nf
-zplugin ice id-as"auto"
-zplugin load robobenklein/zinc
+zinit ice id-as"auto"
+zinit load robobenklein/zinc
 .fi
 .RE
 .P
@@ -103,7 +101,7 @@ will load the plugin as \fBid-as'zinc'\fR.
 14-09-2019
 .RS 4
 .IP \(bu 4
-There's a Vim plugin which extends syntax highlighting of zsh scripts with coloring of the Zplugin commands. \fBProject homepage\fR \fI\(lahttps://github.com/zplugin/zplugin-vim-syntax\(ra\fR.
+There's a Vim plugin which extends syntax highlighting of zsh scripts with coloring of the zinit commands. \fBProject homepage\fR \fI\(lahttps://github.com/zinit/zinit-vim-syntax\(ra\fR.
 .RE 0
 
 .IP \(bu 4
@@ -117,14 +115,14 @@ New ice \fBaliases\fR which loads plugin with the aliases mechanism enabled. Use
 11-09-2019
 .RS 4
 .IP \(bu 4
-New ice-mods \fBsh\fR,\fBbash\fR,\fBksh\fR,\fBcsh\fR that load plugins (and snippets) with the \fBsticky emulation\fR feature of Zsh \[en] all functions defined within the plugin will automatically switch to the desired emulation mode before executing and switch back thereafter. In other words it is now possible to load e.g. bash plugins with Zplugin, provided that the emulation level done by Zsh is sufficient, e.g.:
+New ice-mods \fBsh\fR,\fBbash\fR,\fBksh\fR,\fBcsh\fR that load plugins (and snippets) with the \fBsticky emulation\fR feature of Zsh \[en] all functions defined within the plugin will automatically switch to the desired emulation mode before executing and switch back thereafter. In other words it is now possible to load e.g. bash plugins with zinit, provided that the emulation level done by Zsh is sufficient, e.g.:
 .P
 .RS 2
 .nf
-zplugin ice bash pick"bash_it.sh" \[rs]
+zinit ice bash pick"bash_it.sh" \[rs]
         atinit"BASH_IT=${ZPLGM\[lB]PLUGINS_DIR\[rB]}/Bash-it---bash-it" \[rs]
         atclone"yes n | ./install.sh"
-zplugin load Bash-it/bash-it
+zinit load Bash-it/bash-it
 .fi
 .RE
 .P
@@ -137,24 +135,24 @@ This script loads correctly thanks to the emulation, however it isn't functional
 .IP \(bu 4
 A new ice-mod \fBreset''\fR that ivokes \fBgit reset --hard\fR (or the provided command) before \fBgit pull\fR and \fBatpull''\fR ice. It can be used it to implement altering (i.e. patching) of the plugin's files inside the \fBatpull''\fR ice \[en] \fBgit\fR will report no conflicts when doing \fBpull\fR, and the changes can be then again introduced by the \fBatpull''\fR ice.
 .IP \(bu 4
-Three new Zplugin annexes (i.e. \fBextensions\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Annexes/\(ra\fR):
+Three new zinit annexes (i.e. \fBextensions\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Annexes/\(ra\fR):
 .RS 4
 .IP \(bu 4
-\fBz-a-man\fR \fI\(lahttps://github.com/zplugin/z-a-man\(ra\fR
+\fBz-a-man\fR \fI\(lahttps://github.com/zinit/z-a-man\(ra\fR
 .P
 Generates man pages and code-documentation man pages from plugin's README.md and source files (the code documentation is obtained from \fBZshelldoc\fR \fI\(lahttps://github.com/zdharma/zshelldoc\(ra\fR).
 .IP \(bu 4
-\fBz-a-test\fR \fI\(lahttps://github.com/zplugin/z-a-test\(ra\fR
+\fBz-a-test\fR \fI\(lahttps://github.com/zinit/z-a-test\(ra\fR
 .P
 Runs tests (if detected \fBtest\fR target in a \fBMakefile\fR or any \fB*.zunit\fR files) on plugin installation and non-empty update.
 .IP \(bu 4
-\fBz-a-patch-dl\fR \fI\(lahttps://github.com/zplugin/z-a-patch-dl\(ra\fR
+\fBz-a-patch-dl\fR \fI\(lahttps://github.com/zinit/z-a-patch-dl\(ra\fR
 .P
 Allows easy download and applying of patches, to e.g. aid building a binary program equipped in the plugin.
 .RE 0
 
 .IP \(bu 4
-A new variable is being recognized by the installation script: \fB$ZPLG_BIN_DIR_NAME\fR. It configures the directory within \fB$ZPLG_HOME\fR to which Zplugin should be cloned.
+A new variable is being recognized by the installation script: \fB$ZPLG_BIN_DIR_NAME\fR. It configures the directory within \fB$ZPLG_HOME\fR to which zinit should be cloned.
 .RE 0
 
 .IP \(bu 4
@@ -185,21 +183,21 @@ ${ZPLGM\[lB]PLUGINS_DIR\[rB]} ${ZPLGM\[lB]SNIPPETS_DIR\[rB]}\fR)
 09-07-2019
 .RS 4
 .IP \(bu 4
-Zplugin can now have \fBits own plugins\fR, called \fBz-plugins\fR! Check out an example but fully functional z-plugin \fBzdharma/z-p-submods\fR \fI\(lahttps://github.com/zdharma/z-p-submods\(ra\fR and a document that explains on how to implement your own z-plugin (\fBhere\fR \fI\(la../../wiki/Z-PLUGINS\(ra\fR).
+zinit can now have \fBits own plugins\fR, called \fBz-plugins\fR! Check out an example but fully functional z-plugin \fBzdharma/z-p-submods\fR \fI\(lahttps://github.com/zdharma/z-p-submods\(ra\fR and a document that explains on how to implement your own z-plugin (\fBhere\fR \fI\(la../../wiki/Z-PLUGINS\(ra\fR).
 .RE 0
 
 .IP \(bu 4
 08-07-2019
 .RS 4
 .IP \(bu 4
-You can now do \fBzplugin ice wait ...\fR and it will work as \fBzplugin ice wait'0' ...\fR :) I.e. when there's no value to the \fBwait''\fR ice then a value of \fB0\fR is being substituted.
+You can now do \fBzinit ice wait ...\fR and it will work as \fBzinit ice wait'0' ...\fR :) I.e. when there's no value to the \fBwait''\fR ice then a value of \fB0\fR is being substituted.
 .RE 0
 
 .IP \(bu 4
 02-07-2019
 .RS 4
 .IP \(bu 4
-\fBCooperation of Fast-Syntax-Highlighting and Zplugin\fR \fI\(lahttps://asciinema.org/a/254630\(ra\fR \[en] a new precise highlighting for Zplugin in F-Sy-H.
+\fBCooperation of Fast-Syntax-Highlighting and zinit\fR \fI\(lahttps://asciinema.org/a/254630\(ra\fR \[en] a new precise highlighting for zinit in F-Sy-H.
 .RE 0
 
 .IP \(bu 4
@@ -225,10 +223,10 @@ New ice mod \fBsubscribe''\fR/\fBon-update-of''\fR which works like the \fBwait'
 .P
 .RS 2
 .nf
-% zplugin ice on-update-of'{~/files-*,/tmp/files-*}' lucid \[rs]
+% zinit ice on-update-of'{~/files-*,/tmp/files-*}' lucid \[rs]
     atload"echo I have been loaded" \[rs]
     notify"Yes that's true :)"
-% zplugin load zdharma/null
+% zinit load zdharma/null
 % touch ~/files-1
 The plugin has been loaded
 %
@@ -249,8 +247,8 @@ New ice-mod \fBnotify''\fR which will cause to display an under-prompt notificat
 .P
 .RS 2
 .nf
-% zplugin ice wait"0" lucid notify"zdharma/null has been loaded"
-% zplugin light zdharma/null
+% zinit ice wait"0" lucid notify"zdharma/null has been loaded"
+% zinit light zdharma/null
 %
 zdharma/null has been loaded
 .fi
@@ -260,8 +258,8 @@ In case of problems with the loading a warning message will be output:
 .P
 .RS 2
 .nf
-% zplugin ice notify atload'return 7'
-% zplugin light zdharma/null
+% zinit ice notify atload'return 7'
+% zinit light zdharma/null
 %
 notify: Plugin not loaded / loaded with problem, the return code: 7
 .fi
@@ -278,10 +276,10 @@ Turbo mode, i.e. the \fBwait''\fR ice-mode now supports a suffix \[en] the lette
 .P
 .RS 2
 .nf
-zplugin ice wait"0b" as"command" pick"wd.sh" atinit"echo Firing 1" lucid
-zplugin light mfaerevaag/wd
-zplugin ice wait"0a" as"command" pick"wd.sh" atinit"echo Firing 2" lucid
-zplugin light mfaerevaag/wd
+zinit ice wait"0b" as"command" pick"wd.sh" atinit"echo Firing 1" lucid
+zinit light mfaerevaag/wd
+zinit ice wait"0a" as"command" pick"wd.sh" atinit"echo Firing 2" lucid
+zinit light mfaerevaag/wd
 
 # The output
 Firing 2
@@ -291,47 +289,47 @@ Firing 1
 .P
 As it can be seen, the second plugin has been loaded first. That's because there are now three sub-slots (the \fBa\fR, \fBb\fR and \fBc\fR) in which the plugin/snippet loadings can be put into. Plugins from the same time-slot with suffix \fBa\fR will be loaded before plugins with suffix \fBb\fR, etc.
 .P
-In other words, instead of \fBwait'1'\fR you can enter \fBwait'1a'\fR, \fBwait'1b'\fR and \fBwait'1c'\fR \[en] to this way \fBimpose order\fR on the loadings \fBregardless of the order of \fBzplugin\fB commands\fR. 
+In other words, instead of \fBwait'1'\fR you can enter \fBwait'1a'\fR, \fBwait'1b'\fR and \fBwait'1c'\fR \[en] to this way \fBimpose order\fR on the loadings \fBregardless of the order of \fBzinit\fB commands\fR.
 .RE 0
 
 .RE 0
 
 .P
 To see the full history check \fBthe changelog\fR \fI\(laCHANGELOG.md\(ra\fR.
-.SH "ZPLUGIN"
+.SH "zinit"
 .P
-Zplugin is an elastic and fast Zshell plugin manager that will allow you to install everything from GitHub and other sites. 
+zinit is an elastic and fast Zshell plugin manager that will allow you to install everything from GitHub and other sites.
 .P
-Zplugin is currently the only plugin manager out there that has Turbo mode which yields \fB50-73% faster Zsh startup!\fR
+zinit is currently the only plugin manager out there that has Turbo mode which yields \fB50-73% faster Zsh startup!\fR
 .P
-Zplugin gives \fBreports\fR from plugin load describing what aliases, functions, bindkeys, Zle widgets, zstyles, completions, variables, \fBPATH\fR and \fBFPATH\fR elements a plugin has set up.
+zinit gives \fBreports\fR from plugin load describing what aliases, functions, bindkeys, Zle widgets, zstyles, completions, variables, \fBPATH\fR and \fBFPATH\fR elements a plugin has set up.
 .P
 Supported is \fBunloading\fR of plugin and ability to list, (un)install and selectively disable, enable plugin's completions.
 .P
 The system does not use \fB$FPATH\fR, loading multiple plugins doesn't clutter \fB$FPATH\fR with the same number of entries (e.g. \fB10\fR). Code is immune to \fBKSH_ARRAYS\fR. Completion management functionality is provided to allow user to call \fBcompinit\fR only once in \fB.zshrc\fR.
-.SH "ZPLUGIN WIKI"
+.SH "zinit WIKI"
 .P
-The information in this README is complemented by the \fBZplugin wiki\fR \fI\(lahttp://zdharma.org/zplugin/wiki/\(ra\fR. The README is an introductory overview of Zplugin while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of Zplugin.
+The information in this README is complemented by the \fBzinit wiki\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/\(ra\fR. The README is an introductory overview of zinit while the wiki gives a complete and in-depth information with examples. Make sure to read it to get the most out of zinit.
 .SH "INSTALLATION"
 .SS "Option 1 - Automatic Installation (Recommended)"
 .P
-The easiest way to install Zplugin is to execute: 
+The easiest way to install zinit is to execute:
 .P
 .RS 2
 .nf
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/master/doc/install.sh)"
 .fi
 .RE
 .P
-This will install Zplugin in \fB~/.zplugin/bin\fR. \fB.zshrc\fR will be updated with three lines of code that will be added to the bottom. The lines will be sourcing \fBzplugin.zsh\fR and setting up completion for command \fBzplugin\fR. After installing and reloading the shell compile Zplugin with \fBzplugin self-update\fR.
+This will install zinit in \fB~/.zinit/bin\fR. \fB.zshrc\fR will be updated with three lines of code that will be added to the bottom. The lines will be sourcing \fBzinit.zsh\fR and setting up completion for command \fBzinit\fR. After installing and reloading the shell compile zinit with \fBzinit self-update\fR.
 .SS "Option 2 - Manual Installation"
 .P
-To manually install Zplugin clone the repo to e.g. \fB~/.zplugin/bin\fR:
+To manually install zinit clone the repo to e.g. \fB~/.zinit/bin\fR:
 .P
 .RS 2
 .nf
-mkdir ~/.zplugin
-git clone https://github.com/zdharma/zplugin.git ~/.zplugin/bin
+mkdir ~/.zinit
+git clone https://github.com/zdharma/zinit.git ~/.zinit/bin
 .fi
 .RE
 .P
@@ -339,7 +337,7 @@ and source it from \fB.zshrc\fR (above compinit):
 .P
 .RS 2
 .nf
-source ~/.zplugin/bin/zplugin.zsh
+source ~/.zinit/bin/zinit.zsh
 .fi
 .RE
 .P
@@ -347,65 +345,65 @@ If you place the \fBsource\fR below \fBcompinit\fR, then add those two lines aft
 .P
 .RS 2
 .nf
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps\[lB]zplugin\[rB]=_zplugin
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps\[lB]zinit\[rB]=_zinit
 .fi
 .RE
 .P
 Various paths can be customized, see section \fBCustomizing Paths\fR \fI(Customizing Paths)\fR.
 .P
-After installing and reloading the shell compile Zplugin with \fBzplugin self-update\fR.
+After installing and reloading the shell compile zinit with \fBzinit self-update\fR.
 .SH "USAGE"
 .SS "Introduction"
 .P
-\fBClick here to read the introduction to Zplugin\fR \fI\(lahttp://zdharma.org/zplugin/wiki/INTRODUCTION/\(ra\fR. It explains basic usage and some of the more unique features of Zplugin such as the Turbo mode. If you're new to Zplugin we highly recommend you read it at least once.
+\fBClick here to read the introduction to zinit\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/\(ra\fR. It explains basic usage and some of the more unique features of zinit such as the Turbo mode. If you're new to zinit we highly recommend you read it at least once.
 .SS "Example Usage"
 .P
-After installing Zplugin you can start adding some actions (load some plugins) to \fB~/.zshrc\fR, at bottom. Some examples:
+After installing zinit you can start adding some actions (load some plugins) to \fB~/.zshrc\fR, at bottom. Some examples:
 .P
 .RS 2
 .nf
 # Two regular plugins loaded without tracking.
-zplugin light zsh-users/zsh-autosuggestions
-zplugin light zdharma/fast-syntax-highlighting
+zinit light zsh-users/zsh-autosuggestions
+zinit light zdharma/fast-syntax-highlighting
 
 # Plugin history-search-multi-word loaded with tracking.
-zplugin load zdharma/history-search-multi-word
+zinit load zdharma/history-search-multi-word
 
 # Load the pure theme, with zsh-async library that's bundled with it.
-zplugin ice pick"async.zsh" src"pure.zsh"
-zplugin light sindresorhus/pure
+zinit ice pick"async.zsh" src"pure.zsh"
+zinit light sindresorhus/pure
 
 # Binary release in archive, from GitHub-releases page. 
 # After automatic unpacking it provides program "fzf".
-zplugin ice from"gh-r" as"program"
-zplugin load junegunn/fzf-bin
+zinit ice from"gh-r" as"program"
+zinit load junegunn/fzf-bin
 
 # One other binary release, it needs renaming from `docker-compose-Linux-x86_64`.
 # This is done by ice-mod `mv'{from} -> {to}'. There are multiple packages per
 # single version, for OS X, Linux and Windows \[en] so ice-mod `bpick' is used to
-# select Linux package \[en] in this case this is actually not needed, Zplugin will
+# select Linux package \[en] in this case this is actually not needed, zinit will
 # grep operating system name and architecture automatically when there's no `bpick'.
-zplugin ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
-zplugin load docker/compose
+zinit ice from"gh-r" as"program" mv"docker* -> docker-compose" bpick"*linux*"
+zinit load docker/compose
 
-# Vim repository on GitHub \[en] a typical source code that needs compilation \[en] Zplugin
+# Vim repository on GitHub \[en] a typical source code that needs compilation \[en] zinit
 # can manage it for you if you like, run `./configure` and other `make`, etc. stuff.
 # Ice-mod `pick` selects a binary program to add to $PATH. You could also install the
-# package under the path $ZPFX, see: http://zdharma.org/zplugin/wiki/Compiling-programs
-zplugin ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \[rs]
+# package under the path $ZPFX, see: https://zdharma-continuum.github.io/zinit/wiki/Compiling-programs/
+zinit ice as"program" atclone"rm -f src/auto/config.cache; ./configure" \[rs]
     atpull"%atclone" make pick"src/vim"
-zplugin light vim/vim
+zinit light vim/vim
 
 # Scripts that are built at install (there's single default make target, "install",
 # and it constructs scripts by `cat'ing a few files). The make'' ice could also be:
 # `make"install PREFIX=$ZPFX"`, if "install" wouldn't be the only, default target.
-zplugin ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
-zplugin light tj/git-extras
+zinit ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
+zinit light tj/git-extras
 
 # Handle completions without loading any plugin, see "clist" command.
 # This one is to be ran just once, in interactive session.
-zplugin creinstall %HOME/my_completions  
+zinit creinstall %HOME/my_completions
 .fi
 .RE
 .P
@@ -413,29 +411,29 @@ zplugin creinstall %HOME/my_completions
 .nf
 # For GNU ls (the binaries can be gls, gdircolors, e.g. on OS X when installing the
 # coreutils package from Homebrew; you can also use https://github.com/ogham/exa)
-zplugin ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
-zplugin light trapd00r/LS_COLORS
+zinit ice atclone"dircolors -b LS_COLORS > c.zsh" atpull'%atclone' pick"c.zsh" nocompile'!'
+zinit light trapd00r/LS_COLORS
 .fi
 .RE
 .P
-\fBYou can see an extended explanation of LS_COLORS in the wiki.\fR \fI\(lahttp://zdharma.org/zplugin/wiki/LS_COLORS-explanation/\(ra\fR
+\fBYou can see an extended explanation of LS_COLORS in the wiki.\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/LS_COLORS-explanation/\(ra\fR
 .P
 .RS 2
 .nf
 # make'!...' -> run make before atclone & atpull
-zplugin ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
-zplugin light direnv/direnv
+zinit ice as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' atpull'%atclone' src"zhook.zsh"
+zinit light direnv/direnv
 .fi
 .RE
 .P
-\fBYou can see an extended explanation of direnv in the wiki.\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Direnv-explanation/\(ra\fR
+\fBYou can see an extended explanation of direnv in the wiki.\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/LS_COLORS-explanation/\(ra\fR
 .P
-If you're interested in more examples then check out the \fBzplugin-configs repository\fR \fI\(lahttps://github.com/zdharma/zplugin-configs\(ra\fR where users have uploaded their \fB~/.zshrc\fR and Zplugin configurations. Feel free to \fBsubmit\fR \fI\(lahttps://github.com/zdharma/zplugin-configs/issues/new?template=request-to-add-zshrc-to-the-zplugin-configs-repo.md\(ra\fR your \fB~/.zshrc\fR there if it contains Zplugin commands.
+If you're interested in more examples then check out the \fBzinit-configs repository\fR \fI\(lahttps://github.com/zdharma-continuum/zinit-configs\(ra\fR where users have uploaded their \fB~/.zshrc\fR and zinit configurations. Feel free to \fBsubmit\fR \fI\(lahttps://github.com/zdharma/zinit-configs/issues/new?template=request-to-add-zshrc-to-the-zinit-configs-repo.md\(ra\fR your \fB~/.zshrc\fR there if it contains zinit commands.
 .P
-You can also check out the \fBGallery of Zplugin Invocations\fR \fI\(lahttp://zdharma.org/zplugin/wiki/GALLERY/\(ra\fR for some additional examples.
+You can also check out the \fBGallery of zinit Invocations\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/GALLERY/\(ra\fR for some additional examples.
 .SS "Ice Modifiers"
 .P
-Following \fBice\fR modifiers are to be passed to \fBzplugin ice ...\fR to obtain described effects. The word \fBice\fR means something that's added (like ice to a drink) \[en] and in Zplugin it means adding modifier to a next \fBzplugin\fR command, and also something that's temporary because it melts \[en] and this means that the modification will last only for a \fBsingle\fR next \fBzplugin\fR command.
+Following \fBice\fR modifiers are to be passed to \fBzinit ice ...\fR to obtain described effects. The word \fBice\fR means something that's added (like ice to a drink) \[en] and in zinit it means adding modifier to a next \fBzinit\fR command, and also something that's temporary because it melts \[en] and this means that the modification will last only for a \fBsingle\fR next \fBzinit\fR command.
 .P
 Some Ice-modifiers are highlighted and clicking on them will take you to the appropriate wiki page for an extended explanation.
 .P
@@ -452,7 +450,7 @@ Modifier@Description
 \fBbpick\fR@ Used to select which release from GitHub Releases to download, e.g. \fBzplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose\fR. \fBDoes not work with snippets.\fR 
 \fBdepth\fR@ Pass \fB--depth\fR to \fBgit\fR, i.e. limit how much of history to download. \fBDoes not work with snippets.\fR
 \fBcloneopts\fR@ Pass the contents of \fBcloneopts\fR to \fBgit clone\fR. Defaults to \fB--recursive\fR i.e. Change cloning options. \fBDoes not work with snippets.\fR 
-\fBsvn\fR@ Use Subversion for downloading snippet. GitHub supports \fBSVN\fR protocol, this allows to clone subdirectories as snippets, e.g. \fBzplugin ice svn; zplugin snippet OMZ::plugins/git\fR. Other ice \fBpick\fR can be used to select file to source (default are: \fB*.plugin.zsh\fR, \fBinit.zsh\fR, \fB*.zsh-theme\fR). \fBDoes not work with plugins.\fR
+\fBsvn\fR@ Use Subversion for downloading snippet. GitHub supports \fBSVN\fR protocol, this allows to clone subdirectories as snippets, e.g. \fBzinit ice svn; zinit snippet OMZ::plugins/git\fR. Other ice \fBpick\fR can be used to select file to source (default are: \fB*.plugin.zsh\fR, \fBinit.zsh\fR, \fB*.zsh-theme\fR). \fBDoes not work with plugins.\fR
 .TE
 .SS "Selection of Files (To Source, …)"
 .TS
@@ -460,9 +458,9 @@ tab(@);
 cb cb
 c l .
 Modifier@Description
-\fB\fB\fBpick\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Sourcing-multiple-files/\(ra\fR@ Select the file to source, or the file to set as command (when using \fBsnippet --command\fR or the ice \fBas"program"\fR); it is a pattern, alphabetically first matched file is being chosen; e.g. \fBzplugin ice pick"*.plugin.zsh"; zplugin load …\fR.
-\fB\fB\fBsrc\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Sourcing-multiple-files\(ra\fR@ Specify additional file to source after sourcing main file or after setting up command (via \fBas"program"\fR). It is not a pattern but a plain file name.
-\fB\fB\fBmultisrc\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Sourcing-multiple-files\(ra\fR@ Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. \fBmultisrc'misc.zsh grep.zsh'\fR) and also using brace-expansion syntax (e.g. \fBmultisrc'{misc,grep}.zsh'\fR). Supports patterns.
+\fB\fB\fBpick\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files/\(ra\fR@ Select the file to source, or the file to set as command (when using \fBsnippet --command\fR or the ice \fBas"program"\fR); it is a pattern, alphabetically first matched file is being chosen; e.g. \fBzinit ice pick"*.plugin.zsh"; zinit load …\fR.
+\fB\fB\fBsrc\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files\(ra\fR@ Specify additional file to source after sourcing main file or after setting up command (via \fBas"program"\fR). It is not a pattern but a plain file name.
+\fB\fB\fBmultisrc\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files\(ra\fR@ Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. \fBmultisrc'misc.zsh grep.zsh'\fR) and also using brace-expansion syntax (e.g. \fBmultisrc'{misc,grep}.zsh'\fR). Supports patterns.
 .TE
 .SS "Conditional Loading"
 .TS
@@ -470,12 +468,12 @@ tab(@);
 cb cb
 c l .
 Modifier@Description
-\fB\fB\fBwait\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Example-wait-conditions\(ra\fR@ Postpone loading a plugin or snippet. For \fBwait'1'\fR, loading is done \fB1\fR second after prompt. For \fBwait'\[lB]\[lB] ... \[rB]\[rB]'\fR, \fBwait'(( ... ))'\fR, loading is done when given condition is meet. For \fBwait'!...'\fR, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. \fBFact:\fR when \fBwait\fR is used without value, it works as \fBwait'0'\fR.
-\fB\fB\fBload\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Multiple-prompts\(ra\fR@ A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see \fBunload\fR below). E.g.: \fBload'\[lB]\[lB] $PWD = */github* \[rB]\[rB]'\fR.
-\fB\fB\fBunload\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Multiple-prompts\(ra\fR@ A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: \fBunload'\[lB]\[lB] $PWD != */github* \[rB]\[rB]'\fR.
+\fB\fB\fBwait\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Example-wait-conditions\(ra\fR@ Postpone loading a plugin or snippet. For \fBwait'1'\fR, loading is done \fB1\fR second after prompt. For \fBwait'\[lB]\[lB] ... \[rB]\[rB]'\fR, \fBwait'(( ... ))'\fR, loading is done when given condition is meet. For \fBwait'!...'\fR, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. \fBFact:\fR when \fBwait\fR is used without value, it works as \fBwait'0'\fR.
+\fB\fB\fBload\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see \fBunload\fR below). E.g.: \fBload'\[lB]\[lB] $PWD = */github* \[rB]\[rB]'\fR.
+\fB\fB\fBunload\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: \fBunload'\[lB]\[lB] $PWD != */github* \[rB]\[rB]'\fR.
 \fBcloneonly\fR@ Don't load the plugin / snippet, only download it 
-\fBif\fR@ Load plugin or snippet only when given condition is fulfilled, for example: \fBzplugin ice if'\[lB]\[lB] -n "$commands\[lB]otool\[rB]" \[rB]\[rB]'; zplugin load ...\fR.
-\fBhas\fR@ Load plugin or snippet only when given command is available (in $PATH), e.g. \fBzplugin ice has'git' ...\fR 
+\fBif\fR@ Load plugin or snippet only when given condition is fulfilled, for example: \fBzinit ice if'\[lB]\[lB] -n "$commands\[lB]otool\[rB]" \[rB]\[rB]'; zinit load ...\fR.
+\fBhas\fR@ Load plugin or snippet only when given command is available (in $PATH), e.g. \fBzinit ice has'git' ...\fR
 \fBsubscribe\fR / \fBon-update-of\fR@ Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. \fBsubscribe'{~/files-*,/tmp/files-*}'\fR 
 .TE
 .SS "Plugin Output"
@@ -494,8 +492,8 @@ tab(@);
 cb cb
 c l .
 Modifier@Description
-\fBblockf\fR@ Disallow plugin to modify \fBfpath\fR. Useful when a plugin wants to provide completions in traditional way. Zplugin can manage completions and plugin can be blocked from exposing them.
-\fBnocompletions\fR@ Don't detect, install and manage completions for this plugin. Completions can be installed later with \fBzplugin creinstall {plugin-spec}\fR.
+\fBblockf\fR@ Disallow plugin to modify \fBfpath\fR. Useful when a plugin wants to provide completions in traditional way. zinit can manage completions and plugin can be blocked from exposing them.
+\fBnocompletions\fR@ Don't detect, install and manage completions for this plugin. Completions can be installed later with \fBzinit creinstall {plugin-spec}\fR.
 .TE
 .SS "Command Execution After Cloning, Updating or Loading"
 .TS
@@ -505,13 +503,13 @@ c l .
 Modifier@Description
 \fBmv\fR@ Move file after cloning or after update (then, only if new commits were downloaded). Example: \fBmv "fzf-* -> fzf"\fR. It uses \fB->\fR as separator for old and new file names. Works also with snippets.
 \fBcp\fR@ Copy file after cloning or after update (then, only if new commits were downloaded). Example: \fBcp "docker-c* -> dcompose"\fR. Ran after \fBmv\fR.
-\fB\fB\fBatclone\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/atload-and-other-at-ices\(ra\fR@ Run command after cloning, within plugin's directory, e.g. \fBzplugin ice atclone"echo Cloned"\fR. Ran also after downloading snippet.
-\fB\fB\fBatpull\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/atload-and-other-at-ices\(ra\fR@ Run command after updating (\fBonly if new commits are waiting for download\fR), within plugin's directory. If starts with "!" then command will be ran before \fBmv\fR & \fBcp\fR ices and before \fBgit pull\fR or \fBsvn update\fR. Otherwise it is ran after them. Can be \fBatpull'%atclone'\fR, to repeat \fBatclone\fR Ice-mod.
-\fB\fB\fBatinit\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/atload-and-other-at-ices\(ra\fR@ Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.
-\fB\fB\fBatload\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/atload-and-other-at-ices\(ra\fR@ Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with \fB!\fR, it will then be tracked (if using \fBload\fR, not \fBlight\fR).
+\fB\fB\fBatclone\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after cloning, within plugin's directory, e.g. \fBzinit ice atclone"echo Cloned"\fR. Ran also after downloading snippet.
+\fB\fB\fBatpull\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after updating (\fBonly if new commits are waiting for download\fR), within plugin's directory. If starts with "!" then command will be ran before \fBmv\fR & \fBcp\fR ices and before \fBgit pull\fR or \fBsvn update\fR. Otherwise it is ran after them. Can be \fBatpull'%atclone'\fR, to repeat \fBatclone\fR Ice-mod.
+\fB\fB\fBatinit\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.
+\fB\fB\fBatload\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with \fB!\fR, it will then be tracked (if using \fBload\fR, not \fBlight\fR).
 \fBrun-atpull\fR@ Always run the atpull hook (when updating), not only when there are new commits to be downloaded.
 \fBnocd\fR@ Don't switch the current directory into the plugin's directory when evaluating the above ice-mods \fBatinit''\fR,\fBatload''\fR, etc.
-\fB\fB\fBmake\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Installing-with-make\(ra\fR@ Run \fBmake\fR command after cloning/updating and executing \fBmv\fR, \fBcp\fR, \fBatpull\fR, \fBatclone\fR Ice mods. Can obtain argument, e.g. \fBmake"install PREFIX=/opt"\fR. If the value starts with \fB!\fR then \fBmake\fR is ran before \fBatclone\fR/\fBatpull\fR, e.g. \fBmake'!'\fR.
+\fB\fB\fBmake\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Installing-with-make\(ra\fR@ Run \fBmake\fR command after cloning/updating and executing \fBmv\fR, \fBcp\fR, \fBatpull\fR, \fBatclone\fR Ice mods. Can obtain argument, e.g. \fBmake"install PREFIX=/opt"\fR. If the value starts with \fB!\fR then \fBmake\fR is ran before \fBatclone\fR/\fBatpull\fR, e.g. \fBmake'!'\fR.
 .TE
 .SS "Sticky-Emulation Of Other Shells"
 .TS
@@ -531,22 +529,22 @@ cb cb
 c l .
 Modifier@Description
 \fBas\fR@ Can be \fBas"program"\fR (also the alias: \fBas"command"\fR), and will cause to add script/program to \fB$PATH\fR instead of sourcing (see \fBpick\fR). Can also be \fBas"completion"\fR \[en] use with plugins or snippets in whose only underscore-starting \fB_*\fR files you are interested in.
-\fB\fB\fBid-as\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/id-as/\(ra\fR@ Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.
+\fB\fB\fBid-as\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/id-as/\(ra\fR@ Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.
 \fBcompile\fR@ Pattern (+ possible \fB{...}\fR expansion, like \fB{a/*,b*}\fR) to select additional files to compile, e.g. \fBcompile"(pure\[rs]|async).zsh"\fR for \fBsindresorhus/pure\fR.\[rs]
 \fBnocompile\fR@ Don't try to compile \fBpick\fR-pointed files. If passed the exclamation mark (i.e. \fBnocompile'!'\fR), then do compile, but after \fBmake''\fR and \fBatclone''\fR (useful if Makefile installs some scripts, to point \fBpick''\fR at the location of their installation).
 \fBservice\fR@ Make following plugin or snippet a \fIservice\fR, which will be ran in background, and only in single Zshell instance. See \fBzservices-organization\fR \fI\(lahttps://github.com/zservices\(ra\fR page.
 \fBreset-prompt\fR@ Reset the prompt after loading the plugin/snippet (by issuing \fBzle .reset-prompt\fR). Note: normally it's sufficient to precede the value of \fBwait''\fR ice with \fB!\fR.
 \fBbindmap\fR@ To hold \fB;\fR-separated strings like \fBKey(s)A -> Key(s)B\fR, e.g. \fB^R -> ^T; ^A -> ^B\fR. In general, \fBbindmap''\fRchanges bindings (done with the \fBbindkey\fR builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. \fBDoes not work with snippets.\fR
-\fBtrackbinds\fR@ Shadow but only \fBbindkey\fR calls even with \fBzplugin light ...\fR, i.e. even with tracking disabled (fast loading), to allow \fBbindmap\fR to remap the key-binds. The same effect has \fBzplugin light -b ...\fR, i.e. additional \fB-b\fR option to the \fBlight\fR-subcommand. \fBDoes not work with snippets.\fR
-\fB\fB\fBwrap-track\fB\fR\fR \fI\(lahttp://zdharma.org/zplugin/wiki/wrap-track\(ra\fR@ Takes a \fB;\fR-separated list of function names that are to be tracked (meaning gathering report and unload data) \fBonce\fR during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, \fBwrap-track\fR allows to extend the tracking beyond the moment of loading of a plugin. Example use is to \fBwrap-track\fR a precmd function of a prompt (like \fB_p9k_precmd()\fR of powerlevel10k) or other plugin that \fIpostpones its initialization till the first prompt\fR (like e.g.: zsh-autosuggestions). \fBDoes not work with snippets.\fR
+\fBtrackbinds\fR@ Shadow but only \fBbindkey\fR calls even with \fBzinit light ...\fR, i.e. even with tracking disabled (fast loading), to allow \fBbindmap\fR to remap the key-binds. The same effect has \fBzinit light -b ...\fR, i.e. additional \fB-b\fR option to the \fBlight\fR-subcommand. \fBDoes not work with snippets.\fR
+\fB\fB\fBwrap-track\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/wrap-track\(ra\fR@ Takes a \fB;\fR-separated list of function names that are to be tracked (meaning gathering report and unload data) \fBonce\fR during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, \fBwrap-track\fR allows to extend the tracking beyond the moment of loading of a plugin. Example use is to \fBwrap-track\fR a precmd function of a prompt (like \fB_p9k_precmd()\fR of powerlevel10k) or other plugin that \fIpostpones its initialization till the first prompt\fR (like e.g.: zsh-autosuggestions). \fBDoes not work with snippets.\fR
 \fBaliases\fR@Load the plugin with the aliases mechanism enabled. Use with plugins that define \fBand use\fR aliases in their scripts.
 .TE
 .SS "Order of Execution"
 .P
 Order of execution of related Ice-mods: \fBatinit\fR -> \fBatpull!\fR -> \fBmake'!!'\fR -> \fBmv\fR -> \fBcp\fR -> \fBmake!\fR -> \fBatclone\fR/\fBatpull\fR -> \fBmake\fR -> \fB(plugin script loading)\fR -> \fBsrc\fR -> \fBmultisrc\fR -> \fBatload\fR.
-.SS "Zplugin Commands"
+.SS "zinit Commands"
 .P
-Following commands are passed to \fBzplugin ...\fR to obtain described effects.
+Following commands are passed to \fBzinit ...\fR to obtain described effects.
 .SS "Help"
 .TS
 tab(@);
@@ -564,7 +562,7 @@ c l .
 Command@Description
 \fBload {plg-spec}\fR@ Load plugin, can also receive absolute local path.
 \fBlight \[lB]-b\[rB] {plg-spec}\fR@ Light plugin load, without reporting/tracking. \fB-b\fR \[en] track \fBbindkey\fR-calls only.
-\fBunload \[lB]-q\[rB] {plg-spec}\fR@ Unload plugin loaded with \fBzplugin load ...\fR. \fB-q\fR \[en] quiet.
+\fBunload \[lB]-q\[rB] {plg-spec}\fR@ Unload plugin loaded with \fBzinit load ...\fR. \fB-q\fR \[en] quiet.
 \fBsnippet \[lB]-f\[rB] {url}\fR@ Source local or remote file (by direct URL). \fB-f\fR \[en] don't use cache (force redownload).
 .TE
 .SS "Completions"
@@ -604,7 +602,7 @@ cb cb
 c l .
 Command@Description
 \fBtimes \[lB]-s\[rB]\fR@ Statistics on plugin load times, sorted in order of loading. \fB-s\fR \[en] use seconds instead of milliseconds.
-\fBzstatus\fR@ Overall Zplugin status.
+\fBzstatus\fR@ Overall zinit status.
 \fBreport {plg-spec}\[rs]|--all\fR@ Show plugin report. \fB--all\fR \[en] do it for all plugins.
 \fBloaded \[lB]keyword\[rB], list \[lB]keyword\[rB]\fR@ Show what plugins are loaded (filter with 'keyword').
 \fBls\fR@ List snippets in formatted and colorized manner. Requires \fBtree\fR program.
@@ -628,7 +626,7 @@ tab(@);
 cb cb
 c l .
 Command@Description
-\fBself-update\fR@ Updates and compiles Zplugin.
+\fBself-update\fR@ Updates and compiles zinit.
 \fBupdate \[lB]-q\[rB] \[lB]-r\[rB] {plg-spec}\[rs]|URL\[rs]|--all\fR@ Git update plugin or snippet. \fB--all\fR \[en] update all plugins and snippets. \fB-q\fR \[en] quiet. \fB-r\fR | \fB--reset\fR \[en] run \fBgit reset --hard\fR / \fBsvn revert\fR before pulling changes.
 \fBice <ice specification>\fR@ Add ice to next command, argument is e.g. from"gitlab".
 \fBdelete {plg-spec}\[rs]|URL\[rs]|--clean\[rs]|--all\fR@ Remove plugin or snippet from disk (good to forget wrongly passed ice-mods).  \fB--all\fR \[en] purge. \fB--clean\fR \[en] delete plugins and snippets that are not loaded.
@@ -639,28 +637,28 @@ Command@Description
 \fBchanges {plg-spec}\fR@ View plugin's git log.
 \fBcreate {plg-spec}\fR@ Create plugin (also together with GitHub repository).
 \fBsrv {service-id} \[lB]cmd\[rB]\fR@ Control a service, command can be: stop,start,restart,next,quit; \fBnext\fR moves the service to another Zshell.
-\fBrecall {plg-spec}\[rs]|URL\fR@ Fetch saved ice modifiers and construct \fBzplugin ice ...\fR command.
+\fBrecall {plg-spec}\[rs]|URL\fR@ Fetch saved ice modifiers and construct \fBzinit ice ...\fR command.
 \fBenv-whitelist \[lB]-v\[rB] \[lB]-h\[rB] {env..}\fR@ Allows to specify names (also patterns) of variables left unchanged during an unload. \fB-v\fR \[en] verbose.
-\fBmodule\fR@ Manage binary Zsh module shipped with Zplugin, see \fBzplugin module help\fR.
+\fBmodule\fR@ Manage binary Zsh module shipped with zinit, see \fBzinit module help\fR.
 .TE
-.SS "Updating Zplugin and Plugins"
+.SS "Updating zinit and Plugins"
 .P
-To update Zplugin issue \fBzplugin self-update\fR in the command line.
+To update zinit issue \fBzinit self-update\fR in the command line.
 .P
-To update all plugins and snippets, issue \fBzplugin update\fR. If you wish to update only a single plugin/snippet instead issue \fBzplugin update NAME_OF_PLUGIN\fR. A list of commits will be shown:
+To update all plugins and snippets, issue \fBzinit update\fR. If you wish to update only a single plugin/snippet instead issue \fBzinit update NAME_OF_PLUGIN\fR. A list of commits will be shown:
 .P
-Some plugins require performing an action each time they're updated. One way you can do this is by using the \fBatpull\fR ice modifier. For example, writing \fBzplugin ice atpull'./configure'\fR before loading a plugin will execute \fB./configure\fR after a successful update. Refer to \fBIce Modifiers\fR \fI(Ice Modifiers)\fR for more information.
+Some plugins require performing an action each time they're updated. One way you can do this is by using the \fBatpull\fR ice modifier. For example, writing \fBzinit ice atpull'./configure'\fR before loading a plugin will execute \fB./configure\fR after a successful update. Refer to \fBIce Modifiers\fR \fI(Ice Modifiers)\fR for more information.
 .P
-The ice modifiers for any plugin or snippet are stored in their directory in a \fB._zplugin\fR subdirectory, hence the plugin doesn't have to be loaded to be correctly updated. There's one other file created there, \fB.zplugin_lstupd\fR \[en] it holds the log of the new commits pulled-in in the last update.
+The ice modifiers for any plugin or snippet are stored in their directory in a \fB._zinit\fR subdirectory, hence the plugin doesn't have to be loaded to be correctly updated. There's one other file created there, \fB.zinit_lstupd\fR \[en] it holds the log of the new commits pulled-in in the last update.
 .SS "Using Oh My Zsh Themes"
 .P
 To use \fBthemes\fR created for Oh My Zsh you might want to first source the \fBgit\fR library there:
 .P
 .RS 2
 .nf
-zplugin snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
+zinit snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
 # Or using OMZ:: shorthand:
-zplugin snippet OMZ::lib/git.zsh
+zinit snippet OMZ::lib/git.zsh
 .fi
 .RE
 .P
@@ -673,71 +671,71 @@ If the library will not be loaded, then similar to following errors will be appe
 .fi
 .RE
 .P
-Then you can use the themes as snippets (\fBzplugin snippet {file path or GitHub URL}\fR). Some themes require not only Oh My Zsh's Git \fBlibrary\fR, but also Git \fBplugin\fR (error about \fBcurrent_branch\fR function can be appearing). Load this Git-plugin as single-file snippet directly from OMZ:
+Then you can use the themes as snippets (\fBzinit snippet {file path or GitHub URL}\fR). Some themes require not only Oh My Zsh's Git \fBlibrary\fR, but also Git \fBplugin\fR (error about \fBcurrent_branch\fR function can be appearing). Load this Git-plugin as single-file snippet directly from OMZ:
 .P
 .RS 2
 .nf
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 .fi
 .RE
 .P
-Such lines should be added to \fB.zshrc\fR. Snippets are cached locally, use \fB-f\fR option to download a fresh version of a snippet, or \fBzplugin update {URL}\fR. Can also use \fBzplugin update --all\fR to update all snippets (and plugins).
+Such lines should be added to \fB.zshrc\fR. Snippets are cached locally, use \fB-f\fR option to download a fresh version of a snippet, or \fBzinit update {URL}\fR. Can also use \fBzinit update --all\fR to update all snippets (and plugins).
 .P
 Most themes require \fBpromptsubst\fR option (\fBsetopt promptsubst\fR in \fBzshrc\fR), if it isn't set, then prompt will appear as something like: \fB... $(build_prompt) ...\fR.
 .P
-You might want to suppress completions provided by the git plugin by issuing \fBzplugin cdclear -q\fR (\fB-q\fR is for quiet) \[en] see below \fBIgnoring Compdefs\fR.
+You might want to suppress completions provided by the git plugin by issuing \fBzinit cdclear -q\fR (\fB-q\fR is for quiet) \[en] see below \fBIgnoring Compdefs\fR.
 .P
 To summarize:
 .P
 .RS 2
 .nf
 # Load OMZ Git library
-zplugin snippet OMZ::lib/git.zsh
+zinit snippet OMZ::lib/git.zsh
 
 # Load Git plugin from OMZ
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin cdclear -q # <- forget completions provided up to this moment
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit cdclear -q # <- forget completions provided up to this moment
 
 setopt promptsubst
 
 # Load theme from OMZ
-zplugin snippet OMZ::themes/dstufft.zsh-theme
+zinit snippet OMZ::themes/dstufft.zsh-theme
 
 # Load normal GitHub plugin with theme depending on OMZ Git library
-zplugin light NicoSantangelo/Alpharized
+zinit light NicoSantangelo/Alpharized
 .fi
 .RE
 .P
-See also the Wiki page: \fBExample Oh My Zsh Setup\fR \fI\(lahttp://zdharma.org/zplugin/wiki/Example-Oh-My-Zsh-setup/\(ra\fR.
+See also the Wiki page: \fBExample Oh My Zsh Setup\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/\(ra\fR.
 .SH "COMPLETIONS"
 .SS "Calling \fBcompinit\fR Without Turbo Mode"
 .P
 With no Turbo mode in use, compinit can be called normally, i.e.: as \fBautoload compinit;
-compinit\fR. This should be done after loading of all plugins and before possibly calling \fBzplugin cdreplay\fR. Also, plugins aren't allowed to simply run \fBcompdefs\fR. You can decide whether to run \fBcompdefs\fR by issuing \fBzplugin cdreplay\fR (reads: \fBcompdef\fR-replay). To summarize:
+compinit\fR. This should be done after loading of all plugins and before possibly calling \fBzinit cdreplay\fR. Also, plugins aren't allowed to simply run \fBcompdefs\fR. You can decide whether to run \fBcompdefs\fR by issuing \fBzinit cdreplay\fR (reads: \fBcompdef\fR-replay). To summarize:
 .P
 .RS 2
 .nf
-source ~/.zplugin/bin/zplugin.zsh
+source ~/.zinit/bin/zinit.zsh
 
-zplugin load "some/plugin"
+zinit load "some/plugin"
 ...
-compdef _gnu_generic fd  # this will be intercepted by Zplugin, because as the compinit
+compdef _gnu_generic fd  # this will be intercepted by zinit, because as the compinit
                          # isn't yet loaded, thus there's no such function `compdef'; yet
-                         # Zplugin provides its own `compdef' function which saves the
-                         # completion-definition for later possible re-run with `zplugin
+                         # zinit provides its own `compdef' function which saves the
+                         # completion-definition for later possible re-run with `zinit
                          # cdreplay` or `zpcdreplay` (the second one can be used in hooks
                          # like atload'', atinit'', etc.)
 ...
-zplugin load "other/plugin"
+zinit load "other/plugin"
 
 autoload -Uz compinit
 compinit
 
-zplugin cdreplay -q # -q is for quiet; actually run all the `compdef's saved before
+zinit cdreplay -q # -q is for quiet; actually run all the `compdef's saved before
                     #`compinit` call (`compinit' declares the `compdef' function, so
-                    # it cannot be used until `compinit` is ran; Zplugin solves this
+                    # it cannot be used until `compinit` is ran; zinit solves this
                     # via intercepting the `compdef'-calls and storing them for later
-                    # use with `zplugin cdreplay')
+                    # use with `zinit cdreplay')
 .fi
 .RE
 .P
@@ -749,22 +747,22 @@ compinit; compinit\fR, created for convenience. There's also \fBzpcdreplay\fR wh
 zpcdreplay'\fR, etc. Basically, the whole topic is the same as normal \fBcompinit\fR call, but it is done in \fBatinit\fR or \fBatload\fR hook of the last related plugin with use of the helper functions (\fBzpcompinit\fR,\fBzpcdreplay\fR & \fBzpcdclear\fR \[en] see below for explanation of the last one).
 .SS "Ignoring Compdefs"
 .P
-If you want to ignore compdefs provided by some plugins or snippets, place their load commands before commands loading other plugins or snippets, and issue \fBzplugin cdclear\fR (or \fBzpcdclear\fR, designed to be used in hooks like \fBatload''\fR):
+If you want to ignore compdefs provided by some plugins or snippets, place their load commands before commands loading other plugins or snippets, and issue \fBzinit cdclear\fR (or \fBzpcdclear\fR, designed to be used in hooks like \fBatload''\fR):
 .P
 .RS 2
 .nf
-source ~/.zplugin/bin/zplugin.zsh
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
-zplugin cdclear -q # <- forget completions provided by Git plugin
+source ~/.zinit/bin/zinit.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
+zinit cdclear -q # <- forget completions provided by Git plugin
 
-zplugin load "some/plugin"
+zinit load "some/plugin"
 ...
-zplugin load "other/plugin"
+zinit load "other/plugin"
 
 autoload -Uz compinit
 compinit
-zplugin cdreplay -q # <- execute compdefs provided by rest of plugins
-zplugin cdlist # look at gathered compdefs
+zinit cdreplay -q # <- execute compdefs provided by rest of plugins
+zinit cdlist # look at gathered compdefs
 .fi
 .RE
 .SS "Disabling System-Wide \fBcompinit\fR Call (Ubuntu)"
@@ -777,31 +775,31 @@ On Ubuntu users might get surprised that e.g. their completions work while they 
 skip_global_compinit=1
 .fi
 .RE
-.SH "ZPLUGIN MODULE"
+.SH "zinit MODULE"
 .SS "Motivation"
 .P
-The module is a binary Zsh module (think about \fBzmodload\fR Zsh command, it's that topic) which transparently and automatically \fBcompiles sourced scripts\fR. Many plugin managers do not offer compilation of plugins, the module is a solution to this. Even if a plugin manager does compile plugin's main script (like Zplugin does), the script can source smaller helper scripts or dependency libraries (for example, the prompt \fBgeometry-zsh/geometry\fR does that) and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load command and tracking updates to the plugin \[en] in Zplugin case: by using \fBcompile\fR ice-mod).
+The module is a binary Zsh module (think about \fBzmodload\fR Zsh command, it's that topic) which transparently and automatically \fBcompiles sourced scripts\fR. Many plugin managers do not offer compilation of plugins, the module is a solution to this. Even if a plugin manager does compile plugin's main script (like zinit does), the script can source smaller helper scripts or dependency libraries (for example, the prompt \fBgeometry-zsh/geometry\fR does that) and there are very few solutions to that, which are demanding (e.g. specifying all helper files in plugin load command and tracking updates to the plugin \[en] in zinit case: by using \fBcompile\fR ice-mod).
 .P
- \fBimage\fR \fI\(lahttps://raw.githubusercontent.com/zdharma/zplugin/images/mod-auto-compile.png\(ra\fR
+ \fBimage\fR \fI\(lahttps://raw.githubusercontent.com/zdharma/zinit/images/mod-auto-compile.png\(ra\fR
 .SS "Installation"
-.SS "Without Zplugin"
+.SS "Without zinit"
 .P
-To install just the binary Zplugin module \fBstandalone\fR (Zplugin is not needed, the module can be used with any other plugin manager), execute:
+To install just the binary zinit module \fBstandalone\fR (zinit is not needed, the module can be used with any other plugin manager), execute:
 .P
 .RS 2
 .nf
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zplugin/master/doc/mod-install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/mod-install.sh)"
 .fi
 .RE
 .P
 This script will display what to add to \fB~/.zshrc\fR (2 lines) and show usage instructions.
-.SS "With Zplugin"
+.SS "With zinit"
 .P
-Zplugin users can build the module by issuing following command instead of running above \fBmod-install.sh\fR script (the script is for e.g. \fBzgen\fR users or users of any other plugin manager):
+zinit users can build the module by issuing following command instead of running above \fBmod-install.sh\fR script (the script is for e.g. \fBzgen\fR users or users of any other plugin manager):
 .P
 .RS 2
 .nf
-zplugin module build
+zinit module build
 .fi
 .RE
 .P
@@ -822,11 +820,11 @@ typeset -g ZPLG_MOD_DEBUG=1
 .SH "HINTS AND TIPS"
 .SS "Customizing Paths"
 .P
-Following variables can be set to custom values, before sourcing Zplugin. The previous global variables like \fB$ZPLG_HOME\fR have been removed to not pollute the namespace \[en] there's single \fB$ZPLGM\fR ("\fIZPLUGIN MAP\fR") hash instead of \fB8\fR string variables. Please update your dotfiles.
+Following variables can be set to custom values, before sourcing zinit. The previous global variables like \fB$ZPLG_HOME\fR have been removed to not pollute the namespace \[en] there's single \fB$ZPLGM\fR ("\fIzinit MAP\fR") hash instead of \fB8\fR string variables. Please update your dotfiles.
 .P
 .RS 2
 .nf
-declare -A ZPLGM  # initial Zplugin's hash definition, if configuring before loading Zplugin, and then:
+declare -A ZPLGM  # initial zinit's hash definition, if configuring before loading zinit, and then:
 .fi
 .RE
 .TS
@@ -834,32 +832,32 @@ tab(@);
 cb cb
 l l .
 Hash Field@Description
-ZPLGM\fBBIN_DIR\fR@ Where Zplugin code resides, e.g.: "~/.zplugin/bin"
-ZPLGM\fBHOME_DIR\fR@ Where Zplugin should create all working directories, e.g.: "~/.zplugin"
-ZPLGM\fBPLUGINS_DIR\fR@Override single working directory \[en] for plugins, e.g. "/opt/zsh/zplugin/plugins"
-ZPLGM\fBCOMPLETIONS_DIR\fR@As above, but for completion files, e.g. "/opt/zsh/zplugin/root_completions"
+ZPLGM\fBBIN_DIR\fR@ Where zinit code resides, e.g.: "~/.zinit/bin"
+ZPLGM\fBHOME_DIR\fR@ Where zinit should create all working directories, e.g.: "~/.zinit"
+ZPLGM\fBPLUGINS_DIR\fR@Override single working directory \[en] for plugins, e.g. "/opt/zsh/zinit/plugins"
+ZPLGM\fBCOMPLETIONS_DIR\fR@As above, but for completion files, e.g. "/opt/zsh/zinit/root_completions"
 ZPLGM\fBSNIPPETS_DIR\fR@ As above, but for snippets
 ZPLGM\fBZCOMPDUMP_PATH\fR@Path to \fB.zcompdump\fR file, with the file included (i.e. its name can be different)
 ZPLGM\fBCOMPINIT_OPTS\fR@Options for \fBcompinit\fR call (i.e. done by \fBzpcompinit\fR), use to pass -C to speed up loading
-ZPLGM\fBMUTE_WARNINGS\fR@If set to \fB1\fR, then mutes some of the Zplugin warnings, specifically the \fBplugin already registered\fR warning
+ZPLGM\fBMUTE_WARNINGS\fR@If set to \fB1\fR, then mutes some of the zinit warnings, specifically the \fBplugin already registered\fR warning
 .TE
 .P
-There is also \fB$ZPFX\fR, set by default to \fB~/.zplugin/polaris\fR \[en] a directory where software with \fBMakefile\fR, etc. can be pointed to, by e.g. \fBatclone'./configure --prefix=$ZPFX'\fR.
+There is also \fB$ZPFX\fR, set by default to \fB~/.zinit/polaris\fR \[en] a directory where software with \fBMakefile\fR, etc. can be pointed to, by e.g. \fBatclone'./configure --prefix=$ZPFX'\fR.
 .SS "Non-GitHub (Local) Plugins"
 .P
 Use \fBcreate\fR subcommand with user name \fB_local\fR (the default) to create plugin's skeleton in \fB$ZPLGM\[lB]PLUGINS_DIR\[rB]\fR. It will be not connected with GitHub repository (because of user name being \fB_local\fR). To enter the plugin's directory use \fBcd\fR command with just plugin's name (without \fB_local\fR, it's optional).
 .P
-If user name will not be \fB_local\fR, then Zplugin will create repository also on GitHub and setup correct repository origin.
+If user name will not be \fB_local\fR, then zinit will create repository also on GitHub and setup correct repository origin.
 .SS "Extending Git"
 .P
-There are several projects that provide git extensions. Installing them with Zplugin has many benefits:
+There are several projects that provide git extensions. Installing them with zinit has many benefits:
 .RS 0
 .IP \(bu 4
 all files are under \fB$HOME\fR \[en] no administrator rights needed,
 .IP \(bu 4
 declarative setup (like Chef or Puppet) \[en] copying \fB.zshrc\fR to different account brings also git-related setup,
 .IP \(bu 4
-easy update by e.g. \fBzplugin update --all\fR.
+easy update by e.g. \fBzinit update --all\fR.
 .RE 0
 
 .P
@@ -867,25 +865,25 @@ Below is a configuration that adds multiple git extensions, loaded in Turbo mode
 .P
 .RS 2
 .nf
-zplugin ice wait"2" lucid as"program" pick"bin/git-dsf"
-zplugin light zdharma/zsh-diff-so-fancy
+zinit ice wait"2" lucid as"program" pick"bin/git-dsf"
+zinit light zdharma/zsh-diff-so-fancy
 
-zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-now" make"prefix=$ZPFX install"
-zplugin light iwata/git-now
+zinit ice wait"2" lucid as"program" pick"$ZPFX/bin/git-now" make"prefix=$ZPFX install"
+zinit light iwata/git-now
 
-zplugin ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX" nocompile
-zplugin light tj/git-extras
+zinit ice wait"2" lucid as"program" pick"$ZPFX/bin/git-alias" make"PREFIX=$ZPFX" nocompile
+zinit light tj/git-extras
 
-zplugin ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \[rs]
+zinit ice wait"2" lucid as"program" atclone'perl Makefile.PL PREFIX=$ZPFX' atpull'%atclone' \[rs]
             make'install' pick"$ZPFX/bin/git-cal"
-zplugin light k4rthik/git-cal
+zinit light k4rthik/git-cal
 .fi
 .RE
 .P
-Target directory for installed files is \fB$ZPFX\fR (\fB~/.zplugin/polaris\fR by default).
+Target directory for installed files is \fB$ZPFX\fR (\fB~/.zinit/polaris\fR by default).
 .SS "Preinstalling Plugins"
 .P
-If you create a Docker image that uses Zplugin, or want to install Turbo-loaded plugins before the shell starts interactively, you can invoke the zplugin-scheduler function in such a way, that it:
+If you create a Docker image that uses zinit, or want to install Turbo-loaded plugins before the shell starts interactively, you can invoke the zinit-scheduler function in such a way, that it:
 .RS 0
 .IP \(bu 4
 installs plugins without waiting for the prompt (i.e. it's script friendly),
@@ -905,13 +903,12 @@ RUN zsh -i -c -- '-zplg-scheduler burst || true'
 An example \fBDockerfile\fR can be found \fB\fBhere\fR\fR \fI\(lahttps://github.com/robobenklein/configs/blob/master/Dockerfile\(ra\fR.
 .SH "GETTING HELP AND COMMUNITY"
 .P
-Do you need help or wish to get in touch with other Zplugin users?
+Do you need help or wish to get in touch with other zinit users?
 .RS 0
 .IP \(bu 4
-Visit our subreddit \fBr/zplugin\fR \fI\(lahttps://www.reddit.com/r/zplugin/\(ra\fR.
+Visit our subreddit \fBr/zinit\fR \fI\(lahttps://www.reddit.com/r/zinit/\(ra\fR.
 .IP \(bu 4
-Chat with us in our IRC channel. Connect to \fBchat.freenode.net:6697\fR \fI\(laircs://chat.freenode.net:6697/%23zplugin\(ra\fR (SSL) or \fBchat.freenode.net:6667\fR \fI\(lairc://chat.freenode.net:6667/%23zplugin\(ra\fR and join #zplugin.
+Chat with us on Gitter: \fBhttps://gitter.im/zdharma-continuum/community\fR
 .RE 0
 
 .P
-Following is a quick access via Webchat \fB\fBIRC\fR \fI\(lahttps://kiwiirc.com/buttons/chat.freenode.net/zplugin.png\(ra\fR\fR \fI\(lahttps://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin\(ra\fR
