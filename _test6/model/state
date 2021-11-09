@@ -47,11 +47,11 @@ zinit.zsh
 ZSTYLES__psprint/zsh-select
 
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit' 'psprint/zsh-select'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-select' '2'
-ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'teleid psprint/zsh-select wait '\'''\'' atpull '\''command chmod -x zsh-select'\'' depth 1 '
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit' 'psprint/zsh-select'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-select' '2'
+ZINIT_SNIPPETS: 
+ZINIT_SICE: 'psprint/zsh-select' 'teleid psprint/zsh-select wait '\'''\'' atpull '\''command chmod -x zsh-select'\'' depth 1 '
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

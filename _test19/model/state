@@ -29,11 +29,11 @@ TIME_INDEX
 ZERO
 zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1'
-ZPLG_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools <svn>'
-ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'svn '\'''\'' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '\'''\'' atpull %atclone atclone '\''builtin echo >! test_file'\'' is-snippet '\'''\'' '
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1'
+ZINIT_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools <svn>'
+ZINIT_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'svn '\'''\'' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '\'''\'' atpull %atclone atclone '\''builtin echo >! test_file'\'' is-snippet '\'''\'' '
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

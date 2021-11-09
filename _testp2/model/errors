@@ -1,9 +1,9 @@
 ERRORS
-Failed: -zplg-diff-functions-compute for _local/zinit
-Failed: -zplg-diff-options-compute for _local/zinit
-Failed: -zplg-diff-env-compute _local/zinit
-Failed: -zplg-diff-parameter-compute _local/zinit
-Failed: -zplg-diff-functions-compute for psprint/zsh-editing-workbench
-Failed: -zplg-diff-options-compute for psprint/zsh-editing-workbench
-Failed: -zplg-diff-env-compute psprint/zsh-editing-workbench
-Failed: -zplg-diff-parameter-compute psprint/zsh-editing-workbench
+Failed: -zinit-diff-functions-compute for _local/zinit
+Failed: -zinit-diff-options-compute for _local/zinit
+Failed: -zinit-diff-env-compute _local/zinit
+Failed: -zinit-diff-parameter-compute _local/zinit
+Failed: -zinit-diff-functions-compute for psprint/zsh-editing-workbench
+Failed: -zinit-diff-options-compute for psprint/zsh-editing-workbench
+Failed: -zinit-diff-env-compute psprint/zsh-editing-workbench
+Failed: -zinit-diff-parameter-compute psprint/zsh-editing-workbench

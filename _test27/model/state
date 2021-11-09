@@ -29,11 +29,11 @@ TIME_INDEX
 ZERO
 zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1'
-ZPLG_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'OMZ::plugins/git/git.plugin.zsh <single file>'
-ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' atpull '\''!builtin print -- --Added Line-- >>! git.plugin.zsh; cp -vf git.plugin.zsh git2.plugin.zsh'\'' is-snippet '\'''\'' cp '\''git.plugin.zsh -> git3.plugin.zsh'\'' '
-ZPLG_COMPDEF_REPLAY: '_git gcount' '_git gdv=git-diff' '_grep gfg' '_git ggf=git-checkout' '_git ggl=git-checkout' '_git ggp=git-checkout' '_git ggpnp=git-checkout' '_git ggu=git-checkout' '_git ggpur=git-checkout' '_git ggpull=git-checkout' '_git ggpush=git-checkout' '_git git-svn-dcommit-push=git' '_git gk=gitk' '_git gke=gitk' '_git glp=git-log' '_git gpoat=git-push'
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1'
+ZINIT_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'OMZ::plugins/git/git.plugin.zsh <single file>'
+ZINIT_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' atpull '\''!builtin print -- --Added Line-- >>! git.plugin.zsh; cp -vf git.plugin.zsh git2.plugin.zsh'\'' is-snippet '\'''\'' cp '\''git.plugin.zsh -> git3.plugin.zsh'\'' '
+ZINIT_COMPDEF_REPLAY: '_git gcount' '_git gdv=git-diff' '_grep gfg' '_git ggf=git-checkout' '_git ggl=git-checkout' '_git ggp=git-checkout' '_git ggpnp=git-checkout' '_git ggu=git-checkout' '_git ggpur=git-checkout' '_git ggpull=git-checkout' '_git ggpush=git-checkout' '_git git-svn-dcommit-push=git' '_git gk=gitk' '_git gke=gitk' '_git glp=git-log' '_git gpoat=git-push'
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

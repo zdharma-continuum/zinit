@@ -3,14 +3,14 @@ tst_verbosity
 zinit ice as"command" cp"git.plugin.zsh -> gp" \
     atclone'command echo "touch \${ZINIT[PLUGINS_DIR]}/error.mark" >! git.plugin.zsh' \
     pick"git.plugin.zsh" src"gp" atpull"%atclone" \
-    atinit'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out' \
-    atload'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out'
+    atinit'print "${ZINIT_COMPDEF_REPLAY[@]}" >! compdefs1.out' \
+    atload'print "${ZINIT_COMPDEF_REPLAY[@]}" >! compdefs2.out'
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-print -rl -- "${(okv)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(okv)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
-( zplg cd OMZ::plugins/git/git.plugin.zsh
+( zinit cd OMZ::plugins/git/git.plugin.zsh
   set -e
   print 'command touch Test_has_failed' >! ._zinit/atpull  # static ice should win
 ) || return 1

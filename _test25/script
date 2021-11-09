@@ -5,13 +5,13 @@ zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 zinit cdlist >! answer/compdefs
 
-( zplg cd OMZ::plugins/git/git.plugin.zsh
+( zinit cd OMZ::plugins/git/git.plugin.zsh
   set -e
   command cp -v git.plugin.zsh git1.plugin.zsh
 ) || return 1
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 zinit update OMZ::plugins/git/git.plugin.zsh
 # vim:ft=zsh

@@ -29,11 +29,11 @@ TIME_INDEX
 ZERO
 zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1'
-ZPLG_SNIPPETS: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order <svn>'
-ZPLG_SICE: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'svn '\'''\'' teleid https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order wait '\'''\'' atload '\''cp -v Makefile.copy3 Makefile.copy4'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' is-snippet '\'''\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1'
+ZINIT_SNIPPETS: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order <svn>'
+ZINIT_SICE: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'svn '\'''\'' teleid https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order wait '\'''\'' atload '\''cp -v Makefile.copy3 Makefile.copy4'\'' mv '\''Makefile2 -> Makefile'\'' atclone '\''cp -v Makefile.copy Makefile.copy2'\'' is-snippet '\'''\'' cp '\''Makefile -> Makefile.copy'\'' make '\'''\'' '
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

@@ -16,7 +16,7 @@ cd "$PREV_PWD"
 print -r -- ${#lines[@]} > answer/line_count
 
 # No static ice should be gathered when if-condition is not meet
-print -rl -- "${(kv)ZPLG_SICE[@]}" > answer/static_ice
+print -rl -- "${(kv)ZINIT_SICE[@]}" > answer/static_ice
 
 # Not-neat adaptation of ice-order.plugin.zsh behavior
 command rm -f answer/file.lst

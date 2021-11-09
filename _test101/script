@@ -5,8 +5,8 @@ zinit ice depth"1"
 zinit load psprint/zsh-select
 zinit load zdharma/ice-order
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 store_state answer/state_bunload answer/errors_bunload
 

@@ -2,8 +2,8 @@ tst_verbosity
 
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 zinit cdlist >! answer/compdefs
 # vim:ft=zsh

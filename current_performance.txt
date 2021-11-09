@@ -3,26 +3,26 @@ testp1:
 
 num  calls                time                       self            name
 -----------------------------------------------------------------------------------
- 1) 10400         732.99     0.07   22.72%    732.99     0.07   22.72%  -zplg-add-report
- 2) 2800         720.51     0.26   22.33%    518.87     0.19   16.08%  --zplg-shadow-bindkey
- 3)  200        3130.33    15.65   97.02%    408.27     2.04   12.65%  -zplg-load-plugin
- 4) 2000         435.96     0.22   13.51%    292.61     0.15    9.07%  --zplg-shadow-zle
- 5)  400         241.48     0.60    7.48%    241.48     0.60    7.48%  -zplg-diff-parameter
- 6) 1400         317.08     0.23    9.83%    219.75     0.16    6.81%  --zplg-shadow-zstyle
- 7)  600         367.90     0.61   11.40%    214.55     0.36    6.65%  --zplg-shadow-alias
- 8) 1000         261.87     0.26    8.12%    138.33     0.14    4.29%  --zplg-shadow-autoload
- 9)  400          59.10     0.15    1.83%     59.10     0.15    1.83%  -zplg-diff-functions
+ 1) 10400         732.99     0.07   22.72%    732.99     0.07   22.72%  -zinit-add-report
+ 2) 2800         720.51     0.26   22.33%    518.87     0.19   16.08%  --zinit-shadow-bindkey
+ 3)  200        3130.33    15.65   97.02%    408.27     2.04   12.65%  -zinit-load-plugin
+ 4) 2000         435.96     0.22   13.51%    292.61     0.15    9.07%  --zinit-shadow-zle
+ 5)  400         241.48     0.60    7.48%    241.48     0.60    7.48%  -zinit-diff-parameter
+ 6) 1400         317.08     0.23    9.83%    219.75     0.16    6.81%  --zinit-shadow-zstyle
+ 7)  600         367.90     0.61   11.40%    214.55     0.36    6.65%  --zinit-shadow-alias
+ 8) 1000         261.87     0.26    8.12%    138.33     0.14    4.29%  --zinit-shadow-autoload
+ 9)  400          59.10     0.15    1.83%     59.10     0.15    1.83%  -zinit-diff-functions
 10) 2800         769.30     0.27   23.84%     48.79     0.02    1.51%  bindkey
-11)  400          40.47     0.10    1.25%     40.47     0.10    1.25%  -zplg-diff-options
-12)  400          35.55     0.09    1.10%     35.55     0.09    1.10%  -zplg-diff-env
+11)  400          40.47     0.10    1.25%     40.47     0.10    1.25%  -zinit-diff-options
+12)  400          35.55     0.09    1.10%     35.55     0.09    1.10%  -zinit-diff-env
 13) 2000         470.46     0.24   14.58%     34.50     0.02    1.07%  zle
-14)  200        3205.88    16.03   99.36%     29.71     0.15    0.92%  -zplg-load
+14)  200        3205.88    16.03   99.36%     29.71     0.15    0.92%  -zinit-load
 15)  200          63.47     0.32    1.97%     26.73     0.13    0.83%  add-zsh-hook
-16)  200          26.66     0.13    0.83%     26.66     0.13    0.83%  -zplg-shadow-on
-17)  200          25.26     0.13    0.78%     25.26     0.13    0.78%  -zplg-register-plugin
+16)  200          26.66     0.13    0.83%     26.66     0.13    0.83%  -zinit-shadow-on
+17)  200          25.26     0.13    0.78%     25.26     0.13    0.78%  -zinit-register-plugin
 18) 1400         338.75     0.24   10.50%     21.66     0.02    0.67%  zstyle
 19)  200         185.97     0.93    5.76%     21.10     0.11    0.65%  select-word-style
-20)  200          20.48     0.10    0.63%     20.48     0.10    0.63%  -zplg-shadow-off
+20)  200          20.48     0.10    0.63%     20.48     0.10    0.63%  -zinit-shadow-off
 
 Measured time: 3.231
 
@@ -34,33 +34,33 @@ full answer):
 testp2:
 num  calls                time                       self            name
 -----------------------------------------------------------------------------------
- 1)  200         681.39     3.41   88.60%    326.64     1.63   42.47%  -zplg-load-plugin
- 2) 1000         257.06     0.26   33.42%    141.28     0.14   18.37%  --zplg-shadow-autoload
- 3) 2000         128.77     0.06   16.74%    128.77     0.06   16.74%  -zplg-add-report
+ 1)  200         681.39     3.41   88.60%    326.64     1.63   42.47%  -zinit-load-plugin
+ 2) 1000         257.06     0.26   33.42%    141.28     0.14   18.37%  --zinit-shadow-autoload
+ 3) 2000         128.77     0.06   16.74%    128.77     0.06   16.74%  -zinit-add-report
  4)  200          61.30     0.31    7.97%     26.19     0.13    3.41%  add-zsh-hook
- 5)  200         749.70     3.75   97.48%     25.66     0.13    3.34%  -zplg-load
- 6)  200          23.49     0.12    3.05%     23.49     0.12    3.05%  -zplg-register-plugin
+ 5)  200         749.70     3.75   97.48%     25.66     0.13    3.34%  -zinit-load
+ 6)  200          23.49     0.12    3.05%     23.49     0.12    3.05%  -zinit-register-plugin
  7)  200          18.41     0.09    2.39%     18.41     0.09    2.39%  select-word-style
  8)  200         767.78     3.84   99.83%     18.08     0.09    2.35%  zinit
  9) 1000         273.27     0.27   35.53%     16.21     0.02    2.11%  autoload
-10)  200          12.50     0.06    1.63%     12.50     0.06    1.63%  -zplg-shadow-on
-11)  200          11.90     0.06    1.55%     11.90     0.06    1.55%  -zplg-any-to-user-plugin
-12)  200          11.39     0.06    1.48%     11.39     0.06    1.48%  -zplg-shadow-off
-13)  200           7.27     0.04    0.94%      7.27     0.04    0.94%  -zplg-pack-ice
+10)  200          12.50     0.06    1.63%     12.50     0.06    1.63%  -zinit-shadow-on
+11)  200          11.90     0.06    1.55%     11.90     0.06    1.55%  -zinit-any-to-user-plugin
+12)  200          11.39     0.06    1.48%     11.39     0.06    1.48%  -zinit-shadow-off
+13)  200           7.27     0.04    0.94%      7.27     0.04    0.94%  -zinit-pack-ice
 14)    1         769.10   769.10  100.00%      1.32     1.32    0.17%  (anon)
 
 -----------------------------------------------------------------------------------
 
 2017-12-17 f559b2029712746664dd54503a780754ff292e2c
 zinit: More small optimizations for *load-plugin
-200   681.39   3.41    88.60%    326.64  1.63  42.47%  -zplg-load-plugin
+200   681.39   3.41    88.60%    326.64  1.63  42.47%  -zinit-load-plugin
 Measured time: 0.774
 
 (following one is before the f55 commit; binary used zsh-5.7):
 2017-12-17 d1aed98856694250f7c00cdcc19bb163e539cde9
 zinit: tiny *load-plugin optimization; plus a small fix
 Measured time: 1.160
-200  1027.70    5.14   88.59%    526.26  2.63  45.36%  -zplg-load-plugin
+200  1027.70    5.14   88.59%    526.26  2.63  45.36%  -zinit-load-plugin
 
 Survey (!! zsh-5.7 !1):
 -----------------------
@@ -68,48 +68,48 @@ Survey (!! zsh-5.7 !1):
 2019-02-01 77f6b51b09f39e03449d46020ad76f578427f77f
 Updated README.md
 Measured time: 1.099
-200   950.68   4.75    86.53%    525.32  2.63  47.82%  -zplg-load-plugin
+200   950.68   4.75    86.53%    525.32  2.63  47.82%  -zinit-load-plugin
 
 2019-01-10 ea9302b5090743cf6e2b590672bffa40fef3706f
 zinit: Limit an influence on the FPATH contents – preserve colons
 Measured time: 1.103
-200   952.80   4.76    86.37%    524.93  2.62  47.59%  -zplg-load-plugin
+200   952.80   4.76    86.37%    524.93  2.62  47.59%  -zinit-load-plugin
 
 2018-12-25 ecf0bf3e59e30d13d204d0a76a6b377fd2524fdc
-zinit,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
+zinit,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zinit
 Measured time: 1.108
-200   956.62   4.78    86.34%    525.44  2.63  47.43%  -zplg-load-plugin
+200   956.62   4.78    86.34%    525.44  2.63  47.43%  -zinit-load-plugin
 
 2018-10-24 dde100db60be4a7cd34cf7295ad35c6c0e2efe8d
 zinit: Actually utilize zinit binary module for report-append op
 Measured time: 1.118
-200   967.80   4.84    86.55%    536.91  2.68  48.02%  -zplg-load-plugin
+200   967.80   4.84    86.55%    536.91  2.68  48.02%  -zinit-load-plugin
 
 2018-10-04 2f1a2a39cd75fb93eb209a26f456f293e328091e
 An empty commit to test the new `zinit self-update ...' features
 Measured time: 1.150
-200   1014.98  5.07    88.29%    520.30  2.60  45.26%  -zplg-load-plugin
+200   1014.98  5.07    88.29%    520.30  2.60  45.26%  -zinit-load-plugin
 
 2018-07-28 7adf2fac6ecba2db2c429dc06e706542e9ef3c73
 Updated README.md
 Measured time: 1.167
-200  1040.57    5.20   88.39%    534.85  2.67  45.43%  -zplg-load-plugin
+200  1040.57    5.20   88.39%    534.85  2.67  45.43%  -zinit-load-plugin
 
 2018-02-10 173a50abd58294d1826c2fb1211e8c20521c47d0
 *autoload: Subcommand `recently' mut
 Measured time: 1.139
-200   1007.75   5.04   88.47%    514.34  2.57  45.15%  -zplg-load-plugin
+200   1007.75   5.04   88.47%    514.34  2.57  45.15%  -zinit-load-plugin
 
 
 2018-01-05 df249032dd5b6225a2f448d174050c1e2471a1da
 Updated README.md
 Measured time: 1.154
-200   1021.35   5.11   88.52%    518.50  2.59  44.94%  -zplg-load-plugin
+200   1021.35   5.11   88.52%    518.50  2.59  44.94%  -zinit-load-plugin
 
 2017-12-31 ffe1f603212aa50a7a1f5214b0111fefddb0632e
 *autoload: Add help message on `srv' subcommand
 Measured time: 1.151
-200   1017.20   5.09   88.37%    517.89  2.59  44.99%  -zplg-load-plugin
+200   1017.20   5.09   88.37%    517.89  2.59  44.99%  -zinit-load-plugin
 
 
 
@@ -119,45 +119,45 @@ Survey (!! ZSH 5.3 !!):
 2019-02-01 77f6b51b09f39e03449d46020ad76f578427f77f
 Updated README.md
 Measured time: 2.465
-200  2304.84   11.52   93.53%   1878.79  9.39  76.24%  -zplg-load-plugin
+200  2304.84   11.52   93.53%   1878.79  9.39  76.24%  -zinit-load-plugin
 
 2019-01-10 ea9302b5090743cf6e2b590672bffa40fef3706f
 zinit: Limit an influence on the FPATH contents – preserve colons
 Measured time: 2.479
-200  2318.54   11.59   93.53%   1876.01  9.38  75.68%  -zplg-load-plugin
+200  2318.54   11.59   93.53%   1876.01  9.38  75.68%  -zinit-load-plugin
 
 2018-12-25 ecf0bf3e59e30d13d204d0a76a6b377fd2524fdc
-zinit,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
+zinit,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zinit
 Measured time: 2.469
-200  2311.09   11.56   93.63%   1879.83  9.40  76.16%  -zplg-load-plugin
+200  2311.09   11.56   93.63%   1879.83  9.40  76.16%  -zinit-load-plugin
 
 
 2018-10-24 dde100db60be4a7cd34cf7295ad35c6c0e2efe8d
 zinit: Actually utilize zinit binary module for report-append op
 Measured time: 2.497
-200  2339.53   11.70   93.70%   1903.53  9.52  76.24%  -zplg-load-plugin
+200  2339.53   11.70   93.70%   1903.53  9.52  76.24%  -zinit-load-plugin
 
 2018-10-04 2f1a2a39cd75fb93eb209a26f456f293e328091e
 An empty commit to test the new `zinit self-update ...' features
 Measured time: 2.501
-200  2356.95   11.78   94.26%   1851.15  9.26  74.03%  -zplg-load-plugin
+200  2356.95   11.78   94.26%   1851.15  9.26  74.03%  -zinit-load-plugin
 
 2018-07-28 7adf2fac6ecba2db2c429dc06e706542e9ef3c73
 Updated README
 Measured time: 2.529
-200  2395.83   11.98   94.12%   1884.88  9.42  74.05%  -zplg-load-plugin
+200  2395.83   11.98   94.12%   1884.88  9.42  74.05%  -zinit-load-plugin
 
 2018-02-10 173a50abd58294d1826c2fb1211e8c20521c47d0
 *autoload: Subcommand `recently' mutes error messages from git
 Measured time: 2.525
-200  2387.04   11.94   94.56%   1878.08  9.39  74.40%  -zplg-load-plugin
+200  2387.04   11.94   94.56%   1878.08  9.39  74.40%  -zinit-load-plugin
 
 2018-01-05 df249032dd5b6225a2f448d174050c1e2471a1da
 Updated README.md
 Measured time: 2.514
-200  2371.22   11.86   94.32%   1860.95  9.30  74.02%  -zplg-load-plugin
+200  2371.22   11.86   94.32%   1860.95  9.30  74.02%  -zinit-load-plugin
 
 2017-12-31 ffe1f603212aa50a7a1f5214b0111fefddb0632e
 *autoload: Add help message on `srv' subcommand
 Measured time: 2.513
-200  2377.39   11.89   94.63%   1862.89  9.31  74.15%  -zplg-load-plugin
+200  2377.39   11.89   94.63%   1862.89  9.31  74.15%  -zinit-load-plugin

@@ -29,11 +29,11 @@ TIME_INDEX
 ZERO
 zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1'
-ZPLG_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'OMZ::plugins/git/git.plugin.zsh <single file>'
-ZPLG_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'as command pick git2.plugin.zsh atinit '\''command cp after_cp_test after_atclone_test'\'' teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command cp git2.plugin.zsh after_cp_test'\'' is-snippet '\'''\'' cp '\''gp -> git2.plugin.zsh'\'' '
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1'
+ZINIT_SNIPPETS: 'OMZ::plugins/git/git.plugin.zsh' 'OMZ::plugins/git/git.plugin.zsh <single file>'
+ZINIT_SICE: 'OMZ::plugins/git/git.plugin.zsh' 'as command pick git2.plugin.zsh atinit '\''command cp after_cp_test after_atclone_test'\'' teleid OMZ::plugins/git/git.plugin.zsh wait '\'''\'' mv '\''git.plugin.zsh -> gp'\'' atclone '\''command cp git2.plugin.zsh after_cp_test'\'' is-snippet '\'''\'' cp '\''gp -> git2.plugin.zsh'\'' '
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

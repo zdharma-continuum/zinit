@@ -1,1 +1,1 @@
-print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out
+print "${ZINIT_COMPDEF_REPLAY[@]}" >! compdefs1.out

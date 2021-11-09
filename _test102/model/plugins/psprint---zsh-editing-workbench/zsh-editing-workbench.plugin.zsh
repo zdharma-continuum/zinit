@@ -19,7 +19,7 @@ CONFIG_DIR="$TEST_DIR/answer/.config/zew"
 # 2. Not having fpath already updated (that would equal: using other plugin manager)
 #
 
-if [[ -z "$ZPLG_CUR_PLUGIN" && "${fpath[(r)$REPO_DIR]}" != $REPO_DIR ]]; then
+if [[ -z "$ZINIT_CUR_PLUGIN" && "${fpath[(r)$REPO_DIR]}" != $REPO_DIR ]]; then
     fpath+=( "$REPO_DIR" )
 fi
 
@@ -131,7 +131,7 @@ bindkey '^[R' zew-rotate-shell-words-backwards
 
 alias naliases=n-aliases ncd=n-cd nenv=n-env nfunctions=n-functions nhistory=n-history
 alias nkill=n-kill
-alias -- zpl=echo zplg=print
+alias -- zpl=echo zinit=print
 setopt AUTO_PUSHD HIST_IGNORE_DUPS PUSHD_IGNORE_DUPS
 zstyle ':completion::complete:n-kill::bits' matcher 'r:|=** l:|=*'
 

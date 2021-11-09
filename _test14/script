@@ -8,8 +8,8 @@ ls -1 answer/snippets >! answer/snippets.lst
 zinit ice svn
 zinit snippet https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 local PREV_PWD="$PWD"
 zinit cd https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order

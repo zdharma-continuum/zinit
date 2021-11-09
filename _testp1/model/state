@@ -29,22 +29,22 @@ TIME_INDEX
 ZERO
 zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-editing-workbench' '0'
-ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-editing-workbench' ''
-ZPLG_FUNCTIONS: 'psprint/zsh-editing-workbench' ''
-ZPLG_OPTIONS: 'psprint/zsh-editing-workbench' ''
-ZPLG_PATH: 'psprint/zsh-editing-workbench' ''
-ZPLG_FPATH: 'psprint/zsh-editing-workbench' ''
-ZPLG_PARAMETERS_PRE: 'psprint/zsh-editing-workbench' ''
-ZPLG_PARAMETERS_POST: 'psprint/zsh-editing-workbench' ''
-ZPLG_ZSTYLES: 'psprint/zsh-editing-workbench' ''
-ZPLG_BINDKEYS: 'psprint/zsh-editing-workbench' ''
-ZPLG_ALIASES: 'psprint/zsh-editing-workbench' ''
-ZPLG_WIDGETS_SAVED: 'psprint/zsh-editing-workbench' ''
-ZPLG_WIDGETS_DELETE: 'psprint/zsh-editing-workbench' ''
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-editing-workbench' '0'
+ZINIT_SNIPPETS: 
+ZINIT_SICE: 'psprint/zsh-editing-workbench' ''
+ZINIT_FUNCTIONS: 'psprint/zsh-editing-workbench' ''
+ZINIT_OPTIONS: 'psprint/zsh-editing-workbench' ''
+ZINIT_PATH: 'psprint/zsh-editing-workbench' ''
+ZINIT_FPATH: 'psprint/zsh-editing-workbench' ''
+ZINIT_PARAMETERS_PRE: 'psprint/zsh-editing-workbench' ''
+ZINIT_PARAMETERS_POST: 'psprint/zsh-editing-workbench' ''
+ZINIT_ZSTYLES: 'psprint/zsh-editing-workbench' ''
+ZINIT_BINDKEYS: 'psprint/zsh-editing-workbench' ''
+ZINIT_ALIASES: 'psprint/zsh-editing-workbench' ''
+ZINIT_WIDGETS_SAVED: 'psprint/zsh-editing-workbench' ''
+ZINIT_WIDGETS_DELETE: 'psprint/zsh-editing-workbench' ''
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

@@ -47,11 +47,11 @@ zinit.zsh
 ZSTYLES__zdharma/ice-order
 
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit' 'zdharma/ice-order'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'zdharma/ice-order' '1'
-ZPLG_SNIPPETS: 
-ZPLG_SICE: 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' light-mode '\'''\'' '
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit' 'zdharma/ice-order'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1' 'zdharma/ice-order' '1'
+ZINIT_SNIPPETS: 
+ZINIT_SICE: 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' light-mode '\'''\'' '
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

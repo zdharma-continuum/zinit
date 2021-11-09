@@ -4,12 +4,12 @@ zinit ice atpull'!builtin print -- --Added Line-- >>! git.plugin.zsh; cp -vf git
             cp'git.plugin.zsh -> git3.plugin.zsh'
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-print -rl -- "${(okv)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(okv)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 zinit cdlist >! answer/compdefs
 
-( zplg cd OMZ::plugins/git/git.plugin.zsh
+( zinit cd OMZ::plugins/git/git.plugin.zsh
   set -e
   command mv -v git3.plugin.zsh git0.plugin.zsh                             # cp ran at clone
   builtin echo '--Before Update Line--' >>! git.plugin.zsh

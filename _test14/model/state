@@ -29,11 +29,11 @@ TIME_INDEX
 ZERO
 zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1'
-ZPLG_SNIPPETS: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order <svn>'
-ZPLG_SICE: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'svn '\'''\'' teleid https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order wait '\'''\'' is-snippet '\'''\'' '
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1'
+ZINIT_SNIPPETS: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order <svn>'
+ZINIT_SICE: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'svn '\'''\'' teleid https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order wait '\'''\'' is-snippet '\'''\'' '
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

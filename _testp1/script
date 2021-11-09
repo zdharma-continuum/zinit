@@ -5,8 +5,8 @@ unset ZCONVEY_ID ZCONVEY_FD 2>/dev/null
 zinit ice atclone'LANG=C command sleep 1.1; command cp -vf $TEST_DIR/zew.plugin.zsh zsh-editing-workbench.plugin.zsh'
 zinit load psprint/zsh-editing-workbench
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 ZINIT[TEST]=1
 touch skip

@@ -32,8 +32,8 @@ prepare: ../zinit.zsh ../zinit-side.zsh ../zinit-install.zsh ../zinit-autoload.z
 	cp ../zinit.zsh ../zinit-side.zsh ../zinit-install.zsh ../zinit-autoload.zsh ../_zinit ../git-process-output.zsh .
 	rm -rf data
 	@: ./bin/zsd-transform -q zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
-	@: mv zsdoc/data .
-	@: rm -rf zsdoc
+	@: mv doc/zsdoc/data .
+	@: rm -rf doc/zsdoc
 	@: cp ../_zinit data/functions/zinit.zsh/
 	perl -pi -e 's/command git/internet_mock_git/g' zinit-install.zsh zinit-autoload.zsh
 	perl -pi -e 's/command svn/internet_mock_svn/g' zinit-install.zsh

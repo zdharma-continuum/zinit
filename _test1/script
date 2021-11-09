@@ -3,7 +3,7 @@ tst_verbosity
 zinit ice depth"1"
 zinit load psprint/zsh-select
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 # vim:ft=zsh

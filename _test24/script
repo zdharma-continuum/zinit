@@ -6,7 +6,7 @@ zinit cdlist >! answer/compdefs1
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit cdlist >! answer/compdefs2
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 # vim:ft=zsh

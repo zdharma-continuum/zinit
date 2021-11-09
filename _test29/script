@@ -3,12 +3,12 @@ tst_verbosity
 zinit ice atclone'builtin echo >! test_file' atpull'%atclone'
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 
-print -rl -- "${(okv)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(okv)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 zinit cdlist >! answer/compdefs
 
-( zplg cd OMZ::plugins/git/git.plugin.zsh
+( zinit cd OMZ::plugins/git/git.plugin.zsh
   set -e
   print 'command touch Test_has_failed' >! ._zinit_git.plugin.zsh/atpull  # static ice should win
   print -rl -- test_file* >! file.lst

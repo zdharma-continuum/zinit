@@ -75,11 +75,11 @@ ZSTYLES__psprint/zsh-select
 ZSTYLES__zdharma/ice-order
 
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zinit'
-ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-select' '0' 'zdharma/ice-order' '0'
-ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'teleid psprint/zsh-select wait '\'''\'' depth 1 ' 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' '
-ZPLG_COMPDEF_REPLAY: 
-ZPLG_CUR_PLUGIN: ''
+ZINIT_REGISTERED_PLUGINS: '_local/zinit'
+ZINIT_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-select' '0' 'zdharma/ice-order' '0'
+ZINIT_SNIPPETS: 
+ZINIT_SICE: 'psprint/zsh-select' 'teleid psprint/zsh-select wait '\'''\'' depth 1 ' 'zdharma/ice-order' 'teleid zdharma/ice-order wait '\'''\'' '
+ZINIT_COMPDEF_REPLAY: 
+ZINIT_CUR_PLUGIN: ''
 ---
 Parameter module: 1

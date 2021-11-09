@@ -5,7 +5,7 @@ zinit ice mv"Makefile2 -> Makefile" cp"Makefile -> Makefile.copy" \
             atload'cp -v Makefile.copy3 Makefile.copy4' svn
 zinit snippet https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 # vim:ft=zsh

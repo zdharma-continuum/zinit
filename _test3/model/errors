@@ -1,9 +1,9 @@
 ERRORS
-Failed: -zplg-diff-functions-compute for _local/zinit
-Failed: -zplg-diff-options-compute for _local/zinit
-Failed: -zplg-diff-env-compute _local/zinit
-Failed: -zplg-diff-parameter-compute _local/zinit
-Failed: -zplg-diff-functions-compute for zdharma/ice-order
-Failed: -zplg-diff-options-compute for zdharma/ice-order
-Failed: -zplg-diff-env-compute zdharma/ice-order
-Failed: -zplg-diff-parameter-compute zdharma/ice-order
+Failed: -zinit-diff-functions-compute for _local/zinit
+Failed: -zinit-diff-options-compute for _local/zinit
+Failed: -zinit-diff-env-compute _local/zinit
+Failed: -zinit-diff-parameter-compute _local/zinit
+Failed: -zinit-diff-functions-compute for zdharma/ice-order
+Failed: -zinit-diff-options-compute for zdharma/ice-order
+Failed: -zinit-diff-env-compute zdharma/ice-order
+Failed: -zinit-diff-parameter-compute zdharma/ice-order

@@ -1,2 +1,2 @@
 OMZ::plugins/git/git.plugin.zsh
-atinit 'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out' teleid OMZ::plugins/git/git.plugin.zsh wait '' atpull %atclone atload 'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out' mv 'git.plugin.zsh -> gp' atclone 'command echo "touch \${ZINIT[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh' is-snippet '' src gp 
+atinit 'print "${ZINIT_COMPDEF_REPLAY[@]}" >! compdefs1.out' teleid OMZ::plugins/git/git.plugin.zsh wait '' atpull %atclone atload 'print "${ZINIT_COMPDEF_REPLAY[@]}" >! compdefs2.out' mv 'git.plugin.zsh -> gp' atclone 'command echo "touch \${ZINIT[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh' is-snippet '' src gp 

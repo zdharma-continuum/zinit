@@ -12,8 +12,8 @@ unset ZCONVEY_ID ZCONVEY_FD 2>/dev/null
 # - 11 global parameters
 zinit load psprint/zsh-editing-workbench
 
-print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
-print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
+print -rl -- "${(o)ZINIT_ICE[@]}" >! answer/ice
+print -rl -- "${(okv)ZINIT_SICE[@]}" >! answer/sice
 
 store_state answer/state_bunload answer/errors_bunload
 

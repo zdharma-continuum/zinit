@@ -167,7 +167,7 @@ no_colors() {
 store_state() {
     setopt localoptions extendedglob nokshglob noksharrays
     local out="$1" out2="$2"
-    (( ${+functions[-zplg-diff-env-compute]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-autoload.zsh"
+    (( ${+functions[-zinit-diff-env-compute]} )) || builtin source ${ZINIT[BIN_DIR]}"/zinit-autoload.zsh"
 
     local -A not_show_keys
     not_show_keys=( UPAR 1 DOWNAR 1 RIGHTAR 1 LEFTAR 1 \
@@ -218,16 +218,16 @@ store_state() {
     fpath=( "${fpath[@]/${${PWD:h}:h}\//}" )
     fpath=( "${fpath[@]/${PWD:h}\//}" )
 
-    for k in "${ZPLG_REGISTERED_PLUGINS[@]}"; do
-        -zplg-diff-functions-compute "$k" || print -r -- "Failed: -zplg-diff-functions-compute for $k" >>! "$out2"
-        -zplg-diff-options-compute "$k"   || print -r -- "Failed: -zplg-diff-options-compute for $k" >>! "$out2"
-        -zplg-diff-env-compute "$k"       || print -r -- "Failed: -zplg-diff-env-compute $k" >>! "$out2"
-        -zplg-diff-parameter-compute "$k" || print -r -- "Failed: -zplg-diff-parameter-compute $k" >>! "$out2"
+    for k in "${ZINIT_REGISTERED_PLUGINS[@]}"; do
+        -zinit-diff-functions-compute "$k" || print -r -- "Failed: -zinit-diff-functions-compute for $k" >>! "$out2"
+        -zinit-diff-options-compute "$k"   || print -r -- "Failed: -zinit-diff-options-compute for $k" >>! "$out2"
+        -zinit-diff-env-compute "$k"       || print -r -- "Failed: -zinit-diff-env-compute $k" >>! "$out2"
+        -zinit-diff-parameter-compute "$k" || print -r -- "Failed: -zinit-diff-parameter-compute $k" >>! "$out2"
     done
 
-    print -r -- "ZPLG_REGISTERED_PLUGINS:${${:- ${(qq@)ZPLG_REGISTERED_PLUGINS}}:# }" >>! "$out"
+    print -r -- "ZINIT_REGISTERED_PLUGINS:${${:- ${(qq@)ZINIT_REGISTERED_PLUGINS}}:# }" >>! "$out"
 
-    keys=( ZPLG_REGISTERED_STATES ZPLG_SNIPPETS ZPLG_SICE )
+    keys=( ZINIT_REGISTERED_STATES ZINIT_SNIPPETS ZINIT_SICE )
 
     for k in "${keys[@]}"; do
         [[ "${(ok@)#${(Pk@)k}}" -gt 0 ]] && print -rn -- "$k:" >>! "$out" || print -rn -- "$k: " >>! "$out"
@@ -240,8 +240,8 @@ store_state() {
         print >>! "$out"
     done
     print
-    [[ -n "$ZPLG_COMPDEF_REPLAY" ]] && print -r -- "ZPLG_COMPDEF_REPLAY: ${(qq@)ZPLG_COMPDEF_REPLAY}" >>! "$out" || print -r -- "ZPLG_COMPDEF_REPLAY: " >>! "$out"
-    print -r -- "ZPLG_CUR_PLUGIN: ${(qq)ZPLG_CUR_PLUGIN}" >>! "$out"
+    [[ -n "$ZINIT_COMPDEF_REPLAY" ]] && print -r -- "ZINIT_COMPDEF_REPLAY: ${(qq@)ZINIT_COMPDEF_REPLAY}" >>! "$out" || print -r -- "ZINIT_COMPDEF_REPLAY: " >>! "$out"
+    print -r -- "ZINIT_CUR_PLUGIN: ${(qq)ZINIT_CUR_PLUGIN}" >>! "$out"
 
     print -rl -- "---" "Parameter module: ${+modules[zsh/parameter]}" >>! "$out"
 }

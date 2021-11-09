@@ -57,7 +57,7 @@ want to copy your previous data (from e.g. ~/.zhistory) into the new location.
     znt_list_border=0
     znt_list_bold=1
     znt_list_colorpair="green/black"
-    znt_functions_keywords=( "zplg" "zgen" "match" )
+    znt_functions_keywords=( "zinit" "zgen" "match" )
     znt_cd_active_text="underline"
     znt_env_nlist_coloring_color=$'\x1b[00;33m'
     znt_cd_hotlist=( "~/.config/znt" "/usr/share/zsh/site-functions" "/usr/share/zsh"
