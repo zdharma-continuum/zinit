@@ -1,6 +1,6 @@
 # zinit
 
-[![MIT License][mit-badge]][mit-link] [![][ver-badge]][ver-link] [![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link] [![Subscribe to r/zinit sub][reddit-badge]][reddit-link]
+[![MIT License][mit-badge]][mit-link] [![][ver-badge]][ver-link] [![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link]
 
 > **Note**: [Sebastian Gniazdowski](https://github.com/psprint), the original `zinit` dev, deleted `zdharma` randomly. This is a reliable fork / place for the continuation of the project. 
 
