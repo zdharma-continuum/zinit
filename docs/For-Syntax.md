@@ -53,7 +53,7 @@ zinit as"null" wait"2" lucid from"gh-r" for \
 ```
 
 Note: `sbin''` is an ice added by the
-[z-a-bin-gem-node](https://github.com/zinit/z-a-bin-gem-node) annex, it
+[z-a-bin-gem-node](https://github.com/zdharma-continuum/z-a-bin-gem-node) annex, it
 provides the command to the command line without altering `$PATH`. If the name
 of the command is the same as the name of the plugin, the ice contents can be
 skipped.
