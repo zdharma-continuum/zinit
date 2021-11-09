@@ -19,8 +19,6 @@ FUNCTIONS
  .zinit-exists-physically
  .zinit-exists-physically-message
  .zinit-first
- .zinit-get-plg-dir
- .zinit-shands-exp
  .zinit-store-ices
  .zinit-two-paths
 AUTOLOAD zmv
@@ -47,9 +45,10 @@ ____
  $REPLY = ANSI-colorified "user/plugin" string
 ____
 
-Has 11 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  .zinit-any-colorify-as-uspl2
+ |-- zinit.zsh/.zinit-any-to-pid
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Called by:
@@ -74,6 +73,7 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status
  zinit-install.zsh/.zinit-install-completions
  zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit.zsh/.zinit-formatter-pid
 
 .zinit-compute-ice
 ~~~~~~~~~~~~~~~~~~
@@ -82,18 +82,18 @@ ____
  
  ]]]
  FUNCTION: .zinit-compute-ice [[[
- Computes ZINIT_ICE array (default, it can be specified via $3) from a) input
- ZINIT_ICE, b) static ice, c) saved ice, taking priorities into account. Also
+ Computes ICE array (default, it can be specified via $3) from a) input
+ ICE, b) static ice, c) saved ice, taking priorities into account. Also
  returns path to snippet directory and optional name of snippet file (only
- valid if ZINIT_ICE[svn] is not set).
+ valid if ICE[svn] is not set).
  
  Can also pack resulting ices into ZINIT_SICE (see $2).
  
  $1 - URL (also plugin-spec)
- $2 - "pack" or "nopack" or "pack-nf" - packing means ZINIT_ICE
+ $2 - "pack" or "nopack" or "pack-nf" - packing means ICE
  wins with static ice; "pack-nf" means that disk-ices will
  be ignored (no-file?)
- $3 - name of output associative array, "ZINIT_ICE" is the default
+ $3 - name of output associative array, "ICE" is the default
  $4 - name of output string parameter, to hold path to directory ("local_dir")
  $5 - name of output string parameter, to hold filename ("filename")
  $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
@@ -128,23 +128,28 @@ ____
  sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
 ____
 
-Has 15 line(s). Doesn't call other functions.
+Has 15 line(s). Calls functions:
+
+ .zinit-countdown
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _trap_
 
 Called by:
 
  zinit-autoload.zsh/.zinit-run-delete-hooks
- zinit-autoload.zsh/.zinit-update-or-status
- zinit-install.zsh/.zinit-download-snippet
- zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit-install.zsh/∞zinit-atclone-hook
+ zinit-install.zsh/∞zinit-atpull-e-hook
+ zinit-install.zsh/∞zinit-atpull-hook
+ zinit-install.zsh/∞zinit-make-ee-hook
+ zinit-install.zsh/∞zinit-make-e-hook
+ zinit-install.zsh/∞zinit-make-hook
 
 .zinit-exists-physically
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
- ]]]
  FUNCTION: .zinit-exists-physically [[[
  Checks if directory of given plugin exists in PLUGIN_DIR.
  
@@ -163,7 +168,6 @@ Called by:
 
  .zinit-exists-physically-message
  zinit-autoload.zsh/.zinit-create
- zinit-autoload.zsh/.zinit-get-path
  zinit-autoload.zsh/.zinit-update-or-status
 
 .zinit-exists-physically-message
@@ -181,9 +185,14 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 11 line(s). Calls functions:
+Has 23 line(s). Calls functions:
 
  .zinit-exists-physically-message
+ |-- zinit.zsh/.zinit-any-to-pid
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -199,7 +208,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-first [[[
  Finds the main file of plugin. There are multiple file name
  formats, they are ordered in order starting from more correct
@@ -212,50 +220,20 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 17 line(s). Calls functions:
+Has 20 line(s). Calls functions:
 
  .zinit-first
+ |-- zinit.zsh/.zinit-any-to-pid
  |-- zinit.zsh/.zinit-any-to-user-plugin
- `-- zinit.zsh/.zinit-find-other-matches
+ |-- zinit.zsh/.zinit-find-other-matches
+ `-- zinit.zsh/.zinit-get-object-path
 
 Called by:
 
+ .zinit-two-paths
  zinit-autoload.zsh/.zinit-glance
  zinit-autoload.zsh/.zinit-stress
  zinit-install.zsh/.zinit-compile-plugin
-
-.zinit-get-plg-dir
-~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-plgdir [[[
-____
-
-Has 10 line(s). Doesn't call other functions.
-
-Called by:
-
- .zinit-first
-
-.zinit-shands-exp
-~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-shands-exp [[[
- Does expansion of currently little unstandarized
- shorthands like "%SNIPPETS", "%HOME", "OMZ::", "PZT::".
-____
-
-Has 3 line(s). Doesn't call other functions.
-
-Called by:
-
- .zinit-compute-ice
- .zinit-exists-physically-message
- .zinit-exists-physically
- zinit-autoload.zsh/.zinit-get-path
 
 .zinit-store-ices
 ~~~~~~~~~~~~~~~~~
@@ -293,7 +271,7 @@ ____
  further examination
 ____
 
-Has 18 line(s). Calls functions:
+Has 24 line(s). Calls functions:
 
  .zinit-two-paths
  `-- zinit.zsh/.zinit-get-object-path
@@ -303,7 +281,6 @@ Uses feature(s): _setopt_
 Called by:
 
  .zinit-compute-ice
- zinit-autoload.zsh/.zinit-get-path
  zinit-autoload.zsh/.zinit-update-or-status
 
 zmv

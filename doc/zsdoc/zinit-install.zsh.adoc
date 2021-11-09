@@ -13,20 +13,35 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
+ zicp
  ziextract
+ zimv
+ ∞zinit-atclone-hook
  .zinit-at-eval
+ ∞zinit-atpull-e-hook
+ ∞zinit-atpull-hook
  .zinit-compile-plugin
+ ∞zinit-compile-plugin-hook
  .zinit-compinit
+ ∞zinit-cp-hook
  .zinit-download-file-stdout
  .zinit-download-snippet
  .zinit-extract
+ ∞zinit-extract-hook
  .zinit-forget-completion
+ .zinit-get-cygwin-package
  .zinit-get-latest-gh-r-url-part
  .zinit-get-package
  .zinit-get-url-mtime
  .zinit-install-completions
+ ∞zinit-make-ee-hook
+ ∞zinit-make-e-hook
+ ∞zinit-make-hook
  .zinit-mirror-using-svn
+ ∞zinit-mv-hook
  .zinit-parse-json
+ ∞zinit-ps-on-update-hook
+ ∞zinit-reset-hook
  .zinit-setup-plugin-dir
  .zinit-update-snippet
  zpextract
@@ -41,6 +56,25 @@ Script Body
 Has 3 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 Uses feature(s): _source_
+
+zicp
+~~~~
+
+____
+ 
+ ]]]
+ FUNCTION zicp [[[
+____
+
+Has 30 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zimv
+
+_Environment variables used:_ zinit.zsh -> ZPFX
 
 ziextract
 ~~~~~~~~~
@@ -58,9 +92,10 @@ ____
  $2 - file
 ____
 
-Has 279 line(s). Calls functions:
+Has 293 line(s). Calls functions:
 
  ziextract
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_, _unfunction_, _zparseopts_
 
@@ -70,6 +105,35 @@ Called by:
  .zinit-get-package
  .zinit-setup-plugin-dir
  zpextract
+
+zimv
+~~~~
+
+Has 3 line(s). Calls functions:
+
+ zimv
+ `-- zicp
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+∞zinit-atclone-hook
+~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-atclone-hook [[[
+____
+
+Has 8 line(s). Calls functions:
+
+ ∞zinit-atclone-hook
+ |-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/@zinit-substitute
+
+Uses feature(s): _eval_, _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-at-eval
 ~~~~~~~~~~~~~~
@@ -89,7 +153,44 @@ Uses feature(s): _eval_
 
 Called by:
 
- .zinit-download-snippet
+ ∞zinit-atpull-e-hook
+ ∞zinit-atpull-hook
+
+∞zinit-atpull-e-hook
+~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-atpull-e-hook [[[
+____
+
+Has 5 line(s). Calls functions:
+
+ ∞zinit-atpull-e-hook
+ `-- zinit-side.zsh/.zinit-countdown
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+∞zinit-atpull-hook
+~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-atpull-hook [[[
+____
+
+Has 5 line(s). Calls functions:
+
+ ∞zinit-atpull-hook
+ `-- zinit-side.zsh/.zinit-countdown
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-compile-plugin
 ~~~~~~~~~~~~~~~~~~~~~
@@ -104,19 +205,37 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 60 line(s). Calls functions:
+Has 87 line(s). Calls functions:
 
  .zinit-compile-plugin
  |-- zinit-side.zsh/.zinit-compute-ice
- `-- zinit-side.zsh/.zinit-first
+ |-- zinit-side.zsh/.zinit-first
+ `-- zinit.zsh/+zinit-message
 
-Uses feature(s): _eval_, _zcompile_
+Uses feature(s): _eval_, _setopt_, _zcompile_
 
 Called by:
 
- .zinit-setup-plugin-dir
+ ∞zinit-compile-plugin-hook
  zinit-autoload.zsh/.zinit-compile-uncompile-all
  zinit.zsh/zinit
+
+∞zinit-compile-plugin-hook
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-compile-plugin-hook [[[
+____
+
+Has 19 line(s). Calls functions:
+
+ ∞zinit-compile-plugin-hook
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-compinit
 ~~~~~~~~~~~~~~~
@@ -132,10 +251,11 @@ ____
  No arguments.
 ____
 
-Has 22 line(s). Calls functions:
+Has 26 line(s). Calls functions:
 
  .zinit-compinit
- `-- compinit
+ |-- compinit
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _autoload_, _compinit_, _setopt_, _unfunction_
 
@@ -143,9 +263,27 @@ Called by:
 
  .zinit-install-completions
  zinit-autoload.zsh/.zinit-uninstall-completions
- zinit-autoload.zsh/.zinit-update-all-parallel
+ zinit-autoload.zsh/.zinit-update-or-status-all
  zinit.zsh/.zinit-prepare-home
  zinit.zsh/zinit
+
+∞zinit-cp-hook
+~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-cp-hook [[[
+____
+
+Has 27 line(s). Calls functions:
+
+ ∞zinit-cp-hook
+ `-- zinit.zsh/@zinit-substitute
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-download-file-stdout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,15 +295,17 @@ ____
  curl, wget, lftp, lynx. Used by snippet loading.
 ____
 
-Has 36 line(s). Calls functions:
+Has 48 line(s). Calls functions:
 
  .zinit-download-file-stdout
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_, _trap_, _type_
 
 Called by:
 
  .zinit-download-snippet
+ .zinit-get-cygwin-package
  .zinit-get-package
  .zinit-setup-plugin-dir
 
@@ -181,14 +321,13 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 360 line(s). Calls functions:
+Has 323 line(s). Calls functions:
 
  .zinit-download-snippet
- |-- zinit-side.zsh/.zinit-countdown
  |-- zinit-side.zsh/.zinit-store-ices
- `-- zinit.zsh/@zinit-substitute
+ `-- zinit.zsh/+zinit-message
 
-Uses feature(s): _eval_, _setopt_, _zcompile_
+Uses feature(s): _setopt_, _trap_, _zcompile_
 
 Called by:
 
@@ -204,18 +343,34 @@ ____
  FUNCTION: .zinit-extract() [[[
 ____
 
-Has 28 line(s). Calls functions:
+Has 30 line(s). Calls functions:
 
  .zinit-extract
- `-- ziextract
+ |-- ziextract
+ |   `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
 Called by:
 
- .zinit-download-snippet
- .zinit-setup-plugin-dir
- zinit-autoload.zsh/.zinit-update-or-status
+ ∞zinit-extract-hook
+
+∞zinit-extract-hook
+~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-extract-hook [[[
+____
+
+Has 8 line(s). Calls functions:
+
+ ∞zinit-extract-hook
+ `-- zinit.zsh/@zinit-substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-forget-completion
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -241,6 +396,26 @@ Called by:
  zinit-autoload.zsh/.zinit-uninstall-completions
  zinit.zsh/zinit
 
+.zinit-get-cygwin-package
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: .zinit-get-cygwin-package [[[
+____
+
+Has 70 line(s). Calls functions:
+
+ .zinit-get-cygwin-package
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-setup-plugin-dir
+
 .zinit-get-latest-gh-r-url-part
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -252,7 +427,10 @@ ____
  package. Connects to Github releases page.
 ____
 
-Has 75 line(s). Doesn't call other functions.
+Has 103 line(s). Calls functions:
+
+ .zinit-get-latest-gh-r-url-part
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
@@ -270,13 +448,15 @@ ____
  FUNCTION: .zinit-get-package [[[
 ____
 
-Has 158 line(s). Calls functions:
+Has 196 line(s). Calls functions:
 
  .zinit-get-package
  |-- ziextract
+ |   `-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/@zinit-substitute
 
-Uses feature(s): _eval_, _setopt_
+Uses feature(s): _eval_, _setopt_, _trap_
 
 Called by:
 
@@ -318,12 +498,13 @@ ____
  $3 - if 1, then reinstall, otherwise only install completions that aren't there
 ____
 
-Has 55 line(s). Calls functions:
+Has 61 line(s). Calls functions:
 
  .zinit-install-completions
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit-side.zsh/.zinit-exists-physically-message
- `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
@@ -332,6 +513,57 @@ Called by:
  .zinit-download-snippet
  .zinit-setup-plugin-dir
  zinit.zsh/zinit
+
+∞zinit-make-ee-hook
+~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-make-ee-hook [[[
+____
+
+Has 9 line(s). Calls functions:
+
+ ∞zinit-make-ee-hook
+ |-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/@zinit-substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+∞zinit-make-e-hook
+~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-make-e-hook [[[
+____
+
+Has 9 line(s). Calls functions:
+
+ ∞zinit-make-e-hook
+ |-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/@zinit-substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+∞zinit-make-hook
+~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-make-hook [[[
+____
+
+Has 10 line(s). Calls functions:
+
+ ∞zinit-make-hook
+ |-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/@zinit-substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-mirror-using-svn
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -358,6 +590,24 @@ Called by:
 
  .zinit-download-snippet
 
+∞zinit-mv-hook
+~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-mv-hook [[[
+____
+
+Has 27 line(s). Calls functions:
+
+ ∞zinit-mv-hook
+ `-- zinit.zsh/@zinit-substitute
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
 .zinit-parse-json
 ~~~~~~~~~~~~~~~~~
 
@@ -378,6 +628,42 @@ Called by:
 
  .zinit-get-package
 
+∞zinit-ps-on-update-hook
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-ps-on-update-hook [[[
+____
+
+Has 18 line(s). Calls functions:
+
+ ∞zinit-ps-on-update-hook
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+∞zinit-reset-hook
+~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: ∞zinit-reset-opt-hook [[[
+____
+
+Has 79 line(s). Calls functions:
+
+ ∞zinit-reset-hook
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
 .zinit-setup-plugin-dir
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -393,17 +679,17 @@ ____
  $2 - plugin
 ____
 
-Has 229 line(s). Calls functions:
+Has 198 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- ziextract
+ |   `-- zinit.zsh/+zinit-message
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |-- zinit-side.zsh/.zinit-countdown
  |-- zinit-side.zsh/.zinit-store-ices
  |-- zinit.zsh/.zinit-get-object-path
- `-- zinit.zsh/@zinit-substitute
+ `-- zinit.zsh/+zinit-message
 
-Uses feature(s): _eval_, _setopt_, _trap_
+Uses feature(s): _setopt_, _trap_
 
 Called by:
 
@@ -419,10 +705,11 @@ ____
  FUNCTION: .zinit-update-snippet [[[
 ____
 
-Has 67 line(s). Calls functions:
+Has 76 line(s). Calls functions:
 
  .zinit-update-snippet
  |-- zinit.zsh/.zinit-get-object-path
+ |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/.zinit-pack-ice
 
 Uses feature(s): _eval_, _setopt_
@@ -444,6 +731,7 @@ Has 1 line(s). Calls functions:
 
  zpextract
  `-- ziextract
+     `-- zinit.zsh/+zinit-message
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 

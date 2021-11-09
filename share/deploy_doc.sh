@@ -43,7 +43,7 @@ mv -v Makefile_out out/Makefile
 touch out/.nojekyll
 
 # Copy the PDFs (built earlier by .travis.yml / make)
-cp -v zsdoc/pdf/*.pdf out
+cp -v doc/zsdoc/pdf/*.pdf out
 
 # To count new files
 LIST_NEW=( out/* )
