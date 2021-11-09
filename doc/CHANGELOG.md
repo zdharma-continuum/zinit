@@ -78,7 +78,7 @@ startup. Please note that these directories will not necessarily be part of your
 * 11-12-2019
   - Zinit now supports installing special-Zsh NPM packages! Bye-bye the long and
     complex ice-lists! Check out the
-    [Wiki](http://zdharma.org/zinit/wiki/NPM-Packages/) for an introductory document
+    [Wiki](https://zdharma-continuum.github.io/zinit/wiki/NPM-Packages/) for an introductory document
     on the feature.
 
 * 25-11-2019
@@ -109,7 +109,7 @@ startup. Please note that these directories will not necessarily be part of your
     [z-a-bin-gem-node](https://github.com/zinit/z-a-bin-gem-node) annex, it provides
     the command to the command line without altering `$PATH`.
 
-    See the [Zinit Wiki](http://zdharma.org/zinit/wiki/For-Syntax/) for more
+    See the [Zinit Wiki](https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/) for more
     information on the for-syntax.
 
 * 06-11-2019
@@ -139,7 +139,7 @@ startup. Please note that these directories will not necessarily be part of your
     ```
 
     To load in light mode, use a new `light-mode` ice. More examples and information
-    can be found on the [Zinit Wiki](http://zdharma.org/zinit/wiki/For-Syntax/).
+    can be found on the [Zinit Wiki](https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/).
 
 * 03-11-2019
   - A new value for the `as''` ice – `null`. Specifying `as"null"` is like specifying
@@ -224,7 +224,7 @@ startup. Please note that these directories will not necessarily be part of your
     conflicts when doing `pull`, and the changes can be then again introduced by the
     `atpull''` ice..
   - Three new Zplugin annexes (i.e.
-    [extensions](http://zdharma.org/zplugin/wiki/Annexes/)):
+    [extensions](https://zdharma-continuum.github.io/zplugin/wiki/Annexes/)):
 
       - [z-a-man](https://github.com/zplugin/z-a-man)
 
@@ -372,7 +372,7 @@ startup. Please note that these directories will not necessarily be part of your
 * 12-10-2018
   - New `id-as''` ice-mod. You can nickname a plugin or snippet, to e.g. load it twice, with different `pick''`
     ice-mod, or from Github binary releases and regular Github repository at the same time. More information
-    in [blog post](http://zdharma.org/2018-10-12/Nickname-a-plugin-or-snippet).
+    in [blog post](https://zdharma-continuum.github.io/2018-10-12/Nickname-a-plugin-or-snippet).
 
 * 30-08-2018
   - New `as''` ice-mod value: `completion`. Can be used to install completion-only "plugins", even single
