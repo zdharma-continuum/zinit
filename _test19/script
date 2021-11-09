@@ -1,7 +1,7 @@
 tst_verbosity
 
-zplugin ice svn atclone'builtin echo >! test_file' atpull'%atclone'
-zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+zinit ice svn atclone'builtin echo >! test_file' atpull'%atclone'
+zinit snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
 
 builtin print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 builtin print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
@@ -10,20 +10,20 @@ local matcher_val
 zstyle -s ':completion::complete:n-kill::bits' matcher matcher_val
 echo "$matcher_val" >! answer/matcher
 
-( zplugin cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+( zinit cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
   set -e
   # *load-snippet will not pack ZPLG_ICE (loaded from files by
   # *update-all) and static ice will be used
-  builtin print 'builtin echo >! Test_has_failed' >! ._zplugin/atpull
+  builtin print 'builtin echo >! Test_has_failed' >! ._zinit/atpull
   builtin print -rl -- test_file*(N) >! file1.lst
   command rm -f test_file
   builtin print -rl -- test_file*(N) >! file2.lst
   svn relocate file://${TEST_DIR:h}/test_snippets/zdharma-more
 ) || return 1
 
-zplugin update --all
+zinit update --all
 
-( zplugin cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+( zinit cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
   svn log | grep -o sgniazdowski >! svn_log )
 
 # vim:ft=zsh

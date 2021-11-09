@@ -1,9 +1,9 @@
 tst_verbosity
 
-zplugin ice svn mv"zsh-navigation-tools.plugin.zsh -> plugin.text" \
-            atclone'command echo "touch \${ZPLGM[PLUGINS_DIR]}/load.mark" >! zsh-select.plugin.zsh' \
+zinit ice svn mv"zsh-navigation-tools.plugin.zsh -> plugin.text" \
+            atclone'command echo "touch \${ZINIT[PLUGINS_DIR]}/load.mark" >! zsh-select.plugin.zsh' \
             src"plugin.text"
-zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+zinit snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice

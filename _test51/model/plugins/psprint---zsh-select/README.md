@@ -72,11 +72,11 @@ export ZSHSELECT_START_IN_SEARCH_MODE="1"   # Starts Zsh-Select with searching a
 ```
 
 ## Use with plugin managers
-### [Zplugin](https://github.com/psprint/zplugin)
+### [Zplugin](https://github.com/psprint/zinit)
 
-Add `zplugin load psprint/zsh-select` to `.zshrc`.
+Add `zinit load psprint/zsh-select` to `.zshrc`.
 The plugin will be loaded next time you start `Zsh`.
-To update issue `zplugin update psprint/zsh-select` from command line.
+To update issue `zinit update psprint/zsh-select` from command line.
 
 ### Zgen
 

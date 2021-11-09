@@ -1,5 +1,5 @@
 ALIASES__psprint/zsh-editing-workbench
-naliases\ \'\' ncd\ \'\' nenv\ \'\' nfunctions\ \'\' nhistory\ \'\' nkill\ \'\' zpl\ zplugin zplg\ zplugin
+naliases\ \'\' ncd\ \'\' nenv\ \'\' nfunctions\ \'\' nhistory\ \'\' nkill\ \'\' zpl\ zinit zplg\ zinit
 AT_TIME_1_psprint---zsh-editing-workbench
 __reset-by-test__
 BIN_DIR
@@ -43,12 +43,12 @@ zew-backward-kill-shell-word zew-transpose-shell-words copy-earlier-word transpo
 WIDGETS_SAVED__psprint/zsh-editing-workbench
 -N\ backward-kill-word\ \'\'\ backward-kill-word-match\ builtin -N\ backward-word\ \'\'\ backward-word-match\ builtin -N\ capitalize-word\ \'\'\ capitalize-word-match\ builtin -N\ down-case-word\ \'\'\ down-case-word-match\ builtin -N\ forward-word\ \'\'\ forward-word-match\ builtin -N\ kill-word\ \'\'\ kill-word-match\ builtin -N\ transpose-words\ \'\'\ transpose-words-match\ builtin -N\ up-case-word\ \'\'\ up-case-word-match\ builtin
 ZERO
-zplugin.zsh
+zinit.zsh
 ZSTYLES__psprint/zsh-editing-workbench
 :zle:\\\*\ word-chars :zle:\\\*\ skip-whitespace-first :zle:\\\*\ word-style :completion:history-words:\\\*\ remove-all-dups :completion:history-words:\\\*\ sort :completion:\\\*\ range :completion::complete:n-kill::bits\ matcher
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-editing-workbench'
-ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-editing-workbench' '2'
+ZPLG_REGISTERED_PLUGINS: '_local/zinit' 'psprint/zsh-editing-workbench'
+ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-editing-workbench' '2'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'psprint/zsh-editing-workbench' 'teleid psprint/zsh-editing-workbench wait '\'''\'' '
 ZPLG_COMPDEF_REPLAY: 

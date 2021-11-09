@@ -429,10 +429,10 @@ __reset-by-test__
 TIME_INDEX
 201
 ZERO
-zplugin.zsh
+zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-editing-workbench'
-ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-editing-workbench' '1'
+ZPLG_REGISTERED_PLUGINS: '_local/zinit' 'psprint/zsh-editing-workbench'
+ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-editing-workbench' '1'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'psprint/zsh-editing-workbench' ''
 ZPLG_FUNCTIONS: 'psprint/zsh-editing-workbench' ''

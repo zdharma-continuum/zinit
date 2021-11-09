@@ -43,14 +43,14 @@ WIDGETS_DELETE__psprint/zsh-select
 WIDGETS_SAVED__psprint/zsh-select
 
 ZERO
-zplugin.zsh
+zinit.zsh
 ZSTYLES__psprint/zsh-select
 
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zplugin' 'psprint/zsh-select'
-ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-select' '2'
+ZPLG_REGISTERED_PLUGINS: '_local/zinit' 'psprint/zsh-select'
+ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-select' '2'
 ZPLG_SNIPPETS: 
-ZPLG_SICE: 'psprint/zsh-select' 'as command pick zsh-select2 teleid psprint/zsh-select wait '\'''\'' atload '\''echo ${REPO_DIR:t} > var'\'' mv '\''zsh-select.plugin.zsh -> zs'\'' atclone '\''command echo "touch \${ZPLGM[PLUGINS_DIR]}/error.mark" >! zsh-select.plugin.zsh'\'' from gl cp '\''zs -> zsh-select2'\'' src zs '
+ZPLG_SICE: 'psprint/zsh-select' 'as command pick zsh-select2 teleid psprint/zsh-select wait '\'''\'' atload '\''echo ${REPO_DIR:t} > var'\'' mv '\''zsh-select.plugin.zsh -> zs'\'' atclone '\''command echo "touch \${ZINIT[PLUGINS_DIR]}/error.mark" >! zsh-select.plugin.zsh'\'' from gl cp '\''zs -> zsh-select2'\'' src zs '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

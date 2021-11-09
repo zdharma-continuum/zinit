@@ -27,10 +27,10 @@ __reset-by-test__
 TIME_INDEX
 1
 ZERO
-zplugin.zsh
+zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
-ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
+ZPLG_REGISTERED_PLUGINS: '_local/zinit'
+ZPLG_REGISTERED_STATES: '_local/zinit' '1'
 ZPLG_SNIPPETS: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools <svn>'
 ZPLG_SICE: 'https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools' 'svn '\'''\'' teleid https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools wait '\'''\'' is-snippet '\'''\'' '
 ZPLG_COMPDEF_REPLAY: 

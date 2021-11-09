@@ -1,20 +1,20 @@
 tst_verbosity
 
-zplugin ice mv"git.plugin.zsh -> gp" \
-    atclone'command echo "touch \${ZPLGM[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh' \
+zinit ice mv"git.plugin.zsh -> gp" \
+    atclone'command echo "touch \${ZINIT[SNIPPETS_DIR]}/load.mark" >! git.plugin.zsh' \
     src"gp" atpull"%atclone" \
     atinit'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs1.out' \
     atload'print "${ZPLG_COMPDEF_REPLAY[@]}" >! compdefs2.out'
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 print -rl -- "${(okv)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
 ( zplg cd OMZ::plugins/git/git.plugin.zsh
   set -e
-  print 'command touch Test_has_failed' >! ._zplugin/atpull  # static ice should win
+  print 'command touch Test_has_failed' >! ._zinit/atpull  # static ice should win
 ) || return 1
 
-zplugin update OMZ::plugins/git/git.plugin.zsh
+zinit update OMZ::plugins/git/git.plugin.zsh
 
 # vim:ft=zsh

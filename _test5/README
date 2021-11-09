@@ -8,4 +8,4 @@ This test verifies:
 
 4. Static ice surviving to second command
 
-5. ._zplugin/atpull file having correct contents
+5. ._zinit/atpull file having correct contents

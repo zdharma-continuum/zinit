@@ -41,7 +41,7 @@ num  calls                time                       self            name
  5)  200         749.70     3.75   97.48%     25.66     0.13    3.34%  -zplg-load
  6)  200          23.49     0.12    3.05%     23.49     0.12    3.05%  -zplg-register-plugin
  7)  200          18.41     0.09    2.39%     18.41     0.09    2.39%  select-word-style
- 8)  200         767.78     3.84   99.83%     18.08     0.09    2.35%  zplugin
+ 8)  200         767.78     3.84   99.83%     18.08     0.09    2.35%  zinit
  9) 1000         273.27     0.27   35.53%     16.21     0.02    2.11%  autoload
 10)  200          12.50     0.06    1.63%     12.50     0.06    1.63%  -zplg-shadow-on
 11)  200          11.90     0.06    1.55%     11.90     0.06    1.55%  -zplg-any-to-user-plugin
@@ -52,13 +52,13 @@ num  calls                time                       self            name
 -----------------------------------------------------------------------------------
 
 2017-12-17 f559b2029712746664dd54503a780754ff292e2c
-zplugin: More small optimizations for *load-plugin
+zinit: More small optimizations for *load-plugin
 200   681.39   3.41    88.60%    326.64  1.63  42.47%  -zplg-load-plugin
 Measured time: 0.774
 
 (following one is before the f55 commit; binary used zsh-5.7):
 2017-12-17 d1aed98856694250f7c00cdcc19bb163e539cde9
-zplugin: tiny *load-plugin optimization; plus a small fix
+zinit: tiny *load-plugin optimization; plus a small fix
 Measured time: 1.160
 200  1027.70    5.14   88.59%    526.26  2.63  45.36%  -zplg-load-plugin
 
@@ -71,22 +71,22 @@ Measured time: 1.099
 200   950.68   4.75    86.53%    525.32  2.63  47.82%  -zplg-load-plugin
 
 2019-01-10 ea9302b5090743cf6e2b590672bffa40fef3706f
-zplugin: Limit an influence on the FPATH contents – preserve colons
+zinit: Limit an influence on the FPATH contents – preserve colons
 Measured time: 1.103
 200   952.80   4.76    86.37%    524.93  2.62  47.59%  -zplg-load-plugin
 
 2018-12-25 ecf0bf3e59e30d13d204d0a76a6b377fd2524fdc
-zplugin,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
+zinit,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
 Measured time: 1.108
 200   956.62   4.78    86.34%    525.44  2.63  47.43%  -zplg-load-plugin
 
 2018-10-24 dde100db60be4a7cd34cf7295ad35c6c0e2efe8d
-zplugin: Actually utilize zplugin binary module for report-append op
+zinit: Actually utilize zinit binary module for report-append op
 Measured time: 1.118
 200   967.80   4.84    86.55%    536.91  2.68  48.02%  -zplg-load-plugin
 
 2018-10-04 2f1a2a39cd75fb93eb209a26f456f293e328091e
-An empty commit to test the new `zplugin self-update ...' features
+An empty commit to test the new `zinit self-update ...' features
 Measured time: 1.150
 200   1014.98  5.07    88.29%    520.30  2.60  45.26%  -zplg-load-plugin
 
@@ -122,23 +122,23 @@ Measured time: 2.465
 200  2304.84   11.52   93.53%   1878.79  9.39  76.24%  -zplg-load-plugin
 
 2019-01-10 ea9302b5090743cf6e2b590672bffa40fef3706f
-zplugin: Limit an influence on the FPATH contents – preserve colons
+zinit: Limit an influence on the FPATH contents – preserve colons
 Measured time: 2.479
 200  2318.54   11.59   93.53%   1876.01  9.38  75.68%  -zplg-load-plugin
 
 2018-12-25 ecf0bf3e59e30d13d204d0a76a6b377fd2524fdc
-zplugin,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
+zinit,*-side,*-install: Don't expand OMZ:: etc. prefixes so that `zplg
 Measured time: 2.469
 200  2311.09   11.56   93.63%   1879.83  9.40  76.16%  -zplg-load-plugin
 
 
 2018-10-24 dde100db60be4a7cd34cf7295ad35c6c0e2efe8d
-zplugin: Actually utilize zplugin binary module for report-append op
+zinit: Actually utilize zinit binary module for report-append op
 Measured time: 2.497
 200  2339.53   11.70   93.70%   1903.53  9.52  76.24%  -zplg-load-plugin
 
 2018-10-04 2f1a2a39cd75fb93eb209a26f456f293e328091e
-An empty commit to test the new `zplugin self-update ...' features
+An empty commit to test the new `zinit self-update ...' features
 Measured time: 2.501
 200  2356.95   11.78   94.26%   1851.15  9.26  74.03%  -zplg-load-plugin
 

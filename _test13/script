@@ -1,9 +1,9 @@
 tst_verbosity
 
-zplugin ice mv"Makefile2 -> Makefile" cp"Makefile -> Makefile.copy" \
+zinit ice mv"Makefile2 -> Makefile" cp"Makefile -> Makefile.copy" \
             atclone'cp -v Makefile.copy Makefile.copy2' make \
             atload'cp -v Makefile.copy3 Makefile.copy4' svn
-zplugin snippet https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
+zinit snippet https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice

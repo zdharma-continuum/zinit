@@ -65,8 +65,8 @@ Bindkey '^[R' zew-rotate-shell-words-backwards
 Alias naliases=n-aliases ncd=n-cd nenv=n-env nfunctions=n-functions nhistory=n-history
 Alias nkill=n-kill
 Alias -- zpl=echo zplg=print
-Warning: redefining alias `zpl', previous value: zplugin
-Warning: redefining alias `zplg', previous value: zplugin
+Warning: redefining alias `zpl', previous value: zinit
+Warning: redefining alias `zplg', previous value: zinit
 Zstyle :completion::complete:n-kill::bits matcher r:|=** l:|=*
 Autoload zew_help
 Autoload -zconvey_pinfo

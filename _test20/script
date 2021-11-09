@@ -1,8 +1,8 @@
 tst_verbosity
 
-zplugin ice svn as"command" mv"zsh-navigation-tools.plugin.zsh -> plugin.text" \
+zinit ice svn as"command" mv"zsh-navigation-tools.plugin.zsh -> plugin.text" \
             pick"n-help" atclone"chmod -x znt-tmux.zsh" src"plugin.text"
-zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+zinit snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice

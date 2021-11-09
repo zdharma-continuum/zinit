@@ -1,7 +1,7 @@
 tst_verbosity
 
-zplugin ice svn atpull'!command cp LICENSE LICENSE.cpy' cp'LICENSE -> LICENSE.bkp'
-zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+zinit ice svn atpull'!command cp LICENSE LICENSE.cpy' cp'LICENSE -> LICENSE.bkp'
+zinit snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
@@ -10,15 +10,15 @@ local matcher_val
 zstyle -s ':completion::complete:n-kill::bits' matcher matcher_val
 echo "$matcher_val" >! answer/matcher
 
-( zplugin cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+( zinit cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
   command ls -1 LICENSE* > license.lst
   command rm -f LICENSE.(cpy|bkp)
   # svn relocate file://${TEST_DIR:h}/test_snippets/zdharma-more
 )
 
-zplugin update --all
+zinit update --all
 
-( zplugin cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+( zinit cd https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
   svn log | grep -o sgniazdowski >! svn_log )
 
 # vim:ft=zsh

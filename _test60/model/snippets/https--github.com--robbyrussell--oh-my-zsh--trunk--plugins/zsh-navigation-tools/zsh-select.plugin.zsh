@@ -1,1 +1,1 @@
-touch ${ZPLGM[PLUGINS_DIR]}/load.mark
+touch ${ZINIT[PLUGINS_DIR]}/load.mark

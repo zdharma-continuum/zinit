@@ -1,9 +1,9 @@
 */answer/*
-_zplugin
-zplugin.zsh
-zplugin-side.zsh
-zplugin-install.zsh
-zplugin-autoload.zsh
+_zinit
+zinit.zsh
+zinit-side.zsh
+zinit-install.zsh
+zinit-autoload.zsh
 git-process-output.zsh
 *.zwc
 

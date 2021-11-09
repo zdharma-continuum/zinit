@@ -1,1 +1,1 @@
-command echo "touch \${ZPLGM[PLUGINS_DIR]}/error.mark" >! git.plugin.zsh
+command echo "touch \${ZINIT[PLUGINS_DIR]}/error.mark" >! git.plugin.zsh

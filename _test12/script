@@ -1,8 +1,8 @@
 tst_verbosity
 
-zplugin ice svn as"command" mv"n-help -> nh" cp"nh -> n-help2" \
+zinit ice svn as"command" mv"n-help -> nh" cp"nh -> n-help2" \
             pick"n-help2" atclone"chmod -x znt-tmux.zsh"
-zplugin snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
+zinit snippet https://github.com/robbyrussell/oh-my-zsh/trunk/plugins/zsh-navigation-tools
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice

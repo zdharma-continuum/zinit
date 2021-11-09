@@ -1,4 +1,4 @@
-AT_TIME_1_https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
+AT_TIME_1_https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order
 __reset-by-test__
 BIN_DIR
 test
@@ -22,17 +22,17 @@ SHADOWING
 inactive
 SNIPPETS_DIR
 _test14/answer/snippets
-TIME_1_https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
+TIME_1_https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order
 __reset-by-test__
 TIME_INDEX
 1
 ZERO
-zplugin.zsh
+zinit.zsh
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
-ZPLG_REGISTERED_STATES: '_local/zplugin' '1'
-ZPLG_SNIPPETS: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order <svn>'
-ZPLG_SICE: 'https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order' 'svn '\'''\'' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '\'''\'' is-snippet '\'''\'' '
+ZPLG_REGISTERED_PLUGINS: '_local/zinit'
+ZPLG_REGISTERED_STATES: '_local/zinit' '1'
+ZPLG_SNIPPETS: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order <svn>'
+ZPLG_SICE: 'https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order' 'svn '\'''\'' teleid https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order wait '\'''\'' is-snippet '\'''\'' '
 ZPLG_COMPDEF_REPLAY: 
 ZPLG_CUR_PLUGIN: ''
 ---

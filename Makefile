@@ -28,16 +28,16 @@ curl: test21 test22 test23 test24 test25 test26 test27 test29 test30 \
 
 general: test100 test101 test102 test104
 
-prepare: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh
-	cp ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin ../git-process-output.zsh .
+prepare: ../zinit.zsh ../zinit-side.zsh ../zinit-install.zsh ../zinit-autoload.zsh
+	cp ../zinit.zsh ../zinit-side.zsh ../zinit-install.zsh ../zinit-autoload.zsh ../_zinit ../git-process-output.zsh .
 	rm -rf data
-	@: ./bin/zsd-transform -q zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh
+	@: ./bin/zsd-transform -q zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
 	@: mv zsdoc/data .
 	@: rm -rf zsdoc
-	@: cp ../_zplugin data/functions/zplugin.zsh/
-	perl -pi -e 's/command git/internet_mock_git/g' zplugin-install.zsh zplugin-autoload.zsh
-	perl -pi -e 's/command svn/internet_mock_svn/g' zplugin-install.zsh
-	perl -pi -e 's/command curl/internet_mock_curl/g' zplugin-install.zsh
+	@: cp ../_zinit data/functions/zinit.zsh/
+	perl -pi -e 's/command git/internet_mock_git/g' zinit-install.zsh zinit-autoload.zsh
+	perl -pi -e 's/command svn/internet_mock_svn/g' zinit-install.zsh
+	perl -pi -e 's/command curl/internet_mock_curl/g' zinit-install.zsh
 
 test%: _test%/script _test%/urlmap _test%/model data
 	rm -rf _$@/answer
@@ -45,11 +45,11 @@ test%: _test%/script _test%/urlmap _test%/model data
 	if [ "$(NODIFF)" = "" -a ! -f _$@/skip ]; then diff -x .git -x .svn -x .test_git -x '*.zwc' -x .model_keep -x polaris -u -r _$@/model _$@/answer; exit $$?; fi
 	@echo
 
-data: ../zplugin.zsh ../zplugin-side.zsh ../zplugin-install.zsh ../zplugin-autoload.zsh ../_zplugin
+data: ../zinit.zsh ../zinit-side.zsh ../zinit-install.zsh ../zinit-autoload.zsh ../_zinit
 	make prepare
 
 clean:
-	rm -rf -- data zsdoc zplugin.zsh zplugin-side.zsh zplugin-install.zsh zplugin-autoload.zsh _zplugin
+	rm -rf -- data zsdoc zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh _zinit
 	rm -rf _test*/answer _test*/*.txt _test*/skip
 
 .PHONY: all test prepare clean

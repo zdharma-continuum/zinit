@@ -13,19 +13,19 @@ local backward_kill_word=${widgets[backward-kill-word]}
 # - 4 setopts
 # - 4 zstyles
 # - 11 global parameters
-zplugin load psprint/zsh-editing-workbench
+zinit load psprint/zsh-editing-workbench
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
 store_state answer/state_bunload answer/errors_bunload
 
-zplugin unload psprint/zsh-editing-workbench
+zinit unload psprint/zsh-editing-workbench
 
 # Verify that changes were reverted
 
-[[ ${aliases[zplg]} != "zplugin" ]] && echo >! answer/aliases_incorrect_1
-[[ ${aliases[zpl]} != "zplugin" ]] && echo >! answer/aliases_incorrect_2
+[[ ${aliases[zplg]} != "zinit" ]] && echo >! answer/aliases_incorrect_1
+[[ ${aliases[zpl]} != "zinit" ]] && echo >! answer/aliases_incorrect_2
 (( ${+aliases[nkill]} )) && echo >! answer/aliases_incorrect_3
 (( ${+aliases[nfunctions]} )) && echo >! answer/aliases_incorrect_4
 (( ${+aliases[naliases]}  )) && echo >! answer/aliases_incorrect_5

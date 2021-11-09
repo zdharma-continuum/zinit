@@ -1,2 +1,2 @@
-https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order
-svn '' teleid https://github.com/zdharma/zplugin/trunk/test/test_snippets/ice-order wait '' is-snippet '' 
+https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order
+svn '' teleid https://github.com/zdharma/zinit/trunk/test/test_snippets/ice-order wait '' is-snippet '' 

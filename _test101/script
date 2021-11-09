@@ -1,9 +1,9 @@
 tst_verbosity
 
 print -r -- "Before load PATH: $PATH"
-zplugin ice depth"1"
-zplugin load psprint/zsh-select
-zplugin load zdharma/ice-order
+zinit ice depth"1"
+zinit load psprint/zsh-select
+zinit load zdharma/ice-order
 
 print -rl -- "${(o)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
@@ -14,13 +14,13 @@ store_state answer/state_bunload answer/errors_bunload
 [[ $PATH = *zsh-select* ]] && echo >! answer/correct_path || echo >! answer/incorrect_path_1
 
 print -r -- "Before unload ice-order FPATH: $FPATH"
-zplugin unload zdharma/ice-order
+zinit unload zdharma/ice-order
 print -r -- "After unload ice-order FPATH: $FPATH"
 [[ ${FPATH[(i)test101]} = ${FPATH[(I)test101]} ]] && echo >! answer/correct_fpath_af || echo >! answer/incorrect_fpath_af_2"${FPATH[(i)test101]} = ${FPATH[(I)test101]}" 
 [[ $PATH = *zsh-select* ]] && echo >! answer/correct_path2 || echo >! answer/incorrect_path_2
 
 print -r -- "Before unload zsh-select PATH: $PATH"
-zplugin unload psprint/zsh-select
+zinit unload psprint/zsh-select
 print -r -- "After unload zsh-select PATH: $PATH"
 [[ $PATH != *zsh-select* ]] && echo >! answer/correct_path_af || echo >! answer/incorrect_path_af_3
 

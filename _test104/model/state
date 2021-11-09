@@ -47,12 +47,12 @@ WIDGETS_DELETE__psprint/zsh-editing-workbench
 WIDGETS_SAVED__psprint/zsh-editing-workbench
 
 ZERO
-zplugin.zsh
+zinit.zsh
 ZSTYLES__psprint/zsh-editing-workbench
 
 ---
-ZPLG_REGISTERED_PLUGINS: '_local/zplugin'
-ZPLG_REGISTERED_STATES: '_local/zplugin' '1' 'psprint/zsh-editing-workbench' '0'
+ZPLG_REGISTERED_PLUGINS: '_local/zinit'
+ZPLG_REGISTERED_STATES: '_local/zinit' '1' 'psprint/zsh-editing-workbench' '0'
 ZPLG_SNIPPETS: 
 ZPLG_SICE: 'psprint/zsh-editing-workbench' 'teleid psprint/zsh-editing-workbench wait '\'''\'' '
 ZPLG_COMPDEF_REPLAY: 

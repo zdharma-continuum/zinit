@@ -1,22 +1,22 @@
 tst_verbosity
 
-zplugin ice atpull'!builtin print -- --Added Line-- >>! git.plugin.zsh; cp -vf git.plugin.zsh git2.plugin.zsh' \
+zinit ice atpull'!builtin print -- --Added Line-- >>! git.plugin.zsh; cp -vf git.plugin.zsh git2.plugin.zsh' \
             cp'git.plugin.zsh -> git3.plugin.zsh'
-zplugin snippet OMZ::plugins/git/git.plugin.zsh
+zinit snippet OMZ::plugins/git/git.plugin.zsh
 
 print -rl -- "${(okv)ZPLG_ICE[@]}" >! answer/ice
 print -rl -- "${(okv)ZPLG_SICE[@]}" >! answer/sice
 
-zplugin cdlist >! answer/compdefs
+zinit cdlist >! answer/compdefs
 
 ( zplg cd OMZ::plugins/git/git.plugin.zsh
   set -e
   command mv -v git3.plugin.zsh git0.plugin.zsh                             # cp ran at clone
   builtin echo '--Before Update Line--' >>! git.plugin.zsh
   command cp -v git.plugin.zsh git1.plugin.zsh                              # atpull didn't activate yet
-  print 'command touch Test_has_failed' >! ._zplugin/atpull  # static ice should win
+  print 'command touch Test_has_failed' >! ._zinit/atpull  # static ice should win
 ) || return 1
 
-zplugin update OMZ::plugins/git/git.plugin.zsh
+zinit update OMZ::plugins/git/git.plugin.zsh
 
 # vim:ft=zsh

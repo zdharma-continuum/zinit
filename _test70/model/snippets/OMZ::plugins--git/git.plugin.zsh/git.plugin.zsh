@@ -1,1 +1,1 @@
-touch ${ZPLGM[SNIPPETS_DIR]}/load.mark
+touch ${ZINIT[SNIPPETS_DIR]}/load.mark

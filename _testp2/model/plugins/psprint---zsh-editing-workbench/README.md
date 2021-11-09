@@ -16,9 +16,9 @@ Swapping, copying, deleting shell words, also undo:
 
 ![zew](http://imageshack.com/a/img908/7765/zpdjOK.gif)
 
-## Installation With [Zplugin](https://github.com/psprint/zplugin)
+## Installation With [Zplugin](https://github.com/psprint/zinit)
 
-Add `zplugin load psprint/zsh-editing-workbench` to `.zshrc`. The config files will be available in `~/.config/zew`.
+Add `zinit load psprint/zsh-editing-workbench` to `.zshrc`. The config files will be available in `~/.config/zew`.
 
 ## Installation With Zgen
 
@@ -59,11 +59,11 @@ operations (e.g. incremental history word completion).
 
 ## IRC Channel
 
-Channel `#zplugin@freenode` is a support place for all author's projects. Connect to:
-[chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zplugin) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zplugin)
- and join #zplugin.
+Channel `#zinit@freenode` is a support place for all author's projects. Connect to:
+[chat.freenode.net:6697](ircs://chat.freenode.net:6697/%23zinit) (SSL) or [chat.freenode.net:6667](irc://chat.freenode.net:6667/%23zinit)
+ and join #zinit.
 
-Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zplugin.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zplugin)
+Following is a quick access via Webchat [![IRC](https://kiwiirc.com/buttons/chat.freenode.net/zinit.png)](https://kiwiirc.com/client/chat.freenode.net:+6697/#zinit)
 
 # Configuring terminals
 
