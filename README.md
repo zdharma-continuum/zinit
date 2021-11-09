@@ -2,7 +2,9 @@
 
 [![MIT License][mit-badge]][mit-link] [![][ver-badge]][ver-link] [![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link]
 
-> **Note**: [Sebastian Gniazdowski](https://github.com/psprint), the original `zinit` dev, deleted `zdharma` randomly. This is a reliable fork / place for the continuation of the project. 
+> **Note**: [Sebastian Gniazdowski](https://github.com/psprint), the original `zinit` dev, deleted `zdharma` randomly. This is a reliable fork / place for the continuation of the project.
+>
+> 🚧 For migration instructions please refer [to this wiki entry](https://github.com/zdharma-continuum/zinit/wiki/Migration-to-zdharma-continuum) 
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 
