@@ -1770,24 +1770,21 @@ Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
 
 Zinit is a personal, free-time project with no funding and a huge [feature request
 backlog](https://github.com/zdharma-continuum/zinit/issues). If you love it, consider supporting its
-development via [GitHub Sponsors](https://github.com/sponsors/psprint) or
-[Patreon](https://patreon.com/psprint). Any help counts!
+development via GitHub Sponsors [pending]. Any help counts!
 
 # Getting Help and Community
 
 Do you need help or wish to get in touch with other Zinit users?
 
-- Visit our subreddit [r/zinit](https://www.reddit.com/r/zinit/).
+- [Open a discussion](https://github.com/zdharma-continuum/zinit/discussions).
 
-- Or via Gitter [![Join the chat at https://gitter.im/zdharma/zinit][gitter-badge]][gitter-link]
+- Or via reach out via Gitter [![Join the chat at https://gitter.im/zdharma-continuum/community][gitter-badge]][gitter-link]
 
 <!-- vim:set ft=markdown tw=80 fo+=1n: -->
 
 [gitter-badge]: https://badges.gitter.im/zdharma-continuum/zinit.svg
-[gitter-link]: https://gitter.im/zdharma-continuum/zinit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gitter-link]: https://gitter.im/zdharma-continuum/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-link]: ./LICENSE
-[reddit-badge]: https://img.shields.io/reddit/subreddit-subscribers/zinit?style=social
-[reddit-link]: https://reddit.com/r/zinit
 [ver-badge]: https://img.shields.io/github/tag/zdharma-continuum/zinit.svg
 [ver-link]: https://github.com/zdharma-continuum/zinit/releases
