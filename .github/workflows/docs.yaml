@@ -12,6 +12,6 @@ jobs:
           sudo make install
           zsd --help
 
-      - name: make docs
+      - name: make doc
         run: |
-          make docs
+          make doc
