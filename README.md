@@ -1,4 +1,8 @@
-# zinit
+<p align="center">
+<a href="https://github.com/zdharma-continuum/zinit">
+<img src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/zinit.png"/>
+</a>
+</p>
 
 [![MIT License][mit-badge]][mit-link] [![][ver-badge]][ver-link] [![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link]
 
@@ -66,12 +70,6 @@
 - [Getting Help and Community](#getting-help-and-community)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-<p align="center">
-<a href="https://github.com/zdharma-continuum/zinit">
-<img src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/zinit.png"/>
-</a>
-</p>
 
 # News
 
