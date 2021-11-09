@@ -22,4 +22,9 @@ jobs:
       - name: Check if docs are up to date
         run: |
           git --no-pager diff
-          git --no-pager diff --quiet || echo "The docs in the repo are not up to date" >&2
+
+          if ! git --no-pager diff --quiet
+          then
+            echo "The docs in the repo are not up to date" >&2
+            exit 1
+          fi
