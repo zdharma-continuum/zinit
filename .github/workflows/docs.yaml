@@ -20,5 +20,6 @@ jobs:
           make doc
 
       - name: Check if docs are up to date
+        run: |
           git diff
           git diff --quiet || echo "The docs in the repo are not up to date" >&2
