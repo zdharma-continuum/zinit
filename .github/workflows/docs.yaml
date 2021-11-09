@@ -7,8 +7,8 @@ jobs:
       - name: Install zshelldoc
         run: |
           sudo apt-get install -y zsh
-          git clone https://github.com/zdharma-continuum/zshelldoc.git
-          cd zshelldoc
+          git clone https://github.com/zdharma-continuum/zshelldoc.git /tmp/zsd.git
+          cd /tmp/zsd.git
           sudo make install
           zsd --help
 
