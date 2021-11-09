@@ -8,4 +8,4 @@ jobs:
         run: |
           git clone https://github.com/zdharma-continuum/zshelldoc.git
           cd zshelldoc
-          make install
+          sudo make install
