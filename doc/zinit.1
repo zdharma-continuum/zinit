@@ -416,7 +416,7 @@ zinit light trapd00r/LS_COLORS
 .fi
 .RE
 .P
-\fBYou can see an extended explanation of LS_COLORS in the wiki.\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/LS_COLORS-explanation/\(ra\fR
+\fBYou can see an extended explanation of LS_COLORS in the wiki.\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/LS_COLORS-explanation/\(ra\fR
 .P
 .RS 2
 .nf
@@ -458,9 +458,9 @@ tab(@);
 cb cb
 c l .
 Modifier@Description
-\fB\fB\fBpick\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files/\(ra\fR@ Select the file to source, or the file to set as command (when using \fBsnippet --command\fR or the ice \fBas"program"\fR); it is a pattern, alphabetically first matched file is being chosen; e.g. \fBzinit ice pick"*.plugin.zsh"; zinit load …\fR.
-\fB\fB\fBsrc\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files\(ra\fR@ Specify additional file to source after sourcing main file or after setting up command (via \fBas"program"\fR). It is not a pattern but a plain file name.
-\fB\fB\fBmultisrc\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files\(ra\fR@ Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. \fBmultisrc'misc.zsh grep.zsh'\fR) and also using brace-expansion syntax (e.g. \fBmultisrc'{misc,grep}.zsh'\fR). Supports patterns.
+\fB\fB\fBpick\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files/\(ra\fR@ Select the file to source, or the file to set as command (when using \fBsnippet --command\fR or the ice \fBas"program"\fR); it is a pattern, alphabetically first matched file is being chosen; e.g. \fBzinit ice pick"*.plugin.zsh"; zinit load …\fR.
+\fB\fB\fBsrc\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files\(ra\fR@ Specify additional file to source after sourcing main file or after setting up command (via \fBas"program"\fR). It is not a pattern but a plain file name.
+\fB\fB\fBmultisrc\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Sourcing-multiple-files\(ra\fR@ Allows to specify multiple files for sourcing, enumerated with spaces as the separators (e.g. \fBmultisrc'misc.zsh grep.zsh'\fR) and also using brace-expansion syntax (e.g. \fBmultisrc'{misc,grep}.zsh'\fR). Supports patterns.
 .TE
 .SS "Conditional Loading"
 .TS
@@ -468,9 +468,9 @@ tab(@);
 cb cb
 c l .
 Modifier@Description
-\fB\fB\fBwait\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Example-wait-conditions\(ra\fR@ Postpone loading a plugin or snippet. For \fBwait'1'\fR, loading is done \fB1\fR second after prompt. For \fBwait'\[lB]\[lB] ... \[rB]\[rB]'\fR, \fBwait'(( ... ))'\fR, loading is done when given condition is meet. For \fBwait'!...'\fR, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. \fBFact:\fR when \fBwait\fR is used without value, it works as \fBwait'0'\fR.
-\fB\fB\fBload\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see \fBunload\fR below). E.g.: \fBload'\[lB]\[lB] $PWD = */github* \[rB]\[rB]'\fR.
-\fB\fB\fBunload\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: \fBunload'\[lB]\[lB] $PWD != */github* \[rB]\[rB]'\fR.
+\fB\fB\fBwait\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Example-wait-conditions\(ra\fR@ Postpone loading a plugin or snippet. For \fBwait'1'\fR, loading is done \fB1\fR second after prompt. For \fBwait'\[lB]\[lB] ... \[rB]\[rB]'\fR, \fBwait'(( ... ))'\fR, loading is done when given condition is meet. For \fBwait'!...'\fR, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. \fBFact:\fR when \fBwait\fR is used without value, it works as \fBwait'0'\fR.
+\fB\fB\fBload\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see \fBunload\fR below). E.g.: \fBload'\[lB]\[lB] $PWD = */github* \[rB]\[rB]'\fR.
+\fB\fB\fBunload\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: \fBunload'\[lB]\[lB] $PWD != */github* \[rB]\[rB]'\fR.
 \fBcloneonly\fR@ Don't load the plugin / snippet, only download it 
 \fBif\fR@ Load plugin or snippet only when given condition is fulfilled, for example: \fBzinit ice if'\[lB]\[lB] -n "$commands\[lB]otool\[rB]" \[rB]\[rB]'; zinit load ...\fR.
 \fBhas\fR@ Load plugin or snippet only when given command is available (in $PATH), e.g. \fBzinit ice has'git' ...\fR
@@ -503,13 +503,13 @@ c l .
 Modifier@Description
 \fBmv\fR@ Move file after cloning or after update (then, only if new commits were downloaded). Example: \fBmv "fzf-* -> fzf"\fR. It uses \fB->\fR as separator for old and new file names. Works also with snippets.
 \fBcp\fR@ Copy file after cloning or after update (then, only if new commits were downloaded). Example: \fBcp "docker-c* -> dcompose"\fR. Ran after \fBmv\fR.
-\fB\fB\fBatclone\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after cloning, within plugin's directory, e.g. \fBzinit ice atclone"echo Cloned"\fR. Ran also after downloading snippet.
-\fB\fB\fBatpull\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after updating (\fBonly if new commits are waiting for download\fR), within plugin's directory. If starts with "!" then command will be ran before \fBmv\fR & \fBcp\fR ices and before \fBgit pull\fR or \fBsvn update\fR. Otherwise it is ran after them. Can be \fBatpull'%atclone'\fR, to repeat \fBatclone\fR Ice-mod.
-\fB\fB\fBatinit\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.
-\fB\fB\fBatload\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with \fB!\fR, it will then be tracked (if using \fBload\fR, not \fBlight\fR).
+\fB\fB\fBatclone\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after cloning, within plugin's directory, e.g. \fBzinit ice atclone"echo Cloned"\fR. Ran also after downloading snippet.
+\fB\fB\fBatpull\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after updating (\fBonly if new commits are waiting for download\fR), within plugin's directory. If starts with "!" then command will be ran before \fBmv\fR & \fBcp\fR ices and before \fBgit pull\fR or \fBsvn update\fR. Otherwise it is ran after them. Can be \fBatpull'%atclone'\fR, to repeat \fBatclone\fR Ice-mod.
+\fB\fB\fBatinit\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after directory setup (cloning, checking it, etc.) of plugin/snippet but before loading.
+\fB\fB\fBatload\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/atload-and-other-at-ices\(ra\fR@ Run command after loading, within plugin's directory. Can be also used with snippets. Passed code can be preceded with \fB!\fR, it will then be tracked (if using \fBload\fR, not \fBlight\fR).
 \fBrun-atpull\fR@ Always run the atpull hook (when updating), not only when there are new commits to be downloaded.
 \fBnocd\fR@ Don't switch the current directory into the plugin's directory when evaluating the above ice-mods \fBatinit''\fR,\fBatload''\fR, etc.
-\fB\fB\fBmake\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Installing-with-make\(ra\fR@ Run \fBmake\fR command after cloning/updating and executing \fBmv\fR, \fBcp\fR, \fBatpull\fR, \fBatclone\fR Ice mods. Can obtain argument, e.g. \fBmake"install PREFIX=/opt"\fR. If the value starts with \fB!\fR then \fBmake\fR is ran before \fBatclone\fR/\fBatpull\fR, e.g. \fBmake'!'\fR.
+\fB\fB\fBmake\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Installing-with-make\(ra\fR@ Run \fBmake\fR command after cloning/updating and executing \fBmv\fR, \fBcp\fR, \fBatpull\fR, \fBatclone\fR Ice mods. Can obtain argument, e.g. \fBmake"install PREFIX=/opt"\fR. If the value starts with \fB!\fR then \fBmake\fR is ran before \fBatclone\fR/\fBatpull\fR, e.g. \fBmake'!'\fR.
 .TE
 .SS "Sticky-Emulation Of Other Shells"
 .TS
@@ -529,14 +529,14 @@ cb cb
 c l .
 Modifier@Description
 \fBas\fR@ Can be \fBas"program"\fR (also the alias: \fBas"command"\fR), and will cause to add script/program to \fB$PATH\fR instead of sourcing (see \fBpick\fR). Can also be \fBas"completion"\fR \[en] use with plugins or snippets in whose only underscore-starting \fB_*\fR files you are interested in.
-\fB\fB\fBid-as\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/id-as/\(ra\fR@ Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.
+\fB\fB\fBid-as\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/id-as/\(ra\fR@ Nickname a plugin or snippet, to e.g. create a short handler for long-url snippet.
 \fBcompile\fR@ Pattern (+ possible \fB{...}\fR expansion, like \fB{a/*,b*}\fR) to select additional files to compile, e.g. \fBcompile"(pure\[rs]|async).zsh"\fR for \fBsindresorhus/pure\fR.\[rs]
 \fBnocompile\fR@ Don't try to compile \fBpick\fR-pointed files. If passed the exclamation mark (i.e. \fBnocompile'!'\fR), then do compile, but after \fBmake''\fR and \fBatclone''\fR (useful if Makefile installs some scripts, to point \fBpick''\fR at the location of their installation).
 \fBservice\fR@ Make following plugin or snippet a \fIservice\fR, which will be ran in background, and only in single Zshell instance. See \fBzservices-organization\fR \fI\(lahttps://github.com/zservices\(ra\fR page.
 \fBreset-prompt\fR@ Reset the prompt after loading the plugin/snippet (by issuing \fBzle .reset-prompt\fR). Note: normally it's sufficient to precede the value of \fBwait''\fR ice with \fB!\fR.
 \fBbindmap\fR@ To hold \fB;\fR-separated strings like \fBKey(s)A -> Key(s)B\fR, e.g. \fB^R -> ^T; ^A -> ^B\fR. In general, \fBbindmap''\fRchanges bindings (done with the \fBbindkey\fR builtin) the plugin does. The example would cause the plugin to map Ctrl-T instead of Ctrl-R, and Ctrl-B instead of Ctrl-A. \fBDoes not work with snippets.\fR
 \fBtrackbinds\fR@ Shadow but only \fBbindkey\fR calls even with \fBzinit light ...\fR, i.e. even with tracking disabled (fast loading), to allow \fBbindmap\fR to remap the key-binds. The same effect has \fBzinit light -b ...\fR, i.e. additional \fB-b\fR option to the \fBlight\fR-subcommand. \fBDoes not work with snippets.\fR
-\fB\fB\fBwrap-track\fB\fR\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/wrap-track\(ra\fR@ Takes a \fB;\fR-separated list of function names that are to be tracked (meaning gathering report and unload data) \fBonce\fR during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, \fBwrap-track\fR allows to extend the tracking beyond the moment of loading of a plugin. Example use is to \fBwrap-track\fR a precmd function of a prompt (like \fB_p9k_precmd()\fR of powerlevel10k) or other plugin that \fIpostpones its initialization till the first prompt\fR (like e.g.: zsh-autosuggestions). \fBDoes not work with snippets.\fR
+\fB\fB\fBwrap-track\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/wrap-track\(ra\fR@ Takes a \fB;\fR-separated list of function names that are to be tracked (meaning gathering report and unload data) \fBonce\fR during execution. It works by wrapping the functions with a tracking-enabling and disabling snippet of code. In summary, \fBwrap-track\fR allows to extend the tracking beyond the moment of loading of a plugin. Example use is to \fBwrap-track\fR a precmd function of a prompt (like \fB_p9k_precmd()\fR of powerlevel10k) or other plugin that \fIpostpones its initialization till the first prompt\fR (like e.g.: zsh-autosuggestions). \fBDoes not work with snippets.\fR
 \fBaliases\fR@Load the plugin with the aliases mechanism enabled. Use with plugins that define \fBand use\fR aliases in their scripts.
 .TE
 .SS "Order of Execution"
@@ -656,7 +656,7 @@ To use \fBthemes\fR created for Oh My Zsh you might want to first source the \fB
 .P
 .RS 2
 .nf
-zinit snippet http://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
+zinit snippet https://github.com/ohmyzsh/ohmyzsh/raw/master/lib/git.zsh
 # Or using OMZ:: shorthand:
 zinit snippet OMZ::lib/git.zsh
 .fi
@@ -706,7 +706,7 @@ zinit light NicoSantangelo/Alpharized
 .fi
 .RE
 .P
-See also the Wiki page: \fBExample Oh My Zsh Setup\fR \fI\(lahttp://zdharma-continuum.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/\(ra\fR.
+See also the Wiki page: \fBExample Oh My Zsh Setup\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Example-Oh-My-Zsh-setup/\(ra\fR.
 .SH "COMPLETIONS"
 .SS "Calling \fBcompinit\fR Without Turbo Mode"
 .P
