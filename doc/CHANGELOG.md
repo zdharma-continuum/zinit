@@ -29,7 +29,7 @@ startup. Please note that these directories will not necessarily be part of your
 
 * 19-01-2020
   - The name has been changed to **Zinit** based on the results of the
-    [poll](https://github.com/zdharma/zinit/issues/235).
+    [poll](https://github.com/zdharma-continuum/zinit/issues/235).
   - In general, you don't have to do anything after the name change.
   - Only a run of `zinit update --all` might be necessary.
   - You might also want to rename your `zplugin` calls in `zshrc` to `zinit`.
@@ -40,7 +40,7 @@ startup. Please note that these directories will not necessarily be part of your
   - There's a new function, `zpextract`, which unpacks the given file. It supports many
     formats (notably also `dmg` images) – if there's a format that's unsupported please
     don't hesitate to [make a
-    request](https://github.com/zdharma/zinit/issues/new?template=feature_request.md)
+    request](https://github.com/zdharma-continuum/zinit/issues/new?template=feature_request.md)
     for it to be added. A few facts:
     - the function is available only at the time of the plugin/snippet installation,
     - it's to be used within `atclone` and `atpull` ices,

@@ -3308,7 +3308,7 @@ EOF
     elif [[ "$1" = "info" ]]; then
         if [[ "$2" = "--link" ]]; then
               builtin print -r "You can copy the error messages and submit"
-              builtin print -r "error-report at: https://github.com/zdharma/zinit/issues"
+              builtin print -r "error-report at: https://github.com/zdharma-continuum/zinit/issues"
         else
             builtin print -r "To load the module, add following 2 lines to .zshrc, at top:"
             builtin print -r "    module_path+=( \"${ZINIT[BIN_DIR]}/zmodules/Src\" )"

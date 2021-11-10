@@ -230,7 +230,7 @@
             builtin print -r -- "(\`svn' can be used only with snippets)"
             return 1
         elif (( !___is_snippet )); then
-            builtin print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma/zinit/issues"
+            builtin print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma-continuum/zinit/issues"
             return 1
         fi
         if [[ -e "$___s_path" && -n "$___s_svn" ]]; then
