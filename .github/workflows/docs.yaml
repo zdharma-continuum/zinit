@@ -12,12 +12,25 @@ jobs:
           sudo make install
           zsd --help
 
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+
+      - name: Install asciidoctor-pdf
+        run: |
+          gem install asciidoctor-pdf
+
       - name: Check out repository code
         uses: actions/checkout@v2
 
-      - name: make doc
+      - name: make docs
         run: |
           make doc
+
+      - name: make pdf
+        run: |
+          make -C doc/zsdoc pdf
 
       - name: Tar doc/
         run: |
