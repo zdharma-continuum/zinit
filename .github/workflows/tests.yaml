@@ -21,6 +21,10 @@ jobs:
           git fetch --depth=1 origin tests:tests
           git worktree add test tests
 
+      - name: Install zsh
+        run: |
+          sudo apt install -y zsh
+
       - name: make
         run: |
           make
