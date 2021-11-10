@@ -19,6 +19,13 @@ jobs:
         run: |
           make doc
 
+      - name: Archive docs
+        uses: actions/upload-artifact@v2
+        with:
+          name: doc
+          path: |
+            doc
+
       - name: Check if docs are up to date
         run: |
           git --no-pager diff
