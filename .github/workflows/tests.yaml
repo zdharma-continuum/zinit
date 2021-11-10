@@ -1,0 +1,27 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        testcase:
+          - test
+          - testB
+          - testC
+          - testD
+          - testE
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Check out tests branch
+        run: |
+          git fetch --depth=1 origin tests:tests
+          git worktree add test tests
+
+      - name: make
+        run: |
+          make
+          make -C test ${{ matrix.testcase }} VERBOSE=1
