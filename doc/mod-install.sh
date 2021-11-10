@@ -25,7 +25,7 @@ if test -d "$ZINIT_HOME/mod-bin/.git"; then
     git pull origin master
 else
     cd "$ZINIT_HOME"
-    git clone --depth 10 https://github.com/zdharma-continuum/zplugin.git mod-bin
+    git clone --depth 10 https://github.com/zdharma-continuum/zinit.git mod-bin
 fi
 echo ">>> Done"
 
