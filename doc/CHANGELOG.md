@@ -437,7 +437,7 @@ startup. Please note that these directories will not necessarily be part of your
 
 * 05-02-2018
   - I work much on this README however multi-file Wiki might be better to read – it
-    [just has been created](https://github.com/zdharma/zplugin/wiki).
+    [just has been created](https://github.com/zdharma-continuum/zinit/wiki).
 
 * 16-01-2018
   - New ice-mod `compile` which takes pattern to select additional files to compile, e.g.
@@ -493,7 +493,7 @@ startup. Please note that these directories will not necessarily be part of your
     [full story](#automatic-loadunload-on-condition) and [Asciinema video](https://asciinema.org/a/150825).
 
 * 29-11-2017
-  - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode-zsh--53)** – **39-50% or more faster Zsh startup!**
+  - **[Turbo Mode](https://github.com/zdharma-continuum/zinit#turbo-mode-zsh--53)** – **39-50% or more faster Zsh startup!**
   - Subcommand `update` can update snippets, via given URL (up to this point snippets were updated via
     `zplugin update --all`).
   - Completion management is enabled for snippets (not only plugins).
