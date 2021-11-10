@@ -19,12 +19,16 @@ jobs:
         run: |
           make doc
 
-      - name: Archive docs
+      - name: Tar doc/
+        run: |
+          tar cvzf /tmp/doc.tar.gz doc
+
+      - name: Archive doc.tar.gz
         uses: actions/upload-artifact@v2
         with:
-          name: doc
+          name: docs
           path: |
-            doc
+            /tmp/doc.tar.gz
 
       - name: Check if docs are up to date
         run: |
