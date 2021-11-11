@@ -15,7 +15,7 @@ if [ -z "$ZINIT_BIN_DIR_NAME" ]; then
 fi
 
 if ! test -d "$ZINIT_HOME"; then
-    mkdir "$ZINIT_HOME"
+    mkdir -p "$ZINIT_HOME"
     chmod g-w "$ZINIT_HOME"
     chmod o-w "$ZINIT_HOME"
 fi
