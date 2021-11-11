@@ -21,32 +21,32 @@ if ! test -d "$ZINIT_HOME"; then
 fi
 
 if ! command -v git >/dev/null 2>&1; then
-    echo "[1;31m▓▒░[0m Something went wrong: no [1;32mgit[0m available, cannot proceed."
+    echo "[1;31m▓▒░[0m Something went wrong: [1;32mgit[0m is not available, cannot proceed."
     exit 1
 fi
 
+ZINIT_BRANCH="${ZINIT_BRANCH:-master}"
+
 # Get the download-progress bar tool
+GIT_PROCESS_SCRIPT_URL="https://raw.githubusercontent.com/zdharma-continuum/zinit/${ZINIT_BRANCH}/git-process-output.zsh"
+mkdir -p /tmp/zinit
+cd /tmp/zinit || { echo "Failed to cd to /tmp/zinit" >&2; exit 1; }
 if command -v curl >/dev/null 2>&1; then
-    mkdir -p /tmp/zinit
-    cd /tmp/zinit
-    curl -fsSLO https://raw.githubusercontent.com/zdharma-continuum/zinit/master/git-process-output.zsh && \
-        chmod a+x /tmp/zinit/git-process-output.zsh
+    curl -fsSLO "$GIT_PROCESS_SCRIPT_URL"
 elif command -v wget >/dev/null 2>&1; then
-    mkdir -p /tmp/zinit
-    cd /tmp/zinit
-    wget -q https://raw.githubusercontent.com/zdharma-continuum/zinit/master/git-process-output.zsh && \
-        chmod a+x /tmp/zinit/git-process-output.zsh
+    wget -q "$GIT_PROCESS_SCRIPT_URL"
 fi
+chmod a+x /tmp/zinit/git-process-output.zsh 2>/dev/null
 
 echo
 if test -d "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/.git"; then
-    cd "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME"
+    cd "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME" || { echo "Failed to cd to $ZINIT_HOME/$ZINIT_BIN_DIR_NAME" >&2; exit 1; }
     echo "[1;34m▓▒░[0m Updating [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-    git pull origin master
+    git pull origin "${ZINIT_BRANCH}"
 else
-    cd "$ZINIT_HOME"
+    cd "$ZINIT_HOME" || { echo "Failed to cd to $ZINIT_HOME" >&2; exit 1; }
     echo "[1;34m▓▒░[0m Installing [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-    { git clone --progress https://github.com/zdharma-continuum/zinit.git "$ZINIT_BIN_DIR_NAME" \
+    { git clone --progress --branch "$ZINIT_BRANCH" https://github.com/zdharma-continuum/zinit.git "$ZINIT_BIN_DIR_NAME" \
         2>&1 | { /tmp/zinit/git-process-output.zsh || cat; } } 2>/dev/null
     if [ -d "$ZINIT_BIN_DIR_NAME" ]; then
         echo
@@ -64,14 +64,14 @@ fi
 #
 THE_ZDOTDIR="${ZDOTDIR:-$HOME}"
 RCUPDATE=1
-if egrep '(zinit|zplugin)\.zsh' "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
+if grep -E '(zinit|zplugin)\.zsh' "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
     echo "[34m▓▒░[0m .zshrc already contains \`zinit …' commands – not making changes."
     RCUPDATE=0
 fi
 
 if [ $RCUPDATE -eq 1 ]; then
     echo "[34m▓▒░[0m Updating $THE_ZDOTDIR/.zshrc (10 lines of code, at the bottom)"
-    ZINIT_HOME="$(echo $ZINIT_HOME | sed "s|$HOME|\$HOME|")"
+    ZINIT_HOME="$(echo "$ZINIT_HOME" | sed "s|$HOME|\$HOME|")"
     command cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
 
 ### Added by Zinit's installer
@@ -105,7 +105,7 @@ echo "[38;5;219m▓▒░[0m Would you like to add 4 useful plugins" \
     "functions-features to the plugin manager) to the zshrc as well?" \
     "It will be the following snippet:"
     command cat "$file"
-    echo -n "[38;5;219m▓▒░[0m Enter y/n and press Return: "
+    printf "[38;5;219m▓▒░[0m Enter y/n and press Return: "
     read -r input
     if [ "$input" = y ] || [ "$input" = Y ]; then
         command cat "$file" >> "$THE_ZDOTDIR"/.zshrc
