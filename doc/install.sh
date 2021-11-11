@@ -6,12 +6,12 @@
 
 ZINIT_HOME="${ZINIT_HOME:-$ZPLG_HOME}"
 if [ -z "$ZINIT_HOME" ]; then
-    ZINIT_HOME="${ZDOTDIR:-$HOME}/.zinit"
+    ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit"
 fi
 
 ZINIT_BIN_DIR_NAME="${ZINIT_BIN_DIR_NAME:-$ZPLG_BIN_DIR_NAME}"
 if [ -z "$ZINIT_BIN_DIR_NAME" ]; then
-    ZINIT_BIN_DIR_NAME="bin"
+    ZINIT_BIN_DIR_NAME="zinit.git"
 fi
 
 if ! test -d "$ZINIT_HOME"; then
