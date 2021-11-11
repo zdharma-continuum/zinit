@@ -53,6 +53,6 @@ jobs:
           file: ./ci/docker/Dockerfile.alpine
           build-args: |
             VERSION=latest
-            ZINIT_ZSH_VERSION=${{ matrix.zsh_version }}
+            ZINIT_ZSH_VERSION=${{ matrix.zsh_version }}-tcsetpgrp
           tags: ghcr.io/${{ github.repository }}:latest
           platforms: linux/amd64,linux/arm64/v8
