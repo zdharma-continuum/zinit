@@ -42,6 +42,9 @@ jobs:
       #     ./ci/docker/build.sh alpine latest ${{ matrix.zsh_version }}
       #     docker push ghcr.io/${GITHUB_REPOSITORY}
 
+      - name: Grab git slugs (short commit id, branch etc.)
+        uses: rlespinasse/github-slug-action@v3.x
+
       - name: Build and push
         id: docker_build_zsh_versions
         uses: docker/build-push-action@v2
@@ -51,7 +54,7 @@ jobs:
           build-args: |
             VERSION=latest
             ZINIT_ZSH_VERSION=${{ matrix.zsh_version }}-tcsetpgrp
-          tags: ghcr.io/${{ github.repository }}:zsh-${{ matrix.zsh_version }}
+          tags: ghcr.io/${{ github.repository }}:zsh-${{ matrix.zsh_version }},ghcr.io/${{ github.repository }}:${{ env.GITHUB_SHA_SHORT }}-zsh-${{ matrix.zsh_version }}
           platforms: linux/amd64,linux/arm64/v8
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -79,6 +82,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Grab git slugs (short commit id, branch etc.)
+        uses: rlespinasse/github-slug-action@v3.x
+
       - name: Build and push
         id: docker_build_latest
         uses: docker/build-push-action@v2
@@ -87,7 +93,7 @@ jobs:
           file: ./ci/docker/Dockerfile.alpine
           build-args: |
             VERSION=latest
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: ghcr.io/${{ github.repository }}:latest,ghcr.io/${{ github.repository }}:${{ env.GITHUB_SHA_SHORT }}
           platforms: linux/amd64,linux/arm64/v8
           cache-from: type=gha
           cache-to: type=gha,mode=max
