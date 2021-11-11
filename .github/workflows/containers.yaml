@@ -2,7 +2,7 @@ name: Build containers
 on: [push]
 
 jobs:
-  tests:
+  build-containers:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
