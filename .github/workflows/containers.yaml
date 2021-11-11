@@ -1,5 +1,5 @@
 name: Build containers
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build-containers-with-zsh:
