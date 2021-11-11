@@ -9,6 +9,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 11-11-2021
+  - The annexes repos have been renamed to improve discoverability. They used to
+be called `z-a-${name}` and have been renamed to `zinit-annex-${name}`. You
+don't *need* to update your configs right away since GitHub redirects to the
+new URLs.
+
 * 06-11-2021
   - 🚧 zinit has a new home: https://github.com/zdharma-continuum/zinit
     - The migration from @zdharma, @Zsh-Packages and @zinit-zsh is still in
