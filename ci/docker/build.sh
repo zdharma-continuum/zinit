@@ -5,6 +5,7 @@ build() {
 
   local target="${1:-alpine}"
   local version="${2:-latest}"
+  local zsh_version="${3}"
   local tag
 
   case "$target" in
@@ -22,12 +23,19 @@ build() {
       ;;
   esac
 
+  local image_name="zinit:${tag}"
+
+  if [[ -n "$CI" ]]
+  then
+    image_name="ghcr.io/${GITHUB_REPOSITORY}:${tag}"
+  fi
+
   docker build \
     --no-cache \
     --build-arg "VERSION=${version}" \
-    --build-arg "ZINIT_ZSH_VERSION=5.4.2-tcsetpgrp" \
+    --build-arg "ZINIT_ZSH_VERSION=${zsh_version}" \
     --file "$dockerfile" \
-    --tag "zinit/zinit:${tag}" "$(realpath ../../)"
+    --tag "$image_name" "$(realpath ../../)"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
