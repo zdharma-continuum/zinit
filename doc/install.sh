@@ -144,9 +144,9 @@ For more information see:
 - [38;5;226mThe zdharma-continuum[0m GitHub organization, which hosts zinit and all related components
     - https://github.com/zdharma-continuum
 - [38;5;226mREADME[0m section on the ice-modifiers:
-    - https://github.com/zdharma-continuum/zinit#ice-modifiers,
-- [38;5;226mintro[0m to Zinit at the Wiki:
+    - https://github.com/zdharma-continuum/zinit#ice-modifiers
+- [38;5;226mAn introduction[0m to Zinit on the wiki:
     - https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
-- [38;5;226mFor-Syntax[0m article on the Wiki; it is less directly related to the ices, however, it explains how to use them conveniently:
+- [38;5;226mFor-Syntax[0m article on the wiki; it is less directly related to the ices but it explains how to use them conveniently:
     - https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
 EOF
