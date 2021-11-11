@@ -97,7 +97,7 @@
 
     .
 
-  - A **new annex** [**Unscope**](https://github.com/zdharma-continuum/z-a-unscope) :)
+  - A **new annex** [**Unscope**](https://github.com/zdharma-continuum/zinit-annex-unscope) :)
     It's goal is: to allow the usage of the unscoped — i.e.: given without any
     GitHub user name — plugin IDs. Basically it allows to specify, e.g.: **zinit load
     _zsh-syntax-highlighting_** instead of **zinit load
@@ -119,8 +119,8 @@
     nicer snippet IDs in the installation and update messages, **f)** the
     annexes can be now loaded in any order without influencing their operation
     in any way (there have been some issues with
-    [Patch-Dl](https://github.com/zdharma-continuum/z-a-patch-dl) and
-    [As-Monitor](https://github.com/zdharma-continuum/z-a-as-monitor) annexes), **g)**
+    [Patch-Dl](https://github.com/zdharma-continuum/zinit-annex-patch-dl) and
+    [As-Monitor](https://github.com/zdharma-continuum/zinit-annex-as-monitor) annexes), **g)**
     `compile''` can now obtain multiple patterns separated via semicolon (`;`).
 
 - 25-06-2020
@@ -142,7 +142,7 @@
 
 - 20-06-2020
 
-  - The [Bin-Gem-Node](https://github.com/zdharma-continuum/z-a-bin-gem-node) annex now
+  - The [Bin-Gem-Node](https://github.com/zdharma-continuum/zinit-annex-bin-gem-node) annex now
     has an explicit Cygwin support — it creates additional, **extra shim files**
     — Windows batch scripts that allow to run the shielded applications from
     e.g.: Windows run dialog — if the `~/.zinit/polaris/bin` directory is being
@@ -217,8 +217,8 @@
     directory structure: `Pulumi/bin/{pulumi,pulumi2}`, then after `ziextract --move2 --auto` there will be the two files moved to the top level dir:
     `./{pulumi,pulumi2}`. To obtain the same effect using the `extract''` ice,
     pass two exclamation marks, i.e.: `extract'!!'`. A real-world example — it
-    uses [z-a-as-monitor](https://github.com/zdharma-continuum/z-a-as-monitor) and
-    [z-a-bin-gem-node](https://github.com/zdharma-continuum/z-a-bin-gem-node) annexes to
+    uses [zinit-annex-as-monitor](https://github.com/zdharma-continuum/zinit-annex-as-monitor) and
+    [zinit-annex-bin-gem-node](https://github.com/zdharma-continuum/zinit-annex-bin-gem-node) annexes to
     download a Zip package that has the files inside two-level nested directory
     tree:
 
@@ -253,10 +253,10 @@
   - A new feature — ability to substitute `stringA` → `stringB` in plugin source
     body before executing by `subst'A -> B'`. Works also for any nested `source`
     commands. Example — renaming the `dl''` ice into a `dload''` ice in the
-    [Patch-Dl](https://github.com/zdharma-continuum/z-a-patch-dl) annex:
+    [Patch-Dl](https://github.com/zdharma-continuum/zinit-annex-patch-dl) annex:
 
     ```zsh
-    zinit subst"dl'' -> dload''" for zdharma-continuum/z-a-patch-dl
+    zinit subst"dl'' -> dload''" for zdharma-continuum/zinit-annex-patch-dl
     ```
 
   - A new ice `autoload''` which invokes `autoload -Uz …` on the given
@@ -518,7 +518,7 @@
     ```
 
     The binaries will be exposed without altering the PATH via shims
-    ([Bin-Gem-Node](https://github.com/zdharma-continuum/z-a-bin-gem-node) annex is needed).
+    ([Bin-Gem-Node](https://github.com/zdharma-continuum/zinit-annex-bin-gem-node) annex is needed).
     Shims are correctly removed when deleting a plugin with `zinit delete …`.
 
 - 11-12-2019
@@ -555,7 +555,7 @@
     ```
 
     i.e.: precede the plugin name with `@`. Note: `sbin''` is an ice added by the
-    [z-a-bin-gem-node](https://github.com/zinit/z-a-bin-gem-node) annex, it provides
+    [zinit-annex-bin-gem-node](https://github.com/zinit/zinit-annex-bin-gem-node) annex, it provides
     the command to the command line without altering `$PATH`.
 
     See the [Zinit Wiki](https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/) for more
@@ -687,18 +687,18 @@
   - Three new Zinit annexes (i.e.
     [extensions](https://zdharma-continuum.github.io/zinit/wiki/Annexes/)):
 
-    - [z-a-man](https://github.com/zinit/z-a-man)
+    - [zinit-annex-man](https://github.com/zinit/zinit-annex-man)
 
       Generates man pages and code-documentation man pages from plugin's README.md
       and source files (the code documentation is obtained from
       [Zshelldoc](https://github.com/zdharma-continuum/zshelldoc)).
 
-    - [z-a-test](https://github.com/zinit/z-a-test)
+    - [zinit-annex-test](https://github.com/zinit/zinit-annex-test)
 
       Runs tests (if detected `test` target in a `Makefile` or any `*.zunit` files)
       on plugin installation and non-empty update.
 
-    - [z-a-patch-dl](https://github.com/zinit/z-a-patch-dl)
+    - [zinit-annex-patch-dl](https://github.com/zinit/zinit-annex-patch-dl)
 
       Allows easy download and applying of patches, to e.g. aid building a binary
       program equipped in the plugin.
@@ -756,7 +756,7 @@ install everything from GitHub and other sites. Its characteristics are:
 
 1. Also, specialized Zinit extensions — called **annexes** — allow to extend the
    plugin manager with new commands, URL-preprocessors (used by e.g.:
-   [z-a-as-monitor](https://github.com/zdharma-continuum/z-a-as-monitor) annex),
+   [zinit-annex-as-monitor](https://github.com/zdharma-continuum/zinit-annex-as-monitor) annex),
    post-install and post-update hooks and much more. See the
    [zdharma-continuum](https://github.com/zdharma-continuum) organization for a growing,
    complete list of available Zinit extensions and refer to the [Wiki
@@ -1749,7 +1749,7 @@ Zinit has many benefits:
 
 Below is a configuration that adds multiple git extensions, loaded in Turbo mode,
 1 second after prompt, with use of the
-[Bin-Gem-Node](https://github.com/zdharma-continuum/z-a-bin-gem-node) annex:
+[Bin-Gem-Node](https://github.com/zdharma-continuum/zinit-annex-bin-gem-node) annex:
 
 ```zsh
 zinit as"null" wait"1" lucid for \

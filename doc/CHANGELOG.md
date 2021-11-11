@@ -29,7 +29,7 @@ startup. Please note that these directories will not necessarily be part of your
 
 * 19-01-2020
   - The name has been changed to **Zinit** based on the results of the
-    [poll](https://github.com/zdharma-continuum/zinit/issues/235).
+    [poll](https://github.com/zdharma/zinit/issues/235).
   - In general, you don't have to do anything after the name change.
   - Only a run of `zinit update --all` might be necessary.
   - You might also want to rename your `zplugin` calls in `zshrc` to `zinit`.
@@ -40,7 +40,7 @@ startup. Please note that these directories will not necessarily be part of your
   - There's a new function, `zpextract`, which unpacks the given file. It supports many
     formats (notably also `dmg` images) – if there's a format that's unsupported please
     don't hesitate to [make a
-    request](https://github.com/zdharma-continuum/zinit/issues/new?template=feature_request.md)
+    request](https://github.com/zdharma/zinit/issues/new?template=feature_request.md)
     for it to be added. A few facts:
     - the function is available only at the time of the plugin/snippet installation,
     - it's to be used within `atclone` and `atpull` ices,
@@ -72,7 +72,7 @@ startup. Please note that these directories will not necessarily be part of your
     ```
 
     The binaries will be exposed without altering the PATH via shims
-    ([Bin-Gem-Node](https://github.com/zinit-zsh/z-a-bin-gem-node) annex is needed).
+    ([Bin-Gem-Node](https://github.com/zinit-zsh/zinit-annex-bin-gem-node) annex is needed).
     Shims are correctly removed when deleting a plugin with `zinit delete …`.
 
 * 11-12-2019
@@ -106,7 +106,7 @@ startup. Please note that these directories will not necessarily be part of your
     ```
 
     i.e.: precede the plugin name with `@`. Note: `sbin''` is an ice added by the
-    [z-a-bin-gem-node](https://github.com/zinit/z-a-bin-gem-node) annex, it provides
+    [zinit-annex-bin-gem-node](https://github.com/zinit/zinit-annex-bin-gem-node) annex, it provides
     the command to the command line without altering `$PATH`.
 
     See the [Zinit Wiki](https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/) for more
@@ -226,18 +226,18 @@ startup. Please note that these directories will not necessarily be part of your
   - Three new Zplugin annexes (i.e.
     [extensions](https://zdharma-continuum.github.io/zplugin/wiki/Annexes/)):
 
-      - [z-a-man](https://github.com/zplugin/z-a-man)
+      - [zinit-annex-man](https://github.com/zplugin/zinit-annex-man)
 
         Generates man pages and code-documentation man pages from plugin's README.md
         and source files (the code documentation is obtained from
         [Zshelldoc](https://github.com/zdharma/zshelldoc)).
 
-      - [z-a-test](https://github.com/zplugin/z-a-test)
+      - [zinit-annex-test](https://github.com/zplugin/zinit-annex-test)
 
         Runs tests (if detected `test' target in a `Makefile` or any `*.zunit` files)
         on plugin installation and non-empty update.
 
-      - [z-a-patch-dl](https://github.com/zplugin/z-a-patch-dl)
+      - [zinit-annex-patch-dl](https://github.com/zplugin/zinit-annex-patch-dl)
 
         Allows easy download and applying of patches, to e.g. aid building a binary
         program equipped in the plugin.
@@ -437,7 +437,7 @@ startup. Please note that these directories will not necessarily be part of your
 
 * 05-02-2018
   - I work much on this README however multi-file Wiki might be better to read – it
-    [just has been created](https://github.com/zdharma-continuum/zinit/wiki).
+    [just has been created](https://github.com/zdharma/zplugin/wiki).
 
 * 16-01-2018
   - New ice-mod `compile` which takes pattern to select additional files to compile, e.g.
@@ -493,7 +493,7 @@ startup. Please note that these directories will not necessarily be part of your
     [full story](#automatic-loadunload-on-condition) and [Asciinema video](https://asciinema.org/a/150825).
 
 * 29-11-2017
-  - **[Turbo Mode](https://github.com/zdharma-continuum/zinit#turbo-mode-zsh--53)** – **39-50% or more faster Zsh startup!**
+  - **[Turbo Mode](https://github.com/zdharma/zplugin#turbo-mode-zsh--53)** – **39-50% or more faster Zsh startup!**
   - Subcommand `update` can update snippets, via given URL (up to this point snippets were updated via
     `zplugin update --all`).
   - Completion management is enabled for snippets (not only plugins).
