@@ -46,7 +46,7 @@ jobs:
       #     docker push ghcr.io/${GITHUB_REPOSITORY}
 
       - name: Build and push
-        id: docker_build
+        id: docker_build_zsh_versions
         uses: docker/build-push-action@v2
         with:
           push: true
@@ -60,7 +60,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push
-        id: docker_build
+        id: docker_build_latest
         uses: docker/build-push-action@v2
         with:
           push: true
