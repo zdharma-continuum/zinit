@@ -2,7 +2,7 @@ name: Build containers
 on: [push]
 
 jobs:
-  build-containers:
+  build-containers-with-zsh:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -59,6 +59,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  build-container-latest:
+    runs-on: ubuntu-latest
+    steps:
       - name: Build and push
         id: docker_build_latest
         uses: docker/build-push-action@v2
