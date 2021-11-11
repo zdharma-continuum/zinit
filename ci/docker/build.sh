@@ -23,6 +23,10 @@ build() {
       ;;
   esac
 
+  if [[ -n "$zsh_version" ]]
+  then
+    tag="zsh${zsh_version}-${tag}"
+  fi
   local image_name="zinit:${tag}"
 
   if [[ -n "$CI" ]]
