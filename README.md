@@ -59,7 +59,7 @@
   - [Disabling System-Wide `compinit` Call (Ubuntu)](#disabling-system-wide-compinit-call-ubuntu)
 - [Zinit Module](#zinit-module)
   - [Motivation](#motivation)
-  - [Installation](#installation)
+  - [Module Installation](#module-installation)
     - [Without Zinit](#without-zinit)
     - [With Zinit](#with-zinit)
   - [Measuring Time of `source`s](#measuring-time-of-sources)
@@ -1027,7 +1027,7 @@ command and investigating updates to the plugin – in Zinit case: by using `com
 ![image](https://raw.githubusercontent.com/zdharma-continuum/zinit/images/mod-auto-compile.png)
 
 
-## Installation
+## Module Installation
 
 ### Without Zinit
 
