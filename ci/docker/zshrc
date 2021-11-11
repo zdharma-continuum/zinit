@@ -1,6 +1,9 @@
 source /src/zinit.zsh
 source /utils.zsh
 
+typeset -U path
+path=("${ZPFX:-${HOME}/.zinit/polaris/bin}" $path)
+
 if [[ -n "$ZINIT_ZSH_VERSION" ]]
 then
   zinit::pack-zsh "$ZINIT_ZSH_VERSION"
