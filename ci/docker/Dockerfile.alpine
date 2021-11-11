@@ -11,7 +11,7 @@ ENV PUSERNAME=${PUSERNAME} PUID=${PUID} PGID=${PGID} \
 RUN apk --no-cache --virtual base add \
         zsh curl git libuser sudo && \
     apk --no-cache --virtual build-tools add \
-        build-base autoconf ncurses-dev bash
+        build-base autoconf ncurses-dev bash go
 
 RUN sed -ir 's#^(root:.+):/bin/ash#\1:/bin/zsh#' /etc/passwd && \
     adduser -D -s /bin/zsh -u "${PUID}" -h "/home/${PUSERNAME}" \
