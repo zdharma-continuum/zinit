@@ -555,7 +555,7 @@
     ```
 
     i.e.: precede the plugin name with `@`. Note: `sbin''` is an ice added by the
-    [zinit-annex-bin-gem-node](https://github.com/zinit/zinit-annex-bin-gem-node) annex, it provides
+    [zinit-annex-bin-gem-node](https://github.com/zdharma-continuum/zinit-annex-bin-gem-node) annex, it provides
     the command to the command line without altering `$PATH`.
 
     See the [Zinit Wiki](https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/) for more
@@ -651,7 +651,7 @@
 
   - There's a Vim plugin which extends syntax highlighting of zsh scripts with coloring
     of the Zinit commands. [Project
-    homepage](https://github.com/zinit/zinit-vim-syntax).
+    homepage](https://github.com/zdharma-continuum/zinit-vim-syntax).
 
 - 13-09-2019
 
@@ -687,18 +687,18 @@
   - Three new Zinit annexes (i.e.
     [extensions](https://zdharma-continuum.github.io/zinit/wiki/Annexes/)):
 
-    - [zinit-annex-man](https://github.com/zinit/zinit-annex-man)
+    - [zinit-annex-man](https://github.com/zdharma-continuum/zinit-annex-man)
 
       Generates man pages and code-documentation man pages from plugin's README.md
       and source files (the code documentation is obtained from
       [Zshelldoc](https://github.com/zdharma-continuum/zshelldoc)).
 
-    - [zinit-annex-test](https://github.com/zinit/zinit-annex-test)
+    - [zinit-annex-test](https://github.com/zdharma-continuum/zinit-annex-test)
 
       Runs tests (if detected `test` target in a `Makefile` or any `*.zunit` files)
       on plugin installation and non-empty update.
 
-    - [zinit-annex-patch-dl](https://github.com/zinit/zinit-annex-patch-dl)
+    - [zinit-annex-patch-dl](https://github.com/zdharma-continuum/zinit-annex-patch-dl)
 
       Allows easy download and applying of patches, to e.g. aid building a binary
       program equipped in the plugin.
