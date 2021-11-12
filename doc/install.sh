@@ -41,11 +41,11 @@ fi
 echo
 if test -d "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/.git"; then
     cd "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME"
-    echo "[1;34m▓▒░[0m Updating [1;36mDHARMA[1;33m Initiative Plugin Manager[0m at [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
+    echo "[1;34m▓▒░[0m Updating [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
     git pull origin master
 else
     cd "$ZINIT_HOME"
-    echo "[1;34m▓▒░[0m Installing [1;36mDHARMA[1;33m Initiative Plugin Manager[0m at [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
+    echo "[1;34m▓▒░[0m Installing [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
     { git clone --progress https://github.com/zdharma-continuum/zinit.git "$ZINIT_BIN_DIR_NAME" \
         2>&1 | { /tmp/zinit/git-process-output.zsh || cat; } } 2>/dev/null
     if [ -d "$ZINIT_BIN_DIR_NAME" ]; then
@@ -55,7 +55,7 @@ else
         echo "[1;34m▓▒░[0m Version: [1;32m$VERSION[0m"
     else
         echo
-        echo "[1;31m▓▒░[0m Something went wrong, couldn't install Zinit at [1;33m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
+        echo "[1;31m▓▒░[0m Something went wrong, couldn't install Zinit to [1;33m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
     fi
 fi
 
@@ -76,7 +76,7 @@ if [ $RCUPDATE -eq 1 ]; then
 
 ### Added by Zinit's installer
 if [[ ! -f $ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}DHARMA%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
     command mkdir -p "$ZINIT_HOME" && command chmod g-rwX "$ZINIT_HOME"
     command git clone https://github.com/zdharma-continuum/zinit "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME" && \\
         print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \\
@@ -141,12 +141,12 @@ command cat <<-EOF
 [38;5;219m▓▒░[0m run-atpull reset-prompt trackbinds aliases [38;5;111msh bash ksh csh[0m
 
 For more information see:
+- [38;5;226mThe zdharma-continuum[0m GitHub organization, which hosts zinit and all related components
+    - https://github.com/zdharma-continuum
 - [38;5;226mREADME[0m section on the ice-modifiers:
     - https://github.com/zdharma-continuum/zinit#ice-modifiers,
 - [38;5;226mintro[0m to Zinit at the Wiki:
-    - https://zdharma-continuum.org/zinit/wiki/INTRODUCTION/,
-- [38;5;226mzinit-zsh[0m GitHub account, which holds all the available Zinit annexes:
-    - https://github.com/zdharma-continuum/,
+    - https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
 - [38;5;226mFor-Syntax[0m article on the Wiki; it is less directly related to the ices, however, it explains how to use them conveniently:
-    - https://zdharma-continuum.org/zinit/wiki/For-Syntax/.
+    - https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
 EOF
