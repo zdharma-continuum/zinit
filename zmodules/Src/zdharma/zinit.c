@@ -1,7 +1,7 @@
 /* -*- Mode: C; c-default-style: "linux"; c-basic-offset: 4; indent-tabs-mode: nil -*-
  * vim:sw=4:sts=4:et
  *
- * zplugin.c – module for Zplugin plugin manager
+ * zinit.c – module for Zplugin plugin manager
  *
  * Copyright (c) 2017 Sebastian Gniazdowski
  * All rights reserved.
@@ -29,8 +29,8 @@
  * support, updates, enhancements, or modifications.
  */
 
-#include "zplugin.mdh"
-#include "zplugin.pro"
+#include "zinit.mdh"
+#include "zinit.pro"
 
 /* Source/bin_dot related data structures {{{ */
 static HandlerFunc originalDot = NULL, originalSource = NULL;
@@ -1383,7 +1383,7 @@ bin_zpmod( char *nam, char **argv, UNUSED( Options ops ), UNUSED( int func ) ) {
             zsfree( report );
         }
     } else {
-        zwarnnam( nam, "%d: Unknown zplugin-module command: `%s', see `-h'", __LINE__, subcmd );
+        zwarnnam( nam, "%d: Unknown zinit-module command: `%s', see `-h'", __LINE__, subcmd );
     }
 
     return ret;
@@ -1807,7 +1807,7 @@ finish_( UNUSED( Module m ) )
     bn = ( Builtin ) builtintab->getnode2( builtintab, "source" );
     bn->handlerfunc = originalSource;
 
-    printf( "zdharma/zplugin module unloaded\n" );
+    printf( "zdharma/zinit module unloaded\n" );
     fflush( stdout );
     return 0;
 }
