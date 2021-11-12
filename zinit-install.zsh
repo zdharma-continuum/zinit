@@ -455,7 +455,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                             unfunction :zinit-git-clone
                             return $retval
                     }
-                    :zinit-git-clone |& { command ${ZINIT[BIN_DIR]}/git-process-output.zsh || cat; }
+                    :zinit-git-clone |& { command ${ZINIT[BIN_DIR]}/share/git-process-output.zsh || cat; }
                     if (( pipestatus[1] == 141 )) {
                         :zinit-git-clone
                         integer retval=$?
