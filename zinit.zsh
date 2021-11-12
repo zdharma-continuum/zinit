@@ -1930,7 +1930,7 @@ builtin setopt noaliases
     else
         ch=-
     fi
-    
+
     REPLY=$ZINIT[col-$2]${(pl:COLUMNS-1::$ch:):-}$ZINIT[col-rst]
 }
 # ]]]
@@ -1985,10 +1985,10 @@ builtin setopt noaliases
         # Zakończenie aktywności kodu escape.
         append=$ZINIT[col-rst]
     fi
-    
+
     # Skonstruuj tekst.
     REPLY=$in_prepend${ZINIT[col-$2]:-$1}$influx$3$append
-    
+
     # Zamień nowe linie na znaki, które działają tak samo ale nie są
     # usuwane w podstawieniu $( … ) – vertical tab 0xB ↔ 13 w systemie
     # oktagonalnym połączone z powrotem karetki (015).
@@ -2006,7 +2006,7 @@ builtin setopt noaliases
 
     ZINIT[__last-formatter-code]=
     msg=${${(j: :)${@:#--}}//\%/%%}
-    
+
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
     msg=${${msg//(#b)(([\\]|(%F))([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\%\{\\]#))/\
@@ -2018,7 +2018,7 @@ $(.zinit-main-message-formatter "$match[6]" "$match[7]" "$match[8]"; \
  )${${ZINIT[__last-formatter-code]::=${${${match[7]:#(…|ndsh|mdsh|mmdsh|-…|lr)}:+\
 $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
-    
+
     # Przywróć domyślny kolor na końcu wiadomości.
     msg=$msg$ZINIT[col-rst]
     # Output the processed message:
@@ -2593,7 +2593,7 @@ env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#
                                             +zinit-message "{u-warn}Warning{b-warn}:{msg} Bad new-ices returned" \
                                                 "from the annex{ehi}:{rst} {annex}${___arr[3]}{msg}," \
                                                 "please file an issue report at:{url}" \
-                                    "https://github.com/zinit-zsh/${___arr[3]}/issues/new{msg}.{rst}"
+                                    "https://github.com/zdharma-continuum/${___arr[3]}/issues/new{msg}.{rst}"
                                             ___ices=(  ) ___retval+=7
                                         }
                             }

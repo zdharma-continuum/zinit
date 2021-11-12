@@ -146,7 +146,7 @@ For more information see:
 - [38;5;226mintro[0m to Zinit at the Wiki:
     - https://zdharma-continuum.org/zinit/wiki/INTRODUCTION/,
 - [38;5;226mzinit-zsh[0m GitHub account, which holds all the available Zinit annexes:
-    - https://github.com/zinit-zsh/,
+    - https://github.com/zdharma-continuum/,
 - [38;5;226mFor-Syntax[0m article on the Wiki; it is less directly related to the ices, however, it explains how to use them conveniently:
     - https://zdharma-continuum.org/zinit/wiki/For-Syntax/.
 EOF

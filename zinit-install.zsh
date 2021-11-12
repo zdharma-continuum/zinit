@@ -221,7 +221,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 +zinit-message '{error}requires the {apo}`{annex}'${namemap[$required]}'{apo}`' \
                     "{error}annex, which is currently not installed." \
                     "{nl}{nl}If you'd like to install it, you can visit its homepage:" \
-                    "{nl}– {url}https://github.com/zinit-zsh/zinit-annex-${(L)namemap[$required]}{rst}" \
+                    "{nl}– {url}https://github.com/zdharma-continuum/zinit-annex-${(L)namemap[$required]}{rst}" \
                     "{nl}for instructions."
                 (( ${#profiles[@]:#$profile} > 0 )) && \
                     +zinit-message "{nl}Other available profiles are:" \
@@ -249,7 +249,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         fi
     }
 
-    if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ]] {
+    if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
         +zinit-message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" \
             "{ice}dl''{rst} ice however there's currently no {annex}zinit-annex-patch-dl{rst}" \
             "annex loaded, which provides it."
@@ -258,7 +258,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             "The package should still work, as it doesn't indicate to" \
             "{u}{slight}require{rst} the annex."
         +zinit-message "{nl}You can download the" \
-            "annex from its homepage at {url}https://github.com/zinit-zsh/zinit-annex-patch-dl{rst}."
+            "annex from its homepage at {url}https://github.com/zdharma-continuum/zinit-annex-patch-dl{rst}."
     }
 
     [[ -n ${jsondata1[message]} ]] && \
