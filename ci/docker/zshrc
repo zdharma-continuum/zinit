@@ -4,6 +4,9 @@ source /src/zinit.zsh
 # load zinit utilities
 source /utils.zsh
 
+# Custom setup
+zinit::setup-keys
+
 # Add ZPFX/bin to PATH
 typeset -U path
 path=("${ZPFX:-${HOME}/.zinit/polaris}/bin" $path)
