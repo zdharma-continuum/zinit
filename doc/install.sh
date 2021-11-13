@@ -50,8 +50,13 @@ if test -d "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/.git"; then
 else
     cd "$ZINIT_HOME" || { echo "Failed to cd to $ZINIT_HOME" >&2; exit 1; }
     echo "[1;34m▓▒░[0m Installing [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-    { git clone --progress --branch "$ZINIT_BRANCH" https://github.com/zdharma-continuum/zinit.git "$ZINIT_BIN_DIR_NAME" \
-        2>&1 | { "${ZINIT_TMPDIR}/git-process-output.zsh" || cat; } } 2>/dev/null
+    {
+        git clone --progress --branch "$ZINIT_BRANCH" \
+            https://github.com/zdharma-continuum/zinit.git \
+            "$ZINIT_BIN_DIR_NAME" 2>&1 | {
+            "${ZINIT_TMPDIR}/git-process-output.zsh" || cat;
+        }
+    } 2>/dev/null
     if [ -d "$ZINIT_BIN_DIR_NAME" ]; then
         echo
         echo "[1;34m▓▒░[0m Zinit succesfully installed at [1;32m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m".
