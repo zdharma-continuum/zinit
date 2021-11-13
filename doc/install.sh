@@ -26,17 +26,21 @@ if ! command -v git >/dev/null 2>&1; then
 fi
 
 ZINIT_BRANCH="${ZINIT_BRANCH:-master}"
+ZINIT_TMPDIR="$(mktemp --directory)"
+if [ ! -d "$ZINIT_TMPDIR" ]; then
+    echo "Tempdir creation failed. This ain't good." >&2
+    exit 1
+fi
 
 # Get the download-progress bar tool
 GIT_PROCESS_SCRIPT_URL="https://raw.githubusercontent.com/zdharma-continuum/zinit/${ZINIT_BRANCH}/git-process-output.zsh"
-mkdir -p /tmp/zinit
-cd /tmp/zinit || { echo "Failed to cd to /tmp/zinit" >&2; exit 1; }
+trap 'rm -rvf "$ZINIT_TMPDIR"' EXIT INT
 if command -v curl >/dev/null 2>&1; then
-    curl -fsSLO "$GIT_PROCESS_SCRIPT_URL"
+    curl -fsSL -o "${ZINIT_TMPDIR}/git-process-output.zsh" "$GIT_PROCESS_SCRIPT_URL"
 elif command -v wget >/dev/null 2>&1; then
-    wget -q "$GIT_PROCESS_SCRIPT_URL"
+    wget -q -O "${ZINIT_TMPDIR}/git-process-output.zsh" "$GIT_PROCESS_SCRIPT_URL"
 fi
-chmod a+x /tmp/zinit/git-process-output.zsh 2>/dev/null
+chmod a+x "${ZINIT_TMPDIR}/git-process-output.zsh" 2>/dev/null
 
 echo
 if test -d "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/.git"; then
@@ -47,7 +51,7 @@ else
     cd "$ZINIT_HOME" || { echo "Failed to cd to $ZINIT_HOME" >&2; exit 1; }
     echo "[1;34m▓▒░[0m Installing [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
     { git clone --progress --branch "$ZINIT_BRANCH" https://github.com/zdharma-continuum/zinit.git "$ZINIT_BIN_DIR_NAME" \
-        2>&1 | { /tmp/zinit/git-process-output.zsh || cat; } } 2>/dev/null
+        2>&1 | { "${ZINIT_TMPDIR}/git-process-output.zsh" || cat; } } 2>/dev/null
     if [ -d "$ZINIT_BIN_DIR_NAME" ]; then
         echo
         echo "[1;34m▓▒░[0m Zinit succesfully installed at [1;32m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m".
