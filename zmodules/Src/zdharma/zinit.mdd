@@ -1,0 +1,7 @@
+name=zdharma/zinit
+link=dynamic
+load=no
+
+autofeatures=""
+
+objects="zinit.o"
