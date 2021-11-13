@@ -4,6 +4,10 @@ zinit::setup() {
   source /src/zinit.zsh
 }
 
+zinit::setup-keys() {
+  zinit light-mode snippet for OMZL::key-bindings.zsh
+}
+
 zinit::setup-annexes() {
   zinit light-mode for \
     zdharma-continuum/zinit-annex-as-monitor \
