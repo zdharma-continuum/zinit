@@ -1,161 +1,319 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
-#
-# Clone or pull
-#
+{ # Colors
+  COLOR_RESET='[0m'
+  COLOR_BLUE='[34m'
+  COLOR_BOLD_RED='[1;31m'
+  COLOR_BOLD_GREEN='[1;32m'
+  COLOR_BOLD_YELLOW='[1;33m'
+  COLOR_BOLD_BLUE='[1;34m'
+  COLOR_BOLD_MAGENTA='[1;35m'
+  COLOR_BOLD_CYAN='[1;36m'
+}
 
-ZINIT_HOME="${ZINIT_HOME:-$ZPLG_HOME}"
-if [ -z "$ZINIT_HOME" ]; then
-    ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit"
-fi
+echo_fancy() {
+  emoji="$1"
+  color="$2"
+  shift 2
 
-ZINIT_BIN_DIR_NAME="${ZINIT_BIN_DIR_NAME:-$ZPLG_BIN_DIR_NAME}"
-if [ -z "$ZINIT_BIN_DIR_NAME" ]; then
-    ZINIT_BIN_DIR_NAME="zinit.git"
-fi
+  msg=""
+  # prepend emoji, unless NO_EMOJI is set
+  if [ -z "$NO_EMOJI" ]; then
+    msg="$emoji"
+  fi
 
-if ! test -d "$ZINIT_HOME"; then
-    mkdir -p "$ZINIT_HOME"
-    chmod g-w "$ZINIT_HOME"
-    chmod o-w "$ZINIT_HOME"
-fi
+  # wrap every word in color (needed in case there are custom colors in
+  # the message itself), unless NO_COLOR is set
+  for str in "$@"
+  do
+    # FIXME: NO_COLOR only applies if there are no colors in the msg
+    if [ -z "$NO_COLOR" ]; then
+      msg="${msg}${color}"
+    fi
+    msg="${msg}${str}"
+  done
 
-if ! command -v git >/dev/null 2>&1; then
-    echo "[1;31m▓▒░[0m Something went wrong: [1;32mgit[0m is not available, cannot proceed."
+  # Actual output
+  echo "${msg}${COLOR_RESET}" >&2
+  # fake "local" vars
+  unset emoji color str msg
+}
+
+echo_info() {
+  echo_fancy "🔵" "${COLOR_BOLD_BLUE}" "INFO: ${*}"
+}
+
+echo_success() {
+  echo_fancy "✅" "${COLOR_BOLD_GREEN}" "SUCCESS: ${*}"
+}
+
+echo_warn() {
+  echo_fancy "🚧" "${COLOR_BOLD_YELLOW}" "WARNING: ${*}"
+}
+
+echo_error() {
+  echo_fancy "❌" "${COLOR_BOLD_RED}" "ERROR: ${*}"
+}
+
+check_dependencies() {
+  if ! command -v git >/dev/null 2>&1; then
+    echo_error "${COLOR_BOLD_GREEN}git${COLOR_RESET} is not installed"
     exit 1
-fi
+  fi
+}
 
-ZINIT_BRANCH="${ZINIT_BRANCH:-master}"
-ZINIT_TMPDIR="$(mktemp -d)" # use -d instead of --directory for macos (BSD) compatibility
-if [ ! -d "$ZINIT_TMPDIR" ]; then
-    echo "Tempdir creation failed. This ain't good." >&2
+show_environment() {
+  echo_info "About to setup zinit from $ZINIT_REPO" \
+            "(branch: $ZINIT_BRANCH - commit: ${ZINIT_COMMIT:-N/A})" \
+            "to ${ZINIT_INSTALL_DIR}"
+}
+
+create_zinit_home() {
+  if ! test -d "${ZINIT_HOME}"; then
+    mkdir -p "${ZINIT_HOME}"
+    chmod g-w "${ZINIT_HOME}"
+    chmod o-w "${ZINIT_HOME}"
+  fi
+}
+
+create_zinit_tmpdir() {
+  # use -d instead of --directory for macos (BSD) compatibility
+  ZINIT_TMPDIR="$(mktemp -d)"
+  if [ ! -d "$ZINIT_TMPDIR" ]; then
+    echo_error "Tempdir creation failed. This ain't good"
     exit 1
-fi
+  fi
+
+  trap 'rm -rvf "$ZINIT_TMPDIR"' EXIT INT
+}
 
 # Get the download-progress bar tool
-GIT_PROCESS_SCRIPT_URL="https://raw.githubusercontent.com/zdharma-continuum/zinit/${ZINIT_BRANCH}/git-process-output.zsh"
-trap 'rm -rvf "$ZINIT_TMPDIR"' EXIT INT
-if command -v curl >/dev/null 2>&1; then
-    curl -fsSL -o "${ZINIT_TMPDIR}/git-process-output.zsh" "$GIT_PROCESS_SCRIPT_URL"
-elif command -v wget >/dev/null 2>&1; then
-    wget -q -O "${ZINIT_TMPDIR}/git-process-output.zsh" "$GIT_PROCESS_SCRIPT_URL"
-fi
-chmod a+x "${ZINIT_TMPDIR}/git-process-output.zsh" 2>/dev/null
+download_git_output_processor() {
+  url="https://raw.githubusercontent.com/${ZINIT_REPO}/${ZINIT_COMMIT:-${ZINIT_BRANCH}}/git-process-output.zsh"
+  script_path="${ZINIT_TMPDIR}/git-process-output.zsh"
 
-echo
-if test -d "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/.git"; then
-    cd "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME" || { echo "Failed to cd to $ZINIT_HOME/$ZINIT_BIN_DIR_NAME" >&2; exit 1; }
-    echo "[1;34m▓▒░[0m Updating [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-    git pull origin "${ZINIT_BRANCH}"
-else
-    cd "$ZINIT_HOME" || { echo "Failed to cd to $ZINIT_HOME" >&2; exit 1; }
-    echo "[1;34m▓▒░[0m Installing [1;36mZDHARMA-CONTINUUM[1;33m Initiative Plugin Manager[0m to [1;35m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-    {
-        git clone --progress --branch "$ZINIT_BRANCH" \
-            https://github.com/zdharma-continuum/zinit.git \
-            "$ZINIT_BIN_DIR_NAME" 2>&1 | {
-            "${ZINIT_TMPDIR}/git-process-output.zsh" || cat;
-        }
-    } 2>/dev/null
-    if [ -d "$ZINIT_BIN_DIR_NAME" ]; then
-        echo
-        echo "[1;34m▓▒░[0m Zinit succesfully installed at [1;32m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m".
-        VERSION="$(command git -C "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME" describe --tags 2>/dev/null)"
-        echo "[1;34m▓▒░[0m Version: [1;32m$VERSION[0m"
-    else
-        echo
-        echo "[1;31m▓▒░[0m Something went wrong, couldn't install Zinit to [1;33m$ZINIT_HOME/$ZINIT_BIN_DIR_NAME[0m"
-    fi
-fi
+  echo_info "Fetching git-process-output.zsh from $url"
+  if command -v curl >/dev/null 2>&1; then
+    curl -fsSL -o "$script_path" "$url"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q -O "$script_path" "$url"
+  fi
 
-#
+  # shellcheck disable=2181
+  if [ "$?" -eq 0 ]
+  then
+    echo_success 'Download finished!'
+  else
+    echo_warn "Download failed."
+  fi
+
+  chmod a+x "$script_path" 2>/dev/null
+  unset url script_path
+}
+
+zinit_git_exec() {
+  command git -C "${ZINIT_INSTALL_DIR}" "$@"
+}
+
+zinit_checkout_ref() {
+  ref="${ZINIT_BRANCH}"
+  git_obj_type="branch"
+
+  if [ -n "$ZINIT_COMMIT" ]
+  then
+    ref="$ZINIT_COMMIT"
+    git_obj_type="commit"
+  fi
+
+  if zinit_git_exec checkout "$ref" >/dev/null 2>&1; then
+    echo_success "Checked out $git_obj_type $ref"
+  else
+    echo_error "Failed to check out $git_obj_type $ref"
+  fi
+
+  unset ref git_obj_type
+}
+
+zinit_current_version() {
+  zinit_git_exec describe --tags 2>/dev/null
+}
+
+zinit_update() {
+  cd "${ZINIT_INSTALL_DIR}" || {
+    echo_error "Failed to cd to ${ZINIT_INSTALL_DIR}"
+    exit 1
+  }
+
+  echo_info "Updating ${COLOR_BOLD_CYAN}zinit${COLOR_RESET} in" \
+            "in ${COLOR_BOLD_MAGENTA}${ZINIT_INSTALL_DIR}"
+  { # Clean up repo
+    zinit_git_exec clean -d -f -f
+    zinit_git_exec reset --hard HEAD
+  } >/dev/null 2>&1
+
+  # fetch our branch (to ensure the target commit exists locally)
+  zinit_git_exec fetch origin "$ZINIT_BRANCH"
+
+  zinit_checkout_ref
+  if zinit_git_exec pull origin "$ZINIT_BRANCH"; then
+    echo_success "Updated zinit to $(zinit_current_version)"
+  fi
+}
+
+zinit_install() {
+  cd "${ZINIT_HOME}" || {
+    echo_error "Failed to cd to ${ZINIT_HOME}"
+    exit 1
+  }
+
+  echo_info "Installing ${COLOR_BOLD_CYAN}zinit${COLOR_RESET} to " \
+            "${COLOR_BOLD_MAGENTA}${ZINIT_INSTALL_DIR}"
+  {
+    command git clone --progress --branch "$ZINIT_BRANCH" \
+      "https://github.com/${ZINIT_REPO}" \
+      "${ZINIT_REPO_DIR_NAME}" 2>&1 | {
+      "${ZINIT_TMPDIR}/git-process-output.zsh" || cat;
+    }
+  } 2>/dev/null
+
+  zinit_checkout_ref
+
+  if [ -d "${ZINIT_REPO_DIR_NAME}" ]; then
+    echo_success "Zinit succesfully installed to " \
+                 "${COLOR_BOLD_GREEN}${ZINIT_INSTALL_DIR}"
+    echo_info "Zinit Version: ${COLOR_BOLD_GREEN}$(zinit_current_version)"
+  else
+    echo_error "Failed to install Zinit to ${COLOR_BOLD_YELLOW}${ZINIT_INSTALL_DIR}"
+  fi
+}
+
 # Modify .zshrc
-#
-THE_ZDOTDIR="${ZDOTDIR:-$HOME}"
-RCUPDATE=1
-if grep -E '(zinit|zplugin)\.zsh' "$THE_ZDOTDIR/.zshrc" >/dev/null 2>&1; then
-    echo "[34m▓▒░[0m .zshrc already contains \`zinit …' commands – not making changes."
-    RCUPDATE=0
-fi
+edit_zshrc() {
+  rc_update=1
+  if grep -E '(zinit|zplugin)\.zsh' "${ZSHRC}" >/dev/null 2>&1; then
+    echo_warn "${ZSHRC} already contains zinit commands. Not making any changes."
+    rc_update=0
+  fi
 
-if [ $RCUPDATE -eq 1 ]; then
-    echo "[34m▓▒░[0m Updating $THE_ZDOTDIR/.zshrc (10 lines of code, at the bottom)"
-    ZINIT_HOME="$(echo "$ZINIT_HOME" | sed "s|$HOME|\$HOME|")"
-    command cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
+  if [ $rc_update -eq 1 ]; then
+    echo_info "Updating ${ZSHRC} (10 lines of code, at the bottom)"
+    zinit_home_escaped="$(echo "${ZINIT_HOME}" | sed "s|$HOME|\$HOME|")"
+    command cat <<-EOF >> "$ZSHRC"
 
 ### Added by Zinit's installer
-if [[ ! -f $ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-    command mkdir -p "$ZINIT_HOME" && command chmod g-rwX "$ZINIT_HOME"
-    command git clone https://github.com/zdharma-continuum/zinit "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME" && \\
+if [[ ! -f ${zinit_home_escaped}/${ZINIT_REPO_DIR_NAME}/zinit.zsh ]]; then
+    print -P "%F{33}▓▒░ %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}${ZINIT_REPO}%F{220})…%f"
+    command mkdir -p "${zinit_home_escaped}" && command chmod g-rwX "${zinit_home_escaped}"
+    command git clone https://github.com/${ZINIT_REPO} "${zinit_home_escaped}/${ZINIT_REPO_DIR_NAME}" && \\
         print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \\
         print -P "%F{160}▓▒░ The clone has failed.%f%b"
 fi
 
-source "$ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh"
+source "${zinit_home_escaped}/${ZINIT_REPO_DIR_NAME}/zinit.zsh"
 autoload -Uz _zinit
 (( \${+_comps} )) && _comps[zinit]=_zinit
 EOF
-    file="$(mktemp)"
-    command cat <<-EOF >>"$file"
+  fi
+
+  unset rc_update zinit_home_escaped
+}
+
+query_for_annexes() {
+  zshrc_annex_file="$(mktemp)"
+  command cat <<-EOF >>"$zshrc_annex_file"
 
 # Load a few important annexes, without Turbo
 # (this is currently required for annexes)
 zinit light-mode for \\
-    zdharma-continuum/zinit-annex-rust \\
     zdharma-continuum/zinit-annex-as-monitor \\
+    zdharma-continuum/zinit-annex-bin-gem-node \\
     zdharma-continuum/zinit-annex-patch-dl \\
-    zdharma-continuum/zinit-annex-bin-gem-node
+    zdharma-continuum/zinit-annex-rust
 
 EOF
-echo
-echo "[38;5;219m▓▒░[0m Would you like to add 4 useful plugins" \
-    "- the most useful annexes (Zinit extensions that add new" \
-    "functions-features to the plugin manager) to the zshrc as well?" \
-    "It will be the following snippet:"
-    command cat "$file"
-    printf "[38;5;219m▓▒░[0m Enter y/n and press Return: "
-    read -r input
-    if [ "$input" = y ] || [ "$input" = Y ]; then
-        command cat "$file" >> "$THE_ZDOTDIR"/.zshrc
-        echo
-        echo "[34m▓▒░[0m Done."
-        echo
-    else
-        echo
-        echo "[34m▓▒░[0m Done (skipped the annexes chunk)."
-        echo
-    fi
+  # Ask user if we should add the annexes to his zshrc
+  # If NO_INPUT is set, but NO_ANNEXES is the annexes bit gets appended to the
+  # config (ie. default to yes if NO_INPUT, unless NO_ANNEXES)
+  reply=n
+  if [ -n "$NO_INPUT" ]
+  then
+    [ -z "$NO_ANNEXES" ] && reply=y
+  else
+    echo "[38;5;219m▓▒░${COLOR_RESET} Would you like to add 4 useful plugins" \
+         "- the most useful annexes (Zinit extensions that add new" \
+         "functions-features to the plugin manager) to the zshrc as well?" \
+         "It will be the following snippet:"
+    command cat "$zshrc_annex_file"
+    printf "[38;5;219m▓▒░${COLOR_RESET} Enter y/n and press Return: "
+    read -r reply
+  fi
 
-    command cat <<-EOF >> "$THE_ZDOTDIR/.zshrc"
+  if [ "$reply" = y ] || [ "$reply" = Y ]; then
+    command cat "$zshrc_annex_file" >> "$ZSHRC"
+    echo_success 'Done!'
+  else
+    echo_warning "Skipped the annexes."
+  fi
+
+  command cat <<-EOF >> "$ZSHRC"
 ### End of Zinit's installer chunk
 EOF
-fi
+  unset reply zshrc_annex_file
+}
 
-command cat <<-EOF
 
-[34m▓▒░[0m A quick intro to Zinit: below are all the available Zinit
-[34m▓▒░[0m ice-modifiers, grouped by their role by different colors):
-[34m▓▒░[0m
-[38;5;219m▓▒░[0m id-as'' as'' from'' [38;5;111mwait'' trigger-load'' load'' unload''
-[38;5;219m▓▒░[0m [38;5;51mpick'' src'' multisrc'' [38;5;172mpack'' param'' [0mextract'' [38;5;220matclone''
-[38;5;219m▓▒░[0m [38;5;220matpull'' atload'' atinit'' make'' mv'' cp'' reset''
-[38;5;219m▓▒░[0m [38;5;220mcountdown'' [38;5;160mcompile'' nocompile'' [0mnocd'' [38;5;177mif'' has''
-[38;5;219m▓▒░[0m [38;5;178mcloneopts'' depth'' proto'' [38;5;82mon-update-of'' subscribe''
-[38;5;219m▓▒░[0m bpick'' cloneonly'' service'' notify'' wrap-track''
-[38;5;219m▓▒░[0m bindmap'' atdelete'' ver''
+display_tutorial() {
+  command cat <<-EOF
 
-[34m▓▒░[0m No-value (flag-only) ices:
-[38;5;219m▓▒░[0m [38;5;220msvn git [38;5;82msilent lucid [0mlight-mode is-snippet blockf nocompletions
-[38;5;219m▓▒░[0m run-atpull reset-prompt trackbinds aliases [38;5;111msh bash ksh csh[0m
+${COLOR_BLUE}▓▒░${COLOR_RESET} A quick intro to Zinit: below are all the available Zinit
+${COLOR_BLUE}▓▒░${COLOR_RESET} ice-modifiers, grouped by their role by different colors):
+${COLOR_BLUE}▓▒░${COLOR_RESET}
+[38;5;219m▓▒░${COLOR_RESET} id-as'' as'' from'' [38;5;111mwait'' trigger-load'' load'' unload''
+[38;5;219m▓▒░${COLOR_RESET} [38;5;51mpick'' src'' multisrc'' [38;5;172mpack'' param'' ${COLOR_RESET}extract'' [38;5;220matclone''
+[38;5;219m▓▒░${COLOR_RESET} [38;5;220matpull'' atload'' atinit'' make'' mv'' cp'' reset''
+[38;5;219m▓▒░${COLOR_RESET} [38;5;220mcountdown'' [38;5;160mcompile'' nocompile'' ${COLOR_RESET}nocd'' [38;5;177mif'' has''
+[38;5;219m▓▒░${COLOR_RESET} [38;5;178mcloneopts'' depth'' proto'' [38;5;82mon-update-of'' subscribe''
+[38;5;219m▓▒░${COLOR_RESET} bpick'' cloneonly'' service'' notify'' wrap-track''
+[38;5;219m▓▒░${COLOR_RESET} bindmap'' atdelete'' ver''
+
+${COLOR_BLUE}▓▒░${COLOR_RESET} No-value (flag-only) ices:
+[38;5;219m▓▒░${COLOR_RESET} [38;5;220msvn git [38;5;82msilent lucid ${COLOR_RESET}light-mode is-snippet blockf nocompletions
+[38;5;219m▓▒░${COLOR_RESET} run-atpull reset-prompt trackbinds aliases [38;5;111msh bash ksh csh${COLOR_RESET}
 
 For more information see:
-- [38;5;226mThe zdharma-continuum[0m GitHub organization, which hosts zinit and all related components
+- [38;5;226mThe zdharma-continuum${COLOR_RESET} GitHub organization, which hosts zinit and all related components
     - https://github.com/zdharma-continuum
-- [38;5;226mREADME[0m section on the ice-modifiers:
-    - https://github.com/zdharma-continuum/zinit#ice-modifiers
-- [38;5;226mAn introduction[0m to Zinit on the wiki:
+- [38;5;226mREADME${COLOR_RESET} section on the ice-modifiers:
+    - https://github.com/${ZINIT_REPO}#ice-modifiers
+- [38;5;226mAn introduction${COLOR_RESET} to Zinit on the wiki:
     - https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
-- [38;5;226mFor-Syntax[0m article on the wiki; it is less directly related to the ices but it explains how to use them conveniently:
+- [38;5;226mFor-Syntax${COLOR_RESET} article on the wiki; it is less directly related to the ices but it explains how to use them conveniently:
     - https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
 EOF
+}
+
+ZINIT_REPO="${ZINIT_REPO:-zdharma-continuum/zinit}"
+ZINIT_BRANCH="${ZINIT_BRANCH:-master}"
+ZINIT_COMMIT="${ZINIT_COMMIT:-}"  # no default value
+ZINIT_HOME="${ZINIT_HOME:-${XDG_DATA_HOME:-${HOME}/.local/share}/zinit}"
+ZINIT_REPO_DIR_NAME="${ZINIT_REPO_DIR_NAME:-zinit.git}"
+ZINIT_INSTALL_DIR=${ZINIT_INSTALL_DIR:-${ZINIT_HOME}/${ZINIT_REPO_DIR_NAME}}
+ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
+
+show_environment
+check_dependencies
+create_zinit_home
+create_zinit_tmpdir
+download_git_output_processor
+
+if [ -d "${ZINIT_INSTALL_DIR}/.git" ]; then
+  zinit_update
+else
+  zinit_install
+fi
+
+edit_zshrc
+query_for_annexes
+display_tutorial
+
+# vim: set ft=sh et ts=2 sw=2 :
