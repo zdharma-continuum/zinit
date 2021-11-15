@@ -328,8 +328,9 @@ To manually install zinit clone the repo to e.g. \fB~/.local/share/zinit/bin\fR:
 .P
 .RS 2
 .nf
-mkdir ~/.local/share/zinit
-git clone https://github.com/zdharma-continuum/zinit.git ~/.local/share/zinit/bin
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+mkdir -p "$(dirname $ZINIT_HOME)"
+git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 .fi
 .RE
 .P
@@ -337,7 +338,8 @@ and source it from \fB.zshrc\fR (above compinit):
 .P
 .RS 2
 .nf
-source ~/.local/share/zinit/bin/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
 .fi
 .RE
 .P
@@ -751,7 +753,9 @@ If you want to ignore compdefs provided by some plugins or snippets, place their
 .P
 .RS 2
 .nf
-source ~/.local/share/zinit/bin/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
+
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit cdclear -q # <- forget completions provided by Git plugin
 
