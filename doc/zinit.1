@@ -321,15 +321,15 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/ma
 .fi
 .RE
 .P
-This will install zinit in \fB~/.zinit/bin\fR. \fB.zshrc\fR will be updated with three lines of code that will be added to the bottom. The lines will be sourcing \fBzinit.zsh\fR and setting up completion for command \fBzinit\fR. After installing and reloading the shell compile zinit with \fBzinit self-update\fR.
+This will install zinit in \fB~/.local/share/zinit/bin\fR. \fB.zshrc\fR will be updated with a few lines of code that will be added to the bottom. The lines will be sourcing \fBzinit.zsh\fR and setting up completion for command \fBzinit\fR. After installing and reloading the shell compile zinit with \fBzinit self-update\fR.
 .SS "Option 2 - Manual Installation"
 .P
-To manually install zinit clone the repo to e.g. \fB~/.zinit/bin\fR:
+To manually install zinit clone the repo to e.g. \fB~/.local/share/zinit/bin\fR:
 .P
 .RS 2
 .nf
-mkdir ~/.zinit
-git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin
+mkdir ~/.local/share/zinit
+git clone https://github.com/zdharma-continuum/zinit.git ~/.local/share/zinit/bin
 .fi
 .RE
 .P
@@ -337,7 +337,7 @@ and source it from \fB.zshrc\fR (above compinit):
 .P
 .RS 2
 .nf
-source ~/.zinit/bin/zinit.zsh
+source ~/.local/share/zinit/bin/zinit.zsh
 .fi
 .RE
 .P
@@ -715,7 +715,7 @@ compinit\fR. This should be done after loading of all plugins and before possibl
 .P
 .RS 2
 .nf
-source ~/.zinit/bin/zinit.zsh
+source ~/.local/share/zinit/bin/zinit.zsh
 
 zinit load "some/plugin"
 ...
@@ -751,7 +751,7 @@ If you want to ignore compdefs provided by some plugins or snippets, place their
 .P
 .RS 2
 .nf
-source ~/.zinit/bin/zinit.zsh
+source ~/.local/share/zinit/bin/zinit.zsh
 zinit snippet OMZ::plugins/git/git.plugin.zsh
 zinit cdclear -q # <- forget completions provided by Git plugin
 
@@ -832,8 +832,8 @@ tab(@);
 cb cb
 l l .
 Hash Field@Description
-ZPLGM\fBBIN_DIR\fR@ Where zinit code resides, e.g.: "~/.zinit/bin"
-ZPLGM\fBHOME_DIR\fR@ Where zinit should create all working directories, e.g.: "~/.zinit"
+ZPLGM\fBBIN_DIR\fR@ Where zinit code resides, e.g.: "~/.local/share/zinit/bin"
+ZPLGM\fBHOME_DIR\fR@ Where zinit should create all working directories, e.g.: "~/.local/share/zinit"
 ZPLGM\fBPLUGINS_DIR\fR@Override single working directory \[en] for plugins, e.g. "/opt/zsh/zinit/plugins"
 ZPLGM\fBCOMPLETIONS_DIR\fR@As above, but for completion files, e.g. "/opt/zsh/zinit/root_completions"
 ZPLGM\fBSNIPPETS_DIR\fR@ As above, but for snippets
@@ -842,7 +842,7 @@ ZPLGM\fBCOMPINIT_OPTS\fR@Options for \fBcompinit\fR call (i.e. done by \fBzpcomp
 ZPLGM\fBMUTE_WARNINGS\fR@If set to \fB1\fR, then mutes some of the zinit warnings, specifically the \fBplugin already registered\fR warning
 .TE
 .P
-There is also \fB$ZPFX\fR, set by default to \fB~/.zinit/polaris\fR \[en] a directory where software with \fBMakefile\fR, etc. can be pointed to, by e.g. \fBatclone'./configure --prefix=$ZPFX'\fR.
+There is also \fB$ZPFX\fR, set by default to \fB~/.local/share/zinit/polaris\fR \[en] a directory where software with \fBMakefile\fR, etc. can be pointed to, by e.g. \fBatclone'./configure --prefix=$ZPFX'\fR.
 .SS "Non-GitHub (Local) Plugins"
 .P
 Use \fBcreate\fR subcommand with user name \fB_local\fR (the default) to create plugin's skeleton in \fB$ZPLGM\[lB]PLUGINS_DIR\[rB]\fR. It will be not connected with GitHub repository (because of user name being \fB_local\fR). To enter the plugin's directory use \fBcd\fR command with just plugin's name (without \fB_local\fR, it's optional).
@@ -880,7 +880,7 @@ zinit light k4rthik/git-cal
 .fi
 .RE
 .P
-Target directory for installed files is \fB$ZPFX\fR (\fB~/.zinit/polaris\fR by default).
+Target directory for installed files is \fB$ZPFX\fR (\fB~/.local/share/zinit/polaris\fR by default).
 .SS "Preinstalling Plugins"
 .P
 If you create a Docker image that uses zinit, or want to install Turbo-loaded plugins before the shell starts interactively, you can invoke the zinit-scheduler function in such a way, that it:
