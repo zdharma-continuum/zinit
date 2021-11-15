@@ -60,15 +60,19 @@ echo_error() {
 
 check_dependencies() {
   zsh_min_version=5.5
-  if ! zsh -fc 'autoload is-at-least;
-               is-at-least '"$zsh_min_version"' $ZSH_VERSION'; then
-               echo_warning "ZSH version 5.5+ is recommended for zinit." \
+  if ! zsh -sfc \
+      'autoload is-at-least;
+       is-at-least $1 $ZSH_VERSION' "$zsh_min_version"; then
+    echo_warning "ZSH version 5.5+ is recommended for zinit." \
                  "It'll still work, but be warned."
   fi
+
   if ! command -v git >/dev/null 2>&1; then
     echo_error "${COLOR_BOLD_GREEN}git${COLOR_RESET} is not installed"
     exit 1
   fi
+
+  unset zsh_min_version
 }
 
 show_environment() {
