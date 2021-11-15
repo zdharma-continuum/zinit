@@ -102,12 +102,12 @@ download_git_output_processor() {
   # shellcheck disable=2181
   if [ "$?" -eq 0 ]
   then
+    chmod a+x "$script_path" 2>/dev/null
     echo_success 'Download finished!'
   else
     echo_warn "Download failed."
   fi
 
-  chmod a+x "$script_path" 2>/dev/null
   unset url script_path
 }
 
