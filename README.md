@@ -161,14 +161,16 @@ After installing and reloading the shell compile Zinit with `zinit self-update`.
 To manually install Zinit clone the repo to e.g. `~/.local/share/zinit/zinit.git`:
 
 ```sh
-mkdir -p ~/.local/share/zinit
-git clone https://github.com/zdharma-continuum/zinit.git ~/.local/share/zinit/zinit.git
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+mkdir -p "$(dirname $ZINIT_HOME)"
+git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 ```
 
-and source it from `.zshrc` (above [compinit](http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Initialization)):
+and source `zinit.zsh` from your `.zshrc` (above [compinit](http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Initialization)):
 
 ```sh
-source ~/.local/share/zinit/zinit.git/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
 ```
 
 If you place the `source` below `compinit`, then add those two lines after the `source`:
@@ -920,7 +922,8 @@ after `compinit` will be called (and the original `compdef` function will become
 available), to execute all detected `compdef` calls. To summarize:
 
 ```zsh
-source ~/.local/share/zinit/zinit.git/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
 
 zinit load "some/plugin"
 ...
@@ -963,7 +966,8 @@ helper functions (`zicompinit`,`zicdreplay` & `zicdclear` – see below for expl
 of the last one). To summarize:
 
 ```zsh
-source ~/.local/share/zinit/zinit.git/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share/zinit}"
+source "${ZINIT_HOME}/zinit.zsh"
 
 # Load using the for-syntax
 zinit wait lucid for \
@@ -982,7 +986,9 @@ before commands loading other plugins or snippets, and issue `zinit cdclear` (or
 `zicdclear`, designed to be used in hooks like `atload''`):
 
 ```zsh
-source ~/.local/share/zinit/zinit.git/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
+
 zinit snippet OMZP::git
 zinit cdclear -q # <- forget completions provided by Git plugin
 
