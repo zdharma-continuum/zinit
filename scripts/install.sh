@@ -292,13 +292,14 @@ For more information see:
 EOF
 }
 
+# Globals. Can be overridden.
 ZINIT_REPO="${ZINIT_REPO:-zdharma-continuum/zinit}"
 ZINIT_BRANCH="${ZINIT_BRANCH:-master}"
 ZINIT_COMMIT="${ZINIT_COMMIT:-}"  # no default value
 ZINIT_HOME="${ZINIT_HOME:-${XDG_DATA_HOME:-${HOME}/.local/share}/zinit}"
 ZINIT_REPO_DIR_NAME="${ZINIT_REPO_DIR_NAME:-zinit.git}"
 ZINIT_INSTALL_DIR=${ZINIT_INSTALL_DIR:-${ZINIT_HOME}/${ZINIT_REPO_DIR_NAME}}
-ZSHRC="${ZDOTDIR:-$HOME}/.zshrc"
+ZSHRC="${ZSHRC:-${ZDOTDIR:-${HOME}/.zshrc}}"
 
 show_environment
 check_dependencies
@@ -312,8 +313,15 @@ else
   zinit_install
 fi
 
-edit_zshrc
-query_for_annexes
-display_tutorial
+if [ -z "$NO_EDIT" ]
+then
+  edit_zshrc
+  query_for_annexes
+fi
+
+if [ -z "$NO_TUTORIAL" ]
+then
+  display_tutorial
+fi
 
 # vim: set ft=sh et ts=2 sw=2 :
