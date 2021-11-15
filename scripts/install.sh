@@ -241,7 +241,7 @@ zinit light-mode for \\
     zdharma-continuum/zinit-annex-rust
 
 EOF
-  # Ask user if we should add the annexes to his zshrc
+  # Ask user if we should add the annexes to their zshrc
   # If NO_INPUT is set, but NO_ANNEXES is the annexes bit gets appended to the
   # config (ie. default to yes if NO_INPUT, unless NO_ANNEXES)
   reply=n
