@@ -2,13 +2,23 @@
 
 { # Colors
   COLOR_RESET='[0m'
-  COLOR_BLUE='[34m'
   COLOR_BOLD_RED='[1;31m'
   COLOR_BOLD_GREEN='[1;32m'
   COLOR_BOLD_YELLOW='[1;33m'
   COLOR_BOLD_BLUE='[1;34m'
   COLOR_BOLD_MAGENTA='[1;35m'
   COLOR_BOLD_CYAN='[1;36m'
+
+  # The over-the-top fancy ones
+  COLOR_PALE_MAGENTA='[38;5;226m'
+  COLOR_PALE_BLUE='[38;5;111m'
+  COLOR_ORANGE='[38;5;172m'
+  COLOR_CYAN_ISH='[38;5;51m'
+  COLOR_PALE_YELLOW='[38;5;220m'
+  COLOR_PALE_MAGENTA='[38;5;177m'
+  COLOR_PALE_GREEN='[38;5;82m'
+  COLOR_PALE_BROWN='[38;5;178m'
+  COLOR_BOLD_WHITE_ON_BLACK='[1;37;40m'
 }
 
 echo_fancy() {
@@ -202,11 +212,11 @@ edit_zshrc() {
 
 ### Added by Zinit's installer
 if [[ ! -f ${zinit_home_escaped}/${ZINIT_REPO_DIR_NAME}/zinit.zsh ]]; then
-    print -P "%F{33}▓▒░ %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}${ZINIT_REPO}%F{220})…%f"
+    print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}${ZINIT_REPO}%F{220})…%f"
     command mkdir -p "${zinit_home_escaped}" && command chmod g-rwX "${zinit_home_escaped}"
     command git clone https://github.com/${ZINIT_REPO} "${zinit_home_escaped}/${ZINIT_REPO_DIR_NAME}" && \\
-        print -P "%F{33}▓▒░ %F{34}Installation successful.%f%b" || \\
-        print -P "%F{160}▓▒░ The clone has failed.%f%b"
+        print -P "%F{33} %F{34}Installation successful.%f%b" || \\
+        print -P "%F{160} The clone has failed.%f%b"
 fi
 
 source "${zinit_home_escaped}/${ZINIT_REPO_DIR_NAME}/zinit.zsh"
@@ -239,12 +249,13 @@ EOF
   then
     [ -z "$NO_ANNEXES" ] && reply=y
   else
-    echo "[38;5;219m▓▒░${COLOR_RESET} Would you like to add 4 useful plugins" \
+    echo "${COLOR_PALE_MAGENTA}${COLOR_RESET} Would you like to add 4 useful plugins" \
          "- the most useful annexes (Zinit extensions that add new" \
          "functions-features to the plugin manager) to the zshrc as well?" \
          "It will be the following snippet:"
     command cat "$zshrc_annex_file"
-    printf "[38;5;219m▓▒░${COLOR_RESET} Enter y/n and press Return: "
+    # shellcheck disable=2059
+    printf "${COLOR_PALE_MAGENTA}${COLOR_RESET} Enter y/n and press Return: "
     read -r reply
   fi
 
@@ -265,29 +276,29 @@ EOF
 display_tutorial() {
   command cat <<-EOF
 
-${COLOR_BLUE}▓▒░${COLOR_RESET} A quick intro to Zinit: below are all the available Zinit
-${COLOR_BLUE}▓▒░${COLOR_RESET} ice-modifiers, grouped by their role by different colors):
-${COLOR_BLUE}▓▒░${COLOR_RESET}
-[38;5;219m▓▒░${COLOR_RESET} id-as'' as'' from'' [38;5;111mwait'' trigger-load'' load'' unload''
-[38;5;219m▓▒░${COLOR_RESET} [38;5;51mpick'' src'' multisrc'' [38;5;172mpack'' param'' ${COLOR_RESET}extract'' [38;5;220matclone''
-[38;5;219m▓▒░${COLOR_RESET} [38;5;220matpull'' atload'' atinit'' make'' mv'' cp'' reset''
-[38;5;219m▓▒░${COLOR_RESET} [38;5;220mcountdown'' [38;5;160mcompile'' nocompile'' ${COLOR_RESET}nocd'' [38;5;177mif'' has''
-[38;5;219m▓▒░${COLOR_RESET} [38;5;178mcloneopts'' depth'' proto'' [38;5;82mon-update-of'' subscribe''
-[38;5;219m▓▒░${COLOR_RESET} bpick'' cloneonly'' service'' notify'' wrap-track''
-[38;5;219m▓▒░${COLOR_RESET} bindmap'' atdelete'' ver''
+A quick intro to Zinit: below are all the available Zinit
+ice-modifiers, grouped by role (color groups):
 
-${COLOR_BLUE}▓▒░${COLOR_RESET} No-value (flag-only) ices:
-[38;5;219m▓▒░${COLOR_RESET} [38;5;220msvn git [38;5;82msilent lucid ${COLOR_RESET}light-mode is-snippet blockf nocompletions
-[38;5;219m▓▒░${COLOR_RESET} run-atpull reset-prompt trackbinds aliases [38;5;111msh bash ksh csh${COLOR_RESET}
+id-as'' as'' from'' ${COLOR_PALE_BLUE}wait'' trigger-load'' load'' unload''
+${COLOR_CYAN_ISH}pick'' src'' multisrc'' ${COLOR_ORANGE}pack'' param'' ${COLOR_RESET}extract'' ${COLOR_PALE_YELLOW}atclone''
+${COLOR_PALE_YELLOW}atpull'' atload'' atinit'' make'' mv'' cp'' reset''
+${COLOR_PALE_YELLOW}countdown'' ${COLOR_PALE_RED}compile'' nocompile'' ${COLOR_RESET}nocd'' ${COLOR_PALE_MAGENTA}if'' has''
+${COLOR_PALE_BROWN}cloneopts'' depth'' proto'' ${COLOR_PALE_GREEN}on-update-of'' subscribe''
+bpick'' cloneonly'' service'' notify'' wrap-track''
+bindmap'' atdelete'' ver''
+
+Value-less (flag-only) ices:
+${COLOR_PALE_YELLOW}svn git ${COLOR_PALE_GREEN}silent lucid ${COLOR_RESET}light-mode is-snippet blockf nocompletions
+run-atpull reset-prompt trackbinds aliases ${COLOR_PALE_BLUE}sh bash ksh csh${COLOR_RESET}
 
 For more information see:
-- [38;5;226mThe zdharma-continuum${COLOR_RESET} GitHub organization, which hosts zinit and all related components
+- The ${COLOR_BOLD_WHITE_ON_BLACK}zdharma-continuum${COLOR_RESET} GitHub organization, which hosts zinit and all related components
     - https://github.com/zdharma-continuum
-- [38;5;226mREADME${COLOR_RESET} section on the ice-modifiers:
+- ${COLOR_BOLD_WHITE_ON_BLACK}README${COLOR_RESET} section on the ice-modifiers:
     - https://github.com/${ZINIT_REPO}#ice-modifiers
-- [38;5;226mAn introduction${COLOR_RESET} to Zinit on the wiki:
+- ${COLOR_BOLD_WHITE_ON_BLACK}An introduction${COLOR_RESET} to Zinit on the wiki:
     - https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
-- [38;5;226mFor-Syntax${COLOR_RESET} article on the wiki; it is less directly related to the ices but it explains how to use them conveniently:
+- ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki; it is less directly related to the ices but it explains how to use them conveniently:
     - https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
 EOF
 }
