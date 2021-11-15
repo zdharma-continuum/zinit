@@ -276,18 +276,19 @@ EOF
 display_tutorial() {
   command cat <<-EOF
 
-🌻 Here's a quick intro to Zinit. Below are all the available Zinit
-ice-modifiers, grouped by role (color):
+🌻 Welcome! Here's a quick intro to Zinit.
+
+Below are all the available Zinit ice-modifiers, grouped by role (color):
 
 id-as'' as'' from'' ${COLOR_PALE_BLUE}wait'' trigger-load'' load'' unload''
 ${COLOR_CYAN_ISH}pick'' src'' multisrc'' ${COLOR_ORANGE}pack'' param'' ${COLOR_RESET}extract'' ${COLOR_PALE_YELLOW}atclone''
-${COLOR_PALE_YELLOW}atpull'' atload'' atinit'' make'' mv'' cp'' reset''
-${COLOR_PALE_YELLOW}countdown'' ${COLOR_PALE_RED}compile'' nocompile'' ${COLOR_RESET}nocd'' ${COLOR_PALE_MAGENTA}if'' has''
+atpull'' atload'' atinit'' make'' mv'' cp'' reset''
+countdown'' ${COLOR_PALE_RED}compile'' nocompile'' ${COLOR_RESET}nocd'' ${COLOR_PALE_MAGENTA}if'' has''
 ${COLOR_PALE_BROWN}cloneopts'' depth'' proto'' ${COLOR_PALE_GREEN}on-update-of'' subscribe''
 bpick'' cloneonly'' service'' notify'' wrap-track''
 bindmap'' atdelete'' ver''
 
-Value-less (flag-only) ices:
+🏁 Value-less (flag-only) ices:
 ${COLOR_PALE_YELLOW}svn git ${COLOR_PALE_GREEN}silent lucid ${COLOR_RESET}light-mode is-snippet blockf nocompletions
 run-atpull reset-prompt trackbinds aliases ${COLOR_PALE_BLUE}sh bash ksh csh${COLOR_RESET}
 
@@ -296,10 +297,13 @@ For more information see:
     - 🔖 https://github.com/zdharma-continuum
 - ${COLOR_BOLD_WHITE_ON_BLACK}README${COLOR_RESET} section on the ice-modifiers:
     - 🧊 https://github.com/${ZINIT_REPO}#ice-modifiers
-- ${COLOR_BOLD_WHITE_ON_BLACK}An introduction${COLOR_RESET} to Zinit on the wiki:
+- An ${COLOR_BOLD_WHITE_ON_BLACK}introduction${COLOR_RESET} to Zinit on the wiki:
     - 📚 https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
-- ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki; it is less directly related to the ices but it explains how to use them conveniently:
+- The ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki, which hilights some best practises:
     - 📖 https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
+
+💁 Need help?
+- You can get in touch with us on Gitter: https://gitter.im/zdharma-continuum
 EOF
 }
 
