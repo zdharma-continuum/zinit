@@ -276,8 +276,8 @@ EOF
 display_tutorial() {
   command cat <<-EOF
 
-A quick intro to Zinit: below are all the available Zinit
-ice-modifiers, grouped by role (color groups):
+🌻 Here's a quick intro to Zinit. Below are all the available Zinit
+ice-modifiers, grouped by role (color):
 
 id-as'' as'' from'' ${COLOR_PALE_BLUE}wait'' trigger-load'' load'' unload''
 ${COLOR_CYAN_ISH}pick'' src'' multisrc'' ${COLOR_ORANGE}pack'' param'' ${COLOR_RESET}extract'' ${COLOR_PALE_YELLOW}atclone''
@@ -293,13 +293,13 @@ run-atpull reset-prompt trackbinds aliases ${COLOR_PALE_BLUE}sh bash ksh csh${CO
 
 For more information see:
 - The ${COLOR_BOLD_WHITE_ON_BLACK}zdharma-continuum${COLOR_RESET} GitHub organization, which hosts zinit and all related components
-    - https://github.com/zdharma-continuum
+    - 🔖 https://github.com/zdharma-continuum
 - ${COLOR_BOLD_WHITE_ON_BLACK}README${COLOR_RESET} section on the ice-modifiers:
-    - https://github.com/${ZINIT_REPO}#ice-modifiers
+    - 🧊 https://github.com/${ZINIT_REPO}#ice-modifiers
 - ${COLOR_BOLD_WHITE_ON_BLACK}An introduction${COLOR_RESET} to Zinit on the wiki:
-    - https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
+    - 📚 https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
 - ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki; it is less directly related to the ices but it explains how to use them conveniently:
-    - https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
+    - 📖 https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
 EOF
 }
 
