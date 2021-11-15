@@ -10,14 +10,7 @@
   COLOR_BOLD_CYAN='[1;36m'
 
   # The over-the-top fancy ones
-  COLOR_PALE_MAGENTA='[38;5;226m'
-  COLOR_PALE_BLUE='[38;5;111m'
-  COLOR_ORANGE='[38;5;172m'
-  COLOR_CYAN_ISH='[38;5;51m'
-  COLOR_PALE_YELLOW='[38;5;220m'
   COLOR_PALE_MAGENTA='[38;5;177m'
-  COLOR_PALE_GREEN='[38;5;82m'
-  COLOR_PALE_BROWN='[38;5;178m'
   COLOR_BOLD_WHITE_ON_BLACK='[1;37;40m'
 }
 
@@ -276,34 +269,20 @@ EOF
 display_tutorial() {
   command cat <<-EOF
 
-🌻 Welcome! Here's a quick intro to Zinit.
+🌻 ${COLOR_BOLD_WHITE_ON_BLACK}Welcome!${COLOR_RESET}
 
-Below are all the available Zinit ice-modifiers, grouped by role (color):
+Now to get started you can check out the following:
 
-id-as'' as'' from'' ${COLOR_PALE_BLUE}wait'' trigger-load'' load'' unload''
-${COLOR_CYAN_ISH}pick'' src'' multisrc'' ${COLOR_ORANGE}pack'' param'' ${COLOR_RESET}extract'' ${COLOR_PALE_YELLOW}atclone''
-atpull'' atload'' atinit'' make'' mv'' cp'' reset''
-countdown'' ${COLOR_PALE_RED}compile'' nocompile'' ${COLOR_RESET}nocd'' ${COLOR_PALE_MAGENTA}if'' has''
-${COLOR_PALE_BROWN}cloneopts'' depth'' proto'' ${COLOR_PALE_GREEN}on-update-of'' subscribe''
-bpick'' cloneonly'' service'' notify'' wrap-track''
-bindmap'' atdelete'' ver''
-
-🏁 Value-less (flag-only) ices:
-${COLOR_PALE_YELLOW}svn git ${COLOR_PALE_GREEN}silent lucid ${COLOR_RESET}light-mode is-snippet blockf nocompletions
-run-atpull reset-prompt trackbinds aliases ${COLOR_PALE_BLUE}sh bash ksh csh${COLOR_RESET}
-
-For more information see:
-- The ${COLOR_BOLD_WHITE_ON_BLACK}zdharma-continuum${COLOR_RESET} GitHub organization, which hosts zinit and all related components
-    - 🔖 https://github.com/zdharma-continuum
-- ${COLOR_BOLD_WHITE_ON_BLACK}README${COLOR_RESET} section on the ice-modifiers:
-    - 🧊 https://github.com/${ZINIT_REPO}#ice-modifiers
-- An ${COLOR_BOLD_WHITE_ON_BLACK}introduction${COLOR_RESET} to Zinit on the wiki:
-    - 📚 https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
+- The ${COLOR_BOLD_WHITE_ON_BLACK}README${COLOR_RESET} section on the ice-modifiers:
+    🧊 https://github.com/${ZINIT_REPO}#ice-modifiers
+- There's also an ${COLOR_BOLD_WHITE_ON_BLACK}introduction${COLOR_RESET} to Zinit on the wiki:
+    📚 https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
 - The ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki, which hilights some best practises:
-    - 📖 https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
+    📖 https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
 
 💁 Need help?
-- You can get in touch with us on Gitter: https://gitter.im/zdharma-continuum
+- 💬 Get in touch with us on Gitter: https://gitter.im/zdharma-continuum
+- 🔖 Or on GitHub: https://github.com/zdharma-continuum
 EOF
 }
 
