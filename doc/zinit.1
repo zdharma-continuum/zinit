@@ -120,7 +120,7 @@ New ice-mods \fBsh\fR,\fBbash\fR,\fBksh\fR,\fBcsh\fR that load plugins (and snip
 .RS 2
 .nf
 zinit ice bash pick"bash_it.sh" \[rs]
-        atinit"BASH_IT=${ZPLGM\[lB]PLUGINS_DIR\[rB]}/Bash-it---bash-it" \[rs]
+        atinit"BASH_IT=${ZINIT\[lB]PLUGINS_DIR\[rB]}/Bash-it---bash-it" \[rs]
         atclone"yes n | ./install.sh"
 zinit load Bash-it/bash-it
 .fi
@@ -172,7 +172,7 @@ The unloading of Zle widgets is now more smart \[en] it takes into account the c
 .RS 4
 .IP \(bu 4
 \fB--all\fR \[en] deletes all plugins and snippets (a purge, similar to \fBrm -rf
-${ZPLGM\[lB]PLUGINS_DIR\[rB]} ${ZPLGM\[lB]SNIPPETS_DIR\[rB]}\fR)
+${ZINIT\[lB]PLUGINS_DIR\[rB]} ${ZINIT\[lB]SNIPPETS_DIR\[rB]}\fR)
 .IP \(bu 4
 \fB--clean\fR \[en] deletes only plugins and snippets that are \fBcurrently not loaded\fR in the current session.
 .RE 0
@@ -321,10 +321,10 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/ma
 .fi
 .RE
 .P
-This will install zinit in \fB~/.local/share/zinit/bin\fR. \fB.zshrc\fR will be updated with a few lines of code that will be added to the bottom. The lines will be sourcing \fBzinit.zsh\fR and setting up completion for command \fBzinit\fR. After installing and reloading the shell compile zinit with \fBzinit self-update\fR.
+This will install zinit in \fB~/.local/share/zinit/zinit.git\fR. \fB.zshrc\fR will be updated with a few lines of code that will be added to the bottom. The lines will be sourcing \fBzinit.zsh\fR and setting up completion for command \fBzinit\fR. After installing and reloading the shell compile zinit with \fBzinit self-update\fR.
 .SS "Option 2 - Manual Installation"
 .P
-To manually install zinit clone the repo to e.g. \fB~/.local/share/zinit/bin\fR:
+To manually install zinit clone the repo to e.g. \fB~/.local/share/zinit/zinit.git\fR:
 .P
 .RS 2
 .nf
@@ -376,7 +376,7 @@ zinit load zdharma/history-search-multi-word
 zinit ice pick"async.zsh" src"pure.zsh"
 zinit light sindresorhus/pure
 
-# Binary release in archive, from GitHub-releases page. 
+# Binary release in archive, from GitHub-releases page.
 # After automatic unpacking it provides program "fzf".
 zinit ice from"gh-r" as"program"
 zinit load junegunn/fzf-bin
@@ -446,12 +446,12 @@ tab(@);
 cb cb
 c l .
 Modifier@Description
-\fBproto\fR@ Change protocol to \fBgit\fR,\fBftp\fR,\fBftps\fR,\fBssh\fR, \fBrsync\fR, etc. Default is \fBhttps\fR. \fBDoes not work with snippets.\fR 
+\fBproto\fR@ Change protocol to \fBgit\fR,\fBftp\fR,\fBftps\fR,\fBssh\fR, \fBrsync\fR, etc. Default is \fBhttps\fR. \fBDoes not work with snippets.\fR
 \fBfrom\fR@ Clone plugin from given site. Supported are \fBfrom"github"\fR (default), \fB..."github-rel"\fR, \fB..."gitlab"\fR, \fB..."bitbucket"\fR, \fB..."notabug"\fR (short names: \fBgh\fR, \fBgh-r\fR, \fBgl\fR, \fBbb\fR, \fBnb\fR). Can also be a full domain name (e.g. for GitHub enterprise). \fBDoes not work with snippets.\fR
 \fBver\fR@ Used with \fBfrom"gh-r"\fR (i.e. downloading a binary release, e.g. for use with \fBas"program"\fR) \[en] selects which version to download. Default is latest, can also be explicitly \fBver"latest"\fR. Works also with regular plugins, checkouts e.g. \fBver"abranch"\fR, i.e. a specific version. \fBDoes not work with snippets.\fR
-\fBbpick\fR@ Used to select which release from GitHub Releases to download, e.g. \fBzplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose\fR. \fBDoes not work with snippets.\fR 
+\fBbpick\fR@ Used to select which release from GitHub Releases to download, e.g. \fBzplg ice from"gh-r" as"program" bpick"*Darwin*"; zplg load docker/compose\fR. \fBDoes not work with snippets.\fR
 \fBdepth\fR@ Pass \fB--depth\fR to \fBgit\fR, i.e. limit how much of history to download. \fBDoes not work with snippets.\fR
-\fBcloneopts\fR@ Pass the contents of \fBcloneopts\fR to \fBgit clone\fR. Defaults to \fB--recursive\fR i.e. Change cloning options. \fBDoes not work with snippets.\fR 
+\fBcloneopts\fR@ Pass the contents of \fBcloneopts\fR to \fBgit clone\fR. Defaults to \fB--recursive\fR i.e. Change cloning options. \fBDoes not work with snippets.\fR
 \fBsvn\fR@ Use Subversion for downloading snippet. GitHub supports \fBSVN\fR protocol, this allows to clone subdirectories as snippets, e.g. \fBzinit ice svn; zinit snippet OMZ::plugins/git\fR. Other ice \fBpick\fR can be used to select file to source (default are: \fB*.plugin.zsh\fR, \fBinit.zsh\fR, \fB*.zsh-theme\fR). \fBDoes not work with plugins.\fR
 .TE
 .SS "Selection of Files (To Source, …)"
@@ -473,10 +473,10 @@ Modifier@Description
 \fB\fB\fBwait\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Example-wait-conditions\(ra\fR@ Postpone loading a plugin or snippet. For \fBwait'1'\fR, loading is done \fB1\fR second after prompt. For \fBwait'\[lB]\[lB] ... \[rB]\[rB]'\fR, \fBwait'(( ... ))'\fR, loading is done when given condition is meet. For \fBwait'!...'\fR, prompt is reset after load. Zsh can start 73% faster thanks to postponed loading. \fBFact:\fR when \fBwait\fR is used without value, it works as \fBwait'0'\fR.
 \fB\fB\fBload\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check which should cause plugin to load. It will load once, the condition can be still true, but will not trigger second load (unless plugin is unloaded earlier, see \fBunload\fR below). E.g.: \fBload'\[lB]\[lB] $PWD = */github* \[rB]\[rB]'\fR.
 \fB\fB\fBunload\fB\fR\fR \fI\(lahttps://zdharma-continuum.github.io/zinit/wiki/Multiple-prompts\(ra\fR@ A condition to check causing plugin to unload. It will unload once, then only if loaded again. E.g.: \fBunload'\[lB]\[lB] $PWD != */github* \[rB]\[rB]'\fR.
-\fBcloneonly\fR@ Don't load the plugin / snippet, only download it 
+\fBcloneonly\fR@ Don't load the plugin / snippet, only download it
 \fBif\fR@ Load plugin or snippet only when given condition is fulfilled, for example: \fBzinit ice if'\[lB]\[lB] -n "$commands\[lB]otool\[rB]" \[rB]\[rB]'; zinit load ...\fR.
 \fBhas\fR@ Load plugin or snippet only when given command is available (in $PATH), e.g. \fBzinit ice has'git' ...\fR
-\fBsubscribe\fR / \fBon-update-of\fR@ Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. \fBsubscribe'{~/files-*,/tmp/files-*}'\fR 
+\fBsubscribe\fR / \fBon-update-of\fR@ Postpone loading of a plugin or snippet until the given file(s) get updated, e.g. \fBsubscribe'{~/files-*,/tmp/files-*}'\fR
 .TE
 .SS "Plugin Output"
 .TS
@@ -717,7 +717,8 @@ compinit\fR. This should be done after loading of all plugins and before possibl
 .P
 .RS 2
 .nf
-source ~/.local/share/zinit/bin/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
 
 zinit load "some/plugin"
 ...
@@ -824,11 +825,11 @@ typeset -g ZPLG_MOD_DEBUG=1
 .SH "HINTS AND TIPS"
 .SS "Customizing Paths"
 .P
-Following variables can be set to custom values, before sourcing zinit. The previous global variables like \fB$ZPLG_HOME\fR have been removed to not pollute the namespace \[en] there's single \fB$ZPLGM\fR ("\fIzinit MAP\fR") hash instead of \fB8\fR string variables. Please update your dotfiles.
+Following variables can be set to custom values, before sourcing zinit. The previous global variables like \fB$ZPLG_HOME\fR have been removed to not pollute the namespace \[en] there's single \fB$ZINIT\fR ("\fIzinit MAP\fR") hash instead of \fB8\fR string variables. Please update your dotfiles.
 .P
 .RS 2
 .nf
-declare -A ZPLGM  # initial zinit's hash definition, if configuring before loading zinit, and then:
+declare -A ZINIT  # initial zinit's hash definition, if configuring before loading zinit, and then:
 .fi
 .RE
 .TS
@@ -836,20 +837,20 @@ tab(@);
 cb cb
 l l .
 Hash Field@Description
-ZPLGM\fBBIN_DIR\fR@ Where zinit code resides, e.g.: "~/.local/share/zinit/bin"
-ZPLGM\fBHOME_DIR\fR@ Where zinit should create all working directories, e.g.: "~/.local/share/zinit"
-ZPLGM\fBPLUGINS_DIR\fR@Override single working directory \[en] for plugins, e.g. "/opt/zsh/zinit/plugins"
-ZPLGM\fBCOMPLETIONS_DIR\fR@As above, but for completion files, e.g. "/opt/zsh/zinit/root_completions"
-ZPLGM\fBSNIPPETS_DIR\fR@ As above, but for snippets
-ZPLGM\fBZCOMPDUMP_PATH\fR@Path to \fB.zcompdump\fR file, with the file included (i.e. its name can be different)
-ZPLGM\fBCOMPINIT_OPTS\fR@Options for \fBcompinit\fR call (i.e. done by \fBzpcompinit\fR), use to pass -C to speed up loading
-ZPLGM\fBMUTE_WARNINGS\fR@If set to \fB1\fR, then mutes some of the zinit warnings, specifically the \fBplugin already registered\fR warning
+ZINIT\fBBIN_DIR\fR@ Where zinit code resides, e.g.: "~/.local/share/zinit/zinit.git"
+ZINIT\fBHOME_DIR\fR@ Where zinit should create all working directories, e.g.: "~/.local/share/zinit"
+ZINIT\fBPLUGINS_DIR\fR@Override single working directory \[en] for plugins, e.g. "/opt/zsh/zinit/plugins"
+ZINIT\fBCOMPLETIONS_DIR\fR@As above, but for completion files, e.g. "/opt/zsh/zinit/root_completions"
+ZINIT\fBSNIPPETS_DIR\fR@ As above, but for snippets
+ZINIT\fBZCOMPDUMP_PATH\fR@Path to \fB.zcompdump\fR file, with the file included (i.e. its name can be different)
+ZINIT\fBCOMPINIT_OPTS\fR@Options for \fBcompinit\fR call (i.e. done by \fBzpcompinit\fR), use to pass -C to speed up loading
+ZINIT\fBMUTE_WARNINGS\fR@If set to \fB1\fR, then mutes some of the zinit warnings, specifically the \fBplugin already registered\fR warning
 .TE
 .P
 There is also \fB$ZPFX\fR, set by default to \fB~/.local/share/zinit/polaris\fR \[en] a directory where software with \fBMakefile\fR, etc. can be pointed to, by e.g. \fBatclone'./configure --prefix=$ZPFX'\fR.
 .SS "Non-GitHub (Local) Plugins"
 .P
-Use \fBcreate\fR subcommand with user name \fB_local\fR (the default) to create plugin's skeleton in \fB$ZPLGM\[lB]PLUGINS_DIR\[rB]\fR. It will be not connected with GitHub repository (because of user name being \fB_local\fR). To enter the plugin's directory use \fBcd\fR command with just plugin's name (without \fB_local\fR, it's optional).
+Use \fBcreate\fR subcommand with user name \fB_local\fR (the default) to create plugin's skeleton in \fB$ZINIT\[lB]PLUGINS_DIR\[rB]\fR. It will be not connected with GitHub repository (because of user name being \fB_local\fR). To enter the plugin's directory use \fBcd\fR command with just plugin's name (without \fB_local\fR, it's optional).
 .P
 If user name will not be \fB_local\fR, then zinit will create repository also on GitHub and setup correct repository origin.
 .SS "Extending Git"
