@@ -26,7 +26,7 @@ if ! command -v git >/dev/null 2>&1; then
 fi
 
 ZINIT_BRANCH="${ZINIT_BRANCH:-master}"
-ZINIT_TMPDIR="$(mktemp --directory)"
+ZINIT_TMPDIR="$(mktemp -d)" # use -d instead of --directory for macos (BSD) compatibility
 if [ ! -d "$ZINIT_TMPDIR" ]; then
     echo "Tempdir creation failed. This ain't good." >&2
     exit 1
