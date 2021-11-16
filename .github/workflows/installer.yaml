@@ -30,13 +30,6 @@ jobs:
       - name: Grab git slugs (short commit id, branch etc.)
         uses: rlespinasse/github-slug-action@v3.x
 
-      - name: Install dependencies (windows)
-        if: startsWith(matrix.os, 'windows')
-        uses: egor-tensin/setup-cygwin@v3
-        with:
-          platform: x64
-          packages: curl git zsh
-
       - name: Install dependencies (ubuntu)
         if: startsWith(matrix.os, 'ubuntu-latest')
         run: |
@@ -47,6 +40,13 @@ jobs:
         if: startsWith(matrix.os, 'macos')
         run: |
           brew install curl git zsh
+
+      - name: Install dependencies (windows)
+        if: startsWith(matrix.os, 'windows')
+        uses: egor-tensin/setup-cygwin@v3
+        with:
+          platform: x64
+          packages: curl git zsh
 
       - name: Install zinit (linux/macOS, with annexes)
         if: matrix.annexes == 'with-annexes' && !startsWith(matrix.os, 'windows')
@@ -103,12 +103,6 @@ jobs:
             ~/.zshrc
             ~/.local/share/zinit
 
-      - name: Test zinit install (linux/macOS)
-        if: "!startsWith(matrix.os, 'windows')"
-        run: |
-          export TERM=xterm
-          zsh -silc 'zinit --help; exit $?'
-
       - name: Upload zshrc and zinit files (windows)
         if: startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@v2
@@ -119,6 +113,12 @@ jobs:
           path: |
             C:\tools\cygwin\home\runneradmin\.zshrc
             C:\tools\cygwin\home\runneradmin\.local\.share\zinit\zinit.git
+
+      - name: Test zinit install (linux/macOS)
+        if: "!startsWith(matrix.os, 'windows')"
+        run: |
+          export TERM=xterm
+          zsh -silc 'zinit --help; exit $?'
 
       - name: Test zinit install (windows)
         shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
@@ -164,22 +164,12 @@ jobs:
           platform: x64
           packages: curl git zsh
 
-      - name: Install previous zinit version (${{ github.event.before }})
+      - name: Install previous zinit version (linux/macOS, ${{ github.event.before }})
         if: "!startsWith(matrix.os, 'windows')"
         env:
           PREVIOUS_COMMIT: ${{ github.event.before }}
         run: |
           export ZINIT_COMMIT="$PREVIOUS_COMMIT"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-
-          ./scripts/install.sh
-
-      - name: Update zinit from ${{ github.event.before }} to ${{ github.sha }}
-        if: "!startsWith(matrix.os, 'windows')"
-        run: |
-          export ZINIT_COMMIT="$GITHUB_SHA"
           export ZINIT_REPO="$GITHUB_REPOSITORY"
           export ZINIT_BRANCH="$GITHUB_REF_SLUG"
           export NO_INPUT=true
@@ -198,6 +188,16 @@ jobs:
           export NO_INPUT=true
 
           cd ${GITHUB_WORKSPACE}
+          ./scripts/install.sh
+
+      - name: Update zinit from ${{ github.event.before }} to ${{ github.sha }} (linux/macOS)
+        if: "!startsWith(matrix.os, 'windows')"
+        run: |
+          export ZINIT_COMMIT="$GITHUB_SHA"
+          export ZINIT_REPO="$GITHUB_REPOSITORY"
+          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
+          export NO_INPUT=true
+
           ./scripts/install.sh
 
       - name: Update zinit from ${{ github.event.before }} to ${{ github.sha }} (windows)
