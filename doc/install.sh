@@ -33,7 +33,7 @@ if [ ! -d "$ZINIT_TMPDIR" ]; then
 fi
 
 # Get the download-progress bar tool
-GIT_PROCESS_SCRIPT_URL="https://raw.githubusercontent.com/zdharma-continuum/zinit/${ZINIT_BRANCH}/git-process-output.zsh"
+GIT_PROCESS_SCRIPT_URL="https://raw.githubusercontent.com/zdharma-continuum/zinit/${ZINIT_BRANCH}/share/git-process-output.zsh"
 trap 'rm -rvf "$ZINIT_TMPDIR"' EXIT INT
 if command -v curl >/dev/null 2>&1; then
     curl -fsSL -o "${ZINIT_TMPDIR}/git-process-output.zsh" "$GIT_PROCESS_SCRIPT_URL"
