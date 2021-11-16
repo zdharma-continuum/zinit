@@ -8,3 +8,6 @@ git checkout documentation
 2. Do your modifications and push your changes
 3. Keep an eye on [the CI logs](https://github.com/zdharma-continuum/zinit/actions/workflows/gh-pages.yaml)
 4. If all went well you can head to https://zdharma-continuum.github.io/ to see your changes live.
+
+**NOTE:** If you really **need** to push directly, without CI please refer to
+[the README in the documentation]https://github.com/zdharma-continuum/zinit/blob/documentation/README.md
