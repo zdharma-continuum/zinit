@@ -10,7 +10,7 @@
 All notable changes to this project will be documented in this file.
 
 * 16-11-2021
-  - A brand-new installer has been developped. A few new features have been
+  - A brand-new installer has been developed. A few new features have been
 added. There are a bunch of new env vars you can set:
 
     - `NO_INPUT=1`: non-interactive mode (`NO_INPUT=1`)
