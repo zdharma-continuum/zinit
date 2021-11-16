@@ -102,7 +102,7 @@ create_zinit_tmpdir() {
 
 # Get the download-progress bar tool
 download_git_output_processor() {
-  url="https://raw.githubusercontent.com/${ZINIT_REPO}/${ZINIT_COMMIT:-${ZINIT_BRANCH}}/git-process-output.zsh"
+  url="https://raw.githubusercontent.com/${ZINIT_REPO}/${ZINIT_COMMIT:-${ZINIT_BRANCH}}/share/git-process-output.zsh"
   script_path="${ZINIT_TMPDIR}/git-process-output.zsh"
 
   echo_info "Fetching git-process-output.zsh from $url"
