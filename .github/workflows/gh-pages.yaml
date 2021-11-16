@@ -1,0 +1,27 @@
+name: gh-pages
+on:
+  push:
+    branches:
+      - documentation
+
+jobs:
+  publish-pages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install mkdocs
+        run: |
+          pip install mkdocs mkdocs-material
+
+      - name: Publish to gh-pages
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          make gh-pages
