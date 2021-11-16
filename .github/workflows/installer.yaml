@@ -2,6 +2,16 @@ name: zinit installer
 on: [push, workflow_dispatch]
 
 jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run ShellCheck
+      uses: ludeeus/action-shellcheck@master
+      with:
+        scandir: './scripts'
+
   zinit-installer:
     strategy:
       fail-fast: false
