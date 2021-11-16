@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [ubuntu-latest, macos-latest, windows-latest]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, windows-latest]
         annexes: ["with-annexes", "without-annexes"]
     runs-on: ${{ matrix.os }}
     steps:
@@ -134,8 +134,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # os: [ubuntu-latest, macos-latest, windows-latest]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Fix crlf (windows only)
