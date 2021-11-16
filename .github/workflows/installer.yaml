@@ -116,6 +116,7 @@ jobs:
         with:
           name: zinit-config-${{ matrix.os }}-${{ matrix.annexes }}
           # cygpath -w ~ returns "C:\tools\cygwin\home\runneradmin"
+          # FIXME Why isn't the zinit.git/ dir not getting uploaded?
           path: |
             C:\tools\cygwin\home\runneradmin\.zshrc
             C:\tools\cygwin\home\runneradmin\.local\.share\zinit\zinit.git
