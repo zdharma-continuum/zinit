@@ -1,0 +1,10 @@
+# Updating the gh-pages (zdharma-continuum.github.io)
+
+1. Check out the [documentation](https://github.com/zdharma-continuum/zinit/tree/documentation)
+```shell
+git fetch origin documentation
+git checkout documentation
+```
+2. Do your modifications and push your changes
+3. Keep an eye on [the CI logs](https://github.com/zdharma-continuum/zinit/actions/workflows/gh-pages.yaml)
+4. If all went well you can head to https://zdharma-continuum.github.io/ to see your changes live.
