@@ -1,6 +1,6 @@
 # Updating the gh-pages (zdharma-continuum.github.io)
 
-1. Check out the [documentation](https://github.com/zdharma-continuum/zinit/tree/documentation)
+1. Check out the [documentation branch](https://github.com/zdharma-continuum/zinit/tree/documentation)
 ```shell
 git fetch origin documentation
 git checkout documentation
