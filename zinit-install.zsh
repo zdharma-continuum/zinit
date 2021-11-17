@@ -1431,7 +1431,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         aarch64 "aarch64"
         aarch64-2 "arm"
         linux   "(linux|linux-gnu)"
-        darwin  "(darwin|mac|osx|os-x)"
+        darwin  "(darwin|mac|macos|osx|os-x)"
         cygwin  "(windows|cygwin|[-_]win|win64|win32)"
         windows "(windows|cygwin|[-_]win|win64|win32)"
         msys "(windows|msys|cygwin|[-_]win|win64|win32)"
