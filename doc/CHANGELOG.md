@@ -9,6 +9,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 18-11-2021
+  - The zinit module has been relocated to 
+[its own repository](https://github.com/zdharma-continuum/zinit-module)
+
 * 16-11-2021
   - A brand-new installer has been developed. A few new features have been
 added. There are a bunch of new env vars you can set:
