@@ -9,6 +9,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 17-11-2021
+  - Containers! If you want to try out zinit inside a container, you can now.
+Several versions of zsh are available, as well as arm64. Check out the available
+tags on [ghcr](https://github.com/zdharma-continuum/zinit/pkgs/container/zinit).
+
+```shell
+docker run -it --rm ghcr.io/zdharma-continuum/zinit:latest
+```
+
 * 16-11-2021
   - A brand-new installer has been developed. A few new features have been
 added. There are a bunch of new env vars you can set:
