@@ -3313,7 +3313,7 @@ EOF
             builtin print -r "To load the module, add following 2 lines to .zshrc, at top:"
             # TODO: Update when we move the C code source to the main dir of the repo
             builtin print -r "    module_path+=( \"${ZINIT[MODULE_DIR]}/zmodules/Src\" )"
-            builtin print -r "    zmodload zdharma/zinit"
+            builtin print -r "    zmodload zdharma-continuum/zinit"
             builtin print -r ""
             builtin print -r "After loading, use command \`zpmod' to communicate with the module."
             builtin print -r "See \`zpmod -h' for more information."
@@ -3357,7 +3357,7 @@ EOF
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           noglob +zinit-message {p}-- make --{rst}
           if { make } {
-            [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
+            [[ -f Src/zdharma-continuum/zinit.so ]] && cp -vf Src/zdharma-continuum/zinit.{so,bundle}
             noglob +zinit-message "{info}Module has been built correctly.{rst}"
             .zinit-module info
           } else {
@@ -3365,7 +3365,7 @@ EOF
               .zinit-module info --link
           }
       }
-      builtin print $EPOCHSECONDS >! "${module_path}/COMPILED_AT"
+      builtin print $EPOCHSECONDS >! "${ZINIT[MAN_DIR]}/COMPILED_AT"
     )
 }
 # ]]]
