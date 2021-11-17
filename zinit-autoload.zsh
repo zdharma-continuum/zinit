@@ -3303,7 +3303,6 @@ EOF
 # It's an attempt to plugin only this one function into `zinit' function
 # defined in zinit.zsh, to not make this file longer than it's needed.
 .zinit-module() {
-    local module_dir="${ZINIT[HOME_DIR]}/module"
     if [[ "$1" = "build" ]]; then
         .zinit-build-module "${@[2,-1]}"
     elif [[ "$1" = "info" ]]; then
@@ -3313,7 +3312,7 @@ EOF
         else
             builtin print -r "To load the module, add following 2 lines to .zshrc, at top:"
             # TODO: Update when we move the C code source to the main dir of the repo
-            builtin print -r "    module_path+=( \"${module_dir}/zmodules/Src\" )"
+            builtin print -r "    module_path+=( \"${ZINIT[MODULE_DIR]}/zmodules/Src\" )"
             builtin print -r "    zmodload zdharma/zinit"
             builtin print -r ""
             builtin print -r "After loading, use command \`zpmod' to communicate with the module."
@@ -3337,14 +3336,13 @@ EOF
 .zinit-build-module() {
     setopt localoptions localtraps
     trap 'return 1' INT TERM
-    local module_dir="${ZINIT[HOME_DIR]}/module"  # TODO: Make this ZINIT[MODULE_DIR] ie configurable
-    command git clone "https://github.com/zdharma-continuum/zinit-module.git" "${module_dir}" || {
+    command git clone "https://github.com/zdharma-continuum/zinit-module.git" "${ZINIT[MODULE_DIR]}" || {
         builtin print "${ZINIT[col-error]}Failed to clone module repo${ZINIT[col-rst]}"
         return 1
     }
-    ( builtin cd -q "${module_dir}/zmodules"  # TODO: Move the source of the module to the root of the repo
+    ( builtin cd -q "${ZINIT[MODULE_DIR]}/zmodules"  # TODO: Move the source of the module to the root of the repo
       +zinit-message "{pname}== Building module zdharma-continuum/zinit-module, running: make clean, then ./configure and then make =={rst}"
-      +zinit-message "{pname}== The module sources are located at: "${module_path}" =={rst}"
+      +zinit-message "{pname}== The module sources are located at: "${ZINIT[MODULE_DIR]}" =={rst}"
       if [[ -f Makefile ]] {
           if [[ "$1" = "--clean" ]] {
               noglob +zinit-message {p}-- make distclean --{rst}
