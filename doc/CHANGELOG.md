@@ -9,6 +9,23 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 16-11-2021
+  - A brand-new installer has been developed. A few new features have been
+added. There are a bunch of new env vars you can set:
+
+    - `NO_INPUT=1`: non-interactive mode (`NO_INPUT=1`)
+    - `NO_EDIT=1`: do not modify `.zshrc`
+    - `ZSHRC=/home/user01/.config/zsh/zshrc`: custom path to your `.zshrc`
+    - `ZINIT_REPO=zdharma-continuum/zinit`: Install zinit from a custom GitHub repo
+    - `ZINIT_BRANCH=master`: zinit branch to install
+    - `ZINIT_COMMIT=master`: zinit commit to install (takes precedence over `ZINIT_BRANCH`)
+    - `ZINIT_INSTALL_DIR=~/.local/share/zinit/zinit.git`: Where to install the zinit repo
+
+⚠️ Please note that the download URL for the installer has changed. It is now:
+https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh
+
+For more details check out [PR #61](https://github.com/zdharma-continuum/zinit/pull/61)
+
 * 11-11-2021
   - The annexes repos have been renamed to improve discoverability. They used to
 be called `z-a-${name}` and have been renamed to `zinit-annex-${name}`. You
@@ -358,7 +375,7 @@ startup. Please note that these directories will not necessarily be part of your
 
     In other words, instead of `wait'1'` you can enter `wait'1a'`,
     `wait'1b'` and `wait'1c'` – to this way **impose order** on the loadings
-    **regardless of the order of `zplugin` commands**. 
+    **regardless of the order of `zplugin` commands**.
 * 26-05-2019
   - Turbo-Mode now divides the scheduled events (i.e. loadings of plugins or snippets)
     into packs of 5. In other words, after loading each series of 5 plugins or snippets

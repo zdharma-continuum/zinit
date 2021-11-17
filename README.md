@@ -147,10 +147,10 @@ read it to get the most out of Zinit.
 The easiest way to install Zinit is to execute:
 
 ```zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/master/doc/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/install.sh)"
 ```
 
-This will install Zinit in `~/.zinit/bin`.
+This will install Zinit in `~/.local/share/zinit/zinit.git`.
 `.zshrc` will be updated with three lines of code that will be added to the bottom.
 The lines will be sourcing `zinit.zsh` and setting up completion for command `zinit`.
 
@@ -158,17 +158,19 @@ After installing and reloading the shell compile Zinit with `zinit self-update`.
 
 ### Manual Installation
 
-To manually install Zinit clone the repo to e.g. `~/.zinit/bin`:
+To manually install Zinit clone the repo to e.g. `~/.local/share/zinit/zinit.git`:
 
 ```sh
-mkdir ~/.zinit
-git clone https://github.com/zdharma-continuum/zinit.git ~/.zinit/bin
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+mkdir -p "$(dirname $ZINIT_HOME)"
+git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 ```
 
-and source it from `.zshrc` (above [compinit](http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Initialization)):
+and source `zinit.zsh` from your `.zshrc` (above [compinit](http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Initialization)):
 
 ```sh
-source ~/.zinit/bin/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
 ```
 
 If you place the `source` below `compinit`, then add those two lines after the `source`:
@@ -920,7 +922,8 @@ after `compinit` will be called (and the original `compdef` function will become
 available), to execute all detected `compdef` calls. To summarize:
 
 ```zsh
-source ~/.zinit/bin/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
 
 zinit load "some/plugin"
 ...
@@ -963,7 +966,8 @@ helper functions (`zicompinit`,`zicdreplay` & `zicdclear` – see below for expl
 of the last one). To summarize:
 
 ```zsh
-source ~/.zinit/bin/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share/zinit}"
+source "${ZINIT_HOME}/zinit.zsh"
 
 # Load using the for-syntax
 zinit wait lucid for \
@@ -982,7 +986,9 @@ before commands loading other plugins or snippets, and issue `zinit cdclear` (or
 `zicdclear`, designed to be used in hooks like `atload''`):
 
 ```zsh
-source ~/.zinit/bin/zinit.zsh
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+source "${ZINIT_HOME}/zinit.zsh"
+
 zinit snippet OMZP::git
 zinit cdclear -q # <- forget completions provided by Git plugin
 
@@ -1035,7 +1041,7 @@ To install just the binary Zinit module **standalone** (Zinit is not needed, the
 other plugin manager), execute:
 
 ```zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/master/doc/mod-install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma-continuum/zinit/HEAD/scripts/mod-install.sh)"
 ```
 
 This script will display what to add to `~/.zshrc` (2 lines) and show usage instructions.
@@ -1081,8 +1087,8 @@ declare -A ZINIT  # initial Zinit's hash definition, if configuring before loadi
 
 | Hash Field                          | Description                                                                                                                                                                                                                                                                                                                                                                                              |
 | ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ZINIT\[BIN_DIR\]                    | Where Zinit code resides, e.g.: "~/.zinit/bin"                                                                                                                                                                                                                                                                                                                                                           |
-| ZINIT\[HOME_DIR\]                   | Where Zinit should create all working directories, e.g.: "~/.zinit"                                                                                                                                                                                                                                                                                                                                      |
+| ZINIT\[BIN_DIR\]                    | Where Zinit code resides, e.g.: "~/.local/share/zinit/zinit.git"                                                                                                                                                                                                                                                                                                                                                           |
+| ZINIT\[HOME_DIR\]                   | Where Zinit should create all working directories, e.g.: "~/.local/share/zinit"                                                                                                                                                                                                                                                                                                                                      |
 | ZINIT\[MAN_DIR\]                    | Directory where plugins can store their manpages (`atclone"cp -vf myplugin.1 $ZINIT[MAN_DIR]/man1"`). If overridden, this directory will not necessarily be used by `man` (See #8). Default: `$ZPFX/man`                         |
 | ZINIT\[PLUGINS_DIR\]                | Override single working directory – for plugins, e.g. "/opt/zsh/zinit/plugins"                                                                                                                                                                                                                                                                                                                           |
 | ZINIT\[COMPLETIONS_DIR\]            | As above, but for completion files, e.g. "/opt/zsh/zinit/root_completions"                                                                                                                                                                                                                                                                                                                               |
@@ -1092,7 +1098,7 @@ declare -A ZINIT  # initial Zinit's hash definition, if configuring before loadi
 | ZINIT\[MUTE_WARNINGS\]              | If set to `1`, then mutes some of the Zinit warnings, specifically the `plugin already registered` warning                                                                                                                                                                                                                                                                                               |
 | ZINIT\[OPTIMIZE_OUT_DISK_ACCESSES\] | If set to `1`, then Zinit will skip checking if a Turbo-loaded object exists on the disk. By default Zinit skips Turbo for non-existing objects (plugins or snippets) to install them before the first prompt – without any delays, during the normal processing of `zshrc`. This option can give a performance gain of about 10 ms out of 150 ms (i.e.: Zsh will start up in 140 ms instead of 150 ms). |
 
-There is also `$ZPFX`, set by default to `~/.zinit/polaris` – a directory
+There is also `$ZPFX`, set by default to `~/.local/share/zinit/polaris` – a directory
 where software with `Makefile`, etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.
 
 ## Non-GitHub (Local) Plugins
@@ -1135,7 +1141,7 @@ zinit as"null" wait"1" lucid for \
 
 ```
 
-Target directory for installed files is `$ZPFX` (`~/.zinit/polaris` by default).
+Target directory for installed files is `$ZPFX` (`~/.local/share/zinit/polaris` by default).
 
 # Supporting
 
