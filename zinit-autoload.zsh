@@ -3051,7 +3051,7 @@ EOF
         builtin print "Remote repository $uspl2col set up as origin."
         builtin print "You're in plugin's local folder, the files aren't added to git."
         builtin print "Your next steps after commiting will be:"
-        builtin print "- Choosing a license! https://choosealicense.com/"
+        builtin print "- Choosing a license\! https://choosealicense.com/"
         builtin print "- git push -u origin master (or \`… -u origin main')"
     else
         builtin print "Created local $uspl2col plugin."
