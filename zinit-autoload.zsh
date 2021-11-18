@@ -3308,11 +3308,12 @@ EOF
     elif [[ "$1" = "info" ]]; then
         if [[ "$2" = "--link" ]]; then
               builtin print -r "You can copy the error messages and submit"
-              builtin print -r "error-report at: https://github.com/zdharma-continuum/zinit/issues"
+              builtin print -r "error-report at: https://github.com/zdharma-continuum/zinit-module/issues"
         else
             builtin print -r "To load the module, add following 2 lines to .zshrc, at top:"
-            builtin print -r "    module_path+=( \"${ZINIT[BIN_DIR]}/zmodules/Src\" )"
-            builtin print -r "    zmodload zdharma/zplugin"
+            # TODO: Update when we move the C code source to the main dir of the repo
+            builtin print -r "    module_path+=( \"${ZINIT[MODULE_DIR]}/zmodules/Src\" )"
+            builtin print -r "    zmodload zdharma-continuum/zinit"
             builtin print -r ""
             builtin print -r "After loading, use command \`zpmod' to communicate with the module."
             builtin print -r "See \`zpmod -h' for more information."
@@ -3335,9 +3336,13 @@ EOF
 .zinit-build-module() {
     setopt localoptions localtraps
     trap 'return 1' INT TERM
-    ( builtin cd -q "${ZINIT[BIN_DIR]}"/zmodules
-      +zinit-message "{pname}== Building module zdharma/zplugin, running: make clean, then ./configure and then make =={rst}"
-      +zinit-message "{pname}== The module sources are located at: "${ZINIT[BIN_DIR]}"/zmodules =={rst}"
+    command git clone "https://github.com/zdharma-continuum/zinit-module.git" "${ZINIT[MODULE_DIR]}" || {
+        builtin print "${ZINIT[col-error]}Failed to clone module repo${ZINIT[col-rst]}"
+        return 1
+    }
+    ( builtin cd -q "${ZINIT[MODULE_DIR]}/zmodules"  # TODO: Move the source of the module to the root of the repo
+      +zinit-message "{pname}== Building module zdharma-continuum/zinit-module, running: make clean, then ./configure and then make =={rst}"
+      +zinit-message "{pname}== The module sources are located at: "${ZINIT[MODULE_DIR]}" =={rst}"
       if [[ -f Makefile ]] {
           if [[ "$1" = "--clean" ]] {
               noglob +zinit-message {p}-- make distclean --{rst}
@@ -3352,7 +3357,7 @@ EOF
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           noglob +zinit-message {p}-- make --{rst}
           if { make } {
-            [[ -f Src/zdharma/zplugin.so ]] && cp -vf Src/zdharma/zplugin.{so,bundle}
+            [[ -f Src/zdharma-continuum/zinit.so ]] && cp -vf Src/zdharma-continuum/zinit.{so,bundle}
             noglob +zinit-message "{info}Module has been built correctly.{rst}"
             .zinit-module info
           } else {
@@ -3360,7 +3365,7 @@ EOF
               .zinit-module info --link
           }
       }
-      builtin print $EPOCHSECONDS >! "${ZINIT[BIN_DIR]}"/zmodules/COMPILED_AT
+      builtin print $EPOCHSECONDS >! "${ZINIT[MAN_DIR]}/COMPILED_AT"
     )
 }
 # ]]]

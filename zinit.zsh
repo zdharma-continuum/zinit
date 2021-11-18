@@ -70,6 +70,7 @@ aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\
 pullopts|debug|null|binary|make|nocompile|notify|reset"
 
 # Can be customized.
+: ${ZINIT[MODULE_DIR]:=${ZINIT[HOME_DIR]}/module}
 : ${ZINIT[PLUGINS_DIR]:=${ZINIT[HOME_DIR]}/plugins}
 : ${ZINIT[COMPLETIONS_DIR]:=${ZINIT[HOME_DIR]}/completions}
 : ${ZINIT[SNIPPETS_DIR]:=${ZINIT[HOME_DIR]}/snippets}
