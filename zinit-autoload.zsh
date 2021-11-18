@@ -3037,8 +3037,6 @@ EOF
     xfuncname = "^#+[[:blank:]].*$"
 EOF
 
-    builtin print -r -- "*.zsh  diff=zsh" >! .gitattributes
-    builtin print -r -- "*.md   diff=markdown" >! .gitattributes
     builtin print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZINIT[BIN_DIR]}/share/template-plugin/zsh.gitignore" .gitignore
     command cp -vf "${ZINIT[BIN_DIR]}/share/template-plugin/template-script" .
