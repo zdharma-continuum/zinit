@@ -3021,7 +3021,7 @@ if [[ \${zsh_loaded_plugins[-1]} != */${plugin:t} && -z \${fpath[(r)\${0:h}]} ]]
 typeset -gA Plugins
 Plugins[${${(U)plugin:t}//-/_}_DIR]="\${0:h}"
 
-autoload -Uz example-script
+autoload -Uz template-script
 
 # Use alternate vim marks [[[ and ]]] as the original ones can
 # confuse nested substitutions, e.g.: \${\${\${VAR}}}
@@ -3041,12 +3041,12 @@ EOF
     builtin print -r -- "*.md   diff=markdown" >! .gitattributes
     builtin print -r -- "# $plugin" >! "README.md"
     command cp -vf "${ZINIT[BIN_DIR]}/LICENSE" LICENSE
-    command cp -vf "${ZINIT[BIN_DIR]}/doc/Zsh.gitignore" .gitignore
-    command cp -vf "${ZINIT[BIN_DIR]}/doc/example-script" .
+    command cp -vf "${ZINIT[BIN_DIR]}/share/template-plugin/zsh.gitignore" .gitignore
+    command cp -vf "${ZINIT[BIN_DIR]}/share/template-plugin/template-script" .
 
-    command sed -i -e "s/MY_PLUGIN_DIR/${${(U)plugin:t}//-/_}_DIR/g" example-script
-    command sed -i -e "s/USER_NAME/$user_name/g" example-script
-    command sed -i -e "s/YEAR/$year/g" example-script
+    command sed -i -e "s/MY_PLUGIN_DIR/${${(U)plugin:t}//-/_}_DIR/g" template-script
+    command sed -i -e "s/USER_NAME/$user_name/g" template-script
+    command sed -i -e "s/YEAR/$year/g" template-script
 
     if [[ "$user" != "_local" && -n "$user" ]]; then
         builtin print "Remote repository $uspl2col set up as origin."
