@@ -111,7 +111,7 @@ install everything from GitHub and other sites. Its characteristics are:
 
 1. Zinit supports special, dedicated **packages** that offload the user from
    providing long and complex commands. See the
-   [zsh-packages-* repositories](https://github.com/orgs/zdharma-continuum/repositories)
+   [zinit-packages repository](https://github.com/zdharma-continuum/zinit-packages)
    for a growing, complete list of Zinit packages and the [Wiki
    page](https://zdharma-continuum.github.io/zinit/wiki/Zinit-Packages/) for an article about
    the feature.
