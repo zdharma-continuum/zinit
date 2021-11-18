@@ -3040,7 +3040,6 @@ EOF
     builtin print -r -- "*.zsh  diff=zsh" >! .gitattributes
     builtin print -r -- "*.md   diff=markdown" >! .gitattributes
     builtin print -r -- "# $plugin" >! "README.md"
-    command cp -vf "${ZINIT[BIN_DIR]}/LICENSE" LICENSE
     command cp -vf "${ZINIT[BIN_DIR]}/share/template-plugin/zsh.gitignore" .gitignore
     command cp -vf "${ZINIT[BIN_DIR]}/share/template-plugin/template-script" .
 
@@ -3051,8 +3050,9 @@ EOF
     if [[ "$user" != "_local" && -n "$user" ]]; then
         builtin print "Remote repository $uspl2col set up as origin."
         builtin print "You're in plugin's local folder, the files aren't added to git."
-        builtin print "Your next step after commiting will be:"
-        builtin print "git push -u origin master (or \`… -u origin main')"
+        builtin print "Your next steps after commiting will be:"
+        builtin print "- Choosing a license! https://choosealicense.com/"
+        builtin print "- git push -u origin master (or \`… -u origin main')"
     else
         builtin print "Created local $uspl2col plugin."
         builtin print "You're in plugin's repository folder, the files aren't added to git."
