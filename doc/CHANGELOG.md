@@ -9,6 +9,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 18-11-2021
+  - The [packages]() have all been migrated to
+[a new repository](https://github.com/zdharma-continuum/zinit-packages). Nothing
+fundamentally changes for users, the original repos have only been archived and
+not deleted, so that older zinit versions can still use these.
+
+For more
+information, please refer to
+[this issue](https://github.com/zdharma-continuum/zinit/issues/69) and/or to
+[the corresponding PR](https://github.com/zdharma-continuum/zinit/pull/75)
+
 * 16-11-2021
   - A brand-new installer has been developed. A few new features have been
 added. There are a bunch of new env vars you can set:
