@@ -9,6 +9,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 18-11-2021
+  - The zinit module has been relocated to 
+[its own repository](https://github.com/zdharma-continuum/zinit-module)
+
 * 17-11-2021
   - Containers! If you want to try out zinit inside a container, you can now.
 Several versions of zsh are available, as well as arm64. Check out the available
