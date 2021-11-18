@@ -3313,7 +3313,7 @@ EOF
             builtin print -r "To load the module, add following 2 lines to .zshrc, at top:"
             # TODO: Update when we move the C code source to the main dir of the repo
             builtin print -r "    module_path+=( \"${ZINIT[MODULE_DIR]}/zmodules/Src\" )"
-            builtin print -r "    zmodload zdharma-continuum/zinit"
+            builtin print -r "    zmodload zdharma_continuum/zinit"
             builtin print -r ""
             builtin print -r "After loading, use command \`zpmod' to communicate with the module."
             builtin print -r "See \`zpmod -h' for more information."
