@@ -1,5 +1,14 @@
 # Documentation
 
+## README: Update the table of content
+
+1. Install [doctoc](https://github.com/thlorenz/doctoc)
+2. To update the TOC run the following command:
+
+```zsh
+doctoc --github README.md
+```
+
 ## Generate the manage (doc/zinit.1)
 
 1. Install [pandoc](https://pandoc.org/)
