@@ -1,4 +1,15 @@
-# Updating the gh-pages (zdharma-continuum.github.io)
+# Documentation
+
+## Generate the manage (doc/zinit.1)
+
+1. Install [pandoc](https://pandoc.org/)
+2. From the root of the repo run:
+
+```zsh
+pandoc --standalone --to man README.md -o doc/zinit.1
+```
+
+## Updating the gh-pages (zdharma-continuum.github.io)
 
 1. Check out the [documentation branch](https://github.com/zdharma-continuum/zinit/tree/documentation)
 ```shell
