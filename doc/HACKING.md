@@ -19,7 +19,7 @@ doctoc --github README.md
 make doc
 ```
 
-## Generate the manage (doc/zinit.1)
+## Generate the manpage (doc/zinit.1)
 
 1. Install [pandoc](https://pandoc.org/)
 2. From the root of the repo run:
