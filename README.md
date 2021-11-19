@@ -69,9 +69,7 @@
 
 # News
 
-See [here](./doc/NEWS.md)
-
-To see the full history check [the changelog](doc/CHANGELOG.md).
+See [the changelog](doc/CHANGELOG.md).
 
 # Zinit
 
