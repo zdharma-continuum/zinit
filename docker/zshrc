@@ -21,4 +21,7 @@ then
   source "$INIT_FILE"
 fi
 
+# Setup keys
+zinit::setup-keys
+
 # vim: ft=zsh et ts=2 sw=2 :
