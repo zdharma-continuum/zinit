@@ -3305,8 +3305,7 @@ EOF
               builtin print -r "error-report at: https://github.com/zdharma-continuum/zinit-module/issues"
         else
             builtin print -r "To load the module, add following 2 lines to .zshrc, at top:"
-            # TODO: Update when we move the C code source to the main dir of the repo
-            builtin print -r "    module_path+=( \"${ZINIT[MODULE_DIR]}/zmodules/Src\" )"
+            builtin print -r "    module_path+=( \"${ZINIT[MODULE_DIR]}/Src\" )"
             builtin print -r "    zmodload zdharma_continuum/zinit"
             builtin print -r ""
             builtin print -r "After loading, use command \`zpmod' to communicate with the module."
@@ -3340,7 +3339,7 @@ EOF
             return 1
         }
     fi
-    ( builtin cd -q "${ZINIT[MODULE_DIR]}/zmodules"  # TODO: Move the source of the module to the root of the repo
+    ( builtin cd -q "${ZINIT[MODULE_DIR]}"
       +zinit-message "{pname}== Building module zdharma-continuum/zinit-module, running: make clean, then ./configure and then make =={rst}"
       +zinit-message "{pname}== The module sources are located at: "${ZINIT[MODULE_DIR]}" =={rst}"
       if [[ -f Makefile ]] {
