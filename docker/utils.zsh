@@ -18,6 +18,12 @@ zinit::setup-annexes() {
     zdharma-continuum/zinit-annex-unscope
 }
 
+zinit::install-zshelldoc() {
+  zinit light-mode \
+    make"PREFIX=$ZPFX install" \
+    for zdharma-continuum/zshelldoc
+}
+
 zinit::setup-minimal() {
   zinit wait lucid light-mode for \
     atinit"zicompinit; zicdreplay" \
