@@ -5,7 +5,7 @@ zinit::setup() {
 }
 
 zinit::setup-keys() {
-  zinit light-mode snippet for OMZL::key-bindings.zsh
+  zinit snippet OMZL::key-bindings.zsh
 }
 
 zinit::setup-annexes() {
