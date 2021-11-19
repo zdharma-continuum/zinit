@@ -1,7 +1,7 @@
 all: zinit.zsh.zwc zinit-side.zsh.zwc zinit-install.zsh.zwc zinit-autoload.zsh.zwc
 
 %.zwc: %
-	doc/zcompile $<
+	scripts/zcompile $<
 
 alltest: test testB testC testD testE
 
