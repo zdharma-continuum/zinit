@@ -12,7 +12,6 @@ zinit::setup-annexes() {
   zinit light-mode compile'*handler' for \
     zdharma-continuum/zinit-annex-bin-gem-node \
     zdharma-continuum/zinit-annex-default-ice \
-    zdharma-continuum/zinit-annex-man \
     zdharma-continuum/zinit-annex-meta-plugins \
     zdharma-continuum/zinit-annex-patch-dl \
     zdharma-continuum/zinit-annex-readurl \
@@ -20,6 +19,15 @@ zinit::setup-annexes() {
     zdharma-continuum/zinit-annex-submods \
     zdharma-continuum/zinit-annex-test \
     zdharma-continuum/zinit-annex-unscope
+}
+
+zinit::setup-annexes-extra() {
+  # Dependencies
+  sudo apk add ruby-dev grep tree
+  zinit::install-zshelldoc
+
+  zinit light-mode compile'*handler' for \
+    zdharma-continuum/zinit-annex-man
 }
 
 zinit::install-zshelldoc() {
