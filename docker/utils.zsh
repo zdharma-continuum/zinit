@@ -9,7 +9,7 @@ zinit::setup-keys() {
 }
 
 zinit::setup-annexes() {
-  zinit light-mode for \
+  zinit light-mode compile'*handler' for \
     zdharma-continuum/zinit-annex-bin-gem-node \
     zdharma-continuum/zinit-annex-default-ice \
     zdharma-continuum/zinit-annex-man \
