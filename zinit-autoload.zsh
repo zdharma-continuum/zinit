@@ -3330,9 +3330,15 @@ EOF
 .zinit-build-module() {
     setopt localoptions localtraps
     trap 'return 1' INT TERM
-    command git clone "https://github.com/zdharma-continuum/zinit-module.git" "${ZINIT[MODULE_DIR]}" || {
-        builtin print "${ZINIT[col-error]}Failed to clone module repo${ZINIT[col-rst]}"
-        return 1
+    if command git -C "${ZINIT[MODULE_DIR]}" rev-parse 2>/dev/null {
+        command git -C "${ZINIT[MODULE_DIR]}" clean -d -f -f
+        command git -C "${ZINIT[MODULE_DIR]}" reset --hard HEAD
+        command git -C "${ZINIT[MODULE_DIR]}" pull
+    } || {
+        command git clone "https://github.com/zdharma-continuum/zinit-module.git" "${ZINIT[MODULE_DIR]}" || {
+            builtin print "${ZINIT[col-error]}Failed to clone module repo${ZINIT[col-rst]}"
+            return 1
+        }
     }
     ( builtin cd -q "${ZINIT[MODULE_DIR]}/zmodules"  # TODO: Move the source of the module to the root of the repo
       +zinit-message "{pname}== Building module zdharma-continuum/zinit-module, running: make clean, then ./configure and then make =={rst}"
@@ -3351,7 +3357,7 @@ EOF
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           noglob +zinit-message {p}-- make --{rst}
           if { make } {
-            [[ -f Src/zdharma-continuum/zinit.so ]] && cp -vf Src/zdharma-continuum/zinit.{so,bundle}
+            [[ -f Src/zdharma_continuum/zinit.so ]] && cp -vf Src/zdharma_continuum/zinit.{so,bundle}
             noglob +zinit-message "{info}Module has been built correctly.{rst}"
             .zinit-module info
           } else {
