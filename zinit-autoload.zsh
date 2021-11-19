@@ -3330,16 +3330,16 @@ EOF
 .zinit-build-module() {
     setopt localoptions localtraps
     trap 'return 1' INT TERM
-    if command git -C "${ZINIT[MODULE_DIR]}" rev-parse 2>/dev/null {
+    if command git -C "${ZINIT[MODULE_DIR]}" rev-parse 2>/dev/null; then
         command git -C "${ZINIT[MODULE_DIR]}" clean -d -f -f
         command git -C "${ZINIT[MODULE_DIR]}" reset --hard HEAD
         command git -C "${ZINIT[MODULE_DIR]}" pull
-    } || {
+    else
         command git clone "https://github.com/zdharma-continuum/zinit-module.git" "${ZINIT[MODULE_DIR]}" || {
             builtin print "${ZINIT[col-error]}Failed to clone module repo${ZINIT[col-rst]}"
             return 1
         }
-    }
+    fi
     ( builtin cd -q "${ZINIT[MODULE_DIR]}/zmodules"  # TODO: Move the source of the module to the root of the repo
       +zinit-message "{pname}== Building module zdharma-continuum/zinit-module, running: make clean, then ./configure and then make =={rst}"
       +zinit-message "{pname}== The module sources are located at: "${ZINIT[MODULE_DIR]}" =={rst}"
