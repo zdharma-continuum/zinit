@@ -9,6 +9,16 @@
 doctoc --github README.md
 ```
 
+## Update asciidoc and/or zshelldoc
+
+1. Make sure you have [asciidoc](https://asciidoc.org/) and
+[zshelldoc (zsd)](https://github.com/zdharma-continuum/zshelldoc) installed
+2. From the root of the repo run:
+
+```zsh
+make doc
+```
+
 ## Generate the manage (doc/zinit.1)
 
 1. Install [pandoc](https://pandoc.org/)
