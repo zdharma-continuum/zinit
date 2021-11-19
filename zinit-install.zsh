@@ -599,12 +599,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) {
         +zinit-message "{msg}Installed {num}${#INSTALLED_COMPS}" \
-            "{msg}completions. They are stored in{var}" \
+            "{msg}completions. They are stored in the{var}" \
             "\$INSTALLED_COMPS{msg} array."
         if (( ${#SKIPPED_COMPS} )) {
             +zinit-message "{msg}Skipped installing" \
                 "{num}${#SKIPPED_COMPS}{msg} completions." \
-                "They are stored in {var}\$SKIPPED_COMPS{msg} array."
+                "They are stored in the {var}\$SKIPPED_COMPS{msg} array."
         }
     }
 
