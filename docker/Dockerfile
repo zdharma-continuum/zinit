@@ -24,12 +24,9 @@ VOLUME ["/src"]
 
 COPY --chown=${PUSERNAME} . /src
 COPY --chown=${PUSERNAME} ./docker/zshrc /home/${PUSERNAME}/.zshrc
-COPY ./docker/utils.zsh /utils.zsh
-COPY ./docker/entrypoint.zsh /entrypoint.zsh
 
 USER ${PUSERNAME}
 # RUN zsh -ic "ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}; source /home/${PUSERNAME}/.zshrc"
 RUN zsh -ils -c -- '@zinit-scheduler burst'
 
-# ENTRYPOINT ["/entrypoint.zsh"]
 CMD ["/bin/zsh"]

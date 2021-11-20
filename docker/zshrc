@@ -1,8 +1,8 @@
 # load zinit
 source /src/zinit.zsh
 
-# load zinit utilities
-source /utils.zsh
+# load zinit setup utility functions
+source /src/docker/utils.zsh
 
 # Add ZPFX/bin to PATH
 typeset -U path
@@ -20,5 +20,8 @@ if [[ -r "$INIT_FILE" ]]
 then
   source "$INIT_FILE"
 fi
+
+# Setup keys
+zinit::setup-keys
 
 # vim: ft=zsh et ts=2 sw=2 :

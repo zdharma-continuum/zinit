@@ -4,13 +4,36 @@ zinit::setup() {
   source /src/zinit.zsh
 }
 
+zinit::setup-keys() {
+  zinit snippet OMZL::key-bindings.zsh
+}
+
 zinit::setup-annexes() {
-  zinit light-mode for \
-    zdharma-continuum/z-a-as-monitor \
-    zdharma-continuum/z-a-bin-gem-node \
-    zdharma-continuum/z-a-default-ice \
-    zdharma-continuum/z-a-patch-dl \
-    zdharma-continuum/z-a-rust
+  zinit light-mode compile'*handler' for \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-default-ice \
+    zdharma-continuum/zinit-annex-meta-plugins \
+    zdharma-continuum/zinit-annex-patch-dl \
+    zdharma-continuum/zinit-annex-readurl \
+    zdharma-continuum/zinit-annex-rust \
+    zdharma-continuum/zinit-annex-submods \
+    zdharma-continuum/zinit-annex-test \
+    zdharma-continuum/zinit-annex-unscope
+}
+
+zinit::setup-annexes-extra() {
+  # Dependencies
+  sudo apk add ruby-dev grep tree
+  zinit::install-zshelldoc
+
+  zinit light-mode compile'*handler' for \
+    zdharma-continuum/zinit-annex-man
+}
+
+zinit::install-zshelldoc() {
+  zinit light-mode \
+    make"PREFIX=$ZPFX install" \
+    for zdharma-continuum/zshelldoc
 }
 
 zinit::setup-minimal() {
