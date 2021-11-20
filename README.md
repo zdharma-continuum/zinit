@@ -4,7 +4,10 @@
 </a>
 </p>
 
-[![MIT License][mit-badge]][mit-link] [![][ver-badge]][ver-link] [![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link]
+[![MIT License][mit-badge]][mit-link]
+[![zinit version][ver-badge]][ver-link]
+[![zunit tests][tests-badge]][tests-link]
+[![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link]
 
 > **Note**: [The original author](https://github.com/psprint) of zinit deleted the `zdharma` organization randomly.
 >
@@ -1098,11 +1101,13 @@ Do you need help or wish to get in touch with other Zinit users?
 
 - Or via reach out via Gitter [![Join the chat at https://gitter.im/zdharma-continuum/community][gitter-badge]][gitter-link]
 
-<!-- vim:set ft=markdown tw=80 fo+=1n: -->
-
 [gitter-badge]: https://badges.gitter.im/zdharma-continuum/zinit.svg
 [gitter-link]: https://gitter.im/zdharma-continuum/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-link]: ./LICENSE
 [ver-badge]: https://img.shields.io/github/tag/zdharma-continuum/zinit.svg
 [ver-link]: https://github.com/zdharma-continuum/zinit/releases
+[tests-badge]: https://github.com/zdharma-continuum/zinit/actions/workflows/tests.yaml/badge.svg
+[tests-link]: https://github.com/zdharma-continuum/zinit/actions/workflows/tests.yaml
+
+<!-- vim:set ft=markdown tw=80 fo+=1n: -->
