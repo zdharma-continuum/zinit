@@ -82,7 +82,9 @@ run() {
 
   if [[ -n "$WRAP_CMD" ]]
   then
-    cmd=(zsh -silc "${cmd[*]}")
+    local zsh_opts="-silc"
+    [[ -n "$ZSH_DEBUG" ]] && zsh_opts="-xsilc"
+    cmd=(zsh "$zsh_opts" "${cmd[*]@Q}")
   fi
 
   if [[ -n "$DEBUG" ]]
@@ -104,6 +106,7 @@ then
   CONTAINER_TAG="${CONTAINER_TAG:-latest}"
   CONTAINER_VOLUMES=()
   DEBUG="${DEBUG:-}"
+  ZSH_DEBUG="${ZSH_DEBUG:-}"
   INIT_CONFIG_VAL="${INIT_CONFIG_VAL:-}"
   WRAP_CMD="${WRAP_CMD:-}"
 
@@ -141,8 +144,14 @@ then
         WRAP_CMD=1
         shift
         ;;
-      --tests|--zunit)
+      --tests|--zunit|-z)
         ZUNIT=1
+        shift
+        ;;
+      # Whether to enable debug tracing of zinit (zsh -x)
+      # Only applies to wrapped commands (--w|--wrap)
+      --zsh-debug|-x|-Z)
+        ZSH_DEBUG=1
         shift
         ;;
       *)
