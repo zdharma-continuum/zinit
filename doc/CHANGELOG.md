@@ -9,6 +9,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 21-11-2021
+  - [(z)unit tests](https://github.com/zdharma-continuum/zinit/actions/workflows/tests.yaml)
+have been added to our dear repository. This should help us to sniff out
+some bugs and improve the overall quality of zinit. Stay tuned! More information
+available [here](https://github.com/zdharma-continuum/zinit/pull/96).
 * 20-11-2021
   - zinit is now [XDG compliant](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
 This means that the default value of `ZINIT[HOME_DIR]` is now
