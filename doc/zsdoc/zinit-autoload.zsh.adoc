@@ -138,7 +138,7 @@ ____
  how to load the module in .zshrc.
 ____
 
-Has 29 line(s). Calls functions:
+Has 33 line(s). Calls functions:
 
  .zinit-build-module
  `-- zinit.zsh/+zinit-message
@@ -432,7 +432,7 @@ ____
  $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
-Has 109 line(s). Calls functions:
+Has 103 line(s). Calls functions:
 
  .zinit-create
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2

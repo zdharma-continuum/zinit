@@ -90,3 +90,4 @@ zmodules/Src/zdharma/curses_keys.h
 
 zmodules/Test/*.tmp
 /.project
+doc/zsdoc/data

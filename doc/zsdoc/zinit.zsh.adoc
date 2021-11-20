@@ -90,7 +90,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 213 line(s). Calls functions:
+Has 214 line(s). Calls functions:
 
  Script-Body
  |-- add-zsh-hook
