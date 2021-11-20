@@ -1,0 +1,32 @@
+#!/usr/bin/env zunit
+
+@setup {
+  load setup
+  setup
+}
+
+@teardown {
+  load teardown
+  teardown
+}
+
+@test 'sbin ice' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit light zdharma-continuum/zinit-annex-bin-gem-node\;\
+    zinit light-mode as"null" from"gh-r" sbin'fzf' for junegunn/fzf
+
+  assert $state equals 0
+  # We can't assert 'Downloading zdharma-continuum/zinit-annex-bin-gem-node'
+  # because of the control chars (colored output)
+  assert "$output" contains "Downloading"
+
+  local artifact="${PLUGINS_DIR}/zdharma-continuum---zinit-annex-bin-gem-node/z-a-bin-gem-node.plugin.zsh"
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+
+  artifact="${ZPFX}/bin/fzf"
+  assert "$artifact" is_file
+  assert "$artifact" is_executable
+}
+
+# vim: set ft=zsh et ts=2 sw=2 : #
