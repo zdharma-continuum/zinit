@@ -1,0 +1,49 @@
+#!/usr/bin/env zunit
+
+@setup {
+  load setup
+  setup
+}
+
+@teardown {
+  load teardown
+  teardown
+}
+
+@test 'zinit OMZL::spectrum.zsh installation' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit snippet OMZL::spectrum.zsh
+
+  assert $state equals 0
+  assert "$output" contains "Setting up snippet"
+
+  local artifact="${SNIPPETS_DIR}/OMZL::spectrum.zsh/OMZL::spectrum.zsh"
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+}
+
+@test 'zinit OMZP::git installation' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit snippet OMZP::git
+
+  assert $state equals 0
+  assert "$output" contains "Setting up snippet"
+
+  local artifact="${SNIPPETS_DIR}/OMZP::git/OMZP::git"
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+}
+
+@test 'zinit PZTM::environment installation' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit snippet PZTM::environment
+
+  assert $state equals 0
+  assert "$output" contains "Setting up snippet"
+
+  local artifact="${SNIPPETS_DIR}/PZTM::environment/PZTM::environment"
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+}
+
+# vim: set ft=zsh et ts=2 sw=2 : #

@@ -1,0 +1,41 @@
+#!/usr/bin/env zunit
+
+@setup {
+  load setup
+  setup
+}
+
+@teardown {
+  load teardown
+  teardown
+}
+
+@test 'zinit-annex-bin-gem-node installation' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit light zdharma-continuum/zinit-annex-bin-gem-node
+
+  assert $state equals 0
+  # We can't assert 'Downloading zdharma-continuum/zinit-annex-bin-gem-node'
+  # because of the control chars (colored output)
+  assert "$output" contains "Downloading"
+
+  local artifact="${PLUGINS_DIR}/zdharma-continuum---zinit-annex-bin-gem-node/z-a-bin-gem-node.plugin.zsh"
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+}
+
+@test 'zinit-annex-readurl installation' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit light zdharma-continuum/zinit-annex-readurl
+
+  assert $state equals 0
+  # We can't assert 'Downloading zdharma-continuum/zinit-annex-readurl'
+  # because of the control chars (colored output)
+  assert "$output" contains "Downloading"
+
+  local artifact="${PLUGINS_DIR}/zdharma-continuum---zinit-annex-readurl/z-a-readurl.plugin.zsh"
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+}
+
+# vim: set ft=zsh et ts=2 sw=2 : #
