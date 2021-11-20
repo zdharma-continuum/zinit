@@ -14,7 +14,7 @@ create_config() {
 }
 
 run() {
-  local image="${1:-ghcr.io/pschmitt/zinit}"
+  local image="${1:-ghcr.io/zdharma-continuum/zinit}"
   local tag="${2:-latest}"
   local init_config="${3}"
 
@@ -30,7 +30,7 @@ run() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
-  CONTAINER_IMAGE=ghcr.io/pschmitt/zinit
+  CONTAINER_IMAGE=ghcr.io/zdharma-continuum/zinit
   CONTAINER_TAG=latest
   INIT_CONFIG_VAL=""
 
