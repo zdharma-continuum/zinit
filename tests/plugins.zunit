@@ -25,7 +25,7 @@
 
 @test 'zinit direnv installation' {
   run ./scripts/docker-run.sh --wrap --debug --zunit \
-    zinit lucid as="program" make for direnv/direnv
+    zinit light-mode as"program" make for @direnv/direnv
 
   assert $state equals 0
   assert "$output" contains "Downloading"
