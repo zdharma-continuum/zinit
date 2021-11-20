@@ -53,7 +53,7 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
     elif [[ -d ${ZDOTDIR:-$HOME}/.zplugin ]]; then
         ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zplugin"
     else
-        ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zinit"
+        ZINIT[HOME_DIR]="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit"
     fi
 fi
 
