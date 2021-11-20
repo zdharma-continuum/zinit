@@ -41,8 +41,10 @@ fi
 
 # User can override ZINIT[HOME_DIR].
 if [[ -z ${ZINIT[HOME_DIR]} ]]; then
-    # Ignore ZDOTDIR if user manually put Zinit to $HOME.
-    if [[ -d $HOME/.zinit ]]; then
+    # Search for zinit home in the usual locations
+    if [[ -d ${XDG_DATA_HOME:-${HOME}/.local/share}/zinit ]]; then
+        ZINIT[HOME_DIR]="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit"
+    elif [[ -d $HOME/.zinit ]]; then
         ZINIT[HOME_DIR]="$HOME/.zinit"
     elif [[ -d ${ZDOTDIR:-$HOME}/.zinit ]]; then
         ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zinit"
@@ -51,7 +53,7 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
     elif [[ -d ${ZDOTDIR:-$HOME}/.zplugin ]]; then
         ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zplugin"
     else
-        ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zinit"
+        ZINIT[HOME_DIR]="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit"
     fi
 fi
 
