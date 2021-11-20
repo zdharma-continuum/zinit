@@ -9,6 +9,17 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 20-11-2021
+  - zinit is now [XDG compliant](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html).
+This means that the default value of `ZINIT[HOME_DIR]` is now
+`XDG_DATA_HOME/zinit`, ie `HOME/.local/share/zinit`, we won't clutter your
+`HOME` anymore! Fear not though: if you update zinit without moving your
+config to the new default location it will still fall back to `HOME/.zinit` if
+this directory exists. In the same spirit, if you overrode `ZINIT[HOME_DIR]`
+yourself in your `zshrc` we will use that value instead.
+NOTE: Since its rewrite the installer has been installing zinit's repo to
+`XDG_DATA_HOME/zinit/zinit.git` (see 16-11-2021 entry)
+
 * 18-11-2021
   - The packages (`zinit pack`) have all been migrated to
 [a new repository](https://github.com/zdharma-continuum/zinit-packages). Nothing
@@ -19,7 +30,7 @@ For more information, please refer to
 [this issue](https://github.com/zdharma-continuum/zinit/issues/69) and/or to
 [the corresponding PR](https://github.com/zdharma-continuum/zinit/pull/75)
 
-  - The zinit module has been relocated to 
+  - The zinit module has been relocated to
 [its own repository](https://github.com/zdharma-continuum/zinit-module)
 
 * 17-11-2021
