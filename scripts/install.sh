@@ -313,6 +313,7 @@ download_git_output_processor
 
 if [ -d "${ZINIT_INSTALL_DIR}/.git" ]; then
   zinit_update
+  ZINIT_UPDATE=1
 else
   zinit_install
 fi
@@ -320,7 +321,7 @@ fi
 if [ -z "$NO_EDIT" ]
 then
   edit_zshrc
-  query_for_annexes
+  [ -z "$ZINIT_UPDATE" ] && query_for_annexes
 fi
 
 if [ -z "$NO_TUTORIAL" ]
