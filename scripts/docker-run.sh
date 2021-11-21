@@ -93,7 +93,7 @@ run() {
   then
     local zsh_opts="-silc"
     [[ -n "$ZSH_DEBUG" ]] && zsh_opts="-xsilc"
-    cmd=(zsh "$zsh_opts" "${cmd[*]@Q}")
+    cmd=(zsh "$zsh_opts" "${cmd[*]}")
   fi
 
   if [[ -n "$DEBUG" ]]
@@ -102,7 +102,7 @@ run() {
       # The @Q below is necessary to keep the quotes intact
       # https://stackoverflow.com/a/12985353/1872036
       echo -e "🚀 \e[35mRunning command"
-      echo -e "\$ docker ${args[*]} run $image:$tag ${cmd[*]@Q}\e[0m"
+      echo -e "\$ docker run ${args[*]} $image:$tag ${cmd[*]@Q}\e[0m"
     } >&2
   fi
 
