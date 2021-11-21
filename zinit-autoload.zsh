@@ -716,12 +716,11 @@ ZINIT[EXTENDED_GLOB]=""
     local nl=$'\n' escape=$'\x1b['
     local -a lines
     (   builtin cd -q "$ZINIT[BIN_DIR]" && \
-        command git checkout master &>/dev/null && \
         command git checkout main &>/dev/null && \
         command git fetch --quiet && \
             lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
         if (( ${#lines} > 0 )); then
-            # Remove the (origin/master ...) segments, to expect only tags to appear
+            # Remove the (origin/main ...) segments, to expect only tags to appear
             lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
             # Remove " ||" if it ends the line (i.e. no additional text from the body)
             lines=( "${lines[@]/ \|\|[[:blank:]]#(#e)/}" )
@@ -735,9 +734,9 @@ ZINIT[EXTENDED_GLOB]=""
             builtin print
         fi
         if [[ $1 != -q ]] {
-            command git pull --no-stat --ff-only origin master
+            command git pull --no-stat --ff-only origin main
         } else {
-            command git pull --no-stat --quiet --ff-only origin master
+            command git pull --no-stat --quiet --ff-only origin main
         }
     )
     if [[ $1 != -q ]] {
