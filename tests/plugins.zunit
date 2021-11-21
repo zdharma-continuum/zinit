@@ -1,0 +1,39 @@
+#!/usr/bin/env zunit
+
+@setup {
+  load setup
+  setup
+}
+
+@teardown {
+  load teardown
+  teardown
+}
+
+@test 'zinit fzf installation' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit lucid as="program" from="gh-r" for junegunn/fzf
+
+  assert $state equals 0
+  assert "$output" contains "Downloading"
+  assert "$output" contains "Successfully extracted and assigned +x chmod"
+
+  local artifact="${PLUGINS_DIR}/junegunn---fzf/fzf"
+  assert "$artifact" is_file
+  assert "$artifact" is_executable
+}
+
+@test 'zinit direnv installation' {
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit light-mode as"program" make for @direnv/direnv
+
+  assert $state equals 0
+  assert "$output" contains "Downloading"
+  assert "$output" contains "go: downloading github.com"
+
+  local artifact="${PLUGINS_DIR}/direnv---direnv/direnv"
+  assert "$artifact" is_file
+  assert "$artifact" is_executable
+}
+
+# vim: set ft=zsh et ts=2 sw=2 : #

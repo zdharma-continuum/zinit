@@ -1,3 +1,13 @@
+# Fix permissions on /data (run only once, at startup)
+if [[ "$$" == 1 ]]
+then
+  if [[ -z "$QUIET" ]]
+  then
+    echo "Setting owner of /data to ${PUID}:${PGID}" >&2
+  fi
+  sudo chown -R "${PUID}:${PGID}" /data
+fi
+
 # load zinit
 source /src/zinit.zsh
 
@@ -6,7 +16,7 @@ source /src/docker/utils.zsh
 
 # Add ZPFX/bin to PATH
 typeset -U path
-path=("${ZPFX:-${HOME}/.zinit/polaris}/bin" $path)
+path=("${ZPFX:-${HOME}/.local/share/zinit/polaris}/bin" $path)
 
 # Install custom zsh version
 if [[ -n "$ZINIT_ZSH_VERSION" ]]

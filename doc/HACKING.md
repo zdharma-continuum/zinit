@@ -41,3 +41,73 @@ git checkout documentation
 
 **NOTE:** If you really **need** to push directly, without CI please refer to
 [the README in the documentation]https://github.com/zdharma-continuum/zinit/blob/documentation/README.md
+
+
+# Testing
+
+We run out tests with [zunit](https://zunit.xyz).
+
+To add a new test case:
+
+1. Install [zunit](https://zunit.xyz) and [revolver](https://github.com/molovo/revolver):
+
+```zsh
+zinit for \
+    as"program" \
+    atclone"ln -sfv revolver.zsh-completion _revolver" \
+    atpull"%atclone" \
+    pick"revolver" \
+  @molovo/revolver \
+    as"completion" \
+    atclone"./build.zsh; ln -sfv zunit.zsh-completion _zunit" \
+    atpull"%atclone" \
+    sbin"zunit" \
+  @zunit-zsh/zunit
+```
+
+2. Create a new `.zunit` file in the `tests/` dir. Here's a template:
+
+```zsh
+#!/usr/bin/env zunit
+
+@setup {
+  load setup
+  setup
+}
+
+@teardown {
+  load teardown
+  teardown
+}
+
+@test 'zinit-annex-bin-gem-node installation' {
+  # This spawns the official zinit container, and executesa single zinit command
+  # inside it
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    zinit light as"null" for zdharma-continuum/null
+
+  # Verify exit code of the command above
+  assert $state equals 0
+  assert "$output" contains "Downloading"
+
+  local artifact="${PLUGINS_DIR}/zdharma-continuum---null/readme.md"
+  # Check if we downloaded the file correctly and if it is readable
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+}
+```
+
+You should of course also check out the existing tests ;)
+
+3. To run your new test:
+
+```zsh
+zunit --verbose tests/your_test.zunit
+```
+
+## Debugging tests
+
+If you ever need to inspect the `ZINIT[HOME_DIR]` dir, where zinit's internal
+data is stored you can do so by commenting out the `@teardown` section in your
+test. Then you can re-run said test and head over to
+`${TMPDIR:-/tmp}/zunit-zinit`. Good luck!

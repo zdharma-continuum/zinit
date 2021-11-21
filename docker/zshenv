@@ -1,0 +1,4 @@
+typeset -Ag ZINIT
+
+export ZINIT[HOME_DIR]=/data
+export ZINIT[BIN_DIR]=/src

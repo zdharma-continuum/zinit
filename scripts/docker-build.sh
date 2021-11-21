@@ -12,18 +12,27 @@ build() {
   then
     tag="zsh${zsh_version}-${tag}"
   fi
-  local image_name="zinit:${tag}"
 
   echo -e "\e[34mBuilding image: ${image_name}\e[0m" >&2
 
-  docker build \
-    --no-cache \
+  if docker build \
     --build-arg "PUSERNAME=$(id -u -n)" \
     --build-arg "PUID=$(id -u)" \
     --build-arg "PGID=$(id -g)" \
     --build-arg "ZINIT_ZSH_VERSION=${zsh_version}" \
     --file "$dockerfile" \
-    --tag "$image_name" "$(realpath ..)"
+    --tag "${image_name}:${tag}" \
+    "$(realpath ..)" \
+    "$@"
+  then
+    {
+      echo -e "\e[34mTo use this image for zunit tests run: "
+      echo -e "export CONTAINER_IMAGE=\"${image_name}\" CONTAINER_TAG=\"${tag}\"\e[0m"
+    } >&2
+  else
+    echo -e "\e[31m❌ Container failed to build.\e[0m" >&2
+    return 1
+  fi
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
