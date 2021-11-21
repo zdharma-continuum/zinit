@@ -192,7 +192,7 @@ then
       "${ROOT_DIR}/docker/zshenv:/home/user01/.zshenv"
       "${ROOT_DIR}/docker/zshrc:/home/user01/.zshrc"
     )
-    CONTAINER_ENV=("QUIET=1")
+    CONTAINER_ENV+=("QUIET=1")
   fi
 
   run "$INIT_CONFIG" "$@"
