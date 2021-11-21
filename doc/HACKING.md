@@ -111,3 +111,16 @@ If you ever need to inspect the `ZINIT[HOME_DIR]` dir, where zinit's internal
 data is stored you can do so by commenting out the `@teardown` section in your
 test. Then you can re-run said test and head over to
 `${TMPDIR:-/tmp}/zunit-zinit`. Good luck!
+
+
+# Misc
+## Get the list of supported ices
+
+To get the list in a quick-and-dirty fashion you issue:
+
+```zsh
+zinit --help | tail -1
+```
+
+See [zinit-autoload.zsh](https://github.com/zdharma-continuum/zinit/blob/2feb41cf70d2f782386bbaa6fda691e3bdc7f1ac/zinit-autoload.zsh#L3445-L3447)
+for implementation details.
