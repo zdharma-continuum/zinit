@@ -49,7 +49,7 @@ We run out tests with [zunit](https://zunit.xyz).
 
 To add a new test case:
 
-1. Install [zunit]()https://zunit.xyz and [revolver](https://github.com/molovo/revolver):
+1. Install [zunit](https://zunit.xyz) and [revolver](https://github.com/molovo/revolver):
 
 ```zsh
 zinit for \
