@@ -19,6 +19,7 @@ build() {
     --build-arg "PUSERNAME=$(id -u -n)" \
     --build-arg "PUID=$(id -u)" \
     --build-arg "PGID=$(id -g)" \
+    --build-arg "TERM=${TERM:-xterm-256color}" \
     --build-arg "ZINIT_ZSH_VERSION=${zsh_version}" \
     --file "$dockerfile" \
     --tag "${image_name}:${tag}" \
@@ -26,8 +27,9 @@ build() {
     "$@"
   then
     {
-      echo -e "\e[34mTo use this image for zunit tests run: "
-      echo -e "export CONTAINER_IMAGE=\"${image_name}\" CONTAINER_TAG=\"${tag}\"\e[0m"
+      echo -e "\e[34mTo use this image for zunit tests run: \e[0m"
+      echo -e "\e[34mexport CONTAINER_IMAGE=\"${image_name}\" CONTAINER_TAG=\"${tag}\"\e[0m"
+      echo -e "\e[34mzunit run --verbose\e[0m"
     } >&2
   else
     echo -e "\e[31m❌ Container failed to build.\e[0m" >&2

@@ -69,6 +69,12 @@ run() {
     fi
   fi
 
+  # Inherit TERM
+  if [[ -n "$TERM" ]]
+  then
+    args+=(--env "TERM=${TERM}")
+  fi
+
   if [[ -n "${CONTAINER_ENV[*]}" ]]
   then
     local e
@@ -91,9 +97,9 @@ run() {
 
   if [[ -n "$WRAP_CMD" ]]
   then
-    local zsh_opts="-silc"
-    [[ -n "$ZSH_DEBUG" ]] && zsh_opts="-xsilc"
-    cmd=(zsh "$zsh_opts" "${cmd[*]}")
+    local zsh_opts="ilsc"
+    [[ -n "$ZSH_DEBUG" ]] && zsh_opts="x${zsh_opts}"
+    cmd=(zsh "-${zsh_opts}" "${cmd[*]}")
   fi
 
   if [[ -n "$DEBUG" ]]
@@ -192,7 +198,9 @@ then
       "${ROOT_DIR}/docker/zshenv:/home/user01/.zshenv"
       "${ROOT_DIR}/docker/zshrc:/home/user01/.zshrc"
     )
-    CONTAINER_ENV+=("QUIET=1")
+    CONTAINER_ENV+=(
+      "QUIET=1"
+    )
   fi
 
   run "$INIT_CONFIG" "$@"
