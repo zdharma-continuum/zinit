@@ -4,9 +4,11 @@ FROM alpine:${VERSION}
 ARG PUSERNAME=user01
 ARG PUID=1000
 ARG PGID=1000
+ARG TERM=xterm-256color
 ARG ZINIT_ZSH_VERSION
+
 ENV PUSERNAME=${PUSERNAME} PUID=${PUID} PGID=${PGID} \
-    ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}
+     TERM=${TERM} ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}
 
 RUN apk --no-cache --virtual base add \
         zsh curl git libuser sudo && \

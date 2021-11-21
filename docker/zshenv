@@ -1,3 +1,7 @@
+# Make sure TERM is set
+# Without a TERM value some ices might be ignored
+# https://github.com/zdharma-continuum/zinit/issues/97
+export TERM=${TERM:-xterm-256color}
 typeset -Ag ZINIT
 
 export ZINIT[HOME_DIR]=/data
