@@ -63,7 +63,7 @@ check_dependencies() {
   if ! zsh -sfc \
       'autoload is-at-least;
        is-at-least $1 $ZSH_VERSION' "$zsh_min_version"; then
-    echo_warning "ZSH version 5.5+ is recommended for zinit." \
+    echo_warn "ZSH version 5.5+ is recommended for zinit." \
                  "It'll still work, but be warned."
   fi
 
