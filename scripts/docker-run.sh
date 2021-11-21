@@ -69,6 +69,15 @@ run() {
     fi
   fi
 
+  if [[ -n "${CONTAINER_ENV[*]}" ]]
+  then
+    local e
+    for e in "${CONTAINER_ENV[@]}"
+    do
+      args+=(--env "${e}")
+    done
+  fi
+
   if [[ -n "${CONTAINER_VOLUMES[*]}" ]]
   then
     local vol
@@ -104,6 +113,7 @@ if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
   CONTAINER_IMAGE=${CONTAINER_IMAGE:-ghcr.io/zdharma-continuum/zinit}
   CONTAINER_TAG="${CONTAINER_TAG:-latest}"
+  CONTAINER_ENV=()
   CONTAINER_VOLUMES=()
   DEBUG="${DEBUG:-}"
   ZSH_DEBUG="${ZSH_DEBUG:-}"
@@ -132,6 +142,11 @@ then
         ;;
       -t|--tag)
         CONTAINER_TAG="$2"
+        shift 2
+        ;;
+      # Additional container env vars
+      -e|--environment)
+        CONTAINER_ENV+=("$2")
         shift 2
         ;;
       # Additional container volumes
@@ -177,6 +192,7 @@ then
       "${ROOT_DIR}/docker/zshenv:/home/user01/.zshenv"
       "${ROOT_DIR}/docker/zshrc:/home/user01/.zshrc"
     )
+    CONTAINER_ENV=("QUIET=1")
   fi
 
   run "$INIT_CONFIG" "$@"
