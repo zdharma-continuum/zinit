@@ -11,7 +11,7 @@ source /src/zinit.zsh
 source /src/docker/utils.zsh
 
 # Annexes
-zinit::setup-annexes
+[[ -z "$NOTHING_FANCY" ]] && zinit::setup-annexes
 
 # Add ZPFX/bin to PATH
 typeset -U path
@@ -31,6 +31,6 @@ then
 fi
 
 # Setup keys
-zinit::setup-keys
+[[ -z "$NOTHING_FANCY" ]] && zinit::setup-keys
 
 # vim: ft=zsh et ts=2 sw=2 :

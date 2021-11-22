@@ -8,8 +8,11 @@ sudo chown "${PUID}:${PGID}" /data
 sudo chown -R "${PUID}:${PGID}" /data
 
 # sync files between /data-static and /data
-if [[ -z "$QUIET" ]]
+if [[ -z "$NOTHING_FANCY" ]]
 then
-  echo "Copying files from /data-static to /data" >&2
+  if [[ -z "$QUIET" ]]
+  then
+    echo "Copying files from /data-static to /data" >&2
+  fi
+  rsync -raq /data-static/ /data
 fi
-rsync -raq /data-static/ /data
