@@ -298,7 +298,7 @@ EOF
 
 # Globals. Can be overridden.
 ZINIT_REPO="${ZINIT_REPO:-zdharma-continuum/zinit}"
-ZINIT_BRANCH="${ZINIT_BRANCH:-master}"
+ZINIT_BRANCH="${ZINIT_BRANCH:-main}"
 ZINIT_COMMIT="${ZINIT_COMMIT:-}"  # no default value
 ZINIT_HOME="${ZINIT_HOME:-${XDG_DATA_HOME:-${HOME}/.local/share}/zinit}"
 ZINIT_REPO_DIR_NAME="${ZINIT_REPO_DIR_NAME:-zinit.git}"
