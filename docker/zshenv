@@ -4,5 +4,7 @@
 export TERM=${TERM:-xterm-256color}
 typeset -Ag ZINIT
 
-export ZINIT[HOME_DIR]=/data
+# ZINIT_HOME_DIR is used at build time to force the installation of plugins
+# etc to /data-static
+export ZINIT[HOME_DIR]=${ZINIT_HOME_DIR:-/data}
 export ZINIT[BIN_DIR]=/src

@@ -5,14 +5,7 @@ zinit::setup() {
 }
 
 zinit::setup-keys() {
-  local file="${HOME}/OMZL::key-bindings.zsh"
-
-  if [[ -r "$file" ]]
-  then
-    source "$file"
-  else
-    zinit snippet OMZL::key-bindings.zsh
-  fi
+  zinit snippet OMZL::key-bindings.zsh
 }
 
 zinit::setup-annexes() {
