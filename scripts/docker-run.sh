@@ -138,6 +138,15 @@ then
         INIT_CONFIG_VAL="$2"
         shift 2
         ;;
+      -f|--config-file|--init-config-file|--file)
+        if ! [[ -r "$2" ]]
+        then
+          echo "Unable to read from file: $2" >&2
+          exit 2
+        fi
+        INIT_CONFIG_VAL="$(cat "$2")"
+        shift 2
+        ;;
       -d|--debug)
         DEBUG=1
         shift
