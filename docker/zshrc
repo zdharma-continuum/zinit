@@ -6,6 +6,8 @@ fi
 
 # load zinit
 source /src/zinit.zsh
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
 # load zinit setup utility functions
 source /src/docker/utils.zsh
