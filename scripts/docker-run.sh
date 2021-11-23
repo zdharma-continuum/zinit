@@ -209,6 +209,7 @@ then
     )
     CONTAINER_ENV+=(
       "QUIET=1"
+      "NOTHING_FANCY=1"
     )
   fi
 

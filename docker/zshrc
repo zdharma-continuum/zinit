@@ -1,19 +1,19 @@
-# Fix permissions on /data (run only once, at startup)
-if [[ "$$" == 1 ]]
+# Initialization. Trigger stuff that only needs to be run once, at startup.
+if [[ "$$" == 1 ]] && [[ -z "$ZSH_NO_INIT" ]]
 then
-  if [[ -z "$QUIET" ]]
-  then
-    echo "Setting owner of /data to ${PUID}:${PGID}" >&2
-  fi
-  sudo chown /data
-  sudo chown -R "${PUID}:${PGID}" /data
+  source /src/docker/init.zsh
 fi
 
 # load zinit
 source /src/zinit.zsh
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
 # load zinit setup utility functions
 source /src/docker/utils.zsh
+
+# Annexes
+[[ -z "$NOTHING_FANCY" ]] && zinit::setup-annexes
 
 # Add ZPFX/bin to PATH
 typeset -U path
@@ -33,6 +33,6 @@ then
 fi
 
 # Setup keys
-zinit::setup-keys
+[[ -z "$NOTHING_FANCY" ]] && zinit::setup-keys
 
 # vim: ft=zsh et ts=2 sw=2 :
