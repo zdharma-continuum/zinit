@@ -160,7 +160,7 @@ then
         shift 2
         ;;
       # Additional container env vars
-      -e|--environment)
+      -e|--env|--environment)
         CONTAINER_ENV+=("$2")
         shift 2
         ;;
