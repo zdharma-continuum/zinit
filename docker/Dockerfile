@@ -11,9 +11,11 @@ ENV PUSERNAME=${PUSERNAME} PUID=${PUID} PGID=${PGID} \
      TERM=${TERM} ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}
 
 RUN apk --no-cache --virtual base add \
-        zsh curl git libuser sudo rsync && \
-    apk --no-cache --virtual build-tools add \
-        build-base autoconf ncurses-dev bash go
+        coreutils curl git libuser rsync sudo zsh && \
+    apk --no-cache --virtual zsh-build-tools add \
+        autoconf bash build-base ncurses-dev && \
+    apk --no-cache --virtual dev-tools add \
+        go nodejs-dev npm ruby-dev
 
 RUN sed -ir 's#^(root:.+):/bin/ash#\1:/bin/zsh#' /etc/passwd && \
     adduser -D -s /bin/zsh -u "${PUID}" -h "/home/${PUSERNAME}" \
