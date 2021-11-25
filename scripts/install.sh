@@ -118,7 +118,7 @@ download_git_output_processor() {
     chmod a+x "$script_path" 2>/dev/null
     echo_success 'Download finished!'
   else
-    echo_warn "Download failed."
+    echo_warning "Download failed."
   fi
 
   unset url script_path
@@ -204,7 +204,7 @@ zinit_install() {
 edit_zshrc() {
   rc_update=1
   if grep -E '(zinit|zplugin)\.zsh' "${ZSHRC}" >/dev/null 2>&1; then
-    echo_warn "${ZSHRC} already contains zinit commands. Not making any changes."
+    echo_warning "${ZSHRC} already contains zinit commands. Not making any changes."
     rc_update=0
   fi
 
