@@ -35,4 +35,7 @@ fi
 # Setup keys
 [[ -z "$NOTHING_FANCY" ]] && zinit::setup-keys
 
+# Aliases
+alias vim="nvim"
+
 # vim: ft=zsh et ts=2 sw=2 :
