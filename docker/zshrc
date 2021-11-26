@@ -39,4 +39,17 @@ fi
 alias ls="ls --color=auto"
 alias vim="nvim"
 
+# History
+HISTFILE=${HOME}/.local/share/zsh/history
+HISTSIZE=1000
+SAVEHIST=1000
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_verify
+setopt share_history
+
+mkdir -p ${HISTFILE:A:h}
+
 # vim: ft=zsh et ts=2 sw=2 :
