@@ -151,6 +151,10 @@ then
         DEBUG=1
         shift
         ;;
+      -D|--dev|--devel)
+        DEVEL=1
+        shift
+        ;;
       -i|--image)
         CONTAINER_IMAGE="$2"
         shift 2
@@ -193,6 +197,16 @@ then
   if INIT_CONFIG="$(create_init_config_file "$INIT_CONFIG_VAL")"
   then
     trap 'rm -vf $INIT_CONFIG' EXIT INT
+  fi
+
+  if [[ -n "$DEVEL" ]]
+  then
+    ROOT_DIR="$(cd "$(dirname "$0")/.." >/dev/null 2>&1; pwd -P)" || exit 9
+    # Mount root of the repo to /src
+    # Mount /tmp/zunit-zinit to /data
+    CONTAINER_VOLUMES+=(
+      "${ROOT_DIR}:/src"
+    )
   fi
 
   if [[ -n "$ZUNIT" ]]
