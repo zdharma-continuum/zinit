@@ -2085,12 +2085,13 @@ zimv() {
 
     local make=${ICE[make]}
     @zinit-substitute make
-    (( ${+ICE[make]} )) || return 0
+
+    (( ${+ICE[make]} )) || return
+    [[ $make = "!!"* ]] || return
 
     # Git-plugin make'' at download
-    [[ $make = "!!"* ]] && \
-        .zinit-countdown make && \
-            command make -C "$dir" ${(@s; ;)${make#\!\!}}
+    .zinit-countdown make && \
+        command make -C "$dir" ${(@s; ;)${make#\!\!}}
 }
 # ]]]
 # FUNCTION: ∞zinit-make-e-hook [[[
@@ -2101,12 +2102,13 @@ zimv() {
 
     local make=${ICE[make]}
     @zinit-substitute make
-    (( ${+ICE[make]} )) || return 0
+
+    (( ${+ICE[make]} )) || return
+    [[ $make = ("!"[^\!]*|"!") ]] || return
 
     # Git-plugin make'' at download
-    [[ $make = ("!"[^\!]*|"!") ]] && \
-        .zinit-countdown make && \
-            command make -C "$dir" ${(@s; ;)${make#\!}}
+    .zinit-countdown make && \
+        command make -C "$dir" ${(@s; ;)${make#\!}}
 }
 # ]]]
 # FUNCTION: ∞zinit-make-hook [[[
@@ -2117,12 +2119,13 @@ zimv() {
 
     local make=${ICE[make]}
     @zinit-substitute make
-    (( ${+ICE[make]} )) || return 0
+
+    (( ${+ICE[make]} )) || return
+    [[ $make != "!"* ]] || return
 
     # Git-plugin make'' at download
-    [[ $make != "!"* ]] &&
     .zinit-countdown make &&
-    command make -C "$dir" ${(@s; ;)make}
+        command make -C "$dir" ${(@s; ;)make}
 }
 # ]]]
 # FUNCTION: ∞zinit-atclone-hook [[[
@@ -2164,9 +2167,9 @@ zimv() {
     local extract=${ICE[extract]}
     @zinit-substitute extract
 
-    (( ${+ICE[extract]} )) && {
-        .zinit-extract plugin "$extract" "$dir"
-    } || return 0
+    (( ${+ICE[extract]} )) || return
+
+    .zinit-extract plugin "$extract" "$dir"
 }
 # ]]]
 # FUNCTION: ∞zinit-mv-hook [[[
