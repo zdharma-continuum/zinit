@@ -36,6 +36,7 @@ fi
 [[ -z "$NOTHING_FANCY" ]] && zinit::setup-keys
 
 # Aliases
+alias ls="ls --color=auto"
 alias vim="nvim"
 
 # vim: ft=zsh et ts=2 sw=2 :
