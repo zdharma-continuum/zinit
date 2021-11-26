@@ -450,6 +450,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         }
 
         if [[ $update != -u ]] {
+            local rc=0 hook_rc=0
             # Store ices at clone of a plugin
             .zinit-store-ices "$local_path/._zinit" ICE "" "" "" ""
             reply=(
@@ -459,7 +460,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+                # Functions calls
                 "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_path" "${${key##(zinit|z-annex) hook:}%% <->}" load
+                hook_rc=$?
+                [[ "$hook_rc" -ne 0 ]] && {
+                    # note: this will effectively return the last != 0 rc
+                    rc="$hook_rc"
+                    builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
+                }
             done
 
             # Run annexes' atclone hooks (the after atclone-ice ones)
@@ -474,7 +482,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             done
         }
 
-        ((1))
+        return "$rc"
     ) || return $?
 
     typeset -ga INSTALLED_EXECS
@@ -2077,6 +2085,7 @@ zimv() {
 
     local make=${ICE[make]}
     @zinit-substitute make
+    (( ${+ICE[make]} )) || return 0
 
     # Git-plugin make'' at download
     [[ $make = "!!"* ]] && \
@@ -2092,6 +2101,7 @@ zimv() {
 
     local make=${ICE[make]}
     @zinit-substitute make
+    (( ${+ICE[make]} )) || return 0
 
     # Git-plugin make'' at download
     [[ $make = ("!"[^\!]*|"!") ]] && \
@@ -2107,12 +2117,12 @@ zimv() {
 
     local make=${ICE[make]}
     @zinit-substitute make
+    (( ${+ICE[make]} )) || return 0
 
     # Git-plugin make'' at download
-    (( ${+ICE[make]} )) && \
-        [[ $make != "!"* ]] && \
-            .zinit-countdown make && \
-                command make -C "$dir" ${(@s; ;)make}
+    [[ $make != "!"* ]] &&
+    .zinit-countdown make &&
+    command make -C "$dir" ${(@s; ;)make}
 }
 # ]]]
 # FUNCTION: ∞zinit-atclone-hook [[[
@@ -2123,8 +2133,26 @@ zimv() {
 
     local atclone=${ICE[atclone]}
     @zinit-substitute atclone
+    (( ${+ICE[atclone]} )) || return 0
 
-    [[ -n $atclone ]] && .zinit-countdown atclone && { local ___oldcd=$PWD; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$dir"; } && eval "$atclone"; ((1)); } || eval "$atclone"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }; }
+    local rc=0
+    [[ -n $atclone ]] && .zinit-countdown atclone && {
+        local ___oldcd=$PWD
+
+        (( ${+ICE[nocd]} == 0 )) && {
+            () {
+                setopt localoptions noautopushd
+                builtin cd -q "$dir"
+            }
+        }
+
+        eval "$atclone"
+        rc="$?"
+
+        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }
+    }
+
+    return "$rc"
 }
 # ]]]
 # FUNCTION: ∞zinit-extract-hook [[[
@@ -2136,7 +2164,9 @@ zimv() {
     local extract=${ICE[extract]}
     @zinit-substitute extract
 
-    (( ${+ICE[extract]} )) && .zinit-extract plugin "$extract" "$dir"
+    (( ${+ICE[extract]} )) && {
+        .zinit-extract plugin "$extract" "$dir"
+    } || return 0
 }
 # ]]]
 # FUNCTION: ∞zinit-mv-hook [[[
