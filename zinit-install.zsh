@@ -2086,8 +2086,8 @@ zimv() {
     local make=${ICE[make]}
     @zinit-substitute make
 
-    (( ${+ICE[make]} )) || return
-    [[ $make = "!!"* ]] || return
+    (( ${+ICE[make]} )) || return 0
+    [[ $make = "!!"* ]] || return 0
 
     # Git-plugin make'' at download
     .zinit-countdown make && \
@@ -2103,8 +2103,8 @@ zimv() {
     local make=${ICE[make]}
     @zinit-substitute make
 
-    (( ${+ICE[make]} )) || return
-    [[ $make = ("!"[^\!]*|"!") ]] || return
+    (( ${+ICE[make]} )) || return 0
+    [[ $make = ("!"[^\!]*|"!") ]] || return 0
 
     # Git-plugin make'' at download
     .zinit-countdown make && \
@@ -2120,8 +2120,8 @@ zimv() {
     local make=${ICE[make]}
     @zinit-substitute make
 
-    (( ${+ICE[make]} )) || return
-    [[ $make != "!"* ]] || return
+    (( ${+ICE[make]} )) || return 0
+    [[ $make != "!"* ]] || return 0
 
     # Git-plugin make'' at download
     .zinit-countdown make &&
@@ -2240,19 +2240,20 @@ zimv() {
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
-    if [[ ( $hook = *\!at(clone|pull)* && ${+ICE[nocompile]} -eq 0 ) || \
-            ( $hook = at(clone|pull)* && $ICE[nocompile] = '!' )
-    ]] {
-        # Compile plugin
-        if [[ -z $ICE[(i)(\!|)(sh|bash|ksh|csh)] ]] {
-            () {
-                emulate -LR zsh
-                setopt extendedglob warncreateglobal
-                if [[ $tpe == snippet ]] {
-                    .zinit-compile-plugin "%$dir" ""
-                } else {
-                    .zinit-compile-plugin "$id_as" ""
-                }
+    if ! [[ ( $hook = *\!at(clone|pull)* && ${+ICE[nocompile]} -eq 0 ) || \
+            ( $hook = at(clone|pull)* && $ICE[nocompile] = '!' ) ]] {
+        return 0
+    }
+
+    # Compile plugin
+    if [[ -z $ICE[(i)(\!|)(sh|bash|ksh|csh)] ]] {
+        () {
+            emulate -LR zsh
+            setopt extendedglob warncreateglobal
+            if [[ $tpe == snippet ]] {
+                .zinit-compile-plugin "%$dir" ""
+            } else {
+                .zinit-compile-plugin "$id_as" ""
             }
         }
     }
