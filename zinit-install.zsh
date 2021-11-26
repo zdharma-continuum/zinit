@@ -2167,7 +2167,7 @@ zimv() {
     local extract=${ICE[extract]}
     @zinit-substitute extract
 
-    (( ${+ICE[extract]} )) || return
+    (( ${+ICE[extract]} )) || return 0
 
     .zinit-extract plugin "$extract" "$dir"
 }
