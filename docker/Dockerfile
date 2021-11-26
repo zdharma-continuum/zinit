@@ -8,7 +8,7 @@ ARG TERM=xterm-256color
 ARG ZINIT_ZSH_VERSION
 
 ENV PUSERNAME=${PUSERNAME} PUID=${PUID} PGID=${PGID} \
-     TERM=${TERM} ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}
+    SHELL=/bin/zsh TERM=${TERM} ZINIT_ZSH_VERSION=${ZINIT_ZSH_VERSION}
 
 RUN apk --no-cache --virtual base add \
         coreutils curl git libuser rsync sudo zsh && \
