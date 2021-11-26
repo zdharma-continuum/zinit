@@ -123,8 +123,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 \
         local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} pkgjson \
-        tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123} \
-        URL=https://raw.githubusercontent.com/zdharma-continuum/zinit-packages/HEAD/$2/package.json
+        tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
+    local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ZINIT[PACKAGES_BRANCH]}/${pkg}/package.json
 
     local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
         tool_sep="{rst}, {cmd}" \
@@ -133,16 +133,25 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
     trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
 
-    if [[ $profile != ./* ]] {
-        if { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
-            rm -f $tmpfile; .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
+    if [[ "$user" == "local" ]] && [[ "$pkg" =~ package.json$ ]]; then
+        local pkgfile="/${pkg}"  # re-add stripped /
+        [[ ! -r "$pkgfile" ]] && {
+            +zinit-message "{u-warn}Error{b-warn}:{error} file does not exist: {apo}\`{pid}$pkgfile{apo}\`{rst}"
+            return 1
         }
-    } else {
-        tmpfile=${profile%:*}
-        profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
-    }
+        pkgjson="$(<${pkgfile})"
+    else
+        if [[ $profile != ./* ]] {
+            if { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
+                rm -f $tmpfile; .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
+            }
+        } else {
+            tmpfile=${profile%:*}
+            profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
+        }
 
-    pkgjson="$(<$tmpfile)"
+        pkgjson="$(<$tmpfile)"
+    fi
 
     if [[ -z $pkgjson ]]; then
         +zinit-message "{u-warn}Error{b-warn}:{error} the package {apo}\`{pid}$id_as{apo}\`"\
