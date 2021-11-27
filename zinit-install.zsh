@@ -133,7 +133,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
     trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
 
-    if [[ "$user" == "local" ]] && [[ "$pkg" =~ package.json$ ]]; then
+    local localpkg
+    if [[ "$user" == "local" ]] && [[ "$pkg" =~ /package.json$ ]]; then
+        localpkg=1
         local pkgfile="/${pkg}"  # re-add stripped /
         [[ ! -r "$pkgfile" ]] && {
             +zinit-message "{u-warn}Error{b-warn}:{error} file does not exist: {apo}\`{pid}$pkgfile{apo}\`{rst}"
@@ -189,6 +191,19 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             map=( "\"" "\\\"" "\\" "\\" )
             eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
         }
+        # DIRTYFIX the id-as ice is pretty much required for local packages
+        # without most snippets won't work as expected as their files end up being
+        # saved as "package.json" and then ziextract etc will fail to detect these
+        # NOTE that the id-as also dictates who the downloaded snippet file will
+        # be named
+        if [[ -n "$localpkg" ]] && [[ -z "${ICE[id-as]}" ]]
+        then
+            # First we'll try using the name field of the package.json
+            # If that fails we default to:
+            # zinit-pack---local---path---to---plugin---dir
+            local pkgname=$(jq -r '.name // ""' <<< "$pkgjson" 2>/dev/null)
+            ICE[id-as]=${pkgname:-zinit-pack---local---${${pkg%%/package.json}//\//---}
+        fi
     } else {
         # Założenie: profil domyślny jest pierwszy w tablicy (patrz: inny kolor).
         +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
