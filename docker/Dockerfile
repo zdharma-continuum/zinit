@@ -15,7 +15,7 @@ RUN apk --no-cache --virtual base add \
     apk --no-cache --virtual zsh-build-tools add \
         autoconf bash build-base ncurses-dev && \
     apk --no-cache --virtual dev-tools add \
-        go nodejs-dev npm ruby-dev neovim
+        go jq nodejs-dev npm ruby-dev neovim
 
 RUN sed -ir 's#^(root:.+):/bin/ash#\1:/bin/zsh#' /etc/passwd && \
     adduser -D -s /bin/zsh -u "${PUID}" -h "/home/${PUSERNAME}" \
