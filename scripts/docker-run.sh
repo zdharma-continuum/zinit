@@ -199,13 +199,13 @@ then
     trap 'rm -vf $INIT_CONFIG' EXIT INT
   fi
 
+  GIT_ROOT_DIR="$(cd "$(dirname "$0")/.." >/dev/null 2>&1; pwd -P)" || exit 9
+
   if [[ -n "$DEVEL" ]]
   then
-    ROOT_DIR="$(cd "$(dirname "$0")/.." >/dev/null 2>&1; pwd -P)" || exit 9
     # Mount root of the repo to /src
-    # Mount /tmp/zunit-zinit to /data
     CONTAINER_VOLUMES+=(
-      "${ROOT_DIR}:/src"
+      "${GIT_ROOT_DIR}:/src"
     )
   fi
 
@@ -215,7 +215,7 @@ then
     # Mount root of the repo to /src
     # Mount /tmp/zunit-zinit to /data
     CONTAINER_VOLUMES+=(
-      "${ROOT_DIR}:/src"
+      "${GIT_ROOT_DIR}:/src"
       "${TMPDIR:-/tmp}/zunit-zinit:/data"
       # TODO DIRTYFIX TO BE REMOVED BEFORE MERGING
       "${ROOT_DIR}/docker/zshenv:/home/user01/.zshenv"
