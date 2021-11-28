@@ -22,13 +22,13 @@ then
   zinit::pack-zsh "$ZINIT_ZSH_VERSION"
 fi
 
+source /src/docker/zshrc-fancy
+
 # Source init file
 INIT_FILE="/init.zsh"
 if [[ -r "$INIT_FILE" ]]
 then
   source "$INIT_FILE"
 fi
-
-source /src/docker/zshrc-fancy
 
 # vim: ft=zsh et ts=2 sw=2 :
