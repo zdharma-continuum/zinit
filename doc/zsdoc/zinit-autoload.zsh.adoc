@@ -138,7 +138,7 @@ ____
  how to load the module in .zshrc.
 ____
 
-Has 33 line(s). Calls functions:
+Has 39 line(s). Calls functions:
 
  .zinit-build-module
  `-- zinit.zsh/+zinit-message
@@ -1068,7 +1068,7 @@ ____
  User-action entry point.
 ____
 
-Has 46 line(s). Calls functions:
+Has 45 line(s). Calls functions:
 
  .zinit-self-update
  |-- zinit.zsh/.zinit-get-mtime-into
