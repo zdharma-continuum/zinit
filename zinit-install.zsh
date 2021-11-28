@@ -1,121 +1,67 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
-builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."; return 1; }
+builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
+    builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."
+    return 1
+}
 
-# FUNCTION: .zinit-parse-json [[[
-# Retrievies the ice-list from given profile from
-# the JSON of the package.json.
-.zinit-parse-json() {
-    emulate -LR zsh
-    setopt extendedglob warncreateglobal typesetsilent
 
-    local -A ___pos_to_level ___level_to_pos ___pair_map \
-        ___final_pairs ___Strings ___Counts
-    local ___input=$1 ___workbuf=$1 ___key=$2 ___varname=$3 \
-        ___style ___quoting
-    integer ___nest=${4:-1} ___idx=0 ___pair_idx ___level=0 \
-        ___start ___end ___sidx=1 ___had_quoted_value=0
-    local -a match mbegin mend ___pair_order
+# FUNCTION: .zinit-jq-check [[[
+# Check if jq is available and outputs an error message with instructions if
+# that's not the case
+.zinit-jq-check() {
+    command -v jq >/dev/null && return 0
 
-    (( ${(P)+___varname} )) || typeset -gA "$___varname"
-
-    ___pair_map=( "{" "}" "[" "]" )
-    while [[ $___workbuf = (#b)[^"{}[]\\\"'":,]#((["{[]}\"'":,])|[\\](*))(*) ]]; do
-        if [[ -n ${match[3]} ]] {
-            ___idx+=${mbegin[1]}
-
-            [[ $___quoting = \' ]] && \
-                { ___workbuf=${match[3]}; } || \
-                { ___workbuf=${match[3]:1}; (( ++ ___idx )); }
-
-        } else {
-            ___idx+=${mbegin[1]}
-            if [[ -z $___quoting ]] {
-                if [[ ${match[1]} = ["({["] ]]; then
-                    ___Strings[$___level/${___Counts[$___level]}]+=" $'\0'--object--$'\0'"
-                    ___pos_to_level[$___idx]=$(( ++ ___level ))
-                    ___level_to_pos[$___level]=$___idx
-                    (( ___Counts[$___level] += 1 ))
-                    ___sidx=___idx+1
-                    ___had_quoted_value=0
-                elif [[ ${match[1]} = ["]})"] ]]; then
-                    (( !___had_quoted_value )) && \
-                        ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
-                    ___had_quoted_value=1
-                    if (( ___level > 0 )); then
-                        ___pair_idx=${___level_to_pos[$___level]}
-                        ___pos_to_level[$___idx]=$(( ___level -- ))
-                        if [[ ${___pair_map[${___input[___pair_idx]}]} = ${___input[___idx]} ]] {
-                            ___final_pairs[$___idx]=$___pair_idx
-                            ___final_pairs[$___pair_idx]=$___idx
-                            ___pair_order+=( $___idx )
-                        }
-                    else
-                        ___pos_to_level[$___idx]=-1
-                    fi
-                fi
-            }
-
-            [[ ${match[1]} = \" && $___quoting != \' ]] && \
-                if [[ $___quoting = '"' ]]; then
-                    ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]}"
-                    ___quoting=""
-                else
-                    ___had_quoted_value=1
-                    ___sidx=___idx+1
-                    ___quoting='"'
-                fi
-
-            [[ ${match[1]} = , && -z $___quoting ]] && \
-                {
-                    (( !___had_quoted_value )) && \
-                        ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
-                    ___sidx=___idx+1
-                    ___had_quoted_value=0
-                }
-
-            [[ ${match[1]} = : && -z $___quoting ]] && \
-                {
-                    ___had_quoted_value=0
-                    ___sidx=___idx+1
-                }
-
-            [[ ${match[1]} = \' && $___quoting != \" ]] && \
-                if [[ $___quoting = "'" ]]; then
-                    ___Strings[$___level/${___Counts[$___level]}]+=" ${(q)___input[___sidx,___idx-1]}"
-                    ___quoting=""
-                else
-                    ___had_quoted_value=1
-                    ___sidx=___idx+1
-                    ___quoting="'"
-                fi
-
-            ___workbuf=${match[4]}
-        }
-    done
-
-    local ___text ___found
-    if (( ___nest != 2 )) {
-        integer ___pair_a ___pair_b
-        for ___pair_a ( "${___pair_order[@]}" ) {
-            ___pair_b="${___final_pairs[$___pair_a]}"
-            ___text="${___input[___pair_b,___pair_a]}"
-            if [[ $___text = [[:space:]]#\{[[:space:]]#[\"\']${___key}[\"\']* ]]; then
-                ___found="$___text"
-            fi
-        }
-    }
-
-    if [[ -n $___found && $___nest -lt 2 ]] {
-        .zinit-parse-json "$___found" "$___key" "$___varname" 2
-    }
-
-    if (( ___nest == 2 )) {
-        : ${(PAA)___varname::="${(kv)___Strings[@]}"}
-    }
+    +zinit-message "{error}❌ ERROR: jq binary not found" \
+        "{nl}{u-warn}Please install jq:{rst}" \
+        "https://github.com/stedolan/jq" \
+        "{nl}{u-warn}To do so with zinit, please refer to:{rst}" \
+        "https://github.com/zdharma-continuum/zinit/wiki/Recommended-ices#jq"
+    return 1
 }
 # ]]]
+
+# FUNCTION: .zinit-json-get-value [[[
+# Wrapper around jq that return the value of a property
+# $1: JSON structure
+# $2: jq path
+.zinit-json-get-value() {
+    .zinit-jq-check || return 1
+
+    local jsonstr=$1 jqpath=$2
+    jq -er ".${jqpath}" <<< "$jsonstr"
+}
+# ]]]
+
+# FUNCTION: .zinit-json-to-array [[[
+# Wrapper around jq that sets key/values of an associative array, replicating
+# the structure of a given JSON object
+# $1: JSON structure
+# $2: jq path
+# $3: name of the associative array to store the key/value pairs in
+.zinit-json-to-array() {
+    emulate -LR zsh
+    setopt localoptions noglob
+
+    .zinit-jq-check || return 1
+
+    local jsonstr=$1 jqpath=$2 varname=$3
+
+    (( ${(P)+varname} )) || typeset -gA "$varname"
+
+    # NOTE We're not using @sh for the keys on purpose. Associative
+    # array keys are used verbatim by zsh:
+    # typeset -A a; a[key]=one; a['key']=two; echo ${(k)a}
+    # 'key' key
+    local evalstr=$(command jq -er --arg varname $varname \
+        '.'${jqpath}' | to_entries |
+        map($varname + "[\(.key)]=\(.value | @sh);")[]' \
+        <<< "$jsonstr")
+    eval "$evalstr"
+}
+# ]]]
+
 # FUNCTION: .zinit-get-package [[[
 .zinit-get-package() {
     emulate -LR zsh
@@ -133,101 +79,99 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
     trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
 
-    local localpkg
-    if [[ "$user" == "local" ]] && [[ "$pkg" =~ /package.json$ ]]; then
-        localpkg=1
-        local pkgfile="/${pkg}"  # re-add stripped /
-        [[ ! -r "$pkgfile" ]] && {
-            +zinit-message "{u-warn}Error{b-warn}:{error} file does not exist: {apo}\`{pid}$pkgfile{apo}\`{rst}"
-            return 1
-        }
-        pkgjson="$(<${pkgfile})"
-    else
-        if [[ $profile != ./* ]] {
-            if { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
-                rm -f $tmpfile; .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
-            }
-        } else {
-            tmpfile=${profile%:*}
-            profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
-        }
+    # Check if we were provided with a local path to a package.json
+    # as in:
+    # zinit pack'/zp/firefox-dev/package.json:default' for firefox-dev
+    if [[ $profile == ./* || $profile == /* ]] {
+        local localpkg=1
+        # FIXME below only works if there are no ':' in the path
+        tmpfile=${profile%:*}
+        profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
+    } elif { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
+        # retry
+        command rm -f $tmpfile
+        .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
+    }
 
-        pkgjson="$(<$tmpfile)"
-    fi
+    # load json from file
+    [[ -e $tmpfile ]] && pkgjson="$(<$tmpfile)"
 
-    if [[ -z $pkgjson ]]; then
-        +zinit-message "{u-warn}Error{b-warn}:{error} the package {apo}\`{pid}$id_as{apo}\`"\
-            "{error}couldn't be found.{rst}"
+    if [[ -z $pkgjson ]] {
+        local pkgname=${${id_as##_unknown}:-${pkg:-${plugin}}}
+        [[ -n "$localpkg" ]] && pkgname=$tmpfile
+
+        +zinit-message "{error}❌ Error: the package {hi}${pkgname}" \
+                       "{error}couldn't be found.{rst}"
         return 1
-    fi
+    }
 
-    local -A Strings
-    .zinit-parse-json "$pkgjson" "plugin-info" Strings
-
-    local -A jsondata1
-    jsondata1=( ${(@Q)${(@z)Strings[2/1]}} )
-    local user=${jsondata1[user]} plugin=${jsondata1[plugin]} \
-        url=${jsondata1[url]} message=${jsondata1[message]} \
-        required=${jsondata1[required]:-${jsondata1[requires]}}
+    # root field, where the relevant data is stored
+    local json_root='["zsh-data"]'
+    local json_ices="${json_root}[\"zinit-ices\"]"
+    local json_meta="${json_root}[\"plugin-info\"]"
 
     local -a profiles
-    local key value
-    integer pos
-    profiles=( ${(@Q)${(@z)Strings[2/2]}} )
-    profiles=( ${profiles[@]:#$'\0'--object--$'\0'} )
-    pos=${${(@Q)${(@z)Strings[2/2]}}[(I)$profile]}
-    if (( pos )) {
-        for key value ( "${(@Q)${(@z)Strings[3/$(( (pos + 1) / 2 ))]}}" ) {
-            (( ${+ICE[$key]} )) && [[ ${ICE[$key]} != +* ]] && continue
-            ICE[$key]=$value${ICE[$key]#+}
-        }
-        ICE=( "${(kv)ICE[@]//\\\"/\"}" )
-        [[ ${ICE[as]} = program ]] && ICE[as]="command"
-        [[ -n ${ICE[on-update-of]} ]] && ICE[subscribe]="${ICE[subscribe]:-${ICE[on-update-of]}}"
-        [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
-        if [[ -n ${ICE[id-as]} ]] {
-            @zinit-substitute 'ICE[id-as]'
-            local -A map
-            map=( "\"" "\\\"" "\\" "\\" )
-            eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
-        }
-        # DIRTYFIX the id-as ice is pretty much required for local packages
-        # without most snippets won't work as expected as their files end up being
-        # saved as "package.json" and then ziextract etc will fail to detect these
-        # NOTE that the id-as also dictates who the downloaded snippet file will
-        # be named
-        if [[ -n "$localpkg" ]] && [[ -z "${ICE[id-as]}" ]] {
-            # First we'll try using the name field of the package.json
-            # If that fails we default to:
-            # zinit-pack---local---path---to---plugin---dir
-            local pkgname=$(jq -r '.name // ""' <<< "$pkgjson" 2>/dev/null)
-            ICE[id-as]=${pkgname:-zinit-pack---local---${${pkg%%/package.json}//\//---}}
-        }
-    } else {
-        # Założenie: profil domyślny jest pierwszy w tablicy (patrz: inny kolor).
+    profiles=("${(@f)$(.zinit-json-get-value "$pkgjson" "${json_ices} | keys[]")}") \
+        || return 1
+
+    # Check if user requested an unknown profile
+    if ! (( ${profiles[(I)${profile}]} )) {
+        # Assumption: the default profile is the first in the table (-> different color).
         +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
             "{error}couldn't be found, aborting. Available profiles are:" \
             "{lhi}${(pj:$epro_sep:)profiles[@]}{error}.{rst}"
         return 1
     }
+    local json_profile="${json_ices}[\"${profile}\"]"
 
+    local -A metadata
+    .zinit-json-to-array "$pkgjson" "$json_meta" metadata
+    if [[ "$?" -ne 0 || -z "$metadata" ]] {
+        +zinit-message '{error}❌ ERROR: Failed to retrieve metadata from package.json'
+        return 1
+    }
+
+    local user=${metadata[user]} plugin=${metadata[plugin]} \
+        message=${metadata[message]} url=${metadata[url]}
+
+    .zinit-json-to-array "$pkgjson" "$json_profile" ICE
+    local -a requirements
+
+    # FIXME requires shouldn't be stored under zinit-ices...
+    if [[ -n "$ICE[requires]" ]] {
+        # split requirements on ';'
+        requirements=(${(s.;.)${ICE[requires]}})
+        unset 'ICE[requires]'
+    }
+
+    [[ ${ICE[as]} == program ]] && ICE[as]="command"
+    [[ -n ${ICE[on-update-of]} ]] && ICE[subscribe]="${ICE[subscribe]:-${ICE[on-update-of]}}"
+    [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
+
+    # FIXME Do we even need that? If yes, we may want to do that in
+    # .zinit-json-to-array
+    if [[ -n ${ICE[id-as]} ]] {
+        @zinit-substitute 'ICE[id-as]'
+        local -A map
+        map=( "\"" "\\\"" "\\" "\\" )
+        eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
+    }
 
     +zinit-message "{info3}Package{ehi}:{rst} {pid}$pkg{rst}. Selected" \
         "profile{ehi}:{rst} {hi}$profile{rst}. Available" \
         "profiles:${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl}" \
         "${(pj:$pro_sep:)profiles[@]}{rst}."
+
     if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]] {
-         +zinit-message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}" \
+        +zinit-message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}" \
             "profiles (if any are available) are the recommended ones (the reason" \
             "is that they expose the binaries provided by the package without" \
             "altering (i.e.: {slight}cluttering{rst}{…}) the {var}\$PATH{rst}" \
             "environment variable)."
     }
 
-    ICE[required]=${ICE[required]:-$ICE[requires]}
-    local -a req
-    req=( ${(s.;.)${:-${required:+$required\;}${ICE[required]}}} )
-    for required ( $req ) {
+    local required
+    for required ( $requirements ) {
         if [[ $required == (bgn|dl|monitor) ]]; then
             if [[ ( $required == bgn && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-bin-gem-node *]} ) || \
                 ( $required == dl && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ) || \
@@ -236,7 +180,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
                 local -A namemap
                 namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
                 +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
-                if [[ -z ${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))} ]]; then
+                if [[ -z ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
                     +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
                 else
                     +zinit-message -n "{error}package {pid}$pkg{error} "
@@ -255,7 +199,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         else
             if ! command -v $required &>/dev/null; then
                 +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
-                if [[ -n ${(MS)ICE[required]##(\;|(#s))$required(\;|(#e))} ]]; then
+                if [[ -n ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
                     +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
                 else
                     +zinit-message -n "{error}package {pid}$pkg{error} "
@@ -284,8 +228,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
             "annex from its homepage at {url}https://github.com/zdharma-continuum/zinit-annex-patch-dl{rst}."
     }
 
-    [[ -n ${jsondata1[message]} ]] && \
-        +zinit-message "{info}${jsondata1[message]}{rst}"
+    [[ -n ${message} ]] && +zinit-message "{info}${message}{rst}"
 
     if (( ${+ICE[is-snippet]} )) {
         reply=( "" "$url" )
@@ -293,13 +236,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         return 0
     }
 
+    # FIXME This part below is a bit odd since it essentially replicates what
+    # the dl ice supposed to be doing.
+    # TL;DR below downloads whatever url is stored in the "_resolved" field
     if (( !${+ICE[git]} && !${+ICE[from]} )) {
         (
-            .zinit-parse-json "$pkgjson" "_from" Strings
             local -A jsondata
-            jsondata=( "${(@Q)${(@z)Strings[1/1]}}" )
-
-            local URL=${jsondata[_resolved]}
+            local URL=$(.zinit-json-get-value "$pkgjson" "_resolved")
             local fname="${${URL%%\?*}:t}"
 
             command mkdir -p $dir || {
@@ -688,6 +631,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
 
     emulate -LR zsh
     setopt localtraps extendedglob
+
+    # Return file directly for file:// urls, wget doesn't support this schema
+    if [[ "$url" =~ ^file:// ]] {
+        local filepath=${url##file://}
+        <"$filepath"
+        return "$?"
+    }
 
     if (( restart )) {
         (( ${path[(I)/usr/local/bin]} )) || \
