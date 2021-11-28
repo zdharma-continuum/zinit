@@ -96,10 +96,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # load json from file
     [[ -e $tmpfile ]] && pkgjson="$(<$tmpfile)"
 
-    if [[ -z $pkgjson ]] {
-        local pkgname=${${id_as##_unknown}:-${pkg:-${plugin}}}
-        [[ -n "$localpkg" ]] && pkgname=$tmpfile
+    # Set package name (used later in the output)
+    local pkgname=${${id_as##_unknown}:-${pkg:-${plugin}}}
+    [[ -n "$localpkg" ]] && pkgname="{pid}$pkgname{rst} {note}[$tmpfile]{rst}"
 
+    if [[ -z $pkgjson ]] {
         +zinit-message "{error}❌ Error: the package {hi}${pkgname}" \
                        "{error}couldn't be found.{rst}"
         return 1
@@ -157,7 +158,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
     }
 
-    +zinit-message "{info3}Package{ehi}:{rst} {pid}$pkg{rst}. Selected" \
+    +zinit-message "{info3}Package{ehi}:{rst} ${pkgname}. Selected" \
         "profile{ehi}:{rst} {hi}$profile{rst}. Available" \
         "profiles:${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl}" \
         "${(pj:$pro_sep:)profiles[@]}{rst}."
