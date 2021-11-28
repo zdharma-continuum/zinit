@@ -68,9 +68,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 \
-        local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} pkgjson \
-        tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
-    local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ZINIT[PACKAGES_BRANCH]}/${pkg}/package.json
+        ver=${ICE[ver]} local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} \
+        pkgjson tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
+    local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ver:-${ZINIT[PACKAGES_BRANCH]}}/${pkg}/package.json
 
     local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
         tool_sep="{rst}, {cmd}" \
