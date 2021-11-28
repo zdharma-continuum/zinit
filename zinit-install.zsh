@@ -72,6 +72,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         pkgjson tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
     local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ver:-${ZINIT[PACKAGES_BRANCH]}}/${pkg}/package.json
 
+    # Consume, ie delete the ver ice to avoid being consumed again at
+    # git-clone time
+    [[ -n "$ver" ]] && unset 'ICE[ver]'
+
     local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
         tool_sep="{rst}, {cmd}" \
         lhi_hl="{lhi}" profile_hl="{profile}"
