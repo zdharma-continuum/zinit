@@ -17,8 +17,13 @@ To install jq with zinit, you can follow [these instructions in the wiki](https:
   - zinit packages now better supports installation from local files (previously
 only relative paths worked), and **custom repositories!**
 By default, zinit uses [zhdarma-continuum/zinit-packages](https://github.com/p/zdharma-continuum/zinit-packages).
+
 To use a custom repo you can set `ZINIT[PACKAGES_REPO]=github_org/repo`.
-For installing from a specific branch: `ZINIT[PACKAGES_BRANCH]=feature-branch`.
+
+For installing from a specific branch you can: 
+1. Leverage the `ver` ice (eg: `ver"my-branch`)
+2. Override zinit's default branch with `ZINIT[PACKAGES_BRANCH]=my-branch`
+
 zinit package repos that are not hosted on GitHub can be installed from the
 local filesystem like so:
 `zinit pack"local/path/to/package.json:profile" for mypackage`
