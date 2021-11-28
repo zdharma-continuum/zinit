@@ -17,7 +17,6 @@ zinit::setup-annexes() {
     zdharma-continuum/zinit-annex-readurl \
     zdharma-continuum/zinit-annex-rust \
     zdharma-continuum/zinit-annex-submods \
-    zdharma-continuum/zinit-annex-test \
     zdharma-continuum/zinit-annex-unscope
 }
 
@@ -27,7 +26,8 @@ zinit::setup-annexes-extra() {
   zinit::install-zshelldoc
 
   zinit light-mode compile'*handler' for \
-    zdharma-continuum/zinit-annex-man
+    zdharma-continuum/zinit-annex-man \
+    zdharma-continuum/zinit-annex-test
 }
 
 zinit::install-zshelldoc() {
