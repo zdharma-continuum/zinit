@@ -34,12 +34,14 @@ FUNCTIONS
  .zinit-get-package
  .zinit-get-url-mtime
  .zinit-install-completions
+ .zinit-jq-check
+ .zinit-json-get-value
+ .zinit-json-to-array
  ∞zinit-make-ee-hook
  ∞zinit-make-e-hook
  ∞zinit-make-hook
  .zinit-mirror-using-svn
  ∞zinit-mv-hook
- .zinit-parse-json
  ∞zinit-ps-on-update-hook
  ∞zinit-reset-hook
  .zinit-setup-plugin-dir
@@ -53,7 +55,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 3 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
+Has 6 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 Uses feature(s): _source_
 
@@ -92,7 +94,7 @@ ____
  $2 - file
 ____
 
-Has 293 line(s). Calls functions:
+Has 297 line(s). Calls functions:
 
  ziextract
  `-- zinit.zsh/+zinit-message
@@ -295,7 +297,7 @@ ____
  curl, wget, lftp, lynx. Used by snippet loading.
 ____
 
-Has 48 line(s). Calls functions:
+Has 53 line(s). Calls functions:
 
  .zinit-download-file-stdout
  `-- zinit.zsh/+zinit-message
@@ -444,11 +446,10 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-get-package [[[
 ____
 
-Has 196 line(s). Calls functions:
+Has 194 line(s). Calls functions:
 
  .zinit-get-package
  |-- ziextract
@@ -513,6 +514,66 @@ Called by:
  .zinit-download-snippet
  .zinit-setup-plugin-dir
  zinit.zsh/zinit
+
+.zinit-jq-check
+~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-jq-check [[[
+ Check if jq is available and outputs an error message with instructions if
+ that's not the case
+____
+
+Has 8 line(s). Calls functions:
+
+ .zinit-jq-check
+ `-- zinit.zsh/+zinit-message
+
+Called by:
+
+ .zinit-json-get-value
+ .zinit-json-to-array
+
+.zinit-json-get-value
+~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-json-get-value [[[
+ Wrapper around jq that return the value of a property
+ $1: JSON structure
+ $2: jq path
+____
+
+Has 4 line(s). Calls functions:
+
+ .zinit-json-get-value
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+.zinit-json-to-array
+~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-json-to-array [[[
+ Wrapper around jq that sets key/values of an associative array, replicating
+ the structure of a given JSON object
+ $1: JSON structure
+ $2: jq path
+ $3: name of the associative array to store the key/value pairs in
+____
+
+Has 13 line(s). Calls functions:
+
+ .zinit-json-to-array
+
+Uses feature(s): _eval_, _setopt_
+
+Called by:
+
+ .zinit-get-package
 
 ∞zinit-make-ee-hook
 ~~~~~~~~~~~~~~~~~~~
@@ -607,26 +668,6 @@ Has 27 line(s). Calls functions:
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-.zinit-parse-json
-~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-parse-json [[[
- Retrievies the ice-list from given profile from
- the JSON of the package.json.
-____
-
-Has 107 line(s). Calls functions:
-
- .zinit-parse-json
-
-Uses feature(s): _setopt_
-
-Called by:
-
- .zinit-get-package
 
 ∞zinit-ps-on-update-hook
 ~~~~~~~~~~~~~~~~~~~~~~~~

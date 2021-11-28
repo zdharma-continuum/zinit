@@ -90,7 +90,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 214 line(s). Calls functions:
+Has 217 line(s). Calls functions:
 
  Script-Body
  |-- add-zsh-hook
@@ -856,6 +856,7 @@ Called by:
  zinit-install.zsh/.zinit-get-latest-gh-r-url-part
  zinit-install.zsh/.zinit-get-package
  zinit-install.zsh/.zinit-install-completions
+ zinit-install.zsh/.zinit-jq-check
  zinit-install.zsh/∞zinit-ps-on-update-hook
  zinit-install.zsh/∞zinit-reset-hook
  zinit-install.zsh/.zinit-setup-plugin-dir
@@ -932,7 +933,7 @@ ____
  already exist.
 ____
 
-Has 37 line(s). Calls functions:
+Has 40 line(s). Calls functions:
 
  .zinit-prepare-home
  |-- zinit-autoload.zsh/.zinit-clear-completions
