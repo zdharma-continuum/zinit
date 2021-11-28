@@ -9,6 +9,7 @@ zinit::setup-keys
 # Aliases
 alias ls="ls --color=auto"
 alias vim="nvim"
+alias re-init="source /init.zsh"
 
 # History
 HISTFILE=${HOME}/.local/share/zsh/history

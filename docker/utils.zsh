@@ -4,6 +4,14 @@ zinit::setup() {
   source /src/zinit.zsh
 }
 
+zinit::reload() {
+  local zf
+  for zf in /src/*.zsh
+  do
+    source "$zf"
+  done
+}
+
 zinit::setup-keys() {
   zinit snippet OMZL::key-bindings.zsh
 }
