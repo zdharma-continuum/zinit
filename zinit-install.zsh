@@ -196,14 +196,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT
         # saved as "package.json" and then ziextract etc will fail to detect these
         # NOTE that the id-as also dictates who the downloaded snippet file will
         # be named
-        if [[ -n "$localpkg" ]] && [[ -z "${ICE[id-as]}" ]]
-        then
+        if [[ -n "$localpkg" ]] && [[ -z "${ICE[id-as]}" ]] {
             # First we'll try using the name field of the package.json
             # If that fails we default to:
             # zinit-pack---local---path---to---plugin---dir
             local pkgname=$(jq -r '.name // ""' <<< "$pkgjson" 2>/dev/null)
-            ICE[id-as]=${pkgname:-zinit-pack---local---${${pkg%%/package.json}//\//---}
-        fi
+            ICE[id-as]=${pkgname:-zinit-pack---local---${${pkg%%/package.json}//\//---}}
+        }
     } else {
         # Założenie: profil domyślny jest pierwszy w tablicy (patrz: inny kolor).
         +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
