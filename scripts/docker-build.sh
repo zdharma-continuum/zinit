@@ -4,9 +4,11 @@ build() {
   cd "$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)" || exit 9
 
   local image_name="${1:-zinit}"
-  local zsh_version="${2}"
+  local tag="${2:-latest}"
+  local zsh_version="${3}"
+  shift 3
+
   local dockerfile="../docker/Dockerfile"
-  local tag="latest"
 
   if [[ -n "$zsh_version" ]]
   then
@@ -14,6 +16,9 @@ build() {
   fi
 
   echo -e "\e[34mBuilding image: ${image_name}\e[0m" >&2
+
+  local -a args
+  [[ -n "$NO_CACHE" ]] && args+=(--no-cache "$@")
 
   if docker build \
     --build-arg "PUSERNAME=$(id -u -n)" \
@@ -23,8 +28,8 @@ build() {
     --build-arg "ZINIT_ZSH_VERSION=${zsh_version}" \
     --file "$dockerfile" \
     --tag "${image_name}:${tag}" \
-    "$(realpath ..)" \
-    "$@"
+    "${args[@]}" \
+    "$(realpath ..)"
   then
     {
       echo -e "\e[34mTo use this image for zunit tests run: \e[0m"
@@ -39,5 +44,31 @@ build() {
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
-  build "$@"
+  BUILD_ZSH_VERSION="${BUILD_ZSH_VERSION:-}"
+  CONTAINER_IMAGE="${CONTAINER_IMAGE:-ghcr.io/zdharma-continuum/zinit}"
+  CONTAINER_TAG="${CONTAINER_TAG:-latest}"
+  NO_CACHE="${NO_CACHE:-}"
+
+  while [[ -n "$*" ]]
+  do
+    case "$1" in
+      --image|-i)
+        CONTAINER_IMAGE="$2"
+        shift 2
+        ;;
+      --no-cache|-N)
+        NO_CACHE=1
+        shift
+        ;;
+      --zsh-version|-zv|--zv)
+        BUILD_ZSH_VERSION="${2}"
+        shift 2
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+
+  build "${CONTAINER_IMAGE}" "${CONTAINER_TAG}" "${BUILD_ZSH_VERSION}" "$@"
 fi
