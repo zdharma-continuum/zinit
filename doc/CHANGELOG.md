@@ -9,15 +9,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-* 26-11-2021
-  - zinit packages can now be installed from local files or custom repositories.
-zinit uses [zhdarma-continuum/zinit-packages](https://github.com/p/zdharma-continuum/zinit-packages)
-by default. To use a custom repo you can set `ZINIT[PACKAGES_REPO]=github_org/repo`.
-To install from a specific branch: `ZINIT[PACKAGES_BRANCH]=feature-branch`. For
-repos that are not hosted on GitHub, you can instruct zinit to install packages
-from the local filesystem like so:
-`zinit pack"profile" for local/path/to/package.json` (the user needs to be set
-to `local` and the path to `package.json` must be absolute)
+* 28-11-2021
+  - zinit packages now better supports installation from local files (previously
+only relative paths worked), and **custom repositories!**
+By default, zinit uses [zhdarma-continuum/zinit-packages](https://github.com/p/zdharma-continuum/zinit-packages).
+To use a custom repo you can set `ZINIT[PACKAGES_REPO]=github_org/repo`.
+For installing from a specific branch: `ZINIT[PACKAGES_BRANCH]=feature-branch`.
+zinit package repos that are not hosted on GitHub can be installed from the
+local filesystem like so:
+`zinit pack"local/path/to/package.json:profile" for mypackage`
 
 * 22-11-2021
   - We updated zinit's main branch from `master` to `main`. `zinit self-update`
