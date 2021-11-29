@@ -1842,7 +1842,7 @@ ZINIT[EXTENDED_GLOB]=""
         +zinit-message "{msg2}Restarting the update with the new codebase loaded.{rst}"$'\n'
 
     local file
-    integer sum el
+    integer sum el update_rc
     for file ( "" -side -install -autoload ) {
         .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" el; sum+=el
     }
@@ -1956,6 +1956,11 @@ ZINIT[EXTENDED_GLOB]=""
         else
             (( !OPTS[opt_-q,--quiet] )) && builtin print "Updating $REPLY" || builtin print -n .
             .zinit-update-or-status update "$user" "$plugin"
+            update_rc=$?
+            [[ $update_rc -ne 0 ]] && {
+                +zinit-message "🚧{warn}Warning: {pid}${user}/${plugin} {warn}update returned {obj}$update_rc"
+                retval=$?
+            }
         fi
     done
 
@@ -1963,6 +1968,8 @@ ZINIT[EXTENDED_GLOB]=""
     if (( !OPTS[opt_-q,--quiet] )) {
         +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
     }
+
+    return "$retval"
 } # ]]]
 # FUNCTION: .zinit-update-in-parallel [[[
 .zinit-update-all-parallel() {
