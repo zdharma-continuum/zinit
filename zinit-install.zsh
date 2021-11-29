@@ -2358,7 +2358,7 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-ps-on-update-hook [[[
 ∞zinit-ps-on-update-hook() {
-    if [[ -z $ICE[ps-on-update] ]] { return 1; }
+    [[ -z $ICE[ps-on-update] ]] && return 0
 
     [[ "$1" = plugin ]] && \
         local tpe="$1" dir="${5#%}" hook="$6" subtype="$7" || \
