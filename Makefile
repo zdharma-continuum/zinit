@@ -20,6 +20,7 @@ testD:
 testE:
 	make VERBOSE=$(VERBOSE) NODIFF=$(NODIFF) DEBUG=$(DEBUG) OPTDUMP=$(OPTDUMP) OPTS="ignoreclosebraces" -C test test
 
+doc: export LC_ALL=C
 doc: zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
 	rm -rf doc/zsdoc/data doc/zsdoc/*.adoc
 	# cd is required since zsd outputs to PWD/zsdoc/
