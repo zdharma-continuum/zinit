@@ -55,8 +55,8 @@ Called by:
 
  .zinit-exists-physically-message
  zinit-autoload.zsh/.zinit-clear-completions
- zinit-autoload.zsh/.zinit-compile-uncompile-all
  zinit-autoload.zsh/.zinit-compiled
+ zinit-autoload.zsh/.zinit-compile-uncompile-all
  zinit-autoload.zsh/.zinit-create
  zinit-autoload.zsh/.zinit-exists-message
  zinit-autoload.zsh/.zinit-get-completion-owner-uspl2col
@@ -138,12 +138,12 @@ Uses feature(s): _trap_
 Called by:
 
  zinit-autoload.zsh/.zinit-run-delete-hooks
- zinit-install.zsh/$'\342'$'\210'$'\236'zinit-atclone-hook
- zinit-install.zsh/$'\342'$'\210'$'\236'zinit-atpull-e-hook
- zinit-install.zsh/$'\342'$'\210'$'\236'zinit-atpull-hook
- zinit-install.zsh/$'\342'$'\210'$'\236'zinit-make-e-hook
- zinit-install.zsh/$'\342'$'\210'$'\236'zinit-make-ee-hook
- zinit-install.zsh/$'\342'$'\210'$'\236'zinit-make-hook
+ zinit-install.zsh/∞zinit-atclone-hook
+ zinit-install.zsh/∞zinit-atpull-e-hook
+ zinit-install.zsh/∞zinit-atpull-hook
+ zinit-install.zsh/∞zinit-make-ee-hook
+ zinit-install.zsh/∞zinit-make-e-hook
+ zinit-install.zsh/∞zinit-make-hook
 
 .zinit-exists-physically
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -188,9 +188,9 @@ ____
 Has 23 line(s). Calls functions:
 
  .zinit-exists-physically-message
- |-- zinit.zsh/+zinit-message
  |-- zinit.zsh/.zinit-any-to-pid
- `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
