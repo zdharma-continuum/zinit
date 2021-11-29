@@ -1,4 +1,4 @@
-name: zinit installer
+name: 📦 zinit installer
 on: [push, workflow_dispatch]
 
 jobs:

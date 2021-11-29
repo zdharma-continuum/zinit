@@ -1,4 +1,4 @@
-name: linting
+name: 👮 linting
 on: [push, pull_request, workflow_dispatch]
 jobs:
   build-matrix:
@@ -6,7 +6,7 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: "🖨️  Check out repository code"
+      - name: "📡  Check out repository code"
         uses: actions/checkout@v2
 
       - name: "💬 Set matrix output"
@@ -24,7 +24,7 @@ jobs:
       matrix: ${{ fromJSON(needs.build-matrix.outputs.matrix) }}
 
     steps:
-      - name: "🖨️  Check out repository code"
+      - name: "📡  Check out repository code"
         uses: actions/checkout@v2
 
       - name: "📦 Install dependencies"
