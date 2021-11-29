@@ -11,10 +11,10 @@ All notable changes to this project will be documented in this file.
 
 * 28-11-2021
   - **‼️ BREAKING CHANGE** zinit now requires [jq](https://github.com/stedolan/jq)
-for JSON parsing. This only affects the `pack` ice. User who do not have jq 
+for JSON parsing. This only affects the `pack` ice. Users who do not have jq 
 installed will be greeted with a warning when they try to install packages.
 To install jq with zinit, you can follow [these instructions in the wiki](https://github.com/zdharma-continuum/zinit/wiki/Recommended-ices#jq)
-  - zinit packages now better supports installation from local files (previously
+  - `zinit pack` now better supports installation from local files (previously
 only relative paths worked), and **custom repositories!**
 By default, zinit uses [zhdarma-continuum/zinit-packages](https://github.com/p/zdharma-continuum/zinit-packages).
 
