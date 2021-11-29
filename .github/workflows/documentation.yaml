@@ -30,7 +30,7 @@ jobs:
         run: |
           make doc
 
-      - name: 📇 make pdf
+      - name: 📇 Generate PDF
         run: |
           make -C doc/zsdoc pdf
 
