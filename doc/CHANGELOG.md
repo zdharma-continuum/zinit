@@ -9,6 +9,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+* 29-11-2021
+  - zinit calls no longer silently fail when ices such as `atclone`, 
+`atpull` or `compile` fail. Any hook returning with != 0 will log a warning to
+stdout at runtime:
+
+```zsh
+zinit null atclone'echo "intentional failure"; return 69' \
+  for zdharma-continuum/null
+echo $?
+69
+```
+
 * 28-11-2021
   - **‼️ BREAKING CHANGE** zinit now requires [jq](https://github.com/stedolan/jq)
 for JSON parsing. This only affects the `pack` ice. Users who do not have jq 
