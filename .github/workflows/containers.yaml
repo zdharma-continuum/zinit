@@ -1,4 +1,4 @@
-name: Build containers
+name: 🐳 containers
 on: [push, workflow_dispatch]
 
 jobs:
