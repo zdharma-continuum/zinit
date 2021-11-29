@@ -2331,7 +2331,7 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-atpull-hook [[[
 ∞zinit-atpull-hook() {
-    (( ${+ICE[atpull]} )) || { echo 'EMPTY ATPULL' >&2; return 0; }
+    (( ${+ICE[atpull]} )) || return 0
     [[ -n ${ICE[atpull]} ]] || return 0
     # Exit early if atpull"!cmd" -> this is done by zinit-atpull-e-hook
     [[ $ICE[atpull] == "!"* ]] && return 0
