@@ -479,6 +479,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
                 "${arr[5]}" plugin "$user" "$plugin" "$id_as" "$local_path" "${${key##(zinit|z-annex) hook:}%% <->}"
+                hook_rc=$?
+                [[ "$hook_rc" -ne 0 ]] && {
+                    rc="$hook_rc"
+                    builtin print -Pr -- "${ZINIT[col-warn]}Warning:%f%b ${ZINIT[col-obj]}${arr[5]}${ZINIT[col-warn]} hook returned with ${ZINIT[col-obj]}${hook_rc}${ZINIT[col-rst]}"
+                }
             done
         }
 
