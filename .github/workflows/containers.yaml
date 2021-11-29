@@ -45,7 +45,7 @@ jobs:
         # Older zsh version tend to make GH runners hang when building
         timeout-minutes: 90
         with:
-          push: true
+          push: ${{ github.event.number == 0 }}
           file: ./docker/Dockerfile
           build-args: |
             ZINIT_ZSH_VERSION=${{ matrix.zsh_version }}-tcsetpgrp
