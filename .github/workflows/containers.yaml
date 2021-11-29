@@ -48,7 +48,6 @@ jobs:
           push: true
           file: ./docker/Dockerfile
           build-args: |
-            VERSION=latest
             ZINIT_ZSH_VERSION=${{ matrix.zsh_version }}-tcsetpgrp
           tags: |
             ghcr.io/${{ github.repository }}:zsh-${{ matrix.zsh_version }}
@@ -90,8 +89,6 @@ jobs:
         with:
           push: true
           file: ./docker/Dockerfile
-          build-args: |
-            VERSION=latest
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ env.GITHUB_SHA_SHORT }}
