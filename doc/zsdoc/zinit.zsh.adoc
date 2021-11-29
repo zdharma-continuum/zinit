@@ -699,7 +699,7 @@ ____
  $2 - plugin name, if the third format is used
 ____
 
-Has 92 line(s). Calls functions:
+Has 94 line(s). Calls functions:
 
  .zinit-load
  |-- +zinit-deploy-message

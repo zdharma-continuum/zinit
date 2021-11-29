@@ -1414,7 +1414,7 @@ ____
  $3 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 300 line(s). Calls functions:
+Has 325 line(s). Calls functions:
 
  .zinit-update-or-status
  |-- zinit-install.zsh/.zinit-get-latest-gh-r-url-part
@@ -1451,7 +1451,7 @@ ____
  User-action entry point.
 ____
 
-Has 124 line(s). Calls functions:
+Has 131 line(s). Calls functions:
 
  .zinit-update-or-status-all
  |-- zinit-install.zsh/.zinit-compinit
