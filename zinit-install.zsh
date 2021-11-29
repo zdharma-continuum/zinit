@@ -2266,20 +2266,56 @@ zimv() {
 # ]]]
 # FUNCTION: ∞zinit-atpull-e-hook [[[
 ∞zinit-atpull-e-hook() {
+    (( ${+ICE[atpull]} )) || return 0
+    [[ -z ${ICE[atpull]} ]] || return 0
+    # Only process atpull"!cmd"
+    [[ $ICE[atpull] != "!"* ]] || return 0
+
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
-    [[ $ICE[atpull] = "!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$dir"; } && .zinit-at-eval "${ICE[atpull]#\!}" "$ICE[atclone]"; ((1)); } || .zinit-at-eval "${ICE[atpull]#\!}" "$ICE[atclone]"; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
+    local atpull=${ICE[atpull]#\!}
+    local rc=0
+
+    .zinit-countdown atpull && {
+        local ___oldcd=$PWD
+        (( ${+ICE[nocd]} == 0 )) && {
+            () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
+        }
+        .zinit-at-eval "$atpull" "$ICE[atclone]"
+        rc="$?"
+        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
+    }
+
+    return "$rc"
 }
 # ]]]
 # FUNCTION: ∞zinit-atpull-hook [[[
 ∞zinit-atpull-hook() {
-    [[ "$1" = plugin ]] && \
+    (( ${+ICE[atpull]} )) || return 0
+    [[ -z ${ICE[atpull]} ]] || return 0
+    # Exit early if atpull"!cmd" -> this is done by zinit-atpull-e-hook
+    [[ $ICE[atpull] == "!"* ]] || return 0
+
+    [[ "$1" == plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
-    [[ -n $ICE[atpull] && $ICE[atpull] != "!"* ]] && .zinit-countdown atpull && { local ___oldcd=$PWD; (( ${+ICE[nocd]} == 0 )) && { () { setopt localoptions noautopushd; builtin cd -q "$dir"; } && .zinit-at-eval "$ICE[atpull]" "$ICE[atclone]"; ((1)); } || .zinit-at-eval "${ICE[atpull]#!}" $ICE[atclone]; () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };}
+    local atpull=${ICE[atpull]}
+    local rc=0
+
+    .zinit-countdown atpull && {
+        local ___oldcd=$PWD
+        (( ${+ICE[nocd]} == 0 )) && {
+            () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
+        }
+        .zinit-at-eval "$atpull" $ICE[atclone]
+        rc="$?"
+        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
+    }
+
+    return "$rc"
 }
 # ]]]
 # FUNCTION: ∞zinit-ps-on-update-hook [[[
