@@ -1,4 +1,4 @@
-name: gh-pages
+name: 📑 gh-pages
 on:
   push:
     branches:
@@ -8,19 +8,21 @@ jobs:
   publish-pages:
     runs-on: ubuntu-latest
     steps:
+      - name: 📡 Checkout out repository
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
+      - name: 🐍 Setup Python
       - uses: actions/setup-python@v2
         with:
           python-version: '3.x'
 
-      - name: Install mkdocs
+      - name: 📦 Install mkdocs
         run: |
           pip install mkdocs mkdocs-material
 
-      - name: Publish to gh-pages
+      - name: 🤳 Publish to gh-pages
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
