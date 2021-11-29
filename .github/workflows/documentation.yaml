@@ -1,4 +1,4 @@
-name: documentation
+name: 📚 documentation
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         run: |
           gem install asciidoctor-pdf
 
-      - name: 📡 Check out repository code
+      - name: 📡 Check out repository
         uses: actions/checkout@v2
 
       - name: 👷 Generate zsd
