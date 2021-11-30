@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: ❓ GitHub Discussions
+    url: https://github.com/zdharma-continuum/zinit/discussions
+    about: Please ask and answer questions here
+  - name: 💬 Gitter
+    url: https://gitter.im/zdharma-continuum/community/
+    about: Chat with the team
