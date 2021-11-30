@@ -305,7 +305,7 @@ ZINIT_COMMIT="${ZINIT_COMMIT:-}"  # no default value
 ZINIT_HOME="${ZINIT_HOME:-${XDG_DATA_HOME:-${HOME}/.local/share}/zinit}"
 ZINIT_REPO_DIR_NAME="${ZINIT_REPO_DIR_NAME:-zinit.git}"
 ZINIT_INSTALL_DIR=${ZINIT_INSTALL_DIR:-${ZINIT_HOME}/${ZINIT_REPO_DIR_NAME}}
-ZSHRC="${ZSHRC:-${ZDOTDIR:-${HOME}/.zshrc}}"
+ZSHRC="${ZSHRC:-${ZDOTDIR:-${HOME}}/.zshrc}"
 
 show_environment
 check_dependencies
