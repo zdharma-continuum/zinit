@@ -15,7 +15,7 @@ CONFIG_DIR="$TEST_DIR/answer/.config/zew"
 
 #
 # Update FPATH if:
-# 1. Not loading with Zplugin
+# 1. Not loading with Zinit
 # 2. Not having fpath already updated (that would equal: using other plugin manager)
 #
 

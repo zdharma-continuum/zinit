@@ -22,7 +22,7 @@ LC_ALL=C
 
 local TEST_DIR="$PWD/$1"
 
-# Setup paths and load Zplugin
+# Setup paths and load Zinit
 local REPLY p k l ll
 local -a reply
 local -A ZINIT

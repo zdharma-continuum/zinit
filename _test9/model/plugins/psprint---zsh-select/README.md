@@ -72,7 +72,7 @@ export ZSHSELECT_START_IN_SEARCH_MODE="1"   # Starts Zsh-Select with searching a
 ```
 
 ## Use with plugin managers
-### [Zplugin](https://github.com/psprint/zinit)
+### [Zinit](https://github.com/psprint/zinit)
 
 Add `zinit load psprint/zsh-select` to `.zshrc`.
 The plugin will be loaded next time you start `Zsh`.

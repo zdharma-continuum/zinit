@@ -16,7 +16,7 @@ Swapping, copying, deleting shell words, also undo:
 
 ![zew](http://imageshack.com/a/img908/7765/zpdjOK.gif)
 
-## Installation With [Zplugin](https://github.com/psprint/zinit)
+## Installation With [Zinit](https://github.com/psprint/zinit)
 
 Add `zinit load psprint/zsh-editing-workbench` to `.zshrc`. The config files will be available in `~/.config/zew`.
 
