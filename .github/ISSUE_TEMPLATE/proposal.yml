@@ -1,0 +1,10 @@
+name: "🏦 Proposal"
+description: Propose an architectural change (refactoring etc.)
+labels: ["🏛 proposal", "🎲 triage"]
+title: "🏦 Proposal: "
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Proposal
+      description: Describe what you'd like to see changed
