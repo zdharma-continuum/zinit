@@ -1,0 +1,63 @@
+name: 📚 documentation
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  zshelldoc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Install zshelldoc
+        run: |
+          sudo apt-get install -y zsh
+          git clone https://github.com/zdharma-continuum/zshelldoc.git /tmp/zsd.git
+          cd /tmp/zsd.git
+          sudo make install
+          zsd --help
+
+      - name: ♦️ Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+
+      - name: 📄 Install asciidoctor-pdf
+        run: |
+          gem install asciidoctor-pdf
+
+      - name: 📡 Check out repository
+        uses: actions/checkout@v2
+
+      - name: 👷 Generate zsd
+        run: |
+          make doc
+
+      - name: 📇 Generate PDF
+        run: |
+          make -C doc/zsdoc pdf
+
+      - name: 🗄️ Tar doc/
+        run: |
+          tar cvzf /tmp/doc.tar.gz doc
+
+      - name: ✉️ Upload doc.tar.gz
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: |
+            /tmp/doc.tar.gz
+
+      - name: 🕵️ Check if the zsd docs need to be updated
+      # NOTE: We need to run git diff twice here since w/o --quiet it's RC
+      # is always 0. The first is to display the diff output, the second one
+      # to test whether the diff is empty.
+        run: |
+          git --no-pager diff
+          if git --no-pager diff --quiet
+          then
+            echo "✅ The zshelldocs are up to date"
+          else
+            {
+              echo "❌ The zshelldocs in the repo are not up to date"
+              echo 'Please regenerate them with $ make doc'
+            } >&2
+            exit 1
+          fi
