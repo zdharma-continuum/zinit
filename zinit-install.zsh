@@ -17,7 +17,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         "{nl}{u-warn}Please install jq:{rst}" \
         "https://github.com/stedolan/jq" \
         "{nl}{u-warn}To do so with zinit, please refer to:{rst}" \
-        "https://github.com/zdharma-continuum/zinit/wiki/Recommended-ices#jq"
+        "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
     return 1
 }
 # ]]]
