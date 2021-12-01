@@ -25,7 +25,9 @@
 
 @test 'zinit direnv installation' {
   run ./scripts/docker-run.sh --wrap --debug --zunit \
-    zinit light-mode as"program" make for @direnv/direnv
+    'zinit light-mode as"program" \
+      atclone"go install github.com/cpuguy83/go-md2man/v2@latest" \
+      make for @direnv/direnv'
 
   assert $state equals 0
   assert "$output" contains "Downloading"

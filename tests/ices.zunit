@@ -29,4 +29,31 @@
   assert "$artifact" is_executable
 }
 
+@test 'failing atclone ice' {
+  local zcall=$'zinit null atclone'\''echo "intentional failure"; return 69'\'' \
+      for zdharma-continuum/null'
+
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    $zcall
+
+  assert $state not_equal_to 0
+  assert $state equals 69
+  assert "$output" contains "intentional failure"
+}
+
+@test 'failing atpull ice' {
+  local z=$'zinit id-as'\''atpull-fail'\'' null \
+      atpull'\''echo "intentional failure"; return 69'\'' \
+      run-atpull \
+    for zdharma-continuum/null; \
+    zi update atpull-fail'
+
+  run ./scripts/docker-run.sh --wrap --debug --zunit \
+    $z
+
+  assert $state not_equal_to 0
+  assert $state equals 69
+  assert "$output" contains "intentional failure"
+}
+
 # vim: set ft=zsh et ts=2 sw=2 : #

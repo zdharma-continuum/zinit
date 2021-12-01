@@ -127,7 +127,7 @@ ____
  FUNCTION: ∞zinit-atclone-hook [[[
 ____
 
-Has 8 line(s). Calls functions:
+Has 26 line(s). Calls functions:
 
  ∞zinit-atclone-hook
  |-- zinit-side.zsh/.zinit-countdown
@@ -146,7 +146,7 @@ ____
  FUNCTION: .zinit-at-eval [[[
 ____
 
-Has 5 line(s). Calls functions:
+Has 9 line(s). Calls functions:
 
  .zinit-at-eval
  `-- zinit.zsh/@zinit-substitute
@@ -167,7 +167,7 @@ ____
  FUNCTION: ∞zinit-atpull-e-hook [[[
 ____
 
-Has 5 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  ∞zinit-atpull-e-hook
  `-- zinit-side.zsh/.zinit-countdown
@@ -185,7 +185,7 @@ ____
  FUNCTION: ∞zinit-atpull-hook [[[
 ____
 
-Has 5 line(s). Calls functions:
+Has 22 line(s). Calls functions:
 
  ∞zinit-atpull-hook
  `-- zinit-side.zsh/.zinit-countdown
@@ -323,7 +323,7 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 323 line(s). Calls functions:
+Has 357 line(s). Calls functions:
 
  .zinit-download-snippet
  |-- zinit-side.zsh/.zinit-store-ices
@@ -367,7 +367,7 @@ ____
  FUNCTION: ∞zinit-extract-hook [[[
 ____
 
-Has 8 line(s). Calls functions:
+Has 10 line(s). Calls functions:
 
  ∞zinit-extract-hook
  `-- zinit.zsh/@zinit-substitute
@@ -584,7 +584,7 @@ ____
  FUNCTION: ∞zinit-make-ee-hook [[[
 ____
 
-Has 9 line(s). Calls functions:
+Has 11 line(s). Calls functions:
 
  ∞zinit-make-ee-hook
  |-- zinit-side.zsh/.zinit-countdown
@@ -601,7 +601,7 @@ ____
  FUNCTION: ∞zinit-make-e-hook [[[
 ____
 
-Has 9 line(s). Calls functions:
+Has 11 line(s). Calls functions:
 
  ∞zinit-make-e-hook
  |-- zinit-side.zsh/.zinit-countdown
@@ -618,7 +618,7 @@ ____
  FUNCTION: ∞zinit-make-hook [[[
 ____
 
-Has 10 line(s). Calls functions:
+Has 11 line(s). Calls functions:
 
  ∞zinit-make-hook
  |-- zinit-side.zsh/.zinit-countdown
@@ -720,7 +720,7 @@ ____
  $2 - plugin
 ____
 
-Has 198 line(s). Calls functions:
+Has 209 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- ziextract
