@@ -117,7 +117,7 @@ install everything from GitHub and other sites. Its characteristics are:
 
 1. Also, specialized Zinit extensions — called **annexes** — allow to extend the
    plugin manager with new commands, URL-preprocessors (used by e.g.:
-   [zinit-annex-as-monitor](https://github.com/zdharma-continuum/zinit-annex-as-monitor) annex),
+   [zinit-annex-readurl](https://github.com/zdharma-continuum/zinit-annex-readurl) annex),
    post-install and post-update hooks and much more. See the
    [zdharma-continuum](https://github.com/zdharma-continuum) organization for a growing,
    complete list of available Zinit extensions and refer to the [Wiki
