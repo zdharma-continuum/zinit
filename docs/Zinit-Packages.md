@@ -111,30 +111,30 @@ man page).
 ## The `Zsh-Packages` Organization
 
 Packages are hosted [on GitHub, by the zdharma-continuum
-org](https://github.com/orgs/zdharma-continuum/repositories?q=zinit-package-&type=&language=):
+org](https://github.com/zdharma-continuum/zinit-packages):
 
-- [asciidoctor](https://github.com/zdharma-continuum/zinit-package-asciidoctor) – the AsciiDoc
+- [asciidoctor](https://github.com/zdharma-continuum/zinit-packages/tree/main/asciidoctor) – the AsciiDoc
   converter, installed as a Gem locally in the plugin directory with use of the
   [Bin-Gem-Node](../z-a-bin-gem-node) annex,
-- [doctoc](https://github.com/zdharma-continuum/zinit-package-doctoc) – the TOC (table of contents)
+- [doctoc](https://github.com/zdharma-continuum/zinit-packages/tree/main/doctoc) – the TOC (table of contents)
   generator for Markdown documents, installed as a Node package locally in the
   plugin directory with use of the `Bin-Gem-Node` annex,
-- [ecs-cli](https://github.com/zdharma-continuum/zinit-package-ecs-cli) – the Amazon ECS command
+- [ecs-cli](https://github.com/zdharma-continuum/zinit-packages/tree/main/ecs-cli) – the Amazon ECS command
   line tool, downloaded directly from the
   [URL](https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest) (or
   from the
   [URL](https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-darwin-amd64-latest) for
   OS X – automatically selected),
-- [firefox-dev](https://github.com/zdharma-continuum/zinit-package-firefox-dev) – Firefox Developer
+- [firefox-dev](https://github.com/zdharma-continuum/zinit-packages/tree/main/firefox-dev) – Firefox Developer
   Edition, downloaded from the
   [URL](https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US)
   (or from the
   [URL](https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=osx&lang=en-US)
   for OS X; the OS X installation only downloads the `dmg` image, so it is'nt
   yet complete),
-- [fzf](https://github.com/zdharma-continuum/zinit-package-fzf) – the fuzzy-finder, installed from
+- [fzf](https://github.com/zdharma-continuum/zinit-packages/tree/main/fzf) – the fuzzy-finder, installed from
   source (from a tarball or Git) or from the GitHub-releases binary,
-- [ls\_colors](https://github.com/zdharma-continuum/zinit-package-ls_colors) – the
+- [ls\_colors](https://github.com/zdharma-continuum/zinit-packages/tree/main/ls_colors) – the
   [trapd00r/LS\_COLORS](https://github.com/trapd00r/LS_COLORS) color definitions
   for GNU `ls`, `ogham/exa` and Zshell's completion.
 
