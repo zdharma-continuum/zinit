@@ -857,6 +857,7 @@ Called by:
  zinit-install.zsh/.zinit-get-package
  zinit-install.zsh/.zinit-install-completions
  zinit-install.zsh/.zinit-jq-check
+ zinit-install.zsh/∞zinit-mv-hook
  zinit-install.zsh/∞zinit-ps-on-update-hook
  zinit-install.zsh/∞zinit-reset-hook
  zinit-install.zsh/.zinit-setup-plugin-dir
