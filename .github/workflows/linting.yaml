@@ -31,8 +31,17 @@ jobs:
         run: |
           sudo apt install -y zsh
 
-      - name: "👓 zsh -n: ${{ matrix.file }}"
+      - name: "👓 zsh -n ${{ matrix.file }}"
         env:
           ZSH_FILE: ${{ matrix.file }}
         run: |
           zsh -n "${ZSH_FILE}"
+
+      - name: "💎 zcompile ${{ matrix.file }}"
+        env:
+          ZSH_FILE: ${{ matrix.file }}
+        run: |
+          zsh -fc "zcompile ${ZSH_FILE}"
+          rc=$?
+          ls -al "${ZSH_FILE}.zwc"
+          exit "$rc"
