@@ -43,3 +43,11 @@ body:
       label: zsh version
       description: "ZSH version you're currently using: `echo $ZSH_VERSION`"
       placeholder: "5.8"
+
+  - type: input
+    id: host-info
+    validations:
+      required: true
+    attributes:
+      label: host info
+      description: "`typeset -m '*TYPE'; uname --kernel-release; grep -E '^ID=|^VERSION=' /etc/os-release 2>/dev/null`"
