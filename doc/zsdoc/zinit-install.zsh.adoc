@@ -660,9 +660,10 @@ ____
  FUNCTION: ∞zinit-mv-hook [[[
 ____
 
-Has 27 line(s). Calls functions:
+Has 35 line(s). Calls functions:
 
  ∞zinit-mv-hook
+ |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/@zinit-substitute
 
 Uses feature(s): _setopt_
