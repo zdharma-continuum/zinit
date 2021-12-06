@@ -1623,7 +1623,7 @@ builtin setopt noaliases
     (( ${+ICE[notify]} == 1 )) && { [[ $___retval -eq 0 || -n ${(M)ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $___retval"; }
     (( ${+ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @___rst
 
-    # Withdraw the `m` function.
+    # Unset the `m` function.
     .zinit-set-m-func unset
 
     # Mark no load is in progress.
