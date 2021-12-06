@@ -2024,7 +2024,7 @@ $(.zinit-main-message-formatter "$match[6]" "$match[7]" "$match[8]"; \
 $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
 
-    # Restore the default color at the end of the message.
+    # Reset color attributes at the end of the message
     msg=$msg$ZINIT[col-rst]
     # Output the processed message:
     builtin print -Pr ${opt:#--} -- $msg
