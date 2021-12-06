@@ -1987,7 +1987,7 @@ builtin setopt noaliases
         fi
         # Otherwise no action - only copy of this code without color.
     else
-        # Termination of escape code activity.
+        # End of escaping logic
         append=$ZINIT[col-rst]
     fi
 
