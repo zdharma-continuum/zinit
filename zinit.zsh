@@ -1976,7 +1976,7 @@ builtin setopt noaliases
     fi
     local append influx in_prepend
     if [[ $2 == (b|u|it|st|nb|nu|nit|nst) ]]; then
-        # Code repetition to protect any extreme whitespace
+        # Code repetition to preserve any leading/trailing whitespace
         # and to allow accumulation of this code with others.
         append=$ZINIT[col-$2]
     elif [[ $2 == (…|ndsh|mdsh|mmdsh|-…|lr|) || -z $2 || -z $ZINIT[col-$2] ]]; then
