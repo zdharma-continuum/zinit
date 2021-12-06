@@ -1916,7 +1916,7 @@ builtin setopt noaliases
     local kbz_rev="${(j::)${(@Oas::)kbz}}"
     kbz="${(j::)${(@Oas::)${kbz_rev/[[:blank:]]/ }}}"
 
-    # Add extreme whitespace in
+    # Re-add whitespace
     REPLY=$pbz$REPLY$kbz
 }
 # ]]]
