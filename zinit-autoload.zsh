@@ -1421,7 +1421,7 @@ ZINIT[EXTENDED_GLOB]=""
 # $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $3 - plugin (only when $1 - i.e. user - given)
 .zinit-update-or-status() {
-    # Ustawia opcję localtraps.
+    # Set the localtraps option.
     emulate -LR zsh
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
@@ -1429,7 +1429,7 @@ ZINIT[EXTENDED_GLOB]=""
     ZINIT[first-plugin-mark]=${${ZINIT[first-plugin-mark]:#init}:-1}
     ZINIT[-r/--reset-opt-hook-has-been-run]=0
 
-    # Dostarcz oraz po zakończeniu wycofaj funkcję `m`.
+    # Deliver and withdraw the `m` function when finished.
     .zinit-set-m-func set
     trap ".zinit-set-m-func unset" EXIT
 
@@ -2831,7 +2831,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
     # Make the ices available for the hooks.
     local -A ICE
     ICE=( "${(kv)ICE2[@]}" )
-    
+
     if (( is_snippet )); then
         if [[ "${+ICE2[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]

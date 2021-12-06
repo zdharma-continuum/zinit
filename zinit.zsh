@@ -253,14 +253,12 @@ builtin setopt noaliases
         local PLUGIN_DIR="$ZINIT[PLUGINS_DIR]/${reply[1]:+$reply[1]---}${reply[2]//\//---}"
 
 
-    # "Elementy fpath" – tj. te elementy, które leżą wewnątrz katalogu wtyczki.
-    # Nazwa wynika z tego, że są to wybrane elementy fpath → a więc po prostu
-    # "elementy".
+    # "fpath elements" ----  those elements that lie inside the plug directory.
     local -a fpath_elements
     fpath_elements=( ${fpath[(r)$PLUGIN_DIR/*]} )
 
-    # Dodanie podkatalogu funkcji do elementów, jeżeli istnieje (działanie to jest
-    # wg Standardu Wtyczek w wersji 1.07 i późniejszych).
+    # Add a function subdirectory to items, if any (this action is
+    # according to the Plug Standard version 1.07 and later).
     [[ -d $PLUGIN_DIR/functions ]] && fpath_elements+=( "$PLUGIN_DIR"/functions )
 
     if (( ${+opts[(r)-X]} )); then
@@ -310,7 +308,7 @@ builtin setopt noaliases
                     ZINIT[WARN_SHOWN_FOR_$ZINIT[CUR_USPL2]]=1
                 fi
 
-                # Zastosowanie obejścia.
+                # Workaround
                 func=$func:t
             fi
             if [[ ${ZINIT[NEW_AUTOLOAD]} = 2 ]]; then
@@ -1625,7 +1623,7 @@ builtin setopt noaliases
     (( ${+ICE[notify]} == 1 )) && { [[ $___retval -eq 0 || -n ${(M)ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $___retval"; }
     (( ${+ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @___rst
 
-    # Wycofaj funkcję `m`.
+    # Unset the `m` function.
     .zinit-set-m-func unset
 
     # Mark no load is in progress.
@@ -1903,22 +1901,22 @@ builtin setopt noaliases
 .zinit-formatter-pid() {
     builtin emulate -L zsh -o extendedglob
 
-    # Zapamiętaj krańcowe białe znaki.
+    # Save whitespace location
     local pbz=${(M)1##(#s)[[:space:]]##}
     local kbz=${(M)1%%[[:space:]]##(#e)}
-    # Usuń skrajne białe znaki.
+    # trim whitespace
     1=${1//((#s)[[:space:]]##|[[:space:]]##(#e))/}
 
     ((${+functions[.zinit-first]})) || source ${ZINIT[BIN_DIR]}/zinit-side.zsh
     .zinit-any-colorify-as-uspl2 "$1";
 
-    # Zamień przynajmniej jeden znak na niełamalną spację, ponieważ z
-    # powodu problemów z implementacją krańcowe białe znaki są gubione…
+    # Replace at least one character with an unbreakable space, because
+    # due to implementation problems, marginal whitespace is lost ...
     pbz=${pbz/[[:blank:]]/ }
     local kbz_rev="${(j::)${(@Oas::)kbz}}"
     kbz="${(j::)${(@Oas::)${kbz_rev/[[:blank:]]/ }}}"
 
-    # Dostaw spowrotem krańcowe białe znaki.
+    # Re-add whitespace
     REPLY=$pbz$REPLY$kbz
 }
 # ]]]
@@ -1978,28 +1976,27 @@ builtin setopt noaliases
     fi
     local append influx in_prepend
     if [[ $2 == (b|u|it|st|nb|nu|nit|nst) ]]; then
-        # Powtórzenie kodu aby zabezpieczyć ewentualne krańcowe białe znaki
-        # oraz aby umożliwić akumulację tego kodu z innymi.
+        # Code repetition to preserve any leading/trailing whitespace
+        # and to allow accumulation of this code with others.
         append=$ZINIT[col-$2]
     elif [[ $2 == (…|ndsh|mdsh|mmdsh|-…|lr|) || -z $2 || -z $ZINIT[col-$2] ]]; then
-        # Wznowienie poprzedniego kodu escape, jeżeli jest taki zapisany.
+        # Resume previous escape code, if one is present.
         if [[ $ZINIT[__last-formatter-code] != (…|ndsh|mdsh|mmdsh|-…|lr|rst|nl|) ]]; then
             in_prepend=$ZINIT[col-$ZINIT[__last-formatter-code]]
             influx=$ZINIT[col-$ZINIT[__last-formatter-code]]
         fi
-        # W przeciwnym razie brak akcji – tylko skopiowanie
-        # tego kodu bez koloru.
+        # Otherwise no action - only copy of this code without color.
     else
-        # Zakończenie aktywności kodu escape.
+        # End of escaping logic
         append=$ZINIT[col-rst]
     fi
 
-    # Skonstruuj tekst.
+    # Construct the text.
     REPLY=$in_prepend${ZINIT[col-$2]:-$1}$influx$3$append
 
-    # Zamień nowe linie na znaki, które działają tak samo ale nie są
-    # usuwane w podstawieniu $( … ) – vertical tab 0xB ↔ 13 w systemie
-    # oktagonalnym połączone z powrotem karetki (015).
+    # Replace new lines with characters that work the same but are not
+    # deleted in the substitution $ (...) - vertical tab 0xB ↔ 13 in the system
+    # octagonal connected back carriage (015).
     local nl=$'\n' vertical=$'\013' carriager=$'\015'
     REPLY=${REPLY//$nl/$vertical$carriager}
 
@@ -2027,12 +2024,12 @@ $(.zinit-main-message-formatter "$match[6]" "$match[7]" "$match[8]"; \
 $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
 
-    # Przywróć domyślny kolor na końcu wiadomości.
+    # Reset color attributes at the end of the message
     msg=$msg$ZINIT[col-rst]
     # Output the processed message:
     builtin print -Pr ${opt:#--} -- $msg
 
-    # Potrzebne aby poprawnie zakończyć wiadomość z {nl}.
+    # Needed to correctly end a message with {nl}.
     if [[ -n ${opt:#*n*} || -z $opt ]]; then
         print -n $'\015'
     fi
