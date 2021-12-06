@@ -1901,7 +1901,7 @@ builtin setopt noaliases
 .zinit-formatter-pid() {
     builtin emulate -L zsh -o extendedglob
 
-    # Remember extreme whitespace
+    # Save whitespace location
     local pbz=${(M)1##(#s)[[:space:]]##}
     local kbz=${(M)1%%[[:space:]]##(#e)}
     # Remove extreme whitespace
