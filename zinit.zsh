@@ -1904,7 +1904,7 @@ builtin setopt noaliases
     # Save whitespace location
     local pbz=${(M)1##(#s)[[:space:]]##}
     local kbz=${(M)1%%[[:space:]]##(#e)}
-    # Remove extreme whitespace
+    # trim whitespace
     1=${1//((#s)[[:space:]]##|[[:space:]]##(#e))/}
 
     ((${+functions[.zinit-first]})) || source ${ZINIT[BIN_DIR]}/zinit-side.zsh
