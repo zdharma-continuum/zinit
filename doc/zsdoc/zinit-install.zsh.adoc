@@ -323,7 +323,7 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 357 line(s). Calls functions:
+Has 370 line(s). Calls functions:
 
  .zinit-download-snippet
  |-- zinit-side.zsh/.zinit-store-ices
