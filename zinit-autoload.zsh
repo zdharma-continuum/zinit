@@ -501,7 +501,7 @@ ZINIT[EXTENDED_GLOB]=""
     # This in effect works as: "if different, then readlink"
     [[ -n "$tmp" ]] && in_plugin_path="$tmp"
 
-    if [[ "$in_plugin_path" != "$cpath" ]]; then
+    if [[ "$in_plugin_path" != "$cpath" && -r "$in_plugin_path" ]]; then
         # Get the user---plugin part of path
         while [[ "$in_plugin_path" != ${ZINIT[PLUGINS_DIR]}/[^/]## && "$in_plugin_path" != "/" ]]; do
             in_plugin_path="${in_plugin_path:h}"
