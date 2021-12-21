@@ -503,7 +503,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     if [[ "$in_plugin_path" != "$cpath" && -r "$in_plugin_path" ]]; then
         # Get the user---plugin part of path
-        while [[ "$in_plugin_path" != ${ZINIT[PLUGINS_DIR]}/[^/]## && "$in_plugin_path" != "/" ]]; do
+        while [[ "$in_plugin_path" != ${ZINIT[PLUGINS_DIR]}/[^/]## && "$in_plugin_path" != "/" && "$in_plugin_path" != "." ]]; do
             in_plugin_path="${in_plugin_path:h}"
         done
         in_plugin_path="${in_plugin_path:t}"
