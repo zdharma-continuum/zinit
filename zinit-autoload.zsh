@@ -2212,22 +2212,26 @@ ZINIT[EXTENDED_GLOB]=""
         fi
         [[ -z $EPOCHREALTIME ]] && attime="<no zsh/datetime module → no time data>"
 
+        local line="$time"
         if [[ "$opt" = *-[a-z]#m[a-z]#* ]]; then
-            time="$attime"
+            line="$attime"
+        elif [[ "$opt" = *-[a-z]#a[a-z]#* ]]; then
+            line="$attime $line"
         fi
+
+        line="$line - $REPLY"
 
         if [[ ${sice[as]} == "command" ]]; then
-            builtin print "$time" - "$REPLY (command)"
+            line="$line (command)"
         elif [[ -n ${sice[sbin]+abc} ]]; then
-            builtin print "$time" - "$REPLY (sbin command)"
+            line="$line (sbin command)"
         elif [[ -n ${sice[fbin]+abc} ]]; then
-            builtin print "$time" - "$REPLY (fbin command)"
+            line="$line (fbin command)"
         elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && ${+sice[make]} = 1 ]]; then
-            builtin print "$time" - "$REPLY (/dev/null make plugin)"
-        else
-            builtin print "$time" - "$REPLY"
+            line="$line (/dev/null make plugin)"
         fi
 
+        builtin print "$line"
         (( sum += ZINIT[$entry] ))
     done
     builtin print "Total: $sum sec"
