@@ -1196,6 +1196,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
                 }
             } else {
+                if (( $+commands[realpath] )) && {
+                    local rpv="$(realpath --version | head -n1 | sed -E 's/realpath (\(.*\) )?//g')"
+                    if is-at-least 8.23 $rpv; then
+                        rel_url="$(realpath --relative-to="$local_dir/$dirname" "$url")" && \
+                            { url="$rel_url" }
+                    fi
+                }
                 if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
                     +zinit-message "{msg}Linking {file}$filename{msg}{…}{rst}"
                     command ln -svf "$url" "$local_dir/$dirname/$filename" || \
