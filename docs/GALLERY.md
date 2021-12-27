@@ -243,6 +243,142 @@ zinit snippet OMZ::plugins/osx
 # directory pruned (rm -rf -- ${ZPLGM[SNIPPETS_DIR]}):
 zinit ice svn
 zinit snippet OMZ::plugins/osx
+
+# Loading a local snippet located at $HOME/external/snippet.zsh
+# using symlinks (instead of copying the snippet)
+zinit ice link
+zinit snippet $HOME/external/snippet.zsh
+
+# For-syntax for symlinking local snippets
+zinit light-mode for \
+    is-snippet link id-as'mysnippet' \
+        $HOME/external/snippet.zsh
+
+# Complex example
+# A bit convoluted -- mainly here to demonstrate some zinit-fu.
+#
+# sharkdp/vivid's latest gh-r doesn't package all the themes found in its master
+# branch.  But, we definitely don't want to compile it from scratch (or, if you
+# do, see z-a-rust).  So, we use a plugin with id-as'vivid-bin' to download the
+# release from github, and we use z-a-bin-gem-node to sbin it into our PATH.
+# Next, we still want to clone the repo, so we use another plugin, but this time
+# with id-as'vivid-themes' to clone the repo.
+#
+# Through the rest of this section, I'll refer to ZINIT[PLUGIN_DIR] as ZPD, and
+# ZINIT[SNIPPETS_DIR] as ZSD.
+
+zinit depth'3' light-mode for \
+    zdharma-continuum/zinit-annex-bin-gem-node \
+    zdharma-continuum/zinit-annex-default-ice \
+    NICHOLAS85/z-a-eval \
+    ;
+
+zinit default-ice -q depth'3' lucid light-mode
+
+zinit wait as'null' for \
+    id-as'vivid-bin' from'gh-r' sbin"**/vivid" \
+        @sharkdp/vivid \
+    id-as'vivid-themes' \
+        @sharkdp/vivid
+
+# So far, this has nothing to do with snippets or the link ice.  But, now we
+# have a vivid shim in $ZPFX/bin/vivid, the vivid binary extracted at
+# ZPD/vivid-bin/ and the vivid repo containing the latest themese cloned at
+# ZPD/vivid-themes.
+#
+# We can now use a snippet to symlink it into the snippet cache so that we can
+# call vivid to generate our LS_COLORS.
+
+zinit for \
+    wait'
+        (( $+commands[vivid] )) &&
+        [[ -f $ZINIT[PLUGINS_DIR]/vivid-themes/themes/ayu.yml ]]
+    ' \
+    is-snippet \
+    id-as'vivid-theme-ayu' \
+    link \
+    as'null' \
+    nocompile \
+    eval'echo "export LS_COLORS=\"$(vivid generate vivid-theme-ayu)\""' \
+    atload'zstyle ":completion:*" list-colors "${(s.:.)LS_COLORS}"' \
+        ${ZINIT[PLUGINS_DIR]}/vivid-themes/themes/ayu.yml
+
+# Here's a step-by-step breakdown of what's going on here:
+#
+# 1. wait'...'
+#
+# Allows us to (1) wait until the vivid command is available, and (b) wait until
+# we have cloned our repo and our theme file exists.
+#
+# 2. is-snippet
+#    id-as'vivid-theme-ayu'
+#    link
+#
+# Here, we declare that we're loading a snippet and that it's id should be
+# vivid-theme-ayu.  This will prompt zinit to create a directory
+# ZSD/vivid-theme-ayu and cache the snippet into that directory under the
+# filename ZSD/vivid-theme-ayu/vivid-theme-ayu.  Note, it uses the id-as
+# both for the directory name as well as the filename.
+#
+# Now, since we're using the link ice, we don't actually copy the file, but
+# instead symlink it.  Previously, we used the vivid-themes plugin to clone
+# the vivid repository, so we can expect to find our ayu theme at:
+#
+#     ZPD/vivid-themes/themes/ayu.yml
+#
+# So far, our snippet directory looks like:
+#
+#     ZSD/vivid-theme-ayu/vivid-theme-ayu -> ZPD/vivid-themes/themes/ayu.yml
+#
+# Note, in reality the symlink is relative (not absolute).  Assuming your ZSD
+# and ZPD directories are next to each other, the actual link target should
+# look something like ../../plugins/vivid-themes/themes/ayu.yml
+#
+# 3. as'null'
+#    nocompile
+#
+# The snippet we're loading isn't actually a script at all.  It's the theme file
+# for vivid.  This disables the loading.  Obviously, we don't want to compile
+# this.
+#
+# 4. eval'echo "export LS_COLORS=\"$(vivid generate vivid-theme-ayu)\""'
+#
+# Now we're getting really cool.  We add z-a-eval as well so that we don't make
+# vivid regenerate the LS_COLORS output at each new shell.  We just need to
+# cache the output.  Luckily, this is exactly what z-a-eval does.
+#
+# z-a-eval will cache the output of the eval ice and store it in the snippet
+# directory as evalcache.zsh.
+#
+#     ZSD/vivid-theme-ayu/evalcache.zsh
+#
+# The eval command itself is invoked from the context of the snippet's
+# directory, and our snippet has taken care of symlinking the ayu theme into
+# our snippet directory as vivid-theme-ayu.  Note, there's no .yml because the
+# snippet always takes the id-as name of the snippet.
+#
+# Now, on each subsequent invocation of the shell, we won't run vivid anymore,
+# but will simply source the evalcache which will load our LS_COLORS.
+#
+# 5. atload'...'
+#
+# Lastly, we can still take advantage of an atload (which is not affected by
+# z-a-eval's caching) to run zstyle to convert our LS_COLORS into list-colors
+# style for zsh's completion system.
+#
+# Extra Credit:
+#
+# Technically, we don't need to wait on the vivid command to be available on
+# subsequent invocations of the shell.  We can alter our wait condition to:
+#
+#    wait'
+#        (( $+commands[vivid] )) &&
+#        [[ -f $ZINIT[PLUGINS_DIR]/vivid-themes/themes/ayu.yml ]] ||
+#        [[ -f $ZINIT[SNIPPETS_DIR]/vivid-theme-ayu/evalcache.zsh ]]
+#    ' \
+#
+# If for some reason, we delete our vivid binary, our LS_COLORS won't wait until
+# it is available again to load.
 ```
 
 ## Themes
