@@ -35,4 +35,24 @@ clean:
 	rm -rf doc/zsdoc/data
 
 .PHONY: all test clean doc
+
+docker-shell: docker-build
+	docker run --rm -it -v $$PWD:/opt -w /opt zinit-docs:latest zsh
+
+docker-doctoc: docker-build
+	docker run --rm -it -v $$PWD:/opt -w /opt zinit-docs:latest doctoc --github README.md
+
+docker-doc: docker-build
+	docker run --rm -it -v $$PWD:/opt -w /opt zinit-docs:latest make doc
+
+docker-man: docker-build
+	docker run --rm -it -v $$PWD/doc/zsdoc:/opt -w /opt zinit-docs:latest make man
+
+docker-pdf: docker-build
+	docker run --rm -it -v $$PWD/doc/zsdoc:/opt -w /opt zinit-docs:latest make pdf
+
+docker-build:
+	docker build -t zinit-docs:latest doc
+
+.PHONY: docker-build docker-shell docker-doctoc docker-doc docker-man docker-pdf
 # vim:noet:sts=8:ts=8
