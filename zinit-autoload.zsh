@@ -3422,7 +3422,7 @@ EOF
 —— -h|--help|help                – usage information
 —— man                           – manual
 —— self-update                   – updates and compiles Zinit
-—— times [-s] [-m]               – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments
+—— times [-s] [-m] [-a]          – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments, -a – show both load times and loading moments
 —— zstatus                       – overall Zinit status
 —— load ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – load plugin, can also receive absolute local path
 —— light [-b] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)
