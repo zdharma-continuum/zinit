@@ -20,6 +20,7 @@ nav:
   - "Example Minimal Setup": Example-Minimal-Setup.md
   - "Example Oh My Zsh Setup": Example-Oh-My-Zsh-setup.md
   - "LS_COLORS Explanation": LS_COLORS-explanation.md
+  - "Vivid Explanation": vivid-explanation.md
   - "Direnv Explanation": Direnv-explanation.md
   - "Compiling Programs": Compiling-programs.md
   - "Profiling Plugins": Profiling-plugins.md
