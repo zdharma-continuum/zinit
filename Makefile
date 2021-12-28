@@ -1,5 +1,5 @@
 wiki: docs/*.md docs/css/*.css
-	mkdocs build -d wiki
+	mkdocs -v build -d wiki
 
 gh-pages: wiki
 	mv -vf wiki wiki_
@@ -18,4 +18,4 @@ docker-build:
 	docker build -t zinit-docs:latest .
 
 docker-wiki:
-	docker run --rm -v $$PWD:/opt -w /opt zinit-docs:latest make wiki
+	docker run --rm -it -v $$PWD:/opt -w /opt zinit-docs:latest make wiki
