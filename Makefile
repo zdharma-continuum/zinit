@@ -13,3 +13,9 @@ gh-pages: wiki
 
 master: wiki
 	git checkout master
+
+docker-build:
+	docker build -t zinit-docs:latest .
+
+docker-wiki:
+	docker run --rm -v $$PWD:/opt -w /opt zinit-docs:latest make wiki
