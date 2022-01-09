@@ -1453,7 +1453,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         i686 "((386|686|linux32|x86*(#e))~*x86[-_]64*)"
         amd64 "(amd64|x86[-_]64|intel|intel64|linux64|linux_amd64)"
         x86_64 "(amd64|x86[-_]64|intel|intel64|linux64|linux_amd64)"
-        linux "(linux[-_]|((#s)|)*(gnu|musl)((#e)|))"
+        linux "(linux[-_]((#s)|)*(gnu|musl)((#e)|))"
         darwin "(darwin|mac|[-_]((#s)|)*osx((#e)|))"
         cygwin "(windows|cygwin|[-_]win|win64|win32)"
         msys "(windows|msys|cygwin|[-_]win|win64|win32)"
