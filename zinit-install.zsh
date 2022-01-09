@@ -1511,8 +1511,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         }
         if (( !$#list )) {
             +zinit-message -n "{error}Didn't find correct Github release-file to download"
-            if [[ -n $bpick ]] { +zinit-message -n ", try adapting {obj}bpick{error}-ICE (the current bpick is{error}: {file}${bpick}{error})." } 
-            else { +zinit-message -n . }
+            if [[ -n $bpick ]] { 
+                +zinit-message -n ", try adapting {obj}bpick{error}-ICE (the current bpick is{error}: {file}${bpick}{error})." 
+            } 
+            else { 
+                +zinit-message -n . 
+            }
             +zinit-message '{rst}'
             return 1
         }
