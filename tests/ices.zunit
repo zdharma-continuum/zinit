@@ -79,4 +79,29 @@
   assert "$artifact" is_readable
   assert "$artifact" is_executable
 }
+
+@test 'gh-r ice' {
+  local z=$'zinit as'\''command'\'' from'\''gh-r'\'' mv'\''fd* -> fd'\'' pick'\''fd/fd'\'' \
+      for @sharkdp/fd'
+  run ./scripts/docker-run.sh --wrap --debug --zunit $z
+
+  assert $state equals 0
+  assert "$output" contains "Downloading"
+  assert "$output" contains "linux"
+
+  local artifact="${PLUGINS_DIR}/sharkdp---fd/fd/fd"
+  assert "$artifact" is_file
+  assert "$artifact" is_readable
+  assert "$artifact" is_executable
+}
+
+@test 'incorrect gh-r ice' {
+  local z=$'zinit as'\''command'\'' from'\''gh-r'\'' pick'\''**/k9s'\'' \
+      for @derailed/k9s'
+  run ./scripts/docker-run.sh --wrap --debug --zunit $z
+
+  assert $state equals 0
+  assert "$output" does_not_contain "Darwin"
+}
+
 # vim: set ft=zsh et ts=2 sw=2 : #
