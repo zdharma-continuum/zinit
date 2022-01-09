@@ -183,7 +183,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-readurl *]} )
             ]]; then
                 local -A namemap
-                namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
+                namemap=( bgn bin-gem-node dl patch-dl monitor readurl )
                 +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
                 if [[ -z ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
                     +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
@@ -221,7 +221,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         fi
     }
 
-    if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
+    if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ]] {
         +zinit-message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" \
             "{ice}dl''{rst} ice however there's currently no {annex}zinit-annex-patch-dl{rst}" \
             "annex loaded, which provides it."
@@ -1449,93 +1449,73 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     local -A matchstr
     matchstr=(
-        i386    "((386|686|linux32|x86*(#e))~*x86_64*)"
-        i686    "((386|686|linux32|x86*(#e))~*x86_64*)"
-        x86_64  "(x86_64|amd64|intel|linux64|linux_amd64)"
-        amd64   "(x86_64|amd64|intel|linux64|linux_amd64)"
-        aarch64 "aarch64"
+        i386   "((386|686|linux32|x86*(#e))~*x86(-|_)64*)"
+        i686   "((386|686|linux32|x86*(#e))~*x86(-|_)64*)"
+        x86_64 "(amd64|x86(-|_)64|intel|intel64|linux64|linux_amd64)"
+        amd64  "(amd64|x86(-|_)64|intel|intel64|linux64|linux_amd64)"
+        aarch64  "aarch64"
         aarch64-2 "arm"
-        linux "(linux-musl|((#s)|)*musl((#e)|-))"
-        linuxl-2 "(linux|linux-gnu)"
-        darwin  "(darwin|mac|macos|osx|os-x)"
+        linux_musl "(linux-musl|((#s)|)*musl((#e)|-))"
+        linux_gnu  "(linux|linux-gnu)"
+        darwin     "(darwin|((#s)|)*osx((#e)|-))"
         cygwin  "(windows|cygwin|[-_]win|win64|win32)"
         windows "(windows|cygwin|[-_]win|win64|win32)"
-        msys "(windows|msys|cygwin|[-_]win|win64|win32)"
-        armv7l  "(arm7|armv7)"
+        msys    "(windows|msys|cygwin|[-_]win|win64|win32)"
+        armv7l   "(arm7|armv7)"
         armv7l-2 "arm7"
-        armv6l  "(arm6|armv6)"
+        armv6l   "(arm6|armv6)"
         armv6l-2 "arm"
-        armv5l  "(arm5|armv5)"
+        armv5l   "(arm5|armv5)"
         armv5l-2 "arm"
     )
 
     local -a list init_list
-
-    init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
-                      command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+    init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null \
+                         | command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
     init_list=( ${init_list[@]#href=?} )
-
     local -a list2 bpicks
     bpicks=( ${(s.;.)ICE[bpick]} )
     [[ -z $bpicks ]] && bpicks=( "" )
     local bpick
-
     reply=()
     for bpick ( "${bpicks[@]}" ) {
         list=( $init_list )
-
-        if [[ -n $bpick ]] {
-            list=( ${(M)list[@]:#(#i)*/$~bpick} )
-        }
-
+        if [[ -n $bpick ]] { list=( ${(M)list[@]:#(#i)*/$~bpick} ) }
         if (( $#list > 1 )) {
             list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-
         if (( ${#list} > 1 && ${#matchstr[${MACHTYPE}-2]} )) {
             list2=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}-2]:-${MACHTYPE#(#i)(i|amd)}}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-
         if (( $#list > 1 )) {
             list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-
         if (( $#list > 1 )) {
             list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-(gnu|musl)}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-(gnu|musl)}%%(-|)[0-9.]##}}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-
         if (( $#list > 1 )) {
             list2=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-
         if (( $#list > 1 && $+commands[dpkg-deb] )) {
             list2=( ${list[@]:#*.deb} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-
         if (( $#list > 1 && $+commands[rpm] )) {
             list2=( ${list[@]:#*.rpm} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
-
         if (( !$#list )) {
-            +zinit-message -n "{error}Didn't find correct Github" \
-                "release-file to download"
-            if [[ -n $bpick ]] {
-                +zinit-message -n ", try adapting {obj}bpick{error}-ICE" \
-                    "(the current bpick is{error}: {file}${bpick}{error})."
-            } else {
-                +zinit-message -n .
-            }
+            +zinit-message -n "{error}Didn't find correct Github release-file to download"
+            if [[ -n $bpick ]] { +zinit-message -n ", try adapting {obj}bpick{error}-ICE (the current bpick is{error}: {file}${bpick}{error})." } 
+            else { +zinit-message -n . }
             +zinit-message '{rst}'
             return 1
         }
-
         reply+=( $list[1] )
     }
     [[ -n $reply ]] # testable
