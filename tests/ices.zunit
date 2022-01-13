@@ -79,4 +79,11 @@
   assert "$artifact" is_readable
   assert "$artifact" is_executable
 }
-# vim: set ft=zsh et ts=2 sw=2 : #
+
+@test 'sharkdp/bat ice' {
+  local z=$"zi from'gh-r' as'program' sbin'**/bat -> bat' for @sharkdp/bat"
+  run ./scripts/docker-run.sh --wrap --debug --zunit $z
+
+  assert $state equals 0
+  assert "$output" contains {"Downloading","linux","gnu","bat",".tar.gz"}
+}
