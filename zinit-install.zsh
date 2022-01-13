@@ -183,7 +183,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-readurl *]} )
             ]]; then
                 local -A namemap
-                namemap=( bgn Bin-Gem-Node dl Patch-Dl monitor readurl )
+                namemap=( bgn bin-gem-node dl patch-dl monitor readurl )
                 +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
                 if [[ -z ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
                     +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
@@ -221,7 +221,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         fi
     }
 
-    if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: z-a-patch-dl *]} ]] {
+    if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ]] {
         +zinit-message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" \
             "{ice}dl''{rst} ice however there's currently no {annex}zinit-annex-patch-dl{rst}" \
             "annex loaded, which provides it."
