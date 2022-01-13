@@ -1,5 +1,5 @@
 name: 🧪 zunit
-on: [push, pull_request, workflow_dispatch]
+on: [pull_request, workflow_dispatch]
 jobs:
   build-matrix:
     runs-on: ubuntu-latest
