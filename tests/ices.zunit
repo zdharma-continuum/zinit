@@ -81,7 +81,7 @@
 }
 
 @test 'sharkdp/bat ice' {
-  local z=$"zi from'gh-r' as'program' sbin'**/bat -> bat' for @sharkdp/bat"
+  local z=$(zi from'gh-r' as'program' sbin'**/bat -> bat' for @sharkdp/bat)
   run ./scripts/docker-run.sh --wrap --debug --zunit $z
 
   assert $state equals 0
