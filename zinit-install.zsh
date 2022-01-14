@@ -1456,7 +1456,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         aarch64 "aarch64"
         aarch64-2 "arm"
         musl "*((#s)|/)*(linux|musl)*((#e)|/))*"
-        darwin  "*(darwin|mac|macos|osx|os-x)*"
+        darwin  "*(macos|darwin|osx)*"
         cygwin  "(windows|cygwin|[-_]win|win64|win32)"
         windows "(windows|cygwin|[-_]win|win64|win32)"
         msys "(windows|msys|cygwin|[-_]win|win64|win32)"
@@ -1499,6 +1499,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         if (( $#list > 1 )) {
             list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+        if (( $#list > 1 )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)(darwin)}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)(darwin)}%%(-|)[0-9.]##}}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
