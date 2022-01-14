@@ -1571,7 +1571,7 @@ ziextract() {
         # First try known file extensions
         local -a files
         integer ret_val
-        files=( (#i)**/*.(zip|rar|7z|tgz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg|exe)~(*/*|.(_backup|git))/*(-.DN) )
+        files=( (#i)**/*.(zip|rar|7z|tgz|tbz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg|exe)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
             ziextract "$file" $opt_move $opt_move2 $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
             ret_val+=$?
@@ -1677,7 +1677,7 @@ ziextract() {
         ((#i)*.rar)
             →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "$file"; }
             ;;
-        ((#i)*.tar.bz2|(#i)*.tbz2)
+        ((#i)*.tar.bz2|(#i)*.tbz|(#i)*.tbz2)
             →zinit-extract() { →zinit-check bzip2 "$file" || return 1; command bzip2 -dc "$file" | command tar -xf -; }
             ;;
         ((#i)*.tar.gz|(#i)*.tgz)
