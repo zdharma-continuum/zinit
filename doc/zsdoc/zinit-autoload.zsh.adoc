@@ -1451,7 +1451,7 @@ ____
  User-action entry point.
 ____
 
-Has 131 line(s). Calls functions:
+Has 133 line(s). Calls functions:
 
  .zinit-update-or-status-all
  |-- zinit-install.zsh/.zinit-compinit
