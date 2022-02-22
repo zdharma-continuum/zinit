@@ -718,7 +718,7 @@ ZINIT[EXTENDED_GLOB]=""
     (   builtin cd -q "$ZINIT[BIN_DIR]" && \
         command git checkout main &>/dev/null && \
         command git fetch --quiet && \
-            lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
+            lines=( ${(f)"$(command git --no-pager log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
         if (( ${#lines} > 0 )); then
             # Remove the (origin/main ...) segments, to expect only tags to appear
             lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
@@ -1604,7 +1604,7 @@ ZINIT[EXTENDED_GLOB]=""
               integer had_output=0
               local IFS=$'\n'
               command git fetch --quiet && \
-                command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s%n' ..FETCH_HEAD | \
+                command git --no-pager log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s%n' ..FETCH_HEAD | \
                 while read line; do
                   [[ -n ${line%%[[:space:]]##} ]] && {
                       [[ $had_output -eq 0 ]] && {
