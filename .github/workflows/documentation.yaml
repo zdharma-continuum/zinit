@@ -46,12 +46,8 @@ jobs:
             /tmp/doc.tar.gz
 
       - name: 🕵️ Check if the zsd docs need to be updated
-      # NOTE: We need to run git diff twice here since w/o --quiet it's RC
-      # is always 0. The first is to display the diff output, the second one
-      # to test whether the diff is empty.
         run: |
-          git --no-pager diff
-          if git --no-pager diff --quiet
+          if git --no-pager diff --exit-code
           then
             echo "✅ The zshelldocs are up to date"
           else
