@@ -1865,11 +1865,13 @@ ZINIT[EXTENDED_GLOB]=""
         return $?
     }
 
+    integer retval
+
     if (( OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
         (( !OPTS[opt_-q,--quiet] )) && \
             +zinit-message '{info2}Parallel Update Starts Now{…}{rst}'
         .zinit-update-all-parallel
-        integer retval=$?
+        retval=$?
         .zinit-compinit 1 1 &>/dev/null
         rehash
         if (( !OPTS[opt_-q,--quiet] )) {
