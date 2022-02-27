@@ -90,7 +90,16 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 225 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
+Has 225 line(s). Calls functions:
+
+ Script-Body
+ |-- +zinit-message
+ |-- @zinit-register-hook
+ |-- add-zsh-hook
+ |-- is-at-least
+ `-- zinit-autoload.zsh/.zinit-module
+
+Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _export_, _is-at-least_, _setopt_, _source_, _zmodload_, _zstyle_
 
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
@@ -107,7 +116,13 @@ ____
 
 Has 13 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Uses feature(s): _read_, _zle_
+
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
+ zinit-autoload.zsh/.zinit-recall
 
 +zinit-message
 ~~~~~~~~~~~~~~
@@ -123,6 +138,42 @@ Has 14 line(s). Doesn't call other functions.
 Called by:
 
  +zinit-prehelp-usage-message
+ .zinit-compdef-clear
+ .zinit-compdef-replay
+ .zinit-load-snippet
+ .zinit-register-plugin
+ .zinit-run
+ .zinit-set-m-func
+ :zinit-tmp-subst-autoload
+ Script-Body
+ zinit
+ zinit-autoload.zsh/.zinit-build-module
+ zinit-autoload.zsh/.zinit-cd
+ zinit-autoload.zsh/.zinit-self-update
+ zinit-autoload.zsh/.zinit-show-zstatus
+ zinit-autoload.zsh/.zinit-uninstall-completions
+ zinit-autoload.zsh/.zinit-update-all-parallel
+ zinit-autoload.zsh/.zinit-update-or-status-all
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-autoload.zsh/.zinit-wait-for-update-jobs
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-mv-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-ps-on-update-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-reset-hook
+ zinit-install.zsh/.zinit-compile-plugin
+ zinit-install.zsh/.zinit-compinit
+ zinit-install.zsh/.zinit-download-file-stdout
+ zinit-install.zsh/.zinit-download-snippet
+ zinit-install.zsh/.zinit-extract
+ zinit-install.zsh/.zinit-get-cygwin-package
+ zinit-install.zsh/.zinit-get-latest-gh-r-url-part
+ zinit-install.zsh/.zinit-get-package
+ zinit-install.zsh/.zinit-install-completions
+ zinit-install.zsh/.zinit-jq-check
+ zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit-install.zsh/.zinit-update-snippet
+ zinit-install.zsh/ziextract
+ zinit-side.zsh/.zinit-countdown
+ zinit-side.zsh/.zinit-exists-physically-message
 
 +zinit-prehelp-usage-message
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -135,9 +186,13 @@ ____
 
 Has 38 line(s). Calls functions:
 
- 
+ +zinit-prehelp-usage-message
+ `-- +zinit-message
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ zinit
+ zinit-autoload.zsh/.zinit-delete
 
 -zinit_scheduler_add_sh
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -163,9 +218,13 @@ ____
  FUNCTION: .zinit-add-fpath. [[[
 ____
 
-Has 10 line(s). Doesn't call other functions.
+Has 10 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-add-fpath
+
+Called by:
+
+ zinit
 
 .zinit-add-report
 ~~~~~~~~~~~~~~~~~
@@ -181,7 +240,16 @@ ____
 
 Has 3 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-load-plugin
+ .zinit-load-snippet
+ :zinit-tmp-subst-alias
+ :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
+ :zinit-tmp-subst-compdef
+ :zinit-tmp-subst-zle
+ :zinit-tmp-subst-zstyle
 
 .zinit-any-to-pid
 ~~~~~~~~~~~~~~~~~
@@ -191,11 +259,17 @@ ____
  FUNCTION: .zinit-any-to-pid. [[[
 ____
 
-Has 22 line(s). Doesn't call other functions.
+Has 22 line(s). Calls functions:
+
+ .zinit-any-to-pid
+
+Uses feature(s): _setopt_
 
 Called by:
 
  zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ zinit-side.zsh/.zinit-exists-physically-message
+ zinit-side.zsh/.zinit-first
 
 .zinit-any-to-user-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -214,10 +288,39 @@ ____
 
 Has 29 line(s). Doesn't call other functions.
 
+Uses feature(s): _setopt_
+
 Called by:
 
+ .zinit-add-fpath
+ .zinit-get-object-path
+ .zinit-load
+ .zinit-run
+ :zinit-tmp-subst-autoload
  zinit-autoload.zsh/.zinit-any-to-uspl2
+ zinit-autoload.zsh/.zinit-changes
+ zinit-autoload.zsh/.zinit-compile-uncompile-all
+ zinit-autoload.zsh/.zinit-compiled
+ zinit-autoload.zsh/.zinit-create
+ zinit-autoload.zsh/.zinit-delete
+ zinit-autoload.zsh/.zinit-find-completions-of-plugin
+ zinit-autoload.zsh/.zinit-glance
+ zinit-autoload.zsh/.zinit-show-report
+ zinit-autoload.zsh/.zinit-stress
+ zinit-autoload.zsh/.zinit-uncompile-plugin
+ zinit-autoload.zsh/.zinit-unload
+ zinit-autoload.zsh/.zinit-unregister-plugin
+ zinit-autoload.zsh/.zinit-update-all-parallel
+ zinit-autoload.zsh/.zinit-update-or-status-all
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-install.zsh/.zinit-install-completions
  zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ zinit-side.zsh/.zinit-compute-ice
+ zinit-side.zsh/.zinit-exists-physically-message
+ zinit-side.zsh/.zinit-exists-physically
+ zinit-side.zsh/.zinit-first
+
+_Environment variables used:_ ZPFX
 
 .zinit-compdef-clear
 ~~~~~~~~~~~~~~~~~~~~
@@ -228,9 +331,16 @@ ____
  Implements user-exposed functionality to clear gathered compdefs.
 ____
 
-Has 3 line(s). Doesn't call other functions.
+Has 3 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-compdef-clear
+ `-- +zinit-message
+
+Called by:
+
+ zicdclear
+ zinit
+ zpcdclear
 
 .zinit-compdef-replay
 ~~~~~~~~~~~~~~~~~~~~~
@@ -242,9 +352,18 @@ ____
  after loading plugins.
 ____
 
-Has 17 line(s). Doesn't call other functions.
+Has 17 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-compdef-replay
+ `-- +zinit-message
+
+Uses feature(s): _compdef_
+
+Called by:
+
+ zicdreplay
+ zinit
+ zpcdreplay
 
 .zinit-diff
 ~~~~~~~~~~~
@@ -255,9 +374,13 @@ ____
  Performs diff actions of all types
 ____
 
-Has 4 line(s). Doesn't call other functions.
+Has 4 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-diff
+
+Called by:
+
+ .zinit-load-plugin
 
 .zinit-diff-env
 ~~~~~~~~~~~~~~~
@@ -273,7 +396,10 @@ ____
 
 Has 18 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-diff
+ .zinit-load-plugin
 
 .zinit-diff-functions
 ~~~~~~~~~~~~~~~~~~~~~
@@ -290,7 +416,9 @@ ____
 
 Has 8 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-diff
 
 .zinit-diff-options
 ~~~~~~~~~~~~~~~~~~~
@@ -307,7 +435,9 @@ ____
 
 Has 7 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-diff
 
 .zinit-diff-parameter
 ~~~~~~~~~~~~~~~~~~~~~
@@ -324,7 +454,9 @@ ____
 
 Has 9 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-diff
 
 .zinit-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -339,7 +471,11 @@ ____
 
 Has 17 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-load-plugin
+ .zinit-load-snippet
+ zinit-side.zsh/.zinit-first
 
 .zinit-formatter-bar
 ~~~~~~~~~~~~~~~~~~~~
@@ -350,7 +486,9 @@ ____
  FUNCTION: .zinit-formatter-bar. [[[
 ____
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ .zinit-formatter-bar
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -364,7 +502,10 @@ ____
 
 Has 7 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-formatter-bar
+ .zinit-formatter-th-bar
 
 .zinit-formatter-pid
 ~~~~~~~~~~~~~~~~~~~~
@@ -375,7 +516,12 @@ ____
  FUNCTION: .zinit-formatter-pid. [[[
 ____
 
-Has 11 line(s). Doesn't call other functions.
+Has 11 line(s). Calls functions:
+
+ .zinit-formatter-pid
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+
+Uses feature(s): _source_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -388,7 +534,9 @@ ____
  FUNCTION: .zinit-formatter-th-bar. [[[
 ____
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ .zinit-formatter-th-bar
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -415,7 +563,11 @@ ____
 
 Has 7 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ Script-Body
+ zinit-autoload.zsh/.zinit-self-update
+ zinit-autoload.zsh/.zinit-update-or-status-all
 
 .zinit-get-object-path
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -425,9 +577,21 @@ ____
  FUNCTION: .zinit-get-object-path. [[[
 ____
 
-Has 28 line(s). Doesn't call other functions.
+Has 28 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-get-object-path
+
+Called by:
+
+ .zinit-load-ices
+ .zinit-load-snippet
+ .zinit-run
+ zinit
+ zinit-autoload.zsh/.zinit-get-path
+ zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit-install.zsh/.zinit-update-snippet
+ zinit-side.zsh/.zinit-first
+ zinit-side.zsh/.zinit-two-paths
 
 .zinit-ice
 ~~~~~~~~~~
@@ -442,7 +606,13 @@ ____
 
 Has 13 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit
+
+_Environment variables used:_ ZPFX
 
 .zinit-load
 ~~~~~~~~~~~
@@ -456,9 +626,19 @@ ____
  $2 - plugin name, if the third format is used
 ____
 
-Has 94 line(s). Doesn't call other functions.
+Has 94 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-load
+ |-- +zinit-deploy-message
+ |-- zinit-install.zsh/.zinit-get-package
+ `-- zinit-install.zsh/.zinit-setup-plugin-dir
+
+Uses feature(s): _eval_, _setopt_, _source_, _zle_
+
+Called by:
+
+ .zinit-load-object
+ .zinit-run-task
 
 .zinit-load-ices
 ~~~~~~~~~~~~~~~~
@@ -468,9 +648,15 @@ ____
  FUNCTION: .zinit-load-ices. [[[
 ____
 
-Has 22 line(s). Doesn't call other functions.
+Has 22 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-load-ices
+
+Called by:
+
+ zinit
+
+_Environment variables used:_ ZPFX
 
 .zinit-load-object
 ~~~~~~~~~~~~~~~~~~
@@ -480,9 +666,13 @@ ____
  FUNCTION: .zinit-load-object. [[[
 ____
 
-Has 12 line(s). Doesn't call other functions.
+Has 12 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-load-object
+
+Called by:
+
+ zinit
 
 .zinit-load-plugin
 ~~~~~~~~~~~~~~~~~~
@@ -497,9 +687,18 @@ ____
  $3 - mode (light or load)
 ____
 
-Has 127 line(s). Doesn't call other functions.
+Has 127 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-load-plugin
+ `-- :zinit-tmp-subst-autoload
+     |-- +zinit-message
+     `-- is-at-least
+
+Uses feature(s): _eval_, _setopt_, _source_, _unfunction_, _zle_
+
+Called by:
+
+ .zinit-load
 
 .zinit-load-snippet
 ~~~~~~~~~~~~~~~~~~~
@@ -513,9 +712,21 @@ ____
  $1 - url (can be local, absolute path).
 ____
 
-Has 203 line(s). Doesn't call other functions.
+Has 203 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-load-snippet
+ |-- +zinit-deploy-message
+ |-- +zinit-message
+ `-- zinit-install.zsh/.zinit-download-snippet
+
+Uses feature(s): _autoload_, _eval_, _setopt_, _source_, _unfunction_, _zparseopts_, _zstyle_
+
+Called by:
+
+ .zinit-load-object
+ .zinit-load
+ .zinit-run-task
+ pmodload
 
 .zinit-main-message-formatter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -545,7 +756,14 @@ ____
 
 Has 3 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
+ @zsh-plugin-run-on-unload
+ @zsh-plugin-run-on-update
+ zinit-install.zsh/.zinit-update-snippet
+ zinit-side.zsh/.zinit-compute-ice
 
 .zinit-parse-opts
 ~~~~~~~~~~~~~~~~~
@@ -558,7 +776,10 @@ ____
 
 Has 2 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ zinit
+ zinit-autoload.zsh/.zinit-delete
 
 .zinit-prepare-home
 ~~~~~~~~~~~~~~~~~~~
@@ -570,9 +791,19 @@ ____
  already exist.
 ____
 
-Has 40 line(s). Doesn't call other functions.
+Has 40 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-prepare-home
+ |-- zinit-autoload.zsh/.zinit-clear-completions
+ `-- zinit-install.zsh/.zinit-compinit
+
+Uses feature(s): _source_
+
+Called by:
+
+ Script-Body
+
+_Environment variables used:_ ZPFX
 
 .zinit-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -585,9 +816,14 @@ ____
  https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
 ____
 
-Has 23 line(s). Doesn't call other functions.
+Has 23 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-register-plugin
+ `-- +zinit-message
+
+Called by:
+
+ .zinit-load
 
 .zinit-run
 ~~~~~~~~~~
@@ -600,9 +836,16 @@ ____
  It uses the `correct' parameter from upper's scope zinit().
 ____
 
-Has 24 line(s). Doesn't call other functions.
+Has 24 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-run
+ `-- +zinit-message
+
+Uses feature(s): _eval_, _setopt_
+
+Called by:
+
+ zinit
 
 .zinit-run-task
 ~~~~~~~~~~~~~~~
@@ -623,9 +866,16 @@ ____
  $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 ____
 
-Has 46 line(s). Doesn't call other functions.
+Has 46 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-run-task
+ `-- zinit-autoload.zsh/.zinit-unload
+
+Uses feature(s): _eval_, _source_, _zle_, _zpty_
+
+Called by:
+
+ @zinit-scheduler
 
 .zinit-set-m-func
 ~~~~~~~~~~~~~~~~~
@@ -637,9 +887,18 @@ ____
  Sets and withdraws the temporary, atclone/atpull time function `m`.
 ____
 
-Has 17 line(s). Doesn't call other functions.
+Has 17 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ .zinit-set-m-func
+ `-- +zinit-message
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
+ zinit-autoload.zsh/.zinit-update-or-status
 
 .zinit-setup-params
 ~~~~~~~~~~~~~~~~~~~
@@ -652,7 +911,10 @@ ____
 
 Has 3 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
 
 .zinit-submit-turbo
 ~~~~~~~~~~~~~~~~~~~
@@ -669,7 +931,9 @@ ____
 
 Has 16 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ zinit
 
 .zinit-tmp-subst-off
 ~~~~~~~~~~~~~~~~~~~~
@@ -683,7 +947,11 @@ ____
 
 Has 21 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Uses feature(s): _setopt_, _unfunction_
+
+Called by:
+
+ .zinit-load-plugin
 
 .zinit-tmp-subst-on
 ~~~~~~~~~~~~~~~~~~~
@@ -699,7 +967,11 @@ ____
 
 Has 32 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Uses feature(s): _source_
+
+Called by:
+
+ .zinit-load-plugin
 
 .zinit-util-shands-path
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -712,7 +984,13 @@ ____
 
 Has 9 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-any-to-pid
+
+_Environment variables used:_ ZPFX
 
 :zinit-reload-and-run
 ~~~~~~~~~~~~~~~~~~~~~
@@ -737,6 +1015,8 @@ ____
 
 Has 11 line(s). Doesn't call other functions.
 
+Uses feature(s): _autoload_, _unfunction_
+
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 :zinit-tmp-subst-alias
@@ -750,7 +1030,11 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 36 line(s). Doesn't call other functions.
+Has 36 line(s). Calls functions:
+
+ :zinit-tmp-subst-alias
+
+Uses feature(s): _alias_, _setopt_, _zparseopts_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -766,9 +1050,18 @@ ____
  run custom `autoload' function, that doesn't need FPATH.
 ____
 
-Has 111 line(s). Doesn't call other functions.
+Has 111 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ :zinit-tmp-subst-autoload
+ |-- +zinit-message
+ `-- is-at-least
+
+Uses feature(s): _autoload_, _eval_, _is-at-least_, _setopt_, _zparseopts_
+
+Called by:
+
+ .zinit-load-plugin
+ @autoload
 
 :zinit-tmp-subst-bindkey
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -781,7 +1074,12 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 120 line(s). Doesn't call other functions.
+Has 120 line(s). Calls functions:
+
+ :zinit-tmp-subst-bindkey
+ `-- is-at-least
+
+Uses feature(s): _bindkey_, _is-at-least_, _setopt_, _zparseopts_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -796,7 +1094,11 @@ ____
  calls so that `compinit' can be called after loading plugins.
 ____
 
-Has 6 line(s). Doesn't call other functions.
+Has 6 line(s). Calls functions:
+
+ :zinit-tmp-subst-compdef
+
+Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -811,7 +1113,11 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 36 line(s). Doesn't call other functions.
+Has 36 line(s). Calls functions:
+
+ :zinit-tmp-subst-zle
+
+Uses feature(s): _setopt_, _zle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -826,7 +1132,11 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 23 line(s). Doesn't call other functions.
+Has 23 line(s). Calls functions:
+
+ :zinit-tmp-subst-zstyle
+
+Uses feature(s): _setopt_, _zparseopts_, _zstyle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -839,7 +1149,12 @@ ____
  FUNCTION: @autoload. [[[
 ____
 
-Has 3 line(s). Doesn't call other functions.
+Has 3 line(s). Calls functions:
+
+ @autoload
+ `-- :zinit-tmp-subst-autoload
+     |-- +zinit-message
+     `-- is-at-least
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -869,7 +1184,9 @@ ____
 
 Has 4 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ Script-Body
 
 @zinit-scheduler
 ~~~~~~~~~~~~~~~~
@@ -895,7 +1212,12 @@ ____
  
 ____
 
-Has 75 line(s). *Is a precmd hook*. Doesn't call other functions.
+Has 75 line(s). *Is a precmd hook*. Calls functions:
+
+ @zinit-scheduler
+ `-- add-zsh-hook
+
+Uses feature(s): _add-zsh-hook_, _sched_, _setopt_, _zle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -910,9 +1232,22 @@ ____
 
 Has 40 line(s). Doesn't call other functions.
 
+Uses feature(s): _setopt_
+
 Called by:
 
+ zinit-autoload.zsh/.zinit-at-eval
  zinit-install.zsh/$'\342'$'\210'$'\236'zinit-atclone-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-cp-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-extract-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-make-e-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-make-ee-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-make-hook
+ zinit-install.zsh/$'\342'$'\210'$'\236'zinit-mv-hook
+ zinit-install.zsh/.zinit-at-eval
+ zinit-install.zsh/.zinit-get-package
+
+_Environment variables used:_ ZPFX
 
 @zsh-plugin-run-on-unload
 ~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -925,7 +1260,9 @@ ____
  https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
 ____
 
-Has 2 line(s). Doesn't call other functions.
+Has 2 line(s). Calls functions:
+
+ @zsh-plugin-run-on-unload
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -939,7 +1276,9 @@ ____
  The Plugin Standard required mechanism
 ____
 
-Has 2 line(s). Doesn't call other functions.
+Has 2 line(s). Calls functions:
+
+ @zsh-plugin-run-on-update
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -952,7 +1291,11 @@ ____
  Compatibility with Prezto. Calls can be recursive.
 ____
 
-Has 15 line(s). Doesn't call other functions.
+Has 15 line(s). Calls functions:
+
+ pmodload
+
+Uses feature(s): _zstyle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -967,7 +1310,9 @@ ____
  ices like the atinit'', atload'', etc. ices.
 ____
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ zicdclear
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -982,7 +1327,9 @@ ____
  from such hook ices.
 ____
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ zicdreplay
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1014,7 +1361,12 @@ ____
  ZINIT[ZCOMPDUMP_PATH] and ZINIT[COMPINIT_OPTS].
 ____
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ zicompinit
+ `-- compinit
+
+Uses feature(s): _autoload_, _compinit_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1028,21 +1380,64 @@ ____
  arguments, has completion.
 ____
 
-Has 560 line(s). Doesn't call other functions.
+Has 560 line(s). Calls functions:
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+ zinit
+ |-- +zinit-message
+ |-- +zinit-prehelp-usage-message
+ |   `-- +zinit-message
+ |-- compinit
+ |-- zinit-autoload.zsh/.zinit-cdisable
+ |-- zinit-autoload.zsh/.zinit-cenable
+ |-- zinit-autoload.zsh/.zinit-clear-completions
+ |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
+ |-- zinit-autoload.zsh/.zinit-compiled
+ |-- zinit-autoload.zsh/.zinit-help
+ |-- zinit-autoload.zsh/.zinit-list-bindkeys
+ |-- zinit-autoload.zsh/.zinit-list-compdef-replay
+ |-- zinit-autoload.zsh/.zinit-ls
+ |-- zinit-autoload.zsh/.zinit-module
+ |-- zinit-autoload.zsh/.zinit-recently
+ |-- zinit-autoload.zsh/.zinit-search-completions
+ |-- zinit-autoload.zsh/.zinit-self-update
+ |-- zinit-autoload.zsh/.zinit-show-all-reports
+ |-- zinit-autoload.zsh/.zinit-show-completions
+ |-- zinit-autoload.zsh/.zinit-show-debug-report
+ |-- zinit-autoload.zsh/.zinit-show-registered-plugins
+ |-- zinit-autoload.zsh/.zinit-show-report
+ |-- zinit-autoload.zsh/.zinit-show-times
+ |-- zinit-autoload.zsh/.zinit-show-zstatus
+ |-- zinit-autoload.zsh/.zinit-uncompile-plugin
+ |-- zinit-autoload.zsh/.zinit-uninstall-completions
+ |-- zinit-autoload.zsh/.zinit-unload
+ |-- zinit-autoload.zsh/.zinit-update-or-status
+ |-- zinit-autoload.zsh/.zinit-update-or-status-all
+ |-- zinit-install.zsh/.zinit-compile-plugin
+ |-- zinit-install.zsh/.zinit-compinit
+ |-- zinit-install.zsh/.zinit-forget-completion
+ `-- zinit-install.zsh/.zinit-install-completions
+
+Uses feature(s): _autoload_, _compinit_, _eval_, _setopt_, _source_
+
+Called by:
+
+ zplugin
 
 zpcdclear
 ~~~~~~~~~
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ zpcdclear
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 zpcdreplay
 ~~~~~~~~~~
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ zpcdreplay
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1056,7 +1451,12 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 zpcompinit
 ~~~~~~~~~~
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ zpcompinit
+ `-- compinit
+
+Uses feature(s): _autoload_, _compinit_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1068,7 +1468,43 @@ ____
  Compatibility functions. [[[
 ____
 
-Has 1 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ zplugin
+ `-- zinit
+     |-- +zinit-message
+     |-- +zinit-prehelp-usage-message
+     |   `-- +zinit-message
+     |-- compinit
+     |-- zinit-autoload.zsh/.zinit-cdisable
+     |-- zinit-autoload.zsh/.zinit-cenable
+     |-- zinit-autoload.zsh/.zinit-clear-completions
+     |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
+     |-- zinit-autoload.zsh/.zinit-compiled
+     |-- zinit-autoload.zsh/.zinit-help
+     |-- zinit-autoload.zsh/.zinit-list-bindkeys
+     |-- zinit-autoload.zsh/.zinit-list-compdef-replay
+     |-- zinit-autoload.zsh/.zinit-ls
+     |-- zinit-autoload.zsh/.zinit-module
+     |-- zinit-autoload.zsh/.zinit-recently
+     |-- zinit-autoload.zsh/.zinit-search-completions
+     |-- zinit-autoload.zsh/.zinit-self-update
+     |-- zinit-autoload.zsh/.zinit-show-all-reports
+     |-- zinit-autoload.zsh/.zinit-show-completions
+     |-- zinit-autoload.zsh/.zinit-show-debug-report
+     |-- zinit-autoload.zsh/.zinit-show-registered-plugins
+     |-- zinit-autoload.zsh/.zinit-show-report
+     |-- zinit-autoload.zsh/.zinit-show-times
+     |-- zinit-autoload.zsh/.zinit-show-zstatus
+     |-- zinit-autoload.zsh/.zinit-uncompile-plugin
+     |-- zinit-autoload.zsh/.zinit-uninstall-completions
+     |-- zinit-autoload.zsh/.zinit-unload
+     |-- zinit-autoload.zsh/.zinit-update-or-status
+     |-- zinit-autoload.zsh/.zinit-update-or-status-all
+     |-- zinit-install.zsh/.zinit-compile-plugin
+     |-- zinit-install.zsh/.zinit-compinit
+     |-- zinit-install.zsh/.zinit-forget-completion
+     `-- zinit-install.zsh/.zinit-install-completions
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1091,7 +1527,12 @@ ____
 
 Has 93 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Uses feature(s): _autoload_, _getopts_
+
+Called by:
+
+ @zinit-scheduler
+ Script-Body
 
 compinit
 ~~~~~~~~
@@ -1112,7 +1553,13 @@ ____
 
 Has 549 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
+
+Called by:
+
+ zicompinit
+ zinit
+ zpcompinit
 
 is-at-least
 ~~~~~~~~~~~
@@ -1133,5 +1580,9 @@ ____
 
 Has 56 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
+ Script-Body
 
