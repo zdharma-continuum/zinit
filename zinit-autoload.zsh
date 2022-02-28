@@ -3246,7 +3246,8 @@ EOF
         setopt localoptions extendedglob nokshglob noksharrays
         builtin cd -q "${ZINIT[SNIPPETS_DIR]}"
         local -a list
-        list=( "${(f@)"$(LANG=en_US.utf-8 tree -L 3 --charset utf-8)"}" )
+        local -x LANG=en_US.utf-8
+        list=( "${(f@)"$(${=ZINIT[LIST_COMMAND]})"}" )
         # Oh-My-Zsh single file
         list=( "${list[@]//(#b)(https--github.com--(ohmyzsh|robbyrussel)l--oh-my-zsh--raw--master(--)(#c0,1)(*))/$ZINIT[col-info]Oh-My-Zsh$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](single-file)$ZINIT[col-rst] ${match[1]}}" )
         # Oh-My-Zsh SVN
