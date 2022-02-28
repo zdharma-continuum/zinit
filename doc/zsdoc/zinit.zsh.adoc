@@ -90,7 +90,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 217 line(s). Calls functions:
+Has 225 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
