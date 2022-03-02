@@ -6,7 +6,7 @@ jobs:
     name: Shellcheck
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Run ShellCheck
       uses: ludeeus/action-shellcheck@master
       with:
@@ -25,7 +25,7 @@ jobs:
         run: git config --global core.autocrlf input
 
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Grab git slugs (short commit id, branch etc.)
         uses: rlespinasse/github-slug-action@v3.x
@@ -141,7 +141,7 @@ jobs:
         run: git config --global core.autocrlf input
 
       - name: Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Grab git slugs (short commit id, branch etc.)
         uses: rlespinasse/github-slug-action@v3.x
