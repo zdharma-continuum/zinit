@@ -17,7 +17,7 @@ jobs:
           - 5.8
     steps:
       - name: 📡 Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 🍃 Grab git slugs (short commit id, branch etc.)
         uses: rlespinasse/github-slug-action@v3.x
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📡 Check out repository code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: 🍃 Grab git slugs (short commit id, branch etc.)
         uses: rlespinasse/github-slug-action@v3.x

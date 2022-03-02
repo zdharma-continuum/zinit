@@ -7,7 +7,7 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: "📡  Check out repository code"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: "💬 Set matrix output"
         id: set-matrix
@@ -26,7 +26,7 @@ jobs:
 
     steps:
       - name: "📡  Check out repository code"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: "📦 Install dependencies"
         run: |
