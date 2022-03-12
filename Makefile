@@ -30,9 +30,21 @@ doc: zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
 	# cd is required since zsd outputs to PWD/zsdoc/
 	cd doc; zsd -v --scomm --cignore '(\#*FUNCTION:*{{{*|\#[[:space:]]#}}}*)' ../zinit.zsh ../zinit-side.zsh ../zinit-install.zsh ../zinit-autoload.zsh
 
+IMAGE_ID_PATH := $(PWD)/doc/docker/image-id
+
+doc-docker-image:
+	cd doc/docker && docker build --rm --iidfile ${IMAGE_ID_PATH}  .
+
+doc-in-docker:
+	docker image inspect \
+		$$([[ -f ${IMAGE_ID_PATH} ]] && cat ${IMAGE_ID_PATH}) \
+		>/dev/null 2>&1 || \
+		$(MAKE) doc-docker-image
+	cat ${IMAGE_ID_PATH} | xargs docker run --rm -v $(PWD):/zinit.git
+
 clean:
 	rm -f zinit.zsh.zwc zinit-side.zsh.zwc zinit-install.zsh.zwc zinit-autoload.zsh.zwc
 	rm -rf doc/zsdoc/data
 
-.PHONY: all test clean doc
+.PHONY: all test clean doc doc-in-docker doc-docker-image
 # vim:noet:sts=8:ts=8
