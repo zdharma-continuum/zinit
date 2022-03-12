@@ -19,6 +19,17 @@ doctoc --github README.md
 make doc
 ```
 
+## Update asciidoc and/or zshelldoc in Docker container
+
+Due to some challenges with generating the same docs from the same inputs on different platforms, the docs can be built in a docker container.
+
+1. Make sure you have Docker installed
+2. From the root of the repo run:
+
+```zsh
+make doc-in-docker
+```
+
 ## Generate the manpage (doc/zinit.1)
 
 1. Install [pandoc](https://pandoc.org/)
