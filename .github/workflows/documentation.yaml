@@ -5,14 +5,6 @@ jobs:
   zshelldoc:
     runs-on: ubuntu-latest
     steps:
-      - name: 📦 Install zshelldoc
-        run: |
-          sudo apt-get install -y zsh
-          git clone https://github.com/zdharma-continuum/zshelldoc.git /tmp/zsd.git
-          cd /tmp/zsd.git
-          sudo make install
-          zsd --help
-
       - name: ♦️ Setup ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -28,7 +20,10 @@ jobs:
 
       - name: 👷 Generate zsd
         run: |
-          make doc
+          make doc-container
+          rc="$?"
+          sudo chown -R "$(id -u):$(id -g)" .
+          exit "$rc"
 
       - name: 📇 Generate PDF
         run: |

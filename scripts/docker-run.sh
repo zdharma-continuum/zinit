@@ -42,6 +42,8 @@ create_init_config_file() {
 
   tempfile="$(mktemp)"
   echo "$*" > "$tempfile"
+  # DIRTYFIX perms...
+  chmod 666 "$tempfile"
   echo "$tempfile"
 }
 
@@ -52,6 +54,16 @@ run() {
   shift
 
   local -a args=(--rm)
+
+  local cruntime=docker
+  local sudo_cmd
+  if [[ -z "$CI" ]] && command -v podman >/dev/null 2>&1
+  then
+    cruntime=podman
+    # rootless containers are a PITA
+    # https://www.tutorialworks.com/podman-rootless-volumes/
+    sudo_cmd=sudo
+  fi
 
   if running_interactively
   then
@@ -67,6 +79,11 @@ run() {
       echo "❌ Init config file is not readable" >&2
       return 1
     fi
+  fi
+
+  if [[ -n "$CONTAINER_WORKDIR" ]]
+  then
+    args+=(--workdir "$CONTAINER_WORKDIR")
   fi
 
   # Inherit TERM
@@ -89,7 +106,11 @@ run() {
     local vol
     for vol in "${CONTAINER_VOLUMES[@]}"
     do
-      args+=(--volume "${vol}")
+      # shellcheck disable=2076
+      if [[ ! " ${args[*]} " =~ " --volume ${vol} " ]]
+      then
+        args+=(--volume "${vol}")
+      fi
     done
   fi
 
@@ -108,23 +129,25 @@ run() {
       # The @Q below is necessary to keep the quotes intact
       # https://stackoverflow.com/a/12985353/1872036
       echo -e "🚀 \e[35mRunning command"
-      echo -e "\$ docker run ${args[*]} $image:$tag ${cmd[*]@Q}\e[0m"
+      echo -e "\$ ${cruntime} run ${args[*]} ${image}:${tag} ${cmd[*]@Q}\e[0m"
     } >&2
   fi
 
-  docker run "${args[@]}" "$image:$tag" "${cmd[@]}"
+  ${sudo_cmd} "${cruntime}" run "${args[@]}" "${image}:${tag}" "${cmd[@]}"
 }
 
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
-  CONTAINER_IMAGE=${CONTAINER_IMAGE:-ghcr.io/zdharma-continuum/zinit}
-  CONTAINER_TAG="${CONTAINER_TAG:-latest}"
   CONTAINER_ENV=()
+  CONTAINER_IMAGE="${CONTAINER_IMAGE:-ghcr.io/zdharma-continuum/zinit}"
+  CONTAINER_TAG="${CONTAINER_TAG:-latest}"
   CONTAINER_VOLUMES=()
+  CONTAINER_WORKDIR="${CONTAINER_WORKDIR:-}"
   DEBUG="${DEBUG:-}"
-  ZSH_DEBUG="${ZSH_DEBUG:-}"
   INIT_CONFIG_VAL="${INIT_CONFIG_VAL:-}"
+  PRESET="${PRESET:-}"
   WRAP_CMD="${WRAP_CMD:-}"
+  ZSH_DEBUG="${ZSH_DEBUG:-}"
 
   while [[ -n "$*" ]]
   do
@@ -155,6 +178,10 @@ then
         DEVEL=1
         shift
         ;;
+      --docs)
+        PRESET=docs
+        shift
+        ;;
       -i|--image)
         CONTAINER_IMAGE="$2"
         shift 2
@@ -179,7 +206,7 @@ then
         shift
         ;;
       --tests|--zunit|-z)
-        ZUNIT=1
+        PRESET=zunit
         shift
         ;;
       # Whether to enable debug tracing of zinit (zsh -x)
@@ -194,12 +221,48 @@ then
     esac
   done
 
+  GIT_ROOT_DIR="$(cd "$(dirname "$0")/.." >/dev/null 2>&1; pwd -P)" || exit 9
+  CMD=("$@")
+
+  case "$PRESET" in
+    zunit)
+      # Mount root of the repo to /src
+      # Mount /tmp/zunit-zinit to /data
+      CONTAINER_VOLUMES+=(
+        "${GIT_ROOT_DIR}:/src"
+        "${TMPDIR:-/tmp}/zunit-zinit:/data"
+      )
+      CONTAINER_ENV+=(
+        "QUIET=1"
+        "NOTHING_FANCY=1"
+      )
+      ;;
+    docs)
+      # Mount root of the repo to /src
+      CONTAINER_VOLUMES+=(
+        "${GIT_ROOT_DIR}:/src"
+      )
+      CONTAINER_ENV+=(
+        "QUIET=1"
+        "NOTHING_FANCY=1"
+        "LC_ALL=en_US.UTF-8"
+      )
+      CONTAINER_WORKDIR=/src/doc
+      # shellcheck disable=2016
+      INIT_CONFIG_VAL='zinit nocompile make'\''PREFIX=$ZPFX install'\'' for zdharma-continuum/zshelldoc'
+      # shellcheck disable=2016
+      CMD=(zsh -ilsc
+        'sudo chown -R "$(id -u):$(id -g)" /src &&
+         @zinit-scheduler burst &&
+         sudo apk add tree &&
+         make -C /src doc')
+      ;;
+  esac
+
   if INIT_CONFIG="$(create_init_config_file "$INIT_CONFIG_VAL")"
   then
     trap 'rm -vf $INIT_CONFIG' EXIT INT
   fi
-
-  GIT_ROOT_DIR="$(cd "$(dirname "$0")/.." >/dev/null 2>&1; pwd -P)" || exit 9
 
   if [[ -n "$DEVEL" ]]
   then
@@ -209,23 +272,5 @@ then
     )
   fi
 
-  if [[ -n "$ZUNIT" ]]
-  then
-    ROOT_DIR="$(cd "$(dirname "$0")/.." >/dev/null 2>&1; pwd -P)" || exit 9
-    # Mount root of the repo to /src
-    # Mount /tmp/zunit-zinit to /data
-    CONTAINER_VOLUMES+=(
-      "${GIT_ROOT_DIR}:/src"
-      "${TMPDIR:-/tmp}/zunit-zinit:/data"
-      # TODO DIRTYFIX TO BE REMOVED BEFORE MERGING
-      "${ROOT_DIR}/docker/zshenv:/home/user01/.zshenv"
-      "${ROOT_DIR}/docker/zshrc:/home/user01/.zshrc"
-    )
-    CONTAINER_ENV+=(
-      "QUIET=1"
-      "NOTHING_FANCY=1"
-    )
-  fi
-
-  run "$INIT_CONFIG" "$@"
+  run "$INIT_CONFIG" "${CMD[@]}"
 fi
