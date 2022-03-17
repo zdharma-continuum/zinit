@@ -11,13 +11,20 @@ doctoc --github README.md
 
 ## Update asciidoc and/or zshelldoc
 
-1. Make sure you have [asciidoc](https://asciidoc.org/) and
-[zshelldoc (zsd)](https://github.com/zdharma-continuum/zshelldoc) installed
-2. From the root of the repo run:
+1. Make sure you have [docker](https://www.docker.com/) or
+[podman](https://podman.io/) installed.
+2. From the root of the repo, run:
 
 ```zsh
-make doc
+make doc-container
 ```
+
+If for some reason you want to build the zshelldocs or the PDF manually, you'll
+need:
+
+1. Patience, zsd is very finicky about locales. You have been warned.
+2. [zshelldoc (zsd)](https://github.com/zdharma-continuum/zshelldoc)
+3. [asciidoc](https://asciidoc.org/)
 
 ## Generate the manpage (doc/zinit.1)
 
