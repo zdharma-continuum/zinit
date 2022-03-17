@@ -25,6 +25,7 @@ need:
 1. Patience, zsd is very finicky about locales. You have been warned.
 2. [zshelldoc (zsd)](https://github.com/zdharma-continuum/zshelldoc)
 3. [asciidoc](https://asciidoc.org/)
+4. `make doc`
 
 ## Generate the manpage (doc/zinit.1)
 
