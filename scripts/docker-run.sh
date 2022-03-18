@@ -247,7 +247,7 @@ then
         "NOTHING_FANCY=1"
         "LC_ALL=en_US.UTF-8"
       )
-      CONTAINER_WORKDIR=/src/doc
+      CONTAINER_WORKDIR=/src
       # shellcheck disable=2016
       INIT_CONFIG_VAL='zinit nocompile make'\''PREFIX=$ZPFX install'\'' for zdharma-continuum/zshelldoc'
       # shellcheck disable=2016
