@@ -284,7 +284,7 @@ ____
  FUNCTION: .zinit-get-package [[[
 ____
 
-Has 194 line(s). Calls functions:
+Has 196 line(s). Calls functions:
 
  .zinit-get-package
  |-- ziextract
