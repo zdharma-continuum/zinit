@@ -20,6 +20,9 @@ testD:
 testE:
 	make VERBOSE=$(VERBOSE) NODIFF=$(NODIFF) DEBUG=$(DEBUG) OPTDUMP=$(OPTDUMP) OPTS="ignoreclosebraces" -C test test
 
+doc-container: zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
+	./scripts/docker-run.sh --docs --debug
+
 # Set LC_ALL to avoid having to deal with different locales.
 # The generated .adoc files will differ in sorting and or unicode char encoding.
 # LC_ALL=C is sadly not an option here since it results in incorrect char
