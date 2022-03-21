@@ -718,7 +718,7 @@ ZINIT[EXTENDED_GLOB]=""
     (   builtin cd -q "$ZINIT[BIN_DIR]" && \
         command git checkout main &>/dev/null && \
         command git fetch --quiet && \
-            lines=( ${(f)"$(command git --no-pager log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
+            lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
         if (( ${#lines} > 0 )); then
             # Remove the (origin/main ...) segments, to expect only tags to appear
             lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
@@ -1604,7 +1604,7 @@ ZINIT[EXTENDED_GLOB]=""
               integer had_output=0
               local IFS=$'\n'
               command git fetch --quiet && \
-                command git --no-pager log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s%n' ..FETCH_HEAD | \
+                command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s%n' ..FETCH_HEAD | \
                 while read line; do
                   [[ -n ${line%%[[:space:]]##} ]] && {
                       [[ $had_output -eq 0 ]] && {
@@ -3246,7 +3246,8 @@ EOF
         setopt localoptions extendedglob nokshglob noksharrays
         builtin cd -q "${ZINIT[SNIPPETS_DIR]}"
         local -a list
-        list=( "${(f@)"$(LANG=en_US.utf-8 tree -L 3 --charset utf-8)"}" )
+        local -x LANG=en_US.utf-8
+        list=( "${(f@)"$(${=ZINIT[LIST_COMMAND]})"}" )
         # Oh-My-Zsh single file
         list=( "${list[@]//(#b)(https--github.com--(ohmyzsh|robbyrussel)l--oh-my-zsh--raw--master(--)(#c0,1)(*))/$ZINIT[col-info]Oh-My-Zsh$ZINIT[col-error]${match[2]/--//}$ZINIT[col-pname]${match[3]//--/$ZINIT[col-error]/$ZINIT[col-pname]} $ZINIT[col-info](single-file)$ZINIT[col-rst] ${match[1]}}" )
         # Oh-My-Zsh SVN
