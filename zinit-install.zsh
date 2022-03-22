@@ -64,7 +64,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
 # FUNCTION: .zinit-get-package [[[
 .zinit-get-package() {
-    zinit-jq-check || return 1
+    .zinit-jq-check || return 1
 
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
