@@ -367,6 +367,7 @@ Has 8 line(s). Calls functions:
 
 Called by:
 
+ .zinit-get-package
  .zinit-json-get-value
  .zinit-json-to-array
 
