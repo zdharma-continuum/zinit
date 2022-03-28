@@ -9,18 +9,8 @@ if (( COLS < 10 )) {
     COLS=40
 }
 # Credit to molovo/revolver for the ideas
-typeset -ga progress_frames
-progress_frames=(
-  '0.2 ▹▹▹▹▹ ▸▹▹▹▹ ▹▸▹▹▹ ▹▹▸▹▹ ▹▹▹▸▹ ▹▹▹▹▸'
-  '0.2 ▁ ▃ ▄ ▅ ▆ ▇ ▆ ▅ ▄ ▃'
-  '0.2 ▏ ▎ ▍ ▌ ▋ ▊ ▉ ▊ ▋ ▌ ▍ ▎'
-  '0.2 ▖ ▘ ▝ ▗'
-  '0.2 ◢ ◣ ◤ ◥'
-  '0.2 ▌ ▀ ▐ ▄'
-  '0.2 ✶ ✸ ✹ ✺ ✹ ✷'
-)
-
-integer -g progress_style=$(( RANDOM % 7 + 1 )) cur_frame=1
+progress_frames='0.1 ⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏'
+integer -g cur_frame=1
 typeset -F SECONDS=0 last_time=0
 
 # Alpine Linux doesn't have tput; FreeBSD and Dragonfly BSD have termcap
@@ -37,9 +27,7 @@ if whence tput &> /dev/null; then
 fi
 
 if (( $+ZINIT_CNORM )); then
-  trap $ZINIT_CNORM EXIT
-  trap $ZINIT_CNORM INT
-  trap $ZINIT_CNORM TERM
+  trap $ZINIT_CNORM EXIT INT TERM
 fi
 
 local first=1
@@ -51,7 +39,7 @@ timeline() {
   local bar="$(print -f "%.$2s█%0$(($3-$2-1))s" "████████████████████████" "")"
 
   local -a frames_splitted
-  frames_splitted=( ${(@zQ)progress_frames[progress_style]} )
+  frames_splitted=( ${(@zQ)progress_frames} )
   if (( SECONDS - last_time >= frames_splitted[1] )) {
       (( cur_frame = (cur_frame+1) % (${#frames_splitted}+1-1) ))
       (( cur_frame = cur_frame ? cur_frame : 1 ))
@@ -114,10 +102,10 @@ if [[ -n $TERM ]] {
 while read -r line; do
     (( ++ loop_count ))
     if [[ "$line" = "Cloning into"* ]]; then
-        print; print $line
+        print $line
         continue
     elif [[ "$line" = (#i)*user*name* || "$line" = (#i)*password* ]]; then
-        print; print $line
+        print $line
         continue
     elif [[ "$line" = remote:*~*(Counting|Total|Compressing|Enumerating)* || "$line" = fatal:* ]]; then
         print $line
@@ -157,7 +145,7 @@ while read -r line; do
         (( pr = have_4_deltas ? deltas_4 / 10 : (
                 have_3_receiving ? receiving_3 / 10 : (
                 have_5_compress ? compress_5 / 10 : ( ( ( loop_count - 1 ) / 14 ) % 10 ) + 1 ) ) ))
-	timeline "" $pr 11
+    timeline "" $pr 11
         if (( have_5_compress )); then
             print_my_line_compress "${${${(M)have_1_counting:#1}:+$counting_1}:-...}" \
                                    "${${${(M)have_2_total:#1}:+$total_packed_2}:-0}" \
