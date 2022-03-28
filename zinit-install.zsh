@@ -6,7 +6,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 1
 }
 
-
 # FUNCTION: .zinit-jq-check [[[
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
@@ -1448,26 +1447,20 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     } else {
         local url=https://$urlpart
     }
-
     local -A matchstr
     matchstr=(
-        i386    "((386|686|linux32|x86*(#e))~*x86_64*)"
-        i686    "((386|686|linux32|x86*(#e))~*x86_64*)"
-        x86_64  "(x86_64|amd64|intel|linux64)"
-        amd64   "(x86_64|amd64|intel|linux64)"
-        aarch64 "aarch64"
-        aarch64-2 "arm"
-        linux   "(linux|linux-gnu)"
-        darwin  "(darwin|mac|macos|osx|os-x)"
-        cygwin  "(windows|cygwin|[-_]win|win64|win32)"
-        windows "(windows|cygwin|[-_]win|win64|win32)"
-        msys "(windows|msys|cygwin|[-_]win|win64|win32)"
-        armv7l  "(arm7|armv7)"
-        armv7l-2 "arm7"
-        armv6l  "(arm6|armv6)"
-        armv6l-2 "arm"
-        armv5l  "(arm5|armv5)"
-        armv5l-2 "arm"
+      amd64   '(amd|x86_)64'
+      android '(apk|android)'
+      arm64 '(a(arch64|rm64))'
+      armv5 'arm(v|)5)'
+      armv6 'arm(v|)6)'
+      armv7 'arm(v|)7)'
+      darwin '((apple|)[-_]darwin|(mac(os|)))'
+      linux-gnu '((linux(-|_)|)|((musl|)~|gnu|))'
+      linux-musl '((linux(-|_)|)|((musl|)~|gnu|))'
+      cygwin '(cyg|-|_|)win(dows|32|64|))'
+      msys    '(cyg|-|_|)win(dows|32|64|))'
+      windows '(cyg|-|_|)win(dows|32|64|))'
     )
 
     local -a list init_list
@@ -1485,28 +1478,68 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     for bpick ( "${bpicks[@]}" ) {
         list=( $init_list )
 
-        if [[ -n $bpick ]] {
-            list=( ${(M)list[@]:#(#i)*/$~bpick} )
+        # +zinit-message "{pre}gh-r:{info2} complete releases list{rst}"
+        # print -C 1 ${(pj:\n:)${list[@]:t}}
+
+        +zinit-message "{pre}gh-r:{info2} removing checksum artifacts {rst}"
+        list=( ${list[@]:#*(accoutrements|checksums.txt|MD5SUMS|SHA1SUMS|sha256sum(#e)|manifest(#e)|pkg(#e)|sha256(#e)|AppImage(#e))*} )
+        print -C 1 ${(pj:\n:)${list[@]:t}}
+
+        # Filter .deb packages if dpkg-deb present
+        if (( $#list < 1 && ${+commands[dpkg-deb]} == 1 )) {
+            list2=( ${(M)list[@]:#*\.deb*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        } else {
+            list2=( ${list[@]:#*\.deb*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        # Filter .rpm packages if Redhat Package Manager present
+        if (( $#list < 1 && ${+commands[rpm]} == 1 )) {
+            list2=( ${(M)list[@]:#*.rpm*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        } else {
+            list2=( ${list[@]:#*\.rpm*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        # Filter .apk packages if Anbox present
+        if (( $#list > 1 && ${+commands[anbox]} == 1 )) {
+            list2=( ${(M)list[@]:#*\.apk*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        } else {
+            list2=( ${list[@]:#*\.apk*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        # filter urls by os (e.g., darwin, linux, windows)
+        if (( $#list > 1 )) {
+            +zinit-message "{pre}gh-r:{info2} filtering by \$OSTYPE: ${OSTYPE}{rst}"
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)}%%(-|)[0-9.]##}}*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+            print -C 1 ${(pj:\n:)${list[@]:t}}
         }
 
         if (( $#list > 1 )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
+            +zinit-message "{pre}gh-r:{info2} filtering by \$OSTYPE: ${MACHTYPE}{rst}"
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
-        }
-
-        if (( ${#list} > 1 && ${#matchstr[${MACHTYPE}-2]} )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}-2]:-${MACHTYPE#(#i)(i|amd)}}*} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
+            print -C 1 ${(pj:\n:)${list[@]:t}}
         }
 
         if (( $#list > 1 )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
+            +zinit-message "{pre}gh-r:{info2} filtering by \$MACHTYPE: ${CPUTYPE}{rst}"
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
+            print -C 1 ${(pj:\n:)${list[@]:t}}
         }
 
+        # filter urls by os (e.g., darwin, linux, windows)
         if (( $#list > 1 )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-(gnu|musl)}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-(gnu|musl)}%%(-|)[0-9.]##}}*} )
+            +zinit-message "{pre}gh-r:{info2} filtering by \$OSTYPE: ${OSTYPE}{rst}"
+            list2=( ${(M)list[@]:#(#i)*${matchstr[${${OSTYPE%(#i)}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)}%%(-|)[0-9.]##}}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
+            print -C 1 ${(pj:\n:)${list[@]:t}}
         }
 
         if (( $#list > 1 )) {
@@ -1514,15 +1547,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
-        if (( $#list > 1 && $+commands[dpkg-deb] )) {
-            list2=( ${list[@]:#*.deb} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        }
-
-        if (( $#list > 1 && $+commands[rpm] )) {
-            list2=( ${list[@]:#*.rpm} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        }
+        +zinit-message "{pre}gh-r filter:{info2} sorting by latest version number{rst}"
+        print -C 1 ${(pj:\n:)${list[@]:t}}
 
         if (( !$#list )) {
             +zinit-message -n "{error}Didn't find correct Github" \
