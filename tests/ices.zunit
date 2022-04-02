@@ -1,0 +1,393 @@
+# #!/usr/bin/env zunit
+#
+#
+
+@setup {
+  zinit default-ice from'gh-r' nocompile
+}
+
+@teardown {
+  zinit default-ice --clear
+}
+
+@test 'bat' {
+  run zinit sbin"**/bat -> bat" for @sharkdp/bat
+  assert $state equals 0
+
+  local bat="$ZPFX/bin/bat"
+  assert "$bat" is_file
+  assert "$bat" is_executable
+
+  $bat --version
+  assert $state equals 0
+}
+
+@test 'checkmake' {
+  run zinit sbin'**/checkmake* -> checkmake' for homebrew/checkmake
+  assert $state equals 0
+
+  local checkmake="$ZPFX/bin/checkmake"
+  assert "$checkmake" is_file
+  assert "$checkmake" is_executable
+
+  $checkmake --version
+  assert $state equals 0
+}
+
+@test 'fzf' {
+  run zinit sbin'fzf' for @junegunn/fzf
+  assert $state equals 0
+
+  local fzf="$ZPFX/bin/fzf"
+  assert "$fzf" is_file
+  assert "$fzf" is_executable
+
+  $fzf --version
+  assert $state equals 0
+}
+
+
+@test 'delta' {
+  run zinit sbin'**/delta -> delta' for @dandavison/delta
+  assert $state equals 0
+
+  local delta="$ZPFX/bin/delta"
+  assert "$delta" is_file
+  assert "$delta" is_executable
+
+  $delta --version
+  assert $state equals 0
+}
+
+@test 'exa' {
+  run zinit sbin'**/exa -> exa' for ogham/exa
+  assert $state equals 0
+
+  local exa="$ZPFX/bin/exa"
+  assert "$exa" is_file
+  assert "$exa" is_executable
+
+  $exa --version
+  assert $state equals 0
+}
+
+@test 'fogg' {
+  run zinit sbin'**/f*g' for @chanzuckerberg/fogg
+  assert $state equals 0
+
+  local fogg="$ZPFX/bin/fogg"
+  assert "$fogg" is_file
+  assert "$fogg" is_executable
+
+  $fogg --version
+  assert $state equals 0
+}
+
+@test 'fx' {
+  run zinit sbin'**/fx* -> fx' for @antonmedv/fx
+  assert $state equals 0
+
+  local fx="$ZPFX/bin/fx"
+  assert "$fx" is_file
+  assert "$fx" is_executable
+
+  # use fx because fx has no flags/options (e.g., --version)
+  echo '{"key": "value"}' | $fx .key
+  assert $state  equals 0
+  assert $output same_as 'value'
+}
+
+@test 'git-sizer' {
+  run zinit sbin'**/git-sizer -> git-sizer' for @github/git-sizer
+  assert $state equals 0
+
+  local git_sizer="$ZPFX/bin/git-sizer"
+  assert "$git_sizer" is_file
+  assert "$git_sizer" is_executable
+
+  $git_sizer --version
+  assert $state equals 0
+}
+
+@test 'grex' {
+  run zinit sbin'grex' for pemistahl/grex
+  assert $state equals 0
+
+  local grex="$ZPFX/bin/grex"
+  assert "$grex" is_file
+  assert "$grex" is_executable
+
+  $grex --version
+  assert $state equals 0
+}
+
+@test 'git-mkver' {
+  run zinit sbin'**/git-mkver' for @idc101/git-mkver
+  assert $state equals 0
+
+  local git_mkver="$ZPFX/bin/git-mkver"
+  assert "$git_mkver" is_file
+  assert "$git_mkver" is_executable
+
+  # use git-mkver because --version exits with 130...?
+  $git_mkver info
+  assert $state equals 0
+}
+
+@test 'gh-cli' {
+  run zinit sbin'**/gh' for cli/cli
+  assert $state equals 0
+
+  local gh_cli="$ZPFX/bin/gh"
+  assert "$gh_cli" is_file
+  assert "$gh_cli" is_executable
+  $gh_cli --version
+  assert $state equals 0
+}
+
+@test 'hyperfine' {
+  run zinit sbin'**/hyperfine -> hyperfine' for @sharkdp/hyperfine
+  assert $state equals 0
+
+  local hyperfine="$ZPFX/bin/hyperfine"
+  assert "$hyperfine" is_file
+  assert "$hyperfine" is_executable
+
+  $hyperfine --version
+  assert $state equals 0
+}
+
+@test 'neovim' {
+  run zinit sbin'**/nvim' for neovim/neovim
+  assert $state equals 0
+
+  local nvim="$ZPFX/bin/nvim"
+  assert "$nvim" is_file
+  assert "$nvim" is_executable
+
+  $nvim --version
+  assert $state equals 0
+}
+
+@test 'procs' {
+  run zinit sbin for @dalance/procs
+  assert $state equals 0
+
+  local procs="$ZPFX/bin/procs"
+  assert "$procs" is_file
+  assert "$procs" is_executable
+
+  $procs --version
+  assert $state equals 0
+}
+
+@test 'rg' {
+  run zinit sbin'**/rg -> rg' for @BurntSushi/ripgrep
+  assert $state equals 0
+
+  local rg="$ZPFX/bin/rg"
+  assert "$rg" is_file
+  assert "$rg" is_executable
+
+  $rg --version
+  assert $state equals 0
+}
+
+@test 'shfmt' {
+  run zinit sbin'**/sh* -> shfmt' for @mvdan/sh
+  assert $state equals 0
+
+  local shfmt="$ZPFX/bin/shfmt"
+  assert "$shfmt" is_file
+  assert "$shfmt" is_executable
+
+  $shfmt --version
+  assert $state equals 0
+}
+
+@test 'starship' {
+  run zinit sbin'**/starship -> starship' for @starship/starship
+  assert $state equals 0
+
+  local starship="$ZPFX/bin/starship"
+  assert "$starship" is_file
+  assert "$starship" is_executable
+
+  $starship --version
+  assert $state equals 0
+}
+
+@test 'tokei' {
+  run zinit sbin'**/tokei -> tokei' for @XAMPPRocky/tokei
+  assert $state equals 0
+
+  local tokei="$ZPFX/bin/tokei"
+  assert "$tokei" is_file
+  assert "$tokei" is_executable
+
+  $tokei --version
+  assert $state equals 0
+}
+
+@test 'volta' {
+  run zinit sbin'**/volta' for volta-cli/volta
+  assert $state equals 0
+
+  local volta="$ZPFX/bin/volta"
+  assert "$volta" is_file
+  assert "$volta" is_executable
+
+  $volta --version
+  assert $state equals 0
+}
+
+
+# zi for \
+#     as'completions' \
+#     atclone'./argocd* completion zsh > _argocd' \
+#     atpull'%atclone' \
+#     if'[[ "$(uname -m)" == x86_64 ]]' \
+#     sbin'argocd* -> argocd' \
+#   argoproj/argo-cd
+#
+# zi for \
+#     as'program' \
+#     atclone"./configure --prefix=$ZPRFX > /dev/null" \
+#     atpull'%atclone' \
+#     make"-j PREFIX=${ZPRFX} install > /dev/null" \
+#     pick"cmatrix" \
+#   abishekvashok/cmatrix
+#
+# zi for \
+#     atclone'cp -vf completions/exa.zsh _exa'  \
+#     sbin'**/exa -> exa' \
+#   ogham/exa
+#
+# zi for \
+#     atclone'cp -vf completions/fd.zsh _fd' \
+#     sbin'**/fd -> fd' \
+#   @sharkdp/fd
+#
+# zi for \
+#     atclone"
+#       autoreconf -fi
+#       ./configure --with-oniguruma=builtin
+#       make
+#       ln -sfv $PWD/jq.1 $ZPFX/man/man1" \
+#     atpull'%atclone' \
+#     if"(( ${+commands[jq]} == 0 ))" \
+#     sbin'jq' \
+#   @stedolan/jq
+#
+# zi for \
+#     as'program' \
+#     atpull'%atclone' \
+#     make"-j PREFIX=${ZPRFX} install > /dev/null" \
+#     pick"neofetch" \
+#   dylanaraps/neofetch
+#
+# zi for \
+#     as'program' \
+#     atclone" autoreconf -iv; ./configure --prefix=$ZPFX" \
+#     atpull'%atclone' \
+#     make'-j bin/stow' \
+#     pick"$ZPFX/bin/stow" \
+#   @aspiers/stow
+#
+# zi for \
+#     as"tmux=$ZPFX/tmux" \
+#     make'-j' \
+#     mv'tmux* -> tmux' \
+#     pick'tmux' \
+#   @tmux/tmux
+#
+# zi for \
+#     as'null' \
+#     atclone'%atpull' \
+#     atpull'
+#       ./bin/brew update --preinstall \
+#       && ln -sf $PWD/completions/zsh/_brew $ZINIT[COMPLETIONS_DIR] \
+#       && rm -f brew.zsh \
+#       && ./bin/brew shellenv --dummy-arg > brew.zsh \
+#       && zcompile brew.zsh' \
+#     depth'3' \
+#     nocompletions \
+#     sbin'bin/brew' \
+#     src'brew.zsh' \
+#   @homebrew/brew
+
+# zi for \
+#     as'completions' \
+#     atclone'./argocd* completion zsh > _argocd' \
+#     atpull'%atclone' \
+#     if'[[ "$(uname -m)" == x86_64 ]]' \
+#     sbin'argocd* -> argocd' \
+#   argoproj/argo-cd
+#
+# zi for \
+#     as'program' \
+#     atclone"./configure --prefix=$ZPRFX > /dev/null" \
+#     atpull'%atclone' \
+#     make"-j PREFIX=${ZPRFX} install > /dev/null" \
+#     pick"cmatrix" \
+#   abishekvashok/cmatrix
+#
+# zi for \
+#     atclone'cp -vf completions/exa.zsh _exa'  \
+#     sbin'**/exa -> exa' \
+#   ogham/exa
+#
+# zi for \
+#     atclone'cp -vf completions/fd.zsh _fd' \
+#     sbin'**/fd -> fd' \
+#   @sharkdp/fd
+#
+# zi for \
+#     atclone"
+#       autoreconf -fi
+#       ./configure --with-oniguruma=builtin
+#       make
+#       ln -sfv $PWD/jq.1 $ZPFX/man/man1" \
+#     atpull'%atclone' \
+#     if"(( ${+commands[jq]} == 0 ))" \
+#     sbin'jq' \
+#   @stedolan/jq
+#
+# zi for \
+#     as'program' \
+#     atpull'%atclone' \
+#     make"-j PREFIX=${ZPRFX} install > /dev/null" \
+#     pick"neofetch" \
+#   dylanaraps/neofetch
+#
+# zi for \
+#     as'program' \
+#     atclone" autoreconf -iv; ./configure --prefix=$ZPFX" \
+#     atpull'%atclone' \
+#     make'-j bin/stow' \
+#     pick"$ZPFX/bin/stow" \
+#   @aspiers/stow
+#
+# zi for \
+#     as"tmux=$ZPFX/tmux" \
+#     make'-j' \
+#     mv'tmux* -> tmux' \
+#     pick'tmux' \
+#   @tmux/tmux
+#
+# zi for \
+#     as'null' \
+#     atclone'%atpull' \
+#     atpull'
+#       ./bin/brew update --preinstall \
+#       && ln -sf $PWD/completions/zsh/_brew $ZINIT[COMPLETIONS_DIR] \
+#       && rm -f brew.zsh \
+#       && ./bin/brew shellenv --dummy-arg > brew.zsh \
+#       && zcompile brew.zsh' \
+#     depth'3' \
+#     nocompletions \
+#     sbin'bin/brew' \
+#     src'brew.zsh' \
+#   @homebrew/brew
+
+# vim: set ft=zsh et ts=2 sw=2 : #

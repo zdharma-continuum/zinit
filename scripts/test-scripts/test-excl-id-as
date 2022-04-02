@@ -1,0 +1,192 @@
+# fpath+=( `pwd`/doc )
+# autoload test-id-as
+# test-id-as
+#
+# Introduction of id-as (an ice-mod that allows to nickname
+# any snippet or plugin) is a set of so many changes that
+# more tests were needed, thus this file was created, real
+# tests would took too long.
+#
+# Creates PLUGINS_DIR and SNIPPETS_DIR in /tmp. Can obtain
+# --reuse option, to reuse existing PLUGINS_DIR & SNIPPETS_DIR.
+
+autoload colors; colors
+
+setopt localtraps typesetsilent
+
+typeset -g plg_bkp="${ZPLGM[PLUGINS_DIR]}" snp_bkp="${ZPLGM[SNIPPETS_DIR]}" argv1="$1" argv2="$2"
+[[ -z "$plg_bkp" || -z "$snp_bkp" ]] && { print "Zplugin not loaded? (the \$ZPLGM hash is missing fields)"; return 1; }
+[[ "$plg_bkp" != /* || $snp_bkp != /* ]] && { print "PLUGINS_DIR and/or SNIPPETS_DIR isn't an absolute path, aborting"; return 1; }
+
+if [[ "$argv1" != "--reuse" && "$argv2" != "--reuse" ]]; then
+    command rm -rf /tmp/zplg_plgs /tmp/zplg_snps
+    command mkdir -p /tmp/zplg_plgs /tmp/zplg_snps
+
+    ZPLGM[PLUGINS_DIR]=/tmp/zplg_plgs ZPLGM[SNIPPETS_DIR]=/tmp/zplg_snps
+
+    trap '[[ $argv1 != "--keep" && $argv2 != "--keep" ]] && { ZPLGM[PLUGINS_DIR]=$plg_bkp; ZPLGM[SNIPPETS_DIR]=$snp_bkp; } || { print; print "Kept ${ZPLGM[PLUGINS_DIR]} :: ${ZPLGM[SNIPPETS_DIR]}"; }; return 0;' EXIT INT TERM QUIT
+fi
+
+local INITIAL_CD="$PWD"
+cd /tmp
+print; print -- "$fg[green]..........Working dir: $PWD$reset_color.........."
+
+print -- "Removing test-plugins & snippets from disk ..."
+
+# This removal is in case of --reuse being passed to this script
+
+command rm -rf -- ${ZPLGM[PLUGINS_DIR]}/mvdan---sh/ \
+                    ${ZPLGM[PLUGINS_DIR]}/oz---safe-paste \
+                    ${ZPLGM[PLUGINS_DIR]}/junegunn---fzf-bin \
+                    ${ZPLGM[PLUGINS_DIR]}/my---jun---gun \
+                    ${ZPLGM[PLUGINS_DIR]}/myid \
+                    ${ZPLGM[PLUGINS_DIR]}/myid---sub---1 \
+                    ${ZPLGM[PLUGINS_DIR]}/my---pure
+
+command rm -rf -- ${ZPLGM[SNIPPETS_DIR]}/https--github.com--robbyrussell--oh-my-zsh--trunk--plugins \
+                    ${ZPLGM[SNIPPETS_DIR]}/MY-UNIQUE \
+                    ${ZPLGM[SNIPPETS_DIR]}/my \
+                    ${ZPLGM[SNIPPETS_DIR]}/myid/sub
+
+print -- "Done."
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]mvdan$reset_color/$fg[yellow]sh$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+print zplugin ice from"gh-r" as"command" mv\""shfmt* -> shfmt"\"\; zplugin load mvdan/sh
+zplugin ice from"gh-r" as"command" mv"shfmt* -> shfmt"; zplugin load mvdan/sh
+zplugin cd mvdan/sh; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete mvdan/sh
+zplugin cd mvdan/sh && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`single-file plugin' $fg[magenta]oz$reset_color/$fg[yellow]safe-paste$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+print zplugin load oz/safe-paste
+zplugin load oz/safe-paste
+zplugin cd oz/safe-paste; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete oz/safe-paste
+zplugin cd oz/safe-paste && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]junegunn$reset_color/$fg[yellow]fzf-bin$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+print zplugin ice from"gh-r" as"command" mv"fzf* -> fzf1" atpull\'"!rm -f fzf2; touch fzf.txt"\'\; zplugin light junegunn/fzf-bin
+zplugin ice from"gh-r" as"command" mv"fzf* -> fzf1" atpull'!rm -f fzf2; touch fzf.txt'; zplugin light junegunn/fzf-bin
+zplugin cd junegunn/fzf-bin; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete junegunn/fzf-bin
+zplugin cd junegunn/fzf-bin && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`github-$fg_bold[magenta]binary$fg_no_bold[red]'< $fg[magenta]junegunn$reset_color/$fg[yellow]fzf-bin$fg_bold[green] AS ::\`$fg[red]!my/jun/gun$fg_bold[green]'::$reset_color"
+print zplugin ice from"gh-r" as"command" mv"fzf* -> fzf2" id-as\"\\\\\!my/jun/gun\"\; zplugin load junegunn/fzf-bin
+zplugin ice from"gh-r" as"command" mv"fzf* -> fzf2" id-as"!my/jun/gun"; zplugin load junegunn/fzf-bin
+zplugin cd my/jun/gun; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete my/jun/gun
+zplugin cd my/jun/gun && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]agkozak$reset_color/$fg[yellow]agkozak-zsh-theme$fg_bold[green] AS ::\`$fg[red]!myid$fg_bold[green]'::$reset_color"
+print zplugin ice id-as\"\\\\\!myid\"\; zplugin load agkozak/agkozak-zsh-theme
+zplugin ice id-as"!myid"; zplugin load agkozak/agkozak-zsh-theme
+zplugin cd myid; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete myid
+zplugin cd myid && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "$fg[green]Unloading $fg[red]::\`myid'::$fg[green] (agkozak/agkozak-zsh-theme)$reset_color"
+zplugin unload myid > /tmp/myid.unload.txt
+head -n 4 /tmp/myid.unload.txt
+head -n 17 /tmp/myid.unload.txt | tail -n 4
+
+sleep 5
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]agkozak$reset_color/$fg[yellow]agkozak-zsh-theme$fg_bold[green] AS ::\`$fg[red]!myid/sub/1$fg_bold[green]'::$reset_color"
+print zplugin ice id-as\"\\\\\!myid/sub/1\"\; zplugin load agkozak/agkozak-zsh-theme
+zplugin ice id-as"!myid/sub/1"; zplugin load agkozak/agkozak-zsh-theme
+zplugin cd myid/sub/1; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete myid/sub/1
+zplugin cd myid/sub/1 && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "$green[green]Report of $fg[red]::\`myid/sub/1'::$fg[green] (agkozak/agkozak-zsh-theme)$reset_color"
+zplugin report myid/sub/1 > /tmp/myid--sub--1.report.txt
+head -n 10 /tmp/myid--sub--1.report.txt | tail -n 8
+
+sleep 5
+
+print; print -- "$fg[green]Unloading $fg[red]::\`myid/sub/1'::$fg[green] (agkozak/agkozak-zsh-theme)$reset_color"
+zplugin unload myid/sub/1 > /tmp/myid--sub--1.unload.txt
+head -n 4 /tmp/myid--sub--1.unload.txt
+head -n 17 /tmp/myid--sub--1.unload.txt | tail -n 4
+
+sleep 5
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`theme'< $fg[magenta]sindresorhus$reset_color/$fg[yellow]pure$fg_bold[green] AS ::\`$fg[red]!my/pure$fg_bold[green]'::$reset_color"
+print zplugin ice multisrc\"\{async,pure\}.zsh\" pick"/dev/null" id-as\"\\\\\!my/pure\"\; zplugin load sindresorhus/pure
+zplugin ice multisrc"{async,pure}.zsh" pick"/dev/null" id-as"!my/pure"; zplugin load sindresorhus/pure
+zplugin cd my/pure; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete my/pure
+zplugin cd my/pure && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print
+print -- "\n\n\n"$fg_bold[red]SNIPPETS START NOW$reset_color
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]pip$fg_bold[red] without$fg_no_bold[red] id-as nickname$reset_color"
+zplugin ice svn; zplugin snippet OMZ::plugins/pip
+zplugin cd OMZ::plugins/pip; ls -lthd .*(N) *(N)
+sleep 3
+zplugin creinstall %SNIPPETS/OMZ::plugins/pip
+sleep 3
+cd $OLDPWD
+zplugin delete OMZ::plugins/pip
+zplugin cd OMZ::plugins/pip && ls -lthd .*(N) *(N)
+zplugin cclear
+
+sleep 3
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`single-file command-snippet' $fg[magenta]GH::Osse/git-scripts/blob/master/git-unique$fg_bold[green] AS ::\`$fg[red]!MY-UNIQUE$fg_bold[green]'::$reset_color"
+zplugin ice as"program" id-as\"\\\\\!MY-UNIQUE\"; zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+zplugin ice as"program" id-as"!MY-UNIQUE"; zplugin snippet https://github.com/Osse/git-scripts/blob/master/git-unique
+zplugin cd MY-UNIQUE; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete MY-UNIQUE
+zplugin cd MY-UNIQUE && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]git$fg_bold[green] AS ::\`$fg[red]!my$fg_bold[green]'::$reset_color"
+print zplugin ice svn id-as\"\\\\\!my\"\; zplugin snippet OMZ::plugins/git
+zplugin ice svn id-as"!my"; zplugin snippet OMZ::plugins/git
+zplugin cd my; ls -lthd .*(N) *(N)
+cd $OLDPWD
+zplugin delete my
+zplugin cd my && ls -lthd .*(N) *(N)
+
+sleep 3
+
+print; print -- "\n\n\n$fg[green]----------\nInstalling $fg[red]>\`OMZ plugin (svn)'< $fg[magenta]OMZ::plugins$reset_color/$fg[yellow]gradle$fg_bold[green] AS ::\`$fg[red]!myid/sub$fg_bold[green]'::$reset_color"
+print zplugin ice svn id-as\"\\\\\!myid/sub\"\; zplugin snippet OMZ::plugins/gradle
+zplugin ice svn id-as"!myid/sub"; zplugin snippet OMZ::plugins/gradle
+zplugin cd myid/sub; ls -lthd .*(N) *(N)
+sleep 3
+zplugin creinstall %SNIPPETS/myid/sub
+sleep 3
+cd $OLDPWD
+zplugin delete myid/sub
+zplugin cd myid/sub && ls -lthd .*(N) *(N)
+zplugin cclear
+
+cd $INITIAL_CD
+# vim:ft=zsh:sts=4:sw=4:et

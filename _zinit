@@ -1,0 +1,367 @@
+#compdef zinit
+
+setopt localoptions warncreateglobal typesetsilent
+
+local curcontext="$curcontext" state state_descr line ret=1
+local -a expl
+
+typeset -a commands
+commands=(
+    zstatus:'overall Zinit status'
+    times:'statistics on plugin loading times'
+    self-update:'updates Zinit'
+    help:'usage information'
+    man:'manual'
+    env-whitelist:'specify names (also patterns) of parameters to be left unchanged during an unload'
+    load:'load plugin'
+    delete:'delete plugin'
+    unload:'unload plugin'
+    snippet:"source (or add to PATH with --command) local or remote file (-f: force - don't use cache)"
+    update:'Git update plugin (or all plugins and snippets if --all passed)'
+    status:'Git status for plugin (or all plugins if --all passed)'
+    report:'show plugin'"'"'s report (or all plugins'"'"' if --all passed)'
+    loaded:'show what plugins are loaded'
+    list:'show what plugins are loaded'
+    ls:'list snippets in formatted and colorized manner'
+    cd:"go into plugin's directory"
+    create:'create plugin (also together with Github repository)'
+    edit:"edit plugin's file with \$EDITOR"
+    glance:"look at plugin's source (pygmentize, {,source-}highlight)"
+    stress:'test plugin for compatibility with set of options'
+    changes:"view plugin's git log"
+    recently:"show plugins that changed recently, argument is e.g. 1 month 2 days"
+    clist:'list completions in use'
+    cclear:'clear stray and improper completions'
+    completions:'list completions in use'
+    cdisable:'disable completion'
+    cenable:'enable completion'
+    creinstall:'install completions for plugin'
+    cuninstall:'uninstall completions for plugin'
+    csearch:'search for available completions from any plugin'
+    compinit:'refresh installed completions'
+    dtrace:"start tracking what's going on in session"
+    dstart:"start tracking what's going on in session"
+    dstop:"stop tracking what's going on in session"
+    dunload:'revert changes recorded between dstart and dstop'
+    dreport:"report what was going on in session"
+    dclear:'clear report of what was going on in session'
+    compile:'compile plugin (or all plugins if --all passed)'
+    uncompile:'remove compiled version of plugin (or of all plugins if --all passed)'
+    compiled:'show which plugins are compiled'
+    cdlist:'show compdef replay list'
+    cdreplay:'replay compdefs (to be done after compinit)'
+    cdclear:'clear compdef replay list'
+    srv:'control a service, command can be: stop,start,restart,next,quit; `next'' moves the service to another Zshell'
+    recall:'fetch saved ice modifiers and construct `zinit ice ...'' command'
+    env-whitelist:'allows to specify names (also patterns) of variables left unchanged during an unload. -v - verbose'
+    bindkeys:'lists bindkeys set up by each plugin'
+    module:'manage binary Zsh module shipped with Zinit, see `zinit module help'''
+    run:"execute code inside plugin's folder"
+    {add-fpath,fpath}:'add plugin folder to $fpath'
+)
+
+_arguments -C \
+    '1: :->command'\
+    '*: :->argument' && ret=0
+
+case $state in
+    command)
+        _describe -t commands "Zinit command" commands && ret=0
+        ;;
+
+    argument)
+        case $words[2] in
+            help)
+                _message "Hit enter to get usage information" && ret=0
+                ;;
+
+            man)
+                _message "Hit enter to view manual" && ret=0
+                ;;
+
+            zstatus)
+                _message "Hit enter to get overall status information" && ret=0
+                ;;
+
+            times)
+                _message "Hit enter to get plugin load time statistics" && ret=0
+                ;;
+
+            load|light)
+                typeset -a plugins
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${plugins[@]//---//}" )
+                plugins=( "${plugins[@]:#_local/zinit}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                _alternative \
+                    'plugins:-- Plugin --:compadd -a - plugins' \
+                    'directories:-- Directory --:_directories' && \
+                        ret=0
+                ;;
+
+            run|fpath|add-fpath)
+                typeset -a plugins
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${plugins[@]//---//}" )
+                plugins=( "${plugins[@]:#_local/zinit}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                local -a opts
+                if [[ $words[2] = run ]]; then
+                    opts=( -l )
+                else
+                    opts=( -f --front )
+                fi
+
+                _alternative \
+                    'plugins:-- Plugin --:compadd -a - plugins' \
+                    'directories:-- Directory --:_directories' \
+                    'opts:-- Option --:compadd -a - opts' && \
+                        ret=0
+                ;;
+
+            compile|stress|edit|glance|recall|update|status|cd|changes|delete)
+                # Plugins
+                typeset -a plugins
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N:t) )
+                plugins=( "${plugins[@]//---//}" )
+                plugins=( "${plugins[@]:#_local/zinit}" )
+                plugins=( "${plugins[@]:#custom}" )
+
+                # Snippets
+                local -a snippets snippets_alreadyld
+                local sni
+
+                snippets=( "${ZINIT[SNIPPETS_DIR]}"/**/._zinit(D/:h) )
+                snippets=( ${snippets[@]#${ZINIT[SNIPPETS_DIR]}/} )
+                snippets=( ${snippets[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
+                snippets=( ${snippets[@]/--//} )
+
+                for sni ( ${snippets[@]} ) {
+                    if [[ -n ${ZINIT_SNIPPETS[$sni]} ]]; then
+                        snippets_alreadyld+=( $sni )
+                        snippets=( ${snippets[@]:#$sni} )
+                    fi
+                }
+
+                _alternative 'dsnippets:-- Downloaded Snippet --:compadd -a - snippets' \
+                    'lsnippets:-- Already Loaded Snippet --:compadd -a - snippets_alreadyld' \
+                    'plugins:-- Plugin --:compadd -a - plugins' && \
+                        ret=0
+                ;;
+
+            unload|report)
+                typeset -a plugins absolute normal
+                plugins=( "${ZINIT_REGISTERED_PLUGINS[@]:#_local/zinit}" )
+                normal=( "${plugins[@]:#%*}" )
+                absolute=( "${(M)plugins[@]:#%*}" )
+                absolute=( "${absolute[@]/\%\/\//%/}" )
+                local hm="${HOME%/}"
+                absolute=( "${absolute[@]/$hm/HOME}" )
+                plugins=( $normal $absolute )
+
+                _wanted plugins expl "-- Plugin --" \
+                    compadd "$@" -a - plugins && \
+                        ret=0
+                ;;
+
+            all-reports)
+                _message "Hit enter to get all reports (for all loaded plugins)" && ret=0
+                ;;
+
+            loaded|list)
+                _message "Hit enter or give part of plugin name" && ret=0
+                ;;
+
+            clist|completions)
+                _message "Hit enter to get list of completions" && ret=0
+                ;;
+
+            cclear)
+                _message "Hit enter to clear stray and improper completions" && ret=0
+                ;;
+
+            cdisable)
+                # Find enabled completions
+                typeset -a completions
+                completions=( "${ZINIT[COMPLETIONS_DIR]}"/_*(N:t) )
+                completions=( "${completions[@]#_}" )
+                _wanted plugins expl "-- Completion --" \
+                    compadd "$@" -a - completions && \
+                        ret=0
+                ;;
+
+            cenable)
+                # Find disabled
+                typeset -a completions
+                completions=( "${ZINIT[COMPLETIONS_DIR]}"/[^_]*(N:t) )
+                _wanted plugins expl "-- Completion --" \
+                    compadd "$@" -a - completions && \
+                        ret=0
+                ;;
+
+            creinstall)
+                # Complete only plugins that have any completions
+                # We must iterate each plugin to check
+                # for completions that can be installed
+                typeset -a plugins completions
+                local p c user plugin
+                for p in "${ZINIT[PLUGINS_DIR]}"/*; do
+                    completions=( "$p"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|_zsh_highlight*|/zsdoc/*)(DN) )
+                    for c in "${completions[@]}"; do
+                        p="${p:t}"
+                        user="${p%%---*}"
+                        plugin="${p#*---}"
+                        [[ "$user" = "$plugin" && "${user}---${plugin}" != "$p" ]] && user=""
+                        plugins+=( "${user:+$user/}$plugin" )
+                        break
+                    done
+                done
+                _wanted plugins expl "-- Plugin --" \
+                    compadd "$@" -a - plugins && \
+                        ret=0
+                ;;
+
+            cuninstall)
+                # We must iterate each plugin and check if
+                # it has completions that are installed
+                typeset -a plugins completions
+                local p c user plugin cfile bkpfile
+                for p in "${ZINIT[PLUGINS_DIR]}"/*; do
+                    completions=( "$p"/**/_[^_.][^.]#(N) )
+                    for c in "${completions[@]}"; do
+                        cfile="${c:t}"
+                        bkpfile="${cfile#_}"
+                        # Completion installed, either enabled or disabled?
+                        if [[ -e "${ZINIT[COMPLETIONS_DIR]}"/"$cfile" || -e "${ZINIT[COMPLETIONS_DIR]}"/"$bkpfile" ]]; then
+                            p="${p:t}"
+                            user="${p%%---*}"
+                            plugin="${p#*---}"
+                            [[ "$user" = "$plugin" && "${user}---${plugin}" != "$p" ]] && user=""
+                            plugins+=( "${user:+$user/}$plugin" )
+                            break
+                        fi
+                    done
+                done
+                _wanted plugins expl "-- Plugin --" \
+                    compadd "$@" -a - plugins && \
+                        ret=0
+                ;;
+
+            compinit)
+                _message "Hit enter to refresh completion system" && ret=0
+                ;;
+
+            snippet)
+                local -a snippets snippets_alreadyld
+                local sni
+
+                snippets=( "${ZINIT[SNIPPETS_DIR]}"/**/._zinit(D/:h) )
+                snippets=( ${snippets[@]#${ZINIT[SNIPPETS_DIR]}/} )
+                snippets=( ${snippets[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
+                snippets=( ${snippets[@]/--//} )
+
+                for sni ( ${snippets[@]} ) {
+                    if [[ -n ${ZINIT_SNIPPETS[$sni]} ]]; then
+                        snippets_alreadyld+=( $sni )
+                        snippets=( ${snippets[@]:#$sni} )
+                    fi
+                }
+
+                _alternative 'dsnippets:-- Downloaded Snippet --:compadd -a - snippets' \
+                    'lsnippets:-- Already Loaded Snippet --:compadd -a - snippets_alreadyld' \
+                    'files:-- File --:_files' && \
+                        ret=0
+                ;;
+
+            dstart|dtrace)
+                _message "Hit enter to start tracking this session" && ret=0
+                ;;
+
+            dstop)
+                _message "Hit enter to stop tracking this session" && ret=0
+                ;;
+
+            dunload)
+                _message "Hit enter to revert changes recorded between dstart and dstop" && ret=0
+                ;;
+
+            dreport)
+                _message "Hit enter to show report of what was going on in session" && ret=0
+                ;;
+
+            dclear)
+                _message "Hit enter to clear report of what was going on in session" && ret=0
+                ;;
+
+            compile-all)
+                _message 'Hit enter to compile all downloaded plugins' && ret=0
+                ;;
+
+            uncompile)
+                typeset -a plugins
+                plugins=( "${ZINIT[PLUGINS_DIR]}"/*(N) )
+
+                typeset -a show_plugins p matches
+                for p in "${plugins[@]}"; do
+                    matches=( $p/*.zwc(N) )
+                    if [ "$#matches" -ne "0" ]; then
+                        p="${p:t}"
+                        [ "$p" = "_local---zinit" ] && continue
+                        [ "$p" = "custom" ] && continue
+                        p="${p//---//}"
+                        show_plugins+=( "$p" )
+                    fi
+                done
+
+                _wanted show_plugins expl "-- Plugin --" \
+                    compadd "$@" -a - show_plugins && \
+                        ret=0
+                ;;
+
+            uncompile-all)
+                _message 'Hit enter remove compiled versions of all downloaded plugins' && ret=0
+                ;;
+
+            compiled)
+                _message 'Hit enter to get list of compiled plugins' && ret=0
+                ;;
+
+            cdlist)
+                _message 'Hit enter to show compdef replay list' && ret=0
+                ;;
+
+            cdreplay)
+                _message 'Hit enter to replay recorded compdefs' && ret=0
+                ;;
+
+            cdclear)
+                _message 'Hit enter to clear compdef replay list' && ret=0
+                ;;
+
+            recently)
+                typeset -a timespecs
+                timespecs=(
+                    "3 days":"code modified during last 3 days"
+                    "1 week":"code modified during last 7 days (default)"
+                    "1 month":"code modified during last month"
+                )
+                _describe -t timespecs "Time spec" timespecs && ret=0
+                ;;
+
+            create)
+                _message 'Plugin spec or just enter, to create new plugin' && ret=0
+                ;;
+
+            env-whitelist)
+                _wanted plugins expl "-- Parameter To White List During Any Plugin Unload --" \
+                    _parameters && ret=0
+                ;;
+            *)
+                ret=1
+                ;;
+        esac
+esac
+
+return $ret

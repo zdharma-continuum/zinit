@@ -1,0 +1,32 @@
+[[ -n "$NOTHING_FANCY" ]] && return
+
+# Annexes
+zinit::setup-annexes
+
+# Setup keys
+zinit::setup-keys
+
+# Aliases
+alias ls="ls --color=auto"
+alias vim="nvim"
+alias re-init="source /init.zsh"
+
+# History
+HISTFILE=${HOME}/.local/share/zsh/history
+HISTSIZE=1000
+SAVEHIST=1000
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_ignore_dups
+setopt hist_ignore_space
+setopt hist_verify
+setopt share_history
+
+mkdir -p ${HISTFILE:A:h}
+
+# Completions
+autoload -Uz compinit
+compinit
+zinit cdreplay -q
+
+# vim: ft=zsh et ts=2 sw=2 :

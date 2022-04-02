@@ -1,0 +1,13 @@
+# Make sure TERM is set
+# Without a TERM value some ices might be ignored
+# https://github.com/zdharma-continuum/zinit/issues/97
+export TERM=${TERM:-xterm-256color}
+# Set SHELL
+export SHELL=${SHELL:-${commands[zsh]}}
+
+typeset -Ag ZINIT
+
+# ZINIT_HOME_DIR is used at build time to force the installation of plugins
+# etc to /data-static
+export ZINIT[HOME_DIR]=${ZINIT_HOME_DIR:-/data}
+export ZINIT[BIN_DIR]=/src

@@ -1,0 +1,16 @@
+name: Linting
+on: [push, pull_request, workflow_dispatch]
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "install dependencies"
+        run: sudo apt-get install -y zsh
+
+      - name: "zsh"
+        run: find . -name '*.zsh' -type f -exec zsh -n {} \;
+
+      - name: "zcompile"
+        run: find . -name '*.zsh' -type f -exec zsh -fc "zcompile {}" \;

@@ -1,0 +1,20 @@
+#!/usr/bin/env zunit
+
+@test 'direnv install' {
+  run zinit for \
+      as"program" \
+      atclone'./direnv* hook zsh > zhook.zsh' \
+      from"gh-r" \
+      light-mode \
+      pick'zhook.zsh' \
+      sbin"direnv* -> direnv" \
+    direnv/direnv
+
+  assert $state equals 0
+
+  local direnv="$ZPFX/bin/direnv"
+  assert "$direnv" is_file
+  assert "$direnv" is_executable
+}
+
+# vim: set ft=zsh et ts=2 sw=2 : #

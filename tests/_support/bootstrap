@@ -1,0 +1,32 @@
+#!/usr/bin/env zsh
+#=== HELPER METHODS ===================================
+function error() { print -P "%F{160}[ERROR] ---%f%b $1" >&2 && exit 1; }
+function info() { print -P "%F{34}[INFO] ---%f%b $1"; }
+#=== ZINIT ============================================
+
+
+GIT_REPO=$(git rev-parse --show-toplevel)/tests/_support/zinit
+typeset -gAH ZINIT;
+ZINIT[HOME_DIR]=$GIT_REPO  ZPFX=$ZINIT[HOME_DIR]/polaris
+ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git ZINIT[OPTIMIZE_OUT_DISK_ACCESSES]=1
+ZINIT[COMPLETIONS_DIR]=$ZINIT[HOME_DIR]/completions ZINIT[SNIPPETS_DIR]=$ZINIT[HOME_DIR]/snippets
+ZINIT[ZCOMPDUMP_PATH]=$ZINIT[HOME_DIR]/zcompdump    ZINIT[PLUGINS_DIR]=$ZINIT[HOME_DIR]/plugins
+ZI_REPO='zdharma-continuum'; GH_RAW_URL='https://raw.githubusercontent.com'
+info 'Downloading Zinit' \
+  && command git clone \
+      --branch 'fix/gh-r-logic' \
+      https://github.com/vladdoster/zinit \
+      $ZINIT[BIN_DIR] \
+  || error 'unable to download zinit' \
+  && info 'installing zinit' \
+  && command chmod g-rwX $ZINIT[HOME_DIR] \
+  && zcompile $ZINIT[BIN_DIR]/zinit.zsh \
+  && info 'successfully installed zinit' \
+  || error 'unable to install zinit'
+source $ZINIT[BIN_DIR]/zinit.zsh \
+  && autoload -Uz _zinit \
+  && (( ${+_comps} )) \
+  && _comps[zinit]=_zinit
+
+zinit light-mode for \
+  zdharma-continuum/zinit-annex-{'bin-gem-node','default-ice','binary-symlink'}

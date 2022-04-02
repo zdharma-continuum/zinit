@@ -1,0 +1,53 @@
+name: "🐞 Bug report"
+description: File a bug report
+labels: ["🐞 bug", "🎲 triage"]
+title: "🐞 bug: "
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Issue description
+      description: What went wrong?
+    validations:
+      required: true
+
+  - type: textarea
+    id: zinit-config
+    validations:
+      required: true
+    attributes:
+      label: zinit config
+      description: The ices you used
+      value: |
+        ```zsh
+        zinit \
+          null \
+          atclone'true' \
+          for zdharma_continuum/null
+        ```
+
+  - type: input
+    id: zinit-version
+    validations:
+      required: true
+    attributes:
+      label: 'zinit version or commit ID'
+      description: '`git -C $ZINIT[BIN_DIR] rev-list --max-count=1 HEAD`'
+      placeholder: "7cd8768de45fb7e1f98bbe90a961674b38fa247d"
+
+  - type: input
+    id: zsh-version
+    validations:
+      required: true
+    attributes:
+      label: zsh version
+      description: "ZSH version you're currently using: `echo $ZSH_VERSION`"
+      placeholder: "5.8"
+
+  - type: input
+    id: host-info
+    validations:
+      required: true
+    attributes:
+      label: host info
+      description: "`typeset -m '*TYPE'; uname --kernel-release; grep -E '^ID=|^VERSION=' /etc/os-release 2>/dev/null`"

@@ -1,0 +1,10 @@
+name: "🎁 Feature request"
+description: Request a new feature
+labels: ["🎁 feature request", "🎲 triage"]
+title: "🎁 Feature request: "
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature request
+      description: Description of the usecase that's currently not supported

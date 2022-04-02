@@ -1,0 +1,40 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+
+# Copyright (c) YEAR USER_NAME
+
+# An example of type-agnostic script/function, i.e.: the file can be run as a +x
+# script or as an autoload function.
+
+# Set the base and typically useful options
+emulate -LR zsh
+setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+
+# Run as script? ZSH_SCRIPT is a Zsh 5.3 addition
+if [[ $0 != template-script || -n $ZSH_SCRIPT ]]; then
+    # Handle $0 according to the Zsh Plugin Standard:
+    # https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
+    0=${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}
+    0=${${(M)0##/*}:-$PWD/$0}
+
+    # Such global variable is expected to be typeset'd -g in the plugin.zsh
+    # file. Here it's restored in case of the function being run as a script.
+    typeset -gA Plugins
+    Plugins[MY_PLUGIN_DIR]=${0:h}
+
+    # In case of the script using other scripts from the plugin, either set up
+    # $fpath and autoload, or add the directory to $PATH.
+    fpath+=( $Plugins[MY_PLUGIN_DIR] )
+    autoload …
+
+    # OR
+    path+=( $Plugins[MY_PLUGIN_DIR] )
+fi
+
+# The script/function contents possibly using $Plugins[MY_PLUGIN_DIR] …
+# …
+
+# Use alternate marks [[[ and ]]] as the original ones can confuse nested
+# substitutions, e.g.: ${${${VAR}}}
+
+# vim:ft=zsh:tw=80:sw=4:sts=4:et:foldmarker=[[[,]]]

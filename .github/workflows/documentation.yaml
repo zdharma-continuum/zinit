@@ -1,0 +1,52 @@
+name: Documentation
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  zshelldoc:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+
+      - name: Install asciidoctor-pdf
+        run: |
+          gem install asciidoctor-pdf
+
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Generate zsd
+        run: |
+          make doc-container
+          sudo chown -R "$(id -u):$(id -g)" .
+
+      - name: Generate PDF
+        run: |
+          make -C doc/zsdoc pdf
+
+      - name: Tar doc/
+        run: |
+          tar cvzf /tmp/doc.tar.gz doc
+
+      - name: Upload doc.tar.gz
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: |
+            /tmp/doc.tar.gz
+
+      - name: Check if the zsd docs need to be updated
+        run: |
+          if git --no-pager diff --exit-code
+          then
+          echo "Success: The zshelldocs are up to date"
+          else
+            {
+              echo "ERROR: The zshelldocs are not up to date"
+              echo 'Please regenerate them with `make doc` or make container-doc`'
+            }
+            exit 1
+          fi

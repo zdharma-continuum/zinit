@@ -1,0 +1,26 @@
+name: Unit tests
+
+on: [push, pull_request, workflow_dispatch]
+
+env:
+  TERM: xterm
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['macos-latest', 'ubuntu-latest']
+      fail-fast: false
+    steps:
+      - uses: actions/checkout@v3
+      - name: "install dependencies"
+        run: brew install svn unzip zsh
+
+      - name: "change to z-shell"
+        run: exec zsh
+
+      - name: "${{ matrix.test }}: ${{ matrix.os }}"
+        run: |
+          brew install vladdoster/zunit/zunit
+          zunit --tap --verbose

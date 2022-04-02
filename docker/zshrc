@@ -1,0 +1,34 @@
+# Initialization. Trigger stuff that only needs to be run once, at startup.
+if [[ "$$" == 1 ]] && [[ -z "$ZSH_NO_INIT" ]]
+then
+  source /src/docker/init.zsh
+fi
+
+# load zinit
+source /src/zinit.zsh
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+
+# load zinit setup utility functions
+source /src/docker/utils.zsh
+
+# Add ZPFX/bin and GOPATH/bin to PATH
+typeset -U path
+path=("${ZPFX:-${HOME}/.local/share/zinit/polaris}/bin" "${HOME}/go/bin" $path)
+
+# Install custom zsh version
+if [[ -n "$ZINIT_ZSH_VERSION" ]]
+then
+  zinit::pack-zsh "$ZINIT_ZSH_VERSION"
+fi
+
+source /src/docker/zshrc-fancy
+
+# Source init file
+INIT_FILE="/init.zsh"
+if [[ -r "$INIT_FILE" ]]
+then
+  source "$INIT_FILE"
+fi
+
+# vim: ft=zsh et ts=2 sw=2 :
