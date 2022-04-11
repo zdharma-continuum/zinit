@@ -32,7 +32,7 @@ jobs:
           tar cvzf /tmp/doc.tar.gz doc
 
       - name: ✉️ Upload doc.tar.gz
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: docs
           path: |
