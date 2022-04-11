@@ -96,7 +96,7 @@ jobs:
 
       - name: Upload zshrc and zinit files (linux/macOS)
         if: "!startsWith(matrix.os, 'windows')"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: zinit-config-${{ matrix.os }}-${{ matrix.annexes }}
           path: |
@@ -105,7 +105,7 @@ jobs:
 
       - name: Upload zshrc and zinit files (windows)
         if: startsWith(matrix.os, 'windows')
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: zinit-config-${{ matrix.os }}-${{ matrix.annexes }}
           # cygpath -w ~ returns "C:\tools\cygwin\home\runneradmin"
