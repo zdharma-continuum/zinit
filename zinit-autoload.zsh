@@ -714,11 +714,13 @@ ZINIT[EXTENDED_GLOB]=""
     [[ $1 = -q ]] && +zinit-message "{info2}Updating Zinit{…}{rst}"
 
     local nl=$'\n' escape=$'\x1b['
+    local current_branch=$(builtin pushd $ZINIT[BIN_DIR] > /dev/null && git branch --show-current && popd > /dev/null)
     local -a lines
-    (   builtin cd -q "$ZINIT[BIN_DIR]" && \
-        command git checkout main &>/dev/null && \
-        command git fetch --quiet && \
-            lines=( ${(f)"$(command git --no-pager log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
+    (
+        builtin cd -q "$ZINIT[BIN_DIR]" \
+        && +zinit-message -n "{pre}[self-update]{msg2} fetching changes for {msg2}$current_branch$nl{cmd}" \
+        && command git fetch --quiet \
+        && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
         if (( ${#lines} > 0 )); then
             # Remove the (origin/main ...) segments, to expect only tags to appear
             lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
@@ -727,8 +729,9 @@ ZINIT[EXTENDED_GLOB]=""
             # If there's no ref-name, 2 consecutive spaces occur - fix this
             lines=( "${lines[@]/(#b)[[:space:]]#\|\|[[:space:]]#(*)(#e)/|| ${match[1]}}" )
             lines=( "${lines[@]/(#b)$escape([0-9]##)m[[:space:]]##${escape}m/$escape${match[1]}m${escape}m}" )
-            # Replace what follows "|| ..." with the same thing but with no newlines,
-            # and also only first 10 words (the (w)-flag enables word-indexing)
+            # Replace what follows "|| ..." with the same thing but with no
+            # newlines, and also only first 10 words (the (w)-flag enables
+            # word-indexing)
             lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
             builtin print -rl -- "${lines[@]}" | .zinit-pager
             builtin print
@@ -744,17 +747,12 @@ ZINIT[EXTENDED_GLOB]=""
     }
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
-    zcompile -U $ZINIT[BIN_DIR]/zinit-side.zsh
-    zcompile -U $ZINIT[BIN_DIR]/zinit-install.zsh
-    zcompile -U $ZINIT[BIN_DIR]/zinit-autoload.zsh
-    zcompile -U $ZINIT[BIN_DIR]/zinit-additional.zsh
+    zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh
     zcompile -U $ZINIT[BIN_DIR]/share/git-process-output.zsh
     # Load for the current session
     [[ $1 != -q ]] && +zinit-message "Reloading Zinit for the current session{…}"
     source $ZINIT[BIN_DIR]/zinit.zsh
-    source $ZINIT[BIN_DIR]/zinit-side.zsh
-    source $ZINIT[BIN_DIR]/zinit-install.zsh
-    source $ZINIT[BIN_DIR]/zinit-autoload.zsh
+    zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload'}.zsh
     # Read and remember the new modification timestamps
     local file
     for file ( "" -side -install -autoload ) {
