@@ -1,0 +1,15 @@
+# Add 'zinit` label to any change in a zinit file
+zinit:
+- zinit*.zsh
+# Add 'scripts` label to any change in scripts/ directory
+scripts:
+- scripts/*
+# Add 'docs` label to any change in docs/ directory
+docs:
+- docs/*
+# Add 'tests` label to any change in tests/ directory
+tests:
+- tests/*
+ci/cd:
+- .github/*
+- .github/**/*
