@@ -4,9 +4,10 @@ zinit:
 # Add 'scripts` label to any change in scripts/ directory
 scripts:
 - scripts/*
-# Add 'docs` label to any change in docs/ directory
+# Add 'docs` label to any change in doc/ directory
 docs:
 - docs/*
+- doc/**/*
 # Add 'tests` label to any change in tests/ directory
 tests:
 - tests/*
