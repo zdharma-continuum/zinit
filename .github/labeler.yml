@@ -10,3 +10,6 @@ docs:
 # Add 'tests` label to any change in tests/ directory
 tests:
 - tests/*
+ci/cd:
+- .github/*
+- .github/**/*
