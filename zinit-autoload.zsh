@@ -711,7 +711,7 @@ ZINIT[EXTENDED_GLOB]=""
     emulate -LR zsh
     setopt extendedglob typesetsilent warncreateglobal
 
-    [[ $1 = -q ]] && +zinit-message -n "{info2}[self-update]{info2}{msg2} Updating Zinit repository{msg2}" \
+    [[ $1 = -q ]] && +zinit-message -n "{pre}[self-update]{msg2} Updating Zinit repository{msg2}" \
 
     local nl=$'\n' escape=$'\x1b['
     local current_branch=$(builtin pushd $ZINIT[BIN_DIR] > /dev/null && git branch --show-current && popd > /dev/null)
@@ -743,7 +743,7 @@ ZINIT[EXTENDED_GLOB]=""
         }
     )
     if [[ $1 != -q ]] {
-        +zinit-message -n "{pre}[self-update]{msg2} compiling zinit (zinit){msg2}"
+        +zinit-message -n "{pre}[self-update]{msg2} compiling zinit via {msg2}zcompile{cmd}"
     }
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
