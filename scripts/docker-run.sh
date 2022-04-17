@@ -4,14 +4,12 @@ parent_process() {
   local ppid pcmd
   ppid="$(ps -o ppid= -p "$$" | awk '{ print $1 }')"
 
-  if [[ -z "$ppid" ]]
-  then
+  if [[ -z $ppid ]]; then
     echo "Failed to determine parent process" >&2
     return 1
   fi
 
-  if pcmd="$(ps -o cmd= -p "$ppid")"
-  then
+  if pcmd="$(ps -o cmd= -p "$ppid")"; then
     echo "$pcmd"
     return
   fi
@@ -20,13 +18,11 @@ parent_process() {
 }
 
 running_interactively() {
-  if [[ -n "$CI" ]]
-  then
+  if [[ -n $CI ]]; then
     return 1
   fi
 
-  if ! [[ -t 1 ]]
-  then
+  if ! [[ -t 1 ]]; then
     # return false if running non-interactively, unless run with zunit
     parent_process | grep -q zunit
   fi
@@ -35,8 +31,7 @@ running_interactively() {
 create_init_config_file() {
   local tempfile
 
-  if [[ -z "$*" ]]
-  then
+  if [[ -z $* ]]; then
     return 1
   fi
 
@@ -57,23 +52,19 @@ run() {
 
   local cruntime=docker
   local sudo_cmd
-  if [[ -z "$CI" ]] && command -v podman >/dev/null 2>&1
-  then
+  if [[ -z $CI ]] && command -v podman > /dev/null 2>&1; then
     cruntime=podman
     # rootless containers are a PITA
     # https://www.tutorialworks.com/podman-rootless-volumes/
     sudo_cmd=sudo
   fi
 
-  if running_interactively
-  then
+  if running_interactively; then
     args+=(--tty=true --interactive=true)
   fi
 
-  if [[ -n "$init_config" ]]
-  then
-    if [[ -r "$init_config" ]]
-    then
+  if [[ -n $init_config ]]; then
+    if [[ -r $init_config ]]; then
       args+=(--volume "${init_config}:/init.zsh")
     else
       echo "❌ Init config file is not readable" >&2
@@ -81,34 +72,27 @@ run() {
     fi
   fi
 
-  if [[ -n "$CONTAINER_WORKDIR" ]]
-  then
+  if [[ -n $CONTAINER_WORKDIR ]]; then
     args+=(--workdir "$CONTAINER_WORKDIR")
   fi
 
   # Inherit TERM
-  if [[ -n "$TERM" ]]
-  then
+  if [[ -n $TERM ]]; then
     args+=(--env "TERM=${TERM}")
   fi
 
-  if [[ -n "${CONTAINER_ENV[*]}" ]]
-  then
+  if [[ -n ${CONTAINER_ENV[*]} ]]; then
     local e
-    for e in "${CONTAINER_ENV[@]}"
-    do
+    for e in "${CONTAINER_ENV[@]}"; do
       args+=(--env "${e}")
     done
   fi
 
-  if [[ -n "${CONTAINER_VOLUMES[*]}" ]]
-  then
+  if [[ -n ${CONTAINER_VOLUMES[*]} ]]; then
     local vol
-    for vol in "${CONTAINER_VOLUMES[@]}"
-    do
+    for vol in "${CONTAINER_VOLUMES[@]}"; do
       # shellcheck disable=2076
-      if [[ ! " ${args[*]} " =~ " --volume ${vol} " ]]
-      then
+      if [[ ! " ${args[*]} " =~ " --volume ${vol} " ]]; then
         args+=(--volume "${vol}")
       fi
     done
@@ -116,15 +100,13 @@ run() {
 
   local -a cmd=("$@")
 
-  if [[ -n "$WRAP_CMD" ]]
-  then
+  if [[ -n $WRAP_CMD ]]; then
     local zsh_opts="ilsc"
-    [[ -n "$ZSH_DEBUG" ]] && zsh_opts="x${zsh_opts}"
+    [[ -n $ZSH_DEBUG ]] && zsh_opts="x${zsh_opts}"
     cmd=(zsh "-${zsh_opts}" "${cmd[*]}")
   fi
 
-  if [[ -n "$DEBUG" ]]
-  then
+  if [[ -n $DEBUG ]]; then
     {
       # The @Q below is necessary to keep the quotes intact
       # https://stackoverflow.com/a/12985353/1872036
@@ -136,8 +118,7 @@ run() {
   ${sudo_cmd} "${cruntime}" run "${args[@]}" "${image}:${tag}" "${cmd[@]}"
 }
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-then
+if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
   CONTAINER_ENV=()
   CONTAINER_IMAGE="${CONTAINER_IMAGE:-ghcr.io/zdharma-continuum/zinit}"
   CONTAINER_TAG="${CONTAINER_TAG:-latest}"
@@ -149,32 +130,30 @@ then
   WRAP_CMD="${WRAP_CMD:-}"
   ZSH_DEBUG="${ZSH_DEBUG:-}"
 
-  while [[ -n "$*" ]]
-  do
+  while [[ -n $* ]]; do
     case "$1" in
       # Fetch init config from clipboard (Linux only)
-      --xsel|-b)
+      --xsel | -b)
         INIT_CONFIG_VAL="$(xsel -b)"
         shift
         ;;
-      -c|--config|--init-config|--init)
+      -c | --config | --init-config | --init)
         INIT_CONFIG_VAL="$2"
         shift 2
         ;;
-      -f|--config-file|--init-config-file|--file)
-        if ! [[ -r "$2" ]]
-        then
+      -f | --config-file | --init-config-file | --file)
+        if ! [[ -r $2 ]]; then
           echo "Unable to read from file: $2" >&2
           exit 2
         fi
         INIT_CONFIG_VAL="$(cat "$2")"
         shift 2
         ;;
-      -d|--debug)
+      -d | --debug)
         DEBUG=1
         shift
         ;;
-      -D|--dev|--devel)
+      -D | --dev | --devel)
         DEVEL=1
         shift
         ;;
@@ -182,36 +161,36 @@ then
         PRESET=docs
         shift
         ;;
-      -i|--image)
+      -i | --image)
         CONTAINER_IMAGE="$2"
         shift 2
         ;;
-      -t|--tag)
+      -t | --tag)
         CONTAINER_TAG="$2"
         shift 2
         ;;
       # Additional container env vars
-      -e|--env|--environment)
+      -e | --env | --environment)
         CONTAINER_ENV+=("$2")
         shift 2
         ;;
       # Additional container volumes
-      -v|--volume)
+      -v | --volume)
         CONTAINER_VOLUMES+=("$2")
         shift 2
         ;;
       # Whether to wrap the command in zsh -silc
-      -w|--wrap)
+      -w | --wrap)
         WRAP_CMD=1
         shift
         ;;
-      --tests|--zunit|-z)
+      --tests | --zunit | -z)
         PRESET=zunit
         shift
         ;;
       # Whether to enable debug tracing of zinit (zsh -x)
       # Only applies to wrapped commands (--w|--wrap)
-      --zsh-debug|-x|-Z)
+      --zsh-debug | -x | -Z)
         ZSH_DEBUG=1
         shift
         ;;
@@ -221,7 +200,10 @@ then
     esac
   done
 
-  GIT_ROOT_DIR="$(cd "$(dirname "$0")/.." >/dev/null 2>&1; pwd -P)" || exit 9
+  GIT_ROOT_DIR="$(
+    cd "$(dirname "$0")/.." > /dev/null 2>&1
+    pwd -P
+  )" || exit 9
   CMD=("$@")
 
   case "$PRESET" in
@@ -259,13 +241,11 @@ then
       ;;
   esac
 
-  if INIT_CONFIG="$(create_init_config_file "$INIT_CONFIG_VAL")"
-  then
+  if INIT_CONFIG="$(create_init_config_file "$INIT_CONFIG_VAL")"; then
     trap 'rm -vf $INIT_CONFIG' EXIT INT
   fi
 
-  if [[ -n "$DEVEL" ]]
-  then
+  if [[ -n $DEVEL ]]; then
     # Mount root of the repo to /src
     CONTAINER_VOLUMES+=(
       "${GIT_ROOT_DIR}:/src"

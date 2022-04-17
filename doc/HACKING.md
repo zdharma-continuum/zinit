@@ -3,7 +3,7 @@
 ## README: Update the table of content
 
 1. Install [doctoc](https://github.com/thlorenz/doctoc)
-2. To update the TOC run the following command:
+1. To update the TOC run the following command:
 
 ```zsh
 doctoc --github README.md
@@ -11,26 +11,24 @@ doctoc --github README.md
 
 ## Update asciidoc and/or zshelldoc
 
-1. Make sure you have [docker](https://www.docker.com/) or
-[podman](https://podman.io/) installed.
-2. From the root of the repo, run:
+1. Make sure you have [docker](https://www.docker.com/) or [podman](https://podman.io/) installed.
+1. From the root of the repo, run:
 
 ```zsh
 make doc-container
 ```
 
-If for some reason you want to build the zshelldocs or the PDF manually, you'll
-need:
+If for some reason you want to build the zshelldocs or the PDF manually, you'll need:
 
 1. Patience, zsd is very finicky about locales. You have been warned.
-2. [zshelldoc (zsd)](https://github.com/zdharma-continuum/zshelldoc)
-3. [asciidoc](https://asciidoc.org/)
-4. `make doc`
+1. [zshelldoc (zsd)](https://github.com/zdharma-continuum/zshelldoc)
+1. [asciidoc](https://asciidoc.org/)
+1. `make doc`
 
 ## Generate the manpage (doc/zinit.1)
 
 1. Install [pandoc](https://pandoc.org/)
-2. From the root of the repo run:
+1. From the root of the repo run:
 
 ```zsh
 pandoc --standalone --to man README.md -o doc/zinit.1
@@ -39,17 +37,18 @@ pandoc --standalone --to man README.md -o doc/zinit.1
 ## Updating the gh-pages (zdharma-continuum.github.io)
 
 1. Check out the [documentation branch](https://github.com/zdharma-continuum/zinit/tree/documentation)
+
 ```shell
 git fetch origin documentation
 git checkout documentation
 ```
+
 2. Do your modifications and push your changes
-3. Keep an eye on [the CI logs](https://github.com/zdharma-continuum/zinit/actions/workflows/gh-pages.yaml)
-4. If all went well you can head to https://zdharma-continuum.github.io/ to see your changes live.
+1. Keep an eye on [the CI logs](https://github.com/zdharma-continuum/zinit/actions/workflows/gh-pages.yaml)
+1. If all went well you can head to https://zdharma-continuum.github.io/ to see your changes live.
 
-**NOTE:** If you really **need** to push directly, without CI please refer to
-[the README in the documentation]https://github.com/zdharma-continuum/zinit/blob/documentation/README.md
-
+**NOTE:** If you really **need** to push directly, without CI please refer to \[the README in the
+documentation\]https://github.com/zdharma-continuum/zinit/blob/documentation/README.md
 
 # Testing
 
@@ -115,13 +114,12 @@ zunit --verbose tests/your_test.zunit
 
 ## Debugging tests
 
-If you ever need to inspect the `ZINIT[HOME_DIR]` dir, where zinit's internal
-data is stored you can do so by commenting out the `@teardown` section in your
-test. Then you can re-run said test and head over to
-`${TMPDIR:-/tmp}/zunit-zinit`. Good luck!
-
+If you ever need to inspect the `ZINIT[HOME_DIR]` dir, where zinit's internal data is stored you can do so by commenting
+out the `@teardown` section in your test. Then you can re-run said test and head over to `${TMPDIR:-/tmp}/zunit-zinit`.
+Good luck!
 
 # Misc
+
 ## Get the list of supported ices
 
 To get the list in a quick-and-dirty fashion you issue:
@@ -130,5 +128,6 @@ To get the list in a quick-and-dirty fashion you issue:
 zinit --help | tail -1
 ```
 
-See [zinit-autoload.zsh](https://github.com/zdharma-continuum/zinit/blob/2feb41cf70d2f782386bbaa6fda691e3bdc7f1ac/zinit-autoload.zsh#L3445-L3447)
+See
+[zinit-autoload.zsh](https://github.com/zdharma-continuum/zinit/blob/2feb41cf70d2f782386bbaa6fda691e3bdc7f1ac/zinit-autoload.zsh#L3445-L3447)
 for implementation details.
