@@ -1,47 +1,38 @@
-name: 👮 linting
-on: [push, pull_request, workflow_dispatch]
-jobs:
-  build-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: "📡  Check out repository code"
-        uses: actions/checkout@v3
+name: Lint
 
-      - name: "💬 Set matrix output"
-        id: set-matrix
-        run: |
-          MATRIX="$(find . -type d -name 'doc' -prune -o -type f -iname '*.zsh' -print | jq -ncR '{"include": [{"file": inputs}]}')"
-          echo "MATRIX=${MATRIX}" >&2
-          echo "::set-output name=matrix::${MATRIX}"
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
 
   lint:
+    name: Lint
     runs-on: ubuntu-latest
-    needs: build-matrix
-    strategy:
-      fail-fast: false
-      matrix: ${{ fromJSON(needs.build-matrix.outputs.matrix) }}
-
     steps:
-      - name: "📡  Check out repository code"
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: "📦 Install dependencies"
+      - name: install dependencies
         run: |
-          sudo apt install -y zsh
+          brew install shellcheck shfmt zsh
+          pip3 install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
 
-      - name: "👓 zsh -n ${{ matrix.file }}"
-        env:
-          ZSH_FILE: ${{ matrix.file }}
-        run: |
-          zsh -n "${ZSH_FILE}"
+      - name: run mdformat
+        run: find . -name '*.md' -type f -print0 | xargs -0 -n1 -P4 python3 -m mdformat --check --wrap 120
 
-      - name: "💎 zcompile ${{ matrix.file }}"
-        env:
-          ZSH_FILE: ${{ matrix.file }}
-        run: |
-          zsh -fc "zcompile ${ZSH_FILE}"
-          rc=$?
-          ls -al "${ZSH_FILE}.zwc"
-          exit "$rc"
+      - name: run shfmt
+        run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shfmt -bn -ci -d -i 2 -ln bash -s -sr
+
+      - name: run shellcheck
+        run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shellcheck
+
+      - name: "run zsh"
+        run: find . -name '*.zsh' -type f -print0 | xargs -0 -n1 -P4 zsh -n
+
+      - name: "run zcompile"
+        run: find . -name '*.zsh' -type f -exec zsh -fc "zcompile {}" \;
