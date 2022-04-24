@@ -129,8 +129,8 @@ it to get the most out of Zinit.
 
 The easiest way to install Zinit is to execute:
 
-```zsh
-sh -c "$(curl -fsSL https://git.io/zinit-install)"
+```bash
+bash -c "$(curl -fsSL https://git.io/zinit-install)"
 ```
 
 This will install Zinit in `~/.local/share/zinit/zinit.git`. `.zshrc` will be updated with three lines of code that will
@@ -146,7 +146,7 @@ zinit self-update
 
 To manually install Zinit, clone the repo to, e.g. `~/.local/share/zinit/zinit.git`:
 
-```sh
+```zsh
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 mkdir -p "$(dirname $ZINIT_HOME)"
 git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
@@ -155,7 +155,7 @@ git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 and source `zinit.zsh` from your `.zshrc` (above
 [compinit](http://zsh.sourceforge.net/Doc/Release/Completion-System.html#Initialization)):
 
-```sh
+```zsh
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 source "${ZINIT_HOME}/zinit.zsh"
 ```
@@ -446,7 +446,7 @@ zinit snippet OMZP::fd/_fd
 
 **Basic**
 
-```shell
+```zsh
 zinit snippet <URL>        # Raw Syntax with URL
 zinit snippet PZT::<PATH>  # Shorthand PZT/ (https://github.com/sorin-ionescu/prezto/tree/master/)
 zinit snippet PZTM::<PATH> # Shorthand PZT/modules/
@@ -498,7 +498,7 @@ zinit snippet PZTM::archive
 Use `zinit ice atclone"git clone <repo> <location>"` if module have external module. Like
 [completion](https://github.com/sorin-ionescu/prezto/tree/master/modules/completion):
 
-```shell
+```zsh
 zplugin ice svn blockf \ # use blockf to prevent any unnecessary additions to fpath, as zinit manages fpath
             atclone"git clone --recursive https://github.com/zsh-users/zsh-completions.git external"
 zplugin snippet PZTM::completion
