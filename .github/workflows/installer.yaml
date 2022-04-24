@@ -1,213 +1,67 @@
-name: 📦 zinit installer
-on: [push, workflow_dispatch]
+name: Installer
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  NO_INPUT: true
+  TERM: xterm
+  ZINIT_BRANCH: ${{ github.ref_name }}
+  ZINIT_COMMIT: ${{ github.sha }}
+  ZINIT_REPO: ${{ github.repository }}
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/installer.yaml
+      - scripts/**
+      - share/**
+      - zinit*.zsh
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  shellcheck:
-    name: Shellcheck
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - name: Run ShellCheck
-      uses: ludeeus/action-shellcheck@master
-      with:
-        scandir: './scripts'
 
   zinit-installer:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        annexes: ["with-annexes", "without-annexes"]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Fix crlf (windows only)
-        if: startsWith(matrix.os, 'windows')
-        run: git config --global core.autocrlf input
 
-      - name: Check out repository code
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        annexes: ["with annexes", "no annexes"]
+        os: [macos-latest, ubuntu-latest, windows-latest]
+
+    steps:
+
+      - name: check out repository
         uses: actions/checkout@v3
 
-      - name: Grab git slugs (short commit id, branch etc.)
-        uses: rlespinasse/github-slug-action@v3.x
-
-      - name: Install dependencies (ubuntu)
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl git zsh
-
-      - name: Install dependencies (macOS)
-        if: startsWith(matrix.os, 'macos')
-        run: |
-          brew install curl git zsh
-
-      - name: Install dependencies (windows)
-        if: startsWith(matrix.os, 'windows')
+      - name: windows dependencies
+        if: runner.os == 'Windows'
         uses: egor-tensin/setup-cygwin@v3
         with:
           platform: x64
           packages: curl git zsh
 
-      - name: Install zinit (linux/macOS, with annexes)
-        if: matrix.annexes == 'with-annexes' && !startsWith(matrix.os, 'windows')
-        run: |
-          export ZINIT_COMMIT="$GITHUB_SHA"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
+      - name: remove \r
+        if: runner.os == 'Windows'
+        run: sed -i 's/\r$//' scripts/*.sh
 
-          sh -x ./scripts/install.sh
+      - name: linux/macos dependencies
+        if: runner.os != 'Windows'
+        run: brew install --force curl subversion unzip xz zsh
 
-      - name: Install zinit (linux/macOS, w/o annexes)
-        if: matrix.annexes == 'without-annexes' && !startsWith(matrix.os, 'windows')
-        run: |
-          export ZINIT_COMMIT="$GITHUB_SHA"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-          export NO_ANNEXES=true
+      - name: install
+        run: ./scripts/install.sh
 
-          sh -x ./scripts/install.sh
-
-      - name: Install zinit (windows, with annexes)
-        if: matrix.annexes == 'with-annexes' && startsWith(matrix.os, 'windows')
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
-        run: |
-          export ZINIT_COMMIT="$GITHUB_SHA"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-
-          cd ${GITHUB_WORKSPACE}
-          sh -x ./scripts/install.sh
-
-      - name: Install zinit (windows, w/o annexes)
-        if: matrix.annexes == 'without-annexes' && startsWith(matrix.os, 'windows')
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
-        run: |
-          export ZINIT_COMMIT="$GITHUB_SHA"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-          export NO_ANNEXES=true
-
-          cd ${GITHUB_WORKSPACE}
-          sh -x ./scripts/install.sh
-
-      - name: Upload zshrc and zinit files (linux/macOS)
-        if: "!startsWith(matrix.os, 'windows')"
-        uses: actions/upload-artifact@v3
-        with:
-          name: zinit-config-${{ matrix.os }}-${{ matrix.annexes }}
-          path: |
-            ~/.zshrc
-            ~/.local/share/zinit
-
-      - name: Upload zshrc and zinit files (windows)
-        if: startsWith(matrix.os, 'windows')
-        uses: actions/upload-artifact@v3
-        with:
-          name: zinit-config-${{ matrix.os }}-${{ matrix.annexes }}
-          # cygpath -w ~ returns "C:\tools\cygwin\home\runneradmin"
-          # FIXME Why isn't the zinit.git/ dir not getting uploaded?
-          path: |
-            C:\tools\cygwin\home\runneradmin\.zshrc
-            C:\tools\cygwin\home\runneradmin\.local\.share\zinit\zinit.git
-
-      - name: Test zinit install (linux/macOS)
-        if: "!startsWith(matrix.os, 'windows')"
-        run: |
-          export TERM=xterm
-          zsh -silc 'zinit --help; exit $?'
-
-      - name: Test zinit install (windows)
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
-        if: startsWith(matrix.os, 'windows')
-        run: |
-          export TERM=xterm
-          zsh -silc 'zinit --help; exit $?'
-
-  # TODO: DRY!
-  # Re-using steps in GH Actions is a pain though.
-  zinit-updater:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - name: Fix crlf (windows only)
-        if: startsWith(matrix.os, 'windows')
-        run: git config --global core.autocrlf input
-
-      - name: Check out repository code
-        uses: actions/checkout@v3
-
-      - name: Grab git slugs (short commit id, branch etc.)
-        uses: rlespinasse/github-slug-action@v3.x
-
-      - name: Install dependencies (ubuntu)
-        if: startsWith(matrix.os, 'ubuntu-latest')
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y curl git zsh
-
-      - name: Install dependencies (macOS)
-        if: startsWith(matrix.os, 'macos')
-        run: |
-          brew install curl git zsh
-
-      - name: Install dependencies (windows)
-        if: startsWith(matrix.os, 'windows')
-        uses: egor-tensin/setup-cygwin@v3
-        with:
-          platform: x64
-          packages: curl git zsh
-
-      - name: Install previous zinit version (linux/macOS, ${{ github.event.before }})
-        if: "!startsWith(matrix.os, 'windows')"
-        env:
-          PREVIOUS_COMMIT: ${{ github.event.before }}
-        run: |
-          export ZINIT_COMMIT="$PREVIOUS_COMMIT"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-
-          ./scripts/install.sh
-
-      - name: Install previous zinit version (windows, ${{ github.event.before }})
-        if: startsWith(matrix.os, 'windows')
-        env:
-          PREVIOUS_COMMIT: ${{ github.event.before }}
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
-        run: |
-          export ZINIT_COMMIT="$PREVIOUS_COMMIT"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-
-          cd ${GITHUB_WORKSPACE}
-          ./scripts/install.sh
-
-      - name: Update zinit from ${{ github.event.before }} to ${{ github.sha }} (linux/macOS)
-        if: "!startsWith(matrix.os, 'windows')"
-        run: |
-          export ZINIT_COMMIT="$GITHUB_SHA"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-
-          ./scripts/install.sh
-
-      - name: Update zinit from ${{ github.event.before }} to ${{ github.sha }} (windows)
-        if: startsWith(matrix.os, 'windows')
-        shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
-        run: |
-          export ZINIT_COMMIT="$GITHUB_SHA"
-          export ZINIT_REPO="$GITHUB_REPOSITORY"
-          export ZINIT_BRANCH="$GITHUB_REF_SLUG"
-          export NO_INPUT=true
-
-          cd ${GITHUB_WORKSPACE}
-          ./scripts/install.sh
+      - name: verify install
+        run: zsh -silc 'zinit --help'

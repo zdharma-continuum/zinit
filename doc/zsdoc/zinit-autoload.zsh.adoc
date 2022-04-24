@@ -1068,7 +1068,7 @@ ____
  User-action entry point.
 ____
 
-Has 42 line(s). Calls functions:
+Has 44 line(s). Calls functions:
 
  .zinit-self-update
  |-- zinit.zsh/+zinit-message

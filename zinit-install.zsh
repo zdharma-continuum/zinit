@@ -6,7 +6,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 1
 }
 
-
 # FUNCTION: .zinit-jq-check [[[
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
@@ -1450,24 +1449,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     }
 
     local -A matchstr
+        # aarch64 '((arm|(^(amd|x86)))64|aarch64)*^*(amd|x86_64)'
     matchstr=(
-        i386    "((386|686|linux32|x86*(#e))~*x86_64*)"
-        i686    "((386|686|linux32|x86*(#e))~*x86_64*)"
-        x86_64  "(x86_64|amd64|intel|linux64)"
-        amd64   "(x86_64|amd64|intel|linux64)"
-        aarch64 "aarch64"
-        aarch64-2 "arm"
-        linux   "(linux|linux-gnu)"
-        darwin  "(darwin|mac|macos|osx|os-x)"
-        cygwin  "(windows|cygwin|[-_]win|win64|win32)"
-        windows "(windows|cygwin|[-_]win|win64|win32)"
-        msys "(windows|msys|cygwin|[-_]win|win64|win32)"
-        armv7l  "(arm7|armv7)"
-        armv7l-2 "arm7"
-        armv6l  "(arm6|armv6)"
-        armv6l-2 "arm"
-        armv5l  "(arm5|armv5)"
-        armv5l-2 "arm"
+        amd64 '((amd64|x86_64|)~*(aarch64|arm[v]?[0-9]?)*)'
+        android '(apk|android)'
+        arm64 '(arm64|aarch64|arm[v]?8)'
+        aarch64 '(arm64|aarch64|arm[v]?8)'
+        armv5 'armv?5'
+        armv6 'armv?6'
+        armv7 'armv?7'
+        cygwin '(cyg|-|_|)win(dows|32|64|))'
+        darwin '*((#s)|/)*(darwin*|osx|mac(os|))*((#e)|/)~*(ios|386)'
+        linux-gnu '*((#s)|/)*linux(([-_](musl|gnu))?|musl|gnu|)*((#e)|/)*'
+        linux-musl '*((#s)|/)*linux(([-_](musl))?|musl|)*((#e)|/)*'
+        msys    '(cyg|-|_|)win(dows|32|64|))'
+        windows '(cyg|-|_|)win(dows|32|64|))'
+        x86_64 '*((amd64|x86_64)|)*~*(aarch64|arm64|armv[0-9]|[-_]arm)*'
     )
 
     local -a list init_list
@@ -1489,38 +1486,58 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             list=( ${(M)list[@]:#(#i)*/$~bpick} )
         }
 
-        if (( $#list > 1 )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[$MACHTYPE]:-${MACHTYPE#(#i)(i|amd)}}*} )
+        list=( ${list[@]:#*(a(ccoutrements|ppimage)|s(ha256sum|ig)|manifest|sh|(sha1|md5)sums|sha256|md5|pkg|txt)(#e)} )
+
+        # filter .deb packages if dpkg-deb present
+        if (( $#list < 1 && ${+commands[dpkg-deb]} == 1 )) {
+            list2=( ${(M)list[@]:#*\.deb*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        } else {
+            list2=( ${list[@]:#*\.deb*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
-        if (( ${#list} > 1 && ${#matchstr[${MACHTYPE}-2]} )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}-2]:-${MACHTYPE#(#i)(i|amd)}}*} )
+        # filter .rpm packages if redhat package manager present
+        if (( $#list < 1 && ${+commands[rpm]} == 1 )) {
+            list2=( ${(M)list[@]:#*\.rpm*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        } else {
+            list2=( ${list[@]:#*\.rpm*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        # filter .apk packages if anbox present
+        if (( $#list > 1 && ${+commands[anbox]} == 1 )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[android]}*} )
+        } else {
+            list2=( ${list[@]:#(#i)*${~matchstr[android]}*} )
+        }
+        (( $#list2 > 0 )) && list=( ${list2[@]} )
+
+        # filter urls by os (e.g., darwin, linux, windows)
+        if (( $#list > 1 )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
         if (( $#list > 1 )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[$CPUTYPE]:-${CPUTYPE#(#i)(i|amd)}}*} )
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
         if (( $#list > 1 )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[${${OSTYPE%(#i)-(gnu|musl)}%%(-|)[0-9.]##}]:-${${OSTYPE%(#i)-(gnu|musl)}%%(-|)[0-9.]##}}*} )
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} )
+            (( $#list2 > 0 )) && list=( ${list2[@]} )
+        }
+
+        # filter urls by os (e.g., darwin, linux, windows)
+        if (( $#list > 1 )) {
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
         if (( $#list > 1 )) {
             list2=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        }
-
-        if (( $#list > 1 && $+commands[dpkg-deb] )) {
-            list2=( ${list[@]:#*.deb} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        }
-
-        if (( $#list > 1 && $+commands[rpm] )) {
-            list2=( ${list[@]:#*.rpm} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
@@ -1860,7 +1877,7 @@ ziextract() {
     return 0
 }
 # ]]]
-# FUNCTION: .zinit-extract() [[[
+# FUNCTION: .zinit-extract [[[
 .zinit-extract() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent
@@ -1996,7 +2013,7 @@ zpextract() { ziextract "$@"; }
     REPLY=$outfile
 }
 # ]]]
-# FUNCTION zicp [[[
+# FUNCTION: zicp [[[
 zicp() {
     emulate -LR zsh
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes

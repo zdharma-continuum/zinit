@@ -1,0 +1,7 @@
+allow_risky: false
+directories:
+  tests: tests
+  output: tests/_output
+  support: tests/_support
+fail_fast: true
+verbose: true

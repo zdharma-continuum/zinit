@@ -1,41 +1,32 @@
 #!/usr/bin/env zunit
 
-@setup {
-  load setup
-  setup
-}
-
-@teardown {
-  load teardown
-  teardown
-}
-
-@test 'zinit fzf installation' {
-  run ./scripts/docker-run.sh --wrap --debug --zunit \
-    zinit lucid as="program" from="gh-r" for junegunn/fzf
-
+@test 'nnn' {
+  run zinit light-mode for jarun/nnn
+  zinit cd jarun/nnn
+  run PREFIX=$ZPFX make install
   assert $state equals 0
-  assert "$output" contains "Downloading"
-  assert "$output" contains "Successfully extracted and assigned +x chmod"
-
-  local artifact="${PLUGINS_DIR}/junegunn---fzf/fzf"
-  assert "$artifact" is_file
-  assert "$artifact" is_executable
-}
-
-@test 'zinit direnv installation' {
-  run ./scripts/docker-run.sh --wrap --debug --zunit \
-    'zinit light-mode as"program" \
-      atclone"go install github.com/cpuguy83/go-md2man/v2@latest" \
-      make for @direnv/direnv'
-
+  local nnn="$ZPFX/bin/nnn"
+  assert "$nnn" is_executable
+  $nnn -V
   assert $state equals 0
-  assert "$output" contains "Downloading"
-  assert "$output" contains "go: downloading github.com"
-
-  local artifact="${PLUGINS_DIR}/direnv---direnv/direnv"
-  assert "$artifact" is_file
-  assert "$artifact" is_executable
+}
+# @test 'zsh_bin' {
+#   run zinit as'null' sbin'bin/zsh' for @romkatv/zsh-bin
+#   assert $state equals 0
+#   local zsh_static="$ZPFX/bin/zsh"
+#   assert "$zsh_static" is_executable
+#   $zsh_static --help
+#   assert $state equals 0
+# }
+@test 'pipes' {
+  run zinit light-mode for @pipeseroni/pipes.sh
+  zinit cd pipeseroni/pipes.sh
+  run make PREFIX=$ZPFX install
+  assert $state equals 0
+  local pipes="$ZPFX/bin/pipes.sh"
+  assert "$pipes" is_executable
+  $pipes -v
+  assert $state equals 0
 }
 
-# vim: set ft=zsh et ts=2 sw=2 : #
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker

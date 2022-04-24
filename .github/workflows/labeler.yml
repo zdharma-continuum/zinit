@@ -5,7 +5,7 @@ name: Labeler
 on: [pull_request]
 
 jobs:
-  label:
+  label-pull-requests:
 
     runs-on: ubuntu-latest
     permissions:

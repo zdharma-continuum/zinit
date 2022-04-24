@@ -718,7 +718,7 @@ ZINIT[EXTENDED_GLOB]=""
     local -a lines
     (
         builtin cd -q "$ZINIT[BIN_DIR]" \
-        && +zinit-message -n "{pre}[self-update]{msg2} fetching latest changes from {msg2}$current_branch$nl{cmd}" \
+        && +zinit-message -n "{pre}[self-update]{info} fetching latest changes from {cmd}$current_branch$nl{rst}" \
         && command git fetch --quiet \
         && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
         if (( ${#lines} > 0 )); then
@@ -743,14 +743,16 @@ ZINIT[EXTENDED_GLOB]=""
         }
     )
     if [[ $1 != -q ]] {
-        +zinit-message -n "{pre}[self-update]{msg2} compiling zinit via {msg2}zcompile{cmd}"
+        +zinit-message "{pre}[self-update]{info} compiling zinit via {cmd}zcompile{rst}"
     }
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
     zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh
     zcompile -U $ZINIT[BIN_DIR]/share/git-process-output.zsh
     # Load for the current session
-    [[ $1 != -q ]] && +zinit-message -n "{pre}[self-update]{msg2} Reloading Zinit for the current session{msg2}"
+    [[ $1 != -q ]] && +zinit-message "{pre}[self-update]{info} Reloading Zinit for the current session{rst}"
+
+    +zinit-message "{pre}self-update: {msg2}Resetting the repository with command:{rst} ${ICE[reset]:-git reset --hard HEAD} {…}"
     source $ZINIT[BIN_DIR]/zinit.zsh
     zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload'}.zsh
     # Read and remember the new modification timestamps
