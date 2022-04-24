@@ -1,0 +1,42 @@
+name: Documentation
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+
+  zshelldoc:
+
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Setup ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+
+      - name: Install asciidoctor-pdf
+        run: gem install asciidoctor-pdf
+
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate zsd
+        run: make doc-container
+
+      - name: Check if the zsd docs need to be updated
+        run: |
+          if git --no-pager diff --exit-code; then
+            echo "Zinit zshelldocs are up to date"
+          else
+            echo "Zinit zshelldocs are out-of-date, regenerate via 'make doc'"
+            exit 1
+          fi

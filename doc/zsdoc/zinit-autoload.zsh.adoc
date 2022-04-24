@@ -349,7 +349,6 @@ Has 23 line(s). Calls functions:
 Called by:
 
  .zinit-unload
- zinit-additional.zsh/.zinit-clear-debug-report
 
 .zinit-compile-uncompile-all
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -866,7 +865,7 @@ ____
  FUNCTION: .zinit-ls [[[
 ____
 
-Has 19 line(s). Doesn't call other functions.
+Has 20 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
@@ -1350,7 +1349,6 @@ ____
 Has 394 line(s). Calls functions:
 
  .zinit-unload
- |-- zinit-additional.zsh/.zinit-clear-debug-report
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
@@ -1358,7 +1356,6 @@ Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, 
 
 Called by:
 
- zinit-additional.zsh/.zinit-debug-unload
  zinit.zsh/.zinit-run-task
  zinit.zsh/zinit
 
