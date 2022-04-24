@@ -1,5 +1,7 @@
 name: Report a bug
-description: Report a bug that isn't caused by Zinit. If unsure, use this form
+description: Report a bug or issue with Zinit.
+labels: ["bug"]
+title: "[bug]: "
 body:
 
   - type: markdown

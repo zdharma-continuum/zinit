@@ -1,6 +1,7 @@
 name: Feature request
 description: Suggest a feature for Zinit
-labels: ["Feature"]
+labels: ["feature"]
+title: "[feat]: "
 body:
   - type: markdown
     attributes:
