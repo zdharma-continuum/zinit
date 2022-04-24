@@ -1,53 +1,80 @@
-name: "🐞 Bug report"
-description: File a bug report
-labels: ["🐞 bug", "🎲 triage"]
-title: "🐞 bug: "
+name: Report a bug
+description: Report a bug that isn't caused by Zinit. If unsure, use this form
 body:
-  - type: textarea
-    id: description
-    attributes:
-      label: Issue description
-      description: What went wrong?
-    validations:
-      required: true
 
-  - type: textarea
-    id: zinit-config
-    validations:
-      required: true
+  - type: markdown
     attributes:
-      label: zinit config
-      description: The ices you used
       value: |
-        ```zsh
-        zinit \
-          null \
-          atclone'true' \
-          for zdharma_continuum/null
-        ```
+        ## Self Check
+        - Look for similar errors in existing [GitHub Issues](https://github.com/zdharma-continuum/zinit/issues?q=is%3Aissue) (open or closed).
+        - Try reaching out on the [Gitter server](https://gitter.im/zdharma-continuum/community/) for help.
 
-  - type: input
-    id: zinit-version
+  - type: textarea
     validations:
       required: true
     attributes:
-      label: 'zinit version or commit ID'
-      description: '`git -C $ZINIT[BIN_DIR] rev-list --max-count=1 HEAD`'
-      placeholder: "7cd8768de45fb7e1f98bbe90a961674b38fa247d"
+      label: Describe the bug
+      description: A clear description of what the bug is.
 
-  - type: input
-    id: zsh-version
+  - type: textarea
     validations:
       required: true
     attributes:
-      label: zsh version
-      description: "ZSH version you're currently using: `echo $ZSH_VERSION`"
-      placeholder: "5.8"
+      label: Steps to reproduce
+      description: |
+        Steps to reproduce the problem.
+      placeholder: |
+        For example:
+        1. Enable plugin '...'
+        2. Run command '...' or try to complete command '...'
+        3. See error
 
-  - type: input
-    id: host-info
+  - type: textarea
     validations:
       required: true
     attributes:
-      label: host info
-      description: "`typeset -m '*TYPE'; uname --kernel-release; grep -E '^ID=|^VERSION=' /etc/os-release 2>/dev/null`"
+      label: Expected behavior
+      description: A brief description of what should happen.
+
+  - type: textarea
+    attributes:
+      label: Screenshots and recordings
+      description: |
+        If applicable, add screenshots to help explain your problem. You can also record an asciinema session: https://asciinema.org/
+
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: OS / Linux distribution
+      placeholder: |
+        Add output of the following command:
+        `echo "$OSTYPE $VENDOR $MACHTYPE $CPUTYPE $(uname -m -p)`
+
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: Zsh version
+      description: Run `echo $ZSH_VERSION` to check.
+      placeholder: "5.6"
+
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: Terminal emulator
+      placeholder: iTerm2, GNOME Terminal, Terminal.app...
+
+  - type: dropdown
+    attributes:
+      label: If using WSL on Windows, which version of WSL
+      description: Run `wsl -l -v` to check.
+      options:
+        - WSL1
+        - WSL2
+
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here. This can be themes, plugins, custom settings...

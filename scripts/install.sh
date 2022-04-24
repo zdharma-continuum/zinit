@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 { # Colors
   COLOR_RESET='[0m'
@@ -207,7 +207,7 @@ edit_zshrc() {
 
   if [ $rc_update -eq 1 ]; then
     echo_info "Updating ${ZSHRC} (10 lines of code, at the bottom)"
-    zinit_home_escaped="$(echo "${ZINIT_HOME}" | sed "s|$HOME|\$HOME|")"
+    zinit_home_escaped=${ZINIT_HOME//$HOME/\$HOME}
     command cat <<- EOF >> "$ZSHRC"
 
 ### Added by Zinit's installer
