@@ -1,0 +1,166 @@
+zinit-additional.zsh(1)
+=======================
+:compat-mode!:
+
+NAME
+----
+zinit-additional.zsh - a shell script
+
+SYNOPSIS
+--------
+Documentation automatically generated with `zshelldoc'
+
+FUNCTIONS
+---------
+
+ .zinit-clear-debug-report
+ .zinit-debug-start
+ .zinit-debug-stop
+ .zinit-debug-unload
+ .zinit-service
+ .zinit-wrap-track-functions
+ :zinit-tmp-subst-source
+
+DETAILS
+-------
+
+Script Body
+~~~~~~~~~~~
+
+Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
+
+.zinit-clear-debug-report
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-clear-debug-report [[[
+ Forgets dtrace repport gathered up to this moment.
+____
+
+Has 1 line(s). Calls functions:
+
+ .zinit-clear-debug-report
+ `-- zinit-autoload.zsh/.zinit-clear-report-for
+
+Called by:
+
+ zinit-autoload.zsh/.zinit-unload
+ zinit.zsh/zinit
+
+.zinit-debug-start
+~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-debug-start [[[
+ Starts Dtrace, i.e. session tracking for changes in Zsh state.
+____
+
+Has 9 line(s). Calls functions:
+
+ .zinit-debug-start
+ |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/.zinit-diff
+ `-- zinit.zsh/.zinit-tmp-subst-on
+
+Called by:
+
+ zinit.zsh/zinit
+
+.zinit-debug-stop
+~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-debug-stop [[[
+ Stops Dtrace, i.e. session tracking for changes in Zsh state.
+____
+
+Has 3 line(s). Calls functions:
+
+ .zinit-debug-stop
+ |-- zinit.zsh/.zinit-diff
+ `-- zinit.zsh/.zinit-tmp-subst-off
+
+Called by:
+
+ zinit.zsh/zinit
+
+.zinit-debug-unload
+~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-debug-unload [[[
+ Reverts changes detected by dtrace run.
+____
+
+Has 6 line(s). Calls functions:
+
+ .zinit-debug-unload
+ |-- zinit-autoload.zsh/.zinit-unload
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _source_
+
+Called by:
+
+ zinit.zsh/zinit
+
+.zinit-service
+~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: .zinit-service [[[
+ Handles given service, i.e. obtains lock, runs it, or waits if no lock
+ 
+ $1 - type "p" or "s" (plugin or snippet)
+ $2 - mode - for plugin (light or load)
+ $3 - id - URL or plugin ID or alias name (from id-as'')
+____
+
+Has 33 line(s). Calls functions:
+
+ .zinit-service
+ |-- zinit.zsh/.zinit-load
+ `-- zinit.zsh/.zinit-load-snippet
+
+Uses feature(s): _kill_, _read_, _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+.zinit-wrap-track-functions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ FUNCTION: .zinit-wrap-track-functions [[[
+____
+
+Has 19 line(s). Doesn't call other functions.
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+:zinit-tmp-subst-source
+~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: :zinit-tmp-subst-source [[[
+____
+
+Has 25 line(s). Calls functions:
+
+ :zinit-tmp-subst-source
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+

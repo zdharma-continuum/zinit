@@ -13,7 +13,6 @@ parent_process() {
     echo "$pcmd"
     return
   fi
-
   return 1
 }
 
@@ -200,10 +199,7 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
     esac
   done
 
-  GIT_ROOT_DIR="$(
-    cd "$(dirname "$0")/.." > /dev/null 2>&1
-    pwd -P
-  )" || exit 9
+  GIT_ROOT_DIR="$(git rev-parse --show-toplevel)"
   CMD=("$@")
 
   case "$PRESET" in

@@ -147,6 +147,9 @@ Called by:
  :zinit-tmp-subst-autoload
  Script-Body
  zinit
+ zinit-additional.zsh/.zinit-debug-start
+ zinit-additional.zsh/.zinit-debug-unload
+ zinit-additional.zsh/:zinit-tmp-subst-source
  zinit-autoload.zsh/.zinit-build-module
  zinit-autoload.zsh/.zinit-cd
  zinit-autoload.zsh/.zinit-self-update
@@ -381,6 +384,8 @@ Has 4 line(s). Calls functions:
 Called by:
 
  .zinit-load-plugin
+ zinit-additional.zsh/.zinit-debug-start
+ zinit-additional.zsh/.zinit-debug-stop
 
 .zinit-diff-env
 ~~~~~~~~~~~~~~~
@@ -639,6 +644,7 @@ Called by:
 
  .zinit-load-object
  .zinit-run-task
+ zinit-additional.zsh/.zinit-service
 
 .zinit-load-ices
 ~~~~~~~~~~~~~~~~
@@ -727,6 +733,7 @@ Called by:
  .zinit-load
  .zinit-run-task
  pmodload
+ zinit-additional.zsh/.zinit-service
 
 .zinit-main-message-formatter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -952,6 +959,7 @@ Uses feature(s): _setopt_, _unfunction_
 Called by:
 
  .zinit-load-plugin
+ zinit-additional.zsh/.zinit-debug-stop
 
 .zinit-tmp-subst-on
 ~~~~~~~~~~~~~~~~~~~
@@ -972,6 +980,7 @@ Uses feature(s): _source_
 Called by:
 
  .zinit-load-plugin
+ zinit-additional.zsh/.zinit-debug-start
 
 .zinit-util-shands-path
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -1387,6 +1396,10 @@ Has 560 line(s). Calls functions:
  |-- +zinit-prehelp-usage-message
  |   `-- +zinit-message
  |-- compinit
+ |-- zinit-additional.zsh/.zinit-clear-debug-report
+ |-- zinit-additional.zsh/.zinit-debug-start
+ |-- zinit-additional.zsh/.zinit-debug-stop
+ |-- zinit-additional.zsh/.zinit-debug-unload
  |-- zinit-autoload.zsh/.zinit-cdisable
  |-- zinit-autoload.zsh/.zinit-cenable
  |-- zinit-autoload.zsh/.zinit-clear-completions
@@ -1476,6 +1489,10 @@ Has 1 line(s). Calls functions:
      |-- +zinit-prehelp-usage-message
      |   `-- +zinit-message
      |-- compinit
+     |-- zinit-additional.zsh/.zinit-clear-debug-report
+     |-- zinit-additional.zsh/.zinit-debug-start
+     |-- zinit-additional.zsh/.zinit-debug-stop
+     |-- zinit-additional.zsh/.zinit-debug-unload
      |-- zinit-autoload.zsh/.zinit-cdisable
      |-- zinit-autoload.zsh/.zinit-cenable
      |-- zinit-autoload.zsh/.zinit-clear-completions
@@ -1551,7 +1568,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
