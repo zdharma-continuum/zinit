@@ -1442,8 +1442,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         # aarch64 '((arm|(^(amd|x86)))64|aarch64)*^*(amd|x86_64)'
     matchstr=(
       android '(apk|android)'
-      amd64  '*((amd64|x86_64|[-_i]386)|)*~*(aarch64|arm64|armv[0-9]|[-_]arm)*'
-      x86_64 '*((amd64|x86_64|[-_i]386)|)*~*(aarch64|arm64|armv[0-9]|[-_]arm)*'
+      amd64  '*((amd64|x86_64|i386)|)*~*(aarch64|arm64|armv[0-9]|[-_]arm|i686)*'
+      x86_64 '*((amd64|x86_64|i386)|)*~*(aarch64|arm64|armv[0-9]|[-_]arm|i686)*'
       darwin '*((#s)|/)*(darwin*|osx|mac(os|))*((#e)|/)~*(ios|386)'
       linux-gnu  '*((#s)|/)*linux(([-_](musl|gnu))?|musl|gnu|)*((#e)|/)*'
       linux-musl '*((#s)|/)*linux(([-_](musl))?|musl|)*((#e)|/)*'

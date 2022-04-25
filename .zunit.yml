@@ -4,4 +4,4 @@ directories:
   output: tests/_output
   support: tests/_support
 fail_fast: true
-verbose: true
+verbose: false
