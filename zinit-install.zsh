@@ -1454,7 +1454,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         linux-musl '*((#s)|/)*linux(([-_](musl))?|musl|)*((#e)|/)*'
         msys    '(cyg|-|_|)win(dows|32|64|))'
         windows '(cyg|-|_|)win(dows|32|64|))'
-        x86_64 '*((amd64|x86_64)|)*~*(i686|aarch64|arm64|armv[0-9]|[-_]arm)*'
+        x86_64 '*((amd64|x86_64)|)*~*(i686|aarch64|arm64|armv[0-9]|[-_]arm|[-_]powerpc|riscv)*'
     )
 
     local -a list init_list
