@@ -814,7 +814,7 @@ ____
  User-action entry point.
 ____
 
-Has 67 line(s). Doesn't call other functions.
+Has 66 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -1205,7 +1205,7 @@ ____
  User-action entry point.
 ____
 
-Has 60 line(s). Calls functions:
+Has 65 line(s). Calls functions:
 
  .zinit-show-times
  `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
