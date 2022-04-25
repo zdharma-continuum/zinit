@@ -80,7 +80,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-compute-ice [[[
  Computes ICE array (default, it can be specified via $3) from a) input
  ICE, b) static ice, c) saved ice, taking priorities into account. Also
@@ -122,7 +121,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-countdown [[[
  Displays a countdown 5...4... etc. and returns 0 if it
  sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
@@ -240,7 +238,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-store-ices [[[
  Saves ice mods in given hash onto disk.
  

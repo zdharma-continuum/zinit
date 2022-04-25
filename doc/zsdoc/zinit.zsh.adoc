@@ -108,7 +108,6 @@ _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
 ____
  
- ]]]
  FUNCTION: +zinit-deploy-message. [[[
  Deploys a sub-prompt message to be displayed OR a `zle
  .reset-prompt' call to be invoked
@@ -129,7 +128,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: +zinit-message. [[[
 ____
 
@@ -180,7 +178,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: +zinit-prehelp-usage-message. [[[
 ____
 
@@ -199,7 +196,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: -zinit_scheduler_add_sh. [[[
  Copies task into ZINIT_RUN array, called when a task timeouts.
  A small function ran from pattern in /-substitution as a math
@@ -482,7 +478,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-formatter-bar. [[[
 ____
 
@@ -512,7 +507,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-formatter-pid. [[[
 ____
 
@@ -530,7 +524,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: .zinit-formatter-th-bar. [[[
 ____
 
@@ -545,7 +538,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: .zinit-formatter-url. [[[
 ____
 
@@ -705,7 +697,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-load-snippet. [[[
  Implements the exposed-to-user action of loading a snippet.
  
@@ -733,7 +724,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: +zinit-message-formatter [[[
 ____
 
@@ -770,7 +760,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: +zinit-parse-opts. [[[
 ____
 
@@ -830,7 +819,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-run. [[[
  Run code inside plugin's folder
  It uses the `correct' parameter from upper's scope zinit().
@@ -905,7 +893,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-setup-params. [[[
 ____
 
@@ -1193,7 +1180,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: @zinit-scheduler. [[[
  Searches for timeout tasks, executes them. There's an array of tasks
  waiting for execution, this scheduler manages them, detects which ones
@@ -1551,7 +1537,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 

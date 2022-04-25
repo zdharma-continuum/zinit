@@ -192,7 +192,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-extract [[[
 ____
 
@@ -214,7 +213,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-forget-completion [[[
  Implements alternation of Zsh state so that already initialized
  completion stops being visible to Zsh.
@@ -238,7 +236,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-get-cygwin-package [[[
 ____
 
@@ -258,7 +255,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-get-latest-gh-r-url-part [[[
  Gets version string of latest release of given Github
  package. Connects to Github releases page.
@@ -441,7 +437,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-setup-plugin-dir [[[
  Clones given plugin into PLUGIN_DIR. Supports multiple
  sites (respecting `from' and `proto' ice modifiers).
@@ -473,7 +468,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-update-snippet [[[
 ____
 
@@ -495,7 +489,6 @@ zicp
 
 ____
  
- ]]]
  FUNCTION: zicp [[[
 ____
 
@@ -514,7 +507,6 @@ ziextract
 
 ____
  
- ]]]
  FUNCTION: ziextract [[[
  If the file is an archive, it is extracted by this function.
  Next stage is scanning of files with the common utility `file',
@@ -554,7 +546,6 @@ zpextract
 
 ____
  
- ]]]
  FUNCTION: zpextract [[[
 ____
 
@@ -571,7 +562,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-atclone-hook [[[
 ____
 
@@ -590,7 +580,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-atpull-e-hook [[[
 ____
 
@@ -608,7 +597,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-atpull-hook [[[
 ____
 
@@ -643,7 +631,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-cp-hook [[[
 ____
 
@@ -661,7 +648,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-extract-hook [[[
 ____
 
@@ -677,7 +663,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-make-e-hook [[[
 ____
 
@@ -694,7 +679,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-make-ee-hook [[[
 ____
 
@@ -711,7 +695,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-make-hook [[[
 ____
 
@@ -728,7 +711,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-mv-hook [[[
 ____
 
@@ -747,7 +729,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-ps-on-update-hook [[[
 ____
 
@@ -765,7 +746,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: ∞zinit-reset-opt-hook [[[
 ____
 
@@ -795,7 +775,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 

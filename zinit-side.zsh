@@ -69,7 +69,7 @@
 
     .zinit-any-to-pid "$1" "$2"
     .zinit-get-object-path plugin "$REPLY"
-    integer ret=$? 
+    integer ret=$?
     local dname="$REPLY"
     (( ret )) && { reply=( "$dname" "" ); return 1; }
 
@@ -152,8 +152,7 @@
         fileB_there=( "$local_dirB/$dirnameB"/*~*.(zwc|md|js|html)(.-DOnN[1]) )
 
     reply=( "$local_dirA/$dirnameA" "$svn_dirA" "$local_dirB/$dirnameB" "${fileB_there[1]##$local_dirB/$dirnameB/#}" )
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-compute-ice [[[
 # Computes ICE array (default, it can be specified via $3) from a) input
 # ICE, b) static ice, c) saved ice, taking priorities into account. Also
@@ -317,8 +316,7 @@
     : ${(P)___var_name4::=$___is_snippet}
 
     return 0
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-store-ices [[[
 # Saves ice mods in given hash onto disk.
 #
@@ -377,8 +375,7 @@
     for ___key in url mode; do
         [[ -n "${(P)___key}" ]] && builtin print -r -- "${(P)___key}" >! "$___pfx"/"$___key"
     done
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-countdown [[[
 # Displays a countdown 5...4... etc. and returns 0 if it
 # sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
@@ -398,7 +395,6 @@
     }
     +zinit-message -r -- "{b}{error}0 <running now>{rst}{…}"
     return 0
-}
-# ]]]
+} # ]]]
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
