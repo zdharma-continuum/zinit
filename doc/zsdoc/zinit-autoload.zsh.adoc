@@ -865,7 +865,7 @@ ____
  FUNCTION: .zinit-ls [[[
 ____
 
-Has 19 line(s). Doesn't call other functions.
+Has 20 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
