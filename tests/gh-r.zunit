@@ -360,6 +360,14 @@
   $heksa --help
   assert $state equals 0
 }
+@test 'hadolint' { # Dockerfile linter, validate inline bash, written in Haskell
+  run zinit sbin'* -> hadolint' for @hadolint/hadolint
+  assert $state equals 0
+  local hadolint="$ZPFX/bin/hadolint"
+  assert "$hadolint" is_executable
+  $hadolint --help
+  assert $state equals 0
+}
 @test 'hexyl' { # CLI hex dumper with colors
   run zinit sbin'**/hexyl' for @sharkdp/hexyl
   assert $state equals 0
