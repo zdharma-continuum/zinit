@@ -57,6 +57,16 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
     fi
 fi
 
+if [[ -z ${ZINIT[LIST_COMMAND]} ]]; then
+    if (( ${+commands[exa]} )); then
+        ZINIT[LIST_COMMAND]='exa --color=always --tree --icons -L3'
+    elif (( ${+commands[tree]} )); then
+        ZINIT[LIST_COMMAND]='tree -L 3 -C --charset utf-8'
+    else
+        ZINIT[LIST_COMMAND]='ls --tree'
+    fi
+fi
+
 ZINIT[ice-list]="svn|proto|from|teleid|bindmap|cloneopts|id-as|depth|if|wait|load|\
 unload|blockf|pick|bpick|src|as|ver|silent|lucid|notify|mv|cp|\
 atinit|atclone|atload|atpull|nocd|run-atpull|has|cloneonly|make|\
