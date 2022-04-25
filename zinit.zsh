@@ -1285,8 +1285,8 @@ builtin setopt noaliases
         +zinit-message "{error}ERROR #1"
         return 1
     fi
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-load-snippet. [[[
 # Implements the exposed-to-user action of loading a snippet.
 #
@@ -1527,6 +1527,7 @@ builtin setopt noaliases
     .zinit-set-m-func unset
     return retval
 } # ]]]
+
 # FUNCTION: .zinit-load. [[[
 # Implements the exposed-to-user action of loading a plugin.
 #
@@ -1634,6 +1635,7 @@ builtin setopt noaliases
     ZINIT[AT_TIME_${ZINIT[TIME_INDEX]}_${___id_as//\//---}]=$EPOCHREALTIME
     return ___retval
 } # ]]]
+
 # FUNCTION: .zinit-load-plugin. [[[
 # Lower-level function for loading a plugin.
 #
@@ -1787,6 +1789,7 @@ builtin setopt noaliases
 
     return ___retval
 } # ]]]
+
 # FUNCTION: .zinit-compdef-replay. [[[
 # Runs gathered compdef calls. This allows to run `compinit'
 # after loading plugins.
@@ -1814,6 +1817,7 @@ builtin setopt noaliases
 
     return 0
 } # ]]]
+
 # FUNCTION: .zinit-compdef-clear. [[[
 # Implements user-exposed functionality to clear gathered compdefs.
 .zinit-compdef-clear() {
@@ -1821,6 +1825,7 @@ builtin setopt noaliases
     ZINIT_COMPDEF_REPLAY=( )
     [[ $quiet = -q ]] || +zinit-message "Compdef-replay cleared (it had {num}${count}{rst} entries)."
 } # ]]]
+
 # FUNCTION: .zinit-add-report. [[[
 # Adds a report line for given plugin.
 #
@@ -1832,6 +1837,7 @@ builtin setopt noaliases
     [[ ${ZINIT[DTRACE]} = 1 ]] && { (( ${+builtins[zpmod]} )) && zpmod report-append _dtrace/_dtrace "$2"$'\n' || ZINIT_REPORTS[_dtrace/_dtrace]+="$2"$'\n'; }
     return 0
 } # ]]]
+
 # FUNCTION: .zinit-add-fpath. [[[
 .zinit-add-fpath() {
     [[ $1 = (-f|--front) ]] && { shift; integer front=1; }
@@ -1844,8 +1850,8 @@ builtin setopt noaliases
             ${${${(M)user:#%}:+$plugin}:-${ZINIT[PLUGINS_DIR]}/${id_as//\//---}}${add_dir:+/$add_dir}
         )
     }
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-run. [[[
 # Run code inside plugin's folder
 # It uses the `correct' parameter from upper's scope zinit().
@@ -1874,8 +1880,8 @@ builtin setopt noaliases
     else
         +zinit-message "{u-warn}Error{b-warn}:{rst} no such plugin or snippet."
     fi
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: +zinit-deploy-message. [[[
 # Deploys a sub-prompt message to be displayed OR a `zle
 # .reset-prompt' call to be invoked
@@ -1895,8 +1901,8 @@ builtin setopt noaliases
     exec {THEFD} < <(LANG=C sleep $(( 0.01 + ${${${(M)1#@sleep:}:+${1#@sleep:}}:-0} )); builtin print -r -- ${1:#(@msg|@sleep:*)} "${@[2,-1]}"; )
     command true # workaround a Zsh bug, see: https://www.zsh.org/mla/workers/2018/msg00966.html
     builtin zle -F "$THEFD" +zinit-deploy-message
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-formatter-pid. [[[
 .zinit-formatter-pid() {
     builtin emulate -L zsh -o extendedglob
@@ -1918,13 +1924,13 @@ builtin setopt noaliases
 
     # Re-add whitespace
     REPLY=$pbz$REPLY$kbz
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-formatter-bar. [[[
 .zinit-formatter-bar() {
     .zinit-formatter-bar-util ─ bar
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-formatter-th-bar. [[[
 .zinit-formatter-th-bar() {
     .zinit-formatter-bar-util ━ th-bar
@@ -1938,8 +1944,8 @@ builtin setopt noaliases
     fi
 
     REPLY=$ZINIT[col-$2]${(pl:COLUMNS-1::$ch:):-}$ZINIT[col-rst]
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-formatter-url. [[[
 .zinit-formatter-url() {
     builtin emulate -LR zsh -o extendedglob
@@ -1966,8 +1972,8 @@ builtin setopt noaliases
         # …revert to the basic if not…
         REPLY=$ZINIT[col-url]$1$ZINIT[col-rst]
     }
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: +zinit-message-formatter [[[
 .zinit-main-message-formatter() {
     if [[ -z $1 && -z $2 && -z $3 ]]; then
@@ -2001,8 +2007,8 @@ builtin setopt noaliases
     REPLY=${REPLY//$nl/$vertical$carriager}
 
 #    REPLY+="x(${3}…)"
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: +zinit-message. [[[
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob
@@ -2033,8 +2039,8 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     if [[ -n ${opt:#*n*} || -z $opt ]]; then
         print -n $'\015'
     fi
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: +zinit-prehelp-usage-message. [[[
 +zinit-prehelp-usage-message() {
     builtin emulate -LR zsh -o extendedglob
@@ -2079,14 +2085,13 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
                 "See \`{cmd}help$bcol\` for a more detailed usage information and" \
                 "the list of the {cmd}subcommands$bcol.{rst}"
     }
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: +zinit-parse-opts. [[[
 .zinit-parse-opts() {
     builtin emulate -LR zsh -o extendedglob
     reply=( "${(@)${@[2,-1]//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[$1]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%%:*}]::=1}ß←↓→}:#1ß←↓→}" )
-}
-# ]]]
+} # ]]]
 
 #
 # Ice support.
@@ -2111,6 +2116,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     [[ -n ${ZINIT_ICES[pick]} ]] && ZINIT_ICES[pick]="${ZINIT_ICES[pick]//\$ZPFX/${ZPFX%/}}"
     return retval
 } # ]]]
+
 # FUNCTION: .zinit-pack-ice. [[[
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
 # is in general forgotten for second-next command (that's why it's
@@ -2122,6 +2128,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     ZINIT_SICE[$1${1:+${2:+/}}$2]="${ZINIT_SICE[$1${1:+${2:+/}}$2]# }"
     return 0
 } # ]]]
+
 # FUNCTION: .zinit-load-ices. [[[
 .zinit-load-ices() {
     local id_as="$1" ___key ___path
@@ -2147,15 +2154,14 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
 
     return 0
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-setup-params. [[[
 .zinit-setup-params() {
     emulate -LR zsh -o extendedglob
     reply=( ${(@)${(@s.;.)ICE[param]}/(#m)*/${${MATCH%%(-\>|→|=\>)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→|=\>)}:+\=${${MATCH#*(-\>|→|=\>)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
     (( ${#reply} )) && return 0 || return 1
-}
-# ]]]
+} # ]]]
 
 #
 # Turbo.
@@ -2246,8 +2252,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     elif [[ -n ${ICE[wait]}${ICE[load]}${ICE[unload]}${ICE[subscribe]} ]]; then
         ZINIT_TASKS+=( "${${ICE[wait]:+0}:-1}+0+1 $tpe ${ZINIT[WAIT_IDX]} ${mode:-_} ${(q)id} ${opt_plugin:+${(q)opt_uspl2}}" )
     fi
-}
-# ]]]
+} # ]]]
 # FUNCTION: -zinit_scheduler_add_sh. [[[
 # Copies task into ZINIT_RUN array, called when a task timeouts.
 # A small function ran from pattern in /-substitution as a math
@@ -2260,8 +2265,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     else
         return idx
     fi
-}
-# ]]]
+} # ]]]
 # FUNCTION: @zinit-scheduler. [[[
 # Searches for timeout tasks, executes them. There's an array of tasks
 # waiting for execution, this scheduler manages them, detects which ones
@@ -2379,8 +2383,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     ZINIT_RUN[1-correct,___idx-correct]=()
 
     [[ ${ZINIT[lro-data]##*:} = on ]] && return 0 || return ___ret
-}
-# ]]]
+} # ]]]
 
 #
 # Exposed functions.
@@ -3022,8 +3025,7 @@ zicompdef() { ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" ); }
     :zinit-tmp-subst-autoload -Uz \
         ${(s: :)${${(j: :)${@#\!}}//(#b)((*)(->|=>|→)(*)|(*))/${match[2]:+$match[2] -S $match[4]}${match[5]:+${match[5]} -S ${match[5]}}}} \
         ${${${(@M)${@#\!}:#*(->|=>|→)*}}:+-C} ${${@#\!}:+-C}
-}
-# ]]]
+} # ]]]
 
 # Compatibility functions. [[[
 zplugin() { zinit "$@"; }
@@ -3100,8 +3102,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
             command date '+%s' >! "${ZINIT[BIN_DIR]}/zmodules/COMPILED_AT"
         }
     }
-}
-# ]]]
+} # ]]]
 
 # !atpull-pre.
 @zinit-register-hook "-r/--reset" hook:e-\!atpull-pre ∞zinit-reset-hook
