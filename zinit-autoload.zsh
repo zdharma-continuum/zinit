@@ -2214,21 +2214,26 @@ ZINIT[EXTENDED_GLOB]=""
         fi
         [[ -z $EPOCHREALTIME ]] && attime="<no zsh/datetime module → no time data>"
 
+        local line="$time"
         if [[ "$opt" = *-[a-z]#m[a-z]#* ]]; then
-            time="$attime"
+            line="$attime"
+        elif [[ "$opt" = *-[a-z]#a[a-z]#* ]]; then
+            line="$attime $line"
         fi
 
+        line="$line - $REPLY"
+
         if [[ ${sice[as]} == "command" ]]; then
-            builtin print "$time" - "$REPLY (command)"
+            line="$line (command)"
         elif [[ -n ${sice[sbin]+abc} ]]; then
-            builtin print "$time" - "$REPLY (sbin command)"
+            line="$line (sbin command)"
         elif [[ -n ${sice[fbin]+abc} ]]; then
-            builtin print "$time" - "$REPLY (fbin command)"
+            line="$line (fbin command)"
         elif [[ ( ${sice[pick]} = /dev/null || ${sice[as]} = null ) && ${+sice[make]} = 1 ]]; then
-            builtin print "$time" - "$REPLY (/dev/null make plugin)"
-        else
-            builtin print "$time" - "$REPLY"
+            line="$line (/dev/null make plugin)"
         fi
+
+        builtin print "$line"
 
         (( sum += ZINIT[$entry] ))
     done
@@ -3421,8 +3426,7 @@ EOF
 —— -h|--help|help                – usage information
 —— man                           – manual
 —— self-update                   – updates and compiles Zinit
-—— times [-s] [-m]               – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments
-—— zstatus                       – overall Zinit status
+—— zstatus                       – overall Zinit statu—— times [-s] [-m] [-a] – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments, -a – show both load times and loading moments
 —— load ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – load plugin, can also receive absolute local path
 —— light [-b] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)
 —— unload ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – unload plugin loaded with \`zinit load ...', -q – quiet
