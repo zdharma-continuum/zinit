@@ -532,7 +532,7 @@
   $micro --version
   assert $state equals 0
 }
-@test 'mkcert' { # A simple zero-config tool to make locally trusted development certificates with any names you'd like
+@test 'mkcert' { # A simple zero-config tool to make locally trusted development certificates
   run zinit sbin'* -> mkcert' for @FiloSottile/mkcert
   assert $state equals 0
   local mkcert="$ZPFX/bin/mkcert"
@@ -784,6 +784,11 @@
   run zinit sbin'* -> yq' for @mikefarah/yq; assert $state equals 0
   local yq="$ZPFX/bin/yq"; assert "$yq" is_executable
   run $yq --version; assert $state equals 0
+}
+@test 'zed' { # Tooling for super-structured data: a new and easier way to manipulate data
+  run zinit sbin'* -> zed' for @brimdata/zed; assert $state equals 0
+  local zed="$ZPFX/bin/zed"; assert "$zed" is_executable
+  run $zed --version; assert $state equals 0
 }
 @test 'zoxide' { # A smarter cd command
   run zinit sbin'**/zoxide' for @ajeetdsouza/zoxide; assert $state equals 0
