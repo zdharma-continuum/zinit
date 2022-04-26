@@ -12,20 +12,20 @@
   $act --version
   assert $state equals 0
 }
-@test 'aurora' { # Cross-platform beanstalkd queue server admin console
-  run zinit sbin"aurora" for @xuri/aurora
-  assert $state equals 0
-  local aurora="$ZPFX/bin/aurora"
-  assert "$aurora" is_executable
-  $aurora -v
-  assert $state equals 0
-}
 @test 'asciigraph' {
   run zinit sbin"asciigraph" for @guptarohit/asciigraph
   assert $state equals 0
   local asciigraph="$ZPFX/bin/asciigraph"
   assert "$asciigraph" is_executable
   $asciigraph --help
+  assert $state equals 0
+}
+@test 'aurora' { # Cross-platform beanstalkd queue server admin console
+  run zinit sbin"aurora" for @xuri/aurora
+  assert $state equals 0
+  local aurora="$ZPFX/bin/aurora"
+  assert "$aurora" is_executable
+  $aurora -v
   assert $state equals 0
 }
 @test 'bandwhich' { # Terminal bandwidth utilization tool
@@ -173,7 +173,7 @@
   $dust --version
   assert $state equals 0
 }
-@test 'dyff' { # /ˈdʏf/ - diff tool for YAML files, and sometimes JSON
+@test 'dyff' { # diff tool for YAML files, and sometimes JSON
   run zinit sbin'**/dyff' for @homeport/dyff
   assert $state equals 0
   local dyff="$ZPFX/bin/dyff"
@@ -187,6 +187,14 @@
   local exa="$ZPFX/bin/exa"
   assert "$exa" is_executable
   $exa --version
+  assert $state equals 0
+}
+@test 'fd' {
+  run zinit sbin'**/fd' for @sharkdp/fd
+  assert $state equals 0
+  local fd="$ZPFX/bin/fd"
+  assert "$fd" is_executable
+  $fd version
   assert $state equals 0
 }
 @test 'fogg' { # Manage Infrastructure as Code with less pain
@@ -230,6 +238,14 @@
   local gdu="$ZPFX/bin/gdu"
   assert "$gdu" is_executable
   $gdu --version
+  assert $state equals 0
+}
+@test 'ggsrun' {
+  run zinit sbin'* -> ggsrun' for @tanaikech/ggsrun
+  assert $state equals 0
+  local git_sizer="$ZPFX/bin/ggsrun"
+  assert "$git_sizer" is_executable
+  $git_sizer --version
   assert $state equals 0
 }
 @test 'gh-cli' {
@@ -284,14 +300,6 @@
   run zinit sbin'**/git-sizer -> git-sizer' for @github/git-sizer
   assert $state equals 0
   local git_sizer="$ZPFX/bin/git-sizer"
-  assert "$git_sizer" is_executable
-  $git_sizer --version
-  assert $state equals 0
-}
-@test 'ggsrun' {
-  run zinit sbin'* -> ggsrun' for @tanaikech/ggsrun
-  assert $state equals 0
-  local git_sizer="$ZPFX/bin/ggsrun"
   assert "$git_sizer" is_executable
   $git_sizer --version
   assert $state equals 0
@@ -352,12 +360,12 @@
   $gothanks --help
   assert $state equals 0
 }
-@test 'heksa' { # CLI hex dumper with colors
-  run zinit sbin'**/heksa' for @raspi/heksa
+@test 'grex' { # go test output for humans
+  run zinit sbin'* -> grex' for @pemistahl/grex
   assert $state equals 0
-  local heksa="$ZPFX/bin/heksa"
-  assert "$heksa" is_executable
-  $heksa --help
+  local grex="$ZPFX/bin/gothanks"
+  assert "$grex" is_executable
+  $grex --help
   assert $state equals 0
 }
 @test 'hadolint' { # Dockerfile linter, validate inline bash, written in Haskell
@@ -366,6 +374,14 @@
   local hadolint="$ZPFX/bin/hadolint"
   assert "$hadolint" is_executable
   $hadolint --help
+  assert $state equals 0
+}
+@test 'heksa' { # CLI hex dumper with colors
+  run zinit sbin'**/heksa' for @raspi/heksa
+  assert $state equals 0
+  local heksa="$ZPFX/bin/heksa"
+  assert "$heksa" is_executable
+  $heksa --help
   assert $state equals 0
 }
 @test 'hexyl' { # CLI hex dumper with colors
@@ -409,12 +425,12 @@
   $igo --help
   assert $state equals 0
 }
-@test 'just' { # Just a command runner
-  run zinit sbin'**/just -> just' for casey/just
+@test 'insect' { # High precision scientific calculator with support for physical units
+  run zinit sbin'* -> insect' for @sharkdp/insect
   assert $state equals 0
-  local just="$ZPFX/bin/just"
-  assert "$just" is_executable
-  $just --version
+  local insect="$ZPFX/bin/insect"
+  assert "$insect" is_executable
+  $insect help
   assert $state equals 0
 }
 @test 'jq' { # Command-line JSON processor
@@ -425,12 +441,28 @@
   $jq --version
   assert $state equals 0
 }
+@test 'just' { # Just a command runner
+  run zinit sbin'**/just -> just' for casey/just
+  assert $state equals 0
+  local just="$ZPFX/bin/just"
+  assert "$just" is_executable
+  $just --version
+  assert $state equals 0
+}
 @test 'ko' {
   run zinit sbin'**/ko' for google/ko
   assert $state equals 0
   local ko="$ZPFX/bin/ko"
   assert "$ko" is_executable
   $ko --help
+  assert $state equals 0
+}
+@test 'lazygit' {
+  run zinit sbin'**/lazygit' for jesseduffield/lazygit
+  assert $state equals 0
+  local lazygit="$ZPFX/bin/lazygit"
+  assert "$lazygit" is_executable
+  $lazygit --help
   assert $state equals 0
 }
 @test 'lf' { # Terminal file manager
@@ -500,7 +532,7 @@
   $micro --version
   assert $state equals 0
 }
-@test 'mkcert' { # A simple zero-config tool to make locally trusted development certificates with any names you'd like
+@test 'mkcert' { # A simple zero-config tool to make locally trusted development certificates
   run zinit sbin'* -> mkcert' for @FiloSottile/mkcert
   assert $state equals 0
   local mkcert="$ZPFX/bin/mkcert"
@@ -737,6 +769,11 @@
   local wifiqr="$ZPFX/bin/wifiqr"; assert "$wifiqr" is_executable
   run $wifiqr -h; assert $state equals 0
 }
+@test 'xh' { # Friendly and fast tool for sending HTTP requests
+  run zinit sbin'**/xh -> xh' for @ducaale/xh; assert $state equals 0
+  local xh="$ZPFX/bin/xh"; assert "$xh" is_executable
+  run $xh --version; assert $state equals 0
+}
 @test 'yabai' { # A tiling window manager for macOS based on binary space partitioning
   ! [[ $OSTYPE =~ 'darwin*' ]] && skip 'Yabai test skipped on Linux'
   run zinit sbin'**/yabai' for koekeishiya/yabai; assert $state equals 0
@@ -748,10 +785,10 @@
   local yq="$ZPFX/bin/yq"; assert "$yq" is_executable
   run $yq --version; assert $state equals 0
 }
-@test 'xh' { # Friendly and fast tool for sending HTTP requests
-  run zinit sbin'**/xh -> xh' for @ducaale/xh; assert $state equals 0
-  local xh="$ZPFX/bin/xh"; assert "$xh" is_executable
-  run $xh --version; assert $state equals 0
+@test 'zed' { # Tooling for super-structured data: a new and easier way to manipulate data
+  run zinit sbin'* -> zed' for @brimdata/zed; assert $state equals 0
+  local zed="$ZPFX/bin/zed"; assert "$zed" is_executable
+  run $zed --version; assert $state equals 0
 }
 @test 'zoxide' { # A smarter cd command
   run zinit sbin'**/zoxide' for @ajeetdsouza/zoxide; assert $state equals 0
