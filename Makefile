@@ -1,22 +1,22 @@
 .EXPORT_ALL_VARIABLES:
-# SHELL=zsh
+
+ZSH := $(shell command -v zsh 2> /dev/null)
 SRC := zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
 DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 
-cur-dir := $(shell pwd)
+zwc:
+	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
 
-all: $(wildcard *.zsh)
-
-%.zsh: %.zwc
-	scripts/zcompile $(@)
-
-doc-container: zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
+doc-container:
 	./scripts/docker-run.sh --docs --debug
 
 doc: clean
 	cd doc; zsh -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:*{{{*|\#[[:space:]]#}}}*)' $(DOC_SRC)"
 
+test:
+	zunit run
+
 clean:
-	rm -rf doc/zsdoc/data doc/zsdoc/*.adoc
+	rm -rvf *.zwc doc/zsdoc/zinit{'','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
 
 .PHONY: all test clean doc doc-container
