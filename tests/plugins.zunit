@@ -21,6 +21,14 @@
   local tree="$ZPFX/bin/tree";   assert $tree  is_executable
   $tree -v;                      assert $state equals 0
 }
+@test 'vim' {
+  run zinit light-mode for vim/vim
+  zinit cd vim/vim
+  run ./configure --prefix=$ZPFX && make PREFIX=$ZPFX install
+  assert $state equals 0
+  local vim="$ZPFX/bin/vim"; assert $vim is_executable
+  $vim --version; assert $state equals 0
+}
 # @test 'zsh_bin' {
 #   run zinit as'null' sbin'bin/zsh' for @romkatv/zsh-bin
 #   assert $state equals 0
