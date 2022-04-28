@@ -30,5 +30,25 @@
   assert "$artifact" is_file
   assert "$artifact" is_readable
 }
+@test 'zinit local snippet symlink' {
+  mkdir -p "${DATA_DIR}/external"
+  cat<<EOF >"${DATA_DIR}/external/mysnippet.zsh"
+alias foo=date
+EOF
+
+  local z=$'zinit is-snippet link id-as'\''mysnippet'\'' for /data/external/mysnippet.zsh'
+  run ./scripts/docker-run.sh --wrap --debug --zunit $z
+
+  assert $state equals 0
+  assert "$output" contains "Setting up snippet"
+  assert "$output" contains "Linking"
+
+  local artifact="${SNIPPETS_DIR}/mysnippet/mysnippet"
+  assert $artifact is_link
+  assert $artifact is_readable
+
+  local target="$(readlink "$artifact")"
+  assert "$target" same_as "../../external/mysnippet.zsh"
+}
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
