@@ -28,6 +28,11 @@
   $aurora -v
   assert $state equals 0
 }
+@test 'atuin' { #  Magical shell history
+  run zinit sbin"**/atuin" for @ellie/atuin; assert $state equals 0
+  local atuin="$ZPFX/bin/atuin"; assert "$atuin" is_executable
+  $atuin --version; assert $state equals 0
+}
 @test 'bandwhich' { # Terminal bandwidth utilization tool
   [[ $OSTYPE =~ 'darwin*' ]] && skip 'Bandwhich test skipped on Darwin'
   run zinit sbin"bandwhich" for @imsnif/bandwhich
@@ -119,6 +124,11 @@
   assert "$cog" is_executable
   $cog --version
   assert $state equals 0
+}
+@test 'compress' { # Optimized Go Compression Packages
+  run zinit sbin's2c;s2d;s2sx;' for klauspost/compress; assert $state equals 0
+  local compress="$ZPFX/bin/s2c"; assert "$compress" is_executable
+  $compress --help; assert $state equals 0
 }
 @test 'create-go-app' { # Create a new production-ready project with backend, frontend and deploy automation by running one CLI command
   run zinit sbin'**/cgapp -> cgapp' for create-go-app/cli
@@ -343,6 +353,12 @@
   assert "$gomi" is_executable
   $gomi --version
   assert $state equals 0
+}
+@test 'gosu' { # Simple Go-based setuid+setgid+setgroups+exec
+  if [[ $OSTYPE =~ 'darwin.*' ]]; then skip 'gosu test only ran on Linux'; fi
+  run zinit sbin'* -> gosu' for @tianon/gosu; assert $state equals 0
+  local gosu="$ZPFX/bin/gosu"; assert "$gosu" is_executable
+  $gosu --version; assert $state equals 0
 }
 @test 'gotestfmt' { # go test output for humans
   run zinit sbin'gotestfmt' for @haveyoudebuggedit/gotestfmt
@@ -751,6 +767,11 @@
   run zinit sbin'up* -> up' for akavel/up; assert $state equals 0
   local up="$ZPFX/bin/up"; assert "$up" is_executable
   run $up -h; assert $output contains "up is the Ultimate Plumber"
+}
+@test 'v' { # Simple, fast, safe, compiled language for developing maintainable software
+  run zinit sbin'**/v' for vlang/v; assert $state equals 0
+  local v="$ZPFX/bin/v"; assert "$v" is_executable
+  run $v version; assert $state equals 0
 }
 @test 'volta' { # JS Toolchains as Code
   ! [[ $OSTYPE =~ 'darwin.*' ]] && skip 'Volta test only ran on macOS'
