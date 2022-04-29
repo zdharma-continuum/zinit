@@ -1,16 +1,6 @@
-# Add 'zinit` label to any change in a zinit file
-zinit:
-- zinit*.zsh
-# Add 'scripts` label to any change in scripts/ directory
-scripts:
-- scripts/*
-# Add 'docs` label to any change in doc/ directory
-docs:
-- docs/*
-- doc/**/*
-# Add 'tests` label to any change in tests/ directory
-tests:
-- tests/*
-ci/cd:
-- .github/*
-- .github/**/*
+ci/cd: ['.github/**/*']
+docker: ['docker/*']
+docs: ['doc/**/*']
+scripts: ['scripts/*']
+tests: ['tests/**/*', '.zunit.yml']
+zinit: ['zinit*.zsh', '_zinit']
