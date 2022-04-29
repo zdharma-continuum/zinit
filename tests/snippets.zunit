@@ -32,10 +32,11 @@
 }
 @test 'zinit local snippet symlink' {
   mkdir -p "${ZINIT[HOME_DIR]}/external"
-  cat<<EOF >"${ZINIT[HOME_DIR]}/external/mysnippet.zsh"
+  local actual="${ZINIT[HOME_DIR]}/external/mysnippet.zsh"
+  cat<<EOF >$actual
 alias foo=date
 EOF
-   run zinit is-snippet link id-as'mysnippet' for ${ZINIT[HOME_DIR]}/external/mysnippet.zsh
+   run zinit is-snippet link id-as'mysnippet' for $actual
 
   assert $state equals 0
   assert "$output" contains "Setting up snippet"
@@ -45,8 +46,10 @@ EOF
   assert $artifact is_link
   assert $artifact is_readable
 
-  local target="$(readlink "$artifact")"
-  assert "$target" same_as "../../external/mysnippet.zsh"
+  local link="$(readlink "$artifact")"
+  local target="$(cd ${artifact:h}; cd ${link:h}; pwd)/${link:t}"
+  assert $target same_as $actual
 }
+
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
