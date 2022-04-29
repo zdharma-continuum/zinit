@@ -1,0 +1,22 @@
+# This workflow will triage pull requests and apply a label based on the paths
+# that are modified in the pull request.
+
+name: Labeler
+
+on:
+  pull_request_target: # https://securitylab.github.com/research/github-actions-preventing-pwn-requests
+
+jobs:
+  label-pull-requests:
+
+    permissions:
+      contents: read
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/labeler@v4
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        sync-labels: true
