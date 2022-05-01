@@ -601,7 +601,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 #
 # No arguments.
 .zinit-compinit() {
-    [[ -n ${OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
+    # This might be called during sourcing when setting up the plugins dir, so check that OPTS is actually existing
+    [[ -n $OPTS && -n ${OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
 
     emulate -LR zsh
     builtin setopt nullglob extendedglob warncreateglobal typesetsilent
