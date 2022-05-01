@@ -2360,18 +2360,23 @@ zimv() {
 
     @zinit-substitute from to
 
-    local -a afr
+    local -a afr retval
     ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
       afr=( ${~from}(DN) )
       if (( ${#afr} )) {
           if (( !OPTS[opt_-q,--quiet] )) {
               command cp -vf "${afr[1]}" "$to"
+              retval=$?
+              # ignore errors if no compiled file is found
               command cp -vf "${afr[1]}".zwc "$to".zwc 2>/dev/null
           } else {
               command cp -f "${afr[1]}" "$to"
+              retval=$?
+              # ignore errors if no compiled file is found
               command cp -f "${afr[1]}".zwc "$to".zwc 2>/dev/null
           }
       }
+      return $retval
     )
 }
 # ]]]

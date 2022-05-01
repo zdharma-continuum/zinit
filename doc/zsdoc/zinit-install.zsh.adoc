@@ -703,7 +703,7 @@ ____
  FUNCTION: ∞zinit-cp-hook [[[
 ____
 
-Has 27 line(s). Calls functions:
+Has 30 line(s). Calls functions:
 
  ∞zinit-cp-hook
  `-- zinit.zsh/@zinit-substitute
