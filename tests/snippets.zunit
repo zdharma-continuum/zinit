@@ -1,34 +1,60 @@
 #!/usr/bin/env zunit
 
+@setup {
+  GH_RAW_URL='https://raw.githubusercontent.com'
+  setup_snippet_ok() { # state=$1, output=$2, file=$3
+    assert $1 equals 0
+    assert $2 contains "Setting up snippet"
+    assert $3 is_file; assert $3 is_readable
+  }
+  install_completion(){
+    zinit for as'completion' nocompile id-as"$1" is-snippet "$GH_RAW_URL/$2"
+  }
+}
+
 @test 'OMZL::spectrum.zsh' {
-   run zinit snippet OMZL::spectrum.zsh
-
-  assert $state equals 0
-  assert "$output" contains "Setting up snippet"
-
-  local artifact="$ZINIT[SNIPPETS_DIR]/OMZL::spectrum.zsh/OMZL::spectrum.zsh"
-  assert "$artifact" is_file
-  assert "$artifact" is_readable
+  run zinit snippet OMZL::spectrum.zsh
+  setup_snippet_ok $state $output "$ZINIT[SNIPPETS_DIR]/OMZL::spectrum.zsh/OMZL::spectrum.zsh"
 }
 @test 'OMZP::git' {
-   run zinit snippet OMZP::git
-
-  assert $state equals 0
-  assert "$output" contains "Setting up snippet"
-
-  local artifact="$ZINIT[SNIPPETS_DIR]/OMZP::git/OMZP::git"
-  assert "$artifact" is_file
-  assert "$artifact" is_readable
+  run zinit snippet OMZP::git
+  setup_snippet_ok $state $output "$ZINIT[SNIPPETS_DIR]/OMZP::git/OMZP::git"
 }
 @test 'PZTM::environment' {
-   run zinit snippet PZTM::environment
-
-  assert $state equals 0
-  assert "$output" contains "Setting up snippet"
-
-  local artifact="$ZINIT[SNIPPETS_DIR]/PZTM::environment/PZTM::environment"
-  assert "$artifact" is_file
-  assert "$artifact" is_readable
+  run zinit snippet PZTM::environment
+  setup_snippet_ok $state $output "$ZINIT[SNIPPETS_DIR]/PZTM::environment/PZTM::environment"
 }
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
+@test 'bat-completion' {
+  run install_completion 'bat-completion/_bat' 'sharkdp/bat/master/assets/completions/bat.zsh.in'
+  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_bat
+}
+@test 'brew-completion' {
+  run install_completion 'brew-completion/_brew' 'Homebrew/brew/master/completions/zsh/_brew'
+  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_brew
+}
+@test 'docker-completion' {
+  run install_completion 'docker-completion/_docker' 'docker/cli/master/contrib/completion/zsh/_docker'
+  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_docker
+}
+@test 'exa-completion' {
+  run install_completion 'exa-completion/_exa' 'ogham/exa/master/completions/zsh/_exa'
+  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_exa
+}
+@test 'fd-completion' {
+  run install_completion 'fd-completion/_fd' 'sharkdp/fd/master/contrib/completion/_fd'
+  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_fd
+}
+@test 'tldr-completion::snippet' {
+  run install_completion 'tldr-completion/_tldr' 'dbrgn/tealdeer/main/completion/zsh_tealdeer'
+  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_tldr
+  zinit delete --yes tldr-completion/_tldr; zinit cclear
+}
+@test 'tldr-completion::gh-r' {
+  artifact="$ZINIT[PLUGINS_DIR]/tldr-completion---gh-r"
+  run zinit for as"completion" from"gh-r" id-as'tldr-completion/gh-r' bpick"completions_zsh" @dbrgn/tealdeer
+  assert $state equals 0
+  assert "$artifact/completions_zsh" is_file; assert $artifact is_readable
+}
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=@test,}:foldmethod=marker
