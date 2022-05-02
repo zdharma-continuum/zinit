@@ -822,4 +822,4 @@
   $zoxide --version; assert $state equals 0
 }
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
