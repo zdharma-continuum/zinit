@@ -593,13 +593,18 @@
   local navi="$ZPFX/bin/navi" && assert "$navi" is_executable
   $navi --version && assert $state equals 0
 }
-@test 'neovim' {
-  run zinit sbin'**/nvim' for neovim/neovim
-  assert $state equals 0
+@test 'neovim::binary' {
+  run zinit sbin'**/nvim' id-as'neovim/binary' for neovim/neovim
+  assert $state equals 0; assert $output does_not_contain 'appimage'
   local nvim="$ZPFX/bin/nvim"
   assert "$nvim" is_executable
   $nvim --version
   assert $state equals 0
+}
+@test 'neovim::appimage' {
+  run zinit bpick'*appimage*' id-as'neovim/appimage' for neovim/neovim
+  assert $state equals 0; assert $output does_not_contain 'appimage.'
+  assert "$ZINIT[PLUGINS_DIR]/neovim---appimage/nvim.appimage" is_file
 }
 @test 'onefetch' {
   run zinit sbin'**/onefetch' for o2sh/onefetch; assert $state equals 0
