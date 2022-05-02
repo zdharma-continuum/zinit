@@ -1477,7 +1477,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             list=( ${(M)list[@]:#(#i)*/$~bpick} )
         }
 
-        list=( ${list[@]:#*(a(ccoutrements|ppimage)|s(ha256sum|ig)|manifest|sh|(sha1|md5)sums|sha256|md5|pkg|txt)(#e)} )
+        list=( ${list[@]:#*(a(ccoutrements|ppimage.[a-z]*)|s(ha256sum|ig)|manifest|.sh|(sha1|md5)sums|sha256|md5|pkg|txt)(#e)} )
 
         # filter .deb packages if dpkg-deb present
         if (( $#list < 1 && ${+commands[dpkg-deb]} == 1 )) {
