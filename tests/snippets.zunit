@@ -52,9 +52,12 @@
 }
 @test 'tldr-completion::gh-r' {
   artifact="$ZINIT[PLUGINS_DIR]/tldr-completion---gh-r"
-  run zinit for as"completion" from"gh-r" id-as'tldr-completion/gh-r' bpick"completions_zsh" @dbrgn/tealdeer
+  run zinit for as"completion" from"gh-r" id-as'tldr-completion/gh-r' bpick"completions_zsh" mv"completions_zsh -> _tldr_ghr" pick"_tldr_ghr" @dbrgn/tealdeer
   assert $state equals 0
-  assert "$artifact/completions_zsh" is_file; assert $artifact is_readable
+  assert "$artifact/_tldr_ghr" is_file
+  assert $artifact/_tldr_ghr is_readable
+  assert "$ZINIT[COMPLETIONS_DIR]"/_tldr_ghr is_file
+  assert "$ZINIT[COMPLETIONS_DIR]"/_tldr_ghr is_readable
 }
 @test 'zinit local snippet symlink' {
   mkdir -p "${ZINIT[HOME_DIR]}/external"
