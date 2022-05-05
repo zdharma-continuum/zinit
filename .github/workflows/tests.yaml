@@ -60,13 +60,13 @@ jobs:
         run: rm -rf revolver zunit
 
       - name: "annexes"
-        run: zunit tests/annexes.zunit
+        run: zunit run --tap tests/annexes.zunit
 
       - name: "gh-r"
-        run: zunit tests/gh-r.zunit
+        run: zunit run --tap tests/gh-r.zunit
 
       - name: "plugins"
-        run: zunit tests/plugins.zunit
+        run: zunit run --tap tests/plugins.zunit
 
       - name: "snippets"
-        run: zunit tests/snippets.zunit
+        run: zunit run --tap tests/snippets.zunit
