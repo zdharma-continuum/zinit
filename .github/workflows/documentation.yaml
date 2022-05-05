@@ -4,17 +4,17 @@ on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'zinit*.zsh'
   push:
     branches:
       - main
   workflow_dispatch:
 
 jobs:
-
   zshelldoc:
     runs-on: ubuntu-latest
     steps:
-
       - name: check out repository
         uses: actions/checkout@v3
 
