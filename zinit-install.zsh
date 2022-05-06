@@ -1440,19 +1440,18 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     }
 
     local -A matchstr
-        # aarch64 '((arm|(^(amd|x86)))64|aarch64)*^*(amd|x86_64)'
     matchstr=(
-      android '(apk|android)'
-      amd64  '*((amd64|x86_64)|)*~*(aarch64|arm64|armv[0-9]|[-_]arm|[i-_]686)*'
-      x86_64 '*((amd64|x86_64)|)*~*(aarch64|arm64|armv[0-9]|[-_]arm|[i-_]686)*'
-      darwin '(darwin*|osx|mac|macos)*~*(386)*'
-      linux-gnu  '*((#s)|/)*linux(([-_](musl|gnu))?|musl|gnu|)*((#e)|/)*'
-      linux-musl '*((#s)|/)*linux(([-_](musl))?|musl|)*((#e)|/)*'
-      aarch64 '(arm64|aarch64|arm[v]?8)'
-      arm64  '(arm64|aarch64|arm[v]?8)'
-      armv5  'armv?5'
-      armv6  'armv?6'
-      armv7  'armv?7'
+      android '(apk|android|linux-android)'
+      amd64  '(amd64|x86_64|x64)'
+      x86_64 '(amd64|x86_64|x64)'
+      darwin  '*((#s)|/)*(darwin|mac|macos|osx)*((#e)|/)*'
+      linux-gnu '(linux|linux-gnu|linux-musl)'
+      linux-musl '(linux|linux-musl)*~*linux-gnu*'
+      aarch64 '(arm64|aarch64|arm[?v]8)'
+      arm64  '(arm64|aarch64|arm[?v]8)'
+      armv5  'arm[?v]5'
+      armv6  'arm[?v]6'
+      armv7  'armv[?v]7'
       cygwin '(cyg|-|_|)win(dows|32|64|))'
       msys   '(cyg|-|_|)win(dows|32|64|))'
       windows '(cyg|-|_|)win(dows|32|64|))'
@@ -1473,35 +1472,31 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     for bpick ( "${bpicks[@]}" ) {
         list=( $init_list )
 
-        if [[ -n $bpick ]] {
-            list=( ${(M)list[@]:#(#i)*/$~bpick} )
-        }
+        if [[ -n $bpick ]] { list=( ${(M)list[@]:#(#i)*/$~bpick} ) }
 
-        list=( ${list[@]:#*(a(ccoutrements|ppimage.[a-z]*)|s(ha256sum|ig)|manifest|.sh|(sha1|md5)sums|sha256|md5|pkg|txt)(#e)} )
-
-        # filter .deb packages if dpkg-deb present
-        if (( $#list < 1 && ${+commands[dpkg-deb]} == 1 )) {
-            list2=( ${(M)list[@]:#*\.deb*} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        } else {
-            list2=( ${list[@]:#*\.deb*} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        }
-
-        # filter .rpm packages if redhat package manager present
-        if (( $#list < 1 && ${+commands[rpm]} == 1 )) {
-            list2=( ${(M)list[@]:#*\.rpm*} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        } else {
-            list2=( ${list[@]:#*\.rpm*} )
-            (( $#list2 > 0 )) && list=( ${list2[@]} )
-        }
+        # Remove artifacts that shouldn't be considered
+        list=( ${list[@]:#*(a(ccoutrements|ppimage.[a-z]*)|[3-6]86*|manifest|(md5|sha1)sums|.s(ha256sum|ig)|.md5|.pkg|.sh|.sha256|.txt|.vsix)(#e)} )
 
         # filter .apk packages if anbox present
         if (( $#list > 1 && ${+commands[anbox]} == 1 )) {
+            +zinit-message "{pre}gh-r:{msg2} found {cmd}anbox{info2} -- looking for {obj}.apk{info2} packages {rst}"
             list2=( ${(M)list[@]:#(#i)*${~matchstr[android]}*} )
+        } else { list2=( ${list[@]:#(#i)*${~matchstr[android]}*} ) }
+        (( $#list2 > 0 )) && list=( ${list2[@]} )
+
+        # filter .deb packages if dpkg-deb present
+        if (( $#list > 1 && ${+commands[dpkg-deb]} == 1 )) {
+            list2=( ${list[@]:#(#i)*(?64)*deb(#e)} )
         } else {
-            list2=( ${list[@]:#(#i)*${~matchstr[android]}*} )
+            list2=( ${list[@]:#*deb(#e)} )
+        }
+        (( $#list2 > 0 )) && list=( ${list2[@]} )
+
+        # filter .rpm packages if redhat package manager present
+        if (( $#list > 1 && ${+commands[rpm]} == 1 )) {
+            list2=( ${list[@]:#(#i)*(?64)*rpm(#e)} )
+        } else {
+            list2=( ${list[@]:#*rpm(#e)} )
         }
         (( $#list2 > 0 )) && list=( ${list2[@]} )
 
@@ -1521,23 +1516,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
-        # filter urls by os (e.g., darwin, linux, windows)
+        # filter urls by OS (e.g., darwin, linux, windows)
         if (( $#list > 1 )) {
             list2=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
+        # filter urls by newest (i.e., highest number)
         if (( $#list > 1 )) {
             list2=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
         if (( !$#list )) {
-            +zinit-message -n "{error}Didn't find correct Github" \
-                "release-file to download"
+            +zinit-message -n "{pre}gh-r:{error} failed to find the correct GitHub release asset to download"
             if [[ -n $bpick ]] {
-                +zinit-message -n ", try adapting {obj}bpick{error}-ICE" \
-                    "(the current bpick is{error}: {file}${bpick}{error})."
+                +zinit-message -n ", modify {obj}bpick{error}-ICE (current bpick{error}: {file}${bpick}{error})."
             } else {
                 +zinit-message -n .
             }
@@ -1547,7 +1541,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         reply+=( $list[1] )
     }
-    [[ -n $reply ]] # testable
+    [[ -n $reply ]]
 } # ]]]
 # FUNCTION: ziextract [[[
 # If the file is an archive, it is extracted by this function.
