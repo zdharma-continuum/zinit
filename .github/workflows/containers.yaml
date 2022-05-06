@@ -41,7 +41,7 @@ jobs:
 
       - name: 🐳 Build and push
         id: docker_build_zsh_versions
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         # Older zsh version tend to make GH runners hang when building
         timeout-minutes: 90
         with:
@@ -84,7 +84,7 @@ jobs:
 
       - name: 🐳 Build and push
         id: docker_build_latest
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         if: github.ref == 'refs/heads/main'
         with:
           push: true
