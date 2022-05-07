@@ -75,7 +75,7 @@ reset-prompt|wrap|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
 subscribe|extract|param|opts|autoload|subst|install|pullopts|\
-debug|null|binary"
+debug|null|binary|link"
 ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
 nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\

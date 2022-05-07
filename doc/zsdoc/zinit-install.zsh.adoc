@@ -174,13 +174,14 @@ ____
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 ____
 
-Has 357 line(s). Calls functions:
+Has 377 line(s). Calls functions:
 
  .zinit-download-snippet
  |-- zinit-side.zsh/.zinit-store-ices
- `-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/is-at-least
 
-Uses feature(s): _setopt_, _trap_, _zcompile_
+Uses feature(s): _is-at-least_, _setopt_, _trap_, _zcompile_
 
 Called by:
 
