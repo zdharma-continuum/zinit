@@ -2,10 +2,10 @@ name: Documentation
 
 on:
   pull_request:
-    branches:
-      - main
+    paths:
+      - 'zinit*.zsh'
   push:
-    branches:
+    branchs:
       - main
   workflow_dispatch:
 
