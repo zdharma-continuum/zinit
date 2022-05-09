@@ -311,8 +311,8 @@
   $hadolint --version; assert $state equals 0
 }
 @test 'helix' { # A post-modern modal text editor
-  run zinit lbin'!* -> helix' for @helix-editor/helix; assert $state equals 0
-  local helix="$ZBIN/helix"; assert "$helix" is_executable
+  run zinit lbin'!**/hx' for @helix-editor/helix; assert $state equals 0
+  local helix="$ZBIN/hx"; assert "$helix" is_executable
   $helix --version; assert $state equals 0
 }
 @test 'heksa' { # CLI hex dumper with colors
@@ -602,7 +602,7 @@ $kopia --version; assert $state equals 0
   run $wifiqr -v; assert $state equals 0
 }
 @test 'wtf' { # The personal information dashboard for your terminal
-  run zinit lbin'!* -> wtf' for wtfutil/wtf; assert $state equals 0
+  run zinit lbin'!**/wtf' for wtfutil/wtf; assert $state equals 0
   local wtf="$ZBIN/wtf"; assert "$wtf" is_executable
   run $wtf --version; assert $state equals 0
 }
