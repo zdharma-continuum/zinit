@@ -311,7 +311,7 @@
   $hadolint --version; assert $state equals 0
 }
 @test 'helix' { # A post-modern modal text editor
-  run zinit lbin'!* -> helix' for @helix-ediitor/helix; assert $state equals 0
+  run zinit lbin'!* -> helix' for @helix-editor/helix; assert $state equals 0
   local helix="$ZBIN/helix"; assert "$helix" is_executable
   $helix --version; assert $state equals 0
 }
