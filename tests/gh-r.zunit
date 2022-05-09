@@ -50,7 +50,7 @@
   [[ $OSTYPE =~ 'darwin*' ]] && skip 'Bandwhich test skipped on Darwin'
   run zinit for @imsnif/bandwhich; assert $state equals 0
   local bandwhich="$ZBIN/bandwhich"; assert "$bandwhich" is_executable
-  $bandwhich --help; assert $state equals 0
+  $bandwhich --version; assert $state equals 0
 }
 @test 'bat' { # A cat(1) clone with wings
   run zinit for @sharkdp/bat; assert $state equals 0
@@ -96,7 +96,7 @@
 @test 'calico' { # Cloud native networking and network security
   run zinit lbin"!**/calico* -> calico" for @projectcalico/calico; assert $state equals 0
   local calico="$ZBIN/calico"; assert "$calico" is_executable
-  $calico --version; assert $state equals 0
+  $calico version; assert $state equals 0
 }
 @test 'checkmake' { # experimental linter/analyzer for Makefiles
   run zinit lbin'!checkmake* -> checkmake' for mrtazz/checkmake; assert $state equals 0
