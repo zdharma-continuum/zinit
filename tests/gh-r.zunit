@@ -16,7 +16,7 @@
   local alacritty="$ZBIN/alacritty"; assert "$alacritty" is_executable
   $alacritty --version; assert $state equals 0
 }
-@test 'asciigraph' {
+@test 'asciigraph' { # Go package to make lightweight ASCII line graph ╭┈╯ in command line apps with no other dependencies.
   run zinit for @guptarohit/asciigraph; assert $state equals 0
   local asciigraph="$ZBIN/asciigraph"; assert "$asciigraph" is_executable
   $asciigraph --help; assert $state equals 0
@@ -26,7 +26,7 @@
   local assh="$ZBIN/assh"; assert "$assh" is_executable
   $assh --version; assert $state equals 0
 }
-@test 'atmos' {
+@test 'atmos' { # Universal Tool for DevOps and Cloud Automation (works with terraform, helm, helmfile, etc)
   run zinit for lbin'!* -> atmos' @cloudposse/atmos; assert $state equals 0
   local atmos="$ZBIN/atmos"; assert "$atmos" is_executable
   $atmos version; assert $state equals 0
@@ -47,7 +47,7 @@
   local bandwhich="$ZBIN/bandwhich"; assert "$bandwhich" is_executable
   $bandwhich --help; assert $state equals 0
 }
-@test 'bat' {
+@test 'bat' { # A cat(1) clone with wings
   run zinit for @sharkdp/bat; assert $state equals 0
   local bat="$ZBIN/bat"; assert "$bat" is_executable
   $bat --version; assert $state equals 0
@@ -67,7 +67,7 @@
   local blast="$ZBIN/blast"; assert "$blast" is_executable
   $blast --dry; assert $state equals 0
 }
-@test 'boilr' {
+@test 'boilr' { # boilerplate template manager that generates files or directories from template repositories
   run zinit for @tmrts/boilr
   assert $state equals 0
   [[ $OSTYPE =~ 'darwin*' ]] \
@@ -439,6 +439,11 @@ $kopia --version; assert $state equals 0
   local mocword="$ZBIN/mocword"; assert "$mocword" is_executable
   $mocword --version; assert $state equals 0
 }
+@test 'moonwalk' { # Cover your tracks during Linux Exploitation by leaving zero traces on system logs and filesystem timestamps
+  run zinit lbin'!**/moonwalk* -> moonwalk' for @mufeedvh/moonwalk; assert $state equals 0
+  local moonwalk="$ZBIN/moonwalk"; assert "$moonwalk" is_executable
+  $moonwalk --version; assert $state equals 0
+}
 @test 'navi' {
   run zinit for denisidoro/navi && assert $state equals 0
   local navi="$ZBIN/navi" && assert "$navi" is_executable
@@ -575,7 +580,13 @@ $kopia --version; assert $state equals 0
   local up="$ZBIN/up"; assert "$up" is_executable
   run $up -h; assert $output contains "up is the Ultimate Plumber"
 }
-@test 'whalebrew' {
+@test 'warp' { # Secure and simple terminal sharing
+  ! [[ $OSTYPE =~ 'darwin*' ]] && skip 'Warp test skipped on Linux'
+  run zinit lbin'!* -> warp' for spolu/warp; assert $state equals 0
+  local warp="$ZBIN/warp"; assert "$warp" is_executable
+  run $warp --version; assert $state equals 0
+}
+@test 'whalebrew' { # Homebrew, but with Docker images
   run zinit lbin'!* -> whalebrew' for whalebrew/whalebrew; assert $state equals 0
   local whalebrew="$ZBIN/whalebrew"; assert "$whalebrew" is_executable
   run $whalebrew version; assert $state equals 0
