@@ -91,7 +91,7 @@
 @test 'calico' {
   run zinit lbin"!**/calico* -> calico" for @projectcalico/calico; assert $state equals 0
   local calico="$ZBIN/calico"; assert "$calico" is_executable
-  $calico --version; assert $state equals 0
+  $calico version; assert $state equals 0
 }
 @test 'checkmake' { # experimental linter/analyzer for Makefiles
   run zinit lbin'!checkmake* -> checkmake' for mrtazz/checkmake; assert $state equals 0
