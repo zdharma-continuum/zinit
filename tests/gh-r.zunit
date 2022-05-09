@@ -244,12 +244,12 @@
   local git_chglog="$ZBIN/git-chglog"; assert "$git_chglog" is_executable
   $git_chglog --version; assert $state equals 0
 }
-@test 'git-mkver' {
+@test 'git-mkver' { # Automatic Semantic Versioning for git based software development
   run zinit for @idc101/git-mkver; assert $state equals 0
   local git_mkver="$ZBIN/git-mkver"; assert "$git_mkver" is_executable
   $git_mkver info # use git-mkver be;cause --version exits with 130...? assert $state equals 0
 }
-@test 'git-sizer' {
+@test 'git-sizer' { # Compute various size metrics for a Git repository, flagging those that might cause problems
   run zinit for @github/git-sizer; assert $state equals 0
   local git_sizer="$ZBIN/git-sizer"; assert "$git_sizer" is_executable
   $git_sizer --version; assert $state equals 0
@@ -295,7 +295,7 @@
   local gothanks="$ZBIN/gothanks"; assert "$gothanks" is_executable
   $gothanks --help; assert $state equals 0
 }
-@test 'grex' { # go test output for humans
+@test 'grex' { # A command-line tool and library for generating regular expressions from user-provided test cases
   run zinit for @pemistahl/grex; assert $state equals 0
   local grex="$ZBIN/grex"; assert "$grex" is_executable
   $grex --version; assert $state equals 0
@@ -310,12 +310,17 @@
   local hadolint="$ZBIN/hadolint"; assert "$hadolint" is_executable
   $hadolint --version; assert $state equals 0
 }
+@test 'helix' { # A post-modern modal text editor
+  run zinit lbin'!* -> helix' for @helix-ediitor/helix; assert $state equals 0
+  local helix="$ZBIN/helix"; assert "$helix" is_executable
+  $helix --version; assert $state equals 0
+}
 @test 'heksa' { # CLI hex dumper with colors
   run zinit for @raspi/heksa; assert $state equals 0
   local heksa="$ZBIN/heksa"; assert "$heksa" is_executable
   $heksa --version; assert $state equals 0
 }
-@test 'hexyl' { # CLI hex dumper with colors
+@test 'hexyl' { # A command-line hex viewer
   run zinit for @sharkdp/hexyl; assert $state equals 0
   local hexyl="$ZBIN/hexyl"; assert "$hexyl" is_executable
   $hexyl --version; assert $state equals 0
@@ -505,7 +510,7 @@ $kopia --version; assert $state equals 0
   local reg="$ZBIN/reg"; assert "$reg" is_executable
   $reg version; assert $state equals 0
 }
-@test 'rg' {
+@test 'ripgrep' { # ripgrep recursively searches directories for a regex pattern while respecting your gitignore
   run zinit lbin'!**/rg' for @BurntSushi/ripgrep; assert $state equals 0
   local rg="$ZBIN/rg"; assert "$rg" is_executable
   $rg --version; assert $state equals 0
@@ -515,7 +520,7 @@ $kopia --version; assert $state equals 0
   local rip="$ZBIN/rip"; assert "$rip" is_executable
   $rip --version; assert $state equals 0
 }
-@test 'rust-analyzer' {
+@test 'rust-analyzer' { # A Rust compiler front-end for IDEs
   run zinit lbin'!* -> rust-analyzer' for @rust-lang/rust-analyzer; assert $state equals 0
   local rust_analyzer="$ZBIN/rust-analyzer"; assert "$rust_analyzer" is_executable
   $rust_analyzer --version; assert $state equals 0
@@ -525,7 +530,7 @@ $kopia --version; assert $state equals 0
   local s="$ZBIN/s"; assert "$s" is_executable
   $s --version; assert $state equals 0
 }
-@test 'sd' {
+@test 'sd' { # Intuitive find & replace CLI (sed alternative)
   run zinit lbin'!sd* -> sd' for @chmln/sd; assert $state equals 0
   local sd="$ZBIN/sd"; assert "$sd" is_executable
   $sd --version; assert $state equals 0
