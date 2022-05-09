@@ -602,7 +602,7 @@ $kopia --version; assert $state equals 0
   run $wifiqr -v; assert $state equals 0
 }
 @test 'wtf' { # The personal information dashboard for your terminal
-  run zinit lbin'!**/wtf' for wtfutil/wtf; assert $state equals 0
+  run zinit lbin'!* -> wtf' for wtfutil/wtf; assert $state equals 0
   local wtf="$ZBIN/wtf"; assert "$wtf" is_executable
   run $wtf --version; assert $state equals 0
 }
