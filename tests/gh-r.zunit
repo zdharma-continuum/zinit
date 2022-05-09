@@ -10,13 +10,18 @@
   local act="$ZBIN/act"; assert "$act" is_executable
   $act --version; assert $state equals 0
 }
+@test 'alist' { # A file list program that supports multiple storage, powered by Gin and React
+  run zinit lbin'!* -> alist' for @Xhofe/alist; assert $state equals 0
+  local alist="$ZBIN/alist"; assert "$alist" is_executable
+  $alist --version; assert $state equals 0
+}
 @test 'alacritty' { # Run your GitHub alacrittyions locally
   [[ $OSTYPE =~ 'linux*' ]] && skip 'Alacritty test skipped on Linux/GNU'
   run zinit for @alacritty/alacritty; assert $state equals 0
   local alacritty="$ZBIN/alacritty"; assert "$alacritty" is_executable
   $alacritty --version; assert $state equals 0
 }
-@test 'asciigraph' {
+@test 'asciigraph' { # Go package to make lightweight ASCII line graph ╭┈╯ in command line apps with no other dependencies.
   run zinit for @guptarohit/asciigraph; assert $state equals 0
   local asciigraph="$ZBIN/asciigraph"; assert "$asciigraph" is_executable
   $asciigraph --help; assert $state equals 0
@@ -26,7 +31,7 @@
   local assh="$ZBIN/assh"; assert "$assh" is_executable
   $assh --version; assert $state equals 0
 }
-@test 'atmos' {
+@test 'atmos' { # Universal Tool for DevOps and Cloud Automation (works with terraform, helm, helmfile, etc)
   run zinit for lbin'!* -> atmos' @cloudposse/atmos; assert $state equals 0
   local atmos="$ZBIN/atmos"; assert "$atmos" is_executable
   $atmos version; assert $state equals 0
@@ -47,7 +52,7 @@
   local bandwhich="$ZBIN/bandwhich"; assert "$bandwhich" is_executable
   $bandwhich --help; assert $state equals 0
 }
-@test 'bat' {
+@test 'bat' { # A cat(1) clone with wings
   run zinit for @sharkdp/bat; assert $state equals 0
   local bat="$ZBIN/bat"; assert "$bat" is_executable
   $bat --version; assert $state equals 0
@@ -67,7 +72,7 @@
   local blast="$ZBIN/blast"; assert "$blast" is_executable
   $blast --dry; assert $state equals 0
 }
-@test 'boilr' {
+@test 'boilr' { # boilerplate template manager that generates files or directories from template repositories
   run zinit for @tmrts/boilr
   assert $state equals 0
   [[ $OSTYPE =~ 'darwin*' ]] \
@@ -78,17 +83,17 @@
   $boilr --help
   assert $state equals 0
 }
-@test 'bottom' {
+@test 'bottom' { # Yet another cross-platform graphical process/system monitor
   run zinit lbin'!**/btm' for ClementTsang/bottom; assert $state equals 0
   local bottom="$ZBIN/btm"; assert "$bottom" is_executable
   $bottom --version; assert $state equals 0
 }
-@test 'btop' {
+@test 'btop' { # A monitor of resources
   run zinit lbin'!**/btop' for aristocratos/btop; assert $state equals 0
   local btop="$ZBIN/btop"; assert "$btop" is_executable
   $btop --version; assert $state equals 0
 }
-@test 'calico' {
+@test 'calico' { # Cloud native networking and network security
   run zinit lbin"!**/calico* -> calico" for @projectcalico/calico; assert $state equals 0
   local calico="$ZBIN/calico"; assert "$calico" is_executable
   $calico --version; assert $state equals 0
@@ -244,12 +249,12 @@
   local git_chglog="$ZBIN/git-chglog"; assert "$git_chglog" is_executable
   $git_chglog --version; assert $state equals 0
 }
-@test 'git-mkver' {
+@test 'git-mkver' { # Automatic Semantic Versioning for git based software development
   run zinit for @idc101/git-mkver; assert $state equals 0
   local git_mkver="$ZBIN/git-mkver"; assert "$git_mkver" is_executable
   $git_mkver info # use git-mkver be;cause --version exits with 130...? assert $state equals 0
 }
-@test 'git-sizer' {
+@test 'git-sizer' { # Compute various size metrics for a Git repository, flagging those that might cause problems
   run zinit for @github/git-sizer; assert $state equals 0
   local git_sizer="$ZBIN/git-sizer"; assert "$git_sizer" is_executable
   $git_sizer --version; assert $state equals 0
@@ -295,7 +300,7 @@
   local gothanks="$ZBIN/gothanks"; assert "$gothanks" is_executable
   $gothanks --help; assert $state equals 0
 }
-@test 'grex' { # go test output for humans
+@test 'grex' { # A command-line tool and library for generating regular expressions from user-provided test cases
   run zinit for @pemistahl/grex; assert $state equals 0
   local grex="$ZBIN/grex"; assert "$grex" is_executable
   $grex --version; assert $state equals 0
@@ -310,12 +315,17 @@
   local hadolint="$ZBIN/hadolint"; assert "$hadolint" is_executable
   $hadolint --version; assert $state equals 0
 }
+@test 'helix' { # A post-modern modal text editor
+  run zinit lbin'!**/hx' for @helix-editor/helix; assert $state equals 0
+  local helix="$ZBIN/hx"; assert "$helix" is_executable
+  $helix --version; assert $state equals 0
+}
 @test 'heksa' { # CLI hex dumper with colors
   run zinit for @raspi/heksa; assert $state equals 0
   local heksa="$ZBIN/heksa"; assert "$heksa" is_executable
   $heksa --version; assert $state equals 0
 }
-@test 'hexyl' { # CLI hex dumper with colors
+@test 'hexyl' { # A command-line hex viewer
   run zinit for @sharkdp/hexyl; assert $state equals 0
   local hexyl="$ZBIN/hexyl"; assert "$hexyl" is_executable
   $hexyl --version; assert $state equals 0
@@ -362,7 +372,7 @@
   local keepassxc="$ZBIN/keepassxc"; assert "$keepassxc" is_executable
   $keepassxc -v; assert $state equals 0
 }
-@test 'ko' {
+@test 'ko' { # Build and deploy Go applications on Kubernetes
   run zinit for google/ko; assert $state equals 0
   local ko="$ZBIN/ko"; assert "$ko" is_executable
   $ko version; assert $state equals 0
@@ -372,7 +382,7 @@ run zinit for @kopia/kopia; assert $state equals 0
 local kopia="$ZBIN/kopia"; assert "$kopia" is_executable
 $kopia --version; assert $state equals 0
 }
-@test 'lazygit' {
+@test 'lazygit' { # simple terminal UI for git commands
   run zinit for jesseduffield/lazygit; assert $state equals 0
   local lazygit="$ZBIN/lazygit"; assert "$lazygit" is_executable
   $lazygit --version; assert $state equals 0
@@ -439,18 +449,23 @@ $kopia --version; assert $state equals 0
   local mocword="$ZBIN/mocword"; assert "$mocword" is_executable
   $mocword --version; assert $state equals 0
 }
-@test 'navi' {
+@test 'moonwalk' { # Cover your tracks during Linux Exploitation by leaving zero traces on system logs and filesystem timestamps
+  run zinit lbin'!**/moonwalk* -> moonwalk' for @mufeedvh/moonwalk; assert $state equals 0
+  local moonwalk="$ZBIN/moonwalk"; assert "$moonwalk" is_executable
+  $moonwalk --version; assert $state equals 0
+}
+@test 'navi' { # Declarative, asynchronous routing for React
   run zinit for denisidoro/navi && assert $state equals 0
   local navi="$ZBIN/navi" && assert "$navi" is_executable
   $navi --version && assert $state equals 0
 }
-@test 'neovim::binary' {
+@test 'neovim::binary' { # Vim-fork focused on extensibility and usability
   [[ $OSTYPE =~ 'darwin*' ]] && skip 'Neovim realease binary broken for macOS as of May 3rd, 2022'
   run zinit lbin'!**/nvim' id-as'neovim/binary' for neovim/neovim; assert $state equals 0; assert $output does_not_contain 'appimage'
   local nvim="$ZBIN/nvim"; assert "$nvim" is_executable
   $nvim --version; assert $state equals 0
 }
-@test 'neovim::appimage' {
+@test 'neovim::appimage' { # Vim-fork focused on extensibility and usability
   run zinit bpick'*appimage*' id-as'neovim/appimage' for neovim/neovim
   assert $state equals 0; assert $output contains 'nvim.appimage'
   assert "$ZINIT[PLUGINS_DIR]/neovim---appimage/nvim.appimage" is_file
@@ -500,17 +515,17 @@ $kopia --version; assert $state equals 0
   local reg="$ZBIN/reg"; assert "$reg" is_executable
   $reg version; assert $state equals 0
 }
-@test 'rg' {
+@test 'ripgrep' { # ripgrep recursively searches directories for a regex pattern while respecting your gitignore
   run zinit lbin'!**/rg' for @BurntSushi/ripgrep; assert $state equals 0
   local rg="$ZBIN/rg"; assert "$rg" is_executable
   $rg --version; assert $state equals 0
 }
-@test 'rip' {
+@test 'rip' { # A safe and ergonomic alternative to rm
   run zinit for @nivekuil/rip; assert $state equals 0
   local rip="$ZBIN/rip"; assert "$rip" is_executable
   $rip --version; assert $state equals 0
 }
-@test 'rust-analyzer' {
+@test 'rust-analyzer' { # A Rust compiler front-end for IDEs
   run zinit lbin'!* -> rust-analyzer' for @rust-lang/rust-analyzer; assert $state equals 0
   local rust_analyzer="$ZBIN/rust-analyzer"; assert "$rust_analyzer" is_executable
   $rust_analyzer --version; assert $state equals 0
@@ -520,22 +535,22 @@ $kopia --version; assert $state equals 0
   local s="$ZBIN/s"; assert "$s" is_executable
   $s --version; assert $state equals 0
 }
-@test 'sd' {
+@test 'sd' { # Intuitive find & replace CLI (sed alternative)
   run zinit lbin'!sd* -> sd' for @chmln/sd; assert $state equals 0
   local sd="$ZBIN/sd"; assert "$sd" is_executable
   $sd --version; assert $state equals 0
 }
-@test 'shellcheck' {
+@test 'shellcheck' { # a static analysis tool for shell scripts
   run zinit for koalaman/shellcheck; assert $state equals 0
   local shellcheck="$ZBIN/shellcheck"; assert "$shellcheck" is_executable
   $shellcheck --version; assert $state equals 0
 }
-@test 'shfmt' {
+@test 'shfmt' { # A shell parser, formatter, and interpreter with bash support; includes shfmt
   run zinit lbin'!**/sh* -> shfmt' for @mvdan/sh; assert $state equals 0
   local shfmt="$ZBIN/shfmt"; assert "$shfmt" is_executable
   $shfmt --version; assert $state equals 0
 }
-@test 'starship' {
+@test 'starship' { # The minimal, blazing-fast, and infinitely customizable prompt for any shell
   run zinit for @starship/starship; assert $state equals 0
   local starship="$ZBIN/starship"; assert "$starship" is_executable
   $starship --version; assert $state equals 0
@@ -545,12 +560,12 @@ $kopia --version; assert $state equals 0
   local stern="$ZBIN/stern"; assert "$stern" is_executable
   $stern --version; assert $state equals 0
 }
-@test 'tealdeer' {
+@test 'tealdeer' { # A very fast implementation of tldr in Rust
   run zinit lbin'!tealdeer* -> tealdeer' for @dbrgn/tealdeer; assert $state equals 0
   local tealdeer="$ZBIN/tealdeer"; assert "$tealdeer" is_executable
   $tealdeer --version; assert $state equals 0
 }
-@test 'tokei' {
+@test 'tokei' { # Count your code, quickly.
   run zinit for @XAMPPRocky/tokei; assert $state equals 0
   local tokei="$ZBIN/tokei"; assert "$tokei" is_executable
   $tokei --version; assert $state equals 0
@@ -570,12 +585,18 @@ $kopia --version; assert $state equals 0
   local tv="$ZBIN/tv"; assert "$tv" is_executable
   $tv --version; assert $state equals 0
 }
-@test 'up' {
+@test 'up' { # Deploy infinitely scalable serverless apps, apis, and sites in seconds to AWS
   run zinit lbin'!up* -> up' for akavel/up; assert $state equals 0
   local up="$ZBIN/up"; assert "$up" is_executable
   run $up -h; assert $output contains "up is the Ultimate Plumber"
 }
-@test 'whalebrew' {
+@test 'warp' { # Secure and simple terminal sharing
+  ! [[ $OSTYPE =~ 'darwin*' ]] && skip 'Warp test skipped on Linux'
+  run zinit lbin'!* -> warp' for spolu/warp; assert $state equals 0
+  local warp="$ZBIN/warp"; assert "$warp" is_executable
+  run $warp --version; assert $state equals 0
+}
+@test 'whalebrew' { # Homebrew, but with Docker images
   run zinit lbin'!* -> whalebrew' for whalebrew/whalebrew; assert $state equals 0
   local whalebrew="$ZBIN/whalebrew"; assert "$whalebrew" is_executable
   run $whalebrew version; assert $state equals 0
@@ -584,6 +605,11 @@ $kopia --version; assert $state equals 0
   run zinit lbin'!* -> wifiqr' for reugn/wifiqr; assert $state equals 0
   local wifiqr="$ZBIN/wifiqr"; assert "$wifiqr" is_executable
   run $wifiqr -v; assert $state equals 0
+}
+@test 'wtf' { # The personal information dashboard for your terminal
+  run zinit lbin'!**/wtf* -> wtf' for wtfutil/wtf; assert $state equals 0
+  local wtf="$ZBIN/wtf"; assert "$wtf" is_executable
+  run $wtf --version; assert $state equals 0
 }
 @test 'xh' { # Friendly and fast tool for sending HTTP requests
   run zinit for @ducaale/xh; assert $state equals 0
