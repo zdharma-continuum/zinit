@@ -45,7 +45,7 @@
   [[ $OSTYPE =~ 'darwin*' ]] && skip 'Bandwhich test skipped on Darwin'
   run zinit for @imsnif/bandwhich; assert $state equals 0
   local bandwhich="$ZBIN/bandwhich"; assert "$bandwhich" is_executable
-  $bandwhich --help; assert $state equals 0
+  $bandwhich --version; assert $state equals 0
 }
 @test 'bat' {
   run zinit for @sharkdp/bat; assert $state equals 0

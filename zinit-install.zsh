@@ -1465,7 +1465,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       x86_64 '(amd64|x86_64|x64)'
       darwin  '*((#s)|/)*(apple|darwin|mac|macos|osx|dmg)*((#e)|/)*'
       linux-gnu '(linux|linux-gnu|linux-musl)'
-      linux-musl '(linux|linux-musl)*~*linux-gnu*'
+      linux-musl '(linux|linux-musl)'
+      linux 'linux[?-](musl|gnu|)'
       aarch64 '(arm64|aarch64|arm[?v]8)'
       arm64  '(arm64|aarch64|arm[?v]8)'
       armv5  'arm[?v]5'
@@ -1537,7 +1538,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         # filter urls by OS (e.g., darwin, linux, windows)
         if (( $#list > 1 )) {
-            list2=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} )
+            list2=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} )
             (( $#list2 > 0 )) && list=( ${list2[@]} )
         }
 
