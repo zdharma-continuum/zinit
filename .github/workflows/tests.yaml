@@ -61,15 +61,3 @@ jobs:
 
       - name: "ices"
         run: zunit run tests/ices.zunit
-
-      - name: "annexes"
-        run: zunit run tests/annexes.zunit
-
-      - name: "gh-r"
-        run: zunit run tests/gh-r.zunit
-
-      - name: "plugins"
-        run: zunit run tests/plugins.zunit
-
-      - name: "snippets"
-        run: zunit run tests/snippets.zunit
