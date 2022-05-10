@@ -412,6 +412,11 @@ run zinit for @kopia/kopia; assert $state equals 0
 local kopia="$ZBIN/kopia"; assert "$kopia" is_executable
 $kopia --version; assert $state equals 0
 }
+@test 'krew' { # Build and deploy Go applications on Kubernetes
+  run zinit lbin'!krew* -> krew' for @kubernetes-sigs/krew; assert $state equals 0
+  local krew="$ZBIN/krew"; assert "$krew" is_executable
+  $krew version; assert $state equals 0
+}
 @test 'lazygit' { # simple terminal UI for git commands
   run zinit for jesseduffield/lazygit; assert $state equals 0
   local lazygit="$ZBIN/lazygit"; assert "$lazygit" is_executable
@@ -546,6 +551,11 @@ $kopia --version; assert $state equals 0
   $reg version; assert $state equals 0
 }
 @test 'ripgrep' { # ripgrep recursively searches directories for a regex pattern while respecting your gitignore
+  run zinit lbin'!**/rg' for @BurntSushi/ripgrep; assert $state equals 0
+  local rg="$ZBIN/rg"; assert "$rg" is_executable
+  $rg --version; assert $state equals 0
+}
+@test 'ripgrep-prebuilt' { # ripgrep recursively searches directories for a regex pattern while respecting your gitignore
   run zinit lbin'!**/rg' for @BurntSushi/ripgrep; assert $state equals 0
   local rg="$ZBIN/rg"; assert "$rg" is_executable
   $rg --version; assert $state equals 0
