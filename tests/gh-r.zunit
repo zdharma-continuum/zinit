@@ -305,6 +305,11 @@
   local gosu="$ZBIN/gosu"; assert "$gosu" is_executable
   $gosu --version; assert $state equals 0
 }
+@test 'got' { # Simple golang package and CLI tool to download large files faster than cURL and Wget
+  run zinit for @melbahja/got; assert $state equals 0
+  local got="$ZBIN/got"; assert "$got" is_executable
+  $got --version; assert $state equals 0
+}
 @test 'gotestfmt' { # go test output for humans
   run zinit for @haveyoudebuggedit/gotestfmt; assert $state equals 0
   local gotestfmt="$ZBIN/gotestfmt"; assert "$gotestfmt" is_executable
