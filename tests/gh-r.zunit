@@ -98,6 +98,11 @@
   local calico="$ZBIN/calico"; assert "$calico" is_executable
   $calico version; assert $state equals 0
 }
+@test 'certificates' { # An opinionated helper for generating tls certificates
+  run zinit lbin"!* -> certificates" for @mvmaasakkers/certificates; assert $state equals 0
+  local certificates="$ZBIN/certificates"; assert "$certificates" is_executable
+  $certificates --version; assert $state equals 0
+}
 @test 'checkmake' { # experimental linter/analyzer for Makefiles
   run zinit lbin'!checkmake* -> checkmake' for mrtazz/checkmake; assert $state equals 0
   local checkmake="$ZBIN/checkmake"; assert "$checkmake" is_executable
@@ -152,6 +157,11 @@
   local dc="$ZBIN/docker-compose"; assert "$dc" is_executable
   $dc --version; assert $state equals 0
 }
+@test 'documize' {
+  run zinit lbin'!* -> documize' for @documize/community; assert $state equals 0
+  local documize="$ZBIN/documize"; assert "$documize" is_executable
+  $documize version; assert $state equals 0
+}
 @test 'dog' { # A command-line DNS client.
   if [[ $OSTYPE =~ 'linux.*' ]]; then skip 'ogham/dog only tested for macOS'; fi
   run zinit as'completion' mv'**/dog.zsh -> _dog' for @ogham/dog; assert $state equals 0
@@ -177,6 +187,11 @@
   run zinit lbin'!**/dyff' for @homeport/dyff; assert $state equals 0
   local dyff="$ZBIN/dyff"; assert "$dyff" is_executable
   $dyff version; assert $state equals 0
+}
+@test 'etcd' { # Distributed reliable key-value store for the most critical data of a distributed system
+  run zinit lbin'!**/etcd' for @etcd-io/etcd; assert $state equals 0
+  local etcd="$ZBIN/etcd"; assert "$etcd" is_executable
+  $etcd --version; assert $state equals 0
 }
 @test 'exa' {
   run zinit lbin'!**/exa' for ogham/exa; assert $state equals 0
@@ -335,6 +350,11 @@
   local hit="$ZBIN/hit"; assert "$hit" is_executable
   $hit --version; assert $state equals 0
 }
+@test 'hoofli' { # Generate PlantUML diagrams from Chrome or Firefox network inspection
+  run zinit lbin'!* -> hoofli' for @dnnrly/hoofli; assert $state equals 0
+  local hoofli="$ZBIN/hoofli"; assert "$hoofli" is_executable
+  $hoofli -h; assert $state equals 0
+}
 @test 'hors' { # instant coding answers via the command line (howdoi in rust)
   if [[ $OSTYPE =~ 'linux.*' ]]; then skip 'WindSoilder/hors only tested for macOS'; fi
   run zinit for @WindSoilder/hors; assert $state equals 0
@@ -355,6 +375,11 @@
   run zinit lbin'!* -> insect' for @sharkdp/insect; assert $state equals 0
   local insect="$ZBIN/insect"; assert "$insect" is_executable
   $insect help; assert $state equals 0
+}
+@test 'joincap' { # Merge multiple pcap files together, gracefully.
+  run zinit lbin'!* -> joincap' for @assafmo/joincap; assert $state equals 0
+  local joincap="$ZBIN/joincap"; assert "$joincap" is_executable
+  $joincap --version; assert $state equals 0
 }
 @test 'jq' { # Command-line JSON processor
   run zinit lbin'!* -> jq' for stedolan/jq; assert $state equals 0
