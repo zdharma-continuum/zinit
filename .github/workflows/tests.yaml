@@ -4,8 +4,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-# env:
-#   TERM: xterm
+env:
+  TERM: xterm-256color
 
 on:
   pull_request:
@@ -15,6 +15,7 @@ on:
       - 'tests/**'
       - 'share/**'
       - 'zinit*.zsh'
+      - '.github/workflows/tests.yaml'
   push:
     branches:
       - main
@@ -27,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['macos-10.15', 'macos-11', 'macos-12', 'ubuntu-18.04', 'ubuntu-20.04','ubuntu-22.04']
+        os: ['macos-10.15','macos-11','macos-12','ubuntu-20.04','ubuntu-22.04']
       fail-fast: true
 
     steps:
@@ -36,25 +37,31 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: "upgrade glibc"
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get clean && sudo apt-get update
+          sudo apt-get install \
+            build-essential subversion \
+            gcc gcc-multilib \
+            glibc-source libc6 libc6-dev \
+            musl musl-dev musl-tools
+
       - name: "install ncurses, svn, unzip, and zsh"
         run: |
-          brew install ncurses, svn, unzip, and zsh
+          brew install ncurses svn unzip zsh
           exec bash
           echo "eval $(brew shellenv)" > .profile
 
       - name: "install revolver"
         run: |
-          git clone https://github.com/molovo/revolver revolver
-          chmod u+x revolver/revolver
-          mv revolver/revolver /usr/local/bin
+          git clone --depth 1 https://github.com/molovo/revolver revolver
+          chmod u+x revolver/revolver; mv revolver/revolver /usr/local/bin;
 
       - name: "install zunit"
         run: |
-          git clone https://github.com/zdharma-continuum/zunit
-          cd ./zunit
-          zsh -c -l './build.zsh'
-          chmod u+x ./zunit
-          cp ./zunit /usr/local/bin
+          git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
+          zsh -c -l './build.zsh' && cp ./zunit /usr/local/bin && chmod u+x ./zunit
 
       - name: 'clean up zunit & revolver'
         run: rm -rf revolver zunit

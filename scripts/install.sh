@@ -106,7 +106,7 @@ download_git_output_processor() {
 
   echo_info "Fetching git-process-output.zsh from $url"
   if command -v curl > /dev/null 2>&1; then
-    curl -fsSL -o "$script_path" "$url"
+    curl --tcp-fastopen -fsSL -o "$script_path" "$url"
   elif command -v wget > /dev/null 2>&1; then
     wget -q -O "$script_path" "$url"
   fi
