@@ -31,7 +31,7 @@ info 'creating test env' \
   && command chmod g-rwX $ZINIT[HOME_DIR] \
   && zcompile $ZINIT[BIN_DIR]/zinit.zsh \
   && info 'successfully created zunit env' \
-  || err 'failed to create zunit env'
+  || error 'failed to create zunit env'
 
 source $ZINIT[BIN_DIR]/zinit.zsh \
   && autoload -Uz _zinit \
@@ -41,7 +41,7 @@ source $ZINIT[BIN_DIR]/zinit.zsh \
 # Install Annexes [[[
 info 'installing test dependencies'
     # ver'fix/improve-lbin-logic' \
-zinit light-mode for \
+zinit depth'1' light-mode for \
   zdharma-continuum/zinit-annex-binary-symlink \
   zdharma-continuum/zinit-annex-{'bin-gem-node','default-ice'}
 # ]]]
