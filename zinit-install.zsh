@@ -1491,8 +1491,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     local -a list init_list
 
-    init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
-                      command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+    init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
     init_list=( ${init_list[@]#href=?} )
 
     local -a filtered bpicks
@@ -1788,8 +1787,7 @@ ziextract() {
                 for prog ( hdiutil cp ) { →zinit-check $prog "$file" || return 1; }
 
                 integer retval
-                local attached_vol="$( command hdiutil attach "$file" | \
-                           command tail -n1 | command cut -f 3 )"
+                local attached_vol="$( command hdiutil attach "$file" | command tail -n1 | command cut -f 3 )"
 
                 command cp -Rf ${attached_vol:-${TMPDIR:-/tmp}/acb321GEF}/*(D) .
                 retval=$?
