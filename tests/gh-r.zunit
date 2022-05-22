@@ -118,6 +118,11 @@
   local compress="$ZBIN/s2c"; assert "$compress" is_executable
   $compress --help; assert $state equals 0
 }
+@test 'coreutils' { # Cross-platform Rust rewrite of the GNU coreutils
+  run zinit for uutils/coreutils; assert $state equals 0
+  local coreutils="$ZBIN/s2c"; assert "$coreutils" is_executable
+  $coreutils --help; assert $state equals 0
+}
 @test 'create-go-app' { # Create a new production-ready project with backend, frontend and deploy automation by running one CLI command
   run zinit lbin'!**/cgapp' for create-go-app/cli
   assert $state equals 0
@@ -138,6 +143,11 @@
   run zinit for @dandavison/delta; assert $state equals 0
   local delta="$ZBIN/delta"; assert "$delta" is_executable
   $delta --version; assert $state equals 0
+}
+@test 'devspace' { # Automate your deployment workflow with DevSpace and develop software directly inside Kubernetes
+  run zinit for lbin'!* -> devspace' @loft-sh/devspace; assert $state equals 0
+  local devspace="$ZBIN/devspace"; assert "$devspace" is_executable
+  $devspace --version; assert $state equals 0
 }
 @test 'dive' { # A tool for exploring each layer in a docker image
   run zinit for @wagoodman/dive; assert $state equals 0
@@ -207,6 +217,11 @@
   local fd="$ZBIN/fd"; assert "$fd" is_executable
   $fd version; assert $state equals 0
 }
+@test 'flux2' { # Open and extensible continuous delivery solution for Kubernetes
+  run zinit for lbin'!* -> flux' fluxcd/flux2; assert $state equals 0
+  local flux="$ZBIN/flux"; assert "$flux" is_executable
+  $flux version --client; assert $state equals 0
+}
 @test 'fogg' { # Manage Infrastructure as Code with less pain
   run zinit for @chanzuckerberg/fogg; assert $state equals 0
   local fogg="$ZBIN/fogg"; assert "$fogg" is_executable
@@ -227,6 +242,11 @@
   run zinit lbin'!**/gaper' for @maxcnunes/gaper; assert $state equals 0
   local gaper="$ZBIN/gaper"; assert "$gaper" is_executable
   $gaper --version; assert $state equals 0
+}
+@test 'garden' { # Automation for Kubernetes development and testing
+  run zinit for garden-io/garden; assert $state equals 0
+  local garden="$ZBIN/garden"; assert "$garden" is_executable
+  $garden version; assert $state equals 0
 }
 @test 'gdu' { # Fast disk usage analyzer with console interface written in Go
   run zinit lbin'!* -> gdu' for @dundee/gdu; assert $state equals 0
@@ -509,6 +529,11 @@ $kopia --version; assert $state equals 0
 #   local nvim="$ZBIN/nvim"; assert "$nvim" is_executable
 #   $nvim --version; assert $state equals 0
 # }
+@test 'okteto' { # Git repository summary on your terminal
+  run zinit for lbin'!* -> okteto' okteto/okteto; assert $state equals 0
+  local okteto="$ZBIN/okteto"; assert "$okteto" is_executable
+  $okteto version; assert $state equals 0
+}
 @test 'onefetch' { # Git repository summary on your terminal
   run zinit for o2sh/onefetch; assert $state equals 0
   local onefetch="$ZBIN/onefetch"; assert "$onefetch" is_executable
@@ -610,6 +635,11 @@ $kopia --version; assert $state equals 0
   local stern="$ZBIN/stern"; assert "$stern" is_executable
   $stern --version; assert $state equals 0
 }
+@test 'sysbox' { # sysadmin/scripting utilities, distributed as a single binary
+  run zinit for lbin'!* -> sysbox' @skx/sysbox; assert $state equals 0
+  local sysbox="$ZBIN/sysbox"; assert "$sysbox" is_executable
+  $sysbox version; assert $state equals 0
+}
 @test 'tealdeer' { # A very fast implementation of tldr in Rust
   run zinit lbin'!tealdeer* -> tealdeer' for @dbrgn/tealdeer; assert $state equals 0
   local tealdeer="$ZBIN/tealdeer"; assert "$tealdeer" is_executable
@@ -651,6 +681,11 @@ $kopia --version; assert $state equals 0
   run zinit lbin'!* -> warp' for spolu/warp; assert $state equals 0
   local warp="$ZBIN/warp"; assert "$warp" is_executable
   run $warp --version; assert $state equals 0
+}
+@test 'wezterm' { # A GPU-accelerated cross-platform terminal emulator and multiplexer
+  run zinit for @wez/wezterm; assert $state equals 0
+  local wezterm="$ZBIN/wezterm"; assert "$wezterm" is_executable
+  run $wezterm --version; assert $state equals 0
 }
 @test 'whalebrew' { # Homebrew, but with Docker images
   run zinit lbin'!* -> whalebrew' for whalebrew/whalebrew; assert $state equals 0

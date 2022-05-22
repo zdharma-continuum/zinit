@@ -1507,7 +1507,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       if [[ -n $bpick ]] { list=( ${(M)list[@]:#(#i)*/$~bpick} ) }
 
       # REMOVE ARTIFACTS THAT SHOULDN'T BE CONSIDERED
-      filtered=( ${list[@]:#(#i)*([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.sh(#e))*} )
+      filtered=( ${list[@]:#(#i)*([3-6]86|md5|sig|sum|sha256*|\.(pkg|sh|txt|asc|vsix)(#e))*} )
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .APK PACKAGES IF ANBOX PRESENT
@@ -1516,12 +1516,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .DEB PACKAGES IF DPKG-DEB PRESENT
-      if (( $#list > 1 && ${+commands[dpkg-deb]} == 1 )) { filtered=( ${list[@]:#(#i)*(64|)*deb(#e)} ) } \
+      if (( $#list > 1 && ${+commands[dpkg-deb]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*(64|)*deb(#e)} ) } \
       else { filtered=( ${list[@]:#*deb(#e)} ) }
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .RPM PACKAGES IF REDHAT PACKAGE MANAGER PRESENT
-      if (( $#list > 1 && ${+commands[rpm]} == 1 )) { filtered=( ${list[@]:#(#i)*(64|)*rpm(#e)} ) } \
+      if (( $#list > 1 && ${+commands[rpm]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*(64|)*rpm(#e)} ) } \
       else { filtered=( ${list[@]:#*rpm(#e)} ) }
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
