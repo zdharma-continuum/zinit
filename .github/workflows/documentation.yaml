@@ -10,7 +10,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   zshelldoc:
     runs-on: ubuntu-latest
     steps:
@@ -26,5 +25,6 @@ jobs:
       - name: check for out-of-date documentation
         run: |
           if ! git --no-pager diff --exit-code; then
-            echo "::set-output zshelldocs are out-of-date, run 'make doc'"
+            echo "::error:: Z-shelldocs are out-of-date. To regenerate, run 'make doc'"
+            exit 1
           fi
