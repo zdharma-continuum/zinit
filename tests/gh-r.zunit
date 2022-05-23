@@ -529,11 +529,6 @@ $kopia --version; assert $state equals 0
   local pmy="$ZBIN/pmy"; assert "$pmy" is_executable
   $pmy --version; assert $state equals 0
 }
-@test 'pokeget' { # a bash script you can use to display cool sprites of pokemon in your terminal
-  run zinit bpick'*.tar.gz' lbin'!* -> pokeget' for @talwat/pokeget; assert $state equals 0
-  local pokeget="$ZBIN/pokeget"; assert "$pokeget" is_executable
-  $pokeget pikachu; assert $state equals 0
-}
 @test 'procs' { # A modern replacement for ps written in Rust
   run zinit for @dalance/procs; assert $state equals 0
   local procs="$ZBIN/procs"; assert "$procs" is_executable
