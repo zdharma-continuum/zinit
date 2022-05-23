@@ -1471,22 +1471,23 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     fi
 
     local -A matchstr
+    # Logical grouping of $CPUTYPE & $OSTYPE
     matchstr=(
       aarch64 '(arm64|aarch64|arm[?v]8)'
-      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
-      android '(apk|android|linux-android)'
       arm64 '(arm64|aarch64|arm[?v]8)'
       armv5 'arm[?v]5'
       armv6 'arm[?v]6'
       armv7 'armv[?v]7'
-      cygwin '(cyg|-|_|)win(dows|32|64|))'
-      darwin '*((#s)|/)*(apple|darwin|mac|macos|osx|dmg)*((#e)|/)*'
+      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
       linux "*(linux-musl|musl|linux64|linux)*~^*(linux*${MACHTYPE}|${CPUTYPE}*linux)*"
+      linux-android '(apk|android|linux-android)'
       linux-gnu "*(linux-musl|musl|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
       linux-musl "*(linux-musl|musl|linux-~gnu|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
-      msys '(cyg|-|_|)win(dows|32|64|))'
-      windows '(cyg|-|_|)win(dows|32|64|))'
-      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      darwin '*((#s)|/)*(apple|darwin|mac|macos|osx|dmg)*((#e)|/)*'
+      cygwin '(win((dows|32|64))|cygwin)'
+      msys '(win((dows|32|64))|cygwin)'
+      windows '(win((dows|32|64))|cygwin)'
     )
 
     local -a list init_list
@@ -1511,8 +1512,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .APK PACKAGES IF ANBOX PRESENT
-      if (( $#list > 1 && ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[android]}*} ) } \
-      else { filtered=( ${list[@]:#(#i)*${~matchstr[android]}*} ) }
+      if (( $#list > 1 && ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[linux-android]}*} ) } \
+      else { filtered=( ${list[@]:#(#i)*${~matchstr[linux-android]}*} ) }
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .DEB PACKAGES IF DPKG-DEB PRESENT
