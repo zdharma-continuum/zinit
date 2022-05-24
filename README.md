@@ -12,7 +12,7 @@
 > This is a reliable fork/place for the continuation of the project.
 >
 > 🚧 For migration instructions please refer
-> [to this wiki entry](https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%9A%9A-Migration-to-zdharma-continuum)
+> [to this wiki entry](https://github.com/zdharma-continuum/zinit/wiki/Migrating-from-zinit-to-zdharma-continuum)
 
 <!-- START doctoc generated TOC please keep comment here to allow auto-update -->
 
