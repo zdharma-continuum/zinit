@@ -24,11 +24,10 @@ body:
     attributes:
       label: Steps to reproduce
       description: |
-        Steps to reproduce the problem.
+        Steps to reproduce the problem
       placeholder: |
-        For example:
-        1. Enable plugin '...'
-        2. Run command '...' or try to complete command '...'
+        1. Enable plugin 'foo'
+        2. Run 'foo bar' or try to complete command 'foo --widget'
         3. See error
 
   - type: textarea
@@ -36,47 +35,44 @@ body:
       required: true
     attributes:
       label: Expected behavior
-      description: A brief description of what should happen.
+      description: A brief description of the expected behavior should be
 
   - type: textarea
     attributes:
       label: Screenshots and recordings
       description: |
-        If applicable, add screenshots to help explain your problem. You can also record an asciinema session: https://asciinema.org/
+        If applicable, add screenshots or [asciinema](https://asciinema.org) session to explain your problem
 
   - type: input
     validations:
       required: true
     attributes:
-      label: OS / Linux distribution
-      placeholder: |
-        Add output of the following command:
-        `echo "$OSTYPE $VENDOR $MACHTYPE $CPUTYPE $(uname -m -p)`
+      label: Operating System & Version
+      description: Output of `echo "$OSTYPE | $VENDOR | $MACHTYPE | $CPUTYPE | $(uname -m -p)"` 
 
   - type: input
     validations:
       required: true
     attributes:
       label: Zsh version
-      description: Run `echo $ZSH_VERSION` to check.
-      placeholder: "5.6"
+      description: Output of `zsh --version`
 
   - type: input
     validations:
       required: true
     attributes:
       label: Terminal emulator
-      placeholder: iTerm2, GNOME Terminal, Terminal.app...
+      description: Terminal name & output of `echo "$TERM"`
 
   - type: dropdown
     attributes:
       label: If using WSL on Windows, which version of WSL
-      description: Run `wsl -l -v` to check.
+      description: Output `wsl -l -v`
       options:
-        - WSL1
-        - WSL2
+        - 'WSL 1'
+        - 'WSL 2'
 
   - type: textarea
     attributes:
       label: Additional context
-      description: Add any other context about the problem here. This can be themes, plugins, custom settings...
+      description: Add any other context about the problem. This can be themes, plugins, custom settings, etc.
