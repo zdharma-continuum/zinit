@@ -81,6 +81,12 @@ nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\
 pullopts|debug|null|binary|make|nocompile|notify|reset"
 
+ZINIT[cmds]="-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
+update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
+completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
+dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
+env-whitelist|bindkeys|module|add-fpath|fpath|run"
+
 # Can be customized.
 : ${ZINIT[COMPLETIONS_DIR]:=${ZINIT[HOME_DIR]}/completions}
 : ${ZINIT[MODULE_DIR]:=${ZINIT[HOME_DIR]}/module}
@@ -165,7 +171,10 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-var  $'\e[38;5;81m'   col-glob  $'\e[38;5;227m' col-ehi   $'\e[1m\e[38;5;210m'
         col-cmd  $'\e[38;5;82m'   col-ice   $'\e[38;5;39m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num  $'\e[3;38;5;155m' col-term  $'\e[38;5;185m'
-        col-warn $'\e[38;5;214m'  col-apo $'\e[1;38;5;220m' col-ok    $'\e[38;5;220m'
+        col-warn $'\e[38;5;214m' col-ok    $'\e[38;5;220m'
+        col-apo $'\e[1;38;5;45m' col-aps $'\e[38;5;117m'
+        col-quo $'\e[1;38;5;33m' col-quos    $'\e[1;38;5;160m'
+        col-bapo $'\e[1;38;5;220m'  col-baps $'\e[1;38;5;82m'
         col-faint $'\e[38;5;238m' col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
         col-tab  $' \t '            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
         col-bar  $'\e[38;5;82m'  col-th-bar $'\e[38;5;82m'
@@ -178,6 +187,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-u    $'\e[4m'        col-it    $'\e[3m'        col-st     $'\e[9m'
         col-nu   $'\e[24m'       col-nit   $'\e[23m'       col-nst    $'\e[29m'
         col-bspc $'\b'        col-b-warn $'\e[1;38;5;214m' col-u-warn $'\e[4;38;5;214m'
+        col-bcmd $'\e[38;5;220m'
     )
     if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
           ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
@@ -1912,7 +1922,59 @@ builtin setopt noaliases
     command true # workaround a Zsh bug, see: https://www.zsh.org/mla/workers/2018/msg00966.html
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
+# FUNCTION: .zinit-formatter-auto. [[[
+.zinit-formatter-auto() {
+    emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
+    local out in=$1 i wrk match spaces rest
+    integer mbegin mend
+    local -a ice_order ecmds
+    ice_order=(
+        ${(As:|:)ZINIT[ice-list]}
+        ${(@)${(A@kons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}
+    )
+    ecmds=( ${ZINIT_EXTS[(I)z-annex subcommand:*]#z-annex subcommand:} )
 
+    wrk=$in
+    # Work on input bit by bit on whitespace separated words
+    while [[ $in == (#b)([[:space:]]#)([^[:space:]]##)(*) ]]; do
+        spaces=$match[1]
+        rest=$match[3]
+        wrk=$match[2]
+        REPLY=$wrk
+        # Is it a URL?
+        if [[ $wrk == (#b)(((http|ftp)(|s)|ssh|scp|ntp|file)://[[:alnum:].:+/]##) ]]; then
+            .zinit-formatter-url $wrk
+        # Is it an object ID?
+        elif [[ -d $ZINIT[PLUGINS_DIR]/${wrk//\//---} ]]; then
+            .zinit-formatter-pid $wrk
+        # Is it an ice mod?
+        elif [[ $wrk == ${(~j:|:)ice_order} ]]; then
+            REPLY=$ZINIT[col-ice]$wrk$ZINIT[col-rst]
+        # Is it a zinit command?
+        elif [[ $wrk == (${~ZINIT[cmds]}|${(~j:|:)ecmds}) ]]; then
+            REPLY=$ZINIT[col-cmd]$wrk$ZINIT[col-rst]
+        # Is it a binary or other runnable?
+        elif type $1 &>/dev/null; then
+            REPLY=$ZINIT[col-bcmd]$wrk$ZINIT[col-rst]
+        # Is it a single-char glymph?
+        elif [[ $wrk == (#b)(*)('<->'|'<–>'|'<—>')(*) || $wrk == (#b)(*)(…|–|—|↔|...)(*) ]]; then
+            local -A map=( … … - dsh – ndsh
+                — mdsh '<->' ↔ '<–>' ↔ '<—>' ↔
+                ↔ ↔ ... …)
+            REPLY=$match[1]$ZINIT[col-$map[$wrk]]$match[3]
+        # Is it a quoted string?
+        # \1 - preceding \2 - open, \3 - string, \4 - close, \5 - following
+        elif [[ $wrk == (#b)(*)([\'\`\"])([^\'\`\"]##)([\'\`\"])(*) ]]; then
+            local -A map=( \` bapo \' apo \" quo
+                x\` baps x\' aps x\" quos ) 
+            local openq=$match[2] str=$match[3] closeq=$match[4] RST=$ZINIT[col-rst]
+            REPLY=$match[1]$ZINIT[col-$map[$openq]]$openq$RST$ZINIT[col-$map[x$openq]]$str$RST$ZINIT[col-$map[$closeq]]$closeq$RST$match[5]
+        fi
+        in=$rest
+        out+=${spaces//$'\n'/$'\013\015'}$REPLY
+    done
+    REPLY=$out
+} # ]]]
 # FUNCTION: .zinit-formatter-pid. [[[
 .zinit-formatter-pid() {
     builtin emulate -L zsh -o extendedglob
@@ -2480,11 +2542,7 @@ cdclear|delete) ]]; then
 
     reply=( ${ZINIT_EXTS[(I)z-annex subcommand:*]} )
 
-    [[ -n $1 && $1 != (-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
-update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
-completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
-dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
-env-whitelist|bindkeys|module|add-fpath|fpath|run${reply:+|${(~j:|:)"${reply[@]#z-annex subcommand:}"}}) || $1 = (load|light|snippet) ]] && \
+    [[ -n $1 && $1 != (${~ZINIT[cmds]}|${(~j:|:)reply[@]#z-annex subcommand:}) || $1 = (load|light|snippet) ]] && \
     {
         integer ___error
         if [[ $1 = (load|light|snippet) ]] {
@@ -3147,4 +3205,6 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 # atclone-post.
 @zinit-register-hook "compile-plugin" hook:atclone-post ∞zinit-compile-plugin-hook
 
+# Create so that for sure no warncreateglobal warning is issued
+typeset -g REPLY
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
