@@ -451,9 +451,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             # Store ices at clone of a plugin
             .zinit-store-ices "$local_path/._zinit" ICE "" "" "" ""
             reply=(
-                ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone-<-> <->]}
-                ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-post <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:\!atclone-pre <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:\!atclone-<-> <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:\!atclone-post <->]}
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -999,9 +999,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         # Run annexes' atpull hooks (the before atpull-ice ones).
                         # The SVN block.
                         reply=(
-                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                            ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
-                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
+                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
+                            ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
                         )
                         for key in "${reply[@]}"; do
                             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1093,9 +1093,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     # The URL-snippet block.
                     if [[ $update = -u && $ZINIT[annex-multi-flag:pull-active] -ge 1 ]] {
                         reply=(
-                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                            ${${ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
-                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
+                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
+                            ${${ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                            ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
                         )
                         for key in "${reply[@]}"; do
                             arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1153,9 +1153,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             # The local-file snippets block.
             if [[ $update = -u ]] {
                 reply=(
-                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                    ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
-                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
+                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
+                    ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1248,9 +1248,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             # Run annexes' atpull hooks (the before atpull-ice ones).
             # The block is common to all 3 snippet types.
             reply=(
-                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
-                ${${ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
-                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-post <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\!atpull-pre <->]}
+                ${${ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\!atpull-post <->]}
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1265,9 +1265,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             # Run annexes' atclone hooks (the before atclone-ice ones)
             # The block is common to all 3 snippet types.
             reply=(
-                ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-pre <->]}
-                ${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atclone-<-> <->]}
-                ${(on)ZINIT_EXTS2[(I)zinit hook:\\\!atclone-post <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:\!atclone-pre <->]}
+                ${(on)ZINIT_EXTS[(I)z-annex hook:\!atclone-<-> <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:\!atclone-post <->]}
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )

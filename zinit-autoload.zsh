@@ -1567,9 +1567,9 @@ ZINIT[EXTENDED_GLOB]=""
                 # Run annexes' atpull hooks (the before atpull-ice ones).
                 # The gh-r / GitHub releases block.
                 reply=(
-                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                    ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
-                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
+                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
+                    ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                    ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
                 )
                 for key in "${reply[@]}"; do
                     arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1656,9 +1656,9 @@ ZINIT[EXTENDED_GLOB]=""
                   # Run annexes' atpull hooks (the before atpull-ice ones).
                   # The regular Git-plugins block.
                   reply=(
-                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-pre <->]}
-                      ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
-                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\\\!atpull-post <->]}
+                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]}
+                      ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                      ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}
                   )
                   for key in "${reply[@]}"; do
                       arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
@@ -1703,9 +1703,9 @@ ZINIT[EXTENDED_GLOB]=""
             # Run annexes' atpull hooks (the before atpull[^!]…-ice ones).
             # Block common for Git and gh-r plugins.
             reply=(
-                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-pre <->]}
-                ${${ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\\\!atpull-<-> <->]}}
-                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\\\!atpull-post <->]}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\!atpull-pre <->]}
+                ${${ICE[atpull]:#\!*}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}}
+                ${(on)ZINIT_EXTS2[(I)zinit hook:no-e-\!atpull-post <->]}
             )
             for key in "${reply[@]}"; do
                 arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
