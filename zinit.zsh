@@ -257,7 +257,7 @@ builtin setopt noaliases
 # The hijacking is not only to gather report data, but also to.
 # run custom `autoload' function, that doesn't need FPATH.
 :zinit-tmp-subst-autoload () {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
     local -a opts opts2 custom reply
     local func
@@ -387,7 +387,7 @@ builtin setopt noaliases
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-tmp-subst-bindkey() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     is-at-least 5.3 && \
@@ -945,7 +945,7 @@ builtin setopt noaliases
 # Returns user and plugin in $reply.
 #
 .zinit-any-to-user-plugin() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob typesetsilent noshortloops rcquotes \
          ${${${+reply}:#0}:+warncreateglobal}
 
@@ -987,7 +987,7 @@ builtin setopt noaliases
 } # ]]]
 # FUNCTION: .zinit-any-to-pid. [[[
 .zinit-any-to-pid() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob typesetsilent noshortloops rcquotes \
          ${${${+REPLY}:#0}:+warncreateglobal}
 
@@ -1019,7 +1019,7 @@ builtin setopt noaliases
 # FUNCTION: .zinit-util-shands-path. [[[
 # Replaces parts of path with %HOME, etc.
 .zinit-util-shands-path() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob typesetsilent noshortloops rcquotes \
          ${${${+REPLY}:#0}:+warncreateglobal}
 
@@ -1126,7 +1126,7 @@ builtin setopt noaliases
 # ]]]
 # FUNCTION: @zinit-substitute. [[[
 @zinit-substitute() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     local -A ___subst_map
@@ -1175,7 +1175,7 @@ builtin setopt noaliases
     ZINIT_EXTS[seqno]=$(( ${ZINIT_EXTS[seqno]:-0} + 1 ))
     ZINIT_EXTS[$key${${(M)type#hook:}:+ ${ZINIT_EXTS[seqno]}}]="${ZINIT_EXTS[seqno]} z-annex-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler} ${(q)icemods}"
     () {
-        emulate -LR zsh -o extendedglob
+        builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
         integer index="${type##[%a-zA-Z:_!-]##}"
         ZINIT_EXTS[ice-mods]="${ZINIT_EXTS[ice-mods]}${icemods:+|}${(j:|:)${(@)${(@s:|:)icemods}/(#b)(#s)(?)/$index-$match[1]}}"
     }
@@ -1326,7 +1326,7 @@ builtin setopt noaliases
     [[ -n ${ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ICE[opts]} ]] && {
         local -a precm
         precm=(
-            emulate
+            builtin emulate
             ${${(M)${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
             ${${${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
             ${${ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
@@ -1673,7 +1673,7 @@ builtin setopt noaliases
     [[ -n ${ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ICE[opts]} ]] && {
         local -a ___precm
         ___precm=(
-            emulate
+            builtin emulate
             ${${(M)${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:+-R}
             ${${${ICE[(i)(\!|)(sh|bash|ksh|csh)]}#\!}:-zsh}
             ${${ICE[(i)(\!|)bash]}:+-${(s: :):-o noshglob -o braceexpand -o kshglob}}
@@ -1886,7 +1886,7 @@ builtin setopt noaliases
     .zinit-any-to-user-plugin "$1" ""
     local ___id_as="$1" ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___oldpwd="$PWD"
     () {
-        emulate -LR zsh
+        builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
         builtin cd &>/dev/null -q ${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}} || {
             .zinit-get-object-path snippet "$___id_as"
             builtin cd &>/dev/null -q $REPLY
@@ -1922,6 +1922,7 @@ builtin setopt noaliases
     command true # workaround a Zsh bug, see: https://www.zsh.org/mla/workers/2018/msg00966.html
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
+
 # FUNCTION: .zinit-formatter-auto. [[[
 .zinit-formatter-auto() {
     emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
@@ -1975,9 +1976,10 @@ builtin setopt noaliases
     done
     REPLY=$out
 } # ]]]
+
 # FUNCTION: .zinit-formatter-pid. [[[
 .zinit-formatter-pid() {
-    builtin emulate -L zsh -o extendedglob
+    builtin emulate -L zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
 
     # Save whitespace location
     local pbz=${(M)1##(#s)[[:space:]]##}
@@ -2020,7 +2022,7 @@ builtin setopt noaliases
 
 # FUNCTION: .zinit-formatter-url. [[[
 .zinit-formatter-url() {
-    builtin emulate -LR zsh -o extendedglob
+    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
     #              1:proto        3:domain/5:start      6:end-of-it         7:no-dot-domain        9:file-path
     if [[ $1 = (#b)([^:]#)(://|::)((([[:alnum:]._+-]##).([[:alnum:]_+-]##))|([[:alnum:].+_-]##))(|/(*)) ]] {
         # The advanced coloring if recognized the format…
@@ -2083,7 +2085,7 @@ builtin setopt noaliases
 
 # FUNCTION: +zinit-message. [[[
 +zinit-message() {
-    builtin emulate -LR zsh -o extendedglob
+    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
     local opt msg
     [[ $1 = -* ]] && { local opt=$1; shift; }
 
@@ -2115,7 +2117,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
 # FUNCTION: +zinit-prehelp-usage-message. [[[
 +zinit-prehelp-usage-message() {
-    builtin emulate -LR zsh -o extendedglob
+    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
     local cmd=$1 allowed=$2 sep="$ZINIT[col-msg2], $ZINIT[col-ehi]" \
         sep2="$ZINIT[col-msg2], $ZINIT[col-opt]" bcol
 
@@ -2161,7 +2163,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
 # FUNCTION: +zinit-parse-opts. [[[
 .zinit-parse-opts() {
-    builtin emulate -LR zsh -o extendedglob
+    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
     reply=( "${(@)${@[2,-1]//([  $'\t']##|(#s))(#b)(${(~j.|.)${(@s.|.)___opt_map[$1]}})(#B)([  $'\t']##|(#e))/${OPTS[${___opt_map[${match[1]}]%%:*}]::=1}ß←↓→}:#1ß←↓→}" )
 } # ]]]
 
@@ -2230,7 +2232,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
 # FUNCTION: .zinit-setup-params. [[[
 .zinit-setup-params() {
-    emulate -LR zsh -o extendedglob
+    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
     reply=( ${(@)${(@s.;.)ICE[param]}/(#m)*/${${MATCH%%(-\>|→|=\>)*}//((#s)[[:space:]]##|[[:space:]]##(#e))}${${(M)MATCH#*(-\>|→|=\>)}:+\=${${MATCH#*(-\>|→|=\>)}//((#s)[[:space:]]##|[[:space:]]##(#e))}}} )
     (( ${#reply} )) && return 0 || return 1
 } # ]]]
@@ -2371,7 +2373,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     if [[ -n $1 ]] {
         if [[ ${#ZINIT_RUN} -le 1 || $1 = following ]]  {
             () {
-                builtin emulate -L zsh
+                builtin emulate -L zsh ${=${options[xtrace]:#off}:+-o xtrace}
                 builtin setopt extendedglob
                 # Example entry:
                 # 1531252764+2+1 p 18 light zdharma/zsh-diff-so-fancy
@@ -2414,7 +2416,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
         add-zsh-hook -d -- precmd @zinit-scheduler
         add-zsh-hook -- chpwd @zinit-scheduler
         () {
-            builtin emulate -L zsh
+            builtin emulate -L zsh ${=${options[xtrace]:#off}:+-o xtrace}
             builtin setopt extendedglob
             # No "+" in this pattern, it will match only "1531252764"
             # in "1531252764+2" and replace it with current time.
@@ -2779,7 +2781,7 @@ cdclear|delete) ]]; then
 
         if (( ___error )) {
             () {
-                emulate -LR zsh -o extendedglob
+                builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                 +zinit-message -n "{u-warn}Error{b-warn}:{rst} No plugin or snippet ID given"
                 if [[ -n $___last_ice ]] {
                     +zinit-message -n " (the last recognized ice was: {ice}"\
