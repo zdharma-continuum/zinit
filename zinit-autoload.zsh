@@ -622,7 +622,7 @@ ZINIT[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-uninstall-completions() {
-    builtin emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
 
     typeset -a completions symlinked backup_comps
@@ -708,7 +708,7 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-self-update() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
     [[ $1 = -q ]] && +zinit-message -n "{pre}[self-update]{msg2} Updating Zinit repository{msg2}" \
@@ -766,7 +766,7 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-show-registered-plugins() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     typeset -a filtered
@@ -882,7 +882,7 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ "$sw_arr4" = "-M" && "$sw_arr6" != "-R" ]]; then
             if [[ -n "$sw_arr3" ]]; then
                 () {
-                    emulate -LR zsh -o extendedglob
+                    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                     (( quiet )) || builtin print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3 ${ZINIT[col-info]}in map ${ZINIT[col-rst]}$sw_arr5"
                 }
                 bindkey -M "$sw_arr5" "$sw_arr1" "$sw_arr3"
@@ -915,7 +915,7 @@ ZINIT[EXTENDED_GLOB]=""
         else
             if [[ -n "$sw_arr3" ]]; then
                 () {
-                    emulate -LR zsh -o extendedglob
+                    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                     (( quiet )) || builtin print -r "Restoring bindkey ${${(q)sw_arr1}//(#m)\\[\^\?\]\[\)\(\'\"\}\{\`]/${MATCH#\\}} $sw_arr3"
                 }
                 bindkey "$sw_arr1" "$sw_arr3"
@@ -1422,7 +1422,7 @@ ZINIT[EXTENDED_GLOB]=""
 # $3 - plugin (only when $1 - i.e. user - given)
 .zinit-update-or-status() {
     # Set the localtraps option.
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
     local -a arr
@@ -1831,7 +1831,7 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-update-or-status-all() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob nullglob warncreateglobal typesetsilent noshortloops
 
     local -F2 SECONDS=0
@@ -1975,7 +1975,7 @@ ZINIT[EXTENDED_GLOB]=""
 } # ]]]
 # FUNCTION: .zinit-update-in-parallel [[[
 .zinit-update-all-parallel() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent \
         noshortloops nomonitor nonotify
 
@@ -2173,7 +2173,7 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-show-times() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt  extendedglob warncreateglobal noshortloops
 
     local opt="$1 $2 $3" entry entry2 entry3 user plugin
@@ -2706,7 +2706,7 @@ ZINIT[EXTENDED_GLOB]=""
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-cd() {
-    builtin emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
 
     .zinit-get-path "$1" "$2" && {
@@ -2753,7 +2753,7 @@ ZINIT[EXTENDED_GLOB]=""
 # $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-delete() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
 
     local -a opts match mbegin mend
@@ -2933,7 +2933,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
 #
 # $1 - time spec, e.g. "1 week"
 .zinit-recently() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt nullglob extendedglob warncreateglobal \
                 typesetsilent noshortloops
 
@@ -2970,7 +2970,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
 # $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - (optional) plugin (only when $1 - i.e. user - given)
 .zinit-create() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt localoptions extendedglob warncreateglobal typesetsilent \
         noshortloops rcquotes
 
@@ -3019,9 +3019,9 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
     if [[ "$user" != "_local" && -n "$user" ]]; then
         builtin print "${ZINIT[col-info]}Creating Github repository${ZINIT[col-rst]}"
         if [[ $isorg = (y|yes) ]]; then
-            curl --tcp-fastopen --silent -u "$user" https://api.github.com/orgs/$org/repos -d '{"name":"'"$plugin"'"}' >/dev/null
+            curl --silent -u "$user" https://api.github.com/orgs/$org/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         else
-            curl --tcp-fastopen --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
+            curl --silent -u "$user" https://api.github.com/user/repos -d '{"name":"'"$plugin"'"}' >/dev/null
         fi
         command git clone "https://github.com/${${${(M)isorg:#(y|yes)}:+$org}:-$user}/${plugin}.git" "${${${(M)isorg:#(y|yes)}:+$org}:-$user}---${plugin//\//---}" || {
             builtin print "${ZINIT[col-error]}Creation of remote repository $uspl2col ${ZINIT[col-error]}failed${ZINIT[col-rst]}"
@@ -3210,7 +3210,7 @@ EOF
     )
 
     (
-        emulate -LR ksh
+        builtin emulate -LR ksh ${=${options[xtrace]:#off}:+-o xtrace}
         builtin unsetopt shglob kshglob
         for i in "${ZINIT_STRESS_TEST_OPTIONS[@]}"; do
             builtin setopt "$i"
@@ -3276,7 +3276,7 @@ EOF
 # ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
 # nickname (i.e. id-as'' ice-mod), or a snippet nickname.
 .zinit-get-path() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     [[ $1 == % ]] && local id_as=%$2 || local id_as=$1${1:+/}$2
@@ -3288,7 +3288,7 @@ EOF
 # ]]]
 # FUNCTION: .zinit-recall [[[
 .zinit-recall() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     local -A ice
