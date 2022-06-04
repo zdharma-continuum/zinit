@@ -32,6 +32,7 @@ FUNCTIONS
  .zinit-formatter-auto
  .zinit-formatter-bar
  .zinit-formatter-bar-util
+ .zinit-formatter-dbg
  .zinit-formatter-pid
  .zinit-formatter-th-bar
  .zinit-formatter-url
@@ -132,7 +133,7 @@ ____
  FUNCTION: +zinit-message. [[[
 ____
 
-Has 14 line(s). Doesn't call other functions.
+Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -518,6 +519,18 @@ Called by:
 
  .zinit-formatter-bar
  .zinit-formatter-th-bar
+
+.zinit-formatter-dbg
+~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-formatter-dbg. [[[
+____
+
+Has 5 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-formatter-pid
 ~~~~~~~~~~~~~~~~~~~~
