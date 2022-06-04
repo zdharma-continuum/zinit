@@ -1923,6 +1923,15 @@ builtin setopt noaliases
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
 
+# FUNCTION: .zinit-formatter-dbg. [[[
+.zinit-formatter-dbg() {
+    builtin emulate -L zsh -o extendedglob
+    REPLY=
+    if (( ZINIT[DEBUG] )); then
+        REPLY=$1
+    fi
+} # ]]]
+
 # FUNCTION: .zinit-formatter-auto. [[[
 .zinit-formatter-auto() {
     emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
@@ -2103,6 +2112,7 @@ $(.zinit-main-message-formatter "$match[6]" "$match[7]" "$match[8]"; \
  )${${ZINIT[__last-formatter-code]::=${${${match[7]:#(…|ndsh|mdsh|mmdsh|-…|lr)}:+\
 $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
+    [[ -z $msg ]] && return
 
     # Reset color attributes at the end of the message
     msg=$msg$ZINIT[col-rst]
