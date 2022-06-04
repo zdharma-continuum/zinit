@@ -662,9 +662,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         if (( ${+commands[curl]} )); then
             if [[ -n $progress ]]; then
-                command curl --tcp-fastopen --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
             else
-                command curl --tcp-fastopen -fsSL "$url" || return 1
+                command curl -fsSL "$url" || return 1
             fi
         elif (( ${+commands[wget]} )); then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
@@ -681,9 +681,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     } else {
         if type curl 2>/dev/null 1>&2; then
             if [[ -n $progress ]]; then
-                command curl --tcp-fastopen --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
             else
-                command curl --tcp-fastopen -fsSL "$url" || return 1
+                command curl -fsSL "$url" || return 1
             fi
         elif type wget 2>/dev/null 1>&2; then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
@@ -713,7 +713,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         }
 
     if (( ${+commands[curl]} )) || type curl 2>/dev/null 1>&2; then
-        cmd=(command curl --tcp-fastopen -sIL "$url")
+        cmd=(command curl -sIL "$url")
     elif (( ${+commands[wget]} )) || type wget 2>/dev/null 1>&2; then
         cmd=(command wget --server-response --spider -q "$url" -O -)
     else
