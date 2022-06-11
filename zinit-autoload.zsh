@@ -711,7 +711,7 @@ ZINIT[EXTENDED_GLOB]=""
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
-    [[ $1 = -q ]] && +zinit-message -n "{pre}[self-update]{info} updating zinit repository{msg2}" \
+    [[ $1 = -q ]] && +zinit-message "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
     local nl=$'\n' escape=$'\x1b['
     local current_branch=$(git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
