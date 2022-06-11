@@ -715,12 +715,13 @@ ZINIT[EXTENDED_GLOB]=""
 
     local nl=$'\n' escape=$'\x1b['
     local current_branch=$(builtin git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
+    # local current_branch='main'
     local -a lines
     (
         builtin cd -q "$ZINIT[BIN_DIR]" \
         && +zinit-message -n "{pre}[self-update]{info} fetching latest changes from {cmd}$current_branch$nl{rst}" \
         && command git fetch --quiet \
-        && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..FETCH_HEAD)"} )
+        && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..origin/HEAD)"} )
         if (( ${#lines} > 0 )); then
             # Remove the (origin/main ...) segments, to expect only tags to appear
             lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
