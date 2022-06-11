@@ -719,7 +719,7 @@ ZINIT[EXTENDED_GLOB]=""
     local -a lines
     (
         builtin cd -q "$ZINIT[BIN_DIR]" \
-        && +zinit-message -n "{pre}[self-update]{info} fetching latest changes from {cmd}$current_branch{info} branch$nl{rst}" \
+        && +zinit-message -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
         && command git fetch --quiet \
         && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..origin/HEAD)"} )
         if (( ${#lines} > 0 )); then
@@ -744,7 +744,7 @@ ZINIT[EXTENDED_GLOB]=""
         }
     )
     if [[ $1 != -q ]] {
-        +zinit-message "{pre}[self-update]{info} compiling zinit via {cmd}zcompile{rst}"
+        +zinit-message "{pre}[self-update]{info} compiling zinit via {obj}zcompile{rst}"
     }
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
