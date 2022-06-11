@@ -714,7 +714,7 @@ ZINIT[EXTENDED_GLOB]=""
     [[ $1 = -q ]] && +zinit-message -n "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
     local nl=$'\n' escape=$'\x1b['
-    local current_branch=$(builtin git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
+    local current_branch=$(git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
     # local current_branch='main'
     local -a lines
     (
