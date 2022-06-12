@@ -1449,16 +1449,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     REPLY=
     local user=$1 plugin=$2 urlpart=$3
 
-    if [[ -z $urlpart ]] {
-        local url=https://github.com/$user/$plugin/releases/$ICE[ver]
-    } else {
-        local url=https://$urlpart
-    }
+    if [[ -z $urlpart ]] { local url=https://github.com/$user/$plugin/releases/$ICE[ver] } \
+    else { local url=https://$urlpart }
 
     local HAS_MUSL=$MACHTYPE
-    if (( ${+commands[musl-gcc]} == 1 )) || [[ -n /lib/*musl*(#qN) ]] {
-      HAS_MUSL='linux-musl'
-    }
+    if (( ${+commands[musl-gcc]} == 1 )) || [[ -n /lib/*musl*(#qN) ]] { HAS_MUSL='linux-musl' }
 
     # Logical grouping of $CPUTYPE & $OSTYPE
     local -A matchstr=(
@@ -1478,6 +1473,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       msys '(win((dows|32|64))|cygwin)'
       windows '(win((dows|32|64))|cygwin)'
     )
+    typeset -A PKG_TYPES=(
+      deb 'dpkg-deb'
+      rpm 'rpm'
+    )
 
     local -a list init_list
 
@@ -1488,7 +1487,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local -a filtered bpicks
     bpicks=( ${(s.;.)ICE[bpick]} )
     [[ -z $bpicks ]] && bpicks=( "" )
-    local bpick
+    local bpick pkg_ext pkg_cmd
 
     reply=()
     for bpick ( "${bpicks[@]}" ) {
@@ -1506,14 +1505,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       typeset -A PKG_TYPES=( ['deb']='dpkg-deb' ['rpm']='rpm' )
-      local pkg_ext pkg_cmd
       for pkg_ext pkg_cmd in ${(kv)PKG_TYPES}; do
         if (( ${+commands[${pkg_cmd}]} == 1 )) {
           filtered=( ${list[@]:#(#i)*(64|)*${pkg_ext}(#e)} )
           +zinit-message "{pre}gh-r{rst}: {obj}${pkg_cmd}{info} cmd present -- filtering for {obj}${pkg_ext}{info} packages{rst}"
-        } else {
-          filtered=( ${list[@]:#*${pkg_ext}(#e)} )
-        }
+        } else { filtered=( ${list[@]:#*${pkg_ext}(#e)} ) }
         (( $#filtered > 0 )) && list=( ${filtered[@]} )
       done
 
