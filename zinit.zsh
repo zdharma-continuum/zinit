@@ -171,7 +171,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-var  $'\e[38;5;81m'   col-glob  $'\e[38;5;227m' col-ehi   $'\e[1m\e[38;5;210m'
         col-cmd  $'\e[38;5;82m'   col-ice   $'\e[38;5;39m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num  $'\e[3;38;5;155m' col-term  $'\e[38;5;185m'
-        col-warn $'\e[38;5;214m' col-ok    $'\e[38;5;220m'
+        col-warn $'\e[38;5;214m' col-ok    $'\e[38;5;220m'  col-time  $'\e[38;5;220m'
         col-apo $'\e[1;38;5;45m' col-aps $'\e[38;5;117m'
         col-quo $'\e[1;38;5;33m' col-quos    $'\e[1;38;5;160m'
         col-bapo $'\e[1;38;5;220m'  col-baps $'\e[1;38;5;82m'
@@ -1944,22 +1944,34 @@ builtin setopt noaliases
     )
     ecmds=( ${ZINIT_EXTS[(I)z-annex subcommand:*]#z-annex subcommand:} )
 
+    in=${(j: :)${${(Z+Cn+)in}//[$'\t ']/$'\u00a0'}}
     wrk=$in
     # Work on input bit by bit on whitespace separated words
     while [[ $in == (#b)([[:space:]]#)([^[:space:]]##)(*) ]]; do
         spaces=$match[1]
         rest=$match[3]
-        wrk=$match[2]
+        wrk=${match[2]//---//}
         REPLY=$wrk
+        # Is it a time ?
+        if [[ $wrk == ([[:space:]]##|(#s))[0-9.]##([[:space:]]##|(#e)) &&
+            $rest == ([[:space:]]#|(#s))[sm]([[:space:]]##*|(#e)) || $wrk == ([[:space:]]##|(#s))[0-9.]##[sm]([[:space:]]##|(#e)) ]]; then
+            REPLY=$ZINIT[col-time]$wrk$ZINIT[col-rst]
+            # Colorize next token
+            if [[ $wrk != *[sm]* ]]; then
+                rest=$ZINIT[col-time]${(M)rest##[[:space:]]#[sm]}$ZINIT[col-rst]${rest##[[:space:]]#[sm]}
+            fi
+        # Is it a number? TODO: differentiate floats
+        elif [[ $wrk == ([[:space:]]##|(#s))[0-9.]##([[:space:]]##|(#e)) ]]; then
+            REPLY=$ZINIT[col-num]$wrk$ZINIT[col-rst]
         # Is it a URL?
-        if [[ $wrk == (#b)(((http|ftp)(|s)|ssh|scp|ntp|file)://[[:alnum:].:+/]##) ]]; then
+        elif [[ $wrk == (#b)(((http|ftp)(|s)|ssh|scp|ntp|file)://[[:alnum:].:+/]##) ]]; then
             .zinit-formatter-url $wrk
-        # Is it an object ID?
-        elif [[ -d $ZINIT[PLUGINS_DIR]/${wrk//\//---} ]]; then
-            .zinit-formatter-pid $wrk
         # Is it an ice mod?
-        elif [[ $wrk == ${(~j:|:)ice_order} ]]; then
+        elif [[ $wrk == (--|)(${(~j:|:)ice_order})[:=\"\'\!a-zA-Z0-9-]* ]]; then
             REPLY=$ZINIT[col-ice]$wrk$ZINIT[col-rst]
+        # Is it an object ID?
+        elif [[ $wrk == (OMZ([PLT]|)|PZT([MLT]|)):* || $wrk == [^/]##/[^/]## || -d $ZINIT[PLUGINS_DIR]/${wrk//\//---} ]]; then
+            .zinit-formatter-pid $wrk
         # Is it a zinit command?
         elif [[ $wrk == (${~ZINIT[cmds]}|${(~j:|:)ecmds}) ]]; then
             REPLY=$ZINIT[col-cmd]$wrk$ZINIT[col-rst]
@@ -1983,7 +1995,8 @@ builtin setopt noaliases
         in=$rest
         out+=${spaces//$'\n'/$'\013\015'}$REPLY
     done
-    REPLY=$out
+    # Restore regular, not non-breaking (0xa0) spaces
+    REPLY=${out//$'\u00a0'/ }
 } # ]]]
 
 # FUNCTION: .zinit-formatter-pid. [[[
