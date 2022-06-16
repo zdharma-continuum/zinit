@@ -11,7 +11,7 @@
     [[ -d ${reply[-1]} ]] && return $?
   } else {
     [[ -d ${ZINIT[PLUGINS_DIR]}/${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---} ]] && return $?
-  fi
+  }
 } # ]]]
 # FUNCTION: .zinit-exists-physically-message [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR,
@@ -20,7 +20,6 @@
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-exists-physically-message() {
-
   builtin emulate -LR zsh
   builtin extendedglob noshortloops rcquotes setopt typesetsilent warncreateglobal
 
@@ -136,7 +135,7 @@
   if [[ -d "$local_dirA/$dirnameA/.svn" ]] {
     svn_dirA=".svn"
     if { .zinit-first % "$local_dirA/$dirnameA"; } {
-        fileB_there=( ${reply[-1]} )
+      fileB_there=( ${reply[-1]} )
     }
   }
 
@@ -223,6 +222,7 @@
       builtin print -r -- "The \`svn' ice is given, but the argument ($___URL) is a plugin"
       builtin print -r -- "(\`svn' can be used only with snippets)"
       return 1
+    }
     if (( !___is_snippet )) {
       builtin print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma-continuum/zinit/issues"
       return 1
@@ -246,7 +246,7 @@
       builtin print -r -- "No such snippet found at: $___s_path or $___path"
       return 1
     }
-  fi
+  }
 
   local ___zinit_path="$___local_dir/._zinit"
 

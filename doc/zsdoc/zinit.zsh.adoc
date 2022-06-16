@@ -29,8 +29,10 @@ FUNCTIONS
  .zinit-diff-options
  .zinit-diff-parameter
  .zinit-find-other-matches
+ .zinit-formatter-auto
  .zinit-formatter-bar
  .zinit-formatter-bar-util
+ .zinit-formatter-dbg
  .zinit-formatter-pid
  .zinit-formatter-th-bar
  .zinit-formatter-url
@@ -90,7 +92,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 227 line(s). Calls functions:
+Has 234 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
@@ -131,7 +133,7 @@ ____
  FUNCTION: +zinit-message. [[[
 ____
 
-Has 14 line(s). Doesn't call other functions.
+Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -473,6 +475,22 @@ Called by:
  .zinit-load-snippet
  zinit-side.zsh/.zinit-first
 
+.zinit-formatter-auto
+~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-formatter-auto. [[[
+____
+
+Has 41 line(s). Calls functions:
+
+ .zinit-formatter-auto
+
+Uses feature(s): _type_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
 .zinit-formatter-bar
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -502,6 +520,18 @@ Called by:
  .zinit-formatter-bar
  .zinit-formatter-th-bar
 
+.zinit-formatter-dbg
+~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-formatter-dbg. [[[
+____
+
+Has 5 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
 .zinit-formatter-pid
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -517,7 +547,9 @@ Has 11 line(s). Calls functions:
 
 Uses feature(s): _source_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-formatter-auto
 
 .zinit-formatter-th-bar
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -543,7 +575,9 @@ ____
 
 Has 19 line(s). Doesn't call other functions.
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-formatter-auto
 
 .zinit-get-mtime-into
 ~~~~~~~~~~~~~~~~~~~~~

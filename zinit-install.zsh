@@ -37,7 +37,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $2: jq path
 # $3: name of the associative array to store the key/value pairs in
 .zinit-json-to-array() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt localoptions noglob
 
     .zinit-jq-check || return 1
@@ -60,7 +60,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 .zinit-get-package() {
     .zinit-jq-check || return 1
 
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 \
@@ -291,7 +291,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $1 - user
 # $2 - plugin
 .zinit-setup-plugin-dir() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
@@ -523,7 +523,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $2 - plugin (only when $1 - i.e. user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
 .zinit-install-completions() {
-    builtin emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
 
     local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}}
@@ -605,7 +605,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # This might be called during sourcing when setting up the plugins dir, so check that OPTS is actually existing
     [[ -n $OPTS && -n ${OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
 
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt nullglob extendedglob warncreateglobal typesetsilent
 
     integer use_C=$2
@@ -643,7 +643,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 .zinit-download-file-stdout() {
     local url="$1" restart="$2" progress="${(M)3:#1}"
 
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt localtraps extendedglob
 
     # Return file directly for file:// urls, wget doesn't support this schema
@@ -662,9 +662,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         if (( ${+commands[curl]} )); then
             if [[ -n $progress ]]; then
-                command curl --tcp-fastopen --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
             else
-                command curl --tcp-fastopen -fsSL "$url" || return 1
+                command curl -fsSL "$url" || return 1
             fi
         elif (( ${+commands[wget]} )); then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
@@ -681,9 +681,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     } else {
         if type curl 2>/dev/null 1>&2; then
             if [[ -n $progress ]]; then
-                command curl --tcp-fastopen --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
             else
-                command curl --tcp-fastopen -fsSL "$url" || return 1
+                command curl -fsSL "$url" || return 1
             fi
         elif type wget 2>/dev/null 1>&2; then
             command wget ${${progress:--q}:#1} "$url" -O - || return 1
@@ -713,7 +713,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         }
 
     if (( ${+commands[curl]} )) || type curl 2>/dev/null 1>&2; then
-        cmd=(command curl --tcp-fastopen -sIL "$url")
+        cmd=(command curl -sIL "$url")
     elif (( ${+commands[wget]} )) || type wget 2>/dev/null 1>&2; then
         cmd=(command wget --server-response --spider -q "$url" -O -)
     else
@@ -784,7 +784,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 #
 # $1 - completion function name, e.g. "_cp"; can also be "cp"
 .zinit-forget-completion() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
     local f="$1" quiet="$2"
@@ -812,7 +812,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-compile-plugin() {
-    builtin emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet
@@ -856,7 +856,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {b}{file}$fname{rst}{…}"
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
             () {
-                builtin emulate -LR zsh -o extendedglob
+                builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                 if { ! zcompile -U "$first" } {
                     +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
                     +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
@@ -883,7 +883,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             integer retval
             for first in $list; do
                 () {
-                    builtin emulate -LR zsh -o extendedglob
+                    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                     zcompile -U "$first"; retval+=$?
                 }
             done
@@ -907,7 +907,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # supports Subversion protocol and allows to clone subdirectories.
 # This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 .zinit-download-snippet() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
 
     local save_url=$1 url=$2 id_as=$3 local_dir=$4 dirname=$5 filename=$6 update=$7
@@ -1042,7 +1042,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             ${+ICE[nocompile]} -eq 0
                         ]] {
                             () {
-                                builtin emulate -LR zsh -o extendedglob
+                                builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                                 zcompile -U "${list[1]}" &>/dev/null || \
                                     +zinit-message "{u-warn}Warning{b-warn}:{rst} couldn't compile {apo}\`{file}${list[1]}{apo}\`{rst}."
                             }
@@ -1134,7 +1134,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         $file_path != */dev/null && ${+ICE[nocompile]} -eq 0
                 ]] {
                     () {
-                        builtin emulate -LR zsh -o extendedglob
+                        builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                         if ! zcompile -U "$file_path" 2>/dev/null; then
                             builtin print -r "Couldn't compile \`${file_path:t}', it MIGHT be wrongly downloaded"
                             builtin print -r "(snippet URL points to a directory instead of a file?"
@@ -1352,7 +1352,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: .zinit-update-snippet [[[
 .zinit-update-snippet() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     local -a tmp opts
@@ -1447,7 +1447,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
 .zinit-get-latest-gh-r-url-part() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
     REPLY=
@@ -1471,22 +1471,23 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     fi
 
     local -A matchstr
+    # Logical grouping of $CPUTYPE & $OSTYPE
     matchstr=(
       aarch64 '(arm64|aarch64|arm[?v]8)'
-      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
-      android '(apk|android|linux-android)'
       arm64 '(arm64|aarch64|arm[?v]8)'
       armv5 'arm[?v]5'
       armv6 'arm[?v]6'
       armv7 'armv[?v]7'
-      cygwin '(cyg|-|_|)win(dows|32|64|))'
-      darwin '*((#s)|/)*(apple|darwin|mac|macos|osx|dmg)*((#e)|/)*'
+      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
       linux "*(linux-musl|musl|linux64|linux)*~^*(linux*${MACHTYPE}|${CPUTYPE}*linux)*"
+      linux-android '(apk|android|linux-android)'
       linux-gnu "*(linux-musl|musl|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
       linux-musl "*(linux-musl|musl|linux-~gnu|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
-      msys '(cyg|-|_|)win(dows|32|64|))'
-      windows '(cyg|-|_|)win(dows|32|64|))'
-      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      darwin '*((#s)|/)*(apple|darwin|mac|macos|osx|dmg)*((#e)|/)*'
+      cygwin '(win((dows|32|64))|cygwin)'
+      msys '(win((dows|32|64))|cygwin)'
+      windows '(win((dows|32|64))|cygwin)'
     )
 
     local -a list init_list
@@ -1511,8 +1512,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .APK PACKAGES IF ANBOX PRESENT
-      if (( $#list > 1 && ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[android]}*} ) } \
-      else { filtered=( ${list[@]:#(#i)*${~matchstr[android]}*} ) }
+      if (( $#list > 1 && ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[linux-android]}*} ) } \
+      else { filtered=( ${list[@]:#(#i)*${~matchstr[linux-android]}*} ) }
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .DEB PACKAGES IF DPKG-DEB PRESENT
@@ -1592,7 +1593,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $1 - url
 # $2 - file
 ziextract() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent noshortloops # warncreateglobal
 
     local -a opt_move opt_move2 opt_norm opt_auto opt_nobkp
@@ -1902,7 +1903,7 @@ ziextract() {
 } # ]]]
 # FUNCTION: .zinit-extract [[[
 .zinit-extract() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
     local tpe=$1 extract=$2 local_dir=$3
     (
@@ -1950,7 +1951,7 @@ zpextract() { ziextract "$@"; }
 } # ]]]
 # FUNCTION: .zinit-get-cygwin-package [[[
 .zinit-get-cygwin-package() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     REPLY=
@@ -2035,7 +2036,7 @@ zpextract() { ziextract "$@"; }
 } # ]]]
 # FUNCTION: zicp [[[
 zicp() {
-    emulate -LR zsh
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
     local -a mbegin mend match
@@ -2330,7 +2331,7 @@ zimv() {
     # Compile plugin
     if [[ -z $ICE[(i)(\!|)(sh|bash|ksh|csh)] ]] {
         () {
-            emulate -LR zsh
+            builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
             setopt extendedglob warncreateglobal
             if [[ $tpe == snippet ]] {
                 .zinit-compile-plugin "%$dir" ""
