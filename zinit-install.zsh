@@ -1473,21 +1473,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       msys '(win((dows|32|64))|cygwin)'
       windows '(win((dows|32|64))|cygwin)'
     )
-    typeset -A PKG_TYPES=(
-      deb 'dpkg-deb'
-      rpm 'rpm'
-    )
+    typeset -A PKG_TYPES=( ['deb']='dpkg-deb' ['rpm']='rpm' )
+    # local -A PKG_TYPES=(
+    #   deb 'dpkg-deb'
+    #   rpm 'rpm'
+    # )
+    local -a SEARCH_TERMS=( "$(uname)" )
 
-    local -a list init_list
+    local -a bpicks filtered init_list list
+    local bpick pkg_ext pkg_cmd
 
     init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
                       command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
     init_list=( ${init_list[@]#href=?} )
 
-    local -a filtered bpicks
     bpicks=( ${(s.;.)ICE[bpick]} )
     [[ -z $bpicks ]] && bpicks=( "" )
-    local bpick pkg_ext pkg_cmd
 
     reply=()
     for bpick ( "${bpicks[@]}" ) {
@@ -1504,7 +1505,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       else { filtered=( ${list[@]:#(#i)*${~matchstr[linux-android]}*} ) }
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
-      typeset -A PKG_TYPES=( ['deb']='dpkg-deb' ['rpm']='rpm' )
       for pkg_ext pkg_cmd in ${(kv)PKG_TYPES}; do
         if (( ${+commands[${pkg_cmd}]} == 1 )) {
           filtered=( ${list[@]:#(#i)*(64|)*${pkg_ext}(#e)} )
@@ -1520,8 +1520,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
       # FILTER URLS BY GENERIC OS NAME (E.G., DARWIN, LINUX, ETC.)
       if (( $#list > 1 )) {
-          filtered=( ${(M)list[@]:#(#i)*/$~HAS_MUSL} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-          # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*/${~HAS_MUSL}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
