@@ -29,20 +29,22 @@
     .zinit-any-to-user-plugin "$1" "$2"
     if [[ $reply[1] = % ]] {
       .zinit-any-to-pid "$1" "$2"
-      local pluginSpec1=$REPLY
+      local pluginSpec1="$REPLY"
       if [[ $1 = %* ]] {
-        local pluginSpec2=%${1#%}${${1#%}:+${2:+/}}$2
-      } elif [[ -z $1 || -z $2 ]] {
+        local pluginSpec2=%${1#%}${${1#%}:+${2:+/}}${2}
+      }
+      elif [[ -z $1 || -z $2 ]] {
         local pluginSpec3=%${1#%}${2#%}
       }
-    } else {
+    }
+    else {
       integer pluginSpecAbsent=1
     }
 
     .zinit-any-colorify-as-uspl2 "$1" "$2"
-    +zinit-message "{error}Failed to located (plugin or snippet){rst}: $REPLY."
-    if [[ $nospec -eq 0 && $spec1 != $spec2 ]] {
-      +zinit-message "(expands to: {file}${spec2#%}{rst})."
+    +zinit-message "{error}Failed to locate a plugin or snippet{rst}: ${REPLY} "
+    if [[ $pluginSpecAbsent -eq 0 && $pluginSpec1 != $pluginSpec2 ]] {
+      +zinit-message "(i.e., {file}${pluginSpec2#%}{rst})"
     }
     return 1
   fi
