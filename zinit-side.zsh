@@ -6,12 +6,14 @@
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-exists-physically() {
-  .zinit-any-to-user-plugin "$1" "$2"
-  if [[ ${reply[-2]} = % ]] {
-    [[ -d ${reply[-1]} ]] && return $?
-  } else {
-    [[ -d ${ZINIT[PLUGINS_DIR]}/${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---} ]] && return $?
-  }
+   .zinit-any-to-user-plugin "$1" "$2"
+     if [[ ${reply[-2]} = % ]]; then
+      [[ -d ${reply[-1]} ]] \
+        && return 0 || return 1
+     else
+      [[ -d ${ZINIT[PLUGINS_DIR]}/${reply[-2]:+${reply[-2]}---}${reply[-1]//\//---} ]] \
+        && return 0 || return 1
+     fi
 } # ]]]
 # FUNCTION: .zinit-exists-physically-message [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR,
@@ -21,20 +23,20 @@
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-exists-physically-message() {
   builtin emulate -LR zsh
-  builtin extendedglob noshortloops rcquotes setopt typesetsilent warncreateglobal
+  builtin setopt extendedglob noshortloops rcquotes typesetsilent warncreateglobal
 
   if ! .zinit-exists-physically "$1" "$2"; then
     .zinit-any-to-user-plugin "$1" "$2"
     if [[ $reply[1] = % ]] {
       .zinit-any-to-pid "$1" "$2"
-      local spec1=$REPLY
+      local pluginSpec1=$REPLY
       if [[ $1 = %* ]] {
-        local spec2=%${1#%}${${1#%}:+${2:+/}}$2
+        local pluginSpec2=%${1#%}${${1#%}:+${2:+/}}$2
       } elif [[ -z $1 || -z $2 ]] {
-        local spec3=%${1#%}${2#%}
+        local pluginSpec3=%${1#%}${2#%}
       }
     } else {
-      integer nospec=1
+      integer pluginSpecAbsent=1
     }
 
     .zinit-any-colorify-as-uspl2 "$1" "$2"
@@ -44,7 +46,6 @@
     }
     return 1
   fi
-
   return 0
 } # ]]]
 # FUNCTION: .zinit-first [[[
@@ -218,15 +219,14 @@
   (( ${#___tmp[@]} > 1 && ${#___tmp[@]} % 2 == 0 )) && ___sice=( "${(Q)___tmp[@]}" )
 
   if [[ "${+___sice[svn]}" = "1" || -n "$___s_svn" ]]; then
-    if (( !___is_snippet && ${+___sice[svn]} == 1 )) {
+    if (( !___is_snippet && ${+___sice[svn]} == 1 )); then
       builtin print -r -- "The \`svn' ice is given, but the argument ($___URL) is a plugin"
       builtin print -r -- "(\`svn' can be used only with snippets)"
       return 1
-    }
-    if (( !___is_snippet )) {
+    elif (( !___is_snippet )); then
       builtin print -r -- "Undefined behavior #1 occurred, please report at https://github.com/zdharma-continuum/zinit/issues"
       return 1
-    }
+    fi
     if [[ -e "$___s_path" && -n "$___s_svn" ]] {
       ___sice[svn]=""
       ___local_dir="$___s_path"
@@ -246,14 +246,15 @@
       builtin print -r -- "No such snippet found at: $___s_path or $___path"
       return 1
     }
-  }
+  fi
 
   local ___zinit_path="$___local_dir/._zinit"
 
   # Read disk-Ice
   local -A ___mdata
   local ___key
-  { for ___key in mode url is_release is_release{2..5} ${ice_order[@]}; do
+  {
+    for ___key in mode url is_release is_release{2..5} ${ice_order[@]}; do
       [[ -f "$___zinit_path/$___key" ]] && ___mdata[$___key]="$(<$___zinit_path/$___key)"
     done
     [[ "${___mdata[mode]}" = "1" ]] && ___mdata[svn]=""
@@ -370,7 +371,7 @@
   trap "+zinit-message '{ehi}ABORTING, the ice {ice}$ice{ehi} not ran{rst}'; return 1" INT
   local count=5 ice="${ICE[$1]}" tpe=$1
 
-  if [[ $tpe = "atpull" && $ice = "%atclone" ]] { ice="${ICE[atclone]}"
+  if [[ $tpe = "atpull" && $ice = "%atclone" ]] { ice="${ICE[atclone]}" }
 
   ice="{b}{ice}$tpe{ehi}:{rst}${ice//(#b)(\{[a-z0-9…–_-]##\})/\\$match[1]}"
   +zinit-message -n -- "{hi}Waiting ${count} seconds before running {hi}$ice{rst} "
