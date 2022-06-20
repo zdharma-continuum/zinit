@@ -32,12 +32,10 @@
       local pluginSpec1="$REPLY"
       if [[ $1 = %* ]] {
         local pluginSpec2=%${1#%}${${1#%}:+${2:+/}}${2}
-      }
-      elif [[ -z $1 || -z $2 ]] {
+      } elif [[ -z $1 || -z $2 ]] {
         local pluginSpec3=%${1#%}${2#%}
       }
-    }
-    else {
+    } else {
       integer pluginSpecAbsent=1
     }
 
