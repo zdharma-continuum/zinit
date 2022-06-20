@@ -483,7 +483,7 @@ ____
  FUNCTION: .zinit-formatter-auto. [[[
 ____
 
-Has 41 line(s). Calls functions:
+Has 50 line(s). Calls functions:
 
  .zinit-formatter-auto
 
