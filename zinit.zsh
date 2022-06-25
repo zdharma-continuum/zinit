@@ -81,7 +81,7 @@ nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\
 pullopts|debug|null|binary|make|nocompile|notify|reset"
 
-ZINIT[cmds]="-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
+ZINIT[cmds]="-h|--help|help|man|self-update|times|doctor|load|light|unload|snippet|ls|ice|\
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
@@ -1988,7 +1988,7 @@ builtin setopt noaliases
         # \1 - preceding \2 - open, \3 - string, \4 - close, \5 - following
         elif [[ $wrk == (#b)(*)([\'\`\"])([^\'\`\"]##)([\'\`\"])(*) ]]; then
             local -A map=( \` bapo \' apo \" quo
-                x\` baps x\' aps x\" quos ) 
+                x\` baps x\' aps x\" quos )
             local openq=$match[2] str=$match[3] closeq=$match[4] RST=$ZINIT[col-rst]
             REPLY=$match[1]$ZINIT[col-$map[$openq]]$openq$RST$ZINIT[col-$map[x$openq]]$str$RST$ZINIT[col-$map[$closeq]]$closeq$RST$match[5]
         fi
@@ -2873,7 +2873,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
            }
            (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
            case "$1" in
-                (zstatus)
+                (doctor)
                     .zinit-show-zstatus
                     ;;
                 (times)
