@@ -67,6 +67,7 @@ _commands=(
   'pack:Create a compressed gzip archive of package dependencies'
   'policies:Defines project-wide policies for your project'
   'publish:Publish a package to the npm registry'
+  'reload:Restart the zsh process'
   'run:Run a defined package script'
   'tag:Add, remove, or list tags on a package'
   'team:Maintain team memberships'
@@ -246,12 +247,6 @@ _zinit() {
             '1: :_zinit_commands' \
             ;;
 
-          (doctor)
-          _arguments -C \
-            '(-h --help)'{-h,--help}'[Print this usage information.]' \
-            && ret=0
-          ;;
-
         access)
           _arguments \
             '1: :(public restricted grant revoke ls-packages ls-collaborators edit)'
@@ -293,6 +288,12 @@ _zinit() {
           _arguments \
             '1: :(set get delete list)' \
             '*:: :->config_args'
+          ;;
+
+        doctor)
+          _arguments -C \
+            '(-h --help)'{-h,--help}'[Print this usage information.]' \
+            && ret=0
           ;;
 
         global)
@@ -355,11 +356,15 @@ _zinit() {
             '1: :(set-version)'
           ;;
 
+        reload)
+          _arguments
+          ;;
+
         remove|update)
           _arguments \
-            '--all=[Update all plugins and snippets]:' \
-            '--force=[Re-run hooks (e.g., atpull'', cp'', etc.)]' \
-            '--parallel:[Makes curl perform updates in parallel as compared to the regular serial manner.]' \
+            '--all[Update all plugins and snippets]' \
+            '(-f --force)'{-f,--force}'[Re-run hooks (e.g., atpull'', cp'', etc.)]' \
+            '(-p --parallel)'{-p,--parallel}'[Makes curl perform updates in parallel as compared to the regular serial manner.]' \
             '--plugins:' \
             '--quiet[Do not show progress meter or error messages.  Makes Zinit mute. It will still output the data you ask for, potentially even to the terminal/stdout unless you redirect it.]' \
             '--reset:' \
