@@ -92,7 +92,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 234 line(s). Calls functions:
+Has 262 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
@@ -257,7 +257,7 @@ ____
  FUNCTION: .zinit-any-to-pid. [[[
 ____
 
-Has 22 line(s). Calls functions:
+Has 21 line(s). Calls functions:
 
  .zinit-any-to-pid
 
@@ -392,7 +392,7 @@ ____
  $2 - command, can be "begin" or "end"
 ____
 
-Has 18 line(s). Doesn't call other functions.
+Has 17 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -412,7 +412,7 @@ ____
  $2 - command, can be "begin" or "end"
 ____
 
-Has 8 line(s). Doesn't call other functions.
+Has 10 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -431,7 +431,7 @@ ____
  $2 - command, can be "begin" or "end"
 ____
 
-Has 7 line(s). Doesn't call other functions.
+Has 6 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -450,7 +450,7 @@ ____
  $2 - command, can be "begin" or "end"
 ____
 
-Has 9 line(s). Doesn't call other functions.
+Has 6 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -603,7 +603,7 @@ ____
  FUNCTION: .zinit-get-object-path. [[[
 ____
 
-Has 28 line(s). Calls functions:
+Has 27 line(s). Calls functions:
 
  .zinit-get-object-path
 
@@ -737,7 +737,7 @@ ____
  $1 - url (can be local, absolute path).
 ____
 
-Has 203 line(s). Calls functions:
+Has 208 line(s). Calls functions:
 
  .zinit-load-snippet
  |-- +zinit-deploy-message
@@ -904,7 +904,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION:.zinit-set-m-func() [[[
  Sets and withdraws the temporary, atclone/atpull time function `m`.
 ____
@@ -966,7 +965,7 @@ ____
  "light-b" (i.e. the `trackbinds' mode) or "compdef").
 ____
 
-Has 21 line(s). Doesn't call other functions.
+Has 20 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_, _unfunction_
 
@@ -980,13 +979,13 @@ Called by:
 ____
  
  FUNCTION: .zinit-tmp-subst-on. [[[
- Turn on temporary substituting of functions of builtins and functions according to passed
- mode ("load", "light", "light-b" or "compdef"). The temporary substituting of functions is
- to gather report data, and to hijack `autoload', `bindkey' and
- `compdef' calls.
+ Turn on temporary substituting of functions of builtins and functions
+ according to passed mode ("load", "light", "light-b" or "compdef"). The
+ temporary substituting of functions is to gather report data, and to hijack
+ `autoload', `bindkey' and `compdef' calls.
 ____
 
-Has 32 line(s). Doesn't call other functions.
+Has 35 line(s). Doesn't call other functions.
 
 Uses feature(s): _source_
 
@@ -1003,7 +1002,7 @@ ____
  Replaces parts of path with %HOME, etc.
 ____
 
-Has 9 line(s). Doesn't call other functions.
+Has 8 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
@@ -1034,7 +1033,7 @@ ____
  Author: Bart Schaefer
 ____
 
-Has 11 line(s). Doesn't call other functions.
+Has 13 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _unfunction_
 
@@ -1051,7 +1050,7 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 36 line(s). Calls functions:
+Has 41 line(s). Calls functions:
 
  :zinit-tmp-subst-alias
 
@@ -1071,7 +1070,7 @@ ____
  run custom `autoload' function, that doesn't need FPATH.
 ____
 
-Has 111 line(s). Calls functions:
+Has 108 line(s). Calls functions:
 
  :zinit-tmp-subst-autoload
  |-- +zinit-message
@@ -1095,7 +1094,7 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 120 line(s). Calls functions:
+Has 117 line(s). Calls functions:
 
  :zinit-tmp-subst-bindkey
  `-- is-at-least
@@ -1115,7 +1114,7 @@ ____
  calls so that `compinit' can be called after loading plugins.
 ____
 
-Has 6 line(s). Calls functions:
+Has 5 line(s). Calls functions:
 
  :zinit-tmp-subst-compdef
 
@@ -1134,7 +1133,7 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 36 line(s). Calls functions:
+Has 47 line(s). Calls functions:
 
  :zinit-tmp-subst-zle
 
@@ -1153,7 +1152,7 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 23 line(s). Calls functions:
+Has 20 line(s). Calls functions:
 
  :zinit-tmp-subst-zstyle
 
@@ -1184,7 +1183,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: @zinit-register-annex. [[[
  Registers the z-annex inside Zinit – i.e. an Zinit extension
 ____
@@ -1198,7 +1196,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: @zinit-register-hook. [[[
  Registers the z-annex inside Zinit – i.e. an Zinit extension
 ____
@@ -1246,11 +1243,10 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: @zinit-substitute. [[[
 ____
 
-Has 40 line(s). Doesn't call other functions.
+Has 44 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
@@ -1274,7 +1270,6 @@ _Environment variables used:_ ZPFX
 
 ____
  
- ]]]
  FUNCTION: @zsh-plugin-run-on-update. [[[
  The Plugin Standard required mechanism, see:
  https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
@@ -1291,7 +1286,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: @zsh-plugin-run-on-update. [[[
  The Plugin Standard required mechanism
 ____

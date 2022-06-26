@@ -24,7 +24,9 @@ unset ZPLGM
 # Common needed values.
 #
 
-if [[ ! -e ${ZINIT[BIN_DIR]}/zinit.zsh ]] { ZINIT[BIN_DIR]=; }
+if [[ ! -e ${ZINIT[BIN_DIR]}/zinit.zsh ]]; then
+  ZINIT[BIN_DIR]=
+fi
 
 # Respect the plugin standard too.
 ZINIT[ZERO]="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
@@ -293,11 +295,11 @@ builtin setopt noaliases
 
   # Process the id-as''/teleid'' to get the plugin dir.
   .zinit-any-to-user-plugin $ZINIT[CUR_USPL2]
-  if [[ $reply[1] = % ]] {
+  if [[ $reply[1] = % ]]; then
     local PLUGIN_DIR="$reply[2]"
-    } else {
+  else
     local PLUGIN_DIR="$ZINIT[PLUGINS_DIR]/${reply[1]:+$reply[1]---}${reply[2]//\//---}"
-  }
+  fi
 
   # "fpath elements" ----  those elements that lie inside the plug directory.
   local -a fpath_elements
@@ -305,9 +307,9 @@ builtin setopt noaliases
 
   # Add a function subdirectory to items, if any (this action is
   # according to the Plug Standard version 1.07 and later).
-  if [[ -d $PLUGIN_DIR/functions ]] {
+  if [[ -d $PLUGIN_DIR/functions ]]; then
     fpath_elements+=( "$PLUGIN_DIR"/functions )
-  }
+  fi
 
   if (( ${+opts[(r)-X]} )); then
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
@@ -320,14 +322,14 @@ builtin setopt noaliases
     builtin autoload ${opts[@]} "$@"
     return $?
   fi
-  if [[ -n ${(M)@:#+X} ]] {
+  if [[ -n ${(M)@:#+X} ]]; then
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
     local +h FPATH=$PLUGINS_DIR${fpath_elements:+:${(j.:.)fpath_elements[@]}}:$FPATH
     local +h -a fpath
     fpath=( $PLUGIN_DIR $fpath_elements $fpath )
     builtin autoload +X ${opts[@]} "${@:#+X}"
     return $?
-  }
+  fi
 
   for func; do
     .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
@@ -425,155 +427,130 @@ builtin setopt noaliases
   local -A opts
   zparseopts -A opts -D ${(s::):-lLdDAmrsevaR} M: N:
 
-  if [[ ${#opts} == 0  || ( ${#opts} == 1 && ${+opts[-M]} ) || ( ${#opts} == 1 && ${+opts[-R]} ) || ( ${#opts} == 1 && ${+opts[-s]} ) || ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-s]} ) || ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-R]} ) ]]; then
+  if (( ${#opts} == 0 || ( ${#opts} == 1 && ${+opts[-M]} ) || ( ${#opts} == 1 && ${+opts[-R]} ) || ( ${#opts} == 1 && ${+opts[-s]} ) || ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-s]} ) || ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-R]} ) )); then
     local string="${(q)1}" widget="${(q)2}"
     local quoted
 
-    if [[ -n ${ICE[bindmap]} ]] && [[ ${ZINIT_CUR_BIND_MAP[empty]} -eq 1 ]]; then
+    if [[ -n ${ICE[bindmap]} && ${ZINIT_CUR_BIND_MAP[empty]} -eq 1 ]]; then
       local -a pairs
       pairs=( "${(@s,;,)ICE[bindmap]}" )
       if [[ -n ${(M)pairs:#*\\(#e)} ]]; then
         local prev
-        # pairs=( ${pairs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${prev:+$prev\;}}${match[3]}${${prev::=${match[2]:+${prev:+$prev\;}}${match[2]}}:+}} )
+        pairs=( ${pairs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${prev:+$prev\;}}${match[3]}${${prev::=${match[2]:+${prev:+$prev\;}}${match[2]}}:+}} )
       fi
       pairs=( "${(@)${(@)${(@s:->:)pairs}##[[:space:]]##}%%[[:space:]]##}" )
       ZINIT_CUR_BIND_MAP=( empty 0 )
-      if [[ ${#pairs} > 1 && ${#pairs[@]} % 2 == 0 ]]; then
-        ZINIT_CUR_BIND_MAP+=( "${pairs[@]}" )
-      fi
+      (( ${#pairs} > 1 && ${#pairs[@]} % 2 == 0 )) && ZINIT_CUR_BIND_MAP+=( "${pairs[@]}" )
     fi
 
     local bmap_val="${ZINIT_CUR_BIND_MAP[${1}]}"
-    if [[ !ZINIT_CUR_BIND_MAP[empty] ]]; then
+    if (( !ZINIT_CUR_BIND_MAP[empty] )); then
       [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)1}]}"
       [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)${(Q)1}}]}"
       [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)1}]}"; integer val=1; }
       [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)${(Q)1}}]}"
     fi
-
     if [[ -n $bmap_val ]]; then
       string="${(q)bmap_val}"
       if (( val )); then
-        if [[ ${pos[1]} = "-M" ]]; then
-          pos[4]="$bmap_val"
-        else
-          pos[2]="$bmap_val"
-        fi
+        [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
       else
-        if [[ ${pos[1]} = "-M" ]]; then
-          pos[3]="${(Q)bmap_val}"
-        else
-          pos[1]="${(Q)bmap_val}"
-        fi
+        [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
       fi
-      # .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
+      .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
       ((1))
-    elif [[ ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[UPAR]}} && -n ${${ZINIT[UPAR]}[(r);:${(q)1};:]} ) ]] || [[ ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[DOWNAR]}}  && -n ${${ZINIT[DOWNAR]}[(r);:${(q)1};:]} ) ]] || [[ ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[RIGHTAR]}} && -n ${${ZINIT[RIGHTAR]}[(r);:${(q)1};:]} ) ]] || [[ ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[LEFTAR]}}  && -n ${${ZINIT[LEFTAR]}[(r);:${(q)1};:]} ) ]]; then
+    elif [[ ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[UPAR]}} && -n ${${ZINIT[UPAR]}[(r);:${(q)1};:]} ) || ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[DOWNAR]}} && -n ${${ZINIT[DOWNAR]}[(r);:${(q)1};:]} ) || ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[RIGHTAR]}} && -n ${${ZINIT[RIGHTAR]}[(r);:${(q)1};:]} ) || ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[LEFTAR]}} && -n ${${ZINIT[LEFTAR]}[(r);:${(q)1};:]} ) ]]; then
       string="${(q)bmap_val}"
       if (( val )); then
-        if [[ ${pos[1]} = "-M" ]]; then
-          pos[4]="$bmap_val"
-        else
-          pos[2]="$bmap_val"
-        fi
+        [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
       else
-        if [[ ${pos[1]} = "-M" ]]; then
-          pos[3]="${(Q)bmap_val}"
-        else
-          pos[1]="${(Q)bmap_val}"
-        fi
+        [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
       fi
+      .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as cursor-key and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
+    fi
+    if [[ $bmap_val = hold ]]; then
+      return 0
+    fi
 
-      if [[ $bmap_val = hold ]]; then
-        return 0
-      fi
+    local prev="${(q)${(s: :)$(builtin bindkey ${(Q)string})}[-1]#undefined-key}"
 
-      # local prev="${(q)${(s: :)$(builtin bindkey ${(Q)string})}[-1]#undefined-key}"
+    # "-M map" given?
+    if (( ${+opts[-M]} )); then
+      local Mopt=-M
+      local Marg="${opts[-M]}"
+
+      Mopt="${(q)Mopt}"
+      Marg="${(q)Marg}"
+
+      quoted="$string $widget $prev $Mopt $Marg"
+    else
+      quoted="$string $widget $prev"
+    fi
+
+    # -R given?
+    if (( ${+opts[-R]} )); then
+      local Ropt=-R
+      Ropt="${(q)Ropt}"
 
       if (( ${+opts[-M]} )); then
-        local Mopt=-M
-        local Marg="${opts[-M]}"
-
-        Mopt="${(q)Mopt}"
-        Marg="${(q)Marg}"
-
-        quoted="$string $widget $prev $Mopt $Marg"
+        quoted="$quoted $Ropt"
       else
-        quoted="$string $widget $prev"
+        # Two empty fields for non-existent -M arg.
+        local space=_
+        space="${(q)space}"
+        quoted="$quoted $space $space $Ropt"
       fi
+    fi
 
-      # -R given?
-      if (( ${+opts[-R]} )); then
-        local Ropt=-R
-        Ropt="${(q)Ropt}"
+    quoted="${(q)quoted}"
 
-        if (( ${+opts[-M]} )); then
-          quoted="$quoted $Ropt"
-        else
-          # Two empty fields for non-existent -M arg.
-          local space=_
-          space="${(q)space}"
-          quoted="$quoted $space $space $Ropt"
-        fi
-      fi
+    # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here).
+    if [[ -n ${ZINIT[CUR_USPL2]} ]]; then
+      ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
+    elif [[ ${ZINIT[DTRACE]} = 1 ]]; then
+      ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
+    fi
+  else
+    # bindkey -A newkeymap main?
+    # Negative indices for KSH_ARRAYS immunity.
+    if [[ ${#opts} -eq 1 && ${+opts[-A]} = 1 && ${#pos} = 3 && ${pos[-1]} = main && ${pos[-2]} != -A ]]; then
+      # Save a copy of main keymap.
+      (( ZINIT[BINDKEY_MAIN_IDX] = ${ZINIT[BINDKEY_MAIN_IDX]:-0} + 1 ))
+      local pname="${ZINIT[CUR_PLUGIN]:-_dtrace}"
+      local name="${(q)pname}-main-${ZINIT[BINDKEY_MAIN_IDX]}"
+      builtin bindkey -N "$name" main
 
+      # Remember occurence of main keymap substitution, to revert on unload.
+      local keys=_ widget=_ prev= optA=-A mapname="${name}" optR=_
+      local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optA} ${(q)mapname} ${(q)optR}"
       quoted="${(q)quoted}"
 
-      if [[ -n ${ZINIT[CUR_USPL2]} ]]; then
-        ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
-      fi
+      # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here).
+      [[ -n ${ZINIT[CUR_USPL2]} ]] && ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
+      [[ ${ZINIT[DTRACE]} = 1 ]] && ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
 
-      if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
-      fi
+      .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
+      # bindkey -N newkeymap [other].
+    elif [[ ${#opts} -eq 1 && ${+opts[-N]} = 1 ]]; then
+      local Nopt=-N
+      local Narg="${opts[-N]}"
 
+      local keys=_ widget=_ prev= optN=-N mapname="${Narg}" optR=_
+      local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optN} ${(q)mapname} ${(q)optR}"
+      quoted="${(q)quoted}"
+
+      # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here).
+      [[ -n ${ZINIT[CUR_USPL2]} ]] && ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
+      [[ ${ZINIT[DTRACE]} = 1 ]] && ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
     else
-
-      if [[ ${#opts} -eq 1 && ${pos[-1]} = main && ${pos[-2]} != -A && ${+opts[-A]} = 1 && ${#pos} = 3 ]]; then
-
-        (( ZINIT[BINDKEY_MAIN_IDX] = ${ZINIT[BINDKEY_MAIN_IDX]:-0} + 1 ))
-        local pname="${ZINIT[CUR_PLUGIN]:-_dtrace}"
-        local name="${(q)pname}-main-${ZINIT[BINDKEY_MAIN_IDX]}"
-        builtin bindkey -N "$name" main
-
-        local keys=_ widget=_ prev= optA=-A mapname="${name}" optR=_
-        local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optA} ${(q)mapname} ${(q)optR}"
-        quoted="${(q)quoted}"
-
-        if [[ -n ${ZINIT[CUR_USPL2]} ]]; then
-          ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
-        fi
-
-        if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-          ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
-        fi
-
-      elif [[ ${#opts} -eq 1 && ${+opts[-N]} = 1 ]]; then
-
-        local Nopt=-N
-        local Narg="${opts[-N]}"
-
-        local keys=_ widget=_ prev= optN=-N mapname="${Narg}" optR=_
-        local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optN} ${(q)mapname} ${(q)optR}"
-        quoted="${(q)quoted}"
-
-        if [[ -n ${ZINIT[CUR_USPL2]} ]]; then
-          ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
-        fi
-
-        if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-          ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
-        fi
-      else
-        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${(kv)opts[*]}"
-      fi
+      .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${(kv)opts[*]}"
     fi
   fi
 
-  # actual bindkey
+  # Actual bindkey.
   builtin bindkey "${pos[@]}"
   return $? # testable
-}
+} # ]]]
 
 # FUNCTION: :zinit-tmp-subst-zstyle. [[[
 # Function defined to hijack plugin's calls to the `zstyle' builtin.
@@ -831,8 +808,7 @@ builtin setopt noaliases
 # Turn off temporary substituting of functions completely for a given mode ("load", "light",
 # "light-b" (i.e. the `trackbinds' mode) or "compdef").
 .zinit-tmp-subst-off() {
-  builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal \
-    typesetsilent noshortloops unset noaliases
+  builtin setopt localoptions noerrreturn noerrexit extendedglob warncreateglobal typesetsilent noshortloops unset noaliases
   local mode="$1"
 
   # Disable temporary substituting of functions only once.
@@ -873,9 +849,10 @@ builtin setopt noaliases
 
   return 0
 } # ]]]
+
 # FUNCTION: pmodload. [[[
 # {function:pmodload} Compatibility with Prezto. Calls can be recursive.
-if (( ${+functions[pmodload]} )) || pmodload() ; then
+(( ${+functions[pmodload]} )) || pmodload() {
   local -A ices
   (( ${+ICE} )) && ices=( "${(kv)ICE[@]}" teleid '' )
   local -A ICE ZINIT_ICE
@@ -891,8 +868,7 @@ if (( ${+functions[pmodload]} )) || pmodload() ; then
       shift
     fi
   done
-fi
-# ]]]
+} # ]]]
 
 #
 # Diff functions.
@@ -1054,7 +1030,7 @@ fi
     if [[ $1 == (%|/)* || ( -z $1 && $2 == /* ) ]]; then
       .zinit-util-shands-path $1${${(M)1#(%/?|%[^/]|/?)}:+/}$2
       REPLY=${${REPLY:#%*}:+%}$REPLY
-      } else {
+    else
       REPLY=$1${1:+/}$2
     fi
     return 0
