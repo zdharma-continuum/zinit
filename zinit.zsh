@@ -148,22 +148,23 @@ ZINIT[DTRACE]=0
 ZINIT[TMP_SUBST]=inactive
 
 # Parameters - ICE
+local GH_URL='https://github.com' RAW_GH_URL='https://raw.githubusercontent.com'
 declare -gA ZINIT_1MAP ZINIT_2MAP
 ZINIT_1MAP=(
-  OMZ::https://github.com/ohmyzsh/ohmyzsh/trunk/
-  OMZL::https://github.com/ohmyzsh/ohmyzsh/trunk/lib/
-  OMZP::https://github.com/ohmyzsh/ohmyzsh/trunk/plugins/
-  OMZT::https://github.com/ohmyzsh/ohmyzsh/trunk/themes/
-  PZT::https://github.com/sorin-ionescu/prezto/trunk/
-  PZTM::https://github.com/sorin-ionescu/prezto/trunk/modules/
+  OMZ:: ${GH_URL}/ohmyzsh/ohmyzsh/trunk/
+  OMZL:: ${GH_URL}/ohmyzsh/ohmyzsh/trunk/lib/
+  OMZP:: ${GH_URL}/ohmyzsh/ohmyzsh/trunk/plugins/
+  OMZT:: ${GH_URL}/ohmyzsh/ohmyzsh/trunk/themes/
+  PZT:: ${GH_URL}/sorin-ionescu/prezto/trunk/
+  PZTM:: ${GH_URL}/sorin-ionescu/prezto/trunk/modules/
 )
 ZINIT_2MAP=(
-  OMZ::https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/
-  OMZL::https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/lib/
-  OMZP::https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/
-  OMZT::https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/themes/
-  PZT::https://raw.githubusercontent.com/sorin-ionescu/prezto/master/
-  PZTM::https://raw.githubusercontent.com/sorin-ionescu/prezto/master/modules/
+  OMZ:: ${RAW_GH_URL}/ohmyzsh/ohmyzsh/master/
+  OMZL:: ${RAW_GH_URL}/ohmyzsh/ohmyzsh/master/lib/
+  OMZP:: ${RAW_GH_URL}/ohmyzsh/ohmyzsh/master/plugins/
+  OMZT:: ${RAW_GH_URL}/ohmyzsh/ohmyzsh/master/themes/
+  PZT:: ${RAW_GH_URL}/sorin-ionescu/prezto/master/
+  PZTM:: ${RAW_GH_URL}/sorin-ionescu/prezto/master/modules/
 )
 
 # Initializing
@@ -252,11 +253,11 @@ builtin setopt noaliases
 # So basically one creates function stub that calls :zinit-reload-and-run()
 # instead of "autoload -X".
 #
+# Author: Bart Schaefer
+#
 # $1 - FPATH dedicated to function
 # $2 - autoload options
 # $3 - function name (one that needs autoloading)
-#
-# Author: Bart Schaefer
 :zinit-reload-and-run() {
   local fpath_prefix="$1" autoload_opts="$2" func="$3"
   shift 3
@@ -268,9 +269,9 @@ builtin setopt noaliases
   ___fpath=( ${fpath[@]} )
   local -a +h fpath
 
-  if [[ $FPATH != *${${(@0)fpath_prefix}[1]}* ]] {
+  if [[ $FPATH != *${${(@0)fpath_prefix}[1]}* ]]; then
     fpath=( ${(@0)fpath_prefix} ${___fpath[@]} )
-  }
+  fi
 
   # After this the function exists again.
   builtin autoload ${(s: :)autoload_opts} -- "$func"
@@ -402,11 +403,11 @@ builtin setopt noaliases
   done
 
   return $retval
-}
+} # ]]]
 # FUNCTION: :zinit-tmp-subst-bindkey. [[[
 # Function defined to hijack plugin's calls to the `bindkey' builtin.
 #
-# The hijacking is to gather report data (which is used in unload).
+# The hijackings gather report data (which is used in unload).
 :zinit-tmp-subst-bindkey() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
@@ -589,6 +590,7 @@ builtin setopt noaliases
   builtin zstyle "${pos[@]}"
   return $? # testable
 } # ]]]
+
 # FUNCTION: :zinit-tmp-subst-alias. [[[
 # Function defined to hijack plugin's calls to the `alias' builtin.
 #
@@ -645,8 +647,9 @@ builtin setopt noaliases
   builtin alias "${pos[@]}"
   return $? # testable
 } # ]]]
+
 # FUNCTION: :zinit-tmp-subst-zle. [[[.
-# Function defined to hijack plugin's calls to the `zle' builtin.
+# Function defined to hijack plugins calls to zle builtin.
 #
 # The hijacking is to gather report data (which is used in unload).
 :zinit-tmp-subst-zle() {
@@ -675,8 +678,7 @@ builtin setopt noaliases
       fi
       # These will be saved and restored.
     elif (( ${+widgets[$2]} )); then
-      # Have to remember original widget "$2" and
-      # the copy that it's going to be done.
+      # Have to remember original widget "$2" and the copy going to be done.
       local widname="$2" targetfun="${${${(M)1:#-C}:+$4}:-$3}"
       local completion_widget="${${(M)1:#-C}:+$3}"
       local saved_widcontents="${widgets[$widname]}"
@@ -715,6 +717,7 @@ builtin setopt noaliases
   builtin zle "${pos[@]}"
   return $? # testable
 } # ]]]
+
 # FUNCTION: :zinit-tmp-subst-compdef. [[[
 # Function defined to hijack plugin's calls to the `compdef' function.
 # The hijacking is not only for reporting, but also to save compdef
@@ -724,7 +727,7 @@ builtin setopt noaliases
   .zinit-add-report "${ZINIT[CUR_USPL2]}" "Saving \`compdef $*' for replay"
   ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
 
-  return 0 # testable
+  return 0 
 } # ]]]
 
 # FUNCTION: .zinit-tmp-subst-on. [[[

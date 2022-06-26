@@ -92,7 +92,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 262 line(s). Calls functions:
+Has 263 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
@@ -1026,11 +1026,11 @@ ____
  So basically one creates function stub that calls :zinit-reload-and-run()
  instead of "autoload -X".
  
+ Author: Bart Schaefer
+ 
  $1 - FPATH dedicated to function
  $2 - autoload options
  $3 - function name (one that needs autoloading)
- 
- Author: Bart Schaefer
 ____
 
 Has 13 line(s). Doesn't call other functions.
@@ -1091,7 +1091,7 @@ ____
  FUNCTION: :zinit-tmp-subst-bindkey. [[[
  Function defined to hijack plugin's calls to the `bindkey' builtin.
  
- The hijacking is to gather report data (which is used in unload).
+ The hijackings gather report data (which is used in unload).
 ____
 
 Has 117 line(s). Calls functions:
@@ -1128,7 +1128,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 ____
  
  FUNCTION: :zinit-tmp-subst-zle. [[[.
- Function defined to hijack plugin's calls to the `zle' builtin.
+ Function defined to hijack plugins calls to zle builtin.
  
  The hijacking is to gather report data (which is used in unload).
 ____

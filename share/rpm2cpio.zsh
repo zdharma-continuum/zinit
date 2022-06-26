@@ -4,8 +4,8 @@ emulate -R zsh -o extendedglob
 
 local pkg=$1
 if [[ -z $pkg || ! -e $pkg ]] {
-    print -u2 -Pr "%F{160}rpm2cpio.sh%f: no package supplied"
-    exit 1
+  print -u2 -Pr "%F{160}rpm2cpio.sh%f: no package supplied"
+  exit 1
 }
 
 local leadsize=96
@@ -29,23 +29,23 @@ local COMPRESSION="$($=UNPACKCMD | file -)"
 local -a DECOMPRESSCMD
 
 if [[ $COMPRESSION == (#i)*gzip* ]] {
-    DECOMPRESSCMD=( gunzip )
+  DECOMPRESSCMD=( gunzip )
 } elif [[ $COMPRESSION == (#i)*bzip2* ]] {
-    DECOMPRESSCMD=( bunzip2 )
+DECOMPRESSCMD=( bunzip2 )
 } elif [[ $COMPRESSION == (#i)*xz* ]] {
-    DECOMPRESSCMD=( unxz )
+DECOMPRESSCMD=( unxz )
 } elif [[ $COMPRESSION == (#i)*cpio* ]] {
-    DECOMPRESSCMD=( cat )
+DECOMPRESSCMD=( cat )
 } else {
-    DECOMPRESSCMD=( $(which unlzma 2>/dev/null) )
-    if [[ $DECOMPRESSCMD != /* ]] {
-        DECOMPRESSCMD=( $(which lzmash 2>/dev/null) )
-        if [[ $DECOMPRESSCMD == /* ]] {
-            DECOMPRESSCMD=( lzmash -d -c )
-        } else {
-            DECOMPRESSCMD=( cat )
-        }
-    }
+DECOMPRESSCMD=( $(which unlzma 2>/dev/null) )
+if [[ $DECOMPRESSCMD != /* ]] {
+DECOMPRESSCMD=( $(which lzmash 2>/dev/null) )
+if [[ $DECOMPRESSCMD == /* ]] {
+DECOMPRESSCMD=( lzmash -d -c )
+} else {
+DECOMPRESSCMD=( cat )
+}
+}
 }
 
 command "$UNPACKCMD[@]" 2>/dev/null | command "$DECOMPRESSCMD[@]"
