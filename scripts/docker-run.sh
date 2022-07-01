@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
+#
+# -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
+#
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
 
 parent_process() {
   local ppid pcmd
   ppid="$(ps -o ppid= -p "$$" | awk '{ print $1 }')"
 
   if [[ -z $ppid ]]; then
-    echo "Failed to determine parent process" >&2
+    echo "--- Failed to determine parent process" >&2
     return 1
   fi
 
@@ -36,7 +41,6 @@ create_init_config_file() {
 
   tempfile="$(mktemp)"
   echo "$*" > "$tempfile"
-  # DIRTYFIX perms...
   chmod 666 "$tempfile"
   echo "$tempfile"
 }
@@ -53,8 +57,6 @@ run() {
   local sudo_cmd
   if [[ -z $CI ]] && command -v podman > /dev/null 2>&1; then
     cruntime=podman
-    # rootless containers are a PITA
-    # https://www.tutorialworks.com/podman-rootless-volumes/
     sudo_cmd=sudo
   fi
 
@@ -66,7 +68,7 @@ run() {
     if [[ -r $init_config ]]; then
       args+=(--volume "${init_config}:/init.zsh")
     else
-      echo "❌ Init config file is not readable" >&2
+      echo "--- config file is not readable" >&2
       return 1
     fi
   fi
@@ -109,7 +111,7 @@ run() {
     {
       # The @Q below is necessary to keep the quotes intact
       # https://stackoverflow.com/a/12985353/1872036
-      echo -e "🚀 \e[35mRunning command"
+      echo -e "--- \e[35mRunning command"
       echo -e "\$ ${cruntime} run ${args[*]} ${image}:${tag} ${cmd[*]@Q}\e[0m"
     } >&2
   fi
@@ -131,8 +133,7 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
 
   while [[ -n $* ]]; do
     case "$1" in
-      # Fetch init config from clipboard (Linux only)
-      --xsel | -b)
+      --xsel | -b) # Fetch init config from clipboard (Linux only)
         INIT_CONFIG_VAL="$(xsel -b)"
         shift
         ;;
@@ -168,18 +169,15 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
         CONTAINER_TAG="$2"
         shift 2
         ;;
-      # Additional container env vars
-      -e | --env | --environment)
+      -e | --env | --environment) # Additional container env vars
         CONTAINER_ENV+=("$2")
         shift 2
         ;;
-      # Additional container volumes
-      -v | --volume)
+      -v | --volume) # Additional container volumes
         CONTAINER_VOLUMES+=("$2")
         shift 2
         ;;
-      # Whether to wrap the command in zsh -silc
-      -w | --wrap)
+      -w | --wrap) # Whether to wrap the command in zsh -silc
         WRAP_CMD=1
         shift
         ;;
@@ -187,9 +185,9 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
         PRESET=zunit
         shift
         ;;
-      # Whether to enable debug tracing of zinit (zsh -x)
-      # Only applies to wrapped commands (--w|--wrap)
       --zsh-debug | -x | -Z)
+        # Whether to enable debug tracing of zinit (zsh -x) Only
+        # applies to wrapped commands (--w|--wrap)
         ZSH_DEBUG=1
         shift
         ;;
@@ -204,36 +202,19 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
 
   case "$PRESET" in
     zunit)
-      # Mount root of the repo to /src
-      # Mount /tmp/zunit-zinit to /data
-      CONTAINER_VOLUMES+=(
-        "${GIT_ROOT_DIR}:/src"
-        "${TMPDIR:-/tmp}/zunit-zinit:/data"
-      )
-      CONTAINER_ENV+=(
-        "QUIET=1"
-        "NOTHING_FANCY=1"
-      )
+      # Mount repo -> /src && /tmp/zunit-zinit -> /data
+      CONTAINER_VOLUMES+=("${GIT_ROOT_DIR}:/src" "${TMPDIR:-/tmp}/zunit-zinit:/data")
+      CONTAINER_ENV+=("QUIET=1" "NOTHING_FANCY=1")
       ;;
     docs)
-      # Mount root of the repo to /src
-      CONTAINER_VOLUMES+=(
-        "${GIT_ROOT_DIR}:/src"
-      )
-      CONTAINER_ENV+=(
-        "QUIET=1"
-        "NOTHING_FANCY=1"
-        "LC_ALL=en_US.UTF-8"
-      )
+      # Mount repo -> /src
+      CONTAINER_VOLUMES+=("${GIT_ROOT_DIR}:/src")
+      CONTAINER_ENV+=("QUIET=1" "NOTHING_FANCY=1" "LC_ALL=en_US.UTF-8")
       CONTAINER_WORKDIR=/src
       # shellcheck disable=2016
       INIT_CONFIG_VAL='zinit nocompile make'\''PREFIX=$ZPFX install'\'' for zdharma-continuum/zshelldoc'
       # shellcheck disable=2016
-      CMD=(zsh -ilsc
-        'sudo chown -R "$(id -u):$(id -g)" /src &&
-         @zinit-scheduler burst &&
-         sudo apk add tree &&
-         make -C /src doc')
+      CMD=(zsh -ilsc 'sudo chown -R "$(id -u):$(id -g)" /src && @zinit-scheduler burst && sudo apk add tree && make -C /src doc')
       ;;
   esac
 
@@ -243,9 +224,7 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
 
   if [[ -n $DEVEL ]]; then
     # Mount root of the repo to /src
-    CONTAINER_VOLUMES+=(
-      "${GIT_ROOT_DIR}:/src"
-    )
+    CONTAINER_VOLUMES+=("${GIT_ROOT_DIR}:/src")
   fi
 
   run "$INIT_CONFIG" "${CMD[@]}"

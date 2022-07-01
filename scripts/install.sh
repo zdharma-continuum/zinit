@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
+#
+# -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
+#
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
 
 { # Colors
-  COLOR_RESET='[0m'
-  COLOR_BOLD_RED='[1;31m'
-  COLOR_BOLD_GREEN='[1;32m'
-  COLOR_BOLD_YELLOW='[1;33m'
   COLOR_BOLD_BLUE='[1;34m'
-  COLOR_BOLD_MAGENTA='[1;35m'
   COLOR_BOLD_CYAN='[1;36m'
-
-  # The over-the-top fancy ones
-  COLOR_PALE_MAGENTA='[38;5;177m'
+  COLOR_BOLD_GREEN='[1;32m'
+  COLOR_BOLD_MAGENTA='[1;35m'
+  COLOR_BOLD_RED='[1;31m'
   COLOR_BOLD_WHITE_ON_BLACK='[1;37;40m'
+  COLOR_BOLD_YELLOW='[1;33m'
+  COLOR_PALE_MAGENTA='[38;5;177m'
+  COLOR_RESET='[0m'
 }
 
 echo_fancy() {
@@ -20,13 +23,12 @@ echo_fancy() {
   shift 2
 
   msg=""
-  # prepend emoji, unless NO_EMOJI is set
   if [ -z "$NO_EMOJI" ]; then
     msg="$emoji"
   fi
 
-  # wrap every word in color (needed in case there are custom colors in
-  # the message itself), unless NO_COLOR is set
+  # wrap every word in color (needed in case there are custom colors in the
+  # message itself), unless NO_COLOR is set
   for str in "$@"; do
     # FIXME: NO_COLOR only applies if there are no colors in the msg
     if [ -z "$NO_COLOR" ]; then
@@ -59,11 +61,8 @@ echo_error() {
 
 check_dependencies() {
   zsh_min_version=5.5
-  if ! zsh -sfc \
-    'autoload is-at-least;
-       is-at-least $1 $ZSH_VERSION' "$zsh_min_version"; then
-    echo_warning "ZSH version 5.5+ is recommended for zinit." \
-      "It'll still work, but be warned."
+  if ! zsh -sfc 'autoload is-at-least; is-at-least $1 $ZSH_VERSION' "$zsh_min_version"; then
+    echo_warning "ZSH version 5.5+ is recommended for zinit. It'll still work, but be warned."
   fi
 
   if ! command -v git > /dev/null 2>&1; then
@@ -75,9 +74,7 @@ check_dependencies() {
 }
 
 show_environment() {
-  echo_info "About to setup zinit from $ZINIT_REPO" \
-    "(branch: $ZINIT_BRANCH - commit: ${ZINIT_COMMIT:-N/A})" \
-    "to ${ZINIT_INSTALL_DIR}"
+  echo_info "About to setup zinit from $ZINIT_REPO (branch: $ZINIT_BRANCH - commit: ${ZINIT_COMMIT:-N/A}) to ${ZINIT_INSTALL_DIR}"
 }
 
 create_zinit_home() {
@@ -114,9 +111,9 @@ download_git_output_processor() {
   # shellcheck disable=2181
   if [ "$?" -eq 0 ]; then
     chmod a+x "$script_path" 2> /dev/null
-    echo_success 'Download finished!'
+    echo_success 'download finished'
   else
-    echo_warning "Download failed."
+    echo_warning "download failed"
   fi
 
   unset url script_path
@@ -136,9 +133,9 @@ zinit_checkout_ref() {
   fi
 
   if zinit_git_exec checkout "$ref" > /dev/null 2>&1; then
-    echo_success "Checked out $git_obj_type $ref"
+    echo_success "checked out $git_obj_type $ref"
   else
-    echo_error "Failed to check out $git_obj_type $ref"
+    echo_error "failed to check out $git_obj_type $ref"
   fi
 
   unset ref git_obj_type
@@ -150,12 +147,11 @@ zinit_current_version() {
 
 zinit_update() {
   cd "${ZINIT_INSTALL_DIR}" || {
-    echo_error "Failed to cd to ${ZINIT_INSTALL_DIR}"
+    echo_error "failed to cd to ${ZINIT_INSTALL_DIR}"
     exit 1
   }
 
-  echo_info "Updating ${COLOR_BOLD_CYAN}zinit${COLOR_RESET} in" \
-    "in ${COLOR_BOLD_MAGENTA}${ZINIT_INSTALL_DIR}"
+  echo_info "updating ${COLOR_BOLD_CYAN}zinit${COLOR_RESET} in ${COLOR_BOLD_MAGENTA}${ZINIT_INSTALL_DIR}"
   { # Clean up repo
     zinit_git_exec clean -d -f -f
     zinit_git_exec reset --hard HEAD
@@ -176,7 +172,7 @@ zinit_install() {
     exit 1
   }
 
-  echo_info "Installing ${COLOR_BOLD_CYAN}zinit${COLOR_RESET} to " \
+  echo_info "installing ${COLOR_BOLD_CYAN}zinit${COLOR_RESET} to " \
     "${COLOR_BOLD_MAGENTA}${ZINIT_INSTALL_DIR}"
   {
     command git clone --progress --branch "$ZINIT_BRANCH" \
@@ -189,11 +185,11 @@ zinit_install() {
   zinit_checkout_ref
 
   if [ -d "${ZINIT_REPO_DIR_NAME}" ]; then
-    echo_success "Zinit succesfully installed to " \
+    echo_success "zinit succesfully installed to " \
       "${COLOR_BOLD_GREEN}${ZINIT_INSTALL_DIR}"
-    echo_info "Zinit Version: ${COLOR_BOLD_GREEN}$(zinit_current_version)"
+    echo_info "zinit Version: ${COLOR_BOLD_GREEN}$(zinit_current_version)"
   else
-    echo_error "Failed to install Zinit to ${COLOR_BOLD_YELLOW}${ZINIT_INSTALL_DIR}"
+    echo_error "failed to install Zinit to ${COLOR_BOLD_YELLOW}${ZINIT_INSTALL_DIR}"
   fi
 }
 
@@ -241,12 +237,12 @@ zinit light-mode for \\
     zdharma-continuum/zinit-annex-rust
 
 EOF
-  # Ask user if we should add the annexes to their zshrc
-  # If NO_INPUT is set, but NO_ANNEXES is the annexes bit gets appended to the
-  # config (ie. default to yes if NO_INPUT, unless NO_ANNEXES)
+  # Ask user if we should add the annexes to their zshrc If NO_INPUT is set,
+  # but NO_ANNEXES is the annexes bit gets appended to the config (ie. default
+  # to yes if NO_INPUT, unless NO_ANNEXES)
   reply=n
-  if [ -n "$NO_INPUT" ]; then
-    [ -z "$NO_ANNEXES" ] && reply=y
+  if [ -n "$NO_INPUT" ] && [ -z "$NO_ANNEXES" ]; then
+    reply=y
   else
     echo "${COLOR_PALE_MAGENTA}${COLOR_RESET} Would you like to add 4 useful plugins" \
       "- the most useful annexes (Zinit extensions that add new" \
@@ -276,20 +272,23 @@ EOF
 display_tutorial() {
   command cat <<- EOF
 
-🌻 ${COLOR_BOLD_WHITE_ON_BLACK}Welcome!${COLOR_RESET}
+  ${COLOR_BOLD_WHITE_ON_BLACK}Welcome to Zinit!${COLOR_RESET}
 
-Now to get started you can check out the following:
+  Documentation:
 
-- The ${COLOR_BOLD_WHITE_ON_BLACK}README${COLOR_RESET} section on the ice-modifiers:
-    🧊 https://github.com/${ZINIT_REPO}#ice-modifiers
-- There's also an ${COLOR_BOLD_WHITE_ON_BLACK}introduction${COLOR_RESET} to Zinit on the wiki:
-    📚 https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
-- The ${COLOR_BOLD_WHITE_ON_BLACK}For-Syntax${COLOR_RESET} article on the wiki, which hilights some best practises:
-    📖 https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
+    - ${COLOR_BOLD_WHITE_ON_BLACK}Wiki${COLOR_RESET}: https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/
+    - ${COLOR_BOLD_WHITE_ON_BLACK}README.md${COLOR_RESET}: https://github.com/zdharma-continuum/zinit
 
-💁 Need help?
-- 💬 Get in touch with us on Gitter: https://gitter.im/zdharma-continuum
-- 🔖 Or on GitHub: https://github.com/zdharma-continuum
+  Concepts:
+
+    - ${COLOR_BOLD_WHITE_ON_BLACK}ice modifiers${COLOR_RESET}: https://github.com/${ZINIT_REPO}#ice-modifiers
+    - ${COLOR_BOLD_WHITE_ON_BLACK}for syntax${COLOR_RESET}: https://zdharma-continuum.github.io/zinit/wiki/For-Syntax/
+
+  Need help:
+
+    - Gitter: https://gitter.im/zdharma-continuum
+    - Github Discussions: https://github.com/zdharma-continuum
+
 EOF
 }
 
