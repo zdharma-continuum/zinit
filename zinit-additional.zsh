@@ -1,5 +1,7 @@
 # -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
-# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
+#
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
 
 # FUNCTION: :zinit-tmp-subst-source [[[
 :zinit-tmp-subst-source() {
@@ -31,7 +33,6 @@
 
   builtin eval "$___data"
 } # ]]]
-
 # FUNCTION: .zinit-service [[[
 # Handles given service, i.e. obtains lock, runs it, or waits if no lock
 #
@@ -77,7 +78,6 @@
     builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"
   done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
 } # ]]]
-
 # FUNCTION: .zinit-wrap-track-functions [[[
 .zinit-wrap-track-functions() {
   local user="$1" plugin="$2" id_as="$3" f
@@ -119,7 +119,6 @@
   # Full shadeing on
   .zinit-tmp-subst-on dtrace
 } # ]]]
-
 # FUNCTION: .zinit-debug-stop [[[
 # Stops Dtrace, i.e. session tracking for changes in Zsh state.
 .zinit-debug-stop() {
@@ -131,7 +130,6 @@
   # Gather end data now, for diffing later
   .zinit-diff _dtrace/_dtrace end
 } # ]]]
-
 # FUNCTION: .zinit-clear-debug-report [[[
 #
 # Forgets dtrace repport gathered up to this moment.
@@ -139,7 +137,6 @@
 .zinit-clear-debug-report() {
   .zinit-clear-report-for _dtrace/_dtrace
 } # ]]]
-
 # FUNCTION: .zinit-debug-unload [[[
 #
 # Reverts changes detected by dtrace run.

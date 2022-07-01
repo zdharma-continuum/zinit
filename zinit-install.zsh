@@ -1,6 +1,7 @@
-# -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2;
-# -*-
-# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
+# -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
+#
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors
 
 if ! builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh"; then
   builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."
