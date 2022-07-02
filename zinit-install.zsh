@@ -1459,15 +1459,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         local url=https://$urlpart
     }
 
-    local HAS_MUSL
-    if command -v musl-gcc >/dev/null 2>&1; then
+    # if (( ${+commands[dpkg-deb]} )) || (( find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
+    local HAS_MUSL=$MACHTYPE
+    if (( ${+commands[dpkg-deb]} )) || find /lib/ -maxdepth 1 -name '*musl*'; then
         HAS_MUSL='linux-musl'
-    elif command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    else
-        HAS_MUSL=$MACHTYPE
     fi
 
     local -A matchstr
@@ -1543,8 +1538,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       }
 
       if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
@@ -1553,8 +1548,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       }
 
       if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
