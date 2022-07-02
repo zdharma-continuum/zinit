@@ -737,15 +737,15 @@ ZINIT[EXTENDED_GLOB]=""
             builtin print -rl -- "${lines[@]}" | .zinit-pager
             builtin print
         fi
-        if [[ $1 != -q ]] {
-            command git pull --no-stat --ff-only origin main
-        } else {
-            command git pull --no-stat --quiet --ff-only origin main
-        }
+        if [[ $1 != -q ]]; then
+            command git pull --autostash --ff-only --no-stat origin main
+        else
+            command git pull --autostash --ff-only --no-stat --quiet origin main
+        fi
     )
-    if [[ $1 != -q ]] {
+    if [[ $1 != -q ]]; then
         +zinit-message "{pre}[self-update]{info} compiling zinit via {obj}zcompile{rst}"
-    }
+    fi
     command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
     zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
     zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh

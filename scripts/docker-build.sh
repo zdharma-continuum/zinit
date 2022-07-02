@@ -23,10 +23,9 @@ build() {
   [[ -n $NO_CACHE ]] && args+=(--no-cache "$@")
 
   if docker build \
-    --build-arg "PUSERNAME=$(id -u -n)" \
-    --build-arg "PUID=$(id -u)" \
     --build-arg "PGID=$(id -g)" \
-    --build-arg "TERM=${TERM:-xterm-256color}" \
+    --build-arg "PUID=$(id -u)" \
+    --build-arg "PUSERNAME=$(id -u -n)" \
     --build-arg "ZINIT_ZSH_VERSION=${zsh_version}" \
     --file "$dockerfile" \
     --tag "${image_name}:${tag}" \
