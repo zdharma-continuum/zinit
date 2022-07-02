@@ -75,10 +75,10 @@ run() {
     args+=(--workdir "$CONTAINER_WORKDIR")
   fi
 
-  # Inherit TERM
-  if [[ -n $TERM ]]; then
-    args+=(--env "TERM=${TERM}")
-  fi
+  # # Inherit TERM
+  # if [[ -n $TERM ]]; then
+  #   args+=(--env "TERM=${TERM}")
+  # fi
 
   if [[ -n ${CONTAINER_ENV[*]} ]]; then
     local e
@@ -110,11 +110,11 @@ run() {
       # The @Q below is necessary to keep the quotes intact
       # https://stackoverflow.com/a/12985353/1872036
       echo -e "🚀 \e[35mRunning command"
-      echo -e "\$ ${cruntime} run ${args[*]} ${image}:${tag} ${cmd[*]@Q}\e[0m"
+      echo -e "\$ ${cruntime} run --tty ${args[*]} ${image}:${tag} ${cmd[*]@Q}\e[0m"
     } >&2
   fi
 
-  ${sudo_cmd} "${cruntime}" run "${args[@]}" "${image}:${tag}" "${cmd[@]}"
+  ${sudo_cmd} "${cruntime}" run --tty "${args[@]}" "${image}:${tag}" "${cmd[@]}"
 }
 
 if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
