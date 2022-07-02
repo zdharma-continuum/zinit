@@ -1,4 +1,8 @@
-[[ -n "$NOTHING_FANCY" ]] && return
+#!/usr/bin/env zsh
+
+if [[ -n "$NOTHING_FANCY" ]]; then
+  return
+fi
 
 # Annexes
 zinit::setup-annexes

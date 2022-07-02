@@ -6,8 +6,7 @@ zinit::setup() {
 
 zinit::reload() {
   local zf
-  for zf in /src/*.zsh
-  do
+  for zf in /src/*.zsh; do
     source "$zf"
   done
 }
@@ -29,33 +28,28 @@ zinit::setup-annexes() {
 }
 
 zinit::setup-annexes-extra() {
-  # Dependencies
   sudo apk add ruby-dev grep tree
   zinit::install-zshelldoc
 
   zinit light-mode compile'*handler' for \
-    zdharma-continuum/zinit-annex-man \
-    zdharma-continuum/zinit-annex-test
+    zdharma-continuum/zinit-annex-{'man','test'}
 }
 
 zinit::install-zshelldoc() {
-  zinit light-mode \
+  zinit for \
+    light-mode \
     make"PREFIX=$ZPFX install" \
-    for zdharma-continuum/zshelldoc
+  zdharma-continuum/zshelldoc
 }
 
 zinit::setup-minimal() {
   zinit wait lucid light-mode for \
-    atinit"zicompinit; zicdreplay" \
-        zdharma-continuum/fast-syntax-highlighting \
-    atload"_zsh_autosuggest_start" \
-        zsh-users/zsh-autosuggestions \
-    blockf atpull'zinit creinstall -q .' \
-        zsh-users/zsh-completions
+    atinit"zicompinit; zicdreplay" zdharma-continuum/fast-syntax-highlighting \
+    atload"_zsh_autosuggest_start" zsh-users/zsh-autosuggestions \
+    blockf atpull'zinit creinstall -q .' zsh-users/zsh-completions
 }
 
 zinit::pack-zsh() {
   local version="$1"
-
   zinit pack"$version" for zsh
 }
