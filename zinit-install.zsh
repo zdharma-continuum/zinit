@@ -1459,16 +1459,24 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         local url=https://$urlpart
     }
 
-    local HAS_MUSL
-    if command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    else
-        HAS_MUSL=$MACHTYPE
+    local HAS_MUSL=$(CPUTYPE)
+    if (( ${+commands[musl-gcc]} )) || [[ -d /lib/ ]] && find /lib/ -maxdepth 1 -name '*musl*'; then
+      HAS_MUSL='linux-musl'
     fi
+    local arch_name="$(arch)" os_name="$(uname -s)"
+
+    if [[ "$arch_name" = "x86_64" ]] {
+      if [[ "$os_name" = "Darwin" && "$(sysctl -in sysctl.proc_translated)" = "1" ]] {
+        arch_name='arm64'
+        +zinit-message "{pre}gh-r{rst}:{info} Running on {obj}Rosetta 2{rst}"
+      } else {
+        +zinit-message "{pre}gh-r{rst}:{info} Running on {obj}native Intel{rst}"
+      }
+    } elif [[ "${arch_name}" = "arm64" ]] {
+        +zinit-message "{pre}gh-r{rst}:{info} Running on {obj}ARM{rst}"
+    } else {
+        +zinit-message "{pre}gh-r{rst}:{info} Unknown architecture {obj}${arch_name}{rst}"
+    }
 
     local -A matchstr
     # Logical grouping of $CPUTYPE & $OSTYPE
@@ -1508,8 +1516,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       if [[ -n $bpick ]] { list=( ${(M)list[@]:#(#i)*/$~bpick} ) }
 
       # REMOVE ARTIFACTS THAT SHOULDN'T BE CONSIDERED
-      filtered=( ${list[@]:#(#i)*([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.sh(#e))*} )
+      +zinit-message "{pre}gh-r{rst}:{info} {obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+      filtered=( ${list[@]:#(#i)*([i]?[3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.sh(#e))*} )
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
+      +zinit-message "{pre}gh-r{rst}:{info} {obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
 
       # FILTER .APK PACKAGES IF ANBOX PRESENT
       if (( $#list > 1 && ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[linux-android]}*} ) } \
@@ -1527,7 +1537,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       if (( $#list > 1 )) {
-          filtered=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+          filtered=( ${(M)list[@]:#(#i)*${~matchstr[${arch_name}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
           # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${$(uname)}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
@@ -1543,8 +1553,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       }
 
       if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${arch_name}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
@@ -1553,12 +1563,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       }
 
       if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${os_name}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
         # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[$(uname)]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
