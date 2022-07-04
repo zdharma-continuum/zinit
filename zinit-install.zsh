@@ -3,22 +3,19 @@
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
 builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
-    builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."
-    return 1
+  builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."
+  return 1
 }
 
 # FUNCTION: .zinit-jq-check [[[
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
 .zinit-jq-check() {
-    command -v jq >/dev/null && return 0
-
-    +zinit-message "{error}❌ ERROR: jq binary not found" \
-        "{nl}{u-warn}Please install jq:{rst}" \
-        "https://github.com/stedolan/jq" \
-        "{nl}{u-warn}To do so with zinit, please refer to:{rst}" \
-        "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
-    return 1
+    if (( ${+commands[jq]} == 0 )) {
+      +zinit-message "{error}ERROR{rst}: {obj}jq{info} command not found" \
+        "{nl}{u-warn}zinit:{rst} https://github.com/zdharma-continuum/zinit/wiki/Github-Binary-Recipes#jq"
+      return 1
+    }
 } # ]]]
 # FUNCTION: .zinit-json-get-value [[[
 # Wrapper around jq that return the value of a property
@@ -79,8 +76,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
     trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
 
-    # Check if we were provided with a local path to a package.json
-    # as in:
+    # Check if we were provided with a local path to a package.json as in:
     # zinit pack'/zp/firefox-dev/package.json:default' for firefox-dev
     if [[ $profile == ./* || $profile == /* ]] {
         local localpkg=1
@@ -1453,26 +1449,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     REPLY=
     local user=$1 plugin=$2 urlpart=$3
 
-    if [[ -z $urlpart ]] {
-        local url=https://github.com/$user/$plugin/releases/$ICE[ver]
-    } else {
-        local url=https://$urlpart
-    }
+    if [[ -z $urlpart ]] { local url=https://github.com/$user/$plugin/releases/$ICE[ver] } \
+    else { local url=https://$urlpart }
 
-    local HAS_MUSL
-    if command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    else
-        HAS_MUSL=$MACHTYPE
-    fi
+    local HAS_MUSL=$MACHTYPE
+    if (( ${+commands[musl-gcc]} == 1 )) || [[ -n /lib/*musl*(#qN) ]] { HAS_MUSL='linux-musl' }
 
-    local -A matchstr
     # Logical grouping of $CPUTYPE & $OSTYPE
-    matchstr=(
+    local -A matchstr=(
       aarch64 '(arm64|aarch64|arm[?v]8)'
       arm64 '(arm64|aarch64|arm[?v]8)'
       armv5 'arm[?v]5'
@@ -1489,17 +1473,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       msys '(win((dows|32|64))|cygwin)'
       windows '(win((dows|32|64))|cygwin)'
     )
+    typeset -A PKG_TYPES=( ['deb']='dpkg-deb' ['rpm']='rpm' )
+    # local -A PKG_TYPES=(
+    #   deb 'dpkg-deb'
+    #   rpm 'rpm'
+    # )
+    local -a SEARCH_TERMS=( "$(uname)" )
 
-    local -a list init_list
+    local -a bpicks filtered init_list list
+    local bpick pkg_ext pkg_cmd
 
     init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
                       command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
     init_list=( ${init_list[@]#href=?} )
 
-    local -a filtered bpicks
     bpicks=( ${(s.;.)ICE[bpick]} )
     [[ -z $bpicks ]] && bpicks=( "" )
-    local bpick
 
     reply=()
     for bpick ( "${bpicks[@]}" ) {
@@ -1512,19 +1501,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
       # FILTER .APK PACKAGES IF ANBOX PRESENT
-      if (( $#list > 1 && ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[linux-android]}*} ) } \
+      if (( ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[linux-android]}*} ) } \
       else { filtered=( ${list[@]:#(#i)*${~matchstr[linux-android]}*} ) }
       (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
-      # FILTER .DEB PACKAGES IF DPKG-DEB PRESENT
-      if (( $#list > 1 && ${+commands[dpkg-deb]} == 1 )) { filtered=( ${list[@]:#(#i)*(64|)*deb(#e)} ) } \
-      else { filtered=( ${list[@]:#*deb(#e)} ) }
-      (( $#filtered > 0 )) && list=( ${filtered[@]} )
-
-      # FILTER .RPM PACKAGES IF REDHAT PACKAGE MANAGER PRESENT
-      if (( $#list > 1 && ${+commands[rpm]} == 1 )) { filtered=( ${list[@]:#(#i)*(64|)*rpm(#e)} ) } \
-      else { filtered=( ${list[@]:#*rpm(#e)} ) }
-      (( $#filtered > 0 )) && list=( ${filtered[@]} )
+      for pkg_ext pkg_cmd in ${(kv)PKG_TYPES}; do
+        if (( ${+commands[${pkg_cmd}]} == 1 )) {
+          filtered=( ${list[@]:#(#i)*(64|)*${pkg_ext}(#e)} )
+          +zinit-message "{pre}gh-r{rst}: {obj}${pkg_cmd}{info} cmd present -- filtering for {obj}${pkg_ext}{info} packages{rst}"
+        } else { filtered=( ${list[@]:#*${pkg_ext}(#e)} ) }
+        (( $#filtered > 0 )) && list=( ${filtered[@]} )
+      done
 
       if (( $#list > 1 )) {
           filtered=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
@@ -1533,8 +1520,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
       # FILTER URLS BY GENERIC OS NAME (E.G., DARWIN, LINUX, ETC.)
       if (( $#list > 1 )) {
-          filtered=( ${(M)list[@]:#(#i)*/$~HAS_MUSL} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-          # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*/${~HAS_MUSL}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
@@ -2414,4 +2401,5 @@ zimv() {
         )
     }
 } # ]]]
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
