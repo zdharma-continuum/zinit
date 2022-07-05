@@ -21,7 +21,6 @@ FUNCTIONS
  .zinit-first
  .zinit-store-ices
  .zinit-two-paths
-AUTOLOAD zmv
 
 DETAILS
 -------
@@ -81,12 +80,14 @@ Called by:
 ____
  
  FUNCTION: .zinit-compute-ice [[[
- Computes ICE array (default, it can be specified via $3) from a) input
- ICE, b) static ice, c) saved ice, taking priorities into account. Also
- returns path to snippet directory and optional name of snippet file (only
- valid if ICE[svn] is not set).
- 
+ Computes ICE array
+ - input
+ - static
+ - saved
+ taking priorities into account.
  Can also pack resulting ices into ZINIT_SICE (see $2).
+ Returns filepath to snippet directory and optional snippet file name (only
+ valid if ICE[svn] is not set).
  
  $1 - URL (also plugin-spec)
  $2 - "pack" or "nopack" or "pack-nf" - packing means ICE
@@ -96,16 +97,17 @@ ____
  $4 - name of output string parameter, to hold path to directory ("local_dir")
  $5 - name of output string parameter, to hold filename ("filename")
  $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
+ 
+ $REPLY - snippet directory filepath
 ____
 
-Has 111 line(s). Calls functions:
+Has 110 line(s). Calls functions:
 
  .zinit-compute-ice
  |-- zinit.zsh/.zinit-any-to-user-plugin
- |-- zinit.zsh/.zinit-pack-ice
- `-- zmv
+ `-- zinit.zsh/.zinit-pack-ice
 
-Uses feature(s): _autoload_, _setopt_, _zmv_
+Uses feature(s): _setopt_
 
 Called by:
 
@@ -122,11 +124,12 @@ Called by:
 ____
  
  FUNCTION: .zinit-countdown [[[
- Displays a countdown 5...4... etc. and returns 0 if it
- sucessfully reaches 0, or 1 if Ctrl-C will be pressed.
+ Displays a countdown 5...4... etc.
+ 
+ $REPLY - 1 if Ctrl-C is pressed, otherwise 0
 ____
 
-Has 15 line(s). Calls functions:
+Has 20 line(s). Calls functions:
 
  .zinit-countdown
  `-- zinit.zsh/+zinit-message
@@ -151,13 +154,11 @@ ____
  FUNCTION: .zinit-exists-physically [[[
  Checks if directory of given plugin exists in PLUGIN_DIR.
  
- Testable.
- 
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 10 line(s). Calls functions:
+Has 8 line(s). Calls functions:
 
  .zinit-exists-physically
  `-- zinit.zsh/.zinit-any-to-user-plugin
@@ -174,16 +175,14 @@ Called by:
 ____
  
  FUNCTION: .zinit-exists-physically-message [[[
- Checks if directory of given plugin exists in PLUGIN_DIR,
- and outputs error message if it doesn't.
- 
- Testable.
+ Checks if directory of given plugin exists in PLUGIN_DIR, and outputs error
+ message if it doesn't.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 23 line(s). Calls functions:
+Has 25 line(s). Calls functions:
 
  .zinit-exists-physically-message
  |-- zinit.zsh/+zinit-message
@@ -207,12 +206,11 @@ Called by:
 ____
  
  FUNCTION: .zinit-first [[[
- Finds the main file of plugin. There are multiple file name
- formats, they are ordered in order starting from more correct
- ones, and matched. .zinit-load-plugin() has similar code parts
- and doesn't call .zinit-first() – for performance. Obscure matching
- is done in .zinit-find-other-matches, here and in .zinit-load().
- Obscure = non-standard main-file naming convention.
+ Finds the main file of plugin. There are multiple file name formats, they are
+ ordered in order starting from more correct ones, and matched.
+ .zinit-load-plugin() has similar code parts and doesn't call .zinit-first() –
+ for performance. Obscure matching is done in .zinit-find-other-matches, here
+ and in .zinit-load(). Obscure = non-standard main-file naming convention.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
@@ -241,15 +239,15 @@ ____
  FUNCTION: .zinit-store-ices [[[
  Saves ice mods in given hash onto disk.
  
- $1 - directory where to create / delete files
+ $1 - directory where to create/delete files
  $2 - name of hash that holds values
  $3 - additional keys of hash to store, space separated
  $4 - additional keys of hash to store, empty-meaningful ices, space separated
  $5 – the URL, if applicable
- $6 – the mode (1 - svn, 0 - single file), if applicable
+ $6 – the mode 1 - svn, 0 - single file), if applicable
 ____
 
-Has 32 line(s). Doesn't call other functions.
+Has 30 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -266,6 +264,8 @@ ____
  Obtains a snippet URL without specification if it is an SVN URL (points to
  directory) or regular URL (points to file), returns 2 possible paths for
  further examination
+ 
+ $REPLY - two filepaths
 ____
 
 Has 24 line(s). Calls functions:
@@ -279,29 +279,4 @@ Called by:
 
  .zinit-compute-ice
  zinit-autoload.zsh/.zinit-update-or-status
-
-zmv
-~~~
-
-____
- 
- function zmv {
- zmv, zcp, zln:
- 
- This is a multiple move based on zsh pattern matching.  To get the full
- power of it, you need a postgraduate degree in zsh.  However, simple
- tasks work OK, so if that's all you need, here are some basic examples:
- zmv '(*).txt' '$1.lis'
- Rename foo.txt to foo.lis, etc.  The parenthesis is the thing that
- gets replaced by the $1 (not the `*', as happens in mmv, and note the
- `$', not `=', so that you need to quote both words).
-____
-
-Has 299 line(s). Doesn't call other functions.
-
-Uses feature(s): _eval_, _getopts_, _read_, _setopt_
-
-Called by:
-
- .zinit-compute-ice
 
