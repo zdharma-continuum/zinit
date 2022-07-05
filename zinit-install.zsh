@@ -266,7 +266,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 }
             }
 
-            ziextract "$fname" --move
+            # --move is default (or as explicit, when extract'!…' is given)
+            # Also possible is --move2 when extract'!!…' given
+            ziextract "$fname" ${ICE[extract]---move} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
             return 0
         ) && {
             reply=( "$user" "$plugin" )
@@ -389,7 +391,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     [[ -d ._zinit ]] || return 2
                     builtin print -r -- $url >! ._zinit/url || return 3
                     builtin print -r -- ${REPLY} >! ._zinit/is_release${count:#1} || return 4
-                    ziextract ${REPLY:t} ${${${#reply}:#1}:+--nobkp}
+                    ziextract ${REPLY:t} ${${${#reply}:#1}:+--nobkp} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
                 }
                 return $?
             ) || {
