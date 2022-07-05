@@ -1545,8 +1545,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       }
 
       if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
@@ -1555,8 +1555,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       }
 
       if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
