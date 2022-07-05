@@ -2657,45 +2657,32 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # $1 - e.g. "_mkdir" or "mkdir"
 .zinit-cdisable() {
-    local c="$1"
-    c="${c#_}"
-
-    local cfile="${ZINIT[COMPLETIONS_DIR]}/_${c}"
-    local bkpfile="${cfile:h}/$c"
-
-    if [[ ! -e "$cfile" && ! -e "$bkpfile" ]]; then
-        builtin print "${ZINIT[col-error]}No such completion \`$c'${ZINIT[col-rst]}"
+    comp="${1#_}"
+    local compFile="${ZINIT[COMPLETIONS_DIR]}/_${comp}"
+    local backupCompFile="${compFile:h}/${comp}"
+    if [[ ! -e "$compFile" ]]; then
+        if [[ ! -e "$backupCompFile" ]]; then
+            +zinit-message "{pre}cdisable{rst}: {error}Failed find {obj}${comp}{error} completion{rst}"
+            return 1
+        fi
+        # must be disabled due to a non-existent "$compFile"
+        +zinit-message "{pre}cdisable{rst}:{info} {msg}${comp}{info} completion already disabled{rst}"
+        .zinit-check-comp-consistency "$compFile" "$backupCompFile" 0
         return 1
     fi
-
-    # Check if it's already disabled
-    # Not existing "$cfile" says that
-    if [[ ! -e "$cfile" ]]; then
-        builtin print "Completion ${ZINIT[col-info]}$c${ZINIT[col-rst]} already disabled"
-
-        .zinit-check-comp-consistency "$cfile" "$bkpfile" 0
-        return 1
-    fi
-
-    # No disable, but bkpfile exists?
-    if [[ -e "$bkpfile" ]]; then
-        builtin print "${ZINIT[col-error]}Warning: completion's backup file \`${bkpfile:t}' already exists, will overwrite${ZINIT[col-rst]}"
-        .zinit-check-comp-consistency "$cfile" "$bkpfile" 1
-        command rm -f "$bkpfile"
+    # enabled but bkpfile exists
+    if [[ -e "$backupCompFile" ]]; then
+        +zinit-message "{pre}cdisable{rst}:{warn} completion's backup file {obj}${bkpfile:t}{warn} already exists, will overwrite{rst}"
+        .zinit-check-comp-consistency "$compFile" "$backupCompFile" 1
+        command rm -f "$backupCompFile"
     else
-        .zinit-check-comp-consistency "$cfile" "$bkpfile" 0
+        .zinit-check-comp-consistency "$compFile" "$backupCompFile" 0
     fi
 
-    # Disable
-    command mv "$cfile" "$bkpfile"
-
-    # Prepare readlink command for establishing completion's owner
+    command mv "$compFile" "$backupCompFile"
     .zinit-prepare-readlink
-    # Get completion's owning plugin
-    .zinit-get-completion-owner-uspl2col "$bkpfile" "$REPLY"
-
-    builtin print "Disabled ${ZINIT[col-info]}$c${ZINIT[col-rst]} completion belonging to $REPLY"
-
+    .zinit-get-completion-owner-uspl2col "$backupCompFile" "$REPLY"
+    +zinit-message "{pre}cdisable{rst}: {info}disabled{obj} ${REPLY} {info}({msg} ${comp} {info}) completion{rst}"
     return 0
 } # ]]]
 
