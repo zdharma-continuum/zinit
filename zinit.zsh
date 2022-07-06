@@ -3281,4 +3281,11 @@ zle -N zi-browse-symbol-pbackwards zi-browse-symbol
 zle -N zi-browse-symbol-pforwards zi-browse-symbol
 bindkey "^K" zi-browse-symbol
 
+# A custom completion of plugin ids (alt-a) and of ice names (alt-c)
+zinit null light-mode autoload'ziactioncomplete;ziprocessbuffer' for %$ZINIT[BIN_DIR]
+zle -N ziactioncomplete
+zle -N ziactioncompleteinsert ziactioncomplete
+bindkey '\ea' ziactioncomplete
+bindkey '\eA' ziactioncompleteinsert
+
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
