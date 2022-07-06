@@ -3282,10 +3282,13 @@ zle -N zi-browse-symbol-pforwards zi-browse-symbol
 bindkey "^K" zi-browse-symbol
 
 # A custom completion of plugin ids (alt-a) and of ice names (alt-c)
-zinit null light-mode autoload'ziactioncomplete;ziprocessbuffer' for %$ZINIT[BIN_DIR]
-zle -N ziactioncomplete
-zle -N ziactioncompleteinsert ziactioncomplete
-bindkey '\ea' ziactioncomplete
-bindkey '\eA' ziactioncompleteinsert
+zinit null light-mode autoload'zi-action-complete;zi-process-buffer' for %$ZINIT[BIN_DIR]
+zle -N zi-action-complete
+zle -N zi-action-complete-ice zi-action-complete
+# Alt-A and Alt-C are default.
+zstyle -s ":zinit:action-complete:plugin-id" key ZINIT_TMP || ZINIT_TMP='\eA'
+[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-action-complete
+zstyle -s ":zinit:action-complete:ice" key ZINIT_TMP || ZINIT_TMP='\eC'
+[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-action-complete-ice
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
