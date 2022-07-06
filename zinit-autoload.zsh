@@ -2702,6 +2702,11 @@ ZINIT[EXTENDED_GLOB]=""
 # FUNCTION: .zinit-cd [[[
 # Jumps to plugin's directory (in Zinit's home directory).
 #
+# Remembers which directories you have navigated to, so you can "jump" to them in
+# just a few keystrokes. When n not given ($1, $2 are empty) or if a negative number
+# will be entered to point to that number distance entry from the top of the stack. -1
+# (the default) points to the last, most recent dir, and so on. By default, the
+# last 1500 directories are remembered.
 # User-action entry point.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
@@ -2710,9 +2715,30 @@ ZINIT[EXTENDED_GLOB]=""
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
 
+    local datp=$ZINIT[HOME_DIR]/last-cd.dat
+    command touch -- "$datp"
+    if [[ ( -z $1 || $1 == -[[:digit:]]##* ) && -z $2 ]]; then
+        1=${(M)${1#-}##<->##}
+        local -a lines=( ${(@f)"$(<$datp)"} )
+        if [[ $lines[-1] = [[:space:]]# ]]; then
+            lines[-1]=()
+        fi
+        integer count=$#lines-${1:-0}+0${${(M)1:#0##}:-${1:+1}}
+        while (( count > 0 )); do
+            if [[ -e $lines[count] ]]; then
+                builtin pushd "$lines[count]" && return 0 || +zinit-message "Failed to change dir to one of the last CWDs[{num}-$(($#lines-count+1)){rst}]: {pid}$lines[count]:t{rst}, skipping…"
+            else
+                +zinit-message "One of the last CWDs[{num}-$(($#lines-count+1)){rst}] ({pid}$lines[count]:t{rst}) doesn't exist, skipping…"
+            fi
+            (( count -- ))
+        done
+        if (( $#lines > 1500 )); then
+            print -rl -- $lines[-1150,-1] >>! $datp
+        fi
+    fi
     .zinit-get-path "$1" "$2" && {
         if [[ -e $REPLY ]]; then
-            builtin pushd $REPLY
+            builtin pushd $REPLY && print $REPLY >>! $datp
         else
             +zinit-message "No such plugin or snippet"
             return 1
