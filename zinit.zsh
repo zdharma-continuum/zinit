@@ -3341,8 +3341,8 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 # create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
 
-# a searchable menu of tags for current directory
-zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
+zinit null light-mode autoload'zi-browse-symbol;zi-action-complete;zi-process-buffer' \
+    for %$ZINIT[BIN_DIR]
 zle -N zi-browse-symbol
 zle -N zi-browse-symbol-backwards zi-browse-symbol
 zle -N zi-browse-symbol-pbackwards zi-browse-symbol
@@ -3361,6 +3361,18 @@ export -T PKG_CONFIG_PATH="$ZPFX/lib/pkgconfig:$PKG_CONFIG_PATH" pkg_cpath
 export -T CMAKE_PREFIX_PATH="$ZPFX:$CMAKE_PREFIX_PATH" cmake_ppath
 export -T LD_LIBRARY_PATH="$ZPFX/lib:$LD_LIBRARY_PATH" ld_lpath
 typeset -gU pkg_cpath cmake_ppath ld_lpath
+
+zstyle -s ":zinit:browse-symbol" key ZINIT_TMP || ZINIT_TMP='\es'
+[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
+
+# A custom completion of plugin ids (alt-a) and of ice names (alt-c)
+zle -N zi-action-complete
+zle -N zi-action-complete-ice zi-action-complete
+# Alt-A and Alt-C are default.
+zstyle -s ":zinit:action-complete:plugin-id" key ZINIT_TMP || ZINIT_TMP='\eA'
+[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-action-complete
+zstyle -s ":zinit:action-complete:ice" key ZINIT_TMP || ZINIT_TMP='\eC'
+[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-action-complete-ice
 
 # Local Variables:
 # mode: Shell-Script
