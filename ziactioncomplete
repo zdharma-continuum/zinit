@@ -1,0 +1,64 @@
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
+
+ziactioncomplete()
+{
+    # Emulate zsh and useful options
+    emulate -L zsh -o extended_glob -o warn_create_global -o typeset_silent \
+        -o no_short_loops -o rc_quotes -o no_auto_pushd
+
+    # Invoke the helper/worker function that does all needed $BUFFER processing
+    ziprocessbuffer
+    integer i j pos=$CURSOR size=${#ZINIT_PB_WORDS} newcursor
+    local w=$ZINIT_PB_WORDS[ZINIT_PB_SELECTED_WORD] buf
+    local -a matches=( $ZINIT[PLUGINS_DIR]/*${w//\//---}*(-onND[1,8]) )
+    REPLY=${${matches[1]:t}//---//}
+    for (( i=1; i<=size; i++ )); do
+        # Check if we're at (i.e. directly at or after,
+        # when after are just spaces) current word
+        if [[ $i = $ZINIT_PB_SELECTED_WORD ]]; then
+            # Check if we're at the word itself,
+            # or at some distance after it
+            if [[ $WIDGET == ziactioncompleteinsert ]] && (( pos > (ZINIT_PB_WORDS_BEGINNINGS[i] + ${#ZINIT_PB_WORDS[i]} - 1) )); then
+                # We need to introduce new word
+                # First move all words and spaces forward
+                for (( j=size; j>=i+1; j-- )); do
+                    ZINIT_PB_WORDS[j+1]=${ZINIT_PB_WORDS[j]}
+                    ZINIT_PB_SPACES[j+1]=${ZINIT_PB_SPACES[j]}
+                    ZINIT_PB_WORDS_BEGINNINGS[j+1]=${ZINIT_PB_WORDS_BEGINNINGS[j]}
+                done
+                size+=1
+                # New word is introduced at position i+1, after current word
+                # It doesn't have word beginnings and spaces assigned
+                # It has to take spaces from word next to it, i+2
+                ZINIT_PB_WORDS[i+1]=$REPLY
+                ZINIT_PB_WORDS_BEGINNINGS[i+1]="$(( pos + 1 ))"
+
+                # Now split spaces
+                # cursor_spaces: spaces from current word to the cursor
+                integer cursor_spaces=$(( pos - ZINIT_PB_WORDS_BEGINNINGS[i] - ${#ZINIT_PB_WORDS[i]} + 1 ))
+                # take that from spaces of word "next" in: current NEW next
+                integer after_spaces=$(( ZINIT_PB_SPACES[i+2] - cursor_spaces ))
+                local empty=""
+                ZINIT_PB_SPACES[i+1]="${(l:cursor_spaces:: :)empty}"
+                ZINIT_PB_SPACES[i+2]="${(l:after_spaces:: :)empty}"
+
+                # Cursor will be at end of newly added word
+                newcursor=$(( ZINIT_PB_WORDS_BEGINNINGS[i+1] + ${#ZINIT_PB_WORDS[i+1]} - 1 ))
+            else
+                ZINIT_PB_WORDS[i]=$REPLY
+
+                # Cursor will be at end of newly substituted word
+                newcursor=$(( ZINIT_PB_WORDS_BEGINNINGS[i] + ${#ZINIT_PB_WORDS[i]} - 1 ))
+
+                # Update word beginnings of following words – skipped
+            fi
+        fi
+        buf+=$ZINIT_PB_SPACES[i]$ZINIT_PB_WORDS[i]
+    done
+
+    buf+=$ZINIT_PB_SPACES[i]
+    BUFFER=$buf
+    CURSOR=$newcursor
+}
+

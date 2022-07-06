@@ -3232,4 +3232,11 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 
 # Create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
+
+zinit null light-mode autoload'ziactioncomplete;ziprocessbuffer' for %$ZINIT[BIN_DIR]
+zle -N ziactioncomplete
+zle -N ziactioncompleteinsert ziactioncomplete
+bindkey '\ea' ziactioncomplete
+bindkey '\eA' ziactioncompleteinsert
+
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
