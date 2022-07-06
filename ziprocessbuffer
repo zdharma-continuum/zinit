@@ -3,7 +3,7 @@
 # $2 - optional parameter containing cursor (default is $CURSOR)
 #
 # Output:
-# ZINIT_PB_WORDS - split of "$1" into shell words; array
+# ZINIT_PB_WORDS - split of $1 into shell words; array
 # ZINIT_PB_WORDS_BEGINNINGS - indexes of first letters of corresponding words in ZINIT_PB_WORDS
 # ZINIT_PB_SPACES - white spaces before corresponding words in ZINIT_PB_WORDS
 # ZINIT_PB_SELECTED_WORD - index in ZINIT_PB_WORDS pointing to word activated by cursor position
@@ -22,10 +22,10 @@ local cursor="${2:-$CURSOR}"
 ZINIT_PB_WORDS=( "${(Z+n+)buf}" )
 ZINIT_PB_SPACES=( )
 ZINIT_PB_WORDS_BEGINNINGS=( )
-ZINIT_PB_SELECTED_WORD="-1"
+ZINIT_PB_SELECTED_WORD=-1
 
 # (Z+n+) will return 1 element for buf that is empty or only whitespace
-if [[ "$buf" = ( |$'\t')# ]]; then
+if [[ $buf = ( |$'\t')# ]]; then
     ZINIT_PB_WORDS=( )
     integer nwords=0
 else
@@ -63,34 +63,36 @@ for (( i=1; i<=nwords; i++ )); do
     # This is the beginning of current word
     ZINIT_PB_WORDS_BEGINNINGS[i]=$(( char_count + 1 ))
     # Remember the spaces
-    ZINIT_PB_SPACES[i]="$MATCH"
+    ZINIT_PB_SPACES[i]=$MATCH
 
     # Remove the word
     wordlen="${#word}"
-    [[ "${buf[1,wordlen]}" != "$word" ]] && return 1 # should not happen unless bug in (z)
+    [[ "${buf[1,wordlen]}" != $word ]] && return 1 # should not happen unless bug in (z)
     buf="${buf[wordlen+1,-1]}"
 
     # Spaces point to previous shell word
     # Visual cursor right after spaces (-ge) -> not enough to select previous word (-gt required)
-    [[ "$ZINIT_PB_SELECTED_WORD" -eq "-1" && "$char_count" -gt "$cursor" ]] && ZINIT_PB_SELECTED_WORD=$(( i-1 ))
+    [[ $ZINIT_PB_SELECTED_WORD -eq -1 && $char_count -gt $cursor ]] && ZINIT_PB_SELECTED_WORD=$(( i-1 ))
 
     # Actual characters point to current shell word
     # Visual cursor right after letters (-ge) -> enough to select current word
     char_count=char_count+"$#word"
-    [[ "$ZINIT_PB_SELECTED_WORD" -eq "-1" && "$char_count" -ge "$cursor" ]] && ZINIT_PB_SELECTED_WORD="$i"
+    [[ $ZINIT_PB_SELECTED_WORD -eq -1 && $char_count -ge $cursor ]] && ZINIT_PB_SELECTED_WORD=$i
 done 
 
 # What's left in $buf can be only white spaces
 char_count=char_count+"$#buf"
-ZINIT_PB_SPACES[i]="$buf"
+ZINIT_PB_SPACES[i]=$buf
 
 # Visual cursor right after spaces (-ge) -> enough to select last word
-[[ "$ZINIT_PB_SELECTED_WORD" -eq "-1" && "$char_count" -ge "$cursor" ]] && ZINIT_PB_SELECTED_WORD=$(( i-1 ))
+[[ $ZINIT_PB_SELECTED_WORD -eq -1 && $char_count -ge $cursor ]] && ZINIT_PB_SELECTED_WORD=$(( i-1 ))
 
 # Divide active word into two halves
 integer diff=$(( cursor - ZINIT_PB_WORDS_BEGINNINGS[ZINIT_PB_SELECTED_WORD] + 1 ))
 word="${ZINIT_PB_WORDS[ZINIT_PB_SELECTED_WORD]}"
 ZINIT_PB_LEFT="${word[1,diff]}"
 ZINIT_PB_RIGHT="${word[diff+1,-1]}"
+
+[[ $ZINIT_PB_SELECTED_WORD -gt 0 ]]
 
 # vim:ft=zsh

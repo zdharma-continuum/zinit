@@ -3236,7 +3236,19 @@ typeset -g REPLY
 zinit null light-mode autoload'ziactioncomplete;ziprocessbuffer' for %$ZINIT[BIN_DIR]
 zle -N ziactioncomplete
 zle -N ziactioncompleteinsert ziactioncomplete
+zle -N ziactioncompleteice ziactioncomplete
 bindkey '\ea' ziactioncomplete
 bindkey '\eA' ziactioncompleteinsert
+bindkey '\ei' ziactioncompleteice
+
+#
+# Prepare a helper Zle hook
+#
+ziac_zle_hook() {
+    typeset -ga ziac_wids
+    ziac_wids+=( $LASTWIDGET )
+}
+autoload -Uz add-zle-hook-widget
+add-zle-hook-widget line-pre-redraw ziac_zle_hook
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
