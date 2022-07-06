@@ -1088,6 +1088,13 @@ Target directory for installed files is `$ZPFX` (`~/.local/share/zinit/polaris` 
 ## Changelog<a name="changelog"></a>
 
 Link to the [CHANGELOG](doc/CHANGELOG.md).
+## Completion for Plugin IDs and Ices
+
+Zinit supports a custom completion for plugin IDs (`Alt-Shift-A`) and
+for ices (`Alt-Shift-C`). Just place the cursor after e.g.: `wa` and
+press `Alt-Shift-C` to have it completed to `wait`. The same with
+plugin IDs – `fzf` then `Alt-Shift-A` to have `junegunn/fzf` (if it's
+installed).
 
 ## Support<a name="support"></a>
 
