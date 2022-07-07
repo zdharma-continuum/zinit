@@ -26,7 +26,7 @@ tags-emacs:
 			ctags -e -R --options=share/zsh.ctags --languages=zsh \
 			    --pattern-length-limit=250 --maxdepth=1; \
 		else \
-			ctags -e -R --languages=sh; \
+			ctags -e -R --languages=sh --langmap=sh:.zsh; \
 		fi; \
 		printf "Created the Emacs \`TAGS\` file.\\n"; \
 	else \
@@ -41,7 +41,7 @@ tags-vim:
 			ctags -R --options=share/zsh.ctags --languages=zsh \
 			    --pattern-length-limit=250 --maxdepth=1; \
 		else \
-			ctags -R --languages=sh; \
+			ctags -R --languages=sh --langmap=sh:.zsh; \
 		fi; \
 		printf "Created the Vim's style \`tags\` file.\\n"; \
 	else \
