@@ -1,2 +1,16 @@
-*.zsh   diff=zsh
-*.md    diff=markdown
+# By default, everything is text
+* text
+
+# These must be unix EOLs
+*.sh             eol=lf
+*.zsh   diff=zsh eol=lf
+*.zunit diff=zsh eol=lf
+Makefile         eol=lf
+
+# Use the markdown differ.
+*.md diff=markdown
+
+# Binary files
+*.png binary
+
+# EOF
