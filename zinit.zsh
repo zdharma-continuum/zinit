@@ -3232,4 +3232,9 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 
 # Create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
+
+# Add $ZPFX/lib/pkg-config to PKG_MODULE_DIR, so that libraries
+# installed locally can be found by autotools and cmake
+export PKG_CONFIG_PATH="$ZPFX/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
