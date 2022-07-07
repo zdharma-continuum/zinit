@@ -3302,6 +3302,7 @@ zle -N zi-browse-symbol
 zle -N zi-browse-symbol-backwards zi-browse-symbol
 zle -N zi-browse-symbol-pbackwards zi-browse-symbol
 zle -N zi-browse-symbol-pforwards zi-browse-symbol
+
 zstyle -s ':zinit:browse-symbol' key ZINIT_TMP || ZINIT_TMP='\eQ'
 [[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
 
