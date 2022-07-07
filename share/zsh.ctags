@@ -1,0 +1,34 @@
+#
+# Language: Zsh
+#
+
+--langdef=zsh
+--langmap=zsh:.zsh
+
+#
+# 1. Detect variables
+# 2. … and function names.
+#
+
+--kinddef-zsh=v,var,variables
+--kinddef-zsh=f,fun,functions
+
+--_tabledef-zsh=main
+--_tabledef-zsh=vardef
+--_tabledef-zsh=comment
+
+# Feature: Zsh variable detection
+--_mtable-regex-zsh=main/^\s*(local|typeset|declare|integer|float|readonly)\s+(-\w+\s+)*///{tenter=vardef}
+# Feature: Zsh function name detection
+--_mtable-regex-zsh=main/^\s*(function\s+|)([[:alnum:]:@∞.+-]+)\(\s*\)\s*([\{]|[\n]+[\{])/\2/f/
+--_mtable-regex-zsh=main/^\s*[\#][^\n]*///{tenter=comment}
+--_mtable-regex-zsh=main/.//
+
+--_mtable-regex-zsh=comment/[\n]///{tleave}
+--_mtable-regex-zsh=comment/.//
+
+--_mtable-regex-zsh=vardef/([a-zA-Z_]\w*)([\=](([\"\'][^\"\']*[\"\'])|[\=]([^\"\'][^\s]*[^\"\']{0,1}))){0,1}/\1/v/
+--_mtable-regex-zsh=vardef/[\x5C][\n]///{exclusive}
+--_mtable-regex-zsh=vardef/([\n;\}\)\|\&])///{tleave}
+--_mtable-regex-zsh=vardef/^\s*[\#][^\n]*///{tenter=comment}
+--_mtable-regex-zsh=vardef/.//
