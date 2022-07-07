@@ -3323,10 +3323,14 @@ zle -N zi-browse-symbol-pbackwards zi-browse-symbol
 zle -N zi-browse-symbol-pforwards zi-browse-symbol
 bindkey "^K" zi-browse-symbol
 
+# Add $ZPFX/lib/pkg-config to PKG_MODULE_DIR, so that libraries
+# installed locally can be found by autotools and cmake
+export PKG_CONFIG_PATH="$ZPFX/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 # Local Variables:
 # mode: Shell-Script
 # sh-indentation: 2
 # indent-tabs-mode: nil
 # sh-basic-offset: 2
 # End:
-# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
