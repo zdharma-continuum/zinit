@@ -45,11 +45,12 @@ _commands=(
   'audit:Checks for known security issues with the installed packages'
   'autoclean:Clean and remove unnecessary files from package dependencies'
   'cache:List or clean every cached package'
+  'compile:Compile plugins'
+  'uncompile:Remove compiled plugins'
   "check:Verify package dependencies against zinit's lock file"
   'config:Manages the zinit configuration files'
   'create:Creates new projects from any create-* starter kits'
   'doctor:Show information about the installed tooling.'
-  'exec'
   'generate-lock-entry:Generates a lock file entry'
   'global:Install packages globally on your operating system'
   'help:Show information about a command'
@@ -69,7 +70,7 @@ _commands=(
   'publish:Publish a package to the npm registry'
   'reload:Restart the zsh process'
   'run:Run a defined package script'
-  'tag:Add, remove, or list tags on a package'
+  'module:manage binary Zsh module shipped with Zini'
   'team:Maintain team memberships'
   'unlink:Unlink a previously created symlink for a package'
   'unplug:Temporarily copies a package outside of the global cache for debugging purposes'
@@ -252,16 +253,26 @@ _zinit() {
             '1: :(public restricted grant revoke ls-packages ls-collaborators edit)'
           ;;
 
-        add)
+        update)
           _arguments \
-            '(-D --dev)'{-D,--dev}'[install packages in devDependencies]' \
-            '(-P --peer)'{-P,--peer}'[install packages in peerDependencies]' \
-            '(-O --optional)'{-O,--optional}'[install packages in optionalDependencies]' \
-            '(-E --exact)'{-E,--exact}'[install packages as exact versions]' \
-            '(-T --tilde)'{-T,--tilde}'[install the most recent release of the packages that have the same minor version]' \
             '(--ignore-workspace-root-check -W)'{--ignore-workspace-root-check,-W}'[allows a package to be installed at the workspaces root]' \
+            '(-T --tilde)'{-T,--tilde}'[install the most recent release of the packages that have the same minor version]' \
+            '(-a --all)'{-a,--all}'[compile all plugins]' \
             '--audit[checks for known security issues with the installed packages]' \
-            '*:package-name:_zinit_add_files'
+            '1: :_zinit_global_commands' \
+            '*:: :->command_args'
+          ;;
+
+        compile)
+          _arguments -C \
+            '(-a --all)'{-a,--all}'[compile all plugins]' \
+            && ret=0
+          ;;
+
+        uncompile)
+          _arguments -C \
+            '(-a --all)'{-a,--all}'[compile all plugins]' \
+            && ret=0
           ;;
 
         audit)
@@ -343,10 +354,10 @@ _zinit() {
 
         publish)
           _arguments \
-            '--new-version:version:' \
-            '--message:message:' \
-            '--no-git-tag-version' \
             '--access:access:' \
+            '--message:message:' \
+            '--new-version:version:' \
+            '--no-git-tag-version' \
             '--tag:tag:' \
             '1: :_files'
           ;;
@@ -362,9 +373,9 @@ _zinit() {
 
         remove|update)
           _arguments \
-            '--all[Update all plugins and snippets]' \
             '(-f --force)'{-f,--force}'[Re-run hooks (e.g., atpull'', cp'', etc.)]' \
             '(-p --parallel)'{-p,--parallel}'[Makes curl perform updates in parallel as compared to the regular serial manner.]' \
+            '--all[Update all plugins and snippets]' \
             '--plugins:' \
             '--quiet[Do not show progress meter or error messages.  Makes Zinit mute. It will still output the data you ask for, potentially even to the terminal/stdout unless you redirect it.]' \
             '--reset:' \
@@ -384,10 +395,10 @@ _zinit() {
             '*:: :_default'
           ;;
 
-        tag)
+        module)
           _arguments \
-            '1: :(lists add rm)' \
-            '*:: :->tag_args'
+            '1: :(build info help)' \
+            '*:: :->module_args'
           ;;
 
         team)
@@ -481,14 +492,20 @@ _zinit() {
       esac
       ;;
 
-    tag_args)
+    module_args)
       case $words[1] in
-        ls)
+        build)
           _arguments \
-            '1:package'
+            '(-c --clean)'{-c,--clean}'[Run make distclean before installing]' \
+            '(-l --link)'{-l,--link}'[Create symlink to Zinit Zsh module]' \
           ;;
 
-        add|rm)
+        info)
+          _arguments \
+            '1:package:' \
+            '2:tag:'
+          ;;
+        help)
           _arguments \
             '1:package:' \
             '2:tag:'
