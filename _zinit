@@ -41,15 +41,14 @@
 declare -g _zinit_run_cwd
 
 _commands=(
+  "check:Verify package dependencies against zinit's lock file"
   'access'
   'audit:Checks for known security issues with the installed packages'
-  'autoclean:Clean and remove unnecessary files from package dependencies'
   'cache:List or clean every cached package'
   'compile:Compile plugins'
-  'uncompile:Remove compiled plugins'
-  "check:Verify package dependencies against zinit's lock file"
   'config:Manages the zinit configuration files'
   'create:Creates new projects from any create-* starter kits'
+  'delete:Clean and remove a plugin or snippet'
   'doctor:Show information about the installed tooling.'
   'generate-lock-entry:Generates a lock file entry'
   'global:Install packages globally on your operating system'
@@ -62,6 +61,7 @@ _commands=(
   'link:Symlink a package folder during development'
   'login:Store registry username and email'
   'logout:Clear registry username and email'
+  'module:manage binary Zsh module shipped with Zini'
   'node:Runs Node with the same version that the one used by zinit itself'
   'outdated:Check for outdated package dependencies'
   'owner:Manage package owners'
@@ -70,8 +70,8 @@ _commands=(
   'publish:Publish a package to the npm registry'
   'reload:Restart the zsh process'
   'run:Run a defined package script'
-  'module:manage binary Zsh module shipped with Zini'
   'team:Maintain team memberships'
+  'uncompile:Remove compiled plugins'
   'unlink:Unlink a previously created symlink for a package'
   'unplug:Temporarily copies a package outside of the global cache for debugging purposes'
   'version:Update the package version'
@@ -172,7 +172,7 @@ _zinit_add_files() {
   fi
 }
 
-_zinit_workspaces() {
+_zinit_workspaces() { 
   local version=$(zinit --version |sed -n 's|\([0-9]*\).*|\1|p')
   local -a workspaces
   if [[ $version == "1" ]]; then
@@ -243,116 +243,99 @@ _zinit() {
   case $state in
     command_args)
       case $words[1] in
-        help)
-          _arguments \
-            '1: :_zinit_commands' \
-            ;;
-
-        access)
-          _arguments \
-            '1: :(public restricted grant revoke ls-packages ls-collaborators edit)'
-          ;;
-
-        update)
-          _arguments \
-            '(--ignore-workspace-root-check -W)'{--ignore-workspace-root-check,-W}'[allows a package to be installed at the workspaces root]' \
-            '(-T --tilde)'{-T,--tilde}'[install the most recent release of the packages that have the same minor version]' \
-            '(-a --all)'{-a,--all}'[compile all plugins]' \
-            '--audit[checks for known security issues with the installed packages]' \
-            '1: :_zinit_global_commands' \
-            '*:: :->command_args'
-          ;;
-
-        compile)
-          _arguments -C \
-            '(-a --all)'{-a,--all}'[compile all plugins]' \
-            && ret=0
-          ;;
-
-        uncompile)
-          _arguments -C \
-            '(-a --all)'{-a,--all}'[compile all plugins]' \
-            && ret=0
-          ;;
-
-        audit)
+        audit) # [[[
           _arguments \
             '--verbose[output verbose message]' \
             '--json[format zinit log messages as lines of JSON]' \
             '--level=[only print advisories with severity greater than or equal to]:level:(info low moderate high critical)' \
             '--groups=[only audit dependencies from listed groups]:groups:->groups_args'
-          ;;
-
-        cache)
+          ;; # ]]]
+        cache) # [[[
           _arguments \
             '1: :(list dir clean)' \
             '*:: :->cache_args'
           ;;
-
-        check)
+        check) # [[[
           _arguments \
             '--integrity[Verifies that versions and hashed values of the package contents in package.json]' \
             '--verify-tree[Recursively verifies that the dependencies in package.json are present in node_modules]'
           ;;
-
-        config)
+        compile) # [[[
+          _arguments -C \
+            '(-a --all)'{-a,--all}'[compile all plugins]' \
+            && ret=0
+          ;;
+        config) # [[[
           _arguments \
             '1: :(set get delete list)' \
             '*:: :->config_args'
           ;;
-
-        doctor)
+        delete) # [[[
+          _arguments -C \
+            '(-a --all)'{-a,--all}'[Delete all plugins and snippets]' \
+            '(-c --clean)'{-c,--clean}'[Delete only the currently-not loaded plugins and snippets]' \
+            '(-h --help)'{-h,--help}'[Print this usage information]' \
+            '(-q --quiet)'{-q,--quiet}'[Do not show progress meter or error messages]' \
+            '(-y --yes)'{-y,--yes}'[Automatically confirm any yes/no prompts]' \
+            && ret=0
+          ;;
+        doctor) # [[[
           _arguments -C \
             '(-h --help)'{-h,--help}'[Print this usage information.]' \
             && ret=0
           ;;
-
-        global)
+        global) # [[[
           _arguments \
             '--prefix=[bin prefix to use to install binaries]' \
             '1: :_zinit_global_commands' \
             '*:: :->command_args'
           ;;
-
-        info)
+        help) # [[[
+          _arguments \
+            '1: :_zinit_commands' \
+            ;;
+        info) # [[[
           _arguments \
             '1:package:' \
             '2:field'
           ;;
-
-        init)
+        init) # [[[
           _arguments \
             '(-y --yes)'{-y,--yes}'[install packages in devDependencies]'
+            '(-h --help)'{-h,--help}'[Print this usage information.]' \
           ;;
-
-        licenses)
+        licenses) # [[[
           _arguments \
             '1: :(ls generate-disclaimer)' \
             ;;
-
-        link|unlink|outdated)
+        link|unlink|outdated) # [[[
           _arguments \
             '1:package' \
             ;;
-
-        list)
+        list) # [[[
           _arguments \
             '--depth=[Limit the depth of the shown dependencies]:depth' \
             '--pattern=[filter the list of dependencies by the pattern]'
           ;;
-
-        owner)
+        module) # [[[
+          _arguments \
+            '1: :(build info help)' \
+            '*:: :->module_args'
+          ;;
+        owner) # [[[
           _arguments \
             '1: :(list add rm)' \
             '*:: :->owner_args'
           ;;
-
-        pack)
+        pack) # [[[
           _arguments \
             '(-f --filename)'{-f,--filename}':filename:_files'
           ;;
-
-        publish)
+        policies) # [[[
+          _arguments \
+            '1: :(set-version)'
+          ;;
+        publish) # [[[
           _arguments \
             '--access:access:' \
             '--message:message:' \
@@ -361,17 +344,10 @@ _zinit() {
             '--tag:tag:' \
             '1: :_files'
           ;;
-
-        policies)
-          _arguments \
-            '1: :(set-version)'
-          ;;
-
-        reload)
+        reload) # [[[
           _arguments
           ;;
-
-        remove|update)
+        remove|update) # [[[
           _arguments \
             '(-f --force)'{-f,--force}'[Re-run hooks (e.g., atpull'', cp'', etc.)]' \
             '(-p --parallel)'{-p,--parallel}'[Makes curl perform updates in parallel as compared to the regular serial manner.]' \
@@ -383,8 +359,7 @@ _zinit() {
             '--verbose=[Makes curl verbose during the operation. Useful for debugging and seeing what is going on "under the hood".]' \
             '*:package:'
           ;;
-
-        run)
+        run) # [[[
           if [[ -n $opt_args[--cwd] ]]; then
             _zinit_run_cwd=$opt_args[--cwd]
           else
@@ -394,25 +369,30 @@ _zinit() {
             '1: :_zinit_scripts' \
             '*:: :_default'
           ;;
-
-        module)
-          _arguments \
-            '1: :(build info help)' \
-            '*:: :->module_args'
-          ;;
-
-        team)
+        team) # [[[
           _arguments \
             '1: :(create destroy add rm list)' \
             '*:: :->team_args'
           ;;
-
-        upgrade-interactive)
+        uncompile) # [[[
+          _arguments -C \
+            '(-a --all)'{-a,--all}'[compile all plugins]' \
+            && ret=0
+          ;;
+        update) # [[[
+          _arguments \
+            '(--ignore-workspace-root-check -W)'{--ignore-workspace-root-check,-W}'[allows a package to be installed at the workspaces root]' \
+            '(-T --tilde)'{-T,--tilde}'[install the most recent release of the packages that have the same minor version]' \
+            '(-a --all)'{-a,--all}'[compile all plugins]' \
+            '--audit[checks for known security issues with the installed packages]' \
+            '1: :_zinit_global_commands' \
+            '*:: :->command_args'
+          ;;
+        upgrade-interactive) # [[[
           _arguments \
             '--latest[use the version tagged latest in the registry]'
           ;;
-
-        version)
+        version) # [[[
           _arguments \
             '--new-version[create a new version using an interactive session to prompt you]:version:' \
             '--major[creates a new version by incrementing the major version]' \
@@ -425,25 +405,21 @@ _zinit() {
             '--no-git-tag-version[creates a new version without creating a git tag]' \
             '--no-commit-hooks[bypasses running commit hooks when committing the new version]'
           ;;
-
-        why)
+        why) # [[[
           _arguments \
             '1:query:_files'
           ;;
-
-        workspace)
+        workspace) # [[[
           _arguments \
             '1:workspace:_zinit_workspaces' \
             '*:: :_zinit_global_commands'
           ;;
-
-        workspaces)
+        workspaces) # [[[
           _arguments \
             '--json[format zinit log messages as lines of JSON]' \
             '1:commands:(info run)'
           ;;
-
-        *)
+        *) # [[[
           _default
           ;;
       esac
@@ -451,20 +427,19 @@ _zinit() {
   esac
 
   case $state in
-    cache_args)
+    cache_args) # [[[
       if [[ $words[1] == "list" ]]; then
         _arguments \
           '--pattern=[print out every cached package that matches the pattern]:pattern:'
       fi
       ;;
-    config_args)
+    config_args) # [[[
       case $words[1] in
-        get|delete)
+        get|delete) # [[[
           _arguments \
             '1:key:'
           ;;
-
-        set)
+        set) # [[[
           _arguments \
             '(-g --global)'{-g,--global} \
             '1:key:' \
@@ -472,55 +447,49 @@ _zinit() {
           ;;
       esac
       ;;
-    groups_args)
+    groups_args) # [[[
       local dependency_groups=(devDependencies dependencies optionalDependencies peerDependencies bundledDependencies)
       _values -s ',' 'groups' $dependency_groups
       ;;
-
-    owner_args)
+    module_args) # [[[
       case $words[1] in
-        ls)
+        build) # [[[
+          _arguments \
+            '(-c --clean)'{-c,--clean}'[Run make distclean before installing]' \
+            '(-l --link)'{-l,--link}'[Create symlink to Zinit Zsh module]' \
+          ;;
+        info) # [[[
+          _arguments \
+            '1:package:' \
+            '2:tag:'
+          ;;
+        help) # [[[
+          _arguments \
+            '1:package:' \
+            '2:tag:'
+          ;;
+      esac
+      ;;
+    owner_args) # [[[
+      case $words[1] in
+        ls) # [[[
           _arguments \
             '1:package:'
           ;;
-
-        add|rm)
+        add|rm) # [[[
           _arguments \
             '1:user:' \
             '2:package:'
           ;;
       esac
       ;;
-
-    module_args)
+    team_args) # [[[
       case $words[1] in
-        build)
-          _arguments \
-            '(-c --clean)'{-c,--clean}'[Run make distclean before installing]' \
-            '(-l --link)'{-l,--link}'[Create symlink to Zinit Zsh module]' \
-          ;;
-
-        info)
-          _arguments \
-            '1:package:' \
-            '2:tag:'
-          ;;
-        help)
-          _arguments \
-            '1:package:' \
-            '2:tag:'
-          ;;
-      esac
-      ;;
-
-    team_args)
-      case $words[1] in
-        create|destroy|ls)
+        create|destroy|ls) # [[[
           _arguments \
             '1:scope\:team:'
           ;;
-
-        add|rm)
+        add|rm) # [[[
           _arguments \
             '1:scope\:team:' \
             '2:user:'
@@ -532,10 +501,4 @@ _zinit() {
 
 _zinit "$@"
 
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
-# vim: ft=zsh sw=2 ts=2 et
+# vim: ft=zsh: sw=2: sts=2: et: foldmarker=[[[,;;: foldmethod=marker
