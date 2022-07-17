@@ -1,7 +1,5 @@
 # -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
-#
-# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
-# Copyright (c) 2021-2022 zdharma-continuum and contributors
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
 builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."; return 1; }
 
@@ -3493,4 +3491,4 @@ ice_order=( ${${(s.|.)ZINIT[ice-list]}:#teleid} ${(@)${(@)${(@Akons:|:u)${ZINIT_
 print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
