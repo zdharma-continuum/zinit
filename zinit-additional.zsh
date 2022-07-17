@@ -1,22 +1,25 @@
+#!/usr/bin/env zsh
+#
 # -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
 #
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
-# Copyright (c) 2021-2022 zdharma-continuum and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors#
+
 
 # FUNCTION: :zinit-tmp-subst-source [[[
 :zinit-tmp-subst-source() {
   local -a ___substs ___ab
   ___substs=( "${(@s.;.)ICE[subst]}" )
-  if [[ -n ${(M)___substs:#*\\(#e)} ]]; then
+  if [[ -n ${(M)___substs:#*\\(#e)} ]] {
     local ___prev
     ___substs=( ${___substs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${___prev:+$___prev\;}}${match[3]}${${___prev::=${match[2]:+${___prev:+$___prev\;}}${match[2]}}:+}} )
-  fi
+  }
 
   # Load the plugin
-  if [[ ! -r $1 ]]; then
+  if [[ ! -r $1 ]] {
     +zinit-message "{error}source: Couldn't read the script {obj}${1}{error}" \
       ", cannot substitute {data}${ICE[subst]}{error}.{rst}"
-  fi
+  }
 
   local ___data="$(<$1)"
 
@@ -32,7 +35,8 @@
   }
 
   builtin eval "$___data"
-} # ]]]
+}
+# ]]]
 # FUNCTION: .zinit-service [[[
 # Handles given service, i.e. obtains lock, runs it, or waits if no lock
 #
@@ -45,12 +49,8 @@
 
   local ___tpe="$1" ___mode="$2" ___id="$3" ___fle="${ZINIT[SERVICES_DIR]}/${ICE[service]}.lock" ___fd ___cmd ___tmp ___lckd ___strd=0
   { builtin print -n >! "$___fle"; } 2>/dev/null 1>&2
-
-  if [[ ! -e ${___fle:r}.fifo ]]; then
-    command mkfifo "${___fle:r}.fifo" 2>/dev/null 1>&2
-  elif [[ ! -e ${___fle:r}.fifo2 ]]; then
-    command mkfifo "${___fle:r}.fifo2" 2>/dev/null 1>&2
-  fi
+  [[ ! -e ${___fle:r}.fifo ]] && command mkfifo "${___fle:r}.fifo" 2>/dev/null 1>&2
+  [[ ! -e ${___fle:r}.fifo2 ]] && command mkfifo "${___fle:r}.fifo2" 2>/dev/null 1>&2
 
   typeset -g ZSRV_WORK_DIR="${ZINIT[SERVICES_DIR]}" ZSRV_ID="${ICE[service]}"  # should be also set by other p-m
 
@@ -77,7 +77,8 @@
     ) || break
     builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"
   done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
-} # ]]]
+}
+# ]]]
 # FUNCTION: .zinit-wrap-track-functions [[[
 .zinit-wrap-track-functions() {
   local user="$1" plugin="$2" id_as="$3" f
@@ -85,7 +86,8 @@
   wt=( ${(@s.;.)ICE[wrap-track]} )
   for f in ${wt[@]}; do
     functions[${f}-zinit-bkp]="${functions[$f]}"
-    eval " function $f {
+    eval "
+function $f {
     ZINIT[CUR_USR]=\"$user\" ZINIT[CUR_PLUGIN]=\"$plugin\" ZINIT[CUR_USPL2]=\"$id_as\"
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" begin
@@ -98,7 +100,8 @@
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
     }"
   done
-} # ]]]
+}
+# ]]]
 
 #
 # Dtrace
@@ -131,16 +134,12 @@
   .zinit-diff _dtrace/_dtrace end
 } # ]]]
 # FUNCTION: .zinit-clear-debug-report [[[
-#
 # Forgets dtrace repport gathered up to this moment.
-#
 .zinit-clear-debug-report() {
   .zinit-clear-report-for _dtrace/_dtrace
 } # ]]]
 # FUNCTION: .zinit-debug-unload [[[
-#
 # Reverts changes detected by dtrace run.
-#
 .zinit-debug-unload() {
   (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
   if [[ ${ZINIT[DTRACE]} = 1 ]]; then
@@ -150,4 +149,4 @@
   fi
 } # ]]]
 
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker

@@ -3,7 +3,8 @@
 # -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
 #
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
-# Copyright (c) 2021-2022 zdharma-continuum and contributors
+# Copyright (c) 2021-2022 zdharma-continuum and contributors#
+
 
 emulate -R zsh -o extendedglob
 
@@ -54,3 +55,5 @@ else
 fi
 
 command "$UNPACKCMD[@]" 2>/dev/null | command "$DECOMPRESSCMD[@]"
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
