@@ -75,7 +75,7 @@ reset-prompt|wrap|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
 subscribe|extract|param|opts|autoload|subst|install|pullopts|\
-debug|null|binary|link"
+debug|null|binary|link|configure"
 ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
 nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
 aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\
@@ -3210,7 +3210,9 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 @zinit-register-hook "cp''" hook:no-e-\!atpull-pre ∞zinit-cp-hook
 @zinit-register-hook "compile-plugin" hook:no-e-\!atpull-pre ∞zinit-compile-plugin-hook
 # no-e-!atpull-post.
+@zinit-register-hook "configure'!'" hook:no-e-\!atpull-post ∞zinit-configure-e-hook
 @zinit-register-hook "make'!'" hook:no-e-\!atpull-post ∞zinit-make-e-hook
+@zinit-register-hook "configure''" hook:no-e-\!atpull-post ∞zinit-configure-hook
 @zinit-register-hook "atpull" hook:no-e-\!atpull-post ∞zinit-atpull-hook
 @zinit-register-hook "make''" hook:no-e-\!atpull-post ∞zinit-make-hook
 # atpull-post.
@@ -3224,7 +3226,9 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 @zinit-register-hook "cp''" hook:\!atclone-pre ∞zinit-cp-hook
 @zinit-register-hook "compile-plugin" hook:\!atclone-pre ∞zinit-compile-plugin-hook
 # !atclone-post.
+@zinit-register-hook "configure'!'" hook:\!atclone-post ∞zinit-configure-e-hook
 @zinit-register-hook "make'!'" hook:\!atclone-post ∞zinit-make-e-hook
+@zinit-register-hook "configure''" hook:\!atclone-post ∞zinit-configure-hook
 @zinit-register-hook "atclone" hook:\!atclone-post ∞zinit-atclone-hook
 @zinit-register-hook "make''" hook:\!atclone-post ∞zinit-make-hook
 # atclone-post.

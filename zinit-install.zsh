@@ -2160,6 +2160,62 @@ zimv() {
         ZINIT[-r/--reset-opt-hook-has-been-run]=1
     }
 } # ]]]
+# FUNCTION: ∞zinit-configure-e-hook [[[
+# The !-version of configure'' ice. Runs in between
+# of make'!!' and make'!'. Configure naturally runs
+# before make.
+∞zinit-configure-e-hook() {
+    ∞zinit-configure-base-hook "$@" "!"
+} # ]]]
+# FUNCTION: ∞zinit-configure-hook [[[
+# The non-! version of configure'' ice. Runs in between
+# of make'!' and make''. Configure script naturally runs
+# before make.
+∞zinit-configure-hook() {
+    ∞zinit-configure-base-hook "$@"
+} # ]]]
+# FUNCTION: ∞zinit-configure-base-hook [[[
+# A base common implementation of configure'', as all
+# the starting steps are rigid and the same in all
+# hooks, hence the idea. TODO: use in make'' and other
+# places.
+∞zinit-configure-base-hook() {
+    [[ "$1" = plugin ]] && \
+        local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
+        local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
+
+    local configure=${ICE[configure]}
+    @zinit-substitute configure
+
+    (( ${+ICE[configure]} )) || return 0
+    if [[ $ex = "!" ]]; then
+        [[ $configure[1,2] == *\!* ]] || return 0
+    else
+        [[ $configure[1,2] != *\!* ]] || return 0
+    fi
+
+    if [[ $configure[1,2] == *\#* ]]; then
+        if [[ -f $dir/autogen.sh ]]; then
+            m {pre}Running {cmd}./autogen.sh{…}
+            chmod +x $dir/autogen.sh
+            .zinit-countdown ./autogen.sh && \
+                ( cd -q "$dir"; ./autogen.sh )
+        else
+            m {ehi}WARNING:{error}: No {cmd}autogen.sh{error} on disk while {obj2}\#\
+                {error}flag given to the {ice}configure{apo}\'\'{error} ice, skipping{…}
+        fi
+    else
+        if [[ -f $dir/autogen.sh && ! -f $dir/configure ]]; then
+            m {pre}Running {cmd}./autogen.sh{pre}, because no {cmd}configure{pre} found{…}
+            .zinit-countdown ./autogen.sh && \
+                ( cd -q "$dir"; ./autogen.sh )
+        fi
+    fi
+    m {pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}$ZPFX{nb}{…}
+    configure=${configure##(\!\#|\#\!|\!|\#)}
+    .zinit-countdown ./configure && \
+        ( cd -q "$dir"; ./configure --prefix=$ZPFX ${(@s; ;)configure} )
+} # ]]]
 # FUNCTION: ∞zinit-make-ee-hook [[[
 ∞zinit-make-ee-hook() {
     [[ "$1" = plugin ]] && \
