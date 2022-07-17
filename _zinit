@@ -1,30 +1,5 @@
 #compdef zinit
 # ------------------------------------------------------------------------------
-#
-# Copyright (c) 2022 Vladislav Doster <mvdoster@gmail.com>
-#
-# Redistribution and use in source and binary forms, with or without
-# modification, are permitted provided that the following conditions are met:
-#     * Redistributions of source code must retain the above copyright
-#       notice, this list of conditions and the following disclaimer.
-#     * Redistributions in binary form must reproduce the above copyright
-#       notice, this list of conditions and the following disclaimer in the
-#       documentation and/or other materials provided with the distribution.
-#     * Neither the name of the zsh-users nor the
-#       names of its contributors may be used to endorse or promote products
-#       derived from this software without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL ZSH-USERS BE LIABLE FOR ANY
-# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-# ------------------------------------------------------------------------------
 # Description
 # -----------
 #
@@ -40,45 +15,24 @@
 
 declare -g _zinit_run_cwd
 
+# Commands [[[
 _commands=(
-  "check:Verify package dependencies against zinit's lock file"
-  'access'
-  'audit:Checks for known security issues with the installed packages'
   'cache:List or clean every cached package'
   'compile:Compile plugins'
   'config:Manages the zinit configuration files'
   'create:Creates new projects from any create-* starter kits'
   'delete:Clean and remove a plugin or snippet'
   'doctor:Show information about the installed tooling.'
-  'generate-lock-entry:Generates a lock file entry'
-  'global:Install packages globally on your operating system'
   'help:Show information about a command'
-  'import:Generate zinit.lock from an existing npm-installed node_modules folder'
   'info:Show information about a package'
-  'init:Interactively creates or updates a package.json file'
+  'create:Interactively creates or updates a package.json file'
   'install:Install all the dependencies listed within package.json'
-  'licenses:List licenses for installed packages'
-  'link:Symlink a package folder during development'
-  'login:Store registry username and email'
-  'logout:Clear registry username and email'
   'module:manage binary Zsh module shipped with Zini'
-  'node:Runs Node with the same version that the one used by zinit itself'
-  'outdated:Check for outdated package dependencies'
-  'owner:Manage package owners'
-  'pack:Create a compressed gzip archive of package dependencies'
-  'policies:Defines project-wide policies for your project'
-  'publish:Publish a package to the npm registry'
   'reload:Restart the zsh process'
   'run:Run a defined package script'
-  'team:Maintain team memberships'
   'uncompile:Remove compiled plugins'
-  'unlink:Unlink a previously created symlink for a package'
-  'unplug:Temporarily copies a package outside of the global cache for debugging purposes'
-  'version:Update the package version'
   'versions:Display version information of currently installed zinit, Node.js, and its dependencies'
   'why:Show information about why a package is installed'
-  'workspace'
-  'workspaces:Show information about your workspaces'
 )
 
 _global_commands=(
@@ -87,9 +41,9 @@ _global_commands=(
   'list:List installed packages'
   'remove:Remove installed package'
   'update:Updates packages to their latest version'
-  'upgrade-interactive:Interactively upgrade packages'
 )
-
+# ;;
+# Function: _zinit_find_package_json [[[
 _zinit_find_package_json() {
   local dir=$(cd "$1" && pwd)
 
@@ -106,8 +60,8 @@ _zinit_find_package_json() {
 
     dir=$(dirname $dir)
   done
-}
-
+} # ;;
+# Function: _zinit_commands_scripts [[[
 _zinit_commands_scripts() {
   local -a scripts binaries
   local packageJson
@@ -124,9 +78,9 @@ _zinit_commands_scripts() {
     scripts=($(cat "$packageJson" | perl -0777 -MJSON::PP -n -E '$r=decode_json($_); do{($k=$_)=~s/:/\\:/g;say $k}for sort keys %{$r->{scripts}}'))
   fi
 
-  _describe 'command or script' _commands -- _global_commands -- scripts -- binaries
-}
-
+  _describe 'subcommands' _commands -- _global_commands -- scripts -- binaries
+} # ;;
+# Function: _zinit_scripts [[[
 _zinit_scripts() {
   local -a binaries scripts
   local -a commands
@@ -154,25 +108,25 @@ _zinit_scripts() {
 
   commands=('env' $scripts $binaries)
   _describe 'command' commands
-}
-
+} # ;;
+# Function: _zinit_global_commands [[[
 _zinit_global_commands() {
   local -a cmds
   cmds=('ls:List installed packages')
   _describe 'command' _global_commands
-}
-
+} # ;;
+# Function: _zinit_commands [[[
 _zinit_commands() {
   _describe 'command' _commands -- _global_commands
-}
-
+} # ;;
+# Function: _zinit_add_files [[[
 _zinit_add_files() {
   if compset -P "(file|link):"; then
     _files
   fi
-}
-
-_zinit_workspaces() { 
+} # ;;
+# Function: _zinit_workspaces [[[
+_zinit_workspaces() {
   local version=$(zinit --version |sed -n 's|\([0-9]*\).*|\1|p')
   local -a workspaces
   if [[ $version == "1" ]]; then
@@ -181,7 +135,7 @@ _zinit_workspaces() {
     workspaces=(${(@f)$(zinit workspaces list --json | sed -n 's|.*"name":"\([^"]*\)"}|\1|p')})
   fi
   _describe 'workspace' workspaces
-}
+} # ;;
 
 _zinit() {
   local context state state_descr line
@@ -191,51 +145,6 @@ _zinit() {
     '(-h --help)'{-h,--help}'[output usage information]' \
     '(-V --version)'{-V,--version}'[output the version number]' \
     '--verbose[output verbose messages on internal operations]' \
-    '--cache-folder=[specify a custom folder to store the zinit cache]:folder:_files -/' \
-    '--check-files[install will verify file tree of packages for consistency]' \
-    '--cwd=[working directory to use]:path:_files -/' \
-    "(--enable-pnp --pnp)--disable-pnp[disable the Plug'n'Play installation]" \
-    '(--no-emoji)--emoji=[enable emoji in output(default: false)]:enabled:(true false)' \
-    '(--emoji)--no-emoji[disable emoji in output]' \
-    '(--disable-pnp)'{--enable-pnp,--pnp}"[enable the Plug'n'Play installation]" \
-    '--flat[only allow one version of a package]' \
-    '--focus[Focus on a single workspace by installing remote copies of its sibling workspaces]' \
-    '--force[install and build packages even if they were built before, overwrite lockfile]' \
-    "--frozen-lockfile[don't generate a lockfile and fail if an update is needed]" \
-    '--global-folder=[modules folder]:folder:_files -/' \
-    '--har[save HAR output of network traffic]' \
-    '--https-proxy=[HTTPS proxy]:host:_hosts' \
-    '--ignore-engines[ignore engines check]' \
-    "--ignore-scripts[don't run lifecycle scripts]" \
-    '--ignore-optional[ignore optional dependencies]' \
-    '--ignore-platform[ignore platform checks]' \
-    '--json[format zinit log messages as lines of JSON]' \
-    '--link-duplicates[create hardlinks to the repeated modules in node_modules]' \
-    '--link-folder=[specify a custom folder to store global links]' \
-    '--modules-folder=[rather than installing modules into the node_modules folder relative to the cwd, output them here]:folder:_files -/' \
-    '--mutex=[use a mutex to ensure only one zinit instance is executing]:type[\:specifier]' \
-    '--network-concurrency=[maximum number of concurrent network requests]:number' \
-    '--network-timeout=[TCP timeout for network requests]:milliseconds' \
-    "--no-bin-links[don't generate bin links when setting up packages]" \
-    '--no-default-rc[prevent zinit from automatically detecting zinitrc and npmrc files]' \
-    "--no-lockfile[don't read or generate a lockfile]" \
-    '--non-interactive[do not show interactive prompts]' \
-    '--no-node-version-check[do not warn when using a potentially unsupported Node version]' \
-    '--no-progress[disable progress bar]' \
-    '--offline[trigger an error if any required dependencies are not available in local cache]' \
-    '--otp=[one-time password for two factor authentication]:otpcode' \
-    '--prefer-offline[use network only if dependencies are not available in local cache]' \
-    '--preferred-cache-folder=[specify a custom folder to store the zinit cache if possible]:folder:_files -/' \
-    '(--prod --production)'{--prod,--production}'[install only production dependencies]' \
-    '--proxy=[HTTP proxy]:host:_hosts' \
-    "--pure-lockfile[don't generate a lockfile]" \
-    '--registry=[override configuration registry]:url:_urls' \
-    '(-s --silent)'{-s,--silent}'[skip zinit console logs, other types of logs (script output) will be printed]' \
-    '--scripts-prepend-node-path=[prepend the node executable dir to the PATH in scripts]:bool:(true false)' \
-    '--skip-integrity-check[run install without checking if node_modules is installed]' \
-    "--strict-semver[don't compare semver loosely]" \
-    '--update-checksum[update package checksums from current repository]' \
-    '--use-zinitrc=[specifies a zinitrc that zinit should use]:zinitrc:_files' \
     '1: :_zinit_commands_scripts' \
     '*:: :->command_args'
 
@@ -250,16 +159,6 @@ _zinit() {
             '--level=[only print advisories with severity greater than or equal to]:level:(info low moderate high critical)' \
             '--groups=[only audit dependencies from listed groups]:groups:->groups_args'
           ;; # ]]]
-        cache) # [[[
-          _arguments \
-            '1: :(list dir clean)' \
-            '*:: :->cache_args'
-          ;;
-        check) # [[[
-          _arguments \
-            '--integrity[Verifies that versions and hashed values of the package contents in package.json]' \
-            '--verify-tree[Recursively verifies that the dependencies in package.json are present in node_modules]'
-          ;;
         compile) # [[[
           _arguments -C \
             '(-a --all)'{-a,--all}'[compile all plugins]' \
@@ -280,33 +179,20 @@ _zinit() {
             && ret=0
           ;;
         doctor) # [[[
-          _arguments -C \
-            '(-h --help)'{-h,--help}'[Print this usage information.]' \
-            && ret=0
-          ;;
-        global) # [[[
-          _arguments \
-            '--prefix=[bin prefix to use to install binaries]' \
-            '1: :_zinit_global_commands' \
-            '*:: :->command_args'
+          ret=0
           ;;
         help) # [[[
-          _arguments \
-            '1: :_zinit_commands' \
-            ;;
+          return 0
+          ;;
         info) # [[[
           _arguments \
             '1:package:' \
             '2:field'
           ;;
-        init) # [[[
+        create) # [[[
           _arguments \
-            '(-y --yes)'{-y,--yes}'[install packages in devDependencies]'
+            '(-y --yes)'{-y,--yes}'[install packages in devDependencies]' \
             '(-h --help)'{-h,--help}'[Print this usage information.]' \
-          ;;
-        licenses) # [[[
-          _arguments \
-            '1: :(ls generate-disclaimer)' \
             ;;
         link|unlink|outdated) # [[[
           _arguments \
@@ -322,30 +208,10 @@ _zinit() {
             '1: :(build info help)' \
             '*:: :->module_args'
           ;;
-        owner) # [[[
-          _arguments \
-            '1: :(list add rm)' \
-            '*:: :->owner_args'
-          ;;
-        pack) # [[[
-          _arguments \
-            '(-f --filename)'{-f,--filename}':filename:_files'
-          ;;
-        policies) # [[[
-          _arguments \
-            '1: :(set-version)'
-          ;;
-        publish) # [[[
-          _arguments \
-            '--access:access:' \
-            '--message:message:' \
-            '--new-version:version:' \
-            '--no-git-tag-version' \
-            '--tag:tag:' \
-            '1: :_files'
-          ;;
         reload) # [[[
-          _arguments
+          _arguments -C \
+            '(-h --help)'{-h,--help}'[Print this usage information]' \
+            && return 0
           ;;
         remove|update) # [[[
           _arguments \
@@ -369,11 +235,6 @@ _zinit() {
             '1: :_zinit_scripts' \
             '*:: :_default'
           ;;
-        team) # [[[
-          _arguments \
-            '1: :(create destroy add rm list)' \
-            '*:: :->team_args'
-          ;;
         uncompile) # [[[
           _arguments -C \
             '(-a --all)'{-a,--all}'[compile all plugins]' \
@@ -388,10 +249,6 @@ _zinit() {
             '1: :_zinit_global_commands' \
             '*:: :->command_args'
           ;;
-        upgrade-interactive) # [[[
-          _arguments \
-            '--latest[use the version tagged latest in the registry]'
-          ;;
         version) # [[[
           _arguments \
             '--new-version[create a new version using an interactive session to prompt you]:version:' \
@@ -404,20 +261,6 @@ _zinit() {
             '--prerelease[increments the prerelease version number keeping the main version]' \
             '--no-git-tag-version[creates a new version without creating a git tag]' \
             '--no-commit-hooks[bypasses running commit hooks when committing the new version]'
-          ;;
-        why) # [[[
-          _arguments \
-            '1:query:_files'
-          ;;
-        workspace) # [[[
-          _arguments \
-            '1:workspace:_zinit_workspaces' \
-            '*:: :_zinit_global_commands'
-          ;;
-        workspaces) # [[[
-          _arguments \
-            '--json[format zinit log messages as lines of JSON]' \
-            '1:commands:(info run)'
           ;;
         *) # [[[
           _default
@@ -457,7 +300,7 @@ _zinit() {
           _arguments \
             '(-c --clean)'{-c,--clean}'[Run make distclean before installing]' \
             '(-l --link)'{-l,--link}'[Create symlink to Zinit Zsh module]' \
-          ;;
+            ;;
         info) # [[[
           _arguments \
             '1:package:' \
@@ -501,4 +344,5 @@ _zinit() {
 
 _zinit "$@"
 
-# vim: ft=zsh: sw=2: sts=2: et: foldmarker=[[[,;;: foldmethod=marker
+# vim:ft=zsh:sw=2:sts=2:et:
+#foldmarker=[[[,;;:foldmethod=marker
