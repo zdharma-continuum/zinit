@@ -101,7 +101,7 @@ ____
  $REPLY - snippet directory filepath
 ____
 
-Has 110 line(s). Calls functions:
+Has 91 line(s). Calls functions:
 
  .zinit-compute-ice
  |-- zinit.zsh/.zinit-any-to-user-plugin
@@ -129,7 +129,7 @@ ____
  $REPLY - 1 if Ctrl-C is pressed, otherwise 0
 ____
 
-Has 20 line(s). Calls functions:
+Has 14 line(s). Calls functions:
 
  .zinit-countdown
  `-- zinit.zsh/+zinit-message
@@ -158,7 +158,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 8 line(s). Calls functions:
+Has 6 line(s). Calls functions:
 
  .zinit-exists-physically
  `-- zinit.zsh/.zinit-any-to-user-plugin
@@ -182,7 +182,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 25 line(s). Calls functions:
+Has 21 line(s). Calls functions:
 
  .zinit-exists-physically-message
  |-- zinit.zsh/+zinit-message
@@ -216,7 +216,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 20 line(s). Calls functions:
+Has 21 line(s). Calls functions:
 
  .zinit-first
  |-- zinit.zsh/.zinit-any-to-pid
@@ -247,7 +247,7 @@ ____
  $6 – the mode 1 - svn, 0 - single file), if applicable
 ____
 
-Has 30 line(s). Doesn't call other functions.
+Has 22 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -268,7 +268,7 @@ ____
  $REPLY - two filepaths
 ____
 
-Has 24 line(s). Calls functions:
+Has 19 line(s). Calls functions:
 
  .zinit-two-paths
  `-- zinit.zsh/.zinit-get-object-path

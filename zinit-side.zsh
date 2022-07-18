@@ -1,9 +1,7 @@
-# -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
+#!/usr/bin/env zsh
 #
-# Copyright (c) 2016-2021 Sebastian Gniazdowski and contributors
+# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
 # Copyright (c) 2021-2022 zdharma-continuum and contributors
-#
 
 # FUNCTION: .zinit-any-colorify-as-uspl2 [[[
 # Returns ANSI-colorified "user/plugin" string, from any supported
@@ -149,6 +147,7 @@
   : ${(P)___var_name4::=$___is_snippet}
   return 0
 } # ]]]
+
 # FUNCTION: .zinit-countdown [[[
 # Displays a countdown 5...4... etc.
 #

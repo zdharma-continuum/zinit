@@ -125,7 +125,10 @@ Has 5 line(s). Calls functions:
 
 Uses feature(s): _eval_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ zinit-install.zsh/∞zinit-atpull-e-hook
+ zinit-install.zsh/∞zinit-atpull-hook
 
 .zinit-build-module
 ~~~~~~~~~~~~~~~~~~~
@@ -327,7 +330,6 @@ Uses feature(s): _setopt_
 Called by:
 
  zinit.zsh/.zinit-prepare-home
- zinit.zsh/zinit
 
 .zinit-clear-report-for
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -393,9 +395,7 @@ Has 26 line(s). Calls functions:
 
 Uses feature(s): _setopt_
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-confirm
 ~~~~~~~~~~~~~~
@@ -816,9 +816,7 @@ ____
 
 Has 66 line(s). Doesn't call other functions.
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-list-bindkeys
 ~~~~~~~~~~~~~~~~~~~~
@@ -834,9 +832,7 @@ Has 44 line(s). Calls functions:
  .zinit-list-bindkeys
  `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-list-compdef-replay
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -853,9 +849,7 @@ ____
 
 Has 5 line(s). Doesn't call other functions.
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-ls
 ~~~~~~~~~
@@ -892,8 +886,6 @@ Has 24 line(s). Calls functions:
 Called by:
 
  .zinit-build-module
- zinit.zsh/Script-Body
- zinit.zsh/zinit
 
 .zinit-pager
 ~~~~~~~~~~~~
@@ -1053,9 +1045,7 @@ Has 43 line(s). Calls functions:
 
 Uses feature(s): _setopt_
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-self-update
 ~~~~~~~~~~~~~~~~~~
@@ -1079,7 +1069,6 @@ Uses feature(s): _setopt_, _source_, _zcompile_
 Called by:
 
  .zinit-update-or-status-all
- zinit.zsh/zinit
 
 .zinit-show-all-reports
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -1122,9 +1111,7 @@ Has 72 line(s). Calls functions:
 
 Uses feature(s): _setopt_
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-show-debug-report
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1141,9 +1128,7 @@ Has 1 line(s). Calls functions:
 
  .zinit-show-debug-report
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-show-registered-plugins
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1163,9 +1148,7 @@ Has 22 line(s). Calls functions:
 
 Uses feature(s): _setopt_
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-show-report
 ~~~~~~~~~~~~~~~~~~
@@ -1212,9 +1195,7 @@ Has 65 line(s). Calls functions:
 
 Uses feature(s): _setopt_
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-show-zstatus
 ~~~~~~~~~~~~~~~~~~~
@@ -1236,9 +1217,7 @@ Has 47 line(s). Calls functions:
 
 Uses feature(s): _setopt_
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-stress
 ~~~~~~~~~~~~~
