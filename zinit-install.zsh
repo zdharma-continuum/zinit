@@ -11,10 +11,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
 .zinit-jq-check () {
-  command -v jq > /dev/null && return 0
+  (( $+commands[jq] )) && return 0
   +zinit-message "{error}❌ ERROR: jq binary not found" "{nl}{u-warn}Please install jq:{rst}" "https://github.com/stedolan/jq" "{nl}{u-warn}To do so with zinit, please refer to:{rst}" "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
   return 1
-}
+} # ]]]
 # FUNCTION: .zinit-json-get-value [[[
 # Wrapper around jq that return the value of a property
 # $1: JSON structure
@@ -23,7 +23,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   .zinit-jq-check || return 1
   local jsonstr=$1 jqpath=$2
   jq -er ".${jqpath}" <<< "$jsonstr"
-}
+} # ]]]
 # FUNCTION: .zinit-json-to-array [[[
 # Wrapper around jq that sets key/values of an associative array, replicating
 # the structure of a given JSON object
