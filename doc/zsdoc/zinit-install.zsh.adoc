@@ -96,7 +96,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 87 line(s). Calls functions:
+Has 92 line(s). Calls functions:
 
  .zinit-compile-plugin
  |-- zinit-side.zsh/.zinit-compute-ice
@@ -125,7 +125,7 @@ ____
  No arguments.
 ____
 
-Has 26 line(s). Calls functions:
+Has 21 line(s). Calls functions:
 
  .zinit-compinit
  |-- compinit
@@ -151,7 +151,7 @@ ____
  curl, wget, lftp, lynx. Used by snippet loading.
 ____
 
-Has 53 line(s). Calls functions:
+Has 57 line(s). Calls functions:
 
  .zinit-download-file-stdout
  `-- zinit.zsh/+zinit-message
@@ -224,7 +224,7 @@ ____
  $1 - completion function name, e.g. "_cp"; can also be "cp"
 ____
 
-Has 20 line(s). Doesn't call other functions.
+Has 16 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_, _unfunction_
 
@@ -310,7 +310,7 @@ ____
  header as a time stamp
 ____
 
-Has 35 line(s). Doesn't call other functions.
+Has 31 line(s). Doesn't call other functions.
 
 Uses feature(s): _read_, _setopt_, _trap_, _type_
 
@@ -334,7 +334,7 @@ ____
  $3 - if 1, then reinstall, otherwise only install completions that aren't there
 ____
 
-Has 61 line(s). Calls functions:
+Has 53 line(s). Calls functions:
 
  .zinit-install-completions
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
@@ -428,7 +428,7 @@ ____
  $3 - subdirectory (not path) with working copy, needed for -t and -u
 ____
 
-Has 29 line(s). Doesn't call other functions.
+Has 34 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
@@ -799,7 +799,7 @@ ____
  FUNCTION: ∞zinit-ps-on-update-hook [[[
 ____
 
-Has 18 line(s). Calls functions:
+Has 15 line(s). Calls functions:
 
  ∞zinit-ps-on-update-hook
  `-- zinit.zsh/+zinit-message
