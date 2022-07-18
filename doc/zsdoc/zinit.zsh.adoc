@@ -162,8 +162,8 @@ Called by:
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit-install.zsh/.zinit-update-snippet
  zinit-install.zsh/ziextract
- zinit-install.zsh/→zinit-extract
  zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/→zinit-extract
  zinit-install.zsh/∞zinit-mv-hook
  zinit-install.zsh/∞zinit-ps-on-update-hook
  zinit-install.zsh/∞zinit-reset-hook
