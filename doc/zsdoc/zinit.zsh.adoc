@@ -92,7 +92,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 234 line(s). Calls functions:
+Has 238 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
@@ -1260,6 +1260,7 @@ Called by:
  zinit-install.zsh/.zinit-at-eval
  zinit-install.zsh/.zinit-get-package
  zinit-install.zsh/∞zinit-atclone-hook
+ zinit-install.zsh/∞zinit-configure-base-hook
  zinit-install.zsh/∞zinit-cp-hook
  zinit-install.zsh/∞zinit-extract-hook
  zinit-install.zsh/∞zinit-make-e-hook
