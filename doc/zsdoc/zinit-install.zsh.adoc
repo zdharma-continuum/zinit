@@ -39,6 +39,9 @@ FUNCTIONS
  ∞zinit-atpull-e-hook
  ∞zinit-atpull-hook
  ∞zinit-compile-plugin-hook
+ ∞zinit-configure-base-hook
+ ∞zinit-configure-e-hook
+ ∞zinit-configure-hook
  ∞zinit-cp-hook
  ∞zinit-extract-hook
  ∞zinit-make-e-hook
@@ -624,6 +627,71 @@ Has 19 line(s). Calls functions:
  ∞zinit-compile-plugin-hook
 
 Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+∞zinit-configure-base-hook
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: ∞zinit-configure-base-hook [[[
+ A base common implementation of configure'', as all
+ the starting steps are rigid and the same in all
+ hooks, hence the idea. TODO: use in make'' and other
+ places.
+____
+
+Has 35 line(s). Calls functions:
+
+ ∞zinit-configure-base-hook
+ |-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/@zinit-substitute
+
+Called by:
+
+ ∞zinit-configure-e-hook
+ ∞zinit-configure-hook
+
+_Environment variables used:_ zinit.zsh -> ZPFX
+
+∞zinit-configure-e-hook
+~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: ∞zinit-configure-e-hook [[[
+ The !-version of configure'' ice. Runs in between
+ of make'!!' and make'!'. Configure naturally runs
+ before make.
+____
+
+Has 1 line(s). Calls functions:
+
+ ∞zinit-configure-e-hook
+ `-- ∞zinit-configure-base-hook
+     |-- zinit-side.zsh/.zinit-countdown
+     `-- zinit.zsh/@zinit-substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+∞zinit-configure-hook
+~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: ∞zinit-configure-hook [[[
+ The non-! version of configure'' ice. Runs in between
+ of make'!' and make''. Configure script naturally runs
+ before make.
+____
+
+Has 1 line(s). Calls functions:
+
+ ∞zinit-configure-hook
+ `-- ∞zinit-configure-base-hook
+     |-- zinit-side.zsh/.zinit-countdown
+     `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 

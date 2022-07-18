@@ -142,6 +142,7 @@ Called by:
  zinit-install.zsh/∞zinit-atclone-hook
  zinit-install.zsh/∞zinit-atpull-e-hook
  zinit-install.zsh/∞zinit-atpull-hook
+ zinit-install.zsh/∞zinit-configure-base-hook
  zinit-install.zsh/∞zinit-make-e-hook
  zinit-install.zsh/∞zinit-make-ee-hook
  zinit-install.zsh/∞zinit-make-hook
