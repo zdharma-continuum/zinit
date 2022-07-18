@@ -213,6 +213,289 @@ builtin setopt noaliases
 #
 # Output formatting functions
 #
+#
+
+# FUNCTION: :zinit-reload-and-run [[[
+# Marks given function ($3) for autoloading, and executes it triggering the
+# load. $1 is the fpath dedicated to the function, $2 are autoload options.
+# This function replaces "autoload -X", because using that on older Zsh
+# versions causes problems with traps.
+#
+# So basically one creates function stub that calls :zinit-reload-and-run()
+# instead of "autoload -X".
+#
+# $1 - FPATH dedicated to function
+# $2 - autoload options
+# $3 - function name (one that needs autoloading)
+#
+# Author: Bart Schaefer
+:zinit-reload-and-run () {
+  local fpath_prefix="$1" autoload_opts="$2" func="$3" 
+  shift 3
+  unfunction -- "$func"
+  local -a ___fpath
+  ___fpath=(${fpath[@]}) 
+  local -a +h fpath
+  [[ $FPATH != *${${(@0)fpath_prefix}[1]}* ]] && fpath=(${(@0)fpath_prefix} ${___fpath[@]}) 
+  builtin autoload ${(s: :)autoload_opts} -- "$func"
+  "$func" "$@"
+} # ]]]
+# FUNCTION: :zinit-tmp-subst-autoload [[[
+# Function defined to hijack plugin's calls to the `autoload' builtin.
+#
+# The hijacking is not only to gather report data, but also to.
+# run custom `autoload' function, that doesn't need FPATH.
+:zinit-tmp-subst-autoload () {
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
+  local -a opts opts2 custom reply
+  local func
+  zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} I+=opts2 S+:=custom
+  builtin set -- ${@:#--}
+  .zinit-any-to-user-plugin $ZINIT[CUR_USPL2]
+  [[ $reply[1] = % ]] && local PLUGIN_DIR="$reply[2]"  || local PLUGIN_DIR="$ZINIT[PLUGINS_DIR]/${reply[1]:+$reply[1]---}${reply[2]//\//---}" 
+  local -a fpath_elements
+  fpath_elements=(${fpath[(r)$PLUGIN_DIR/*]}) 
+  [[ -d $PLUGIN_DIR/functions ]] && fpath_elements+=("$PLUGIN_DIR"/functions) 
+  if (( ${+opts[(r)-X]} )); then
+    .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: Failed autoload ${(j: :)opts[@]} $*"
+    +zinit-message -u2 "{error}builtin autoload required for {obj}${(j: :)opts[@]}{error} option(s)"
+    return 1
+  fi
+  if (( ${+opts[(r)-w]} )); then
+    .zinit-add-report "${ZINIT[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
+    fpath+=($PLUGIN_DIR) 
+    builtin autoload ${opts[@]} "$@"
+    return $?
+  fi
+  if [[ -n ${(M)@:#+X} ]]; then
+    .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload +X ${opts:+${(j: :)opts[@]} }${(j: :)${@:#+X}}"
+    local +h FPATH=$PLUGINS_DIR${fpath_elements:+:${(j.:.)fpath_elements[@]}}:$FPATH 
+    local +h -a fpath
+    fpath=($PLUGIN_DIR $fpath_elements $fpath) 
+    builtin autoload +X ${opts[@]} "${@:#+X}"
+    return $?
+  fi
+  for func; do
+    .zinit-add-report "${ZINIT[CUR_USPL2]}" "Autoload $func${opts:+ with options ${(j: :)opts[@]}}"
+  done
+  integer count retval
+  for func; do
+    if (( ${+functions[$func]} != 1 )); then
+      builtin setopt noaliases
+      if [[ $func == /* ]] && is-at-least 5.4; then
+        builtin autoload ${opts[@]} $func
+        return $?
+      elif [[ $func == /* ]]; then
+        if [[ $ZINIT[MUTE_WARNINGS] != (1|true|on|yes) && -z $ZINIT[WARN_SHOWN_FOR_$ZINIT[CUR_USPL2]] ]]; then
+          +zinit-message "{u-warn}Warning{b-warn}: {rst}the plugin {pid}$ZINIT[CUR_USPL2]" "{rst}is using autoload functions specified by their absolute path," "which is not supported by this Zsh version ({↔} {version}$ZSH_VERSION{rst}," "required is Zsh >= {version}5.4{rst})." "{nl}A fallback mechanism has been applied, which works well only" "for functions in the plugin {u}{slight}main{rst} directory." "{nl}(To mute this message, set" "{var}\$ZINIT[MUTE_WARNINGS]{rst} to a truth value.)"
+          ZINIT[WARN_SHOWN_FOR_$ZINIT[CUR_USPL2]]=1 
+        fi
+        func=$func:t 
+      fi
+      if [[ ${ZINIT[NEW_AUTOLOAD]} = 2 ]]; then
+        builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
+        retval=$? 
+      elif [[ ${ZINIT[NEW_AUTOLOAD]} = 1 ]]; then
+        if (( ${+opts[(r)-C]} )); then
+          local pth nl=$'\n' sel="" 
+          for pth in $PLUGIN_DIR $fpath_elements $fpath; do
+            [[ -f $pth/$func ]] && {
+              sel=$pth 
+              break
+            }
+          done
+          if [[ -z $sel ]]; then
+            +zinit-message '{u-warn}zinit{b-warn}:{error} Couldn''t find autoload function{ehi}:' "{apo}\`{file}${func}{apo}\`{error} anywhere in {var}\$fpath{error}."
+            retval=1 
+          else
+            eval "function ${(q)${custom[++count*2]}:-$func} {
+                            local body=\"\$(<${(qqq)sel}/${(qqq)func})\" body2
+                            () { setopt localoptions extendedglob
+                                 body2=\"\${body##[[:space:]]#${func}[[:blank:]]#\(\)[[:space:]]#\{}\"
+                                 [[ \$body2 != \$body ]] &&                                     body2=\"\${body2%\}[[:space:]]#([$nl]#([[:blank:]]#\#[^$nl]#((#e)|[$nl]))#)#}\"
+                            }
+
+                            functions[${${(q)custom[count*2]}:-$func}]=\"\$body2\"
+                            ${(q)${custom[count*2]}:-$func} \"\$@\"
+                        }"
+            retval=$? 
+          fi
+        else
+          eval "function ${(q)func} {
+                        local -a fpath
+                        fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath_elements} ${(qqq@)fpath} )
+                        builtin autoload -X ${(j: :)${(q-)opts[@]}}
+                    }"
+          retval=$? 
+        fi
+      else
+        eval "function ${(q)func} {
+                    :zinit-reload-and-run ${(qqq)PLUGIN_DIR}"$'\0'"${(pj,\0,)${(qqq)fpath_elements[@]}} ${(qq)opts[*]} ${(q)func} "'"$@"
+                }'
+        retval=$? 
+      fi
+      (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
+    fi
+    if (( ${+opts2[(r)-I]} )); then
+      ${custom[count*2]:-$func}
+      retval=$? 
+    fi
+  done
+  return $retval
+} # ]]]
+# FUNCTION: :zinit-tmp-subst-bindkey. [[[
+# Function defined to hijack plugin's calls to the `bindkey' builtin.
+#
+# The hijacking is to gather report data (which is used in unload).
+:zinit-tmp-subst-bindkey() {
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops
+
+    is-at-least 5.3 && \
+        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Bindkey ${(j: :)${(q+)@}}" || \
+        .zinit-add-report "${ZINIT[CUR_USPL2]}" "Bindkey ${(j: :)${(q)@}}"
+
+    # Remember to perform the actual bindkey call.
+    typeset -a pos
+    pos=( "$@" )
+
+    # Check if we have regular bindkey call, i.e.
+    # with no options or with -s, plus possible -M
+    # option.
+    local -A opts
+    zparseopts -A opts -D ${(s::):-lLdDAmrsevaR} M: N:
+
+    if (( ${#opts} == 0 ||
+        ( ${#opts} == 1 && ${+opts[-M]} ) ||
+        ( ${#opts} == 1 && ${+opts[-R]} ) ||
+        ( ${#opts} == 1 && ${+opts[-s]} ) ||
+        ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-s]} ) ||
+        ( ${#opts} <= 2 && ${+opts[-M]} && ${+opts[-R]} )
+    )); then
+        local string="${(q)1}" widget="${(q)2}"
+        local quoted
+
+        if [[ -n ${ICE[bindmap]} && ${ZINIT_CUR_BIND_MAP[empty]} -eq 1 ]]; then
+            local -a pairs
+            pairs=( "${(@s,;,)ICE[bindmap]}" )
+            if [[ -n ${(M)pairs:#*\\(#e)} ]] {
+                local prev
+                pairs=( ${pairs[@]//(#b)((*)\\(#e)|(*))/${match[3]:+${prev:+$prev\;}}${match[3]}${${prev::=${match[2]:+${prev:+$prev\;}}${match[2]}}:+}} )
+            }
+            pairs=( "${(@)${(@)${(@s:->:)pairs}##[[:space:]]##}%%[[:space:]]##}" )
+            ZINIT_CUR_BIND_MAP=( empty 0 )
+            (( ${#pairs} > 1 && ${#pairs[@]} % 2 == 0 )) && ZINIT_CUR_BIND_MAP+=( "${pairs[@]}" )
+        fi
+
+        local bmap_val="${ZINIT_CUR_BIND_MAP[${1}]}"
+        if (( !ZINIT_CUR_BIND_MAP[empty] )) {
+            [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)1}]}"
+            [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[${(qqq)${(Q)1}}]}"
+            [[ -z $bmap_val ]] && { bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)1}]}"; integer val=1; }
+            [[ -z $bmap_val ]] && bmap_val="${ZINIT_CUR_BIND_MAP[!${(qqq)${(Q)1}}]}"
+        }
+        if [[ -n $bmap_val ]]; then
+            string="${(q)bmap_val}"
+            if (( val )) {
+                [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
+            } else {
+                [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
+            }
+            .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> changed to <$bmap_val>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
+            ((1))
+        elif [[ ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[UPAR]}} && -n ${${ZINIT[UPAR]}[(r);:${(q)1};:]} ) || \
+                ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[DOWNAR]}} && -n ${${ZINIT[DOWNAR]}[(r);:${(q)1};:]} ) || \
+                ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[RIGHTAR]}} && -n ${${ZINIT[RIGHTAR]}[(r);:${(q)1};:]} ) || \
+                ( -n ${bmap_val::=${ZINIT_CUR_BIND_MAP[LEFTAR]}} && -n ${${ZINIT[LEFTAR]}[(r);:${(q)1};:]} )
+        ]]; then
+            string="${(q)bmap_val}"
+            if (( val )) {
+                [[ ${pos[1]} = "-M" ]] && pos[4]="$bmap_val" || pos[2]="$bmap_val"
+            } else {
+                [[ ${pos[1]} = "-M" ]] && pos[3]="${(Q)bmap_val}" || pos[1]="${(Q)bmap_val}"
+            }
+            .zinit-add-report "${ZINIT[CUR_USPL2]}" ":::Bindkey: combination <$1> recognized as cursor-key and changed to <${bmap_val}>${${(M)bmap_val:#hold}:+, i.e. ${ZINIT[col-error]}unmapped${ZINIT[col-rst]}}"
+        fi
+        [[ $bmap_val = hold ]] && return 0
+
+        local prev="${(q)${(s: :)$(builtin bindkey ${(Q)string})}[-1]#undefined-key}"
+
+        # "-M map" given?
+        if (( ${+opts[-M]} )); then
+            local Mopt=-M
+            local Marg="${opts[-M]}"
+
+            Mopt="${(q)Mopt}"
+            Marg="${(q)Marg}"
+
+            quoted="$string $widget $prev $Mopt $Marg"
+        else
+            quoted="$string $widget $prev"
+        fi
+
+        # -R given?
+        if (( ${+opts[-R]} )); then
+            local Ropt=-R
+            Ropt="${(q)Ropt}"
+
+            if (( ${+opts[-M]} )); then
+                quoted="$quoted $Ropt"
+            else
+                # Two empty fields for non-existent -M arg.
+                local space=_
+                space="${(q)space}"
+                quoted="$quoted $space $space $Ropt"
+            fi
+        fi
+
+        quoted="${(q)quoted}"
+
+        # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here).
+        [[ -n ${ZINIT[CUR_USPL2]} ]] && ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
+        # Remember for dtrace.
+        [[ ${ZINIT[DTRACE]} = 1 ]] && ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
+    else
+        # bindkey -A newkeymap main?
+        # Negative indices for KSH_ARRAYS immunity.
+        if [[ ${#opts} -eq 1 && ${+opts[-A]} = 1 && ${#pos} = 3 && ${pos[-1]} = main && ${pos[-2]} != -A ]]; then
+            # Save a copy of main keymap.
+            (( ZINIT[BINDKEY_MAIN_IDX] = ${ZINIT[BINDKEY_MAIN_IDX]:-0} + 1 ))
+            local pname="${ZINIT[CUR_PLUGIN]:-_dtrace}"
+            local name="${(q)pname}-main-${ZINIT[BINDKEY_MAIN_IDX]}"
+            builtin bindkey -N "$name" main
+
+            # Remember occurence of main keymap substitution, to revert on unload.
+            local keys=_ widget=_ prev= optA=-A mapname="${name}" optR=_
+            local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optA} ${(q)mapname} ${(q)optR}"
+            quoted="${(q)quoted}"
+
+            # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here).
+            [[ -n ${ZINIT[CUR_USPL2]} ]] && ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
+            [[ ${ZINIT[DTRACE]} = 1 ]] && ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
+
+            .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: keymap \`main' copied to \`${name}' because of \`${pos[-2]}' substitution"
+        # bindkey -N newkeymap [other].
+        elif [[ ${#opts} -eq 1 && ${+opts[-N]} = 1 ]]; then
+            local Nopt=-N
+            local Narg="${opts[-N]}"
+
+            local keys=_ widget=_ prev= optN=-N mapname="${Narg}" optR=_
+            local quoted="${(q)keys} ${(q)widget} ${(q)prev} ${(q)optN} ${(q)mapname} ${(q)optR}"
+            quoted="${(q)quoted}"
+
+            # Remember the bindkey, only when load is in progress (it can be dstart that leads execution here).
+            [[ -n ${ZINIT[CUR_USPL2]} ]] && ZINIT[BINDKEYS__${ZINIT[CUR_USPL2]}]+="$quoted "
+            [[ ${ZINIT[DTRACE]} = 1 ]] && ZINIT[BINDKEYS___dtrace/_dtrace]+="$quoted "
+        else
+            .zinit-add-report "${ZINIT[CUR_USPL2]}" "Warning: last bindkey used non-typical options: ${(kv)opts[*]}"
+        fi
+    fi
+
+    # Actual bindkey.
+    builtin bindkey "${pos[@]}"
+    return $? # testable
+} # ]]]
 
 # FUNCTION: +zinit-message [[[
 +zinit-message () {
@@ -1979,31 +2262,7 @@ builtin setopt noaliases
     ZINIT_TASKS+=("${${ICE[wait]:+0}:-1}+0+1 $tpe ${ZINIT[WAIT_IDX]} ${mode:-_} ${(q)id} ${opt_plugin:+${(q)opt_uspl2}}") 
   fi
 } # ]]]
-# FUNCTION: :zinit-reload-and-run [[[
-# Marks given function ($3) for autoloading, and executes it triggering the
-# load. $1 is the fpath dedicated to the function, $2 are autoload options.
-# This function replaces "autoload -X", because using that on older Zsh
-# versions causes problems with traps.
-#
-# So basically one creates function stub that calls :zinit-reload-and-run()
-# instead of "autoload -X".
-#
-# $1 - FPATH dedicated to function
-# $2 - autoload options
-# $3 - function name (one that needs autoloading)
-#
-# Author: Bart Schaefer
-:zinit-reload-and-run () {
-  local fpath_prefix="$1" autoload_opts="$2" func="$3" 
-  shift 3
-  unfunction -- "$func"
-  local -a ___fpath
-  ___fpath=(${fpath[@]}) 
-  local -a +h fpath
-  [[ $FPATH != *${${(@0)fpath_prefix}[1]}* ]] && fpath=(${(@0)fpath_prefix} ${___fpath[@]}) 
-  builtin autoload ${(s: :)autoload_opts} -- "$func"
-  "$func" "$@"
-} # ]]]
+
 
 #
 # Utility functions

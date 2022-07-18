@@ -446,7 +446,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 

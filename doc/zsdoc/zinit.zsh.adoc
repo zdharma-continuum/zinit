@@ -60,6 +60,7 @@ FUNCTIONS
  :zinit-reload-and-run
  :zinit-tmp-subst-alias
  :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
  :zinit-tmp-subst-compdef
  :zinit-tmp-subst-zle
  :zinit-tmp-subst-zstyle
@@ -162,8 +163,8 @@ Called by:
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit-install.zsh/.zinit-update-snippet
  zinit-install.zsh/ziextract
- zinit-install.zsh/∞zinit-configure-base-hook
  zinit-install.zsh/→zinit-extract
+ zinit-install.zsh/∞zinit-configure-base-hook
  zinit-install.zsh/∞zinit-mv-hook
  zinit-install.zsh/∞zinit-ps-on-update-hook
  zinit-install.zsh/∞zinit-reset-hook
@@ -233,6 +234,7 @@ Called by:
  .zinit-load-snippet
  :zinit-tmp-subst-alias
  :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
  :zinit-tmp-subst-compdef
  :zinit-tmp-subst-zle
  :zinit-tmp-subst-zstyle
@@ -968,7 +970,7 @@ ____
  run custom `autoload' function, that doesn't need FPATH.
 ____
 
-Has 97 line(s). Calls functions:
+Has 194 line(s). Calls functions:
 
  :zinit-tmp-subst-autoload
  |-- +zinit-message
@@ -979,6 +981,26 @@ Uses feature(s): _autoload_, _eval_, _is-at-least_, _setopt_, _zparseopts_
 Called by:
 
  .zinit-load-plugin
+
+:zinit-tmp-subst-bindkey
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: :zinit-tmp-subst-bindkey. [[[
+ Function defined to hijack plugin's calls to the `bindkey' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+____
+
+Has 120 line(s). Calls functions:
+
+ :zinit-tmp-subst-bindkey
+ `-- is-at-least
+
+Uses feature(s): _bindkey_, _is-at-least_, _setopt_, _zparseopts_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 :zinit-tmp-subst-compdef
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1379,7 +1401,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
@@ -1411,6 +1433,7 @@ Has 56 line(s). Doesn't call other functions.
 Called by:
 
  :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
  Script-Body
  zinit-install.zsh/.zinit-download-snippet
 
