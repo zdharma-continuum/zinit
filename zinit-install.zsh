@@ -441,78 +441,62 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
 # $3 - if 1, then reinstall, otherwise only install completions that aren't there
+
 .zinit-install-completions() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
-
-    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}}
-    local reinstall=${3:-0} quiet=${${4:+1}:-0}
-    (( OPTS[opt_-q,--quiet] )) && quiet=1
-    [[ $4 = -Q ]] && quiet=2
-    typeset -ga INSTALLED_COMPS SKIPPED_COMPS
-    INSTALLED_COMPS=() SKIPPED_COMPS=()
-
-    .zinit-any-to-user-plugin "$id_as" ""
-    local user=${reply[-2]}
-    local plugin=${reply[-1]}
-    .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-    local abbrev_pspec=$REPLY
-
-    .zinit-exists-physically-message "$id_as" "" || return 1
-
-    # Symlink any completion files included in plugin's directory
-    typeset -a completions already_symlinked backup_comps
-    local c cfile bkpfile
-    # The plugin == . is a semi-hack/trick to handle `creinstall .' properly
-    [[ $user == % || ( -z $user && $plugin == . ) ]] && \
-        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
-        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
-    already_symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
-    backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
-
-    # Symlink completions if they are not already there
-    # either as completions (_fname) or as backups (fname)
-    # OR - if it's a reinstall
-    for c in "${completions[@]}"; do
-        cfile="${c:t}"
-        bkpfile="${cfile#_}"
-        if [[ ( -z ${already_symlinked[(r)*/$cfile]} || $reinstall = 1 ) &&
-              -z ${backup_comps[(r)*/$bkpfile]}
-        ]]; then
-            if [[ $reinstall = 1 ]]; then
-                # Remove old files
-                command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile" "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
-            fi
-            INSTALLED_COMPS+=( $cfile )
-            (( quiet )) || builtin print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory."
-            command ln -fs "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
-            # Make compinit notice the change
-            .zinit-forget-completion "$cfile" "$quiet"
-        else
-            SKIPPED_COMPS+=( $cfile )
-            (( quiet )) || builtin print -Pr "Not symlinking completion \`${ZINIT[col-obj]}$cfile%f%b', it already exists."
-            (( quiet )) || builtin print -Pr "${ZINIT[col-info2]}Use \`${ZINIT[col-pname]}zinit creinstall $abbrev_pspec${ZINIT[col-info2]}' to force install.%f%b"
-        fi
-    done
-
-    if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) {
-        +zinit-message "{msg}Installed {num}${#INSTALLED_COMPS}" \
-            "{msg}completions. They are stored in the{var}" \
-            "\$INSTALLED_COMPS{msg} array."
-        if (( ${#SKIPPED_COMPS} )) {
-            +zinit-message "{msg}Skipped installing" \
-                "{num}${#SKIPPED_COMPS}{msg} completions." \
-                "They are stored in the {var}\$SKIPPED_COMPS{msg} array."
-        }
-    }
-
-    if (( ZSH_SUBSHELL )) {
-        builtin print -rl -- $INSTALLED_COMPS >! ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst
-        builtin print -rl -- $SKIPPED_COMPS >! ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst
-    }
-
-    .zinit-compinit 1 1 &>/dev/null
-} # ]]]
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
+  local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} 
+  local reinstall=${3:-0} quiet=${${4:+1}:-0} 
+  (( OPTS[opt_-q,--quiet] )) && quiet=1 
+  [[ $4 = -Q ]] && quiet=2 
+  typeset -ga INSTALLED_COMPS SKIPPED_COMPS
+  INSTALLED_COMPS=() SKIPPED_COMPS=() 
+  .zinit-any-to-user-plugin "$id_as" ""
+  local user=${reply[-2]} 
+  local plugin=${reply[-1]} 
+  .zinit-any-colorify-as-uspl2 "$user" "$plugin"
+  local abbrev_pspec=$REPLY 
+  .zinit-exists-physically-message "$id_as" "" || return 1
+  typeset -a completions already_symlinked backup_comps
+  local c cfile bkpfile
+  [[ $user == % || ( -z $user && $plugin == . ) ]] && completions=("${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/))  || completions=("${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/)) 
+  already_symlinked=("${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN)) 
+  backup_comps=("${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN)) 
+  for c in "${completions[@]}"
+  do
+    cfile="${c:t}" 
+    bkpfile="${cfile#_}" 
+    if [[ ( -z ${already_symlinked[(r)*/$cfile]} || $reinstall = 1 ) && -z ${backup_comps[(r)*/$bkpfile]} ]]
+    then
+      if [[ $reinstall = 1 ]]
+      then
+        command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile" "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
+      fi
+      INSTALLED_COMPS+=($cfile) 
+      (( quiet )) || builtin print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory."
+      command ln -fs "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
+      .zinit-forget-completion "$cfile" "$quiet"
+    else
+      SKIPPED_COMPS+=($cfile) 
+      (( quiet )) || builtin print -Pr "Not symlinking completion \`${ZINIT[col-obj]}$cfile%f%b', it already exists."
+      (( quiet )) || builtin print -Pr "${ZINIT[col-info2]}Use \`${ZINIT[col-pname]}zinit creinstall $abbrev_pspec${ZINIT[col-info2]}' to force install.%f%b"
+    fi
+  done
+  if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) ))
+  then
+    +zinit-message "{msg}Installed {num}${#INSTALLED_COMPS}" "{msg}completions. They are stored in the{var}" "\$INSTALLED_COMPS{msg} array."
+    if (( ${#SKIPPED_COMPS} ))
+    then
+      +zinit-message "{msg}Skipped installing" "{num}${#SKIPPED_COMPS}{msg} completions." "They are stored in the {var}\$SKIPPED_COMPS{msg} array."
+    fi
+  fi
+  if (( ZSH_SUBSHELL ))
+  then
+    builtin print -rl -- $INSTALLED_COMPS >| ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst
+    builtin print -rl -- $SKIPPED_COMPS >| ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst
+  fi
+  .zinit-compinit 1 1 &> /dev/null
+}
 # FUNCTION: .zinit-compinit [[[
 # User-exposed `compinit' frontend which first ensures that all
 # completions managed by Zinit are forgotten by Zshell. After
@@ -520,141 +504,126 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # Zinit's completions.
 #
 # No arguments.
-.zinit-compinit() {
-    # This might be called during sourcing when setting up the plugins dir, so check that OPTS is actually existing
-    [[ -n $OPTS && -n ${OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
-
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    builtin setopt nullglob extendedglob warncreateglobal typesetsilent
-
-    integer use_C=$2
-
-    typeset -a symlinked backup_comps
-    local c cfile bkpfile action
-
-    symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc )
-    backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc )
-
-    # Delete completions if they are really there, either
-    # as completions (_fname) or backups (fname)
-    for c in "${symlinked[@]}" "${backup_comps[@]}"; do
-        action=0
-        cfile="${c:t}"
-        cfile="_${cfile#_}"
-        bkpfile="${cfile#_}"
-
-        #print -Pr "${ZINIT[col-info]}Processing completion $cfile%f%b"
-        .zinit-forget-completion "$cfile"
-    done
-
-    +zinit-message "Initializing completion ({func}compinit{rst}){…}"
-    command rm -f ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
-
-    # Workaround for a nasty trick in _vim
-    (( ${+functions[_vim_files]} )) && unfunction _vim_files
-
-    builtin autoload -Uz compinit
-    compinit ${${(M)use_C:#1}:+-C} -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
+.zinit-compinit () {
+  [[ -n $OPTS && -n ${OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  builtin setopt nullglob extendedglob warncreateglobal typesetsilent
+  integer use_C=$2 
+  typeset -a symlinked backup_comps
+  local c cfile bkpfile action
+  symlinked=("${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc) 
+  backup_comps=("${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc) 
+  for c in "${symlinked[@]}" "${backup_comps[@]}"
+  do
+    action=0 
+    cfile="${c:t}" 
+    cfile="_${cfile#_}" 
+    bkpfile="${cfile#_}" 
+    .zinit-forget-completion "$cfile"
+  done
+  +zinit-message "Initializing completion ({func}compinit{rst}){…}"
+  command rm -f ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
+  (( ${+functions[_vim_files]} )) && unfunction _vim_files
+  builtin autoload -Uz compinit
+  compinit ${${(M)use_C:#1}:+-C} -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
 } # ]]]
 # FUNCTION: .zinit-download-file-stdout [[[
 # Downloads file to stdout. Supports following backend commands:
 # curl, wget, lftp, lynx. Used by snippet loading.
-.zinit-download-file-stdout() {
-    local url="$1" restart="$2" progress="${(M)3:#1}"
-
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt localtraps extendedglob
-
-    # Return file directly for file:// urls, wget doesn't support this schema
-    if [[ "$url" =~ ^file:// ]] {
-        local filepath=${url##file://}
-        <"$filepath"
-        return "$?"
+.zinit-download-file-stdout () {
+  local url="$1" restart="$2" progress="${(M)3:#1}" 
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  setopt localtraps extendedglob
+  if [[ "$url" =~ ^file:// ]]
+  then
+    local filepath=${url##file://} 
+     < "$filepath"
+    return "$?"
+  fi
+  if (( restart ))
+  then
+    (( ${path[(I)/usr/local/bin]} )) || {
+      path+=("/usr/local/bin") 
+      trap "path[-1]=()" EXIT
     }
-
-    if (( restart )) {
-        (( ${path[(I)/usr/local/bin]} )) || \
-            {
-                path+=( "/usr/local/bin" );
-                trap "path[-1]=()" EXIT
-            }
-
-        if (( ${+commands[curl]} )); then
-            if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
-            else
-                command curl -fsSL "$url" || return 1
-            fi
-        elif (( ${+commands[wget]} )); then
-            command wget ${${progress:--q}:#1} "$url" -O - || return 1
-        elif (( ${+commands[lftp]} )); then
-            command lftp -c "cat $url" || return 1
-        elif (( ${+commands[lynx]} )); then
-            command lynx -source "$url" || return 1
-        else
-            +zinit-message "{u-warn}ERROR{b-warn}:{rst}No download tool detected" \
-                "(one of: {cmd}curl{rst}, {cmd}wget{rst}, {cmd}lftp{rst}," \
-                "{cmd}lynx{rst})."
-            return 2
-        fi
-    } else {
-        if type curl 2>/dev/null 1>&2; then
-            if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
-            else
-                command curl -fsSL "$url" || return 1
-            fi
-        elif type wget 2>/dev/null 1>&2; then
-            command wget ${${progress:--q}:#1} "$url" -O - || return 1
-        elif type lftp 2>/dev/null 1>&2; then
-            command lftp -c "cat $url" || return 1
-        else
-            .zinit-download-file-stdout "$url" "1" "$progress"
-            return $?
-        fi
-    }
-
-    return 0
-} # ]]]
+    if (( ${+commands[curl]} ))
+    then
+      if [[ -n $progress ]]
+      then
+        command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+      else
+        command curl -fsSL "$url" || return 1
+      fi
+    elif (( ${+commands[wget]} ))
+    then
+      command wget ${${progress:--q}:#1} "$url" -O - || return 1
+    elif (( ${+commands[lftp]} ))
+    then
+      command lftp -c "cat $url" || return 1
+    elif (( ${+commands[lynx]} ))
+    then
+      command lynx -source "$url" || return 1
+    else
+      +zinit-message "{u-warn}ERROR{b-warn}:{rst}No download tool detected" "(one of: {cmd}curl{rst}, {cmd}wget{rst}, {cmd}lftp{rst}," "{cmd}lynx{rst})."
+      return 2
+    fi
+  else
+    if type curl 2> /dev/null >&2
+    then
+      if [[ -n $progress ]]
+      then
+        command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+      else
+        command curl -fsSL "$url" || return 1
+      fi
+    elif type wget 2> /dev/null >&2
+    then
+      command wget ${${progress:--q}:#1} "$url" -O - || return 1
+    elif type lftp 2> /dev/null >&2
+    then
+      command lftp -c "cat $url" || return 1
+    else
+      .zinit-download-file-stdout "$url" "1" "$progress"
+      return $?
+    fi
+  fi
+  return 0
+}
 # FUNCTION: .zinit-get-url-mtime [[[
 # For the given URL returns the date in the Last-Modified
 # header as a time stamp
-.zinit-get-url-mtime() {
-    local url="$1" IFS line header
-    local -a cmd
-
-    setopt localoptions localtraps
-
-    (( !${path[(I)/usr/local/bin]} )) && \
-        {
-            path+=( "/usr/local/bin" );
-            trap "path[-1]=()" EXIT
-        }
-
-    if (( ${+commands[curl]} )) || type curl 2>/dev/null 1>&2; then
-        cmd=(command curl -sIL "$url")
-    elif (( ${+commands[wget]} )) || type wget 2>/dev/null 1>&2; then
-        cmd=(command wget --server-response --spider -q "$url" -O -)
-    else
-        REPLY=$(( $(date +"%s") ))
-        return 2
-    fi
-
-    "${cmd[@]}" |& command grep -i Last-Modified: | while read -r line; do
-        header="${${line#*, }//$'\r'}"
-    done
-
-    if [[ -z $header ]] {
-        REPLY=$(( $(date +"%s") ))
-        return 3
-    }
-
-    LANG=C TZ=UTC strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
-        REPLY=$(( $(date +"%s") ))
-        return 4
-    }
-
-    return 0
+.zinit-get-url-mtime () {
+  local url="$1" IFS line header 
+  local -a cmd
+  setopt localoptions localtraps
+  (( !${path[(I)/usr/local/bin]} )) && {
+    path+=("/usr/local/bin") 
+    trap "path[-1]=()" EXIT
+  }
+  if (( ${+commands[curl]} )) || type curl 2> /dev/null >&2
+  then
+    cmd=(command curl -sIL "$url") 
+  elif (( ${+commands[wget]} )) || type wget 2> /dev/null >&2
+  then
+    cmd=(command wget --server-response --spider -q "$url" -O -) 
+  else
+    REPLY=$(( $(date +"%s") )) 
+    return 2
+  fi
+  "${cmd[@]}" 2>&1 | command grep -i Last-Modified: | while read -r line
+  do
+    header="${${line#*, }//$'\r'}" 
+  done
+  if [[ -z $header ]]
+  then
+    REPLY=$(( $(date +"%s") )) 
+    return 3
+  fi
+  LANG=C TZ=UTC strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &> /dev/null || {
+    REPLY=$(( $(date +"%s") )) 
+    return 4
+  }
+  return 0
 } # ]]]
 # FUNCTION: .zinit-mirror-using-svn [[[
 # Used to clone subdirectories from Github. If in update mode
@@ -666,63 +635,64 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $1 - URL
 # $2 - mode, "" - normal, "-u" - update, "-t" - test
 # $3 - subdirectory (not path) with working copy, needed for -t and -u
-.zinit-mirror-using-svn() {
-    setopt localoptions extendedglob warncreateglobal
-    local url="$1" update="$2" directory="$3"
-
-    (( ${+commands[svn]} )) || \
-        builtin print -Pr -- "${ZINIT[col-error]}Warning:%f%b Subversion not found" \
-            ", please install it to use \`${ZINIT[col-obj]}svn%f%b' ice."
-
-    if [[ "$update" = "-t" ]]; then
-        (
-            () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
-            local -a out1 out2
-            out1=( "${(f@)"$(LANG=C svn info -r HEAD)"}" )
-            out2=( "${(f@)"$(LANG=C svn info)"}" )
-
-            out1=( "${(M)out1[@]:#Revision:*}" )
-            out2=( "${(M)out2[@]:#Revision:*}" )
-            [[ "${out1[1]##[^0-9]##}" != "${out2[1]##[^0-9]##}" ]] && return 0
-            return 1
-        )
-        return $?
-    fi
-    if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]; then
-        ( () { setopt localoptions noautopushd; builtin cd -q "$directory"; }
-          command svn update
-          return $? )
-    else
-        command svn checkout --non-interactive -q "$url" "$directory"
-    fi
+.zinit-mirror-using-svn () {
+  setopt localoptions extendedglob warncreateglobal
+  local url="$1" update="$2" directory="$3" 
+  (( ${+commands[svn]} )) || builtin print -Pr -- "${ZINIT[col-error]}Warning:%f%b Subversion not found" ", please install it to use \`${ZINIT[col-obj]}svn%f%b' ice."
+  if [[ "$update" = "-t" ]]
+  then
+    (
+      () {
+        setopt localoptions noautopushd
+        builtin cd -q "$directory"
+      }
+      local -a out1 out2
+      out1=("${(f@)"$(LANG=C svn info -r HEAD)"}") 
+      out2=("${(f@)"$(LANG=C svn info)"}") 
+      out1=("${(M)out1[@]:#Revision:*}") 
+      out2=("${(M)out2[@]:#Revision:*}") 
+      [[ "${out1[1]##[^0-9]##}" != "${out2[1]##[^0-9]##}" ]] && return 0
+      return 1
+    )
     return $?
+  fi
+  if [[ "$update" = "-u" && -d "$directory" && -d "$directory/.svn" ]]
+  then
+    (
+      () {
+        setopt localoptions noautopushd
+        builtin cd -q "$directory"
+      }
+      command svn update
+      return $?
+    )
+  else
+    command svn checkout --non-interactive -q "$url" "$directory"
+  fi
+  return $?
 } # ]]]
 # FUNCTION: .zinit-forget-completion [[[
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
 #
 # $1 - completion function name, e.g. "_cp"; can also be "cp"
-.zinit-forget-completion() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt extendedglob typesetsilent warncreateglobal
-
-    local f="$1" quiet="$2"
-
-    typeset -a commands
-    commands=( ${(k)_comps[(Re)$f]} )
-
-    [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && builtin print -Prn "Forgetting commands completed by \`${ZINIT[col-obj]}$f%f%b': "
-
-    local k
-    integer first=1
-    for k ( $commands ) {
-        unset "_comps[$k]"
-        (( quiet )) || builtin print -Prn "${${first:#1}:+, }${ZINIT[col-info]}$k%f%b"
-        first=0
-    }
-    (( quiet || first )) || builtin print
-
-    unfunction -- 2>/dev/null "$f"
+.zinit-forget-completion () {
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  setopt extendedglob typesetsilent warncreateglobal
+  local f="$1" quiet="$2" 
+  typeset -a commands
+  commands=(${(k)_comps[(Re)$f]}) 
+  [[ "${#commands}" -gt 0 ]] && (( quiet == 0 )) && builtin print -Prn "Forgetting commands completed by \`${ZINIT[col-obj]}$f%f%b': "
+  local k
+  integer first=1 
+  for k in $commands
+  do
+    unset "_comps[$k]"
+    (( quiet )) || builtin print -Prn "${${first:#1}:+, }${ZINIT[col-info]}$k%f%b"
+    first=0 
+  done
+  (( quiet || first )) || builtin print
+  unfunction -- "$f" 2> /dev/null
 } # ]]]
 # FUNCTION: .zinit-compile-plugin [[[
 # Compiles given plugin (its main source file, and also an
@@ -730,96 +700,100 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-.zinit-compile-plugin() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
-
-    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet
-    local -a list
-
-    local -A ICE
-    .zinit-compute-ice "$id_as" "pack" \
-        ICE plugin_dir filename is_snippet || return 1
-
-    if [[ ${ICE[pick]} != /dev/null && ${ICE[as]} != null && \
-        ${+ICE[null]} -eq 0 && ${ICE[as]} != command && ${+ICE[binary]} -eq 0 && \
-        ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! )
-    ]] {
-        reply=()
-        if [[ -n ${ICE[pick]} ]]; then
-            list=( ${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN) )
-            if [[ ${#list} -eq 0 ]] {
-                builtin print "No files for compilation found (pick-ice didn't match)."
-                return 1
-            }
-            reply=( "${list[1]:h}" "${list[1]}" )
-        else
-            if (( is_snippet )) {
-                if [[ -f $plugin_dir/$filename ]] {
-                    reply=( "$plugin_dir" $plugin_dir/$filename )
-                } elif { ! .zinit-first % "$plugin_dir" } {
-                    +zinit-message "No files for compilation found."
-                    return 1
-                }
-            } else {
-                .zinit-first "$1" "$2" || {
-                    +zinit-message "No files for compilation found."
-                    return 1
-                }
-            }
+.zinit-compile-plugin () {
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+  local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet 
+  local -a list
+  local -A ICE
+  .zinit-compute-ice "$id_as" "pack" ICE plugin_dir filename is_snippet || return 1
+  if [[ ${ICE[pick]} != /dev/null && ${ICE[as]} != null && ${+ICE[null]} -eq 0 && ${ICE[as]} != command && ${+ICE[binary]} -eq 0 && ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! ) ]]
+  then
+    reply=() 
+    if [[ -n ${ICE[pick]} ]]
+    then
+      list=(${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN)) 
+      if [[ ${#list} -eq 0 ]]
+      then
+        builtin print "No files for compilation found (pick-ice didn't match)."
+        return 1
+      fi
+      reply=("${list[1]:h}" "${list[1]}") 
+    else
+      if (( is_snippet ))
+      then
+        if [[ -f $plugin_dir/$filename ]]
+        then
+          reply=("$plugin_dir" $plugin_dir/$filename) 
+        elif {
+            ! .zinit-first % "$plugin_dir"
+          }
+        then
+          +zinit-message "No files for compilation found."
+          return 1
         fi
-        local pdir_path=${reply[-2]}
-        first=${reply[-1]}
-        local fname=${first#$pdir_path/}
-
-        +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {b}{file}$fname{rst}{…}"
-        if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
-            () {
-                builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
-                if { ! zcompile -U "$first" } {
-                    +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
-                    +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
-                } else {
-                    +zinit-message " {ok}OK{rst}."
-                }
-                # Try to catch possible additional file
-                zcompile -U "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
-            }
+      else
+        .zinit-first "$1" "$2" || {
+          +zinit-message "No files for compilation found."
+          return 1
         }
-    }
-
-    if [[ -n "${ICE[compile]}" ]]; then
-        local -a pats
-        pats=( ${(s.;.)ICE[compile]} )
-        local pat
-        list=()
-        for pat ( $pats ) {
-            eval "list+=( \$plugin_dir/$~pat(N) )"
-        }
-        if [[ ${#list} -eq 0 ]] {
-            +zinit-message "{u-warn}Warning{b-warn}:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
-        } else {
-            integer retval
-            for first in $list; do
-                () {
-                    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
-                    zcompile -U "$first"; retval+=$?
-                }
-            done
-            builtin print -rl -- ${list[@]#$plugin_dir/} >! ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
-            if (( retval )) {
-                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
-                    "are listed in the {var}\$ADD_COMPILED{rst} array (operation exit" \
-                    "code: {ehi}$retval{rst})."
-            } else {
-                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
-                    "are listed in the {var}\$ADD_COMPILED{rst} array."
-            }
-        }
+      fi
     fi
-
-    return 0
-} # ]]]
+    local pdir_path=${reply[-2]} 
+    first=${reply[-1]} 
+    local fname=${first#$pdir_path/} 
+    +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {b}{file}$fname{rst}{…}"
+    if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]]
+    then
+      () {
+        builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
+        if {
+            ! zcompile -U "$first"
+          }
+        then
+          +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
+          +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
+        else
+          +zinit-message " {ok}OK{rst}."
+        fi
+        zcompile -U "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2> /dev/null
+      }
+    fi
+  fi
+  if [[ -n "${ICE[compile]}" ]]
+  then
+    local -a pats
+    pats=(${(s.;.)ICE[compile]}) 
+    local pat
+    list=() 
+    for pat in $pats
+    do
+      eval "list+=( \$plugin_dir/$~pat(N) )"
+    done
+    if [[ ${#list} -eq 0 ]]
+    then
+      +zinit-message "{u-warn}Warning{b-warn}:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
+    else
+      integer retval
+      for first in $list
+      do
+        () {
+          builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
+          zcompile -U "$first"
+          retval+=$? 
+        }
+      done
+      builtin print -rl -- ${list[@]#$plugin_dir/} >| ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
+      if (( retval ))
+      then
+        +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" "are listed in the {var}\$ADD_COMPILED{rst} array (operation exit" "code: {ehi}$retval{rst})."
+      else
+        +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" "are listed in the {var}\$ADD_COMPILED{rst} array."
+      fi
+    fi
+  fi
+  return 0
+}
 # FUNCTION: .zinit-download-snippet [[[
 # Downloads snippet – either a file – with curl, wget, lftp or lynx,
 # or a directory, with Subversion – when svn-ICE is active. Github
@@ -2357,50 +2331,45 @@ zimv() {
     return "$rc"
 } # ]]]
 # FUNCTION: ∞zinit-atpull-hook [[[
-∞zinit-atpull-hook() {
-    (( ${+ICE[atpull]} )) || return 0
-    [[ -n ${ICE[atpull]} ]] || return 0
-    # Exit early if atpull"!cmd" -> this is done by zinit-atpull-e-hook
-    [[ $ICE[atpull] == "!"* ]] && return 0
-
-    [[ "$1" == plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
-        local dir="${4#%}" hook="$5" subtype="$6"
-
-    local atpull=${ICE[atpull]}
-    local rc=0
-
-    .zinit-countdown atpull && {
-        local ___oldcd=$PWD
-        (( ${+ICE[nocd]} == 0 )) && {
-            () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
-        }
-        .zinit-at-eval "$atpull" $ICE[atclone]
-        rc="$?"
-        () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
+∞zinit-atpull-hook () {
+  (( ${+ICE[atpull]} )) || return 0
+  [[ -n ${ICE[atpull]} ]] || return 0
+  [[ $ICE[atpull] == "!"* ]] && return 0
+  [[ "$1" == plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6"
+  local atpull=${ICE[atpull]}
+  local rc=0
+  .zinit-countdown atpull && {
+    local ___oldcd=$PWD
+    (( ${+ICE[nocd]} == 0 )) && {
+      () {
+        setopt localoptions noautopushd
+        builtin cd -q "$dir"
+      }
     }
-
-    return "$rc"
+    .zinit-at-eval "$atpull" $ICE[atclone]
+    rc="$?"
+    () {
+      setopt localoptions noautopushd
+      builtin cd -q "$___oldcd"
+    }
+  }
+  return "$rc"
 } # ]]]
 # FUNCTION: ∞zinit-ps-on-update-hook [[[
-∞zinit-ps-on-update-hook() {
-    [[ -z $ICE[ps-on-update] ]] && return 0
-
-    [[ "$1" = plugin ]] && \
-        local tpe="$1" dir="${5#%}" hook="$6" subtype="$7" || \
-        local tpe="$1" dir="${4#%}" hook="$5" subtype="$6"
-
-    if (( !OPTS[opt_-q,--quiet] )) {
-        +zinit-message "Running $tpe's provided update code: {info}${ICE[ps-on-update][1,50]}${ICE[ps-on-update][51]:+…}{rst}"
-        (
-            builtin cd -q "$dir" || return 1
-            eval "$ICE[ps-on-update]"
-        )
-    } else {
-        (
-            builtin cd -q "$dir" || return 1
-            eval "$ICE[ps-on-update]" &> /dev/null
-        )
-    }
+∞zinit-ps-on-update-hook () {
+  [[ -z $ICE[ps-on-update] ]] && return 0
+  [[ "$1" = plugin ]] && local tpe="$1" dir="${5#%}" hook="$6" subtype="$7"  || local tpe="$1" dir="${4#%}" hook="$5" subtype="$6"
+  if (( !OPTS[opt_-q,--quiet] ))
+  then
+    +zinit-message "Running $tpe's provided update code: {info}${ICE[ps-on-update][1,50]}${ICE[ps-on-update][51]:+…}{rst}"
+    (
+      builtin cd -q "$dir" || return 1
+      eval "$ICE[ps-on-update]"
+    )
+  else
+    (
+      builtin cd -q "$dir" || return 1
+      eval "$ICE[ps-on-update]" &> /dev/null
+    )
+  fi
 } # ]]]
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
