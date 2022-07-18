@@ -1241,7 +1241,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   local HAS_MUSL
   if (( $+commands[musl-gcc] )); then
-    && HAS_MUSL='linux-musl' 
+    HAS_MUSL='linux-musl' 
   elif find /lib/ -maxdepth 1 -name '*musl*' > /dev/null 2>&1; then
     HAS_MUSL='linux-musl' 
   else
