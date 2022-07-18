@@ -162,8 +162,8 @@ Called by:
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit-install.zsh/.zinit-update-snippet
  zinit-install.zsh/ziextract
- zinit-install.zsh/→zinit-extract
  zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/→zinit-extract
  zinit-install.zsh/∞zinit-mv-hook
  zinit-install.zsh/∞zinit-ps-on-update-hook
  zinit-install.zsh/∞zinit-reset-hook
@@ -1379,7 +1379,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
