@@ -10,280 +10,197 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # FUNCTION: .zinit-jq-check [[[
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
-.zinit-jq-check() {
-    command -v jq >/dev/null && return 0
-
-    +zinit-message "{error}❌ ERROR: jq binary not found" \
-        "{nl}{u-warn}Please install jq:{rst}" \
-        "https://github.com/stedolan/jq" \
-        "{nl}{u-warn}To do so with zinit, please refer to:{rst}" \
-        "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
-    return 1
-} # ]]]
+.zinit-jq-check () {
+  command -v jq > /dev/null && return 0
+  +zinit-message "{error}❌ ERROR: jq binary not found" "{nl}{u-warn}Please install jq:{rst}" "https://github.com/stedolan/jq" "{nl}{u-warn}To do so with zinit, please refer to:{rst}" "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
+  return 1
+}
 # FUNCTION: .zinit-json-get-value [[[
 # Wrapper around jq that return the value of a property
 # $1: JSON structure
 # $2: jq path
-.zinit-json-get-value() {
-    .zinit-jq-check || return 1
-
-    local jsonstr=$1 jqpath=$2
-    jq -er ".${jqpath}" <<< "$jsonstr"
-} # ]]]
+.zinit-json-get-value () {
+  .zinit-jq-check || return 1
+  local jsonstr=$1 jqpath=$2
+  jq -er ".${jqpath}" <<< "$jsonstr"
+}
 # FUNCTION: .zinit-json-to-array [[[
 # Wrapper around jq that sets key/values of an associative array, replicating
 # the structure of a given JSON object
 # $1: JSON structure
 # $2: jq path
 # $3: name of the associative array to store the key/value pairs in
-.zinit-json-to-array() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt localoptions noglob
-
-    .zinit-jq-check || return 1
-
-    local jsonstr=$1 jqpath=$2 varname=$3
-
-    (( ${(P)+varname} )) || typeset -gA "$varname"
-
-    # NOTE We're not using @sh for the keys on purpose. Associative
-    # array keys are used verbatim by zsh:
-    # typeset -A a; a[key]=one; a['key']=two; echo ${(k)a}
-    # 'key' key
-    local evalstr=$(command jq -er --arg varname $varname \
-        '.'${jqpath}' | to_entries |
-        map($varname + "[\(.key)]=\(.value | @sh);")[]' \
-        <<< "$jsonstr")
-    eval "$evalstr"
+.zinit-json-to-array () {
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  setopt localoptions noglob
+  .zinit-jq-check || return 1
+  local jsonstr=$1 jqpath=$2 varname=$3
+  (( ${(P)+varname} )) || typeset -gA "$varname"
+  local evalstr=$(command jq -er --arg varname $varname '.'${jqpath}' | to_entries | map($varname + "[\(.key)]=\(.value | @sh);")[]' <<< "$jsonstr")
+  eval "$evalstr"
 } # ]]]
 # FUNCTION: .zinit-get-package [[[
-.zinit-get-package() {
-    .zinit-jq-check || return 1
-
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
-
-    local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 \
-        ver=${ICE[ver]} local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} \
-        pkgjson tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
-    local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ver:-${ZINIT[PACKAGES_BRANCH]}}/${pkg}/package.json
-
-    # Consume, ie delete the ver ice to avoid being consumed again at
-    # git-clone time
-    [[ -n "$ver" ]] && unset 'ICE[ver]'
-
-    local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
-        tool_sep="{rst}, {cmd}" \
-        lhi_hl="{lhi}" profile_hl="{profile}"
-
-    trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
-    trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
-
-    # Check if we were provided with a local path to a package.json
-    # as in:
-    # zinit pack'/zp/firefox-dev/package.json:default' for firefox-dev
-    if [[ $profile == ./* || $profile == /* ]] {
-        local localpkg=1
-        # FIXME below only works if there are no ':' in the path
-        tmpfile=${profile%:*}
-        profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
-    } elif { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
-        # retry
-        command rm -f $tmpfile
-        .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
+.zinit-get-package () {
+  .zinit-jq-check || return 1
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+  local user=$1 pkg=$2 plugin=$2 id_as=$3 dir=$4 profile=$5 ver=${ICE[ver]} local_path=${ZINIT[PLUGINS_DIR]}/${3//\//---} pkgjson tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
+  local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ver:-${ZINIT[PACKAGES_BRANCH]}}/${pkg}/package.json
+  [[ -n "$ver" ]] && unset 'ICE[ver]'
+  local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" tool_sep="{rst}, {cmd}" lhi_hl="{lhi}" profile_hl="{profile}"
+  trap "rmdir ${(qqq)local_path} 2>/dev/null; return 1" INT TERM QUIT HUP
+  trap "rmdir ${(qqq)local_path} 2>/dev/null" EXIT
+  if [[ $profile == ./* || $profile == /* ]]
+  then
+    local localpkg=1
+    tmpfile=${profile%:*}
+    profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
+  elif {
+      ! .zinit-download-file-stdout $URL 0 1 2> /dev/null > $tmpfile
     }
-
-    # load json from file
-    [[ -e $tmpfile ]] && pkgjson="$(<$tmpfile)"
-
-    # Set package name (used later in the output)
-    local pkgname=${${id_as##_unknown}:-${pkg:-${plugin}}}
-    [[ -n "$localpkg" ]] && pkgname="{pid}$pkgname{rst} {note}[$tmpfile]{rst}"
-
-    if [[ -z $pkgjson ]] {
-        +zinit-message "{error}❌ Error: the package {hi}${pkgname}" \
-                       "{error}couldn't be found.{rst}"
-        return 1
-    }
-
-    # root field, where the relevant data is stored
-    local json_root='["zsh-data"]'
-    local json_ices="${json_root}[\"zinit-ices\"]"
-    local json_meta="${json_root}[\"plugin-info\"]"
-
-    local -a profiles
-    profiles=("${(@f)$(.zinit-json-get-value "$pkgjson" "${json_ices} | keys[]")}") \
-        || return 1
-
-    # Check if user requested an unknown profile
-    if ! (( ${profiles[(I)${profile}]} )) {
-        # Assumption: the default profile is the first in the table (-> different color).
-        +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
-            "{error}couldn't be found, aborting. Available profiles are:" \
-            "{lhi}${(pj:$epro_sep:)profiles[@]}{error}.{rst}"
-        return 1
-    }
-    local json_profile="${json_ices}[\"${profile}\"]"
-
-    local -A metadata
-    .zinit-json-to-array "$pkgjson" "$json_meta" metadata
-    if [[ "$?" -ne 0 || -z "$metadata" ]] {
-        +zinit-message '{error}❌ ERROR: Failed to retrieve metadata from package.json'
-        return 1
-    }
-
-    local user=${metadata[user]} plugin=${metadata[plugin]} \
-        message=${metadata[message]} url=${metadata[url]}
-
-    .zinit-json-to-array "$pkgjson" "$json_profile" ICE
-    local -a requirements
-
-    # FIXME requires shouldn't be stored under zinit-ices...
-    if [[ -n "$ICE[requires]" ]] {
-        # split requirements on ';'
-        requirements=(${(s.;.)${ICE[requires]}})
-        unset 'ICE[requires]'
-    }
-
-    [[ ${ICE[as]} == program ]] && ICE[as]="command"
-    [[ -n ${ICE[on-update-of]} ]] && ICE[subscribe]="${ICE[subscribe]:-${ICE[on-update-of]}}"
-    [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
-
-    # FIXME Do we even need that? If yes, we may want to do that in
-    # .zinit-json-to-array
-    if [[ -n ${ICE[id-as]} ]] {
-        @zinit-substitute 'ICE[id-as]'
-        local -A map
-        map=( "\"" "\\\"" "\\" "\\" )
-        eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
-    }
-
-    +zinit-message "{info3}Package{ehi}:{rst} ${pkgname}. Selected" \
-        "profile{ehi}:{rst} {hi}$profile{rst}. Available" \
-        "profiles:${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl}" \
-        "${(pj:$pro_sep:)profiles[@]}{rst}."
-
-    if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]] {
-        +zinit-message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}" \
-            "profiles (if any are available) are the recommended ones (the reason" \
-            "is that they expose the binaries provided by the package without" \
-            "altering (i.e.: {slight}cluttering{rst}{…}) the {var}\$PATH{rst}" \
-            "environment variable)."
-    }
-
-    local required
-    for required ( $requirements ) {
-        if [[ $required == (bgn|dl|monitor) ]]; then
-            if [[ ( $required == bgn && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-bin-gem-node *]} ) || \
-                ( $required == dl && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ) || \
-                ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-readurl *]} )
-            ]]; then
-                local -A namemap
-                namemap=( bgn bin-gem-node dl patch-dl monitor readurl )
-                +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
-                if [[ -z ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
-                    +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
-                else
-                    +zinit-message -n "{error}package {pid}$pkg{error} "
-                fi
-                +zinit-message '{error}requires the {apo}`{annex}'${namemap[$required]}'{apo}`' \
-                    "{error}annex, which is currently not installed." \
-                    "{nl}{nl}If you'd like to install it, you can visit its homepage:" \
-                    "{nl}– {url}https://github.com/zdharma-continuum/zinit-annex-${(L)namemap[$required]}{rst}" \
-                    "{nl}for instructions."
-                (( ${#profiles[@]:#$profile} > 0 )) && \
-                    +zinit-message "{nl}Other available profiles are:" \
-"{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
-
-                return 1
-            fi
+  then
+    command rm -f $tmpfile
+    .zinit-download-file-stdout $URL 1 1 $tmpfile 2> /dev/null > 1
+  fi
+  [[ -e $tmpfile ]] && pkgjson="$(<$tmpfile)"
+  local pkgname=${${id_as##_unknown}:-${pkg:-${plugin}}}
+  [[ -n "$localpkg" ]] && pkgname="{pid}$pkgname{rst} {note}[$tmpfile]{rst}"
+  if [[ -z $pkgjson ]]
+  then
+    +zinit-message "{error}❌ Error: the package {hi}${pkgname}" "{error}couldn't be found.{rst}"
+    return 1
+  fi
+  local json_root='["zsh-data"]'
+  local json_ices="${json_root}[\"zinit-ices\"]"
+  local json_meta="${json_root}[\"plugin-info\"]"
+  local -a profiles
+  profiles=("${(@f)$(.zinit-json-get-value "$pkgjson" "${json_ices} | keys[]")}")  || return 1
+  if ! (( ${profiles[(I)${profile}]} ))
+  then
+    +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" "{error}couldn't be found, aborting. Available profiles are:" "{lhi}${(pj:$epro_sep:)profiles[@]}{error}.{rst}"
+    return 1
+  fi
+  local json_profile="${json_ices}[\"${profile}\"]"
+  local -A metadata
+  .zinit-json-to-array "$pkgjson" "$json_meta" metadata
+  if [[ "$?" -ne 0 || -z "$metadata" ]]
+  then
+    +zinit-message '{error}❌ ERROR: Failed to retrieve metadata from package.json'
+    return 1
+  fi
+  local user=${metadata[user]} plugin=${metadata[plugin]} message=${metadata[message]} url=${metadata[url]}
+  .zinit-json-to-array "$pkgjson" "$json_profile" ICE
+  local -a requirements
+  if [[ -n "$ICE[requires]" ]]
+  then
+    requirements=(${(s.;.)${ICE[requires]}})
+    unset 'ICE[requires]'
+  fi
+  [[ ${ICE[as]} == program ]] && ICE[as]="command"
+  [[ -n ${ICE[on-update-of]} ]] && ICE[subscribe]="${ICE[subscribe]:-${ICE[on-update-of]}}"
+  [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
+  if [[ -n ${ICE[id-as]} ]]
+  then
+    @zinit-substitute 'ICE[id-as]'
+    local -A map
+    map=("\"" "\\\"" "\\" "\\")
+    eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
+  fi
+  +zinit-message "{info3}Package{ehi}:{rst} ${pkgname}. Selected" "profile{ehi}:{rst} {hi}$profile{rst}. Available" "profiles:${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl}" "${(pj:$pro_sep:)profiles[@]}{rst}."
+  if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]]
+  then
+    +zinit-message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}""profiles (if any are available) are the recommended ones (the reason" "is that they expose the binaries provided by the package without" "altering (i.e.: {slight}cluttering{rst}{…}) the {var}\$PATH{rst}" "environment variable)."
+  fi
+  local required
+  for required in $requirements
+  do
+    if [[ $required == (bgn|dl|monitor) ]]
+    then
+      if [[ ( $required == bgn && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-bin-gem-node *]} ) || ( $required == dl && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ) || ( $required == monitor && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-readurl *]} ) ]]
+      then
+        local -A namemap
+        namemap=(bgn bin-gem-node dl patch-dl monitor readurl)
+        +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
+        if [[ -z ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]
+        then
+          +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
         else
-            if ! command -v $required &>/dev/null; then
-                +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
-                if [[ -n ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
-                    +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
-                else
-                    +zinit-message -n "{error}package {pid}$pkg{error} "
-                fi
-                +zinit-message '{error}requires a {apo}`{cmd}'$required'{apo}`{error}' \
-                    "command to be available in {var}\$PATH{error}.{rst}" \
-                    "{nl}{error}The package cannot be installed unless the" \
-                    "command will be available."
-                (( ${#profiles[@]:#$profile} > 0 )) && \
-                    +zinit-message "{nl}Other available profiles are:" \
-                        "{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
-                return 1
-            fi
+          +zinit-message -n "{error}package {pid}$pkg{error} "
         fi
-    }
-
-    if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ]] {
-        +zinit-message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" \
-            "{ice}dl''{rst} ice however there's currently no {annex}zinit-annex-patch-dl{rst}" \
-            "annex loaded, which provides it."
-        +zinit-message "The ice will be inactive, i.e.: no additional" \
-            "files will become downloaded (the ice downloads the given URLs)." \
-            "The package should still work, as it doesn't indicate to" \
-            "{u}{slight}require{rst} the annex."
-        +zinit-message "{nl}You can download the" \
-            "annex from its homepage at {url}https://github.com/zdharma-continuum/zinit-annex-patch-dl{rst}."
-    }
-
-    [[ -n ${message} ]] && +zinit-message "{info}${message}{rst}"
-
-    if (( ${+ICE[is-snippet]} )) {
-        reply=( "" "$url" )
-        REPLY=snippet
-        return 0
-    }
-
-    # FIXME This part below is a bit odd since it essentially replicates what
-    # the dl ice supposed to be doing.
-    # TL;DR below downloads whatever url is stored in the "_resolved" field
-    if (( !${+ICE[git]} && !${+ICE[from]} )) {
-        (
-            local -A jsondata
-            local URL=$(.zinit-json-get-value "$pkgjson" "_resolved")
-            local fname="${${URL%%\?*}:t}"
-
-            command mkdir -p $dir || {
-                +zinit-message "{u-warn}Error{b-warn}:{error} Couldn't create directory:" \
-                    "{dir}$dir{error}, aborting.{rst}"
-                return 1
-            }
-            builtin cd -q $dir || return 1
-
-            +zinit-message "Downloading tarball for {pid}$plugin{rst}{…}"
-
-            if { ! .zinit-download-file-stdout "$URL" 0 1 >! "$fname" } {
-                if { ! .zinit-download-file-stdout "$URL" 1 1 >! "$fname" } {
-                    command rm -f "$fname"
-                    +zinit-message "Download of the file {apo}\`{file}$fname{apo}\`{rst}" \
-                        "failed. No available download tool? One of:" \
-                        "{cmd}${(pj:$tool_sep:)${=:-curl wget lftp lynx}}{rst}."
-
-                    return 1
-                }
-            }
-
-            # --move is default (or as explicit, when extract'!…' is given)
-            # Also possible is --move2 when extract'!!…' given
-            ziextract "$fname" ${ICE[extract]---move} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
-            return 0
-        ) && {
-            reply=( "$user" "$plugin" )
-            REPLY=tarball
+        +zinit-message '{error}requires the {apo}`{annex}'${namemap[$required]}'{apo}`' "{error}annex, which is currently not installed." "{nl}{nl}If you'd like to install it, you can visit its homepage:" "{nl}– {url}https://github.com/zdharma-continuum/zinit-annex-${(L)namemap[$required]}{rst}" "{nl}for instructions."
+        (( ${#profiles[@]:#$profile} > 0 )) && +zinit-message "{nl}Other available profiles are:" "{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
+        return 1
+      fi
+    else
+      if ! command -v $required &> /dev/null
+      then
+        +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
+        if [[ -n ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]
+        then
+          +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
+        else
+          +zinit-message -n "{error}package {pid}$pkg{error} "
+        fi
+        +zinit-message '{error}requires a {apo}`{cmd}'$required'{apo}`{error}' "command to be available in {var}\$PATH{error}.{rst}" "{nl}{error}The package cannot be installed unless the" "command will be available."
+        (( ${#profiles[@]:#$profile} > 0 )) && +zinit-message "{nl}Other available profiles are:" "{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
+        return 1
+      fi
+    fi
+  done
+  if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ]]
+  then
+    +zinit-message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" "{ice}dl''{rst} ice however there's currently no {annex}zinit-annex-patch-dl{rst}" "annexloaded, which provides it."
+    +zinit-message "The ice will be inactive, i.e.: no additional" "files will become downloaded (the ice downloads the given URLs)." "The package should still work, as it doesn't indicate to" "{u}{slight}require{rst} the annex."
+    +zinit-message "{nl}You can download the" "annex from its homepage at {url}https://github.com/zdharma-continuum/zinit-annex-patch-dl{rst}."
+  fi
+  [[ -n ${message} ]] && +zinit-message "{info}${message}{rst}"
+  if (( ${+ICE[is-snippet]} ))
+  then
+    reply=("" "$url")
+    REPLY=snippet
+    return 0
+  fi
+  if (( !${+ICE[git]} && !${+ICE[from]} ))
+  then
+    (
+      local -A jsondata
+      local URL=$(.zinit-json-get-value "$pkgjson" "_resolved")
+      local fname="${${URL%%\?*}:t}"
+      command mkdir -p $dir || {
+        +zinit-message "{u-warn}Error{b-warn}:{error} Couldn't create directory:" "{dir}$dir{error}, aborting.{rst}"
+        return 1
+      }
+      builtin cd -q $dir || return 1
+      +zinit-message "Downloading tarball for {pid}$plugin{rst}{…}"
+      if {
+          ! .zinit-download-file-stdout "$URL" 0 1 >| "$fname"
         }
-    } else {
-            reply=( "${ICE[user]:-$user}" "${ICE[plugin]:-$plugin}" )
-            if [[ ${ICE[from]} = (|gh-r|github-rel) ]]; then
-                REPLY=github
-            else
-                REPLY=unknown
-            fi
+      then
+        if {
+            ! .zinit-download-file-stdout "$URL" 1 1 >| "$fname"
+          }
+        then
+          command rm -f "$fname"
+          +zinit-message "Download of the file {apo}\`{file}$fname{apo}\`{rst}" "failed. No available download tool? One of:" "{cmd}${(pj:$tool_sep:)${=:-curl wget lftp lynx}}{rst}."
+          return 1
+        fi
+      fi
+      ziextract "$fname" ${ICE[extract]---move} ${${(M)ICE[extract]:#!([^!]|(#e))*}:+--move} ${${(M)ICE[extract]:#!!*}:+--move2}
+      return 0
+    ) && {
+      reply=("$user" "$plugin")
+      REPLY=tarball
     }
-
-    return $?
+  else
+    reply=("${ICE[user]:-$user}" "${ICE[plugin]:-$plugin}")
+    if [[ ${ICE[from]} = (|gh-r|github-rel) ]]
+    then
+      REPLY=github
+    else
+      REPLY=unknown
+    fi
+  fi
+  return $?
 } # ]]]
 # FUNCTION: .zinit-setup-plugin-dir [[[
 # Clones given plugin into PLUGIN_DIR. Supports multiple
@@ -2156,7 +2073,6 @@ zimv() {
             ZINIT[-r/--reset-opt-hook-has-been-run]=1
         }
     } else {
-        # If there's no -r/--reset, pretend that it already has been served.
         ZINIT[-r/--reset-opt-hook-has-been-run]=1
     }
 } # ]]]
@@ -2179,42 +2095,57 @@ zimv() {
 # the starting steps are rigid and the same in all
 # hooks, hence the idea. TODO: use in make'' and other
 # places.
-∞zinit-configure-base-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
-        local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
-
-    local configure=${ICE[configure]}
-    @zinit-substitute configure
-
-    (( ${+ICE[configure]} )) || return 0
-    if [[ $ex = "!" ]]; then
-        [[ $configure[1,2] == *\!* ]] || return 0
-    else
-        [[ $configure[1,2] != *\!* ]] || return 0
-    fi
-
+∞zinit-configure-base-hook () {
+  [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7" ex="$8"  || local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
+  local configure=${ICE[configure]}
+  @zinit-substitute configure
+  (( ${+ICE[configure]} )) || return 0
+  if [[ $ex = "!" ]]; then
+    [[ $configure[1,2] == *\!* ]] || return 0
+  else
+    [[ $configure[1,2] != *\!* ]] || return 0
+  fi
+  if [[ ! -f "${dir}"/configure ]]; then
     if [[ $configure[1,2] == *\#* ]]; then
-        if [[ -f $dir/autogen.sh ]]; then
-            m {pre}Running {cmd}./autogen.sh{…}
-            chmod +x $dir/autogen.sh
-            .zinit-countdown ./autogen.sh && \
-                ( cd -q "$dir"; ./autogen.sh )
-        else
-            m {ehi}WARNING:{error}: No {cmd}autogen.sh{error} on disk while {obj2}\#\
-                {error}flag given to the {ice}configure{apo}\'\'{error} ice, skipping{…}
-        fi
+      if [[ -f "${dir}"/autogen.sh ]]; then
+        +zinit-message "{pre}Running {cmd}./autogen.sh{…}"
+        (
+          cd -q "${dir}"
+          chmod +x ./autogen.sh
+          ./autogen.sh
+        )
+      elif [[ -f "${dir}"/configure.ac ]]; then
+        (
+          cd -q "${dir}"
+          autoconf && [[ -f "${dir}"/configure ]]
+        )
+      elif [[ -f "${dir}"/aclocal.m4 ]]; then
+        (
+          cd -q "${dir}"
+          aclocal
+          automake --add-missing
+          automake
+          autoconf
+        ) && [[ -f "${dir}"/configure ]]
+      else
+        +zinit-message "{ehi}WARNING:{error}: No {cmd}autogen.sh{error} on disk while {obj2}{error}flag given to the {ice}configure{apo}{error} ice, skipping{…}"
+      fi
     else
-        if [[ -f $dir/autogen.sh && ! -f $dir/configure ]]; then
-            m {pre}Running {cmd}./autogen.sh{pre}, because no {cmd}configure{pre} found{…}
-            .zinit-countdown ./autogen.sh && \
-                ( cd -q "$dir"; ./autogen.sh )
-        fi
+      if [[ -f "${dir}"/autogen.sh && ! -f "${dir}"/configure ]]; then
+        +zinit-message "{pre}Running {cmd}./autogen.sh{pre}, because no {cmd}configure{pre} found{…}"
+        (
+          cd -q "${dir}"
+          ./autogen.sh
+        )
+      fi
     fi
-    m {pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}$ZPFX{nb}{…}
-    configure=${configure##(\!\#|\#\!|\!|\#)}
-    .zinit-countdown ./configure && \
-        ( cd -q "$dir"; ./configure --prefix=$ZPFX ${(@s; ;)configure} )
+  fi
+  +zinit-message "{pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}${dir}{nb}{…}"
+  configure=${configure##(\!\#|\#\!|\!|\#)}
+  (
+    cd -q "${dir}"
+    ./configure --prefix="${dir}" ${(@s; ;)configure}
+  )
 } # ]]]
 # FUNCTION: ∞zinit-make-ee-hook [[[
 ∞zinit-make-ee-hook() {
