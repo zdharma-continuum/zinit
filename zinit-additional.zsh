@@ -10,11 +10,11 @@
 #
 
 # FUNCTION: .zinit-clear-debug-report [[[
-.zinit-clear-debug-report () {
+.zinit-clear-debug-report() {
   .zinit-clear-report-for _dtrace/_dtrace
 } # ]]]
 # FUNCTION: .zinit-debug-start [[[
-.zinit-debug-start () {
+.zinit-debug-start() {
   if [[ ${ZINIT[DTRACE]} = 1 ]]
   then
     +zinit-message "{error}Dtrace is already active, stop it first with \`dstop'{rst}"
@@ -25,13 +25,13 @@
   .zinit-tmp-subst-on dtrace
 } # ]]]
 # FUNCTION: .zinit-debug-stop [[[
-.zinit-debug-stop () {
+.zinit-debug-stop() {
   ZINIT[DTRACE]=0
   .zinit-tmp-subst-off dtrace
   .zinit-diff _dtrace/_dtrace end
 } # ]]]
 # FUNCTION: .zinit-debug-unload [[[
-.zinit-debug-unload () {
+.zinit-debug-unload() {
   (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
   if [[ ${ZINIT[DTRACE]} = 1 ]]
   then
@@ -46,7 +46,7 @@
 #
 
 # FUNCTION: .zinit-service [[[
-.zinit-service () {
+.zinit-service() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob warncreateglobal typesetsilent noshortloops
   local ___tpe="$1" ___mode="$2" ___id="$3" ___fle="${ZINIT[SERVICES_DIR]}/${ICE[service]}.lock" ___fd ___cmd ___tmp ___lckd ___strd=0
@@ -113,7 +113,7 @@
   done >>| "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
 } # ]]]
 # FUNCTION: .zinit-wrap-track-functions [[[
-.zinit-wrap-track-functions () {
+.zinit-wrap-track-functions() {
   local user="$1" plugin="$2" id_as="$3" f
   local -a wt
   wt=(${(@s.;.)ICE[wrap-track]})
@@ -132,11 +132,11 @@ function $f {
     .zinit-diff \"\${ZINIT[CUR_USPL2]}\" end
     .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
-}"
+    }"
   done
 } # ]]]
 # FUNCTION: :zinit-tmp-subst-source [[[
-:zinit-tmp-subst-source () {
+:zinit-tmp-subst-source() {
   local -a ___substs ___ab
   ___substs=("${(@s.;.)ICE[subst]}")
   if [[ -n ${(M)___substs:#*\\(#e)} ]]
