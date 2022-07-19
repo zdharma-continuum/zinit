@@ -1,0 +1,4 @@
+# Prepend directories carrying libs and headers to appropriate vars
+export CPPFLAGS="-I$ZPFX/include $CPPFLAGS"
+export LDFLAGS="-L$ZPFX/lib -L$ZPFX/lib64 $LDFLAGS"
+ 
