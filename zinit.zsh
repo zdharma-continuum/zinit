@@ -106,6 +106,7 @@ export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.ca
     PMSPEC=0uUpiPsf
 [[ -z ${path[(re)$ZPFX/bin]} ]] && [[ -d "$ZPFX/bin" ]] && path=( "$ZPFX/bin" "${path[@]}" )
 [[ -z ${path[(re)$ZPFX/sbin]} ]] && [[ -d "$ZPFX/sbin" ]] && path=( "$ZPFX/sbin" "${path[@]}" )
+typeset -gU PATH path
 
 # Add completions directory to fpath.
 [[ -z ${fpath[(re)${ZINIT[COMPLETIONS_DIR]}]} ]] && fpath=( "${ZINIT[COMPLETIONS_DIR]}" "${fpath[@]}" )
@@ -1222,7 +1223,7 @@ builtin setopt noaliases
         # For compaudit.
         command chmod go-w "${ZINIT[HOME_DIR]}"
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin $ZPFX/share
     }
     [[ ! -d ${ZINIT[PLUGINS_DIR]}/_local---zinit ]] && {
         command rm -rf "${ZINIT[PLUGINS_DIR]:-${TMPDIR:-/tmp}/132bcaCAB}/_local---zplugin"
@@ -1231,7 +1232,7 @@ builtin setopt noaliases
         command ln -s "${ZINIT[BIN_DIR]}/_zinit" "${ZINIT[PLUGINS_DIR]}/_local---zinit"
 
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin $ZPFX/share
 
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
@@ -1247,7 +1248,7 @@ builtin setopt noaliases
         command ln -s "${ZINIT[PLUGINS_DIR]}/_local---zinit/_zinit" "${ZINIT[COMPLETIONS_DIR]}"
 
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin $ZPFX/share
 
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         .zinit-compinit &>/dev/null
@@ -1262,11 +1263,17 @@ builtin setopt noaliases
         command chmod go-w "${ZINIT[SERVICES_DIR]}"
 
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir 2>/dev/null -p $ZPFX/bin $ZPFX/share
     }
     [[ ! -d ${~ZINIT[MAN_DIR]}/man9 ]] && {
         # Create ZINIT[MAN_DIR]/man{1..9}
         command mkdir 2>/dev/null -p ${~ZINIT[MAN_DIR]}/man{1..9}
+    }
+
+    # Copy Autotools compilation options setting
+    [[ -f $ZPFX/share/config.site ]] || {
+        command mkdir -p $ZPFX/share
+        command cp $ZINIT[BIN_DIR]/share/config.site $ZPFX/share
     }
 } # ]]]
 # FUNCTION: .zinit-load-object. [[[
@@ -1316,6 +1323,8 @@ builtin setopt noaliases
     local -a opts
     zparseopts -E -D -a opts f -command || { +zinit-message "{u-warn}Error{b-warn}:{rst} Incorrect options (accepted ones: {opt}-f{rst}, {opt}--command{rst})."; return 1; }
     local url="$1"
+    # Ensure that configuration prepared for configure script
+    local -x CONFIG_SITE="$CONFIG_SITE:$ZPFX/share/config.site"
     [[ -n ${ICE[teleid]} ]] && url="${ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
@@ -1669,6 +1678,9 @@ builtin setopt noaliases
     # within scripts that we `source`.
     builtin set --
     [[ -o ksharrays ]] && ___correct=1
+
+    # Configuration prepared for configure script
+    local -x CONFIG_SITE="$CONFIG_SITE:$ZPFX/share/config.site"
 
     [[ -n ${ICE[(i)(\!|)(sh|bash|ksh|csh)]}${ICE[opts]} ]] && {
         local -a ___precm
@@ -3234,7 +3246,16 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 typeset -g REPLY
 
 # Add $ZPFX/lib/pkg-config to PKG_MODULE_DIR, so that libraries
-# installed locally can be found by autotools and cmake
-export PKG_CONFIG_PATH="$ZPFX/lib/pkgconfig:$PKG_CONFIG_PATH"
+# installed locally can be found by autotools and cmake. There
+# is also $ZPFX/share/config.site file with autotools settings
+
+# -T ties :-separated scalar and an array parameter, and this
+# makes -U (uniq) to work on the scalar variables, removing
+# duplicates
+
+export -T PKG_CONFIG_PATH="$ZPFX/lib/pkgconfig:$PKG_CONFIG_PATH" pkg_cpath
+export -T CMAKE_PREFIX_PATH="$ZPFX:$CMAKE_PREFIX_PATH" cmake_ppath
+export -T LD_LIBRARY_PATH="$ZPFX/lib:$LD_LIBRARY_PATH" ld_lpath
+typeset -gU pkg_cpath cmake_ppath ld_lpath
 
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
