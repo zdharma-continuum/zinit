@@ -1,0 +1,482 @@
+#!/bin/zsh
+# This is a Zle widget file. In general, it is s used as (without setup
+# provided by the plugin):
+#
+# autoload browse-symbol
+# zle -N browse-symbol
+# zle -N browse-symbol-backwards browse-symbol
+# zle -N browse-symbol-pbackwards browse-symbol
+# zle -N browse-symbol-pforwards browse-symbol
+# bindkey "^T" browse-symbol
+#
+# This will bind to Ctrl-T. The plugin binds to Ctrl-O Ctrl-K.
+#
+# Example zstyles:
+# zstyle ":plugin:zinit:symbol-search" page-size 5
+# zstyle ":plugin:zinit:symbol-search" highlight-color "fg=magenta,bold"
+# zstyle ":plugin:zinit:symbol-search" heading-color "fg=18,bold"
+# zstyle ":plugin:zinit:symbol-search" title-color "fg=180,bold"
+# zstyle ":plugin:zinit:symbol-search" arrow-color "fg=180,bg=39,bold"
+# zstyle ":plugin:zinit:symbol-search" func-color "fg=208,bold"
+# zstyle ":plugin:zinit:symbol-search" var-color "fg=174,bg=39,bold"
+# zstyle ":plugin:zinit:symbol-search" macro-color "fg=39,bold"
+# zstyle ":plugin:zinit:symbol-search" eqdol-color "fg=183,bg=39,bold"
+
+emulate -L zsh
+setopt typesetsilent extendedglob noshortloops localtraps warncreateglobal
+
+# When an error, then no cursor keys bindings
+zmodload zsh/terminfo 2>/dev/null
+zmodload zsh/termcap 2>/dev/null
+
+typeset -gA TAG
+integer -g __tfind_spe_index
+integer -g __tfind_spe_restart __tfind_spe_call_count __tfind_spe_funct
+typeset -g __tfind_page_size __tfind_high_color __tfind_heading_color \
+	__tfind_title_color __tfind_arrow_color __tfind_func_color \
+	__tfind_var_color __tfind_eqdol_color __tfind_macro_color
+typeset -gaU __tfind_spe_found
+typeset -ga __tfind_tag_data
+typeset -g __tfind_git_or_project __tfind_outside_git
+local mbegin mend match
+local MATCH
+integer MBEGIN MEND
+
+(( __tfind_spe_call_count ++ ))
+trap '(( __tfind_spe_call_count -- )); return 0;' INT
+
+_tfind_find_index() {
+    local q
+    # Read tags file
+    if [[ -f ./TAGS ]]; then
+        TAG[file]=$PWD/TAGS
+        # Save current project name
+        TAG[git-or-project]="$PWD:t"
+    elif [[ -f ../TAGS ]]; then
+        TAG[file]=$PWD:h/TAGS
+        # Save current project name
+        TAG[git-or-project]="$PWD:h:t"
+    elif [[ -f ../../TAGS ]]; then
+        TAG[file]=$PWD:h:h/TAGS
+        # Save current project name
+        TAG[git-or-project]="$PWD:h:h:t"
+    else
+        [[ -z $TAG[file] ]] && TAG[git-or-project]="<unknown>"
+        #TAG[file]=
+    fi
+
+    # Pre-process found index
+    TAG[file-pp]=${TAG[file]/TAGS/.TAGS}.z
+    if [[ -n $TAG[file] && -f $TAG[file] && ( ! -f $TAG[file-pp] || $TAG[file] -nt $TAG[file-pp]) ]]
+    then
+        local sed_
+        (( $+commands[sed] )) && sed_=sed
+        (( $+commands[gsed] )) && sed_=gsed
+        # Generate simplified file – append the filename at each line,
+        # so that it's not only at the preamble line
+        command $sed_ -r -n $'/^\x0c$/ { n; s/,[^,]*$//;s/^/\x02/; h; d;}; G; y/\\n/,/; p' $TAG[file] >! $TAG[file-pp]
+    fi
+
+    # Read index, and as index is found, establish git main dir for it
+    __tfind_outside_git=
+    if [[ -n $TAG[file] && -f $TAG[file-pp] ]]; then
+        __tfind_tag_data=( ${"${(@f)"$(<${TAG[file-pp]})"}"##[[:space:]]##} )
+        # Cleanup functions and their preambles
+        __tfind_tag_data=( ${__tfind_tag_data[@]/(#b)(\([^\)]#\))[[:space:]]#[\{]*($'\x7f')/$match[1]$match[2]} )
+        __tfind_tag_data=( ${__tfind_tag_data[@]/(#b)[[:space:]]\#*($'\x7f')/$match[1]} )
+        __tfind_outside_git="${PWD%/${$(git rev-parse --show-prefix)%/}}"
+        if [[ -d $__tfind_outside_git && -n ${${(M)PWD##$__tfind_outside_git}##$HOME} ]]; then
+            TAG[git-or-project]=$__tfind_outside_git:t
+            TAG[repo-dir]=$__tfind_outside_git
+        else
+            TAG[repo-dir]=$TAG[file]:h
+        fi
+        return 0
+    fi
+    return 1
+}
+
+_tfind_error_msg()
+{
+    integer buflen=$#BUFFER
+    if [[ -z $TAG[repo-dir] || $TAG[repo-dir] == . ]]; then
+        POSTDISPLAY=$'\n'"Symbol index NOT found, NO DATA to show, sleeping…"
+        local search_buffer=
+    elif [[ $#__tfind_tag_data -eq 0 ]]; then
+        POSTDISPLAY=$'\n'"The index file contains NO symbol data, forced sleeping..."
+        local search_buffer=
+    elif [[ $search_buffer != [[:space:]]# && $#__tfind_spe_found -eq 0 ]]; then
+        POSTDISPLAY=$'\n'"Found 0 matches for query: $search_buffer"
+    else
+        return 1
+    fi
+    region_highlight+=("$buflen $(( $buflen+$#POSTDISPLAY-$#search_buffer )) fg=179,bold")
+    region_highlight+=("$(( $buflen+$#POSTDISPLAY-$#search_buffer ))  $(( $buflen+$#POSTDISPLAY )) fg=39,bold")
+    # Number?
+    [[ -n ${#${(MS)POSTDISPLAY##<->##}} ]] && \
+        region_highlight+=("$((buflen+7)) $((buflen+7+${#${(MS)POSTDISPLAY##<->##}})) fg=39,bold")
+    return 0
+
+}
+_tfind_main() {
+    local match mbegin mend
+    local MATCH
+    integer MBEGIN MEND buflen=${#BUFFER}
+    TAG[fun-xt-chars]='+.:@\/→↓←↑\$,_\--'
+    # First call or restart?
+    if [[ $__tfind_spe_call_count -le 1 || $__tfind_spe_restart = 1 ]]; then
+        if [[ $__tfind_spe_call_count -le 1 ]]; then
+            # Read configuration data
+            zstyle -s ":plugin:zinit:symbol-search" page-size __tfind_page_size || __tfind_page_size=$(( LINES / 3 ))
+            zstyle -s ":plugin:zinit:symbol-search" highlight-color __tfind_high_color || __tfind_high_color="fg=39,bold"
+            zstyle -s ":plugin:zinit:symbol-search" heading-color __tfind_heading_color || __tfind_heading_color="fg=69,bold"
+            zstyle -s ":plugin:zinit:symbol-search" title-color __tfind_title_color || __tfind_title_color="fg=208,bold"
+            zstyle -s ":plugin:zinit:symbol-search" arrow-color __tfind_arrow_color || __tfind_arrow_color="fg=227,bg=69,bold"
+            zstyle -s ":plugin:zini t:symbol-search" var-color __tfind_var_color || __tfind_var_color="fg=127,bold"
+            zstyle -s ":plugin:zinit:symbol-search" func-color __tfind_func_color || __tfind_func_color="fg=70,bold"
+            zstyle -s ":plugin:zinit:symbol-search" macro-color __tfind_macro_color || __tfind_macro_color="fg=208,bold"
+            zstyle -s ":plugin:zinit:symbol-search" eqdol-color __tfind_eqdol_color || __tfind_eqdol_color="fg=69,bold"
+
+	    # Find the index to operate on, git dir, etc.
+	    _tfind_find_index || { _tfind_error_msg; return;}
+       fi
+
+        # '0' will get changed into $to_display limit
+        [[ $WIDGET = *-symbol || $WIDGET = *-pforwards ]] && __tfind_spe_index=1
+        [[ $WIDGET = *-backwards || $WIDGET = *-pbackwards ]] && __tfind_spe_index=0
+        __tfind_spe_found=()
+        __tfind_spe_restart=0
+    else
+        # Consecutive call
+        [[ $WIDGET = *-symbol ]] && (( __tfind_spe_index ++ ))
+        [[ $WIDGET = *-backwards ]] && (( __tfind_spe_index -- ))
+        [[ $WIDGET = *-pforwards ]] && (( __tfind_spe_index = __tfind_spe_index + __tfind_page_size ))
+        [[ $WIDGET = *-pbackwards ]] && (( __tfind_spe_index = __tfind_spe_index - __tfind_page_size ))
+    fi
+
+    # Find history entries matching pattern *word1*~^*word2*~^*word3* etc.
+    local search_buffer="${BUFFER%% ##}" search_pattern="" csearch_pattern=""
+    search_buffer="${${search_buffer## ##}%% ##}"
+    search_buffer="${search_buffer//(#m)[][*?|#~^()><\\]/\\$MATCH}"
+    search_pattern="*${search_buffer// ##/*~^*}*"
+    csearch_pattern="${search_buffer// ##/|}"
+
+    if [[ $#__tfind_spe_found -eq 0 ]]; then
+        # The repeat will make the matching work on a fresh heap arena
+        repeat 1; do
+            # Match only before ^? ($'\177')
+            __tfind_spe_found=( "${(@M)__tfind_tag_data:#(#i)$~search_pattern*$'\177'*}" )
+            (( __tfind_spe_funct )) &&  __tfind_spe_found=( ${(M)__tfind_spe_found:#[[:alnum:]$TAG[fun-xt-chars]]##[[:space:]]#\([^\)]#\)[[:space:]]#(\{|)*} )
+        done
+    fi
+
+    if [[ $#__tfind_spe_found -eq 0 ]]; then
+        _tfind_error_msg && return
+    fi
+
+    #
+    # Pagination, index value guards
+    #
+
+    integer page_size=$__tfind_page_size
+    integer max_index="$#__tfind_spe_found"
+    [[ $page_size -gt $max_index ]] && page_size=$max_index
+    [[ $__tfind_spe_index -le 0 ]] && __tfind_spe_index=$max_index
+    [[ $__tfind_spe_index -gt $max_index ]] && __tfind_spe_index=1
+    integer page_start_idx=$(( ((__tfind_spe_index-1)/page_size)*page_size+1 ))
+    integer on_page_idx=$(( (__tfind_spe_index-1) % page_size + 1 ))
+
+    #
+    # Prepare display
+    #
+
+    typeset -a disp_list
+    disp_list=( "${(@)__tfind_spe_found[page_start_idx,page_start_idx+page_size-1]}" )
+
+    # Remove meta-data from the entries
+    disp_list=( "${(@)disp_list//$'\177'*/}" )
+
+    # All entries should have multilines replaced
+    disp_list=( "${(@)disp_list//$'\n'/\\n}" )
+    # ... and truncated to display width, and
+    # also preceeded by two spaces
+    disp_list=( "${(@)disp_list/(#m)*/  ${MATCH[1,COLUMNS-8]}}" )
+
+    local p=$'\n'
+    local entry=$disp_list[on_page_idx]
+    entry[1]='»'
+    disp_list[on_page_idx]=$entry
+
+    #
+    # Detect where "> .." entry starts
+    #
+
+    local txt_before="${(F)${(@)disp_list[1,on_page_idx-1]}}"
+
+    #
+    # Colorify
+    #
+    local noun=${${${__tfind_spe_funct:#0}:+function}:-symbol}
+    local preamble=$'\n'"View of ${noun}s for repo: «««$TAG[git-or-project]»»» located at: $__tfind_outside_git:h"$'\n'"${(C)noun} no. #$__tfind_spe_index. Found $max_index ${noun}s in the index."$'\n' \
+    key="Ctrl-F to toggle functions-ONLY view."$'\n'
+    preamble+=$key
+
+    local text="${(F)disp_list}"
+    integer offset=${#preamble}+$buflen
+
+    POSTDISPLAY="$preamble$text"
+
+    region_highlight=( "$(( offset + ${#txt_before} )) $(( offset + ${#txt_before} + ${#entry} + 1 )) underline" )
+
+    color_att() { local c;if (($4==0)){c=$__tfind_title_color;} elif (($4==1)){c=$__tfind_high_color;} elif (($4==4)){c=$__tfind_var_color;} elif (($4==7)){c=$__tfind_func_color;} elif (($4==9)){c=$__tfind_eqdol_color;} elif (($4==10)){c=$__tfind_macro_color;} else {c=$__tfind_arrow_color;}; region_highlight+=("$(($1+$2-1)) $(($1+$3)) $c"); }
+    functions -M coloratt 4 4 color_att
+
+    # Also highlight project name
+    local h="$(( 30+buflen+__tfind_spe_funct*2 )) $(( 30+$buflen+${#TAG[git-or-project]}+__tfind_spe_funct*2 )) $__tfind_title_color"
+    local q="$buflen $offset $__tfind_heading_color"
+    region_highlight+=( $q $h )
+    : "${preamble//(#b)no. ([^.]##)./$((coloratt(buflen,mbegin[1],mend[1],0)))}"
+    : "${preamble//(#b)Found ([0-9]##)/$((coloratt(buflen,mbegin[1],mend[1],1)))}"
+    : "${preamble//(#b)» located at: ([^$p]##)/$((coloratt(buflen,mbegin[1],mend[1],1)))}"
+    : "${preamble//(#b)(Ctrl-F)/$((coloratt(buflen,mbegin[1],mend[1],0)))}"
+    : "${text//((#s)|$p)(#b)(»)/$((coloratt(offset,mbegin[1],mend[1],3)))}"
+    # Basic syntax highlighting - a few keywords like C/Java type names
+    : "${text//(#b)((([[:space:]\(\{\[]int|double|enum|short|long|(u|w|g|gu)(int|char|long|short)(8|16|32|64|128|max|)(_t|)|char|(|un)signed|FILE|const|restrict|size_t|va_list|ptrdiff_t|off_t|gboolean|gpointer|gconstpointer|typedef|static|struct|union)[[:space:]])|[a-zA-Z_]##_t|local|integer|float|declare|typeset|readonly)/$((coloratt(offset,mbegin[1],mend[1],4)))}"
+    : "${text//(#b)(=)/$((coloratt(offset,mbegin[1],mend[1],9)))}"
+    : "${text//(#b)(\#[[:space:]]#(include|define|if|endif))/$((coloratt(offset,mbegin[1],mend[1],10)))}"
+    : "${text//(#b)(\$<->#)/$((coloratt(offset,mbegin[1],mend[1],9)))}"
+    : "${text//(#b)([[:alnum:]$TAG[fun-xt-chars]]##)[[:space:]]#\([^\)]#\)/$((coloratt(offset,mbegin[1],mend[1],7)))}"
+    : "${text//(#b)\#[[:space:]]#(include|define)[[:space:]]##([[:alnum:]_]##)[^[:alnum:]_]/$((coloratt(offset,mbegin[2],mend[2],7)))}"
+    if [[ -n $search_pattern ]]; then
+        : "${(f)${(S)text//*(#bi)(${~csearch_pattern})/$((coloratt(offset,mbegin[1],mend[1],1)))}}"
+    fi
+
+   functions +M color_att
+   unfunction color_att
+}
+
+
+_tfind_functions() {
+    __tfind_spe_funct=1-__tfind_spe_funct
+    __tfind_spe_restart=1
+    _tfind_simulate_widget
+}
+_tfind_simulate_widget() {
+    (( __tfind_spe_call_count ++ ))
+    _tfind_main
+}
+
+_tfind_self_insert() {
+    [[ $#KEYS ]] && __tfind_spe_restart=1
+    LBUFFER+="${KEYS[-1]}"
+    _tfind_simulate_widget
+}
+
+_tfind_backward_delete_char() {
+    [[ $#LBUFFER ]] && __tfind_spe_restart=1
+    LBUFFER="${LBUFFER%?}"
+    _tfind_simulate_widget
+}
+
+_tfind_delete_char() {
+    [[ $#RBUFFER ]] && __tfind_spe_restart=1
+    RBUFFER="${RBUFFER#?}"
+    _tfind_simulate_widget
+}
+
+_tfind_cancel_accept() {
+    BUFFER=""
+    __tfind_spe_index=-1
+    zle .accept-line
+}
+
+_tfind_main
+
+if [[ $__tfind_spe_call_count -eq 1 ]]; then
+    # Make the tfind keymap a copy of the current main
+    bindkey -N tfind emacs
+
+    local down_widget="${${${WIDGET%-backwards}%-pbackwards}-pforwards}"
+    local up_widget="${down_widget}-backwards"
+    local pdown_widget="${down_widget}-pforwards"
+    local pup_widget="${down_widget}-pbackwards"
+
+    # Manual, termcap, terminfo
+    bindkey -M tfind '^[OA' $up_widget
+    bindkey -M tfind '^[OB' $down_widget
+    bindkey -M tfind '^[[A' $up_widget
+    bindkey -M tfind '^[[B' $down_widget
+    [[ -n "$termcap[ku]" ]] && bindkey -M tfind "$termcap[ku]" $up_widget
+    [[ -n "$termcap[kd]" ]] && bindkey -M tfind "$termcap[kd]" $down_widget
+    [[ -n "$termcap[kD]" ]] && bindkey -M tfind "$termcap[kD]" delete-char
+    [[ -n "$terminfo[kcuu1]" ]] && bindkey -M tfind "$terminfo[kcuu1]" $up_widget
+    [[ -n "$terminfo[kcud1]" ]] && bindkey -M tfind "$terminfo[kcud1]" $down_widget
+    [[ -n "$terminfo[kdch1]" ]] && bindkey -M tfind "$terminfo[kdch1]" delete-char
+
+    # More bindkeys, to remove influence of overloading plugins (sy-h, suggestions)
+    # Left/Right cursor keys
+    bindkey -M tfind '^[[D' .backward-char
+    bindkey -M tfind '^[[C' .forward-char
+    [[ -n "$termcap[kl]" ]] && bindkey -M tfind "$termcap[kl]" .backward-char
+    [[ -n "$termcap[kr]" ]] && bindkey -M tfind "$termcap[kr]" .forward-char
+    [[ -n "$terminfo[kcub1]" ]] && bindkey -M tfind "$terminfo[kcub1]" .backward-char
+    [[ -n "$terminfo[kcuf1]" ]] && bindkey -M tfind "$terminfo[kcuf1]" .forward-char
+    # Now Home/End keys, first few recorded in my .zshrc during the years sequences
+    bindkey -M tfind "\e[1~" .beginning-of-line
+    bindkey -M tfind "\e[7~" .beginning-of-line
+    bindkey -M tfind "\e[H"  .beginning-of-line
+    bindkey -M tfind "\e[4~" .end-of-line
+    bindkey -M tfind "\e[F"  .end-of-line
+    bindkey -M tfind "\e[8~" .end-of-line
+    [[ -n "$termcap[kh]" ]] && bindkey -M tfind "$termcap[kh]" .beginning-of-line
+    [[ -n "$termcap[@7]" ]] && bindkey -M tfind "$termcap[@7]" .end-of-line
+    [[ -n "$terminfo[khome]" ]] && bindkey -M tfind "$terminfo[khome]" .beginning-of-line
+    [[ -n "$terminfo[kend]" ]] && bindkey -M tfind "$terminfo[kend]" .end-of-line
+    # The same for Ctrl-E, Ctrl-F
+    bindkey -M tfind '^A' .beginning-of-line
+    bindkey -M tfind '^E' .end-of-line
+    # Additional keys
+    bindkey -M tfind '^[b' .backward-word
+    bindkey -M tfind '^[B' .backward-word
+    bindkey -M tfind '^[f' .forward-word
+    bindkey -M tfind '^[F' .forward-word
+    bindkey -M tfind '^[w' .forward-word
+    bindkey -M tfind '^[W' .forward-word
+
+    # Additional keys
+    bindkey -M tfind '^P' $up_widget
+    bindkey -M tfind '^N' $down_widget
+
+    # Page Up, Page Down keys
+    [[ -n "$termcap[kP]" ]] && bindkey -M tfind "$termcap[kP]" $pup_widget
+    [[ -n "$termcap[kN]" ]] && bindkey -M tfind "$termcap[kN]" $pdown_widget
+    [[ -n "$terminfo[kpp]" ]] && bindkey -M tfind "$terminfo[kpp]" $pup_widget
+    [[ -n "$terminfo[knp]" ]] && bindkey -M tfind "$terminfo[knp]" $pdown_widget
+
+    # Needed for Fedora 23, zsh-5.1.1
+    bindkey -M tfind ' ' self-insert
+
+    # Removal of default Ctrl-R binding
+    bindkey -M tfind '^R' $down_widget
+    # If one would like to re-open
+    bindkey -M tfind '^O' $down_widget
+
+    # Substitute self-insert, backward-delete-char, delete-char
+    zle -A self-insert saved-self-insert
+    zle -A backward-delete-char saved-backward-delete-char
+    zle -A delete-char saved-delete-char
+    zle -N self-insert _tfind_self_insert
+    zle -N backward-delete-char _tfind_backward_delete_char
+    zle -N delete-char _tfind_delete_char
+    zle -N tfind-functions _tfind_functions
+
+    # Override ourselves with what we actually are
+    # because zsh-autosuggestions change us
+    zle -A $down_widget saved-$down_widget
+    zle -A $up_widget saved-$up_widget
+    zle -N $down_widget _tfind_simulate_widget
+    zle -N $up_widget _tfind_simulate_widget
+
+    zle -A $pdown_widget saved-$pdown_widget
+    zle -A $pup_widget saved-$pup_widget
+    zle -N $pdown_widget _tfind_simulate_widget
+    zle -N $pup_widget _tfind_simulate_widget
+    zle -A zle-line-pre-redraw saved-pre-redraw
+    zle -D zle-line-pre-redraw
+    local selected_editor cd_at_edit tagtext tagline taglinebyte tagfile
+    local -a comm
+    comm=()
+
+    # Add Ctrl-V, ESC bindings to cancel search
+    # A workaround for Zsh versions like 5.0.2
+    zle -N _tfind_cancel_accept
+    bindkey -M tfind "^[" _tfind_cancel_accept
+    bindkey -M tfind "^f" tfind-functions
+
+    local redrawbkp=0
+    # Trap INT to manually interrupt Zle to work around a bug
+    trap 'zle && zle .send-break' INT
+    if zle .recursive-edit -K tfind; then
+        if [[ $__tfind_spe_index -lt 0 ]]; then
+            :
+        else
+            zstyle -s ":plugin:zinit:symbol-search" editor selected_editor || selected_editor=${VISUAL:-${EDITOR:-mcedit}}
+            zstyle -T ":plugin:zinit:symbol-search" cd_at_edit && cd_at_edit=yes || cd_at_edit=no
+            (( ! $+commands[$selected_editor] )) && selected_editor=vim
+            (( ! $+commands[$selected_editor] )) && selected_editor=nano
+            (( ! $+commands[$selected_editor] )) && selected_editor=emacs
+
+            tagtext=$__tfind_spe_found[__tfind_spe_index]
+            if [[ $tagtext = (#b)[^$'\177']#$'\177'[^$'\1']#$'\1'([^$'\2']#)$'\2'(*) ]]; then
+                taglinebyte=${match[1]}
+                tagline=${taglinebyte%%,*}
+
+                # CD vs absolute path
+                tagfile=$__tfind_outside_git/${match[2]}
+
+                # Editor command
+                case "$selected_editor" in
+                    (vim|vi|gvim|mvim|nvim)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (emacs|emacsclient)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (gedit)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (nano)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (mcedit)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (*)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                esac
+            fi
+        fi
+    else
+        BUFFER=""
+    fi
+    POSTDISPLAY=
+
+    # Restore self-insert, backward-delete-char, delete-char
+    zle -A saved-self-insert self-insert
+    zle -A saved-backward-delete-char backward-delete-char
+    zle -A saved-delete-char delete-char
+    zle -D saved-self-insert saved-backward-delete-char saved-delete-char
+
+    # Restore ourselves
+    zle -A saved-$down_widget $down_widget
+    zle -A saved-$up_widget $up_widget
+    zle -D saved-$down_widget saved-$up_widget
+
+    zle -A saved-$pdown_widget $pdown_widget
+    zle -A saved-$pup_widget $pup_widget
+    zle -D saved-$pdown_widget saved-$pup_widget
+
+    zle -A saved-pre-redraw zle-line-pre-redraw
+    zle -D saved-pre-redraw
+    # Full reinitialisation at next call
+    __tfind_spe_call_count=0
+
+    # Free memory
+    __tfind_spe_found=()
+    __tfind_tag_data=()
+    region_highlight=()
+
+    # Is there a command to run?
+    if [[ $#comm != 0 ]]; then
+        local auto_run
+        zstyle -T ":plugin:zinit" auto_run && auto_run=yes || auto_run=no
+        BUFFER=$comm[*]
+        CURSOR=$buflen
+        [[ $auto_run = yes ]] && zle .accept-line
+    fi
+elif (( __tfind_spe_call_count > 0 )); then
+    (( __tfind_spe_call_count -- ))
+fi
+
+# vim:ft=zsh

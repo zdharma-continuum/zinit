@@ -3232,4 +3232,13 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 
 # Create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
+
+# A searchable menu of TAGS in current directory
+zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
+zle -N zi-browse-symbol
+zle -N zi-browse-symbol-backwards zi-browse-symbol
+zle -N zi-browse-symbol-pbackwards zi-browse-symbol
+zle -N zi-browse-symbol-pforwards zi-browse-symbol
+bindkey "^K" zi-browse-symbol
+
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
