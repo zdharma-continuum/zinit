@@ -2076,35 +2076,60 @@ zimv() {
     zicp --mv ${dir:+--dir} $dir "$@"
 } # ]]]
 # FUNCTION: .zinit-configure-run-autoconf [[[
+# Called either because # flag given to configure'', or because
+# there's no ./configure script. Runs autoconf, autoreconf,
+# autogen.sh as needed.
 .zinit-configure-run-autoconf() {
     local dir=$1 flags=$2
     integer q
+    local msg="{pre} ({flag}#{pre} flag given){…}" msg_="{pre}{…}"
+    # Custom script
     if [[ -f $dir/autogen.sh ]]; then
         q=1
-        m {pre}Running {cmd}./autogen.sh{pre} \({flag}\#{pre} flag given\){…}
+        m {pre}Running {cmd}./autogen.sh${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         .zinit-countdown ./autogen.sh && \
             (
                 cd -q $dir
                 chmod +x ./autogen.sh
                 ./autogen.sh
             )
-    elif [[ -f $dir/configure.ac ]]; then
+    # Autoreconf only if available in PATH
+    elif [[ -f $dir/configure && -f $dir/configure.ac && \
+            $+commands[autoreconf] = 1 ]]; then
         q=1
-        .zinit-countdown autoconf && \
+        m {pre}Running {cmd}autoreconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
+        .zinit-countdown autoreconf\ -f\ -i\ … && \
             (
                 cd -q $dir
-                autoconf
+                rm -f aclocal.m4
+                aclocal -I m4 --force
+                libtoolize --copy --force
+                autoreconf -f -i -I m4
             )
-    # Does this have sense? configure rather won't come from aclocal.m4 alone
-    elif [[ -f $dir/aclocal.m4 ]]; then
+    # Manual reproduction of autoreconf run
+    elif [[ -f $dir/configure && -f $dir/configure.ac ]]; then
         q=1
+        m {pre}Running {cmd}aclocal{pre}, {cmd}autoconf{pre} and {cmd}automake\
+${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         .zinit-countdown aclocal,\ autoconf,\ automake && \
             (
                 cd -q $dir
-                aclocal
-                automake --add-missing
-                automake
-                autoconf
+                rm -f aclocal.m4
+                aclocal -I m4 --force
+                libtoolize --copy --force
+                aclocal -I m4 --force
+                autoconf -I m4 -f
+                autoheader -I m4 -f
+                automake --add-missing -c --force-missing
+            )
+    # Only autoconf if no existing ./configure
+    elif [[ ! -f $dir/configure && -f $dir/configure.ac ]]; then
+        q=1
+        m {pre}Running {cmd}autoconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
+        .zinit-countdown autoconf\ -f && \
+            (
+                cd -q $dir
+                autoconf -f -I m4
             )
     elif [[ $flags == *\#* ]]; then
         m {ehi}WARNING:{error}: No {cmd}autogen.sh{error} nor {file}configure.ac \
@@ -2117,7 +2142,9 @@ zimv() {
         if (( q )); then
             m {error}WARNING:some input files existed \({file}configure.ac{error}, \
                 etc.\) however running {cmd}Autotools{error} didn\'t yield a \
-                {cmd}./configure{error} script, meaning that it won\'t be run\!
+                {cmd}./configure{error} script, meaning that it won\'t be run\! \
+                Please check if you have packages such as {pkg}autoconf{error}, \
+                {pkg}autmake{error} and similar installed.
         else
             # No output – lacking both configure.ac and configure → a no-op
             :

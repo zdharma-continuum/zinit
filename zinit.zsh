@@ -176,7 +176,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-quo $'\e[1;38;5;33m' col-quos    $'\e[1;38;5;160m'
         col-bapo $'\e[1;38;5;220m'  col-baps $'\e[1;38;5;82m'
         col-faint $'\e[38;5;238m' col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
-        col-flag  $'\e[1;3;38;5;79m'
+        col-flag  $'\e[1;3;38;5;79m' col-pkg $'\e[1;3;38;5;27m'
         col-tab  $' \t '            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
         col-bar  $'\e[38;5;82m'  col-th-bar $'\e[38;5;82m'
         col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
