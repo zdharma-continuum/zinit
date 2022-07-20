@@ -2265,16 +2265,13 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
     local configure=${ICE[configure]}
     @zinit-substitute configure
 
-    local flags=${${=configure}[1]}
     # c-cmake, s-scons, m-meson, 0-default (configure)
     local flags=${(M)configure##[smc0\!\#]##}
     configure=${configure##$flags([[:space:]]##|(#e))}
     (( ${+ICE[configure]} )) || return 0
-    if [[ $ex = "!" ]]; then
-        [[ $flags == *\!* ]] || return 0
-    else
-        [[ $flags != *\!* ]] || return 0
-    fi
+    # !-only flags
+    local eflags=${(SM)flags##[\!]##}
+    [[ $eflags == $ex ]] || return 0
 
     # Conditionally run autogen.sh/autoconf/aclocal/etc. to
     # see if we got an output ./configure file (or preexisting
@@ -2345,49 +2342,34 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 } # ]]]
 # FUNCTION: ∞zinit-make-ee-hook [[[
 ∞zinit-make-ee-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
-        local dir="${4#%}" hook="$5" subtype="$6"
-
-    local make=${ICE[make]}
-    @zinit-substitute make
-
-    (( ${+ICE[make]} )) || return 0
-    [[ $make = "!!"* ]] || return 0
-
-    # Git-plugin make'' at download
-    .zinit-countdown make && \
-        command make -C "$dir" ${(@s; ;)${make#\!\!}}
+    ∞zinit-make-base-hook "$@" "!!"
 } # ]]]
 # FUNCTION: ∞zinit-make-e-hook [[[
 ∞zinit-make-e-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
-        local dir="${4#%}" hook="$5" subtype="$6"
-
-    local make=${ICE[make]}
-    @zinit-substitute make
-
-    (( ${+ICE[make]} )) || return 0
-    [[ $make = ("!"[^\!]*|"!") ]] || return 0
-
-    # Git-plugin make'' at download
-    .zinit-countdown make && \
-        command make -C "$dir" ${(@s; ;)${make#\!}}
+    ∞zinit-make-base-hook "$@" "!"
 } # ]]]
 # FUNCTION: ∞zinit-make-hook [[[
 ∞zinit-make-hook() {
+    ∞zinit-make-base-hook "$@" ""
+} # ]]]
+# FUNCTION: ∞zinit-make-hook [[[
+∞zinit-make-base-hook() {
     [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
-        local dir="${4#%}" hook="$5" subtype="$6"
+        local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
+        local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
 
     local make=${ICE[make]}
     @zinit-substitute make
 
+    # Save preceding ! only
+    local eflags=${(M)make##[\!]##}
+    make=${make##$eflags}
     (( ${+ICE[make]} )) || return 0
-    [[ $make != "!"* ]] || return 0
+    [[ $ex == $eflags ]] || return 0
 
     # Git-plugin make'' at download
+    [[ -d $dir/_build-zinit ]] && dir+=/_build-zinit
+
     .zinit-countdown make &&
         command make -C "$dir" ${(@s; ;)make}
 } # ]]]
