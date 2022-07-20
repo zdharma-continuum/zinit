@@ -63,5 +63,3 @@ test:
 
 clean:
 	rm -rvf *.zwc doc/zsdoc/zinit{'','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
-
-.PHONY: all clean doc doc/container test
