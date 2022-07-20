@@ -2270,7 +2270,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
     configure=${configure##$flags([[:space:]]##|(#e))}
     (( ${+ICE[configure]} )) || return 0
     # !-only flags
-    local eflags=${(SM)flags##[\!]##}
+    local eflags=${(SM)flags##[\!]##} aflags=${(SM)flags##[smc0]##}
     [[ $eflags == $ex ]] || return 0
 
     # Conditionally run autogen.sh/autoconf/aclocal/etc. to
@@ -2287,7 +2287,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
     fi
 
     local -a files=( $dir/CMakeLists.txt(N) $dir/*/CMakeLists.txt(N) )
-    if [[ $#files -gt 0 && -z $flags || $flags == [^a-z0]#c[^a-z0]# ]]; then
+    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#c[^a-z0]# ]]; then
         if (( ${+commands[cmake]} )); then
             command mkdir -p $dir/_build-zinit
             m {pre}Running {cmd}cmake{pre} ${${${${#files}:#0}:+for \
@@ -2303,7 +2303,7 @@ because {flag}c{pre} flag given}
         fi
     fi
     local -a files=( $dir/SConstruct(N) $dir/*/SConstruct(N) )
-    if [[ $#files -gt 0 && -z $flags || $flags == [^a-z0]#s[^a-z0]# ]]; then
+    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#s[^a-z0]# ]]; then
         if (( ${+commands[scons]} )); then
             m {pre}Running {cmd}scons{pre} for its found {file}SConstruct{pre} input file{…}
             .zinit-countdown scons && \
@@ -2316,7 +2316,7 @@ because {flag}c{pre} flag given}
         fi
     fi
     local -a files=( $dir/meson.build(N) $dir/*/meson.build(N) )
-    if [[ $#files -gt 0 && -z $flags || $flags == [^a-z0]#m[^a-z0]# ]]; then
+    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#m[^a-z0]# ]]; then
         if (( ${+commands[meson]} )); then
             m {pre}Running {cmd}meson setup{pre} ${${${${#files}:#0}:+\
 for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
@@ -2330,7 +2330,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
                 flag given}! Skipping{…}
         fi
     fi
-    if [[ -f $dir/configure && -z $flags || $flags == [^a-z0]#0[^a-z0]# ]]; then
+    if [[ -f $dir/configure && -z $aflags || $flags == [^a-z0]#0[^a-z0]# ]]; then
         m {pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}$ZPFX{nb}{…}
         .zinit-countdown ./configure && \
             (
@@ -2367,11 +2367,28 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     (( ${+ICE[make]} )) || return 0
     [[ $ex == $eflags ]] || return 0
 
-    # Git-plugin make'' at download
+    # For meson and cmake
     [[ -d $dir/_build-zinit ]] && dir+=/_build-zinit
 
-    .zinit-countdown make &&
-        command make -C "$dir" ${(@s; ;)make}
+    # Run either `make` or `meson compile`
+    if [[ -f $dir/Makefile ]]; then
+        m {pre}Running {apo}\`{cmd}make{opt} ${(@s; ;)make}{apo}\`{pre}{…}
+        .zinit-countdown make &&
+            command make -C "$dir" ${(@s; ;)make}
+    elif [[ -f $dir/build.ninja ]]; then
+        m {pre}Running {apo}\`{cmd}meson{opt} compile{apo}\`{pre}{…}
+        .zinit-countdown meson\ compile &&
+            meson compile -C "$dir"
+        [[ $make == ([[:space:]]|(#s))install([[:space:]]|(#e)) ]] &&
+        {
+            m {pre}Running {apo}\`{cmd}meson{opt} ${(@s; ;)make}{apo}\`{pre}{…}
+            .zinit-countdown meson\ ${(@s; ;)make} &&
+                meson ${(@s; ;)make} -C "$dir"
+        }
+    else
+        m {error}ERROR: No {file}Makefile{error} nor {cmd}meson{error} \
+            build dir found, {cmd}make{error}/{cmd}meson{error} isn\'t run\!
+    fi
 } # ]]]
 # FUNCTION: ∞zinit-atclone-hook [[[
 ∞zinit-atclone-hook() {
