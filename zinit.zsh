@@ -3232,4 +3232,13 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 
 # Create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
+
+# A searchable menu of TAGS in current directory
+zinit null light-mode autoload'tag-search-multi-word' for %$ZINIT[BIN_DIR]
+zle -N tag-search-multi-word
+zle -N tag-search-multi-word-backwards tag-search-multi-word
+zle -N tag-search-multi-word-pbackwards tag-search-multi-word
+zle -N tag-search-multi-word-pforwards tag-search-multi-word
+bindkey "^O^K" tag-search-multi-word
+
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
