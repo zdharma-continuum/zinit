@@ -1,5 +1,5 @@
+#!/usr/bin/env zsh
 # -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
 #
 # Copyright (c) 2016-2021 Sebastian Gniazdowski and contributors
 # Copyright (c) 2021-2022 zdharma-continuum and contributors
@@ -9,7 +9,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."
   return 1
 }
-# FUNCTION: .zinit-jq-check [[[
+# FUNCTION: .zinit-jq-check {{{
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
 .zinit-jq-check () {
@@ -17,7 +17,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   +zinit-message "{error}❌ ERROR: jq binary not found" "{nl}{u-warn}Please install jq:{rst}" "https://github.com/stedolan/jq" "{nl}{u-warn}To do so with zinit, please refer to:{rst}" "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
   return 1
 } # ]]]
-# FUNCTION: .zinit-json-get-value [[[
+# FUNCTION: .zinit-json-get-value {{{
 # Wrapper around jq that return the value of a property
 # $1: JSON structure
 # $2: jq path
@@ -26,7 +26,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   local jsonstr=$1 jqpath=$2
   jq -er ".${jqpath}" <<< "$jsonstr"
 } # ]]]
-# FUNCTION: .zinit-json-to-array [[[
+# FUNCTION: .zinit-json-to-array {{{
 # Wrapper around jq that sets key/values of an associative array, replicating
 # the structure of a given JSON object
 # $1: JSON structure
@@ -41,7 +41,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   local evalstr=$(command jq -er --arg varname $varname '.'${jqpath}' | to_entries | map($varname + "[\(.key)]=\(.value | @sh);")[]' <<< "$jsonstr")
   eval "$evalstr"
 } # ]]]
-# FUNCTION: .zinit-get-package [[[
+# FUNCTION: .zinit-get-package {{{
 .zinit-get-package () {
   .zinit-jq-check || return 1
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
@@ -204,7 +204,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   return $?
 } # ]]]
-# FUNCTION: .zinit-setup-plugin-dir [[[
+# FUNCTION: .zinit-setup-plugin-dir {{{
 # Clones given plugin into PLUGIN_DIR. Supports multiple
 # sites (respecting `from' and `proto' ice modifiers).
 # Invokes compilation of plugin's main file.
@@ -407,7 +407,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   (( !OPTS[opt_-p,--parallel] )) && rehash
   return 0
 } # ]]]
-# FUNCTION: .zinit-install-completions [[[
+# FUNCTION: .zinit-install-completions {{{
 # Installs all completions of given plugin. After that they are
 # visible to `compinit'. Visible completions can be selectively
 # disabled and enabled. User can access completion data with
@@ -471,7 +471,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   .zinit-compinit 1 1 &> /dev/null
 } # ]]]
-# FUNCTION: .zinit-compinit [[[
+# FUNCTION: .zinit-compinit {{{
 # User-exposed `compinit' frontend which first ensures that all
 # completions managed by Zinit are forgotten by Zshell. After
 # that it runs normal `compinit', which should more easily detect
@@ -501,7 +501,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   builtin autoload -Uz compinit
   compinit ${${(M)use_C:#1}:+-C} -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
 } # ]]]
-# FUNCTION: .zinit-download-file-stdout [[[
+# FUNCTION: .zinit-download-file-stdout {{{
 # Downloads file to stdout. Supports following backend commands:
 # curl, wget, lftp, lynx. Used by snippet loading.
 .zinit-download-file-stdout () {
@@ -563,7 +563,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   return 0
 } # ]]]
-# FUNCTION: .zinit-get-url-mtime [[[
+# FUNCTION: .zinit-get-url-mtime {{{
 # For the given URL returns the date in the Last-Modified
 # header as a time stamp
 .zinit-get-url-mtime () {
@@ -599,7 +599,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   }
   return 0
 } # ]]]
-# FUNCTION: .zinit-mirror-using-svn [[[
+# FUNCTION: .zinit-mirror-using-svn {{{
 # Used to clone subdirectories from Github. If in update mode
 # (see $2), then invokes `svn update', in normal mode invokes
 # `svn checkout --non-interactive -q <URL>'. In test mode only
@@ -645,7 +645,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   return $?
 } # ]]]
-# FUNCTION: .zinit-forget-completion [[[
+# FUNCTION: .zinit-forget-completion {{{
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
 #
@@ -668,7 +668,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   (( quiet || first )) || builtin print
   unfunction -- "$f" 2> /dev/null
 } # ]]]
-# FUNCTION: .zinit-compile-plugin [[[
+# FUNCTION: .zinit-compile-plugin {{{
 # Compiles given plugin (its main source file, and also an
 # additional "....zsh" file if it exists).
 #
@@ -768,7 +768,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   return 0
 } # ]]]
-# FUNCTION: .zinit-download-snippet [[[
+# FUNCTION: .zinit-download-snippet {{{
 .zinit-download-snippet () {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob warncreateglobal typesetsilent
@@ -1154,7 +1154,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   (( !OPTS[opt_-p,--parallel] )) && rehash
   return $retval
 } # ]]]
-# FUNCTION: .zinit-update-snippet [[[
+# FUNCTION: .zinit-update-snippet {{{
 .zinit-update-snippet () {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
@@ -1228,7 +1228,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "-u"
   return $?
 } # ]]]
-# FUNCTION: .zinit-get-latest-gh-r-url-part [[[
+# FUNCTION: .zinit-get-latest-gh-r-url-part {{{
 .zinit-get-latest-gh-r-url-part () {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob warncreateglobal typesetsilent noshortloops
@@ -1241,11 +1241,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   fi
   local HAS_MUSL
   if (( $+commands[musl-gcc] )); then
-    HAS_MUSL='linux-musl' 
+    HAS_MUSL='linux-musl'
   elif find /lib/ -maxdepth 1 -name '*musl*' > /dev/null 2>&1; then
-    HAS_MUSL='linux-musl' 
+    HAS_MUSL='linux-musl'
   else
-    HAS_MUSL=$MACHTYPE 
+    HAS_MUSL=$(uname -p)
   fi
   local -A matchstr
   matchstr=(aarch64 '(arm64|aarch64|arm[?v]8)' arm64 '(arm64|aarch64|arm[?v]8)' armv5 'arm[?v]5' armv6 'arm[?v]6' armv7 'armv[?v]7' amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*' x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*' linux "*(linux-musl|musl|linux64|linux)*~^*(linux*${MACHTYPE}|${CPUTYPE}*linux)*" linux-android '(apk|android|linux-android)' linux-gnu "*(linux-musl|musl|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*" linux-musl "*(linux-musl|musl|linux-~gnu|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*" darwin '*((#s)|/)*(apple|darwin|mac|macos|osx|dmg)*((#e)|/)*' cygwin '(win((dows|32|64))|cygwin)' msys '(win((dows|32|64))|cygwin)' windows '(win((dows|32|64))|cygwin)') 
@@ -1294,7 +1294,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     fi
     if (( $#list > 1 ))
     then
-      filtered=(${(M)list[@]:#(#i)*/$~HAS_MUSL})  && (( $#filtered > 0 )) && list=(${filtered[@]}) 
+      filtered=(${(M)list[@]:#(#i)*/$~HAS_MUSL}) && (( $#filtered > 0 )) && list=(${filtered[@]}) 
     fi
     if (( $#list > 1 ))
     then
@@ -1340,7 +1340,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   done
   [[ -n $reply ]]
 } # ]]]
-# FUNCTION: ziextract [[[
+# FUNCTION: ziextract {{{
 # If the file is an archive, it is extracted by this function.
 # Next stage is scanning of files with the common utility `file',
 # to detect executables. They are given +x mode. There are also
@@ -1630,7 +1630,7 @@ ziextract () {
   fi
   return 0
 } # ]]]
-# FUNCTION: .zinit-extract [[[
+# FUNCTION: .zinit-extract {{{
 .zinit-extract () {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob warncreateglobal typesetsilent
@@ -1657,11 +1657,11 @@ ziextract () {
     done
   )
 } # ]]]
-# FUNCTION: zpextract [[[
+# FUNCTION: zpextract {{{
 zpextract () {
   ziextract "$@"
 } # ]]]
-# FUNCTION: .zinit-at-eval [[[
+# FUNCTION: .zinit-at-eval {{{
 .zinit-at-eval () {
   local atpull="$1" atclone="$2" 
   integer retval
@@ -1671,7 +1671,7 @@ zpextract () {
   eval "$cmd"
   return "$?"
 } # ]]]
-# FUNCTION: .zinit-get-cygwin-package [[[
+# FUNCTION: .zinit-get-cygwin-package {{{
 .zinit-get-cygwin-package () {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
@@ -1744,7 +1744,7 @@ zpextract () {
   done
   REPLY=$outfile 
 } # ]]]
-# FUNCTION: ∞zinit-reset-hook [[[
+# FUNCTION: ∞zinit-reset-hook {{{
 ∞zinit-reset-hook () {
   if [[ "$1" = plugin ]]
   then
@@ -1838,18 +1838,18 @@ zpextract () {
     ZINIT[-r/--reset-opt-hook-has-been-run]=1 
   fi
 } # ]]]
-# FUNCTION: ∞zinit-configure-e-hook [[[
+# FUNCTION: ∞zinit-configure-e-hook {{{
 # The !-version of configure ice. Runs in between
 # of make!! and make!. Configure naturally runs
 # before make.
 ∞zinit-configure-e-hook () {
   ∞zinit-configure-base-hook "$@" "!"
 } # ]]]
-# FUNCTION: ∞zinit-configure-hook [[[
+# FUNCTION: ∞zinit-configure-hook {{{
 ∞zinit-configure-hook () {
   ∞zinit-configure-base-hook "$@"
 } # ]]]
-# FUNCTION: ∞zinit-configure-base-hook [[[
+# FUNCTION: ∞zinit-configure-base-hook {{{
 ∞zinit-configure-base-hook () {
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7" ex="$8"  || local dir="${4#%}" hook="$5" subtype="$6" ex="$7" 
   local configure=${ICE[configure]} 
@@ -1909,7 +1909,7 @@ zpextract () {
     ./configure --prefix="${dir}" ${(@s; ;)configure}
   )
 } # ]]]
-# FUNCTION: ∞zinit-make-ee-hook [[[
+# FUNCTION: ∞zinit-make-ee-hook {{{
 ∞zinit-make-ee-hook () {
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6" 
   local make=${ICE[make]} 
@@ -1918,7 +1918,7 @@ zpextract () {
   [[ $make = "!!"* ]] || return 0
   .zinit-countdown make && command make -C "$dir" ${(@s; ;)${make#\!\!}}
 } # ]]]
-# FUNCTION: ∞zinit-make-e-hook [[[
+# FUNCTION: ∞zinit-make-e-hook {{{
 ∞zinit-make-e-hook () {
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6" 
   local make=${ICE[make]} 
@@ -1927,7 +1927,7 @@ zpextract () {
   [[ $make = ("!"[^\!]*|"!") ]] || return 0
   .zinit-countdown make && command make -C "$dir" ${(@s; ;)${make#\!}}
 } # ]]]
-# FUNCTION: ∞zinit-make-hook [[[
+# FUNCTION: ∞zinit-make-hook {{{
 ∞zinit-make-hook () {
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6" 
   local make=${ICE[make]} 
@@ -1936,7 +1936,7 @@ zpextract () {
   [[ $make != "!"* ]] || return 0
   .zinit-countdown make && command make -C "$dir" ${(@s; ;)make}
 } # ]]]
-# FUNCTION: ∞zinit-atclone-hook [[[
+# FUNCTION: ∞zinit-atclone-hook {{{
 ∞zinit-atclone-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
@@ -1965,7 +1965,7 @@ zpextract () {
 
     return "$rc"
 } # ]]]
-# FUNCTION: ∞zinit-extract-hook [[[
+# FUNCTION: ∞zinit-extract-hook {{{
 ∞zinit-extract-hook () {
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6" 
   local extract=${ICE[extract]} 
@@ -1973,7 +1973,7 @@ zpextract () {
   (( ${+ICE[extract]} )) || return 0
   .zinit-extract plugin "$extract" "$dir"
 } # ]]]
-# FUNCTION: ∞zinit-mv-hook [[[
+# FUNCTION: ∞zinit-mv-hook {{{
 ∞zinit-mv-hook () {
   [[ -z $ICE[mv] ]] && return 0
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6" 
@@ -2007,7 +2007,7 @@ zpextract () {
     return $retval
   )
 } # ]]]
-# FUNCTION: ∞zinit-cp-hook [[[
+# FUNCTION: ∞zinit-cp-hook {{{
 ∞zinit-cp-hook () {
   [[ -z $ICE[cp] ]] && return
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6" 
@@ -2038,7 +2038,7 @@ zpextract () {
     fi
   )
 } # ]]]
-# FUNCTION: ∞zinit-compile-plugin-hook [[[
+# FUNCTION: ∞zinit-compile-plugin-hook {{{
 ∞zinit-compile-plugin-hook () {
   [[ "$1" = plugin ]] && local dir="${5#%}" hook="$6" subtype="$7"  || local dir="${4#%}" hook="$5" subtype="$6" 
   if ! [[ ( $hook = *\!at(clone|pull)* && ${+ICE[nocompile]} -eq 0 ) || ( $hook = at(clone|pull)* && $ICE[nocompile] = '!' ) ]]
@@ -2059,7 +2059,7 @@ zpextract () {
     }
   fi
 } # ]]]
-# FUNCTION: ∞zinit-atpull-e-hook [[[
+# FUNCTION: ∞zinit-atpull-e-hook {{{
 ∞zinit-atpull-e-hook () {
   (( ${+ICE[atpull]} )) || return 0
   [[ -n ${ICE[atpull]} ]] || return 0
@@ -2084,7 +2084,7 @@ zpextract () {
   }
   return "$rc"
 } # ]]]
-# FUNCTION: ∞zinit-atpull-hook [[[
+# FUNCTION: ∞zinit-atpull-hook {{{
 ∞zinit-atpull-hook () {
   (( ${+ICE[atpull]} )) || return 0
   [[ -n ${ICE[atpull]} ]] || return 0
@@ -2109,7 +2109,7 @@ zpextract () {
   }
   return "$rc"
 } # ]]]
-# FUNCTION: ∞zinit-ps-on-update-hook [[[
+# FUNCTION: ∞zinit-ps-on-update-hook {{{
 ∞zinit-ps-on-update-hook () {
   [[ -z $ICE[ps-on-update] ]] && return 0
   [[ "$1" = plugin ]] && local tpe="$1" dir="${5#%}" hook="$6" subtype="$7"  || local tpe="$1" dir="${4#%}" hook="$5" subtype="$6"
@@ -2127,3 +2127,5 @@ zpextract () {
     )
   fi
 } # ]]]
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={{{,}}}:foldmethod=marker

@@ -1,5 +1,5 @@
+#!/usr/bin/env zsh
 # -*- mode: sh; sh-indentation: 2; indent-tabs-mode: nil; sh-basic-offset: 2; -*-
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
 #
 # Copyright (c) 2016-2021 Sebastian Gniazdowski and contributors
 # Copyright (c) 2021-2022 zdharma-continuum and contributors
@@ -9,11 +9,12 @@
 # Debug tracing (dtrace)
 #
 
-# FUNCTION: .zinit-clear-debug-report [[[
+# FUNCTION: .zinit-clear-debug-report {{{
 .zinit-clear-debug-report() {
   .zinit-clear-report-for _dtrace/_dtrace
-} # ]]]
-# FUNCTION: .zinit-debug-start [[[
+} # }}}
+
+# FUNCTION: .zinit-debug-start {{{
 .zinit-debug-start() {
   if [[ ${ZINIT[DTRACE]} = 1 ]]
   then
@@ -23,14 +24,15 @@
   ZINIT[DTRACE]=1
   .zinit-diff _dtrace/_dtrace begin
   .zinit-tmp-subst-on dtrace
-} # ]]]
-# FUNCTION: .zinit-debug-stop [[[
+} # }}}
+# FUNCTION: .zinit-debug-stop {{{
 .zinit-debug-stop() {
   ZINIT[DTRACE]=0
   .zinit-tmp-subst-off dtrace
   .zinit-diff _dtrace/_dtrace end
-} # ]]]
-# FUNCTION: .zinit-debug-unload [[[
+} # }}}
+
+# FUNCTION: .zinit-debug-unload {{{
 .zinit-debug-unload() {
   (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
   if [[ ${ZINIT[DTRACE]} = 1 ]]
@@ -39,13 +41,13 @@
   else
     .zinit-unload _dtrace _dtrace
   fi
-} # ]]]
+} # }}}
 
 #
 # Helper functions
 #
 
-# FUNCTION: .zinit-service [[[
+# FUNCTION: .zinit-service {{{
 .zinit-service() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob warncreateglobal typesetsilent noshortloops
@@ -111,8 +113,9 @@
     ) || break
     builtin read -t 1 ___tmp <> "${___fle:r}.fifo2"
   done >>| "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
-} # ]]]
-# FUNCTION: .zinit-wrap-track-functions [[[
+} # }}}
+
+# FUNCTION: .zinit-wrap-track-functions {{{
 .zinit-wrap-track-functions() {
   local user="$1" plugin="$2" id_as="$3" f
   local -a wt
@@ -134,8 +137,9 @@ function $f {
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
     }"
   done
-} # ]]]
-# FUNCTION: :zinit-tmp-subst-source [[[
+} # }}}
+
+# FUNCTION: :zinit-tmp-subst-source {{{
 :zinit-tmp-subst-source() {
   local -a ___substs ___ab
   ___substs=("${(@s.;.)ICE[subst]}")
@@ -161,4 +165,6 @@ function $f {
     ___data="() { ${(F)${(@)${(f)___data[@]}:#[$___tabspc]#\#*}} ; } \"\${@[2,-1]}\""
   }
   builtin eval "$___data"
-} # ]]]
+} # }}}
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={{{,}}}:foldmethod=marker
