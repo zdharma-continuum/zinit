@@ -35,7 +35,6 @@ Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 
 ____
  
- FUNCTION: .zinit-any-colorify-as-uspl2 [[[
  Returns ANSI-colorified "user/plugin" string, from any supported
  plugin spec (user---plugin, user/plugin, user plugin, plugin).
  
@@ -79,7 +78,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-compute-ice [[[
  Computes ICE array
  - input
  - static
@@ -123,7 +121,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-countdown [[[
  Displays a countdown 5...4... etc.
  
  $REPLY - 1 if Ctrl-C is pressed, otherwise 0
@@ -151,7 +148,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-exists-physically [[[
  Checks if directory of given plugin exists in PLUGIN_DIR.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
@@ -174,7 +170,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-exists-physically-message [[[
  Checks if directory of given plugin exists in PLUGIN_DIR, and outputs error
  message if it doesn't.
  
@@ -205,7 +200,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-first [[[
  Finds the main file of plugin. There are multiple file name formats, they are
  ordered in order starting from more correct ones, and matched.
  .zinit-load-plugin() has similar code parts and doesn't call .zinit-first() –
@@ -236,7 +230,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-store-ices [[[
  Saves ice mods in given hash onto disk.
  
  $1 - directory where to create/delete files
@@ -260,7 +253,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-two-paths [[[
  Obtains a snippet URL without specification if it is an SVN URL (points to
  directory) or regular URL (points to file), returns 2 possible paths for
  further examination

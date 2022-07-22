@@ -46,7 +46,6 @@ Uses feature(s): _source_
 
 ____
  
- FUNCTION: .zinit-compile-plugin [[[
  Compiles given plugin (its main source file, and also an
  additional "....zsh" file if it exists).
  
@@ -74,7 +73,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-compinit [[[
  User-exposed `compinit' frontend which first ensures that all
  completions managed by Zinit are forgotten by Zshell. After
  that it runs normal `compinit', which should more easily detect
@@ -104,7 +102,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-download-file-stdout [[[
  Downloads file to stdout. Supports following backend commands:
  curl, wget, lftp, lynx. Used by snippet loading.
 ____
@@ -126,11 +123,6 @@ Called by:
 .zinit-download-snippet
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-download-snippet [[[
-____
-
 Has 383 line(s). Calls functions:
 
  .zinit-download-snippet
@@ -150,7 +142,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-forget-completion [[[
  Implements alternation of Zsh state so that already initialized
  completion stops being visible to Zsh.
  
@@ -171,11 +162,6 @@ Called by:
 .zinit-get-latest-gh-r-url-part
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-get-latest-gh-r-url-part [[[
-____
-
 Has 109 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
@@ -190,11 +176,6 @@ Called by:
 
 .zinit-get-package
 ~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-get-package [[[
-____
 
 Has 160 line(s). Calls functions:
 
@@ -217,7 +198,6 @@ _Environment variables used:_ zinit.zsh -> ZPFX
 
 ____
  
- FUNCTION: .zinit-get-url-mtime [[[
  For the given URL returns the date in the Last-Modified
  header as a time stamp
 ____
@@ -235,7 +215,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-install-completions [[[
  Installs all completions of given plugin. After that they are
  visible to `compinit'. Visible completions can be selectively
  disabled and enabled. User can access completion data with
@@ -267,7 +246,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-jq-check [[[
  Check if jq is available and outputs an error message with instructions if
  that's not the case
 ____
@@ -288,7 +266,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-json-get-value [[[
  Wrapper around jq that return the value of a property
  $1: JSON structure
  $2: jq path
@@ -305,7 +282,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- FUNCTION: .zinit-json-to-array [[[
  Wrapper around jq that sets key/values of an associative array, replicating
  the structure of a given JSON object
  $1: JSON structure
@@ -328,7 +304,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-mirror-using-svn [[[
  Used to clone subdirectories from Github. If in update mode
  (see $2), then invokes `svn update', in normal mode invokes
  `svn checkout --non-interactive -q <URL>'. In test mode only
@@ -353,7 +328,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-setup-plugin-dir [[[
  Clones given plugin into PLUGIN_DIR. Supports multiple
  sites (respecting `from' and `proto' ice modifiers).
  Invokes compilation of plugin's main file.
@@ -382,11 +356,6 @@ Called by:
 .zinit-update-snippet
 ~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-update-snippet [[[
-____
-
 Has 71 line(s). Calls functions:
 
  .zinit-update-snippet
@@ -405,7 +374,6 @@ ziextract
 
 ____
  
- FUNCTION: ziextract [[[
  If the file is an archive, it is extracted by this function.
  Next stage is scanning of files with the common utility `file',
  to detect executables. They are given +x mode. There are also
@@ -446,7 +414,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 

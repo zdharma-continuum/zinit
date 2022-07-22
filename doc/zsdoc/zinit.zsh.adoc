@@ -91,7 +91,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 210 line(s). Calls functions:
+Has 212 line(s). Calls functions:
 
  Script-Body
  |-- @zinit-register-hook
@@ -105,11 +105,6 @@ _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 +zinit-deploy-message
 ~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: +zinit-deploy-message [[[
-____
-
 Has 22 line(s). Doesn't call other functions.
 
 Uses feature(s): _read_, _zle_
@@ -122,11 +117,6 @@ Called by:
 
 +zinit-message
 ~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: +zinit-message [[[
-____
 
 Has 34 line(s). Doesn't call other functions.
 
@@ -163,8 +153,8 @@ Called by:
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit-install.zsh/.zinit-update-snippet
  zinit-install.zsh/ziextract
- zinit-install.zsh/→zinit-extract
  zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/→zinit-extract
  zinit-install.zsh/∞zinit-mv-hook
  zinit-install.zsh/∞zinit-ps-on-update-hook
  zinit-install.zsh/∞zinit-reset-hook
@@ -173,11 +163,6 @@ Called by:
 
 +zinit-prehelp-usage-message
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: +zinit-prehelp-usage-message [[[
-____
 
 Has 48 line(s). Calls functions:
 
@@ -194,7 +179,6 @@ Called by:
 
 ____
  
- FUNCTION: -zinit_scheduler_add_sh [[[
  Copies task into ZINIT_RUN array, called when a task timeouts.
  A small function ran from pattern in /-substitution as a math
  function.
@@ -207,11 +191,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 .zinit-add-fpath
 ~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-add-fpath [[[
-____
-
 Has 11 line(s). Calls functions:
 
  .zinit-add-fpath
@@ -220,11 +199,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-add-report
 ~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-add-report [[[
-____
 
 Has 7 line(s). Doesn't call other functions.
 
@@ -242,11 +216,6 @@ Called by:
 .zinit-any-to-pid
 ~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-any-to-pid [[[
-____
-
 Has 19 line(s). Calls functions:
 
  .zinit-any-to-pid
@@ -261,11 +230,6 @@ Called by:
 
 .zinit-any-to-user-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-any-to-user-plugin [[[
-____
 
 Has 25 line(s). Doesn't call other functions.
 
@@ -306,11 +270,6 @@ _Environment variables used:_ ZPFX
 .zinit-compdef-clear
 ~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-compdef-clear [[[
-____
-
 Has 3 line(s). Calls functions:
 
  .zinit-compdef-clear
@@ -323,11 +282,6 @@ Called by:
 
 .zinit-compdef-replay
 ~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-compdef-replay [[[
-____
 
 Has 15 line(s). Calls functions:
 
@@ -346,7 +300,7 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-diff [[[
+ 
 ____
 
 Has 4 line(s). Calls functions:
@@ -362,7 +316,8 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-diff-env [[[
+ 
+ 
 ____
 
 Has 17 line(s). Doesn't call other functions.
@@ -377,7 +332,8 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-diff-functions [[[
+ 
+ 
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -391,7 +347,8 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-diff-options [[[
+ 
+ 
 ____
 
 Has 4 line(s). Doesn't call other functions.
@@ -403,11 +360,6 @@ Called by:
 .zinit-diff-parameter
 ~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-diff-parameter [[[
-____
-
 Has 8 line(s). Doesn't call other functions.
 
 Called by:
@@ -416,11 +368,6 @@ Called by:
 
 .zinit-find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-find-other-matches [[[
-____
 
 Has 12 line(s). Doesn't call other functions.
 
@@ -433,11 +380,6 @@ Called by:
 .zinit-formatter-auto
 ~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-formatter-auto [[[
-____
-
 Has 42 line(s). Calls functions:
 
  .zinit-formatter-auto
@@ -449,11 +391,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 .zinit-formatter-bar
 ~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-formatter-bar [[[
-____
-
 Has 1 line(s). Calls functions:
 
  .zinit-formatter-bar
@@ -462,11 +399,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-formatter-bar-util
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-formatter-bar-util [[[
-____
 
 Has 6 line(s). Doesn't call other functions.
 
@@ -478,22 +410,12 @@ Called by:
 .zinit-formatter-dbg
 ~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-formatter-dbg [[[
-____
-
 Has 5 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-formatter-pid
 ~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-formatter-pid [[[
-____
 
 Has 10 line(s). Calls functions:
 
@@ -509,11 +431,6 @@ Called by:
 .zinit-formatter-th-bar
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-formatter-th-bar [[[
-____
-
 Has 1 line(s). Calls functions:
 
  .zinit-formatter-th-bar
@@ -523,11 +440,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 .zinit-formatter-url
 ~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-formatter-url [[[
-____
-
 Has 19 line(s). Doesn't call other functions.
 
 Called by:
@@ -536,11 +448,6 @@ Called by:
 
 .zinit-get-mtime-into
 ~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-get-mtime-into [[[
-____
 
 Has 11 line(s). Doesn't call other functions.
 
@@ -553,11 +460,6 @@ Called by:
 
 .zinit-get-object-path
 ~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-get-object-path [[[
-____
 
 Has 22 line(s). Calls functions:
 
@@ -578,11 +480,6 @@ Called by:
 .zinit-ice
 ~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-ice [[[
-____
-
 Has 11 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
@@ -595,11 +492,6 @@ _Environment variables used:_ ZPFX
 
 .zinit-load
 ~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-load [[[
-____
 
 Has 102 line(s). Calls functions:
 
@@ -618,11 +510,6 @@ Called by:
 .zinit-load-ices
 ~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-load-ices [[[
-____
-
 Has 18 line(s). Calls functions:
 
  .zinit-load-ices
@@ -636,11 +523,6 @@ _Environment variables used:_ ZPFX
 .zinit-load-object
 ~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-load-object [[[
-____
-
 Has 10 line(s). Calls functions:
 
  .zinit-load-object
@@ -651,11 +533,6 @@ Called by:
 
 .zinit-load-plugin
 ~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-load-plugin [[[
-____
 
 Has 336 line(s). Calls functions:
 
@@ -672,11 +549,6 @@ Called by:
 
 .zinit-load-snippet
 ~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-load-snippet [[[
-____
 
 Has 397 line(s). Calls functions:
 
@@ -697,22 +569,12 @@ Called by:
 .zinit-main-message-formatter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-main-message-formatter [[[
-____
-
 Has 18 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-pack-ice
 ~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-pack-ice [[[
-____
 
 Has 3 line(s). Doesn't call other functions.
 
@@ -728,11 +590,6 @@ Called by:
 .zinit-parse-opts
 ~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-parse-opts [[[
-____
-
 Has 2 line(s). Doesn't call other functions.
 
 Called by:
@@ -742,11 +599,6 @@ Called by:
 
 .zinit-prepare-home
 ~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-prepare-home [[[
-____
 
 Has 40 line(s). Calls functions:
 
@@ -765,11 +617,6 @@ _Environment variables used:_ ZPFX
 .zinit-register-plugin
 ~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-register-plugin [[[
-____
-
 Has 20 line(s). Calls functions:
 
  .zinit-register-plugin
@@ -782,11 +629,6 @@ Called by:
 .zinit-run
 ~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-run [[[
-____
-
 Has 33 line(s). Calls functions:
 
  .zinit-run
@@ -798,11 +640,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-run-task
 ~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-run-task [[[
-____
 
 Has 44 line(s). Calls functions:
 
@@ -817,11 +654,6 @@ Called by:
 
 .zinit-set-m-func
 ~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-set-m-func [[[
-____
 
 Has 17 line(s). Calls functions:
 
@@ -839,11 +671,6 @@ Called by:
 .zinit-setup-params
 ~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-setup-params [[[
-____
-
 Has 3 line(s). Doesn't call other functions.
 
 Called by:
@@ -854,11 +681,6 @@ Called by:
 .zinit-submit-turbo
 ~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-submit-turbo [[[
-____
-
 Has 11 line(s). Doesn't call other functions.
 
 Called by:
@@ -867,11 +689,6 @@ Called by:
 
 .zinit-tmp-subst-off
 ~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-tmp-subst-off [[[
-____
 
 Has 17 line(s). Doesn't call other functions.
 
@@ -884,11 +701,6 @@ Called by:
 .zinit-tmp-subst-on
 ~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-tmp-subst-on [[[
-____
-
 Has 29 line(s). Doesn't call other functions.
 
 Uses feature(s): _source_
@@ -899,11 +711,6 @@ Called by:
 
 .zinit-util-shands-path
 ~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-util-shands-path [[[
-____
 
 Has 6 line(s). Doesn't call other functions.
 
@@ -920,7 +727,6 @@ _Environment variables used:_ ZPFX
 
 ____
  
- FUNCTION: :zinit-reload-and-run [[[
  Marks given function ($3) for autoloading, and executes it triggering the
  load. $1 is the fpath dedicated to the function, $2 are autoload options.
  This function replaces "autoload -X", because using that on older Zsh
@@ -929,11 +735,11 @@ ____
  So basically one creates function stub that calls :zinit-reload-and-run()
  instead of "autoload -X".
  
+ Author: Bart Schaefer
+ 
  $1 - FPATH dedicated to function
  $2 - autoload options
  $3 - function name (one that needs autoloading)
- 
- Author: Bart Schaefer
 ____
 
 Has 9 line(s). Doesn't call other functions.
@@ -944,11 +750,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 :zinit-tmp-subst-alias
 ~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: :zinit-tmp-subst-alias [[[
-____
 
 Has 30 line(s). Calls functions:
 
@@ -963,8 +764,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- FUNCTION: :zinit-tmp-subst-autoload [[[
- Function defined to hijack plugin's calls to the `autoload' builtin.
+ Function defined to hijack plugins calls to the autoload builtin.
  
  The hijacking is not only to gather report data, but also to.
  run custom `autoload' function, that doesn't need FPATH.
@@ -987,7 +787,6 @@ Called by:
 
 ____
  
- FUNCTION: :zinit-tmp-subst-bindkey. [[[
  Function defined to hijack plugin's calls to the `bindkey' builtin.
  
  The hijacking is to gather report data (which is used in unload).
@@ -1005,11 +804,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 :zinit-tmp-subst-compdef
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: :zinit-tmp-subst-compdef [[[
-____
-
 Has 4 line(s). Calls functions:
 
  :zinit-tmp-subst-compdef
@@ -1023,7 +817,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- FUNCTION: :zinit-tmp-subst-zle [[[
  Function defined to hijack plugin's calls to the `zle' builtin.
  
  The hijacking is to gather report data (which is used in unload)
@@ -1040,11 +833,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 :zinit-tmp-subst-zstyle
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: :zinit-tmp-subst-zstyle [[[
-____
-
 Has 19 line(s). Calls functions:
 
  :zinit-tmp-subst-zstyle
@@ -1056,22 +844,12 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 @zinit-register-annex
 ~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: @zinit-register-annex [[[
-____
-
 Has 8 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 @zinit-register-hook
 ~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: @zinit-register-hook [[[
-____
 
 Has 4 line(s). Doesn't call other functions.
 
@@ -1081,11 +859,6 @@ Called by:
 
 @zinit-scheduler
 ~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: @zinit-scheduler [[[
-____
 
 Has 73 line(s). *Is a precmd hook*. Calls functions:
 
@@ -1098,11 +871,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 @zinit-substitute
 ~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: @zinit-substitute [[[
-____
 
 Has 26 line(s). Doesn't call other functions.
 
@@ -1127,11 +895,6 @@ _Environment variables used:_ ZPFX
 @zsh-plugin-run-on-unload
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: @zsh-plugin-run-on-unload [[[
-____
-
 Has 2 line(s). Calls functions:
 
  @zsh-plugin-run-on-unload
@@ -1140,11 +903,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 @zsh-plugin-run-on-update
 ~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: @zsh-plugin-run-on-update [[[
-____
 
 Has 2 line(s). Calls functions:
 
@@ -1157,7 +915,6 @@ pmodload
 
 ____
  
- FUNCTION: pmodload() [[[
  Compatibility with Prezto. Calls can be recursive.
 ____
 
@@ -1174,7 +931,8 @@ zicdclear
 
 ____
  
- FUNCTION: zicdclear [[[
+ 
+ 
 ____
 
 Has 1 line(s). Calls functions:
@@ -1188,7 +946,8 @@ zicdreplay
 
 ____
  
- FUNCTION: zicdreplay [[[
+ 
+ 
 ____
 
 Has 1 line(s). Calls functions:
@@ -1202,7 +961,8 @@ zicompdef
 
 ____
  
- FUNCTION: zicompdef [[[
+ 
+ 
 ____
 
 Has 1 line(s). Doesn't call other functions.
@@ -1214,7 +974,8 @@ zicompinit
 
 ____
  
- FUNCTION: zicompinit [[[
+ 
+ 
 ____
 
 Has 1 line(s). Calls functions:
@@ -1231,7 +992,6 @@ zinit
 
 ____
  
- FUNCTION: zinit [[[
  Main function directly exposed to user, obtains subcommand and its
  arguments, has completion.
 ____
@@ -1271,7 +1031,8 @@ zpcdclear
 
 ____
  
- FUNCTION: zpcdclear [[[
+ 
+ 
 ____
 
 Has 1 line(s). Calls functions:
@@ -1285,7 +1046,8 @@ zpcdreplay
 
 ____
  
- FUNCTION: zpcdreplay [[[
+ 
+ 
 ____
 
 Has 1 line(s). Calls functions:
@@ -1299,7 +1061,8 @@ zpcompdef
 
 ____
  
- FUNCTION: zpcompdef [[[
+ 
+ 
 ____
 
 Has 1 line(s). Doesn't call other functions.
@@ -1311,7 +1074,8 @@ zpcompinit
 
 ____
  
- FUNCTION: zpcompinit [[[
+ 
+ 
 ____
 
 Has 2 line(s). Calls functions:
@@ -1328,7 +1092,8 @@ zplugin
 
 ____
  
- FUNCTION: zplugin [[[
+ 
+ 
 ____
 
 Has 1 line(s). Calls functions:
@@ -1401,7 +1166,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
