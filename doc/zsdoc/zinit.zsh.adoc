@@ -91,7 +91,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 212 line(s). Calls functions:
+Has 167 line(s). Calls functions:
 
  Script-Body
  |-- @zinit-register-hook
@@ -792,7 +792,7 @@ ____
  The hijacking is to gather report data (which is used in unload).
 ____
 
-Has 120 line(s). Calls functions:
+Has 113 line(s). Calls functions:
 
  :zinit-tmp-subst-bindkey
  `-- is-at-least
