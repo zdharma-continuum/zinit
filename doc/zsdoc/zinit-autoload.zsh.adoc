@@ -25,8 +25,8 @@ FUNCTIONS
  .zinit-check-which-completions-are-installed
  .zinit-clear-completions
  .zinit-clear-report-for
- .zinit-compile-uncompile-all
  .zinit-compiled
+ .zinit-compile-uncompile-all
  .zinit-confirm
  .zinit-create
  .zinit-delete
@@ -157,13 +157,18 @@ ____
  FUNCTION: .zinit-cd [[[
  Jumps to plugin's directory (in Zinit's home directory).
  
+ Remembers which directories you have navigated to, so you can "jump" to them in
+ just a few keystrokes. When n not given ($1, $2 are empty) or if a negative number
+ will be entered to point to that number distance entry from the top of the stack. -1
+ (the default) points to the last, most recent dir, and so on. By default, the
+ last 1500 directories are remembered.
  User-action entry point.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 15 line(s). Calls functions:
+Has 36 line(s). Calls functions:
 
  .zinit-cd
  `-- zinit.zsh/+zinit-message
@@ -350,6 +355,29 @@ Called by:
 
  .zinit-unload
 
+.zinit-compiled
+~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-compiled [[[
+ Displays list of plugins that are compiled.
+ 
+ User-action entry point.
+____
+
+Has 26 line(s). Calls functions:
+
+ .zinit-compiled
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- zinit.zsh/.zinit-any-to-user-plugin
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit.zsh/zinit
+
 .zinit-compile-uncompile-all
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -365,29 +393,6 @@ Has 23 line(s). Calls functions:
 
  .zinit-compile-uncompile-all
  |-- zinit-install.zsh/.zinit-compile-plugin
- |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- `-- zinit.zsh/.zinit-any-to-user-plugin
-
-Uses feature(s): _setopt_
-
-Called by:
-
- zinit.zsh/zinit
-
-.zinit-compiled
-~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: .zinit-compiled [[[
- Displays list of plugins that are compiled.
- 
- User-action entry point.
-____
-
-Has 26 line(s). Calls functions:
-
- .zinit-compiled
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
@@ -462,9 +467,9 @@ Has 99 line(s). Calls functions:
 
  .zinit-delete
  |-- zinit-side.zsh/.zinit-compute-ice
- |-- zinit.zsh/+zinit-prehelp-usage-message
  |-- zinit.zsh/.zinit-any-to-user-plugin
- `-- zinit.zsh/.zinit-parse-opts
+ |-- zinit.zsh/.zinit-parse-opts
+ `-- zinit.zsh/+zinit-prehelp-usage-message
 
 Uses feature(s): _setopt_
 
@@ -1071,8 +1076,8 @@ ____
 Has 42 line(s). Calls functions:
 
  .zinit-self-update
- |-- zinit.zsh/+zinit-message
- `-- zinit.zsh/.zinit-get-mtime-into
+ |-- zinit.zsh/.zinit-get-mtime-into
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_, _source_, _zcompile_
 
@@ -1390,8 +1395,8 @@ Has 84 line(s). Calls functions:
 
  .zinit-update-all-parallel
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |-- zinit.zsh/+zinit-message
- `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
@@ -1425,8 +1430,8 @@ Has 325 line(s). Calls functions:
  |-- zinit-side.zsh/.zinit-exists-physically-message
  |-- zinit-side.zsh/.zinit-store-ices
  |-- zinit-side.zsh/.zinit-two-paths
- |-- zinit.zsh/+zinit-message
  |-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/.zinit-set-m-func
 
 Uses feature(s): _kill_, _read_, _setopt_, _source_, _trap_, _wait_
@@ -1456,9 +1461,9 @@ Has 133 line(s). Calls functions:
  .zinit-update-or-status-all
  |-- zinit-install.zsh/.zinit-compinit
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |-- zinit.zsh/+zinit-message
  |-- zinit.zsh/.zinit-any-to-user-plugin
- `-- zinit.zsh/.zinit-get-mtime-into
+ |-- zinit.zsh/.zinit-get-mtime-into
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_, _source_
 
