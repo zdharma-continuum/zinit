@@ -1,92 +1,63 @@
 #!/usr/bin/env zunit
 
-# @test 'zinit-annex-as-monitor' {
-#   local annex="zinit-annex-as-monitor"
-#   run zinit load zdharma-continuum/$annex
-#   assert $state equals 0
-#   zinit cd zdharma-continuum/$annex
-#   assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-#   assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-# }
-@test 'zinit-annex-bin-gem-node' {
-  local annex="zinit-annex-bin-gem-node"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-binary-symlink' {
-  local annex="zinit-annex-binary-symlink"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-man' {
-  local annex="zinit-annex-man"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-meta-plugins' {
-  local annex="zinit-annex-test"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-patch-dl' {
-  local annex="zinit-annex-patch-dl"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-readurl' {
-  local annex="zinit-annex-readurl"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-rust' {
-  local annex="zinit-annex-rust"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-submods' {
-  local annex="zinit-annex-submods"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-test' {
-  local annex="zinit-annex-test"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
-}
-@test 'zinit-annex-unscope' {
-  local annex="zinit-annex-test"
-  run zinit load zdharma-continuum/$annex
-  assert $state equals 0
-  zinit cd zdharma-continuum/$annex
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_file
-  assert "$PWD/${annex//zinit-annex/z-a}.plugin.zsh" is_readable
+@setup {
+  load $PWD/tests/_support/annex_test_assertions
 }
 
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=@test,}:foldmethod=marker
+# TEST: zinit-annex-bin-gem-node
+@test 'zinit-annex-bin-gem-node' {
+  local annex="zinit-annex-bin-gem-node"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-binary-symlink
+@test 'zinit-annex-binary-symlink' {
+  local annex="zinit-annex-binary-symlink"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-man
+@test 'zinit-annex-man' {
+  local annex="zinit-annex-man"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-meta-plugins
+@test 'zinit-annex-meta-plugins' {
+  local annex="zinit-annex-test"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-patch-dl
+@test 'zinit-annex-patch-dl' {
+  local annex="zinit-annex-patch-dl"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-pull
+@test 'zinit-annex-pull' {
+  local annex="zinit-annex-pull"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-readurl
+@test 'zinit-annex-readurl' {
+  local annex="zinit-annex-readurl"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-rust
+@test 'zinit-annex-rust' {
+  local annex="zinit-annex-rust"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-submods
+@test 'zinit-annex-submods' {
+  local annex="zinit-annex-submods"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-test
+@test 'zinit-annex-test' {
+  local annex="zinit-annex-test"
+  _annex_test_function $annex
+}
+# TEST: zinit-annex-unscope
+@test 'zinit-annex-unscope' {
+  local annex="zinit-annex-test"
+  _annex_test_function $annex
+}
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=TEST,}:foldmethod=marker
