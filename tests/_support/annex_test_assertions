@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+
+_annex_test_function() {
+  run zinit load zdharma-continuum/${1}
+  assert ${state} equals 0
+  zinit cd zdharma-continuum/${1}
+  assert ${PWD}/${${1}//zinit-annex/z-a}.plugin.zsh is_file
+  assert ${PWD}/${${1}//zinit-annex/z-a}.plugin.zsh is_readable
+}
