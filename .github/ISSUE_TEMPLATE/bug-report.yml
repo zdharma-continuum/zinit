@@ -1,22 +1,30 @@
-name: Report a bug
-description: Report a bug or issue with Zinit.
-labels: ["bug"]
+name: Bug Report
+description: File a bug report
 title: "[bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - vladdoster
 body:
 
   - type: markdown
     attributes:
       value: |
+        Thanks for taking the time to fill out this bug report!
+
         ## Self Check
+
         - Look for similar errors in existing [GitHub Issues](https://github.com/zdharma-continuum/zinit/issues?q=is%3Aissue) (open or closed).
         - Try reaching out on the [Gitter server](https://gitter.im/zdharma-continuum/community/) for help.
 
   - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
     validations:
       required: true
-    attributes:
-      label: Describe the bug
-      description: A clear description of what the bug is.
 
   - type: textarea
     validations:
@@ -31,11 +39,11 @@ body:
         3. See error
 
   - type: textarea
-    validations:
-      required: true
+    id: logs
     attributes:
-      label: Expected behavior
-      description: A brief description of the expected behavior should be
+      label: Relevant output
+      description: Please copy and paste any relevant output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
 
   - type: textarea
     attributes:
@@ -48,7 +56,7 @@ body:
       required: true
     attributes:
       label: Operating System & Version
-      description: Output of `echo "$OSTYPE | $VENDOR | $MACHTYPE | $CPUTYPE | $(uname -m -p)"` 
+      description: Output of `echo "OS: ${OSTYPE:-N/A} | Vendor: ${VENDOR:-N/A} | Machine: ${MACHTYPE:-N/A} | CPU: ${CPUTYPE:-N/A} | Processor: ${$(uname -p 2>/dev/null):-N/A} | Hardware: ${$(uname -m 2>/dev/null):-N/A}"` 
 
   - type: input
     validations:
@@ -62,7 +70,7 @@ body:
       required: true
     attributes:
       label: Terminal emulator
-      description: Terminal name & output of `echo "$TERM"`
+      description: Terminal name & output of `echo "${TERM}"`
 
   - type: dropdown
     attributes:
@@ -76,3 +84,12 @@ body:
     attributes:
       label: Additional context
       description: Add any other context about the problem. This can be themes, plugins, custom settings, etc.
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
