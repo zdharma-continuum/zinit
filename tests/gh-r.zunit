@@ -94,9 +94,9 @@
   $btop --version; assert $state equals 0
 }
 @test 'calico' { # Cloud native networking and network security
-  run zinit lbin"!**/calico* -> calico" for @projectcalico/calico; assert $state equals 0
+  run zinit lbin"!* -> calico" for @projectcalico/calico; assert $state equals 0
   local calico="$ZBIN/calico"; assert "$calico" is_executable
-  $calico version; assert $state equals 0
+  $calico --help; assert $state equals 0
 }
 @test 'certificates' { # An opinionated helper for generating tls certificates
   run zinit lbin"!* -> certificates" for @mvmaasakkers/certificates; assert $state equals 0
