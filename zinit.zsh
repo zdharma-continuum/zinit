@@ -1268,6 +1268,11 @@ builtin setopt noaliases
         # Create ZINIT[MAN_DIR]/man{1..9}
         command mkdir 2>/dev/null -p ${~ZINIT[MAN_DIR]}/man{1..9}
     }
+    # Copy Zinit manpage so that man is able to find it
+    [[ ! -f $ZINIT[MAN_DIR]/man1/zinit.1 ]] && {
+        command mkdir -p $ZINIT[MAN_DIR]/man1
+        command cp $ZINIT[BIN_DIR]/doc/zinit.1 $ZINIT[MAN_DIR]/man1
+    }
 } # ]]]
 # FUNCTION: .zinit-load-object. [[[
 .zinit-load-object() {
