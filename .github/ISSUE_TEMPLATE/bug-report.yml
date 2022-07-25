@@ -56,7 +56,11 @@ body:
       required: true
     attributes:
       label: Operating System & Version
-      description: Output of `echo "OS: ${OSTYPE:-N/A} | Vendor: ${VENDOR:-N/A} | Machine: ${MACHTYPE:-N/A} | CPU: ${CPUTYPE:-N/A} | Processor: ${$(uname -p 2>/dev/null):-N/A} | Hardware: ${$(uname -m 2>/dev/null):-N/A}"` 
+      description: |
+        Output of 
+        ```
+        echo "OS: ${OSTYPE:-N/A} | Vendor: ${VENDOR:-N/A} | Machine: ${MACHTYPE:-N/A} | CPU: ${CPUTYPE:-N/A} | Processor: ${$(uname -p 2>/dev/null):-N/A} | Hardware: ${$(uname -m 2>/dev/null):-N/A}"
+        ``` 
 
   - type: input
     validations:
