@@ -1688,7 +1688,7 @@ ZINIT[EXTENDED_GLOB]=""
                 }
             )
         fi
-        if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract] -ne 0 ]] {
+        if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract]$+ice[configure] -ne 0 ]] {
             if (( !OPTS[opt_-q,--quiet] && ZINIT[annex-multi-flag:pull-active] == 1 )) {
                 +zinit-message -n "{pre}[update]{msg3} Continuing with the update because "
                 (( ${+ice[run-atpull]} )) && \
