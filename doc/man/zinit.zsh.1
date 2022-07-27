@@ -1,0 +1,2582 @@
+'\" t
+.\"     Title: zinit.zsh
+.\"    Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 07/27/2022
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "ZINIT\&.ZSH" "1" "07/27/2022" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+zinit.zsh \- a shell script
+.SH "SYNOPSIS"
+.sp
+Documentation automatically generated with \(oqzshelldoc\(cq
+.SH "FUNCTIONS"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+ +zinit\-deploy\-message
+ +zinit\-message
+ +zinit\-prehelp\-usage\-message
+ \-zinit_scheduler_add_sh
+ \&.zinit\-add\-fpath
+ \&.zinit\-add\-report
+ \&.zinit\-any\-to\-pid
+ \&.zinit\-any\-to\-user\-plugin
+ \&.zinit\-compdef\-clear
+ \&.zinit\-compdef\-replay
+ \&.zinit\-diff
+ \&.zinit\-diff\-env
+ \&.zinit\-diff\-functions
+ \&.zinit\-diff\-options
+ \&.zinit\-diff\-parameter
+ \&.zinit\-find\-other\-matches
+ \&.zinit\-formatter\-auto
+ \&.zinit\-formatter\-bar
+ \&.zinit\-formatter\-bar\-util
+ \&.zinit\-formatter\-dbg
+ \&.zinit\-formatter\-pid
+ \&.zinit\-formatter\-th\-bar
+ \&.zinit\-formatter\-url
+ \&.zinit\-get\-mtime\-into
+ \&.zinit\-get\-object\-path
+ \&.zinit\-ice
+ \&.zinit\-load
+ \&.zinit\-load\-ices
+ \&.zinit\-load\-object
+ \&.zinit\-load\-plugin
+ \&.zinit\-load\-snippet
+ \&.zinit\-main\-message\-formatter
+ \&.zinit\-pack\-ice
+ \&.zinit\-parse\-opts
+ \&.zinit\-prepare\-home
+ \&.zinit\-register\-plugin
+ \&.zinit\-run
+ \&.zinit\-run\-task
+ \&.zinit\-set\-m\-func
+ \&.zinit\-setup\-params
+ \&.zinit\-submit\-turbo
+ \&.zinit\-tmp\-subst\-off
+ \&.zinit\-tmp\-subst\-on
+ \&.zinit\-util\-shands\-path
+ :zinit\-reload\-and\-run
+ :zinit\-tmp\-subst\-alias
+ :zinit\-tmp\-subst\-autoload
+ :zinit\-tmp\-subst\-bindkey
+ :zinit\-tmp\-subst\-compdef
+ :zinit\-tmp\-subst\-zle
+ :zinit\-tmp\-subst\-zstyle
+ @autoload
+ @zinit\-register\-annex
+ @zinit\-register\-hook
+ @zinit\-substitute
+ @zsh\-plugin\-run\-on\-unload
+ @zsh\-plugin\-run\-on\-update
+ pmodload
+ zicdclear
+ zicdreplay
+ zicompdef
+ zicompinit
+ zinit
+ zpcdclear
+ zpcdreplay
+ zpcompdef
+ zpcompinit
+ zplugin
+AUTOLOAD add\-zsh\-hook
+AUTOLOAD compinit
+AUTOLOAD is\-at\-least
+PRECMD\-HOOK @zinit\-scheduler
+.fi
+.if n \{\
+.RE
+.\}
+.SH "DETAILS"
+.SS "Script Body"
+.sp
+Has 238 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Script\-Body
+|\-\- +zinit\-message
+|\-\- @zinit\-register\-hook
+|\-\- add\-zsh\-hook
+|\-\- is\-at\-least
+`\-\- zinit\-autoload\&.zsh/\&.zinit\-module
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIadd\-zsh\-hook\fR, \fIalias\fR, \fIautoload\fR, \fIexport\fR, \fIis\-at\-least\fR, \fIsetopt\fR, \fIsource\fR, \fIzmodload\fR, \fIzstyle\fR
+.sp
+\fIExports (environment):\fR PMSPEC \fB//\fR ZPFX \fB//\fR ZSH_CACHE_DIR
+.SS "+zinit\-deploy\-message"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: +zinit\-deploy\-message\&. [[[
+Deploys a sub\-prompt message to be displayed OR a `zle
+\&.reset\-prompt\*(Aq call to be invoked
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 13 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIread\fR, \fIzle\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-snippet
+\&.zinit\-load
+zinit\-autoload\&.zsh/\&.zinit\-recall
+.fi
+.if n \{\
+.RE
+.\}
+.SS "+zinit\-message"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: +zinit\-message\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 16 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
++zinit\-prehelp\-usage\-message
+\&.zinit\-compdef\-clear
+\&.zinit\-compdef\-replay
+\&.zinit\-load\-snippet
+\&.zinit\-register\-plugin
+\&.zinit\-run
+\&.zinit\-set\-m\-func
+:zinit\-tmp\-subst\-autoload
+Script\-Body
+zinit
+zinit\-additional\&.zsh/\&.zinit\-debug\-start
+zinit\-additional\&.zsh/\&.zinit\-debug\-unload
+zinit\-additional\&.zsh/:zinit\-tmp\-subst\-source
+zinit\-autoload\&.zsh/\&.zinit\-build\-module
+zinit\-autoload\&.zsh/\&.zinit\-cd
+zinit\-autoload\&.zsh/\&.zinit\-self\-update
+zinit\-autoload\&.zsh/\&.zinit\-show\-zstatus
+zinit\-autoload\&.zsh/\&.zinit\-uninstall\-completions
+zinit\-autoload\&.zsh/\&.zinit\-update\-all\-parallel
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status\-all
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+zinit\-autoload\&.zsh/\&.zinit\-wait\-for\-update\-jobs
+zinit\-install\&.zsh/\&.zinit\-compile\-plugin
+zinit\-install\&.zsh/\&.zinit\-compinit
+zinit\-install\&.zsh/\&.zinit\-download\-file\-stdout
+zinit\-install\&.zsh/\&.zinit\-download\-snippet
+zinit\-install\&.zsh/\&.zinit\-extract
+zinit\-install\&.zsh/\&.zinit\-get\-cygwin\-package
+zinit\-install\&.zsh/\&.zinit\-get\-latest\-gh\-r\-url\-part
+zinit\-install\&.zsh/\&.zinit\-get\-package
+zinit\-install\&.zsh/\&.zinit\-install\-completions
+zinit\-install\&.zsh/\&.zinit\-jq\-check
+zinit\-install\&.zsh/\&.zinit\-setup\-plugin\-dir
+zinit\-install\&.zsh/\&.zinit\-update\-snippet
+zinit\-install\&.zsh/ziextract
+zinit\-install\&.zsh/∞zinit\-mv\-hook
+zinit\-install\&.zsh/∞zinit\-ps\-on\-update\-hook
+zinit\-install\&.zsh/∞zinit\-reset\-hook
+zinit\-side\&.zsh/\&.zinit\-countdown
+zinit\-side\&.zsh/\&.zinit\-exists\-physically\-message
+.fi
+.if n \{\
+.RE
+.\}
+.SS "+zinit\-prehelp\-usage\-message"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: +zinit\-prehelp\-usage\-message\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 38 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
++zinit\-prehelp\-usage\-message
+`\-\- +zinit\-message
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zinit
+zinit\-autoload\&.zsh/\&.zinit\-delete
+.fi
+.if n \{\
+.RE
+.\}
+.SS "\-zinit_scheduler_add_sh"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \-zinit_scheduler_add_sh\&. [[[
+Copies task into ZINIT_RUN array, called when a task timeouts\&.
+A small function ran from pattern in /\-substitution as a math
+function\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 7 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.PP
+\fBzinit-add-fpath\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-add\-fpath\&. [[[
+____
+
+Has 10 line(s)\&. Calls functions:
+
+ \&.zinit\-add\-fpath
+
+Called by:
+
+ zinit
+
+\&.zinit\-add\-report
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-add\-report\&. [[[
+Adds a report line for given plugin\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- uspl2, i\&.e\&. user/plugin
+$2, \&.\&.\&. \- the text
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 3 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-plugin
+\&.zinit\-load\-snippet
+:zinit\-tmp\-subst\-alias
+:zinit\-tmp\-subst\-autoload
+:zinit\-tmp\-subst\-bindkey
+:zinit\-tmp\-subst\-compdef
+:zinit\-tmp\-subst\-zle
+:zinit\-tmp\-subst\-zstyle
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-any-to-pid\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-any\-to\-pid\&. [[[
+____
+
+Has 22 line(s)\&. Calls functions:
+
+ \&.zinit\-any\-to\-pid
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit\-side\&.zsh/\&.zinit\-any\-colorify\-as\-uspl2
+ zinit\-side\&.zsh/\&.zinit\-exists\-physically\-message
+ zinit\-side\&.zsh/\&.zinit\-first
+
+\&.zinit\-any\-to\-user\-plugin
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-any\-to\-user\-plugin\&. [[[
+Allows elastic plugin\-spec across the code\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- plugin spec (4 formats: user\-\-\-plugin, user/plugin, user, plugin)
+$2 \- plugin (only when $1 \- i\&.e\&. user \- given)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Returns user and plugin in $reply\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 29 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIsetopt\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-add\-fpath
+\&.zinit\-get\-object\-path
+\&.zinit\-load
+\&.zinit\-run
+:zinit\-tmp\-subst\-autoload
+zinit\-autoload\&.zsh/\&.zinit\-any\-to\-uspl2
+zinit\-autoload\&.zsh/\&.zinit\-changes
+zinit\-autoload\&.zsh/\&.zinit\-compile\-uncompile\-all
+zinit\-autoload\&.zsh/\&.zinit\-compiled
+zinit\-autoload\&.zsh/\&.zinit\-create
+zinit\-autoload\&.zsh/\&.zinit\-delete
+zinit\-autoload\&.zsh/\&.zinit\-find\-completions\-of\-plugin
+zinit\-autoload\&.zsh/\&.zinit\-glance
+zinit\-autoload\&.zsh/\&.zinit\-show\-report
+zinit\-autoload\&.zsh/\&.zinit\-stress
+zinit\-autoload\&.zsh/\&.zinit\-uncompile\-plugin
+zinit\-autoload\&.zsh/\&.zinit\-unload
+zinit\-autoload\&.zsh/\&.zinit\-unregister\-plugin
+zinit\-autoload\&.zsh/\&.zinit\-update\-all\-parallel
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status\-all
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+zinit\-install\&.zsh/\&.zinit\-install\-completions
+zinit\-side\&.zsh/\&.zinit\-any\-colorify\-as\-uspl2
+zinit\-side\&.zsh/\&.zinit\-compute\-ice
+zinit\-side\&.zsh/\&.zinit\-exists\-physically\-message
+zinit\-side\&.zsh/\&.zinit\-exists\-physically
+zinit\-side\&.zsh/\&.zinit\-first
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fIEnvironment variables used:\fR ZPFX
+.PP
+\fBzinit-compdef-clear\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-compdef\-clear\&. [[[
+ Implements user\-exposed functionality to clear gathered compdefs\&.
+____
+
+Has 3 line(s)\&. Calls functions:
+
+ \&.zinit\-compdef\-clear
+ `\-\- +zinit\-message
+
+Called by:
+
+ zicdclear
+ zinit
+ zpcdclear
+
+\&.zinit\-compdef\-replay
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-compdef\-replay\&. [[[
+Runs gathered compdef calls\&. This allows to run `compinit\*(Aq
+after loading plugins\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 17 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-compdef\-replay
+`\-\- +zinit\-message
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIcompdef\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zicdreplay
+zinit
+zpcdreplay
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-diff\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-diff\&. [[[
+ Performs diff actions of all types
+____
+
+Has 4 line(s)\&. Calls functions:
+
+ \&.zinit\-diff
+
+Called by:
+
+ \&.zinit\-load\-plugin
+ zinit\-additional\&.zsh/\&.zinit\-debug\-start
+ zinit\-additional\&.zsh/\&.zinit\-debug\-stop
+
+\&.zinit\-diff\-env
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-diff\-env\&. [[[
+Implements detection of change in PATH and FPATH\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- user/plugin (i\&.e\&. uspl2 format)
+$2 \- command, can be "begin" or "end"
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 18 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-diff
+\&.zinit\-load\-plugin
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-diff-functions\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-diff\-functions\&. [[[
+ Implements detection of newly created functions\&. Performs
+ data gathering, computation is done in *\-compute()\&.
+
+ $1 \- user/plugin (i\&.e\&. uspl2 format)
+ $2 \- command, can be "begin" or "end"
+____
+
+Has 8 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Called by:
+
+ \&.zinit\-diff
+
+\&.zinit\-diff\-options
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-diff\-options\&. [[[
+Implements detection of change in option state\&. Performs
+data gathering, computation is done in *\-compute()\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- user/plugin (i\&.e\&. uspl2 format)
+$2 \- command, can be "begin" or "end"
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 7 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-diff
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-diff-parameter\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-diff\-parameter\&. [[[
+ Implements detection of change in any parameter\*(Aqs existence and type\&.
+ Performs data gathering, computation is done in *\-compute()\&.
+
+ $1 \- user/plugin (i\&.e\&. uspl2 format)
+ $2 \- command, can be "begin" or "end"
+____
+
+Has 9 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Called by:
+
+ \&.zinit\-diff
+
+\&.zinit\-find\-other\-matches
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-find\-other\-matches\&. [[[
+Plugin\*(Aqs main source file is in general `name\&.plugin\&.zsh\*(Aq\&. However,
+there can be different conventions, if that file is not found, then
+this functions examines other conventions in the most sane order\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 17 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-plugin
+\&.zinit\-load\-snippet
+zinit\-side\&.zsh/\&.zinit\-first
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-formatter-auto\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-formatter\-auto\&. [[[
+____
+
+Has 50 line(s)\&. Calls functions:
+
+ \&.zinit\-formatter\-auto
+
+Uses feature(s): _type_
+
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+
+\&.zinit\-formatter\-bar
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-formatter\-bar\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-formatter\-bar
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.PP
+\fBzinit-formatter-bar-util\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-formatter\-bar\-util\&. [[[
+____
+
+Has 7 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Called by:
+
+ \&.zinit\-formatter\-bar
+ \&.zinit\-formatter\-th\-bar
+
+\&.zinit\-formatter\-dbg
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-formatter\-dbg\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 5 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.PP
+\fBzinit-formatter-pid\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-formatter\-pid\&. [[[
+____
+
+Has 11 line(s)\&. Calls functions:
+
+ \&.zinit\-formatter\-pid
+ `\-\- zinit\-side\&.zsh/\&.zinit\-any\-colorify\-as\-uspl2
+
+Uses feature(s): _source_
+
+Called by:
+
+ \&.zinit\-formatter\-auto
+
+\&.zinit\-formatter\-th\-bar
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-formatter\-th\-bar\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-formatter\-th\-bar
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.PP
+\fBzinit-formatter-url\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-formatter\-url\&. [[[
+____
+
+Has 19 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Called by:
+
+ \&.zinit\-formatter\-auto
+
+\&.zinit\-get\-mtime\-into
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-get\-mtime\-into\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 7 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Script\-Body
+zinit\-autoload\&.zsh/\&.zinit\-self\-update
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status\-all
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-get-object-path\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-get\-object\-path\&. [[[
+____
+
+Has 28 line(s)\&. Calls functions:
+
+ \&.zinit\-get\-object\-path
+
+Called by:
+
+ \&.zinit\-load\-ices
+ \&.zinit\-load\-snippet
+ \&.zinit\-run
+ zinit
+ zinit\-autoload\&.zsh/\&.zinit\-get\-path
+ zinit\-install\&.zsh/\&.zinit\-setup\-plugin\-dir
+ zinit\-install\&.zsh/\&.zinit\-update\-snippet
+ zinit\-side\&.zsh/\&.zinit\-first
+ zinit\-side\&.zsh/\&.zinit\-two\-paths
+
+\&.zinit\-ice
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-ice\&. [[[
+Parses ICE specification, puts the result into ICE global hash\&.
+The ice\-spec is valid for next command only (i\&.e\&. it "melts"), but
+it can then stick to plugin and activate e\&.g\&. at update\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 13 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIsetopt\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zinit
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fIEnvironment variables used:\fR ZPFX
+.PP
+\fBzinit-load\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-load\&. [[[
+ Implements the exposed\-to\-user action of loading a plugin\&.
+
+ $1 \- plugin spec (4 formats: user\-\-\-plugin, user/plugin, user, plugin)
+ $2 \- plugin name, if the third format is used
+____
+
+Has 94 line(s)\&. Calls functions:
+
+ \&.zinit\-load
+ |\-\- +zinit\-deploy\-message
+ |\-\- zinit\-install\&.zsh/\&.zinit\-get\-package
+ `\-\- zinit\-install\&.zsh/\&.zinit\-setup\-plugin\-dir
+
+Uses feature(s): _eval_, _setopt_, _source_, _zle_
+
+Called by:
+
+ \&.zinit\-load\-object
+ \&.zinit\-run\-task
+ zinit\-additional\&.zsh/\&.zinit\-service
+
+\&.zinit\-load\-ices
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-load\-ices\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 22 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-ices
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zinit
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fIEnvironment variables used:\fR ZPFX
+.PP
+\fBzinit-load-object\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-load\-object\&. [[[
+____
+
+Has 12 line(s)\&. Calls functions:
+
+ \&.zinit\-load\-object
+
+Called by:
+
+ zinit
+
+\&.zinit\-load\-plugin
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-load\-plugin\&. [[[
+Lower\-level function for loading a plugin\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- user
+$2 \- plugin
+$3 \- mode (light or load)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 127 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-plugin
+`\-\- :zinit\-tmp\-subst\-autoload
+    |\-\- +zinit\-message
+    `\-\- is\-at\-least
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIeval\fR, \fIsetopt\fR, \fIsource\fR, \fIunfunction\fR, \fIzle\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-load-snippet\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-load\-snippet\&. [[[
+ Implements the exposed\-to\-user action of loading a snippet\&.
+
+ $1 \- url (can be local, absolute path)\&.
+____
+
+Has 203 line(s)\&. Calls functions:
+
+ \&.zinit\-load\-snippet
+ |\-\- +zinit\-deploy\-message
+ |\-\- +zinit\-message
+ `\-\- zinit\-install\&.zsh/\&.zinit\-download\-snippet
+
+Uses feature(s): _autoload_, _eval_, _setopt_, _source_, _unfunction_, _zparseopts_, _zstyle_
+
+Called by:
+
+ \&.zinit\-load\-object
+ \&.zinit\-load
+ \&.zinit\-run\-task
+ pmodload
+ zinit\-additional\&.zsh/\&.zinit\-service
+
+\&.zinit\-main\-message\-formatter
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: +zinit\-message\-formatter [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 18 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.PP
+\fBzinit-pack-ice\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-pack\-ice\&. [[[
+ Remembers all ice\-mods, assigns them to concrete plugin\&. Ice spec
+ is in general forgotten for second\-next command (that\*(Aqs why it\*(Aqs
+ called "ice" \- it melts), however they glue to the object (plugin
+ or snippet) mentioned in the next command \(en for later use with e\&.g\&.
+ `zinit update \&.\&.\&.\*(Aq\&.
+____
+
+Has 3 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Called by:
+
+ \&.zinit\-load\-snippet
+ \&.zinit\-load
+ @zsh\-plugin\-run\-on\-unload
+ @zsh\-plugin\-run\-on\-update
+ zinit\-install\&.zsh/\&.zinit\-update\-snippet
+ zinit\-side\&.zsh/\&.zinit\-compute\-ice
+
+\&.zinit\-parse\-opts
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: +zinit\-parse\-opts\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 2 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zinit
+zinit\-autoload\&.zsh/\&.zinit\-delete
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-prepare-home\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-prepare\-home\&. [[[
+ Creates all directories needed by Zinit, first checks if they
+ already exist\&.
+____
+
+Has 40 line(s)\&. Calls functions:
+
+ \&.zinit\-prepare\-home
+ |\-\- zinit\-autoload\&.zsh/\&.zinit\-clear\-completions
+ `\-\- zinit\-install\&.zsh/\&.zinit\-compinit
+
+Uses feature(s): _source_
+
+Called by:
+
+ Script\-Body
+
+_Environment variables used:_ ZPFX
+
+\&.zinit\-register\-plugin
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-register\-plugin\&. [[[
+Adds the plugin to ZINIT_REGISTERED_PLUGINS array and to the
+zsh_loaded_plugins array (managed according to the plugin standard:
+https://zdharma\-continuum\&.github\&.io/Zsh\-100\-Commits\-Club/Zsh\-Plugin\-Standard\&.html)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 23 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-register\-plugin
+`\-\- +zinit\-message
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-run\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-run\&. [[[
+ Run code inside plugin\*(Aqs folder
+ It uses the `correct\*(Aq parameter from upper\*(Aqs scope zinit()\&.
+____
+
+Has 24 line(s)\&. Calls functions:
+
+ \&.zinit\-run
+ `\-\- +zinit\-message
+
+Uses feature(s): _eval_, _setopt_
+
+Called by:
+
+ zinit
+
+\&.zinit\-run\-task
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-run\-task\&. [[[
+A backend, worker function of \&.zinit\-scheduler\&. It obtains the tasks
+index and a few of its properties (like the type: plugin, snippet,
+service plugin, service snippet) and executes it first checking for
+additional conditions (like non\-numeric wait\*(Aq\*(Aq ice)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- the pass number, either 1st or 2nd pass
+$2 \- the time assigned to the task
+$3 \- type: plugin, snippet, service plugin, service snippet
+$4 \- task\*(Aqs index in the ZINIT[WAIT_ICE_\&.\&.\&.] fields
+$5 \- mode: load or light
+$6 \- the plugin\-spec or snippet URL or alias name (from id\-as\*(Aq\*(Aq)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 46 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-run\-task
+`\-\- zinit\-autoload\&.zsh/\&.zinit\-unload
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIeval\fR, \fIsource\fR, \fIzle\fR, \fIzpty\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+@zinit\-scheduler
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-set-m-func\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ ]]]
+ FUNCTION:\&.zinit\-set\-m\-func() [[[
+ Sets and withdraws the temporary, atclone/atpull time function `m`\&.
+____
+
+Has 17 line(s)\&. Calls functions:
+
+ \&.zinit\-set\-m\-func
+ `\-\- +zinit\-message
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ \&.zinit\-load\-snippet
+ \&.zinit\-load
+ zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+
+\&.zinit\-setup\-params
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-setup\-params\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 3 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-snippet
+\&.zinit\-load
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-submit-turbo\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-submit\-turbo\&. [[[
+ If `zinit load`, `zinit light` or `zinit snippet`  will be
+ preceded with `wait\*(Aq, `load\*(Aq, `unload\*(Aq or `on\-update\-of`/`subscribe\*(Aq
+ ice\-mods then the plugin or snipped is to be loaded in turbo\-mode,
+ and this function adds it to internal data structures, so that
+ @zinit\-scheduler can run (load, unload) this as a task\&.
+____
+
+Has 16 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Called by:
+
+ zinit
+
+\&.zinit\-tmp\-subst\-off
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-tmp\-subst\-off\&. [[[
+Turn off temporary substituting of functions completely for a given mode ("load", "light",
+"light\-b" (i\&.e\&. the `trackbinds\*(Aq mode) or "compdef")\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 21 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIsetopt\fR, \fIunfunction\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-plugin
+zinit\-additional\&.zsh/\&.zinit\-debug\-stop
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-tmp-subst-on\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-tmp\-subst\-on\&. [[[
+ Turn on temporary substituting of functions of builtins and functions according to passed
+ mode ("load", "light", "light\-b" or "compdef")\&. The temporary substituting of functions is
+ to gather report data, and to hijack `autoload\*(Aq, `bindkey\*(Aq and
+ `compdef\*(Aq calls\&.
+____
+
+Has 32 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Uses feature(s): _source_
+
+Called by:
+
+ \&.zinit\-load\-plugin
+ zinit\-additional\&.zsh/\&.zinit\-debug\-start
+
+\&.zinit\-util\-shands\-path
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-util\-shands\-path\&. [[[
+Replaces parts of path with %HOME, etc\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 9 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIsetopt\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-any\-to\-pid
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fIEnvironment variables used:\fR ZPFX
+.SS ":zinit\-reload\-and\-run"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: :zinit\-reload\-and\-run\&. [[[
+Marks given function ($3) for autoloading, and executes it triggering the
+load\&. $1 is the fpath dedicated to the function, $2 are autoload options\&.
+This function replaces "autoload \-X", because using that on older Zsh
+versions causes problems with traps\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+So basically one creates function stub that calls :zinit\-reload\-and\-run()
+instead of "autoload \-X"\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- FPATH dedicated to function
+$2 \- autoload options
+$3 \- function name (one that needs autoloading)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Author: Bart Schaefer
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 11 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIautoload\fR, \fIunfunction\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS ":zinit\-tmp\-subst\-alias"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: :zinit\-tmp\-subst\-alias\&. [[[
+Function defined to hijack plugin\*(Aqs calls to the `alias\*(Aq builtin\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+The hijacking is to gather report data (which is used in unload)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 36 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+:zinit\-tmp\-subst\-alias
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIalias\fR, \fIsetopt\fR, \fIzparseopts\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS ":zinit\-tmp\-subst\-autoload"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: :zinit\-tmp\-subst\-autoload\&. [[[
+Function defined to hijack plugin\*(Aqs calls to the `autoload\*(Aq builtin\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+The hijacking is not only to gather report data, but also to\&.
+run custom `autoload\*(Aq function, that doesn\*(Aqt need FPATH\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 111 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+:zinit\-tmp\-subst\-autoload
+|\-\- +zinit\-message
+`\-\- is\-at\-least
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIautoload\fR, \fIeval\fR, \fIis\-at\-least\fR, \fIsetopt\fR, \fIzparseopts\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-load\-plugin
+@autoload
+.fi
+.if n \{\
+.RE
+.\}
+.SS ":zinit\-tmp\-subst\-bindkey"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: :zinit\-tmp\-subst\-bindkey\&. [[[
+Function defined to hijack plugin\*(Aqs calls to the `bindkey\*(Aq builtin\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+The hijacking is to gather report data (which is used in unload)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 120 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+:zinit\-tmp\-subst\-bindkey
+`\-\- is\-at\-least
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIbindkey\fR, \fIis\-at\-least\fR, \fIsetopt\fR, \fIzparseopts\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS ":zinit\-tmp\-subst\-compdef"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: :zinit\-tmp\-subst\-compdef\&. [[[
+Function defined to hijack plugin\*(Aqs calls to the `compdef\*(Aq function\&.
+The hijacking is not only for reporting, but also to save compdef
+calls so that `compinit\*(Aq can be called after loading plugins\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 6 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+:zinit\-tmp\-subst\-compdef
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIsetopt\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS ":zinit\-tmp\-subst\-zle"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: :zinit\-tmp\-subst\-zle\&. [[[\&.
+Function defined to hijack plugin\*(Aqs calls to the `zle\*(Aq builtin\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+The hijacking is to gather report data (which is used in unload)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 36 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+:zinit\-tmp\-subst\-zle
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIsetopt\fR, \fIzle\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS ":zinit\-tmp\-subst\-zstyle"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: :zinit\-tmp\-subst\-zstyle\&. [[[
+Function defined to hijack plugin\*(Aqs calls to the `zstyle\*(Aq builtin\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+The hijacking is to gather report data (which is used in unload)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 23 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+:zinit\-tmp\-subst\-zstyle
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIsetopt\fR, \fIzparseopts\fR, \fIzstyle\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "@autoload"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: @autoload\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 3 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+@autoload
+`\-\- :zinit\-tmp\-subst\-autoload
+    |\-\- +zinit\-message
+    `\-\- is\-at\-least
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "@zinit\-register\-annex"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: @zinit\-register\-annex\&. [[[
+Registers the z\-annex inside Zinit \(en i\&.e\&. an Zinit extension
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 8 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "@zinit\-register\-hook"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: @zinit\-register\-hook\&. [[[
+Registers the z\-annex inside Zinit \(en i\&.e\&. an Zinit extension
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 4 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Script\-Body
+.fi
+.if n \{\
+.RE
+.\}
+.SS "@zinit\-scheduler"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: @zinit\-scheduler\&. [[[
+Searches for timeout tasks, executes them\&. There\*(Aqs an array of tasks
+waiting for execution, this scheduler manages them, detects which ones
+should be run at current moment, decides to remove (or not) them from
+the array after execution\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- if "following", then it is non\-first (second and more)
+invocation of the scheduler; this results in chain of `sched\*(Aq
+invocations that results in repetitive @zinit\-scheduler activity\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+if "burst", then all tasks are marked timeout and executed one
+by one; this is handy if e\&.g\&. a docker image starts up and
+needs to install all turbo\-mode plugins without any hesitation
+(delay), i\&.e\&. "burst" allows to run package installations from
+script, not from prompt\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 75 line(s)\&. \fBIs a precmd hook\fR\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+@zinit\-scheduler
+`\-\- add\-zsh\-hook
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIadd\-zsh\-hook\fR, \fIsched\fR, \fIsetopt\fR, \fIzle\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "@zinit\-substitute"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: @zinit\-substitute\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 40 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIsetopt\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zinit\-autoload\&.zsh/\&.zinit\-at\-eval
+zinit\-install\&.zsh/\&.zinit\-at\-eval
+zinit\-install\&.zsh/\&.zinit\-get\-package
+zinit\-install\&.zsh/∞zinit\-atclone\-hook
+zinit\-install\&.zsh/∞zinit\-configure\-base\-hook
+zinit\-install\&.zsh/∞zinit\-cp\-hook
+zinit\-install\&.zsh/∞zinit\-extract\-hook
+zinit\-install\&.zsh/∞zinit\-make\-e\-hook
+zinit\-install\&.zsh/∞zinit\-make\-ee\-hook
+zinit\-install\&.zsh/∞zinit\-make\-hook
+zinit\-install\&.zsh/∞zinit\-mv\-hook
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+\fIEnvironment variables used:\fR ZPFX
+.SS "@zsh\-plugin\-run\-on\-unload"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: @zsh\-plugin\-run\-on\-update\&. [[[
+The Plugin Standard required mechanism, see:
+https://zdharma\-continuum\&.github\&.io/Zsh\-100\-Commits\-Club/Zsh\-Plugin\-Standard\&.html
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 2 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+@zsh\-plugin\-run\-on\-unload
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "@zsh\-plugin\-run\-on\-update"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: @zsh\-plugin\-run\-on\-update\&. [[[
+The Plugin Standard required mechanism
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 2 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+@zsh\-plugin\-run\-on\-update
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "pmodload"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: pmodload\&. [[[
+Compatibility with Prezto\&. Calls can be recursive\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 15 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+pmodload
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIzstyle\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zicdclear"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: zicdclear\&. [[[
+A wrapper for `zinit cdclear \-q\*(Aq which can be called from hook
+ices like the atinit\*(Aq\*(Aq, atload\*(Aq\*(Aq, etc\&. ices\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zicdclear
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zicdreplay"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: zicdreplay\&. [[[
+A function that can be invoked from within `atinit\*(Aq, `atload\*(Aq, etc\&.
+ice\-mod\&.  It works like `zinit cdreplay\*(Aq, which cannot be invoked
+from such hook ices\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zicdreplay
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zicompdef"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: zicompdef\&. [[[
+Stores compdef for a replay with `zicdreplay\*(Aq (turbo mode) or
+with `zinit cdreplay\*(Aq (normal mode)\&. An utility functton of
+an undefined use case\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 1 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zicompinit"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+]]]
+FUNCTION: zicompinit\&. [[[
+A function that can be invoked from within `atinit\*(Aq, `atload\*(Aq, etc\&.
+ice\-mod\&.  It runs `autoload compinit; compinit\*(Aq and respects
+ZINIT[ZCOMPDUMP_PATH] and ZINIT[COMPINIT_OPTS]\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zicompinit
+`\-\- compinit
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIautoload\fR, \fIcompinit\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zinit"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: zinit\&. [[[
+Main function directly exposed to user, obtains subcommand and its
+arguments, has completion\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 560 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zinit
+|\-\- +zinit\-message
+|\-\- +zinit\-prehelp\-usage\-message
+|\ \&\ \& `\-\- +zinit\-message
+|\-\- compinit
+|\-\- zinit\-additional\&.zsh/\&.zinit\-clear\-debug\-report
+|\-\- zinit\-additional\&.zsh/\&.zinit\-debug\-start
+|\-\- zinit\-additional\&.zsh/\&.zinit\-debug\-stop
+|\-\- zinit\-additional\&.zsh/\&.zinit\-debug\-unload
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-cdisable
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-cenable
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-clear\-completions
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-compile\-uncompile\-all
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-compiled
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-help
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-list\-bindkeys
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-list\-compdef\-replay
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-ls
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-module
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-recently
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-search\-completions
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-self\-update
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-all\-reports
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-completions
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-debug\-report
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-registered\-plugins
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-report
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-times
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-zstatus
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-uncompile\-plugin
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-uninstall\-completions
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-unload
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+|\-\- zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status\-all
+|\-\- zinit\-install\&.zsh/\&.zinit\-compile\-plugin
+|\-\- zinit\-install\&.zsh/\&.zinit\-compinit
+|\-\- zinit\-install\&.zsh/\&.zinit\-forget\-completion
+`\-\- zinit\-install\&.zsh/\&.zinit\-install\-completions
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIautoload\fR, \fIcompinit\fR, \fIeval\fR, \fIsetopt\fR, \fIsource\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zplugin
+.fi
+.if n \{\
+.RE
+.\}
+.SS "zpcdclear"
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zpcdclear
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zpcdreplay"
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zpcdreplay
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zpcompdef"
+.sp
+Has 1 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zpcompinit"
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zpcompinit
+`\-\- compinit
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIautoload\fR, \fIcompinit\fR
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "zplugin"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Compatibility functions\&. [[[
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 1 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zplugin
+`\-\- zinit
+    |\-\- +zinit\-message
+    |\-\- +zinit\-prehelp\-usage\-message
+    |\ \&\ \& `\-\- +zinit\-message
+    |\-\- compinit
+    |\-\- zinit\-additional\&.zsh/\&.zinit\-clear\-debug\-report
+    |\-\- zinit\-additional\&.zsh/\&.zinit\-debug\-start
+    |\-\- zinit\-additional\&.zsh/\&.zinit\-debug\-stop
+    |\-\- zinit\-additional\&.zsh/\&.zinit\-debug\-unload
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-cdisable
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-cenable
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-clear\-completions
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-compile\-uncompile\-all
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-compiled
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-help
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-list\-bindkeys
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-list\-compdef\-replay
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-ls
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-module
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-recently
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-search\-completions
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-self\-update
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-all\-reports
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-completions
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-debug\-report
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-registered\-plugins
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-report
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-times
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-show\-zstatus
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-uncompile\-plugin
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-uninstall\-completions
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-unload
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+    |\-\- zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status\-all
+    |\-\- zinit\-install\&.zsh/\&.zinit\-compile\-plugin
+    |\-\- zinit\-install\&.zsh/\&.zinit\-compinit
+    |\-\- zinit\-install\&.zsh/\&.zinit\-forget\-completion
+    `\-\- zinit\-install\&.zsh/\&.zinit\-install\-completions
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Not called by script or any function (may be e\&.g\&. a hook, a Zle widget, etc\&.)\&.
+.SS "add\-zsh\-hook"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Add to HOOK the given FUNCTION\&.
+HOOK is one of chpwd, precmd, preexec, periodic, zshaddhistory,
+zshexit, zsh_directory_name (the _functions subscript is not required)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+With \-d, remove the function from the hook instead; delete the hook
+variable if it is empty\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\-D behaves like \-d, but pattern characters are active in the
+function name, so any matching function will be deleted from the hook\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 93 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIautoload\fR, \fIgetopts\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+@zinit\-scheduler
+Script\-Body
+.fi
+.if n \{\
+.RE
+.\}
+.SS "compinit"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Initialisation for new style completion\&. This mainly contains some helper
+functions and setup\&. Everything else is split into different files that
+will automatically be made autoloaded (see the end of this file)\&.  The
+names of the files that will be considered for autoloading are those that
+begin with an underscores (like `_condition)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+The first line of each of these files is read and must indicate what
+should be done with its contents:
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+`#compdef <names \&.\&.\&.>\*(Aq
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 573 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Uses feature(s): \fIautoload\fR, \fIbindkey\fR, \fIcompdef\fR, \fIcompdump\fR, \fIeval\fR, \fIread\fR, \fIsetopt\fR, \fIunfunction\fR, \fIzle\fR, \fIzstyle\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zicompinit
+zinit
+zpcompinit
+.fi
+.if n \{\
+.RE
+.\}
+.SS "is\-at\-least"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+Test whether $ZSH_VERSION (or some value of your choice, if a second argument
+is provided) is greater than or equal to x\&.y\&.z\-r (in argument one)\&. In fact,
+it\*(Aqll accept any dot/dash\-separated string of numbers as its second argument
+and compare it to the dot/dash\-separated first argument\&. Leading non\-number
+parts of a segment (such as the "zefram" in 3\&.1\&.2\-zefram4) are not considered
+when the comparison is done; only the numbers matter\&. Any left\-out segments
+in the first argument that are present in the version string compared are
+considered as zeroes, eg 3 == 3\&.0 == 3\&.0\&.0 == 3\&.0\&.0\&.0 and so on\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 56 line(s)\&. Doesn\(cqt call other functions\&.
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+:zinit\-tmp\-subst\-autoload
+:zinit\-tmp\-subst\-bindkey
+Script\-Body
+zinit\-install\&.zsh/\&.zinit\-download\-snippet
+.fi
+.if n \{\
+.RE
+.\}

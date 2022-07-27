@@ -1,0 +1,463 @@
+'\" t
+.\"     Title: zinit-side.zsh
+.\"    Author: [FIXME: author] [see http://www.docbook.org/tdg5/en/html/author]
+.\" Generator: DocBook XSL Stylesheets vsnapshot <http://docbook.sf.net/>
+.\"      Date: 07/27/2022
+.\"    Manual: \ \&
+.\"    Source: \ \&
+.\"  Language: English
+.\"
+.TH "ZINIT\-SIDE\&.ZSH" "1" "07/27/2022" "\ \&" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+zinit-side.zsh \- a shell script
+.SH "SYNOPSIS"
+.sp
+Documentation automatically generated with \(oqzshelldoc\(cq
+.SH "FUNCTIONS"
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-any\-colorify\-as\-uspl2
+\&.zinit\-compute\-ice
+\&.zinit\-countdown
+\&.zinit\-exists\-physically
+\&.zinit\-exists\-physically\-message
+\&.zinit\-first
+\&.zinit\-store\-ices
+\&.zinit\-two\-paths
+.fi
+.if n \{\
+.RE
+.\}
+.SH "DETAILS"
+.SS "Script Body"
+.sp
+Has 1 line(s)\&. No functions are called (may set up e\&.g\&. a hook, a Zle widget bound to a key, etc\&.)\&.
+.PP
+\fBzinit-any-colorify-as-uspl2\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-any\-colorify\-as\-uspl2 [[[
+ Returns ANSI\-colorified "user/plugin" string, from any supported
+ plugin spec (user\-\-\-plugin, user/plugin, user plugin, plugin)\&.
+
+ $1 \- plugin spec (4 formats: user\-\-\-plugin, user/plugin, user, plugin)
+ $2 \- plugin (only when $1 \- i\&.e\&. user \- given)
+ $REPLY = ANSI\-colorified "user/plugin" string
+____
+
+Has 22 line(s)\&. Calls functions:
+
+ \&.zinit\-any\-colorify\-as\-uspl2
+ |\-\- zinit\&.zsh/\&.zinit\-any\-to\-pid
+ `\-\- zinit\&.zsh/\&.zinit\-any\-to\-user\-plugin
+
+Called by:
+
+ \&.zinit\-exists\-physically\-message
+ zinit\-autoload\&.zsh/\&.zinit\-clear\-completions
+ zinit\-autoload\&.zsh/\&.zinit\-compile\-uncompile\-all
+ zinit\-autoload\&.zsh/\&.zinit\-compiled
+ zinit\-autoload\&.zsh/\&.zinit\-create
+ zinit\-autoload\&.zsh/\&.zinit\-exists\-message
+ zinit\-autoload\&.zsh/\&.zinit\-get\-completion\-owner\-uspl2col
+ zinit\-autoload\&.zsh/\&.zinit\-list\-bindkeys
+ zinit\-autoload\&.zsh/\&.zinit\-recently
+ zinit\-autoload\&.zsh/\&.zinit\-search\-completions
+ zinit\-autoload\&.zsh/\&.zinit\-show\-completions
+ zinit\-autoload\&.zsh/\&.zinit\-show\-registered\-plugins
+ zinit\-autoload\&.zsh/\&.zinit\-show\-times
+ zinit\-autoload\&.zsh/\&.zinit\-uncompile\-plugin
+ zinit\-autoload\&.zsh/\&.zinit\-unload
+ zinit\-autoload\&.zsh/\&.zinit\-update\-all\-parallel
+ zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status\-all
+ zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+ zinit\-install\&.zsh/\&.zinit\-install\-completions
+ zinit\-install\&.zsh/\&.zinit\-setup\-plugin\-dir
+ zinit\&.zsh/\&.zinit\-formatter\-pid
+
+\&.zinit\-compute\-ice
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-compute\-ice [[[
+Computes ICE array
+\- input
+\- static
+\- saved
+taking priorities into account\&.
+Can also pack resulting ices into ZINIT_SICE (see $2)\&.
+Returns filepath to snippet directory and optional snippet file name (only
+valid if ICE[svn] is not set)\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- URL (also plugin\-spec)
+$2 \- "pack" or "nopack" or "pack\-nf" \- packing means ICE
+wins with static ice; "pack\-nf" means that disk\-ices will
+be ignored (no\-file?)
+$3 \- name of output associative array, "ICE" is the default
+$4 \- name of output string parameter, to hold path to directory ("local_dir")
+$5 \- name of output string parameter, to hold filename ("filename")
+$6 \- name of output string parameter, to hold is\-snippet 0/1\-bool ("is_snippet")
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$REPLY \- snippet directory filepath
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 110 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-compute\-ice
+|\-\- zinit\&.zsh/\&.zinit\-any\-to\-user\-plugin
+`\-\- zinit\&.zsh/\&.zinit\-pack\-ice
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIsetopt\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+zinit\-autoload\&.zsh/\&.zinit\-delete
+zinit\-autoload\&.zsh/\&.zinit\-edit
+zinit\-autoload\&.zsh/\&.zinit\-recall
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status\-snippet
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+zinit\-install\&.zsh/\&.zinit\-compile\-plugin
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-countdown\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-countdown [[[
+ Displays a countdown 5\&.\&.\&.4\&.\&.\&. etc\&.
+
+ $REPLY \- 1 if Ctrl\-C is pressed, otherwise 0
+____
+
+Has 20 line(s)\&. Calls functions:
+
+ \&.zinit\-countdown
+ `\-\- zinit\&.zsh/+zinit\-message
+
+Uses feature(s): _trap_
+
+Called by:
+
+ zinit\-autoload\&.zsh/\&.zinit\-run\-delete\-hooks
+ zinit\-install\&.zsh/∞zinit\-atclone\-hook
+ zinit\-install\&.zsh/∞zinit\-atpull\-e\-hook
+ zinit\-install\&.zsh/∞zinit\-atpull\-hook
+ zinit\-install\&.zsh/∞zinit\-configure\-base\-hook
+ zinit\-install\&.zsh/∞zinit\-make\-e\-hook
+ zinit\-install\&.zsh/∞zinit\-make\-ee\-hook
+ zinit\-install\&.zsh/∞zinit\-make\-hook
+
+\&.zinit\-exists\-physically
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-exists\-physically [[[
+Checks if directory of given plugin exists in PLUGIN_DIR\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- plugin spec (4 formats: user\-\-\-plugin, user/plugin, user, plugin)
+$2 \- plugin (only when $1 \- i\&.e\&. user \- given)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 8 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-exists\-physically
+`\-\- zinit\&.zsh/\&.zinit\-any\-to\-user\-plugin
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-exists\-physically\-message
+zinit\-autoload\&.zsh/\&.zinit\-create
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-exists-physically-message\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-exists\-physically\-message [[[
+ Checks if directory of given plugin exists in PLUGIN_DIR, and outputs error
+ message if it doesn\*(Aqt\&.
+
+ $1 \- plugin spec (4 formats: user\-\-\-plugin, user/plugin, user, plugin)
+ $2 \- plugin (only when $1 \- i\&.e\&. user \- given)
+____
+
+Has 25 line(s)\&. Calls functions:
+
+ \&.zinit\-exists\-physically\-message
+ |\-\- zinit\&.zsh/+zinit\-message
+ |\-\- zinit\&.zsh/\&.zinit\-any\-to\-pid
+ `\-\- zinit\&.zsh/\&.zinit\-any\-to\-user\-plugin
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ \&.zinit\-compute\-ice
+ zinit\-autoload\&.zsh/\&.zinit\-changes
+ zinit\-autoload\&.zsh/\&.zinit\-glance
+ zinit\-autoload\&.zsh/\&.zinit\-stress
+ zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+ zinit\-install\&.zsh/\&.zinit\-install\-completions
+
+\&.zinit\-first
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-first [[[
+Finds the main file of plugin\&. There are multiple file name formats, they are
+ordered in order starting from more correct ones, and matched\&.
+\&.zinit\-load\-plugin() has similar code parts and doesn\*(Aqt call \&.zinit\-first() \(en
+for performance\&. Obscure matching is done in \&.zinit\-find\-other\-matches, here
+and in \&.zinit\-load()\&. Obscure = non\-standard main\-file naming convention\&.
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$1 \- plugin spec (4 formats: user\-\-\-plugin, user/plugin, user, plugin)
+$2 \- plugin (only when $1 \- i\&.e\&. user \- given)
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 20 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-first
+|\-\- zinit\&.zsh/\&.zinit\-any\-to\-pid
+|\-\- zinit\&.zsh/\&.zinit\-any\-to\-user\-plugin
+|\-\- zinit\&.zsh/\&.zinit\-find\-other\-matches
+`\-\- zinit\&.zsh/\&.zinit\-get\-object\-path
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-two\-paths
+zinit\-autoload\&.zsh/\&.zinit\-glance
+zinit\-autoload\&.zsh/\&.zinit\-stress
+zinit\-install\&.zsh/\&.zinit\-compile\-plugin
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+\fBzinit-store-ices\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+____
+
+ FUNCTION: \&.zinit\-store\-ices [[[
+ Saves ice mods in given hash onto disk\&.
+
+ $1 \- directory where to create/delete files
+ $2 \- name of hash that holds values
+ $3 \- additional keys of hash to store, space separated
+ $4 \- additional keys of hash to store, empty\-meaningful ices, space separated
+ $5 \(en the URL, if applicable
+ $6 \(en the mode 1 \- svn, 0 \- single file), if applicable
+____
+
+Has 30 line(s)\&. Doesn\*(Aqt call other functions\&.
+
+Called by:
+
+ zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+ zinit\-install\&.zsh/\&.zinit\-download\-snippet
+ zinit\-install\&.zsh/\&.zinit\-setup\-plugin\-dir
+
+\&.zinit\-two\-paths
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+FUNCTION: \&.zinit\-two\-paths [[[
+Obtains a snippet URL without specification if it is an SVN URL (points to
+directory) or regular URL (points to file), returns 2 possible paths for
+further examination
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+$REPLY \- two filepaths
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Has 24 line(s)\&. Calls functions:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-two\-paths
+`\-\- zinit\&.zsh/\&.zinit\-get\-object\-path
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+Uses feature(s): \fIsetopt\fR
+.sp
+Called by:
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+\&.zinit\-compute\-ice
+zinit\-autoload\&.zsh/\&.zinit\-update\-or\-status
+.fi
+.if n \{\
+.RE
+.\}
