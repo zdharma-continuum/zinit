@@ -1,0 +1,379 @@
+# This is a Zle widget file. In general, it is s used as (without setup
+# provided by the plugin):
+#
+# autoload tag-search-multi-word
+# zle -N tag-search-multi-word
+# zle -N tag-search-multi-word-backwards tag-search-multi-word
+# zle -N tag-search-multi-word-pbackwards tag-search-multi-word
+# zle -N tag-search-multi-word-pforwards tag-search-multi-word
+# bindkey "^T" tag-search-multi-word
+#
+# This will bind to Ctrl-T. The plugin binds to Ctrl-O Ctrl-K.
+#
+# Example zstyles:
+# zstyle ":plugin:zinit:tag-search-multi-word" page-size 5
+# zstyle ":plugin:zinit:tag-search-multi-word" highlight-color "fg=magenta,bold"
+
+emulate -L zsh
+setopt typesetsilent extendedglob noshortloops localtraps
+
+# When an error, then no cursor keys bindings
+zmodload zsh/terminfo 2>/dev/null
+zmodload zsh/termcap 2>/dev/null
+
+typeset -gA TAG
+typeset -g __tsmw_hcw_index
+typeset -g __tsmw_hcw_widget_name __tsmw_hcw_restart __tsmw_hcw_call_count
+typeset -g __tsmw_page_size __tsmw_hl_color
+typeset -gaU __tsmw_hcw_found
+typeset -ga __tsmw_tag_data
+typeset -g __tsmw_repo_or_project
+
+(( __tsmw_hcw_call_count ++ ))
+trap '(( __tsmw_hcw_call_count -- )); return 0;' INT
+
+_tsmw_main() {
+    # First call or restart?
+    if [[ $__tsmw_hcw_call_count -le 1 || $__tsmw_hcw_restart = 1 ]]; then
+        if [[ $__tsmw_hcw_call_count -le 1 ]]; then
+            # Read configuration data
+            zstyle -s ":plugin:zinit" page-size __tsmw_page_size || __tsmw_page_size=$(( LINES / 3 ))
+            zstyle -s ":plugin:zinit" highlight-color __tsmw_hl_color || __tsmw_hl_color="fg=39,bold"
+
+            # Read tags file
+            if [[ -z $TAG[file] || ! -f $TAG[file] ]]
+            then
+                if [[ -f ./TAGS ]]; then
+                    TAG[file]=$PWD/TAGS
+                    # Save current project name
+                    __tsmw_repo_or_project="$PWD:t"
+                elif [[ -f ../TAGS ]]; then
+                    TAG[file]=$PWD:h/TAGS
+                    # Save current project name
+                    __tsmw_repo_or_project="$PWD:h:t"
+                elif [[ -f ../../TAGS ]]; then
+                    TAG[file]=$PWD:h:h/TAGS
+                    # Save current project name
+                    __tsmw_repo_or_project="$PWD:h:h:t"
+                else
+                    __tsmw_repo_or_project="<unknown>"
+                    TAG[file]=
+                fi
+            fi
+            if [[ -f $TAG[file] ]]
+            then
+                # Generate simplified file
+                sed -r -n $'/^\x0c$/ { n; s/,[^,]*$//;s/^/\x02/; h; d;}; G; y/\\n/,/; p' $TAG[file] >! $TAG[file].z
+                __tsmw_tag_data=( "${(@f)"$(<${TAG[file]}.z)"}" ) 
+                __tsmw_tag_data=( "${__tsmw_tag_data[@]:#(#s)!*}" )
+            fi
+
+        fi
+
+        # '0' will get changed into $to_display limit
+        [[ $WIDGET = *-word || $WIDGET = *-pforwards ]] && __tsmw_hcw_index=1
+        [[ $WIDGET = *-backwards || $WIDGET = *-pbackwards ]] && __tsmw_hcw_index=0
+        __tsmw_hcw_widget_name="${${${WIDGET%-backwards}-pbackwards}-pforwards}"
+        __tsmw_hcw_found=( )
+        __tsmw_hcw_finished=0
+        __tsmw_hcw_restart=0
+    else
+        # Consecutive call
+        [[ $WIDGET = *-word ]] && (( __tsmw_hcw_index ++ ))
+        [[ $WIDGET = *-backwards ]] && (( __tsmw_hcw_index -- ))
+        [[ $WIDGET = *-pforwards ]] && (( __tsmw_hcw_index = __tsmw_hcw_index + __tsmw_page_size ))
+        [[ $WIDGET = *-pbackwards ]] && (( __tsmw_hcw_index = __tsmw_hcw_index - __tsmw_page_size ))
+    fi
+
+    # Find history entries matching pattern *word1*~^*word2*~^*word3* etc.
+    local search_buffer="${BUFFER%% ##}" search_pattern="" colsearch_pattern=""
+    search_buffer="${search_buffer## ##}"
+    search_buffer="${search_buffer//(#m)[][*?|#~^()><\\]/\\$MATCH}"
+    search_pattern="${search_buffer// ##/*~^*}"
+    colsearch_pattern="${search_buffer// ##/|}"
+
+    if [ "$#__tsmw_hcw_found" -eq 0 ]; then
+        # The repeat will make the matching work on a fresh heap arena
+        repeat 1; do
+            # Match only before ^? ($'\177')
+            __tsmw_hcw_found=( "${(@M)__tsmw_tag_data:#(#i)*$~search_pattern*$'\177'*}" )
+        done
+    fi
+
+    if [ "$#__tsmw_hcw_found" -le 0 ]; then
+        POSTDISPLAY=$'\n'"No matches found"
+        return 0
+    fi
+
+    #
+    # Pagination, index value guards
+    #
+
+    integer page_size=$__tsmw_page_size
+    integer max_index="$#__tsmw_hcw_found"
+    [ $page_size -gt $max_index ] && page_size=$max_index
+    [ $__tsmw_hcw_index -le 0 ] && __tsmw_hcw_index=$max_index
+    [ $__tsmw_hcw_index -gt $max_index ] && __tsmw_hcw_index=1
+    integer page_start_idx=$(( ((__tsmw_hcw_index-1)/page_size)*page_size+1 ))
+    integer on_page_idx=$(( (__tsmw_hcw_index-1) % page_size + 1 ))
+
+    #
+    # Prepare display
+    #
+
+    typeset -a disp_list
+    disp_list=( "${(@)__tsmw_hcw_found[page_start_idx,page_start_idx+page_size-1]}" )
+
+    # Remove meta-data from the entries
+    disp_list=( "${(@)disp_list//$'\177'*/}" )
+
+    # All entries should have multilines replaced
+    disp_list=( "${(@)disp_list//$'\n'/\\n}" )
+    # ... and truncated to display width, and
+    # also preceeded by two spaces
+    disp_list=( "${(@)disp_list/(#m)*/  ${MATCH[1,COLUMNS-8]}}" )
+
+    local nl=$'\n'
+    local entry=$disp_list[on_page_idx]
+    entry[1]='>'
+    disp_list[on_page_idx]=$entry
+
+    #
+    # Detect where "> .." entry starts
+    #
+
+    local txt_before="${(F)${(@)disp_list[1,on_page_idx-1]}}"
+
+    #
+    # Colorify
+    #
+
+    local preamble=$'\n'"Searching in $__tsmw_repo_or_project"$'\n'"Element #$__tsmw_hcw_index of $max_index"$'\n'
+    local text="${(F)disp_list}"
+    integer offset=${#preamble}+${#BUFFER}
+
+    POSTDISPLAY="$preamble$text"
+
+    region_highlight=( "$(( offset + ${#txt_before} )) $(( offset + ${#txt_before} + ${#entry} + 1 )) underline" )
+    if [ -n $colsearch_pattern ]; then
+        # Following line is taken from Zaw (GH zsh-users/zaw) – license is named Zaw, it is in LICENSE file
+        region_highlight+=( "${(f)${(S)text//*(#bi)(${~colsearch_pattern})/$(( offset + mbegin[1] - 1 )) $(( offset + mend[1] )) ${__tsmw_hl_color}${nl}}%$nl*}" )
+    fi
+
+    # Also highlight project name
+    local rh="$(( 14 + ${#BUFFER} )) $(( 14 + ${#BUFFER} + ${#__tsmw_repo_or_project} )) ${__tsmw_hl_color}"
+    region_highlight+=( $rh )
+}
+
+_tsmw_main
+
+_tsmw_simulate_widget() {
+    (( __tsmw_hcw_call_count ++ ))
+    _tsmw_main
+}
+
+_tsmw_self_insert() {
+    LBUFFER+="${KEYS[-1]}"
+    __tsmw_hcw_restart=1
+    _tsmw_simulate_widget
+}
+
+_tsmw_backward_delete_char() {
+    LBUFFER="${LBUFFER%?}"
+    __tsmw_hcw_restart=1
+    _tsmw_simulate_widget
+}
+
+_tsmw_delete_char() {
+    RBUFFER="${RBUFFER#?}"
+    __tsmw_hcw_restart=1
+    _tsmw_simulate_widget
+}
+
+_tsmw_cancel_accept() {
+    BUFFER=""
+    __tsmw_hcw_index=-1
+    zle .accept-line
+}
+
+if [ $__tsmw_hcw_call_count -eq 1 ]; then
+    # Make the tsmw keymap a copy of the current main
+    bindkey -N tsmw emacs
+
+    local down_widget="${${${WIDGET%-backwards}%-pbackwards}-pforwards}"
+    local up_widget="${down_widget}-backwards"
+    local pdown_widget="${down_widget}-pforwards"
+    local pup_widget="${down_widget}-pbackwards"
+
+    # Manual, termcap, terminfo
+    bindkey -M tsmw '^[OA' $up_widget
+    bindkey -M tsmw '^[OB' $down_widget
+    bindkey -M tsmw '^[[A' $up_widget
+    bindkey -M tsmw '^[[B' $down_widget
+    [ -n "$termcap[ku]" ] && bindkey -M tsmw "$termcap[ku]" $up_widget
+    [ -n "$termcap[kd]" ] && bindkey -M tsmw "$termcap[kd]" $down_widget
+    [ -n "$termcap[kD]" ] && bindkey -M tsmw "$termcap[kD]" delete-char
+    [ -n "$terminfo[kcuu1]" ] && bindkey -M tsmw "$terminfo[kcuu1]" $up_widget
+    [ -n "$terminfo[kcud1]" ] && bindkey -M tsmw "$terminfo[kcud1]" $down_widget
+    [ -n "$terminfo[kdch1]" ] && bindkey -M tsmw "$terminfo[kdch1]" delete-char
+
+    # More bindkeys, to remove influence of overloading plugins (sy-h, suggestions)
+    # Left/Right cursor keys
+    bindkey -M tsmw '^[[D' .backward-char
+    bindkey -M tsmw '^[[C' .forward-char
+    [ -n "$termcap[kl]" ] && bindkey -M tsmw "$termcap[kl]" .backward-char
+    [ -n "$termcap[kr]" ] && bindkey -M tsmw "$termcap[kr]" .forward-char
+    [ -n "$terminfo[kcub1]" ] && bindkey -M tsmw "$terminfo[kcub1]" .backward-char
+    [ -n "$terminfo[kcuf1]" ] && bindkey -M tsmw "$terminfo[kcuf1]" .forward-char
+    # Now Home/End keys, first few recorded in my .zshrc during the years sequences
+    bindkey -M tsmw "\e[1~" .beginning-of-line
+    bindkey -M tsmw "\e[7~" .beginning-of-line
+    bindkey -M tsmw "\e[H"  .beginning-of-line
+    bindkey -M tsmw "\e[4~" .end-of-line
+    bindkey -M tsmw "\e[F"  .end-of-line
+    bindkey -M tsmw "\e[8~" .end-of-line
+    [ -n "$termcap[kh]" ] && bindkey -M tsmw "$termcap[kh]" .beginning-of-line
+    [ -n "$termcap[@7]" ] && bindkey -M tsmw "$termcap[@7]" .end-of-line
+    [ -n "$terminfo[khome]" ] && bindkey -M tsmw "$terminfo[khome]" .beginning-of-line
+    [ -n "$terminfo[kend]" ] && bindkey -M tsmw "$terminfo[kend]" .end-of-line
+    # The same for Ctrl-E, Ctrl-F
+    bindkey -M tsmw '^A' .beginning-of-line
+    bindkey -M tsmw '^E' .end-of-line
+    # Additional keys
+    bindkey -M tsmw '^[b' .backward-word
+    bindkey -M tsmw '^[B' .backward-word
+    bindkey -M tsmw '^[f' .forward-word
+    bindkey -M tsmw '^[F' .forward-word
+    bindkey -M tsmw '^[w' .forward-word
+    bindkey -M tsmw '^[W' .forward-word
+
+    # Additional keys
+    bindkey -M tsmw '^P' $up_widget
+    bindkey -M tsmw '^N' $down_widget
+
+    # Page Up, Page Down keys
+    [ -n "$termcap[kP]" ] && bindkey -M tsmw "$termcap[kP]" $pup_widget
+    [ -n "$termcap[kN]" ] && bindkey -M tsmw "$termcap[kN]" $pdown_widget
+    [ -n "$terminfo[kpp]" ] && bindkey -M tsmw "$terminfo[kpp]" $pup_widget
+    [ -n "$terminfo[knp]" ] && bindkey -M tsmw "$terminfo[knp]" $pdown_widget
+
+    # Needed for Fedora 23, zsh-5.1.1
+    bindkey -M tsmw ' ' self-insert
+
+    # Removal of default Ctrl-R binding
+    bindkey -M tsmw '^R' $down_widget
+    # If one would like to re-open
+    bindkey -M tsmw '^O' $down_widget
+    bindkey -M tsmw '^O^K' $down_widget
+
+    # Substitute self-insert, backward-delete-char, delete-char
+    zle -A self-insert saved-self-insert
+    zle -A backward-delete-char saved-backward-delete-char
+    zle -A delete-char saved-delete-char
+    zle -N self-insert _tsmw_self_insert
+    zle -N backward-delete-char _tsmw_backward_delete_char
+    zle -N delete-char _tsmw_delete_char
+
+    # Override ourselves with what we actually are
+    # because zsh-autosuggestions change us
+    zle -A $down_widget saved-$down_widget
+    zle -A $up_widget saved-$up_widget
+    zle -N $down_widget _tsmw_simulate_widget
+    zle -N $up_widget _tsmw_simulate_widget
+
+    zle -A $pdown_widget saved-$pdown_widget
+    zle -A $pup_widget saved-$pup_widget
+    zle -N $pdown_widget _tsmw_simulate_widget
+    zle -N $pup_widget _tsmw_simulate_widget
+
+    local selected_editor cd_at_edit tagtext taglinebyte tagfile
+    local -a comm
+    comm=()
+
+    # Add Ctrl-V, ESC bindings to cancel search
+    # A workaround for Zsh versions like 5.0.2
+    zle -N _tsmw_cancel_accept
+    bindkey -M tsmw "^V" _tsmw_cancel_accept
+    bindkey -M tsmw "^[" _tsmw_cancel_accept
+
+    # Trap INT to manually interrupt Zle to work around a bug
+    trap 'zle && zle .send-break' INT
+
+    if zle .recursive-edit -K tsmw; then
+        if [[ $__tsmw_hcw_index -lt 0 ]]; then
+            BUFFER=""
+        else
+            zstyle -s ":plugin:zinit" editor selected_editor || selected_editor=${VISUAL:-${EDITOR:-mcedit}}
+            zstyle -T ":plugin:zinit" cd_at_edit && cd_at_edit=yes || cd_at_edit=no
+            (( ! $+commands[$selected_editor] )) && selected_editor=vim
+            (( ! $+commands[$selected_editor] )) && selected_editor=nano
+            (( ! $+commands[$selected_editor] )) && selected_editor=emacs
+
+            tagtext=$__tsmw_hcw_found[__tsmw_hcw_index]
+            if [[ $tagtext = (#b)[^$'\177']#$'\177'[^$'\1']#$'\1'([^$'\2']#)$'\2'(*) ]]; then
+                taglinebyte=${match[1]}
+                tagline=${taglinebyte%%,*}
+
+                # CD vs absolute path
+                tagfile=$PWD/${match[2]}
+
+                # Editor command
+                case "$selected_editor" in
+                    (vim|vi|gvim|mvim|nvim)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (emacs|emacsclient)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (gedit)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (nano)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                    (mcedit)
+                        comm+=( $selected_editor "+$tagline" -- "${(q)tagfile}" )
+                        ;;
+                esac
+            fi
+        fi
+    else
+        BUFFER=""
+    fi
+    POSTDISPLAY=""
+
+    # Restore self-insert, backward-delete-char, delete-char
+    zle -A saved-self-insert self-insert
+    zle -A saved-backward-delete-char backward-delete-char
+    zle -A saved-delete-char delete-char
+    zle -D saved-self-insert saved-backward-delete-char saved-delete-char
+
+    # Restore ourselves
+    zle -A saved-$down_widget $down_widget
+    zle -A saved-$up_widget $up_widget
+    zle -D saved-$down_widget saved-$up_widget
+
+    zle -A saved-$pdown_widget $pdown_widget
+    zle -A saved-$pup_widget $pup_widget
+    zle -D saved-$pdown_widget saved-$pup_widget
+
+    # Full reinitialisation at next call
+    __tsmw_hcw_call_count=0
+
+    # Free memory
+    __tsmw_hcw_found=( )
+    __tsmw_tag_data=( )
+
+    # Is there a command to run?
+    if [[ $#comm != 0 ]]; then
+        local auto_run
+        zstyle -T ":plugin:zinit" auto_run && auto_run=yes || auto_run=no
+        BUFFER=$comm[*]
+        CURSOR=$#BUFFER
+        [[ $auto_run = yes ]] && zle .accept-line
+    fi
+elif (( __tsmw_hcw_call_count > 0 )); then
+    (( __tsmw_hcw_call_count -- ))
+fi
+
+# vim:ft=zsh
