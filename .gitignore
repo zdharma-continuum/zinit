@@ -21,3 +21,4 @@ txt/
 zmodules/
 tests/_output/
 tests/_support/zunit/
+.idea

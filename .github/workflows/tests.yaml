@@ -72,6 +72,9 @@ jobs:
       - name: "gh-r"
         run: zunit run tests/gh-r.zunit
 
+      - name: "ices"
+        run: zunit run tests/ices.zunit
+
       - name: "plugins"
         run: zunit run tests/plugins.zunit
 

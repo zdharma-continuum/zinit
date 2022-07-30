@@ -145,7 +145,7 @@
   $dive --version; assert $state equals 0
 }
 @test 'docker-buildx' { # A monitor of resources
-  run zinit for as'completions' atclone'buildx* completion zsh > _buildx' lbin'!buildx-* -> buildx' @docker/buildx
+  run zinit for as'completions' atclone'./buildx* completion zsh > _buildx' lbin'!buildx-* -> buildx' @docker/buildx
   assert $state equals 0
   local buildx="$ZBIN/buildx"; assert "$buildx" is_executable
   $buildx version; assert $state equals 0

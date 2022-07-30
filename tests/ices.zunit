@@ -1,0 +1,52 @@
+#!/usr/bin/env zunit
+
+@setup {
+  ZPLUGINS=$ZINIT[PLUGINS_DIR]
+
+  function _zunit_assert_not_exists() {
+    local pathname=$1 filepath
+
+    # If filepath is relative, prepend the test directory
+    if [[ "${pathname:0:1}" != "/" ]]; then
+      filepath="$testdir/${pathname}"
+    else
+      filepath="$pathname"
+    fi
+
+    [[ ! -e "$filepath" ]] && return 0
+
+    echo "'$pathname' does exist"
+    exit 1
+  }
+
+}
+
+@test 'mv' {
+  run zinit as"null" id-as"test/mv" mv"readme.md -> mv.md" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---mv/mv.md" is_file
+  assert "$ZPLUGINS/test---mv/mv.md" is_file
+  assert "$ZPLUGINS/test---mv/readme.md" not_exists
+}
+
+@test 'cp' {
+  run zinit as"null" id-as"test/cp" cp"readme.md -> cp.md" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---cp/cp.md" is_file
+  assert "$ZPLUGINS/test---cp/cp.md" is_readable
+  assert "$ZPLUGINS/test---cp/readme.md" is_file
+}
+
+@test 'atclone' {
+  run zinit as"null" id-as"test/atclone" atclone"mv readme.md atclone.md" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---atclone/atclone.md" is_file
+  assert "$ZPLUGINS/test---atclone/atclone.md" is_readable
+  assert "$ZPLUGINS/test---atclone/readme.md" not_exists
+}
+
+@test 'make' {
+  run zinit as"null" id-as"test/make" atclone"printf 'all:\n\ttouch whatever\n' > Makefile" make"" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---make/whatever" is_file
+}
