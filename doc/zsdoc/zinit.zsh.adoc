@@ -1203,7 +1203,9 @@ ____
  Registers the z-annex inside Zinit – i.e. an Zinit extension
 ____
 
-Has 4 line(s). Doesn't call other functions.
+Has 6 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
 
 Called by:
 
