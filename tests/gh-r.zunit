@@ -436,6 +436,11 @@ $kopia --version; assert $state equals 0
   local lsd="$ZBIN/lsd"; assert "$lsd" is_executable
   $lsd --version; assert $state equals 0
 }
+@test 'lnav' { # advanced log file viewer
+  run zinit for tstack/lnav; assert $state equals 0
+  local lnav="$ZBIN/lnav"; assert "$lnav" is_executable
+  $lnav --version; assert $state equals 0
+}
 @test 'lstf' { # The aggregated TCP flows printer in Linux
   if [[ ! $OSTYPE =~ 'linux.*' ]]; then skip 'lstf test only ran on Linux'; fi
   run zinit for yuuki/lstf; assert $state equals 0
