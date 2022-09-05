@@ -1486,7 +1486,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       linux-android '(apk|android|linux-android)'
       linux-gnu "*(linux-musl|musl|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
       linux-musl "*(linux-musl|musl|linux-~gnu|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
-      darwin '*((#s)|/)*(apple|darwin|mac|macos|osx|dmg)*((#e)|/)*'
+      darwin '*((#s)|/)*(apple|darwin|mac|macos|os(-|)x|dmg)*((#e)|/)*'
       cygwin '(win((dows|32|64))|cygwin)'
       msys '(win((dows|32|64))|cygwin)'
       windows '(win((dows|32|64))|cygwin)'
