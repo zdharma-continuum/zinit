@@ -1747,7 +1747,7 @@ ziextract() {
             →zinit-extract() {
                 →zinit-check gunzip "$file" || return 1
                 .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
-                command gunzip "$file" |& command egrep -v '.out$'
+                command gunzip "$file" |& command grep -E -v '.out$'
                 integer ret=$pipestatus[1]
                 command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
                 return ret
@@ -1763,7 +1763,7 @@ ziextract() {
             }
             →zinit-extract() { →zinit-check bunzip2 "$file" || return 1
                 .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
-                command bunzip2 "$file" |& command egrep -v '.out$'
+                command bunzip2 "$file" |& command grep -E -v '.out$'
                 integer ret=$pipestatus[1]
                 command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
                 return ret

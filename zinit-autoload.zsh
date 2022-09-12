@@ -1671,7 +1671,7 @@ ZINIT[EXTENDED_GLOB]=""
                       }
                   done
                   ICE=()
-                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
+                  (( ZINIT[annex-multi-flag:pull-active] >= 2 )) && command git pull --no-stat ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command grep -E -v '(FETCH_HEAD|up.to.date\.|From.*://)'
               }
               return ${ZINIT[annex-multi-flag:pull-active]}
             )
@@ -1684,7 +1684,7 @@ ZINIT[EXTENDED_GLOB]=""
                 if (( OPTS[opt_-q,--quiet] )) {
                     command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} &> /dev/null
                 } else {
-                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command egrep -v '(FETCH_HEAD|up.to.date\.|From.*://)'
+                    command git pull --recurse-submodules ${=ice[pullopts]:---ff-only} origin ${ice[ver]:-$main_branch} |& command grep -E -v '(FETCH_HEAD|up.to.date\.|From.*://)'
                 }
             )
         fi
