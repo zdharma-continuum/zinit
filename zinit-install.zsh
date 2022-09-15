@@ -1464,7 +1464,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if [[ -z $urlpart ]] {
         local tag_version=${ICE[ver]}
         if [[ -z $tag_version ]]; then
-            tag_version="$( { .zinit-download-file-stdout $site/latest || .zinit-download-file-stdout $site/latest 1; } 2>/dev/null | \
+            local releases_url=https://github.com/$user/$plugin/releases/latest
+            tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | \
                               command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
             tag_version=${tag_version##*/}
         fi
