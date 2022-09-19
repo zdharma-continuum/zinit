@@ -8,7 +8,7 @@
 
 # Set the base and typically useful options
 emulate -LR zsh
-setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes noautopushd
 
 # Run as script? ZSH_SCRIPT is a Zsh 5.3 addition
 if [[ $0 != template-script || -n $ZSH_SCRIPT ]]; then
