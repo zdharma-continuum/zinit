@@ -47,7 +47,7 @@
     [[ ! -e ${___fle:r}.fifo ]] && command mkfifo "${___fle:r}.fifo" 2>/dev/null 1>&2
     [[ ! -e ${___fle:r}.fifo2 ]] && command mkfifo "${___fle:r}.fifo2" 2>/dev/null 1>&2
 
-    typeset -g ZSRV_WORK_DIR="${ZINIT[SERVICES_DIR]}" ZSRV_ID="${ICE[service]}"  # should be also set by other p-m
+    typeset -gx ZSRV_WORK_DIR="${ZINIT[SERVICES_DIR]}" ZSRV_ID="${ICE[service]}"  # should be also set by other p-m
 
     while (( 1 )); do
         (
@@ -55,8 +55,12 @@
                 [[ ! -f ${___fle:r}.stop ]] && if (( ___lckd )) || zsystem 2>/dev/null 1>&2 flock -t 1 -f ___fd -e $___fle; then
                     ___lckd=1
                     if (( ! ___strd )) || [[ $___cmd = RESTART ]]; then
-                        [[ $___tpe = p ]] && { ___strd=1; .zinit-load "$___id" "" "$___mode"; }
-                        [[ $___tpe = s ]] && { ___strd=1; .zinit-load-snippet "$___id" ""; }
+                        [[ $___tpe = p ]] && { ___strd=1
+                                                .zinit-load "$___id" "" "$___mode" 0;
+                                            }
+                        [[ $___tpe = s ]] && { ___strd=1
+                                                .zinit-load-snippet "$___id" "" 0;
+                                            }
                     fi
                     ___cmd=
                     while (( 1 )); do builtin read -t 32767 ___cmd <>"${___fle:r}.fifo" && break; done
