@@ -1034,20 +1034,27 @@ builtin setopt noaliases
 # there can be different conventions, if that file is not found, then
 # this functions examines other conventions in the most sane order.
 .zinit-find-other-matches() {
-    local pdir_path="$1" pbase="$2"
+    local pdir_path="$1" pbase="$2" limit="$3"
 
-    if [[ -e $pdir_path/init.zsh ]] {
-        reply=( "$pdir_path"/init.zsh )
-    } elif [[ -e $pdir_path/$pbase.zsh-theme ]] {
-        reply=( "$pdir_path/$pbase".zsh-theme )
-    } elif [[ -e $pdir_path/$pbase.theme.zsh ]] {
-        reply=( "$pdir_path/$pbase".theme.zsh )
-    } else {
-        reply=(
-            "$pdir_path"/*.plugin.zsh(DN) "$pdir_path"/*.zsh-theme(DN) "$pdir_path"/*.lib.zsh(DN)
-            "$pdir_path"/*.zsh(DN) "$pdir_path"/*.sh(DN) "$pdir_path"/.zshrc(DN)
-        )
-    }
+    # Only *.plugin.zsh load? When loading service.
+    if [[ $limit == 1 ]]; then
+        reply=( "$pdir_path"/*.plugin.zsh(DN) )
+    elif [[ $limit == 0 ]]; then
+        reply=( "$pdir_path"/*.service.zsh(DN) )
+    else
+        if [[ -e $pdir_path/init.zsh ]] {
+            reply=( "$pdir_path"/init.zsh )
+        } elif [[ -e $pdir_path/$pbase.zsh-theme ]] {
+            reply=( "$pdir_path/$pbase".zsh-theme )
+        } elif [[ -e $pdir_path/$pbase.theme.zsh ]] {
+            reply=( "$pdir_path/$pbase".theme.zsh )
+        } else {
+            reply=(
+                "$pdir_path"/*.plugin.zsh(DN) "$pdir_path"/*.zsh-theme(DN) "$pdir_path"/*.lib.zsh(DN)
+                "$pdir_path"/*.zsh(DN) "$pdir_path"/*.sh(DN) "$pdir_path"/.zshrc(DN)
+            )
+        }
+    fi
     reply=( "${(u)reply[@]}" )
 
     return $(( ${#reply} > 0 ? 0 : 1 ))
@@ -1321,7 +1328,7 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local -a opts
     zparseopts -E -D -a opts f -command || { +zinit-message "{u-warn}Error{b-warn}:{rst} Incorrect options (accepted ones: {opt}-f{rst}, {opt}--command{rst})."; return 1; }
-    local url="$1"
+    local url="$1" limit="$3"
     [[ -n ${ICE[teleid]} ]] && url="${ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
@@ -1357,7 +1364,7 @@ builtin setopt noaliases
 
     # Set up param'' objects (parameters).
     if [[ -n ${ICE[param]} ]] {
-        .zinit-setup-params && local ${(Q)reply[@]}
+        .zinit-setup-params && local -x ${(Q)reply[@]}
     }
 
     .zinit-pack-ice "$id_as" ""
@@ -1444,7 +1451,7 @@ builtin setopt noaliases
             if [[ -n ${ICE[pick]} ]]; then
                 list=( ${(M)~ICE[pick]##/*}(DN) $local_dir/$dirname/${~ICE[pick]}(DN) )
             elif (( ${+ICE[pick]} == 0 )); then
-                .zinit-find-other-matches "$local_dir/$dirname" "$filename"
+                .zinit-find-other-matches "$local_dir/$dirname" "$filename" "$limit"
                 list=( ${reply[@]} )
             fi
         }
@@ -1561,7 +1568,7 @@ builtin setopt noaliases
 # $2 - plugin name, if the third format is used
 .zinit-load () {
     typeset -F 3 SECONDS=0
-    local ___mode="$3" ___rst=0 ___retval=0 ___key
+    local ___mode="$3" ___limit="$4" ___rst=0 ___retval=0 ___key
     .zinit-any-to-user-plugin "$1" "$2"
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
@@ -1605,7 +1612,7 @@ builtin setopt noaliases
         ICE[teleid]="$___user${${___user:#(%|/)*}:+/}$___plugin"
         [[ $REPLY = snippet ]] && {
             ICE[id-as]="${ICE[id-as]:-$___id_as}"
-            .zinit-load-snippet $___plugin && return
+            .zinit-load-snippet $___plugin "" $___limit && return
             zle && { builtin print; zle .reset-prompt; }
             return 1
         }
@@ -1627,7 +1634,7 @@ builtin setopt noaliases
 
     # Set up param'' objects (parameters).
     if [[ -n ${ICE[param]} ]] {
-        .zinit-setup-params && local ${(Q)reply[@]}
+        .zinit-setup-params && local -x ${(Q)reply[@]}
     }
 
     reply=( ${(on)ZINIT_EXTS[(I)z-annex hook:\!atinit-<-> <->]} )
@@ -1646,7 +1653,8 @@ builtin setopt noaliases
             return $(( 10 - $? ))
     done
 
-    .zinit-load-plugin "$___user" "$___plugin" "$___id_as" "$___mode" "$___rst"; ___retval=$?
+    .zinit-load-plugin "$___user" "$___plugin" "$___id_as" \
+                    "$___mode" "$___rst" "$___limit" ; ___retval=$?
     (( ${+ICE[notify]} == 1 )) && { [[ $___retval -eq 0 || -n ${(M)ICE[notify]#\!} ]] && { local msg; eval "msg=\"${ICE[notify]#\!}\""; +zinit-deploy-message @msg "$msg" } || +zinit-deploy-message @msg "notify: Plugin not loaded / loaded with problem, the return code: $___retval"; }
     (( ${+ICE[reset-prompt]} == 1 )) && +zinit-deploy-message @___rst
 
@@ -1669,7 +1677,8 @@ builtin setopt noaliases
 # $2 - plugin
 # $3 - mode (light or load)
 .zinit-load-plugin() {
-    local ___user="$1" ___plugin="$2" ___id_as="$3" ___mode="$4" ___rst="$5" ___correct=0 ___retval=0
+    local ___user="$1" ___plugin="$2" ___id_as="$3" ___mode="$4" \
+            ___rst="$5" ___limit="$6" ___correct=0 ___retval=0
     local ___pbase="${${___plugin:t}%(.plugin.zsh|.zsh|.git)}" ___key
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
@@ -1753,10 +1762,10 @@ builtin setopt noaliases
     else
         if [[ -n ${ICE[pick]} ]]; then
             [[ ${ICE[pick]} = /dev/null ]] && reply=( /dev/null ) || reply=( ${(M)~ICE[pick]##/*}(DN) $___pdir_path/${~ICE[pick]}(DN) )
-        elif [[ -e $___pdir_path/$___pbase.plugin.zsh ]]; then
+        elif [[ -e $___pdir_path/$___pbase.plugin.zsh && $___limit -ne 0 ]]; then
             reply=( "$___pdir_path/$___pbase".plugin.zsh )
         else
-            .zinit-find-other-matches "$___pdir_path" "$___pbase"
+            .zinit-find-other-matches "$___pdir_path" "$___pbase" "$___limit"
         fi
 
         #[[ ${#reply} -eq 0 ]] && return 1
@@ -2311,11 +2320,12 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     fi
 
     if [[ $___action = *load ]]; then
-        if [[ $___tpe = p ]]; then
-            .zinit-load "${(@)=___id}" "" "$___mode"; (( ___retval += $? ))
-        elif [[ $___tpe = s ]]; then
-            .zinit-load-snippet $___opt "$___id"; (( ___retval += $? ))
-        elif [[ $___tpe = p1 || $___tpe = s1 ]]; then
+        if [[ $___tpe = p* ]]; then
+            .zinit-load "${(@)=___id}" "" "$___mode" ${___tpe#p}; (( ___retval += $? ))
+        elif [[ $___tpe = s* ]]; then
+            .zinit-load-snippet $___opt "$___id" "" ${___tpe#s}; (( ___retval += $? ))
+        fi
+        if [[ $___tpe = p1 || $___tpe = s1 ]]; then
             (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
             zpty -b "${___id//\//:} / ${ICE[service]}" '.zinit-service '"${(M)___tpe#?}"' "$___mode" "$___id"'
         fi
