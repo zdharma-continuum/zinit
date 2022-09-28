@@ -92,16 +92,50 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 238 line(s). Calls functions:
+Has 254 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
  |-- @zinit-register-hook
  |-- add-zsh-hook
  |-- is-at-least
+ |-- zinit
+ |   |-- +zinit-message
+ |   |-- +zinit-prehelp-usage-message
+ |   |   `-- +zinit-message
+ |   |-- compinit
+ |   |-- zinit-autoload.zsh/.zinit-cdisable
+ |   |-- zinit-autoload.zsh/.zinit-cenable
+ |   |-- zinit-autoload.zsh/.zinit-clear-completions
+ |   |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
+ |   |-- zinit-autoload.zsh/.zinit-compiled
+ |   |-- zinit-autoload.zsh/.zinit-help
+ |   |-- zinit-autoload.zsh/.zinit-list-bindkeys
+ |   |-- zinit-autoload.zsh/.zinit-list-compdef-replay
+ |   |-- zinit-autoload.zsh/.zinit-ls
+ |   |-- zinit-autoload.zsh/.zinit-module
+ |   |-- zinit-autoload.zsh/.zinit-recently
+ |   |-- zinit-autoload.zsh/.zinit-search-completions
+ |   |-- zinit-autoload.zsh/.zinit-self-update
+ |   |-- zinit-autoload.zsh/.zinit-show-all-reports
+ |   |-- zinit-autoload.zsh/.zinit-show-completions
+ |   |-- zinit-autoload.zsh/.zinit-show-debug-report
+ |   |-- zinit-autoload.zsh/.zinit-show-registered-plugins
+ |   |-- zinit-autoload.zsh/.zinit-show-report
+ |   |-- zinit-autoload.zsh/.zinit-show-times
+ |   |-- zinit-autoload.zsh/.zinit-show-zstatus
+ |   |-- zinit-autoload.zsh/.zinit-uncompile-plugin
+ |   |-- zinit-autoload.zsh/.zinit-uninstall-completions
+ |   |-- zinit-autoload.zsh/.zinit-unload
+ |   |-- zinit-autoload.zsh/.zinit-update-or-status
+ |   |-- zinit-autoload.zsh/.zinit-update-or-status-all
+ |   |-- zinit-install.zsh/.zinit-compile-plugin
+ |   |-- zinit-install.zsh/.zinit-compinit
+ |   |-- zinit-install.zsh/.zinit-forget-completion
+ |   `-- zinit-install.zsh/.zinit-install-completions
  `-- zinit-autoload.zsh/.zinit-module
 
-Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _export_, _is-at-least_, _setopt_, _source_, _zmodload_, _zstyle_
+Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
 
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
@@ -467,7 +501,7 @@ ____
  this functions examines other conventions in the most sane order.
 ____
 
-Has 17 line(s). Doesn't call other functions.
+Has 22 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -652,7 +686,7 @@ ____
  $2 - plugin name, if the third format is used
 ____
 
-Has 94 line(s). Calls functions:
+Has 95 line(s). Calls functions:
 
  .zinit-load
  |-- +zinit-deploy-message
@@ -713,7 +747,7 @@ ____
  $3 - mode (light or load)
 ____
 
-Has 127 line(s). Calls functions:
+Has 128 line(s). Calls functions:
 
  .zinit-load-plugin
  `-- :zinit-tmp-subst-autoload
@@ -814,7 +848,7 @@ ____
  already exist.
 ____
 
-Has 40 line(s). Calls functions:
+Has 44 line(s). Calls functions:
 
  .zinit-prepare-home
  |-- zinit-autoload.zsh/.zinit-clear-completions
@@ -888,7 +922,7 @@ ____
  $6 - the plugin-spec or snippet URL or alias name (from id-as'')
 ____
 
-Has 46 line(s). Calls functions:
+Has 47 line(s). Calls functions:
 
  .zinit-run-task
  `-- zinit-autoload.zsh/.zinit-unload
@@ -1265,9 +1299,7 @@ Called by:
  zinit-install.zsh/∞zinit-configure-base-hook
  zinit-install.zsh/∞zinit-cp-hook
  zinit-install.zsh/∞zinit-extract-hook
- zinit-install.zsh/∞zinit-make-e-hook
- zinit-install.zsh/∞zinit-make-ee-hook
- zinit-install.zsh/∞zinit-make-hook
+ zinit-install.zsh/∞zinit-make-base-hook
  zinit-install.zsh/∞zinit-mv-hook
 
 _Environment variables used:_ ZPFX
@@ -1444,6 +1476,7 @@ Uses feature(s): _autoload_, _compinit_, _eval_, _setopt_, _source_
 
 Called by:
 
+ Script-Body
  zplugin
 
 zpcdclear

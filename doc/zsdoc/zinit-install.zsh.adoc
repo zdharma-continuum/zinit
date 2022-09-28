@@ -16,6 +16,7 @@ FUNCTIONS
  .zinit-at-eval
  .zinit-compile-plugin
  .zinit-compinit
+ .zinit-configure-run-autoconf
  .zinit-download-file-stdout
  .zinit-download-snippet
  .zinit-extract
@@ -44,6 +45,7 @@ FUNCTIONS
  ∞zinit-configure-hook
  ∞zinit-cp-hook
  ∞zinit-extract-hook
+ ∞zinit-make-base-hook
  ∞zinit-make-e-hook
  ∞zinit-make-ee-hook
  ∞zinit-make-hook
@@ -140,6 +142,26 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status-all
  zinit.zsh/.zinit-prepare-home
  zinit.zsh/zinit
+
+.zinit-configure-run-autoconf
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: .zinit-configure-run-autoconf [[[
+ Called either because # flag given to configure'', or because
+ there's no ./configure script. Runs autoconf, autoreconf,
+ autogen.sh as needed.
+____
+
+Has 64 line(s). Calls functions:
+
+ .zinit-configure-run-autoconf
+ `-- zinit-side.zsh/.zinit-countdown
+
+Called by:
+
+ ∞zinit-configure-base-hook
 
 .zinit-download-file-stdout
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -264,7 +286,7 @@ ____
  package. Connects to Github releases page.
 ____
 
-Has 115 line(s). Calls functions:
+Has 122 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zinit-message
@@ -450,7 +472,7 @@ ____
  $2 - plugin
 ____
 
-Has 209 line(s). Calls functions:
+Has 215 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- ziextract
@@ -642,7 +664,7 @@ ____
  places.
 ____
 
-Has 35 line(s). Calls functions:
+Has 65 line(s). Calls functions:
 
  ∞zinit-configure-base-hook
  |-- zinit-side.zsh/.zinit-countdown
@@ -727,6 +749,26 @@ Has 10 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
+∞zinit-make-base-hook
+~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ FUNCTION: ∞zinit-make-hook [[[
+____
+
+Has 29 line(s). Calls functions:
+
+ ∞zinit-make-base-hook
+ |-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/@zinit-substitute
+
+Called by:
+
+ ∞zinit-make-e-hook
+ ∞zinit-make-ee-hook
+ ∞zinit-make-hook
+
 ∞zinit-make-e-hook
 ~~~~~~~~~~~~~~~~~~
 
@@ -735,11 +777,12 @@ ____
  FUNCTION: ∞zinit-make-e-hook [[[
 ____
 
-Has 11 line(s). Calls functions:
+Has 1 line(s). Calls functions:
 
  ∞zinit-make-e-hook
- |-- zinit-side.zsh/.zinit-countdown
- `-- zinit.zsh/@zinit-substitute
+ `-- ∞zinit-make-base-hook
+     |-- zinit-side.zsh/.zinit-countdown
+     `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -751,11 +794,12 @@ ____
  FUNCTION: ∞zinit-make-ee-hook [[[
 ____
 
-Has 11 line(s). Calls functions:
+Has 1 line(s). Calls functions:
 
  ∞zinit-make-ee-hook
- |-- zinit-side.zsh/.zinit-countdown
- `-- zinit.zsh/@zinit-substitute
+ `-- ∞zinit-make-base-hook
+     |-- zinit-side.zsh/.zinit-countdown
+     `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -767,11 +811,12 @@ ____
  FUNCTION: ∞zinit-make-hook [[[
 ____
 
-Has 11 line(s). Calls functions:
+Has 1 line(s). Calls functions:
 
  ∞zinit-make-hook
- |-- zinit-side.zsh/.zinit-countdown
- `-- zinit.zsh/@zinit-substitute
+ `-- ∞zinit-make-base-hook
+     |-- zinit-side.zsh/.zinit-countdown
+     `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
