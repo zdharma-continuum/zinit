@@ -2088,6 +2088,82 @@ zimv() {
     if [[ $1 = (-d|--dir) ]] { dir=$2; shift 2; }
     zicp --mv ${dir:+--dir} $dir "$@"
 } # ]]]
+# FUNCTION: .zinit-configure-run-autoconf [[[
+# Called either because # flag given to configure'', or because
+# there's no ./configure script. Runs autoconf, autoreconf,
+# autogen.sh as needed.
+.zinit-configure-run-autoconf() {
+    local dir=$1 flags=$2
+    integer q
+    local msg="{pre} ({flag}#{pre} flag given){…}" msg_="{pre}{…}"
+    # Custom script
+    if [[ -f $dir/autogen.sh ]]; then
+        q=1
+        m {pre}Running {cmd}./autogen.sh${${${(M)flags:#*\#*}:+$msg}:-$msg_}
+        .zinit-countdown ./autogen.sh && \
+            (
+                cd -q $dir
+                chmod +x ./autogen.sh
+                ./autogen.sh
+            )
+    # Autoreconf only if available in PATH
+    elif [[ -f $dir/configure && -f $dir/configure.ac && \
+            $+commands[autoreconf] = 1 ]]; then
+        q=1
+        m {pre}Running {cmd}autoreconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
+        .zinit-countdown autoreconf\ -f\ -i\ … && \
+            (
+                cd -q $dir
+                rm -f aclocal.m4
+                aclocal -I m4 --force
+                libtoolize --copy --force
+                autoreconf -f -i -I m4
+            )
+    # Manual reproduction of autoreconf run
+    elif [[ -f $dir/configure && -f $dir/configure.ac ]]; then
+        q=1
+        m {pre}Running {cmd}aclocal{pre}, {cmd}autoconf{pre} and {cmd}automake\
+${${${(M)flags:#*\#*}:+$msg}:-$msg_}
+        .zinit-countdown aclocal,\ autoconf,\ automake && \
+            (
+                cd -q $dir
+                rm -f aclocal.m4
+                aclocal -I m4 --force
+                libtoolize --copy --force
+                aclocal -I m4 --force
+                autoconf -I m4 -f
+                autoheader -I m4 -f
+                automake --add-missing -c --force-missing
+            )
+    # Only autoconf if no existing ./configure
+    elif [[ ! -f $dir/configure && -f $dir/configure.ac ]]; then
+        q=1
+        m {pre}Running {cmd}autoconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
+        .zinit-countdown autoconf\ -f && \
+            (
+                cd -q $dir
+                autoconf -f -I m4
+            )
+    elif [[ $flags == *\#* ]]; then
+        m {ehi}WARNING:{error}: No {cmd}autogen.sh{error} nor {file}configure.ac \
+            {error}on disk while the {flag}\# \
+            {error}flag given to the {ice}configure{apo}\'\'{error} ice, skipping \
+            further {cmd}./configure{error}-generation related actions{…}
+        ((1))
+    fi
+    if [[ ! -f $dir/configure ]]; then
+        if (( q )); then
+            m {error}WARNING:some input files existed \({file}configure.ac{error}, \
+                etc.\) however running {cmd}Autotools{error} didn\'t yield a \
+                {cmd}./configure{error} script, meaning that it won\'t be run\! \
+                Please check if you have packages such as {pkg}autoconf{error}, \
+                {pkg}autmake{error} and similar installed.
+        else
+            # No output – lacking both configure.ac and configure → a no-op
+            :
+        fi
+    fi
+} # ]]]
 # FUNCTION: ∞zinit-reset-opt-hook [[[
 ∞zinit-reset-hook() {
     # File
@@ -2197,85 +2273,135 @@ zimv() {
         local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
 
+    emulate -L zsh -o extendedglob
+
     local configure=${ICE[configure]}
     @zinit-substitute configure
 
+    # c-cmake, s-scons, m-meson, 0-default (configure)
+    local flags=${(M)configure##[smc0\!\#]##}
+    configure=${configure##$flags([[:space:]]##|(#e))}
     (( ${+ICE[configure]} )) || return 0
-    if [[ $ex = "!" ]]; then
-        [[ $configure[1,2] == *\!* ]] || return 0
-    else
-        [[ $configure[1,2] != *\!* ]] || return 0
+    # !-only flags
+    local eflags=${(SM)flags##[\!]##} aflags=${(SM)flags##[smc0]##}
+    [[ $eflags == $ex ]] || return 0
+
+    # Conditionally run autogen.sh/autoconf/aclocal/etc. to
+    # see if we got an output ./configure file (or preexisting
+    # if no autotools have been resolved to run from the optional
+    # # flag and the .ac/.m4 input files) ready to run
+    [[ $flags == *\#* || ! -f $dir/configure ]] &&
+        .zinit-configure-run-autoconf "$dir" $flags
+
+    if [[ $flags == (#b)*([^smc0\!\#]##)* || ${flags//[\!\#]##/} == (#b)(([smc0](#c2,))) ]]; then
+        m {error}ERROR: improper ${match[2]:+\(multiple of s,m,c\?\)} flag\(s\) \({flag}${match[1]}{error}\) \
+            given, skipping further build system actions processing{…}
+        return 1
     fi
 
-    if [[ $configure[1,2] == *\#* ]]; then
-        if [[ -f $dir/autogen.sh ]]; then
-            m {pre}Running {cmd}./autogen.sh{…}
-            chmod +x $dir/autogen.sh
-            .zinit-countdown ./autogen.sh && \
-                ( cd -q "$dir"; ./autogen.sh )
+    local -a files=( $dir/CMakeLists.txt(N) $dir/*/CMakeLists.txt(N) )
+    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#c[^a-z0]# ]]; then
+        if (( ${+commands[cmake]} )); then
+            command mkdir -p $dir/_build-zinit
+            m {pre}Running {cmd}cmake{pre} ${${${${#files}:#0}:+for \
+            its found {file}CMakeLists.txt{pre} input file{…}}:-\
+because {flag}c{pre} flag given}
+           .zinit-countdown cmake && \
+             ( cd -q $dir/_build-zinit; cmake -DCMAKE_INSTALL_PREFIX=$ZPFX .. ${(@s; ;)configure} )
         else
-            m {ehi}WARNING:{error}: No {cmd}autogen.sh{error} on disk while {obj2}\#\
-                {error}flag given to the {ice}configure{apo}\'\'{error} ice, skipping{…}
-        fi
-    else
-        if [[ -f $dir/autogen.sh && ! -f $dir/configure ]]; then
-            m {pre}Running {cmd}./autogen.sh{pre}, because no {cmd}configure{pre} found{…}
-            .zinit-countdown ./autogen.sh && \
-                ( cd -q "$dir"; ./autogen.sh )
+            m {error}Error: no {cmd}cmake{error} binary found and \
+                ${${${${#files}:#0}:+its input file exists \
+                   ({file}CMakeLists.txt{error})}:-and {flag}c{error} \
+                   flag given}! Skipping{…}
         fi
     fi
-    m {pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}$ZPFX{nb}{…}
-    configure=${configure##(\!\#|\#\!|\!|\#)}
-    .zinit-countdown ./configure && \
-        ( cd -q "$dir"; ./configure --prefix=$ZPFX ${(@s; ;)configure} )
+    local -a files=( $dir/SConstruct(N) $dir/*/SConstruct(N) )
+    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#s[^a-z0]# ]]; then
+        if (( ${+commands[scons]} )); then
+            m {pre}Running {cmd}scons{pre} for its found {file}SConstruct{pre} input file{…}
+            .zinit-countdown scons && \
+                 ( cd $dir; scons RELEASE=yes --prefix=$ZPFX ${(@s; ;)configure} )
+        else
+            m {error}Error: no {cmd}scons{error} binary found and \
+                ${${${${#files}:#0}:+its input file exists \
+                    ({file}SConstruct{error})}:-and {flag}s{error} \
+                    flag given}! Skipping{…}
+        fi
+    fi
+    local -a files=( $dir/meson.build(N) $dir/*/meson.build(N) )
+    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#m[^a-z0]# ]]; then
+        if (( ${+commands[meson]} )); then
+            m {pre}Running {cmd}meson setup{pre} ${${${${#files}:#0}:+\
+for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
+                flag given}{…}
+            .zinit-countdown meson\ setup && \
+                ( cd $dir; command meson setup --prefix=$ZPFX _build-zinit ${(@s; ;)configure} )
+        else
+            m {error}Error: no {cmd}meson{error} binary found and \
+            ${${${${#files}:#0}:+its input file exists \
+                ({file}meson.build{error})}:-{flag}m{error} \
+                flag given}! Skipping{…}
+        fi
+    fi
+    if [[ -f $dir/configure && -z $aflags || $flags == [^a-z0]#0[^a-z0]# ]]; then
+        m {pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}$ZPFX{nb}{…}
+        .zinit-countdown ./configure && \
+            (
+                cd -q $dir
+                chmod +x ./configure
+                ./configure --prefix=$ZPFX ${(@s; ;)configure}
+            )
+    fi
 } # ]]]
 # FUNCTION: ∞zinit-make-ee-hook [[[
 ∞zinit-make-ee-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
-        local dir="${4#%}" hook="$5" subtype="$6"
-
-    local make=${ICE[make]}
-    @zinit-substitute make
-
-    (( ${+ICE[make]} )) || return 0
-    [[ $make = "!!"* ]] || return 0
-
-    # Git-plugin make'' at download
-    .zinit-countdown make && \
-        command make -C "$dir" ${(@s; ;)${make#\!\!}}
+    ∞zinit-make-base-hook "$@" "!!"
 } # ]]]
 # FUNCTION: ∞zinit-make-e-hook [[[
 ∞zinit-make-e-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
-        local dir="${4#%}" hook="$5" subtype="$6"
-
-    local make=${ICE[make]}
-    @zinit-substitute make
-
-    (( ${+ICE[make]} )) || return 0
-    [[ $make = ("!"[^\!]*|"!") ]] || return 0
-
-    # Git-plugin make'' at download
-    .zinit-countdown make && \
-        command make -C "$dir" ${(@s; ;)${make#\!}}
+    ∞zinit-make-base-hook "$@" "!"
 } # ]]]
 # FUNCTION: ∞zinit-make-hook [[[
 ∞zinit-make-hook() {
+    ∞zinit-make-base-hook "$@" ""
+} # ]]]
+# FUNCTION: ∞zinit-make-hook [[[
+∞zinit-make-base-hook() {
     [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
-        local dir="${4#%}" hook="$5" subtype="$6"
+        local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
+        local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
 
     local make=${ICE[make]}
     @zinit-substitute make
 
+    # Save preceding ! only
+    local eflags=${(M)make##[\!]##}
+    make=${make##$eflags}
     (( ${+ICE[make]} )) || return 0
-    [[ $make != "!"* ]] || return 0
+    [[ $ex == $eflags ]] || return 0
 
-    # Git-plugin make'' at download
-    .zinit-countdown make &&
-        command make -C "$dir" ${(@s; ;)make}
+    # For meson and cmake
+    [[ -d $dir/_build-zinit ]] && dir+=/_build-zinit
+
+    # Run either `make` or `meson compile`
+    if [[ -f $dir/Makefile ]]; then
+        m {pre}Running {apo}\`{cmd}make{opt} ${(@s; ;)make}{apo}\`{pre}{…}
+        .zinit-countdown make &&
+            command make -C "$dir" ${(@s; ;)make}
+    elif [[ -f $dir/build.ninja ]]; then
+        m {pre}Running {apo}\`{cmd}meson{opt} compile{apo}\`{pre}{…}
+        .zinit-countdown meson\ compile &&
+            meson compile -C "$dir"
+        [[ $make == ([[:space:]]|(#s))install([[:space:]]|(#e)) ]] &&
+        {
+            m {pre}Running {apo}\`{cmd}meson{opt} ${(@s; ;)make}{apo}\`{pre}{…}
+            .zinit-countdown meson\ ${(@s; ;)make} &&
+                meson ${(@s; ;)make} -C "$dir"
+        }
+    else
+        m {error}ERROR: No {file}Makefile{error} nor {cmd}meson{error} \
+            build dir found, {cmd}make{error}/{cmd}meson{error} isn\'t run\!
+    fi
 } # ]]]
 # FUNCTION: ∞zinit-atclone-hook [[[
 ∞zinit-atclone-hook() {
