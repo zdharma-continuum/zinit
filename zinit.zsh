@@ -143,20 +143,6 @@ ZINIT_2MAP=(
     PZT:: https://raw.githubusercontent.com/sorin-ionescu/prezto/master/
     PZTM:: https://raw.githubusercontent.com/sorin-ionescu/prezto/master/modules/
 )
-
-# Global aliases for quick access to zinit dirs, use simply as e.g.: cd ZIDIR
-alias -g ZIBIN=${ZINIT[BIN_DIR]} \
- 	ZIDIR=${ZINIT[HOME_DIR]} ZIPLUGS=${ZINIT[PLUGINS_DIR]} \
- 	ZISNIPS=${ZINIT[SNIPPETS_DIR]} ZICOMPS=${ZINIT[COMPLETIONS_DIR]} \
-	ZISERV=${ZINIT[SERVICES_DIR]} ZICACHE=$ZSH_CACHE_DIR \
-	ZPFX=$ZPFX
-
-# ... and few global variables, Can be used as e.g.: ~DIR or $DIR, etc.
-typeset -g ZIBIN=${ZINIT[BIN_DIR]} \
-	ZIDIR=${ZINIT[HOME_DIR]} ZIPLUGS=${ZINIT[PLUGINS_DIR]} \
-	ZISNIPS=${ZINIT[SNIPPETS_DIR]} ZICOMPS=${ZINIT[COMPLETIONS_DIR]} \
-	ZISERV=${ZINIT[SERVICES_DIR]} ZICACHE=$ZSH_CACHE_DIR
-
 # ]]]
 
 # Init. [[[
