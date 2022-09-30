@@ -95,4 +95,4 @@ ZINIT_PB_RIGHT="${word[diff+1,-1]}"
 
 [[ $ZINIT_PB_SELECTED_WORD -gt 0 ]]
 
-# vim:ft=zsh
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
