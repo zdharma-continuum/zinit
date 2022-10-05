@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
-# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
-
+#
 # Copyright (c) YEAR USER_NAME
 
 # An example of type-agnostic script/function, i.e.: the file can be run as a +x
@@ -37,4 +36,10 @@ fi
 # Use alternate marks [[[ and ]]] as the original ones can confuse nested
 # substitutions, e.g.: ${${${VAR}}}
 
-# vim:ft=zsh:tw=80:sw=4:sts=4:et:foldmarker=[[[,]]]
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
