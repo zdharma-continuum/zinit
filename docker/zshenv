@@ -11,3 +11,11 @@ typeset -Ag ZINIT
 # etc to /data-static
 export ZINIT[HOME_DIR]=${ZINIT_HOME_DIR:-/data}
 export ZINIT[BIN_DIR]=/src
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et

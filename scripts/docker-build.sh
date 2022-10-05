@@ -71,3 +71,11 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
 
   build "${CONTAINER_IMAGE}" "${CONTAINER_TAG}" "${BUILD_ZSH_VERSION}" "$@"
 fi
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=bash sw=2 ts=2 et

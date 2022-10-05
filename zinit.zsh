@@ -1,4 +1,3 @@
-# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
 #
@@ -2009,7 +2008,7 @@ builtin setopt noaliases
         # \1 - preceding \2 - open, \3 - string, \4 - close, \5 - following
         elif [[ $wrk == (#b)(*)([\'\`\"])([^\'\`\"]##)([\'\`\"])(*) ]]; then
             local -A map=( \` bapo \' apo \" quo
-                x\` baps x\' aps x\" quos ) 
+                x\` baps x\' aps x\" quos )
             local openq=$match[2] str=$match[3] closeq=$match[4] RST=$ZINIT[col-rst]
             REPLY=$match[1]$ZINIT[col-$map[$openq]]$openq$RST$ZINIT[col-$map[x$openq]]$str$RST$ZINIT[col-$map[$closeq]]$closeq$RST$match[5]
         fi
@@ -2051,7 +2050,8 @@ builtin setopt noaliases
 # FUNCTION: .zinit-formatter-th-bar. [[[
 .zinit-formatter-th-bar() {
     .zinit-formatter-bar-util ━ th-bar
-}
+} # ]]]
+
 # FUNCTION: .zinit-formatter-bar-util. [[[
 .zinit-formatter-bar-util() {
     if [[ $LANG == (#i)*utf-8* ]]; then
@@ -3268,4 +3268,10 @@ zle -N zi-browse-symbol-pforwards zi-browse-symbol
 zstyle -s ':zinit:browse-symbol' key ZINIT_TMP || ZINIT_TMP='\eQ'
 [[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
