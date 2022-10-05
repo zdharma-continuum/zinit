@@ -1474,15 +1474,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         local url=https://$urlpart
     }
 
-    local HAS_MUSL
-    if command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    else
-        HAS_MUSL=$MACHTYPE
+    local HAS_MUSL=$MACHTYPE
+    if (( ${+commands[curl]} )) || find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
+      HAS_MUSL='linux-musl'
     fi
 
     local -A matchstr
@@ -2616,4 +2610,11 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         )
     }
 } # ]]]
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
