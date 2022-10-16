@@ -70,6 +70,7 @@ case $state in
     _describe -t commands "Zinit command" commands && ret=0
     ;;
   argument)
+    curcontext="${curcontext%:*:*}:zinit-$words[2]:"
     case $words[2] in
       help)
         _message "Hit enter to get usage information" && ret=0
