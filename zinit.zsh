@@ -1178,11 +1178,16 @@ builtin setopt noaliases
 # FUNCTION: @zinit-register-annex. [[[
 # Registers the z-annex inside Zinit – i.e. an Zinit extension
 @zinit-register-annex() {
+    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    # See comment in zinit-register-hook() why nobanghist is needed
+    builtin setopt nobanghist
     local name="$1" type="$2" handler="$3" helphandler="$4" icemods="$5" key="z-annex ${(q)2}"
     ZINIT_EXTS[seqno]=$(( ${ZINIT_EXTS[seqno]:-0} + 1 ))
     ZINIT_EXTS[$key${${(M)type#hook:}:+ ${ZINIT_EXTS[seqno]}}]="${ZINIT_EXTS[seqno]} z-annex-data: ${(q)name} ${(q)type} ${(q)handler} ${(q)helphandler} ${(q)icemods}"
     () {
         builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
+        # See comment in zinit-register-hook() why nobanghist is needed
+        builtin setopt nobanghist
         integer index="${type##[%a-zA-Z:_!-]##}"
         ZINIT_EXTS[ice-mods]="${ZINIT_EXTS[ice-mods]}${icemods:+|}${(j:|:)${(@)${(@s:|:)icemods}/(#b)(#s)(?)/$index-$match[1]}}"
     }
