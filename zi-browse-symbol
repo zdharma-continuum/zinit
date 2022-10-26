@@ -104,6 +104,8 @@ _tfind_error_msg()
     if [[ -z $TAG[repo-dir] || $TAG[repo-dir] == . ]]; then
         POSTDISPLAY=$'\n'"Symbol index NOT found, NO DATA to show, sleeping…"
         local search_buffer=
+    elif [[ $#__tfind_spe_found -eq 0 ]]; then
+        POSTDISPLAY=$'\n'"Didn't found any symbol."
     elif [[ $#__tfind_tag_data -eq 0 ]]; then
         POSTDISPLAY=$'\n'"The index file contains NO symbol data, forced sleeping..."
         local search_buffer=
@@ -172,16 +174,15 @@ _tfind_main() {
         done
     fi
 
-    if [[ $#__tfind_spe_found -eq 0 ]]; then
-        _tfind_error_msg && return
+    if (( $#__tfind_spe_found == 0 )); then
+        _tfind_error_msg; return
     fi
-
     #
     # Pagination, index value guards
     #
 
     integer page_size=$__tfind_page_size
-    integer max_index="$#__tfind_spe_found"
+    integer max_index=$#__tfind_spe_found
     [[ $page_size -gt $max_index ]] && page_size=$max_index
     [[ $__tfind_spe_index -le 0 ]] && __tfind_spe_index=$max_index
     [[ $__tfind_spe_index -gt $max_index ]] && __tfind_spe_index=1

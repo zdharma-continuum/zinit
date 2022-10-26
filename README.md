@@ -873,6 +873,12 @@ Following commands are passed to `zinit ...` to obtain described effects.
 |                             `module`                             | <div align="justify" style="text-align: justify;"> Manage binary Zsh module shipped with Zinit, see `zinit module help`.</div>                                                                                                                                                                                                                                                                |
 | `add-fpath\|fpath` `[-f\|--front]` `{plg-spec}` `[subdirectory]` | <div align="justify" style="text-align: justify;">Adds given plugin (not yet snippet) directory to `$fpath`. If the second argument is given, it is appended to the directory path. If the option `-f`/`--front` is given, the directory path is prepended instead of appended to `$fpath`. The `{plg-spec}` can be absolute path, i.e.: it's possible to also add regular directories.</div> |
 |               `run` `[-l]` `[plugin]` `{command}`                | <div align="justify" style="text-align: justify;">Runs the given command in the given plugin's directory. If the option `-l` will be given then the plugin should be skipped – the option will cause the previous plugin to be reused.</div>                                                                                                                                                  |
+## An embedded TAGS browser
+
+Zinit comes via an embedded Ctags browser. Just create a `TAGS` file
+via e.g.: `ctags -e -R .` and then press `Alt-Shift-q` to open the
+browser. You can test the feature by generating TAGS for Zinit, via:
+`cd $ZINIT[BIN_DIR]; make tags-emacs` and then opening the browser.
 
 ## Updating Zinit and Plugins<a name="updating-zinit-and-plugins"></a>
 
