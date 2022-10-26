@@ -1,3 +1,60 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Zinit<a name="zinit"></a>](#zinita-namezinita)
+  - [Zinit Wiki<a name="zinit-wiki"></a>](#zinit-wikia-namezinit-wikia)
+  - [Install<a name="install"></a>](#installa-nameinstalla)
+    - [Automatic<a name="automatic"></a>](#automatica-nameautomatica)
+    - [Manual<a name="manual"></a>](#manuala-namemanuala)
+  - [Usage<a name="usage"></a>](#usagea-nameusagea)
+    - [Introduction<a name="introduction"></a>](#introductiona-nameintroductiona)
+    - [Plugins and snippets<a name="plugins-and-snippets"></a>](#plugins-and-snippetsa-nameplugins-and-snippetsa)
+    - [Upgrade Zinit and plugins<a name="upgrade-zinit-and-plugins"></a>](#upgrade-zinit-and-pluginsa-nameupgrade-zinit-and-pluginsa)
+    - [Turbo and lucid<a name="turbo-and-lucid"></a>](#turbo-and-lucida-nameturbo-and-lucida)
+    - [Migration<a name="migration"></a>](#migrationa-namemigrationa)
+  - [Frequently Asked Questions<a name="frequently-asked-questions"></a>](#frequently-asked-questionsa-namefrequently-asked-questionsa)
+    - [Use `zi ice svn` if a plugin/snippet requires an entire subdirectory<a name="use-zi-ice-svn-if-a-pluginsnippet-requires-an-entire-subdirectory"></a>](#use-zi-ice-svn-if-a-pluginsnippet-requires-an-entire-subdirectorya-nameuse-zi-ice-svn-if-a-pluginsnippet-requires-an-entire-subdirectorya)
+    - [Use `zi ice as'completion'` to directly add single file completion snippets<a name="use-zi-ice-ascompletion-to-directly-add-single-file-completion-snippets"></a>](#use-zi-ice-ascompletion-to-directly-add-single-file-completion-snippetsa-nameuse-zi-ice-ascompletion-to-directly-add-single-file-completion-snippetsa)
+    - [More Examples<a name="more-examples"></a>](#more-examplesa-namemore-examplesa)
+- [How to Use<a name="how-to-use"></a>](#how-to-usea-namehow-to-usea)
+  - [Ice Modifiers<a name="ice-modifiers"></a>](#ice-modifiersa-nameice-modifiersa)
+    - [Cloning Options<a name="cloning-options"></a>](#cloning-optionsa-namecloning-optionsa)
+    - [Selection of Files (To Source, …)<a name="selection-of-files-to-source-%E2%80%A6"></a>](#selection-of-files-to-source-a-nameselection-of-files-to-source-a)
+    - [Conditional Loading<a name="conditional-loading"></a>](#conditional-loadinga-nameconditional-loadinga)
+    - [Plugin Output<a name="plugin-output"></a>](#plugin-outputa-nameplugin-outputa)
+    - [Completions<a name="completions"></a>](#completionsa-namecompletionsa)
+    - [Command Execution After Cloning, Updating or Loading<a name="command-execution-after-cloning-updating-or-loading"></a>](#command-execution-after-cloning-updating-or-loadinga-namecommand-execution-after-cloning-updating-or-loadinga)
+    - [Sticky-Emulation Of Other Shells<a name="sticky-emulation-of-other-shells"></a>](#sticky-emulation-of-other-shellsa-namesticky-emulation-of-other-shellsa)
+    - [Others<a name="others"></a>](#othersa-nameothersa)
+    - [Order of Execution<a name="order-of-execution"></a>](#order-of-executiona-nameorder-of-executiona)
+  - [Zinit Commands<a name="zinit-commands"></a>](#zinit-commandsa-namezinit-commandsa)
+    - [Help<a name="help"></a>](#helpa-namehelpa)
+    - [Loading and Unloading<a name="loading-and-unloading"></a>](#loading-and-unloadinga-nameloading-and-unloadinga)
+    - [Completions<a name="completions-1"></a>](#completionsa-namecompletions-1a)
+    - [Tracking of the Active Session<a name="tracking-of-the-active-session"></a>](#tracking-of-the-active-sessiona-nametracking-of-the-active-sessiona)
+    - [Reports and Statistics<a name="reports-and-statistics"></a>](#reports-and-statisticsa-namereports-and-statisticsa)
+    - [Compiling<a name="compiling"></a>](#compilinga-namecompilinga)
+    - [Other<a name="other"></a>](#othera-nameothera)
+  - [An embedded TAGS browser](#an-embedded-tags-browser)
+  - [Updating Zinit and Plugins<a name="updating-zinit-and-plugins"></a>](#updating-zinit-and-pluginsa-nameupdating-zinit-and-pluginsa)
+  - [Completions<a name="completions-2"></a>](#completionsa-namecompletions-2a)
+    - [Calling `compinit` Without Turbo Mode<a name="calling-compinit-without-turbo-mode"></a>](#calling-compinit-without-turbo-modea-namecalling-compinit-without-turbo-modea)
+    - [Calling `compinit` With Turbo Mode<a name="calling-compinit-with-turbo-mode"></a>](#calling-compinit-with-turbo-modea-namecalling-compinit-with-turbo-modea)
+    - [Ignoring Compdefs<a name="ignoring-compdefs"></a>](#ignoring-compdefsa-nameignoring-compdefsa)
+    - [Disabling System-Wide `compinit` Call (Ubuntu)<a name="disabling-system-wide-compinit-call-ubuntu"></a>](#disabling-system-wide-compinit-call-ubuntua-namedisabling-system-wide-compinit-call-ubuntua)
+  - [Zinit Module<a name="zinit-module"></a>](#zinit-modulea-namezinit-modulea)
+  - [Hints and Tips<a name="hints-and-tips"></a>](#hints-and-tipsa-namehints-and-tipsa)
+    - [Customizing Paths<a name="customizing-paths"></a>](#customizing-pathsa-namecustomizing-pathsa)
+    - [Non-GitHub (Local) Plugins<a name="non-github-local-plugins"></a>](#non-github-local-pluginsa-namenon-github-local-pluginsa)
+    - [Extending Git<a name="extending-git"></a>](#extending-gita-nameextending-gita)
+    - [Use named directories for plugin dirs](#use-named-directories-for-plugin-dirs)
+  - [Changelog<a name="changelog"></a>](#changeloga-namechangeloga)
+  - [Support<a name="support"></a>](#supporta-namesupporta)
+  - [Getting Help and Community<a name="getting-help-and-community"></a>](#getting-help-and-communitya-namegetting-help-and-communitya)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 <p align="center">
   <a href="https://github.com/zdharma-continuum/zinit">
     <img src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/zinit.png"/>
@@ -783,6 +840,7 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | `trackbinds`   | Shadow but only `bindkey` calls even with `zinit light ...`, i.e. even with investigating disabled (fast loading), to allow `bindmap` to remap the key-binds. The same effect has `zinit light -b ...`, i.e. additional `-b` option to the `light`-subcommand. **Does not work with snippets.**                                                                                                                                                                                                                                                                                                                                                                   |
 | `wrap-track`   | Takes a `;`-separated list of function names that are to be investigated (meaning gathering report and unload data) **once** during execution. It works by wrapping the functions with a investigating-enabling and disabling snippet of code. In summary, `wrap-track` allows to extend the investigating beyond the moment of loading of a plugin. Example use is to `wrap-track` a precmd function of a prompt (like `_p9k_precmd()` of powerlevel10k) or other plugin that _postpones its initialization till the first prompt_ (like e.g.: zsh-autosuggestions). **Does not work with snippets.**                                                            |
 | `reset-prompt` | Reset the prompt after loading the plugin/snippet (by issuing `zle .reset-prompt`). Note: normally it's sufficient to precede the value of `wait''` ice with `!`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `param`        | Creates parameters (variables) for the time of loading a plugin only. The variables are separated from their values via `->` or `→`, e.g.:`param'CMD_COMMAND_PATH → ~/cmds; CMD_DIR → $HOME'`. Multiple vars can be created either via separating them by `;` or via multiple `param''` ices. |
 
 ### Order of Execution<a name="order-of-execution"></a>
 
@@ -877,6 +935,13 @@ Following commands are passed to `zinit ...` to obtain described effects.
 | `delete {plg-spec}\|URL\|--clean\|--all`                         | Remove plugin or snippet from disk (good to forget wrongly passed ice-mods).  <br> `--all` – purge.<br> `--clean` – delete plugins and snippets that are not loaded.                                                                                                                                                                  |
 | `update [-q] [-r] {plg-spec}\|URL\|--all`                        | Git update plugin or snippet.<br> `--all` – update all plugins and snippets.<br>  `-q` – quiet.<br> `-r` \| `--reset` – run `git reset --hard` / `svn revert` before pulling changes.                                                                                                                                                 |
 | `add-fpath\|fpath` `[-f\|--front]` `{plg-spec}` `[subdirectory]` | Adds given plugin (not yet snippet) directory to `$fpath`. If the second argument is given, it is appended to the directory path. If the option `-f`/`--front` is given, the directory path is prepended instead of appended to `$fpath`. The `{plg-spec}` can be absolute path, i.e.: it's possible to also add regular directories. |
+
+## An embedded TAGS browser
+
+Zinit comes via an embedded Ctags browser. Just create a `TAGS` file
+via e.g.: `ctags -e -R .` and then press `Alt-Shift-q` to open the
+browser. You can test the feature by generating TAGS for Zinit, via:
+`cd $ZINIT[BIN_DIR]; make tags-emacs` and then opening the browser.
 
 ## Updating Zinit and Plugins<a name="updating-zinit-and-plugins"></a>
 
