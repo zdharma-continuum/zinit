@@ -9,7 +9,8 @@
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-# $REPLY = ANSI-colorified "user/plugin" string
+#
+# $REPLY - ANSI-colorified "user/plugin" string
 .zinit-any-colorify-as-uspl2() {
   .zinit-any-to-user-plugin "$1" "$2"
   local user="${reply[-2]}" plugin="${reply[-1]}"
@@ -78,7 +79,7 @@
 
   # strip whitespace from beginning of url
   ___URL="${${___URL#"${___URL%%[! $'\t']*}"}%/}"
-  
+
   # snippet
   .zinit-two-paths "$___URL"
   local ___s_path="${reply[-4]}" ___s_svn="${reply[-3]}" ___path="${reply[-2]}" ___filename="${reply[-1]}" ___local_dir
@@ -133,7 +134,6 @@
   fi
 
   local ___zinit_path="$___local_dir/._zinit"
-  
   # read disk-ice
   local -A ___mdata
   local ___key
@@ -217,7 +217,6 @@
   +zinit-message -r -- "{b}{error}0 <running now>{rst}{…}"
   return 0
 } # ]]]
-
 # FUNCTION: .zinit-exists-physically [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR.
 #
@@ -266,7 +265,6 @@
   fi
   return 0
 } # ]]]
-
 # FUNCTION: .zinit-first [[[
 # Finds the main file of plugin. There are multiple file name formats, they are
 # ordered in order starting from more correct ones, and matched.
@@ -306,17 +304,17 @@
 # FUNCTION: .zinit-store-ices [[[
 # Saves ice mods in given hash onto disk.
 #
-# $1 - directory where to create/delete files
+# $1 - directory where to create or delete files
 # $2 - name of hash that holds values
 # $3 - additional keys of hash to store, space separated
 # $4 - additional keys of hash to store, empty-meaningful ices, space separated
-# $5 – the URL, if applicable
-# $6 – the mode 1 - svn, 0 - single file), if applicable
+# $5 – URL, if applicable
+# $6 – mode, svn=1, 0=single file
 .zinit-store-ices() {
   local ___pfx="$1" ___ice_var="$2" ___add_ices="$3" ___add_ices2="$4"
   local url="$5" mode="$6"
 
-  # Copy from .zinit-recall
+  # Copy from zinit-recall response
   local -a ice_order nval_ices
   ice_order=(
     ${(s.|.)ZINIT[ice-list]}
@@ -370,7 +368,7 @@
 
   # remove leading whitespace and trailing /
   url="${${url#"${url%%[! $'\t']*}"}%/}"
-  url1=$url 
+  url1=$url
   url2=$url
 
   .zinit-get-object-path snippet "$url1"
