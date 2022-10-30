@@ -30,8 +30,7 @@
     }
 
     builtin eval "$___data"
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-service [[[
 # Handles given service, i.e. obtains lock, runs it, or waits if no lock
 #
@@ -76,8 +75,8 @@
         ) || break
         builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"
     done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: .zinit-wrap-track-functions [[[
 .zinit-wrap-track-functions() {
     local user="$1" plugin="$2" id_as="$3" f
@@ -99,8 +98,7 @@ function $f {
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 }"
     done
-}
-# ]]]
+} # ]]]
 
 #
 # Dtrace
@@ -122,7 +120,7 @@ function $f {
     .zinit-tmp-subst-on dtrace
 } # ]]]
 # FUNCTION: .zinit-debug-stop [[[
-# Stops Dtrace, i.e. session tracking for changes in Zsh state.
+# Stops Dtrace (i.e., session tracking for changes in Zsh state).
 .zinit-debug-stop() {
     ZINIT[DTRACE]=0
 
