@@ -41,7 +41,8 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
- $REPLY = ANSI-colorified "user/plugin" string
+ 
+ $REPLY - ANSI-colorified "user/plugin" string
 ____
 
 Has 22 line(s). Calls functions:
@@ -139,13 +140,12 @@ Uses feature(s): _trap_
 Called by:
 
  zinit-autoload.zsh/.zinit-run-delete-hooks
+ zinit-install.zsh/.zinit-configure-run-autoconf
  zinit-install.zsh/∞zinit-atclone-hook
  zinit-install.zsh/∞zinit-atpull-e-hook
  zinit-install.zsh/∞zinit-atpull-hook
  zinit-install.zsh/∞zinit-configure-base-hook
- zinit-install.zsh/∞zinit-make-e-hook
- zinit-install.zsh/∞zinit-make-ee-hook
- zinit-install.zsh/∞zinit-make-hook
+ zinit-install.zsh/∞zinit-make-base-hook
 
 .zinit-exists-physically
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -240,12 +240,12 @@ ____
  FUNCTION: .zinit-store-ices [[[
  Saves ice mods in given hash onto disk.
  
- $1 - directory where to create/delete files
+ $1 - directory where to create or delete files
  $2 - name of hash that holds values
  $3 - additional keys of hash to store, space separated
  $4 - additional keys of hash to store, empty-meaningful ices, space separated
- $5 – the URL, if applicable
- $6 – the mode 1 - svn, 0 - single file), if applicable
+ $5 – URL, if applicable
+ $6 – mode, svn=1, 0=single file
 ____
 
 Has 30 line(s). Doesn't call other functions.
