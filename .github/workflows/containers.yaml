@@ -1,4 +1,5 @@
-name: 🐳 containers
+name: Container images
+
 on: [push, workflow_dispatch]
 
 jobs:
@@ -16,34 +17,33 @@ jobs:
           - 5.7.1
           - 5.8
     steps:
-      - name: 📡 Check out repository code
+      - name: check out repository code
         uses: actions/checkout@v3
 
-      - name: 🍃 Grab git slugs (short commit id, branch etc.)
+      - name: Grab git slugs (short commit id, branch etc.)
         uses: rlespinasse/github-slug-action@v3.x
 
-      - name: 🌐 Set up QEMU
+      - name: set up qemu
         uses: docker/setup-qemu-action@v2
 
-      - name: 🐋 Set up Docker Buildx
+      - name: setup docker buildx
         id: buildx
         uses: docker/setup-buildx-action@v2
         with:
           install: true
           use: true
 
-      - name: 🔑 Login to GitHub Container Registry
+      - name: login to github container registry
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🐳 Build and push
+      - name: build and push
         id: docker_build_zsh_versions
         uses: docker/build-push-action@v3
-        # Older zsh version tend to make GH runners hang when building
-        timeout-minutes: 90
+        timeout-minutes: 90 # compiling older zsh versions take a long time
         with:
           push: ${{ github.event.number == 0 }}
           file: ./docker/Dockerfile
@@ -59,30 +59,30 @@ jobs:
   build-container-latest:
     runs-on: ubuntu-latest
     steps:
-      - name: 📡 Check out repository code
+      - name: checkout code
         uses: actions/checkout@v3
 
-      - name: 🍃 Grab git slugs (short commit id, branch etc.)
+      - name: get vcs details
         uses: rlespinasse/github-slug-action@v3.x
 
-      - name: 🌐 Set up QEMU
+      - name: setup docker qemu
         uses: docker/setup-qemu-action@v2
 
-      - name: 🐋 Set up Docker Buildx
+      - name: setup docker buildx
         id: buildx
         uses: docker/setup-buildx-action@v2
         with:
           install: true
           use: true
 
-      - name: 🔑 Login to GitHub Container Registry
+      - name: github container registry authentication
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 🐳 Build and push
+      - name: build & push new image
         id: docker_build_latest
         uses: docker/build-push-action@v3
         if: github.ref == 'refs/heads/main'
