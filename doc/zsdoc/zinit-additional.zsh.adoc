@@ -34,7 +34,6 @@ Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 
 ____
  
- FUNCTION: .zinit-clear-debug-report [[[
  Forgets dtrace repport gathered up to this moment.
 ____
 
@@ -53,7 +52,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-debug-start [[[
  Starts Dtrace, i.e. session tracking for changes in Zsh state.
 ____
 
@@ -73,7 +71,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-debug-stop [[[
  Stops Dtrace (i.e., session tracking for changes in Zsh state).
 ____
 
@@ -92,7 +89,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-debug-unload [[[
  Reverts changes detected by dtrace run.
 ____
 
@@ -113,7 +109,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-service [[[
  Handles given service, i.e. obtains lock, runs it, or waits if no lock
  
  $1 - type "p" or "s" (plugin or snippet)
@@ -134,11 +129,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 .zinit-wrap-track-functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-____
- 
- FUNCTION: .zinit-wrap-track-functions [[[
-____
-
 Has 19 line(s). Doesn't call other functions.
 
 Uses feature(s): _eval_
@@ -147,11 +137,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 :zinit-tmp-subst-source
 ~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- FUNCTION: :zinit-tmp-subst-source [[[
-____
 
 Has 25 line(s). Calls functions:
 
