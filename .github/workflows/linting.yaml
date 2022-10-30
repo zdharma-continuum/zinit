@@ -17,10 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: install homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
       - name: install dependencies
         run: |
-          brew install shellcheck shfmt zsh
-          pip3 install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
+          brew install shellcheck shfmt zsh python@3.8
+          python3.8 -m pip install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
 
       - name: run mdformat
         run: find . -name '*.md' -type f -print0 | xargs -0 -n1 -P4 python3 -m mdformat --check --wrap 120

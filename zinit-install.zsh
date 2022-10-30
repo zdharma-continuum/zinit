@@ -22,6 +22,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: .zinit-json-get-value [[[
 # Wrapper around jq that return the value of a property
+#
 # $1: JSON structure
 # $2: jq path
 .zinit-json-get-value() {
@@ -33,6 +34,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # FUNCTION: .zinit-json-to-array [[[
 # Wrapper around jq that sets key/values of an associative array, replicating
 # the structure of a given JSON object
+#
 # $1: JSON structure
 # $2: jq path
 # $3: name of the associative array to store the key/value pairs in
@@ -68,8 +70,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         pkgjson tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
     local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ver:-${ZINIT[PACKAGES_BRANCH]}}/${pkg}/package.json
 
-    # Consume, ie delete the ver ice to avoid being consumed again at
-    # git-clone time
+    # Consume (i.e., delete) the ver ice to avoid being consumed again at git-clone time
     [[ -n "$ver" ]] && unset 'ICE[ver]'
 
     local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
@@ -523,13 +524,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: .zinit-install-completions [[[
 # Installs all completions of given plugin. After that they are
-# visible to `compinit'. Visible completions can be selectively
+# visible to 'compinit'. Visible completions can be selectively
 # disabled and enabled. User can access completion data with
-# `clist' or `completions' subcommand.
+# 'clist' or 'completions' subcommand.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
-# $2 - plugin (only when $1 - i.e. user - given)
-# $3 - if 1, then reinstall, otherwise only install completions that aren't there
+# $2 - plugin if $1 (i.e., user) given
+# $3 - if 1, then reinstall, otherwise only install completions that are not present
 .zinit-install-completions() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
@@ -549,10 +550,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     .zinit-exists-physically-message "$id_as" "" || return 1
 
-    # Symlink any completion files included in plugin's directory
+    # Symlink any completion files included in the plugin directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    # The plugin == . is a semi-hack/trick to handle `creinstall .' properly
+    # The plugin == . is a semi-hack/trick to handle 'creinstall .' properly
     [[ $user == % || ( -z $user && $plugin == . ) ]] && \
         completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
         completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
@@ -561,7 +562,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
-    # OR - if it's a reinstall
+    # OR - if its a reinstall
     for c in "${completions[@]}"; do
         cfile="${c:t}"
         bkpfile="${cfile#_}"
@@ -670,7 +671,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         if (( ${+commands[curl]} )); then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
             else
                 command curl -fsSL "$url" || return 1
             fi
@@ -689,7 +690,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     } else {
         if type curl 2>/dev/null 1>&2; then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
             else
                 command curl -fsSL "$url" || return 1
             fi
@@ -910,10 +911,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 0
 } # ]]]
 # FUNCTION: .zinit-download-snippet [[[
-# Downloads snippet – either a file – with curl, wget, lftp or lynx,
-# or a directory, with Subversion – when svn-ICE is active. Github
-# supports Subversion protocol and allows to clone subdirectories.
-# This is used to provide a layer of support for Oh-My-Zsh and Prezto.
+# Downloads snippet
+#   file – with curl, wget, lftp or lynx,
+#   directory, with Subversion – when svn-ICE is active. 
+#
+#   Github supports Subversion protocol and allows to clone subdirectories.
+#   This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 .zinit-download-snippet() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
@@ -1451,6 +1454,32 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return $?
 } # ]]]
+# FUNCTION: .zinit-single-line [[[
+# Display cURL progress bar on a single line
+.zinit-single-line() {
+    emulate -LR zsh
+    setopt extendedglob noshortloops nowarncreateglobal rcquotes typesetsilent
+    local IFS= n=$'\n' r=$'\r' zero=$'\0'
+
+    {
+      command perl -pe 'BEGIN { $|++; $/ = \1 }; tr/\r\n/\n\0/' \
+        || gstdbuf -o0 gtr '\r\n' '\n\0' \
+        || stdbuf -o0 tr '\r\n' '\n\0';
+      print
+    } 2>/dev/null | while read -r line;
+
+    do
+      if [[ $line == *$zero* ]]; then
+        # cURL doesn't add a newline to progress bars
+        # print -nr -- "${r}${(l:COLUMNS:: :):-}${r}${line##*${zero}}"
+        print -nr -- "${r}${(l:COLUMNS:: :):-}${r}${line%${zero}}"
+      else
+        print -nr -- "${r}${(l:COLUMNS:: :):-}${r}${${line//[${r}${n}]/}%\%*}${${(M)line%\%}:+%}"
+      fi
+    done
+
+    print
+} # ]]]
 # FUNCTION: .zinit-get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
@@ -1944,8 +1973,9 @@ ziextract() {
     )
 } # ]]]
 # FUNCTION: zpextract [[[
-zpextract() { ziextract "$@"; }
-# ]]]
+zpextract() {
+  ziextract "$@"
+} # ]]]
 # FUNCTION: .zinit-at-eval [[[
 .zinit-at-eval() {
     local atpull="$1" atclone="$2"
@@ -2075,17 +2105,16 @@ zicp() {
         return $retval
     )
     return
-}
-
+} # ]]]
+# FUNCTION: zimv [[[
 zimv() {
     local dir
     if [[ $1 = (-d|--dir) ]] { dir=$2; shift 2; }
     zicp --mv ${dir:+--dir} $dir "$@"
 } # ]]]
 # FUNCTION: .zinit-configure-run-autoconf [[[
-# Called either because # flag given to configure'', or because
-# there's no ./configure script. Runs autoconf, autoreconf,
-# autogen.sh as needed.
+# Called either because "#" flag given to configure'', or because
+# theres no ./configure script. Runs autoconf, autoreconf, and autogen.sh as needed.
 .zinit-configure-run-autoconf() {
     local dir=$1 flags=$2
     integer q
@@ -2158,7 +2187,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         fi
     fi
 } # ]]]
-# FUNCTION: ∞zinit-reset-opt-hook [[[
+# FUNCTION: ∞zinit-reset-hook [[[
 ∞zinit-reset-hook() {
     # File
     if [[ "$1" = plugin ]] {
@@ -2359,7 +2388,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 ∞zinit-make-hook() {
     ∞zinit-make-base-hook "$@" ""
 } # ]]]
-# FUNCTION: ∞zinit-make-hook [[[
+# FUNCTION: ∞zinit-make-base-hook [[[
 ∞zinit-make-base-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \

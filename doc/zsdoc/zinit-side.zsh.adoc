@@ -35,13 +35,13 @@ Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 
 ____
  
- FUNCTION: .zinit-any-colorify-as-uspl2 [[[
  Returns ANSI-colorified "user/plugin" string, from any supported
  plugin spec (user---plugin, user/plugin, user plugin, plugin).
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
- $REPLY = ANSI-colorified "user/plugin" string
+ 
+ $REPLY - ANSI-colorified "user/plugin" string
 ____
 
 Has 22 line(s). Calls functions:
@@ -79,7 +79,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-compute-ice [[[
  Computes ICE array
  - input
  - static
@@ -123,7 +122,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-countdown [[[
  Displays a countdown 5...4... etc.
  
  $REPLY - 1 if Ctrl-C is pressed, otherwise 0
@@ -139,20 +137,18 @@ Uses feature(s): _trap_
 Called by:
 
  zinit-autoload.zsh/.zinit-run-delete-hooks
+ zinit-install.zsh/.zinit-configure-run-autoconf
  zinit-install.zsh/∞zinit-atclone-hook
  zinit-install.zsh/∞zinit-atpull-e-hook
  zinit-install.zsh/∞zinit-atpull-hook
  zinit-install.zsh/∞zinit-configure-base-hook
- zinit-install.zsh/∞zinit-make-e-hook
- zinit-install.zsh/∞zinit-make-ee-hook
- zinit-install.zsh/∞zinit-make-hook
+ zinit-install.zsh/∞zinit-make-base-hook
 
 .zinit-exists-physically
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
- FUNCTION: .zinit-exists-physically [[[
  Checks if directory of given plugin exists in PLUGIN_DIR.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
@@ -175,7 +171,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-exists-physically-message [[[
  Checks if directory of given plugin exists in PLUGIN_DIR, and outputs error
  message if it doesn't.
  
@@ -206,7 +201,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-first [[[
  Finds the main file of plugin. There are multiple file name formats, they are
  ordered in order starting from more correct ones, and matched.
  .zinit-load-plugin() has similar code parts and doesn't call .zinit-first() –
@@ -237,15 +231,14 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-store-ices [[[
  Saves ice mods in given hash onto disk.
  
- $1 - directory where to create/delete files
+ $1 - directory where to create or delete files
  $2 - name of hash that holds values
  $3 - additional keys of hash to store, space separated
  $4 - additional keys of hash to store, empty-meaningful ices, space separated
- $5 – the URL, if applicable
- $6 – the mode 1 - svn, 0 - single file), if applicable
+ $5 – URL, if applicable
+ $6 – mode, svn=1, 0=single file
 ____
 
 Has 30 line(s). Doesn't call other functions.
@@ -261,7 +254,6 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-two-paths [[[
  Obtains a snippet URL without specification if it is an SVN URL (points to
  directory) or regular URL (points to file), returns 2 possible paths for
  further examination
