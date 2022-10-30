@@ -132,7 +132,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: .zinit-build-module [[[
  Performs ./configure && make on the module and displays information
  how to load the module in .zshrc.
@@ -219,7 +218,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-changes [[[
  Shows `git log` of given plugin.
  
@@ -349,6 +347,7 @@ Has 23 line(s). Calls functions:
 Called by:
 
  .zinit-unload
+ zinit-additional.zsh/.zinit-clear-debug-report
 
 .zinit-compile-uncompile-all
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -448,7 +447,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  FUNCTION: .zinit-delete [[[
  Deletes plugin's or snippet's directory (in Zinit's home directory).
  
@@ -759,7 +757,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-get-path [[[
  Returns path of given ID-string, which may be a plugin-spec
  (like "user/plugin" or "user" "plugin"), an absolute path
@@ -825,7 +822,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-list-bindkeys [[[
 ____
 
@@ -878,7 +874,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-module [[[
  Function that has sub-commands passed as long-options (with two dashes, --).
  It's an attempt to plugin only this one function into `zinit' function
@@ -941,7 +936,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-recall [[[
 ____
 
@@ -1063,9 +1057,7 @@ Called by:
 ____
  
  FUNCTION: .zinit-self-update [[[
- Updates Zinit code (does a git pull).
- 
- User-action entry point.
+ Updates Zinit code (does a git pull)
 ____
 
 Has 42 line(s). Calls functions:
@@ -1151,9 +1143,7 @@ Called by:
 ____
  
  FUNCTION: .zinit-show-registered-plugins [[[
- Lists loaded plugins (subcommands list, lodaded).
- 
- User-action entry point.
+ Lists loaded plugins (subcommands list, lodaded)
 ____
 
 Has 22 line(s). Calls functions:
@@ -1174,8 +1164,6 @@ ____
  
  FUNCTION: .zinit-show-report [[[
  Displays report of the plugin given.
- 
- User-action entry point.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
  $2 - plugin (only when $1 - i.e. user - given)
@@ -1221,7 +1209,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-show-zstatus [[[
  Shows Zinit status, i.e. number of loaded plugins,
  of available completions, etc.
@@ -1328,27 +1315,26 @@ Called by:
 ____
  
  FUNCTION: .zinit-unload [[[
- 0. Call the Zsh Plugin's Standard *_plugin_unload function
- 0. Call the code provided by the Zsh Plugin's Standard @zsh-plugin-run-at-update
- 1. Delete bindkeys (...)
- 2. Delete Zstyles
- 3. Restore options
- 4. Remove aliases
- 5. Restore Zle state
- 6. Unfunction functions (created by plugin)
- 7. Clean-up FPATH and PATH
- 8. Delete created variables
- 9. Forget the plugin
- 
- User-action entry point.
+ 1. call the zsh plugin's standard *_plugin_unload function
+ 2. call the code provided by the zsh plugin's standard @zsh-plugin-run-at-update
+ 3. delete bindkeys (...)
+ 4. delete zstyles
+ 5. restore options
+ 6. remove aliases
+ 7. restore zle state
+ 8. unfunction functions (created by plugin)
+ 9. clean-up fpath and path
+ 10. delete created variables
+ 11. forget the plugin
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 394 line(s). Calls functions:
+Has 386 line(s). Calls functions:
 
  .zinit-unload
+ |-- zinit-additional.zsh/.zinit-clear-debug-report
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
@@ -1356,6 +1342,7 @@ Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, 
 
 Called by:
 
+ zinit-additional.zsh/.zinit-debug-unload
  zinit.zsh/.zinit-run-task
  zinit.zsh/zinit
 
@@ -1383,7 +1370,7 @@ Called by:
 
 ____
  
- FUNCTION: .zinit-update-in-parallel [[[
+ FUNCTION: .zinit-update-all-parallel [[[
 ____
 
 Has 84 line(s). Calls functions:
@@ -1442,7 +1429,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-update-or-status-all [[[
  Updates (git pull) or does `git status` for all existing plugins.
  This includes also plugins that are not loaded into Zsh (but exist
@@ -1498,7 +1484,6 @@ Called by:
 
 ____
  
- ]]]
  FUNCTION: .zinit-wait-for-update-jobs [[[
 ____
 
