@@ -13,7 +13,7 @@ container:
 	docker build --tag=ghcr.io/zdharma-continuum/zinit:latest --file=docker/Dockerfile .
 
 doc: clean
-	cd doc; zsh -d -f -i -c "zsd -v --scomm --cignore '(\\#*FUNCTION:[[:blank:]][∞\.\+\@\-a-zA-Z]*[[[*|^}.*\\#*]]]*)' $(DOC_SRC)"
+	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\:\∞\.\+\@\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC)"
 
 doc/container: container
 	./scripts/docker-run.sh --docs --debug
