@@ -1516,8 +1516,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       armv5 'arm[?v]5'
       armv6 'arm[?v]6'
       armv7 'armv[?v]7'
-      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
-      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(linux32|eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(linux32|eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
       linux "*(linux-musl|musl|linux64|linux)*~^*(linux*${MACHTYPE}|${CPUTYPE}*linux)*"
       linux-android '(apk|android|linux-android)'
       linux-gnu "*(linux-musl|musl|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
