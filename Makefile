@@ -19,7 +19,7 @@ doc/container: container
 	./scripts/docker-run.sh --docs --debug
 
 # Run ctags to generate Emacs and Vim's format tag file.
-tags: tags-emacs tags-vim
+tags: tags/emacs tags/vim
 
 tags/emacs: ## Build Emacs-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
