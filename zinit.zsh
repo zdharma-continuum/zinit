@@ -2390,10 +2390,14 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 #      (delay), i.e. "burst" allows to run package installations from
 #      script, not from prompt.
 @zinit-scheduler() {
-    integer ___ret="${${ZINIT[lro-data]%:*}##*:}"
+    integer ___ret="${${ZINIT[lro-data]%:*}##*:}" \
+            ___secs=$(($#ZINIT_TASKS>1?1:10))
     # lro stands for lastarg-retval-option.
-    [[ $1 = following ]] && sched +1 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following "${ZINIT[lro-data]%:*:*}"'
-    [[ -n $1 && $1 != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
+    [[ $1 = following ]] && \
+        sched +$___secs 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following "${ZINIT[lro-data]%:*:*}"'
+    ((___secs==10))&&return 0
+    [[ -n $1 && $1 != (following*|burst) ]] && \
+        { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ $1 = burst ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
     ZINIT[START_TIME]="${ZINIT[START_TIME]:-$EPOCHREALTIME}"
 
