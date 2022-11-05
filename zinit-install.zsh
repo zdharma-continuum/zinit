@@ -1880,8 +1880,8 @@ ziextract() {
     execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
     if [[ ${#execs} -gt 0 && -n $execs ]] {
         execs=( ${(@f)"$( file ${execs[@]} )"} )
-        execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
-        execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
+        execs=( "${(M)execs[@]:#[^(:]##:*executable*}" )
+        execs=( "${execs[@]/(#b)([^(:]##):*/${match[1]}}" )
     }
 
     builtin print -rl -- ${execs[@]} >! ${TMPDIR:-/tmp}/zinit-execs.$$.lst
