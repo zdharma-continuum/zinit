@@ -1511,8 +1511,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local -A matchstr
     # Logical grouping of $CPUTYPE & $OSTYPE
     matchstr=(
-      aarch64 '(arm64|aarch64|arm[?v]8)'
-      arm64 '(arm64|aarch64|arm[?v]8)'
+      aarch64 '(arm64|aarch64|arm[?v]8|)*~*(linux32)*'
+      arm64 '(arm64|aarch64|arm[?v]8|)*~*(linux32)*'
       armv5 'arm[?v]5'
       armv6 'arm[?v]6'
       armv7 'armv[?v]7'
