@@ -184,7 +184,7 @@ ____
  
  Downloads snippet
  file – with curl, wget, lftp or lynx,
- directory, with Subversion – when svn-ICE is active. 
+ directory, with Subversion – when svn-ICE is active.
  
  Github supports Subversion protocol and allows to clone subdirectories.
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
