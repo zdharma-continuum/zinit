@@ -31,7 +31,7 @@ zmodload zsh/termcap 2>/dev/null
 
 typeset -gA TAG
 integer -g __tfind_spe_index
-integer -g __tfind_spe_restart __tfind_spe_call_count __tfind_spe_funct
+integer -g __tfind_spe_restart __tfind_spe_call_count __tfind_spe_funct __tfind_spe_sort
 typeset -g __tfind_page_size __tfind_high_color __tfind_heading_color \
 	__tfind_title_color __tfind_arrow_color __tfind_func_color \
 	__tfind_var_color __tfind_eqdol_color __tfind_macro_color
@@ -47,21 +47,15 @@ trap '(( __tfind_spe_call_count -- )); return 0;' INT
 
 _tfind_find_index() {
     local q
+    local -a p
     # Read tags file
-    if [[ -f ./TAGS ]]; then
-        TAG[file]=$PWD/TAGS
-        # Save current project name
-        TAG[git-or-project]="$PWD:t"
-    elif [[ -f ../TAGS ]]; then
-        TAG[file]=$PWD:h/TAGS
-        # Save current project name
-        TAG[git-or-project]="$PWD:h:t"
-    elif [[ -f ../../TAGS ]]; then
-        TAG[file]=$PWD:h:h/TAGS
-        # Save current project name
-        TAG[git-or-project]="$PWD:h:h:t"
+    p=( (../)#TAGS(N) )
+    TAG[file]=${${(On)p}[1]}
+    [[ -f ./TAGS ]] && TAG[file]=$PWD/TAGS
+    if [[ -n $TAG[file] ]]; then
+        TAG[git-or-project]=${${TAG[file]:a}:h:t}
     else
-        [[ -z $TAG[file] ]] && TAG[git-or-project]="<unknown>"
+        TAG[git-or-project]="<unknown>"
         #TAG[file]=
     fi
 
@@ -78,17 +72,18 @@ _tfind_find_index() {
     fi
 
     # Read index, and as index is found, establish git main dir for it
-    __tfind_outside_git=
+    __tfind_outside_git=$TAG[file]:h
     if [[ -n $TAG[file] && -f $TAG[file-pp] ]]; then
         __tfind_tag_data=( ${"${(@f)"$(<${TAG[file-pp]})"}"##[[:space:]]##} )
         # Cleanup functions and their preambles
         __tfind_tag_data=( ${__tfind_tag_data[@]/(#b)(\([^\)]#\))[[:space:]]#[\{]*($'\x7f')/$match[1]$match[2]} )
         __tfind_tag_data=( ${__tfind_tag_data[@]/(#b)[[:space:]]\#*($'\x7f')/$match[1]} )
-        __tfind_outside_git="${PWD%/${$(git rev-parse --show-prefix)%/}}"
+        __tfind_outside_git="${PWD%/${$(git rev-parse --quiet --show-prefix 2>/dev/null)%/}}"
         if [[ -d $__tfind_outside_git && -n ${${(M)PWD##$__tfind_outside_git}##$HOME} ]]; then
             TAG[git-or-project]=$__tfind_outside_git:t
             TAG[repo-dir]=$__tfind_outside_git
         else
+            TAG[git-or-project]=$TAG[file]:h
             TAG[repo-dir]=$TAG[file]:h
         fi
         return 0
@@ -105,6 +100,8 @@ _tfind_error_msg()
     elif [[ $#__tfind_tag_data -eq 0 ]]; then
         POSTDISPLAY=$'\n'"The index file contains NO symbol data, forced sleeping..."
         local search_buffer=
+    elif [[ $#__tfind_spe_found -eq 0 && $search_buffer == [[:space:]]# ]]; then
+        POSTDISPLAY=$'\n'"No items found"
     elif [[ $search_buffer != [[:space:]]# && $#__tfind_spe_found -eq 0 ]]; then
         POSTDISPLAY=$'\n'"Found 0 matches for query: $search_buffer"
     else
@@ -137,8 +134,8 @@ _tfind_main() {
             zstyle -s ":plugin:zinit:symbol-search" macro-color __tfind_macro_color || __tfind_macro_color="fg=208,bold"
             zstyle -s ":plugin:zinit:symbol-search" eqdol-color __tfind_eqdol_color || __tfind_eqdol_color="fg=69,bold"
 
-	    # Find the index to operate on, git dir, etc.
-	    _tfind_find_index || { _tfind_error_msg; return;}
+        # Find the index to operate on, git dir, etc.
+        _tfind_find_index || { _tfind_error_msg && return;}
        fi
 
         # '0' will get changed into $to_display limit
@@ -166,11 +163,12 @@ _tfind_main() {
         repeat 1; do
             # Match only before ^? ($'\177')
             __tfind_spe_found=( "${(@M)__tfind_tag_data:#(#i)$~search_pattern*$'\177'*}" )
-            (( __tfind_spe_funct )) &&  __tfind_spe_found=( ${(M)__tfind_spe_found:#[[:alnum:]$TAG[fun-xt-chars]]##[[:space:]]#\([^\)]#\)[[:space:]]#(\{|)*} )
+            ((__tfind_spe_funct)) &&  __tfind_spe_found=(${(M)__tfind_spe_found:#[[:alnum:]$TAG[fun-xt-chars]]##[[:space:]]#\([^\)]#\)[[:space:]]#(\{|)*})
+            ((__tfind_spe_sort)) &&  __tfind_spe_found=(${(no)__tfind_spe_found})
         done
     fi
 
-    if [[ $#__tfind_spe_found -eq 0 ]]; then
+    if ((!$#__tfind_spe_found)); then
         _tfind_error_msg && return
     fi
 
@@ -217,8 +215,8 @@ _tfind_main() {
     # Colorify
     #
     local noun=${${${__tfind_spe_funct:#0}:+function}:-symbol}
-    local preamble=$'\n'"View of ${noun}s for repo: «««$TAG[git-or-project]»»» located at: $__tfind_outside_git:h"$'\n'"${(C)noun} no. #$__tfind_spe_index. Found $max_index ${noun}s in the index."$'\n' \
-    key="Ctrl-F to toggle functions-ONLY view."$'\n'
+    local preamble=$'\n'"View of ${noun}s for repo: «««${(U)TAG[git-or-project]}»»» located at: $TAG[repo-dir]:h"$'\n'"${(C)noun} no. #$__tfind_spe_index. Found $max_index ${noun}s in the index."$'\n' \
+    key="Ctrl-f to toggle functions-ONLY view. Alt-s to toggle sort."$'\n'
     preamble+=$key
 
     local text="${(F)disp_list}"
@@ -228,9 +226,9 @@ _tfind_main() {
 
     region_highlight=( "$(( offset + ${#txt_before} )) $(( offset + ${#txt_before} + ${#entry} + 1 )) underline" )
 
-    color_att() { local c;if (($4==0)){c=$__tfind_title_color;} elif (($4==1)){c=$__tfind_high_color;} elif (($4==4)){c=$__tfind_var_color;} elif (($4==7)){c=$__tfind_func_color;} elif (($4==9)){c=$__tfind_eqdol_color;} elif (($4==10)){c=$__tfind_macro_color;} else {c=$__tfind_arrow_color;}; region_highlight+=("$(($1+$2-1)) $(($1+$3)) $c"); }
+    color_att() { local c;if (($4==0)){c=$__tfind_title_color;} elif (($4==1)){c=$__tfind_high_color;} elif (($4==4)){c=$__tfind_var_color;} elif (($4==7)){c=$__tfind_func_color;} elif (($4==9)){c=$__tfind_eqdol_color;} elif (($4==10)){c=$__tfind_macro_color;} else {c=$__tfind_arrow_color;}; region_highlight_+=("$(($1+$2-1)) $(($1+$3)) $c"); }
     functions -M coloratt 4 4 color_att
-
+    local -a region_highlight_
     # Also highlight project name
     local h="$(( 30+buflen+__tfind_spe_funct*2 )) $(( 30+$buflen+${#TAG[git-or-project]}+__tfind_spe_funct*2 )) $__tfind_title_color"
     local q="$buflen $offset $__tfind_heading_color"
@@ -238,7 +236,8 @@ _tfind_main() {
     : "${preamble//(#b)no. ([^.]##)./$((coloratt(buflen,mbegin[1],mend[1],0)))}"
     : "${preamble//(#b)Found ([0-9]##)/$((coloratt(buflen,mbegin[1],mend[1],1)))}"
     : "${preamble//(#b)» located at: ([^$p]##)/$((coloratt(buflen,mbegin[1],mend[1],1)))}"
-    : "${preamble//(#b)(Ctrl-F)/$((coloratt(buflen,mbegin[1],mend[1],0)))}"
+    : "${preamble//(#b)(Ctrl-f)/$((coloratt(buflen,mbegin[1],mend[1],0)))}"
+    : "${preamble//(#b)(Alt-s)/$((coloratt(buflen,mbegin[1],mend[1],0)))}"
     : "${text//((#s)|$p)(#b)(»)/$((coloratt(offset,mbegin[1],mend[1],3)))}"
     # Basic syntax highlighting - a few keywords like C/Java type names
     : "${text//(#b)((([[:space:]\(\{\[]int|double|enum|short|long|(u|w|g|gu)(int|char|long|short)(8|16|32|64|128|max|)(_t|)|char|(|un)signed|FILE|const|restrict|size_t|va_list|ptrdiff_t|off_t|gboolean|gpointer|gconstpointer|typedef|static|struct|union)[[:space:]])|[a-zA-Z_]##_t|local|integer|float|declare|typeset|readonly)/$((coloratt(offset,mbegin[1],mend[1],4)))}"
@@ -251,13 +250,19 @@ _tfind_main() {
         : "${(f)${(S)text//*(#bi)(${~csearch_pattern})/$((coloratt(offset,mbegin[1],mend[1],1)))}}"
     fi
 
-   functions +M color_att
-   unfunction color_att
+    functions +M color_att
+    unfunction color_att
+    region_highlight+=( $region_highlight_ )
 }
 
 
 _tfind_functions() {
     __tfind_spe_funct=1-__tfind_spe_funct
+    __tfind_spe_restart=1
+    _tfind_simulate_widget
+}
+_tfind_sort() {
+    __tfind_spe_sort=1-__tfind_spe_sort
     __tfind_spe_restart=1
     _tfind_simulate_widget
 }
@@ -369,6 +374,7 @@ if [[ $__tfind_spe_call_count -eq 1 ]]; then
     zle -N backward-delete-char _tfind_backward_delete_char
     zle -N delete-char _tfind_delete_char
     zle -N tfind-functions _tfind_functions
+    zle -N tfind-sort _tfind_sort
 
     # Override ourselves with what we actually are
     # because zsh-autosuggestions change us
@@ -392,12 +398,13 @@ if [[ $__tfind_spe_call_count -eq 1 ]]; then
     zle -N _tfind_cancel_accept
     bindkey -M tfind "^[" _tfind_cancel_accept
     bindkey -M tfind "^f" tfind-functions
+    bindkey -M tfind "\es" tfind-sort
 
     local redrawbkp=0
     # Trap INT to manually interrupt Zle to work around a bug
     trap 'zle && zle .send-break' INT
     if zle .recursive-edit -K tfind; then
-        if [[ $__tfind_spe_index -lt 0 ]]; then
+        if ((__tfind_spe_index<=0)); then
             :
         else
             zstyle -s ":plugin:zinit:symbol-search" editor selected_editor || selected_editor=${VISUAL:-${EDITOR:-mcedit}}
@@ -412,8 +419,12 @@ if [[ $__tfind_spe_call_count -eq 1 ]]; then
                 tagline=${taglinebyte%%,*}
 
                 # CD vs absolute path
-                tagfile=$__tfind_outside_git/${match[2]}
-
+                if [[ $match[2] != /* && -n $TAG[repo-dir] ]]; then
+                    tagfile=$TAG[repo-dir]/$match[2]
+                else
+                    tagfile=$match[2]
+                fi
+                [[ ! -f $tagfile && -f $match[2] ]] && tagfile=$match[2]
                 # Editor command
                 case "$selected_editor" in
                     (vim|vi|gvim|mvim|nvim)
