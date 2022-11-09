@@ -164,15 +164,15 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
         col-id-as   $'\e[4;38;5;220m'    col-version $'\e[3;38;5;87m'
         # The more recent, fresh ones:
         col-pre  $'\e[38;5;135m'  col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
-        col-obj  $'\e[38;5;218m'  col-obj2  $'\e[38;5;118m' col-file  $'\e[3;38;5;117m'
-        col-dir  $'\e[3;38;5;153m' col-func $'\e[38;5;219m'
+        col-obj  $'\e[38;5;218m'  col-obj2  $'\e[38;5;118m' col-file  $'\e[1;3;38;5;208m'
+        col-dir  $'\e[3;38;5;153m' col-func $'\e[38;5;219m' col-ext  $'\e[1;3;38;5;41m'
         col-url  $'\e[38;5;75m'   col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;147m'
         col-data $'\e[38;5;82m'   col-data2 $'\e[38;5;117m' col-hi    $'\e[1m\e[38;5;183m'
         col-var  $'\e[38;5;81m'   col-glob  $'\e[38;5;227m' col-ehi   $'\e[1m\e[38;5;210m'
         col-cmd  $'\e[38;5;82m'   col-ice   $'\e[38;5;39m'  col-nl    $'\n'
         col-txt  $'\e[38;5;254m' col-num  $'\e[3;38;5;155m' col-term  $'\e[38;5;185m'
         col-warn $'\e[38;5;214m' col-ok    $'\e[38;5;220m'  col-time  $'\e[38;5;220m'
-        col-apo $'\e[1;38;5;45m' col-aps $'\e[38;5;117m'
+        col-apo $'\e[1;38;5;45m' col-aps $'\e[38;5;117m'    col-dot $'\e[38;5;220m'
         col-quo $'\e[1;38;5;33m' col-quos    $'\e[1;38;5;160m'
         col-bapo $'\e[1;38;5;220m'  col-baps $'\e[1;38;5;82m'
         col-faint $'\e[38;5;238m' col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
@@ -1936,6 +1936,23 @@ builtin setopt noaliases
     command true # workaround a Zsh bug, see: https://www.zsh.org/mla/workers/2018/msg00966.html
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
+
+# FUNCTION: .zinit-formatter-file [[[
+.zinit-formatter-file() {
+    builtin emulate -L zsh -o extendedglob
+    local -a match mbegin mend
+    REPLY=$1
+    if [[ $REPLY = (#b)(*).(*).(*) ]]; then
+        REPLY=$ZINIT[col-file]$match[1]$ZINIT[col-rst]\
+$ZINIT[col-dot].$'\e[1;3;38;5;39m'$match[2]$ZINIT[col-rst]\
+$ZINIT[col-dot].$ZINIT[col-ext]$match[3]
+    elif [[ $REPLY = (#b)(*).(*) ]]; then
+        REPLY=$ZINIT[col-file]$match[1]$ZINIT[col-rst]\
+$ZINIT[col-dot].$ZINIT[col-ext]$match[2]$ZINIT[col-rst]
+    else
+        REPLY=$ZINIT[col-file]$REPLY$ZINIT[col-rst]
+    fi
+}
 
 # FUNCTION: .zinit-formatter-dbg [[[
 .zinit-formatter-dbg() {
