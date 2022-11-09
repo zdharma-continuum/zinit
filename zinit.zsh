@@ -26,7 +26,7 @@ unset ZPLGM
 ZINIT[ZERO]="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
 [[ ! -o functionargzero || ${options[posixargzero]} = on || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
 
-: ${ZINIT[BIN_DIR]:="${ZINIT[ZERO]:h}"}
+: ${ZINIT[BIN_DIR]:=${ZINIT[ZERO]:h}}
 [[ ${ZINIT[BIN_DIR]} = \~* ]] && ZINIT[BIN_DIR]=${~ZINIT[BIN_DIR]}
 
 # Make ZINIT[BIN_DIR] path absolute.
@@ -926,9 +926,9 @@ builtin setopt noaliases
     if (( ZINIT[HAVE_ZSTAT] )) {
         local -a arr
         { zstat +mtime -A arr "$1"; } 2>/dev/null
-        : ${(P)2::="${arr[1]}"}
+        : ${(P)2::=${arr[1]}}
     } else {
-        { : ${(P)2::="$(stat -c %Y "$1")"}; } 2>/dev/null
+        { : ${(P)2::="$(command stat -c %Y "$1")"}; } 2>/dev/null
     }
 } # ]]]
 # FUNCTION: .zinit-any-to-user-plugin [[[
@@ -1099,7 +1099,7 @@ builtin setopt noaliases
     id_as="${ICE[id-as]:-$id_as}"
 
     # Remove leading whitespace and trailing /.
-    id_as="${${id_as#"${id_as%%[! $'\t']*}"}%/}"
+    id_as="${${id_as#${id_as%%[! $'\t']*}}%/}"
 
     for type ( ${=${${(M)type:#AUTO}:+snippet plugin}:-$type} ) {
         if [[ $type == snippet ]] {
@@ -1348,7 +1348,7 @@ builtin setopt noaliases
         )
     }
     # Remove leading whitespace and trailing /.
-    url="${${url#"${url%%[! $'\t']*}"}%/}"
+    url="${${url#${url%%[! $'\t']*}}%/}"
     ICE[teleid]="${ICE[teleid]:-$url}"
     [[ ${ICE[as]} = null || ${+ICE[null]} -eq 1 || ${+ICE[binary]} -eq 1 ]] && \
         ICE[pick]="${ICE[pick]:-/dev/null}"
@@ -2818,7 +2818,7 @@ cdclear|delete) ]]; then
                 +zinit-message -n "{u-warn}Error{b-warn}:{rst} No plugin or snippet ID given"
                 if [[ -n $___last_ice ]] {
                     +zinit-message -n " (the last recognized ice was: {ice}"\
-"${___last_ice/(#m)(${~ZINIT[ice-list]})/"{data}$MATCH"}{apo}''{rst}).{error}
+"${___last_ice/(#m)(${~ZINIT[ice-list]})/{data}$MATCH}{apo}''{rst}).{error}
 You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice is in fact a plugin.{rst}
 {note}Note:{rst} The {apo}\`{ice}ice{apo}\`{rst} subcommand is now again required if not using the for-syntax"
                 }
