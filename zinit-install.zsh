@@ -1880,7 +1880,7 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         if (( !OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
-                    +zinit-message "{info}[{pre}ziextract{info}]{rst} Successfully extracted and assigned +x chmod to the file: {obj}${execs[1]}{rst}."
+                    +zinit-message "{info}[{pre}ziextract{info}]{rst} Successfully extracted and assigned +x chmod to the file: {file}${execs[1]}{rst}."
             else
                 local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
                 if (( ${#execs} > 7 )) {
