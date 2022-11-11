@@ -3293,6 +3293,7 @@ typeset -g REPLY
 
 # a searchable menu of tags for current directory
 zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
+ZINIT_REGISTERED_PLUGINS[-1]=()
 zle -N zi-browse-symbol
 zle -N zi-browse-symbol-backwards zi-browse-symbol
 zle -N zi-browse-symbol-pbackwards zi-browse-symbol
