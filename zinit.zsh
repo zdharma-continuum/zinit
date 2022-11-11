@@ -3366,6 +3366,8 @@ zle -N zi-browse-symbol-pbackwards zi-browse-symbol
 zle -N zi-browse-symbol-pforwards zi-browse-symbol
 bindkey "^K" zi-browse-symbol
 
+ZINIT_REGISTERED_PLUGINS[-1]=()
+
 # Add $ZPFX/lib/pkg-config to PKG_MODULE_DIR, so that libraries
 # installed locally can be found by autotools and cmake. There
 # is also $ZPFX/share/config.site file with autotools settings
