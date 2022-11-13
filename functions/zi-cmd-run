@@ -1,0 +1,57 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+
+# Copyright (c) 2022 Sebastian Gniazdowski
+
+# Bootstrap complete exec environment.
+local -A Options
+local -a opt_help opt_q
+integer verbose
+
+zi-run-parse-opts() {
+    reply=()
+    builtin zparseopts -D -E -A Options -- \
+            -quiet=opt_q q=opt_q \
+            -help=opt_help h=opt_help || return 7
+    reply=("$@")
+}
+
+zi-run-parse-opts "$@" || return $?
+
+set -- "$reply[@]"
+local cmd=$1 cmd_name=$1:t:r
+integer exit_code
+
+# Read command definition.
+if ! @str-read-toml $cmd INI; then
+    zi-msg {203}Warning:{174} problems reading command definition \
+        \(file: {41}$cmd{174}\)
+    return 1
+fi
+
+# Replace any special sequences like %var or $var.
+INI[vars__zi]=$ZINIT[BIN_DIR]
+zi-replace-vars INI
+INI[x_ini_path]=$cmd
+INI[x_cache_dir]=${Config[main__cache]:-${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zinit}}
+INI[x_confi_dir]=$CONFI
+command mkdir -p $INI[x_cache_dir] $INI[x_confi_dir]
+
+#
+# Run cmd catching its output.
+#
+
+# The local out file.
+local outfile=$cmd:h/._$cmd_name.out
+# The main line of code ↔ execution of the ini-file runnable.
+repeat 1 { zi-run-command INI $cmd_name $outfile; exit_code=$?; }
+
+wait $REPLY
+exit_code+=$?
+
+(($#opt_q))||zi-msg {140}Command %B{39}${(U)cmd_name}%b{140} executed and \
+                returned with code: {41}$exit_code
+return exit_code
+
+# vim:ft=zsh:tw=80:sw=4:sts=4:et:foldmarker=[[[,]]]
+

@@ -1,0 +1,42 @@
+#!/usr/bin/env zsh
+
+zi-extend-iocmd-text() {
+    local q=$1 with=$2 char v excl
+    shift 2
+    local -a arr text=( "$@" )
+    reply=()
+    arr=( "${(@Q)${(@z)with}}" )
+    for v in $arr; do
+        if [[ $q == 0 ]]; then
+            char="0<"
+        elif [[ $q == 1 ]]; then
+            char="1>"
+        elif [[ $q == 2 ]]; then
+            char="2>"
+        fi
+
+        excl=${${(M)v#\!}:+\>}
+        v=${v#\!}
+
+        # Redirection of stdin
+        [[ $v != std(in|out|err) && $q == 0 ]] && reply+=( "0<$v")
+        [[ $v == stdin && $q == 0 ]] && reply+=( "0< <(cat)")
+        [[ $v == stdout && $q == 0 ]] && reply+=( "0<&1")
+        [[ $v == stderr && $q == 0 ]] && reply+=( "0<&2")
+
+        # Redirection of stdout
+        [[ $v != std(out|err|in) && $q == 1 ]] && reply+=( "1>$excl$v")
+        [[ $v == stdout && $q == 1 ]] && reply+=( "1> >(cat)")
+        [[ $v == stdin && $q == 1 ]] && reply+=( "1>&0")
+        [[ $v == stderr && $q == 1 ]] && reply+=( "1>&2")
+
+        # Redirection of stdin
+        [[ $v != std(err|out|in) && $q == 2 ]] && reply+=( "2>$excl$v")
+        [[ $v == stderr && $q == 2 ]] && reply+=( "2> >(cat >&2)")
+        [[ $v == stdout && $q == 2 ]] && reply+=( "2>&1")
+        [[ $v == stdin && $q == 2 ]] && reply+=( "2>&0")
+    done
+    reply=( "$text[@]" "$reply[@]" )
+}
+
+# vim:ft=zsh:sw=4:sts=4:ts=8:et

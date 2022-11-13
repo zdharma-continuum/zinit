@@ -1,0 +1,174 @@
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# @str-parse-json
+#
+# Parses the buffer ($1) with JSON and returns:
+#
+# 1. Fields for the given key ($2) in the given hash ($3)
+# 2. The hash looks like follows:
+#   1/1 → strings at the level 1 of the 1st object
+#   1/2 → strings at the level 1 of the 2nd object
+#   …
+#   2/1 → strings at 2nd level of the 1st object
+#   …
+#
+# The strings are parseable with "${(@Q)${(@z)value}", i.e.:
+# they're concatenated and quoted strings found in the JSON.
+#
+# Example:
+#
+# {"zinit-ices":{
+#   "default":{
+#       "wait":"1",
+#       "lucid":"",
+#       "as":"program",
+#       "pick":"fzy",
+#       "make":"",
+#   },
+#   "bgn":{
+#       "wait":"1",
+#       "lucid":"",
+#       "as":"null",
+#       "make":"",
+#       "sbin":"fzy;contrib/fzy-*"
+#   }
+# }}
+#
+# Will result in:
+#
+# local -A Strings
+# Strings[1/1]='zinit-ices'
+# Strings[2/1]='default bgn'
+# Strings[3/1]='wait 1 lucid \  as program pick fzy make \ '
+# Strings[3/2]='wait 1 lucid \  as null make \  sbin fzy\;contrib/fzy-\*'
+#
+# So that when you e.g.: expect a key `bgn' but don't know at which
+# position, you can do:
+#
+# local -A Strings
+# @str-parse-json "$json" "zinit-ices" Strings
+#
+# integer pos
+# pos=${${(@Q)${(@z)Strings[2/1]}}[(I)bgn]}
+# if (( pos )) {
+#   local -A ices
+#   ices=( "${(@Q)${(@z)Strings[3/$pos]}}" )
+#   # Use the `ices' hash holding the values of the `bgn' object
+#   …
+# }
+#
+# $1 - the buffer with JSON
+# $2 - the key in the JSON that should be mapped to the
+#      result (i.e.: you can map subset of the input)
+# $3 - the name of the output hash parameter
+
+@str-parse-json() {
+    emulate -LR zsh -o extendedglob -o warncreateglobal -o typesetsilent
+
+    local -A __pos_to_level __level_to_pos __pair_map \
+        __final_pairs __Strings __Counts
+    local __input=$1 __workbuf=$1 __key=$2 __varname=$3 \
+        __style __quoting
+    integer __nest=${4:-1} __idx=0 __pair_idx __level=0 \
+        __start __end __sidx=1 __had_quoted_value=0
+    local -a match mbegin mend __pair_order
+
+    (( ${(P)+__varname} )) || typeset -gA "$__varname"
+
+    __pair_map=( "(" ")" "{" "}" "[" "]" )
+    while [[ $__workbuf = (#b)[^"{}()[]\\\"'":,]#((["({[]})\"'":,])|[\\](*))(*) ]]; do
+        [[ -n ${match[3]} ]] && {
+            __idx+=${mbegin[1]}
+
+            [[ $__quoting = \' ]] && \
+                { __workbuf=${match[3]}; } || \
+                { __workbuf=${match[3]:1}; (( ++ __idx )); }
+
+        } || {
+            __idx+=${mbegin[1]}
+            [[ -z $__quoting ]] && {
+                if [[ ${match[1]} = ["{["] ]]; then
+                    __Strings[$__level/${__Counts[$__level]}]+=" $'\0'--object--$'\0'"
+                    __pos_to_level[$__idx]=$(( ++ __level ))
+                    __level_to_pos[$__level]=$__idx
+                    (( __Counts[$__level] += 1 ))
+                    __sidx=__idx+1
+                    __had_quoted_value=0
+                elif [[ ${match[1]} = ["]}"] ]]; then
+                    (( !__had_quoted_value )) && \
+                        __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
+                    __had_quoted_value=1
+                    if (( __level > 0 )); then
+                        __pair_idx=${__level_to_pos[$__level]}
+                        __pos_to_level[$__idx]=$(( __level -- ))
+                        [[ ${__pair_map[${__input[__pair_idx]}]} = ${__input[__idx]} ]] && {
+                            __final_pairs[$__idx]=$__pair_idx
+                            __final_pairs[$__pair_idx]=$__idx
+                            __pair_order+=( $__idx )
+                        }
+                    else
+                        __pos_to_level[$__idx]=-1
+                    fi
+                fi
+            }
+
+            [[ ${match[1]} = \" && $__quoting != \' ]] && \
+                if [[ $__quoting = '"' ]]; then
+                    __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]}"
+                    __quoting=""
+                else
+                    __had_quoted_value=1
+                    __sidx=__idx+1
+                    __quoting='"'
+                fi
+
+            [[ ${match[1]} = , && -z $__quoting ]] && \
+                {
+                    (( !__had_quoted_value )) && \
+                        __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]//((#s)[[:blank:]]##|([[:blank:]]##(#e)))}"
+                    __sidx=__idx+1
+                    __had_quoted_value=0
+                }
+
+            [[ ${match[1]} = : && -z $__quoting ]] && \
+                {
+                    __had_quoted_value=0
+                    __sidx=__idx+1
+                }
+
+            [[ ${match[1]} = \' && $__quoting != \" ]] && \
+                if [[ $__quoting = "'" ]]; then
+                    __Strings[$__level/${__Counts[$__level]}]+=" ${(q)__input[__sidx,__idx-1]}"
+                    __quoting=""
+                else
+                    __had_quoted_value=1
+                    __sidx=__idx+1
+                    __quoting="'"
+                fi
+
+            __workbuf=${match[4]}
+        }
+    done
+
+    local __text value __found
+    integer __pair_a __pair_b
+    for __pair_a ( "${__pair_order[@]}" ) {
+        __pair_b="${__final_pairs[$__pair_a]}"
+        __text="${__input[__pair_b,__pair_a]}"
+        if [[ $__text = [[:space:]]#\{[[:space:]]#[\"\']${__key}[\"\']* ]]; then
+            if (( __nest != 2 )) {
+                __found="$__text"
+                break
+            }
+        fi
+    }
+
+    if [[ -n $__found && $__nest -lt 2 ]] {
+        @str-parse-json "$__found" "$__key" "$__varname" 2
+    }
+
+    if (( __nest == 2 )) {
+        : ${(PAA)__varname::="${(kv)__Strings[@]}"}
+    }
+}
+
+# vim:ft=zsh:sts=4:sw=4:et

@@ -1,0 +1,89 @@
+#!/usr/bin/env zsh
+# Obtains the command to run and full path to log
+# in its directory and outputs to it plus two other
+# locations (/tmp and ~/.config/csrv)
+local -A Config
+
+local CACHE var_name=$1 cmd_name=$2 data_file=$3
+local -a args
+shift 3
+
+Config=( "${(kv@)${(@PAkv)var_name}}" )
+CACHE=$Config[x_cache_dir] CONFI=$Config[x_confi_dir]
+
+# Include
+if [[ -n $Config[main__include] ]]; then
+    local -a files inc=(${${(@z)Config[main__include]}:r})
+    local q
+    local -A Other
+    local -TU CMD_PATH=$CMD_COMMAND_PATH cmd_path
+    cmd_path+=( $ZICMD_DIR/cmds $CONFI/cmds )
+    files=( $^cmd_path/*.(cmd|ini)(N) )
+    for q in $inc; do
+        q=${(M)files[@]:#*/$q.(ini|cmd)}
+        Other=()
+        @str-read-toml $q Other || {
+            msg {203}Warning:{174} problems reading command definition \
+                \(file: {41}$q{174}
+        }
+        Config=( "${(@kv)Other}" "${(@kv)Config}" )
+    done
+fi
+
+# Get the run entity.
+local cmd=$Config[main__runnable] tpe=$Config[main__type]
+local runpath=$Config[main__run-path] pth=$Config[main__path] \
+        fpth=$Config[main__fpath] quiet=$Config[main__quiet]
+Config[x_ini_loc]=$cmd_name
+# Get the arguments.
+zi-get-args $var_name
+args=( "$reply[@]" )
+
+local stdin=${Config[io__in]:-stdin} stdout=${Config[io__out]:-stdout} \
+        stderr=${Config[io__err]:-stderr}
+local -a text=( "${args[@]}" )
+[[ -z $quiet || $quiet == (no|false|0) ]] && \
+    text+=( "&>>!\"\$CACHE/cmds/$cmd_name.out\"" "&>>|\"\$data_file\"" )
+reply=( "$text[@]" )
+
+# Append any redirections.
+if [[ $quiet != (ignore-io|yes|true|1)  ]]; then
+    zi-extend-iocmd-text 0 $stdin "$reply[@]"
+    zi-extend-iocmd-text 1 $stdout "$reply[@]"
+    zi-extend-iocmd-text 2 $stderr "$reply[@]"
+fi
+
+# Prepend any command wrappers like sh -c ….
+zi-extend-typecmd-text Config $cmd "$reply[@]"
+
+text=( "$reply[@]" )
+
+# Run via eval to allow e.g.: cmd="env PATH=… command"
+# or cmd="command -C …"
+(
+    typeset -gUx FPATH PATH
+    zi-non-empty $pth && path=( "${(s.:.)${(@Q)${(@z)pth}}}" $path )
+    zi-non-empty $fpth && fpath=( "${(s.:.)${(@Q)${(@z)fpth}}}" $fpath )
+
+    if [[ -n $runpath ]]; then
+        command mkdir -p $runpath
+        builtin cd -q $runpath
+    fi
+    # Run any deps
+    if [[ -n $Config[main__deps] ]]; then
+        local -a eps=(${(@z)Config[main__deps]})
+        local q
+        for q in $eps; do
+            repeat 1 {zi cmd run $q;}
+        done
+    fi
+    repeat 1 { builtin eval "$text[@]"; }
+    return $?
+) &
+# Save the PID of the background command
+local tmp=$!-$? key=CMD_${(U)cmd}_PID
+Plugins[$key]=${tmp%-*}
+REPLY=${tmp%-*}
+return ${tmp#*-}
+
+# vim:ft=zsh:sw=4:sts=4:ts=8:et

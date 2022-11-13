@@ -1,0 +1,83 @@
+#!/usr/bin/env zsh
+
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# Copyright (c) 2018 Sebastian Gniazdowski
+#
+# @str-read-toml
+#
+# Reads a TOML file with support for single-level array.
+#
+# $1 - path to the toml file to parse
+# $2 - name of output hash (TOML by default)
+# $3 - prefix for keys in the hash (can be empty)
+#
+# Writes to given hash under keys built in following way: ${3}<section>_field.
+# Values are values from toml file. The values can be quoted and concatenated
+# strings if they're an array. For example:
+#
+# [sec]
+# array = [ val1, "value 2", value&3 ]
+#
+# Then the fields of the hash will be:
+# TOML[<sec>_array]="val1 value\ 2 value\&3"
+#
+# To retrieve the array stored in such way, use the substitution
+# "${(@Q)${(@z)TOML[<sec>_array]}}":
+#
+# local -a array
+# array=( "${(@Q)${(@z)TOML[<sec>_array]}}" )
+#
+
+@str-read-toml() {
+    local __toml_file="$1" __out_hash="${2:-TOML}" __key_prefix="$3"
+    local IFS='' __line __cur_section="void" __access_string REPLY
+    local -a match mbegin mend
+    integer retval
+
+    # Don't leak any helper functions
+    typeset -g tomlef
+    tomlef=( ${(k)functions} )
+    trap "unset -f -- \"\${(k)functions[@]:|tomlef}\" &>/dev/null; unset tomlef" EXIT
+    trap "unset -f -- \"\${(k)functions[@]:|tomlef}\" &>/dev/null; unset tomlef; return 1" INT
+
+    .str-toml-parse-array() {
+        local -A Strings
+        @str-parse-json "{\"input\":$1}" input Strings
+        if [[ -n "${Strings[2/1]}" ]]; then
+            REPLY="${Strings[2/1]# }"
+            return 0
+        else
+            REPLY=""
+            return 1
+        fi
+    }
+
+    [[ ! -r "$__toml_file" ]] && { zi-msg {203}@str-read-toml: \
+        {174}a toml file is unreadable \($__toml_file\); return 1; }
+
+    (( ${(P)+__out_hash} )) || typeset -gA "$__out_hash"
+
+    while read -r -t 1 __line; do
+        if [[ "$__line" = [[:blank:]]#\;* ]]; then
+            continue
+        elif [[ "$__line" = (#b)[[:blank:]]#\[([^\]]##)\][[:blank:]]# ]]; then
+            __cur_section="${match[1]}"
+        elif [[ "$__line" = (#b)[[:blank:]]#([^[:blank:]=]##)[[:blank:]]#[=][[:blank:]]#(*) ]]; then
+            match[2]="${match[2]%"${match[2]##*[! $'\t']}"}" # remove trailing whitespace
+            .str-toml-parse-array "${match[2]}" && \
+                match[2]="$REPLY"
+            __access_string="${__out_hash}[${__key_prefix}${__cur_section}__${match[1]}]"
+            : "${(P)__access_string::=${match[2]}}"
+        else
+            if [[ -n $__line ]]; then
+                zi-msg {203}Error:{174} Incorrect line in input: %f$__line
+                retval+=1
+            fi
+        fi
+    done < "$__toml_file"
+
+    return retval
+}
+
+
+# vim:ft=zsh:sw=4:sts=4:et

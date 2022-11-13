@@ -1,0 +1,50 @@
+#!/usr/bin/env zsh
+zi-extend-typecmd-text() {
+    local var_name=$1 cmd=$2 tpe env sh pth
+    shift 2
+
+    local -a args=( "$@" )
+    local -A ExtendConfig
+    ExtendConfig=( "${(@PAkv)var_name}" )
+
+    reply=()
+    tpe=$ExtendConfig[main__type]
+    env=$ExtendConfig[main__env]
+    sh=$ExtendConfig[main__shell]
+    pth=$ExtendConfig[x_ini_path]:r.env
+
+    [[ -z $env && -f $pth ]]&&env=$pth
+    if [[ $tpe == source ]]; then 
+        if [[ $sh != (none|) ]]; then
+            # The arguments fall from positional params set for zsh -c
+            # to the source command, which automatically inherits them.
+            reply=( $sh -c "${env:+source\ $env;} source \"\$@\"" "${(q)cmd}" zi-source )
+        else
+            # The positional parameters are automatically appended by
+            # source builtin by the wrapping eval.
+            reply=( "${env:+source $env;}source ${(q)cmd}" )
+        fi
+    elif [[ $tpe == binary ]]; then
+        if [[ $sh != (none|) ]]; then
+            reply=( $sh -c "'${env:+source $env;} $cmd \"\$@\"'" zi-bin )
+        else
+            reply=( "${env:+source $env;} $cmd \"\$@\"" )
+        fi
+    elif [[ $tpe == autoload ]]; then
+        if [[ $sh != (none|) ]]; then
+            reply=( $sh -c "\"${env:+source $env;} autoload $cmd; $cmd \\\"\\\$@\\\"\"" zi-autoload )
+        else
+            autoload $cmd
+            reply=( ${=env:+source $env;} $cmd )
+        fi
+    elif [[ $tpe == eval ]]; then
+        if [[ $sh != (none|) ]]; then
+            reply=( $sh -c '"'"${=env:+source $env;}""eval $cmd"' \"\$@\""' zi-eval )
+        else
+            reply=( eval ${=env:+source $env ;} $cmd )
+        fi
+    fi
+    reply+=( "$args[@]" )
+}
+
+# vim:ft=zsh:sw=4:sts=4:ts=8:et

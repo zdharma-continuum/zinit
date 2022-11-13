@@ -1,0 +1,56 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+
+# Copyright (c) 2022 Sebastian Gniazdowski
+
+# Set the base and typically useful options
+builtin emulate -L zsh
+builtin setopt extendedglob warncreateglobal typesetsilent noshortloops \
+        noautopushd multios
+
+0=${${0:#$ZSH_ARGZERO}:-${(%):-%N}}
+0=${${(M)0##/*}:-$PWD/${0#./}}
+source $0:h:h/scripts/common.snip.zsh cmd-run $0:h:h
+
+# Such global variable is expected to be typeset'd -g in the plugin.zsh
+# file. Here it's restored in case of the function being run as a script.
+typeset -gA Plugins=( ZICMD_DIR "$ZINIT[BIN_DIR]" )
+local subcmd=$1
+local CONFI=${XDG_CACHE_HOME:-$HOME/.config}/zinit
+mkdir -p $CONFI
+
+shift
+
+warn() {
+    zi-msg {warn}Error: no such subcommand \`{cmd}$subcmd{warn}\` found
+}
+
+case $subcmd in
+    (*)
+        if (( $+functions[zi-cmd-$subcmd] )); then
+            zi-cmd-$subcmd "$@"
+        elif [[ -d $Plugins[ZICMD_DIR]/functions ]]; then
+            if [[ -x $Plugins[ZICMD_DIR]/functions/zi-cmd-$subcmd ]]; then
+                autoload $Plugins[ZICMD_DIR]/functions/zi-cmd-$subcmd
+                zi-cmd-$subcmd "$@"
+            else
+                local -TU ZICMD_COMMAND_PATH=$ZICMD_COMMAND_PATH q
+                # Add typical paths
+                q+=( $ZINIT[BIN_DIR]/cmds $CONFI/cmds )
+                local -a expr
+                expr=( $^q/*.(ini|cmd)(N) )
+                expr=( ${(M)expr:#(*/|)$subcmd.(ini|cmd)} )
+                if (( $#expr )); then
+                    zi-cmd-run "$expr[1]" "$@"
+                else
+                    warn
+                    return 1
+                fi
+            fi
+        else
+            warn
+            return 3
+        fi
+        ;;
+esac
+# vim:ft=zsh:tw=80:sw=4:sts=4:et:foldmarker=[[[,]]]

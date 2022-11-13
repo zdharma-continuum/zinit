@@ -1,0 +1,44 @@
+#!/usr/bin/env zsh
+
+zi-extend-pipe-text() {
+    local var_name=$1 cmd=$2 tpe sh pth p
+    shift 2
+    integer ret
+
+    local -a args=( "$@" )
+    local -A Config 
+    typeset -gA IConfig
+    Config=( "${(@PAkv)var_name}" )
+
+    reply=($args)
+    IConfig=( "${(@kv)${(@PAkv)REPLY}}" )
+
+    p=$Config[main__pipe]
+
+    if [[ -n $p ]]; then
+        zi-read-ini-for ${p#cmd:}
+        var_name=$REPLY
+    else
+        return 0
+    fi
+
+    # extend-pipe-text jest uruchamiany z run-command, ktory nastepnie
+    # uruchamia go ponownie na tej samej zmiennej INI. Prowadzi to do
+
+    if [[ -n $p ]]; then
+        if [[ $p == cmd:* ]]; then
+            # The local out file.
+            p=${p#cmd:}
+            outfile=$p:h/_$p:t:r.out
+            # The main line of code ↔ execution of the ini-file runnable.
+            reply+=( "|" repeat 1 "{ zi-run-command "$var_name" "$p" "$outfile";}" )
+            ret=1
+        else
+            reply+=( "|" $p )
+            ret=1
+        fi
+    fi
+
+    return $((!ret))
+}
+# vim:ft=zsh:sw=4:sts=4:ts=8:et

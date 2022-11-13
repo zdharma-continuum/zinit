@@ -84,7 +84,7 @@ ZINIT[cmds]="-h|--help|help|man|self-update|times|zstatus|load|light|unload|snip
 update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
 completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
 dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
-env-whitelist|bindkeys|module|add-fpath|fpath|run"
+env-whitelist|bindkeys|module|add-fpath|fpath|run|cmd"
 
 # Can be customized.
 : ${ZINIT[COMPLETIONS_DIR]:=${ZINIT[HOME_DIR]}/completions}
@@ -2831,6 +2831,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
     }
 
     case "$1" in
+       (cmd)
+            shift
+            $ZINIT[BIN_DIR]/scripts/zi-cmd "$@"
+            ;;
        (ice)
            shift
            .zinit-ice "$@"
@@ -3276,6 +3280,8 @@ typeset -g REPLY
 
 # a searchable menu of tags for current directory
 zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
+ZINIT_REGISTERED_PLUGINS[-1]=()
+
 zle -N zi-browse-symbol
 zle -N zi-browse-symbol-backwards zi-browse-symbol
 zle -N zi-browse-symbol-pbackwards zi-browse-symbol

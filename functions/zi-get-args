@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+zi-get-args() {
+    local var_name=$1 k
+    local -a keys args
+    keys=( ${(on)${(AP)var_name}[(I)args__*-<->]} )
+    for k in $keys; do
+        args+=( ${${(AP)var_name}[$k]} )
+    done
+    args+=( ${(z)${${(AP)var_name}[args__@]}} )
+    # Tilde expand dirs
+    args=( "${args[@]//(#s)\~/$HOME}" )
+    reply=( "$args[@]" )
+}
+
+# vim:ft=zsh:sw=4:sts=4:ts=8:et
