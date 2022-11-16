@@ -1,8 +1,8 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
-# FUNCTION: :zinit-tmp-subst-source [[[
-:zinit-tmp-subst-source() {
+# FUNCTION: :zi::tmp-subst-source [[[
+:zi::tmp-subst-source() {
     local -a ___substs ___ab
     ___substs=( "${(@s.;.)ICE[subst]}" )
     if [[ -n ${(M)___substs:#*\\(#e)} ]] {
@@ -12,7 +12,7 @@
 
     # Load the plugin
     if [[ ! -r $1 ]] {
-        +zinit-message "{error}source: Couldn't read the script {obj}${1}{error}" \
+        +zi::message "{error}source: Couldn't read the script {obj}${1}{error}" \
             ", cannot substitute {data}${ICE[subst]}{error}.{rst}"
     }
 
@@ -31,13 +31,13 @@
 
     builtin eval "$___data"
 } # ]]]
-# FUNCTION: .zinit-service [[[
+# FUNCTION: __zi::service [[[
 # Handles given service, i.e. obtains lock, runs it, or waits if no lock
 #
 # $1 - type "p" or "s" (plugin or snippet)
 # $2 - mode - for plugin (light or load)
 # $3 - id - URL or plugin ID or alias name (from id-as'')
-.zinit-service() {
+__zi::service() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
@@ -55,10 +55,10 @@
                     ___lckd=1
                     if (( ! ___strd )) || [[ $___cmd = RESTART ]]; then
                         [[ $___tpe = p ]] && { ___strd=1
-                                                .zinit-load "$___id" "" "$___mode" 0;
+                                                __zi::load "$___id" "" "$___mode" 0;
                                             }
                         [[ $___tpe = s ]] && { ___strd=1
-                                                .zinit-load-snippet "$___id" "" 0;
+                                                __zi::load-snippet "$___id" "" 0;
                                             }
                     fi
                     ___cmd=
@@ -77,8 +77,8 @@
     done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
 } # ]]]
 
-# FUNCTION: .zinit-wrap-track-functions [[[
-.zinit-wrap-track-functions() {
+# FUNCTION: __zi::wrap-track-functions [[[
+__zi::wrap-track-functions() {
     local user="$1" plugin="$2" id_as="$3" f
     local -a wt
     wt=( ${(@s.;.)ICE[wrap-track]} )
@@ -87,14 +87,14 @@
         eval "
 function $f {
     ZINIT[CUR_USR]=\"$user\" ZINIT[CUR_PLUGIN]=\"$plugin\" ZINIT[CUR_USPL2]=\"$id_as\"
-    .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
-    .zinit-diff \"\${ZINIT[CUR_USPL2]}\" begin
-    .zinit-tmp-subst-on load
+    __zi::add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Starting to track function: $f ===\"
+    __zi::diff \"\${ZINIT[CUR_USPL2]}\" begin
+    __zi::tmp-subst-on load
     functions[${f}]=\${functions[${f}-zinit-bkp]}
     ${f} \"\$@\"
-    .zinit-tmp-subst-off load
-    .zinit-diff \"\${ZINIT[CUR_USPL2]}\" end
-    .zinit-add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
+    __zi::tmp-subst-off load
+    __zi::diff \"\${ZINIT[CUR_USPL2]}\" end
+    __zi::add-report \"\${ZINIT[CUR_USPL2]}\" \"Note: === Ended tracking function: $f ===\"
     ZINIT[CUR_USR]= ZINIT[CUR_PLUGIN]= ZINIT[CUR_USPL2]=
 }"
     done
@@ -104,45 +104,45 @@ function $f {
 # Dtrace
 #
 
-# FUNCTION: .zinit-debug-start [[[
+# FUNCTION: __zi::debug-start [[[
 # Starts Dtrace, i.e. session tracking for changes in Zsh state.
-.zinit-debug-start() {
+__zi::debug-start() {
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "{error}Dtrace is already active, stop it first with \`dstop'{rst}"
+        +zi::message "{error}Dtrace is already active, stop it first with \`dstop'{rst}"
         return 1
     fi
 
     ZINIT[DTRACE]=1
 
-    .zinit-diff _dtrace/_dtrace begin
+    __zi::diff _dtrace/_dtrace begin
 
     # Full shadeing on
-    .zinit-tmp-subst-on dtrace
+    __zi::tmp-subst-on dtrace
 } # ]]]
-# FUNCTION: .zinit-debug-stop [[[
+# FUNCTION: __zi::debug-stop [[[
 # Stops Dtrace (i.e., session tracking for changes in Zsh state).
-.zinit-debug-stop() {
+__zi::debug-stop() {
     ZINIT[DTRACE]=0
 
     # Shadowing fully off
-    .zinit-tmp-subst-off dtrace
+    __zi::tmp-subst-off dtrace
 
     # Gather end data now, for diffing later
-    .zinit-diff _dtrace/_dtrace end
+    __zi::diff _dtrace/_dtrace end
 } # ]]]
-# FUNCTION: .zinit-clear-debug-report [[[
+# FUNCTION: __zi::clear-debug-report [[[
 # Forgets dtrace repport gathered up to this moment.
-.zinit-clear-debug-report() {
-    .zinit-clear-report-for _dtrace/_dtrace
+__zi::clear-debug-report() {
+    __zi::clear-report-for _dtrace/_dtrace
 } # ]]]
-# FUNCTION: .zinit-debug-unload [[[
+# FUNCTION: __zi::debug-unload [[[
 # Reverts changes detected by dtrace run.
-.zinit-debug-unload() {
-    (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
+__zi::debug-unload() {
+    (( ${+functions[__zi::unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "{error}Dtrace is still active, stop it first with \`dstop'{rst}"
+        +zi::message "{error}Dtrace is still active, stop it first with \`dstop'{rst}"
     else
-        .zinit-unload _dtrace _dtrace
+        __zi::unload _dtrace _dtrace
     fi
 } # ]]]
 

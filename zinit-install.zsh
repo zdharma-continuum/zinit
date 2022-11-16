@@ -7,42 +7,42 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 1
 }
 
-# FUNCTION: .zinit-jq-check [[[
+# FUNCTION: __zi::jq-check [[[
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
-.zinit-jq-check() {
+__zi::jq-check() {
     command -v jq >/dev/null && return 0
 
-    +zinit-message "{error}❌ ERROR: jq binary not found" \
+    +zi::message "{error}❌ ERROR: jq binary not found" \
         "{nl}{u-warn}Please install jq:{rst}" \
         "https://github.com/stedolan/jq" \
         "{nl}{u-warn}To do so with zinit, please refer to:{rst}" \
         "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
     return 1
 } # ]]]
-# FUNCTION: .zinit-json-get-value [[[
+# FUNCTION: __zi::json-get-value [[[
 # Wrapper around jq that return the value of a property
 #
 # $1: JSON structure
 # $2: jq path
-.zinit-json-get-value() {
-    .zinit-jq-check || return 1
+__zi::json-get-value() {
+    __zi::jq-check || return 1
 
     local jsonstr=$1 jqpath=$2
     jq -er ".${jqpath}" <<< "$jsonstr"
 } # ]]]
-# FUNCTION: .zinit-json-to-array [[[
+# FUNCTION: __zi::json-to-array [[[
 # Wrapper around jq that sets key/values of an associative array, replicating
 # the structure of a given JSON object
 #
 # $1: JSON structure
 # $2: jq path
 # $3: name of the associative array to store the key/value pairs in
-.zinit-json-to-array() {
+__zi::json-to-array() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt localoptions noglob
 
-    .zinit-jq-check || return 1
+    __zi::jq-check || return 1
 
     local jsonstr=$1 jqpath=$2 varname=$3
 
@@ -58,9 +58,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         <<< "$jsonstr")
     eval "$evalstr"
 } # ]]]
-# FUNCTION: .zinit-get-package [[[
-.zinit-get-package() {
-    .zinit-jq-check || return 1
+# FUNCTION: __zi::get-package [[[
+__zi::get-package() {
+    __zi::jq-check || return 1
 
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
@@ -88,10 +88,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         # FIXME below only works if there are no ':' in the path
         tmpfile=${profile%:*}
         profile=${${${(M)profile:#*:*}:+${profile#*:}}:-default}
-    } elif { ! .zinit-download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
+    } elif { ! __zi::download-file-stdout $URL 0 1 2>/dev/null > $tmpfile } {
         # retry
         command rm -f $tmpfile
-        .zinit-download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
+        __zi::download-file-stdout $URL 1 1 2>/dev/null >1 $tmpfile
     }
 
     # load json from file
@@ -102,7 +102,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     [[ -n "$localpkg" ]] && pkgname="{pid}$pkgname{rst} {note}[$tmpfile]{rst}"
 
     if [[ -z $pkgjson ]] {
-        +zinit-message "{error}❌ Error: the package {hi}${pkgname}" \
+        +zi::message "{error}❌ Error: the package {hi}${pkgname}" \
                        "{error}couldn't be found.{rst}"
         return 1
     }
@@ -113,13 +113,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local json_meta="${json_root}[\"plugin-info\"]"
 
     local -a profiles
-    profiles=("${(@f)$(.zinit-json-get-value "$pkgjson" "${json_ices} | keys[]")}") \
+    profiles=("${(@f)$(__zi::json-get-value "$pkgjson" "${json_ices} | keys[]")}") \
         || return 1
 
     # Check if user requested an unknown profile
     if ! (( ${profiles[(I)${profile}]} )) {
         # Assumption: the default profile is the first in the table (-> different color).
-        +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
+        +zi::message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
             "{error}couldn't be found, aborting. Available profiles are:" \
             "{lhi}${(pj:$epro_sep:)profiles[@]}{error}.{rst}"
         return 1
@@ -127,16 +127,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local json_profile="${json_ices}[\"${profile}\"]"
 
     local -A metadata
-    .zinit-json-to-array "$pkgjson" "$json_meta" metadata
+    __zi::json-to-array "$pkgjson" "$json_meta" metadata
     if [[ "$?" -ne 0 || -z "$metadata" ]] {
-        +zinit-message '{error}❌ ERROR: Failed to retrieve metadata from package.json'
+        +zi::message '{error}❌ ERROR: Failed to retrieve metadata from package.json'
         return 1
     }
 
     local user=${metadata[user]} plugin=${metadata[plugin]} \
         message=${metadata[message]} url=${metadata[url]}
 
-    .zinit-json-to-array "$pkgjson" "$json_profile" ICE
+    __zi::json-to-array "$pkgjson" "$json_profile" ICE
     local -a requirements
 
     # FIXME requires shouldn't be stored under zinit-ices...
@@ -151,21 +151,21 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
 
     # FIXME Do we even need that? If yes, we may want to do that in
-    # .zinit-json-to-array
+    # __zi::json-to-array
     if [[ -n ${ICE[id-as]} ]] {
-        @zinit-substitute 'ICE[id-as]'
+        @zi::substitute 'ICE[id-as]'
         local -A map
         map=( "\"" "\\\"" "\\" "\\" )
         eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
     }
 
-    +zinit-message "{info3}Package{ehi}:{rst} ${pkgname}. Selected" \
+    +zi::message "{info3}Package{ehi}:{rst} ${pkgname}. Selected" \
         "profile{ehi}:{rst} {hi}$profile{rst}. Available" \
         "profiles:${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl}" \
         "${(pj:$pro_sep:)profiles[@]}{rst}."
 
     if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]] {
-        +zinit-message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}" \
+        +zi::message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}" \
             "profiles (if any are available) are the recommended ones (the reason" \
             "is that they expose the binaries provided by the package without" \
             "altering (i.e.: {slight}cluttering{rst}{…}) the {var}\$PATH{rst}" \
@@ -181,37 +181,37 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             ]]; then
                 local -A namemap
                 namemap=( bgn bin-gem-node dl patch-dl monitor readurl )
-                +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
+                +zi::message -n "{u-warn}ERROR{b-warn}: {error}the "
                 if [[ -z ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
-                    +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
+                    +zi::message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
                 else
-                    +zinit-message -n "{error}package {pid}$pkg{error} "
+                    +zi::message -n "{error}package {pid}$pkg{error} "
                 fi
-                +zinit-message '{error}requires the {apo}`{annex}'${namemap[$required]}'{apo}`' \
+                +zi::message '{error}requires the {apo}`{annex}'${namemap[$required]}'{apo}`' \
                     "{error}annex, which is currently not installed." \
                     "{nl}{nl}If you'd like to install it, you can visit its homepage:" \
                     "{nl}– {url}https://github.com/zdharma-continuum/zinit-annex-${(L)namemap[$required]}{rst}" \
                     "{nl}for instructions."
                 (( ${#profiles[@]:#$profile} > 0 )) && \
-                    +zinit-message "{nl}Other available profiles are:" \
+                    +zi::message "{nl}Other available profiles are:" \
 "{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
 
                 return 1
             fi
         else
             if ! command -v $required &>/dev/null; then
-                +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
+                +zi::message -n "{u-warn}ERROR{b-warn}: {error}the "
                 if [[ -n ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
-                    +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
+                    +zi::message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
                 else
-                    +zinit-message -n "{error}package {pid}$pkg{error} "
+                    +zi::message -n "{error}package {pid}$pkg{error} "
                 fi
-                +zinit-message '{error}requires a {apo}`{cmd}'$required'{apo}`{error}' \
+                +zi::message '{error}requires a {apo}`{cmd}'$required'{apo}`{error}' \
                     "command to be available in {var}\$PATH{error}.{rst}" \
                     "{nl}{error}The package cannot be installed unless the" \
                     "command will be available."
                 (( ${#profiles[@]:#$profile} > 0 )) && \
-                    +zinit-message "{nl}Other available profiles are:" \
+                    +zi::message "{nl}Other available profiles are:" \
                         "{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
                 return 1
             fi
@@ -219,18 +219,18 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     }
 
     if [[ -n ${ICE[dl]} && -z ${(k)ZINIT_EXTS[(r)<-> z-annex-data: zinit-annex-patch-dl *]} ]] {
-        +zinit-message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" \
+        +zi::message "{nl}{u-warn}WARNING{b-warn}:{rst} the profile uses" \
             "{ice}dl''{rst} ice however there's currently no {annex}zinit-annex-patch-dl{rst}" \
             "annex loaded, which provides it."
-        +zinit-message "The ice will be inactive, i.e.: no additional" \
+        +zi::message "The ice will be inactive, i.e.: no additional" \
             "files will become downloaded (the ice downloads the given URLs)." \
             "The package should still work, as it doesn't indicate to" \
             "{u}{slight}require{rst} the annex."
-        +zinit-message "{nl}You can download the" \
+        +zi::message "{nl}You can download the" \
             "annex from its homepage at {url}https://github.com/zdharma-continuum/zinit-annex-patch-dl{rst}."
     }
 
-    [[ -n ${message} ]] && +zinit-message "{info}${message}{rst}"
+    [[ -n ${message} ]] && +zi::message "{info}${message}{rst}"
 
     if (( ${+ICE[is-snippet]} )) {
         reply=( "" "$url" )
@@ -244,22 +244,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if (( !${+ICE[git]} && !${+ICE[from]} )) {
         (
             local -A jsondata
-            local URL=$(.zinit-json-get-value "$pkgjson" "_resolved")
+            local URL=$(__zi::json-get-value "$pkgjson" "_resolved")
             local fname="${${URL%%\?*}:t}"
 
             command mkdir -p $dir || {
-                +zinit-message "{u-warn}Error{b-warn}:{error} Couldn't create directory:" \
+                +zi::message "{u-warn}Error{b-warn}:{error} Couldn't create directory:" \
                     "{dir}$dir{error}, aborting.{rst}"
                 return 1
             }
             builtin cd -q $dir || return 1
 
-            +zinit-message "Downloading tarball for {pid}$plugin{rst}{…}"
+            +zi::message "Downloading tarball for {pid}$plugin{rst}{…}"
 
-            if { ! .zinit-download-file-stdout "$URL" 0 1 >! "$fname" } {
-                if { ! .zinit-download-file-stdout "$URL" 1 1 >! "$fname" } {
+            if { ! __zi::download-file-stdout "$URL" 0 1 >! "$fname" } {
+                if { ! __zi::download-file-stdout "$URL" 1 1 >! "$fname" } {
                     command rm -f "$fname"
-                    +zinit-message "Download of the file {apo}\`{file}$fname{apo}\`{rst}" \
+                    +zi::message "Download of the file {apo}\`{file}$fname{apo}\`{rst}" \
                         "failed. No available download tool? One of:" \
                         "{cmd}${(pj:$tool_sep:)${=:-curl wget lftp lynx}}{rst}."
 
@@ -286,22 +286,22 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return $?
 } # ]]]
-# FUNCTION: .zinit-setup-plugin-dir [[[
+# FUNCTION: __zi::setup-plugin-dir [[[
 # Clones given plugin into PLUGIN_DIR. Supports multiple
 # sites (respecting `from' and `proto' ice modifiers).
 # Invokes compilation of plugin's main file.
 #
 # $1 - user
 # $2 - plugin
-.zinit-setup-plugin-dir() {
+__zi::setup-plugin-dir() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal noshortloops rcquotes
 
     local user=$1 plugin=$2 id_as=$3 remote_url_path=${1:+$1/}$2 \
         local_path tpe=$4 update=$5 version=$6
 
-    if .zinit-get-object-path plugin "$id_as" && [[ -z $update ]] {
-        +zinit-message "{u-warn}ERROR{b-warn}:{error} A plugin named {pid}$id_as{error}" \
+    if __zi::get-object-path plugin "$id_as" && [[ -z $update ]] {
+        +zi::message "{u-warn}ERROR{b-warn}:{error} A plugin named {pid}$id_as{error}" \
                 "already exists, aborting."
         return 1
     }
@@ -340,10 +340,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
-            .zinit-any-colorify-as-uspl2 "$user" "$plugin"
+            __zi::any-colorify-as-uspl2 "$user" "$plugin"
             local pid_hl='{pid}' id_msg_part=" (at label{ehi}:{rst} {id-as}$id_as{rst}{…})"
             (( $+ICE[pack] )) && local infix_m="({b}{ice}pack{apo}''{rst}) "
-            +zinit-message "{nl}Downloading $infix_m{pid}$user${user:+/}$plugin{…}${${${id_as:#$user/$plugin}}:+$id_msg_part}"
+            +zi::message "{nl}Downloading $infix_m{pid}$user${user:+/}$plugin{…}${${${id_as:#$user/$plugin}}:+$id_msg_part}"
         }
 
         local site
@@ -357,13 +357,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ $site = */releases ]] {
             local tag_version=${ICE[ver]}
             if [[ -z $tag_version ]]; then
-                tag_version="$( { .zinit-download-file-stdout $site/latest || .zinit-download-file-stdout $site/latest 1; } 2>/dev/null | \
+                tag_version="$( { __zi::download-file-stdout $site/latest || __zi::download-file-stdout $site/latest 1; } 2>/dev/null | \
                                   command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
                 tag_version=${tag_version##*/}
             fi
             local url=$site/expanded_assets/$tag_version
 
-            .zinit-get-latest-gh-r-url-part "$user" "$plugin" "$url" || return $?
+            __zi::get-latest-gh-r-url-part "$user" "$plugin" "$url" || return $?
 
             command mkdir -p "$local_path"
             [[ -d "$local_path" ]] || return 1
@@ -379,16 +379,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         { local old_version="$(<$local_path/._zinit/is_release${count:#1})"; } 2>/dev/null
                         old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                     }
-                    +zinit-message "(Requesting \`${REPLY:t}'${version:+, version $version}{…}${old_version:+ Current version: $old_version.})"
-                    if { ! .zinit-download-file-stdout "$url" 0 1 >! "${REPLY:t}" } {
-                        if { ! .zinit-download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
+                    +zi::message "(Requesting \`${REPLY:t}'${version:+, version $version}{…}${old_version:+ Current version: $old_version.})"
+                    if { ! __zi::download-file-stdout "$url" 0 1 >! "${REPLY:t}" } {
+                        if { ! __zi::download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
                             command rm -f "${REPLY:t}"
-                            +zinit-message "Download of release for \`$remote_url_path' " \
+                            +zi::message "Download of release for \`$remote_url_path' " \
                                 "failed.{nl}Tried url: $url."
                             return 1
                         }
                     }
-                    if .zinit-download-file-stdout "$url.sig" 2>/dev/null >! "${REPLY:t}.sig"; then
+                    if __zi::download-file-stdout "$url.sig" 2>/dev/null >! "${REPLY:t}.sig"; then
                         :
                     else
                         command rm -f "${REPLY:t}.sig"
@@ -410,14 +410,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_path"; } || return 1
-                .zinit-get-cygwin-package "$remote_url_path" || return 1
+                __zi::get-cygwin-package "$remote_url_path" || return 1
                 builtin print -r -- $REPLY >! ._zinit/is_release
                 ziextract "$REPLY"
             ) || return $?
         } elif [[ $tpe = github ]] {
             case ${ICE[proto]} in
                 (|https|git|http|ftp|ftps|rsync|ssh)
-                    :zinit-git-clone() {
+                    :zi::git-clone() {
                         command git clone --progress ${(s: :)ICE[cloneopts]---recursive} \
                             ${(s: :)ICE[depth]:+--depth ${ICE[depth]}} \
                             "${ICE[proto]:-https}://${site:-${ICE[from]:-github.com}}/$remote_url_path" \
@@ -427,12 +427,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             --config fetch.fsckobjects=false \
                             --config pull.rebase=false
                             integer retval=$?
-                            unfunction :zinit-git-clone
+                            unfunction :zi::git-clone
                             return $retval
                     }
-                    :zinit-git-clone |& { command ${ZINIT[BIN_DIR]}/share/git-process-output.zsh || cat; }
+                    :zi::git-clone |& { command ${ZINIT[BIN_DIR]}/share/git-process-output.zsh || cat; }
                     if (( pipestatus[1] == 141 )) {
-                        :zinit-git-clone
+                        :zi::git-clone
                         integer retval=$?
                         if (( retval )) {
                             builtin print -Pr -- "$ZINIT[col-error]Clone failed (code: $ZINIT[col-obj]$retval$ZINIT[col-error]).%f%b"
@@ -456,7 +456,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ $update != -u ]] {
             hook_rc=0
             # Store ices at clone of a plugin
-            .zinit-store-ices "$local_path/._zinit" ICE "" "" "" ""
+            __zi::store-ices "$local_path/._zinit" ICE "" "" "" ""
             reply=(
                 ${(on)ZINIT_EXTS2[(I)zinit hook:\!atclone-pre <->]}
                 ${(on)ZINIT_EXTS[(I)z-annex hook:\!atclone-<-> <->]}
@@ -501,7 +501,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local -A OPTS
     OPTS[opt_-q,--quiet]=1
     [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
-        .zinit-install-completions "$id_as" "" "0"
+        __zi::install-completions "$id_as" "" "0"
 
     if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
@@ -522,7 +522,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return 0
 } # ]]]
-# FUNCTION: .zinit-install-completions [[[
+# FUNCTION: __zi::install-completions [[[
 # Installs all completions of given plugin. After that they are
 # visible to 'compinit'. Visible completions can be selectively
 # disabled and enabled. User can access completion data with
@@ -531,7 +531,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin if $1 (i.e., user) given
 # $3 - if 1, then reinstall, otherwise only install completions that are not present
-.zinit-install-completions() {
+__zi::install-completions() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
 
@@ -542,13 +542,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     typeset -ga INSTALLED_COMPS SKIPPED_COMPS
     INSTALLED_COMPS=() SKIPPED_COMPS=()
 
-    .zinit-any-to-user-plugin "$id_as" ""
+    __zi::any-to-user-plugin "$id_as" ""
     local user=${reply[-2]}
     local plugin=${reply[-1]}
-    .zinit-any-colorify-as-uspl2 "$user" "$plugin"
+    __zi::any-colorify-as-uspl2 "$user" "$plugin"
     local abbrev_pspec=$REPLY
 
-    .zinit-exists-physically-message "$id_as" "" || return 1
+    __zi::exists-physically-message "$id_as" "" || return 1
 
     # Symlink any completion files included in the plugin directory
     typeset -a completions already_symlinked backup_comps
@@ -577,7 +577,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             (( quiet )) || builtin print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory."
             command ln -fs "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
             # Make compinit notice the change
-            .zinit-forget-completion "$cfile" "$quiet"
+            __zi::forget-completion "$cfile" "$quiet"
         else
             SKIPPED_COMPS+=( $cfile )
             (( quiet )) || builtin print -Pr "Not symlinking completion \`${ZINIT[col-obj]}$cfile%f%b', it already exists."
@@ -586,11 +586,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     done
 
     if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) {
-        +zinit-message "{msg}Installed {num}${#INSTALLED_COMPS}" \
+        +zi::message "{msg}Installed {num}${#INSTALLED_COMPS}" \
             "{msg}completions. They are stored in the{var}" \
             "\$INSTALLED_COMPS{msg} array."
         if (( ${#SKIPPED_COMPS} )) {
-            +zinit-message "{msg}Skipped installing" \
+            +zi::message "{msg}Skipped installing" \
                 "{num}${#SKIPPED_COMPS}{msg} completions." \
                 "They are stored in the {var}\$SKIPPED_COMPS{msg} array."
         }
@@ -601,16 +601,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         builtin print -rl -- $SKIPPED_COMPS >! ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst
     }
 
-    .zinit-compinit 1 1 &>/dev/null
+    __zi::compinit 1 1 &>/dev/null
 } # ]]]
-# FUNCTION: .zinit-compinit [[[
+# FUNCTION: __zi::compinit [[[
 # User-exposed `compinit' frontend which first ensures that all
 # completions managed by Zinit are forgotten by Zshell. After
 # that it runs normal `compinit', which should more easily detect
 # Zinit's completions.
 #
 # No arguments.
-.zinit-compinit() {
+__zi::compinit() {
     # This might be called during sourcing when setting up the plugins dir, so check that OPTS is actually existing
     [[ -n $OPTS && -n ${OPTS[opt_-p,--parallel]} && $1 != 1 ]] && return
 
@@ -634,10 +634,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         bkpfile="${cfile#_}"
 
         #print -Pr "${ZINIT[col-info]}Processing completion $cfile%f%b"
-        .zinit-forget-completion "$cfile"
+        __zi::forget-completion "$cfile"
     done
 
-    +zinit-message "Initializing completion ({func}compinit{rst}){…}"
+    +zi::message "Initializing completion ({func}compinit{rst}){…}"
     command rm -f ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump}
 
     # Workaround for a nasty trick in _vim
@@ -646,10 +646,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     builtin autoload -Uz compinit
     compinit ${${(M)use_C:#1}:+-C} -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
 } # ]]]
-# FUNCTION: .zinit-download-file-stdout [[[
+# FUNCTION: __zi::download-file-stdout [[[
 # Downloads file to stdout. Supports following backend commands:
 # curl, wget, lftp, lynx. Used by snippet loading.
-.zinit-download-file-stdout() {
+__zi::download-file-stdout() {
     local url="$1" restart="$2" progress="${(M)3:#1}"
 
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
@@ -671,7 +671,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         if (( ${+commands[curl]} )); then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >(__zi::single-line >&2) || return 1
             else
                 command curl -fsSL "$url" || return 1
             fi
@@ -682,7 +682,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         elif (( ${+commands[lynx]} )); then
             command lynx -source "$url" || return 1
         else
-            +zinit-message "{u-warn}ERROR{b-warn}:{rst}No download tool detected" \
+            +zi::message "{u-warn}ERROR{b-warn}:{rst}No download tool detected" \
                 "(one of: {cmd}curl{rst}, {cmd}wget{rst}, {cmd}lftp{rst}," \
                 "{cmd}lynx{rst})."
             return 2
@@ -690,7 +690,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     } else {
         if type curl 2>/dev/null 1>&2; then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >(__zi::single-line >&2) || return 1
             else
                 command curl -fsSL "$url" || return 1
             fi
@@ -699,17 +699,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         elif type lftp 2>/dev/null 1>&2; then
             command lftp -c "cat $url" || return 1
         else
-            .zinit-download-file-stdout "$url" "1" "$progress"
+            __zi::download-file-stdout "$url" "1" "$progress"
             return $?
         fi
     }
 
     return 0
 } # ]]]
-# FUNCTION: .zinit-get-url-mtime [[[
+# FUNCTION: __zi::get-url-mtime [[[
 # For the given URL returns the date in the Last-Modified
 # header as a time stamp
-.zinit-get-url-mtime() {
+__zi::get-url-mtime() {
     local url="$1" IFS line header
     local -a cmd
 
@@ -746,7 +746,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return 0
 } # ]]]
-# FUNCTION: .zinit-mirror-using-svn [[[
+# FUNCTION: __zi::mirror-using-svn [[[
 # Used to clone subdirectories from Github. If in update mode
 # (see $2), then invokes `svn update', in normal mode invokes
 # `svn checkout --non-interactive -q <URL>'. In test mode only
@@ -756,7 +756,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $1 - URL
 # $2 - mode, "" - normal, "-u" - update, "-t" - test
 # $3 - subdirectory (not path) with working copy, needed for -t and -u
-.zinit-mirror-using-svn() {
+__zi::mirror-using-svn() {
     setopt localoptions extendedglob warncreateglobal
     local url="$1" update="$2" directory="$3"
 
@@ -787,12 +787,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     fi
     return $?
 } # ]]]
-# FUNCTION: .zinit-forget-completion [[[
+# FUNCTION: __zi::forget-completion [[[
 # Implements alternation of Zsh state so that already initialized
 # completion stops being visible to Zsh.
 #
 # $1 - completion function name, e.g. "_cp"; can also be "cp"
-.zinit-forget-completion() {
+__zi::forget-completion() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
@@ -814,13 +814,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     unfunction -- 2>/dev/null "$f"
 } # ]]]
-# FUNCTION: .zinit-compile-plugin [[[
+# FUNCTION: __zi::compile-plugin [[[
 # Compiles given plugin (its main source file, and also an
 # additional "....zsh" file if it exists).
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-.zinit-compile-plugin() {
+__zi::compile-plugin() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
@@ -828,7 +828,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local -a list
 
     local -A ICE
-    .zinit-compute-ice "$id_as" "pack" \
+    __zi::compute-ice "$id_as" "pack" \
         ICE plugin_dir filename is_snippet || return 1
 
     if [[ ${ICE[pick]} != /dev/null && ${ICE[as]} != null && \
@@ -847,13 +847,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             if (( is_snippet )) {
                 if [[ -f $plugin_dir/$filename ]] {
                     reply=( "$plugin_dir" $plugin_dir/$filename )
-                } elif { ! .zinit-first % "$plugin_dir" } {
-                    +zinit-message "No files for compilation found."
+                } elif { ! __zi::first % "$plugin_dir" } {
+                    +zi::message "No files for compilation found."
                     return 1
                 }
             } else {
-                .zinit-first "$1" "$2" || {
-                    +zinit-message "No files for compilation found."
+                __zi::first "$1" "$2" || {
+                    +zi::message "No files for compilation found."
                     return 1
                 }
             }
@@ -862,15 +862,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         first=${reply[-1]}
         local fname=${first#$pdir_path/}
 
-        +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {b}{file}$fname{rst}{…}"
+        +zi::message -n "{note}Note:{rst} Compiling{ehi}:{rst} {b}{file}$fname{rst}{…}"
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
             () {
                 builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                 if { ! zcompile -U "$first" } {
-                    +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
-                    +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
+                    +zi::message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
+                    +zi::message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
                 } else {
-                    +zinit-message " {ok}OK{rst}."
+                    +zi::message " {ok}OK{rst}."
                 }
                 # Try to catch possible additional file
                 zcompile -U "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
@@ -887,7 +887,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             eval "list+=( \$plugin_dir/$~pat(N) )"
         }
         if [[ ${#list} -eq 0 ]] {
-            +zinit-message "{u-warn}Warning{b-warn}:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
+            +zi::message "{u-warn}Warning{b-warn}:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
         } else {
             integer retval
             for first in $list; do
@@ -898,11 +898,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             done
             builtin print -rl -- ${list[@]#$plugin_dir/} >! ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
             if (( retval )) {
-                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
+                +zi::message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
                     "are listed in the {var}\$ADD_COMPILED{rst} array (operation exit" \
                     "code: {ehi}$retval{rst})."
             } else {
-                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
+                +zi::message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
                     "are listed in the {var}\$ADD_COMPILED{rst} array."
             }
         }
@@ -910,14 +910,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return 0
 } # ]]]
-# FUNCTION: .zinit-download-snippet [[[
+# FUNCTION: __zi::download-snippet [[[
 # Downloads snippet
 #   file – with curl, wget, lftp or lynx,
 #   directory, with Subversion – when svn-ICE is active. 
 #
 #   Github supports Subversion protocol and allows to clone subdirectories.
 #   This is used to provide a layer of support for Oh-My-Zsh and Prezto.
-.zinit-download-snippet() {
+__zi::download-snippet() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
 
@@ -964,14 +964,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     if [[ ! -d $local_dir/$dirname ]]; then
         local id_msg_part="{…} (at label{ehi}:{rst} {id-as}$id_as{rst})"
-        [[ $update != -u ]] && +zinit-message "{nl}{info}Setting up snippet:" \
+        [[ $update != -u ]] && +zi::message "{nl}{info}Setting up snippet:" \
                                     "{url}$sname{rst}${ICE[id-as]:+$id_msg_part}"
         command mkdir -p "$local_dir"
     fi
 
     if [[ $update = -u && ${OPTS[opt_-q,--quiet]} != 1 ]]; then
         local id_msg_part="{…} (identified as{ehi}:{rst} {id-as}$id_as{rst})"
-        +zinit-message "{nl}{info2}Updating snippet: {url}$sname{rst}${ICE[id-as]:+$id_msg_part}"
+        +zi::message "{nl}{info2}Updating snippet: {url}$sname{rst}${ICE[id-as]:+$id_msg_part}"
     fi
 
     # A flag for the annexes. 0 – no new commits, 1 - run-atpull mode,
@@ -989,12 +989,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
-                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "Downloading {apo}\`{url}$sname{apo}\`{rst}${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{…}"
+                (( !OPTS[opt_-q,--quiet] )) && +zi::message "Downloading {apo}\`{url}$sname{apo}\`{rst}${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{…}"
 
                 if (( ${+ICE[svn]} )) {
                     if [[ $update = -u ]] {
                         # Test if update available
-                        if ! .zinit-mirror-using-svn "$url" "-t" "$dirname"; then
+                        if ! __zi::mirror-using-svn "$url" "-t" "$dirname"; then
                             if (( ${+ICE[run-atpull]} || OPTS[opt_-u,--urge] )) {
                                 ZINIT[annex-multi-flag:pull-active]=1
                             } else { return 0; } # Will return when no updates so atpull''
@@ -1028,13 +1028,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             # the messages on an actual update
                             if (( OPTS[opt_-q,--quiet] )); then
                                 local id_msg_part="{…} (identified as{ehi}: {id-as}$id_as{rst})"
-                                +zinit-message "{nl}{info2}Updating snippet {url}${sname}{rst}${ICE[id-as]:+$id_msg_part}"
-                                +zinit-message "Downloading {apo}\`{rst}$sname{apo}\`{rst} (with Subversion){…}"
+                                +zi::message "{nl}{info2}Updating snippet {url}${sname}{rst}${ICE[id-as]:+$id_msg_part}"
+                                +zi::message "Downloading {apo}\`{rst}$sname{apo}\`{rst} (with Subversion){…}"
                             fi
-                            .zinit-mirror-using-svn "$url" "-u" "$dirname" || return 4
+                            __zi::mirror-using-svn "$url" "-u" "$dirname" || return 4
                         }
                     } else {
-                        .zinit-mirror-using-svn "$url" "" "$dirname" || return 4
+                        __zi::mirror-using-svn "$url" "" "$dirname" || return 4
                     }
 
                     # Redundant code, just to compile SVN snippet
@@ -1055,7 +1055,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             () {
                                 builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
                                 zcompile -U "${list[1]}" &>/dev/null || \
-                                    +zinit-message "{u-warn}Warning{b-warn}:{rst} couldn't compile {apo}\`{file}${list[1]}{apo}\`{rst}."
+                                    +zi::message "{u-warn}Warning{b-warn}:{rst} couldn't compile {apo}\`{file}${list[1]}{apo}\`{rst}."
                             }
                         }
                     fi
@@ -1065,7 +1065,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     command mkdir -p "$local_dir/$dirname"
 
                     if (( !OPTS[opt_-f,--force] )) {
-                        .zinit-get-url-mtime "$url"
+                        __zi::get-url-mtime "$url"
                     } else {
                         REPLY=$EPOCHSECONDS
                     }
@@ -1083,7 +1083,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     local -a matched
                     matched=( $local_dir/$dirname/$filename(DNms-$secs) )
                     if (( ${#matched} )) {
-                        +zinit-message "{info}Already up to date.{rst}"
+                        +zi::message "{info}Already up to date.{rst}"
                         # Empty-update return-short path – it also decides the
                         # pull-active flag after the return from this sub-shell
                         (( ${+ICE[run-atpull]} || OPTS[opt_-u,--urge] )) && skip_dl=1 || return 0
@@ -1118,10 +1118,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     }
 
                     if (( !skip_dl )) {
-                        if { ! .zinit-download-file-stdout "$url" 0 1 >! "$dirname/$filename" } {
-                            if { ! .zinit-download-file-stdout "$url" 1 1 >! "$dirname/$filename" } {
+                        if { ! __zi::download-file-stdout "$url" 0 1 >! "$dirname/$filename" } {
+                            if { ! __zi::download-file-stdout "$url" 1 1 >! "$dirname/$filename" } {
                                 command rm -f "$dirname/$filename"
-                                +zinit-message "{u-warn}ERROR{b-warn}:{rst} Download failed."
+                                +zi::message "{u-warn}ERROR{b-warn}:{rst} Download failed."
                                 return 4
                             }
                         }
@@ -1179,26 +1179,26 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
             command mkdir -p "$local_dir/$dirname"
             if [[ ! -e $url ]] {
-                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source file {file}$url{error} doesn't exist.{rst}"
+                (( !OPTS[opt_-q,--quiet] )) && +zi::message "{ehi}ERROR:{error} The source file {file}$url{error} doesn't exist.{rst}"
                 retval=4
             }
             if [[ -e $url && ! -f $url && $url != /dev/null ]] {
-                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't a regular file.{rst}"
+                (( !OPTS[opt_-q,--quiet] )) && +zi::message "{ehi}ERROR:{error} The source {file}$url{error} isn't a regular file.{rst}"
                 retval=4
             }
             if [[ -e $url && ! -r $url && $url != /dev/null ]] {
-                (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{ehi}ERROR:{error} The source {file}$url{error} isn't" \
+                (( !OPTS[opt_-q,--quiet] )) && +zi::message "{ehi}ERROR:{error} The source {file}$url{error} isn't" \
                     "accessible (wrong permissions).{rst}"
                 retval=4
             }
             if ! (( ${+ICE[link] )) {
                 if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
-                    +zinit-message "{msg}Copying {file}$filename{msg}{…}{rst}"
+                    +zi::message "{msg}Copying {file}$filename{msg}{…}{rst}"
                     command cp -vf "$url" "$local_dir/$dirname/$filename" || \
-                        { +zinit-message "{ehi}ERROR:{error} The file copying has been unsuccessful.{rst}"; retval=4; }
+                        { +zi::message "{ehi}ERROR:{error} The file copying has been unsuccessful.{rst}"; retval=4; }
                 } else {
                     command cp -f "$url" "$local_dir/$dirname/$filename" &>/dev/null || \
-                        { +zinit-message "{ehi}ERROR:{error} The copying of {file}$filename{error} has been unsuccessful"\
+                        { +zi::message "{ehi}ERROR:{error} The copying of {file}$filename{error} has been unsuccessful"\
     "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
                 }
             } else {
@@ -1210,12 +1210,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     fi
                 }
                 if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
-                    +zinit-message "{msg}Linking {file}$filename{msg}{…}{rst}"
+                    +zi::message "{msg}Linking {file}$filename{msg}{…}{rst}"
                     command ln -svf "$url" "$local_dir/$dirname/$filename" || \
-                        { +zinit-message "{ehi}ERROR:{error} The file linking has been unsuccessful.{rst}"; retval=4; }
+                        { +zi::message "{ehi}ERROR:{error} The file linking has been unsuccessful.{rst}"; retval=4; }
                 } else {
                     command ln -sf "$url" "$local_dir/$dirname/$filename" &>/dev/null || \
-                        { +zinit-message "{ehi}ERROR:{error} The link of {file}$filename{error} has been unsuccessful"\
+                        { +zi::message "{ehi}ERROR:{error} The link of {file}$filename{error} has been unsuccessful"\
     "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
                 }
             }
@@ -1226,9 +1226,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ ${${:-$local_dir/$dirname}%%/##} != ${ZINIT[SNIPPETS_DIR]} ]] {
             # Store ices at "clone" and update of snippet, SVN and single-file
             local pfx=$local_dir/$dirname/._zinit
-            .zinit-store-ices "$pfx" ICE url_rsvd "" "$save_url" "${+ICE[svn]}"
+            __zi::store-ices "$pfx" ICE url_rsvd "" "$save_url" "${+ICE[svn]}"
         } elif [[ -n $id_as ]] {
-            +zinit-message "{u-warn}Warning{b-warn}:{rst} the snippet {url}$id_as{rst} isn't" \
+            +zi::message "{u-warn}Warning{b-warn}:{rst} the snippet {url}$id_as{rst} isn't" \
                 "fully downloaded – you should remove it with {apo}\`{cmd}zinit delete $id_as{apo}\`{rst}."
         }
 
@@ -1340,7 +1340,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local -A OPTS
     OPTS[opt_-q,--quiet]=1
     [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
-        .zinit-install-completions "%" "$local_dir/$dirname" 0
+        __zi::install-completions "%" "$local_dir/$dirname" 0
 
     if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
         typeset -ga INSTALLED_COMPS SKIPPED_COMPS
@@ -1361,8 +1361,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return $retval
 } # ]]]
-# FUNCTION: .zinit-update-snippet [[[
-.zinit-update-snippet() {
+# FUNCTION: __zi::update-snippet [[[
+__zi::update-snippet() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
@@ -1390,7 +1390,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local local_dir dirname filename save_url=$url \
         id_as=${ICE[id-as]:-$url}
 
-    .zinit-pack-ice "$id_as" ""
+    __zi::pack-ice "$id_as" ""
 
     # Allow things like $OSTYPE in the URL
     eval "url=\"$url\""
@@ -1401,7 +1401,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if (( ${#tmp} > 1 && ${#tmp} % 2 == 0 )) {
         ICE=( "${(kv)ICE[@]}" "${tmp[@]}" )
     } elif [[ -n ${ZINIT_SICE[$id_as]} ]] {
-        +zinit-message "{error}WARNING:{msg2} Inconsistency #3" \
+        +zi::message "{error}WARNING:{msg2} Inconsistency #3" \
             "occurred, please report the string: \`{obj}${ZINIT_SICE[$id_as]}{msg2}' to the" \
             "GitHub issues page: {obj}https://github.com/zdharma-continuum/zinit/issues/{msg2}.{rst}"
     }
@@ -1428,8 +1428,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         }
     }
 
-    if { ! .zinit-get-object-path snippet "$id_as" } {
-        +zinit-message "{msg2}Error: the snippet \`{obj}$id_as{msg2}'" \
+    if { ! __zi::get-object-path snippet "$id_as" } {
+        +zi::message "{msg2}Error: the snippet \`{obj}$id_as{msg2}'" \
                 "doesn't exist, aborting the update.{rst}"
             return 1
     }
@@ -1450,13 +1450,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     # Download or copy the file
     [[ $url = *github.com* && $url != */raw/* ]] && url=${url/\/(blob|tree)\///raw/}
-    .zinit-download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "-u"
+    __zi::download-snippet "$save_url" "$url" "$id_as" "$local_dir" "$dirname" "$filename" "-u"
 
     return $?
 } # ]]]
-# FUNCTION: .zinit-single-line [[[
+# FUNCTION: __zi::single-line [[[
 # Display cURL progress bar on a single line
-.zinit-single-line() {
+__zi::single-line() {
     emulate -LR zsh
     setopt extendedglob noshortloops nowarncreateglobal rcquotes typesetsilent
     local IFS= n=$'\n' r=$'\r' zero=$'\0'
@@ -1480,10 +1480,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     print
 } # ]]]
-# FUNCTION: .zinit-get-latest-gh-r-url-part [[[
+# FUNCTION: __zi::get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
-.zinit-get-latest-gh-r-url-part() {
+__zi::get-latest-gh-r-url-part() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
 
@@ -1494,7 +1494,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         local tag_version=${ICE[ver]}
         if [[ -z $tag_version ]]; then
             local releases_url=https://github.com/$user/$plugin/releases/latest
-            tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | \
+            tag_version="$( { __zi::download-file-stdout $releases_url || __zi::download-file-stdout $releases_url 1; } 2>/dev/null | \
                               command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
             tag_version=${tag_version##*/}
         fi
@@ -1530,7 +1530,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     local -a list init_list
 
-    init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
+    init_list=( ${(@f)"$( { __zi::download-file-stdout $url || __zi::download-file-stdout $url 1; } 2>/dev/null | \
                       command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
     init_list=( ${init_list[@]#href=?} )
 
@@ -1566,43 +1566,43 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
       if (( $#list > 1 )) {
           filtered=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-          # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${$(uname)}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+          # +zi::message "{pre}gh-r{rst}:{info} ${matchstr[${$(uname)}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       # FILTER URLS BY GENERIC OS NAME (E.G., DARWIN, LINUX, ETC.)
       if (( $#list > 1 )) {
           filtered=( ${(M)list[@]:#(#i)*/$~HAS_MUSL} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-          # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+          # +zi::message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
         filtered=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${OSTYPE//[0-9.]/}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        # +zi::message "{pre}gh-r{rst}:{info} ${matchstr[${OSTYPE//[0-9.]/}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
         filtered=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        # +zi::message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
         filtered=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${OSTYPE//[0-9.]/}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        # +zi::message "{pre}gh-r{rst}:{info} ${matchstr[${OSTYPE//[0-9.]/}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
         filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        # +zi::message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
         filtered=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[$(uname)]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        # +zi::message "{pre}gh-r{rst}:{info} ${matchstr[$(uname)]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       if (( $#list > 1 )) {
         filtered=( ${(M)list[@]:#(#i)*${~HAS_MUSL}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
+        # +zi::message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
       }
 
       # FILTER URLS BY NEWEST (I.E., HIGHEST NUMBER)
@@ -1611,10 +1611,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       }
 
       if (( !$#list )) {
-        +zinit-message -n "{pre}gh-r:{error} failed to find the correct GitHub release asset to download"
-        if [[ -n $bpick ]] { +zinit-message -n ", modify {obj}bpick{error}-ICE (current bpick{error}: {file}${bpick}{error})." } \
-        else { +zinit-message -n . }
-        +zinit-message '{rst}'
+        +zi::message -n "{pre}gh-r:{error} failed to find the correct GitHub release asset to download"
+        if [[ -n $bpick ]] { +zi::message -n ", modify {obj}bpick{error}-ICE (current bpick{error}: {file}${bpick}{error})." } \
+        else { +zi::message -n . }
+        +zi::message '{rst}'
         return 1
       }
 
@@ -1637,7 +1637,7 @@ ziextract() {
     local -a opt_move opt_move2 opt_norm opt_auto opt_nobkp
     zparseopts -D -E -move=opt_move -move2=opt_move2 -norm=opt_norm \
             -auto=opt_auto -nobkp=opt_nobkp || \
-        { +zinit-message "{error}ziextract:{msg2} Incorrect options given to" \
+        { +zi::message "{error}ziextract:{msg2} Incorrect options given to" \
                   "\`{pre}ziextract{msg2}' (available are: {meta}--auto{msg2}," \
                   "{meta}--move{msg2}, {meta}--move2{msg2}, {meta}--norm{msg2}," \
                   "{meta}--nobkp{msg2}).{rst}"; return 1; }
@@ -1671,7 +1671,7 @@ ziextract() {
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar|exe|pe32) ]] {
                     (( !OPTS[opt_-q,--quiet] )) && \
-                        +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
+                        +zi::message "{pre}ziextract:{info2} Note:{rst}" \
                             "detected a {meta}$type{rst} archive in the file" \
                             "{file}$fname{rst}."
                     ziextract "$fname" "$type" $opt_move $opt_move2 $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
@@ -1699,7 +1699,7 @@ ziextract() {
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
                                 (( !OPTS[opt_-q,--quiet] )) && \
-                                    +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
+                                    +zi::message "{pre}ziextract:{info2} Note:{rst}" \
                                         "detected a {obj}${type2}{rst} archive in the" \
                                         " file {file}${fname}{rst}."
                                 ziextract "$fname" "$type2" $opt_move $opt_move2 $opt_norm ${${${#archives}:#1}:+--nobkp}
@@ -1719,12 +1719,12 @@ ziextract() {
     }
 
     if [[ -z $file ]] {
-        +zinit-message "{error}ziextract:{msg2} ERROR:{msg} argument" \
+        +zi::message "{error}ziextract:{msg2} ERROR:{msg} argument" \
             "needed (the file to extract) or the {meta}--auto{msg} option."
         return 1
     }
     if [[ ! -e $file ]] {
-        +zinit-message "{error}ziextract:{msg2} ERROR:{msg}" \
+        +zi::message "{error}ziextract:{msg2} ERROR:{msg}" \
             "the file \`{meta}${file}{msg}' doesn't exist.{rst}"
         return 1
     }
@@ -1734,10 +1734,10 @@ ziextract() {
         command mv -f *~(._zinit*|._backup|.git|.svn|.hg|$file)(DN) ._backup 2>/dev/null
     }
 
-    .zinit-extract-wrapper() {
+    __zi::extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{pre}ziextract:{msg} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
+            +zi::message "{pre}ziextract:{msg} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
         $fun; retval=$?
         if (( retval == 0 )) {
             local -a files
@@ -1748,7 +1748,7 @@ ziextract() {
     }
 
     →zinit-check() { (( ${+commands[$1]} )) || \
-        +zinit-message "{error}ziextract:{msg2} Error:{msg} No command {data}$1{msg}," \
+        +zi::message "{error}ziextract:{msg2} Error:{msg} No command {data}$1{msg}," \
                 "it is required to unpack {file}$2{rst}."
     }
 
@@ -1782,7 +1782,7 @@ ziextract() {
             }
             →zinit-extract() {
                 →zinit-check gunzip "$file" || return 1
-                .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
+                __zi::get-mtime-into "$file" 'ZINIT[tmp]'
                 command gunzip "$file" |& command grep -E -v '.out$'
                 integer ret=$pipestatus[1]
                 command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
@@ -1798,7 +1798,7 @@ ziextract() {
                 file=$file.bz2
             }
             →zinit-extract() { →zinit-check bunzip2 "$file" || return 1
-                .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
+                __zi::get-mtime-into "$file" 'ZINIT[tmp]'
                 command bunzip2 "$file" |& command grep -E -v '.out$'
                 integer ret=$pipestatus[1]
                 command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
@@ -1811,7 +1811,7 @@ ziextract() {
                 file=$file.xz
             }
             →zinit-extract() { →zinit-check xz "$file" || return 1
-                .zinit-get-mtime-into "$file" 'ZINIT[tmp]'
+                __zi::get-mtime-into "$file" 'ZINIT[tmp]'
                 command xz -d "$file"
                 integer ret=$?
                 command touch -t "$(strftime %Y%m%d%H%M.%S $ZINIT[tmp])" "$file"
@@ -1835,7 +1835,7 @@ ziextract() {
                 command hdiutil detach $attached_vol
 
                 if (( retval )) {
-                    +zinit-message "{error}ziextract:{msg2} WARNING:{msg}" \
+                    +zi::message "{error}ziextract:{msg2} WARNING:{msg}" \
                             "problem occurred when attempted to copy the files" \
                             "from the mounted image: \`{obj}${file}{msg}'.{rst}"
                 }
@@ -1857,16 +1857,16 @@ ziextract() {
     esac
 
     if [[ $(typeset -f + →zinit-extract) == "→zinit-extract" ]] {
-        .zinit-extract-wrapper "$file" →zinit-extract || {
-            +zinit-message -n "{error}ziextract:{msg2} WARNING:{msg}" \
+        __zi::extract-wrapper "$file" →zinit-extract || {
+            +zi::message -n "{error}ziextract:{msg2} WARNING:{msg}" \
                 "extraction of the archive \`{file}${file}{msg}' had problems"
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} && !nobkp )) {
-                +zinit-message -n ", restoring the previous version of the plugin/snippet"
+                +zi::message -n ", restoring the previous version of the plugin/snippet"
                 command mv ._backup/*(DN) . 2>/dev/null
             }
-            +zinit-message ".{rst}"
+            +zi::message ".{rst}"
             unfunction -- →zinit-extract →zinit-check 2>/dev/null
             return 1
         }
@@ -1874,7 +1874,7 @@ ziextract() {
     } else {
         integer warning=1
     }
-    unfunction -- .zinit-extract-wrapper
+    unfunction -- __zi::extract-wrapper
 
     local -a execs
     execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
@@ -1889,13 +1889,13 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         if (( !OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
-                    +zinit-message "{pre}ziextract:{rst}" \
+                    +zi::message "{pre}ziextract:{rst}" \
                         "Successfully extracted and assigned +x chmod to the file:" \
                         "\`{obj}${execs[1]}{rst}'."
             else
                 local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
                 if (( ${#execs} > 7 )) {
-                    +zinit-message "{pre}ziextract:{rst} Successfully" \
+                    +zi::message "{pre}ziextract:{rst} Successfully" \
                         "extracted and marked executable the appropriate files" \
                         "({obj}${(pj:$sep:)${(@)execs[1,5]:t}},…{rst}) contained" \
                         "in \`{file}$file{rst}'. All the extracted" \
@@ -1903,7 +1903,7 @@ ziextract() {
                         "available in the {msg2}INSTALLED_EXECS{rst}" \
                         "array."
                 } else {
-                    +zinit-message "{pre}ziextract:{rst} Successfully" \
+                    +zi::message "{pre}ziextract:{rst} Successfully" \
                         "extracted and marked executable the appropriate files" \
                         "({obj}${(pj:$sep:)${execs[@]:t}}{rst}) contained" \
                         "in \`{file}$file{rst}'."
@@ -1911,7 +1911,7 @@ ziextract() {
             fi
         }
     } elif (( warning )) {
-        +zinit-message "{pre}ziextract:" \
+        +zi::message "{pre}ziextract:" \
             "{error}WARNING: {msg}didn't recognize the archive" \
             "type of \`{obj}${file}{msg}'" \
             "${ext:+/ {obj2}${ext}{msg} }"\
@@ -1939,21 +1939,21 @@ ziextract() {
     }
     return 0
 } # ]]]
-# FUNCTION: .zinit-extract [[[
-.zinit-extract() {
+# FUNCTION: __zi::extract [[[
+__zi::extract() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
     local tpe=$1 extract=$2 local_dir=$3
     (
         builtin cd -q "$local_dir" || \
-            { +zinit-message "{error}ERROR:{msg2} The path of the $tpe" \
+            { +zi::message "{error}ERROR:{msg2} The path of the $tpe" \
                       "(\`{file}$local_dir{msg2}') isn't accessible.{rst}"
                 return 1
             }
         local -a files
         files=( ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }} )
         if [[ ${#files} -eq 0 && -n ${extract##(\!-|-\!|\!|-)} ]] {
-                +zinit-message "{error}ERROR:{msg2} The files" \
+                +zi::message "{error}ERROR:{msg2} The files" \
                         "(\`{file}${extract##(\!-|-\!|\!|-)}{msg2}')" \
                         "not found, cannot extract.{rst}"
                 return 1
@@ -1976,11 +1976,11 @@ ziextract() {
 zpextract() {
   ziextract "$@"
 } # ]]]
-# FUNCTION: .zinit-at-eval [[[
-.zinit-at-eval() {
+# FUNCTION: __zi::at-eval [[[
+__zi::at-eval() {
     local atpull="$1" atclone="$2"
     integer retval
-    @zinit-substitute atclone atpull
+    @zi::substitute atclone atpull
 
     local cmd="$atpull"
     [[ $atpull == "%atclone" ]] && cmd="$atclone"
@@ -1988,8 +1988,8 @@ zpextract() {
     eval "$cmd"
     return "$?"
 } # ]]]
-# FUNCTION: .zinit-get-cygwin-package [[[
-.zinit-get-cygwin-package() {
+# FUNCTION: __zi::get-cygwin-package [[[
+__zi::get-cygwin-package() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
 
@@ -2002,11 +2002,11 @@ zpextract() {
     # Download mirrors.lst
     #
 
-    +zinit-message "{info}Downloading{ehi}: {obj}mirrors.lst{info}{…}{rst}"
+    +zi::message "{info}Downloading{ehi}: {obj}mirrors.lst{info}{…}{rst}"
     local mlst="$(mktemp)"
     while (( retry -- )) {
-        if ! .zinit-download-file-stdout https://cygwin.com/mirrors.lst 0 > $mlst; then
-            .zinit-download-file-stdout https://cygwin.com/mirrors.lst 1 > $mlst
+        if ! __zi::download-file-stdout https://cygwin.com/mirrors.lst 0 > $mlst; then
+            __zi::download-file-stdout https://cygwin.com/mirrors.lst 1 > $mlst
         fi
 
         local -a mlist
@@ -2017,7 +2017,7 @@ zpextract() {
     }
 
     if [[ -z $mirror ]] {
-        +zinit-message "{error}Couldn't download{error}: {obj}mirrors.lst {error}."
+        +zi::message "{error}Couldn't download{error}: {obj}mirrors.lst {error}."
         return 1
     }
 
@@ -2027,24 +2027,24 @@ zpextract() {
     # Download setup.ini.bz2
     #
 
-    +zinit-message "{info2}Selected mirror is{error}: {url}${mirror}{rst}"
-    +zinit-message "{info}Downloading{ehi}: {file}setup.ini.bz2{info}{…}{rst}"
+    +zi::message "{info2}Selected mirror is{error}: {url}${mirror}{rst}"
+    +zi::message "{info}Downloading{ehi}: {file}setup.ini.bz2{info}{…}{rst}"
     local setup="$(mktemp -u)"
     retry=3
     while (( retry -- )) {
-        if ! .zinit-download-file-stdout ${mirror}x86_64/setup.bz2 0 1 > $setup.bz2; then
-            .zinit-download-file-stdout ${mirror}x86_64/setup.bz2 1 1 > $setup.bz2
+        if ! __zi::download-file-stdout ${mirror}x86_64/setup.bz2 0 1 > $setup.bz2; then
+            __zi::download-file-stdout ${mirror}x86_64/setup.bz2 1 1 > $setup.bz2
         fi
 
         command bunzip2 "$setup.bz2" 2>/dev/null
         [[ -s $setup ]] && break
         mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
-        +zinit-message "{pre}Retrying{error}: {meta}#{obj}$(( 3 - $retry ))/3, {pre}with mirror{error}: {url}${mirror}{rst}"
+        +zi::message "{pre}Retrying{error}: {meta}#{obj}$(( 3 - $retry ))/3, {pre}with mirror{error}: {url}${mirror}{rst}"
     }
     local setup_contents="$(command grep -A 26 "@ $pkg\$" "$setup")"
     local urlpart=${${(S)setup_contents/(#b)*@ $pkg${nl}*install: (*)$nl*/$match[1]}%% *}
     if [[ -z $urlpart ]] {
-        +zinit-message "{error}Couldn't find package{error}: {data2}\`{data}${pkg}{data2}'{error}.{rst}"
+        +zi::message "{error}Couldn't find package{error}: {data2}\`{data}${pkg}{data2}'{error}.{rst}"
         return 2
     }
     local url=$mirror/$urlpart outfile=${TMPDIR:-${TMPDIR:-/tmp}}/${urlpart:t}
@@ -2053,18 +2053,18 @@ zpextract() {
     # Download the package
     #
 
-    +zinit-message "{info}Downloading{ehi}: {file}${url:t}{info}{…}{rst}"
+    +zi::message "{info}Downloading{ehi}: {file}${url:t}{info}{…}{rst}"
     retry=2
     while (( retry -- )) {
         integer retval=0
-        if ! .zinit-download-file-stdout $url 0 1 > $outfile; then
-            if ! .zinit-download-file-stdout $url 1 1 > $outfile; then
-                +zinit-message "{error}Couldn't download{error}: {url}${url}{error}."
+        if ! __zi::download-file-stdout $url 0 1 > $outfile; then
+            if ! __zi::download-file-stdout $url 1 1 > $outfile; then
+                +zi::message "{error}Couldn't download{error}: {url}${url}{error}."
                 retval=1
                 mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
                 url=$mirror/$urlpart outfile=${TMPDIR:-${TMPDIR:-/tmp}}/${urlpart:t}
                 if (( retry )) {
-                    +zinit-message "{info2}Retrying, with mirror{error}: {url}${mirror}{info2}{…}{rst}"
+                    +zi::message "{info2}Retrying, with mirror{error}: {url}${mirror}{info2}{…}{rst}"
                     continue
                 }
             fi
@@ -2112,10 +2112,10 @@ zimv() {
     if [[ $1 = (-d|--dir) ]] { dir=$2; shift 2; }
     zicp --mv ${dir:+--dir} $dir "$@"
 } # ]]]
-# FUNCTION: .zinit-configure-run-autoconf [[[
+# FUNCTION: __zi::configure-run-autoconf [[[
 # Called either because "#" flag given to configure'', or because
 # theres no ./configure script. Runs autoconf, autoreconf, and autogen.sh as needed.
-.zinit-configure-run-autoconf() {
+__zi::configure-run-autoconf() {
     local dir=$1 flags=$2
     integer q
     local msg="{pre} ({flag}#{pre} flag given){…}" msg_="{pre}{…}"
@@ -2123,7 +2123,7 @@ zimv() {
     if [[ -f $dir/autogen.sh ]]; then
         q=1
         m {pre}Running {cmd}./autogen.sh${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown ./autogen.sh && \
+        __zi::countdown ./autogen.sh && \
             (
                 cd -q $dir
                 chmod +x ./autogen.sh
@@ -2134,7 +2134,7 @@ zimv() {
             $+commands[autoreconf] = 1 ]]; then
         q=1
         m {pre}Running {cmd}autoreconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown autoreconf\ -f\ -i\ … && \
+        __zi::countdown autoreconf\ -f\ -i\ … && \
             (
                 cd -q $dir
                 rm -f aclocal.m4
@@ -2147,7 +2147,7 @@ zimv() {
         q=1
         m {pre}Running {cmd}aclocal{pre}, {cmd}autoconf{pre} and {cmd}automake\
 ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown aclocal,\ autoconf,\ automake && \
+        __zi::countdown aclocal,\ autoconf,\ automake && \
             (
                 cd -q $dir
                 rm -f aclocal.m4
@@ -2162,7 +2162,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
     elif [[ ! -f $dir/configure && -f $dir/configure.ac ]]; then
         q=1
         m {pre}Running {cmd}autoconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown autoconf\ -f && \
+        __zi::countdown autoconf\ -f && \
             (
                 cd -q $dir
                 autoconf -f -I m4
@@ -2187,8 +2187,8 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         fi
     fi
 } # ]]]
-# FUNCTION: ∞zinit-reset-hook [[[
-∞zinit-reset-hook() {
+# FUNCTION: ~zi::reset-hook [[[
+~zi::reset-hook() {
     # File
     if [[ "$1" = plugin ]] {
         local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
@@ -2206,7 +2206,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         if [[ $type == snippet ]] {
             if (( $+ICE[svn] )) {
                 if [[ $skip_pull -eq 0 && -d $filename/.svn ]] {
-                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive {…}/{file}$filename/.{rst} {…}"
+                    (( !OPTS[opt_-q,--quiet] )) && +zi::message "{pre}reset ($msg_bit): {msg2}Resetting the repository ($msg_bit) with command: {rst}svn revert --recursive {…}/{file}$filename/.{rst} {…}"
                     command svn revert --recursive $filename/.
                 }
             } else {
@@ -2214,9 +2214,9 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
                     if (( !OPTS[opt_-q,--quiet] )) {
                         if [[ -f $local_dir/$dirname/$filename ]] {
                             if [[ -n $option || -z $ICE[reset] ]] {
-                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} {…}{rst}"
+                                +zi::message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2} {…}{rst}"
                             } else {
-                                +zinit-message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}," \
+                                +zi::message "{pre}reset ($msg_bit):{msg2} Removing the snippet-file: {file}$filename{msg2}," \
                                     "with the supplied code: {data2}$ICE[reset]{msg2} {…}{rst}"
                             }
                             if (( option )) {
@@ -2225,36 +2225,36 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
                                 eval "${ICE[reset]:-rm -f \"$local_dir/$dirname/$filename\"}"
                             }
                         } else {
-                            +zinit-message "{pre}reset ($msg_bit):{msg2} The file {file}$filename{msg2} is already deleted {…}{rst}"
+                            +zi::message "{pre}reset ($msg_bit):{msg2} The file {file}$filename{msg2} is already deleted {…}{rst}"
                             if [[ -n $ICE[reset] && ! -n $option ]] {
-                                +zinit-message "{pre}reset ($msg_bit):{msg2} (skipped running the provided reset-code:" \
+                                +zi::message "{pre}reset ($msg_bit):{msg2} (skipped running the provided reset-code:" \
                                     "{data2}$ICE[reset]{msg2}){rst}"
                             }
                         }
                     }
                 } else {
                         [[ -f $local_dir/$dirname/$filename ]] && \
-                            +zinit-message "{pre}reset ($msg_bit): {msg2}Skipping the removal of {file}$filename{msg2}" \
+                            +zi::message "{pre}reset ($msg_bit): {msg2}Skipping the removal of {file}$filename{msg2}" \
                                  "as there is no new copy scheduled for download.{rst}" || \
-                            +zinit-message "{pre}reset ($msg_bit): {msg2}The file {file}$filename{msg2} is already deleted" \
+                            +zi::message "{pre}reset ($msg_bit): {msg2}The file {file}$filename{msg2} is already deleted" \
                                 "and {ehi}no new download is being scheduled.{rst}"
                 }
             }
         } elif [[ $type == plugin ]] {
             if (( is_release && !skip_pull )) {
                 if (( option )) {
-                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}/*"
+                    (( !OPTS[opt_-q,--quiet] )) && +zi::message "{pre}reset ($msg_bit): {msg2}running: {rst}rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}/*"
                     builtin eval command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}"/*(ND)
                 } else {
-                    (( !OPTS[opt_-q,--quiet] )) && +zinit-message "{pre}reset ($msg_bit): {msg2}running: {rst}${ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}/*}"
+                    (( !OPTS[opt_-q,--quiet] )) && +zi::message "{pre}reset ($msg_bit): {msg2}running: {rst}${ICE[reset]:-rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}/*}"
                     builtin eval ${ICE[reset]:-command rm -rf ${${ZINIT[PLUGINS_DIR]:#[/[:space:]]##}:-${TMPDIR:-/tmp}/xyzabc312}/"${${(M)${local_dir##${ZINIT[PLUGINS_DIR]}[/[:space:]]#}:#[^/]*}:-${TMPDIR:-/tmp}/xyzabc312-zinit-protection-triggered}"/*(ND)}
                 }
             } elif (( !skip_pull )) {
                 if (( option )) {
-                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD {…}"
+                    +zi::message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} git reset --hard HEAD {…}"
                     command git reset --hard HEAD
                 } else {
-                    +zinit-message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} ${ICE[reset]:-git reset --hard HEAD} {…}"
+                    +zi::message "{pre}reset ($msg_bit): {msg2}Resetting the repository with command:{rst} ${ICE[reset]:-git reset --hard HEAD} {…}"
                     builtin eval "${ICE[reset]:-git reset --hard HEAD}"
                 }
             }
@@ -2272,26 +2272,26 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         ZINIT[-r/--reset-opt-hook-has-been-run]=1
     }
 } # ]]]
-# FUNCTION: ∞zinit-configure-e-hook [[[
+# FUNCTION: ~zi::configure-e-hook [[[
 # The !-version of configure'' ice. Runs in between
 # of make'!!' and make'!'. Configure naturally runs
 # before make.
-∞zinit-configure-e-hook() {
-    ∞zinit-configure-base-hook "$@" "!"
+~zi::configure-e-hook() {
+    ~zi::configure-base-hook "$@" "!"
 } # ]]]
-# FUNCTION: ∞zinit-configure-hook [[[
+# FUNCTION: ~zi::configure-hook [[[
 # The non-! version of configure'' ice. Runs in between
 # of make'!' and make''. Configure script naturally runs
 # before make.
-∞zinit-configure-hook() {
-    ∞zinit-configure-base-hook "$@"
+~zi::configure-hook() {
+    ~zi::configure-base-hook "$@"
 } # ]]]
-# FUNCTION: ∞zinit-configure-base-hook [[[
+# FUNCTION: ~zi::configure-base-hook [[[
 # A base common implementation of configure'', as all
 # the starting steps are rigid and the same in all
 # hooks, hence the idea. TODO: use in make'' and other
 # places.
-∞zinit-configure-base-hook() {
+~zi::configure-base-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
@@ -2299,7 +2299,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
     emulate -L zsh -o extendedglob
 
     local configure=${ICE[configure]}
-    @zinit-substitute configure
+    @zi::substitute configure
 
     # c-cmake, s-scons, m-meson, 0-default (configure)
     local flags=${(M)configure##[smc0\!\#]##}
@@ -2314,7 +2314,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
     # if no autotools have been resolved to run from the optional
     # # flag and the .ac/.m4 input files) ready to run
     [[ $flags == *\#* || ! -f $dir/configure ]] &&
-        .zinit-configure-run-autoconf "$dir" $flags
+        __zi::configure-run-autoconf "$dir" $flags
 
     if [[ $flags == (#b)*([^smc0\!\#]##)* || ${flags//[\!\#]##/} == (#b)(([smc0](#c2,))) ]]; then
         m {error}ERROR: improper ${match[2]:+\(multiple of s,m,c\?\)} flag\(s\) \({flag}${match[1]}{error}\) \
@@ -2329,7 +2329,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
             m {pre}Running {cmd}cmake{pre} ${${${${#files}:#0}:+for \
             its found {file}CMakeLists.txt{pre} input file{…}}:-\
 because {flag}c{pre} flag given}
-           .zinit-countdown cmake && \
+           __zi::countdown cmake && \
              ( cd -q $dir/_build-zinit; cmake -DCMAKE_INSTALL_PREFIX=$ZPFX .. ${(@s; ;)configure} )
         else
             m {error}Error: no {cmd}cmake{error} binary found and \
@@ -2342,7 +2342,7 @@ because {flag}c{pre} flag given}
     if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#s[^a-z0]# ]]; then
         if (( ${+commands[scons]} )); then
             m {pre}Running {cmd}scons{pre} for its found {file}SConstruct{pre} input file{…}
-            .zinit-countdown scons && \
+            __zi::countdown scons && \
                  ( cd $dir; scons RELEASE=yes --prefix=$ZPFX ${(@s; ;)configure} )
         else
             m {error}Error: no {cmd}scons{error} binary found and \
@@ -2357,7 +2357,7 @@ because {flag}c{pre} flag given}
             m {pre}Running {cmd}meson setup{pre} ${${${${#files}:#0}:+\
 for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
                 flag given}{…}
-            .zinit-countdown meson\ setup && \
+            __zi::countdown meson\ setup && \
                 ( cd $dir; command meson setup --prefix=$ZPFX _build-zinit ${(@s; ;)configure} )
         else
             m {error}Error: no {cmd}meson{error} binary found and \
@@ -2368,7 +2368,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     fi
     if [[ -f $dir/configure && -z $aflags || $flags == [^a-z0]#0[^a-z0]# ]]; then
         m {pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}$ZPFX{nb}{…}
-        .zinit-countdown ./configure && \
+        __zi::countdown ./configure && \
             (
                 cd -q $dir
                 chmod +x ./configure
@@ -2376,26 +2376,26 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
             )
     fi
 } # ]]]
-# FUNCTION: ∞zinit-make-ee-hook [[[
-∞zinit-make-ee-hook() {
-    ∞zinit-make-base-hook "$@" "!!"
+# FUNCTION: ~zi::make-ee-hook [[[
+~zi::make-ee-hook() {
+    ~zi::make-base-hook "$@" "!!"
 } # ]]]
-# FUNCTION: ∞zinit-make-e-hook [[[
-∞zinit-make-e-hook() {
-    ∞zinit-make-base-hook "$@" "!"
+# FUNCTION: ~zi::make-e-hook [[[
+~zi::make-e-hook() {
+    ~zi::make-base-hook "$@" "!"
 } # ]]]
-# FUNCTION: ∞zinit-make-hook [[[
-∞zinit-make-hook() {
-    ∞zinit-make-base-hook "$@" ""
+# FUNCTION: ~zi::make-hook [[[
+~zi::make-hook() {
+    ~zi::make-base-hook "$@" ""
 } # ]]]
-# FUNCTION: ∞zinit-make-base-hook [[[
-∞zinit-make-base-hook() {
+# FUNCTION: ~zi::make-base-hook [[[
+~zi::make-base-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
 
     local make=${ICE[make]}
-    @zinit-substitute make
+    @zi::substitute make
 
     # Save preceding ! only
     local eflags=${(M)make##[\!]##}
@@ -2409,16 +2409,16 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     # Run either `make` or `meson compile`
     if [[ -f $dir/Makefile ]]; then
         m {pre}Running {apo}\`{cmd}make{opt} ${(@s; ;)make}{apo}\`{pre}{…}
-        .zinit-countdown make &&
+        __zi::countdown make &&
             command make -C "$dir" ${(@s; ;)make}
     elif [[ -f $dir/build.ninja ]]; then
         m {pre}Running {apo}\`{cmd}meson{opt} compile{apo}\`{pre}{…}
-        .zinit-countdown meson\ compile &&
+        __zi::countdown meson\ compile &&
             meson compile -C "$dir"
         [[ $make == ([[:space:]]|(#s))install([[:space:]]|(#e)) ]] &&
         {
             m {pre}Running {apo}\`{cmd}meson{opt} ${(@s; ;)make}{apo}\`{pre}{…}
-            .zinit-countdown meson\ ${(@s; ;)make} &&
+            __zi::countdown meson\ ${(@s; ;)make} &&
                 meson ${(@s; ;)make} -C "$dir"
         }
     else
@@ -2426,18 +2426,18 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
             build dir found, {cmd}make{error}/{cmd}meson{error} isn\'t run\!
     fi
 } # ]]]
-# FUNCTION: ∞zinit-atclone-hook [[[
-∞zinit-atclone-hook() {
+# FUNCTION: ~zi::atclone-hook [[[
+~zi::atclone-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
     local atclone=${ICE[atclone]}
-    @zinit-substitute atclone
+    @zi::substitute atclone
     (( ${+ICE[atclone]} )) || return 0
 
     local rc=0
-    [[ -n $atclone ]] && .zinit-countdown atclone && {
+    [[ -n $atclone ]] && __zi::countdown atclone && {
         local ___oldcd=$PWD
 
         (( ${+ICE[nocd]} == 0 )) && {
@@ -2455,21 +2455,21 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 
     return "$rc"
 } # ]]]
-# FUNCTION: ∞zinit-extract-hook [[[
-∞zinit-extract-hook() {
+# FUNCTION: ~zi::extract-hook [[[
+~zi::extract-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
 
     local extract=${ICE[extract]}
-    @zinit-substitute extract
+    @zi::substitute extract
 
     (( ${+ICE[extract]} )) || return 0
 
-    .zinit-extract plugin "$extract" "$dir"
+    __zi::extract plugin "$extract" "$dir"
 } # ]]]
-# FUNCTION: ∞zinit-mv-hook [[[
-∞zinit-mv-hook() {
+# FUNCTION: ~zi::mv-hook [[[
+~zi::mv-hook() {
     [[ -z $ICE[mv] ]] && return 0
 
     [[ "$1" = plugin ]] && \
@@ -2482,7 +2482,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         local from=${ICE[mv]%%[[:space:]]##*} to=${ICE[mv]##*[[:space:]]##}
     }
 
-    @zinit-substitute from to
+    @zi::substitute from to
 
     local -a mv_args=("-f")
     local -a afr
@@ -2492,7 +2492,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         afr=( ${~from}(DN) )
 
         if (( ! ${#afr} )) {
-            +zinit-message "{warn}Warning: mv ice didn't match any file. [{error}$ICE[mv]{warn}]" \
+            +zi::message "{warn}Warning: mv ice didn't match any file. [{error}$ICE[mv]{warn}]" \
                            "{nl}{warn}Available files:{nl}{obj}$(ls -1)"
             return 1
         }
@@ -2506,8 +2506,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         return $retval
     )
 } # ]]]
-# FUNCTION: ∞zinit-cp-hook [[[
-∞zinit-cp-hook() {
+# FUNCTION: ~zi::cp-hook [[[
+~zi::cp-hook() {
     [[ -z $ICE[cp] ]] && return
 
     [[ "$1" = plugin ]] && \
@@ -2520,7 +2520,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         local from=${ICE[cp]%%[[:space:]]##*} to=${ICE[cp]##*[[:space:]]##}
     }
 
-    @zinit-substitute from to
+    @zi::substitute from to
 
     local -a afr retval
     ( () { setopt localoptions noautopushd; builtin cd -q "$dir"; } || return 1
@@ -2542,8 +2542,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     )
 }
 # ]]]
-# FUNCTION: ∞zinit-compile-plugin-hook [[[
-∞zinit-compile-plugin-hook() {
+# FUNCTION: ~zi::compile-plugin-hook [[[
+~zi::compile-plugin-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
@@ -2559,15 +2559,15 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
             builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
             setopt extendedglob warncreateglobal
             if [[ $tpe == snippet ]] {
-                .zinit-compile-plugin "%$dir" ""
+                __zi::compile-plugin "%$dir" ""
             } else {
-                .zinit-compile-plugin "$id_as" ""
+                __zi::compile-plugin "$id_as" ""
             }
         }
     }
 } # ]]]
-# FUNCTION: ∞zinit-atpull-e-hook [[[
-∞zinit-atpull-e-hook() {
+# FUNCTION: ~zi::atpull-e-hook [[[
+~zi::atpull-e-hook() {
     (( ${+ICE[atpull]} )) || return 0
     [[ -n ${ICE[atpull]} ]] || return 0
     # Only process atpull"!cmd"
@@ -2580,20 +2580,20 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     local atpull=${ICE[atpull]#\!}
     local rc=0
 
-    .zinit-countdown atpull && {
+    __zi::countdown atpull && {
         local ___oldcd=$PWD
         (( ${+ICE[nocd]} == 0 )) && {
             () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
         }
-        .zinit-at-eval "$atpull" "$ICE[atclone]"
+        __zi::at-eval "$atpull" "$ICE[atclone]"
         rc="$?"
         () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
     }
 
     return "$rc"
 } # ]]]
-# FUNCTION: ∞zinit-atpull-hook [[[
-∞zinit-atpull-hook() {
+# FUNCTION: ~zi::atpull-hook [[[
+~zi::atpull-hook() {
     (( ${+ICE[atpull]} )) || return 0
     [[ -n ${ICE[atpull]} ]] || return 0
     # Exit early if atpull"!cmd" -> this is done by zinit-atpull-e-hook
@@ -2606,20 +2606,20 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     local atpull=${ICE[atpull]}
     local rc=0
 
-    .zinit-countdown atpull && {
+    __zi::countdown atpull && {
         local ___oldcd=$PWD
         (( ${+ICE[nocd]} == 0 )) && {
             () { setopt localoptions noautopushd; builtin cd -q "$dir"; }
         }
-        .zinit-at-eval "$atpull" $ICE[atclone]
+        __zi::at-eval "$atpull" $ICE[atclone]
         rc="$?"
         () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; };
     }
 
     return "$rc"
 } # ]]]
-# FUNCTION: ∞zinit-ps-on-update-hook [[[
-∞zinit-ps-on-update-hook() {
+# FUNCTION: ~zi::ps-on-update-hook [[[
+~zi::ps-on-update-hook() {
     [[ -z $ICE[ps-on-update] ]] && return 0
 
     [[ "$1" = plugin ]] && \
@@ -2627,7 +2627,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         local tpe="$1" dir="${4#%}" hook="$5" subtype="$6"
 
     if (( !OPTS[opt_-q,--quiet] )) {
-        +zinit-message "Running $tpe's provided update code: {info}${ICE[ps-on-update][1,50]}${ICE[ps-on-update][51]:+…}{rst}"
+        +zi::message "Running $tpe's provided update code: {info}${ICE[ps-on-update][1,50]}${ICE[ps-on-update][51]:+…}{rst}"
         (
             builtin cd -q "$dir" || return 1
             eval "$ICE[ps-on-update]"
