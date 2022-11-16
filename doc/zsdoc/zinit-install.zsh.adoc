@@ -584,7 +584,7 @@ ____
  $2 - file
 ____
 
-Has 297 line(s). Calls functions:
+Has 283 line(s). Calls functions:
 
  ziextract
  `-- zinit.zsh/+zi::message
