@@ -23,20 +23,24 @@ jobs:
 
       - name: install dependencies
         run: |
-          brew install shellcheck shfmt zsh python@3.8
+          brew install npm python@3.8 shellcheck shfmt zsh
           python3.8 -m pip install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
+          npm install --save-dev @commitlint/config-angular @commitlint/cli
 
-      - name: run mdformat
+      - name: commit
+        run: commitlint --from=$(git cherry -v origin/main $(git branch --show-current) | head -n 1 | awk '{print $2}')
+
+      - name: markdown
         run: find . -name '*.md' -type f -print0 | xargs -0 -n1 -P4 python3 -m mdformat --check --wrap 120
 
-      - name: run shfmt
+      - name: shell (shfmt)
         run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shfmt -bn -ci -d -i 2 -ln bash -s -sr
 
-      - name: run shellcheck
+      - name: shell (shellcheck)
         run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shellcheck
 
-      - name: "run zsh"
+      - name: zsh (noexec)
         run: find . -name '*.zsh' -type f -print0 | xargs -0 -n1 -P4 zsh -n
 
-      - name: "run zcompile"
+      - name: zsh (zcompile)
         run: find . -name '*.zsh' -type f -exec zsh -fc "zcompile {}" \;
