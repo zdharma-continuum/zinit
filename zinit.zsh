@@ -2395,7 +2395,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     # lro stands for lastarg-retval-option.
     [[ $1 = following ]] && \
         sched +$___secs 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following "${ZINIT[lro-data]%:*:*}"'
-    ((___secs==10))&&return 0
+    (( ___secs == 10 )) && return 0
     [[ -n $1 && $1 != (following*|burst) ]] && \
         { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ $1 = burst ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
