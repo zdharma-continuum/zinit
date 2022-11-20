@@ -16,28 +16,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
-      - name: install homebrew
-        id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+      - uses: actions/setup-python@v4
 
       - name: install dependencies
         run: |
-          brew install npm python@3.8 shellcheck shfmt zsh
-          python3.8 -m pip install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
-          npm install --save-dev @commitlint/config-angular @commitlint/cli
+          sudo apt-get install --yes zsh
+          pip install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
 
       - name: commit
-        run: commitlint --from=$(git cherry -v origin/main $(git branch --show-current) | head -n 1 | awk '{print $2}')
+        uses: wagoid/commitlint-github-action@v5
+        with:
+          configFile: '.commitlintrc'
+        # run: commitlint --from=$(git cherry origin/main | head -n 1 | awk '{print $2}')
 
       - name: markdown
-        run: find . -name '*.md' -type f -print0 | xargs -0 -n1 -P4 python3 -m mdformat --check --wrap 120
+        run: find . -name '*.md' ! -name 'CHANGELOG.md' -name '*.md' -type f -print0 | xargs -0 -n1 -P4 mdformat --check --wrap 120
 
-      - name: shell (shfmt)
-        run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shfmt -bn -ci -d -i 2 -ln bash -s -sr
+      # - name: shell (shfmt)
+      #   run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shfmt -bn -ci -d -i 2 -ln bash -s -sr
 
-      - name: shell (shellcheck)
-        run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shellcheck
+      # - name: shell (shellcheck)
+      #   run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shellcheck
 
       - name: zsh (noexec)
         run: find . -name '*.zsh' -type f -print0 | xargs -0 -n1 -P4 zsh -n
