@@ -2390,7 +2390,7 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 #      (delay), i.e. "burst" allows to run package installations from
 #      script, not from prompt.
 @zinit-scheduler() {
-    integer ___ret="${${ZINIT[lro-data]%:*}##*:}" \
+    integer ___ret="${${ZINIT[lro-data]%:*}##*:}" ___secs=$(($#ZINIT_TASKS>1?1:10))
             ___secs=$(($#ZINIT_TASKS>1?1:10))
     # lro stands for lastarg-retval-option.
     [[ $1 = following ]] && \
