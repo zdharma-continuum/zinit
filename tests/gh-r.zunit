@@ -645,12 +645,6 @@ $kopia --version; assert $state equals 0
   local volta="$ZBIN/volta"; assert "$volta" is_executable
   run $volta --version; assert $state equals 0
 }
-@test 'warp' { # Secure and simple terminal sharing
-  ! [[ $OSTYPE =~ 'darwin*' ]] && skip 'Warp test skipped on Linux'
-  run zinit lbin'!* -> warp' for spolu/warp; assert $state equals 0
-  local warp="$ZBIN/warp"; assert "$warp" is_executable
-  run $warp --version; assert $state equals 0
-}
 @test 'whalebrew' { # Homebrew, but with Docker images
   run zinit lbin'!* -> whalebrew' for whalebrew/whalebrew; assert $state equals 0
   local whalebrew="$ZBIN/whalebrew"; assert "$whalebrew" is_executable
