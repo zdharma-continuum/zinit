@@ -1,9 +1,10 @@
 #!/usr/bin/env zsh
 
 # Log functions [[[
-function error(){ print -P "%F{red}ZUNIT[ERROR]: $1%f" && return 1; }
-function info() { print -P "%F{blue}ZUNIT[INFO]%f: %F{cyan}$1%f"; }
-function warn() { print -P "%F{yellow}ZUNIT[WARN]: $1%f"; }
+function log(){ print -P "[%F{cyan}ZUNIT%f] %F{$2}$1%f"; }
+function error(){ print -P "$(log "ERROR" "red") $1"; }
+function info(){ print -P "$(log "INFO" "green") $1"; }
+function warn(){ print -P "$(log "WARN" "yellow") $1"; }
 # ]]]
 # Create Zunit test environment [[[
 GIT_REPO=$(git rev-parse --show-toplevel)
@@ -16,22 +17,23 @@ ZPFX=$ZINIT[HOME_DIR]/polaris;
 rm -rf $ZINIT[HOME_DIR]
 mkdir -p $ZINIT[HOME_DIR]
 git diff > $ZINIT[HOME_DIR]/unstaged.diff
-info 'creating test env' \
-  && git clone \
-      --dissociate \
-      --local \
-      --no-hardlinks \
-      --reference "$GIT_REPO" \
-      "$GIT_REPO" \
-    "$GIT_REPO"/tests/_support/zunit/zinit.git \
-  || error 'failed to create zinit copy for test env' \
-  &&  [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]] \
-  && git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff \
-  && info 'installing zinit' \
-  && command chmod g-rwX $ZINIT[HOME_DIR] \
-  && zcompile $ZINIT[BIN_DIR]/zinit.zsh \
-  && info 'successfully created zunit env' \
-  || error 'failed to create zunit env'
+info 'creating test env'
+{
+  git clone \
+    --dissociate \
+    --local \
+    --no-hardlinks \
+    --reference "$GIT_REPO" \
+    "$GIT_REPO" \
+    "$GIT_REPO"/tests/_support/zunit/zinit.git
+  if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]] {
+    git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff
+  }
+  info 'installing zinit'
+  command chmod g-rwX $ZINIT[HOME_DIR]
+  zcompile $ZINIT[BIN_DIR]/zinit.zsh
+  info 'successfully created zunit env'
+} || error 'failed to create zunit env'
 
 source $ZINIT[BIN_DIR]/zinit.zsh \
   && autoload -Uz _zinit \
@@ -40,10 +42,7 @@ source $ZINIT[BIN_DIR]/zinit.zsh \
 # ]]]
 # Install Annexes [[[
 info 'installing test dependencies'
-    # ver'fix/improve-lbin-logic' \
-zinit depth'1' light-mode for \
-  zdharma-continuum/zinit-annex-binary-symlink \
-  zdharma-continuum/zinit-annex-{'bin-gem-node','default-ice'}
+zinit depth'1' light-mode for @zdharma-continuum/zinit-annex-{'bin-gem-node','binary-symlink','default-ice'}
 # ]]]
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker

@@ -2631,4 +2631,4 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 # indent-tabs-mode: nil
 # sh-basic-offset: 2
 # End:
-# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
+# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker[[[]]]

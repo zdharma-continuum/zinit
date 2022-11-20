@@ -11,14 +11,15 @@ PDF_CMD := asciidoctor -a reproducible -b pdf -r asciidoctor-pdf -D pdf
 MAN_SRC := $(foreach wrd,$(SRC),man/$(wrd))
 MAN_CMD := a2x --verbose -L --doctype manpage --format manpage -D man
 
-.PHONY: all clean test
+.PHONY: all clean test man pdf
 
 all: clean man pdf
+dirs:
+	mkdir -p man pdf
 
 # Manual pages
 # uses a2x from asciidoc package
-man: $(shell mkdir -p $(@)) $(SRC)
-
+man: dirs $(MAN_SRC)
 man/git-process-output.zsh:
 	$(MAN_CMD) git-process-output.zsh.adoc
 man/rpm2cpio.zsh:
@@ -36,8 +37,7 @@ man/zinit.zsh:
 
 # PDFS
 # uses asciidoctor not a2x (i.e. not asciidoc)
-pdf: $(PDF_SRC)
-
+pdf: dirs $(PDF_SRC)
 git-process-output.zsh.pdf:
 	$(PDF_CMD) git-process-output.zsh.adoc
 rpm2cpio.zsh.pdf:
