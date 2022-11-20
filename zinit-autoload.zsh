@@ -718,7 +718,7 @@ __zi::self-update() {
         builtin cd -q "$ZINIT[BIN_DIR]" \
         && +zi::message -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
         && command git fetch --quiet \
-        && lines=( ${(f)"$(command git log --abbrev-commit --boundary --date=short --color --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset %Cblue%G?%Creset || %b' ..origin/HEAD)"} )
+        && lines=( ${(f)"$(command git log --abbrev-commit --boundary --date=short --decorate --color --pretty=format:'%Cgreen%ad %Cred%h%Creset -%C(yellow)%d%Creset %s %Cblue[%cn]%Creset || %b' ..origin/HEAD)"} )
         if (( ${#lines} > 0 )); then
             # Remove the (origin/main ...) segments, to expect only tags to appear
             lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
