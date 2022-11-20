@@ -4,6 +4,8 @@
 @setup {
   zinit default-ice as'null' light-mode nocompile nocompletions
   ZBIN=$ZPFX/bin
+  export LC_CTYPE=C
+  export LANG=C
 }
 
 # @test 'nnn' {
