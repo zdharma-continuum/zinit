@@ -2390,14 +2390,12 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 #      (delay), i.e. "burst" allows to run package installations from
 #      script, not from prompt.
 @zinit-scheduler() {
-    integer ___ret="${${ZINIT[lro-data]%:*}##*:}" ___secs=$(($#ZINIT_TASKS>1?1:10))
+    integer ___ret="${${ZINIT[lro-data]%:*}##*:}"
     # lro stands for lastarg-retval-option.
-    [[ $1 = following ]] && sched +$___secs 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following "${ZINIT[lro-data]%:*:*}"'
-    [[ -n $1 && $1 != (following*|burst) ]] && \
-        { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
+    [[ $1 = following ]] && sched +1 'ZINIT[lro-data]="$_:$?:${options[printexitvalue]}"; @zinit-scheduler following "${ZINIT[lro-data]%:*:*}"'
+    [[ -n $1 && $1 != (following*|burst) ]] && { local THEFD="$1"; zle -F "$THEFD"; exec {THEFD}<&-; }
     [[ $1 = burst ]] && local -h EPOCHSECONDS=$(( EPOCHSECONDS+10000 ))
     ZINIT[START_TIME]="${ZINIT[START_TIME]:-$EPOCHREALTIME}"
-    [[ -n ${ZINIT_TASKS:#<no-data>} ]] && return 0
 
     integer ___t=EPOCHSECONDS ___i correct
     local -a match mbegin mend reply
@@ -3278,8 +3276,6 @@ typeset -g REPLY
 
 # a searchable menu of tags for current directory
 zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
-ZINIT_REGISTERED_PLUGINS[-1]=()
-
 zle -N zi-browse-symbol
 zle -N zi-browse-symbol-backwards zi-browse-symbol
 zle -N zi-browse-symbol-pbackwards zi-browse-symbol
