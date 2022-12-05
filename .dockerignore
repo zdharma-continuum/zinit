@@ -1,10 +1,7 @@
-.git/
-.github/
+*.zwc
 .git*
+Makefile
 doc/
 scripts/
 test/
 tests/
-
-*.zwc
-Makefile
