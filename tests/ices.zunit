@@ -50,3 +50,18 @@
   assert $state equals 0
   assert "$ZPLUGINS/test---make/whatever" is_file
 }
+
+@test 'completions' {
+  run zinit as"null" id-as"test/completions" atclone"touch _whatever" completions for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---completions/_whatever" is_file
+  assert "$ZINIT[COMPLETIONS_DIR]/_whatever" is_file
+}
+
+# If both are given, the completions wins
+@test 'completions-overwrite' {
+  run zinit as"null" id-as"test/completions-overwrite" atclone"touch _whatever2" nocompletions completions for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---completions-overwrite/_whatever2" is_file
+  assert "$ZINIT[COMPLETIONS_DIR]/_whatever2" is_file
+}

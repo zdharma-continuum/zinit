@@ -184,7 +184,7 @@ ____
  
  Downloads snippet
  file – with curl, wget, lftp or lynx,
- directory, with Subversion – when svn-ICE is active. 
+ directory, with Subversion – when svn-ICE is active.
  
  Github supports Subversion protocol and allows to clone subdirectories.
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
@@ -792,7 +792,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 

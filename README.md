@@ -734,6 +734,7 @@ You may safely assume a given ice works with both plugins and snippets unless ex
 | :-------------: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |    `blockf`     | <div align="justify" style="text-align: justify;">Disallow plugin to modify `fpath`. Useful when a plugin wants to provide completions in traditional way. Zinit can manage completions and plugin can be blocked from exposing them.</div> |
 | `nocompletions` | <div align="justify" style="text-align: justify;">Don't detect, install and manage completions for this plugin. Completions can be installed later with `zinit creinstall {plugin-spec}`.</div>                                             |
+|  `completions`  | <div align="justify" style="text-align: justify;">Do detect, install and manage completions for this plugin. Overwrites `as'null'` or `nocompletions`.</div>                                                                                |
 
 ### Command Execution After Cloning, Updating or Loading<a name="command-execution-after-cloning-updating-or-loading"></a>
 
