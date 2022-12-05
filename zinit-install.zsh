@@ -500,7 +500,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # After additional executions like atclone'' - install completions (1 - plugins)
     local -A OPTS
     OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
+    [[ (0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0) || 0 != ${+ICE[completions]} ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
     if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
@@ -913,7 +913,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # FUNCTION: .zinit-download-snippet [[[
 # Downloads snippet
 #   file – with curl, wget, lftp or lynx,
-#   directory, with Subversion – when svn-ICE is active. 
+#   directory, with Subversion – when svn-ICE is active.
 #
 #   Github supports Subversion protocol and allows to clone subdirectories.
 #   This is used to provide a layer of support for Oh-My-Zsh and Prezto.
@@ -1339,7 +1339,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # After additional executions like atclone'' - install completions (2 - snippets)
     local -A OPTS
     OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
+    [[ (0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0) || 0 != ${+ICE[completions]} ]] && \
         .zinit-install-completions "%" "$local_dir/$dirname" 0
 
     if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {

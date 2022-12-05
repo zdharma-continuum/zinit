@@ -69,7 +69,7 @@ fi
 ZINIT[ice-list]="svn|proto|from|teleid|bindmap|cloneopts|id-as|depth|if|wait|load|\
 unload|blockf|pick|bpick|src|as|ver|silent|lucid|notify|mv|cp|\
 atinit|atclone|atload|atpull|nocd|run-atpull|has|cloneonly|make|\
-service|trackbinds|multisrc|compile|nocompile|nocompletions|\
+service|trackbinds|multisrc|compile|nocompile|completions|nocompletions|\
 reset-prompt|wrap|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
 \!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
 light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
