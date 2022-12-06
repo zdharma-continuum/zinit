@@ -5,8 +5,8 @@ SRC := zinit{'','-additional','-autoload','-install','-side'}.zsh
 DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 CONTAINTER_NAME := zinit
 
-.PHONY: all clean container/build container/shell doc doc/container help tags tags/emacs tags/vim test zwc
-.SILENT: all clean container/build container/shell doc doc/container help tags tags/emacs tags/vim test zwc
+.PHONY: all clean container-build container-shell doc doc-container help tags tags-emacs tags-vim test zwc
+.SILENT: all clean container-build container-shell doc doc-container help tags tags-emacs tags-vim test zwc
 
 all: help
 
@@ -17,13 +17,15 @@ container-build: ## build docker image
 	docker build \
 		--compress \
 		--file=Dockerfile \
+		--platform=linux/x86_64 \
+		--rm \
+		--force-rm \
 		--tag=$(CONTAINTER_NAME):latest \
 		.
 
 container-shell: ## start shell in docker container
-	@docker run \
+	docker run \
 		--interactive \
-		--mount=source=zinit-volume,destination=/home \
 		--tty \
 		$(CONTAINTER_NAME):latest
 
@@ -39,7 +41,7 @@ help: ## display available make targets
 
 tags: tags/emacs tags/vim ## Run ctags to generate Emacs and Vim's format tag file
 
-tags/emacs: ## build emacs-style ctags file
+tags-emacs: ## build emacs-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 		if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
 			ctags -e -R --options=share/zsh.ctags --languages=zsh \
@@ -53,7 +55,7 @@ tags/emacs: ## build emacs-style ctags file
 	    'version) utility first.\n'; \
 	fi
 
-tags/vim: ## build the vim-style ctags file
+tags-vim: ## build the vim-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 		if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
 			ctags --languages=zsh --maxdepth=1 --options=share/zsh.ctags --pattern-length-limit=250 -R; \

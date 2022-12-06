@@ -47,10 +47,6 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
         ZINIT[HOME_DIR]="$HOME/.zinit"
     elif [[ -d ${ZDOTDIR:-$HOME}/.zinit ]]; then
         ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zinit"
-    elif [[ -d $HOME/.zplugin ]]; then
-        ZINIT[HOME_DIR]="$HOME/.zplugin"
-    elif [[ -d ${ZDOTDIR:-$HOME}/.zplugin ]]; then
-        ZINIT[HOME_DIR]="${ZDOTDIR:-$HOME}/.zplugin"
     else
         ZINIT[HOME_DIR]="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit"
     fi

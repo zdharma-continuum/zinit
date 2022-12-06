@@ -1,0 +1,56 @@
+# syntax=docker/dockerfile-upstream:master
+
+FROM ubuntu:latest
+
+LABEL org.label-schema.schema-version="1.0"
+LABEL org.label-schema.name="zdharm-continuum/zinit"
+LABEL org.label-schema.description="Containerized dotfiles environment"
+LABEL org.label-schema.vcs-url="https://github.com/zdharm-continuum/zinit"
+LABEL org.label-schema.docker.cmd="docker run --interactive --mount source=dotfiles-volume,destination=/home/ --tty vladdoster/dotfiles"
+
+ARG USER
+
+ENV USER ${USER:-zinit}
+ENV HOME /home/${USER}
+ENV ZINIT_SRC ${HOME}/zinit.git
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV LANG en_US.utf8
+ENV TERM xterm
+
+RUN apt-get update \
+ && apt-get --yes install --no-install-recommends \
+   apt-utils autoconf automake asciidoc-dblatex ruby-asciidoctor \
+   ca-certificates cmake curl \
+   debianutils \
+   file \
+   g++ gcc git \
+   less locales \
+   make man-db \
+   ncurses-base ncurses-bin ncurses-dev ncurses-term \
+   pkg-config \
+   subversion sudo \
+   tar tree \
+   unzip \
+   xz-utils \
+   zsh \
+ && rm -rf /var/lib/apt/lists/* \
+ && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
+
+RUN useradd \
+  --create-home \
+  --gid root --groups sudo \
+  --home-dir ${HOME} \
+  --shell "$(which zsh)" \
+  --uid 1001 \
+  ${USER} \
+ && passwd --delete ${USER}
+
+USER ${USER}
+WORKDIR ${HOME}
+
+COPY --chown=${USER} ./docker/zshrc ${HOME}/.zshrc
+COPY --chown=${USER} . ${ZINIT_SRC}
+
+ENTRYPOINT ["zsh"]
+CMD ["-i", "-l"]

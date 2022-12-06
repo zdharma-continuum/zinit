@@ -2,10 +2,10 @@
 
 typeset -Ag ZINIT
 
-ZINIT[HOME_DIR]=${ZINIT_HOME_DIR:-$HOME/zinit}
-ZINIT[BIN_DIR]=${ZINIT_BIN_DIR:-$HOME/zinit.git}
+ZINIT[HOME_DIR]=${ZINIT_DATA:-$HOME/zinit}
+ZINIT[BIN_DIR]=${ZINIT_SRC:-$HOME/zinit.git}
 
-source $ZINIT[BIN_DIR]/zinit.zsh
+source ${ZINIT[BIN_DIR]}/zinit.zsh
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
@@ -15,13 +15,8 @@ zi as'completion' for OMZP::{'golang/_golang','pip/_pip'}
 #=== COMPLETIONS ======================================
 local GH_RAW_URL='https://raw.githubusercontent.com'
 znippet() { zi for light-mode as'completion' has"${1}" nocompile id-as"${1}-completion/_${1}" is-snippet "${GH_RAW_URL}/${2}/_${1}"; }
-znippet 'brew' 'Homebrew/brew/master/completions/zsh'
-znippet 'docker' 'docker/cli/master/contrib/completion/zsh'
-znippet 'exa' 'ogham/exa/master/completions/zsh'
-znippet 'fd' 'sharkdp/fd/master/contrib/completion'
-zi light-mode as'completion' nocompile is-snippet for \
-  "${GH_RAW_URL}/git/git/master/contrib/completion/git-completion.zsh" \
-  "${GH_RAW_URL}/Homebrew/homebrew-services/master/completions/zsh/_brew_services"
+zi light-mode as'completion' nocompile is-snippet for "${GH_RAW_URL}/git/git/master/contrib/completion/git-completion.zsh"
+zi light-mode make"PREFIX=${ZPFX} install" for zdharma-continuum/zshelldoc
 #=== PROMPT ===========================================
 eval "MODE_CURSOR_"{'SEARCH="#ff00ff blinking underline"','VICMD="green block"','VIINS="#ffff00  bar"'}";"
 zi for as'null' compile'(pure|async).zsh' multisrc'(pure|async).zsh' light-mode atinit"
