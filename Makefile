@@ -1,7 +1,7 @@
 .EXPORT_ALL_VARIABLES:
 
-ZSH := $(shell command -v zsh 2> /dev/null)
-SRC := zinit{'','-additional','-autoload','-install','-side'}.zsh
+ZSH := $(shell command -v zsh 2> /dev/null) -ilc
+SRC := share/{'git-process-output','rpm2cpio'}.zsh zinit{'','-additional','-autoload','-install','-side'}.zsh
 DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 CONTAINTER_NAME := zinit
 
@@ -17,6 +17,7 @@ container-build: ## build docker image
 	docker build \
 		--compress \
 		--file=Dockerfile \
+		--n
 		--platform=linux/x86_64 \
 		--rm \
 		--force-rm \
@@ -30,7 +31,7 @@ container-shell: ## start shell in docker container
 		$(CONTAINTER_NAME):latest
 
 doc: clean
-	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\:\∞\.\+\@\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC)"
+	cd doc; $(ZSH) -df "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\+\@\:∞\.\~\-\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC); make -C ./zsdoc pdf"
 
 doc-container:
 	./scripts/docker-run.sh --docs --debug

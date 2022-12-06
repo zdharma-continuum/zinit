@@ -2,7 +2,8 @@
 
 FROM asciidoctor/docker-asciidoctor:latest
 
-ENV ZINIT_SRC ${HOME}/zinit.git
+ENV USER root
+ENV ZINIT_SRC /${USER}/zinit.git
 
 RUN apk add \
   asciidoc-doc \
@@ -10,10 +11,13 @@ RUN apk add \
   tree \
   zsh
 
-COPY ./docker/zshrc ${HOME}/.zshrc
-COPY . ${ZINIT_SRC}
+USER ${USER}
+WORKDIR /${USER}
 
-WORKDIR ${ZINIT_SRC}
+COPY ./docker/zshrc .zshrc
+COPY . zinit.git
+
+RUN zsh --interactive --login -c -- '@zinit-scheduler burst'
 
 ENTRYPOINT ["zsh"]
 CMD ["-i", "-l"]
