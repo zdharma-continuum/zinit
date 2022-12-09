@@ -13,13 +13,13 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
- .zinit-clear-debug-report
- .zinit-debug-start
- .zinit-debug-stop
- .zinit-debug-unload
- .zinit-service
- .zinit-wrap-track-functions
- :zinit-tmp-subst-source
+ _zi::clear-debug-report
+ _zi::debug-start
+ _zi::debug-stop
+ _zi::debug-unload
+ _zi::service
+ _zi::wrap-track-functions
+ :zi::tmp-subst-source
 
 DETAILS
 -------
@@ -29,7 +29,7 @@ Script Body
 
 Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
-.zinit-clear-debug-report
+_zi::clear-debug-report
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -39,15 +39,15 @@ ____
 
 Has 1 line(s). Calls functions:
 
- .zinit-clear-debug-report
- `-- zinit-autoload.zsh/.zinit-clear-report-for
+ _zi::clear-debug-report
+ `-- zinit-autoload.zsh/_zi::clear-report-for
 
 Called by:
 
- zinit-autoload.zsh/.zinit-unload
+ zinit-autoload.zsh/_zi::unload
  zinit.zsh/zinit
 
-.zinit-debug-start
+_zi::debug-start
 ~~~~~~~~~~~~~~~~~~
 
 ____
@@ -57,16 +57,16 @@ ____
 
 Has 9 line(s). Calls functions:
 
- .zinit-debug-start
- |-- zinit.zsh/+zinit-message
- |-- zinit.zsh/.zinit-diff
- `-- zinit.zsh/.zinit-tmp-subst-on
+ _zi::debug-start
+ |-- zinit.zsh/+zi::message
+ |-- zinit.zsh/_zi::diff
+ `-- zinit.zsh/_zi::tmp-subst-on
 
 Called by:
 
  zinit.zsh/zinit
 
-.zinit-debug-stop
+_zi::debug-stop
 ~~~~~~~~~~~~~~~~~
 
 ____
@@ -76,15 +76,15 @@ ____
 
 Has 3 line(s). Calls functions:
 
- .zinit-debug-stop
- |-- zinit.zsh/.zinit-diff
- `-- zinit.zsh/.zinit-tmp-subst-off
+ _zi::debug-stop
+ |-- zinit.zsh/_zi::diff
+ `-- zinit.zsh/_zi::tmp-subst-off
 
 Called by:
 
  zinit.zsh/zinit
 
-.zinit-debug-unload
+_zi::debug-unload
 ~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -94,9 +94,9 @@ ____
 
 Has 6 line(s). Calls functions:
 
- .zinit-debug-unload
- |-- zinit-autoload.zsh/.zinit-unload
- `-- zinit.zsh/+zinit-message
+ _zi::debug-unload
+ |-- zinit-autoload.zsh/_zi::unload
+ `-- zinit.zsh/+zi::message
 
 Uses feature(s): _source_
 
@@ -104,7 +104,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-service
+_zi::service
 ~~~~~~~~~~~~~~
 
 ____
@@ -118,15 +118,15 @@ ____
 
 Has 37 line(s). Calls functions:
 
- .zinit-service
- |-- zinit.zsh/.zinit-load
- `-- zinit.zsh/.zinit-load-snippet
+ _zi::service
+ |-- zinit.zsh/_zi::load
+ `-- zinit.zsh/_zi::load-snippet
 
 Uses feature(s): _kill_, _read_, _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-wrap-track-functions
+_zi::wrap-track-functions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 19 line(s). Doesn't call other functions.
@@ -135,13 +135,13 @@ Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-:zinit-tmp-subst-source
+:zi::tmp-subst-source
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 25 line(s). Calls functions:
 
- :zinit-tmp-subst-source
- `-- zinit.zsh/+zinit-message
+ :zi::tmp-subst-source
+ `-- zinit.zsh/+zi::message
 
 Uses feature(s): _eval_
 

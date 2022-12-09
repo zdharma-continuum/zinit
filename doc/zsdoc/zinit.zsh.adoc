@@ -13,61 +13,61 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
- +zinit-deploy-message
- +zinit-message
- +zinit-prehelp-usage-message
+ +zi::deploy-message
+ +zi::message
+ +zi::prehelp-usage-message
  -zinit_scheduler_add_sh
- .zinit-add-fpath
- .zinit-add-report
- .zinit-any-to-pid
- .zinit-any-to-user-plugin
- .zinit-compdef-clear
- .zinit-compdef-replay
- .zinit-diff
- .zinit-diff-env
- .zinit-diff-functions
- .zinit-diff-options
- .zinit-diff-parameter
- .zinit-find-other-matches
- .zinit-formatter-auto
- .zinit-formatter-bar
- .zinit-formatter-bar-util
- .zinit-formatter-dbg
- .zinit-formatter-pid
- .zinit-formatter-th-bar
- .zinit-formatter-url
- .zinit-get-mtime-into
- .zinit-get-object-path
- .zinit-ice
- .zinit-load
- .zinit-load-ices
- .zinit-load-object
- .zinit-load-plugin
- .zinit-load-snippet
- .zinit-main-message-formatter
- .zinit-pack-ice
- .zinit-parse-opts
- .zinit-prepare-home
- .zinit-register-plugin
- .zinit-run
- .zinit-run-task
- .zinit-set-m-func
- .zinit-setup-params
- .zinit-submit-turbo
- .zinit-tmp-subst-off
- .zinit-tmp-subst-on
- .zinit-util-shands-path
- :zinit-reload-and-run
- :zinit-tmp-subst-alias
- :zinit-tmp-subst-autoload
- :zinit-tmp-subst-bindkey
- :zinit-tmp-subst-compdef
- :zinit-tmp-subst-zle
- :zinit-tmp-subst-zstyle
+ _zi::add-fpath
+ _zi::add-report
+ _zi::any-to-pid
+ _zi::any-to-user-plugin
+ _zi::compdef-clear
+ _zi::compdef-replay
+ _zi::diff
+ _zi::diff-env
+ _zi::diff-functions
+ _zi::diff-options
+ _zi::diff-parameter
+ _zi::find-other-matches
+ _zi::formatter-auto
+ _zi::formatter-bar
+ _zi::formatter-bar-util
+ _zi::formatter-dbg
+ _zi::formatter-pid
+ _zi::formatter-th-bar
+ _zi::formatter-url
+ _zi::get-mtime-into
+ _zi::get-object-path
+ _zi::ice
+ _zi::load
+ _zi::load-ices
+ _zi::load-object
+ _zi::load-plugin
+ _zi::load-snippet
+ _zi::main-message-formatter
+ _zi::pack-ice
+ _zi::parse-opts
+ _zi::prepare-home
+ _zi::register-plugin
+ _zi::run
+ _zi::run-task
+ _zi::set-m-func
+ _zi::setup-params
+ _zi::submit-turbo
+ _zi::tmp-subst-off
+ _zi::tmp-subst-on
+ _zi::util-shands-path
+ :zi::reload-and-run
+ :zi::tmp-subst-alias
+ :zi::tmp-subst-autoload
+ :zi::tmp-subst-bindkey
+ :zi::tmp-subst-compdef
+ :zi::tmp-subst-zle
+ :zi::tmp-subst-zstyle
  @autoload
- @zinit-register-annex
- @zinit-register-hook
- @zinit-substitute
+ @zi::register-annex
+ @zi::register-hook
+ @zi::substitute
  @zsh-plugin-run-on-unload
  @zsh-plugin-run-on-update
  pmodload
@@ -84,7 +84,7 @@ FUNCTIONS
 AUTOLOAD add-zsh-hook
 AUTOLOAD compinit
 AUTOLOAD is-at-least
-PRECMD-HOOK @zinit-scheduler
+PRECMD-HOOK @zi::scheduler
 
 DETAILS
 -------
@@ -95,55 +95,55 @@ Script Body
 Has 245 line(s). Calls functions:
 
  Script-Body
- |-- +zinit-message
- |-- @zinit-register-hook
+ |-- +zi::message
+ |-- @zi::register-hook
  |-- add-zsh-hook
  |-- is-at-least
  |-- zinit
- |   |-- +zinit-message
- |   |-- +zinit-prehelp-usage-message
- |   |   `-- +zinit-message
+ |   |-- +zi::message
+ |   |-- +zi::prehelp-usage-message
+ |   |   `-- +zi::message
  |   |-- compinit
- |   |-- zinit-additional.zsh/.zinit-clear-debug-report
- |   |-- zinit-additional.zsh/.zinit-debug-start
- |   |-- zinit-additional.zsh/.zinit-debug-stop
- |   |-- zinit-additional.zsh/.zinit-debug-unload
- |   |-- zinit-autoload.zsh/.zinit-cdisable
- |   |-- zinit-autoload.zsh/.zinit-cenable
- |   |-- zinit-autoload.zsh/.zinit-clear-completions
- |   |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
- |   |-- zinit-autoload.zsh/.zinit-compiled
- |   |-- zinit-autoload.zsh/.zinit-help
- |   |-- zinit-autoload.zsh/.zinit-list-bindkeys
- |   |-- zinit-autoload.zsh/.zinit-list-compdef-replay
- |   |-- zinit-autoload.zsh/.zinit-ls
- |   |-- zinit-autoload.zsh/.zinit-module
- |   |-- zinit-autoload.zsh/.zinit-recently
- |   |-- zinit-autoload.zsh/.zinit-search-completions
- |   |-- zinit-autoload.zsh/.zinit-self-update
- |   |-- zinit-autoload.zsh/.zinit-show-all-reports
- |   |-- zinit-autoload.zsh/.zinit-show-completions
- |   |-- zinit-autoload.zsh/.zinit-show-debug-report
- |   |-- zinit-autoload.zsh/.zinit-show-registered-plugins
- |   |-- zinit-autoload.zsh/.zinit-show-report
- |   |-- zinit-autoload.zsh/.zinit-show-times
- |   |-- zinit-autoload.zsh/.zinit-show-zstatus
- |   |-- zinit-autoload.zsh/.zinit-uncompile-plugin
- |   |-- zinit-autoload.zsh/.zinit-uninstall-completions
- |   |-- zinit-autoload.zsh/.zinit-unload
- |   |-- zinit-autoload.zsh/.zinit-update-or-status
- |   |-- zinit-autoload.zsh/.zinit-update-or-status-all
- |   |-- zinit-install.zsh/.zinit-compile-plugin
- |   |-- zinit-install.zsh/.zinit-compinit
- |   |-- zinit-install.zsh/.zinit-forget-completion
- |   `-- zinit-install.zsh/.zinit-install-completions
- `-- zinit-autoload.zsh/.zinit-module
+ |   |-- zinit-additional.zsh/_zi::clear-debug-report
+ |   |-- zinit-additional.zsh/_zi::debug-start
+ |   |-- zinit-additional.zsh/_zi::debug-stop
+ |   |-- zinit-additional.zsh/_zi::debug-unload
+ |   |-- zinit-autoload.zsh/_zi::cdisable
+ |   |-- zinit-autoload.zsh/_zi::cenable
+ |   |-- zinit-autoload.zsh/_zi::clear-completions
+ |   |-- zinit-autoload.zsh/_zi::compile-uncompile-all
+ |   |-- zinit-autoload.zsh/_zi::compiled
+ |   |-- zinit-autoload.zsh/_zi::help
+ |   |-- zinit-autoload.zsh/_zi::list-bindkeys
+ |   |-- zinit-autoload.zsh/_zi::list-compdef-replay
+ |   |-- zinit-autoload.zsh/_zi::ls
+ |   |-- zinit-autoload.zsh/_zi::module
+ |   |-- zinit-autoload.zsh/_zi::recently
+ |   |-- zinit-autoload.zsh/_zi::search-completions
+ |   |-- zinit-autoload.zsh/_zi::self-update
+ |   |-- zinit-autoload.zsh/_zi::show-all-reports
+ |   |-- zinit-autoload.zsh/_zi::show-completions
+ |   |-- zinit-autoload.zsh/_zi::show-debug-report
+ |   |-- zinit-autoload.zsh/_zi::show-registered-plugins
+ |   |-- zinit-autoload.zsh/_zi::show-report
+ |   |-- zinit-autoload.zsh/_zi::show-times
+ |   |-- zinit-autoload.zsh/_zi::show-zstatus
+ |   |-- zinit-autoload.zsh/_zi::uncompile-plugin
+ |   |-- zinit-autoload.zsh/_zi::uninstall-completions
+ |   |-- zinit-autoload.zsh/_zi::unload
+ |   |-- zinit-autoload.zsh/_zi::update-or-status
+ |   |-- zinit-autoload.zsh/_zi::update-or-status-all
+ |   |-- zinit-install.zsh/_zi::compile-plugin
+ |   |-- zinit-install.zsh/_zi::compinit
+ |   |-- zinit-install.zsh/_zi::forget-completion
+ |   `-- zinit-install.zsh/_zi::install-completions
+ `-- zinit-autoload.zsh/_zi::module
 
 Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
 
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
-+zinit-deploy-message
++zi::deploy-message
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -158,70 +158,70 @@ Uses feature(s): _read_, _zle_
 
 Called by:
 
- .zinit-load-snippet
- .zinit-load
- zinit-autoload.zsh/.zinit-recall
+ _zi::load-snippet
+ _zi::load
+ zinit-autoload.zsh/_zi::recall
 
-+zinit-message
++zi::message
 ~~~~~~~~~~~~~~
 
 Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
- +zinit-prehelp-usage-message
- .zinit-compdef-clear
- .zinit-compdef-replay
- .zinit-load-snippet
- .zinit-register-plugin
- .zinit-run
- .zinit-set-m-func
- :zinit-tmp-subst-autoload
+ +zi::prehelp-usage-message
+ _zi::compdef-clear
+ _zi::compdef-replay
+ _zi::load-snippet
+ _zi::register-plugin
+ _zi::run
+ _zi::set-m-func
+ :zi::tmp-subst-autoload
  Script-Body
  zinit
- zinit-additional.zsh/.zinit-debug-start
- zinit-additional.zsh/.zinit-debug-unload
- zinit-additional.zsh/:zinit-tmp-subst-source
- zinit-autoload.zsh/.zinit-build-module
- zinit-autoload.zsh/.zinit-cd
- zinit-autoload.zsh/.zinit-self-update
- zinit-autoload.zsh/.zinit-show-zstatus
- zinit-autoload.zsh/.zinit-uninstall-completions
- zinit-autoload.zsh/.zinit-update-all-parallel
- zinit-autoload.zsh/.zinit-update-or-status-all
- zinit-autoload.zsh/.zinit-update-or-status
- zinit-autoload.zsh/.zinit-wait-for-update-jobs
- zinit-install.zsh/.zinit-compile-plugin
- zinit-install.zsh/.zinit-compinit
- zinit-install.zsh/.zinit-download-file-stdout
- zinit-install.zsh/.zinit-download-snippet
- zinit-install.zsh/.zinit-extract
- zinit-install.zsh/.zinit-get-cygwin-package
- zinit-install.zsh/.zinit-get-latest-gh-r-url-part
- zinit-install.zsh/.zinit-get-package
- zinit-install.zsh/.zinit-install-completions
- zinit-install.zsh/.zinit-jq-check
- zinit-install.zsh/.zinit-setup-plugin-dir
- zinit-install.zsh/.zinit-update-snippet
+ zinit-additional.zsh/_zi::debug-start
+ zinit-additional.zsh/_zi::debug-unload
+ zinit-additional.zsh/:zi::tmp-subst-source
+ zinit-autoload.zsh/_zi::build-module
+ zinit-autoload.zsh/_zi::cd
+ zinit-autoload.zsh/_zi::self-update
+ zinit-autoload.zsh/_zi::show-zstatus
+ zinit-autoload.zsh/_zi::uninstall-completions
+ zinit-autoload.zsh/_zi::update-all-parallel
+ zinit-autoload.zsh/_zi::update-or-status-all
+ zinit-autoload.zsh/_zi::update-or-status
+ zinit-autoload.zsh/_zi::wait-for-update-jobs
+ zinit-install.zsh/_zi::compile-plugin
+ zinit-install.zsh/_zi::compinit
+ zinit-install.zsh/_zi::download-file-stdout
+ zinit-install.zsh/_zi::download-snippet
+ zinit-install.zsh/_zi::extract
+ zinit-install.zsh/_zi::get-cygwin-package
+ zinit-install.zsh/_zi::get-latest-gh-r-url-part
+ zinit-install.zsh/_zi::get-package
+ zinit-install.zsh/_zi::install-completions
+ zinit-install.zsh/_zi::jq-check
+ zinit-install.zsh/_zi::setup-plugin-dir
+ zinit-install.zsh/_zi::update-snippet
  zinit-install.zsh/ziextract
- zinit-install.zsh/∞zinit-mv-hook
- zinit-install.zsh/∞zinit-ps-on-update-hook
- zinit-install.zsh/∞zinit-reset-hook
- zinit-side.zsh/.zinit-countdown
- zinit-side.zsh/.zinit-exists-physically-message
+ zinit-install.zsh/~zi::mv-hook
+ zinit-install.zsh/~zi::ps-on-update-hook
+ zinit-install.zsh/~zi::reset-hook
+ zinit-side.zsh/_zi::countdown
+ zinit-side.zsh/_zi::exists-physically-message
 
-+zinit-prehelp-usage-message
++zi::prehelp-usage-message
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 38 line(s). Calls functions:
 
- +zinit-prehelp-usage-message
- `-- +zinit-message
+ +zi::prehelp-usage-message
+ `-- +zi::message
 
 Called by:
 
  zinit
- zinit-autoload.zsh/.zinit-delete
+ zinit-autoload.zsh/_zi::delete
 
 -zinit_scheduler_add_sh
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -237,18 +237,18 @@ Has 7 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-add-fpath
+_zi::add-fpath
 ~~~~~~~~~~~~~~~~
 
 Has 10 line(s). Calls functions:
 
- .zinit-add-fpath
+ _zi::add-fpath
 
 Called by:
 
  zinit
 
-.zinit-add-report
+_zi::add-report
 ~~~~~~~~~~~~~~~~~
 
 ____
@@ -263,31 +263,31 @@ Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-load-plugin
- .zinit-load-snippet
- :zinit-tmp-subst-alias
- :zinit-tmp-subst-autoload
- :zinit-tmp-subst-bindkey
- :zinit-tmp-subst-compdef
- :zinit-tmp-subst-zle
- :zinit-tmp-subst-zstyle
+ _zi::load-plugin
+ _zi::load-snippet
+ :zi::tmp-subst-alias
+ :zi::tmp-subst-autoload
+ :zi::tmp-subst-bindkey
+ :zi::tmp-subst-compdef
+ :zi::tmp-subst-zle
+ :zi::tmp-subst-zstyle
 
-.zinit-any-to-pid
+_zi::any-to-pid
 ~~~~~~~~~~~~~~~~~
 
 Has 22 line(s). Calls functions:
 
- .zinit-any-to-pid
+ _zi::any-to-pid
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- zinit-side.zsh/.zinit-exists-physically-message
- zinit-side.zsh/.zinit-first
+ zinit-side.zsh/_zi::any-colorify-as-uspl2
+ zinit-side.zsh/_zi::exists-physically-message
+ zinit-side.zsh/_zi::first
 
-.zinit-any-to-user-plugin
+_zi::any-to-user-plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -306,37 +306,37 @@ Uses feature(s): _setopt_
 
 Called by:
 
- .zinit-add-fpath
- .zinit-get-object-path
- .zinit-load
- .zinit-run
- :zinit-tmp-subst-autoload
- zinit-autoload.zsh/.zinit-any-to-uspl2
- zinit-autoload.zsh/.zinit-changes
- zinit-autoload.zsh/.zinit-compile-uncompile-all
- zinit-autoload.zsh/.zinit-compiled
- zinit-autoload.zsh/.zinit-create
- zinit-autoload.zsh/.zinit-delete
- zinit-autoload.zsh/.zinit-find-completions-of-plugin
- zinit-autoload.zsh/.zinit-glance
- zinit-autoload.zsh/.zinit-show-report
- zinit-autoload.zsh/.zinit-stress
- zinit-autoload.zsh/.zinit-uncompile-plugin
- zinit-autoload.zsh/.zinit-unload
- zinit-autoload.zsh/.zinit-unregister-plugin
- zinit-autoload.zsh/.zinit-update-all-parallel
- zinit-autoload.zsh/.zinit-update-or-status-all
- zinit-autoload.zsh/.zinit-update-or-status
- zinit-install.zsh/.zinit-install-completions
- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- zinit-side.zsh/.zinit-compute-ice
- zinit-side.zsh/.zinit-exists-physically-message
- zinit-side.zsh/.zinit-exists-physically
- zinit-side.zsh/.zinit-first
+ _zi::add-fpath
+ _zi::get-object-path
+ _zi::load
+ _zi::run
+ :zi::tmp-subst-autoload
+ zinit-autoload.zsh/_zi::any-to-uspl2
+ zinit-autoload.zsh/_zi::changes
+ zinit-autoload.zsh/_zi::compile-uncompile-all
+ zinit-autoload.zsh/_zi::compiled
+ zinit-autoload.zsh/_zi::create
+ zinit-autoload.zsh/_zi::delete
+ zinit-autoload.zsh/_zi::find-completions-of-plugin
+ zinit-autoload.zsh/_zi::glance
+ zinit-autoload.zsh/_zi::show-report
+ zinit-autoload.zsh/_zi::stress
+ zinit-autoload.zsh/_zi::uncompile-plugin
+ zinit-autoload.zsh/_zi::unload
+ zinit-autoload.zsh/_zi::unregister-plugin
+ zinit-autoload.zsh/_zi::update-all-parallel
+ zinit-autoload.zsh/_zi::update-or-status-all
+ zinit-autoload.zsh/_zi::update-or-status
+ zinit-install.zsh/_zi::install-completions
+ zinit-side.zsh/_zi::any-colorify-as-uspl2
+ zinit-side.zsh/_zi::compute-ice
+ zinit-side.zsh/_zi::exists-physically-message
+ zinit-side.zsh/_zi::exists-physically
+ zinit-side.zsh/_zi::first
 
 _Environment variables used:_ ZPFX
 
-.zinit-compdef-clear
+_zi::compdef-clear
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -346,8 +346,8 @@ ____
 
 Has 3 line(s). Calls functions:
 
- .zinit-compdef-clear
- `-- +zinit-message
+ _zi::compdef-clear
+ `-- +zi::message
 
 Called by:
 
@@ -355,7 +355,7 @@ Called by:
  zinit
  zpcdclear
 
-.zinit-compdef-replay
+_zi::compdef-replay
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -365,8 +365,8 @@ ____
 
 Has 17 line(s). Calls functions:
 
- .zinit-compdef-replay
- `-- +zinit-message
+ _zi::compdef-replay
+ `-- +zi::message
 
 Uses feature(s): _compdef_
 
@@ -376,7 +376,7 @@ Called by:
  zinit
  zpcdreplay
 
-.zinit-diff
+_zi::diff
 ~~~~~~~~~~~
 
 ____
@@ -386,15 +386,15 @@ ____
 
 Has 4 line(s). Calls functions:
 
- .zinit-diff
+ _zi::diff
 
 Called by:
 
- .zinit-load-plugin
- zinit-additional.zsh/.zinit-debug-start
- zinit-additional.zsh/.zinit-debug-stop
+ _zi::load-plugin
+ zinit-additional.zsh/_zi::debug-start
+ zinit-additional.zsh/_zi::debug-stop
 
-.zinit-diff-env
+_zi::diff-env
 ~~~~~~~~~~~~~~~
 
 ____
@@ -409,10 +409,10 @@ Has 18 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-diff
- .zinit-load-plugin
+ _zi::diff
+ _zi::load-plugin
 
-.zinit-diff-functions
+_zi::diff-functions
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -428,9 +428,9 @@ Has 8 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-diff
+ _zi::diff
 
-.zinit-diff-options
+_zi::diff-options
 ~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -446,9 +446,9 @@ Has 7 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-diff
+ _zi::diff
 
-.zinit-diff-parameter
+_zi::diff-parameter
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -464,9 +464,9 @@ Has 9 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-diff
+ _zi::diff
 
-.zinit-find-other-matches
+_zi::find-other-matches
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -480,80 +480,80 @@ Has 22 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-load-plugin
- .zinit-load-snippet
- zinit-side.zsh/.zinit-first
+ _zi::load-plugin
+ _zi::load-snippet
+ zinit-side.zsh/_zi::first
 
-.zinit-formatter-auto
+_zi::formatter-auto
 ~~~~~~~~~~~~~~~~~~~~~
 
 Has 50 line(s). Calls functions:
 
- .zinit-formatter-auto
+ _zi::formatter-auto
 
 Uses feature(s): _type_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-formatter-bar
+_zi::formatter-bar
 ~~~~~~~~~~~~~~~~~~~~
 
 Has 1 line(s). Calls functions:
 
- .zinit-formatter-bar
+ _zi::formatter-bar
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-formatter-bar-util
+_zi::formatter-bar-util
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 7 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-formatter-bar
- .zinit-formatter-th-bar
+ _zi::formatter-bar
+ _zi::formatter-th-bar
 
-.zinit-formatter-dbg
+_zi::formatter-dbg
 ~~~~~~~~~~~~~~~~~~~~
 
 Has 5 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-formatter-pid
+_zi::formatter-pid
 ~~~~~~~~~~~~~~~~~~~~
 
 Has 11 line(s). Calls functions:
 
- .zinit-formatter-pid
- `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ _zi::formatter-pid
+ `-- zinit-side.zsh/_zi::any-colorify-as-uspl2
 
 Uses feature(s): _source_
 
 Called by:
 
- .zinit-formatter-auto
+ _zi::formatter-auto
 
-.zinit-formatter-th-bar
+_zi::formatter-th-bar
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 1 line(s). Calls functions:
 
- .zinit-formatter-th-bar
+ _zi::formatter-th-bar
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-formatter-url
+_zi::formatter-url
 ~~~~~~~~~~~~~~~~~~~~
 
 Has 19 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-formatter-auto
+ _zi::formatter-auto
 
-.zinit-get-mtime-into
+_zi::get-mtime-into
 ~~~~~~~~~~~~~~~~~~~~~
 
 Has 7 line(s). Doesn't call other functions.
@@ -561,29 +561,29 @@ Has 7 line(s). Doesn't call other functions.
 Called by:
 
  Script-Body
- zinit-autoload.zsh/.zinit-self-update
- zinit-autoload.zsh/.zinit-update-or-status-all
+ zinit-autoload.zsh/_zi::self-update
+ zinit-autoload.zsh/_zi::update-or-status-all
 
-.zinit-get-object-path
+_zi::get-object-path
 ~~~~~~~~~~~~~~~~~~~~~~
 
 Has 28 line(s). Calls functions:
 
- .zinit-get-object-path
+ _zi::get-object-path
 
 Called by:
 
- .zinit-load-ices
- .zinit-load-snippet
- .zinit-run
+ _zi::load-ices
+ _zi::load-snippet
+ _zi::run
  zinit
- zinit-autoload.zsh/.zinit-get-path
- zinit-install.zsh/.zinit-setup-plugin-dir
- zinit-install.zsh/.zinit-update-snippet
- zinit-side.zsh/.zinit-first
- zinit-side.zsh/.zinit-two-paths
+ zinit-autoload.zsh/_zi::get-path
+ zinit-install.zsh/_zi::setup-plugin-dir
+ zinit-install.zsh/_zi::update-snippet
+ zinit-side.zsh/_zi::first
+ zinit-side.zsh/_zi::two-paths
 
-.zinit-ice
+_zi::ice
 ~~~~~~~~~~
 
 ____
@@ -603,7 +603,7 @@ Called by:
 
 _Environment variables used:_ ZPFX
 
-.zinit-load
+_zi::load
 ~~~~~~~~~~~
 
 ____
@@ -616,25 +616,25 @@ ____
 
 Has 95 line(s). Calls functions:
 
- .zinit-load
- |-- +zinit-deploy-message
- |-- zinit-install.zsh/.zinit-get-package
- `-- zinit-install.zsh/.zinit-setup-plugin-dir
+ _zi::load
+ |-- +zi::deploy-message
+ |-- zinit-install.zsh/_zi::get-package
+ `-- zinit-install.zsh/_zi::setup-plugin-dir
 
 Uses feature(s): _eval_, _setopt_, _source_, _zle_
 
 Called by:
 
- .zinit-load-object
- .zinit-run-task
- zinit-additional.zsh/.zinit-service
+ _zi::load-object
+ _zi::run-task
+ zinit-additional.zsh/_zi::service
 
-.zinit-load-ices
+_zi::load-ices
 ~~~~~~~~~~~~~~~~
 
 Has 22 line(s). Calls functions:
 
- .zinit-load-ices
+ _zi::load-ices
 
 Called by:
 
@@ -642,18 +642,18 @@ Called by:
 
 _Environment variables used:_ ZPFX
 
-.zinit-load-object
+_zi::load-object
 ~~~~~~~~~~~~~~~~~~
 
 Has 12 line(s). Calls functions:
 
- .zinit-load-object
+ _zi::load-object
 
 Called by:
 
  zinit
 
-.zinit-load-plugin
+_zi::load-plugin
 ~~~~~~~~~~~~~~~~~~
 
 ____
@@ -667,18 +667,18 @@ ____
 
 Has 128 line(s). Calls functions:
 
- .zinit-load-plugin
- `-- :zinit-tmp-subst-autoload
-     |-- +zinit-message
+ _zi::load-plugin
+ `-- :zi::tmp-subst-autoload
+     |-- +zi::message
      `-- is-at-least
 
 Uses feature(s): _eval_, _setopt_, _source_, _unfunction_, _zle_
 
 Called by:
 
- .zinit-load
+ _zi::load
 
-.zinit-load-snippet
+_zi::load-snippet
 ~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -690,29 +690,29 @@ ____
 
 Has 203 line(s). Calls functions:
 
- .zinit-load-snippet
- |-- +zinit-deploy-message
- |-- +zinit-message
- `-- zinit-install.zsh/.zinit-download-snippet
+ _zi::load-snippet
+ |-- +zi::deploy-message
+ |-- +zi::message
+ `-- zinit-install.zsh/_zi::download-snippet
 
 Uses feature(s): _autoload_, _eval_, _setopt_, _source_, _unfunction_, _zparseopts_, _zstyle_
 
 Called by:
 
- .zinit-load-object
- .zinit-load
- .zinit-run-task
+ _zi::load-object
+ _zi::load
+ _zi::run-task
  pmodload
- zinit-additional.zsh/.zinit-service
+ zinit-additional.zsh/_zi::service
 
-.zinit-main-message-formatter
+_zi::main-message-formatter
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 18 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-pack-ice
+_zi::pack-ice
 ~~~~~~~~~~~~~~~
 
 ____
@@ -726,14 +726,14 @@ Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-load-snippet
- .zinit-load
+ _zi::load-snippet
+ _zi::load
  @zsh-plugin-run-on-unload
  @zsh-plugin-run-on-update
- zinit-install.zsh/.zinit-update-snippet
- zinit-side.zsh/.zinit-compute-ice
+ zinit-install.zsh/_zi::update-snippet
+ zinit-side.zsh/_zi::compute-ice
 
-.zinit-parse-opts
+_zi::parse-opts
 ~~~~~~~~~~~~~~~~~
 
 Has 2 line(s). Doesn't call other functions.
@@ -741,9 +741,9 @@ Has 2 line(s). Doesn't call other functions.
 Called by:
 
  zinit
- zinit-autoload.zsh/.zinit-delete
+ zinit-autoload.zsh/_zi::delete
 
-.zinit-prepare-home
+_zi::prepare-home
 ~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -754,9 +754,9 @@ ____
 
 Has 45 line(s). Calls functions:
 
- .zinit-prepare-home
- |-- zinit-autoload.zsh/.zinit-clear-completions
- `-- zinit-install.zsh/.zinit-compinit
+ _zi::prepare-home
+ |-- zinit-autoload.zsh/_zi::clear-completions
+ `-- zinit-install.zsh/_zi::compinit
 
 Uses feature(s): _source_
 
@@ -766,7 +766,7 @@ Called by:
 
 _Environment variables used:_ ZPFX
 
-.zinit-register-plugin
+_zi::register-plugin
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -778,14 +778,14 @@ ____
 
 Has 23 line(s). Calls functions:
 
- .zinit-register-plugin
- `-- +zinit-message
+ _zi::register-plugin
+ `-- +zi::message
 
 Called by:
 
- .zinit-load
+ _zi::load
 
-.zinit-run
+_zi::run
 ~~~~~~~~~~
 
 ____
@@ -796,8 +796,8 @@ ____
 
 Has 24 line(s). Calls functions:
 
- .zinit-run
- `-- +zinit-message
+ _zi::run
+ `-- +zi::message
 
 Uses feature(s): _eval_, _setopt_
 
@@ -805,12 +805,12 @@ Called by:
 
  zinit
 
-.zinit-run-task
+_zi::run-task
 ~~~~~~~~~~~~~~~
 
 ____
  
- A backend, worker function of .zinit-scheduler. It obtains the tasks
+ A backend, worker function of _zi::scheduler. It obtains the tasks
  index and a few of its properties (like the type: plugin, snippet,
  service plugin, service snippet) and executes it first checking for
  additional conditions (like non-numeric wait'' ice).
@@ -825,16 +825,16 @@ ____
 
 Has 47 line(s). Calls functions:
 
- .zinit-run-task
- `-- zinit-autoload.zsh/.zinit-unload
+ _zi::run-task
+ `-- zinit-autoload.zsh/_zi::unload
 
 Uses feature(s): _eval_, _source_, _zle_, _zpty_
 
 Called by:
 
- @zinit-scheduler
+ @zi::scheduler
 
-.zinit-set-m-func
+_zi::set-m-func
 ~~~~~~~~~~~~~~~~~
 
 ____
@@ -845,28 +845,28 @@ ____
 
 Has 17 line(s). Calls functions:
 
- .zinit-set-m-func
- `-- +zinit-message
+ _zi::set-m-func
+ `-- +zi::message
 
 Uses feature(s): _setopt_
 
 Called by:
 
- .zinit-load-snippet
- .zinit-load
- zinit-autoload.zsh/.zinit-update-or-status
+ _zi::load-snippet
+ _zi::load
+ zinit-autoload.zsh/_zi::update-or-status
 
-.zinit-setup-params
+_zi::setup-params
 ~~~~~~~~~~~~~~~~~~~
 
 Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
- .zinit-load-snippet
- .zinit-load
+ _zi::load-snippet
+ _zi::load
 
-.zinit-submit-turbo
+_zi::submit-turbo
 ~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -874,7 +874,7 @@ ____
  If `zinit load`, `zinit light` or `zinit snippet`  will be
  preceded with 'wait', 'load', 'unload' or 'on-update-of'/'subscribe'
  ice-mods then the plugin or snipped is to be loaded in turbo-mode,
- and this function adds it to internal data structures. @zinit-scheduler uses the data to
+ and this function adds it to internal data structures. @zi::scheduler uses the data to
  create load or unload tasks.
 ____
 
@@ -884,7 +884,7 @@ Called by:
 
  zinit
 
-.zinit-tmp-subst-off
+_zi::tmp-subst-off
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -899,10 +899,10 @@ Uses feature(s): _setopt_, _unfunction_
 
 Called by:
 
- .zinit-load-plugin
- zinit-additional.zsh/.zinit-debug-stop
+ _zi::load-plugin
+ zinit-additional.zsh/_zi::debug-stop
 
-.zinit-tmp-subst-on
+_zi::tmp-subst-on
 ~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -918,10 +918,10 @@ Uses feature(s): _source_
 
 Called by:
 
- .zinit-load-plugin
- zinit-additional.zsh/.zinit-debug-start
+ _zi::load-plugin
+ zinit-additional.zsh/_zi::debug-start
 
-.zinit-util-shands-path
+_zi::util-shands-path
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -935,11 +935,11 @@ Uses feature(s): _setopt_
 
 Called by:
 
- .zinit-any-to-pid
+ _zi::any-to-pid
 
 _Environment variables used:_ ZPFX
 
-:zinit-reload-and-run
+:zi::reload-and-run
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -949,7 +949,7 @@ ____
  This function replaces "autoload -X", because using that on older Zsh
  versions causes problems with traps.
  
- So basically one creates function stub that calls :zinit-reload-and-run()
+ So basically one creates function stub that calls :zi::reload-and-run()
  instead of "autoload -X".
  
  Author: Bart Schaefer
@@ -965,7 +965,7 @@ Uses feature(s): _autoload_, _unfunction_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-:zinit-tmp-subst-alias
+:zi::tmp-subst-alias
 ~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -977,13 +977,13 @@ ____
 
 Has 36 line(s). Calls functions:
 
- :zinit-tmp-subst-alias
+ :zi::tmp-subst-alias
 
 Uses feature(s): _alias_, _setopt_, _zparseopts_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-:zinit-tmp-subst-autoload
+:zi::tmp-subst-autoload
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -995,18 +995,18 @@ ____
 
 Has 111 line(s). Calls functions:
 
- :zinit-tmp-subst-autoload
- |-- +zinit-message
+ :zi::tmp-subst-autoload
+ |-- +zi::message
  `-- is-at-least
 
 Uses feature(s): _autoload_, _eval_, _is-at-least_, _setopt_, _zparseopts_
 
 Called by:
 
- .zinit-load-plugin
+ _zi::load-plugin
  @autoload
 
-:zinit-tmp-subst-bindkey
+:zi::tmp-subst-bindkey
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -1018,14 +1018,14 @@ ____
 
 Has 120 line(s). Calls functions:
 
- :zinit-tmp-subst-bindkey
+ :zi::tmp-subst-bindkey
  `-- is-at-least
 
 Uses feature(s): _bindkey_, _is-at-least_, _setopt_, _zparseopts_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-:zinit-tmp-subst-compdef
+:zi::tmp-subst-compdef
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -1037,13 +1037,13 @@ ____
 
 Has 6 line(s). Calls functions:
 
- :zinit-tmp-subst-compdef
+ :zi::tmp-subst-compdef
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-:zinit-tmp-subst-zle
+:zi::tmp-subst-zle
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -1055,13 +1055,13 @@ ____
 
 Has 36 line(s). Calls functions:
 
- :zinit-tmp-subst-zle
+ :zi::tmp-subst-zle
 
 Uses feature(s): _setopt_, _zle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-:zinit-tmp-subst-zstyle
+:zi::tmp-subst-zstyle
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -1073,7 +1073,7 @@ ____
 
 Has 23 line(s). Calls functions:
 
- :zinit-tmp-subst-zstyle
+ :zi::tmp-subst-zstyle
 
 Uses feature(s): _setopt_, _zparseopts_, _zstyle_
 
@@ -1085,13 +1085,13 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 Has 4 line(s). Calls functions:
 
  @autoload
- `-- :zinit-tmp-subst-autoload
-     |-- +zinit-message
+ `-- :zi::tmp-subst-autoload
+     |-- +zi::message
      `-- is-at-least
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-@zinit-register-annex
+@zi::register-annex
 ~~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -1106,7 +1106,7 @@ Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-@zinit-register-hook
+@zi::register-hook
 ~~~~~~~~~~~~~~~~~~~~
 
 ____
@@ -1122,7 +1122,7 @@ Called by:
 
  Script-Body
 
-@zinit-scheduler
+@zi::scheduler
 ~~~~~~~~~~~~~~~~
 
 ____
@@ -1134,7 +1134,7 @@ ____
  
  $1 - if "following", then it is non-first (second and more)
  invocation of the scheduler; this results in chain of 'sched'
- invocations that results in repetitive @zinit-scheduler activity.
+ invocations that results in repetitive @zi::scheduler activity.
  
  if "burst", then all tasks are marked timeout and executed one
  by one; this is handy if e.g. a docker image starts up and
@@ -1145,14 +1145,14 @@ ____
 
 Has 75 line(s). *Is a precmd hook*. Calls functions:
 
- @zinit-scheduler
+ @zi::scheduler
  `-- add-zsh-hook
 
 Uses feature(s): _add-zsh-hook_, _sched_, _setopt_, _zle_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-@zinit-substitute
+@zi::substitute
 ~~~~~~~~~~~~~~~~~
 
 Has 40 line(s). Doesn't call other functions.
@@ -1161,15 +1161,15 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zinit-autoload.zsh/.zinit-at-eval
- zinit-install.zsh/.zinit-at-eval
- zinit-install.zsh/.zinit-get-package
- zinit-install.zsh/∞zinit-atclone-hook
- zinit-install.zsh/∞zinit-configure-base-hook
- zinit-install.zsh/∞zinit-cp-hook
- zinit-install.zsh/∞zinit-extract-hook
- zinit-install.zsh/∞zinit-make-base-hook
- zinit-install.zsh/∞zinit-mv-hook
+ zinit-autoload.zsh/_zi::at-eval
+ zinit-install.zsh/_zi::at-eval
+ zinit-install.zsh/_zi::get-package
+ zinit-install.zsh/~zi::atclone-hook
+ zinit-install.zsh/~zi::configure-base-hook
+ zinit-install.zsh/~zi::cp-hook
+ zinit-install.zsh/~zi::extract-hook
+ zinit-install.zsh/~zi::make-base-hook
+ zinit-install.zsh/~zi::mv-hook
 
 _Environment variables used:_ ZPFX
 
@@ -1287,43 +1287,43 @@ ____
 Has 560 line(s). Calls functions:
 
  zinit
- |-- +zinit-message
- |-- +zinit-prehelp-usage-message
- |   `-- +zinit-message
+ |-- +zi::message
+ |-- +zi::prehelp-usage-message
+ |   `-- +zi::message
  |-- compinit
- |-- zinit-additional.zsh/.zinit-clear-debug-report
- |-- zinit-additional.zsh/.zinit-debug-start
- |-- zinit-additional.zsh/.zinit-debug-stop
- |-- zinit-additional.zsh/.zinit-debug-unload
- |-- zinit-autoload.zsh/.zinit-cdisable
- |-- zinit-autoload.zsh/.zinit-cenable
- |-- zinit-autoload.zsh/.zinit-clear-completions
- |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
- |-- zinit-autoload.zsh/.zinit-compiled
- |-- zinit-autoload.zsh/.zinit-help
- |-- zinit-autoload.zsh/.zinit-list-bindkeys
- |-- zinit-autoload.zsh/.zinit-list-compdef-replay
- |-- zinit-autoload.zsh/.zinit-ls
- |-- zinit-autoload.zsh/.zinit-module
- |-- zinit-autoload.zsh/.zinit-recently
- |-- zinit-autoload.zsh/.zinit-search-completions
- |-- zinit-autoload.zsh/.zinit-self-update
- |-- zinit-autoload.zsh/.zinit-show-all-reports
- |-- zinit-autoload.zsh/.zinit-show-completions
- |-- zinit-autoload.zsh/.zinit-show-debug-report
- |-- zinit-autoload.zsh/.zinit-show-registered-plugins
- |-- zinit-autoload.zsh/.zinit-show-report
- |-- zinit-autoload.zsh/.zinit-show-times
- |-- zinit-autoload.zsh/.zinit-show-zstatus
- |-- zinit-autoload.zsh/.zinit-uncompile-plugin
- |-- zinit-autoload.zsh/.zinit-uninstall-completions
- |-- zinit-autoload.zsh/.zinit-unload
- |-- zinit-autoload.zsh/.zinit-update-or-status
- |-- zinit-autoload.zsh/.zinit-update-or-status-all
- |-- zinit-install.zsh/.zinit-compile-plugin
- |-- zinit-install.zsh/.zinit-compinit
- |-- zinit-install.zsh/.zinit-forget-completion
- `-- zinit-install.zsh/.zinit-install-completions
+ |-- zinit-additional.zsh/_zi::clear-debug-report
+ |-- zinit-additional.zsh/_zi::debug-start
+ |-- zinit-additional.zsh/_zi::debug-stop
+ |-- zinit-additional.zsh/_zi::debug-unload
+ |-- zinit-autoload.zsh/_zi::cdisable
+ |-- zinit-autoload.zsh/_zi::cenable
+ |-- zinit-autoload.zsh/_zi::clear-completions
+ |-- zinit-autoload.zsh/_zi::compile-uncompile-all
+ |-- zinit-autoload.zsh/_zi::compiled
+ |-- zinit-autoload.zsh/_zi::help
+ |-- zinit-autoload.zsh/_zi::list-bindkeys
+ |-- zinit-autoload.zsh/_zi::list-compdef-replay
+ |-- zinit-autoload.zsh/_zi::ls
+ |-- zinit-autoload.zsh/_zi::module
+ |-- zinit-autoload.zsh/_zi::recently
+ |-- zinit-autoload.zsh/_zi::search-completions
+ |-- zinit-autoload.zsh/_zi::self-update
+ |-- zinit-autoload.zsh/_zi::show-all-reports
+ |-- zinit-autoload.zsh/_zi::show-completions
+ |-- zinit-autoload.zsh/_zi::show-debug-report
+ |-- zinit-autoload.zsh/_zi::show-registered-plugins
+ |-- zinit-autoload.zsh/_zi::show-report
+ |-- zinit-autoload.zsh/_zi::show-times
+ |-- zinit-autoload.zsh/_zi::show-zstatus
+ |-- zinit-autoload.zsh/_zi::uncompile-plugin
+ |-- zinit-autoload.zsh/_zi::uninstall-completions
+ |-- zinit-autoload.zsh/_zi::unload
+ |-- zinit-autoload.zsh/_zi::update-or-status
+ |-- zinit-autoload.zsh/_zi::update-or-status-all
+ |-- zinit-install.zsh/_zi::compile-plugin
+ |-- zinit-install.zsh/_zi::compinit
+ |-- zinit-install.zsh/_zi::forget-completion
+ `-- zinit-install.zsh/_zi::install-completions
 
 Uses feature(s): _autoload_, _compinit_, _eval_, _setopt_, _source_
 
@@ -1376,43 +1376,43 @@ Has 1 line(s). Calls functions:
 
  zplugin
  `-- zinit
-     |-- +zinit-message
-     |-- +zinit-prehelp-usage-message
-     |   `-- +zinit-message
+     |-- +zi::message
+     |-- +zi::prehelp-usage-message
+     |   `-- +zi::message
      |-- compinit
-     |-- zinit-additional.zsh/.zinit-clear-debug-report
-     |-- zinit-additional.zsh/.zinit-debug-start
-     |-- zinit-additional.zsh/.zinit-debug-stop
-     |-- zinit-additional.zsh/.zinit-debug-unload
-     |-- zinit-autoload.zsh/.zinit-cdisable
-     |-- zinit-autoload.zsh/.zinit-cenable
-     |-- zinit-autoload.zsh/.zinit-clear-completions
-     |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
-     |-- zinit-autoload.zsh/.zinit-compiled
-     |-- zinit-autoload.zsh/.zinit-help
-     |-- zinit-autoload.zsh/.zinit-list-bindkeys
-     |-- zinit-autoload.zsh/.zinit-list-compdef-replay
-     |-- zinit-autoload.zsh/.zinit-ls
-     |-- zinit-autoload.zsh/.zinit-module
-     |-- zinit-autoload.zsh/.zinit-recently
-     |-- zinit-autoload.zsh/.zinit-search-completions
-     |-- zinit-autoload.zsh/.zinit-self-update
-     |-- zinit-autoload.zsh/.zinit-show-all-reports
-     |-- zinit-autoload.zsh/.zinit-show-completions
-     |-- zinit-autoload.zsh/.zinit-show-debug-report
-     |-- zinit-autoload.zsh/.zinit-show-registered-plugins
-     |-- zinit-autoload.zsh/.zinit-show-report
-     |-- zinit-autoload.zsh/.zinit-show-times
-     |-- zinit-autoload.zsh/.zinit-show-zstatus
-     |-- zinit-autoload.zsh/.zinit-uncompile-plugin
-     |-- zinit-autoload.zsh/.zinit-uninstall-completions
-     |-- zinit-autoload.zsh/.zinit-unload
-     |-- zinit-autoload.zsh/.zinit-update-or-status
-     |-- zinit-autoload.zsh/.zinit-update-or-status-all
-     |-- zinit-install.zsh/.zinit-compile-plugin
-     |-- zinit-install.zsh/.zinit-compinit
-     |-- zinit-install.zsh/.zinit-forget-completion
-     `-- zinit-install.zsh/.zinit-install-completions
+     |-- zinit-additional.zsh/_zi::clear-debug-report
+     |-- zinit-additional.zsh/_zi::debug-start
+     |-- zinit-additional.zsh/_zi::debug-stop
+     |-- zinit-additional.zsh/_zi::debug-unload
+     |-- zinit-autoload.zsh/_zi::cdisable
+     |-- zinit-autoload.zsh/_zi::cenable
+     |-- zinit-autoload.zsh/_zi::clear-completions
+     |-- zinit-autoload.zsh/_zi::compile-uncompile-all
+     |-- zinit-autoload.zsh/_zi::compiled
+     |-- zinit-autoload.zsh/_zi::help
+     |-- zinit-autoload.zsh/_zi::list-bindkeys
+     |-- zinit-autoload.zsh/_zi::list-compdef-replay
+     |-- zinit-autoload.zsh/_zi::ls
+     |-- zinit-autoload.zsh/_zi::module
+     |-- zinit-autoload.zsh/_zi::recently
+     |-- zinit-autoload.zsh/_zi::search-completions
+     |-- zinit-autoload.zsh/_zi::self-update
+     |-- zinit-autoload.zsh/_zi::show-all-reports
+     |-- zinit-autoload.zsh/_zi::show-completions
+     |-- zinit-autoload.zsh/_zi::show-debug-report
+     |-- zinit-autoload.zsh/_zi::show-registered-plugins
+     |-- zinit-autoload.zsh/_zi::show-report
+     |-- zinit-autoload.zsh/_zi::show-times
+     |-- zinit-autoload.zsh/_zi::show-zstatus
+     |-- zinit-autoload.zsh/_zi::uncompile-plugin
+     |-- zinit-autoload.zsh/_zi::uninstall-completions
+     |-- zinit-autoload.zsh/_zi::unload
+     |-- zinit-autoload.zsh/_zi::update-or-status
+     |-- zinit-autoload.zsh/_zi::update-or-status-all
+     |-- zinit-install.zsh/_zi::compile-plugin
+     |-- zinit-install.zsh/_zi::compinit
+     |-- zinit-install.zsh/_zi::forget-completion
+     `-- zinit-install.zsh/_zi::install-completions
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1439,7 +1439,7 @@ Uses feature(s): _autoload_, _getopts_
 
 Called by:
 
- @zinit-scheduler
+ @zi::scheduler
  Script-Body
 
 compinit
@@ -1490,8 +1490,8 @@ Has 56 line(s). Doesn't call other functions.
 
 Called by:
 
- :zinit-tmp-subst-autoload
- :zinit-tmp-subst-bindkey
+ :zi::tmp-subst-autoload
+ :zi::tmp-subst-bindkey
  Script-Body
- zinit-install.zsh/.zinit-download-snippet
+ zinit-install.zsh/_zi::download-snippet
 

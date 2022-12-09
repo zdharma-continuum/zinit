@@ -3,7 +3,7 @@
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
 # Copyright (c) 2021-2022 zdharma-continuum and contributors
 
-# FUNCTION: .zinit-any-colorify-as-uspl2 [[[
+# FUNCTION: _zi::any-colorify-as-uspl2 [[[
 # Returns ANSI-colorified "user/plugin" string, from any supported
 # plugin spec (user---plugin, user/plugin, user plugin, plugin).
 #
@@ -11,11 +11,11 @@
 # $2 - plugin (only when $1 - i.e. user - given)
 #
 # $REPLY - ANSI-colorified "user/plugin" string
-.zinit-any-colorify-as-uspl2() {
-  .zinit-any-to-user-plugin "$1" "$2"
+_zi::any-colorify-as-uspl2() {
+  _zi::any-to-user-plugin "$1" "$2"
   local user="${reply[-2]}" plugin="${reply[-1]}"
   if [[ "$user" = "%" ]]; then
-    .zinit-any-to-pid "" $plugin
+    _zi::any-to-pid "" $plugin
     REPLY="${REPLY/https--github.com--(robbyrussell--oh-my-zsh|ohmyzsh--ohmyzsh)--trunk--plugins--/OMZP::}"
     REPLY="${REPLY/https--github.com--(robbyrussell--oh-my-zsh|ohmyzsh--ohmyzsh)--trunk--plugins/OMZP}"
     REPLY="${REPLY/https--github.com--(robbyrussell--oh-my-zsh|ohmyzsh--ohmyzsh)--trunk--lib--/OMZL::}"
@@ -35,7 +35,7 @@
     REPLY="${user:+${ZINIT[col-uname]}${user}${ZINIT[col-rst]}/}${ZINIT[col-pname]}${plugin}${ZINIT[col-rst]}"
   fi
 } # ]]]
-# FUNCTION: .zinit-compute-ice [[[
+# FUNCTION: _zi::compute-ice [[[
 # Computes ICE array
 #   - input
 #   - static
@@ -55,14 +55,14 @@
 # $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
 #
 # $REPLY - snippet directory filepath
-.zinit-compute-ice() {
+_zi::compute-ice() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob typesetsilent warncreateglobal noshortloops
 
   local ___URL="${1%/}" ___pack="$2" ___is_snippet=0
   local ___var_name1="${3:-ZINIT_ICE}" ___var_name2="${4:-local_dir}" ___var_name3="${5:-filename}" ___var_name4="${6:-is_snippet}"
 
-  # Copy from .zinit-recall
+  # Copy from _zi::recall
   local -a ice_order nval_ices
   ice_order=(
     ${(s.|.)ZINIT[ice-list]}
@@ -81,21 +81,21 @@
   ___URL="${${___URL#"${___URL%%[! $'\t']*}"}%/}"
 
   # snippet
-  .zinit-two-paths "$___URL"
+  _zi::two-paths "$___URL"
   local ___s_path="${reply[-4]}" ___s_svn="${reply[-3]}" ___path="${reply[-2]}" ___filename="${reply[-1]}" ___local_dir
 
   if [[ -d "$___s_path" || -d "$___path" ]]; then
     ___is_snippet=1
   else
     # plugin
-    .zinit-any-to-user-plugin "$___URL" ""
+    _zi::any-to-user-plugin "$___URL" ""
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}"
     ___s_path="" ___filename=""
     [[ "$___user" = "%" ]] && ___path="$___plugin" || ___path="${ZINIT[PLUGINS_DIR]}/${___user:+${___user}---}${___plugin//\//---}"
-    .zinit-exists-physically-message "$___user" "$___plugin" || return 1
+    _zi::exists-physically-message "$___user" "$___plugin" || return 1
   fi
 
-  [[ $___pack = pack* ]] && (( ${#ICE} > 0 )) && .zinit-pack-ice "${___user-$___URL}" "$___plugin"
+  [[ $___pack = pack* ]] && (( ${#ICE} > 0 )) && _zi::pack-ice "${___user-$___URL}" "$___plugin"
 
   local -A ___sice
   local -a ___tmp
@@ -191,15 +191,15 @@
 
   return 0
 } # ]]]
-# FUNCTION: .zinit-countdown [[[
+# FUNCTION: _zi::countdown [[[
 # Displays a countdown 5...4... etc.
 #
 # $REPLY - 1 if Ctrl-C is pressed, otherwise 0
-.zinit-countdown() {
+_zi::countdown() {
   (( !${+ICE[countdown]} )) && return 0
 
   builtin emulate -L zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
-  trap "+zinit-message \"{ehi}ABORTING, the ice {ice}$ice{ehi} not ran{rst}\"; return 1" INT
+  trap "+zi::message \"{ehi}ABORTING, the ice {ice}$ice{ehi} not ran{rst}\"; return 1" INT
 
   local count=5 ice tpe="$1"
 
@@ -207,23 +207,23 @@
   [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ICE[atclone]}"
   ice="{b}{ice}$tpe{ehi}:{rst}${ice//(#b)(\{[a-z0-9…–_-]##\})/\\$match[1]}"
 
-  +zinit-message -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
+  +zi::message -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
 
   while (( -- count + 1 )) {
-    +zinit-message -n -- "{b}{error}"$(( count + 1 ))"{rst}{…}"
+    +zi::message -n -- "{b}{error}"$(( count + 1 ))"{rst}{…}"
     sleep 1
   }
 
-  +zinit-message -r -- "{b}{error}0 <running now>{rst}{…}"
+  +zi::message -r -- "{b}{error}0 <running now>{rst}{…}"
   return 0
 } # ]]]
-# FUNCTION: .zinit-exists-physically [[[
+# FUNCTION: _zi::exists-physically [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-.zinit-exists-physically() {
-  .zinit-any-to-user-plugin "$1" "$2"
+_zi::exists-physically() {
+  _zi::any-to-user-plugin "$1" "$2"
   if [[ ${reply[-2]} = % ]]; then
     [[ -d ${reply[-1]} ]] && return 0 || return 1
   else
@@ -232,19 +232,19 @@
       || return 1
   fi
 } # ]]]
-# FUNCTION: .zinit-exists-physically-message [[[
+# FUNCTION: _zi::exists-physically-message [[[
 # Checks if directory of given plugin exists in PLUGIN_DIR, and outputs error
 # message if it doesn't.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-.zinit-exists-physically-message() {
+_zi::exists-physically-message() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
-  if ! .zinit-exists-physically "$1" "$2"; then
-    .zinit-any-to-user-plugin "$1" "$2"
+  if ! _zi::exists-physically "$1" "$2"; then
+    _zi::any-to-user-plugin "$1" "$2"
     if [[ $reply[1] = % ]]; then
-      .zinit-any-to-pid "$1" "$2"
+      _zi::any-to-pid "$1" "$2"
       local spec1=$REPLY
       if [[ $1 = %* ]]; then
         local spec2=%${1#%}${${1#%}:+${2:+/}}$2
@@ -254,32 +254,32 @@
     else
       integer nospec=1
     fi
-    .zinit-any-colorify-as-uspl2 "$1" "$2"
+    _zi::any-colorify-as-uspl2 "$1" "$2"
 
-    +zinit-message "{error}No such (plugin or snippet){rst}: $REPLY."
+    +zi::message "{error}No such (plugin or snippet){rst}: $REPLY."
 
     [[ $nospec -eq 0 && $spec1 != $spec2 ]] \
-      && +zinit-message "(expands to: {file}${spec2#%}{rst})."
+      && +zi::message "(expands to: {file}${spec2#%}{rst})."
 
     return 1
   fi
   return 0
 } # ]]]
-# FUNCTION: .zinit-first [[[
+# FUNCTION: _zi::first [[[
 # Finds the main file of plugin. There are multiple file name formats, they are
 # ordered in order starting from more correct ones, and matched.
-# .zinit-load-plugin() has similar code parts and doesn't call .zinit-first() –
-# for performance. Obscure matching is done in .zinit-find-other-matches, here
-# and in .zinit-load(). Obscure = non-standard main-file naming convention.
+# _zi::load-plugin() has similar code parts and doesn't call _zi::first() –
+# for performance. Obscure matching is done in _zi::find-other-matches, here
+# and in _zi::load(). Obscure = non-standard main-file naming convention.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-.zinit-first() {
-  .zinit-any-to-user-plugin "$1" "$2"
+_zi::first() {
+  _zi::any-to-user-plugin "$1" "$2"
   local user="${reply[-2]}" plugin="${reply[-1]}"
 
-  .zinit-any-to-pid "$1" "$2"
-  .zinit-get-object-path plugin "$REPLY"
+  _zi::any-to-pid "$1" "$2"
+  _zi::get-object-path plugin "$REPLY"
   integer ret=$?
   local dname="$REPLY"
   (( ret )) && { reply=( "$dname" "" ); return 1; }
@@ -289,7 +289,7 @@
   if [[ -e "$dname/$plugin.plugin.zsh" ]]; then
     reply=( "$dname/$plugin.plugin.zsh" )
   else
-    .zinit-find-other-matches "$dname" "$plugin"
+    _zi::find-other-matches "$dname" "$plugin"
   fi
 
   if [[ "${#reply}" -eq "0" ]]; then
@@ -301,7 +301,7 @@
   reply=( "$dname" "${reply[-${#reply}]}" )
   return 0
 } # ]]]
-# FUNCTION: .zinit-store-ices [[[
+# FUNCTION: _zi::store-ices [[[
 # Saves ice mods in given hash onto disk.
 #
 # $1 - directory where to create or delete files
@@ -310,7 +310,7 @@
 # $4 - additional keys of hash to store, empty-meaningful ices, space separated
 # $5 – URL, if applicable
 # $6 – mode, svn=1, 0=single file
-.zinit-store-ices() {
+_zi::store-ices() {
   local ___pfx="$1" ___ice_var="$2" ___add_ices="$3" ___add_ices2="$4"
   local url="$5" mode="$6"
 
@@ -353,13 +353,13 @@
     [[ -n "${(P)___key}" ]] && builtin print -r -- "${(P)___key}" >! "$___pfx"/"$___key"
   done
 } # ]]]
-# FUNCTION: .zinit-two-paths [[[
+# FUNCTION: _zi::two-paths [[[
 # Obtains a snippet URL without specification if it is an SVN URL (points to
 # directory) or regular URL (points to file), returns 2 possible paths for
 # further examination
 #
 # $REPLY - two filepaths
-.zinit-two-paths() {
+_zi::two-paths() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
   setopt extendedglob typesetsilent warncreateglobal noshortloops
 
@@ -371,16 +371,16 @@
   url1=$url
   url2=$url
 
-  .zinit-get-object-path snippet "$url1"
+  _zi::get-object-path snippet "$url1"
   local_dirA=$reply[-3] dirnameA=$reply[-2]
   [[ -d "$local_dirA/$dirnameA/.svn" ]] && {
     svn_dirA=".svn"
-    if { .zinit-first % "$local_dirA/$dirnameA"; } {
+    if { _zi::first % "$local_dirA/$dirnameA"; } {
       fileB_there=( ${reply[-1]} )
     }
   }
 
-  .zinit-get-object-path snippet "$url2"
+  _zi::get-object-path snippet "$url2"
   local_dirB=$reply[-3] dirnameB=$reply[-2]
 
   [[ -z $svn_dirA ]] && fileB_there=( "$local_dirB/$dirnameB"/*~*.(zwc|md|js|html)(.-DOnN[1]) )
