@@ -13,13 +13,13 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
+ :zi::tmp-subst-source
  _zi::clear-debug-report
  _zi::debug-start
  _zi::debug-stop
  _zi::debug-unload
  _zi::service
  _zi::wrap-track-functions
- :zi::tmp-subst-source
 
 DETAILS
 -------
@@ -29,8 +29,20 @@ Script Body
 
 Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
+:zi::tmp-subst-source
+~~~~~~~~~~~~~~~~~~~~~
+
+Has 25 line(s). Calls functions:
+
+ :zi::tmp-subst-source
+ `-- zinit.zsh/+zi::message
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
 _zi::clear-debug-report
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -48,7 +60,7 @@ Called by:
  zinit.zsh/zinit
 
 _zi::debug-start
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 ____
  
@@ -67,7 +79,7 @@ Called by:
  zinit.zsh/zinit
 
 _zi::debug-stop
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -85,7 +97,7 @@ Called by:
  zinit.zsh/zinit
 
 _zi::debug-unload
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -105,7 +117,7 @@ Called by:
  zinit.zsh/zinit
 
 _zi::service
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 ____
  
@@ -127,21 +139,9 @@ Uses feature(s): _kill_, _read_, _setopt_
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::wrap-track-functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 19 line(s). Doesn't call other functions.
-
-Uses feature(s): _eval_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-:zi::tmp-subst-source
-~~~~~~~~~~~~~~~~~~~~~~~
-
-Has 25 line(s). Calls functions:
-
- :zi::tmp-subst-source
- `-- zinit.zsh/+zi::message
 
 Uses feature(s): _eval_
 

@@ -31,7 +31,7 @@ Script Body
 Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 _zi::any-colorify-as-uspl2
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -75,7 +75,7 @@ Called by:
  zinit.zsh/_zi::formatter-pid
 
 _zi::compute-ice
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 ____
  
@@ -103,6 +103,22 @@ ____
 Has 110 line(s). Calls functions:
 
  _zi::compute-ice
+ |-- _zi::exists-physically-message
+ |   |-- _zi::any-colorify-as-uspl2
+ |   |   |-- zinit.zsh/_zi::any-to-pid
+ |   |   `-- zinit.zsh/_zi::any-to-user-plugin
+ |   |-- _zi::exists-physically
+ |   |   `-- zinit.zsh/_zi::any-to-user-plugin
+ |   |-- zinit.zsh/+zi::message
+ |   |-- zinit.zsh/_zi::any-to-pid
+ |   `-- zinit.zsh/_zi::any-to-user-plugin
+ |-- _zi::two-paths
+ |   |-- _zi::first
+ |   |   |-- zinit.zsh/_zi::any-to-pid
+ |   |   |-- zinit.zsh/_zi::any-to-user-plugin
+ |   |   |-- zinit.zsh/_zi::find-other-matches
+ |   |   `-- zinit.zsh/_zi::get-object-path
+ |   `-- zinit.zsh/_zi::get-object-path
  |-- zinit.zsh/_zi::any-to-user-plugin
  `-- zinit.zsh/_zi::pack-ice
 
@@ -118,7 +134,7 @@ Called by:
  zinit-install.zsh/_zi::compile-plugin
 
 _zi::countdown
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 ____
  
@@ -137,15 +153,15 @@ Uses feature(s): _trap_
 Called by:
 
  zinit-autoload.zsh/_zi::run-delete-hooks
+ zinit-install.zsh/\~zi::atclone-hook
+ zinit-install.zsh/\~zi::atpull-e-hook
+ zinit-install.zsh/\~zi::atpull-hook
+ zinit-install.zsh/\~zi::configure-base-hook
+ zinit-install.zsh/\~zi::make-base-hook
  zinit-install.zsh/_zi::configure-run-autoconf
- zinit-install.zsh/~zi::atclone-hook
- zinit-install.zsh/~zi::atpull-e-hook
- zinit-install.zsh/~zi::atpull-hook
- zinit-install.zsh/~zi::configure-base-hook
- zinit-install.zsh/~zi::make-base-hook
 
 _zi::exists-physically
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -167,7 +183,7 @@ Called by:
  zinit-autoload.zsh/_zi::update-or-status
 
 _zi::exists-physically-message
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -181,6 +197,11 @@ ____
 Has 25 line(s). Calls functions:
 
  _zi::exists-physically-message
+ |-- _zi::any-colorify-as-uspl2
+ |   |-- zinit.zsh/_zi::any-to-pid
+ |   `-- zinit.zsh/_zi::any-to-user-plugin
+ |-- _zi::exists-physically
+ |   `-- zinit.zsh/_zi::any-to-user-plugin
  |-- zinit.zsh/+zi::message
  |-- zinit.zsh/_zi::any-to-pid
  `-- zinit.zsh/_zi::any-to-user-plugin
@@ -197,7 +218,7 @@ Called by:
  zinit-install.zsh/_zi::install-completions
 
 _zi::first
-~~~~~~~~~~~~
+~~~~~~~~~~
 
 ____
  
@@ -227,7 +248,7 @@ Called by:
  zinit-install.zsh/_zi::compile-plugin
 
 _zi::store-ices
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -250,7 +271,7 @@ Called by:
  zinit-install.zsh/_zi::setup-plugin-dir
 
 _zi::two-paths
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 ____
  
@@ -264,6 +285,11 @@ ____
 Has 24 line(s). Calls functions:
 
  _zi::two-paths
+ |-- _zi::first
+ |   |-- zinit.zsh/_zi::any-to-pid
+ |   |-- zinit.zsh/_zi::any-to-user-plugin
+ |   |-- zinit.zsh/_zi::find-other-matches
+ |   `-- zinit.zsh/_zi::get-object-path
  `-- zinit.zsh/_zi::get-object-path
 
 Uses feature(s): _setopt_

@@ -17,6 +17,19 @@ FUNCTIONS
  +zi::message
  +zi::prehelp-usage-message
  -zinit_scheduler_add_sh
+ :zi::reload-and-run
+ :zi::tmp-subst-alias
+ :zi::tmp-subst-autoload
+ :zi::tmp-subst-bindkey
+ :zi::tmp-subst-compdef
+ :zi::tmp-subst-zle
+ :zi::tmp-subst-zstyle
+ @autoload
+ @zi::register-annex
+ @zi::register-hook
+ @zi::substitute
+ @zsh-plugin-run-on-unload
+ @zsh-plugin-run-on-update
  _zi::add-fpath
  _zi::add-report
  _zi::any-to-pid
@@ -57,19 +70,6 @@ FUNCTIONS
  _zi::tmp-subst-off
  _zi::tmp-subst-on
  _zi::util-shands-path
- :zi::reload-and-run
- :zi::tmp-subst-alias
- :zi::tmp-subst-autoload
- :zi::tmp-subst-bindkey
- :zi::tmp-subst-compdef
- :zi::tmp-subst-zle
- :zi::tmp-subst-zstyle
- @autoload
- @zi::register-annex
- @zi::register-hook
- @zi::substitute
- @zsh-plugin-run-on-unload
- @zsh-plugin-run-on-update
  pmodload
  zicdclear
  zicdreplay
@@ -97,12 +97,87 @@ Has 245 line(s). Calls functions:
  Script-Body
  |-- +zi::message
  |-- @zi::register-hook
+ |-- _zi::get-mtime-into
+ |-- _zi::prepare-home
+ |   |-- zinit-autoload.zsh/_zi::clear-completions
+ |   `-- zinit-install.zsh/_zi::compinit
  |-- add-zsh-hook
  |-- is-at-least
  |-- zinit
  |   |-- +zi::message
  |   |-- +zi::prehelp-usage-message
  |   |   `-- +zi::message
+ |   |-- _zi::add-fpath
+ |   |   `-- _zi::any-to-user-plugin
+ |   |-- _zi::compdef-clear
+ |   |   `-- +zi::message
+ |   |-- _zi::compdef-replay
+ |   |   `-- +zi::message
+ |   |-- _zi::get-object-path
+ |   |   `-- _zi::any-to-user-plugin
+ |   |-- _zi::ice
+ |   |-- _zi::load-ices
+ |   |   `-- _zi::get-object-path
+ |   |       `-- _zi::any-to-user-plugin
+ |   |-- _zi::load-object
+ |   |   |-- _zi::load
+ |   |   |   |-- +zi::deploy-message
+ |   |   |   |-- _zi::any-to-user-plugin
+ |   |   |   |-- _zi::load-plugin
+ |   |   |   |   |-- :zi::tmp-subst-autoload
+ |   |   |   |   |   |-- +zi::message
+ |   |   |   |   |   |-- _zi::add-report
+ |   |   |   |   |   |-- _zi::any-to-user-plugin
+ |   |   |   |   |   `-- is-at-least
+ |   |   |   |   |-- _zi::add-report
+ |   |   |   |   |-- _zi::diff
+ |   |   |   |   |   |-- _zi::diff-env
+ |   |   |   |   |   |-- _zi::diff-functions
+ |   |   |   |   |   |-- _zi::diff-options
+ |   |   |   |   |   `-- _zi::diff-parameter
+ |   |   |   |   |-- _zi::diff-env
+ |   |   |   |   |-- _zi::find-other-matches
+ |   |   |   |   |-- _zi::tmp-subst-off
+ |   |   |   |   `-- _zi::tmp-subst-on
+ |   |   |   |-- _zi::load-snippet
+ |   |   |   |   |-- +zi::deploy-message
+ |   |   |   |   |-- +zi::message
+ |   |   |   |   |-- _zi::add-report
+ |   |   |   |   |-- _zi::find-other-matches
+ |   |   |   |   |-- _zi::get-object-path
+ |   |   |   |   |   `-- _zi::any-to-user-plugin
+ |   |   |   |   |-- _zi::pack-ice
+ |   |   |   |   |-- _zi::set-m-func
+ |   |   |   |   |   `-- +zi::message
+ |   |   |   |   |-- _zi::setup-params
+ |   |   |   |   `-- zinit-install.zsh/_zi::download-snippet
+ |   |   |   |-- _zi::pack-ice
+ |   |   |   |-- _zi::register-plugin
+ |   |   |   |   `-- +zi::message
+ |   |   |   |-- _zi::set-m-func
+ |   |   |   |   `-- +zi::message
+ |   |   |   |-- _zi::setup-params
+ |   |   |   |-- zinit-install.zsh/_zi::get-package
+ |   |   |   `-- zinit-install.zsh/_zi::setup-plugin-dir
+ |   |   `-- _zi::load-snippet
+ |   |       |-- +zi::deploy-message
+ |   |       |-- +zi::message
+ |   |       |-- _zi::add-report
+ |   |       |-- _zi::find-other-matches
+ |   |       |-- _zi::get-object-path
+ |   |       |   `-- _zi::any-to-user-plugin
+ |   |       |-- _zi::pack-ice
+ |   |       |-- _zi::set-m-func
+ |   |       |   `-- +zi::message
+ |   |       |-- _zi::setup-params
+ |   |       `-- zinit-install.zsh/_zi::download-snippet
+ |   |-- _zi::parse-opts
+ |   |-- _zi::run
+ |   |   |-- +zi::message
+ |   |   |-- _zi::any-to-user-plugin
+ |   |   `-- _zi::get-object-path
+ |   |       `-- _zi::any-to-user-plugin
+ |   |-- _zi::submit-turbo
  |   |-- compinit
  |   |-- zinit-additional.zsh/_zi::clear-debug-report
  |   |-- zinit-additional.zsh/_zi::debug-start
@@ -144,7 +219,7 @@ Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _export_, _is-a
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
 +zi::deploy-message
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -163,25 +238,25 @@ Called by:
  zinit-autoload.zsh/_zi::recall
 
 +zi::message
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
  +zi::prehelp-usage-message
+ :zi::tmp-subst-autoload
+ Script-Body
  _zi::compdef-clear
  _zi::compdef-replay
  _zi::load-snippet
  _zi::register-plugin
  _zi::run
  _zi::set-m-func
- :zi::tmp-subst-autoload
- Script-Body
  zinit
+ zinit-additional.zsh/:zi::tmp-subst-source
  zinit-additional.zsh/_zi::debug-start
  zinit-additional.zsh/_zi::debug-unload
- zinit-additional.zsh/:zi::tmp-subst-source
  zinit-autoload.zsh/_zi::build-module
  zinit-autoload.zsh/_zi::cd
  zinit-autoload.zsh/_zi::self-update
@@ -191,6 +266,9 @@ Called by:
  zinit-autoload.zsh/_zi::update-or-status-all
  zinit-autoload.zsh/_zi::update-or-status
  zinit-autoload.zsh/_zi::wait-for-update-jobs
+ zinit-install.zsh/\~zi::mv-hook
+ zinit-install.zsh/\~zi::ps-on-update-hook
+ zinit-install.zsh/\~zi::reset-hook
  zinit-install.zsh/_zi::compile-plugin
  zinit-install.zsh/_zi::compinit
  zinit-install.zsh/_zi::download-file-stdout
@@ -204,14 +282,11 @@ Called by:
  zinit-install.zsh/_zi::setup-plugin-dir
  zinit-install.zsh/_zi::update-snippet
  zinit-install.zsh/ziextract
- zinit-install.zsh/~zi::mv-hook
- zinit-install.zsh/~zi::ps-on-update-hook
- zinit-install.zsh/~zi::reset-hook
  zinit-side.zsh/_zi::countdown
  zinit-side.zsh/_zi::exists-physically-message
 
 +zi::prehelp-usage-message
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 38 line(s). Calls functions:
 
@@ -237,19 +312,347 @@ Has 7 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
+:zi::reload-and-run
+~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Marks given function ($3) for autoloading, and executes it triggering the
+ load. $1 is the fpath dedicated to the function, $2 are autoload options.
+ This function replaces "autoload -X", because using that on older Zsh
+ versions causes problems with traps.
+ 
+ So basically one creates function stub that calls :zi::reload-and-run()
+ instead of "autoload -X".
+ 
+ Author: Bart Schaefer
+ 
+ $1 - FPATH dedicated to function
+ $2 - autoload options
+ $3 - function name (one that needs autoloading)
+____
+
+Has 11 line(s). Doesn't call other functions.
+
+Uses feature(s): _autoload_, _unfunction_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+:zi::tmp-subst-alias
+~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Function defined to hijack plugin's calls to the `alias' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+____
+
+Has 36 line(s). Calls functions:
+
+ :zi::tmp-subst-alias
+ `-- _zi::add-report
+
+Uses feature(s): _alias_, _setopt_, _zparseopts_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+:zi::tmp-subst-autoload
+~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Hijack plugin's calls to the 'autoload' builtin.
+ 
+ The hijacking gathers report data and runs custom `autoload' function, that doesn't need FPATH.
+____
+
+Has 111 line(s). Calls functions:
+
+ :zi::tmp-subst-autoload
+ |-- +zi::message
+ |-- _zi::add-report
+ |-- _zi::any-to-user-plugin
+ `-- is-at-least
+
+Uses feature(s): _autoload_, _eval_, _is-at-least_, _setopt_, _zparseopts_
+
+Called by:
+
+ @autoload
+ _zi::load-plugin
+
+:zi::tmp-subst-bindkey
+~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Function defined to hijack plugin's calls to the `bindkey' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+____
+
+Has 120 line(s). Calls functions:
+
+ :zi::tmp-subst-bindkey
+ |-- _zi::add-report
+ `-- is-at-least
+
+Uses feature(s): _bindkey_, _is-at-least_, _setopt_, _zparseopts_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+:zi::tmp-subst-compdef
+~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Function defined to hijack plugin's calls to the `compdef' function.
+ The hijacking is not only for reporting, but also to save compdef
+ calls so that `compinit' can be called after loading plugins.
+____
+
+Has 6 line(s). Calls functions:
+
+ :zi::tmp-subst-compdef
+ `-- _zi::add-report
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+:zi::tmp-subst-zle
+~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Function defined to hijack plugin's calls to the `zle' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+____
+
+Has 36 line(s). Calls functions:
+
+ :zi::tmp-subst-zle
+ `-- _zi::add-report
+
+Uses feature(s): _setopt_, _zle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+:zi::tmp-subst-zstyle
+~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Function defined to hijack plugin's calls to the `zstyle' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+____
+
+Has 23 line(s). Calls functions:
+
+ :zi::tmp-subst-zstyle
+ `-- _zi::add-report
+
+Uses feature(s): _setopt_, _zparseopts_, _zstyle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+@autoload
+~~~~~~~~~
+
+Has 4 line(s). Calls functions:
+
+ @autoload
+ `-- :zi::tmp-subst-autoload
+     |-- +zi::message
+     |-- _zi::add-report
+     |-- _zi::any-to-user-plugin
+     `-- is-at-least
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+@zi::register-annex
+~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ ]]]
+ Registers the z-annex inside Zinit – i.e. an Zinit extension
+____
+
+Has 11 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+@zi::register-hook
+~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ Registers the z-annex inside Zinit (i.e., an Zinit extension)
+____
+
+Has 6 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ Script-Body
+
+@zi::scheduler
+~~~~~~~~~~~~~~
+
+____
+ 
+ Searches for timeout tasks, executes them. Theres an array of tasks
+ waiting for execution, this scheduler manages them, detects which ones
+ should be run at current moment, decides to remove (or not) them from
+ the array after execution.
+ 
+ $1 - if "following", then it is non-first (second and more)
+ invocation of the scheduler; this results in chain of 'sched'
+ invocations that results in repetitive @zi::scheduler activity.
+ 
+ if "burst", then all tasks are marked timeout and executed one
+ by one; this is handy if e.g. a docker image starts up and
+ needs to install all turbo-mode plugins without any hesitation
+ (delay), i.e. "burst" allows to run package installations from
+ script, not from prompt.
+____
+
+Has 75 line(s). *Is a precmd hook*. Calls functions:
+
+ @zi::scheduler
+ |-- _zi::run-task
+ |   |-- _zi::load
+ |   |   |-- +zi::deploy-message
+ |   |   |-- _zi::any-to-user-plugin
+ |   |   |-- _zi::load-plugin
+ |   |   |   |-- :zi::tmp-subst-autoload
+ |   |   |   |   |-- +zi::message
+ |   |   |   |   |-- _zi::add-report
+ |   |   |   |   |-- _zi::any-to-user-plugin
+ |   |   |   |   `-- is-at-least
+ |   |   |   |-- _zi::add-report
+ |   |   |   |-- _zi::diff
+ |   |   |   |   |-- _zi::diff-env
+ |   |   |   |   |-- _zi::diff-functions
+ |   |   |   |   |-- _zi::diff-options
+ |   |   |   |   `-- _zi::diff-parameter
+ |   |   |   |-- _zi::diff-env
+ |   |   |   |-- _zi::find-other-matches
+ |   |   |   |-- _zi::tmp-subst-off
+ |   |   |   `-- _zi::tmp-subst-on
+ |   |   |-- _zi::load-snippet
+ |   |   |   |-- +zi::deploy-message
+ |   |   |   |-- +zi::message
+ |   |   |   |-- _zi::add-report
+ |   |   |   |-- _zi::find-other-matches
+ |   |   |   |-- _zi::get-object-path
+ |   |   |   |   `-- _zi::any-to-user-plugin
+ |   |   |   |-- _zi::pack-ice
+ |   |   |   |-- _zi::set-m-func
+ |   |   |   |   `-- +zi::message
+ |   |   |   |-- _zi::setup-params
+ |   |   |   `-- zinit-install.zsh/_zi::download-snippet
+ |   |   |-- _zi::pack-ice
+ |   |   |-- _zi::register-plugin
+ |   |   |   `-- +zi::message
+ |   |   |-- _zi::set-m-func
+ |   |   |   `-- +zi::message
+ |   |   |-- _zi::setup-params
+ |   |   |-- zinit-install.zsh/_zi::get-package
+ |   |   `-- zinit-install.zsh/_zi::setup-plugin-dir
+ |   |-- _zi::load-snippet
+ |   |   |-- +zi::deploy-message
+ |   |   |-- +zi::message
+ |   |   |-- _zi::add-report
+ |   |   |-- _zi::find-other-matches
+ |   |   |-- _zi::get-object-path
+ |   |   |   `-- _zi::any-to-user-plugin
+ |   |   |-- _zi::pack-ice
+ |   |   |-- _zi::set-m-func
+ |   |   |   `-- +zi::message
+ |   |   |-- _zi::setup-params
+ |   |   `-- zinit-install.zsh/_zi::download-snippet
+ |   `-- zinit-autoload.zsh/_zi::unload
+ `-- add-zsh-hook
+
+Uses feature(s): _add-zsh-hook_, _sched_, _setopt_, _zle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+@zi::substitute
+~~~~~~~~~~~~~~~
+
+Has 40 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit-autoload.zsh/_zi::at-eval
+ zinit-install.zsh/\~zi::atclone-hook
+ zinit-install.zsh/\~zi::configure-base-hook
+ zinit-install.zsh/\~zi::cp-hook
+ zinit-install.zsh/\~zi::extract-hook
+ zinit-install.zsh/\~zi::make-base-hook
+ zinit-install.zsh/\~zi::mv-hook
+ zinit-install.zsh/_zi::at-eval
+ zinit-install.zsh/_zi::get-package
+
+_Environment variables used:_ ZPFX
+
+@zsh-plugin-run-on-unload
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ The Plugin Standard required mechanism, see:
+ https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
+____
+
+Has 2 line(s). Calls functions:
+
+ @zsh-plugin-run-on-unload
+ `-- _zi::pack-ice
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+@zsh-plugin-run-on-update
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ The Plugin Standard required mechanism
+____
+
+Has 2 line(s). Calls functions:
+
+ @zsh-plugin-run-on-update
+ `-- _zi::pack-ice
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
 _zi::add-fpath
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 Has 10 line(s). Calls functions:
 
  _zi::add-fpath
+ `-- _zi::any-to-user-plugin
 
 Called by:
 
  zinit
 
 _zi::add-report
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -263,21 +666,22 @@ Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
- _zi::load-plugin
- _zi::load-snippet
  :zi::tmp-subst-alias
  :zi::tmp-subst-autoload
  :zi::tmp-subst-bindkey
  :zi::tmp-subst-compdef
  :zi::tmp-subst-zle
  :zi::tmp-subst-zstyle
+ _zi::load-plugin
+ _zi::load-snippet
 
 _zi::any-to-pid
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 Has 22 line(s). Calls functions:
 
  _zi::any-to-pid
+ `-- _zi::util-shands-path
 
 Uses feature(s): _setopt_
 
@@ -288,7 +692,7 @@ Called by:
  zinit-side.zsh/_zi::first
 
 _zi::any-to-user-plugin
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -306,11 +710,11 @@ Uses feature(s): _setopt_
 
 Called by:
 
+ :zi::tmp-subst-autoload
  _zi::add-fpath
  _zi::get-object-path
  _zi::load
  _zi::run
- :zi::tmp-subst-autoload
  zinit-autoload.zsh/_zi::any-to-uspl2
  zinit-autoload.zsh/_zi::changes
  zinit-autoload.zsh/_zi::compile-uncompile-all
@@ -337,7 +741,7 @@ Called by:
 _Environment variables used:_ ZPFX
 
 _zi::compdef-clear
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -356,7 +760,7 @@ Called by:
  zpcdclear
 
 _zi::compdef-replay
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -377,7 +781,7 @@ Called by:
  zpcdreplay
 
 _zi::diff
-~~~~~~~~~~~
+~~~~~~~~~
 
 ____
  
@@ -387,6 +791,10 @@ ____
 Has 4 line(s). Calls functions:
 
  _zi::diff
+ |-- _zi::diff-env
+ |-- _zi::diff-functions
+ |-- _zi::diff-options
+ `-- _zi::diff-parameter
 
 Called by:
 
@@ -395,7 +803,7 @@ Called by:
  zinit-additional.zsh/_zi::debug-stop
 
 _zi::diff-env
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 ____
  
@@ -413,7 +821,7 @@ Called by:
  _zi::load-plugin
 
 _zi::diff-functions
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -431,7 +839,7 @@ Called by:
  _zi::diff
 
 _zi::diff-options
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -449,7 +857,7 @@ Called by:
  _zi::diff
 
 _zi::diff-parameter
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -467,7 +875,7 @@ Called by:
  _zi::diff
 
 _zi::find-other-matches
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -485,27 +893,31 @@ Called by:
  zinit-side.zsh/_zi::first
 
 _zi::formatter-auto
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Has 50 line(s). Calls functions:
 
  _zi::formatter-auto
+ |-- _zi::formatter-pid
+ |   `-- zinit-side.zsh/_zi::any-colorify-as-uspl2
+ `-- _zi::formatter-url
 
 Uses feature(s): _type_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::formatter-bar
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Has 1 line(s). Calls functions:
 
  _zi::formatter-bar
+ `-- _zi::formatter-bar-util
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::formatter-bar-util
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 7 line(s). Doesn't call other functions.
 
@@ -515,14 +927,14 @@ Called by:
  _zi::formatter-th-bar
 
 _zi::formatter-dbg
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Has 5 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::formatter-pid
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Has 11 line(s). Calls functions:
 
@@ -536,16 +948,17 @@ Called by:
  _zi::formatter-auto
 
 _zi::formatter-th-bar
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 Has 1 line(s). Calls functions:
 
  _zi::formatter-th-bar
+ `-- _zi::formatter-bar-util
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::formatter-url
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Has 19 line(s). Doesn't call other functions.
 
@@ -554,7 +967,7 @@ Called by:
  _zi::formatter-auto
 
 _zi::get-mtime-into
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Has 7 line(s). Doesn't call other functions.
 
@@ -565,11 +978,12 @@ Called by:
  zinit-autoload.zsh/_zi::update-or-status-all
 
 _zi::get-object-path
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 Has 28 line(s). Calls functions:
 
  _zi::get-object-path
+ `-- _zi::any-to-user-plugin
 
 Called by:
 
@@ -584,7 +998,7 @@ Called by:
  zinit-side.zsh/_zi::two-paths
 
 _zi::ice
-~~~~~~~~~~
+~~~~~~~~
 
 ____
  
@@ -604,7 +1018,7 @@ Called by:
 _Environment variables used:_ ZPFX
 
 _zi::load
-~~~~~~~~~~~
+~~~~~~~~~
 
 ____
  
@@ -618,6 +1032,41 @@ Has 95 line(s). Calls functions:
 
  _zi::load
  |-- +zi::deploy-message
+ |-- _zi::any-to-user-plugin
+ |-- _zi::load-plugin
+ |   |-- :zi::tmp-subst-autoload
+ |   |   |-- +zi::message
+ |   |   |-- _zi::add-report
+ |   |   |-- _zi::any-to-user-plugin
+ |   |   `-- is-at-least
+ |   |-- _zi::add-report
+ |   |-- _zi::diff
+ |   |   |-- _zi::diff-env
+ |   |   |-- _zi::diff-functions
+ |   |   |-- _zi::diff-options
+ |   |   `-- _zi::diff-parameter
+ |   |-- _zi::diff-env
+ |   |-- _zi::find-other-matches
+ |   |-- _zi::tmp-subst-off
+ |   `-- _zi::tmp-subst-on
+ |-- _zi::load-snippet
+ |   |-- +zi::deploy-message
+ |   |-- +zi::message
+ |   |-- _zi::add-report
+ |   |-- _zi::find-other-matches
+ |   |-- _zi::get-object-path
+ |   |   `-- _zi::any-to-user-plugin
+ |   |-- _zi::pack-ice
+ |   |-- _zi::set-m-func
+ |   |   `-- +zi::message
+ |   |-- _zi::setup-params
+ |   `-- zinit-install.zsh/_zi::download-snippet
+ |-- _zi::pack-ice
+ |-- _zi::register-plugin
+ |   `-- +zi::message
+ |-- _zi::set-m-func
+ |   `-- +zi::message
+ |-- _zi::setup-params
  |-- zinit-install.zsh/_zi::get-package
  `-- zinit-install.zsh/_zi::setup-plugin-dir
 
@@ -630,11 +1079,13 @@ Called by:
  zinit-additional.zsh/_zi::service
 
 _zi::load-ices
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 Has 22 line(s). Calls functions:
 
  _zi::load-ices
+ `-- _zi::get-object-path
+     `-- _zi::any-to-user-plugin
 
 Called by:
 
@@ -643,18 +1094,69 @@ Called by:
 _Environment variables used:_ ZPFX
 
 _zi::load-object
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 Has 12 line(s). Calls functions:
 
  _zi::load-object
+ |-- _zi::load
+ |   |-- +zi::deploy-message
+ |   |-- _zi::any-to-user-plugin
+ |   |-- _zi::load-plugin
+ |   |   |-- :zi::tmp-subst-autoload
+ |   |   |   |-- +zi::message
+ |   |   |   |-- _zi::add-report
+ |   |   |   |-- _zi::any-to-user-plugin
+ |   |   |   `-- is-at-least
+ |   |   |-- _zi::add-report
+ |   |   |-- _zi::diff
+ |   |   |   |-- _zi::diff-env
+ |   |   |   |-- _zi::diff-functions
+ |   |   |   |-- _zi::diff-options
+ |   |   |   `-- _zi::diff-parameter
+ |   |   |-- _zi::diff-env
+ |   |   |-- _zi::find-other-matches
+ |   |   |-- _zi::tmp-subst-off
+ |   |   `-- _zi::tmp-subst-on
+ |   |-- _zi::load-snippet
+ |   |   |-- +zi::deploy-message
+ |   |   |-- +zi::message
+ |   |   |-- _zi::add-report
+ |   |   |-- _zi::find-other-matches
+ |   |   |-- _zi::get-object-path
+ |   |   |   `-- _zi::any-to-user-plugin
+ |   |   |-- _zi::pack-ice
+ |   |   |-- _zi::set-m-func
+ |   |   |   `-- +zi::message
+ |   |   |-- _zi::setup-params
+ |   |   `-- zinit-install.zsh/_zi::download-snippet
+ |   |-- _zi::pack-ice
+ |   |-- _zi::register-plugin
+ |   |   `-- +zi::message
+ |   |-- _zi::set-m-func
+ |   |   `-- +zi::message
+ |   |-- _zi::setup-params
+ |   |-- zinit-install.zsh/_zi::get-package
+ |   `-- zinit-install.zsh/_zi::setup-plugin-dir
+ `-- _zi::load-snippet
+     |-- +zi::deploy-message
+     |-- +zi::message
+     |-- _zi::add-report
+     |-- _zi::find-other-matches
+     |-- _zi::get-object-path
+     |   `-- _zi::any-to-user-plugin
+     |-- _zi::pack-ice
+     |-- _zi::set-m-func
+     |   `-- +zi::message
+     |-- _zi::setup-params
+     `-- zinit-install.zsh/_zi::download-snippet
 
 Called by:
 
  zinit
 
 _zi::load-plugin
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 ____
  
@@ -668,9 +1170,21 @@ ____
 Has 128 line(s). Calls functions:
 
  _zi::load-plugin
- `-- :zi::tmp-subst-autoload
-     |-- +zi::message
-     `-- is-at-least
+ |-- :zi::tmp-subst-autoload
+ |   |-- +zi::message
+ |   |-- _zi::add-report
+ |   |-- _zi::any-to-user-plugin
+ |   `-- is-at-least
+ |-- _zi::add-report
+ |-- _zi::diff
+ |   |-- _zi::diff-env
+ |   |-- _zi::diff-functions
+ |   |-- _zi::diff-options
+ |   `-- _zi::diff-parameter
+ |-- _zi::diff-env
+ |-- _zi::find-other-matches
+ |-- _zi::tmp-subst-off
+ `-- _zi::tmp-subst-on
 
 Uses feature(s): _eval_, _setopt_, _source_, _unfunction_, _zle_
 
@@ -679,7 +1193,7 @@ Called by:
  _zi::load
 
 _zi::load-snippet
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -693,6 +1207,14 @@ Has 203 line(s). Calls functions:
  _zi::load-snippet
  |-- +zi::deploy-message
  |-- +zi::message
+ |-- _zi::add-report
+ |-- _zi::find-other-matches
+ |-- _zi::get-object-path
+ |   `-- _zi::any-to-user-plugin
+ |-- _zi::pack-ice
+ |-- _zi::set-m-func
+ |   `-- +zi::message
+ |-- _zi::setup-params
  `-- zinit-install.zsh/_zi::download-snippet
 
 Uses feature(s): _autoload_, _eval_, _setopt_, _source_, _unfunction_, _zparseopts_, _zstyle_
@@ -706,14 +1228,14 @@ Called by:
  zinit-additional.zsh/_zi::service
 
 _zi::main-message-formatter
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 18 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::pack-ice
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 ____
  
@@ -726,15 +1248,15 @@ Has 3 line(s). Doesn't call other functions.
 
 Called by:
 
- _zi::load-snippet
- _zi::load
  @zsh-plugin-run-on-unload
  @zsh-plugin-run-on-update
+ _zi::load-snippet
+ _zi::load
  zinit-install.zsh/_zi::update-snippet
  zinit-side.zsh/_zi::compute-ice
 
 _zi::parse-opts
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 Has 2 line(s). Doesn't call other functions.
 
@@ -744,7 +1266,7 @@ Called by:
  zinit-autoload.zsh/_zi::delete
 
 _zi::prepare-home
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -767,7 +1289,7 @@ Called by:
 _Environment variables used:_ ZPFX
 
 _zi::register-plugin
-~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -786,7 +1308,7 @@ Called by:
  _zi::load
 
 _zi::run
-~~~~~~~~~~
+~~~~~~~~
 
 ____
  
@@ -797,7 +1319,10 @@ ____
 Has 24 line(s). Calls functions:
 
  _zi::run
- `-- +zi::message
+ |-- +zi::message
+ |-- _zi::any-to-user-plugin
+ `-- _zi::get-object-path
+     `-- _zi::any-to-user-plugin
 
 Uses feature(s): _eval_, _setopt_
 
@@ -806,7 +1331,7 @@ Called by:
  zinit
 
 _zi::run-task
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 ____
  
@@ -826,6 +1351,57 @@ ____
 Has 47 line(s). Calls functions:
 
  _zi::run-task
+ |-- _zi::load
+ |   |-- +zi::deploy-message
+ |   |-- _zi::any-to-user-plugin
+ |   |-- _zi::load-plugin
+ |   |   |-- :zi::tmp-subst-autoload
+ |   |   |   |-- +zi::message
+ |   |   |   |-- _zi::add-report
+ |   |   |   |-- _zi::any-to-user-plugin
+ |   |   |   `-- is-at-least
+ |   |   |-- _zi::add-report
+ |   |   |-- _zi::diff
+ |   |   |   |-- _zi::diff-env
+ |   |   |   |-- _zi::diff-functions
+ |   |   |   |-- _zi::diff-options
+ |   |   |   `-- _zi::diff-parameter
+ |   |   |-- _zi::diff-env
+ |   |   |-- _zi::find-other-matches
+ |   |   |-- _zi::tmp-subst-off
+ |   |   `-- _zi::tmp-subst-on
+ |   |-- _zi::load-snippet
+ |   |   |-- +zi::deploy-message
+ |   |   |-- +zi::message
+ |   |   |-- _zi::add-report
+ |   |   |-- _zi::find-other-matches
+ |   |   |-- _zi::get-object-path
+ |   |   |   `-- _zi::any-to-user-plugin
+ |   |   |-- _zi::pack-ice
+ |   |   |-- _zi::set-m-func
+ |   |   |   `-- +zi::message
+ |   |   |-- _zi::setup-params
+ |   |   `-- zinit-install.zsh/_zi::download-snippet
+ |   |-- _zi::pack-ice
+ |   |-- _zi::register-plugin
+ |   |   `-- +zi::message
+ |   |-- _zi::set-m-func
+ |   |   `-- +zi::message
+ |   |-- _zi::setup-params
+ |   |-- zinit-install.zsh/_zi::get-package
+ |   `-- zinit-install.zsh/_zi::setup-plugin-dir
+ |-- _zi::load-snippet
+ |   |-- +zi::deploy-message
+ |   |-- +zi::message
+ |   |-- _zi::add-report
+ |   |-- _zi::find-other-matches
+ |   |-- _zi::get-object-path
+ |   |   `-- _zi::any-to-user-plugin
+ |   |-- _zi::pack-ice
+ |   |-- _zi::set-m-func
+ |   |   `-- +zi::message
+ |   |-- _zi::setup-params
+ |   `-- zinit-install.zsh/_zi::download-snippet
  `-- zinit-autoload.zsh/_zi::unload
 
 Uses feature(s): _eval_, _source_, _zle_, _zpty_
@@ -835,7 +1411,7 @@ Called by:
  @zi::scheduler
 
 _zi::set-m-func
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -857,7 +1433,7 @@ Called by:
  zinit-autoload.zsh/_zi::update-or-status
 
 _zi::setup-params
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 Has 3 line(s). Doesn't call other functions.
 
@@ -867,7 +1443,7 @@ Called by:
  _zi::load
 
 _zi::submit-turbo
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -885,7 +1461,7 @@ Called by:
  zinit
 
 _zi::tmp-subst-off
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -903,7 +1479,7 @@ Called by:
  zinit-additional.zsh/_zi::debug-stop
 
 _zi::tmp-subst-on
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -922,7 +1498,7 @@ Called by:
  zinit-additional.zsh/_zi::debug-start
 
 _zi::util-shands-path
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -939,275 +1515,24 @@ Called by:
 
 _Environment variables used:_ ZPFX
 
-:zi::reload-and-run
-~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Marks given function ($3) for autoloading, and executes it triggering the
- load. $1 is the fpath dedicated to the function, $2 are autoload options.
- This function replaces "autoload -X", because using that on older Zsh
- versions causes problems with traps.
- 
- So basically one creates function stub that calls :zi::reload-and-run()
- instead of "autoload -X".
- 
- Author: Bart Schaefer
- 
- $1 - FPATH dedicated to function
- $2 - autoload options
- $3 - function name (one that needs autoloading)
-____
-
-Has 11 line(s). Doesn't call other functions.
-
-Uses feature(s): _autoload_, _unfunction_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-:zi::tmp-subst-alias
-~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Function defined to hijack plugin's calls to the `alias' builtin.
- 
- The hijacking is to gather report data (which is used in unload).
-____
-
-Has 36 line(s). Calls functions:
-
- :zi::tmp-subst-alias
-
-Uses feature(s): _alias_, _setopt_, _zparseopts_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-:zi::tmp-subst-autoload
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Hijack plugin's calls to the 'autoload' builtin.
- 
- The hijacking gathers report data and runs custom `autoload' function, that doesn't need FPATH.
-____
-
-Has 111 line(s). Calls functions:
-
- :zi::tmp-subst-autoload
- |-- +zi::message
- `-- is-at-least
-
-Uses feature(s): _autoload_, _eval_, _is-at-least_, _setopt_, _zparseopts_
-
-Called by:
-
- _zi::load-plugin
- @autoload
-
-:zi::tmp-subst-bindkey
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Function defined to hijack plugin's calls to the `bindkey' builtin.
- 
- The hijacking is to gather report data (which is used in unload).
-____
-
-Has 120 line(s). Calls functions:
-
- :zi::tmp-subst-bindkey
- `-- is-at-least
-
-Uses feature(s): _bindkey_, _is-at-least_, _setopt_, _zparseopts_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-:zi::tmp-subst-compdef
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Function defined to hijack plugin's calls to the `compdef' function.
- The hijacking is not only for reporting, but also to save compdef
- calls so that `compinit' can be called after loading plugins.
-____
-
-Has 6 line(s). Calls functions:
-
- :zi::tmp-subst-compdef
-
-Uses feature(s): _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-:zi::tmp-subst-zle
-~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Function defined to hijack plugin's calls to the `zle' builtin.
- 
- The hijacking is to gather report data (which is used in unload).
-____
-
-Has 36 line(s). Calls functions:
-
- :zi::tmp-subst-zle
-
-Uses feature(s): _setopt_, _zle_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-:zi::tmp-subst-zstyle
-~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Function defined to hijack plugin's calls to the `zstyle' builtin.
- 
- The hijacking is to gather report data (which is used in unload).
-____
-
-Has 23 line(s). Calls functions:
-
- :zi::tmp-subst-zstyle
-
-Uses feature(s): _setopt_, _zparseopts_, _zstyle_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-@autoload
-~~~~~~~~~
-
-Has 4 line(s). Calls functions:
-
- @autoload
- `-- :zi::tmp-subst-autoload
-     |-- +zi::message
-     `-- is-at-least
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-@zi::register-annex
-~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- ]]]
- Registers the z-annex inside Zinit – i.e. an Zinit extension
-____
-
-Has 11 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-@zi::register-hook
-~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Registers the z-annex inside Zinit (i.e., an Zinit extension)
-____
-
-Has 6 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Called by:
-
- Script-Body
-
-@zi::scheduler
-~~~~~~~~~~~~~~~~
-
-____
- 
- Searches for timeout tasks, executes them. Theres an array of tasks
- waiting for execution, this scheduler manages them, detects which ones
- should be run at current moment, decides to remove (or not) them from
- the array after execution.
- 
- $1 - if "following", then it is non-first (second and more)
- invocation of the scheduler; this results in chain of 'sched'
- invocations that results in repetitive @zi::scheduler activity.
- 
- if "burst", then all tasks are marked timeout and executed one
- by one; this is handy if e.g. a docker image starts up and
- needs to install all turbo-mode plugins without any hesitation
- (delay), i.e. "burst" allows to run package installations from
- script, not from prompt.
-____
-
-Has 75 line(s). *Is a precmd hook*. Calls functions:
-
- @zi::scheduler
- `-- add-zsh-hook
-
-Uses feature(s): _add-zsh-hook_, _sched_, _setopt_, _zle_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-@zi::substitute
-~~~~~~~~~~~~~~~~~
-
-Has 40 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Called by:
-
- zinit-autoload.zsh/_zi::at-eval
- zinit-install.zsh/_zi::at-eval
- zinit-install.zsh/_zi::get-package
- zinit-install.zsh/~zi::atclone-hook
- zinit-install.zsh/~zi::configure-base-hook
- zinit-install.zsh/~zi::cp-hook
- zinit-install.zsh/~zi::extract-hook
- zinit-install.zsh/~zi::make-base-hook
- zinit-install.zsh/~zi::mv-hook
-
-_Environment variables used:_ ZPFX
-
-@zsh-plugin-run-on-unload
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- The Plugin Standard required mechanism, see:
- https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
-____
-
-Has 2 line(s). Calls functions:
-
- @zsh-plugin-run-on-unload
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-@zsh-plugin-run-on-update
-~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- The Plugin Standard required mechanism
-____
-
-Has 2 line(s). Calls functions:
-
- @zsh-plugin-run-on-update
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
 pmodload
 ~~~~~~~~
 
 Has 15 line(s). Calls functions:
 
  pmodload
+ `-- _zi::load-snippet
+     |-- +zi::deploy-message
+     |-- +zi::message
+     |-- _zi::add-report
+     |-- _zi::find-other-matches
+     |-- _zi::get-object-path
+     |   `-- _zi::any-to-user-plugin
+     |-- _zi::pack-ice
+     |-- _zi::set-m-func
+     |   `-- +zi::message
+     |-- _zi::setup-params
+     `-- zinit-install.zsh/_zi::download-snippet
 
 Uses feature(s): _zstyle_
 
@@ -1225,6 +1550,8 @@ ____
 Has 1 line(s). Calls functions:
 
  zicdclear
+ `-- _zi::compdef-clear
+     `-- +zi::message
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1240,6 +1567,8 @@ ____
 Has 1 line(s). Calls functions:
 
  zicdreplay
+ `-- _zi::compdef-replay
+     `-- +zi::message
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1290,6 +1619,77 @@ Has 560 line(s). Calls functions:
  |-- +zi::message
  |-- +zi::prehelp-usage-message
  |   `-- +zi::message
+ |-- _zi::add-fpath
+ |   `-- _zi::any-to-user-plugin
+ |-- _zi::compdef-clear
+ |   `-- +zi::message
+ |-- _zi::compdef-replay
+ |   `-- +zi::message
+ |-- _zi::get-object-path
+ |   `-- _zi::any-to-user-plugin
+ |-- _zi::ice
+ |-- _zi::load-ices
+ |   `-- _zi::get-object-path
+ |       `-- _zi::any-to-user-plugin
+ |-- _zi::load-object
+ |   |-- _zi::load
+ |   |   |-- +zi::deploy-message
+ |   |   |-- _zi::any-to-user-plugin
+ |   |   |-- _zi::load-plugin
+ |   |   |   |-- :zi::tmp-subst-autoload
+ |   |   |   |   |-- +zi::message
+ |   |   |   |   |-- _zi::add-report
+ |   |   |   |   |-- _zi::any-to-user-plugin
+ |   |   |   |   `-- is-at-least
+ |   |   |   |-- _zi::add-report
+ |   |   |   |-- _zi::diff
+ |   |   |   |   |-- _zi::diff-env
+ |   |   |   |   |-- _zi::diff-functions
+ |   |   |   |   |-- _zi::diff-options
+ |   |   |   |   `-- _zi::diff-parameter
+ |   |   |   |-- _zi::diff-env
+ |   |   |   |-- _zi::find-other-matches
+ |   |   |   |-- _zi::tmp-subst-off
+ |   |   |   `-- _zi::tmp-subst-on
+ |   |   |-- _zi::load-snippet
+ |   |   |   |-- +zi::deploy-message
+ |   |   |   |-- +zi::message
+ |   |   |   |-- _zi::add-report
+ |   |   |   |-- _zi::find-other-matches
+ |   |   |   |-- _zi::get-object-path
+ |   |   |   |   `-- _zi::any-to-user-plugin
+ |   |   |   |-- _zi::pack-ice
+ |   |   |   |-- _zi::set-m-func
+ |   |   |   |   `-- +zi::message
+ |   |   |   |-- _zi::setup-params
+ |   |   |   `-- zinit-install.zsh/_zi::download-snippet
+ |   |   |-- _zi::pack-ice
+ |   |   |-- _zi::register-plugin
+ |   |   |   `-- +zi::message
+ |   |   |-- _zi::set-m-func
+ |   |   |   `-- +zi::message
+ |   |   |-- _zi::setup-params
+ |   |   |-- zinit-install.zsh/_zi::get-package
+ |   |   `-- zinit-install.zsh/_zi::setup-plugin-dir
+ |   `-- _zi::load-snippet
+ |       |-- +zi::deploy-message
+ |       |-- +zi::message
+ |       |-- _zi::add-report
+ |       |-- _zi::find-other-matches
+ |       |-- _zi::get-object-path
+ |       |   `-- _zi::any-to-user-plugin
+ |       |-- _zi::pack-ice
+ |       |-- _zi::set-m-func
+ |       |   `-- +zi::message
+ |       |-- _zi::setup-params
+ |       `-- zinit-install.zsh/_zi::download-snippet
+ |-- _zi::parse-opts
+ |-- _zi::run
+ |   |-- +zi::message
+ |   |-- _zi::any-to-user-plugin
+ |   `-- _zi::get-object-path
+ |       `-- _zi::any-to-user-plugin
+ |-- _zi::submit-turbo
  |-- compinit
  |-- zinit-additional.zsh/_zi::clear-debug-report
  |-- zinit-additional.zsh/_zi::debug-start
@@ -1338,6 +1738,8 @@ zpcdclear
 Has 1 line(s). Calls functions:
 
  zpcdclear
+ `-- _zi::compdef-clear
+     `-- +zi::message
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1347,6 +1749,8 @@ zpcdreplay
 Has 1 line(s). Calls functions:
 
  zpcdreplay
+ `-- _zi::compdef-replay
+     `-- +zi::message
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1379,6 +1783,77 @@ Has 1 line(s). Calls functions:
      |-- +zi::message
      |-- +zi::prehelp-usage-message
      |   `-- +zi::message
+     |-- _zi::add-fpath
+     |   `-- _zi::any-to-user-plugin
+     |-- _zi::compdef-clear
+     |   `-- +zi::message
+     |-- _zi::compdef-replay
+     |   `-- +zi::message
+     |-- _zi::get-object-path
+     |   `-- _zi::any-to-user-plugin
+     |-- _zi::ice
+     |-- _zi::load-ices
+     |   `-- _zi::get-object-path
+     |       `-- _zi::any-to-user-plugin
+     |-- _zi::load-object
+     |   |-- _zi::load
+     |   |   |-- +zi::deploy-message
+     |   |   |-- _zi::any-to-user-plugin
+     |   |   |-- _zi::load-plugin
+     |   |   |   |-- :zi::tmp-subst-autoload
+     |   |   |   |   |-- +zi::message
+     |   |   |   |   |-- _zi::add-report
+     |   |   |   |   |-- _zi::any-to-user-plugin
+     |   |   |   |   `-- is-at-least
+     |   |   |   |-- _zi::add-report
+     |   |   |   |-- _zi::diff
+     |   |   |   |   |-- _zi::diff-env
+     |   |   |   |   |-- _zi::diff-functions
+     |   |   |   |   |-- _zi::diff-options
+     |   |   |   |   `-- _zi::diff-parameter
+     |   |   |   |-- _zi::diff-env
+     |   |   |   |-- _zi::find-other-matches
+     |   |   |   |-- _zi::tmp-subst-off
+     |   |   |   `-- _zi::tmp-subst-on
+     |   |   |-- _zi::load-snippet
+     |   |   |   |-- +zi::deploy-message
+     |   |   |   |-- +zi::message
+     |   |   |   |-- _zi::add-report
+     |   |   |   |-- _zi::find-other-matches
+     |   |   |   |-- _zi::get-object-path
+     |   |   |   |   `-- _zi::any-to-user-plugin
+     |   |   |   |-- _zi::pack-ice
+     |   |   |   |-- _zi::set-m-func
+     |   |   |   |   `-- +zi::message
+     |   |   |   |-- _zi::setup-params
+     |   |   |   `-- zinit-install.zsh/_zi::download-snippet
+     |   |   |-- _zi::pack-ice
+     |   |   |-- _zi::register-plugin
+     |   |   |   `-- +zi::message
+     |   |   |-- _zi::set-m-func
+     |   |   |   `-- +zi::message
+     |   |   |-- _zi::setup-params
+     |   |   |-- zinit-install.zsh/_zi::get-package
+     |   |   `-- zinit-install.zsh/_zi::setup-plugin-dir
+     |   `-- _zi::load-snippet
+     |       |-- +zi::deploy-message
+     |       |-- +zi::message
+     |       |-- _zi::add-report
+     |       |-- _zi::find-other-matches
+     |       |-- _zi::get-object-path
+     |       |   `-- _zi::any-to-user-plugin
+     |       |-- _zi::pack-ice
+     |       |-- _zi::set-m-func
+     |       |   `-- +zi::message
+     |       |-- _zi::setup-params
+     |       `-- zinit-install.zsh/_zi::download-snippet
+     |-- _zi::parse-opts
+     |-- _zi::run
+     |   |-- +zi::message
+     |   |-- _zi::any-to-user-plugin
+     |   `-- _zi::get-object-path
+     |       `-- _zi::any-to-user-plugin
+     |-- _zi::submit-turbo
      |-- compinit
      |-- zinit-additional.zsh/_zi::clear-debug-report
      |-- zinit-additional.zsh/_zi::debug-start

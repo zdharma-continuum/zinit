@@ -66,7 +66,7 @@ Has 6 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 Uses feature(s): _source_
 
 _zi::at-eval
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Has 9 line(s). Calls functions:
 
@@ -77,11 +77,11 @@ Uses feature(s): _eval_
 
 Called by:
 
- ~zi::atpull-e-hook
- ~zi::atpull-hook
+ \~zi::atpull-e-hook
+ \~zi::atpull-hook
 
 _zi::compile-plugin
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -103,12 +103,12 @@ Uses feature(s): _eval_, _setopt_, _zcompile_
 
 Called by:
 
- ~zi::compile-plugin-hook
+ \~zi::compile-plugin-hook
  zinit-autoload.zsh/_zi::compile-uncompile-all
  zinit.zsh/zinit
 
 _zi::compinit
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 ____
  
@@ -123,6 +123,7 @@ ____
 Has 26 line(s). Calls functions:
 
  _zi::compinit
+ |-- _zi::forget-completion
  |-- compinit
  `-- zinit.zsh/+zi::message
 
@@ -137,7 +138,7 @@ Called by:
  zinit.zsh/zinit
 
 _zi::configure-run-autoconf
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -145,17 +146,17 @@ ____
  theres no ./configure script. Runs autoconf, autoreconf, and autogen.sh as needed.
 ____
 
-Has 64 line(s). Calls functions:
+Has 63 line(s). Calls functions:
 
  _zi::configure-run-autoconf
  `-- zinit-side.zsh/_zi::countdown
 
 Called by:
 
- ~zi::configure-base-hook
+ \~zi::configure-base-hook
 
 _zi::download-file-stdout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -178,7 +179,7 @@ Called by:
  _zi::setup-plugin-dir
 
 _zi::download-snippet
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -193,6 +194,20 @@ ____
 Has 377 line(s). Calls functions:
 
  _zi::download-snippet
+ |-- _zi::download-file-stdout
+ |   `-- zinit.zsh/+zi::message
+ |-- _zi::get-url-mtime
+ |-- _zi::install-completions
+ |   |-- _zi::compinit
+ |   |   |-- _zi::forget-completion
+ |   |   |-- compinit
+ |   |   `-- zinit.zsh/+zi::message
+ |   |-- _zi::forget-completion
+ |   |-- zinit-side.zsh/_zi::any-colorify-as-uspl2
+ |   |-- zinit-side.zsh/_zi::exists-physically-message
+ |   |-- zinit.zsh/+zi::message
+ |   `-- zinit.zsh/_zi::any-to-user-plugin
+ |-- _zi::mirror-using-svn
  |-- zinit-side.zsh/_zi::store-ices
  |-- zinit.zsh/+zi::message
  `-- zinit.zsh/is-at-least
@@ -205,7 +220,7 @@ Called by:
  zinit.zsh/_zi::load-snippet
 
 _zi::extract
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 Has 30 line(s). Calls functions:
 
@@ -218,10 +233,10 @@ Uses feature(s): _setopt_
 
 Called by:
 
- ~zi::extract-hook
+ \~zi::extract-hook
 
 _zi::forget-completion
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -243,11 +258,13 @@ Called by:
  zinit.zsh/zinit
 
 _zi::get-cygwin-package
-~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 70 line(s). Calls functions:
 
  _zi::get-cygwin-package
+ |-- _zi::download-file-stdout
+ |   `-- zinit.zsh/+zi::message
  `-- zinit.zsh/+zi::message
 
 Uses feature(s): _setopt_
@@ -257,7 +274,7 @@ Called by:
  _zi::setup-plugin-dir
 
 _zi::get-latest-gh-r-url-part
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -278,11 +295,18 @@ Called by:
  zinit-autoload.zsh/_zi::update-or-status
 
 _zi::get-package
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 Has 195 line(s). Calls functions:
 
  _zi::get-package
+ |-- _zi::download-file-stdout
+ |   `-- zinit.zsh/+zi::message
+ |-- _zi::jq-check
+ |   `-- zinit.zsh/+zi::message
+ |-- _zi::json-to-array
+ |   `-- _zi::jq-check
+ |       `-- zinit.zsh/+zi::message
  |-- ziextract
  |   `-- zinit.zsh/+zi::message
  |-- zinit.zsh/+zi::message
@@ -297,7 +321,7 @@ Called by:
 _Environment variables used:_ zinit.zsh -> ZPFX
 
 _zi::get-url-mtime
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -314,7 +338,7 @@ Called by:
  _zi::download-snippet
 
 _zi::install-completions
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -331,6 +355,11 @@ ____
 Has 61 line(s). Calls functions:
 
  _zi::install-completions
+ |-- _zi::compinit
+ |   |-- _zi::forget-completion
+ |   |-- compinit
+ |   `-- zinit.zsh/+zi::message
+ |-- _zi::forget-completion
  |-- zinit-side.zsh/_zi::any-colorify-as-uspl2
  |-- zinit-side.zsh/_zi::exists-physically-message
  |-- zinit.zsh/+zi::message
@@ -345,7 +374,7 @@ Called by:
  zinit.zsh/zinit
 
 _zi::jq-check
-~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~
 
 ____
  
@@ -365,7 +394,7 @@ Called by:
  _zi::json-to-array
 
 _zi::json-get-value
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -378,11 +407,13 @@ ____
 Has 4 line(s). Calls functions:
 
  _zi::json-get-value
+ `-- _zi::jq-check
+     `-- zinit.zsh/+zi::message
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::json-to-array
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -397,6 +428,8 @@ ____
 Has 13 line(s). Calls functions:
 
  _zi::json-to-array
+ `-- _zi::jq-check
+     `-- zinit.zsh/+zi::message
 
 Uses feature(s): _eval_, _setopt_
 
@@ -405,7 +438,7 @@ Called by:
  _zi::get-package
 
 _zi::mirror-using-svn
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -429,7 +462,7 @@ Called by:
  _zi::download-snippet
 
 _zi::setup-plugin-dir
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -444,6 +477,24 @@ ____
 Has 215 line(s). Calls functions:
 
  _zi::setup-plugin-dir
+ |-- _zi::download-file-stdout
+ |   `-- zinit.zsh/+zi::message
+ |-- _zi::get-cygwin-package
+ |   |-- _zi::download-file-stdout
+ |   |   `-- zinit.zsh/+zi::message
+ |   `-- zinit.zsh/+zi::message
+ |-- _zi::get-latest-gh-r-url-part
+ |   `-- zinit.zsh/+zi::message
+ |-- _zi::install-completions
+ |   |-- _zi::compinit
+ |   |   |-- _zi::forget-completion
+ |   |   |-- compinit
+ |   |   `-- zinit.zsh/+zi::message
+ |   |-- _zi::forget-completion
+ |   |-- zinit-side.zsh/_zi::any-colorify-as-uspl2
+ |   |-- zinit-side.zsh/_zi::exists-physically-message
+ |   |-- zinit.zsh/+zi::message
+ |   `-- zinit.zsh/_zi::any-to-user-plugin
  |-- ziextract
  |   `-- zinit.zsh/+zi::message
  |-- zinit-side.zsh/_zi::any-colorify-as-uspl2
@@ -459,7 +510,7 @@ Called by:
  zinit.zsh/_zi::load
 
 _zi::single-line
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 ____
  
@@ -473,11 +524,29 @@ Uses feature(s): _read_, _setopt_
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 _zi::update-snippet
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 Has 76 line(s). Calls functions:
 
  _zi::update-snippet
+ |-- _zi::download-snippet
+ |   |-- _zi::download-file-stdout
+ |   |   `-- zinit.zsh/+zi::message
+ |   |-- _zi::get-url-mtime
+ |   |-- _zi::install-completions
+ |   |   |-- _zi::compinit
+ |   |   |   |-- _zi::forget-completion
+ |   |   |   |-- compinit
+ |   |   |   `-- zinit.zsh/+zi::message
+ |   |   |-- _zi::forget-completion
+ |   |   |-- zinit-side.zsh/_zi::any-colorify-as-uspl2
+ |   |   |-- zinit-side.zsh/_zi::exists-physically-message
+ |   |   |-- zinit.zsh/+zi::message
+ |   |   `-- zinit.zsh/_zi::any-to-user-plugin
+ |   |-- _zi::mirror-using-svn
+ |   |-- zinit-side.zsh/_zi::store-ices
+ |   |-- zinit.zsh/+zi::message
+ |   `-- zinit.zsh/is-at-least
  |-- zinit.zsh/+zi::message
  |-- zinit.zsh/_zi::get-object-path
  `-- zinit.zsh/_zi::pack-ice
@@ -551,60 +620,48 @@ Has 1 line(s). Calls functions:
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::atclone-hook
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
-Has 26 line(s). Calls functions:
-
- ~zi::atclone-hook
- |-- zinit-side.zsh/_zi::countdown
- `-- zinit.zsh/@zi::substitute
+Has 26 line(s). Doesn't call other functions.
 
 Uses feature(s): _eval_, _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::atpull-e-hook
-~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
-Has 22 line(s). Calls functions:
-
- ~zi::atpull-e-hook
- `-- zinit-side.zsh/_zi::countdown
+Has 22 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::atpull-hook
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
-Has 22 line(s). Calls functions:
-
- ~zi::atpull-hook
- `-- zinit-side.zsh/_zi::countdown
+Has 22 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::compile-plugin-hook
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
  ]]]
 ____
 
-Has 19 line(s). Calls functions:
-
- ~zi::compile-plugin-hook
+Has 19 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::configure-base-hook
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -614,21 +671,12 @@ ____
  places.
 ____
 
-Has 65 line(s). Calls functions:
+Has 65 line(s). Doesn't call other functions.
 
- ~zi::configure-base-hook
- |-- zinit-side.zsh/_zi::countdown
- `-- zinit.zsh/@zi::substitute
-
-Called by:
-
- ~zi::configure-e-hook
- ~zi::configure-hook
-
-_Environment variables used:_ zinit.zsh -> ZPFX
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::configure-e-hook
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -637,17 +685,12 @@ ____
  before make.
 ____
 
-Has 1 line(s). Calls functions:
-
- ~zi::configure-e-hook
- `-- ~zi::configure-base-hook
-     |-- zinit-side.zsh/_zi::countdown
-     `-- zinit.zsh/@zi::substitute
+Has 1 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::configure-hook
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -656,120 +699,76 @@ ____
  before make.
 ____
 
-Has 1 line(s). Calls functions:
-
- ~zi::configure-hook
- `-- ~zi::configure-base-hook
-     |-- zinit-side.zsh/_zi::countdown
-     `-- zinit.zsh/@zi::substitute
+Has 1 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::cp-hook
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
-Has 30 line(s). Calls functions:
-
- ~zi::cp-hook
- `-- zinit.zsh/@zi::substitute
+Has 30 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::extract-hook
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
-Has 10 line(s). Calls functions:
-
- ~zi::extract-hook
- `-- zinit.zsh/@zi::substitute
+Has 10 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::make-base-hook
-~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
 
-Has 29 line(s). Calls functions:
+Has 29 line(s). Doesn't call other functions.
 
- ~zi::make-base-hook
- |-- zinit-side.zsh/_zi::countdown
- `-- zinit.zsh/@zi::substitute
-
-Called by:
-
- ~zi::make-e-hook
- ~zi::make-ee-hook
- ~zi::make-hook
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::make-e-hook
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
-Has 1 line(s). Calls functions:
-
- ~zi::make-e-hook
- `-- ~zi::make-base-hook
-     |-- zinit-side.zsh/_zi::countdown
-     `-- zinit.zsh/@zi::substitute
+Has 1 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::make-ee-hook
-~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
-Has 1 line(s). Calls functions:
-
- ~zi::make-ee-hook
- `-- ~zi::make-base-hook
-     |-- zinit-side.zsh/_zi::countdown
-     `-- zinit.zsh/@zi::substitute
+Has 1 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::make-hook
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
-Has 1 line(s). Calls functions:
-
- ~zi::make-hook
- `-- ~zi::make-base-hook
-     |-- zinit-side.zsh/_zi::countdown
-     `-- zinit.zsh/@zi::substitute
+Has 1 line(s). Doesn't call other functions.
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::mv-hook
-~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
-Has 35 line(s). Calls functions:
-
- ~zi::mv-hook
- |-- zinit.zsh/+zi::message
- `-- zinit.zsh/@zi::substitute
+Has 35 line(s). Doesn't call other functions.
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::ps-on-update-hook
-~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
 
-Has 18 line(s). Calls functions:
-
- ~zi::ps-on-update-hook
- `-- zinit.zsh/+zi::message
+Has 18 line(s). Doesn't call other functions.
 
 Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ~zi::reset-hook
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~
 
-Has 79 line(s). Calls functions:
-
- ~zi::reset-hook
- `-- zinit.zsh/+zi::message
+Has 79 line(s). Doesn't call other functions.
 
 Uses feature(s): _eval_
 
