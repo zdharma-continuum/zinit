@@ -17,16 +17,17 @@ container-build: ## build docker image
 	docker build \
 		--compress \
 		--file=Dockerfile \
-		--n
+		--force-rm \
 		--platform=linux/x86_64 \
 		--rm \
-		--force-rm \
 		--tag=$(CONTAINTER_NAME):latest \
 		.
 
 container-shell: ## start shell in docker container
 	docker run \
 		--interactive \
+		--mount=source=zinit-volume,destination=/root \
+		--platform=linux/x86_64 \
 		--tty \
 		$(CONTAINTER_NAME):latest
 
