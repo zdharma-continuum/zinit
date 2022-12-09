@@ -1,7 +1,7 @@
 .EXPORT_ALL_VARIABLES:
 
 ZSH := $(shell command -v zsh 2> /dev/null)
-SRC := zinit{'','-additional','-autoload','-install','-side'}.zsh
+SRC := share/{'git-process-output','rpm2cpio'}.zsh zinit{'','-additional','-autoload','-install','-side'}.zsh
 DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 
 .PHONY: all clean container doc doc/container tags tags/emacs tags/vim test zwc
@@ -9,14 +9,20 @@ DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 clean:
 	rm -rvf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
 
-container:
-	docker build --tag=ghcr.io/zdharma-continuum/zinit:latest --file=docker/Dockerfile .
-
 doc: clean
-	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\:\∞\.\+\@\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC)"
+	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\+\@\-\:\~\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC); make -C ./zsdoc pdf"
 
-doc/container: container
-	./scripts/docker-run.sh --docs --debug
+CONTAINER_NAME := zinit
+CONTAINER_CMD := docker run -it --platform=linux/x86_64 --mount=source=$(CONTAINER_NAME)-volume,destination=/root
+
+container-build: ## build docker image
+	docker build --file=Dockerfile --platform=linux/x86_64 --tag=$(CONTAINER_NAME):latest .
+
+container-docs: ## regenerate zinit docs in container
+	$(CONTAINER_CMD) $(CONTAINER_NAME):latest make --directory zinit.git/ doc
+
+container-shell: ## start shell in docker container
+	$(CONTAINER_CMD) $(CONTAINER_NAME):latest
 
 # Run ctags to generate Emacs and Vim's format tag file.
 tags: tags/emacs tags/vim

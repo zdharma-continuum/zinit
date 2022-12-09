@@ -231,7 +231,7 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
       # shellcheck disable=2016
       CMD=(zsh -ilsc
         'sudo chown -R "$(id -u):$(id -g)" /src &&
-         @zinit-scheduler burst &&
+         @zi::scheduler burst &&
          sudo apk add tree &&
          make -C /src doc')
       ;;
