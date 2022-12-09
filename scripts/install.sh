@@ -261,7 +261,7 @@ EOF
   if [ "$reply" = y ] || [ "$reply" = Y ]; then
     command cat "$zshrc_annex_file" >> "$ZSHRC"
     echo_info "Installing annexes"
-    zsh -ic "@zinit-scheduler burst"
+    zsh -ic "@zi::scheduler burst"
     echo_success 'Done!'
   else
     echo_warning "Skipped the annexes."
