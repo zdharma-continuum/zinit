@@ -40,10 +40,8 @@ source $ZINIT[BIN_DIR]/zinit.zsh \
 # ]]]
 # Install Annexes [[[
 info 'installing test dependencies'
-    # ver'fix/improve-lbin-logic' \
-zinit depth'1' light-mode for \
-  zdharma-continuum/zinit-annex-binary-symlink \
-  zdharma-continuum/zinit-annex-{'bin-gem-node','default-ice'}
+zi id-as ver'style/rename-funcs' light-mode for \
+  @vladdoster/zinit-annex-{bin-gem-node,binary-symlink,default-ice,patch-dl,submods}
 # ]]]
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
