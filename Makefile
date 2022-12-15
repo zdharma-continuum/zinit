@@ -13,7 +13,7 @@ doc: clean
 	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\+\@\-\:\~\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC); make -C ./zsdoc pdf"
 
 CONTAINER_NAME := zinit
-CONTAINER_CMD := docker run -it --platform=linux/x86_64 --mount=source=$(CONTAINER_NAME)-volume,destination=/root
+CONTAINER_CMD := docker run -i --platform=linux/x86_64 --mount=source=$(CONTAINER_NAME)-volume,destination=/root
 
 container-build: ## build docker image
 	docker build --file=Dockerfile --platform=linux/x86_64 --tag=$(CONTAINER_NAME):latest .
