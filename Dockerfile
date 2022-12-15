@@ -21,3 +21,5 @@ COPY ./docker/zshrc .zshrc
 RUN zsh --interactive --login -c -- '@zi::scheduler burst'
 
 CMD ["zsh","--interactive","--login"]
+
+# vim: set fenc=utf8 ffs=unix ft=dockerfile list noet sw=4 ts=4 tw=72:
