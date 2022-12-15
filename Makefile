@@ -58,3 +58,5 @@ test:
 
 zwc:
 	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
+
+# vim: set fenc=utf8 ffs=unix ft=make list noet sw=4 ts=4 tw=72:
