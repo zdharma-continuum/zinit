@@ -6,11 +6,13 @@ DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 
 .PHONY: all clean container doc doc/container tags tags/emacs tags/vim test zwc
 
+all: help
+
 clean:
 	rm -rvf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
 
-doc: clean
-	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\+\@\-\:\~\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC); make -C ./zsdoc pdf"
+doc: clean ## Generate zinit documentation
+	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\+\@\-\:\_\_a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*|\#[[:space:]][\]]*)' $(DOC_SRC); make -C ./zsdoc pdf"
 
 CONTAINER_NAME := zinit
 CONTAINER_CMD := docker run -i --platform=linux/x86_64 --mount=source=$(CONTAINER_NAME)-volume,destination=/root
@@ -24,10 +26,9 @@ container-docs: ## regenerate zinit docs in container
 container-shell: ## start shell in docker container
 	$(CONTAINER_CMD) $(CONTAINER_NAME):latest
 
-# Run ctags to generate Emacs and Vim's format tag file.
-tags: tags/emacs tags/vim
+tags: tags/emacs tags/vim ## run ctags to generate emacs and vim's format tag file.
 
-tags/emacs: ## Build Emacs-style ctags file
+tags/emacs: ## build emacs-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 		if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
 			ctags -e -R --options=share/zsh.ctags --languages=zsh \
@@ -41,7 +42,7 @@ tags/emacs: ## Build Emacs-style ctags file
 	    'version) utility first.\n'; \
 	fi
 
-tags/vim: ## Build the Vim-style ctags file
+tags/vim: ## build the vim-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 		if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
 			ctags --languages=zsh --maxdepth=1 --options=share/zsh.ctags --pattern-length-limit=250 -R; \
@@ -53,10 +54,14 @@ tags/vim: ## Build the Vim-style ctags file
 	    printf 'Error: Please install a ctags first.\n'; \
 	fi
 
-test:
+test: ## Run zunit tests
 	zunit run
 
-zwc:
+zwc: ## compile zsh files via zcompile
 	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
+
+help: ## display available make targets
+	@ # credit: tweekmonster github gist
+	@echo "$$(grep -hE '^[a-zA-Z0-9_-]+:.*##' $(MAKEFILE_LIST) | sed -e 's/:.*##\s*/:/' -e 's/^\(.\+\):\(.*\)/\\033[36m\1\\033[m:\2/' | column -c2 -t -s : | sort)"
 
 # vim: set fenc=utf8 ffs=unix ft=make list noet sw=4 ts=4 tw=72:

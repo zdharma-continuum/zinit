@@ -266,9 +266,9 @@ Called by:
  zinit-autoload.zsh/zi::update-or-status-all
  zinit-autoload.zsh/zi::update-or-status
  zinit-autoload.zsh/zi::wait-for-update-jobs
- zinit-install.zsh/\~zi::mv-hook
- zinit-install.zsh/\~zi::ps-on-update-hook
- zinit-install.zsh/\~zi::reset-hook
+ zinit-install.zsh/__zi::mv-hook
+ zinit-install.zsh/__zi::ps-on-update-hook
+ zinit-install.zsh/__zi::reset-hook
  zinit-install.zsh/zi::compile-plugin
  zinit-install.zsh/zi::compinit
  zinit-install.zsh/zi::download-file-stdout
@@ -478,7 +478,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  Registers the z-annex inside Zinit – i.e. an Zinit extension
 ____
 
@@ -597,12 +596,12 @@ Uses feature(s): _setopt_
 Called by:
 
  zinit-autoload.zsh/zi::at-eval
- zinit-install.zsh/\~zi::atclone-hook
- zinit-install.zsh/\~zi::configure-base-hook
- zinit-install.zsh/\~zi::cp-hook
- zinit-install.zsh/\~zi::extract-hook
- zinit-install.zsh/\~zi::make-base-hook
- zinit-install.zsh/\~zi::mv-hook
+ zinit-install.zsh/__zi::atclone-hook
+ zinit-install.zsh/__zi::configure-base-hook
+ zinit-install.zsh/__zi::cp-hook
+ zinit-install.zsh/__zi::extract-hook
+ zinit-install.zsh/__zi::make-base-hook
+ zinit-install.zsh/__zi::mv-hook
  zinit-install.zsh/zi::at-eval
  zinit-install.zsh/zi::get-package
 
@@ -1438,7 +1437,6 @@ zi::set-m-func
 
 ____
  
- ]]]
  Sets and withdraws the temporary, atclone/atpull time function `m`.
 ____
 
@@ -1934,7 +1932,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 

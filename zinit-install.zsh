@@ -2172,8 +2172,8 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         fi
     fi
 } # ]]]
-# FUNCTION: ~zi::reset-hook [[[
-~zi::reset-hook() {
+# FUNCTION: __zi::reset-hook [[[
+__zi::reset-hook() {
     # File
     if [[ "$1" = plugin ]] {
         local type="$1" user="$2" plugin="$3" id_as="$4" dir="${5#%}" hook="$6"
@@ -2257,26 +2257,26 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         ZINIT[-r/--reset-opt-hook-has-been-run]=1
     }
 } # ]]]
-# FUNCTION: ~zi::configure-e-hook [[[
+# FUNCTION: __zi::configure-e-hook [[[
 # The !-version of configure'' ice. Runs in between
 # of make'!!' and make'!'. Configure naturally runs
 # before make.
-~zi::configure-e-hook() {
-    ~zi::configure-base-hook "$@" "!"
+__zi::configure-e-hook() {
+    __zi::configure-base-hook "$@" "!"
 } # ]]]
-# FUNCTION: ~zi::configure-hook [[[
+# FUNCTION: __zi::configure-hook [[[
 # The non-! version of configure'' ice. Runs in between
 # of make'!' and make''. Configure script naturally runs
 # before make.
-~zi::configure-hook() {
-    ~zi::configure-base-hook "$@"
+__zi::configure-hook() {
+    __zi::configure-base-hook "$@"
 } # ]]]
-# FUNCTION: ~zi::configure-base-hook [[[
+# FUNCTION: __zi::configure-base-hook [[[
 # A base common implementation of configure'', as all
 # the starting steps are rigid and the same in all
 # hooks, hence the idea. TODO: use in make'' and other
 # places.
-~zi::configure-base-hook() {
+__zi::configure-base-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
@@ -2361,20 +2361,20 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
             )
     fi
 } # ]]]
-# FUNCTION: ~zi::make-ee-hook [[[
-~zi::make-ee-hook() {
-    ~zi::make-base-hook "$@" "!!"
+# FUNCTION: __zi::make-ee-hook [[[
+__zi::make-ee-hook() {
+    __zi::make-base-hook "$@" "!!"
 } # ]]]
-# FUNCTION: ~zi::make-e-hook [[[
-~zi::make-e-hook() {
-    ~zi::make-base-hook "$@" "!"
+# FUNCTION: __zi::make-e-hook [[[
+__zi::make-e-hook() {
+    __zi::make-base-hook "$@" "!"
 } # ]]]
-# FUNCTION: ~zi::make-hook [[[
-~zi::make-hook() {
-    ~zi::make-base-hook "$@" ""
+# FUNCTION: __zi::make-hook [[[
+__zi::make-hook() {
+    __zi::make-base-hook "$@" ""
 } # ]]]
-# FUNCTION: ~zi::make-base-hook [[[
-~zi::make-base-hook() {
+# FUNCTION: __zi::make-base-hook [[[
+__zi::make-base-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
@@ -2411,8 +2411,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
             build dir found, {cmd}make{error}/{cmd}meson{error} isn\'t run\!
     fi
 } # ]]]
-# FUNCTION: ~zi::atclone-hook [[[
-~zi::atclone-hook() {
+# FUNCTION: __zi::atclone-hook [[[
+__zi::atclone-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
@@ -2440,8 +2440,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 
     return "$rc"
 } # ]]]
-# FUNCTION: ~zi::extract-hook [[[
-~zi::extract-hook() {
+# FUNCTION: __zi::extract-hook [[[
+__zi::extract-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
@@ -2453,8 +2453,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 
     zi::extract plugin "$extract" "$dir"
 } # ]]]
-# FUNCTION: ~zi::mv-hook [[[
-~zi::mv-hook() {
+# FUNCTION: __zi::mv-hook [[[
+__zi::mv-hook() {
     [[ -z $ICE[mv] ]] && return 0
 
     [[ "$1" = plugin ]] && \
@@ -2491,8 +2491,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         return $retval
     )
 } # ]]]
-# FUNCTION: ~zi::cp-hook [[[
-~zi::cp-hook() {
+# FUNCTION: __zi::cp-hook [[[
+__zi::cp-hook() {
     [[ -z $ICE[cp] ]] && return
 
     [[ "$1" = plugin ]] && \
@@ -2527,8 +2527,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     )
 }
 # ]]]
-# FUNCTION: ~zi::compile-plugin-hook [[[
-~zi::compile-plugin-hook() {
+# FUNCTION: __zi::compile-plugin-hook [[[
+__zi::compile-plugin-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" || \
         local dir="${4#%}" hook="$5" subtype="$6"
@@ -2551,8 +2551,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         }
     }
 } # ]]]
-# FUNCTION: ~zi::atpull-e-hook [[[
-~zi::atpull-e-hook() {
+# FUNCTION: __zi::atpull-e-hook [[[
+__zi::atpull-e-hook() {
     (( ${+ICE[atpull]} )) || return 0
     [[ -n ${ICE[atpull]} ]] || return 0
     # Only process atpull"!cmd"
@@ -2577,8 +2577,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 
     return "$rc"
 } # ]]]
-# FUNCTION: ~zi::atpull-hook [[[
-~zi::atpull-hook() {
+# FUNCTION: __zi::atpull-hook [[[
+__zi::atpull-hook() {
     (( ${+ICE[atpull]} )) || return 0
     [[ -n ${ICE[atpull]} ]] || return 0
     # Exit early if atpull"!cmd" -> this is done by zinit-atpull-e-hook
@@ -2603,8 +2603,8 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 
     return "$rc"
 } # ]]]
-# FUNCTION: ~zi::ps-on-update-hook [[[
-~zi::ps-on-update-hook() {
+# FUNCTION: __zi::ps-on-update-hook [[[
+__zi::ps-on-update-hook() {
     [[ -z $ICE[ps-on-update] ]] && return 0
 
     [[ "$1" = plugin ]] && \
