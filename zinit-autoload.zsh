@@ -3352,9 +3352,15 @@ EOF
     )
 } # ]]]
 
+
+# FUNCTION: zi::version [[[
+# Shows usage information.
 #
-# Help function
-#
+# User-action entry point.
+zi::version() {
+	+zinit-message "zinit{cmd} $(git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
+	return $?
+} # ]]]
 
 # FUNCTION: .zinit-help [[[
 # Shows usage information.
@@ -3364,6 +3370,7 @@ EOF
            builtin print -r -- "${ZINIT[col-p]}Usage${ZINIT[col-rst]}:
 —— -h|--help|help                – usage information
 —— man                           – manual
+—— version                       – display zinit version
 —— self-update                   – updates and compiles Zinit
 —— zstatus                       – overall Zinit statu—— times [-s] [-m] [-a] – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments, -a – show both load times and loading moments
 —— load ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – load plugin, can also receive absolute local path
