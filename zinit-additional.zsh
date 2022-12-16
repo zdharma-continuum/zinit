@@ -76,7 +76,6 @@ zi::service() {
         builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"
     done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
 } # ]]]
-
 # FUNCTION: zi::wrap-track-functions [[[
 zi::wrap-track-functions() {
     local user="$1" plugin="$2" id_as="$3" f
@@ -104,6 +103,11 @@ function $f {
 # Dtrace
 #
 
+# FUNCTION: zi::clear-debug-report [[[
+# Forgets dtrace repport gathered up to this moment.
+zi::clear-debug-report() {
+    zi::clear-report-for _dtrace/_dtrace
+} # ]]]
 # FUNCTION: zi::debug-start [[[
 # Starts Dtrace, i.e. session tracking for changes in Zsh state.
 zi::debug-start() {
@@ -130,11 +134,6 @@ zi::debug-stop() {
     # Gather end data now, for diffing later
     zi::diff _dtrace/_dtrace end
 } # ]]]
-# FUNCTION: zi::clear-debug-report [[[
-# Forgets dtrace repport gathered up to this moment.
-zi::clear-debug-report() {
-    zi::clear-report-for _dtrace/_dtrace
-} # ]]]
 # FUNCTION: zi::debug-unload [[[
 # Reverts changes detected by dtrace run.
 zi::debug-unload() {
@@ -146,4 +145,4 @@ zi::debug-unload() {
     fi
 } # ]]]
 
-# vim: set fenc=utf8 ffs=unix foldmarker=[[[,]]] foldmethod=marker ft=zsh list noet sw=2 ts=2 tw=72 :
+# vim: set fenc=utf8 ffs=unix foldmarker=[[[,]]] foldmethod=marker ft=zsh list noet sw=2 ts=2 tw=72:
