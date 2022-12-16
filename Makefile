@@ -3,7 +3,7 @@
 ZSH := $(shell command -v zsh 2> /dev/null)
 SRC := share/{'git-process-output','rpm2cpio'}.zsh zinit{'','-additional','-autoload','-install','-side'}.zsh
 DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
-HAS_TTY := $(shell zsh -c "(( $${+GITHUB_ACTIONS} )) && echo '' || echo '--tty'")
+HAS_TTY := $(shell echo $${GITHUB_ACTIONS:---tty})
 
 .PHONY: all clean container-build container-shell container-docs tags tags/emacs tags/vim test zwc
 
