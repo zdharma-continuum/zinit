@@ -3276,41 +3276,41 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 } # ]]]
 
 # !atpull-pre
-@zi::register-hook "-r/--reset" hook:e-\!atpull-pre ~zi::reset-hook
+@zi::register-hook "-r/--reset" hook:e-\!atpull-pre __zi::reset-hook
 # !atpull-post
-@zi::register-hook "ICE[reset]" hook:e-\!atpull-post ~zi::reset-hook
-@zi::register-hook "atpull'!'" hook:e-\!atpull-post ~zi::atpull-e-hook
+@zi::register-hook "ICE[reset]" hook:e-\!atpull-post __zi::reset-hook
+@zi::register-hook "atpull'!'" hook:e-\!atpull-post __zi::atpull-e-hook
 
 # e-!atpull-pre.
-@zi::register-hook "make'!!'" hook:no-e-\!atpull-pre ~zi::make-ee-hook
-@zi::register-hook "extract" hook:e-\!atpull-pre ~zi::extract-hook
-@zi::register-hook "mv''" hook:no-e-\!atpull-pre ~zi::mv-hook
-@zi::register-hook "cp''" hook:no-e-\!atpull-pre ~zi::cp-hook
-@zi::register-hook "compile-plugin" hook:no-e-\!atpull-pre ~zi::compile-plugin-hook
+@zi::register-hook "make'!!'" hook:no-e-\!atpull-pre __zi::make-ee-hook
+@zi::register-hook "extract" hook:e-\!atpull-pre __zi::extract-hook
+@zi::register-hook "mv''" hook:no-e-\!atpull-pre __zi::mv-hook
+@zi::register-hook "cp''" hook:no-e-\!atpull-pre __zi::cp-hook
+@zi::register-hook "compile-plugin" hook:no-e-\!atpull-pre __zi::compile-plugin-hook
 # no-e-!atpull-post.
-@zi::register-hook "configure'!'" hook:no-e-\!atpull-post ~zi::configure-e-hook
-@zi::register-hook "make'!'" hook:no-e-\!atpull-post ~zi::make-e-hook
-@zi::register-hook "configure''" hook:no-e-\!atpull-post ~zi::configure-hook
-@zi::register-hook "atpull" hook:no-e-\!atpull-post ~zi::atpull-hook
-@zi::register-hook "make''" hook:no-e-\!atpull-post ~zi::make-hook
+@zi::register-hook "configure'!'" hook:no-e-\!atpull-post __zi::configure-e-hook
+@zi::register-hook "make'!'" hook:no-e-\!atpull-post __zi::make-e-hook
+@zi::register-hook "configure''" hook:no-e-\!atpull-post __zi::configure-hook
+@zi::register-hook "atpull" hook:no-e-\!atpull-post __zi::atpull-hook
+@zi::register-hook "make''" hook:no-e-\!atpull-post __zi::make-hook
 # atpull-post.
-@zi::register-hook "compile-plugin" hook:atpull-post ~zi::compile-plugin-hook
-@zi::register-hook "ps-on-update" hook:%atpull-post ~zi::ps-on-update-hook
+@zi::register-hook "compile-plugin" hook:atpull-post __zi::compile-plugin-hook
+@zi::register-hook "ps-on-update" hook:%atpull-post __zi::ps-on-update-hook
 
 # !atclone-pre.
-@zi::register-hook "make'!!'" hook:\!atclone-pre ~zi::make-ee-hook
-@zi::register-hook "extract" hook:\!atclone-pre ~zi::extract-hook
-@zi::register-hook "mv''" hook:\!atclone-pre ~zi::mv-hook
-@zi::register-hook "cp''" hook:\!atclone-pre ~zi::cp-hook
-@zi::register-hook "compile-plugin" hook:\!atclone-pre ~zi::compile-plugin-hook
+@zi::register-hook "make'!!'" hook:\!atclone-pre __zi::make-ee-hook
+@zi::register-hook "extract" hook:\!atclone-pre __zi::extract-hook
+@zi::register-hook "mv''" hook:\!atclone-pre __zi::mv-hook
+@zi::register-hook "cp''" hook:\!atclone-pre __zi::cp-hook
+@zi::register-hook "compile-plugin" hook:\!atclone-pre __zi::compile-plugin-hook
 # !atclone-post.
-@zi::register-hook "configure'!'" hook:\!atclone-post ~zi::configure-e-hook
-@zi::register-hook "make'!'" hook:\!atclone-post ~zi::make-e-hook
-@zi::register-hook "configure''" hook:\!atclone-post ~zi::configure-hook
-@zi::register-hook "atclone" hook:\!atclone-post ~zi::atclone-hook
-@zi::register-hook "make''" hook:\!atclone-post ~zi::make-hook
+@zi::register-hook "configure'!'" hook:\!atclone-post __zi::configure-e-hook
+@zi::register-hook "make'!'" hook:\!atclone-post __zi::make-e-hook
+@zi::register-hook "configure''" hook:\!atclone-post __zi::configure-hook
+@zi::register-hook "atclone" hook:\!atclone-post __zi::atclone-hook
+@zi::register-hook "make''" hook:\!atclone-post __zi::make-hook
 # atclone-post.
-@zi::register-hook "compile-plugin" hook:atclone-post ~zi::compile-plugin-hook
+@zi::register-hook "compile-plugin" hook:atclone-post __zi::compile-plugin-hook
 
 # create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY

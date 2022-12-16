@@ -13,6 +13,22 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
+ __zi::atclone-hook
+ __zi::atpull-e-hook
+ __zi::atpull-hook
+ __zi::compile-plugin-hook
+ __zi::configure-base-hook
+ __zi::configure-e-hook
+ __zi::configure-hook
+ __zi::cp-hook
+ __zi::extract-hook
+ __zi::make-base-hook
+ __zi::make-e-hook
+ __zi::make-ee-hook
+ __zi::make-hook
+ __zi::mv-hook
+ __zi::ps-on-update-hook
+ __zi::reset-hook
  zi::at-eval
  zi::compile-plugin
  zi::compinit
@@ -37,22 +53,6 @@ FUNCTIONS
  ziextract
  zimv
  zpextract
- ~zi::atclone-hook
- ~zi::atpull-e-hook
- ~zi::atpull-hook
- ~zi::compile-plugin-hook
- ~zi::configure-base-hook
- ~zi::configure-e-hook
- ~zi::configure-hook
- ~zi::cp-hook
- ~zi::extract-hook
- ~zi::make-base-hook
- ~zi::make-e-hook
- ~zi::make-ee-hook
- ~zi::make-hook
- ~zi::mv-hook
- ~zi::ps-on-update-hook
- ~zi::reset-hook
 AUTOLOAD compinit
 
 DETAILS
@@ -64,6 +64,244 @@ Script Body
 Has 6 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 Uses feature(s): _source_
+
+__zi::atclone-hook
+~~~~~~~~~~~~~~~~~~
+
+Has 26 line(s). Calls functions:
+
+ __zi::atclone-hook
+ |-- zinit-side.zsh/zi::countdown
+ `-- zinit.zsh/@zi::substitute
+
+Uses feature(s): _eval_, _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::atpull-e-hook
+~~~~~~~~~~~~~~~~~~~
+
+Has 22 line(s). Calls functions:
+
+ __zi::atpull-e-hook
+ |-- zi::at-eval
+ |   `-- zinit.zsh/@zi::substitute
+ `-- zinit-side.zsh/zi::countdown
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::atpull-hook
+~~~~~~~~~~~~~~~~~
+
+Has 22 line(s). Calls functions:
+
+ __zi::atpull-hook
+ |-- zi::at-eval
+ |   `-- zinit.zsh/@zi::substitute
+ `-- zinit-side.zsh/zi::countdown
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::compile-plugin-hook
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Has 19 line(s). Calls functions:
+
+ __zi::compile-plugin-hook
+ `-- zi::compile-plugin
+     |-- zinit-side.zsh/zi::compute-ice
+     |-- zinit-side.zsh/zi::first
+     `-- zinit.zsh/+zi::message
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::configure-base-hook
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ A base common implementation of configure'', as all
+ the starting steps are rigid and the same in all
+ hooks, hence the idea. TODO: use in make'' and other
+ places.
+____
+
+Has 65 line(s). Calls functions:
+
+ __zi::configure-base-hook
+ |-- zi::configure-run-autoconf
+ |   `-- zinit-side.zsh/zi::countdown
+ |-- zinit-side.zsh/zi::countdown
+ `-- zinit.zsh/@zi::substitute
+
+Called by:
+
+ __zi::configure-e-hook
+ __zi::configure-hook
+
+_Environment variables used:_ zinit.zsh -> ZPFX
+
+__zi::configure-e-hook
+~~~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ The !-version of configure'' ice. Runs in between
+ of make'!!' and make'!'. Configure naturally runs
+ before make.
+____
+
+Has 1 line(s). Calls functions:
+
+ __zi::configure-e-hook
+ `-- __zi::configure-base-hook
+     |-- zi::configure-run-autoconf
+     |   `-- zinit-side.zsh/zi::countdown
+     |-- zinit-side.zsh/zi::countdown
+     `-- zinit.zsh/@zi::substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::configure-hook
+~~~~~~~~~~~~~~~~~~~~
+
+____
+ 
+ The non-! version of configure'' ice. Runs in between
+ of make'!' and make''. Configure script naturally runs
+ before make.
+____
+
+Has 1 line(s). Calls functions:
+
+ __zi::configure-hook
+ `-- __zi::configure-base-hook
+     |-- zi::configure-run-autoconf
+     |   `-- zinit-side.zsh/zi::countdown
+     |-- zinit-side.zsh/zi::countdown
+     `-- zinit.zsh/@zi::substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::cp-hook
+~~~~~~~~~~~~~
+
+Has 30 line(s). Calls functions:
+
+ __zi::cp-hook
+ `-- zinit.zsh/@zi::substitute
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::extract-hook
+~~~~~~~~~~~~~~~~~~
+
+Has 10 line(s). Calls functions:
+
+ __zi::extract-hook
+ |-- zi::extract
+ |   |-- ziextract
+ |   |   `-- zinit.zsh/+zi::message
+ |   `-- zinit.zsh/+zi::message
+ `-- zinit.zsh/@zi::substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::make-base-hook
+~~~~~~~~~~~~~~~~~~~~
+
+Has 29 line(s). Calls functions:
+
+ __zi::make-base-hook
+ |-- zinit-side.zsh/zi::countdown
+ `-- zinit.zsh/@zi::substitute
+
+Called by:
+
+ __zi::make-e-hook
+ __zi::make-ee-hook
+ __zi::make-hook
+
+__zi::make-e-hook
+~~~~~~~~~~~~~~~~~
+
+Has 1 line(s). Calls functions:
+
+ __zi::make-e-hook
+ `-- __zi::make-base-hook
+     |-- zinit-side.zsh/zi::countdown
+     `-- zinit.zsh/@zi::substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::make-ee-hook
+~~~~~~~~~~~~~~~~~~
+
+Has 1 line(s). Calls functions:
+
+ __zi::make-ee-hook
+ `-- __zi::make-base-hook
+     |-- zinit-side.zsh/zi::countdown
+     `-- zinit.zsh/@zi::substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::make-hook
+~~~~~~~~~~~~~~~
+
+Has 1 line(s). Calls functions:
+
+ __zi::make-hook
+ `-- __zi::make-base-hook
+     |-- zinit-side.zsh/zi::countdown
+     `-- zinit.zsh/@zi::substitute
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::mv-hook
+~~~~~~~~~~~~~
+
+Has 35 line(s). Calls functions:
+
+ __zi::mv-hook
+ |-- zinit.zsh/+zi::message
+ `-- zinit.zsh/@zi::substitute
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::ps-on-update-hook
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Has 18 line(s). Calls functions:
+
+ __zi::ps-on-update-hook
+ `-- zinit.zsh/+zi::message
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zi::reset-hook
+~~~~~~~~~~~~~~~~
+
+Has 79 line(s). Calls functions:
+
+ __zi::reset-hook
+ `-- zinit.zsh/+zi::message
+
+Uses feature(s): _eval_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 zi::at-eval
 ~~~~~~~~~~~
@@ -77,8 +315,8 @@ Uses feature(s): _eval_
 
 Called by:
 
- \~zi::atpull-e-hook
- \~zi::atpull-hook
+ __zi::atpull-e-hook
+ __zi::atpull-hook
 
 zi::compile-plugin
 ~~~~~~~~~~~~~~~~~~
@@ -103,7 +341,7 @@ Uses feature(s): _eval_, _setopt_, _zcompile_
 
 Called by:
 
- \~zi::compile-plugin-hook
+ __zi::compile-plugin-hook
  zinit-autoload.zsh/zi::compile-uncompile-all
  zinit.zsh/zinit
 
@@ -153,7 +391,7 @@ Has 64 line(s). Calls functions:
 
 Called by:
 
- \~zi::configure-base-hook
+ __zi::configure-base-hook
 
 zi::download-file-stdout
 ~~~~~~~~~~~~~~~~~~~~~~~~
@@ -233,7 +471,7 @@ Uses feature(s): _setopt_
 
 Called by:
 
- \~zi::extract-hook
+ __zi::extract-hook
 
 zi::forget-completion
 ~~~~~~~~~~~~~~~~~~~~~
@@ -619,161 +857,6 @@ Has 1 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-~zi::atclone-hook
-~~~~~~~~~~~~~~~~~
-
-Has 26 line(s). Doesn't call other functions.
-
-Uses feature(s): _eval_, _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::atpull-e-hook
-~~~~~~~~~~~~~~~~~~
-
-Has 22 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::atpull-hook
-~~~~~~~~~~~~~~~~
-
-Has 22 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::compile-plugin-hook
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- ]]]
-____
-
-Has 19 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::configure-base-hook
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- A base common implementation of configure'', as all
- the starting steps are rigid and the same in all
- hooks, hence the idea. TODO: use in make'' and other
- places.
-____
-
-Has 65 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::configure-e-hook
-~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- The !-version of configure'' ice. Runs in between
- of make'!!' and make'!'. Configure naturally runs
- before make.
-____
-
-Has 1 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::configure-hook
-~~~~~~~~~~~~~~~~~~~
-
-____
- 
- The non-! version of configure'' ice. Runs in between
- of make'!' and make''. Configure script naturally runs
- before make.
-____
-
-Has 1 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::cp-hook
-~~~~~~~~~~~~
-
-Has 30 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::extract-hook
-~~~~~~~~~~~~~~~~~
-
-Has 10 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::make-base-hook
-~~~~~~~~~~~~~~~~~~~
-
-Has 29 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::make-e-hook
-~~~~~~~~~~~~~~~~
-
-Has 1 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::make-ee-hook
-~~~~~~~~~~~~~~~~~
-
-Has 1 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::make-hook
-~~~~~~~~~~~~~~
-
-Has 1 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::mv-hook
-~~~~~~~~~~~~
-
-Has 35 line(s). Doesn't call other functions.
-
-Uses feature(s): _setopt_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::ps-on-update-hook
-~~~~~~~~~~~~~~~~~~~~~~
-
-Has 18 line(s). Doesn't call other functions.
-
-Uses feature(s): _eval_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-~zi::reset-hook
-~~~~~~~~~~~~~~~
-
-Has 79 line(s). Doesn't call other functions.
-
-Uses feature(s): _eval_
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
 compinit
 ~~~~~~~~
 
@@ -791,7 +874,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 

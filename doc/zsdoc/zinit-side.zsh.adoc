@@ -153,11 +153,11 @@ Uses feature(s): _trap_
 Called by:
 
  zinit-autoload.zsh/zi::run-delete-hooks
- zinit-install.zsh/\~zi::atclone-hook
- zinit-install.zsh/\~zi::atpull-e-hook
- zinit-install.zsh/\~zi::atpull-hook
- zinit-install.zsh/\~zi::configure-base-hook
- zinit-install.zsh/\~zi::make-base-hook
+ zinit-install.zsh/__zi::atclone-hook
+ zinit-install.zsh/__zi::atpull-e-hook
+ zinit-install.zsh/__zi::atpull-hook
+ zinit-install.zsh/__zi::configure-base-hook
+ zinit-install.zsh/__zi::make-base-hook
  zinit-install.zsh/zi::configure-run-autoconf
 
 zi::exists-physically
