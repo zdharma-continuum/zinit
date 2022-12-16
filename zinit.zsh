@@ -1320,6 +1320,7 @@ zi::prepare-home() {
         command cp -f $ZINIT[BIN_DIR]/doc/zinit.1 $ZINIT[MAN_DIR]/man1
     }
 } # ]]]
+
 # FUNCTION: zi::load-object [[[
 zi::load-object() {
     local ___type="$1" ___id=$2
@@ -1334,8 +1335,8 @@ zi::load-object() {
     ___retval+=$?
 
     return __retval
-}
-# ]]]
+} # ]]]
+
 # FUNCTION: zi::set-m-func [[[
 # Sets and withdraws the temporary, atclone/atpull time function `m`.
 zi::set-m-func() {
