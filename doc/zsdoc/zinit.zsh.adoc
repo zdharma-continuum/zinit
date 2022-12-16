@@ -92,7 +92,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 245 line(s). Calls functions:
+Has 249 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
@@ -133,6 +133,7 @@ Has 245 line(s). Calls functions:
  |   |-- zinit-autoload.zsh/.zinit-unload
  |   |-- zinit-autoload.zsh/.zinit-update-or-status
  |   |-- zinit-autoload.zsh/.zinit-update-or-status-all
+ |   |-- zinit-autoload.zsh/zi::version
  |   |-- zinit-install.zsh/.zinit-compile-plugin
  |   |-- zinit-install.zsh/.zinit-compinit
  |   |-- zinit-install.zsh/.zinit-forget-completion
@@ -191,6 +192,7 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status-all
  zinit-autoload.zsh/.zinit-update-or-status
  zinit-autoload.zsh/.zinit-wait-for-update-jobs
+ zinit-autoload.zsh/zi::version
  zinit-install.zsh/.zinit-compile-plugin
  zinit-install.zsh/.zinit-compinit
  zinit-install.zsh/.zinit-download-file-stdout
@@ -1284,7 +1286,7 @@ ____
  and completion.
 ____
 
-Has 560 line(s). Calls functions:
+Has 564 line(s). Calls functions:
 
  zinit
  |-- +zinit-message
@@ -1320,6 +1322,7 @@ Has 560 line(s). Calls functions:
  |-- zinit-autoload.zsh/.zinit-unload
  |-- zinit-autoload.zsh/.zinit-update-or-status
  |-- zinit-autoload.zsh/.zinit-update-or-status-all
+ |-- zinit-autoload.zsh/zi::version
  |-- zinit-install.zsh/.zinit-compile-plugin
  |-- zinit-install.zsh/.zinit-compinit
  |-- zinit-install.zsh/.zinit-forget-completion
@@ -1409,6 +1412,7 @@ Has 1 line(s). Calls functions:
      |-- zinit-autoload.zsh/.zinit-unload
      |-- zinit-autoload.zsh/.zinit-update-or-status
      |-- zinit-autoload.zsh/.zinit-update-or-status-all
+     |-- zinit-autoload.zsh/zi::version
      |-- zinit-install.zsh/.zinit-compile-plugin
      |-- zinit-install.zsh/.zinit-compinit
      |-- zinit-install.zsh/.zinit-forget-completion

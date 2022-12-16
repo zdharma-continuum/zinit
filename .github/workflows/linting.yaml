@@ -33,7 +33,7 @@ jobs:
         # run: commitlint --from=$(git cherry origin/main | head -n 1 | awk '{print $2}')
 
       - name: markdown
-        run: find . -name '*.md' ! -name 'CHANGELOG.md' -name '*.md' -type f -print0 | xargs -0 -n1 -P4 mdformat --check --wrap 120
+        run: find . -name '*.md' ! -name 'CHANGELOG.md' -type f -print0 | xargs -0 -n1 -P4 mdformat --check --wrap 120 --number
 
       # - name: shell (shfmt)
       #   run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shfmt -bn -ci -d -i 2 -ln bash -s -sr

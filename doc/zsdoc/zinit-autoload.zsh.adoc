@@ -76,6 +76,7 @@ FUNCTIONS
  .zinit-update-or-status-all
  .zinit-update-or-status-snippet
  .zinit-wait-for-update-jobs
+ zi::version
 
 DETAILS
 -------
@@ -774,7 +775,7 @@ ____
  User-action entry point.
 ____
 
-Has 66 line(s). Doesn't call other functions.
+Has 67 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -1406,4 +1407,23 @@ Uses feature(s): _wait_
 Called by:
 
  .zinit-update-all-parallel
+
+zi::version
+~~~~~~~~~~~
+
+____
+ 
+ Shows usage information.
+ 
+ User-action entry point.
+____
+
+Has 2 line(s). Calls functions:
+
+ zi::version
+ `-- zinit.zsh/+zinit-message
+
+Called by:
+
+ zinit.zsh/zinit
 

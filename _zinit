@@ -45,6 +45,7 @@ commands=(
   dunload:'revert changes recorded between dstart and dstop'
   dreport:"report what was going on in session"
   dclear:'clear report of what was going on in session'
+  version:'display zinit version'
   compile:'compile plugin (or all plugins if --all passed)'
   uncompile:'remove compiled version of plugin (or of all plugins if --all passed)'
   compiled:'show which plugins are compiled'
@@ -73,6 +74,9 @@ case $state in
     case $words[2] in
       help)
         _message "Hit enter to get usage information" && ret=0
+        ;;
+      version)
+        _message "display zinit version" && ret=0
         ;;
       man)
         _message "Hit enter to view manual" && ret=0
