@@ -3,6 +3,7 @@
 ZSH := $(shell command -v zsh 2> /dev/null)
 SRC := share/{'git-process-output','rpm2cpio'}.zsh zinit{'','-additional','-autoload','-install','-side'}.zsh
 DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
+HAS_TTY := --tty
 
 .PHONY: all clean container doc doc/container tags tags/emacs tags/vim test zwc
 
@@ -25,6 +26,12 @@ container-docs: ## regenerate zinit docs in container
 
 container-shell: ## start shell in docker container
 	$(CONTAINER_CMD) $(CONTAINER_NAME):latest
+
+test: ## Run zunit tests
+	zunit run
+
+zwc: ## compile zsh files via zcompile
+	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
 
 tags: tags/emacs tags/vim ## run ctags to generate emacs and vim's format tag file.
 
@@ -53,12 +60,6 @@ tags/vim: ## build the vim-style ctags file
 	else \
 	    printf 'Error: Please install a ctags first.\n'; \
 	fi
-
-test: ## Run zunit tests
-	zunit run
-
-zwc: ## compile zsh files via zcompile
-	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
 
 help: ## display available make targets
 	@ # credit: tweekmonster github gist
