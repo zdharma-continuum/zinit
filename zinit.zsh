@@ -66,25 +66,63 @@ if [[ -z ${ZINIT[LIST_COMMAND]} ]]; then
     fi
 fi
 
-ZINIT[ice-list]="svn|proto|from|teleid|bindmap|cloneopts|id-as|depth|if|wait|load|\
-unload|blockf|pick|bpick|src|as|ver|silent|lucid|notify|mv|cp|\
-atinit|atclone|atload|atpull|nocd|run-atpull|has|cloneonly|make|\
-service|trackbinds|multisrc|compile|nocompile|completions|nocompletions|\
-reset-prompt|wrap|reset|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\
-\!csh|aliases|countdown|ps-on-unload|ps-on-update|trigger-load|\
-light-mode|is-snippet|atdelete|pack|git|verbose|on-update-of|\
-subscribe|extract|param|opts|autoload|subst|install|pullopts|\
-debug|null|binary|link|configure"
-ZINIT[nval-ice-list]="blockf|silent|lucid|trackbinds|cloneonly|nocd|run-atpull|\
-nocompletions|sh|\!sh|bash|\!bash|ksh|\!ksh|csh|\!csh|\
-aliases|countdown|light-mode|is-snippet|git|verbose|cloneopts|\
-pullopts|debug|null|binary|make|nocompile|notify|reset"
-
-ZINIT[cmds]="-h|--help|help|man|self-update|times|zstatus|load|light|unload|snippet|ls|ice|\
-update|status|report|delete|loaded|list|cd|create|edit|glance|stress|changes|recently|clist|\
-completions|cclear|cdisable|cenable|creinstall|cuninstall|csearch|compinit|dtrace|dstart|dstop|\
-dunload|dreport|dclear|compile|uncompile|compiled|cdlist|cdreplay|cdclear|srv|recall|\
-env-whitelist|bindkeys|module|add-fpath|fpath|run"
+ZINIT[ice-list]="\
+\!bash|\!csh|\!ksh|\!sh|\
+aliases|as|atclone|atdelete|atinit|atload|atpull|autoload|\
+bash|binary|bindmap|blockf|bpick|\
+cloneonly|cloneopts|compile|completions|configure|countdown|cp|csh|\
+debug|depth|\
+extract|\
+from|git|\
+has|\
+id-as|if|install|is-snippet|\
+ksh|\
+light-mode|link|load|lucid|\
+make|multisrc|mv|nocd|nocompile|nocompletions|notify|null|\
+on-update-of|opts|\
+pack|param|pick|proto|ps-on-unload|ps-on-update|pullopts|\
+reset|reset-prompt|run-atpull|\
+service|sh|silent|src|subscribe|subst|svn|\
+teleid|trackbinds|trigger-load|\
+unload|\
+ver|verbose|\
+wait|wrap"
+ZINIT[nval-ice-list]="\
+\!bash|\!csh|\!ksh|\!sh|\
+aliases|\
+bash|binary|blockf|\
+cloneonly|cloneopts|countdown|csh|\
+debug|\
+git|\
+is-snippet|\
+ksh|\
+light-mode|lucid|\
+make|\
+nocd|nocompile|nocompletions|notify|null|\
+pullopts|\
+reset|run-atpull|\
+sh|silent|\
+trackbinds|\
+verbose"
+ZINIT[cmds]="\
+-help|-h|\
+add-fpath|\
+bindkeys|\
+cclear|cd|cdclear|cdisable|cdlist|cdreplay|cenable|changes|clist|compile|compiled|compinit|completions|create|creinstall|csearch|cuninstall|\
+dclear|delete|dreport|dstart|dstop|dtrace|dunload|\
+edit|env-whitelist|\
+fpath|\
+glance|\
+help|\
+ice|\
+light|list|load|loaded|ls|\
+man|module|\
+recall|recently|report|run|\
+self-update|snippet|srv|status|stress|\
+times|\
+uncompile|unload|update|\
+version|\
+zstatus"
 
 # Can be customized.
 : ${ZINIT[COMPLETIONS_DIR]:=${ZINIT[HOME_DIR]}/completions}
@@ -2551,16 +2589,16 @@ zinit() {
         --bindkeys opt_-b,--bindkeys
         -x         opt_-x,--command:"Load the snippet as a {cmd}command{rst}, i.e.: add it to {var}\$PATH{rst} and set {b-lhi}+x{rst} on it."
         --command  opt_-x,--command
-        env-whitelist "-h|--help|-v|--verbose"
-        update        "-L|--plugins|-s|--snippets|-p|--parallel|-a|--all|\
--q|--quiet|-r|--reset|-u|--urge|-n|--no-pager|-v|--verbose|-h|--help"
-        delete        "-a|--all|-c|--clean|-y|--yes|-q|--quiet|-h|--help"
-        unload        "-h|--help|-q|--quiet"
-        cdclear       "-h|--help|-q|--quiet"
-        cdreplay      "-h|--help|-q|--quiet"
-        times         "-h|--help|-m|-s"
-        light         "-h|--help|-b"
-        snippet       "-h|--help|-f|--force|--command|-x"
+        cdclear       "--help|--quiet|-h|-q"
+        cdreplay      "--help|--quiet|-h|-q"
+        delete        "--all|--clean|--help|--quiet|--yes|-a|-c|-h|-q|-y"
+        env-whitelist "--help|--verbose|-h|-v"
+        light         "--help|-b|-h"
+        snippet       "--command|--force|--help|-f|-h|-x"
+        times         "--help|-h|-m|-s"
+        unload        "--help|--quiet|-h|-q"
+        update        "--all|--help|--no-pager|--parallel|--plugins|--quiet|--reset|--snippets|--urge|--verbose|-L|-a|-h|-n|-p|-q|-r|-s|-u|-v"
+        version       ""
     )
 
     cmd="$1"
@@ -3064,6 +3102,9 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                 (-h|--help|help)
                     .zinit-help
+                    ;;
+                (version)
+                    zi::version
                     ;;
                 (ls)
                     shift
