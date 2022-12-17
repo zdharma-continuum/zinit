@@ -1,3 +1,26 @@
+# [3.9.0](https://github.com/zdharma-continuum/zinit/compare/v3.8.0...v3.9.0) (2022-12-17)
+
+
+### Bug Fixes
+
+* remove broken gh-r zunit test for "warp" ([#430](https://github.com/zdharma-continuum/zinit/issues/430)) ([64fa4ae](https://github.com/zdharma-continuum/zinit/commit/64fa4aef3ae517afe5444b24df9603e9d1a77a55))
+
+
+### Features
+
+* add `completions` ice ([#417](https://github.com/zdharma-continuum/zinit/issues/417)) ([59975d7](https://github.com/zdharma-continuum/zinit/commit/59975d70d7101651b0bb01f4e22c23db0dae8133))
+* display version via `version` sub command ([bfb01e6](https://github.com/zdharma-continuum/zinit/commit/bfb01e65d7b9a98c643f3ee0a92f2df06372f52e))
+
+
+### Performance Improvements
+
+* reduce scheduler task check to 10 second interval ([#429](https://github.com/zdharma-continuum/zinit/issues/429)) ([1681ce4](https://github.com/zdharma-continuum/zinit/commit/1681ce40ebf98e5bf48b78ac5d6c060c1ecada99))
+
+
+### Reverts
+
+* "perf: reduce scheduler task check to 10 second interval ([#429](https://github.com/zdharma-continuum/zinit/issues/429))" ([#432](https://github.com/zdharma-continuum/zinit/issues/432)) ([cfd3261](https://github.com/zdharma-continuum/zinit/commit/cfd32618921ce0626a6deadc794da962750a845d))
+
 # [3.8.0](https://github.com/zdharma-continuum/zinit/compare/v3.7.0...v3.8.0) (2022-11-07)
 
 
