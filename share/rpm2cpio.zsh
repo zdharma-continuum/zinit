@@ -55,10 +55,4 @@ fi
 
 command "$UNPACKCMD[@]" 2>/dev/null | command "$DECOMPRESSCMD[@]"
 
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
-# vim: ft=zsh sw=2 ts=2 et
+# vim: set fenc=utf8 ffs=unix foldmarker=[[[,]]] foldmethod=marker ft=zsh list noet sw=2 ts=2 tw=72 :

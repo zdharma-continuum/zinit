@@ -1,10 +1,1 @@
-.git/
-.github/
-.git*
-doc/
-scripts/
-test/
-tests/
-
 *.zwc
-Makefile
