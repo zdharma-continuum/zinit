@@ -115,7 +115,7 @@ For more details check out [PR #61](https://github.com/zdharma-continuum/zinit/p
 - 06-11-2021
 
   - 🚧 zinit has a new home: https://github.com/zdharma-continuum/zinit
-    - The migration from @zdharma, @Zsh-Packages and @zi::zsh is still in progress. If you are interested in helping
+    - The migration from @zdharma, @Zsh-Packages and @zinit-zsh is still in progress. If you are interested in helping
       or want to let us know that a particular project is missing, please head to
       [I_WANT_TO_HELP](https://github.com/zdharma-continuum/I_WANT_TO_HELP/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
   - 📚 zinit now ensures that the man dirs under `$ZPFX/man` are created on startup. Please note that these directories

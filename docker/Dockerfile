@@ -36,6 +36,6 @@ USER ${PUSERNAME}
 # Fetch keys config and store it outside of ZINIT[HOME_DIR] since it might get
 # overridden at runtime (the /data volume)
 RUN ZINIT_HOME_DIR=/data-static ZSH_NO_INIT=1 \
-    zsh -ils -c -- '@zi::scheduler burst'
+    zsh -ils -c -- '@zinit-scheduler burst'
 
 CMD ["/bin/zsh"]

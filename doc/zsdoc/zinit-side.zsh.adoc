@@ -13,14 +13,14 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
- zi::any-colorify-as-uspl2
- zi::compute-ice
- zi::countdown
- zi::exists-physically
- zi::exists-physically-message
- zi::first
- zi::store-ices
- zi::two-paths
+ .zinit-any-colorify-as-uspl2
+ .zinit-compute-ice
+ .zinit-countdown
+ .zinit-exists-physically
+ .zinit-exists-physically-message
+ .zinit-first
+ .zinit-store-ices
+ .zinit-two-paths
 
 DETAILS
 -------
@@ -30,8 +30,8 @@ Script Body
 
 Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
-zi::any-colorify-as-uspl2
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-any-colorify-as-uspl2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -46,36 +46,36 @@ ____
 
 Has 22 line(s). Calls functions:
 
- zi::any-colorify-as-uspl2
- |-- zinit.zsh/zi::any-to-pid
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-any-colorify-as-uspl2
+ |-- zinit.zsh/.zinit-any-to-pid
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Called by:
 
- zi::exists-physically-message
- zinit-autoload.zsh/zi::clear-completions
- zinit-autoload.zsh/zi::compile-uncompile-all
- zinit-autoload.zsh/zi::compiled
- zinit-autoload.zsh/zi::create
- zinit-autoload.zsh/zi::exists-message
- zinit-autoload.zsh/zi::get-completion-owner-uspl2col
- zinit-autoload.zsh/zi::list-bindkeys
- zinit-autoload.zsh/zi::recently
- zinit-autoload.zsh/zi::search-completions
- zinit-autoload.zsh/zi::show-completions
- zinit-autoload.zsh/zi::show-registered-plugins
- zinit-autoload.zsh/zi::show-times
- zinit-autoload.zsh/zi::uncompile-plugin
- zinit-autoload.zsh/zi::unload
- zinit-autoload.zsh/zi::update-all-parallel
- zinit-autoload.zsh/zi::update-or-status-all
- zinit-autoload.zsh/zi::update-or-status
- zinit-install.zsh/zi::install-completions
- zinit-install.zsh/zi::setup-plugin-dir
- zinit.zsh/zi::formatter-pid
+ .zinit-exists-physically-message
+ zinit-autoload.zsh/.zinit-clear-completions
+ zinit-autoload.zsh/.zinit-compile-uncompile-all
+ zinit-autoload.zsh/.zinit-compiled
+ zinit-autoload.zsh/.zinit-create
+ zinit-autoload.zsh/.zinit-exists-message
+ zinit-autoload.zsh/.zinit-get-completion-owner-uspl2col
+ zinit-autoload.zsh/.zinit-list-bindkeys
+ zinit-autoload.zsh/.zinit-recently
+ zinit-autoload.zsh/.zinit-search-completions
+ zinit-autoload.zsh/.zinit-show-completions
+ zinit-autoload.zsh/.zinit-show-registered-plugins
+ zinit-autoload.zsh/.zinit-show-times
+ zinit-autoload.zsh/.zinit-uncompile-plugin
+ zinit-autoload.zsh/.zinit-unload
+ zinit-autoload.zsh/.zinit-update-all-parallel
+ zinit-autoload.zsh/.zinit-update-or-status-all
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-install.zsh/.zinit-install-completions
+ zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit.zsh/.zinit-formatter-pid
 
-zi::compute-ice
-~~~~~~~~~~~~~~~
+.zinit-compute-ice
+~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -102,39 +102,23 @@ ____
 
 Has 110 line(s). Calls functions:
 
- zi::compute-ice
- |-- zi::exists-physically-message
- |   |-- zi::any-colorify-as-uspl2
- |   |   |-- zinit.zsh/zi::any-to-pid
- |   |   `-- zinit.zsh/zi::any-to-user-plugin
- |   |-- zi::exists-physically
- |   |   `-- zinit.zsh/zi::any-to-user-plugin
- |   |-- zinit.zsh/+zi::message
- |   |-- zinit.zsh/zi::any-to-pid
- |   `-- zinit.zsh/zi::any-to-user-plugin
- |-- zi::two-paths
- |   |-- zi::first
- |   |   |-- zinit.zsh/zi::any-to-pid
- |   |   |-- zinit.zsh/zi::any-to-user-plugin
- |   |   |-- zinit.zsh/zi::find-other-matches
- |   |   `-- zinit.zsh/zi::get-object-path
- |   `-- zinit.zsh/zi::get-object-path
- |-- zinit.zsh/zi::any-to-user-plugin
- `-- zinit.zsh/zi::pack-ice
+ .zinit-compute-ice
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/.zinit-pack-ice
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zinit-autoload.zsh/zi::delete
- zinit-autoload.zsh/zi::edit
- zinit-autoload.zsh/zi::recall
- zinit-autoload.zsh/zi::update-or-status-snippet
- zinit-autoload.zsh/zi::update-or-status
- zinit-install.zsh/zi::compile-plugin
+ zinit-autoload.zsh/.zinit-delete
+ zinit-autoload.zsh/.zinit-edit
+ zinit-autoload.zsh/.zinit-recall
+ zinit-autoload.zsh/.zinit-update-or-status-snippet
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-install.zsh/.zinit-compile-plugin
 
-zi::countdown
-~~~~~~~~~~~~~
+.zinit-countdown
+~~~~~~~~~~~~~~~~
 
 ____
  
@@ -145,23 +129,23 @@ ____
 
 Has 20 line(s). Calls functions:
 
- zi::countdown
- `-- zinit.zsh/+zi::message
+ .zinit-countdown
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _trap_
 
 Called by:
 
- zinit-autoload.zsh/zi::run-delete-hooks
- zinit-install.zsh/__zi::atclone-hook
- zinit-install.zsh/__zi::atpull-e-hook
- zinit-install.zsh/__zi::atpull-hook
- zinit-install.zsh/__zi::configure-base-hook
- zinit-install.zsh/__zi::make-base-hook
- zinit-install.zsh/zi::configure-run-autoconf
+ zinit-autoload.zsh/.zinit-run-delete-hooks
+ zinit-install.zsh/.zinit-configure-run-autoconf
+ zinit-install.zsh/∞zinit-atclone-hook
+ zinit-install.zsh/∞zinit-atpull-e-hook
+ zinit-install.zsh/∞zinit-atpull-hook
+ zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/∞zinit-make-base-hook
 
-zi::exists-physically
-~~~~~~~~~~~~~~~~~~~~~
+.zinit-exists-physically
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -173,17 +157,17 @@ ____
 
 Has 8 line(s). Calls functions:
 
- zi::exists-physically
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-exists-physically
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Called by:
 
- zi::exists-physically-message
- zinit-autoload.zsh/zi::create
- zinit-autoload.zsh/zi::update-or-status
+ .zinit-exists-physically-message
+ zinit-autoload.zsh/.zinit-create
+ zinit-autoload.zsh/.zinit-update-or-status
 
-zi::exists-physically-message
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-exists-physically-message
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -196,37 +180,32 @@ ____
 
 Has 25 line(s). Calls functions:
 
- zi::exists-physically-message
- |-- zi::any-colorify-as-uspl2
- |   |-- zinit.zsh/zi::any-to-pid
- |   `-- zinit.zsh/zi::any-to-user-plugin
- |-- zi::exists-physically
- |   `-- zinit.zsh/zi::any-to-user-plugin
- |-- zinit.zsh/+zi::message
- |-- zinit.zsh/zi::any-to-pid
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-exists-physically-message
+ |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/.zinit-any-to-pid
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zi::compute-ice
- zinit-autoload.zsh/zi::changes
- zinit-autoload.zsh/zi::glance
- zinit-autoload.zsh/zi::stress
- zinit-autoload.zsh/zi::update-or-status
- zinit-install.zsh/zi::install-completions
+ .zinit-compute-ice
+ zinit-autoload.zsh/.zinit-changes
+ zinit-autoload.zsh/.zinit-glance
+ zinit-autoload.zsh/.zinit-stress
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-install.zsh/.zinit-install-completions
 
-zi::first
-~~~~~~~~~
+.zinit-first
+~~~~~~~~~~~~
 
 ____
  
  Finds the main file of plugin. There are multiple file name formats, they are
  ordered in order starting from more correct ones, and matched.
- zi::load-plugin() has similar code parts and doesn't call zi::first() –
- for performance. Obscure matching is done in zi::find-other-matches, here
- and in zi::load(). Obscure = non-standard main-file naming convention.
+ .zinit-load-plugin() has similar code parts and doesn't call .zinit-first() –
+ for performance. Obscure matching is done in .zinit-find-other-matches, here
+ and in .zinit-load(). Obscure = non-standard main-file naming convention.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
@@ -234,21 +213,21 @@ ____
 
 Has 20 line(s). Calls functions:
 
- zi::first
- |-- zinit.zsh/zi::any-to-pid
- |-- zinit.zsh/zi::any-to-user-plugin
- |-- zinit.zsh/zi::find-other-matches
- `-- zinit.zsh/zi::get-object-path
+ .zinit-first
+ |-- zinit.zsh/.zinit-any-to-pid
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/.zinit-find-other-matches
+ `-- zinit.zsh/.zinit-get-object-path
 
 Called by:
 
- zi::two-paths
- zinit-autoload.zsh/zi::glance
- zinit-autoload.zsh/zi::stress
- zinit-install.zsh/zi::compile-plugin
+ .zinit-two-paths
+ zinit-autoload.zsh/.zinit-glance
+ zinit-autoload.zsh/.zinit-stress
+ zinit-install.zsh/.zinit-compile-plugin
 
-zi::store-ices
-~~~~~~~~~~~~~~
+.zinit-store-ices
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -266,12 +245,12 @@ Has 30 line(s). Doesn't call other functions.
 
 Called by:
 
- zinit-autoload.zsh/zi::update-or-status
- zinit-install.zsh/zi::download-snippet
- zinit-install.zsh/zi::setup-plugin-dir
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-install.zsh/.zinit-download-snippet
+ zinit-install.zsh/.zinit-setup-plugin-dir
 
-zi::two-paths
-~~~~~~~~~~~~~
+.zinit-two-paths
+~~~~~~~~~~~~~~~~
 
 ____
  
@@ -284,18 +263,13 @@ ____
 
 Has 24 line(s). Calls functions:
 
- zi::two-paths
- |-- zi::first
- |   |-- zinit.zsh/zi::any-to-pid
- |   |-- zinit.zsh/zi::any-to-user-plugin
- |   |-- zinit.zsh/zi::find-other-matches
- |   `-- zinit.zsh/zi::get-object-path
- `-- zinit.zsh/zi::get-object-path
+ .zinit-two-paths
+ `-- zinit.zsh/.zinit-get-object-path
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zi::compute-ice
- zinit-autoload.zsh/zi::update-or-status
+ .zinit-compute-ice
+ zinit-autoload.zsh/.zinit-update-or-status
 
