@@ -34,7 +34,7 @@
 * change ctags symbols browser key  binding from `ctrl-k` to `alt-Q` ([#387](https://github.com/zdharma-continuum/zinit/issues/387)) ([7f6dc7d](https://github.com/zdharma-continuum/zinit/commit/7f6dc7da6c824b30c0e8e30ae0ecbda5be118e68)), closes [#386](https://github.com/zdharma-continuum/zinit/issues/386)
 * Do not try to escape exclamation marks ([#399](https://github.com/zdharma-continuum/zinit/issues/399)) ([0e55b2e](https://github.com/zdharma-continuum/zinit/commit/0e55b2ea673915c462af752ee7d46fff55e6f436))
 * docs workflow should fail if out-of-date ([#278](https://github.com/zdharma-continuum/zinit/issues/278)) ([07cde66](https://github.com/zdharma-continuum/zinit/commit/07cde660081c91382ce73b60485839710154c7c6))
-* Don't error if $OPTS is not yet defined in zi::compinit call ([44765e0](https://github.com/zdharma-continuum/zinit/commit/44765e0bcb8d3f1ee3eb55286e33ad17b8c72a5e))
+* Don't error if $OPTS is not yet defined in .zinit-compinit call ([44765e0](https://github.com/zdharma-continuum/zinit/commit/44765e0bcb8d3f1ee3eb55286e33ad17b8c72a5e))
 * filter by runtime detected CPU before compiled CPU ([#304](https://github.com/zdharma-continuum/zinit/issues/304)) ([a4dc13f](https://github.com/zdharma-continuum/zinit/commit/a4dc13f66a65c4fa52953104c13e44a7d7c0a945)), closes [#287](https://github.com/zdharma-continuum/zinit/issues/287)
 * gh-r & plugin zunit tests ([dd12fce](https://github.com/zdharma-continuum/zinit/commit/dd12fce3f49db284de7cf18a03ef891cc46bc7cc))
 * gh-r filters i686 (32 bit) for x86_64 ([#226](https://github.com/zdharma-continuum/zinit/issues/226)) ([57f0d82](https://github.com/zdharma-continuum/zinit/commit/57f0d82118ed626f04d4b9b8b26de48c9d7e0956)), closes [#225](https://github.com/zdharma-continuum/zinit/issues/225)

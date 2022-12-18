@@ -13,69 +13,70 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
- zi::any-to-uspl2
- zi::at-eval
- zi::build-module
- zi::cd
- zi::cdisable
- zi::cenable
- zi::changes
- zi::check-comp-consistency
- zi::check-which-completions-are-enabled
- zi::check-which-completions-are-installed
- zi::clear-completions
- zi::clear-report-for
- zi::compile-uncompile-all
- zi::compiled
- zi::confirm
- zi::create
- zi::delete
- zi::diff-env-compute
- zi::diff-functions-compute
- zi::diff-options-compute
- zi::diff-parameter-compute
- zi::edit
- zi::exists-message
- zi::find-completions-of-plugin
- zi::format-env
- zi::format-functions
- zi::format-options
- zi::format-parameter
- zi::get-completion-owner
- zi::get-completion-owner-uspl2col
- zi::get-path
- zi::glance
- zi::help
- zi::list-bindkeys
- zi::list-compdef-replay
- zi::ls
- zi::module
- zi::pager
- zi::prepare-readlink
- zi::recall
- zi::recently
- zi::restore-extendedglob
- zi::run-delete-hooks
- zi::save-set-extendedglob
- zi::search-completions
- zi::self-update
- zi::show-all-reports
- zi::show-completions
- zi::show-debug-report
- zi::show-registered-plugins
- zi::show-report
- zi::show-times
- zi::show-zstatus
- zi::stress
- zi::uncompile-plugin
- zi::uninstall-completions
- zi::unload
- zi::unregister-plugin
- zi::update-all-parallel
- zi::update-or-status
- zi::update-or-status-all
- zi::update-or-status-snippet
- zi::wait-for-update-jobs
+ .zinit-any-to-uspl2
+ .zinit-at-eval
+ .zinit-build-module
+ .zinit-cd
+ .zinit-cdisable
+ .zinit-cenable
+ .zinit-changes
+ .zinit-check-comp-consistency
+ .zinit-check-which-completions-are-enabled
+ .zinit-check-which-completions-are-installed
+ .zinit-clear-completions
+ .zinit-clear-report-for
+ .zinit-compile-uncompile-all
+ .zinit-compiled
+ .zinit-confirm
+ .zinit-create
+ .zinit-delete
+ .zinit-diff-env-compute
+ .zinit-diff-functions-compute
+ .zinit-diff-options-compute
+ .zinit-diff-parameter-compute
+ .zinit-edit
+ .zinit-exists-message
+ .zinit-find-completions-of-plugin
+ .zinit-format-env
+ .zinit-format-functions
+ .zinit-format-options
+ .zinit-format-parameter
+ .zinit-get-completion-owner
+ .zinit-get-completion-owner-uspl2col
+ .zinit-get-path
+ .zinit-glance
+ .zinit-help
+ .zinit-list-bindkeys
+ .zinit-list-compdef-replay
+ .zinit-ls
+ .zinit-module
+ .zinit-pager
+ .zinit-prepare-readlink
+ .zinit-recall
+ .zinit-recently
+ .zinit-restore-extendedglob
+ .zinit-run-delete-hooks
+ .zinit-save-set-extendedglob
+ .zinit-search-completions
+ .zinit-self-update
+ .zinit-show-all-reports
+ .zinit-show-completions
+ .zinit-show-debug-report
+ .zinit-show-registered-plugins
+ .zinit-show-report
+ .zinit-show-times
+ .zinit-show-zstatus
+ .zinit-stress
+ .zinit-uncompile-plugin
+ .zinit-uninstall-completions
+ .zinit-unload
+ .zinit-unregister-plugin
+ .zinit-update-all-parallel
+ .zinit-update-or-status
+ .zinit-update-or-status-all
+ .zinit-update-or-status-snippet
+ .zinit-wait-for-update-jobs
+ zi::version
 
 DETAILS
 -------
@@ -87,8 +88,8 @@ Has 5 line(s). No functions are called (may set up e.g. a hook, a Zle widget bou
 
 Uses feature(s): _source_
 
-zi::any-to-uspl2
-~~~~~~~~~~~~~~~~
+.zinit-any-to-uspl2
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -101,28 +102,28 @@ ____
 
 Has 2 line(s). Calls functions:
 
- zi::any-to-uspl2
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-any-to-uspl2
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Called by:
 
- zi::clear-report-for
- zi::exists-message
+ .zinit-clear-report-for
+ .zinit-exists-message
 
-zi::at-eval
-~~~~~~~~~~~
+.zinit-at-eval
+~~~~~~~~~~~~~~
 
 Has 5 line(s). Calls functions:
 
- zi::at-eval
- `-- zinit.zsh/@zi::substitute
+ .zinit-at-eval
+ `-- zinit.zsh/@zinit-substitute
 
 Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::build-module
-~~~~~~~~~~~~~~~~
+.zinit-build-module
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -132,18 +133,17 @@ ____
 
 Has 39 line(s). Calls functions:
 
- zi::build-module
- |-- zi::module
- `-- zinit.zsh/+zi::message
+ .zinit-build-module
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_, _trap_
 
 Called by:
 
- zi::module
+ .zinit-module
 
-zi::cd
-~~~~~~
+.zinit-cd
+~~~~~~~~~
 
 ____
  
@@ -157,17 +157,15 @@ ____
 
 Has 15 line(s). Calls functions:
 
- zi::cd
- |-- zi::get-path
- |   `-- zinit.zsh/zi::get-object-path
- `-- zinit.zsh/+zi::message
+ .zinit-cd
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::cdisable
-~~~~~~~~~~~~
+.zinit-cdisable
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -180,19 +178,14 @@ ____
 
 Has 30 line(s). Calls functions:
 
- zi::cdisable
- |-- zi::check-comp-consistency
- |-- zi::get-completion-owner-uspl2col
- |   |-- zi::get-completion-owner
- |   `-- zinit-side.zsh/zi::any-colorify-as-uspl2
- `-- zi::prepare-readlink
+ .zinit-cdisable
 
 Called by:
 
  zinit.zsh/zinit
 
-zi::cenable
-~~~~~~~~~~~
+.zinit-cenable
+~~~~~~~~~~~~~~
 
 ____
  
@@ -205,19 +198,14 @@ ____
 
 Has 31 line(s). Calls functions:
 
- zi::cenable
- |-- zi::check-comp-consistency
- |-- zi::get-completion-owner-uspl2col
- |   |-- zi::get-completion-owner
- |   `-- zinit-side.zsh/zi::any-colorify-as-uspl2
- `-- zi::prepare-readlink
+ .zinit-cenable
 
 Called by:
 
  zinit.zsh/zinit
 
-zi::changes
-~~~~~~~~~~~
+.zinit-changes
+~~~~~~~~~~~~~~
 
 ____
  
@@ -231,14 +219,14 @@ ____
 
 Has 9 line(s). Calls functions:
 
- zi::changes
- |-- zinit-side.zsh/zi::exists-physically-message
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-changes
+ |-- zinit-side.zsh/.zinit-exists-physically-message
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::check-comp-consistency
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-check-comp-consistency
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -256,11 +244,11 @@ Has 11 line(s). Doesn't call other functions.
 
 Called by:
 
- zi::cdisable
- zi::cenable
+ .zinit-cdisable
+ .zinit-cenable
 
-zi::check-which-completions-are-enabled
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-check-which-completions-are-enabled
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -279,10 +267,10 @@ Has 11 line(s). Doesn't call other functions.
 
 Called by:
 
- zi::show-report
+ .zinit-show-report
 
-zi::check-which-completions-are-installed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-check-which-completions-are-installed
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -298,10 +286,10 @@ Has 12 line(s). Doesn't call other functions.
 
 Called by:
 
- zi::show-report
+ .zinit-show-report
 
-zi::clear-completions
-~~~~~~~~~~~~~~~~~~~~~
+.zinit-clear-completions
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -315,20 +303,18 @@ ____
 
 Has 37 line(s). Calls functions:
 
- zi::clear-completions
- |-- zi::get-completion-owner
- |-- zi::prepare-readlink
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-clear-completions
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zinit.zsh/zi::prepare-home
+ zinit.zsh/.zinit-prepare-home
  zinit.zsh/zinit
 
-zi::clear-report-for
-~~~~~~~~~~~~~~~~~~~~
+.zinit-clear-report-for
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -341,17 +327,15 @@ ____
 
 Has 23 line(s). Calls functions:
 
- zi::clear-report-for
- `-- zi::any-to-uspl2
-     `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-clear-report-for
 
 Called by:
 
- zi::unload
- zinit-additional.zsh/zi::clear-debug-report
+ .zinit-unload
+ zinit-additional.zsh/.zinit-clear-debug-report
 
-zi::compile-uncompile-all
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-compile-uncompile-all
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -362,13 +346,10 @@ ____
 
 Has 23 line(s). Calls functions:
 
- zi::compile-uncompile-all
- |-- zi::uncompile-plugin
- |   |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |   `-- zinit.zsh/zi::any-to-user-plugin
- |-- zinit-install.zsh/zi::compile-plugin
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-compile-uncompile-all
+ |-- zinit-install.zsh/.zinit-compile-plugin
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
 
@@ -376,8 +357,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::compiled
-~~~~~~~~~~~~
+.zinit-compiled
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -388,9 +369,9 @@ ____
 
 Has 26 line(s). Calls functions:
 
- zi::compiled
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-compiled
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
 
@@ -398,8 +379,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::confirm
-~~~~~~~~~~~
+.zinit-confirm
+~~~~~~~~~~~~~~
 
 ____
  
@@ -416,10 +397,10 @@ Uses feature(s): _eval_, _read_
 
 Called by:
 
- zi::delete
+ .zinit-delete
 
-zi::create
-~~~~~~~~~~
+.zinit-create
+~~~~~~~~~~~~~
 
 ____
  
@@ -433,17 +414,17 @@ ____
 
 Has 103 line(s). Calls functions:
 
- zi::create
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |-- zinit-side.zsh/zi::exists-physically
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-create
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- zinit-side.zsh/.zinit-exists-physically
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _autoload_, _setopt_, _vared_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::delete
-~~~~~~~~~~
+.zinit-delete
+~~~~~~~~~~~~~
 
 ____
  
@@ -457,24 +438,23 @@ ____
 
 Has 99 line(s). Calls functions:
 
- zi::delete
- |-- zi::confirm
- |-- zinit-side.zsh/zi::compute-ice
- |-- zinit.zsh/+zi::prehelp-usage-message
- |-- zinit.zsh/zi::any-to-user-plugin
- `-- zinit.zsh/zi::parse-opts
+ .zinit-delete
+ |-- zinit-side.zsh/.zinit-compute-ice
+ |-- zinit.zsh/+zinit-prehelp-usage-message
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/.zinit-parse-opts
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::diff-env-compute
-~~~~~~~~~~~~~~~~~~~~
+.zinit-diff-env-compute
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
  Computes ZINIT_PATH, ZINIT_FPATH that hold (f)path components
- added by plugin. Uses data gathered earlier by zi::diff-env().
+ added by plugin. Uses data gathered earlier by .zinit-diff-env().
  
  $1 - user/plugin
 ____
@@ -485,16 +465,16 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::show-report
- zi::unload
+ .zinit-show-report
+ .zinit-unload
 
-zi::diff-functions-compute
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-diff-functions-compute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
  Computes FUNCTIONS that holds new functions added by plugin.
- Uses data gathered earlier by zi::diff-functions().
+ Uses data gathered earlier by .zinit-diff-functions().
  
  $1 - user/plugin
 ____
@@ -505,16 +485,16 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::show-report
- zi::unload
+ .zinit-show-report
+ .zinit-unload
 
-zi::diff-options-compute
-~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-diff-options-compute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
  Computes OPTIONS that holds options changed by plugin.
- Uses data gathered earlier by zi::diff-options().
+ Uses data gathered earlier by .zinit-diff-options().
  
  $1 - user/plugin
 ____
@@ -525,17 +505,17 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::show-report
- zi::unload
+ .zinit-show-report
+ .zinit-unload
 
-zi::diff-parameter-compute
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-diff-parameter-compute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
  Computes ZINIT_PARAMETERS_PRE, ZINIT_PARAMETERS_POST that hold
  parameters created or changed (their type) by plugin. Uses
- data gathered earlier by zi::diff-parameter().
+ data gathered earlier by .zinit-diff-parameter().
  
  $1 - user/plugin
 ____
@@ -546,11 +526,11 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::show-report
- zi::unload
+ .zinit-show-report
+ .zinit-unload
 
-zi::edit
-~~~~~~~~
+.zinit-edit
+~~~~~~~~~~~
 
 ____
  
@@ -565,13 +545,13 @@ ____
 
 Has 22 line(s). Calls functions:
 
- zi::edit
- `-- zinit-side.zsh/zi::compute-ice
+ .zinit-edit
+ `-- zinit-side.zsh/.zinit-compute-ice
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::exists-message
-~~~~~~~~~~~~~~~~~~
+.zinit-exists-message
+~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -584,18 +564,16 @@ ____
 
 Has 7 line(s). Calls functions:
 
- zi::exists-message
- |-- zi::any-to-uspl2
- |   `-- zinit.zsh/zi::any-to-user-plugin
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-exists-message
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Called by:
 
- zi::show-report
- zi::unload
+ .zinit-show-report
+ .zinit-unload
 
-zi::find-completions-of-plugin
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-find-completions-of-plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -608,17 +586,17 @@ ____
 
 Has 6 line(s). Calls functions:
 
- zi::find-completions-of-plugin
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-find-completions-of-plugin
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zi::show-report
+ .zinit-show-report
 
-zi::format-env
-~~~~~~~~~~~~~~
+.zinit-format-env
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -633,10 +611,10 @@ Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
- zi::show-report
+ .zinit-show-report
 
-zi::format-functions
-~~~~~~~~~~~~~~~~~~~~
+.zinit-format-functions
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -650,10 +628,10 @@ Has 36 line(s). Doesn't call other functions.
 
 Called by:
 
- zi::show-report
+ .zinit-show-report
 
-zi::format-options
-~~~~~~~~~~~~~~~~~~
+.zinit-format-options
+~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -665,16 +643,14 @@ ____
 
 Has 21 line(s). Calls functions:
 
- zi::format-options
- |-- zi::restore-extendedglob
- `-- zi::save-set-extendedglob
+ .zinit-format-options
 
 Called by:
 
- zi::show-report
+ .zinit-show-report
 
-zi::format-parameter
-~~~~~~~~~~~~~~~~~~~~
+.zinit-format-parameter
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -690,10 +666,10 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::show-report
+ .zinit-show-report
 
-zi::get-completion-owner
-~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-get-completion-owner
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -717,12 +693,12 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::clear-completions
- zi::get-completion-owner-uspl2col
- zi::show-completions
+ .zinit-clear-completions
+ .zinit-get-completion-owner-uspl2col
+ .zinit-show-completions
 
-zi::get-completion-owner-uspl2col
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-get-completion-owner-uspl2col
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -735,17 +711,16 @@ ____
 
 Has 2 line(s). Calls functions:
 
- zi::get-completion-owner-uspl2col
- |-- zi::get-completion-owner
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-get-completion-owner-uspl2col
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Called by:
 
- zi::cdisable
- zi::cenable
+ .zinit-cdisable
+ .zinit-cenable
 
-zi::get-path
-~~~~~~~~~~~~
+.zinit-get-path
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -757,18 +732,18 @@ ____
 
 Has 8 line(s). Calls functions:
 
- zi::get-path
- `-- zinit.zsh/zi::get-object-path
+ .zinit-get-path
+ `-- zinit.zsh/.zinit-get-object-path
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zi::cd
- zi::uninstall-completions
+ .zinit-cd
+ .zinit-uninstall-completions
 
-zi::glance
-~~~~~~~~~~
+.zinit-glance
+~~~~~~~~~~~~~
 
 ____
  
@@ -783,16 +758,15 @@ ____
 
 Has 39 line(s). Calls functions:
 
- zi::glance
- |-- zi::pager
- |-- zinit-side.zsh/zi::exists-physically-message
- |-- zinit-side.zsh/zi::first
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-glance
+ |-- zinit-side.zsh/.zinit-exists-physically-message
+ |-- zinit-side.zsh/.zinit-first
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::help
-~~~~~~~~
+.zinit-help
+~~~~~~~~~~~
 
 ____
  
@@ -807,20 +781,20 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::list-bindkeys
-~~~~~~~~~~~~~~~~~
+.zinit-list-bindkeys
+~~~~~~~~~~~~~~~~~~~~
 
 Has 44 line(s). Calls functions:
 
- zi::list-bindkeys
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-list-bindkeys
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Called by:
 
  zinit.zsh/zinit
 
-zi::list-compdef-replay
-~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-list-compdef-replay
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -837,8 +811,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::ls
-~~~~~~
+.zinit-ls
+~~~~~~~~~
 
 Has 20 line(s). Doesn't call other functions.
 
@@ -848,8 +822,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::module
-~~~~~~~~~~
+.zinit-module
+~~~~~~~~~~~~~
 
 ____
  
@@ -860,18 +834,16 @@ ____
 
 Has 24 line(s). Calls functions:
 
- zi::module
- `-- zi::build-module
-     `-- zinit.zsh/+zi::message
+ .zinit-module
 
 Called by:
 
- zi::build-module
+ .zinit-build-module
  zinit.zsh/Script-Body
  zinit.zsh/zinit
 
-zi::pager
-~~~~~~~~~
+.zinit-pager
+~~~~~~~~~~~~
 
 ____
  
@@ -884,12 +856,12 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::glance
- zi::self-update
- zi::update-or-status
+ .zinit-glance
+ .zinit-self-update
+ .zinit-update-or-status
 
-zi::prepare-readlink
-~~~~~~~~~~~~~~~~~~~~
+.zinit-prepare-readlink
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -904,26 +876,26 @@ Uses feature(s): _type_
 
 Called by:
 
- zi::cdisable
- zi::cenable
- zi::clear-completions
- zi::show-completions
+ .zinit-cdisable
+ .zinit-cenable
+ .zinit-clear-completions
+ .zinit-show-completions
 
-zi::recall
-~~~~~~~~~~
+.zinit-recall
+~~~~~~~~~~~~~
 
 Has 38 line(s). Calls functions:
 
- zi::recall
- |-- zinit-side.zsh/zi::compute-ice
- `-- zinit.zsh/+zi::deploy-message
+ .zinit-recall
+ |-- zinit-side.zsh/.zinit-compute-ice
+ `-- zinit.zsh/+zinit-deploy-message
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::recently
-~~~~~~~~~~~~
+.zinit-recently
+~~~~~~~~~~~~~~~
 
 ____
  
@@ -936,8 +908,8 @@ ____
 
 Has 28 line(s). Calls functions:
 
- zi::recently
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-recently
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
 
@@ -945,8 +917,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::restore-extendedglob
-~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-restore-extendedglob
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -959,23 +931,23 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::format-options
- zi::unload
+ .zinit-format-options
+ .zinit-unload
 
-zi::run-delete-hooks
-~~~~~~~~~~~~~~~~~~~~
+.zinit-run-delete-hooks
+~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 17 line(s). Calls functions:
 
- zi::run-delete-hooks
- `-- zinit-side.zsh/zi::countdown
+ .zinit-run-delete-hooks
+ `-- zinit-side.zsh/.zinit-countdown
 
 Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::save-set-extendedglob
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-save-set-extendedglob
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -989,15 +961,15 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zi::format-options
- zi::unload
+ .zinit-format-options
+ .zinit-unload
 
-zi::search-completions
-~~~~~~~~~~~~~~~~~~~~~~
+.zinit-search-completions
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
- While zi::show-completions() shows what completions are
+ While .zinit-show-completions() shows what completions are
  installed, this functions searches through all plugin dirs
  showing what's available in general (for installation).
  
@@ -1006,8 +978,8 @@ ____
 
 Has 43 line(s). Calls functions:
 
- zi::search-completions
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-search-completions
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
 
@@ -1015,8 +987,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::self-update
-~~~~~~~~~~~~~~~
+.zinit-self-update
+~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1025,20 +997,19 @@ ____
 
 Has 42 line(s). Calls functions:
 
- zi::self-update
- |-- zi::pager
- |-- zinit.zsh/+zi::message
- `-- zinit.zsh/zi::get-mtime-into
+ .zinit-self-update
+ |-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/.zinit-get-mtime-into
 
 Uses feature(s): _setopt_, _source_, _zcompile_
 
 Called by:
 
- zi::update-or-status-all
+ .zinit-update-or-status-all
  zinit.zsh/zinit
 
-zi::show-all-reports
-~~~~~~~~~~~~~~~~~~~~
+.zinit-show-all-reports
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1049,34 +1020,14 @@ ____
 
 Has 5 line(s). Calls functions:
 
- zi::show-all-reports
- `-- zi::show-report
-     |-- zi::check-which-completions-are-enabled
-     |-- zi::check-which-completions-are-installed
-     |-- zi::diff-env-compute
-     |-- zi::diff-functions-compute
-     |-- zi::diff-options-compute
-     |-- zi::diff-parameter-compute
-     |-- zi::exists-message
-     |   |-- zi::any-to-uspl2
-     |   |   `-- zinit.zsh/zi::any-to-user-plugin
-     |   `-- zinit-side.zsh/zi::any-colorify-as-uspl2
-     |-- zi::find-completions-of-plugin
-     |   `-- zinit.zsh/zi::any-to-user-plugin
-     |-- zi::format-env
-     |-- zi::format-functions
-     |-- zi::format-options
-     |   |-- zi::restore-extendedglob
-     |   `-- zi::save-set-extendedglob
-     |-- zi::format-parameter
-     `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-show-all-reports
 
 Called by:
 
  zinit.zsh/zinit
 
-zi::show-completions
-~~~~~~~~~~~~~~~~~~~~
+.zinit-show-completions
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1091,10 +1042,8 @@ ____
 
 Has 72 line(s). Calls functions:
 
- zi::show-completions
- |-- zi::get-completion-owner
- |-- zi::prepare-readlink
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-show-completions
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
 
@@ -1102,8 +1051,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::show-debug-report
-~~~~~~~~~~~~~~~~~~~~~
+.zinit-show-debug-report
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1114,34 +1063,14 @@ ____
 
 Has 1 line(s). Calls functions:
 
- zi::show-debug-report
- `-- zi::show-report
-     |-- zi::check-which-completions-are-enabled
-     |-- zi::check-which-completions-are-installed
-     |-- zi::diff-env-compute
-     |-- zi::diff-functions-compute
-     |-- zi::diff-options-compute
-     |-- zi::diff-parameter-compute
-     |-- zi::exists-message
-     |   |-- zi::any-to-uspl2
-     |   |   `-- zinit.zsh/zi::any-to-user-plugin
-     |   `-- zinit-side.zsh/zi::any-colorify-as-uspl2
-     |-- zi::find-completions-of-plugin
-     |   `-- zinit.zsh/zi::any-to-user-plugin
-     |-- zi::format-env
-     |-- zi::format-functions
-     |-- zi::format-options
-     |   |-- zi::restore-extendedglob
-     |   `-- zi::save-set-extendedglob
-     |-- zi::format-parameter
-     `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-show-debug-report
 
 Called by:
 
  zinit.zsh/zinit
 
-zi::show-registered-plugins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-show-registered-plugins
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1150,8 +1079,8 @@ ____
 
 Has 22 line(s). Calls functions:
 
- zi::show-registered-plugins
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-show-registered-plugins
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
 
@@ -1159,8 +1088,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::show-report
-~~~~~~~~~~~~~~~
+.zinit-show-report
+~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1172,37 +1101,19 @@ ____
 
 Has 71 line(s). Calls functions:
 
- zi::show-report
- |-- zi::check-which-completions-are-enabled
- |-- zi::check-which-completions-are-installed
- |-- zi::diff-env-compute
- |-- zi::diff-functions-compute
- |-- zi::diff-options-compute
- |-- zi::diff-parameter-compute
- |-- zi::exists-message
- |   |-- zi::any-to-uspl2
- |   |   `-- zinit.zsh/zi::any-to-user-plugin
- |   `-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |-- zi::find-completions-of-plugin
- |   `-- zinit.zsh/zi::any-to-user-plugin
- |-- zi::format-env
- |-- zi::format-functions
- |-- zi::format-options
- |   |-- zi::restore-extendedglob
- |   `-- zi::save-set-extendedglob
- |-- zi::format-parameter
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-show-report
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zi::show-all-reports
- zi::show-debug-report
+ .zinit-show-all-reports
+ .zinit-show-debug-report
  zinit.zsh/zinit
 
-zi::show-times
-~~~~~~~~~~~~~~
+.zinit-show-times
+~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1213,8 +1124,8 @@ ____
 
 Has 65 line(s). Calls functions:
 
- zi::show-times
- `-- zinit-side.zsh/zi::any-colorify-as-uspl2
+ .zinit-show-times
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
 
@@ -1222,8 +1133,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::show-zstatus
-~~~~~~~~~~~~~~~~
+.zinit-show-zstatus
+~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1235,8 +1146,8 @@ ____
 
 Has 47 line(s). Calls functions:
 
- zi::show-zstatus
- `-- zinit.zsh/+zi::message
+ .zinit-show-zstatus
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
@@ -1244,8 +1155,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::stress
-~~~~~~~~~~
+.zinit-stress
+~~~~~~~~~~~~~
 
 ____
  
@@ -1263,17 +1174,17 @@ ____
 
 Has 38 line(s). Calls functions:
 
- zi::stress
- |-- zinit-side.zsh/zi::exists-physically-message
- |-- zinit-side.zsh/zi::first
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-stress
+ |-- zinit-side.zsh/.zinit-exists-physically-message
+ |-- zinit-side.zsh/.zinit-first
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_, _zcompile_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zi::uncompile-plugin
-~~~~~~~~~~~~~~~~~~~~
+.zinit-uncompile-plugin
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1287,19 +1198,19 @@ ____
 
 Has 22 line(s). Calls functions:
 
- zi::uncompile-plugin
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-uncompile-plugin
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zi::compile-uncompile-all
+ .zinit-compile-uncompile-all
  zinit.zsh/zinit
 
-zi::uninstall-completions
-~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-uninstall-completions
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1312,12 +1223,10 @@ ____
 
 Has 46 line(s). Calls functions:
 
- zi::uninstall-completions
- |-- zi::get-path
- |   `-- zinit.zsh/zi::get-object-path
- |-- zinit-install.zsh/zi::compinit
- |-- zinit-install.zsh/zi::forget-completion
- `-- zinit.zsh/+zi::message
+ .zinit-uninstall-completions
+ |-- zinit-install.zsh/.zinit-compinit
+ |-- zinit-install.zsh/.zinit-forget-completion
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_, _source_
 
@@ -1325,8 +1234,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::unload
-~~~~~~~~~~
+.zinit-unload
+~~~~~~~~~~~~~
 
 ____
  
@@ -1348,36 +1257,21 @@ ____
 
 Has 386 line(s). Calls functions:
 
- zi::unload
- |-- zi::clear-report-for
- |   `-- zi::any-to-uspl2
- |       `-- zinit.zsh/zi::any-to-user-plugin
- |-- zi::diff-env-compute
- |-- zi::diff-functions-compute
- |-- zi::diff-options-compute
- |-- zi::diff-parameter-compute
- |-- zi::exists-message
- |   |-- zi::any-to-uspl2
- |   |   `-- zinit.zsh/zi::any-to-user-plugin
- |   `-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |-- zi::restore-extendedglob
- |-- zi::save-set-extendedglob
- |-- zi::unregister-plugin
- |   `-- zinit.zsh/zi::any-to-user-plugin
- |-- zinit-additional.zsh/zi::clear-debug-report
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-unload
+ |-- zinit-additional.zsh/.zinit-clear-debug-report
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
- zinit-additional.zsh/zi::debug-unload
- zinit.zsh/zi::run-task
+ zinit-additional.zsh/.zinit-debug-unload
+ zinit.zsh/.zinit-run-task
  zinit.zsh/zinit
 
-zi::unregister-plugin
-~~~~~~~~~~~~~~~~~~~~~
+.zinit-unregister-plugin
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1387,52 +1281,31 @@ ____
 
 Has 6 line(s). Calls functions:
 
- zi::unregister-plugin
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-unregister-plugin
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Called by:
 
- zi::unload
+ .zinit-unload
 
-zi::update-all-parallel
-~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-update-all-parallel
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 84 line(s). Calls functions:
 
- zi::update-all-parallel
- |-- zi::update-or-status
- |   |-- zi::pager
- |   |-- zi::update-or-status-snippet
- |   |   |-- zinit-install.zsh/zi::update-snippet
- |   |   `-- zinit-side.zsh/zi::compute-ice
- |   |-- zinit-install.zsh/zi::get-latest-gh-r-url-part
- |   |-- zinit-install.zsh/zi::setup-plugin-dir
- |   |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |   |-- zinit-side.zsh/zi::compute-ice
- |   |-- zinit-side.zsh/zi::exists-physically
- |   |-- zinit-side.zsh/zi::exists-physically-message
- |   |-- zinit-side.zsh/zi::store-ices
- |   |-- zinit-side.zsh/zi::two-paths
- |   |-- zinit.zsh/+zi::message
- |   |-- zinit.zsh/zi::any-to-user-plugin
- |   `-- zinit.zsh/zi::set-m-func
- |-- zi::update-or-status-snippet
- |   |-- zinit-install.zsh/zi::update-snippet
- |   `-- zinit-side.zsh/zi::compute-ice
- |-- zi::wait-for-update-jobs
- |   `-- zinit.zsh/+zi::message
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |-- zinit.zsh/+zi::message
- `-- zinit.zsh/zi::any-to-user-plugin
+ .zinit-update-all-parallel
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
 
 Called by:
 
- zi::update-or-status-all
+ .zinit-update-or-status-all
 
-zi::update-or-status
-~~~~~~~~~~~~~~~~~~~~
+.zinit-update-or-status
+~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1447,33 +1320,29 @@ ____
 
 Has 325 line(s). Calls functions:
 
- zi::update-or-status
- |-- zi::pager
- |-- zi::update-or-status-snippet
- |   |-- zinit-install.zsh/zi::update-snippet
- |   `-- zinit-side.zsh/zi::compute-ice
- |-- zinit-install.zsh/zi::get-latest-gh-r-url-part
- |-- zinit-install.zsh/zi::setup-plugin-dir
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |-- zinit-side.zsh/zi::compute-ice
- |-- zinit-side.zsh/zi::exists-physically
- |-- zinit-side.zsh/zi::exists-physically-message
- |-- zinit-side.zsh/zi::store-ices
- |-- zinit-side.zsh/zi::two-paths
- |-- zinit.zsh/+zi::message
- |-- zinit.zsh/zi::any-to-user-plugin
- `-- zinit.zsh/zi::set-m-func
+ .zinit-update-or-status
+ |-- zinit-install.zsh/.zinit-get-latest-gh-r-url-part
+ |-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- zinit-side.zsh/.zinit-compute-ice
+ |-- zinit-side.zsh/.zinit-exists-physically
+ |-- zinit-side.zsh/.zinit-exists-physically-message
+ |-- zinit-side.zsh/.zinit-store-ices
+ |-- zinit-side.zsh/.zinit-two-paths
+ |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/.zinit-set-m-func
 
 Uses feature(s): _kill_, _read_, _setopt_, _source_, _trap_, _wait_
 
 Called by:
 
- zi::update-all-parallel
- zi::update-or-status-all
+ .zinit-update-all-parallel
+ .zinit-update-or-status-all
  zinit.zsh/zinit
 
-zi::update-or-status-all
-~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-update-or-status-all
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1486,60 +1355,12 @@ ____
 
 Has 133 line(s). Calls functions:
 
- zi::update-or-status-all
- |-- zi::self-update
- |   |-- zi::pager
- |   |-- zinit.zsh/+zi::message
- |   `-- zinit.zsh/zi::get-mtime-into
- |-- zi::update-all-parallel
- |   |-- zi::update-or-status
- |   |   |-- zi::pager
- |   |   |-- zi::update-or-status-snippet
- |   |   |   |-- zinit-install.zsh/zi::update-snippet
- |   |   |   `-- zinit-side.zsh/zi::compute-ice
- |   |   |-- zinit-install.zsh/zi::get-latest-gh-r-url-part
- |   |   |-- zinit-install.zsh/zi::setup-plugin-dir
- |   |   |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |   |   |-- zinit-side.zsh/zi::compute-ice
- |   |   |-- zinit-side.zsh/zi::exists-physically
- |   |   |-- zinit-side.zsh/zi::exists-physically-message
- |   |   |-- zinit-side.zsh/zi::store-ices
- |   |   |-- zinit-side.zsh/zi::two-paths
- |   |   |-- zinit.zsh/+zi::message
- |   |   |-- zinit.zsh/zi::any-to-user-plugin
- |   |   `-- zinit.zsh/zi::set-m-func
- |   |-- zi::update-or-status-snippet
- |   |   |-- zinit-install.zsh/zi::update-snippet
- |   |   `-- zinit-side.zsh/zi::compute-ice
- |   |-- zi::wait-for-update-jobs
- |   |   `-- zinit.zsh/+zi::message
- |   |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |   |-- zinit.zsh/+zi::message
- |   `-- zinit.zsh/zi::any-to-user-plugin
- |-- zi::update-or-status
- |   |-- zi::pager
- |   |-- zi::update-or-status-snippet
- |   |   |-- zinit-install.zsh/zi::update-snippet
- |   |   `-- zinit-side.zsh/zi::compute-ice
- |   |-- zinit-install.zsh/zi::get-latest-gh-r-url-part
- |   |-- zinit-install.zsh/zi::setup-plugin-dir
- |   |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |   |-- zinit-side.zsh/zi::compute-ice
- |   |-- zinit-side.zsh/zi::exists-physically
- |   |-- zinit-side.zsh/zi::exists-physically-message
- |   |-- zinit-side.zsh/zi::store-ices
- |   |-- zinit-side.zsh/zi::two-paths
- |   |-- zinit.zsh/+zi::message
- |   |-- zinit.zsh/zi::any-to-user-plugin
- |   `-- zinit.zsh/zi::set-m-func
- |-- zi::update-or-status-snippet
- |   |-- zinit-install.zsh/zi::update-snippet
- |   `-- zinit-side.zsh/zi::compute-ice
- |-- zinit-install.zsh/zi::compinit
- |-- zinit-side.zsh/zi::any-colorify-as-uspl2
- |-- zinit.zsh/+zi::message
- |-- zinit.zsh/zi::any-to-user-plugin
- `-- zinit.zsh/zi::get-mtime-into
+ .zinit-update-or-status-all
+ |-- zinit-install.zsh/.zinit-compinit
+ |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/.zinit-any-to-user-plugin
+ `-- zinit.zsh/.zinit-get-mtime-into
 
 Uses feature(s): _setopt_, _source_
 
@@ -1547,8 +1368,8 @@ Called by:
 
  zinit.zsh/zinit
 
-zi::update-or-status-snippet
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-update-or-status-snippet
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ____
  
@@ -1561,31 +1382,31 @@ ____
 
 Has 34 line(s). Calls functions:
 
- zi::update-or-status-snippet
- |-- zinit-install.zsh/zi::update-snippet
- `-- zinit-side.zsh/zi::compute-ice
+ .zinit-update-or-status-snippet
+ |-- zinit-install.zsh/.zinit-update-snippet
+ `-- zinit-side.zsh/.zinit-compute-ice
 
 Uses feature(s): _source_
 
 Called by:
 
- zi::update-all-parallel
- zi::update-or-status-all
- zi::update-or-status
+ .zinit-update-all-parallel
+ .zinit-update-or-status-all
+ .zinit-update-or-status
 
-zi::wait-for-update-jobs
-~~~~~~~~~~~~~~~~~~~~~~~~
+.zinit-wait-for-update-jobs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Has 18 line(s). Calls functions:
 
- zi::wait-for-update-jobs
- `-- zinit.zsh/+zi::message
+ .zinit-wait-for-update-jobs
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _wait_
 
 Called by:
 
- zi::update-all-parallel
+ .zinit-update-all-parallel
 
 zi::version
 ~~~~~~~~~~~
