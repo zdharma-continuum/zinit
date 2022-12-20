@@ -6,6 +6,14 @@
   ZBIN=$ZPFX/bin
   export LC_CTYPE=C
   export LANG=C
+  export ZTMP=$(mktemp -qu)
+}
+
+@test 'wait-ice' {
+  # @zinit-scheduler with "burst" argument executes all tasks "now"
+  eval zinit wait nocd atload\'touch $ZTMP\' for zdharma-continuum/null && @zinit-scheduler burst
+  assert $state equals 0
+  assert $ZTMP is_file
 }
 
 # @test 'nnn' {
