@@ -6,14 +6,39 @@
   ZBIN=$ZPFX/bin
   export LC_CTYPE=C
   export LANG=C
-  export ZTMP=$(mktemp -qu)
+  export ZTMP=$(mktemp -qu) TMPQ=,
+}
+
+@test '(un)load-ices' {
+  rm -f $ZTMP
+  # @zinit-scheduler with "burst" argument executes all tasks "now"
+  eval zinit load'"[[ \$TMPQ = , ]]"' atload"\"!touch \$ZTMP; TMPQ=.; TMPE=.\"" unload'"[[ \$TMPQ = . ]]"' for zdharma-continuum/null && @zinit-scheduler burst && @zinit-scheduler burst
+  state=$?
+  # Test if plugin effects withdrawal on unload is working
+  assert "$TMPE" different_to .
+  # Test if plugin is marked as unloaded
+  assert "$ZINIT_REGISTERED_PLUGINS[-1]" different_to zdharma-continuum/null
+  assert "$state" equals 0
+  # Test if plugin is loaded
+  assert "$ZTMP" is_file
+}
+
+@test 'wait-ice-with-condition' {
+  rm -f $ZTMP
+  # @zinit-scheduler with "burst" argument executes all tasks "now"
+  eval zinit wait'"[[ -n $ZTMP ]]"' atload'"touch $ZTMP"' for zdharma-continuum/null && @zinit-scheduler burst
+  state=$?
+  assert $state equals 0
+  assert $ZTMP is_file
 }
 
 @test 'wait-ice' {
+  rm -f $ZTMP
   # @zinit-scheduler with "burst" argument executes all tasks "now"
-  eval zinit wait nocd atload\'touch $ZTMP\' for zdharma-continuum/null && @zinit-scheduler burst
-  assert $state equals 0
-  assert $ZTMP is_file
+  eval zinit wait nocd atload'"touch $ZTMP"' for zdharma-continuum/null && @zinit-scheduler burst
+  state=$?
+  assert "$state" equals 0
+  assert "$ZTMP" is_file
 }
 
 # @test 'nnn' {
