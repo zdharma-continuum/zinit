@@ -1731,7 +1731,7 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{info}[{pre}ziextract{info}]{rst} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
+            +zinit-message "{info}[{pre}ziextract{info}]{rst} Unpacking the files from: \`{file}$file{msg}'{…}"
         $fun; retval=$?
         if (( retval == 0 )) {
             local -a files
@@ -1880,7 +1880,7 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         if (( !OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
-                    +zinit-message "{info}[{pre}ziextract{info}]{rst} Successfully extracted and assigned +x chmod to the file: {obj}${execs[1]}{rst}."
+                    +zinit-message "{info}[{pre}ziextract{info}]{rst} Successfully extracted and assigned +x chmod to the file: {file}${execs[1]}{rst}."
             else
                 local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
                 if (( ${#execs} > 7 )) {
