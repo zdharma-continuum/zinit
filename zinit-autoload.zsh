@@ -700,13 +700,10 @@ ZINIT[EXTENDED_GLOB]=""
     }
     (( $? )) && cat
     return 0
-}
-# ]]]
+} # ]]]
 
 # FUNCTION: .zinit-self-update [[[
-# Updates Zinit code (does a git pull).
-#
-# User-action entry point.
+# Updates Zinit code (does a git pull)
 .zinit-self-update() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
@@ -763,9 +760,7 @@ ZINIT[EXTENDED_GLOB]=""
     }
 } # ]]]
 # FUNCTION: .zinit-show-registered-plugins [[[
-# Lists loaded plugins (subcommands list, lodaded).
-#
-# User-action entry point.
+# Lists loaded plugins (subcommands list, lodaded)
 .zinit-show-registered-plugins() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
@@ -792,19 +787,17 @@ ZINIT[EXTENDED_GLOB]=""
     done
 } # ]]]
 # FUNCTION: .zinit-unload [[[
-# 0. Call the Zsh Plugin's Standard *_plugin_unload function
-# 0. Call the code provided by the Zsh Plugin's Standard @zsh-plugin-run-at-update
-# 1. Delete bindkeys (...)
-# 2. Delete Zstyles
-# 3. Restore options
-# 4. Remove aliases
-# 5. Restore Zle state
-# 6. Unfunction functions (created by plugin)
-# 7. Clean-up FPATH and PATH
-# 8. Delete created variables
-# 9. Forget the plugin
-#
-# User-action entry point.
+# 1. call the zsh plugin's standard *_plugin_unload function
+# 2. call the code provided by the zsh plugin's standard @zsh-plugin-run-at-update
+# 3. delete bindkeys (...)
+# 4. delete zstyles
+# 5. restore options
+# 6. remove aliases
+# 7. restore zle state
+# 8. unfunction functions (created by plugin)
+# 9. clean-up fpath and path
+# 10. delete created variables
+# 11. forget the plugin
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -835,16 +828,10 @@ ZINIT[EXTENDED_GLOB]=""
     typeset -g LASTREPORT
     LASTREPORT=`.zinit-show-report "$1" "$2"`
 
-    #
     # Call the Zsh Plugin's Standard *_plugin_unload function
-    #
-
     (( ${+functions[${plugin}_plugin_unload]} )) && ${plugin}_plugin_unload
 
-    #
     # Call the code provided by the Zsh Plugin's Standard @zsh-plugin-run-at-update
-    #
-
     local -a tmp
     local -A sice
     tmp=( "${(z@)ZINIT_SICE[$uspl2]}" )
@@ -858,10 +845,7 @@ ZINIT[EXTENDED_GLOB]=""
         () { setopt localoptions noautopushd; builtin cd -q "$___oldcd"; }
     fi
 
-    #
     # 1. Delete done bindkeys
-    #
-
     typeset -a string_widget
     string_widget=( "${(z)ZINIT[BINDKEYS__$uspl2]}" )
     local sw
@@ -927,9 +911,7 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     done
 
-    #
     # 2. Delete created Zstyles
-    #
 
     typeset -a pattern_style
     pattern_style=( "${(z)ZINIT[ZSTYLES__$uspl2]}" )
@@ -950,11 +932,8 @@ ZINIT[EXTENDED_GLOB]=""
         zstyle -d "$ps_arr1" "$ps_arr2"
     done
 
-    #
     # 3. Restore changed options
-    #
-
-    # Paranoid, don't want bad key/value pair error
+    # paranoid, don't want bad key/value pair error
     .zinit-diff-options-compute "$uspl2"
     integer empty=0
     .zinit-save-set-extendedglob
@@ -978,10 +957,7 @@ ZINIT[EXTENDED_GLOB]=""
         done
     fi
 
-    #
     # 4. Delete aliases
-    #
-
     typeset -a aname_avalue
     aname_avalue=( "${(z)ZINIT[ALIASES__$uspl2]}" )
     local nv
@@ -1075,10 +1051,11 @@ ZINIT[EXTENDED_GLOB]=""
                     if (( found_idx || found_idx2 ))
                     then
                         # Skip multiple loads of the same plugin
-                        # TODO: Fully handle multiple plugin loads
+                        # TODO: fully handle multiple plugin loads
                         if [[ "$oth_uspl2" != "$uspl2" ]]; then
                             to_process_plugin="$oth_uspl2"
-                            break # Only the first one is needed
+                            # only the first one is needed
+                            break
                         fi
                     fi
                 done
@@ -1092,9 +1069,8 @@ ZINIT[EXTENDED_GLOB]=""
                     if (( found_idx )) {
                         oth_orig_saved=( "${(z)${(Q)entry_splitted[found_idx]}}" )
                         local oth_fun="${oth_orig_saved[4]}"
-                        # oth_orig_saved[2]="${(q)orig_saved2}" # not do this, because
-                                                        # we don't want to call other
-                                                        # plugin's function at any moment
+                        # below is wrong because we don't want to call other plugins function at any moment
+                        # oth_orig_saved[2]="${(q)orig_saved2}"
                         oth_orig_saved[5]="${(q)orig_saved3}" # chain up the widget
                         entry_splitted[found_idx]="${(q)${(j: :)oth_orig_saved}}"
                         ZINIT[WIDGETS_SAVED__$oth_uspl2]="${(j: :)entry_splitted}"
@@ -1123,10 +1099,9 @@ ZINIT[EXTENDED_GLOB]=""
                                 zle -N "$oth_prefix_uspl2_X" "${widgets[$prefix_X]#user:}"
                             fi
                         fi
-
                         # The alternate method
-                        #skip_delete+=( "${match[1]}" )
-                        #functions[$oth_fun]="${functions[$oth_fun]//[^\{[:space:]]#$orig_saved1/${match[1]}}"
+                        # skip_delete+=( "${match[1]}" )
+                        # functions[$oth_fun]="${functions[$oth_fun]//[^\{[:space:]]#$orig_saved1/${match[1]}}"
                     fi
                 else
                     (( quiet )) || builtin print "Restoring Zle widget $orig_saved1"
@@ -1162,10 +1137,7 @@ ZINIT[EXTENDED_GLOB]=""
         zle -D "$wid"
     done
 
-    #
     # 6. Unfunction
-    #
-
     .zinit-diff-functions-compute "$uspl2"
     typeset -a func
     func=( "${(z)ZINIT[FUNCTIONS__$uspl2]}" )
@@ -1183,14 +1155,9 @@ ZINIT[EXTENDED_GLOB]=""
         (( ${+zshexit_functions} )) && zshexit_functions=( ${zshexit_functions[@]:#$f} )
     done
 
-    #
     # 7. Clean up FPATH and PATH
-    #
-
     .zinit-diff-env-compute "$uspl2"
-
-    # Have to iterate over $path elements and
-    # skip those that were added by the plugin
+    # iterate over $path elements and skip those that were added by the plugin
     typeset -a new elem p
     elem=( "${(z)ZINIT[PATH__$uspl2]}" )
     for p in "${path[@]}"; do
@@ -1216,10 +1183,7 @@ ZINIT[EXTENDED_GLOB]=""
     }
     fpath=( "${new[@]}" )
 
-    #
     # 8. Delete created variables
-    #
-
     .zinit-diff-parameter-compute "$uspl2"
     empty=0
     .zinit-save-set-extendedglob
@@ -1245,8 +1209,7 @@ ZINIT[EXTENDED_GLOB]=""
                 # Don't unset readonly variables
                 [[ ${(tP)k} == *-readonly(|-*) ]] && continue
 
-                # Don't unset arrays managed by add-zsh-hook,
-                # also ignore a few special parameters
+                # Don't unset arrays managed by add-zsh-hook, also ignore a few special parameters
                 # TODO: remember and remove hooks
                 case "$k" in
                     (chpwd_functions|precmd_functions|preexec_functions|periodic_functions|zshaddhistory_functions|zshexit_functions|zsh_directory_name_functions)
@@ -1256,10 +1219,8 @@ ZINIT[EXTENDED_GLOB]=""
                         ;;
                 esac
 
-                # Don't unset redefined variables, only newly defined
-                # "" means variable didn't exist before plugin load
-                # (didn't have a type).
-                # Do an exception for the prompt variables.
+                # Don't unset redefined variables, only newly defined "" means variable didn't exist before plugin load (didn't have a type).
+                # Do an exception for the prompt variables
                 if [[ $v1 = '""' || ( $k = (RPROMPT|RPS1|RPS2|PROMPT|PS1|PS2|PS3|PS4) && $v1 != $v2 ) ]]; then
                     found=0
                     for wl in "${whitelist[@]}"; do
@@ -1270,9 +1231,7 @@ ZINIT[EXTENDED_GLOB]=""
                     done
                     if (( !found )); then
                         (( quiet )) || builtin print "Unsetting variable $k"
-                        # Checked that 4.3.17 does support "--"
-                        # There cannot be parameter starting with
-                        # "-" but let's defensively use "--" here
+                        # checked that 4.3.17 does support "--"; cannot be parameter starting with "-" but let's defensively use "--" here
                         unset -- "$k"
                     else
                         builtin print "Skipping unset of variable $k (whitelist)"
@@ -1282,10 +1241,7 @@ ZINIT[EXTENDED_GLOB]=""
         done
     fi
 
-    #
     # 9. Forget the plugin
-    #
-
     if [[ "$uspl2" = "_dtrace/_dtrace" ]]; then
         .zinit-clear-debug-report
         (( quiet )) || builtin print "dtrace report saved to \$LASTREPORT"
@@ -1296,12 +1252,9 @@ ZINIT[EXTENDED_GLOB]=""
         .zinit-clear-report-for "$user" "$plugin"
         (( quiet )) || builtin print "Plugin's report saved to \$LASTREPORT"
     fi
-
 } # ]]]
 # FUNCTION: .zinit-show-report [[[
 # Displays report of the plugin given.
-#
-# User-action entry point.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
@@ -1823,8 +1776,7 @@ ZINIT[EXTENDED_GLOB]=""
     }
 
     return $retval
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-update-or-status-all [[[
 # Updates (git pull) or does `git status` for all existing plugins.
 # This includes also plugins that are not loaded into Zsh (but exist
@@ -1974,7 +1926,7 @@ ZINIT[EXTENDED_GLOB]=""
 
     return "$retval"
 } # ]]]
-# FUNCTION: .zinit-update-in-parallel [[[
+# FUNCTION: .zinit-update-all-parallel [[[
 .zinit-update-all-parallel() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent \
@@ -1992,8 +1944,7 @@ ZINIT[EXTENDED_GLOB]=""
     if (( OPTS[opt_-s,--snippets] || !OPTS[opt_-l,--plugins] )) {
         for snip ( "${files[@]}" ) {
             main_counter=main_counter-1
-            # The continue may cause the tail of processes to
-            # fall-through to the following plugins-specific `wait'
+            # The continue may cause the tail of processes to fall-through to the following plugins-specific `wait'
             # Should happen only in a very special conditions
             # TODO handle this
             [[ ! -f ${snip:h}/url ]] && continue
@@ -2073,8 +2024,7 @@ ZINIT[EXTENDED_GLOB]=""
     }
     # Shouldn't happen
     # (( ${#PUAssocArray} > 0 )) && wait ${(k)PUAssocArray}
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-wait-for-update-jobs [[[
 .zinit-wait-for-update-jobs() {
     local tpe=$1
@@ -2095,8 +2045,7 @@ ZINIT[EXTENDED_GLOB]=""
             "${OPTS[value]}{obj} concurrent update jobs" \
             "({msg2}${tpe}{obj}){…}{rst}"
     }
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-show-zstatus [[[
 # Shows Zinit status, i.e. number of loaded plugins,
 # of available completions, etc.
@@ -2239,8 +2188,7 @@ ZINIT[EXTENDED_GLOB]=""
         (( sum += ZINIT[$entry] ))
     done
     builtin print "Total: $sum sec"
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-list-bindkeys [[[
 .zinit-list-bindkeys() {
     local uspl2 uspl2col sw first=1
@@ -2292,9 +2240,7 @@ ZINIT[EXTENDED_GLOB]=""
             fi
         done
     done
-}
-# ]]]
-
+} # ]]]
 # FUNCTION: .zinit-compiled [[[
 # Displays list of plugins that are compiled.
 #
@@ -2698,7 +2644,6 @@ ZINIT[EXTENDED_GLOB]=""
 
     return 0
 } # ]]]
-
 # FUNCTION: .zinit-cd [[[
 # Jumps to plugin's directory (in Zinit's home directory).
 #
@@ -2744,8 +2689,7 @@ ZINIT[EXTENDED_GLOB]=""
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-delete [[[
 # Deletes plugin's or snippet's directory (in Zinit's home directory).
 #
@@ -2907,8 +2851,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         }
     fi
     return 0
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-changes [[[
 # Shows `git log` of given plugin.
 #
@@ -3269,8 +3212,7 @@ EOF
         list[-1]+=", located at ZINIT[SNIPPETS_DIR], i.e. ${ZINIT[SNIPPETS_DIR]}"
         builtin print -rl -- "${list[@]}"
     )
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-get-path [[[
 # Returns path of given ID-string, which may be a plugin-spec
 # (like "user/plugin" or "user" "plugin"), an absolute path
@@ -3285,8 +3227,7 @@ EOF
         .zinit-get-object-path plugin "$id_as"
 
     return $(( 1 - reply[3] ))
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-recall [[[
 .zinit-recall() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
@@ -3335,8 +3276,7 @@ EOF
         fi
         +zinit-deploy-message @rst
     } || builtin print -r -- "No such plugin or snippet"
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-module [[[
 # Function that has sub-commands passed as long-options (with two dashes, --).
 # It's an attempt to plugin only this one function into `zinit' function
@@ -3366,8 +3306,7 @@ EOF
         builtin print -r "to be run. To display the instructions on loading the module, run:"
         builtin print -r "\`zinit module info'."
     fi
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-build-module [[[
 # Performs ./configure && make on the module and displays information
 # how to load the module in .zshrc.
@@ -3411,12 +3350,17 @@ EOF
       }
       builtin print $EPOCHSECONDS >! "${ZINIT[MAN_DIR]}/COMPILED_AT"
     )
-}
-# ]]]
+} # ]]]
 
+
+# FUNCTION: zi::version [[[
+# Shows usage information.
 #
-# Help function
-#
+# User-action entry point.
+zi::version() {
+	+zinit-message "zinit{cmd} $(git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
+	return $?
+} # ]]]
 
 # FUNCTION: .zinit-help [[[
 # Shows usage information.
@@ -3426,6 +3370,7 @@ EOF
            builtin print -r -- "${ZINIT[col-p]}Usage${ZINIT[col-rst]}:
 —— -h|--help|help                – usage information
 —— man                           – manual
+—— version                       – display zinit version
 —— self-update                   – updates and compiles Zinit
 —— zstatus                       – overall Zinit statu—— times [-s] [-m] [-a] – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments, -a – show both load times and loading moments
 —— load ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – load plugin, can also receive absolute local path
@@ -3491,4 +3436,10 @@ ice_order=( ${${(s.|.)ZINIT[ice-list]}:#teleid} ${(@)${(@)${(@Akons:|:u)${ZINIT_
 print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker

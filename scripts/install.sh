@@ -324,4 +324,10 @@ if [ -z "$NO_TUTORIAL" ]; then
   display_tutorial
 fi
 
-# vim: set ft=sh et ts=2 sw=2 :
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=bash sw=2 ts=2 et

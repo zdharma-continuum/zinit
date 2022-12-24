@@ -22,6 +22,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: .zinit-json-get-value [[[
 # Wrapper around jq that return the value of a property
+#
 # $1: JSON structure
 # $2: jq path
 .zinit-json-get-value() {
@@ -33,6 +34,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # FUNCTION: .zinit-json-to-array [[[
 # Wrapper around jq that sets key/values of an associative array, replicating
 # the structure of a given JSON object
+#
 # $1: JSON structure
 # $2: jq path
 # $3: name of the associative array to store the key/value pairs in
@@ -68,8 +70,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         pkgjson tmpfile=${$(mktemp):-${TMPDIR:-/tmp}/zsh.xYzAbc123}
     local URL=https://raw.githubusercontent.com/${ZINIT[PACKAGES_REPO]}/${ver:-${ZINIT[PACKAGES_BRANCH]}}/${pkg}/package.json
 
-    # Consume, ie delete the ver ice to avoid being consumed again at
-    # git-clone time
+    # Consume (i.e., delete) the ver ice to avoid being consumed again at git-clone time
     [[ -n "$ver" ]] && unset 'ICE[ver]'
 
     local pro_sep="{rst}, {profile}" epro_sep="{error}, {profile}" \
@@ -499,7 +500,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # After additional executions like atclone'' - install completions (1 - plugins)
     local -A OPTS
     OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
+    [[ (0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0) || 0 != ${+ICE[completions]} ]] && \
         .zinit-install-completions "$id_as" "" "0"
 
     if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
@@ -523,13 +524,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: .zinit-install-completions [[[
 # Installs all completions of given plugin. After that they are
-# visible to `compinit'. Visible completions can be selectively
+# visible to 'compinit'. Visible completions can be selectively
 # disabled and enabled. User can access completion data with
-# `clist' or `completions' subcommand.
+# 'clist' or 'completions' subcommand.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
-# $2 - plugin (only when $1 - i.e. user - given)
-# $3 - if 1, then reinstall, otherwise only install completions that aren't there
+# $2 - plugin if $1 (i.e., user) given
+# $3 - if 1, then reinstall, otherwise only install completions that are not present
 .zinit-install-completions() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
@@ -549,10 +550,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     .zinit-exists-physically-message "$id_as" "" || return 1
 
-    # Symlink any completion files included in plugin's directory
+    # Symlink any completion files included in the plugin directory
     typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
-    # The plugin == . is a semi-hack/trick to handle `creinstall .' properly
+    # The plugin == . is a semi-hack/trick to handle 'creinstall .' properly
     [[ $user == % || ( -z $user && $plugin == . ) ]] && \
         completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
         completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
@@ -561,7 +562,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
-    # OR - if it's a reinstall
+    # OR - if its a reinstall
     for c in "${completions[@]}"; do
         cfile="${c:t}"
         bkpfile="${cfile#_}"
@@ -670,7 +671,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
         if (( ${+commands[curl]} )); then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
             else
                 command curl -fsSL "$url" || return 1
             fi
@@ -689,7 +690,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     } else {
         if type curl 2>/dev/null 1>&2; then
             if [[ -n $progress ]]; then
-                command curl --progress-bar -fSL "$url" 2> >($ZINIT[BIN_DIR]/share/single-line.zsh >&2) || return 1
+                command curl --progress-bar -fSL "$url" 2> >(.zinit-single-line >&2) || return 1
             else
                 command curl -fsSL "$url" || return 1
             fi
@@ -910,10 +911,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 0
 } # ]]]
 # FUNCTION: .zinit-download-snippet [[[
-# Downloads snippet – either a file – with curl, wget, lftp or lynx,
-# or a directory, with Subversion – when svn-ICE is active. Github
-# supports Subversion protocol and allows to clone subdirectories.
-# This is used to provide a layer of support for Oh-My-Zsh and Prezto.
+# Downloads snippet
+#   file – with curl, wget, lftp or lynx,
+#   directory, with Subversion – when svn-ICE is active.
+#
+#   Github supports Subversion protocol and allows to clone subdirectories.
+#   This is used to provide a layer of support for Oh-My-Zsh and Prezto.
 .zinit-download-snippet() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
@@ -1336,7 +1339,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # After additional executions like atclone'' - install completions (2 - snippets)
     local -A OPTS
     OPTS[opt_-q,--quiet]=1
-    [[ 0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0 ]] && \
+    [[ (0 = ${+ICE[nocompletions]} && ${ICE[as]} != null && ${+ICE[null]} -eq 0) || 0 != ${+ICE[completions]} ]] && \
         .zinit-install-completions "%" "$local_dir/$dirname" 0
 
     if [[ -e ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst || -e ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst ]] {
@@ -1451,6 +1454,32 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     return $?
 } # ]]]
+# FUNCTION: .zinit-single-line [[[
+# Display cURL progress bar on a single line
+.zinit-single-line() {
+    emulate -LR zsh
+    setopt extendedglob noshortloops nowarncreateglobal rcquotes typesetsilent
+    local IFS= n=$'\n' r=$'\r' zero=$'\0'
+
+    {
+      command perl -pe 'BEGIN { $|++; $/ = \1 }; tr/\r\n/\n\0/' \
+        || gstdbuf -o0 gtr '\r\n' '\n\0' \
+        || stdbuf -o0 tr '\r\n' '\n\0';
+      print
+    } 2>/dev/null | while read -r line;
+
+    do
+      if [[ $line == *$zero* ]]; then
+        # cURL doesn't add a newline to progress bars
+        # print -nr -- "${r}${(l:COLUMNS:: :):-}${r}${line##*${zero}}"
+        print -nr -- "${r}${(l:COLUMNS:: :):-}${r}${line%${zero}}"
+      else
+        print -nr -- "${r}${(l:COLUMNS:: :):-}${r}${${line//[${r}${n}]/}%\%*}${${(M)line%\%}:+%}"
+      fi
+    done
+
+    print
+} # ]]]
 # FUNCTION: .zinit-get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
@@ -1474,27 +1503,21 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         local url=https://$urlpart
     }
 
-    local HAS_MUSL
-    if command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif command -v musl-gcc >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    elif find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
-        HAS_MUSL='linux-musl'
-    else
-        HAS_MUSL=$MACHTYPE
+    local HAS_MUSL=$MACHTYPE
+    if (( ${+commands[curl]} )) || find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
+      HAS_MUSL='linux-musl'
     fi
 
     local -A matchstr
     # Logical grouping of $CPUTYPE & $OSTYPE
     matchstr=(
-      aarch64 '(arm64|aarch64|arm[?v]8)'
-      arm64 '(arm64|aarch64|arm[?v]8)'
+      aarch64 '(arm64|aarch64|arm[?v]8|)*~*(linux32)*'
+      arm64 '(arm64|aarch64|arm[?v]8|)*~*(linux32)*'
       armv5 'arm[?v]5'
       armv6 'arm[?v]6'
       armv7 'armv[?v]7'
-      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
-      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(linux32|eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
+      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(linux32|eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
       linux "*(linux-musl|musl|linux64|linux)*~^*(linux*${MACHTYPE}|${CPUTYPE}*linux)*"
       linux-android '(apk|android|linux-android)'
       linux-gnu "*(linux-musl|musl|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
@@ -1614,7 +1637,7 @@ ziextract() {
     local -a opt_move opt_move2 opt_norm opt_auto opt_nobkp
     zparseopts -D -E -move=opt_move -move2=opt_move2 -norm=opt_norm \
             -auto=opt_auto -nobkp=opt_nobkp || \
-        { +zinit-message "{error}ziextract:{msg2} Incorrect options given to" \
+        { +zinit-message "{info}[{pre}ziextract{info}]{error} Incorrect options given to" \
                   "\`{pre}ziextract{msg2}' (available are: {meta}--auto{msg2}," \
                   "{meta}--move{msg2}, {meta}--move2{msg2}, {meta}--norm{msg2}," \
                   "{meta}--nobkp{msg2}).{rst}"; return 1; }
@@ -1648,9 +1671,7 @@ ziextract() {
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar|exe|pe32) ]] {
                     (( !OPTS[opt_-q,--quiet] )) && \
-                        +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
-                            "detected a {meta}$type{rst} archive in the file" \
-                            "{file}$fname{rst}."
+                        +zinit-message "{info}[{pre}ziextract{info}]{msg2} detected a {meta}$type{rst} archive in the file {file}$fname{rst}."
                     ziextract "$fname" "$type" $opt_move $opt_move2 $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
                     integer iret_val=$?
                     ret_val+=iret_val
@@ -1676,9 +1697,7 @@ ziextract() {
                                 # this might delete too soon… However, it's unusual case.
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
                                 (( !OPTS[opt_-q,--quiet] )) && \
-                                    +zinit-message "{pre}ziextract:{info2} Note:{rst}" \
-                                        "detected a {obj}${type2}{rst} archive in the" \
-                                        " file {file}${fname}{rst}."
+                                    +zinit-message "{info}[{pre}ziextract{info}]{msg2} detected a {obj}${type2}{rst} archive in the file {file}${fname}{rst}."
                                 ziextract "$fname" "$type2" $opt_move $opt_move2 $opt_norm ${${${#archives}:#1}:+--nobkp}
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
@@ -1696,13 +1715,11 @@ ziextract() {
     }
 
     if [[ -z $file ]] {
-        +zinit-message "{error}ziextract:{msg2} ERROR:{msg} argument" \
-            "needed (the file to extract) or the {meta}--auto{msg} option."
+        +zinit-message "{info}[{pre}ziextract{info}]{error} argument needed (the file to extract) or the {meta}--auto{msg} option."
         return 1
     }
     if [[ ! -e $file ]] {
-        +zinit-message "{error}ziextract:{msg2} ERROR:{msg}" \
-            "the file \`{meta}${file}{msg}' doesn't exist.{rst}"
+        +zinit-message "{info}[{pre}ziextract{info}]{error} ERROR:{msg} the file \`{meta}${file}{msg}' doesn't exist.{rst}"
         return 1
     }
     if (( !nobkp )) {
@@ -1714,7 +1731,7 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{pre}ziextract:{msg} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
+            +zinit-message "{info}[{pre}ziextract{info}]{rst} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
         $fun; retval=$?
         if (( retval == 0 )) {
             local -a files
@@ -1725,8 +1742,7 @@ ziextract() {
     }
 
     →zinit-check() { (( ${+commands[$1]} )) || \
-        +zinit-message "{error}ziextract:{msg2} Error:{msg} No command {data}$1{msg}," \
-                "it is required to unpack {file}$2{rst}."
+        +zinit-message "{info}[{pre}ziextract{info}]{error} Error:{msg} No command {data}$1{msg}, it is required to unpack {file}$2{rst}."
     }
 
     case "${${ext:+.$ext}:-$file}" in
@@ -1812,8 +1828,7 @@ ziextract() {
                 command hdiutil detach $attached_vol
 
                 if (( retval )) {
-                    +zinit-message "{error}ziextract:{msg2} WARNING:{msg}" \
-                            "problem occurred when attempted to copy the files" \
+                    +zinit-message "{info}[{pre}ziextract{info}]{error} Error:{msg} problem occurred when attempted to copy the files" \
                             "from the mounted image: \`{obj}${file}{msg}'.{rst}"
                 }
                 return $retval
@@ -1835,8 +1850,7 @@ ziextract() {
 
     if [[ $(typeset -f + →zinit-extract) == "→zinit-extract" ]] {
         .zinit-extract-wrapper "$file" →zinit-extract || {
-            +zinit-message -n "{error}ziextract:{msg2} WARNING:{msg}" \
-                "extraction of the archive \`{file}${file}{msg}' had problems"
+            +zinit-message -n "{info}[{pre}ziextract{info}]{error} Error:{msg} extraction of the archive \`{file}${file}{msg}' had problems"
             local -a bfiles
             bfiles=( ._backup/*(DN) )
             if (( ${#bfiles} && !nobkp )) {
@@ -1857,8 +1871,8 @@ ziextract() {
     execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
     if [[ ${#execs} -gt 0 && -n $execs ]] {
         execs=( ${(@f)"$( file ${execs[@]} )"} )
-        execs=( "${(M)execs[@]:#[^:]##:*executable*}" )
-        execs=( "${execs[@]/(#b)([^:]##):*/${match[1]}}" )
+        execs=( "${(M)execs[@]:#[^(:]##:*executable*}" )
+        execs=( "${execs[@]/(#b)([^(:]##):*/${match[1]}}" )
     }
 
     builtin print -rl -- ${execs[@]} >! ${TMPDIR:-/tmp}/zinit-execs.$$.lst
@@ -1866,13 +1880,11 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         if (( !OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
-                    +zinit-message "{pre}ziextract:{rst}" \
-                        "Successfully extracted and assigned +x chmod to the file:" \
-                        "\`{obj}${execs[1]}{rst}'."
+                    +zinit-message "{info}[{pre}ziextract{info}]{rst} Successfully extracted and assigned +x chmod to the file: {obj}${execs[1]}{rst}."
             else
                 local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
                 if (( ${#execs} > 7 )) {
-                    +zinit-message "{pre}ziextract:{rst} Successfully" \
+                    +zinit-message "{info}[{pre}ziextract{info}]{rst} Successfully" \
                         "extracted and marked executable the appropriate files" \
                         "({obj}${(pj:$sep:)${(@)execs[1,5]:t}},…{rst}) contained" \
                         "in \`{file}$file{rst}'. All the extracted" \
@@ -1880,19 +1892,15 @@ ziextract() {
                         "available in the {msg2}INSTALLED_EXECS{rst}" \
                         "array."
                 } else {
-                    +zinit-message "{pre}ziextract:{rst} Successfully" \
-                        "extracted and marked executable the appropriate files" \
+                    +zinit-message "{info}[{pre}ziextract{info}]{rst} Successfully" \
+                        "extracted and marked {obj}${#execs}{rst} executable the appropriate files" \
                         "({obj}${(pj:$sep:)${execs[@]:t}}{rst}) contained" \
                         "in \`{file}$file{rst}'."
                 }
             fi
         }
     } elif (( warning )) {
-        +zinit-message "{pre}ziextract:" \
-            "{error}WARNING: {msg}didn't recognize the archive" \
-            "type of \`{obj}${file}{msg}'" \
-            "${ext:+/ {obj2}${ext}{msg} }"\
-"(no extraction has been done).%f%b"
+        +zinit-message "{info}[{pre}ziextract{info}]{error} Error:{msg} didn't recognize archive type of {obj}${file}{msg} ${ext:+/ {obj2}${ext}{msg} } (no extraction has been done).{rst}"
     }
 
     if (( move | move2 )) {
@@ -1950,8 +1958,9 @@ ziextract() {
     )
 } # ]]]
 # FUNCTION: zpextract [[[
-zpextract() { ziextract "$@"; }
-# ]]]
+zpextract() {
+  ziextract "$@"
+} # ]]]
 # FUNCTION: .zinit-at-eval [[[
 .zinit-at-eval() {
     local atpull="$1" atclone="$2"
@@ -2081,17 +2090,16 @@ zicp() {
         return $retval
     )
     return
-}
-
+} # ]]]
+# FUNCTION: zimv [[[
 zimv() {
     local dir
     if [[ $1 = (-d|--dir) ]] { dir=$2; shift 2; }
     zicp --mv ${dir:+--dir} $dir "$@"
 } # ]]]
 # FUNCTION: .zinit-configure-run-autoconf [[[
-# Called either because # flag given to configure'', or because
-# there's no ./configure script. Runs autoconf, autoreconf,
-# autogen.sh as needed.
+# Called either because "#" flag given to configure'', or because
+# theres no ./configure script. Runs autoconf, autoreconf, and autogen.sh as needed.
 .zinit-configure-run-autoconf() {
     local dir=$1 flags=$2
     integer q
@@ -2164,7 +2172,7 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
         fi
     fi
 } # ]]]
-# FUNCTION: ∞zinit-reset-opt-hook [[[
+# FUNCTION: ∞zinit-reset-hook [[[
 ∞zinit-reset-hook() {
     # File
     if [[ "$1" = plugin ]] {
@@ -2365,7 +2373,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
 ∞zinit-make-hook() {
     ∞zinit-make-base-hook "$@" ""
 } # ]]]
-# FUNCTION: ∞zinit-make-hook [[[
+# FUNCTION: ∞zinit-make-base-hook [[[
 ∞zinit-make-base-hook() {
     [[ "$1" = plugin ]] && \
         local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
@@ -2616,4 +2624,11 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
         )
     }
 } # ]]]
-# vim:ft=zsh:sw=4:sts=4:et:foldmarker=[[[,]]]:foldmethod=marker
+
+# Local Variables:
+# mode: Shell-Script
+# sh-indentation: 2
+# indent-tabs-mode: nil
+# sh-basic-offset: 2
+# End:
+# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker

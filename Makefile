@@ -1,26 +1,27 @@
 .EXPORT_ALL_VARIABLES:
 
 ZSH := $(shell command -v zsh 2> /dev/null)
-SRC := zinit{'','-autoload','-install','-side'}.zsh
-# zinit.zsh zinit-side.zsh zinit-install.zsh zinit-autoload.zsh
+SRC := zinit{'','-additional','-autoload','-install','-side'}.zsh
 DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 
-.PHONY: all \
-        clean \
-        doc \
-        doc/container \
-        test \
-        tags \
-        tags-emacs \
-        tags-vim
+.PHONY: all clean container doc doc/container tags tags/emacs tags/vim test zwc
 
-# Invoke a ctags utility to generate Emacs and Vim's format tag file.
-#
-# Generate two formats at once: Emacs and Vim's.
-tags: tags-emacs tags-vim
+clean:
+	rm -rvf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
 
-# Build only the Emacs-style `TAGS` file.
-tags-emacs:
+container:
+	docker build --tag=ghcr.io/zdharma-continuum/zinit:latest --file=docker/Dockerfile .
+
+doc: clean
+	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\:\∞\.\+\@\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC)"
+
+doc/container: container
+	./scripts/docker-run.sh --docs --debug
+
+# Run ctags to generate Emacs and Vim's format tag file.
+tags: tags/emacs tags/vim
+
+tags/emacs: ## Build Emacs-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 	    if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
 		    ctags -G -e -R --options=share/zsh.ctags --languages=zsh \
@@ -38,8 +39,7 @@ tags-emacs:
 	    'version) utility first.\n'; \
 	fi
 
-# Build only the Vim-style `tags` file.
-tags-vim:
+tags/vim: ## Build the Vim-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 	    if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
 		    ctags -G -R --options=share/zsh.ctags --languages=zsh \
@@ -53,21 +53,11 @@ tags-vim:
 	    rm -f .tags; \
 	    printf "Created the Vim's style \`tags\` file.\\n"; \
 	else \
-	    printf 'Error: Please install a Ctags (e.g.: either the Exuberant or Universal %b' \
-	    'version) utility first.\n'; \
+	    printf 'Error: Please install a ctags first.\n'; \
 	fi
-
-zwc:
-	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
-
-doc/container:
-	./scripts/docker-run.sh --docs --debug
-
-doc: clean
-	cd doc; zsh -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:*{{{*|\#[[:space:]]#}}}*)' $(DOC_SRC)"
 
 test:
 	zunit run
 
-clean:
-	rm -rvf *.zwc doc/zsdoc/zinit{'','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
+zwc:
+	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
