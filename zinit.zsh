@@ -1169,11 +1169,12 @@ builtin setopt noaliases
 
     local -A ___subst_map
     ___subst_map=(
-        "%ID%"   "${id_as_clean:-$id_as}"
-        "%USER%" "$user"
-        "%PLUGIN%" "${plugin:-$save_url}"
+        "%ID%"   "${${${id_as_clean:-$id_as}:-$___id_as}:-$ICE[id-as]}"
+        "%USER%" "$___user"
+        "%PLUGIN%" "${___plugin:-$save_url}"
         "%URL%" "${save_url:-${user:+$user/}$plugin}"
-        "%DIR%" "${local_path:-$local_dir${dirname:+/$dirname}}"
+        "%DIR%" "${${local_path:-$local_dir${dirname:+/$dirname}}:-$___pdir_path}"
+        '%ZPFX%' "$ZPFX"
         '$ZPFX' "$ZPFX"
         '${ZPFX}' "$ZPFX"
         '%OS%' "${OSTYPE%(-gnu|[0-9]##)}" '%MACH%' "$MACHTYPE" '%CPU%' "$CPUTYPE"
@@ -1198,11 +1199,14 @@ builtin setopt noaliases
     ___add=( "${ICE[param]:+${(@Q)${(@z)ZINIT[PARAM_SUBST]}}}" )
     (( ${#___add} % 2 == 0 )) && ___subst_map+=( "${___add[@]}" )
 
-    local ___var_name
-    for ___var_name; do
-        local ___value=${(P)___var_name}
-        ___value=${___value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${___subst_map[$MATCH]}}
-        : ${(P)___var_name::=$___value}
+    local ___cnt ___var_name
+    [[ $1 = <-> ]] && {___cnt=$1; shift;} || ___cnt=1
+    repeat $___cnt; do
+        for ___var_name; do
+            local ___value=${(P)___var_name}
+            ___value=${___value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${___subst_map[$MATCH]}}
+            : ${(P)___var_name::=$___value}
+        done
     done
 }
 # ]]]
@@ -1405,8 +1409,6 @@ builtin setopt noaliases
         .zinit-setup-params && local -x ${(Q)reply[@]}
     }
 
-    .zinit-pack-ice "$id_as" ""
-
     # Oh-My-Zsh, Prezto and manual shorthands.
     [[ $url = *(${(~kj.|.)${(Mk)ZINIT_1MAP:#OMZ*}}|robbyrussell*oh-my-zsh|ohmyzsh/ohmyzsh)* ]] && local ZSH="${ZINIT[SNIPPETS_DIR]}"
 
@@ -1415,6 +1417,12 @@ builtin setopt noaliases
     .zinit-get-object-path snippet "$id_as"
     filename="${reply[-2]}" dirname="${reply[-2]}"
     local_dir="${reply[-3]}" exists=${reply[-1]}
+
+    # Substitute special strings 3 times deep, like %ID%, %USER%, %PLUGIN%, etc.
+    @zinit-substitute 3 id_as filename local_dir dirname 'ICE[atinit]' 'ICE[atload]'
+    [[ -f $local_dir${dirname:+/$dirname}/$filename ]] && exists=1
+
+    .zinit-pack-ice "$id_as" ""
 
     local -a arr
     local key
@@ -1609,9 +1617,15 @@ builtin setopt noaliases
     local ___mode="$3" ___limit="$4" ___rst=0 ___retval=0 ___key
     .zinit-any-to-user-plugin "$1" "$2"
     local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
+
+
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
-    local ___pdir_orig="$___pdir_path"
     ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
+
+    # Substitute special strings 3 times deep, like %ID%, %USER%, %PLUGIN%, etc.
+    @zinit-substitute 3 ___id_as 'ICE[id-as]' ___pdir_path 'ICE[atinit]' 'ICE[atload]'
+    local ___pdir_orig="$___pdir_path"
+
     if [[ -n ${ICE[teleid]} ]] {
         .zinit-any-to-user-plugin "${ICE[teleid]}"
         ___user="${reply[-2]}" ___plugin="${reply[-1]}"

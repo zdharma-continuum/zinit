@@ -676,6 +676,38 @@ Also, two articles on the Wiki present an example setup
 
 # How to Use<a name="how-to-use"></a>
 
+## Special variable-like strings `%NAME%`
+
+You can use a set of special var-like strings in any of the ices (currently: `atinit`, `atload`, `atclone`, `atpull`,
+`mv`, `cp`, `make`, `configure`, and a few others):
+
+- %ID% – id-as ice
+- %USER% – username (in user/plugin ID)
+- %PLUGIN% – plugin name (in user/plugin ID)
+- %URL% – snippet url
+- %DIR% – plugin directory path
+- %ZPFX% – value of $ZPFX
+- %OS% – `$OSTYPE`
+- %MACH% – `$MACHTYPE`
+- %CPU% – `$CPUTYPE`
+- %VENDOR% – `$VENDOR`
+- %HOST% – `$HOST`
+- %UID% – `$UID` (numerical user id)
+- %GID% – `$GID` (group #)
+
+For example:
+
+```zsh
+zinit id-as'plugin-%UID%' atload'print Loaded from dir: %DIR%, plugin id: %ID%' \
+    for zdharma-continuum/null
+```
+
+output is:
+
+```
+Loaded from dir: /home/q/.local/share/zinit/plugins/plugin-500, plugin id: plugin-500
+```
+
 ## Ice Modifiers<a name="ice-modifiers"></a>
 
 Following `ice` modifiers are to be [passed](https://zdharma-continuum.github.io/zinit/wiki/Alternate-Ice-Syntax/) to
