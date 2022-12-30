@@ -3364,7 +3364,9 @@ zle -N zi-browse-symbol
 zle -N zi-browse-symbol-backwards zi-browse-symbol
 zle -N zi-browse-symbol-pbackwards zi-browse-symbol
 zle -N zi-browse-symbol-pforwards zi-browse-symbol
-bindkey "^K" zi-browse-symbol
+
+zstyle -s ":zinit:browse-symbol" key ZINIT_TMP || ZINIT_TMP='\es'
+[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
 
 ZINIT_REGISTERED_PLUGINS[-1]=()
 
@@ -3380,9 +3382,6 @@ export -T PKG_CONFIG_PATH="$ZPFX/lib/pkgconfig:$PKG_CONFIG_PATH" pkg_cpath
 export -T CMAKE_PREFIX_PATH="$ZPFX:$CMAKE_PREFIX_PATH" cmake_ppath
 export -T LD_LIBRARY_PATH="$ZPFX/lib:$LD_LIBRARY_PATH" ld_lpath
 typeset -gU pkg_cpath cmake_ppath ld_lpath
-
-zstyle -s ":zinit:browse-symbol" key ZINIT_TMP || ZINIT_TMP='\es'
-[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
 
 # A custom completion of plugin ids (alt-a) and of ice names (alt-c)
 zle -N zi-action-complete
