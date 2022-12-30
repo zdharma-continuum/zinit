@@ -134,8 +134,8 @@ _tfind_main() {
             zstyle -s ":plugin:zinit:symbol-search" macro-color __tfind_macro_color || __tfind_macro_color="fg=208,bold"
             zstyle -s ":plugin:zinit:symbol-search" eqdol-color __tfind_eqdol_color || __tfind_eqdol_color="fg=69,bold"
 
-        # Find the index to operate on, git dir, etc.
-        _tfind_find_index || { _tfind_error_msg && return;}
+	    # Find the index to operate on, git dir, etc.
+	    _tfind_find_index || { _tfind_error_msg; return;}
        fi
 
         # '0' will get changed into $to_display limit
@@ -216,9 +216,7 @@ _tfind_main() {
     #
     local noun=${${${__tfind_spe_funct:#0}:+function}:-symbol}
     local preamble=$'\n'"View of ${noun}s for repo: «««${(U)TAG[git-or-project]}»»» located at: $TAG[repo-dir]:h"$'\n'"${(C)noun} no. #$__tfind_spe_index. Found $max_index ${noun}s in the index."$'\n' \
-    key="Ctrl-f to toggle functions-ONLY view. Alt-s to toggle sort."$'\n'
-    preamble+=$key
-
+    key="Ctrl-F to toggle functions-ONLY view. Alt-s to toggle sort."$'\n'
     local text="${(F)disp_list}"
     integer offset=${#preamble}+$buflen
 
@@ -236,7 +234,7 @@ _tfind_main() {
     : "${preamble//(#b)no. ([^.]##)./$((coloratt(buflen,mbegin[1],mend[1],0)))}"
     : "${preamble//(#b)Found ([0-9]##)/$((coloratt(buflen,mbegin[1],mend[1],1)))}"
     : "${preamble//(#b)» located at: ([^$p]##)/$((coloratt(buflen,mbegin[1],mend[1],1)))}"
-    : "${preamble//(#b)(Ctrl-f)/$((coloratt(buflen,mbegin[1],mend[1],0)))}"
+    : "${preamble//(#b)(Ctrl-F)/$((coloratt(buflen,mbegin[1],mend[1],0)))}"
     : "${preamble//(#b)(Alt-s)/$((coloratt(buflen,mbegin[1],mend[1],0)))}"
     : "${text//((#s)|$p)(#b)(»)/$((coloratt(offset,mbegin[1],mend[1],3)))}"
     # Basic syntax highlighting - a few keywords like C/Java type names
@@ -387,8 +385,10 @@ if [[ $__tfind_spe_call_count -eq 1 ]]; then
     zle -A $pup_widget saved-$pup_widget
     zle -N $pdown_widget _tfind_simulate_widget
     zle -N $pup_widget _tfind_simulate_widget
-    zle -A zle-line-pre-redraw saved-pre-redraw
-    zle -D zle-line-pre-redraw
+    if (( $+widgets[zle-line-pre-redraw] )); then
+        zle -A zle-line-pre-redraw saved-pre-redraw
+        zle -D zle-line-pre-redraw
+    fi
     local selected_editor cd_at_edit tagtext tagline taglinebyte tagfile
     local -a comm
     comm=()
@@ -468,8 +468,11 @@ if [[ $__tfind_spe_call_count -eq 1 ]]; then
     zle -A saved-$pup_widget $pup_widget
     zle -D saved-$pdown_widget saved-$pup_widget
 
-    zle -A saved-pre-redraw zle-line-pre-redraw
-    zle -D saved-pre-redraw
+    if (( $+widgets[saved-pre-redraw] )); then
+        zle -A saved-pre-redraw zle-line-pre-redraw
+        zle -D saved-pre-redraw
+    fi
+
     # Full reinitialisation at next call
     __tfind_spe_call_count=0
 

@@ -1207,6 +1207,10 @@ press `Alt-Shift-C` to have it completed to `wait`. The same with
 plugin IDs – `fzf` then `Alt-Shift-A` to have `junegunn/fzf` (if it's
 installed).
 
+## Changelog<a name="changelog"></a>
+
+Link to the [CHANGELOG](doc/CHANGELOG.md).
+
 ## Support<a name="support"></a>
 
 Zinit is a personal, free-time project with no funding and a huge

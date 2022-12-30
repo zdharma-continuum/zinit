@@ -1731,7 +1731,7 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{info}[{pre}ziextract{info}]{rst} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
+            +zinit-message "{info}[{pre}ziextract{info}]{rst} Unpacking the files from: \`{file}$file{msg}'{…}"
         $fun; retval=$?
         if (( retval == 0 )) {
             local -a files

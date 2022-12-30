@@ -26,7 +26,7 @@ unset ZPLGM
 ZINIT[ZERO]="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
 [[ ! -o functionargzero || ${options[posixargzero]} = on || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
 
-: ${ZINIT[BIN_DIR]:="${ZINIT[ZERO]:h}"}
+: ${ZINIT[BIN_DIR]:=${ZINIT[ZERO]:h}}
 [[ ${ZINIT[BIN_DIR]} = \~* ]] && ZINIT[BIN_DIR]=${~ZINIT[BIN_DIR]}
 
 # Make ZINIT[BIN_DIR] path absolute.
@@ -136,6 +136,8 @@ typeset -g ZPFX
 : ${ZPFX:=${ZINIT[HOME_DIR]}/polaris}
 : ${ZINIT[ALIASES_OPT]::=${${options[aliases]:#off}:+1}}
 : ${ZINIT[MAN_DIR]:=${ZPFX}/man}
+: ${ZINIT[THEME_DIR]:=$ZINIT[BIN_DIR]/share/themes}
+: ${ZITHEME:=default}
 
 ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMPLETIONS_DIR]}
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
@@ -193,6 +195,7 @@ zmodload zsh/termcap 2>/dev/null
 if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
       ( ${+termcap} -eq 1 && -n ${termcap[Co]} )
 ]] {
+<<<<<<< HEAD
     ZINIT+=(
         # Old colors: 31m
         col-pname   $'\e[1;4m\e[32m'     col-uname   $'\e[1;4m\e[35m'     col-keyword $'\e[32m'
@@ -234,6 +237,10 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
     ]] {
         ZINIT+=( col-pname $'\e[1;4m\e[38;5;39m' col-uname  $'\e[1;4m\e[38;5;207m' )
     }
+=======
+        [[ -f $ZINIT[THEME_DIR]/$ZITHEME.zsh ]] && \
+            source $ZINIT[THEME_DIR]/$ZITHEME.zsh
+>>>>>>> 770ca1518cdc12e66f20b0875e4c0aff785d0dfd
 }
 
 # Hooks
@@ -1324,11 +1331,14 @@ builtin setopt noaliases
         command mkdir -p $ZINIT[MAN_DIR]/man1
         command cp -f $ZINIT[BIN_DIR]/doc/zinit.1 $ZINIT[MAN_DIR]/man1
     }
+<<<<<<< HEAD
     # Copy Autotools compilation options setting
     [[ ! -f $ZPFX/share/config.site ]] && {
         command mkdir -p $ZPFX/share
         command cp $ZINIT[BIN_DIR]/share/config.site $ZPFX/share
     }
+=======
+>>>>>>> 770ca1518cdc12e66f20b0875e4c0aff785d0dfd
 } # ]]]
 # FUNCTION: .zinit-load-object [[[
 .zinit-load-object() {
@@ -1377,9 +1387,12 @@ builtin setopt noaliases
     local -a opts
     zparseopts -E -D -a opts f -command || { +zinit-message "{u-warn}Error{b-warn}:{rst} Incorrect options (accepted ones: {opt}-f{rst}, {opt}--command{rst})."; return 1; }
     local url="$1" limit="$3"
+<<<<<<< HEAD
     # Ensure that configuration prepared for configure script
     local -x CONFIG_SITE="$CONFIG_SITE:$ZPFX/share/config.site"
  
+=======
+>>>>>>> 770ca1518cdc12e66f20b0875e4c0aff785d0dfd
     [[ -n ${ICE[teleid]} ]] && url="${ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
     # within scripts that we `source`.
@@ -2001,6 +2014,7 @@ builtin setopt noaliases
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
 
+<<<<<<< HEAD
 # FUNCTION: .zinit-formatter-file [[[
 .zinit-formatter-file() {
     builtin emulate -L zsh -o extendedglob
@@ -2018,6 +2032,8 @@ $ZINIT[col-dot].$ZINIT[col-ext]$match[2]$ZINIT[col-rst]
     fi
 }
 
+=======
+>>>>>>> 770ca1518cdc12e66f20b0875e4c0aff785d0dfd
 # FUNCTION: .zinit-formatter-dbg [[[
 .zinit-formatter-dbg() {
     builtin emulate -L zsh -o extendedglob
