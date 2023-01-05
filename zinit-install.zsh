@@ -1480,146 +1480,106 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     print
 } # ]]]
+# FUNCTION: .zi::get-architecture [[[
+.zi::get-architecture () {
+  emulate -LR zsh
+  setopt extendedglob noshortloops nowarncreateglobal rcquotes typesetsilent
+  local _arch="$(arch)" _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
+  case "$_os" in
+    (Darwin)
+      _sys='(apple|darwin|apple-darwin|dmg|mac((-|)os|)|os(-|64|)x)'
+      arch -x86_64 /usr/bin/true 2> /dev/null
+      if [[ $? -eq 0 ]] && [[ $_cpu != "arm64" ]]; then
+        _os=$_sys*~*((aarch|arm)64)
+      fi
+      ;;
+    (Linux)
+      if [[ -n /lib/*musl*(#qN) ]] || (( ${+commands[musl-gcc]} )); then
+        _sys='((unknown-|)linux-(gnu|musl))'
+      else
+        _sys="(unknown-|)linux-gnu"
+      fi
+      ;;
+    (MINGW* | MSYS* | CYGWIN* | Windows_NT)
+      _sys='pc-windows-gnu'
+      ;;
+    (*)
+      +zinit-message "{info}[{pre}gh-r{info}]{error} Unsupported OS: {obj}${_os}{rst}"
+      ;;
+  esac
+  case "$_cpu" in
+    (aarch64 | arm64)
+      _cpu='(arm|aarch)64'
+      ;;
+    (amd64 | i386 | i486 | i686| i786 | x64 | x86 | x86-64 | x86_64)
+      _cpu='(amd64|x86_64|x64)'
+      ;;
+    (armv6l)
+      _os=${_os}eabihf
+      ;;
+    (armv7l | armv8l)
+      _os=${_os}eabihf
+      ;;
+    (*)
+      +zinit-message "{info}[{pre}ziextract{info}]{error} Unsupported CPU: {obj}$_cpu{rst}"
+      ;;
+  esac
+  echo "${_sys};${_cpu};${_os}"
+} # ]]]
 # FUNCTION: .zinit-get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
 # package. Connects to Github releases page.
-.zinit-get-latest-gh-r-url-part() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt extendedglob warncreateglobal typesetsilent noshortloops
-
-    REPLY=
-    local user=$1 plugin=$2 urlpart=$3
-
-    if [[ -z $urlpart ]] {
-        local tag_version=${ICE[ver]}
-        if [[ -z $tag_version ]]; then
-            local releases_url=https://github.com/$user/$plugin/releases/latest
-            tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | \
-                              command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
-            tag_version=${tag_version##*/}
-        fi
-        local url=https://github.com/$user/$plugin/releases/expanded_assets/$tag_version
-    } else {
-        local url=https://$urlpart
+.zinit-get-latest-gh-r-url-part () {
+  builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+  setopt extendedglob nowarncreateglobal typesetsilent noshortloops
+  REPLY=
+  local plugin="$2" urlpart="$3" user="$1"
+  local -a bpicks filtered init_list list parts
+  parts=(${(@s:;:)$(.zi::get-architecture)})
+  # +zinit-message "{info}[{pre}gh-r{info}]{rst} filters -> {glob}${(@)parts}{rst}"
+  if [[ -z $urlpart ]]; then
+    local tag_version=${ICE[ver]}
+    if [[ -z $tag_version ]]; then
+      local releases_url=https://github.com/$user/$plugin/releases/latest
+      tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+' )"
+      tag_version=${tag_version##*/}
+    fi
+    local url=https://github.com/$user/$plugin/releases/expanded_assets/$tag_version else
+    local url=https://$urlpart
+  fi
+  init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+  init_list=(${init_list[@]#href=?})
+  bpicks=(${(s.;.)ICE[bpick]})
+  [[ -z $bpicks ]] && bpicks=("")
+  local bpick bpick_error
+  reply=()
+  for bpick in "${bpicks[@]}"; do
+    list=($init_list)
+    if [[ -n $bpick ]] {
+      list=( ${(M)list[@]:#(#i)*/$~bpick} )
+      bpick_error="{nl}{info}[{pre}gh-r{info}]{rst} To fix, modify {ice}bpick{rst} ice value {glob}${bpick}"
     }
 
-    local HAS_MUSL=$MACHTYPE
-    if (( ${+commands[curl]} )) || find /lib/ -maxdepth 1 -name '*musl*' >/dev/null 2>&1; then
-      HAS_MUSL='linux-musl'
+    local junk="([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
+    filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+
+    for part in "${parts[@]}"; do
+      if (( $#list > 1 )) {
+        filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
+      }
+    done
+
+    if (( $#list > 1 )); then
+      filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
     fi
 
-    local -A matchstr
-    # Logical grouping of $CPUTYPE & $OSTYPE
-    matchstr=(
-      aarch64 '(arm64|aarch64|arm[?v]8|)*~*(linux32)*'
-      arm64 '(arm64|aarch64|arm[?v]8|)*~*(linux32)*'
-      armv5 'arm[?v]5'
-      armv6 'arm[?v]6'
-      armv7 'armv[?v]7'
-      amd64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(linux32|eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
-      x86_64 '(amd|amd64|x64|x86|x86_64|64bit|)*~*(linux32|eabi(hf|)|powerpc|ppc64(le|)|[-_]mips*|aarch64|riscv(64|)|s390x|[-_.]arm*)*'
-      linux "*(linux-musl|musl|linux64|linux)*~^*(linux*${MACHTYPE}|${CPUTYPE}*linux)*"
-      linux-android '(apk|android|linux-android)'
-      linux-gnu "*(linux-musl|musl|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
-      linux-musl "*(linux-musl|musl|linux-~gnu|linux)*~^*(${MACHTYPE}|${CPUTYPE}|)*"
-      darwin '*((#s)|/)*(apple|darwin|mac|macos|os(-|)x|dmg)*((#e)|/)*'
-      cygwin '(win((dows|32|64))|cygwin)'
-      msys '(win((dows|32|64))|cygwin)'
-      windows '(win((dows|32|64))|cygwin)'
-    )
-
-    local -a list init_list
-
-    init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | \
-                      command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
-    init_list=( ${init_list[@]#href=?} )
-
-    local -a filtered bpicks
-    bpicks=( ${(s.;.)ICE[bpick]} )
-    [[ -z $bpicks ]] && bpicks=( "" )
-    local bpick
-
-    reply=()
-    for bpick ( "${bpicks[@]}" ) {
-      list=( $init_list )
-
-      if [[ -n $bpick ]] { list=( ${(M)list[@]:#(#i)*/$~bpick} ) }
-
-      # REMOVE ARTIFACTS THAT SHOULDN'T BE CONSIDERED
-      filtered=( ${list[@]:#(#i)*([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.sh(#e))*} )
-      (( $#filtered > 0 )) && list=( ${filtered[@]} )
-
-      # FILTER .APK PACKAGES IF ANBOX PRESENT
-      if (( $#list > 1 && ${+commands[anbox]} == 1 )) { filtered=( ${(M)list[@]:#(#i)*${~matchstr[linux-android]}*} ) } \
-      else { filtered=( ${list[@]:#(#i)*${~matchstr[linux-android]}*} ) }
-      (( $#filtered > 0 )) && list=( ${filtered[@]} )
-
-      # FILTER .DEB PACKAGES IF DPKG-DEB PRESENT
-      if (( $#list > 1 && ${+commands[dpkg-deb]} == 1 )) { filtered=( ${list[@]:#(#i)*(64|)*deb(#e)} ) } \
-      else { filtered=( ${list[@]:#*deb(#e)} ) }
-      (( $#filtered > 0 )) && list=( ${filtered[@]} )
-
-      # FILTER .RPM PACKAGES IF REDHAT PACKAGE MANAGER PRESENT
-      if (( $#list > 1 && ${+commands[rpm]} == 1 )) { filtered=( ${list[@]:#(#i)*(64|)*rpm(#e)} ) } \
-      else { filtered=( ${list[@]:#*rpm(#e)} ) }
-      (( $#filtered > 0 )) && list=( ${filtered[@]} )
-
-      if (( $#list > 1 )) {
-          filtered=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-          # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${$(uname)}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      # FILTER URLS BY GENERIC OS NAME (E.G., DARWIN, LINUX, ETC.)
-      if (( $#list > 1 )) {
-          filtered=( ${(M)list[@]:#(#i)*/$~HAS_MUSL} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-          # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${OSTYPE//[0-9.]/}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${CPUTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${CPUTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${OSTYPE//[0-9.]/}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${OSTYPE//[0-9.]/}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${MACHTYPE}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[${MACHTYPE}]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~matchstr[${$(uname)}]}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${matchstr[$(uname)]}\\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~HAS_MUSL}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{pre}gh-r{rst}:{info} ${HAS_MUSL} \\n{obj}${(pj:\n:)${(@)list[1,5]:t}}{rst}"
-      }
-
-      # FILTER URLS BY NEWEST (I.E., HIGHEST NUMBER)
-      if (( $#list > 1 )) {
-        filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-      }
-
-      if (( !$#list )) {
-        +zinit-message -n "{pre}gh-r:{error} failed to find the correct GitHub release asset to download"
-        if [[ -n $bpick ]] { +zinit-message -n ", modify {obj}bpick{error}-ICE (current bpick{error}: {file}${bpick}{error})." } \
-        else { +zinit-message -n . }
-        +zinit-message '{rst}'
-        return 1
-      }
-
-      reply+=( $list[1] )
-    }
+    if (( !$#list )); then
+      +zinit-message -n "{info}[{pre}gh-r{info}]{error} No GitHub release asset to download ${bpick_error}{rst}"
+      return 1
+    fi
+    reply+=($list[1])
+  done
   [[ -n $reply ]]
 } # ]]]
 # FUNCTION: ziextract [[[
@@ -2098,8 +2058,8 @@ zimv() {
     zicp --mv ${dir:+--dir} $dir "$@"
 } # ]]]
 # FUNCTION: .zinit-configure-run-autoconf [[[
-# Called either because "#" flag given to configure'', or because
-# theres no ./configure script. Runs autoconf, autoreconf, and autogen.sh as needed.
+# Called if # passed to configure ice or no ./configure found
+# Runs autoconf, autoreconf, and autogen.sh
 .zinit-configure-run-autoconf() {
     local dir=$1 flags=$2
     integer q
@@ -2525,8 +2485,7 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
       }
       return $retval
     )
-}
-# ]]]
+} # ]]]
 # FUNCTION: ∞zinit-compile-plugin-hook [[[
 ∞zinit-compile-plugin-hook() {
     [[ "$1" = plugin ]] && \
@@ -2625,10 +2584,4 @@ for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
     }
 } # ]]]
 
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
 # vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker

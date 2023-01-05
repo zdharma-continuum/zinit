@@ -67,7 +67,7 @@ jobs:
         run: zunit run tests/annexes.zunit
 
       - name: "gh-r"
-        run: zunit run tests/gh-r.zunit
+        run: zunit run --fail-fast --verbose tests/gh-r.zunit
 
       - name: "ices"
         run: zunit run tests/ices.zunit
