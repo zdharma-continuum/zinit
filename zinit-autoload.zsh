@@ -1502,7 +1502,7 @@ ZINIT[EXTENDED_GLOB]=""
                 }
             }
             if (( ZINIT[annex-multi-flag:pull-active] <= 1 && !OPTS[opt_-q,--quiet] )) {
-                builtin print -- "\rBinary release already up to date (version: $version)"
+                +zinit-message "{info}[{pre}${ice[from]}{info}]{rst} latest version ({version}${version}{rst}) already installed"
             }
         }
 

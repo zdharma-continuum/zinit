@@ -1544,47 +1544,46 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+' )"
       tag_version=${tag_version##*/}
     fi
-    local url=https://github.com/$user/$plugin/releases/expanded_assets/$tag_version else
+    local url=https://github.com/$user/$plugin/releases/expanded_assets/$tag_version
+  else
     local url=https://$urlpart
   fi
   init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
   init_list=(${init_list[@]#href=?})
   bpicks=(${(s.;.)ICE[bpick]})
   [[ -z $bpicks ]] && bpicks=("")
-  local bpick bpick_error
+  local bpick bpick_error=""
   reply=()
   for bpick in "${bpicks[@]}"; do
     list=($init_list)
-    if [[ -n $bpick ]] {
+    if [[ -n $bpick ]]; then
       list=( ${(M)list[@]:#(#i)*/$~bpick} )
-      bpick_error="{nl}{info}[{pre}gh-r{info}]{rst} To fix, modify {ice}bpick{rst} ice value {glob}${bpick}"
-    }
+      if (( !$#list )); then
+        +zinit-message "{info}[{pre}gh-r{info}] {error}Error{rst}: {ice}bpick{rst} ice found no release assets{rst}. To fix, modify the {ice}bpick{rst} glob pattern {glob}${bpick}{rst}"
+      fi
+    fi
 
     local junk="([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     for part in "${parts[@]}"; do
-      if (( $#list > 1 )) {
-        filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
-      }
+      if (( $#list > 1 )) { filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ) }
+      # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
     done
 
-    if (( $#list > 1 )); then
-      filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-    fi
+    if (( $#list > 1 )) { filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ); }
 
     if (( !$#list )); then
-      +zinit-message -n "{info}[{pre}gh-r{info}]{error} No GitHub release asset to download ${bpick_error}{rst}"
+      +zinit-message "{nl}{info}[{pre}gh-r{info}] {error}Error{rst}: No GitHub release assets found for {glob}${tag_version}{rst}"
       return 1
     fi
-    reply+=($list[1])
+    reply+=( "${list[1]}" )
   done
   [[ -n $reply ]]
 } # ]]]
 # FUNCTION: ziextract [[[
 # If the file is an archive, it is extracted by this function.
-# Next stage is scanning of files with the common utility `file',
+# Next stage is scanning of files with the common utility file
 # to detect executables. They are given +x mode. There are also
 # messages to the user on performed actions.
 #
