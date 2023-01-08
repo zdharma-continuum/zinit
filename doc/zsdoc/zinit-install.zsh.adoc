@@ -278,7 +278,7 @@ ____
  package. Connects to Github releases page.
 ____
 
-Has 49 line(s). Calls functions:
+Has 48 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zinit-message
@@ -520,7 +520,7 @@ ziextract
 ____
  
  If the file is an archive, it is extracted by this function.
- Next stage is scanning of files with the common utility `file',
+ Next stage is scanning of files with the common utility file
  to detect executables. They are given +x mode. There are also
  messages to the user on performed actions.
  
