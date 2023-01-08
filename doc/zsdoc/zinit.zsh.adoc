@@ -193,6 +193,7 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status
  zinit-autoload.zsh/.zinit-wait-for-update-jobs
  zinit-autoload.zsh/zi::version
+ zinit-install.zsh/.zi::get-architecture
  zinit-install.zsh/.zinit-compile-plugin
  zinit-install.zsh/.zinit-compinit
  zinit-install.zsh/.zinit-download-file-stdout

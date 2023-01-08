@@ -1,9 +1,10 @@
 #!/usr/bin/env zsh
 
-_annex_test_function() {
-  run zinit load zdharma-continuum/${1}
+is_annex() {
+  local annex="zinit-annex-${1}"
+  run zinit load zdharma-continuum/${annex}
   assert ${state} equals 0
-  zinit cd zdharma-continuum/${1}
-  assert ${PWD}/${${1}//zinit-annex/z-a}.plugin.zsh is_file
-  assert ${PWD}/${${1}//zinit-annex/z-a}.plugin.zsh is_readable
+  zinit cd zdharma-continuum/${annex}
+  assert ${PWD}/${${annex}//zinit-annex/z-a}.plugin.zsh is_file
+  assert ${PWD}/${${annex}//zinit-annex/z-a}.plugin.zsh is_readable
 }

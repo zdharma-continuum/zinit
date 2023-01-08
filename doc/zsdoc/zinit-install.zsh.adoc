@@ -13,6 +13,7 @@ Documentation automatically generated with `zshelldoc'
 FUNCTIONS
 ---------
 
+ .zi::get-architecture
  .zinit-at-eval
  .zinit-compile-plugin
  .zinit-compinit
@@ -64,6 +65,18 @@ Script Body
 Has 6 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 Uses feature(s): _source_
+
+.zi::get-architecture
+~~~~~~~~~~~~~~~~~~~~~
+
+Has 43 line(s). Calls functions:
+
+ .zi::get-architecture
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-at-eval
 ~~~~~~~~~~~~~~
@@ -141,8 +154,8 @@ Called by:
 
 ____
  
- Called either because "#" flag given to configure'', or because
- theres no ./configure script. Runs autoconf, autoreconf, and autogen.sh as needed.
+ Called if # passed to configure ice or no ./configure found
+ Runs autoconf, autoreconf, and autogen.sh
 ____
 
 Has 64 line(s). Calls functions:
@@ -265,7 +278,7 @@ ____
  package. Connects to Github releases page.
 ____
 
-Has 116 line(s). Calls functions:
+Has 49 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zinit-message
@@ -589,11 +602,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ∞zinit-compile-plugin-hook
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- ]]]
-____
 
 Has 19 line(s). Calls functions:
 

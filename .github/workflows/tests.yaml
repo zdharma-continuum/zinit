@@ -28,7 +28,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['macos-12','ubuntu-20.04','ubuntu-22.04']
+        os: ['macos-latest','ubuntu-latest']
       fail-fast: false
 
     steps:
@@ -44,18 +44,17 @@ jobs:
       - name: "install musl"
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get clean && sudo apt-get update && sudo apt-get install \
+          sudo apt-get update \
+          && sudo apt-get install \
             build-essential curl file gcc gcc-multilib glibc-source \
             libc6 libc6-dev \
             musl musl-dev musl-tools unzip zsh
 
       - name: "install dependencies"
         id: install-deps
-        run: brew install ncurses svn unzip zsh xz
-
-      - name: "install revolver"
-        id: install-revolver
-        run: brew install molovo/revolver/revolver
+        run: |
+          export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
+          brew install --force --overwrite gnu-sed coreutils unzip xz zsh
 
       - name: "install zunit"
         id: install-zunit
@@ -68,7 +67,7 @@ jobs:
         run: zunit run tests/annexes.zunit
 
       - name: "gh-r"
-        run: zunit run tests/gh-r.zunit
+        run: zunit run --fail-fast --verbose tests/gh-r.zunit
 
       - name: "ices"
         run: zunit run tests/ices.zunit
