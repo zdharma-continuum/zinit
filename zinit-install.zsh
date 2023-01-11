@@ -1524,7 +1524,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       +zinit-message "{info}[{pre}ziextract{info}]{error} Unsupported CPU: {obj}$_cpu{rst}"
       ;;
   esac
-  echo "${_sys};${_cpu};${_os}"
+  echo "${_cpu};${_sys};${_os}"
 } # ]]]
 # FUNCTION: .zinit-get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
