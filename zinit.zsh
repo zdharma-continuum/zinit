@@ -75,7 +75,7 @@ fi
 ZINIT[ice-list]="\
 \!bash|\!csh|\!ksh|\!sh|\
 aliases|as|atclone|atdelete|atinit|atload|atpull|autoload|\
-bash|binary|bindmap|blockf|bpick|\
+bash|binary|bindmap|blockf|bpick|build|\
 cloneonly|cloneopts|compile|completions|configure|countdown|cp|csh|\
 debug|depth|\
 extract|\
@@ -96,7 +96,7 @@ wait|wrap"
 ZINIT[nval-ice-list]="\
 \!bash|\!csh|\!ksh|\!sh|\
 aliases|\
-bash|binary|blockf|\
+bash|binary|blockf|build|\
 cloneonly|cloneopts|countdown|csh|\
 debug|\
 git|\
@@ -104,7 +104,7 @@ is-snippet|\
 ksh|\
 light-mode|lucid|\
 make|\
-nocd|nocompile|nocompletions|notify|null|\
+nocd|nocompile|nocompletions|notify|null|nonull|\
 pullopts|\
 reset|run-atpull|\
 sh|silent|\
@@ -2265,6 +2265,16 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     [[ ${ZINIT_ICES[as]} = program ]] && ZINIT_ICES[as]=command
     [[ -n ${ZINIT_ICES[on-update-of]} ]] && ZINIT_ICES[subscribe]="${ZINIT_ICES[subscribe]:-${ZINIT_ICES[on-update-of]}}"
     [[ -n ${ZINIT_ICES[pick]} ]] && ZINIT_ICES[pick]="${ZINIT_ICES[pick]//\$ZPFX/${ZPFX%/}}"
+    (( $+ZINIT_ICES[env] )) && ZINIT_ICES[param]=$ZINIT_ICES[env]
+    # Build ice given? If yes, then enable null'', configure'' and make'' ices
+    if (( $+ZINIT_ICES[build] )); then
+        # Set null'' if not requested otherwise
+        (( $+INIT_ICES[nonull] )) || ZINIT_ICES[null]=
+        # Preserve any args for configure ice
+        ZINIT_ICES[configure]=${ZINIT_ICES[configure]:---prefix=$ZPFX}
+        # By default, if build'' is empty, then use 'install' target to make
+        ZINIT_ICES[make]=${ZINIT_ICES[build]:-install}
+    fi
     return retval
 } # ]]]
 # FUNCTION: .zinit-pack-ice [[[
