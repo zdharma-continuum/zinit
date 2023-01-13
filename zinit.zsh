@@ -395,11 +395,11 @@ builtin setopt noaliases
                         retval=$?
                     }
                 } else {
-                    eval "function ${(q)func} {
+                    functions[$func]="
                         local -a fpath
                         fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath_elements} ${(qqq@)fpath} )
                         builtin autoload -X ${(j: :)${(q-)opts[@]}}
-                    }"
+                    "
                     retval=$?
                 }
             else
