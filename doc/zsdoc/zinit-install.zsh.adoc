@@ -278,7 +278,7 @@ ____
  package. Connects to Github releases page.
 ____
 
-Has 48 line(s). Calls functions:
+Has 52 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zinit-message

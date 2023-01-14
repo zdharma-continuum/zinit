@@ -38,17 +38,12 @@ jobs:
           fetch-depth: 0
 
       - name: install homebrew
-        id: set-up-homebrew
+        id: setup-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: "install musl"
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update \
-          && sudo apt-get install \
-            build-essential curl file gcc gcc-multilib glibc-source \
-            libc6 libc6-dev \
-            musl musl-dev musl-tools unzip zsh
+      # - name: "install musl"
+      #   if: runner.os == 'Linux'
+      #   run: sudo apt-get install build-essential curl file gcc gcc-multilib glibc-source libc6 libc6-dev unzip xz-utils zsh
 
       - name: "install dependencies"
         id: install-deps

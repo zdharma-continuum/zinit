@@ -1484,7 +1484,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 .zi::get-architecture () {
   emulate -LR zsh
   setopt extendedglob noshortloops nowarncreateglobal rcquotes typesetsilent
-  local _arch="$(arch)" _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
+  local _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
   case "$_os" in
     (Darwin)
       _sys='(apple|darwin|apple-darwin|dmg|mac((-|)os|)|os(-|64|)x)'
@@ -1495,9 +1495,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       ;;
     (Linux)
       if [[ -n /lib/*musl*(#qN) ]] || (( ${+commands[musl-gcc]} )); then
-        _sys='((unknown-|)linux-(gnu|musl))'
+        _sys='(linux[\-\_])*~^*((gnu|musl)[\-\_\.])'
       else
-        _sys="(unknown-|)linux-gnu"
+        _sys='(linux[\-\_])*~^*(gnu[\-\_\.])'
       fi
       ;;
     (MINGW* | MSYS* | CYGWIN* | Windows_NT)
@@ -1567,8 +1567,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     for part in "${parts[@]}"; do
-      if (( $#list > 1 )) { filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ) }
-      # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
+      if (( $#list > 1 )); then
+        filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
+      else
+        break
+      fi
     done
 
     if (( $#list > 1 )) { filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ); }
