@@ -255,6 +255,11 @@
   local ghq="$ZBIN/ghq"; assert "$ghq" is_executable
   $ghq --version; assert $state equals 0
 }
+@test 'git-absorb' { # git commit --fixup, but automatic
+  run zinit for @tummychow/git-absorb; assert $state equals 0
+  local git_absorb="$ZBIN/git-absorb"; assert "$git_absorb" is_executable
+  $git_absorb --version; assert $state equals 0
+}
 @test 'git-chglog' { # CHANGELOG generator implemented in Go
   run zinit for @git-chglog/git-chglog; assert $state equals 0
   local git_chglog="$ZBIN/git-chglog"; assert "$git_chglog" is_executable
