@@ -1,6 +1,8 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
+0="${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}"
+
 builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."; return 1; }
 
 ZINIT[EXTENDED_GLOB]=""
@@ -3337,6 +3339,7 @@ EOF
           }
       }
       noglob +zinit-message  {p}-- ./configure --{rst}
+      local -x CPPFLAGS CFLAGS LDFLAGS
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
           noglob +zinit-message {p}-- make --{rst}
           if { make } {

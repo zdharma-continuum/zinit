@@ -19,11 +19,10 @@ unset ZPLGM
 #
 # Common needed values.
 #
+0="${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}"
+ZINIT[ZERO]="$0"
 
 [[ ! -e ${ZINIT[BIN_DIR]}/zinit.zsh ]] && ZINIT[BIN_DIR]=
-
-# Respect the plugin standard too.
-ZINIT[ZERO]="${ZERO:-${${0:#$ZSH_ARGZERO}:-${(%):-%N}}}"
 [[ ! -o functionargzero || ${options[posixargzero]} = on || ${ZINIT[ZERO]} != */* ]] && ZINIT[ZERO]="${(%):-%N}"
 
 : ${ZINIT[BIN_DIR]:="${ZINIT[ZERO]:h}"}
@@ -247,7 +246,7 @@ ZINIT_ZLE_HOOKS_LIST=(
     zle-keymap-select 1
     paste-insert 1
 )
-builtin setopt noaliases
+builtin setopt noaliases #zsweep:pass
 # ]]]
 
 #
@@ -283,7 +282,7 @@ builtin setopt noaliases
         fpath=( ${(@0)fpath_prefix} ${___fpath[@]} )
 
     # After this the function exists again.
-    builtin autoload ${(s: :)autoload_opts} -- "$func"
+    builtin autoload ${(s: :)autoload_opts} -- "$func" #zsweep:pass
 
     # User wanted to call the function, not only load it.
     "$func" "$@"
@@ -294,11 +293,11 @@ builtin setopt noaliases
 # The hijacking gathers report data and runs custom `autoload' function, that doesn't need FPATH.
 :zinit-tmp-subst-autoload() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    builtin setopt extendedglob warncreateglobal typesetsilent rcquotes
+    builtin setopt extendedglob warncreateglobal typesetsilent rcquotes promptsubst
     local -a opts opts2 custom reply
     local func
 
-    zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} I+=opts2 S+:=custom
+    zparseopts -D -E -M -a opts ${(s::):-RTUXdkmrtWzwC} I+=opts2 S+:=custom #zsweep:pass
 
     builtin set -- ${@:#--}
 
@@ -325,7 +324,7 @@ builtin setopt noaliases
     if (( ${+opts[(r)-w]} )); then
         .zinit-add-report "${ZINIT[CUR_USPL2]}" "-w-Autoload ${(j: :)opts[@]} ${(j: :)@}"
         fpath+=( $PLUGIN_DIR )
-        builtin autoload ${opts[@]} "$@"
+        builtin autoload ${opts[@]} "$@" #zsweep:pass
         return $?
     fi
     if [[ -n ${(M)@:#+X} ]]; then
@@ -333,7 +332,7 @@ builtin setopt noaliases
         local +h FPATH=$PLUGINS_DIR${fpath_elements:+:${(j.:.)fpath_elements[@]}}:$FPATH
         local +h -a fpath
         fpath=( $PLUGIN_DIR $fpath_elements $fpath )
-        builtin autoload +X ${opts[@]} "${@:#+X}"
+        builtin autoload +X ${opts[@]} "${@:#+X}" #zsweep:pass
         return $?
     fi
 
@@ -348,7 +347,7 @@ builtin setopt noaliases
         if (( ${+functions[$func]} != 1 )) {
             builtin setopt noaliases
             if [[ $func == /* ]] && is-at-least 5.4; then
-                builtin autoload ${opts[@]} $func
+                builtin autoload ${opts[@]} $func #zsweep:pass
                 return $?
             elif [[ $func == /* ]]; then
                 if [[ $ZINIT[MUTE_WARNINGS] != (1|true|on|yes) && \
@@ -368,7 +367,7 @@ builtin setopt noaliases
                 func=$func:t
             fi
             if [[ ${ZINIT[NEW_AUTOLOAD]} = 2 ]]; then
-                builtin autoload ${opts[@]} "$PLUGIN_DIR/$func"
+                builtin autoload ${opts[@]} "$PLUGIN_DIR/$func" #zsweep:pass
                 retval=$?
             elif [[ ${ZINIT[NEW_AUTOLOAD]} = 1 ]]; then
                 if (( ${+opts[(r)-C]} )) {
@@ -398,7 +397,7 @@ builtin setopt noaliases
                     eval "function ${(q)func} {
                         local -a fpath
                         fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath_elements} ${(qqq@)fpath} )
-                        builtin autoload -X ${(j: :)${(q-)opts[@]}}
+                        builtin autoload -X ${(j: :)${(q-)opts[@]}} #zsweep:pass
                     }"
                     retval=$?
                 }
@@ -438,7 +437,7 @@ builtin setopt noaliases
     # with no options or with -s, plus possible -M
     # option.
     local -A opts
-    zparseopts -A opts -D ${(s::):-lLdDAmrsevaR} M: N:
+    zparseopts -A opts -D ${(s::):-lLdDAmrsevaR} M: N: #zsweep:pass
 
     if (( ${#opts} == 0 ||
         ( ${#opts} == 1 && ${+opts[-M]} ) ||
@@ -586,7 +585,7 @@ builtin setopt noaliases
     # Check if we have regular zstyle call, i.e.
     # with no options or with -e.
     local -a opts
-    zparseopts -a opts -D ${(s::):-eLdgabsTtm}
+    zparseopts -a opts -D ${(s::):-eLdgabsTtm} #zsweep:pass
 
     if [[ ${#opts} -eq 0 || ( ${#opts} -eq 1 && ${+opts[(r)-e]} = 1 ) ]]; then
         # Have to quote $1, then $2, then concatenate them, then quote them again.
@@ -624,7 +623,7 @@ builtin setopt noaliases
     pos=( "$@" )
 
     local -a opts
-    zparseopts -a opts -D ${(s::):-gs}
+    zparseopts -a opts -D ${(s::):-gs}  #zsweep:pass
 
     local a quoted tmp
     for a in "$@"; do
@@ -1365,7 +1364,7 @@ builtin setopt noaliases
 .zinit-load-snippet() {
     typeset -F 3 SECONDS=0
     local -a opts
-    zparseopts -E -D -a opts f -command || { +zinit-message "{u-warn}Error{b-warn}:{rst} Incorrect options (accepted ones: {opt}-f{rst}, {opt}--command{rst})."; return 1; }
+    zparseopts -E -D -a opts f -command || { +zinit-message "{u-warn}Error{b-warn}:{rst} Incorrect options (accepted ones: {opt}-f{rst}, {opt}--command{rst})."; return 1; } #zsweep:pass
     local url="$1" limit="$3"
     [[ -n ${ICE[teleid]} ]] && url="${ICE[teleid]}"
     # Hide arguments from sourced scripts. Without this calls our "$@" are visible as "$@"
@@ -1477,7 +1476,7 @@ builtin setopt noaliases
             [[ -z ${fpath[(r)$local_dir/$dirname/functions]} ]] && fpath+=( "$local_dir/$dirname/functions" )
             () {
                 builtin setopt localoptions extendedglob
-                autoload $local_dir/$dirname/functions/^([_.]*|prompt_*_setup|README*)(D-.N:t)
+                autoload $local_dir/$dirname/functions/^([_.]*|prompt_*_setup|README*)(D-.N:t) #zsweep:pass
             }
         }
 
@@ -2088,9 +2087,9 @@ builtin setopt noaliases
 # FUNCTION: .zinit-formatter-bar-util [[[
 .zinit-formatter-bar-util() {
     if [[ $LANG == (#i)*utf-8* ]]; then
-        ch=$1
+        local ch=$1
     else
-        ch=-
+        local ch=-
     fi
 
     REPLY=$ZINIT[col-$2]${(pl:COLUMNS-1::$ch:):-}$ZINIT[col-rst]
@@ -2437,7 +2436,8 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
     integer ___t=EPOCHSECONDS ___i correct
     local -a match mbegin mend reply
-    local MATCH REPLY AFD; integer MBEGIN MEND
+    local MATCH REPLY AFD
+    integer MBEGIN MEND
 
     [[ -o ksharrays ]] && correct=1
 
@@ -3214,7 +3214,7 @@ zpcompdef() {
 (( ZINIT[ALIASES_OPT] )) && builtin setopt aliases
 (( ZINIT[SOURCED] ++ )) && return
 
-autoload add-zsh-hook
+autoload -Uz add-zsh-hook
 if { zmodload zsh/datetime } {
     add-zsh-hook -- precmd @zinit-scheduler  # zsh/datetime required for wait/load/unload ice-mods
     ZINIT[HAVE_SCHEDULER]=1

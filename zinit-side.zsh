@@ -3,6 +3,8 @@
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors
 # Copyright (c) 2021-2022 zdharma-continuum and contributors
 
+0="${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}"
+
 # FUNCTION: .zinit-any-colorify-as-uspl2 [[[
 # Returns ANSI-colorified "user/plugin" string, from any supported
 # plugin spec (user---plugin, user/plugin, user plugin, plugin).

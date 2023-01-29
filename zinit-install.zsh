@@ -2,6 +2,8 @@
 # -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
+0="${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}"
+
 builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."
     return 1
@@ -40,7 +42,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # $3: name of the associative array to store the key/value pairs in
 .zinit-json-to-array() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt localoptions noglob
+    setopt localoptions noglob extendedglob warncreateglobal nopromptsubst typesetsilent
 
     .zinit-jq-check || return 1
 
@@ -376,7 +378,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     count+=1
                     url="https://github.com${REPLY}"
                     if [[ -d $local_path/._zinit ]] {
-                        { local old_version="$(<$local_path/._zinit/is_release${count:#1})"; } 2>/dev/null
+                        {
+                        local old_version
+                        old_version="$(<$local_path/._zinit/is_release${count:#1})"; } 2>/dev/null
                         old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                     }
                     +zinit-message "(Requesting \`${REPLY:t}'${version:+, version $version}{…}${old_version:+ Current version: $old_version.})"
@@ -739,6 +743,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         return 3
     }
 
+    local -x LANG TZ
     LANG=C TZ=UTC strftime -r -s REPLY "%d %b %Y %H:%M:%S GMT" "$header" &>/dev/null || {
         REPLY=$(( $(date +"%s") ))
         return 4
@@ -927,10 +932,10 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     local -a list arr
     integer retval=0 hook_rc=0
-    local teleid_clean=${ICE[teleid]%%\?*}
+    local teleid_clean=${ICE[teleid]%%\?*} sname
     [[ $teleid_clean == *://* ]] && \
-        local sname=${(M)teleid_clean##*://[^/]##(/[^/]##)(#c0,4)} || \
-        local sname=${${teleid_clean:h}:t}/${teleid_clean:t}
+        sname=${(M)teleid_clean##*://[^/]##(/[^/]##)(#c0,4)} || \
+        sname=${${teleid_clean:h}:t}/${teleid_clean:t}
     [[ $sname = */trunk* ]] && sname=${${ICE[teleid]%%/trunk*}:t}/${ICE[teleid]:t}
     sname=${sname#./}
 
@@ -1205,6 +1210,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 if (( $+commands[realpath] )) {
                     local rpv="$(realpath --version | head -n1 | sed -E 's/realpath (\(.*\))?//g')"
                     if is-at-least 8.23 $rpv; then
+                        local rel_url
                         rel_url="$(realpath --relative-to="$local_dir/$dirname" "$url")" && \
                             { url="$rel_url" }
                     fi
@@ -1603,7 +1609,7 @@ ziextract() {
         { +zinit-message "{info}[{pre}ziextract{info}]{error} Incorrect options given to" \
                   "\`{pre}ziextract{msg2}' (available are: {meta}--auto{msg2}," \
                   "{meta}--move{msg2}, {meta}--move2{msg2}, {meta}--norm{msg2}," \
-                  "{meta}--nobkp{msg2}).{rst}"; return 1; }
+                  "{meta}--nobkp{msg2}).{rst}"; return 1; } #zsweep:pass
 
     local file="$1" ext="$2"
     integer move=${${${(M)${#opt_move}:#0}:+0}:-1} \
@@ -1960,7 +1966,8 @@ zpextract() {
         local -a mlist
         mlist=( "${(@f)$(<$mlst)}" )
 
-        local mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
+        local mirror
+        mirror=${${mlist[ RANDOM % (${#mlist} + 1) ]}%%;*}
         [[ -n $mirror ]] && break
     }
 

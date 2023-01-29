@@ -1,6 +1,8 @@
 # -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
 # Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
 
+0="${${(M)${0::=${(%):-%x}}:#/*}:-$PWD/$0}"
+
 # FUNCTION: :zinit-tmp-subst-source [[[
 :zinit-tmp-subst-source() {
     local -a ___substs ___ab
