@@ -2765,7 +2765,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
 
     if [[ "$local_dir" != /* ]]
     then
-        builtin print "Obtained a risky, not-absolute path ($local_dir), aborting"
+        +zinit-message "{log-error} Obtained a risky, not-absolute path ({dir}$local_dir{rst}), aborting"
         return 1
     fi
 
@@ -2788,34 +2788,34 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
         if [[ "${+ICE2[svn]}" = "1" ]] {
             if [[ -e "$local_dir" ]]
             then
-                .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
+                .zinit-confirm "Delete {file}$local_dir{rst}? (it holds: ${(j:, :)${(@u)files}})" \
                     ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; \
                     command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
             else
-                builtin print "No such snippet"
+                +zinit-message "{log-error} No such snippet"
                 return 1
             fi
         } else {
             if [[ -e "$local_dir" ]]; then
-                .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
+                .zinit-confirm "Delete ${file}$local_dir{rst}? (it holds: ${(j:, :)${(@u)files}})" \
                     ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
                     \"$local_dir\"; command rm -rf \
                         ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
             else
-                builtin print "No such snippet"
+                +zinit-message "{log-error} No such snippet"
                 return 1
             fi
         }
     else
         .zinit-any-to-user-plugin "${ICE2[teleid]}"
         if [[ -e "$local_dir" ]]; then
-            .zinit-confirm "Delete $local_dir? (it holds: ${(j:, :)${(@u)files}})" \
+            .zinit-confirm "Delete {file}$local_dir{rst}? (it holds: ${(j:, :)${(@u)files}})" \
                 ".zinit-run-delete-hooks plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
                 \"$local_dir\"; \
                 command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
         else
-            builtin print -r -- "No such plugin or snippet"
+            +zinit-message -r "{log-error} No such snippet"
             return 1
         fi
     fi
@@ -2831,26 +2831,22 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
 .zinit-confirm() {
     if (( OPTS[opt_-y,--yes] )); then
         integer retval
-        eval "$2"; retval=$?
-        (( OPTS[opt_-q,--quiet] )) || builtin print "\nDone (action executed, exit code: $retval)"
+        builtin eval "${2}"; retval=$?
+        (( OPTS[opt_-q,--quiet] )) || +zinit-message -lrP "{log-msg} Action executed (exit code: {num}${?}{rst})"
     else
-        builtin print -Pr -- "$1"
-        builtin print "[yY/n…]"
-        local ans
-        if [[ -t 0 ]] {
-            read -q ans
-        } else {
-            read -k1 -u0 ans
-        }
-        if [[ "$ans" = "y" ]] {
-            eval "$2"
-            builtin print "\nDone (action executed, exit code: $?)"
-        } else {
-            builtin print "\nBreak, no action"
-            return 1
-        }
+      local choice prompt
+      builtin print -D -v prompt "$(+zinit-message '{log-info} Press [{opt}Y{rst}/{opt}y{rst}] to continue: ')"
+      +zinit-message "${1}"
+      if builtin read -qs "choice?${prompt}"; then
+        builtin print
+        builtin eval "${2}"
+        +zinit-message "{log-msg} Action executed (exit code: {num}${?}{rst})"
+        return 0
+      else
+        +zinit-message "{log-msg} No action executed ('{opt}${choice}{rst}' not 'Y' or 'y')"
+        return 1
+      fi
     fi
-    return 0
 } # ]]]
 # FUNCTION: .zinit-changes [[[
 # Shows `git log` of given plugin.
@@ -2915,8 +2911,7 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
 # $2 - (optional) plugin (only when $1 - i.e. user - given)
 .zinit-create() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt localoptions extendedglob warncreateglobal typesetsilent \
-        noshortloops rcquotes
+    setopt localoptions extendedglob noshortloops rcquotes typesetsilent warncreateglobal
 
     .zinit-any-to-user-plugin "$1" "$2"
     local user="${reply[-2]}" plugin="${reply[-1]}"
