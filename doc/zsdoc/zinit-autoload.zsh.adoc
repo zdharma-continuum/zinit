@@ -391,7 +391,7 @@ ____
  $2 - expression
 ____
 
-Has 18 line(s). Calls functions:
+Has 17 line(s). Calls functions:
 
  .zinit-confirm
  `-- zinit.zsh/+zinit-message
