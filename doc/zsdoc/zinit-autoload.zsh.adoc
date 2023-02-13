@@ -391,7 +391,10 @@ ____
  $2 - expression
 ____
 
-Has 22 line(s). Doesn't call other functions.
+Has 18 line(s). Calls functions:
+
+ .zinit-confirm
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _eval_, _read_
 
@@ -412,7 +415,7 @@ ____
  $2 - (optional) plugin (only when $1 - i.e. user - given)
 ____
 
-Has 103 line(s). Calls functions:
+Has 102 line(s). Calls functions:
 
  .zinit-create
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
@@ -440,6 +443,7 @@ Has 99 line(s). Calls functions:
 
  .zinit-delete
  |-- zinit-side.zsh/.zinit-compute-ice
+ |-- zinit.zsh/+zinit-message
  |-- zinit.zsh/+zinit-prehelp-usage-message
  |-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit.zsh/.zinit-parse-opts

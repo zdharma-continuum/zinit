@@ -82,6 +82,7 @@ FUNCTIONS
  zpcompinit
  zplugin
 AUTOLOAD add-zsh-hook
+AUTOLOAD colors
 AUTOLOAD compinit
 AUTOLOAD is-at-least
 PRECMD-HOOK @zinit-scheduler
@@ -92,12 +93,13 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 249 line(s). Calls functions:
+Has 250 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
  |-- @zinit-register-hook
  |-- add-zsh-hook
+ |-- colors
  |-- is-at-least
  |-- zinit
  |   |-- +zinit-message
@@ -140,7 +142,7 @@ Has 249 line(s). Calls functions:
  |   `-- zinit-install.zsh/.zinit-install-completions
  `-- zinit-autoload.zsh/.zinit-module
 
-Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
+Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _colors_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
 
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
@@ -185,6 +187,8 @@ Called by:
  zinit-additional.zsh/:zinit-tmp-subst-source
  zinit-autoload.zsh/.zinit-build-module
  zinit-autoload.zsh/.zinit-cd
+ zinit-autoload.zsh/.zinit-confirm
+ zinit-autoload.zsh/.zinit-delete
  zinit-autoload.zsh/.zinit-self-update
  zinit-autoload.zsh/.zinit-show-zstatus
  zinit-autoload.zsh/.zinit-uninstall-completions
@@ -1445,6 +1449,21 @@ Uses feature(s): _autoload_, _getopts_
 Called by:
 
  @zinit-scheduler
+ Script-Body
+
+colors
+~~~~~~
+
+____
+ 
+ Put standard ANSI color codes in shell parameters for easy use.
+ Note that some terminals do not support all combinations.
+____
+
+Has 134 line(s). Doesn't call other functions.
+
+Called by:
+
  Script-Body
 
 compinit
