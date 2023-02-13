@@ -563,7 +563,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
     # OR - if its a reinstall
-    for c in "${completions[@]}"; do
+    for c in "${completions[@]:A}"; do
         cfile="${c:t}"
         bkpfile="${cfile#_}"
         if [[ ( -z ${already_symlinked[(r)*/$cfile]} || $reinstall = 1 ) &&
