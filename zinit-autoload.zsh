@@ -2829,18 +2829,17 @@ builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
 # $1 - question
 # $2 - expression
 .zinit-confirm() {
+    integer retval
     if (( OPTS[opt_-y,--yes] )); then
-        integer retval
         builtin eval "${2}"; retval=$?
-        (( OPTS[opt_-q,--quiet] )) || +zinit-message -lrP "{log-msg} Action executed (exit code: {num}${?}{rst})"
+        (( OPTS[opt_-q,--quiet] )) || +zinit-message -lrP "{log-msg} Action executed (exit code: {num}${retval}{rst})"
     else
       local choice prompt
-      builtin print -D -v prompt "$(+zinit-message '{log-info} Press [{opt}Y{rst}/{opt}y{rst}] to continue: ')"
+      builtin print -D -v prompt "$(+zinit-message '{log-info} Press [{opt}Y{rst}/{opt}y{rst}] to continue: {nl}')"
       +zinit-message "${1}"
       if builtin read -qs "choice?${prompt}"; then
-        builtin print
-        builtin eval "${2}"
-        +zinit-message "{log-msg} Action executed (exit code: {num}${?}{rst})"
+        builtin eval "${2}"; retval=$?
+        +zinit-message "{log-msg} Action executed (exit code: {num}${retval}{rst})"
         return 0
       else
         +zinit-message "{log-msg} No action executed ('{opt}${choice}{rst}' not 'Y' or 'y')"
