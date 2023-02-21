@@ -357,8 +357,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ $site = */releases ]] {
             local tag_version=${ICE[ver]}
             if [[ -z $tag_version ]]; then
-                tag_version="$( { .zinit-download-file-stdout $site/latest || .zinit-download-file-stdout $site/latest 1; } 2>/dev/null | \
-                                  command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
+                tag_version="$({.zinit-download-file-stdout $site/latest || .zinit-download-file-stdout $site/latest 1;} 2>/dev/null | command grep -i -m 1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
                 tag_version=${tag_version##*/}
             fi
             local url=$site/expanded_assets/$tag_version
@@ -1548,7 +1547,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   else
     local url=https://$urlpart
   fi
-  init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+  init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -i -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
   init_list=(${init_list[@]#href=?})
   bpicks=(${(s.;.)ICE[bpick]})
   [[ -z $bpicks ]] && bpicks=("")
