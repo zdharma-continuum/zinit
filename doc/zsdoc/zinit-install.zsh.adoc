@@ -454,7 +454,7 @@ ____
  $2 - plugin
 ____
 
-Has 215 line(s). Calls functions:
+Has 214 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- ziextract
