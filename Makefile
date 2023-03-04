@@ -24,7 +24,7 @@ tags: tags/emacs tags/vim
 tags/emacs: ## Build Emacs-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 		if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
-			ctags -e -R --options=share/zsh.ctags --languages=zsh \
+			ctags -e -R --options=share/zsh.ctags --languages=zsh,zsh3 \
 			    --pattern-length-limit=250 --maxdepth=1; \
 		else \
 			ctags -e -R --languages=sh --langmap=sh:.zsh; \
@@ -38,7 +38,7 @@ tags/emacs: ## Build Emacs-style ctags file
 tags/vim: ## Build the Vim-style ctags file
 	@if type ctags >/dev/null 2>&1; then \
 		if ctags --version | grep >/dev/null 2>&1 "Universal Ctags"; then \
-			ctags --languages=zsh --maxdepth=1 --options=share/zsh.ctags --pattern-length-limit=250 -R; \
+			ctags --maxdepth=1 --options=share/zsh.ctags --languages=zsh,zsh3 --pattern-length-limit=250 -R; \
 		else \
 			ctags -R --languages=sh --langmap=sh:.zsh; \
 		fi; \
