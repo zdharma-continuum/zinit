@@ -3048,7 +3048,7 @@ EOF
     .zinit-exists-physically-message "$user" "$plugin" || return 1
 
     .zinit-first "$1" "$2" || {
-        builtin print "${ZINIT[col-error]}No source file found, cannot glance${ZINIT[col-rst]}"
+       +zinit-message '{log-err} No source file found, cannot glance'
         return 1
     }
 
@@ -3059,17 +3059,17 @@ EOF
 
     {
         if (( ${+commands[pygmentize]} )); then
-            builtin print "Glancing with ${ZINIT[col-info]}pygmentize${ZINIT[col-rst]}"
-            pygmentize -l bash -g "$fname"
+            +zinit-message "{log-info} Inspecting via {cmd}pygmentize{rst}"
+            pygmentize -l 'bash' "$fname"
         elif (( ${+commands[highlight]} )); then
-            builtin print "Glancing with ${ZINIT[col-info]}highlight${ZINIT[col-rst]}"
+            +zinit-message "{log-info} Inspecting via {cmd}highlight{rst}"
             if (( has_256_colors )); then
-                highlight -q --force -S sh -O xterm256 "$fname"
+                highlight --force --output-format xterm256 --quiet --syntax sh "$fname"
             else
-                highlight -q --force -S sh -O ansi "$fname"
+                highlight --force --output-format ansi --quiet --syntax sh "$fname"
             fi
         elif (( ${+commands[source-highlight]} )); then
-            builtin print "Glancing with ${ZINIT[col-info]}source-highlight${ZINIT[col-rst]}"
+            +zinit-message "{log-info} Inspecting via {cmd}source-highlight{rst}"
             source-highlight -fesc --failsafe -s zsh -o STDOUT -i "$fname"
         else
             cat "$fname"

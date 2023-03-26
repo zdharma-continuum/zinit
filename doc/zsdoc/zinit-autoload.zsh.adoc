@@ -765,6 +765,7 @@ Has 39 line(s). Calls functions:
  .zinit-glance
  |-- zinit-side.zsh/.zinit-exists-physically-message
  |-- zinit-side.zsh/.zinit-first
+ |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
