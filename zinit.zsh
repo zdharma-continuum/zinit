@@ -3223,7 +3223,9 @@ zmodload zsh/zpty zsh/system 2>/dev/null
 zmodload -F zsh/stat b:zstat 2>/dev/null && ZINIT[HAVE_ZSTAT]=1
 
 # code [[[
-builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
+if [[ -z $ZINIT[NO_ALIASES] ]]; then
+    builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
+fi
 
 .zinit-prepare-home
 
