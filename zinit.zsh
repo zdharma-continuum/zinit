@@ -2603,7 +2603,7 @@ zinit() {
 
     cmd="$1"
     if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|\
-cdclear|delete) ]]; then
+cdclear) ]]; then
         if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
             .zinit-parse-opts "$cmd" "$@"
             if (( OPTS[opt_-h,--help] )); then
@@ -2924,6 +2924,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (zstatus)
                     .zinit-show-zstatus
                     ;;
+                (delete)
+                    shift
+                    .zinit-delete "$@"
+                    ;;
                 (times)
                     .zinit-show-times "${@[2-correct,-1]}"
                     ;;
@@ -3093,7 +3097,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (cdlist)
                     .zinit-list-compdef-replay
                     ;;
-                (cd|delete|recall|edit|glance|changes|create|stress)
+                (cd|recall|edit|glance|changes|create|stress)
                     .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; ___retval=$?
                     ;;
                 (recently)
