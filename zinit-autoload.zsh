@@ -2730,7 +2730,7 @@ ZINIT[EXTENDED_GLOB]=""
         local -a all_installed=(${${ZINIT[COMPLETIONS_DIR]}%%[/[:space:]]##}/*~*_zinit(/ND) ${${ZINIT[PLUGINS_DIR]}%%[/[:space:]]##}/*~*/_local---zinit(/ND) ${${ZINIT[SNIPPETS_DIR]}%%[/[:space:]]##}/*~*/plugins(/ND))
         if (( $#o_yes )) || ( -zinit-prompt "delete all plugins and snippets (${#all_installed} total)" ); then
             command rm -rf -- ${(@)all_installed}
-            command rm -rf -- **/*(-@)
+            command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
             rc=$?
             +zinit-message "finished with return code {num}${rc}{rst}"
             return $rc
@@ -2762,7 +2762,7 @@ ZINIT[EXTENDED_GLOB]=""
                     if (( $#o_yes )) || ( -zinit-prompt "delete $i snippet (${(#)files} files)" ); then
                         .zinit-run-delete-hooks snippet "${ICE2[teleid]}" "" "$the_id" "$local_dir"
                         command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
-                        command rm -rf -- **/*(-@)
+                        command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
                     else
                         continue
                     fi
@@ -2776,6 +2776,7 @@ ZINIT[EXTENDED_GLOB]=""
                     if (( $#o_yes )) || ( -zinit-prompt "delete $i (${(#)files} files)" ); then
                         .zinit-run-delete-hooks snippet "${ICE2[teleid]}" "" "$the_id" "$local_dir"
                         command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
+                        command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
                     else
                         continue
                     fi
@@ -2791,6 +2792,7 @@ ZINIT[EXTENDED_GLOB]=""
                 if (( $#o_yes )) || ( -zinit-prompt "delete $i (${(#)files} files)" ); then
                     .zinit-run-delete-hooks plugin "${reply[-2]}" "${reply[-1]}" "$the_id" "$local_dir"
                     command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
+                    command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
                 fi
                 continue
             else

@@ -2925,7 +2925,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                 (delete)
                     shift
-                    .zinit-delete
+                    .zinit-delete "$@"
                     ;;
                 (times)
                     .zinit-show-times "${@[2-correct,-1]}"

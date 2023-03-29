@@ -438,7 +438,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 103 line(s). Calls functions:
+Has 105 line(s). Calls functions:
 
  .zinit-delete
  `-- zinit.zsh/+zinit-message
