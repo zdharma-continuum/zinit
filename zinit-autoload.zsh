@@ -2727,8 +2727,11 @@ ZINIT[EXTENDED_GLOB]=""
     (( $#o_clean && $#o_all )) && { print -l -- "choose either --all or --clean"; return 0 }
 
     if (( $#o_all && !$#o_clean )); then
-        local -a all_installed=(${${ZINIT[COMPLETIONS_DIR]}%%[/[:space:]]##}/*~*_zinit(/ND) ${${ZINIT[PLUGINS_DIR]}%%[/[:space:]]##}/*~*/_local---zinit(/ND) ${${ZINIT[SNIPPETS_DIR]}%%[/[:space:]]##}/*~*/plugins(/ND))
-        if (( $#o_yes )) || ( -zinit-prompt "delete all plugins and snippets (${#all_installed} total)" ); then
+        local -a all_installed=(
+          ${${ZINIT[PLUGINS_DIR]}%%[/[:space:]]##}/*~*/_local---zinit(/ND)
+          ${${ZINIT[SNIPPETS_DIR]}%%[/[:space:]]##}/*~*/plugins(/ND)
+        )
+        if (( $#o_yes )) || ( .zinit-prompt "delete all plugins and snippets (${#all_installed} total)" ); then
             command rm -rf -- ${(@)all_installed}
             command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
             rc=$?
@@ -2738,7 +2741,7 @@ ZINIT[EXTENDED_GLOB]=""
         print -- ''
         return 1
     fi
-    (( $# == 0 )) && { +zinit-message "ERROR: must supply atleast one plugin to delete"; return 0 }
+    (( !$# )) && { +zinit-message "ERROR: must supply atleast one plugin to delete"; return 0 }
     local -a failed=()
     for i in $@; do
         local the_id="${${i:#(%|/)*}}" local_dir filename is_snippet
@@ -2759,7 +2762,7 @@ ZINIT[EXTENDED_GLOB]=""
         if (( is_snippet )); then
             if [[ "${+ICE2[svn]}" = "1" ]]; then
                 if [[ -e "$local_dir" ]]; then
-                    if (( $#o_yes )) || ( -zinit-prompt "delete $i snippet (${(#)files} files)" ); then
+                    if (( $#o_yes )) || ( .zinit-prompt "delete $i snippet (${(#)files} files)" ); then
                         .zinit-run-delete-hooks snippet "${ICE2[teleid]}" "" "$the_id" "$local_dir"
                         command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
                         command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
@@ -2773,7 +2776,7 @@ ZINIT[EXTENDED_GLOB]=""
                 fi
             else
                 if [[ -e "$local_dir" ]]; then
-                    if (( $#o_yes )) || ( -zinit-prompt "delete $i (${(#)files} files)" ); then
+                    if (( $#o_yes )) || ( .zinit-prompt "delete $i (${(#)files} files)" ); then
                         .zinit-run-delete-hooks snippet "${ICE2[teleid]}" "" "$the_id" "$local_dir"
                         command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
                         command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
@@ -2789,7 +2792,7 @@ ZINIT[EXTENDED_GLOB]=""
         else
             .zinit-any-to-user-plugin "${ICE2[teleid]}"
             if [[ -e "$local_dir" ]]; then
-                if (( $#o_yes )) || ( -zinit-prompt "delete $i (${(#)files} files)" ); then
+                if (( $#o_yes )) || ( .zinit-prompt "delete $i (${(#)files} files)" ); then
                     .zinit-run-delete-hooks plugin "${reply[-2]}" "${reply[-1]}" "$the_id" "$local_dir"
                     command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
                     command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
