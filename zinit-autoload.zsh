@@ -2735,7 +2735,7 @@ ZINIT[EXTENDED_GLOB]=""
             command rm -rf -- ${(@)all_installed}
             command rm -rf -- $ZINIT[HOME_DIR]/**/*(-@)
             rc=$?
-            +zinit-message "finished with return code {num}${rc}{rst}"
+            +zinit-message "deleted all completed with return code {num}${rc}{rst}"
             return $rc
         fi
         print -- ''

@@ -3,13 +3,16 @@
 @setup {
   zinit default-ice --quiet from'gh-r' nocompile lbin'!'
   ZBIN="${ZPFX}/bin"
-  zinit for @nektos/act; assert $state equals 0
-  local act="$ZBIN/act"; assert "$act" is_executable
-  $act --version; assert $state equals 0
 }
 
-@test 'delete' { # zinit delete subcommand
-  zinit from'gh-r' nocompile lbin'!' for @sharkdp/bat @nektos/act
-  run zinit delete --yes sharkdp/bar nektos/act
-  assert $state equals 0
+@test 'zinit delete' { # zinit delete subcommand
+  # --help
+  run zinit delete --help;  assert $state equals 0
+  # --all --yes
+  run zinit from'gh-r' id-as nocompile lbin'!' for @nektos/act; assert $state equals 0
+  local act_bin="$ZBIN/act"; assert "$act_bin" is_executable
+  bin_dir="$(ls $ZBIN)"; assert "$bin_dir" is_not_empty
+  $act_bin --version; assert $state equals 0
+  run zinit delete --all --yes; assert $state equals 0
+  bin_dir="$(ls $ZBIN)"; assert "$bin_dir" is_empty
 }
