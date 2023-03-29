@@ -1,5 +1,10 @@
-# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
-# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
+#
+# zdharma-continuum/zinit/tests/commands.zunit
+# Copyright (c) 2016-2020 Sebastian Gniazdowski
+# Copyright (c) 2016-2023 zdharma-continuum
+# Homepage: https://github.com/zdharma-continuum/zinit
+# License: MIT License
+#
 
 builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || { builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."; return 1; }
 

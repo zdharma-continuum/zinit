@@ -1,4 +1,10 @@
-# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
+#
+# zdharma-continuum/zinit/zinit.zsh
+# Copyright (c) 2016-2021 Sebastian Gniazdowski
+# Copyright (c) 2021-2023 zdharma-continuum
+# Homepage: https://github.com/zdharma-continuum/zinit
+# License: MIT License
+#
 
 #
 # Main state variables.
