@@ -52,6 +52,7 @@ FUNCTIONS
  .zinit-module
  .zinit-pager
  .zinit-prepare-readlink
+ .zinit-prompt
  .zinit-recall
  .zinit-recently
  .zinit-restore-extendedglob
@@ -398,9 +399,7 @@ Has 17 line(s). Calls functions:
 
 Uses feature(s): _eval_, _read_
 
-Called by:
-
- .zinit-delete
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-create
 ~~~~~~~~~~~~~
@@ -439,18 +438,16 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
 ____
 
-Has 99 line(s). Calls functions:
+Has 103 line(s). Calls functions:
 
  .zinit-delete
- |-- zinit-side.zsh/.zinit-compute-ice
- |-- zinit.zsh/+zinit-message
- |-- zinit.zsh/+zinit-prehelp-usage-message
- |-- zinit.zsh/.zinit-any-to-user-plugin
- `-- zinit.zsh/.zinit-parse-opts
+ `-- zinit.zsh/+zinit-message
 
-Uses feature(s): _setopt_
+Uses feature(s): _setopt_, _zmodload_, _zparseopts_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ zinit.zsh/zinit
 
 .zinit-diff-env-compute
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -885,6 +882,20 @@ Called by:
  .zinit-cenable
  .zinit-clear-completions
  .zinit-show-completions
+
+.zinit-prompt
+~~~~~~~~~~~~~
+
+____
+ 
+ Prompt user to confirm
+____
+
+Has 3 line(s). Doesn't call other functions.
+
+Uses feature(s): _read_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-recall
 ~~~~~~~~~~~~~
