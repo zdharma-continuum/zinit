@@ -2690,6 +2690,7 @@ ZINIT[EXTENDED_GLOB]=""
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 } # ]]]
+
 # FUNCTION: .zinit-delete [[[
 # Deletes plugin's or snippet's directory (in Zinit's home directory).
 #
@@ -2697,130 +2698,118 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin (only when $1 - i.e. user - given)
-.zinit-delete() {
+
+.zinit-delete () {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent
 
-    local -a opts match mbegin mend
-    local MATCH; integer MBEGIN MEND _retval
+    local o_verbose o_help o_all o_clean o_yes rc
+    local -a usage=(
+      'Usage:'
+      '  zinit delete [options] [plugins...]'
+      ' '
+      'Options'
+      ' '
+      '  -a, --all     Delete all installed plugins, snippets, and completions'
+      '  -y, --yes     Don´t prompt user to confirm'
+      ''
+    )
 
-    # Parse options
-    .zinit-parse-opts delete "$@"
-    builtin set -- "${reply[@]}"
-    if (( $@[(I)-*] || OPTS[opt_-h,--help] )) { +zinit-prehelp-usage-message delete $___opt_map[delete] $@; return 1; }
+    zmodload zsh/zutil
+    zparseopts -D -F -K -- \
+      {a,-all}=o_all \
+      {c,-clean}=o_clean \
+      {h,-help}=o_help \
+      {y,-yes}=o_yes \
+      {v,-verbose}=o_verbose \
+    || return 1
 
-    local the_id="$1${${1:#(%|/)*}:+${2:+/}}$2"
+    (( $#o_help )) && { print -lr -- $usage; return 0 }
+    (( $#o_clean && $#o_all )) && { print -l -- "choose either --all or --clean"; return 0 }
 
-    # -a/--all given?
-    if (( OPTS[opt_-a,--all] )); then
-        .zinit-confirm "Prune all plugins in \`${ZINIT[PLUGINS_DIR]}'"\
-"and snippets in \`${ZINIT[SNIPPETS_DIR]}'?" \
-"command rm -rf ${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/_local---zinit(ND) "\
-"${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/plugins(ND)"
-        return $?
-    fi
-
-    # -c/--clean given?
-    if (( OPTS[opt_-c,--clean] )) {
-        .zinit-confirm "Prune ${ZINIT[col-info]}CURRENTLY NOT LOADED${ZINIT[col-rst]}"\
-" plugins in $ZINIT[col-file]$ZINIT[PLUGINS_DIR]%f%b"\
-" and snippets in $ZINIT[col-file]$ZINIT[SNIPPETS_DIR]%f%b?" \
-" # Delete unloaded snippets
-local -aU loadedsnips todelete final_todelete
-loadedsnips=( \${\${ZINIT_SNIPPETS[@]% <*>}/(#m)*/\$(.zinit-get-object-path snippet \"\$MATCH\" && builtin print -rn \$REPLY; )} )
-local dir=\${\${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/xyzcba231}
-todelete=( \$dir/*/*/*(ND/) \$dir/*/*(ND/) \$dir/*(ND/) )
-final_todelete=( \${todelete[@]:#*/(\${(~j:|:)loadedsnips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)} )
-final_todelete=( \${final_todelete[@]//(#m)*/\$( .zinit-get-object-path snippet \"\${\${\${MATCH##\${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/\${match[1]##--}://}//--//}\" && builtin print -r -- \$REPLY)} )
-final_todelete=( \${final_todelete[@]:#(\${(~j:|:)loadedsnips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)} )
-todelete=( \${\${\${(@)\${(@)final_todelete##\$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/\${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/\$match[1]/\$ZINIT[col-file]\$match[2]\$ZINIT[col-rst]} )
-todelete=( \${todelete[@]//(#m)(#s)[^\/]##(#e)/\$ZINIT[col-file]\$MATCH\$ZINIT[col-rst]} )
-final_todelete=( \${\${\${(@)\${(@)final_todelete##\$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/\${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/\$match[1]/\$match[2]} )
-builtin print; print -Prln \"\$ZINIT[col-obj]Deleting the following \"\
-\"\$ZINIT[col-file]\${#todelete}\$ZINIT[col-msg2] UNLOADED\$ZINIT[col-obj] snippets:%f%b\" \
-    \$todelete \"%f%b\"
-sleep 3
-local snip
-for snip ( \$final_todelete ) { zinit delete -q -y \$snip; _retval+=\$?; }
-builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\"
-
-# Next delete unloaded plugins
-local -a dirs
-dirs=( \${\${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/(\${(~j:|:)\${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/) )
-dirs=( \${(@)\${dirs[@]##\$ZINIT[PLUGINS_DIR]/#}//---//} )
-builtin print -Prl \"\" \"\$ZINIT[col-obj]Deleting the following \"\
-\"\$ZINIT[col-file]\${#dirs}\$ZINIT[col-msg2] UNLOADED\$ZINIT[col-obj] plugins:%f%b\" \
-\${\${dirs//(#b)(*)(\/([^\/]##))(#e)/\${\${match[2]:+\$ZINIT[col-uname]\$match[1]\$ZINIT[col-rst]/\$ZINIT[col-pname]\$match[3]\$ZINIT[col-rst]}:-\$ZINIT[col-pname]\$match[1]}}//(#b)(^\$ZINIT[col-uname])(*)/\$ZINIT[col-pname]\$match[1]}
-sleep 3
-for snip ( \$dirs ) { zinit delete -q -y \$snip; _retval+=\$?; }
-builtin print -Pr \"\$ZINIT[col-obj]Done (with the exit code: \$_retval).%f%b\""
-        return _retval
-    }
-
-    local -A ICE2
-    local local_dir filename is_snippet
-
-    .zinit-compute-ice "$the_id" "pack" \
-        ICE2 local_dir filename is_snippet || return 1
-
-    if [[ "$local_dir" != /* ]]
-    then
-        +zinit-message "{log-error} Obtained a risky, not-absolute path ({dir}$local_dir{rst}), aborting"
+    if (( $#o_all && !$#o_clean )); then
+        local -a all_installed=(${${ZINIT[COMPLETIONS_DIR]}%%[/[:space:]]##}/*~*_zinit(/ND) ${${ZINIT[PLUGINS_DIR]}%%[/[:space:]]##}/*~*/_local---zinit(/ND) ${${ZINIT[SNIPPETS_DIR]}%%[/[:space:]]##}/*~*/plugins(/ND))
+        if (( $#o_yes )) || ( -zinit-prompt "delete all plugins and snippets (${#all_installed} total)" ); then
+            command rm -rf -- ${(@)all_installed}
+            command rm -rf -- **/*(-@)
+            rc=$?
+            +zinit-message "finished with return code {num}${rc}{rst}"
+            return $rc
+        fi
+        print -- ''
         return 1
     fi
-
-    ICE2[teleid]="${ICE2[teleid]:-${ICE2[id-as]}}"
-
-    local -a files
-    files=( "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t)
-        "$local_dir"/*(*DN:t) "$local_dir"/*(@DN:t) "$local_dir"/*(.DN:t)
-        "$local_dir"/*~*/.(_zinit|svn|git)(/DN:t) "$local_dir"/*(=DN:t)
-        "$local_dir"/*(pDN:t) "$local_dir"/*(%DN:t)
-    )
-    (( !${#files} )) && files=( "no files?" )
-    files=( ${(@)files[1,4]} ${files[4]+more…} )
-
-    # Make the ices available for the hooks.
-    local -A ICE
-    ICE=( "${(kv)ICE2[@]}" )
-
-    if (( is_snippet )); then
-        if [[ "${+ICE2[svn]}" = "1" ]] {
-            if [[ -e "$local_dir" ]]
-            then
-                .zinit-confirm "Delete {file}$local_dir{rst}? (it holds: ${(j:, :)${(@u)files}})" \
-                    ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
-                    \"$local_dir\"; \
-                    command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
-            else
-                +zinit-message "{log-error} No such snippet"
-                return 1
-            fi
-        } else {
-            if [[ -e "$local_dir" ]]; then
-                .zinit-confirm "Delete ${file}$local_dir{rst}? (it holds: ${(j:, :)${(@u)files}})" \
-                    ".zinit-run-delete-hooks snippet \"${ICE2[teleid]}\" \"\" \"$the_id\" \
-                    \"$local_dir\"; command rm -rf \
-                        ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
-            else
-                +zinit-message "{log-error} No such snippet"
-                return 1
-            fi
-        }
-    else
-        .zinit-any-to-user-plugin "${ICE2[teleid]}"
-        if [[ -e "$local_dir" ]]; then
-            .zinit-confirm "Delete {file}$local_dir{rst}? (it holds: ${(j:, :)${(@u)files}})" \
-                ".zinit-run-delete-hooks plugin \"${reply[-2]}\" \"${reply[-1]}\" \"$the_id\" \
-                \"$local_dir\"; \
-                command rm -rf ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}"
-        else
-            +zinit-message -r "{log-error} No such snippet"
-            return 1
+    (( $# == 0 )) && { +zinit-message "ERROR: must supply atleast one plugin to delete"; return 0 }
+    local -a failed=()
+    for i in $@; do
+        local the_id="${${i:#(%|/)*}}" local_dir filename is_snippet
+        local -A ICE2
+        .zinit-compute-ice "$the_id" "pack" ICE2 local_dir filename is_snippet || return 1
+        if [[ "$local_dir" != /* ]]; then
+            +zinit-message "ERROR: $i is not a plugin or snippet"
+            failed+=($i)
+            continue
         fi
-    fi
-
+        local ICE2[teleid]="${ICE2[teleid]:-${ICE2[id-as]}}"
+        local -a files
+        files=("$local_dir"/*(%DN:t) "$local_dir"/*(*DN:t) "$local_dir"/*(.DN:t) "$local_dir"/*(=DN:t) "$local_dir"/*(@DN:t) "$local_dir"/*(pDN:t) "$local_dir"/*.(zsh|sh|bash|ksh)(DN:t) "$local_dir"/*~*/.(_zinit|svn|git)(/DN:t))
+        (( !${#files} )) && files=("no files?")
+        files=(${(@)files[1,4]} ${files[4]+more…})
+        local -A ICE
+        local ICE=("${(kv)ICE2[@]}")
+        if (( is_snippet )); then
+            if [[ "${+ICE2[svn]}" = "1" ]]; then
+                if [[ -e "$local_dir" ]]; then
+                    if (( $#o_yes )) || ( -zinit-prompt "delete $i snippet (${(#)files} files)" ); then
+                        .zinit-run-delete-hooks snippet "${ICE2[teleid]}" "" "$the_id" "$local_dir"
+                        command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
+                        command rm -rf -- **/*(-@)
+                    else
+                        continue
+                    fi
+                else
+                    +zinit-message "error: $i is not a snippet"
+                    failed+=($i)
+                    continue
+                fi
+            else
+                if [[ -e "$local_dir" ]]; then
+                    if (( $#o_yes )) || ( -zinit-prompt "delete $i (${(#)files} files)" ); then
+                        .zinit-run-delete-hooks snippet "${ICE2[teleid]}" "" "$the_id" "$local_dir"
+                        command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
+                    else
+                        continue
+                    fi
+                else
+                    +zinit-message "error: $i is not a snippet"
+                    failed+=($i)
+                    continue
+                fi
+            fi
+        else
+            .zinit-any-to-user-plugin "${ICE2[teleid]}"
+            if [[ -e "$local_dir" ]]; then
+                if (( $#o_yes )) || ( -zinit-prompt "delete $i (${(#)files} files)" ); then
+                    .zinit-run-delete-hooks plugin "${reply[-2]}" "${reply[-1]}" "$the_id" "$local_dir"
+                    command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}
+                fi
+                continue
+            else
+                +zinit-message "ERROR: $i is not a plugin"
+                failed+=($i)
+                continue
+            fi
+        fi
+    done
+    print -- "finished (${#failed}/${#@} failed)"
     return 0
+} # ]]]
+# FUNCTION: .zinit-prompt [[[
+# Prompt user to confirm
+.zinit-prompt(){
+  read -q ${(%):-"?%s%F{cyan}zinit%f%s: ${1}? [y/N]: "} && REPLY=y
+  print ''
+  [[ $REPLY == y ]] && return 0 || return 1
 } # ]]]
 # FUNCTION: .zinit-confirm [[[
 # Prints given question, waits for "y" key, evals
