@@ -1,0 +1,15 @@
+#!/usr/bin/env zunit
+
+@setup {
+  zinit default-ice --quiet from'gh-r' nocompile lbin'!'
+  ZBIN="${ZPFX}/bin"
+  zinit for @nektos/act; assert $state equals 0
+  local act="$ZBIN/act"; assert "$act" is_executable
+  $act --version; assert $state equals 0
+}
+
+@test 'delete' { # zinit delete subcommand
+  zinit from'gh-r' nocompile lbin'!' for @sharkdp/bat @nektos/act
+  run zinit delete --yes sharkdp/bar nektos/act
+  assert $state equals 0
+}
