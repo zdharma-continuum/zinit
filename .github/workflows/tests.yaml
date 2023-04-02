@@ -29,8 +29,8 @@ jobs:
     strategy:
       matrix:
         os: ['macos-latest','ubuntu-latest']
+        test: ['annexes', 'gh-r', 'ices', 'plugins', 'snippets']
       fail-fast: false
-
     steps:
       - name: checkout ${{ github.repository }}
         uses: actions/checkout@v3
@@ -58,17 +58,5 @@ jobs:
           git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           zsh -c -l './build.zsh' && sudo chmod u+x ./zunit && cp ./zunit "$HOME/.local/bin/"
 
-      - name: "annexes"
-        run: zunit run tests/annexes.zunit
-
-      - name: "gh-r"
-        run: zunit run --fail-fast --verbose tests/gh-r.zunit
-
-      - name: "ices"
-        run: zunit run tests/ices.zunit
-
-      - name: "plugins"
-        run: zunit run tests/plugins.zunit
-
-      - name: "snippets"
-        run: zunit run tests/snippets.zunit
+      - name: ${matrix.test}
+        run: zunit run --fail-fas --verbose tests/${matrix.test}.zunit
