@@ -93,7 +93,7 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 252 line(s). Calls functions:
+Has 244 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
@@ -115,6 +115,7 @@ Has 252 line(s). Calls functions:
  |   |-- zinit-autoload.zsh/.zinit-clear-completions
  |   |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
  |   |-- zinit-autoload.zsh/.zinit-compiled
+ |   |-- zinit-autoload.zsh/.zinit-delete
  |   |-- zinit-autoload.zsh/.zinit-help
  |   |-- zinit-autoload.zsh/.zinit-list-bindkeys
  |   |-- zinit-autoload.zsh/.zinit-list-compdef-replay
@@ -229,7 +230,6 @@ Has 38 line(s). Calls functions:
 Called by:
 
  zinit
- zinit-autoload.zsh/.zinit-delete
 
 -zinit_scheduler_add_sh
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -749,7 +749,6 @@ Has 2 line(s). Doesn't call other functions.
 Called by:
 
  zinit
- zinit-autoload.zsh/.zinit-delete
 
 .zinit-prepare-home
 ~~~~~~~~~~~~~~~~~~~
@@ -1104,7 +1103,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  Registers the z-annex inside Zinit – i.e. an Zinit extension
 ____
 
@@ -1292,7 +1290,7 @@ ____
  and completion.
 ____
 
-Has 564 line(s). Calls functions:
+Has 568 line(s). Calls functions:
 
  zinit
  |-- +zinit-message
@@ -1308,6 +1306,7 @@ Has 564 line(s). Calls functions:
  |-- zinit-autoload.zsh/.zinit-clear-completions
  |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
  |-- zinit-autoload.zsh/.zinit-compiled
+ |-- zinit-autoload.zsh/.zinit-delete
  |-- zinit-autoload.zsh/.zinit-help
  |-- zinit-autoload.zsh/.zinit-list-bindkeys
  |-- zinit-autoload.zsh/.zinit-list-compdef-replay
@@ -1340,6 +1339,7 @@ Called by:
 
  Script-Body
  zplugin
+ zinit-autoload.zsh/.zinit-delete
 
 zpcdclear
 ~~~~~~~~~
@@ -1398,6 +1398,7 @@ Has 1 line(s). Calls functions:
      |-- zinit-autoload.zsh/.zinit-clear-completions
      |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
      |-- zinit-autoload.zsh/.zinit-compiled
+     |-- zinit-autoload.zsh/.zinit-delete
      |-- zinit-autoload.zsh/.zinit-help
      |-- zinit-autoload.zsh/.zinit-list-bindkeys
      |-- zinit-autoload.zsh/.zinit-list-compdef-replay
@@ -1461,7 +1462,7 @@ ____
  Note that some terminals do not support all combinations.
 ____
 
-Has 120 line(s). Doesn't call other functions.
+Has 117 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -1484,7 +1485,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
