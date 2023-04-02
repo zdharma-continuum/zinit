@@ -800,7 +800,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 

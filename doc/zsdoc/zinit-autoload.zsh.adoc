@@ -52,6 +52,7 @@ FUNCTIONS
  .zinit-module
  .zinit-pager
  .zinit-prepare-readlink
+ .zinit-prompt
  .zinit-recall
  .zinit-recently
  .zinit-restore-extendedglob
@@ -398,9 +399,7 @@ Has 17 line(s). Calls functions:
 
 Uses feature(s): _eval_, _read_
 
-Called by:
-
- .zinit-delete
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 .zinit-create
 ~~~~~~~~~~~~~
@@ -431,26 +430,24 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- Deletes plugin's or snippet's directory (in Zinit's home directory).
+ Deletes a plugin or snippet and related files and hooks.
  
- User-action entry point.
- 
- $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- $2 - plugin (only when $1 - i.e. user - given)
+ $1 - snippet url or plugin
 ____
 
-Has 99 line(s). Calls functions:
+Has 107 line(s). Calls functions:
 
  .zinit-delete
  |-- zinit-side.zsh/.zinit-compute-ice
  |-- zinit.zsh/+zinit-message
- |-- zinit.zsh/+zinit-prehelp-usage-message
  |-- zinit.zsh/.zinit-any-to-user-plugin
- `-- zinit.zsh/.zinit-parse-opts
+ `-- zinit.zsh/zinit
 
-Uses feature(s): _setopt_
+Uses feature(s): _setopt_, _zmodload_, _zparseopts_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ zinit.zsh/zinit
 
 .zinit-diff-env-compute
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -886,6 +883,26 @@ Called by:
  .zinit-clear-completions
  .zinit-show-completions
 
+.zinit-prompt
+~~~~~~~~~~~~~
+
+____
+ 
+ Prompt user to confirm
+ 
+ $1 - prompt
+ 
+ $REPLY - 0 or 1
+____
+
+Has 4 line(s). Doesn't call other functions.
+
+Uses feature(s): _read_
+
+Called by:
+
+ .zinit-delete
+
 .zinit-recall
 ~~~~~~~~~~~~~
 
@@ -949,7 +966,9 @@ Has 17 line(s). Calls functions:
 
 Uses feature(s): _eval_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
+
+ .zinit-delete
 
 .zinit-save-set-extendedglob
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~

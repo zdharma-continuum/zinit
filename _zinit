@@ -210,7 +210,7 @@ _zinit_delete(){
     '--quiet[Turn off messages from the operation]' \
     '--yes[Automatically confirm any yes/no prompts]' \
     + '(operation)' \
-      '1:installed:__zinit_installed' \
+      '*::installed:__zinit_installed' \
       {-a,--all}'[Delete all plugins and snippets]' \
       {-c,--clean}'[Delete only the currently-not loaded plugins and snippets]'
 } # ]]]
