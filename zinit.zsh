@@ -1,4 +1,10 @@
-# Copyright (c) 2016-2020 Sebastian Gniazdowski and contributors.
+#
+# zdharma-continuum/zinit/zinit.zsh
+# Copyright (c) 2016-2021 Sebastian Gniazdowski
+# Copyright (c) 2021-2023 zdharma-continuum
+# Homepage: https://github.com/zdharma-continuum/zinit
+# License: MIT License
+#
 
 #
 # Main state variables.
@@ -186,54 +192,45 @@ ZINIT_2MAP=(
 # Init [[[
 zmodload zsh/zutil || { builtin print -P "%F{196}zsh/zutil module is required, aborting Zinit set up.%f"; return 1; }
 zmodload zsh/parameter || { builtin print -P "%F{196}zsh/parameter module is required, aborting Zinit set up.%f"; return 1; }
-zmodload zsh/terminfo 2>/dev/null
-zmodload zsh/termcap 2>/dev/null
+zmodload zsh/term{cap,info} 2>/dev/null
+autoload -Uz colors && colors
 
-if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || \
-      ( ${+termcap} -eq 1 && -n ${termcap[Co]} )
-]] {
-    ZINIT+=(
-        # Old colors: 31m
-        col-pname   $'\e[1;4m\e[32m'     col-uname   $'\e[1;4m\e[35m'     col-keyword $'\e[32m'
-        col-note    $'\e[38;5;148m'       col-error   $'\e[1m\e[38;5;204m' col-p       $'\e[38;5;81m'
-        col-info    $'\e[38;5;82m'       col-info2   $'\e[38;5;227m'      col-profile $'\e[38;5;148m'
-        col-uninst  $'\e[38;5;118m'      col-info3   $'\e[1m\e[38;5;227m' col-slight  $'\e[38;5;230m'
-        col-failure $'\e[38;5;204m'      col-happy   $'\e[1m\e[38;5;82m'  col-annex   $'\e[38;5;153m'
-        col-id-as   $'\e[4;38;5;220m'    col-version $'\e[3;38;5;87m'
-        # The more recent, fresh ones:
-        col-pre  $'\e[38;5;135m'  col-msg   $'\e[0m'        col-msg2  $'\e[38;5;172m'
-        col-obj  $'\e[38;5;218m'  col-obj2  $'\e[38;5;118m' col-file  $'\e[3;38;5;117m'
-        col-dir  $'\e[3;38;5;153m' col-func $'\e[38;5;219m'
-        col-url  $'\e[38;5;75m'   col-meta  $'\e[38;5;57m'  col-meta2 $'\e[38;5;147m'
-        col-data $'\e[38;5;82m'   col-data2 $'\e[38;5;117m' col-hi    $'\e[1m\e[38;5;183m'
-        col-var  $'\e[38;5;81m'   col-glob  $'\e[38;5;227m' col-ehi   $'\e[1m\e[38;5;210m'
-        col-cmd  $'\e[38;5;82m'   col-ice   $'\e[38;5;39m'  col-nl    $'\n'
-        col-txt  $'\e[38;5;254m' col-num  $'\e[3;38;5;155m' col-term  $'\e[38;5;185m'
-        col-warn $'\e[38;5;214m' col-ok    $'\e[38;5;220m'  col-time  $'\e[38;5;220m'
-        col-apo $'\e[1;38;5;45m' col-aps $'\e[38;5;117m'
-        col-quo $'\e[1;38;5;33m' col-quos    $'\e[1;38;5;160m'
-        col-bapo $'\e[1;38;5;220m'  col-baps $'\e[1;38;5;82m'
-        col-faint $'\e[38;5;238m' col-opt   $'\e[38;5;219m' col-lhi   $'\e[38;5;81m'
-        col-flag  $'\e[1;3;38;5;79m' col-pkg $'\e[1;3;38;5;27m'
-        col-tab  $' \t '            col-msg3  $'\e[38;5;238m' col-b-lhi $'\e[1m\e[38;5;75m'
-        col-bar  $'\e[38;5;82m'  col-th-bar $'\e[38;5;82m'
-        col-…    "${${${(M)LANG:#*UTF-8*}:+…}:-...}"  col-ndsh  "${${${(M)LANG:#*UTF-8*}:+–}:-}"
-        col-mdsh $'\e[1;38;5;220m'"${${${(M)LANG:#*UTF-8*}:+–}:--}"$'\e[0m'
-        col-mmdsh $'\e[1;38;5;220m'"${${${(M)LANG:#*UTF-8*}:+――}:--}"$'\e[0m'
-        col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}" col-lr    "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
-        col-↔    ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔\e[0m'}:-$'\e[38;5;82m«-»\e[0m'}
-        col-rst  $'\e[0m'        col-b     $'\e[1m'        col-nb     $'\e[22m'
-        col-u    $'\e[4m'        col-it    $'\e[3m'        col-st     $'\e[9m'
-        col-nu   $'\e[24m'       col-nit   $'\e[23m'       col-nst    $'\e[29m'
-        col-bspc $'\b'        col-b-warn $'\e[1;38;5;214m' col-u-warn $'\e[4;38;5;214m'
-        col-bcmd $'\e[38;5;220m'
-    )
-    if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || \
-          ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 )
-    ]] {
-        ZINIT+=( col-pname $'\e[1;4m\e[38;5;39m' col-uname  $'\e[1;4m\e[38;5;207m' )
-    }
-}
+if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+termcap} -eq 1 && -n ${termcap[Co]} ) ]]; then
+  ZINIT+=(
+    col-annex   $'\e[38;5;153m'         col-faint   $'\e[38;5;238m'         col-msg2    $'\e[38;5;172m'      col-quo     $'\e[1;38;5;33m'
+    col-apo     $'\e[1;38;5;45m'        col-file    $'\e[3;38;5;117m'       col-msg3    $'\e[38;5;238m'      col-quos    $'\e[1;38;5;160m'
+    col-aps     $'\e[38;5;117m'         col-flag    $'\e[1;3;38;5;79m'      col-nb      $'\e[22m'            col-rst     $'\e[0m'
+    col-b       $'\e[1m'                col-func    $'\e[38;5;219m'         col-nit     $'\e[23m'            col-slight  $'\e[38;5;230m'
+    col-b-lhi   $'\e[1m\e[38;5;75m'     col-glob    $'\e[38;5;227m'         col-nl      $'\n'                col-st      $'\e[9m'
+    col-b-warn  $'\e[1;38;5;214m'       col-happy   $'\e[1m\e[38;5;82m'     col-note    $'\e[38;5;148m'      col-tab     $' \t '
+    col-bapo    $'\e[1;38;5;220m'       col-hi      $'\e[1m\e[38;5;183m'    col-nst     $'\e[29m'            col-term    $'\e[38;5;185m'
+    col-baps    $'\e[1;38;5;82m'        col-ice     $'\e[38;5;39m'          col-nu      $'\e[24m'            col-th-bar  $'\e[38;5;82m'
+    col-bar     $'\e[38;5;82m'          col-id-as   $'\e[4;38;5;220m'       col-num     $'\e[3;38;5;155m'    col-time    $'\e[38;5;220m'
+    col-bcmd    $'\e[38;5;220m'         col-info    $'\e[38;5;82m'          col-obj     $'\e[38;5;218m'      col-txt     $'\e[38;5;254m'
+    col-bspc    $'\b'                   col-info2   $'\e[38;5;227m'         col-obj2    $'\e[38;5;118m'      col-u       $'\e[4m'
+    col-cmd     $'\e[38;5;82m'          col-info3   $'\e[1m\e[38;5;227m'    col-ok      $'\e[38;5;220m'      col-u-warn  $'\e[4;38;5;214m'
+    col-data    $'\e[38;5;82m'          col-it      $'\e[3m'                col-opt     $'\e[38;5;219m'      col-uname   $'\e[1;4m\e[35m'
+    col-data2   $'\e[38;5;117m'         col-keyword $'\e[32m'               col-p       $'\e[38;5;81m'       col-uninst  $'\e[38;5;118m'
+    col-dir     $'\e[3;38;5;153m'       col-lhi     $'\e[38;5;81m'          col-pkg     $'\e[1;3;38;5;27m'   col-url     $'\e[38;5;75m'
+    col-ehi     $'\e[1m\e[38;5;210m'    col-meta    $'\e[38;5;57m'          col-pname   $'\e[1;4m\e[32m'     col-var     $'\e[38;5;81m'
+    col-error   $'\e[1m\e[38;5;204m'    col-meta2   $'\e[38;5;147m'         col-pre     $'\e[38;5;135m'      col-version $'\e[3;38;5;87m'
+    col-failure $'\e[38;5;204m'         col-msg     $'\e[0m'                col-profile $'\e[38;5;148m'      col-warn    $'\e[38;5;214m'
+
+    col-i $'\e[0;32m'"==>"$'\e[0m' col-e $'\e[1;91m'"Error: "$'\e[0m'
+    col-m $'\e[0;35m'"==>"$'\e[0m' col-w $'\e[0;33m'"Warning: "$'\e[0m'
+
+    col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}"    col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
+    col-ndsh "${${${(M)LANG:#*UTF-8*}:+–}:-}"        col-…  "${${${(M)LANG:#*UTF-8*}:+…}:-...}"
+
+    col-mdsh  $'\e[1;38;5;220m'"${${${(M)LANG:#*UTF-8*}:+–}:--}"$'\e[0m'
+    col-mmdsh $'\e[1;38;5;220m'"${${${(M)LANG:#*UTF-8*}:+――}:--}"$'\e[0m'
+
+    col-↔     ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔\e[0m'}:-$'\e[38;5;82m«-»\e[0m'}
+  )
+  if [[ ( ${+terminfo} -eq 1 && ${terminfo[colors]} -ge 256 ) || ( ${+termcap} -eq 1 && ${termcap[Co]} -ge 256 ) ]]; then
+    ZINIT+=( col-pname $'\e[1;4m\e[38;5;39m' col-uname  $'\e[1;4m\e[38;5;207m' )
+  fi
+fi
 
 # Hooks
 typeset -gAH ZINIT_ZLE_HOOKS_LIST
@@ -395,11 +392,11 @@ builtin setopt noaliases
                         retval=$?
                     }
                 } else {
-                    eval "function ${(q)func} {
+                    functions[$func]="
                         local -a fpath
                         fpath=( ${(qqq)PLUGIN_DIR} ${(qqq@)fpath_elements} ${(qqq@)fpath} )
                         builtin autoload -X ${(j: :)${(q-)opts[@]}}
-                    }"
+                    "
                     retval=$?
                 }
             else
@@ -1204,8 +1201,7 @@ builtin setopt noaliases
         ___value=${___value//(#m)(%[a-zA-Z0-9]##%|\$ZPFX|\$\{ZPFX\})/${___subst_map[$MATCH]}}
         : ${(P)___var_name::=$___value}
     done
-}
-# ]]]
+} # ]]]
 # FUNCTION: @zinit-register-annex [[[
 # Registers the z-annex inside Zinit – i.e. an Zinit extension
 @zinit-register-annex() {
@@ -2603,7 +2599,7 @@ zinit() {
 
     cmd="$1"
     if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|\
-cdclear|delete) ]]; then
+cdclear) ]]; then
         if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
             .zinit-parse-opts "$cmd" "$@"
             if (( OPTS[opt_-h,--help] )); then
@@ -2924,6 +2920,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (zstatus)
                     .zinit-show-zstatus
                     ;;
+                (delete)
+                    shift
+                    .zinit-delete "$@"
+                    ;;
                 (times)
                     .zinit-show-times "${@[2-correct,-1]}"
                     ;;
@@ -3093,7 +3093,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (cdlist)
                     .zinit-list-compdef-replay
                     ;;
-                (cd|delete|recall|edit|glance|changes|create|stress)
+                (cd|recall|edit|glance|changes|create|stress)
                     .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; ___retval=$?
                     ;;
                 (recently)
@@ -3224,7 +3224,9 @@ zmodload zsh/zpty zsh/system 2>/dev/null
 zmodload -F zsh/stat b:zstat 2>/dev/null && ZINIT[HAVE_ZSTAT]=1
 
 # code [[[
-builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
+if [[ -z $ZINIT[NO_ALIASES] ]]; then
+    builtin alias zpl=zinit zplg=zinit zi=zinit zini=zinit
+fi
 
 .zinit-prepare-home
 

@@ -231,7 +231,7 @@
   $gf --version; assert $state equals 0
 }
 @test 'ggsrun' { # This is a CLI tool to execute Google Apps Script (GAS) at own terminal on local PC. Also this CLI tool can be used for managing files in Google Drive for OAuth2 and Service Account
-  run zinit lbin'!* -> ggsrun' for @tanaikech/ggsrun; assert $state equals 0
+  run zinit lbin'!* -> ggsrun' ver'v2.0.0' for @tanaikech/ggsrun; assert $state equals 0
   local git_sizer="$ZBIN/ggsrun"; assert "$git_sizer" is_executable
   $git_sizer --version; assert $state equals 0
 }
@@ -432,7 +432,7 @@ $kopia --version; assert $state equals 0
   $lf -version; assert $state equals 0
 }
 @test 'lsd' { # The next gen ls command
-  run zinit for @Peltoche/lsd; assert $state equals 0
+  run zinit for @lsd-rs/lsd; assert $state equals 0
   local lsd="$ZBIN/lsd"; assert "$lsd" is_executable
   $lsd --version; assert $state equals 0
 }

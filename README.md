@@ -133,8 +133,8 @@ In your `.zshrc`, add the following snippet
 
 ```zsh
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-mkdir -p "$(dirname $ZINIT_HOME)"
-git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 ```
 
@@ -210,9 +210,12 @@ zinit ice pick"async.zsh" src"pure.zsh" # with zsh-async library that's bundled 
 zinit light sindresorhus/pure
 
 # Load starship theme
-zinit ice as"command" from"gh-r" \ # `starship` binary as command, from github release
-          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \ # starship setup at clone(create init.zsh, completion)
-          atpull"%atclone" src"init.zsh" # pull behavior same as clone, source init.zsh
+# line 1: `starship` binary as command, from github release
+# line 2: starship setup at clone(create init.zsh, completion)
+# line 3: pull behavior same as clone, source init.zsh
+zinit ice as"command" from"gh-r" \
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+          atpull"%atclone" src"init.zsh"
 zinit light starship/starship
 ```
 
@@ -1040,6 +1043,7 @@ declare -A ZINIT  # initial Zinit's hash definition, if configuring before loadi
 | ZINIT\[COMPINIT_OPTS\]              | Options for `compinit` call (i.e. done by `zicompinit`), use to pass -C to speed up loading                                                                                                                                                                                                                                                                                                              |
 | ZINIT\[MUTE_WARNINGS\]              | If set to `1`, then mutes some of the Zinit warnings, specifically the `plugin already registered` warning                                                                                                                                                                                                                                                                                               |
 | ZINIT\[OPTIMIZE_OUT_DISK_ACCESSES\] | If set to `1`, then Zinit will skip checking if a Turbo-loaded object exists on the disk. By default Zinit skips Turbo for non-existing objects (plugins or snippets) to install them before the first prompt – without any delays, during the normal processing of `zshrc`. This option can give a performance gain of about 10 ms out of 150 ms (i.e.: Zsh will start up in 140 ms instead of 150 ms). |
+| ZINIT\[NO_ALIASES\]                 | If set to `1`, then Zinit will not set aliases such as `zi` or `zini`                                                                                                                                                                                                                                                                                                                                    |
 
 There is also `$ZPFX`, set by default to `~/.local/share/zinit/polaris` – a directory where software with `Makefile`,
 etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.

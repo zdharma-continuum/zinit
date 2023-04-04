@@ -82,6 +82,7 @@ FUNCTIONS
  zpcompinit
  zplugin
 AUTOLOAD add-zsh-hook
+AUTOLOAD colors
 AUTOLOAD compinit
 AUTOLOAD is-at-least
 PRECMD-HOOK @zinit-scheduler
@@ -92,12 +93,13 @@ DETAILS
 Script Body
 ~~~~~~~~~~~
 
-Has 249 line(s). Calls functions:
+Has 244 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
  |-- @zinit-register-hook
  |-- add-zsh-hook
+ |-- colors
  |-- is-at-least
  |-- zinit
  |   |-- +zinit-message
@@ -113,6 +115,7 @@ Has 249 line(s). Calls functions:
  |   |-- zinit-autoload.zsh/.zinit-clear-completions
  |   |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
  |   |-- zinit-autoload.zsh/.zinit-compiled
+ |   |-- zinit-autoload.zsh/.zinit-delete
  |   |-- zinit-autoload.zsh/.zinit-help
  |   |-- zinit-autoload.zsh/.zinit-list-bindkeys
  |   |-- zinit-autoload.zsh/.zinit-list-compdef-replay
@@ -140,7 +143,7 @@ Has 249 line(s). Calls functions:
  |   `-- zinit-install.zsh/.zinit-install-completions
  `-- zinit-autoload.zsh/.zinit-module
 
-Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
+Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _colors_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
 
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
@@ -185,6 +188,9 @@ Called by:
  zinit-additional.zsh/:zinit-tmp-subst-source
  zinit-autoload.zsh/.zinit-build-module
  zinit-autoload.zsh/.zinit-cd
+ zinit-autoload.zsh/.zinit-confirm
+ zinit-autoload.zsh/.zinit-delete
+ zinit-autoload.zsh/.zinit-glance
  zinit-autoload.zsh/.zinit-self-update
  zinit-autoload.zsh/.zinit-show-zstatus
  zinit-autoload.zsh/.zinit-uninstall-completions
@@ -224,7 +230,6 @@ Has 38 line(s). Calls functions:
 Called by:
 
  zinit
- zinit-autoload.zsh/.zinit-delete
 
 -zinit_scheduler_add_sh
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -744,7 +749,6 @@ Has 2 line(s). Doesn't call other functions.
 Called by:
 
  zinit
- zinit-autoload.zsh/.zinit-delete
 
 .zinit-prepare-home
 ~~~~~~~~~~~~~~~~~~~
@@ -1099,7 +1103,6 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- ]]]
  Registers the z-annex inside Zinit – i.e. an Zinit extension
 ____
 
@@ -1287,7 +1290,7 @@ ____
  and completion.
 ____
 
-Has 564 line(s). Calls functions:
+Has 568 line(s). Calls functions:
 
  zinit
  |-- +zinit-message
@@ -1303,6 +1306,7 @@ Has 564 line(s). Calls functions:
  |-- zinit-autoload.zsh/.zinit-clear-completions
  |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
  |-- zinit-autoload.zsh/.zinit-compiled
+ |-- zinit-autoload.zsh/.zinit-delete
  |-- zinit-autoload.zsh/.zinit-help
  |-- zinit-autoload.zsh/.zinit-list-bindkeys
  |-- zinit-autoload.zsh/.zinit-list-compdef-replay
@@ -1335,6 +1339,7 @@ Called by:
 
  Script-Body
  zplugin
+ zinit-autoload.zsh/.zinit-delete
 
 zpcdclear
 ~~~~~~~~~
@@ -1393,6 +1398,7 @@ Has 1 line(s). Calls functions:
      |-- zinit-autoload.zsh/.zinit-clear-completions
      |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
      |-- zinit-autoload.zsh/.zinit-compiled
+     |-- zinit-autoload.zsh/.zinit-delete
      |-- zinit-autoload.zsh/.zinit-help
      |-- zinit-autoload.zsh/.zinit-list-bindkeys
      |-- zinit-autoload.zsh/.zinit-list-compdef-replay
@@ -1447,6 +1453,21 @@ Called by:
  @zinit-scheduler
  Script-Body
 
+colors
+~~~~~~
+
+____
+ 
+ Put standard ANSI color codes in shell parameters for easy use.
+ Note that some terminals do not support all combinations.
+____
+
+Has 117 line(s). Doesn't call other functions.
+
+Called by:
+
+ Script-Body
+
 compinit
 ~~~~~~~~
 
@@ -1464,7 +1485,7 @@ ____
  `#compdef <names ...>'
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
