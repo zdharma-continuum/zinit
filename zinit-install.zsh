@@ -393,7 +393,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         command rm -f "${REPLY:t}.sig"
                     fi
 
-                    command mkdir -p ._zinit
+                    command mkdir -p ._zinit && echo '*' > ._zinit/.gitignore
                     [[ -d ._zinit ]] || return 2
                     builtin print -r -- $url >! ._zinit/url || return 3
                     builtin print -r -- ${REPLY} >! ._zinit/is_release${count:#1} || return 4
@@ -404,7 +404,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 return 1
             }
         } elif [[ $site = cygwin ]] {
-            command mkdir -p "$local_path/._zinit"
+            command mkdir -p "$local_path/._zinit" && echo '*' > "$local_path/._zinit/.gitignore"
             [[ -d "$local_path" ]] || return 1
 
             (
