@@ -1,18 +1,11 @@
-zinit-side.zsh(1)
-=================
-:compat-mode!:
 
 NAME
-----
+
 zinit-side.zsh - a shell script
 
-SYNOPSIS
---------
 Documentation automatically generated with `zshelldoc'
 
-FUNCTIONS
----------
-
+== FUNCTIONS
  .zinit-any-colorify-as-uspl2
  .zinit-compute-ice
  .zinit-countdown
@@ -22,16 +15,13 @@ FUNCTIONS
  .zinit-store-ices
  .zinit-two-paths
 
-DETAILS
--------
+=== DETAILS
 
-Script Body
-~~~~~~~~~~~
+==== Script Body
 
 Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
-.zinit-any-colorify-as-uspl2
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-any-colorify-as-uspl2
 
 ____
  
@@ -42,6 +32,7 @@ ____
  $2 - plugin (only when $1 - i.e. user - given)
  
  $REPLY - ANSI-colorified "user/plugin" string
+
 ____
 
 Has 22 line(s). Calls functions:
@@ -74,8 +65,7 @@ Called by:
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit.zsh/.zinit-formatter-pid
 
-.zinit-compute-ice
-~~~~~~~~~~~~~~~~~~
+==== .zinit-compute-ice
 
 ____
  
@@ -98,11 +88,28 @@ ____
  $6 - name of output string parameter, to hold is-snippet 0/1-bool ("is_snippet")
  
  $REPLY - snippet directory filepath
+
 ____
 
 Has 110 line(s). Calls functions:
 
  .zinit-compute-ice
+ |-- .zinit-exists-physically-message
+ |   |-- .zinit-any-colorify-as-uspl2
+ |   |   |-- zinit.zsh/.zinit-any-to-pid
+ |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |-- .zinit-exists-physically
+ |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/.zinit-any-to-pid
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- .zinit-two-paths
+ |   |-- .zinit-first
+ |   |   |-- zinit.zsh/.zinit-any-to-pid
+ |   |   |-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |   |-- zinit.zsh/.zinit-find-other-matches
+ |   |   `-- zinit.zsh/.zinit-get-object-path
+ |   `-- zinit.zsh/.zinit-get-object-path
  |-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit.zsh/.zinit-pack-ice
 
@@ -117,14 +124,14 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status
  zinit-install.zsh/.zinit-compile-plugin
 
-.zinit-countdown
-~~~~~~~~~~~~~~~~
+==== .zinit-countdown
 
 ____
  
  Displays a countdown 5...4... etc.
  
  $REPLY - 1 if Ctrl-C is pressed, otherwise 0
+
 ____
 
 Has 20 line(s). Calls functions:
@@ -144,8 +151,7 @@ Called by:
  zinit-install.zsh/∞zinit-configure-base-hook
  zinit-install.zsh/∞zinit-make-base-hook
 
-.zinit-exists-physically
-~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-exists-physically
 
 ____
  
@@ -153,6 +159,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 8 line(s). Calls functions:
@@ -166,8 +173,7 @@ Called by:
  zinit-autoload.zsh/.zinit-create
  zinit-autoload.zsh/.zinit-update-or-status
 
-.zinit-exists-physically-message
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-exists-physically-message
 
 ____
  
@@ -176,11 +182,17 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 25 line(s). Calls functions:
 
  .zinit-exists-physically-message
+ |-- .zinit-any-colorify-as-uspl2
+ |   |-- zinit.zsh/.zinit-any-to-pid
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- .zinit-exists-physically
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- zinit.zsh/+zinit-message
  |-- zinit.zsh/.zinit-any-to-pid
  `-- zinit.zsh/.zinit-any-to-user-plugin
@@ -196,8 +208,7 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status
  zinit-install.zsh/.zinit-install-completions
 
-.zinit-first
-~~~~~~~~~~~~
+==== .zinit-first
 
 ____
  
@@ -209,6 +220,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 20 line(s). Calls functions:
@@ -226,8 +238,7 @@ Called by:
  zinit-autoload.zsh/.zinit-stress
  zinit-install.zsh/.zinit-compile-plugin
 
-.zinit-store-ices
-~~~~~~~~~~~~~~~~~
+==== .zinit-store-ices
 
 ____
  
@@ -239,6 +250,7 @@ ____
  $4 - additional keys of hash to store, empty-meaningful ices, space separated
  $5 – URL, if applicable
  $6 – mode, svn=1, 0=single file
+
 ____
 
 Has 30 line(s). Doesn't call other functions.
@@ -249,8 +261,7 @@ Called by:
  zinit-install.zsh/.zinit-download-snippet
  zinit-install.zsh/.zinit-setup-plugin-dir
 
-.zinit-two-paths
-~~~~~~~~~~~~~~~~
+==== .zinit-two-paths
 
 ____
  
@@ -259,11 +270,17 @@ ____
  further examination
  
  $REPLY - two filepaths
+
 ____
 
 Has 24 line(s). Calls functions:
 
  .zinit-two-paths
+ |-- .zinit-first
+ |   |-- zinit.zsh/.zinit-any-to-pid
+ |   |-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |-- zinit.zsh/.zinit-find-other-matches
+ |   `-- zinit.zsh/.zinit-get-object-path
  `-- zinit.zsh/.zinit-get-object-path
 
 Uses feature(s): _setopt_
