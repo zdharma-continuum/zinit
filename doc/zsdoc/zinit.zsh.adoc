@@ -185,7 +185,8 @@ Has 244 line(s). Calls functions:
  |   |-- zinit-autoload.zsh/.zinit-help
  |   |-- zinit-autoload.zsh/.zinit-list-bindkeys
  |   |-- zinit-autoload.zsh/.zinit-list-compdef-replay
- |   |-- zinit-autoload.zsh/.zinit-ls
+ |   |-- zinit-autoload.zsh/.zinit-list-plugins
+ |   |-- zinit-autoload.zsh/.zinit-list-snippets
  |   |-- zinit-autoload.zsh/.zinit-module
  |   |-- zinit-autoload.zsh/.zinit-recently
  |   |-- zinit-autoload.zsh/.zinit-search-completions
@@ -193,7 +194,6 @@ Has 244 line(s). Calls functions:
  |   |-- zinit-autoload.zsh/.zinit-show-all-reports
  |   |-- zinit-autoload.zsh/.zinit-show-completions
  |   |-- zinit-autoload.zsh/.zinit-show-debug-report
- |   |-- zinit-autoload.zsh/.zinit-show-registered-plugins
  |   |-- zinit-autoload.zsh/.zinit-show-report
  |   |-- zinit-autoload.zsh/.zinit-show-times
  |   |-- zinit-autoload.zsh/.zinit-show-zstatus
@@ -256,8 +256,8 @@ Called by:
  zinit-autoload.zsh/.zinit-confirm
  zinit-autoload.zsh/.zinit-delete
  zinit-autoload.zsh/.zinit-glance
+ zinit-autoload.zsh/.zinit-list-plugins
  zinit-autoload.zsh/.zinit-self-update
- zinit-autoload.zsh/.zinit-show-registered-plugins
  zinit-autoload.zsh/.zinit-show-zstatus
  zinit-autoload.zsh/.zinit-uninstall-completions
  zinit-autoload.zsh/.zinit-update-all-parallel
@@ -1578,7 +1578,7 @@ ____
 
 ____
 
-Has 568 line(s). Calls functions:
+Has 564 line(s). Calls functions:
 
  zinit
  |-- +zinit-message
@@ -1669,7 +1669,8 @@ Has 568 line(s). Calls functions:
  |-- zinit-autoload.zsh/.zinit-help
  |-- zinit-autoload.zsh/.zinit-list-bindkeys
  |-- zinit-autoload.zsh/.zinit-list-compdef-replay
- |-- zinit-autoload.zsh/.zinit-ls
+ |-- zinit-autoload.zsh/.zinit-list-plugins
+ |-- zinit-autoload.zsh/.zinit-list-snippets
  |-- zinit-autoload.zsh/.zinit-module
  |-- zinit-autoload.zsh/.zinit-recently
  |-- zinit-autoload.zsh/.zinit-search-completions
@@ -1677,7 +1678,6 @@ Has 568 line(s). Calls functions:
  |-- zinit-autoload.zsh/.zinit-show-all-reports
  |-- zinit-autoload.zsh/.zinit-show-completions
  |-- zinit-autoload.zsh/.zinit-show-debug-report
- |-- zinit-autoload.zsh/.zinit-show-registered-plugins
  |-- zinit-autoload.zsh/.zinit-show-report
  |-- zinit-autoload.zsh/.zinit-show-times
  |-- zinit-autoload.zsh/.zinit-show-zstatus
@@ -1831,7 +1831,8 @@ Has 1 line(s). Calls functions:
      |-- zinit-autoload.zsh/.zinit-help
      |-- zinit-autoload.zsh/.zinit-list-bindkeys
      |-- zinit-autoload.zsh/.zinit-list-compdef-replay
-     |-- zinit-autoload.zsh/.zinit-ls
+     |-- zinit-autoload.zsh/.zinit-list-plugins
+     |-- zinit-autoload.zsh/.zinit-list-snippets
      |-- zinit-autoload.zsh/.zinit-module
      |-- zinit-autoload.zsh/.zinit-recently
      |-- zinit-autoload.zsh/.zinit-search-completions
@@ -1839,7 +1840,6 @@ Has 1 line(s). Calls functions:
      |-- zinit-autoload.zsh/.zinit-show-all-reports
      |-- zinit-autoload.zsh/.zinit-show-completions
      |-- zinit-autoload.zsh/.zinit-show-debug-report
-     |-- zinit-autoload.zsh/.zinit-show-registered-plugins
      |-- zinit-autoload.zsh/.zinit-show-report
      |-- zinit-autoload.zsh/.zinit-show-times
      |-- zinit-autoload.zsh/.zinit-show-zstatus
@@ -1891,7 +1891,7 @@ ____
 
 ____
 
-Has 134 line(s). Doesn't call other functions.
+Has 120 line(s). Doesn't call other functions.
 
 Called by:
 

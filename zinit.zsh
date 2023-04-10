@@ -121,10 +121,11 @@ fpath|\
 glance|\
 help|\
 ice|\
-light|list-plugins|list-snippets|load|\
+light|load|\
 man|module|\
+plugins|\
 recall|recently|report|run|\
-self-update|snippet|srv|status|stress|\
+self-update|snippet|snippets|srv|status|stress|\
 times|\
 uncompile|unload|update|\
 version|\
@@ -2945,13 +2946,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     .zinit-list-bindkeys
                     ;;
                  (update)
-                    if (( ${+ICE[if]} )) {
-                        eval "${ICE[if]}" || return 1;
-                    }
+                    (( ${+ICE[if]} )) && { eval "${ICE[if]}" } || return 1
                     for REPLY ( ${(s.;.)ICE[has]} ) {
                         (( ${+commands[$REPLY]} )) || return 1
                     }
-
                     shift
                     .zinit-parse-opts update "$@"
                     builtin set -- "${reply[@]}"
@@ -2976,22 +2974,21 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (report)
                     if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
                         [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 4; }
-                     .zinit-show-all-reports
+                        .zinit-show-all-reports
                     else
                         .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
                     fi
                     ;;
-                (list-plugins)
-                    # Show list of loaded plugins.
-                    .zinit-show-registered-plugins "$2"
-                   ;;
-                (clist|completions)
-                    # Show installed, enabled or disabled, completions.
-                    # Detect stray and improper ones.
+                (plugins)
+                    .zinit-list-plugins "$2"
+                    ;;
+                (snippets)
+                    .zinit-list-snippets "$2"
+                    ;;
+                (completions) # Show installed, enabled or disabled, completions and detect stray and improper ones
                     .zinit-show-completions "$2"
                     ;;
-                (cclear)
-                    # Delete stray and improper completions.
+                (cclear) # Delete stray and improper completions.
                     .zinit-clear-completions
                     ;;
                 (cdisable)
@@ -3032,8 +3029,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                 (creinstall)
                     (( ${+functions[.zinit-install-completions]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                    # Installs completions for plugin. Enables them all. It's a
-                    # reinstallation, thus every obstacle gets overwritten or removed.
+                    # Installs completions for plugin. Enables them all. It is a reinstallation, thus every obstacle gets overwritten or removed.
                     [[ $2 = -[qQ] ]] && { 5=$2; shift; }
                     .zinit-install-completions "${2%%(///|//|/)}" "${3%%(///|//|/)}" 1 "${(M)4:#-[qQ]}"; ___retval=$?
                     [[ -z ${(M)4:#-[qQ]} ]] && +zinit-message "Initializing completion ({func}compinit{rst}){…}"
@@ -3106,10 +3102,6 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (version)
                     zi::version
                     ;;
-                (list-snippets)
-                    shift
-                    .zinit-ls "$@"
-                    ;;
                 (srv)
                     () { setopt localoptions extendedglob warncreateglobal
                     [[ ! -e ${ZINIT[SERVICES_DIR]}/"$2".fifo ]] && { builtin print "No such service: $2"; } ||
@@ -3125,16 +3117,16 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     .zinit-module "${@[2-correct,-1]}"; ___retval=$?
                     ;;
                  (*)
-                     if [[ -z $1 ]] {
-                         +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Missing a {cmd}subcommand "
-                         +zinit-prehelp-usage-message rst
-                     } else {
-                         +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:{rst}" \
-                                 "{apo}\`{error}$1{apo}\`{rst} "
-                         +zinit-prehelp-usage-message rst
-                     }
-                     ___retval=1
-                     ;;
+                    if [[ -z $1 ]] {
+                       +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Missing a {cmd}subcommand "
+                       +zinit-prehelp-usage-message rst
+                    } else {
+                       +zinit-message -n "{b}{u-warn}ERROR{b-warn}:{rst} Unknown subcommand{ehi}:{rst}" \
+                               "{apo}\`{error}$1{apo}\`{rst} "
+                       +zinit-prehelp-usage-message rst
+                    }
+                    ___retval=1
+                    ;;
              esac
              ;;
     esac
