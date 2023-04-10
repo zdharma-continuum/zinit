@@ -199,6 +199,11 @@
   local fd="$ZBIN/fd"; assert "$fd" is_executable
   $fd version; assert $state equals 0
 }
+@test 'fnm' { # Fast and simple Node.js version manager, built in Rust
+  run zinit for @Schniz/fnm; assert $state equals 0
+  local fnm="$ZBIN/fnm"; assert "$fnm" is_executable
+  $fnm --version; assert $state equals 0
+}
 @test 'fogg' { # Manage Infrastructure as Code with less pain
   run zinit for @chanzuckerberg/fogg; assert $state equals 0
   local fogg="$ZBIN/fogg"; assert "$fogg" is_executable
