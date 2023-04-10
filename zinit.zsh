@@ -121,7 +121,7 @@ fpath|\
 glance|\
 help|\
 ice|\
-light|list|load|loaded|ls|\
+light|list-plugins|list-snippets|load|\
 man|module|\
 recall|recently|report|run|\
 self-update|snippet|srv|status|stress|\
@@ -2981,10 +2981,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                         .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
                     fi
                     ;;
-                (loaded|list)
+                (list-plugins)
                     # Show list of loaded plugins.
                     .zinit-show-registered-plugins "$2"
-                    ;;
+                   ;;
                 (clist|completions)
                     # Show installed, enabled or disabled, completions.
                     # Detect stray and improper ones.
@@ -3106,7 +3106,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (version)
                     zi::version
                     ;;
-                (ls)
+                (list-snippets)
                     shift
                     .zinit-ls "$@"
                     ;;

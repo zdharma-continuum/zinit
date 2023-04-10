@@ -257,6 +257,7 @@ Called by:
  zinit-autoload.zsh/.zinit-delete
  zinit-autoload.zsh/.zinit-glance
  zinit-autoload.zsh/.zinit-self-update
+ zinit-autoload.zsh/.zinit-show-registered-plugins
  zinit-autoload.zsh/.zinit-show-zstatus
  zinit-autoload.zsh/.zinit-uninstall-completions
  zinit-autoload.zsh/.zinit-update-all-parallel

@@ -445,7 +445,7 @@ ____
 
 ____
 
-Has 107 line(s). Calls functions:
+Has 111 line(s). Calls functions:
 
  .zinit-delete
  |-- .zinit-prompt
@@ -1161,10 +1161,10 @@ ____
 
 ____
 
-Has 22 line(s). Calls functions:
+Has 21 line(s). Calls functions:
 
  .zinit-show-registered-plugins
- `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 

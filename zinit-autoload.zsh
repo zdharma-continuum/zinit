@@ -770,27 +770,25 @@ ZINIT[EXTENDED_GLOB]=""
 .zinit-show-registered-plugins() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob warncreateglobal typesetsilent noshortloops
-
     typeset -a filtered
     local keyword="$1"
-
-    keyword="${keyword## ##}"
-    keyword="${keyword%% ##}"
-    if [[ -n "$keyword" ]]; then
-        builtin print "Installed plugins matching ${ZINIT[col-info]}$keyword${ZINIT[col-rst]}:"
-        filtered=( "${(M)ZINIT_REGISTERED_PLUGINS[@]:#*$keyword*}" )
-    else
-        filtered=( "${ZINIT_REGISTERED_PLUGINS[@]}" )
-    fi
-
-    local i
-    for i in "${filtered[@]}"; do
-        [[ "$i" = "_local/zinit" ]] && continue
-        .zinit-any-colorify-as-uspl2 "$i"
-        # Mark light loads
-        [[ "${ZINIT[STATES__$i]}" = "1" ]] && REPLY="$REPLY ${ZINIT[col-info]}*${ZINIT[col-rst]}"
-        builtin print -r -- "$REPLY"
-    done
+     keyword="${keyword## ##}"
+     keyword="${keyword%% ##}"
+     if [[ -n "$keyword" ]]; then
+         +zinit-message "{i} Installed plugins matching {info}$keyword{rst}:"
+         filtered=( "${(M)ZINIT[@]:#STATES__*$keyword*}" )
+     else
+         filtered=(${${(M)${(k)ZINIT[@]}:##STATES__*}//[A-Z]*__/})
+     fi
+     local i
+     +zinit-message '{u}{info}Registered plugins{rst}'
+     for i in "${(o)filtered[@]}"; do
+         [[ "$i" = "local/zinit" ]] && continue
+         local is_loaded='{error}U'
+         (( "ZINIT[STATES__$i]" )) && is_loaded="{happy}L"
+         +zinit-message -C2 -- $is_loaded{rst} $i
+     done
+     +zinit-message -- '{nl}{note}Note:{rst} Loaded plugins are denoted by a {num}*'
 } # ]]]
 # FUNCTION: .zinit-unload [[[
 # 1. call the zsh plugin's standard *_plugin_unload function
@@ -2766,6 +2764,9 @@ ZINIT[EXTENDED_GLOB]=""
         if (( $#o_yes )) || ( .zinit-prompt "Delete all plugins and snippets (${#all_installed} total)"); then
             command rm -rf -- ${(@)all_installed}
             command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N)
+            for f in ${(M)${(k)ZINIT[@]}:##STATES__*~*local/zinit*}; do
+              builtin unset "ZINIT[$f]"
+            done
             local rc=$?
             +zinit-message "{m} Deleted all completed with return code {num}${rc}{rst}"
             return $rc
@@ -2801,6 +2802,7 @@ ZINIT[EXTENDED_GLOB]=""
                 }
                 command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N) # delete files
                 command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N) # delete broken symlins
+                builtin unset "ZINIT[STATES__${ICE2[id-as]}]" || builtin unset "ZINIT[STATES__${ICE2[teleid]}]"
                 +zinit-message "{m} Uninstalled $i"
             else
                 +zinit-message "{w} No available plugin or snippet with the name '$i'"
