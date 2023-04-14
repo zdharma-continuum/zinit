@@ -1,0 +1,15 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+jobs:
+  commit:
+    uses: zdharma-continuum/.github/.github/workflows/commit-job.yml@main
+  lint:
+    uses: zdharma-continuum/.github/.github/workflows/lint-job.yml@main

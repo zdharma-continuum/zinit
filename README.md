@@ -75,27 +75,27 @@ sites. Its characteristics are:
    (i.e., the shell will start up to **5** times faster!). Check out a speed comparison with other popular plugin
    managers [here](https://github.com/zdharma-continuum/pm-perf-test).
 
-2. The plugin manager gives **reports** from plugin loadings describing what **aliases**, functions, **bindkeys**, Zle
+1. The plugin manager gives **reports** from plugin loadings describing what **aliases**, functions, **bindkeys**, Zle
    widgets, zstyles, **completions**, variables, `PATH` and `FPATH` elements a plugin has set up. This allows one to
    quickly familiarize oneself with a new plugin and provides rich and easy-to-digest information which might be helpful
    on various occasions.
 
-3. Supported is the unloading of plugin and ability to list, (un)install and **selectively disable**, **enable**
+1. Supported is the unloading of plugin and ability to list, (un)install and **selectively disable**, **enable**
    plugin's completions.
 
-4. The plugin manager supports loading plugins and libraries from Oh My Zsh or Prezto. However, the implementation isn't
+1. The plugin manager supports loading plugins and libraries from Oh My Zsh or Prezto. However, the implementation isn't
    framework-specific and doesn't bloat the plugin manager with such code (more on this topic can be found on the Wiki,
    in the [Introduction](https://zdharma-continuum.github.io/zinit/wiki/INTRODUCTION/#oh_my_zsh_prezto)).
 
-5. The system does not use `$FPATH`, loading multiple plugins doesn't clutter `$FPATH` with the same number of entries
+1. The system does not use `$FPATH`, loading multiple plugins doesn't clutter `$FPATH` with the same number of entries
    (e.g. `10`, `15` or more). Code is immune to `KSH_ARRAYS` and other options typically causing compatibility problems.
 
-6. Zinit supports special, dedicated **packages** that offload the user from providing long and complex commands. See
+1. Zinit supports special, dedicated **packages** that offload the user from providing long and complex commands. See
    the [zinit-packages repository](https://github.com/zdharma-continuum/zinit-packages) for a growing, complete list of
    Zinit packages and the [Wiki page](https://zdharma-continuum.github.io/zinit/wiki/Zinit-Packages/) for an article
    about the feature.
 
-7. Also, specialized Zinit extensions — called **annexes** — have the ability to extend the plugin manager with new
+1. Also, specialized Zinit extensions — called **annexes** — have the ability to extend the plugin manager with new
    commands, URL-preprocessors (used by e.g.:
    [zinit-annex-readurl](https://github.com/zdharma-continuum/zinit-annex-readurl) annex), post-install and post-update
    hooks, and much more. See the [zdharma-continuum](https://github.com/zdharma-continuum) organization for a growing,
@@ -403,7 +403,7 @@ zi snippet OMZP::ruby
 ### Use `zi ice svn` if a plugin/snippet requires an entire subdirectory<a name="use-zi-ice-svn-if-a-pluginsnippet-requires-an-entire-subdirectory"></a>
 
 1. [gitfast](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/gitfast)
-2. [osx](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/osx)
+1. [osx](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/osx)
 
 ```zsh
 zi ice svn
@@ -416,7 +416,7 @@ zi snippet OMZP::osx
 ### Use `zi ice as'completion'` to directly add single file completion snippets<a name="use-zi-ice-ascompletion-to-directly-add-single-file-completion-snippets"></a>
 
 1. [docker](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/docker)
-2. [fd](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fd)
+1. [fd](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/fd)
 
 ```zsh
 zi ice as"completion"
