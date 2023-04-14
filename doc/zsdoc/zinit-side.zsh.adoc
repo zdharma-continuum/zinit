@@ -54,7 +54,6 @@ Called by:
  zinit-autoload.zsh/.zinit-recently
  zinit-autoload.zsh/.zinit-search-completions
  zinit-autoload.zsh/.zinit-show-completions
- zinit-autoload.zsh/.zinit-show-registered-plugins
  zinit-autoload.zsh/.zinit-show-times
  zinit-autoload.zsh/.zinit-uncompile-plugin
  zinit-autoload.zsh/.zinit-unload

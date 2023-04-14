@@ -41,7 +41,8 @@ Documentation automatically generated with `zshelldoc'
  .zinit-help
  .zinit-list-bindkeys
  .zinit-list-compdef-replay
- .zinit-ls
+ .zinit-list-plugins
+ .zinit-list-snippets
  .zinit-module
  .zinit-pager
  .zinit-prepare-readlink
@@ -56,7 +57,6 @@ Documentation automatically generated with `zshelldoc'
  .zinit-show-all-reports
  .zinit-show-completions
  .zinit-show-debug-report
- .zinit-show-registered-plugins
  .zinit-show-report
  .zinit-show-times
  .zinit-show-zstatus
@@ -445,7 +445,7 @@ ____
 
 ____
 
-Has 107 line(s). Calls functions:
+Has 111 line(s). Calls functions:
 
  .zinit-delete
  |-- .zinit-prompt
@@ -831,7 +831,26 @@ Called by:
 
  zinit.zsh/zinit
 
-==== .zinit-ls
+==== .zinit-list-plugins
+
+____
+ 
+ Lists loaded plugins (subcommands list, lodaded)
+
+____
+
+Has 21 line(s). Calls functions:
+
+ .zinit-list-plugins
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit.zsh/zinit
+
+==== .zinit-list-snippets
 
 Has 20 line(s). Doesn't call other functions.
 
@@ -1148,25 +1167,6 @@ Has 1 line(s). Calls functions:
      |   `-- .zinit-save-set-extendedglob
      |-- .zinit-format-parameter
      `-- zinit.zsh/.zinit-any-to-user-plugin
-
-Called by:
-
- zinit.zsh/zinit
-
-==== .zinit-show-registered-plugins
-
-____
- 
- Lists loaded plugins (subcommands list, lodaded)
-
-____
-
-Has 22 line(s). Calls functions:
-
- .zinit-show-registered-plugins
- `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
-
-Uses feature(s): _setopt_
 
 Called by:
 
