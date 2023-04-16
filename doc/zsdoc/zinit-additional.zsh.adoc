@@ -1,18 +1,11 @@
-zinit-additional.zsh(1)
-=======================
-:compat-mode!:
 
 NAME
-----
+
 zinit-additional.zsh - a shell script
 
-SYNOPSIS
---------
 Documentation automatically generated with `zshelldoc'
 
-FUNCTIONS
----------
-
+== FUNCTIONS
  .zinit-clear-debug-report
  .zinit-debug-start
  .zinit-debug-stop
@@ -21,20 +14,18 @@ FUNCTIONS
  .zinit-wrap-track-functions
  :zinit-tmp-subst-source
 
-DETAILS
--------
+=== DETAILS
 
-Script Body
-~~~~~~~~~~~
+==== Script Body
 
 Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
-.zinit-clear-debug-report
-~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-clear-debug-report
 
 ____
  
  Forgets dtrace repport gathered up to this moment.
+
 ____
 
 Has 1 line(s). Calls functions:
@@ -47,12 +38,12 @@ Called by:
  zinit-autoload.zsh/.zinit-unload
  zinit.zsh/zinit
 
-.zinit-debug-start
-~~~~~~~~~~~~~~~~~~
+==== .zinit-debug-start
 
 ____
  
  Starts Dtrace, i.e. session tracking for changes in Zsh state.
+
 ____
 
 Has 9 line(s). Calls functions:
@@ -66,12 +57,12 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-debug-stop
-~~~~~~~~~~~~~~~~~
+==== .zinit-debug-stop
 
 ____
  
  Stops Dtrace (i.e., session tracking for changes in Zsh state).
+
 ____
 
 Has 3 line(s). Calls functions:
@@ -84,12 +75,12 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-debug-unload
-~~~~~~~~~~~~~~~~~~~
+==== .zinit-debug-unload
 
 ____
  
  Reverts changes detected by dtrace run.
+
 ____
 
 Has 6 line(s). Calls functions:
@@ -104,8 +95,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-service
-~~~~~~~~~~~~~~
+==== .zinit-service
 
 ____
  
@@ -114,6 +104,7 @@ ____
  $1 - type "p" or "s" (plugin or snippet)
  $2 - mode - for plugin (light or load)
  $3 - id - URL or plugin ID or alias name (from id-as'')
+
 ____
 
 Has 37 line(s). Calls functions:
@@ -126,8 +117,7 @@ Uses feature(s): _kill_, _read_, _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-wrap-track-functions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-wrap-track-functions
 
 Has 19 line(s). Doesn't call other functions.
 
@@ -135,8 +125,7 @@ Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-:zinit-tmp-subst-source
-~~~~~~~~~~~~~~~~~~~~~~~
+==== :zinit-tmp-subst-source
 
 Has 25 line(s). Calls functions:
 

@@ -816,7 +816,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 ### Completions<a name="completions-1"></a>
 
 | Command                                            | Description                                                                                                                                         |
-| :------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `cclear`                                           | Clear stray and improper completions.                                                                                                               |
 | `cdclear [-q]`                                     | Clear compdef replay list. `-q` – quiet.                                                                                                            |
 | `cdisable {cname}`                                 | Disable completion `cname`.                                                                                                                         |
@@ -832,7 +832,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 ### Tracking of the Active Session<a name="tracking-of-the-active-session"></a>
 
 | Command          | Description                                       |
-| :--------------- | ------------------------------------------------- |
+| ---------------- | ------------------------------------------------- |
 | `dclear`         | Clear report of what was going on in session.     |
 | `dstop`          | Stop investigating what's going on in session.    |
 | `dreport`        | Report what was going on in session.              |
@@ -841,21 +841,21 @@ Following commands are passed to `zinit ...` to obtain described effects.
 
 ### Reports and Statistics<a name="reports-and-statistics"></a>
 
-| Command                            | Description                                                                                                                                                                                         |
-| :--------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ls`                               | List snippets in formatted and colorized manner. Requires `tree` program.                                                                                                                           |
-| `bindkeys`                         | Lists bindkeys set up by each plugin.                                                                                                                                                               |
-| `zstatus`                          | Overall Zinit status.                                                                                                                                                                               |
-| `report {plg-spec}`                | Show plugin report. `--all` – do it for all plugins.                                                                                                                                                |
-| `status {plg-spec}`                | Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets.                                                                                                      |
-| `recently [time-spec]`             | Show plugins that changed recently, argument is e.g. 1 month 2 days.                                                                                                                                |
-| `times [-s] [-m] [-a]`             | Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds. `-m` – show plugin loading moments. `-a` - show both plugin load times and loading moments |
-| `loaded [keyword], list [keyword]` | Show what plugins are loaded (filter with 'keyword').                                                                                                                                               |
+| Command                  | Description                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bindkeys`               | Lists bindkeys set up by each plugin.                                                                                                                    |
+| `list-plugins [keyword]` | Show what plugins are loaded (filter with 'keyword').                                                                                                    |
+| `list-snippets`          | List snippets in formatted and colorized manner. Requires `tree` program.                                                                                |
+| `recently [time-spec]`   | Show plugins that changed recently, argument is e.g. 1 month 2 days.                                                                                     |
+| `report {plg-spec}`      | Show plugin report. `--all` – do it for all plugins.                                                                                                     |
+| `status {plg-spec}`      | Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets.                                                           |
+| `zstatus`                | Display brief statistics for your Zinit installation.                                                                                                    |
+| `times [-a] [-m] [-s]`   | Print load times for each plugin. `-s` – Times are printed in seconds. `-m` – Show plugin loading moments. `-a` - Times and loading moments are printed. |
 
 ### Compiling<a name="compiling"></a>
 
 | Command                | Description                                                         |
-| :--------------------- | ------------------------------------------------------------------- |
+| ---------------------- | ------------------------------------------------------------------- |
 | `compiled`             | List plugins that are compiled.                                     |
 | `compile {plg-spec}`   | Compile plugin. `--all` – compile all plugins.                      |
 | `uncompile {plg-spec}` | Remove compiled version of plugin. `--all` – do it for all plugins. |
@@ -863,7 +863,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 ### Other<a name="other"></a>
 
 | Command                                                          | Description                                                                                                                                                                                                                                                                                                                           |
-| :--------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `module`                                                         | Manage binary Zsh module shipped with Zinit, see `zinit module help`.                                                                                                                                                                                                                                                                 |
 | `self-update`                                                    | Updates and compiles Zinit.                                                                                                                                                                                                                                                                                                           |
 | `cd {plg-spec}`                                                  | Cd into plugin's directory. Also support snippets if fed with URL.                                                                                                                                                                                                                                                                    |
