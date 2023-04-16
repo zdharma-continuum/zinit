@@ -209,6 +209,11 @@
   local fogg="$ZBIN/fogg"; assert "$fogg" is_executable
   $fogg version; assert $state equals 0
 }
+@test 'fq' { # jq for binary formats - tool, language and decoders for working with binary and text formats
+  run zinit for @wader/fq; assert $state equals 0
+  local fq="$ZBIN/fq"; assert "$fq" is_executable
+  $fq --version; assert $state equals 0
+}
 @test 'fx' { # Terminal JSON viewer
   run zinit lbin'!* -> fx' for @antonmedv/fx; assert $state equals 0
   local fx="$ZBIN/fx"; assert "$fx" is_executable
