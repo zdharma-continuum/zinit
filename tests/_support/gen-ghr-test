@@ -1,0 +1,50 @@
+#!/usr/bin/env zsh
+#
+# Easily generate gh-r Zunit tests.
+#
+# Usage:
+#   gen-ghr-test [<user/repository>...]
+#
+# Note: Tests might require slight adjustments to the lbin or id-as ice
+#
+(){
+  local flag_help
+  local -a usage=(
+      "gen-ghr-test [-h|--help]"
+      "gen-ghr-test [<project...>]"
+  )
+
+  # -D pulls parsed flags out of $@
+  # -E allows flags/args and positionals to be mixed, which we don't want in this example
+  # -F says fail if we find a flag that wasn't defined
+  # -M allows us to map option aliases (ie: h=flag_help -help=h)
+  # -K allows us to set default values without zparseopts overwriting them
+  # Remember that the first dash is automatically handled, so long options are -opt, not --opt
+
+  zmodload zsh/zutil
+  zparseopts -D -F -K -- \
+      {h,-help}=flag_help \
+      || return 1
+
+  [[ -z "$flag_help" ]] || { print -l $usage; return 0 }
+
+  (( !$# )) && {
+      builtin print -P -- "%F{red}Error%f gen-ghr-test requires one or more arguments"
+      return 1
+  }
+
+  local repo description bin_name
+  for repo in $@; do
+      bin_name="${repo:t}"
+      description="$(gh search repos "${repo}" --limit 1 --json description -q '.[].[]')"
+      cat <<- EOF
+@test '${bin_name}' { # ${description}
+  run zinit for @${repo}; assert \$state equals 0
+  local $bin_name="\$ZBIN/${bin_name}"; assert "\$${bin_name}" is_executable
+  run "\$${bin_name}" --version; assert \$state equals 0
+}
+EOF
+  done
+} $@
+
+# vim: set expandtab filetype=zsh shiftwidth=2 softtabstop=2 tabstop=2:

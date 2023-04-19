@@ -12,23 +12,21 @@ on:
     branches:
       - main
     paths:
-      - 'tests/**'
-      - 'share/**'
-      - 'zinit*.zsh'
-      - '.github/workflows/tests.yaml'
+      - "tests/**"
+      - "share/**"
+      - "zinit*.zsh"
+      - ".github/workflows/tests.yaml"
   push:
     branches:
       - main
   workflow_dispatch:
 
 jobs:
-
   zunit-tests:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['macos-latest','ubuntu-latest']
+        os: ["macos-latest", "ubuntu-latest"]
       fail-fast: false
 
     steps:
@@ -57,6 +55,9 @@ jobs:
           mkdir -p "$HOME/.local/bin" && echo "$HOME/.local/bin" >> $GITHUB_PATH
           git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           zsh -c -l './build.zsh' && sudo chmod u+x ./zunit && cp ./zunit "$HOME/.local/bin/"
+
+      # - name: disable secssessment system policy security
+      #   run: sudo spctl --master-disable
 
       - name: "annexes"
         run: zunit run tests/annexes.zunit
