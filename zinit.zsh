@@ -2946,7 +2946,9 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     .zinit-list-bindkeys
                     ;;
                  (update)
-                    (( ${+ICE[if]} )) && { eval "${ICE[if]}" } || return 1
+                    if (( ${+ICE[if]} )) {
+                        eval "${ICE[if]}" || return 1;
+                    }
                     for REPLY ( ${(s.;.)ICE[has]} ) {
                         (( ${+commands[$REPLY]} )) || return 1
                     }
