@@ -1578,7 +1578,7 @@ ____
 
 ____
 
-Has 564 line(s). Calls functions:
+Has 566 line(s). Calls functions:
 
  zinit
  |-- +zinit-message
@@ -1891,7 +1891,7 @@ ____
 
 ____
 
-Has 120 line(s). Doesn't call other functions.
+Has 134 line(s). Doesn't call other functions.
 
 Called by:
 
