@@ -1698,6 +1698,17 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks() {
+    # Call make uninstall if it's available
+    local make_path=$5/Makefile mfest_path=$5/_build-zinit/install_manifest.txt
+    [[ -f $make_path ]] && \
+        grep '^uninstall:' $make_path &>/dev/null && \
+        { +zinit-message {pre}Running {cmd}make uninstall{pre}{…}
+            make -C "$make_path:h" uninstall;}
+    [[ -f $mfest_path ]] && \
+        { +zinit-message {pre}Removing files from:{file} \
+            $mfest_path:t{pre}{…}
+            command xargs rm -f <$mfest_path
+        }
     if [[ -n ${ICE[atdelete]} ]]; then
         .zinit-countdown "atdelete" && ( (( ${+ICE[nocd]} == 0 )) && \
                 { builtin cd -q "$5" && eval "${ICE[atdelete]}"; ((1)); } || \
