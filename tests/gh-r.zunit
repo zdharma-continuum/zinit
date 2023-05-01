@@ -307,7 +307,7 @@
   $git_chglog --version; assert $state equals 0
 }
 @test 'git-mkver' { # Automatic Semantic Versioning for git based software development
-  run zinit for @idc101/git-mkver; assert $state equals 0
+  run zinit ver'v1.2.2' for @idc101/git-mkver; assert $state equals 0
   local git_mkver="$ZBIN/git-mkver"; assert "$git_mkver" is_executable
   # use git-mkver info because --version exits with 130?
   $git_mkver info; assert $state equals 0
