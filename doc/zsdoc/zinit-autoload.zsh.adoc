@@ -340,7 +340,7 @@ Has 23 line(s). Calls functions:
 Called by:
 
  .zinit-unload
- zinit-additional.zsh/.zinit-clear-debug-report
+ zinit-additional.zsh/.zinit-debug-clear
 
 ==== .zinit-compile-uncompile-all
 
@@ -796,7 +796,7 @@ ____
 
 ____
 
-Has 67 line(s). Doesn't call other functions.
+Has 64 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -1168,9 +1168,7 @@ Has 1 line(s). Calls functions:
      |-- .zinit-format-parameter
      `-- zinit.zsh/.zinit-any-to-user-plugin
 
-Called by:
-
- zinit.zsh/zinit
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== .zinit-show-report
 
@@ -1212,6 +1210,7 @@ Called by:
 
  .zinit-show-all-reports
  .zinit-show-debug-report
+ zinit-additional.zsh/.zinit-debug-report
  zinit.zsh/zinit
 
 ==== .zinit-show-times
@@ -1359,7 +1358,7 @@ ____
 
 ____
 
-Has 386 line(s). Calls functions:
+Has 385 line(s). Calls functions:
 
  .zinit-unload
  |-- .zinit-clear-report-for
@@ -1377,15 +1376,16 @@ Has 386 line(s). Calls functions:
  |-- .zinit-save-set-extendedglob
  |-- .zinit-unregister-plugin
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
- |-- zinit-additional.zsh/.zinit-clear-debug-report
+ |-- zinit-additional.zsh/.zinit-debug-clear
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
- zinit-additional.zsh/.zinit-debug-unload
+ zinit-additional.zsh/.zinit-debug-revert
  zinit.zsh/.zinit-run-task
  zinit.zsh/zinit
 
