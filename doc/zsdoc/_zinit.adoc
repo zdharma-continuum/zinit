@@ -1,0 +1,451 @@
+_zinit(1)
+=========
+:compat-mode!:
+
+NAME
+----
+_zinit - a shell script
+
+SYNOPSIS
+--------
+Documentation automatically generated with `zshelldoc'
+
+FUNCTIONS
+---------
+
+ __zinit_commands
+ __zinit_completion_caching_policy
+ __zinit_installed
+ __zinit_installed_plugins
+ __zinit_installed_snippets
+ __zinit_list_aliases
+ _zinit
+ _zinit_add_fpath
+ _zinit_bindkeys
+ _zinit_cclear
+ _zinit_cd
+ _zinit_cdclear
+ _zinit_cdisable
+ _zinit_cdlist
+ _zinit_cdreplay
+ _zinit_cenable
+ _zinit_changes
+ _zinit_clist
+ _zinit_compile
+ _zinit_compiled
+ _zinit_compinit
+ _zinit_completions
+ _zinit_create
+ _zinit_creinstall
+ _zinit_csearch
+ _zinit_cunistall
+ _zinit_dclear
+ _zinit_delete
+ _zinit_dreport
+ _zinit_dstart
+ _zinit_dstop
+ _zinit_dtrace
+ _zinit_dunload
+ _zinit_edit
+ _zinit_env_whitelist
+ _zinit_glance
+ _zinit_list
+ _zinit_load
+ _zinit_loaded
+ _zinit_man
+ _zinit_module
+ _zinit_recall
+ _zinit_recently
+ _zinit_report
+ _zinit_run
+ _zinit_snippet
+ _zinit_status
+ _zinit_stress
+ _zinit_times
+ _zinit_uncompile
+ _zinit_unload
+ _zinit_update
+
+DETAILS
+-------
+
+Script Body
+~~~~~~~~~~~
+
+Has 3 line(s). Calls functions:
+
+ Script-Body
+ `-- _zinit
+     `-- __zinit_commands
+
+__zinit_commands
+~~~~~~~~~~~~~~~~
+
+Has 55 line(s). Doesn't call other functions.
+
+Called by:
+
+ _zinit
+
+__zinit_completion_caching_policy
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Has 4 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zinit_installed
+~~~~~~~~~~~~~~~~~
+
+Has 3 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zinit_installed_plugins
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Has 8 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zinit_installed_snippets
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Has 6 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+__zinit_list_aliases
+~~~~~~~~~~~~~~~~~~~~
+
+Has 3 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit
+~~~~~~
+
+Has 23 line(s). Calls functions:
+
+ _zinit
+ `-- __zinit_commands
+
+Called by:
+
+ Script-Body
+
+_zinit_add_fpath
+~~~~~~~~~~~~~~~~
+
+Has 2 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_bindkeys
+~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cclear
+~~~~~~~~~~~~~
+
+Has 4 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cd
+~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cdclear
+~~~~~~~~~~~~~~
+
+Has 4 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cdisable
+~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cdlist
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cdreplay
+~~~~~~~~~~~~~~~
+
+Has 4 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cenable
+~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_changes
+~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_clist
+~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_compile
+~~~~~~~~~~~~~~
+
+Has 3 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_compiled
+~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_compinit
+~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_completions
+~~~~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_create
+~~~~~~~~~~~~~
+
+Has 2 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_creinstall
+~~~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_csearch
+~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_cunistall
+~~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_dclear
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_delete
+~~~~~~~~~~~~~
+
+Has 8 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_dreport
+~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_dstart
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_dstop
+~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_dtrace
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_dunload
+~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_edit
+~~~~~~~~~~~
+
+Has 3 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_env_whitelist
+~~~~~~~~~~~~~~~~~~~~
+
+Has 4 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_glance
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_list
+~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_load
+~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_loaded
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_man
+~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_module
+~~~~~~~~~~~~~
+
+Has 2 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_recall
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_recently
+~~~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_report
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_run
+~~~~~~~~~~
+
+Has 3 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_snippet
+~~~~~~~~~~~~~~
+
+Has 5 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_status
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_stress
+~~~~~~~~~~~~~
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_times
+~~~~~~~~~~~~
+
+Has 6 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_uncompile
+~~~~~~~~~~~~~~~~
+
+Has 3 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_unload
+~~~~~~~~~~~~~
+
+Has 4 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+_zinit_update
+~~~~~~~~~~~~~
+
+Has 10 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+

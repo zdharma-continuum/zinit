@@ -357,8 +357,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ $site = */releases ]] {
             local tag_version=${ICE[ver]}
             if [[ -z $tag_version ]]; then
-                tag_version="$( { .zinit-download-file-stdout $site/latest || .zinit-download-file-stdout $site/latest 1; } 2>/dev/null | \
-                                  command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
+                tag_version="$({.zinit-download-file-stdout $site/latest || .zinit-download-file-stdout $site/latest 1;} 2>/dev/null | command grep -i -m 1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+')"
                 tag_version=${tag_version##*/}
             fi
             local url=$site/expanded_assets/$tag_version
@@ -394,7 +393,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         command rm -f "${REPLY:t}.sig"
                     fi
 
-                    command mkdir -p ._zinit
+                    command mkdir -p ._zinit && echo '*' > ._zinit/.gitignore
                     [[ -d ._zinit ]] || return 2
                     builtin print -r -- $url >! ._zinit/url || return 3
                     builtin print -r -- ${REPLY} >! ._zinit/is_release${count:#1} || return 4
@@ -405,7 +404,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 return 1
             }
         } elif [[ $site = cygwin ]] {
-            command mkdir -p "$local_path/._zinit"
+            command mkdir -p "$local_path/._zinit" && echo '*' > "$local_path/._zinit/.gitignore"
             [[ -d "$local_path" ]] || return 1
 
             (
@@ -563,7 +562,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # Symlink completions if they are not already there
     # either as completions (_fname) or as backups (fname)
     # OR - if its a reinstall
-    for c in "${completions[@]}"; do
+    for c in "${completions[@]:A}"; do
         cfile="${c:t}"
         bkpfile="${cfile#_}"
         if [[ ( -z ${already_symlinked[(r)*/$cfile]} || $reinstall = 1 ) &&
@@ -1484,7 +1483,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 .zi::get-architecture () {
   emulate -LR zsh
   setopt extendedglob noshortloops nowarncreateglobal rcquotes typesetsilent
-  local _arch="$(arch)" _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
+  local _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
   case "$_os" in
     (Darwin)
       _sys='(apple|darwin|apple-darwin|dmg|mac((-|)os|)|os(-|64|)x)'
@@ -1495,9 +1494,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       ;;
     (Linux)
       if [[ -n /lib/*musl*(#qN) ]] || (( ${+commands[musl-gcc]} )); then
-        _sys='((unknown-|)linux-(gnu|musl))'
+        _sys='(linux[\-\_])*~^*((gnu|musl)[\-\_\.])'
       else
-        _sys="(unknown-|)linux-gnu"
+        _sys='(linux[\-\_])*~^*(gnu[\-\_\.])'
       fi
       ;;
     (MINGW* | MSYS* | CYGWIN* | Windows_NT)
@@ -1548,7 +1547,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   else
     local url=https://$urlpart
   fi
-  init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
+  init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -i -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
   init_list=(${init_list[@]#href=?})
   bpicks=(${(s.;.)ICE[bpick]})
   [[ -z $bpicks ]] && bpicks=("")
@@ -1567,8 +1566,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     for part in "${parts[@]}"; do
-      if (( $#list > 1 )) { filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ) }
-      # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
+      if (( $#list > 1 )); then
+        filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+        # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
+      else
+        break
+      fi
     done
 
     if (( $#list > 1 )) { filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ); }

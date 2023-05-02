@@ -12,23 +12,21 @@ on:
     branches:
       - main
     paths:
-      - 'tests/**'
-      - 'share/**'
-      - 'zinit*.zsh'
-      - '.github/workflows/tests.yaml'
+      - "tests/**"
+      - "share/**"
+      - "zinit*.zsh"
+      - ".github/workflows/tests.yaml"
   push:
     branches:
       - main
   workflow_dispatch:
 
 jobs:
-
   zunit-tests:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['macos-latest','ubuntu-latest']
+        os: ["macos-latest", "ubuntu-latest"]
       fail-fast: false
 
     steps:
@@ -38,17 +36,12 @@ jobs:
           fetch-depth: 0
 
       - name: install homebrew
-        id: set-up-homebrew
+        id: setup-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: "install musl"
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update \
-          && sudo apt-get install \
-            build-essential curl file gcc gcc-multilib glibc-source \
-            libc6 libc6-dev \
-            musl musl-dev musl-tools unzip zsh
+      # - name: "install musl"
+      #   if: runner.os == 'Linux'
+      #   run: sudo apt-get install build-essential curl file gcc gcc-multilib glibc-source libc6 libc6-dev unzip xz-utils zsh
 
       - name: "install dependencies"
         id: install-deps
@@ -63,8 +56,14 @@ jobs:
           git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           zsh -c -l './build.zsh' && sudo chmod u+x ./zunit && cp ./zunit "$HOME/.local/bin/"
 
+      # - name: disable secssessment system policy security
+      #   run: sudo spctl --master-disable
+
       - name: "annexes"
         run: zunit run tests/annexes.zunit
+
+      - name: "commands"
+        run: zunit run tests/commands.zunit
 
       - name: "gh-r"
         run: zunit run --fail-fast --verbose tests/gh-r.zunit

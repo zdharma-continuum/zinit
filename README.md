@@ -133,8 +133,8 @@ In your `.zshrc`, add the following snippet
 
 ```zsh
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-mkdir -p "$(dirname $ZINIT_HOME)"
-git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
+[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
 source "${ZINIT_HOME}/zinit.zsh"
 ```
 
@@ -210,9 +210,12 @@ zinit ice pick"async.zsh" src"pure.zsh" # with zsh-async library that's bundled 
 zinit light sindresorhus/pure
 
 # Load starship theme
-zinit ice as"command" from"gh-r" \ # `starship` binary as command, from github release
-          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \ # starship setup at clone(create init.zsh, completion)
-          atpull"%atclone" src"init.zsh" # pull behavior same as clone, source init.zsh
+# line 1: `starship` binary as command, from github release
+# line 2: starship setup at clone(create init.zsh, completion)
+# line 3: pull behavior same as clone, source init.zsh
+zinit ice as"command" from"gh-r" \
+          atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
+          atpull"%atclone" src"init.zsh"
 zinit light starship/starship
 ```
 
@@ -814,7 +817,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 ### Completions<a name="completions-1"></a>
 
 | Command                                            | Description                                                                                                                                         |
-| :------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `cclear`                                           | Clear stray and improper completions.                                                                                                               |
 | `cdclear [-q]`                                     | Clear compdef replay list. `-q` – quiet.                                                                                                            |
 | `cdisable {cname}`                                 | Disable completion `cname`.                                                                                                                         |
@@ -830,7 +833,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 ### Tracking of the Active Session<a name="tracking-of-the-active-session"></a>
 
 | Command          | Description                                       |
-| :--------------- | ------------------------------------------------- |
+| ---------------- | ------------------------------------------------- |
 | `dclear`         | Clear report of what was going on in session.     |
 | `dstop`          | Stop investigating what's going on in session.    |
 | `dreport`        | Report what was going on in session.              |
@@ -839,21 +842,21 @@ Following commands are passed to `zinit ...` to obtain described effects.
 
 ### Reports and Statistics<a name="reports-and-statistics"></a>
 
-| Command                            | Description                                                                                                                                                                                         |
-| :--------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ls`                               | List snippets in formatted and colorized manner. Requires `tree` program.                                                                                                                           |
-| `bindkeys`                         | Lists bindkeys set up by each plugin.                                                                                                                                                               |
-| `zstatus`                          | Overall Zinit status.                                                                                                                                                                               |
-| `report {plg-spec}`                | Show plugin report. `--all` – do it for all plugins.                                                                                                                                                |
-| `status {plg-spec}`                | Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets.                                                                                                      |
-| `recently [time-spec]`             | Show plugins that changed recently, argument is e.g. 1 month 2 days.                                                                                                                                |
-| `times [-s] [-m] [-a]`             | Statistics on plugin load times, sorted in order of loading. `-s` – use seconds instead of milliseconds. `-m` – show plugin loading moments. `-a` - show both plugin load times and loading moments |
-| `loaded [keyword], list [keyword]` | Show what plugins are loaded (filter with 'keyword').                                                                                                                                               |
+| Command                  | Description                                                                                                                                              |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bindkeys`               | Lists bindkeys set up by each plugin.                                                                                                                    |
+| `list-plugins [keyword]` | Show what plugins are loaded (filter with 'keyword').                                                                                                    |
+| `list-snippets`          | List snippets in formatted and colorized manner. Requires `tree` program.                                                                                |
+| `recently [time-spec]`   | Show plugins that changed recently, argument is e.g. 1 month 2 days.                                                                                     |
+| `report {plg-spec}`      | Show plugin report. `--all` – do it for all plugins.                                                                                                     |
+| `status {plg-spec}`      | Git status for plugin or svn status for snippet. `--all` – do it for all plugins and snippets.                                                           |
+| `zstatus`                | Display brief statistics for your Zinit installation.                                                                                                    |
+| `times [-a] [-m] [-s]`   | Print load times for each plugin. `-s` – Times are printed in seconds. `-m` – Show plugin loading moments. `-a` - Times and loading moments are printed. |
 
 ### Compiling<a name="compiling"></a>
 
 | Command                | Description                                                         |
-| :--------------------- | ------------------------------------------------------------------- |
+| ---------------------- | ------------------------------------------------------------------- |
 | `compiled`             | List plugins that are compiled.                                     |
 | `compile {plg-spec}`   | Compile plugin. `--all` – compile all plugins.                      |
 | `uncompile {plg-spec}` | Remove compiled version of plugin. `--all` – do it for all plugins. |
@@ -861,7 +864,7 @@ Following commands are passed to `zinit ...` to obtain described effects.
 ### Other<a name="other"></a>
 
 | Command                                                          | Description                                                                                                                                                                                                                                                                                                                           |
-| :--------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `module`                                                         | Manage binary Zsh module shipped with Zinit, see `zinit module help`.                                                                                                                                                                                                                                                                 |
 | `self-update`                                                    | Updates and compiles Zinit.                                                                                                                                                                                                                                                                                                           |
 | `cd {plg-spec}`                                                  | Cd into plugin's directory. Also support snippets if fed with URL.                                                                                                                                                                                                                                                                    |
@@ -1041,6 +1044,7 @@ declare -A ZINIT  # initial Zinit's hash definition, if configuring before loadi
 | ZINIT\[COMPINIT_OPTS\]              | Options for `compinit` call (i.e. done by `zicompinit`), use to pass -C to speed up loading                                                                                                                                                                                                                                                                                                              |
 | ZINIT\[MUTE_WARNINGS\]              | If set to `1`, then mutes some of the Zinit warnings, specifically the `plugin already registered` warning                                                                                                                                                                                                                                                                                               |
 | ZINIT\[OPTIMIZE_OUT_DISK_ACCESSES\] | If set to `1`, then Zinit will skip checking if a Turbo-loaded object exists on the disk. By default Zinit skips Turbo for non-existing objects (plugins or snippets) to install them before the first prompt – without any delays, during the normal processing of `zshrc`. This option can give a performance gain of about 10 ms out of 150 ms (i.e.: Zsh will start up in 140 ms instead of 150 ms). |
+| ZINIT\[NO_ALIASES\]                 | If set to `1`, then Zinit will not set aliases such as `zi` or `zini`                                                                                                                                                                                                                                                                                                                                    |
 
 There is also `$ZPFX`, set by default to `~/.local/share/zinit/polaris` – a directory where software with `Makefile`,
 etc. can be pointed to, by e.g. `atclone'./configure --prefix=$ZPFX'`.

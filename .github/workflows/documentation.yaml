@@ -30,7 +30,7 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
           if ! git --no-pager diff --exit-code; then
             echo "::error:: Z-shelldocs are out-of-date." >> $GITHUB_STEP_SUMMARY
-            echo "To regenerate, run `make doc`" >> $GITHUB_STEP_SUMMARY
+            echo 'To regenerate, run `make doc`' >> $GITHUB_STEP_SUMMARY
             exit 1
           else
             echo "::notice:: Z-shelldocs are up-to-date." >> $GITHUB_STEP_SUMMARY
