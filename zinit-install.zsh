@@ -584,16 +584,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         fi
     done
 
-    if (( quiet == 1 && (${#INSTALLED_COMPS} || ${#SKIPPED_COMPS}) )) {
-        +zinit-message "{msg}Installed {num}${#INSTALLED_COMPS}" \
-            "{msg}completions. They are stored in the{var}" \
-            "\$INSTALLED_COMPS{msg} array."
-        if (( ${#SKIPPED_COMPS} )) {
-            +zinit-message "{msg}Skipped installing" \
-                "{num}${#SKIPPED_COMPS}{msg} completions." \
-                "They are stored in the {var}\$SKIPPED_COMPS{msg} array."
-        }
-    }
+    local comps msg
+    local -A comp_types=(\$INSTALLED_COMPS 'Installed' \$SKIPPED_COMPS 'Skipped re-installing')
+    for comps msg in ${(kv)comp_types}; do
+        local comps_num=${#${(e)comps}}
+        if (( comps_num > 0 )); then
+            +zinit-message "{m} ${msg} {num}$comps_num{rst} completion${=${comps_num:#1}:+s}"
+            if (( quiet == 0 )); then
+                +zinit-message "{m} Added $comps_num completion${=${comps_num:#1}:+s} to {var}$comps{rst} array"
+            fi
+        fi
+    done
 
     if (( ZSH_SUBSHELL )) {
         builtin print -rl -- $INSTALLED_COMPS >! ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst
@@ -847,12 +848,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 if [[ -f $plugin_dir/$filename ]] {
                     reply=( "$plugin_dir" $plugin_dir/$filename )
                 } elif { ! .zinit-first % "$plugin_dir" } {
-                    +zinit-message "No files for compilation found."
+                    +zinit-message "{m} No files for compilation found"
                     return 1
                 }
             } else {
                 .zinit-first "$1" "$2" || {
-                    +zinit-message "No files for compilation found."
+                    +zinit-message "{m} No files for compilation found"
                     return 1
                 }
             }
@@ -861,7 +862,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         first=${reply[-1]}
         local fname=${first#$pdir_path/}
 
-        +zinit-message -n "{note}Note:{rst} Compiling{ehi}:{rst} {b}{file}$fname{rst}{…}"
+        +zinit-message -n "{m} Compiling {file}$fname{rst}"
         if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
             () {
                 builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
@@ -869,7 +870,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     +zinit-message "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
                     +zinit-message "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
                 } else {
-                    +zinit-message " {ok}OK{rst}."
+                    +zinit-message " [{happy}OK{rst}]"
                 }
                 # Try to catch possible additional file
                 zcompile -U "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
@@ -886,7 +887,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             eval "list+=( \$plugin_dir/$~pat(N) )"
         }
         if [[ ${#list} -eq 0 ]] {
-            +zinit-message "{u-warn}Warning{b-warn}:{rst} ice {ice}compile{apo}''{rst} didn't match any files."
+            +zinit-message "{w} ice {ice}compile{apo}''{rst} didn't match any files."
         } else {
             integer retval
             for first in $list; do
@@ -896,13 +897,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 }
             done
             builtin print -rl -- ${list[@]#$plugin_dir/} >! ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
+            +zinit-message -n "{m} {num}${#list}{rst} compiled file${=${list:#1}:+s} added to {var}\$ADD_COMPILED{rst} array"
             if (( retval )) {
-                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
-                    "are listed in the {var}\$ADD_COMPILED{rst} array (operation exit" \
-                    "code: {ehi}$retval{rst})."
-            } else {
-                +zinit-message "{note}Note:{rst} The additional {num}${#list}{rst} compiled files" \
-                    "are listed in the {var}\$ADD_COMPILED{rst} array."
+                +zinit-message " (exit code: {ehi}$retval{rst})"
             }
         }
     fi

@@ -94,7 +94,7 @@ ____
 
 ____
 
-Has 87 line(s). Calls functions:
+Has 83 line(s). Calls functions:
 
  .zinit-compile-plugin
  |-- zinit-side.zsh/.zinit-compute-ice
@@ -349,7 +349,7 @@ ____
 
 ____
 
-Has 61 line(s). Calls functions:
+Has 62 line(s). Calls functions:
 
  .zinit-install-completions
  |-- .zinit-compinit
@@ -850,7 +850,7 @@ ____
 
 ____
 
-Has 573 line(s). Doesn't call other functions.
+Has 549 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
