@@ -1,3 +1,25 @@
+# [3.11.0](https://github.com/zdharma-continuum/zinit/compare/v3.10.0...v3.11.0) (2023-05-04)
+
+
+### Bug Fixes
+
+* add `.gitignore` with '*' pattern in a plugins `._zinit/` directory ([#397](https://github.com/zdharma-continuum/zinit/issues/397)) ([fccb508](https://github.com/zdharma-continuum/zinit/commit/fccb5080ab4b1df83f01906082eea444f218776f)), closes [#395](https://github.com/zdharma-continuum/zinit/issues/395)
+* broken update command ([336ca85](https://github.com/zdharma-continuum/zinit/commit/336ca85ade5d4c5c99bd903610baf9961753192b))
+* cleanup style, naming, and completion ([6c82d67](https://github.com/zdharma-continuum/zinit/commit/6c82d6788dec6a60c4c217d03c45c327bc0e59a1))
+* compile and completion log messages ([c4446da](https://github.com/zdharma-continuum/zinit/commit/c4446da57e5375f4a89ea94e1e8c04eacfc4e494))
+* csearch ignores lua files ([4d1840b](https://github.com/zdharma-continuum/zinit/commit/4d1840b883e86cc46df2050c01bd0731e29023aa))
+* makefile clean target less verbose ([3396f5e](https://github.com/zdharma-continuum/zinit/commit/3396f5e3aa1fb81d128d4f34b9ff868011d68981))
+* pin git-mkver gh-r test to v.1.2.2 ([a05cc1a](https://github.com/zdharma-continuum/zinit/commit/a05cc1ab59db5b82c5a0f7ee0b6bbef84f0e8b0e))
+* pin git-mkver unit test to v1.2.2 ([08f02e0](https://github.com/zdharma-continuum/zinit/commit/08f02e00d0fbc86b10d44d18f5b774c9c00806cc))
+* regenerate docs ([e0177e2](https://github.com/zdharma-continuum/zinit/commit/e0177e20382d8336d55bc2637a6f2c515d25ce19))
+
+
+### Features
+
+* expand gh-r zunit tests ([c323116](https://github.com/zdharma-continuum/zinit/commit/c3231164836c8ca3ca9ebded8d95c31c0a186567))
+* refactor debug commands ([930b25e](https://github.com/zdharma-continuum/zinit/commit/930b25ee3c6cc66931eda0030c422fddd69ef9c4))
+* refactor ls, list, and loaded commands ([a865907](https://github.com/zdharma-continuum/zinit/commit/a86590762ac2bb5244db5d3cd7d99d32a9dc11fe))
+
 # [3.10.0](https://github.com/zdharma-continuum/zinit/compare/v3.9.0...v3.10.0) (2023-04-02)
 
 
