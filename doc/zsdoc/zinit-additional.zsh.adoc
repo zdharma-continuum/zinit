@@ -6,10 +6,13 @@ zinit-additional.zsh - a shell script
 Documentation automatically generated with `zshelldoc'
 
 == FUNCTIONS
- .zinit-clear-debug-report
+ +zinit-debug
+ .zinit-debug-clear
+ .zinit-debug-report
+ .zinit-debug-revert
  .zinit-debug-start
+ .zinit-debug-status
  .zinit-debug-stop
- .zinit-debug-unload
  .zinit-service
  .zinit-wrap-track-functions
  :zinit-tmp-subst-source
@@ -20,80 +23,124 @@ Documentation automatically generated with `zshelldoc'
 
 Has 1 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
-==== .zinit-clear-debug-report
+==== +zinit-debug
 
 ____
  
- Forgets dtrace repport gathered up to this moment.
+ Debug command entry point
 
 ____
 
-Has 1 line(s). Calls functions:
+Has 35 line(s). Doesn't call other functions.
 
- .zinit-clear-debug-report
- `-- zinit-autoload.zsh/.zinit-clear-report-for
+Uses feature(s): _setopt_, _zmodload_, _zparseopts_
+
+Called by:
+
+ zinit.zsh/zinit
+
+==== .zinit-debug-clear
+
+____
+ 
+ Clear latest debug report
+
+____
+
+Has 7 line(s). Calls functions:
+
+ .zinit-debug-clear
+ |-- zinit-autoload.zsh/.zinit-clear-report-for
+ `-- zinit.zsh/+zi-log
 
 Called by:
 
  zinit-autoload.zsh/.zinit-unload
- zinit.zsh/zinit
 
-==== .zinit-debug-start
-
-____
- 
- Starts Dtrace, i.e. session tracking for changes in Zsh state.
-
-____
-
-Has 9 line(s). Calls functions:
-
- .zinit-debug-start
- |-- zinit.zsh/+zinit-message
- |-- zinit.zsh/.zinit-diff
- `-- zinit.zsh/.zinit-tmp-subst-on
-
-Called by:
-
- zinit.zsh/zinit
-
-==== .zinit-debug-stop
+==== .zinit-debug-report
 
 ____
  
- Stops Dtrace (i.e., session tracking for changes in Zsh state).
-
-____
-
-Has 3 line(s). Calls functions:
-
- .zinit-debug-stop
- |-- zinit.zsh/.zinit-diff
- `-- zinit.zsh/.zinit-tmp-subst-off
-
-Called by:
-
- zinit.zsh/zinit
-
-==== .zinit-debug-unload
-
-____
- 
- Reverts changes detected by dtrace run.
+ Displays debug report (data recorded in interactive session).
 
 ____
 
 Has 6 line(s). Calls functions:
 
- .zinit-debug-unload
- |-- zinit-autoload.zsh/.zinit-unload
- `-- zinit.zsh/+zinit-message
+ .zinit-debug-report
+ |-- zinit-autoload.zsh/.zinit-show-report
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _source_
 
-Called by:
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
- zinit.zsh/zinit
+==== .zinit-debug-revert
+
+____
+ 
+ Revert changes made during debug mode
+
+____
+
+Has 7 line(s). Calls functions:
+
+ .zinit-debug-revert
+ |-- zinit-autoload.zsh/.zinit-unload
+ `-- zinit.zsh/+zi-log
+
+Uses feature(s): _source_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-debug-start
+
+____
+ 
+ Start debug mode
+
+____
+
+Has 13 line(s). Calls functions:
+
+ .zinit-debug-start
+ |-- zinit.zsh/+zi-log
+ |-- zinit.zsh/.zinit-diff
+ `-- zinit.zsh/.zinit-tmp-subst-on
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-debug-status
+
+____
+ 
+ Revert changes made during debug mode
+
+____
+
+Has 2 line(s). Calls functions:
+
+ .zinit-debug-status
+ `-- zinit.zsh/+zi-log
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-debug-stop
+
+____
+ 
+ Stop debug mode
+
+____
+
+Has 14 line(s). Calls functions:
+
+ .zinit-debug-stop
+ |-- zinit.zsh/+zi-log
+ |-- zinit.zsh/.zinit-diff
+ `-- zinit.zsh/.zinit-tmp-subst-off
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== .zinit-service
 
@@ -130,7 +177,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 Has 25 line(s). Calls functions:
 
  :zinit-tmp-subst-source
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_
 

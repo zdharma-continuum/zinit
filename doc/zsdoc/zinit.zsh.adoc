@@ -6,6 +6,7 @@ zinit.zsh - a shell script
 Documentation automatically generated with `zshelldoc'
 
 == FUNCTIONS
+ +zi-log
  +zinit-deploy-message
  +zinit-message
  +zinit-prehelp-usage-message
@@ -172,10 +173,7 @@ Has 244 line(s). Calls functions:
  |   |       `-- .zinit-any-to-user-plugin
  |   |-- .zinit-submit-turbo
  |   |-- compinit
- |   |-- zinit-additional.zsh/.zinit-clear-debug-report
- |   |-- zinit-additional.zsh/.zinit-debug-start
- |   |-- zinit-additional.zsh/.zinit-debug-stop
- |   |-- zinit-additional.zsh/.zinit-debug-unload
+ |   |-- zinit-additional.zsh/+zinit-debug
  |   |-- zinit-autoload.zsh/.zinit-cdisable
  |   |-- zinit-autoload.zsh/.zinit-cenable
  |   |-- zinit-autoload.zsh/.zinit-clear-completions
@@ -193,7 +191,6 @@ Has 244 line(s). Calls functions:
  |   |-- zinit-autoload.zsh/.zinit-self-update
  |   |-- zinit-autoload.zsh/.zinit-show-all-reports
  |   |-- zinit-autoload.zsh/.zinit-show-completions
- |   |-- zinit-autoload.zsh/.zinit-show-debug-report
  |   |-- zinit-autoload.zsh/.zinit-show-report
  |   |-- zinit-autoload.zsh/.zinit-show-times
  |   |-- zinit-autoload.zsh/.zinit-show-zstatus
@@ -212,6 +209,30 @@ Has 244 line(s). Calls functions:
 Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _colors_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
 
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
+
+==== +zi-log
+
+____
+ 
+ Wrapper function for +zinit-message until migrated to +zi-log
+
+____
+
+Has 1 line(s). Calls functions:
+
+ +zi-log
+ `-- +zinit-message
+
+Called by:
+
+ zinit-additional.zsh/.zinit-debug-clear
+ zinit-additional.zsh/.zinit-debug-report
+ zinit-additional.zsh/.zinit-debug-revert
+ zinit-additional.zsh/.zinit-debug-start
+ zinit-additional.zsh/.zinit-debug-status
+ zinit-additional.zsh/.zinit-debug-stop
+ zinit-additional.zsh/:zinit-tmp-subst-source
+ zinit-autoload.zsh/.zinit-unload
 
 ==== +zinit-deploy-message
 
@@ -234,10 +255,17 @@ Called by:
 
 ==== +zinit-message
 
+____
+ 
+ Logging function
+
+____
+
 Has 16 line(s). Doesn't call other functions.
 
 Called by:
 
+ +zi-log
  +zinit-prehelp-usage-message
  .zinit-compdef-clear
  .zinit-compdef-replay
@@ -248,9 +276,6 @@ Called by:
  :zinit-tmp-subst-autoload
  Script-Body
  zinit
- zinit-additional.zsh/.zinit-debug-start
- zinit-additional.zsh/.zinit-debug-unload
- zinit-additional.zsh/:zinit-tmp-subst-source
  zinit-autoload.zsh/.zinit-build-module
  zinit-autoload.zsh/.zinit-cd
  zinit-autoload.zsh/.zinit-confirm
@@ -1578,7 +1603,7 @@ ____
 
 ____
 
-Has 566 line(s). Calls functions:
+Has 553 line(s). Calls functions:
 
  zinit
  |-- +zinit-message
@@ -1656,10 +1681,7 @@ Has 566 line(s). Calls functions:
  |       `-- .zinit-any-to-user-plugin
  |-- .zinit-submit-turbo
  |-- compinit
- |-- zinit-additional.zsh/.zinit-clear-debug-report
- |-- zinit-additional.zsh/.zinit-debug-start
- |-- zinit-additional.zsh/.zinit-debug-stop
- |-- zinit-additional.zsh/.zinit-debug-unload
+ |-- zinit-additional.zsh/+zinit-debug
  |-- zinit-autoload.zsh/.zinit-cdisable
  |-- zinit-autoload.zsh/.zinit-cenable
  |-- zinit-autoload.zsh/.zinit-clear-completions
@@ -1677,7 +1699,6 @@ Has 566 line(s). Calls functions:
  |-- zinit-autoload.zsh/.zinit-self-update
  |-- zinit-autoload.zsh/.zinit-show-all-reports
  |-- zinit-autoload.zsh/.zinit-show-completions
- |-- zinit-autoload.zsh/.zinit-show-debug-report
  |-- zinit-autoload.zsh/.zinit-show-report
  |-- zinit-autoload.zsh/.zinit-show-times
  |-- zinit-autoload.zsh/.zinit-show-zstatus
@@ -1818,10 +1839,7 @@ Has 1 line(s). Calls functions:
      |       `-- .zinit-any-to-user-plugin
      |-- .zinit-submit-turbo
      |-- compinit
-     |-- zinit-additional.zsh/.zinit-clear-debug-report
-     |-- zinit-additional.zsh/.zinit-debug-start
-     |-- zinit-additional.zsh/.zinit-debug-stop
-     |-- zinit-additional.zsh/.zinit-debug-unload
+     |-- zinit-additional.zsh/+zinit-debug
      |-- zinit-autoload.zsh/.zinit-cdisable
      |-- zinit-autoload.zsh/.zinit-cenable
      |-- zinit-autoload.zsh/.zinit-clear-completions
@@ -1839,7 +1857,6 @@ Has 1 line(s). Calls functions:
      |-- zinit-autoload.zsh/.zinit-self-update
      |-- zinit-autoload.zsh/.zinit-show-all-reports
      |-- zinit-autoload.zsh/.zinit-show-completions
-     |-- zinit-autoload.zsh/.zinit-show-debug-report
      |-- zinit-autoload.zsh/.zinit-show-report
      |-- zinit-autoload.zsh/.zinit-show-times
      |-- zinit-autoload.zsh/.zinit-show-zstatus
@@ -1891,7 +1908,7 @@ ____
 
 ____
 
-Has 134 line(s). Doesn't call other functions.
+Has 120 line(s). Doesn't call other functions.
 
 Called by:
 
