@@ -26,17 +26,12 @@ __zinit_commands(){
     'compiled:List of compiled plugins'
     'compinit:Refresh installed completions'
     'completions:List status of all installed completions'
-    'create:Create plugin (also together with Github repository)'
+    'create:Generate Zsh plugin boilerplate'
     'creinstall:Install completions for plugin'
     'csearch:Search for available completions from any plugin'
     'cuninstall:Uninstall completions for plugin'
-    'dclear:Clear report of what was going on in session'
+    'debug:Functions for debugging Zinit'
     'delete:Uninstall a plugin or snippet'
-    'dreport:Report what was going on in session'
-    'dstart:Start tracking whats going on in session'
-    'dstop:Stop tracking whats going on in session'
-    'dtrace:Start tracking whats going on in session'
-    'dunload:Revert changes recorded between dstart and dstop'
     'edit:Edit a plugins or snippet with \$EDITOR'
     'env-whitelist:Specify names (also patterns) of parameters to be left unchanged during an unload'
     'glance:Look at plugins source'
@@ -65,6 +60,17 @@ __zinit_commands(){
   )
   _describe -t commands 'zinit commands' commands
 } # ]]]
+###
+# Commands in the debug context
+###
+_zinit_debug_commands=(
+  'clear:Clear report of debug tracing session'
+  'report:Show report of debug tracing session'
+  'revert:Revert changes detected during debug tracing session'
+  'start:Start debug tracing session'
+  'status:Show current state of debug mode'
+  'stop:Stop debug tracing session'
+)
 # FUNCTION: __zinit_completion_caching_policy [[[
 __zinit_completion_caching_policy(){
   local -a tmp
@@ -105,7 +111,7 @@ __zinit_installed_snippets(){
 __zinit_list_aliases(){
   local -a aliases
   aliases=( ls list uninstall delete )
-  echo "${aliases}"
+  builtin print -- "$aliases"
 } # ]]]
 
 # FUNCTION: _zinit_add_fpath [[[
@@ -184,7 +190,7 @@ _zinit_compile(){
 # FUNCTION: _zinit_create [[[
 _zinit_create(){
   _arguments \
-    '1:name:[Name of plugin]' && ret=0
+    '1:Plugin Name' && ret=0
 } # ]]]
 # FUNCTION: _zinit_creinstall [[[
 _zinit_creinstall(){
@@ -198,10 +204,6 @@ _zinit_csearch(){
 _zinit_cunistall(){
   _arguments - installed '*::installed:__zinit_installed' && ret=0
 } # ]]]
-# FUNCTION: _zinit_dclear [[[
-_zinit_dclear(){
-  ret=0
-} # ]]]
 # FUNCTION: _zinit_delete [[[
 _zinit_delete(){
   _arguments \
@@ -213,25 +215,9 @@ _zinit_delete(){
       {-a,--all}'[Delete all plugins and snippets]' \
       {-c,--clean}'[Delete only the currently-not loaded plugins and snippets]'
 } # ]]]
-# FUNCTION: _zinit_dreport [[[
-_zinit_dreport(){
-  ret=0
-} # ]]]
-# FUNCTION: _zinit_dstart [[[
-_zinit_dstart(){
-  ret=0
-} # ]]]
-# FUNCTION: _zinit_dstop [[[
-_zinit_dstop(){
-  ret=0
-} # ]]]
-# FUNCTION: _zinit_dtrace [[[
-_zinit_dtrace(){
-  ret=0
-} # ]]]
-# FUNCTION: _zinit_dunload [[[
-_zinit_dunload(){
-  ret=0
+_zinit_debug(){
+  _arguments \
+    '1: :_zinit_debug_cmds'
 } # ]]]
 # FUNCTION: _zinit_edit [[[
 _zinit_edit(){
@@ -370,6 +356,10 @@ _zinit(){
       ;;
   esac
 } # ]]]
+
+(( $+functions[_zinit_debug_cmds] )) || _zinit_debug_cmds() {
+  _describe -t commands 'commands' _zinit_debug_commands "$@"
+}
 
 _zinit "$@"
 

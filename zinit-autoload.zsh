@@ -1414,52 +1414,49 @@ EOF
 # User-action entry point.
 .zinit-help() {
            builtin print -r -- "${ZINIT[col-p]}Usage${ZINIT[col-rst]}:
-—— -h|--help|help                – usage information
-—— man                           – manual
-—— version                       – display zinit version
-—— self-update                   – updates and compiles Zinit
-—— zstatus                       – overall Zinit statu—— times [-s] [-m] [-a] – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments, -a – show both load times and loading moments
-—— load ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – load plugin, can also receive absolute local path
-—— light [-b] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)
-—— unload ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – unload plugin loaded with \`zinit load ...', -q – quiet
-—— snippet [-f] ${ZINIT[col-pname]}{url}${ZINIT[col-rst]}            – source local or remote file (by direct URL), -f: force – don't use cache
-—— ls                            – list snippets in formatted and colorized manner
-—— ice <ice specification>       – add ICE to next command, argument is e.g. from\"gitlab\"
-—— update [-q] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
-—— status ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
-—— report ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – show plugin's report (or all plugins' if ——all passed)
-—— delete [--all|--clean] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL – remove plugin or snippet from disk (good to forget wrongly passed ice-mods); --all – purge, --clean – delete plugins and snippets that are not loaded
-—— loaded|list {keyword}         – show what plugins are loaded (filter with \'keyword')
+—— help                          – usage information
+—— bindkeys                      – lists bindkeys set up by each plugin
 —— cd ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                   – cd into plugin's directory; also support snippets, if feed with URL
-—— create ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – create plugin (also together with Github repository)
-—— edit ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – edit plugin's file with \$EDITOR
-—— glance ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – look at plugin's source (pygmentize, {,source-}highlight)
-—— stress ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – test plugin for compatibility with set of options
-—— changes ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – view plugin's git log
-—— recently ${ZINIT[col-info]}[time-spec]${ZINIT[col-rst]}          – show plugins that changed recently, argument is e.g. 1 month 2 days
-—— clist|completions             – list completions in use
+—— cdclear [-q]                  – clear compdef replay list, -q – quiet
 —— cdisable ${ZINIT[col-info]}cname${ZINIT[col-rst]}                – disable completion \`cname'
-—— cenable ${ZINIT[col-info]}cname${ZINIT[col-rst]}                 – enable completion \`cname'
-—— creinstall ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – install completions for plugin, can also receive absolute local path; -q – quiet
-—— cuninstall ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – uninstall completions for plugin
-—— csearch                       – search for available completions from any plugin
-—— compinit                      – refresh installed completions
-—— dtrace|dstart                 – start tracking what's going on in session
-—— dstop                         – stop tracking what's going on in session
-—— dunload                       – revert changes recorded between dstart and dstop
-—— dreport                       – report what was going on in session
-—— dclear                        – clear report of what was going on in session
-—— compile ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – compile plugin (or all plugins if ——all passed)
-—— uncompile ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}            – remove compiled version of plugin (or of all plugins if ——all passed)
-—— compiled                      – list plugins that are compiled
 —— cdlist                        – show compdef replay list
 —— cdreplay [-q]                 – replay compdefs (to be done after compinit), -q – quiet
-—— cdclear [-q]                  – clear compdef replay list, -q – quiet
-—— srv {service-id} [cmd]        – control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
-—— recall ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – fetch saved ice modifiers and construct \`zinit ice ...' command
+—— cenable ${ZINIT[col-info]}cname${ZINIT[col-rst]}                 – enable completion \`cname'
+—— changes ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – view plugin's git log
+—— clist|completions             – list completions in use
+—— compile ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – compile plugin (or all plugins if ——all passed)
+—— compiled                      – list plugins that are compiled
+—— compinit                      – refresh installed completions
+—— create ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – create plugin (also together with Github repository)
+—— creinstall ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – install completions for plugin, can also receive absolute local path; -q – quiet
+—— csearch                       – search for available completions from any plugin
+—— cuninstall ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – uninstall completions for plugin
+—— debug                         – manage debug mode
+—— delete                        – delete a plugin or snippet
+—— edit ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – edit plugin's file with \$EDITOR
 —— env-whitelist [-v|-h] {env..} – allows to specify names (also patterns) of variables left unchanged during an unload. -v – verbose
-—— bindkeys                      – lists bindkeys set up by each plugin
+—— glance ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – look at plugin's source (pygmentize, {,source-}highlight)
+—— ice <ice specification>       – add ICE to next command, argument is e.g. from\"gitlab\"
+—— light [-b] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}           – light plugin load, without reporting/tracking (-b – do track but bindkey-calls only)
+—— load ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}                 – load plugin, can also receive absolute local path
+—— loaded|list {keyword}         – show what plugins are loaded (filter with \'keyword')
+—— ls                            – list snippets in formatted and colorized manner
+—— man                           – manual
 —— module                        – manage binary Zsh module shipped with Zinit, see \`zinit module help'
+—— recall ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – fetch saved ice modifiers and construct \`zinit ice ...' command
+—— recently ${ZINIT[col-info]}[time-spec]${ZINIT[col-rst]}          – show plugins that changed recently, argument is e.g. 1 month 2 days
+—— report ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – show plugin's report (or all plugins' if ——all passed)
+—— self-update                   – updates and compiles Zinit
+—— snippet [-f] ${ZINIT[col-pname]}{url}${ZINIT[col-rst]}            – source local or remote file (by direct URL), -f: force – don't use cache
+—— srv {service-id} [cmd]        – control a service, command can be: stop,start,restart,next,quit; \`next' moves the service to another Zshell
+—— status ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL           – Git status for plugin or svn status for snippet (or for all those if ——all passed)
+—— stress ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – test plugin for compatibility with set of options
+—— times [-s] [-m] [-a] – statistics on plugin load times, sorted in order of loading; -s – use seconds instead of milliseconds, -m – show plugin loading moments, -a – show both load times and loading moments
+—— uncompile ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}            – remove compiled version of plugin (or of all plugins if ——all passed)
+—— unload ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – unload plugin loaded with \`zinit load ...', -q – quiet
+—— update [-q] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
+—— version                       – display zinit version
+—— zstatus                       – overall Zinit statu
 —— add-fpath|fpath ${ZINIT[col-info]}[-f|--front]${ZINIT[col-rst]} \\
     ${ZINIT[col-pname]}plg-spec ${ZINIT[col-info]}[subdirectory]${ZINIT[col-rst]}      – adds given plugin directory to \$fpath; if the second argument is given, it is appended to the directory path; if the option -f/--front is given, the directory path is prepended instead of appended to \$fpath. The ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]} can be absolute path
 —— run [-l] [plugin] {command}   – runs the given command in the given plugin's directory; if the option -l will be given then the plugin should be skipped – the option will cause the previous plugin to be reused"
@@ -2298,7 +2295,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     local k
 
     .zinit-any-colorify-as-uspl2 "$uspl2"
-    (( quiet )) || builtin print -r -- "${ZINIT[col-bar]}---${ZINIT[col-rst]} Unloading plugin: $REPLY ${ZINIT[col-bar]}---${ZINIT[col-rst]}"
+    (( quiet )) || +zi-log "{i} Unloading $REPLY"
 
     local ___dir
     [[ "$user" = "%" ]] && ___dir="$plugin" || ___dir="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
@@ -2734,8 +2731,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     # 9. Forget the plugin
     if [[ "$uspl2" = "_dtrace/_dtrace" ]]; then
-        .zinit-clear-debug-report
-        (( quiet )) || builtin print "dtrace report saved to \$LASTREPORT"
+        .zinit-debug-clear
     else
         (( quiet )) || builtin print "Unregistering plugin $uspl2col"
         .zinit-unregister-plugin "$user" "$plugin" "${sice[teleid]}"
@@ -3435,4 +3431,4 @@ zi::version() {
 	return $?
 } # ]]]
 
-# vim: set fenc=utf8 ffs=unix foldmarker=[[[,]]] foldmethod=marker ft=zsh list et sts=2 sw=2 ts=2 tw=100:
+# vim: set fenc=utf8 ffs=unix foldmarker=[[[,]]] foldmethod=marker ft=zsh list et sts=4 sw=4 ts=4 tw=100:

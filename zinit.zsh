@@ -115,7 +115,7 @@ ZINIT[cmds]="\
 add-fpath|\
 bindkeys|\
 cclear|cd|cdclear|cdisable|cdlist|cdreplay|cenable|changes|clist|compile|compiled|compinit|completions|create|creinstall|csearch|cuninstall|\
-dclear|delete|dreport|dstart|dstop|dtrace|dunload|\
+delete|debug|\
 edit|env-whitelist|\
 fpath|\
 glance|\
@@ -2157,6 +2157,7 @@ builtin setopt noaliases
 } # ]]]
 
 # FUNCTION: +zinit-message [[[
+# Logging function
 +zinit-message() {
     builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
     local opt msg
@@ -2187,6 +2188,11 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     if [[ -n ${opt:#*n*} || -z $opt ]]; then
         print -n $'\015'
     fi
+} # ]]]
+# FUNCTION: +zi-log [[[
+# Wrapper function for +zinit-message until migrated to +zi-log
++zi-log(){
+    +zinit-message $@
 } # ]]]
 
 # FUNCTION: +zinit-prehelp-usage-message [[[
@@ -2261,7 +2267,6 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     [[ -n ${ZINIT_ICES[pick]} ]] && ZINIT_ICES[pick]="${ZINIT_ICES[pick]//\$ZPFX/${ZPFX%/}}"
     return retval
 } # ]]]
-
 # FUNCTION: .zinit-pack-ice [[[
 # Remembers all ice-mods, assigns them to concrete plugin. Ice spec
 # is in general forgotten for second-next command (i.e., ice melts quickly), however they
@@ -2271,7 +2276,6 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     ZINIT_SICE[$1${1:+${2:+/}}$2]="${ZINIT_SICE[$1${1:+${2:+/}}$2]# }"
     return 0
 } # ]]]
-
 # FUNCTION: .zinit-load-ices [[[
 .zinit-load-ices() {
     local id_as="$1" ___key ___path
@@ -2298,7 +2302,6 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
     return 0
 } # ]]]
-
 # FUNCTION: .zinit-setup-params [[[
 .zinit-setup-params() {
     builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
@@ -2371,7 +2374,6 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 
     return ___s
 } # ]]]
-
 # FUNCTION: .zinit-submit-turbo [[[
 # If `zinit load`, `zinit light` or `zinit snippet`  will be
 # preceded with 'wait', 'load', 'unload' or 'on-update-of'/'subscribe'
@@ -2882,14 +2884,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
        (run)
            .zinit-run "${@[2-correct,-1]}"
            ;;
-       (dstart|dtrace)
-            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-           .zinit-debug-start
-           ;;
-       (dstop)
-            (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-           .zinit-debug-stop
-           ;;
+
        (man)
            man "${ZINIT[BIN_DIR]}/doc/zinit.1"
            ;;
@@ -3057,17 +3052,6 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     .zinit-compinit; ___retval=$?
                     ;;
-                (dreport)
-                    .zinit-show-debug-report
-                    ;;
-                (dclear)
-                    (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-                    .zinit-clear-debug-report
-                    ;;
-                (dunload)
-                    (( ${+functions[.zinit-service]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
-                    .zinit-debug-unload
-                    ;;
                 (compile)
                     (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
@@ -3076,6 +3060,11 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     else
                         .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
                     fi
+                    ;;
+                (debug)
+                    shift;
+                    (( ${+functions[+zinit-debug]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
+                    +zinit-debug $@
                     ;;
                 (uncompile)
                     if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
@@ -3179,23 +3168,19 @@ zicompdef() {
 zplugin() {
   zinit "$@"
 } # ]]]
-
 # FUNCTION: zpcdreplay [[[
 zpcdreplay() {
   .zinit-compdef-replay -q
 } # ]]]
-
 # FUNCTION: zpcdclear [[[
 zpcdclear() {
   .zinit-compdef-clear -q
 } # ]]]
-
 # FUNCTION: zpcompinit [[[
 zpcompinit() {
   autoload -Uz compinit
   compinit -d ${ZINIT[ZCOMPDUMP_PATH]:-${ZDOTDIR:-$HOME}/.zcompdump} "${(Q@)${(z@)ZINIT[COMPINIT_OPTS]}}"
 } # ]]]
-
 # FUNCTION: zpcompdef [[[
 zpcompdef() {
   ZINIT_COMPDEF_REPLAY+=( "${(j: :)${(q)@}}" )
