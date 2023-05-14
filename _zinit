@@ -194,7 +194,12 @@ _zinit_create(){
 } # ]]]
 # FUNCTION: _zinit_creinstall [[[
 _zinit_creinstall(){
-  _arguments - plugin '1::plugin:__zinit_installed_plugins' && ret=0
+  _arguments -A \
+    {-f,--force}'[Force new download of the snippet file]' \
+    {-h,--help}'[Show this help message]' \
+    {-q,--quiet}'[Turn off messages from the operation]' \
+    '1::plugin:__zinit_installed_plugins' \
+  && ret=0
 } # ]]]
 # FUNCTION: _zinit_csearch [[[
 _zinit_csearch(){
@@ -223,14 +228,15 @@ _zinit_debug(){
 _zinit_edit(){
   _arguments \
     - installed '*::plugin:__zinit_installed_plugins' \
-    - snippet '*::snippet:__zinit_installed_snippets' && ret=0
+    - snippet '*::snippet:__zinit_installed_snippets' \
+  && ret=0
 } # ]]]
 # FUNCTION: _zinit_env_whitelist [[[
 _zinit_env_whitelist(){
   _arguments -A \
     '(-h --help)'{-h,--help}'[Show this help message]' \
     '(-v --verbose)'{-v,--verbose}'[Make some output more verbose]' \
-    && ret=0
+  && ret=0
 } # ]]]
 # FUNCTION: _zinit_glance [[[
 _zinit_glance(){
@@ -269,7 +275,8 @@ _zinit_report(){
 _zinit_run(){
   _arguments \
     - installed '1:installed:__zinit_installed' \
-    '2:command to run:' && ret=0
+    '2:command to run:' \
+  && ret=0
 } # ]]]
 # FUNCTION: _zinit_self_update [[[
 _zinit_self_update(){
@@ -312,7 +319,8 @@ _zinit_unload(){
   _arguments -A \
     '(-h --help)'{-h,--help}'[Show this help message]' \
     '(-q --quiet)'{-q,--quiet}'[Turn off messages from the operation]' \
-    - installed '*:installed:__zinit_installed'
+    - installed '*:installed:__zinit_installed' \
+  && ret=0
 } # ]]]
 # FUNCTION: _zinit_update [[[
 _zinit_update(){
@@ -326,7 +334,8 @@ _zinit_update(){
       '--parallel[Turn on concurrent, multi-thread update (of all objects)]' \
       '(-a --all)'{-a,--all}'[Update all plugins and snippets]' \
   - set2 \
-      '1:installed:__zinit_installed'
+      '1:installed:__zinit_installed' \
+  && ret=0
 } # ]]]
 # FUNCTION: _zunit_load [[[
 _zinit_load() {

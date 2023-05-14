@@ -6,6 +6,7 @@ zinit.zsh - a shell script
 Documentation automatically generated with `zshelldoc'
 
 == FUNCTIONS
+ +zi-cmp-reinstall
  +zi-log
  +zinit-deploy-message
  +zinit-message
@@ -89,6 +90,7 @@ Has 244 line(s). Calls functions:
 
  Script-Body
  |-- +zinit-message
+ |   `-- +zi-log
  |-- .zinit-get-mtime-into
  |-- .zinit-prepare-home
  |   |-- zinit-autoload.zsh/.zinit-clear-completions
@@ -98,15 +100,22 @@ Has 244 line(s). Calls functions:
  |-- colors
  |-- is-at-least
  |-- zinit
+ |   |-- +zi-cmp-reinstall
+ |   |   |-- compinit
+ |   |   `-- zinit-install.zsh/.zinit-install-completions
  |   |-- +zinit-message
+ |   |   `-- +zi-log
  |   |-- +zinit-prehelp-usage-message
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-add-fpath
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-compdef-clear
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-compdef-replay
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-get-object-path
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-ice
@@ -130,12 +139,14 @@ Has 244 line(s). Calls functions:
  |   |   |   |   |-- .zinit-tmp-subst-on
  |   |   |   |   `-- :zinit-tmp-subst-autoload
  |   |   |   |       |-- +zinit-message
+ |   |   |   |       |   `-- +zi-log
  |   |   |   |       |-- .zinit-add-report
  |   |   |   |       |-- .zinit-any-to-user-plugin
  |   |   |   |       `-- is-at-least
  |   |   |   |-- .zinit-load-snippet
  |   |   |   |   |-- +zinit-deploy-message
  |   |   |   |   |-- +zinit-message
+ |   |   |   |   |   `-- +zi-log
  |   |   |   |   |-- .zinit-add-report
  |   |   |   |   |-- .zinit-find-other-matches
  |   |   |   |   |-- .zinit-get-object-path
@@ -143,19 +154,23 @@ Has 244 line(s). Calls functions:
  |   |   |   |   |-- .zinit-pack-ice
  |   |   |   |   |-- .zinit-set-m-func
  |   |   |   |   |   `-- +zinit-message
+ |   |   |   |   |       `-- +zi-log
  |   |   |   |   |-- .zinit-setup-params
  |   |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
  |   |   |   |-- .zinit-pack-ice
  |   |   |   |-- .zinit-register-plugin
  |   |   |   |   `-- +zinit-message
+ |   |   |   |       `-- +zi-log
  |   |   |   |-- .zinit-set-m-func
  |   |   |   |   `-- +zinit-message
+ |   |   |   |       `-- +zi-log
  |   |   |   |-- .zinit-setup-params
  |   |   |   |-- zinit-install.zsh/.zinit-get-package
  |   |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
  |   |   `-- .zinit-load-snippet
  |   |       |-- +zinit-deploy-message
  |   |       |-- +zinit-message
+ |   |       |   `-- +zi-log
  |   |       |-- .zinit-add-report
  |   |       |-- .zinit-find-other-matches
  |   |       |-- .zinit-get-object-path
@@ -163,11 +178,13 @@ Has 244 line(s). Calls functions:
  |   |       |-- .zinit-pack-ice
  |   |       |-- .zinit-set-m-func
  |   |       |   `-- +zinit-message
+ |   |       |       `-- +zi-log
  |   |       |-- .zinit-setup-params
  |   |       `-- zinit-install.zsh/.zinit-download-snippet
  |   |-- .zinit-parse-opts
  |   |-- .zinit-run
  |   |   |-- +zinit-message
+ |   |   |   `-- +zi-log
  |   |   |-- .zinit-any-to-user-plugin
  |   |   `-- .zinit-get-object-path
  |   |       `-- .zinit-any-to-user-plugin
@@ -202,15 +219,14 @@ Has 244 line(s). Calls functions:
  |   |-- zinit-autoload.zsh/zi::version
  |   |-- zinit-install.zsh/.zinit-compile-plugin
  |   |-- zinit-install.zsh/.zinit-compinit
- |   |-- zinit-install.zsh/.zinit-forget-completion
- |   `-- zinit-install.zsh/.zinit-install-completions
+ |   `-- zinit-install.zsh/.zinit-forget-completion
  `-- zinit-autoload.zsh/.zinit-module
 
 Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _colors_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
 
 _Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
 
-==== +zi-log
+==== +zi-cmp-reinstall
 
 ____
  
@@ -218,13 +234,31 @@ ____
 
 ____
 
-Has 1 line(s). Calls functions:
+Has 5 line(s). Calls functions:
 
- +zi-log
- `-- +zinit-message
+ +zi-cmp-reinstall
+ |-- compinit
+ `-- zinit-install.zsh/.zinit-install-completions
+
+Uses feature(s): _autoload_, _compinit_, _source_
 
 Called by:
 
+ zinit
+
+==== +zi-log
+
+____
+ 
+ Logging function
+
+____
+
+Has 16 line(s). Doesn't call other functions.
+
+Called by:
+
+ +zinit-message
  zinit-additional.zsh/.zinit-debug-clear
  zinit-additional.zsh/.zinit-debug-report
  zinit-additional.zsh/.zinit-debug-revert
@@ -233,6 +267,7 @@ Called by:
  zinit-additional.zsh/.zinit-debug-stop
  zinit-additional.zsh/:zinit-tmp-subst-source
  zinit-autoload.zsh/.zinit-unload
+ zinit-install.zsh/.zinit-install-completions
 
 ==== +zinit-deploy-message
 
@@ -257,15 +292,17 @@ Called by:
 
 ____
  
- Logging function
+ Wrapper function for +zinit-message until migrated to +zi-log
 
 ____
 
-Has 16 line(s). Doesn't call other functions.
+Has 1 line(s). Calls functions:
+
+ +zinit-message
+ `-- +zi-log
 
 Called by:
 
- +zi-log
  +zinit-prehelp-usage-message
  .zinit-compdef-clear
  .zinit-compdef-replay
@@ -316,6 +353,7 @@ Has 38 line(s). Calls functions:
 
  +zinit-prehelp-usage-message
  `-- +zinit-message
+     `-- +zi-log
 
 Called by:
 
@@ -425,7 +463,6 @@ Called by:
  zinit-autoload.zsh/.zinit-update-all-parallel
  zinit-autoload.zsh/.zinit-update-or-status-all
  zinit-autoload.zsh/.zinit-update-or-status
- zinit-install.zsh/.zinit-install-completions
  zinit-side.zsh/.zinit-any-colorify-as-uspl2
  zinit-side.zsh/.zinit-compute-ice
  zinit-side.zsh/.zinit-exists-physically-message
@@ -444,6 +481,7 @@ Has 3 line(s). Calls functions:
 
  .zinit-compdef-clear
  `-- +zinit-message
+     `-- +zi-log
 
 Called by:
 
@@ -463,6 +501,7 @@ Has 17 line(s). Calls functions:
 
  .zinit-compdef-replay
  `-- +zinit-message
+     `-- +zi-log
 
 Uses feature(s): _compdef_
 
@@ -727,12 +766,14 @@ Has 95 line(s). Calls functions:
  |   |-- .zinit-tmp-subst-on
  |   `-- :zinit-tmp-subst-autoload
  |       |-- +zinit-message
+ |       |   `-- +zi-log
  |       |-- .zinit-add-report
  |       |-- .zinit-any-to-user-plugin
  |       `-- is-at-least
  |-- .zinit-load-snippet
  |   |-- +zinit-deploy-message
  |   |-- +zinit-message
+ |   |   `-- +zi-log
  |   |-- .zinit-add-report
  |   |-- .zinit-find-other-matches
  |   |-- .zinit-get-object-path
@@ -740,13 +781,16 @@ Has 95 line(s). Calls functions:
  |   |-- .zinit-pack-ice
  |   |-- .zinit-set-m-func
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-setup-params
  |   `-- zinit-install.zsh/.zinit-download-snippet
  |-- .zinit-pack-ice
  |-- .zinit-register-plugin
  |   `-- +zinit-message
+ |       `-- +zi-log
  |-- .zinit-set-m-func
  |   `-- +zinit-message
+ |       `-- +zi-log
  |-- .zinit-setup-params
  |-- zinit-install.zsh/.zinit-get-package
  `-- zinit-install.zsh/.zinit-setup-plugin-dir
@@ -792,12 +836,14 @@ Has 12 line(s). Calls functions:
  |   |   |-- .zinit-tmp-subst-on
  |   |   `-- :zinit-tmp-subst-autoload
  |   |       |-- +zinit-message
+ |   |       |   `-- +zi-log
  |   |       |-- .zinit-add-report
  |   |       |-- .zinit-any-to-user-plugin
  |   |       `-- is-at-least
  |   |-- .zinit-load-snippet
  |   |   |-- +zinit-deploy-message
  |   |   |-- +zinit-message
+ |   |   |   `-- +zi-log
  |   |   |-- .zinit-add-report
  |   |   |-- .zinit-find-other-matches
  |   |   |-- .zinit-get-object-path
@@ -805,19 +851,23 @@ Has 12 line(s). Calls functions:
  |   |   |-- .zinit-pack-ice
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zinit-message
+ |   |   |       `-- +zi-log
  |   |   |-- .zinit-setup-params
  |   |   `-- zinit-install.zsh/.zinit-download-snippet
  |   |-- .zinit-pack-ice
  |   |-- .zinit-register-plugin
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-set-m-func
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-setup-params
  |   |-- zinit-install.zsh/.zinit-get-package
  |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
  `-- .zinit-load-snippet
      |-- +zinit-deploy-message
      |-- +zinit-message
+     |   `-- +zi-log
      |-- .zinit-add-report
      |-- .zinit-find-other-matches
      |-- .zinit-get-object-path
@@ -825,6 +875,7 @@ Has 12 line(s). Calls functions:
      |-- .zinit-pack-ice
      |-- .zinit-set-m-func
      |   `-- +zinit-message
+     |       `-- +zi-log
      |-- .zinit-setup-params
      `-- zinit-install.zsh/.zinit-download-snippet
 
@@ -859,6 +910,7 @@ Has 128 line(s). Calls functions:
  |-- .zinit-tmp-subst-on
  `-- :zinit-tmp-subst-autoload
      |-- +zinit-message
+     |   `-- +zi-log
      |-- .zinit-add-report
      |-- .zinit-any-to-user-plugin
      `-- is-at-least
@@ -884,6 +936,7 @@ Has 203 line(s). Calls functions:
  .zinit-load-snippet
  |-- +zinit-deploy-message
  |-- +zinit-message
+ |   `-- +zi-log
  |-- .zinit-add-report
  |-- .zinit-find-other-matches
  |-- .zinit-get-object-path
@@ -891,6 +944,7 @@ Has 203 line(s). Calls functions:
  |-- .zinit-pack-ice
  |-- .zinit-set-m-func
  |   `-- +zinit-message
+ |       `-- +zi-log
  |-- .zinit-setup-params
  `-- zinit-install.zsh/.zinit-download-snippet
 
@@ -974,6 +1028,7 @@ Has 23 line(s). Calls functions:
 
  .zinit-register-plugin
  `-- +zinit-message
+     `-- +zi-log
 
 Called by:
 
@@ -992,6 +1047,7 @@ Has 24 line(s). Calls functions:
 
  .zinit-run
  |-- +zinit-message
+ |   `-- +zi-log
  |-- .zinit-any-to-user-plugin
  `-- .zinit-get-object-path
      `-- .zinit-any-to-user-plugin
@@ -1039,12 +1095,14 @@ Has 47 line(s). Calls functions:
  |   |   |-- .zinit-tmp-subst-on
  |   |   `-- :zinit-tmp-subst-autoload
  |   |       |-- +zinit-message
+ |   |       |   `-- +zi-log
  |   |       |-- .zinit-add-report
  |   |       |-- .zinit-any-to-user-plugin
  |   |       `-- is-at-least
  |   |-- .zinit-load-snippet
  |   |   |-- +zinit-deploy-message
  |   |   |-- +zinit-message
+ |   |   |   `-- +zi-log
  |   |   |-- .zinit-add-report
  |   |   |-- .zinit-find-other-matches
  |   |   |-- .zinit-get-object-path
@@ -1052,19 +1110,23 @@ Has 47 line(s). Calls functions:
  |   |   |-- .zinit-pack-ice
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zinit-message
+ |   |   |       `-- +zi-log
  |   |   |-- .zinit-setup-params
  |   |   `-- zinit-install.zsh/.zinit-download-snippet
  |   |-- .zinit-pack-ice
  |   |-- .zinit-register-plugin
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-set-m-func
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-setup-params
  |   |-- zinit-install.zsh/.zinit-get-package
  |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
  |-- .zinit-load-snippet
  |   |-- +zinit-deploy-message
  |   |-- +zinit-message
+ |   |   `-- +zi-log
  |   |-- .zinit-add-report
  |   |-- .zinit-find-other-matches
  |   |-- .zinit-get-object-path
@@ -1072,6 +1134,7 @@ Has 47 line(s). Calls functions:
  |   |-- .zinit-pack-ice
  |   |-- .zinit-set-m-func
  |   |   `-- +zinit-message
+ |   |       `-- +zi-log
  |   |-- .zinit-setup-params
  |   `-- zinit-install.zsh/.zinit-download-snippet
  `-- zinit-autoload.zsh/.zinit-unload
@@ -1095,6 +1158,7 @@ Has 17 line(s). Calls functions:
 
  .zinit-set-m-func
  `-- +zinit-message
+     `-- +zi-log
 
 Uses feature(s): _setopt_
 
@@ -1243,6 +1307,7 @@ Has 111 line(s). Calls functions:
 
  :zinit-tmp-subst-autoload
  |-- +zinit-message
+ |   `-- +zi-log
  |-- .zinit-add-report
  |-- .zinit-any-to-user-plugin
  `-- is-at-least
@@ -1338,6 +1403,7 @@ Has 4 line(s). Calls functions:
  @autoload
  `-- :zinit-tmp-subst-autoload
      |-- +zinit-message
+     |   `-- +zi-log
      |-- .zinit-add-report
      |-- .zinit-any-to-user-plugin
      `-- is-at-least
@@ -1415,12 +1481,14 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |   |   |-- .zinit-tmp-subst-on
  |   |   |   `-- :zinit-tmp-subst-autoload
  |   |   |       |-- +zinit-message
+ |   |   |       |   `-- +zi-log
  |   |   |       |-- .zinit-add-report
  |   |   |       |-- .zinit-any-to-user-plugin
  |   |   |       `-- is-at-least
  |   |   |-- .zinit-load-snippet
  |   |   |   |-- +zinit-deploy-message
  |   |   |   |-- +zinit-message
+ |   |   |   |   `-- +zi-log
  |   |   |   |-- .zinit-add-report
  |   |   |   |-- .zinit-find-other-matches
  |   |   |   |-- .zinit-get-object-path
@@ -1428,19 +1496,23 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |   |   |-- .zinit-pack-ice
  |   |   |   |-- .zinit-set-m-func
  |   |   |   |   `-- +zinit-message
+ |   |   |   |       `-- +zi-log
  |   |   |   |-- .zinit-setup-params
  |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
  |   |   |-- .zinit-pack-ice
  |   |   |-- .zinit-register-plugin
  |   |   |   `-- +zinit-message
+ |   |   |       `-- +zi-log
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zinit-message
+ |   |   |       `-- +zi-log
  |   |   |-- .zinit-setup-params
  |   |   |-- zinit-install.zsh/.zinit-get-package
  |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
  |   |-- .zinit-load-snippet
  |   |   |-- +zinit-deploy-message
  |   |   |-- +zinit-message
+ |   |   |   `-- +zi-log
  |   |   |-- .zinit-add-report
  |   |   |-- .zinit-find-other-matches
  |   |   |-- .zinit-get-object-path
@@ -1448,6 +1520,7 @@ Has 75 line(s). *Is a precmd hook*. Calls functions:
  |   |   |-- .zinit-pack-ice
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zinit-message
+ |   |   |       `-- +zi-log
  |   |   |-- .zinit-setup-params
  |   |   `-- zinit-install.zsh/.zinit-download-snippet
  |   `-- zinit-autoload.zsh/.zinit-unload
@@ -1514,6 +1587,7 @@ Has 15 line(s). Calls functions:
  `-- .zinit-load-snippet
      |-- +zinit-deploy-message
      |-- +zinit-message
+     |   `-- +zi-log
      |-- .zinit-add-report
      |-- .zinit-find-other-matches
      |-- .zinit-get-object-path
@@ -1521,6 +1595,7 @@ Has 15 line(s). Calls functions:
      |-- .zinit-pack-ice
      |-- .zinit-set-m-func
      |   `-- +zinit-message
+     |       `-- +zi-log
      |-- .zinit-setup-params
      `-- zinit-install.zsh/.zinit-download-snippet
 
@@ -1542,6 +1617,7 @@ Has 1 line(s). Calls functions:
  zicdclear
  `-- .zinit-compdef-clear
      `-- +zinit-message
+         `-- +zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1559,6 +1635,7 @@ Has 1 line(s). Calls functions:
  zicdreplay
  `-- .zinit-compdef-replay
      `-- +zinit-message
+         `-- +zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1603,18 +1680,25 @@ ____
 
 ____
 
-Has 553 line(s). Calls functions:
+Has 519 line(s). Calls functions:
 
  zinit
+ |-- +zi-cmp-reinstall
+ |   |-- compinit
+ |   `-- zinit-install.zsh/.zinit-install-completions
  |-- +zinit-message
+ |   `-- +zi-log
  |-- +zinit-prehelp-usage-message
  |   `-- +zinit-message
+ |       `-- +zi-log
  |-- .zinit-add-fpath
  |   `-- .zinit-any-to-user-plugin
  |-- .zinit-compdef-clear
  |   `-- +zinit-message
+ |       `-- +zi-log
  |-- .zinit-compdef-replay
  |   `-- +zinit-message
+ |       `-- +zi-log
  |-- .zinit-get-object-path
  |   `-- .zinit-any-to-user-plugin
  |-- .zinit-ice
@@ -1638,12 +1722,14 @@ Has 553 line(s). Calls functions:
  |   |   |   |-- .zinit-tmp-subst-on
  |   |   |   `-- :zinit-tmp-subst-autoload
  |   |   |       |-- +zinit-message
+ |   |   |       |   `-- +zi-log
  |   |   |       |-- .zinit-add-report
  |   |   |       |-- .zinit-any-to-user-plugin
  |   |   |       `-- is-at-least
  |   |   |-- .zinit-load-snippet
  |   |   |   |-- +zinit-deploy-message
  |   |   |   |-- +zinit-message
+ |   |   |   |   `-- +zi-log
  |   |   |   |-- .zinit-add-report
  |   |   |   |-- .zinit-find-other-matches
  |   |   |   |-- .zinit-get-object-path
@@ -1651,19 +1737,23 @@ Has 553 line(s). Calls functions:
  |   |   |   |-- .zinit-pack-ice
  |   |   |   |-- .zinit-set-m-func
  |   |   |   |   `-- +zinit-message
+ |   |   |   |       `-- +zi-log
  |   |   |   |-- .zinit-setup-params
  |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
  |   |   |-- .zinit-pack-ice
  |   |   |-- .zinit-register-plugin
  |   |   |   `-- +zinit-message
+ |   |   |       `-- +zi-log
  |   |   |-- .zinit-set-m-func
  |   |   |   `-- +zinit-message
+ |   |   |       `-- +zi-log
  |   |   |-- .zinit-setup-params
  |   |   |-- zinit-install.zsh/.zinit-get-package
  |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
  |   `-- .zinit-load-snippet
  |       |-- +zinit-deploy-message
  |       |-- +zinit-message
+ |       |   `-- +zi-log
  |       |-- .zinit-add-report
  |       |-- .zinit-find-other-matches
  |       |-- .zinit-get-object-path
@@ -1671,11 +1761,13 @@ Has 553 line(s). Calls functions:
  |       |-- .zinit-pack-ice
  |       |-- .zinit-set-m-func
  |       |   `-- +zinit-message
+ |       |       `-- +zi-log
  |       |-- .zinit-setup-params
  |       `-- zinit-install.zsh/.zinit-download-snippet
  |-- .zinit-parse-opts
  |-- .zinit-run
  |   |-- +zinit-message
+ |   |   `-- +zi-log
  |   |-- .zinit-any-to-user-plugin
  |   `-- .zinit-get-object-path
  |       `-- .zinit-any-to-user-plugin
@@ -1710,8 +1802,7 @@ Has 553 line(s). Calls functions:
  |-- zinit-autoload.zsh/zi::version
  |-- zinit-install.zsh/.zinit-compile-plugin
  |-- zinit-install.zsh/.zinit-compinit
- |-- zinit-install.zsh/.zinit-forget-completion
- `-- zinit-install.zsh/.zinit-install-completions
+ `-- zinit-install.zsh/.zinit-forget-completion
 
 Uses feature(s): _autoload_, _compinit_, _eval_, _setopt_, _source_
 
@@ -1728,6 +1819,7 @@ Has 1 line(s). Calls functions:
  zpcdclear
  `-- .zinit-compdef-clear
      `-- +zinit-message
+         `-- +zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1738,6 +1830,7 @@ Has 1 line(s). Calls functions:
  zpcdreplay
  `-- .zinit-compdef-replay
      `-- +zinit-message
+         `-- +zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1764,15 +1857,22 @@ Has 1 line(s). Calls functions:
 
  zplugin
  `-- zinit
+     |-- +zi-cmp-reinstall
+     |   |-- compinit
+     |   `-- zinit-install.zsh/.zinit-install-completions
      |-- +zinit-message
+     |   `-- +zi-log
      |-- +zinit-prehelp-usage-message
      |   `-- +zinit-message
+     |       `-- +zi-log
      |-- .zinit-add-fpath
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-compdef-clear
      |   `-- +zinit-message
+     |       `-- +zi-log
      |-- .zinit-compdef-replay
      |   `-- +zinit-message
+     |       `-- +zi-log
      |-- .zinit-get-object-path
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-ice
@@ -1796,12 +1896,14 @@ Has 1 line(s). Calls functions:
      |   |   |   |-- .zinit-tmp-subst-on
      |   |   |   `-- :zinit-tmp-subst-autoload
      |   |   |       |-- +zinit-message
+     |   |   |       |   `-- +zi-log
      |   |   |       |-- .zinit-add-report
      |   |   |       |-- .zinit-any-to-user-plugin
      |   |   |       `-- is-at-least
      |   |   |-- .zinit-load-snippet
      |   |   |   |-- +zinit-deploy-message
      |   |   |   |-- +zinit-message
+     |   |   |   |   `-- +zi-log
      |   |   |   |-- .zinit-add-report
      |   |   |   |-- .zinit-find-other-matches
      |   |   |   |-- .zinit-get-object-path
@@ -1809,19 +1911,23 @@ Has 1 line(s). Calls functions:
      |   |   |   |-- .zinit-pack-ice
      |   |   |   |-- .zinit-set-m-func
      |   |   |   |   `-- +zinit-message
+     |   |   |   |       `-- +zi-log
      |   |   |   |-- .zinit-setup-params
      |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
      |   |   |-- .zinit-pack-ice
      |   |   |-- .zinit-register-plugin
      |   |   |   `-- +zinit-message
+     |   |   |       `-- +zi-log
      |   |   |-- .zinit-set-m-func
      |   |   |   `-- +zinit-message
+     |   |   |       `-- +zi-log
      |   |   |-- .zinit-setup-params
      |   |   |-- zinit-install.zsh/.zinit-get-package
      |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
      |   `-- .zinit-load-snippet
      |       |-- +zinit-deploy-message
      |       |-- +zinit-message
+     |       |   `-- +zi-log
      |       |-- .zinit-add-report
      |       |-- .zinit-find-other-matches
      |       |-- .zinit-get-object-path
@@ -1829,11 +1935,13 @@ Has 1 line(s). Calls functions:
      |       |-- .zinit-pack-ice
      |       |-- .zinit-set-m-func
      |       |   `-- +zinit-message
+     |       |       `-- +zi-log
      |       |-- .zinit-setup-params
      |       `-- zinit-install.zsh/.zinit-download-snippet
      |-- .zinit-parse-opts
      |-- .zinit-run
      |   |-- +zinit-message
+     |   |   `-- +zi-log
      |   |-- .zinit-any-to-user-plugin
      |   `-- .zinit-get-object-path
      |       `-- .zinit-any-to-user-plugin
@@ -1868,8 +1976,7 @@ Has 1 line(s). Calls functions:
      |-- zinit-autoload.zsh/zi::version
      |-- zinit-install.zsh/.zinit-compile-plugin
      |-- zinit-install.zsh/.zinit-compinit
-     |-- zinit-install.zsh/.zinit-forget-completion
-     `-- zinit-install.zsh/.zinit-install-completions
+     `-- zinit-install.zsh/.zinit-forget-completion
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -1908,7 +2015,7 @@ ____
 
 ____
 
-Has 117 line(s). Doesn't call other functions.
+Has 120 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -1931,12 +2038,13 @@ ____
 
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
+ +zi-cmp-reinstall
  zicompinit
  zinit
  zpcompinit

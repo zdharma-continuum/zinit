@@ -204,11 +204,8 @@ Has 377 line(s). Calls functions:
  |   |   |-- .zinit-forget-completion
  |   |   |-- compinit
  |   |   `-- zinit.zsh/+zinit-message
- |   |-- .zinit-forget-completion
- |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |   |-- zinit-side.zsh/.zinit-exists-physically-message
- |   |-- zinit.zsh/+zinit-message
- |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |-- zinit.zsh/+zi-log
+ |   `-- zinit.zsh/+zinit-message
  |-- .zinit-mirror-using-svn
  |-- zinit-side.zsh/.zinit-store-ices
  |-- zinit.zsh/+zinit-message
@@ -254,7 +251,6 @@ Uses feature(s): _setopt_, _unfunction_
 Called by:
 
  .zinit-compinit
- .zinit-install-completions
  zinit-autoload.zsh/.zinit-uninstall-completions
  zinit.zsh/zinit
 
@@ -338,37 +334,32 @@ Called by:
 
 ____
  
- Installs all completions of given plugin. After that they are
- visible to 'compinit'. Visible completions can be selectively
- disabled and enabled. User can access completion data with
- 'clist' or 'completions' subcommand.
+ Installs plugin completions.
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin if $1 (i.e., user) given
  $3 - if 1, then reinstall, otherwise only install completions that are not present
+ 
 
 ____
 
-Has 62 line(s). Calls functions:
+Has 76 line(s). Calls functions:
 
  .zinit-install-completions
  |-- .zinit-compinit
  |   |-- .zinit-forget-completion
  |   |-- compinit
  |   `-- zinit.zsh/+zinit-message
- |-- .zinit-forget-completion
- |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |-- zinit-side.zsh/.zinit-exists-physically-message
- |-- zinit.zsh/+zinit-message
- `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit.zsh/+zi-log
+ `-- zinit.zsh/+zinit-message
 
-Uses feature(s): _setopt_
+Uses feature(s): _setopt_, _zparseopts_
 
 Called by:
 
  .zinit-download-snippet
  .zinit-setup-plugin-dir
- zinit.zsh/zinit
+ zinit.zsh/+zi-cmp-reinstall
 
 ==== .zinit-jq-check
 
@@ -487,11 +478,8 @@ Has 214 line(s). Calls functions:
  |   |   |-- .zinit-forget-completion
  |   |   |-- compinit
  |   |   `-- zinit.zsh/+zinit-message
- |   |-- .zinit-forget-completion
- |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |   |-- zinit-side.zsh/.zinit-exists-physically-message
- |   |-- zinit.zsh/+zinit-message
- |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |-- zinit.zsh/+zi-log
+ |   `-- zinit.zsh/+zinit-message
  |-- ziextract
  |   `-- zinit.zsh/+zinit-message
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
@@ -534,11 +522,8 @@ Has 76 line(s). Calls functions:
  |   |   |   |-- .zinit-forget-completion
  |   |   |   |-- compinit
  |   |   |   `-- zinit.zsh/+zinit-message
- |   |   |-- .zinit-forget-completion
- |   |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |   |   |-- zinit-side.zsh/.zinit-exists-physically-message
- |   |   |-- zinit.zsh/+zinit-message
- |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |   |-- zinit.zsh/+zi-log
+ |   |   `-- zinit.zsh/+zinit-message
  |   |-- .zinit-mirror-using-svn
  |   |-- zinit-side.zsh/.zinit-store-ices
  |   |-- zinit.zsh/+zinit-message
@@ -850,7 +835,7 @@ ____
 
 ____
 
-Has 549 line(s). Doesn't call other functions.
+Has 573 line(s). Doesn't call other functions.
 
 Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
 
