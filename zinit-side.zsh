@@ -330,7 +330,7 @@
     svn
   )
 
-  command mkdir -p "$___pfx"
+  command mkdir -p "$___pfx" && echo '*' > "$___pfx/.gitignore"
   local ___key ___var_name
   # No nval_ices here
   for ___key in ${ice_order[@]:#(${(~j:|:)nval_ices[@]})} ${(s: :)___add_ices[@]}; do

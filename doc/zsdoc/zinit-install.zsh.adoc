@@ -1,18 +1,12 @@
-zinit-install.zsh(1)
-====================
-:compat-mode!:
 
 NAME
-----
+
 zinit-install.zsh - a shell script
 
-SYNOPSIS
---------
 Documentation automatically generated with `zshelldoc'
 
-FUNCTIONS
----------
-
+== FUNCTIONS
+ .zi::get-architecture
  .zinit-at-eval
  .zinit-compile-plugin
  .zinit-compinit
@@ -55,18 +49,26 @@ FUNCTIONS
  ∞zinit-reset-hook
 AUTOLOAD compinit
 
-DETAILS
--------
+=== DETAILS
 
-Script Body
-~~~~~~~~~~~
+==== Script Body
 
 Has 6 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 Uses feature(s): _source_
 
-.zinit-at-eval
-~~~~~~~~~~~~~~
+==== .zi::get-architecture
+
+Has 43 line(s). Calls functions:
+
+ .zi::get-architecture
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-at-eval
 
 Has 9 line(s). Calls functions:
 
@@ -80,8 +82,7 @@ Called by:
  ∞zinit-atpull-e-hook
  ∞zinit-atpull-hook
 
-.zinit-compile-plugin
-~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-compile-plugin
 
 ____
  
@@ -90,9 +91,10 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
-Has 87 line(s). Calls functions:
+Has 83 line(s). Calls functions:
 
  .zinit-compile-plugin
  |-- zinit-side.zsh/.zinit-compute-ice
@@ -107,8 +109,7 @@ Called by:
  zinit-autoload.zsh/.zinit-compile-uncompile-all
  zinit.zsh/zinit
 
-.zinit-compinit
-~~~~~~~~~~~~~~~
+==== .zinit-compinit
 
 ____
  
@@ -118,11 +119,13 @@ ____
  Zinit's completions.
  
  No arguments.
+
 ____
 
 Has 26 line(s). Calls functions:
 
  .zinit-compinit
+ |-- .zinit-forget-completion
  |-- compinit
  `-- zinit.zsh/+zinit-message
 
@@ -136,13 +139,13 @@ Called by:
  zinit.zsh/.zinit-prepare-home
  zinit.zsh/zinit
 
-.zinit-configure-run-autoconf
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-configure-run-autoconf
 
 ____
  
- Called either because "#" flag given to configure'', or because
- theres no ./configure script. Runs autoconf, autoreconf, and autogen.sh as needed.
+ Called if # passed to configure ice or no ./configure found
+ Runs autoconf, autoreconf, and autogen.sh
+
 ____
 
 Has 64 line(s). Calls functions:
@@ -154,13 +157,13 @@ Called by:
 
  ∞zinit-configure-base-hook
 
-.zinit-download-file-stdout
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-download-file-stdout
 
 ____
  
  Downloads file to stdout. Supports following backend commands:
  curl, wget, lftp, lynx. Used by snippet loading.
+
 ____
 
 Has 53 line(s). Calls functions:
@@ -177,22 +180,36 @@ Called by:
  .zinit-get-package
  .zinit-setup-plugin-dir
 
-.zinit-download-snippet
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-download-snippet
 
 ____
  
  Downloads snippet
  file – with curl, wget, lftp or lynx,
- directory, with Subversion – when svn-ICE is active. 
+ directory, with Subversion – when svn-ICE is active.
  
  Github supports Subversion protocol and allows to clone subdirectories.
  This is used to provide a layer of support for Oh-My-Zsh and Prezto.
+
 ____
 
 Has 377 line(s). Calls functions:
 
  .zinit-download-snippet
+ |-- .zinit-download-file-stdout
+ |   `-- zinit.zsh/+zinit-message
+ |-- .zinit-get-url-mtime
+ |-- .zinit-install-completions
+ |   |-- .zinit-compinit
+ |   |   |-- .zinit-forget-completion
+ |   |   |-- compinit
+ |   |   `-- zinit.zsh/+zinit-message
+ |   |-- .zinit-forget-completion
+ |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   |-- zinit-side.zsh/.zinit-exists-physically-message
+ |   |-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- .zinit-mirror-using-svn
  |-- zinit-side.zsh/.zinit-store-ices
  |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/is-at-least
@@ -204,8 +221,7 @@ Called by:
  .zinit-update-snippet
  zinit.zsh/.zinit-load-snippet
 
-.zinit-extract
-~~~~~~~~~~~~~~
+==== .zinit-extract
 
 Has 30 line(s). Calls functions:
 
@@ -220,8 +236,7 @@ Called by:
 
  ∞zinit-extract-hook
 
-.zinit-forget-completion
-~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-forget-completion
 
 ____
  
@@ -229,6 +244,7 @@ ____
  completion stops being visible to Zsh.
  
  $1 - completion function name, e.g. "_cp"; can also be "cp"
+
 ____
 
 Has 20 line(s). Doesn't call other functions.
@@ -242,12 +258,13 @@ Called by:
  zinit-autoload.zsh/.zinit-uninstall-completions
  zinit.zsh/zinit
 
-.zinit-get-cygwin-package
-~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-get-cygwin-package
 
 Has 70 line(s). Calls functions:
 
  .zinit-get-cygwin-package
+ |-- .zinit-download-file-stdout
+ |   `-- zinit.zsh/+zinit-message
  `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
@@ -256,16 +273,16 @@ Called by:
 
  .zinit-setup-plugin-dir
 
-.zinit-get-latest-gh-r-url-part
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-get-latest-gh-r-url-part
 
 ____
  
  Gets version string of latest release of given Github
  package. Connects to Github releases page.
+
 ____
 
-Has 116 line(s). Calls functions:
+Has 52 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zinit-message
@@ -277,12 +294,18 @@ Called by:
  .zinit-setup-plugin-dir
  zinit-autoload.zsh/.zinit-update-or-status
 
-.zinit-get-package
-~~~~~~~~~~~~~~~~~~
+==== .zinit-get-package
 
 Has 195 line(s). Calls functions:
 
  .zinit-get-package
+ |-- .zinit-download-file-stdout
+ |   `-- zinit.zsh/+zinit-message
+ |-- .zinit-jq-check
+ |   `-- zinit.zsh/+zinit-message
+ |-- .zinit-json-to-array
+ |   `-- .zinit-jq-check
+ |       `-- zinit.zsh/+zinit-message
  |-- ziextract
  |   `-- zinit.zsh/+zinit-message
  |-- zinit.zsh/+zinit-message
@@ -294,15 +317,13 @@ Called by:
 
  zinit.zsh/.zinit-load
 
-_Environment variables used:_ zinit.zsh -> ZPFX
-
-.zinit-get-url-mtime
-~~~~~~~~~~~~~~~~~~~~
+==== .zinit-get-url-mtime
 
 ____
  
  For the given URL returns the date in the Last-Modified
  header as a time stamp
+
 ____
 
 Has 35 line(s). Doesn't call other functions.
@@ -313,8 +334,7 @@ Called by:
 
  .zinit-download-snippet
 
-.zinit-install-completions
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-install-completions
 
 ____
  
@@ -326,11 +346,17 @@ ____
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin if $1 (i.e., user) given
  $3 - if 1, then reinstall, otherwise only install completions that are not present
+
 ____
 
-Has 61 line(s). Calls functions:
+Has 62 line(s). Calls functions:
 
  .zinit-install-completions
+ |-- .zinit-compinit
+ |   |-- .zinit-forget-completion
+ |   |-- compinit
+ |   `-- zinit.zsh/+zinit-message
+ |-- .zinit-forget-completion
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit-side.zsh/.zinit-exists-physically-message
  |-- zinit.zsh/+zinit-message
@@ -344,13 +370,13 @@ Called by:
  .zinit-setup-plugin-dir
  zinit.zsh/zinit
 
-.zinit-jq-check
-~~~~~~~~~~~~~~~
+==== .zinit-jq-check
 
 ____
  
  Check if jq is available and outputs an error message with instructions if
  that's not the case
+
 ____
 
 Has 8 line(s). Calls functions:
@@ -364,8 +390,7 @@ Called by:
  .zinit-json-get-value
  .zinit-json-to-array
 
-.zinit-json-get-value
-~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-json-get-value
 
 ____
  
@@ -373,16 +398,18 @@ ____
  
  $1: JSON structure
  $2: jq path
+
 ____
 
 Has 4 line(s). Calls functions:
 
  .zinit-json-get-value
+ `-- .zinit-jq-check
+     `-- zinit.zsh/+zinit-message
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-json-to-array
-~~~~~~~~~~~~~~~~~~~~
+==== .zinit-json-to-array
 
 ____
  
@@ -392,11 +419,14 @@ ____
  $1: JSON structure
  $2: jq path
  $3: name of the associative array to store the key/value pairs in
+
 ____
 
 Has 13 line(s). Calls functions:
 
  .zinit-json-to-array
+ `-- .zinit-jq-check
+     `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _eval_, _setopt_
 
@@ -404,8 +434,7 @@ Called by:
 
  .zinit-get-package
 
-.zinit-mirror-using-svn
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-mirror-using-svn
 
 ____
  
@@ -418,6 +447,7 @@ ____
  $1 - URL
  $2 - mode, "" - normal, "-u" - update, "-t" - test
  $3 - subdirectory (not path) with working copy, needed for -t and -u
+
 ____
 
 Has 29 line(s). Doesn't call other functions.
@@ -428,8 +458,7 @@ Called by:
 
  .zinit-download-snippet
 
-.zinit-setup-plugin-dir
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-setup-plugin-dir
 
 ____
  
@@ -439,11 +468,30 @@ ____
  
  $1 - user
  $2 - plugin
+
 ____
 
-Has 215 line(s). Calls functions:
+Has 214 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
+ |-- .zinit-download-file-stdout
+ |   `-- zinit.zsh/+zinit-message
+ |-- .zinit-get-cygwin-package
+ |   |-- .zinit-download-file-stdout
+ |   |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zinit-message
+ |-- .zinit-get-latest-gh-r-url-part
+ |   `-- zinit.zsh/+zinit-message
+ |-- .zinit-install-completions
+ |   |-- .zinit-compinit
+ |   |   |-- .zinit-forget-completion
+ |   |   |-- compinit
+ |   |   `-- zinit.zsh/+zinit-message
+ |   |-- .zinit-forget-completion
+ |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   |-- zinit-side.zsh/.zinit-exists-physically-message
+ |   |-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- ziextract
  |   `-- zinit.zsh/+zinit-message
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
@@ -458,12 +506,12 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status
  zinit.zsh/.zinit-load
 
-.zinit-single-line
-~~~~~~~~~~~~~~~~~~
+==== .zinit-single-line
 
 ____
  
  Display cURL progress bar on a single line
+
 ____
 
 Has 20 line(s). Doesn't call other functions.
@@ -472,12 +520,29 @@ Uses feature(s): _read_, _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-update-snippet
-~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-update-snippet
 
 Has 76 line(s). Calls functions:
 
  .zinit-update-snippet
+ |-- .zinit-download-snippet
+ |   |-- .zinit-download-file-stdout
+ |   |   `-- zinit.zsh/+zinit-message
+ |   |-- .zinit-get-url-mtime
+ |   |-- .zinit-install-completions
+ |   |   |-- .zinit-compinit
+ |   |   |   |-- .zinit-forget-completion
+ |   |   |   |-- compinit
+ |   |   |   `-- zinit.zsh/+zinit-message
+ |   |   |-- .zinit-forget-completion
+ |   |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   |   |-- zinit-side.zsh/.zinit-exists-physically-message
+ |   |   |-- zinit.zsh/+zinit-message
+ |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |-- .zinit-mirror-using-svn
+ |   |-- zinit-side.zsh/.zinit-store-ices
+ |   |-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/is-at-least
  |-- zinit.zsh/+zinit-message
  |-- zinit.zsh/.zinit-get-object-path
  `-- zinit.zsh/.zinit-pack-ice
@@ -488,8 +553,7 @@ Called by:
 
  zinit-autoload.zsh/.zinit-update-or-status-snippet
 
-zicp
-~~~~
+==== zicp
 
 Has 30 line(s). Doesn't call other functions.
 
@@ -499,20 +563,18 @@ Called by:
 
  zimv
 
-_Environment variables used:_ zinit.zsh -> ZPFX
-
-ziextract
-~~~~~~~~~
+==== ziextract
 
 ____
  
  If the file is an archive, it is extracted by this function.
- Next stage is scanning of files with the common utility `file',
+ Next stage is scanning of files with the common utility file
  to detect executables. They are given +x mode. There are also
  messages to the user on performed actions.
  
  $1 - url
  $2 - file
+
 ____
 
 Has 283 line(s). Calls functions:
@@ -529,8 +591,7 @@ Called by:
  .zinit-setup-plugin-dir
  zpextract
 
-zimv
-~~~~
+==== zimv
 
 Has 3 line(s). Calls functions:
 
@@ -539,8 +600,7 @@ Has 3 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-zpextract
-~~~~~~~~~
+==== zpextract
 
 Has 1 line(s). Calls functions:
 
@@ -550,8 +610,7 @@ Has 1 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-atclone-hook
-~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-atclone-hook
 
 Has 26 line(s). Calls functions:
 
@@ -563,48 +622,47 @@ Uses feature(s): _eval_, _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-atpull-e-hook
-~~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-atpull-e-hook
 
 Has 22 line(s). Calls functions:
 
  ∞zinit-atpull-e-hook
+ |-- .zinit-at-eval
+ |   `-- zinit.zsh/@zinit-substitute
  `-- zinit-side.zsh/.zinit-countdown
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-atpull-hook
-~~~~~~~~~~~~~~~~~~
+==== ∞zinit-atpull-hook
 
 Has 22 line(s). Calls functions:
 
  ∞zinit-atpull-hook
+ |-- .zinit-at-eval
+ |   `-- zinit.zsh/@zinit-substitute
  `-- zinit-side.zsh/.zinit-countdown
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-compile-plugin-hook
-~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- ]]]
-____
+==== ∞zinit-compile-plugin-hook
 
 Has 19 line(s). Calls functions:
 
  ∞zinit-compile-plugin-hook
+ `-- .zinit-compile-plugin
+     |-- zinit-side.zsh/.zinit-compute-ice
+     |-- zinit-side.zsh/.zinit-first
+     `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-configure-base-hook
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-configure-base-hook
 
 ____
  
@@ -612,11 +670,14 @@ ____
  the starting steps are rigid and the same in all
  hooks, hence the idea. TODO: use in make'' and other
  places.
+
 ____
 
 Has 65 line(s). Calls functions:
 
  ∞zinit-configure-base-hook
+ |-- .zinit-configure-run-autoconf
+ |   `-- zinit-side.zsh/.zinit-countdown
  |-- zinit-side.zsh/.zinit-countdown
  `-- zinit.zsh/@zinit-substitute
 
@@ -625,48 +686,49 @@ Called by:
  ∞zinit-configure-e-hook
  ∞zinit-configure-hook
 
-_Environment variables used:_ zinit.zsh -> ZPFX
-
-∞zinit-configure-e-hook
-~~~~~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-configure-e-hook
 
 ____
  
  The !-version of configure'' ice. Runs in between
  of make'!!' and make'!'. Configure naturally runs
  before make.
+
 ____
 
 Has 1 line(s). Calls functions:
 
  ∞zinit-configure-e-hook
  `-- ∞zinit-configure-base-hook
+     |-- .zinit-configure-run-autoconf
+     |   `-- zinit-side.zsh/.zinit-countdown
      |-- zinit-side.zsh/.zinit-countdown
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-configure-hook
-~~~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-configure-hook
 
 ____
  
  The non-! version of configure'' ice. Runs in between
  of make'!' and make''. Configure script naturally runs
  before make.
+
 ____
 
 Has 1 line(s). Calls functions:
 
  ∞zinit-configure-hook
  `-- ∞zinit-configure-base-hook
+     |-- .zinit-configure-run-autoconf
+     |   `-- zinit-side.zsh/.zinit-countdown
      |-- zinit-side.zsh/.zinit-countdown
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-cp-hook
-~~~~~~~~~~~~~~
+==== ∞zinit-cp-hook
 
 Has 30 line(s). Calls functions:
 
@@ -677,18 +739,20 @@ Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-extract-hook
-~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-extract-hook
 
 Has 10 line(s). Calls functions:
 
  ∞zinit-extract-hook
+ |-- .zinit-extract
+ |   |-- ziextract
+ |   |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zinit-message
  `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-make-base-hook
-~~~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-make-base-hook
 
 Has 29 line(s). Calls functions:
 
@@ -702,8 +766,7 @@ Called by:
  ∞zinit-make-ee-hook
  ∞zinit-make-hook
 
-∞zinit-make-e-hook
-~~~~~~~~~~~~~~~~~~
+==== ∞zinit-make-e-hook
 
 Has 1 line(s). Calls functions:
 
@@ -714,8 +777,7 @@ Has 1 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-make-ee-hook
-~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-make-ee-hook
 
 Has 1 line(s). Calls functions:
 
@@ -726,8 +788,7 @@ Has 1 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-make-hook
-~~~~~~~~~~~~~~~~
+==== ∞zinit-make-hook
 
 Has 1 line(s). Calls functions:
 
@@ -738,8 +799,7 @@ Has 1 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-mv-hook
-~~~~~~~~~~~~~~
+==== ∞zinit-mv-hook
 
 Has 35 line(s). Calls functions:
 
@@ -751,8 +811,7 @@ Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-ps-on-update-hook
-~~~~~~~~~~~~~~~~~~~~~~~~
+==== ∞zinit-ps-on-update-hook
 
 Has 18 line(s). Calls functions:
 
@@ -763,8 +822,7 @@ Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-∞zinit-reset-hook
-~~~~~~~~~~~~~~~~~
+==== ∞zinit-reset-hook
 
 Has 79 line(s). Calls functions:
 
@@ -775,8 +833,7 @@ Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-compinit
-~~~~~~~~
+==== compinit
 
 ____
  
@@ -790,6 +847,7 @@ ____
  should be done with its contents:
  
  `#compdef <names ...>'
+
 ____
 
 Has 549 line(s). Doesn't call other functions.

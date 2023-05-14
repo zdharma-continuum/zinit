@@ -1,4 +1,5 @@
 ci/cd: ['.github/**/*']
+completion: ['_zinit']
 docker: ['docker/*']
 docs: ['*.md', 'doc/**/*']
 scripts: ['scripts/*']
