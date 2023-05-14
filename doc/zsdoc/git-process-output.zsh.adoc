@@ -1,27 +1,18 @@
-git-process-output.zsh(1)
-=========================
-:compat-mode!:
 
 NAME
-----
+
 git-process-output.zsh - a shell script
 
-SYNOPSIS
---------
 Documentation automatically generated with `zshelldoc'
 
-FUNCTIONS
----------
-
+== FUNCTIONS
  print_my_line
  print_my_line_compress
  timeline
 
-DETAILS
--------
+=== DETAILS
 
-Script Body
-~~~~~~~~~~~
+==== Script Body
 
 Has 113 line(s). Calls functions:
 
@@ -32,8 +23,7 @@ Has 113 line(s). Calls functions:
 
 Uses feature(s): _eval_, _read_, _setopt_, _trap_
 
-print_my_line
-~~~~~~~~~~~~~
+==== print_my_line
 
 ____
  
@@ -42,6 +32,7 @@ ____
  $3 - total objects
  $4 - receiving percentage
  $5 - resolving percentage
+
 ____
 
 Has 13 line(s). Doesn't call other functions.
@@ -50,8 +41,7 @@ Called by:
 
  Script-Body
 
-print_my_line_compress
-~~~~~~~~~~~~~~~~~~~~~~
+==== print_my_line_compress
 
 Has 12 line(s). Doesn't call other functions.
 
@@ -59,12 +49,12 @@ Called by:
 
  Script-Body
 
-timeline
-~~~~~~~~
+==== timeline
 
 ____
  
  Code by leoj3n
+
 ____
 
 Has 15 line(s). Doesn't call other functions.

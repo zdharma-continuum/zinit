@@ -12,6 +12,7 @@ all: help
 
 clean:
 	rm -rf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
+	$(ZSH) 'zinit delete --yes zdharma-continuum/zshelldoc; exit'
 
 container-build: ## build docker image
 	docker build \
@@ -30,8 +31,10 @@ container-shell: ## start shell in docker container
 		--platform=linux/x86_64 \
 		--tty \
 		$(CONTAINTER_NAME):latest
+deps:
+	$(ZSH) "zi for make'PREFIX=$${ZPFX} install' nocompile zdharma-continuum/zshelldoc"
 
-doc: clean
+doc: clean deps
 	cd doc; $(ZSH) -df "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\+\@\:∞\.\~\-\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC); make -C ./zsdoc pdf"
 
 doc-container:

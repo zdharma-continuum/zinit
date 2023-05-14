@@ -1,24 +1,15 @@
-rpm2cpio.zsh(1)
-===============
-:compat-mode!:
 
 NAME
-----
+
 rpm2cpio.zsh - a shell script
 
-SYNOPSIS
---------
 Documentation automatically generated with `zshelldoc'
 
-FUNCTIONS
----------
+== FUNCTIONS
 
+=== DETAILS
 
-DETAILS
--------
-
-Script Body
-~~~~~~~~~~~
+==== Script Body
 
 Has 51 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
