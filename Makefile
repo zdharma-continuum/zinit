@@ -11,7 +11,7 @@ CONTAINTER_NAME := zinit
 all: help
 
 clean:
-	rm -rvf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
+	rm -rf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
 
 container-build: ## build docker image
 	docker build \

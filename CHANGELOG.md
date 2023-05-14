@@ -1,3 +1,90 @@
+# [3.11.0](https://github.com/zdharma-continuum/zinit/compare/v3.10.0...v3.11.0) (2023-05-04)
+
+
+### Bug Fixes
+
+* add `.gitignore` with '*' pattern in a plugins `._zinit/` directory ([#397](https://github.com/zdharma-continuum/zinit/issues/397)) ([fccb508](https://github.com/zdharma-continuum/zinit/commit/fccb5080ab4b1df83f01906082eea444f218776f)), closes [#395](https://github.com/zdharma-continuum/zinit/issues/395)
+* broken update command ([336ca85](https://github.com/zdharma-continuum/zinit/commit/336ca85ade5d4c5c99bd903610baf9961753192b))
+* cleanup style, naming, and completion ([6c82d67](https://github.com/zdharma-continuum/zinit/commit/6c82d6788dec6a60c4c217d03c45c327bc0e59a1))
+* compile and completion log messages ([c4446da](https://github.com/zdharma-continuum/zinit/commit/c4446da57e5375f4a89ea94e1e8c04eacfc4e494))
+* csearch ignores lua files ([4d1840b](https://github.com/zdharma-continuum/zinit/commit/4d1840b883e86cc46df2050c01bd0731e29023aa))
+* makefile clean target less verbose ([3396f5e](https://github.com/zdharma-continuum/zinit/commit/3396f5e3aa1fb81d128d4f34b9ff868011d68981))
+* pin git-mkver gh-r test to v.1.2.2 ([a05cc1a](https://github.com/zdharma-continuum/zinit/commit/a05cc1ab59db5b82c5a0f7ee0b6bbef84f0e8b0e))
+* pin git-mkver unit test to v1.2.2 ([08f02e0](https://github.com/zdharma-continuum/zinit/commit/08f02e00d0fbc86b10d44d18f5b774c9c00806cc))
+* regenerate docs ([e0177e2](https://github.com/zdharma-continuum/zinit/commit/e0177e20382d8336d55bc2637a6f2c515d25ce19))
+
+
+### Features
+
+* expand gh-r zunit tests ([c323116](https://github.com/zdharma-continuum/zinit/commit/c3231164836c8ca3ca9ebded8d95c31c0a186567))
+* refactor debug commands ([930b25e](https://github.com/zdharma-continuum/zinit/commit/930b25ee3c6cc66931eda0030c422fddd69ef9c4))
+* refactor ls, list, and loaded commands ([a865907](https://github.com/zdharma-continuum/zinit/commit/a86590762ac2bb5244db5d3cd7d99d32a9dc11fe))
+
+# [3.10.0](https://github.com/zdharma-continuum/zinit/compare/v3.9.0...v3.10.0) (2023-04-02)
+
+
+### Bug Fixes
+
+* absolute path support in the symbol browser ([d29a8ba](https://github.com/zdharma-continuum/zinit/commit/d29a8ba2b757b936663c16d12e46d3638f44027a))
+* assign to functions hash to make %x work ([bd65a01](https://github.com/zdharma-continuum/zinit/commit/bd65a017345ac891b6b14eb5feb4182bc9c74ace))
+* broken symbolic link after `creinstall .` ([da0d6b7](https://github.com/zdharma-continuum/zinit/commit/da0d6b712c6466d11165ac9e27a6cd7de856e537))
+* bump node version in release workflow ([938f483](https://github.com/zdharma-continuum/zinit/commit/938f48375b20545078b63d6c1dba0a905599afe4))
+* change prefix `~zi::` to `__zi::` ([0e45493](https://github.com/zdharma-continuum/zinit/commit/0e45493e36ff350c79c164895bd4718103e2cf7a))
+* container build & shell make targets ([a72fb83](https://github.com/zdharma-continuum/zinit/commit/a72fb83f0999a7fa4a26c6e1bb71d6cab3858b4f))
+* container build & shell make targets ([14b2cda](https://github.com/zdharma-continuum/zinit/commit/14b2cda0397c343b1bfdc041cba7c4ab216e3803))
+* container build & shell make targets ([370808d](https://github.com/zdharma-continuum/zinit/commit/370808dd5186f4b9c8a214e7ef6f4350df243b5b))
+* container build & shell make targets ([47bd74f](https://github.com/zdharma-continuum/zinit/commit/47bd74f8a7c74761e9b03943d3c40fc523df585f))
+* container build & shell make targets ([f8eb967](https://github.com/zdharma-continuum/zinit/commit/f8eb967b0e98f135b43cb5065aceb8a4f058aa09))
+* container build & shell make targets ([3af321e](https://github.com/zdharma-continuum/zinit/commit/3af321e8e4975a07634df08acda383e4cf53e99c))
+* do not run `make docs` ([3802893](https://github.com/zdharma-continuum/zinit/commit/3802893c74988fc03bad086601c905a1046a9fc1))
+* failing zunit tests & bootstrap script ([d618467](https://github.com/zdharma-continuum/zinit/commit/d618467ff090a6dbfb327ca0a29141d0c9312b24))
+* file modelines ([75bb735](https://github.com/zdharma-continuum/zinit/commit/75bb73547ed24ab6d25e1aed03684caebba39f5e))
+* gh-r & bpick ice log format and content ([ad88a89](https://github.com/zdharma-continuum/zinit/commit/ad88a890ad25505acb764f9551ee00d5264daa9a))
+* gh-r parsing logic for arm64 & logging style ([7e48651](https://github.com/zdharma-continuum/zinit/commit/7e486519d7aad48a8b6009ae5075f0efec2409f9))
+* gh-r pattern for 64bit linux-gnu systems ([b5a31c0](https://github.com/zdharma-continuum/zinit/commit/b5a31c07f2bd2d823ce9e99b98228ec68db523bd))
+* lsd repo owner changed to lsd-rs organization ([#489](https://github.com/zdharma-continuum/zinit/issues/489)) ([824d9d3](https://github.com/zdharma-continuum/zinit/commit/824d9d36177dac00a81333205e2b3dfbc35cb758))
+* make gh-r release search case-insensitive ([3eb75b7](https://github.com/zdharma-continuum/zinit/commit/3eb75b7ee9db4dd01455811cf4ca4539dd07246b))
+* make target docker cmd flags ([dd04896](https://github.com/zdharma-continuum/zinit/commit/dd048964491b9a63f4622b591b9a227d5e981408))
+* pin `ggsrun` version in gh-r z-unit test ([9f67798](https://github.com/zdharma-continuum/zinit/commit/9f677989e8386469bc2d5dcb0d2cb5d62d489e34))
+* the starship example does not work properly ([4933b62](https://github.com/zdharma-continuum/zinit/commit/4933b62f400a1b6b29b82a9ff233911b336a33c5))
+* update pygmentize flags in glance subcommand ([#488](https://github.com/zdharma-continuum/zinit/issues/488)) ([b773763](https://github.com/zdharma-continuum/zinit/commit/b773763bdc37d414a5d954ccb00877374177f0ec))
+* use correct return code in zinit-confirm ([d467738](https://github.com/zdharma-continuum/zinit/commit/d467738c1b1c834e938b4b4bb6e83cab5bfdc429))
+* vim modelines & zsdoc pdf rendering ([2b460a7](https://github.com/zdharma-continuum/zinit/commit/2b460a74f236178cd8d06b55069049381d79256e))
+
+
+### Features
+
+* delete subcommand refactor ([9eee215](https://github.com/zdharma-continuum/zinit/commit/9eee215e3f8ee7d8404e4e54f8ef57a57a21fde2)), closes [#57](https://github.com/zdharma-continuum/zinit/issues/57) [#239](https://github.com/zdharma-continuum/zinit/issues/239)
+* zinit completion improvements ([b8d12e5](https://github.com/zdharma-continuum/zinit/commit/b8d12e555d4cadff7769ef67c5d4c0d403f0b11e))
+
+
+### Reverts
+
+* "Merge branch 'refactor/zinit-function-names' into main" ([515688b](https://github.com/zdharma-continuum/zinit/commit/515688bc976e793422d21ba9debfdd1a982c611e))
+
+# [3.9.0](https://github.com/zdharma-continuum/zinit/compare/v3.8.0...v3.9.0) (2022-12-17)
+
+
+### Bug Fixes
+
+* remove broken gh-r zunit test for "warp" ([#430](https://github.com/zdharma-continuum/zinit/issues/430)) ([64fa4ae](https://github.com/zdharma-continuum/zinit/commit/64fa4aef3ae517afe5444b24df9603e9d1a77a55))
+
+
+### Features
+
+* add `completions` ice ([#417](https://github.com/zdharma-continuum/zinit/issues/417)) ([59975d7](https://github.com/zdharma-continuum/zinit/commit/59975d70d7101651b0bb01f4e22c23db0dae8133))
+* display version via `version` sub command ([bfb01e6](https://github.com/zdharma-continuum/zinit/commit/bfb01e65d7b9a98c643f3ee0a92f2df06372f52e))
+
+
+### Performance Improvements
+
+* reduce scheduler task check to 10 second interval ([#429](https://github.com/zdharma-continuum/zinit/issues/429)) ([1681ce4](https://github.com/zdharma-continuum/zinit/commit/1681ce40ebf98e5bf48b78ac5d6c060c1ecada99))
+
+
+### Reverts
+
+* "perf: reduce scheduler task check to 10 second interval ([#429](https://github.com/zdharma-continuum/zinit/issues/429))" ([#432](https://github.com/zdharma-continuum/zinit/issues/432)) ([cfd3261](https://github.com/zdharma-continuum/zinit/commit/cfd32618921ce0626a6deadc794da962750a845d))
+
 # [3.8.0](https://github.com/zdharma-continuum/zinit/compare/v3.7.0...v3.8.0) (2022-11-07)
 
 

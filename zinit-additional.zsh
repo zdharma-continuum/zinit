@@ -12,7 +12,7 @@
 
     # Load the plugin
     if [[ ! -r $1 ]] {
-        +zinit-message "{error}source: Couldn't read the script {obj}${1}{error}" \
+        +zi-log "{error}source: Couldn't read the script {obj}${1}{error}" \
             ", cannot substitute {data}${ICE[subst]}{error}.{rst}"
     }
 
@@ -76,7 +76,6 @@
         builtin read -t 1 ___tmp <>"${___fle:r}.fifo2"
     done >>! "$ZSRV_WORK_DIR/$ZSRV_ID".log 2>&1
 } # ]]]
-
 # FUNCTION: .zinit-wrap-track-functions [[[
 .zinit-wrap-track-functions() {
     local user="$1" plugin="$2" id_as="$3" f
@@ -101,55 +100,120 @@ function $f {
 } # ]]]
 
 #
-# Dtrace
+# debug command
 #
 
-# FUNCTION: .zinit-debug-start [[[
-# Starts Dtrace, i.e. session tracking for changes in Zsh state.
-.zinit-debug-start() {
+# FUNCTION: .zinit-debug-clear [[[
+# Clear latest debug report
+.zinit-debug-clear() {
+    {
+        .zinit-clear-report-for _dtrace/_dtrace
+        +zi-log '{m} Cleared debug report'
+    } || {
+        +zi-log '{e} Failed to clear debug report'
+        return 1
+    }
+} # ]]]
+# FUNCTION: .zinit-debug-report [[[
+# Displays debug report (data recorded in interactive session).
+.zinit-debug-report() {
     if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "{error}Dtrace is already active, stop it first with \`dstop'{rst}"
+        +zi-log "{e} Debug mode active, stop it first via {cmd}zinit debug stop{rst}"
+    else
+        (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
+        .zinit-show-report "_dtrace/_dtrace"
+    fi
+} # ]]]
+# FUNCTION: .zinit-debug-revert [[[
+# Revert changes made during debug mode
+.zinit-debug-revert() {
+    if [[ ${ZINIT[DTRACE]} = 1 ]]; then
+        +zi-log "{e} Debug mode is active. To stop, run {cmd}zinit debug stop{rst}"
+    else
+        (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
+        .zinit-unload _dtrace _dtrace
+        +zi-log "{m} Reverted changes detected during debug mode"
+    fi
+} # ]]]
+# FUNCTION: .zinit-debug-start [[[
+# Start debug mode
+.zinit-debug-start() {
+    if [[ $ZINIT[DTRACE] = 1 ]]; then
+        +zi-log "{e} Debug mode currently active"
         return 1
     fi
-
-    ZINIT[DTRACE]=1
-
-    .zinit-diff _dtrace/_dtrace begin
-
-    # Full shadeing on
-    .zinit-tmp-subst-on dtrace
+    (){
+        ZINIT[DTRACE]=1
+        .zinit-diff _dtrace/_dtrace begin
+        .zinit-tmp-subst-on dtrace
+    }
+    if (( $? == 0 )); then
+        +zi-log "{i} Started debug mode"
+        return 0
+    fi
+} # ]]]
+# FUNCTION: .zinit-debug-status [[[
+# Revert changes made during debug mode
+.zinit-debug-status() {
+    +zi-log -n '{m} Debug mode: '
+    (( ZINIT[DTRACE] )) && +zi-log 'running' || +zi-log 'stopped'
 } # ]]]
 # FUNCTION: .zinit-debug-stop [[[
-# Stops Dtrace (i.e., session tracking for changes in Zsh state).
+# Stop debug mode
 .zinit-debug-stop() {
-    ZINIT[DTRACE]=0
-
-    # Shadowing fully off
-    .zinit-tmp-subst-off dtrace
-
-    # Gather end data now, for diffing later
-    .zinit-diff _dtrace/_dtrace end
-} # ]]]
-# FUNCTION: .zinit-clear-debug-report [[[
-# Forgets dtrace repport gathered up to this moment.
-.zinit-clear-debug-report() {
-    .zinit-clear-report-for _dtrace/_dtrace
-} # ]]]
-# FUNCTION: .zinit-debug-unload [[[
-# Reverts changes detected by dtrace run.
-.zinit-debug-unload() {
-    (( ${+functions[.zinit-unload]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
-    if [[ ${ZINIT[DTRACE]} = 1 ]]; then
-        +zinit-message "{error}Dtrace is still active, stop it first with \`dstop'{rst}"
+    if [[ $ZINIT[DTRACE] = 0 ]]; then
+        +zi-log '{e} Debug mode not active'
+        return 0
     else
-        .zinit-unload _dtrace _dtrace
+        ZINIT[DTRACE]=0
+        (){
+            .zinit-tmp-subst-off dtrace     # turn of shadowing
+            .zinit-diff _dtrace/_dtrace end # get end data to diff later
+        }
+        if (( $? == 0 )); then
+            +zi-log '{i} Stopped debug mode'
+            return 0
+        fi
+    fi
+} # ]]]
+# FUNCTION: +zinit-debug [[[
+# Debug command entry point
++zinit-debug(){
+    emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt extendedglob noksharrays nokshglob nullglob typesetsilent warncreateglobal
+    local o_help cmd
+    local -a usage=(
+      'Usage:'
+      '  zinit debug [options] [command]'
+      ' '
+      'Options:'
+      '  -h, --help     Show list of command-line options'
+      ' '
+      'Commands:'
+      '  clear     Clear debug report'
+      '  report    Show debug report'
+      '  revert    Revert changes made during debug mode'
+      '  start     Start debug mode'
+      '  status    Current debug status'
+      '  stop      Stop debug mode'
+    )
+    zmodload zsh/zutil
+    zparseopts -D -F -K -- \
+        {h,-help}=o_help \
+    || return 1
+
+    (( $#o_help )) && {
+        print -l -- $usage
+        return 0
+    }
+
+    cmd="$1"
+    if (( ! $+functions[.zinit-debug-${cmd}] )); then
+        print -l -- $usage
+        return 1
+    else
+        .zinit-debug-${cmd} "${(@)@:2}"
     fi
 } # ]]]
 
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
-# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
+# vim: ft=zsh sw=4 ts=4 et foldmarker=[[[,]]] foldmethod=marker

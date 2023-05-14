@@ -1,18 +1,11 @@
-zinit-autoload.zsh(1)
-=====================
-:compat-mode!:
 
 NAME
-----
+
 zinit-autoload.zsh - a shell script
 
-SYNOPSIS
---------
 Documentation automatically generated with `zshelldoc'
 
-FUNCTIONS
----------
-
+== FUNCTIONS
  .zinit-any-to-uspl2
  .zinit-at-eval
  .zinit-build-module
@@ -48,10 +41,12 @@ FUNCTIONS
  .zinit-help
  .zinit-list-bindkeys
  .zinit-list-compdef-replay
- .zinit-ls
+ .zinit-list-plugins
+ .zinit-list-snippets
  .zinit-module
  .zinit-pager
  .zinit-prepare-readlink
+ .zinit-prompt
  .zinit-recall
  .zinit-recently
  .zinit-restore-extendedglob
@@ -62,7 +57,6 @@ FUNCTIONS
  .zinit-show-all-reports
  .zinit-show-completions
  .zinit-show-debug-report
- .zinit-show-registered-plugins
  .zinit-show-report
  .zinit-show-times
  .zinit-show-zstatus
@@ -76,19 +70,17 @@ FUNCTIONS
  .zinit-update-or-status-all
  .zinit-update-or-status-snippet
  .zinit-wait-for-update-jobs
+ zi::version
 
-DETAILS
--------
+=== DETAILS
 
-Script Body
-~~~~~~~~~~~
+==== Script Body
 
 Has 5 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 Uses feature(s): _source_
 
-.zinit-any-to-uspl2
-~~~~~~~~~~~~~~~~~~~
+==== .zinit-any-to-uspl2
 
 ____
  
@@ -97,6 +89,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - (optional) plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 2 line(s). Calls functions:
@@ -109,8 +102,7 @@ Called by:
  .zinit-clear-report-for
  .zinit-exists-message
 
-.zinit-at-eval
-~~~~~~~~~~~~~~
+==== .zinit-at-eval
 
 Has 5 line(s). Calls functions:
 
@@ -121,18 +113,19 @@ Uses feature(s): _eval_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-build-module
-~~~~~~~~~~~~~~~~~~~
+==== .zinit-build-module
 
 ____
  
  Performs ./configure && make on the module and displays information
  how to load the module in .zshrc.
+
 ____
 
 Has 39 line(s). Calls functions:
 
  .zinit-build-module
+ |-- .zinit-module
  `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_, _trap_
@@ -141,8 +134,7 @@ Called by:
 
  .zinit-module
 
-.zinit-cd
-~~~~~~~~~
+==== .zinit-cd
 
 ____
  
@@ -152,19 +144,21 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 15 line(s). Calls functions:
 
  .zinit-cd
+ |-- .zinit-get-path
+ |   `-- zinit.zsh/.zinit-get-object-path
  `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-cdisable
-~~~~~~~~~~~~~~~
+==== .zinit-cdisable
 
 ____
  
@@ -173,18 +167,23 @@ ____
  User-action entry point.
  
  $1 - e.g. "_mkdir" or "mkdir"
+
 ____
 
 Has 30 line(s). Calls functions:
 
  .zinit-cdisable
+ |-- .zinit-check-comp-consistency
+ |-- .zinit-get-completion-owner-uspl2col
+ |   |-- .zinit-get-completion-owner
+ |   `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- .zinit-prepare-readlink
 
 Called by:
 
  zinit.zsh/zinit
 
-.zinit-cenable
-~~~~~~~~~~~~~~
+==== .zinit-cenable
 
 ____
  
@@ -193,18 +192,23 @@ ____
  User-action entry point.
  
  $1 - e.g. "_mkdir" or "mkdir"
+
 ____
 
 Has 31 line(s). Calls functions:
 
  .zinit-cenable
+ |-- .zinit-check-comp-consistency
+ |-- .zinit-get-completion-owner-uspl2col
+ |   |-- .zinit-get-completion-owner
+ |   `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- .zinit-prepare-readlink
 
 Called by:
 
  zinit.zsh/zinit
 
-.zinit-changes
-~~~~~~~~~~~~~~
+==== .zinit-changes
 
 ____
  
@@ -214,6 +218,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 9 line(s). Calls functions:
@@ -224,8 +229,7 @@ Has 9 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-check-comp-consistency
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-check-comp-consistency
 
 ____
  
@@ -237,6 +241,7 @@ ____
  
  $1 - path to completion within plugin's directory
  $2 - path to backup file within plugin's directory
+
 ____
 
 Has 11 line(s). Doesn't call other functions.
@@ -246,8 +251,7 @@ Called by:
  .zinit-cdisable
  .zinit-cenable
 
-.zinit-check-which-completions-are-enabled
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-check-which-completions-are-enabled
 
 ____
  
@@ -260,6 +264,7 @@ ____
  - i.e. disabled
  
  $1, ... - path to completion within plugin's directory
+
 ____
 
 Has 11 line(s). Doesn't call other functions.
@@ -268,8 +273,7 @@ Called by:
 
  .zinit-show-report
 
-.zinit-check-which-completions-are-installed
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-check-which-completions-are-installed
 
 ____
  
@@ -279,6 +283,7 @@ ____
  in reply.
  
  $1, ... - path to completion within plugin's directory
+
 ____
 
 Has 12 line(s). Doesn't call other functions.
@@ -287,8 +292,7 @@ Called by:
 
  .zinit-show-report
 
-.zinit-clear-completions
-~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-clear-completions
 
 ____
  
@@ -298,11 +302,14 @@ ____
  installed and enabled.
  
  User-action entry point.
+
 ____
 
 Has 37 line(s). Calls functions:
 
  .zinit-clear-completions
+ |-- .zinit-get-completion-owner
+ |-- .zinit-prepare-readlink
  `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
@@ -312,8 +319,7 @@ Called by:
  zinit.zsh/.zinit-prepare-home
  zinit.zsh/zinit
 
-.zinit-clear-report-for
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-clear-report-for
 
 ____
  
@@ -322,30 +328,36 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - (optional) plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 23 line(s). Calls functions:
 
  .zinit-clear-report-for
+ `-- .zinit-any-to-uspl2
+     `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Called by:
 
  .zinit-unload
- zinit-additional.zsh/.zinit-clear-debug-report
+ zinit-additional.zsh/.zinit-debug-clear
 
-.zinit-compile-uncompile-all
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-compile-uncompile-all
 
 ____
  
  Compiles or uncompiles all existing (on disk) plugins.
  
  User-action entry point.
+
 ____
 
 Has 23 line(s). Calls functions:
 
  .zinit-compile-uncompile-all
+ |-- .zinit-uncompile-plugin
+ |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- zinit-install.zsh/.zinit-compile-plugin
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  `-- zinit.zsh/.zinit-any-to-user-plugin
@@ -356,14 +368,14 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-compiled
-~~~~~~~~~~~~~~~
+==== .zinit-compiled
 
 ____
  
  Displays list of plugins that are compiled.
  
  User-action entry point.
+
 ____
 
 Has 26 line(s). Calls functions:
@@ -378,8 +390,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-confirm
-~~~~~~~~~~~~~~
+==== .zinit-confirm
 
 ____
  
@@ -388,18 +399,19 @@ ____
  
  $1 - question
  $2 - expression
+
 ____
 
-Has 22 line(s). Doesn't call other functions.
+Has 17 line(s). Calls functions:
+
+ .zinit-confirm
+ `-- zinit.zsh/+zinit-message
 
 Uses feature(s): _eval_, _read_
 
-Called by:
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
- .zinit-delete
-
-.zinit-create
-~~~~~~~~~~~~~
+==== .zinit-create
 
 ____
  
@@ -409,9 +421,10 @@ ____
  
  $1 - (optional) plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - (optional) plugin (only when $1 - i.e. user - given)
+
 ____
 
-Has 103 line(s). Calls functions:
+Has 102 line(s). Calls functions:
 
  .zinit-create
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
@@ -422,33 +435,34 @@ Uses feature(s): _autoload_, _setopt_, _vared_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-delete
-~~~~~~~~~~~~~
+==== .zinit-delete
 
 ____
  
- Deletes plugin's or snippet's directory (in Zinit's home directory).
+ Deletes a plugin or snippet and related files and hooks.
  
- User-action entry point.
- 
- $1 - snippet URL or plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
- $2 - plugin (only when $1 - i.e. user - given)
+ $1 - snippet url or plugin
+
 ____
 
-Has 99 line(s). Calls functions:
+Has 111 line(s). Calls functions:
 
  .zinit-delete
+ |-- .zinit-prompt
+ |-- .zinit-run-delete-hooks
+ |   `-- zinit-side.zsh/.zinit-countdown
  |-- zinit-side.zsh/.zinit-compute-ice
- |-- zinit.zsh/+zinit-prehelp-usage-message
+ |-- zinit.zsh/+zinit-message
  |-- zinit.zsh/.zinit-any-to-user-plugin
- `-- zinit.zsh/.zinit-parse-opts
+ `-- zinit.zsh/zinit
 
-Uses feature(s): _setopt_
+Uses feature(s): _setopt_, _zmodload_, _zparseopts_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
 
-.zinit-diff-env-compute
-~~~~~~~~~~~~~~~~~~~~~~~
+ zinit.zsh/zinit
+
+==== .zinit-diff-env-compute
 
 ____
  
@@ -456,6 +470,7 @@ ____
  added by plugin. Uses data gathered earlier by .zinit-diff-env().
  
  $1 - user/plugin
+
 ____
 
 Has 30 line(s). Doesn't call other functions.
@@ -467,8 +482,7 @@ Called by:
  .zinit-show-report
  .zinit-unload
 
-.zinit-diff-functions-compute
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-diff-functions-compute
 
 ____
  
@@ -476,6 +490,7 @@ ____
  Uses data gathered earlier by .zinit-diff-functions().
  
  $1 - user/plugin
+
 ____
 
 Has 19 line(s). Doesn't call other functions.
@@ -487,8 +502,7 @@ Called by:
  .zinit-show-report
  .zinit-unload
 
-.zinit-diff-options-compute
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-diff-options-compute
 
 ____
  
@@ -496,6 +510,7 @@ ____
  Uses data gathered earlier by .zinit-diff-options().
  
  $1 - user/plugin
+
 ____
 
 Has 17 line(s). Doesn't call other functions.
@@ -507,8 +522,7 @@ Called by:
  .zinit-show-report
  .zinit-unload
 
-.zinit-diff-parameter-compute
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-diff-parameter-compute
 
 ____
  
@@ -517,6 +531,7 @@ ____
  data gathered earlier by .zinit-diff-parameter().
  
  $1 - user/plugin
+
 ____
 
 Has 28 line(s). Doesn't call other functions.
@@ -528,8 +543,7 @@ Called by:
  .zinit-show-report
  .zinit-unload
 
-.zinit-edit
-~~~~~~~~~~~
+==== .zinit-edit
 
 ____
  
@@ -540,6 +554,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 22 line(s). Calls functions:
@@ -549,8 +564,7 @@ Has 22 line(s). Calls functions:
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-exists-message
-~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-exists-message
 
 ____
  
@@ -559,11 +573,14 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - (optional) plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 7 line(s). Calls functions:
 
  .zinit-exists-message
+ |-- .zinit-any-to-uspl2
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Called by:
@@ -571,8 +588,7 @@ Called by:
  .zinit-show-report
  .zinit-unload
 
-.zinit-find-completions-of-plugin
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-find-completions-of-plugin
 
 ____
  
@@ -581,6 +597,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 6 line(s). Calls functions:
@@ -594,8 +611,7 @@ Called by:
 
  .zinit-show-report
 
-.zinit-format-env
-~~~~~~~~~~~~~~~~~
+==== .zinit-format-env
 
 ____
  
@@ -604,6 +620,7 @@ ____
  
  $1 - user/plugin (i.e. uspl2 format of plugin-spec)
  $2 - if 1, then examine PATH, if 2, then examine FPATH
+
 ____
 
 Has 16 line(s). Doesn't call other functions.
@@ -612,8 +629,7 @@ Called by:
 
  .zinit-show-report
 
-.zinit-format-functions
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-format-functions
 
 ____
  
@@ -621,6 +637,7 @@ ____
  by given plugin.
  
  $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+
 ____
 
 Has 36 line(s). Doesn't call other functions.
@@ -629,8 +646,7 @@ Called by:
 
  .zinit-show-report
 
-.zinit-format-options
-~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-format-options
 
 ____
  
@@ -638,18 +654,20 @@ ____
  plugin "$1" was loaded.
  
  $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+
 ____
 
 Has 21 line(s). Calls functions:
 
  .zinit-format-options
+ |-- .zinit-restore-extendedglob
+ `-- .zinit-save-set-extendedglob
 
 Called by:
 
  .zinit-show-report
 
-.zinit-format-parameter
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-format-parameter
 
 ____
  
@@ -657,6 +675,7 @@ ____
  changed when the given plugin was loaded.
  
  $1 - user/plugin (i.e. uspl2 format of plugin-spec)
+
 ____
 
 Has 35 line(s). Doesn't call other functions.
@@ -667,8 +686,7 @@ Called by:
 
  .zinit-show-report
 
-.zinit-get-completion-owner
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-get-completion-owner
 
 ____
  
@@ -684,6 +702,7 @@ ____
  
  $1 - absolute path to completion file (in COMPLETIONS_DIR)
  $2 - readlink command (":" or "readlink")
+
 ____
 
 Has 22 line(s). Doesn't call other functions.
@@ -696,8 +715,7 @@ Called by:
  .zinit-get-completion-owner-uspl2col
  .zinit-show-completions
 
-.zinit-get-completion-owner-uspl2col
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-get-completion-owner-uspl2col
 
 ____
  
@@ -706,11 +724,13 @@ ____
  
  $1 - absolute path to completion file (in COMPLETIONS_DIR)
  $2 - readlink command (":" or "readlink")
+
 ____
 
 Has 2 line(s). Calls functions:
 
  .zinit-get-completion-owner-uspl2col
+ |-- .zinit-get-completion-owner
  `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Called by:
@@ -718,8 +738,7 @@ Called by:
  .zinit-cdisable
  .zinit-cenable
 
-.zinit-get-path
-~~~~~~~~~~~~~~~
+==== .zinit-get-path
 
 ____
  
@@ -727,6 +746,7 @@ ____
  (like "user/plugin" or "user" "plugin"), an absolute path
  ("%" "/home/..." and also "%SNIPPETS/..." etc.), or a plugin
  nickname (i.e. id-as'' ice-mod), or a snippet nickname.
+
 ____
 
 Has 8 line(s). Calls functions:
@@ -741,8 +761,7 @@ Called by:
  .zinit-cd
  .zinit-uninstall-completions
 
-.zinit-glance
-~~~~~~~~~~~~~
+==== .zinit-glance
 
 ____
  
@@ -753,35 +772,37 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 39 line(s). Calls functions:
 
  .zinit-glance
+ |-- .zinit-pager
  |-- zinit-side.zsh/.zinit-exists-physically-message
  |-- zinit-side.zsh/.zinit-first
+ |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-help
-~~~~~~~~~~~
+==== .zinit-help
 
 ____
  
  Shows usage information.
  
  User-action entry point.
+
 ____
 
-Has 66 line(s). Doesn't call other functions.
+Has 64 line(s). Doesn't call other functions.
 
 Called by:
 
  zinit.zsh/zinit
 
-.zinit-list-bindkeys
-~~~~~~~~~~~~~~~~~~~~
+==== .zinit-list-bindkeys
 
 Has 44 line(s). Calls functions:
 
@@ -792,8 +813,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-list-compdef-replay
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-list-compdef-replay
 
 ____
  
@@ -802,6 +822,7 @@ ____
  already ran. Zinit solves this by recording compdefs.
  
  User-action entry point.
+
 ____
 
 Has 5 line(s). Doesn't call other functions.
@@ -810,8 +831,26 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-ls
-~~~~~~~~~
+==== .zinit-list-plugins
+
+____
+ 
+ Lists loaded plugins (subcommands list, lodaded)
+
+____
+
+Has 21 line(s). Calls functions:
+
+ .zinit-list-plugins
+ `-- zinit.zsh/+zinit-message
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit.zsh/zinit
+
+==== .zinit-list-snippets
 
 Has 20 line(s). Doesn't call other functions.
 
@@ -821,19 +860,21 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-module
-~~~~~~~~~~~~~
+==== .zinit-module
 
 ____
  
  Function that has sub-commands passed as long-options (with two dashes, --).
  It's an attempt to plugin only this one function into `zinit' function
  defined in zinit.zsh, to not make this file longer than it's needed.
+
 ____
 
 Has 24 line(s). Calls functions:
 
  .zinit-module
+ `-- .zinit-build-module
+     `-- zinit.zsh/+zinit-message
 
 Called by:
 
@@ -841,12 +882,12 @@ Called by:
  zinit.zsh/Script-Body
  zinit.zsh/zinit
 
-.zinit-pager
-~~~~~~~~~~~~
+==== .zinit-pager
 
 ____
  
  BusyBox less lacks the -X and -i options, so it can use more
+
 ____
 
 Has 14 line(s). Doesn't call other functions.
@@ -859,14 +900,14 @@ Called by:
  .zinit-self-update
  .zinit-update-or-status
 
-.zinit-prepare-readlink
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-prepare-readlink
 
 ____
  
  Prepares readlink command, used for establishing completion's owner.
  
  $REPLY = ":" or "readlink"
+
 ____
 
 Has 4 line(s). Doesn't call other functions.
@@ -880,8 +921,27 @@ Called by:
  .zinit-clear-completions
  .zinit-show-completions
 
-.zinit-recall
-~~~~~~~~~~~~~
+==== .zinit-prompt
+
+____
+ 
+ Prompt user to confirm
+ 
+ $1 - prompt
+ 
+ $REPLY - 0 or 1
+
+____
+
+Has 4 line(s). Doesn't call other functions.
+
+Uses feature(s): _read_
+
+Called by:
+
+ .zinit-delete
+
+==== .zinit-recall
 
 Has 38 line(s). Calls functions:
 
@@ -893,8 +953,7 @@ Uses feature(s): _setopt_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-recently
-~~~~~~~~~~~~~~~
+==== .zinit-recently
 
 ____
  
@@ -903,6 +962,7 @@ ____
  User-action entry point.
  
  $1 - time spec, e.g. "1 week"
+
 ____
 
 Has 28 line(s). Calls functions:
@@ -916,12 +976,12 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-restore-extendedglob
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-restore-extendedglob
 
 ____
  
  Restores extendedglob-option from state saved earlier.
+
 ____
 
 Has 1 line(s). Doesn't call other functions.
@@ -933,8 +993,7 @@ Called by:
  .zinit-format-options
  .zinit-unload
 
-.zinit-run-delete-hooks
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-run-delete-hooks
 
 Has 17 line(s). Calls functions:
 
@@ -943,15 +1002,17 @@ Has 17 line(s). Calls functions:
 
 Uses feature(s): _eval_
 
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+Called by:
 
-.zinit-save-set-extendedglob
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ .zinit-delete
+
+==== .zinit-save-set-extendedglob
 
 ____
  
  Enables extendedglob-option first saving if it was already
  enabled, for restoration of this state later.
+
 ____
 
 Has 2 line(s). Doesn't call other functions.
@@ -963,8 +1024,7 @@ Called by:
  .zinit-format-options
  .zinit-unload
 
-.zinit-search-completions
-~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-search-completions
 
 ____
  
@@ -973,6 +1033,7 @@ ____
  showing what's available in general (for installation).
  
  User-action entry point.
+
 ____
 
 Has 43 line(s). Calls functions:
@@ -986,17 +1047,18 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-self-update
-~~~~~~~~~~~~~~~~~~
+==== .zinit-self-update
 
 ____
  
  Updates Zinit code (does a git pull)
+
 ____
 
 Has 42 line(s). Calls functions:
 
  .zinit-self-update
+ |-- .zinit-pager
  |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/.zinit-get-mtime-into
 
@@ -1007,26 +1069,45 @@ Called by:
  .zinit-update-or-status-all
  zinit.zsh/zinit
 
-.zinit-show-all-reports
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-show-all-reports
 
 ____
  
  Displays reports of all loaded plugins.
  
  User-action entry point.
+
 ____
 
 Has 5 line(s). Calls functions:
 
  .zinit-show-all-reports
+ `-- .zinit-show-report
+     |-- .zinit-check-which-completions-are-enabled
+     |-- .zinit-check-which-completions-are-installed
+     |-- .zinit-diff-env-compute
+     |-- .zinit-diff-functions-compute
+     |-- .zinit-diff-options-compute
+     |-- .zinit-diff-parameter-compute
+     |-- .zinit-exists-message
+     |   |-- .zinit-any-to-uspl2
+     |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+     |   `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+     |-- .zinit-find-completions-of-plugin
+     |   `-- zinit.zsh/.zinit-any-to-user-plugin
+     |-- .zinit-format-env
+     |-- .zinit-format-functions
+     |-- .zinit-format-options
+     |   |-- .zinit-restore-extendedglob
+     |   `-- .zinit-save-set-extendedglob
+     |-- .zinit-format-parameter
+     `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Called by:
 
  zinit.zsh/zinit
 
-.zinit-show-completions
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-show-completions
 
 ____
  
@@ -1037,11 +1118,14 @@ ____
  installed and enabled.
  
  User-action entry point.
+
 ____
 
 Has 72 line(s). Calls functions:
 
  .zinit-show-completions
+ |-- .zinit-get-completion-owner
+ |-- .zinit-prepare-readlink
  `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
 
 Uses feature(s): _setopt_
@@ -1050,45 +1134,43 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-show-debug-report
-~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-show-debug-report
 
 ____
  
  Displays dtrace report (data recorded in interactive session).
  
  User-action entry point.
+
 ____
 
 Has 1 line(s). Calls functions:
 
  .zinit-show-debug-report
+ `-- .zinit-show-report
+     |-- .zinit-check-which-completions-are-enabled
+     |-- .zinit-check-which-completions-are-installed
+     |-- .zinit-diff-env-compute
+     |-- .zinit-diff-functions-compute
+     |-- .zinit-diff-options-compute
+     |-- .zinit-diff-parameter-compute
+     |-- .zinit-exists-message
+     |   |-- .zinit-any-to-uspl2
+     |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+     |   `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+     |-- .zinit-find-completions-of-plugin
+     |   `-- zinit.zsh/.zinit-any-to-user-plugin
+     |-- .zinit-format-env
+     |-- .zinit-format-functions
+     |-- .zinit-format-options
+     |   |-- .zinit-restore-extendedglob
+     |   `-- .zinit-save-set-extendedglob
+     |-- .zinit-format-parameter
+     `-- zinit.zsh/.zinit-any-to-user-plugin
 
-Called by:
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
- zinit.zsh/zinit
-
-.zinit-show-registered-plugins
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-____
- 
- Lists loaded plugins (subcommands list, lodaded)
-____
-
-Has 22 line(s). Calls functions:
-
- .zinit-show-registered-plugins
- `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
-
-Uses feature(s): _setopt_
-
-Called by:
-
- zinit.zsh/zinit
-
-.zinit-show-report
-~~~~~~~~~~~~~~~~~~
+==== .zinit-show-report
 
 ____
  
@@ -1096,11 +1178,30 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 71 line(s). Calls functions:
 
  .zinit-show-report
+ |-- .zinit-check-which-completions-are-enabled
+ |-- .zinit-check-which-completions-are-installed
+ |-- .zinit-diff-env-compute
+ |-- .zinit-diff-functions-compute
+ |-- .zinit-diff-options-compute
+ |-- .zinit-diff-parameter-compute
+ |-- .zinit-exists-message
+ |   |-- .zinit-any-to-uspl2
+ |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- .zinit-find-completions-of-plugin
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- .zinit-format-env
+ |-- .zinit-format-functions
+ |-- .zinit-format-options
+ |   |-- .zinit-restore-extendedglob
+ |   `-- .zinit-save-set-extendedglob
+ |-- .zinit-format-parameter
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
@@ -1109,16 +1210,17 @@ Called by:
 
  .zinit-show-all-reports
  .zinit-show-debug-report
+ zinit-additional.zsh/.zinit-debug-report
  zinit.zsh/zinit
 
-.zinit-show-times
-~~~~~~~~~~~~~~~~~
+==== .zinit-show-times
 
 ____
  
  Shows loading times of all loaded plugins.
  
  User-action entry point.
+
 ____
 
 Has 65 line(s). Calls functions:
@@ -1132,8 +1234,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-show-zstatus
-~~~~~~~~~~~~~~~~~~~
+==== .zinit-show-zstatus
 
 ____
  
@@ -1141,6 +1242,7 @@ ____
  of available completions, etc.
  
  User-action entry point.
+
 ____
 
 Has 47 line(s). Calls functions:
@@ -1154,8 +1256,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-stress
-~~~~~~~~~~~~~
+==== .zinit-stress
 
 ____
  
@@ -1169,6 +1270,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 38 line(s). Calls functions:
@@ -1182,8 +1284,7 @@ Uses feature(s): _setopt_, _zcompile_
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
-.zinit-uncompile-plugin
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-uncompile-plugin
 
 ____
  
@@ -1193,6 +1294,7 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 22 line(s). Calls functions:
@@ -1208,8 +1310,7 @@ Called by:
  .zinit-compile-uncompile-all
  zinit.zsh/zinit
 
-.zinit-uninstall-completions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-uninstall-completions
 
 ____
  
@@ -1218,11 +1319,14 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 46 line(s). Calls functions:
 
  .zinit-uninstall-completions
+ |-- .zinit-get-path
+ |   `-- zinit.zsh/.zinit-get-object-path
  |-- zinit-install.zsh/.zinit-compinit
  |-- zinit-install.zsh/.zinit-forget-completion
  `-- zinit.zsh/+zinit-message
@@ -1233,8 +1337,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-unload
-~~~~~~~~~~~~~
+==== .zinit-unload
 
 ____
  
@@ -1252,30 +1355,47 @@ ____
  
  $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
  $2 - plugin (only when $1 - i.e. user - given)
+
 ____
 
-Has 386 line(s). Calls functions:
+Has 385 line(s). Calls functions:
 
  .zinit-unload
- |-- zinit-additional.zsh/.zinit-clear-debug-report
+ |-- .zinit-clear-report-for
+ |   `-- .zinit-any-to-uspl2
+ |       `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- .zinit-diff-env-compute
+ |-- .zinit-diff-functions-compute
+ |-- .zinit-diff-options-compute
+ |-- .zinit-diff-parameter-compute
+ |-- .zinit-exists-message
+ |   |-- .zinit-any-to-uspl2
+ |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |   `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- .zinit-restore-extendedglob
+ |-- .zinit-save-set-extendedglob
+ |-- .zinit-unregister-plugin
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- zinit-additional.zsh/.zinit-debug-clear
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _alias_, _bindkey_, _eval_, _setopt_, _unalias_, _unfunction_, _zle_, _zstyle_
 
 Called by:
 
- zinit-additional.zsh/.zinit-debug-unload
+ zinit-additional.zsh/.zinit-debug-revert
  zinit.zsh/.zinit-run-task
  zinit.zsh/zinit
 
-.zinit-unregister-plugin
-~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-unregister-plugin
 
 ____
  
  Removes the plugin from ZINIT_REGISTERED_PLUGINS array and from the
  zsh_loaded_plugins array (managed according to the plugin standard)
+
 ____
 
 Has 6 line(s). Calls functions:
@@ -1287,12 +1407,32 @@ Called by:
 
  .zinit-unload
 
-.zinit-update-all-parallel
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-update-all-parallel
 
 Has 84 line(s). Calls functions:
 
  .zinit-update-all-parallel
+ |-- .zinit-update-or-status
+ |   |-- .zinit-pager
+ |   |-- .zinit-update-or-status-snippet
+ |   |   |-- zinit-install.zsh/.zinit-update-snippet
+ |   |   `-- zinit-side.zsh/.zinit-compute-ice
+ |   |-- zinit-install.zsh/.zinit-get-latest-gh-r-url-part
+ |   |-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   |-- zinit-side.zsh/.zinit-compute-ice
+ |   |-- zinit-side.zsh/.zinit-exists-physically
+ |   |-- zinit-side.zsh/.zinit-exists-physically-message
+ |   |-- zinit-side.zsh/.zinit-store-ices
+ |   |-- zinit-side.zsh/.zinit-two-paths
+ |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/.zinit-any-to-user-plugin
+ |   `-- zinit.zsh/.zinit-set-m-func
+ |-- .zinit-update-or-status-snippet
+ |   |-- zinit-install.zsh/.zinit-update-snippet
+ |   `-- zinit-side.zsh/.zinit-compute-ice
+ |-- .zinit-wait-for-update-jobs
+ |   `-- zinit.zsh/+zinit-message
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit.zsh/+zinit-message
  `-- zinit.zsh/.zinit-any-to-user-plugin
@@ -1303,8 +1443,7 @@ Called by:
 
  .zinit-update-or-status-all
 
-.zinit-update-or-status
-~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-update-or-status
 
 ____
  
@@ -1315,11 +1454,16 @@ ____
  $1 - "status" for status, other for update
  $2 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
  $3 - plugin (only when $1 - i.e. user - given)
+
 ____
 
 Has 325 line(s). Calls functions:
 
  .zinit-update-or-status
+ |-- .zinit-pager
+ |-- .zinit-update-or-status-snippet
+ |   |-- zinit-install.zsh/.zinit-update-snippet
+ |   `-- zinit-side.zsh/.zinit-compute-ice
  |-- zinit-install.zsh/.zinit-get-latest-gh-r-url-part
  |-- zinit-install.zsh/.zinit-setup-plugin-dir
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
@@ -1340,8 +1484,7 @@ Called by:
  .zinit-update-or-status-all
  zinit.zsh/zinit
 
-.zinit-update-or-status-all
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-update-or-status-all
 
 ____
  
@@ -1350,11 +1493,60 @@ ____
  on disk). Also updates (i.e. redownloads) snippets.
  
  User-action entry point.
+
 ____
 
 Has 133 line(s). Calls functions:
 
  .zinit-update-or-status-all
+ |-- .zinit-self-update
+ |   |-- .zinit-pager
+ |   |-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/.zinit-get-mtime-into
+ |-- .zinit-update-all-parallel
+ |   |-- .zinit-update-or-status
+ |   |   |-- .zinit-pager
+ |   |   |-- .zinit-update-or-status-snippet
+ |   |   |   |-- zinit-install.zsh/.zinit-update-snippet
+ |   |   |   `-- zinit-side.zsh/.zinit-compute-ice
+ |   |   |-- zinit-install.zsh/.zinit-get-latest-gh-r-url-part
+ |   |   |-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |   |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   |   |-- zinit-side.zsh/.zinit-compute-ice
+ |   |   |-- zinit-side.zsh/.zinit-exists-physically
+ |   |   |-- zinit-side.zsh/.zinit-exists-physically-message
+ |   |   |-- zinit-side.zsh/.zinit-store-ices
+ |   |   |-- zinit-side.zsh/.zinit-two-paths
+ |   |   |-- zinit.zsh/+zinit-message
+ |   |   |-- zinit.zsh/.zinit-any-to-user-plugin
+ |   |   `-- zinit.zsh/.zinit-set-m-func
+ |   |-- .zinit-update-or-status-snippet
+ |   |   |-- zinit-install.zsh/.zinit-update-snippet
+ |   |   `-- zinit-side.zsh/.zinit-compute-ice
+ |   |-- .zinit-wait-for-update-jobs
+ |   |   `-- zinit.zsh/+zinit-message
+ |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   |-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/.zinit-any-to-user-plugin
+ |-- .zinit-update-or-status
+ |   |-- .zinit-pager
+ |   |-- .zinit-update-or-status-snippet
+ |   |   |-- zinit-install.zsh/.zinit-update-snippet
+ |   |   `-- zinit-side.zsh/.zinit-compute-ice
+ |   |-- zinit-install.zsh/.zinit-get-latest-gh-r-url-part
+ |   |-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ |   |-- zinit-side.zsh/.zinit-compute-ice
+ |   |-- zinit-side.zsh/.zinit-exists-physically
+ |   |-- zinit-side.zsh/.zinit-exists-physically-message
+ |   |-- zinit-side.zsh/.zinit-store-ices
+ |   |-- zinit-side.zsh/.zinit-two-paths
+ |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/.zinit-any-to-user-plugin
+ |   `-- zinit.zsh/.zinit-set-m-func
+ |-- .zinit-update-or-status-snippet
+ |   |-- zinit-install.zsh/.zinit-update-snippet
+ |   `-- zinit-side.zsh/.zinit-compute-ice
  |-- zinit-install.zsh/.zinit-compinit
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit.zsh/+zinit-message
@@ -1367,8 +1559,7 @@ Called by:
 
  zinit.zsh/zinit
 
-.zinit-update-or-status-snippet
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-update-or-status-snippet
 
 ____
  
@@ -1377,6 +1568,7 @@ ____
  
  $1 - "status" or "update"
  $2 - snippet URL
+
 ____
 
 Has 34 line(s). Calls functions:
@@ -1393,8 +1585,7 @@ Called by:
  .zinit-update-or-status-all
  .zinit-update-or-status
 
-.zinit-wait-for-update-jobs
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==== .zinit-wait-for-update-jobs
 
 Has 18 line(s). Calls functions:
 
@@ -1406,4 +1597,23 @@ Uses feature(s): _wait_
 Called by:
 
  .zinit-update-all-parallel
+
+==== zi::version
+
+____
+ 
+ Shows usage information.
+ 
+ User-action entry point.
+
+____
+
+Has 2 line(s). Calls functions:
+
+ zi::version
+ `-- zinit.zsh/+zinit-message
+
+Called by:
+
+ zinit.zsh/zinit
 
