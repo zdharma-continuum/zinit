@@ -3276,7 +3276,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
 
         [[ $st != status && ${OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
-            +zinit-message "{info}Note:{rst} updating also unloaded snippets"
+            +zinit-message "{n} Updating also unloaded snippets"
 
         for snip ( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D) ) {
             [[ ! -f ${snip:h}/url ]] && continue
@@ -3297,10 +3297,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     if [[ $st = status ]]; then
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{info}Note:{rst} status done also for unloaded plugins"
+            +zinit-message "{n} Status of unloaded plugins"
     else
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{info}Note:{rst} updating also unloaded plugins"
+            +zinit-message "{n} Updating unloaded plugins"
     fi
 
     ZINIT[first-plugin-mark]=init
@@ -3332,8 +3332,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
         # Must be a git repository or a binary release
         if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]]; then
-            (( !OPTS[opt_-q,--quiet] )) && \
-                builtin print "$REPLY: not a git repository"
+            # (( !OPTS[opt_-q,--quiet] )) && builtin print "$REPLY: not a git repository"
             continue
         fi
 

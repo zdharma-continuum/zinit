@@ -209,7 +209,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-bar     $'\e[38;5;82m'          col-id-as   $'\e[4;38;5;220m'       col-num     $'\e[3;38;5;155m'    col-time    $'\e[38;5;220m'
     col-bcmd    $'\e[38;5;220m'         col-info    $'\e[38;5;82m'          col-obj     $'\e[38;5;218m'      col-txt     $'\e[38;5;254m'
     col-bspc    $'\b'                   col-info2   $'\e[38;5;227m'         col-obj2    $'\e[38;5;118m'      col-u       $'\e[4m'
-    col-cmd     $'\e[38;5;82m'          col-info3   $'\e[1m\e[38;5;227m'    col-ok      $'\e[38;5;220m'      col-u-warn  $'\e[4;38;5;214m'
+    col-cmd     $'\e[38;5;82m'          col-ok      $'\e[38;5;220m'         col-u-warn  $'\e[4;38;5;214m'
     col-data    $'\e[38;5;82m'          col-it      $'\e[3m'                col-opt     $'\e[38;5;219m'      col-uname   $'\e[1;4m\e[35m'
     col-data2   $'\e[38;5;117m'         col-keyword $'\e[32m'               col-p       $'\e[38;5;81m'       col-uninst  $'\e[38;5;118m'
     col-dir     $'\e[3;38;5;153m'       col-lhi     $'\e[38;5;81m'          col-pkg     $'\e[1;3;38;5;27m'   col-url     $'\e[38;5;75m'
@@ -217,8 +217,11 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-error   $'\e[1m\e[38;5;204m'    col-meta2   $'\e[38;5;147m'         col-pre     $'\e[38;5;135m'      col-version $'\e[3;38;5;87m'
     col-failure $'\e[38;5;204m'         col-msg     $'\e[0m'                col-profile $'\e[38;5;148m'      col-warn    $'\e[38;5;214m'
 
-    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' col-e $'\e[1m\e[38;5;204m'"Error: "$'\e[0m'
-    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' col-w $'\e[1;38;5;214m'"Warning: "$'\e[0m'
+    col-e $'\e[1m\e[38;5;204m'"Error"$'\e[0m'":"  # error
+    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m'        # info
+    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m'       # message
+    col-n $'\e[38;5;148m'"Note"$'\e[0m'":"        # note
+    col-w $'\e[1;38;5;214m'"Warning"$'\e[0m'":"   # warning
 
     col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}"    col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
     col-ndsh "${${${(M)LANG:#*UTF-8*}:+–}:-}"        col-…  "${${${(M)LANG:#*UTF-8*}:+…}:-...}"

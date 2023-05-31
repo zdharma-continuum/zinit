@@ -119,9 +119,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     # Check if user requested an unknown profile
     if ! (( ${profiles[(I)${profile}]} )) {
         # Assumption: the default profile is the first in the table (-> different color).
-        +zinit-message "{u-warn}Error{b-warn}:{error} the profile {apo}\`{hi}$profile{apo}\`" \
-            "{error}couldn't be found, aborting. Available profiles are:" \
-            "{lhi}${(pj:$epro_sep:)profiles[@]}{error}.{rst}"
+        +zinit-message "{e} Profile $profile not found, aborting. Available profiles are: ${(pj:$epro_sep:)profiles[@]}"
         return 1
     }
     local json_profile="${json_ices}[\"${profile}\"]"
@@ -129,7 +127,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local -A metadata
     .zinit-json-to-array "$pkgjson" "$json_meta" metadata
     if [[ "$?" -ne 0 || -z "$metadata" ]] {
-        +zinit-message '{error}❌ ERROR: Failed to retrieve metadata from package.json'
+        +zinit-message '{e} Failed to retrieve metadata from package.json'
         return 1
     }
 
@@ -150,27 +148,19 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     [[ -n ${ICE[on-update-of]} ]] && ICE[subscribe]="${ICE[subscribe]:-${ICE[on-update-of]}}"
     [[ -n ${ICE[pick]} ]] && ICE[pick]="${ICE[pick]//\$ZPFX/${ZPFX%/}}"
 
-    # FIXME Do we even need that? If yes, we may want to do that in
-    # .zinit-json-to-array
-    if [[ -n ${ICE[id-as]} ]] {
+    # TODO: move logic to .zinit-json-to-array
+    if [[ -n ${ICE[id-as]} ]]; then
         @zinit-substitute 'ICE[id-as]'
         local -A map
         map=( "\"" "\\\"" "\\" "\\" )
         eval "ICE[id-as]=\"${ICE[id-as]//(#m)[\"\\]/${map[$MATCH]}}\""
-    }
+    fi
 
-    +zinit-message "{info3}Package{ehi}:{rst} ${pkgname}. Selected" \
-        "profile{ehi}:{rst} {hi}$profile{rst}. Available" \
-        "profiles:${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl}" \
-        "${(pj:$pro_sep:)profiles[@]}{rst}."
+    +zinit-message "{i} Package ${pkgname} [Current profile ${profile}] Available profiles: ${${${(M)profile:#default}:+$lhi_hl}:-$profile_hl} ${(pj:$pro_sep:)profiles[@]}{rst}"
 
-    if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]] {
-        +zinit-message "{note}Note:{rst} The {apo}\`{profile}bgn{glob}*{apo}\`{rst}" \
-            "profiles (if any are available) are the recommended ones (the reason" \
-            "is that they expose the binaries provided by the package without" \
-            "altering (i.e.: {slight}cluttering{rst}{…}) the {var}\$PATH{rst}" \
-            "environment variable)."
-    }
+    if [[ $profile != *bgn* && -n ${(M)profiles[@]:#*bgn*} ]]; then
+      +zinit-message "{n} {profile}bgn{glob}*{rst} profiles (if any are available) are the recommended ones (it will expose the binaries provided by the package without altering the {var}\$PATH{rst} environment variable)"
+    fi
 
     local required
     for required ( $requirements ) {
@@ -181,7 +171,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             ]]; then
                 local -A namemap
                 namemap=( bgn bin-gem-node dl patch-dl monitor readurl )
-                +zinit-message -n "{u-warn}ERROR{b-warn}: {error}the "
+                +zinit-message -n "{e} "
                 if [[ -z ${(MS)ICE[requires]##(\;|(#s))$required(\;|(#e))} ]]; then
                     +zinit-message -n "{error}requested profile {apo}\`{hi}$profile{apo}\`{error} "
                 else
@@ -193,8 +183,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     "{nl}– {url}https://github.com/zdharma-continuum/zinit-annex-${(L)namemap[$required]}{rst}" \
                     "{nl}for instructions."
                 (( ${#profiles[@]:#$profile} > 0 )) && \
-                    +zinit-message "{nl}Other available profiles are:" \
-"{profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
+                    +zinit-message "{nl}Available profiles: {profile}${(pj:$pro_sep:)${profiles[@]:#$profile}}{rst}."
 
                 return 1
             fi
