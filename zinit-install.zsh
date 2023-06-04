@@ -554,8 +554,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local c cfile bkpfile
     # The plugin == . is a semi-hack/trick to handle 'creinstall .' properly
     [[ $user == % || ( -z $user && $plugin == . ) ]] && \
-        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
-        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
+        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.yaml|*.py|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
+        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.yaml|*.py|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
     already_symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
     backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
 
