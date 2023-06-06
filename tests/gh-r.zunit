@@ -437,7 +437,7 @@
   $joincap --version; assert $state equals 0
 }
 @test 'jq' { # Command-line JSON processor
-  run zinit lbin'!* -> jq' for stedolan/jq; assert $state equals 0
+  run zinit lbin'!* -> jq' for jqlang/jq; assert $state equals 0
   local jq="$ZBIN/jq"; assert "$jq" is_executable
   $jq --version; assert $state equals 0
 }
