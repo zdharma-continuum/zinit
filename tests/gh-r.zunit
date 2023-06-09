@@ -226,7 +226,7 @@
 }
 @test 'fclones' { # Efficient duplicate file Finder
   [[ $OSTYPE =~ 'darwin*' ]] && skip "on $os_type"
-  run zinit  for @pkolaczk/fclones; assert $state equals 0
+  run zinit ver'0.30.0' for @pkolaczk/fclones; assert $state equals 0
   local fclones="$ZBIN/fclones"; assert "$fclones" is_executable
   run "$fclones" --help; assert $state equals 0
 }
