@@ -60,7 +60,6 @@ Called by:
  zinit-autoload.zsh/.zinit-update-all-parallel
  zinit-autoload.zsh/.zinit-update-or-status-all
  zinit-autoload.zsh/.zinit-update-or-status
- zinit-install.zsh/.zinit-install-completions
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit.zsh/.zinit-formatter-pid
 
@@ -205,7 +204,6 @@ Called by:
  zinit-autoload.zsh/.zinit-glance
  zinit-autoload.zsh/.zinit-stress
  zinit-autoload.zsh/.zinit-update-or-status
- zinit-install.zsh/.zinit-install-completions
 
 ==== .zinit-first
 

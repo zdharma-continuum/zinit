@@ -522,65 +522,68 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 0
 } # ]]]
 # FUNCTION: .zinit-install-completions [[[
-# Installs all completions of given plugin. After that they are
-# visible to 'compinit'. Visible completions can be selectively
-# disabled and enabled. User can access completion data with
-# 'clist' or 'completions' subcommand.
+# Installs plugin completions.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin if $1 (i.e., user) given
 # $3 - if 1, then reinstall, otherwise only install completions that are not present
-.zinit-install-completions() {
+#
+.zinit-install-completions () {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt nullglob extendedglob warncreateglobal typesetsilent noshortloops
+    setopt extendedglob noshortloops nullglob typesetsilent warncreateglobal
 
-    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}}
-    local reinstall=${3:-0} quiet=${${4:+1}:-0}
-    (( OPTS[opt_-q,--quiet] )) && quiet=1
-    [[ $4 = -Q ]] && quiet=2
-    typeset -ga INSTALLED_COMPS SKIPPED_COMPS
-    INSTALLED_COMPS=() SKIPPED_COMPS=()
+    local all force help quiet reinstall
+    builtin zparseopts -D \
+      {a,-all}=all \
+      {h,-help}=help \
+      {f,-force}=force \
+      {q,-quiet}=quiet
+    if (( ! $# )); then
+        +zi-log '{e} One argument or {opt}--all{rst} required'
+        return 0
+    elif [[ -n $help ]]; then
+        +zi-log 'Usage: {cmd}zinit creinstall{rst} [options]{nl}'
+        +zi-log "Options:"
+        +zi-log "  -a, --all            List all packages in the index"
+        +zi-log "  -f, --force          Hide the 'package installed' indicator"
+        +zi-log "  -h, --help           Output this help text and exit"
+        +zi-log "  -q, --quiet          Hide the 'package installed' indicator"
+        return 0
+    fi
 
-    .zinit-any-to-user-plugin "$id_as" ""
-    local user=${reply[-2]}
-    local plugin=${reply[-1]}
-    .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-    local abbrev_pspec=$REPLY
+    typeset -ga INSTALLED_COMPS=() SKIPPED_COMPS=()
+    .zinit-any-to-user-plugin "$1"
+    local user=${reply[-2]} plugin=${reply[-1]}
+    .zinit-exists-physically-message "$1" "" || return 1
+    typeset -a already_symlinked backup_comps completions
+    local bkpfile c cfile
+    local cmp_ignore='*.(html|jpeg|jpg|js|lua|md|png|ps1|ri|txt|yml|zwc|/zsdoc/*|_zsh_highlight*)'
 
-    .zinit-exists-physically-message "$id_as" "" || return 1
+    if [[ $user == % || ( -z $user && $plugin == . ) ]]; then
+        completions=("$plugin"/**/_[^_.]*~*${~cmp_ignore}(DN^/))
+    else
+        completions=("${ZINIT[PLUGINS_DIR]}/${1//\//---}"/**/_[^_.]*~*${~cmp_ignore}(DN^/))
+    fi
 
-    # Symlink any completion files included in the plugin directory
-    typeset -a completions already_symlinked backup_comps
-    local c cfile bkpfile
-    # The plugin == . is a semi-hack/trick to handle 'creinstall .' properly
-    [[ $user == % || ( -z $user && $plugin == . ) ]] && \
-        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
-        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
-    already_symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
-    backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
-
-    # Symlink completions if they are not already there
-    # either as completions (_fname) or as backups (fname)
-    # OR - if its a reinstall
+    already_symlinked=("${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN))
+    backup_comps=("${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN))
     for c in "${completions[@]:A}"; do
         cfile="${c:t}"
         bkpfile="${cfile#_}"
-        if [[ ( -z ${already_symlinked[(r)*/$cfile]} || $reinstall = 1 ) &&
-              -z ${backup_comps[(r)*/$bkpfile]}
-        ]]; then
-            if [[ $reinstall = 1 ]]; then
-                # Remove old files
-                command rm -f "${ZINIT[COMPLETIONS_DIR]}/$cfile" "${ZINIT[COMPLETIONS_DIR]}/$bkpfile"
+        if [[ ( -z ${already_symlinked[(r)*/$cfile]} || -n $force ) && -z ${backup_comps[(r)*/$bkpfile]} ]]; then
+            if [[ -z $force ]]; then
+                command rm -f "${ZINIT[COMPLETIONS_DIR]}/"{$cfile,$bkpfile}
             fi
-            INSTALLED_COMPS+=( $cfile )
-            (( quiet )) || builtin print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory."
+            INSTALLED_COMPS+=($cfile)
+            [[ -z $quiet ]] && +zi-log "{m} Created link of $cfile in completions directory"
             command ln -fs "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
-            # Make compinit notice the change
-            .zinit-forget-completion "$cfile" "$quiet"
+            .zinit-forget-completion "$cfile"
         else
-            SKIPPED_COMPS+=( $cfile )
-            (( quiet )) || builtin print -Pr "Not symlinking completion \`${ZINIT[col-obj]}$cfile%f%b', it already exists."
-            (( quiet )) || builtin print -Pr "${ZINIT[col-info2]}Use \`${ZINIT[col-pname]}zinit creinstall $abbrev_pspec${ZINIT[col-info2]}' to force install.%f%b"
+            SKIPPED_COMPS+=($cfile)
+            [[ -z $quiet ]] && {
+                +zi-log "{w} $cfile is already installed."
+                +zi-log "To reinstall $cfile, run:{nl}{tab}{cmd}zinit creinstall --force $id_as{rst}"
+            }
         fi
     done
 
@@ -590,18 +593,18 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         local comps_num=${#${(e)comps}}
         if (( comps_num > 0 )); then
             +zinit-message "{m} ${msg} {num}$comps_num{rst} completion${=${comps_num:#1}:+s}"
-            if (( quiet == 0 )); then
-                +zinit-message "{m} Added $comps_num completion${=${comps_num:#1}:+s} to {var}$comps{rst} array"
-            fi
+            [[ -z quiet ]] && {
+                +zi-log "{m} Added $comps_num completion${=${comps_num:#1}:+s} to {var}$comps{rst} array"
+            }
         fi
     done
 
-    if (( ZSH_SUBSHELL )) {
-        builtin print -rl -- $INSTALLED_COMPS >! ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst
-        builtin print -rl -- $SKIPPED_COMPS >! ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst
-    }
+    if (( ZSH_SUBSHELL )); then
+        builtin print -rl -- $INSTALLED_COMPS >| ${TMPDIR:-/tmp}/zinit.installed_comps.$$.lst
+        builtin print -rl -- $SKIPPED_COMPS >| ${TMPDIR:-/tmp}/zinit.skipped_comps.$$.lst
+    fi
 
-    .zinit-compinit 1 1 &>/dev/null
+    .zinit-compinit 1 1 &> /dev/null
 } # ]]]
 # FUNCTION: .zinit-compinit [[[
 # User-exposed `compinit' frontend which first ensures that all
@@ -796,7 +799,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
-    local f="$1" quiet="$2"
+    local f="$1" quiet="${2:-0}"
 
     typeset -a commands
     commands=( ${(k)_comps[(Re)$f]} )
