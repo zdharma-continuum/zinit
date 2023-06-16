@@ -12,12 +12,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 # that's not the case
 .zinit-jq-check() {
     command -v jq >/dev/null && return 0
-
-    +zinit-message "{error}❌ ERROR: jq binary not found" \
-        "{nl}{u-warn}Please install jq:{rst}" \
-        "https://github.com/jqlang/jq" \
-        "{nl}{u-warn}To do so with zinit, please refer to:{rst}" \
-        "https://github.com/zdharma-continuum/zinit/wiki/%F0%9F%A7%8A-Recommended-ices#jq"
+		+zi-log '{e} Missing required dependency {cmd}jq{rst}. Please install it.'
     return 1
 } # ]]]
 # FUNCTION: .zinit-json-get-value [[[
@@ -554,8 +549,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local c cfile bkpfile
     # The plugin == . is a semi-hack/trick to handle 'creinstall .' properly
     [[ $user == % || ( -z $user && $plugin == . ) ]] && \
-        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.yaml|*.py|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
-        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.yaml|*.py|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
+        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
+        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
     already_symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
     backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
 

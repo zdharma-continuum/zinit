@@ -302,10 +302,10 @@ Has 195 line(s). Calls functions:
  |-- .zinit-download-file-stdout
  |   `-- zinit.zsh/+zinit-message
  |-- .zinit-jq-check
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-json-to-array
  |   `-- .zinit-jq-check
- |       `-- zinit.zsh/+zinit-message
+ |       `-- zinit.zsh/+zi-log
  |-- ziextract
  |   `-- zinit.zsh/+zinit-message
  |-- zinit.zsh/+zinit-message
@@ -379,10 +379,10 @@ ____
 
 ____
 
-Has 8 line(s). Calls functions:
+Has 3 line(s). Calls functions:
 
  .zinit-jq-check
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Called by:
 
@@ -405,7 +405,7 @@ Has 4 line(s). Calls functions:
 
  .zinit-json-get-value
  `-- .zinit-jq-check
-     `-- zinit.zsh/+zinit-message
+     `-- zinit.zsh/+zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -426,7 +426,7 @@ Has 13 line(s). Calls functions:
 
  .zinit-json-to-array
  `-- .zinit-jq-check
-     `-- zinit.zsh/+zinit-message
+     `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_, _setopt_
 
