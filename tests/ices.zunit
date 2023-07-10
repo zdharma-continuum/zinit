@@ -62,4 +62,11 @@
   assert __init__.py is_not_value_in $COMPS
 }
 
+@test 'build-ice' {
+  run zinit as"null" id-as"test/build-ice" \
+        atclone'print "all_:\n\ttouch flag_file">>Makefile' build"all_" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---build-ice/flag_file" is_file
+}
+
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
