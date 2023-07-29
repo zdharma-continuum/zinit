@@ -2278,7 +2278,7 @@ because {flag}c{pre} flag given}
         else
             m {error}Error: no {cmd}cmake{error} binary found and \
                 ${${${${#files}:#0}:+its input file exists \
-                   ({file}CMakeLists.txt{error})}:-and {flag}c{error} \
+                   \({file}CMakeLists.txt{error}\)}:-and {flag}c{error} \
                    flag given}! Skipping{…}
         fi
     fi
