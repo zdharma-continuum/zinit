@@ -3,7 +3,7 @@
 
  ZINIT+=(
     col-annex   $'\e[38;5;153m'         col-faint   $'\e[38;5;238m'         col-msg2    $'\e[38;5;172m'      col-quo     $'\e[1;38;5;33m'
-    col-apo     $'\e[1;38;5;45m'        col-file    $'\e[3;38;5;117m'       col-msg3    $'\e[38;5;238m'      col-quos    $'\e[1;38;5;160m'
+    col-apo     $'\e[1;38;5;45m'        col-file    $'\e[3;38;5;27m'       col-msg3    $'\e[38;5;238m'      col-quos    $'\e[1;38;5;160m'
     col-aps     $'\e[38;5;117m'         col-flag    $'\e[1;3;38;5;79m'      col-nb      $'\e[22m'            col-rst     $'\e[0m'
     col-b       $'\e[1m'                col-func    $'\e[38;5;219m'         col-nit     $'\e[23m'            col-slight  $'\e[38;5;230m'
     col-b-lhi   $'\e[1m\e[38;5;75m'     col-glob    $'\e[38;5;227m'         col-nl      $'\n'                col-st      $'\e[9m'
@@ -18,7 +18,7 @@
     col-data2   $'\e[38;5;117m'         col-keyword $'\e[32m'               col-p       $'\e[38;5;81m'       col-uninst  $'\e[38;5;118m'
     col-dir     $'\e[3;38;5;153m'       col-lhi     $'\e[38;5;81m'          col-pkg     $'\e[1;3;38;5;27m'   col-url     $'\e[38;5;75m'
     col-ehi     $'\e[1m\e[38;5;210m'    col-meta    $'\e[38;5;57m'          col-pname   $'\e[1;4m\e[32m'     col-var     $'\e[38;5;81m'
-    col-error   $'\e[1m\e[38;5;204m'    col-meta2   $'\e[38;5;147m'         col-pre     $'\e[38;5;135m'      col-version $'\e[3;38;5;87m'
+    col-error   $'\e[1m\e[38;5;204m'    col-meta2   $'\e[38;5;147m'         col-pre     $'\e[38;5;135m'      col-version $'\e[3;38;5;57m'
     col-failure $'\e[38;5;204m'         col-msg     $'\e[0m'                col-profile $'\e[38;5;148m'      col-warn    $'\e[38;5;214m'
 
     col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' col-e $'\e[1m\e[38;5;204m'"Error: "$'\e[0m'
@@ -31,6 +31,8 @@
     col-mmdsh $'\e[1;38;5;220m'"${${${(M)LANG:#*UTF-8*}:+――}:--}"$'\e[0m'
 
     col-↔     ${${${(M)LANG:#*UTF-8*}:+$'\e[38;5;82m↔\e[0m'}:-$'\e[38;5;82m«-»\e[0m'}
+
+    col-ext   $'\e[1;38;5;41m'
 )
 
 # Conmditionally allow 256 color codes for base handlers

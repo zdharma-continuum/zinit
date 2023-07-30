@@ -1949,6 +1949,23 @@ builtin setopt noaliases
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
 
+# FUNCTION: .zinit-formatter-file [[[
+.zinit-formatter-file() {
+    builtin emulate -L zsh -o extendedglob
+    local -a match mbegin mend
+    REPLY=$1
+    if [[ $REPLY = (#b)([^.]#)-((#B)(|v|V|ver|VER)[0-9.]##).(?##) ]]; then
+        REPLY=$ZINIT[col-file]$match[1]$ZINIT[col-rst]\
+$ZINIT[col-dot]-$ZINIT[col-version]$match[2]$ZINIT[col-rst]\
+$ZINIT[col-dot].$ZINIT[col-ext]$match[3]$ZINIT[col-rst]
+    elif [[ $REPLY = (#b)([^.]#).(*) ]]; then
+        REPLY=$ZINIT[col-file]$match[1]$ZINIT[col-rst]\
+$ZINIT[col-dot].$ZINIT[col-ext]$match[2]$ZINIT[col-rst]
+    else
+        REPLY=$ZINIT[col-file]$REPLY$ZINIT[col-rst]
+    fi
+}
+
 # FUNCTION: .zinit-formatter-dbg [[[
 .zinit-formatter-dbg() {
     builtin emulate -L zsh -o extendedglob
