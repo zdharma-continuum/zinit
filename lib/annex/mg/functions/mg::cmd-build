@@ -1,0 +1,71 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# Copyright (c) 2023 Sebastian Gniazdowski
+
+mg::cmd-build() {
+    # Set the base and typically useful options.
+    builtin emulate -L zsh -o extendedglob -o warncreateglobal \
+                        -o typesetsilent -o noshortloops \
+                        -o rcquotes
+    local tool=${XMG_TOOL:-appimagetool}
+    integer QRET
+
+    # -o - base output file name
+    # -v - set version
+    # -q - quiet
+    # --verbose verbose output
+    local -A Opts=(
+                    -v "${$(git describe --tags)##[a-zA-Z-]##}"
+                   )
+    builtin zparseopts -D -E -A Opts -K -- \
+                v q -verbose h -help -mv||return 7
+    Opts[-o]=${Opts[-o]:-$PWD:t-$Opts[-v].mg}
+
+    if (($+Opts[-h]||$+Opts[--help]));then
+        +zinit-message {pre}mg annex: {note}Usage:{rst}
+        return 0
+    fi
+
+    if ((!$+commands[$tool]));then
+        +zinit-message {pre}mg annex: {error}no {cmd}$tool \
+            {error}found, please install the relevant package \
+            \(via e.g.: {pkg}apt-get install $tool{error}\)
+            return 1
+    fi
+
+    +zinit-message {i} {pre}mg annex: {note}running command: \
+                {var}VERSION{note}={data}$Opts[-v] \
+                {cmd}appimagetool {opt}-v -n \
+                {b}{file}$Opts[-o]{note}{…}
+    LANG=C sleep 0.5
+
+    run-ait() {
+        VERSION=$Opts[-v] "$1" \
+                            ${Opts[--verbose]+--verbose} \
+                            -n $PWD \
+                            $Opts[-o]
+        QRET=$?
+    }
+    if (($+Opts[-q]));then
+        run-ait $tool &>/dev/null
+    else
+        run-ait $tool
+    fi
+    builtin unset -f run-ait
+
+    if ((!$QRET));then
+        +zinit-message {i} {pre}mg-annex: {note}the build \
+                        was {hi}successfull{nb}{note}!
+    else
+        +zinit-message {i} {pre}mg-annex: {error}the build \
+                        {b}{error}failed{error}!
+        return QRET
+    fi
+
+    if ((!$QRET && $+Opts[--mv]));then
+        +zinit-message {i} {pre}mg-annex: {note}moving the output \
+                        file to {data}plugins{note} dir \
+                        \({b}{dir}$ZINIT[PLUGINS_DIR]{nb}{note}\){…}
+        command mv -v -- $Opts[-o] $ZINIT[PLUGINS_DIR]
+    fi
+}

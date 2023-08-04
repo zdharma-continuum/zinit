@@ -1,0 +1,89 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4;-*-
+# Copyright (c) 2023 Sebastian Gniazdowski
+
+mg::cmd-extract() {
+    # Set the base and typically useful options.
+    builtin emulate -L zsh -o extendedglob -o warncreateglobal \
+                        -o typesetsilent -o noshortloops \
+                        -o rcquotes
+    local STOOL=${XMG_TOOL:-appimagetool} SID=${${1#@}%%(.mg|/##)##}
+    integer QRET
+    local -a match mbegin mend
+    local MATCH SPATH
+    integer MBEGIN MEND
+    SPATH=($ZINIT[PLUGINS_DIR]/(#i)($SID)([v0-9.-]##)#.mg)
+    SPATH=${${(O@n)SPATH}[1]}
+
+    # -o - output dir name
+    # -v/--verbose verbose output
+    # -p/--plg out in zinit plugin dir
+    # -h/--help usage info
+    # -q/--quiet be quiet
+    local -A Opts=(
+        --output $SID:r:t
+    )
+    builtin zparseopts -D -E -A Opts -K -- \
+                q -quiet o: -output: p -plg v -verbose h -help||return 7
+    mg::opt-cascade Opts -q --quiet -v --verbose -o --output -h --help -p --plg
+    if (($+Opts[-p]));then
+        if [[ -z ${Opts[-o]##/*} ]];then
+            Opts[-o]=$ZINIT[PLUGINS_DIR]/$Opts[-o]:t
+        else
+            Opts[-o]=$ZINIT[PLUGINS_DIR]/$Opts[-o]
+        fi
+    fi
+    Opts[-o]=${Opts[-o]:P}
+
+    if (($+Opts[-h]));then
+        +zinit-message {pre}mg annex: {note}Usage:{rst}
+        return 0
+    fi
+
+    if ((!$+commands[$STOOL]));then
+        (($+Opts[-q]))||+zinit-message {pre}mg annex: {w}{warn}no {cmd}$STOOL \
+            {warn}command found, the {b}{warn}extraction will proceed \
+            {nb}{warn}however please install the relevant package \
+            \(via e.g.: {pkg}apt-get install $STOOL{warn}\)
+    fi
+
+    if [[ -e $Opts[-o] ]];then
+        (($+Opts[-q]))||+zinit-message {pre}mg annex: {e}{error}the \
+                    file/dir {file}$Opts[-o] {error}already exists{…} exiting{…}
+        return 8
+    fi
+
+    command mkdir -p -- $Opts[-o]:h
+    (($+Opts[-q]))||+zinit-message {i} {pre}mg annex: {note}running command: \
+                    ./{cmd}$SPATH:t {opt}--appimage-extract{note}{…}
+    LANG=C sleep 0.5
+
+    run-aie() {
+        local SDIR=$(mktemp -d)
+        builtin cd -q -- $SDIR
+        trap 'builtin cd -q -- "$OLDPWD"' EXIT
+        trap 'builtin cd -q -- "$OLDPWD";return 1' INT TERM QUIT
+        if (($1));then
+            VERSION=$Opts[-v] "$SPATH" --appimage-extract
+        else
+            VERSION=$Opts[-v] "$SPATH" --appimage-extract&>!/dev/null
+        fi
+        QRET+=$?
+        command mv -f ${${${+Opts[-v]}:#0}:+-v} -- squashfs-root $Opts[-o]|
+        print -- $PWD
+        QRET+=$?
+        return QRET
+    }
+    run-aie $+Opts[-v] $STOOL
+
+    builtin unset -f run-aie
+
+    if ((!$QRET));then
+        (($+Opts[-q]))||+zinit-message {i} {pre}mg-annex: {note}the extraction \
+                        was {hi}successfull{nb}{note}!
+    else
+        (($+Opts[-q]))||+zinit-message {i} {pre}mg-annex: {warn}the extraction \
+                        {b}{error}failed{error}!
+    fi
+    return QRET
+}

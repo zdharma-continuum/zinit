@@ -1,0 +1,25 @@
+#!/usr/bin/env zsh
+# Copyright (c) 2023 Sebastian Gniazdowski
+#
+# nc::opt-cascade
+#
+
+mg::opt-cascade() {
+    # Preamble – emulate & 0=…
+    local VARNAME=$1 VARSTRQ VARSTRP Q P VALQ VALP
+    shift
+    integer EC
+
+    # Cascade options to short ones
+    for Q P in $@;do
+        VARSTRQ="${VARNAME}[$Q]" VARSTRP="${VARNAME}[$P]"
+        VALQ=${(P)VARSTRQ} VALP=${(P)VARSTRP}
+        VALQ=${VALQ:-$VALP}
+        [[ -z $VALP$VALQ ]]&&VALQ=1 VALP=1
+        ((${(P)+VARSTRQ}))&&: ${(P)VARSTRP::=$VALQ} ${(P)VARSTRQ::=$VALQ}
+        ((${(P)+VARSTRP}))&&: ${(P)VARSTRQ::=$VALQ} ${(P)VARSTRP::=$VALQ}
+    done
+    return EC
+}
+
+# vim:ft=zsh

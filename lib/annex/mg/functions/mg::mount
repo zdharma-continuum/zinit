@@ -1,0 +1,86 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+
+# Copyright (c) 2023 Sebastian Gniazdowski
+
+##
+## Mount the AppImage/mg file and return its AppDir path
+## and also the PID of the mount command
+##
+mg::mount() {
+    # Set the base and typically useful options.
+    builtin emulate -L zsh -o extendedglob -o warncreateglobal \
+                        -o typesetsilent -o noshortloops \
+                        -o rcquotes
+
+    local SID=$1
+
+    # Strip the ID from some possible accidental /-s and leading @.
+    SID=${${SID#@}%%(.mg|/##)##}
+
+    # Conditionally enable the output from this annex
+    integer IBSHOW_MESSAGES=$+ICE[debug]
+
+    local -a match mbegin mend
+    local MATCH SPATH
+    integer MBEGIN MEND
+    SPATH=($ZINIT[PLUGINS_DIR]/(#i)($SID)([v0-9.-]##)#.mg)
+    SPATH=${${(O@n)SPATH}[1]}
+
+    # debug message
+    ((IBSHOW_MESSAGES))&&\
+        +zinit-message {b}{note}==\> {pre}mg annex:{rst} args: \
+            {b}{meta}${(pj:{rst}{nl}{b}{note}==\>{b}{meta}:)@}
+
+    # does the miligram exist?
+    if [[ ! -e $SPATH ]];then
+        +zinit-message {pre}mg annex:{msg} no such file: \
+            {file}$SPATH{msg}, didn\'t load anything{…}
+            return 1
+    fi
+
+    # is it marked +x?
+    if [[ ! -x $SPATH ]];then
+        if ! chmod +x $SPATH;then
+            +zinit-message {pre}mg annex:{msg}\
+                couldn\'t set {flag}+x{msg} on file:\
+                {file}$SPATH:t, {msg}skipping the miligram{…}
+            return 1
+        fi
+    fi
+
+    local SMNTPATH
+    integer QPID
+
+    ##
+    ## Mount, capturing the directory and PID
+    ##
+
+    (){
+        $SPATH --appimage-mount>!$1&!;QPID=$!
+        until [[ -s $1 ]];do
+            LANG=C sleep 0.004
+        done
+        LANG=C sleep 0.001
+        # read the saved mount dir path
+        SMNTPATH="$(<$1)"
+    } =(:) # returns tmp file
+
+    ##
+    ## Keep? ↔ should miligram contents be left in file system?
+    ##
+
+    if ((!$+ICE[keep]));then
+        {sleep 3&&kill -TERM $QPID;} &!
+    fi
+
+    ##
+    ## Return values
+    ##
+
+    REPLY=$SMNTPATH reply=($QPID)
+    # return value: if got the path and the pid
+    [[ -n $SMNTPATH ]] && ((QPID))
+}
+
+# vim:ft=zsh:tw=80:sw=4:sts=4:et

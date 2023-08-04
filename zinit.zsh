@@ -3298,12 +3298,15 @@ typeset -g REPLY
 
 # a searchable menu of tags for current directory
 zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
+
 zle -N zi-browse-symbol
 zle -N zi-browse-symbol-backwards zi-browse-symbol
 zle -N zi-browse-symbol-pbackwards zi-browse-symbol
 zle -N zi-browse-symbol-pforwards zi-browse-symbol
 zstyle -s ':zinit:browse-symbol' key ZINIT_TMP || ZINIT_TMP='\eQ'
 [[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
+
+zinit light-mode for %$ZINIT[BIN_DIR]/lib/annex/mg
 
 # Local Variables:
 # mode: Shell-Script

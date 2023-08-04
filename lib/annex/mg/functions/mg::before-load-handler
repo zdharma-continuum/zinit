@@ -1,0 +1,84 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+
+# Copyright (c) 2020 Sebastian Gniazdowski
+
+mg::before-load-handler() {
+    # Set the base and typically useful options.
+    builtin emulate -L zsh -o extendedglob -o warncreateglobal \
+                        -o typesetsilent -o noshortloops \
+                        -o rcquotes
+
+    local type=$1 id=$2 id_as=$3 args=$4 ices=$5 hook=$6 subtype=$7
+
+    # Conditionally enable the output from this annex
+    integer IBSHOW_MESSAGES=$+ICE[debug]
+
+    # Exclude IDs with slashes and also packages
+    [[ $id != *.mg && $+ICE[mg] != 1 ]] && return 0
+    [[ $id == */* ]] && local BAD_ID=1 Q=1
+    [[ $id == *:* ]] && local BAD_ID2=1 Q=1
+    (( $+ICE[pack] )) && local IS_PACK=1 Q=1
+    if ((Q));then
+        mg::msg "$BAD_ID" "$BAD_ID2" "$BAD_TELE" "$IS_PACK"
+        return 1
+    fi
+
+    local -a match mbegin mend reply
+    local MATCH REPLY
+    integer MBEGIN MEND
+
+    local -A tpe_map
+    tpe_map=( 0 plugin 1 snippet )
+
+    # Strip the ID from some possible accidental /-s.
+    id=${${id#@}%%(.mg|/##)##}
+
+    # I've pressed C-J. Will now press C-J and C-H a few times
+    # So the completion-method switching doesn't seem to work.
+    if mg::mount "$id";then
+        ##
+        ## Save in $Plugins hash
+        ##
+
+        Plugins[MG_PATH_$id_as]=$REPLY
+        Plugins[MG_PID_$id_as]=$reply[1]
+
+        ##
+        ## Support messages
+        ##
+
+        if (( Zinit_Annex_Mg[enable-output] )) {
+            # Clear the messages-flag, for cleanness
+            Zinit_Annex_Mg[enable-output]=0
+
+            # Enable the output from this annex
+            # [Updated to disable via configuration]
+            if (( $+ZINIT_ANNNEX_MG_HUMBLE ))
+            then
+                IBSHOW_MESSAGES=0
+            else
+                IBSHOW_MESSAGES=1
+            fi
+        }
+
+        # Overwrite the outside parameters in order to introduce
+        # the actual object's ID.
+        ICE[id-as]=${id_as:-$___id} # cascade from ice to the phy-ID
+        ___id=%$REPLY               # overwrite the physical-ID
+        ___ehid=$ICE[id-as]         # handler ID – the id-as'' ice
+        ___etid=%$REPLY             # folder path (via preceding %)
+        ICE[teleid]=%$REPLY         # folder path (via preceding %)
+
+        # Debug message.
+        if ((IBSHOW_MESSAGES));then
+            +zinit-message {pre}mg annex: {msg}Matched \
+                the miligram to its dir: \
+                {meta}$id {ehi}→ {b}{file}${ICE[teleid]#%}
+        fi
+    fi
+
+    return 0
+}
+
+# vim:ft=zsh:tw=80:sw=4:sts=4:et
