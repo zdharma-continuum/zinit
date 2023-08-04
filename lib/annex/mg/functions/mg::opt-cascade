@@ -1,4 +1,5 @@
 #!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; sh-basic-offset: 4; -*-
 # Copyright (c) 2023 Sebastian Gniazdowski
 #
 # nc::opt-cascade

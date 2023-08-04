@@ -1,0 +1,21 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
+# Copyright (c) 2023 Sebastian Gniazdowski
+
+mg::ghr::get-url-for()
+{
+        local SVERSION=$1
+
+        if [[ -z $SVERSION ]]; then
+            local SRELEASES_URL=https://github.com/$SUSER/$SPLUGIN/releases/latest
+            SVERSION="$( { .zinit-download-file-stdout $SRELEASES_URL || .zinit-download-file-stdout $SRELEASES_URL 1; } 2>/dev/null | command grep -m1 -o 'href=./'$SUSER'/'$SPLUGIN'/releases/tag/[^"]\+' )"
+            SVERSION=${SVERSION##*/}
+        fi
+        local SURL=https://github.com/$SUSER/$SPLUGIN/releases/expanded_assets/$SVERSION
+
+        # return value
+        REPLY=$SURL reply=($SVERSION)
+
+        # testable / set return code
+        [[ -n $SVERSION && -z ${REPLY##*$SVERSION} ]]
+}

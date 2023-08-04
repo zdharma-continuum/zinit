@@ -70,7 +70,6 @@ mg::cmd-extract() {
         fi
         QRET+=$?
         command mv -f ${${${+Opts[-v]}:#0}:+-v} -- squashfs-root $Opts[-o]|
-        print -- $PWD
         QRET+=$?
         return QRET
     }

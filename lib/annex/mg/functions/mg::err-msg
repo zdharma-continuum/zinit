@@ -1,0 +1,20 @@
+#!/usr/bin/env zsh
+# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4;-*-
+
+# Copyright (c) 2023 Sebastian Gniazdowski
+
+mg::err-msg() {
+    local bad_id=$1 bad_id2=$2 bad_tele=$3 is_pack=$4
+    local -a msgs
+    msgs=(
+${bad_not_mg:+"the id doesn't have .mg suffix and no mg'' ice given"}
+${bad_id:+"the ID contains a slash"}
+${bad_id2:+"the ID looks like a snippet ID (URL)"} 
+${is_pack:+"the pack'' ice have been given"}
+    )
+
+    +zinit-message {pre}zmg annex: \
+        {msg}Skipping the ID: {meta2}$id{msg} \
+        "(reason(s): ${(j:, and also :)msgs}).{rst}"
+        return 0
+}

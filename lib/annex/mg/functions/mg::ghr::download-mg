@@ -1,0 +1,97 @@
+#!/usr/bin/env zsh
+# -*- mode: sh;sh-indentation: 4;indent-tabs-mode: nil;sh-basic-offset: 4; -*-
+# Copyright (c) 2023 Sebastian Gniazdowski
+
+mg::ghr::download-mg()
+{
+    # Set the base and typically useful options.
+    builtin emulate -L zsh -o extendedglob -o warncreateglobal \
+        -o typesetsilent -o noshortloops \
+        -o rcquotes \
+
+    local SMG=$1 SUSER=${1%%/*} SPLUGIN=${1##*/} SID=$2 SURLPART=$3
+    REPLY=
+    local -a bpicks filtered init_list list parts
+    local SURL SVERSION=${ICE[ver]} SPART
+
+    mg::util::cond-load-zinit .zinit-download-file-stdout 2||return 1
+
+    parts=(${(@s:;:)$(.zi::get-architecture)})
+
+    if ! mg::ghr::get-url-for "$ICE[ver]" "$SURLPART";then
+        +zinit-message {e}Couldn\'t find the {version}${ICE[ver]:-latest} \
+            {error}version of {pid}$SMG {error}plugin, exiting
+        return 1
+    fi
+    SURL=$REPLY SVERSION=$reply[1]
+
+    init_list=( ${(@f)"$( { .zinit-download-file-stdout $SURL || .zinit-download-file-stdout $SURL 1; } 2>/dev/null | command grep -i -o 'href=./'$SUSER'/'$SPLUGIN'/releases/download/[^"]\+')"} )
+    init_list=(${init_list[@]#href=?})
+    bpicks=(${(s.;.)ICE[bpick]})
+    [[ -z $bpicks ]] && bpicks=("")
+    local bpick bpick_error=""
+    reply=()
+    for bpick in "${bpicks[@]}"; do
+        list=($init_list)
+        if [[ -n $bpick ]]; then
+            list=( ${(M)list[@]:#(#i)*/$~bpick} )
+            if (( !$#list )); then
+                +zinit-message "{info}[{pre}gh-r{info}] {error}Error{rst}: {ice}bpick{rst} ice found no release assets{rst}. To fix, modify the {ice}bpick{rst} glob pattern {glob}${bpick}{rst}"
+            fi
+        fi
+
+        local junk="([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
+        filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+
+        if (( $#list > 1 )) { filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ); }
+
+        # pre-filter any .mg and .AppImage
+        if (( $#list > 1 )); then
+            filtered=(${(M)list:#(#i)*.mg})
+            (( $#filtered >= 1 ))&&list=($filtered)
+            filtered=(${(M)list:#(#i)*.AppImage})
+            (( $#filtered >= 1 ))&&list=($filtered)
+        fi
+
+
+        # filter for miligram's name
+        list=(${(M)list:#*/${~SID}*})
+
+        # Filter for any architecture if needed
+        foreach SPART ($parts)
+            if (( $#list > 1 )); then
+                filtered=( ${(M)list[@]:#(#i)*${~SPART}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+                # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${SPART}{rst}{nl}    - ${(@pj:\n    - :)list[1,2]}{nl}"
+            else
+                break
+            fi
+        end
+
+        if (( !$#list )); then
+            +zinit-message "{nl}{info}[{pre}gh-r{info}] {error}Error{rst}: no {meta}miligrams {rst}found for {version}${SVERSION}{rst}"
+            return 1
+        fi
+        reply+=( "${list[1]}" )
+    done
+    [[ -n $reply ]]||return 1
+    REPLY=$reply[1] SURL=github.com$REPLY
+
+    +zinit-message {i} \(Requesting \`{file}${REPLY:t}{rst}\', version:\
+                                {version}$SVERSION{rst}{…}\)
+
+    (
+        builtin cd -q -- $ZINIT[PLUGINS_DIR]||return 1
+        if ! .zinit-download-file-stdout "$SURL" 0 1 >! "${REPLY:t}";then
+            if ! .zinit-download-file-stdout "$SURL" 1 1 >! "${REPLY:t}";then
+                command rm -f "${REPLY:t}"
+                +zinit-message "Download of miligram for \`{pid}$SMG{rst}' " \
+                    "failed.{nl}Tried url: {url}$REPLY{rst}."
+                return 1
+            fi
+        fi
+        [[ -f $REPLY:t ]]
+    )
+    return $?
+}
+
+# vim:ft=zsh:tw=80:sw=4:sts=4:et

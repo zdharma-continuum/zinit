@@ -1,0 +1,22 @@
+#!/usr/bin/env zsh
+# -*- mode: sh;sh-indentation: 4;indent-tabs-mode: nil;sh-basic-offset: 4; -*-
+# Copyright (c) 2023 Sebastian Gniazdowski
+
+mg::util::cond-load-zinit()
+{
+    local SF=$1 SPATH
+    integer QID=$2
+    local -a map=(
+            zinit.zsh  zinit-install.zsh
+            zinit-side.zsh zinit-auoload.zsh
+    )
+
+    # already loaded?
+    (($+functions[$SF]))&&return 0
+
+    # load if file exists
+    [[ -f ${SPATH::=$ZINIT[BIN_DIR]/$map[QID]} ]]&&builtin source $SPATH||\
+            +zinit-message {e}Couldn\'t source {file}$map[QID]:t{error}{…}
+    return $((!$+functions[$SF]))
+}
+# vim:ft=zsh:tw=80:sw=4:sts=4:et

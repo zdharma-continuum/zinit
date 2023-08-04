@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
-# -*- mode: sh; sh-indentation: 4; indent-tabs-mode: nil; sh-basic-offset: 4; -*-
-
+# -*- mode: sh;sh-indentation: 4;indent-tabs-mode: nil;sh-basic-offset: 4; -*-
 # Copyright (c) 2023 Sebastian Gniazdowski
 
 ##
@@ -19,13 +18,15 @@ mg::mount() {
     SID=${${SID#@}%%(.mg|/##)##}
 
     # Conditionally enable the output from this annex
-    integer IBSHOW_MESSAGES=$+ICE[debug]
+    integer IBSHOW_MESSAGES=$+ICE[debug]+$+ZINIT[DEBUG]
 
     local -a match mbegin mend
     local MATCH SPATH
     integer MBEGIN MEND
-    SPATH=($ZINIT[PLUGINS_DIR]/(#i)($SID)([v0-9.-]##)#.mg)
+    SPATH=($ZINIT[PLUGINS_DIR]/(#i)($SID)([v0-9.-]##)#.mg(N.,@))
     SPATH=${${(O@n)SPATH}[1]}
+
+    [[ -z $SPATH ]]&&return 8
 
     # debug message
     ((IBSHOW_MESSAGES))&&\
