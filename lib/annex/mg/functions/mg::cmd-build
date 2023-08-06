@@ -40,7 +40,17 @@ mg::cmd-build() {
     LANG=C sleep 0.5
 
     run-ait() {
-        VERSION=$Opts[-v] "$1" \
+        local sed_=sed
+        (($+commands[gsed]))&&sed_=gsed
+        local SDESKTOP=$PWD:t.desktop
+        if [[ ! -e $SDESKTOP ]];then
+            command cp -vf $Plugins[MG_DIR]/share/desktop.tmpl $SDESKTOP
+            command $sed_ -i -r -e 's/\{name\}/'$PWD:t'/g' $SDESKTOP
+            command $sed_ -i -r -e 's/\{version\}/'$Opts[-v]'/g' $SDESKTOP
+        fi
+        command touch AppRun $PWD:t.png
+        command chmod +x AppRun
+        VERSION=$Opts[-v] ARCH="x86_64" "$1" \
                             ${Opts[--verbose]+--verbose} \
                             -n $PWD \
                             $Opts[-o]
