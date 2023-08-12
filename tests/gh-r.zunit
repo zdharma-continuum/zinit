@@ -217,7 +217,7 @@
 @test 'dysk' { # A linux utility to get information on filesystems, like df but better
   [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
   run zinit lbin'!**/x86_64-linux/* -> dysk' for @Canop/dysk; assert $state equals 0
-  local lfs="$ZBIN/dysk"; assert "$dysk" is_executable
+  local dysk="$ZBIN/dysk"; assert "$dysk" is_executable
   run $dysk --version; assert $state equals 0
 }
 @test 'etcd' { # Distributed reliable key-value store for the most critical data of a distributed system
