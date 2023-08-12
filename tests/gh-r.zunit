@@ -145,7 +145,7 @@
 @test 'create-go-app' { # Create a new production-ready project with backend, frontend and deploy automation by running one CLI command
   run zinit for id-as'cgapp' @create-go-app/cli; assert $state equals 0
   local cgapp="$ZBIN/cgapp"; assert "$cgapp" is_executable
-  [[ $OSTYPE =~ 'darwin*' ]] && assert "$output" contains "darwin_$(uname -m)" && pass
+  [[ $OSTYPE =~ 'darwin*' ]] && assert "$output" contains "darwin_${$(uname -m)//x86_/amd}" && pass
   $cgapp --version; assert $state equals 0
 }
 @test 'csview' { # Pretty csv viewer for cli with cjk/emoji support
