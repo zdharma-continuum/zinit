@@ -232,7 +232,6 @@ Called by:
  zinit-additional.zsh/.zinit-debug-status
  zinit-additional.zsh/.zinit-debug-stop
  zinit-additional.zsh/:zinit-tmp-subst-source
- zinit-autoload.zsh/.zinit-list-plugins
  zinit-autoload.zsh/.zinit-unload
 
 ==== +zinit-deploy-message
@@ -282,6 +281,7 @@ Called by:
  zinit-autoload.zsh/.zinit-confirm
  zinit-autoload.zsh/.zinit-delete
  zinit-autoload.zsh/.zinit-glance
+ zinit-autoload.zsh/.zinit-list-plugins
  zinit-autoload.zsh/.zinit-self-update
  zinit-autoload.zsh/.zinit-show-zstatus
  zinit-autoload.zsh/.zinit-uninstall-completions

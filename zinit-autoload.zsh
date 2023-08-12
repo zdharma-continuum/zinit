@@ -1554,20 +1554,20 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
      keyword="${keyword## ##}"
      keyword="${keyword%% ##}"
      if [[ -n "$keyword" ]]; then
-         +zi-log "{i} Installed plugins matching {info}$keyword{rst}:"
+         +zinit-message "{i} Installed plugins matching {info}$keyword{rst}:"
          filtered=( "${(M)ZINIT[@]:#STATES__*$keyword*}" )
      else
          filtered=(${${(M)${(k)ZINIT[@]}:##STATES__*}//[A-Z]*__/})
      fi
      local i
-     +zi-log '{m} {b}Plugins{rst}'
+     +zinit-message '{m} {b}Plugins{rst}'
      for i in "${(o)filtered[@]}"; do
          [[ "$i" = "local/zinit" ]] && continue
          local is_loaded='{error}U'
-         (( ZINIT[STATES__${i}] )) && is_loaded="{happy}L"
-         +zi-log -C2 -- $is_loaded{rst} $i
+         (( "ZINIT[STATES__$i]" )) && is_loaded="{happy}L"
+         +zinit-message -C2 -- $is_loaded{rst} $i
      done
-     +zi-log -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
+     +zinit-message -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
 } # ]]]
 # FUNCTION: .zinit-list-snippets [[[
 .zinit-list-snippets() {
