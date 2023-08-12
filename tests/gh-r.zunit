@@ -59,7 +59,7 @@
   run $assh --version; assert $state equals 0
 }
 @test 'atuin' { #  Magical shell history
-  run zinit ver'v14.0.0' for @ellie/atuin; assert $state equals 0
+  run zinit for @ellie/atuin; assert $state equals 0
   local atuin="$ZBIN/atuin"; assert "$atuin" is_executable
   run $atuin --version; assert $state equals 0
 }
