@@ -59,7 +59,7 @@
   run $assh --version; assert $state equals 0
 }
 @test 'atuin' { #  Magical shell history
-  run zinit ver'v14.0.0' for @ellie/atuin; assert $state equals 0
+  run zinit for @atuinsh/atuin; assert $state equals 0
   local atuin="$ZBIN/atuin"; assert "$atuin" is_executable
   run $atuin --version; assert $state equals 0
 }
@@ -145,7 +145,7 @@
 @test 'create-go-app' { # Create a new production-ready project with backend, frontend and deploy automation by running one CLI command
   run zinit for id-as'cgapp' @create-go-app/cli; assert $state equals 0
   local cgapp="$ZBIN/cgapp"; assert "$cgapp" is_executable
-  [[ $OSTYPE =~ 'darwin*' ]] && assert "$output" contains "macOS_$(uname -m)" && pass
+  [[ $OSTYPE =~ 'darwin*' ]] && assert "$output" contains "darwin_${$(uname -m)//x86_/amd}" && pass
   $cgapp --version; assert $state equals 0
 }
 @test 'csview' { # Pretty csv viewer for cli with cjk/emoji support
@@ -213,6 +213,12 @@
   run zinit lbin'!**/dyff' for @homeport/dyff; assert $state equals 0
   local dyff="$ZBIN/dyff"; assert "$dyff" is_executable
   $dyff version; assert $state equals 0
+}
+@test 'dysk' { # A linux utility to get information on filesystems, like df but better
+  [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
+  run zinit lbin'!**/x86_64-linux/* -> dysk' for @Canop/dysk; assert $state equals 0
+  local dysk="$ZBIN/dysk"; assert "$dysk" is_executable
+  run $dysk --version; assert $state equals 0
 }
 @test 'etcd' { # Distributed reliable key-value store for the most critical data of a distributed system
   run zinit lbin'!**/etcd' for @etcd-io/etcd; assert $state equals 0
@@ -481,12 +487,6 @@ $kopia --version; assert $state equals 0
   run zinit for @gokcehan/lf; assert $state equals 0
   local lf="$ZBIN/lf"; assert "$lf" is_executable
   $lf -version; assert $state equals 0
-}
-@test 'lfs' { # A linux utility to get information on filesystems, like df but better
-  [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
-  run zinit lbin'!**/x86_64-linux/* -> lfs' for @Canop/lfs; assert $state equals 0
-  local lfs="$ZBIN/lfs"; assert "$lfs" is_executable
-  run $lfs --version; assert $state equals 0
 }
 @test 'lnav' { # advanced log file viewer
   run zinit for @tstack/lnav; assert $state equals 0

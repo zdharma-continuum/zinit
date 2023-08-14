@@ -842,7 +842,7 @@ ____
 Has 21 line(s). Calls functions:
 
  .zinit-list-plugins
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
