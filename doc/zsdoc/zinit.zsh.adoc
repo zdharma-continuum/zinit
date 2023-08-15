@@ -233,6 +233,7 @@ Called by:
  zinit-additional.zsh/.zinit-debug-stop
  zinit-additional.zsh/:zinit-tmp-subst-source
  zinit-autoload.zsh/.zinit-unload
+ zinit-install.zsh/.zinit-get-latest-gh-r-url-part
 
 ==== +zinit-deploy-message
 
