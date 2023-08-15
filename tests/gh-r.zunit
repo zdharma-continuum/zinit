@@ -288,7 +288,7 @@
   $gh_cli --version; assert $state equals 0
 }
 @test 'gh-hub' { # A command-line tool that makes git easier to use with GitHub
-  run zinit cp"hub-*/etc/hub.zsh_completion -> _hub" for @mislav/hub; assert $state equals 0
+  run zinit cp"hub-*/etc/hub.zsh_completion -> _hub" for @github/hub; assert $state equals 0
   local hub="$ZBIN/hub"; assert "$hub" is_executable
   $hub --version; assert $state equals 0
 }

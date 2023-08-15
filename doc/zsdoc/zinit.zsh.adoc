@@ -110,6 +110,8 @@ Has 244 line(s). Calls functions:
  |   |-- .zinit-get-object-path
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-ice
+ |   |   `-- +zi-log
+ |   |       `-- +zinit-message
  |   |-- .zinit-load-ices
  |   |   `-- .zinit-get-object-path
  |   |       `-- .zinit-any-to-user-plugin
@@ -225,6 +227,7 @@ Has 1 line(s). Calls functions:
 
 Called by:
 
+ .zinit-ice
  zinit-additional.zsh/.zinit-debug-clear
  zinit-additional.zsh/.zinit-debug-report
  zinit-additional.zsh/.zinit-debug-revert
@@ -234,6 +237,7 @@ Called by:
  zinit-additional.zsh/:zinit-tmp-subst-source
  zinit-autoload.zsh/.zinit-list-plugins
  zinit-autoload.zsh/.zinit-unload
+ zinit-install.zsh/.zinit-jq-check
 
 ==== +zinit-deploy-message
 
@@ -300,7 +304,6 @@ Called by:
  zinit-install.zsh/.zinit-get-latest-gh-r-url-part
  zinit-install.zsh/.zinit-get-package
  zinit-install.zsh/.zinit-install-completions
- zinit-install.zsh/.zinit-jq-check
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit-install.zsh/.zinit-update-snippet
  zinit-install.zsh/ziextract
@@ -690,9 +693,13 @@ ____
 
 ____
 
-Has 13 line(s). Doesn't call other functions.
+Has 32 line(s). Calls functions:
 
-Uses feature(s): _setopt_
+ .zinit-ice
+ `-- +zi-log
+     `-- +zinit-message
+
+Uses feature(s): _setopt_, _zmodload_, _zparseopts_
 
 Called by:
 
@@ -1600,10 +1607,11 @@ ____
  
  Entrypoint function directly exposed to user, consumes subcommands with respective arguments,
  and completion.
+ 
 
 ____
 
-Has 553 line(s). Calls functions:
+Has 527 line(s). Calls functions:
 
  zinit
  |-- +zinit-message
@@ -1618,6 +1626,8 @@ Has 553 line(s). Calls functions:
  |-- .zinit-get-object-path
  |   `-- .zinit-any-to-user-plugin
  |-- .zinit-ice
+ |   `-- +zi-log
+ |       `-- +zinit-message
  |-- .zinit-load-ices
  |   `-- .zinit-get-object-path
  |       `-- .zinit-any-to-user-plugin
@@ -1776,6 +1786,8 @@ Has 1 line(s). Calls functions:
      |-- .zinit-get-object-path
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-ice
+     |   `-- +zi-log
+     |       `-- +zinit-message
      |-- .zinit-load-ices
      |   `-- .zinit-get-object-path
      |       `-- .zinit-any-to-user-plugin

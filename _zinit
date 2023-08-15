@@ -36,6 +36,7 @@ __zinit_commands(){
     'env-whitelist:Specify names (also patterns) of parameters to be left unchanged during an unload'
     'glance:Look at plugins source'
     'help:Usage information'
+    'ice:Set ice'
     'load:Load plugin'
     'man:Display Zinit'\''s manpage'
     'module:Manage binary Zsh module shipped with Zinit'
@@ -236,6 +237,11 @@ _zinit_env_whitelist(){
 _zinit_glance(){
   _arguments - installed '1:installed:__zinit_installed' && ret=0
 } # ]]]
+# FUNCTION: _zinit_ice [[[
+_zinit_ice(){
+  _arguments -A \
+    '(-h --help)'{-h,--help}'[Print usage]' && ret=0
+} # ]]]
 # FUNCTION: _zinit_list [[[
 _zinit_list(){
   _message 'Hit enter to list the defined key bindings replay' && ret=0
@@ -279,7 +285,7 @@ _zinit_snippet(){
   _arguments -A \
     '(-c --command)'{-c,--command}'[Load the snippet as a command (i.e., make executable and apend to $PATH])' \
     '(-f --force)'{-f,--force}'[Force new download of the snippet file]' \
-    '(-h --help)'{-h,--help}'[Show this help message]'
+    '(-h --help)'{-h,--help}'[Print usage]'
   _arguments - snippet '*::snippet:__zinit_installed_snippets' && ret=0
 } # ]]]
 # FUNCTION: _zinit_status [[[

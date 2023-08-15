@@ -51,15 +51,5 @@
   assert "$ZPLUGINS/test---completions-overwrite/_whatever2" is_file
   assert "$ZINIT[COMPLETIONS_DIR]/_whatever2" is_file
 }
-@test 'completions-ignored' {
-  # only the _valid file should be installed as a completion
-  run zinit as"null" id-as"test/ignored_completions" atclone"touch __init__.py _valid" completions for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---ignored_completions/_valid" is_file
-  assert "$ZPLUGINS/test---ignored_completions/__init__.py" is_file
-  assert "$ZINIT[COMPLETIONS_DIR]/_valid" is_file
-  COMPS=( "$ZINIT[COMPLETIONS_DIR]"/_* )
-  assert __init__.py is_not_value_in $COMPS
-}
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker

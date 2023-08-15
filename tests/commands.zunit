@@ -16,6 +16,19 @@
   assert $output contains 'zinit delete [options] [plugins...]'
   assert $state equals 0
 }
+@test 'zinit help' {
+  for cmd in '-h' '--help' 'help'; do
+    run zinit $cmd
+    assert $output contains 'Usage: zinit [OPTIONS] COMMAND'
+    assert $state equals 0
+  done
+}
+@test 'ice --help' {
+  run zinit ice --help
+  assert $output contains 'Usage: zinit ice [-h|--help] [args ...]'
+  assert $output contains 'Available ice-modifiers:'
+  assert $state equals 0
+}
 @test 'delete --all' {
   run zinit as'completion' is-snippet for @'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
   assert $state equals 0
