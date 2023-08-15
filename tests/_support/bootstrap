@@ -1,49 +1,67 @@
 #!/usr/bin/env zsh
+setopt NO_GLOBAL_RCS NO_GLOBAL_EXPORT NO_RCS
 
 # Log functions [[[
-function error(){ print -P "%F{red}ZUNIT[ERROR]: $1%f" && return 1; }
-function info() { print -P "%F{blue}ZUNIT[INFO]%f: %F{cyan}$1%f"; }
-function warn() { print -P "%F{yellow}ZUNIT[WARN]: $1%f"; }
+function error(){ print -P "%F{red}[ERROR]%f: ${1}" && return 1; }
+function info() { print -P "%F{green}[INFO]%f:%F{cyan} ${1} %f"; }
+function warn() { print -P "%F{yellow}[WARN]%f: ${1}"; }
 # ]]]
 # Create Zunit test environment [[[
 GIT_REPO=$(git rev-parse --show-toplevel)
-typeset -gAH  ZINIT;
-ZINIT[HOME_DIR]="$GIT_REPO/tests/_support/zunit";    ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git;
-ZINIT[COMPLETIONS_DIR]=$ZINIT[HOME_DIR]/completions; ZINIT[SNIPPETS_DIR]=$ZINIT[HOME_DIR]/snippets;
-ZINIT[ZCOMPDUMP_PATH]=$ZINIT[HOME_DIR]/zcompdump;    ZINIT[PLUGINS_DIR]=$ZINIT[HOME_DIR]/plugins;
+
+_mktemp_cmd='mktemp'
+if (( ${+commands[gmktemp]} )); then
+    _mktemp_cmd='gmktemp'
+fi
+TMP_ZUNIT=$(${_mktemp_cmd} --directory --tmpdir="${GIT_REPO}/tests/_support")
+if [[ ! -d ${TMP_ZUNIT} ]]; then
+    error "zunit temp dir not found"
+    exit 1
+fi
+
+typeset -gAH ZINIT;
+ZINIT[HOME_DIR]=${TMP_ZUNIT};
+ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git;
+ZINIT[COMPLETIONS_DIR]=$ZINIT[HOME_DIR]/completions;
+ZINIT[PLUGINS_DIR]=$ZINIT[HOME_DIR]/plugins;
+ZINIT[SNIPPETS_DIR]=$ZINIT[HOME_DIR]/snippets;
+ZINIT[ZCOMPDUMP_PATH]=$ZINIT[HOME_DIR]/zcompdump;
 ZPFX=$ZINIT[HOME_DIR]/polaris;
 
-rm -rf $ZINIT[HOME_DIR]
-mkdir -p $ZINIT[HOME_DIR]
-git diff > $ZINIT[HOME_DIR]/unstaged.diff
-info 'creating test env' \
-  && git clone \
-      --dissociate \
-      --local \
-      --no-hardlinks \
-      --reference "$GIT_REPO" \
-      "$GIT_REPO" \
-    "$GIT_REPO"/tests/_support/zunit/zinit.git \
-  || error 'failed to create zinit copy for test env' \
-  &&  [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]] \
-  && git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff \
-  && info 'installing zinit' \
-  && command chmod g-rwX $ZINIT[HOME_DIR] \
-  && zcompile $ZINIT[BIN_DIR]/zinit.zsh \
-  && info 'successfully created zunit env' \
-  || error 'failed to create zunit env'
+command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
+info 'creating test env'
+git clone \
+    --dissociate \
+    --local \
+    --no-hardlinks \
+    --reference "${GIT_REPO}" \
+    "${GIT_REPO}" \
+    "${ZINIT[BIN_DIR]}"
+if (( $? != 0 )); then
+    error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2
+    exit 1
+fi
 
-source $ZINIT[BIN_DIR]/zinit.zsh \
-  && autoload -Uz _zinit \
-  && (( ${+_comps} )) \
-  && _comps[zinit]=_zinit
+if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
+    (
+        git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff && \
+            chmod g-rwX "${ZINIT[HOME_DIR]}" && \
+            zcompile "${ZINIT[BIN_DIR]}/zinit.zsh"
+    )
+fi
+(( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
+
+{
+    source $ZINIT[BIN_DIR]/zinit.zsh && \
+        autoload -Uz _zinit && \
+        (( ${+_comps} )) && \
+        _comps[zinit]=_zinit
+}
+(( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 # ]]]
 # Install Annexes [[[
 info 'installing test dependencies'
-    # ver'fix/improve-lbin-logic' \
-zinit depth'1' light-mode for \
-  zdharma-continuum/zinit-annex-binary-symlink \
-  zdharma-continuum/zinit-annex-{'bin-gem-node','default-ice'}
+zinit depth'1' light-mode for zdharma-continuum/zinit-annex-{'binary-symlink','default-ice'}
 # ]]]
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker

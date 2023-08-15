@@ -18,20 +18,21 @@ jobs:
 
       - name: checkout repository
         uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
 
       - name: re-generate documentation
         run: |
           make doc/container
           sudo chown -R "$(id -u):$(id -g)" .
 
-      - name: check for out-of-date documentation
-        run: |
-          echo "### Documentation summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
-          if ! git --no-pager diff --exit-code; then
-            echo "::error:: Z-shelldocs are out-of-date." >> $GITHUB_STEP_SUMMARY
-            echo "To regenerate, run `make doc`" >> $GITHUB_STEP_SUMMARY
-            exit 1
-          else
-            echo "::notice:: Z-shelldocs are up-to-date." >> $GITHUB_STEP_SUMMARY
-          fi
+      - name: commit changes to the current branch
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: 'doc'
+          author_name: GitHub Actions
+          author_email: actions@github.com
+          commit: --signoff
+          message: 'docs: generate'
+          push: true

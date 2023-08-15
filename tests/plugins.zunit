@@ -37,6 +37,12 @@
   local vim="$ZBIN/vim"; assert $vim is_executable
   $vim --version; assert $state equals 0
 }
+@test 'zsh-completions' {
+  run zinit light-mode for zsh-users/zsh-completions
+  zinit cd zsh-users/zsh-completions
+  run zinit creinstall -q .; assert $state equals 0
+  local broken_completions=($(echo "$ZINIT[COMPLETIONS_DIR]"/*(-@))); assert "${#broken_completions[@]}" equals 0
+}
 # @test 'zsh_bin' {
 #   run zinit as'null' sbin'bin/zsh' for @romkatv/zsh-bin
 #   assert $state equals 0

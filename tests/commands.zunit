@@ -1,0 +1,47 @@
+#!/usr/bin/env zunit
+#
+# zdharma-continuum/zinit/tests/commands.zunit
+# Copyright (c) 2016-2021 Sebastian Gniazdowski
+# Copyright (c) 2021-2023 zdharma-continuum
+# Homepage: https://github.com/zdharma-continuum/zinit
+# License: MIT License
+#
+
+@setup {
+  ZBIN="${ZPFX}/bin"
+}
+
+@test 'delete --help' {
+  run zinit delete --help
+  assert $output contains 'zinit delete [options] [plugins...]'
+  assert $state equals 0
+}
+@test 'delete --all' {
+  run zinit as'completion' is-snippet for @'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
+  assert $state equals 0
+}
+@test 'delete a snippet' {
+  run zinit id-as'git.zsh' is-snippet for @'OMZL::git.zsh'
+  run zinit delete --yes 'git.zsh'
+  assert $state equals 0
+}
+@test 'delete a plugin' {
+    run zinit from'gh-r' as'program' id-as mv'shfmt* -> shfmt' for @'mvdan/sh'
+    run zinit delete --yes sh
+    assert $state equals 0
+}
+@test 'delete a program' {
+    run zinit as'program' cp'wd.sh->wd' mv'_wd.sh->_wd' pick'wd' for @'mfaerevaag/wd'
+    run zinit delete --yes mfaerevaag/wd
+    assert $state equals 0
+}
+
+@test 'plugins' {
+  run zinit plugins
+  assert $output contains 'Plugins'
+  assert $output contains 'Unloaded: '
+  assert $output contains 'Loaded: '
+  assert $state equals 0
+}
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
