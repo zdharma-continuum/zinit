@@ -554,8 +554,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local c cfile bkpfile
     # The plugin == . is a semi-hack/trick to handle 'creinstall .' properly
     [[ $user == % || ( -z $user && $plugin == . ) ]] && \
-        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.yaml|*.py|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
-        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.yaml|*.py|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
+        completions=( "${plugin}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) ) || \
+        completions=( "${ZINIT[PLUGINS_DIR]}/${id_as//\//---}"/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN^/) )
     already_symlinked=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
     backup_comps=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
 
@@ -1483,17 +1483,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   local _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
   case "$_os" in
     (Darwin)
-      _sys='(apple|darwin|apple-darwin|dmg|mac((-|)os|)|os(-|64|)x)'
+      _sys='(apple|darwin|apple-darwin|dmg|mac((-|)os|)|(os(-|64|)x))'
       arch -x86_64 /usr/bin/true 2> /dev/null
       if [[ $? -eq 0 ]] && [[ $_cpu != "arm64" ]]; then
         _os=$_sys*~*((aarch|arm)64)
       fi
       ;;
     (Linux)
-      if [[ -n /lib/*musl*(#qN) ]] || (( ${+commands[musl-gcc]} )); then
-        _sys='(linux[\-\_])*~^*((gnu|musl)[\-\_\.])'
+      if [[ -n /lib/*musl*(#qN) ]] && command -v musl-gcc > /dev/null 2>&1; then
+        _sys='(linux[\-\_])*~^*(gnu[\-\_\.]|musl[\-\_\.])'
       else
-        _sys='(linux[\-\_])*~^*(gnu[\-\_\.])'
+        _sys='((linux[\-\_])*~^*(gnu|musl)[\-\_\.])*~*(android)'
       fi
       ;;
     (MINGW* | MSYS* | CYGWIN* | Windows_NT)
@@ -1508,7 +1508,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       _cpu='(arm|aarch)64'
       ;;
     (amd64 | i386 | i486 | i686| i786 | x64 | x86 | x86-64 | x86_64)
-      _cpu='(amd64|x86_64|x64)'
+      _cpu="(amd64|x86_64|x64)*~*(eabi[f])"
       ;;
     (armv6l)
       _os=${_os}eabihf
@@ -1520,7 +1520,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       +zinit-message "{info}[{pre}ziextract{info}]{error} Unsupported CPU: {obj}$_cpu{rst}"
       ;;
   esac
-  echo "${_sys};${_cpu};${_os}"
+  print -- "${_sys};${_os};${_cpu};${_sys};${_os}"
 } # ]]]
 # FUNCTION: .zinit-get-latest-gh-r-url-part [[[
 # Gets version string of latest release of given Github
@@ -1532,6 +1532,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   local plugin="$2" urlpart="$3" user="$1"
   local -a bpicks filtered init_list list parts
   parts=(${(@s:;:)$(.zi::get-architecture)})
+  # +zi-log "{m} ${(@)parts}"
   # +zinit-message "{info}[{pre}gh-r{info}]{rst} filters -> {glob}${(@)parts}{rst}"
   if [[ -z $urlpart ]]; then
     local tag_version=${ICE[ver]}
@@ -1559,13 +1560,13 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       fi
     fi
 
-    local junk="([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
+    local junk='([3-6]86|asc|md5|sig|sum|txt|vsix|pkg|.(apk|b3|deb|json|rpm|sbom|sh(a(256|512)|)|yml)(#e))'
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     for part in "${parts[@]}"; do
       if (( $#list > 1 )); then
         filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zinit-message "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
+        +zi-log "{i} filter -> {glob}${part}{rst}{nl}  {m} ${(@pj:\n  - :)list[1,2]}"
       else
         break
       fi

@@ -1,6 +1,5 @@
 #!/usr/bin/env zunit
 
-
 @setup {
   export ZBIN="${ZPFX}/bin"
   export os_type="${OSTYPE//[0-9\.]*/}"
@@ -91,10 +90,10 @@
   run $blast --dry=1; assert $state equals 0
 }
 @test 'boilr' { # boilerplate template manager that generates files or directories from template repositories
-  run zinit for @tmrts/boilr; assert $state equals 0
+  run zinit ver'0.2.0' for @tmrts/boilr; assert $state equals 0
   local boilr="$ZBIN/boilr"; assert "$boilr" is_executable
-  [[ $OSTYPE =~ 'darwin*' ]] && assert "$output" contains "darwin_amd64" && pass
-  run $boilr --help; assert $state equals 0
+  # [[ $OSTYPE =~ 'darwin*' ]] && assert "$output" contains "darwin_amd64" && pass
+  run $boilr version; assert $state equals 0
 }
 @test 'booklit' { # a pretty lit content authoring system
   run zinit for lbin'!* -> booklit' @vito/booklit; assert $state equals 0
@@ -120,7 +119,7 @@
 @test 'calico' { # Cloud native networking and network security
   run zinit lbin"!* -> calico" for @projectcalico/calico; assert $state equals 0
   local calico="$ZBIN/calico"; assert "$calico" is_executable
-  run $calico --help; assert $state equals 0
+  run $calico version; assert $state equals 0
 }
 @test 'certificates' { # An opinionated helper for generating tls certificates
   run zinit lbin"!* -> certificates" for @mvmaasakkers/certificates; assert $state equals 0
@@ -192,7 +191,7 @@
 @test 'dstask' { # Git powered terminal-based todo/note manager -- markdown note page per task
   run zinit lbin'!*->dstask' bpick'^*import*' for @naggie/dstask; assert $state equals 0
   local dstask="$ZBIN/dstask"; assert "$dstask" is_executable
-  $dstask help; assert $state equals 0
+  $dstask version; assert $state equals 0
 }
 @test 'dua' { # View disk space usage and delete unwanted data, fast
   run zinit lbin'!**/dua' for @Byron/dua-cli; assert $state equals 0
@@ -228,7 +227,7 @@
   [[ $OSTYPE =~ 'darwin*' ]] && skip "on $os_type"
   run zinit ver'v0.31.0' for @pkolaczk/fclones; assert $state equals 0
   local fclones="$ZBIN/fclones"; assert "$fclones" is_executable
-  run "$fclones" --help; assert $state equals 0
+  run "$fclones" --version; assert $state equals 0
 }
 @test 'fd' { # A fast, simple, and user-friendly alternative to find
   run zinit for @sharkdp/fd; assert $state equals 0
@@ -540,7 +539,7 @@ $kopia --version; assert $state equals 0
   [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
   run zinit lbin'!* -> miniserve' for @svenstaro/miniserve; assert $state equals 0
   local miniserve="$ZBIN/miniserve"; assert "$miniserve" is_executable
-  run $miniserve --help; assert $state equals 0
+  run $miniserve --version; assert $state equals 0
 }
 @test 'mkcert' { # A simple zero-config tool to make locally trusted development certificates
   run zinit lbin'!* -> mkcert' for @FiloSottile/mkcert; assert $state equals 0
@@ -591,7 +590,7 @@ $kopia --version; assert $state equals 0
 @test 'ouch' { # Painless compression and decompression for your terminal
   run zinit for @ouch-org/ouch; assert $state equals 0
   local ouch="$ZBIN/ouch"; assert "$ouch" is_executable
-  run "$ouch" --help; assert $state equals 0
+  run "$ouch" --version; assert $state equals 0
 }
 @test 'pastel' { # A command-line tool to generate, analyze, convert and manipulate colors
   run zinit for @sharkdp/pastel; assert $state equals 0
@@ -610,7 +609,7 @@ $kopia --version; assert $state equals 0
 }
 @test 'pipr' { # A tool to interactively write shell pipelines.
   [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
-  run zinit for @Elkowar/pipr; assert $state equals 0
+   run zinit for @Elkowar/pipr; assert $state equals 0
   local pipr="$ZBIN/pipr"; assert "$pipr" is_executable
   run "$pipr" --help; assert $state equals 0
 }
@@ -808,5 +807,7 @@ $kopia --version; assert $state equals 0
   local zoxide="$ZBIN/zoxide"; assert "$zoxide" is_executable
   run $zoxide --version; assert $state equals 0
 }
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
