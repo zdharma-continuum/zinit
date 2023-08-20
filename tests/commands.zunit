@@ -43,5 +43,10 @@
   assert $output contains 'Loaded: '
   assert $state equals 0
 }
+@test 'self-update' {
+  run zinit self-update
+  assert $output contains 'Already up-to-date.'
+  assert $state equals 0
+}
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
