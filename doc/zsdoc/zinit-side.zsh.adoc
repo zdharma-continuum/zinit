@@ -99,7 +99,7 @@ Has 110 line(s). Calls functions:
  |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |   |-- .zinit-exists-physically
  |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   |-- zinit.zsh/.zinit-any-to-pid
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- .zinit-two-paths
@@ -136,7 +136,7 @@ ____
 Has 20 line(s). Calls functions:
 
  .zinit-countdown
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _trap_
 
@@ -192,7 +192,7 @@ Has 25 line(s). Calls functions:
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- .zinit-exists-physically
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-any-to-pid
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
