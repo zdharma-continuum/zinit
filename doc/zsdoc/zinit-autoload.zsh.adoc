@@ -126,7 +126,7 @@ Has 39 line(s). Calls functions:
 
  .zinit-build-module
  |-- .zinit-module
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_, _trap_
 
@@ -152,7 +152,7 @@ Has 15 line(s). Calls functions:
  .zinit-cd
  |-- .zinit-get-path
  |   `-- zinit.zsh/.zinit-get-object-path
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
@@ -405,7 +405,7 @@ ____
 Has 17 line(s). Calls functions:
 
  .zinit-confirm
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_, _read_
 
@@ -452,7 +452,7 @@ Has 111 line(s). Calls functions:
  |-- .zinit-run-delete-hooks
  |   `-- zinit-side.zsh/.zinit-countdown
  |-- zinit-side.zsh/.zinit-compute-ice
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit.zsh/zinit
 
@@ -781,7 +781,7 @@ Has 39 line(s). Calls functions:
  |-- .zinit-pager
  |-- zinit-side.zsh/.zinit-exists-physically-message
  |-- zinit-side.zsh/.zinit-first
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -874,7 +874,7 @@ Has 24 line(s). Calls functions:
 
  .zinit-module
  `-- .zinit-build-module
-     `-- zinit.zsh/+zinit-message
+     `-- zinit.zsh/+zi-log
 
 Called by:
 
@@ -1059,7 +1059,7 @@ Has 42 line(s). Calls functions:
 
  .zinit-self-update
  |-- .zinit-pager
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/.zinit-get-mtime-into
 
 Uses feature(s): _setopt_, _source_, _zcompile_
@@ -1248,7 +1248,7 @@ ____
 Has 47 line(s). Calls functions:
 
  .zinit-show-zstatus
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
@@ -1329,7 +1329,7 @@ Has 46 line(s). Calls functions:
  |   `-- zinit.zsh/.zinit-get-object-path
  |-- zinit-install.zsh/.zinit-compinit
  |-- zinit-install.zsh/.zinit-forget-completion
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_, _source_
 
@@ -1425,16 +1425,16 @@ Has 84 line(s). Calls functions:
  |   |-- zinit-side.zsh/.zinit-exists-physically-message
  |   |-- zinit-side.zsh/.zinit-store-ices
  |   |-- zinit-side.zsh/.zinit-two-paths
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   |-- zinit.zsh/.zinit-any-to-user-plugin
  |   `-- zinit.zsh/.zinit-set-m-func
  |-- .zinit-update-or-status-snippet
  |   |-- zinit-install.zsh/.zinit-update-snippet
  |   `-- zinit-side.zsh/.zinit-compute-ice
  |-- .zinit-wait-for-update-jobs
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
@@ -1472,7 +1472,7 @@ Has 325 line(s). Calls functions:
  |-- zinit-side.zsh/.zinit-exists-physically-message
  |-- zinit-side.zsh/.zinit-store-ices
  |-- zinit-side.zsh/.zinit-two-paths
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit.zsh/.zinit-set-m-func
 
@@ -1501,7 +1501,7 @@ Has 133 line(s). Calls functions:
  .zinit-update-or-status-all
  |-- .zinit-self-update
  |   |-- .zinit-pager
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   `-- zinit.zsh/.zinit-get-mtime-into
  |-- .zinit-update-all-parallel
  |   |-- .zinit-update-or-status
@@ -1517,16 +1517,16 @@ Has 133 line(s). Calls functions:
  |   |   |-- zinit-side.zsh/.zinit-exists-physically-message
  |   |   |-- zinit-side.zsh/.zinit-store-ices
  |   |   |-- zinit-side.zsh/.zinit-two-paths
- |   |   |-- zinit.zsh/+zinit-message
+ |   |   |-- zinit.zsh/+zi-log
  |   |   |-- zinit.zsh/.zinit-any-to-user-plugin
  |   |   `-- zinit.zsh/.zinit-set-m-func
  |   |-- .zinit-update-or-status-snippet
  |   |   |-- zinit-install.zsh/.zinit-update-snippet
  |   |   `-- zinit-side.zsh/.zinit-compute-ice
  |   |-- .zinit-wait-for-update-jobs
- |   |   `-- zinit.zsh/+zinit-message
+ |   |   `-- zinit.zsh/+zi-log
  |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- .zinit-update-or-status
  |   |-- .zinit-pager
@@ -1541,7 +1541,7 @@ Has 133 line(s). Calls functions:
  |   |-- zinit-side.zsh/.zinit-exists-physically-message
  |   |-- zinit-side.zsh/.zinit-store-ices
  |   |-- zinit-side.zsh/.zinit-two-paths
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   |-- zinit.zsh/.zinit-any-to-user-plugin
  |   `-- zinit.zsh/.zinit-set-m-func
  |-- .zinit-update-or-status-snippet
@@ -1549,7 +1549,7 @@ Has 133 line(s). Calls functions:
  |   `-- zinit-side.zsh/.zinit-compute-ice
  |-- zinit-install.zsh/.zinit-compinit
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit.zsh/.zinit-get-mtime-into
 
@@ -1590,7 +1590,7 @@ Called by:
 Has 18 line(s). Calls functions:
 
  .zinit-wait-for-update-jobs
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _wait_
 
@@ -1611,7 +1611,7 @@ ____
 Has 2 line(s). Calls functions:
 
  zi::version
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Called by:
 

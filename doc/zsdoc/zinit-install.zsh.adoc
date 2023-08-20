@@ -62,7 +62,7 @@ Uses feature(s): _source_
 Has 43 line(s). Calls functions:
 
  .zi::get-architecture
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
@@ -99,7 +99,7 @@ Has 83 line(s). Calls functions:
  .zinit-compile-plugin
  |-- zinit-side.zsh/.zinit-compute-ice
  |-- zinit-side.zsh/.zinit-first
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_, _setopt_, _zcompile_
 
@@ -127,7 +127,7 @@ Has 26 line(s). Calls functions:
  .zinit-compinit
  |-- .zinit-forget-completion
  |-- compinit
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _autoload_, _compinit_, _setopt_, _unfunction_
 
@@ -169,7 +169,7 @@ ____
 Has 53 line(s). Calls functions:
 
  .zinit-download-file-stdout
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_, _trap_, _type_
 
@@ -197,21 +197,21 @@ Has 377 line(s). Calls functions:
 
  .zinit-download-snippet
  |-- .zinit-download-file-stdout
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-get-url-mtime
  |-- .zinit-install-completions
  |   |-- .zinit-compinit
  |   |   |-- .zinit-forget-completion
  |   |   |-- compinit
- |   |   `-- zinit.zsh/+zinit-message
+ |   |   `-- zinit.zsh/+zi-log
  |   |-- .zinit-forget-completion
  |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |   |-- zinit-side.zsh/.zinit-exists-physically-message
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- .zinit-mirror-using-svn
  |-- zinit-side.zsh/.zinit-store-ices
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/is-at-least
 
 Uses feature(s): _is-at-least_, _setopt_, _trap_, _zcompile_
@@ -227,8 +227,8 @@ Has 30 line(s). Calls functions:
 
  .zinit-extract
  |-- ziextract
- |   `-- zinit.zsh/+zinit-message
- `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
@@ -264,8 +264,8 @@ Has 70 line(s). Calls functions:
 
  .zinit-get-cygwin-package
  |-- .zinit-download-file-stdout
- |   `-- zinit.zsh/+zinit-message
- `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
@@ -285,7 +285,7 @@ ____
 Has 52 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
@@ -300,15 +300,15 @@ Has 195 line(s). Calls functions:
 
  .zinit-get-package
  |-- .zinit-download-file-stdout
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-jq-check
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-json-to-array
  |   `-- .zinit-jq-check
- |       `-- zinit.zsh/+zinit-message
+ |       `-- zinit.zsh/+zi-log
  |-- ziextract
- |   `-- zinit.zsh/+zinit-message
- |-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/@zinit-substitute
 
 Uses feature(s): _eval_, _setopt_, _trap_
@@ -355,11 +355,11 @@ Has 62 line(s). Calls functions:
  |-- .zinit-compinit
  |   |-- .zinit-forget-completion
  |   |-- compinit
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-forget-completion
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit-side.zsh/.zinit-exists-physically-message
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/.zinit-any-to-user-plugin
 
 Uses feature(s): _setopt_
@@ -382,7 +382,7 @@ ____
 Has 8 line(s). Calls functions:
 
  .zinit-jq-check
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Called by:
 
@@ -405,7 +405,7 @@ Has 4 line(s). Calls functions:
 
  .zinit-json-get-value
  `-- .zinit-jq-check
-     `-- zinit.zsh/+zinit-message
+     `-- zinit.zsh/+zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -426,7 +426,7 @@ Has 13 line(s). Calls functions:
 
  .zinit-json-to-array
  `-- .zinit-jq-check
-     `-- zinit.zsh/+zinit-message
+     `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_, _setopt_
 
@@ -475,28 +475,28 @@ Has 214 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- .zinit-download-file-stdout
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-get-cygwin-package
  |   |-- .zinit-download-file-stdout
- |   |   `-- zinit.zsh/+zinit-message
- |   `-- zinit.zsh/+zinit-message
+ |   |   `-- zinit.zsh/+zi-log
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-get-latest-gh-r-url-part
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-install-completions
  |   |-- .zinit-compinit
  |   |   |-- .zinit-forget-completion
  |   |   |-- compinit
- |   |   `-- zinit.zsh/+zinit-message
+ |   |   `-- zinit.zsh/+zi-log
  |   |-- .zinit-forget-completion
  |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |   |-- zinit-side.zsh/.zinit-exists-physically-message
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- ziextract
- |   `-- zinit.zsh/+zinit-message
+ |   `-- zinit.zsh/+zi-log
  |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |-- zinit-side.zsh/.zinit-store-ices
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/.zinit-get-object-path
 
 Uses feature(s): _setopt_, _trap_
@@ -527,23 +527,23 @@ Has 76 line(s). Calls functions:
  .zinit-update-snippet
  |-- .zinit-download-snippet
  |   |-- .zinit-download-file-stdout
- |   |   `-- zinit.zsh/+zinit-message
+ |   |   `-- zinit.zsh/+zi-log
  |   |-- .zinit-get-url-mtime
  |   |-- .zinit-install-completions
  |   |   |-- .zinit-compinit
  |   |   |   |-- .zinit-forget-completion
  |   |   |   |-- compinit
- |   |   |   `-- zinit.zsh/+zinit-message
+ |   |   |   `-- zinit.zsh/+zi-log
  |   |   |-- .zinit-forget-completion
  |   |   |-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
  |   |   |-- zinit-side.zsh/.zinit-exists-physically-message
- |   |   |-- zinit.zsh/+zinit-message
+ |   |   |-- zinit.zsh/+zi-log
  |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |   |-- .zinit-mirror-using-svn
  |   |-- zinit-side.zsh/.zinit-store-ices
- |   |-- zinit.zsh/+zinit-message
+ |   |-- zinit.zsh/+zi-log
  |   `-- zinit.zsh/is-at-least
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-get-object-path
  `-- zinit.zsh/.zinit-pack-ice
 
@@ -580,7 +580,7 @@ ____
 Has 283 line(s). Calls functions:
 
  ziextract
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_, _unfunction_, _zparseopts_
 
@@ -606,7 +606,7 @@ Has 1 line(s). Calls functions:
 
  zpextract
  `-- ziextract
-     `-- zinit.zsh/+zinit-message
+     `-- zinit.zsh/+zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
@@ -656,7 +656,7 @@ Has 19 line(s). Calls functions:
  `-- .zinit-compile-plugin
      |-- zinit-side.zsh/.zinit-compute-ice
      |-- zinit-side.zsh/.zinit-first
-     `-- zinit.zsh/+zinit-message
+     `-- zinit.zsh/+zi-log
 
 Uses feature(s): _setopt_
 
@@ -746,8 +746,8 @@ Has 10 line(s). Calls functions:
  ∞zinit-extract-hook
  |-- .zinit-extract
  |   |-- ziextract
- |   |   `-- zinit.zsh/+zinit-message
- |   `-- zinit.zsh/+zinit-message
+ |   |   `-- zinit.zsh/+zi-log
+ |   `-- zinit.zsh/+zi-log
  `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -804,7 +804,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 Has 35 line(s). Calls functions:
 
  ∞zinit-mv-hook
- |-- zinit.zsh/+zinit-message
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/@zinit-substitute
 
 Uses feature(s): _setopt_
@@ -816,7 +816,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 Has 18 line(s). Calls functions:
 
  ∞zinit-ps-on-update-hook
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_
 
@@ -827,7 +827,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 Has 79 line(s). Calls functions:
 
  ∞zinit-reset-hook
- `-- zinit.zsh/+zinit-message
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_
 
