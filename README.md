@@ -53,6 +53,7 @@
   - [Disabling System-Wide `compinit` Call (Ubuntu)](#disabling-system-wide-compinit-call-ubuntu)
 - [Zinit Module](#zinit-module)
 - [Hints and Tips](#hints-and-tips)
+  - [Using ZPFX variable](#using-zpfx-variable)
   - [Customizing Paths](#customizing-paths)
   - [Non-GitHub (Local) Plugins](#non-github-local-plugins)
   - [Extending Git](#extending-git)
@@ -1019,6 +1020,50 @@ skip_global_compinit=1
 The module is now hosted [in its own repository](https://github.com/zdharma-continuum/zinit-module)
 
 ## Hints and Tips<a name="hints-and-tips"></a>
+
+### Using ZPFX variable
+
+Zinit uses a special, short named variable `$ZPFX` to denote a standard "prefix" for installing compiled software. Such, commonly used, prefixes are usually, e.g.: `/usr/`,`/usr/local` or `$HOME/.local`. Basically, when one would want to explain what a prefix-dir is in one sentence, it would be something like: a root directory, under which `…/bin`,`…/share`, `…/lib` sub-dirs are populated with installed binaries, data-files, libraries, etc.
+
+How to use the variable? It is automatically exploited when using `configure''` and `make''` ices, and user doesn't have to take any actions. This means that the `configure` command that'll be run will be:
+
+```zsh
+./configure --prefix=$ZPFX
+```
+
+The default location used for `$ZPFX` is: `~/.local/share/zinit/polaris`. You can, for example, set it to `$HOME/.local` to have the software installed with `configure''` and `make''` ices installed to that directory.
+
+Typical use cases when working with `$ZPFX` are, e.g.:
+
+```zsh
+$ ls $ZPFX
+$ cd $ZPFX
+$ cd $ZPFX/bin  # note: $ZPFX/bin is automatically prepended to $PATH
+$ cd $ZPFX/share
+```
+
+Before the `configure''` ice appeared one would use `$ZPFX` as follows:
+
+```zsh
+zinit atclone'./configure --prefix=$ZPFX` atpull'%atclone' make \
+        for universal-ctags/ctags
+```
+
+but now it's sufficient to do:
+
+```zsh
+# Will work for any build system
+# (supported are: configure, cmake, scons and meson)
+zinit configure make for universal-ctags/ctags
+```
+
+To set ZPFX, one should do (in `.zshrc` before loading `zinit`):
+
+```zsh
+$ export ZPFX=$HOME/my-software # or: ZPFX=$HOME/.local, etc.
+```
+
+We encourage people to install compiled software with use of `$ZPFX` and `configure''` and `make''` ices, to have a nice, clean user-home dir based setup.
 
 ### Customizing Paths<a name="customizing-paths"></a>
 
