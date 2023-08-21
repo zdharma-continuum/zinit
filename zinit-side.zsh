@@ -199,7 +199,7 @@
   (( !${+ICE[countdown]} )) && return 0
 
   builtin emulate -L zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
-  trap "+zinit-message \"{ehi}ABORTING, the ice {ice}$ice{ehi} not ran{rst}\"; return 1" INT
+  trap "+zi-log \"{ehi}ABORTING, the ice {ice}$ice{ehi} not ran{rst}\"; return 1" INT
 
   local count=5 ice tpe="$1"
 
@@ -207,14 +207,14 @@
   [[ $tpe = "atpull" && $ice = "%atclone" ]] && ice="${ICE[atclone]}"
   ice="{b}{ice}$tpe{ehi}:{rst}${ice//(#b)(\{[a-z0-9…–_-]##\})/\\$match[1]}"
 
-  +zinit-message -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
+  +zi-log -n "{hi}Running $ice{rst}{hi} ice in...{rst} "
 
   while (( -- count + 1 )) {
-    +zinit-message -n -- "{b}{error}"$(( count + 1 ))"{rst}{…}"
+    +zi-log -n -- "{b}{error}"$(( count + 1 ))"{rst}{…}"
     sleep 1
   }
 
-  +zinit-message -r -- "{b}{error}0 <running now>{rst}{…}"
+  +zi-log -r -- "{b}{error}0 <running now>{rst}{…}"
   return 0
 } # ]]]
 # FUNCTION: .zinit-exists-physically [[[
@@ -256,10 +256,10 @@
     fi
     .zinit-any-colorify-as-uspl2 "$1" "$2"
 
-    +zinit-message "{error}No such (plugin or snippet){rst}: $REPLY."
+    +zi-log "{error}No such (plugin or snippet){rst}: $REPLY."
 
     [[ $nospec -eq 0 && $spec1 != $spec2 ]] \
-      && +zinit-message "(expands to: {file}${spec2#%}{rst})."
+      && +zi-log "(expands to: {file}${spec2#%}{rst})."
 
     return 1
   fi
