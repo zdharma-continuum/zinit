@@ -344,7 +344,7 @@
   $git_sizer --version; assert $state equals 0
 }
 @test 'gomi' { # Replacement for UNIX rm command
-  run zinit for @b4b4r07/gomi; assert $state equals 0
+  run zinit for @babarot/gomi; assert $state equals 0
   local gomi="$ZBIN/gomi"; assert "$gomi" is_executable
   $gomi --version; assert $state equals 0
 }
