@@ -1478,8 +1478,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 } # ]]]
 # FUNCTION: .zi::get-architecture [[[
 .zi::get-architecture () {
-  emulate -LR zsh
-  setopt extendedglob noshortloops nowarncreateglobal rcquotes typesetsilent
+  emulate -L zsh
+  setopt extendedglob noshortloops nowarncreateglobal rcquotes
   local _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
   case "$_os" in
     (Darwin)
@@ -1490,11 +1490,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       fi
       ;;
     (Linux)
-      if [[ -n /lib/*musl*(#qN) ]] || (( ${+commands[musl-gcc]} )); then
-        _sys='(linux[\-\_])*~^*((gnu|musl)[\-\_\.])'
-      else
-        _sys='(linux[\-\_])*~^*(gnu[\-\_\.])'
-      fi
+      _sys='(musl|gnu)*~^*(unknown|)linux*'
       ;;
     (MINGW* | MSYS* | CYGWIN* | Windows_NT)
       _sys='pc-windows-gnu'
@@ -1559,13 +1555,17 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       fi
     fi
 
-    local junk="([3-6]86|md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
+    local junk="(md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
+    local -a array=( $(print -rm "*($(arch)|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
+    (( ${#array} > 0 )) && list=( ${array[@]} )
+    +zi-log -- "{dbg} filtered ${#filtered} to ${#array} release assets"
+
+    +zi-log -- "{dbg}${(@pj:\n  - :)list[1,2]}{nl}"
     for part in "${parts[@]}"; do
       if (( $#list > 1 )); then
         filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
-        # +zi-log "{info}[{pre}gh-r{info}]{rst} filter -> {glob}${part}{rst}{nl}  - ${(@pj:\n  - :)list[1,2]}{nl}"
       else
         break
       fi
