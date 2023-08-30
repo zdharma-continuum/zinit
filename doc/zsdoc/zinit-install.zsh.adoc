@@ -59,7 +59,7 @@ Uses feature(s): _source_
 
 ==== .zi::get-architecture
 
-Has 43 line(s). Calls functions:
+Has 39 line(s). Calls functions:
 
  .zi::get-architecture
  `-- zinit.zsh/+zi-log
@@ -282,7 +282,7 @@ ____
 
 ____
 
-Has 52 line(s). Calls functions:
+Has 55 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zi-log
