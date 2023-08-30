@@ -240,6 +240,7 @@ Called by:
  zinit-additional.zsh/.zinit-debug-status
  zinit-additional.zsh/.zinit-debug-stop
  zinit-additional.zsh/:zinit-tmp-subst-source
+ zinit-autoload.zsh/.zi-check-for-git-changes
  zinit-autoload.zsh/.zinit-build-module
  zinit-autoload.zsh/.zinit-cd
  zinit-autoload.zsh/.zinit-confirm
