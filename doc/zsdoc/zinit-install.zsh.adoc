@@ -282,7 +282,7 @@ ____
 
 ____
 
-Has 55 line(s). Calls functions:
+Has 57 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zi-log
