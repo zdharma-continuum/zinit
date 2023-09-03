@@ -453,7 +453,7 @@
   run $insect help; assert $state equals 0
 }
 @test 'ipinfo' { # Official Command Line Interface for the IPinfo API (IP geolocation and other types of IP data)
-  run zinit for id-as'ipinfo' @ipinfo/cli; assert $state equals 0
+  run zinit for id-as'ipinfo' lbin'*->ipinfo' @ipinfo/cli; assert $state equals 0
   local cli="$ZBIN/ipinfo"; assert "$cli" is_executable
   run "$cli" --version; assert $state equals 0
 }
