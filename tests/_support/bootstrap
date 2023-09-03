@@ -19,9 +19,6 @@ if [[ ! -d ${TMP_ZUNIT} ]]; then
     exit 1
 fi
 
-# USER_ZINIT=("${(@kv)ZINIT}")
-# print -l -- ${(@kv)USER_ZINIT}
-
 typeset -gAH ZINIT;
 ZINIT[HOME_DIR]=${TMP_ZUNIT};
 ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git;
@@ -36,7 +33,6 @@ info 'creating test env'
 git clone \
     --depth=1 \
     --dissociate \
-    --local \
     --no-hardlinks \
     --reference "${GIT_REPO}" \
     file://${GIT_REPO:A} \
@@ -55,12 +51,7 @@ if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
 fi
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 
-{
-    source $ZINIT[BIN_DIR]/zinit.zsh
-        # autoload -Uz _zinit && \
-        # (( ${+_comps} )) && \
-        # _comps[zinit]=_zinit
-}
+source $ZINIT[BIN_DIR]/zinit.zsh
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 # ]]]
 # Install Annexes [[[
@@ -69,10 +60,9 @@ for annex (binary-symlink default-ice); do
   if [[ ! -d ${GIT_REPO}/tests/_support/$annex ]]; then;
     git clone https://github.com/zdharma-continuum/zinit-annex-$annex ${GIT_REPO:A}/tests/_support/$annex
   fi
-  zinit light-mode for ${GIT_REPO:A}/tests/_support/$annex
+  zinit light ${GIT_REPO:A}/tests/_support/$annex
   info "loaded $annex dependencies"
 done
-# @zdharma-continuum/zinit-annex-{'binary-symlink','default-ice'}
 # ]]]
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
