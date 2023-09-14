@@ -660,7 +660,7 @@
   run "$pulumi" version; assert $state equals 0
 }
 @test 'qsv' { # CSVs sliced, diced & analyzed.
-  run zinit for @jqnatividad/qsv; assert $state equals 0
+  run zinit ver'0.112.0' for @jqnatividad/qsv; assert $state equals 0
   local qsv="$ZBIN/qsv"; assert "$qsv" is_executable
   run "$qsv" --version; assert $state equals 0
 }
