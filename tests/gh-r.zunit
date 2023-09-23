@@ -2,6 +2,7 @@
 
 
 @setup {
+  HOME="$ZPFX" # Stops programs creating directories in user home
   export ZBIN="${ZPFX}/bin"
   export os_type="${OSTYPE//[0-9\.]*/}"
   zinit default-ice --quiet from'gh-r' nocompile lbin''
