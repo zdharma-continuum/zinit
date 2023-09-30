@@ -522,10 +522,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 0
 } # ]]]
 # FUNCTION: .zinit-install-completions [[[
-# Installs all completions of given plugin. After that they are
-# visible to 'compinit'. Visible completions can be selectively
-# disabled and enabled. User can access completion data with
-# 'clist' or 'completions' subcommand.
+# Installs all completions of given plugin. After that they are visible to
+# 'compinit'. Visible completions can be selectively disabled and enabled. User
+# can access completion data with 'completions' subcommand.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin if $1 (i.e., user) given
