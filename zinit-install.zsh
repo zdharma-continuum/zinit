@@ -1557,7 +1557,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local junk="(md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
-    local -a array=( $(print -rm "*($(arch)|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
+    local -a array=( $(print -rm "*(${MACHTYPE}|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
     (( ${#array} > 0 )) && list=( ${array[@]} )
     +zi-log -- "{dbg} filtered ${#filtered} to ${#array} release assets"
 
