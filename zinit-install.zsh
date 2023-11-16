@@ -522,10 +522,9 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     return 0
 } # ]]]
 # FUNCTION: .zinit-install-completions [[[
-# Installs all completions of given plugin. After that they are
-# visible to 'compinit'. Visible completions can be selectively
-# disabled and enabled. User can access completion data with
-# 'clist' or 'completions' subcommand.
+# Installs all completions of given plugin. After that they are visible to
+# 'compinit'. Visible completions can be selectively disabled and enabled. User
+# can access completion data with 'completions' subcommand.
 #
 # $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
 # $2 - plugin if $1 (i.e., user) given
@@ -1558,7 +1557,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     local junk="(md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
-    local -a array=( $(print -rm "*($(arch)|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
+    local -a array=( $(print -rm "*(${MACHTYPE}|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
     (( ${#array} > 0 )) && list=( ${array[@]} )
     +zi-log -- "{dbg} filtered ${#filtered} to ${#array} release assets"
 

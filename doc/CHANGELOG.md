@@ -639,7 +639,7 @@ For more details check out [PR #61](https://github.com/zdharma-continuum/zinit/p
 
 - 06-11-2017
 
-  - The subcommand `clist` now prints `3` completions per line (not `1`). This makes large amount of completions to look
+  - The subcommand `completions` now prints `3` completions per line (not `1`). This makes large amount of completions to look
     better. Argument can be given, e.g. `6`, to increase the grouping.
   - New Ice-mod `silent` that mutes `stderr` & `stdout` of a plugin or snippet.
 

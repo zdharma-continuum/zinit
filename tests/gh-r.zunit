@@ -2,9 +2,10 @@
 
 
 @setup {
+  HOME="$ZPFX" # Stops programs creating directories in user home
   export ZBIN="${ZPFX}/bin"
   export os_type="${OSTYPE//[0-9\.]*/}"
-  zinit default-ice --quiet from'gh-r' nocompile lbin
+  zinit default-ice --quiet from'gh-r' nocompile lbin''
 }
 
 # @test 'atmos' {  Universal Tool for DevOps and Cloud Automation (works with terraform, helm, helmfile, etc)
@@ -36,6 +37,11 @@
   run zinit for @nektos/act; assert $state equals 0
   local act="$ZBIN/act"; assert "$act" is_executable
   $act --version; assert $state equals 0
+}
+@test 'akamai' { # Manage and configure Akamai from the Command Line.
+  run zinit id-as'akamai' lbin'akamai*->akamai' for @akamai/cli; assert $state equals 0
+  local cli="$ZBIN/akamai"; assert "$cli" is_executable
+  run "$cli" --version; assert $state equals 0
 }
 @test 'alacritty' { # Run your GitHub alacrittyions locally
   [[ $OSTYPE =~ 'linux*' ]] && skip "Alacritty test skipped on $os_type"
@@ -72,7 +78,7 @@
   [[ $OSTYPE =~ 'darwin*' ]] && skip "on $os_type"
   run zinit for @imsnif/bandwhich; assert $state equals 0
   local bandwhich="$ZBIN/bandwhich"; assert "$bandwhich" is_executable
-  run $bandwhich --version; assert $state equals 0
+  run $bandwhich --help; assert $state equals 0
 }
 @test 'bat' { # A cat(1) clone with wings
   run zinit for @sharkdp/bat; assert $state equals 0
@@ -152,6 +158,11 @@
   run zinit for @wfxr/csview; assert $state equals 0
   local csview="$ZBIN/csview"; assert "$csview" is_executable
   run $csview --version; assert $state equals 0
+}
+@test 'dapr' { # Command-line tools for Dapr.
+  run zinit id-as'dapr' for @dapr/cli; assert $state equals 0
+  local cli="$ZBIN/dapr"; assert "$cli" is_executable
+  run "$cli" --version; assert $state equals 0
 }
 @test 'delta' { # A syntax-highlighting pager for git, diff, and grep output
   run zinit for @dandavison/delta; assert $state equals 0
@@ -427,6 +438,11 @@
   local hyperfine="$ZBIN/hyperfine"; assert "$hyperfine" is_executable
   run $hyperfine --version; assert $state equals 0
 }
+@test 'ignite' { # Ignite CLI is the all-in-one platform to build, launch, and maintain any crypto application on a sovereign and secured blockchain
+  run zinit for id-as'ignite' @ignite/cli; assert $state equals 0
+  local cli="$ZBIN/ignite"; assert "$cli" is_executable
+  run "$cli" version; assert $state equals 0
+}
 @test 'igo' { # Improved Go Syntax (transpiler)
   run zinit for @rocketlaunchr/igo; assert $state equals 0
   local igo="$ZBIN/igo"; assert "$igo" is_executable
@@ -436,6 +452,11 @@
   run zinit ver'v5.7.0' lbin'!* -> insect' for @sharkdp/insect; assert $state equals 0
   local insect="$ZBIN/insect"; assert "$insect" is_executable
   run $insect help; assert $state equals 0
+}
+@test 'ipinfo' { # Official Command Line Interface for the IPinfo API (IP geolocation and other types of IP data)
+  run zinit for id-as'ipinfo' lbin'*->ipinfo' @ipinfo/cli; assert $state equals 0
+  local cli="$ZBIN/ipinfo"; assert "$cli" is_executable
+  run "$cli" --version; assert $state equals 0
 }
 @test 'joincap' { # Merge multiple pcap files together, gracefully
   run zinit lbin'!* -> joincap' for @assafmo/joincap; assert $state equals 0
@@ -472,6 +493,11 @@
   run zinit lbin'!krew* -> krew' for @kubernetes-sigs/krew; assert $state equals 0
   local krew="$ZBIN/krew"; assert "$krew" is_executable
   run $krew version; assert $state equals 0
+}
+@test 'kubedb' { # `kubectl` plugin for KubeDB
+  run zinit for id-as'kubedb' lbin'*->kubedb' @kubedb/cli; assert $state equals 0
+  local cli="$ZBIN/kubedb"; assert "$cli" is_executable
+  run "$cli" version; assert $state equals 0
 }
 @test 'lazygit' { # simple terminal UI for git commands
   run zinit for @jesseduffield/lazygit; assert $state equals 0
@@ -635,9 +661,14 @@
   run "$pulumi" version; assert $state equals 0
 }
 @test 'qsv' { # CSVs sliced, diced & analyzed.
-  run zinit for @jqnatividad/qsv; assert $state equals 0
+  run zinit ver'0.112.0' for @jqnatividad/qsv; assert $state equals 0
   local qsv="$ZBIN/qsv"; assert "$qsv" is_executable
   run "$qsv" --version; assert $state equals 0
+}
+@test 'rancher' { # Rancher CLI
+  run zinit for id-as'rancher' @rancher/cli; assert $state equals 0
+  local cli="$ZBIN/rancher"; assert "$cli" is_executable
+  run "$cli" --version; assert $state equals 0
 }
 @test 'rare' { # Realtime regex-extraction and aggregation into common formats such as histograms, bar graphs, tables, etc
   run zinit for @zix99/rare; assert $state equals 0
@@ -715,6 +746,11 @@
   run zinit for @starship/starship; assert $state equals 0
   local starship="$ZBIN/starship"; assert "$starship" is_executable
   run "$starship" --version; assert $state equals 0
+}
+@test 'step' { # A zero trust swiss army knife for working with X509, OAuth, JWT, OATH OTP, etc.
+  run zinit for id-as'step' @smallstep/cli; assert $state equals 0
+  local cli="$ZBIN/step"; assert "$cli" is_executable
+  run "$cli" --version; assert $state equals 0
 }
 @test 'stern' { # Multi pod and container log tailing for Kubernetes
   run zinit for @stern/stern; assert $state equals 0

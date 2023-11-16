@@ -1213,7 +1213,7 @@ EOF
       '  -y, --yes      Don´t prompt for user confirmation'
     )
     zmodload zsh/zutil
-    zparseopts -D -F -K -- \
+    zparseopts -D -E -F -K -- \
       {a,-all}=o_all \
       {c,-clean}=o_clean \
       {d,-dry-run}=o_debug \
@@ -1423,7 +1423,7 @@ EOF
 —— cdreplay [-q]                 – replay compdefs (to be done after compinit), -q – quiet
 —— cenable ${ZINIT[col-info]}cname${ZINIT[col-rst]}                 – enable completion \`cname'
 —— changes ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – view plugin's git log
-—— clist|completions             – list completions in use
+—— completions                   – list installed completions
 —— compile ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – compile plugin (or all plugins if ——all passed)
 —— compiled                      – list plugins that are compiled
 —— compinit                      – refresh installed completions

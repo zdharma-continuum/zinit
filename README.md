@@ -641,7 +641,7 @@ zi light vim/vim
 zi ice as"program" pick"$ZPFX/bin/git-*" make"PREFIX=$ZPFX"
 zi light tj/git-extras
 
-# Handle completions without loading any plugin; see "clist" command.
+# Handle completions without loading any plugin; see "completions" command.
 # This one is to be ran just once, in interactive session.
 zi creinstall %HOME/my_completions
 ```
@@ -815,19 +815,19 @@ Following commands are passed to `zinit ...` to obtain described effects.
 
 ### Completions<a name="completions-1"></a>
 
-| Command                                            | Description                                                                                                                                         |
-| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `cclear`                                           | Clear stray and improper completions.                                                                                                               |
-| `cdclear [-q]`                                     | Clear compdef replay list. `-q` – quiet.                                                                                                            |
-| `cdisable {cname}`                                 | Disable completion `cname`.                                                                                                                         |
-| `cdlist`                                           | Show compdef replay list.                                                                                                                           |
-| `cdreplay [-q]`                                    | Replay compdefs (to be done after compinit). `-q` – quiet.                                                                                          |
-| `cenable {cname}`                                  | Enable completion `cname`.                                                                                                                          |
-| `clist \[*columns*\]`, `completions \[*columns*\]` | List completions in use, with <code>columns</code> completions per line. `zpl clist 5` will for example print 5 completions per line. Default is 3. |
-| `compinit`                                         | Refresh installed completions.                                                                                                                      |
-| `creinstall [-q] [-Q] {plg-spec}`                  | Install completions for plugin, can also receive absolute local path. `-q` – quiet. `-Q` - quiet all.                                               |
-| `csearch`                                          | Search for available completions from any plugin.                                                                                                   |
-| `cuninstall {plg-spec}`                            | Uninstall completions for plugin.                                                                                                                   |
+| Command                           | Description                                                                                                                                         |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `cclear`                          | Clear stray and improper completions.                                                                                                               |
+| `cdclear [-q]`                    | Clear compdef replay list. `-q` – quiet.                                                                                                            |
+| `cdisable {cname}`                | Disable completion `cname`.                                                                                                                         |
+| `cdlist`                          | Show compdef replay list.                                                                                                                           |
+| `cdreplay [-q]`                   | Replay compdefs (to be done after compinit). `-q` – quiet.                                                                                          |
+| `cenable {cname}`                 | Enable completion `cname`.                                                                                                                          |
+| `completions \[*columns*\]`       | List completions in use, with <code>columns</code> completions per line. `zpl clist 5` will for example print 5 completions per line. Default is 3. |
+| `compinit`                        | Refresh installed completions.                                                                                                                      |
+| `creinstall [-q] [-Q] {plg-spec}` | Install completions for plugin, can also receive absolute local path. `-q` – quiet. `-Q` - quiet all.                                               |
+| `csearch`                         | Search for available completions from any plugin.                                                                                                   |
+| `cuninstall {plg-spec}`           | Uninstall completions for plugin.                                                                                                                   |
 
 ### Tracking of the Active Session<a name="tracking-of-the-active-session"></a>
 
