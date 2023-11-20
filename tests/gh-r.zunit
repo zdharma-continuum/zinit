@@ -5,7 +5,7 @@
   HOME="$ZPFX" # Stops programs creating directories in user home
   export ZBIN="${ZPFX}/bin"
   export os_type="${OSTYPE//[0-9\.]*/}"
-  zinit default-ice --quiet from'gh-r' nocompile lbin''
+  zinit default-ice --quiet from'gh-r' lbin
 }
 
 # @test 'atmos' {  Universal Tool for DevOps and Cloud Automation (works with terraform, helm, helmfile, etc)
@@ -723,7 +723,7 @@
   run "$s" --version; assert $state equals 0
 }
 @test 'sd' { # Intuitive find & replace CLI a.k.a modern sed
-  run zinit lbin'!sd* -> sd' for @chmln/sd; assert $state equals 0
+  run zinit for @chmln/sd; assert $state equals 0
   local sd="$ZBIN/sd"; assert "$sd" is_executable
   run "$sd" --version; assert $state equals 0
 }
