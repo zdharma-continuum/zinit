@@ -830,6 +830,12 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     .zinit-compute-ice "$id_as" "pack" \
         ICE plugin_dir filename is_snippet || return 1
 
+    # when from"gh-r" ice set, skip compile unless compile ice is set 
+    if [[ ${ICE[from]} = gh-r ]] && (( ${+ICE[compile]} == 0 )); then
+        +zi-log '{d} from"gh-r" detected, skipping compile'
+        return 0
+    fi
+
     if [[ ${ICE[pick]} != /dev/null && ${ICE[as]} != null && \
         ${+ICE[null]} -eq 0 && ${ICE[as]} != command && ${+ICE[binary]} -eq 0 && \
         ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! )
