@@ -227,7 +227,7 @@ if [[ ${BASH_SOURCE[0]} == "${0}" ]]; then
       )
       CONTAINER_WORKDIR=/src
       # shellcheck disable=2016
-      INIT_CONFIG_VAL='zinit nocompile make'\''PREFIX=$ZPFX install'\'' for zdharma-continuum/zshelldoc'
+      INIT_CONFIG_VAL='zinit nocompile make'\''prefix=$ZPFX install'\'' for zdharma-continuum/zshelldoc'
       # shellcheck disable=2016
       CMD=(zsh -ilsc
         'sudo chown -R "$(id -u):$(id -g)" /src &&
