@@ -94,7 +94,7 @@ ____
 
 ____
 
-Has 87 line(s). Calls functions:
+Has 89 line(s). Calls functions:
 
  .zinit-compile-plugin
  |-- zinit-side.zsh/.zinit-compute-ice

@@ -832,7 +832,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     # when from"gh-r" ice set, skip compile unless compile ice is set 
     if [[ ${ICE[from]} = gh-r ]] && (( ${+ICE[compile]} == 0 )); then
-        +zi-log '{d} from"gh-r" detected, skipping compile'
+        +zi-log '{dbg} from"gh-r" detected, skipping compile'
         return 0
     fi
 
@@ -905,6 +905,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             +zi-log -n "{m} {num}${#list}{rst} compiled file${=${list:#1}:+s} added to {var}\$ADD_COMPILED{rst} array"
             if (( retval )) {
                 +zi-log " (exit code: {ehi}$retval{rst})"
+            } else {
+                +zi-log ' '
             }
         }
     fi
