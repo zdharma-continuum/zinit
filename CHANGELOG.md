@@ -1,3 +1,14 @@
+## [3.12.1](https://github.com/zdharma-continuum/zinit/compare/v3.12.0...v3.12.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* container zshelldoc install ([#591](https://github.com/zdharma-continuum/zinit/issues/591)) ([8170753](https://github.com/zdharma-continuum/zinit/commit/8170753a5d21f2e54ba30901cdb0afb6399a7b51))
+* from'gh-r' skips compile by default ([#590](https://github.com/zdharma-continuum/zinit/issues/590)) ([1f52eee](https://github.com/zdharma-continuum/zinit/commit/1f52eee1b1ef4a76b779d2017f2e7d2151516544))
+* respect delete flags after positional arguments ([#587](https://github.com/zdharma-continuum/zinit/issues/587)) ([e18f9a7](https://github.com/zdharma-continuum/zinit/commit/e18f9a7da273fa44079b16a90e89df76664fcbee))
+* set home dir to test env in gh-r tests ([#582](https://github.com/zdharma-continuum/zinit/issues/582)) ([9b33288](https://github.com/zdharma-continuum/zinit/commit/9b33288b4aa88a1d41786eacfe31eb966b6c0455))
+* use $MACHTYPE instead of arch command ([#588](https://github.com/zdharma-continuum/zinit/issues/588)) ([bcf70e8](https://github.com/zdharma-continuum/zinit/commit/bcf70e8268dd09737d262919dcba0ff3301a705d))
+
 # [3.12.0](https://github.com/zdharma-continuum/zinit/compare/v3.11.0...v3.12.0) (2023-08-30)
 
 
