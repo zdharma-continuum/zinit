@@ -219,6 +219,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
 
     col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' col-e $'\e[1m\e[38;5;204m'"Error: "$'\e[0m'
     col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' col-w $'\e[1;38;5;214m'"Warning: "$'\e[0m'
+    col-dbg $'\e[2m\e[38;47;108m'"[debug]"$'\e[0m'
 
     col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}"    col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
     col-ndsh "${${${(M)LANG:#*UTF-8*}:+–}:-}"        col-…  "${${${(M)LANG:#*UTF-8*}:+…}:-...}"
@@ -1977,7 +1978,7 @@ builtin setopt noaliases
     builtin emulate -L zsh -o extendedglob
     REPLY=
     if (( ZINIT[DEBUG] )); then
-        REPLY=$1
+        REPLY="$ZINIT[col-dbg]$1"
     fi
 } # ]]]
 
