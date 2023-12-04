@@ -43,6 +43,16 @@
   assert $output contains 'Loaded: '
   assert $state equals 0
 }
+@test 'help' {
+  for cmd in 'help' '-h' '--help'; do
+    run zinit $cmd
+    assert $output contains '—— help                          – usage information'
+    assert $state equals 0
+  done
+  run zinit -help
+  assert $output contains 'Unknown subcommand'
+  assert $state equals 1  
+}
 @test 'self-update' {
   run zinit self-update
   assert $output contains 'Already up-to-date.'
