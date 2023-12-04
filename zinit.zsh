@@ -111,7 +111,6 @@ sh|silent|\
 trackbinds|\
 verbose"
 ZINIT[cmds]="\
--help|-h|\
 add-fpath|\
 bindkeys|\
 cclear|cd|cdclear|cdisable|cdlist|cdreplay|cenable|changes|compile|compiled|compinit|completions|create|creinstall|csearch|cuninstall|\
@@ -119,7 +118,7 @@ delete|debug|\
 edit|env-whitelist|\
 fpath|\
 glance|\
-help|\
+help|--help|-h|\
 ice|\
 light|load|\
 man|module|\
