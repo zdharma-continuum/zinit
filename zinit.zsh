@@ -22,6 +22,7 @@ typeset -gAH ZPLGM
 ZINIT=( "${(kv)ZPLGM[@]}" "${(kv)ZINIT[@]}" )
 unset ZPLGM
 
+
 #
 # Common needed values.
 #
@@ -216,9 +217,9 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-error   $'\e[1m\e[38;5;204m'    col-meta2   $'\e[38;5;147m'         col-pre     $'\e[38;5;135m'      col-version $'\e[3;38;5;87m'
     col-failure $'\e[38;5;204m'         col-msg     $'\e[0m'                col-profile $'\e[38;5;148m'      col-warn    $'\e[38;5;214m'
 
-    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' col-e $'\e[1m\e[38;5;204m'"Error: "$'\e[0m'
-    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' col-w $'\e[1;38;5;214m'"Warning: "$'\e[0m'
-    col-dbg $'\e[2m\e[38;47;108m'"[debug]"$'\e[0m'
+    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' col-e $'\e[1m\e[38;5;204m'"Error"$'\e[0m'":"
+    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' col-w $'\e[1;38;5;214m'"Warning"$'\e[0m'":"
+    col-dbg     $'\e[2m\e[38;47;107m'"[debug]"$'\e[0m'
 
     col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}"    col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
     col-ndsh "${${${(M)LANG:#*UTF-8*}:+–}:-}"        col-…  "${${${(M)LANG:#*UTF-8*}:+…}:-...}"
@@ -1972,15 +1973,6 @@ builtin setopt noaliases
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
 
-# FUNCTION: .zinit-formatter-dbg [[[
-.zinit-formatter-dbg() {
-    builtin emulate -L zsh -o extendedglob
-    REPLY=
-    if (( ZINIT[DEBUG] )); then
-        REPLY="$ZINIT[col-dbg]$1"
-    fi
-} # ]]]
-
 # FUNCTION: .zinit-formatter-auto [[[
 .zinit-formatter-auto() {
     emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
@@ -2165,6 +2157,9 @@ builtin setopt noaliases
 
     ZINIT[__last-formatter-code]=
     msg=${${(j: :)${@:#--}}//\%/%%}
+    if [[ -z $ZINIT[DEBUG] ]] && [[ "$msg" = (#s){dbg}* ]]; then
+        return
+    fi
 
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
@@ -2551,6 +2546,9 @@ zinit() {
     if (( !${#match} )) {
         local -a reply; local REPLY
     }
+
+
+
 
     [[ -o ksharrays ]] && ___correct=1
 

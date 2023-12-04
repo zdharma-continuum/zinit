@@ -341,9 +341,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            local pid_hl='{pid}' id_msg_part=" (at label{ehi}:{rst} {id-as}$id_as{rst}{…})"
-            (( $+ICE[pack] )) && local infix_m="({b}{ice}pack{apo}''{rst}) "
-            +zi-log "{nl}Downloading $infix_m{pid}$user${user:+/}$plugin{…}${${${id_as:#$user/$plugin}}:+$id_msg_part}"
+            local pid_hl='{pid}' id_msg_part=" (at label: {id-as}$id_as{rst})"
+            +zi-log "{nl}{i} Downloading {b}{file}$user${user:+/}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
         }
 
         local site
@@ -378,7 +377,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         { local old_version="$(<$local_path/._zinit/is_release${count:#1})"; } 2>/dev/null
                         old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                     }
-                    +zi-log "(Requesting \`${REPLY:t}'${version:+, version $version}{…}${old_version:+ Current version: $old_version.})"
+                    +zi-log "{m} Requesting ${REPLY:t} ${version:+, version $version} ${old_version:+ Current version: $old_version.}{rst}"
                     if { ! .zinit-download-file-stdout "$url" 0 1 >! "${REPLY:t}" } {
                         if { ! .zinit-download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
                             command rm -f "${REPLY:t}"
@@ -992,7 +991,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
-                (( !OPTS[opt_-q,--quiet] )) && +zi-log "Downloading {apo}\`{url}$sname{apo}\`{rst}${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{…}"
+                (( !OPTS[opt_-q,--quiet] )) && +zi-log "{i} Downloading {file}$sname{rst} ${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{rst}"
 
                 if (( ${+ICE[svn]} )) {
                     if [[ $update = -u ]] {
@@ -1503,7 +1502,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       _sys='pc-windows-gnu'
       ;;
     (*)
-      +zi-log "{info}[{pre}gh-r{info}]{error} Unsupported OS: {obj}${_os}{rst}"
+      +zi-log "{e} {b}gh-r{rst}Unsupported OS: {obj}$_os{rst}"
       ;;
   esac
   case "$_cpu" in
@@ -1520,7 +1519,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       _os=${_os}eabihf
       ;;
     (*)
-      +zi-log "{info}[{pre}ziextract{info}]{error} Unsupported CPU: {obj}$_cpu{rst}"
+      +zi-log "{e} {b}gh-r{rst}Unsupported CPU: {obj}$_cpu{rst}"
       ;;
   esac
   echo "${_sys};${_cpu};${_os}"
@@ -1535,7 +1534,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   local plugin="$2" urlpart="$3" user="$1"
   local -a bpicks filtered init_list list parts
   parts=(${(@s:;:)$(.zi::get-architecture)})
-  # +zi-log "{info}[{pre}gh-r{info}]{rst} filters -> {glob}${(@)parts}{rst}"
   if [[ -z $urlpart ]]; then
     local tag_version=${ICE[ver]}
     if [[ -z $tag_version ]]; then
@@ -1558,18 +1556,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if [[ -n $bpick ]]; then
       list=( ${(M)list[@]:#(#i)*/$~bpick} )
       if (( !$#list )); then
-        +zi-log "{info}[{pre}gh-r{info}] {error}Error{rst}: {ice}bpick{rst} ice found no release assets{rst}. To fix, modify the {ice}bpick{rst} glob pattern {glob}${bpick}{rst}"
+        +zi-log "{e} {b}gh-r{rst}: {ice}bpick{rst} ice found no release assets To fix, modify the {ice}bpick{rst} glob pattern {glob}$bpick{rst}"
       fi
+    else
+      local junk="(386|md5|sig|asc|txt|vsix|sum|sha256*|pkg|([\.]apk|deb|json|rpm|sh))"
+      filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
     fi
-
-    local junk="(md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
-    filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     local -a array=( $(print -rm "*(${MACHTYPE}|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
     (( ${#array} > 0 )) && list=( ${array[@]} )
-    +zi-log -- "{dbg} filtered ${#filtered} to ${#array} release assets"
 
-    +zi-log -- "{dbg}${(@pj:\n  - :)list[1,2]}{nl}"
     for part in "${parts[@]}"; do
       if (( $#list > 1 )); then
         filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
@@ -1581,7 +1577,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if (( $#list > 1 )) { filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ); }
 
     if (( !$#list )); then
-      +zi-log "{nl}{info}[{pre}gh-r{info}] {error}Error{rst}: No GitHub release assets found for {glob}${tag_version}{rst}"
+      +zi-log "{e} {b}gh-r{rst}: No GitHub release assets found for {glob}$tag_version{rst}"
       return 1
     fi
     reply+=( "${list[1]}" )
@@ -2004,7 +2000,7 @@ zpextract() {
     # Download the package
     #
 
-    +zi-log "{info}Downloading{ehi}: {file}${url:t}{info}{…}{rst}"
+    +zi-log "{nl}{i} Downloading {b}{file}${url:t}{rst}"
     retry=2
     while (( retry -- )) {
         integer retval=0

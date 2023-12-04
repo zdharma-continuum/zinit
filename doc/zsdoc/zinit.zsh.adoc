@@ -26,7 +26,6 @@ Documentation automatically generated with `zshelldoc'
  .zinit-formatter-auto
  .zinit-formatter-bar
  .zinit-formatter-bar-util
- .zinit-formatter-dbg
  .zinit-formatter-pid
  .zinit-formatter-th-bar
  .zinit-formatter-url
@@ -85,7 +84,7 @@ PRECMD-HOOK @zinit-scheduler
 
 ==== Script Body
 
-Has 245 line(s). Calls functions:
+Has 246 line(s). Calls functions:
 
  Script-Body
  |-- +zi-log
@@ -218,7 +217,7 @@ ____
 
 ____
 
-Has 16 line(s). Doesn't call other functions.
+Has 20 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -614,12 +613,6 @@ Called by:
 
  .zinit-formatter-bar
  .zinit-formatter-th-bar
-
-==== .zinit-formatter-dbg
-
-Has 5 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== .zinit-formatter-pid
 
