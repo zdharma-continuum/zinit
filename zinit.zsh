@@ -2548,9 +2548,6 @@ zinit() {
         local -a reply; local REPLY
     }
 
-
-
-
     [[ -o ksharrays ]] && ___correct=1
 
     local -A ___opt_map OPTS
