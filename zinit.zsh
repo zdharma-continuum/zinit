@@ -22,7 +22,6 @@ typeset -gAH ZPLGM
 ZINIT=( "${(kv)ZPLGM[@]}" "${(kv)ZINIT[@]}" )
 unset ZPLGM
 
-
 #
 # Common needed values.
 #
