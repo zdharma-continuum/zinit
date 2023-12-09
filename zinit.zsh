@@ -216,10 +216,12 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-ehi     $'\e[1m\e[38;5;210m'    col-meta    $'\e[38;5;57m'          col-pname   $'\e[1;4m\e[32m'     col-var     $'\e[38;5;81m'
     col-error   $'\e[1m\e[38;5;204m'    col-meta2   $'\e[38;5;147m'         col-pre     $'\e[38;5;135m'      col-version $'\e[3;38;5;87m'
     col-failure $'\e[38;5;204m'         col-msg     $'\e[0m'                col-profile $'\e[38;5;148m'      col-warn    $'\e[38;5;214m'
-
-    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' col-e $'\e[1m\e[38;5;204m'"Error"$'\e[0m'":"
-    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' col-w $'\e[1;38;5;214m'"Warning"$'\e[0m'":"
-    col-dbg     $'\e[2m\e[38;47;107m'"[debug]"$'\e[0m'
+    
+    col-dbg $'\e[2m\e[38;47;107m'"[debug]"$'\e[0m'
+    col-e $'\e[1m\e[38;5;204m'"Error"$'\e[0m'":"
+    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' 
+    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' 
+    col-w $'\e[1m\e[38;5;214m'"Warning"$'\e[0m'":"
 
     col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}"    col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
     col-ndsh "${${${(M)LANG:#*UTF-8*}:+–}:-}"        col-…  "${${${(M)LANG:#*UTF-8*}:+…}:-...}"
