@@ -206,7 +206,7 @@
   run $dstask version; assert $state equals 0
 }
 @test 'dua' { # View disk space usage and delete unwanted data, fast
-  run zinit lbin'!**/dua' for @Byron/dua-cli; assert $state equals 0
+  run zinit ver'v2.20.3' lbin'!**/dua' for @Byron/dua-cli; assert $state equals 0
   local dua="$ZBIN/dua"; assert "$dua" is_executable
   run $dua --version; assert $state equals 0
 }
