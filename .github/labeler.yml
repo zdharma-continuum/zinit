@@ -1,4 +1,4 @@
-ci/cd: ['.github/**/*']
+ci: ['.github/**/*']
 completion: ['_zinit']
 docker: ['docker/*']
 docs: ['*.md', 'doc/**/*']
