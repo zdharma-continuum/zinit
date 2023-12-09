@@ -1,7 +1,41 @@
-ci: ['.github/**/*']
-completion: ['_zinit']
-docker: ['docker/*']
-docs: ['*.md', 'doc/**/*']
-scripts: ['scripts/*']
-tests: ['.zunit.yml', 'tests/**/*']
-zinit: ['_zinit', 'zinit*.zsh']
+ci/cd:
+- changed-files:
+  - any-glob-to-any-file: '.github/**'
+
+docker:
+- changed-files:
+  - any-glob-to-any-file: 'docker/**'
+
+scripts:
+- changed-files:
+  - any-glob-to-any-file: 'docker/**'
+
+tests:
+- changed-files:
+  - any-glob-to-any-file: ['.zunit.yml', 'tests/**/*']
+
+completion:
+- changed-files:
+  - any-glob-to-any-file: '_zinit'
+
+# Add 'Documentation' label to any file changes within 'docs' folder
+docs:
+- changed-files:
+  - any-glob-to-any-file: 'doc/**'
+  - any-glob-to-any-file: '**/*.md'
+
+# Add 'source' label to any change to src files within the source dir EXCEPT for the docs sub-folder
+zinit:
+  - changed-files:
+    - any-glob-to-any-file: 'zinit*.zsh*'
+
+# Add 'feature' label to any PR where the head branch name starts with `feature` or has a `feature` section in the name
+feature:
+ - head-branch: ['^feat']
+
+fix:
+ - head-branch: ['^fix']
+
+ # Add 'release' label to any PR that is opened against the `main` branch
+release:
+ - base-branch: 'main'
