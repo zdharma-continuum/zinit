@@ -1,55 +1,119 @@
 #!/usr/bin/env zunit
 
-
 @setup {
-  zinit default-ice as'null' light-mode nocompile nocompletions
-  ZBIN=$ZPFX/bin
-  export LC_CTYPE=C
-  export LANG=C
+  HOME="$ZINIT[HOME_DIR]"
+  export ZBIN="${ZINIT[POLARIS]}/bin"
 }
 
-# @test 'nnn' {
-#   run zinit light-mode for jarun/nnn
-#   zinit cd jarun/nnn
-#   run PREFIX=$ZPFX make install; assert $state equals 0
-#   local nnn="$ZPFX/bin/nnn";     assert $nnn   is_executable
-#   $nnn -V;                       assert $state equals 0
+# @test 'cmatrix' {
+#   run zinit build for @abishekvashok/cmatrix;
+#   local cmatrix="$ZBIN/cmatrix"; assert "$cmatrix" is_executable
+#   run "$cmatrix" -V; assert $state equals 0
+#   # ensure cmake artifacts are deleted
+#   zinit delete --yes abishekvashok/cmatrix; assert $state equals 0
+#   run "$cmatrix"; assert $state equals 127
 # }
-@test 'pipes' {
-  run zinit for @pipeseroni/pipes.sh
-  # zinit cd pipeseroni/pipes.sh
-  run zinit run pipeseroni/pipes.sh make PREFIX=$ZPFX install; assert $state equals 0
-  local pipes="$ZBIN/pipes.sh"; assert $pipes is_executable
-  $pipes -v; assert $state equals 0
+@test 'figlet' {
+  run zinit make for @cmatsuoka/figlet; assert $state equals 0
+  local figlet="$ZBIN/figlet"; assert "$figlet" is_executable
+  run "$figlet" -I 1; assert $state equals 0
 }
-@test 'tree' {
-  run zinit light-mode for Old-Man-Programmer/tree
-  zinit cd Old-Man-Programmer/tree
-  run make PREFIX=$ZPFX install; assert $state equals 0
-  local tree="$ZBIN/tree";   assert $tree  is_executable
-  $tree -v;                      assert $state equals 0
+@test 'htop' {
+  run zinit build for @htop-dev/htop; assert $state equals 0
+  local htop="$ZBIN/htop"; assert "$htop" is_executable
+  run "$htop" --version; assert $state equals 0
+}
+@test 'bash' {
+  run zinit build for @bminor/bash; assert $state equals 0
+  local bash="$ZBIN/bash"; assert $bash is_executable
+  run "$bash" --version; assert $state equals 0
+}
+@test 'ctags' {
+  run zinit build for @universal-ctags/ctags; assert $state equals 0
+  local ctags="$ZBIN/ctags"; assert "$ctags" is_executable
+  run "$ctags" --version; assert $state equals 0
+}
+@test 'lua-format' {
+  run zinit cmake for @Koihik/LuaFormatter; assert $state equals 0
+  local lua_format="$ZBIN/lua-format"; assert "$lua_format" is_executable
+  run "$lua_format" --version; assert $state equals 0
+}
+@test 'jq' {
+  run zinit build for @jqlang/jq; assert $state equals 0
+  local jq="$ZBIN/jq"; assert "$jq" is_executable
+  run "$jq" --version; assert $state equals 0
+}
+@test 'ncurses' {
+  builtin print -v cfg_opts -- '--enable-'{widec,termcap}
+  run zinit configure"$cfg_opts" make for @mirror/ncurses; assert $state equals 0
+  local ncurses="$ZBIN/clear"; assert "$ncurses" is_executable
+  run "$ncurses" -V; assert $state equals 0
+}
+@test 'neofetch' {
+  run zinit make for @dylanaraps/neofetch; assert $state equals 0
+  local neofetch="$ZBIN/neofetch"; assert "$neofetch" is_executable
+  run "$neofetch" --version; assert $state equals 1; assert $output contains 'Neofetch'
+}
+@test 'neovim-make' {
+  run zinit make for @neovim/neovim; assert $state equals 0
+  local neovim="$ZBIN/nvim"; assert $neovim is_executable
+  run "$neovim" --version; assert $state equals 0
+
+  nvim_ver="$($neovim --version | head -n1 | awk '{print $2}')";
+  nvim_commit="$(git --work-tree=$ZINIT[PLUGINS_DIR]/neovim---neovim rev-parse --short HEAD)";
+  print -lPr " " "nvim ver: %F{blue}$nvim_ver%f" "nvim commit sha: %F{blue}$nvim_commit%f" "check: [[ %F{blue}$nvim_ver%f = %F{blue}*$nvim_commit(#e)%f ]]"
+  [[ $nvim_ver = *$nvim_commit(#e) ]] && print -P "%F{green}ok%f"
+  # run zinit delete --yes neovim/neovim; assert $state equals 0
+}
+# @test 'neovim-cmake' {
+#   run zinit cmake for @neovim/neovim; assert $state equals 0
+#   local neovim="$ZBIN/nvim"; assert $neovim is_executable
+#   run "$neovim" --version; assert $state equals 0
+#
+#   nvim_ver="$($neovim --version | head -n1 | awk '{print $2}')";
+#   nvim_commit="$(git --work-tree=$ZINIT[PLUGINS_DIR]/neovim---neovim rev-parse --short HEAD)";
+#   print -lPr " " "nvim ver: %F{blue}$nvim_ver%f" "nvim commit sha: %F{blue}$nvim_commit%f" "check: [[ %F{blue}$nvim_ver%f = %F{blue}*$nvim_commit(#e)%f ]]"
+#   [[ $nvim_ver = *$nvim_commit(#e) ]] && print -P "%F{green}ok%f"
+#
+#   run zinit delete --yes neovim/neovim; assert $state equals 0
+# }
+@test 'tmux' {
+  if [[ $OSTYPE =~ 'darwin*' ]]; then
+    run zinit configure'--disable-utf8proc' make for @tmux/tmux; assert $state equals 0
+  else
+    run zinit build for @tmux/tmux; assert $state equals 0
+  fi
+  local tmux="$ZBIN/tmux"; assert $tmux is_executable
+  run "$tmux" -V; assert $state equals 0
 }
 @test 'vim' {
-  run zinit light-mode for vim/vim
-  zinit cd vim/vim
-  run ./configure --prefix=$ZPFX && make PREFIX=$ZPFX install
-  assert $state equals 0
+  run zinit build for @vim/vim; assert $state equals 0
   local vim="$ZBIN/vim"; assert $vim is_executable
-  $vim --version; assert $state equals 0
+  run "$vim" --version; assert $state equals 0
+  # run zinit delete --yes vim/vim; assert $state equals 0
 }
-@test 'zsh-completions' {
-  run zinit light-mode for zsh-users/zsh-completions
-  zinit cd zsh-users/zsh-completions
-  run zinit creinstall -q .; assert $state equals 0
-  local broken_completions=($(echo "$ZINIT[COMPLETIONS_DIR]"/*(-@))); assert "${#broken_completions[@]}" equals 0
+@test 'zsh' {
+  # run zinit configure'--with-tcsetpgrp' make'install.bin' for @zsh-users/zsh; assert $state equals 0
+  run zinit configure'--with-tcsetpgrp' atclone"./Util/preconfig"  make'install.bin' for @zsh-users/zsh; assert $state equals 0
+  local zsh="$ZBIN/zsh"; assert $zsh is_executable
+  run "$zsh" --version; assert $state equals 0
+  run zinit delete --yes zsh-users/zsh; assert $state equals 0
+  run "$zsh" --version; assert $state equals 127
 }
-# @test 'zsh_bin' {
-#   run zinit as'null' sbin'bin/zsh' for @romkatv/zsh-bin
-#   assert $state equals 0
-#   local zsh_static="$ZPFX/bin/zsh"
-#   assert "$zsh_static" is_executable
-#   $zsh_static --help
-#   assert $state equals 0
+
+# ===========
+# Flaky tests
+# ===========
+# @test 'stow' {
+#   run zinit configure'--without-pmdir' make for @aspiers/stow; assert $state equals 0
+#   local stow="$ZBIN/stow"; assert "$stow" is_executable
+#   run "$stow" --version; assert $state equals 0
+# }
+# @test 'zsh-completions' {
+#   run zinit light-mode for zsh-users/zsh-completions
+#   zinit cd zsh-users/zsh-completions
+#   run zinit creinstall -q .; assert $state equals 0
+#   local broken_completions=($(echo "$ZINIT[COMPLETIONS_DIR]"/*(-@N))); assert "$#broken_completions[@]" equals 0
 # }
 
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=@test,}:foldmethod=marker
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=indent

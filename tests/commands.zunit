@@ -11,18 +11,13 @@
   ZBIN="${ZPFX}/bin"
 }
 
-@test 'delete --help' {
-  run zinit delete --help
-  assert $output contains 'zinit delete [options] [plugins...]'
-  assert $state equals 0
-}
 @test 'delete --all' {
   run zinit as'completion' is-snippet for @'https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker'
   assert $state equals 0
 }
-@test 'delete a snippet' {
-  run zinit id-as'git.zsh' is-snippet for @'OMZL::git.zsh'
-  run zinit delete --yes 'git.zsh'
+@test 'delete --help' {
+  run zinit delete --help
+  assert $output contains 'zinit delete [options] [plugins...]'
   assert $state equals 0
 }
 @test 'delete a plugin' {
@@ -35,12 +30,9 @@
     run zinit delete --yes mfaerevaag/wd
     assert $state equals 0
 }
-
-@test 'plugins' {
-  run zinit plugins
-  assert $output contains 'Plugins'
-  assert $output contains 'Unloaded: '
-  assert $output contains 'Loaded: '
+@test 'delete a snippet' {
+  run zinit id-as'git.zsh' is-snippet for @'OMZL::git.zsh'
+  run zinit delete --yes 'git.zsh'
   assert $state equals 0
 }
 @test 'help' {
@@ -51,12 +43,34 @@
   done
   run zinit -help
   assert $output contains 'Unknown subcommand'
-  assert $state equals 1  
+  assert $state equals 1
+}
+
+@test 'plugins' {
+  run zinit plugins
+  assert $output contains 'Plugins'
+  assert $output contains 'Unloaded: '
+  assert $output contains 'Loaded: '
+  assert $state equals 0
 }
 @test 'self-update' {
   run zinit self-update
   assert $output contains 'Already up-to-date.'
   assert $state equals 0
+}
+@test 'log_debug_unset' {
+  run eval '(( ${+ZINIT[DEBUG]} == 1 ))'; assert $state equals 1
+  run +zi-log -n "{dbg} message"
+  assert "$output" contains ""; assert $state equals 0
+  run +zi-log -n "{m} message"
+  assert "$output" contains "${ZINIT[col-m]} message"; assert $state equals 0
+}
+@test 'log_debug_set' {
+  ZINIT+=( DEBUG "true" )
+  run eval '(( ${+ZINIT[DEBUG]} == 1 ))'
+  assert $state equals 0
+  run +zi-log -n "{dbg} message"
+  assert $output contains "${ZINIT[col-dbg]} message"; assert $state equals 0
 }
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker

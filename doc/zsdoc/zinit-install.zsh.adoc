@@ -6,11 +6,11 @@ zinit-install.zsh - a shell script
 Documentation automatically generated with `zshelldoc'
 
 == FUNCTIONS
+ +zinit-cmake-hook
  .zi::get-architecture
  .zinit-at-eval
  .zinit-compile-plugin
  .zinit-compinit
- .zinit-configure-run-autoconf
  .zinit-download-file-stdout
  .zinit-download-snippet
  .zinit-extract
@@ -27,6 +27,7 @@ Documentation automatically generated with `zshelldoc'
  .zinit-setup-plugin-dir
  .zinit-single-line
  .zinit-update-snippet
+ __zinit-cmake-base-hook
  zicp
  ziextract
  zimv
@@ -56,6 +57,16 @@ AUTOLOAD compinit
 Has 6 line(s). No functions are called (may set up e.g. a hook, a Zle widget bound to a key, etc.).
 
 Uses feature(s): _source_
+
+==== +zinit-cmake-hook
+
+Has 1 line(s). Calls functions:
+
+ +zinit-cmake-hook
+ `-- __zinit-cmake-base-hook
+     `-- zinit.zsh/+zi-log
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== .zi::get-architecture
 
@@ -138,24 +149,6 @@ Called by:
  zinit-autoload.zsh/.zinit-update-or-status-all
  zinit.zsh/.zinit-prepare-home
  zinit.zsh/zinit
-
-==== .zinit-configure-run-autoconf
-
-____
- 
- Called if # passed to configure ice or no ./configure found
- Runs autoconf, autoreconf, and autogen.sh
-
-____
-
-Has 64 line(s). Calls functions:
-
- .zinit-configure-run-autoconf
- `-- zinit-side.zsh/.zinit-countdown
-
-Called by:
-
- ∞zinit-configure-base-hook
 
 ==== .zinit-download-file-stdout
 
@@ -282,7 +275,7 @@ ____
 
 ____
 
-Has 57 line(s). Calls functions:
+Has 55 line(s). Calls functions:
 
  .zinit-get-latest-gh-r-url-part
  `-- zinit.zsh/+zi-log
@@ -470,7 +463,7 @@ ____
 
 ____
 
-Has 214 line(s). Calls functions:
+Has 213 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- .zinit-download-file-stdout
@@ -551,6 +544,26 @@ Uses feature(s): _eval_, _setopt_
 Called by:
 
  zinit-autoload.zsh/.zinit-update-or-status-snippet
+
+==== __zinit-cmake-base-hook
+
+____
+ 
+ FUNCTION: __zinit-cmake-base-hook [[[
+ A base common implementation of the cmake ice
+
+____
+
+Has 23 line(s). Calls functions:
+
+ __zinit-cmake-base-hook
+ `-- zinit.zsh/+zi-log
+
+Uses feature(s): _eval_, _setopt_
+
+Called by:
+
+ +zinit-cmake-hook
 
 ==== zicp
 
@@ -665,20 +678,17 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ____
  
- A base common implementation of configure'', as all
- the starting steps are rigid and the same in all
- hooks, hence the idea. TODO: use in make'' and other
- places.
+ A base common implementation of the configure ice
 
 ____
 
-Has 65 line(s). Calls functions:
+Has 40 line(s). Calls functions:
 
  ∞zinit-configure-base-hook
- |-- .zinit-configure-run-autoconf
- |   `-- zinit-side.zsh/.zinit-countdown
- |-- zinit-side.zsh/.zinit-countdown
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/@zinit-substitute
+
+Uses feature(s): _eval_, _setopt_
 
 Called by:
 
@@ -687,21 +697,11 @@ Called by:
 
 ==== ∞zinit-configure-e-hook
 
-____
- 
- The !-version of configure'' ice. Runs in between
- of make'!!' and make'!'. Configure naturally runs
- before make.
-
-____
-
 Has 1 line(s). Calls functions:
 
  ∞zinit-configure-e-hook
  `-- ∞zinit-configure-base-hook
-     |-- .zinit-configure-run-autoconf
-     |   `-- zinit-side.zsh/.zinit-countdown
-     |-- zinit-side.zsh/.zinit-countdown
+     |-- zinit.zsh/+zi-log
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -720,9 +720,7 @@ Has 1 line(s). Calls functions:
 
  ∞zinit-configure-hook
  `-- ∞zinit-configure-base-hook
-     |-- .zinit-configure-run-autoconf
-     |   `-- zinit-side.zsh/.zinit-countdown
-     |-- zinit-side.zsh/.zinit-countdown
+     |-- zinit.zsh/+zi-log
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -753,11 +751,19 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== ∞zinit-make-base-hook
 
-Has 29 line(s). Calls functions:
+____
+ 
+ A base common implementation of the make ice
+
+____
+
+Has 57 line(s). Calls functions:
 
  ∞zinit-make-base-hook
- |-- zinit-side.zsh/.zinit-countdown
+ |-- zinit.zsh/+zi-log
  `-- zinit.zsh/@zinit-substitute
+
+Uses feature(s): _eval_, _setopt_
 
 Called by:
 
@@ -771,7 +777,7 @@ Has 1 line(s). Calls functions:
 
  ∞zinit-make-e-hook
  `-- ∞zinit-make-base-hook
-     |-- zinit-side.zsh/.zinit-countdown
+     |-- zinit.zsh/+zi-log
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -782,7 +788,7 @@ Has 1 line(s). Calls functions:
 
  ∞zinit-make-ee-hook
  `-- ∞zinit-make-base-hook
-     |-- zinit-side.zsh/.zinit-countdown
+     |-- zinit.zsh/+zi-log
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
@@ -793,7 +799,7 @@ Has 1 line(s). Calls functions:
 
  ∞zinit-make-hook
  `-- ∞zinit-make-base-hook
-     |-- zinit-side.zsh/.zinit-countdown
+     |-- zinit.zsh/+zi-log
      `-- zinit.zsh/@zinit-substitute
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).

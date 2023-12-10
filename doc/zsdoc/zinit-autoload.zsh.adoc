@@ -470,7 +470,7 @@ Has 111 line(s). Calls functions:
  .zinit-delete
  |-- .zinit-prompt
  |-- .zinit-run-delete-hooks
- |   `-- zinit-side.zsh/.zinit-countdown
+ |   `-- zinit.zsh/+zi-log
  |-- zinit-side.zsh/.zinit-compute-ice
  |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-any-to-user-plugin
@@ -1015,10 +1015,10 @@ Called by:
 
 ==== .zinit-run-delete-hooks
 
-Has 17 line(s). Calls functions:
+Has 32 line(s). Calls functions:
 
  .zinit-run-delete-hooks
- `-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_
 
@@ -1267,7 +1267,7 @@ ____
 
 ____
 
-Has 47 line(s). Calls functions:
+Has 48 line(s). Calls functions:
 
  .zinit-show-zstatus
  `-- zinit.zsh/+zi-log

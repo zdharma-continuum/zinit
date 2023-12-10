@@ -62,6 +62,8 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
     fi
 fi
 
+
+
 if [[ -z ${ZINIT[LIST_COMMAND]} ]]; then
     if (( ${+commands[exa]} )); then
         ZINIT[LIST_COMMAND]='exa --color=always --tree --icons -L3'
@@ -75,8 +77,8 @@ fi
 ZINIT[ice-list]="\
 \!bash|\!csh|\!ksh|\!sh|\
 aliases|as|atclone|atdelete|atinit|atload|atpull|autoload|\
-bash|binary|bindmap|blockf|bpick|\
-cloneonly|cloneopts|compile|completions|configure|countdown|cp|csh|\
+bash|binary|bindmap|blockf|bpick|build|\
+cloneonly|cloneopts|cmake|compile|completions|configure|countdown|cp|csh|\
 debug|depth|\
 extract|\
 from|git|\
@@ -97,7 +99,7 @@ ZINIT[nval-ice-list]="\
 \!bash|\!csh|\!ksh|\!sh|\
 aliases|\
 bash|binary|blockf|\
-cloneonly|cloneopts|countdown|csh|\
+cloneonly|cloneopts|cmake|configure|countdown|csh|\
 debug|\
 git|\
 is-snippet|\
@@ -133,15 +135,18 @@ zstatus"
 # Can be customized.
 : ${ZINIT[COMPLETIONS_DIR]:=${ZINIT[HOME_DIR]}/completions}
 : ${ZINIT[MODULE_DIR]:=${ZINIT[HOME_DIR]}/module}
-: ${ZINIT[PACKAGES_REPO]:=zdharma-continuum/zinit-packages}
 : ${ZINIT[PACKAGES_BRANCH]:=HEAD}
+: ${ZINIT[PACKAGES_REPO]:=zdharma-continuum/zinit-packages}
 : ${ZINIT[PLUGINS_DIR]:=${ZINIT[HOME_DIR]}/plugins}
+: ${ZINIT[POLARIS_DIR]:=${ZINIT[HOME_DIR]}/polaris}
 : ${ZINIT[SERVICES_DIR]:=${ZINIT[HOME_DIR]}/services}
 : ${ZINIT[SNIPPETS_DIR]:=${ZINIT[HOME_DIR]}/snippets}
+: ${ZINIT[ZPFX]:=${ZINIT[HOME_DIR]}/polaris}
 typeset -g ZPFX
-: ${ZPFX:=${ZINIT[HOME_DIR]}/polaris}
+: ${ZPFX:=${ZINIT[ZPFX]}}
 : ${ZINIT[ALIASES_OPT]::=${${options[aliases]:#off}:+1}}
 : ${ZINIT[MAN_DIR]:=${ZPFX}/man}
+
 
 ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMPLETIONS_DIR]}
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
@@ -149,6 +154,11 @@ export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.ca
     PMSPEC=0uUpiPsf
 [[ -z ${path[(re)$ZPFX/bin]} ]] && [[ -d "$ZPFX/bin" ]] && path=( "$ZPFX/bin" "${path[@]}" )
 [[ -z ${path[(re)$ZPFX/sbin]} ]] && [[ -d "$ZPFX/sbin" ]] && path=( "$ZPFX/sbin" "${path[@]}" )
+
+hash -f
+hash -d zinit=${ZINIT[HOME_DIR]}
+hash -d plugins=${ZINIT[PLUGINS_DIR]}
+hash -d zpfx=${ZINIT[HOME_DIR]}/polaris
 
 # Add completions directory to fpath.
 [[ -z ${fpath[(re)${ZINIT[COMPLETIONS_DIR]}]} ]] && fpath=( "${ZINIT[COMPLETIONS_DIR]}" "${fpath[@]}" )
@@ -215,10 +225,12 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-ehi     $'\e[1m\e[38;5;210m'    col-meta    $'\e[38;5;57m'          col-pname   $'\e[1;4m\e[32m'     col-var     $'\e[38;5;81m'
     col-error   $'\e[1m\e[38;5;204m'    col-meta2   $'\e[38;5;147m'         col-pre     $'\e[38;5;135m'      col-version $'\e[3;38;5;87m'
     col-failure $'\e[38;5;204m'         col-msg     $'\e[0m'                col-profile $'\e[38;5;148m'      col-warn    $'\e[38;5;214m'
-
-    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' col-e $'\e[1m\e[38;5;204m'"Error: "$'\e[0m'
-    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' col-w $'\e[1;38;5;214m'"Warning: "$'\e[0m'
-    col-dbg $'\e[2m\e[38;47;108m'"[debug]"$'\e[0m'
+    
+    col-dbg $'\e[2m\e[38;47;107m'"[debug]"$'\e[0m'
+    col-e $'\e[1m\e[38;5;204m'"Error"$'\e[0m'":"
+    col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' 
+    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' 
+    col-w $'\e[1m\e[38;5;214m'"Warning"$'\e[0m'":"
 
     col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}"    col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
     col-ndsh "${${${(M)LANG:#*UTF-8*}:+–}:-}"        col-…  "${${${(M)LANG:#*UTF-8*}:+…}:-...}"
@@ -1264,7 +1276,7 @@ builtin setopt noaliases
         # For compaudit.
         command chmod go-w "${ZINIT[HOME_DIR]}"
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir -p "${ZPFX:-ZINIT[HOME_DIR]/polaris}/bin"
     }
     [[ ! -d ${ZINIT[PLUGINS_DIR]}/_local---zinit ]] && {
         command rm -rf "${ZINIT[PLUGINS_DIR]:-${TMPDIR:-/tmp}/132bcaCAB}/_local---zplugin"
@@ -1273,7 +1285,7 @@ builtin setopt noaliases
         command ln -s "${ZINIT[BIN_DIR]}/_zinit" "${ZINIT[PLUGINS_DIR]}/_local---zinit"
 
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir -p "${ZPFX:-ZINIT[HOME_DIR]/polaris}/bin"
 
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         (( ${+functions[.zinit-confirm]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
@@ -1289,7 +1301,7 @@ builtin setopt noaliases
         command ln -s "${ZINIT[PLUGINS_DIR]}/_local---zinit/_zinit" "${ZINIT[COMPLETIONS_DIR]}"
 
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir -p "${ZPFX:-ZINIT[HOME_DIR]/polaris}/bin"
 
         (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
         .zinit-compinit &>/dev/null
@@ -1304,7 +1316,7 @@ builtin setopt noaliases
         command chmod go-w "${ZINIT[SERVICES_DIR]}"
 
         # Also set up */bin and ZPFX in general.
-        command mkdir 2>/dev/null -p $ZPFX/bin
+        command mkdir -p "${ZPFX:-ZINIT[HOME_DIR]/polaris}/bin"
     }
     [[ ! -d ${~ZINIT[MAN_DIR]}/man9 ]] && {
         # Create ZINIT[MAN_DIR]/man{1..9}
@@ -1972,15 +1984,6 @@ builtin setopt noaliases
     builtin zle -F "$THEFD" +zinit-deploy-message
 } # ]]]
 
-# FUNCTION: .zinit-formatter-dbg [[[
-.zinit-formatter-dbg() {
-    builtin emulate -L zsh -o extendedglob
-    REPLY=
-    if (( ZINIT[DEBUG] )); then
-        REPLY="$ZINIT[col-dbg]$1"
-    fi
-} # ]]]
-
 # FUNCTION: .zinit-formatter-auto [[[
 .zinit-formatter-auto() {
     emulate -L zsh -o extendedglob -o warncreateglobal -o typesetsilent
@@ -2166,6 +2169,10 @@ builtin setopt noaliases
     ZINIT[__last-formatter-code]=
     msg=${${(j: :)${@:#--}}//\%/%%}
 
+    if [[ -z $ZINIT[DEBUG] ]] && [[ "$msg" = (#s){dbg}* ]]; then
+        return
+    fi
+
     # First try a dedicated formatter, marking its empty output with ←→, then
     # the general formatter and in the end filter-out the ←→ from the message.
     msg=${${msg//(#b)(([\\]|(%F))([\{]([^\}]##)[\}])|([\{]([^\}]##)[\}])([^\%\{\\]#))/\
@@ -2252,19 +2259,27 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
 # Parses ICE specification, puts the result into ICE global hash.
 # The ice-spec is valid for next command only (i.e. it "melts"), but
 # it can then stick to plugin and activate e.g. at update.
-.zinit-ice() {
+.zinit-ice () {
     builtin setopt localoptions noksharrays extendedglob warncreateglobal typesetsilent noshortloops
     integer retval
     local bit exts="${(j:|:)${(@)${(@Akons:|:)${ZINIT_EXTS[ice-mods]//\'\'/}}/(#s)<->-/}}"
     for bit; do
-        [[ $bit = (#b)(--|)(${~ZINIT[ice-list]}${~exts})(*) ]] && \
-            ZINIT_ICES[${match[2]}]+="${ZINIT_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || \
-            break
+        [[ $bit = (#b)(--|)(${~ZINIT[ice-list]}${~exts})(*) ]] && ZINIT_ICES[${match[2]}]+="${ZINIT_ICES[${match[2]}]:+;}${match[3]#(:|=)}" || break
         retval+=1
     done
     [[ ${ZINIT_ICES[as]} = program ]] && ZINIT_ICES[as]=command
     [[ -n ${ZINIT_ICES[on-update-of]} ]] && ZINIT_ICES[subscribe]="${ZINIT_ICES[subscribe]:-${ZINIT_ICES[on-update-of]}}"
     [[ -n ${ZINIT_ICES[pick]} ]] && ZINIT_ICES[pick]="${ZINIT_ICES[pick]//\$ZPFX/${ZPFX%/}}"
+    if (( $+ZINIT_ICES[build] )); then
+        +zi-log -- "{dbg} {ice}build{rst}: setting configure & make ices"
+        ZINIT_ICES[configure]=
+        ZINIT_ICES[make]=
+    fi
+    if (( $+ZINIT_ICES[configure] || $+ZINIT_ICES[cmake] || $+ZINIT_ICES[make] )); then
+        ZINIT_ICES[null]=
+    fi
+    (( $+ZINIT_ICES[configure] )) && ZINIT_ICES[configure]=${ZINIT_ICES[configure]:---quiet}
+    (( $+ZINIT_ICES[make] )) && ZINIT_ICES[make]=${ZINIT_ICES[make]:-install}
     return retval
 } # ]]]
 # FUNCTION: .zinit-pack-ice [[[
@@ -3274,6 +3289,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 @zinit-register-hook "configure''" hook:no-e-\!atpull-post ∞zinit-configure-hook
 @zinit-register-hook "atpull" hook:no-e-\!atpull-post ∞zinit-atpull-hook
 @zinit-register-hook "make''" hook:no-e-\!atpull-post ∞zinit-make-hook
+@zinit-register-hook "cmake''" hook:no-e-\!atpull-post +zinit-cmake-hook
 # atpull-post.
 @zinit-register-hook "compile-plugin" hook:atpull-post ∞zinit-compile-plugin-hook
 @zinit-register-hook "ps-on-update" hook:%atpull-post ∞zinit-ps-on-update-hook
@@ -3290,6 +3306,7 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 @zinit-register-hook "configure''" hook:\!atclone-post ∞zinit-configure-hook
 @zinit-register-hook "atclone" hook:\!atclone-post ∞zinit-atclone-hook
 @zinit-register-hook "make''" hook:\!atclone-post ∞zinit-make-hook
+@zinit-register-hook "cmake''" hook:\!atclone-post +zinit-cmake-hook
 # atclone-post.
 @zinit-register-hook "compile-plugin" hook:atclone-post ∞zinit-compile-plugin-hook
 

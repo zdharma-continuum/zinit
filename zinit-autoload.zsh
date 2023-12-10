@@ -1697,24 +1697,37 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     done
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
-.zinit-run-delete-hooks() {
-    if [[ -n ${ICE[atdelete]} ]]; then
-        .zinit-countdown "atdelete" && ( (( ${+ICE[nocd]} == 0 )) && \
-                { builtin cd -q "$5" && eval "${ICE[atdelete]}"; ((1)); } || \
-                eval "${ICE[atdelete]}" )
+.zinit-run-delete-hooks () {
+    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2' 
+    if [[ -f $make_path ]] && grep '^uninstall:' $make_path &> /dev/null; then
+        +zi-log "{m} Make uninstall"
+        command make -C "${make_path:h}" {'CMAKE_INSTALL_PREFIX','PREFIX','prefix'}="$ZPFX" --ignore-errors uninstall
+        if (( $? == 0 )); then
+            +zi-log "{m} Successful Make uninstall"
+        fi
+    elif [[ -f $mfest_path ]]; then
+        +zi-log "{m} Cmake uninstall"
+        if ! command cmake --build ${mfest_path:h} --target uninstall >/dev/null; then
+            xargs rm -rf < "$mfest_path" 2>/dev/null 1>&2
+            if (( $? == 0 )); then
+                +zi-log "{m} Successful Cmake uninstall"
+            fi
+        fi
     fi
-
+    find $ZPFX -depth -type d -empty -delete &> /dev/null
+    if [[ -n ${ICE[atdelete]} ]]; then
+        (
+            (( ${+ICE[nocd]} == 0 )) && {
+                builtin cd -q "$5" && eval "${ICE[atdelete]}"
+                ((1))
+            } || eval "${ICE[atdelete]}"
+        )
+    fi
     local -a arr
     local key
-
-    # Run annexes' atdelete hooks
-    reply=(
-        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]}
-        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}
-    )
+    reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}) 
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}") 
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 } # ]]]
@@ -2150,6 +2163,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     +zi-log "Zinit's binary directory: {file}${ZINIT[BIN_DIR]}{rst}"
     +zi-log "Plugin directory: {file}${ZINIT[PLUGINS_DIR]}{rst}"
     +zi-log "Completions directory: {file}${ZINIT[COMPLETIONS_DIR]}{rst}"
+    +zi-log "ZPFX directory: {file}${ZINIT[ZPFX]:-$ZPFX}{rst}"
 
     # Without _zlocal/zinit
     +zi-log "Loaded plugins: {num}$(( ${#ZINIT_REGISTERED_PLUGINS[@]} - 1 )){rst}"
