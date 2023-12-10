@@ -2171,7 +2171,7 @@ zimv() {
         if [[ ! -e configure || ! -e Makefile ]]; then
             +zi-log "{m} ${ice} Attempting to generate configure script... "
             local c
-            for c in "[[ -e autogen.sh ]] && ./autogen.sh" "[[ -n *.a[mc](#qN.) ]] && autoreconf -ifm" "git clean -fxd; aclocal --force; autoconf --force; automake --add-missing --copy --force-missing"; do
+            for c in "[[ -e autogen.sh ]] && sh ./autogen.sh" "[[ -n *.a[mc](#qN.) ]] && autoreconf -ifm" "git clean -fxd; aclocal --force; autoconf --force; automake --add-missing --copy --force-missing"; do
                 +zi-log -PrD "{dbg} ${ice} {faint}${c}{rst}"
                 eval "${c}" 2>/dev/null >&2
                 if [[ -f configure ]]; then
@@ -2237,7 +2237,7 @@ zimv() {
     fi
     local -i ret=0
     {
-        build="command make -C ${dir} --jobs"
+        build="make -C ${dir} --jobs 4"
         +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${(D)ZINIT[ZPFX]}){rst}"
         +zi-log "{dbg} ${ice} eval ${build} $make_prefix=$prefix 2>/dev/null 1>&2"
         eval "${build} $make_prefix=$prefix" 2>/dev/null 1>&2
@@ -2250,7 +2250,7 @@ zimv() {
     }
     {
         install="${build} ${make}"
-        +zi-log "{m} ${ice} ${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${(D)ZINIT[ZPFX]}) ${make} {rst}"
+        +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${(D)ZINIT[ZPFX]}) ${make} {rst}"
         +zi-log "{dbg} ${ice} eval ${build} $make_prefix=$prefix ${make} 2>/dev/null 1>&2"
         eval "${(s; ;)install} $make_prefix=$prefix" 2>/dev/null 1>&2
         ret=$?
@@ -2294,7 +2294,7 @@ __zinit-cmake-base-hook () {
     local c ret=0 ice='{b}cmake{rst}:'
     for c in "-S ${dir} -B ${dir}/build -DCMAKE_BUILD_TYPE=Release --install-prefix ${ZINIT[ZPFX]} ${QUIET}" "--build ${dir}/build --parallel $(nproc) ${QUIET}" "--install ${dir}/build ${QUIET}"; do
       +zi-log "{m} ${ice} {faint}cmake ${(Ds; ;)c} {rst}"
-        eval "command cmake ${c}" 2> /dev/null >&2
+        eval "cmake ${c}" 2> /dev/null >&2
         if (( $? )); then
             +zi-log "{e} ${ice} Failure cmake ${c}{rst}"
             ret=$?
