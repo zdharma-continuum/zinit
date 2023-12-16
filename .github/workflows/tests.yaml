@@ -74,8 +74,9 @@ jobs:
       - name: zunit
         shell: zsh {0}
         run: |
-          ls -1 ./tests/*zunit | parallel \
-            --joblog /tmp/log \
+          command -p ls -1 ./tests/*zunit \                                                                                                    <<<
+            | parallel \
+            --jobs=4 \
             --keep-order \
-            -j4 \
-          $HOME/.local/bin/zunit run
+            --line-buffer \
+            $HOME/.local/bin/zunit run
