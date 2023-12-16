@@ -2140,7 +2140,7 @@ zimv() {
             ZINIT[-r/--reset-opt-hook-has-been-run]=1
         }
     } else {
-        # If there's no -r/--reset, pretend that it already has been served.
+        # If theres no -r/--reset, pretend that it already has been served.
         ZINIT[-r/--reset-opt-hook-has-been-run]=1
     }
 } # ]]]
@@ -2165,26 +2165,31 @@ zimv() {
     aflags=${(SM)flags##[smc0]##}
     [[ $eflags == $ex ]] || return 0
     typeset -aU configure_opt=(${(@s; ;)configure})
-    configure_opt+=("--prefix ${ZINIT[ZPFX]}")
+    configure_opt+=("--prefix ${ZINIT[HOME_DIR]}/polaris")
     {
         builtin cd -- "$dir" || return 1
-        if [[ ! -e configure || ! -e Makefile ]]; then
+        if [[ ! -e Makefile ]] && [[ ! -e configure ]]; then
             +zi-log "{m} ${ice} Attempting to generate configure script... "
             local c
             for c in "[[ -e autogen.sh ]] && sh ./autogen.sh" "[[ -n *.a[mc](#qN.) ]] && autoreconf -ifm" "git clean -fxd; aclocal --force; autoconf --force; automake --add-missing --copy --force-missing"; do
                 +zi-log -PrD "{dbg} ${ice} {faint}${c}{rst}"
                 eval "${c}" 2>/dev/null >&2
                 if [[ -f configure ]]; then
-                  +zi-log "{dbg} ${ice} {faint}./configure $(builtin print -PDn -- ${(Ds; ;)configure_opt[@]//prefix /prefix=}){rst}"
-                    eval "./configure ${(S)configure_opt[@]//prefix /prefix=}" 2>/dev/null 1>&2
-                    if [[ $? -eq 0 || -f Makefile ]]; then
-                        +zi-log "{m} ${ice} Successfully configured Makefile"
-                        break
-                    else
-                        +zi-log "{e} ${ice} Failed project configuration"
-                    fi
+                    break
                 fi
             done
+        fi
+        if [[ -e configure ]]; then
+            +zi-log "{m} ${ice} Configuring Makefile"
+            +zi-log "{dbg} ${ice} {faint}./configure $(builtin print -PDn -- ${(Ds; ;)configure_opt[@]//prefix /prefix=}){rst}"
+            eval "./configure ${(S)configure_opt[@]//prefix /prefix=}" 2>/dev/null 1>&2
+            if [[ $? -eq 0 || -f Makefile ]]; then
+                +zi-log "{m} ${ice} Successfully configured Makefile"
+                return 0
+            fi
+        else
+            +zi-log "{e} ${ice} Failed project configuration"
+            return 1
         fi
     }
     return 0
