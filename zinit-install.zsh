@@ -2180,11 +2180,11 @@ zimv() {
             done
         fi
         if [[ -e configure ]]; then
-            +zi-log "{m} ${ice} Configuring Makefile"
+            +zi-log "{m} ${ice} Generating Makefile"
             +zi-log "{dbg} ${ice} {faint}./configure $(builtin print -PDn -- ${(Ds; ;)configure_opt[@]//prefix /prefix=}){rst}"
             eval "./configure ${(S)configure_opt[@]//prefix /prefix=}" 2>/dev/null 1>&2
             if [[ $? -eq 0 || -f Makefile ]]; then
-                +zi-log "{m} ${ice} Successfully configured Makefile"
+                +zi-log "{m} ${ice} Successfully generated Makefile"
                 return 0
             fi
         else
