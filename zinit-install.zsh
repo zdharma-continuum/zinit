@@ -6,7 +6,28 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     builtin print -P "${ZINIT[col-error]}ERROR:%f%b Couldn't find ${ZINIT[col-obj]}zinit-side.zsh%f%b."
     return 1
 }
-
+# FUNCTION: .zinit-realpath [[[
+#
+# $1: Initial path
+# $2: Target path
+.zinit-realpath () {
+    [[ $# -ge 1 ]] && [[ $# -le 2 ]] || return 1
+    local target=${${2:-$1}:a} current=${${${2:+$1}:-$PWD}:a} relative=''
+    local appendix="${target#/}"
+    while appendix="${target#${current}/}"
+        [[ $current != '/' ]] && [[ $appendix = $target ]]
+    do
+        if [[ $current = $appendix ]]; then
+            relative="${relative:-.}"
+            builtin print -- "${relative#/}"
+            return 0
+        fi
+        current=${current%/*}
+        relative="$relative${relative:+/}.."
+    done
+    relative+=${relative:+${appendix:+/}}${appendix#/}
+    builtin print -- "$relative"
+} # ]]]
 # FUNCTION: .zinit-jq-check [[[
 # Check if jq is available and outputs an error message with instructions if
 # that's not the case
@@ -1194,34 +1215,38 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     "accessible (wrong permissions).{rst}"
                 retval=4
             }
-            if ! (( ${+ICE[link] )) {
-                if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
+
+
+            if ! (( ${+ICE[link]} )); then
+                if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]]; then
                     +zi-log "{msg}Copying {file}$filename{msg}{…}{rst}"
-                    command cp -vf "$url" "$local_dir/$dirname/$filename" || \
-                        { +zi-log "{ehi}ERROR:{error} The file copying has been unsuccessful.{rst}"; retval=4; }
-                } else {
-                    command cp -f "$url" "$local_dir/$dirname/$filename" &>/dev/null || \
-                        { +zi-log "{ehi}ERROR:{error} The copying of {file}$filename{error} has been unsuccessful"\
-    "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
-                }
-            } else {
-                if (( $+commands[realpath] )) {
-                    local rpv="$(realpath --version | head -n1 | sed -E 's/realpath (\(.*\))?//g')"
-                    if is-at-least 8.23 $rpv; then
-                        rel_url="$(realpath --relative-to="$local_dir/$dirname" "$url")" && \
-                            { url="$rel_url" }
-                    fi
-                }
-                if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
+                    command cp -vf "$url" "$local_dir/$dirname/$filename" || {
+                        +zi-log "{ehi}ERROR:{error} The file copying has been unsuccessful.{rst}"
+                        retval=4
+                    }
+                else
+                    command cp -f "$url" "$local_dir/$dirname/$filename" &> /dev/null || {
+                        +zi-log "{ehi}ERROR:{error} The copying of {file}$filename{error} has been unsuccessful" "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"
+                        retval=4
+                    }
+                fi
+            else
+                rel_url="$(.zinit-realpath "$local_dir/$dirname" "$url")"
+                url="${rel_url}"
+                if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]]; then
                     +zi-log "{msg}Linking {file}$filename{msg}{…}{rst}"
-                    command ln -svf "$url" "$local_dir/$dirname/$filename" || \
-                        { +zi-log "{ehi}ERROR:{error} The file linking has been unsuccessful.{rst}"; retval=4; }
-                } else {
-                    command ln -sf "$url" "$local_dir/$dirname/$filename" &>/dev/null || \
-                        { +zi-log "{ehi}ERROR:{error} The link of {file}$filename{error} has been unsuccessful"\
-    "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
-                }
-            }
+                    command ln -svf "$url" "$local_dir/$dirname/$filename" || {
+                        +zi-log "{ehi}ERROR:{error} The file linking has been unsuccessful.{rst}"
+                        retval=4
+                    }
+                else
+                    command ln -sf "$url" "$local_dir/$dirname/$filename" &> /dev/null || {
+                        +zi-log "{ehi}ERROR:{error} The link of {file}$filename{error} has been unsuccessful" "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"
+                        retval=4
+                    }
+                fi
+            fi
+
         }
 
         (( retval == 4 )) && { command rmdir "$local_dir/$dirname" 2>/dev/null; return $retval; }

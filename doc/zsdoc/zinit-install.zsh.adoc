@@ -24,6 +24,7 @@ Documentation automatically generated with `zshelldoc'
  .zinit-json-get-value
  .zinit-json-to-array
  .zinit-mirror-using-svn
+ .zinit-realpath
  .zinit-setup-plugin-dir
  .zinit-single-line
  .zinit-update-snippet
@@ -193,7 +194,7 @@ ____
 
 ____
 
-Has 377 line(s). Calls functions:
+Has 372 line(s). Calls functions:
 
  .zinit-download-snippet
  |-- .zinit-download-file-stdout
@@ -211,10 +212,9 @@ Has 377 line(s). Calls functions:
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- .zinit-mirror-using-svn
  |-- zinit-side.zsh/.zinit-store-ices
- |-- zinit.zsh/+zi-log
- `-- zinit.zsh/is-at-least
+ `-- zinit.zsh/+zi-log
 
-Uses feature(s): _is-at-least_, _setopt_, _trap_, _zcompile_
+Uses feature(s): _setopt_, _trap_, _zcompile_
 
 Called by:
 
@@ -457,6 +457,20 @@ Called by:
 
  .zinit-download-snippet
 
+==== .zinit-realpath
+
+____
+ 
+ 
+ $1: Initial path
+ $2: Target path
+
+____
+
+Has 16 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
 ==== .zinit-setup-plugin-dir
 
 ____
@@ -540,8 +554,7 @@ Has 76 line(s). Calls functions:
  |   |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |   |-- .zinit-mirror-using-svn
  |   |-- zinit-side.zsh/.zinit-store-ices
- |   |-- zinit.zsh/+zi-log
- |   `-- zinit.zsh/is-at-least
+ |   `-- zinit.zsh/+zi-log
  |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-get-object-path
  `-- zinit.zsh/.zinit-pack-ice
