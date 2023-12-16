@@ -113,7 +113,7 @@
   run $bottom --version; assert $state equals 0
 }
 @test 'broot' { # A new way to see and navigate directory trees
-  [[ $OSTYPE =~ 'darwin*' ]] && skip " on $os_type"
+  [[ $OSTYPE =~ 'darwin*' ]] && skip "on $os_type"
   run zinit lbin'!*${OSTYPE}*/* -> broot' for @Canop/broot; assert $state equals 0
   local broot="$ZBIN/broot"; assert "$broot" is_executable
   run "$broot" --version; assert $state equals 0
@@ -226,7 +226,7 @@
   run $dyff version; assert $state equals 0
 }
 @test 'dysk' { # A linux utility to get information on filesystems, like df but better
-  [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
+  [[ $OSTYPE =~ 'darwin*' ]] && skip "on $os_type"
   run zinit lbin'!**/x86_64-linux/* -> dysk' for @Canop/dysk; assert $state equals 0
   local dysk="$ZBIN/dysk"; assert "$dysk" is_executable
   run $dysk --version; assert $state equals 0

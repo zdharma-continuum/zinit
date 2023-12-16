@@ -50,7 +50,7 @@ fi
 
 if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
     (
-        git --quiet -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff && \
+        git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff && \
             chmod g-rwX "${ZINIT[HOME_DIR]}" && \
             zcompile "${ZINIT[BIN_DIR]}/zinit.zsh" >/dev/null
     ) >/dev/null

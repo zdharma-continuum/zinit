@@ -24,7 +24,6 @@
   run zinit snippet PZTM::environment
   setup_snippet_ok $state $output "$ZINIT[SNIPPETS_DIR]/PZTM::environment/PZTM::environment"
 }
-
 @test 'bat-completion' {
   run install_completion 'bat-completion/_bat' 'sharkdp/bat/master/assets/completions/bat.zsh.in'
   setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_bat
@@ -45,11 +44,6 @@
   run install_completion 'fd-completion/_fd' 'sharkdp/fd/master/contrib/completion/_fd'
   setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_fd
 }
-@test 'tldr-completion::snippet' {
-  run install_completion 'tldr-completion/_tldr' 'dbrgn/tealdeer/main/completion/zsh_tealdeer'
-  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_tldr
-  zinit delete --yes tldr-completion/_tldr; zinit cclear
-}
 @test 'tldr-completion::gh-r' {
   artifact="$ZINIT[PLUGINS_DIR]/tldr-completion---gh-r"
   run zinit for as"completion" from"gh-r" id-as'tldr-completion/gh-r' bpick"completions_zsh" mv"completions_zsh -> _tldr_ghr" pick"_tldr_ghr" @dbrgn/tealdeer
@@ -58,6 +52,11 @@
   assert $artifact/_tldr_ghr is_readable
   assert "$ZINIT[COMPLETIONS_DIR]"/_tldr_ghr is_file
   assert "$ZINIT[COMPLETIONS_DIR]"/_tldr_ghr is_readable
+}
+@test 'tldr-completion::snippet' {
+  run install_completion 'tldr-completion/_tldr' 'dbrgn/tealdeer/main/completion/zsh_tealdeer'
+  setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_tldr
+  zinit delete --yes tldr-completion/_tldr; zinit cclear
 }
 @test 'zinit local snippet symlink' {
   mkdir -p "${ZINIT[HOME_DIR]}/external"

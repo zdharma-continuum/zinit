@@ -12,20 +12,6 @@
   }
 }
 
-@test 'mv' {
-  run zinit as"null" id-as"test/mv" mv"readme.md -> mv.md" for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---mv/mv.md" is_file
-  assert "$ZPLUGINS/test---mv/mv.md" is_file
-  assert "$ZPLUGINS/test---mv/readme.md" not_exists
-}
-@test 'cp' {
-  run zinit as"null" id-as"test/cp" cp"readme.md -> cp.md" for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---cp/cp.md" is_file
-  assert "$ZPLUGINS/test---cp/cp.md" is_readable
-  assert "$ZPLUGINS/test---cp/readme.md" is_file
-}
 @test 'atclone' {
   run zinit as"null" id-as"test/atclone" atclone"mv readme.md atclone.md" for zdharma-continuum/null
   assert $state equals 0
@@ -33,23 +19,11 @@
   assert "$ZPLUGINS/test---atclone/atclone.md" is_readable
   assert "$ZPLUGINS/test---atclone/readme.md" not_exists
 }
-@test 'make' {
-  run zinit as"null" id-as"test/make" atclone"printf 'all:\n\ttouch whatever\n' > Makefile" make"all" for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---make/whatever" is_file
-}
 @test 'completions' {
   run zinit as"null" id-as"test/completions" atclone"touch _whatever" completions for zdharma-continuum/null
   assert $state equals 0
   assert "$ZPLUGINS/test---completions/_whatever" is_file
   assert "$ZINIT[COMPLETIONS_DIR]/_whatever" is_file
-}
-@test 'completions-overwrite' {
-  # if both are given, the completions wins
-  run zinit as"null" id-as"test/completions-overwrite" atclone"touch _whatever2" nocompletions completions for zdharma-continuum/null
-  assert $state equals 0
-  assert "$ZPLUGINS/test---completions-overwrite/_whatever2" is_file
-  assert "$ZINIT[COMPLETIONS_DIR]/_whatever2" is_file
 }
 @test 'completions-ignored' {
   # only the _valid file should be installed as a completion
@@ -60,6 +34,32 @@
   assert "$ZINIT[COMPLETIONS_DIR]/_valid" is_file
   COMPS=( "$ZINIT[COMPLETIONS_DIR]"/_* )
   assert __init__.py is_not_value_in $COMPS
+}
+@test 'completions-overwrite' {
+  # if both are given, the completions wins
+  run zinit as"null" id-as"test/completions-overwrite" atclone"touch _whatever2" nocompletions completions for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---completions-overwrite/_whatever2" is_file
+  assert "$ZINIT[COMPLETIONS_DIR]/_whatever2" is_file
+}
+@test 'cp' {
+  run zinit as"null" id-as"test/cp" cp"readme.md -> cp.md" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---cp/cp.md" is_file
+  assert "$ZPLUGINS/test---cp/cp.md" is_readable
+  assert "$ZPLUGINS/test---cp/readme.md" is_file
+}
+@test 'make' {
+  run zinit as"null" id-as"test/make" atclone"printf 'all:\n\ttouch whatever\n' > Makefile" make"all" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---make/whatever" is_file
+}
+@test 'mv' {
+  run zinit as"null" id-as"test/mv" mv"readme.md -> mv.md" for zdharma-continuum/null
+  assert $state equals 0
+  assert "$ZPLUGINS/test---mv/mv.md" is_file
+  assert "$ZPLUGINS/test---mv/mv.md" is_file
+  assert "$ZPLUGINS/test---mv/readme.md" not_exists
 }
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=\ {,}:foldmethod=marker
