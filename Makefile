@@ -8,7 +8,7 @@ DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
 
 clean:
 	@$(ZSH) -c "print -Pr '%BRemoving%b:'; print -C 3 -lPr tests/_output/*(.N) tests/_support/{default-ice,binary-symlink,tmp*}(N) *.zwc(N) doc/zsdoc/zinit*.zsh.adoc(N) doc/zsdoc/data/(N)"
-	@$(ZSH) -c "rm -rf tests/_output/*(.N) tests/_support/{default-ice,binary-symlink,tmp*}(N) *.zwc(N) doc/zsdoc/zinit*.zsh.adoc(N) doc/zsdoc/data/(N)"
+	@$(ZSH) -c "rm -rf tests/_output/*(.N) tests/_support/{default-ice,binary-symlink,tmp*}(N) *.zwc(N) doc/zsdoc/data/(N)"
 
 container:
 	docker build --tag=ghcr.io/zdharma-continuum/zinit:latest --file=docker/Dockerfile .
