@@ -1215,8 +1215,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                     "accessible (wrong permissions).{rst}"
                 retval=4
             }
-
-
+            
             if ! (( ${+ICE[link]} )); then
                 if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]]; then
                     +zi-log "{msg}Copying {file}$filename{msg}{…}{rst}"
