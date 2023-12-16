@@ -21,17 +21,18 @@ if [[ ! -d ${TMP_ZUNIT} ]]; then
     exit 1
 fi
 
-typeset -gx zi_dir="${TMP_ZUNIT}"
-typeset -gxA ZINIT=()
+typeset -gx zi_test_dir="${TMP_ZUNIT}"
+typeset -gxAUH ZINIT
 # DEBUG           'true'
 ZINIT+=(
-  BIN_DIR         ${zi_dir}/zinit.git
-  COMPLETIONS_DIR ${zi_dir}/completions SNIPPETS_DIR ${zi_dir}/snippets
-  HOME_DIR        ${zi_dir}             PLUGINS_DIR  ${zi_dir}/plugins
-  ZCOMPDUMP_PATH  ${zi_dir}/zcompdump   ZPFX         ${zi_dir}/polaris
-  POLARIS         ${zi_dir}/polaris
+  BIN_DIR         ${zi_test_dir}/zinit.git
+  COMPLETIONS_DIR ${zi_test_dir}/completions SNIPPETS_DIR ${zi_test_dir}/snippets
+  HOME_DIR        ${zi_test_dir}             PLUGINS_DIR  ${zi_test_dir}/plugins
+  ZCOMPDUMP_PATH  ${zi_test_dir}/zcompdump   ZPFX         ${zi_test_dir}/polaris
+  POLARIS         ${zi_test_dir}/polaris
 )
-# typeset -gxH ZPFX="$ZINIT[POLARIS]"
+typeset -gxH ZPFX=
+ZPFX="$zi_test_dir"/polaris
 # FORK            'vladdoster'        REPO           'zinit-t'
 # typeset -gxAUH ZINIT=(${(kv)CONFIG})
 
@@ -60,27 +61,25 @@ fi
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 
 hash -f
-builtin hash -d zinit=$zi_dir
-builtin hash -d zpfx=$zi_dir/polaris
-source $zi_dir/zinit.git/zinit.zsh
+builtin hash -d zinit=$zi_test_dir
+builtin hash -d zpfx=$zi_test_dir/polaris
+builtin hash -d plugins=$zi_test_dir/plugins
+source $zi_test_dir/zinit.git/zinit.zsh
 (( $? != 0 )) && { error "Unable to source zinit" >&2; exit 1 }
 hash -f
-builtin hash -d zinit=$zi_dir
-builtin hash -d zpfx=$zi_dir/polaris
-
+builtin hash -d zinit=$zi_test_dir
+builtin hash -d zpfx=$zi_test_dir/polaris
+builtin hash -d plugins=$zi_test_dir/plugins
 # ]]]
 # Install Annexes [[[
 # +zi-log '{m} installing test dependencies'
-{
-  zinit for \
-    depth'1' \
+zinit for \
   @zdharma-continuum/zinit-annex-linkman \
-    depth'1' \
   @zdharma-continuum/zinit-annex-default-ice \
     ver'feat/logging' \
   @zdharma-continuum/zinit-annex-binary-symlink
-} >/dev/null
 +zi-log "{m} loaded $annex dependencies"
 # ]]]
+zinit zstatus
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker

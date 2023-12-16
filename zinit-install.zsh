@@ -1613,7 +1613,7 @@ ziextract() {
 
     if (( auto )) {
         # First try known file extensions
-        local -a files
+        local -aU files
         integer ret_val
         files=( (#i)**/*.(zip|rar|7z|tgz|tbz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg|exe)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
@@ -1622,7 +1622,7 @@ ziextract() {
         }
         # Second, try to find the archive via `file' tool
         if (( !${#files} )) {
-            local -aU output infiles stage2_processed archives
+            local -a output infiles stage2_processed archives
             infiles=( **/*~(._zinit*|._backup|.git)(|/*)~*/*/*(-.DN) )
             output=( ${(@f)"$(command file -- $infiles 2>&1)"} )
             archives=( ${(M)output[@]:#(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) *} )
@@ -1693,10 +1693,10 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zi-log "{info}[{pre}ziextract{info}]{rst} Unpacking the files from: \`{obj}$file{msg}'{…}{rst}"
+            +zi-log "{m} Extracting files in {obj}$file{rst}"
         $fun; retval=$?
         if (( retval == 0 )) {
-            local -a files
+            local -aU files
             files=( *~(._zinit*|._backup|.git|.svn|.hg|$file)(DN) )
             (( ${#files} && !norm )) && command rm -f "$file"
         }
@@ -1709,25 +1709,37 @@ ziextract() {
 
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
-            →zinit-extract() { →zinit-check unzip "$file" || return 1; command unzip -o "$file"; }
+            →zinit-extract(){ 
+                →zinit-check unzip "$file" || return 1
+                command tar -xzf "${file}" --strip-components=1
+            }
             ;;
         ((#i)*.rar)
-            →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "$file"; }
+            →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "${file}"; }
             ;;
         ((#i)*.tar.bz2|(#i)*.tbz|(#i)*.tbz2)
-            →zinit-extract() { →zinit-check bzip2 "$file" || return 1; command bzip2 -dc "$file" | command tar -xf -; }
+          →zinit-extract() { →zinit-check bzip2 "$file" || return 1; local i; for i (0 1); do command tar -xjf "${file}" --strip-components=$i; done && rm -f ${file}; 
+        }
             ;;
         ((#i)*.tar.gz|(#i)*.tgz)
-            →zinit-extract() { →zinit-check gzip "$file" || return 1; command gzip -dc "$file" | command tar -xf -; }
+            →zinit-extract() { 
+                # →zinit-check gzip "$file" || return 1
+                local i; 
+                for i in 0 1; do 
+                    command tar -xf "${file}" --strip-components=$i;
+                    [[ -n ${${file:P}:h}/*(#qx.N) ]] && break
+                done
+                rm -rf ${file//[.]t(ar[.]|)gz/}(/N) ${file}
+            }
             ;;
         ((#i)*.tar.xz|(#i)*.txz)
-            →zinit-extract() { →zinit-check xz "$file" || return 1; command xz -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check xz "$file" || return 1; local i; for i (0 1); do command tar -xzf "${file}" --strip-components=$i; done && rm -f ${file}; }
             ;;
         ((#i)*.tar.7z|(#i)*.t7z)
-            →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x -so "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x -so "$file" | command tar -xf - --strip-components=0; rm -f ${file}; }
             ;;
         ((#i)*.tar)
-            →zinit-extract() { →zinit-check tar "$file" || return 1; command tar -xf "$file"; }
+            →zinit-extract() { →zinit-check tar "$file" || return 1; command tar -xzf "${file}" --strip-components=0; rm -f $file; }
             ;;
         ((#i)*.gz|(#i)*.gzip)
             if [[ $file != (#i)*.gz ]] {
@@ -1829,7 +1841,7 @@ ziextract() {
     }
     unfunction -- .zinit-extract-wrapper
 
-    local -a execs
+    local -aU execs
     execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
     if [[ ${#execs} -gt 0 && -n $execs ]] {
         execs=( ${(@f)"$( file ${execs[@]} )"} )
@@ -1842,7 +1854,7 @@ ziextract() {
         command chmod a+x "${execs[@]}"
         if (( !OPTS[opt_-q,--quiet] )) {
             if (( ${#execs} == 1 )); then
-                    +zi-log "{info}[{pre}ziextract{info}]{rst} Successfully extracted and assigned +x chmod to the file: {obj}${execs[1]}{rst}."
+                    +zi-log "{m} Extracted and assigned +x chmod to {file}${execs[1]}{rst}"
             else
                 local sep="$ZINIT[col-rst],$ZINIT[col-obj] "
                 if (( ${#execs} > 7 )) {
@@ -1897,7 +1909,7 @@ ziextract() {
                       "(\`{file}$local_dir{msg2}') isn't accessible.{rst}"
                 return 1
             }
-        local -a files
+        local -aU files
         files=( ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }} )
         if [[ ${#files} -eq 0 && -n ${extract##(\!-|-\!|\!|-)} ]] {
                 +zi-log "{error}ERROR:{msg2} The files" \
@@ -2243,25 +2255,27 @@ zimv() {
     local -i ret=0
     {
         build="make -C ${dir} --jobs 4"
-        +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${(D)ZINIT[ZPFX]}){rst}"
+        +zi-log "{m} ${ice} Building..."
+        # +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${(D)ZINIT[ZPFX]}){rst}"
         +zi-log "{dbg} ${ice} eval ${build} $make_prefix=$prefix 2>/dev/null 1>&2"
         eval "${build} $make_prefix=$prefix" 2>/dev/null 1>&2
         ret=$?
     } always {
         if (( ret )); then
-            +zi-log "{w} ${ice} build returned {num}${ret}{rst}"
+            +zi-log "{w} ${ice} Build returned {num}${ret}{rst}"
         fi
         (( TRY_BLOCK_ERROR = 0 ))
     }
     {
         install="${build} ${make}"
-        +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${(D)ZINIT[ZPFX]}) ${make} {rst}"
+        # +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${ZINIT[POLARIS]}) ${make} {rst}"
+        +zi-log "{m} ${ice} Installing in ${(D)ZINIT[ZPFX]}"
         +zi-log "{dbg} ${ice} eval ${build} $make_prefix=$prefix ${make} 2>/dev/null 1>&2"
         eval "${(s; ;)install} $make_prefix=$prefix" 2>/dev/null 1>&2
         ret=$?
     } always {
         if (( ret )); then
-            +zi-log "{w} ${ice} install returned {num}${ret}{rst}"
+            +zi-log "{w} ${ice} Install returned {num}${ret}{rst}"
         fi
         (( TRY_BLOCK_ERROR = 0 ))
     }

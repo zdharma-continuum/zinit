@@ -1,11 +1,9 @@
 #!/usr/bin/env zunit
 
 @setup {
-  HOME="$zi_dir"
+  HOME="$zi_test_dir"
   # ZBIN="$zi_dir/polaris/bin"
-  typeset -gx ZBIN="$zi_dir/polaris/bin"
-  # zinit zstatus
-  +zi-log '{bar}{nl}{rst}'
+  typeset -gx ZBIN="$zi_test_dir/polaris/bin"
 }
 
 # @test 'cmatrix' {

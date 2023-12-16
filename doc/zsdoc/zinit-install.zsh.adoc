@@ -681,7 +681,7 @@ ____
 
 ____
 
-Has 40 line(s). Calls functions:
+Has 45 line(s). Calls functions:
 
  ∞zinit-configure-base-hook
  |-- zinit.zsh/+zi-log

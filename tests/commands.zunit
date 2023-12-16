@@ -26,7 +26,7 @@
     assert $state equals 0
 }
 @test 'delete a program' {
-    run zinit as'program' cp'wd.sh->wd' mv'_wd.sh->_wd' pick'wd' for @'mfaerevaag/wd'
+    run zinit as'program' mv'wd.sh->wd' mv'_wd.sh->_wd' pick'wd' for @'mfaerevaag/wd'
     run zinit delete --yes mfaerevaag/wd
     assert $state equals 0
 }

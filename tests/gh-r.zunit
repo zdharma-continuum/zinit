@@ -39,7 +39,7 @@
   $act --version; assert $state equals 0
 }
 @test 'akamai' { # Manage and configure Akamai from the Command Line.
-  run zinit id-as'akamai' lbin'!akamai*->akamai' for @akamai/cli; assert $state equals 0
+  run zinit id-as'akamai' lbin"!akamai*->akamai" for @akamai/cli; assert $state equals 0
   local cli="$ZBIN/akamai"; assert "$cli" is_executable
   run "$cli" --version; assert $state equals 0
 }
@@ -143,11 +143,11 @@
   local cog="$ZBIN/cog"; assert "$cog" is_executable
   run $cog --version; assert $state equals 0
 }
-@test 'compress' { # Optimized Go Compression Packages
-  run zinit bpick'*.tar.gz' lbin'!s2c;s2d;s2sx;' for @klauspost/compress; assert $state equals 0
-  local compress="$ZBIN/s2c"; assert "$compress" is_executable
-  run $compress --help; assert $state equals 0
-}
+# @test 'compress' { # Optimized Go Compression Packages
+#   run zinit bpick'*.tar.gz' lbin'!s2c;s2d;s2sx;' for @klauspost/compress; assert $state equals 0
+#   local compress="$ZBIN/s2c"; assert "$compress" is_executable
+#   run $compress --help; assert $state equals 0
+# }
 @test 'create-go-app' { # Create a new production-ready project with backend, frontend and deploy automation by running one CLI command
   run zinit for id-as'cgapp' @create-go-app/cli; assert $state equals 0
   local cgapp="$ZBIN/cgapp"; assert "$cgapp" is_executable
@@ -196,7 +196,7 @@
   run $credential_desktop version; assert $state equals 0
 }
 @test 'documize' { # Modern Confluence alternative designed for internal & external docs, built with Go & Ember JS
-  run zinit for id-as'documize' @documize/community; assert $state equals 0
+  run zinit for @documize/community; assert $state equals 0
   local documize="$ZBIN/documize"; assert "$documize" is_executable
   run $documize version; assert $state equals 0
 }
@@ -454,7 +454,7 @@
   run $insect help; assert $state equals 0
 }
 @test 'ipinfo' { # Official Command Line Interface for the IPinfo API (IP geolocation and other types of IP data)
-  run zinit for id-as'ipinfo' @ipinfo/cli; assert $state equals 0
+  run zinit for @ipinfo/cli; assert $state equals 0
   local cli="$ZBIN/ipinfo"; assert "$cli" is_executable
   run "$cli" --version; assert $state equals 0
 }

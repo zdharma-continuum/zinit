@@ -1015,7 +1015,7 @@ Called by:
 
 ==== .zinit-run-delete-hooks
 
-Has 32 line(s). Calls functions:
+Has 33 line(s). Calls functions:
 
  .zinit-run-delete-hooks
  `-- zinit.zsh/+zi-log
