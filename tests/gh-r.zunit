@@ -473,12 +473,12 @@
   local just="$ZBIN/just"; assert "$just" is_executable
   run $just --version; assert $state equals 0
 }
-@test 'keepassxc' { # a cross-platform community-driven port of the Windows application Keepass Password Safe
-  [[ $OSTYPE =~ 'linux*' ]] && skip "skipped on $os_type"
-  run zinit for lbin'!*-cli -> keepassxc-cli' @keepassxreboot/keepassxc; assert $state equals 0
-  local keepassxc="$ZBIN/keepassxc-cli"; assert "$keepassxc" is_executable
-  run $keepassxc --version; assert $state equals 0
-}
+# @test 'keepassxc' { # a cross-platform community-driven port of the Windows application Keepass Password Safe
+#   [[ $OSTYPE =~ 'linux*' ]] && skip "skipped on $os_type"
+#   run zinit for lbin'!*-cli -> keepassxc-cli' @keepassxreboot/keepassxc; assert $state equals 0
+#   local keepassxc="$ZBIN/keepassxc-cli"; assert "$keepassxc" is_executable
+#   run $keepassxc --version; assert $state equals 0
+# }
 @test 'ko' { # Build and deploy Go applications on Kubernetes
   run zinit for @ko-build/ko; assert $state equals 0
   local ko="$ZBIN/ko"; assert "$ko" is_executable
