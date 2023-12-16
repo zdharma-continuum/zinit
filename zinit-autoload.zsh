@@ -1699,22 +1699,23 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks () {
     local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2' 
-    if [[ -f $make_path ]] && grep '^uninstall:' $make_path &> /dev/null; then
-        +zi-log "{m} Make uninstall"
-        command make -C "${make_path:h}" {'CMAKE_INSTALL_PREFIX','PREFIX','prefix'}="$ZPFX" --ignore-errors uninstall
+    if [[ -f $make_path ]] && grep '^uninstall' $make_path &> /dev/null; then
+        +zi-log -n "{m} Make uninstall... "
+        eval 'command make -C ${make_path:h} {prefix,{,CMAKE_INSTALL_}PREFIX}=$ZINIT[ZPFX] --ignore-errors uninstall' 2>/dev/null 1>&2
         if (( $? == 0 )); then
-            +zi-log "{m} Successful Make uninstall"
+            +zi-log " [{happy}OK{rst}]"
+        else
+            +zi-log " [{error}Failed{rst}]"
         fi
     elif [[ -f $mfest_path ]]; then
-        +zi-log "{m} Cmake uninstall"
-        if ! command cmake --build ${mfest_path:h} --target uninstall >/dev/null; then
-            xargs rm -rf < "$mfest_path" 2>/dev/null 1>&2
-            if (( $? == 0 )); then
-                +zi-log "{m} Successful Cmake uninstall"
-            fi
+        +zi-log -n "{m} Cmake uninstall... "
+        if { command cmake --build ${mfest_path:h} --target uninstall || xargs rm -rf < "$mfest_path" } &>/dev/null ; then
+            +zi-log " [{happy}OK{rst}]"
+        else
+            +zi-log " [{error}Failed{rst}]"
         fi
     fi
-    find $ZPFX -depth -type d -empty -delete &> /dev/null
+    eval 'find $ZINIT[ZPFX] -depth -type d -empty -delete' &> /dev/null
     if [[ -n ${ICE[atdelete]} ]]; then
         (
             (( ${+ICE[nocd]} == 0 )) && {

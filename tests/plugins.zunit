@@ -1,8 +1,11 @@
 #!/usr/bin/env zunit
 
 @setup {
-  HOME="$ZINIT[HOME_DIR]"
-  export ZBIN="${ZINIT[POLARIS]}/bin"
+  HOME="$zi_dir"
+  # ZBIN="$zi_dir/polaris/bin"
+  typeset -gx ZBIN="$zi_dir/polaris/bin"
+  # zinit zstatus
+  +zi-log '{bar}{nl}{rst}'
 }
 
 # @test 'cmatrix' {
@@ -37,6 +40,8 @@
   run zinit cmake for @Koihik/LuaFormatter; assert $state equals 0
   local lua_format="$ZBIN/lua-format"; assert "$lua_format" is_executable
   run "$lua_format" --version; assert $state equals 0
+  run zinit delete --yes Koihik/LuaFormatter; assert $state equals 0
+  run "$lua_format" --version; assert $state equals 127
 }
 @test 'jq' {
   run zinit build for @jqlang/jq; assert $state equals 0
@@ -44,10 +49,11 @@
   run "$jq" --version; assert $state equals 0
 }
 @test 'ncurses' {
-  builtin print -v cfg_opts -- '--enable-'{widec,termcap}
-  run zinit configure"$cfg_opts" make for @mirror/ncurses; assert $state equals 0
+  run zinit configure"'$(print -- --enable-{'widec','termcap'})'" make for @mirror/ncurses; assert $state equals 0
   local ncurses="$ZBIN/clear"; assert "$ncurses" is_executable
   run "$ncurses" -V; assert $state equals 0
+  run zinit delete --yes mirror/ncurses; assert $state equals 0
+  run "$ncurses" -V; assert $state equals 127
 }
 @test 'neofetch' {
   run zinit make for @dylanaraps/neofetch; assert $state equals 0
@@ -63,7 +69,8 @@
   nvim_commit="$(git --work-tree=$ZINIT[PLUGINS_DIR]/neovim---neovim rev-parse --short HEAD)";
   print -lPr " " "nvim ver: %F{blue}$nvim_ver%f" "nvim commit sha: %F{blue}$nvim_commit%f" "check: [[ %F{blue}$nvim_ver%f = %F{blue}*$nvim_commit(#e)%f ]]"
   [[ $nvim_ver = *$nvim_commit(#e) ]] && print -P "%F{green}ok%f"
-  # run zinit delete --yes neovim/neovim; assert $state equals 0
+  run zinit delete --yes neovim/neovim; assert $state equals 0
+  run "$neovim" --version; assert $state equals 127
 }
 # @test 'neovim-cmake' {
 #   run zinit cmake for @neovim/neovim; assert $state equals 0
@@ -85,6 +92,8 @@
   fi
   local tmux="$ZBIN/tmux"; assert $tmux is_executable
   run "$tmux" -V; assert $state equals 0
+  run zinit delete --yes tmux/tmux; assert $state equals 0
+  run "$tmux" -V; assert $state equals 127
 }
 @test 'vim' {
   run zinit build for @vim/vim; assert $state equals 0

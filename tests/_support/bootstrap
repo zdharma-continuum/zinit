@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
-setopt NO_GLOBAL_RCS NO_GLOBAL_EXPORT NO_RCS NO_ALIASES
+
+emulate zsh
+setopt NO_GLOBAL_RCS NO_RCS NO_ALIASES
 
 # Log functions [[[
 function error(){ print -P "%F{red}[ERROR]%f: ${1}" && return 1; }
@@ -19,8 +21,8 @@ if [[ ! -d ${TMP_ZUNIT} ]]; then
     exit 1
 fi
 
-typeset -g zi_dir="${TMP_ZUNIT}"
-typeset -gxUA ZINIT
+typeset -gx zi_dir="${TMP_ZUNIT}"
+typeset -gxA ZINIT=()
 # DEBUG           'true'
 ZINIT+=(
   BIN_DIR         ${zi_dir}/zinit.git
@@ -80,9 +82,5 @@ builtin hash -d zpfx=$zi_dir/polaris
 } >/dev/null
 +zi-log "{m} loaded $annex dependencies"
 # ]]]
-
-# +zi-log '{nl}{bar}'
-# zinit zstatus
-# +zi-log '{bar}{nl}'
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
