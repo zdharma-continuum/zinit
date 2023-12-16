@@ -74,7 +74,7 @@ jobs:
       - name: zunit
         shell: zsh {0}
         run: |
-          command -p ls -1 ./tests/*zunit \                                                                                                    <<<
+          command -p ls -1 ./tests/*zunit \
             | parallel \
             --jobs=4 \
             --keep-order \
