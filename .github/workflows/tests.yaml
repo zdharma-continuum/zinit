@@ -26,7 +26,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["macos-latest", "ubuntu-latest"]
+        os: ["macos-latest","ubuntu-latest"]
       fail-fast: false
 
     steps:
@@ -39,40 +39,43 @@ jobs:
         id: setup-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      # - name: "install musl"
-      #   if: runner.os == 'Linux'
-      #   run: sudo apt-get install build-essential curl file gcc gcc-multilib glibc-source libc6 libc6-dev unzip xz-utils zsh
+      - name: "install musl"
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update --yes
+          sudo apt-get install --yes \
+            autoconf automake autotools-dev \
+            build-essential byacc\
+            cmake curl \
+            file \
+            gcc gettext glibc-source grep \
+            libc6 libc6-dev libevent-dev libncurses5-dev libncursesw5-dev libtool libuvc0 lua5.1 \
+            m4 \
+            ninja-build \
+            pkg-config parallel \
+            unzip \
+            xz-utils \
+            zsh
 
       - name: "install dependencies"
         id: install-deps
         run: |
           export HOMEBREW_NO_INSTALLED_DEPENDENTS_CHECK=1
-          brew install --force --overwrite gnu-sed coreutils unzip xz zsh
+          brew install --force --overwrite autoconf automake binutils byacc cmake coreutils gettext gnu-sed libevent libtool libuv lua lua@5.1 make ncurses pkg-config texinfo unzip xz zsh parallel
+          brew link --force --overwrite ncurses
 
       - name: "install zunit"
         id: install-zunit
         run: |
           mkdir -p "$HOME/.local/bin" && echo "$HOME/.local/bin" >> $GITHUB_PATH
-          git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
+          git clone --branch='feat/format' --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           zsh -c -l './build.zsh' && sudo chmod u+x ./zunit && cp ./zunit "$HOME/.local/bin/"
 
-      # - name: disable secssessment system policy security
-      #   run: sudo spctl --master-disable
-
-      - name: "annexes"
-        run: zunit run tests/annexes.zunit
-
-      - name: "commands"
-        run: zunit run tests/commands.zunit
-
-      - name: "gh-r"
-        run: zunit run --fail-fast --verbose tests/gh-r.zunit
-
-      - name: "ices"
-        run: zunit run tests/ices.zunit
-
-      - name: "plugins"
-        run: zunit run tests/plugins.zunit
-
-      - name: "snippets"
-        run: zunit run tests/snippets.zunit
+      - name: zunit
+        shell: zsh {0}
+        run: |
+          ls -1 ./tests/*zunit | parallel \
+            --joblog /tmp/log \
+            --keep-order \
+            -j4 \
+          $HOME/.local/bin/zunit run
