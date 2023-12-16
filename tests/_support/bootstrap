@@ -78,11 +78,7 @@ builtin hash -d zpfx=$zi_dir/polaris
     ver'feat/logging' \
   @zdharma-continuum/zinit-annex-binary-symlink
 } >/dev/null
-+zi-log "{m} loaded $annex dependencies"
++zi-log "{m} loaded dependencies"
 # ]]]
-
-+zi-log '{nl}{bar}'
-zinit zstatus
-+zi-log '{bar}{nl}'
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
