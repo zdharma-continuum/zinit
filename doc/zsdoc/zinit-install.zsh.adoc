@@ -549,7 +549,6 @@ Called by:
 
 ____
  
- FUNCTION: __zinit-cmake-base-hook [[[
  A base common implementation of the cmake ice
 
 ____
