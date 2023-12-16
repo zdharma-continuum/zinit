@@ -32,7 +32,7 @@ ZINIT+=(
 # typeset -gxH ZPFX="$ZINIT[POLARIS]"
 # FORK            'vladdoster'        REPO           'zinit-t'
 # typeset -gxAUH ZINIT=(${(kv)CONFIG})
-
+git config --global --add advice.detachedHead false
 command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
 # info 'creating test env'
 git clone \
