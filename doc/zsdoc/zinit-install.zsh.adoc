@@ -549,6 +549,7 @@ Called by:
 
 ____
  
+ FUNCTION: __zinit-cmake-base-hook [[[
  A base common implementation of the cmake ice
 
 ____
@@ -588,7 +589,7 @@ ____
 
 ____
 
-Has 283 line(s). Calls functions:
+Has 294 line(s). Calls functions:
 
  ziextract
  `-- zinit.zsh/+zi-log
