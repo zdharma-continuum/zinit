@@ -1,2 +1,25 @@
-[1m[1m[4;38;5;214mERROR[0m[1;38;5;214m:[0m[0m Unknown subcommand[0m[1m[38;5;210m: [0m[1;38;5;45m`[0m[38;5;82mall: touch whatever[0m[1;38;5;45m`[0m[0m [0m[0m[0m(it should be one of, e.g.[0m[1m[38;5;210m: [0m[22m[22m[0m`[0m[38;5;82mload[0m[0m`, `[38;5;82msnippet[0m[0m`, `[38;5;82mupdate[0m[0m`, `[38;5;82mdelete[0m[0m`, [0m[38;5;82m[0m[38;5;82m…[38;5;82m[0m, e.g.[0m[1m[38;5;210m: [0m[22m[22m[0m`[0m[38;5;81mzinit [0m[1m[1m[38;5;82mload [0m[1;4m[38;5;207musername[0m/[1;4m[38;5;39mreponame[0m[0m`) or a [0m[1m[1m[1m[38;5;183mfor[0m[22m[22m[0m-based command body (i.e.[0m[1m[38;5;210m:[0m[0m[0m[0m e.g.[0m[1m[38;5;210m: [0m[0m[0m[0m`[0m[38;5;81mzinit [0m[38;5;81m…[38;5;81m[1mice-spec[1m[22m[22m[22m…[22m [1m[38;5;183mfor[0m[22m[22m[38;5;81m [0m[38;5;81m…[38;5;81m([1mplugin [1m[22mor[22m[1m snippet) [1m[1;4m[38;5;39mID-1 ID-2 [0m[1;4m[38;5;39m⋯⋯[1;4m[38;5;39m[38;5;81m[0m[38;5;81m…[38;5;81m[0m`). See `[0m[38;5;82mhelp[0m[0m` for a more detailed usage information and the list of the [0m[38;5;82msubcommands[0m[0m.[0m[0m[0m[0m
-
+.EXPORT_ALL_VARIABLES:
+
+ZSH := $(shell command -v zsh 2> /dev/null)
+SRC := zinit{'','-additional','-autoload','-install','-side'}.zsh
+DOC_SRC := $(foreach wrd,$(SRC),../$(wrd))
+
+.PHONY: all clean container doc doc/container tags tags/emacs tags/vim test zwc
+
+clean:
+	rm -rf *.zwc doc/zsdoc/zinit{'','-additional','-autoload','-install','-side'}.zsh.adoc doc/zsdoc/data/
+
+container:
+	docker build --tag=ghcr.io/zdharma-continuum/zinit:latest --file=docker/Dockerfile .
+
+doc: clean
+	cd doc; zsh -l -d -f -i -c "zsd -v --scomm --cignore '(\#*FUNCTION:[[:space:]][\:\∞\.\+\@\-a-zA-Z0-9]*[\[]*|}[[:space:]]\#[[:space:]][\]]*)' $(DOC_SRC)"
+
+doc/container: container
+	./scripts/docker-run.sh --docs --debug
+
+test:
+	zunit run
+
+zwc:
+	$(or $(ZSH),:) -fc 'for f in *.zsh; do zcompile -R -- $$f.zwc $$f || exit; done'
