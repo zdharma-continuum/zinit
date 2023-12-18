@@ -8,7 +8,9 @@
 #
 
 @setup {
-  ZBIN="${ZPFX}/bin"
+  HOME="$zi_test_dir"
+  # ZBIN="$zi_dir/polaris/bin"
+  typeset -gx ZBIN="$zi_test_dir/polaris/bin"
 }
 
 @test 'delete --all' {

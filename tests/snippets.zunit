@@ -1,7 +1,8 @@
 #!/usr/bin/env zunit
 
 @setup {
-  typeset -gx completion_dir="$zi_dir/completions"
+  HOME="$zi_test_dir"
+  typeset -gx completion_dir="$zi_test_dir/completions"
 }
 
 @test 'tldr-snippet' {

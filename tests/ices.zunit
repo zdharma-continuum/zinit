@@ -1,7 +1,9 @@
 #!/usr/bin/env zunit
 
 @setup {
-  ZPLUGINS=$ZINIT[PLUGINS_DIR]
+  HOME="$zi_test_dir"
+  # ZBIN="$zi_dir/polaris/bin"
+  typeset -gx ZPLUGINS="$zi_test_dir/plugins"
   function _zunit_assert_not_exists(){
     local file_path=$1
     if [[ "${file_path:0:1}" != "/" ]]; then # relative path - prepend the test directory

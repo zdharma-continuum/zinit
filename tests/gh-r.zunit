@@ -1,8 +1,11 @@
 #!/usr/bin/env zunit
 
 @setup {
-  HOME="$ZPFX" # Stops programs creating directories in user home
-  export ZBIN="${ZPFX}/bin"
+  HOME="$zi_test_dir"
+  # ZBIN="$zi_dir/polaris/bin"
+  typeset -gx ZBIN="$zi_test_dir/polaris/bin"
+  # HOME="$ZPFX" # Stops programs creating directories in user home
+  # export ZBIN="${ZPFX}/bin"
   [[ ! -d $ZBIN ]] && mkdir -p "$ZBIN"
   export os_type="${OSTYPE//[0-9\.]*/}"
   zinit default-ice --quiet from'gh-r' lbin'!' null
