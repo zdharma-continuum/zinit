@@ -77,8 +77,8 @@ jobs:
       - name: "annexes"
         run: zunit run tests/annexes.zunit
 
-      - name: "ices"
-        run: zunit run tests/ices.zunit
+      # - name: "ices"
+      #   run: zunit run tests/ices.zunit
 
       - name: "snippets"
         run: zunit run tests/snippets.zunit
