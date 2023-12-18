@@ -74,12 +74,6 @@ jobs:
       - name: "commands"
         run: zunit run tests/commands.zunit
 
-      - name: "plugins"
-        run: zunit run tests/plugins.zunit
-
-      - name: "gh-r"
-        run: zunit run tests/gh-r.zunit
-
       - name: "annexes"
         run: zunit run tests/annexes.zunit
 
@@ -88,3 +82,9 @@ jobs:
 
       - name: "snippets"
         run: zunit run tests/snippets.zunit
+
+      - name: "plugins"
+        run: zunit run tests/plugins.zunit
+
+      - name: "gh-r"
+        run: zunit run tests/gh-r.zunit
