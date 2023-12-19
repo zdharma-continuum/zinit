@@ -1620,7 +1620,7 @@ ziextract() {
             ziextract "$file" $opt_move $opt_move2 $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
             ret_val+=$?
         }
-        # Second, try to find the archive via `file' tool
+        # Second, try to find the archive via file command
         if (( !${#files} )) {
             local -a output infiles stage2_processed archives
             infiles=( **/*~(._zinit*|._backup|.git)(|/*)~*/*/*(-.DN) )
@@ -1633,7 +1633,7 @@ ziextract() {
                 type=${(L)desc/(#b)(#i)(* |(#s))(zip|rar|xz|7-zip|gzip|bzip2|tar|exe|PE32) */$match[2]}
                 if [[ $type = (zip|rar|xz|7-zip|gzip|bzip2|tar|exe|pe32) ]] {
                     (( !OPTS[opt_-q,--quiet] )) && \
-                        +zi-log "{info}[{pre}ziextract{info}]{msg2} detected a {meta}$type{rst} archive in the file {file}$fname{rst}."
+                        +zi-log "{m} Detected {meta}$type{rst} archive in file {file}$fname{rst}"
                     ziextract "$fname" "$type" $opt_move $opt_move2 $opt_norm --norm ${${${#archives}:#1}:+--nobkp}
                     integer iret_val=$?
                     ret_val+=iret_val
@@ -1655,11 +1655,9 @@ ziextract() {
                             if [[ $type != $type2 && \
                                 $type2 = (zip|rar|xz|7-zip|gzip|bzip2|tar)
                             ]] {
-                                # TODO: if multiple archives are really in the archive,
-                                # this might delete too soon… However, it's unusual case.
+                                # this might delete too soon if multiple archives in archive 
                                 [[ $fname != $infname && $norm -eq 0 ]] && command rm -f "$infname"
-                                (( !OPTS[opt_-q,--quiet] )) && \
-                                    +zi-log "{info}[{pre}ziextract{info}]{msg2} detected a {obj}${type2}{rst} archive in the file {file}${fname}{rst}."
+                                (( !OPTS[opt_-q,--quiet] )) && +zi-log "{m} Detected {obj}${type2}{rst} archive in {file}${fname}{rst}"
                                 ziextract "$fname" "$type2" $opt_move $opt_move2 $opt_norm ${${${#archives}:#1}:+--nobkp}
                                 ret_val+=$?
                                 stage2_processed+=( $fname )
@@ -1681,7 +1679,7 @@ ziextract() {
         return 1
     }
     if [[ ! -e $file ]] {
-        +zi-log "{info}[{pre}ziextract{info}]{error} ERROR:{msg} the file \`{meta}${file}{msg}' doesn't exist.{rst}"
+        +zi-log "{e} No file {obj}${file}{rst} found"
         return 1
     }
     if (( !nobkp )) {
@@ -1693,7 +1691,7 @@ ziextract() {
     .zinit-extract-wrapper() {
         local file="$1" fun="$2" retval
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zi-log "{m} Extracting files in {obj}$file{rst}"
+            +zi-log "{m} Extracting archive {obj}$file{rst}"
         $fun; retval=$?
         if (( retval == 0 )) {
             local -aU files
@@ -1711,7 +1709,7 @@ ziextract() {
         ((#i)*.zip)
             →zinit-extract(){ 
                 →zinit-check unzip "$file" || return 1
-                command tar -xzf "${file}" --strip-components=1
+                unzip -q "${file}" 
             }
             ;;
         ((#i)*.rar)
