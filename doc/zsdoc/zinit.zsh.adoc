@@ -1,0 +1,1973 @@
+
+NAME
+
+zinit.zsh - a shell script
+
+Documentation automatically generated with `zshelldoc'
+
+== FUNCTIONS
+ +zi-log
+ +zinit-deploy-message
+ +zinit-message
+ +zinit-prehelp-usage-message
+ -zinit_scheduler_add_sh
+ .zinit-add-fpath
+ .zinit-add-report
+ .zinit-any-to-pid
+ .zinit-any-to-user-plugin
+ .zinit-compdef-clear
+ .zinit-compdef-replay
+ .zinit-diff
+ .zinit-diff-env
+ .zinit-diff-functions
+ .zinit-diff-options
+ .zinit-diff-parameter
+ .zinit-find-other-matches
+ .zinit-formatter-auto
+ .zinit-formatter-bar
+ .zinit-formatter-bar-util
+ .zinit-formatter-pid
+ .zinit-formatter-th-bar
+ .zinit-formatter-url
+ .zinit-get-mtime-into
+ .zinit-get-object-path
+ .zinit-ice
+ .zinit-load
+ .zinit-load-ices
+ .zinit-load-object
+ .zinit-load-plugin
+ .zinit-load-snippet
+ .zinit-main-message-formatter
+ .zinit-pack-ice
+ .zinit-parse-opts
+ .zinit-prepare-home
+ .zinit-register-plugin
+ .zinit-run
+ .zinit-run-task
+ .zinit-set-m-func
+ .zinit-setup-params
+ .zinit-submit-turbo
+ .zinit-tmp-subst-off
+ .zinit-tmp-subst-on
+ .zinit-util-shands-path
+ :zinit-reload-and-run
+ :zinit-tmp-subst-alias
+ :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
+ :zinit-tmp-subst-compdef
+ :zinit-tmp-subst-zle
+ :zinit-tmp-subst-zstyle
+ @autoload
+ @zinit-register-annex
+ @zinit-register-hook
+ @zinit-substitute
+ @zsh-plugin-run-on-unload
+ @zsh-plugin-run-on-update
+ pmodload
+ zicdclear
+ zicdreplay
+ zicompdef
+ zicompinit
+ zinit
+ zpcdclear
+ zpcdreplay
+ zpcompdef
+ zpcompinit
+ zplugin
+AUTOLOAD add-zsh-hook
+AUTOLOAD colors
+AUTOLOAD compinit
+AUTOLOAD is-at-least
+PRECMD-HOOK @zinit-scheduler
+
+=== DETAILS
+
+==== Script Body
+
+Has 259 line(s). Calls functions:
+
+ Script-Body
+ |-- +zi-log
+ |-- .zinit-get-mtime-into
+ |-- .zinit-prepare-home
+ |   |-- zinit-autoload.zsh/.zinit-clear-completions
+ |   `-- zinit-install.zsh/.zinit-compinit
+ |-- @zinit-register-hook
+ |-- add-zsh-hook
+ |-- colors
+ |-- is-at-least
+ |-- zinit
+ |   |-- +zi-log
+ |   |-- +zinit-prehelp-usage-message
+ |   |   `-- +zi-log
+ |   |-- .zinit-add-fpath
+ |   |   `-- .zinit-any-to-user-plugin
+ |   |-- .zinit-compdef-clear
+ |   |   `-- +zi-log
+ |   |-- .zinit-compdef-replay
+ |   |   `-- +zi-log
+ |   |-- .zinit-get-object-path
+ |   |   `-- .zinit-any-to-user-plugin
+ |   |-- .zinit-ice
+ |   |   `-- +zi-log
+ |   |-- .zinit-load-ices
+ |   |   `-- .zinit-get-object-path
+ |   |       `-- .zinit-any-to-user-plugin
+ |   |-- .zinit-load-object
+ |   |   |-- .zinit-load
+ |   |   |   |-- +zinit-deploy-message
+ |   |   |   |-- .zinit-any-to-user-plugin
+ |   |   |   |-- .zinit-load-plugin
+ |   |   |   |   |-- .zinit-add-report
+ |   |   |   |   |-- .zinit-diff
+ |   |   |   |   |   |-- .zinit-diff-env
+ |   |   |   |   |   |-- .zinit-diff-functions
+ |   |   |   |   |   |-- .zinit-diff-options
+ |   |   |   |   |   `-- .zinit-diff-parameter
+ |   |   |   |   |-- .zinit-diff-env
+ |   |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |   |-- .zinit-tmp-subst-off
+ |   |   |   |   |-- .zinit-tmp-subst-on
+ |   |   |   |   `-- :zinit-tmp-subst-autoload
+ |   |   |   |       |-- +zi-log
+ |   |   |   |       |-- .zinit-add-report
+ |   |   |   |       |-- .zinit-any-to-user-plugin
+ |   |   |   |       `-- is-at-least
+ |   |   |   |-- .zinit-load-snippet
+ |   |   |   |   |-- +zi-log
+ |   |   |   |   |-- +zinit-deploy-message
+ |   |   |   |   |-- .zinit-add-report
+ |   |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |   |-- .zinit-get-object-path
+ |   |   |   |   |   `-- .zinit-any-to-user-plugin
+ |   |   |   |   |-- .zinit-pack-ice
+ |   |   |   |   |-- .zinit-set-m-func
+ |   |   |   |   |   `-- +zi-log
+ |   |   |   |   |-- .zinit-setup-params
+ |   |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
+ |   |   |   |-- .zinit-pack-ice
+ |   |   |   |-- .zinit-register-plugin
+ |   |   |   |   `-- +zi-log
+ |   |   |   |-- .zinit-set-m-func
+ |   |   |   |   `-- +zi-log
+ |   |   |   |-- .zinit-setup-params
+ |   |   |   |-- zinit-install.zsh/.zinit-get-package
+ |   |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |   |   `-- .zinit-load-snippet
+ |   |       |-- +zi-log
+ |   |       |-- +zinit-deploy-message
+ |   |       |-- .zinit-add-report
+ |   |       |-- .zinit-find-other-matches
+ |   |       |-- .zinit-get-object-path
+ |   |       |   `-- .zinit-any-to-user-plugin
+ |   |       |-- .zinit-pack-ice
+ |   |       |-- .zinit-set-m-func
+ |   |       |   `-- +zi-log
+ |   |       |-- .zinit-setup-params
+ |   |       `-- zinit-install.zsh/.zinit-download-snippet
+ |   |-- .zinit-parse-opts
+ |   |-- .zinit-run
+ |   |   |-- +zi-log
+ |   |   |-- .zinit-any-to-user-plugin
+ |   |   `-- .zinit-get-object-path
+ |   |       `-- .zinit-any-to-user-plugin
+ |   |-- .zinit-submit-turbo
+ |   |-- compinit
+ |   |-- zinit-additional.zsh/+zinit-debug
+ |   |-- zinit-autoload.zsh/.zinit-cdisable
+ |   |-- zinit-autoload.zsh/.zinit-cenable
+ |   |-- zinit-autoload.zsh/.zinit-clear-completions
+ |   |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
+ |   |-- zinit-autoload.zsh/.zinit-compiled
+ |   |-- zinit-autoload.zsh/.zinit-delete
+ |   |-- zinit-autoload.zsh/.zinit-help
+ |   |-- zinit-autoload.zsh/.zinit-list-bindkeys
+ |   |-- zinit-autoload.zsh/.zinit-list-compdef-replay
+ |   |-- zinit-autoload.zsh/.zinit-list-plugins
+ |   |-- zinit-autoload.zsh/.zinit-list-snippets
+ |   |-- zinit-autoload.zsh/.zinit-module
+ |   |-- zinit-autoload.zsh/.zinit-recently
+ |   |-- zinit-autoload.zsh/.zinit-search-completions
+ |   |-- zinit-autoload.zsh/.zinit-self-update
+ |   |-- zinit-autoload.zsh/.zinit-show-all-reports
+ |   |-- zinit-autoload.zsh/.zinit-show-completions
+ |   |-- zinit-autoload.zsh/.zinit-show-report
+ |   |-- zinit-autoload.zsh/.zinit-show-times
+ |   |-- zinit-autoload.zsh/.zinit-show-zstatus
+ |   |-- zinit-autoload.zsh/.zinit-uncompile-plugin
+ |   |-- zinit-autoload.zsh/.zinit-uninstall-completions
+ |   |-- zinit-autoload.zsh/.zinit-unload
+ |   |-- zinit-autoload.zsh/.zinit-update-or-status
+ |   |-- zinit-autoload.zsh/.zinit-update-or-status-all
+ |   |-- zinit-autoload.zsh/zi::version
+ |   |-- zinit-install.zsh/.zinit-compile-plugin
+ |   |-- zinit-install.zsh/.zinit-compinit
+ |   |-- zinit-install.zsh/.zinit-forget-completion
+ |   `-- zinit-install.zsh/.zinit-install-completions
+ `-- zinit-autoload.zsh/.zinit-module
+
+Uses feature(s): _add-zsh-hook_, _alias_, _autoload_, _bindkey_, _colors_, _export_, _is-at-least_, _setopt_, _source_, _zle_, _zmodload_, _zstyle_
+
+_Exports (environment):_ PMSPEC [big]*//* ZPFX [big]*//* ZSH_CACHE_DIR
+
+==== +zi-log
+
+____
+ 
+ Logging function
+
+____
+
+Has 20 line(s). Doesn't call other functions.
+
+Called by:
+
+ +zinit-message
+ +zinit-prehelp-usage-message
+ .zinit-compdef-clear
+ .zinit-compdef-replay
+ .zinit-ice
+ .zinit-load-snippet
+ .zinit-register-plugin
+ .zinit-run
+ .zinit-set-m-func
+ :zinit-tmp-subst-autoload
+ Script-Body
+ zinit
+ zinit-additional.zsh/.zinit-debug-clear
+ zinit-additional.zsh/.zinit-debug-report
+ zinit-additional.zsh/.zinit-debug-revert
+ zinit-additional.zsh/.zinit-debug-start
+ zinit-additional.zsh/.zinit-debug-status
+ zinit-additional.zsh/.zinit-debug-stop
+ zinit-additional.zsh/:zinit-tmp-subst-source
+ zinit-autoload.zsh/.zi-check-for-git-changes
+ zinit-autoload.zsh/.zinit-build-module
+ zinit-autoload.zsh/.zinit-cd
+ zinit-autoload.zsh/.zinit-confirm
+ zinit-autoload.zsh/.zinit-delete
+ zinit-autoload.zsh/.zinit-glance
+ zinit-autoload.zsh/.zinit-list-plugins
+ zinit-autoload.zsh/.zinit-run-delete-hooks
+ zinit-autoload.zsh/.zinit-self-update
+ zinit-autoload.zsh/.zinit-show-zstatus
+ zinit-autoload.zsh/.zinit-uninstall-completions
+ zinit-autoload.zsh/.zinit-unload
+ zinit-autoload.zsh/.zinit-update-all-parallel
+ zinit-autoload.zsh/.zinit-update-or-status-all
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-autoload.zsh/.zinit-wait-for-update-jobs
+ zinit-autoload.zsh/zi::version
+ zinit-install.zsh/.zi::get-architecture
+ zinit-install.zsh/.zinit-compile-plugin
+ zinit-install.zsh/.zinit-compinit
+ zinit-install.zsh/.zinit-download-file-stdout
+ zinit-install.zsh/.zinit-download-snippet
+ zinit-install.zsh/.zinit-extract
+ zinit-install.zsh/.zinit-get-cygwin-package
+ zinit-install.zsh/.zinit-get-latest-gh-r-url-part
+ zinit-install.zsh/.zinit-get-package
+ zinit-install.zsh/.zinit-install-completions
+ zinit-install.zsh/.zinit-jq-check
+ zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit-install.zsh/.zinit-update-snippet
+ zinit-install.zsh/__zinit-cmake-base-hook
+ zinit-install.zsh/ziextract
+ zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/∞zinit-make-base-hook
+ zinit-install.zsh/∞zinit-mv-hook
+ zinit-install.zsh/∞zinit-ps-on-update-hook
+ zinit-install.zsh/∞zinit-reset-hook
+ zinit-side.zsh/.zinit-countdown
+ zinit-side.zsh/.zinit-exists-physically-message
+
+==== +zinit-deploy-message
+
+____
+ 
+ Deploys a sub-prompt message to be displayed OR a 'zle .reset-prompt'
+ call to be invoked
+
+____
+
+Has 13 line(s). Doesn't call other functions.
+
+Uses feature(s): _read_, _zle_
+
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
+ zinit-autoload.zsh/.zinit-recall
+
+==== +zinit-message
+
+____
+ 
+ Wrapper function to maintain backward compatibility
+
+____
+
+Has 1 line(s). Calls functions:
+
+ +zinit-message
+ `-- +zi-log
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== +zinit-prehelp-usage-message
+
+Has 38 line(s). Calls functions:
+
+ +zinit-prehelp-usage-message
+ `-- +zi-log
+
+Called by:
+
+ zinit
+
+==== -zinit_scheduler_add_sh
+
+____
+ 
+ Copies task into ZINIT_RUN array, called when a task timeouts.
+ A small function ran from pattern in /-substitution as a math
+ function.
+
+____
+
+Has 7 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-add-fpath
+
+Has 10 line(s). Calls functions:
+
+ .zinit-add-fpath
+ `-- .zinit-any-to-user-plugin
+
+Called by:
+
+ zinit
+
+==== .zinit-add-report
+
+____
+ 
+ Adds a report line for given plugin.
+ 
+ $1 - uspl2, i.e. user/plugin
+ $2 - the text
+
+____
+
+Has 3 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-load-plugin
+ .zinit-load-snippet
+ :zinit-tmp-subst-alias
+ :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
+ :zinit-tmp-subst-compdef
+ :zinit-tmp-subst-zle
+ :zinit-tmp-subst-zstyle
+
+==== .zinit-any-to-pid
+
+Has 22 line(s). Calls functions:
+
+ .zinit-any-to-pid
+ `-- .zinit-util-shands-path
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ zinit-side.zsh/.zinit-exists-physically-message
+ zinit-side.zsh/.zinit-first
+
+==== .zinit-any-to-user-plugin
+
+____
+ 
+ Allows elastic plugin-spec across the code.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin (only when $1 - i.e. user - given)
+ 
+ $REPLY - user and plugin
+
+____
+
+Has 29 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-add-fpath
+ .zinit-get-object-path
+ .zinit-load
+ .zinit-run
+ :zinit-tmp-subst-autoload
+ zinit-autoload.zsh/.zinit-any-to-uspl2
+ zinit-autoload.zsh/.zinit-changes
+ zinit-autoload.zsh/.zinit-compile-uncompile-all
+ zinit-autoload.zsh/.zinit-compiled
+ zinit-autoload.zsh/.zinit-create
+ zinit-autoload.zsh/.zinit-delete
+ zinit-autoload.zsh/.zinit-find-completions-of-plugin
+ zinit-autoload.zsh/.zinit-glance
+ zinit-autoload.zsh/.zinit-show-report
+ zinit-autoload.zsh/.zinit-stress
+ zinit-autoload.zsh/.zinit-uncompile-plugin
+ zinit-autoload.zsh/.zinit-unload
+ zinit-autoload.zsh/.zinit-unregister-plugin
+ zinit-autoload.zsh/.zinit-update-all-parallel
+ zinit-autoload.zsh/.zinit-update-or-status-all
+ zinit-autoload.zsh/.zinit-update-or-status
+ zinit-install.zsh/.zinit-install-completions
+ zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ zinit-side.zsh/.zinit-compute-ice
+ zinit-side.zsh/.zinit-exists-physically-message
+ zinit-side.zsh/.zinit-exists-physically
+ zinit-side.zsh/.zinit-first
+
+==== .zinit-compdef-clear
+
+____
+ 
+ Implements user-exposed functionality to clear gathered compdefs.
+
+____
+
+Has 3 line(s). Calls functions:
+
+ .zinit-compdef-clear
+ `-- +zi-log
+
+Called by:
+
+ zicdclear
+ zinit
+ zpcdclear
+
+==== .zinit-compdef-replay
+
+____
+ 
+ Runs gathered compdef calls. This allows to run 'compinit' after loading plugins.
+
+____
+
+Has 17 line(s). Calls functions:
+
+ .zinit-compdef-replay
+ `-- +zi-log
+
+Uses feature(s): _compdef_
+
+Called by:
+
+ zicdreplay
+ zinit
+ zpcdreplay
+
+==== .zinit-diff
+
+____
+ 
+ Performs diff actions of all types
+
+____
+
+Has 4 line(s). Calls functions:
+
+ .zinit-diff
+ |-- .zinit-diff-env
+ |-- .zinit-diff-functions
+ |-- .zinit-diff-options
+ `-- .zinit-diff-parameter
+
+Called by:
+
+ .zinit-load-plugin
+ zinit-additional.zsh/.zinit-debug-start
+ zinit-additional.zsh/.zinit-debug-stop
+
+==== .zinit-diff-env
+
+____
+ 
+ Implements detection of change in PATH and FPATH.
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
+
+____
+
+Has 18 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-diff
+ .zinit-load-plugin
+
+==== .zinit-diff-functions
+
+____
+ 
+ Implements detection of newly created functions. Performs
+ data gathering, computation is done in *-compute().
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
+
+____
+
+Has 8 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-diff
+
+==== .zinit-diff-options
+
+____
+ 
+ Implements detection of change in option state. Performs
+ data gathering, computation is done in *-compute().
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
+
+____
+
+Has 7 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-diff
+
+==== .zinit-diff-parameter
+
+____
+ 
+ Implements detection of change in any parameter's existence and type.
+ Performs data gathering, computation is done in *-compute().
+ 
+ $1 - user/plugin (i.e. uspl2 format)
+ $2 - command, can be "begin" or "end"
+
+____
+
+Has 9 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-diff
+
+==== .zinit-find-other-matches
+
+____
+ 
+ Plugin's main source file is in general `name.plugin.zsh'. However,
+ there can be different conventions, if that file is not found, then
+ this functions examines other conventions in the most sane order.
+
+____
+
+Has 22 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-load-plugin
+ .zinit-load-snippet
+ zinit-side.zsh/.zinit-first
+
+==== .zinit-formatter-auto
+
+Has 50 line(s). Calls functions:
+
+ .zinit-formatter-auto
+ |-- .zinit-formatter-pid
+ |   `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+ `-- .zinit-formatter-url
+
+Uses feature(s): _type_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-formatter-bar
+
+Has 1 line(s). Calls functions:
+
+ .zinit-formatter-bar
+ `-- .zinit-formatter-bar-util
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-formatter-bar-util
+
+Has 7 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-formatter-bar
+ .zinit-formatter-th-bar
+
+==== .zinit-formatter-pid
+
+Has 11 line(s). Calls functions:
+
+ .zinit-formatter-pid
+ `-- zinit-side.zsh/.zinit-any-colorify-as-uspl2
+
+Uses feature(s): _source_
+
+Called by:
+
+ .zinit-formatter-auto
+
+==== .zinit-formatter-th-bar
+
+Has 1 line(s). Calls functions:
+
+ .zinit-formatter-th-bar
+ `-- .zinit-formatter-bar-util
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-formatter-url
+
+Has 19 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-formatter-auto
+
+==== .zinit-get-mtime-into
+
+Has 7 line(s). Doesn't call other functions.
+
+Called by:
+
+ Script-Body
+ zinit-autoload.zsh/.zinit-self-update
+ zinit-autoload.zsh/.zinit-update-or-status-all
+
+==== .zinit-get-object-path
+
+Has 28 line(s). Calls functions:
+
+ .zinit-get-object-path
+ `-- .zinit-any-to-user-plugin
+
+Called by:
+
+ .zinit-load-ices
+ .zinit-load-snippet
+ .zinit-run
+ zinit
+ zinit-autoload.zsh/.zinit-get-path
+ zinit-install.zsh/.zinit-setup-plugin-dir
+ zinit-install.zsh/.zinit-update-snippet
+ zinit-side.zsh/.zinit-first
+ zinit-side.zsh/.zinit-two-paths
+
+==== .zinit-ice
+
+____
+ 
+ Parses ICE specification, puts the result into ICE global hash.
+ The ice-spec is valid for next command only (i.e. it "melts"), but
+ it can then stick to plugin and activate e.g. at update.
+
+____
+
+Has 21 line(s). Calls functions:
+
+ .zinit-ice
+ `-- +zi-log
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit
+
+==== .zinit-load
+
+____
+ 
+ Implements the exposed-to-user action of loading a plugin.
+ 
+ $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+ $2 - plugin name, if the third format is used
+
+____
+
+Has 95 line(s). Calls functions:
+
+ .zinit-load
+ |-- +zinit-deploy-message
+ |-- .zinit-any-to-user-plugin
+ |-- .zinit-load-plugin
+ |   |-- .zinit-add-report
+ |   |-- .zinit-diff
+ |   |   |-- .zinit-diff-env
+ |   |   |-- .zinit-diff-functions
+ |   |   |-- .zinit-diff-options
+ |   |   `-- .zinit-diff-parameter
+ |   |-- .zinit-diff-env
+ |   |-- .zinit-find-other-matches
+ |   |-- .zinit-tmp-subst-off
+ |   |-- .zinit-tmp-subst-on
+ |   `-- :zinit-tmp-subst-autoload
+ |       |-- +zi-log
+ |       |-- .zinit-add-report
+ |       |-- .zinit-any-to-user-plugin
+ |       `-- is-at-least
+ |-- .zinit-load-snippet
+ |   |-- +zi-log
+ |   |-- +zinit-deploy-message
+ |   |-- .zinit-add-report
+ |   |-- .zinit-find-other-matches
+ |   |-- .zinit-get-object-path
+ |   |   `-- .zinit-any-to-user-plugin
+ |   |-- .zinit-pack-ice
+ |   |-- .zinit-set-m-func
+ |   |   `-- +zi-log
+ |   |-- .zinit-setup-params
+ |   `-- zinit-install.zsh/.zinit-download-snippet
+ |-- .zinit-pack-ice
+ |-- .zinit-register-plugin
+ |   `-- +zi-log
+ |-- .zinit-set-m-func
+ |   `-- +zi-log
+ |-- .zinit-setup-params
+ |-- zinit-install.zsh/.zinit-get-package
+ `-- zinit-install.zsh/.zinit-setup-plugin-dir
+
+Uses feature(s): _eval_, _setopt_, _source_, _zle_
+
+Called by:
+
+ .zinit-load-object
+ .zinit-run-task
+ zinit-additional.zsh/.zinit-service
+
+==== .zinit-load-ices
+
+Has 22 line(s). Calls functions:
+
+ .zinit-load-ices
+ `-- .zinit-get-object-path
+     `-- .zinit-any-to-user-plugin
+
+Called by:
+
+ zinit
+
+==== .zinit-load-object
+
+Has 12 line(s). Calls functions:
+
+ .zinit-load-object
+ |-- .zinit-load
+ |   |-- +zinit-deploy-message
+ |   |-- .zinit-any-to-user-plugin
+ |   |-- .zinit-load-plugin
+ |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-diff
+ |   |   |   |-- .zinit-diff-env
+ |   |   |   |-- .zinit-diff-functions
+ |   |   |   |-- .zinit-diff-options
+ |   |   |   `-- .zinit-diff-parameter
+ |   |   |-- .zinit-diff-env
+ |   |   |-- .zinit-find-other-matches
+ |   |   |-- .zinit-tmp-subst-off
+ |   |   |-- .zinit-tmp-subst-on
+ |   |   `-- :zinit-tmp-subst-autoload
+ |   |       |-- +zi-log
+ |   |       |-- .zinit-add-report
+ |   |       |-- .zinit-any-to-user-plugin
+ |   |       `-- is-at-least
+ |   |-- .zinit-load-snippet
+ |   |   |-- +zi-log
+ |   |   |-- +zinit-deploy-message
+ |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-find-other-matches
+ |   |   |-- .zinit-get-object-path
+ |   |   |   `-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-set-m-func
+ |   |   |   `-- +zi-log
+ |   |   |-- .zinit-setup-params
+ |   |   `-- zinit-install.zsh/.zinit-download-snippet
+ |   |-- .zinit-pack-ice
+ |   |-- .zinit-register-plugin
+ |   |   `-- +zi-log
+ |   |-- .zinit-set-m-func
+ |   |   `-- +zi-log
+ |   |-- .zinit-setup-params
+ |   |-- zinit-install.zsh/.zinit-get-package
+ |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
+ `-- .zinit-load-snippet
+     |-- +zi-log
+     |-- +zinit-deploy-message
+     |-- .zinit-add-report
+     |-- .zinit-find-other-matches
+     |-- .zinit-get-object-path
+     |   `-- .zinit-any-to-user-plugin
+     |-- .zinit-pack-ice
+     |-- .zinit-set-m-func
+     |   `-- +zi-log
+     |-- .zinit-setup-params
+     `-- zinit-install.zsh/.zinit-download-snippet
+
+Called by:
+
+ zinit
+
+==== .zinit-load-plugin
+
+____
+ 
+ Lower-level function for loading a plugin.
+ 
+ $1 - user
+ $2 - plugin
+ $3 - mode (light or load)
+
+____
+
+Has 128 line(s). Calls functions:
+
+ .zinit-load-plugin
+ |-- .zinit-add-report
+ |-- .zinit-diff
+ |   |-- .zinit-diff-env
+ |   |-- .zinit-diff-functions
+ |   |-- .zinit-diff-options
+ |   `-- .zinit-diff-parameter
+ |-- .zinit-diff-env
+ |-- .zinit-find-other-matches
+ |-- .zinit-tmp-subst-off
+ |-- .zinit-tmp-subst-on
+ `-- :zinit-tmp-subst-autoload
+     |-- +zi-log
+     |-- .zinit-add-report
+     |-- .zinit-any-to-user-plugin
+     `-- is-at-least
+
+Uses feature(s): _eval_, _setopt_, _source_, _unfunction_, _zle_
+
+Called by:
+
+ .zinit-load
+
+==== .zinit-load-snippet
+
+____
+ 
+ Implements the exposed-to-user action of loading a snippet.
+ 
+ $1 - url (can be local, absolute path).
+
+____
+
+Has 203 line(s). Calls functions:
+
+ .zinit-load-snippet
+ |-- +zi-log
+ |-- +zinit-deploy-message
+ |-- .zinit-add-report
+ |-- .zinit-find-other-matches
+ |-- .zinit-get-object-path
+ |   `-- .zinit-any-to-user-plugin
+ |-- .zinit-pack-ice
+ |-- .zinit-set-m-func
+ |   `-- +zi-log
+ |-- .zinit-setup-params
+ `-- zinit-install.zsh/.zinit-download-snippet
+
+Uses feature(s): _autoload_, _eval_, _setopt_, _source_, _unfunction_, _zparseopts_, _zstyle_
+
+Called by:
+
+ .zinit-load-object
+ .zinit-load
+ .zinit-run-task
+ pmodload
+ zinit-additional.zsh/.zinit-service
+
+==== .zinit-main-message-formatter
+
+Has 18 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== .zinit-pack-ice
+
+____
+ 
+ Remembers all ice-mods, assigns them to concrete plugin. Ice spec
+ is in general forgotten for second-next command (i.e., ice melts quickly), however they
+ glue to the object (plugin or snippet) mentioned in the next command for later use with (e.g. 'zinit update ...').
+
+____
+
+Has 3 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
+ @zsh-plugin-run-on-unload
+ @zsh-plugin-run-on-update
+ zinit-install.zsh/.zinit-update-snippet
+ zinit-side.zsh/.zinit-compute-ice
+
+==== .zinit-parse-opts
+
+Has 2 line(s). Doesn't call other functions.
+
+Called by:
+
+ zinit
+
+==== .zinit-prepare-home
+
+____
+ 
+ Creates all directories needed by Zinit, first checks if they
+ already exist.
+
+____
+
+Has 45 line(s). Calls functions:
+
+ .zinit-prepare-home
+ |-- zinit-autoload.zsh/.zinit-clear-completions
+ `-- zinit-install.zsh/.zinit-compinit
+
+Uses feature(s): _source_
+
+Called by:
+
+ Script-Body
+
+==== .zinit-register-plugin
+
+____
+ 
+ Adds the plugin to ZINIT_REGISTERED_PLUGINS array and to the
+ zsh_loaded_plugins array (managed according to the plugin standard:
+ https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html).
+
+____
+
+Has 23 line(s). Calls functions:
+
+ .zinit-register-plugin
+ `-- +zi-log
+
+Called by:
+
+ .zinit-load
+
+==== .zinit-run
+
+____
+ 
+ Run code inside plugins folder
+ It uses the 'correct' parameter from uppers scope zinit().
+
+____
+
+Has 24 line(s). Calls functions:
+
+ .zinit-run
+ |-- +zi-log
+ |-- .zinit-any-to-user-plugin
+ `-- .zinit-get-object-path
+     `-- .zinit-any-to-user-plugin
+
+Uses feature(s): _eval_, _setopt_
+
+Called by:
+
+ zinit
+
+==== .zinit-run-task
+
+____
+ 
+ A backend, worker function of .zinit-scheduler. It obtains the tasks
+ index and a few of its properties (like the type: plugin, snippet,
+ service plugin, service snippet) and executes it first checking for
+ additional conditions (like non-numeric wait'' ice).
+ 
+ $1 - current pass: 1 or 2
+ $2 - time assigned to the task
+ $3 - type: plugin, service plugin, service snippet, snippet
+ $4 - tasks index in the ZINIT[WAIT_ICE_...] fields
+ $5 - mode: load, light
+ $6 - details: alias name (derived from id-as''), plugin-spec, or snippet URL
+
+____
+
+Has 47 line(s). Calls functions:
+
+ .zinit-run-task
+ |-- .zinit-load
+ |   |-- +zinit-deploy-message
+ |   |-- .zinit-any-to-user-plugin
+ |   |-- .zinit-load-plugin
+ |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-diff
+ |   |   |   |-- .zinit-diff-env
+ |   |   |   |-- .zinit-diff-functions
+ |   |   |   |-- .zinit-diff-options
+ |   |   |   `-- .zinit-diff-parameter
+ |   |   |-- .zinit-diff-env
+ |   |   |-- .zinit-find-other-matches
+ |   |   |-- .zinit-tmp-subst-off
+ |   |   |-- .zinit-tmp-subst-on
+ |   |   `-- :zinit-tmp-subst-autoload
+ |   |       |-- +zi-log
+ |   |       |-- .zinit-add-report
+ |   |       |-- .zinit-any-to-user-plugin
+ |   |       `-- is-at-least
+ |   |-- .zinit-load-snippet
+ |   |   |-- +zi-log
+ |   |   |-- +zinit-deploy-message
+ |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-find-other-matches
+ |   |   |-- .zinit-get-object-path
+ |   |   |   `-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-set-m-func
+ |   |   |   `-- +zi-log
+ |   |   |-- .zinit-setup-params
+ |   |   `-- zinit-install.zsh/.zinit-download-snippet
+ |   |-- .zinit-pack-ice
+ |   |-- .zinit-register-plugin
+ |   |   `-- +zi-log
+ |   |-- .zinit-set-m-func
+ |   |   `-- +zi-log
+ |   |-- .zinit-setup-params
+ |   |-- zinit-install.zsh/.zinit-get-package
+ |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |-- .zinit-load-snippet
+ |   |-- +zi-log
+ |   |-- +zinit-deploy-message
+ |   |-- .zinit-add-report
+ |   |-- .zinit-find-other-matches
+ |   |-- .zinit-get-object-path
+ |   |   `-- .zinit-any-to-user-plugin
+ |   |-- .zinit-pack-ice
+ |   |-- .zinit-set-m-func
+ |   |   `-- +zi-log
+ |   |-- .zinit-setup-params
+ |   `-- zinit-install.zsh/.zinit-download-snippet
+ `-- zinit-autoload.zsh/.zinit-unload
+
+Uses feature(s): _eval_, _source_, _zle_, _zpty_
+
+Called by:
+
+ @zinit-scheduler
+
+==== .zinit-set-m-func
+
+____
+ 
+ ]]]
+ Sets and withdraws the temporary, atclone/atpull time function `m`.
+
+____
+
+Has 17 line(s). Calls functions:
+
+ .zinit-set-m-func
+ `-- +zi-log
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
+ zinit-autoload.zsh/.zinit-update-or-status
+
+==== .zinit-setup-params
+
+Has 3 line(s). Doesn't call other functions.
+
+Called by:
+
+ .zinit-load-snippet
+ .zinit-load
+
+==== .zinit-submit-turbo
+
+____
+ 
+ If `zinit load`, `zinit light` or `zinit snippet`  will be
+ preceded with 'wait', 'load', 'unload' or 'on-update-of'/'subscribe'
+ ice-mods then the plugin or snipped is to be loaded in turbo-mode,
+ and this function adds it to internal data structures. @zinit-scheduler uses the data to
+ create load or unload tasks.
+
+____
+
+Has 16 line(s). Doesn't call other functions.
+
+Called by:
+
+ zinit
+
+==== .zinit-tmp-subst-off
+
+____
+ 
+ Turn off temporary substituting of functions completely for a given mode ("load", "light",
+ "light-b" (i.e. the `trackbinds' mode) or "compdef").
+
+____
+
+Has 21 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_, _unfunction_
+
+Called by:
+
+ .zinit-load-plugin
+ zinit-additional.zsh/.zinit-debug-stop
+
+==== .zinit-tmp-subst-on
+
+____
+ 
+ Turn on temporary substituting of functions of builtins and functions according to passed
+ mode ("load", "light", "light-b" or "compdef"). The temporary substituting of functions is
+ to gather report data, and to hijack 'autoload', 'bindkey' and 'compdef' calls.
+
+____
+
+Has 32 line(s). Doesn't call other functions.
+
+Uses feature(s): _source_
+
+Called by:
+
+ .zinit-load-plugin
+ zinit-additional.zsh/.zinit-debug-start
+
+==== .zinit-util-shands-path
+
+____
+ 
+ Replaces parts of path with %HOME, etc.
+
+____
+
+Has 9 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ .zinit-any-to-pid
+
+==== :zinit-reload-and-run
+
+____
+ 
+ Marks given function ($3) for autoloading, and executes it triggering the
+ load. $1 is the fpath dedicated to the function, $2 are autoload options.
+ This function replaces "autoload -X", because using that on older Zsh
+ versions causes problems with traps.
+ 
+ So basically one creates function stub that calls :zinit-reload-and-run()
+ instead of "autoload -X".
+ 
+ Author: Bart Schaefer
+ 
+ $1 - FPATH dedicated to function
+ $2 - autoload options
+ $3 - function name (one that needs autoloading)
+
+____
+
+Has 11 line(s). Doesn't call other functions.
+
+Uses feature(s): _autoload_, _unfunction_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== :zinit-tmp-subst-alias
+
+____
+ 
+ Function defined to hijack plugin's calls to the `alias' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+
+____
+
+Has 36 line(s). Calls functions:
+
+ :zinit-tmp-subst-alias
+ `-- .zinit-add-report
+
+Uses feature(s): _alias_, _setopt_, _zparseopts_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== :zinit-tmp-subst-autoload
+
+____
+ 
+ Hijack plugin's calls to the 'autoload' builtin.
+ 
+ The hijacking gathers report data and runs custom `autoload' function, that doesn't need FPATH.
+
+____
+
+Has 111 line(s). Calls functions:
+
+ :zinit-tmp-subst-autoload
+ |-- +zi-log
+ |-- .zinit-add-report
+ |-- .zinit-any-to-user-plugin
+ `-- is-at-least
+
+Uses feature(s): _autoload_, _eval_, _is-at-least_, _setopt_, _zparseopts_
+
+Called by:
+
+ .zinit-load-plugin
+ @autoload
+
+==== :zinit-tmp-subst-bindkey
+
+____
+ 
+ Function defined to hijack plugin's calls to the `bindkey' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+
+____
+
+Has 120 line(s). Calls functions:
+
+ :zinit-tmp-subst-bindkey
+ |-- .zinit-add-report
+ `-- is-at-least
+
+Uses feature(s): _bindkey_, _is-at-least_, _setopt_, _zparseopts_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== :zinit-tmp-subst-compdef
+
+____
+ 
+ Function defined to hijack plugin's calls to the `compdef' function.
+ The hijacking is not only for reporting, but also to save compdef
+ calls so that `compinit' can be called after loading plugins.
+
+____
+
+Has 6 line(s). Calls functions:
+
+ :zinit-tmp-subst-compdef
+ `-- .zinit-add-report
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== :zinit-tmp-subst-zle
+
+____
+ 
+ Function defined to hijack plugin's calls to the `zle' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+
+____
+
+Has 36 line(s). Calls functions:
+
+ :zinit-tmp-subst-zle
+ `-- .zinit-add-report
+
+Uses feature(s): _setopt_, _zle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== :zinit-tmp-subst-zstyle
+
+____
+ 
+ Function defined to hijack plugin's calls to the `zstyle' builtin.
+ 
+ The hijacking is to gather report data (which is used in unload).
+
+____
+
+Has 23 line(s). Calls functions:
+
+ :zinit-tmp-subst-zstyle
+ `-- .zinit-add-report
+
+Uses feature(s): _setopt_, _zparseopts_, _zstyle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== @autoload
+
+Has 4 line(s). Calls functions:
+
+ @autoload
+ `-- :zinit-tmp-subst-autoload
+     |-- +zi-log
+     |-- .zinit-add-report
+     |-- .zinit-any-to-user-plugin
+     `-- is-at-least
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== @zinit-register-annex
+
+____
+ 
+ Registers the z-annex inside Zinit – i.e. an Zinit extension
+
+____
+
+Has 11 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== @zinit-register-hook
+
+____
+ 
+ Registers the z-annex inside Zinit (i.e., an Zinit extension)
+
+____
+
+Has 6 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ Script-Body
+
+==== @zinit-scheduler
+
+____
+ 
+ Searches for timeout tasks, executes them. Theres an array of tasks
+ waiting for execution, this scheduler manages them, detects which ones
+ should be run at current moment, decides to remove (or not) them from
+ the array after execution.
+ 
+ $1 - if "following", then it is non-first (second and more)
+ invocation of the scheduler; this results in chain of 'sched'
+ invocations that results in repetitive @zinit-scheduler activity.
+ 
+ if "burst", then all tasks are marked timeout and executed one
+ by one; this is handy if e.g. a docker image starts up and
+ needs to install all turbo-mode plugins without any hesitation
+ (delay), i.e. "burst" allows to run package installations from
+ script, not from prompt.
+
+____
+
+Has 75 line(s). *Is a precmd hook*. Calls functions:
+
+ @zinit-scheduler
+ |-- .zinit-run-task
+ |   |-- .zinit-load
+ |   |   |-- +zinit-deploy-message
+ |   |   |-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-load-plugin
+ |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-diff
+ |   |   |   |   |-- .zinit-diff-env
+ |   |   |   |   |-- .zinit-diff-functions
+ |   |   |   |   |-- .zinit-diff-options
+ |   |   |   |   `-- .zinit-diff-parameter
+ |   |   |   |-- .zinit-diff-env
+ |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |-- .zinit-tmp-subst-off
+ |   |   |   |-- .zinit-tmp-subst-on
+ |   |   |   `-- :zinit-tmp-subst-autoload
+ |   |   |       |-- +zi-log
+ |   |   |       |-- .zinit-add-report
+ |   |   |       |-- .zinit-any-to-user-plugin
+ |   |   |       `-- is-at-least
+ |   |   |-- .zinit-load-snippet
+ |   |   |   |-- +zi-log
+ |   |   |   |-- +zinit-deploy-message
+ |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |-- .zinit-get-object-path
+ |   |   |   |   `-- .zinit-any-to-user-plugin
+ |   |   |   |-- .zinit-pack-ice
+ |   |   |   |-- .zinit-set-m-func
+ |   |   |   |   `-- +zi-log
+ |   |   |   |-- .zinit-setup-params
+ |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
+ |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-register-plugin
+ |   |   |   `-- +zi-log
+ |   |   |-- .zinit-set-m-func
+ |   |   |   `-- +zi-log
+ |   |   |-- .zinit-setup-params
+ |   |   |-- zinit-install.zsh/.zinit-get-package
+ |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |   |-- .zinit-load-snippet
+ |   |   |-- +zi-log
+ |   |   |-- +zinit-deploy-message
+ |   |   |-- .zinit-add-report
+ |   |   |-- .zinit-find-other-matches
+ |   |   |-- .zinit-get-object-path
+ |   |   |   `-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-set-m-func
+ |   |   |   `-- +zi-log
+ |   |   |-- .zinit-setup-params
+ |   |   `-- zinit-install.zsh/.zinit-download-snippet
+ |   `-- zinit-autoload.zsh/.zinit-unload
+ `-- add-zsh-hook
+
+Uses feature(s): _add-zsh-hook_, _sched_, _setopt_, _zle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== @zinit-substitute
+
+Has 40 line(s). Doesn't call other functions.
+
+Uses feature(s): _setopt_
+
+Called by:
+
+ zinit-autoload.zsh/.zinit-at-eval
+ zinit-install.zsh/.zinit-at-eval
+ zinit-install.zsh/.zinit-get-package
+ zinit-install.zsh/∞zinit-atclone-hook
+ zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/∞zinit-cp-hook
+ zinit-install.zsh/∞zinit-extract-hook
+ zinit-install.zsh/∞zinit-make-base-hook
+ zinit-install.zsh/∞zinit-mv-hook
+
+==== @zsh-plugin-run-on-unload
+
+____
+ 
+ The Plugin Standard required mechanism, see:
+ https://zdharma-continuum.github.io/Zsh-100-Commits-Club/Zsh-Plugin-Standard.html
+
+____
+
+Has 2 line(s). Calls functions:
+
+ @zsh-plugin-run-on-unload
+ `-- .zinit-pack-ice
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== @zsh-plugin-run-on-update
+
+____
+ 
+ The Plugin Standard required mechanism
+
+____
+
+Has 2 line(s). Calls functions:
+
+ @zsh-plugin-run-on-update
+ `-- .zinit-pack-ice
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== pmodload
+
+Has 15 line(s). Calls functions:
+
+ pmodload
+ `-- .zinit-load-snippet
+     |-- +zi-log
+     |-- +zinit-deploy-message
+     |-- .zinit-add-report
+     |-- .zinit-find-other-matches
+     |-- .zinit-get-object-path
+     |   `-- .zinit-any-to-user-plugin
+     |-- .zinit-pack-ice
+     |-- .zinit-set-m-func
+     |   `-- +zi-log
+     |-- .zinit-setup-params
+     `-- zinit-install.zsh/.zinit-download-snippet
+
+Uses feature(s): _zstyle_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zicdclear
+
+____
+ 
+ A wrapper for "zinit cdclear -q" which can be called from hook
+ ices like the atinit"", atload"", etc. ices.
+
+____
+
+Has 1 line(s). Calls functions:
+
+ zicdclear
+ `-- .zinit-compdef-clear
+     `-- +zi-log
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zicdreplay
+
+____
+ 
+ A function that can be invoked from within "atinit", "atload", etc.
+ ice-mod. It works like "zinit cdreplay", which cannot be invoked from such hook ices
+
+____
+
+Has 1 line(s). Calls functions:
+
+ zicdreplay
+ `-- .zinit-compdef-replay
+     `-- +zi-log
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zicompdef
+
+____
+ 
+ Stores compdef for a replay with "zicdreplay" (turbo mode) or
+ with "zinit cdreplay" (normal mode). An utility functton of an undefined use case.
+
+____
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zicompinit
+
+____
+ 
+ A function that can be invoked from within "atinit", "atload", etc.
+ ice-mod.  It runs "autoload compinit; compinit" and respects
+ ZINIT[ZCOMPDUMP_PATH] and ZINIT[COMPINIT_OPTS].
+
+____
+
+Has 2 line(s). Calls functions:
+
+ zicompinit
+ `-- compinit
+
+Uses feature(s): _autoload_, _compinit_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zinit
+
+____
+ 
+ Entrypoint function directly exposed to user, consumes subcommands with respective arguments,
+ and completion.
+
+____
+
+Has 553 line(s). Calls functions:
+
+ zinit
+ |-- +zi-log
+ |-- +zinit-prehelp-usage-message
+ |   `-- +zi-log
+ |-- .zinit-add-fpath
+ |   `-- .zinit-any-to-user-plugin
+ |-- .zinit-compdef-clear
+ |   `-- +zi-log
+ |-- .zinit-compdef-replay
+ |   `-- +zi-log
+ |-- .zinit-get-object-path
+ |   `-- .zinit-any-to-user-plugin
+ |-- .zinit-ice
+ |   `-- +zi-log
+ |-- .zinit-load-ices
+ |   `-- .zinit-get-object-path
+ |       `-- .zinit-any-to-user-plugin
+ |-- .zinit-load-object
+ |   |-- .zinit-load
+ |   |   |-- +zinit-deploy-message
+ |   |   |-- .zinit-any-to-user-plugin
+ |   |   |-- .zinit-load-plugin
+ |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-diff
+ |   |   |   |   |-- .zinit-diff-env
+ |   |   |   |   |-- .zinit-diff-functions
+ |   |   |   |   |-- .zinit-diff-options
+ |   |   |   |   `-- .zinit-diff-parameter
+ |   |   |   |-- .zinit-diff-env
+ |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |-- .zinit-tmp-subst-off
+ |   |   |   |-- .zinit-tmp-subst-on
+ |   |   |   `-- :zinit-tmp-subst-autoload
+ |   |   |       |-- +zi-log
+ |   |   |       |-- .zinit-add-report
+ |   |   |       |-- .zinit-any-to-user-plugin
+ |   |   |       `-- is-at-least
+ |   |   |-- .zinit-load-snippet
+ |   |   |   |-- +zi-log
+ |   |   |   |-- +zinit-deploy-message
+ |   |   |   |-- .zinit-add-report
+ |   |   |   |-- .zinit-find-other-matches
+ |   |   |   |-- .zinit-get-object-path
+ |   |   |   |   `-- .zinit-any-to-user-plugin
+ |   |   |   |-- .zinit-pack-ice
+ |   |   |   |-- .zinit-set-m-func
+ |   |   |   |   `-- +zi-log
+ |   |   |   |-- .zinit-setup-params
+ |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
+ |   |   |-- .zinit-pack-ice
+ |   |   |-- .zinit-register-plugin
+ |   |   |   `-- +zi-log
+ |   |   |-- .zinit-set-m-func
+ |   |   |   `-- +zi-log
+ |   |   |-- .zinit-setup-params
+ |   |   |-- zinit-install.zsh/.zinit-get-package
+ |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
+ |   `-- .zinit-load-snippet
+ |       |-- +zi-log
+ |       |-- +zinit-deploy-message
+ |       |-- .zinit-add-report
+ |       |-- .zinit-find-other-matches
+ |       |-- .zinit-get-object-path
+ |       |   `-- .zinit-any-to-user-plugin
+ |       |-- .zinit-pack-ice
+ |       |-- .zinit-set-m-func
+ |       |   `-- +zi-log
+ |       |-- .zinit-setup-params
+ |       `-- zinit-install.zsh/.zinit-download-snippet
+ |-- .zinit-parse-opts
+ |-- .zinit-run
+ |   |-- +zi-log
+ |   |-- .zinit-any-to-user-plugin
+ |   `-- .zinit-get-object-path
+ |       `-- .zinit-any-to-user-plugin
+ |-- .zinit-submit-turbo
+ |-- compinit
+ |-- zinit-additional.zsh/+zinit-debug
+ |-- zinit-autoload.zsh/.zinit-cdisable
+ |-- zinit-autoload.zsh/.zinit-cenable
+ |-- zinit-autoload.zsh/.zinit-clear-completions
+ |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
+ |-- zinit-autoload.zsh/.zinit-compiled
+ |-- zinit-autoload.zsh/.zinit-delete
+ |-- zinit-autoload.zsh/.zinit-help
+ |-- zinit-autoload.zsh/.zinit-list-bindkeys
+ |-- zinit-autoload.zsh/.zinit-list-compdef-replay
+ |-- zinit-autoload.zsh/.zinit-list-plugins
+ |-- zinit-autoload.zsh/.zinit-list-snippets
+ |-- zinit-autoload.zsh/.zinit-module
+ |-- zinit-autoload.zsh/.zinit-recently
+ |-- zinit-autoload.zsh/.zinit-search-completions
+ |-- zinit-autoload.zsh/.zinit-self-update
+ |-- zinit-autoload.zsh/.zinit-show-all-reports
+ |-- zinit-autoload.zsh/.zinit-show-completions
+ |-- zinit-autoload.zsh/.zinit-show-report
+ |-- zinit-autoload.zsh/.zinit-show-times
+ |-- zinit-autoload.zsh/.zinit-show-zstatus
+ |-- zinit-autoload.zsh/.zinit-uncompile-plugin
+ |-- zinit-autoload.zsh/.zinit-uninstall-completions
+ |-- zinit-autoload.zsh/.zinit-unload
+ |-- zinit-autoload.zsh/.zinit-update-or-status
+ |-- zinit-autoload.zsh/.zinit-update-or-status-all
+ |-- zinit-autoload.zsh/zi::version
+ |-- zinit-install.zsh/.zinit-compile-plugin
+ |-- zinit-install.zsh/.zinit-compinit
+ |-- zinit-install.zsh/.zinit-forget-completion
+ `-- zinit-install.zsh/.zinit-install-completions
+
+Uses feature(s): _autoload_, _compinit_, _eval_, _setopt_, _source_
+
+Called by:
+
+ Script-Body
+ zplugin
+ zinit-autoload.zsh/.zinit-delete
+
+==== zpcdclear
+
+Has 1 line(s). Calls functions:
+
+ zpcdclear
+ `-- .zinit-compdef-clear
+     `-- +zi-log
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zpcdreplay
+
+Has 1 line(s). Calls functions:
+
+ zpcdreplay
+ `-- .zinit-compdef-replay
+     `-- +zi-log
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zpcompdef
+
+Has 1 line(s). Doesn't call other functions.
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zpcompinit
+
+Has 2 line(s). Calls functions:
+
+ zpcompinit
+ `-- compinit
+
+Uses feature(s): _autoload_, _compinit_
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== zplugin
+
+Has 1 line(s). Calls functions:
+
+ zplugin
+ `-- zinit
+     |-- +zi-log
+     |-- +zinit-prehelp-usage-message
+     |   `-- +zi-log
+     |-- .zinit-add-fpath
+     |   `-- .zinit-any-to-user-plugin
+     |-- .zinit-compdef-clear
+     |   `-- +zi-log
+     |-- .zinit-compdef-replay
+     |   `-- +zi-log
+     |-- .zinit-get-object-path
+     |   `-- .zinit-any-to-user-plugin
+     |-- .zinit-ice
+     |   `-- +zi-log
+     |-- .zinit-load-ices
+     |   `-- .zinit-get-object-path
+     |       `-- .zinit-any-to-user-plugin
+     |-- .zinit-load-object
+     |   |-- .zinit-load
+     |   |   |-- +zinit-deploy-message
+     |   |   |-- .zinit-any-to-user-plugin
+     |   |   |-- .zinit-load-plugin
+     |   |   |   |-- .zinit-add-report
+     |   |   |   |-- .zinit-diff
+     |   |   |   |   |-- .zinit-diff-env
+     |   |   |   |   |-- .zinit-diff-functions
+     |   |   |   |   |-- .zinit-diff-options
+     |   |   |   |   `-- .zinit-diff-parameter
+     |   |   |   |-- .zinit-diff-env
+     |   |   |   |-- .zinit-find-other-matches
+     |   |   |   |-- .zinit-tmp-subst-off
+     |   |   |   |-- .zinit-tmp-subst-on
+     |   |   |   `-- :zinit-tmp-subst-autoload
+     |   |   |       |-- +zi-log
+     |   |   |       |-- .zinit-add-report
+     |   |   |       |-- .zinit-any-to-user-plugin
+     |   |   |       `-- is-at-least
+     |   |   |-- .zinit-load-snippet
+     |   |   |   |-- +zi-log
+     |   |   |   |-- +zinit-deploy-message
+     |   |   |   |-- .zinit-add-report
+     |   |   |   |-- .zinit-find-other-matches
+     |   |   |   |-- .zinit-get-object-path
+     |   |   |   |   `-- .zinit-any-to-user-plugin
+     |   |   |   |-- .zinit-pack-ice
+     |   |   |   |-- .zinit-set-m-func
+     |   |   |   |   `-- +zi-log
+     |   |   |   |-- .zinit-setup-params
+     |   |   |   `-- zinit-install.zsh/.zinit-download-snippet
+     |   |   |-- .zinit-pack-ice
+     |   |   |-- .zinit-register-plugin
+     |   |   |   `-- +zi-log
+     |   |   |-- .zinit-set-m-func
+     |   |   |   `-- +zi-log
+     |   |   |-- .zinit-setup-params
+     |   |   |-- zinit-install.zsh/.zinit-get-package
+     |   |   `-- zinit-install.zsh/.zinit-setup-plugin-dir
+     |   `-- .zinit-load-snippet
+     |       |-- +zi-log
+     |       |-- +zinit-deploy-message
+     |       |-- .zinit-add-report
+     |       |-- .zinit-find-other-matches
+     |       |-- .zinit-get-object-path
+     |       |   `-- .zinit-any-to-user-plugin
+     |       |-- .zinit-pack-ice
+     |       |-- .zinit-set-m-func
+     |       |   `-- +zi-log
+     |       |-- .zinit-setup-params
+     |       `-- zinit-install.zsh/.zinit-download-snippet
+     |-- .zinit-parse-opts
+     |-- .zinit-run
+     |   |-- +zi-log
+     |   |-- .zinit-any-to-user-plugin
+     |   `-- .zinit-get-object-path
+     |       `-- .zinit-any-to-user-plugin
+     |-- .zinit-submit-turbo
+     |-- compinit
+     |-- zinit-additional.zsh/+zinit-debug
+     |-- zinit-autoload.zsh/.zinit-cdisable
+     |-- zinit-autoload.zsh/.zinit-cenable
+     |-- zinit-autoload.zsh/.zinit-clear-completions
+     |-- zinit-autoload.zsh/.zinit-compile-uncompile-all
+     |-- zinit-autoload.zsh/.zinit-compiled
+     |-- zinit-autoload.zsh/.zinit-delete
+     |-- zinit-autoload.zsh/.zinit-help
+     |-- zinit-autoload.zsh/.zinit-list-bindkeys
+     |-- zinit-autoload.zsh/.zinit-list-compdef-replay
+     |-- zinit-autoload.zsh/.zinit-list-plugins
+     |-- zinit-autoload.zsh/.zinit-list-snippets
+     |-- zinit-autoload.zsh/.zinit-module
+     |-- zinit-autoload.zsh/.zinit-recently
+     |-- zinit-autoload.zsh/.zinit-search-completions
+     |-- zinit-autoload.zsh/.zinit-self-update
+     |-- zinit-autoload.zsh/.zinit-show-all-reports
+     |-- zinit-autoload.zsh/.zinit-show-completions
+     |-- zinit-autoload.zsh/.zinit-show-report
+     |-- zinit-autoload.zsh/.zinit-show-times
+     |-- zinit-autoload.zsh/.zinit-show-zstatus
+     |-- zinit-autoload.zsh/.zinit-uncompile-plugin
+     |-- zinit-autoload.zsh/.zinit-uninstall-completions
+     |-- zinit-autoload.zsh/.zinit-unload
+     |-- zinit-autoload.zsh/.zinit-update-or-status
+     |-- zinit-autoload.zsh/.zinit-update-or-status-all
+     |-- zinit-autoload.zsh/zi::version
+     |-- zinit-install.zsh/.zinit-compile-plugin
+     |-- zinit-install.zsh/.zinit-compinit
+     |-- zinit-install.zsh/.zinit-forget-completion
+     `-- zinit-install.zsh/.zinit-install-completions
+
+Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
+
+==== add-zsh-hook
+
+____
+ 
+ Add to HOOK the given FUNCTION.
+ HOOK is one of chpwd, precmd, preexec, periodic, zshaddhistory,
+ zshexit, zsh_directory_name (the _functions subscript is not required).
+ 
+ With -d, remove the function from the hook instead; delete the hook
+ variable if it is empty.
+ 
+ -D behaves like -d, but pattern characters are active in the
+ function name, so any matching function will be deleted from the hook.
+ 
+
+____
+
+Has 93 line(s). Doesn't call other functions.
+
+Uses feature(s): _autoload_, _getopts_
+
+Called by:
+
+ @zinit-scheduler
+ Script-Body
+
+==== colors
+
+____
+ 
+ Put standard ANSI color codes in shell parameters for easy use.
+ Note that some terminals do not support all combinations.
+
+____
+
+Has 120 line(s). Doesn't call other functions.
+
+Called by:
+
+ Script-Body
+
+==== compinit
+
+____
+ 
+ Initialisation for new style completion. This mainly contains some helper
+ functions and setup. Everything else is split into different files that
+ will automatically be made autoloaded (see the end of this file).  The
+ names of the files that will be considered for autoloading are those that
+ begin with an underscores (like `_condition).
+ 
+ The first line of each of these files is read and must indicate what
+ should be done with its contents:
+ 
+ `#compdef <names ...>'
+
+____
+
+Has 573 line(s). Doesn't call other functions.
+
+Uses feature(s): _autoload_, _bindkey_, _compdef_, _compdump_, _eval_, _read_, _setopt_, _unfunction_, _zle_, _zstyle_
+
+Called by:
+
+ zicompinit
+ zinit
+ zpcompinit
+
+==== is-at-least
+
+____
+ 
+ 
+ Test whether $ZSH_VERSION (or some value of your choice, if a second argument
+ is provided) is greater than or equal to x.y.z-r (in argument one). In fact,
+ it'll accept any dot/dash-separated string of numbers as its second argument
+ and compare it to the dot/dash-separated first argument. Leading non-number
+ parts of a segment (such as the "zefram" in 3.1.2-zefram4) are not considered
+ when the comparison is done; only the numbers matter. Any left-out segments
+ in the first argument that are present in the version string compared are
+ considered as zeroes, eg 3 == 3.0 == 3.0.0 == 3.0.0.0 and so on.
+ 
+
+____
+
+Has 56 line(s). Doesn't call other functions.
+
+Called by:
+
+ :zinit-tmp-subst-autoload
+ :zinit-tmp-subst-bindkey
+ Script-Body
+ zinit-install.zsh/.zinit-download-snippet
+
