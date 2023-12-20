@@ -2,7 +2,6 @@
 
 @setup {
   HOME="$zi_test_dir"
-  # ZBIN="$zi_dir/polaris/bin"
   typeset -gx ZBIN="$zi_test_dir/polaris/bin"
 }
 

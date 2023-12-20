@@ -3088,7 +3088,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 .zinit-pager &
 
               integer pager_pid=$!
-              { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
+              { sleep 1 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
               { wait $pager_pid; } > /dev/null 2>&1
 
               local -a log

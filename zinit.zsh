@@ -2966,7 +2966,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     .zinit-parse-opts update "$@"
                     builtin set -- "${reply[@]}"
                     if [[ ${OPTS[opt_-a,--all]} -eq 1 || ${OPTS[opt_-p,--parallel]} -eq 1 || ${OPTS[opt_-s,--snippets]} -eq 1 || ${OPTS[opt_-l,--plugins]} -eq 1 || -z $1$2${ICE[teleid]}${ICE[id-as]} ]]; then
-                        [[ -z $1$2 && $(( OPTS[opt_-a,--all] + OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                        [[ -z $1$2 && $(( OPTS[opt_-a,--all] + OPTS[opt_-p,--parallel] + OPTS[opt_-s,--snippets] + OPTS[opt_-l,--plugins] )) -eq 0 ]] && { builtin print -r -- "Assuming --all is passed"; }
                         (( OPTS[opt_-p,--parallel] )) && OPTS[value]=${1:-15}
                         .zinit-update-or-status-all update; ___retval=$?
                     else
@@ -2977,7 +2977,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                 (status)
                     if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
                         .zinit-update-or-status-all status; ___retval=$?
                     else
                         .zinit-update-or-status status "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -2985,7 +2985,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                 (report)
                     if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 4; }
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
                         .zinit-show-all-reports
                     else
                         .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -3070,7 +3070,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                 (compile)
                     (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
                         .zinit-compile-uncompile-all 1; ___retval=$?
                     else
                         .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -3083,7 +3083,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     ;;
                 (uncompile)
                     if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; sleep 3; }
+                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
                         .zinit-compile-uncompile-all 0; ___retval=$?
                     else
                         .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
@@ -3312,15 +3312,6 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 
 # create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
-
-# a searchable menu of tags for current directory
-zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
-zle -N zi-browse-symbol
-zle -N zi-browse-symbol-backwards zi-browse-symbol
-zle -N zi-browse-symbol-pbackwards zi-browse-symbol
-zle -N zi-browse-symbol-pforwards zi-browse-symbol
-zstyle -s ':zinit:browse-symbol' key ZINIT_TMP || ZINIT_TMP='\eQ'
-[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
 
 # Local Variables:
 # mode: Shell-Script
