@@ -39,10 +39,10 @@
 @test 'act' { # Run your GitHub Actions locally
   run zinit for @nektos/act; assert $state equals 0
   local act="$ZBIN/act"; assert "$act" is_executable
-  $act --version; assert $state equals 0
+  run "$act" --version; assert $state equals 0
 }
 @test 'akamai' { # Manage and configure Akamai from the Command Line.
-  run zinit id-as'akamai' lbin"!akamai*->akamai" for @akamai/cli; assert $state equals 0
+  run zinit lbin"!akamai*->akamai" for @akamai/cli; assert $state equals 0
   local cli="$ZBIN/akamai"; assert "$cli" is_executable
   run "$cli" --version; assert $state equals 0
 }
@@ -50,12 +50,12 @@
   [[ $OSTYPE =~ 'linux*' ]] && skip "Alacritty test skipped on $os_type"
   run zinit for @alacritty/alacritty; assert $state equals 0
   local alacritty="$ZBIN/alacritty"; assert "$alacritty" is_executable
-  $alacritty --version; assert $state equals 0
+  run "$alacritty" --version; assert $state equals 0
 }
 @test 'alist' { # A file list program that supports multiple storage, powered by Gin and React
   run zinit for @alist-org/alist; assert $state equals 0
   local alist="$ZBIN/alist"; assert "$alist" is_executable
-  run $alist version; assert $state equals 0
+  run "$alist" version; assert $state equals 0
 }
 @test 'asciigraph' { # Go package to make lightweight ASCII line graphs in command line apps with no external dependencies.
   run zinit for @guptarohit/asciigraph; assert $state equals 0
@@ -65,7 +65,7 @@
 @test 'assh' { # make your ssh client smarter
   run zinit for @moul/assh; assert $state equals 0
   local assh="$ZBIN/assh"; assert "$assh" is_executable
-  run $assh --version; assert $state equals 0
+  run "$assh" --version; assert $state equals 0
 }
 @test 'atuin' { #  Magical shell history
   run zinit for @atuinsh/atuin; assert $state equals 0
@@ -777,17 +777,17 @@
 @test 'topgrade' { # Upgrade everything
   run zinit for @r-darwish/topgrade; assert $state equals 0
   local topgrade="$ZBIN/topgrade"; assert "$topgrade" is_executable
-  run $topgrade --version; assert $state equals 0
+  run "$topgrade" --version; assert $state equals 0
 }
 @test 'tre' { # Tree command, improved
   run zinit for @dduan/tre; assert $state equals 0
   local tre="$ZBIN/tre"; assert "$tre" is_executable
-  run $tre --version; assert $state equals 0
+  run "$tre" --version; assert $state equals 0
 }
 @test 'tv' { # A cross-platform CLI csv pretty printer that uses column styling to maximize viewer enjoyment
   run zinit for @uzimaru0000/tv; assert $state equals 0
   local tv="$ZBIN/tv"; assert "$tv" is_executable
-  run $tv --version; assert $state equals 0
+  run "$tv" --version; assert $state equals 0
 }
 @test 'up-1' { # Deploy infinitely scalable serverless apps, apis, and sites in seconds to AWS
   run zinit for @apex/up; assert $state equals 0
@@ -801,10 +801,10 @@
 }
 @test 'volta-cli' { # JS Toolchains as Code
   [[ "$OSTYPE" =~ 'linux*' ]] && skip 'Volta CLI skipped on Linux'
-  export VOLTA_HOME="${ZPFX}/bin"
-  run zinit lbin'volta;volta-migrate' for @volta-cli/volta; assert $state equals 0
+  export VOLTA_HOME="${zi_test_dir}/bin"
+  run zinit for @volta-cli/volta; assert $state equals 0
   local volta="$ZBIN/volta"; assert "$volta" is_executable
-  run $volta --version; assert $state equals 0
+  run "$volta" --version; assert $state equals 0
 }
 @test 'watchexec' { # Executes commands in response to file modifications
   run zinit for @watchexec/watchexec; assert $state equals 0
@@ -814,22 +814,22 @@
 @test 'whalebrew' { # Homebrew, but with Docker images
   run zinit for whalebrew/whalebrew; assert $state equals 0
   local whalebrew="$ZBIN/whalebrew"; assert "$whalebrew" is_executable
-  run $whalebrew version; assert $state equals 0
+  run "$whalebrew" version; assert $state equals 0
 }
 @test 'wifiqr' { # Create a QR code with your Wi-Fi login details
-  run zinit for reugn/wifiqr; assert $state equals 0
+  run zinit for @reugn/wifiqr; assert $state equals 0
   local wifiqr="$ZBIN/wifiqr"; assert "$wifiqr" is_executable
-  run $wifiqr --version; assert $state equals 0
+  run "$wifiqr" --version; assert $state equals 0
 }
 @test 'wtf' { # The personal information dashboard for your terminal
-  run zinit for wtfutil/wtf; assert $state equals 0
+  run zinit for @wtfutil/wtf; assert $state equals 0
   local wtf="$ZBIN/wtf"; assert "$wtf" is_executable
-  run $wtf --version; assert $state equals 0
+  run "$wtf" --version; assert $state equals 0
 }
 @test 'xh' { # Friendly and fast tool for sending HTTP requests
   run zinit for @ducaale/xh; assert $state equals 0
   local xh="$ZBIN/xh"; assert "$xh" is_executable
-  run $xh --version; assert $state equals 0
+  run "$xh" --version; assert $state equals 0
 }
 @test 'xsv' { # A fast CSV command line toolkit written in Rust.
   run zinit for @BurntSushi/xsv; assert $state equals 0
@@ -840,22 +840,22 @@
   [[ $OSTYPE =~ 'linux*' ]] && skip 'Yabai skipped on Linux'
   run zinit for @koekeishiya/yabai; assert $state equals 0
   local yabai="$ZBIN/yabai"; assert "$yabai" is_executable
-  run $yabai --version; assert $state equals 0
+  run "$yabai" --version; assert $state equals 0
 }
 @test 'yq' { # a portable command-line YAML, JSON and XML processor
   run zinit for @mikefarah/yq; assert $state equals 0
   local yq="$ZBIN/yq"; assert "$yq" is_executable
-  run $yq --version; assert $state equals 0
+  run "$yq" --version; assert $state equals 0
 }
 @test 'zed' { # Tooling for super-structured data: a new and easier way to manipulate data
   run zinit for @brimdata/zed; assert $state equals 0
   local zed="$ZBIN/zed"; assert "$zed" is_executable
-  run $zed --version; assert $state equals 0
+  run "$zed" --version; assert $state equals 0
 }
 @test 'zoxide' { # A smarter cd command
   run zinit for @ajeetdsouza/zoxide; assert $state equals 0
   local zoxide="$ZBIN/zoxide"; assert "$zoxide" is_executable
-  run $zoxide --version; assert $state equals 0
+  run "$zoxide" --version; assert $state equals 0
 }
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
