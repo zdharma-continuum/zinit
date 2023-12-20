@@ -204,8 +204,10 @@
   run $documize version; assert $state equals 0
 }
 @test 'dstask' { # Git powered terminal-based todo/note manager -- markdown note page per task
-  run zinit bpick'^*import*' for @naggie/dstask; assert $state equals 0
+  run "zinit bpick'*~*(import)*' for @naggie/dstask"; assert $state equals 0
   local dstask="$ZBIN/dstask"; assert "$dstask" is_executable
+  DSTASK_GIT_REPO="$zi_test_dir/.dstask"
+  yes | $dstask
   run $dstask version; assert $state equals 0
 }
 @test 'dua' { # View disk space usage and delete unwanted data, fast
