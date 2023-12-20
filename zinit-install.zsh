@@ -1707,31 +1707,43 @@ ziextract() {
 
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
-            →zinit-extract(){ 
-                →zinit-check unzip "$file" || return 1
-                unzip -q "${file}" 
-            }
+            →zinit-extract(){ →zinit-check unzip "$file" || return 1; command unzip -q -o "$file"; }
             ;;
         ((#i)*.rar)
             →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "${file}"; }
             ;;
         ((#i)*.tar.bz2|(#i)*.tbz|(#i)*.tbz2)
-          →zinit-extract() { →zinit-check bzip2 "$file" || return 1; local i; for i (0 1); do command tar -xjf "${file}" --strip-components=$i; done && rm -f ${file}; 
-        }
+            →zinit-extract() { 
+                local i;
+                for i in 0 1; do 
+                    command tar -xjf "${file}" --strip-components=$i
+                    [[ -n ${${file:P}:h}/*(#qx.N) ]] && break
+                done
+                rm -rf ${file//([.]tar|)[.](tbz(2|)|bz2)/}(/N) ${file}
+                return
+            }
             ;;
         ((#i)*.tar.gz|(#i)*.tgz)
             →zinit-extract() { 
-                # →zinit-check gzip "$file" || return 1
                 local i; 
                 for i in 0 1; do 
                     command tar -xf "${file}" --strip-components=$i;
                     [[ -n ${${file:P}:h}/*(#qx.N) ]] && break
                 done
                 rm -rf ${file//[.]t(ar[.]|)gz/}(/N) ${file}
+                return
             }
             ;;
         ((#i)*.tar.xz|(#i)*.txz)
-            →zinit-extract() { →zinit-check xz "$file" || return 1; local i; for i (0 1); do command tar -xzf "${file}" --strip-components=$i; done && rm -f ${file}; }
+            →zinit-extract() {
+                local i; 
+                for i in 0 1; do 
+                    command tar -xzf "${file}" --strip-components=$i;
+                    [[ -n ${${file:P}:h}/*(#qx.N) ]] && break
+                done
+                rm -rf ${file//[.]t(ar[.]|)xz/}(/N) ${file}
+                return
+            }
             ;;
         ((#i)*.tar.7z|(#i)*.t7z)
             →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x -so "$file" | command tar -xf - --strip-components=0; rm -f ${file}; }
