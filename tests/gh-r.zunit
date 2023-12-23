@@ -200,7 +200,7 @@
 }
 @test 'documize' { # Modern Confluence alternative designed for internal & external docs, built with Go & Ember JS
   run zinit for @documize/community; assert $state equals 0
-  local documize="$ZBIN/documize"; assert "$documize" is_executable
+  local documize="$ZBIN/community"; assert "$documize" is_executable
   run $documize version; assert $state equals 0
 }
 @test 'dstask' { # Git powered terminal-based todo/note manager -- markdown note page per task
