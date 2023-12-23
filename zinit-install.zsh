@@ -1923,10 +1923,6 @@ ziextract() {
         }
     )
 } # ]]]
-# FUNCTION: zpextract [[[
-zpextract() {
-  ziextract "$@"
-} # ]]]
 # FUNCTION: .zinit-at-eval [[[
 .zinit-at-eval() {
     local atpull="$1" atclone="$2"
