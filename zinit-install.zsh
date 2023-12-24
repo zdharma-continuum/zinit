@@ -341,9 +341,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if [[ $tpe != tarball ]] {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            local pid_hl='{pid}' id_msg_part=" (at label{ehi}:{rst} {id-as}$id_as{rst}{…})"
-            (( $+ICE[pack] )) && local infix_m="({b}{ice}pack{apo}''{rst}) "
-            +zi-log "{nl}Downloading $infix_m{pid}$user${user:+/}$plugin{…}${${${id_as:#$user/$plugin}}:+$id_msg_part}"
+            local pid_hl='{pid}' id_msg_part=" (at label: {id-as}$id_as{rst})"
+            +zi-log "{nl}{i} Downloading {b}{file}$user${user:+/}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
         }
 
         local site
@@ -378,7 +377,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                         { local old_version="$(<$local_path/._zinit/is_release${count:#1})"; } 2>/dev/null
                         old_version=${old_version/(#b)(\/[^\/]##)(#c4,4)\/([^\/]##)*/${match[2]}}
                     }
-                    +zi-log "(Requesting \`${REPLY:t}'${version:+, version $version}{…}${old_version:+ Current version: $old_version.})"
+                    +zi-log "{m} Requesting ${REPLY:t} ${version:+, version $version} ${old_version:+ Current version: $old_version.}{rst}"
                     if { ! .zinit-download-file-stdout "$url" 0 1 >! "${REPLY:t}" } {
                         if { ! .zinit-download-file-stdout "$url" 1 1 >! "${REPLY:t}" } {
                             command rm -f "${REPLY:t}"
@@ -830,7 +829,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     .zinit-compute-ice "$id_as" "pack" \
         ICE plugin_dir filename is_snippet || return 1
 
-    # when from"gh-r" ice set, skip compile unless compile ice is set 
+    # when from"gh-r" ice set, skip compile unless compile ice is set
     if [[ ${ICE[from]} = gh-r ]] && (( ${+ICE[compile]} == 0 )); then
         +zi-log '{dbg} from"gh-r" detected, skipping compile'
         return 0
@@ -992,7 +991,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
-                (( !OPTS[opt_-q,--quiet] )) && +zi-log "Downloading {apo}\`{url}$sname{apo}\`{rst}${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{…}"
+                (( !OPTS[opt_-q,--quiet] )) && +zi-log "{i} Downloading {file}$sname{rst} ${${ICE[svn]+" (with Subversion)"}:-" (with curl, wget, lftp)"}{rst}"
 
                 if (( ${+ICE[svn]} )) {
                     if [[ $update = -u ]] {
@@ -1503,7 +1502,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       _sys='pc-windows-gnu'
       ;;
     (*)
-      +zi-log "{info}[{pre}gh-r{info}]{error} Unsupported OS: {obj}${_os}{rst}"
+      +zi-log "{e} {b}gh-r{rst}Unsupported OS: {obj}$_os{rst}"
       ;;
   esac
   case "$_cpu" in
@@ -1520,7 +1519,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       _os=${_os}eabihf
       ;;
     (*)
-      +zi-log "{info}[{pre}ziextract{info}]{error} Unsupported CPU: {obj}$_cpu{rst}"
+      +zi-log "{e} {b}gh-r{rst}Unsupported CPU: {obj}$_cpu{rst}"
       ;;
   esac
   echo "${_sys};${_cpu};${_os}"
@@ -1535,7 +1534,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   local plugin="$2" urlpart="$3" user="$1"
   local -a bpicks filtered init_list list parts
   parts=(${(@s:;:)$(.zi::get-architecture)})
-  # +zi-log "{info}[{pre}gh-r{info}]{rst} filters -> {glob}${(@)parts}{rst}"
   if [[ -z $urlpart ]]; then
     local tag_version=${ICE[ver]}
     if [[ -z $tag_version ]]; then
@@ -1558,18 +1556,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if [[ -n $bpick ]]; then
       list=( ${(M)list[@]:#(#i)*/$~bpick} )
       if (( !$#list )); then
-        +zi-log "{info}[{pre}gh-r{info}] {error}Error{rst}: {ice}bpick{rst} ice found no release assets{rst}. To fix, modify the {ice}bpick{rst} glob pattern {glob}${bpick}{rst}"
+        +zi-log "{e} {b}gh-r{rst}: {ice}bpick{rst} ice found no release assets To fix, modify the {ice}bpick{rst} glob pattern {glob}$bpick{rst}"
       fi
+    else
+      local junk="(386|md5|sig|asc|txt|vsix|sum|sha256*|pkg|([\.]apk|deb|json|rpm|sh))"
+      filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
     fi
-
-    local junk="(md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
-    filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     local -a array=( $(print -rm "*(${MACHTYPE}|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
     (( ${#array} > 0 )) && list=( ${array[@]} )
-    +zi-log -- "{dbg} filtered ${#filtered} to ${#array} release assets"
 
-    +zi-log -- "{dbg}${(@pj:\n  - :)list[1,2]}{nl}"
     for part in "${parts[@]}"; do
       if (( $#list > 1 )); then
         filtered=( ${(M)list[@]:#(#i)*${~part}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
@@ -1581,7 +1577,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     if (( $#list > 1 )) { filtered=( ${list[@]:#(#i)*.(sha[[:digit:]]#|asc)} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} ); }
 
     if (( !$#list )); then
-      +zi-log "{nl}{info}[{pre}gh-r{info}] {error}Error{rst}: No GitHub release assets found for {glob}${tag_version}{rst}"
+      +zi-log "{e} {b}gh-r{rst}: No GitHub release assets found for {glob}$tag_version{rst}"
       return 1
     fi
     reply+=( "${list[1]}" )
@@ -1600,7 +1596,7 @@ ziextract() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent noshortloops # warncreateglobal
 
-    local -a opt_move opt_move2 opt_norm opt_auto opt_nobkp
+    local -aU opt_move opt_move2 opt_norm opt_auto opt_nobkp
     zparseopts -D -E -move=opt_move -move2=opt_move2 -norm=opt_norm \
             -auto=opt_auto -nobkp=opt_nobkp || \
         { +zi-log "{info}[{pre}ziextract{info}]{error} Incorrect options given to" \
@@ -1617,7 +1613,7 @@ ziextract() {
 
     if (( auto )) {
         # First try known file extensions
-        local -a files
+        local -aU files
         integer ret_val
         files=( (#i)**/*.(zip|rar|7z|tgz|tbz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg|exe)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
@@ -1833,7 +1829,7 @@ ziextract() {
     }
     unfunction -- .zinit-extract-wrapper
 
-    local -a execs
+    local -aU execs
     execs=( **/*~(._zinit(|/*)|.git(|/*)|.svn(|/*)|.hg(|/*)|._backup(|/*))(DN-.) )
     if [[ ${#execs} -gt 0 && -n $execs ]] {
         execs=( ${(@f)"$( file ${execs[@]} )"} )
@@ -1901,7 +1897,7 @@ ziextract() {
                       "(\`{file}$local_dir{msg2}') isn't accessible.{rst}"
                 return 1
             }
-        local -a files
+        local -aU files
         files=( ${(@)${(@s: :)${extract##(\!-|-\!|\!|-)}}//(#b)(((#s)|([^\\])[\\]([\\][\\])#)|((#s)|([^\\])([\\][\\])#)) /${match[2]:+$match[3]$match[4] }${match[5]:+$match[6]${(l:${#match[7]}/2::\\:):-} }} )
         if [[ ${#files} -eq 0 && -n ${extract##(\!-|-\!|\!|-)} ]] {
                 +zi-log "{error}ERROR:{msg2} The files" \
@@ -2000,7 +1996,7 @@ ziextract() {
     # Download the package
     #
 
-    +zi-log "{info}Downloading{ehi}: {file}${url:t}{info}{…}{rst}"
+    +zi-log "{nl}{i} Downloading {b}{file}${url:t}{rst}"
     retry=2
     while (( retry -- )) {
         integer retval=0
@@ -2058,81 +2054,6 @@ zimv() {
     local dir
     if [[ $1 = (-d|--dir) ]] { dir=$2; shift 2; }
     zicp --mv ${dir:+--dir} $dir "$@"
-} # ]]]
-# FUNCTION: .zinit-configure-run-autoconf [[[
-# Called if # passed to configure ice or no ./configure found
-# Runs autoconf, autoreconf, and autogen.sh
-.zinit-configure-run-autoconf() {
-    local dir=$1 flags=$2
-    integer q
-    local msg="{pre} ({flag}#{pre} flag given){…}" msg_="{pre}{…}"
-    # Custom script
-    if [[ -f $dir/autogen.sh ]]; then
-        q=1
-        m {pre}Running {cmd}./autogen.sh${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown ./autogen.sh && \
-            (
-                cd -q $dir
-                chmod +x ./autogen.sh
-                ./autogen.sh
-            )
-    # Autoreconf only if available in PATH
-    elif [[ -f $dir/configure && -f $dir/configure.ac && \
-            $+commands[autoreconf] = 1 ]]; then
-        q=1
-        m {pre}Running {cmd}autoreconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown autoreconf\ -f\ -i\ … && \
-            (
-                cd -q $dir
-                rm -f aclocal.m4
-                aclocal -I m4 --force
-                libtoolize --copy --force
-                autoreconf -f -i -I m4
-            )
-    # Manual reproduction of autoreconf run
-    elif [[ -f $dir/configure && -f $dir/configure.ac ]]; then
-        q=1
-        m {pre}Running {cmd}aclocal{pre}, {cmd}autoconf{pre} and {cmd}automake\
-${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown aclocal,\ autoconf,\ automake && \
-            (
-                cd -q $dir
-                rm -f aclocal.m4
-                aclocal -I m4 --force
-                libtoolize --copy --force
-                aclocal -I m4 --force
-                autoconf -I m4 -f
-                autoheader -I m4 -f
-                automake --add-missing -c --force-missing
-            )
-    # Only autoconf if no existing ./configure
-    elif [[ ! -f $dir/configure && -f $dir/configure.ac ]]; then
-        q=1
-        m {pre}Running {cmd}autoconf {opt}-f${${${(M)flags:#*\#*}:+$msg}:-$msg_}
-        .zinit-countdown autoconf\ -f && \
-            (
-                cd -q $dir
-                autoconf -f -I m4
-            )
-    elif [[ $flags == *\#* ]]; then
-        m {ehi}WARNING:{error}: No {cmd}autogen.sh{error} nor {file}configure.ac \
-            {error}on disk while the {flag}\# \
-            {error}flag given to the {ice}configure{apo}\'\'{error} ice, skipping \
-            further {cmd}./configure{error}-generation related actions{…}
-        ((1))
-    fi
-    if [[ ! -f $dir/configure ]]; then
-        if (( q )); then
-            m {error}WARNING:some input files existed \({file}configure.ac{error}, \
-                etc.\) however running {cmd}Autotools{error} didn\'t yield a \
-                {cmd}./configure{error} script, meaning that it won\'t be run\! \
-                Please check if you have packages such as {pkg}autoconf{error}, \
-                {pkg}autmake{error} and similar installed.
-        else
-            # No output – lacking both configure.ac and configure → a no-op
-            :
-        fi
-    fi
 } # ]]]
 # FUNCTION: ∞zinit-reset-hook [[[
 ∞zinit-reset-hook() {
@@ -2215,14 +2136,61 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
             ZINIT[-r/--reset-opt-hook-has-been-run]=1
         }
     } else {
-        # If there's no -r/--reset, pretend that it already has been served.
+        # If theres no -r/--reset, pretend that it already has been served.
         ZINIT[-r/--reset-opt-hook-has-been-run]=1
     }
 } # ]]]
+
+# FUNCTION: ∞zinit-configure-base-hook [[[
+# A base common implementation of the configure ice
+∞zinit-configure-base-hook () {
+    emulate -L zsh
+    setopt extendedglob
+    if [[ "$1" = plugin ]]; then
+        local dir="${5#%}" hook="$6" subtype="$7" ex="$8"
+    else
+        local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
+    fi
+    local flags configure eflags aflags ice='{b}configure{rst}:'
+    configure=${ICE[configure]}
+    @zinit-substitute configure
+    (( ${+ICE[configure]} )) || return 0
+    flags=${(M)configure##[smc0\!\#]##}
+    configure=${configure##$flags([[:space:]]##|(#e))}
+    eflags=${(SM)flags##[\!]##}
+    aflags=${(SM)flags##[smc0]##}
+    [[ $eflags == $ex ]] || return 0
+    typeset -aU configure_opt=(${(@s; ;)configure})
+    configure_opt+=("--prefix ${ZINIT[HOME_DIR]}/polaris")
+    {
+        builtin cd -- "$dir" || return 1
+        if [[ ! -e Makefile ]] && [[ ! -e configure ]]; then
+            +zi-log "{m} ${ice} Attempting to generate configure script... "
+            local c
+            for c in "[[ -e autogen.sh ]] && sh ./autogen.sh" "[[ -n *.a[mc](#qN.) ]] && autoreconf -ifm" "git clean -fxd; aclocal --force; autoconf --force; automake --add-missing --copy --force-missing"; do
+                +zi-log -PrD "{dbg} ${ice} {faint}${c}{rst}"
+                eval "${c}" 2>/dev/null >&2
+                if [[ -f configure ]]; then
+                    break
+                fi
+            done
+        fi
+        if [[ -e configure ]]; then
+            +zi-log "{m} ${ice} Generating Makefile"
+            +zi-log "{dbg} ${ice} {faint}./configure $(builtin print -PDn -- ${(Ds; ;)configure_opt[@]//prefix /prefix=}){rst}"
+            eval "./configure ${(S)configure_opt[@]//prefix /prefix=}" 2>/dev/null 1>&2
+            if [[ $? -eq 0 || -f Makefile ]]; then
+                +zi-log "{m} ${ice} Successfully generated Makefile"
+                return 0
+            fi
+        else
+            +zi-log "{e} ${ice} Failed project configuration"
+            return 1
+        fi
+    }
+    return 0
+} # ]]]
 # FUNCTION: ∞zinit-configure-e-hook [[[
-# The !-version of configure'' ice. Runs in between
-# of make'!!' and make'!'. Configure naturally runs
-# before make.
 ∞zinit-configure-e-hook() {
     ∞zinit-configure-base-hook "$@" "!"
 } # ]]]
@@ -2231,148 +2199,117 @@ ${${${(M)flags:#*\#*}:+$msg}:-$msg_}
 # of make'!' and make''. Configure script naturally runs
 # before make.
 ∞zinit-configure-hook() {
-    ∞zinit-configure-base-hook "$@"
+    ∞zinit-configure-base-hook "$@" ""
 } # ]]]
-# FUNCTION: ∞zinit-configure-base-hook [[[
-# A base common implementation of configure'', as all
-# the starting steps are rigid and the same in all
-# hooks, hence the idea. TODO: use in make'' and other
-# places.
-∞zinit-configure-base-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
+
+# FUNCTION: ∞zinit-make-base-hook [[[
+# A base common implementation of the make ice
+∞zinit-make-base-hook () {
+    emulate -L zsh
+    setopt extendedglob
+    [[ -z $ICE[make] ]] && return 0
+    if [[ "$1" = plugin ]]; then
+        local dir="${5#%}" hook="$6" subtype="$7" ex="$8"
+    else
         local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
-
-    emulate -L zsh -o extendedglob
-
-    local configure=${ICE[configure]}
-    @zinit-substitute configure
-
-    # c-cmake, s-scons, m-meson, 0-default (configure)
-    local flags=${(M)configure##[smc0\!\#]##}
-    configure=${configure##$flags([[:space:]]##|(#e))}
-    (( ${+ICE[configure]} )) || return 0
-    # !-only flags
-    local eflags=${(SM)flags##[\!]##} aflags=${(SM)flags##[smc0]##}
-    [[ $eflags == $ex ]] || return 0
-
-    # Conditionally run autogen.sh/autoconf/aclocal/etc. to
-    # see if we got an output ./configure file (or preexisting
-    # if no autotools have been resolved to run from the optional
-    # # flag and the .ac/.m4 input files) ready to run
-    [[ $flags == *\#* || ! -f $dir/configure ]] &&
-        .zinit-configure-run-autoconf "$dir" $flags
-
-    if [[ $flags == (#b)*([^smc0\!\#]##)* || ${flags//[\!\#]##/} == (#b)(([smc0](#c2,))) ]]; then
-        m {error}ERROR: improper ${match[2]:+\(multiple of s,m,c\?\)} flag\(s\) \({flag}${match[1]}{error}\) \
-            given, skipping further build system actions processing{…}
-        return 1
+    fi
+    local make=${ICE[make]} ice='{b}make{rst}:'
+    @zinit-substitute make
+    (( ${+ICE[make]} )) || return 0
+    local eflags=${(M)make##[\!]##}
+    make=${make##$eflags}
+    [[ $ex == $eflags ]] || return 0
+    local make_prefix='prefix'
+    if grep -w -- "PREFIX =" ${dir}/[Mm]akefile >/dev/null; then
+        make_prefix="PREFIX"
     fi
 
-    local -a files=( $dir/CMakeLists.txt(N) $dir/*/CMakeLists.txt(N) )
-    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#c[^a-z0]# ]]; then
-        if (( ${+commands[cmake]} )); then
-            command mkdir -p $dir/_build-zinit
-            m {pre}Running {cmd}cmake{pre} ${${${${#files}:#0}:+for \
-            its found {file}CMakeLists.txt{pre} input file{…}}:-\
-because {flag}c{pre} flag given}
-           .zinit-countdown cmake && \
-             ( cd -q $dir/_build-zinit; cmake -DCMAKE_INSTALL_PREFIX=$ZPFX .. ${(@s; ;)configure} )
-        else
-            m {error}Error: no {cmd}cmake{error} binary found and \
-                ${${${${#files}:#0}:+its input file exists \
-                   \({file}CMakeLists.txt{error}\)}:-and {flag}c{error} \
-                   flag given}! Skipping{…}
+    local src=($dir/[Cc][Mm]ake*(N.om[1]))
+    if (( $#src )); then
+      +zi-log "{m} ${ice} Detected Cmake project, using CMAKE_INSTALL_PREFIX={file}\$ZPFX{rst}"
+      make_prefix="CMAKE_INSTALL_PREFIX"
+    else
+      +zi-log -ru2 -- "{dbg} ${dir:t}: No Cmake files found in ${dir}"
+    fi
+    local prefix="${ZINIT[ZPFX]}"
+    if [[ -n OPTS[opt_-q,--quiet] || -n ${ZINIT[DEBUG]:#1} ]]; then
+        +zi-log "{dbg} ${ice} setting quiet mode"
+        local quiet='2>/dev/null 1>&2'
+    fi
+    local -i ret=0
+    {
+        build="make -C ${dir} --jobs 4"
+        +zi-log "{m} ${ice} Building..."
+        # +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${(D)ZINIT[ZPFX]}){rst}"
+        +zi-log "{dbg} ${ice} eval ${build} $make_prefix=$prefix 2>/dev/null 1>&2"
+        eval "${build} $make_prefix=$prefix" 2>/dev/null 1>&2
+        ret=$?
+    } always {
+        if (( ret )); then
+            +zi-log "{w} ${ice} Build returned {num}${ret}{rst}"
         fi
-    fi
-    local -a files=( $dir/SConstruct(N) $dir/*/SConstruct(N) )
-    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#s[^a-z0]# ]]; then
-        if (( ${+commands[scons]} )); then
-            m {pre}Running {cmd}scons{pre} for its found {file}SConstruct{pre} input file{…}
-            .zinit-countdown scons && \
-                 ( cd $dir; scons RELEASE=yes --prefix=$ZPFX ${(@s; ;)configure} )
-        else
-            m {error}Error: no {cmd}scons{error} binary found and \
-                ${${${${#files}:#0}:+its input file exists \
-                    ({file}SConstruct{error})}:-and {flag}s{error} \
-                    flag given}! Skipping{…}
+        (( TRY_BLOCK_ERROR = 0 ))
+    }
+    {
+        install="${build} ${make}"
+        # +zi-log "{m} ${ice} {faint}${(Ds; ;)build} $make_prefix=$(builtin print -Pnf '%s' ${ZINIT[POLARIS]}) ${make} {rst}"
+        +zi-log "{m} ${ice} Installing in ${(D)ZINIT[ZPFX]}"
+        +zi-log "{dbg} ${ice} eval ${build} $make_prefix=$prefix ${make} 2>/dev/null 1>&2"
+        eval "${(s; ;)install} $make_prefix=$prefix" 2>/dev/null 1>&2
+        ret=$?
+    } always {
+        if (( ret )); then
+            +zi-log "{w} ${ice} Install returned {num}${ret}{rst}"
         fi
-    fi
-    local -a files=( $dir/meson.build(N) $dir/*/meson.build(N) )
-    if [[ $#files -gt 0 && -z $aflags || $flags == [^a-z0]#m[^a-z0]# ]]; then
-        if (( ${+commands[meson]} )); then
-            m {pre}Running {cmd}meson setup{pre} ${${${${#files}:#0}:+\
-for its found {file}meson.build{pre} input file}:-because {flag}m{pre} \
-                flag given}{…}
-            .zinit-countdown meson\ setup && \
-                ( cd $dir; command meson setup --prefix=$ZPFX _build-zinit ${(@s; ;)configure} )
-        else
-            m {error}Error: no {cmd}meson{error} binary found and \
-            ${${${${#files}:#0}:+its input file exists \
-                ({file}meson.build{error})}:-{flag}m{error} \
-                flag given}! Skipping{…}
-        fi
-    fi
-    if [[ -f $dir/configure && -z $aflags || $flags == [^a-z0]#0[^a-z0]# ]]; then
-        m {pre}Running {cmd}./configure {opt}--prefix{meta}={b}{dir}$ZPFX{nb}{…}
-        .zinit-countdown ./configure && \
-            (
-                cd -q $dir
-                chmod +x ./configure
-                ./configure --prefix=$ZPFX ${(@s; ;)configure}
-            )
-    fi
-} # ]]]
-# FUNCTION: ∞zinit-make-ee-hook [[[
-∞zinit-make-ee-hook() {
-    ∞zinit-make-base-hook "$@" "!!"
+        (( TRY_BLOCK_ERROR = 0 ))
+    }
+    return $ret
 } # ]]]
 # FUNCTION: ∞zinit-make-e-hook [[[
 ∞zinit-make-e-hook() {
     ∞zinit-make-base-hook "$@" "!"
 } # ]]]
+# FUNCTION: ∞zinit-make-ee-hook [[[
+∞zinit-make-ee-hook() {
+    ∞zinit-make-base-hook "$@" "!!"
+} # ]]]
 # FUNCTION: ∞zinit-make-hook [[[
 ∞zinit-make-hook() {
     ∞zinit-make-base-hook "$@" ""
 } # ]]]
-# FUNCTION: ∞zinit-make-base-hook [[[
-∞zinit-make-base-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" ex="$8" || \
-        local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
 
-    local make=${ICE[make]}
-    @zinit-substitute make
-
-    # Save preceding ! only
-    local eflags=${(M)make##[\!]##}
-    make=${make##$eflags}
-    (( ${+ICE[make]} )) || return 0
-    [[ $ex == $eflags ]] || return 0
-
-    # For meson and cmake
-    [[ -d $dir/_build-zinit ]] && dir+=/_build-zinit
-
-    # Run either `make` or `meson compile`
-    if [[ -f $dir/Makefile ]]; then
-        m {pre}Running {apo}\`{cmd}make{opt} ${(@s; ;)make}{apo}\`{pre}{…}
-        .zinit-countdown make &&
-            command make -C "$dir" ${(@s; ;)make}
-    elif [[ -f $dir/build.ninja ]]; then
-        m {pre}Running {apo}\`{cmd}meson{opt} compile{apo}\`{pre}{…}
-        .zinit-countdown meson\ compile &&
-            meson compile -C "$dir"
-        [[ $make == ([[:space:]]|(#s))install([[:space:]]|(#e)) ]] &&
-        {
-            m {pre}Running {apo}\`{cmd}meson{opt} ${(@s; ;)make}{apo}\`{pre}{…}
-            .zinit-countdown meson\ ${(@s; ;)make} &&
-                meson ${(@s; ;)make} -C "$dir"
-        }
-    else
-        m {error}ERROR: No {file}Makefile{error} nor {cmd}meson{error} \
-            build dir found, {cmd}make{error}/{cmd}meson{error} isn\'t run\!
+# FUNCTION: __zinit-cmake-base-hook [[[
+# A base common implementation of the cmake ice
+__zinit-cmake-base-hook () {
+    emulate -L zsh
+    setopt extended_glob
+    (( ${+ICE[cmake]} )) || return 0
+    if (( ! ${+commands[cmake]} )); then
+        +zi-log "{e} {cmd}cmake{rst} required to use {ice}cmake{rst} ice"
+        return 0
     fi
+    if [[ "$1" = plugin ]]; then
+        local dir="${5#%}" hook="$6" subtype="$7" ex="$8"
+    else
+        local dir="${4#%}" hook="$5" subtype="$6" ex="$7"
+    fi
+    (( OPTS[opt_-q,--quiet] || ZINIT[DEBUG] )) && local QUIET='2>/dev/null 1>&2'
+    local c ret=0 ice='{b}cmake{rst}:'
+    for c in "-S ${dir} -B ${dir}/build -DCMAKE_BUILD_TYPE=Release --install-prefix ${ZINIT[ZPFX]} ${QUIET}" "--build ${dir}/build --parallel $(nproc) ${QUIET}" "--install ${dir}/build ${QUIET}"; do
+      +zi-log "{m} ${ice} {faint}cmake ${(Ds; ;)c} {rst}"
+        eval "cmake ${c}" 2> /dev/null >&2
+        if (( $? )); then
+            +zi-log "{e} ${ice} Failure cmake ${c}{rst}"
+            ret=$?
+        fi
+    done
+    return $?
 } # ]]]
+# FUNCTION: +zinit-cmake-hook [[[
++zinit-cmake-hook() {
+    __zinit-cmake-base-hook "$@"
+} # ]]]
+
 # FUNCTION: ∞zinit-atclone-hook [[[
 ∞zinit-atclone-hook() {
     [[ "$1" = plugin ]] && \
