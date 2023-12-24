@@ -30,7 +30,6 @@ Documentation automatically generated with `zshelldoc'
  zicp
  ziextract
  zimv
- zpextract
  ∞zinit-atclone-hook
  ∞zinit-atpull-e-hook
  ∞zinit-atpull-hook
@@ -588,7 +587,6 @@ Called by:
  .zinit-extract
  .zinit-get-package
  .zinit-setup-plugin-dir
- zpextract
 
 ==== zimv
 
@@ -596,16 +594,6 @@ Has 3 line(s). Calls functions:
 
  zimv
  `-- zicp
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
-==== zpextract
-
-Has 1 line(s). Calls functions:
-
- zpextract
- `-- ziextract
-     `-- zinit.zsh/+zi-log
 
 Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
