@@ -1,5 +1,5 @@
-#!/usr/bin/env zsh
-setopt NO_GLOBAL_RCS NO_GLOBAL_EXPORT NO_RCS
+emulate -L zsh
+setopt no_global_rcs no_rcs no_aliases extended_glob null_glob
 
 # Log functions [[[
 function error(){ print -P "%F{red}[ERROR]%f: ${1}" && return 1; }
@@ -19,24 +19,31 @@ if [[ ! -d ${TMP_ZUNIT} ]]; then
     exit 1
 fi
 
-typeset -gAH ZINIT;
-ZINIT[HOME_DIR]=${TMP_ZUNIT};
-ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git;
-ZINIT[COMPLETIONS_DIR]=$ZINIT[HOME_DIR]/completions;
-ZINIT[PLUGINS_DIR]=$ZINIT[HOME_DIR]/plugins;
-ZINIT[SNIPPETS_DIR]=$ZINIT[HOME_DIR]/snippets;
-ZINIT[ZCOMPDUMP_PATH]=$ZINIT[HOME_DIR]/zcompdump;
-ZPFX=$ZINIT[HOME_DIR]/polaris;
+typeset -gx zi_test_dir="${TMP_ZUNIT}"
+typeset -gxAUH ZINIT
+# DEBUG           'true'
+ZINIT+=(
+  BIN_DIR         ${zi_test_dir}/zinit.git
+  COMPLETIONS_DIR ${zi_test_dir}/completions SNIPPETS_DIR ${zi_test_dir}/snippets
+  HOME_DIR        ${zi_test_dir}             PLUGINS_DIR  ${zi_test_dir}/plugins
+  ZCOMPDUMP_PATH  ${zi_test_dir}/zcompdump   ZPFX         ${zi_test_dir}/polaris
+  POLARIS         ${zi_test_dir}/polaris
+)
+typeset -gxH ZPFX=
+ZPFX="$zi_test_dir"/polaris
+# FORK            'vladdoster'        REPO           'zinit-t'
+# typeset -gxAUH ZINIT=(${(kv)CONFIG})
 
 command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
-info 'creating test env'
+# info 'creating test env'
 git clone \
+    --quiet \
     --depth=1 \
     --dissociate \
     --no-hardlinks \
     --reference "${GIT_REPO}" \
     file://${GIT_REPO:A} \
-    "${ZINIT[BIN_DIR]}"
+    "${ZINIT[BIN_DIR]}" >/dev/null
 if (( $? != 0 )); then
     error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2
     exit 1
@@ -46,23 +53,31 @@ if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
     (
         git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff && \
             chmod g-rwX "${ZINIT[HOME_DIR]}" && \
-            zcompile "${ZINIT[BIN_DIR]}/zinit.zsh"
-    )
+            zcompile "${ZINIT[BIN_DIR]}/zinit.zsh" >/dev/null
+    ) >/dev/null
 fi
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 
-source $ZINIT[BIN_DIR]/zinit.zsh
-(( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
+hash -f
+builtin hash -d zinit=$zi_test_dir
+builtin hash -d zpfx=$zi_test_dir/polaris
+builtin hash -d plugins=$zi_test_dir/plugins
+source $zi_test_dir/zinit.git/zinit.zsh
+(( $? != 0 )) && { error "Unable to source zinit" >&2; exit 1 }
+hash -f
+builtin hash -d zinit=$zi_test_dir
+builtin hash -d zpfx=$zi_test_dir/polaris
+builtin hash -d plugins=$zi_test_dir/plugins
 # ]]]
 # Install Annexes [[[
-info 'installing test dependencies'
-for annex (binary-symlink default-ice); do
-  if [[ ! -d ${GIT_REPO}/tests/_support/$annex ]]; then;
-    git clone https://github.com/zdharma-continuum/zinit-annex-$annex ${GIT_REPO:A}/tests/_support/$annex
-  fi
-  zinit light ${GIT_REPO:A}/tests/_support/$annex
-  info "loaded $annex dependencies"
-done
-# ]]]
+# +zi-log '{m} installing test dependencies'
+zinit for \
+  @zdharma-continuum/zinit-annex-linkman \
+  @zdharma-continuum/zinit-annex-default-ice \
+  @zdharma-continuum/zinit-annex-binary-symlink \
+  @zdharma-continuum/zinit-annex-bin-gem-node
 
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
++zi-log "{m} loaded $annex dependencies"
+# ]]]
+zinit zstatus
+

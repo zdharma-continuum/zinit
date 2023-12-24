@@ -1279,8 +1279,8 @@ EOF
     }
     local i
     if (( $#o_yes )) || ( .zinit-prompt "Delete ${(j:, :)@}"); then
-        local -A ICE ICE2
         for i in $@; do
+            local -A ICE=() ICE2=()
             local the_id="${${i:#(%|/)*}}" filename is_snippet local_dir
             .zinit-compute-ice "$the_id" "pack" ICE2 local_dir filename is_snippet || return 1
             if [[ "$local_dir" != /* ]]; then

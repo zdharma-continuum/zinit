@@ -1,10 +1,13 @@
 #!/usr/bin/env zunit
 
 
+
+
 @setup {
   HOME="$ZPFX" # Stops programs creating directories in user home
   export ZBIN="${ZPFX}/bin"
   export os_type="${OSTYPE//[0-9\.]*/}"
+  load "${PWD}/tests/_support/annex_test_assertions"
   zinit default-ice --quiet from'gh-r' lbin
 }
 
@@ -552,10 +555,22 @@
   local mcfly="$ZBIN/mcfly"; assert "$mcfly" is_executable
   run $mcfly --version; assert $state equals 0
 }
-@test 'mdbook' { # Create book from markdown files. Like Gitbook but implemented in Rust
+@test 'mdbook-lbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
   run zinit for @rust-lang/mdBook; assert $state equals 0
   local mdbook="$ZBIN/mdbook"; assert "$mdbook" is_executable
-  run $mdbook --version; assert $state equals 0
+  run "$mdbook" --version; assert $state equals 0
+  run file "$mdbook"; assert $output contains 'executable'
+  zinit delete --yes rust-lang/mdBook;
+  run "$mdbook" --version; assert $state equals 127; assert $output contains 'no such file or directory'
+}
+@test 'mdbook-sbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
+  load_bin_gem_node
+  run zinit from'gh-r' sbin"mdbook" for @rust-lang/mdBook; assert $state equals 0
+  local mdbook="$ZBIN/mdbook"; assert "$mdbook" is_executable
+  run "$mdbook" --version; assert $state equals 0
+  run file "$mdbook"; assert $output contains 'zsh script'; assert $output contains 'ASCII text'
+  zinit delete --yes rust-lang/mdBook; assert $state equals 0
+  run "$mdbook" --version; assert $state equals 127; assert $output contains 'no such file or directory'
 }
 @test 'mdcat' { # cat for markdown
   run zinit for @swsnr/mdcat; assert $state equals 0
