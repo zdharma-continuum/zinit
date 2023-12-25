@@ -27,7 +27,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ["macos-latest","ubuntu-latest"]
+        os: ["macos-latest", "ubuntu-latest"]
       fail-fast: false
 
     steps:
@@ -67,21 +67,32 @@ jobs:
           mkdir -p "$HOME/.local/bin" && echo "$HOME/.local/bin" >> $GITHUB_PATH
           git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           zsh -l -c './build.zsh' && sudo chmod u+x ./zunit && cp ./zunit "$HOME/.local/bin/"
+      
+      - name: Run tests
+        shell: zsh {0}
+        run: |
+           command -p ls -1 ./tests/*zunit \
+             | parallel \
+             --use-cpus-instead-of-cores \
+             -N0 \
+             --jobs=2 \
+             --keep-order \
+             $HOME/.local/bin/zunit run
 
-      - name: "annexes"
-        run: zunit run tests/annexes.zunit
+      # - name: "annexes"
+      #   run: zunit run tests/annexes.zunit
       
-      - name: "commands"
-        run: zunit run tests/commands.zunit
+      # - name: "commands"
+      #   run: zunit run tests/commands.zunit
         
-      - name: "gh-r"
-        run: zunit run --fail-fast --verbose tests/gh-r.zunit
+      # - name: "gh-r"
+      #   run: zunit run --fail-fast --verbose tests/gh-r.zunit
       
-      - name: "ices"
-        run: zunit run tests/ices.zunit
+      # - name: "ices"
+      #   run: zunit run tests/ices.zunit
       
-      - name: "plugins"
-        run: zunit run tests/plugins.zunit
+      # - name: "plugins"
+      #   run: zunit run tests/plugins.zunit
       
-      - name: "snippets"
-        run: zunit run tests/snippets.zunit
+      # - name: "snippets"
+      #   run: zunit run tests/snippets.zunit
