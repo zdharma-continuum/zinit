@@ -548,7 +548,7 @@
   run $mas version; assert $state equals 0
 }
 @test 'mcfly' { # Fly through your shell history. Great Scott
-  run zinit for @cantino/mcfly; assert $state equals 0
+  run zinit ver'v0.8.3' for @cantino/mcfly; assert $state equals 0
   local mcfly="$ZBIN/mcfly"; assert "$mcfly" is_executable
   run $mcfly --version; assert $state equals 0
 }
