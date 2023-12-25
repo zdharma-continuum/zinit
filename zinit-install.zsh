@@ -2140,7 +2140,6 @@ zimv() {
         ZINIT[-r/--reset-opt-hook-has-been-run]=1
     }
 } # ]]]
-
 # FUNCTION: ∞zinit-configure-base-hook [[[
 # A base common implementation of the configure ice
 ∞zinit-configure-base-hook () {
@@ -2161,34 +2160,35 @@ zimv() {
     aflags=${(SM)flags##[smc0]##}
     [[ $eflags == $ex ]] || return 0
     typeset -aU configure_opt=(${(@s; ;)configure})
-    configure_opt+=("--prefix ${ZINIT[HOME_DIR]}/polaris")
+    configure_opt+=("--prefix=${ZPFX:-${ZINIT[HOME_DIR]}/polaris}")
     {
         builtin cd -- "$dir" || return 1
-        if [[ ! -e Makefile ]] && [[ ! -e configure ]]; then
+        if [[ -n *(#i)makefile(#qN) ]]; then
+            return 0
+        elif [[ -z *(#i)configure(#qN) ]]; then
             +zi-log "{m} ${ice} Attempting to generate configure script... "
             local c
             for c in "[[ -e autogen.sh ]] && sh ./autogen.sh" "[[ -n *.a[mc](#qN.) ]] && autoreconf -ifm" "git clean -fxd; aclocal --force; autoconf --force; automake --add-missing --copy --force-missing"; do
                 +zi-log -PrD "{dbg} ${ice} {faint}${c}{rst}"
-                eval "${c}" 2>/dev/null >&2
-                if [[ -f configure ]]; then
-                    break
-                fi
+                {
+                    eval "${c}" 2> /dev/null >&2
+                } always {
+                    [[ -n *(#i)configure(#qN) ]] && break
+                    (( TRY_BLOCK_ERROR = 0 ))
+                }
             done
         fi
-        if [[ -e configure ]]; then
-            +zi-log "{m} ${ice} Generating Makefile"
-            +zi-log "{dbg} ${ice} {faint}./configure $(builtin print -PDn -- ${(Ds; ;)configure_opt[@]//prefix /prefix=}){rst}"
-            eval "./configure ${(S)configure_opt[@]//prefix /prefix=}" 2>/dev/null 1>&2
-            if [[ $? -eq 0 || -f Makefile ]]; then
-                +zi-log "{m} ${ice} Successfully generated Makefile"
-                return 0
-            fi
+        +zi-log "{m} ${ice} Generating Makefile"
+        +zi-log "{dbg} ${ice} {faint}./configure $(builtin print -PDn -- ${(Ds; ;)configure_opt[@]//prefix /prefix=}){rst}"
+        eval "./configure ${(S)configure_opt[@]//prefix /prefix=}" 2> /dev/null >&2
+        if [[ -n *(#i)makefile(#qN) ]]; then
+            +zi-log "{m} ${ice} Successfully generated Makefile"
+            return 0
         else
             +zi-log "{e} ${ice} Failed project configuration"
             return 1
         fi
     }
-    return 0
 } # ]]]
 # FUNCTION: ∞zinit-configure-e-hook [[[
 ∞zinit-configure-e-hook() {
