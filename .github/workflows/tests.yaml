@@ -73,10 +73,9 @@ jobs:
         run: |
            command -p ls -1 ./tests/*zunit \
              | parallel \
-             --use-cpus-instead-of-cores \
-             -N0 \
-             --jobs=2 \
+             --jobs=0 \
              --keep-order \
+             --line-buffer \
              $HOME/.local/bin/zunit run
 
       # - name: "annexes"
