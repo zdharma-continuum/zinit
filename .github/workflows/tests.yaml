@@ -68,12 +68,16 @@ jobs:
           git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           zsh -l -c './build.zsh' && sudo chmod u+x ./zunit && cp ./zunit "$HOME/.local/bin/"
       
+      - name: "gh-r"
+        shell: zsh {0}
+        run: $HOME/.local/bin/zunit run --verbose tests/gh-r.zunit
+      
       - name: Run tests
         shell: zsh {0}
         run: |
            command -p ls -1 ./tests/*zunit \
              | parallel \
-             --jobs=0 \
+             --jobs=2 \
              --keep-order \
              --line-buffer \
              $HOME/.local/bin/zunit run
