@@ -1,3 +1,8 @@
+#!/usr/bin/env zsh
+
+# emulate -L zsh
+# setopt no_global_rcs no_rcs no_aliases extended_glob null_glob
+
 emulate zsh
 setopt no_global_rcs no_rcs no_aliases extended_glob
 
@@ -20,17 +25,16 @@ if [[ ! -d ${TMP_ZUNIT} ]]; then
 fi
 
 typeset -gx zi_test_dir="${TMP_ZUNIT}"
-typeset -gxAUH ZINIT
-# DEBUG           'true'
+typeset -gxAUH ZINIT=()
 ZINIT+=(
-  BIN_DIR         ${zi_test_dir}/zinit.git
-  COMPLETIONS_DIR ${zi_test_dir}/completions SNIPPETS_DIR ${zi_test_dir}/snippets
-  HOME_DIR        ${zi_test_dir}             PLUGINS_DIR  ${zi_test_dir}/plugins
-  ZCOMPDUMP_PATH  ${zi_test_dir}/zcompdump   ZPFX         ${zi_test_dir}/polaris
-  POLARIS         ${zi_test_dir}/polaris
+  BIN_DIR         "${zi_test_dir}/zinit.git"
+  COMPLETIONS_DIR "${zi_test_dir}/completions" SNIPPETS_DIR "${zi_test_dir}/snippets"
+  HOME_DIR        "${zi_test_dir}"             PLUGINS_DIR  "${zi_test_dir}/plugins"
+  ZCOMPDUMP_PATH  "${zi_test_dir}/zcompdump"   ZPFX         "${zi_test_dir}/polaris"
+  POLARIS         "${zi_test_dir}/polaris"
 )
 typeset -gxH ZPFX=
-ZPFX="$zi_test_dir"/polaris
+ZPFX="${zi_test_dir}/polaris"
 
 command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
 # info 'creating test env'
@@ -49,7 +53,7 @@ fi
 
 if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
     (
-        git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff && \
+        git -C "${ZINIT[BIN_DIR]}" apply "${ZINIT[HOME_DIR]}/unstaged.diff" && \
             chmod g-rwX "${ZINIT[HOME_DIR]}" && \
             zcompile "${ZINIT[BIN_DIR]}/zinit.zsh" >/dev/null
     ) >/dev/null
@@ -57,15 +61,16 @@ fi
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 
 hash -f
-builtin hash -d zinit=$zi_test_dir
-builtin hash -d zpfx=$zi_test_dir/polaris
-builtin hash -d plugins=$zi_test_dir/plugins
-source $zi_test_dir/zinit.git/zinit.zsh
+builtin hash -d zinit="${zi_test_dir}"
+builtin hash -d zpfx="${zi_test_dir}/polaris"
+builtin hash -d plugins="${zi_test_dir}/plugins"
+source "${zi_test_dir}/zinit.git/zinit.zsh"
 (( $? != 0 )) && { error "Unable to source zinit" >&2; exit 1 }
 hash -f
-builtin hash -d zinit=$zi_test_dir
-builtin hash -d zpfx=$zi_test_dir/polaris
-builtin hash -d plugins=$zi_test_dir/plugins
+builtin hash -d zinit="${zi_test_dir}"
+builtin hash -d zpfx="${zi_test_dir}/polaris"
+builtin hash -d plugins="${zi_test_dir}/plugins"
+
 {
   zinit for \
     @zdharma-continuum/zinit-annex-bin-gem-node \
@@ -74,5 +79,4 @@ builtin hash -d plugins=$zi_test_dir/plugins
     @zdharma-continuum/zinit-annex-linkman
 }>/dev/null
 
-+zi-log "{m} loaded $annex dependencies"
 zinit zstatus

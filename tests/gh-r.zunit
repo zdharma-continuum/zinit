@@ -1,37 +1,12 @@
 #!/usr/bin/env zunit
 
 @setup {
-    load "${PWD}/tests/_support/annex_test_assertions"
-    HOME="$zi_test_dir" # Stops programs creating directories in user home
-    typeset -gx ZBIN="$zi_test_dir/polaris/bin" os_type="${OSTYPE//[0-9\.]*/}"
-    [[ ! -d $ZBIN ]] && mkdir -p "$ZBIN"
-    zinit default-ice --quiet from'gh-r' lbin'!' null
+  load "${PWD}/tests/_support/annex_test_assertions"
+  HOME="$zi_test_dir" # Stops programs creating directories in user home
+  typeset -gx ZBIN="$zi_test_dir/polaris/bin" os_type="${OSTYPE//[0-9\.]*/}"
+  [[ ! -d $ZBIN ]] && mkdir -p "$ZBIN"
+  zinit default-ice --quiet from'gh-r' lbin'!' null
 }
-
-# @test 'atmos' {  Universal Tool for DevOps and Cloud Automation (works with terraform, helm, helmfile, etc)
-#   skip 'null'
-#   run zinit for lbin'!* -> atmos' @cloudposse/atmos; assert $state equals 0
-#   local atmos="$ZBIN/atmos"; assert "$atmos" is_executable
-#   $atmos version; assert $state equals 0
-# }
-# @test 'bit' {  A tool for composable software development
-#   skip 'skip bit test due to gh-r version bug'
-#   run zinit lbin'!bit* -> bit' for @teambit/bit; assert $state equals 0
-#   local bit="$ZBIN/bit"; assert "$bit" is_executable
-#   $bit --version; assert $state equals 0
-# }
-# @test 'neovim::appimage' { # Vim-fork focused on extensibility and usability
-#   skip 'null'
-#   run zinit bpick'*appimage*' id-as'neovim/appimage' for neovim/neovim
-#   assert $state equals 0; assert $output contains 'nvim.appimage'
-#   assert "$ZINIT[PLUGINS_DIR]/neovim---appimage/nvim.appimage" is_file
-# }
-# @test 'neovim::binary' { # Vim-fork focused on extensibility and usability
-#   skip 'null'
-#   run zinit lbin'!**/nvim' id-as'neovim/binary' for neovim/neovim; assert $state equals 0; assert $output does_not_contain 'appimage'
-#   local nvim="$ZBIN/nvim"; assert "$nvim" is_executable
-#   $nvim --version; assert $state equals 0
-# }
 
 @test 'act' { # Run your GitHub Actions locally
   run zinit for @nektos/act; assert $state equals 0
@@ -575,22 +550,38 @@
   run "$mdbook" --version;
   assert $state equals 127; assert $output contains 'no such file or directory'
 }
+@test 'mdbook-lbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
+  run zinit for @rust-lang/mdBook; assert $state equals 0
+  local mdbook="$ZBIN/mdbook"; assert "$mdbook" is_executable
+  run "$mdbook" --version; assert $state equals 0
+  run file "$mdbook"; assert $output contains 'executable'
+  zinit delete --yes rust-lang/mdBook;
+  run "$mdbook" --version; assert $state equals 127; assert $output contains 'no such file or directory'
+}
 @test 'mdbook-sbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
   load_bin_gem_node
-  local mdbook="$ZBIN/mdbook";
-
-  run zinit from'gh-r' sbin"mdbook" for @rust-lang/mdBook; assert $state equals 0 assert "$mdbook" is_executable
-
+  run zinit from'gh-r' sbin"mdbook" for @rust-lang/mdBook; assert $state equals 0
+  local mdbook="$ZBIN/mdbook"; assert "$mdbook" is_executable
   run "$mdbook" --version; assert $state equals 0
+  run file "$mdbook"; assert $output contains 'zsh script'; assert $output contains 'ASCII text'
+  zinit delete --yes rust-lang/mdBook; assert $state equals 0
+  run "$mdbook" --version; assert $state equals 127; assert $output contains 'no such file or directory'
+# @test 'mdbook-sbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
+#   load_bin_gem_node
+#   local mdbook="$ZBIN/mdbook";
 
-  run command file "$(command realpath ${mdbook})";
-  assert $output contains 'zsh script'; assert $output contains 'ASCII text'
+#   run zinit from'gh-r' sbin"mdbook" for @rust-lang/mdBook; assert $state equals 0 assert "$mdbook" is_executable
 
-  run zinit delete --yes rust-lang/mdBook; assert $state equals 0
+#   run "$mdbook" --version; assert $state equals 0
 
-  run "$mdbook" --version;
-  assert $state equals 127; assert $output contains 'no such file or directory'
-}
+#   run command file "$(command realpath ${mdbook})";
+#   assert $output contains 'zsh script'; assert $output contains 'ASCII text'
+
+#   run zinit delete --yes rust-lang/mdBook; assert $state equals 0
+
+#   run "$mdbook" --version;
+#   assert $state equals 127; assert $output contains 'no such file or directory'
+# }
 @test 'mdcat' { # cat for markdown
   run zinit for @swsnr/mdcat; assert $state equals 0
   local mdcat="$ZBIN/mdcat"; assert "$mdcat" is_executable
@@ -884,5 +875,33 @@
   local zoxide="$ZBIN/zoxide"; assert "$zoxide" is_executable
   run $zoxide --version; assert $state equals 0
 }
+
+#=============
+# Flaky Tests
+#=============
+# @test 'atmos' {  Universal Tool for DevOps and Cloud Automation (works with terraform, helm, helmfile, etc)
+#   skip 'null'
+#   run zinit for lbin'!* -> atmos' @cloudposse/atmos; assert $state equals 0
+#   local atmos="$ZBIN/atmos"; assert "$atmos" is_executable
+#   $atmos version; assert $state equals 0
+# }
+# @test 'bit' {  A tool for composable software development
+#   skip 'skip bit test due to gh-r version bug'
+#   run zinit lbin'!bit* -> bit' for @teambit/bit; assert $state equals 0
+#   local bit="$ZBIN/bit"; assert "$bit" is_executable
+#   $bit --version; assert $state equals 0
+# }
+# @test 'neovim::appimage' { # Vim-fork focused on extensibility and usability
+#   skip 'null'
+#   run zinit bpick'*appimage*' id-as'neovim/appimage' for neovim/neovim
+#   assert $state equals 0; assert $output contains 'nvim.appimage'
+#   assert "$ZINIT[PLUGINS_DIR]/neovim---appimage/nvim.appimage" is_file
+# }
+# @test 'neovim::binary' { # Vim-fork focused on extensibility and usability
+#   skip 'null'
+#   run zinit lbin'!**/nvim' id-as'neovim/binary' for neovim/neovim; assert $state equals 0; assert $output does_not_contain 'appimage'
+#   local nvim="$ZBIN/nvim"; assert "$nvim" is_executable
+#   $nvim --version; assert $state equals 0
+# }
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
