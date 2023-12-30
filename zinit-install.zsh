@@ -1713,7 +1713,7 @@ ziextract() {
 
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
-            →zinit-extract() { →zinit-check unzip "$file" || return 1; command unzip -o "$file"; }
+            →zinit-extract() { →zinit-check unzip "$file" || return 1; command unzip -qq -o "$file"; }
             ;;
         ((#i)*.rar)
             →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "$file"; }
