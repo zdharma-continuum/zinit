@@ -1199,76 +1199,79 @@ EOF
 #
 # $1 - snippet url or plugin
 .zinit-delete () {
-    emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt extendedglob noksharrays nokshglob nullglob typesetsilent warncreateglobal
+    setopt local_options extended_glob no_ksh_arrays no_ksh_glob null_glob typeset_silent warn_create_global
     local o_all o_clean o_debug o_help o_verbose o_yes rc
     local -a usage=(
-      'Usage:'
-      '  zinit delete [options] [plugins...]'
-      ' '
-      'Options:'
-      '  -a, --all      Delete all installed plugins, snippets, and completions'
-      '  -c, --clean    Delete unloaded plugins and snippets'
-      '  -h, --help     Show list of command-line options'
-      '  -y, --yes      Don´t prompt for user confirmation'
+        'Usage:'
+        '  zinit delete [options] [plugins...]'
+        ' '
+        'Options:'
+        '  -a, --all      Delete all installed plugins, snippets, and completions'
+        '  -c, --clean    Delete unloaded plugins and snippets'
+        '  -h, --help     Show list of command-line options'
+        '  -y, --yes      Don´t prompt for user confirmation'
     )
     zmodload zsh/zutil
     zparseopts -D -E -F -K -- \
-      {a,-all}=o_all \
-      {c,-clean}=o_clean \
-      {d,-dry-run}=o_debug \
-      {h,-help}=o_help \
-      {y,-yes}=o_yes \
+        {a,-all}=o_all \
+        {c,-clean}=o_clean \
+        {d,-dry-run}=o_debug \
+        {h,-help}=o_help \
+        {y,-yes}=o_yes \
     || return 1
     (( $#o_help )) && {
-      print -l -- $usage
-      return 0
+        print -l -- $usage
+        return 0
     }
     (( $#o_clean && $#o_all )) && {
         +zi-log "{e} Invalid usage: Options --all and --clean are mutually exclusive"
         return 1
     }
     (( $#o_clean )) && {
-      local -a unld_plgns
-      local -aU ld_snips unld_snips del_list
-      local snip plugin _retval dir=${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/xyzcba231}
-
-      unld_snips=( $dir/*/*/*(ND/) $dir/*/*(ND/) $dir/*(ND/) )
-      ld_snips=(${${ZINIT_SNIPPETS[@]% <*>}/(#m)*/$(.zinit-get-object-path snippet "$MATCH" && builtin print -rn -- $REPLY; )})
-      del_list=(${unld_snips[@]:#*/(${(~j:|:)ld_snips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)})
-      del_list=(${del_list[@]//(#m)*/$( .zinit-get-object-path snippet "${${${MATCH##${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/${match[1]##--}://}//--//}" && builtin print -r -- $REPLY)})
-      del_list=(${del_list[@]:#(${(~j:|:)ld_snips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)})
-      unld_snips=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$ZINIT[col-file]$match[2]$ZINIT[col-rst]})
-      unld_snips=(${unld_snips[@]//(#m)(#s)[^\/]##(#e)/$ZINIT[col-file]$MATCH$ZINIT[col-rst]})
-      del_list=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$match[2]})
-      unld_plgns=(${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/(${(~j:|:)${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/))
-      unld_plgns=(${(@)${unld_plgns[@]##$ZINIT[PLUGINS_DIR]/#}//---//})
-      # delete unloaded snippets & plugins
-      (( $#del_list || $#unld_plgns )) && {
-        +zi-log "{m} Deleting {num}${#unld_snips}{rst} unloaded snippets:" $unld_snips
-        +zi-log "{m} Deleting {num}${#unld_plgns}{rst} unloaded plugins:" $unld_plgns
-        if (( $#o_yes )) || ( .zinit-prompt "delete ${#unld_snips} snippets and ${#unld_plgns} plugins?"); then
-          for snip in $del_list $unld_plgns ; do
-            zinit delete --yes "$snip"
-            _retval+=$?
-          done
-          return _retval
-        fi
-      } || {
-        +zi-log "{m} No unloaded plugins or snippets to delete"
-        return 0
-      }
+        local -a unld_plgns
+        local -aU ld_snips unld_snips del_list
+        local snip plugin _retval dir=${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/xyzcba231}
+        unld_snips=($dir/*/*/*(ND/) $dir/*/*(ND/) $dir/*(ND/))
+        ld_snips=(${${ZINIT_SNIPPETS[@]% <*>}/(#m)*/$(.zinit-get-object-path snippet "$MATCH" && builtin print -rn -- $REPLY; )})
+        del_list=(${unld_snips[@]:#*/(${(~j:|:)ld_snips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)})
+        del_list=(${del_list[@]//(#m)*/$( .zinit-get-object-path snippet "${${${MATCH##${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/${match[1]##--}://}//--//}" && builtin print -r -- $REPLY)})
+        del_list=(${del_list[@]:#(${(~j:|:)ld_snips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)})
+        unld_snips=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$ZINIT[col-file]$match[2]$ZINIT[col-rst]})
+        unld_snips=(${unld_snips[@]//(#m)(#s)[^\/]##(#e)/$ZINIT[col-file]$MATCH$ZINIT[col-rst]})
+        unld_snips+=($(builtin print -- "${ZINIT[HOME_DIR]}"/snippets/*(/N^F:t)))
+        del_list=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$match[2]})
+        unld_plgns=(${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/(${(~j:|:)${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/))
+        unld_plgns=(${(@)${unld_plgns[@]##$ZINIT[PLUGINS_DIR]/#}//---//})
+        (( $#del_list || $#unld_plgns || $#unld_snips )) && {
+            (( $#unld_snips )) && +zi-log "{m} Deleting {num}${#unld_snips}{rst} unloaded snippets:" $unld_snips
+            (( $#unld_plgns )) && +zi-log "{m} Deleting {num}${#unld_plgns}{rst} unloaded plugins:" $unld_plgns
+            if (( $#o_yes )) || (.zinit-prompt "Delete ${#unld_snips} snippets and ${#unld_plgns} plugins?"); then
+                for snip in $del_list $unld_plgns $unld_snips; do
+                    zinit delete --yes "$snip"
+                    _retval+=$?
+                done
+                return _retval
+            else
+                return 0
+            fi
+        } || {
+            +zi-log "{m} No unloaded plugins or snippets to delete"
+            return 0
+        }
     }
+    local i
     if (( $#o_all && !$#o_clean )); then
-        local -a all_installed=(${${ZINIT[PLUGINS_DIR]}%%[/[:space:]]##}/*~*/_local---zinit(/ND) ${${ZINIT[SNIPPETS_DIR]}%%[/[:space:]]##}/*~*/plugins(/ND))
-        if (( $#o_yes )) || ( .zinit-prompt "Delete all plugins and snippets (${#all_installed} total)"); then
-            command rm -rf -- ${(@)all_installed}
-            command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N)
+        local -a all_installed=($(cat "${ZINIT[HOME_DIR]}"/{'snippets','plugins'}/*/(*/)#teleid(N)))
+        if (( $#o_yes )) || (.zinit-prompt "Delete all plugins and snippets (${#all_installed} total)"); then
+            for i in $all_installed; do
+                zinit delete --yes "${i}"
+            done
+            command rm -f -- "${ZINIT[HOME_DIR]}"/**/*(-@N)
             for f in ${(M)${(k)ZINIT[@]}:##STATES__*~*local/zinit*}; do
-              builtin unset "ZINIT[$f]"
+                builtin unset "ZINIT[$f]"
             done
             local rc=$?
-            +zi-log "{m} Deleted all completed with return code {num}${rc}{rst}"
+            +zi-log "{m} Delete completed with return code {num}${rc}{rst}"
             return $rc
         fi
         return 1
@@ -1277,14 +1280,13 @@ EOF
         +zi-log "{e} Invalid usage: This command requires at least 1 plugin or snippet argument."
         return 0
     }
-    local i
-    if (( $#o_yes )) || ( .zinit-prompt "Delete ${(j:, :)@}"); then
+    if (( $#o_yes )) || (.zinit-prompt "Delete ${(j:, :)@}"); then
         for i in $@; do
             local -A ICE=() ICE2=()
             local the_id="${${i:#(%|/)*}}" filename is_snippet local_dir
             .zinit-compute-ice "$the_id" "pack" ICE2 local_dir filename is_snippet || return 1
             if [[ "$local_dir" != /* ]]; then
-                +zi-log "{w} No available plugin or snippet with the name '$i'"
+                +zi-log "{w} No available plugin or snippet with the name '{b}$i{rst}'"
                 return 1
             fi
             ICE2[teleid]="${ICE2[teleid]:-${ICE2[id-as]}}"
@@ -1300,12 +1302,12 @@ EOF
                     .zinit-any-to-user-plugin "${ICE2[teleid]}"
                     .zinit-run-delete-hooks plugin "${reply[-2]}" "${reply[-1]}" "$the_id" "$local_dir"
                 }
-                command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N) # delete files
-                command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N) # delete broken symlins
+                command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N)
+                command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N)
                 builtin unset "ZINIT[STATES__${ICE2[id-as]}]" || builtin unset "ZINIT[STATES__${ICE2[teleid]}]"
-                +zi-log "{m} Uninstalled $i"
+                (( quiet )) || +zi-log "{m} Uninstalled {b}$i{rst}"
             else
-                +zi-log "{w} No available plugin or snippet with the name '$i'"
+                +zi-log "{w} No available plugin or snippet with the name '{b}$i{rst}'"
                 return 1
             fi
         done
