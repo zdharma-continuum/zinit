@@ -540,48 +540,23 @@
 @test 'mdbook-lbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
   local mdbook="$ZBIN/mdbook";
   run zinit for @rust-lang/mdBook; assert $state equals 0 assert "$mdbook" is_executable
-
   run "$mdbook" --version; assert $state equals 0
-
   run command file "$(command realpath ${mdbook})"; assert $output contains 'executable'
-
   run zinit delete --yes rust-lang/mdBook; assert $state equals 0
-
   run "$mdbook" --version;
   assert $state equals 127; assert $output contains 'no such file or directory'
 }
-@test 'mdbook-lbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
-  run zinit for @rust-lang/mdBook; assert $state equals 0
-  local mdbook="$ZBIN/mdbook"; assert "$mdbook" is_executable
-  run "$mdbook" --version; assert $state equals 0
-  run file "$mdbook"; assert $output contains 'executable'
-  zinit delete --yes rust-lang/mdBook;
-  run "$mdbook" --version; assert $state equals 127; assert $output contains 'no such file or directory'
-}
 @test 'mdbook-sbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
   load_bin_gem_node
-  run zinit from'gh-r' sbin"mdbook" for @rust-lang/mdBook; assert $state equals 0
-  local mdbook="$ZBIN/mdbook"; assert "$mdbook" is_executable
+  local mdbook="$ZBIN/mdbook";
+  run zinit from'gh-r' sbin"mdbook" for @rust-lang/mdBook; assert $state equals 0 assert "$mdbook" is_executable
   run "$mdbook" --version; assert $state equals 0
-  run file "$mdbook"; assert $output contains 'zsh script'; assert $output contains 'ASCII text'
-  zinit delete --yes rust-lang/mdBook; assert $state equals 0
-  run "$mdbook" --version; assert $state equals 127; assert $output contains 'no such file or directory'
-# @test 'mdbook-sbin' { # Create book from markdown files. Like Gitbook but implemented in Rust
-#   load_bin_gem_node
-#   local mdbook="$ZBIN/mdbook";
-
-#   run zinit from'gh-r' sbin"mdbook" for @rust-lang/mdBook; assert $state equals 0 assert "$mdbook" is_executable
-
-#   run "$mdbook" --version; assert $state equals 0
-
-#   run command file "$(command realpath ${mdbook})";
-#   assert $output contains 'zsh script'; assert $output contains 'ASCII text'
-
-#   run zinit delete --yes rust-lang/mdBook; assert $state equals 0
-
-#   run "$mdbook" --version;
-#   assert $state equals 127; assert $output contains 'no such file or directory'
-# }
+  run command file "$(command realpath ${mdbook})";
+  assert $output contains 'zsh script'; assert $output contains 'ASCII text'
+  run zinit delete --yes rust-lang/mdBook; assert $state equals 0
+  run "$mdbook" --version;
+  assert $state equals 127; assert $output contains 'no such file or directory'
+}
 @test 'mdcat' { # cat for markdown
   run zinit for @swsnr/mdcat; assert $state equals 0
   local mdcat="$ZBIN/mdcat"; assert "$mdcat" is_executable
