@@ -1697,24 +1697,38 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     done
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
-.zinit-run-delete-hooks() {
-    if [[ -n ${ICE[atdelete]} ]]; then
-        .zinit-countdown "atdelete" && ( (( ${+ICE[nocd]} == 0 )) && \
-                { builtin cd -q "$5" && eval "${ICE[atdelete]}"; ((1)); } || \
-                eval "${ICE[atdelete]}" )
+.zinit-run-delete-hooks () {
+    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2' 
+    if [[ -f $make_path ]] && grep '^uninstall' $make_path &> /dev/null; then
+        +zi-log -n "{m} Make uninstall... "
+        eval 'command make -C ${make_path:h} {prefix,{,CMAKE_INSTALL_}PREFIX}=$ZINIT[ZPFX] --ignore-errors uninstall' 2>/dev/null 1>&2
+        if (( $? == 0 )); then
+            +zi-log " [{happy}OK{rst}]"
+        else
+            +zi-log " [{error}Failed{rst}]"
+        fi
+    elif [[ -f $mfest_path ]]; then
+        +zi-log -n "{m} Cmake uninstall... "
+        if { command cmake --build ${mfest_path:h} --target uninstall || xargs rm -rf < "$mfest_path" } &>/dev/null ; then
+            +zi-log " [{happy}OK{rst}]"
+        else
+            +zi-log " [{error}Failed{rst}]"
+        fi
     fi
-
+    eval 'find $ZINIT[ZPFX] -depth -type d -empty -delete' &> /dev/null
+    if [[ -n ${ICE[atdelete]} ]]; then
+        (
+            (( ${+ICE[nocd]} == 0 )) && {
+                builtin cd -q "$5" && eval "${ICE[atdelete]}"
+                ((1))
+            } || eval "${ICE[atdelete]}"
+        )
+    fi
     local -a arr
     local key
-
-    # Run annexes' atdelete hooks
-    reply=(
-        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]}
-        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}
-    )
+    reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}) 
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}") 
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 } # ]]]
