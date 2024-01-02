@@ -1719,19 +1719,19 @@ ziextract() {
             →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "$file"; }
             ;;
         ((#i)*.tar.bz2|(#i)*.tbz|(#i)*.tbz2)
-            →zinit-extract() { →zinit-check bzip2 "$file" || return 1; command bzip2 -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check bzip2 "$file" || return 1; command bzip2 -dc "$file" | command tar --no-same-owner -xf -; }
             ;;
         ((#i)*.tar.gz|(#i)*.tgz)
-            →zinit-extract() { →zinit-check gzip "$file" || return 1; command gzip -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check gzip "$file" || return 1; command gzip -dc "$file" | command tar --no-same-owner -xf -; }
             ;;
         ((#i)*.tar.xz|(#i)*.txz)
-            →zinit-extract() { →zinit-check xz "$file" || return 1; command xz -dc "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check xz "$file" || return 1; command xz -dc "$file" | command tar --no-same-owner -xf -; }
             ;;
         ((#i)*.tar.7z|(#i)*.t7z)
-            →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x -so "$file" | command tar -xf -; }
+            →zinit-extract() { →zinit-check 7z "$file" || return 1; command 7z x -so "$file" | command tar --no-same-owner -xf -; }
             ;;
         ((#i)*.tar)
-            →zinit-extract() { →zinit-check tar "$file" || return 1; command tar -xf "$file"; }
+            →zinit-extract() { →zinit-check tar "$file" || return 1; command tar --no-same-owner -xf "$file"; }
             ;;
         ((#i)*.gz|(#i)*.gzip)
             if [[ $file != (#i)*.gz ]] {
