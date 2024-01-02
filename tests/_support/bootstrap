@@ -31,11 +31,11 @@ ZPFX=$ZINIT[HOME_DIR]/polaris;
 command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
 info 'creating test env'
 git clone \
+    --depth=1 \
     --dissociate \
-    --local \
     --no-hardlinks \
     --reference "${GIT_REPO}" \
-    "${GIT_REPO}" \
+    file://${GIT_REPO:A} \
     "${ZINIT[BIN_DIR]}"
 if (( $? != 0 )); then
     error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2
@@ -51,17 +51,18 @@ if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
 fi
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 
-{
-    source $ZINIT[BIN_DIR]/zinit.zsh && \
-        autoload -Uz _zinit && \
-        (( ${+_comps} )) && \
-        _comps[zinit]=_zinit
-}
+source $ZINIT[BIN_DIR]/zinit.zsh
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 # ]]]
 # Install Annexes [[[
 info 'installing test dependencies'
-zinit depth'1' light-mode for zdharma-continuum/zinit-annex-{'binary-symlink','default-ice'}
+for annex (binary-symlink default-ice); do
+  if [[ ! -d ${GIT_REPO}/tests/_support/$annex ]]; then;
+    git clone https://github.com/zdharma-continuum/zinit-annex-$annex ${GIT_REPO:A}/tests/_support/$annex
+  fi
+  zinit light ${GIT_REPO:A}/tests/_support/$annex
+  info "loaded $annex dependencies"
+done
 # ]]]
 
 # vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
