@@ -1619,7 +1619,7 @@ ziextract() {
         # First try known file extensions
         local -a files
         integer ret_val
-        files=( (#i)**/*.(zip|rar|7z|tgz|tbz|tbz2|tar.gz|tar.bz2|tar.7z|txz|tar.xz|gz|xz|tar|dmg|exe)~(*/*|.(_backup|git))/*(-.DN) )
+        files=( (#i)**/*.(7z|dmg|exe|gz|rar|tar|tar.7z|tar.bz2|tar.gz|tar.xz|tbz|tbz2|tgz|txz|xz|zip|zst)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
             ziextract "$file" $opt_move $opt_move2 $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
             ret_val+=$?
@@ -1714,6 +1714,9 @@ ziextract() {
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
             →zinit-extract() { →zinit-check unzip "$file" || return 1; command unzip -qq -o "$file"; }
+            ;;
+        ((#i)*.tar.zst)
+            →zinit-extract() { →zinit-check unzstd "$file" || return 1; command tar --use-compress-program=unzstd -xvf "$file"; }
             ;;
         ((#i)*.rar)
             →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "$file"; }
