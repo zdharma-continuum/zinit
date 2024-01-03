@@ -1562,7 +1562,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       fi
     fi
 
-    local junk="(md5|sig|asc|txt|vsix|sum|sha256*|pkg|.(apk|deb|json|rpm|sh(#e)))"
+    local junk='(386|md5|sig|asc|vsix|sum|sha256|[\.](apk|deb|json|rpm|sh|pkg|txt)(#e))'
     filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     local -a array=( $(print -rm "*(${MACHTYPE}|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
