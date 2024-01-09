@@ -71,7 +71,6 @@ jobs:
           ./configure --prefix=$HOME/.local && make all install
 
       - name: "gh-r"
-        shell: zsh {0}
         run: $HOME/.local/bin/zunit run --verbose tests/gh-r.zunit
 
       - name: "annexes"
