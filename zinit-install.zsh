@@ -1561,9 +1561,8 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         +zi-log "{info}[{pre}gh-r{info}] {error}Error{rst}: {ice}bpick{rst} ice found no release assets{rst}. To fix, modify the {ice}bpick{rst} glob pattern {glob}${bpick}{rst}"
       fi
     fi
-
-    local junk='(386|asc|b3|deb|md5|rpm|vsix|([\.]apk|json|pkg|txt|s(h(a|)|ig|um)*)(#e))'
-    filtered=( ${list[@]:#(#i)*${~junk}*} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
+    local junk='*((s(ha256|ig|um)|386|asc|md5|txt|vsix)*|(apk|b3|deb|json|pkg|rpm|sh|zst)(#e))';
+    filtered=( ${(m@)list:#(#i)${~junk}} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
 
     local -a array=( $(print -rm "*(${MACHTYPE}|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
     (( ${#array} > 0 )) && list=( ${array[@]} )
@@ -1619,7 +1618,7 @@ ziextract() {
         # First try known file extensions
         local -a files
         integer ret_val
-        files=( (#i)**/*.(7z|dmg|exe|gz|rar|tar|tar.7z|tar.bz2|tar.gz|tar.xz|tbz|tbz2|tgz|txz|xz|zip|zst)~(*/*|.(_backup|git))/*(-.DN) )
+        files=( (#i)**/*.(7z|dmg|exe|gz|rar|tar|tar.7z|tar.bz2|tar.gz|tar.xz|tbz|tbz2|tgz|txz|xz|zip)~(*/*|.(_backup|git))/*(-.DN) )
         for file ( $files ) {
             ziextract "$file" $opt_move $opt_move2 $opt_norm $opt_nobkp ${${${#files}:#1}:+--nobkp}
             ret_val+=$?
@@ -1714,9 +1713,6 @@ ziextract() {
     case "${${ext:+.$ext}:-$file}" in
         ((#i)*.zip)
             →zinit-extract() { →zinit-check unzip "$file" || return 1; command unzip -qq -o "$file"; }
-            ;;
-        ((#i)*.tar.zst)
-            →zinit-extract() { →zinit-check unzstd "$file" || return 1; command tar --use-compress-program=unzstd -xvf "$file"; }
             ;;
         ((#i)*.rar)
             →zinit-extract() { →zinit-check unrar "$file" || return 1; command unrar x "$file"; }
