@@ -51,12 +51,20 @@
   done
   run zinit -help
   assert $output contains 'Unknown subcommand'
-  assert $state equals 1  
+  assert $state equals 1
 }
 @test 'self-update' {
   run zinit self-update
   assert $output contains 'Already up-to-date.'
   assert $state equals 0
 }
-
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
+@test 'set-debug' {
+  ZINIT+=(DEBUG 'true')
+  run +zi-log -n '{dbg} message'
+  assert $output contains '[debug]'; assert $state equals 0
+}
+@test 'unset-dbg' {
+  run +zi-log -n '{dbg} message'; assert $output contains ''
+  run +zi-log -n '{m} message'
+  assert $output contains 'message'; assert $state equals 0
+}
