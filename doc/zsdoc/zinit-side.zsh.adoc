@@ -116,7 +116,6 @@ Uses feature(s): _setopt_
 
 Called by:
 
- zinit-autoload.zsh/.zinit-delete
  zinit-autoload.zsh/.zinit-edit
  zinit-autoload.zsh/.zinit-recall
  zinit-autoload.zsh/.zinit-update-or-status-snippet
