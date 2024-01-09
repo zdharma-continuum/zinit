@@ -5,7 +5,7 @@
   HOME="$zi_test_dir" # Stops programs creating directories in user home
   typeset -gx ZBIN="$zi_test_dir/polaris/bin" os_type="${OSTYPE//[0-9\.]*/}"
   [[ ! -d $ZBIN ]] && mkdir -p "$ZBIN"
-  zinit default-ice --quiet from'gh-r' lbin'!' null
+  zinit default-ice --quiet from'gh-r' lbin'!'
 }
 
 @test 'act' { # Run your GitHub Actions locally

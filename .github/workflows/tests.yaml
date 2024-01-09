@@ -67,26 +67,22 @@ jobs:
           mkdir -p "$HOME/.local/bin" && echo "$HOME/.local/bin" >> $GITHUB_PATH
           git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           zsh -l -c './build.zsh' && sudo chmod u+x ./zunit && cp ./zunit "$HOME/.local/bin/"
-      
-      - name: "gh-r"
-        shell: zsh {0}
-        run: $HOME/.local/bin/zunit run --verbose tests/gh-r.zunit
-      
+
       - name: "annexes"
         run: zunit run tests/annexes.zunit
-      
+
       - name: "commands"
         run: zunit run tests/commands.zunit
-        
+
       - name: "gh-r"
         run: zunit run tests/gh-r.zunit
-      
+
       - name: "ices"
         run: zunit run tests/ices.zunit
-      
+
       - name: "plugins"
         run: zunit run tests/plugins.zunit
-      
+
       - name: "snippets"
         run: zunit run tests/snippets.zunit
 
