@@ -424,6 +424,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                             --config receive.fsckobjects=false \
                             --config fetch.fsckobjects=false \
                             --config pull.rebase=false
+                        command git remote set-head origin -a
                             integer retval=$?
                             unfunction :zinit-git-clone
                             return $retval
@@ -538,7 +539,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     (( OPTS[opt_-q,--quiet] )) && quiet=1 
     [[ $4 = -Q ]] && quiet=2 
 
-    typeset -gaU INSTALLED_COMPS SKIPPED_COMPS
+    typeset -ga INSTALLED_COMPS SKIPPED_COMPS
     INSTALLED_COMPS=() SKIPPED_COMPS=() 
 
     .zinit-any-to-user-plugin "$id_as" ""
@@ -547,10 +548,11 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     .zinit-any-colorify-as-uspl2 "$user" "$plugin"
     local abbrev_pspec=$REPLY 
     .zinit-exists-physically-message "$id_as" "" || return 1
-    typeset -aU completions already_symlinked backup_comps
+    typeset -a completions already_symlinked backup_comps
     local c cfile bkpfile
     nt () {
-        [[ $(head -n 1 $REPLY) != *compdef* ]]
+      +zi-log "{dbg} $REPLY $reply"
+      [[ $(head -n 1 ${REPLY}) != *compdef* ]]
     }
     # Symlink any completion files included in the plugin directory
     [[ $user == % || ( -z $user && $plugin == . ) ]] && \
@@ -570,6 +572,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 continue
             else
                 +zi-log "{m} Renaming completion {obj}${c:t}{rst} as {file}_${${$(head -n1 ${c})//\#compdef/}// /}{rst}"
+                mv "${c}" "${c:h}/${cfile}"
             fi
         fi
         bkpfile="${cfile#_}" 
@@ -579,7 +582,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             fi
             INSTALLED_COMPS+=($cfile) 
             (( quiet )) || builtin print -Pr "Symlinking completion ${ZINIT[col-uname]}$cfile%f%b to completions directory."
-            command ln -fs "$c" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
+            command ln -fs "${c:h}/${cfile}" "${ZINIT[COMPLETIONS_DIR]}/$cfile"
             .zinit-forget-completion "$cfile" "$quiet"
         else
             SKIPPED_COMPS+=($cfile) 
@@ -1489,19 +1492,19 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 .zi::get-architecture () {
   emulate -L zsh
   setopt extendedglob noshortloops nowarncreateglobal rcquotes
-  local _clib="gnu" _cpu="$(uname -m)" _os="$(uname -s)" _sys=""
+  local _clib="gnu" _cpu="$(uname -m)" _os="${(L)$(uname -s)}" _sys=""
   case "$_os" in
-    (Darwin)
+    (darwin)
       _sys='(apple|darwin|apple-darwin|dmg|mac((-|)os|)|os(-|64|)x)'
       arch -x86_64 /usr/bin/true 2> /dev/null
       if [[ $? -eq 0 ]] && [[ $_cpu != "arm64" ]]; then
-        _os=$_sys*~*((aarch|arm)64)
+        _os=${_sys}*~*((aarch|arm)64)
       fi
       ;;
-    (Linux)
+    (linux)
       _sys='(musl|gnu)*~^*(unknown|)linux*'
       ;;
-    (MINGW* | MSYS* | CYGWIN* | Windows_NT)
+    (mingw* | msys* | cygwin* | windows_nt)
       _sys='pc-windows-gnu'
       ;;
     (*)
@@ -1566,6 +1569,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
       # print -l ${${(m@)list:#${~junk}}:t}
       filtered=( ${(m@)list:#(#i)${~junk}} ) && (( $#filtered > 0 )) && list=( ${filtered[@]} )
     fi
+
+    # nt () {
+    #   [[ $(head -n 1 ${REPLY}) != *compdef* ]]
+    # }
+    # nt () {
+    #   [[ ${REPLY} != *compdef* ]]
+    # }
+    # local -a array=( ${list[@]}(+nt))
 
     local -a array=( $(print -rm "*(${MACHTYPE}|${VENDOR}|)*~^*(${parts[1]}|${(L)$(uname)})*" $list[@]) )
     (( ${#array} > 0 )) && list=( ${array[@]} )

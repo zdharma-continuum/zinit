@@ -91,7 +91,7 @@ ____
 
 ____
 
-Has 12 line(s). Calls functions:
+Has 13 line(s). Calls functions:
 
  .zi-check-for-git-changes
  `-- zinit.zsh/+zi-log
@@ -99,6 +99,7 @@ Has 12 line(s). Calls functions:
 Called by:
 
  .zinit-self-update
+ .zinit-update-or-status
 
 ==== .zinit-any-to-uspl2
 
@@ -465,12 +466,12 @@ ____
 
 ____
 
-Has 111 line(s). Calls functions:
+Has 114 line(s). Calls functions:
 
  .zinit-delete
  |-- .zinit-prompt
  |-- .zinit-run-delete-hooks
- |   `-- zinit-side.zsh/.zinit-countdown
+ |   `-- zinit.zsh/+zi-log
  |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit.zsh/zinit
@@ -1014,10 +1015,10 @@ Called by:
 
 ==== .zinit-run-delete-hooks
 
-Has 17 line(s). Calls functions:
+Has 33 line(s). Calls functions:
 
  .zinit-run-delete-hooks
- `-- zinit-side.zsh/.zinit-countdown
+ `-- zinit.zsh/+zi-log
 
 Uses feature(s): _eval_
 
@@ -1434,6 +1435,8 @@ Has 84 line(s). Calls functions:
 
  .zinit-update-all-parallel
  |-- .zinit-update-or-status
+ |   |-- .zi-check-for-git-changes
+ |   |   `-- zinit.zsh/+zi-log
  |   |-- .zinit-pager
  |   |-- .zinit-update-or-status-snippet
  |   |   |-- zinit-install.zsh/.zinit-update-snippet
@@ -1478,9 +1481,11 @@ ____
 
 ____
 
-Has 325 line(s). Calls functions:
+Has 276 line(s). Calls functions:
 
  .zinit-update-or-status
+ |-- .zi-check-for-git-changes
+ |   `-- zinit.zsh/+zi-log
  |-- .zinit-pager
  |-- .zinit-update-or-status-snippet
  |   |-- zinit-install.zsh/.zinit-update-snippet
@@ -1528,6 +1533,8 @@ Has 133 line(s). Calls functions:
  |   `-- zinit.zsh/.zinit-get-mtime-into
  |-- .zinit-update-all-parallel
  |   |-- .zinit-update-or-status
+ |   |   |-- .zi-check-for-git-changes
+ |   |   |   `-- zinit.zsh/+zi-log
  |   |   |-- .zinit-pager
  |   |   |-- .zinit-update-or-status-snippet
  |   |   |   |-- zinit-install.zsh/.zinit-update-snippet
@@ -1552,6 +1559,8 @@ Has 133 line(s). Calls functions:
  |   |-- zinit.zsh/+zi-log
  |   `-- zinit.zsh/.zinit-any-to-user-plugin
  |-- .zinit-update-or-status
+ |   |-- .zi-check-for-git-changes
+ |   |   `-- zinit.zsh/+zi-log
  |   |-- .zinit-pager
  |   |-- .zinit-update-or-status-snippet
  |   |   |-- zinit-install.zsh/.zinit-update-snippet

@@ -26,7 +26,6 @@ Documentation automatically generated with `zshelldoc'
  .zinit-formatter-auto
  .zinit-formatter-bar
  .zinit-formatter-bar-util
- .zinit-formatter-dbg
  .zinit-formatter-pid
  .zinit-formatter-th-bar
  .zinit-formatter-url
@@ -85,7 +84,7 @@ PRECMD-HOOK @zinit-scheduler
 
 ==== Script Body
 
-Has 245 line(s). Calls functions:
+Has 256 line(s). Calls functions:
 
  Script-Body
  |-- +zi-log
@@ -110,6 +109,7 @@ Has 245 line(s). Calls functions:
  |   |-- .zinit-get-object-path
  |   |   `-- .zinit-any-to-user-plugin
  |   |-- .zinit-ice
+ |   |   `-- +zi-log
  |   |-- .zinit-load-ices
  |   |   `-- .zinit-get-object-path
  |   |       `-- .zinit-any-to-user-plugin
@@ -218,7 +218,7 @@ ____
 
 ____
 
-Has 16 line(s). Doesn't call other functions.
+Has 20 line(s). Doesn't call other functions.
 
 Called by:
 
@@ -226,6 +226,7 @@ Called by:
  +zinit-prehelp-usage-message
  .zinit-compdef-clear
  .zinit-compdef-replay
+ .zinit-ice
  .zinit-load-snippet
  .zinit-register-plugin
  .zinit-run
@@ -247,6 +248,7 @@ Called by:
  zinit-autoload.zsh/.zinit-delete
  zinit-autoload.zsh/.zinit-glance
  zinit-autoload.zsh/.zinit-list-plugins
+ zinit-autoload.zsh/.zinit-run-delete-hooks
  zinit-autoload.zsh/.zinit-self-update
  zinit-autoload.zsh/.zinit-show-zstatus
  zinit-autoload.zsh/.zinit-uninstall-completions
@@ -269,7 +271,10 @@ Called by:
  zinit-install.zsh/.zinit-jq-check
  zinit-install.zsh/.zinit-setup-plugin-dir
  zinit-install.zsh/.zinit-update-snippet
+ zinit-install.zsh/__zinit-cmake-base-hook
  zinit-install.zsh/ziextract
+ zinit-install.zsh/∞zinit-configure-base-hook
+ zinit-install.zsh/∞zinit-make-base-hook
  zinit-install.zsh/∞zinit-mv-hook
  zinit-install.zsh/∞zinit-ps-on-update-hook
  zinit-install.zsh/∞zinit-reset-hook
@@ -615,12 +620,6 @@ Called by:
  .zinit-formatter-bar
  .zinit-formatter-th-bar
 
-==== .zinit-formatter-dbg
-
-Has 5 line(s). Doesn't call other functions.
-
-Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
-
 ==== .zinit-formatter-pid
 
 Has 11 line(s). Calls functions:
@@ -690,7 +689,10 @@ ____
 
 ____
 
-Has 13 line(s). Doesn't call other functions.
+Has 21 line(s). Calls functions:
+
+ .zinit-ice
+ `-- +zi-log
 
 Uses feature(s): _setopt_
 
@@ -1618,6 +1620,7 @@ Has 553 line(s). Calls functions:
  |-- .zinit-get-object-path
  |   `-- .zinit-any-to-user-plugin
  |-- .zinit-ice
+ |   `-- +zi-log
  |-- .zinit-load-ices
  |   `-- .zinit-get-object-path
  |       `-- .zinit-any-to-user-plugin
@@ -1776,6 +1779,7 @@ Has 1 line(s). Calls functions:
      |-- .zinit-get-object-path
      |   `-- .zinit-any-to-user-plugin
      |-- .zinit-ice
+     |   `-- +zi-log
      |-- .zinit-load-ices
      |   `-- .zinit-get-object-path
      |       `-- .zinit-any-to-user-plugin

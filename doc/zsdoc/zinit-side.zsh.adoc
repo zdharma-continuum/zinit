@@ -141,13 +141,9 @@ Uses feature(s): _trap_
 
 Called by:
 
- zinit-autoload.zsh/.zinit-run-delete-hooks
- zinit-install.zsh/.zinit-configure-run-autoconf
  zinit-install.zsh/∞zinit-atclone-hook
  zinit-install.zsh/∞zinit-atpull-e-hook
  zinit-install.zsh/∞zinit-atpull-hook
- zinit-install.zsh/∞zinit-configure-base-hook
- zinit-install.zsh/∞zinit-make-base-hook
 
 ==== .zinit-exists-physically
 
