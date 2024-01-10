@@ -3291,9 +3291,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         local user=${reply[-2]} plugin=${reply[-1]}
 
         # Must be a git repository or a binary release
-        if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]]; then
-            (( !OPTS[opt_-q,--quiet] )) && \
-                builtin print "$REPLY: not a git repository"
+        if [[ ! -d ${repo}/.git  ]]; then
+            if [[ ! -f ${repo}/._zinit/is_release ]] && (( !OPTS[opt_-q,--quiet] )); then
+                +zi-log "{m} ${REPLY} not a git repository"
+            fi
             continue
         fi
 
@@ -3305,7 +3306,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             .zinit-update-or-status update "$user" "$plugin"
             update_rc=$?
             [[ $update_rc -ne 0 ]] && {
-                +zi-log "🚧{warn}Warning: {pid}${user}/${plugin} {warn}update returned {obj}$update_rc"
+                +zi-log "{w} Updating {b}${user}/${plugin}{rst} returned {num}$update_rc{rst}"
                 retval=$?
             }
         fi
@@ -3313,7 +3314,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     .zinit-compinit 1 1 &>/dev/null
     if (( !OPTS[opt_-q,--quiet] )) {
-        +zi-log "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
+        +zi-log "{nl}{i} Update finished in {num}${SECONDS}{rst} seconds"
     }
 
     return "$retval"
