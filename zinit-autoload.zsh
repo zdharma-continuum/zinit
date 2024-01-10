@@ -2982,7 +2982,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 fi
             done
             if (( ZINIT[annex-multi-flag:pull-active] <= 1 && !OPTS[opt_-q,--quiet] )); then
-                +zi-log "{info}[{pre}${ice[from]}{info}]{rst} latest version ({version}${version}{rst}) already installed"
+                +zi-log "{m} {ice}{b}${ice[from]}{rst}: Latest version {version}${version}{rst} already installed"
             fi
         fi
         if (( 1 )); then
@@ -2992,7 +2992,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                     (( ZINIT[first-plugin-mark] )) && {
                         ZINIT[first-plugin-mark]=0 
                     } || builtin print
-                    builtin print "\rUpdating $REPLY"
+                    +zi-log "{i} Updating {b}${id_as}{rst}"
                 fi
                 ICE=("${(kv)ice[@]}") 
                 reply=(${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-pre <->]} ${${(M)ICE[atpull]#\!}:+${(on)ZINIT_EXTS[(I)z-annex hook:\!atpull-<-> <->]}} ${(on)ZINIT_EXTS2[(I)zinit hook:e-\!atpull-post <->]}) 
@@ -3037,7 +3037,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                                     (( ZINIT[first-plugin-mark] )) && {
                                         ZINIT[first-plugin-mark]=0 
                                     } || builtin print
-                                    builtin print "Updating $REPLY"
+                                    +zi-log "{i} Updating {pname}${id_as}{rst}"
                                 fi
                             }
                             builtin print $line
