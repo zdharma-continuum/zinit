@@ -471,7 +471,6 @@ Has 111 line(s). Calls functions:
  |-- .zinit-prompt
  |-- .zinit-run-delete-hooks
  |   `-- zinit-side.zsh/.zinit-countdown
- |-- zinit-side.zsh/.zinit-compute-ice
  |-- zinit.zsh/+zi-log
  |-- zinit.zsh/.zinit-any-to-user-plugin
  `-- zinit.zsh/zinit

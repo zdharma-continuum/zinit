@@ -8,3 +8,8 @@ is_annex() {
   assert ${PWD}/${${annex}//zinit-annex/z-a}.plugin.zsh is_file
   assert ${PWD}/${${annex}//zinit-annex/z-a}.plugin.zsh is_readable
 }
+
+load_bin_gem_node(){
+  run zinit load @zdharma-continuum/zinit-annex-bin-gem-node
+  zinit default-ice --quiet from'gh-r'
+}
