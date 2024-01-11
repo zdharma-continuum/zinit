@@ -1,3 +1,4 @@
+# vim: ft=zsh sw=4 ts=4 et foldmarker=[[[,]]] foldmethod=marker
 #
 # zdharma-continuum/zinit/zinit.zsh
 # Copyright (c) 2016-2021 Sebastian Gniazdowski
@@ -3310,19 +3311,4 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 # create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
 
-# a searchable menu of tags for current directory
-zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
-zle -N zi-browse-symbol
-zle -N zi-browse-symbol-backwards zi-browse-symbol
-zle -N zi-browse-symbol-pbackwards zi-browse-symbol
-zle -N zi-browse-symbol-pforwards zi-browse-symbol
-zstyle -s ':zinit:browse-symbol' key ZINIT_TMP || ZINIT_TMP='\eQ'
-[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
 
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
-# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker

@@ -2845,7 +2845,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             local user=${reply[-2]} plugin=${reply[-1]}
 
             # Must be a git repository or a binary release
-            if [[ ! -d $repo/.git && ! -f $repo/._zinit/is_release ]] {
+            if [[ ! -d $repo/.git && ! -f $repo/._zinit/from ]] {
                 continue
             }
             files2+=( $repo )
@@ -3291,10 +3291,8 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         local user=${reply[-2]} plugin=${reply[-1]}
 
         # Must be a git repository or a binary release
-        if [[ ! -d ${repo}/.git  ]]; then
-            if [[ ! -f ${repo}/._zinit/is_release ]] && (( !OPTS[opt_-q,--quiet] )); then
-                +zi-log "{m} ${REPLY} not a git repository"
-            fi
+        if [[ ! -d ${repo}/.git  ]] && [[ ! -f ${repo}/._zinit/from ]] && (( !OPTS[opt_-q,--quiet] )); then
+            +zi-log "{m} ${REPLY} not a git repository"
             continue
         fi
 

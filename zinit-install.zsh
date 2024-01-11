@@ -2078,9 +2078,7 @@ zimv() {
     } else {
         local type="$1" url="$2" id_as="$3" dir="${4#%}" hook="$5"
     }
-    if (( ( OPTS[opt_-r,--reset] && ZINIT[-r/--reset-opt-hook-has-been-run] == 0 ) || \
-        ( ${+ICE[reset]} && ZINIT[-r/--reset-opt-hook-has-been-run] == 1 )
-    )) {
+    if (( ( OPTS[opt_-r,--reset] && ZINIT[-r/--reset-opt-hook-has-been-run] == 0 ) || ( ${+ICE[reset]} && ZINIT[-r/--reset-opt-hook-has-been-run] == 1 ))) {
         if (( ZINIT[-r/--reset-opt-hook-has-been-run] )) {
             local msg_bit="{meta}reset{msg2} ice given{pre}" option=
         } else {
