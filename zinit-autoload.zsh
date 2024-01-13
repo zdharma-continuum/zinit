@@ -981,25 +981,32 @@ ZINIT[EXTENDED_GLOB]=""
 #
 # User-action entry point.
 .zinit-compile-uncompile-all() {
-    builtin setopt localoptions nullglob
-
+    emulate -L zsh
+    setopt extendedglob null_glob typeset_silent
     local compile="$1"
-
     typeset -a plugins
-    plugins=( "${ZINIT[PLUGINS_DIR]}"/*(DN) )
-
+    condition () {
+        if [[ -f "${REPLY:h}/id-as" ]]; then
+            REPLY="$(cat "${REPLY:h}/id-as")"
+        else
+            reply+=("$(cat ${REPLY})")
+        fi
+    }
+    local -a plugins=("${ZINIT[PLUGINS_DIR]}"/**/\._zinit/teleid(+condition))
+    +zi-log "{dbg} ${(j;, ;)plugins[@]}"
     local p user plugin
     for p in "${plugins[@]}"; do
         [[ "${p:t}" = "custom" || "${p:t}" = "_local---zinit" ]] && continue
-
         .zinit-any-to-user-plugin "${p:t}"
         user="${reply[-2]}" plugin="${reply[-1]}"
-
         .zinit-any-colorify-as-uspl2 "$user" "$plugin"
         builtin print -r -- "$REPLY:"
-
         if [[ "$compile" = "1" ]]; then
-            .zinit-compile-plugin "$user" "$plugin"
+            if [[ -n ${user} ]]; then
+                .zinit-compile-plugin "$user" "$plugin"
+            else
+                .zinit-compile-plugin "$plugin"
+            fi
         else
             .zinit-uncompile-plugin "$user" "$plugin" "1"
         fi
