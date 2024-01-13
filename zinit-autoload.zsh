@@ -980,26 +980,34 @@ ZINIT[EXTENDED_GLOB]=""
 # Compiles or uncompiles all existing (on disk) plugins.
 #
 # User-action entry point.
-.zinit-compile-uncompile-all() {
-    builtin setopt localoptions nullglob
-
+.zinit-compile-uncompile-all () {
+    setopt local_options extendedglob null_glob typeset_silent
     local compile="$1"
-
-    typeset -a plugins
-    plugins=( "${ZINIT[PLUGINS_DIR]}"/*(DN) )
-
-    local p user plugin
+    condition () {
+        if [[ -f "${REPLY:h}/id-as" ]]; then
+            REPLY="$(cat "${REPLY:h}/id-as")"
+        else
+            reply+=("$(cat ${REPLY})")
+        fi
+        return 0
+    }
+    local -a plugins=("${ZINIT[PLUGINS_DIR]}"/**/\._zinit/teleid(+condition))
+    +zi-dbg "${(j;, ;)plugins[@]}"
+    local p
+    local plugin user
     for p in "${plugins[@]}"; do
         [[ "${p:t}" = "custom" || "${p:t}" = "_local---zinit" ]] && continue
-
-        .zinit-any-to-user-plugin "${p:t}"
+        .zinit-any-to-user-plugin "${p}"
         user="${reply[-2]}" plugin="${reply[-1]}"
-
+        +zi-dbg "$0: user: ${user} plugin: ${plugin}"
         .zinit-any-colorify-as-uspl2 "$user" "$plugin"
         builtin print -r -- "$REPLY:"
-
         if [[ "$compile" = "1" ]]; then
-            .zinit-compile-plugin "$user" "$plugin"
+            if [[ -n ${user} ]]; then
+                .zinit-compile-plugin "$user" "$plugin"
+            else
+                .zinit-compile-plugin "$plugin"
+            fi
         else
             .zinit-uncompile-plugin "$user" "$plugin" "1"
         fi
@@ -1700,7 +1708,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks () {
-    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2' 
+    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2'
     if [[ -f $make_path ]] && grep '^uninstall' $make_path &> /dev/null; then
         +zi-log -n "{m} Make uninstall... "
         eval 'command make -C ${make_path:h} {prefix,{,CMAKE_INSTALL_}PREFIX}=$ZINIT[ZPFX] --ignore-errors uninstall' 2>/dev/null 1>&2
@@ -1728,9 +1736,9 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     fi
     local -a arr
     local key
-    reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}) 
+    reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]})
     for key in "${reply[@]}"; do
-        arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}") 
+        arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}")
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 } # ]]]
@@ -1802,7 +1810,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # $1 - Absolute path to Git repository"
 .zi-check-for-git-changes() {
-    +zi-log "{dbg} checking $1"
+    +zi-dbg "checking $1"
     if command git --work-tree "$1" rev-parse --is-inside-work-tree &> /dev/null; then
         if command git --work-tree "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
             local count="$(command git --work-tree "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"

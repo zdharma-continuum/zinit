@@ -116,7 +116,7 @@
       ___sice[svn]=""
       ___local_dir="$___s_path"
     else
-      if [[ ! -e "$___path" ]] { 
+      if [[ ! -e "$___path" ]] {
         builtin print -r -- "No such snippet, looked at paths (1): $___s_path, and: $___path";
         return 1;
       }
@@ -240,7 +240,7 @@
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-exists-physically-message() {
   builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-  builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+  setopt extended_glob no_short_loops rc_quotes typeset_silent warn_create_global
   if ! .zinit-exists-physically "$1" "$2"; then
     .zinit-any-to-user-plugin "$1" "$2"
     if [[ $reply[1] = % ]]; then
