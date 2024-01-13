@@ -226,7 +226,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-dbg $'\e[2m\e[38;47;107m'"[debug]"$'\e[0m'
     col-e $'\e[1m\e[38;5;204m'"Error"$'\e[0m'":"
     col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m' 
-    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m' 
+    col-m $'\e[38;5;135m'"==>"$'\e[0m' 
     col-w $'\e[1m\e[38;5;214m'"Warning"$'\e[0m'":"
 
     col--…   "${${${(M)LANG:#*UTF-8*}:+⋯⋯}:-···}"    col-lr "${${${(M)LANG:#*UTF-8*}:+↔}:-"«-»"}"
@@ -2929,8 +2929,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     .zinit-show-zstatus
                     ;;
                 (delete)
-                    shift
-                    .zinit-delete "$@"
+                    .zinit-delete "${(@)@:2}"
                     ;;
                 (times)
                     .zinit-show-times "${@[2-correct,-1]}"
@@ -3310,19 +3309,4 @@ if [[ -e ${${ZINIT[BIN_DIR]}}/zmodules/Src/zdharma/zplugin.so ]] {
 # create so that for sure no warncreateglobal warning is issued
 typeset -g REPLY
 
-# a searchable menu of tags for current directory
-zinit null light-mode autoload'zi-browse-symbol' for %$ZINIT[BIN_DIR]
-zle -N zi-browse-symbol
-zle -N zi-browse-symbol-backwards zi-browse-symbol
-zle -N zi-browse-symbol-pbackwards zi-browse-symbol
-zle -N zi-browse-symbol-pforwards zi-browse-symbol
-zstyle -s ':zinit:browse-symbol' key ZINIT_TMP || ZINIT_TMP='\eQ'
-[[ -n $ZINIT_TMP ]] && bindkey $ZINIT_TMP zi-browse-symbol
-
-# Local Variables:
-# mode: Shell-Script
-# sh-indentation: 2
-# indent-tabs-mode: nil
-# sh-basic-offset: 2
-# End:
 # vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
