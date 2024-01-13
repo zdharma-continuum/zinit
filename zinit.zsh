@@ -226,7 +226,6 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-dbg $'\e[2m\e[38;47;107m'"[debug]"$'\e[0m'
     col-e $'\e[1m\e[38;5;204m'"Error"$'\e[0m'":"
     col-i $'\e[1m\e[38;5;82m'"==>"$'\e[0m'
-    col-m $'\e[1m\e[38;5;135m'"==>"$'\e[0m'
     col-m $'\e[38;5;4m'"==>"$'\e[0m'
     col-w $'\e[1m\e[38;5;214m'"Warning"$'\e[0m'":"
 
