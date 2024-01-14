@@ -1,63 +1,41 @@
 #!/usr/bin/env zunit
 
 @setup {
-  load $PWD/tests/_support/annex_test_assertions
+  load "${PWD}/tests/_support/annex_test_assertions"
 }
 
-# TEST: zinit-annex-bin-gem-node
 @test 'zinit-annex-bin-gem-node' {
-  local annex="zinit-annex-bin-gem-node"
-  _annex_test_function $annex
+  is_annex "bin-gem-node"
 }
-# TEST: zinit-annex-binary-symlink
 @test 'zinit-annex-binary-symlink' {
-  local annex="zinit-annex-binary-symlink"
-  _annex_test_function $annex
+  is_annex "binary-symlink"
 }
-# TEST: zinit-annex-man
 @test 'zinit-annex-man' {
-  local annex="zinit-annex-man"
-  _annex_test_function $annex
+  is_annex "man"
 }
-# TEST: zinit-annex-meta-plugins
 @test 'zinit-annex-meta-plugins' {
-  local annex="zinit-annex-test"
-  _annex_test_function $annex
+  is_annex "meta-plugins"
 }
-# TEST: zinit-annex-patch-dl
 @test 'zinit-annex-patch-dl' {
-  local annex="zinit-annex-patch-dl"
-  _annex_test_function $annex
+  is_annex "patch-dl"
 }
-# TEST: zinit-annex-pull
 @test 'zinit-annex-pull' {
-  local annex="zinit-annex-pull"
-  _annex_test_function $annex
+  is_annex 'pull'
 }
-# TEST: zinit-annex-readurl
 @test 'zinit-annex-readurl' {
-  local annex="zinit-annex-readurl"
-  _annex_test_function $annex
+  is_annex 'readurl'
 }
-# TEST: zinit-annex-rust
 @test 'zinit-annex-rust' {
-  local annex="zinit-annex-rust"
-  _annex_test_function $annex
+  is_annex 'rust'
 }
-# TEST: zinit-annex-submods
 @test 'zinit-annex-submods' {
-  local annex="zinit-annex-submods"
-  _annex_test_function $annex
+  is_annex 'submods'
 }
-# TEST: zinit-annex-test
 @test 'zinit-annex-test' {
-  local annex="zinit-annex-test"
-  _annex_test_function $annex
+  is_annex 'test'
 }
-# TEST: zinit-annex-unscope
 @test 'zinit-annex-unscope' {
-  local annex="zinit-annex-test"
-  _annex_test_function $annex
+  is_annex 'unscope'
 }
 
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=TEST,}:foldmethod=marker
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker

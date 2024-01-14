@@ -20,5 +20,5 @@ test/
 txt/
 zmodules/
 tests/_output/
-tests/_support/zunit/
+tests/_support/tmp*
 .idea

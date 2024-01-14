@@ -1,49 +1,82 @@
 #!/usr/bin/env zsh
 
+# emulate -L zsh
+# setopt no_global_rcs no_rcs no_aliases extended_glob null_glob
+
+emulate zsh
+setopt no_global_rcs no_rcs no_aliases extended_glob
+
 # Log functions [[[
-function error(){ print -P "%F{red}ZUNIT[ERROR]: $1%f" && return 1; }
-function info() { print -P "%F{blue}ZUNIT[INFO]%f: %F{cyan}$1%f"; }
-function warn() { print -P "%F{yellow}ZUNIT[WARN]: $1%f"; }
+function error(){ print -P "%F{red}[ERROR]%f: ${1}" && return 1; }
+function info() { print -P "%F{green}[INFO]%f:%F{cyan} ${1} %f"; }
+function warn() { print -P "%F{yellow}[WARN]%f: ${1}"; }
 # ]]]
 # Create Zunit test environment [[[
 GIT_REPO=$(git rev-parse --show-toplevel)
-typeset -gAH  ZINIT;
-ZINIT[HOME_DIR]="$GIT_REPO/tests/_support/zunit";    ZINIT[BIN_DIR]=$ZINIT[HOME_DIR]/zinit.git;
-ZINIT[COMPLETIONS_DIR]=$ZINIT[HOME_DIR]/completions; ZINIT[SNIPPETS_DIR]=$ZINIT[HOME_DIR]/snippets;
-ZINIT[ZCOMPDUMP_PATH]=$ZINIT[HOME_DIR]/zcompdump;    ZINIT[PLUGINS_DIR]=$ZINIT[HOME_DIR]/plugins;
-ZPFX=$ZINIT[HOME_DIR]/polaris;
 
-rm -rf $ZINIT[HOME_DIR]
-mkdir -p $ZINIT[HOME_DIR]
-git diff > $ZINIT[HOME_DIR]/unstaged.diff
-info 'creating test env' \
-  && git clone \
-      --dissociate \
-      --local \
-      --no-hardlinks \
-      --reference "$GIT_REPO" \
-      "$GIT_REPO" \
-    "$GIT_REPO"/tests/_support/zunit/zinit.git \
-  || error 'failed to create zinit copy for test env' \
-  &&  [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]] \
-  && git -C $ZINIT[BIN_DIR] apply $ZINIT[HOME_DIR]/unstaged.diff \
-  && info 'installing zinit' \
-  && command chmod g-rwX $ZINIT[HOME_DIR] \
-  && zcompile $ZINIT[BIN_DIR]/zinit.zsh \
-  && info 'successfully created zunit env' \
-  || error 'failed to create zunit env'
+_mktemp_cmd='mktemp'
+if (( ${+commands[gmktemp]} )); then
+    _mktemp_cmd='gmktemp'
+fi
+TMP_ZUNIT=$(${_mktemp_cmd} --directory --tmpdir="${GIT_REPO}/tests/_support")
+if [[ ! -d ${TMP_ZUNIT} ]]; then
+    error "zunit temp dir not found"
+    exit 1
+fi
 
-source $ZINIT[BIN_DIR]/zinit.zsh \
-  && autoload -Uz _zinit \
-  && (( ${+_comps} )) \
-  && _comps[zinit]=_zinit
-# ]]]
-# Install Annexes [[[
-info 'installing test dependencies'
-    # ver'fix/improve-lbin-logic' \
-zinit depth'1' light-mode for \
-  zdharma-continuum/zinit-annex-binary-symlink \
-  zdharma-continuum/zinit-annex-{'bin-gem-node','default-ice'}
-# ]]]
+typeset -gx zi_test_dir="${TMP_ZUNIT}"
+typeset -gxAUH ZINIT=()
+ZINIT+=(
+  BIN_DIR         "${zi_test_dir}/zinit.git"
+  COMPLETIONS_DIR "${zi_test_dir}/completions" SNIPPETS_DIR "${zi_test_dir}/snippets"
+  HOME_DIR        "${zi_test_dir}"             PLUGINS_DIR  "${zi_test_dir}/plugins"
+  ZCOMPDUMP_PATH  "${zi_test_dir}/zcompdump"   ZPFX         "${zi_test_dir}/polaris"
+  POLARIS         "${zi_test_dir}/polaris"
+)
+typeset -gxH ZPFX=
+ZPFX="${zi_test_dir}/polaris"
 
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker=[[[,]]]:foldmethod=marker
+command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
+# info 'creating test env'
+git clone \
+    --quiet \
+    --depth=1 \
+    --dissociate \
+    --no-hardlinks \
+    --reference "${GIT_REPO}" \
+    file://${GIT_REPO:A} \
+    "${ZINIT[BIN_DIR]}" >/dev/null
+if (( $? != 0 )); then
+    error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2
+    exit 1
+fi
+
+if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
+    (
+        git -C "${ZINIT[BIN_DIR]}" apply "${ZINIT[HOME_DIR]}/unstaged.diff" && \
+            chmod g-rwX "${ZINIT[HOME_DIR]}" && \
+            zcompile "${ZINIT[BIN_DIR]}/zinit.zsh" >/dev/null
+    ) >/dev/null
+fi
+(( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
+
+hash -f
+builtin hash -d zinit="${zi_test_dir}"
+builtin hash -d zpfx="${zi_test_dir}/polaris"
+builtin hash -d plugins="${zi_test_dir}/plugins"
+source "${zi_test_dir}/zinit.git/zinit.zsh"
+(( $? != 0 )) && { error "Unable to source zinit" >&2; exit 1 }
+hash -f
+builtin hash -d zinit="${zi_test_dir}"
+builtin hash -d zpfx="${zi_test_dir}/polaris"
+builtin hash -d plugins="${zi_test_dir}/plugins"
+
+{
+  zinit for \
+    @zdharma-continuum/zinit-annex-bin-gem-node \
+    @zdharma-continuum/zinit-annex-binary-symlink \
+    @zdharma-continuum/zinit-annex-default-ice \
+    @zdharma-continuum/zinit-annex-linkman
+}>/dev/null
+
+zinit zstatus
