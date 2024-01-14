@@ -668,17 +668,17 @@ ZINIT[EXTENDED_GLOB]=""
         fi
 
         if (( action )); then
-            +zinit-message "{info}Uninstalling completion \`{file}$cfile{info}'{…}{rst}"
+            +zi-log "{info}Uninstalling completion \`{file}$cfile{info}'{…}{rst}"
             # Make compinit notice the change
             .zinit-forget-completion "$cfile"
             (( global_action ++ ))
         else
-            +zinit-message "{info}Completion \`{file}$cfile{info}' not installed.{rst}"
+            +zi-log "{info}Completion \`{file}$cfile{info}' not installed.{rst}"
         fi
     done
 
     if (( global_action > 0 )); then
-        +zinit-message "{info}Uninstalled {num}$global_action{info} completions.{rst}"
+        +zi-log "{info}Uninstalled {num}$global_action{info} completions.{rst}"
     fi
 
     .zinit-compinit >/dev/null
@@ -725,27 +725,27 @@ ZINIT[EXTENDED_GLOB]=""
         }
     fi
     ( builtin cd -q "${ZINIT[MODULE_DIR]}"
-      +zinit-message "{pname}== Building module zdharma-continuum/zinit-module, running: make clean, then ./configure and then make =={rst}"
-      +zinit-message "{pname}== The module sources are located at: "${ZINIT[MODULE_DIR]}" =={rst}"
+      +zi-log "{pname}== Building module zdharma-continuum/zinit-module, running: make clean, then ./configure and then make =={rst}"
+      +zi-log "{pname}== The module sources are located at: "${ZINIT[MODULE_DIR]}" =={rst}"
       if [[ -f Makefile ]] {
           if [[ "$1" = "--clean" ]] {
-              noglob +zinit-message {p}-- make distclean --{rst}
+              noglob +zi-log {p}-- make distclean --{rst}
               make distclean
               ((1))
           } else {
-              noglob +zinit-message {p}-- make clean --{rst}
+              noglob +zi-log {p}-- make clean --{rst}
               make clean
           }
       }
-      noglob +zinit-message  {p}-- ./configure --{rst}
+      noglob +zi-log  {p}-- ./configure --{rst}
       CPPFLAGS=-I/usr/local/include CFLAGS="-g -Wall -O3" LDFLAGS=-L/usr/local/lib ./configure --disable-gdbm --without-tcsetpgrp && {
-          noglob +zinit-message {p}-- make --{rst}
+          noglob +zi-log {p}-- make --{rst}
           if { make } {
             [[ -f Src/zdharma_continuum/zinit.so ]] && cp -vf Src/zdharma_continuum/zinit.{so,bundle}
-            noglob +zinit-message "{info}Module has been built correctly.{rst}"
+            noglob +zi-log "{info}Module has been built correctly.{rst}"
             .zinit-module info
           } else {
-              noglob +zinit-message  "{error}Module didn't build.{rst} "
+              noglob +zi-log  "{error}Module didn't build.{rst} "
               .zinit-module info --link
           }
       }
@@ -798,12 +798,12 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ -e $REPLY ]]; then
             builtin pushd $REPLY
         else
-            +zinit-message "No such plugin or snippet"
+            +zi-log "No such plugin or snippet"
             return 1
         fi
         builtin print
     } || {
-        +zinit-message "No such plugin or snippet"
+        +zi-log "No such plugin or snippet"
         return 1
     }
 } # ]]]
@@ -1047,17 +1047,17 @@ ZINIT[EXTENDED_GLOB]=""
     integer retval
     if (( OPTS[opt_-y,--yes] )); then
         builtin eval "${2}"; retval=$?
-        (( OPTS[opt_-q,--quiet] )) || +zinit-message -lrP "{m} Action executed (exit code: {num}${retval}{rst})"
+        (( OPTS[opt_-q,--quiet] )) || +zi-log -lrP "{m} Action executed (exit code: {num}${retval}{rst})"
     else
       local choice prompt
-      builtin print -D -v prompt "$(+zinit-message '{i} Press [{opt}Y{rst}/{opt}y{rst}] to continue: {nl}')"
-      +zinit-message "${1}"
+      builtin print -D -v prompt "$(+zi-log '{i} Press [{opt}Y{rst}/{opt}y{rst}] to continue: {nl}')"
+      +zi-log "${1}"
       if builtin read -qs "choice?${prompt}"; then
         builtin eval "${2}"; retval=$?
-        +zinit-message "{m} Action executed (exit code: {num}${retval}{rst})"
+        +zi-log "{m} Action executed (exit code: {num}${retval}{rst})"
         return 0
       else
-        +zinit-message "{m} No action executed ('{opt}${choice}{rst}' not 'Y' or 'y')"
+        +zi-log "{m} No action executed ('{opt}${choice}{rst}' not 'Y' or 'y')"
         return 1
       fi
     fi
@@ -1199,92 +1199,94 @@ EOF
 #
 # $1 - snippet url or plugin
 .zinit-delete () {
-    emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt extendedglob noksharrays nokshglob nullglob typesetsilent warncreateglobal
+    setopt local_options extended_glob no_ksh_arrays no_ksh_glob null_glob typeset_silent warn_create_global
     local o_all o_clean o_debug o_help o_verbose o_yes rc
     local -a usage=(
-      'Usage:'
-      '  zinit delete [options] [plugins...]'
-      ' '
-      'Options:'
-      '  -a, --all      Delete all installed plugins, snippets, and completions'
-      '  -c, --clean    Delete unloaded plugins and snippets'
-      '  -h, --help     Show list of command-line options'
-      '  -y, --yes      Don´t prompt for user confirmation'
+        'Usage:'
+        '  zinit delete [options] [plugins...]'
+        ' '
+        'Options:'
+        '  -a, --all      Delete all installed plugins, snippets, and completions'
+        '  -c, --clean    Delete unloaded plugins and snippets'
+        '  -h, --help     Show list of command-line options'
+        '  -y, --yes      Don´t prompt for user confirmation'
     )
     zmodload zsh/zutil
-    zparseopts -D -F -K -- \
-      {a,-all}=o_all \
-      {c,-clean}=o_clean \
-      {d,-dry-run}=o_debug \
-      {h,-help}=o_help \
-      {y,-yes}=o_yes \
+    zparseopts -D -E -F -K -- \
+        {a,-all}=o_all \
+        {c,-clean}=o_clean \
+        {d,-dry-run}=o_debug \
+        {h,-help}=o_help \
+        {y,-yes}=o_yes \
     || return 1
     (( $#o_help )) && {
-      print -l -- $usage
-      return 0
+        print -l -- $usage
+        return 0
     }
     (( $#o_clean && $#o_all )) && {
-        +zinit-message "{e} Invalid usage: Options --all and --clean are mutually exclusive"
+        +zi-log "{e} Invalid usage: Options --all and --clean are mutually exclusive"
         return 1
     }
     (( $#o_clean )) && {
-      local -a unld_plgns
-      local -aU ld_snips unld_snips del_list
-      local snip plugin _retval dir=${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/xyzcba231}
-
-      unld_snips=( $dir/*/*/*(ND/) $dir/*/*(ND/) $dir/*(ND/) )
-      ld_snips=(${${ZINIT_SNIPPETS[@]% <*>}/(#m)*/$(.zinit-get-object-path snippet "$MATCH" && builtin print -rn -- $REPLY; )})
-      del_list=(${unld_snips[@]:#*/(${(~j:|:)ld_snips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)})
-      del_list=(${del_list[@]//(#m)*/$( .zinit-get-object-path snippet "${${${MATCH##${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/${match[1]##--}://}//--//}" && builtin print -r -- $REPLY)})
-      del_list=(${del_list[@]:#(${(~j:|:)ld_snips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)})
-      unld_snips=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$ZINIT[col-file]$match[2]$ZINIT[col-rst]})
-      unld_snips=(${unld_snips[@]//(#m)(#s)[^\/]##(#e)/$ZINIT[col-file]$MATCH$ZINIT[col-rst]})
-      del_list=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$match[2]})
-      unld_plgns=(${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/(${(~j:|:)${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/))
-      unld_plgns=(${(@)${unld_plgns[@]##$ZINIT[PLUGINS_DIR]/#}//---//})
-      # delete unloaded snippets & plugins
-      (( $#del_list || $#unld_plgns )) && {
-        +zinit-message "{m} Deleting {num}${#unld_snips}{rst} unloaded snippets:" $unld_snips
-        +zinit-message "{m} Deleting {num}${#unld_plgns}{rst} unloaded plugins:" $unld_plgns
-        if (( $#o_yes )) || ( .zinit-prompt "delete ${#unld_snips} snippets and ${#unld_plgns} plugins?"); then
-          for snip in $del_list $unld_plgns ; do
-            zinit delete --yes "$snip"
-            _retval+=$?
-          done
-          return _retval
-        fi
-      } || {
-        +zinit-message "{m} No unloaded plugins or snippets to delete"
-        return 0
-      }
+        local -a unld_plgns
+        local -aU ld_snips unld_snips del_list
+        local snip plugin _retval dir=${${ZINIT[SNIPPETS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/xyzcba231}
+        unld_snips=($dir/*/*/*(ND/) $dir/*/*(ND/) $dir/*(ND/))
+        ld_snips=(${${ZINIT_SNIPPETS[@]% <*>}/(#m)*/$(.zinit-get-object-path snippet "$MATCH" && builtin print -rn -- $REPLY; )})
+        del_list=(${unld_snips[@]:#*/(${(~j:|:)ld_snips}|*/plugins|._backup|._zinit|.svn|.git)(|/*)})
+        del_list=(${del_list[@]//(#m)*/$( .zinit-get-object-path snippet "${${${MATCH##${dir}[/[:space:]]#}/(#i)(#b)(http(s|)|ftp(s|)|ssh|rsync)--/${match[1]##--}://}//--//}" && builtin print -r -- $REPLY)})
+        del_list=(${del_list[@]:#(${(~j:|:)ld_snips}|*/plugins|*/._backup|*/._zinit|*/.svn|*/.git)(|/*)})
+        unld_snips=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$ZINIT[col-file]$match[2]$ZINIT[col-rst]})
+        unld_snips=(${unld_snips[@]//(#m)(#s)[^\/]##(#e)/$ZINIT[col-file]$MATCH$ZINIT[col-rst]})
+        unld_snips+=($(builtin print -- "${ZINIT[HOME_DIR]}"/snippets/*(/N^F:t)))
+        del_list=(${${${(@)${(@)del_list##$dir/#}//(#i)(#m)(http(s|)|ftp(s|)|ssh|rsync)--/${MATCH%--}://}//--//}//(#b)(*)\/([^\/]##)(#e)/$match[1]/$match[2]})
+        unld_plgns=(${${ZINIT[PLUGINS_DIR]%%[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcEFG312}/*~*/(${(~j:|:)${ZINIT_REGISTERED_PLUGINS[@]//\//---}})(ND/))
+        unld_plgns=(${(@)${unld_plgns[@]##$ZINIT[PLUGINS_DIR]/#}//---//})
+        (( $#del_list || $#unld_plgns || $#unld_snips )) && {
+            (( $#unld_snips )) && +zi-log "{m} Deleting {num}${#unld_snips}{rst} unloaded snippets:" $unld_snips
+            (( $#unld_plgns )) && +zi-log "{m} Deleting {num}${#unld_plgns}{rst} unloaded plugins:" $unld_plgns
+            if (( $#o_yes )) || (.zinit-prompt "Delete ${#unld_snips} snippets and ${#unld_plgns} plugins?"); then
+                for snip in $del_list $unld_plgns $unld_snips; do
+                    zinit delete --yes "$snip"
+                    _retval+=$?
+                done
+                return _retval
+            else
+                return 0
+            fi
+        } || {
+            +zi-log "{m} No unloaded plugins or snippets to delete"
+            return 0
+        }
     }
+    local i
     if (( $#o_all && !$#o_clean )); then
-        local -a all_installed=(${${ZINIT[PLUGINS_DIR]}%%[/[:space:]]##}/*~*/_local---zinit(/ND) ${${ZINIT[SNIPPETS_DIR]}%%[/[:space:]]##}/*~*/plugins(/ND))
-        if (( $#o_yes )) || ( .zinit-prompt "Delete all plugins and snippets (${#all_installed} total)"); then
-            command rm -rf -- ${(@)all_installed}
-            command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N)
+        local -a all_installed=($(cat "${ZINIT[HOME_DIR]}"/{'snippets','plugins'}/*/(*/)#teleid(N)))
+        if (( $#o_yes )) || (.zinit-prompt "Delete all plugins and snippets (${#all_installed} total)"); then
+            for i in $all_installed; do
+                zinit delete --yes "${i}"
+            done
+            command rm -f -- "${ZINIT[HOME_DIR]}"/**/*(-@N)
             for f in ${(M)${(k)ZINIT[@]}:##STATES__*~*local/zinit*}; do
-              builtin unset "ZINIT[$f]"
+                builtin unset "ZINIT[$f]"
             done
             local rc=$?
-            +zinit-message "{m} Deleted all completed with return code {num}${rc}{rst}"
+            +zi-log "{m} Delete completed with return code {num}${rc}{rst}"
             return $rc
         fi
         return 1
     fi
     (( !$# )) && {
-        +zinit-message "{e} Invalid usage: This command requires at least 1 plugin or snippet argument."
+        +zi-log "{e} Invalid usage: This command requires at least 1 plugin or snippet argument."
         return 0
     }
-    local i
-    if (( $#o_yes )) || ( .zinit-prompt "Delete ${(j:, :)@}"); then
-        local -A ICE ICE2
+    if (( $#o_yes )) || (.zinit-prompt "Delete ${(j:, :)@}"); then
         for i in $@; do
+            local -A ICE=() ICE2=()
             local the_id="${${i:#(%|/)*}}" filename is_snippet local_dir
             .zinit-compute-ice "$the_id" "pack" ICE2 local_dir filename is_snippet || return 1
             if [[ "$local_dir" != /* ]]; then
-                +zinit-message "{w} No available plugin or snippet with the name '$i'"
+                +zi-log "{w} No available plugin or snippet with the name '{b}$i{rst}'"
                 return 1
             fi
             ICE2[teleid]="${ICE2[teleid]:-${ICE2[id-as]}}"
@@ -1300,12 +1302,12 @@ EOF
                     .zinit-any-to-user-plugin "${ICE2[teleid]}"
                     .zinit-run-delete-hooks plugin "${reply[-2]}" "${reply[-1]}" "$the_id" "$local_dir"
                 }
-                command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N) # delete files
-                command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N) # delete broken symlins
+                command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N)
+                command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N)
                 builtin unset "ZINIT[STATES__${ICE2[id-as]}]" || builtin unset "ZINIT[STATES__${ICE2[teleid]}]"
-                +zinit-message "{m} Uninstalled $i"
+                (( quiet )) || +zi-log "{m} Uninstalled {b}$i{rst}"
             else
-                +zinit-message "{w} No available plugin or snippet with the name '$i'"
+                +zi-log "{w} No available plugin or snippet with the name '{b}$i{rst}'"
                 return 1
             fi
         done
@@ -1374,7 +1376,7 @@ EOF
     .zinit-exists-physically-message "$user" "$plugin" || return 1
 
     .zinit-first "$1" "$2" || {
-       +zinit-message '{log-err} No source file found, cannot glance'
+       +zi-log '{log-err} No source file found, cannot glance'
         return 1
     }
 
@@ -1385,17 +1387,17 @@ EOF
 
     {
         if (( ${+commands[pygmentize]} )); then
-            +zinit-message "{log-info} Inspecting via {cmd}pygmentize{rst}"
+            +zi-log "{log-info} Inspecting via {cmd}pygmentize{rst}"
             pygmentize -l 'bash' "$fname"
         elif (( ${+commands[highlight]} )); then
-            +zinit-message "{log-info} Inspecting via {cmd}highlight{rst}"
+            +zi-log "{log-info} Inspecting via {cmd}highlight{rst}"
             if (( has_256_colors )); then
                 highlight --force --output-format xterm256 --quiet --syntax sh "$fname"
             else
                 highlight --force --output-format ansi --quiet --syntax sh "$fname"
             fi
         elif (( ${+commands[source-highlight]} )); then
-            +zinit-message "{log-info} Inspecting via {cmd}source-highlight{rst}"
+            +zi-log "{log-info} Inspecting via {cmd}source-highlight{rst}"
             source-highlight -fesc --failsafe -s zsh -o STDOUT -i "$fname"
         else
             cat "$fname"
@@ -1423,7 +1425,7 @@ EOF
 —— cdreplay [-q]                 – replay compdefs (to be done after compinit), -q – quiet
 —— cenable ${ZINIT[col-info]}cname${ZINIT[col-rst]}                 – enable completion \`cname'
 —— changes ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – view plugin's git log
-—— clist|completions             – list completions in use
+—— completions                   – list installed completions
 —— compile ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}              – compile plugin (or all plugins if ——all passed)
 —— compiled                      – list plugins that are compiled
 —— compinit                      – refresh installed completions
@@ -1554,20 +1556,20 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
      keyword="${keyword## ##}"
      keyword="${keyword%% ##}"
      if [[ -n "$keyword" ]]; then
-         +zinit-message "{i} Installed plugins matching {info}$keyword{rst}:"
+         +zi-log "{i} Installed plugins matching {info}$keyword{rst}:"
          filtered=( "${(M)ZINIT[@]:#STATES__*$keyword*}" )
      else
          filtered=(${${(M)${(k)ZINIT[@]}:##STATES__*}//[A-Z]*__/})
      fi
      local i
-     +zinit-message '{m} {b}Plugins{rst}'
+     +zi-log '{m} {b}Plugins{rst}'
      for i in "${(o)filtered[@]}"; do
          [[ "$i" = "local/zinit" ]] && continue
          local is_loaded='{error}U'
-         (( "ZINIT[STATES__$i]" )) && is_loaded="{happy}L"
-         +zinit-message -C2 -- $is_loaded{rst} $i
+         (( ZINIT[STATES__${i}] )) && is_loaded="{happy}L"
+         +zi-log -C2 -- $is_loaded{rst} $i
      done
-     +zinit-message -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
+     +zi-log -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
 } # ]]]
 # FUNCTION: .zinit-list-snippets [[[
 .zinit-list-snippets() {
@@ -1697,24 +1699,38 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     done
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
-.zinit-run-delete-hooks() {
-    if [[ -n ${ICE[atdelete]} ]]; then
-        .zinit-countdown "atdelete" && ( (( ${+ICE[nocd]} == 0 )) && \
-                { builtin cd -q "$5" && eval "${ICE[atdelete]}"; ((1)); } || \
-                eval "${ICE[atdelete]}" )
+.zinit-run-delete-hooks () {
+    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2' 
+    if [[ -f $make_path ]] && grep '^uninstall' $make_path &> /dev/null; then
+        +zi-log -n "{m} Make uninstall... "
+        eval 'command make -C ${make_path:h} {prefix,{,CMAKE_INSTALL_}PREFIX}=$ZINIT[ZPFX] --ignore-errors uninstall' 2>/dev/null 1>&2
+        if (( $? == 0 )); then
+            +zi-log " [{happy}OK{rst}]"
+        else
+            +zi-log " [{error}Failed{rst}]"
+        fi
+    elif [[ -f $mfest_path ]]; then
+        +zi-log -n "{m} Cmake uninstall... "
+        if { command cmake --build ${mfest_path:h} --target uninstall || xargs rm -rf < "$mfest_path" } &>/dev/null ; then
+            +zi-log " [{happy}OK{rst}]"
+        else
+            +zi-log " [{error}Failed{rst}]"
+        fi
     fi
-
+    eval 'find $ZINIT[ZPFX] -depth -type d -empty -delete' &> /dev/null
+    if [[ -n ${ICE[atdelete]} ]]; then
+        (
+            (( ${+ICE[nocd]} == 0 )) && {
+                builtin cd -q "$5" && eval "${ICE[atdelete]}"
+                ((1))
+            } || eval "${ICE[atdelete]}"
+        )
+    fi
     local -a arr
     local key
-
-    # Run annexes' atdelete hooks
-    reply=(
-        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]}
-        ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]}
-        ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}
-    )
+    reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}) 
     for key in "${reply[@]}"; do
-        arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
+        arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}") 
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 } # ]]]
@@ -1780,62 +1796,83 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         fi
     done
 } # ]]]
+
+# FUNCTION: .zi-check-for-git-changes [[[
+# Check for Git updates
+#
+# $1 - Absolute path to Git repository"
+.zi-check-for-git-changes() {
+    +zi-log "{dbg} checking $1"
+    if command git --work-tree "$1" rev-parse --is-inside-work-tree &> /dev/null; then
+        if command git --work-tree "$1" rev-parse --abbrev-ref @'{u}' &> /dev/null; then
+            local count="$(command git --work-tree "$1" rev-list --left-right --count HEAD...@'{u}' 2> /dev/null)"
+            local down="$count[(w)2]"
+            if [[ $down -gt 0 ]]; then
+                return 0
+            fi
+        fi
+        builtin print -P -- "Already up-to-date."
+        return 1
+    fi
+} # ]]]
 # FUNCTION: .zinit-self-update [[[
 # Updates Zinit code (does a git pull)
 .zinit-self-update() {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
 
-    [[ $1 = -q ]] && +zinit-message "{pre}[self-update]{info} updating zinit repository{msg2}" \
+    if .zi-check-for-git-changes "$ZINIT[BIN_DIR]"; then
+        [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
-    local nl=$'\n' escape=$'\x1b['
-    local current_branch=$(git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
-    # local current_branch='main'
-    local -a lines
-    (
-        builtin cd -q "$ZINIT[BIN_DIR]" \
-        && +zinit-message -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
-        && command git fetch --quiet \
-        && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..origin/HEAD)"} )
-        if (( ${#lines} > 0 )); then
-            # Remove the (origin/main ...) segments, to expect only tags to appear
-            lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
-            # Remove " ||" if it ends the line (i.e. no additional text from the body)
-            lines=( "${lines[@]/ \|\|[[:blank:]]#(#e)/}" )
-            # If there's no ref-name, 2 consecutive spaces occur - fix this
-            lines=( "${lines[@]/(#b)[[:space:]]#\|\|[[:space:]]#(*)(#e)/|| ${match[1]}}" )
-            lines=( "${lines[@]/(#b)$escape([0-9]##)m[[:space:]]##${escape}m/$escape${match[1]}m${escape}m}" )
-            # Replace what follows "|| ..." with the same thing but with no
-            # newlines, and also only first 10 words (the (w)-flag enables
-            # word-indexing)
-            lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
-            builtin print -rl -- "${lines[@]}" | .zinit-pager
-            builtin print
-        fi
+        local nl=$'\n' escape=$'\x1b['
+        local current_branch=$(git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
+        # local current_branch='main'
+        local -a lines
+        (
+            builtin cd -q "$ZINIT[BIN_DIR]" \
+            && +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
+            && command git fetch --quiet \
+            && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..origin/HEAD)"} )
+            if (( ${#lines} > 0 )); then
+                # Remove the (origin/main ...) segments, to expect only tags to appear
+                lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
+                # Remove " ||" if it ends the line (i.e. no additional text from the body)
+                lines=( "${lines[@]/ \|\|[[:blank:]]#(#e)/}" )
+                # If there's no ref-name, 2 consecutive spaces occur - fix this
+                lines=( "${lines[@]/(#b)[[:space:]]#\|\|[[:space:]]#(*)(#e)/|| ${match[1]}}" )
+                lines=( "${lines[@]/(#b)$escape([0-9]##)m[[:space:]]##${escape}m/$escape${match[1]}m${escape}m}" )
+                # Replace what follows "|| ..." with the same thing but with no
+                # newlines, and also only first 10 words (the (w)-flag enables
+                # word-indexing)
+                lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
+                builtin print -rl -- "${lines[@]}" | .zinit-pager
+                builtin print
+            fi
+            if [[ $1 != -q ]] {
+                command git pull --no-stat --ff-only origin main
+            } else {
+                command git pull --no-stat --quiet --ff-only origin main
+            }
+        )
         if [[ $1 != -q ]] {
-            command git pull --no-stat --ff-only origin main
-        } else {
-            command git pull --no-stat --quiet --ff-only origin main
+            +zi-log "{pre}[self-update]{info} compiling zinit via {obj}zcompile{rst}"
         }
-    )
-    if [[ $1 != -q ]] {
-        +zinit-message "{pre}[self-update]{info} compiling zinit via {obj}zcompile{rst}"
-    }
-    command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
-    zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
-    zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh
-    zcompile -U $ZINIT[BIN_DIR]/share/git-process-output.zsh
-    # Load for the current session
-    [[ $1 != -q ]] && +zinit-message "{pre}[self-update]{info} reloading zinit for the current session{rst}"
+        command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
+        zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
+        zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh
+        zcompile -U $ZINIT[BIN_DIR]/share/git-process-output.zsh
+        # Load for the current session
+        [[ $1 != -q ]] && +zi-log "{pre}[self-update]{info} reloading zinit for the current session{rst}"
 
-    # +zinit-message "{pre}[self-update]{info} resetting zinit repository via{rst}: {cmd}${ICE[reset]:-git reset --hard HEAD}{rst}"
-    source $ZINIT[BIN_DIR]/zinit.zsh
-    zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload'}.zsh
-    # Read and remember the new modification timestamps
-    local file
-    for file ( "" -side -install -autoload ) {
-        .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
-    }
+        # +zi-log "{pre}[self-update]{info} resetting zinit repository via{rst}: {cmd}${ICE[reset]:-git reset --hard HEAD}{rst}"
+        source $ZINIT[BIN_DIR]/zinit.zsh
+        zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload'}.zsh
+        # Read and remember the new modification timestamps
+        local file
+        for file ( "" -side -install -autoload ) {
+            .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
+        }
+    fi
 } # ]]]
 
 # FUNCTION: .zinit-show-all-reports [[[
@@ -2125,13 +2162,13 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     local infoc="${ZINIT[col-info2]}"
 
-    +zinit-message "Zinit's main directory: {file}${ZINIT[HOME_DIR]}{rst}"
-    +zinit-message "Zinit's binary directory: {file}${ZINIT[BIN_DIR]}{rst}"
-    +zinit-message "Plugin directory: {file}${ZINIT[PLUGINS_DIR]}{rst}"
-    +zinit-message "Completions directory: {file}${ZINIT[COMPLETIONS_DIR]}{rst}"
+    +zi-log "Zinit's main directory: {file}${ZINIT[HOME_DIR]}{rst}"
+    +zi-log "Zinit's binary directory: {file}${ZINIT[BIN_DIR]}{rst}"
+    +zi-log "Plugin directory: {file}${ZINIT[PLUGINS_DIR]}{rst}"
+    +zi-log "Completions directory: {file}${ZINIT[COMPLETIONS_DIR]}{rst}"
 
     # Without _zlocal/zinit
-    +zinit-message "Loaded plugins: {num}$(( ${#ZINIT_REGISTERED_PLUGINS[@]} - 1 )){rst}"
+    +zi-log "Loaded plugins: {num}$(( ${#ZINIT_REGISTERED_PLUGINS[@]} - 1 )){rst}"
 
     # Count light-loaded plugins
     integer light=0
@@ -2140,32 +2177,32 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         [[ "$s" = 1 ]] && (( light ++ ))
     done
     # Without _zlocal/zinit
-    +zinit-message "Light loaded: {num}$(( light - 1 )){rst}"
+    +zi-log "Light loaded: {num}$(( light - 1 )){rst}"
 
     # Downloaded plugins, without _zlocal/zinit, custom
     typeset -a plugins
     plugins=( "${ZINIT[PLUGINS_DIR]}"/*(DN) )
-    +zinit-message "Downloaded plugins: {num}$(( ${#plugins} - 1 )){rst}"
+    +zi-log "Downloaded plugins: {num}$(( ${#plugins} - 1 )){rst}"
 
     # Number of enabled completions, with _zlocal/zinit
     typeset -a completions
     completions=( "${ZINIT[COMPLETIONS_DIR]}"/_[^_.]*~*.zwc(DN) )
-    +zinit-message "Enabled completions: {num}${#completions[@]}{rst}"
+    +zi-log "Enabled completions: {num}${#completions[@]}{rst}"
 
     # Number of disabled completions, with _zlocal/zinit
     completions=( "${ZINIT[COMPLETIONS_DIR]}"/[^_.]*~*.zwc(DN) )
-    +zinit-message "Disabled completions: {num}${#completions[@]}{rst}"
+    +zi-log "Disabled completions: {num}${#completions[@]}{rst}"
 
     # Number of completions existing in all plugins
     completions=( "${ZINIT[PLUGINS_DIR]}"/*/**/_[^_.]*~*(*.zwc|*.html|*.txt|*.png|*.jpg|*.jpeg|*.js|*.md|*.yml|*.ri|_zsh_highlight*|/zsdoc/*|*.ps1)(DN) )
-    +zinit-message "Completions available overall: {num}${#completions[@]}{rst}"
+    +zi-log "Completions available overall: {num}${#completions[@]}{rst}"
 
     # Enumerate snippets loaded
-    # }, ${infoc}{rst}", j:, :, {msg}"$'\e[0m, +zinit-message h
-    +zinit-message -n "Snippets loaded: "
+    # }, ${infoc}{rst}", j:, :, {msg}"$'\e[0m, +zi-log h
+    +zi-log -n "Snippets loaded: "
     local sni
     for sni in ${(onv)ZINIT_SNIPPETS[@]}; do
-        +zinit-message -n "{url}${sni% <[^>]#>}{rst} ${(M)sni%<[^>]##>}, "
+        +zi-log -n "{url}${sni% <[^>]#>}{rst} ${(M)sni%<[^>]##>}, "
     done
     [[ -z $sni ]] && builtin print -n " "
     builtin print '\b\b  '
@@ -2185,7 +2222,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         fi
     done
 
-    +zinit-message "Compiled plugins: {num}$count{rst}"
+    +zi-log "Compiled plugins: {num}$count{rst}"
 } # ]]]
 
 # FUNCTION: .zinit-stress [[[
@@ -2824,7 +2861,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             local PUFILE=$PUDIR/${counter}_$PUFILEMAIN.out
 
             .zinit-any-colorify-as-uspl2 "$uspl"
-            +zinit-message "Updating $REPLY{…}" >! $PUFILE
+            +zi-log "Updating $REPLY{…}" >! $PUFILE
 
             .zinit-any-to-user-plugin "$uspl"
             local user=${reply[-2]} plugin=${reply[-1]}
@@ -2879,7 +2916,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         .zinit-exists-physically "$user" "$plugin" || return $retval
         .zinit-any-colorify-as-uspl2 "$2" "$3"
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{msg2}Updating also \`$REPLY{rst}{msg2}'" \
+            +zi-log "{msg2}Updating also \`$REPLY{rst}{msg2}'" \
                 "plugin (already updated a snippet of the same name){…}{rst}"
     } else {
         .zinit-exists-physically-message "$user" "$plugin" || return 1
@@ -2976,7 +3013,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 }
             }
             if (( ZINIT[annex-multi-flag:pull-active] <= 1 && !OPTS[opt_-q,--quiet] )) {
-                +zinit-message "{info}[{pre}${ice[from]}{info}]{rst} latest version ({version}${version}{rst}) already installed"
+                +zi-log "{info}[{pre}${ice[from]}{info}]{rst} latest version ({version}${version}{rst}) already installed"
             }
         }
 
@@ -3117,10 +3154,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         fi
         if [[ -n ${(v)ice[(I)(mv|cp|atpull|ps-on-update|cargo)]} || $+ice[sbin]$+ice[make]$+ice[extract]$+ice[configure] -ne 0 ]] {
             if (( !OPTS[opt_-q,--quiet] && ZINIT[annex-multi-flag:pull-active] == 1 )) {
-                +zinit-message -n "{pre}[update]{msg3} Continuing with the update because "
+                +zi-log -n "{pre}[update]{msg3} Continuing with the update because "
                 (( ${+ice[run-atpull]} )) && \
-                    +zinit-message "{ice}run-atpull{apo}''{msg3} ice given.{rst}" || \
-                    +zinit-message "{opt}-u{msg3}/{opt}--urge{msg3} given.{rst}"
+                    +zi-log "{ice}run-atpull{apo}''{msg3} ice given.{rst}" || \
+                    +zi-log "{opt}-u{msg3}/{opt}--urge{msg3} given.{rst}"
             }
         }
 
@@ -3224,7 +3261,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     .zinit-self-update -q
 
     [[ $2 = restart ]] && \
-        +zinit-message "{msg2}Restarting the update with the new codebase loaded.{rst}"$'\n'
+        +zi-log "{msg2}Restarting the update with the new codebase loaded.{rst}"$'\n'
 
     local file
     integer sum el update_rc
@@ -3236,7 +3273,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     if [[ $2 != restart ]] && (( ZINIT[mtime] + ZINIT[mtime-side] +
         ZINIT[mtime-install] + ZINIT[mtime-autoload] != sum
     )) {
-        +zinit-message "{msg2}Detected Zinit update in another session -" \
+        +zi-log "{msg2}Detected Zinit update in another session -" \
             "{pre}reloading Zinit{msg2}{…}{rst}"
         source $ZINIT[BIN_DIR]/zinit.zsh
         source $ZINIT[BIN_DIR]/zinit-side.zsh
@@ -3245,7 +3282,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         for file ( "" -side -install -autoload ) {
             .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
         }
-        +zinit-message "%B{pname}Done.{rst}"$'\n'
+        +zi-log "%B{pname}Done.{rst}"$'\n'
         .zinit-update-or-status-all "$1" restart
         return $?
     }
@@ -3254,13 +3291,13 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     if (( OPTS[opt_-p,--parallel] )) && [[ $1 = update ]] {
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message '{info2}Parallel Update Starts Now{…}{rst}'
+            +zi-log '{info2}Parallel Update Starts Now{…}{rst}'
         .zinit-update-all-parallel
         retval=$?
         .zinit-compinit 1 1 &>/dev/null
         rehash
         if (( !OPTS[opt_-q,--quiet] )) {
-            +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
+            +zi-log "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
         }
         return $retval
     }
@@ -3276,7 +3313,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         snipps=( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)(ND) )
 
         [[ $st != status && ${OPTS[opt_-q,--quiet]} != 1 && -n $snipps ]] && \
-            +zinit-message "{info}Note:{rst} updating also unloaded snippets"
+            +zi-log "{info}Note:{rst} updating also unloaded snippets"
 
         for snip ( ${ZINIT[SNIPPETS_DIR]}/**/(._zinit|._zplugin)/mode(D) ) {
             [[ ! -f ${snip:h}/url ]] && continue
@@ -3297,10 +3334,10 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     if [[ $st = status ]]; then
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{info}Note:{rst} status done also for unloaded plugins"
+            +zi-log "{info}Note:{rst} status done also for unloaded plugins"
     else
         (( !OPTS[opt_-q,--quiet] )) && \
-            +zinit-message "{info}Note:{rst} updating also unloaded plugins"
+            +zi-log "{info}Note:{rst} updating also unloaded plugins"
     fi
 
     ZINIT[first-plugin-mark]=init
@@ -3345,7 +3382,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             .zinit-update-or-status update "$user" "$plugin"
             update_rc=$?
             [[ $update_rc -ne 0 ]] && {
-                +zinit-message "🚧{warn}Warning: {pid}${user}/${plugin} {warn}update returned {obj}$update_rc"
+                +zi-log "🚧{warn}Warning: {pid}${user}/${plugin} {warn}update returned {obj}$update_rc"
                 retval=$?
             }
         fi
@@ -3353,7 +3390,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
     .zinit-compinit 1 1 &>/dev/null
     if (( !OPTS[opt_-q,--quiet] )) {
-        +zinit-message "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
+        +zi-log "{msg2}The update took {obj}${SECONDS}{msg2} seconds{rst}"
     }
 
     return "$retval"
@@ -3416,7 +3453,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         counter=0
         PUAssocArray=()
     } elif (( counter == 1 && !OPTS[opt_-q,--quiet] )) {
-        +zinit-message "{obj}Spawning the next{num}" \
+        +zi-log "{obj}Spawning the next{num}" \
             "${OPTS[value]}{obj} concurrent update jobs" \
             "({msg2}${tpe}{obj}){…}{rst}"
     }
@@ -3427,7 +3464,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # User-action entry point.
 zi::version() {
-	+zinit-message "zinit{cmd} $(git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
+	+zi-log "zinit{cmd} $(git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
 	return $?
 } # ]]]
 

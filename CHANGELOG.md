@@ -1,3 +1,35 @@
+## [3.12.1](https://github.com/zdharma-continuum/zinit/compare/v3.12.0...v3.12.1) (2023-11-20)
+
+
+### Bug Fixes
+
+* container zshelldoc install ([#591](https://github.com/zdharma-continuum/zinit/issues/591)) ([8170753](https://github.com/zdharma-continuum/zinit/commit/8170753a5d21f2e54ba30901cdb0afb6399a7b51))
+* from'gh-r' skips compile by default ([#590](https://github.com/zdharma-continuum/zinit/issues/590)) ([1f52eee](https://github.com/zdharma-continuum/zinit/commit/1f52eee1b1ef4a76b779d2017f2e7d2151516544))
+* respect delete flags after positional arguments ([#587](https://github.com/zdharma-continuum/zinit/issues/587)) ([e18f9a7](https://github.com/zdharma-continuum/zinit/commit/e18f9a7da273fa44079b16a90e89df76664fcbee))
+* set home dir to test env in gh-r tests ([#582](https://github.com/zdharma-continuum/zinit/issues/582)) ([9b33288](https://github.com/zdharma-continuum/zinit/commit/9b33288b4aa88a1d41786eacfe31eb966b6c0455))
+* use $MACHTYPE instead of arch command ([#588](https://github.com/zdharma-continuum/zinit/issues/588)) ([bcf70e8](https://github.com/zdharma-continuum/zinit/commit/bcf70e8268dd09737d262919dcba0ff3301a705d))
+
+# [3.12.0](https://github.com/zdharma-continuum/zinit/compare/v3.11.0...v3.12.0) (2023-08-30)
+
+
+### Bug Fixes
+
+* build container for tagged releases ([f933dc0](https://github.com/zdharma-continuum/zinit/commit/f933dc028e9968ed434c21775c2bfc85a722ee04))
+* gh-r linux regex & gh-r zunit tests ([#564](https://github.com/zdharma-continuum/zinit/issues/564)) ([207ab9f](https://github.com/zdharma-continuum/zinit/commit/207ab9f281214bc07da82e7e542126745bf878dd))
+* gh-r zunit tests ([#561](https://github.com/zdharma-continuum/zinit/issues/561)) ([97b087e](https://github.com/zdharma-continuum/zinit/commit/97b087e68ae0c87cc31bcc9172cedf1cf5fcab68))
+* Ignore .yaml and .py files when installing completions ([#528](https://github.com/zdharma-continuum/zinit/issues/528)) ([113cfc4](https://github.com/zdharma-continuum/zinit/commit/113cfc47fb6ec1ed753222b7ba4542ef48ca2fde))
+* jq has moved from stedolan/jq to jqlang/jq ([#530](https://github.com/zdharma-continuum/zinit/issues/530)) ([de85908](https://github.com/zdharma-continuum/zinit/commit/de85908f8d0b89ff6327adfa285ca5a0c4302f2d))
+* math expression in plugins command ([#559](https://github.com/zdharma-continuum/zinit/issues/559)) ([68a6b42](https://github.com/zdharma-continuum/zinit/commit/68a6b42caf224b2ca2c172d58daf9faf5c86beb9))
+* pin fclones version to v0.31.0 ([497d519](https://github.com/zdharma-continuum/zinit/commit/497d519d99c3d3cdb8e71dfdf4583cadef9220a0))
+* quote parens so that they aren't used as globs ([#549](https://github.com/zdharma-continuum/zinit/issues/549)) ([1375adf](https://github.com/zdharma-continuum/zinit/commit/1375adf8f8edadbdcfc18445d852c7f08e723887))
+* self-update check for updates ([#562](https://github.com/zdharma-continuum/zinit/issues/562)) ([b456a2d](https://github.com/zdharma-continuum/zinit/commit/b456a2dba65673f4cf5a9a8c2bc16d7d0dcb3ace))
+* update gomi repo owner ([#568](https://github.com/zdharma-continuum/zinit/issues/568)) ([19ca2dc](https://github.com/zdharma-continuum/zinit/commit/19ca2dc361f9995a3e6a8a8aed0ade435168cd3d))
+
+
+### Features
+
+* build container with zsh 5.9 ([#525](https://github.com/zdharma-continuum/zinit/issues/525)) ([238e843](https://github.com/zdharma-continuum/zinit/commit/238e843d60de27b8f3deaf2d0b5e6657b293c9eb))
+
 # [3.11.0](https://github.com/zdharma-continuum/zinit/compare/v3.10.0...v3.11.0) (2023-05-04)
 
 

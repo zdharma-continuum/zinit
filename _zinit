@@ -21,7 +21,6 @@ __zinit_commands(){
     'cdreplay:Replay compdef list'
     'cenable:Enable completions'
     'changes:View plugins git log'
-    'clist:List status of all installed completions'
     'compile:Compile plugin (or all plugins if --all passed)'
     'compiled:List of compiled plugins'
     'compinit:Refresh installed completions'
@@ -163,10 +162,6 @@ _zinit_cenable(){
 # FUNCTION: _zinit_changes [[[
 _zinit_changes(){
   _message 'View git log of a plugin' && ret=0
-} # ]]]
-# FUNCTION: _zinit_clist [[[
-_zinit_clist(){
-  _message 'Hit enter to get list of completions' && ret=0
 } # ]]]
 # FUNCTION: _zinit_compiled [[[
 _zinit_compiled(){
