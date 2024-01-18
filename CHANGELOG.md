@@ -1,3 +1,24 @@
+# [3.13.0](https://github.com/zdharma-continuum/zinit/compare/v3.12.1...v3.13.0) (2024-01-18)
+
+
+### Bug Fixes
+
+* **ci:** remove duplicate gh-r  zunit job ([#623](https://github.com/zdharma-continuum/zinit/issues/623)) ([70cefc0](https://github.com/zdharma-continuum/zinit/commit/70cefc086a8b2277476e7f4fa3e00e0f7d4fd4cf))
+* debug logging logic and format ([#592](https://github.com/zdharma-continuum/zinit/issues/592)) ([3c7e5be](https://github.com/zdharma-continuum/zinit/commit/3c7e5be07d79b8f1a7fbd5dfd150a09a6309e461))
+* handle zinit --help ([#597](https://github.com/zdharma-continuum/zinit/issues/597)) ([8cf9104](https://github.com/zdharma-continuum/zinit/commit/8cf9104ac08da3f7f108a32e0a3b117e22681d46))
+* link ice check in .zinit-download-snippet function ([#608](https://github.com/zdharma-continuum/zinit/issues/608)) ([358ef03](https://github.com/zdharma-continuum/zinit/commit/358ef03785a18e694e94fd4560e0582c4024bcc3))
+* pin dua gh-r test to v2.20.3 ([#605](https://github.com/zdharma-continuum/zinit/issues/605)) ([0ba778a](https://github.com/zdharma-continuum/zinit/commit/0ba778ac734e33c960fe08bbd56a351b1b86dcd4))
+* silence unzip command in ziextract ([#614](https://github.com/zdharma-continuum/zinit/issues/614)) ([71764bf](https://github.com/zdharma-continuum/zinit/commit/71764bf2caa553f52435ed374bb48b74b0a8ad96))
+* tar permissions when `ziextract` ran as root user ([#557](https://github.com/zdharma-continuum/zinit/issues/557)) ([e2d477c](https://github.com/zdharma-continuum/zinit/commit/e2d477cde4e87d13ebc6b99e7f95022f75ca075e))
+* update labeler config to v5 ([#604](https://github.com/zdharma-continuum/zinit/issues/604)) ([794723c](https://github.com/zdharma-continuum/zinit/commit/794723cc4829e0f9293fc441100913ac7f02566a))
+
+
+### Features
+
+* configure, make, cmake, and build ices ([#613](https://github.com/zdharma-continuum/zinit/issues/613)) ([#616](https://github.com/zdharma-continuum/zinit/issues/616)) ([22e66db](https://github.com/zdharma-continuum/zinit/commit/22e66db478716005d6fec52cd412fad3fc94a9a2))
+* **delete:** fix unsetting plugin state & add `--debug` / `--quiet` flags ([#622](https://github.com/zdharma-continuum/zinit/issues/622)) ([3f4b685](https://github.com/zdharma-continuum/zinit/commit/3f4b68562265e6b06f55124e34fab0fe58c53adf))
+* remove zpextract and use ziextract ([#611](https://github.com/zdharma-continuum/zinit/issues/611)) ([2ccac85](https://github.com/zdharma-continuum/zinit/commit/2ccac85e376965a6e6d9fe1dc3f1470b706e9fac))
+
 ## [3.12.1](https://github.com/zdharma-continuum/zinit/compare/v3.12.0...v3.12.1) (2023-11-20)
 
 
