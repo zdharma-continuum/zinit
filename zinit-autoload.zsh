@@ -1563,29 +1563,29 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     done
 } # ]]]
 # FUNCTION: .zinit-list-plugins [[[
-# Lists loaded plugins (subcommands list, lodaded)
-.zinit-list-plugins() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+# Lists loaded plugins
+.zinit-list-plugins () {
+    builtin emulate -LR zsh
     setopt extended_glob warn_create_global typeset_silent no_short_loops
     typeset -a filtered
-    local keyword="$1"
-     keyword="${keyword## ##}"
-     keyword="${keyword%% ##}"
-     if [[ -n "$keyword" ]]; then
-         +zi-log "{i} Installed plugins matching {info}$keyword{rst}:"
-         filtered=( "${(M)ZINIT[@]:#STATES__*$keyword*}" )
-     else
-         filtered=(${${(M)${(k)ZINIT[@]}:##STATES__*}//[A-Z]*__/})
-     fi
-     local i
-     +zi-log '{m} {b}Plugins{rst}'
-     for i in "${(o)filtered[@]}"; do
-         [[ "$i" = "local/zinit" ]] && continue
-         local is_loaded='{error}U'
-         (( ZINIT[STATES__${i}] )) && is_loaded="{happy}L"
-         +zi-log -C2 -- $is_loaded{rst} $i
-     done
-     +zi-log -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
+    local keyword="${${${1}## ##}%% ##}"
+    if [[ -n "$keyword" ]]; then
+        +zi-log "{dbg} ${(qqq)1} -> ${(qqq)keyword}{rst}"
+        filtered=(${${(k)ZINIT[(I)STATES__*${keyword}*~*(local/zinit)*]}//[A-Z]*__/})
+        +zi-log "{m} ${#filtered} {b}Plugins{rst} matching '{glob}${keyword}{rst}'"
+    else
+        filtered=(${${(M)${(k)ZINIT[@]}:##STATES__*~*local/zinit*}//[A-Z]*__/})
+        +zi-log "{m} ${#filtered} {b}Plugins{rst}"
+    fi
+    local i
+    local -i idx=1
+    for i in "${(o)filtered[@]}"; do
+        local is_loaded='{error}U'
+        (( ZINIT[STATES__${i}] )) && is_loaded="{happy}L"
+        +zi-log "$(print -f "%2d %s %s\n" ${idx} ${is_loaded} {b}${(D)i//[%]/}{rst})"
+        (( idx+=1 ))
+    done
+    +zi-log -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
 } # ]]]
 # FUNCTION: .zinit-list-snippets [[[
 .zinit-list-snippets() {
