@@ -1194,13 +1194,16 @@ EOF
         builtin print "You're in plugin's repository folder, the files aren't added to git."
     fi
 } # ]]]
+
 # FUNCTION: .zinit-delete [[[
-# Deletes a plugin or snippet and related files and hooks.
+# Deletes a plugin or snippet and related files and hooks
 #
 # $1 - snippet url or plugin
 .zinit-delete () {
-    setopt local_options extended_glob no_ksh_arrays no_ksh_glob null_glob typeset_silent warn_create_global
-    local o_all o_clean o_debug o_help o_verbose o_yes rc
+    emulate -LR zsh
+    setopt extended_glob no_ksh_arrays no_ksh_glob typeset_silent warn_create_global
+    +zi-log "{dbg} $0: ${(qqS)@}"
+    local o_all o_clean o_debug o_help o_quiet o_yes rc
     local -a usage=(
         'Usage:'
         '  zinit delete [options] [plugins...]'
@@ -1208,20 +1211,26 @@ EOF
         'Options:'
         '  -a, --all      Delete all installed plugins, snippets, and completions'
         '  -c, --clean    Delete unloaded plugins and snippets'
+        '  -d, --debug    Enable debug mode'
         '  -h, --help     Show list of command-line options'
+        '  -q, --quiet    Make some output more quiet'
         '  -y, --yes      Don´t prompt for user confirmation'
     )
     zmodload zsh/zutil
     zparseopts -D -E -F -K -- \
         {a,-all}=o_all \
         {c,-clean}=o_clean \
-        {d,-dry-run}=o_debug \
+        {d,-debug}=o_debug \
         {h,-help}=o_help \
+        {q,-quiet}=o_quiet \
         {y,-yes}=o_yes \
     || return 1
     (( $#o_help )) && {
-        print -l -- $usage
+        print -l -- ${usage}
         return 0
+    }
+    (( $#o_debug )) && {
+        setopt xtrace
     }
     (( $#o_clean && $#o_all )) && {
         +zi-log "{e} Invalid usage: Options --all and --clean are mutually exclusive"
@@ -1245,7 +1254,7 @@ EOF
         (( $#del_list || $#unld_plgns || $#unld_snips )) && {
             (( $#unld_snips )) && +zi-log "{m} Deleting {num}${#unld_snips}{rst} unloaded snippets:" $unld_snips
             (( $#unld_plgns )) && +zi-log "{m} Deleting {num}${#unld_plgns}{rst} unloaded plugins:" $unld_plgns
-            if (( $#o_yes )) || (.zinit-prompt "Delete ${#unld_snips} snippets and ${#unld_plgns} plugins?"); then
+            if (( $#o_yes )) || ( .zinit-prompt "Delete ${#unld_snips} snippets and ${#unld_plgns} plugins?" ); then
                 for snip in $del_list $unld_plgns $unld_snips; do
                     zinit delete --yes "$snip"
                     _retval+=$?
@@ -1261,16 +1270,24 @@ EOF
     }
     local i
     if (( $#o_all && !$#o_clean )); then
-        local -a all_installed=($(cat "${ZINIT[HOME_DIR]}"/{'snippets','plugins'}/*/(*/)#teleid(N)))
-        if (( $#o_yes )) || (.zinit-prompt "Delete all plugins and snippets (${#all_installed} total)"); then
-            for i in $all_installed; do
+        condition () {
+            if [[ -e "${REPLY:h}"/id-as ]]; then
+                reply+=("$(cat "${REPLY:h}/id-as")")
+            else
+                reply+=("$(cat "${REPLY:A}")")
+            fi
+        }
+        local -a all_installed=("${ZINIT[HOME_DIR]}"/{'plugins','snippets'}/**/\._zinit/teleid(N+condition))
+        if (( $#o_yes )) || ( .zinit-prompt "Delete all plugins and snippets ($#all_installed total)" ); then
+            for i in ${all_installed[@]}; do
                 zinit delete --yes "${i}"
             done
-            command rm -f -- "${ZINIT[HOME_DIR]}"/**/*(-@N)
-            for f in ${(M)${(k)ZINIT[@]}:##STATES__*~*local/zinit*}; do
-                builtin unset "ZINIT[$f]"
+            rc=$?
+            command rm -d -f -v "${ZINIT[HOME_DIR]}"/**/*(-@N) "${ZINIT[HOME_DIR]}"/{'plugins','snippets'}/*(N/^F)
+            local f
+            for f in ${(k)ZINIT[(I)STATES__*~*local/zinit]}; do
+                builtin unset "ZINIT[${f}]"
             done
-            local rc=$?
             +zi-log "{m} Delete completed with return code {num}${rc}{rst}"
             return $rc
         fi
@@ -1280,8 +1297,8 @@ EOF
         +zi-log "{e} Invalid usage: This command requires at least 1 plugin or snippet argument."
         return 0
     }
-    if (( $#o_yes )) || (.zinit-prompt "Delete ${(j:, :)@}"); then
-        for i in $@; do
+    if (( $#o_yes )) || ( .zinit-prompt "Delete ${(j:, :)@}" ); then
+        for i in "${@}"; do
             local -A ICE=() ICE2=()
             local the_id="${${i:#(%|/)*}}" filename is_snippet local_dir
             .zinit-compute-ice "$the_id" "pack" ICE2 local_dir filename is_snippet || return 1
@@ -1302,10 +1319,9 @@ EOF
                     .zinit-any-to-user-plugin "${ICE2[teleid]}"
                     .zinit-run-delete-hooks plugin "${reply[-2]}" "${reply[-1]}" "$the_id" "$local_dir"
                 }
-                command rm -rf -- ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N)
-                command rm -f -- $ZINIT[HOME_DIR]/**/*(-@N)
-                builtin unset "ZINIT[STATES__${ICE2[id-as]}]" || builtin unset "ZINIT[STATES__${ICE2[teleid]}]"
-                (( quiet )) || +zi-log "{m} Uninstalled {b}$i{rst}"
+                command rm -d -f -r "${ZINIT[HOME_DIR]}"/**/*(-@N) "${ZINIT[HOME_DIR]}"/{'plugins','snippets'}/*(N/^F) ${(q)${${local_dir:#[/[:space:]]##}:-${TMPDIR:-${TMPDIR:-/tmp}}/abcYZX321}}(N)
+                builtin unset "ZINIT[STATES__${i}]" || builtin unset "ZINIT[STATES__${ICE2[teleid]}]"
+                (( $#o_quiet )) || +zi-log "{m} Uninstalled {b}$i{rst}"
             else
                 +zi-log "{w} No available plugin or snippet with the name '{b}$i{rst}'"
                 return 1
@@ -1547,29 +1563,29 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     done
 } # ]]]
 # FUNCTION: .zinit-list-plugins [[[
-# Lists loaded plugins (subcommands list, lodaded)
-.zinit-list-plugins() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt extendedglob warncreateglobal typesetsilent noshortloops
+# Lists loaded plugins
+.zinit-list-plugins () {
+    builtin emulate -LR zsh
+    setopt extended_glob warn_create_global typeset_silent no_short_loops
     typeset -a filtered
-    local keyword="$1"
-     keyword="${keyword## ##}"
-     keyword="${keyword%% ##}"
-     if [[ -n "$keyword" ]]; then
-         +zi-log "{i} Installed plugins matching {info}$keyword{rst}:"
-         filtered=( "${(M)ZINIT[@]:#STATES__*$keyword*}" )
-     else
-         filtered=(${${(M)${(k)ZINIT[@]}:##STATES__*}//[A-Z]*__/})
-     fi
-     local i
-     +zi-log '{m} {b}Plugins{rst}'
-     for i in "${(o)filtered[@]}"; do
-         [[ "$i" = "local/zinit" ]] && continue
-         local is_loaded='{error}U'
-         (( ZINIT[STATES__${i}] )) && is_loaded="{happy}L"
-         +zi-log -C2 -- $is_loaded{rst} $i
-     done
-     +zi-log -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
+    local keyword="${${${1}## ##}%% ##}"
+    if [[ -n "$keyword" ]]; then
+        +zi-log "{dbg} ${(qqq)1} -> ${(qqq)keyword}{rst}"
+        filtered=(${${(k)ZINIT[(I)STATES__*${keyword}*~*(local/zinit)*]}//[A-Z]*__/})
+        +zi-log "{m} ${#filtered} {b}Plugins{rst} matching '{glob}${keyword}{rst}'"
+    else
+        filtered=(${${(M)${(k)ZINIT[@]}:##STATES__*~*local/zinit*}//[A-Z]*__/})
+        +zi-log "{m} ${#filtered} {b}Plugins{rst}"
+    fi
+    local i
+    local -i idx=1
+    for i in "${(o)filtered[@]}"; do
+        local is_loaded='{error}U'
+        (( ZINIT[STATES__${i}] )) && is_loaded="{happy}L"
+        +zi-log "$(print -f "%2d %s %s\n" ${idx} ${is_loaded} {b}${(D)i//[%]/}{rst})"
+        (( idx+=1 ))
+    done
+    +zi-log -- '{nl}Loaded: {happy}L{rst} | Unloaded: {error}U{rst}'
 } # ]]]
 # FUNCTION: .zinit-list-snippets [[[
 .zinit-list-snippets() {
@@ -1700,7 +1716,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 # FUNCTION: .zinit-run-delete-hooks [[[
 .zinit-run-delete-hooks () {
-    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2' 
+    local make_path=$5/Makefile mfest_path=$5/build/install_manifest.txt quiet='2>/dev/null 1>&2'
     if [[ -f $make_path ]] && grep '^uninstall' $make_path &> /dev/null; then
         +zi-log -n "{m} Make uninstall... "
         eval 'command make -C ${make_path:h} {prefix,{,CMAKE_INSTALL_}PREFIX}=$ZINIT[ZPFX] --ignore-errors uninstall' 2>/dev/null 1>&2
@@ -1728,9 +1744,9 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     fi
     local -a arr
     local key
-    reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]}) 
+    reply=(${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-pre <->]} ${(on)ZINIT_EXTS[(I)z-annex hook:atdelete-<-> <->]} ${(on)ZINIT_EXTS2[(I)zinit hook:atdelete-post <->]})
     for key in "${reply[@]}"; do
-        arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}") 
+        arr=("${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}")
         "${arr[5]}" "$1" "$2" $3 "$4" "$5" "${${key##(zinit|z-annex) hook:}%% <->}" delete:TODO
     done
 } # ]]]

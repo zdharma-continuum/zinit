@@ -37,12 +37,17 @@
 }
 
 @test 'plugins' {
-  run zinit plugins
-  assert $output contains 'Plugins'
-  assert $output contains 'Unloaded: '
-  assert $output contains 'Loaded: '
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit plugins)
   assert $state equals 0
+  assert $output contains "==> 5 Plugins"
+  assert $output contains 'Loaded: L | Unloaded: U'
 }
+@test 'plugins with keyword' {
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit plugins zdharma)
+  assert $state equals 0
+  assert $output contains "==> 4 Plugins matching 'zdharma'"
+}
+
 @test 'help' {
   for cmd in 'help' '-h' '--help'; do
     run zinit $cmd

@@ -202,13 +202,15 @@ _zinit_cunistall(){
 # FUNCTION: _zinit_delete [[[
 _zinit_delete(){
   _arguments \
-    '--help[Show this help message]' \
-    '--quiet[Turn off messages from the operation]' \
-    '--yes[Automatically confirm any yes/no prompts]' \
+    {-d,--debug}'[Enable xtrace]' \
+    {-h,--help}'[Show this help message]' \
+    {-q,--quiet}'[Make some output more quiet]' \
+    {-y,--yes}'[Automatically confirm any yes/no prompts]' \
     + '(operation)' \
       '*::installed:__zinit_installed' \
       {-a,--all}'[Delete all plugins and snippets]' \
-      {-c,--clean}'[Delete only the currently-not loaded plugins and snippets]'
+      {-c,--clean}'[Delete only the currently-not loaded plugins and snippets]' \
+    && ret=0
 } # ]]]
 _zinit_debug(){
   _arguments \
