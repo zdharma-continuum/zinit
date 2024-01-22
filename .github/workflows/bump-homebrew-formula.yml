@@ -1,0 +1,24 @@
+name: Bump Homebrew Formula
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  bump-homebrew-formula:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Bump Homebrew formulae
+        uses: dawidd6/action-homebrew-bump-formula@v3
+        with:
+          formula: zinit
+          # A Personal Access Token (PAT) is instead of the default
+          # GITHUB_TOKEN because brew bump-formula-pr creates a fork of the
+          # formula's tap repository (if needed) and then creates a pull
+          # request.
+          token: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
