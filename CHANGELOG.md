@@ -1,3 +1,10 @@
+## [3.13.1](https://github.com/zdharma-continuum/zinit/compare/v3.13.0...v3.13.1) (2024-01-22)
+
+
+### Bug Fixes
+
+*  `plugins` command correctly handles keyword argument ([#626](https://github.com/zdharma-continuum/zinit/issues/626)) ([f26d387](https://github.com/zdharma-continuum/zinit/commit/f26d387e51c9103f2ba7142a8c1a25ba1d62e065))
+
 # [3.13.0](https://github.com/zdharma-continuum/zinit/compare/v3.12.1...v3.13.0) (2024-01-18)
 
 
