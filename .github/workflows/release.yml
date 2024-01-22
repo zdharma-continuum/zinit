@@ -2,9 +2,6 @@ name: Release
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - '*'
 
 jobs:
   release:
@@ -25,6 +22,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # - name: Build Docker image
+      #   run: docker buildx --load build --tag vladdoster/dotfiles:latest .
+
       - name: Generate release
         run: npx semantic-release --ci --
         env:
@@ -33,19 +33,3 @@ jobs:
           GIT_AUTHOR_NAME: 'Vladislav Doster'
           GIT_COMMITTER_EMAIL: 'mvdoster@gmail.com'
           GIT_COMMITTER_NAME: 'Vladislav Doster'
-
-  bump-homebrew-formula:
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Bump Homebrew formulae
-        uses: dawidd6/action-homebrew-bump-formula@v3
-        with:
-          formula: zinit
-          org: zdharma-continuum
-          # A Personal Access Token (PAT) is instead of the default
-          # GITHUB_TOKEN because brew bump-formula-pr creates a fork of the
-          # formula's tap repository (if needed) and then creates a pull
-          # request.
-          token: ${{ secrets.HOMEBREW_GITHUB_API_TOKEN }}
