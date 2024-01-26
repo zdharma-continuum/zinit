@@ -40,12 +40,11 @@ command git diff > ${ZINIT[HOME_DIR]}/unstaged.diff
 # info 'creating test env'
 git clone \
     --quiet \
-    --depth=1 \
     --dissociate \
     --no-hardlinks \
     --reference "${GIT_REPO}" \
     file://${GIT_REPO:A} \
-    "${ZINIT[BIN_DIR]}" >/dev/null
+    "${ZINIT[BIN_DIR]}"
 if (( $? != 0 )); then
     error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2
     exit 1
@@ -56,7 +55,7 @@ if [[ -s $ZINIT[HOME_DIR]/unstaged.diff ]]; then
         git -C "${ZINIT[BIN_DIR]}" apply "${ZINIT[HOME_DIR]}/unstaged.diff" && \
             chmod g-rwX "${ZINIT[HOME_DIR]}" && \
             zcompile "${ZINIT[BIN_DIR]}/zinit.zsh" >/dev/null
-    ) >/dev/null
+    )
 fi
 (( $? != 0 )) && { error "Unable to copy ${GIT_REPO} to ${TMP_ZUNIT}" >&2; exit 1 }
 

@@ -59,9 +59,11 @@
   assert $state equals 1
 }
 @test 'self-update' {
-  run zinit self-update
-  assert $output contains 'Already up-to-date.'
-  assert $state equals 0
+  run zinit self-update --quiet; assert $state equals 0
+  assert $output contains 'Updated Zinit'
+
+  run zinit self-update; assert $state equals 0
+  assert $output contains 'Updating Zinit';assert $output contains 'Updated Zinit'
 }
 @test 'set-debug' {
   ZINIT+=(DEBUG 'true')
