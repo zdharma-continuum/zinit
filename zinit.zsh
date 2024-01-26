@@ -2605,6 +2605,7 @@ zinit() {
         delete        "--all|--clean|--help|--quiet|--yes|-a|-c|-h|-q|-y"
         env-whitelist "--help|--verbose|-h|-v"
         light         "--help|-b|-h"
+        self-update   "--help|--no-pager|--quiet|-h|-n|-q"
         snippet       "--command|--force|--help|-f|-h|-x"
         times         "--help|-h|-m|-s"
         unload        "--help|--quiet|-h|-q"
@@ -2613,8 +2614,7 @@ zinit() {
     )
 
     cmd="$1"
-    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|\
-cdclear) ]]; then
+    if [[ $cmd == (cdclear|cdreplay|env-whitelist|light|load|self-update|snippet|times|unload|update) ]]; then
         if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
             .zinit-parse-opts "$cmd" "$@"
             if (( OPTS[opt_-h,--help] )); then

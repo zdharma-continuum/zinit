@@ -1833,62 +1833,52 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 } # ]]]
 # FUNCTION: .zinit-self-update [[[
 # Updates Zinit code (does a git pull)
-.zinit-self-update() {
+.zinit-self-update () {
     builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
     setopt extendedglob typesetsilent warncreateglobal
-
-    if .zi-check-for-git-changes "$ZINIT[BIN_DIR]"; then
-        [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
-
-        local nl=$'\n' escape=$'\x1b['
-        local current_branch=$(git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
-        # local current_branch='main'
-        local -a lines
-        (
-            builtin cd -q "$ZINIT[BIN_DIR]" \
-            && +zi-log -n "{pre}[self-update]{info} fetching latest changes from {obj}$current_branch{info} branch$nl{rst}" \
-            && command git fetch --quiet \
-            && lines=( ${(f)"$(command git log --color --date=short --pretty=format:'%Cgreen%cd %h %Creset%s %Cred%d%Creset || %b' ..origin/HEAD)"} )
-            if (( ${#lines} > 0 )); then
-                # Remove the (origin/main ...) segments, to expect only tags to appear
-                lines=( "${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}" )
-                # Remove " ||" if it ends the line (i.e. no additional text from the body)
-                lines=( "${lines[@]/ \|\|[[:blank:]]#(#e)/}" )
-                # If there's no ref-name, 2 consecutive spaces occur - fix this
-                lines=( "${lines[@]/(#b)[[:space:]]#\|\|[[:space:]]#(*)(#e)/|| ${match[1]}}" )
-                lines=( "${lines[@]/(#b)$escape([0-9]##)m[[:space:]]##${escape}m/$escape${match[1]}m${escape}m}" )
-                # Replace what follows "|| ..." with the same thing but with no
-                # newlines, and also only first 10 words (the (w)-flag enables
-                # word-indexing)
-                lines=( "${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}" )
+    (( !OPTS[opt_-q,--quiet] )) && +zi-log "{m} {b}Updating Zinit...{rst}"
+    local nl=$'\n' escape=$'\x1b['
+    local -a lines
+    (
+        builtin cd -q "$ZINIT[BIN_DIR]" && {
+            (( !OPTS[opt_-q,--quiet] )) && +zi-log -n "{m} {b}self-update{rst}: fetching latest changes from {obj}main{rst} branch{nl}{rst}"
+        } && command git fetch --all --quiet && lines=(${(f)"$(command git --no-pager log --color --date=short --pretty='format:%C(yellow)%h%C(auto,magenta)% %C(auto,blue)%>(12,trunc)%ad %C(auto,reset)%s%C(auto,red)% gD% D %C(auto,green)%aN' -- ..origin/main)"})
+        if (( ${#lines} > 0 )); then
+            lines=("${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}")
+            lines=("${lines[@]/ \|\|[[:blank:]]#(#e)/}")
+            lines=("${lines[@]/(#b)[[:space:]]#\|\|[[:space:]]#(*)(#e)/|| ${match[1]}}")
+            lines=("${lines[@]/(#b)$escape([0-9]##)m[[:space:]]##${escape}m/$escape${match[1]}m${escape}m}")
+            lines=("${lines[@]/(#b)[[:blank:]]#\|\|(*)(#e)/| ${${match[1]//$nl/ }[(w)1,(w)10]}}")
+            (( !OPTS[opt_-q,--quiet] )) && {
                 builtin print -rl -- "${lines[@]}" | .zinit-pager
                 builtin print
-            fi
-            if [[ $1 != -q ]] {
-                command git pull --no-stat --ff-only origin main
-            } else {
-                command git pull --no-stat --quiet --ff-only origin main
             }
-        )
-        if [[ $1 != -q ]] {
-            +zi-log "{pre}[self-update]{info} compiling zinit via {obj}zcompile{rst}"
-        }
-        command rm -f $ZINIT[BIN_DIR]/*.zwc(DN)
-        zcompile -U $ZINIT[BIN_DIR]/zinit.zsh
-        zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload','additional'}.zsh
-        zcompile -U $ZINIT[BIN_DIR]/share/git-process-output.zsh
-        # Load for the current session
-        [[ $1 != -q ]] && +zi-log "{pre}[self-update]{info} reloading zinit for the current session{rst}"
-
-        # +zi-log "{pre}[self-update]{info} resetting zinit repository via{rst}: {cmd}${ICE[reset]:-git reset --hard HEAD}{rst}"
-        source $ZINIT[BIN_DIR]/zinit.zsh
-        zcompile -U $ZINIT[BIN_DIR]/zinit-{'side','install','autoload'}.zsh
-        # Read and remember the new modification timestamps
-        local file
-        for file ( "" -side -install -autoload ) {
-            .zinit-get-mtime-into "${ZINIT[BIN_DIR]}/zinit$file.zsh" "ZINIT[mtime$file]"
-        }
-    fi
+        fi
+        local branch='--set-upstream https://github.com/zdharma-continuum/zinit main'
+        if (( !OPTS[opt_-q,--quiet] )); then
+            command git pull --autostash --ff-only --no-stat --squash ${=branch}
+        else
+            command git pull --autostash --ff-only --no-stat --quiet --squash ${=branch}
+        fi
+        # (( $? )) && {
+        #   +zi-log "{w} Unable to update Zinit"
+        #   return 0
+        # }
+    )
+    # (( $? )) && {
+    #   +zi-log "{w} Unable to update Zinit"
+    #   return 0
+    # }
+    command rm -f ${ZINIT[BIN_DIR]}/*.zwc(DN)
+    (( !OPTS[opt_-q,--quiet] )) && +zi-log "{m} {b}self-update{rst}: compiling zinit via {obj}zcompile{rst}"
+    local file
+    for file in ${ZINIT[BIN_DIR]}/zinit(*).zsh(.N); do
+        builtin zcompile -Uz ${file:A}
+        .zinit-get-mtime-into "${f:A}" "ZINIT[mtime${file:t}]"
+    done
+    (( !OPTS[opt_-q,--quiet] )) && +zi-log "{m} {b}self-update{rst}: reloading zinit for the current session{rst}"
+    builtin source ${ZINIT[BIN_DIR]}/zinit.zsh
+    +zi-log "{i} {b}Updated Zinit{rst}"
 } # ]]]
 
 # FUNCTION: .zinit-show-all-reports [[[

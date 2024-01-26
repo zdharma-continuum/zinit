@@ -270,6 +270,11 @@ _zinit_run(){
 } # ]]]
 # FUNCTION: _zinit_self_update [[[
 _zinit_self_update(){
+    _arguments \
+      '(-h --help)'{-h,--help}'[Show this help message]' \
+      '(-n --no-pager)'{-n,--no-pager}'[Do not pipe Git output into a pager]' \
+      '(-q --quiet)'{-q,--quiet}'[Quiet, suppress feedback messages]' \
+    && ret=0
 } # ]]]
 # FUNCTION: _zinit_snippet [[[
 _zinit_snippet(){
