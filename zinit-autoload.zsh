@@ -1842,7 +1842,8 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     (
         builtin cd -q "$ZINIT[BIN_DIR]" && {
             (( !OPTS[opt_-q,--quiet] )) && +zi-log -n "{m} {b}self-update{rst}: fetching latest changes from {obj}main{rst} branch{nl}{rst}"
-        } && command git fetch --all --quiet && lines=(${(f)"$(command git --no-pager log --color --date=short --pretty='format:%C(yellow)%h%C(auto,magenta)% %C(auto,blue)%>(12,trunc)%ad %C(auto,reset)%s%C(auto,red)% gD% D %C(auto,green)%aN' -- ..origin/main)"})
+        } && command git fetch --all --quiet && lines=(${(f)"$(command git --no-pager log origin/main --not $(git branch --show-current) --color --date=short --pretty='format:%C(yellow)%h%C(auto,magenta)% %C(auto,blue)%>(12,trunc)%ad %C(auto,reset)%s%C(auto,red)% gD% D %C(auto,green)%aN')"})
+        # } && command git fetch --all --quiet && lines=(${(f)"$(command git --no-pager log  $(git branch --show-current) --not origin/main --color --date=short --pretty='format:%C(yellow)%h%C(auto,magenta)% %C(auto,blue)%>(12,trunc)%ad %C(auto,reset)%s%C(auto,red)% gD% D %C(auto,green)%aN')"})
         if (( ${#lines} > 0 )); then
             lines=("${(S)lines[@]//\(([,[:blank:]]#(origin|HEAD|master|main)[^a-zA-Z]##(HEAD|origin|master|main)[,[:blank:]]#)#\)/}")
             lines=("${lines[@]/ \|\|[[:blank:]]#(#e)/}")
