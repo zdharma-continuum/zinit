@@ -1854,7 +1854,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
                 builtin print
             }
         fi
-        local branch='--set-upstream https://github.com/zdharma-continuum/zinit main'
+        local branch='--set-upstream origin main'
         if (( !OPTS[opt_-q,--quiet] )); then
             command git pull --autostash --ff-only --no-stat --squash ${=branch}
         else
