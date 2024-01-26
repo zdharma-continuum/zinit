@@ -48,7 +48,7 @@ jobs:
             autoconf automake autotools-dev \
             build-essential byacc\
             file \
-            gcc gettext glibc-source grep \
+            gcc gettext glibc-source grep git \
             libc6 libc6-dev libevent-dev libncurses5-dev libncursesw5-dev libtool libuvc0 lua5.1 \
             m4 \
             ninja-build \
@@ -58,7 +58,7 @@ jobs:
       - name: "install dependencies"
         id: install-deps
         run: |
-          brew install --force --overwrite automake binutils byacc coreutils gnu-sed libuv lua lua@5.1 make ninja texinfo unzip zsh
+          brew install --force --overwrite automake binutils byacc coreutils git gnu-sed libuv lua lua@5.1 make ninja texinfo unzip zsh
           brew link --force --overwrite ncurses
 
       - name: "install zunit"
