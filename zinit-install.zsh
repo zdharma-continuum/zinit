@@ -2333,16 +2333,14 @@ __zinit-cmake-base-hook () {
     else
         local dir="${4#%}" hook="$5" subtype="$6"
     fi
-
     if ! [[ ( $hook = *\!at(clone|pull)* && ${+ICE[nocompile]} -eq 0 ) || ( $hook = at(clone|pull)* && $ICE[nocompile] = '!' ) ]]; then
         return 0
     fi
-
     if [[ -z $ICE[(i)(\!|)(sh|bash|ksh|csh)] ]]; then
         () {
             builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
-            builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-            setopt extendedglob warncreateglobal
+            # builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+            setopt local_options extended_glob warn_create_global
             local quiet=1
             if [[ $tpe == snippet ]]; then
                 .zinit-compile-plugin "%$dir"
