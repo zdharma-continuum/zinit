@@ -2985,10 +2985,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                         .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
                     fi
                     ;;
-                (plugins) 
+                (plugins)
                     .zinit-list-plugins "$2"
                     ;;
-                (snippets) 
+                (snippets)
                     .zinit-list-snippets "$2"
                     ;;
                 (completions) # Show installed, enabled or disabled, completions and detect stray and improper ones
@@ -3061,8 +3061,8 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     .zinit-compinit; ___retval=$?
                     ;;
-                (compiled) 
-                    .zinit-compiled 
+                (compiled)
+                    .zinit-compiled
                     ;;
                 (compile|uncompile)
                     (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
@@ -3077,10 +3077,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                           " -q, --quiet           Remove all unused images not just dangling ones"
                     fi
                     if (( $#all )); then
-                        .zinit-compile-uncompile-all ${action}; ___retval=$?
+                        .zinit-compile-uncompile-all ${action}; ___retval="${?}"
                     else
                         for f in ${(q+)^@}; do
-                            .zinit-${action}-plugin "$f"; (( ___retval += $? ))
+                            .zinit-$action-plugin "${f}"; (( ___retval += ${?} ))
                         done
                     fi
                     ;;
