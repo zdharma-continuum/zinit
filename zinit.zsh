@@ -1340,8 +1340,7 @@ builtin setopt noaliases
     ___retval+=$?
 
     return __retval
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-set-m-func [[[
 # Sets and withdraws the temporary, atclone/atpull time function `m`.
 .zinit-set-m-func() {
@@ -2986,11 +2985,9 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                         .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
                     fi
                     ;;
-                (plugins)
-                    .zinit-list-plugins "$2"
+                (plugins) .zinit-list-plugins "$2"
                     ;;
-                (snippets)
-                    .zinit-list-snippets "$2"
+                (snippets) .zinit-list-snippets "$2"
                     ;;
                 (completions) # Show installed, enabled or disabled, completions and detect stray and improper ones
                     .zinit-show-completions "$2"
@@ -3062,29 +3059,25 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     .zinit-compinit; ___retval=$?
                     ;;
+                (compiled) .zinit-compiled 
+                    ;;
                 (compile|uncompile)
                     (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
-                    local action="$1" all help quiet
+                    local action="$1" all f help quiet
                     shift
                     zparseopts -D -F -K -- {a,-all}=all {h,-help}=help {q,-quiet}=quiet || return
                     if (( $#help )); then
-                        print -rC1 --      \
-                          "Usage:  zinit $action [OPTIONS]" \
-                          " " \
-                          "Remove unused data" \
-                          " " \
+                        +zi-log "Usage:  zinit ${action} [OPTIONS]" \
+                          "{nl}${action} plugins{nl}" \
                           "Options:" \
                           " -a, --all             Remove all unused images not just dangling ones" \
-                          " -f, --force           Do not prompt for confirmation"
-                        return 0
+                          " -q, --quiet           Remove all unused images not just dangling ones"
                     fi
                     if (( $#all )); then
-                        .zinit-compile-uncompile-all ${action}
-                        ___retval=$?
+                        .zinit-compile-uncompile-all ${action}; ___retval=$?
                     else
-                        local f
                         for f in ${(q+)^@}; do
-                            .zinit-${action}-plugin "$f"
+                            .zinit-${action}-plugin "$f"; (( ___retval += $? ))
                         done
                     fi
                     ;;
@@ -3093,11 +3086,8 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[+zinit-debug]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
                     +zinit-debug $@
                     ;;
-                (compiled)
-                    .zinit-compiled
-                    ;;
-                (cdlist)
-                    .zinit-list-compdef-replay
+
+                (cdlist) .zinit-list-compdef-replay
                     ;;
                 (cd|recall|edit|glance|changes|create|stress)
                     .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; ___retval=$?

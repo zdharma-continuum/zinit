@@ -73,6 +73,27 @@
   assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
 }
 
+@test 'compile command' {
+  run zinit for id-as"compile-command" @zdharma-continuum/history-search-multi-word
+
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile --quiet compile-command)
+  assert $state equals 0
+  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
+
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compiled)
+  assert $state equals 0
+  assert $output contains 'compile-command:'
+
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit uncompile --quiet compile-command)
+  assert $state equals 0; assert $output contains '==> Uncompiling compile-command [OK]'
+}
+
+@test 'uncompile --all' {
+  zinit uncompile --all --quiet
+  run zinit compiled; assert $state equals 0
+  assert $output contains 'No compiled plugins'
+}
+
 @test 'self-update' {
   run zinit self-update
   assert $output contains 'Already up-to-date.'

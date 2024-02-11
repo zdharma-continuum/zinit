@@ -306,8 +306,7 @@ ZINIT[EXTENDED_GLOB]=""
     @zinit-substitute atclone atpull
     [[ $atpull = "%atclone" ]] && { eval "$atclone"; retval=$?; } || { eval "$atpull"; retval=$?; }
     return $retval
-}
-# ]]]
+} # ]]]
 
 #
 # Format functions
@@ -1009,7 +1008,6 @@ ZINIT[EXTENDED_GLOB]=""
         if [[ ${#list} -eq 0 ]]; then
             +zi-log "{w} {ice}compile{apo}''{rst} didn't match any files"
         else
-            # (( $#quiet )) || +zi-log -n "{m} Compiling {num}${#list}{rst} file${=${list:#1}:+s} ${(pj;, ;)list[@]:t}"
             +zi-log -n "{m} Compiling {num}${#list}{rst} file${=${list:#1}:+s} ${(pj;, ;)list[@]:t}"
             integer retval
             for first in $list; do
@@ -1105,31 +1103,26 @@ ZINIT[EXTENDED_GLOB]=""
 # Displays list of plugins that are compiled.
 #
 # User-action entry point.
-.zinit-compiled() {
+.zinit-compiled () {
     builtin setopt localoptions nullglob
-
     typeset -a matches m
-    matches=( ${ZINIT[PLUGINS_DIR]}/*/*.zwc(DN) )
-
+    matches=(${ZINIT[PLUGINS_DIR]}/*/*.zwc(DN))
     if [[ "${#matches[@]}" -eq "0" ]]; then
         builtin print "No compiled plugins"
         return 0
     fi
-
     local cur_plugin="" uspl1 file user plugin
     for m in "${matches[@]}"; do
         file="${m:t}"
         uspl1="${${m:h}:t}"
         .zinit-any-to-user-plugin "$uspl1"
         user="${reply[-2]}" plugin="${reply[-1]}"
-
         if [[ "$cur_plugin" != "$uspl1" ]]; then
-            [[ -n "$cur_plugin" ]] && builtin print # newline
+            [[ -n "$cur_plugin" ]] && builtin print
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
             builtin print -r -- "$REPLY:"
             cur_plugin="$uspl1"
         fi
-
         builtin print "$file"
     done
 } # ]]]
@@ -1142,8 +1135,8 @@ ZINIT[EXTENDED_GLOB]=""
 # $2 - plugin (only when $1 - i.e. user - given)
 .zinit-uncompile-plugin () {
     emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
-    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet
+    setopt extended_glob no_short_loops rc_quotes warn_create_global
+    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} filename first is_snippet m plugin_dir
     local -a list
     local -A ICE
     .zinit-compute-ice "$id_as" "pack" ICE plugin_dir filename is_snippet || return 1
@@ -1155,25 +1148,20 @@ ZINIT[EXTENDED_GLOB]=""
         if (( $#quiet )); then
             +zi-log -n "{m} Uncompiling {b}${id_as}{rst}"
         else
-             +zi-log "{i} {file}${id_as}{rst}"
+            +zi-log "{i} {file}${id_as}{rst}"
         fi
         integer retval
         (( !$#quiet )) && +zi-log -n "{m} Removing: "
         for m in ${plugin_dir}/*.zwc(.N); do
-            command rm -f ${m:A}
+            command rm -f "${m:A}"
             retval+=$?
-            (( !$#quiet )) && { +zi-log -n "{file}${m:t}{rst} " }
+            (( !$#quiet )) && +zi-log -n "{file}${m:t}{rst} "
         done
-        if (( retval )) {
+        if (( retval )); then
             +zi-log " [exit code: {ehi}$retval{rst}]"
-        } else {
-            +zi-log " [{happy}OK{rst}]" 
-        }
-        # fi
-    # else
-    #     if (( !$#quiet )); then
-    #         +zi-log "${id_as} not compiled"
-    #     fi
+        else
+            +zi-log " [{happy}OK{rst}]"
+        fi
     fi
 } # ]]]
 
