@@ -2339,7 +2339,6 @@ __zinit-cmake-base-hook () {
     if [[ -z $ICE[(i)(\!|)(sh|bash|ksh|csh)] ]]; then
         () {
             builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
-            # builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
             setopt local_options extended_glob warn_create_global
             local quiet=1
             if [[ $tpe == snippet ]]; then
