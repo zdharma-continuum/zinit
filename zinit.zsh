@@ -2888,7 +2888,7 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
        (cdclear)
            .zinit-compdef-clear "$2"
            ;;
-       (add-fpath|fpath)
+       ((add-|)fpath)
            .zinit-add-fpath "${@[2-correct,-1]}"
            ;;
        (run)
@@ -2985,9 +2985,11 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                         .zinit-show-report "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
                     fi
                     ;;
-                (plugins) .zinit-list-plugins "$2"
+                (plugins) 
+                    .zinit-list-plugins "$2"
                     ;;
-                (snippets) .zinit-list-snippets "$2"
+                (snippets) 
+                    .zinit-list-snippets "$2"
                     ;;
                 (completions) # Show installed, enabled or disabled, completions and detect stray and improper ones
                     .zinit-show-completions "$2"
@@ -3059,7 +3061,8 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     .zinit-compinit; ___retval=$?
                     ;;
-                (compiled) .zinit-compiled 
+                (compiled) 
+                    .zinit-compiled 
                     ;;
                 (compile|uncompile)
                     (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
@@ -3087,9 +3090,10 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     +zinit-debug $@
                     ;;
 
-                (cdlist) .zinit-list-compdef-replay
+                (cdlist)
+                    .zinit-list-compdef-replay
                     ;;
-                (cd|recall|edit|glance|changes|create|stress)
+                ((c(hanges|d))|create|edit|glance|recall|stress)
                     .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; ___retval=$?
                     ;;
                 (recently)
