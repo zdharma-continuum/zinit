@@ -2613,8 +2613,7 @@ zinit() {
     )
 
     cmd="$1"
-    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|\
-cdclear) ]]; then
+    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|cdclear) ]]; then
         if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
             .zinit-parse-opts "$cmd" "$@"
             if (( OPTS[opt_-h,--help] )); then
@@ -2896,7 +2895,6 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
        (run)
            .zinit-run "${@[2-correct,-1]}"
            ;;
-
        (man)
            man "${ZINIT[BIN_DIR]}/doc/zinit.1"
            ;;
@@ -3064,27 +3062,36 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     .zinit-compinit; ___retval=$?
                     ;;
-                (compile)
-                    (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
-                        .zinit-compile-uncompile-all 1; ___retval=$?
+                (compile|uncompile)
+                    (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
+                    local action="$1" all help quiet
+                    shift
+                    zparseopts -D -F -K -- {a,-all}=all {h,-help}=help {q,-quiet}=quiet || return
+                    if (( $#help )); then
+                        print -rC1 --      \
+                          "Usage:  zinit $action [OPTIONS]" \
+                          " " \
+                          "Remove unused data" \
+                          " " \
+                          "Options:" \
+                          " -a, --all             Remove all unused images not just dangling ones" \
+                          " -f, --force           Do not prompt for confirmation"
+                        return 0
+                    fi
+                    if (( $#all )); then
+                        .zinit-compile-uncompile-all ${action}
+                        ___retval=$?
                     else
-                        .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
+                        local f
+                        for f in ${(q+)^@}; do
+                            .zinit-${action}-plugin "$f"
+                        done
                     fi
                     ;;
                 (debug)
                     shift;
                     (( ${+functions[+zinit-debug]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
                     +zinit-debug $@
-                    ;;
-                (uncompile)
-                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
-                        .zinit-compile-uncompile-all 0; ___retval=$?
-                    else
-                        .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                    fi
                     ;;
                 (compiled)
                     .zinit-compiled

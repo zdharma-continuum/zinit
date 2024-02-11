@@ -1,14 +1,19 @@
 #!/usr/bin/env zunit
-#
-# zdharma-continuum/zinit/tests/commands.zunit
-# Copyright (c) 2016-2021 Sebastian Gniazdowski
-# Copyright (c) 2021-2023 zdharma-continuum
-# Homepage: https://github.com/zdharma-continuum/zinit
-# License: MIT License
-#
 
 @setup {
-  ZBIN="${ZPFX}/bin"
+  typeset -gx HOME="$zi_test_dir"
+  typeset -gx ZBIN="$zi_test_dir/polaris/bin"
+}
+
+@test 'help' {
+  for cmd in 'help' '-h' '--help'; do
+    run zinit $cmd
+    assert $output contains '—— help                          – usage information'
+    assert $state equals 0
+  done
+  run zinit -help
+  assert $output contains 'Unknown subcommand'
+  assert $state equals 1
 }
 
 @test 'delete --help' {
@@ -31,9 +36,10 @@
     assert $state equals 0
 }
 @test 'delete a program' {
-    run zinit as'program' cp'wd.sh->wd' mv'_wd.sh->_wd' pick'wd' for @'mfaerevaag/wd'
-    run zinit delete --yes mfaerevaag/wd
+    run zinit as'program' cp'wd.sh->wd' mv'_wd.sh->_wd' pick'wd' completions for @'mfaerevaag/wd'
     assert $state equals 0
+    run return ${+commands[wd]}; assert $state equals 0
+    run zinit delete --yes mfaerevaag/wd
 }
 
 @test 'plugins' {
@@ -48,16 +54,25 @@
   assert $output contains "==> 4 Plugins matching 'zdharma'"
 }
 
-@test 'help' {
-  for cmd in 'help' '-h' '--help'; do
-    run zinit $cmd
-    assert $output contains '—— help                          – usage information'
-    assert $state equals 0
-  done
-  run zinit -help
-  assert $output contains 'Unknown subcommand'
-  assert $state equals 1
+@test 'compile' {
+  run zinit light @zdharma-continuum/history-search-multi-word
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile zdharma-continuum/history-search-multi-word)
+  assert $state equals 0
+  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
 }
+@test 'compile multiple files' {
+  run zinit for compile'h*~*zwc' id-as'hsmw-compile-ice' @zdharma-continuum/history-search-multi-word
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile hsmw-compile-ice)
+  assert $output contains "==> Compiling 4 files history-search-multi-word, history-search-multi-word.plugin.zsh, hsmw-context-main, hsmw-highlight [OK]"
+  assert $state equals 0
+}
+@test 'compile single file' {
+  run zinit for id-as'hsmw-no-compile-ice' @zdharma-continuum/history-search-multi-word
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile hsmw-no-compile-ice)
+  assert $state equals 0
+  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
+}
+
 @test 'self-update' {
   run zinit self-update
   assert $output contains 'Already up-to-date.'
@@ -73,3 +88,5 @@
   run +zi-log -n '{m} message'
   assert $output contains 'message'; assert $state equals 0
 }
+
+# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker

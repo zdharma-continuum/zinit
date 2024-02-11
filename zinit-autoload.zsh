@@ -976,32 +976,128 @@ ZINIT[EXTENDED_GLOB]=""
         fi
     done
 } # ]]]
+
+# FUNCTION: .zinit-compile-plugin [[[
+# Compiles given plugin (its main source file, and also an
+# additional "....zsh" file if it exists).
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+.zinit-compile-plugin () {
+    emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet
+    local -a list
+    local -A ICE
+    .zinit-compute-ice "$id_as" "pack" ICE plugin_dir filename is_snippet || return 1
+    if [[ ${ICE[from]} = gh-r ]] && (( ${+ICE[compile]} == 0 )); then
+        +zi-log "{dbg} $0: ${id_as} has from'gh-r', skip compile"
+        return 0
+    fi
+    __compile_header () {
+        (( $#quiet )) || +zi-log "{i} {b}${1}{rst}"
+    }
+    if [[ -n "${ICE[compile]}" ]]; then
+        local -aU pats list=()
+        pats=(${(s.;.)ICE[compile]})
+        local pat
+        __compile_header "${id_as}"
+        for pat in $pats; do
+            list+=("${plugin_dir:A}/"${~pat}(.N))
+        done
+        +zi-log "{dbg} $0: pattern {glob}${pats}{rst} found ${(pj;, ;)list[@]:t}"
+        if [[ ${#list} -eq 0 ]]; then
+            +zi-log "{w} {ice}compile{apo}''{rst} didn't match any files"
+        else
+            # (( $#quiet )) || +zi-log -n "{m} Compiling {num}${#list}{rst} file${=${list:#1}:+s} ${(pj;, ;)list[@]:t}"
+            +zi-log -n "{m} Compiling {num}${#list}{rst} file${=${list:#1}:+s} ${(pj;, ;)list[@]:t}"
+            integer retval
+            for first in $list; do
+                () {
+                    builtin zcompile -Uz -- "${first}"
+                    retval+=$?
+                }
+            done
+            builtin print -rl -- ${list[@]#$plugin_dir/} >| ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
+            if (( !retval )); then
+                +zi-log " [{happy}OK{rst}]"
+            else
+                +zi-log " (exit code: {ehi}$retval{rst})"
+            fi
+        fi
+        return
+    fi
+    if [[ ${ICE[pick]} != /dev/null && ${ICE[as]} != null && ${+ICE[null]} -eq 0 && ${ICE[as]} != command && ${+ICE[binary]} -eq 0 && ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! ) ]]; then
+        __compile_header "${id_as}"
+        reply=()
+        if [[ -n ${ICE[pick]} ]]; then
+            list=(${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN))
+            if [[ ${#list} -eq 0 ]]; then
+                +zi-log "{w} No files for compilation found (pick-ice didn't match)"
+                return 1
+            fi
+            reply=("${list[1]:h}" "${list[1]}")
+        else
+            if (( is_snippet )); then
+                if [[ -f $plugin_dir/$filename ]]; then
+                    reply=("$plugin_dir" $plugin_dir/$filename)
+                elif { ! .zinit-first % "$plugin_dir" }; then
+                    +zi-log "{m} No files for compilation found"
+                    return 1
+                fi
+            else
+                .zinit-first "$1" "$2" || {
+                    +zi-log "{m} No files for compilation found"
+                    return 1
+                }
+            fi
+        fi
+        local pdir_path=${reply[-2]}
+        first=${reply[-1]}
+        local fname=${first#$pdir_path/}
+        +zi-log -n "{m} Compiling {file}${fname}{rst}"
+        if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]]; then
+            () {
+                builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
+                if { ! zcompile -Uz "$first" }; then
+                    +zi-log "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
+                    +zi-log "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
+                else
+                    +zi-log " [{happy}OK{rst}]"
+                fi
+                zcompile -U "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2> /dev/null
+            }
+        fi
+    fi
+    return 0
+} # ]]]
 # FUNCTION: .zinit-compile-uncompile-all [[[
 # Compiles or uncompiles all existing (on disk) plugins.
 #
 # User-action entry point.
-.zinit-compile-uncompile-all() {
-    builtin setopt localoptions nullglob
-
+.zinit-compile-uncompile-all () {
+    emulate -L zsh
+    setopt extendedglob null_glob typeset_silent
     local compile="$1"
-
-    typeset -a plugins
-    plugins=( "${ZINIT[PLUGINS_DIR]}"/*(DN) )
-
+    +zi-log "{dbg} ${compile} all"
+    condition () {
+        if [[ -e "${REPLY:h}"/id-as ]]; then
+            reply+=("$(cat "${REPLY:h}/id-as")")
+        else
+            reply+=("$(cat "${REPLY:A}")")
+        fi
+    }
+    local -aU plugins=("$ZINIT_REGISTERED_PLUGINS[@]")
+    plugins+=(${ZINIT[PLUGINS_DIR]}/*/\._zinit/teleid(on+condition))
     local p user plugin
     for p in "${plugins[@]}"; do
-        [[ "${p:t}" = "custom" || "${p:t}" = "_local---zinit" ]] && continue
-
-        .zinit-any-to-user-plugin "${p:t}"
+        [[ "${p:t}" = "custom" || "${p}" = "_local/zinit" ]] && continue
+        .zinit-any-to-user-plugin "${p}"
         user="${reply[-2]}" plugin="${reply[-1]}"
-
-        .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-        builtin print -r -- "$REPLY:"
-
-        if [[ "$compile" = "1" ]]; then
-            .zinit-compile-plugin "$user" "$plugin"
+        if [[ -n ${user} ]]; then
+            .zinit-${compile}-plugin "$user" "$plugin"
         else
-            .zinit-uncompile-plugin "$user" "$plugin" "1"
+            .zinit-${compile}-plugin "$plugin"
         fi
     done
 } # ]]]
@@ -1037,6 +1133,50 @@ ZINIT[EXTENDED_GLOB]=""
         builtin print "$file"
     done
 } # ]]]
+# FUNCTION: .zinit-uncompile-plugin [[[
+# Uncompiles given plugin.
+#
+# User-action entry point.
+#
+# $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
+# $2 - plugin (only when $1 - i.e. user - given)
+.zinit-uncompile-plugin () {
+    emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
+    setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
+    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet
+    local -a list
+    local -A ICE
+    .zinit-compute-ice "$id_as" "pack" ICE plugin_dir filename is_snippet || return 1
+    if [[ ${ICE[from]} = gh-r ]] && (( ${+ICE[compile]} == 0 )); then
+        +zi-log "{dbg} $0: ${id_as} has from'gh-r', skip compile"
+        return 0
+    fi
+    if [[ -n ${plugin_dir}/*.zwc(#qN) ]]; then
+        if (( $#quiet )); then
+            +zi-log -n "{m} Uncompiling {b}${id_as}{rst}"
+        else
+             +zi-log "{i} {file}${id_as}{rst}"
+        fi
+        integer retval
+        (( !$#quiet )) && +zi-log -n "{m} Removing: "
+        for m in ${plugin_dir}/*.zwc(.N); do
+            command rm -f ${m:A}
+            retval+=$?
+            (( !$#quiet )) && { +zi-log -n "{file}${m:t}{rst} " }
+        done
+        if (( retval )) {
+            +zi-log " [exit code: {ehi}$retval{rst}]"
+        } else {
+            +zi-log " [{happy}OK{rst}]" 
+        }
+        # fi
+    # else
+    #     if (( !$#quiet )); then
+    #         +zi-log "${id_as} not compiled"
+    #     fi
+    fi
+} # ]]]
+
 # FUNCTION: .zinit-confirm [[[
 # Prints given question, waits for "y" key, evals
 # given expression if "y" obtained
@@ -2292,41 +2432,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
     command rm -f "${fname}.zwc"
     (( compiled )) && zcompile -U "$fname"
 } # ]]]
-# FUNCTION: .zinit-uncompile-plugin [[[
-# Uncompiles given plugin.
-#
-# User-action entry point.
-#
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user (+ plugin in $2), plugin)
-# $2 - plugin (only when $1 - i.e. user - given)
-.zinit-uncompile-plugin() {
-    builtin setopt localoptions nullglob
 
-    .zinit-any-to-user-plugin "$1" "$2"
-    local user="${reply[-2]}" plugin="${reply[-1]}" silent="$3"
-
-    # There are plugins having ".plugin.zsh"
-    # in ${plugin} directory name, also some
-    # have ".zsh" there
-    [[ "$user" = "%" ]] && local pdir_path="$plugin" || local pdir_path="${ZINIT[PLUGINS_DIR]}/${user:+${user}---}${plugin//\//---}"
-    typeset -a matches m
-    matches=( $pdir_path/*.zwc(DN) )
-
-    if [[ "${#matches[@]}" -eq "0" ]]; then
-        if [[ "$silent" = "1" ]]; then
-            builtin print "not compiled"
-        else
-            .zinit-any-colorify-as-uspl2 "$user" "$plugin"
-            builtin print -r -- "$REPLY not compiled"
-        fi
-        return 1
-    fi
-
-    for m in "${matches[@]}"; do
-        builtin print "Removing ${ZINIT[col-info]}${m:t}${ZINIT[col-rst]}"
-        command rm -f "$m"
-    done
-} # ]]]
 # FUNCTION: .zinit-unload [[[
 # 1. call the zsh plugin's standard *_plugin_unload function
 # 2. call the code provided by the zsh plugin's standard @zsh-plugin-run-at-update
