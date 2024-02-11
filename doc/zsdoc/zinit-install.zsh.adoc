@@ -621,7 +621,7 @@ Not called by script or any function (may be e.g. a hook, a Zle widget, etc.).
 
 ==== ∞zinit-compile-plugin-hook
 
-Has 23 line(s). Calls functions:
+Has 20 line(s). Calls functions:
 
  ∞zinit-compile-plugin-hook
  `-- zinit-autoload.zsh/.zinit-compile-plugin
