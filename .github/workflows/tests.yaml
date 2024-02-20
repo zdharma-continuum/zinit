@@ -58,7 +58,7 @@ jobs:
       - name: "install dependencies"
         id: install-deps
         run: |
-          brew install --force --overwrite autoconf automake binutils byacc cmake coreutils curl gettext gnu-sed libevent libtool libuv lua lua@5.1 make ncurses ninja parallel pkg-config texinfo unzip xz zsh
+          brew install --force --overwrite autoconf automake binutils byacc cmake coreutils curl gettext gnu-sed libevent libtool libuv lua lua@5.4 make ncurses ninja parallel pkg-config texinfo unzip xz zsh
           brew link --force --overwrite ncurses
 
       - name: "install zunit"
