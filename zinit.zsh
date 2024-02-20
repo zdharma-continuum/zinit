@@ -2275,8 +2275,8 @@ $match[7]}:-${ZINIT[__last-formatter-code]}}}:+}}}//←→}
     if (( $+ZINIT_ICES[configure] || $+ZINIT_ICES[cmake] || $+ZINIT_ICES[make] )); then
         ZINIT_ICES[null]=
     fi
-    (( $+ZINIT_ICES[configure] )) && ZINIT_ICES[configure]=${ZINIT_ICES[configure]:---quiet}
-    (( $+ZINIT_ICES[make] )) && ZINIT_ICES[make]=${ZINIT_ICES[make]:-install}
+    (( $+ZINIT_ICES[configure] )) && ZINIT_ICES[configure]="${ZINIT_ICES[configure]}"
+    (( $+ZINIT_ICES[make] )) && ZINIT_ICES[make]="${ZINIT_ICES[make]:-install}"
     return retval
 } # ]]]
 # FUNCTION: .zinit-pack-ice [[[
