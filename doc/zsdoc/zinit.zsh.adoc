@@ -1965,5 +1965,4 @@ Called by:
  :zinit-tmp-subst-autoload
  :zinit-tmp-subst-bindkey
  Script-Body
- zinit-install.zsh/.zinit-download-snippet
 
