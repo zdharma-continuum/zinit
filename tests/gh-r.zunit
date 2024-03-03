@@ -1,4 +1,5 @@
 #!/usr/bin/env zunit
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
 
 @setup {
   load "${PWD}/tests/_support/annex_test_assertions"
@@ -227,7 +228,7 @@
   run $fnm --version; assert $state equals 0
 }
 @test 'fogg' { # Manage Infrastructure as Code with less pain
-  run zinit for @chanzuckerberg/fogg; assert $state equals 0
+  run zinit ver'v0.92.1' for @chanzuckerberg/fogg; assert $state equals 0
   local fogg="$ZBIN/fogg"; assert "$fogg" is_executable
   run $fogg version; assert $state equals 0
 }
@@ -881,5 +882,3 @@
 #   local nvim="$ZBIN/nvim"; assert "$nvim" is_executable
 #   $nvim --version; assert $state equals 0
 # }
-
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker
