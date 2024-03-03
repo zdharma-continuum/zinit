@@ -1,4 +1,5 @@
 #!/usr/bin/env zunit
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
 
 @setup {
   typeset -gx HOME="$zi_test_dir"
@@ -54,46 +55,6 @@
   assert $output contains "==> 4 Plugins matching 'zdharma'"
 }
 
-@test 'compile' {
-  run zinit light @zdharma-continuum/history-search-multi-word
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile zdharma-continuum/history-search-multi-word)
-  assert $state equals 0
-  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
-}
-@test 'compile multiple files' {
-  run zinit for compile'h*~*zwc' id-as'hsmw-compile-ice' @zdharma-continuum/history-search-multi-word
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile hsmw-compile-ice)
-  assert $output contains "==> Compiling 4 files history-search-multi-word, history-search-multi-word.plugin.zsh, hsmw-context-main, hsmw-highlight [OK]"
-  assert $state equals 0
-}
-@test 'compile single file' {
-  run zinit for id-as'hsmw-no-compile-ice' @zdharma-continuum/history-search-multi-word
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile hsmw-no-compile-ice)
-  assert $state equals 0
-  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
-}
-
-@test 'compile command' {
-  run zinit for id-as"compile-command" @zdharma-continuum/history-search-multi-word
-
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile --quiet compile-command)
-  assert $state equals 0
-  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
-
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compiled)
-  assert $state equals 0
-  assert $output contains 'compile-command:'
-
-  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit uncompile --quiet compile-command)
-  assert $state equals 0; assert $output contains '==> Uncompiling compile-command [OK]'
-}
-
-@test 'uncompile --all' {
-  zinit uncompile --all --quiet
-  run zinit compiled; assert $state equals 0
-  assert $output contains 'No compiled plugins'
-}
-
 @test 'self-update' {
   run zinit self-update
   assert $output contains 'Already up-to-date.'
@@ -109,5 +70,3 @@
   run +zi-log -n '{m} message'
   assert $output contains 'message'; assert $state equals 0
 }
-
-# vim:ft=zsh:sw=2:sts=2:et:foldmarker={,}:foldmethod=marker

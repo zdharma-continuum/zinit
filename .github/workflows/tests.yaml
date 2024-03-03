@@ -74,6 +74,9 @@ jobs:
       - name: "commands"
         run: zunit run tests/commands.zunit
 
+      - name: "compile"
+        run: zunit run tests/compile.zunit
+
       - name: "gh-r"
         run: zunit run tests/gh-r.zunit
 
