@@ -1,5 +1,12 @@
 #!/usr/bin/env zunit
 # vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
+#
+# zdharma-continuum/zinit/tests/commands.zunit
+# Copyright (c) 2016-2021 Sebastian Gniazdowski
+# Copyright (c) 2021-2024 zdharma-continuum
+# Homepage: https://github.com/zdharma-continuum/zinit
+# License: MIT License
+#
 
 @setup {
   typeset -gx HOME="$zi_test_dir"

@@ -209,7 +209,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-aps     $'\e[38;5;117m'         col-flag    $'\e[1;3;38;5;79m'      col-nb      $'\e[22m'            col-rst     $'\e[0m'
     col-b       $'\e[1m'                col-func    $'\e[38;5;219m'         col-nit     $'\e[23m'            col-slight  $'\e[38;5;230m'
     col-b-lhi   $'\e[1m\e[38;5;75m'     col-glob    $'\e[38;5;227m'         col-nl      $'\n'                col-st      $'\e[9m'
-    col-b-warn  $'\e[1;38;5;214m'       col-happy   $'\e[1m\e[38;5;82m'     col-note    $'\e[38;5;148m'      col-tab     $'    \t'
+    col-b-warn  $'\e[1;38;5;214m'       col-happy   $'\e[1m\e[38;5;82m'     col-note    $'\e[38;5;148m'      col-tab     $' \t '
     col-bapo    $'\e[1;38;5;220m'       col-hi      $'\e[1m\e[38;5;183m'    col-nst     $'\e[29m'            col-term    $'\e[38;5;185m'
     col-baps    $'\e[1;38;5;82m'        col-ice     $'\e[38;5;39m'          col-nu      $'\e[24m'            col-th-bar  $'\e[38;5;82m'
     col-bar     $'\e[38;5;82m'          col-id-as   $'\e[4;38;5;220m'       col-num     $'\e[3;38;5;155m'    col-time    $'\e[38;5;220m'

@@ -79,4 +79,4 @@ builtin hash -d plugins="${zi_test_dir}/plugins"
     @zdharma-continuum/zinit-annex-linkman
 }>/dev/null
 
-zinit zstatus
+zinit zstatus 
