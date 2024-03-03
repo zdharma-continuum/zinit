@@ -3070,11 +3070,13 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     shift
                     zparseopts -D -F -K -- {a,-all}=all {h,-help}=help {q,-quiet}=quiet || return
                     if (( $#help )); then
-                        +zi-log "Usage:  zinit ${action} [OPTIONS]{nl}" \
-                          "${action} plugins{nl}" \
-                          'Options:{nl}' \
-                          '    {tab}-a, --all             Remove all unused images not just dangling ones{nl}' \
-                          '    {tab}-q, --quiet           Remove all unused images not just dangling ones'
+                        print "Usage:"
+                        print "  zinit ${0} <options> <plugin>"
+                        print " "
+                        print "Options:"
+                        print "  -a, --all       Checkout the specified branch"
+                        print "  -h, --help      Checkout the specified branch"
+                        print "  -q, --quiet     Checkout the specified tag or commit"
                     fi
                     if (( $#all )); then
                         .zinit-compile-uncompile-all ${action}; ___retval="${?}"
