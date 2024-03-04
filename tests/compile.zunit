@@ -1,0 +1,53 @@
+#!/usr/bin/env zunit
+# vim:ft=zsh:sw=4:sts=4:et:foldmarker={,}:foldmethod=marker
+
+@setup {
+  typeset -gx HOME="$zi_test_dir"
+  typeset -gx ZBIN="$zi_test_dir/polaris/bin"
+}
+
+@test 'compile ice - multiple files' {
+  run zinit for compile'h*~*zwc' id-as'hsmw-compile-ice' @zdharma-continuum/history-search-multi-word
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile hsmw-compile-ice)
+  assert $output contains "==> Compiling 4 files history-search-multi-word, history-search-multi-word.plugin.zsh, hsmw-context-main, hsmw-highlight [OK]"
+  assert $state equals 0
+}
+@test 'compile ice - single file' {
+  run zinit for id-as'hsmw-no-compile-ice' @zdharma-continuum/history-search-multi-word
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile hsmw-no-compile-ice)
+  assert $state equals 0
+  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
+}
+@test 'compile ice' {
+  run zinit light @zdharma-continuum/history-search-multi-word
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile zdharma-continuum/history-search-multi-word)
+  assert $state equals 0
+  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
+}
+
+@test 'compile cmd' {
+  run zinit for id-as"compile-command" @zdharma-continuum/history-search-multi-word
+
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile --quiet compile-command)
+  assert $state equals 0
+  assert $output contains "==> Compiling history-search-multi-word.plugin.zsh [OK]"
+
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compiled)
+  assert $state equals 0
+  assert $output contains 'compile-command:'
+
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit uncompile --quiet compile-command)
+  assert $state equals 0; assert $output contains '==> Uncompiling compile-command [OK]'
+}
+@test 'compiled cmd' {
+  zinit uncompile --all --quiet
+  run zinit compiled; assert $state equals 0
+  assert $output contains 'No compiled plugins'
+}
+@test 'uncompile cmd' {
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit compile -q compile-command)
+  assert $state equals 0
+  run perl -pe 's/\x1b\[[0-9;]*[mG]//g' <(zinit uncompile -q compile-command)
+  assert $state equals 0
+  assert $output contains '==> Uncompiling compile-command [OK]'
+}

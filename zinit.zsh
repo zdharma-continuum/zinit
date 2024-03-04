@@ -209,7 +209,7 @@ if [[ -z $SOURCED && ( ${+terminfo} -eq 1 && -n ${terminfo[colors]} ) || ( ${+te
     col-aps     $'\e[38;5;117m'         col-flag    $'\e[1;3;38;5;79m'      col-nb      $'\e[22m'            col-rst     $'\e[0m'
     col-b       $'\e[1m'                col-func    $'\e[38;5;219m'         col-nit     $'\e[23m'            col-slight  $'\e[38;5;230m'
     col-b-lhi   $'\e[1m\e[38;5;75m'     col-glob    $'\e[38;5;227m'         col-nl      $'\n'                col-st      $'\e[9m'
-    col-b-warn  $'\e[1;38;5;214m'       col-happy   $'\e[1m\e[38;5;82m'     col-note    $'\e[38;5;148m'      col-tab     $' \t '
+    col-b-warn  $'\e[1;38;5;214m'       col-happy   $'\e[1m\e[38;5;82m'     col-note    $'\e[38;5;148m'      col-tab     $' \t '
     col-bapo    $'\e[1;38;5;220m'       col-hi      $'\e[1m\e[38;5;183m'    col-nst     $'\e[29m'            col-term    $'\e[38;5;185m'
     col-baps    $'\e[1;38;5;82m'        col-ice     $'\e[38;5;39m'          col-nu      $'\e[24m'            col-th-bar  $'\e[38;5;82m'
     col-bar     $'\e[38;5;82m'          col-id-as   $'\e[4;38;5;220m'       col-num     $'\e[3;38;5;155m'    col-time    $'\e[38;5;220m'
@@ -1340,8 +1340,7 @@ builtin setopt noaliases
     ___retval+=$?
 
     return __retval
-}
-# ]]]
+} # ]]]
 # FUNCTION: .zinit-set-m-func [[[
 # Sets and withdraws the temporary, atclone/atpull time function `m`.
 .zinit-set-m-func() {
@@ -2613,8 +2612,7 @@ zinit() {
     )
 
     cmd="$1"
-    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|\
-cdclear) ]]; then
+    if [[ $cmd == (times|unload|env-whitelist|update|snippet|load|light|cdreplay|cdclear) ]]; then
         if (( $@[(I)-*] || OPTS[opt_-h,--help] )); then
             .zinit-parse-opts "$cmd" "$@"
             if (( OPTS[opt_-h,--help] )); then
@@ -2890,13 +2888,12 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
        (cdclear)
            .zinit-compdef-clear "$2"
            ;;
-       (add-fpath|fpath)
+       ((add-|)fpath)
            .zinit-add-fpath "${@[2-correct,-1]}"
            ;;
        (run)
            .zinit-run "${@[2-correct,-1]}"
            ;;
-
        (man)
            man "${ZINIT[BIN_DIR]}/doc/zinit.1"
            ;;
@@ -3064,13 +3061,29 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[.zinit-forget-completion]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
                     .zinit-compinit; ___retval=$?
                     ;;
-                (compile)
-                    (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
-                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
-                        .zinit-compile-uncompile-all 1; ___retval=$?
+                (compiled)
+                    .zinit-compiled
+                    ;;
+                (compile|uncompile)
+                    (( ${+functions[.zinit-compile-plugin]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
+                    local action="$1" all f help quiet
+                    shift
+                    zparseopts -D -F -K -- {a,-all}=all {h,-help}=help {q,-quiet}=quiet || return
+                    if (( $#help )); then
+                        print "Usage:"
+                        print "  zinit ${0} <options> <plugin>"
+                        print " "
+                        print "Options:"
+                        print "  -a, --all       Checkout the specified branch"
+                        print "  -h, --help      Checkout the specified branch"
+                        print "  -q, --quiet     Checkout the specified tag or commit"
+                    fi
+                    if (( $#all )); then
+                        .zinit-compile-uncompile-all ${action}; ___retval="${?}"
                     else
-                        .zinit-compile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
+                        for f in ${(q+)^@}; do
+                            .zinit-$action-plugin "${f}"; (( ___retval += ${?} ))
+                        done
                     fi
                     ;;
                 (debug)
@@ -3078,21 +3091,11 @@ You can try to prepend {apo}${___q}{lhi}@{apo}'{error} to the ID if the last ice
                     (( ${+functions[+zinit-debug]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-additional.zsh"
                     +zinit-debug $@
                     ;;
-                (uncompile)
-                    if [[ $2 = --all || ( -z $2 && -z $3 ) ]]; then
-                        [[ -z $2 ]] && { builtin print -r -- "Assuming --all is passed"; }
-                        .zinit-compile-uncompile-all 0; ___retval=$?
-                    else
-                        .zinit-uncompile-plugin "${2%%(///|//|/)}" "${3%%(///|//|/)}"; ___retval=$?
-                    fi
-                    ;;
-                (compiled)
-                    .zinit-compiled
-                    ;;
+
                 (cdlist)
                     .zinit-list-compdef-replay
                     ;;
-                (cd|recall|edit|glance|changes|create|stress)
+                ((c(hanges|d))|create|edit|glance|recall|stress)
                     .zinit-"$1" "${@[2-correct,-1]%%(///|//|/)}"; ___retval=$?
                     ;;
                 (recently)

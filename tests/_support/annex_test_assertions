@@ -11,5 +11,5 @@ is_annex() {
 
 load_bin_gem_node(){
   run zinit load @zdharma-continuum/zinit-annex-bin-gem-node
-  zinit default-ice --quiet from'gh-r'
+  zinit default-ice from'gh-r'
 }
