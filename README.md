@@ -9,7 +9,7 @@
 [![MIT License][mit-badge]][mit-link] [![zinit version][ver-badge]][ver-link] [![zunit tests][tests-badge]][tests-link]
 [![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link]
 
-<!-- mdformat-toc start --slug=github --maxlevel=6 --minlevel=2 -->
+<!-- mdformat-toc start --slug=github --maxlevel=3 --minlevel=2 -->
 
 - [Zinit Wiki](#zinit-wiki)
 - [Install](#install)
@@ -42,9 +42,6 @@
   - [Tracking of the Active Session](#tracking-of-the-active-session)
   - [Reports and Statistics](#reports-and-statistics)
   - [Compiling](#compiling)
-    - [compile](#compile)
-    - [compiled](#compiled)
-    - [uncompile](#uncompile)
   - [Other](#other)
 - [Updating Zinit and Plugins](#updating-zinit-and-plugins)
 - [Completions](#completions-2)
