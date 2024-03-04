@@ -42,6 +42,9 @@
   - [Tracking of the Active Session](#tracking-of-the-active-session)
   - [Reports and Statistics](#reports-and-statistics)
   - [Compiling](#compiling)
+    - [compile](#compile)
+    - [compiled](#compiled)
+    - [uncompile](#uncompile)
   - [Other](#other)
 - [Updating Zinit and Plugins](#updating-zinit-and-plugins)
 - [Completions](#completions-2)
@@ -853,11 +856,41 @@ Following commands are passed to `zinit ...` to obtain described effects.
 
 ### Compiling<a name="compiling"></a>
 
-| Command                | Description                                                         |
-| ---------------------- | ------------------------------------------------------------------- |
-| `compiled`             | List plugins that are compiled.                                     |
-| `compile {plg-spec}`   | Compile plugin. `--all` – compile all plugins.                      |
-| `uncompile {plg-spec}` | Remove compiled version of plugin. `--all` – do it for all plugins. |
+#### compile<a name="compile"></a>
+
+List plugins that are compiled.
+
+```zsh
+zinit [options] compile PLUGIN
+```
+
+| Option        | Description               |
+| ------------- | ------------------------- |
+| `-a, --all`   | Compile all plugins       |
+| `-h, --help`  | Print usage               |
+| `-q, --quiet` | Suppress the build output |
+
+#### compiled<a name="compiled"></a>
+
+List plugins that are compiled.
+
+```zsh
+zinit compiled
+```
+
+#### uncompile<a name="uncompile"></a>
+
+List plugins that are compiled.
+
+```zsh
+zinit [options] uncompile PLUGIN
+```
+
+| Option        | Description                               |
+| ------------- | ----------------------------------------- |
+| `-a, --all`   | Remove any compiled files for all plugins |
+| `-h, --help`  | Print usage                               |
+| `-q, --quiet` | Suppress the output                       |
 
 ### Other<a name="other"></a>
 
