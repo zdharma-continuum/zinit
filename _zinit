@@ -178,9 +178,12 @@ _zinit_completions(){
 # FUNCTION: _zinit_create [[[
 _zinit_compile(){
   _arguments \
+    '(-h --help)'{-h,--help}'[Show this help message]' \
+    '(-q --quiet)'{-q,--quiet}'[Make some output more quiet]' \
     + '(operation)' \
-      '1:installed:__zinit_installed' \
-      {-a,--all}'[Compile all plugins]'
+      '(-a --all)'{-a,--all}'[Compile all plugins]' \
+      '*::installed:__zinit_installed' \
+    && ret=0
 } # ]]]
 # FUNCTION: _zinit_create [[[
 _zinit_create(){
@@ -299,10 +302,13 @@ _zinit_times(){
 } # ]]]
 # FUNCTION: _zinit_uncompile [[[
 _zinit_uncompile(){
-  _arguments -A \
-    '(-a --all)'{-a,--all}'[Delete all plugins and snippets]'
-  _arguments - installed '*::installed:__zinit_installed' && ret=0
-  # - plugin '1:plugin:__zinit_installed_plugins'
+  _arguments \
+    '(-h --help)'{-h,--help}'[Show this help message]' \
+    '(-q --quiet)'{-q,--quiet}'[Make some output more quiet]' \
+    + '(operation)' \
+      '(-a --all)'{-a,--all}'[Uncompile all plugins]' \
+      '*::installed:__zinit_installed' \
+    && ret=0
 } # ]]]
 # FUNCTION: _zinit_unload [[[
 _zinit_unload(){

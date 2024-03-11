@@ -812,106 +812,6 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
 
     unfunction -- 2>/dev/null "$f"
 } # ]]]
-# FUNCTION: .zinit-compile-plugin [[[
-# Compiles given plugin (its main source file, and also an
-# additional "....zsh" file if it exists).
-#
-# $1 - plugin spec (4 formats: user---plugin, user/plugin, user, plugin)
-# $2 - plugin (only when $1 - i.e. user - given)
-.zinit-compile-plugin() {
-    builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-    builtin setopt extendedglob warncreateglobal typesetsilent noshortloops rcquotes
-
-    local id_as=$1${2:+${${${(M)1:#%}:+$2}:-/$2}} first plugin_dir filename is_snippet
-    local -a list
-
-    local -A ICE
-    .zinit-compute-ice "$id_as" "pack" \
-        ICE plugin_dir filename is_snippet || return 1
-
-    # when from"gh-r" ice set, skip compile unless compile ice is set
-    if [[ ${ICE[from]} = gh-r ]] && (( ${+ICE[compile]} == 0 )); then
-        +zi-log '{dbg} from"gh-r" detected, skipping compile'
-        return 0
-    fi
-
-    if [[ ${ICE[pick]} != /dev/null && ${ICE[as]} != null && \
-        ${+ICE[null]} -eq 0 && ${ICE[as]} != command && ${+ICE[binary]} -eq 0 && \
-        ( ${+ICE[nocompile]} = 0 || ${ICE[nocompile]} = \! )
-    ]] {
-        reply=()
-        if [[ -n ${ICE[pick]} ]]; then
-            list=( ${~${(M)ICE[pick]:#/*}:-$plugin_dir/$ICE[pick]}(DN) )
-            if [[ ${#list} -eq 0 ]] {
-                builtin print "No files for compilation found (pick-ice didn't match)."
-                return 1
-            }
-            reply=( "${list[1]:h}" "${list[1]}" )
-        else
-            if (( is_snippet )) {
-                if [[ -f $plugin_dir/$filename ]] {
-                    reply=( "$plugin_dir" $plugin_dir/$filename )
-                } elif { ! .zinit-first % "$plugin_dir" } {
-                    +zi-log "{m} No files for compilation found"
-                    return 1
-                }
-            } else {
-                .zinit-first "$1" "$2" || {
-                    +zi-log "{m} No files for compilation found"
-                    return 1
-                }
-            }
-        fi
-        local pdir_path=${reply[-2]}
-        first=${reply[-1]}
-        local fname=${first#$pdir_path/}
-
-        +zi-log -n "{m} Compiling {file}$fname{rst}"
-        if [[ -z ${ICE[(i)(\!|)(sh|bash|ksh|csh)]} ]] {
-            () {
-                builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
-                if { ! zcompile -U "$first" } {
-                    +zi-log "{msg2}Warning:{rst} Compilation failed. Don't worry, the plugin will work also without compilation."
-                    +zi-log "{msg2}Warning:{rst} Consider submitting an error report to Zinit or to the plugin's author."
-                } else {
-                    +zi-log " [{happy}OK{rst}]"
-                }
-                # Try to catch possible additional file
-                zcompile -U "${${first%.plugin.zsh}%.zsh-theme}.zsh" 2>/dev/null
-            }
-        }
-    }
-
-    if [[ -n "${ICE[compile]}" ]]; then
-        local -a pats
-        pats=( ${(s.;.)ICE[compile]} )
-        local pat
-        list=()
-        for pat ( $pats ) {
-            eval "list+=( \$plugin_dir/$~pat(N) )"
-        }
-        if [[ ${#list} -eq 0 ]] {
-            +zi-log "{w} ice {ice}compile{apo}''{rst} didn't match any files."
-        } else {
-            integer retval
-            for first in $list; do
-                () {
-                    builtin emulate -LR zsh -o extendedglob ${=${options[xtrace]:#off}:+-o xtrace}
-                    zcompile -U "$first"; retval+=$?
-                }
-            done
-            builtin print -rl -- ${list[@]#$plugin_dir/} >! ${TMPDIR:-/tmp}/zinit.compiled.$$.lst
-            +zi-log -n "{m} {num}${#list}{rst} compiled file${=${list:#1}:+s} added to {var}\$ADD_COMPILED{rst} array"
-            if (( retval )) {
-                +zi-log " (exit code: {ehi}$retval{rst})"
-            } else {
-                +zi-log ' '
-            }
-        }
-    fi
-
-    return 0
-} # ]]]
 # FUNCTION: .zinit-download-snippet [[[
 # Downloads snippet
 #   file – with curl, wget, lftp or lynx,
@@ -2427,28 +2327,27 @@ __zinit-cmake-base-hook () {
     )
 } # ]]]
 # FUNCTION: ∞zinit-compile-plugin-hook [[[
-∞zinit-compile-plugin-hook() {
-    [[ "$1" = plugin ]] && \
-        local dir="${5#%}" hook="$6" subtype="$7" || \
+∞zinit-compile-plugin-hook () {
+    if [[ "$1" = plugin ]]; then
+        local dir="${5#%}" hook="$6" subtype="$7"
+    else
         local dir="${4#%}" hook="$5" subtype="$6"
-
-    if ! [[ ( $hook = *\!at(clone|pull)* && ${+ICE[nocompile]} -eq 0 ) || \
-            ( $hook = at(clone|pull)* && $ICE[nocompile] = '!' ) ]] {
+    fi
+    if ! [[ ( $hook = *\!at(clone|pull)* && ${+ICE[nocompile]} -eq 0 ) || ( $hook = at(clone|pull)* && $ICE[nocompile] = '!' ) ]]; then
         return 0
-    }
-
-    # Compile plugin
-    if [[ -z $ICE[(i)(\!|)(sh|bash|ksh|csh)] ]] {
+    fi
+    if [[ -z $ICE[(i)(\!|)(sh|bash|ksh|csh)] ]]; then
         () {
-            builtin emulate -LR zsh ${=${options[xtrace]:#off}:+-o xtrace}
-            setopt extendedglob warncreateglobal
-            if [[ $tpe == snippet ]] {
-                .zinit-compile-plugin "%$dir" ""
-            } else {
-                .zinit-compile-plugin "$id_as" ""
-            }
+            builtin source "${ZINIT[BIN_DIR]}/zinit-autoload.zsh" || return 1
+            setopt local_options extended_glob warn_create_global
+            local quiet=1
+            if [[ $tpe == snippet ]]; then
+                .zinit-compile-plugin "%$dir"
+            else
+                .zinit-compile-plugin "$id_as"
+            fi
         }
-    }
+    fi
 } # ]]]
 # FUNCTION: ∞zinit-atpull-e-hook [[[
 ∞zinit-atpull-e-hook() {
