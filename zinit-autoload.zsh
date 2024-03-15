@@ -1969,7 +1969,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
         local nl=$'\n' escape=$'\x1b['
-        local current_branch=$(git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
+        local current_branch=$(command git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
         # local current_branch='main'
         local -a lines
         (
@@ -3168,7 +3168,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             }
         }
 
-        if [[ -d $local_dir/.git ]] && ( builtin cd -q $local_dir ; git show-ref --verify --quiet refs/heads/main ); then
+        if [[ -d $local_dir/.git ]] && ( builtin cd -q $local_dir ; command git show-ref --verify --quiet refs/heads/main ); then
             local main_branch=main
         else
             local main_branch=master
@@ -3574,7 +3574,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # User-action entry point.
 zi::version() {
-	+zi-log "zinit{cmd} $(git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
+	+zi-log "zinit{cmd} $(command git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
 	return $?
 } # ]]]
 
