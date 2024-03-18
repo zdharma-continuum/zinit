@@ -233,7 +233,7 @@
   run $fogg version; assert $state equals 0
 }
 @test 'fx' { # Terminal JSON viewer
-  run zinit lbin'!* -> fx' for @antonmedv/fx; assert $state equals 0
+  run zinit lbin'!* -> fx' ver'32.0.0' for @antonmedv/fx; assert $state equals 0
   local fx="$ZBIN/fx"; assert "$fx" is_executable
   run $fx -v; assert $state equals 0
 }
