@@ -84,7 +84,7 @@
 }
 @test 'broot' { # A new way to see and navigate directory trees
   [[ $OSTYPE =~ 'darwin*' ]] && skip " on $os_type"
-  run zinit lbin'!*${OSTYPE}*/* -> broot' for @Canop/broot; assert $state equals 0
+  run zinit for @Canop/broot; assert $state equals 0
   local broot="$ZBIN/broot"; assert "$broot" is_executable
   run "$broot" --version; assert $state equals 0
 }
@@ -233,7 +233,7 @@
   run $fogg version; assert $state equals 0
 }
 @test 'fx' { # Terminal JSON viewer
-  run zinit lbin'!* -> fx' for @antonmedv/fx; assert $state equals 0
+  run zinit lbin'!* -> fx' ver'32.0.0' for @antonmedv/fx; assert $state equals 0
   local fx="$ZBIN/fx"; assert "$fx" is_executable
   run $fx -v; assert $state equals 0
 }
