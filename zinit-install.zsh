@@ -414,7 +414,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             ) || return $?
         } elif [[ $tpe = github ]] {
             case ${ICE[proto]} in
-                (|https|git|http|ftp|ftps|rsync|ssh)
+                (|ftp(|s)|git|http(|s)|rsync|ssh)
                     :zinit-git-clone() {
                         command git clone --progress ${(s: :)ICE[cloneopts]---recursive} \
                             ${(s: :)ICE[depth]:+--depth ${ICE[depth]}} \
@@ -886,8 +886,7 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     ZINIT[annex-multi-flag:pull-active]=${${${(M)update:#-u}:+${ZINIT[annex-multi-flag:pull-active]}}:-2}
 
     (
-        if [[ $url = (http|https|ftp|ftps|scp)://* ]] {
-            # URL
+        if [[ $url = (ftp(|s)|http(|s)|scp)://* ]] {
             (
                 () { setopt localoptions noautopushd; builtin cd -q "$local_dir"; } || return 4
 
