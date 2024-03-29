@@ -27,7 +27,7 @@ jobs:
           pip install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
 
       - name: commit
-        uses: wagoid/commitlint-github-action@v5
+        uses: wagoid/commitlint-github-action@v6
         with:
           configFile: '.commitlintrc'
         # run: commitlint --from=$(git cherry origin/main | head -n 1 | awk '{print $2}')
