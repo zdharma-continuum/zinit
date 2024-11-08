@@ -26,7 +26,7 @@
   run "$alacritty" --version; assert $state equals 0
 }
 @test 'alist' { # A file list program that supports multiple storage, powered by Gin and React
-  run zinit lbin'!* -> alist' for @alist-org/alist; assert $state equals 0
+  run zinit lbin'!* -> alist' for @alistgo/alist; assert $state equals 0
   local alist="$ZBIN/alist"; assert "$alist" is_executable
   run "$alist" version; assert $state equals 0
 }
