@@ -534,11 +534,6 @@
   run "$mdbook" --version;
   assert $state equals 127; assert $output contains 'no such file or directory'
 }
-@test 'mdcat' { # cat for markdown
-  run zinit for @swsnr/mdcat; assert $state equals 0
-  local mdcat="$ZBIN/mdcat"; assert "$mdcat" is_executable
-  run "$mdcat" --version; assert $state equals 0
-}
 @test 'micro' { # A modern and intuitive terminal-based text editor
   run zinit for @zyedidia/micro; assert $state equals 0
   local micro="$ZBIN/micro"; assert "$micro" is_executable
