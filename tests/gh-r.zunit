@@ -732,7 +732,7 @@
   run $shfmt --version; assert $state equals 0
 }
 @test 'skim' { # Fuzzy Finder in rust
-  run zinit ver'v0.9.4' for @lotabout/skim; assert $state equals 0
+  run zinit for @skim-rs/skim; assert $state equals 0
   local skim="$ZBIN/sk"; assert "$skim" is_executable
   run "$skim" --version; assert $state equals 0
 }
@@ -757,7 +757,7 @@
   run "$stern" --version; assert $state equals 0
 }
 @test 'tealdeer' { # A very fast implementation of tldr in Rust
-  run zinit lbin'!tealdeer* -> tealdeer' for @dbrgn/tealdeer; assert $state equals 0
+  run zinit lbin'!tealdeer* -> tealdeer' for @tealdeer-rs/tealdeer; assert $state equals 0
   local tealdeer="$ZBIN/tealdeer"; assert "$tealdeer" is_executable
   run "$tealdeer" --version; assert $state equals 0
 }
