@@ -3,5 +3,5 @@ directories:
   output: tests/_output
   support: tests/_support
   tests: tests
-fail_fast: true
+fail_fast: false
 verbose: true
