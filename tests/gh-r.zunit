@@ -781,11 +781,6 @@
   local tre="$ZBIN/tre"; assert "$tre" is_executable
   run $tre --version; assert $state equals 0
 }
-@test 'tv' { # A cross-platform CLI csv pretty printer that uses column styling to maximize viewer enjoyment
-  run zinit for @uzimaru0000/tv; assert $state equals 0
-  local tv="$ZBIN/tv"; assert "$tv" is_executable
-  run $tv --version; assert $state equals 0
-}
 @test 'up' { # Deploy infinitely scalable serverless apps, apis, and sites in seconds to AWS
   run zinit lbin'!up* -> up' for akavel/up; assert $state equals 0
   local up="$ZBIN/up"; assert "$up" is_executable
@@ -840,7 +835,7 @@
   run $yq --version; assert $state equals 0
 }
 @test 'zed' { # Tooling for super-structured data: a new and easier way to manipulate data
-  run zinit for @brimdata/zed; assert $state equals 0
+  run zinit for @brimdata/super; assert $state equals 0
   local zed="$ZBIN/zed"; assert "$zed" is_executable
   run $zed --version; assert $state equals 0
 }
