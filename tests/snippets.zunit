@@ -46,13 +46,13 @@
   setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_fd
 }
 @test 'tldr-completion::snippet' {
-  run install_completion 'tldr-completion/_tldr' 'dbrgn/tealdeer/main/completion/zsh_tealdeer'
+  run install_completion 'tldr-completion/_tldr' 'tealdeer-rs/tealdeer/main/completion/zsh_tealdeer'
   setup_snippet_ok $state $output "$ZINIT[COMPLETIONS_DIR]"/_tldr
   zinit delete --yes tldr-completion/_tldr; zinit cclear
 }
 @test 'tldr-completion::gh-r' {
   artifact="$ZINIT[PLUGINS_DIR]/tldr-completion---gh-r"
-  run zinit for as"completion" from"gh-r" id-as'tldr-completion/gh-r' bpick"completions_zsh" mv"completions_zsh -> _tldr_ghr" pick"_tldr_ghr" @dbrgn/tealdeer
+  run zinit for as"completion" from"gh-r" id-as'tldr-completion/gh-r' bpick"completions_zsh" mv"completions_zsh -> _tldr_ghr" pick"_tldr_ghr" @tealdeer-rs/tealdeer
   assert $state equals 0
   assert "$artifact/_tldr_ghr" is_file
   assert $artifact/_tldr_ghr is_readable
@@ -65,7 +65,7 @@
   cat<<EOF >$actual
 alias foo=date
 EOF
-   run zinit is-snippet link id-as'mysnippet' for $actual
+   run zinit is-snippet link nocompile id-as'mysnippet' for $actual
 
   assert $state equals 0
   assert "$output" contains "Setting up snippet"
