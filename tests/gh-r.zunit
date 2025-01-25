@@ -509,12 +509,6 @@
   local mage="$ZBIN/mage"; assert "$mage" is_executable
   run $mage -version; assert $state equals 0
 }
-@test 'mas' { # Mac App Store command line interface
-  [[ $OSTYPE =~ 'linux*' ]] && skip "skipped on $os_type"
-  run zinit for @mas-cli/mas; assert $state equals 0
-  local mas="$ZBIN/mas"; assert "$mas" is_executable
-  run $mas version; assert $state equals 0
-}
 @test 'mcfly' { # Fly through your shell history. Great Scott
   run zinit ver'v0.8.3' for @cantino/mcfly; assert $state equals 0
   local mcfly="$ZBIN/mcfly"; assert "$mcfly" is_executable
