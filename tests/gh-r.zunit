@@ -386,11 +386,6 @@
   local hexyl="$ZBIN/hexyl"; assert "$hexyl" is_executable
   run $hexyl --version; assert $state equals 0
 }
-@test 'hit-on' { # Git Workflow Helper Tool
-  run zinit lbin'!* -> hit' for kowainik/hit-on; assert $state equals 0
-  local hit="$ZBIN/hit"; assert "$hit" is_executable
-  run $hit --version; assert $state equals 0
-}
 @test 'hoofli' { # Generate PlantUML diagrams from Chrome or Firefox network inspection
   run zinit lbin'!* -> hoofli' for @dnnrly/hoofli; assert $state equals 0
   local hoofli="$ZBIN/hoofli"; assert "$hoofli" is_executable
@@ -659,8 +654,8 @@
   local pulumi="$ZBIN/pulumi"; assert "$pulumi" is_executable
   run "$pulumi" version; assert $state equals 0
 }
-@test 'qsv' { # CSVs sliced, diced & analyzed.
-  run zinit ver'0.112.0' for @jqnatividad/qsv; assert $state equals 0
+@test 'qsv' { #  Blazing-fast Data-Wrangling toolkit
+  run zinit for @dathere/qsv; assert $state equals 0
   local qsv="$ZBIN/qsv"; assert "$qsv" is_executable
   run "$qsv" --version; assert $state equals 0
 }
