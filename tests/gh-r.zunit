@@ -423,7 +423,7 @@
   run $insect help; assert $state equals 0
 }
 @test 'ipinfo' { # Official Command Line Interface for the IPinfo API (IP geolocation and other types of IP data)
-  run zinit for id-as'ipinfo' lbin'*->ipinfo' @ipinfo/cli; assert $state equals 0
+  run zinit for id-as'ipinfo' lbin'!*->ipinfo' @ipinfo/cli; assert $state equals 0
   local cli="$ZBIN/ipinfo"; assert "$cli" is_executable
   run "$cli" --version; assert $state equals 0
 }
@@ -464,7 +464,7 @@
   run $krew version; assert $state equals 0
 }
 @test 'kubedb' { # `kubectl` plugin for KubeDB
-  run zinit for lbin'kube*->kubedb' @kubedb/cli; assert $state equals 0
+  run zinit for lbin'!kube*->kubedb' @kubedb/cli; assert $state equals 0
   local cli="$ZBIN/kubedb"; assert "$cli" is_executable
   run "$cli" version; assert $state equals 0
 }
@@ -604,7 +604,7 @@
   run $moonwalk --version; assert $state equals 0
 }
 @test 'navi' { # An interactive cheatsheet tool for the command-line
-  run zinit lbin'* -> navi' for @denisidoro/navi; assert $state equals 0
+  run zinit lbin'!* -> navi' for @denisidoro/navi; assert $state equals 0
   local navi="$ZBIN/navi"; assert "$navi" is_executable
   run $navi --version; assert $state equals 0
 }
