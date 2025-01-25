@@ -65,7 +65,7 @@
   cat<<EOF >$actual
 alias foo=date
 EOF
-   run zinit is-snippet link id-as'mysnippet' for $actual
+   run zinit is-snippet link nocompile id-as'mysnippet' for $actual
 
   assert $state equals 0
   assert "$output" contains "Setting up snippet"
