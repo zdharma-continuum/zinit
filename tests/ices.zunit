@@ -16,7 +16,7 @@
   run zinit as"null" id-as"test/mv" mv"readme.md -> mv.md" for zdharma-continuum/null
   assert $state equals 0
   assert "$ZPLUGINS/test---mv/mv.md" is_file
-  assert "$ZPLUGINS/test---mv/mv.md" is_file
+  assert "$ZPLUGINS/test---mv/mv.md" is_readable
   assert "$ZPLUGINS/test---mv/readme.md" not_exists
 }
 @test 'cp' {
