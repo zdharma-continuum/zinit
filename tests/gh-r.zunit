@@ -15,7 +15,7 @@
   run "$act" --version; assert $state equals 0
 }
 @test 'akamai' { # Manage and configure Akamai from the Command Line.
-  run zinit id-as'akamai' lbin'akamai*->akamai' for @akamai/cli; assert $state equals 0
+  run zinit id-as'akamai' lbin'!akamai*->akamai' for @akamai/cli; assert $state equals 0
   local cli="$ZBIN/akamai"; assert "$cli" is_executable
   run "$cli" --version; assert $state equals 0
 }
@@ -41,7 +41,7 @@
   run "$assh" --version; assert $state equals 0
 }
 @test 'atuin' { #  Magical shell history
-  run zinit for @atuinsh/atuin; assert $state equals 0
+  run zinit lbin'!atuin*->atuin' bpick'^*update*' for @atuinsh/atuin; assert $state equals 0
   local atuin="$ZBIN/atuin"; assert "$atuin" is_executable
   run "$atuin" --version; assert $state equals 0
 }
@@ -84,7 +84,7 @@
 }
 @test 'broot' { # A new way to see and navigate directory trees
   [[ $OSTYPE =~ 'darwin*' ]] && skip " on $os_type"
-  run zinit for @Canop/broot; assert $state equals 0
+  run zinit lbin"!*$MACHTYPE*$OSTYPE*/broot" for @Canop/broot; assert $state equals 0
   local broot="$ZBIN/broot"; assert "$broot" is_executable
   run "$broot" --version; assert $state equals 0
 }
@@ -96,7 +96,7 @@
 @test 'calico' { # Cloud native networking and network security
   run zinit lbin'!* -> calico' for @projectcalico/calico; assert $state equals 0
   local calico="$ZBIN/calico"; assert "$calico" is_executable
-  run "$calico" version; assert $state equals 0
+  run "$calico" --help; assert $state equals 0
 }
 @test 'certificates' { # An opinionated helper for generating tls certificates
   run zinit lbin'!* -> certificates' for @mvmaasakkers/certificates; assert $state equals 0
