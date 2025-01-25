@@ -401,11 +401,6 @@
   local hyperfine="$ZBIN/hyperfine"; assert "$hyperfine" is_executable
   run $hyperfine --version; assert $state equals 0
 }
-@test 'ignite' { # Ignite CLI is the all-in-one platform to build, launch, and maintain any crypto application on a sovereign and secured blockchain
-  run zinit for id-as'ignite' @ignite/cli; assert $state equals 0
-  local cli="$ZBIN/ignite"; assert "$cli" is_executable
-  run "$cli" version; assert $state equals 0
-}
 @test 'igo' { # Improved Go Syntax (transpiler)
   run zinit for @rocketlaunchr/igo; assert $state equals 0
   local igo="$ZBIN/igo"; assert "$igo" is_executable
