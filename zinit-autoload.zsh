@@ -1602,7 +1602,7 @@ EOF
 —— unload ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}               – unload plugin loaded with \`zinit load ...', -q – quiet
 —— update [-q] ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]}|URL      – Git update plugin or snippet (or all plugins and snippets if ——all passed); besides -q accepts also ——quiet, and also -r/--reset – this option causes to run git reset --hard / svn revert before pulling changes
 —— version                       – display zinit version
-—— zstatus                       – overall Zinit statu
+—— zstatus                       – overall Zinit status
 —— add-fpath|fpath ${ZINIT[col-info]}[-f|--front]${ZINIT[col-rst]} \\
     ${ZINIT[col-pname]}plg-spec ${ZINIT[col-info]}[subdirectory]${ZINIT[col-rst]}      – adds given plugin directory to \$fpath; if the second argument is given, it is appended to the directory path; if the option -f/--front is given, the directory path is prepended instead of appended to \$fpath. The ${ZINIT[col-pname]}plg-spec${ZINIT[col-rst]} can be absolute path
 —— run [-l] [plugin] {command}   – runs the given command in the given plugin's directory; if the option -l will be given then the plugin should be skipped – the option will cause the previous plugin to be reused"
@@ -1969,7 +1969,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
         [[ $1 = -q ]] && +zi-log "{pre}[self-update]{info} updating zinit repository{msg2}" \
 
         local nl=$'\n' escape=$'\x1b['
-        local current_branch=$(git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
+        local current_branch=$(command git -C $ZINIT[BIN_DIR] rev-parse --abbrev-ref HEAD)
         # local current_branch='main'
         local -a lines
         (
@@ -3168,7 +3168,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             }
         }
 
-        if [[ -d $local_dir/.git ]] && ( builtin cd -q $local_dir ; git show-ref --verify --quiet refs/heads/main ); then
+        if [[ -d $local_dir/.git ]] && ( builtin cd -q $local_dir ; command git show-ref --verify --quiet refs/heads/main ); then
             local main_branch=main
         else
             local main_branch=master
@@ -3574,7 +3574,7 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 #
 # User-action entry point.
 zi::version() {
-	+zi-log "zinit{cmd} $(git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
+	+zi-log "zinit{cmd} $(command git --git-dir=$(realpath ${ZINIT[BIN_DIR]}/.git) describe --tags) {rst}(${OSTYPE}_${CPUTYPE})"
 	return $?
 } # ]]]
 
