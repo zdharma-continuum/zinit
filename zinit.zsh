@@ -63,7 +63,9 @@ if [[ -z ${ZINIT[HOME_DIR]} ]]; then
 fi
 
 if [[ -z ${ZINIT[LIST_COMMAND]} ]]; then
-    if (( ${+commands[exa]} )); then
+    if (( ${+commands[eza]} )); then
+        ZINIT[LIST_COMMAND]='eza --color=always --tree --icons -L3'
+    elif (( ${+commands[exa]} )); then
         ZINIT[LIST_COMMAND]='exa --color=always --tree --icons -L3'
     elif (( ${+commands[tree]} )); then
         ZINIT[LIST_COMMAND]='tree -L 3 -C --charset utf-8'
