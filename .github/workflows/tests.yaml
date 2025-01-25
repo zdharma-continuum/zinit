@@ -69,7 +69,7 @@ jobs:
           mkdir -p "$HOME/.local/bin" && echo "$HOME/.local/bin" >> $GITHUB_PATH
           git clone --depth 1 https://github.com/zdharma-continuum/zunit; cd ./zunit
           ./configure --prefix=$HOME/.local && make all install
-      
+
       - name: "annexes"
         run: zunit run tests/annexes.zunit
 
