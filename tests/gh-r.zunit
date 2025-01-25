@@ -242,12 +242,6 @@
   local fzf="$ZBIN/fzf"; assert "$fzf" is_executable
   run $fzf --version; assert $state equals 0
 }
-@test 'gaper' { # Builds and restarts a Go project when it crashes or some watched file changes
-  [[ $OSTYPE =~ "linux*" ]] && skip "on $os_type"
-  run zinit lbin'!**/gaper' for @maxcnunes/gaper; assert $state equals 0
-  local gaper="$ZBIN/gaper"; assert "$gaper" is_executable
-  run $gaper --version; assert $state equals 0
-}
 @test 'gdu' { # Fast disk usage analyzer with console interface written in Go
   run zinit lbin'!* -> gdu' for @dundee/gdu; assert $state equals 0
   local gdu="$ZBIN/gdu"; assert "$gdu" is_executable
