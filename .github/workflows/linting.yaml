@@ -10,33 +10,45 @@ on:
   workflow_dispatch:
 
 jobs:
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [markdown, zsh-noexec, zsh-zcompile]
+
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: '0'
+          fetch-depth: 0
 
       - uses: actions/setup-python@v5
 
       - name: install dependencies
         run: |
+          sudo apt-get update
           sudo apt-get install --yes zsh
           pip install --user linkify-it-py mdformat mdformat-config mdformat-gfm mdformat-shfmt mdformat-tables mdformat-toc
 
-      - name: markdown
-        run: find . -name '*.md' ! -name 'CHANGELOG.md' -type f -print0 | xargs -0 -n1 -P4 mdformat --check --wrap 120 --number
-
-      # - name: shell (shfmt)
-      #   run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shfmt -bn -ci -d -i 2 -ln bash -s -sr
-
-      # - name: shell (shellcheck)
-      #   run: find . -name '*.sh' -type f -print0 | xargs -0 -n1 -P4 shellcheck
-
-      - name: zsh (noexec)
-        run: find . -name '*.zsh' -type f -print0 | xargs -0 -n1 -P4 zsh -n
-
-      - name: zsh (zcompile)
-        run: find . -name '*.zsh' -type f -exec zsh -fc "zcompile {}" \;
+      - name: "run lint (${{ matrix.task }})"
+        run: |
+          case "${{ matrix.task }}" in
+            markdown)
+              find . -name '*.md' ! -name 'CHANGELOG.md' -type f -print0 \
+                | xargs -0 -n1 -P4 mdformat --check --wrap 120 --number
+              ;;
+            zsh-noexec)
+              find . -name '*.zsh' -type f -print0 \
+                | xargs -0 -n1 -P4 zsh -n
+              ;;
+            zsh-zcompile)
+              find . -name '*.zsh' -type f \
+                -exec zsh -fc "zcompile {}" \;
+              ;;
+            *)
+              echo "ERROR: unknown task ${{ matrix.task }}" >&2
+              exit 1
+              ;;
+          esac
