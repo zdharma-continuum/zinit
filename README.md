@@ -1159,20 +1159,20 @@ declare -A ZINIT  # initial Zinit's hash definition, if configuring before loadi
 
 | Hash Field | Description | | ----------------------------------- |
 \--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-| | ZINIT\[BIN_DIR\] | Where Zinit code resides, e.g.: "~/.local/share/zinit/zinit.git" | | ZINIT\[HOME_DIR\] | Where
-Zinit should create all working directories, e.g.: "~/.local/share/zinit" | | ZINIT\[MAN_DIR\] | Directory where plugins
-can store their manpages (`atclone"cp -vf myplugin.1 $ZINIT[MAN_DIR]/man1"`). If overridden, this directory will not
-necessarily be used by `man` (See #8). Default: `$ZPFX/man` | | ZINIT\[PLUGINS_DIR\] | Override single working directory
-– for plugins, e.g. "/opt/zsh/zinit/plugins" | | ZINIT\[COMPLETIONS_DIR\] | As above, but for completion files, e.g.
-"/opt/zsh/zinit/root_completions" | | ZINIT\[SNIPPETS_DIR\] | As above, but for snippets | | ZINIT\[LIST_COMMAND\] |
-Command to use for displaying a directory tree (e.g., `ls --tree`, `tree`, etc.) | | ZINIT\[ZCOMPDUMP_PATH\] | Path to
-`.zcompdump` file, with the file included (i.e. its name can be different) | | ZINIT\[COMPINIT_OPTS\] | Options for
-`compinit` call (i.e. done by `zicompinit`), use to pass -C to speed up loading | | ZINIT\[MUTE_WARNINGS\] | If set to
+| | ZINIT[BIN_DIR] | Where Zinit code resides, e.g.: "~/.local/share/zinit/zinit.git" | | ZINIT[HOME_DIR] | Where Zinit
+should create all working directories, e.g.: "~/.local/share/zinit" | | ZINIT[MAN_DIR] | Directory where plugins can
+store their manpages (`atclone"cp -vf myplugin.1 $ZINIT[MAN_DIR]/man1"`). If overridden, this directory will not
+necessarily be used by `man` (See #8). Default: `$ZPFX/man` | | ZINIT[PLUGINS_DIR] | Override single working directory –
+for plugins, e.g. "/opt/zsh/zinit/plugins" | | ZINIT[COMPLETIONS_DIR] | As above, but for completion files, e.g.
+"/opt/zsh/zinit/root_completions" | | ZINIT[SNIPPETS_DIR] | As above, but for snippets | | ZINIT[LIST_COMMAND] | Command
+to use for displaying a directory tree (e.g., `ls --tree`, `tree`, etc.) | | ZINIT[ZCOMPDUMP_PATH] | Path to
+`.zcompdump` file, with the file included (i.e. its name can be different) | | ZINIT[COMPINIT_OPTS] | Options for
+`compinit` call (i.e. done by `zicompinit`), use to pass -C to speed up loading | | ZINIT[MUTE_WARNINGS] | If set to
 `1`, then mutes some of the Zinit warnings, specifically the `plugin already registered` warning | |
-ZINIT\[OPTIMIZE_OUT_DISK_ACCESSES\] | If set to `1`, then Zinit will skip checking if a Turbo-loaded object exists on
-the disk. By default Zinit skips Turbo for non-existing objects (plugins or snippets) to install them before the first
+ZINIT[OPTIMIZE_OUT_DISK_ACCESSES] | If set to `1`, then Zinit will skip checking if a Turbo-loaded object exists on the
+disk. By default Zinit skips Turbo for non-existing objects (plugins or snippets) to install them before the first
 prompt – without any delays, during the normal processing of `zshrc`. This option can give a performance gain of about
-10 ms out of 150 ms (i.e.: Zsh will start up in 140 ms instead of 150 ms). | | ZINIT\[NO_ALIASES\] | If set to `1`, then
+10 ms out of 150 ms (i.e.: Zsh will start up in 140 ms instead of 150 ms). | | ZINIT[NO_ALIASES] | If set to `1`, then
 Zinit will not set aliases such as `zi` or `zini` |
 
 There is also `$ZPFX`, set by default to `~/.local/share/zinit/polaris` – a directory where software with `Makefile`,
@@ -1223,7 +1223,7 @@ Link to the [CHANGELOG](doc/CHANGELOG.md).
 
 Zinit is a personal, free-time project with no funding and a huge
 [feature request backlog](https://github.com/zdharma-continuum/zinit/issues). If you love it, consider supporting its
-development via GitHub Sponsors \[pending\]. Any help counts!
+development via GitHub Sponsors [pending]. Any help counts!
 
 ## Getting Help and Community<a name="getting-help-and-community"></a>
 
