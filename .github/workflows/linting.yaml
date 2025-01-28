@@ -28,7 +28,8 @@ jobs:
       # - MD034/no-bare-urls
       # - MD036/no-emphasis-as-heading
       - run: |
-          markdownlint --help
+          markdownlint --version
+
           markdownlint \
             --ignore '**/CHANGELOG.md' \
             --disable MD013 MD033 MD034 MD036 -- \
