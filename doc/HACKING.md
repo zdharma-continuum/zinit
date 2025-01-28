@@ -1,6 +1,8 @@
-# Documentation
+# HACKING.md
 
-## README: Update the table of content
+## Documentation
+
+### README: Update the table of content
 
 1. Install [doctoc](https://github.com/thlorenz/doctoc)
 2. To update the TOC run the following command:
@@ -9,7 +11,7 @@
 doctoc --github README.md
 ```
 
-## Update asciidoc and/or zshelldoc
+### Update asciidoc and/or zshelldoc
 
 1. Make sure you have [docker](https://www.docker.com/) or [podman](https://podman.io/) installed.
 2. From the root of the repo, run:
@@ -25,7 +27,7 @@ If for some reason you want to build the zshelldocs or the PDF manually, you'll 
 3. [asciidoc](https://asciidoc.org/)
 4. `make doc`
 
-## Generate the manpage (doc/zinit.1)
+### Generate the manpage (doc/zinit.1)
 
 1. Install [pandoc](https://pandoc.org/)
 2. From the root of the repo run:
@@ -34,7 +36,7 @@ If for some reason you want to build the zshelldocs or the PDF manually, you'll 
 pandoc --standalone --to man README.md -o doc/zinit.1
 ```
 
-## Updating the gh-pages (zdharma-continuum.github.io)
+### Updating the gh-pages (zdharma-continuum.github.io)
 
 1. Check out the [documentation branch](https://github.com/zdharma-continuum/zinit/tree/documentation)
 
@@ -50,9 +52,9 @@ git checkout documentation
 **NOTE:** If you really **need** to push directly, without CI please refer to \[the README in the
 documentation\]https://github.com/zdharma-continuum/zinit/blob/documentation/README.md
 
-# Testing
+## Testing
 
-We run out tests with [zunit](https://zunit.xyz).
+We run our tests with [zunit](https://zunit.xyz).
 
 To add a new test case:
 
@@ -112,15 +114,15 @@ You should of course also check out the existing tests ;)
 zunit --verbose tests/your_test.zunit
 ```
 
-## Debugging tests
+### Debugging tests
 
 If you ever need to inspect the `ZINIT[HOME_DIR]` dir, where zinit's internal data is stored you can do so by commenting
 out the `@teardown` section in your test. Then you can re-run said test and head over to `${TMPDIR:-/tmp}/zunit-zinit`.
 Good luck!
 
-# Misc
+## Misc
 
-## Get the list of supported ices
+### Get the list of supported ices
 
 To get the list in a quick-and-dirty fashion you issue:
 
