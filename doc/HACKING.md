@@ -7,18 +7,18 @@
 1. Install [doctoc](https://github.com/thlorenz/doctoc)
 2. To update the TOC run the following command:
 
-```zsh
-doctoc --github README.md
-```
+    ```zsh
+    doctoc --github README.md
+    ```
 
 ### Update asciidoc and/or zshelldoc
 
 1. Make sure you have [docker](https://www.docker.com/) or [podman](https://podman.io/) installed.
 2. From the root of the repo, run:
 
-```zsh
-make doc-container
-```
+    ```zsh
+    make doc-container
+    ```
 
 If for some reason you want to build the zshelldocs or the PDF manually, you'll need:
 
@@ -32,18 +32,18 @@ If for some reason you want to build the zshelldocs or the PDF manually, you'll 
 1. Install [pandoc](https://pandoc.org/)
 2. From the root of the repo run:
 
-```zsh
-pandoc --standalone --to man README.md -o doc/zinit.1
-```
+    ```zsh
+    pandoc --standalone --to man README.md -o doc/zinit.1
+    ```
 
 ### Updating the gh-pages (zdharma-continuum.github.io)
 
 1. Check out the [documentation branch](https://github.com/zdharma-continuum/zinit/tree/documentation)
 
-```shell
-git fetch origin documentation
-git checkout documentation
-```
+    ```shell
+    git fetch origin documentation
+    git checkout documentation
+    ```
 
 2. Do your modifications and push your changes
 3. Keep an eye on [the CI logs](https://github.com/zdharma-continuum/zinit/actions/workflows/gh-pages.yaml)
@@ -60,59 +60,59 @@ To add a new test case:
 
 1. Install [zunit](https://zunit.xyz) and [revolver](https://github.com/molovo/revolver):
 
-```zsh
-zinit for \
-    as"program" \
-    atclone"ln -sfv revolver.zsh-completion _revolver" \
-    atpull"%atclone" \
-    pick"revolver" \
-  @molovo/revolver \
-    as"completion" \
-    atclone"./build.zsh; ln -sfv zunit.zsh-completion _zunit" \
-    atpull"%atclone" \
-    sbin"zunit" \
-  @zunit-zsh/zunit
-```
+    ```zsh
+    zinit for \
+        as"program" \
+        atclone"ln -sfv revolver.zsh-completion _revolver" \
+        atpull"%atclone" \
+        pick"revolver" \
+      @molovo/revolver \
+        as"completion" \
+        atclone"./build.zsh; ln -sfv zunit.zsh-completion _zunit" \
+        atpull"%atclone" \
+        sbin"zunit" \
+      @zunit-zsh/zunit
+    ```
 
 2. Create a new `.zunit` file in the `tests/` dir. Here's a template:
 
-```zsh
-#!/usr/bin/env zunit
+    ```zsh
+    #!/usr/bin/env zunit
 
-@setup {
-  load setup
-  setup
-}
+    @setup {
+      load setup
+      setup
+    }
 
-@teardown {
-  load teardown
-  teardown
-}
+    @teardown {
+      load teardown
+      teardown
+    }
 
-@test 'zinit-annex-bin-gem-node installation' {
-  # This spawns the official zinit container, and executesa single zinit command
-  # inside it
-  run ./scripts/docker-run.sh --wrap --debug --zunit \
-    zinit light as"null" for zdharma-continuum/null
+    @test 'zinit-annex-bin-gem-node installation' {
+      # This spawns the official zinit container, and executes a single zinit command
+      # inside it
+      run ./scripts/docker-run.sh --wrap --debug --zunit \
+        zinit light as"null" for zdharma-continuum/null
 
-  # Verify exit code of the command above
-  assert $state equals 0
-  assert "$output" contains "Downloading"
+      # Verify exit code of the command above
+      assert $state equals 0
+      assert "$output" contains "Downloading"
 
-  local artifact="${PLUGINS_DIR}/zdharma-continuum---null/readme.md"
-  # Check if we downloaded the file correctly and if it is readable
-  assert "$artifact" is_file
-  assert "$artifact" is_readable
-}
-```
+      local artifact="${PLUGINS_DIR}/zdharma-continuum---null/readme.md"
+      # Check if we downloaded the file correctly and if it is readable
+      assert "$artifact" is_file
+      assert "$artifact" is_readable
+    }
+    ```
 
-You should of course also check out the existing tests ;)
+    You should of course also check out the existing tests ;)
 
 3. To run your new test:
 
-```zsh
-zunit --verbose tests/your_test.zunit
-```
+    ```zsh
+    zunit --verbose tests/your_test.zunit
+    ```
 
 ### Debugging tests
 
