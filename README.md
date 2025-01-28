@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/zdharma-continuum/zinit">
-    <img src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/zinit.png"/>
+    <img alt="zinit logo" src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/zinit.png"/>
   </a>
 </p>
 
@@ -63,7 +63,7 @@
 
 <p align="center">
 <a href="https://github.com/zdharma-continuum/pm-perf-test">
-<img width="550px" src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/startup-times.png"/>
+<img alt="startup times graph" width="550px" src="https://raw.githubusercontent.com/zdharma-continuum/zinit/images/startup-times.png"/>
 </a>
 </p>
 
@@ -918,7 +918,7 @@ To update all plugins and snippets, issue `zinit update`. If you wish to update 
 issue `zinit update NAME_OF_PLUGIN`. A list of commits will be shown:
 
 <p align="center">
-<img src="./doc/img/update.png" />
+<img alt="screenshot displaying zinit update tj/git-extras and its output" src="./doc/img/update.png" />
 </p>
 
 Some plugins require performing an action each time they're updated. One way you can do this is by using the `atpull`
@@ -1069,10 +1069,10 @@ to have the software installed with `configure''` and `make''` ices installed to
 Typical use cases when working with `$ZPFX` are, e.g.:
 
 ```zsh
-$ ls $ZPFX
-$ cd $ZPFX
-$ cd $ZPFX/bin  # note: $ZPFX/bin is automatically prepended to $PATH
-$ cd $ZPFX/share
+ls $ZPFX
+cd $ZPFX
+cd $ZPFX/bin  # note: $ZPFX/bin is automatically prepended to $PATH
+cd $ZPFX/share
 ```
 
 Before the `configure''` ice appeared one would use `$ZPFX` as follows:
@@ -1093,7 +1093,7 @@ zinit configure make for universal-ctags/ctags
 To set ZPFX, one should do (in `.zshrc` before loading `zinit`):
 
 ```zsh
-$ export ZPFX=$HOME/my-software # or: ZPFX=$HOME/.local, etc.
+export ZPFX=$HOME/my-software # or: ZPFX=$HOME/.local, etc.
 ```
 
 We encourage people to install compiled software with use of `$ZPFX` and `configure''` and `make''` ices, to have a
