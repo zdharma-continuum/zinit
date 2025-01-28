@@ -15,8 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: xt0rted/markdownlint-problem-matcher@v3
 
@@ -30,6 +28,8 @@ jobs:
       - run: |
           markdownlint --version
 
+          pwd
+          ls
           ls **/*.md
 
           markdownlint \
