@@ -2981,7 +2981,6 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             PUAssocArray[$!]=$PUFILE
 
             .zinit-wait-for-update-jobs plugins
-
         }
     }
     # Shouldn't happen
@@ -3200,7 +3199,8 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
 
               integer pager_pid=$!
               { sleep 20 && kill -9 $pager_pid 2>/dev/null 1>&2; } &!
-              { wait $pager_pid; } > /dev/null 2>&1
+              integer kill_pager_pid=$!
+              { wait $pager_pid; kill -9 $kill_pager_pid; } >/dev/null 2>&1
 
               local -a log
               { log=( ${(@f)"$(<$local_dir/.zinit_lastupd)"} ); } 2>/dev/null
@@ -3562,6 +3562,11 @@ print -- "\nAvailable ice-modifiers:\n\n${ice_order[*]}"
             command rm -f ${(v)PUAssocArray}
         counter=0
         PUAssocArray=()
+
+        # Clear zombie jobs.
+        if (( main_counter == 0 )) {
+            wait
+        }
     } elif (( counter == 1 && !OPTS[opt_-q,--quiet] )) {
         +zi-log "{obj}Spawning the next{num}" \
             "${OPTS[value]}{obj} concurrent update jobs" \
