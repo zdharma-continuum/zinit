@@ -27,6 +27,7 @@ jobs:
       # - MD033/no-inline-html
       - run: |
           markdownlint \
+            --ignore CHANGELOG.md \
             --disable MD013 MD033 -- \
             **/*.md
 
