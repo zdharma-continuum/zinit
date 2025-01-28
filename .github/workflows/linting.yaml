@@ -32,7 +32,7 @@ jobs:
 
           markdownlint \
             --ignore '**/CHANGELOG.md' \
-            --disable MD013 MD033 MD034 MD036 -- \
+            --disable MD013 MD033 MD034 -- \
             **/*.md
 
   zshlint:
