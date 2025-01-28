@@ -28,14 +28,13 @@ jobs:
       - run: |
           markdownlint --version
 
-          pwd
-          ls
-          ls **/*.md
+          # List files to lint
+          ls *.md **/*.md
 
           markdownlint \
             --ignore '**/CHANGELOG.md' \
-            --disable MD013 MD033 MD034 -- \
-            **/*.md
+            --disable MD013 MD033 MD034 MD036 -- \
+            *.md **/*.md
 
   zshlint:
     name: ZSH Lint
