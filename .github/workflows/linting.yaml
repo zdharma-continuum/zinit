@@ -18,10 +18,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: xt0rted/markdownlint-problem-matcher@v3
+
+      # disabled checks:
+      # - MD013/line-length
+      # - MD033/no-inline-html
       - run: |
-          # disabled checks:
-          # - MD013/line-length
-          # - MD033/no-inline-html
           markdownlint \
             --disable MD013 MD033 -- \
             **/*.md
