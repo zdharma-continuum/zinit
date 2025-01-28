@@ -58,7 +58,7 @@ echo_error() {
 }
 
 check_dependencies() {
-  zsh_min_version=5.5
+  zsh_min_version=5.8
   if ! zsh -sfc \
     'autoload is-at-least;
        is-at-least $1 $ZSH_VERSION' "$zsh_min_version"; then
