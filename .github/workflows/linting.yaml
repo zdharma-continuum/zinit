@@ -25,6 +25,7 @@ jobs:
       # - MD033/no-inline-html
       # - MD034/no-bare-urls
       # - MD036/no-emphasis-as-heading
+      # - MD041/first-line-heading/first-line-h1
       - run: |
           markdownlint --version
 
@@ -33,7 +34,7 @@ jobs:
 
           markdownlint \
             --ignore '**/CHANGELOG.md' \
-            --disable MD013 MD033 MD034 MD036 -- \
+            --disable MD013 MD033 MD034 MD036 MD041 -- \
             *.md **/*.md
 
   zshlint:
