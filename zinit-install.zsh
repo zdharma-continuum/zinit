@@ -2268,7 +2268,7 @@ __zinit-cmake-base-hook () {
     pairs=( ${(s[;])ICE[$ice_key]} ) # Split on semicolons
     pairs=( "${pairs[@]//((#s)[[:space:]]##|[[:space:]]##(#e))/}" ) # Trim spaces
 
-    local retval=0
+    local pair retval=0
     for pair in "${pairs[@]}"; do
         if [[ $pair == *("->"|"→")* ]]; then
             local from="${pair%%[[:space:]]#(->|→)*}"
