@@ -582,6 +582,7 @@
   run $moonwalk --version; assert $state equals 0
 }
 @test 'navi' { # An interactive cheatsheet tool for the command-line
+  [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
   run zinit lbin'!* -> navi' for @denisidoro/navi; assert $state equals 0
   local navi="$ZBIN/navi"; assert "$navi" is_executable
   run $navi --version; assert $state equals 0
