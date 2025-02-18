@@ -98,7 +98,7 @@ __zinit_installed_plugins(){
 __zinit_installed_snippets(){
   # [[ -prefix '-' ]] && return 0
   typeset -a snippets
-  local expl snippet
+  local expl
   snippets=( "${ZINIT[SNIPPETS_DIR]}"/**/._zinit(D/:h) )
   snippets=( ${(Q)snippets[@]#${ZINIT[SNIPPETS_DIR]}/} )
   # formulae=( ${(qq)formulae[@]/(#b)(http|https|ftp|ftps|scp)--/${match[1]}://} )
