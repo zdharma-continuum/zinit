@@ -48,7 +48,9 @@
   - [Calling `compinit` Without Turbo Mode](#calling-compinit-without-turbo-mode)
   - [Calling `compinit` With Turbo Mode](#calling-compinit-with-turbo-mode)
   - [Ignoring Compdefs](#ignoring-compdefs)
-  - [Disabling System-Wide `compinit` Call (Ubuntu)](#disabling-system-wide-compinit-call-ubuntu)
+  - [Disabling System-Wide `compinit` Call](#disabling-system-wide-compinit-call)
+    - [Ubuntu](#disabling-system-wide-compinit-call-ubuntu)
+    - [NixOS](#disabling-system-wide-compinit-call-nixos)
 - [Zinit Module](#zinit-module)
 - [Hints and Tips](#hints-and-tips)
   - [Using ZPFX variable](#using-zpfx-variable)
@@ -1031,17 +1033,35 @@ zi cdlist # look at gathered compdefs
 The `cdreplay` is important if you use plugins like `OMZP::kubectl` or `asdf-vm/asdf`, because these plugins call
 `compdef`.
 
-### Disabling System-Wide `compinit` Call (Ubuntu)<a name="disabling-system-wide-compinit-call-ubuntu"></a>
+### Disabling System-Wide `compinit` Call<a name="disabling-system-wide-compinit-call"></a>
 
-On Ubuntu users might get surprised that e.g. their completions work while they didn't call `compinit` in their
-`.zshrc`. That's because the function is being called in `/etc/zshrc`. To disable this call – what is needed to avoid
-the slowdown and if user loads any completion-equipped plugins, i.e. almost on 100% – add the following lines to
+On some systems, users might be surprised to see that completions work even though they didn’t call `compinit` in their
+`~/.zshrc`. This happens because `compinit` is being called from `/etc/zshrc`. To disable this behavior -- which is
+recommended to avoid slow startup, especially if you load plugins that bring their own completions (which is almost
+always the case) -- follow the instructions for your system below:
+
+#### Ubuntu<a name="disabling-system-wide-compinit-call-ubuntu"></a>
+
+On Ubuntu, the global `compinit` call can be disabled on a per-user basis by adding the following lines to a users
 `~/.zshenv`:
 
 ```zsh
 # Skip the not really helping Ubuntu global compinit
 skip_global_compinit=1
 ```
+
+#### NixOS<a name="disabling-system-wide-compinit-call-nixos"></a>
+
+On NixOS, the global `compinit` call can be disabled system-wide by setting the following option in your
+`/etc/nixos/configuration.nix`:
+
+```
+# Disable global completion init to speed up `compinit` call in `~/.zshrc`.
+programs.zsh.enableGlobalCompInit = false;
+```
+
+Don't forget to add the `compinit` call to every user's `~/.zshrc`! Otherwise completions for system packages might not
+work.
 
 ## Zinit Module<a name="zinit-module"></a>
 
