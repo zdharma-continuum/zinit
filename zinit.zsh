@@ -149,6 +149,12 @@ typeset -g ZPFX
 
 ZINIT[PLUGINS_DIR]=${~ZINIT[PLUGINS_DIR]}   ZINIT[COMPLETIONS_DIR]=${~ZINIT[COMPLETIONS_DIR]}
 ZINIT[SNIPPETS_DIR]=${~ZINIT[SNIPPETS_DIR]} ZINIT[SERVICES_DIR]=${~ZINIT[SERVICES_DIR]}
+
+# Make sure $ZSH_CACHE_DIR is writable, otherwise use a directory in $HOME
+if [[ ! -w "$ZSH_CACHE_DIR" ]]; then
+  ZSH_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/zinit"
+fi
+
 export ZPFX=${~ZPFX} ZSH_CACHE_DIR="${ZSH_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/zinit}" \
     PMSPEC=0uUpiPsf
 [[ -z ${path[(re)$ZPFX/bin]} ]] && [[ -d "$ZPFX/bin" ]] && path=( "$ZPFX/bin" "${path[@]}" )
