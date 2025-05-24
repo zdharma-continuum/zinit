@@ -84,7 +84,7 @@ PRECMD-HOOK @zinit-scheduler
 
 ==== Script Body
 
-Has 258 line(s). Calls functions:
+Has 264 line(s). Calls functions:
 
  Script-Body
  |-- +zi-log
