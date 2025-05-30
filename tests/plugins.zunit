@@ -1,18 +1,44 @@
 #!/usr/bin/env zunit
 
 @setup {
-  HOME="$zi_test_dir"
+  HOME="$zi_test_dir" TMPQ=,
   typeset -gx ZBIN="$zi_test_dir/polaris/bin"
+  zinit default-ice as'null' light-mode nocompile nocompletions
+  ZBIN=$ZPFX/bin
+  export LC_CTYPE=C; export LANG=C
+  export ZTMP=$(mktemp -qu) 
 }
 
-# @test 'cmatrix' {
-#   run zinit build for @abishekvashok/cmatrix;
-#   local cmatrix="$ZBIN/cmatrix"; assert "$cmatrix" is_executable
-#   run "$cmatrix" -V; assert $state equals 0
-#   # ensure cmake artifacts are deleted
-#   zinit delete --yes abishekvashok/cmatrix; assert $state equals 0
-#   run "$cmatrix"; assert $state equals 127
-# }
+@test '(un)load-ices' {
+  rm -f $ZTMP
+  # @zinit-scheduler with "burst" argument executes all tasks "now"
+  eval zinit load'"[[ \$TMPQ = , ]]"' atload"\"!touch \$ZTMP; TMPQ=.; TMPE=.\"" unload'"[[ \$TMPQ = . ]]"' for zdharma-continuum/null && @zinit-scheduler burst && @zinit-scheduler burst
+  state=$?
+  # Test if plugin effects withdrawal on unload is working
+  assert "$TMPE" different_to .
+  # Test if plugin is marked as unloaded
+  assert "$ZINIT_REGISTERED_PLUGINS[-1]" different_to zdharma-continuum/null
+  assert "$state" equals 0
+  # Test if plugin is loaded
+  assert "$ZTMP" is_file
+}
+@test 'wait-ice-with-condition' {
+  rm -f $ZTMP
+  # @zinit-scheduler with "burst" argument executes all tasks "now"
+  eval zinit wait'"[[ -n $ZTMP ]]"' atload'"touch $ZTMP"' for zdharma-continuum/null && @zinit-scheduler burst
+  state=$?
+  assert $state equals 0
+  assert $ZTMP is_file
+}
+@test 'wait-ice' {
+  rm -f $ZTMP
+  # @zinit-scheduler with "burst" argument executes all tasks "now"
+  eval zinit wait nocd atload'"touch $ZTMP"' for zdharma-continuum/null && @zinit-scheduler burst
+  state=$?
+  assert "$state" equals 0
+  assert "$ZTMP" is_file
+}
+
 @test 'figlet' {
   run zinit make for @cmatsuoka/figlet; assert $state equals 0
   local figlet="$ZBIN/figlet"; assert "$figlet" is_executable
@@ -69,18 +95,6 @@
   run zinit delete --yes neovim/neovim; assert $state equals 0
   run "$neovim" --version; assert $state equals 127
 }
-# @test 'neovim-cmake' {
-#   run zinit cmake for @neovim/neovim; assert $state equals 0
-#   local neovim="$ZBIN/nvim"; assert $neovim is_executable
-#   run "$neovim" --version; assert $state equals 0
-#
-#   nvim_ver="$($neovim --version | head -n1 | awk '{print $2}')";
-#   nvim_commit="$(git --work-tree=$ZINIT[PLUGINS_DIR]/neovim---neovim rev-parse --short HEAD)";
-#   print -lPr " " "nvim ver: %F{blue}$nvim_ver%f" "nvim commit sha: %F{blue}$nvim_commit%f" "check: [[ %F{blue}$nvim_ver%f = %F{blue}*$nvim_commit(#e)%f ]]"
-#   [[ $nvim_ver = *$nvim_commit(#e) ]] && print -P "%F{green}ok%f"
-#
-#   run zinit delete --yes neovim/neovim; assert $state equals 0
-# }
 @test 'tmux' {
   if [[ $OSTYPE =~ 'darwin*' ]]; then
     run zinit configure'--disable-utf8proc' make for @tmux/tmux; assert $state equals 0
@@ -110,6 +124,26 @@
 # ===========
 # Flaky tests
 # ===========
+# @test 'cmatrix' {
+#   run zinit build for @abishekvashok/cmatrix;
+#   local cmatrix="$ZBIN/cmatrix"; assert "$cmatrix" is_executable
+#   run "$cmatrix" -V; assert $state equals 0
+#   # ensure cmake artifacts are deleted
+#   zinit delete --yes abishekvashok/cmatrix; assert $state equals 0
+#   run "$cmatrix"; assert $state equals 127
+# }
+# @test 'neovim-cmake' {
+#   run zinit cmake for @neovim/neovim; assert $state equals 0
+#   local neovim="$ZBIN/nvim"; assert $neovim is_executable
+#   run "$neovim" --version; assert $state equals 0
+#
+#   nvim_ver="$($neovim --version | head -n1 | awk '{print $2}')";
+#   nvim_commit="$(git --work-tree=$ZINIT[PLUGINS_DIR]/neovim---neovim rev-parse --short HEAD)";
+#   print -lPr " " "nvim ver: %F{blue}$nvim_ver%f" "nvim commit sha: %F{blue}$nvim_commit%f" "check: [[ %F{blue}$nvim_ver%f = %F{blue}*$nvim_commit(#e)%f ]]"
+#   [[ $nvim_ver = *$nvim_commit(#e) ]] && print -P "%F{green}ok%f"
+#
+#   run zinit delete --yes neovim/neovim; assert $state equals 0
+# }
 # @test 'stow' {
 #   run zinit configure'--without-pmdir' make for @aspiers/stow; assert $state equals 0
 #   local stow="$ZBIN/stow"; assert "$stow" is_executable
