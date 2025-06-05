@@ -416,9 +416,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
             case ${ICE[proto]} in
                 (|ftp(|s)|git|http(|s)|rsync|ssh)
                     :zinit-git-clone() {
+                        local clone_url
+                        if [[ ${ICE[proto]} == "ssh" ]]; then
+                            clone_url="git@${site:-${ICE[from]:-github.com}}:$remote_url_path"
+                        else
+                            clone_url="${ICE[proto]:-https}://${site:-${ICE[from]:-github.com}}/$remote_url_path"
+                        fi
                         command git clone --progress ${(s: :)ICE[cloneopts]---recursive} \
                             ${(s: :)ICE[depth]:+--depth ${ICE[depth]}} \
-                            "${ICE[proto]:-https}://${site:-${ICE[from]:-github.com}}/$remote_url_path" \
+                            "$clone_url" \
                             "$local_path" \
                             --config transfer.fsckobjects=false \
                             --config receive.fsckobjects=false \
