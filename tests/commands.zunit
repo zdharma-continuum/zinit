@@ -77,3 +77,7 @@
   run +zi-log -n '{m} message'
   assert $output contains 'message'; assert $state equals 0
 }
+@test 'ls' {
+  run zinit ls
+  assert $state equals 0
+}
