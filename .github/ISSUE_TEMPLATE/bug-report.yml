@@ -14,7 +14,7 @@ body:
         ## Self Check
 
         - Look for similar errors in existing [GitHub Issues](https://github.com/zdharma-continuum/zinit/issues?q=is%3Aissue) (open or closed).
-        - Try reaching out on the [Gitter server](https://gitter.im/zdharma-continuum/community/) for help.
+        - Try reaching out on the [Gitter server](https://matrix.to/#/#zdharma-continuum_community:gitter.im) for help.
 
   - type: textarea
     id: what-happened

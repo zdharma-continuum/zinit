@@ -7,7 +7,7 @@
 # Zinit<a name="zinit"></a>
 
 [![MIT License][mit-badge]][mit-link] [![zinit version][ver-badge]][ver-link] [![zunit tests][tests-badge]][tests-link]
-[![Join the chat at https://gitter.im/zdharma-continuum/zinit][gitter-badge]][gitter-link]
+[![Join the chat at https://matrix.to/#/#zdharma-continuum_community:gitter.im][gitter-badge]][gitter-link]
 
 <!-- mdformat-toc start --slug=github --maxlevel=3 --minlevel=2 -->
 
@@ -1200,11 +1200,11 @@ Do you need help or wish to get in touch with other Zinit users?
 
 - [Open a discussion](https://github.com/zdharma-continuum/zinit/discussions).
 
-- Or via reach out via Gitter
-  [![Join the chat at https://gitter.im/zdharma-continuum/community][gitter-badge]][gitter-link]
+- Or via reach out via Matrix
+  [![Join the chat at https://matrix.to/#/#zdharma-continuum_community:gitter.im][gitter-badge]][gitter-link]
 
 [gitter-badge]: https://badges.gitter.im/zdharma-continuum/zinit.svg
-[gitter-link]: https://gitter.im/zdharma-continuum/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+[gitter-link]: https://matrix.to/#/#zdharma-continuum_community:gitter.im
 [mit-badge]: https://img.shields.io/badge/license-MIT-blue.svg
 [mit-link]: ./LICENSE
 [tests-badge]: https://github.com/zdharma-continuum/zinit/actions/workflows/tests.yaml/badge.svg
