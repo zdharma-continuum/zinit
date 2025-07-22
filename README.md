@@ -338,6 +338,9 @@ ZSH_THEME="robbyrussell"
 # Must Load OMZ Git library
 zi snippet OMZL::git.zsh
 
+# Must Load OMZ Async prompt library
+zi snippet OMZL::async_prompt.zsh 
+
 # Load Git plugin from OMZ
 zi snippet OMZP::git
 zi cdclear -q # <- forget completions provided up to this moment
