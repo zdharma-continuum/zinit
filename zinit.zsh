@@ -1443,8 +1443,10 @@ builtin setopt noaliases
     )
     for key in "${reply[@]}"; do
         arr=( "${(Q)${(z@)ZINIT_EXTS[$key]:-$ZINIT_EXTS2[$key]}[@]}" )
-        "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" load || \
-            return $(( 10 - $? ))
+        if [[ -n "${arr[5]:-}" ]]; then
+            "${arr[5]}" snippet "$save_url" "$id_as" "$local_dir/$dirname" "${${key##(zinit|z-annex) hook:}%% <->}" load || \
+                return $(( 10 - $? ))
+        fi
     done
 
     # Download or copy the file.
@@ -1647,8 +1649,10 @@ builtin setopt noaliases
     )
     for ___key in "${reply[@]}"; do
         ___arr=( "${(Q)${(z@)ZINIT_EXTS[$___key]:-$ZINIT_EXTS2[$___key]}[@]}" )
-        "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" "${${___key##(zinit|z-annex) hook:}%% <->}" load || \
-            return $(( 10 - $? ))
+        if [[ -n "${___arr[5]:-}" ]]; then
+            "${___arr[5]}" plugin "$___user" "$___plugin" "$___id_as" "$___pdir_orig" "${${___key##(zinit|z-annex) hook:}%% <->}" load || \
+                return $(( 10 - $? ))
+        fi
     done
 
     if [[ $___user != % && ! -d ${ZINIT[PLUGINS_DIR]}/${___id_as//\//---} ]] {
