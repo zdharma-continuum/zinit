@@ -710,7 +710,7 @@ ____
 
 ____
 
-Has 95 line(s). Calls functions:
+Has 97 line(s). Calls functions:
 
  .zinit-load
  |-- +zinit-deploy-message
@@ -880,7 +880,7 @@ ____
 
 ____
 
-Has 203 line(s). Calls functions:
+Has 205 line(s). Calls functions:
 
  .zinit-load-snippet
  |-- +zi-log
