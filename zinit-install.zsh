@@ -1442,8 +1442,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   if [[ -z $urlpart ]]; then
     local tag_version=${ICE[ver]}
     if [[ -z $tag_version ]]; then
-      local releases_url=https://github.com/$user/$plugin/releases/latest
-      tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+' )"
+      # Try GitHub API first, fallback to HTML parsing
+      local api_url=https://api.github.com/repos/$user/$plugin/releases/latest
+      tag_version="$( { .zinit-download-file-stdout $api_url || .zinit-download-file-stdout $api_url 1; } 2>/dev/null | command grep -o '"tag_name"[[:space:]]*:[[:space:]]*"[^"]\+"' | command grep -o '"[^"]*"$' | tr -d '"' )"
+      # Fallback to original method if API fails
+      if [[ -z $tag_version ]]; then
+        local releases_url=https://github.com/$user/$plugin/releases/latest
+        tag_version="$( { .zinit-download-file-stdout $releases_url || .zinit-download-file-stdout $releases_url 1; } 2>/dev/null | command grep -m1 -o 'href=./'$user'/'$plugin'/releases/tag/[^"]\+' )"
+      fi
       tag_version=${tag_version##*/}
     fi
     local url=https://github.com/$user/$plugin/releases/expanded_assets/$tag_version
