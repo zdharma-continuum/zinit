@@ -6,6 +6,7 @@
   HOME="$zi_test_dir" # Stops programs creating directories in user home
   typeset -gx ZBIN="$zi_test_dir/polaris/bin" os_type="${OSTYPE//[0-9\.]*/}"
   [[ ! -d $ZBIN ]] && mkdir -p "$ZBIN"
+  arch=$(uname -m)
   zinit default-ice --quiet from'gh-r' lbin'!' null
 }
 
@@ -104,7 +105,7 @@
   run "$certificates" --version; assert $state equals 0
 }
 @test 'checkmake' { # experimental linter/analyzer for Makefiles
-  run zinit lbin'!checkmake* -> checkmake' for @mrtazz/checkmake; assert $state equals 0
+  run zinit lbin'!checkmake* -> checkmake' for @checkmake/checkmake; assert $state equals 0
   local checkmake="$ZBIN/checkmake"; assert "$checkmake" is_executable
   run $checkmake --version; assert $state equals 0
 }
@@ -197,7 +198,7 @@
 }
 @test 'dysk' { # A linux utility to get information on filesystems, like df but better
   [[ $OSTYPE =~ 'darwin*' ]] && skip "skipped on $os_type"
-  run zinit lbin'!**/x86_64-linux/* -> dysk' for @Canop/dysk; assert $state equals 0
+  run zinit lbin"!**/$arch*$os_type/* -> dysk" for @Canop/dysk; assert $state equals 0
   local dysk="$ZBIN/dysk"; assert "$dysk" is_executable
   run $dysk --version; assert $state equals 0
 }
@@ -298,7 +299,7 @@
   run "$git_sizer" --version; assert $state equals 0
 }
 @test 'gitui' { # Blazing fast terminal-ui for git written in rust
-  run zinit for @extrawurst/gitui; assert $state equals 0
+  run zinit for @gitui-org/gitui; assert $state equals 0
   local gitui="$ZBIN/gitui"; assert "$gitui" is_executable
   run "$gitui" --version; assert $state equals 0
 }
@@ -814,6 +815,7 @@
   run $yq --version; assert $state equals 0
 }
 @test 'zed' { # Tooling for super-structured data: a new and easier way to manipulate data
+  skip "Official Doc: SuperDB is still under development so there's not yet a GA release."
   run zinit for @brimdata/super; assert $state equals 0
   local zed="$ZBIN/zed"; assert "$zed" is_executable
   run $zed --version; assert $state equals 0
