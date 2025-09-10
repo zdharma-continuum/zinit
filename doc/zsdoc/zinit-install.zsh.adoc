@@ -435,7 +435,7 @@ ____
 
 ____
 
-Has 219 line(s). Calls functions:
+Has 220 line(s). Calls functions:
 
  .zinit-setup-plugin-dir
  |-- .zinit-download-file-stdout
