@@ -342,7 +342,14 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
         if [[ -z $update ]] {
             .zinit-any-colorify-as-uspl2 "$user" "$plugin"
             local pid_hl='{pid}' id_msg_part=" (at label: {id-as}$id_as{rst})"
-            +zi-log "{nl}{i} Downloading {b}{file}$user${user:+/}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
+
+            if [[ "$tpe" = "local" ]]; then
+                # Print a message appropriate for local plugins
+                +zi-log "{nl}{i} Installing local plugin from {b}{file}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
+            else
+                # Print the original message for all other types (github, gitlab, etc.)
+                +zi-log "{nl}{i} Downloading {b}{file}$user${user:+/}$plugin{rst} ${${${id_as:#$user/$plugin}}:+$id_msg_part}{rst}"
+            fi
         }
 
         local site
@@ -413,6 +420,21 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
                 builtin print -r -- $REPLY >! ._zinit/is_release
                 ziextract "$REPLY"
             ) || return $?
+        } elif [[ $tpe = local ]] {
+            # `$plugin` contains the full source path from the zinit call
+            # `$local_path` contains the target path inside $ZINIT[PLUGINS_DIR]
+            +zi-log "{info}Symlinking local plugin from {file}$plugin{rst} {info}to {file}$local_path{rst}"
+            
+            # Create a symlink from the dotfiles location to the zinit plugins dir
+            # This makes zinit "aware" of it for all subsequent operations.
+            command ln -s "$plugin" "$local_path"
+            
+            # Create the ._zinit directory so zinit recognizes it as a managed plugin
+            command mkdir -p "$local_path/._zinit" && echo '*' > "$local_path/._zinit/.gitignore"
+            [[ -d "$local_path/._zinit" ]] || return 2
+            
+            # Store a flag indicating this is a local, symlinked plugin
+            builtin print -r -- "symlink" >! "$local_path/._zinit/is_local"
         } elif [[ $tpe = github ]] {
             case ${ICE[proto]} in
                 (|ftp(|s)|git|http(|s)|rsync|ssh)
@@ -2425,4 +2447,4 @@ __zinit-cmake-base-hook () {
     }
 } # ]]]
 
-# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
+# vim: ft=zsh sw=4 ts=4 et foldmarker=[[[,]]] foldmethod=marker

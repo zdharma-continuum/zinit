@@ -1683,7 +1683,20 @@ builtin setopt noaliases
             return "$rc"
         fi
         zle && ___rst=1
-    }
+    } elif [[ "$___user" = "%" && "$___plugin" != "$ZINIT[BIN_DIR]" && ! -e "${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}" ]]; then
+        # It's a local plugin (user is '%') and it's not yet in the plugins directory -> triggers one-time installation
+        (( ${+functions[.zinit-setup-plugin-dir]} )) || builtin source "${ZINIT[BIN_DIR]}/zinit-install.zsh" || return 1
+        
+        # Call the installer with the special "local" type. `___plugin` holds the full path.
+        .zinit-setup-plugin-dir "$___user" "$___plugin" "$___id_as" "local"
+        
+        local rc="$?"
+        if [[ "$rc" -ne 0 ]]; then
+            zle && { builtin print; zle .reset-prompt; }
+            return "$rc"
+        fi
+        zle && ___rst=1
+    fi
 
     ZINIT_SICE[$___id_as]=
     .zinit-pack-ice "$___id_as"
@@ -3341,8 +3354,8 @@ zstyle -s ':zinit:browse-symbol' key ZINIT_TMP || ZINIT_TMP='\eQ'
 
 # Local Variables:
 # mode: Shell-Script
-# sh-indentation: 2
+# sh-indentation: 4
 # indent-tabs-mode: nil
-# sh-basic-offset: 2
+# sh-basic-offset: 4
 # End:
-# vim: ft=zsh sw=2 ts=2 et foldmarker=[[[,]]] foldmethod=marker
+# vim: ft=zsh sw=4 ts=4 et foldmarker=[[[,]]] foldmethod=marker
