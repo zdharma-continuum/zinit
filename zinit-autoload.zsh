@@ -683,28 +683,44 @@ ZINIT[EXTENDED_GLOB]=""
     .zinit-compinit >/dev/null
 } # ]]]
 
-#
-# User-exposed functions
-#
-
 # FUNCTION: .zinit-pager [[[
 # BusyBox less lacks the -X and -i options, so it can use more
 .zinit-pager() {
     setopt LOCAL_OPTIONS EQUALS
-    # Quiet mode ? → no pager.
-    if (( OPTS[opt_-n,--no-pager] )) {
-        cat
+
+    # Check if a non-interactive mode has been requested, either via a flag or a global setting.
+    if (( OPTS[opt_-n,--no-pager] )) || [[ ${ZINIT[NO_PAGER]} = (1|true|on|yes) ]]; then
+        # NON-INTERACTIVE MODE
+        local max_lines=${ZINIT[NO_PAGER_MAX_LINES]}
+
+        # Check if a line limit is explicitly set and is a valid non-negative integer.
+        if [[ $max_lines =~ ^[0-9]+$ ]]; then
+            if (( max_lines > 0 )); then
+                # A positive number means limit the output to that many lines.
+                head -n "$max_lines"
+            else
+                # A value of 0 means suppress all output from the pager completely.
+                # `cat > /dev/null` is the most robust way to achieve this.
+                cat > /dev/null
+            fi
+        else
+            # No valid line limit is set, so show the full output without interaction.
+            cat
+        fi
         return 0
-    }
-    if [[ ${${:-=less}:A:t} = busybox* ]] {
-        more 2>/dev/null
-        (( ${+commands[more]} ))
-    } else {
-        less -FRXi 2>/dev/null
-        (( ${+commands[less]} ))
-    }
-    (( $? )) && cat
-    return 0
+    else
+        # INTERACTIVE MODE (Original Behavior)
+        # Fall back to the default interactive pager if no non-interactive mode is set.
+        if [[ ${${:-=less}:A:t} = busybox* ]] {
+            more 2>/dev/null
+            (( ${+commands[more]} ))
+        } else {
+            less -FRXi 2>/dev/null
+            (( ${+commands[less]} ))
+        }
+        (( $? )) && cat
+        return 0
+    fi
 } # ]]]
 
 # FUNCTION: .zinit-build-module [[[
