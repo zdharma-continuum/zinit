@@ -1457,6 +1457,15 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
   else
     local url=https://$urlpart
   fi
+  if [[ "${ICE[bpick]}" == "src" ]]; then
+    +zi-log "{dbg} {b}gh-r{rst}: bpick\"src\" detected, targeting source code tarball for tag: {version}$tag_version{rst}"
+    # Construct the URL path for the auto-generated source code archive
+    reply=( "/$user/$plugin/archive/refs/tags/$tag_version.tar.gz" )
+    # Ensure the reply isn't empty if tag_version was somehow missed
+    [[ -n "$tag_version" ]] && return 0
+    +zi-log "{e} {b}gh-r{rst}: Could not determine tag version, cannot use bpick\"src\"."
+    return 1
+  fi
   init_list=( ${(@f)"$( { .zinit-download-file-stdout $url || .zinit-download-file-stdout $url 1; } 2>/dev/null | command grep -i -o 'href=./'$user'/'$plugin'/releases/download/[^"]\+')"} )
   init_list=(${(L)init_list[@]#href=?})
   bpicks=(${(s.;.)ICE[bpick]})
