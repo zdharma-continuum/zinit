@@ -1628,7 +1628,18 @@ builtin setopt noaliases
     typeset -F 3 SECONDS=0
     local ___mode="$3" ___limit="$4" ___rst=0 ___retval=0 ___key
     .zinit-any-to-user-plugin "$1" "$2"
-    local ___user="${reply[-2]}" ___plugin="${reply[-1]}" ___id_as="${ICE[id-as]:-${reply[-2]}${${reply[-2]:#(%|/)*}:+/}${reply[-1]}}"
+    local ___user="${reply[-2]}" ___plugin="${reply[-1]}"
+    if [[ -n "${ICE[id-as]}" ]]; then
+        # If the user provides an id-as, respect it.
+        ___id_as="${ICE[id-as]}"
+    elif [[ "$___user" = "%" ]]; then
+        # If it's a local plugin (user='%') and no id-as is given, create a default.
+        # `${___plugin:t}` extracts the tail (basename) of the path.
+        ___id_as="local/${___plugin:t}"
+    else
+        # Otherwise, use the original default logic for remote plugins (user/plugin).
+        ___id_as="${___user}${${___user:#(%|/)*}:+/}$___plugin"
+    fi
     local ___pdir_path="${${${(M)___user:#%}:+$___plugin}:-${ZINIT[PLUGINS_DIR]}/${___id_as//\//---}}"
     local ___pdir_orig="$___pdir_path"
     ZINIT[CUR_USR]="$___user" ZINIT[CUR_PLUGIN]="$___plugin" ZINIT[CUR_USPL2]="$___id_as"
