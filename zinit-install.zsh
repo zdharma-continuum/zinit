@@ -1143,13 +1143,16 @@ builtin source "${ZINIT[BIN_DIR]}/zinit-side.zsh" || {
     "${${(M)OPTS[opt_-q,--quiet]:#1}:+, skip the -q/--quiet option for more information}.{rst}"; retval=4; }
                 }
             } else {
-                if (( $+commands[realpath] )) {
+                # Check for GNU realpath by testing its --version flag before using it.
+                # This prevents errors on systems with BSD realpath (like macOS).
+                if (( $+commands[realpath] )) && command realpath --version >/dev/null 2>&1; then
+                    # We have GNU realpath, so we can try to create a relative link.
                     local rpv="$(realpath --version | head -n1 | sed -E 's/realpath (\(.*\))?//g')"
                     if is-at-least 8.23 $rpv; then
                         rel_url="$(realpath --relative-to="$local_dir/$dirname" "$url")" && \
                             { url="$rel_url" }
                     fi
-                }
+                fi
                 if (( !OPTS[opt_-q,--quiet] )) && [[ $url != /dev/null ]] {
                     +zi-log "{msg}Linking {file}$filename{msg}{…}{rst}"
                     command ln -svf "$url" "$local_dir/$dirname/$filename" || \
